@@ -1,0 +1,49 @@
+[project]
+name = "axignal"
+version = "0.0.0"
+description = "AXIGNAL engineering governance bootstrap. No product features yet."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "Proprietary" }
+authors = [{ name = "AXIGNAL" }]
+dependencies = []
+
+[dependency-groups]
+dev = [
+  "pytest>=8.3",
+  "ruff>=0.6",
+  "mypy>=1.11",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["domain", "pipeline", "cognition", "tools"]
+
+[project.scripts]
+architecture-guard = "tools.architecture_guard.guard:main"
+axignal-governance = "tools.governance.__main__:main"
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+extend-exclude = [".specify", ".opencode", "graphify-out", "data"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM", "RUF"]
+ignore = ["E501"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["domain", "pipeline", "cognition", "tools"]
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+files = ["domain", "pipeline", "cognition", "tools"]
+exclude = ["^\\.specify/", "^\\.opencode/"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"
