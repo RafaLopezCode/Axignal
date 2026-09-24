@@ -1,0 +1,182 @@
+[
+  {
+    "file": "large.clustered.json",
+    "hash": "76d03da64dac521ad6aae9261204f1494c19747068024b2d3c9e7a0c9d37c10c",
+    "nodeCount": 50000,
+    "edgeCount": 250000,
+    "topology": "clustered",
+    "scale": "large",
+    "bytes": 102175406
+  },
+  {
+    "file": "medium.clustered.json",
+    "hash": "7cfc2560e8acb50ff82e5af613fb85e0cc4aff9299ea030bcda634444131696e",
+    "nodeCount": 10000,
+    "edgeCount": 50000,
+    "topology": "clustered",
+    "scale": "medium",
+    "bytes": 20287875
+  },
+  {
+    "file": "medium.corporate.json",
+    "hash": "2f43c8c1d5b63eab64d121b923410d142a293a1370efe728456e9c076662e618",
+    "nodeCount": 10000,
+    "edgeCount": 50000,
+    "topology": "corporate",
+    "scale": "medium",
+    "bytes": 20274009
+  },
+  {
+    "file": "medium.hairball.json",
+    "hash": "a26d24d9ef208a5759616cb4b981da4bba73d3fa4525ecc0222f59541d894798",
+    "nodeCount": 10000,
+    "edgeCount": 50000,
+    "topology": "hairball",
+    "scale": "medium",
+    "bytes": 20285798
+  },
+  {
+    "file": "medium.neighbourhood.json",
+    "hash": "d3968e846f337263cbf1a0e6f5ee5adc3ebb160aa02b0e180043901f801c6704",
+    "nodeCount": 10000,
+    "edgeCount": 50000,
+    "topology": "neighbourhood",
+    "scale": "medium",
+    "bytes": 20282502
+  },
+  {
+    "file": "medium.supply.json",
+    "hash": "fa0d0cfee113cac330b52f2d10cc739321f15ccd5b8b055555d9fad659538868",
+    "nodeCount": 10000,
+    "edgeCount": 50000,
+    "topology": "supply",
+    "scale": "medium",
+    "bytes": 20289554
+  },
+  {
+    "file": "medium.temporal.json",
+    "hash": "e1ce99659d8b8b98cca36fad9cf1e358b004923dc5ddcafc54ea9565a344f8c9",
+    "nodeCount": 10000,
+    "edgeCount": 50000,
+    "topology": "temporal",
+    "scale": "medium",
+    "bytes": 20282440
+  },
+  {
+    "file": "small.clustered.json",
+    "hash": "f9fd339026ab29fa96f17c67514cd61508fafe4219963db3c2a7b9c4893e061a",
+    "nodeCount": 1000,
+    "edgeCount": 5000,
+    "topology": "clustered",
+    "scale": "small",
+    "bytes": 2010949
+  },
+  {
+    "file": "small.corporate.json",
+    "hash": "018dfd7c17744d9318b2162e7f6e790be03819f1e620b6cf1b912d9bb9c8a1f7",
+    "nodeCount": 1000,
+    "edgeCount": 5000,
+    "topology": "corporate",
+    "scale": "small",
+    "bytes": 2009502
+  },
+  {
+    "file": "small.hairball.json",
+    "hash": "d01c2e712e5393be3da1c5c4c4fa787f5d7a5ccdb7627d4ae8ebe38b25e210cf",
+    "nodeCount": 1000,
+    "edgeCount": 5000,
+    "topology": "hairball",
+    "scale": "small",
+    "bytes": 2011932
+  },
+  {
+    "file": "small.neighbourhood.json",
+    "hash": "53cbb8dacb786b083ec7cdef19345888071a957cfb5b20f40b12f91c53c3e4e3",
+    "nodeCount": 1000,
+    "edgeCount": 5000,
+    "topology": "neighbourhood",
+    "scale": "small",
+    "bytes": 2009652
+  },
+  {
+    "file": "small.supply.json",
+    "hash": "d9700637b6a85b73f3f5c18a31bbaa1cb529c1919bb22c81d62ef43144db63fc",
+    "nodeCount": 1000,
+    "edgeCount": 5000,
+    "topology": "supply",
+    "scale": "small",
+    "bytes": 2011052
+  },
+  {
+    "file": "small.temporal.json",
+    "hash": "5f24dcdd5d7f9bff384da6e2972bc7ded28d589f8df074f6cf0ffba2d0d0626d",
+    "nodeCount": 1000,
+    "edgeCount": 5000,
+    "topology": "temporal",
+    "scale": "small",
+    "bytes": 2010973
+  },
+  {
+    "file": "stress.clustered.json",
+    "hash": "16cf1ba72712395295980a8f5a474a278288d72d9c92607f9d7613371c063f7d",
+    "nodeCount": 100000,
+    "edgeCount": 500000,
+    "topology": "clustered",
+    "scale": "stress",
+    "bytes": 204629216
+  },
+  {
+    "file": "tiny.clustered.json",
+    "hash": "28a50c796cd597f3d60be19eb45ee0006c5e5357d91bbc31a9621fff4429c72c",
+    "nodeCount": 100,
+    "edgeCount": 500,
+    "topology": "clustered",
+    "scale": "tiny",
+    "bytes": 199482
+  },
+  {
+    "file": "tiny.corporate.json",
+    "hash": "d64ca9ad2365a4d037ef9b3c79876f37e0a90dfb8a2caf7bb9dd46a7192be8c5",
+    "nodeCount": 100,
+    "edgeCount": 500,
+    "topology": "corporate",
+    "scale": "tiny",
+    "bytes": 199596
+  },
+  {
+    "file": "tiny.hairball.json",
+    "hash": "23cda7cbf758cda9728c1df3cab1cd34df6e403ecdc2e13f754bdaa1422ca256",
+    "nodeCount": 100,
+    "edgeCount": 500,
+    "topology": "hairball",
+    "scale": "tiny",
+    "bytes": 199587
+  },
+  {
+    "file": "tiny.neighbourhood.json",
+    "hash": "0f9f46773d2e71501c3353a904236bcb41c25567e8181dd584ad8f3e5550a286",
+    "nodeCount": 100,
+    "edgeCount": 500,
+    "topology": "neighbourhood",
+    "scale": "tiny",
+    "bytes": 199129
+  },
+  {
+    "file": "tiny.supply.json",
+    "hash": "e6dea1a299fdc9283bf6e2f1b1f201cd0a7b5348ea1a51420758e1e6e7d1daf0",
+    "nodeCount": 100,
+    "edgeCount": 500,
+    "topology": "supply",
+    "scale": "tiny",
+    "bytes": 199733
+  },
+  {
+    "file": "tiny.temporal.json",
+    "hash": "056dffc6ad0f44a0c4fc2c226602603c5c98f63eb4b962f1a25c78e8e76efd05",
+    "nodeCount": 100,
+    "edgeCount": 500,
+    "topology": "temporal",
+    "scale": "tiny",
+    "bytes": 199540
+  }
+]
