@@ -2,7 +2,7 @@
 /**
  * AXIGLAND graph-engine bakeoff runner.
  *
- *   node benchmark/run.mjs --mode=perf [--heavy] [--scales=tiny,small] [--engines=sigma,cosmos]
+ *   node benchmark/run.mjs --mode=perf [--heavy] [--scales=tiny,small] [--engines=sigma]
  *   node benchmark/run.mjs --mode=scenarios [--engines=...]
  *   node benchmark/run.mjs --mode=screenshots [--engines=...]
  *
@@ -33,7 +33,7 @@ const args = Object.fromEntries(
 
 const MODE = args.mode || "perf";
 const HEAVY = Boolean(args.heavy);
-const ENGINES = (args.engines || "cytoscape,sigma,g6,cosmos").split(",");
+const ENGINES = (args.engines || "cytoscape,sigma,g6").split(",");
 
 function save(name, data) {
   mkdirSync(RESULTS, { recursive: true });

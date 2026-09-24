@@ -14,7 +14,6 @@
   },
   "dependencies": {
     "@antv/g6": "5.1.1",
-    "@cosmograph/cosmos": "3.4.1",
     "cytoscape": "3.34.3",
     "graphology": "0.26.0",
     "graphology-layout-forceatlas2": "0.10.1",

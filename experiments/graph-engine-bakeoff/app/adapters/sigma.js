@@ -37,6 +37,10 @@ export default function createSigmaAdapter({ container, base, pending, onReady }
     graph.addEdgeWithKey(e.id, e.source, e.target, {
       size: 0.4 + e.materiality * 2.6,
       color: EPI_COLOR[e.epistemicClass] || EPI_COLOR.OBSERVED,
+      nature: e.nature,
+      first_observed_at: e.first_observed_at,
+      valid_from: e.valid_from,
+      valid_until: e.valid_until,
       epistemicClass: e.epistemicClass,
       evidenceStrength: e.evidenceStrength,
       type: "arrow",
@@ -107,6 +111,10 @@ export default function createSigmaAdapter({ container, base, pending, onReady }
           graph.addEdgeWithKey(e.id, e.source, e.target, {
             size: 0.4 + e.materiality * 2.6,
             color: EPI_COLOR[e.epistemicClass] || EPI_COLOR.OBSERVED,
+            nature: e.nature,
+            first_observed_at: e.first_observed_at,
+            valid_from: e.valid_from,
+            valid_until: e.valid_until,
             epistemicClass: e.epistemicClass,
             evidenceStrength: e.evidenceStrength,
             type: "arrow",

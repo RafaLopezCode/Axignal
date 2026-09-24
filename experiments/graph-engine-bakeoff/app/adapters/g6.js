@@ -26,7 +26,15 @@ function edgeData(e) {
     id: e.id,
     source: e.source,
     target: e.target,
-    data: { epistemicClass: e.epistemicClass, materiality: e.materiality, evidenceStrength: e.evidenceStrength },
+    data: {
+      nature: e.nature,
+      first_observed_at: e.first_observed_at,
+      valid_from: e.valid_from,
+      valid_until: e.valid_until,
+      epistemicClass: e.epistemicClass,
+      materiality: e.materiality,
+      evidenceStrength: e.evidenceStrength,
+    },
   };
 }
 
@@ -67,6 +75,7 @@ export default async function createG6Adapter({ container, base, pending, onRead
 
   const allNodes = pending.nodes.map(nodeData);
   const allEdges = pending.edges.map(edgeData);
+  const addedEdgeIds = new Set(base.edges.map((edge) => edge.id));
   let pendingNodeIndex = 0;
 
   async function setStates(ids, state) {
@@ -86,7 +95,12 @@ export default async function createG6Adapter({ container, base, pending, onRead
       pendingNodeIndex += chunkNodes.length;
       const present = new Set(graph.getNodeData().map((n) => n.id));
       for (const n of chunkNodes) present.add(n.id);
-      const chunkEdges = allEdges.filter((e) => present.has(e.source) && present.has(e.target) && e.id);
+      const chunkEdges = allEdges.filter((e) => {
+        if (addedEdgeIds.has(e.id)) return false;
+        if (!present.has(e.source) || !present.has(e.target)) return false;
+        addedEdgeIds.add(e.id);
+        return true;
+      });
       graph.addNodeData(chunkNodes);
       graph.addEdgeData(chunkEdges);
       await graph.draw();

@@ -22,6 +22,7 @@ let data = null;
 
 function activeEdge(edge) {
   if (edge.first_observed_at > state.timeT) return false;
+  if (edge.valid_from != null && edge.valid_from > state.timeT) return false;
   if (edge.valid_until != null && edge.valid_until < state.timeT) return false;
   return true;
 }
@@ -83,7 +84,15 @@ const api = {
     record("pending_nodes", split.pending.nodes.length);
     record("pending_edges", split.pending.edges.length);
     record("js_heap_mb", heapMB());
-    this.results.meta = { engine, fixture, ...metrics.marks };
+    const initialMetrics = Object.fromEntries(
+      metrics.events.map(({ name, value }) => [name, value]),
+    );
+    this.results = {
+      engine,
+      fixture,
+      ...initialMetrics,
+      meta: { engine, fixture, ...metrics.marks },
+    };
     return this;
   },
   async idleFrames(n = 90) {

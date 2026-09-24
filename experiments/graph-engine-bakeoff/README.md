@@ -39,11 +39,11 @@ node fixtures/generate.mjs --only large --topology clustered
 node fixtures/generate.mjs --only stress --topology clustered
 node fixtures/hash.mjs
 node benchmark/smoke.mjs
-node benchmark/run.mjs --mode=perf --engines=cytoscape,sigma,cosmos --scales=tiny,small,medium
+node benchmark/run.mjs --mode=perf --engines=cytoscape,sigma --scales=tiny,small,medium
 node benchmark/run.mjs --mode=perf --engines=g6 --scales=tiny,small
-node benchmark/run.mjs --mode=perf --engines=cosmos,sigma --scales=large,stress
+node benchmark/run.mjs --mode=perf --engines=sigma --scales=large,stress
 node benchmark/run.mjs --mode=perf --engines=cytoscape --scales=large
-node benchmark/run.mjs --mode=scenarios --engines=cytoscape,sigma,cosmos
+node benchmark/run.mjs --mode=scenarios --engines=cytoscape,sigma,g6
 node benchmark/run.mjs --mode=screenshots
 ```
 
@@ -53,10 +53,11 @@ screenshots review) Python 3. Heavy fixtures (`fixtures/data/`) are generated,
 
 ## License warnings
 
-- `@cosmograph/cosmos` is **CC-BY-NC-4.0** (NonCommercial) with a non-public core
-  repository. It is present **only** to characterise the GPU-renderer ceiling in
-  a non-commercial research context, and is marked reference-only in the adapter.
-  It must never become an AXIGNAL dependency.
+- Cosmos measurements in the committed report, results, and screenshots are
+  historical bakeoff evidence. The Cosmos adapter and package were removed
+  because `@cosmograph/cosmos` is **CC-BY-NC-4.0** (NonCommercial) and its core
+  repository is not public. Current runs cannot reproduce those measurements;
+  Cosmos must never become an AXIGNAL dependency.
 - `@linkurious/ogma` is not publicly installable and is not included.
 
 ## Determinism

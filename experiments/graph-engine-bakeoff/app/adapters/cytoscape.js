@@ -34,6 +34,10 @@ function edgeEl(e) {
       id: e.id,
       source: e.source,
       target: e.target,
+      nature: e.nature,
+      first_observed_at: e.first_observed_at,
+      valid_from: e.valid_from,
+      valid_until: e.valid_until,
       epistemicClass: e.epistemicClass,
       materiality: e.materiality,
       evidenceStrength: e.evidenceStrength,
@@ -82,16 +86,26 @@ export default function createCytoscapeAdapter({ container, base, pending, onRea
   });
   onReady?.();
 
-  const all = elementsOf({ nodes: pending.nodes, edges: pending.edges });
-  let pendingIndex = 0;
+  const pendingNodes = pending.nodes.map(nodeEl);
+  const pendingEdges = pending.edges.map(edgeEl);
+  const addedEdgeIds = new Set(base.edges.map((edge) => edge.id));
+  let pendingNodeIndex = 0;
 
   return {
     engine: "cytoscape",
     async expand(count) {
-      const chunk = all.slice(pendingIndex, pendingIndex + count);
-      pendingIndex += chunk.length;
-      cy.batch(() => cy.add(chunk));
-      return chunk.length;
+      const chunkNodes = pendingNodes.slice(pendingNodeIndex, pendingNodeIndex + count);
+      pendingNodeIndex += chunkNodes.length;
+      const availableNodeIds = new Set(cy.nodes().map((node) => node.id()));
+      for (const node of chunkNodes) availableNodeIds.add(node.data.id);
+      const chunkEdges = pendingEdges.filter((edge) => {
+        if (addedEdgeIds.has(edge.data.id)) return false;
+        if (!availableNodeIds.has(edge.data.source) || !availableNodeIds.has(edge.data.target)) return false;
+        addedEdgeIds.add(edge.data.id);
+        return true;
+      });
+      cy.batch(() => cy.add([...chunkNodes, ...chunkEdges]));
+      return chunkNodes.length;
     },
     async recenter(id) {
       const node = cy.getElementById(id);
