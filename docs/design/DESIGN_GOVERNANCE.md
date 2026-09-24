@@ -17,7 +17,7 @@ FEATURE SPEC
         ↓
 DESIGN BRIEF
         ↓
-UI/UX SKILLS  (frontend-design, ui-ux-pro-max)
+UI/UX SKILLS  (frontend-design, ui-ux-pro-max, axignal-graph-design)
         ↓
 IMPLEMENTATION
 ```
@@ -32,6 +32,7 @@ authorize changes the architecture forbids. On conflict: stop and report.
 | --- | --- | --- |
 | `frontend-design` | Visual direction, art direction, composition, typography, hierarchy, spatial rhythm, motion language, interaction polish, distinctive identity, avoiding generic SaaS / generic AI aesthetics, deliberate visual systems, production-quality frontend execution. | Invent product semantics; redefine epistemic meaning; override IA or accessibility. |
 | `ui-ux-pro-max` | Information architecture, interaction design, usability, accessibility, responsive behavior, navigation, cognitive load, UX heuristics, interface consistency, component/state behavior, empty/loading/error states, data-density management, dashboard ergonomics. | Override the MASTER; trade truthfulness for polish; add sponsored or ranking manipulation. |
+| `axignal-graph-design` | AXIGLAND-specific graph cartography guidance: semantic LOD, visual grammar, focus, evidence explainability, accessibility complement, and renderer boundary. | Change canonical semantics, evidence truth, cognition/JEV/Claim Review/source policy; implement or authorize runtime by itself. |
 
 `ui-ux-pro-max` should challenge visual decisions that reduce usability.
 `frontend-design` should push toward exceptional visual quality without inventing
@@ -57,18 +58,22 @@ AXIGLAND · XIGNAL lifecycle · FIRST_MAP construction · FAXT presentation ·
 INXIGHT presentation · PATHX visualization · temporal exploration · economic
 relationship inspection.
 
-## Graph UX — reserved problem
+## Graph UX — accepted architecture; runtime remains future work
 
 AXIGLAND graph visualization is a first-class product surface. The
-**`GRAPH_ENGINE_BAKEOFF`** (P0-GRAPH-01) has now been executed; see
+**`GRAPH_ENGINE_BAKEOFF`** (P0-GRAPH-01) has been closed; see
 `../research/AXIGLAND_GRAPH_ENGINE_BAKEOFF.md` and
-`../research/AXIGLAND_GRAPH_ARCHITECTURE_DECISION.md`. Its outcome is a
-**PROPOSED, not accepted** ADR (`../adr/ADR-0009-axigland-graph-architecture.md`).
-No graph engine is a production dependency, and no final visual grammar is
-fixed. CTO acceptance is required before this becomes doctrine.
+`../research/AXIGLAND_GRAPH_ARCHITECTURE_DECISION.md`. Its outcome is the
+**accepted** ADR (`../adr/ADR-0009-axigland-graph-architecture.md`). AXIGNAL
+owns semantic cartography behind a replaceable renderer contract. Sigma +
+Graphology is the initial implementation choice only; neither is canonical
+authority, and neither is a production dependency. Detailed AXIGLAND graph
+design guidance lives in `.opencode/skills/axignal-graph-design/`. No product
+graph UI or runtime is implemented by this acceptance.
 
-The following mappings are **hypotheses to test, not frozen decisions**, and must
-not be implemented now:
+Specific visual mappings below remain **hypotheses to validate**, not empirical
+findings. Their semantic ownership is AXIGNAL's; implementation and product
+validation require a later authorized slice:
 
 ```
 NODE SIZE      → economic relevance
@@ -107,8 +112,8 @@ local, offline, stdlib-only, and are never invoked by required CI.
 
 ## Validation after design-skill changes
 
-- Both skills discoverable and their `SKILL.md` readable.
-- `frontend-design`/`ui-ux-pro-max` frontmatter `name` matches directory.
+- All project-local skills discoverable and their `SKILL.md` readable.
+- Every project-local skill's frontmatter `name` matches its directory.
 - Deterministic repository validation, Architecture Guard, tests, typecheck,
   lint and build all pass.
 - No global configuration changed; installation is project-local.

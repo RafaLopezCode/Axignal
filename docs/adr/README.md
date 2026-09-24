@@ -16,7 +16,7 @@ Constitution (`.specify/memory/constitution.md`).
 | [ADR-0006](ADR-0006-model-provider-abstraction.md) | Model Provider Abstraction | §13, §14, §30, §43 |
 | [ADR-0007](ADR-0007-deterministic-ci.md) | Deterministic CI | §14, §46.30; Constitution |
 | [ADR-0008](ADR-0008-no-crm-no-workflow-drift.md) | No CRM / No Workflow Drift | §2.1, §22, §32, §38 |
-| [ADR-0009](ADR-0009-axigland-graph-architecture.md) | AXIGLAND Graph Architecture (**PROPOSED, NOT ACCEPTED**) | §3, §8, §16–§18, §20, §24–§26 |
+| [ADR-0009](ADR-0009-axigland-graph-architecture.md) | AXIGLAND Graph Architecture (**ACCEPTED**) | §3, §8, §16–§18, §20, §24–§26 |
 
 ## Adding an ADR
 

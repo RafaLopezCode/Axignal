@@ -3,16 +3,17 @@
 > These skills are **design intelligence**, not product authorities. Precedence is
 > defined in [DESIGN_GOVERNANCE.md](DESIGN_GOVERNANCE.md): the MASTER wins.
 
-## Installed skills (exactly two)
+## Project-local skills
 
 | Skill | Responsibility | Install path |
 | --- | --- | --- |
 | `frontend-design` | Visual direction, art direction, composition, typography, hierarchy, spatial rhythm, motion language, interaction polish, distinctive visual identity, avoiding generic AI aesthetics. | `.opencode/skills/frontend-design/SKILL.md` |
 | `ui-ux-pro-max` | Information architecture, interaction design, usability, accessibility, responsive behavior, navigation, cognitive load, UX heuristics, consistency, component/state design, empty/loading/error states, data-density, dashboard ergonomics. | `.opencode/skills/ui-ux-pro-max/SKILL.md` |
+| `axignal-graph-design` | AXIGLAND-specific economic cartography, semantic/epistemic/temporal grammar, evidence explainability, accessibility requirements, and renderer boundary. Authored for AXIGNAL; not an upstream super-skill. | `.opencode/skills/axignal-graph-design/SKILL.md` |
 
-Graph/network visualization UX is deliberately **excluded** from this pair. It is
-reserved for the future `GRAPH_ENGINE_BAKEOFF` and an AXIGNAL-specific
-graph-design skill (see [DESIGN_GOVERNANCE.md](DESIGN_GOVERNANCE.md)).
+The two upstream skills remain subordinate general design intelligence. The
+AXIGNAL-specific graph skill adds governed product context for graph work; it
+does not change the provenance or pinned revisions of either upstream skill.
 
 ## Provenance (pinned upstream revisions)
 
@@ -50,9 +51,9 @@ alternatives; the canonical upstreams are clearly superior:
 
 The `ui-ux-pro-max` official installer's OpenCode profile installs several
 sibling skills (`brand`, `design`, `design-system`, `slides`, `ui-styling`,
-`banner-design`) in addition to `ui-ux-pro-max`. Per the mission, only the **two**
-selected super-skills are kept; the siblings were removed after install so the
-repository exposes exactly `frontend-design` and `ui-ux-pro-max`.
+`banner-design`) in addition to `ui-ux-pro-max`. Per the original installation
+scope, only the two selected upstream super-skills are kept; the AXIGNAL-authored
+graph skill is maintained separately.
 
 ## Discovery (OpenCode)
 
@@ -64,7 +65,7 @@ the native `skill` tool. Validation rules:
 - `name` in frontmatter must match the containing directory.
 - `description` is required (1–1024 chars).
 
-Both installed skills satisfy these rules. A **new agent session is required**
+All three project-local skills satisfy these rules. A **new agent session is required**
 for newly installed skills to appear in the available-skills list; a session
 started before installation will not surface them.
 
@@ -102,6 +103,7 @@ host system.
 ## Boundaries
 
 - No AXIGNAL product UI is implemented by installing these skills.
-- No graph engine is selected.
+- ADR-0009 accepts Sigma + Graphology as the initial replaceable renderer behind
+  an AXIGNAL-owned contract; no production graph engine dependency is added.
 - These skills recommend; they never override the MASTER, the Engineering
   Constitution, ADRs, or architecture contracts.

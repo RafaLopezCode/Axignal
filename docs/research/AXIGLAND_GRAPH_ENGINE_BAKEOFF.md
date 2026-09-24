@@ -32,10 +32,11 @@
   with a hybrid element (Graphology as a *replaceable* in-memory structure, never
   as semantic authority). Framework-first (G6) is rejected on large-graph
   failure; cosmos is rejected on license; Ogma informs missing requirements only.
-- Recommended provisional target: **AXIGNAL cartography layer + renderer adapter;
-  preferred renderer = Sigma.js v3 + Graphology**. See
+- Accepted architecture (ADR-0009): **AXIGNAL cartography layer + replaceable
+  renderer adapter; initial renderer = Sigma.js v3 + Graphology**. The decision
+  does not authorize runtime implementation. See
   [`AXIGLAND_GRAPH_ARCHITECTURE_DECISION.md`](AXIGLAND_GRAPH_ARCHITECTURE_DECISION.md)
-  and the PROPOSED (NOT ACCEPTED) `../adr/ADR-0009-axigland-graph-architecture.md`.
+  and the accepted `../adr/ADR-0009-axigland-graph-architecture.md`.
 
 ---
 
@@ -209,7 +210,7 @@ frames.
 
 ## 9. Scenario results (medium 10k/50k unless noted; ms)
 
-| Scenario metric | cytoscape | sigma | cosmos *(NC)* |
+| Scenario metric | cytoscape | sigma | cosmos *(NC; historical only)* |
 | --- | ---: | ---: | ---: |
 | Progressive expand +100 | 36 | 15 | 36 |
 | +500 | 71 | 13 | 48 |
@@ -222,18 +223,30 @@ frames.
 | Temporal T1→T2 | **629** | **27** | 13 |
 | Hairball idle P95 | 16.8 | 16.8 | 16.8 |
 
-All 30 runs (3 engines × 10 scenarios) completed without adapter errors.
+These are committed historical raw-run results. The later P0-GRAPH-01R review
+found adapter/harness defects that affect interpretation of some scenario rows;
+the raw evidence is preserved and has not been rewritten. In particular, filter
+and temporal timings came from the pre-repair harness and are not trusted as
+validated performance facts or product targets. The current harness removed the
+Cosmos adapter, so historical Cosmos rows cannot be reproduced by the current
+harness. The repair did not change the architecture conclusion.
 
 ### 9.1 FIRST_MAP (Scenario 1)
-Base 5% initial render cost is dominated by engine init (see §8). “Useful first
-render” is achieved by all tested engines at small/medium; Sigma/cosmos remain
-< 350 ms at medium, Cytoscape ≈ 2.1 s.
+Base 5% initial render cost is dominated by engine init (see §8). The historical
+run reported “useful first render” for tested engines at small/medium; historical
+Sigma/Cosmos values were < 350 ms at medium and Cytoscape ≈ 2.1 s. Cosmos is no
+longer in the current harness, and these remain harness measurements rather
+than product budgets.
 
 ### 9.2 Progressive expansion (Scenario 2)
-Sigma and cosmos add 20k elements in ~30–190 ms **without full rebuild** (both
-refresh/incremental). Cytoscape requires ~2 s for +20k and scales to ~11 s at
-large first render; it is effectively a rebuild-per-change architecture at this
-scale. The AXIGLAND "demand-materialized" model therefore favors Sigma/cosmos.
+The historical scenario requested a +20,000 expansion; on the medium fixture
+the final Sigma operation had only 3,900 pending nodes remaining after earlier
+stages. Its 190 ms record therefore is not a measurement of adding 20,000 new
+nodes in that single call. Treat expansion timings as harness-specific
+historical evidence, not as a universal scale guarantee. The large/stress
+first-render and idle/frame measurements remain the clearest unaffected
+comparative evidence for provisional Sigma headroom; the selection remains
+accepted by ADR-0009.
 
 ### 9.3 Recenter (Scenario 3)
 Sigma camera recenter 7 ms; cosmos (index zoom) 28 ms; Cytoscape 77 ms.
@@ -453,9 +466,10 @@ renderer is not expected to. This does not penalize open-source candidates.
 - **Reject** cosmos.gl (license) and Ogma (not installable) as foundations.
 - **Reject** G6 as the cartography foundation (large-graph failure).
 - **Retain** Cytoscape only as an algorithm/reference control.
-- **Adopt** an **AXIGNAL-owned cartography layer + renderer adapter**, with
-  **Sigma.js v3 + Graphology** as the provisional renderer, pending CTO
-  authorization in a separate slice.
+- **Adopt** an **AXIGNAL-owned cartography layer + replaceable renderer
+  adapter**, with **Sigma.js v3 + Graphology** as the initial implementation
+  choice, as accepted by CTO in ADR-0009. Runtime implementation remains a
+  separate authorized slice.
 - Build the missing AXIGNAL-owned pieces before any production graph: semantic
   LOD projector, epistemic grammar, temporal projection, PATHX state,
   accessibility complement, label strategy.
@@ -483,11 +497,11 @@ node fixtures/generate.mjs --only large --topology clustered
 node fixtures/generate.mjs --only stress --topology clustered
 node fixtures/hash.mjs
 node benchmark/smoke.mjs                                  # adapter sanity
-node benchmark/run.mjs --mode=perf --engines=cytoscape,sigma,cosmos --scales=tiny,small,medium
+node benchmark/run.mjs --mode=perf --engines=cytoscape,sigma --scales=tiny,small,medium
 node benchmark/run.mjs --mode=perf --engines=g6 --scales=tiny,small
-node benchmark/run.mjs --mode=perf --engines=cosmos,sigma --scales=large,stress
+node benchmark/run.mjs --mode=perf --engines=sigma --scales=large,stress
 node benchmark/run.mjs --mode=perf --engines=cytoscape --scales=large
-node benchmark/run.mjs --mode=scenarios --engines=cytoscape,sigma,cosmos
+node benchmark/run.mjs --mode=scenarios --engines=cytoscape,sigma
 node benchmark/run.mjs --mode=screenshots
 ```
 
