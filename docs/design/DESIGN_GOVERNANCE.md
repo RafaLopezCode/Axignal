@@ -59,9 +59,13 @@ relationship inspection.
 
 ## Graph UX — reserved problem
 
-No graph engine is selected here. AXIGLAND graph visualization is a first-class
-product surface and requires a later, dedicated **`GRAPH_ENGINE_BAKEOFF`**
-(engine choice, performance, accessibility, LOD strategy).
+AXIGLAND graph visualization is a first-class product surface. The
+**`GRAPH_ENGINE_BAKEOFF`** (P0-GRAPH-01) has now been executed; see
+`../research/AXIGLAND_GRAPH_ENGINE_BAKEOFF.md` and
+`../research/AXIGLAND_GRAPH_ARCHITECTURE_DECISION.md`. Its outcome is a
+**PROPOSED, not accepted** ADR (`../adr/ADR-0009-axigland-graph-architecture.md`).
+No graph engine is a production dependency, and no final visual grammar is
+fixed. CTO acceptance is required before this becomes doctrine.
 
 The following mappings are **hypotheses to test, not frozen decisions**, and must
 not be implemented now:

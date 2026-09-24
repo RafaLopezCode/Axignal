@@ -1,0 +1,3196 @@
+[
+  {
+    "scenario": "first_map",
+    "fixture": "medium.clustered.json",
+    "base": 0.05,
+    "engine": "cytoscape",
+    "ok": true,
+    "wallLoadMs": 591,
+    "errors": [],
+    "meta": {
+      "engine": "cytoscape",
+      "fixture": "medium.clustered.json",
+      "t0": 266.7000000178814,
+      "fixture_loaded": 432.59999999403954,
+      "graph_init_start": 440,
+      "graph_ready": 512.0999999940395,
+      "first_render": 586
+    },
+    "consoleErrors": [
+      "Failed to load resource: the server responded with a status of 404 (Not Found)"
+    ],
+    "metrics": {
+      "marks": {
+        "t0": 266.7000000178814,
+        "fixture_loaded": 432.59999999403954,
+        "graph_init_start": 440,
+        "graph_ready": 512.0999999940395,
+        "first_render": 586
+      },
+      "events": [
+        {
+          "name": "data_fetch_ms",
+          "value": 102,
+          "at": 432.59999999403954
+        },
+        {
+          "name": "data_parse_ms",
+          "value": 64,
+          "at": 432.59999999403954
+        },
+        {
+          "name": "data_bytes",
+          "value": 20287875,
+          "at": 432.59999999403954
+        },
+        {
+          "name": "graph_init_ms",
+          "value": 72,
+          "at": 586
+        },
+        {
+          "name": "first_render_ms",
+          "value": 319,
+          "at": 586
+        },
+        {
+          "name": "time_to_interactive_ms",
+          "value": 319,
+          "at": 586
+        },
+        {
+          "name": "base_nodes",
+          "value": 500,
+          "at": 586
+        },
+        {
+          "name": "base_edges",
+          "value": 100,
+          "at": 586
+        },
+        {
+          "name": "pending_nodes",
+          "value": 9500,
+          "at": 586
+        },
+        {
+          "name": "pending_edges",
+          "value": 49900,
+          "at": 586
+        },
+        {
+          "name": "js_heap_mb",
+          "value": 70.82,
+          "at": 586.0999999940395
+        },
+        {
+          "name": "idle",
+          "value": {
+            "count": 60,
+            "mean": 17.46,
+            "p50": 16.7,
+            "p95": 16.9,
+            "p99": 63.3
+          },
+          "at": 1640.5999999940395
+        },
+        {
+          "name": "js_heap_mb",
+          "value": 35.29,
+          "at": 1640.7000000178814
+        }
+      ]
+    }
+  },
+  {
+    "scenario": "progressive",
+    "fixture": "medium.clustered.json",
+    "base": 0.05,
+    "engine": "cytoscape",
+    "ok": true,
+    "wallLoadMs": 503,
+    "errors": [],
+    "+100": {
+      "added": 100,
+      "ms": 36.099999994039536
+    },
+    "+500": {
+      "added": 500,
+      "ms": 71
+    },
+    "+5000": {
+      "added": 5000,
+      "ms": 435.59999999403954
+    },
+    "+20000": {
+      "added": 20000,
+      "ms": 1979.8999999761581
+    },
+    "consoleErrors": [],
+    "metrics": {
+      "marks": {
+        "t0": 223,
+        "fixture_loaded": 351.80000001192093,
+        "graph_init_start": 357.90000000596046,
+        "graph_ready": 425.30000001192093,
+        "first_render": 498.40000000596046
+      },
+      "events": [
+        {
+          "name": "data_fetch_ms",
+          "value": 72,
+          "at": 351.80000001192093
+        },
+        {
+          "name": "data_parse_ms",
+          "value": 56,
+          "at": 351.80000001192093
+        },
+        {
+          "name": "data_bytes",
+          "value": 20287875,
+          "at": 351.80000001192093
+        },
+        {
+          "name": "graph_init_ms",
+          "value": 67,
+          "at": 498.40000000596046
+        },
+        {
+          "name": "first_render_ms",
+          "value": 275,
+          "at": 498.40000000596046
+        },
+        {
+          "name": "time_to_interactive_ms",
+          "value": 275,
+          "at": 498.40000000596046
+        },
+        {
+          "name": "base_nodes",
+          "value": 500,
+          "at": 498.40000000596046
+        },
+        {
+          "name": "base_edges",
+          "value": 100,
+          "at": 498.40000000596046
+        },
+        {
+          "name": "pending_nodes",
+          "value": 9500,
+          "at": 498.40000000596046
+        },
+        {
+          "name": "pending_edges",
+          "value": 49900,
+          "at": 498.40000000596046
+        },
+        {
+          "name": "js_heap_mb",
+          "value": 66.19,
+          "at": 498.5
+        },
+        {
+          "name": "expand_100_ms",
+          "value": 36,
+          "at": 540.0999999940395
+        },
+        {
+          "name": "expand_100_added",
+          "value": 100,
+          "at": 540.0999999940395
+        },
+        {
+          "name": "expand_500_ms",
+          "value": 71,
+          "at": 612.5999999940395
+        },
+        {
+          "name": "expand_500_added",
+          "value": 500,
+          "at": 612.5999999940395
+        },
+        {
+          "name": "expand_5000_ms",
+          "value": 436,
+          "at": 1050.0999999940395
+        },
+        {
+          "name": "expand_5000_added",
+          "value": 5000,
+          "at": 1050.0999999940395
+        },
+        {
+          "name": "expand_20000_ms",
+          "value": 1980,
+          "at": 3059.199999988079
+        },
+        {
+          "name": "expand_20000_added",
+          "value": 20000,
+          "at": 3059.199999988079
+        }
+      ]
+    }
+  },
+  {
+    "scenario": "recenter",
+    "fixture": "medium.clustered.json",
+    "base": 0.3,
+    "engine": "cytoscape",
+    "ok": true,
+    "wallLoadMs": 1455,
+    "errors": [],
+    "consoleErrors": [],
+    "metrics": {
+      "marks": {
+        "t0": 235.7000000178814,
+        "fixture_loaded": 381.30000001192093,
+        "graph_init_start": 388.7000000178814,
+        "graph_ready": 947.2000000178814,
+        "first_render": 1446.6000000238419
+      },
+      "events": [
+        {
+          "name": "data_fetch_ms",
+          "value": 88,
+          "at": 381.40000000596046
+        },
+        {
+          "name": "data_parse_ms",
+          "value": 58,
+          "at": 381.40000000596046
+        },
+        {
+          "name": "data_bytes",
+          "value": 20287875,
+          "at": 381.40000000596046
+        },
+        {
+          "name": "graph_init_ms",
+          "value": 559,
+          "at": 1446.6000000238419
+        },
+        {
+          "name": "first_render_ms",
+          "value": 1211,
+          "at": 1446.6000000238419
+        },
+        {
+          "name": "time_to_interactive_ms",
+          "value": 1211,
+          "at": 1446.6000000238419
+        },
+        {
+          "name": "base_nodes",
+          "value": 3000,
+          "at": 1446.6000000238419
+        },
+        {
+          "name": "base_edges",
+          "value": 4493,
+          "at": 1446.6000000238419
+        },
+        {
+          "name": "pending_nodes",
+          "value": 7000,
+          "at": 1446.6000000238419
+        },
+        {
+          "name": "pending_edges",
+          "value": 45507,
+          "at": 1446.6000000238419
+        },
+        {
+          "name": "js_heap_mb",
+          "value": 79.3,
+          "at": 1446.6000000238419
+        },
+        {
+          "name": "recenter_ms",
+          "value": 77,
+          "at": 1826.9000000059605
+        }
+      ]
+    }
+  },
+  {
+    "scenario": "epistemic",
+    "fixture": "medium.clustered.json",
+    "base": 0.5,
+    "engine": "cytoscape",
+    "ok": true,
+    "wallLoadMs": 2462,
+    "errors": [],
+    "observedOnlyMs": 723,
+    "allMs": 857,
+    "consoleErrors": [],
+    "metrics": {
+      "marks": {
+        "t0": 222.30000001192093,
+        "fixture_loaded": 344.90000000596046,
+        "graph_init_start": 352.59999999403954,
+        "graph_ready": 1505.0999999940395,
+        "first_render": 2455.300000011921
+      },
+      "events": [
+        {
+          "name": "data_fetch_ms",
+          "value": 71,
+          "at": 345
+        },
+        {
+          "name": "data_parse_ms",
+          "value": 52,
+          "at": 345
+        },
+        {
+          "name": "data_bytes",
+          "value": 20287875,
+          "at": 345
+        },
+        {
+          "name": "graph_init_ms",
+          "value": 1153,
+          "at": 2455.4000000059605
+        },
+        {
+          "name": "first_render_ms",
+          "value": 2233,
+          "at": 2455.4000000059605
+        },
+        {
+          "name": "time_to_interactive_ms",
+          "value": 2233,
+          "at": 2455.4000000059605
+        },
+        {
+          "name": "base_nodes",
+          "value": 5000,
+          "at": 2455.4000000059605
+        },
+        {
+          "name": "base_edges",
+          "value": 12544,
+          "at": 2455.4000000059605
+        },
+        {
+          "name": "pending_nodes",
+          "value": 5000,
+          "at": 2455.4000000059605
+        },
+        {
+          "name": "pending_edges",
+          "value": 37456,
+          "at": 2455.4000000059605
+        },
+        {
+          "name": "js_heap_mb",
+          "value": 200,
+          "at": 2455.5
+        },
+        {
+          "name": "epistemic_ms",
+          "value": 723,
+          "at": 3614.800000011921
+        },
+        {
+          "name": "epistemic_ms",
+          "value": 857,
+          "at": 4825.9000000059605
+        }
+      ]
+    }
+  },
+  {
+    "scenario": "pathx",
+    "fixture": "medium.clustered.json",
+    "base": 0.5,
+    "engine": "cytoscape",
+    "ok": true,
+    "wallLoadMs": 2540,
+    "errors": [],
+    "edges": [
+      "e10889",
+      "e47657",
+      "e26719",
+      "e40254",
+      "e25457",
+      "e46646"
+    ],
+    "ms": 714.9000000059605,
+    "clearMs": 699.5999999940395,
+    "consoleErrors": [],
+    "metrics": {
+      "marks": {
+        "t0": 257.90000000596046,
+        "fixture_loaded": 403,
+        "graph_init_start": 411.59999999403954,
+        "graph_ready": 1602.4000000059605,
+        "first_render": 2533.7999999821186
+      },
+      "events": [
+        {
+          "name": "data_fetch_ms",
+          "value": 86,
+          "at": 403.09999999403954
+        },
+        {
+          "name": "data_parse_ms",
+          "value": 59,
+          "at": 403.09999999403954
+        },
+        {
+          "name": "data_bytes",
+          "value": 20287875,
+          "at": 403.09999999403954
+        },
+        {
+          "name": "graph_init_ms",
+          "value": 1191,
+          "at": 2533.7999999821186
+        },
+        {
+          "name": "first_render_ms",
+          "value": 2276,
+          "at": 2533.7999999821186
+        },
+        {
+          "name": "time_to_interactive_ms",
+          "value": 2276,
+          "at": 2533.7999999821186
+        },
+        {
+          "name": "base_nodes",
+          "value": 5000,
+          "at": 2533.7999999821186
+        },
+        {
+          "name": "base_edges",
+          "value": 12544,
+          "at": 2533.7999999821186
+        },
+        {
+          "name": "pending_nodes",
+          "value": 5000,
+          "at": 2533.7999999821186
+        },
+        {
+          "name": "pending_edges",
+          "value": 37456,
+          "at": 2533.9000000059605
+        },
+        {
+          "name": "js_heap_mb",
+          "value": 201.75,
+          "at": 2533.9000000059605
+        },
+        {
+          "name": "pathx_highlight_ms",
+          "value": 715,
+          "at": 4043.5
+        }
+      ]
+    }
+  },
+  {
+    "scenario": "filter",
+    "fixture": "medium.clustered.json",
+    "base": 0.5,
+    "engine": "cytoscape",
+    "ok": true,
+    "wallLoadMs": 2714,
+    "errors": [],
+    "filterMs": 633.9000000059605,
+    "consoleErrors": [],
+    "metrics": {
+      "marks": {
+        "t0": 286,
+        "fixture_loaded": 437,
+        "graph_init_start": 446.59999999403954,
+        "graph_ready": 1712.9000000059605,
+        "first_render": 2708.199999988079
+      },
+      "events": [
+        {
+          "name": "data_fetch_ms",
+          "value": 83,
+          "at": 437.19999998807907
+        },
+        {
+          "name": "data_parse_ms",
+          "value": 68,
+          "at": 437.19999998807907
+        },
+        {
+          "name": "data_bytes",
+          "value": 20287875,
+          "at": 437.19999998807907
+        },
+        {
+          "name": "graph_init_ms",
+          "value": 1266,
+          "at": 2708.199999988079
+        },
+        {
+          "name": "first_render_ms",
+          "value": 2422,
+          "at": 2708.199999988079
+        },
+        {
+          "name": "time_to_interactive_ms",
+          "value": 2422,
+          "at": 2708.199999988079
+        },
+        {
+          "name": "base_nodes",
+          "value": 5000,
+          "at": 2708.199999988079
+        },
+        {
+          "name": "base_edges",
+          "value": 12544,
+          "at": 2708.199999988079
+        },
+        {
+          "name": "pending_nodes",
+          "value": 5000,
+          "at": 2708.199999988079
+        },
+        {
+          "name": "pending_edges",
+          "value": 37456,
+          "at": 2708.199999988079
+        },
+        {
+          "name": "js_heap_mb",
+          "value": 199.51,
+          "at": 2708.4000000059605
+        },
+        {
+          "name": "filter_ms",
+          "value": 634,
+          "at": 4122.800000011921
+        },
+        {
+          "name": "filter_ms",
+          "value": 1238,
+          "at": 5502.800000011921
+        }
+      ]
+    }
+  },
+  {
+    "scenario": "temporal",
+    "fixture": "medium.temporal.json",
+    "base": 0.5,
+    "engine": "cytoscape",
+    "ok": true,
+    "wallLoadMs": 2682,
+    "errors": [],
+    "t2TransitionMs": 629.3000000119209,
+    "consoleErrors": [],
+    "metrics": {
+      "marks": {
+        "t0": 281,
+        "fixture_loaded": 428,
+        "graph_init_start": 436.90000000596046,
+        "graph_ready": 1742.800000011921,
+        "first_render": 2675.5
+      },
+      "events": [
+        {
+          "name": "data_fetch_ms",
+          "value": 84,
+          "at": 428
+        },
+        {
+          "name": "data_parse_ms",
+          "value": 63,
+          "at": 428
+        },
+        {
+          "name": "data_bytes",
+          "value": 20282440,
+          "at": 428
+        },
+        {
+          "name": "graph_init_ms",
+          "value": 1306,
+          "at": 2675.5
+        },
+        {
+          "name": "first_render_ms",
+          "value": 2395,
+          "at": 2675.5
+        },
+        {
+          "name": "time_to_interactive_ms",
+          "value": 2395,
+          "at": 2675.5
+        },
+        {
+          "name": "base_nodes",
+          "value": 5000,
+          "at": 2675.5
+        },
+        {
+          "name": "base_edges",
+          "value": 12593,
+          "at": 2675.5
+        },
+        {
+          "name": "pending_nodes",
+          "value": 5000,
+          "at": 2675.5
+        },
+        {
+          "name": "pending_edges",
+          "value": 37407,
+          "at": 2675.5
+        },
+        {
+          "name": "js_heap_mb",
+          "value": 201.88,
+          "at": 2675.5999999940395
+        },
+        {
+          "name": "temporal_transition_ms",
+          "value": 740,
+          "at": 4190.4000000059605
+        },
+        {
+          "name": "temporal_transition_ms",
+          "value": 629,
+          "at": 5368.300000011921
+        }
+      ]
+    }
+  },
+  {
+    "scenario": "continuous",
+    "fixture": "medium.clustered.json",
+    "base": 0.05,
+    "engine": "cytoscape",
+    "ok": true,
+    "wallLoadMs": 560,
+    "errors": [],
+    "framesDuringDiscovery": {
+      "count": 150,
+      "mean": 16.65,
+      "p50": 16.7,
+      "p95": 16.8,
+      "p99": 16.8
+    },
+    "consoleErrors": [],
+    "metrics": {
+      "marks": {
+        "t0": 228.09999999403954,
+        "fixture_loaded": 381,
+        "graph_init_start": 391.69999998807907,
+        "graph_ready": 483,
+        "first_render": 554.5
+      },
+      "events": [
+        {
+          "name": "data_fetch_ms",
+          "value": 86,
+          "at": 381
+        },
+        {
+          "name": "data_parse_ms",
+          "value": 67,
+          "at": 381
+        },
+        {
+          "name": "data_bytes",
+          "value": 20287875,
+          "at": 381
+        },
+        {
+          "name": "graph_init_ms",
+          "value": 91,
+          "at": 554.5
+        },
+        {
+          "name": "first_render_ms",
+          "value": 326,
+          "at": 554.5
+        },
+        {
+          "name": "time_to_interactive_ms",
+          "value": 326,
+          "at": 554.5
+        },
+        {
+          "name": "base_nodes",
+          "value": 500,
+          "at": 554.5
+        },
+        {
+          "name": "base_edges",
+          "value": 100,
+          "at": 554.5
+        },
+        {
+          "name": "pending_nodes",
+          "value": 9500,
+          "at": 554.5
+        },
+        {
+          "name": "pending_edges",
+          "value": 49900,
+          "at": 554.5
+        },
+        {
+          "name": "js_heap_mb",
+          "value": 70.81,
+          "at": 554.6999999880791
+        },
+        {
+          "name": "expand_50_ms",
+          "value": 27,
+          "at": 587
+        },
+        {
+          "name": "expand_50_added",
+          "value": 50,
+          "at": 587
+        },
+        {
+          "name": "expand_50_ms",
+          "value": 15,
+          "at": 601.9000000059605
+        },
+        {
+          "name": "expand_50_added",
+          "value": 50,
+          "at": 601.9000000059605
+        },
+        {
+          "name": "expand_50_ms",
+          "value": 16,
+          "at": 617.6999999880791
+        },
+        {
+          "name": "expand_50_added",
+          "value": 50,
+          "at": 617.6999999880791
+        },
+        {
+          "name": "expand_50_ms",
+          "value": 17,
+          "at": 634.3000000119209
+        },
+        {
+          "name": "expand_50_added",
+          "value": 50,
+          "at": 634.3000000119209
+        },
+        {
+          "name": "expand_50_ms",
+          "value": 17,
+          "at": 651.4000000059605
+        },
+        {
+          "name": "expand_50_added",
+          "value": 50,
+          "at": 651.4000000059605
+        },
+        {
+          "name": "expand_50_ms",
+          "value": 18,
+          "at": 669.1999999880791
+        },
+        {
+          "name": "expand_50_added",
+          "value": 50,
+          "at": 669.1999999880791
+        },
+        {
+          "name": "expand_50_ms",
+          "value": 16,
+          "at": 685.5999999940395
+        },
+        {
+          "name": "expand_50_added",
+          "value": 50,
+          "at": 685.5999999940395
+        },
+        {
+          "name": "expand_50_ms",
+          "value": 17,
+          "at": 702.4000000059605
+        },
+        {
+          "name": "expand_50_added",
+          "value": 50,
+          "at": 702.4000000059605
+        },
+        {
+          "name": "expand_50_ms",
+          "value": 16,
+          "at": 718.4000000059605
+        },
+        {
+          "name": "expand_50_added",
+          "value": 50,
+          "at": 718.4000000059605
+        },
+        {
+          "name": "expand_50_ms",
+          "value": 18,
+          "at": 735.9000000059605
+        },
+        {
+          "name": "expand_50_added",
+          "value": 50,
+          "at": 735.9000000059605
+        }
+      ]
+    }
+  },
+  {
+    "scenario": "hairball",
+    "fixture": "medium.hairball.json",
+    "base": 1,
+    "engine": "cytoscape",
+    "ok": true,
+    "wallLoadMs": 9931,
+    "errors": [],
+    "count": 60,
+    "mean": 16.49,
+    "p50": 16.7,
+    "p95": 16.8,
+    "p99": 16.9,
+    "consoleErrors": [],
+    "metrics": {
+      "marks": {
+        "t0": 241.40000000596046,
+        "fixture_loaded": 382.19999998807907,
+        "graph_init_start": 390.59999999403954,
+        "graph_ready": 4468.300000011921,
+        "first_render": 9514.59999999404
+      },
+      "events": [
+        {
+          "name": "data_fetch_ms",
+          "value": 83,
+          "at": 382.19999998807907
+        },
+        {
+          "name": "data_parse_ms",
+          "value": 57,
+          "at": 382.19999998807907
+        },
+        {
+          "name": "data_bytes",
+          "value": 20285798,
+          "at": 382.19999998807907
+        },
+        {
+          "name": "graph_init_ms",
+          "value": 4078,
+          "at": 9514.59999999404
+        },
+        {
+          "name": "first_render_ms",
+          "value": 9273,
+          "at": 9514.59999999404
+        },
+        {
+          "name": "time_to_interactive_ms",
+          "value": 9273,
+          "at": 9514.59999999404
+        },
+        {
+          "name": "base_nodes",
+          "value": 10000,
+          "at": 9514.59999999404
+        },
+        {
+          "name": "base_edges",
+          "value": 50000,
+          "at": 9514.59999999404
+        },
+        {
+          "name": "pending_nodes",
+          "value": 0,
+          "at": 9514.59999999404
+        },
+        {
+          "name": "pending_edges",
+          "value": 0,
+          "at": 9514.59999999404
+        },
+        {
+          "name": "js_heap_mb",
+          "value": 302.49,
+          "at": 9514.699999988079
+        },
+        {
+          "name": "idle",
+          "value": {
+            "count": 30,
+            "mean": 55.36,
+            "p50": 16.7,
+            "p95": 33.3,
+            "p99": 1184.3
+          },
+          "at": 14075
+        },
+        {
+          "name": "js_heap_mb",
+          "value": 307.05,
+          "at": 14075.09999999404
+        },
+        {
+          "name": "idle",
+          "value": {
+            "count": 60,
+            "mean": 16.49,
+            "p50": 16.7,
+            "p95": 16.8,
+            "p99": 16.9
+          },
+          "at": 15293.300000011921
+        },
+        {
+          "name": "js_heap_mb",
+          "value": 307.73,
+          "at": 15293.40000000596
+        }
+      ]
+    }
+  },
+  {
+    "scenario": "corporate",
+    "fixture": "medium.corporate.json",
+    "base": 0.5,
+    "engine": "cytoscape",
+    "ok": true,
+    "wallLoadMs": 3519,
+    "errors": [],
+    "meta": {
+      "engine": "cytoscape",
+      "fixture": "medium.corporate.json",
+      "t0": 230.90000000596046,
+      "fixture_loaded": 384.2000000178814,
+      "graph_init_start": 392.09999999403954,
+      "graph_ready": 2175.300000011921,
+      "first_render": 3512.800000011921
+    },
+    "consoleErrors": [],
+    "metrics": {
+      "marks": {
+        "t0": 230.90000000596046,
+        "fixture_loaded": 384.2000000178814,
+        "graph_init_start": 392.09999999403954,
+        "graph_ready": 2175.300000011921,
+        "first_render": 3512.800000011921
+      },
+      "events": [
+        {
+          "name": "data_fetch_ms",
+          "value": 98,
+          "at": 384.2000000178814
+        },
+        {
+          "name": "data_parse_ms",
+          "value": 56,
+          "at": 384.2000000178814
+        },
+        {
+          "name": "data_bytes",
+          "value": 20274009,
+          "at": 384.2000000178814
+        },
+        {
+          "name": "graph_init_ms",
+          "value": 1783,
+          "at": 3512.800000011921
+        },
+        {
+          "name": "first_render_ms",
+          "value": 3282,
+          "at": 3512.800000011921
+        },
+        {
+          "name": "time_to_interactive_ms",
+          "value": 3282,
+          "at": 3512.800000011921
+        },
+        {
+          "name": "base_nodes",
+          "value": 5000,
+          "at": 3512.800000011921
+        },
+        {
+          "name": "base_edges",
+          "value": 21963,
+          "at": 3512.800000011921
+        },
+        {
+          "name": "pending_nodes",
+          "value": 5000,
+          "at": 3512.800000011921
+        },
+        {
+          "name": "pending_edges",
+          "value": 28037,
+          "at": 3512.800000011921
+        },
+        {
+          "name": "js_heap_mb",
+          "value": 263.8,
+          "at": 3512.9000000059605
+        },
+        {
+          "name": "idle",
+          "value": {
+            "count": 30,
+            "mean": 260.73,
+            "p50": 16.7,
+            "p95": 1117.7,
+            "p99": 1801.5
+          },
+          "at": 13126.5
+        },
+        {
+          "name": "js_heap_mb",
+          "value": 209.08,
+          "at": 13126.5
+        }
+      ]
+    }
+  },
+  {
+    "scenario": "first_map",
+    "fixture": "medium.clustered.json",
+    "base": 0.05,
+    "engine": "sigma",
+    "ok": true,
+    "wallLoadMs": 417,
+    "errors": [],
+    "meta": {
+      "engine": "sigma",
+      "fixture": "medium.clustered.json",
+      "t0": 218.30000001192093,
+      "fixture_loaded": 347,
+      "graph_init_start": 353.80000001192093,
+      "graph_ready": 411.60000002384186,
+      "first_render": 411.90000000596046
+    },
+    "consoleErrors": [],
+    "metrics": {
+      "marks": {
+        "t0": 218.30000001192093,
+        "fixture_loaded": 347,
+        "graph_init_start": 353.80000001192093,
+        "graph_ready": 411.60000002384186,
+        "first_render": 411.90000000596046
+      },
+      "events": [
+        {
+          "name": "data_fetch_ms",
+          "value": 76,
+          "at": 347.10000002384186
+        },
+        {
+          "name": "data_parse_ms",
+          "value": 52,
+          "at": 347.10000002384186
+        },
+        {
+          "name": "data_bytes",
+          "value": 20287875,
+          "at": 347.10000002384186
+        },
+        {
+          "name": "graph_init_ms",
+          "value": 58,
+          "at": 411.90000000596046
+        },
+        {
+          "name": "first_render_ms",
+          "value": 194,
+          "at": 411.90000000596046
+        },
+        {
+          "name": "time_to_interactive_ms",
+          "value": 194,
+          "at": 411.90000000596046
+        },
+        {
+          "name": "base_nodes",
+          "value": 500,
+          "at": 411.90000000596046
+        },
+        {
+          "name": "base_edges",
+          "value": 100,
+          "at": 411.90000000596046
+        },
+        {
+          "name": "pending_nodes",
+          "value": 9500,
+          "at": 411.90000000596046
+        },
+        {
+          "name": "pending_edges",
+          "value": 49900,
+          "at": 411.90000000596046
+        },
+        {
+          "name": "js_heap_mb",
+          "value": 49.86,
+          "at": 412
+        },
+        {
+          "name": "idle",
+          "value": {
+            "count": 60,
+            "mean": 16.43,
+            "p50": 16.7,
+            "p95": 16.8,
+            "p99": 16.8
+          },
+          "at": 1401.7000000178814
+        },
+        {
+          "name": "js_heap_mb",
+          "value": 26.65,
+          "at": 1401.7000000178814
+        }
+      ]
+    }
+  },
+  {
+    "scenario": "progressive",
+    "fixture": "medium.clustered.json",
+    "base": 0.05,
+    "engine": "sigma",
+    "ok": true,
+    "wallLoadMs": 422,
+    "errors": [],
+    "+100": {
+      "added": 100,
+      "ms": 15
+    },
+    "+500": {
+      "added": 500,
+      "ms": 13.200000017881393
+    },
+    "+5000": {
+      "added": 5000,
+      "ms": 133.5
+    },
+    "+20000": {
+      "added": 3900,
+      "ms": 189.89999997615814
+    },
+    "consoleErrors": [],
+    "metrics": {
+      "marks": {
+        "t0": 237.69999998807907,
+        "fixture_loaded": 374.40000000596046,
+        "graph_init_start": 382.09999999403954,
+        "graph_ready": 414.30000001192093,
+        "first_render": 414.59999999403954
+      },
+      "events": [
+        {
+          "name": "data_fetch_ms",
+          "value": 78,
+          "at": 374.5
+        },
+        {
+          "name": "data_parse_ms",
+          "value": 59,
+          "at": 374.5
+        },
+        {
+          "name": "data_bytes",
+          "value": 20287875,
+          "at": 374.5
+        },
+        {
+          "name": "graph_init_ms",
+          "value": 32,
+          "at": 414.59999999403954
+        },
+        {
+          "name": "first_render_ms",
+          "value": 177,
+          "at": 414.59999999403954
+        },
+        {
+          "name": "time_to_interactive_ms",
+          "value": 177,
+          "at": 414.59999999403954
+        },
+        {
+          "name": "base_nodes",
+          "value": 500,
+          "at": 414.59999999403954
+        },
+        {
+          "name": "base_edges",
+          "value": 100,
+          "at": 414.59999999403954
+        },
+        {
+          "name": "pending_nodes",
+          "value": 9500,
+          "at": 414.59999999403954
+        },
+        {
+          "name": "pending_edges",
+          "value": 49900,
+          "at": 414.59999999403954
+        },
+        {
+          "name": "js_heap_mb",
+          "value": 49.93,
+          "at": 414.69999998807907
+        },
+        {
+          "name": "expand_100_ms",
+          "value": 15,
+          "at": 433.30000001192093
+        },
+        {
+          "name": "expand_100_added",
+          "value": 100,
+          "at": 433.30000001192093
+        },
+        {
+          "name": "expand_500_ms",
+          "value": 13,
+          "at": 447.80000001192093
+        },
+        {
+          "name": "expand_500_added",
+          "value": 500,
+          "at": 447.80000001192093
+        },
+        {
+          "name": "expand_5000_ms",
+          "value": 134,
+          "at": 583.4000000059605
+        },
+        {
+          "name": "expand_5000_added",
+          "value": 5000,
+          "at": 583.4000000059605
+        },
+        {
+          "name": "expand_20000_ms",
+          "value": 190,
+          "at": 774.6999999880791
+        },
+        {
+          "name": "expand_20000_added",
+          "value": 3900,
+          "at": 774.6999999880791
+        }
+      ]
+    }
+  },
+  {
+    "scenario": "recenter",
+    "fixture": "medium.clustered.json",
+    "base": 0.3,
+    "engine": "sigma",
+    "ok": true,
+    "wallLoadMs": 525,
+    "errors": [],
+    "consoleErrors": [],
+    "metrics": {
+      "marks": {
+        "t0": 271.30000001192093,
+        "fixture_loaded": 392.59999999403954,
+        "graph_init_start": 400.30000001192093,
+        "graph_ready": 516.0999999940395,
+        "first_render": 516.5999999940395
+      },
+      "events": [
+        {
+          "name": "data_fetch_ms",
+          "value": 71,
+          "at": 392.7000000178814
+        },
+        {
+          "name": "data_parse_ms",
+          "value": 51,
+          "at": 392.7000000178814
+        },
+        {
+          "name": "data_bytes",
+          "value": 20287875,
+          "at": 392.7000000178814
+        },
+        {
+          "name": "graph_init_ms",
+          "value": 116,
+          "at": 516.5999999940395
+        },
+        {
+          "name": "first_render_ms",
+          "value": 245,
+          "at": 516.5999999940395
+        },
+        {
+          "name": "time_to_interactive_ms",
+          "value": 245,
+          "at": 516.5999999940395
+        },
+        {
+          "name": "base_nodes",
+          "value": 3000,
+          "at": 516.5999999940395
+        },
+        {
+          "name": "base_edges",
+          "value": 4493,
+          "at": 516.5999999940395
+        },
+        {
+          "name": "pending_nodes",
+          "value": 7000,
+          "at": 516.5999999940395
+        },
+        {
+          "name": "pending_edges",
+          "value": 45507,
+          "at": 516.5999999940395
+        },
+        {
+          "name": "js_heap_mb",
+          "value": 68.18,
+          "at": 516.8000000119209
+        },
+        {
+          "name": "recenter_ms",
+          "value": 7,
+          "at": 529
+        }
+      ]
+    }
+  },
+  {
+    "scenario": "epistemic",
+    "fixture": "medium.clustered.json",
+    "base": 0.5,
+    "engine": "sigma",
+    "ok": true,
+    "wallLoadMs": 557,
+    "errors": [],
+    "observedOnlyMs": 41,
+    "allMs": 30,
+    "consoleErrors": [],
+    "metrics": {
+      "marks": {
+        "t0": 213.90000000596046,
+        "fixture_loaded": 345.40000000596046,
+        "graph_init_start": 353.59999999403954,
+        "graph_ready": 549.4000000059605,
+        "first_render": 549.8000000119209
+      },
+      "events": [
+        {
+          "name": "data_fetch_ms",
+          "value": 78,
+          "at": 345.5
+        },
+        {
+          "name": "data_parse_ms",
+          "value": 54,
+          "at": 345.5
+        },
+        {
+          "name": "data_bytes",
+          "value": 20287875,
+          "at": 345.5
+        },
+        {
+          "name": "graph_init_ms",
+          "value": 196,
+          "at": 549.9000000059605
+        },
+        {
+          "name": "first_render_ms",
+          "value": 336,
+          "at": 549.9000000059605
+        },
+        {
+          "name": "time_to_interactive_ms",
+          "value": 336,
+          "at": 549.9000000059605
+        },
+        {
+          "name": "base_nodes",
+          "value": 5000,
+          "at": 549.9000000059605
+        },
+        {
+          "name": "base_edges",
+          "value": 12544,
+          "at": 549.9000000059605
+        },
+        {
+          "name": "pending_nodes",
+          "value": 5000,
+          "at": 549.9000000059605
+        },
+        {
+          "name": "pending_edges",
+          "value": 37456,
+          "at": 549.9000000059605
+        },
+        {
+          "name": "js_heap_mb",
+          "value": 64.84,
+          "at": 549.9000000059605
+        },
+        {
+          "name": "epistemic_ms",
+          "value": 41,
+          "at": 595.4000000059605
+        },
+        {
+          "name": "epistemic_ms",
+          "value": 30,
+          "at": 804.3000000119209
+        }
+      ]
+    }
+  },
+  {
+    "scenario": "pathx",
+    "fixture": "medium.clustered.json",
+    "base": 0.5,
+    "engine": "sigma",
+    "ok": true,
+    "wallLoadMs": 549,
+    "errors": [],
+    "edges": [
+      "e10889",
+      "e47657",
+      "e26719",
+      "e40254",
+      "e25457",
+      "e46646"
+    ],
+    "ms": 40.400000005960464,
+    "clearMs": 27.099999994039536,
+    "consoleErrors": [],
+    "metrics": {
+      "marks": {
+        "t0": 216.69999998807907,
+        "fixture_loaded": 344.30000001192093,
+        "graph_init_start": 352.19999998807907,
+        "graph_ready": 542.9000000059605,
+        "first_render": 543.1999999880791
+      },
+      "events": [
+        {
+          "name": "data_fetch_ms",
+          "value": 77,
+          "at": 344.40000000596046
+        },
+        {
+          "name": "data_parse_ms",
+          "value": 50,
+          "at": 344.40000000596046
+        },
+        {
+          "name": "data_bytes",
+          "value": 20287875,
+          "at": 344.40000000596046
+        },
+        {
+          "name": "graph_init_ms",
+          "value": 191,
+          "at": 543.1999999880791
+        },
+        {
+          "name": "first_render_ms",
+          "value": 327,
+          "at": 543.1999999880791
+        },
+        {
+          "name": "time_to_interactive_ms",
+          "value": 327,
+          "at": 543.1999999880791
+        },
+        {
+          "name": "base_nodes",
+          "value": 5000,
+          "at": 543.1999999880791
+        },
+        {
+          "name": "base_edges",
+          "value": 12544,
+          "at": 543.1999999880791
+        },
+        {
+          "name": "pending_nodes",
+          "value": 5000,
+          "at": 543.1999999880791
+        },
+        {
+          "name": "pending_edges",
+          "value": 37456,
+          "at": 543.1999999880791
+        },
+        {
+          "name": "js_heap_mb",
+          "value": 64.28,
+          "at": 543.3000000119209
+        },
+        {
+          "name": "pathx_highlight_ms",
+          "value": 40,
+          "at": 589
+        }
+      ]
+    }
+  },
+  {
+    "scenario": "filter",
+    "fixture": "medium.clustered.json",
+    "base": 0.5,
+    "engine": "sigma",
+    "ok": true,
+    "wallLoadMs": 574,
+    "errors": [],
+    "filterMs": 42.599999994039536,
+    "consoleErrors": [],
+    "metrics": {
+      "marks": {
+        "t0": 222.2999999821186,
+        "fixture_loaded": 355.09999999403954,
+        "graph_init_start": 363.5,
+        "graph_ready": 568.2999999821186,
+        "first_render": 568.5999999940395
+      },
+      "events": [
+        {
+          "name": "data_fetch_ms",
+          "value": 76,
+          "at": 355.19999998807907
+        },
+        {
+          "name": "data_parse_ms",
+          "value": 57,
+          "at": 355.19999998807907
+        },
+        {
+          "name": "data_bytes",
+          "value": 20287875,
+          "at": 355.19999998807907
+        },
+        {
+          "name": "graph_init_ms",
+          "value": 205,
+          "at": 568.5999999940395
+        },
+        {
+          "name": "first_render_ms",
+          "value": 346,
+          "at": 568.5999999940395
+        },
+        {
+          "name": "time_to_interactive_ms",
+          "value": 346,
+          "at": 568.5999999940395
+        },
+        {
+          "name": "base_nodes",
+          "value": 5000,
+          "at": 568.5999999940395
+        },
+        {
+          "name": "base_edges",
+          "value": 12544,
+          "at": 568.5999999940395
+        },
+        {
+          "name": "pending_nodes",
+          "value": 5000,
+          "at": 568.5999999940395
+        },
+        {
+          "name": "pending_edges",
+          "value": 37456,
+          "at": 568.5999999940395
+        },
+        {
+          "name": "js_heap_mb",
+          "value": 64.51,
+          "at": 568.6999999880791
+        },
+        {
+          "name": "filter_ms",
+          "value": 43,
+          "at": 615.6999999880791
+        },
+        {
+          "name": "filter_ms",
+          "value": 29,
+          "at": 803.5
+        }
+      ]
+    }
+  },
+  {
+    "scenario": "temporal",
+    "fixture": "medium.temporal.json",
+    "base": 0.5,
+    "engine": "sigma",
+    "ok": true,
+    "wallLoadMs": 552,
+    "errors": [],
+    "t2TransitionMs": 27.299999982118607,
+    "consoleErrors": [],
+    "metrics": {
+      "marks": {
+        "t0": 218.69999998807907,
+        "fixture_loaded": 345.69999998807907,
+        "graph_init_start": 353.59999999403954,
+        "graph_ready": 547.6999999880791,
+        "first_render": 548
+      },
+      "events": [
+        {
+          "name": "data_fetch_ms",
+          "value": 77,
+          "at": 345.7999999821186
+        },
+        {
+          "name": "data_parse_ms",
+          "value": 50,
+          "at": 345.7999999821186
+        },
+        {
+          "name": "data_bytes",
+          "value": 20282440,
+          "at": 345.7999999821186
+        },
+        {
+          "name": "graph_init_ms",
+          "value": 194,
+          "at": 548
+        },
+        {
+          "name": "first_render_ms",
+          "value": 329,
+          "at": 548
+        },
+        {
+          "name": "time_to_interactive_ms",
+          "value": 329,
+          "at": 548
+        },
+        {
+          "name": "base_nodes",
+          "value": 5000,
+          "at": 548
+        },
+        {
+          "name": "base_edges",
+          "value": 12593,
+          "at": 548
+        },
+        {
+          "name": "pending_nodes",
+          "value": 5000,
+          "at": 548
+        },
+        {
+          "name": "pending_edges",
+          "value": 37407,
+          "at": 548
+        },
+        {
+          "name": "js_heap_mb",
+          "value": 64.86,
+          "at": 548
+        },
+        {
+          "name": "temporal_transition_ms",
+          "value": 40,
+          "at": 591.6999999880791
+        },
+        {
+          "name": "temporal_transition_ms",
+          "value": 27,
+          "at": 821.1999999880791
+        }
+      ]
+    }
+  },
+  {
+    "scenario": "continuous",
+    "fixture": "medium.clustered.json",
+    "base": 0.05,
+    "engine": "sigma",
+    "ok": true,
+    "wallLoadMs": 418,
+    "errors": [],
+    "framesDuringDiscovery": {
+      "count": 150,
+      "mean": 16.6,
+      "p50": 16.7,
+      "p95": 16.8,
+      "p99": 16.8
+    },
+    "consoleErrors": [],
+    "metrics": {
+      "marks": {
+        "t0": 229.2000000178814,
+        "fixture_loaded": 367.80000001192093,
+        "graph_init_start": 374.7000000178814,
+        "graph_ready": 411.7000000178814,
+        "first_render": 412.30000001192093
+      },
+      "events": [
+        {
+          "name": "data_fetch_ms",
+          "value": 78,
+          "at": 367.90000000596046
+        },
+        {
+          "name": "data_parse_ms",
+          "value": 61,
+          "at": 367.90000000596046
+        },
+        {
+          "name": "data_bytes",
+          "value": 20287875,
+          "at": 367.90000000596046
+        },
+        {
+          "name": "graph_init_ms",
+          "value": 37,
+          "at": 412.30000001192093
+        },
+        {
+          "name": "first_render_ms",
+          "value": 183,
+          "at": 412.30000001192093
+        },
+        {
+          "name": "time_to_interactive_ms",
+          "value": 183,
+          "at": 412.30000001192093
+        },
+        {
+          "name": "base_nodes",
+          "value": 500,
+          "at": 412.30000001192093
+        },
+        {
+          "name": "base_edges",
+          "value": 100,
+          "at": 412.30000001192093
+        },
+        {
+          "name": "pending_nodes",
+          "value": 9500,
+          "at": 412.30000001192093
+        },
+        {
+          "name": "pending_edges",
+          "value": 49900,
+          "at": 412.30000001192093
+        },
+        {
+          "name": "js_heap_mb",
+          "value": 49.37,
+          "at": 412.40000000596046
+        },
+        {
+          "name": "expand_50_ms",
+          "value": 14,
+          "at": 432
+        },
+        {
+          "name": "expand_50_added",
+          "value": 50,
+          "at": 432
+        },
+        {
+          "name": "expand_50_ms",
+          "value": 11,
+          "at": 442.5
+        },
+        {
+          "name": "expand_50_added",
+          "value": 50,
+          "at": 442.60000002384186
+        },
+        {
+          "name": "expand_50_ms",
+          "value": 14,
+          "at": 456.30000001192093
+        },
+        {
+          "name": "expand_50_added",
+          "value": 50,
+          "at": 456.30000001192093
+        },
+        {
+          "name": "expand_50_ms",
+          "value": 17,
+          "at": 473.60000002384186
+        },
+        {
+          "name": "expand_50_added",
+          "value": 50,
+          "at": 473.60000002384186
+        },
+        {
+          "name": "expand_50_ms",
+          "value": 16,
+          "at": 489.7000000178814
+        },
+        {
+          "name": "expand_50_added",
+          "value": 50,
+          "at": 489.7000000178814
+        },
+        {
+          "name": "expand_50_ms",
+          "value": 16,
+          "at": 505.7000000178814
+        },
+        {
+          "name": "expand_50_added",
+          "value": 50,
+          "at": 505.7000000178814
+        },
+        {
+          "name": "expand_50_ms",
+          "value": 17,
+          "at": 523.1000000238419
+        },
+        {
+          "name": "expand_50_added",
+          "value": 50,
+          "at": 523.1000000238419
+        },
+        {
+          "name": "expand_50_ms",
+          "value": 16,
+          "at": 539.2000000178814
+        },
+        {
+          "name": "expand_50_added",
+          "value": 50,
+          "at": 539.2000000178814
+        },
+        {
+          "name": "expand_50_ms",
+          "value": 17,
+          "at": 555.7000000178814
+        },
+        {
+          "name": "expand_50_added",
+          "value": 50,
+          "at": 555.7000000178814
+        },
+        {
+          "name": "expand_50_ms",
+          "value": 17,
+          "at": 572.7000000178814
+        },
+        {
+          "name": "expand_50_added",
+          "value": 50,
+          "at": 572.7000000178814
+        }
+      ]
+    }
+  },
+  {
+    "scenario": "hairball",
+    "fixture": "medium.hairball.json",
+    "base": 1,
+    "engine": "sigma",
+    "ok": true,
+    "wallLoadMs": 756,
+    "errors": [],
+    "count": 60,
+    "mean": 16.27,
+    "p50": 16.7,
+    "p95": 16.8,
+    "p99": 16.9,
+    "consoleErrors": [],
+    "metrics": {
+      "marks": {
+        "t0": 332.90000000596046,
+        "fixture_loaded": 457.40000000596046,
+        "graph_init_start": 467.19999998807907,
+        "graph_ready": 749,
+        "first_render": 749.3000000119209
+      },
+      "events": [
+        {
+          "name": "data_fetch_ms",
+          "value": 73,
+          "at": 457.40000000596046
+        },
+        {
+          "name": "data_parse_ms",
+          "value": 51,
+          "at": 457.40000000596046
+        },
+        {
+          "name": "data_bytes",
+          "value": 20285798,
+          "at": 457.40000000596046
+        },
+        {
+          "name": "graph_init_ms",
+          "value": 282,
+          "at": 749.3000000119209
+        },
+        {
+          "name": "first_render_ms",
+          "value": 416,
+          "at": 749.3000000119209
+        },
+        {
+          "name": "time_to_interactive_ms",
+          "value": 416,
+          "at": 749.3000000119209
+        },
+        {
+          "name": "base_nodes",
+          "value": 10000,
+          "at": 749.3000000119209
+        },
+        {
+          "name": "base_edges",
+          "value": 50000,
+          "at": 749.3000000119209
+        },
+        {
+          "name": "pending_nodes",
+          "value": 0,
+          "at": 749.3000000119209
+        },
+        {
+          "name": "pending_edges",
+          "value": 0,
+          "at": 749.3000000119209
+        },
+        {
+          "name": "js_heap_mb",
+          "value": 103.54,
+          "at": 749.3000000119209
+        },
+        {
+          "name": "idle",
+          "value": {
+            "count": 30,
+            "mean": 16.2,
+            "p50": 16.7,
+            "p95": 16.8,
+            "p99": 16.8
+          },
+          "at": 1248
+        },
+        {
+          "name": "js_heap_mb",
+          "value": 77.64,
+          "at": 1248.0999999940395
+        },
+        {
+          "name": "idle",
+          "value": {
+            "count": 60,
+            "mean": 16.27,
+            "p50": 16.7,
+            "p95": 16.8,
+            "p99": 16.9
+          },
+          "at": 2414.5999999940395
+        },
+        {
+          "name": "js_heap_mb",
+          "value": 77.87,
+          "at": 2414.699999988079
+        }
+      ]
+    }
+  },
+  {
+    "scenario": "corporate",
+    "fixture": "medium.corporate.json",
+    "base": 0.5,
+    "engine": "sigma",
+    "ok": true,
+    "wallLoadMs": 621,
+    "errors": [],
+    "meta": {
+      "engine": "sigma",
+      "fixture": "medium.corporate.json",
+      "t0": 218.2000000178814,
+      "fixture_loaded": 364.40000000596046,
+      "graph_init_start": 372.80000001192093,
+      "graph_ready": 615.8000000119209,
+      "first_render": 616.0999999940395
+    },
+    "consoleErrors": [],
+    "metrics": {
+      "marks": {
+        "t0": 218.2000000178814,
+        "fixture_loaded": 364.40000000596046,
+        "graph_init_start": 372.80000001192093,
+        "graph_ready": 615.8000000119209,
+        "first_render": 616.0999999940395
+      },
+      "events": [
+        {
+          "name": "data_fetch_ms",
+          "value": 84,
+          "at": 364.5
+        },
+        {
+          "name": "data_parse_ms",
+          "value": 62,
+          "at": 364.5
+        },
+        {
+          "name": "data_bytes",
+          "value": 20274009,
+          "at": 364.5
+        },
+        {
+          "name": "graph_init_ms",
+          "value": 243,
+          "at": 616.0999999940395
+        },
+        {
+          "name": "first_render_ms",
+          "value": 398,
+          "at": 616.0999999940395
+        },
+        {
+          "name": "time_to_interactive_ms",
+          "value": 398,
+          "at": 616.0999999940395
+        },
+        {
+          "name": "base_nodes",
+          "value": 5000,
+          "at": 616.0999999940395
+        },
+        {
+          "name": "base_edges",
+          "value": 21963,
+          "at": 616.0999999940395
+        },
+        {
+          "name": "pending_nodes",
+          "value": 5000,
+          "at": 616.0999999940395
+        },
+        {
+          "name": "pending_edges",
+          "value": 28037,
+          "at": 616.0999999940395
+        },
+        {
+          "name": "js_heap_mb",
+          "value": 72.95,
+          "at": 616.2000000178814
+        },
+        {
+          "name": "idle",
+          "value": {
+            "count": 30,
+            "mean": 16.19,
+            "p50": 16.7,
+            "p95": 16.8,
+            "p99": 16.8
+          },
+          "at": 1108
+        },
+        {
+          "name": "js_heap_mb",
+          "value": 72.98,
+          "at": 1108.0999999940395
+        }
+      ]
+    }
+  },
+  {
+    "scenario": "first_map",
+    "fixture": "medium.clustered.json",
+    "base": 0.05,
+    "engine": "cosmos",
+    "ok": true,
+    "wallLoadMs": 353,
+    "errors": [],
+    "meta": {
+      "engine": "cosmos",
+      "fixture": "medium.clustered.json",
+      "t0": 211.5,
+      "fixture_loaded": 339.59999999403954,
+      "graph_init_start": 346.09999999403954,
+      "graph_ready": 348.59999999403954,
+      "first_render": 349
+    },
+    "consoleErrors": [],
+    "metrics": {
+      "marks": {
+        "t0": 211.5,
+        "fixture_loaded": 339.59999999403954,
+        "graph_init_start": 346.09999999403954,
+        "graph_ready": 348.59999999403954,
+        "first_render": 349
+      },
+      "events": [
+        {
+          "name": "data_fetch_ms",
+          "value": 76,
+          "at": 339.69999998807907
+        },
+        {
+          "name": "data_parse_ms",
+          "value": 52,
+          "at": 339.69999998807907
+        },
+        {
+          "name": "data_bytes",
+          "value": 20287875,
+          "at": 339.69999998807907
+        },
+        {
+          "name": "graph_init_ms",
+          "value": 3,
+          "at": 349
+        },
+        {
+          "name": "first_render_ms",
+          "value": 138,
+          "at": 349
+        },
+        {
+          "name": "time_to_interactive_ms",
+          "value": 138,
+          "at": 349.09999999403954
+        },
+        {
+          "name": "base_nodes",
+          "value": 500,
+          "at": 349.09999999403954
+        },
+        {
+          "name": "base_edges",
+          "value": 100,
+          "at": 349.09999999403954
+        },
+        {
+          "name": "pending_nodes",
+          "value": 9500,
+          "at": 349.09999999403954
+        },
+        {
+          "name": "pending_edges",
+          "value": 49900,
+          "at": 349.09999999403954
+        },
+        {
+          "name": "js_heap_mb",
+          "value": 48.87,
+          "at": 349.09999999403954
+        },
+        {
+          "name": "idle",
+          "value": {
+            "count": 60,
+            "mean": 26.65,
+            "p50": 16.7,
+            "p95": 16.8,
+            "p99": 633.8
+          },
+          "at": 1952.7999999821186
+        },
+        {
+          "name": "js_heap_mb",
+          "value": 38.44,
+          "at": 1952.7999999821186
+        }
+      ]
+    }
+  },
+  {
+    "scenario": "progressive",
+    "fixture": "medium.clustered.json",
+    "base": 0.05,
+    "engine": "cosmos",
+    "ok": true,
+    "wallLoadMs": 361,
+    "errors": [],
+    "+100": {
+      "added": 100,
+      "ms": 36
+    },
+    "+500": {
+      "added": 500,
+      "ms": 47.599999994039536
+    },
+    "+5000": {
+      "added": 5000,
+      "ms": 52.599999994039536
+    },
+    "+20000": {
+      "added": 3900,
+      "ms": 30.200000017881393
+    },
+    "consoleErrors": [],
+    "metrics": {
+      "marks": {
+        "t0": 223.69999998807907,
+        "fixture_loaded": 346.2999999821186,
+        "graph_init_start": 352.90000000596046,
+        "graph_ready": 355.2999999821186,
+        "first_render": 355.7999999821186
+      },
+      "events": [
+        {
+          "name": "data_fetch_ms",
+          "value": 72,
+          "at": 346.40000000596046
+        },
+        {
+          "name": "data_parse_ms",
+          "value": 50,
+          "at": 346.40000000596046
+        },
+        {
+          "name": "data_bytes",
+          "value": 20287875,
+          "at": 346.40000000596046
+        },
+        {
+          "name": "graph_init_ms",
+          "value": 2,
+          "at": 355.7999999821186
+        },
+        {
+          "name": "first_render_ms",
+          "value": 132,
+          "at": 355.7999999821186
+        },
+        {
+          "name": "time_to_interactive_ms",
+          "value": 132,
+          "at": 355.7999999821186
+        },
+        {
+          "name": "base_nodes",
+          "value": 500,
+          "at": 355.7999999821186
+        },
+        {
+          "name": "base_edges",
+          "value": 100,
+          "at": 355.7999999821186
+        },
+        {
+          "name": "pending_nodes",
+          "value": 9500,
+          "at": 355.7999999821186
+        },
+        {
+          "name": "pending_edges",
+          "value": 49900,
+          "at": 355.7999999821186
+        },
+        {
+          "name": "js_heap_mb",
+          "value": 48.93,
+          "at": 355.90000000596046
+        },
+        {
+          "name": "expand_100_ms",
+          "value": 36,
+          "at": 546.9000000059605
+        },
+        {
+          "name": "expand_100_added",
+          "value": 100,
+          "at": 546.9000000059605
+        },
+        {
+          "name": "expand_500_ms",
+          "value": 48,
+          "at": 607.1999999880791
+        },
+        {
+          "name": "expand_500_added",
+          "value": 500,
+          "at": 607.1999999880791
+        },
+        {
+          "name": "expand_5000_ms",
+          "value": 53,
+          "at": 664.0999999940395
+        },
+        {
+          "name": "expand_5000_added",
+          "value": 5000,
+          "at": 664.0999999940395
+        },
+        {
+          "name": "expand_20000_ms",
+          "value": 30,
+          "at": 711.5
+        },
+        {
+          "name": "expand_20000_added",
+          "value": 3900,
+          "at": 711.5
+        }
+      ]
+    }
+  },
+  {
+    "scenario": "recenter",
+    "fixture": "medium.clustered.json",
+    "base": 0.3,
+    "engine": "cosmos",
+    "ok": true,
+    "wallLoadMs": 378,
+    "errors": [],
+    "consoleErrors": [],
+    "metrics": {
+      "marks": {
+        "t0": 222.89999997615814,
+        "fixture_loaded": 358.69999998807907,
+        "graph_init_start": 365.39999997615814,
+        "graph_ready": 371.89999997615814,
+        "first_render": 372.2999999821186
+      },
+      "events": [
+        {
+          "name": "data_fetch_ms",
+          "value": 75,
+          "at": 358.69999998807907
+        },
+        {
+          "name": "data_parse_ms",
+          "value": 61,
+          "at": 358.69999998807907
+        },
+        {
+          "name": "data_bytes",
+          "value": 20287875,
+          "at": 358.69999998807907
+        },
+        {
+          "name": "graph_init_ms",
+          "value": 7,
+          "at": 372.2999999821186
+        },
+        {
+          "name": "first_render_ms",
+          "value": 149,
+          "at": 372.2999999821186
+        },
+        {
+          "name": "time_to_interactive_ms",
+          "value": 149,
+          "at": 372.2999999821186
+        },
+        {
+          "name": "base_nodes",
+          "value": 3000,
+          "at": 372.2999999821186
+        },
+        {
+          "name": "base_edges",
+          "value": 4493,
+          "at": 372.2999999821186
+        },
+        {
+          "name": "pending_nodes",
+          "value": 7000,
+          "at": 372.2999999821186
+        },
+        {
+          "name": "pending_edges",
+          "value": 45507,
+          "at": 372.2999999821186
+        },
+        {
+          "name": "js_heap_mb",
+          "value": 49.98,
+          "at": 372.5
+        },
+        {
+          "name": "recenter_ms",
+          "value": 28,
+          "at": 592.2999999821186
+        }
+      ]
+    }
+  },
+  {
+    "scenario": "epistemic",
+    "fixture": "medium.clustered.json",
+    "base": 0.5,
+    "engine": "cosmos",
+    "ok": true,
+    "wallLoadMs": 380,
+    "errors": [],
+    "observedOnlyMs": 21,
+    "allMs": 16,
+    "consoleErrors": [],
+    "metrics": {
+      "marks": {
+        "t0": 224,
+        "fixture_loaded": 350.2000000178814,
+        "graph_init_start": 358.80000001192093,
+        "graph_ready": 369.80000001192093,
+        "first_render": 370.30000001192093
+      },
+      "events": [
+        {
+          "name": "data_fetch_ms",
+          "value": 75,
+          "at": 350.30000001192093
+        },
+        {
+          "name": "data_parse_ms",
+          "value": 51,
+          "at": 350.30000001192093
+        },
+        {
+          "name": "data_bytes",
+          "value": 20287875,
+          "at": 350.30000001192093
+        },
+        {
+          "name": "graph_init_ms",
+          "value": 11,
+          "at": 370.30000001192093
+        },
+        {
+          "name": "first_render_ms",
+          "value": 146,
+          "at": 370.40000000596046
+        },
+        {
+          "name": "time_to_interactive_ms",
+          "value": 146,
+          "at": 370.40000000596046
+        },
+        {
+          "name": "base_nodes",
+          "value": 5000,
+          "at": 370.40000000596046
+        },
+        {
+          "name": "base_edges",
+          "value": 12544,
+          "at": 370.40000000596046
+        },
+        {
+          "name": "pending_nodes",
+          "value": 5000,
+          "at": 370.40000000596046
+        },
+        {
+          "name": "pending_edges",
+          "value": 37456,
+          "at": 370.40000000596046
+        },
+        {
+          "name": "js_heap_mb",
+          "value": 52.66,
+          "at": 370.40000000596046
+        },
+        {
+          "name": "epistemic_ms",
+          "value": 21,
+          "at": 582.9000000059605
+        },
+        {
+          "name": "epistemic_ms",
+          "value": 16,
+          "at": 961
+        }
+      ]
+    }
+  },
+  {
+    "scenario": "pathx",
+    "fixture": "medium.clustered.json",
+    "base": 0.5,
+    "engine": "cosmos",
+    "ok": true,
+    "wallLoadMs": 374,
+    "errors": [],
+    "edges": [
+      "e10889",
+      "e47657",
+      "e26719",
+      "e40254",
+      "e25457",
+      "e46646"
+    ],
+    "ms": 13.5,
+    "clearMs": 6.199999988079071,
+    "consoleErrors": [],
+    "metrics": {
+      "marks": {
+        "t0": 222.89999997615814,
+        "fixture_loaded": 349.89999997615814,
+        "graph_init_start": 357.89999997615814,
+        "graph_ready": 368.69999998807907,
+        "first_render": 369.19999998807907
+      },
+      "events": [
+        {
+          "name": "data_fetch_ms",
+          "value": 75,
+          "at": 350
+        },
+        {
+          "name": "data_parse_ms",
+          "value": 52,
+          "at": 350
+        },
+        {
+          "name": "data_bytes",
+          "value": 20287875,
+          "at": 350
+        },
+        {
+          "name": "graph_init_ms",
+          "value": 11,
+          "at": 369.19999998807907
+        },
+        {
+          "name": "first_render_ms",
+          "value": 146,
+          "at": 369.19999998807907
+        },
+        {
+          "name": "time_to_interactive_ms",
+          "value": 146,
+          "at": 369.19999998807907
+        },
+        {
+          "name": "base_nodes",
+          "value": 5000,
+          "at": 369.19999998807907
+        },
+        {
+          "name": "base_edges",
+          "value": 12544,
+          "at": 369.19999998807907
+        },
+        {
+          "name": "pending_nodes",
+          "value": 5000,
+          "at": 369.19999998807907
+        },
+        {
+          "name": "pending_edges",
+          "value": 37456,
+          "at": 369.2999999821186
+        },
+        {
+          "name": "js_heap_mb",
+          "value": 52.57,
+          "at": 369.2999999821186
+        },
+        {
+          "name": "pathx_highlight_ms",
+          "value": 14,
+          "at": 558.0999999940395
+        }
+      ]
+    }
+  },
+  {
+    "scenario": "filter",
+    "fixture": "medium.clustered.json",
+    "base": 0.5,
+    "engine": "cosmos",
+    "ok": true,
+    "wallLoadMs": 389,
+    "errors": [],
+    "filterMs": 21.799999982118607,
+    "consoleErrors": [],
+    "metrics": {
+      "marks": {
+        "t0": 223.40000000596046,
+        "fixture_loaded": 364.59999999403954,
+        "graph_init_start": 372.59999999403954,
+        "graph_ready": 383.7000000178814,
+        "first_render": 384.30000001192093
+      },
+      "events": [
+        {
+          "name": "data_fetch_ms",
+          "value": 83,
+          "at": 364.7000000178814
+        },
+        {
+          "name": "data_parse_ms",
+          "value": 58,
+          "at": 364.7000000178814
+        },
+        {
+          "name": "data_bytes",
+          "value": 20287875,
+          "at": 364.7000000178814
+        },
+        {
+          "name": "graph_init_ms",
+          "value": 11,
+          "at": 384.30000001192093
+        },
+        {
+          "name": "first_render_ms",
+          "value": 161,
+          "at": 384.30000001192093
+        },
+        {
+          "name": "time_to_interactive_ms",
+          "value": 161,
+          "at": 384.30000001192093
+        },
+        {
+          "name": "base_nodes",
+          "value": 5000,
+          "at": 384.30000001192093
+        },
+        {
+          "name": "base_edges",
+          "value": 12544,
+          "at": 384.30000001192093
+        },
+        {
+          "name": "pending_nodes",
+          "value": 5000,
+          "at": 384.30000001192093
+        },
+        {
+          "name": "pending_edges",
+          "value": 37456,
+          "at": 384.30000001192093
+        },
+        {
+          "name": "js_heap_mb",
+          "value": 52.57,
+          "at": 384.40000000596046
+        },
+        {
+          "name": "filter_ms",
+          "value": 22,
+          "at": 586
+        },
+        {
+          "name": "filter_ms",
+          "value": 17,
+          "at": 943
+        }
+      ]
+    }
+  },
+  {
+    "scenario": "temporal",
+    "fixture": "medium.temporal.json",
+    "base": 0.5,
+    "engine": "cosmos",
+    "ok": true,
+    "wallLoadMs": 361,
+    "errors": [],
+    "t2TransitionMs": 12.799999982118607,
+    "consoleErrors": [],
+    "metrics": {
+      "marks": {
+        "t0": 213,
+        "fixture_loaded": 337.40000000596046,
+        "graph_init_start": 344.7000000178814,
+        "graph_ready": 354.90000000596046,
+        "first_render": 355.40000000596046
+      },
+      "events": [
+        {
+          "name": "data_fetch_ms",
+          "value": 69,
+          "at": 337.5
+        },
+        {
+          "name": "data_parse_ms",
+          "value": 55,
+          "at": 337.5
+        },
+        {
+          "name": "data_bytes",
+          "value": 20282440,
+          "at": 337.5
+        },
+        {
+          "name": "graph_init_ms",
+          "value": 10,
+          "at": 355.40000000596046
+        },
+        {
+          "name": "first_render_ms",
+          "value": 142,
+          "at": 355.40000000596046
+        },
+        {
+          "name": "time_to_interactive_ms",
+          "value": 142,
+          "at": 355.40000000596046
+        },
+        {
+          "name": "base_nodes",
+          "value": 5000,
+          "at": 355.40000000596046
+        },
+        {
+          "name": "base_edges",
+          "value": 12593,
+          "at": 355.40000000596046
+        },
+        {
+          "name": "pending_nodes",
+          "value": 5000,
+          "at": 355.40000000596046
+        },
+        {
+          "name": "pending_edges",
+          "value": 37407,
+          "at": 355.40000000596046
+        },
+        {
+          "name": "js_heap_mb",
+          "value": 52.02,
+          "at": 355.5
+        },
+        {
+          "name": "temporal_transition_ms",
+          "value": 20,
+          "at": 574.7000000178814
+        },
+        {
+          "name": "temporal_transition_ms",
+          "value": 13,
+          "at": 923
+        }
+      ]
+    }
+  },
+  {
+    "scenario": "continuous",
+    "fixture": "medium.clustered.json",
+    "base": 0.05,
+    "engine": "cosmos",
+    "ok": true,
+    "wallLoadMs": 383,
+    "errors": [],
+    "framesDuringDiscovery": {
+      "count": 150,
+      "mean": 16.99,
+      "p50": 16.7,
+      "p95": 16.9,
+      "p99": 33.5
+    },
+    "consoleErrors": [],
+    "metrics": {
+      "marks": {
+        "t0": 232.09999999403954,
+        "fixture_loaded": 366.5,
+        "graph_init_start": 373.59999999403954,
+        "graph_ready": 376.2999999821186,
+        "first_render": 376.7999999821186
+      },
+      "events": [
+        {
+          "name": "data_fetch_ms",
+          "value": 80,
+          "at": 366.5
+        },
+        {
+          "name": "data_parse_ms",
+          "value": 55,
+          "at": 366.5
+        },
+        {
+          "name": "data_bytes",
+          "value": 20287875,
+          "at": 366.5
+        },
+        {
+          "name": "graph_init_ms",
+          "value": 3,
+          "at": 376.7999999821186
+        },
+        {
+          "name": "first_render_ms",
+          "value": 145,
+          "at": 376.7999999821186
+        },
+        {
+          "name": "time_to_interactive_ms",
+          "value": 145,
+          "at": 376.7999999821186
+        },
+        {
+          "name": "base_nodes",
+          "value": 500,
+          "at": 376.7999999821186
+        },
+        {
+          "name": "base_edges",
+          "value": 100,
+          "at": 376.7999999821186
+        },
+        {
+          "name": "pending_nodes",
+          "value": 9500,
+          "at": 376.7999999821186
+        },
+        {
+          "name": "pending_edges",
+          "value": 49900,
+          "at": 376.7999999821186
+        },
+        {
+          "name": "js_heap_mb",
+          "value": 48.94,
+          "at": 376.89999997615814
+        },
+        {
+          "name": "expand_50_ms",
+          "value": 35,
+          "at": 564.6999999880791
+        },
+        {
+          "name": "expand_50_added",
+          "value": 50,
+          "at": 564.6999999880791
+        },
+        {
+          "name": "expand_50_ms",
+          "value": 31,
+          "at": 595.7999999821186
+        },
+        {
+          "name": "expand_50_added",
+          "value": 50,
+          "at": 595.7999999821186
+        },
+        {
+          "name": "expand_50_ms",
+          "value": 22,
+          "at": 617.8999999761581
+        },
+        {
+          "name": "expand_50_added",
+          "value": 50,
+          "at": 617.8999999761581
+        },
+        {
+          "name": "expand_50_ms",
+          "value": 21,
+          "at": 639.0999999940395
+        },
+        {
+          "name": "expand_50_added",
+          "value": 50,
+          "at": 639.0999999940395
+        },
+        {
+          "name": "expand_50_ms",
+          "value": 22,
+          "at": 660.6999999880791
+        },
+        {
+          "name": "expand_50_added",
+          "value": 50,
+          "at": 660.6999999880791
+        },
+        {
+          "name": "expand_50_ms",
+          "value": 26,
+          "at": 686.3999999761581
+        },
+        {
+          "name": "expand_50_added",
+          "value": 50,
+          "at": 686.3999999761581
+        },
+        {
+          "name": "expand_50_ms",
+          "value": 22,
+          "at": 708.2999999821186
+        },
+        {
+          "name": "expand_50_added",
+          "value": 50,
+          "at": 708.2999999821186
+        },
+        {
+          "name": "expand_50_ms",
+          "value": 6,
+          "at": 714.5
+        },
+        {
+          "name": "expand_50_added",
+          "value": 50,
+          "at": 714.5
+        },
+        {
+          "name": "expand_50_ms",
+          "value": 21,
+          "at": 735.1999999880791
+        },
+        {
+          "name": "expand_50_added",
+          "value": 50,
+          "at": 735.1999999880791
+        },
+        {
+          "name": "expand_50_ms",
+          "value": 21,
+          "at": 755.6999999880791
+        },
+        {
+          "name": "expand_50_added",
+          "value": 50,
+          "at": 755.6999999880791
+        }
+      ]
+    }
+  },
+  {
+    "scenario": "hairball",
+    "fixture": "medium.hairball.json",
+    "base": 1,
+    "engine": "cosmos",
+    "ok": true,
+    "wallLoadMs": 401,
+    "errors": [],
+    "count": 60,
+    "mean": 16.49,
+    "p50": 16.7,
+    "p95": 16.8,
+    "p99": 16.8,
+    "consoleErrors": [],
+    "metrics": {
+      "marks": {
+        "t0": 220.59999999403954,
+        "fixture_loaded": 352.09999999403954,
+        "graph_init_start": 361.09999999403954,
+        "graph_ready": 393.40000000596046,
+        "first_render": 393.90000000596046
+      },
+      "events": [
+        {
+          "name": "data_fetch_ms",
+          "value": 78,
+          "at": 352.19999998807907
+        },
+        {
+          "name": "data_parse_ms",
+          "value": 53,
+          "at": 352.19999998807907
+        },
+        {
+          "name": "data_bytes",
+          "value": 20285798,
+          "at": 352.19999998807907
+        },
+        {
+          "name": "graph_init_ms",
+          "value": 32,
+          "at": 393.90000000596046
+        },
+        {
+          "name": "first_render_ms",
+          "value": 173,
+          "at": 393.90000000596046
+        },
+        {
+          "name": "time_to_interactive_ms",
+          "value": 173,
+          "at": 393.90000000596046
+        },
+        {
+          "name": "base_nodes",
+          "value": 10000,
+          "at": 393.90000000596046
+        },
+        {
+          "name": "base_edges",
+          "value": 50000,
+          "at": 393.90000000596046
+        },
+        {
+          "name": "pending_nodes",
+          "value": 0,
+          "at": 393.90000000596046
+        },
+        {
+          "name": "pending_edges",
+          "value": 0,
+          "at": 393.90000000596046
+        },
+        {
+          "name": "js_heap_mb",
+          "value": 50.67,
+          "at": 394
+        },
+        {
+          "name": "idle",
+          "value": {
+            "count": 30,
+            "mean": 16.23,
+            "p50": 16.7,
+            "p95": 16.8,
+            "p99": 33.3
+          },
+          "at": 1115.4000000059605
+        },
+        {
+          "name": "js_heap_mb",
+          "value": 63.08,
+          "at": 1115.5
+        },
+        {
+          "name": "idle",
+          "value": {
+            "count": 60,
+            "mean": 16.49,
+            "p50": 16.7,
+            "p95": 16.8,
+            "p99": 16.8
+          },
+          "at": 2251.4000000059605
+        },
+        {
+          "name": "js_heap_mb",
+          "value": 55.88,
+          "at": 2251.5
+        }
+      ]
+    }
+  },
+  {
+    "scenario": "corporate",
+    "fixture": "medium.corporate.json",
+    "base": 0.5,
+    "engine": "cosmos",
+    "ok": true,
+    "wallLoadMs": 393,
+    "errors": [],
+    "meta": {
+      "engine": "cosmos",
+      "fixture": "medium.corporate.json",
+      "t0": 227.7000000178814,
+      "fixture_loaded": 363.7000000178814,
+      "graph_init_start": 371.09999999403954,
+      "graph_ready": 387,
+      "first_render": 387.5
+    },
+    "consoleErrors": [],
+    "metrics": {
+      "marks": {
+        "t0": 227.7000000178814,
+        "fixture_loaded": 363.7000000178814,
+        "graph_init_start": 371.09999999403954,
+        "graph_ready": 387,
+        "first_render": 387.5
+      },
+      "events": [
+        {
+          "name": "data_fetch_ms",
+          "value": 76,
+          "at": 363.7000000178814
+        },
+        {
+          "name": "data_parse_ms",
+          "value": 60,
+          "at": 363.7000000178814
+        },
+        {
+          "name": "data_bytes",
+          "value": 20274009,
+          "at": 363.7000000178814
+        },
+        {
+          "name": "graph_init_ms",
+          "value": 16,
+          "at": 387.5
+        },
+        {
+          "name": "first_render_ms",
+          "value": 160,
+          "at": 387.5
+        },
+        {
+          "name": "time_to_interactive_ms",
+          "value": 160,
+          "at": 387.5
+        },
+        {
+          "name": "base_nodes",
+          "value": 5000,
+          "at": 387.5
+        },
+        {
+          "name": "base_edges",
+          "value": 21963,
+          "at": 387.5
+        },
+        {
+          "name": "pending_nodes",
+          "value": 5000,
+          "at": 387.5
+        },
+        {
+          "name": "pending_edges",
+          "value": 28037,
+          "at": 387.5
+        },
+        {
+          "name": "js_heap_mb",
+          "value": 53.75,
+          "at": 387.7000000178814
+        },
+        {
+          "name": "idle",
+          "value": {
+            "count": 30,
+            "mean": 22.34,
+            "p50": 16.7,
+            "p95": 16.8,
+            "p99": 216.8
+          },
+          "at": 1075.800000011921
+        },
+        {
+          "name": "js_heap_mb",
+          "value": 40.95,
+          "at": 1075.800000011921
+        }
+      ]
+    }
+  }
+]

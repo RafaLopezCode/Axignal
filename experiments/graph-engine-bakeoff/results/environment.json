@@ -1,0 +1,18 @@
+{
+  "os": "win32 x64 (10.0.26200)",
+  "cpu": "Intel(R) Core(TM) i5-10400F CPU @ 2.90GHz",
+  "ramGb": 16,
+  "node": "v24.14.1",
+  "browserVersion": "153.0.8010.53",
+  "gpu": {
+    "webgl": true,
+    "vendor": "Google Inc. (NVIDIA)",
+    "renderer": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1650 (0x00002188) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)"
+  },
+  "viewport": {
+    "width": 1440,
+    "height": 900,
+    "deviceScaleFactor": 1
+  }
+}
