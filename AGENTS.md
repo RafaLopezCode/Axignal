@@ -68,6 +68,28 @@ IMPLEMENTATION
 - **Do not deploy production** from this repository without explicit
   authorization.
 
+## Design intelligence (UI/UX)
+
+AXIGNAL has two project-local design skills under `.opencode/skills/`:
+`frontend-design` (visual direction) and `ui-ux-pro-max` (UX, IA, interaction,
+accessibility, data-density). See `docs/design/UI_UX_SKILLS.md` and
+`docs/design/SKILLS.lock.json` for pinned upstream revisions and update steps.
+
+- They are **design intelligence, not product authorities**. Precedence:
+  `MASTER → Constitution → ADRs/contracts → Feature spec → Design brief →
+  UI/UX skills → implementation`. If a skill conflicts with the MASTER, the
+  MASTER wins; if it conflicts with an architectural invariant, the architecture
+  wins.
+- Do not let design output invent product semantics, alter epistemic meaning, or
+  add sponsored/ranking behaviour.
+- Design constraints: `docs/design/DESIGN_DOCTRINE.md` and
+  `docs/design/DESIGN_GOVERNANCE.md`.
+- Graph visualization is **not** selected here; it is reserved for a future
+  `GRAPH_ENGINE_BAKEOFF`. Do not install a graph engine or design AXIGLAND UX
+  under this scope.
+- Installing/using design skills must not add LLM or network dependencies to
+  required CI.
+
 ## Deterministic validation
 
 ```powershell

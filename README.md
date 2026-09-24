@@ -27,6 +27,7 @@ the MASTER PRODUCT MODEL.
 | Deterministic governance checks | `tools/governance/` |
 | Graphify (repo knowledge graph) | `docs/governance/GRAPHIFY.md` |
 | Spec Kit (spec-driven lifecycle) | `.specify/`, `.opencode/commands/`, `docs/governance/SPEC_KIT.md` |
+| Design intelligence (UI/UX skills) | `.opencode/skills/`, `docs/design/UI_UX_SKILLS.md` |
 | Deterministic CI | `.github/workflows/ci.yml`, `docs/governance/DETERMINISTIC_CI.md` |
 
 ## Architecture (boundaries)

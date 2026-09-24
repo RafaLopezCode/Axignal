@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "scope": "AXIGNAL project-local design intelligence",
+  "discovery": {
+    "agent": "opencode",
+    "project_skill_path": ".opencode/skills/<name>/SKILL.md"
+  },
+  "skills": [
+    {
+      "name": "frontend-design",
+      "responsibility": "visual-direction",
+      "install_path": ".opencode/skills/frontend-design/SKILL.md",
+      "upstream_repository": "https://github.com/anthropics/skills",
+      "upstream_revision": "33375500bcea98d610eb30ce10ac4e59b89c390d",
+      "upstream_path": "skills/frontend-design",
+      "install_mechanism": "direct-vendoring",
+      "license": "MIT",
+      "local_sha256": "d91970639e9f5c37682ac7ab60094d35f1c7c1f38d731bd56396563aee10c1d3",
+      "files": ["SKILL.md", "LICENSE.txt"]
+    },
+    {
+      "name": "ui-ux-pro-max",
+      "responsibility": "ux-and-interaction",
+      "install_path": ".opencode/skills/ui-ux-pro-max/SKILL.md",
+      "upstream_repository": "https://github.com/nextlevelbuilder/ui-ux-pro-max-skill",
+      "upstream_revision": "dcc40ff5133ef78276117db0cc34e7b83cc8aeba",
+      "published_package": "ui-ux-pro-max-cli@2.15.0",
+      "upstream_path": "src/ui-ux-pro-max",
+      "install_mechanism": "official-cli",
+      "install_command": "npx ui-ux-pro-max-cli@2.15.0 init --ai opencode --offline",
+      "license": "MIT",
+      "local_sha256": "fff1d6ffd0c5e2e121f83e4c5bdbf52f25695a4de37d445a7b2f3afa1de362d9",
+      "requires": ["python3-stdlib"],
+      "network_at_runtime": false
+    }
+  ],
+  "excluded": {
+    "graph_ux": "reserved for GRAPH_ENGINE_BAKEOFF and a future AXIGNAL-specific graph-design skill",
+    "installer_siblings_removed": ["brand", "design", "design-system", "slides", "ui-styling", "banner-design"]
+  }
+}
