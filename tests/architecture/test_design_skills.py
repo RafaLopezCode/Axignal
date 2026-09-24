@@ -1,8 +1,8 @@
 """Design-skill installation contract (deterministic, offline, no LLM).
 
-Verifies the two selected UI/UX super-skills are installed project-locally in a
-form OpenCode can discover: ``.opencode/skills/<name>/SKILL.md`` with matching
-frontmatter name and a non-empty description. Graph UX is deliberately excluded.
+Verifies both pinned upstream UI/UX skills and the AXIGNAL-authored graph skill
+are discoverable project-locally, while upstream provenance remains limited to
+the two upstream skills.
 """
 
 from __future__ import annotations
@@ -16,6 +16,7 @@ SKILLS_DIR = REPO_ROOT / ".opencode" / "skills"
 LOCK_FILE = REPO_ROOT / "docs" / "design" / "SKILLS.lock.json"
 
 EXPECTED_SKILLS = {"frontend-design", "ui-ux-pro-max"}
+EXPECTED_LOCAL_SKILLS = EXPECTED_SKILLS | {"axignal-graph-design"}
 
 _FRONTMATTER = re.compile(r"^---\r?\n(.*?)\r?\n---", re.DOTALL)
 
@@ -31,13 +32,13 @@ def _frontmatter(path: Path) -> dict[str, str]:
     return fields
 
 
-def test_exactly_two_skills_are_installed() -> None:
+def test_expected_project_local_skills_are_installed() -> None:
     installed = {path.name for path in SKILLS_DIR.iterdir() if path.is_dir()}
-    assert installed == EXPECTED_SKILLS
+    assert installed == EXPECTED_LOCAL_SKILLS
 
 
 def test_each_skill_is_discoverable() -> None:
-    for name in EXPECTED_SKILLS:
+    for name in EXPECTED_LOCAL_SKILLS:
         skill_file = SKILLS_DIR / name / "SKILL.md"
         assert skill_file.is_file(), f"missing SKILL.md for {name}"
         fields = _frontmatter(skill_file)

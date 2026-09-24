@@ -1,13 +1,14 @@
 # AXIGLAND Graph Architecture Decision
 
-- **Status:** Research decision. Feeds a PROPOSED ADR. **Not** accepted doctrine.
+- **Status:** CTO accepted in ADR-0009. Research evidence remains historical;
+  architecture acceptance does not authorize runtime implementation.
 - **Date:** 2026-09-24
 - **Evidence:** [`AXIGLAND_GRAPH_ENGINE_BAKEOFF.md`](AXIGLAND_GRAPH_ENGINE_BAKEOFF.md)
 
 ```
 ARCHITECTURE_DECISION=HYBRID
 FOUNDATION_FRAMEWORK=NONE
-PREFERRED_RENDERER=sigma   # Sigma.js v3.0.3, with graphology 0.26.0 as in-memory substrate
+INITIAL_RENDERER=sigma + graphology   # replaceable adapter implementation
 SEMANTIC_LAYER_OWNED_BY_AXIGNAL=YES
 ```
 
@@ -53,13 +54,18 @@ scheduling.
 - **Ogma:** not publicly installable → executable benchmark blocked; used only to
   enumerate requirements a mature product bundles.
 
-## Why Sigma (provisional)
+## Why Sigma (initial implementation choice)
 
 Among adoptable (MIT) candidates it is the only one that:
-- holds **~60 fps to 100k/500k** (idle P95 16.8 ms; first render 3.7 s; heap
-  ~600 MB at stress);
-- performs dynamic mutation cheaply at 10k/50k (expand +20k in ~190 ms, filter
-  29 ms, PATHX 40 ms, temporal 27 ms, recenter 7 ms);
+- recorded an idle P95 of 16.8 ms at stress in the benchmark harness (first
+  render 3.7 s; heap ~600 MB); these are fixture- and environment-specific
+  measurements, not product guarantees;
+- showed useful recenter (7 ms) and PATHX highlight (40 ms) timings in the
+  historical medium scenario; the filter and temporal timings came from the
+  pre-repair harness and are not treated as validated facts. The nominal
+  +20,000 expansion request had only 3,900 pending nodes on Sigma's final
+  medium-fixture addition, so 190 ms does not measure 20,000 new nodes in that
+  single call;
 - exposes node/edge reducers and custom WebGL programs (a high ceiling for a
   distinctive AXIGLAND grammar) with a small, well-typed interface;
 - keeps Graphology (MIT) as an explicitly replaceable substrate behind an
@@ -73,17 +79,17 @@ Among adoptable (MIT) candidates it is the only one that:
 | Represent required semantic grammar | PASS* | PASS | PASS | PASS |
 | Dynamic materialization without full rebuild at realistic scale | PASS | FAIL | PASS | FAIL (≥large) |
 | No forced vendor-object semantics | PASS (low-level) | WEAK | PASS | WEAK |
-| Viable accessible complementary model | PASS* | PASS | PASS | PASS |
+| Supplies AXIGNAL-required accessibility architecture | NOT ESTABLISHED | NOT ESTABLISHED | NOT ESTABLISHED | NOT ESTABLISHED |
 
-\* not adoptable regardless.
+No tested renderer establishes AXIGNAL's required accessibility architecture;
+the accessible complement is an AXIGNAL-owned design and validation requirement.
 
 ## Scope note
 
-This decision does **not** add a production graph dependency, does not implement
-UI, and does not freeze the visual grammar. The hypotheses in
-`../design/DESIGN_GOVERNANCE.md` remain hypotheses. A future
-`axignal-graph-design` skill should be derived from this decision + doctrine +
-benchmark evidence, not from speculation.
+This decision does **not** add a production graph dependency, implement UI, or
+freeze unvalidated visual mappings. The AXIGNAL-specific
+`.opencode/skills/axignal-graph-design/` skill records design guidance and
+validation requirements; it does not implement runtime behavior.
 
 ## Evidence gaps (do not overstate)
 
