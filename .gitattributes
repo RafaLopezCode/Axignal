@@ -1,0 +1,20 @@
+* text=auto eol=lf
+
+*.py text eol=lf
+*.md text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+*.toml text eol=lf
+*.json text eol=lf
+*.ps1 text eol=crlf
+*.sh text eol=lf
+
+# Graphify canonical graph artifacts: text so the union merge driver can operate.
+graphify-out/graph.json text eol=lf merge=graphify
+
+# Binary assets
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.webp binary
+*.pdf binary

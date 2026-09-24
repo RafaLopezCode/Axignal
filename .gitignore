@@ -1,0 +1,52 @@
+# --- Python ---
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+.venv/
+venv/
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# --- uv ---
+.uv/
+
+# --- AXIGNAL raw / working / private data (MASTER section 37) ---
+data/raw/
+data/working/
+data/exports/
+*.jsonl
+*.sqlite
+*.sqlite3
+*.db
+
+# --- Graphify generated / heavyweight state (see docs/governance/GRAPHIFY.md) ---
+graphify-out/
+.graphify/
+.graphify_cache/
+raw/
+
+# --- Secrets / credentials ---
+.env
+.env.*
+*.pem
+*.key
+credentials.json
+service-account*.json
+*.p12
+
+# --- OS / editor ---
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+.vscode/
+
+# --- Local agent scratch (never canonical) ---
+.specify/feature.json
+specs/*/checklists/*.tmp

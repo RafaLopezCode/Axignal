@@ -1,0 +1,33 @@
+# Graphify ignore rules for AXIGNAL.
+# Generated / heavyweight / non-canonical state must not be indexed.
+
+graphify-out/
+.git/
+.venv/
+venv/
+node_modules/
+__pycache__/
+*.pyc
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+dist/
+build/
+*.egg-info/
+
+# Raw / working / private data (MASTER §37)
+data/raw/
+data/working/
+data/exports/
+*.jsonl
+*.sqlite
+*.sqlite3
+*.db
+
+# Secrets / credentials
+.env
+.env.*
+*.pem
+*.key
+credentials.json
+service-account*.json
