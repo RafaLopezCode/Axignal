@@ -25,6 +25,15 @@ conflict.
 - The [MASTER Product Model](product/AXIGNAL_MASTER_PRODUCT_MODEL_2026-09-24_V2.md)
   is semantic authority; its pinned hash is verified by CI.
 
+### Product Specifications
+
+- [AXIGNAL Admin Product Specification](product/AXIGNAL_ADMIN_PRODUCT_SPEC.md):
+  Human-first operational, economic, epistemic and commercial governance
+  specification for AXIGNAL Admin; PROPOSED / PRE_IMPLEMENTATION. Its active
+  filename identifies the current specification; Git history records versions.
+  It is subordinate to the MASTER, Constitution, accepted ADRs, and Atlas, and
+  does not establish runtime implementation.
+
 ## Engineering governance
 
 - The [Engineering Constitution](../.specify/memory/constitution.md) derives
