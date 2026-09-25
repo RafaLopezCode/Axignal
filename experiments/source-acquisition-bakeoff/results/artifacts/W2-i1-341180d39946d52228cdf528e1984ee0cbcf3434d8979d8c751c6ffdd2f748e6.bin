@@ -1,0 +1,1 @@
+<html><div id='app'>Loading</div><script>document.querySelector('#app').textContent='Widget';</script></html>

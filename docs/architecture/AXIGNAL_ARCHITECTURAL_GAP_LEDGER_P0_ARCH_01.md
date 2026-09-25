@@ -89,12 +89,15 @@ Status taxonomy is used exactly as follows:
 
 - `DOMAIN`: Observation/acquisition.
 - `TARGET_RESPONSIBILITY`: Select permitted source capabilities and acquire observations through replaceable source adapters.
-- `CURRENT_STATUS`: `OPEN_DECISION`.
-- `REPOSITORY_EVIDENCE`: `pipeline/discovery/` and `pipeline/enrichment/` contain package boundaries only; no acquisition adapter, router, or source capability contract was found. `AGENTS.md` prohibits source-stack adoption without its own order.
+- `CURRENT_STATUS`: `ACCEPTED_NOT_IMPLEMENTED`.
+- `ARCHITECTURE_STATUS`: `SOURCE_ACQUISITION_ARCHITECTURE=ACCEPTED_NOT_IMPLEMENTED` (ADR-0010, CTO accepted 2026-09-25).
+- `ENGINE_SELECTION`: `SOURCE_ENGINE_SELECTION=OPEN_IMPLEMENTATION_DECISION`; initial HTTP and browser adapters remain deferred.
+- `RUNTIME_STATUS`: `SOURCE_RUNTIME=NOT_IMPLEMENTED`.
+- `REPOSITORY_EVIDENCE`: `pipeline/discovery/` and `pipeline/enrichment/` contain package boundaries only; no production acquisition adapter, router, or source capability contract was found. The candidate harness and adapters are experimental evidence only.
 - `MISSING_CAPABILITY`: Source contract, rights enforcement, routing/scoring, acquisition adapters, retry/failure state, and provenance attachment. The Atlas leaves stack and router scoring open.
 - `DEPENDENCIES`: Research planner, budget/rights policy, evidence ledger, Python Stage 1.
 - `AUTHORITY_BOUNDARY`: Sources provide observations, not truth or instruction authority.
-- `FUTURE_SLICE`: P0-SOURCE-01 and a later source architecture decision; neither is authorized here.
+- `FUTURE_SLICE`: Source runtime and implementation-time adapter selection require separate authorization; the accepted architecture does not authorize implementation.
 - `BLOCKING_OR_NONBLOCKING`: Nonblocking for this reconciliation; blocks acquisition runtime.
 
 ### G — Evidence Ledger / Provenance
@@ -346,8 +349,8 @@ Counts cover the 26 broad domains A–Z above; they do not count individual clas
 | `IMPLEMENTED` | 0 |
 | `PARTIALLY_IMPLEMENTED` | 10 |
 | `SPECIFIED_NOT_IMPLEMENTED` | 11 |
-| `ACCEPTED_NOT_IMPLEMENTED` | 3 |
-| `OPEN_DECISION` | 2 |
+| `ACCEPTED_NOT_IMPLEMENTED` | 4 |
+| `OPEN_DECISION` | 1 |
 | `EXPERIMENTAL` | 0 |
 | `RETIRED` | 0 |
 | **Total** | **26** |

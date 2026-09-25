@@ -17,6 +17,7 @@ Constitution (`.specify/memory/constitution.md`).
 | [ADR-0007](ADR-0007-deterministic-ci.md) | Deterministic CI | §14, §46.30; Constitution |
 | [ADR-0008](ADR-0008-no-crm-no-workflow-drift.md) | No CRM / No Workflow Drift | §2.1, §22, §32, §38 |
 | [ADR-0009](ADR-0009-axigland-graph-architecture.md) | AXIGLAND Graph Architecture (**ACCEPTED**) | §3, §8, §16–§18, §20, §24–§26 |
+| [ADR-0010](ADR-0010-axignal-source-acquisition-architecture.md) | AXIGNAL Source Acquisition Architecture (**ACCEPTED**) | §3, §6, §7, §23, §26, §39, §46 |
 
 ## Adding an ADR
 
