@@ -3,6 +3,16 @@
 > Derived from the MASTER PRODUCT MODEL. See
 > `docs/product/AXIGNAL_MASTER_PRODUCT_MODEL_2026-09-24_V2.md`.
 
+## Logical target architecture and current implementation
+
+The [AXIGNAL Logical Architecture Atlas](AXIGNAL_LOGICAL_ARCHITECTURE_ATLAS_V0.1.md)
+specifies target logical responsibilities, boundaries and loops. It is
+subordinate to the MASTER, Engineering Constitution and accepted ADRs; it does
+not prove that a described component is implemented. Use the
+[P0-ARCH-01 gap ledger](AXIGNAL_ARCHITECTURAL_GAP_LEDGER_P0_ARCH_01.md) for
+current status and repository evidence. Source code and deterministic tests,
+not architecture prose or Graphify output, establish implementation status.
+
 ## Canonical dependency direction
 
 ```

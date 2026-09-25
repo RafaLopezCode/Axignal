@@ -17,6 +17,8 @@ uv run axignal-governance
 
 `uv run axignal-governance` runs: hygiene, terminology, docs, spec, deps,
 no-generated-data, architecture and (if the `graphify` binary exists) graphify.
+The docs check also verifies the pinned SHA-256 of the logical architecture
+Atlas so the reconciled input remains byte-stable unless its pin is reviewed.
 
 ## Required gates
 

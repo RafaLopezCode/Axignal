@@ -18,6 +18,9 @@ from tools.architecture_guard.guard import run as run_architecture_guard
 
 MASTER_REL = "docs/product/AXIGNAL_MASTER_PRODUCT_MODEL_2026-09-24_V2.md"
 MASTER_HASH_REL = "docs/product/AXIGNAL_MASTER_PRODUCT_MODEL_2026-09-24_V2.md.sha256"
+ATLAS_REL = "docs/architecture/AXIGNAL_LOGICAL_ARCHITECTURE_ATLAS_V0.1.md"
+ATLAS_HASH_REL = f"{ATLAS_REL}.sha256"
+ARCHITECTURAL_GAP_LEDGER_REL = "docs/architecture/AXIGNAL_ARCHITECTURAL_GAP_LEDGER_P0_ARCH_01.md"
 
 REQUIRED_PATHS: tuple[str, ...] = (
     "README.md",
@@ -28,6 +31,9 @@ REQUIRED_PATHS: tuple[str, ...] = (
     ".github/workflows/ci.yml",
     MASTER_REL,
     MASTER_HASH_REL,
+    ATLAS_REL,
+    ATLAS_HASH_REL,
+    ARCHITECTURAL_GAP_LEDGER_REL,
     ".specify/memory/constitution.md",
     ".specify/init-options.json",
     "docs/architecture/OVERVIEW.md",
@@ -196,6 +202,19 @@ def check_docs_integrity(root: Path) -> list[Problem]:
             problems.append(f"ADR-{adr_id} does not cite the MASTER")
         if f"ADR-{adr_id}" not in _read(adr_dir / "README.md"):
             problems.append(f"ADR index does not link ADR-{adr_id}")
+    atlas = root / ATLAS_REL
+    atlas_pinned = root / ATLAS_HASH_REL
+    if not atlas.exists() or not atlas_pinned.exists():
+        problems.append("logical architecture Atlas or its pinned hash file is missing")
+    else:
+        actual = hashlib.sha256(atlas.read_bytes()).hexdigest()
+        expected = _read(atlas_pinned).split()[0].strip()
+        if actual != expected:
+            problems.append(
+                "logical architecture Atlas hash mismatch: the Atlas changed without "
+                f"updating {ATLAS_HASH_REL} (actual {actual[:12]}..., "
+                f"pinned {expected[:12]}...)"
+            )
     return problems
 
 

@@ -23,7 +23,10 @@ Graphify never touches other projects.
 | `docs/governance/GRAPHIFY.md` | Documentation | **Yes** |
 
 The generated graph is not a source of truth and must not be committed. The
-MASTER and code are the source of truth; the graph is a derived index.
+MASTER and code are the source of truth; the graph is a derived index. The
+Logical Architecture Atlas records target architecture, while the P0-ARCH-01
+gap ledger records evidence-backed current status. Graphify indexes these
+documents but cannot promote target descriptions into implementation evidence.
 
 ## Install / verify
 
