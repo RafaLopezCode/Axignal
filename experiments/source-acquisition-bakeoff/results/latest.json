@@ -1,0 +1,2392 @@
+{
+  "information_gain_loop": {
+    "FIRST_OBSERVATION": {
+      "acquisition_config": {
+        "deadline_ms": 1500,
+        "max_response_bytes": 1000000,
+        "requested_artifact_types": [
+          "text/html"
+        ],
+        "rights_policy": "synthetic-fixture-only",
+        "source_constraints": {},
+        "temporal_requirement": "no-stated-freshness"
+      },
+      "acquisition_method": "local_http_get",
+      "adapter_identity": "axignal-offline-fixture-adapter/0.1",
+      "artifact_type": "text/html",
+      "content_fingerprint": "a30a130dcf6ea44a82db47de4836955af52e297fd901a5f5112f00a87e89f326",
+      "extraction_metadata": {
+        "candidate_engine": null,
+        "transform": "none"
+      },
+      "failure_state": null,
+      "observed_at": null,
+      "provenance": [
+        "source-request",
+        "loop-Q1",
+        "axignal-offline-fixture-adapter/0.1"
+      ],
+      "raw_artifact_reference": "results/artifacts/loop-Q1-a30a130dcf6ea44a82db47de4836955af52e297fd901a5f5112f00a87e89f326.bin",
+      "research_question_id": "W10-Q1",
+      "response_metadata": {
+        "body_bytes": 48,
+        "elapsed_ms": 1.181,
+        "final_uri": "http://127.0.0.1:64384/w10-first",
+        "headers": {
+          "content-length": "48",
+          "content-type": "text/html",
+          "date": "Fri, 25 Sep 2026 00:44:59 GMT",
+          "server": "BaseHTTP/0.6 Python/3.12.11",
+          "x-fixture-request-id": "w10-first"
+        },
+        "redirect_chain": [
+          "http://127.0.0.1:64384/w10-first"
+        ],
+        "status": 200
+      },
+      "retrieved_at": "2026-09-25T00:44:59.018245+00:00",
+      "rights_metadata": "synthetic fixture; no external source rights asserted",
+      "source_identity": "synthetic-repository-fixture",
+      "source_uri": "http://127.0.0.1:64384/w10-first"
+    },
+    "FIRST_REQUEST": {
+      "budget_requests": 1,
+      "capability": "TARGETED_URL",
+      "deadline_ms": 1500,
+      "requested_artifact_types": [
+        "text/html"
+      ],
+      "research_question_id": "W10-Q1",
+      "rights_policy": "synthetic-fixture-only",
+      "source_constraints": {},
+      "target": "/w10-first",
+      "temporal_requirement": "no-stated-freshness"
+    },
+    "PROVENANCE_CHAIN_PRESERVED": true,
+    "SECOND_OBSERVATION": {
+      "acquisition_config": {
+        "deadline_ms": 1500,
+        "max_response_bytes": 1000000,
+        "requested_artifact_types": [
+          "text/html"
+        ],
+        "rights_policy": "synthetic-fixture-only",
+        "source_constraints": {},
+        "temporal_requirement": "no-stated-freshness"
+      },
+      "acquisition_method": "local_http_get",
+      "adapter_identity": "axignal-offline-fixture-adapter/0.1",
+      "artifact_type": "text/html",
+      "content_fingerprint": "9b61d0149a5f484cac4cbc53a9909235efef2c1f966fa220f5caba8af19b3960",
+      "extraction_metadata": {
+        "candidate_engine": null,
+        "transform": "none"
+      },
+      "failure_state": null,
+      "observed_at": null,
+      "provenance": [
+        "source-request",
+        "loop-Q2",
+        "axignal-offline-fixture-adapter/0.1"
+      ],
+      "raw_artifact_reference": "results/artifacts/loop-Q2-9b61d0149a5f484cac4cbc53a9909235efef2c1f966fa220f5caba8af19b3960.bin",
+      "research_question_id": "W10-Q2",
+      "response_metadata": {
+        "body_bytes": 59,
+        "elapsed_ms": 1.263,
+        "final_uri": "http://127.0.0.1:64384/w10-followup",
+        "headers": {
+          "content-length": "59",
+          "content-type": "text/html",
+          "date": "Fri, 25 Sep 2026 00:44:59 GMT",
+          "server": "BaseHTTP/0.6 Python/3.12.11",
+          "x-fixture-request-id": "w10-followup"
+        },
+        "redirect_chain": [
+          "http://127.0.0.1:64384/w10-followup"
+        ],
+        "status": 200
+      },
+      "retrieved_at": "2026-09-25T00:44:59.034362+00:00",
+      "rights_metadata": "synthetic fixture; no external source rights asserted",
+      "source_identity": "synthetic-repository-fixture",
+      "source_uri": "http://127.0.0.1:64384/w10-followup"
+    },
+    "SECOND_REQUEST": {
+      "budget_requests": 1,
+      "capability": "TARGETED_URL",
+      "deadline_ms": 1500,
+      "requested_artifact_types": [
+        "text/html"
+      ],
+      "research_question_id": "W10-Q2",
+      "rights_policy": "synthetic-fixture-only",
+      "source_constraints": {},
+      "target": "/w10-followup",
+      "temporal_requirement": "no-stated-freshness"
+    },
+    "STRUCTURED_GAP": {
+      "basis_observation": "a30a130dcf6ea44a82db47de4836955af52e297fd901a5f5112f00a87e89f326",
+      "gap_id": "G1",
+      "missing_fields": [
+        "complete_address"
+      ]
+    }
+  },
+  "measurement_summary": {
+    "cpu_count": 12,
+    "evidence_yield": "vector: successful required observation slots; wall seconds; bytes received; requests; marginal monetary cost (not applicable to synthetic fixtures). No weighted composite.",
+    "explicit_failures": 3,
+    "latency_ms_median_including_loopback": 1.319,
+    "latency_ms_p95_including_loopback": 17.257,
+    "latency_scope": "local HTTP fixture only; not comparative candidate performance",
+    "network_bytes_received": 2214,
+    "observed_slot_count": 51,
+    "raw_artifacts_written": 39,
+    "requests": 42,
+    "reuse_refetch_hashes_match": true,
+    "wall_seconds": 0.310241
+  },
+  "observations": [
+    {
+      "acquisition_config": {
+        "deadline_ms": 1500,
+        "max_response_bytes": 1000000,
+        "requested_artifact_types": [
+          "text/html"
+        ],
+        "rights_policy": "synthetic-fixture-only",
+        "source_constraints": {},
+        "temporal_requirement": "no-stated-freshness"
+      },
+      "acquisition_method": "local_http_get",
+      "adapter_identity": "axignal-offline-fixture-adapter/0.1",
+      "artifact_type": "text/html",
+      "content_fingerprint": "3986aab699c218648017aac330b85440ecbc9ae7397fa897b5d49fad603343bc",
+      "evidence_slots": 2,
+      "expected": "success",
+      "extraction_metadata": {
+        "candidate_engine": null,
+        "transform": "none"
+      },
+      "failure_state": null,
+      "iteration": 1,
+      "observed_at": null,
+      "provenance": [
+        "source-request",
+        "W1-i1",
+        "axignal-offline-fixture-adapter/0.1"
+      ],
+      "raw_artifact_reference": "results/artifacts/W1-i1-3986aab699c218648017aac330b85440ecbc9ae7397fa897b5d49fad603343bc.bin",
+      "research_question_id": "W1-Q1",
+      "response_metadata": {
+        "body_bytes": 81,
+        "elapsed_ms": 75.107,
+        "final_uri": "http://127.0.0.1:64384/w1",
+        "headers": {
+          "content-length": "81",
+          "content-type": "text/html",
+          "date": "Fri, 25 Sep 2026 00:44:58 GMT",
+          "server": "BaseHTTP/0.6 Python/3.12.11",
+          "x-fixture-request-id": "w1"
+        },
+        "redirect_chain": [
+          "http://127.0.0.1:64384/w1"
+        ],
+        "status": 200
+      },
+      "retrieved_at": "2026-09-25T00:44:58.903083+00:00",
+      "rights_metadata": "synthetic fixture; no external source rights asserted",
+      "source_identity": "synthetic-repository-fixture",
+      "source_uri": "http://127.0.0.1:64384/w1",
+      "workload_id": "W1"
+    },
+    {
+      "acquisition_config": {
+        "deadline_ms": 1500,
+        "max_response_bytes": 1000000,
+        "requested_artifact_types": [
+          "text/html"
+        ],
+        "rights_policy": "synthetic-fixture-only",
+        "source_constraints": {},
+        "temporal_requirement": "no-stated-freshness"
+      },
+      "acquisition_method": "local_http_get",
+      "adapter_identity": "axignal-offline-fixture-adapter/0.1",
+      "artifact_type": "text/html",
+      "content_fingerprint": "341180d39946d52228cdf528e1984ee0cbcf3434d8979d8c751c6ffdd2f748e6",
+      "evidence_slots": 1,
+      "expected": "success_static_shell",
+      "extraction_metadata": {
+        "candidate_engine": null,
+        "transform": "none"
+      },
+      "failure_state": null,
+      "iteration": 1,
+      "observed_at": null,
+      "provenance": [
+        "source-request",
+        "W2-i1",
+        "axignal-offline-fixture-adapter/0.1"
+      ],
+      "raw_artifact_reference": "results/artifacts/W2-i1-341180d39946d52228cdf528e1984ee0cbcf3434d8979d8c751c6ffdd2f748e6.bin",
+      "research_question_id": "W2-Q1",
+      "response_metadata": {
+        "body_bytes": 109,
+        "elapsed_ms": 1.545,
+        "final_uri": "http://127.0.0.1:64384/w2",
+        "headers": {
+          "content-length": "109",
+          "content-type": "text/html",
+          "date": "Fri, 25 Sep 2026 00:44:58 GMT",
+          "server": "BaseHTTP/0.6 Python/3.12.11",
+          "x-fixture-request-id": "w2"
+        },
+        "redirect_chain": [
+          "http://127.0.0.1:64384/w2"
+        ],
+        "status": 200
+      },
+      "retrieved_at": "2026-09-25T00:44:58.905052+00:00",
+      "rights_metadata": "synthetic fixture; no external source rights asserted",
+      "source_identity": "synthetic-repository-fixture",
+      "source_uri": "http://127.0.0.1:64384/w2",
+      "workload_id": "W2"
+    },
+    {
+      "acquisition_config": {
+        "deadline_ms": 1500,
+        "max_response_bytes": 1000000,
+        "requested_artifact_types": [
+          "text/html"
+        ],
+        "rights_policy": "synthetic-fixture-only",
+        "source_constraints": {},
+        "temporal_requirement": "no-stated-freshness"
+      },
+      "acquisition_method": "local_http_get",
+      "adapter_identity": "axignal-offline-fixture-adapter/0.1",
+      "artifact_type": "text/html",
+      "content_fingerprint": "6aaf19137f1e40c9a1272122cfd61536682ccc40ad3efd09a0ac0fec5aebfc18",
+      "evidence_slots": 2,
+      "expected": "success",
+      "extraction_metadata": {
+        "candidate_engine": null,
+        "transform": "none"
+      },
+      "failure_state": null,
+      "iteration": 1,
+      "observed_at": null,
+      "provenance": [
+        "source-request",
+        "W3-i1",
+        "axignal-offline-fixture-adapter/0.1"
+      ],
+      "raw_artifact_reference": "results/artifacts/W3-i1-6aaf19137f1e40c9a1272122cfd61536682ccc40ad3efd09a0ac0fec5aebfc18.bin",
+      "research_question_id": "W3-Q1",
+      "response_metadata": {
+        "body_bytes": 40,
+        "elapsed_ms": 13.471,
+        "final_uri": "http://127.0.0.1:64384/w3",
+        "headers": {
+          "content-length": "40",
+          "content-type": "text/html",
+          "date": "Fri, 25 Sep 2026 00:44:58 GMT",
+          "server": "BaseHTTP/0.6 Python/3.12.11",
+          "x-fixture-request-id": "w3"
+        },
+        "redirect_chain": [
+          "http://127.0.0.1:64384/w3"
+        ],
+        "status": 200
+      },
+      "retrieved_at": "2026-09-25T00:44:58.918665+00:00",
+      "rights_metadata": "synthetic fixture; no external source rights asserted",
+      "source_identity": "synthetic-repository-fixture",
+      "source_uri": "http://127.0.0.1:64384/w3",
+      "workload_id": "W3"
+    },
+    {
+      "acquisition_config": {
+        "deadline_ms": 1500,
+        "max_response_bytes": 1000000,
+        "requested_artifact_types": [
+          "text/html"
+        ],
+        "rights_policy": "synthetic-fixture-only",
+        "source_constraints": {},
+        "temporal_requirement": "no-stated-freshness"
+      },
+      "acquisition_method": "local_http_get",
+      "adapter_identity": "axignal-offline-fixture-adapter/0.1",
+      "artifact_type": "text/html",
+      "content_fingerprint": "82b9bd082cc1c879a33a7f515817e145a534e4f4b3fa5f35bf8bb9c8b66c7629",
+      "evidence_slots": 1,
+      "expected": "bounded_child",
+      "extraction_metadata": {
+        "candidate_engine": null,
+        "transform": "none"
+      },
+      "failure_state": null,
+      "iteration": 1,
+      "observed_at": null,
+      "provenance": [
+        "source-request",
+        "W3-child-i1",
+        "axignal-offline-fixture-adapter/0.1"
+      ],
+      "raw_artifact_reference": "results/artifacts/W3-child-i1-82b9bd082cc1c879a33a7f515817e145a534e4f4b3fa5f35bf8bb9c8b66c7629.bin",
+      "research_question_id": "W3-Q1",
+      "response_metadata": {
+        "body_bytes": 37,
+        "elapsed_ms": 1.44,
+        "final_uri": "http://127.0.0.1:64384/w3-child",
+        "headers": {
+          "content-length": "37",
+          "content-type": "text/html",
+          "date": "Fri, 25 Sep 2026 00:44:58 GMT",
+          "server": "BaseHTTP/0.6 Python/3.12.11",
+          "x-fixture-request-id": "w3-child"
+        },
+        "redirect_chain": [
+          "http://127.0.0.1:64384/w3-child"
+        ],
+        "status": 200
+      },
+      "retrieved_at": "2026-09-25T00:44:58.919689+00:00",
+      "rights_metadata": "synthetic fixture; no external source rights asserted",
+      "source_identity": "synthetic-repository-fixture",
+      "source_uri": "http://127.0.0.1:64384/w3-child",
+      "workload_id": "W3"
+    },
+    {
+      "acquisition_config": {
+        "deadline_ms": 1500,
+        "max_response_bytes": 1000000,
+        "requested_artifact_types": [
+          "application/pdf"
+        ],
+        "rights_policy": "synthetic-fixture-only",
+        "source_constraints": {},
+        "temporal_requirement": "no-stated-freshness"
+      },
+      "acquisition_method": "local_http_get",
+      "adapter_identity": "axignal-offline-fixture-adapter/0.1",
+      "artifact_type": "application/pdf",
+      "content_fingerprint": "209584899a3997f195803a878487a38feb4c7256d96a61489f916216bcc2eb99",
+      "evidence_slots": 1,
+      "expected": "success_fixture_pdf",
+      "extraction_metadata": {
+        "candidate_engine": null,
+        "transform": "none"
+      },
+      "failure_state": null,
+      "iteration": 1,
+      "observed_at": null,
+      "provenance": [
+        "source-request",
+        "W4-i1",
+        "axignal-offline-fixture-adapter/0.1"
+      ],
+      "raw_artifact_reference": "results/artifacts/W4-i1-209584899a3997f195803a878487a38feb4c7256d96a61489f916216bcc2eb99.bin",
+      "research_question_id": "W4-Q1",
+      "response_metadata": {
+        "body_bytes": 71,
+        "elapsed_ms": 1.284,
+        "final_uri": "http://127.0.0.1:64384/w4",
+        "headers": {
+          "content-length": "71",
+          "content-type": "application/pdf",
+          "date": "Fri, 25 Sep 2026 00:44:58 GMT",
+          "server": "BaseHTTP/0.6 Python/3.12.11",
+          "x-fixture-request-id": "w4"
+        },
+        "redirect_chain": [
+          "http://127.0.0.1:64384/w4"
+        ],
+        "status": 200
+      },
+      "retrieved_at": "2026-09-25T00:44:58.920661+00:00",
+      "rights_metadata": "synthetic fixture; no external source rights asserted",
+      "source_identity": "synthetic-repository-fixture",
+      "source_uri": "http://127.0.0.1:64384/w4",
+      "workload_id": "W4"
+    },
+    {
+      "acquisition_config": {
+        "deadline_ms": 1500,
+        "max_response_bytes": 1000000,
+        "requested_artifact_types": [
+          "text/html"
+        ],
+        "rights_policy": "synthetic-fixture-only",
+        "source_constraints": {},
+        "temporal_requirement": "no-stated-freshness"
+      },
+      "acquisition_method": "local_http_get",
+      "adapter_identity": "axignal-offline-fixture-adapter/0.1",
+      "artifact_type": "text/html",
+      "content_fingerprint": "7de8687288843c0bf3085b1d6a95e3db5e3a04e58ee690b8c32bb40035cce1c1",
+      "evidence_slots": 1,
+      "expected": "success",
+      "extraction_metadata": {
+        "candidate_engine": null,
+        "transform": "none"
+      },
+      "failure_state": null,
+      "iteration": 1,
+      "observed_at": null,
+      "provenance": [
+        "source-request",
+        "W5-i1",
+        "axignal-offline-fixture-adapter/0.1"
+      ],
+      "raw_artifact_reference": "results/artifacts/W5-i1-7de8687288843c0bf3085b1d6a95e3db5e3a04e58ee690b8c32bb40035cce1c1.bin",
+      "research_question_id": "W5-Q1",
+      "response_metadata": {
+        "body_bytes": 64,
+        "elapsed_ms": 17.257,
+        "final_uri": "http://127.0.0.1:64384/w5",
+        "headers": {
+          "content-length": "64",
+          "content-type": "text/html",
+          "date": "Fri, 25 Sep 2026 00:44:58 GMT",
+          "server": "BaseHTTP/0.6 Python/3.12.11",
+          "x-fixture-request-id": "w5"
+        },
+        "redirect_chain": [
+          "http://127.0.0.1:64384/w5"
+        ],
+        "status": 200
+      },
+      "retrieved_at": "2026-09-25T00:44:58.938851+00:00",
+      "rights_metadata": "synthetic fixture; no external source rights asserted",
+      "source_identity": "synthetic-repository-fixture",
+      "source_uri": "http://127.0.0.1:64384/w5",
+      "workload_id": "W5"
+    },
+    {
+      "acquisition_config": {
+        "deadline_ms": 1500,
+        "max_response_bytes": 1000000,
+        "requested_artifact_types": [
+          "text/html"
+        ],
+        "rights_policy": "synthetic-fixture-only",
+        "source_constraints": {},
+        "temporal_requirement": "no-stated-freshness"
+      },
+      "acquisition_method": "local_http_get",
+      "adapter_identity": "axignal-offline-fixture-adapter/0.1",
+      "artifact_type": "text/html",
+      "content_fingerprint": "c101e98827806f011fa1fa1fc1d2c7563ca42ca3217dadc5d5da744af00741fe",
+      "evidence_slots": 2,
+      "expected": "success",
+      "extraction_metadata": {
+        "candidate_engine": null,
+        "transform": "none"
+      },
+      "failure_state": null,
+      "iteration": 1,
+      "observed_at": null,
+      "provenance": [
+        "source-request",
+        "W6-i1",
+        "axignal-offline-fixture-adapter/0.1"
+      ],
+      "raw_artifact_reference": "results/artifacts/W6-i1-c101e98827806f011fa1fa1fc1d2c7563ca42ca3217dadc5d5da744af00741fe.bin",
+      "research_question_id": "W6-Q1",
+      "response_metadata": {
+        "body_bytes": 68,
+        "elapsed_ms": 1.498,
+        "final_uri": "http://127.0.0.1:64384/w6",
+        "headers": {
+          "content-length": "68",
+          "content-type": "text/html",
+          "date": "Fri, 25 Sep 2026 00:44:58 GMT",
+          "server": "BaseHTTP/0.6 Python/3.12.11",
+          "x-fixture-request-id": "w6"
+        },
+        "redirect_chain": [
+          "http://127.0.0.1:64384/w6"
+        ],
+        "status": 200
+      },
+      "retrieved_at": "2026-09-25T00:44:58.939264+00:00",
+      "rights_metadata": "synthetic fixture; no external source rights asserted",
+      "source_identity": "synthetic-repository-fixture",
+      "source_uri": "http://127.0.0.1:64384/w6",
+      "workload_id": "W6"
+    },
+    {
+      "acquisition_config": {
+        "deadline_ms": 1500,
+        "max_response_bytes": 1000000,
+        "requested_artifact_types": [
+          "text/html"
+        ],
+        "rights_policy": "synthetic-fixture-only",
+        "source_constraints": {},
+        "temporal_requirement": "no-stated-freshness"
+      },
+      "acquisition_method": "local_http_get",
+      "adapter_identity": "axignal-offline-fixture-adapter/0.1",
+      "artifact_type": "text/html",
+      "content_fingerprint": "ae83562a13da4ba51a858ab46b29febc49535faebc434d1ccd1fbc6cf456dc4d",
+      "evidence_slots": 2,
+      "expected": "success_observation_only",
+      "extraction_metadata": {
+        "candidate_engine": null,
+        "transform": "none"
+      },
+      "failure_state": null,
+      "iteration": 1,
+      "observed_at": null,
+      "provenance": [
+        "source-request",
+        "W7-i1",
+        "axignal-offline-fixture-adapter/0.1"
+      ],
+      "raw_artifact_reference": "results/artifacts/W7-i1-ae83562a13da4ba51a858ab46b29febc49535faebc434d1ccd1fbc6cf456dc4d.bin",
+      "research_question_id": "W7-Q1",
+      "response_metadata": {
+        "body_bytes": 58,
+        "elapsed_ms": 1.299,
+        "final_uri": "http://127.0.0.1:64384/w7",
+        "headers": {
+          "content-length": "58",
+          "content-type": "text/html",
+          "date": "Fri, 25 Sep 2026 00:44:58 GMT",
+          "server": "BaseHTTP/0.6 Python/3.12.11",
+          "x-fixture-request-id": "w7"
+        },
+        "redirect_chain": [
+          "http://127.0.0.1:64384/w7"
+        ],
+        "status": 200
+      },
+      "retrieved_at": "2026-09-25T00:44:58.939264+00:00",
+      "rights_metadata": "synthetic fixture; no external source rights asserted",
+      "source_identity": "synthetic-repository-fixture",
+      "source_uri": "http://127.0.0.1:64384/w7",
+      "workload_id": "W7"
+    },
+    {
+      "acquisition_config": {
+        "deadline_ms": 1500,
+        "max_response_bytes": 1000000,
+        "requested_artifact_types": [
+          "text/html"
+        ],
+        "rights_policy": "synthetic-fixture-only",
+        "source_constraints": {},
+        "temporal_requirement": "no-stated-freshness"
+      },
+      "acquisition_method": "local_http_get",
+      "adapter_identity": "axignal-offline-fixture-adapter/0.1",
+      "artifact_type": "text/html",
+      "content_fingerprint": "093c38a19ec989c00c31c93eecb90e9051134b779a4af07c6de00e67be0f12dc",
+      "evidence_slots": 1,
+      "expected": "two_observations",
+      "extraction_metadata": {
+        "candidate_engine": null,
+        "transform": "none"
+      },
+      "failure_state": null,
+      "iteration": 1,
+      "observed_at": null,
+      "provenance": [
+        "source-request",
+        "W8-i1",
+        "axignal-offline-fixture-adapter/0.1"
+      ],
+      "raw_artifact_reference": "results/artifacts/W8-i1-093c38a19ec989c00c31c93eecb90e9051134b779a4af07c6de00e67be0f12dc.bin",
+      "research_question_id": "W8-Q1",
+      "response_metadata": {
+        "body_bytes": 38,
+        "elapsed_ms": 1.234,
+        "final_uri": "http://127.0.0.1:64384/w8a",
+        "headers": {
+          "content-length": "38",
+          "content-type": "text/html",
+          "date": "Fri, 25 Sep 2026 00:44:58 GMT",
+          "server": "BaseHTTP/0.6 Python/3.12.11",
+          "x-fixture-request-id": "w8a"
+        },
+        "redirect_chain": [
+          "http://127.0.0.1:64384/w8a"
+        ],
+        "status": 200
+      },
+      "retrieved_at": "2026-09-25T00:44:58.939264+00:00",
+      "rights_metadata": "synthetic fixture; no external source rights asserted",
+      "source_identity": "synthetic-repository-fixture",
+      "source_uri": "http://127.0.0.1:64384/w8a",
+      "workload_id": "W8"
+    },
+    {
+      "acquisition_config": {
+        "deadline_ms": 1500,
+        "max_response_bytes": 1000000,
+        "requested_artifact_types": [
+          "text/html"
+        ],
+        "rights_policy": "synthetic-fixture-only",
+        "source_constraints": {},
+        "temporal_requirement": "no-stated-freshness"
+      },
+      "acquisition_method": "local_http_get",
+      "adapter_identity": "axignal-offline-fixture-adapter/0.1",
+      "artifact_type": "text/html",
+      "content_fingerprint": "b5be881f69edfb96345fed6195cc90647a09b23c39e0794dd9fa6691c9858917",
+      "evidence_slots": 1,
+      "expected": "contradictory_observation",
+      "extraction_metadata": {
+        "candidate_engine": null,
+        "transform": "none"
+      },
+      "failure_state": null,
+      "iteration": 1,
+      "observed_at": null,
+      "provenance": [
+        "source-request",
+        "W8b-i1",
+        "axignal-offline-fixture-adapter/0.1"
+      ],
+      "raw_artifact_reference": "results/artifacts/W8b-i1-b5be881f69edfb96345fed6195cc90647a09b23c39e0794dd9fa6691c9858917.bin",
+      "research_question_id": "W8-Q1",
+      "response_metadata": {
+        "body_bytes": 38,
+        "elapsed_ms": 12.803,
+        "final_uri": "http://127.0.0.1:64384/w8b",
+        "headers": {
+          "content-length": "38",
+          "content-type": "text/html",
+          "date": "Fri, 25 Sep 2026 00:44:58 GMT",
+          "server": "BaseHTTP/0.6 Python/3.12.11",
+          "x-fixture-request-id": "w8b"
+        },
+        "redirect_chain": [
+          "http://127.0.0.1:64384/w8b"
+        ],
+        "status": 200
+      },
+      "retrieved_at": "2026-09-25T00:44:58.954923+00:00",
+      "rights_metadata": "synthetic fixture; no external source rights asserted",
+      "source_identity": "synthetic-repository-fixture",
+      "source_uri": "http://127.0.0.1:64384/w8b",
+      "workload_id": "W8"
+    },
+    {
+      "acquisition_config": {
+        "deadline_ms": 1500,
+        "max_response_bytes": 1000000,
+        "requested_artifact_types": [
+          "text/html"
+        ],
+        "rights_policy": "synthetic-fixture-only",
+        "source_constraints": {},
+        "temporal_requirement": "no-stated-freshness"
+      },
+      "acquisition_method": "local_http_get",
+      "adapter_identity": "axignal-offline-fixture-adapter/0.1",
+      "artifact_type": "text/html",
+      "content_fingerprint": "b50a27c4a15dc477f363ff4ab9a1c9f1ab77070bfed5db05b526265d3a820e6d",
+      "evidence_slots": 1,
+      "expected": "success_targeted",
+      "extraction_metadata": {
+        "candidate_engine": null,
+        "transform": "none"
+      },
+      "failure_state": null,
+      "iteration": 1,
+      "observed_at": null,
+      "provenance": [
+        "source-request",
+        "W9-i1",
+        "axignal-offline-fixture-adapter/0.1"
+      ],
+      "raw_artifact_reference": "results/artifacts/W9-i1-b50a27c4a15dc477f363ff4ab9a1c9f1ab77070bfed5db05b526265d3a820e6d.bin",
+      "research_question_id": "W9-Q1",
+      "response_metadata": {
+        "body_bytes": 55,
+        "elapsed_ms": 16.144,
+        "final_uri": "http://127.0.0.1:64384/w9",
+        "headers": {
+          "content-length": "55",
+          "content-type": "text/html",
+          "date": "Fri, 25 Sep 2026 00:44:58 GMT",
+          "server": "BaseHTTP/0.6 Python/3.12.11",
+          "x-fixture-request-id": "w9"
+        },
+        "redirect_chain": [
+          "http://127.0.0.1:64384/w9"
+        ],
+        "status": 200
+      },
+      "retrieved_at": "2026-09-25T00:44:58.970656+00:00",
+      "rights_metadata": "synthetic fixture; no external source rights asserted",
+      "source_identity": "synthetic-repository-fixture",
+      "source_uri": "http://127.0.0.1:64384/w9",
+      "workload_id": "W9"
+    },
+    {
+      "acquisition_config": {
+        "deadline_ms": 1500,
+        "max_response_bytes": 1000000,
+        "requested_artifact_types": [
+          "text/html"
+        ],
+        "rights_policy": "synthetic-fixture-only",
+        "source_constraints": {},
+        "temporal_requirement": "no-stated-freshness"
+      },
+      "acquisition_method": "local_http_get",
+      "adapter_identity": "axignal-offline-fixture-adapter/0.1",
+      "artifact_type": "text/html",
+      "content_fingerprint": "a30a130dcf6ea44a82db47de4836955af52e297fd901a5f5112f00a87e89f326",
+      "evidence_slots": 1,
+      "expected": "two_step_loop",
+      "extraction_metadata": {
+        "candidate_engine": null,
+        "transform": "none"
+      },
+      "failure_state": null,
+      "iteration": 1,
+      "observed_at": null,
+      "provenance": [
+        "source-request",
+        "W10-i1",
+        "axignal-offline-fixture-adapter/0.1"
+      ],
+      "raw_artifact_reference": "results/artifacts/W10-i1-a30a130dcf6ea44a82db47de4836955af52e297fd901a5f5112f00a87e89f326.bin",
+      "research_question_id": "W10-Q1",
+      "response_metadata": {
+        "body_bytes": 48,
+        "elapsed_ms": 1.898,
+        "final_uri": "http://127.0.0.1:64384/w10-first",
+        "headers": {
+          "content-length": "48",
+          "content-type": "text/html",
+          "date": "Fri, 25 Sep 2026 00:44:58 GMT",
+          "server": "BaseHTTP/0.6 Python/3.12.11",
+          "x-fixture-request-id": "w10-first"
+        },
+        "redirect_chain": [
+          "http://127.0.0.1:64384/w10-first"
+        ],
+        "status": 200
+      },
+      "retrieved_at": "2026-09-25T00:44:58.970656+00:00",
+      "rights_metadata": "synthetic fixture; no external source rights asserted",
+      "source_identity": "synthetic-repository-fixture",
+      "source_uri": "http://127.0.0.1:64384/w10-first",
+      "workload_id": "W10"
+    },
+    {
+      "acquisition_config": {
+        "deadline_ms": 1500,
+        "max_response_bytes": 1000000,
+        "requested_artifact_types": [
+          "text/plain"
+        ],
+        "rights_policy": "synthetic-fixture-only",
+        "source_constraints": {},
+        "temporal_requirement": "no-stated-freshness"
+      },
+      "acquisition_method": "local_http_get",
+      "adapter_identity": "axignal-offline-fixture-adapter/0.1",
+      "artifact_type": "text/plain; charset=utf-8",
+      "content_fingerprint": null,
+      "evidence_slots": 0,
+      "expected": "explicit_http_403",
+      "extraction_metadata": {
+        "candidate_engine": null,
+        "transform": "none"
+      },
+      "failure_state": "http_403",
+      "iteration": 1,
+      "observed_at": null,
+      "provenance": [
+        "source-request",
+        "W11-i1",
+        "axignal-offline-fixture-adapter/0.1"
+      ],
+      "raw_artifact_reference": "",
+      "research_question_id": "W11-Q1",
+      "response_metadata": {
+        "body_bytes": 0,
+        "elapsed_ms": 1.247,
+        "final_uri": "http://127.0.0.1:64384/w11-restricted",
+        "headers": {
+          "content-length": "21",
+          "content-type": "text/plain; charset=utf-8",
+          "date": "Fri, 25 Sep 2026 00:44:58 GMT",
+          "server": "BaseHTTP/0.6 Python/3.12.11",
+          "x-fixture-request-id": "w11-restricted"
+        },
+        "redirect_chain": [
+          "http://127.0.0.1:64384/w11-restricted"
+        ],
+        "status": 403
+      },
+      "retrieved_at": "2026-09-25T00:44:58.970656+00:00",
+      "rights_metadata": "synthetic fixture; no external source rights asserted",
+      "source_identity": "synthetic-repository-fixture",
+      "source_uri": "http://127.0.0.1:64384/w11-restricted",
+      "workload_id": "W11"
+    },
+    {
+      "acquisition_config": {
+        "deadline_ms": 1500,
+        "max_response_bytes": 1000000,
+        "requested_artifact_types": [
+          "text/html"
+        ],
+        "rights_policy": "synthetic-fixture-only",
+        "source_constraints": {},
+        "temporal_requirement": "no-stated-freshness"
+      },
+      "acquisition_method": "local_http_get",
+      "adapter_identity": "axignal-offline-fixture-adapter/0.1",
+      "artifact_type": "text/html",
+      "content_fingerprint": "c0e6c34320b920d849757b9d6c57fcd77f24882609ac6f87243fe49b0e178bb1",
+      "evidence_slots": 1,
+      "expected": "cache_then_refetch_policy",
+      "extraction_metadata": {
+        "candidate_engine": null,
+        "transform": "none"
+      },
+      "failure_state": null,
+      "iteration": 1,
+      "observed_at": null,
+      "provenance": [
+        "source-request",
+        "W12-i1",
+        "axignal-offline-fixture-adapter/0.1"
+      ],
+      "raw_artifact_reference": "results/artifacts/W12-i1-c0e6c34320b920d849757b9d6c57fcd77f24882609ac6f87243fe49b0e178bb1.bin",
+      "research_question_id": "W12-Q1",
+      "response_metadata": {
+        "body_bytes": 31,
+        "elapsed_ms": 12.241,
+        "final_uri": "http://127.0.0.1:64384/w12",
+        "headers": {
+          "content-length": "31",
+          "content-type": "text/html",
+          "date": "Fri, 25 Sep 2026 00:44:58 GMT",
+          "server": "BaseHTTP/0.6 Python/3.12.11",
+          "x-fixture-request-id": "w12"
+        },
+        "redirect_chain": [
+          "http://127.0.0.1:64384/w12"
+        ],
+        "status": 200
+      },
+      "retrieved_at": "2026-09-25T00:44:58.986466+00:00",
+      "rights_metadata": "synthetic fixture; no external source rights asserted",
+      "source_identity": "synthetic-repository-fixture",
+      "source_uri": "http://127.0.0.1:64384/w12",
+      "workload_id": "W12"
+    },
+    {
+      "acquisition_config": {
+        "deadline_ms": 1500,
+        "max_response_bytes": 1000000,
+        "requested_artifact_types": [
+          "text/html"
+        ],
+        "rights_policy": "synthetic-fixture-only",
+        "source_constraints": {},
+        "temporal_requirement": "no-stated-freshness"
+      },
+      "acquisition_method": "local_http_get",
+      "adapter_identity": "axignal-offline-fixture-adapter/0.1",
+      "artifact_type": "text/html",
+      "content_fingerprint": "3986aab699c218648017aac330b85440ecbc9ae7397fa897b5d49fad603343bc",
+      "evidence_slots": 2,
+      "expected": "success",
+      "extraction_metadata": {
+        "candidate_engine": null,
+        "transform": "none"
+      },
+      "failure_state": null,
+      "iteration": 2,
+      "observed_at": null,
+      "provenance": [
+        "source-request",
+        "W1-i2",
+        "axignal-offline-fixture-adapter/0.1"
+      ],
+      "raw_artifact_reference": "results/artifacts/W1-i2-3986aab699c218648017aac330b85440ecbc9ae7397fa897b5d49fad603343bc.bin",
+      "research_question_id": "W1-Q1",
+      "response_metadata": {
+        "body_bytes": 81,
+        "elapsed_ms": 1.753,
+        "final_uri": "http://127.0.0.1:64384/w1",
+        "headers": {
+          "content-length": "81",
+          "content-type": "text/html",
+          "date": "Fri, 25 Sep 2026 00:44:58 GMT",
+          "server": "BaseHTTP/0.6 Python/3.12.11",
+          "x-fixture-request-id": "w1"
+        },
+        "redirect_chain": [
+          "http://127.0.0.1:64384/w1"
+        ],
+        "status": 200
+      },
+      "retrieved_at": "2026-09-25T00:44:58.986466+00:00",
+      "rights_metadata": "synthetic fixture; no external source rights asserted",
+      "source_identity": "synthetic-repository-fixture",
+      "source_uri": "http://127.0.0.1:64384/w1",
+      "workload_id": "W1"
+    },
+    {
+      "acquisition_config": {
+        "deadline_ms": 1500,
+        "max_response_bytes": 1000000,
+        "requested_artifact_types": [
+          "text/html"
+        ],
+        "rights_policy": "synthetic-fixture-only",
+        "source_constraints": {},
+        "temporal_requirement": "no-stated-freshness"
+      },
+      "acquisition_method": "local_http_get",
+      "adapter_identity": "axignal-offline-fixture-adapter/0.1",
+      "artifact_type": "text/html",
+      "content_fingerprint": "341180d39946d52228cdf528e1984ee0cbcf3434d8979d8c751c6ffdd2f748e6",
+      "evidence_slots": 1,
+      "expected": "success_static_shell",
+      "extraction_metadata": {
+        "candidate_engine": null,
+        "transform": "none"
+      },
+      "failure_state": null,
+      "iteration": 2,
+      "observed_at": null,
+      "provenance": [
+        "source-request",
+        "W2-i2",
+        "axignal-offline-fixture-adapter/0.1"
+      ],
+      "raw_artifact_reference": "results/artifacts/W2-i2-341180d39946d52228cdf528e1984ee0cbcf3434d8979d8c751c6ffdd2f748e6.bin",
+      "research_question_id": "W2-Q1",
+      "response_metadata": {
+        "body_bytes": 109,
+        "elapsed_ms": 1.789,
+        "final_uri": "http://127.0.0.1:64384/w2",
+        "headers": {
+          "content-length": "109",
+          "content-type": "text/html",
+          "date": "Fri, 25 Sep 2026 00:44:58 GMT",
+          "server": "BaseHTTP/0.6 Python/3.12.11",
+          "x-fixture-request-id": "w2"
+        },
+        "redirect_chain": [
+          "http://127.0.0.1:64384/w2"
+        ],
+        "status": 200
+      },
+      "retrieved_at": "2026-09-25T00:44:58.986466+00:00",
+      "rights_metadata": "synthetic fixture; no external source rights asserted",
+      "source_identity": "synthetic-repository-fixture",
+      "source_uri": "http://127.0.0.1:64384/w2",
+      "workload_id": "W2"
+    },
+    {
+      "acquisition_config": {
+        "deadline_ms": 1500,
+        "max_response_bytes": 1000000,
+        "requested_artifact_types": [
+          "text/html"
+        ],
+        "rights_policy": "synthetic-fixture-only",
+        "source_constraints": {},
+        "temporal_requirement": "no-stated-freshness"
+      },
+      "acquisition_method": "local_http_get",
+      "adapter_identity": "axignal-offline-fixture-adapter/0.1",
+      "artifact_type": "text/html",
+      "content_fingerprint": "6aaf19137f1e40c9a1272122cfd61536682ccc40ad3efd09a0ac0fec5aebfc18",
+      "evidence_slots": 2,
+      "expected": "success",
+      "extraction_metadata": {
+        "candidate_engine": null,
+        "transform": "none"
+      },
+      "failure_state": null,
+      "iteration": 2,
+      "observed_at": null,
+      "provenance": [
+        "source-request",
+        "W3-i2",
+        "axignal-offline-fixture-adapter/0.1"
+      ],
+      "raw_artifact_reference": "results/artifacts/W3-i2-6aaf19137f1e40c9a1272122cfd61536682ccc40ad3efd09a0ac0fec5aebfc18.bin",
+      "research_question_id": "W3-Q1",
+      "response_metadata": {
+        "body_bytes": 40,
+        "elapsed_ms": 1.814,
+        "final_uri": "http://127.0.0.1:64384/w3",
+        "headers": {
+          "content-length": "40",
+          "content-type": "text/html",
+          "date": "Fri, 25 Sep 2026 00:44:58 GMT",
+          "server": "BaseHTTP/0.6 Python/3.12.11",
+          "x-fixture-request-id": "w3"
+        },
+        "redirect_chain": [
+          "http://127.0.0.1:64384/w3"
+        ],
+        "status": 200
+      },
+      "retrieved_at": "2026-09-25T00:44:58.986466+00:00",
+      "rights_metadata": "synthetic fixture; no external source rights asserted",
+      "source_identity": "synthetic-repository-fixture",
+      "source_uri": "http://127.0.0.1:64384/w3",
+      "workload_id": "W3"
+    },
+    {
+      "acquisition_config": {
+        "deadline_ms": 1500,
+        "max_response_bytes": 1000000,
+        "requested_artifact_types": [
+          "text/html"
+        ],
+        "rights_policy": "synthetic-fixture-only",
+        "source_constraints": {},
+        "temporal_requirement": "no-stated-freshness"
+      },
+      "acquisition_method": "local_http_get",
+      "adapter_identity": "axignal-offline-fixture-adapter/0.1",
+      "artifact_type": "text/html",
+      "content_fingerprint": "82b9bd082cc1c879a33a7f515817e145a534e4f4b3fa5f35bf8bb9c8b66c7629",
+      "evidence_slots": 1,
+      "expected": "bounded_child",
+      "extraction_metadata": {
+        "candidate_engine": null,
+        "transform": "none"
+      },
+      "failure_state": null,
+      "iteration": 2,
+      "observed_at": null,
+      "provenance": [
+        "source-request",
+        "W3-child-i2",
+        "axignal-offline-fixture-adapter/0.1"
+      ],
+      "raw_artifact_reference": "results/artifacts/W3-child-i2-82b9bd082cc1c879a33a7f515817e145a534e4f4b3fa5f35bf8bb9c8b66c7629.bin",
+      "research_question_id": "W3-Q1",
+      "response_metadata": {
+        "body_bytes": 37,
+        "elapsed_ms": 1.802,
+        "final_uri": "http://127.0.0.1:64384/w3-child",
+        "headers": {
+          "content-length": "37",
+          "content-type": "text/html",
+          "date": "Fri, 25 Sep 2026 00:44:58 GMT",
+          "server": "BaseHTTP/0.6 Python/3.12.11",
+          "x-fixture-request-id": "w3-child"
+        },
+        "redirect_chain": [
+          "http://127.0.0.1:64384/w3-child"
+        ],
+        "status": 200
+      },
+      "retrieved_at": "2026-09-25T00:44:58.986466+00:00",
+      "rights_metadata": "synthetic fixture; no external source rights asserted",
+      "source_identity": "synthetic-repository-fixture",
+      "source_uri": "http://127.0.0.1:64384/w3-child",
+      "workload_id": "W3"
+    },
+    {
+      "acquisition_config": {
+        "deadline_ms": 1500,
+        "max_response_bytes": 1000000,
+        "requested_artifact_types": [
+          "application/pdf"
+        ],
+        "rights_policy": "synthetic-fixture-only",
+        "source_constraints": {},
+        "temporal_requirement": "no-stated-freshness"
+      },
+      "acquisition_method": "local_http_get",
+      "adapter_identity": "axignal-offline-fixture-adapter/0.1",
+      "artifact_type": "application/pdf",
+      "content_fingerprint": "209584899a3997f195803a878487a38feb4c7256d96a61489f916216bcc2eb99",
+      "evidence_slots": 1,
+      "expected": "success_fixture_pdf",
+      "extraction_metadata": {
+        "candidate_engine": null,
+        "transform": "none"
+      },
+      "failure_state": null,
+      "iteration": 2,
+      "observed_at": null,
+      "provenance": [
+        "source-request",
+        "W4-i2",
+        "axignal-offline-fixture-adapter/0.1"
+      ],
+      "raw_artifact_reference": "results/artifacts/W4-i2-209584899a3997f195803a878487a38feb4c7256d96a61489f916216bcc2eb99.bin",
+      "research_question_id": "W4-Q1",
+      "response_metadata": {
+        "body_bytes": 71,
+        "elapsed_ms": 1.768,
+        "final_uri": "http://127.0.0.1:64384/w4",
+        "headers": {
+          "content-length": "71",
+          "content-type": "application/pdf",
+          "date": "Fri, 25 Sep 2026 00:44:58 GMT",
+          "server": "BaseHTTP/0.6 Python/3.12.11",
+          "x-fixture-request-id": "w4"
+        },
+        "redirect_chain": [
+          "http://127.0.0.1:64384/w4"
+        ],
+        "status": 200
+      },
+      "retrieved_at": "2026-09-25T00:44:58.986466+00:00",
+      "rights_metadata": "synthetic fixture; no external source rights asserted",
+      "source_identity": "synthetic-repository-fixture",
+      "source_uri": "http://127.0.0.1:64384/w4",
+      "workload_id": "W4"
+    },
+    {
+      "acquisition_config": {
+        "deadline_ms": 1500,
+        "max_response_bytes": 1000000,
+        "requested_artifact_types": [
+          "text/html"
+        ],
+        "rights_policy": "synthetic-fixture-only",
+        "source_constraints": {},
+        "temporal_requirement": "no-stated-freshness"
+      },
+      "acquisition_method": "local_http_get",
+      "adapter_identity": "axignal-offline-fixture-adapter/0.1",
+      "artifact_type": "text/html",
+      "content_fingerprint": "7de8687288843c0bf3085b1d6a95e3db5e3a04e58ee690b8c32bb40035cce1c1",
+      "evidence_slots": 1,
+      "expected": "success",
+      "extraction_metadata": {
+        "candidate_engine": null,
+        "transform": "none"
+      },
+      "failure_state": null,
+      "iteration": 2,
+      "observed_at": null,
+      "provenance": [
+        "source-request",
+        "W5-i2",
+        "axignal-offline-fixture-adapter/0.1"
+      ],
+      "raw_artifact_reference": "results/artifacts/W5-i2-7de8687288843c0bf3085b1d6a95e3db5e3a04e58ee690b8c32bb40035cce1c1.bin",
+      "research_question_id": "W5-Q1",
+      "response_metadata": {
+        "body_bytes": 64,
+        "elapsed_ms": 1.715,
+        "final_uri": "http://127.0.0.1:64384/w5",
+        "headers": {
+          "content-length": "64",
+          "content-type": "text/html",
+          "date": "Fri, 25 Sep 2026 00:44:58 GMT",
+          "server": "BaseHTTP/0.6 Python/3.12.11",
+          "x-fixture-request-id": "w5"
+        },
+        "redirect_chain": [
+          "http://127.0.0.1:64384/w5"
+        ],
+        "status": 200
+      },
+      "retrieved_at": "2026-09-25T00:44:58.986466+00:00",
+      "rights_metadata": "synthetic fixture; no external source rights asserted",
+      "source_identity": "synthetic-repository-fixture",
+      "source_uri": "http://127.0.0.1:64384/w5",
+      "workload_id": "W5"
+    },
+    {
+      "acquisition_config": {
+        "deadline_ms": 1500,
+        "max_response_bytes": 1000000,
+        "requested_artifact_types": [
+          "text/html"
+        ],
+        "rights_policy": "synthetic-fixture-only",
+        "source_constraints": {},
+        "temporal_requirement": "no-stated-freshness"
+      },
+      "acquisition_method": "local_http_get",
+      "adapter_identity": "axignal-offline-fixture-adapter/0.1",
+      "artifact_type": "text/html",
+      "content_fingerprint": "c101e98827806f011fa1fa1fc1d2c7563ca42ca3217dadc5d5da744af00741fe",
+      "evidence_slots": 2,
+      "expected": "success",
+      "extraction_metadata": {
+        "candidate_engine": null,
+        "transform": "none"
+      },
+      "failure_state": null,
+      "iteration": 2,
+      "observed_at": null,
+      "provenance": [
+        "source-request",
+        "W6-i2",
+        "axignal-offline-fixture-adapter/0.1"
+      ],
+      "raw_artifact_reference": "results/artifacts/W6-i2-c101e98827806f011fa1fa1fc1d2c7563ca42ca3217dadc5d5da744af00741fe.bin",
+      "research_question_id": "W6-Q1",
+      "response_metadata": {
+        "body_bytes": 68,
+        "elapsed_ms": 1.437,
+        "final_uri": "http://127.0.0.1:64384/w6",
+        "headers": {
+          "content-length": "68",
+          "content-type": "text/html",
+          "date": "Fri, 25 Sep 2026 00:44:58 GMT",
+          "server": "BaseHTTP/0.6 Python/3.12.11",
+          "x-fixture-request-id": "w6"
+        },
+        "redirect_chain": [
+          "http://127.0.0.1:64384/w6"
+        ],
+        "status": 200
+      },
+      "retrieved_at": "2026-09-25T00:44:58.986466+00:00",
+      "rights_metadata": "synthetic fixture; no external source rights asserted",
+      "source_identity": "synthetic-repository-fixture",
+      "source_uri": "http://127.0.0.1:64384/w6",
+      "workload_id": "W6"
+    },
+    {
+      "acquisition_config": {
+        "deadline_ms": 1500,
+        "max_response_bytes": 1000000,
+        "requested_artifact_types": [
+          "text/html"
+        ],
+        "rights_policy": "synthetic-fixture-only",
+        "source_constraints": {},
+        "temporal_requirement": "no-stated-freshness"
+      },
+      "acquisition_method": "local_http_get",
+      "adapter_identity": "axignal-offline-fixture-adapter/0.1",
+      "artifact_type": "text/html",
+      "content_fingerprint": "ae83562a13da4ba51a858ab46b29febc49535faebc434d1ccd1fbc6cf456dc4d",
+      "evidence_slots": 2,
+      "expected": "success_observation_only",
+      "extraction_metadata": {
+        "candidate_engine": null,
+        "transform": "none"
+      },
+      "failure_state": null,
+      "iteration": 2,
+      "observed_at": null,
+      "provenance": [
+        "source-request",
+        "W7-i2",
+        "axignal-offline-fixture-adapter/0.1"
+      ],
+      "raw_artifact_reference": "results/artifacts/W7-i2-ae83562a13da4ba51a858ab46b29febc49535faebc434d1ccd1fbc6cf456dc4d.bin",
+      "research_question_id": "W7-Q1",
+      "response_metadata": {
+        "body_bytes": 58,
+        "elapsed_ms": 1.358,
+        "final_uri": "http://127.0.0.1:64384/w7",
+        "headers": {
+          "content-length": "58",
+          "content-type": "text/html",
+          "date": "Fri, 25 Sep 2026 00:44:58 GMT",
+          "server": "BaseHTTP/0.6 Python/3.12.11",
+          "x-fixture-request-id": "w7"
+        },
+        "redirect_chain": [
+          "http://127.0.0.1:64384/w7"
+        ],
+        "status": 200
+      },
+      "retrieved_at": "2026-09-25T00:44:58.986466+00:00",
+      "rights_metadata": "synthetic fixture; no external source rights asserted",
+      "source_identity": "synthetic-repository-fixture",
+      "source_uri": "http://127.0.0.1:64384/w7",
+      "workload_id": "W7"
+    },
+    {
+      "acquisition_config": {
+        "deadline_ms": 1500,
+        "max_response_bytes": 1000000,
+        "requested_artifact_types": [
+          "text/html"
+        ],
+        "rights_policy": "synthetic-fixture-only",
+        "source_constraints": {},
+        "temporal_requirement": "no-stated-freshness"
+      },
+      "acquisition_method": "local_http_get",
+      "adapter_identity": "axignal-offline-fixture-adapter/0.1",
+      "artifact_type": "text/html",
+      "content_fingerprint": "093c38a19ec989c00c31c93eecb90e9051134b779a4af07c6de00e67be0f12dc",
+      "evidence_slots": 1,
+      "expected": "two_observations",
+      "extraction_metadata": {
+        "candidate_engine": null,
+        "transform": "none"
+      },
+      "failure_state": null,
+      "iteration": 2,
+      "observed_at": null,
+      "provenance": [
+        "source-request",
+        "W8-i2",
+        "axignal-offline-fixture-adapter/0.1"
+      ],
+      "raw_artifact_reference": "results/artifacts/W8-i2-093c38a19ec989c00c31c93eecb90e9051134b779a4af07c6de00e67be0f12dc.bin",
+      "research_question_id": "W8-Q1",
+      "response_metadata": {
+        "body_bytes": 38,
+        "elapsed_ms": 1.36,
+        "final_uri": "http://127.0.0.1:64384/w8a",
+        "headers": {
+          "content-length": "38",
+          "content-type": "text/html",
+          "date": "Fri, 25 Sep 2026 00:44:59 GMT",
+          "server": "BaseHTTP/0.6 Python/3.12.11",
+          "x-fixture-request-id": "w8a"
+        },
+        "redirect_chain": [
+          "http://127.0.0.1:64384/w8a"
+        ],
+        "status": 200
+      },
+      "retrieved_at": "2026-09-25T00:44:59.002325+00:00",
+      "rights_metadata": "synthetic fixture; no external source rights asserted",
+      "source_identity": "synthetic-repository-fixture",
+      "source_uri": "http://127.0.0.1:64384/w8a",
+      "workload_id": "W8"
+    },
+    {
+      "acquisition_config": {
+        "deadline_ms": 1500,
+        "max_response_bytes": 1000000,
+        "requested_artifact_types": [
+          "text/html"
+        ],
+        "rights_policy": "synthetic-fixture-only",
+        "source_constraints": {},
+        "temporal_requirement": "no-stated-freshness"
+      },
+      "acquisition_method": "local_http_get",
+      "adapter_identity": "axignal-offline-fixture-adapter/0.1",
+      "artifact_type": "text/html",
+      "content_fingerprint": "b5be881f69edfb96345fed6195cc90647a09b23c39e0794dd9fa6691c9858917",
+      "evidence_slots": 1,
+      "expected": "contradictory_observation",
+      "extraction_metadata": {
+        "candidate_engine": null,
+        "transform": "none"
+      },
+      "failure_state": null,
+      "iteration": 2,
+      "observed_at": null,
+      "provenance": [
+        "source-request",
+        "W8b-i2",
+        "axignal-offline-fixture-adapter/0.1"
+      ],
+      "raw_artifact_reference": "results/artifacts/W8b-i2-b5be881f69edfb96345fed6195cc90647a09b23c39e0794dd9fa6691c9858917.bin",
+      "research_question_id": "W8-Q1",
+      "response_metadata": {
+        "body_bytes": 38,
+        "elapsed_ms": 1.27,
+        "final_uri": "http://127.0.0.1:64384/w8b",
+        "headers": {
+          "content-length": "38",
+          "content-type": "text/html",
+          "date": "Fri, 25 Sep 2026 00:44:59 GMT",
+          "server": "BaseHTTP/0.6 Python/3.12.11",
+          "x-fixture-request-id": "w8b"
+        },
+        "redirect_chain": [
+          "http://127.0.0.1:64384/w8b"
+        ],
+        "status": 200
+      },
+      "retrieved_at": "2026-09-25T00:44:59.002325+00:00",
+      "rights_metadata": "synthetic fixture; no external source rights asserted",
+      "source_identity": "synthetic-repository-fixture",
+      "source_uri": "http://127.0.0.1:64384/w8b",
+      "workload_id": "W8"
+    },
+    {
+      "acquisition_config": {
+        "deadline_ms": 1500,
+        "max_response_bytes": 1000000,
+        "requested_artifact_types": [
+          "text/html"
+        ],
+        "rights_policy": "synthetic-fixture-only",
+        "source_constraints": {},
+        "temporal_requirement": "no-stated-freshness"
+      },
+      "acquisition_method": "local_http_get",
+      "adapter_identity": "axignal-offline-fixture-adapter/0.1",
+      "artifact_type": "text/html",
+      "content_fingerprint": "b50a27c4a15dc477f363ff4ab9a1c9f1ab77070bfed5db05b526265d3a820e6d",
+      "evidence_slots": 1,
+      "expected": "success_targeted",
+      "extraction_metadata": {
+        "candidate_engine": null,
+        "transform": "none"
+      },
+      "failure_state": null,
+      "iteration": 2,
+      "observed_at": null,
+      "provenance": [
+        "source-request",
+        "W9-i2",
+        "axignal-offline-fixture-adapter/0.1"
+      ],
+      "raw_artifact_reference": "results/artifacts/W9-i2-b50a27c4a15dc477f363ff4ab9a1c9f1ab77070bfed5db05b526265d3a820e6d.bin",
+      "research_question_id": "W9-Q1",
+      "response_metadata": {
+        "body_bytes": 55,
+        "elapsed_ms": 1.285,
+        "final_uri": "http://127.0.0.1:64384/w9",
+        "headers": {
+          "content-length": "55",
+          "content-type": "text/html",
+          "date": "Fri, 25 Sep 2026 00:44:59 GMT",
+          "server": "BaseHTTP/0.6 Python/3.12.11",
+          "x-fixture-request-id": "w9"
+        },
+        "redirect_chain": [
+          "http://127.0.0.1:64384/w9"
+        ],
+        "status": 200
+      },
+      "retrieved_at": "2026-09-25T00:44:59.002325+00:00",
+      "rights_metadata": "synthetic fixture; no external source rights asserted",
+      "source_identity": "synthetic-repository-fixture",
+      "source_uri": "http://127.0.0.1:64384/w9",
+      "workload_id": "W9"
+    },
+    {
+      "acquisition_config": {
+        "deadline_ms": 1500,
+        "max_response_bytes": 1000000,
+        "requested_artifact_types": [
+          "text/html"
+        ],
+        "rights_policy": "synthetic-fixture-only",
+        "source_constraints": {},
+        "temporal_requirement": "no-stated-freshness"
+      },
+      "acquisition_method": "local_http_get",
+      "adapter_identity": "axignal-offline-fixture-adapter/0.1",
+      "artifact_type": "text/html",
+      "content_fingerprint": "a30a130dcf6ea44a82db47de4836955af52e297fd901a5f5112f00a87e89f326",
+      "evidence_slots": 1,
+      "expected": "two_step_loop",
+      "extraction_metadata": {
+        "candidate_engine": null,
+        "transform": "none"
+      },
+      "failure_state": null,
+      "iteration": 2,
+      "observed_at": null,
+      "provenance": [
+        "source-request",
+        "W10-i2",
+        "axignal-offline-fixture-adapter/0.1"
+      ],
+      "raw_artifact_reference": "results/artifacts/W10-i2-a30a130dcf6ea44a82db47de4836955af52e297fd901a5f5112f00a87e89f326.bin",
+      "research_question_id": "W10-Q1",
+      "response_metadata": {
+        "body_bytes": 48,
+        "elapsed_ms": 1.32,
+        "final_uri": "http://127.0.0.1:64384/w10-first",
+        "headers": {
+          "content-length": "48",
+          "content-type": "text/html",
+          "date": "Fri, 25 Sep 2026 00:44:59 GMT",
+          "server": "BaseHTTP/0.6 Python/3.12.11",
+          "x-fixture-request-id": "w10-first"
+        },
+        "redirect_chain": [
+          "http://127.0.0.1:64384/w10-first"
+        ],
+        "status": 200
+      },
+      "retrieved_at": "2026-09-25T00:44:59.002325+00:00",
+      "rights_metadata": "synthetic fixture; no external source rights asserted",
+      "source_identity": "synthetic-repository-fixture",
+      "source_uri": "http://127.0.0.1:64384/w10-first",
+      "workload_id": "W10"
+    },
+    {
+      "acquisition_config": {
+        "deadline_ms": 1500,
+        "max_response_bytes": 1000000,
+        "requested_artifact_types": [
+          "text/plain"
+        ],
+        "rights_policy": "synthetic-fixture-only",
+        "source_constraints": {},
+        "temporal_requirement": "no-stated-freshness"
+      },
+      "acquisition_method": "local_http_get",
+      "adapter_identity": "axignal-offline-fixture-adapter/0.1",
+      "artifact_type": "text/plain; charset=utf-8",
+      "content_fingerprint": null,
+      "evidence_slots": 0,
+      "expected": "explicit_http_403",
+      "extraction_metadata": {
+        "candidate_engine": null,
+        "transform": "none"
+      },
+      "failure_state": "http_403",
+      "iteration": 2,
+      "observed_at": null,
+      "provenance": [
+        "source-request",
+        "W11-i2",
+        "axignal-offline-fixture-adapter/0.1"
+      ],
+      "raw_artifact_reference": "",
+      "research_question_id": "W11-Q1",
+      "response_metadata": {
+        "body_bytes": 0,
+        "elapsed_ms": 1.069,
+        "final_uri": "http://127.0.0.1:64384/w11-restricted",
+        "headers": {
+          "content-length": "21",
+          "content-type": "text/plain; charset=utf-8",
+          "date": "Fri, 25 Sep 2026 00:44:59 GMT",
+          "server": "BaseHTTP/0.6 Python/3.12.11",
+          "x-fixture-request-id": "w11-restricted"
+        },
+        "redirect_chain": [
+          "http://127.0.0.1:64384/w11-restricted"
+        ],
+        "status": 403
+      },
+      "retrieved_at": "2026-09-25T00:44:59.002325+00:00",
+      "rights_metadata": "synthetic fixture; no external source rights asserted",
+      "source_identity": "synthetic-repository-fixture",
+      "source_uri": "http://127.0.0.1:64384/w11-restricted",
+      "workload_id": "W11"
+    },
+    {
+      "acquisition_config": {
+        "deadline_ms": 1500,
+        "max_response_bytes": 1000000,
+        "requested_artifact_types": [
+          "text/html"
+        ],
+        "rights_policy": "synthetic-fixture-only",
+        "source_constraints": {},
+        "temporal_requirement": "no-stated-freshness"
+      },
+      "acquisition_method": "local_http_get",
+      "adapter_identity": "axignal-offline-fixture-adapter/0.1",
+      "artifact_type": "text/html",
+      "content_fingerprint": "c0e6c34320b920d849757b9d6c57fcd77f24882609ac6f87243fe49b0e178bb1",
+      "evidence_slots": 1,
+      "expected": "cache_then_refetch_policy",
+      "extraction_metadata": {
+        "candidate_engine": null,
+        "transform": "none"
+      },
+      "failure_state": null,
+      "iteration": 2,
+      "observed_at": null,
+      "provenance": [
+        "source-request",
+        "W12-i2",
+        "axignal-offline-fixture-adapter/0.1"
+      ],
+      "raw_artifact_reference": "results/artifacts/W12-i2-c0e6c34320b920d849757b9d6c57fcd77f24882609ac6f87243fe49b0e178bb1.bin",
+      "research_question_id": "W12-Q1",
+      "response_metadata": {
+        "body_bytes": 31,
+        "elapsed_ms": 1.319,
+        "final_uri": "http://127.0.0.1:64384/w12",
+        "headers": {
+          "content-length": "31",
+          "content-type": "text/html",
+          "date": "Fri, 25 Sep 2026 00:44:59 GMT",
+          "server": "BaseHTTP/0.6 Python/3.12.11",
+          "x-fixture-request-id": "w12"
+        },
+        "redirect_chain": [
+          "http://127.0.0.1:64384/w12"
+        ],
+        "status": 200
+      },
+      "retrieved_at": "2026-09-25T00:44:59.002325+00:00",
+      "rights_metadata": "synthetic fixture; no external source rights asserted",
+      "source_identity": "synthetic-repository-fixture",
+      "source_uri": "http://127.0.0.1:64384/w12",
+      "workload_id": "W12"
+    },
+    {
+      "acquisition_config": {
+        "deadline_ms": 1500,
+        "max_response_bytes": 1000000,
+        "requested_artifact_types": [
+          "text/html"
+        ],
+        "rights_policy": "synthetic-fixture-only",
+        "source_constraints": {},
+        "temporal_requirement": "no-stated-freshness"
+      },
+      "acquisition_method": "local_http_get",
+      "adapter_identity": "axignal-offline-fixture-adapter/0.1",
+      "artifact_type": "text/html",
+      "content_fingerprint": "3986aab699c218648017aac330b85440ecbc9ae7397fa897b5d49fad603343bc",
+      "evidence_slots": 2,
+      "expected": "success",
+      "extraction_metadata": {
+        "candidate_engine": null,
+        "transform": "none"
+      },
+      "failure_state": null,
+      "iteration": 3,
+      "observed_at": null,
+      "provenance": [
+        "source-request",
+        "W1-i3",
+        "axignal-offline-fixture-adapter/0.1"
+      ],
+      "raw_artifact_reference": "results/artifacts/W1-i3-3986aab699c218648017aac330b85440ecbc9ae7397fa897b5d49fad603343bc.bin",
+      "research_question_id": "W1-Q1",
+      "response_metadata": {
+        "body_bytes": 81,
+        "elapsed_ms": 1.278,
+        "final_uri": "http://127.0.0.1:64384/w1",
+        "headers": {
+          "content-length": "81",
+          "content-type": "text/html",
+          "date": "Fri, 25 Sep 2026 00:44:59 GMT",
+          "server": "BaseHTTP/0.6 Python/3.12.11",
+          "x-fixture-request-id": "w1"
+        },
+        "redirect_chain": [
+          "http://127.0.0.1:64384/w1"
+        ],
+        "status": 200
+      },
+      "retrieved_at": "2026-09-25T00:44:59.002325+00:00",
+      "rights_metadata": "synthetic fixture; no external source rights asserted",
+      "source_identity": "synthetic-repository-fixture",
+      "source_uri": "http://127.0.0.1:64384/w1",
+      "workload_id": "W1"
+    },
+    {
+      "acquisition_config": {
+        "deadline_ms": 1500,
+        "max_response_bytes": 1000000,
+        "requested_artifact_types": [
+          "text/html"
+        ],
+        "rights_policy": "synthetic-fixture-only",
+        "source_constraints": {},
+        "temporal_requirement": "no-stated-freshness"
+      },
+      "acquisition_method": "local_http_get",
+      "adapter_identity": "axignal-offline-fixture-adapter/0.1",
+      "artifact_type": "text/html",
+      "content_fingerprint": "341180d39946d52228cdf528e1984ee0cbcf3434d8979d8c751c6ffdd2f748e6",
+      "evidence_slots": 1,
+      "expected": "success_static_shell",
+      "extraction_metadata": {
+        "candidate_engine": null,
+        "transform": "none"
+      },
+      "failure_state": null,
+      "iteration": 3,
+      "observed_at": null,
+      "provenance": [
+        "source-request",
+        "W2-i3",
+        "axignal-offline-fixture-adapter/0.1"
+      ],
+      "raw_artifact_reference": "results/artifacts/W2-i3-341180d39946d52228cdf528e1984ee0cbcf3434d8979d8c751c6ffdd2f748e6.bin",
+      "research_question_id": "W2-Q1",
+      "response_metadata": {
+        "body_bytes": 109,
+        "elapsed_ms": 1.236,
+        "final_uri": "http://127.0.0.1:64384/w2",
+        "headers": {
+          "content-length": "109",
+          "content-type": "text/html",
+          "date": "Fri, 25 Sep 2026 00:44:59 GMT",
+          "server": "BaseHTTP/0.6 Python/3.12.11",
+          "x-fixture-request-id": "w2"
+        },
+        "redirect_chain": [
+          "http://127.0.0.1:64384/w2"
+        ],
+        "status": 200
+      },
+      "retrieved_at": "2026-09-25T00:44:59.002325+00:00",
+      "rights_metadata": "synthetic fixture; no external source rights asserted",
+      "source_identity": "synthetic-repository-fixture",
+      "source_uri": "http://127.0.0.1:64384/w2",
+      "workload_id": "W2"
+    },
+    {
+      "acquisition_config": {
+        "deadline_ms": 1500,
+        "max_response_bytes": 1000000,
+        "requested_artifact_types": [
+          "text/html"
+        ],
+        "rights_policy": "synthetic-fixture-only",
+        "source_constraints": {},
+        "temporal_requirement": "no-stated-freshness"
+      },
+      "acquisition_method": "local_http_get",
+      "adapter_identity": "axignal-offline-fixture-adapter/0.1",
+      "artifact_type": "text/html",
+      "content_fingerprint": "6aaf19137f1e40c9a1272122cfd61536682ccc40ad3efd09a0ac0fec5aebfc18",
+      "evidence_slots": 2,
+      "expected": "success",
+      "extraction_metadata": {
+        "candidate_engine": null,
+        "transform": "none"
+      },
+      "failure_state": null,
+      "iteration": 3,
+      "observed_at": null,
+      "provenance": [
+        "source-request",
+        "W3-i3",
+        "axignal-offline-fixture-adapter/0.1"
+      ],
+      "raw_artifact_reference": "results/artifacts/W3-i3-6aaf19137f1e40c9a1272122cfd61536682ccc40ad3efd09a0ac0fec5aebfc18.bin",
+      "research_question_id": "W3-Q1",
+      "response_metadata": {
+        "body_bytes": 40,
+        "elapsed_ms": 1.275,
+        "final_uri": "http://127.0.0.1:64384/w3",
+        "headers": {
+          "content-length": "40",
+          "content-type": "text/html",
+          "date": "Fri, 25 Sep 2026 00:44:59 GMT",
+          "server": "BaseHTTP/0.6 Python/3.12.11",
+          "x-fixture-request-id": "w3"
+        },
+        "redirect_chain": [
+          "http://127.0.0.1:64384/w3"
+        ],
+        "status": 200
+      },
+      "retrieved_at": "2026-09-25T00:44:59.002325+00:00",
+      "rights_metadata": "synthetic fixture; no external source rights asserted",
+      "source_identity": "synthetic-repository-fixture",
+      "source_uri": "http://127.0.0.1:64384/w3",
+      "workload_id": "W3"
+    },
+    {
+      "acquisition_config": {
+        "deadline_ms": 1500,
+        "max_response_bytes": 1000000,
+        "requested_artifact_types": [
+          "text/html"
+        ],
+        "rights_policy": "synthetic-fixture-only",
+        "source_constraints": {},
+        "temporal_requirement": "no-stated-freshness"
+      },
+      "acquisition_method": "local_http_get",
+      "adapter_identity": "axignal-offline-fixture-adapter/0.1",
+      "artifact_type": "text/html",
+      "content_fingerprint": "82b9bd082cc1c879a33a7f515817e145a534e4f4b3fa5f35bf8bb9c8b66c7629",
+      "evidence_slots": 1,
+      "expected": "bounded_child",
+      "extraction_metadata": {
+        "candidate_engine": null,
+        "transform": "none"
+      },
+      "failure_state": null,
+      "iteration": 3,
+      "observed_at": null,
+      "provenance": [
+        "source-request",
+        "W3-child-i3",
+        "axignal-offline-fixture-adapter/0.1"
+      ],
+      "raw_artifact_reference": "results/artifacts/W3-child-i3-82b9bd082cc1c879a33a7f515817e145a534e4f4b3fa5f35bf8bb9c8b66c7629.bin",
+      "research_question_id": "W3-Q1",
+      "response_metadata": {
+        "body_bytes": 37,
+        "elapsed_ms": 5.564,
+        "final_uri": "http://127.0.0.1:64384/w3-child",
+        "headers": {
+          "content-length": "37",
+          "content-type": "text/html",
+          "date": "Fri, 25 Sep 2026 00:44:59 GMT",
+          "server": "BaseHTTP/0.6 Python/3.12.11",
+          "x-fixture-request-id": "w3-child"
+        },
+        "redirect_chain": [
+          "http://127.0.0.1:64384/w3-child"
+        ],
+        "status": 200
+      },
+      "retrieved_at": "2026-09-25T00:44:59.018245+00:00",
+      "rights_metadata": "synthetic fixture; no external source rights asserted",
+      "source_identity": "synthetic-repository-fixture",
+      "source_uri": "http://127.0.0.1:64384/w3-child",
+      "workload_id": "W3"
+    },
+    {
+      "acquisition_config": {
+        "deadline_ms": 1500,
+        "max_response_bytes": 1000000,
+        "requested_artifact_types": [
+          "application/pdf"
+        ],
+        "rights_policy": "synthetic-fixture-only",
+        "source_constraints": {},
+        "temporal_requirement": "no-stated-freshness"
+      },
+      "acquisition_method": "local_http_get",
+      "adapter_identity": "axignal-offline-fixture-adapter/0.1",
+      "artifact_type": "application/pdf",
+      "content_fingerprint": "209584899a3997f195803a878487a38feb4c7256d96a61489f916216bcc2eb99",
+      "evidence_slots": 1,
+      "expected": "success_fixture_pdf",
+      "extraction_metadata": {
+        "candidate_engine": null,
+        "transform": "none"
+      },
+      "failure_state": null,
+      "iteration": 3,
+      "observed_at": null,
+      "provenance": [
+        "source-request",
+        "W4-i3",
+        "axignal-offline-fixture-adapter/0.1"
+      ],
+      "raw_artifact_reference": "results/artifacts/W4-i3-209584899a3997f195803a878487a38feb4c7256d96a61489f916216bcc2eb99.bin",
+      "research_question_id": "W4-Q1",
+      "response_metadata": {
+        "body_bytes": 71,
+        "elapsed_ms": 1.284,
+        "final_uri": "http://127.0.0.1:64384/w4",
+        "headers": {
+          "content-length": "71",
+          "content-type": "application/pdf",
+          "date": "Fri, 25 Sep 2026 00:44:59 GMT",
+          "server": "BaseHTTP/0.6 Python/3.12.11",
+          "x-fixture-request-id": "w4"
+        },
+        "redirect_chain": [
+          "http://127.0.0.1:64384/w4"
+        ],
+        "status": 200
+      },
+      "retrieved_at": "2026-09-25T00:44:59.018245+00:00",
+      "rights_metadata": "synthetic fixture; no external source rights asserted",
+      "source_identity": "synthetic-repository-fixture",
+      "source_uri": "http://127.0.0.1:64384/w4",
+      "workload_id": "W4"
+    },
+    {
+      "acquisition_config": {
+        "deadline_ms": 1500,
+        "max_response_bytes": 1000000,
+        "requested_artifact_types": [
+          "text/html"
+        ],
+        "rights_policy": "synthetic-fixture-only",
+        "source_constraints": {},
+        "temporal_requirement": "no-stated-freshness"
+      },
+      "acquisition_method": "local_http_get",
+      "adapter_identity": "axignal-offline-fixture-adapter/0.1",
+      "artifact_type": "text/html",
+      "content_fingerprint": "7de8687288843c0bf3085b1d6a95e3db5e3a04e58ee690b8c32bb40035cce1c1",
+      "evidence_slots": 1,
+      "expected": "success",
+      "extraction_metadata": {
+        "candidate_engine": null,
+        "transform": "none"
+      },
+      "failure_state": null,
+      "iteration": 3,
+      "observed_at": null,
+      "provenance": [
+        "source-request",
+        "W5-i3",
+        "axignal-offline-fixture-adapter/0.1"
+      ],
+      "raw_artifact_reference": "results/artifacts/W5-i3-7de8687288843c0bf3085b1d6a95e3db5e3a04e58ee690b8c32bb40035cce1c1.bin",
+      "research_question_id": "W5-Q1",
+      "response_metadata": {
+        "body_bytes": 64,
+        "elapsed_ms": 1.24,
+        "final_uri": "http://127.0.0.1:64384/w5",
+        "headers": {
+          "content-length": "64",
+          "content-type": "text/html",
+          "date": "Fri, 25 Sep 2026 00:44:59 GMT",
+          "server": "BaseHTTP/0.6 Python/3.12.11",
+          "x-fixture-request-id": "w5"
+        },
+        "redirect_chain": [
+          "http://127.0.0.1:64384/w5"
+        ],
+        "status": 200
+      },
+      "retrieved_at": "2026-09-25T00:44:59.018245+00:00",
+      "rights_metadata": "synthetic fixture; no external source rights asserted",
+      "source_identity": "synthetic-repository-fixture",
+      "source_uri": "http://127.0.0.1:64384/w5",
+      "workload_id": "W5"
+    },
+    {
+      "acquisition_config": {
+        "deadline_ms": 1500,
+        "max_response_bytes": 1000000,
+        "requested_artifact_types": [
+          "text/html"
+        ],
+        "rights_policy": "synthetic-fixture-only",
+        "source_constraints": {},
+        "temporal_requirement": "no-stated-freshness"
+      },
+      "acquisition_method": "local_http_get",
+      "adapter_identity": "axignal-offline-fixture-adapter/0.1",
+      "artifact_type": "text/html",
+      "content_fingerprint": "c101e98827806f011fa1fa1fc1d2c7563ca42ca3217dadc5d5da744af00741fe",
+      "evidence_slots": 2,
+      "expected": "success",
+      "extraction_metadata": {
+        "candidate_engine": null,
+        "transform": "none"
+      },
+      "failure_state": null,
+      "iteration": 3,
+      "observed_at": null,
+      "provenance": [
+        "source-request",
+        "W6-i3",
+        "axignal-offline-fixture-adapter/0.1"
+      ],
+      "raw_artifact_reference": "results/artifacts/W6-i3-c101e98827806f011fa1fa1fc1d2c7563ca42ca3217dadc5d5da744af00741fe.bin",
+      "research_question_id": "W6-Q1",
+      "response_metadata": {
+        "body_bytes": 68,
+        "elapsed_ms": 1.267,
+        "final_uri": "http://127.0.0.1:64384/w6",
+        "headers": {
+          "content-length": "68",
+          "content-type": "text/html",
+          "date": "Fri, 25 Sep 2026 00:44:59 GMT",
+          "server": "BaseHTTP/0.6 Python/3.12.11",
+          "x-fixture-request-id": "w6"
+        },
+        "redirect_chain": [
+          "http://127.0.0.1:64384/w6"
+        ],
+        "status": 200
+      },
+      "retrieved_at": "2026-09-25T00:44:59.018245+00:00",
+      "rights_metadata": "synthetic fixture; no external source rights asserted",
+      "source_identity": "synthetic-repository-fixture",
+      "source_uri": "http://127.0.0.1:64384/w6",
+      "workload_id": "W6"
+    },
+    {
+      "acquisition_config": {
+        "deadline_ms": 1500,
+        "max_response_bytes": 1000000,
+        "requested_artifact_types": [
+          "text/html"
+        ],
+        "rights_policy": "synthetic-fixture-only",
+        "source_constraints": {},
+        "temporal_requirement": "no-stated-freshness"
+      },
+      "acquisition_method": "local_http_get",
+      "adapter_identity": "axignal-offline-fixture-adapter/0.1",
+      "artifact_type": "text/html",
+      "content_fingerprint": "ae83562a13da4ba51a858ab46b29febc49535faebc434d1ccd1fbc6cf456dc4d",
+      "evidence_slots": 2,
+      "expected": "success_observation_only",
+      "extraction_metadata": {
+        "candidate_engine": null,
+        "transform": "none"
+      },
+      "failure_state": null,
+      "iteration": 3,
+      "observed_at": null,
+      "provenance": [
+        "source-request",
+        "W7-i3",
+        "axignal-offline-fixture-adapter/0.1"
+      ],
+      "raw_artifact_reference": "results/artifacts/W7-i3-ae83562a13da4ba51a858ab46b29febc49535faebc434d1ccd1fbc6cf456dc4d.bin",
+      "research_question_id": "W7-Q1",
+      "response_metadata": {
+        "body_bytes": 58,
+        "elapsed_ms": 1.237,
+        "final_uri": "http://127.0.0.1:64384/w7",
+        "headers": {
+          "content-length": "58",
+          "content-type": "text/html",
+          "date": "Fri, 25 Sep 2026 00:44:59 GMT",
+          "server": "BaseHTTP/0.6 Python/3.12.11",
+          "x-fixture-request-id": "w7"
+        },
+        "redirect_chain": [
+          "http://127.0.0.1:64384/w7"
+        ],
+        "status": 200
+      },
+      "retrieved_at": "2026-09-25T00:44:59.018245+00:00",
+      "rights_metadata": "synthetic fixture; no external source rights asserted",
+      "source_identity": "synthetic-repository-fixture",
+      "source_uri": "http://127.0.0.1:64384/w7",
+      "workload_id": "W7"
+    },
+    {
+      "acquisition_config": {
+        "deadline_ms": 1500,
+        "max_response_bytes": 1000000,
+        "requested_artifact_types": [
+          "text/html"
+        ],
+        "rights_policy": "synthetic-fixture-only",
+        "source_constraints": {},
+        "temporal_requirement": "no-stated-freshness"
+      },
+      "acquisition_method": "local_http_get",
+      "adapter_identity": "axignal-offline-fixture-adapter/0.1",
+      "artifact_type": "text/html",
+      "content_fingerprint": "093c38a19ec989c00c31c93eecb90e9051134b779a4af07c6de00e67be0f12dc",
+      "evidence_slots": 1,
+      "expected": "two_observations",
+      "extraction_metadata": {
+        "candidate_engine": null,
+        "transform": "none"
+      },
+      "failure_state": null,
+      "iteration": 3,
+      "observed_at": null,
+      "provenance": [
+        "source-request",
+        "W8-i3",
+        "axignal-offline-fixture-adapter/0.1"
+      ],
+      "raw_artifact_reference": "results/artifacts/W8-i3-093c38a19ec989c00c31c93eecb90e9051134b779a4af07c6de00e67be0f12dc.bin",
+      "research_question_id": "W8-Q1",
+      "response_metadata": {
+        "body_bytes": 38,
+        "elapsed_ms": 1.276,
+        "final_uri": "http://127.0.0.1:64384/w8a",
+        "headers": {
+          "content-length": "38",
+          "content-type": "text/html",
+          "date": "Fri, 25 Sep 2026 00:44:59 GMT",
+          "server": "BaseHTTP/0.6 Python/3.12.11",
+          "x-fixture-request-id": "w8a"
+        },
+        "redirect_chain": [
+          "http://127.0.0.1:64384/w8a"
+        ],
+        "status": 200
+      },
+      "retrieved_at": "2026-09-25T00:44:59.018245+00:00",
+      "rights_metadata": "synthetic fixture; no external source rights asserted",
+      "source_identity": "synthetic-repository-fixture",
+      "source_uri": "http://127.0.0.1:64384/w8a",
+      "workload_id": "W8"
+    },
+    {
+      "acquisition_config": {
+        "deadline_ms": 1500,
+        "max_response_bytes": 1000000,
+        "requested_artifact_types": [
+          "text/html"
+        ],
+        "rights_policy": "synthetic-fixture-only",
+        "source_constraints": {},
+        "temporal_requirement": "no-stated-freshness"
+      },
+      "acquisition_method": "local_http_get",
+      "adapter_identity": "axignal-offline-fixture-adapter/0.1",
+      "artifact_type": "text/html",
+      "content_fingerprint": "b5be881f69edfb96345fed6195cc90647a09b23c39e0794dd9fa6691c9858917",
+      "evidence_slots": 1,
+      "expected": "contradictory_observation",
+      "extraction_metadata": {
+        "candidate_engine": null,
+        "transform": "none"
+      },
+      "failure_state": null,
+      "iteration": 3,
+      "observed_at": null,
+      "provenance": [
+        "source-request",
+        "W8b-i3",
+        "axignal-offline-fixture-adapter/0.1"
+      ],
+      "raw_artifact_reference": "results/artifacts/W8b-i3-b5be881f69edfb96345fed6195cc90647a09b23c39e0794dd9fa6691c9858917.bin",
+      "research_question_id": "W8-Q1",
+      "response_metadata": {
+        "body_bytes": 38,
+        "elapsed_ms": 1.255,
+        "final_uri": "http://127.0.0.1:64384/w8b",
+        "headers": {
+          "content-length": "38",
+          "content-type": "text/html",
+          "date": "Fri, 25 Sep 2026 00:44:59 GMT",
+          "server": "BaseHTTP/0.6 Python/3.12.11",
+          "x-fixture-request-id": "w8b"
+        },
+        "redirect_chain": [
+          "http://127.0.0.1:64384/w8b"
+        ],
+        "status": 200
+      },
+      "retrieved_at": "2026-09-25T00:44:59.018245+00:00",
+      "rights_metadata": "synthetic fixture; no external source rights asserted",
+      "source_identity": "synthetic-repository-fixture",
+      "source_uri": "http://127.0.0.1:64384/w8b",
+      "workload_id": "W8"
+    },
+    {
+      "acquisition_config": {
+        "deadline_ms": 1500,
+        "max_response_bytes": 1000000,
+        "requested_artifact_types": [
+          "text/html"
+        ],
+        "rights_policy": "synthetic-fixture-only",
+        "source_constraints": {},
+        "temporal_requirement": "no-stated-freshness"
+      },
+      "acquisition_method": "local_http_get",
+      "adapter_identity": "axignal-offline-fixture-adapter/0.1",
+      "artifact_type": "text/html",
+      "content_fingerprint": "b50a27c4a15dc477f363ff4ab9a1c9f1ab77070bfed5db05b526265d3a820e6d",
+      "evidence_slots": 1,
+      "expected": "success_targeted",
+      "extraction_metadata": {
+        "candidate_engine": null,
+        "transform": "none"
+      },
+      "failure_state": null,
+      "iteration": 3,
+      "observed_at": null,
+      "provenance": [
+        "source-request",
+        "W9-i3",
+        "axignal-offline-fixture-adapter/0.1"
+      ],
+      "raw_artifact_reference": "results/artifacts/W9-i3-b50a27c4a15dc477f363ff4ab9a1c9f1ab77070bfed5db05b526265d3a820e6d.bin",
+      "research_question_id": "W9-Q1",
+      "response_metadata": {
+        "body_bytes": 55,
+        "elapsed_ms": 1.29,
+        "final_uri": "http://127.0.0.1:64384/w9",
+        "headers": {
+          "content-length": "55",
+          "content-type": "text/html",
+          "date": "Fri, 25 Sep 2026 00:44:59 GMT",
+          "server": "BaseHTTP/0.6 Python/3.12.11",
+          "x-fixture-request-id": "w9"
+        },
+        "redirect_chain": [
+          "http://127.0.0.1:64384/w9"
+        ],
+        "status": 200
+      },
+      "retrieved_at": "2026-09-25T00:44:59.018245+00:00",
+      "rights_metadata": "synthetic fixture; no external source rights asserted",
+      "source_identity": "synthetic-repository-fixture",
+      "source_uri": "http://127.0.0.1:64384/w9",
+      "workload_id": "W9"
+    },
+    {
+      "acquisition_config": {
+        "deadline_ms": 1500,
+        "max_response_bytes": 1000000,
+        "requested_artifact_types": [
+          "text/html"
+        ],
+        "rights_policy": "synthetic-fixture-only",
+        "source_constraints": {},
+        "temporal_requirement": "no-stated-freshness"
+      },
+      "acquisition_method": "local_http_get",
+      "adapter_identity": "axignal-offline-fixture-adapter/0.1",
+      "artifact_type": "text/html",
+      "content_fingerprint": "a30a130dcf6ea44a82db47de4836955af52e297fd901a5f5112f00a87e89f326",
+      "evidence_slots": 1,
+      "expected": "two_step_loop",
+      "extraction_metadata": {
+        "candidate_engine": null,
+        "transform": "none"
+      },
+      "failure_state": null,
+      "iteration": 3,
+      "observed_at": null,
+      "provenance": [
+        "source-request",
+        "W10-i3",
+        "axignal-offline-fixture-adapter/0.1"
+      ],
+      "raw_artifact_reference": "results/artifacts/W10-i3-a30a130dcf6ea44a82db47de4836955af52e297fd901a5f5112f00a87e89f326.bin",
+      "research_question_id": "W10-Q1",
+      "response_metadata": {
+        "body_bytes": 48,
+        "elapsed_ms": 1.229,
+        "final_uri": "http://127.0.0.1:64384/w10-first",
+        "headers": {
+          "content-length": "48",
+          "content-type": "text/html",
+          "date": "Fri, 25 Sep 2026 00:44:59 GMT",
+          "server": "BaseHTTP/0.6 Python/3.12.11",
+          "x-fixture-request-id": "w10-first"
+        },
+        "redirect_chain": [
+          "http://127.0.0.1:64384/w10-first"
+        ],
+        "status": 200
+      },
+      "retrieved_at": "2026-09-25T00:44:59.018245+00:00",
+      "rights_metadata": "synthetic fixture; no external source rights asserted",
+      "source_identity": "synthetic-repository-fixture",
+      "source_uri": "http://127.0.0.1:64384/w10-first",
+      "workload_id": "W10"
+    },
+    {
+      "acquisition_config": {
+        "deadline_ms": 1500,
+        "max_response_bytes": 1000000,
+        "requested_artifact_types": [
+          "text/plain"
+        ],
+        "rights_policy": "synthetic-fixture-only",
+        "source_constraints": {},
+        "temporal_requirement": "no-stated-freshness"
+      },
+      "acquisition_method": "local_http_get",
+      "adapter_identity": "axignal-offline-fixture-adapter/0.1",
+      "artifact_type": "text/plain; charset=utf-8",
+      "content_fingerprint": null,
+      "evidence_slots": 0,
+      "expected": "explicit_http_403",
+      "extraction_metadata": {
+        "candidate_engine": null,
+        "transform": "none"
+      },
+      "failure_state": "http_403",
+      "iteration": 3,
+      "observed_at": null,
+      "provenance": [
+        "source-request",
+        "W11-i3",
+        "axignal-offline-fixture-adapter/0.1"
+      ],
+      "raw_artifact_reference": "",
+      "research_question_id": "W11-Q1",
+      "response_metadata": {
+        "body_bytes": 0,
+        "elapsed_ms": 0.979,
+        "final_uri": "http://127.0.0.1:64384/w11-restricted",
+        "headers": {
+          "content-length": "21",
+          "content-type": "text/plain; charset=utf-8",
+          "date": "Fri, 25 Sep 2026 00:44:59 GMT",
+          "server": "BaseHTTP/0.6 Python/3.12.11",
+          "x-fixture-request-id": "w11-restricted"
+        },
+        "redirect_chain": [
+          "http://127.0.0.1:64384/w11-restricted"
+        ],
+        "status": 403
+      },
+      "retrieved_at": "2026-09-25T00:44:59.018245+00:00",
+      "rights_metadata": "synthetic fixture; no external source rights asserted",
+      "source_identity": "synthetic-repository-fixture",
+      "source_uri": "http://127.0.0.1:64384/w11-restricted",
+      "workload_id": "W11"
+    },
+    {
+      "acquisition_config": {
+        "deadline_ms": 1500,
+        "max_response_bytes": 1000000,
+        "requested_artifact_types": [
+          "text/html"
+        ],
+        "rights_policy": "synthetic-fixture-only",
+        "source_constraints": {},
+        "temporal_requirement": "no-stated-freshness"
+      },
+      "acquisition_method": "local_http_get",
+      "adapter_identity": "axignal-offline-fixture-adapter/0.1",
+      "artifact_type": "text/html",
+      "content_fingerprint": "c0e6c34320b920d849757b9d6c57fcd77f24882609ac6f87243fe49b0e178bb1",
+      "evidence_slots": 1,
+      "expected": "cache_then_refetch_policy",
+      "extraction_metadata": {
+        "candidate_engine": null,
+        "transform": "none"
+      },
+      "failure_state": null,
+      "iteration": 3,
+      "observed_at": null,
+      "provenance": [
+        "source-request",
+        "W12-i3",
+        "axignal-offline-fixture-adapter/0.1"
+      ],
+      "raw_artifact_reference": "results/artifacts/W12-i3-c0e6c34320b920d849757b9d6c57fcd77f24882609ac6f87243fe49b0e178bb1.bin",
+      "research_question_id": "W12-Q1",
+      "response_metadata": {
+        "body_bytes": 31,
+        "elapsed_ms": 1.254,
+        "final_uri": "http://127.0.0.1:64384/w12",
+        "headers": {
+          "content-length": "31",
+          "content-type": "text/html",
+          "date": "Fri, 25 Sep 2026 00:44:59 GMT",
+          "server": "BaseHTTP/0.6 Python/3.12.11",
+          "x-fixture-request-id": "w12"
+        },
+        "redirect_chain": [
+          "http://127.0.0.1:64384/w12"
+        ],
+        "status": 200
+      },
+      "retrieved_at": "2026-09-25T00:44:59.018245+00:00",
+      "rights_metadata": "synthetic fixture; no external source rights asserted",
+      "source_identity": "synthetic-repository-fixture",
+      "source_uri": "http://127.0.0.1:64384/w12",
+      "workload_id": "W12"
+    }
+  ],
+  "run_metadata": {
+    "adapter": "axignal-offline-fixture-adapter/0.1",
+    "candidate_engines_benchmarked": [],
+    "candidate_engines_installed": [],
+    "cpu_count": 12,
+    "date_utc": "2026-09-25T00:44:59.034362+00:00",
+    "external_network_used": false,
+    "iterations": 3,
+    "platform": "Windows-11-10.0.26200-SP0",
+    "python": "3.12.11",
+    "result_kind": "offline_fixture_contract_and_transport_reference_only",
+    "warm_cold_state": "loopback server warmed before iteration 1; no browser, cache, or candidate engine state",
+    "workload_count": 12
+  }
+}
