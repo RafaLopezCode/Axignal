@@ -1,6 +1,6 @@
 # AXIGNAL V3 --- PRIVATE CROSS-INTELLIGENCE
 
-**Document version:** 1.0\
+**Document version:** 1.1 (V3.1 doctrinal reconciliation)\
 **Product generation:** AXIGNAL V3\
 **Spec status:** PROPOSED\
 **Implementation status:** PRE_IMPLEMENTATION\
@@ -266,16 +266,18 @@ what questions follow from the discrepancy**.
 
 ------------------------------------------------------------------------
 
-# 6. Zero-friction connection doctrine
+# 6. Low-friction access ambition
 
-Customers should not need to understand MCP, APIs, developer portals or
-tokens.
+Low friction is a product ambition, not a measured result. Customers should
+not need to understand MCP, APIs, developer portals or tokens.
 
-Target UX:
+“Connect your company” is not a mandatory V3 entry step or integration setup
+wizard. After an explicit V3 request, the customer may enter Ask AXENT directly
+and begin with available authorized context. When a material question requires
+missing private evidence, AXENT explains what access would resolve and why;
+see §44.
 
-> **Connect your company**
-
-Then AXIGNAL explains what connection would answer and why.
+Connection copy and interaction are contextual to that question.
 
 MCP, native APIs, OAuth, enterprise connectors and file ingestion are
 infrastructure.
@@ -294,7 +296,7 @@ Do not begin by asking the customer to connect everything.
 Preferred flow:
 
 ``` text
-V2 / PUBLIC ANALYSIS
+V3 REQUEST / AVAILABLE PUBLIC ANALYSIS
        ↓
 MATERIAL UNANSWERED QUESTION
        ↓
@@ -346,6 +348,9 @@ campaign.send
 ```
 
 Read-only is the default.
+Authorization is requested just in time for a material question. Available
+provider data is not necessarily required data; an existing connection does
+not grant blanket permission to use it.
 
 Principle:
 
@@ -1422,3 +1427,195 @@ And:
 
 > **Private access expands analytical context. It never expands
 > canonical authority.**
+
+------------------------------------------------------------------------
+
+# 44. V3.1 contextual private capability access
+
+**V3.1 is a reconciliation maturity of AXIGNAL V3, not a new product
+generation.** V3 remains `PROPOSED / PRE_IMPLEMENTATION`; this section
+specifies product and architectural semantics only. It selects no runtime,
+provider, protocol, schema, persistence mechanism or UI component.
+
+## 44.1 Entry and investigation policy
+
+An explicit V3 request or purchase may enter Ask AXENT directly. AXENT begins
+with AXIGNAL's already authorized public projection and the analytical
+question; a private connection is not an onboarding prerequisite. Do not add
+a generic integration setup wizard or a redundant start-V3 step after the
+customer has explicitly requested V3, unless a separately required payment,
+legal or security decision is due.
+
+Investigate first. A Private Analytical Question and the Knowledge Frontier
+identify what remains unknown; the Research Planner evaluates whether the gap
+is material and whether additional information is worth pursuing. If public
+and already-authorized evidence suffices, continue without asking for access.
+If a material analytical branch needs private evidence, express the gap as a
+vendor-neutral `RequiredPrivateCapability` and explain why that capability is
+needed. A capability request is never generated solely because a provider or
+integration exists. Expected information gain and customer interruption are
+considered by research policy, without a universal score, cutoff or numeric
+friction quota. Public evidence may direct a private analytical question, and
+private evidence may direct independent public research; both are attention
+triggers only. Public research still requires independent evidence admission.
+Private AEAP determines the question-specific analytical need; the shared
+Knowledge Frontier and Research Planner provide the gap and research-priority
+policy rather than a duplicate private gap engine.
+
+The customer controls access, AXIGNAL controls analytical method, and
+evidence controls supported conclusions. A customer may authorize, decline,
+revoke, or optionally pre-connect where supported. Product entitlement or
+AXIGNAL intent approval is not provider authorization; provider authorization
+is not evidence; authorization is not truth.
+
+## 44.2 Capability and authorization responsibilities
+
+The following are semantic contracts, not executable interfaces. The V3
+domain owns question, capability need, private projection and analytical
+continuation. Future access infrastructure routes or enacts access only; it
+does not decide what is true.
+
+| Contract responsibility | Required semantics |
+| --- | --- |
+| Private Analytical Question | Trace the V3 investigation branch, public/private input references, gap, materiality, current result and continuation. Reuse the existing Knowledge Frontier and Research Planner; do not create a second gap or research engine. |
+| Required Private Capability | State the provider-neutral data operation or dimension needed to resolve that question, with the minimum fields and access mode; it is a need, not permission or evidence. |
+| Private Capability Request | Bind question/gap, required and excluded capability, analytical reason, expected information gain if available, available access paths, authorization state and continuation reference. It is not shown directly without contextual projection. |
+| Private Capability Broker | Determine whether supported capability exists, an already authorized connection and scope satisfy it, incremental scope is needed, and cloud or local access is available. Route access; never decide truth. |
+| Private Authorization Broker | Provider-neutral initiation, verification, granted-scope recording, state, expiry, revocation and credential handoff responsibilities. It owns access mechanics, not analytical or epistemic authority. |
+| Provider Capability Discovery | Distinguish provider-supported, actually granted and analytically required capabilities. A successful connection alone does not establish that the requirement is satisfied. |
+| Provider Adapter | Translate the authorized provider/local read path into AXIGNAL-owned semantics and failure/provenance handling. Adapters remain replaceable; provider schema and identity do not define the analytical ontology. |
+| Private Capability Projection | Produce the bounded, tenant-scoped, question-relevant projection consumed by Private AEAP, preserving public/private distinction and source lineage. |
+| Contextual Consent Projection | Present the question, why access matters, minimum requested and excluded scope, read-only mode, decline option and what analysis resumes. AXENT owns meaning; a UI renderer only presents it. |
+| Authorization State | Use the operational states in §44.4. Access state is never an epistemic or evidence state. |
+| Incremental Scope Request | If a new question needs a scope not already granted, create a separately justified request; no silent expansion. |
+| Capability Reuse | Check existing valid authorized capability/scope before asking again. A provider connection is not blanket access; do not repeat consent when valid scope is sufficient. |
+| Private Analytical Continuation | Preserve the original question/branch, gap, evidence already considered and intended next analytical step while access is pending or declined. |
+| Private Observation Provenance | Preserve tenant/source/connection/capability references, observation and applicable effective time, granted scope, adapter/normalization lineage and privacy class. Keep it distinct from public evidence. |
+| Private Data Minimization | Acquire only question-scoped fields and records; prefer sufficient aggregation and deterministic preprocessing. Avoid PII when non-identifying economic signals suffice. Connection never means unbounded ingestion or permission to copy everything. |
+| Cloud Connector | Cloud-first governed access is the preferred path for supported SaaS/private systems, subject to provider restrictions and actual capability. No universal OAuth or coverage claim follows. |
+| Local / On-Premise Adapter | Retain a local/on-premise access path when the required system cannot be reached through a suitable governed cloud path. The concept is not a selected runtime; “Private Bridge” is not canonicalized here. |
+| Connection Revocation | Deny future access after revocation and expose operational state. Revocation is distinct from retention/deletion of previously acquired observations, derived findings or reports; exact policy and duration remain open. |
+| Private Analytical Trigger | Private evidence may direct AXIGNAL research attention and question generation only. It has no canonical write authority. |
+| Private-to-Public Research Escalation | A private signal may prompt independent public research. Public canonical admission requires independently acquired public evidence and the existing evidence-admission policy; there is no private-to-public shortcut. |
+| Private Integration Telemetry | Measure request/consent/authorization/reuse/scope/failure/value lifecycle using minimized operational metadata, named definitions and known/unknown states. Do not claim zero friction as measured or invent target values. |
+| Admin Observability References | Provide bounded IDs and references for investigation, question, capability request, connection/adapter, state/scope, lifecycle times, revocation/retention, cost and failure/security events. References reveal no private payload or finding by default. |
+
+## 44.3 Contextual request and interaction
+
+When a question requires access, AXENT projects a contextual inline capability
+Card within the ongoing analysis. The Card makes the analytical question and
+reason visible; identifies requested and explicitly unnecessary data; states
+read-only as the default and explains any justified alternative; offers
+continue-without-access, decline or authorize; and states which branch would
+resume. Exact copy and visual design are not domain contracts.
+
+Modal or popup interaction is not the default. It may be appropriate for the
+provider's authorization UI, legal consent, payment, security-sensitive scope
+expansion or important revocation confirmation. AI Elements, if used by a
+future renderer, is a presentation implementation only and cannot become
+domain authority. Secrets (including access/refresh tokens and client
+secrets) never enter AXENT context, Private AEAP context or Card properties.
+
+AXIGNAL's “authorize this investigation” intent and the provider's actual
+authorization are separate transitions. Only verified granted capabilities
+make a private capability available. Decline is a valid path: continue with
+public or other authorized evidence, mark the branch insufficient/unknown,
+defer it, or explain the limitation. Decline, denial, failure, or unavailable
+access never means false, zero, or negative evidence.
+
+An optional Connections surface may show connections, granted scopes,
+read-only status, health, expiration and controls to reconnect or revoke. It
+is secondary and never mandatory V3 onboarding. A pre-connected provider
+creates available access only: it does not automatically authorize every
+capability, ingest data or trigger analysis.
+
+## 44.4 Access states, pause/resume and failure semantics
+
+Provider-neutral operational authorization states are:
+
+```text
+NOT_REQUIRED
+NOT_AUTHORIZED
+REQUESTED
+USER_DECLINED
+AUTHORIZATION_PENDING
+AUTHORIZED
+PARTIALLY_AUTHORIZED
+SCOPE_INSUFFICIENT
+EXPIRED
+REVOKED
+FAILED
+```
+
+These states describe access, not evidence. Research/access outcomes must
+also distinguish unsupported capability, security-policy denial, provider
+unavailability, rate limiting, adapter failure, incomplete or stale data,
+normalization failure and insufficient private evidence. An access or
+operational failure must never be converted to an analytical conclusion.
+Where recorded as failure reasons, preserve distinct semantics for
+`CAPABILITY_NOT_SUPPORTED`, `NOT_AUTHORIZED`, `USER_DECLINED`,
+`AUTHORIZATION_PENDING`, `SCOPE_INSUFFICIENT`, `AUTHORIZATION_EXPIRED`,
+`AUTHORIZATION_REVOKED`, `PROVIDER_UNAVAILABLE`, `RATE_LIMITED`,
+`ADAPTER_FAILED`, `DATA_INCOMPLETE`, `DATA_STALE`, `NORMALIZATION_FAILED`,
+`PRIVATE_EVIDENCE_INSUFFICIENT` and `SECURITY_POLICY_DENIED`.
+
+When authorization is needed, pause the affected analytical branch while the
+rest of V3 and any independent work continue. Preserve its question and
+continuation; after provider verification and capability availability, obtain
+only the minimum required observation and resume that original branch. The
+customer does not restart V3. If access is declined or unavailable, the branch
+ends or remains unresolved according to its evidence and stopping reason.
+Do not solicit access indefinitely: stop or defer when evidence is sufficient,
+marginal information gain is low, the customer declines, capability is
+unavailable, policy denies access, source space or budget is exhausted, the
+question remains `UNKNOWN_PRIVATE` / `NOT_OBSERVABLE` / `NOT_APPLICABLE`, or
+the analytical branch is low materiality.
+
+Revoking access prevents future reads. It does not alone decide retention or
+deletion of prior private observations, minimized state, findings or reports.
+Do not invent durations, deletion promises or retention transitions here.
+
+## 44.5 Epistemic, privacy and Admin boundaries
+
+Private data may direct research attention, suggest hypotheses and motivate
+independent public-source investigation. It may not direct public canonical
+conclusions. Private-derived analysis remains in the tenant-scoped Private
+Analytical Space, not a second AXIGLAND, data lake, shadow CRM or workflow
+system. Public AXIGLAND references remain projections; private links do not
+change canonical identity, FAXT, INXIGHT, PATHX or public provenance.
+
+Admin may observe the bounded lifecycle references above under P0-ADMIN-01.
+Admin does not own capability meaning or authorization semantics, and its
+default projections do not expose private source payloads, documents,
+opportunities, financial details, findings, prompts or model context.
+Operational visibility is not private-content access.
+
+The following future telemetry may be defined with stable names and explicit
+denominators: V3 request-to-AXENT time, time to first private question,
+capability request/approval/decline rates, authorization completion/failure,
+time to capability available, scope expansion and repeated-consent rates,
+connection reuse, capability use, request-to-finding and
+request-to-information-gain rates, connector failure, and time to private
+value. Missing observations remain unknown; no targets or empirical
+“zero-friction” result are asserted.
+
+## 44.6 Boundaries and open implementation choices
+
+Cloud-first is an access strategy, with local/on-premise access when
+necessary; it does not assert universal provider support. Provider names and
+capability examples elsewhere in this proposal are illustrative, not a
+commitment that an adapter is implemented, supported or production-ready.
+Any production support claim remains subject to the existing full-value gate.
+
+Exact authorization mechanism, OAuth library, token/secret storage, connector
+framework, protocol/MCP implementation, AI Elements API, browser popup,
+provider SDK, database, queue, workflow engine, cloud hosting, local runtime,
+retention duration and deletion policy remain unselected. V3.1 makes no
+runtime, dependency, migration, provider registration or release change.
+
+The product principles are: “AXENT does not ask customers to configure
+integrations. AXENT asks permission to investigate valuable questions.”;
+“Investigate first. Request access when evidence requires it.”; and “Private
+data access is a consequence of an analytical question, not a prerequisite
+for starting V3.” These guide product behavior; they are not a claim of
+measured friction or public marketing copy.

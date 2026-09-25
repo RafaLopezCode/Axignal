@@ -97,6 +97,9 @@ conflict.
 
 - `docs/research/` holds evidence and analysis, not canonical product
   authority by itself. Accepted decisions belong in ADRs.
+- [AXIGNAL V3.1 Private Capability Reconciliation](research/AXIGNAL_V3_1_PRIVATE_CAPABILITY_RECONCILIATION.md)
+  records the subordinate V3 contextual-access reconciliation and checked
+  authorities; it does not authorize implementation.
 - `experiments/` holds bounded harnesses and raw results.
   Experimental artifacts are not production implementations or architecture
   authority.
