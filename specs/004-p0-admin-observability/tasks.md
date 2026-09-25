@@ -33,9 +33,9 @@ implementation.
 
 ## Phase 3: Documentation-slice validation
 
-- [ ] T009 Run repository deterministic validation, Graphify checks, broken
+- [x] T009 Run repository deterministic validation, Graphify checks, broken
   reference checks and secret scan; inspect the final change boundary.
-- [ ] T010 Commit only authorized P0-ADMIN-01 documentation, push the dedicated
+- [x] T010 Commit only authorized P0-ADMIN-01 documentation, push the dedicated
   branch and open a PR for CTO review.
 
 ## Deferred; requires separate authorization
