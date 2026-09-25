@@ -83,6 +83,13 @@ conflict.
   and [contract catalogue](../specs/004-p0-admin-observability/contracts/observability-contracts.md)
   define its semantic requirements.
   It selects no infrastructure and authorizes no runtime.
+- [Structured Decision Intelligence Architecture V0.1](architecture/AXIGNAL_STRUCTURED_DECISION_INTELLIGENCE_ARCHITECTURE_V0.1.md)
+  specifies AXIGNAL-owned decision grammar, minimal state compilation,
+  deterministic composition and a pre-implementation Decision Laboratory.
+  TypeSafe Jev is the proposed initial replaceable evaluator; no SDK, runtime,
+  database, provider call or threshold is introduced. See the
+  [P0-JEV-01 feature spec](../specs/005-p0-jev-01-structured-decision-intelligence/spec.md)
+  and its [contract catalogue](../specs/005-p0-jev-01-structured-decision-intelligence/contracts/decision-contracts.md).
 
 ## Communication
 
@@ -100,6 +107,13 @@ conflict.
 - [AXIGNAL V3.1 Private Capability Reconciliation](research/AXIGNAL_V3_1_PRIVATE_CAPABILITY_RECONCILIATION.md)
   records the subordinate V3 contextual-access reconciliation and checked
   authorities; it does not authorize implementation.
+- [P0-JEV-01 TypeSafe / Jev Research](research/AXIGNAL_P0_JEV_01_TYPESAFE_RESEARCH.md)
+  records current official docs, source versions, API/SDK and cookbook evidence,
+  and separates vendor facts from AXIGNAL decisions and unproven assumptions.
+- [P0-JEV-01 Opportunity Map](research/AXIGNAL_P0_JEV_01_OPPORTUNITY_MAP.md)
+  reconstructs current AXIGNAL owners and the proposed family-specific
+  decision paths. [Community patterns](research/AXIGNAL_P0_JEV_01_COMMUNITY_PATTERNS.md)
+  are recorded as non-authoritative evidence only.
 - `experiments/` holds bounded harnesses and raw results.
   Experimental artifacts are not production implementations or architecture
   authority.
@@ -111,7 +125,7 @@ conflict.
 | `product/` | `CANONICAL_PRODUCT_AUTHORITY` | MASTER Product Model |
 | `.specify/memory/`, `governance/` | `ENGINEERING_GOVERNANCE` | Binding constraints subordinate to MASTER |
 | `adr/` | `ACCEPTED_ARCHITECTURAL_DECISION` | Check status in each ADR |
-| `architecture/` | `ARCHITECTURE_REFERENCE` | Atlas, gap ledger, and Brain/Xeed pre-implementation specification |
+| `architecture/` | `ARCHITECTURE_REFERENCE` | Atlas, gap ledger, and pre-implementation domain architecture references |
 | `communication/` | `ACTIVE_DOMAIN_STRATEGY`, `STRATEGY_APPENDIX` | Strategy is working; appendix is `PROPOSED` |
 | `design/` | `ENGINEERING_GOVERNANCE` | Design guidance subordinate to product and architecture authorities |
 | `research/` | `RESEARCH_EVIDENCE` | Analysis/evidence; not authority by itself |
