@@ -26,8 +26,12 @@
 - [x] T011 [US3] Recompute deterministic composition, supported metrics, critical regressions, and predeclared outcome in `experiments/decision_lab/cli.py` during offline replay.
 - [x] T012 [US3] Replay the smoke and controlled artifacts without credential or network access into `docs/research/p0-jev-03/`.
 - [x] T013 [US3] Complete the evidence-labeled report in `docs/research/p0-jev-03/empirical-report.md`.
-- [ ] T014 [US3] Run required offline and repository gates; verify secret, production, CI, migration, and canonical-write exclusions.
-- [ ] T015 [US3] Open a new unmerged PR for CTO review and provide the required evidence ledger.
+- [x] T014 [US3] Run required offline and repository gates; verify secret, production, CI, migration, and canonical-write exclusions.
+- [x] T015 [US3] Open a new unmerged PR for CTO review and provide the required evidence ledger.
+
+Validation note: exact-head GitHub CI, including governance, deterministic validation, Graphify, and Gitleaks, passed. Local hygiene/no-generated-data checks reject the order-required ignored `.env`; it is untracked and absent from the PR.
+
+Review PR: https://github.com/RafaLopezCode/Axignal/pull/14 (OPEN; not merged).
 
 ## Dependency Order
 
