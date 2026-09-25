@@ -325,7 +325,7 @@ A customer view should expose:
 -   INXIGHT interaction;
 -   evidence inspection;
 -   PATHX interaction;
--   Ask AXIGNAL usage when implemented;
+-   Ask AXENT — by AXIGNAL usage when implemented;
 -   export usage;
 -   product MCP usage;
 -   Admin interactions only where relevant and authorized;
@@ -498,7 +498,13 @@ The primary recurrent unit metric is:
 
 `COST_PER_ACTIVE_XEED_MONTH`
 
-It must be decomposable by category, provider, research run and Xeed.
+Its denominator is an active customer-facing Xeed-month under a separately
+governed activation definition. It must be decomposable by category, provider,
+research run and Xeed. This Admin service-unit metric is distinct from MASTER
+§42's `COST_PER_LIVE_XIGNAL`, which measures the cost of maintaining a
+persistent Xignal observation allocation (MASTER §§4.4, 7). The metrics have
+different units and scopes; no conversion or substitution is implied without a
+separately governed mapping. See the [Admin Observability Architecture](../architecture/AXIGNAL_ADMIN_OBSERVABILITY_ARCHITECTURE_V0.1.md).
 
 Related metrics:
 
@@ -979,6 +985,26 @@ Per source/domain/adapter:
 
 Sources provide observations, not canonical truth.
 
+## 11.5 V2 / Deep Report observability
+
+AXIGNAL V2 remains `PROPOSED / PRE_IMPLEMENTATION`. Future Admin projections
+may expose report lifecycle, Xeed/report readiness, projection and AEAP versions,
+analytical branch counts and stopping reasons, contradictions, alternative
+explanations, Red Team outcomes, supported-finding counts, escalation, latency,
+cost and evidence reuse. These are observability requirements, not runtime
+claims. Admin does not author V2 findings or their epistemic state.
+
+## 11.6 V3 private operational observability
+
+AXIGNAL V3 remains `PROPOSED / PRE_IMPLEMENTATION`. Future Admin projections
+may expose connection and adapter state, authorized capability/scope metadata,
+revocation and retention/deletion state, private-operation cost, report
+lifecycle and security events. Operational metadata does not grant access to
+private observations, documents, prompts, model context or Private Findings.
+Private-content inspection, if separately authorized in the future, is a
+different capability with its own audit trail. Admin is not a private-data
+browser.
+
 ------------------------------------------------------------------------
 
 # 12. Governance, policies, security and audit
@@ -1306,6 +1332,10 @@ They require independent authorization boundaries.
 
 Admin MCP V0.1 is **read-only**.
 
+Admin MCP is an internal projection over authorized Admin observability. It is
+not Product MCP and does not inherit Product MCP authorization. It has no
+canonical write authority and no private customer-content access by default.
+
 Candidate tools:
 
 -   `get_admin_summary`
@@ -1375,6 +1405,9 @@ AGENT
 
 Agent conclusions are not Admin truth and cannot mutate AXIGLAND.
 
+Admin operations may read governed V3 operational metadata, but Admin and
+Admin MCP do not gain private customer-content access through that metadata.
+
 ------------------------------------------------------------------------
 
 # 20. Event and lineage architecture
@@ -1431,7 +1464,11 @@ Events should support, where applicable:
 -   outcome;
 -   relevant provenance.
 
-Exact schemas are deferred to implementation planning.
+The proposed conceptual envelope and contract catalogue are specified in the
+[Admin Observability Architecture V0.1](../architecture/AXIGNAL_ADMIN_OBSERVABILITY_ARCHITECTURE_V0.1.md)
+and [P0-ADMIN-01 contracts](../../specs/004-p0-admin-observability/contracts/observability-contracts.md).
+Exact wire schemas, storage, transport, and provider-specific adapters remain
+deferred to separately authorized implementation design.
 
 ------------------------------------------------------------------------
 
@@ -1525,26 +1562,22 @@ North Star that hides tradeoffs.
 Candidate architecture:
 
 ``` text
-DOMAIN / OPERATIONAL EVENTS
-          │
-          ▼
-OPERATIONAL EVENT LEDGER
-          │
-          ├──────────────────┐
-          ▼                  ▼
-    METRIC ENGINE       COST ATTRIBUTION
-          │                  │
-          └────────┬─────────┘
-                   ▼
-            ADMIN READ MODELS
-                   │
-       ┌───────────┼───────────┬───────────┐
-       ▼           ▼           ▼           ▼
-   HUMAN UI      EXPORT       MCP       ALERTING
+DOMAIN-OWNED EVENTS / OBSERVATIONS
+          ↓
+VERSIONED OBSERVABILITY CONTRACTS
+          ↓
+METRIC DEFINITION + ATTRIBUTION POLICIES
+          ↓
+AUTHORIZED ADMIN PROJECTION
+          ├── HUMAN UI
+          ├── JSON / CSV / MARKDOWN
+          └── INTERNAL READ-ONLY ADMIN MCP
 ```
 
-The exact persistence and event infrastructure remain implementation
-decisions.
+This is a semantic flow, not an event-sourcing mandate. Logs, metrics, traces,
+domain events and canonical evidence remain distinct. The Admin Projection is
+not an event store or source of domain truth. Exact persistence, transport,
+metric computation and event infrastructure remain implementation decisions.
 
 ------------------------------------------------------------------------
 
@@ -1607,6 +1640,12 @@ SPECIFICATION_IS_NOT_RUNTIME_EVIDENCE
 
 ADMIN_ACTION_DOES_NOT_ASSERT_AXIGLAND_TRUTH
 
+ADMIN_OPERATIONAL_VISIBILITY_IS_NOT_PRIVATE_CONTENT_ACCESS
+
+OBSERVABILITY_IS_NOT_A_SHADOW_CUSTOMER_DATA_WAREHOUSE
+
+V2_V3_ADMIN_TELEMETRY_IS_NOT_A_RUNTIME_CLAIM
+
 UNSUPPORTED_CANONICAL_WRITE_TARGET_IS_ZERO
 ```
 
@@ -1614,8 +1653,9 @@ UNSUPPORTED_CANONICAL_WRITE_TARGET_IS_ZERO
 
 # 26. Implementation slices
 
-Admin V0.1 should be implemented incrementally as underlying runtimes
-become real.
+Admin V0.1 may be implemented incrementally only after separate
+implementation authorization and as underlying runtimes become real. P0-ADMIN-01
+specifies observability contracts and does not authorize implementation.
 
 ## ADMIN-01A --- Observability Contracts
 
@@ -1662,8 +1702,9 @@ implemented.
 
 # 27. V0.1 specification Definition of Done
 
-The specification is sufficiently mature to authorize implementation
-planning when it defines and reconciles:
+This checklist defines specification completeness for a future, separately
+authorized implementation-planning slice; satisfying it does not itself grant
+implementation authorization. The spec must define and reconcile:
 
 -   information architecture;
 -   event taxonomy;

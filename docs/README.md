@@ -77,6 +77,12 @@ conflict.
 - [Subscriber Experience Interaction Architecture V0.1](architecture/AXIGNAL_SUBSCRIBER_EXPERIENCE_INTERACTION_ARCHITECTURE_V0.1.md)
   defines proposed pre-implementation contracts for P0-INTERACTION-01. It is
   subordinate to the authorities above; specified != implemented.
+- [Admin Observability Architecture V0.1](architecture/AXIGNAL_ADMIN_OBSERVABILITY_ARCHITECTURE_V0.1.md)
+  defines proposed, pre-implementation Admin observability boundaries and
+  projection semantics. The [P0-ADMIN-01 feature spec](../specs/004-p0-admin-observability/spec.md)
+  and [contract catalogue](../specs/004-p0-admin-observability/contracts/observability-contracts.md)
+  define its semantic requirements.
+  It selects no infrastructure and authorizes no runtime.
 
 ## Communication
 
