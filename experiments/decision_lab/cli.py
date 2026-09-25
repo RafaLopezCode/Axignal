@@ -148,7 +148,13 @@ def validate() -> tuple[int, int, int]:
     return len(corpus), len(grammar), len(definitions)
 
 
-def _run_live(experiment_path: Path, output: Path) -> None:
+def _run_live(
+    experiment_path: Path,
+    output: Path,
+    *,
+    api_key: str | None = None,
+    allow_repository_output: bool = False,
+) -> None:
     validate()
     definition = _load(experiment_path)
     grammar = {
@@ -159,7 +165,7 @@ def _run_live(experiment_path: Path, output: Path) -> None:
         )
     }
     validate_experiment(definition, grammar)
-    if not os.environ.get("TYPESAFE_API_KEY"):
+    if not api_key and not os.environ.get("TYPESAFE_API_KEY"):
         raise LabError("TYPESAFE_API_KEY is unavailable; no request was made")
     cases = {
         case["case_id"]: case for case in validate_corpus(_load(ROOT / "corpus/v0.1/cases.json"))
@@ -181,9 +187,9 @@ def _run_live(experiment_path: Path, output: Path) -> None:
     from experiments.decision_lab.providers.typesafe import TypeSafeLabEvaluator
 
     repo_root = ROOT.parents[1].resolve()
-    if output.resolve().is_relative_to(repo_root):
+    if output.resolve().is_relative_to(repo_root) and not allow_repository_output:
         raise LabError("experiment result output must be outside the repository")
-    evaluator = TypeSafeLabEvaluator()
+    evaluator = TypeSafeLabEvaluator(api_key=api_key)
     records: list[dict[str, Any]] = []
     for case_index, case in enumerate(selected):
         for variant in definition["variants"]:
@@ -436,8 +442,10 @@ def _run_replay(fixture_path: Path, output: Path) -> None:
     write_result(output, result)
 
 
-def _run_result_replay(source_path: Path, output: Path) -> None:
-    if output.resolve().is_relative_to(ROOT.parents[1].resolve()):
+def _run_result_replay(
+    source_path: Path, output: Path, *, allow_repository_output: bool = False
+) -> None:
+    if output.resolve().is_relative_to(ROOT.parents[1].resolve()) and not allow_repository_output:
         raise LabError("experiment result output must be outside the repository")
     source = read_result(source_path)
     source_records = source.get("records", [])
@@ -472,6 +480,8 @@ def _run_result_replay(source_path: Path, output: Path) -> None:
                 "case_id": row.get("case_id"),
                 "variant_id": row.get("variant_id"),
                 "repetition": row.get("repetition", 1),
+                "expected_outcome": row.get("expected_outcome"),
+                "label_status": row.get("label_status"),
                 "state_fingerprint": row.get("state_fingerprint"),
                 "judgments": [item.to_dict() for item in judgments],
                 "compositions": compositions,
@@ -480,6 +490,75 @@ def _run_result_replay(source_path: Path, output: Path) -> None:
                 "metadata": row.get("metadata", {}),
             }
         )
+    metrics_by_variant: dict[str, Any] = {}
+    definition = source.get("experiment_definition", {})
+    critical_regressions: list[str] = []
+    outcome: dict[str, Any] | None = None
+    if isinstance(definition, dict) and definition.get("experiment_id"):
+        for variant in definition.get("variants", []):
+            variant_id = variant.get("variant_id")
+            variant_rows = [
+                row
+                for row in records
+                if row.get("variant_id") == variant_id
+                and row.get("label_status") == "DETERMINISTIC_GROUND_TRUTH"
+                and row.get("expected_outcome") is not None
+            ]
+            answered = [
+                (row["expected_outcome"], row["variant_outcome"].get("outcome"), row["case_id"])
+                for row in variant_rows
+                if row["variant_outcome"].get("status") in {"COMPOSED", "COMPOSED_EXPERIMENTAL"}
+                and isinstance(row["variant_outcome"].get("outcome"), str)
+            ]
+            classification = classification_metrics(
+                [str(item[0]) for item in answered], [str(item[1]) for item in answered]
+            )
+            metrics_by_variant[str(variant_id)] = {
+                "exact_outcome_accuracy": classification["accuracy"],
+                "classification": classification,
+                "n_expected": len(variant_rows),
+                "n_answered": len(answered),
+                "unique_answered_cases": len({str(item[2]) for item in answered}),
+                "answered_case_ids": sorted({str(item[2]) for item in answered}),
+                "missing_or_failed": len(variant_rows) - len(answered),
+            }
+        corpus = validate_corpus(_load(ROOT / "corpus/v0.1/cases.json"))
+        critical_case_ids = {
+            case["case_id"]
+            for case in corpus
+            if {"near-match", "conflicting-ID", "contradiction"} & set(case["edge_case_tags"])
+        }
+        if len(definition.get("variants", [])) == 2:
+            first_id, second_id = (item["variant_id"] for item in definition["variants"])
+            first_records = {
+                (row["case_id"], row["repetition"]): row
+                for row in records
+                if row["variant_id"] == first_id
+            }
+            second_records = {
+                (row["case_id"], row["repetition"]): row
+                for row in records
+                if row["variant_id"] == second_id
+            }
+            for identity in first_records.keys() & second_records.keys():
+                first, second = first_records[identity], second_records[identity]
+                if identity[0] not in critical_case_ids or first.get("expected_outcome") is None:
+                    continue
+                if (
+                    first["variant_outcome"].get("outcome") == first["expected_outcome"]
+                    and second["variant_outcome"].get("outcome") != second["expected_outcome"]
+                ):
+                    critical_regressions.append(f"{identity[0]}::{identity[1]}")
+        outcome = evaluate_experiment_outcome(
+            definition,
+            metrics_by_variant,
+            operational_failures=sum(row.get("failure") is not None for row in records),
+            critical_regressions=critical_regressions,
+            incompatible_output_semantics=any(
+                metric.get("exact_outcome_accuracy") is None
+                for metric in metrics_by_variant.values()
+            ),
+        )
     replay: dict[str, Any] = {
         "artifact_type": "decision-lab-result",
         "result_version": "0.1.0",
@@ -487,11 +566,15 @@ def _run_result_replay(source_path: Path, output: Path) -> None:
         "data_mode": "RECORDED_RESULT_REPLAY_NO_PROVIDER_CALL",
         "source_result_id": source.get("result_id"),
         "experiment_id": source.get("experiment_id"),
-        "experiment_definition": definition,
+        "experiment_definition": definition if definition else None,
         "reproducibility_manifest": source.get("reproducibility_manifest"),
         "predeclared_evaluation_criteria": source.get("predeclared_evaluation_criteria"),
         "evaluation_criteria_sha256": source.get("evaluation_criteria_sha256"),
         "records": records,
+        "metrics_by_variant": metrics_by_variant,
+        "critical_regressions": critical_regressions,
+        "result": outcome["outcome"] if outcome else None,
+        "result_reasons": outcome["reasons"] if outcome else [],
         "limitations": ["Recorded re-composition only; no model quality inference."],
     }
     replay.pop("result_id")

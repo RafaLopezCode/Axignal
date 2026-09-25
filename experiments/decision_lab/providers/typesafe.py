@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import math
 import os
 import time
 from importlib.metadata import PackageNotFoundError, version
@@ -25,6 +26,37 @@ def _question(primitive: str, definition: dict[str, Any]) -> Any:
     if primitive == "NOUL":
         return Noul(**kwargs)
     raise LabError("unsupported TypeSafe primitive")
+
+
+def _safe_raw_answer(typed: Any, primitive: str) -> dict[str, Any]:
+    """Copy only replay-relevant typed answer fields from the SDK object."""
+    field_names = {
+        "CHOICE": ("choice", "probabilities", "confidence"),
+        "SCORE": ("score", "probabilities", "confidence", "legend"),
+        "NOUL": ("noul", "probability_yes", "probability"),
+    }[primitive]
+    answer: dict[str, Any] = {}
+    for field_name in field_names:
+        if not hasattr(typed, field_name):
+            continue
+        value = getattr(typed, field_name)
+        scalar = (
+            value is None
+            or isinstance(value, (str, int, bool))
+            or (isinstance(value, float) and math.isfinite(value))
+        )
+        mapping = isinstance(value, dict) and all(
+            isinstance(key, (str, int))
+            and (
+                item is None
+                or isinstance(item, (str, int, bool))
+                or (isinstance(item, float) and math.isfinite(item))
+            )
+            for key, item in value.items()
+        )
+        if scalar or mapping:
+            answer[field_name] = value
+    return answer
 
 
 class TypeSafeLabEvaluator:
@@ -68,12 +100,11 @@ class TypeSafeLabEvaluator:
         usage: dict[str, int] = {}
         for key in ("input_tokens", "output_tokens", "total_tokens"):
             value = getattr(usage_obj, key, None)
-            if isinstance(value, int):
+            if isinstance(value, int) and not isinstance(value, bool):
                 usage[key] = value
-        if "total_tokens" not in usage and {"input_tokens", "output_tokens"} <= usage.keys():
-            usage["total_tokens"] = usage["input_tokens"] + usage["output_tokens"]
         resolved = getattr(response, "model", None)
         judgments: list[NormalizedJudgment] = []
+        raw_answers: dict[str, dict[str, Any]] = {}
         for definition in question_definitions:
             qid = definition["question_id"]
             primitive = definition["primitive"]
@@ -83,6 +114,7 @@ class TypeSafeLabEvaluator:
             if not isinstance(typed_map, dict):
                 typed_map = getattr(response, "answers", {})
             typed = typed_map.get(qid) if isinstance(typed_map, dict) else None
+            raw_answers[qid] = _safe_raw_answer(typed, primitive)
             if primitive == "CHOICE":
                 answer = {
                     "selected": getattr(typed, "choice", None),
@@ -118,6 +150,7 @@ class TypeSafeLabEvaluator:
         safe_meta: dict[str, Any] = (
             {"resolved_model": resolved} if isinstance(resolved, str) else {}
         )
+        safe_meta["raw_answers"] = raw_answers
         safe_meta["latency_seconds"] = elapsed_seconds
         try:
             safe_meta["sdk_version"] = version("typesafe-sdk")
