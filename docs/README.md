@@ -114,6 +114,12 @@ conflict.
   reconstructs current AXIGNAL owners and the proposed family-specific
   decision paths. [Community patterns](research/AXIGNAL_P0_JEV_01_COMMUNITY_PATTERNS.md)
   are recorded as non-authoritative evidence only.
+- [P0-JEV-02 TypeSafe documentation refresh](research/AXIGNAL_P0_JEV_02_TYPESAFE_REFRESH.md)
+  records the dated vendor-documentation and official SDK review for the
+  experimental lab; it does not revise P0-JEV-01 authority.
+- [P0-JEV-02 Decision Laboratory synthesis](research/AXIGNAL_P0_JEV_02_SYNTHESIS.md)
+  records the lab implementation boundary and explicitly distinguishes
+  unrun live experiments from observations; no result is canonical policy.
 - `experiments/` holds bounded harnesses and raw results.
   Experimental artifacts are not production implementations or architecture
   authority.

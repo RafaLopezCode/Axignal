@@ -1,0 +1,56 @@
+{
+  "experiment_id": "relationship-atomic-decomposition",
+  "version": "0.1.0",
+  "hypothesis": "Atomic relation dimensions may localize errors versus compound judgment.",
+  "decision_family": "ECONOMIC_RELATIONSHIP",
+  "case_ids": [
+    "REL-01-explicit-current",
+    "REL-03-historical",
+    "REL-04-marketing",
+    "REL-09-contradiction",
+    "REL-12-weak"
+  ],
+  "variants": [
+    {
+      "variant_id": "v1",
+      "question_ids": [
+        "REL.COMPOUND.v1"
+      ],
+      "state_variant": "minimal"
+    },
+    {
+      "variant_id": "v2",
+      "question_ids": [
+        "REL.PRESENCE.v1",
+        "REL.TYPE.v1",
+        "REL.TIME.v1",
+        "REL.CONTRADICTION.v1"
+      ],
+      "state_variant": "ablation"
+    }
+  ],
+  "repetitions": 1,
+  "requested_model": "jev-1.13.0",
+  "metrics": [
+    "case_outcome",
+    "operational_failure",
+    "usage"
+  ],
+  "budget": {
+    "max_requests": 10,
+    "max_questions": 30,
+    "max_state_bytes": 20000,
+    "max_cost_usd": 0.01,
+    "max_concurrency": 1,
+    "max_retries": 0,
+    "max_request_bytes": 20000,
+    "max_input_tokens_estimate": 150000
+  },
+  "stop_conditions": [
+    "budget exceeded",
+    "credential/configuration ambiguity",
+    "schema invalidity",
+    "first unresolved safety issue"
+  ],
+  "status": "PREDECLARED_NOT_RUN"
+}

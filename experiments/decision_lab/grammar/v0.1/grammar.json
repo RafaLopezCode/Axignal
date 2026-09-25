@@ -1,0 +1,302 @@
+{
+  "version": "0.1.0",
+  "grammar_id": "AXIGNAL-DECISION-GRAMMAR",
+  "questions": [
+    {
+      "question_id": "CES.SUPPORT.v1",
+      "question_version": "v1",
+      "family": "CLAIM_EVIDENCE_SUPPORT",
+      "primitive": "CHOICE",
+      "instructions": "Does supplied evidence support the stated claim? Judge only evidence supplied for this synthetic candidate.",
+      "semantic_meaning": "Concise wording candidate for evidence support; same primitive and options as CES.SUPPORT.v2.",
+      "criteria": {
+        "SUPPORTED": null,
+        "PARTIAL": null,
+        "NOT_SUPPORTED": null,
+        "NO_EVIDENCE": null,
+        "CONFLICTING": null
+      },
+      "required_state_contract": "decision-state.v0.1",
+      "relevant_state_paths": [
+        "candidate",
+        "evidence_ids",
+        "temporal_context",
+        "provenance"
+      ],
+      "known_exclusions": [
+        "Does not create or authorize canonical truth.",
+        "Does not infer absent evidence."
+      ],
+      "experimental_status": "EXPERIMENTAL_CANDIDATE"
+    },
+    {
+      "question_id": "CES.SUPPORT_N.v1",
+      "question_version": "v1",
+      "family": "CLAIM_EVIDENCE_SUPPORT",
+      "primitive": "NOUL",
+      "instructions": "The supplied evidence supports the complete claim about this exact candidate.",
+      "semantic_meaning": "Probability of complete support.",
+      "criteria": {},
+      "required_state_contract": "decision-state.v0.1",
+      "relevant_state_paths": [
+        "candidate",
+        "evidence_ids",
+        "temporal_context",
+        "provenance"
+      ],
+      "known_exclusions": [
+        "Does not create or authorize canonical truth.",
+        "Does not infer absent evidence."
+      ],
+      "experimental_status": "EXPERIMENTAL_CANDIDATE"
+    },
+    {
+      "question_id": "CES.SUPPORT_SCORE.v1",
+      "question_version": "v1",
+      "family": "CLAIM_EVIDENCE_SUPPORT",
+      "primitive": "SCORE",
+      "instructions": "Score support from absent to complete under the rubric.",
+      "semantic_meaning": "Ordered support degree.",
+      "criteria": [
+        "ABSENT: no evidence supports the claim.",
+        "WEAK: only weak indirect support.",
+        "PARTIAL: material but incomplete support.",
+        "STRONG: direct, complete support."
+      ],
+      "required_state_contract": "decision-state.v0.1",
+      "relevant_state_paths": [
+        "candidate",
+        "evidence_ids",
+        "temporal_context",
+        "provenance"
+      ],
+      "known_exclusions": [
+        "Does not create or authorize canonical truth.",
+        "Does not infer absent evidence."
+      ],
+      "experimental_status": "EXPERIMENTAL_CANDIDATE"
+    },
+    {
+      "question_id": "ENT.ALIGN.v1",
+      "question_version": "v1",
+      "family": "ENTITY_ALIGNMENT",
+      "primitive": "CHOICE",
+      "instructions": "Assess whether records identify the same legal entity; preserve unresolved identity.",
+      "semantic_meaning": "Identity compatibility.",
+      "criteria": {
+        "SAME_ENTITY": null,
+        "LIKELY_SAME": null,
+        "DISTINCT": null,
+        "UNRESOLVED": null
+      },
+      "required_state_contract": "decision-state.v0.1",
+      "relevant_state_paths": [
+        "candidate",
+        "evidence_ids",
+        "temporal_context",
+        "provenance"
+      ],
+      "known_exclusions": [
+        "Does not create or authorize canonical truth.",
+        "Does not infer absent evidence."
+      ],
+      "experimental_status": "EXPERIMENTAL_CANDIDATE"
+    },
+    {
+      "question_id": "ENT.MATCH_N.v1",
+      "question_version": "v1",
+      "family": "ENTITY_ALIGNMENT",
+      "primitive": "NOUL",
+      "instructions": "These records refer to the same legal entity, not merely a shared brand or parent.",
+      "semantic_meaning": "Binary identity hypothesis.",
+      "criteria": {},
+      "required_state_contract": "decision-state.v0.1",
+      "relevant_state_paths": [
+        "candidate",
+        "evidence_ids",
+        "temporal_context",
+        "provenance"
+      ],
+      "known_exclusions": [
+        "Does not create or authorize canonical truth.",
+        "Does not infer absent evidence."
+      ],
+      "experimental_status": "EXPERIMENTAL_CANDIDATE"
+    },
+    {
+      "question_id": "ENT.MATCH_SCORE.v1",
+      "question_version": "v1",
+      "family": "ENTITY_ALIGNMENT",
+      "primitive": "SCORE",
+      "instructions": "Score identity evidence from incompatible to strongly aligned.",
+      "semantic_meaning": "Ordered identity evidence.",
+      "criteria": [
+        "ABSENT: no evidence supports the claim.",
+        "WEAK: only weak indirect support.",
+        "PARTIAL: material but incomplete support.",
+        "STRONG: direct, complete support."
+      ],
+      "required_state_contract": "decision-state.v0.1",
+      "relevant_state_paths": [
+        "candidate",
+        "evidence_ids",
+        "temporal_context",
+        "provenance"
+      ],
+      "known_exclusions": [
+        "Does not create or authorize canonical truth.",
+        "Does not infer absent evidence."
+      ],
+      "experimental_status": "EXPERIMENTAL_CANDIDATE"
+    },
+    {
+      "question_id": "REL.PRESENCE.v1",
+      "question_version": "v1",
+      "family": "ECONOMIC_RELATIONSHIP",
+      "primitive": "NOUL",
+      "instructions": "A current economic relationship exists as of the supplied temporal context.",
+      "semantic_meaning": "Current relationship probability.",
+      "criteria": {},
+      "required_state_contract": "decision-state.v0.1",
+      "relevant_state_paths": [
+        "candidate",
+        "evidence_ids",
+        "temporal_context",
+        "provenance"
+      ],
+      "known_exclusions": [
+        "Does not create or authorize canonical truth.",
+        "Does not infer absent evidence."
+      ],
+      "experimental_status": "EXPERIMENTAL_CANDIDATE"
+    },
+    {
+      "question_id": "REL.TYPE.v1",
+      "question_version": "v1",
+      "family": "ECONOMIC_RELATIONSHIP",
+      "primitive": "CHOICE",
+      "instructions": "Classify the evidenced relationship; use unresolved if type is not established.",
+      "semantic_meaning": "Relationship type.",
+      "criteria": {
+        "CUSTOMER": null,
+        "SUPPLIER": null,
+        "RESELLER": null,
+        "PARTNER": null,
+        "OTHER": null,
+        "UNRESOLVED": null
+      },
+      "required_state_contract": "decision-state.v0.1",
+      "relevant_state_paths": [
+        "candidate",
+        "evidence_ids",
+        "temporal_context",
+        "provenance"
+      ],
+      "known_exclusions": [
+        "Does not create or authorize canonical truth.",
+        "Does not infer absent evidence."
+      ],
+      "experimental_status": "EXPERIMENTAL_CANDIDATE"
+    },
+    {
+      "question_id": "REL.TIME.v1",
+      "question_version": "v1",
+      "family": "ECONOMIC_RELATIONSHIP",
+      "primitive": "CHOICE",
+      "instructions": "Classify relationship time status from supplied evidence.",
+      "semantic_meaning": "Temporal status.",
+      "criteria": {
+        "CURRENT": null,
+        "HISTORICAL": null,
+        "UNRESOLVED": null,
+        "NONE": null
+      },
+      "required_state_contract": "decision-state.v0.1",
+      "relevant_state_paths": [
+        "candidate",
+        "evidence_ids",
+        "temporal_context",
+        "provenance"
+      ],
+      "known_exclusions": [
+        "Does not create or authorize canonical truth.",
+        "Does not infer absent evidence."
+      ],
+      "experimental_status": "EXPERIMENTAL_CANDIDATE"
+    },
+    {
+      "question_id": "REL.CONTRADICTION.v1",
+      "question_version": "v1",
+      "family": "ECONOMIC_RELATIONSHIP",
+      "primitive": "NOUL",
+      "instructions": "Supplied records contain material unresolved contradiction about status.",
+      "semantic_meaning": "Contradiction probability.",
+      "criteria": {},
+      "required_state_contract": "decision-state.v0.1",
+      "relevant_state_paths": [
+        "candidate",
+        "evidence_ids",
+        "temporal_context",
+        "provenance"
+      ],
+      "known_exclusions": [
+        "Does not create or authorize canonical truth.",
+        "Does not infer absent evidence."
+      ],
+      "experimental_status": "EXPERIMENTAL_CANDIDATE"
+    },
+    {
+      "question_id": "CES.SUPPORT.v2",
+      "question_version": "v2",
+      "family": "CLAIM_EVIDENCE_SUPPORT",
+      "primitive": "CHOICE",
+      "instructions": "Classify whether supplied evidence fully supports, partially supports, fails to support, is absent for, or materially conflicts with the exact claim about the synthetic candidate. Do not treat repeated copies of one source as independent corroboration.",
+      "semantic_meaning": "Criteria-explicit wording candidate for controlled wording comparison.",
+      "criteria": {
+        "SUPPORTED": null,
+        "PARTIAL": null,
+        "NOT_SUPPORTED": null,
+        "NO_EVIDENCE": null,
+        "CONFLICTING": null
+      },
+      "required_state_contract": "decision-state.v0.1",
+      "relevant_state_paths": [
+        "candidate",
+        "evidence_ids",
+        "temporal_context",
+        "provenance"
+      ],
+      "known_exclusions": [
+        "Does not create or authorize canonical truth.",
+        "Does not infer absent evidence."
+      ],
+      "experimental_status": "EXPERIMENTAL_CANDIDATE"
+    },
+    {
+      "question_id": "REL.COMPOUND.v1",
+      "question_version": "v1",
+      "family": "ECONOMIC_RELATIONSHIP",
+      "primitive": "CHOICE",
+      "instructions": "Classify the supplied economic relationship in one integrated judgment, considering existence and temporal status. Preserve unresolved if evidence is incomplete or contradictory.",
+      "semantic_meaning": "Compound relation status judgment for comparison with atomic dimensions.",
+      "criteria": {
+        "CURRENT": null,
+        "HISTORICAL": null,
+        "NONE": null,
+        "UNRESOLVED": null
+      },
+      "required_state_contract": "decision-state.v0.1",
+      "relevant_state_paths": [
+        "candidate",
+        "evidence_ids",
+        "temporal_context",
+        "provenance"
+      ],
+      "known_exclusions": [
+        "Does not create or authorize canonical truth.",
+        "Does not infer absent evidence."
+      ],
+      "experimental_status": "EXPERIMENTAL_CANDIDATE"
+    }
+  ]
+}

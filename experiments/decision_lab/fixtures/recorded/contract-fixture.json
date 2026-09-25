@@ -1,0 +1,18 @@
+{
+  "artifact_type": "decision-lab-fixture",
+  "fixture_only": true,
+  "not_jev_observation": true,
+  "question_id": "CES.SUPPORT.v1",
+  "primitive": "CHOICE",
+  "answer": {
+    "selected": "PARTIAL",
+    "distribution": {
+      "SUPPORTED": 0.1,
+      "PARTIAL": 0.8,
+      "NOT_SUPPORTED": 0.05,
+      "NO_EVIDENCE": 0.03,
+      "CONFLICTING": 0.02
+    },
+    "confidence": 0.8
+  }
+}
