@@ -45,4 +45,4 @@
 - [x] T023 Produce `docs/research/AXIGNAL_P0_JEV_02_SYNTHESIS.md`, separating vendor facts, hypotheses, observed results, and validated policy.
 - [x] T024 Run repository/lab gates, Graphify, and build. Local `gitleaks` was unavailable; the existing GitHub secret-scan job remains enabled for PR CI.
 - [x] T025 Verify changed-file scope, optional-only dependency placement, no migrations/runtime side effects, and clean worktree before commit.
-- [ ] T026 Commit only P0-JEV-02 scope, push `experiment/p0-jev-02-decision-lab`, and open a PR without merging.
+- [x] T026 Commit only P0-JEV-02 scope, push `experiment/p0-jev-02-decision-lab`, and open a PR without merging.
