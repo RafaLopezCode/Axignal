@@ -1,0 +1,109 @@
+{
+  "artifact_type": "decision-lab-result",
+  "data_mode": "LIVE_PROVIDER_SMOKE",
+  "evaluator": "typesafe-sdk",
+  "experiment_id": "p0-jev-03-smoke",
+  "experiment_version": "0.1.0",
+  "question_count": 1,
+  "records": [
+    {
+      "case_id": "CES-01-clear-positive",
+      "composition": {
+        "outcome": "NO_EVIDENCE",
+        "policy_version": "support.v0.1",
+        "status": "COMPOSED"
+      },
+      "expected_outcome": "SUPPORTED",
+      "failure_category": null,
+      "judgments": [
+        {
+          "confidence": 0.79,
+          "distribution": {
+            "CONFLICTING": 0.0,
+            "NOT_SUPPORTED": 0.14,
+            "NO_EVIDENCE": 0.83,
+            "PARTIAL": 0.01,
+            "SUPPORTED": 0.02
+          },
+          "evaluator": "typesafe-sdk",
+          "legend": null,
+          "primitive": "CHOICE",
+          "question_id": "CES.SUPPORT.v1",
+          "requested_model": "jev-1.13.0",
+          "resolved_model": "jev-1.13.0",
+          "status": "ANSWERED",
+          "usage": {
+            "input_tokens": 391,
+            "output_tokens": 70
+          },
+          "value": "NO_EVIDENCE"
+        }
+      ],
+      "label_status": "DETERMINISTIC_GROUND_TRUTH",
+      "metadata": {
+        "latency_seconds": 1.3455205999780446,
+        "raw_answers": {
+          "CES.SUPPORT.v1": {
+            "choice": "NO_EVIDENCE",
+            "confidence": 0.79,
+            "probabilities": {
+              "CONFLICTING": 0.0,
+              "NOT_SUPPORTED": 0.14,
+              "NO_EVIDENCE": 0.83,
+              "PARTIAL": 0.01,
+              "SUPPORTED": 0.02
+            }
+          }
+        },
+        "resolved_model": "jev-1.13.0",
+        "sdk_version": "0.7.1",
+        "usage": {
+          "input_tokens": 391,
+          "output_tokens": 70
+        }
+      },
+      "primitive": "CHOICE",
+      "question_id": "CES.SUPPORT.v1",
+      "question_version": "v1",
+      "raw_answer": {
+        "choice": "NO_EVIDENCE",
+        "confidence": 0.79,
+        "probabilities": {
+          "CONFLICTING": 0.0,
+          "NOT_SUPPORTED": 0.14,
+          "NO_EVIDENCE": 0.83,
+          "PARTIAL": 0.01,
+          "SUPPORTED": 0.02
+        }
+      },
+      "requested_model": "jev-1.13.0",
+      "resolved_model": "jev-1.13.0",
+      "state_compiler_version": "0.2.0",
+      "state_contract_version": "0.1.0",
+      "state_fingerprint": "23c5187e146130eb4d5bc44c509cc6a7dae7d64c59257b898adcc4f5edbfc844",
+      "state_variant_id": "minimal",
+      "state_variant_version": "0.1.0"
+    }
+  ],
+  "reproducibility_manifest": {
+    "adapter_version": "0.2.0",
+    "corpus_version": "0.1.0",
+    "execution_mode": "LIVE_PROVIDER",
+    "git_revision": "551ba1a2e78d2768089b45a9e764403174a14755",
+    "grammar_version": "0.1.0",
+    "question_id": "CES.SUPPORT.v1",
+    "question_version": "v1",
+    "requested_model": "jev-1.13.0",
+    "resolved_model": "jev-1.13.0",
+    "state_compiler_version": "0.2.0",
+    "state_contract_version": "0.1.0",
+    "state_variant_id": "minimal",
+    "state_variant_version": "0.1.0",
+    "typesafe_sdk_version": "0.7.1"
+  },
+  "request_count": 1,
+  "result_id": "b56a860609bbb391490fcae782a6133b75cf954d5519ad5bb95eb0a6565c95fc",
+  "result_version": "0.1.0",
+  "retry_count": 0,
+  "timestamp_utc": "2026-09-25T18:05:23.970703+00:00"
+}

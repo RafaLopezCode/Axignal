@@ -1,0 +1,25 @@
+{
+  "artifact_type": "p0-jev-03-smoke-gate",
+  "checks": {
+    "authentication_and_provider_call": true,
+    "confidence_preserved": true,
+    "distribution_preserved": true,
+    "latency_measured": true,
+    "normalization": true,
+    "offline_replay": true,
+    "one_request_one_question": true,
+    "pinned_assets": true,
+    "requested_model": true,
+    "resolved_model": true,
+    "safe_artifact_digest": true,
+    "sdk_adapter_versions": true,
+    "usage_preserved": true,
+    "zero_retries": true
+  },
+  "failure_category": null,
+  "note": "Compatibility gate only; this is not model quality evidence.",
+  "passed": true,
+  "result_id": "908a8cacc6f4285c301c18086fade0438b498802b311a73511ff213cccb150cc",
+  "smoke_result_id": "b56a860609bbb391490fcae782a6133b75cf954d5519ad5bb95eb0a6565c95fc",
+  "timestamp_utc": "2026-09-25T18:07:52.485505+00:00"
+}
