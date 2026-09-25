@@ -228,7 +228,7 @@ def test_typesafe_adapter_pins_model_disables_retries_and_preserves_metadata(
                 choice="SUPPORTED", probabilities={"SUPPORTED": 0.9}, confidence=0.9
             )
             return SimpleNamespace(
-                choices={"CES.SUPPORT.v1": answer},
+                choices={"CES.SUPPORT.vNext": answer},
                 model="jev-1.13.0",
                 usage=SimpleNamespace(input_tokens=21, output_tokens=0, total_tokens=21),
             )
@@ -243,13 +243,40 @@ def test_typesafe_adapter_pins_model_disables_retries_and_preserves_metadata(
     monkeypatch.setenv("TYPESAFE_API_KEY", "unit-test-secret")
     evaluator = TypeSafeLabEvaluator()
     question = {
-        "question_id": "CES.SUPPORT.v1",
+        "question_id": "CES.SUPPORT.vNext",
+        "version": "vNext.1",
+        "family": "CLAIM_EVIDENCE_SUPPORT",
         "primitive": "CHOICE",
+        "semantic_target": (
+            "Assess the explicit claim proposition against all supplied semantic evidence passages."
+        ),
         "instructions": "Synthetic contract test",
-        "criteria": {"SUPPORTED": None, "NO": None},
+        "criteria": {
+            "options": [
+                {"id": "SUPPORTED", "meaning": "Evidence supports the claim."},
+                {"id": "PARTIAL", "meaning": "Evidence supports part of the claim."},
+                {"id": "NOT_SUPPORTED", "meaning": "Relevant evidence does not support it."},
+                {"id": "NO_EVIDENCE", "meaning": "No relevant evidence is available."},
+                {"id": "CONFLICTING", "meaning": "Material evidence conflicts."},
+                {"id": "UNRESOLVED", "meaning": "The answer remains unresolved."},
+            ],
+            "mutually_exclusive": True,
+            "coverage": "EXHAUSTIVE_WITH_UNRESOLVED",
+        },
     }
     judgments, failure, metadata = evaluator.evaluate(
-        {"synthetic": True}, [question], model="jev-1.13.0"
+        {
+            "state_contract_version": "claim-evidence.vNext.1",
+            "claim": {"proposition": "Fictional entity supplies Q."},
+            "evidence": [
+                {
+                    "content": "Fictional catalogue lists Q.",
+                    "provenance": {"source_ref": "synthetic://adapter-test"},
+                }
+            ],
+        },
+        [question],
+        model="jev-1.13.0",
     )
     assert failure is None
     assert metadata["resolved_model"] == "jev-1.13.0"

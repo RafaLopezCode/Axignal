@@ -11,8 +11,10 @@ from pathlib import Path
 from typing import Any
 
 from experiments.decision_lab import __version__ as LAB_VERSION
+from experiments.decision_lab.answerability_vnext import validate_decision_request
 from experiments.decision_lab.artifacts import read_result, write_result
 from experiments.decision_lab.comparison import compare_records
+from experiments.decision_lab.contracts_vnext import DECISION_CONTRACTS
 from experiments.decision_lab.experiment import estimate_budget, manifest_digest
 from experiments.decision_lab.judgments import (
     compose_relationship_decomposition,
@@ -165,13 +167,28 @@ def _run_live(
         )
     }
     validate_experiment(definition, grammar)
-    if not api_key and not os.environ.get("TYPESAFE_API_KEY"):
-        raise LabError("TYPESAFE_API_KEY is unavailable; no request was made")
     cases = {
         case["case_id"]: case for case in validate_corpus(_load(ROOT / "corpus/v0.1/cases.json"))
     }
     selected = [cases[case_id] for case_id in definition["case_ids"]]
     variant_states, state_fingerprints = _compile_variant_states(definition, selected)
+    for case_index, _case in enumerate(selected):
+        for variant in definition["variants"]:
+            state_payload = variant_states[variant["variant_id"]][case_index]
+            for question_id in variant["question_ids"]:
+                if question_id not in DECISION_CONTRACTS:
+                    raise LabError(
+                        "live evaluation requires a registered V-next DecisionContract; "
+                        "historical V0.1 questions are replay-only"
+                    )
+                answerability = validate_decision_request(question_id, state_payload)
+                if not answerability.answerable:
+                    raise LabError(
+                        "live evaluation refused by AXIGNAL AnswerabilityGate: "
+                        + ",".join(answerability.reasons)
+                    )
+    if not api_key and not os.environ.get("TYPESAFE_API_KEY"):
+        raise LabError("TYPESAFE_API_KEY is unavailable; no request was made")
     plan = estimate_budget(
         definition,
         [case["state"] for case in selected],

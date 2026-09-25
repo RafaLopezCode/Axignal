@@ -8,6 +8,8 @@ import time
 from importlib.metadata import PackageNotFoundError, version
 from typing import Any
 
+from experiments.decision_lab.answerability_vnext import validate_decision_request
+from experiments.decision_lab.contracts_vnext import DECISION_CONTRACTS, validate_question_binding
 from experiments.decision_lab.evaluator import failure_for_exception
 from experiments.decision_lab.judgments import normalize_judgment
 from experiments.decision_lab.models import LabError, NormalizedJudgment, OperationalFailure
@@ -74,6 +76,25 @@ class TypeSafeLabEvaluator:
         *,
         model: str,
     ) -> tuple[list[NormalizedJudgment], OperationalFailure | None, dict[str, Any]]:
+        if not question_definitions:
+            raise LabError("provider request requires at least one registered DecisionContract")
+        for definition in question_definitions:
+            question_id = definition.get("question_id")
+            contract = DECISION_CONTRACTS.get(question_id) if isinstance(question_id, str) else None
+            if contract is None:
+                raise LabError("provider request rejected: no registered V-next DecisionContract")
+            binding_errors = validate_question_binding(question_id, definition, state)
+            if binding_errors:
+                raise LabError(
+                    "provider request rejected by DecisionContract binding: "
+                    + ",".join(binding_errors)
+                )
+            answerability = validate_decision_request(question_id, state)
+            if not answerability.answerable:
+                raise LabError(
+                    "provider request rejected by AXIGNAL AnswerabilityGate: "
+                    + ",".join(answerability.reasons)
+                )
         from typesafe_sdk import RetryPolicy, TypeSafeClient
 
         questions = {

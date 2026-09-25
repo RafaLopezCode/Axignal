@@ -80,7 +80,7 @@ def test_raw_answer_whitelist_preserves_only_replay_fields() -> None:
 def test_adapter_preserves_reported_usage_without_synthesizing_fields(
     monkeypatch: Any,
 ) -> None:
-    qid = "CES.SUPPORT.v1"
+    qid = "CES.SUPPORT.vNext"
     choice = SimpleNamespace(
         choice="SUPPORTED",
         probabilities={"SUPPORTED": 0.91, "PARTIAL": 0.09},
@@ -98,7 +98,7 @@ def test_adapter_preserves_reported_usage_without_synthesizing_fields(
             return None
 
         def system_one(self, *, state: Any, questions: Any, model: str, retry: Any) -> Any:
-            assert state == {"candidate": "synthetic"}
+            assert state["claim"]["proposition"] == "Fictional entity supplies Q."
             assert set(questions) == {qid}
             assert model == "jev-1.13.0"
             assert retry.max_retries == 0
@@ -125,13 +125,41 @@ def test_adapter_preserves_reported_usage_without_synthesizing_fields(
     monkeypatch.setitem(sys.modules, "typesafe_sdk", fake_sdk)
 
     judgments, failure, metadata = TypeSafeLabEvaluator(api_key="test-only").evaluate(
-        {"candidate": "synthetic"},
+        {
+            "state_contract_version": "claim-evidence.vNext.1",
+            "claim": {"proposition": "Fictional entity supplies Q."},
+            "evidence": [
+                {
+                    "content": "Fictional catalogue lists Q.",
+                    "provenance": {"source_ref": "synthetic://adapter-test"},
+                }
+            ],
+        },
         [
             {
                 "question_id": qid,
+                "version": "vNext.1",
+                "family": "CLAIM_EVIDENCE_SUPPORT",
                 "primitive": "CHOICE",
+                "semantic_target": (
+                    "Assess the explicit claim proposition against all supplied semantic evidence passages."
+                ),
                 "instructions": "synthetic test question",
-                "criteria": {"SUPPORTED": None, "PARTIAL": None},
+                "criteria": {
+                    "options": [
+                        {"id": "SUPPORTED", "meaning": "Evidence supports the claim."},
+                        {"id": "PARTIAL", "meaning": "Evidence supports part of the claim."},
+                        {
+                            "id": "NOT_SUPPORTED",
+                            "meaning": "Relevant evidence does not support it.",
+                        },
+                        {"id": "NO_EVIDENCE", "meaning": "No relevant evidence is available."},
+                        {"id": "CONFLICTING", "meaning": "Material evidence conflicts."},
+                        {"id": "UNRESOLVED", "meaning": "The answer remains unresolved."},
+                    ],
+                    "mutually_exclusive": True,
+                    "coverage": "EXHAUSTIVE_WITH_UNRESOLVED",
+                },
             }
         ],
         model="jev-1.13.0",
