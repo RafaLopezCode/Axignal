@@ -12,6 +12,8 @@ DOMAIN_PACKAGE: Final[str] = "domain"
 XIGNAL_PACKAGE: Final[str] = "domain.xignal"
 ORGANIZATIONS_PACKAGE: Final[str] = "domain.organizations"
 PROVIDER_PACKAGE: Final[str] = "cognition.providers"
+LAB_PACKAGE: Final[str] = "experiments.decision_lab"
+LAB_TYPESAFE_ADAPTER: Final[str] = "experiments.decision_lab.providers.typesafe"
 
 #: Domain is the innermost layer; these imports are forbidden from domain code.
 DOMAIN_FORBIDDEN_IMPORTS: Final[tuple[str, ...]] = (
@@ -41,7 +43,10 @@ PROVIDER_SDK_PREFIXES: Final[tuple[str, ...]] = (
     "groq",
     "deepseek",
     "boto3",
+    "typesafe_sdk",
 )
+
+LAB_FORBIDDEN_IMPORTS: Final[tuple[str, ...]] = ("domain", "pipeline", "cognition")
 
 #: CRM / workflow / sponsored truth drift must never enter the core layers.
 FORBIDDEN_MODULE_SEGMENTS: Final[frozenset[str]] = frozenset(

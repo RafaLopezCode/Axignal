@@ -1,0 +1,81 @@
+{
+  "experiment_id": "claim-wording-ab",
+  "version": "0.1.0",
+  "hypothesis": "Explicit support/partial/contradiction criteria may reduce unsupported positive claims.",
+  "decision_family": "CLAIM_EVIDENCE_SUPPORT",
+  "case_ids": [
+    "CES-01-clear-positive",
+    "CES-02-clear-negative",
+    "CES-03-partial-support",
+    "CES-04-wrong-entity",
+    "CES-07-missing-evidence"
+  ],
+  "variants": [
+    {
+      "variant_id": "v1",
+      "question_ids": [
+        "CES.SUPPORT.v1"
+      ],
+      "state_variant": "minimal",
+      "semantic_target_id": "claim.evidence_support"
+    },
+    {
+      "variant_id": "v2",
+      "question_ids": [
+        "CES.SUPPORT.v2"
+      ],
+      "state_variant": "minimal",
+      "semantic_target_id": "claim.evidence_support"
+    }
+  ],
+  "repetitions": 1,
+  "requested_model": "jev-1.13.0",
+  "metrics": [
+    "case_outcome",
+    "operational_failure",
+    "usage"
+  ],
+  "budget": {
+    "max_requests": 10,
+    "max_questions": 30,
+    "max_state_bytes": 20000,
+    "max_concurrency": 1,
+    "max_retries": 0,
+    "max_request_bytes": 20000,
+    "max_total_request_bytes": 150000
+  },
+  "stop_conditions": [
+    "budget exceeded",
+    "credential/configuration ambiguity",
+    "schema invalidity",
+    "first unresolved safety issue"
+  ],
+  "status": "PREDECLARED_NOT_RUN",
+  "experiment_type": "QUESTION_WORDING",
+  "independent_variable": "question_version",
+  "controlled_dimensions": [
+    "case_ids",
+    "state_variant",
+    "primitive",
+    "semantic_target",
+    "requested_model",
+    "repetitions",
+    "policy_version",
+    "budget"
+  ],
+  "policy_version": "support.v0.1",
+  "evaluation_criteria": {
+    "primary_metric": "exact_outcome_accuracy",
+    "direction": "HIGHER_IS_BETTER",
+    "minimum_effect": null,
+    "no_threshold_reason": "V0.1 synthetic sample does not justify a quality threshold.",
+    "minimum_answered_cases": 4,
+    "critical_regression_policy": "BLOCK",
+    "invalidation_conditions": [
+      "OPERATIONAL_FAILURE",
+      "CRITICAL_REGRESSION",
+      "INCOMPATIBLE_OUTPUT_SEMANTICS",
+      "INSUFFICIENT_ANSWERED_CASES"
+    ]
+  }
+}

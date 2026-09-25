@@ -1,0 +1,8 @@
+{
+  "version": "0.1.0",
+  "definitions": {
+    "claim-wording-ab@0.1.0": "380a0348c3abfa0ccd0311c79e5e5fea751bd523cc57362e70acb2235ff8c942",
+    "minimal-state-ablation@0.1.0": "09093311f1cebcd99d4e2143677e33bad1727b655f56693f5039bc010b1d2bbd",
+    "relationship-atomic-decomposition@0.1.0": "aa3d2924f41ac5e343fc1ee06025eec8b75e0d8e2acbf022f2266ba7c00a75c5"
+  }
+}

@@ -49,6 +49,9 @@ jobs:
       - name: Unit tests
         run: uv run pytest tests/unit
 
+      - name: Offline experiment tests
+        run: uv run pytest tests/experiments
+
       - name: Contract tests
         run: uv run pytest tests/contracts
 

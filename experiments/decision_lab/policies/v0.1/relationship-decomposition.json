@@ -1,0 +1,15 @@
+{
+  "policy_version": "relationship-decomposition.v0.1",
+  "purpose": "Comparable experimental output for compound versus atomic relationship judgments",
+  "presence_positive_at": 0.5,
+  "contradiction_signal_at": 0.5,
+  "time_status_mapping": {
+    "CURRENT": "CURRENT",
+    "HISTORICAL": "HISTORICAL",
+    "NONE": "NONE",
+    "UNRESOLVED": "UNRESOLVED"
+  },
+  "contradictory_comparable_outcome": "UNRESOLVED",
+  "canonical_authority": false,
+  "limitations": "Experimental composition thresholds do not alter or establish canonical truth; raw probabilities and each atomic judgment remain in the result."
+}

@@ -126,15 +126,45 @@ def _apply_rules(module: str, relative: str, target: str, line: int) -> list[Vio
             )
         )
 
-    if not _is_within(module, rules.PROVIDER_PACKAGE) and _matches_any(
-        target, rules.PROVIDER_SDK_PREFIXES
-    ):
+    is_typesafe_sdk = _matches_any(target, ("typesafe_sdk",))
+    provider_sdk_outside_boundary = (
+        module != rules.LAB_TYPESAFE_ADAPTER
+        if is_typesafe_sdk
+        else not _is_within(module, rules.PROVIDER_PACKAGE)
+    )
+    if provider_sdk_outside_boundary and _matches_any(target, rules.PROVIDER_SDK_PREFIXES):
         violations.append(
             Violation(
                 "PROVIDER_SDK_IMPORT",
                 relative,
                 line,
-                f"model-provider SDK import outside cognition/providers: {target}",
+                f"model-provider SDK import outside its approved boundary: {target}",
+            )
+        )
+
+    if _is_within(module, rules.LAB_PACKAGE) and any(
+        _is_within(target, package) for package in rules.LAB_FORBIDDEN_IMPORTS
+    ):
+        violations.append(
+            Violation(
+                "LAB_PRODUCTION_IMPORT",
+                relative,
+                line,
+                f"experimental lab must not import production layer: {target}",
+            )
+        )
+
+    if (
+        _is_within(module, "domain")
+        or _is_within(module, "pipeline")
+        or _is_within(module, "cognition")
+    ) and _is_within(target, rules.LAB_PACKAGE):
+        violations.append(
+            Violation(
+                "PRODUCTION_LAB_IMPORT",
+                relative,
+                line,
+                f"production code must not import experimental lab: {target}",
             )
         )
 

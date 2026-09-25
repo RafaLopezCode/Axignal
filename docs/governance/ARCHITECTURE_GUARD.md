@@ -16,7 +16,9 @@ uv run python -m tools.architecture_guard --json
 | Rule | Rejects | Doctrine |
 | --- | --- | --- |
 | `LAYER_IMPORT` | `domain/**` importing `pipeline`, `cognition`, `apps` or `tools`. | Constitution "Architectural Constraints" |
-| `PROVIDER_SDK_IMPORT` | Importing a model-provider SDK outside `cognition/providers/` (openai, anthropic, google.generativeai, litellm, transformers, ...). | ADR-0006, MASTER §13 |
+| `PROVIDER_SDK_IMPORT` | Importing a model-provider SDK outside `cognition/providers/`, except the official `typesafe_sdk` import in the exact experimental adapter `experiments/decision_lab/providers/typesafe.py`. | ADR-0006, MASTER §13; CTO-authorized P0-JEV-02 lab boundary |
+| `LAB_PRODUCTION_IMPORT` | Experimental Decision Laboratory importing `domain`, `pipeline` or `cognition`. | P0-JEV-02 isolation contract |
+| `PRODUCTION_LAB_IMPORT` | `domain`, `pipeline` or `cognition` importing the experimental Decision Laboratory. | P0-JEV-02 isolation contract |
 | `PROVIDER_CANONICAL_WRITE` | Provider adapters importing canonical writers. LLM output → canonical write without admission. | MASTER §14, §15.1 |
 | `PROJECTION_CANONICAL_WRITE` | Projection packages (`domain/pathx`, `domain/inxight`, `domain/knowledge_frontier`) importing canonical writers. | ADR-0005 |
 | `XIGNAL_ISOLATION` | `domain/xignal/**` importing `domain/organizations/**`. | ADR-0004 |
@@ -38,6 +40,7 @@ The guard checks structure. The runtime invariants are checked by
 
 ## Negative tests
 
-`tests/architecture/test_architecture_guard.py` builds synthetic source trees
-with each forbidden pattern and asserts the guard rejects them. Textual grep is
-never used as a substitute for AST enforcement.
+`tests/architecture/` builds synthetic source trees and direct AST-rule
+examples for forbidden patterns, including the isolated Decision Laboratory
+adapter exception. Textual grep is never used as a substitute for AST
+enforcement.
