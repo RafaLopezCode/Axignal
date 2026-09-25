@@ -40,3 +40,16 @@ Sources reviewed on 2026-09-25:
 - **May experiment size be reduced?** No. The declared five-case/two-variant design is the smallest valid predeclared comparison and remains 10 requests/10 questions.
 - **Can preflight cost be stated?** No. Without a defensible provider-input-token upper bound, both preflight tokens and monetary exposure remain `UNKNOWN`.
 - **May a response alter labels or the grammar?** No. Labels and grammar locks remain unchanged and have no promotion path in this slice.
+
+## Post-Run CTO Epistemic Review
+
+The review of the completed live run found its `CLAIM_EVIDENCE_SUPPORT` input state structurally insufficient. The Golden corpus stores synthetic evidence text and metadata separately from provider `state`; the compiled `minimal` state sent to Jev contains candidate identity, evidence IDs, and `known_unknowns`, but no machine-readable claim or evidence semantic content. `minimal@0.1.0` also removes `temporal_context` and `provenance`. Reconstructed serialized states match the fingerprints in every recorded v1/v2 result row. The result artifact stores fingerprints, not serialized request states.
+
+The immutable observation that Jev chose `NO_EVIDENCE` for all five cases in both variants remains valid. `OBSERVED_ACCURACY_UNDER_P0_JEV_03_STATE=0.20` for both variants; `JEV_CLAIM_EVIDENCE_ACCURACY=NOT_ESTABLISHED`. Provider compatibility, typed judgment capture, and offline replay remain validated. The wording comparison is limited by the shared state insufficiency. No provider output, label, result/replay artifact, State Compiler behavior, question grammar, or production code was changed by this review.
+
+Bounded architecture candidates for CTO review, not canonical invariants:
+
+- `QUESTION_STATE_ANSWERABILITY_MUST_BE_VALIDATED_BEFORE_LIVE_EVALUATION`
+- `IDENTIFIERS_ARE_NOT_SEMANTIC_EVIDENCE`
+
+Future research question (design direction only): “What is the minimum semantically sufficient structured state required for Jev to discriminate CLAIM_EVIDENCE_SUPPORT outcomes reliably?” A conceptual ladder for a separately governed study is S0 candidate + evidence references; S1 + explicit claim; S2 + evidence semantic content; S3 + provenance/source structure; S4 + temporal context. No variants or new experiment are implemented or predeclared here; no provider calls were made.

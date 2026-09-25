@@ -14,6 +14,7 @@ from experiments.decision_lab.judgments import normalize_judgment
 from experiments.decision_lab.outcomes import object_digest
 from experiments.decision_lab.pilot import _smoke_budget
 from experiments.decision_lab.providers.typesafe import TypeSafeLabEvaluator, _safe_raw_answer
+from experiments.decision_lab.state import apply_state_variant, compile_state
 from experiments.decision_lab.validation import validate_corpus, validate_grammar
 
 LAB_ROOT = Path(__file__).parents[2] / "experiments/decision_lab"
@@ -34,6 +35,31 @@ def test_smoke_budget_is_exactly_one_request_and_question() -> None:
     assert budget["expected_question_count"] == 1
     assert budget["preflight_token_count"] == "UNKNOWN"
     assert budget["preflight_monetary_cost"] == "UNKNOWN"
+
+
+def test_evidence_ids_alone_do_not_make_claim_support_state_answerable() -> None:
+    """Characterize the recorded state; this is not a semantic sufficiency validator."""
+    cases = validate_corpus(_load(LAB_ROOT / "corpus/v0.1/cases.json"))
+    case = next(item for item in cases if item["case_id"] == "CES-01-clear-positive")
+    question = next(
+        item
+        for item in validate_grammar(
+            _load(LAB_ROOT / "grammar/v0.1/grammar.json"),
+            _load(LAB_ROOT / "grammar/v0.1/question-lock.json"),
+        )
+        if item["question_id"] == "CES.SUPPORT.v1"
+    )
+    minimal, _version = apply_state_variant(dict(case["state"]), "minimal")
+    serialized = compile_state(minimal).canonical_json
+
+    assert case["evidence"][0]["text"]
+    assert minimal["evidence_ids"] == [case["evidence"][0]["evidence_id"]]
+    assert "claim" not in minimal
+    assert "evidence" not in minimal
+    assert "text" not in minimal
+    assert "claim" not in question["relevant_state_paths"]
+    assert "evidence_text" not in question["relevant_state_paths"]
+    assert case["evidence"][0]["text"] not in serialized
 
 
 def test_raw_answer_whitelist_preserves_only_replay_fields() -> None:

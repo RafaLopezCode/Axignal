@@ -83,12 +83,12 @@ All ten calls answered, returned distributions, resolved to `jev-1.13.0`, and re
 
 Provider-reported usage summed across the ten calls: `4,043` input tokens and `700` output tokens. The provider did not report `total_tokens`; aggregate total-token usage is **UNKNOWN**. Summed local per-call latency: `6.1736513` seconds; observed range: `0.5853913`–`0.7035691` seconds.
 
-Wrong answers: `4/5` for each variant. The eight wrong rows reported confidence from `0.74` to `0.84`; this is a concerning confidence observation, but calibration and formal overconfidence are **NOT VALIDATED**. The one correct case per variant reported `0.98` and `0.99`; there is no low-confidence correct answer in this sample. No distribution was flat or malformed; the selected `NO_EVIDENCE` probabilities ranged from `0.79` to `1.00`. No SDK schema mismatch, model-resolution mismatch, or unexpected exception occurred. The absent `total_tokens` field is retained as unknown.
+The observed outcome differs from the Golden label in `4/5` cases for each variant. The eight rows reported confidence from `0.74` to `0.84`; the one matching row reported `0.98` and `0.99`. These are observations under the P0-JEV-03 request state. They do not establish model quality for a semantically sufficient `CLAIM_EVIDENCE_SUPPORT` task. Calibration and formal overconfidence are **NOT VALIDATED**. No distribution was flat or malformed; the selected `NO_EVIDENCE` probabilities ranged from `0.79` to `1.00`. No SDK schema mismatch, model-resolution mismatch, or unexpected exception occurred. The absent `total_tokens` field is retained as unknown.
 
 ## AXIGNAL_DERIVED_METRIC
 
-- **v1 exact outcome accuracy**: `1/5 = 0.20`; confusion matrix rows are Golden labels and the only predicted column is `NO_EVIDENCE` (`SUPPORTED→NO_EVIDENCE: 1`, `NOT_SUPPORTED→NO_EVIDENCE: 2`, `PARTIAL→NO_EVIDENCE: 1`, `NO_EVIDENCE→NO_EVIDENCE: 1`).
-- **v2 exact outcome accuracy**: `1/5 = 0.20`; identical confusion matrix.
+- **OBSERVED_ACCURACY_UNDER_P0_JEV_03_STATE (v1)**: `1/5 = 0.20`; confusion matrix rows are Golden labels and the only predicted column is `NO_EVIDENCE` (`SUPPORTED→NO_EVIDENCE: 1`, `NOT_SUPPORTED→NO_EVIDENCE: 2`, `PARTIAL→NO_EVIDENCE: 1`, `NO_EVIDENCE→NO_EVIDENCE: 1`).
+- **OBSERVED_ACCURACY_UNDER_P0_JEV_03_STATE (v2)**: `1/5 = 0.20`; identical confusion matrix.
 - **Difference**: no top-choice change and no accuracy difference. v2 increased `P(NO_EVIDENCE)` on all five cases by `0.01`–`0.07`; this descriptive movement does not establish a benefit.
 - **Critical regressions**: `0` under the existing evaluator.
 - **Provider operational failures**: `0`.
@@ -132,11 +132,48 @@ Configuration/corpus SHA-256:
 
 The replay function hash reflects the offline replay fix made after the smoke request; it did not participate in either live provider call. The smoke request and experiment request functions, TypeSafe evaluator, corpus, grammar, question lock, experiment definition, and price policy hashes reflect the source used for the controlled run. The smoke-specific request function and TypeSafe evaluator were unchanged after the smoke call.
 
+## POST-RUN CTO EPISTEMIC REVIEW
+
+This review was performed after the live observations. It did not alter provider outputs, Golden labels, question definitions, or any create-only live/replay artifact. The exact request path and payload were inspected deterministically: Golden case → `case["state"]` → `minimal@0.1.0` variant → State Compiler `0.2.0` canonical JSON and SHA-256 fingerprint → `_run_live` → `TypeSafeLabEvaluator.evaluate(state=..., questions=...)` → `TypeSafeClient.system_one(state=state, questions=questions, ...)`. The adapter sends the compiled state unchanged; it does not look up or attach the corpus's separate `evidence` entries.
+
+The result artifact stores each request's `state_fingerprint`, not its serialized provider state. The serialized states below were reconstructed from the unchanged corpus and compiler/variant code, and every reconstructed fingerprint matches both the v1 and v2 rows in `claim-wording-ab-result.json`.
+
+| Case | Explicit claim in provider state | Evidence text / semantic attributes in provider state | Evidence IDs in provider state | Candidate identity | Provenance after `minimal` | Temporal context after `minimal` | Known unknowns | State fingerprint |
+|---|---|---|---|---|---|---|---|---|
+| CES-01-clear-positive | No | No / No | Yes (`CES-E01`) | Yes (`CES-C01`) | No | No | Yes | `23c5187e146130eb4d5bc44c509cc6a7dae7d64c59257b898adcc4f5edbfc844` |
+| CES-02-clear-negative | No | No / No | Yes (`CES-E02`) | Yes (`CES-C02`) | No | No | Yes | `b9b272a2664fc294b176f06cc4094cb5cf7d08ea6466df929a0052cc672a419d` |
+| CES-03-partial-support | No | No / No | Yes (`CES-E03`) | Yes (`CES-C03`) | No | No | Yes | `f2dcbaa5305ab3f26d5557e11365540fc8ca03dffcf028513bb796d1d5521f91` |
+| CES-04-wrong-entity | No | No / No | Yes (`CES-E04`) | Yes (`CES-C04`) | No | No | Yes | `650f77ac8541b48010b0e8375612fbd7d947bb44ea34ae81ea79ae63049f7a4b` |
+| CES-07-missing-evidence | No | No / No | No (empty list) | Yes (`CES-C07`) | No | No | Yes | `b6fd3b0f6ec12c4f5f15b1eeecf895f314227ca84a6010fae93cbeb9a608f7ea` |
+
+The serialized provider state for each case is the canonical JSON form of the columns above: `candidate`, `evidence_ids`, and `known_unknowns`. For example, CES-01 was sent as `{"candidate":{"name":"Fictional CES 01","synthetic_id":"CES-C01"},"evidence_ids":["CES-E01"],"known_unknowns":["resolved_entity"]}`. The evidence text, `source_ref`, `observed_at`, and `source_independence_group` exist in the Golden corpus's separate `evidence` array but were not included in the compiled provider state. None of the five cases contains a machine-readable `claim` object. Candidate identity does not itself state a proposition.
+
+Both `CES.SUPPORT.v1` and `CES.SUPPORT.v2` instruct Jev to judge support for a stated/exact claim, but their declared `relevant_state_paths` are only `candidate`, `evidence_ids`, `temporal_context`, and `provenance`. Neither question declares a claim or evidence-content path. In the actual serialized state, `temporal_context` and `provenance` are also absent. The v1 and v2 rows have identical per-case state fingerprints, so the wording comparison changed question wording while both variants received the same structurally insufficient state.
+
+The corpus currently separates case evidence from provider decision state: evidence content and attributes are stored under case-level `evidence`, while `state` carries references only. This is a contract-design defect for evaluating evidence-support judgments. The minimal variant removed `temporal_context` and `provenance`, both of which were present in the source state; it did not remove claim text or evidence text because neither was present in `state` to begin with. A non-empty evidence ID does not provide the referenced evidence's semantic content to the provider.
+
+**CLAIM_EVIDENCE_STATE_SUFFICIENCY=STRUCTURALLY_INSUFFICIENT.** This follows from deterministic contract and payload inspection, without asking Jev to diagnose its own input. The question asks whether supplied evidence supports a stated claim, but no claim proposition or evidence content was supplied. `NO_EVIDENCE` may therefore be a rational response to the actual request state. The experiment does not establish Jev's accuracy on `CLAIM_EVIDENCE_SUPPORT` when given semantically sufficient inputs.
+
+The three results are distinct:
+
+1. **Provider compatibility:** `PROVIDER_COMPATIBILITY_VALIDATED=YES`. Authentication, SDK request/typed response contract, pinned model, captured typed judgments and available usage, latency, artifact persistence, and offline replay were validated.
+2. **Experimental observation:** Jev selected `NO_EVIDENCE` for all five cases under both wording variants. The historical descriptive accuracy remains `OBSERVED_ACCURACY_UNDER_P0_JEV_03_STATE=0.20` for v1 and v2.
+3. **Model quality:** `JEV_CLAIM_EVIDENCE_ACCURACY=NOT_ESTABLISHED`. The supplied state lacked both the claim and evidence semantic content, so the generalized quality interpretation does not follow.
+
+`LIVE_TYPED_JUDGMENT_CAPTURE_VALIDATED=YES` and `OFFLINE_REPLAY_VALIDATED=YES`. `WORDING_COMPARISON_INTERPRETABILITY=LIMITED_BY_STATE_SUFFICIENCY`: the wording variants did produce different probability distributions, but these observations do not isolate wording effects on an answerable support judgment.
+
+**Experimental architecture candidates for CTO review only; not canonical invariants:**
+
+- `QUESTION_STATE_ANSWERABILITY_MUST_BE_VALIDATED_BEFORE_LIVE_EVALUATION`
+- `IDENTIFIERS_ARE_NOT_SEMANTIC_EVIDENCE`
+
+**Future research question (design direction only):** “What is the minimum semantically sufficient structured state required for Jev to discriminate CLAIM_EVIDENCE_SUPPORT outcomes reliably?” A possible conceptual ladder is S0 candidate + evidence references; S1 add explicit claim; S2 add evidence semantic content; S3 add provenance/source structure; S4 add temporal context. No variants are implemented or predeclared here. No live calls were made for this review. State Compiler, grammar, production runtime, and canonical architecture were not changed.
+
 ## AXIGNAL_INTERPRETATION
 
-On this five-case synthetic sample, both wording variants returned the same top choice for every case and achieved the same descriptive accuracy. The provider repeatedly favored `NO_EVIDENCE`, including where the independent Golden label was positive, negative, or partial. The criteria-explicit wording shifted more probability toward `NO_EVIDENCE`, but did not change the selected answer or measured accuracy. The sample and unvalidated calibration do not support a quality or generalization claim.
+On this five-case synthetic sample, both wording variants returned the same top choice for every case and the same observed accuracy under the supplied state (`0.20`). The provider repeatedly favored `NO_EVIDENCE`, including where the independent Golden label was positive, negative, or partial. The criteria-explicit wording shifted more probability toward `NO_EVIDENCE`, but did not change the selected answer or observed accuracy. Because the state was structurally insufficient, neither these results nor the confidence values establish Jev's actual `CLAIM_EVIDENCE_SUPPORT` quality or generalization.
 
-`GRAMMAR_EVOLUTION_CANDIDATE=NO`: no wording candidate is supported by the formal outcome or descriptive accuracy. No grammar was promoted.
+`GRAMMAR_EVOLUTION_CANDIDATE=NO`: no wording candidate is supported by the formal outcome, descriptive observation, or question-state answerability review. No grammar was promoted.
 
 ## UNKNOWN
 
