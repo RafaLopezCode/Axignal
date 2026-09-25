@@ -84,9 +84,12 @@ accessibility, data-density). See `docs/design/UI_UX_SKILLS.md` and
   add sponsored/ranking behaviour.
 - Design constraints: `docs/design/DESIGN_DOCTRINE.md` and
   `docs/design/DESIGN_GOVERNANCE.md`.
-- Graph visualization is **not** selected here; it is reserved for a future
-  `GRAPH_ENGINE_BAKEOFF`. Do not install a graph engine or design AXIGLAND UX
-  under this scope.
+- The graph architecture is accepted in ADR-0009: AXIGNAL owns graph
+  projection and semantic cartography behind a replaceable renderer boundary;
+  Sigma + Graphology are the initial renderer choice. This does not authorize
+  graph runtime, production renderer dependencies or product UI. Read the
+  logical target and evidence-backed current-state ledger linked from
+  `docs/architecture/OVERVIEW.md` before architecture work.
 - Installing/using design skills must not add LLM or network dependencies to
   required CI.
 
