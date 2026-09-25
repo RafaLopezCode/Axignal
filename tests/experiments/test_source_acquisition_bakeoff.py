@@ -26,6 +26,13 @@ def test_corpus_covers_twelve_required_workload_classes() -> None:
     assert len({row["class"] for row in corpus}) == 12
 
 
+def test_browser_fixture_value_is_absent_from_initial_html() -> None:
+    w2 = source_bakeoff.fixture_data()[1]
+    assert w2["id"] == "W2"
+    assert b"Widget" not in w2["body"]
+    assert b"src='/w2.js'" in w2["body"]
+
+
 def test_candidate_evidence_has_the_required_field_set() -> None:
     evidence_path = MODULE_PATH.parent / "candidate-evidence.json"
     evidence = json.loads(evidence_path.read_text(encoding="utf-8"))
@@ -85,7 +92,10 @@ def test_fixture_adapter_rejects_non_fixture_hosts() -> None:
         raise AssertionError("non-loopback fixture host should be rejected")
 
 
-def test_run_has_explicit_failure_raw_artifacts_and_iterative_provenance() -> None:
+def test_run_has_explicit_failure_raw_artifacts_and_iterative_provenance(
+    tmp_path: Path, monkeypatch
+) -> None:
+    monkeypatch.setattr(source_bakeoff, "ROOT", tmp_path)
     result = source_bakeoff.run(iterations=1)
     assert result["run_metadata"]["external_network_used"] is False
     assert result["measurement_summary"]["requests"] == 14
@@ -99,3 +109,34 @@ def test_run_has_explicit_failure_raw_artifacts_and_iterative_provenance() -> No
     assert observation["response_metadata"]["final_uri"] == observation["source_uri"]
     assert observation["response_metadata"]["redirect_chain"] == [observation["source_uri"]]
     assert observation["acquisition_config"]["max_response_bytes"] > 0
+
+
+def test_candidate_adapter_normalizes_explicit_http_failure() -> None:
+    worker_path = MODULE_PATH.with_name("runtime_candidate_worker.py")
+    worker_spec = importlib.util.spec_from_file_location("candidate_runtime_worker", worker_path)
+    assert worker_spec is not None and worker_spec.loader is not None
+    worker = importlib.util.module_from_spec(worker_spec)
+    sys.modules[worker_spec.name] = worker
+    worker_spec.loader.exec_module(worker)
+    record = {
+        "research_question_id": "W11-Q1",
+        "workload_id": "W11",
+        "iteration": 1,
+        "mode": "http",
+        "url": "http://127.0.0.1:43123/w11-restricted",
+        "expected_slots": 0,
+    }
+    observation = worker.normalized(
+        "scrapy",
+        record,
+        status=403,
+        headers={"Content-Type": "text/plain"},
+        final_url=record["url"],
+        body=b"fixture policy denial",
+        elapsed_ms=1.0,
+    )
+    assert observation["failure_state"] == "http_403"
+    assert observation["response_metadata"]["status"] == 403
+    assert observation["raw_body_base64"]
+    assert observation["provenance"]
+    assert "faxt" not in observation

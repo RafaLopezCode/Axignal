@@ -59,12 +59,50 @@ class SourceObservation:
 class FixtureHandler(http.server.BaseHTTPRequestHandler):
     protocol_version = "HTTP/1.1"
     fixture_map: ClassVar[dict[str, tuple[int, str, bytes]]] = {}
+    request_counts: ClassVar[dict[str, int]] = {}
+    byte_counts: ClassVar[dict[str, int]] = {}
+    stats_lock: ClassVar[threading.Lock] = threading.Lock()
 
     def do_GET(self) -> None:
-        status, content_type, body = self.fixture_map.get(
-            self.path, (404, "text/plain; charset=utf-8", b"fixture not found")
-        )
-        if self.path == "/w11-restricted":
+        path = urlsplit(self.path).path
+        with self.stats_lock:
+            self.request_counts[path] = self.request_counts.get(path, 0) + 1
+        if path == "/failure/timeout":
+            time.sleep(0.5)
+        if path == "/failure/redirect-loop":
+            self.send_response(302)
+            self.send_header("Location", path)
+            self.send_header("Content-Length", "0")
+            self.end_headers()
+            return
+        if path == "/failure/private-redirect":
+            # Deliberately stays on this loopback server: no private or
+            # metadata address is contacted during this safety simulation.
+            self.send_response(302)
+            self.send_header("Location", "/failure/private-destination-simulated")
+            self.send_header("Content-Length", "0")
+            self.end_headers()
+            return
+        if path == "/failure/private-destination-simulated":
+            self.send_response(204)
+            self.send_header("Content-Length", "0")
+            self.end_headers()
+            return
+        if path == "/failure/timeout":
+            status, content_type, body = 200, "text/html; charset=utf-8", b"<p>delayed response</p>"
+        elif path == "/failure/oversized":
+            status, content_type, body = (
+                200,
+                "application/octet-stream",
+                b"x" * (MAX_RESPONSE_BYTES + 1),
+            )
+        elif path == "/failure/malformed":
+            status, content_type, body = 200, "text/html; charset=utf-8", b"<html><div><b>broken"
+        else:
+            status, content_type, body = self.fixture_map.get(
+                path, (404, "text/plain; charset=utf-8", b"fixture not found")
+            )
+        if path == "/w11-restricted":
             status, content_type, body = (
                 403,
                 "text/plain; charset=utf-8",
@@ -73,11 +111,24 @@ class FixtureHandler(http.server.BaseHTTPRequestHandler):
         self.send_response(status)
         self.send_header("Content-Type", content_type)
         self.send_header("Content-Length", str(len(body)))
-        self.send_header("X-Fixture-Request-Id", self.path.lstrip("/"))
+        self.send_header("X-Fixture-Request-Id", path.lstrip("/"))
         self.end_headers()
-        self.wfile.write(body)
+        try:
+            self.wfile.write(body)
+        except (BrokenPipeError, ConnectionResetError, ConnectionAbortedError):
+            # Expected when a client enforces the timeout fixture's deadline.
+            return
+        with self.stats_lock:
+            self.byte_counts[path] = self.byte_counts.get(path, 0) + len(body)
 
     def log_message(self, _format: str, *_args: object) -> None:
+        return
+
+
+class QuietThreadingHTTPServer(http.server.ThreadingHTTPServer):
+    """Hide expected socket resets from deliberately timed-out fixture clients."""
+
+    def handle_error(self, _request: object, _client_address: object) -> None:
         return
 
 
@@ -99,7 +150,9 @@ def fixture_data() -> list[dict[str, Any]]:
             "path": "/w2",
             "slots": ["hydrated_product"],
             "expected": "success_static_shell",
-            "body": b"<html><div id='app'>Loading</div><script>document.querySelector('#app').textContent='Widget';</script></html>",
+            # The value needed for the evidence slot is delivered by a separate
+            # script and is absent from the initial HTML response.
+            "body": b"<html><div id='app'>Loading</div><script src='/w2.js'></script></html>",
             "type": "text/html",
         },
         {
@@ -310,7 +363,14 @@ def run(iterations: int = 3) -> dict[str, Any]:
         "text/html",
         b"<p>Fixture B says founded in 2012.</p>",
     )
-    server = http.server.ThreadingHTTPServer(("127.0.0.1", 0), FixtureHandler)
+    FixtureHandler.fixture_map["/w2.js"] = (
+        200,
+        "application/javascript; charset=utf-8",
+        b"document.querySelector('#app').textContent='Widget';",
+    )
+    server = QuietThreadingHTTPServer(("127.0.0.1", 0), FixtureHandler)
+    FixtureHandler.request_counts = {}
+    FixtureHandler.byte_counts = {}
     thread = threading.Thread(target=server.serve_forever, daemon=True)
     thread.start()
     base_url = f"http://127.0.0.1:{server.server_port}"

@@ -8,17 +8,14 @@ Source Router, canonical source contract, JEV, Luna, or Python intelligence.
 
 ## Executive finding
 
-The documentary review finds a broad capability landscape but does not identify
-a production-ready winner. No third-party candidate engine was installed or
-runtime-benchmarked in this slice. The reproducible harness measures an
-offline, synthetic, loopback fixture adapter only; it proves the experimental
-request/observation shape, raw-artifact retention, explicit failures and a
-two-request information-gain loop. It must not be read as a comparative engine
-performance result.
+The documentary review and isolated candidate-runtime comparison do not identify
+a production-ready winner. Five Python runtimes were measured against the same
+offline, synthetic, loopback fixture. The results are comparative observations
+for this fixture only, not public-source fitness or production performance.
 
 `SOURCE_ARCHITECTURE_DECISION=DEFERRED`
 `CONTRACT_STATUS=EXPERIMENTAL`
-`CANDIDATE_ENGINE_RUNTIME_BENCHMARKS=0`
+`CANDIDATE_ENGINE_RUNTIME_BENCHMARKS=5`
 
 This conclusion preserves the open source-acquisition decision recorded in
 Atlas §10–11 and the P0-ARCH-01 gap ledger. This experiment does not change
@@ -318,31 +315,126 @@ which are fixed by this experiment.
 
 ## Evidence / inference / decision / open questions
 
-**Evidence:** official sources document multiple suitable but heterogeneous
-HTTP, browser, crawling, platform, model-extraction and managed API
-capabilities. The fixture reference retains hashes/artifact paths, source URI,
-status/headers, request IDs, retrieval time, adapter identity and explicit
-failure. Candidate implementations were not run.
+### DOCUMENTARY EVIDENCE
 
-**Inference:** no single reviewed tool's documented feature list proves it
-meets AXIGNAL's rights, provenance, safety, targeted iteration and operational
-requirements. General HTTP/crawl and browser capabilities are naturally
-separable; specialized platforms and model extraction have different risk and
-value profiles. A capability-routed portfolio is plausible, but this is not
-yet empirically established.
+The preceding capability review records official project documentation, package
+versions, licensing and operational questions. It is distinct from runtime
+results. Agent Reach and ScrapeGraphAI remain specialized documentary-only
+candidates; Firecrawl remains a managed/self-hosted service reference and was
+not installed or benchmarked. No credentials, live platform integrations,
+managed endpoints, or model extraction were used.
 
-**Decision:** `SOURCE_ARCHITECTURE_DECISION=DEFERRED`;
-`SOURCE_CAPABILITY_CONTRACT=EXPERIMENTAL`. No ADR-0010 is created. No specific
-engine is selected or production-approved.
+### FIXTURE EVIDENCE
 
-**Open questions:** candidate-runtime comparison under common adapters;
-actual raw/redirect/provenance retention; browser security/performance; PDF
-text extraction; source-specific rights and retention; source policy rules;
-robots behavior; state and resume semantics; operational/dependency footprint;
-measured CPU/RSS/network; managed API total cost; Firecrawl AGPL applicability;
-whether targeted requests are simpler on direct HTTP than crawler frameworks;
-and whether specialized platforms are needed at all for the initial product.
+#### CANDIDATE RUNTIME EVIDENCE
 
+The reference harness and candidate matrix ran only against local synthetic
+routes bound to `127.0.0.1`. Five measured iterations followed one warmup for
+each target/candidate. Python was 3.12.11 on Windows 11 (12 logical CPUs,
+17,025,171,456 bytes RAM). Candidate package environments were separately
+hash-locked; no runtime dependency was added to the product environment.
+
+| Candidate | W2 external JavaScript | Fixture observations / failures | Aggregate runtime and peak RSS | Fixture findings |
+|---|---:|---:|---:|---|
+| Scrapling 0.4.15 | 5/5 rendered by DynamicFetcher | 110 / 20 | 30,589.2 ms / 673,509,376 B | HTTP W1 median 1.3 ms; browser W2 median 673.5 ms; followed redirect loop to configured 30-hop bound; oversized response had no adapter cap. |
+| Crawlee 1.10.2 | 0/5; browser page creation timed out | 110 / 20 | 95,615.8 ms / 342,659,072 B | HTTP path and PDF raw bytes worked; configured redirect bound surfaced `TooManyRedirects`; 100 ms request deadline did not stop delayed response. |
+| Crawl4AI 0.9.4 | 5/5 DOM rendered, but flagged anti-bot | 100 / 100 | 26,446.8 ms / 603,656,192 B | Short synthetic content triggered anti-bot/near-empty classification, including W10; the harness withheld Q2 without a valid Q1 basis. W4 raw PDF bytes unavailable. |
+| Scrapy 2.19.0 | Unsupported; raw shell retained | 105 / 20 | 5,067.7 ms / 85,983,232 B | Lowest measured footprint here; sub-millisecond W1 timings round to 0.0 ms. Redirect-loop record did not expose a normalized terminal failure. |
+| Playwright 1.63.0 | 5/5 rendered | 105 / 35 | 5,894.3 ms / 517,394,432 B | Always-browser reference, W1 median 19.5 ms; explicit timeout and navigation failures; PDF navigation surfaced a download rather than raw PDF bytes. |
+
+Installed footprint in the isolated Python 3.12.11 environments was:
+
+| Candidate | Distributions | Site-packages bytes | Environment bytes |
+|---|---:|---:|---:|
+| Scrapling | 22 | 243,770,000 | 244,698,081 |
+| Crawlee | 32 | 144,757,588 | 145,590,427 |
+| Crawl4AI | 96 | 566,573,633 | 568,358,797 |
+| Scrapy | 44 | 52,013,024 | 53,318,910 |
+| Playwright | 4 | 112,498,991 | 113,093,765 |
+
+The shared Playwright browser installation used 739,902,209 bytes. Lockfiles
+record exact candidate and transitive package hashes. These footprints exclude
+source/runtime data outside the isolated Python environments and are not
+deployment image sizes.
+
+Totals combine mixed request types, warm/cold process lifecycles, and framework
+instrumentation; use per-workload rows for interpretation. They are not a fair
+production throughput ranking. Six synthetic failure cases were exercised:
+404, delayed timeout, redirect loop, loopback-only simulated forbidden
+redirect, oversized response, and malformed body. `file:` was rejected in
+preflight without dispatch. Redirect-loop fixture request counts show why a
+strict redirect budget and destination revalidation must be enforced above
+candidate defaults. The simulated forbidden redirect never connected to an
+actual private or external destination.
+
+W3 used an explicit bounded root and child URL pair, not link discovery. W4
+checked raw PDF transport only, not PDF text extraction. W5–W9 exercised raw
+page acquisition only, not semantic extraction. Robots and rights decisions
+were not inferred from local fixtures. Failure normalization and raw artifact
+hash/lineage fields are preserved in the timestamped JSON and content-addressed
+artifact directory.
+
+### TARGETED INFORMATION-GAIN AND COMPOSITION EVIDENCE
+
+The harness derived G1 from each returned Q1 fingerprint and dispatched Q2 only for a successful Q1 observation. Scrapling, Crawlee, Scrapy, and Playwright each completed five targeted Q1→G1→Q2 iterations with the G1 basis carried into Q2. Crawl4AI returned anti-bot-classified Q1 results in all five iterations, so no Q2 request was issued.
+Per-candidate W10 observation totals were:
+
+| Candidate | W10 state | Requests / bytes | Required slots | Median observation time |
+|---|---|---:|---:|---:|
+| Scrapling | Supported | 10 / 535 B | 10 | 12.817 ms |
+| Crawlee | Supported | 10 / 535 B | 10 | 5.442 ms |
+| Crawl4AI | Failed (anti-bot classification) | 5 / 435 B | 0 | 252.897 ms |
+| Scrapy | Supported | 10 / 535 B | 10 | 0.000 ms (timer resolution) |
+| Playwright | Supported | 10 / 535 B | 10 | 18.154 ms |
+
+The harness derived G1 from each returned Q1 fingerprint and dispatched Q2
+only for a successful Q1 observation. Scrapling, Crawlee, Scrapy, and Playwright
+each completed five targeted Q1→G1→Q2 iterations with the G1 basis carried into
+Q2. Crawl4AI returned anti-bot-classified Q1 results in all five iterations,
+so no Q2 request was issued. Candidate aggregate request totals were Scrapling
+590, Crawlee 131, Crawl4AI 205, Scrapy 108, and Playwright 210, including
+W1–W12 and failure fixtures.
+
+The experiment composed Scrapy HTTP with Playwright browser escalation for the
+five Q1 requests whose initial HTML lacked the JavaScript-rendered `Widget`:
+5/5 escalated only when the declared predicate required it, with the same
+request identity and a preserved provenance chain. The observed yield vector
+was `S=5, T=28.741 ms median per pair, B=977 bytes, R=16 fixture requests,
+C=0, M=374,411,264 B peak RSS, P=2.0625 CPU seconds`. Sequential worker cold
+startup was 2,517.450 ms. Here C is local compute cost (not a monetary cost), B
+is fixture transfer bytes, and R includes a robots request. These are local
+harness measurements, not service-level budgets.
+
+### INFERENCE
+
+The runs demonstrate that distinct HTTP and browser adapters can produce the
+same experimental observation shape and can be composed without losing the
+request/provenance chain on the tested path. They also show material
+candidate-specific differences in JS behavior, timeouts, redirects, response
+limits, and resource use. Synthetic loopback evidence cannot settle source
+policy, operational fit, reliability on public sites, or a production winner.
+
+### ARCHITECTURE DECISION
+
+`SOURCE_ARCHITECTURE_DECISION=DEFERRED` (engine selection)
+`SOURCE_CONTRACT_STATUS=EXPERIMENTAL`
+`SOURCE_BOUNDARY_PROPOSAL=AXIGNAL_OWNED_REPLACEABLE_ADAPTERS`
+`ADR-0010=PROPOSED`
+
+ADR-0010 proposes AXIGNAL ownership of request/observation semantics and policy,
+with HTTP and browser as separate replaceable capabilities. It is not accepted
+architecture and selects no engine. No candidate is production-approved.
+
+### Open questions and next experiment
+
+Before selecting an engine, repair and repeat the Crawlee browser path, measure
+explicit deadlines and redirect/egress enforcement, and compare on a CTO-approved
+small set of lawfully public representative sources under documented rights,
+robots, and retention policy. Include an approved JS page, bounded link
+following, PDF bytes and extraction as separate stages, and request/resume
+behavior. Keep network egress constrained and verify redirects at every hop.
+Resolve candidate-specific installation and transitive license notices before
+any product distribution. Do not infer these answers from this fixture.
 ## Reproducibility / validation
 
 Run instructions and limits are in the experiment README. The raw result is

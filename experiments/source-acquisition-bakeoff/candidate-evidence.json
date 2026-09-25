@@ -1,6 +1,6 @@
 {
   "discovery_date": "2026-09-25",
-  "evidence_kind": "documentary capability review; no third-party engine packages installed or runtime-benchmarked",
+  "evidence_kind": "documentary capability review plus isolated loopback-only runtime benchmark for five candidates; Agent Reach and ScrapeGraphAI specialized capabilities and Firecrawl service remain untested with explicit reasons",
   "candidates": [
     {
       "project": "Scrapling",
@@ -36,7 +36,7 @@
       "estimated_operational_complexity": "Medium; browser binaries, proxy configuration, crawler state, stealth modes",
       "axignal_fit_hypothesis": "Candidate for ordinary HTTP and browser capability experiments; prohibit stealth/bypass by default; provenance and rights gates remain AXIGNAL-owned",
       "eligibility": "CONDITIONALLY_ELIGIBLE",
-      "benchmark_status": "Documentary review only; not engine-benchmarked"
+      "benchmark_status": "Runtime fixture benchmarked; 5 iterations after warmup; raw output: results/candidate-runtime/latest-candidate-runtime.json."
     },
     {
       "project": "Crawlee for Python",
@@ -72,7 +72,7 @@
       "estimated_operational_complexity": "Medium-high; lifecycle, storage, HTTP/browser stack, queues and optional hosted ecosystem",
       "axignal_fit_hypothesis": "Strong orchestration candidate for targeted requests and bounded follow-up; determine whether its queue/state abstractions add more than AXIGNAL needs",
       "eligibility": "ELIGIBLE",
-      "benchmark_status": "Documentary review only; not engine-benchmarked"
+      "benchmark_status": "Runtime fixture benchmarked; browser page creation timed out; raw output: results/candidate-runtime/latest-candidate-runtime.json."
     },
     {
       "project": "Crawl4AI",
@@ -108,7 +108,7 @@
       "estimated_operational_complexity": "High for browser/Docker server; moderate for restricted in-process path",
       "axignal_fit_hypothesis": "Useful browser/PDF candidate if used as acquisition only; its LLM extraction overlaps AXIGNAL deterministic/cognitive stages and must be disabled for authority-neutral tests",
       "eligibility": "CONDITIONALLY_ELIGIBLE",
-      "benchmark_status": "Documentary review only; not engine-benchmarked"
+      "benchmark_status": "Runtime fixture benchmarked; short synthetic pages flagged anti-bot; raw output: results/candidate-runtime/latest-candidate-runtime.json."
     },
     {
       "project": "Scrapy",
@@ -144,7 +144,7 @@
       "estimated_operational_complexity": "Medium; mature framework with project/spider conventions and reactor integration",
       "axignal_fit_hypothesis": "Strong deterministic HTTP foundation; likely browser complement needed, and a thin targeted adapter must control per-question lifecycle",
       "eligibility": "ELIGIBLE",
-      "benchmark_status": "Documentary review only; not engine-benchmarked"
+      "benchmark_status": "Runtime fixture benchmarked; browser rendering unsupported; raw output: results/candidate-runtime/latest-candidate-runtime.json."
     },
     {
       "project": "Agent Reach",
@@ -180,7 +180,7 @@
       "estimated_operational_complexity": "High/variable; platform auth, cookies, command tools and backend lifecycle",
       "axignal_fit_hypothesis": "SPECIALIZED_ONLY candidate for separately approved public platform observation after policy, credential, provenance and upstream dependency review",
       "eligibility": "SPECIALIZED_ONLY",
-      "benchmark_status": "Documentary review only; not engine-benchmarked"
+      "benchmark_status": "SPECIALIZED_ONLY; runtime not tested because its platform integrations lacked a credential-free representative synthetic fixture capability in this trial."
     },
     {
       "project": "ScrapeGraphAI OSS library",
@@ -216,7 +216,7 @@
       "estimated_operational_complexity": "Medium-high; graph config, models, tokens and transport stack",
       "axignal_fit_hypothesis": "SPECIALIZED_ONLY for comparative extraction research; do not let JSON output replace raw observations or AXIGNAL's epistemic pipeline",
       "eligibility": "SPECIALIZED_ONLY",
-      "benchmark_status": "Documentary review only; not engine-benchmarked"
+      "benchmark_status": "SPECIALIZED_ONLY; no raw-acquisition-only mode with unique evidence was established; model-backed extraction was outside this acquisition comparison."
     },
     {
       "project": "Firecrawl OSS/self-hosted",
@@ -252,7 +252,7 @@
       "estimated_operational_complexity": "High self-host; low infrastructure burden but medium-high vendor/credit dependence when managed",
       "axignal_fit_hypothesis": "CONDITIONAL candidate for later isolated comparison; high technical breadth but AGPL obligations, larger ops footprint and managed-model semantics require review",
       "eligibility": "CONDITIONALLY_ELIGIBLE",
-      "benchmark_status": "Documentary review only; not engine-benchmarked"
+      "benchmark_status": "RUNTIME_NOT_TESTED; no readily available lawful/no-cost local controlled trial without vendor credentials; self-hosted AGPL service was not installed per CTO order."
     },
     {
       "project": "Playwright for Python (browser capability reference)",
@@ -288,7 +288,7 @@
       "estimated_operational_complexity": "High relative to HTTP only; browser binaries, sandbox, memory and lifecycle management",
       "axignal_fit_hypothesis": "Browser complement reference, not general acquisition engine; test W2 separately if browser capability becomes authorized",
       "eligibility": "ELIGIBLE",
-      "benchmark_status": "Documentary review only; not engine-benchmarked"
+      "benchmark_status": "Runtime fixture benchmarked; direct browser reference; raw output: results/candidate-runtime/latest-candidate-runtime.json."
     }
   ]
 }
