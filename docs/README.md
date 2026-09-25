@@ -39,6 +39,14 @@ conflict.
   Product MCP; PROPOSED / PRE_IMPLEMENTATION. It is subordinate to the MASTER,
   Constitution, accepted ADRs, and Atlas, and does not establish runtime
   implementation.
+- [AXIGNAL V2 Deep Report & Executive Analysis Specification](product/AXIGNAL_V2_DEEP_REPORT_EXECUTIVE_ANALYSIS_SPEC.md):
+  Proposed full-value analytical product generation over the canonical AXIGLAND;
+  PROPOSED / PRE_IMPLEMENTATION. It is subordinate to the MASTER, Constitution,
+  accepted ADRs, and Atlas, and does not authorize implementation.
+- [AXIGNAL V3 Private Cross-Intelligence Specification](product/AXIGNAL_V3_PRIVATE_CROSS_INTELLIGENCE_SPEC.md):
+  Proposed full-value, tenant-scoped private analytical product generation;
+  PROPOSED / PRE_IMPLEMENTATION. Private analysis does not create a private
+  AXIGLAND or authorize implementation.
 
 ## Engineering governance
 
