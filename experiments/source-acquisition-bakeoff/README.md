@@ -66,3 +66,34 @@ Timestamped candidate JSON and `latest-candidate-runtime.json` are stored in
 `results/candidate-runtime/`; content-addressed raw response bytes are stored
 under `results/candidate-runtime/artifacts/`. The original reference result
 remains at `results/latest.json`.
+
+## P0-SOURCE-01C public trial
+
+The bounded public matrix and its source-policy decisions are recorded in
+`results/public-web/policy-decisions.json` before target requests, with
+observations in `results/public-web/latest-public-web.json`. Run it from the
+isolated controller environment:
+
+```powershell
+$env:P0_SOURCE01B_ROOT = 'C:\path\outside\the\repository\p0-source01b'
+& (Join-Path $env:P0_SOURCE01B_ROOT 'controller\.venv\Scripts\python.exe') `
+  experiments/source-acquisition-bakeoff/run_public_web_trial.py
+```
+
+This experimental runner has a fixed host/path allowlist, rejects non-HTTP(S),
+local, non-public-DNS, and nonstandard-port destinations, checks public DNS
+before every requested URL, disables automatic redirects, and runs Scrapy with
+one-request concurrency, an 8-second timeout, a 256 KiB response cap, no
+retries, no cookies, and a minimal environment with no proxy or repository
+credentials. Redirect responses are recorded but not followed. HTML is
+fingerprinted rather than retained; the WAI test PDF is retained byte-for-byte
+with its source URL and attribution metadata. Content is never executed or
+semantically extracted.
+
+Scrapling is not dispatched because its inspected HTTP API does not expose a
+verified streaming body-size cap. Playwright and Scrapling browser are not
+dispatched because the available browser route controls do not enforce both a
+hard response cap and per-hop redirect validation. DNS is checked but not
+pinned to the candidate connection. These limits are explicit reasons the
+public candidate decision remains deferred; the runner is not a production
+security subsystem.

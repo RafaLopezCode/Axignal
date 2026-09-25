@@ -440,4 +440,129 @@ any product distribution. Do not infer these answers from this fixture.
 Run instructions and limits are in the experiment README. The raw result is
 recorded separately from this narrative. The harness has five contract tests
 covering W1–W12 inventory, observation-only schema, loopback confinement,
-failure/artifact handling and iterative provenance.
+failure/artifact handling and iterative provenance. The P0-SOURCE-01C exact
+target/DNS guard has its own unit tests.
+
+## P0-SOURCE-01C public-web validation (2026-09-25)
+
+This section adds the CTO-authorized public trial without changing the
+historical P0-SOURCE-01A/B results above. The target policy manifest was
+written before candidate requests. Machine-readable evidence is in
+[`latest-public-web.json`](../../experiments/source-acquisition-bakeoff/results/public-web/latest-public-web.json)
+and [`policy-decisions.json`](../../experiments/source-acquisition-bakeoff/results/public-web/policy-decisions.json).
+
+### DOCUMENTARY EVIDENCE
+
+- Selenium's official copyright page licenses Selenium-originating website
+  documentation under Apache 2.0. Its HTTPS robots file returned `200` with
+  `User-agent: *` and no disallow. Its HTTP robots URL returned `301` to the
+  HTTPS robots file, which was separately read before any HTTP-origin target
+  request. Selenium documents the selected dynamic page as a WebDriver test
+  resource where interaction creates content absent before the action.
+  Sources: [Selenium copyright and license](https://www.selenium.dev/documentation/about/copyright/),
+  [Selenium waiting-strategy test description](https://www.selenium.dev/documentation/en/webdriver/waits/).
+- W3C's robots file contains no disallow matching the selected WAI test PDF
+  path. WAI's material-use page permits copying complete WAI documents with
+  attribution and no modification. Sources: [W3C robots.txt](https://www.w3.org/robots.txt),
+  [WAI material-use policy](https://www.w3.org/WAI/about/using-wai-material/).
+- httpbin was excluded because its source-policy state was not verified; the
+  approved Selenium HTTP-to-HTTPS redirect and one deliberate 404 target
+  covered P8.
+- Crawlee had no material capability likely to change the P0-SOURCE-01B
+  result and was not repeated. Crawl4AI's fixture anti-bot classification and
+  unavailable raw PDF remain unresolved. Agent Reach, ScrapeGraphAI, and
+  Firecrawl stayed outside this general-engine trial as directed.
+
+### SYNTHETIC FIXTURE EVIDENCE
+
+Historical P0-SOURCE-01A/B outcomes remain as recorded above, including the
+five-engine loopback comparison and 5/5 fixture HTTP-to-browser escalations.
+They are not reclassified as public-web evidence.
+
+### PUBLIC-WEB EVIDENCE
+
+The trial made **11 bounded Scrapy requests across 9 unique URLs**: one static
+Selenium project/license page; two explicitly listed same-site documentation
+pages; Selenium's JS test page via HTTP only; one W3C WAI test PDF; Selenium's
+dated blog index; its sponsor page; a causally dispatched Q1/O1/G1/Q2/O2 loop;
+one HTTP-to-HTTPS redirect response; and one deliberate 404. No discovered-link
+traversal ran. Results were 9 HTTP 200 responses, one 301, and one 404. Every
+observation records request identity, requested/final URI, retrieval time,
+status, headers/content type, body length/hash, adapter, and failure state.
+HTML bodies were not mirrored.
+
+The PDF acquisition boundary is separate from PDF extraction. The original
+13,264-byte PDF was retained without transformation at
+[`3df79d34abbca99308e79cb94461c1893582604d68329a41fd4bec1885e6adb4.pdf`](../../experiments/source-acquisition-bakeoff/results/public-web/artifacts/3df79d34abbca99308e79cb94461c1893582604d68329a41fd4bec1885e6adb4.pdf).
+SHA-256 is `3df79d34abbca99308e79cb94461c1893582604d68329a41fd4bec1885e6adb4`,
+content type was `application/pdf`, and `EXTRACTION_PERFORMED=NO`. The evidence
+record carries the source URL and attribution/policy basis.
+
+The targeted sequence completed as `Q1 → O1 → G1 → Q2 → O2`. Q1 succeeded
+with a SHA-256 basis. G1 was experiment-defined: the project/license page did
+not answer the targeted sponsor/relationship question. Only then was Q2 sent
+to the Selenium sponsor page. The gap-basis hash and both observations are
+linked in the JSON. This tests acquisition lineage, not semantic truth or
+canonical admission.
+
+P8 recorded the HTTP origin's `301` and `Location` header without automatically
+following it, and recorded the deliberate `404` as `failure_state=http_404`.
+The requests ran sequentially with Scrapy 2.19.0, one concurrent request, an
+8-second timeout, a 256 KiB maximum response size, retries disabled, cookies
+and referer middleware disabled, and a clean process environment without
+proxy variables, repository credentials, or browser cookies. Each requested
+URL was restricted by a host/path allowlist and checked for public DNS answers
+immediately before dispatch. Redirects were not followed. Content was treated
+as data: no scripts or downloads were executed, no semantic extraction ran,
+and no FAXT or canonical mutation was produced. DNS was checked but not pinned
+to the candidate connection; this residual is documented in the raw evidence.
+
+The one-pass Scrapy measurement was 86,990,848 bytes peak RSS, 1.828125 CPU
+seconds, and two processes. Q2 used a separate worker with 84,541,440 bytes
+peak RSS and 1.578125 CPU seconds. Per-page elapsed values are preserved in the
+JSON but are single observations, not a latency ranking or service budget.
+There were 11 candidate requests; PDF transfer was 13,264 bytes. No external
+monetary cost was billed or measured.
+
+Scrapling 0.4.15 was **not dispatched**: its public HTTP Fetcher did not expose
+a verified streaming response-size cap in the inspected request interface.
+Checking length after full retrieval would not enforce the transfer bound.
+Playwright 1.63.0 and Scrapling's browser path were **not dispatched**: the
+available route controls did not establish both a hard response-body limit
+and validation of every redirect hop. P3 therefore contains only an initial
+HTTP observation; its post-interaction DOM was not acquired. Browser
+candidates, browser resource cost, and public HTTP-first escalation savings
+remain unmeasured.
+
+### INFERENCE
+
+The experimental AXIGNAL-shaped observation carried identity, provenance,
+failure state, and the original PDF through this small public workload using
+Scrapy. Static and multi-page documentation, temporal material, a relationship
+resource, the targeted follow-up, a redirect response, and a 404 produced
+explicit observations. P3 proves only that the HTTP path retrieved the test
+shell; it does not validate browser-rendered content. No conclusion is drawn
+about company truth, source reliability, or the meaning of the sponsor page.
+
+The fixture comparison and public trial do not establish Scrapy as a
+comparative winner because Scrapling and browser candidates were withheld by
+the safety gate. Scrapy's low synthetic footprint and successful public
+handling make it the only HTTP candidate that completed this bounded trial,
+not a proven superior provider.
+
+### PROPOSED DECISION
+
+`SOURCE_ARCHITECTURE_DECISION=DEFERRED`
+`INITIAL_HTTP_ADAPTER=DEFERRED`
+`INITIAL_BROWSER_ADAPTER=DEFERRED`
+`AXIGNAL_OWNS_SOURCE_CONTRACT=PROPOSED`
+`CANDIDATE_ADAPTERS=EXPERIMENTAL`
+`PRODUCTION_SOURCE_ROUTER=ABSENT`
+
+Keep ADR-0010 **PROPOSED**. A follow-up comparison needs an experiment-local
+transport that enforces a hard byte cap for Scrapling and browser responses,
+validates every redirect hop and DNS destination, then runs the same
+policy-approved target set for Scrapy, Scrapling, and Playwright. Until then,
+do not infer public browser-escalation savings or select an initial engine.
+Scrapling stealth, anti-bot, and CAPTCHA capabilities remain prohibited as
+automatic fallback behavior; a denied request is a terminal policy outcome.

@@ -1,0 +1,30 @@
+{
+  "experiment": "P0-SOURCE-01C",
+  "decided_at": "2026-09-25T05:39:04.371974+00:00",
+  "targets": {
+    "https://www.selenium.dev/": {
+      "robots": "https robots.txt returned 200 with User-agent: * and no disallow; HTTP robots.txt returned 301 to the HTTPS robots URL, then verified there.",
+      "rights": "Selenium's official copyright page says Selenium-origin website documentation is Apache-2.0.",
+      "decision": "PERMITTED_FOR_ONE_LOW_RATE_TECHNICAL_GET_PER_EXACT_ALLOWLISTED_PATH",
+      "evidence": [
+        "https://www.selenium.dev/robots.txt",
+        "https://www.selenium.dev/documentation/about/copyright/"
+      ]
+    },
+    "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf": {
+      "robots": "W3C robots.txt has no disallow matching this exact /WAI/ER/tests path.",
+      "rights": "WAI material-use policy permits copying complete WAI documents with attribution; preserve source URL and copyright metadata.",
+      "decision": "PERMITTED_FOR_ONE_LOW_RATE_PDF_GET_AND_RAW_BYTE_RETENTION_WITH_ATTRIBUTION",
+      "evidence": [
+        "https://www.w3.org/robots.txt",
+        "https://www.w3.org/WAI/about/using-wai-material/"
+      ]
+    }
+  },
+  "exclusions": {
+    "httpbin": "excluded because robots/terms policy was unavailable; unnecessary for redirect/failure workload.",
+    "python.org": "excluded to keep the matrix on the two explicitly policy-screened sources.",
+    "scrapling": "not dispatched until a verified streaming/body-size cap is available.",
+    "browser": "not dispatched until a hard response cap and redirect-hop enforcement can be guaranteed."
+  }
+}

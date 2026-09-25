@@ -17,6 +17,14 @@ import sys
 import time
 from datetime import UTC, datetime
 from typing import Any, ClassVar
+from urllib.parse import urlsplit
+
+
+def _public_guard(url: str) -> None:
+    if os.environ.get("P0_SOURCE01C_PUBLIC_TRIAL") == "1":
+        from public_guard import validate_public_url
+
+        validate_public_url(url)
 
 
 def normalized(
@@ -51,8 +59,10 @@ def normalized(
         "capability_state": request.get("capability_state", "SUPPORTED"),
         "requested_url": request["url"],
         "source_uri": request["url"],
-        "source_identity": "synthetic-repository-fixture",
         "request_identity": request["research_question_id"],
+        "source_identity": urlsplit(request["url"]).hostname
+        if os.environ.get("P0_SOURCE01C_PUBLIC_TRIAL") == "1"
+        else "synthetic-repository-fixture",
         "retrieved_at": datetime.now(UTC).isoformat(),
         "observed_at": None,
         "acquisition_method": request["mode"],
@@ -85,6 +95,7 @@ def normalized(
             f"axignal-experimental-{candidate}-adapter/0.1",
         ],
         "rights_metadata": "synthetic repository fixture; no external source rights asserted",
+        "policy_decision": request.get("policy_decision"),
         "extraction_metadata": {"transform": "none; raw acquisition only", "candidate": candidate},
         "rendered_html": rendered_html,
         "js_execution": (
@@ -130,6 +141,7 @@ def scrapling(records: list[dict[str, Any]]) -> list[dict[str, Any]]:
     for record in records:
         start = time.perf_counter()
         try:
+            _public_guard(record["url"])
             if record["mode"] == "browser":
                 response = DynamicFetcher.fetch(
                     record["url"],
@@ -163,13 +175,15 @@ def scrapling(records: list[dict[str, Any]]) -> list[dict[str, Any]]:
                 response = Fetcher.get(
                     record["url"],
                     timeout=record.get("deadline_ms", 8000) / 1000,
-                    follow_redirects=True,
+                    follow_redirects=os.environ.get("P0_SOURCE01C_PUBLIC_TRIAL") != "1",
                 )
                 body = (
                     response.body
                     if isinstance(response.body, bytes)
                     else str(response.body).encode()
                 )
+                if os.environ.get("P0_SOURCE01C_PUBLIC_TRIAL") == "1" and len(body) > 262_144:
+                    raise ValueError("response_size_limit_exceeded")
                 final = str(response.url)
                 output.append(
                     normalized(
@@ -413,15 +427,26 @@ async def playwright(records: list[dict[str, Any]]) -> list[dict[str, Any]]:
     output: list[dict[str, Any]] = []
     async with async_playwright() as playwright_api:
         browser = await playwright_api.chromium.launch(headless=True)
-        context = await browser.new_context()
-        await context.route(
-            "**/*",
-            lambda route: (
-                route.continue_()
-                if route.request.url.startswith("http://127.0.0.1:")
-                else route.abort()
-            ),
-        )
+        context = await browser.new_context(service_workers="block", accept_downloads=False)
+
+        async def guard_browser_request(route: Any) -> None:
+            url = route.request.url
+            if os.environ.get("P0_SOURCE01C_PUBLIC_TRIAL") == "1":
+                try:
+                    _public_guard(url)
+                    if route.request.resource_type not in {"document", "script", "stylesheet"}:
+                        await route.abort()
+                        return
+                    await route.continue_()
+                except Exception:
+                    await route.abort()
+                return
+            if url.startswith("http://127.0.0.1:"):
+                await route.continue_()
+            else:
+                await route.abort()
+
+        await context.route("**/*", guard_browser_request)
         page = await context.new_page()
         network: list[dict[str, Any]] = []
         page.on(
@@ -435,6 +460,7 @@ async def playwright(records: list[dict[str, Any]]) -> list[dict[str, Any]]:
         for record in records:
             start = time.perf_counter()
             try:
+                _public_guard(record["url"])
                 response = await page.goto(
                     record["url"],
                     wait_until="domcontentloaded",
@@ -442,6 +468,8 @@ async def playwright(records: list[dict[str, Any]]) -> list[dict[str, Any]]:
                 )
                 html = await page.content()
                 body = await response.body() if response else b""
+                if os.environ.get("P0_SOURCE01C_PUBLIC_TRIAL") == "1" and len(body) > 262_144:
+                    raise ValueError("response_size_limit_exceeded")
                 output.append(
                     normalized(
                         "playwright",
@@ -484,16 +512,21 @@ def scrapy(records: list[dict[str, Any]]) -> list[dict[str, Any]]:
         name = "axignal_runtime_fixture"
         custom_settings: ClassVar[dict[str, Any]] = {
             "LOG_ENABLED": False,
-            "ROBOTSTXT_OBEY": True,
+            "ROBOTSTXT_OBEY": os.environ.get("P0_SOURCE01C_PUBLIC_TRIAL") != "1",
+            "COOKIES_ENABLED": os.environ.get("P0_SOURCE01C_PUBLIC_TRIAL") != "1",
+            "REFERER_ENABLED": os.environ.get("P0_SOURCE01C_PUBLIC_TRIAL") != "1",
             "RETRY_ENABLED": False,
             "DOWNLOAD_TIMEOUT": 8,
-            "DOWNLOAD_MAXSIZE": 1_000_000,
+            "DOWNLOAD_MAXSIZE": 262_144
+            if os.environ.get("P0_SOURCE01C_PUBLIC_TRIAL") == "1"
+            else 1_000_000,
             "REDIRECT_MAX_TIMES": 5,
             "CONCURRENT_REQUESTS": 1,
         }
 
         async def start(self):
             for record in records:
+                _public_guard(record["url"])
                 yield scrapy.Request(
                     record["url"],
                     callback=self.parse,
@@ -504,6 +537,7 @@ def scrapy(records: list[dict[str, Any]]) -> list[dict[str, Any]]:
                         "started": time.perf_counter(),
                         "handle_httpstatus_all": True,
                         "download_timeout": record.get("deadline_ms", 8000) / 1000,
+                        "dont_redirect": os.environ.get("P0_SOURCE01C_PUBLIC_TRIAL") == "1",
                     },
                 )
 
@@ -547,9 +581,15 @@ def scrapy(records: list[dict[str, Any]]) -> list[dict[str, Any]]:
     process = CrawlerProcess(
         settings={
             "LOG_ENABLED": False,
-            "ROBOTSTXT_OBEY": True,
+            "ROBOTSTXT_OBEY": os.environ.get("P0_SOURCE01C_PUBLIC_TRIAL") != "1",
+            "COOKIES_ENABLED": os.environ.get("P0_SOURCE01C_PUBLIC_TRIAL") != "1",
+            "REFERER_ENABLED": os.environ.get("P0_SOURCE01C_PUBLIC_TRIAL") != "1",
             "RETRY_ENABLED": False,
             "DOWNLOAD_TIMEOUT": 8,
+            "DOWNLOAD_MAXSIZE": 262_144
+            if os.environ.get("P0_SOURCE01C_PUBLIC_TRIAL") == "1"
+            else 1_000_000,
+            "CONCURRENT_REQUESTS": 1,
         }
     )
     process.crawl(RuntimeSpider)
