@@ -33,6 +33,12 @@ conflict.
   filename identifies the current specification; Git history records versions.
   It is subordinate to the MASTER, Constitution, accepted ADRs, and Atlas, and
   does not establish runtime implementation.
+- [AXIGNAL Subscriber Experience & Ask AXENT Product Specification](product/AXIGNAL_SUBSCRIBER_EXPERIENCE_ASK_AXENT_PRODUCT_SPEC.md):
+  Human-first subscriber interaction specification covering Xeed germination,
+  evolution, evidence, progressive disclosure, Ask AXENT, portability and
+  Product MCP; PROPOSED / PRE_IMPLEMENTATION. It is subordinate to the MASTER,
+  Constitution, accepted ADRs, and Atlas, and does not establish runtime
+  implementation.
 
 ## Engineering governance
 
@@ -60,6 +66,9 @@ conflict.
   write authority. **Specified != implemented; documented architecture !=
   runtime evidence.** Provider-specific execution descriptions do not select or
   implement a provider; ADR-0006 governs the replaceable provider boundary.
+- [Subscriber Experience Interaction Architecture V0.1](architecture/AXIGNAL_SUBSCRIBER_EXPERIENCE_INTERACTION_ARCHITECTURE_V0.1.md)
+  defines proposed pre-implementation contracts for P0-INTERACTION-01. It is
+  subordinate to the authorities above; specified != implemented.
 
 ## Communication
 

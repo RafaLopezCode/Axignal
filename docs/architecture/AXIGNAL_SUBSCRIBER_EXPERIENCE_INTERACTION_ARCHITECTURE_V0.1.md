@@ -1,0 +1,117 @@
+# AXIGNAL Subscriber Experience Interaction Architecture V0.1
+
+**Version:** 0.1\
+**Status:** PROPOSED\
+**Implementation status:** PRE_IMPLEMENTATION\
+**Classification:** PROPOSED_INTERACTION_ARCHITECTURE\
+**Feature:** P0-INTERACTION-01 (`specs/003-subscriber-experience-interaction/`)
+
+This document specifies future interaction contracts. It is subordinate to
+the MASTER Product Model, Engineering Constitution, accepted ADRs and Logical
+Architecture Atlas. It creates no new accepted architectural authority and is
+not evidence that a runtime exists.
+
+## Boundary
+
+```text
+Canonical AXIGLAND
+        ↓
+AXIGNAL authorized subscriber projection
+        ├── Human-first UI projections
+        ├── Ask AXENT — by AXIGNAL (contextual cognitive projection)
+        ├── Portable Xeed (Markdown / JSON projection)
+        └── Product MCP (authorized read/query projection)
+```
+
+There is one canonical AXIGLAND. Subscriber UI, model response, export and
+Product MCP are not canonical authority. Subscriber Experience is distinct
+from AXIGNAL Internal Admin in purpose, authorization and projection. AXIGNAL
+owns semantic meaning; a renderer draws its projection. Ask AXENT extends
+understanding and does not compensate for poor deterministic information
+design.
+
+## Human-first interaction model
+
+Default comprehension follows: What is happening? → What matters? → What
+changed? → Why? → What supports this? → What else should I examine? Basic
+comprehension does not require prompting. Progressive disclosure reveals
+complexity without erasing it. Cognitive-question-to-representation mapping
+includes feed/discoveries, economic map, graph, timeline, evidence/derivation,
+PATHX, corporate structure, knowledge/observability and representation
+anomalies. Graph is not the universal UI; graph hairball is not success.
+
+Germination is a projection of actual state, never a cosmetic timer. First Map
+reveal presents evidence-backed “What AXIGNAL learned”, “What AXIGNAL found”
+and “What AXIGNAL did not expect” before or with “Explore your economic world”.
+Today prioritizes explainable material changes since the prior visit. No opaque
+WOW or universal materiality score is allowed.
+
+## Canonical contract catalogue
+
+The normative proposed definitions are maintained in
+[`contracts/interaction-contracts.md`](../../specs/003-subscriber-experience-interaction/contracts/interaction-contracts.md):
+
+1. Subscriber Projection
+2. Germination Projection
+3. Today / Attention / Material Change
+4. Evolution / Temporal Projection
+5. Evidence Drill-down
+6. Graph / Map Projection
+7. PATHX Presentation
+8. Ask AXENT Context
+9. Ask AXENT Response
+10. Ask AXENT Research Escalation
+11. Subscriber Authorization
+12. Portable Xeed
+13. Product MCP Read
+14. Cognitive Provider Policy
+15. Subscriber Cognitive Telemetry
+
+All 15 preserve the same authority boundary and specify producer/consumer,
+required meaning, hard invariants and failure/unknown semantics. Concrete wire
+schemas, endpoints, storage, event names, authorization mechanism and UI
+components remain deferred.
+
+## Cognitive policy and model facts
+
+The current proposed policy maps the background cognitive role to
+OpenAI/GPT-6 Luna/Batch and subscriber cognition to OpenAI/GPT-6 Luna/Standard
+Responses. This is policy under `CognitiveProvider`/`ModelRouter`, not domain
+authority or permanent provider coupling. A model change requires representative
+evaluation. The model never directs AXIGNAL and its output is never canonical
+truth.
+
+Model identifiers, capability and pricing are external mutable facts. The
+dated verification and official source references are in
+[`research.md`](../../specs/003-subscriber-experience-interaction/research.md).
+The 1M+ context window is capacity, not a target. Context must be the smallest
+useful authorized structured projection. Missing cost is unknown, not zero.
+
+## Claim review, portability and agent boundary
+
+A subscriber may challenge a claim, which triggers independent reinvestigation
+and policy evaluation; it does not edit canonical truth. Users may direct
+attention, never conclusions. Xeed.md and Xeed.json are scoped temporal
+projections, not authority. Product MCP is an explicitly authorized query
+surface; no write authority is specified. External agents cannot mutate
+AXIGLAND.
+
+## Security, privacy and telemetry
+
+All requests, context, responses, exports and MCP reads are account/Xeed
+scoped. Authorization is enforced at retrieval and release boundaries.
+Unrelated subscriber data, secrets and unnecessary PII do not enter model
+context or telemetry. Private subscriber state does not silently become public
+AXIGLAND truth. Telemetry is minimized, protected and lineage-aware. UX/cost
+metrics are interpretable observations; no causal conclusion is encoded
+without evidence.
+
+## Non-goals and status
+
+This document authorizes no production subscriber UI, Ask AXENT runtime, model
+API call, Batch job, Brain, research loop, JEV, Source Router, Product MCP,
+Xeed export runtime, Admin, Customer Operations, production dependency, schema
+or migration. Follow-on implementation requires review/authorization of this
+proposed contract and separate governed slices.
+
+**Specified != implemented. Documented architecture != runtime evidence.**
