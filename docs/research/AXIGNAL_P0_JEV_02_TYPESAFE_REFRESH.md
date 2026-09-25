@@ -45,7 +45,8 @@ the accepted production architecture.
   is a dated public price reference, not account invoice evidence.
 - Python SDK transient retries default to two. The lab sets retry count to
   zero and uses a 30-second attempt timeout; its sequential runner separately
-  enforces request/question/state-size/cost limits before calls.
+  enforces request/question/state-size and encoded request-byte limits before
+  calls. Bytes are not token counts and are never converted to cost.
 - SDK authorization headers are redacted but request and response bodies are
   not safe for verbose logging. The adapter retains normalized answers and
   safe metadata only; exception text and response bodies are discarded.
@@ -59,10 +60,12 @@ the accepted production architecture.
 ### Material delta from P0-JEV-01
 
 The documentation index now exposes separate Noul and Choice self-consistency
-recipes and a detailed Python retry reference. The model page now explicitly
-lists the Jev 1.13 input-token price. These additions inform experiment design
-and preflight estimates. They provide no AXIGNAL-labeled observations and do
-not contradict or supersede P0-JEV-01.
+recipes and a detailed Python retry reference. The model page lists the Jev
+1.13 input-token price. The lab stores that reviewed price in an explicit
+versioned policy and applies it only to provider-reported input-token usage;
+preflight request bytes do not estimate tokens or cost. The source provides no
+invoice evidence and no AXIGNAL-labeled observations and does not contradict or
+supersede P0-JEV-01.
 
 ### SDK decision
 

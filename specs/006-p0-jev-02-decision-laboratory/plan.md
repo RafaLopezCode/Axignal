@@ -29,9 +29,9 @@ Implement a small, isolated, Python-based experimental laboratory under `experim
 ## Research Decisions
 
 1. **SDK selection**: Python official TypeSafe SDK 0.7.1. AXIGNAL is Python-first; SDK provides typed Choice/Score/Noul response objects, usage/model metadata, and typed errors. JavaScript SDK 0.6.0 was reviewed but has no current AXIGNAL runtime target. The official SDK is not a production dependency.
-2. **Retry/cost control**: Current Python SDK retries twice by default. Configure `RetryPolicy(max_retries=0)` and client timeout; the runner enforces request, question, state-byte, and official-price-derived preflight limits before each call. Concurrency is one. A failure is recorded by safe category only.
+2. **Retry/budget control**: Current Python SDK retries twice by default. Configure `RetryPolicy(max_retries=0)` and client timeout; the runner enforces request, question, state-byte, and encoded request-byte limits before each call. Bytes are not tokens, so preflight token count and monetary cost remain unknown. Concurrency is one. A failure is recorded by safe category only.
 3. **Logging/privacy**: TypeSafe SDK docs/source state secret headers are redacted but bodies are not. The adapter suppresses verbose SDK logs, never prints exceptions/body, records only normalized judgments and safe metadata, and uses synthetic public-like fixture data.
-4. **Cost**: Current official model page lists Jev 1.13 at USD 0.042 per million input tokens and zero output-token price, subject to change. The experiment manifest snapshots source/date and reports an estimate distinct from invoiced cost; unknown actual charge stays unknown.
+4. **Cost**: The official model page reviewed on 2026-09-25 lists Jev 1.13 at USD 0.042 per million input tokens and zero output-token price. This is captured in a versioned pricing-policy record. It is applied only to provider-reported input-token usage after a response; invoice cost remains unknown. Preflight bytes never imply tokens or money.
 5. **No calibration claim**: 42 synthetic cases and any small live sample support exploratory diagnostics only. No production threshold, calibration claim, model promotion, or active grammar results.
 6. **Repository isolation**: Experiment package is under `experiments/decision_lab/`, not included in the hatch wheel. The live adapter is the only module allowed to import `typesafe_sdk`.
 
@@ -40,7 +40,9 @@ Implement a small, isolated, Python-based experimental laboratory under `experim
 - Corpus V0.1: 42 fully synthetic cases; 14 each for claim/evidence support, entity alignment, and economic relationship. Explicit label statuses and provenance distinguish known synthetic construction from designed ambiguity/contradiction/no-answer.
 - Grammar V0.1: immutable question IDs/versions and family/primitive/state/exclusion metadata; includes claim wording variants, entity alignment Choice, relationship presence Noul, type Choice, time Choice, and contradiction Noul.
 - State compiler V0.1: deterministic JSON-safe projection and SHA-256 fingerprint of semantic state only.
-- Controlled definitions: claim wording A/B, state ablation, and compound-versus-atomic relationship judgment. Live budgets are predeclared; no calls occur unless invoked with `--live` and credentials are available.
+- Controlled definitions declare experiment type, one independent variable, controlled dimensions, policy version and predeclared evaluation criteria. Supported executable types are QUESTION_WORDING, STATE_ABLATION, ATOMIC_DECOMPOSITION, MODEL_COMPARISON, and REPEATABILITY. Other proposed types fail closed until implemented. Live budgets are predeclared; no calls occur unless invoked with `--live` and credentials are available.
+- State variants use a versioned explicit registry. Unknown variants fail closed. Results preserve variant identity and fingerprint per evaluation. Outcome classification is deterministic and uses only predeclared criteria; the current small-sample criteria intentionally produce INCONCLUSIVE where they do not establish a justified effect threshold.
+- Atomic relationship decomposition retains all four raw judgments and applies a versioned, experimental-only deterministic composer. Unresolved and contradictory signals remain explicit; the composer has no canonical admission path.
 - Offline fixture replay validates ingestion/normalization/composition only; it never represents Jev quality or golden corpus correctness.
 
 ## Architecture
@@ -106,7 +108,7 @@ specs/006-p0-jev-02-decision-laboratory/
 ## Risks and Rollback
 
 - SDK transitive dependencies may be large or incompatible; keep them isolated in the optional group and remove that group/adapter if resolution or SDK isolation fails.
-- Token estimates are unavailable before calls; use UTF-8 request-body byte upper bounds with the dated official input price for conservative preflight, then record reported usage and stop on any mismatch.
+- Token counts and monetary costs are unknown before calls. UTF-8 request-byte budgets are a separate safety bound. Provider-reported input-token usage may be priced only through the dated, versioned policy record; invoice cost remains unknown.
 - SDK/API shape may drift; typed normalization fails closed and records an operational/schema failure.
 - Synthetic labels may be mistaken for empirical truth; reports must declare their authority and whether evaluator data are live, recorded, or fixture-only.
 - Rollback is removal of this feature branch's lab files, optional dependency group/lock entries, guard exception/tests, and documentation links. No production data/schema needs rollback.

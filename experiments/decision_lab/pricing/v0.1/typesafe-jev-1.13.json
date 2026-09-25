@@ -1,0 +1,15 @@
+{
+  "policy_version": "typesafe-jev-1.13-input-price.v0.1",
+  "provider": "TypeSafe",
+  "model": "jev-1.13.0",
+  "price_dimension": "input_tokens",
+  "price": 0.042,
+  "currency": "USD",
+  "unit": "per 1,000,000 input tokens",
+  "output_token_price": 0,
+  "effective_date": null,
+  "reviewed_date": "2026-09-25",
+  "source_authority": "Official TypeSafe model documentation",
+  "source_url": "https://docs.typesafe.ai/models",
+  "limitations": "Public listed price only; not account billing or invoice evidence. Effective date is not stated by the source."
+}

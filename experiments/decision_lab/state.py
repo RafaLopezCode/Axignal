@@ -1,15 +1,50 @@
-"""Deterministic compilation for minimal experimental state."""
+"""Deterministic compilation and explicit state-variant transformations."""
 
 from __future__ import annotations
 
 import hashlib
 import json
 import math
+from collections.abc import Callable, Mapping
 from dataclasses import dataclass
 from typing import Any
 
+from experiments.decision_lab.models import LabError
+
 STATE_CONTRACT_VERSION = "0.1.0"
-STATE_COMPILER_VERSION = "0.1.0"
+STATE_COMPILER_VERSION = "0.2.0"
+
+
+@dataclass(frozen=True)
+class StateVariant:
+    variant_id: str
+    version: str
+    transform: Callable[[dict[str, Any]], dict[str, Any]]
+
+
+def _identity(payload: dict[str, Any]) -> dict[str, Any]:
+    return json.loads(json.dumps(payload, ensure_ascii=False))
+
+
+def _without_temporal_provenance(payload: dict[str, Any]) -> dict[str, Any]:
+    transformed = _identity(payload)
+    transformed.pop("temporal_context", None)
+    transformed.pop("provenance", None)
+    return transformed
+
+
+STATE_VARIANTS: Mapping[str, StateVariant] = {
+    "full_context": StateVariant("full_context", "0.1.0", _identity),
+    "minimal": StateVariant("minimal", "0.1.0", _without_temporal_provenance),
+}
+
+
+def apply_state_variant(payload: dict[str, Any], variant_id: str) -> tuple[dict[str, Any], str]:
+    """Apply one named, versioned transformation; unknown variants fail closed."""
+    variant = STATE_VARIANTS.get(variant_id)
+    if variant is None:
+        raise LabError(f"unknown state variant: {variant_id}")
+    return variant.transform(payload), variant.version
 
 
 @dataclass(frozen=True)

@@ -27,7 +27,13 @@ Question identity is `(question_id, question_version)`; grammar has its own vers
 
 ## ExperimentDefinition / ExperimentResult
 
-Definition fixes hypothesis, family, cases/split, grammar/state/policy variants, repetitions, measures, model, declared budgets, and stop conditions. Result contains immutable identity, git/corpus/grammar/compiler/policy/evaluator versions, state fingerprints, normalized judgments, failures, compositions, class-scoped metrics, usage/cost/latency where known, and a live/recorded/fixture evidence label.
+Definition fixes hypothesis, family, cases/split, grammar/state/policy variants, repetitions, measures, model, declared budgets, stop conditions, experiment type, independent variable, controlled dimensions, and predeclared evaluation criteria. The validator enforces the declared single-variable comparison. Result identity is content-digested and create-only; its reproducibility manifest records the git revision, definition version/digest, corpus and grammar versions, exact question versions, compiler and state variant versions/fingerprints, policy and evaluator/SDK versions, requested/resolved model, case IDs, repetitions, and execution mode. Results retain normalized raw judgments, failures, compositions, class-scoped metrics, usage/cost/latency where known, and a live/recorded/fixture evidence label. Criteria snapshots and their digest are immutable with the completed result.
+
+Preflight request bytes are measured independently of token usage. Preflight tokens and monetary cost are `UNKNOWN`. Provider-reported input-token usage may be estimated under an explicit versioned pricing-policy record; invoice cost remains `UNKNOWN` without billing evidence.
+
+Outcome criteria are declared before execution. The deterministic evaluator emits `SUPPORTED` or `NOT_SUPPORTED` only when a justified predeclared minimum effect and sufficient valid evidence exist. Operational failure, critical regression, incompatible semantics, insufficient cases, or absent effect threshold produce `INCONCLUSIVE` with reasons.
+
+The relationship atomic strategy has a versioned deterministic experimental composer for REL.PRESENCE, REL.TYPE, REL.TIME, and REL.CONTRADICTION. It retains each raw judgment, preserves contradictory/unresolved state, and has no canonical admission authority.
 
 ## Label and privacy rules
 

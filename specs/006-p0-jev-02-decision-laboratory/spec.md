@@ -73,7 +73,7 @@ An authorized researcher can request a predeclared, budgeted Jev lab experiment 
 - **FR-005**: The evaluator boundary MUST be replaceable and return normalized typed judgments or classified operational failure.
 - **FR-006**: The lab MUST preserve raw normalized Choice, Score, and Noul values, distributions, defined confidence, evaluator/model identity, and returned usage before composition.
 - **FR-007**: Experimental composition MUST be deterministic, explicitly versioned, and isolated from canonical admission and all production writers.
-- **FR-008**: Experiments MUST declare variables, corpus/split, evaluator/model, repetitions, measures, request/question/token/cost limits, and stop conditions before execution.
+- **FR-008**: Experiments MUST declare their type, independent variable, controlled dimensions, corpus/split, evaluator/model, repetitions, measures, request/question/state/request-byte limits, and stop conditions before execution. Preflight token count and monetary cost remain unknown unless an authoritative mechanism exists.
 - **FR-009**: Budget enforcement MUST happen before provider calls; retries and concurrency MUST be bounded and observable.
 - **FR-010**: Offline recorded-response replay MUST work without TypeSafe SDK, credentials, network, Jev, or Luna.
 - **FR-011**: Result artifacts MUST contain a reproducibility manifest and use immutable result identities; unavailable usage, cost, latency, or metadata MUST remain unknown.

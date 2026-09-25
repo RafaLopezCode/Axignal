@@ -2,7 +2,9 @@
 
 from __future__ import annotations
 
+import json
 import math
+from pathlib import Path
 from typing import Any
 
 from experiments.decision_lab.models import NormalizedJudgment
@@ -117,3 +119,91 @@ def compose_support(judgment: NormalizedJudgment) -> dict[str, Any]:
     if judgment.primitive == "SCORE":
         outcome = {"score": value, "distribution": judgment.distribution}
     return {"status": "COMPOSED", "outcome": outcome, "policy_version": "support.v0.1"}
+
+
+def compose_relationship_decomposition(
+    judgments: list[NormalizedJudgment],
+) -> dict[str, Any]:
+    """Map the declared four-question relation strategy to compound labels.
+
+    The 0.5 cut is an experimental comparison rule only. Raw judgments remain
+    separately persisted and the result is never canonical truth.
+    """
+    required = {
+        "REL.PRESENCE.v1": "NOUL",
+        "REL.TYPE.v1": "CHOICE",
+        "REL.TIME.v1": "CHOICE",
+        "REL.CONTRADICTION.v1": "NOUL",
+    }
+    by_id = {item.question_id: item for item in judgments}
+    if len(by_id) != len(judgments) or set(by_id) != set(required):
+        return {
+            "status": "UNRESOLVED",
+            "outcome": "UNRESOLVED",
+            "resolution_state": "INCOMPLETE_ATOMIC_SET",
+            "policy_version": "relationship-decomposition.v0.1",
+        }
+    if any(
+        by_id[question_id].primitive != primitive or by_id[question_id].status != "ANSWERED"
+        for question_id, primitive in required.items()
+    ):
+        return {
+            "status": "UNRESOLVED",
+            "outcome": "UNRESOLVED",
+            "resolution_state": "MISSING_OR_MALFORMED_ATOMIC_JUDGMENT",
+            "policy_version": "relationship-decomposition.v0.1",
+        }
+
+    presence = float(by_id["REL.PRESENCE.v1"].value)
+    contradiction = float(by_id["REL.CONTRADICTION.v1"].value)
+    policy = json.loads(
+        (Path(__file__).parent / "policies/v0.1/relationship-decomposition.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    thresholds = {
+        "presence_positive_at": policy["presence_positive_at"],
+        "contradiction_at": policy["contradiction_signal_at"],
+    }
+    time_status_mapping = policy.get("time_status_mapping", {})
+    raw_time_status = str(by_id["REL.TIME.v1"].value)
+    time_status = time_status_mapping.get(raw_time_status)
+    if time_status not in {"CURRENT", "HISTORICAL", "NONE", "UNRESOLVED"}:
+        time_status = "UNRESOLVED"
+    if contradiction >= thresholds["contradiction_at"]:
+        outcome = policy["contradictory_comparable_outcome"]
+        resolution = "CONTRADICTORY"
+    elif time_status == "UNRESOLVED":
+        outcome = "UNRESOLVED"
+        resolution = "UNRESOLVED"
+    elif time_status == "NONE":
+        if presence >= thresholds["presence_positive_at"]:
+            outcome = "UNRESOLVED"
+            resolution = "CONTRADICTORY_ATOMIC_SIGNALS"
+        else:
+            outcome = "NONE"
+            resolution = "RESOLVED"
+    elif time_status in {"CURRENT", "HISTORICAL"}:
+        if presence >= thresholds["presence_positive_at"]:
+            outcome = time_status
+            resolution = "RESOLVED"
+        else:
+            outcome = "UNRESOLVED"
+            resolution = "CONTRADICTORY_ATOMIC_SIGNALS"
+    else:
+        outcome = "UNRESOLVED"
+        resolution = "UNRESOLVED"
+    return {
+        "status": "COMPOSED_EXPERIMENTAL",
+        "outcome": outcome,
+        "resolution_state": resolution,
+        "signals": {
+            "presence_probability": presence,
+            "relationship_type": by_id["REL.TYPE.v1"].value,
+            "time_status": time_status,
+            "contradiction_probability": contradiction,
+        },
+        "composition_thresholds": thresholds,
+        "policy_version": policy["policy_version"],
+        "canonical_authority": policy["canonical_authority"],
+    }

@@ -12,17 +12,27 @@ import pytest
 from experiments.decision_lab.artifacts import read_result, write_result
 from experiments.decision_lab.cli import ROOT, main, validate
 from experiments.decision_lab.evaluator import RecordedEvaluator, failure_for_exception
-from experiments.decision_lab.experiment import estimate_budget
-from experiments.decision_lab.judgments import compose_support, normalize_judgment
+from experiments.decision_lab.experiment import estimate_budget, manifest_digest
+from experiments.decision_lab.judgments import (
+    compose_relationship_decomposition,
+    compose_support,
+    normalize_judgment,
+)
 from experiments.decision_lab.metrics import (
     calibration_metrics,
     classification_metrics,
     detect_critical_regressions,
 )
 from experiments.decision_lab.models import LabError
+from experiments.decision_lab.outcomes import evaluate_experiment_outcome, object_digest
+from experiments.decision_lab.pricing import estimate_cost_from_usage, load_pricing_policy
 from experiments.decision_lab.providers.typesafe import TypeSafeLabEvaluator
-from experiments.decision_lab.state import compile_state
-from experiments.decision_lab.validation import validate_corpus, validate_grammar
+from experiments.decision_lab.state import apply_state_variant, compile_state
+from experiments.decision_lab.validation import (
+    validate_corpus,
+    validate_experiment,
+    validate_grammar,
+)
 
 
 def _load(relative: str) -> dict:
@@ -164,6 +174,11 @@ def test_experiment_budget_preflight_enforces_request_question_and_state_limits(
     estimate = estimate_budget(plan, states)
     assert estimate["expected_request_count"] == 10
     assert estimate["expected_question_count"] == 10
+    assert estimate["preflight_request_bytes"] > 0
+    assert estimate["preflight_token_count"] == "UNKNOWN"
+    assert estimate["preflight_monetary_cost"] == "UNKNOWN"
+    assert "input_token_upper_bound" not in estimate
+    assert "estimated_cost_usd" not in estimate
     plan["budget"]["max_requests"] = 1
     with pytest.raises(LabError, match="exceeds"):
         estimate_budget(plan, states)
@@ -233,7 +248,9 @@ def test_typesafe_adapter_pins_model_disables_retries_and_preserves_metadata(
         "instructions": "Synthetic contract test",
         "criteria": {"SUPPORTED": None, "NO": None},
     }
-    judgments, failure, metadata = evaluator.evaluate({"synthetic": True}, [question])
+    judgments, failure, metadata = evaluator.evaluate(
+        {"synthetic": True}, [question], model="jev-1.13.0"
+    )
     assert failure is None
     assert metadata["resolved_model"] == "jev-1.13.0"
     assert metadata["usage"] == {"input_tokens": 21, "output_tokens": 0, "total_tokens": 21}
@@ -249,11 +266,35 @@ def test_typesafe_adapter_pins_model_disables_retries_and_preserves_metadata(
 
 def test_result_artifact_is_create_only_and_readable(tmp_path: Path) -> None:
     path = tmp_path / "results" / "one.json"
-    payload = {"artifact_type": "decision-lab-result", "result_id": "fixed"}
+    payload = {"artifact_type": "decision-lab-result", "result_id": ""}
+    payload["result_id"] = manifest_digest(
+        {key: value for key, value in payload.items() if key != "result_id"}
+    )
     write_result(path, payload)
     assert read_result(path) == payload
     with pytest.raises(FileExistsError):
         write_result(path, payload)
+
+
+def test_completed_result_rejects_changed_predeclared_criteria(tmp_path: Path) -> None:
+    path = tmp_path / "criteria.json"
+    criteria = {"minimum_effect": 0.1, "minimum_answered_cases": 3}
+    payload = {
+        "artifact_type": "decision-lab-result",
+        "result_id": "",
+        "predeclared_evaluation_criteria": criteria,
+        "evaluation_criteria_sha256": object_digest(criteria),
+    }
+    payload["result_id"] = manifest_digest(
+        {key: value for key, value in payload.items() if key != "result_id"}
+    )
+    write_result(path, payload)
+    assert read_result(path)["predeclared_evaluation_criteria"] == criteria
+    tampered = json.loads(path.read_text(encoding="utf-8"))
+    tampered["predeclared_evaluation_criteria"]["minimum_effect"] = 0.01
+    path.write_text(json.dumps(tampered), encoding="utf-8")
+    with pytest.raises(LabError, match="digest"):
+        read_result(path)
 
 
 def test_metrics_are_class_scoped_and_calibration_unvalidated() -> None:
@@ -309,15 +350,27 @@ def test_recorded_result_replay_recomposes_without_provider(tmp_path: Path) -> N
         source,
         {
             "artifact_type": "decision-lab-result",
-            "result_id": "source-id",
+            "result_id": "",
             "data_mode": "RECORDED_FIXTURE_NOT_OBSERVATION",
             "judgments": [judgment.to_dict()],
         },
     )
+    source_payload = json.loads(source.read_text(encoding="utf-8"))
+    source_payload["result_id"] = manifest_digest(
+        {key: value for key, value in source_payload.items() if key != "result_id"}
+    )
+    source.write_text(json.dumps(source_payload), encoding="utf-8")
     assert main(["replay", "--result", str(source), "--output", str(output)]) == 0
     result = read_result(output)
     assert result["data_mode"] == "RECORDED_RESULT_REPLAY_NO_PROVIDER_CALL"
     assert result["records"][0]["judgments"][0]["value"] == "PARTIAL"
+
+
+def test_fixture_replay_result_digest_is_valid(tmp_path: Path) -> None:
+    output = tmp_path / "fixture-replay.json"
+    fixture = ROOT / "fixtures/recorded/contract-fixture.json"
+    assert main(["replay", "--fixture", str(fixture), "--output", str(output)]) == 0
+    assert read_result(output)["data_mode"] == "RECORDED_FIXTURE_NOT_OBSERVATION"
 
 
 def test_no_grammar_self_promotion_or_cache_claim() -> None:
@@ -327,4 +380,197 @@ def test_no_grammar_self_promotion_or_cache_claim() -> None:
     )
     assert not any(
         "cache" in path.name.lower() for path in (ROOT / "experiments/v0.1").glob("*.json")
+    )
+
+
+def _definition(name: str) -> tuple[dict, dict[str, dict]]:
+    definition = _load(f"experiments/v0.1/{name}.json")
+    grammar = _load("grammar/v0.1/grammar.json")
+    return definition, {item["question_id"]: item for item in grammar["questions"]}
+
+
+def test_question_wording_rejects_state_variant_drift() -> None:
+    definition, grammar = _definition("claim-wording-ab")
+    definition["variants"][1]["state_variant"] = "full_context"
+    with pytest.raises(LabError, match="state or model"):
+        validate_experiment(definition, grammar)
+
+
+def test_question_wording_rejects_primitive_drift() -> None:
+    definition, grammar = _definition("claim-wording-ab")
+    grammar["CES.SUPPORT.v2"]["primitive"] = "SCORE"
+    with pytest.raises(LabError, match="primitive"):
+        validate_experiment(definition, grammar)
+
+
+def test_state_ablation_rejects_question_version_drift() -> None:
+    definition, grammar = _definition("minimal-state-ablation")
+    definition["variants"][1]["question_ids"] = ["CES.SUPPORT.v2"]
+    with pytest.raises(LabError, match="question versions"):
+        validate_experiment(definition, grammar)
+
+
+def test_atomic_decomposition_rejects_state_variant_drift() -> None:
+    definition, grammar = _definition("relationship-atomic-decomposition")
+    definition["variants"][1]["state_variant"] = "full_context"
+    with pytest.raises(LabError, match="state and model"):
+        validate_experiment(definition, grammar)
+
+
+def test_model_comparison_and_repeatability_contracts_are_supported() -> None:
+    definition, grammar = _definition("claim-wording-ab")
+    base_variant = definition["variants"][0]
+    model_comparison = json.loads(json.dumps(definition))
+    model_comparison["experiment_type"] = "MODEL_COMPARISON"
+    model_comparison["independent_variable"] = "requested_model"
+    model_comparison["controlled_dimensions"] = [
+        "case_ids",
+        "question_versions",
+        "state_variant",
+        "repetitions",
+        "policy_version",
+        "budget",
+    ]
+    model_comparison["variants"] = [
+        {**base_variant, "variant_id": "m1", "requested_model": "jev-1.13.0"},
+        {**base_variant, "variant_id": "m2", "requested_model": "jev-1.12.0"},
+    ]
+    validate_experiment(model_comparison, grammar)
+
+    repeatability = json.loads(json.dumps(definition))
+    repeatability["experiment_type"] = "REPEATABILITY"
+    repeatability["independent_variable"] = "repetition_count"
+    repeatability["controlled_dimensions"] = [
+        "case_ids",
+        "question_versions",
+        "state_variant",
+        "requested_model",
+        "policy_version",
+        "budget",
+    ]
+    repeatability["variants"] = [base_variant]
+    repeatability["repetitions"] = 3
+    validate_experiment(repeatability, grammar)
+
+
+def test_unknown_state_variant_fails_closed_and_ablation_is_deterministic() -> None:
+    state = {
+        "candidate": {"id": "SYN-1"},
+        "temporal_context": {"status": "known"},
+        "provenance": {"seed": "x"},
+    }
+    first, version = apply_state_variant(state, "minimal")
+    second, second_version = apply_state_variant(state, "minimal")
+    assert first == second
+    assert version == second_version == "0.1.0"
+    assert "temporal_context" not in first and "provenance" not in first
+    assert compile_state(first).fingerprint == compile_state(second).fingerprint
+    with pytest.raises(LabError, match="unknown state variant"):
+        apply_state_variant(state, "silent-fallthrough")
+
+
+def test_relationship_atomic_composer_produces_comparable_and_unresolved_states() -> None:
+    atomic = [
+        normalize_judgment(
+            "REL.PRESENCE.v1", "NOUL", {"probability_yes": 0.9}, evaluator="fixture"
+        ),
+        normalize_judgment("REL.TYPE.v1", "CHOICE", {"selected": "CUSTOMER"}, evaluator="fixture"),
+        normalize_judgment("REL.TIME.v1", "CHOICE", {"selected": "CURRENT"}, evaluator="fixture"),
+        normalize_judgment(
+            "REL.CONTRADICTION.v1", "NOUL", {"probability_yes": 0.1}, evaluator="fixture"
+        ),
+    ]
+    composed = compose_relationship_decomposition(atomic)
+    compound = normalize_judgment(
+        "REL.COMPOUND.v1", "CHOICE", {"selected": "CURRENT"}, evaluator="fixture"
+    )
+    assert composed["outcome"] == compose_support(compound)["outcome"] == "CURRENT"
+    assert composed["signals"]["presence_probability"] == 0.9
+    assert composed["canonical_authority"] is False
+    contradictory = [
+        *atomic[:-1],
+        normalize_judgment(
+            "REL.CONTRADICTION.v1", "NOUL", {"probability_yes": 0.8}, evaluator="fixture"
+        ),
+    ]
+    preserved = compose_relationship_decomposition(contradictory)
+    assert preserved["outcome"] == "UNRESOLVED"
+    assert preserved["resolution_state"] == "CONTRADICTORY"
+    assert (
+        compose_relationship_decomposition(atomic[:-1])["resolution_state"]
+        == "INCOMPLETE_ATOMIC_SET"
+    )
+
+
+def _outcome_definition(minimum_effect: float | None = 0.1) -> dict:
+    return {
+        "evaluation_criteria": {
+            "primary_metric": "exact_outcome_accuracy",
+            "direction": "HIGHER_IS_BETTER",
+            "minimum_effect": minimum_effect,
+            "minimum_answered_cases": 3,
+            "critical_regression_policy": "BLOCK",
+            "invalidation_conditions": ["OPERATIONAL_FAILURE"],
+            **(
+                {"no_threshold_reason": "No justified threshold."} if minimum_effect is None else {}
+            ),
+        }
+    }
+
+
+def _outcome_metrics(first: float, second: float, n: int = 3) -> dict:
+    return {
+        "baseline": {"exact_outcome_accuracy": first, "unique_answered_cases": n},
+        "candidate": {"exact_outcome_accuracy": second, "unique_answered_cases": n},
+    }
+
+
+def test_predeclared_outcomes_support_not_support_and_inconclusive() -> None:
+    assert (
+        evaluate_experiment_outcome(_outcome_definition(), _outcome_metrics(0.5, 0.8))["outcome"]
+        == "SUPPORTED"
+    )
+    assert (
+        evaluate_experiment_outcome(_outcome_definition(), _outcome_metrics(0.8, 0.5))["outcome"]
+        == "NOT_SUPPORTED"
+    )
+    assert (
+        evaluate_experiment_outcome(_outcome_definition(None), _outcome_metrics(0.5, 0.8))[
+            "outcome"
+        ]
+        == "INCONCLUSIVE"
+    )
+
+
+def test_inadequate_evidence_failures_and_critical_regression_are_inconclusive() -> None:
+    definition = _outcome_definition()
+    assert evaluate_experiment_outcome(definition, _outcome_metrics(0.5, 0.8, 2))["reasons"] == [
+        "INSUFFICIENT_ANSWERED_CASES"
+    ]
+    assert (
+        evaluate_experiment_outcome(definition, _outcome_metrics(0.5, 0.8), operational_failures=1)[
+            "outcome"
+        ]
+        == "INCONCLUSIVE"
+    )
+    assert (
+        evaluate_experiment_outcome(
+            definition, _outcome_metrics(0.5, 0.8), critical_regressions=["critical-case"]
+        )["outcome"]
+        == "INCONCLUSIVE"
+    )
+
+
+def test_usage_pricing_requires_versioned_policy_and_provider_token_usage() -> None:
+    policy = load_pricing_policy()
+    priced = estimate_cost_from_usage(policy, {"input_tokens": 100}, model="jev-1.13.0")
+    assert priced["estimated_cost"] == pytest.approx(0.0000042)
+    assert priced["invoice_cost"] == "UNKNOWN"
+    assert priced["pricing_policy_version"] == policy["policy_version"]
+    assert estimate_cost_from_usage(policy, None, model="jev-1.13.0")["estimated_cost"] == "UNKNOWN"
+    assert (
+        estimate_cost_from_usage(policy, {"input_tokens": 100}, model="jev-1.12.0")[
+            "estimated_cost"
+        ]
+        == "UNKNOWN"
     )

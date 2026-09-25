@@ -120,6 +120,9 @@ conflict.
 - [P0-JEV-02 Decision Laboratory synthesis](research/AXIGNAL_P0_JEV_02_SYNTHESIS.md)
   records the lab implementation boundary and explicitly distinguishes
   unrun live experiments from observations; no result is canonical policy.
+- [P0-JEV-02 pre-merge repair record](research/AXIGNAL_P0_JEV_02_PRE_MERGE_REPAIR.md)
+  documents the controlled-variable, state-variant, pricing, outcome and
+  result-integrity safeguards added before any live experiment.
 - `experiments/` holds bounded harnesses and raw results.
   Experimental artifacts are not production implementations or architecture
   authority.

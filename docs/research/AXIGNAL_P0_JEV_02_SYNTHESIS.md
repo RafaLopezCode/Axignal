@@ -78,8 +78,20 @@ composition rule was promoted.
 2. **minimal-state-ablation** — Compare full and temporal/provenance-ablated
    states using the same question version.
 3. **relationship-atomic-decomposition** — Compare a compound relationship
-   Choice with independent presence/type/time/contradiction questions; preserve
-   request/question counts in the declared budget.
+   Choice with independent presence/type/time/contradiction questions under the
+   identical minimal state. Preserve raw atomic judgments and derive a
+   comparable outcome only through the versioned experimental composer;
+   preserve unresolved and contradictory results.
+
+Every plan now declares one experiment type and independent variable, its
+controlled dimensions, policy version, and evaluation criteria before any
+execution. The validator rejects changes to held-constant dimensions. State
+variants resolve through an explicit versioned registry; unknown IDs fail
+closed. Result records carry a content digest and reproducibility metadata.
+The criteria evaluator returns `SUPPORTED` or `NOT_SUPPORTED` only when the
+predeclared threshold and evidence justify it; these V0.1 plans declare no
+minimum effect because the small synthetic sample cannot justify one, so
+otherwise eligible outcomes remain `INCONCLUSIVE` with a reason.
 
 They are predeclared hypotheses, not completed runs. Repetition, evaluator
 version comparisons, primitive comparisons, fan-out economics and cost per
@@ -100,9 +112,13 @@ permitted.
 - Raw answer forms, distributions, defined confidence, resolved model when
   available, and usage are retained. Missing values remain missing. SDK
   exceptions are mapped to safe categories and never become semantic negatives.
-- Results use create-only file writes and a manifest digest. There is no cache;
+- Results use create-only file writes and a content digest. There is no cache;
   cache key semantics are therefore not applicable. No automatic grammar or
   policy promotion exists.
+- Preflight request-byte limits do not estimate tokens or price. Token count
+  and monetary cost remain unknown before execution. A versioned pricing record
+  may estimate cost from provider-reported input-token usage; invoice cost is
+  unknown absent billing evidence.
 - No private/customer data, production database, migration, deployment, source
   acquisition or production runtime was used or changed.
 - Future Admin observability should be considered only through later governed

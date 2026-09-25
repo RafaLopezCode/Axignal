@@ -14,12 +14,19 @@ from experiments.decision_lab import __version__ as LAB_VERSION
 from experiments.decision_lab.artifacts import read_result, write_result
 from experiments.decision_lab.comparison import compare_records
 from experiments.decision_lab.experiment import estimate_budget, manifest_digest
-from experiments.decision_lab.judgments import compose_support, normalize_judgment
+from experiments.decision_lab.judgments import (
+    compose_relationship_decomposition,
+    compose_support,
+    normalize_judgment,
+)
 from experiments.decision_lab.metrics import classification_metrics
 from experiments.decision_lab.models import LabError, NormalizedJudgment
+from experiments.decision_lab.outcomes import evaluate_experiment_outcome, object_digest
+from experiments.decision_lab.pricing import estimate_cost_from_usage, load_pricing_policy
 from experiments.decision_lab.report import render_report
-from experiments.decision_lab.state import compile_state
+from experiments.decision_lab.state import STATE_VARIANTS, apply_state_variant, compile_state
 from experiments.decision_lab.validation import (
+    validate_controlled_state_fingerprints,
     validate_corpus,
     validate_experiment,
     validate_grammar,
@@ -35,6 +42,51 @@ def _load(path: Path) -> dict[str, Any]:
     return data
 
 
+def _compile_variant_states(
+    definition: dict[str, Any], cases: list[dict[str, Any]]
+) -> tuple[dict[str, list[dict[str, Any]]], dict[str, dict[str, dict[str, Any]]]]:
+    payloads: dict[str, list[dict[str, Any]]] = {
+        variant["variant_id"]: [] for variant in definition["variants"]
+    }
+    fingerprints: dict[str, dict[str, dict[str, Any]]] = {}
+    for case in cases:
+        fingerprints[case["case_id"]] = {}
+        for variant in definition["variants"]:
+            payload, version = apply_state_variant(dict(case["state"]), variant["state_variant"])
+            compiled = compile_state(payload)
+            payloads[variant["variant_id"]].append(compiled.payload)
+            fingerprints[case["case_id"]][variant["variant_id"]] = {
+                "fingerprint": compiled.fingerprint,
+                "variant_id": variant["state_variant"],
+                "variant_version": version,
+                "has_ablatable_fields": bool(
+                    {"temporal_context", "provenance"} & case["state"].keys()
+                ),
+            }
+    validate_controlled_state_fingerprints(definition, fingerprints)
+    return payloads, fingerprints
+
+
+def _variant_outcome(
+    definition: dict[str, Any],
+    variant: dict[str, Any],
+    judgments: list[NormalizedJudgment],
+) -> dict[str, Any]:
+    if (
+        definition.get("experiment_type") == "ATOMIC_DECOMPOSITION"
+        and variant.get("question_strategy") == "ATOMIC"
+    ):
+        return compose_relationship_decomposition(judgments)
+    if len(judgments) != 1:
+        return {"status": "UNRESOLVED", "outcome": None}
+    composition = compose_support(judgments[0])
+    return {
+        "status": composition["status"],
+        "outcome": composition["outcome"] if isinstance(composition["outcome"], str) else None,
+        "raw_composition": composition,
+    }
+
+
 def validate() -> tuple[int, int, int]:
     corpus = validate_corpus(_load(ROOT / "corpus/v0.1/cases.json"))
     grammar = validate_grammar(
@@ -42,10 +94,20 @@ def validate() -> tuple[int, int, int]:
         _load(ROOT / "grammar/v0.1/question-lock.json"),
     )
     grammar_by_id = {question["question_id"]: question for question in grammar}
-    definitions = sorted((ROOT / "experiments/v0.1").glob("*.json"))
+    definitions = sorted(
+        path
+        for path in (ROOT / "experiments/v0.1").glob("*.json")
+        if path.name != "definition-lock.json"
+    )
+    definition_lock = _load(ROOT / "experiments/v0.1/definition-lock.json").get("definitions", {})
     for path in definitions:
         definition = _load(path)
-        validate_experiment(definition)
+        definition_key = f"{definition.get('experiment_id')}@{definition.get('version')}"
+        if not isinstance(definition_lock, dict) or definition_lock.get(
+            definition_key
+        ) != manifest_digest(definition):
+            raise LabError(f"experiment definition changed or is not locked: {definition_key}")
+        validate_experiment(definition, grammar_by_id)
         case_ids = {case["case_id"] for case in corpus}
         question_ids = set(grammar_by_id)
         if not set(definition["case_ids"]) <= case_ids:
@@ -75,20 +137,20 @@ def validate() -> tuple[int, int, int]:
                             raise LabError(
                                 f"case label is outside Choice options: {case['case_id']}"
                             )
-        states = [case["state"] for case in corpus if case["case_id"] in definition["case_ids"]]
-        estimate_budget(definition, states, grammar_by_id)
+        selected = [case for case in corpus if case["case_id"] in definition["case_ids"]]
+        variant_states, _fingerprints = _compile_variant_states(definition, selected)
+        estimate_budget(
+            definition,
+            [case["state"] for case in selected],
+            grammar_by_id,
+            variant_states,
+        )
     return len(corpus), len(grammar), len(definitions)
 
 
 def _run_live(experiment_path: Path, output: Path) -> None:
     validate()
     definition = _load(experiment_path)
-    validate_experiment(definition)
-    if not os.environ.get("TYPESAFE_API_KEY"):
-        raise LabError("TYPESAFE_API_KEY is unavailable; no request was made")
-    cases = {
-        case["case_id"]: case for case in validate_corpus(_load(ROOT / "corpus/v0.1/cases.json"))
-    }
     grammar = {
         q["question_id"]: q
         for q in validate_grammar(
@@ -96,8 +158,20 @@ def _run_live(experiment_path: Path, output: Path) -> None:
             _load(ROOT / "grammar/v0.1/question-lock.json"),
         )
     }
+    validate_experiment(definition, grammar)
+    if not os.environ.get("TYPESAFE_API_KEY"):
+        raise LabError("TYPESAFE_API_KEY is unavailable; no request was made")
+    cases = {
+        case["case_id"]: case for case in validate_corpus(_load(ROOT / "corpus/v0.1/cases.json"))
+    }
     selected = [cases[case_id] for case_id in definition["case_ids"]]
-    plan = estimate_budget(definition, [case["state"] for case in selected], grammar)
+    variant_states, state_fingerprints = _compile_variant_states(definition, selected)
+    plan = estimate_budget(
+        definition,
+        [case["state"] for case in selected],
+        grammar,
+        variant_states,
+    )
     if (
         definition["budget"].get("max_concurrency") != 1
         or definition["budget"].get("max_retries") != 0
@@ -111,16 +185,16 @@ def _run_live(experiment_path: Path, output: Path) -> None:
         raise LabError("experiment result output must be outside the repository")
     evaluator = TypeSafeLabEvaluator()
     records: list[dict[str, Any]] = []
-    for case in selected:
+    for case_index, case in enumerate(selected):
         for variant in definition["variants"]:
             for _ in range(int(definition.get("repetitions", 1))):
                 questions = [grammar[qid] for qid in variant["question_ids"]]
-                state_payload = dict(case["state"])
-                if variant.get("state_variant") == "without_temporal_provenance":
-                    state_payload.pop("temporal_context", None)
-                    state_payload.pop("provenance", None)
+                state_payload = variant_states[variant["variant_id"]][case_index]
                 compiled = compile_state(state_payload)
-                judgments, failure, safe_meta = evaluator.evaluate(compiled.payload, questions)
+                requested_model = variant.get("requested_model", definition["requested_model"])
+                judgments, failure, safe_meta = evaluator.evaluate(
+                    compiled.payload, questions, model=requested_model
+                )
                 compositions = [
                     {
                         "question_id": item.question_id,
@@ -128,6 +202,7 @@ def _run_live(experiment_path: Path, output: Path) -> None:
                     }
                     for item in judgments
                 ]
+                variant_outcome = _variant_outcome(definition, variant, judgments)
                 records.append(
                     {
                         "case_id": case["case_id"],
@@ -136,35 +211,23 @@ def _run_live(experiment_path: Path, output: Path) -> None:
                         "expected_outcome": case["expected_outcome"],
                         "label_status": case["label_status"],
                         "state_fingerprint": compiled.fingerprint,
+                        "state_variant_id": variant["state_variant"],
+                        "state_variant_version": state_fingerprints[case["case_id"]][
+                            variant["variant_id"]
+                        ]["variant_version"],
+                        "state_contract_version": compiled.contract_version,
+                        "state_compiler_version": compiled.compiler_version,
+                        "policy_version": definition["policy_version"],
+                        "requested_model": requested_model,
                         "judgments": [item.to_dict() for item in judgments],
                         "compositions": compositions,
+                        "variant_outcome": variant_outcome,
                         "failure": failure.category if failure else None,
                         "metadata": safe_meta,
                     }
                 )
-    usage_rows = [row.get("metadata", {}).get("usage", {}) for row in records]
-    usage_fields = ("input_tokens", "output_tokens", "total_tokens")
-    usage_complete = bool(usage_rows) and all(
-        all(isinstance(usage.get(key), int) for key in usage_fields) for usage in usage_rows
-    )
-    actual_usage = (
-        {key: sum(usage[key] for usage in usage_rows) for key in usage_fields}
-        if usage_complete
-        else None
-    )
     metrics_by_variant: dict[str, Any] = {}
     for variant in definition["variants"]:
-        if len(variant["question_ids"]) != 1:
-            metrics_by_variant[variant["variant_id"]] = {
-                "status": "NOT_APPLICABLE_TO_COMPOSED_MULTI_QUESTION_OUTPUT"
-            }
-            continue
-        qid = variant["question_ids"][0]
-        if grammar[qid]["primitive"] != "CHOICE":
-            metrics_by_variant[variant["variant_id"]] = {
-                "status": "NO_SINGLE_CLASS_LABEL_FOR_PRIMITIVE"
-            }
-            continue
         variant_rows = [
             row
             for row in records
@@ -173,18 +236,95 @@ def _run_live(experiment_path: Path, output: Path) -> None:
             and row["expected_outcome"] is not None
         ]
         answered = [
-            (row["expected_outcome"], row["judgments"][0]["value"])
+            (row["expected_outcome"], row["variant_outcome"].get("outcome"), row["case_id"])
             for row in variant_rows
-            if row["judgments"] and row["judgments"][0]["status"] == "ANSWERED"
+            if row["variant_outcome"].get("status") in {"COMPOSED", "COMPOSED_EXPERIMENTAL"}
+            and isinstance(row["variant_outcome"].get("outcome"), str)
         ]
+        unique_case_ids = sorted({str(item[2]) for item in answered})
+        classification = classification_metrics(
+            [str(item[0]) for item in answered], [str(item[1]) for item in answered]
+        )
         metrics_by_variant[variant["variant_id"]] = {
-            "classification": classification_metrics(
-                [str(item[0]) for item in answered], [str(item[1]) for item in answered]
-            ),
+            "exact_outcome_accuracy": classification["accuracy"],
+            "classification": classification,
             "n_expected": len(variant_rows),
             "n_answered": len(answered),
+            "unique_answered_cases": len(unique_case_ids),
+            "answered_case_ids": unique_case_ids,
             "missing_or_failed": len(variant_rows) - len(answered),
         }
+    critical_case_ids = {
+        case["case_id"]
+        for case in selected
+        if {"near-match", "conflicting-ID", "contradiction"} & set(case["edge_case_tags"])
+    }
+    critical_regressions: list[str] = []
+    if len(definition["variants"]) == 2:
+        first_id, second_id = (item["variant_id"] for item in definition["variants"])
+        first_records = {
+            (row["case_id"], row["repetition"]): row
+            for row in records
+            if row["variant_id"] == first_id
+        }
+        second_records = {
+            (row["case_id"], row["repetition"]): row
+            for row in records
+            if row["variant_id"] == second_id
+        }
+        for identity in first_records.keys() & second_records.keys():
+            first, second = first_records[identity], second_records[identity]
+            if identity[0] not in critical_case_ids or first["expected_outcome"] is None:
+                continue
+            if (
+                first["variant_outcome"].get("outcome") == first["expected_outcome"]
+                and second["variant_outcome"].get("outcome") != second["expected_outcome"]
+            ):
+                critical_regressions.append(f"{identity[0]}::{identity[1]}")
+    outcome = evaluate_experiment_outcome(
+        definition,
+        metrics_by_variant,
+        operational_failures=sum(row["failure"] is not None for row in records),
+        critical_regressions=critical_regressions,
+        incompatible_output_semantics=any(
+            metric.get("exact_outcome_accuracy") is None for metric in metrics_by_variant.values()
+        ),
+    )
+    actual_usage_by_row = [row.get("metadata", {}).get("usage") for row in records]
+    usage_fields = ("input_tokens", "output_tokens", "total_tokens")
+    usage_complete = bool(actual_usage_by_row) and all(
+        isinstance(usage, dict) and all(isinstance(usage.get(key), int) for key in usage_fields)
+        for usage in actual_usage_by_row
+    )
+    actual_usage = (
+        {key: sum(usage[key] for usage in actual_usage_by_row) for key in usage_fields}
+        if usage_complete
+        else None
+    )
+    pricing_policy = load_pricing_policy()
+    cost_rows = [
+        estimate_cost_from_usage(
+            pricing_policy,
+            row.get("metadata", {}).get("usage"),
+            model=row["requested_model"],
+        )
+        for row in records
+    ]
+    estimated_costs = [item["estimated_cost"] for item in cost_rows]
+    cost_known = bool(estimated_costs) and all(
+        isinstance(value, (int, float)) for value in estimated_costs
+    )
+    actual_cost = sum(float(value) for value in estimated_costs) if cost_known else "UNKNOWN"
+    resolved_models = sorted(
+        {
+            judgment["resolved_model"]
+            for row in records
+            for judgment in row["judgments"]
+            if judgment.get("resolved_model")
+        }
+    )
+    definition_digest = manifest_digest(definition)
+    criteria_snapshot = dict(definition["evaluation_criteria"])
     result = {
         "artifact_type": "decision-lab-result",
         "result_version": "0.1.0",
@@ -194,8 +334,12 @@ def _run_live(experiment_path: Path, output: Path) -> None:
         "evaluator": "typesafe-sdk",
         "records": records,
         "metrics_by_variant": metrics_by_variant,
-        "result": "INCONCLUSIVE",
+        "result": outcome["outcome"],
+        "result_reasons": outcome["reasons"],
+        "critical_regressions": critical_regressions,
         "budget_preflight": plan,
+        "predeclared_evaluation_criteria": criteria_snapshot,
+        "evaluation_criteria_sha256": object_digest(criteria_snapshot),
         "reproducibility_manifest": {
             "git_revision": subprocess.run(
                 ["git", "rev-parse", "HEAD"], capture_output=True, text=True, check=False
@@ -203,21 +347,53 @@ def _run_live(experiment_path: Path, output: Path) -> None:
             or "UNKNOWN",
             "corpus_version": "0.1.0",
             "grammar_version": "0.1.0",
-            "state_contract_version": "0.1.0",
-            "state_compiler_version": "0.1.0",
-            "policy_version": "support.v0.1",
-            "requested_model": definition["requested_model"],
+            "experiment_definition_version": definition["version"],
+            "experiment_definition_digest": definition_digest,
+            "experiment_type": definition["experiment_type"],
+            "question_versions_by_variant": {
+                variant["variant_id"]: [
+                    {"question_id": qid, "question_version": grammar[qid]["question_version"]}
+                    for qid in variant["question_ids"]
+                ]
+                for variant in definition["variants"]
+            },
+            "state_contract_version": records[0]["state_contract_version"]
+            if records
+            else "UNKNOWN",
+            "state_compiler_version": records[0]["state_compiler_version"]
+            if records
+            else "UNKNOWN",
+            "state_variants_by_variant": {
+                variant["variant_id"]: {
+                    "state_variant_id": variant["state_variant"],
+                    "state_variant_version": STATE_VARIANTS[variant["state_variant"]].version,
+                    "state_fingerprints_by_case": {
+                        case_id: by_variant[variant["variant_id"]]["fingerprint"]
+                        for case_id, by_variant in state_fingerprints.items()
+                    },
+                }
+                for variant in definition["variants"]
+            },
+            "policy_version": definition["policy_version"],
+            "evaluator_adapter_version": "0.2.0",
+            "requested_models_by_variant": {
+                variant["variant_id"]: variant.get("requested_model", definition["requested_model"])
+                for variant in definition["variants"]
+            },
+            "resolved_models": resolved_models,
+            "pricing_policy_version": pricing_policy["policy_version"] if cost_known else None,
+            "case_ids": list(definition["case_ids"]),
+            "repetitions": definition.get("repetitions", 1),
+            "execution_mode": "LIVE_PROVIDER",
             "lab_version": LAB_VERSION,
             "typesafe_sdk_version": "0.7.1",
         },
         "actual_usage": actual_usage,
         "actual_usage_status": "COMPLETE" if usage_complete else "UNKNOWN_OR_INCOMPLETE",
-        "actual_cost_estimate_usd": (
-            actual_usage["input_tokens"] * 0.042 / 1_000_000 if usage_complete else None
-        ),
-        "cost_status": "PUBLIC_PRICE_ESTIMATE_ONLY" if usage_complete else "UNKNOWN",
-        "actual_invoice_cost": "UNKNOWN",
-        "actual_cost_estimate_source": "https://docs.typesafe.ai/models (reviewed 2026-09-25)",
+        "actual_cost_estimate": actual_cost,
+        "cost_status": "VERSIONED_PUBLIC_PRICE_ESTIMATE" if cost_known else "UNKNOWN",
+        "invoice_cost": "UNKNOWN",
+        "pricing_policy": pricing_policy if cost_known else None,
         "limitations": ["No canonical authority; exploratory observations only."],
     }
     result["result_id"] = manifest_digest(result)
@@ -255,6 +431,7 @@ def _run_replay(fixture_path: Path, output: Path) -> None:
         "cost": None,
         "outcome": "CONTRACT_REPLAY_ONLY; NO QUALITY CLAIM",
     }
+    result.pop("result_id")
     result["result_id"] = manifest_digest(result)
     write_result(output, result)
 
@@ -267,6 +444,8 @@ def _run_result_replay(source_path: Path, output: Path) -> None:
     if not isinstance(source_records, list):
         raise LabError("result records are malformed")
     records: list[dict[str, Any]] = []
+    definition = source.get("experiment_definition", {})
+    variants = {variant.get("variant_id"): variant for variant in definition.get("variants", [])}
     if not source_records and isinstance(source.get("judgments"), list):
         judgments = [NormalizedJudgment(**item) for item in source["judgments"]]
         source_records = [
@@ -278,6 +457,16 @@ def _run_result_replay(source_path: Path, output: Path) -> None:
             {"question_id": item.question_id, "composition": compose_support(item)}
             for item in judgments
         ]
+        variant = variants.get(row.get("variant_id"), {})
+        if (
+            definition.get("experiment_type") == "ATOMIC_DECOMPOSITION"
+            and variant.get("question_strategy") == "ATOMIC"
+        ):
+            variant_outcome = compose_relationship_decomposition(judgments)
+        elif len(judgments) == 1:
+            variant_outcome = _variant_outcome(definition, variant, judgments)
+        else:
+            variant_outcome = {"status": "UNRESOLVED", "outcome": None}
         records.append(
             {
                 "case_id": row.get("case_id"),
@@ -286,6 +475,7 @@ def _run_result_replay(source_path: Path, output: Path) -> None:
                 "state_fingerprint": row.get("state_fingerprint"),
                 "judgments": [item.to_dict() for item in judgments],
                 "compositions": compositions,
+                "variant_outcome": variant_outcome,
                 "failure": row.get("failure"),
                 "metadata": row.get("metadata", {}),
             }
@@ -297,9 +487,14 @@ def _run_result_replay(source_path: Path, output: Path) -> None:
         "data_mode": "RECORDED_RESULT_REPLAY_NO_PROVIDER_CALL",
         "source_result_id": source.get("result_id"),
         "experiment_id": source.get("experiment_id"),
+        "experiment_definition": definition,
+        "reproducibility_manifest": source.get("reproducibility_manifest"),
+        "predeclared_evaluation_criteria": source.get("predeclared_evaluation_criteria"),
+        "evaluation_criteria_sha256": source.get("evaluation_criteria_sha256"),
         "records": records,
         "limitations": ["Recorded re-composition only; no model quality inference."],
     }
+    replay.pop("result_id")
     replay["result_id"] = manifest_digest(replay)
     write_result(output, replay)
 

@@ -23,7 +23,7 @@
       "question_ids": [
         "CES.SUPPORT.v1"
       ],
-      "state_variant": "without_temporal_provenance"
+      "state_variant": "minimal"
     }
   ],
   "repetitions": 1,
@@ -37,11 +37,10 @@
     "max_requests": 10,
     "max_questions": 30,
     "max_state_bytes": 20000,
-    "max_cost_usd": 0.01,
     "max_concurrency": 1,
     "max_retries": 0,
     "max_request_bytes": 20000,
-    "max_input_tokens_estimate": 150000
+    "max_total_request_bytes": 150000
   },
   "stop_conditions": [
     "budget exceeded",
@@ -49,5 +48,30 @@
     "schema invalidity",
     "first unresolved safety issue"
   ],
-  "status": "PREDECLARED_NOT_RUN"
+  "status": "PREDECLARED_NOT_RUN",
+  "experiment_type": "STATE_ABLATION",
+  "independent_variable": "state_variant",
+  "controlled_dimensions": [
+    "case_ids",
+    "question_versions",
+    "requested_model",
+    "repetitions",
+    "policy_version",
+    "budget"
+  ],
+  "policy_version": "support.v0.1",
+  "evaluation_criteria": {
+    "primary_metric": "exact_outcome_accuracy",
+    "direction": "HIGHER_IS_BETTER",
+    "minimum_effect": null,
+    "no_threshold_reason": "V0.1 synthetic sample does not justify a quality threshold.",
+    "minimum_answered_cases": 4,
+    "critical_regression_policy": "BLOCK",
+    "invalidation_conditions": [
+      "OPERATIONAL_FAILURE",
+      "CRITICAL_REGRESSION",
+      "INCOMPATIBLE_OUTPUT_SEMANTICS",
+      "INSUFFICIENT_ANSWERED_CASES"
+    ]
+  }
 }

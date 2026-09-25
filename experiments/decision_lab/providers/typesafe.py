@@ -11,7 +11,7 @@ from experiments.decision_lab.evaluator import failure_for_exception
 from experiments.decision_lab.judgments import normalize_judgment
 from experiments.decision_lab.models import LabError, NormalizedJudgment, OperationalFailure
 
-REQUESTED_MODEL = "jev-1.13.0"
+ADAPTER_VERSION = "0.2.0"
 
 
 def _question(primitive: str, definition: dict[str, Any]) -> Any:
@@ -36,7 +36,11 @@ class TypeSafeLabEvaluator:
             raise LabError("TYPESAFE_API_KEY is unavailable")
 
     def evaluate(
-        self, state: dict[str, Any], question_definitions: list[dict[str, Any]]
+        self,
+        state: dict[str, Any],
+        question_definitions: list[dict[str, Any]],
+        *,
+        model: str,
     ) -> tuple[list[NormalizedJudgment], OperationalFailure | None, dict[str, Any]]:
         from typesafe_sdk import RetryPolicy, TypeSafeClient
 
@@ -49,7 +53,7 @@ class TypeSafeLabEvaluator:
                 response = client.system_one(
                     state=state,
                     questions=questions,
-                    model=REQUESTED_MODEL,
+                    model=model,
                     retry=RetryPolicy(max_retries=0),
                 )
             elapsed_seconds = time.perf_counter() - started
@@ -106,7 +110,7 @@ class TypeSafeLabEvaluator:
                     primitive,
                     answer,
                     evaluator="typesafe-sdk",
-                    requested_model=REQUESTED_MODEL,
+                    requested_model=model,
                     resolved_model=resolved if isinstance(resolved, str) else None,
                     usage=usage or None,
                 )
