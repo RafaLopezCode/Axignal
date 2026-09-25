@@ -1,7 +1,7 @@
 # ADR-0010: AXIGNAL Source Acquisition Architecture
 
-- **Status:** **PROPOSED**; requires CTO acceptance. No production source
-  acquisition implementation is authorized by this proposal.
+- **Status:** **ACCEPTED** by CTO on 2026-09-25. This accepts the architecture
+  boundary only; no production source acquisition implementation is authorized.
 - **Date:** 2026-09-25
 - **Source doctrine:** MASTER §3, §6, §7, §23, §26, §39, §46;
   Engineering Constitution's evidence, epistemic, security, and provider
@@ -36,19 +36,26 @@ accepted before a broader trial.
 
 ## Decision
 
-Propose that AXIGNAL own the source acquisition contract, source policy,
-request identity, provenance, and failure semantics. Third-party tools may
-only be replaceable adapters behind that boundary. Keep raw HTTP acquisition
-and browser rendering as distinct capabilities so a future policy can request
-browser work only when a declared capability need requires it.
+AXIGNAL owns the semantics of `SourceRequest` and `SourceObservation`, source
+policy, request identity, provenance, and failure semantics. Source policy
+executes before acquisition. Raw evidence and its provenance are first-class
+outputs of acquisition, which has no canonical truth authority. Third-party
+tools may only be replaceable adapters behind this AXIGNAL-owned boundary.
 
-The source contract and authority boundary remain proposed. The initial HTTP
-and browser engine choices remain `DEFERRED`: only Scrapy completed the
-public-target run under the enforced response cap, while the second HTTP
-candidate and browser paths were withheld by the security gate. The public
-results are not enough to claim a comparative winner. All candidates remain
-experimental and replaceable. This proposal authorizes no production
-dependencies, semantic extraction, evidence admission, or canonical mutation.
+HTTP acquisition and browser rendering are distinct capabilities. Browser
+work is requested only when a declared capability need requires it; browser
+rendering is not the default. Targeted iterative acquisition is mandatory.
+A restricted or denied acquisition is a terminal policy outcome and does not
+authorize stealth, anti-bot, or CAPTCHA escalation.
+
+The initial HTTP and browser adapter choices remain `DEFERRED`. P0-SOURCE-01
+did not establish a comparative winner: only Scrapy completed the bounded
+public-target run, while Scrapling and browser paths were withheld by the
+security gate. All candidates remain experimental and replaceable. Adapter
+selection may occur during implementation without reopening this ADR unless
+the selection changes the accepted architectural boundary. This ADR authorizes
+no production dependencies, semantic extraction, evidence admission, or
+canonical mutation.
 
 ## Alternatives considered
 
@@ -62,8 +69,8 @@ dependencies, semantic extraction, evidence admission, or canonical mutation.
 - **Let each library define AXIGNAL observations:** rejected because observed
   field and failure differences would leak vendor-specific semantics upward.
 - **Defer the ownership boundary itself:** less consistent with the existing
-  AXIGNAL evidence and canonical-truth boundaries; CTO review is still needed
-  before this proposed boundary can be treated as accepted architecture.
+  AXIGNAL evidence and canonical-truth boundaries. This was considered before
+  CTO review and was not selected.
 
 ## Tradeoffs
 
@@ -85,5 +92,6 @@ and does not make any candidate safe by itself.
   always-browser resource delta remain unmeasured on public content.
 - Raw fetched content remains untrusted evidence material and cannot itself
   update canonical AXIGLAND state.
-- Until accepted, this ADR is a proposal and does not supersede the MASTER,
-  Constitution, or accepted ADRs.
+- Acceptance records architecture only. It does not supersede the MASTER,
+  Constitution, or other accepted ADRs, and it does not establish that a source
+  contract, router, provider adapter, or acquisition runtime is implemented.

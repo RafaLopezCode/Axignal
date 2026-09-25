@@ -1,6 +1,7 @@
 # AXIGNAL Source Acquisition Bakeoff (P0-SOURCE-01)
 
-**Status:** EXPERIMENTAL; source architecture decision deferred
+**Status:** EXPERIMENTAL evidence; architecture accepted-not-implemented;
+engine selection open; runtime not implemented
 **Research date:** 2026-09-25
 **Repository base:** `33298cc45dcb5c17c0401272b72df9d5134d3ef9`
 **Purpose:** evaluate acquisition capabilities without implementing a product
@@ -13,13 +14,17 @@ a production-ready winner. Five Python runtimes were measured against the same
 offline, synthetic, loopback fixture. The results are comparative observations
 for this fixture only, not public-source fitness or production performance.
 
-`SOURCE_ARCHITECTURE_DECISION=DEFERRED`
+`SOURCE_ACQUISITION_ARCHITECTURE=ACCEPTED_NOT_IMPLEMENTED`
+`SOURCE_ENGINE_SELECTION=OPEN_IMPLEMENTATION_DECISION`
+`SOURCE_RUNTIME=NOT_IMPLEMENTED`
 `CONTRACT_STATUS=EXPERIMENTAL`
 `CANDIDATE_ENGINE_RUNTIME_BENCHMARKS=5`
 
-This conclusion preserves the open source-acquisition decision recorded in
-Atlas §10–11 and the P0-ARCH-01 gap ledger. This experiment does not change
-those product implementation status classifications.
+The deferred finding below records the experiment's conclusion that evidence
+did not select an engine. The CTO subsequently accepted the architecture
+boundary in ADR-0010 without selecting an adapter or authorizing runtime
+implementation. The P0-ARCH-01 gap ledger records those current statuses.
+Candidate adapters and this bakeoff harness remain experimental.
 
 ## Authority and boundary
 
@@ -414,16 +419,18 @@ candidate-specific differences in JS behavior, timeouts, redirects, response
 limits, and resource use. Synthetic loopback evidence cannot settle source
 policy, operational fit, reliability on public sites, or a production winner.
 
-### ARCHITECTURE DECISION
+### EXPERIMENT-TIME ARCHITECTURE DECISION
 
-`SOURCE_ARCHITECTURE_DECISION=DEFERRED` (engine selection)
+`P0_SOURCE_01_EXPERIMENT_CONCLUSION=DEFERRED_ENGINE_SELECTION`
 `SOURCE_CONTRACT_STATUS=EXPERIMENTAL`
 `SOURCE_BOUNDARY_PROPOSAL=AXIGNAL_OWNED_REPLACEABLE_ADAPTERS`
-`ADR-0010=PROPOSED`
+`ADR-0010_AT_EXPERIMENT_CONCLUSION=PROPOSED`
 
-ADR-0010 proposes AXIGNAL ownership of request/observation semantics and policy,
-with HTTP and browser as separate replaceable capabilities. It is not accepted
-architecture and selects no engine. No candidate is production-approved.
+At the experiment conclusion, ADR-0010 proposed AXIGNAL ownership of
+request/observation semantics and policy, with HTTP and browser as separate
+replaceable capabilities. That experiment-time status is retained as history;
+the CTO later accepted the architecture in ADR-0010 without selecting an
+engine. No candidate is production-approved.
 
 ### Open questions and next experiment
 
@@ -550,16 +557,19 @@ the safety gate. Scrapy's low synthetic footprint and successful public
 handling make it the only HTTP candidate that completed this bounded trial,
 not a proven superior provider.
 
-### PROPOSED DECISION
+### EXPERIMENT-TIME PROPOSED DECISION (HISTORICAL)
 
-`SOURCE_ARCHITECTURE_DECISION=DEFERRED`
+`P0_SOURCE_01C_ENGINE_SELECTION_FINDING=DEFERRED`
 `INITIAL_HTTP_ADAPTER=DEFERRED`
 `INITIAL_BROWSER_ADAPTER=DEFERRED`
-`AXIGNAL_OWNS_SOURCE_CONTRACT=PROPOSED`
+`AXIGNAL_OWNS_SOURCE_CONTRACT=PROPOSED_AT_EXPERIMENT_CONCLUSION`
 `CANDIDATE_ADAPTERS=EXPERIMENTAL`
 `PRODUCTION_SOURCE_ROUTER=ABSENT`
 
-Keep ADR-0010 **PROPOSED**. A follow-up comparison needs an experiment-local
+The following recommendation is retained as written to preserve the experiment
+record. CTO acceptance of ADR-0010 supersedes its proposed architecture status;
+the recommendation's adapter-selection finding remains current. A follow-up
+comparison needs an experiment-local
 transport that enforces a hard byte cap for Scrapling and browser responses,
 validates every redirect hop and DNS destination, then runs the same
 policy-approved target set for Scrapy, Scrapling, and Playwright. Until then,
