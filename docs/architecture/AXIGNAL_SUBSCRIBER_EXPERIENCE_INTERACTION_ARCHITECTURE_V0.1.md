@@ -72,6 +72,33 @@ required meaning, hard invariants and failure/unknown semantics. Concrete wire
 schemas, endpoints, storage, event names, authorization mechanism and UI
 components remain deferred.
 
+## V3 contextual private capability interaction
+
+The V3 product specification owns private analytical questions, required
+capabilities, access need and continuation. Subscriber Interaction owns only
+the authorized projection of a V3 `PrivateCapabilityRequest` into the existing
+Ask AXENT experience. An explicit V3 request may enter Ask AXENT directly;
+private connection is optional at entry. AXENT first investigates with
+available authorized context and requests access only when a material question
+requires missing private evidence.
+
+The request is presented as a contextual inline Card carrying the question,
+reason, minimum requested and unnecessary scope, read-only default, decline
+path and analytical continuation. Subscriber intent approval is not provider
+authorization. Provider verification and granted scope determine capability
+availability. Decline or access failure pauses or resolves only the affected
+branch; successful availability resumes its original question. A secondary
+Connections surface may expose access metadata and revoke/reconnect controls;
+it is not mandatory onboarding. Modals/popups are reserved for provider,
+legal, payment or security-sensitive transitions, not the default request
+surface. A renderer such as AI Elements cannot own these semantics. See C16
+in the interaction contract catalogue and V3 §44 for the domain contract.
+
+This is an additive, subordinate reconciliation. It does not change the
+human-first model, existing Ask AXENT authority, authorization boundary,
+Admin boundary or pre-implementation status. No subscriber UI, Card,
+connector, authorization or runtime is implemented or authorized.
+
 ## Cognitive policy and model facts
 
 The current proposed policy maps the background cognitive role to

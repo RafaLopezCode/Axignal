@@ -232,3 +232,33 @@ No concrete API schema, event bus, database model, UI design system, operational
 SLO, rate limit, model prompt, retrieval algorithm, storage/retention policy,
 MCP server, authorization mechanism or runtime component is selected or
 implemented here.
+
+## C16 — V3 Contextual Private Capability Interaction
+
+- **Producer**: V3-owned `PrivateCapabilityRequest` projected by AXIGNAL
+  Subscriber Interaction. **Consumers**: subscriber and future access
+  boundary.
+- **Must convey**: the analytical question and why it needs private evidence;
+  minimum requested and unnecessary capability/scope; read-only default;
+  access/authorization state; decline path; and the original analytical
+  continuation that will resume if capability becomes available. It may link
+  to bounded connection references for a secondary Connections surface.
+- **Invariant**: V3 may start without private connections. Investigate first
+  and request access only when evidence requires it. Subscriber intent approval
+  is distinct from provider authorization; verified granted capability is
+  required before access. Check reuse before asking, never silently expand
+  scope, and never treat connection as blanket permission or ingestion. The
+  Card is a contextual inline projection by default; a renderer such as AI
+  Elements has no domain authority. Secrets never enter Card properties,
+  Ask AXENT context or Private AEAP context. Decline/failure is not negative
+  evidence. Authorization pauses the affected branch, not the product; the
+  original branch resumes on capability availability.
+- **Failure / unknown**: distinguish unsupported, not authorized, declined,
+  pending, insufficient scope, expired, revoked, provider unavailable,
+  rate-limited, adapter failed, incomplete/stale data, normalization failure
+  and insufficient private evidence. Access failures remain operational states
+  and cannot become analytical conclusions.
+
+Exact component, API, provider authorization, local/cloud adapter, telemetry
+transport and retention/deletion policy remain unselected. The domain contract
+is in `docs/product/AXIGNAL_V3_PRIVATE_CROSS_INTELLIGENCE_SPEC.md` §44.
