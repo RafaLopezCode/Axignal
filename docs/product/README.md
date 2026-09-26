@@ -9,6 +9,7 @@ authority in the repository.
 | --- | --- |
 | `AXIGNAL_MASTER_PRODUCT_MODEL_2026-09-24_V2.md` | **The single MASTER PRODUCT MODEL.** Semantic authority. Doctrine consolidated, including the 2026-09-26 economic brain doctrine. Do not replace, reinterpret, summarize away, or weaken. |
 | `AXIGNAL_MASTER_PRODUCT_MODEL_2026-09-24_V2.md.sha256` | Pinned content hash. Verified in CI. Changing the MASTER requires an explicit, reviewed change to this hash. |
+| [`AXIGNAL_DIGITAL_REPRESENTATION_INTELLIGENCE_PRODUCT_SPEC.md`](AXIGNAL_DIGITAL_REPRESENTATION_INTELLIGENCE_PRODUCT_SPEC.md) | Proposed, pre-implementation product specification for the four DRI observation families; subordinate to MASTER §54. |
 
 ## Rules
 
@@ -17,6 +18,9 @@ authority in the repository.
   is cognitive substrate; explainable economic intelligence is the product.
 - Economic Opportunity Intelligence and Compounding Economic Intelligence
   are inseparable core pillars; see MASTER §53.
+- Digital Representation Intelligence connects search, generative,
+  social/public conversation and public reputation/experience observations to
+  the governed economic world; see MASTER §54. It does not authorize runtime.
 - Engineering constraints are derived from the MASTER into
   `.specify/memory/constitution.md` (the Engineering Constitution).
 - No feature spec, plan, task, or ADR may override the MASTER.
