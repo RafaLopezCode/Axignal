@@ -68,7 +68,12 @@
   `e877547f27a17f945df40ae546533fa68cf3ee79`. Scope audit found only the
   authorized documentation, doctrine and Spec Kit paths; no runtime, provider,
   sensor, dependency, migration or deployment changes/calls occurred.
-- [ ] T016 Commit the slice on the authorized branch, push, open one PR against
-  `main` without merging, and verify remote CI for that head.
-- [ ] T017 Return the complete original and addendum CTO ledgers; stop before
-  P0-DRI-01.
+- [x] T016 Commit the slice on the authorized branch, push, open one PR against
+  `main` without merging, and verify remote CI for that head. PR #20 is open at
+  `https://github.com/RafaLopezCode/Axignal/pull/20`; the published doctrine
+  head `a33b7ca1e2f5b7129739b47e39efef524c1c5b9a` passed remote run
+  `36244274408` (deterministic validation, Graphify structural checks and
+  secret scanning all successful; Sourcery review skipped). The final
+  task-ledger closeout remains subject to CI on its pushed head.
+- [x] T017 Return the complete original and addendum CTO ledgers in the final
+  task response; stop before P0-DRI-01.

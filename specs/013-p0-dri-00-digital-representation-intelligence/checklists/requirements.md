@@ -60,5 +60,8 @@
 - [x] No runtime, provider, sensor integration, crawler, schema, migration,
   dependency, UI, experiment or deployment is included.
 - [x] PR #18 remains independent and untouched; `.env` remains unaccessed.
-- [ ] Deterministic gates, Graphify, diff/scope audit, one commit, same branch/PR
-  delivery and remote CI are recorded before closure.
+- [x] Deterministic gates, Graphify, diff/scope audit, the documentation-only
+  implementation commit, same branch/PR delivery and remote CI are recorded:
+  commit `a33b7ca1e2f5b7129739b47e39efef524c1c5b9a`, PR #20, remote run
+  `36244274408`. The PR remains open and unmerged; a follow-up ledger commit
+  records this closeout and is checked again on its final head.
