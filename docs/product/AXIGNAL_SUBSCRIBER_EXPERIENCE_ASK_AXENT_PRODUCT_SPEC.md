@@ -1218,3 +1218,63 @@ Review history, removal/currentness, raw-text rights, personal-data
 minimization, subject resolution and uncertainty stay visible in the design
 contract. No review response automation, reviewer profiles, CRM workflows,
 provider integrations, UI implementation or score is authorized here.
+
+---
+
+# 28. Human First cognitive contract (P0-HFX-00 convergence)
+
+Human First is a product capability that makes the same governed AXIGLAND
+intelligence understandable at different levels of expertise. It supplements
+the five cognitive modes already defined above; it does not replace them with a
+new module taxonomy or make Ask AXENT the required path to comprehension.
+
+Material subscriber output should present, directly or through drill-down:
+
+```text
+WHAT IS THIS?
+WHAT DOES IT MEAN AND WHY DOES IT MATTER?
+WHAT CHANGED, AND WHEN?
+IS IT OBSERVED, DERIVED, POTENTIAL, UNKNOWN, STALE OR CONTRADICTED?
+WHAT SCOPE / MEASURE / DENOMINATOR AFFECTS ITS MEANING?
+WHERE CAN I INSPECT THE ACTUAL DERIVATION AND EVIDENCE?
+```
+
+The presentation axes remain independent: semantic family, canonical
+epistemic state, temporal/currentness state, attention projection and human
+output archetype. The ontology is not required navigation. “No mental joins”
+means AXIGNAL should compose a meaning from information it already governs;
+every composite must preserve its dependencies and evidence trail. Human
+cognitive compression may omit immaterial detail from the first view, never a
+material qualification or a route to inspect it.
+
+Semantic depths are `GLANCE → UNDERSTAND → REASON → PROVE`, not a mandatory
+linear wizard. A user may jump to evidence, evolution, comparison or contextual
+AXENT navigation while retaining object identity and orientation. Plain
+language and expert detail project the same truth. Metrics retain human meaning,
+technical definition and interpretation boundary where material.
+
+When a user returns, the projection should restore the investigation goal,
+attention origin when recorded, unresolved question, then-state, inspected
+evidence and material changes since the checkpoint. `Cognitive continuity`
+means where the person was and what remained open; `cognitive provenance` means
+why attention began. If the reason was not recorded, show it as unknown rather
+than inventing one. Past epistemic state is never rewritten by current
+knowledge.
+
+AXIGLAND, Xeed germination process/context and private user cognitive continuity
+are separate authorities. Private state directs attention and retrieval only;
+it cannot create economic truth. For agency use, the active client is a private
+authorization boundary. Default retrieval stays in that client context.
+Portfolio retrieval requires explicit intent, permission and clear scope.
+Neither embeddings nor natural-language similarity may switch clients.
+
+Epistemic styling uses more than color and is consistent across modes. Exact
+colors, icons, motion and density adaptation are research hypotheses. Future
+validation includes non-specialist comprehension, expert access to method and
+evidence, task resumption, uncertainty distinction, keyboard/screen-reader use,
+reduced motion and cognitive accessibility.
+
+See the [Human First Doctrine](HFX_HUMAN_FIRST_COGNITIVE_UX_DOCTRINE.md),
+[HCI research synthesis](../research/HFX_COGNITIVE_PSYCHOLOGY_AND_HCI_RESEARCH.md),
+[continuity/context architecture](../architecture/HFX_COGNITIVE_CONTINUITY_AND_MEMORY_ARCHITECTURE.md),
+and ADR-0016/0017. These remain pre-implementation contracts.

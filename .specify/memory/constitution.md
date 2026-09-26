@@ -253,4 +253,40 @@ extraction is separate from the blocking structural Graphify check. See
   this file.
 - Report and stop if a requested implementation conflicts with doctrine.
 
-**Version**: 1.1.0 | **Ratified**: 2026-09-24 | **Last Amended**: 2026-09-26
+### XIX. Human First Cognitive UX
+
+Human-facing projections must minimize user reconstruction while preserving
+canonical meaning, material uncertainty, temporal scope and access to real
+evidence. Domain ontology must not become required navigation. Cognitive depth
+is directly navigable; it is not a mandatory funnel. AXIGNAL performs joins it
+can deterministically perform rather than transferring them to the user.
+(MASTER §55)
+
+### XX. Cognitive State Is Not Canonical Truth
+
+AXIGLAND, Xeed germination process/context and private cognitive continuity are
+distinct authorities. Xeed-private or user-attention state MUST NOT create or
+mutate canonical AXIGLAND facts. Public knowledge still passes the existing
+EvidenceAdmission authority. Cognitive continuity stores task/context, not a
+sensitive psychological profile; it must not infer sensitive traits from
+navigation or clicks. (MASTER §§5, 6, 23, 55)
+
+### XXI. Governed Context Routing
+
+Any future private AXENT retrieval MUST resolve and authorize tenant, client
+context, Xeed and user/thread scope before retrieval. Default private scope is
+one selected client. Portfolio scope requires explicit intent and authorization.
+Semantic/vector similarity MUST NOT grant authorization or switch client
+context. AXENT MUST use typed Context Broker operations and MUST NOT receive
+unrestricted database credentials or arbitrary SQL. (MASTER §55)
+
+### XXII. Human Output and Epistemic Presentation
+
+Material human outputs MUST preserve semantic family, epistemic state, temporal
+state, attention projection and presentation archetype as distinct dimensions.
+UNKNOWN MUST NOT render as FALSE or zero; POTENTIAL and INFERRED MUST NOT render
+as OBSERVED. Material outputs retain a navigable provenance/evidence path.
+Visual state MUST NOT rely on color alone. Exact visual encodings and cognitive
+effectiveness require human validation. (MASTER §§15, 16, 25, 55)
+
+**Version**: 1.2.0 | **Ratified**: 2026-09-24 | **Last Amended**: 2026-09-26

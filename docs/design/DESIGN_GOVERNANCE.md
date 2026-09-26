@@ -110,6 +110,29 @@ execution. Required gates remain deterministic and offline
 (`docs/governance/DETERMINISTIC_CI.md`). The `ui-ux-pro-max` search scripts are
 local, offline, stdlib-only, and are never invoked by required CI.
 
+## Human First research and product precedence
+
+The MASTER §55 and accepted ADR-0016/0017 govern Human First meaning and
+cognitive/private-context boundaries. The HFX product doctrine, HCI evidence
+synthesis and user-research protocol are subordinate explanations. Research
+findings constrain design only within their stated task and population; they do
+not prove an AXIGNAL-specific result. Project-local skills remain subordinate
+design intelligence and cannot set epistemic meanings or select persistence.
+
+Use the existing Subscriber Experience cognitive modes (Today, Explore,
+Evolution, Evidence and Ask AXENT) as the current information architecture
+context. Human First adds semantic depth, continuity, provenance, explicit
+client scope and evidence navigation; it does not require a new UI, universal
+dashboard, fixed card count, palette or graph layout. These remain subject to a
+later authorized prototype and user validation.
+
+For future private multi-client interactions, scope is explicit and authorized
+before retrieval; portfolio mode is separately visible and authorized. Color
+is never the only epistemic channel. WCAG 2.2 AA is the future production
+conformance target, supplemented by COGA-informed cognitive accessibility
+review and user testing. Neither automated scans nor this doctrine alone prove
+cognitive usability.
+
 ## Validation after design-skill changes
 
 - All project-local skills discoverable and their `SKILL.md` readable.

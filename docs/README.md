@@ -44,6 +44,10 @@ conflict.
   Product MCP; PROPOSED / PRE_IMPLEMENTATION. It is subordinate to the MASTER,
   Constitution, accepted ADRs, and Atlas, and does not establish runtime
   implementation.
+- [Human First Cognitive UX Doctrine](product/HFX_HUMAN_FIRST_COGNITIVE_UX_DOCTRINE.md):
+  accepted product doctrine for cognitive compression, semantic depth,
+  navigation, output semantics, epistemic presentation and accessible proof;
+  pre-implementation.
 - [AXIGNAL V2 Deep Report & Executive Analysis Specification](product/AXIGNAL_V2_DEEP_REPORT_EXECUTIVE_ANALYSIS_SPEC.md):
   Proposed full-value analytical product generation over the canonical AXIGLAND;
   PROPOSED / PRE_IMPLEMENTATION. It is subordinate to the MASTER, Constitution,
@@ -79,6 +83,9 @@ conflict.
   write authority. **Specified != implemented; documented architecture !=
   runtime evidence.** Provider-specific execution descriptions do not select or
   implement a provider; ADR-0006 governs the replaceable provider boundary.
+- [HFX Cognitive Continuity, Provenance & Context Architecture](architecture/HFX_COGNITIVE_CONTINUITY_AND_MEMORY_ARCHITECTURE.md)
+  records pre-implementation private-context, multi-client routing and storage
+  hypotheses; it authorizes no runtime or database selection.
 - [Subscriber Experience Interaction Architecture V0.1](architecture/AXIGNAL_SUBSCRIBER_EXPERIENCE_INTERACTION_ARCHITECTURE_V0.1.md)
   defines proposed pre-implementation contracts for P0-INTERACTION-01. It is
   subordinate to the authorities above; specified != implemented.
@@ -108,6 +115,12 @@ conflict.
 
 - `docs/research/` holds evidence and analysis, not canonical product
   authority by itself. Accepted decisions belong in ADRs.
+- [HFX Cognitive Psychology & HCI Research](research/HFX_COGNITIVE_PSYCHOLOGY_AND_HCI_RESEARCH.md)
+  distinguishes empirical studies, standards/guidance, AXIGNAL inference and
+  CTO hypotheses; reports no AXIGNAL user-study results.
+- [HFX User Research & Validation Protocol](research/HFX_USER_RESEARCH_AND_VALIDATION_PROTOCOL.md)
+  defines later benchmark tasks, study groups, acceptance scenarios and
+  accessibility/trust-calibration validation.
 - [AXIGNAL V3.1 Private Capability Reconciliation](research/AXIGNAL_V3_1_PRIVATE_CAPABILITY_RECONCILIATION.md)
   records the subordinate V3 contextual-access reconciliation and checked
   authorities; it does not authorize implementation.

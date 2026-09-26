@@ -3201,3 +3201,127 @@ changed.** El moat no es coleccionar más dashboards, sino conectar
 observaciones digitales reutilizables y temporales a un mundo económico
 gobernado. Esto define dirección de producto, no UI, sensor, integración,
 contrato ejecutable ni comportamiento actualmente implementado.
+
+------------------------------------------------------------------------
+
+# 55. Human First Cognitive UX
+
+Human First is a core product capability: AXIGNAL turns persistent,
+evidence-governed economic intelligence into human understanding while
+preserving truth, uncertainty, temporal context and a path to evidence. This
+section is durable product doctrine; interaction and persistence contracts
+remain in subordinate ADRs and pre-implementation architecture documents.
+
+> **AI makes intelligence abundant. Human attention remains scarce. AXIGNAL's
+> Human First advantage is turning persistent machine intelligence into
+> persistent human understanding.**
+
+> **The sophistication of AXIGNAL must be experienced as simplicity, and that
+> simplicity must never be purchased by hiding truth, uncertainty or evidence.**
+
+Human First complements the existing Memory/Time and Economic Brain capabilities:
+
+```text
+MEMORY / TIME
+governed economic observation and history
+        ↓
+BRAIN
+evidence-grounded economic reasoning
+        ↓
+HUMAN COGNITIVE INTERFACE
+meaning, navigation, continuity and proof
+```
+
+The product must minimize the **Expertise Tax**: the domain vocabulary and
+professional knowledge a person must already possess before AXIGNAL is useful.
+The same canonical intelligence serves non-specialists and experts at different
+explanation depths; expertise may change density, never canonical truth.
+
+The following are AXIGNAL product concepts and requirements, not claims of
+empirical AXIGNAL outcomes:
+
+- **Cognitive Compression:** reduce complex internal state to the minimum
+  truthful human meaning without losing material epistemic, temporal, scope,
+  denominator, contradiction or evidence context.
+- **Semantic Zoom:** keep one object and mental model while moving among
+  `GLANCE → UNDERSTAND → REASON → PROVE`. Depth is not a linear wizard; direct
+  access to evidence, evolution, comparison and AXENT remains possible.
+- **Cognitive Navigation:** move by meaningful relationships and questions,
+  not by requiring knowledge of internal ontology or menu location.
+- **Cognitive Continuity:** restore investigation, open questions, then-state
+  and changes since the last meaningful checkpoint.
+- **Cognitive Provenance:** preserve the actual trigger/reason an investigation
+  entered attention when that record exists. Missing origin remains `UNKNOWN`;
+  no retrospective rationale may be invented.
+- **Human Cognitive Amortization:** do not make people repeatedly reconstruct
+  understanding that AXIGNAL can preserve within its authorized retention and
+  privacy boundaries.
+- **Interpretation Debt:** the mental work unnecessarily transferred to a
+  person to turn available AXIGNAL information into usable understanding.
+  This is an AXIGNAL design concept, not a validated scientific measure.
+- **Cognitive Jevons:** a product hypothesis that cheaper and more abundant
+  machine analysis can increase human integration and verification work when
+  unmanaged. It is not an established economic law or observed AXIGNAL result.
+
+Hard HFX principles:
+
+```text
+MEANING_BEFORE_METRICS=YES
+NO_MENTAL_JOINS_WHEN_AXIGNAL_CAN_JOIN=YES
+EVIDENCE_ON_DEMAND=YES
+UNKNOWN_IS_NOT_FALSE=YES
+POTENTIAL_IS_NOT_OBSERVED=YES
+INFERENCE_IS_NOT_OBSERVATION=YES
+SAME_CANONICAL_TRUTH_ACROSS_EXPLANATION_DEPTHS=YES
+COGNITIVE_DEPTH_IS_DIRECTLY_NAVIGABLE=YES
+```
+
+Material human outputs preserve independent semantic family, epistemic state,
+temporal state, attention projection and presentation archetype. Attention is a
+projection over canonical state; it does not create economic relevance or
+truth. A material output communicates its meaning and why it matters, and
+preserves access to its scope, derivation, uncertainty and supporting evidence.
+Professional measures retain plain-language meaning, technical definition and
+interpretation boundary where material. `CHART != INSIGHT`.
+
+AXIGNAL separates three authorities:
+
+```text
+AXIGLAND
+shared canonical economic truth
+        ≠
+XEED GERMINATION CONTEXT
+tenant/client/Xeed research process and authorized private references
+        ≠
+PRIVATE COGNITIVE CONTINUITY
+user/client/Xeed investigation and attention state
+```
+
+Xeed germination context and private cognitive state may direct research,
+projection and retrieval within authorization. Neither creates a second
+canonical company truth nor mutates AXIGLAND; any public knowledge still passes
+existing evidence admission. Private attention is task/context state, not a
+psychological profile. It must not be inferred into sensitive traits or leak
+across subscribers, tenants or client contexts.
+
+AXENT is a contextual cognitive navigator: it can focus, compare, explain,
+restore an investigation and navigate to evidence. It is not the sole route to
+comprehension and has no unrestricted database access or arbitrary SQL
+authority. Private routing resolves tenant, client context, Xeed, thread and
+permissions before retrieval. Client scope is explicit; portfolio scope is
+explicit and separately authorized. Similarity never grants authorization or
+switches client context.
+
+Visual grammar preserves canonical epistemic and temporal distinctions. No
+epistemic state relies on color alone; exact colors, icons, motion and layouts
+remain hypotheses until tested. Human First is subject to representative user
+research, including cognitive accessibility and expert depth; compliance and
+visual preference alone do not prove comprehension.
+
+“Cognitive Jevons,” Interpretation Debt, attention amortization, semantic-depth
+navigation and AXENT navigation effectiveness remain product hypotheses until
+AXIGNAL-specific evidence is collected. Research methods and findings are
+recorded separately from doctrine. See [Human First Cognitive UX Doctrine](HFX_HUMAN_FIRST_COGNITIVE_UX_DOCTRINE.md),
+[HFX HCI Research](../research/HFX_COGNITIVE_PSYCHOLOGY_AND_HCI_RESEARCH.md),
+[HFX Cognitive Continuity Architecture](../architecture/HFX_COGNITIVE_CONTINUITY_AND_MEMORY_ARCHITECTURE.md),
+and ADR-0016/0017.

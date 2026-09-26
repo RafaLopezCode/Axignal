@@ -97,3 +97,28 @@ Visual polish must not hide epistemic uncertainty. No raw internal scores (e.g.
 Encoded from MASTER §2.1, §4.8, §9, §16, §17, §18, §19, §21, §22, §24, §25, §26,
 §32, §39, §46. Design intent here is directional; concrete UI is a later,
 spec-driven feature — not part of the governance baseline.
+
+## Human First cognitive constraints
+
+Human First is a core product capability, not a cosmetic layer. Every material
+subscriber-facing projection should lead with truthful human meaning, retain
+scope and epistemic/temporal distinctions, and preserve a direct path to
+derivation and evidence. Cognitive depth (`GLANCE`, `UNDERSTAND`, `REASON`,
+`PROVE`) is semantic and directly navigable; it is not a required multi-screen
+funnel. AXIGNAL performs joins it can already perform instead of asking people
+to remember metrics or reconstruct relationships across disconnected views.
+
+The same canonical object and truth serve different expertise levels. Plain
+language changes explanation density, never epistemic state. `UNKNOWN != FALSE`,
+`POTENTIAL != OBSERVED`, and historical state is not current state. Missing
+provenance remains unknown; no retrospective rationale is invented.
+
+Semantic family, epistemic state, temporal state, attention projection and
+presentation archetype remain separate. Attention prioritization is a
+projection, not canonical truth. No encoding uses color alone for epistemic
+state. Specific colors, shapes, icons and motion remain hypotheses until tested
+with users and assistive technology. AXENT can navigate and explain the current
+object, but ordinary comprehension cannot depend on chat.
+
+See [Human First Cognitive UX Doctrine](../product/HFX_HUMAN_FIRST_COGNITIVE_UX_DOCTRINE.md)
+and ADR-0016. This document adds no UI or runtime implementation.

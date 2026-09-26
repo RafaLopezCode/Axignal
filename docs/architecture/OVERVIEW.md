@@ -80,6 +80,14 @@ ExperienceSignal are conceptual derivations. These are product/architecture
 constraints, not proof of implementation. This overview authorizes no DRI
 runtime, source integration, score, schema or UI.
 
+Human First Cognitive UX is a core product capability under MASTER §55 and
+ADR-0016/0017. It governs human meaning, directly navigable semantic depth,
+continuity/provenance and separation of AXIGLAND, Xeed germination context and
+private cognitive state. The HFX Cognitive Continuity Architecture is a
+pre-implementation target only: typed scope-first AXENT retrieval, no direct
+database or arbitrary SQL access, and an unselected PostgreSQL/pgvector
+architecture hypothesis that requires measurement before implementation.
+
 ## Data model
 
 Conceptual entities (MASTER §36): `Organization`, `FAXT`, `Evidence`,

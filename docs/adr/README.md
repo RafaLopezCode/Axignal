@@ -23,6 +23,8 @@ Constitution (`.specify/memory/constitution.md`).
 | [ADR-0013](ADR-0013-compounding-economic-intelligence.md) | AXIGNAL Compounds Governed Economic Intelligence (**ACCEPTED PRODUCT DOCTRINE**) | §46, §53 |
 | [ADR-0014](ADR-0014-digital-representation-intelligence.md) | Digital Representation Intelligence Is a Core AXIGNAL Observation Capability (**ACCEPTED PRODUCT DOCTRINE**) | §22, §46, §54 |
 | [ADR-0015](ADR-0015-digital-measurement-instruments-and-observation-reuse.md) | Digital Measurements Are Instrument-Bound Reusable Observations (**ACCEPTED MEASUREMENT DOCTRINE**) | §20, §46, §53–§54 |
+| [ADR-0016](ADR-0016-human-first-cognitive-interface.md) | Human First Cognitive UX Is a Core AXIGNAL Product Capability (**ACCEPTED PRODUCT/INTERACTION DOCTRINE; PRE-IMPLEMENTATION**) | §55 |
+| [ADR-0017](ADR-0017-private-cognitive-continuity-and-context-boundaries.md) | Cognitive Continuity and Xeed Context Are Private Authorities Separate From AXIGLAND (**ACCEPTED TARGET ARCHITECTURE; PRE-IMPLEMENTATION**) | §55 |
 
 ## Adding an ADR
 
