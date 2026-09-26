@@ -83,13 +83,12 @@ conflict.
   and [contract catalogue](../specs/004-p0-admin-observability/contracts/observability-contracts.md)
   define its semantic requirements.
   It selects no infrastructure and authorizes no runtime.
-- [Structured Decision Intelligence Architecture V0.1](architecture/AXIGNAL_STRUCTURED_DECISION_INTELLIGENCE_ARCHITECTURE_V0.1.md)
-  specifies AXIGNAL-owned decision grammar, minimal state compilation,
-  deterministic composition and a pre-implementation Decision Laboratory.
-  TypeSafe Jev is the proposed initial replaceable evaluator; no SDK, runtime,
-  database, provider call or threshold is introduced. See the
-  [P0-JEV-01 feature spec](../specs/005-p0-jev-01-structured-decision-intelligence/spec.md)
-  and its [contract catalogue](../specs/005-p0-jev-01-structured-decision-intelligence/contracts/decision-contracts.md).
+- [Structured Decision Intelligence Architecture V0.2](architecture/AXIGNAL_STRUCTURED_DECISION_INTELLIGENCE_ARCHITECTURE_V0.2.md)
+  is the accepted experimental architecture for family-specific information
+  contracts and pre-provider answerability. The [V-next reconciliation spec](../specs/008-p0-jev-reconciliation/spec.md)
+  defines its deterministic reference controls; no production provider runtime,
+  dependency, migration or behavior change is introduced. V0.1 remains the
+  historical design record, and P0-JEV-03 replay uses its original contract.
 
 ## Communication
 

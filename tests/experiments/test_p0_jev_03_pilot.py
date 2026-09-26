@@ -80,7 +80,7 @@ def test_raw_answer_whitelist_preserves_only_replay_fields() -> None:
 def test_adapter_preserves_reported_usage_without_synthesizing_fields(
     monkeypatch: Any,
 ) -> None:
-    qid = "CES.SUPPORT.v1"
+    qid = "CES.SUPPORT.vNext"
     choice = SimpleNamespace(
         choice="SUPPORTED",
         probabilities={"SUPPORTED": 0.91, "PARTIAL": 0.09},
@@ -98,7 +98,7 @@ def test_adapter_preserves_reported_usage_without_synthesizing_fields(
             return None
 
         def system_one(self, *, state: Any, questions: Any, model: str, retry: Any) -> Any:
-            assert state == {"candidate": "synthetic"}
+            assert state["claim"]["proposition"] == "Fictional entity supplies Q."
             assert set(questions) == {qid}
             assert model == "jev-1.13.0"
             assert retry.max_retries == 0
@@ -124,16 +124,30 @@ def test_adapter_preserves_reported_usage_without_synthesizing_fields(
     fake_sdk.TypeSafeClient = FakeClient  # type: ignore[attr-defined]
     monkeypatch.setitem(sys.modules, "typesafe_sdk", fake_sdk)
 
-    judgments, failure, metadata = TypeSafeLabEvaluator(api_key="test-only").evaluate(
-        {"candidate": "synthetic"},
-        [
+    question = next(
+        item
+        for item in _load(LAB_ROOT / "grammar/vnext/grammar.json")["questions"]
+        if item["question_id"] == qid
+    )
+    state = {
+        "state_contract_version": "claim-evidence.vNext.1",
+        "claim": {"proposition": "Fictional entity supplies Q."},
+        "evidence": [
             {
-                "question_id": qid,
-                "primitive": "CHOICE",
-                "instructions": "synthetic test question",
-                "criteria": {"SUPPORTED": None, "PARTIAL": None},
+                "content": "Fictional catalogue lists Q.",
+                "provenance": {"source_ref": "synthetic://adapter-test"},
             }
         ],
+    }
+    from experiments.decision_lab.requests_vnext import (
+        ValidatedProviderRequest,
+        prepare_provider_request,
+    )
+
+    request = prepare_provider_request(qid, state, question, {})
+    assert isinstance(request, ValidatedProviderRequest)
+    judgments, failure, metadata = TypeSafeLabEvaluator(api_key="test-only").evaluate(
+        request,
         model="jev-1.13.0",
     )
 

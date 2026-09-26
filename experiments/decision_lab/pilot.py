@@ -15,19 +15,14 @@ from typing import Any
 from experiments.decision_lab.artifacts import read_result
 from experiments.decision_lab.cli import (
     ROOT,
-    _compile_variant_states,
     _load,
-    _run_live,
     _run_result_replay,
 )
 from experiments.decision_lab.experiment import estimate_budget, manifest_digest
-from experiments.decision_lab.judgments import compose_support
 from experiments.decision_lab.models import LabError
-from experiments.decision_lab.pricing import load_pricing_policy
 from experiments.decision_lab.state import apply_state_variant, compile_state
 from experiments.decision_lab.validation import (
     validate_corpus,
-    validate_experiment,
     validate_grammar,
 )
 
@@ -177,91 +172,9 @@ def _smoke_budget(case: dict[str, Any], question: dict[str, Any]) -> dict[str, A
 
 
 def run_smoke() -> None:
-    if SMOKE_RESULT.exists() or SMOKE_GATE.exists() or SMOKE_REPLAY.exists():
-        raise LabError("P0-JEV-03 smoke artifacts already exist; no second smoke is allowed")
-    _verify_local_safety()
-    sdk = _sdk_version()
-    if sdk != EXPECTED_SDK_VERSION:
-        raise LabError("installed TypeSafe SDK does not match the approved pin")
-    cases, grammar = _corpus(), _grammar()
-    if SMOKE_CASE_ID not in cases or SMOKE_QUESTION_ID not in grammar:
-        raise LabError("approved smoke assets are unavailable")
-    case = cases[SMOKE_CASE_ID]
-    question = grammar[SMOKE_QUESTION_ID]
-    if question["primitive"] != "CHOICE" or question["family"] != "CLAIM_EVIDENCE_SUPPORT":
-        raise LabError("approved smoke question contract changed")
-    budget = _smoke_budget(case, question)
-    pricing = load_pricing_policy()
-    api_key = _load_local_api_key()
-    from experiments.decision_lab.providers.typesafe import ADAPTER_VERSION, TypeSafeLabEvaluator
-
-    compiled_payload, state_variant_version = apply_state_variant(dict(case["state"]), "minimal")
-    compiled = compile_state(compiled_payload)
-    print(
-        "PREFLIGHT phase=smoke cases=1 variants=1 questions=1 max_requests=1 "
-        f"request_bytes={budget['max_request_bytes']} total_request_bytes={budget['preflight_request_bytes']} "
-        "input_token_budget=UNKNOWN max_estimated_cost=UNKNOWN concurrency=1 sdk_retries=0 "
-        f"pricing_policy={pricing['policy_version']}"
+    raise LabError(
+        "P0-JEV-03 smoke is immutable historical evidence; new provider execution is disabled"
     )
-    evaluator = TypeSafeLabEvaluator(api_key=api_key)
-    del api_key
-    judgments, failure, metadata = evaluator.evaluate(
-        compiled.payload,
-        [question],
-        model=PINNED_MODEL,
-    )
-    judgment = judgments[0].to_dict() if len(judgments) == 1 else None
-    row = {
-        "case_id": SMOKE_CASE_ID,
-        "expected_outcome": case["expected_outcome"],
-        "label_status": case["label_status"],
-        "question_id": SMOKE_QUESTION_ID,
-        "question_version": question["question_version"],
-        "primitive": question["primitive"],
-        "state_contract_version": compiled.contract_version,
-        "state_compiler_version": compiled.compiler_version,
-        "state_variant_id": "minimal",
-        "state_variant_version": state_variant_version,
-        "state_fingerprint": compiled.fingerprint,
-        "requested_model": PINNED_MODEL,
-        "resolved_model": metadata.get("resolved_model"),
-        "raw_answer": metadata.get("raw_answers", {}).get(SMOKE_QUESTION_ID),
-        "judgments": [judgment] if judgment is not None else [],
-        "composition": compose_support(judgments[0]) if len(judgments) == 1 else None,
-        "failure_category": failure.category if failure else None,
-        "metadata": metadata,
-    }
-    artifact = {
-        "artifact_type": "decision-lab-result",
-        "result_version": "0.1.0",
-        "data_mode": "LIVE_PROVIDER_SMOKE",
-        "experiment_id": "p0-jev-03-smoke",
-        "experiment_version": "0.1.0",
-        "evaluator": "typesafe-sdk",
-        "records": [row],
-        "request_count": 1,
-        "question_count": 1,
-        "retry_count": 0,
-        "timestamp_utc": datetime.now(UTC).isoformat(),
-        "reproducibility_manifest": {
-            "git_revision": _source_revision(),
-            "corpus_version": "0.1.0",
-            "grammar_version": "0.1.0",
-            "state_contract_version": compiled.contract_version,
-            "state_compiler_version": compiled.compiler_version,
-            "state_variant_id": "minimal",
-            "state_variant_version": state_variant_version,
-            "question_id": SMOKE_QUESTION_ID,
-            "question_version": question["question_version"],
-            "requested_model": PINNED_MODEL,
-            "resolved_model": metadata.get("resolved_model"),
-            "adapter_version": ADAPTER_VERSION,
-            "typesafe_sdk_version": sdk,
-            "execution_mode": "LIVE_PROVIDER",
-        },
-    }
-    _create_only(SMOKE_RESULT, artifact)
-    print(f"WROTE {SMOKE_RESULT}")
 
 
 def evaluate_smoke_gate() -> None:
@@ -342,56 +255,7 @@ def evaluate_smoke_gate() -> None:
 
 
 def run_experiment() -> None:
-    if EXPERIMENT_RESULT.exists() or EXPERIMENT_REPLAY.exists():
-        raise LabError("P0-JEV-03 experiment artifacts already exist; no rerun is allowed")
-    gate = json.loads(SMOKE_GATE.read_text(encoding="utf-8"))
-    gate_unhashed = dict(gate)
-    gate_id = gate_unhashed.pop("result_id", None)
-    smoke = read_result(SMOKE_RESULT)
-    if (
-        gate.get("artifact_type") != "p0-jev-03-smoke-gate"
-        or not gate_id
-        or manifest_digest(gate_unhashed) != gate_id
-        or gate.get("smoke_result_id") != smoke.get("result_id")
-        or gate.get("passed") is not True
-    ):
-        raise LabError("a digest-valid passing smoke gate is required")
-    if _sdk_version() != EXPECTED_SDK_VERSION:
-        raise LabError("installed TypeSafe SDK does not match the approved pin")
-    definition_path = ROOT / "experiments/v0.1/claim-wording-ab.json"
-    definition = _load(definition_path)
-    grammar = _grammar()
-    validate_experiment(definition, grammar)
-    cases = _corpus()
-    selected = [cases[case_id] for case_id in definition["case_ids"]]
-    variant_states, _ = _compile_variant_states(definition, selected)
-    budget = estimate_budget(
-        definition,
-        [case["state"] for case in selected],
-        grammar,
-        variant_states,
-    )
-    if (
-        definition.get("experiment_id") != "claim-wording-ab"
-        or definition.get("version") != "0.1.0"
-        or budget["expected_request_count"] != 10
-        or budget["expected_question_count"] != 10
-        or definition["budget"].get("max_concurrency") != 1
-        or definition["budget"].get("max_retries") != 0
-    ):
-        raise LabError("predeclared experiment or budget contract changed")
-    pricing = load_pricing_policy()
-    print(
-        "PREFLIGHT phase=experiment cases=5 variants=2 questions=10 max_requests=10 "
-        f"max_input_token_budget=UNKNOWN request_byte_budget={definition['budget']['max_request_bytes']} "
-        f"max_total_request_bytes={definition['budget']['max_total_request_bytes']} "
-        "concurrency=1 sdk_retries=0 pricing_policy="
-        f"{pricing['policy_version']} max_estimated_cost=UNKNOWN"
-    )
-    api_key = _load_local_api_key()
-    _run_live(definition_path, EXPERIMENT_RESULT, api_key=api_key, allow_repository_output=True)
-    del api_key
-    print(f"WROTE {EXPERIMENT_RESULT}")
+    raise LabError("P0-JEV-03 V0.1 is immutable historical evidence; new execution is disabled")
 
 
 def replay_experiment() -> None:

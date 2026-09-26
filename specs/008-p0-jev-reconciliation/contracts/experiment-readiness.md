@@ -1,0 +1,9 @@
+# Experiment Readiness and State-Sufficiency Preregistration
+
+The locked design is `experiments/decision_lab/experiments/vnext/state-sufficiency-preregistration.json`, ID `claim-state-sufficiency-vnext-01`. It asks which explicit claim/evidence information layers make a decision request answerable while controlling question, primitive, model/SDK, policy, repetition and evaluation conditions. It does not ask which state produces the largest unqualified score.
+
+Arms are ordered: S0 identifiers/references only; S1 explicit proposition plus references; S2 proposition plus semantic passages; S3 S2 plus source provenance; S4 S3 plus required temporal context. The deterministic gate predicts S0/S1 unanswerable and S3 answerable when all required fields exist. S2 remains unanswerable because source provenance is contract-required. S4 is conditional on temporal scope.
+
+Development cases `CES-N-01`–`CES-N-04`; held-out cases `CES-N-05`, `CES-N-06`, fixed by ID. The held-out split may not be inspected for tuning; any change requires a new preregistration and held-out version. Current corpus is synthetic and small. It cannot establish performance, statistical significance, minimum state sufficiency in the real domain or a production threshold. A future live experiment requires independently adjudicated and provenance-validated cases, sample-logic review, current price/budget and separately authorized execution.
+
+Required validity gates cover contract/state/answer-space/primitive validity, fixture pass, golden provenance, controlled variables, pinned model and SDK, budget/retries, composition/evaluation policy, locked holdout, authority isolation and secret boundary. Current `GOLDEN_PROVENANCE_VALID=false`; therefore `LIVE_EXPERIMENT_ELIGIBLE=NO`. Even a future YES is eligibility only; `LIVE_EXPERIMENT_AUTHORIZED=NO` until a separate CTO order.

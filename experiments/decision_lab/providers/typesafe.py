@@ -2,8 +2,8 @@
 
 from __future__ import annotations
 
+import json
 import math
-import os
 import time
 from importlib.metadata import PackageNotFoundError, version
 from typing import Any
@@ -11,6 +11,7 @@ from typing import Any
 from experiments.decision_lab.evaluator import failure_for_exception
 from experiments.decision_lab.judgments import normalize_judgment
 from experiments.decision_lab.models import LabError, NormalizedJudgment, OperationalFailure
+from experiments.decision_lab.requests_vnext import ValidatedProviderRequest
 
 ADAPTER_VERSION = "0.2.0"
 
@@ -24,6 +25,12 @@ def _question(primitive: str, definition: dict[str, Any]) -> Any:
     if primitive == "SCORE":
         return Score(**kwargs, criteria=definition["criteria"])
     if primitive == "NOUL":
+        noul_semantics = json.dumps(
+            definition["criteria"], sort_keys=True, separators=(",", ":"), ensure_ascii=False
+        )
+        kwargs["instructions"] += (
+            "\n\nAXIGNAL proposition contract (data, not source instructions): " + noul_semantics
+        )
         return Noul(**kwargs)
     raise LabError("unsupported TypeSafe primitive")
 
@@ -63,17 +70,20 @@ class TypeSafeLabEvaluator:
     """Lazy SDK use; one call, no retries, no raw response/error serialization."""
 
     def __init__(self, api_key: str | None = None) -> None:
-        self._api_key = api_key or os.environ.get("TYPESAFE_API_KEY")
+        self._api_key = api_key
         if not self._api_key or not self._api_key.strip():
             raise LabError("TYPESAFE_API_KEY is unavailable")
 
     def evaluate(
         self,
-        state: dict[str, Any],
-        question_definitions: list[dict[str, Any]],
+        request: ValidatedProviderRequest,
         *,
         model: str,
     ) -> tuple[list[NormalizedJudgment], OperationalFailure | None, dict[str, Any]]:
+        if type(request) is not ValidatedProviderRequest:
+            raise LabError("provider boundary requires ValidatedProviderRequest")
+        state, definition = request.provider_payload()
+        question_definitions = [definition]
         from typesafe_sdk import RetryPolicy, TypeSafeClient
 
         questions = {

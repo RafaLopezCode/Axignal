@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import argparse
 import json
-import os
 import subprocess
 import sys
 from pathlib import Path
@@ -165,13 +164,20 @@ def _run_live(
         )
     }
     validate_experiment(definition, grammar)
-    if not api_key and not os.environ.get("TYPESAFE_API_KEY"):
-        raise LabError("TYPESAFE_API_KEY is unavailable; no request was made")
     cases = {
         case["case_id"]: case for case in validate_corpus(_load(ROOT / "corpus/v0.1/cases.json"))
     }
     selected = [cases[case_id] for case_id in definition["case_ids"]]
     variant_states, state_fingerprints = _compile_variant_states(definition, selected)
+    for case_index, _case in enumerate(selected):
+        for variant in definition["variants"]:
+            state_payload = variant_states[variant["variant_id"]][case_index]
+            for question_id in variant["question_ids"]:
+                from experiments.decision_lab.requests_vnext import prepare_provider_request
+
+                prepare_provider_request(question_id, state_payload, grammar[question_id], {})
+    if not api_key:
+        raise LabError("TYPESAFE_API_KEY is unavailable; no request was made")
     plan = estimate_budget(
         definition,
         [case["state"] for case in selected],
@@ -198,9 +204,31 @@ def _run_live(
                 state_payload = variant_states[variant["variant_id"]][case_index]
                 compiled = compile_state(state_payload)
                 requested_model = variant.get("requested_model", definition["requested_model"])
-                judgments, failure, safe_meta = evaluator.evaluate(
-                    compiled.payload, questions, model=requested_model
+                from experiments.decision_lab.requests_vnext import (
+                    DeterministicDecisionResult,
+                    ValidatedProviderRequest,
+                    prepare_provider_request,
                 )
+
+                judgments = []
+                failures = []
+                safe_meta = {}
+                for question in questions:
+                    prepared = prepare_provider_request(
+                        question["question_id"], state_payload, question, {}
+                    )
+                    if isinstance(prepared, DeterministicDecisionResult):
+                        raise LabError(
+                            "V0.1 live runner cannot record V-next deterministic results; replay only"
+                        )
+                    if not isinstance(prepared, ValidatedProviderRequest):
+                        raise LabError("pre-provider gate returned an invalid request type")
+                    result, failure, metadata = evaluator.evaluate(prepared, model=requested_model)
+                    judgments.extend(result)
+                    if failure is not None:
+                        failures.append(failure)
+                    safe_meta.update(metadata)
+                failure = failures[0] if failures else None
                 compositions = [
                     {
                         "question_id": item.question_id,

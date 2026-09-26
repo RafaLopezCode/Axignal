@@ -228,7 +228,7 @@ def test_typesafe_adapter_pins_model_disables_retries_and_preserves_metadata(
                 choice="SUPPORTED", probabilities={"SUPPORTED": 0.9}, confidence=0.9
             )
             return SimpleNamespace(
-                choices={"CES.SUPPORT.v1": answer},
+                choices={"CES.SUPPORT.vNext": answer},
                 model="jev-1.13.0",
                 usage=SimpleNamespace(input_tokens=21, output_tokens=0, total_tokens=21),
             )
@@ -240,16 +240,38 @@ def test_typesafe_adapter_pins_model_disables_retries_and_preserves_metadata(
     fake.RetryPolicy = lambda **kwargs: SimpleNamespace(**kwargs)
     fake.TypeSafeClient = FakeClient
     monkeypatch.setitem(sys.modules, "typesafe_sdk", fake)
-    monkeypatch.setenv("TYPESAFE_API_KEY", "unit-test-secret")
-    evaluator = TypeSafeLabEvaluator()
-    question = {
-        "question_id": "CES.SUPPORT.v1",
-        "primitive": "CHOICE",
-        "instructions": "Synthetic contract test",
-        "criteria": {"SUPPORTED": None, "NO": None},
-    }
+    evaluator = TypeSafeLabEvaluator(api_key="offline-test-secret")
+    question = next(
+        item
+        for item in json.loads((ROOT / "grammar/vnext/grammar.json").read_text(encoding="utf-8"))[
+            "questions"
+        ]
+        if item["question_id"] == "CES.SUPPORT.vNext"
+    )
+    from experiments.decision_lab.requests_vnext import (
+        ValidatedProviderRequest,
+        prepare_provider_request,
+    )
+
+    request = prepare_provider_request(
+        "CES.SUPPORT.vNext",
+        {
+            "state_contract_version": "claim-evidence.vNext.1",
+            "claim": {"proposition": "Fictional entity supplies Q."},
+            "evidence": [
+                {
+                    "content": "Fictional catalogue lists Q.",
+                    "provenance": {"source_ref": "synthetic://adapter-test"},
+                }
+            ],
+        },
+        question,
+        {},
+    )
+    assert isinstance(request, ValidatedProviderRequest)
     judgments, failure, metadata = evaluator.evaluate(
-        {"synthetic": True}, [question], model="jev-1.13.0"
+        request,
+        model="jev-1.13.0",
     )
     assert failure is None
     assert metadata["resolved_model"] == "jev-1.13.0"
@@ -261,7 +283,7 @@ def test_typesafe_adapter_pins_model_disables_retries_and_preserves_metadata(
     assert observed["client"]["timeout"] == 30
     assert observed["request"]["model"] == "jev-1.13.0"
     assert observed["request"]["retry"].max_retries == 0
-    assert "unit-test-secret" not in repr(judgments)
+    assert "offline-test-secret" not in repr(judgments)
 
 
 def test_result_artifact_is_create_only_and_readable(tmp_path: Path) -> None:
