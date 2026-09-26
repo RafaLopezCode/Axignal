@@ -13,6 +13,10 @@
 | **FAXT** | A canonical, evidence-backed unit of knowledge with subject, predicate, object, evidence, provenance, temporality, currentness, epistemic state and contradictions. | An opinion, a commercial possibility, or an INXIGHT. |
 | **INXIGHT** | Interpretation/derived knowledge from several FAXTs and/or relationships. Must be explainable down to its sources and must degrade when they go stale. | A FAXT. |
 | **PATHX** | An explainable economic path between entities. Replaces the provisional product name `EconomicPath` (a technical equivalent type may remain internally). | A single relationship. |
+| **Digital Representation Intelligence** | AXIGNAL's source-neutral observation of how authorized digital surfaces represent an organization, with explicit conditions, instrument/version, time and uncertainty. | SEO/GEO execution, social management or business truth. |
+| **Public Experience Intelligence** | A DRI capability that derives explainable, temporal signals from public experience observations without treating reviews as truth. | A separate reputation product, customer population census or FAXT. |
+| **RepresentationGap** | An explainable INXIGHT derived by comparing economic knowledge with condition-bound digital representation. | A FAXT or proof that a capability is absent. |
+| **ReviewObservation** | A future semantic observation of a public review and its source-reported attributes, subject resolution, time/currentness and permitted lineage. | A verified fact about the underlying experience. |
 
 ## Doctrinal statements (preserve verbatim)
 

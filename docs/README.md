@@ -27,6 +27,11 @@ conflict.
 
 ### Product Specifications
 
+- [Digital Representation Intelligence Product Specification](product/AXIGNAL_DIGITAL_REPRESENTATION_INTELLIGENCE_PRODUCT_SPEC.md):
+  four-family, source-neutral observation and measurement doctrine, including
+  public experience; PROPOSED / PRE_IMPLEMENTATION. It is subordinate to the
+  MASTER, Constitution and ADR-0014/0015 and authorizes no implementation.
+
 - [AXIGNAL Admin Product Specification](product/AXIGNAL_ADMIN_PRODUCT_SPEC.md):
   Human-first operational, economic, epistemic and commercial governance
   specification for AXIGNAL Admin; PROPOSED / PRE_IMPLEMENTATION. Its active

@@ -7,7 +7,9 @@ arquitectura conceptual\
 **Revision:** 2026-09-26\
 **Change:** AXIGNAL Economic Brain / Economic Opportunity Intelligence /
 Global Economic Sensors / Capability-Specific Economic Reach / Typed
-Economic Reasoning / Compounding Economic Intelligence\
+Economic Reasoning / Compounding Economic Intelligence / Digital
+Representation Intelligence / Digital Observation and Measurement Instruments /
+Representation Gaps / Public Reputation and Experience Intelligence\
 **Naturaleza:** documento vivo y normativo. Sustituye las hipótesis
 incompatibles de versiones anteriores.\
 **Propósito:** impedir deriva conceptual durante diseño, implementación
@@ -1270,6 +1272,17 @@ Y:
 Una agencia puede Xignal 100 clientes, competidores o targets. No
 necesita demostrar que representa a cada uno porque Xignal **no escribe
 información sobre ellos**: sólo asigna observación.
+
+Digital Representation Intelligence añade observación independiente de cómo
+superficies de búsqueda, generativas y de conversación pública representan a
+una organización, y de qué experiencia pública se declara sobre sus productos
+y servicios. No ejecuta SEO/GEO, campañas, gestión de redes ni reparación de
+reputación. Un antes/después sólo es comparable cuando pregunta, superficie,
+instrumento, versión, condiciones, periodo y cobertura son compatibles.
+Visibilidad, menciones, citas, ratings y opiniones no prueban capacidad,
+demanda, calidad ni resultado comercial. La brecha entre representación y
+conocimiento económico observado es una derivación que requiere explicación,
+incertidumbre y, cuando corresponda, investigación independiente.
 
 ------------------------------------------------------------------------
 
@@ -2899,3 +2912,292 @@ STALE_KNOWLEDGE_REVALIDATION_RATE
 MARGINAL_COGNITIVE_COST_PER_XEED
 MARGINAL_COGNITIVE_COST_PER_RETURNING_XEED
 ```
+
+# 54. Digital Representation and Public Experience Intelligence
+
+Esta sección extiende el mismo cerebro económico con una capacidad perceptiva
+de cuatro familias. No crea un producto de reputación separado, no cambia la
+autoridad de AXIGLAND y no afirma que estas capacidades estén implementadas.
+La especificación subordinada y los ADR-0014/0015 desarrollan esta doctrina;
+MASTER §54 sigue siendo su única autoridad semántica.
+
+> **Digital Representation Intelligence is AXIGNAL's capability to
+> independently observe, preserve, compare and explain how organizations,
+> capabilities, products and markets are represented across observable digital
+> discovery surfaces over time.**
+
+La representación es contexto económico observable, no realidad económica.
+AXIGNAL observa divergencias entre la realidad económica sustentada por
+evidencia y la representación digital, y explica por qué podrían importar.
+Esta capacidad amplía la percepción del Economic Brain; no crea una suite de
+marketing ni un producto independiente.
+
+```text
+DIGITAL REPRESENTATION INTELLIGENCE
+├── SEARCH REPRESENTATION
+├── GENERATIVE REPRESENTATION
+├── SOCIAL / PUBLIC CONVERSATION REPRESENTATION
+└── PUBLIC REPUTATION / EXPERIENCE REPRESENTATION
+```
+
+AXIGNAL observa cómo superficies externas presentan, encuentran, describen o
+discuten organizaciones y qué experiencias sus autores reportan públicamente.
+Una representación es evidencia de lo que una superficie mostró bajo unas
+condiciones; no es la realidad económica ni una edición de AXIGLAND. AXIGNAL
+conecta estas observaciones gobernadas con capacidades, mercados, demanda,
+proyectos, competidores, reach, oportunidades y tiempo, manteniendo cada clase
+epistémica separada.
+
+## 54.1 Las cuatro familias perceptivas
+
+Las definiciones normativas de las familias son:
+
+> **Search Representation is an observation of how an entity appears within a
+> specific search/discovery surface under explicit query, geography, language,
+> device and temporal conditions.**
+
+> **Generative Representation is an observation of what a generative discovery
+> surface produces under a frozen measurement instrument and explicit execution
+> conditions.**
+
+> **Public Social Representation is the observable public conversation in
+> which an organization, product, capability or market appears under legally
+> and operationally authorized observation conditions.**
+
+La familia superior `DIGITAL_REPRESENTATION_OBSERVATION` puede abarcar
+`SEARCH_OBSERVATION`, `GENERATIVE_OBSERVATION`,
+`SOCIAL_PUBLIC_OBSERVATION`, `PUBLIC_WEB_REPRESENTATION_OBSERVATION` y
+`PRIVATE_FIRST_PARTY_OBSERVATION`. Son categorías semánticas; no implican
+clases, tablas, nodos o APIs. La observación privada permanece aislada de la
+representación pública canónica.
+
+Una observación de búsqueda preserva semántica equivalente a superficie,
+consulta/familia de consultas, geografía, idioma, dispositivo, momento,
+conjunto y tipos de resultados, presencia de entidad, posición cuando tenga
+sentido, dominio propio o fuente de terceros, features/citas, instrumento y
+versión, referencia original y provenance. No existe una posición de búsqueda
+válida sin consulta, geografía, idioma, superficie y tiempo identificados.
+Una ejecución generativa preserva semántica equivalente a superficie/prompt,
+modo de grounding/búsqueda cuando sea observable, idioma, contexto, ejecución,
+réplica, muestra, tiempos, variación, estabilidad, incertidumbre, menciones y
+citas. La UI de producto no se sustituye por una respuesta de API. Lo que no
+se pueda observar permanece `UNKNOWN`.
+
+`MEASUREMENT_INSTRUMENT` es una especificación versionada e inspeccionable de
+las condiciones bajo las cuales una observación se produce y compara. Puede
+describir ID/versión, propósito, mercado/categoría, familias y consultas o
+prompts congelados, geografía, idioma, persona/contexto, superficies, modo de
+ejecución, política de réplicas, reglas de detección de entidad y extracción
+de citas, semántica de ranking/prominencia, criterios de observación
+informativa, metodología estadística y fechas de creación/congelación. Es
+semántica conceptual, no schema. Un resultado sin ID y versión de instrumento
+no es comparable; un cambio material crea discontinuidad salvo puente validado.
+Una familia validada de consultas/prompts puede ser infraestructura compartida
+de medición; no se requiere por defecto un prompt distinto por organización.
+
+- **Search Representation:** resultados observados para consulta, idioma,
+  geografía, superficie, dispositivo/contexto cuando corresponda, hora e
+  instrumento identificados. No existe un ranking global independiente de
+  condiciones.
+- **Generative Representation:** respuesta observada en una superficie de
+  producto o en una API identificada. La UI de un producto y la respuesta de
+  su modelo por API son instrumentos distintos. Se preservan prompt/instrumento
+  autorizado, versión, condiciones, ejecución, réplica, variación, muestra e
+  incertidumbre; la salida no confirma hechos del negocio.
+- **Social / Public Conversation Representation:** conversación, menciones,
+  temas y citas observados en una fuente y ventana definidas. Volumen no equivale
+  a demanda; sentimiento o tema son derivaciones, no FAXT. Un post puede
+  alimentar varias proyecciones, pero cuenta una vez como observación.
+- **Public Reputation / Experience Representation:** observación independiente
+  de señales estructuradas y no estructuradas de experiencia pública asociadas
+  a una organización, producto, servicio o ubicación a través de plataformas
+  de reviews, foros y otras fuentes públicas autorizadas. Trustpilot, Google
+  Reviews/Business Profile, G2, Capterra, comunidades y marketplaces son
+  ejemplos de familias de sensores, no dominios ni integraciones aprobadas.
+
+> **Public Reputation Representation is AXIGNAL's independent observation of
+> structured and unstructured public experience signals associated with an
+> organization, product, service or location across review platforms, forums
+> and other authorized public sources.**
+
+Estas familias describen qué se observa; no fuerzan una ontología ejecutable,
+clases, APIs, sensores ni dependencias en este slice.
+
+## 54.2 Observaciones de experiencia y límite de verdad
+
+`REVIEW_OBSERVATION` es un concepto futuro, no una clase de runtime. Su
+semántica debe poder conservar fuente e ID de la review, sujeto resuelto si lo
+hay (organización, producto, servicio o ubicación), rating nativo y escala,
+texto o referencia permitida, fecha declarada, fecha de experiencia sólo si se
+declara, momento de observación, verificación reportada por la plataforma,
+respuesta pública separada, fechas, currentness, lineage y referencia a la
+observación original. La fuente puede permitir guardar sólo un ID, fingerprint,
+referencia o extracto, no el texto íntegro.
+
+```text
+REVIEW != BUSINESS_TRUTH
+REVIEWER_CLAIM != FAXT
+PLATFORM_RATING != AXIGNAL_JUDGMENT
+PLATFORM_VERIFICATION != AXIGNAL_AUTHENTICITY_JUDGMENT
+SENTIMENT != EXPERIENCE_FACT
+```
+
+Una review prueba que se observó una declaración pública bajo determinadas
+condiciones; no prueba por sí sola que el hecho narrado ocurrió. Un rating
+4.3/5 sigue siendo el valor reportado por esa fuente y escala, no una
+transformación automática a `86/100`. `VERIFIED` conserva el estado que la
+plataforma comunicó; no es una certificación de AXIGNAL sobre autenticidad o
+veracidad. No se autoriza clasificar normalmente a una persona como mentirosa,
+review falsa o no auténtica. Una anomalía puede motivar investigación, pero
+`ANOMALY != FRAUD` y `ANOMALY != REVIEW_BOMBING`.
+
+`EXPERIENCE_THEME` es una derivación versionada, inspeccionable y trazable; sus
+ejemplos futuros incluyen delivery, soporte, calidad, billing, instalación,
+fiabilidad, valor, documentación y onboarding, sin congelar una taxonomía aquí.
+`EXPERIENCE_SIGNAL` es un patrón recurrente, temporalmente delimitado y
+respaldado por varias observaciones públicas. Puede describir praise,
+complaints, target/producto, respuestas o cambios. No se proyecta
+automáticamente una review de un producto o sede a toda la organización.
+
+`REPUTATION_STATE` es una representación derivada multidimensional: puede
+desglosar ratings nativos, polaridad clasificada, temas, severidad, volumen,
+recencia, tendencia, amplitud de fuentes, cobertura, incertidumbre y
+currentness. No es calidad objetiva ni autoridad universal sobre la empresa.
+`REPUTATION_CHANGE` requiere comparación temporal válida con ventanas,
+cobertura, sujetos, elegibilidad y metodología compatibles. Una edición o
+eliminación actualiza la proyección vigente; historial previamente observado
+sólo se retiene si los derechos lo permiten. `REMOVED_AT_SOURCE != PROVEN_FALSE`
+y la razón de retirada permanece desconocida salvo evidencia de la fuente.
+
+`REPUTATION_GAP` es un INXIGHT derivado, nunca FAXT: por ejemplo, capacidad de
+soporte observada junto con quejas de soporte recurrentes puede indicar un
+gap de experiencia que amerita investigar. También puede reflejar localidad,
+producto, inconsistencia operativa, expectativas o sesgo de observación; no
+declara que la capacidad sea falsa ni que la empresa preste mal servicio.
+Una anomalía de volumen, distribución o duplicación señala un patrón que
+requiere contrato y revisión; por sí misma no prueba fraude o review bombing.
+
+## 54.3 Juicio, composición y métricas
+
+Un evaluador estructurado reemplazable, incluido Jev sólo como candidato, puede
+clasificar evidencia acotada cuando exista estado estructurado suficiente y
+AnswerabilityGate contestable. Puede clasificar polarity, temas, severidad,
+target, tipo de queja/praise, incumplimiento de expectativa o relevancia de una
+respuesta; son contratos futuros, sin answer spaces congelados aquí. Un
+evaluador no oculta observaciones detrás de un número ni decide verdad:
+
+```text
+REVIEW_EXPERIENCE_POLARITY
+REVIEW_TOPIC_CLASSIFICATION
+REVIEW_ISSUE_SEVERITY
+REVIEW_EXPERIENCE_TARGET
+REVIEW_COMPLAINT_TYPE
+REVIEW_PRAISE_TYPE
+REVIEW_EXPECTATION_FAILURE
+REVIEW_COMPANY_RESPONSE_RELEVANCE
+```
+
+```text
+ReviewObservation → StateContract → deterministic preprocessing
+→ AnswerabilityGate → replaceable StructuredEvaluator
+→ typed classification → deterministic composition
+```
+
+```text
+CLASSIFICATION_VERSION_REQUIRED
+METRIC_VERSION_REQUIRED
+DELETION_PROPAGATES_TO_CURRENTNESS
+DUPLICATES_MUST_NOT_DOUBLE_COUNT
+REPUTATION_METRIC_IS_DETERMINISTIC
+REPUTATION_METRIC_IS_TRACEABLE
+COMPOSITE_METRIC_IS_DECOMPOSABLE
+CROSS_PLATFORM_RATINGS_NOT_NAIVELY_COMPARABLE
+```
+
+Una métrica agregada futura sólo se permite bajo método determinista,
+versionado, reproducible, inspeccionable, trazable, específico a fuentes,
+muestra, incertidumbre y currentness. Debe descomponerse hasta dimensiones,
+clasificaciones, observaciones y referencias permitidas; exponer periodo,
+muestra elegible, cobertura clasificable, fuentes, versión y fórmula. Un cambio
+de versión metodológica no es cambio de reputación. Pesos, cuando existan,
+son visibles y fijados por contrato, nunca seleccionados dinámicamente por un
+LLM. Si la muestra es insuficiente, las poblaciones incompatibles, la cobertura
+baja, el instrumento cambió o currentness es desconocida, se retiene el índice
+como `NOT_ANSWERABLE / WITHHELD`.
+
+Los ratings de fuentes distintas no son ingenuamente comparables ni se
+promedian automáticamente. Escalas, población, solicitud, verificación,
+moderación, granularidad, geografía y sesgo de selección pueden diferir. La
+amplitud de fuentes no implica igualdad; una observación no equivale a otra
+sólo por conteo. `SAMPLE_SIZE`, población observada, ventana, fuentes,
+clasificación y cobertura sobreviven cualquier agregación. Reviews son una
+muestra y no permiten afirmar porcentajes de todos los clientes sin evidencia
+independiente.
+
+## 54.4 Sensores, privacidad y amortización
+
+El acceso depende del dato y canal. Una review pública visible y una analítica
+de owner autenticado pertenecen a fronteras potencialmente distintas; la
+segunda puede alimentar sólo análisis privados del tenant. No entra
+silenciosamente en AXIGLAND público o análisis de otros suscriptores. Fuente,
+identidad, autoridad, derechos de acceso, método, términos, derechos sobre
+base y contenido, privacidad, retención, borrado, transmisión a proveedores y
+currentness se evalúan antes de una adquisición futura. Visibilidad pública no
+implica autorización de recolección automática. Acceso oficial/gobernado se
+prefiere a automatización frágil; scraping autenticado, exportar cookies,
+evadir controles anti-bot o resolver CAPTCHA no está autorizado por defecto.
+
+El diseño futuro minimiza datos personales, no crea grafos de perfiles de
+reviewers y considera borrado, retirada de contenido, límites de cita y
+redistribución. No se asume retención perpetua del texto crudo. Reviews exactas,
+sindicadas, cross-posted o ingeridas más de una vez no se convierten en N
+evidencias de N experiencias. Una observación pública permitida se adquiere y
+resuelve una vez, puede servir proyecciones/Xignals pertinentes sin doble
+conteo y conserva lineage; el estado privado permanece aislado.
+
+La selección futura de un `DIGITAL_REPRESENTATION_SENSOR` considera cobertura,
+calidad, derechos, latencia, frescura, estabilidad, costo y reutilización. El
+registro conceptual de sensores distingue familia/superficie, canal público o
+privado, cobertura geográfica/idiomática, método y requisitos de acceso,
+derechos, modelo de costo, frescura/profundidad histórica, retención de datos,
+semántica de medición, comportamiento estocástico y potencial de reutilización.
+Cuando varios sensores gobernados satisfacen el mismo requisito informativo,
+se prefiere el sensor suficiente de menor costo. El costo se evalúa por
+observación legítimamente reutilizable, no sólo por Xeed. No se define router,
+registro ejecutable ni fórmula en este slice.
+
+La observación pública se adquiere una vez cuando sea posible y se reutiliza
+para cada organización que legítimamente represente, sujeto a derechos,
+resolución y deduplicación. `XEED_INITIATED_OBSERVATION !=
+XEED_OWNED_CANONICAL_FACT`: la atención dirige dónde mirar, no quién tiene
+autoridad sobre la verdad. AXIGLAND conserva observaciones con lineage e
+historia temporal gobernada. Una observación de hoy no reconstruye
+retroactivamente una historia que nunca fue recogida; la variación de
+superficie, sensor o instrumento se preserva como posible discontinuidad, no
+como cambio automático de la empresa.
+
+Las señales públicas de experiencia pueden abrir un `ResearchObjective` AXENT
+o una hipótesis de market pain. No crean automáticamente `DemandSignal`, FAXT
+ni oportunidad; requieren repetición, ámbito, tiempo, resolución de sujeto e
+independencia/evidencia económica adicional. EOI puede dirigir qué superficies
+DRI observa; una brecha de representación puede, a su vez, informar
+reevaluación EOI. Ninguna flecha borra límites epistémicos.
+
+## 54.5 Producto y explicación
+
+Today, Explore, Evolution, Evidence y Ask AXENT pueden mostrar representación
+de búsqueda/generativa/conversación, experiencia pública, cambios, praise,
+issues, anomalías y gaps cuando haya observaciones y contratos adecuados. Cada
+afirmación responde por qué se muestra, bajo qué instrumento/versión,
+superficie, muestra, periodo y condiciones, qué fue observado o derivado, qué
+se clasificó, qué fórmula se calculó y qué sigue incierto. AXENT puede
+investigar y explicar la traza, no inventar reviews, atribuir veracidad a un
+reviewer ni reescribir observaciones.
+
+AXIGNAL no es un SEO/GEO tool, social-listening manager, review manager,
+reputation-repair service ni review-response bot. La propuesta a agencias sigue
+siendo: **You improve the company. AXIGNAL independently observes what
+changed.** El moat no es coleccionar más dashboards, sino conectar
+observaciones digitales reutilizables y temporales a un mundo económico
+gobernado. Esto define dirección de producto, no UI, sensor, integración,
+contrato ejecutable ni comportamiento actualmente implementado.

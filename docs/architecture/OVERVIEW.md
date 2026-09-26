@@ -70,9 +70,15 @@ not reduce a market to an organization's headquarters jurisdiction. Economic
 reasoning is typed, explainable and temporally grounded. Reuse preserves
 provenance, epistemic state and currentness. See MASTER §53 and ADR-0012/0013.
 
-These are product/architecture constraints, not proof that opportunity or
-compounding behavior has been implemented. No runtime representation is
-authorized by this overview.
+Digital Representation Intelligence is another target observation capability
+over search, generative, social/public conversation and public
+reputation/experience surfaces. Every result is bound to an instrument,
+version, conditions and time. Reviews, platform ratings and evaluator
+classifications remain observations/derivations, not canonical business truth;
+private first-party inputs stay tenant-private. RepresentationGap and
+ExperienceSignal are conceptual derivations. These are product/architecture
+constraints, not proof of implementation. This overview authorizes no DRI
+runtime, source integration, score, schema or UI.
 
 ## Data model
 

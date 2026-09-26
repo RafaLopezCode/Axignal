@@ -70,6 +70,15 @@ IMPLEMENTATION
   output is not canonical truth; provider use requires separate authority.
 - **Reuse only with epistemic state, provenance and currentness.** Reuse is
   not trust forever; upstream change must permit downstream reevaluation.
+- **Digital Representation Intelligence is observation, not SEO/GEO execution
+  or reputation management.** Surface output is not business truth; mention
+  differs from citation, and citation differs from endorsement. Measurement
+  claims require instrument/version, conditions, time, sample and uncertainty.
+  Private first-party analytics stay private; no provider hardwiring, universal
+  digital score, authenticated scraping or anti-bot bypass by default.
+  Reuse authorized public observations across relevant Xignals without double
+  counting. RepresentationGap and public experience signals are derived, not
+  FAXT. See MASTER §54 and ADR-0014/0015.
 - **Never let user, agency or subscriber input directly mutate canonical truth.**
   Input directs attention only.
 - **Never hard-wire AXIGNAL to one model provider.** Use

@@ -1170,3 +1170,51 @@ RETURN WHEN THE WORLD CHANGES
 Human First is not a limitation on AXIGNAL's intelligence.
 
 It is the mechanism by which that intelligence becomes economically useful.
+
+---
+
+# Public representation and experience (proposed)
+
+When governed observations become available, Today, Explore, Evolution and
+Evidence may connect economic reality, digital representation, demand,
+opportunity, temporal memory and explanation. Search, generative, social/public
+conversation and public reputation/experience remain distinct observation
+families. This is future product semantics, not a claim that any surface or
+feature is implemented.
+
+Conceptually, Today may surface recent representation or experience changes;
+Explore may inspect sources, recurring themes and affected products/locations;
+Evolution may compare compatible periods and show instrument discontinuities;
+Evidence may trace each derived signal to permitted observations and source
+references. These are product-area responsibilities, not a committed
+navigation or screen design.
+
+Public-experience projections may explain recurring praise, issues, themes,
+products/locations, company responses, anomalies and representation/experience
+gaps. Every percentage is bounded to eligible observed reviews and a period;
+source population, sample, classification coverage, uncertainty, instrument
+and method version remain inspectable. A platform rating is shown as
+source-reported, and a platform verification marker does not establish
+authenticity. Reviews, classifications and gaps do not become FAXT.
+
+Ask AXENT may answer questions such as “What are customers complaining about?”,
+“Which products are involved?”, “Which sources and reviews support this?”,
+“How did public experience change?”, “What was observed versus classified?”,
+“How was this metric calculated?”, “Could this indicate a market need?” and
+“What remains uncertain?”. It must trace answers to permitted source
+references, observation times, instruments, classification versions and
+deterministic formulas. It cannot invent reviews, decide reviewer honesty,
+declare fraud, imply that a response solved a problem, or turn a review sample
+into all customers. Further questions may ask why reputation changed, which
+issues became more frequent, how experience compares with competitors, whether
+a change is broad or source-specific, what remains a reviewer claim rather than
+a business fact, and which part was evaluator-classified. Every answer remains
+bounded to the observed sample and cannot assert customer-population
+representativeness without independent evidence.
+
+Public observations may be reused across relevant Xignals without being
+counted more than once. Private first-party analytics remain tenant-private.
+Review history, removal/currentness, raw-text rights, personal-data
+minimization, subject resolution and uncertainty stay visible in the design
+contract. No review response automation, reviewer profiles, CRM workflows,
+provider integrations, UI implementation or score is authorized here.

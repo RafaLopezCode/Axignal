@@ -21,6 +21,8 @@ Constitution (`.specify/memory/constitution.md`).
 | [ADR-0011](ADR-0011-jev-structured-decision-reconciliation.md) | Jev Structured Decision Reconciliation (**ACCEPTED EXPERIMENTAL ARCHITECTURE**) | §14, §15, §19, §30, §46 |
 | [ADR-0012](ADR-0012-economic-opportunity-intelligence.md) | Economic Opportunity Intelligence Is a Core AXIGNAL Capability (**ACCEPTED PRODUCT DOCTRINE**) | §46, §53 |
 | [ADR-0013](ADR-0013-compounding-economic-intelligence.md) | AXIGNAL Compounds Governed Economic Intelligence (**ACCEPTED PRODUCT DOCTRINE**) | §46, §53 |
+| [ADR-0014](ADR-0014-digital-representation-intelligence.md) | Digital Representation Intelligence Is a Core AXIGNAL Observation Capability (**ACCEPTED PRODUCT DOCTRINE**) | §22, §46, §54 |
+| [ADR-0015](ADR-0015-digital-measurement-instruments-and-observation-reuse.md) | Digital Measurements Are Instrument-Bound Reusable Observations (**ACCEPTED MEASUREMENT DOCTRINE**) | §20, §46, §53–§54 |
 
 ## Adding an ADR
 

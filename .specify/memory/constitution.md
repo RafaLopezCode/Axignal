@@ -177,6 +177,17 @@ verification, reevaluation or explicit uncertainty. Upstream changes must
 support downstream reevaluation without erasing history. Subscriber activity
 may direct attention, never canonical conclusions. (MASTER §5, §23, §53)
 
+### XVIII. Digital Representation Is Condition-Bound Observation
+
+Digital surfaces and public experience are observations under identified
+instruments, versions, conditions and time; they are not economic reality or
+canonical truth. Mentions are not citations, citations are not endorsements,
+reviews and reviewer claims are not FAXTs, and platform ratings or verification
+are not AXIGNAL judgments. Private first-party analytics remain tenant-private.
+Representation gaps and experience signals are explainable derivations, not
+facts. No universal digital score, source integration or runtime is authorized
+by this doctrine. (MASTER §54)
+
 ## Canonical Dependency Direction (enforced by Architecture Guard)
 
 ```

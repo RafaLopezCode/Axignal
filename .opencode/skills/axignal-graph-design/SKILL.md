@@ -46,6 +46,14 @@ truth, or a production dependency by virtue of this skill.
 - Make surprising or anomalous representation inspectable, not silently
   suppressed. “Why am I seeing this?” must trace persisted derivation, FAXTs,
   evidence, source lineage, and observation/currentness; do not invent narrative.
+- Keep search, generative, social/public-conversation and public
+  reputation/experience projections distinct. A review is an observed claim,
+  not business truth; a source rating is not an AXIGNAL judgment; an anomaly is
+  not fraud. RepresentationGap and ExperienceSignal are derived and must expose
+  source, instrument/version, period, sample, coverage and uncertainty.
+- Do not naively compare ratings across sources, double-count syndicated
+  observations, project product/location experience onto an entire company, or
+  let private first-party analytics enter public AXIGLAND projections.
 - Leave a REQUEST REVIEW seam. Review does not grant graph editing or canonical
   truth authority; disputed does not mean false. Review states may include
   UPHELD, REVISED, RETIRED, or UNRESOLVED under the separate review policy.
