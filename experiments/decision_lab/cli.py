@@ -4,17 +4,14 @@ from __future__ import annotations
 
 import argparse
 import json
-import os
 import subprocess
 import sys
 from pathlib import Path
 from typing import Any
 
 from experiments.decision_lab import __version__ as LAB_VERSION
-from experiments.decision_lab.answerability_vnext import validate_decision_request
 from experiments.decision_lab.artifacts import read_result, write_result
 from experiments.decision_lab.comparison import compare_records
-from experiments.decision_lab.contracts_vnext import DECISION_CONTRACTS
 from experiments.decision_lab.experiment import estimate_budget, manifest_digest
 from experiments.decision_lab.judgments import (
     compose_relationship_decomposition,
@@ -176,18 +173,10 @@ def _run_live(
         for variant in definition["variants"]:
             state_payload = variant_states[variant["variant_id"]][case_index]
             for question_id in variant["question_ids"]:
-                if question_id not in DECISION_CONTRACTS:
-                    raise LabError(
-                        "live evaluation requires a registered V-next DecisionContract; "
-                        "historical V0.1 questions are replay-only"
-                    )
-                answerability = validate_decision_request(question_id, state_payload)
-                if not answerability.answerable:
-                    raise LabError(
-                        "live evaluation refused by AXIGNAL AnswerabilityGate: "
-                        + ",".join(answerability.reasons)
-                    )
-    if not api_key and not os.environ.get("TYPESAFE_API_KEY"):
+                from experiments.decision_lab.requests_vnext import prepare_provider_request
+
+                prepare_provider_request(question_id, state_payload, grammar[question_id], {})
+    if not api_key:
         raise LabError("TYPESAFE_API_KEY is unavailable; no request was made")
     plan = estimate_budget(
         definition,
@@ -215,9 +204,31 @@ def _run_live(
                 state_payload = variant_states[variant["variant_id"]][case_index]
                 compiled = compile_state(state_payload)
                 requested_model = variant.get("requested_model", definition["requested_model"])
-                judgments, failure, safe_meta = evaluator.evaluate(
-                    compiled.payload, questions, model=requested_model
+                from experiments.decision_lab.requests_vnext import (
+                    DeterministicDecisionResult,
+                    ValidatedProviderRequest,
+                    prepare_provider_request,
                 )
+
+                judgments = []
+                failures = []
+                safe_meta = {}
+                for question in questions:
+                    prepared = prepare_provider_request(
+                        question["question_id"], state_payload, question, {}
+                    )
+                    if isinstance(prepared, DeterministicDecisionResult):
+                        raise LabError(
+                            "V0.1 live runner cannot record V-next deterministic results; replay only"
+                        )
+                    if not isinstance(prepared, ValidatedProviderRequest):
+                        raise LabError("pre-provider gate returned an invalid request type")
+                    result, failure, metadata = evaluator.evaluate(prepared, model=requested_model)
+                    judgments.extend(result)
+                    if failure is not None:
+                        failures.append(failure)
+                    safe_meta.update(metadata)
+                failure = failures[0] if failures else None
                 compositions = [
                     {
                         "question_id": item.question_id,

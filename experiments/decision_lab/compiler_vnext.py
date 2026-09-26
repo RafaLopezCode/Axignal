@@ -39,11 +39,22 @@ def assemble_state(
 ) -> tuple[dict[str, Any], tuple[str, ...]]:
     """Resolve explicit evidence references; missing records never become text."""
     source = json.loads(json.dumps(source_state, ensure_ascii=False))
+    has_refs = "evidence_refs" in source
+    has_legacy_ids = "evidence_ids" in source
     refs = source.pop("evidence_refs", None)
-    if refs is None:
+    legacy_ids = source.pop("evidence_ids", None)
+    if has_refs and has_legacy_ids:
+        raise LabError("evidence_ids and evidence_refs cannot both be declared")
+    if has_legacy_ids:
+        refs = legacy_ids
+    if not has_refs and not has_legacy_ids:
         return source, ()
-    if not isinstance(refs, list) or any(not isinstance(item, str) or not item for item in refs):
+    if not isinstance(refs, list) or any(
+        not isinstance(item, str) or not item.strip() for item in refs
+    ):
         raise LabError("evidence_refs must be a list of non-empty identifiers")
+    if len(refs) != len(set(refs)):
+        raise LabError("evidence_refs cannot contain duplicate identifiers")
     assembled: list[dict[str, Any]] = []
     unresolved: list[str] = []
     for evidence_id in refs:
@@ -51,7 +62,12 @@ def assemble_state(
         if record is None:
             unresolved.append(evidence_id)
             continue
-        item = json.loads(json.dumps(record, ensure_ascii=False))
+        if not isinstance(record, dict):
+            raise LabError(f"evidence catalog record must be an object: {evidence_id}")
+        try:
+            item = json.loads(json.dumps(record, ensure_ascii=False, allow_nan=False))
+        except (TypeError, ValueError) as exc:
+            raise LabError(f"evidence catalog record is not JSON-safe: {evidence_id}") from exc
         item["evidence_id"] = evidence_id
         assembled.append(item)
     source["evidence"] = assembled

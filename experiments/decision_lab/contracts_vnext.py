@@ -6,7 +6,9 @@ do not determine whether supplied evidence is true or whether a model is right.
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+import hashlib
+import json
+from dataclasses import dataclass, replace
 from enum import StrEnum
 from typing import Any
 
@@ -77,6 +79,7 @@ class DecisionContract:
     authority_boundary: str
     evaluation_status: str
     information_requirements: tuple[str, ...]
+    question_semantic_fingerprint: str = ""
 
 
 def _r(
@@ -269,6 +272,52 @@ DECISION_CONTRACTS: dict[str, DecisionContract] = {
 }
 
 
+QUESTION_SEMANTIC_FINGERPRINTS = {
+    "CES.SUPPORT.vNext": "bdf8d25fce3fa66e5dd71e512085fcd81130109a792c7c7954681408f9c9f35b",
+    "CES.SUPPORT_N.vNext": "1718c364c46611b606241c84056ca18515e6c3c9dae7140cb9831516ec676314",
+    "CES.SUPPORT_SCORE.vNext": "259d21e39c36356e6bca83170a473939340a9a1864090930ab10a0e02bc1605a",
+    "ENT.ALIGN.vNext": "6d6406a2fba11d83b3f2a48a53226f73a38cc348a41450b1eca05ade2a93d865",
+    "ENT.MATCH_N.vNext": "490100cae910614c75bdc70dabd37531104a350a424d3691aa64fdb98730892e",
+    "ENT.MATCH_SCORE.vNext": "20443d5bd749c8bf958d5a3df6b8d3a5215e12dd9767c8a1dd0ec73fee9af881",
+    "REL.EXISTENCE.vNext": "6bf7741af63d21d6736c81ebb6240abcbe15ab3d097875506dbac220a0684508",
+    "REL.TYPE.vNext": "86adf61d6297d185f09f4a316d8102340e5007ca22b9c89b316daa9b7238ddb8",
+    "REL.TIME.vNext": "0147b19bc28347fad90b947aea748964f315eb2df86c8ecbc4d3602b74836025",
+    "REL.CONTRADICTION.vNext": "cdef3e34fb807be837971f69ad1caa71dc217e6f5a0980f9a43c111af9654aa9",
+    "CES.SUPPORT.vNext.wording-b": "b00481c397fe5576e4f3e579fc994e1c52e4a7aaf51b7115f778f9d6074adf8d",
+    "REL.COMPOUND.vNext": "3ad2e1d73890b952ff6a77171680fdfd1ee37862b38573f2d1b8e7c1452568d6",
+}
+DECISION_CONTRACTS = {
+    question_id: replace(
+        contract, question_semantic_fingerprint=QUESTION_SEMANTIC_FINGERPRINTS[question_id]
+    )
+    for question_id, contract in DECISION_CONTRACTS.items()
+}
+
+_SEMANTIC_QUESTION_FIELDS = (
+    "question_id",
+    "version",
+    "family",
+    "primitive",
+    "semantic_target",
+    "instructions",
+    "state_contract",
+    "information_requirements",
+    "uncertainty_semantics",
+    "composition_semantics",
+    "criteria",
+)
+
+
+def canonical_question_definition(definition: dict[str, Any]) -> str:
+    """Serialize provider-visible question meaning with stable object-key order."""
+    semantic = {key: definition.get(key) for key in _SEMANTIC_QUESTION_FIELDS}
+    return json.dumps(semantic, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
+
+
+def question_semantic_fingerprint(definition: dict[str, Any]) -> str:
+    return hashlib.sha256(canonical_question_definition(definition).encode("utf-8")).hexdigest()
+
+
 def contract_errors(contract: DecisionContract) -> list[str]:
     """Validate stable contract declarations without judging semantic truth."""
     errors: list[str] = []
@@ -290,6 +339,8 @@ def contract_errors(contract: DecisionContract) -> list[str]:
         errors.append("INFORMATION_REQUIREMENTS_MISMATCH")
     if not contract.answer_space or len(set(contract.answer_space)) != len(contract.answer_space):
         errors.append("INVALID_ANSWER_SPACE")
+    if len(contract.question_semantic_fingerprint) != 64:
+        errors.append("QUESTION_SEMANTIC_FINGERPRINT_MISSING")
     if contract.primitive is Primitive.CHOICE and len(contract.answer_space) < 2:
         errors.append("INVALID_CHOICE_OPTIONS")
     if contract.primitive is Primitive.SCORE and len(contract.answer_space) < 2:
@@ -379,6 +430,8 @@ def validate_question_binding(
     if contract is None:
         return ["INVALID_DECISION_CONTRACT"]
     errors: list[str] = []
+    if question_semantic_fingerprint(definition) != contract.question_semantic_fingerprint:
+        errors.append("QUESTION_SEMANTIC_FINGERPRINT_MISMATCH")
     if definition.get("question_id") != contract.question_id:
         errors.append("QUESTION_ID_MISMATCH")
     if definition.get("version") != contract.question_version:
@@ -486,13 +539,24 @@ def validate_grammar_vnext(document: dict[str, Any]) -> list[str]:
             f"{question_id}:{error}"
             for error in validate_primitive_contract(primitive, item.get("criteria", {}))
         )
+        expected_fingerprint = QUESTION_SEMANTIC_FINGERPRINTS.get(question_id)
+        if expected_fingerprint is None:
+            errors.append(f"QUESTION_SEMANTIC_FINGERPRINT_MISSING:{question_id}")
+        elif question_semantic_fingerprint(item) != expected_fingerprint:
+            errors.append(f"QUESTION_SEMANTIC_FINGERPRINT_MISMATCH:{question_id}")
+        registered = DECISION_CONTRACTS.get(question_id)
+        if (
+            registered is not None
+            and registered.question_semantic_fingerprint != expected_fingerprint
+        ):
+            errors.append(f"CONTRACT_FINGERPRINT_REGISTRY_MISMATCH:{question_id}")
     if len(questions) != 12:
         errors.append("EXPECTED_12_AUDITED_QUESTIONS")
     return errors
 
 
 def deterministic_entity_identifier_result(state: dict[str, Any]) -> str | None:
-    """Return an exact shared-identifier result before any semantic evaluator."""
+    """Use only verified, checksum-valid LEIs under the contract's GLEIF rule."""
     entities = state.get("entities")
     if not isinstance(entities, dict):
         return None
@@ -504,13 +568,29 @@ def deterministic_entity_identifier_result(state: dict[str, Any]) -> str | None:
     second_id = second.get("canonical_identifier")
     if not isinstance(first_id, dict) or not isinstance(second_id, dict):
         return None
-    scheme = first_id.get("scheme")
-    value = first_id.get("value")
-    if not isinstance(scheme, str) or not scheme or not isinstance(value, str) or not value:
+    if not _validated_gleif_lei(first_id) or not _validated_gleif_lei(second_id):
         return None
-    if first_id == second_id:
+    if first_id["value"] == second_id["value"]:
         return "SAME_LEGAL_ENTITY"
-    return None
+    return "DISTINCT_ENTITY"
+
+
+def _validated_gleif_lei(identifier: dict[str, Any]) -> bool:
+    """Validate the LEI namespace declaration and ISO 17442 check digits."""
+    value = identifier.get("value")
+    if (
+        identifier.get("scheme") != "LEI"
+        or identifier.get("authority") != "GLEIF"
+        or identifier.get("validation_status") != "VERIFIED"
+        or not isinstance(value, str)
+        or len(value) != 20
+        or not value.isascii()
+        or not value.isalnum()
+        or not value.isupper()
+    ):
+        return False
+    expanded = "".join(str(ord(char) - 55) if char.isalpha() else char for char in value)
+    return int(expanded) % 97 == 1
 
 
 def missingness(value: Any) -> Missingness:

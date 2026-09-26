@@ -124,44 +124,30 @@ def test_adapter_preserves_reported_usage_without_synthesizing_fields(
     fake_sdk.TypeSafeClient = FakeClient  # type: ignore[attr-defined]
     monkeypatch.setitem(sys.modules, "typesafe_sdk", fake_sdk)
 
-    judgments, failure, metadata = TypeSafeLabEvaluator(api_key="test-only").evaluate(
-        {
-            "state_contract_version": "claim-evidence.vNext.1",
-            "claim": {"proposition": "Fictional entity supplies Q."},
-            "evidence": [
-                {
-                    "content": "Fictional catalogue lists Q.",
-                    "provenance": {"source_ref": "synthetic://adapter-test"},
-                }
-            ],
-        },
-        [
+    question = next(
+        item
+        for item in _load(LAB_ROOT / "grammar/vnext/grammar.json")["questions"]
+        if item["question_id"] == qid
+    )
+    state = {
+        "state_contract_version": "claim-evidence.vNext.1",
+        "claim": {"proposition": "Fictional entity supplies Q."},
+        "evidence": [
             {
-                "question_id": qid,
-                "version": "vNext.1",
-                "family": "CLAIM_EVIDENCE_SUPPORT",
-                "primitive": "CHOICE",
-                "semantic_target": (
-                    "Assess the explicit claim proposition against all supplied semantic evidence passages."
-                ),
-                "instructions": "synthetic test question",
-                "criteria": {
-                    "options": [
-                        {"id": "SUPPORTED", "meaning": "Evidence supports the claim."},
-                        {"id": "PARTIAL", "meaning": "Evidence supports part of the claim."},
-                        {
-                            "id": "NOT_SUPPORTED",
-                            "meaning": "Relevant evidence does not support it.",
-                        },
-                        {"id": "NO_EVIDENCE", "meaning": "No relevant evidence is available."},
-                        {"id": "CONFLICTING", "meaning": "Material evidence conflicts."},
-                        {"id": "UNRESOLVED", "meaning": "The answer remains unresolved."},
-                    ],
-                    "mutually_exclusive": True,
-                    "coverage": "EXHAUSTIVE_WITH_UNRESOLVED",
-                },
+                "content": "Fictional catalogue lists Q.",
+                "provenance": {"source_ref": "synthetic://adapter-test"},
             }
         ],
+    }
+    from experiments.decision_lab.requests_vnext import (
+        ValidatedProviderRequest,
+        prepare_provider_request,
+    )
+
+    request = prepare_provider_request(qid, state, question, {})
+    assert isinstance(request, ValidatedProviderRequest)
+    judgments, failure, metadata = TypeSafeLabEvaluator(api_key="test-only").evaluate(
+        request,
         model="jev-1.13.0",
     )
 

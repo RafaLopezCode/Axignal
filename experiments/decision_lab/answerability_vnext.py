@@ -50,6 +50,13 @@ def validate_answerability(
     """Return information sufficiency only; this is not a truth/quality score."""
     errors = contract_errors(contract)
     reasons = set(errors)
+    unresolved_refs = state.get("unresolved_evidence_refs")
+    unresolved_input_refs = any(key in state for key in ("evidence_refs", "evidence_ids"))
+    unresolved_results = "unresolved_evidence_refs" in state and (
+        not isinstance(unresolved_refs, list) or bool(unresolved_refs)
+    )
+    if unresolved_results or unresolved_input_refs:
+        reasons.add("UNRESOLVED_REFERENCE")
     state_contract = STATE_CONTRACTS.get(contract.family)
     if state_contract is None:
         reasons.add("INVALID_STATE_CONTRACT")

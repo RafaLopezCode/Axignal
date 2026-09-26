@@ -52,6 +52,7 @@ def quality_eligible_cases(cases: list[dict[str, Any]]) -> list[dict[str, Any]]:
         case
         for case in cases
         if case.get("answerability", {}).get("status") == "ANSWERABLE"
+        and case.get("result_source", "PROVIDER_JUDGMENT") == "PROVIDER_JUDGMENT"
         and case.get("expected_outcome") is not None
         and case.get("label_provenance")
         and case.get("raw_judgment", {}).get("status") == "ANSWERED"

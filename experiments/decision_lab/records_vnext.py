@@ -28,6 +28,7 @@ class DecisionCaseRecord:
     composed_result: dict[str, Any] | None
     metrics: dict[str, Any]
     failure_attribution: FailureAttribution | None
+    result_source: str = "PROVIDER_JUDGMENT"
 
     def validate(self) -> tuple[str, ...]:
         errors: list[str] = []
@@ -45,6 +46,12 @@ class DecisionCaseRecord:
             errors.append("VERSION_BINDING_MISSING")
         if self.answerability_status not in {"ANSWERABLE", "NOT_ANSWERABLE"}:
             errors.append("INVALID_ANSWERABILITY_STATUS")
+        if self.result_source not in {"PROVIDER_JUDGMENT", "DETERMINISTIC_RESULT"}:
+            errors.append("INVALID_RESULT_SOURCE")
+        if self.result_source == "DETERMINISTIC_RESULT" and self.raw_judgment is not None:
+            errors.append("DETERMINISTIC_RESULT_MUST_NOT_BE_PROVIDER_JUDGMENT")
+        if self.result_source == "DETERMINISTIC_RESULT" and self.metrics:
+            errors.append("DETERMINISTIC_RESULT_EXCLUDED_FROM_PROVIDER_METRICS")
         if self.answerability_status == "NOT_ANSWERABLE" and (
             self.raw_judgment is not None or self.composed_result is not None
         ):

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import ast
 import hashlib
+import json
 from pathlib import Path
 
 import pytest
@@ -22,6 +23,7 @@ from experiments.decision_lab.contracts_vnext import (
     deterministic_entity_identifier_result,
     missingness,
     path_value,
+    question_semantic_fingerprint,
     validate_grammar_vnext,
     validate_primitive_contract,
     validate_question_binding,
@@ -37,6 +39,11 @@ from experiments.decision_lab.pilot import run_experiment as run_historical_expe
 from experiments.decision_lab.pilot import run_smoke as run_historical_smoke
 from experiments.decision_lab.providers.typesafe import TypeSafeLabEvaluator
 from experiments.decision_lab.records_vnext import DecisionCaseRecord
+from experiments.decision_lab.requests_vnext import (
+    DeterministicDecisionResult,
+    ValidatedProviderRequest,
+    prepare_provider_request,
+)
 from experiments.decision_lab.validity_vnext import (
     VALIDITY_GATES,
     quality_eligible_cases,
@@ -44,6 +51,13 @@ from experiments.decision_lab.validity_vnext import (
 )
 
 ROOT = Path(__file__).resolve().parents[2]
+
+
+def vnext_question(question_id: str) -> dict[str, object]:
+    document = json.loads(
+        (ROOT / "experiments/decision_lab/grammar/vnext/grammar.json").read_text()
+    )
+    return next(item for item in document["questions"] if item["question_id"] == question_id)
 
 
 def claim_state() -> dict[str, object]:
@@ -182,8 +196,24 @@ def test_entity_alignment_requires_two_entity_records_and_semantic_evidence() ->
         deterministic_entity_identifier_result(
             {
                 "entities": {
-                    "a": {"name": "A", "canonical_identifier": {"scheme": "LEI", "value": "x"}},
-                    "b": {"name": "A Ltd", "canonical_identifier": {"scheme": "LEI", "value": "x"}},
+                    "a": {
+                        "name": "A",
+                        "canonical_identifier": {
+                            "scheme": "LEI",
+                            "authority": "GLEIF",
+                            "validation_status": "VERIFIED",
+                            "value": "5493001KJTIIGC8Y1R12",
+                        },
+                    },
+                    "b": {
+                        "name": "A Ltd",
+                        "canonical_identifier": {
+                            "scheme": "LEI",
+                            "authority": "GLEIF",
+                            "validation_status": "VERIFIED",
+                            "value": "5493001KJTIIGC8Y1R12",
+                        },
+                    },
                 }
             }
         )
@@ -260,28 +290,37 @@ def test_choice_score_and_noul_contracts_validate_their_own_semantics() -> None:
 
 
 def test_provider_question_binding_rejects_answer_space_and_noul_argument_drift() -> None:
-    claim_question = {
-        "question_id": "CES.SUPPORT.vNext",
-        "version": "vNext.1",
-        "family": "CLAIM_EVIDENCE_SUPPORT",
-        "primitive": "CHOICE",
-        "semantic_target": (
-            "Assess the explicit claim proposition against all supplied semantic evidence passages."
-        ),
-        "criteria": {
-            "options": [
-                {"id": "SUPPORTED", "meaning": "Supports."},
-                {"id": "PARTIAL", "meaning": "Partially supports."},
-                {"id": "NOT_SUPPORTED", "meaning": "Does not support."},
-                {"id": "NO_EVIDENCE", "meaning": "No evidence."},
-                {"id": "CONFLICTING", "meaning": "Conflicts."},
-                {"id": "UNRESOLVED", "meaning": "Unresolved."},
-            ],
-            "mutually_exclusive": True,
-            "coverage": "EXHAUSTIVE_WITH_UNRESOLVED",
-        },
-    }
+    claim_question = vnext_question("CES.SUPPORT.vNext")
     assert validate_question_binding("CES.SUPPORT.vNext", claim_question, claim_state()) == []
+    claim_question["instructions"] = "Altered instructions"
+    assert "QUESTION_SEMANTIC_FINGERPRINT_MISMATCH" in validate_question_binding(
+        "CES.SUPPORT.vNext", claim_question, claim_state()
+    )
+    claim_question = vnext_question("CES.SUPPORT.vNext")
+    claim_question["criteria"]["options"][0]["meaning"] = "Changed meaning; same option ID."
+    assert "QUESTION_SEMANTIC_FINGERPRINT_MISMATCH" in validate_question_binding(
+        "CES.SUPPORT.vNext", claim_question, claim_state()
+    )
+    claim_question = vnext_question("CES.SUPPORT.vNext")
+    claim_question["criteria"]["options"] = list(reversed(claim_question["criteria"]["options"]))
+    assert "QUESTION_SEMANTIC_FINGERPRINT_MISMATCH" in validate_question_binding(
+        "CES.SUPPORT.vNext", claim_question, claim_state()
+    )
+    claim_question = vnext_question("CES.SUPPORT.vNext")
+    claim_question["primitive"] = "SCORE"
+    assert "QUESTION_SEMANTIC_FINGERPRINT_MISMATCH" in validate_question_binding(
+        "CES.SUPPORT.vNext", claim_question, claim_state()
+    )
+    claim_question = vnext_question("CES.SUPPORT.vNext")
+    claim_question["semantic_target"] = "Different target"
+    assert "QUESTION_SEMANTIC_FINGERPRINT_MISMATCH" in validate_question_binding(
+        "CES.SUPPORT.vNext", claim_question, claim_state()
+    )
+    claim_question = vnext_question("CES.SUPPORT.vNext")
+    claim_question["version"] = "vNext.2"
+    assert "QUESTION_SEMANTIC_FINGERPRINT_MISMATCH" in validate_question_binding(
+        "CES.SUPPORT.vNext", claim_question, claim_state()
+    )
     claim_question["criteria"]["options"] = claim_question["criteria"]["options"][:-1]
     assert "ANSWER_SPACE_CONTRACT_MISMATCH" in validate_question_binding(
         "CES.SUPPORT.vNext", claim_question, claim_state()
@@ -296,33 +335,324 @@ def test_provider_question_binding_rejects_answer_space_and_noul_argument_drift(
         },
         "evidence": [{"content": "A supplies B.", "provenance": {"source_ref": "synthetic://r1"}}],
     }
-    relationship_question = {
-        "question_id": "REL.EXISTENCE.vNext",
-        "version": "vNext.1",
-        "family": "ECONOMIC_RELATIONSHIP",
-        "primitive": "NOUL",
-        "semantic_target": (
-            "Judge whether the explicit directed or undirected relation proposition between two endpoints is evidenced."
-        ),
-        "criteria": {
-            "proposition": (
-                "Judge whether the explicit directed or undirected relation proposition between two endpoints is evidenced."
-            ),
-            "required_arguments": [
-                "relationship.endpoints",
-                "relationship.proposition",
-                "evidence[*]",
-            ],
-            "probability_semantics": "Probability of the stated proposition only; not truth or confidence.",
-        },
-    }
+    relationship_question = vnext_question("REL.EXISTENCE.vNext")
     assert (
         validate_question_binding("REL.EXISTENCE.vNext", relationship_question, relationship_state)
         == []
     )
+    relationship_question["criteria"]["proposition"] = "Changed Noul proposition"
+    assert "QUESTION_SEMANTIC_FINGERPRINT_MISMATCH" in validate_question_binding(
+        "REL.EXISTENCE.vNext", relationship_question, relationship_state
+    )
+    relationship_question = vnext_question("REL.EXISTENCE.vNext")
     relationship_question["criteria"]["required_arguments"] = ["unmodeled.secret"]
     assert "NOUL_ARGUMENT_NOT_IN_STATE_CONTRACT" in validate_question_binding(
         "REL.EXISTENCE.vNext", relationship_question, relationship_state
+    )
+
+
+def test_question_fingerprint_is_stable_and_binds_score_and_noul_semantics() -> None:
+    base = vnext_question("CES.SUPPORT.vNext")
+    reordered = {key: base[key] for key in reversed(list(base))}
+    assert question_semantic_fingerprint(base) == question_semantic_fingerprint(reordered)
+    score = json.loads((ROOT / "experiments/decision_lab/grammar/vnext/grammar.json").read_text())[
+        "questions"
+    ]
+    score_question = next(
+        item for item in score if item["question_id"] == "CES.SUPPORT_SCORE.vNext"
+    )
+    original = question_semantic_fingerprint(score_question)
+    score_question["criteria"]["levels"].reverse()
+    assert question_semantic_fingerprint(score_question) != original
+    score_question["criteria"]["levels"].reverse()
+    score_question["criteria"]["levels"][0]["meaning"] = "Changed meaning"
+    assert question_semantic_fingerprint(score_question) != original
+    grammar = json.loads((ROOT / "experiments/decision_lab/grammar/vnext/grammar.json").read_text())
+    score_definition = next(
+        item for item in grammar["questions"] if item["question_id"] == "CES.SUPPORT_SCORE.vNext"
+    )
+    score_definition["criteria"]["levels"][0]["meaning"] = "Changed meaning"
+    assert "QUESTION_SEMANTIC_FINGERPRINT_MISMATCH:CES.SUPPORT_SCORE.vNext" in (
+        validate_grammar_vnext(grammar)
+    )
+    noul = vnext_question("REL.EXISTENCE.vNext")
+    original_noul = question_semantic_fingerprint(noul)
+    noul["criteria"]["required_arguments"].pop()
+    assert question_semantic_fingerprint(noul) != original_noul
+
+
+def test_authoritative_gate_rejects_unresolved_empty_unknown_and_legacy_refs() -> None:
+    question = vnext_question("CES.SUPPORT.vNext")
+    base = claim_state()
+    base.pop("evidence")
+    base["evidence_refs"] = ["e1"]
+    invalid = [
+        (base, {}),
+        (base, {"e1": {"content": "", "provenance": {"source_ref": "synthetic://empty"}}}),
+        (
+            base,
+            {
+                "e1": {
+                    "status": "UNKNOWN",
+                    "provenance": {"source_ref": "synthetic://unknown"},
+                }
+            },
+        ),
+    ]
+    for state, catalog in invalid:
+        with pytest.raises(LabError):
+            prepare_provider_request("CES.SUPPORT.vNext", state, question, catalog)
+
+    syntactic_only = claim_state()
+    syntactic_only["evidence"] = [
+        {"evidence_id": "present-id", "provenance": {"source_ref": "synthetic://no-content"}}
+    ]
+    with pytest.raises(LabError, match="NOT_ANSWERABLE"):
+        prepare_provider_request("CES.SUPPORT.vNext", syntactic_only, question, {})
+
+    legacy = claim_state()
+    legacy.pop("evidence")
+    legacy["evidence_ids"] = ["fake"]
+    with pytest.raises(LabError, match="REFERENCE_UNRESOLVED"):
+        prepare_provider_request("CES.SUPPORT.vNext", legacy, question, {})
+    direct = validate_decision_request(
+        "CES.SUPPORT.vNext",
+        {**claim_state(), "evidence_ids": ["fake"]},
+    )
+    assert direct.status == "NOT_ANSWERABLE"
+    assert "UNRESOLVED_REFERENCE" in direct.reasons
+    preserved_unknown = compile_decision_state(
+        "CES.SUPPORT.vNext",
+        {
+            **claim_state(),
+            "evidence": [
+                {
+                    "status": "UNKNOWN",
+                    "provenance": {"source_ref": "synthetic://unknown"},
+                }
+            ],
+        },
+    )
+    assert preserved_unknown.payload["evidence"][0]["status"] == "UNKNOWN"
+    assert preserved_unknown.answerability.status == "NOT_ANSWERABLE"
+
+
+def test_resolved_references_create_request_and_payload_cannot_mutate_silently() -> None:
+    question = vnext_question("CES.SUPPORT.vNext")
+    state = claim_state()
+    state.pop("evidence")
+    state["evidence_refs"] = ["e1"]
+    catalog = {
+        "e1": {
+            "content": "The public catalogue lists component Q.",
+            "provenance": {"source_ref": "synthetic://resolved"},
+        }
+    }
+    request = prepare_provider_request("CES.SUPPORT.vNext", state, question, catalog)
+    assert isinstance(request, ValidatedProviderRequest)
+    state["claim"]["proposition"] = "mutated after validation"
+    question["instructions"] = "mutated after validation"
+    payload, bound_question = request.provider_payload()
+    assert payload["claim"]["proposition"] == "The fictional entity supplies component Q."
+    assert bound_question["instructions"] != "mutated after validation"
+    object.__setattr__(request, "_state_json", request._state_json + " ")
+    with pytest.raises(LabError, match="integrity check failed"):
+        request.provider_payload()
+
+
+def test_direct_raw_adapter_call_fails_before_fake_sdk(monkeypatch: pytest.MonkeyPatch) -> None:
+    import sys
+    from types import ModuleType
+
+    observed = {"calls": 0}
+
+    class FakeClient:
+        def __init__(self, **_kwargs: object) -> None:
+            observed["calls"] += 1
+
+    fake = ModuleType("typesafe_sdk")
+    fake.TypeSafeClient = FakeClient  # type: ignore[attr-defined]
+    monkeypatch.setitem(sys.modules, "typesafe_sdk", fake)
+    evaluator = TypeSafeLabEvaluator(api_key="offline-test-only")
+    with pytest.raises(LabError, match="requires ValidatedProviderRequest"):
+        evaluator.evaluate(claim_state(), model="fake-model")  # type: ignore[arg-type]
+    assert observed["calls"] == 0
+
+    class OverriddenRequest(ValidatedProviderRequest):
+        def provider_payload(self) -> tuple[dict[str, object], dict[str, object]]:
+            return claim_state(), vnext_question("CES.SUPPORT.vNext")
+
+    forged = object.__new__(OverriddenRequest)
+    with pytest.raises(LabError, match="requires ValidatedProviderRequest"):
+        evaluator.evaluate(forged, model="fake-model")
+    assert observed["calls"] == 0
+
+
+def test_provider_request_constructor_cannot_be_forged_with_boolean_metadata() -> None:
+    with pytest.raises(LabError, match="created by the authoritative gate"):
+        ValidatedProviderRequest("{}", "{}", "0" * 64, "0" * 64, _seal=True)  # type: ignore[arg-type]
+
+
+def test_exact_verified_lei_short_circuits_and_has_no_model_provenance() -> None:
+    state = {
+        "state_contract_version": "entity-alignment.vNext.1",
+        "entities": {
+            "a": {
+                "name": "A",
+                "canonical_identifier": {
+                    "scheme": "LEI",
+                    "authority": "GLEIF",
+                    "validation_status": "VERIFIED",
+                    "value": "5493001KJTIIGC8Y1R12",
+                },
+            },
+            "b": {
+                "name": "A Ltd",
+                "canonical_identifier": {
+                    "scheme": "LEI",
+                    "authority": "GLEIF",
+                    "validation_status": "VERIFIED",
+                    "value": "5493001KJTIIGC8Y1R12",
+                },
+            },
+        },
+        "evidence": [
+            {
+                "content": "Synthetic identity evidence.",
+                "provenance": {"source_ref": "synthetic://identity"},
+            }
+        ],
+    }
+    result = prepare_provider_request(
+        "ENT.ALIGN.vNext", state, vnext_question("ENT.ALIGN.vNext"), {}
+    )
+    assert isinstance(result, DeterministicDecisionResult)
+    assert result.result == "SAME_LEGAL_ENTITY"
+    assert result.rule_id == "entity-alignment.exact-verified-lei.v1"
+    assert result.identifier_namespace == "GLEIF:LEI"
+    assert "confidence" not in result.to_dict()
+    assert "model" not in result.to_dict()
+    assert (
+        quality_eligible_cases(
+            [
+                {
+                    "case_id": "deterministic",
+                    "answerability": {"status": "ANSWERABLE"},
+                    "result_source": "DETERMINISTIC_RESULT",
+                    "expected_outcome": "SAME_LEGAL_ENTITY",
+                    "label_provenance": "synthetic",
+                    "raw_judgment": {"status": "ANSWERED"},
+                }
+            ]
+        )
+        == []
+    )
+    state["entities"]["b"]["canonical_identifier"]["value"] = "529900T8BM49AURSDO55"
+    different = prepare_provider_request(
+        "ENT.ALIGN.vNext", state, vnext_question("ENT.ALIGN.vNext"), {}
+    )
+    assert isinstance(different, DeterministicDecisionResult)
+    assert different.result == "DISTINCT_ENTITY"
+
+
+def test_unverified_or_different_identifier_does_not_claim_deterministic_identity() -> None:
+    question = vnext_question("ENT.ALIGN.vNext")
+    state = {
+        "state_contract_version": "entity-alignment.vNext.1",
+        "entities": {
+            "a": {"name": "Same Name"},
+            "b": {"name": "Same Name"},
+        },
+        "evidence": [{"content": "Pair evidence.", "provenance": {"source_ref": "s"}}],
+    }
+    assert isinstance(
+        prepare_provider_request("ENT.ALIGN.vNext", state, question, {}),
+        ValidatedProviderRequest,
+    )
+
+
+def test_lei_deterministic_rule_rejects_unicode_lookalikes_and_invalid_references() -> None:
+    question = vnext_question("ENT.ALIGN.vNext")
+    state = {
+        "state_contract_version": "entity-alignment.vNext.1",
+        "entities": {
+            key: {
+                "name": f"Entity {key}",
+                "canonical_identifier": {
+                    "scheme": "LEI",
+                    "authority": "GLEIF",
+                    "validation_status": "VERIFIED",
+                    "value": "5493001KJTIIGC8Y1R12",
+                },
+            }
+            for key in ("a", "b")
+        },
+        "evidence": [
+            {
+                "content": "Synthetic identity evidence.",
+                "provenance": {"source_ref": "synthetic://lei"},
+            }
+        ],
+    }
+    state["entities"]["b"]["canonical_identifier"]["value"] = chr(0xFF15) + "493001KJTIIGC8Y1R12"
+    result = prepare_provider_request("ENT.ALIGN.vNext", state, question, {})
+    assert isinstance(result, ValidatedProviderRequest)
+
+    claim = claim_state()
+    claim.pop("evidence")
+    claim["evidence_refs"] = ["e1", "e1"]
+    with pytest.raises(LabError, match="duplicate identifiers"):
+        prepare_provider_request(
+            "CES.SUPPORT.vNext",
+            claim,
+            vnext_question("CES.SUPPORT.vNext"),
+            {"e1": {"content": "Duplicate fixture passage."}},
+        )
+
+    claim["evidence_refs"] = ["e1"]
+    with pytest.raises(LabError, match="record must be an object"):
+        prepare_provider_request(
+            "CES.SUPPORT.vNext",
+            claim,
+            vnext_question("CES.SUPPORT.vNext"),
+            {"e1": "not-an-object"},  # type: ignore[dict-item]
+        )
+
+    claim["evidence_refs"] = "e1"
+    direct = validate_decision_request("CES.SUPPORT.vNext", {**claim_state(), **claim})
+    assert direct.status == "NOT_ANSWERABLE"
+    assert "UNRESOLVED_REFERENCE" in direct.reasons
+    for malformed_refs in (None, [], ["   "]):
+        invalid_state = claim_state()
+        invalid_state["evidence_refs"] = malformed_refs
+        with pytest.raises(LabError):
+            prepare_provider_request(
+                "CES.SUPPORT.vNext",
+                invalid_state,
+                vnext_question("CES.SUPPORT.vNext"),
+                {},
+            )
+    direct_malformed_result = validate_decision_request(
+        "CES.SUPPORT.vNext",
+        {**claim_state(), "unresolved_evidence_refs": "e1"},
+    )
+    assert direct_malformed_result.status == "NOT_ANSWERABLE"
+    assert "UNRESOLVED_REFERENCE" in direct_malformed_result.reasons
+    state["entities"]["a"]["canonical_identifier"] = {
+        "scheme": "LEI",
+        "authority": "GLEIF",
+        "validation_status": "VERIFIED",
+        "value": "one",
+    }
+    state["entities"]["b"]["canonical_identifier"] = {
+        "scheme": "LEI",
+        "authority": "GLEIF",
+        "validation_status": "VERIFIED",
+        "value": "two",
+    }
+    assert isinstance(
+        prepare_provider_request("ENT.ALIGN.vNext", state, question, {}),
+        ValidatedProviderRequest,
     )
 
 
@@ -455,23 +785,15 @@ def test_unanswerable_case_record_cannot_carry_a_provider_judgment() -> None:
 
 def test_historical_v01_live_path_is_refused_before_provider_or_key_lookup(tmp_path: Path) -> None:
     definition = ROOT / "experiments/decision_lab/experiments/v0.1/claim-wording-ab.json"
-    with pytest.raises(LabError, match="registered V-next DecisionContract"):
+    with pytest.raises(LabError, match="INVALID_DECISION_CONTRACT"):
         _run_live(definition, tmp_path / "result.json")
 
 
 def test_typesafe_adapter_rejects_unregistered_contract_before_sdk_import() -> None:
     evaluator = TypeSafeLabEvaluator(api_key="offline-test-fixture")
-    with pytest.raises(LabError, match="no registered V-next DecisionContract"):
+    with pytest.raises(LabError, match="requires ValidatedProviderRequest"):
         evaluator.evaluate(
             {"candidate": {"id": "only-an-id"}},
-            [
-                {
-                    "question_id": "CES.SUPPORT.v1",
-                    "primitive": "CHOICE",
-                    "instructions": "historical",
-                    "criteria": {},
-                }
-            ],
             model="jev-1.13.0",
         )
 

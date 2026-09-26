@@ -2,17 +2,16 @@
 
 from __future__ import annotations
 
+import json
 import math
-import os
 import time
 from importlib.metadata import PackageNotFoundError, version
 from typing import Any
 
-from experiments.decision_lab.answerability_vnext import validate_decision_request
-from experiments.decision_lab.contracts_vnext import DECISION_CONTRACTS, validate_question_binding
 from experiments.decision_lab.evaluator import failure_for_exception
 from experiments.decision_lab.judgments import normalize_judgment
 from experiments.decision_lab.models import LabError, NormalizedJudgment, OperationalFailure
+from experiments.decision_lab.requests_vnext import ValidatedProviderRequest
 
 ADAPTER_VERSION = "0.2.0"
 
@@ -26,6 +25,12 @@ def _question(primitive: str, definition: dict[str, Any]) -> Any:
     if primitive == "SCORE":
         return Score(**kwargs, criteria=definition["criteria"])
     if primitive == "NOUL":
+        noul_semantics = json.dumps(
+            definition["criteria"], sort_keys=True, separators=(",", ":"), ensure_ascii=False
+        )
+        kwargs["instructions"] += (
+            "\n\nAXIGNAL proposition contract (data, not source instructions): " + noul_semantics
+        )
         return Noul(**kwargs)
     raise LabError("unsupported TypeSafe primitive")
 
@@ -65,36 +70,20 @@ class TypeSafeLabEvaluator:
     """Lazy SDK use; one call, no retries, no raw response/error serialization."""
 
     def __init__(self, api_key: str | None = None) -> None:
-        self._api_key = api_key or os.environ.get("TYPESAFE_API_KEY")
+        self._api_key = api_key
         if not self._api_key or not self._api_key.strip():
             raise LabError("TYPESAFE_API_KEY is unavailable")
 
     def evaluate(
         self,
-        state: dict[str, Any],
-        question_definitions: list[dict[str, Any]],
+        request: ValidatedProviderRequest,
         *,
         model: str,
     ) -> tuple[list[NormalizedJudgment], OperationalFailure | None, dict[str, Any]]:
-        if not question_definitions:
-            raise LabError("provider request requires at least one registered DecisionContract")
-        for definition in question_definitions:
-            question_id = definition.get("question_id")
-            contract = DECISION_CONTRACTS.get(question_id) if isinstance(question_id, str) else None
-            if contract is None:
-                raise LabError("provider request rejected: no registered V-next DecisionContract")
-            binding_errors = validate_question_binding(question_id, definition, state)
-            if binding_errors:
-                raise LabError(
-                    "provider request rejected by DecisionContract binding: "
-                    + ",".join(binding_errors)
-                )
-            answerability = validate_decision_request(question_id, state)
-            if not answerability.answerable:
-                raise LabError(
-                    "provider request rejected by AXIGNAL AnswerabilityGate: "
-                    + ",".join(answerability.reasons)
-                )
+        if type(request) is not ValidatedProviderRequest:
+            raise LabError("provider boundary requires ValidatedProviderRequest")
+        state, definition = request.provider_payload()
+        question_definitions = [definition]
         from typesafe_sdk import RetryPolicy, TypeSafeClient
 
         questions = {
