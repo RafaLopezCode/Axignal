@@ -23,5 +23,5 @@
 
 - [x] T011 Run required local quality gates and Graphify checks; record known governance exception without touching `.env`.
 - [x] T012 Verify only authorized documentation paths changed and all prohibited external/runtime calls remain zero.
-- [ ] T013 Commit the single slice, push its branch and open the titled PR against `main`, unmerged.
-- [ ] T014 Verify PR #18 remains open/unmerged on its original head; return the full CTO ledger.
+- [x] T013 Commit the single slice, push its branch and open the titled PR against `main`, unmerged.
+- [x] T014 Verify PR #18 remains open/unmerged on its original head; return the full CTO ledger.

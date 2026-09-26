@@ -22,4 +22,4 @@
 - [x] Local deterministic quality gates recorded; governance reports only the known `.env` presence exception, untouched.
 - [x] Graphify update and diagnostics recorded (0 missing/dangling endpoints).
 - [x] Diff/scope and zero external calls verified.
-- [ ] One commit and one unmerged PR against `main` verified.
+- [x] One commit and one unmerged PR against `main` verified.
