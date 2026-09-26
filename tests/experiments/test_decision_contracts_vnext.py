@@ -60,6 +60,14 @@ def vnext_question(question_id: str) -> dict[str, object]:
     return next(item for item in document["questions"] if item["question_id"] == question_id)
 
 
+def vnext_2_claim_question() -> dict[str, object]:
+    return json.loads(
+        (
+            ROOT / "experiments/decision_lab/grammar/vnext/claim-evidence-support.vNext.2.json"
+        ).read_text(encoding="utf-8")
+    )
+
+
 def claim_state() -> dict[str, object]:
     return {
         "state_contract_version": "claim-evidence.vNext.1",
@@ -88,6 +96,116 @@ def test_decision_contract_declares_the_full_owned_boundary() -> None:
     )
     assert contract.uncertainty_semantics and contract.composition_policy
     assert "EvidenceAdmission" in contract.authority_boundary
+
+
+def test_vnext_1_claim_evidence_question_identity_and_answer_space_are_historical() -> None:
+    question = vnext_question("CES.SUPPORT.vNext")
+    contract = DECISION_CONTRACTS["CES.SUPPORT.vNext"]
+    assert question["version"] == "vNext.1"
+    assert question_semantic_fingerprint(question) == (
+        "bdf8d25fce3fa66e5dd71e512085fcd81130109a792c7c7954681408f9c9f35b"
+    )
+    assert contract.question_semantic_fingerprint == (
+        "bdf8d25fce3fa66e5dd71e512085fcd81130109a792c7c7954681408f9c9f35b"
+    )
+    assert contract.answer_space == (
+        "SUPPORTED",
+        "PARTIAL",
+        "NOT_SUPPORTED",
+        "NO_EVIDENCE",
+        "CONFLICTING",
+        "UNRESOLVED",
+    )
+    grammar = json.loads(
+        (ROOT / "experiments/decision_lab/grammar/vnext/grammar.json").read_text(encoding="utf-8")
+    )
+    assert grammar["version"] == "vNext.1"
+    assert len(grammar["questions"]) == 12
+    assert validate_grammar_vnext(grammar) == []
+
+
+def test_vnext_2_claim_evidence_semantics_close_the_answer_space() -> None:
+    question = vnext_2_claim_question()
+    contract = DECISION_CONTRACTS["CES.SUPPORT.vNext.2"]
+    options = question["criteria"]["options"]
+    meanings = {item["id"]: item["meaning"] for item in options}
+
+    assert contract.question_id == "CES.SUPPORT.vNext.2"
+    assert contract.question_version == "vNext.2"
+    assert contract.version == "decision-contract.vNext.2"
+    assert contract.state_contract_version == "claim-evidence.vNext.1"
+    assert tuple(meanings) == contract.answer_space
+    assert validate_question_binding("CES.SUPPORT.vNext.2", question, claim_state()) == []
+
+    conceptual_cases = {
+        "FULL_SUPPORT": "SUPPORTED",
+        "PARTIAL_SUPPORT": "PARTIAL",
+        "DIRECT_CONTRADICTION": "CONTRADICTED",
+        "RELEVANT_NON_SUPPORT": "NOT_SUPPORTED",
+        "NO_RELEVANT_EVIDENCE": "NO_EVIDENCE",
+        "MULTI_EVIDENCE_CONFLICT": "CONFLICTING",
+        "AMBIGUOUS_OR_UNRESOLVABLE": "UNRESOLVED",
+    }
+    assert set(conceptual_cases.values()) == set(contract.answer_space)
+    assert "directly contradicts" in meanings["CONTRADICTED"]
+    assert "incompatible assertions" in meanings["CONFLICTING"]
+    assert "neither supports nor directly contradicts" in meanings["NOT_SUPPORTED"]
+    assert "passages were supplied" in meanings["NO_EVIDENCE"]
+    assert "no material refutation" in meanings["SUPPORTED"]
+    assert "does not refute" in meanings["PARTIAL"]
+    assert "prevents a determinate classification" in meanings["UNRESOLVED"]
+    assert question["criteria"]["classification_precedence"] == [
+        "CONFLICTING",
+        "CONTRADICTED",
+        "SUPPORTED",
+        "PARTIAL",
+        "NOT_SUPPORTED",
+        "NO_EVIDENCE",
+        "UNRESOLVED",
+    ]
+
+
+def test_vnext_2_no_relevant_evidence_requires_supplied_passage() -> None:
+    state = claim_state()
+    state["evidence"] = []
+    result = validate_decision_request("CES.SUPPORT.vNext.2", state)
+    assert result.status == "NOT_ANSWERABLE"
+    assert "EMPTY_REQUIRED_INFORMATION" in result.reasons
+    question = vnext_2_claim_question()
+    no_evidence = next(
+        item for item in question["criteria"]["options"] if item["id"] == "NO_EVIDENCE"
+    )
+    assert "passages were supplied" in no_evidence["meaning"]
+    assert "none is relevant" in question["instructions"]
+
+
+def test_provider_question_binding_rejects_vnext_cross_version_and_semantic_drift() -> None:
+    v1_question = vnext_question("CES.SUPPORT.vNext")
+    v2_question = vnext_2_claim_question()
+    assert "QUESTION_SEMANTIC_FINGERPRINT_MISMATCH" in validate_question_binding(
+        "CES.SUPPORT.vNext", v2_question, claim_state()
+    )
+    assert "QUESTION_SEMANTIC_FINGERPRINT_MISMATCH" in validate_question_binding(
+        "CES.SUPPORT.vNext.2", v1_question, claim_state()
+    )
+    changed_v2 = vnext_2_claim_question()
+    changed_v2["criteria"]["options"][2]["meaning"] = "A different semantic definition."
+    assert "QUESTION_SEMANTIC_FINGERPRINT_MISMATCH" in validate_question_binding(
+        "CES.SUPPORT.vNext.2", changed_v2, claim_state()
+    )
+
+    sealed = prepare_provider_request("CES.SUPPORT.vNext.2", claim_state(), v2_question, {})
+    assert isinstance(sealed, ValidatedProviderRequest)
+    _, bound_question = sealed.provider_payload()
+    assert bound_question["question_id"] == "CES.SUPPORT.vNext.2"
+
+    with pytest.raises(LabError, match="QUESTION_SEMANTIC_FINGERPRINT_MISMATCH"):
+        prepare_provider_request(
+            "CES.SUPPORT.vNext.2",
+            claim_state(),
+            v1_question,
+            {},
+        )
 
 
 def test_vnext_grammar_audits_all_twelve_questions_with_machine_contracts() -> None:

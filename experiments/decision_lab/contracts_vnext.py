@@ -233,6 +233,32 @@ DECISION_CONTRACTS: dict[str, DecisionContract] = {
             for item in STATE_CONTRACTS[DecisionFamily.CLAIM_EVIDENCE_SUPPORT].requirements
         ),
     ),
+    "CES.SUPPORT.vNext.2": DecisionContract(
+        DecisionFamily.CLAIM_EVIDENCE_SUPPORT,
+        "decision-contract.vNext.2",
+        "Assess the explicit claim proposition against all supplied semantic evidence passages, distinguishing evidence that refutes the claim from evidence sources that conflict with each other.",
+        "CES.SUPPORT.vNext.2",
+        "vNext.2",
+        Primitive.CHOICE,
+        (
+            "SUPPORTED",
+            "PARTIAL",
+            "CONTRADICTED",
+            "NOT_SUPPORTED",
+            "NO_EVIDENCE",
+            "CONFLICTING",
+            "UNRESOLVED",
+        ),
+        STATE_CONTRACTS[DecisionFamily.CLAIM_EVIDENCE_SUPPORT].version,
+        "No relevant passage, source-source conflict, direct claim contradiction, and genuine indeterminacy remain distinct.",
+        "support.vNext.2; preserves raw choice and distribution; no truth threshold.",
+        "Experimental judgment only; AXIGNAL policy and EvidenceAdmission retain authority.",
+        "OFFLINE_STRUCTURAL_VALIDATION_ONLY",
+        tuple(
+            item.requirement_id
+            for item in STATE_CONTRACTS[DecisionFamily.CLAIM_EVIDENCE_SUPPORT].requirements
+        ),
+    ),
     "ENT.ALIGN.vNext": DecisionContract(
         DecisionFamily.ENTITY_ALIGNMENT,
         "decision-contract.vNext.1",
@@ -274,6 +300,7 @@ DECISION_CONTRACTS: dict[str, DecisionContract] = {
 
 QUESTION_SEMANTIC_FINGERPRINTS = {
     "CES.SUPPORT.vNext": "bdf8d25fce3fa66e5dd71e512085fcd81130109a792c7c7954681408f9c9f35b",
+    "CES.SUPPORT.vNext.2": "cc8956ebafb3a13e15185d28b842b76041c84079c8192e342ea5489568b3c27e",
     "CES.SUPPORT_N.vNext": "1718c364c46611b606241c84056ca18515e6c3c9dae7140cb9831516ec676314",
     "CES.SUPPORT_SCORE.vNext": "259d21e39c36356e6bca83170a473939340a9a1864090930ab10a0e02bc1605a",
     "ENT.ALIGN.vNext": "6d6406a2fba11d83b3f2a48a53226f73a38cc348a41450b1eca05ade2a93d865",
