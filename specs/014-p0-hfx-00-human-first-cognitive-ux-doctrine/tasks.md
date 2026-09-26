@@ -39,5 +39,7 @@
   `validation.md`.
 - [x] Refresh/diagnose Graphify structurally and review resulting scope.
 - [x] Verify PR #18 remains OPEN/unmerged at the expected SHA and untouched.
-- [ ] Push one documentation-only commit and create one unmerged PR against main.
-- [ ] Verify green remote CI for the exact final PR head and return ledger.
+- [x] Publish the documentation-only branch and create one unmerged PR against
+  main.
+- [x] Verify green remote CI for the exact final PR head and return the CTO
+  ledger. Exact remote run/head details are captured in the closure ledger.

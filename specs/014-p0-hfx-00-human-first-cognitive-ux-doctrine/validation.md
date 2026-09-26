@@ -43,5 +43,6 @@
 - No `.env` contents or TypeSafe API key were accessed. No AXIGNAL runtime,
   Jev, OpenAI or other provider call was made. P0-JEV-04, P0-HFX-01,
   P0-DRI-01 and P0-EOI-01 were not started.
-- Final PR number, exact-head remote CI and review-thread state remain pending
-  until the documentation change is published.
+- PR #21 is open and unmerged. Its exact final head, green remote CI run and
+  review-thread state are verified at closure and reported in the CTO ledger;
+  this record avoids duplicating mutable PR/check metadata.
