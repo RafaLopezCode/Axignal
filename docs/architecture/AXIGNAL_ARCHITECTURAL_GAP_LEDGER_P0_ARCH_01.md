@@ -124,16 +124,16 @@ Status taxonomy is used exactly as follows:
 - `FUTURE_SLICE`: Python deterministic intelligence, separately authorized.
 - `BLOCKING_OR_NONBLOCKING`: Nonblocking for this reconciliation; required before the full cognitive loop.
 
-### I — Cognitive model boundary / Luna Batch
+### I — Cognitive provider and evaluator boundary
 
 - `DOMAIN`: Cognition/provider orchestration.
 - `TARGET_RESPONSIBILITY`: Send structured cognitive jobs through replaceable adapters; interpret evidence and targeted research without canonical write authority.
 - `CURRENT_STATUS`: `PARTIALLY_IMPLEMENTED`.
 - `REPOSITORY_EVIDENCE`: `cognition/jobs/model.py`, `cognition/providers/base.py`, `cognition/providers/echo.py`, `cognition/router/router.py`, and `cognition/batch/packager.py` implement job/result shapes, provider protocol, router, offline Echo adapter, and deterministic batching.
-- `MISSING_CAPABILITY`: Real model adapter, Luna Batch integration, asynchronous submission/result lifecycle, operational retry/idempotency and the integrated research loop.
+- `MISSING_CAPABILITY`: Any separately authorized contextual-cognition or structured-evaluator adapter, optional asynchronous submission/result lifecycle, operational retry/idempotency and an integrated deterministic-first research loop.
 - `DEPENDENCIES`: Python preprocessing/state, evidence, provider abstraction, JEV contract.
 - `AUTHORITY_BOUNDARY`: `StructuredResult.is_canonical_truth` is always false; model output must pass deterministic policy/evidence admission.
-- `FUTURE_SLICE`: Explicitly authorized cognition/Luna work after preceding architecture decisions.
+- `FUTURE_SLICE`: Explicitly authorized provider-neutral cognition and evaluator work after semantic contracts and preceding architecture decisions.
 - `BLOCKING_OR_NONBLOCKING`: Nonblocking for this reconciliation; runtime integration remains prohibited here.
 
 ### J — Structured State Builder
@@ -142,7 +142,7 @@ Status taxonomy is used exactly as follows:
 - `TARGET_RESPONSIBILITY`: Convert normalized candidates and evidence into validated structured state for bounded decision evaluation.
 - `CURRENT_STATUS`: `SPECIFIED_NOT_IMPLEMENTED`.
 - `REPOSITORY_EVIDENCE`: FAXT, relationship, feature, and cognitive result models exist independently; no builder/orchestrator connecting them was found.
-- `MISSING_CAPABILITY`: Unified typed state assembly, contradiction/source-diversity/currentness features, and validation before JEV.
+- `MISSING_CAPABILITY`: Unified typed state assembly, contradiction/source-diversity/currentness features, and validation before any bounded structured evaluator.
 - `DEPENDENCIES`: Python Stage 2, evidence/provenance, canonical domain types.
 - `AUTHORITY_BOUNDARY`: Constructs decision input only; construction is not canonical admission.
 - `FUTURE_SLICE`: Python deterministic intelligence, separately authorized.
@@ -154,10 +154,10 @@ Status taxonomy is used exactly as follows:
 - `TARGET_RESPONSIBILITY`: Evaluate explicit decision classes from structured state and return sufficient, insufficient, ambiguous, contradictory, stale, or blocked outcomes.
 - `CURRENT_STATUS`: `OPEN_DECISION`.
 - `REPOSITORY_EVIDENCE`: No JEV implementation, dependency, or integration API found; the Atlas explicitly leaves JEV selection/API open.
-- `MISSING_CAPABILITY`: Approved JEV selection and contract, decision taxonomy/calibration, and bounded evaluation integration.
+- `MISSING_CAPABILITY`: Typed economic decision contracts, decision taxonomy/calibration, separately authorized evaluator selection and bounded evaluation integration.
 - `DEPENDENCIES`: Structured State Builder, evidence, decision policy.
-- `AUTHORITY_BOUNDARY`: JEV evaluates bounded decisions; its result is not an automatic canonical write.
-- `FUTURE_SLICE`: JEV research/decision after a separate CTO decision.
+- `AUTHORITY_BOUNDARY`: A replaceable structured evaluator may evaluate bounded decisions; its result is not an automatic canonical write. Jev is an experimental candidate only, not canonical authority or live-authorized.
+- `FUTURE_SLICE`: P0-EOI-01 economic reasoning contracts; evaluator/provider decisions require separate rights and CTO authorization.
 - `BLOCKING_OR_NONBLOCKING`: Nonblocking for this reconciliation; selection must precede JEV runtime.
 
 ### L — Decision Gap / Uncertainty Analysis
@@ -372,7 +372,7 @@ The target loops are explicitly specified in Atlas §§61–66. The codebase doe
 
 ## Cognitive authority and direct-write paths
 
-The Atlas's target cognitive flow remains distinct: **Sources → Python Stage 1 → Luna semantic interpretation → Python Stage 2 → JEV → (sufficient) AXIGNAL Policy Gate, or (insufficient) structured gap → Python Stage 3 → Luna targeted research → Source Router → new evidence**. In the current repository, normalization/exact-name resolution are partial Stage 1-like primitives; provider job/result abstractions and Echo are not Luna; domain models are not a Stage 2 builder; JEV and Stage 3 do not exist; the targeted return path is specified only.
+The Atlas's target cognitive flow is **Sources → deterministic Stage 1 → bounded replaceable contextual cognition when needed → deterministic Stage 2 and answerability → replaceable structured evaluator only when required and eligible → AXIGNAL Policy Gate, or (insufficient) structured gap → AXENT research → Source Router → new evidence**. In the current repository, normalization/exact-name resolution are partial Stage 1-like primitives; provider job/result abstractions and the Echo test adapter are not semantic cognition; domain models are not a Stage 2 builder; no production structured evaluator or Stage 3 research loop exists; the targeted return path is specified only.
 
 - `CLAIM_REVIEW_DIRECT_CANONICAL_PATH=NO`: no Claim Review runtime exists; the Atlas explicitly prohibits this edge.
 - `MODEL_DIRECT_CANONICAL_PATH=NO`: `StructuredResult.is_canonical_truth` is false; FAXT/observed relationships require `EvidenceAdmission`.

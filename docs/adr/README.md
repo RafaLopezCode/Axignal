@@ -19,6 +19,8 @@ Constitution (`.specify/memory/constitution.md`).
 | [ADR-0009](ADR-0009-axigland-graph-architecture.md) | AXIGLAND Graph Architecture (**ACCEPTED**) | §3, §8, §16–§18, §20, §24–§26 |
 | [ADR-0010](ADR-0010-axignal-source-acquisition-architecture.md) | AXIGNAL Source Acquisition Architecture (**ACCEPTED**) | §3, §6, §7, §23, §26, §39, §46 |
 | [ADR-0011](ADR-0011-jev-structured-decision-reconciliation.md) | Jev Structured Decision Reconciliation (**ACCEPTED EXPERIMENTAL ARCHITECTURE**) | §14, §15, §19, §30, §46 |
+| [ADR-0012](ADR-0012-economic-opportunity-intelligence.md) | Economic Opportunity Intelligence Is a Core AXIGNAL Capability (**ACCEPTED PRODUCT DOCTRINE**) | §46, §53 |
+| [ADR-0013](ADR-0013-compounding-economic-intelligence.md) | AXIGNAL Compounds Governed Economic Intelligence (**ACCEPTED PRODUCT DOCTRINE**) | §46, §53 |
 
 ## Adding an ADR
 

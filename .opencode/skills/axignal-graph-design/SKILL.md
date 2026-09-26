@@ -12,10 +12,11 @@ hierarchy, evidence drill-down, representation anomalies, graph accessibility,
 or graph performance architecture.
 
 This is AXIGNAL-specific design intelligence, not a generic graph recipe.
-AXIGLAND is the canonical, temporal, evidence-backed economic world. A graph is
-one demand-materialized projection of that world. The purpose is a living
-economic cartography: make meaning legible before spectacle. A fast hairball is
-still a hairball; **WOW != volume**.
+AXIGLAND is the canonical, temporal, evidence-backed economic memory. AXIGNAL
+is an observing economic brain, not an economic index. A graph is one
+demand-materialized cognitive projection, not the final product; explainable
+economic intelligence is the product. The purpose is to make meaning legible
+before spectacle. A fast hairball is still a hairball; **WOW != volume**.
 
 Follow the authority order: MASTER → Engineering Constitution → accepted ADRs
 and contracts → feature spec → design brief → this skill → implementation. ADR-
@@ -34,6 +35,10 @@ truth, or a production dependency by virtue of this skill.
 - Treat relationships as economic objects. Keep nature, direction, materiality,
   epistemic class, currentness, evidence, and decision state separate; never
   collapse them into a generic strength score.
+- Surface demand, activity, capability-specific reach and any derived potential
+  opportunity through inspectable dimensions and explanation traces. Procurement
+  does not imply a customer or relationship; a map alone is not an opportunity
+  explanation.
 - PATHX is an explainable path through constituent relationships, never an
   implied direct edge between its endpoints.
 - Make focus/recenter alter the view, not canonical meaning. Preserve orientation

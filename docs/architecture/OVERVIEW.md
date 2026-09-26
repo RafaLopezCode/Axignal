@@ -58,6 +58,22 @@ canonical truth authority.
 9. No CRM / workflow / sponsored truth in the core.
 10. Reevaluation, not editing.
 
+## Economic intelligence doctrine
+
+AXIGNAL is an observing economic brain, not an economic index. Economic
+Opportunity Intelligence and Compounding Economic Intelligence are core
+product capabilities; graph/cartographic projections are cognitive substrate,
+not the final product. Opportunity is derived and `POTENTIAL` by default, and
+procurement/project activity does not establish a customer or relationship.
+Economic Reach is capability-specific; geography informs reasoning and does
+not reduce a market to an organization's headquarters jurisdiction. Economic
+reasoning is typed, explainable and temporally grounded. Reuse preserves
+provenance, epistemic state and currentness. See MASTER §53 and ADR-0012/0013.
+
+These are product/architecture constraints, not proof that opportunity or
+compounding behavior has been implemented. No runtime representation is
+authorized by this overview.
+
 ## Data model
 
 Conceptual entities (MASTER §36): `Organization`, `FAXT`, `Evidence`,

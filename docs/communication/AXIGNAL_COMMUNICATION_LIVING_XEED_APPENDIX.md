@@ -780,11 +780,11 @@ AXIGNAL itself can explain.
 
 ------------------------------------------------------------------------
 
-## 24. Potential lead-discovery implication
+## 24. Potential AXIGNAL go-to-market research implication
 
-The same observation capability may eventually help AXIGNAL discover
-organizations exhibiting significant observable representation gaps or
-anomalies:
+As a company-internal go-to-market research hypothesis, the same observation
+capability may help AXIGNAL identify organizations exhibiting observable
+representation gaps or anomalies:
 
 ``` text
 PUBLIC ORGANIZATION
@@ -798,16 +798,18 @@ SEARCH / AGENT / WEB REPRESENTATION
 REPRESENTATION GAP
 ```
 
-This should never become indiscriminate lead scraping or unsupported
-profiling. Any commercial use must preserve source policy, evidence,
-privacy, epistemic classification, applicable outreach rules and the
-separation between observation and inference.
+This is not a subscriber capability, AXIGNAL economic opportunity, customer,
+lead or relationship. It must not become a lead-generation product,
+indiscriminate scraping, CRM or workflow. Any separately authorized company
+marketing use must preserve source policy, evidence, privacy, epistemic
+classification, applicable outreach rules and the separation between
+observation and inference. It establishes no commercial fit or conversion.
 
 Strategic implication:
 
-> **AXIGNAL may eventually use the same external-observation capability
-> it sells to discover organizations that demonstrably have the problem
-> AXIGNAL helps investigate.**
+> **AXIGNAL may separately evaluate whether independent observation can
+> inform its own evidence-backed go-to-market research, without treating
+> a representation gap as an AXIGNAL customer or product opportunity.**
 
 ------------------------------------------------------------------------
 

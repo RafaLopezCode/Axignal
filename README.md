@@ -1,14 +1,22 @@
 # AXIGNAL
 
-AXIGNAL is an autonomous, independent economic cartography system. It observes
-the observable real economy, resolves organizations from public evidence,
-distinguishes observed facts from inferences, and maintains **AXIGLAND**: one
-canonical, temporal, living economic world that materializes and deepens on
-demand. Users may **Xignal** any organization — assigning persistent
-computational observation — but they direct AXIGNAL's attention, never its
-conclusions. AXIGNAL is not a CRM, business social network, SEO/GEO agency, an
-editable directory, or a wrapper around a foundation model. The full doctrine is
-the MASTER PRODUCT MODEL.
+AXIGNAL is an observing economic brain, not an economic index. It observes,
+understands, remembers, connects, compares and reasons over the observable
+economy to surface explainable economic activity and potential opportunities
+while preserving evidence, uncertainty, provenance and time. It maintains
+**AXIGLAND**, one canonical, temporal, governed economic memory that
+materializes and deepens on demand. Economic Opportunity Intelligence and
+Compounding Economic Intelligence are inseparable product pillars; economic
+cartography is their cognitive substrate. Users may **Xignal** any organization
+— assigning persistent computational observation — but they direct AXIGNAL's
+attention, never its conclusions. AXIGNAL is not a CRM, business social
+network, SEO/GEO agency, editable directory, or wrapper around a foundation
+model. The full doctrine is the MASTER PRODUCT MODEL.
+
+Economic opportunities are derived and `POTENTIAL` by default: project or
+procurement signals do not establish a customer or relationship, and a
+capability match does not establish commercial fit. The map is a projection;
+it is not the final product.
 
 ## Canonical repository and path
 

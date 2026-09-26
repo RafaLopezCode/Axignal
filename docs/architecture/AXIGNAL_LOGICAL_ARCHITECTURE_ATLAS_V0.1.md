@@ -14,6 +14,15 @@ represent AXIGNAL faithfully in Graphify without prematurely choosing
 libraries, storage topology, queues, databases, source providers or
 implementation details.
 
+**Doctrine reconciliation (2026-09-26):** This target is subordinate to
+MASTER §53 and ADR-0012/0013. Its former provider-specific model, Batch-first
+and “model brain” wording is superseded. Read every cognitive-provider label
+below as a replaceable, non-authoritative role only where bounded judgment or
+contextual cognition is needed. Deterministic computation comes first;
+answerability precedes judgment; missing context routes to AXENT research or
+explicit unknown/abstention. No provider live use or runtime implementation is
+authorized here.
+
 ------------------------------------------------------------------------
 
 ## 0. Executive thesis
@@ -575,7 +584,7 @@ PYTHON — STAGE 1
 deterministic intake
      │
      ▼
-GPT-6 LUNA BATCH
+BOUNDED COGNITION WHEN REQUIRED
 semantic interpretation
      │
      ▼
@@ -601,7 +610,7 @@ SUFFICIENT          INSUFFICIENT /
  │                 next-action computation
  │                         │
  │                         ▼
- │                  GPT-6 LUNA BATCH
+ │                  BOUNDED COGNITION WHEN REQUIRED
  │                  targeted research
  │                         │
  │                         ▼
@@ -642,7 +651,7 @@ Python must not invent semantic truth.
 
 ------------------------------------------------------------------------
 
-## 16. GPT-6 Luna Batch --- semantic interpretation
+## 16. Replaceable contextual cognition --- semantic interpretation
 
 The model is used for cognitive interpretation of unstructured evidence.
 
@@ -687,13 +696,16 @@ Responsibilities may include:
 -   structured JEV input;
 -   invariant checks.
 
-This is why the architecture is not merely `Luna → JEV`.
+This is why the architecture is not merely `cognitive provider → JEV`.
 
 ------------------------------------------------------------------------
 
-## 18. JEV --- bounded decision evaluation
+## 18. Replaceable structured evaluator --- bounded decision evaluation
 
-JEV receives structured state whenever possible.
+An authorized replaceable structured evaluator receives answerable,
+validated state when deterministic computation cannot answer. Jev remains the
+current experimental candidate only; no provider, rights or live use are
+authorized by this target architecture.
 
 Candidate decision classes:
 
@@ -794,10 +806,11 @@ STOP_WITH_EXPLICIT_UNCERTAINTY
 
 ------------------------------------------------------------------------
 
-## 21. Luna targeted-research stage
+## 21. AXENT targeted-research stage
 
-When more research is justified, Luna can transform the structured gap
-into a precise research objective.
+When answer-required context is missing, AXENT may transform the structured gap
+into a precise research objective. Any bounded evaluator remains replaceable
+and non-authoritative; if uncertainty remains after research, preserve it.
 
 Example:
 
@@ -1314,29 +1327,22 @@ crawler pipeline.
 
 # PART XVI --- COMPUTE ARCHITECTURE
 
-## 43. Batch-first cognition
+## 43. Deterministic-first cognition and answerability-gated routing
 
-Primary cognitive execution policy:
+The cognitive route is selected per question after checking the required
+information and answerability. The conceptual order is:
 
 ``` text
-AXIGNAL COGNITIVE CONTRACT
-          ↓
-MODEL PROVIDER ADAPTER
-          ↓
-GPT-6 LUNA BATCH
+DETERMINISTIC COMPUTATION WHEN SUFFICIENT
+          ↓ only when bounded judgment is required and answerable
+REPLACEABLE STRUCTURED EVALUATOR
+          ↓ deterministic composition and AXIGNAL policy
+AXENT RESEARCH FOR MISSING CONTEXT; UNKNOWN / ABSTAIN IF STILL INSUFFICIENT
 ```
 
-Batch should be treated as asynchronous architecture, not merely cheaper
-synchronous inference.
-
-The lower unit cost is reinvested in:
-
--   corroboration;
--   contradiction search;
--   broader discovery;
--   temporal verification;
--   selective multi-hop exploration;
--   targeted uncertainty reduction.
+Execution timing (synchronous or asynchronous) is operational policy. It is
+not a provider, cognitive-authority or product invariant. No model output is
+canonical truth and no universal confidence score replaces typed uncertainty.
 
 ------------------------------------------------------------------------
 
@@ -1753,7 +1759,7 @@ AXIGNAL Cognitive Contract
         ↓
 Provider Adapter
         ↓
-GPT-6 Luna Batch / future
+replaceable contextual cognition / future
 
 OBSERVATION
 AXIGNAL Source Contract
@@ -1901,13 +1907,13 @@ SOURCE ACQUISITION
  ↓
 PYTHON₁
  ↓
-LUNA
+COGNITIVE PROVIDER
  ↓
 PYTHON₂
  ↓
 JEV
  ├─ sufficient → canonical policy
- └─ insufficient → Python₃ → Luna → targeted acquisition ↺
+ └─ insufficient → Python₃ → cognitive provider → targeted acquisition ↺
 ```
 
 Purpose: reduce uncertainty economically.
@@ -2216,7 +2222,7 @@ implementation existence.
                                         │
                                         ▼
                               ┌────────────────────┐
-                              │ GPT-6 LUNA BATCH   │
+                              │ BOUNDED COGNITION WHEN REQUIRED       │
                               │ semantic cognition │
                               └─────────┬──────────┘
                                         │
@@ -2250,7 +2256,7 @@ implementation existence.
                        │                                 │
                        │                                 ▼
                        │                        ┌─────────────────┐
-                       │                        │      LUNA       │
+                       │                        │      COGNITIVE PROVIDER       │
                        │                        │ targeted query  │
                        │                        └────────┬────────┘
                        │                                 │
@@ -2314,9 +2320,9 @@ cannot answer:
 5.  Where are budgets applied?
 6.  Where are source rights checked?
 7.  Where is provenance created/preserved?
-8.  What does Python do before Luna?
-9.  What does Luna do?
-10. What does Python do after Luna?
+8.  What does Python do before cognitive provider?
+9.  What does cognitive provider do?
+10. What does Python do after cognitive provider?
 11. What does JEV decide?
 12. What happens when JEV cannot decide?
 13. How does targeted research return to acquisition?
@@ -2352,7 +2358,7 @@ SOURCES PROVIDE OBSERVATIONS, NOT TRUTH.
 
 PYTHON MAKES DATA AND STATE DETERMINISTIC.
 
-LUNA INTERPRETS ECONOMIC MEANING.
+COGNITIVE PROVIDER INTERPRETS ECONOMIC MEANING.
 
 PYTHON CANONICALIZES THE INTERPRETATION INTO STRUCTURED STATE.
 
@@ -2360,7 +2366,7 @@ JEV EVALUATES BOUNDED DECISIONS.
 
 WHEN INFORMATION IS INSUFFICIENT,
 PYTHON COMPUTES THE NEXT RESEARCH ACTION,
-LUNA FORMULATES TARGETED INVESTIGATION,
+COGNITIVE PROVIDER FORMULATES TARGETED INVESTIGATION,
 AND THE LOOP RETURNS TO SOURCES.
 
 AXIGNAL POLICY DECIDES WHAT MAY BECOME CANONICAL.
@@ -2424,7 +2430,7 @@ JEV
   ↓
 PYTHON
   ↓
-LUNA / BRAIN
+AXIGNAL GOVERNED SYSTEM / BRAIN
   ↓
 INTEGRATED CLOSED LOOP
 ```

@@ -99,20 +99,21 @@ human-first model, existing Ask AXENT authority, authorization boundary,
 Admin boundary or pre-implementation status. No subscriber UI, Card,
 connector, authorization or runtime is implemented or authorized.
 
-## Cognitive policy and model facts
+## Cognitive policy and provider boundary
 
-The current proposed policy maps the background cognitive role to
-OpenAI/GPT-6 Luna/Batch and subscriber cognition to OpenAI/GPT-6 Luna/Standard
-Responses. This is policy under `CognitiveProvider`/`ModelRouter`, not domain
-authority or permanent provider coupling. A model change requires representative
-evaluation. The model never directs AXIGNAL and its output is never canonical
-truth.
+MASTER §53 supersedes the former proposed OpenAI/GPT-6 Luna/Batch and
+Standard Responses defaults recorded in the historical research for this
+interaction architecture. No provider or model is canonized here. AXIGNAL's
+brain is its complete governed system, not a model. Deterministic computation
+comes first; a replaceable structured evaluator is used only for bounded
+judgment after answerability is established; missing context routes to AXENT
+research or remains unknown/abstained. Model output never directs AXIGNAL or
+becomes canonical truth. Any provider live use needs separate authorization,
+rights and evaluation.
 
-Model identifiers, capability and pricing are external mutable facts. The
-dated verification and official source references are in
-[`research.md`](../../specs/003-subscriber-experience-interaction/research.md).
-The 1M+ context window is capacity, not a target. Context must be the smallest
-useful authorized structured projection. Missing cost is unknown, not zero.
+Context is the smallest useful authorized structured projection. Provider
+identifiers, capability, context limits and pricing are mutable operational
+facts, not product semantics. Missing cost is unknown, not zero.
 
 ## Claim review, portability and agent boundary
 

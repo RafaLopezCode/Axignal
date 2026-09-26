@@ -311,7 +311,9 @@ PRIVATE EVIDENCE
 V3 CROSS-ANALYSIS
 ```
 
-Example:
+Example (the CRM object named `opportunity` here is private, customer-owned
+pipeline data; it is not AXIGNAL's derived Economic Opportunity and does not
+become canonical AXIGLAND state):
 
 > **AXIGNAL sees an external demand pattern around capability X.
 > Read-only access to your opportunity pipeline would let AXIGNAL test
@@ -417,7 +419,9 @@ Adapter
 AEAP reasons over normalized capabilities, not vendor-specific schemas.
 
 CRM and ERP records are authorized private observations, not AXIGNAL-owned
-leads, pipeline, opportunity, task, or workflow objects. Connectors are
+leads, pipeline, opportunity, task, or workflow objects. A CRM-native
+`opportunity` remains distinct from an AXIGNAL Economic Opportunity, which is
+derived economic intelligence and `POTENTIAL` by default. Connectors are
 read-only by default and create no write-back or workflow authority. This
 specification remains compatible with ADR-0008.
 
