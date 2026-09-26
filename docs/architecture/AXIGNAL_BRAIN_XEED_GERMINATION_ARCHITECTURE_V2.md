@@ -5,6 +5,15 @@
 **Scope:** Cognitive compute architecture for planting, germinating, evolving and continuously cultivating a Xeed into AXIGLAND.  
 **Authority:** Must remain subordinate to `AXIGNAL_MASTER_PRODUCT_MODEL_2026-09-24_V2.md` and the AXIGNAL Engineering Constitution.
 
+**Doctrine reconciliation (2026-09-26):** This pre-implementation design is
+subordinate to MASTER §53 and ADR-0012/0013. Any concrete provider/model name,
+OpenAI Batch default or provider-first execution assumption elsewhere in this
+document is a superseded proposal, not current authority. AXIGNAL's brain is
+the complete governed system, not a model. Execution is deterministic-first;
+bounded structured evaluators are replaceable and non-authoritative; missing
+context routes to AXENT research or explicit unknown/abstention. This document
+grants no live-provider authorization and does not establish runtime behavior.
+
 ---
 
 ## 1. Executive thesis
@@ -21,9 +30,15 @@ The brain must optimize for:
 
 > **maximum reusable, verifiable economic information gain per unit of money, time and compute.**
 
-The primary cognitive execution policy is **GPT-6 Luna through the OpenAI Batch endpoint**, with AXIGNAL designed explicitly around asynchronous batch semantics rather than treating Batch as a cheaper drop-in transport.
+Provider and execution-mode selection are replaceable policy. Deterministic
+computation is preferred first; bounded typed evaluation or AXENT research is
+selected only when the question and answerability require it. Asynchronous
+processing is an operational option, not a product or provider invariant.
 
-The economic advantage of Batch is to be reinvested in **depth of intelligence**: broader discovery, corroboration, contradiction search, temporal verification, selective multi-hop exploration and targeted uncertainty-reduction loops.
+Reusable knowledge and governed cognitive efficiency should enable greater
+depth of intelligence: discovery, corroboration, contradiction search,
+temporal verification, selective multi-hop exploration and targeted
+uncertainty reduction. Low token or provider cost is not the moat.
 
 The Brain is not authorized to invent an internal model of the company from public traces. Its germination target is the **externally observable economic representation** of the organization: how it appears, connects, changes and can be reconstructed from independent public evidence.
 
@@ -40,13 +55,13 @@ The questions used during germination are therefore an **internal research progr
 3. **Independent evidence only.** User context can define a research objective but cannot become canonical truth without independent evidence.
 4. **Demand-materialized intelligence.** AXIGNAL has a global ontology but spends deep compute where demand creates value.
 5. **Compute once, learn permanently, verify when necessary.** Reusable knowledge must reduce future marginal compute.
-6. **Batch-first cognition.** Cognitive jobs are planned for asynchronous GPT-6 Luna Batch execution unless a separately authorized architecture decision creates an exception.
+6. **Determinism and answerability first.** Cognitive jobs are routed to deterministic computation, a replaceable bounded evaluator, AXENT research or abstention according to requirements and sufficient context; execution mode is policy, not doctrine.
 7. **Depth before latency.** FIRST_MAP_WOW optimizes information quality under an acceptable asynchronous window, not chatbot response speed.
 8. **Unknown is not false.** Missing evidence remains epistemically explicit.
 9. **Observed is not potential.** Evidence-backed reality and inferred compatibility are distinct graph layers.
 10. **Relationship is not PATHX.** A PATHX is an explainable economic path through relationships, not another relationship type.
 11. **Time belongs to economic state.** Currentness, first/last observation and validity are first-class.
-12. **Models interpret; Python computes; JEV evaluates structured decisions; AXIGNAL owns policy.**
+12. **Deterministic computation answers exact questions; replaceable bounded cognition evaluates only eligible questions; AXIGNAL owns composition, authority and policy.**
 13. **Providers are replaceable organs.** Model, source acquisition and graph renderer must sit behind AXIGNAL-owned boundaries.
 14. **LIVE is not DONE.** Passing map readiness begins continuous cultivation rather than ending analysis.
 15. **Every background compute unit should maximize useful knowledge gain.**
@@ -110,8 +125,8 @@ The questions used during germination are therefore an **internal research progr
                               └───────┬───────┘
                                       ▼
                               ┌───────────────┐
-                              │ GPT-6 LUNA    │
-                              │     BATCH     │
+                              │ BOUNDED        │
+                              │ COGNITION      │
                               └───────┬───────┘
                                       ▼
                               ┌───────────────┐
@@ -125,8 +140,9 @@ The questions used during germination are therefore an **internal research progr
                               └───────┬───────┘
                                       ▼
                               ┌───────────────┐
-                              │      JEV      │
-                              │ evaluation    │
+                                      │ REPLACEABLE   │
+                                      │ STRUCTURED    │
+                                      │ EVALUATOR     │
                               └───────┬───────┘
                                       │
                         ┌─────────────┴─────────────┐
@@ -250,9 +266,11 @@ subject to:
     ReadinessPolicy
 ```
 
-### 5.2 Reinvest Batch economics
+### 5.2 Reinvest research and reuse efficiency
 
-The lower unit cost of Batch should not merely make the same analysis cheaper. AXIGNAL should spend the economic headroom on intelligence with diminishing-return controls:
+Efficiency from valid knowledge reuse and governed research should deepen
+intelligence, with diminishing-return controls. Low token cost or one provider
+is not the moat. Candidate investments include:
 
 - more independent sources;
 - broader initial discovery;
@@ -273,11 +291,16 @@ Never double token usage merely because tokens are cheaper. Spend only when expe
 
 ---
 
-## 6. GPT-6 Luna Batch architecture
+## 6. Governed cognition execution architecture
 
-### 6.1 Batch is an architectural primitive
+### 6.1 Execution mode follows the task
 
-AXIGNAL must not call the model as if every cognitive question were an interactive chat turn. The Brain creates **CognitiveJobs**, batches compatible work, persists correlation metadata and asynchronously ingests results.
+AXIGNAL must not route every cognitive question through a model. The Brain
+uses deterministic computation when sufficient; it invokes bounded cognition
+only when required, and uses AXENT research when answer-required context is
+missing. If information remains insufficient it preserves unknown/abstains.
+Any future asynchronous job execution must persist correlation metadata and
+ingest results through deterministic, provenance-preserving policy.
 
 ```text
 CognitiveJob {
@@ -299,7 +322,7 @@ CognitiveJob {
 }
 ```
 
-### 6.2 Batch Planner
+### 6.2 Asynchronous job planner (if selected by policy)
 
 Responsibilities:
 
@@ -1401,7 +1424,7 @@ AXIGNAL Cognitive Contract
         ↓
 Model Provider Adapter
         ↓
-GPT-6 Luna Batch / future provider
+replaceable provider adapter, if separately authorized
 
 OBSERVATION
 AXIGNAL Source Contract
@@ -1895,7 +1918,7 @@ TypeSafe/JEV skills selected under evidence
     ↓
 axignal-python-intelligence
     ↓
-GPT-6 LUNA BATCH ARCHITECTURE
+OPTIONAL ASYNCHRONOUS COGNITION ARCHITECTURE
     ↓
 XEED ASYNC EXPERIENCE
 AXIGNAL Observatory + readiness + notifications
@@ -2005,7 +2028,7 @@ The architecture succeeds when planting a previously unseen Xeed causes AXIGNAL 
 4. acquire independently observed evidence;
 5. preserve provenance;
 6. structure and normalize evidence deterministically;
-7. allocate GPT-6 Luna Batch compute intelligently;
+7. allocate deterministic computation, bounded judgment and research by governed policy;
 8. evaluate bounded uncertainty with JEV;
 9. open targeted research loops when information is insufficient;
 10. stop spending when marginal knowledge value falls below cost/budget;
@@ -2041,7 +2064,7 @@ THE BRAIN SPENDS COMPUTE WHERE INFORMATION GAIN IS HIGHEST
       ↓
 SOURCES PROVIDE OBSERVATIONS, NEVER TRUTH
       ↓
-GPT-6 LUNA BATCH INTERPRETS AT SCALE
+AXENT RESEARCH AND BOUNDED COGNITION
       ↓
 PYTHON MAKES STRUCTURE DETERMINISTIC
       ↓

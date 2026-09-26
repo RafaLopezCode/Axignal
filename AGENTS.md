@@ -53,6 +53,23 @@ IMPLEMENTATION
 - **Never convert UNKNOWN into FALSE.** Use `None`/`UNKNOWN`; never default.
 - **Never promote inference to observation.** Observed requires evidence
   admission.
+- **AXIGNAL is an economic brain, not an economic index.** Economic
+  Opportunity Intelligence and Compounding Economic Intelligence are core;
+  cartography is cognitive substrate.
+- **Treat opportunity as derived and POTENTIAL by default.** Procurement or
+  project activity does not establish a customer, lead, subcontract or
+  observed relationship. A capability match does not establish commercial fit.
+- **Use geography as reasoning context and reach per capability.** A home
+  jurisdiction does not define an organization's total market. Do not
+  special-case TED or a country-specific source into domain semantics.
+- **Keep economic reasoning inspectable and multidimensional.** Prefer
+  deterministic computation first; do not collapse opportunity into an
+  opaque universal score. Check answerability before bounded judgment and
+  route missing context to governed research or abstention.
+- **Evaluators are replaceable and non-authoritative.** Structured model
+  output is not canonical truth; provider use requires separate authority.
+- **Reuse only with epistemic state, provenance and currentness.** Reuse is
+  not trust forever; upstream change must permit downstream reevaluation.
 - **Never let user, agency or subscriber input directly mutate canonical truth.**
   Input directs attention only.
 - **Never hard-wire AXIGNAL to one model provider.** Use

@@ -276,17 +276,13 @@ ExecutiveAnalysisProvider
         → StructuredAnalysis
 ```
 
-The current cognitive policy maps background work to OpenAI / GPT-6 Luna via
-Batch where appropriate. V2 may use that current default policy for background
-and deep analysis through `CognitiveProvider` / `ModelRouter` and the
-provider-neutral `ExecutiveAnalysisProvider` contract. Model selection is
-operational policy, not domain authority or a permanent dependency; it may
-change through evaluated policy. Batch is appropriate for asynchronous work,
-not a required architecture for every task. Interactive Ask AXENT remains a
-separate subscriber role using the current Standard Responses policy in the
-[Subscriber Experience specification](AXIGNAL_SUBSCRIBER_EXPERIENCE_ASK_AXENT_PRODUCT_SPEC.md).
-
-The product must not be coupled semantically to Luna.
+No provider or model is canonized by this product specification. AXIGNAL is
+the governed economic brain, not a provider. Deterministic computation is
+preferred first; replaceable bounded evaluators may be considered only after
+answerability is established. Missing context routes through AXENT research
+or remains unknown/abstained. Provider and execution-mode selection require
+separate authorization and evidence-based policy. The product must not be
+coupled semantically to any model or provider.
 
 The preferred architecture is:
 

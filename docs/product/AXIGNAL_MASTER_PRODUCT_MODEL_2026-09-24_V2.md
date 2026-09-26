@@ -4,15 +4,24 @@
 arquitectura conceptual\
 **Versión:** 2026-09-24 --- reconstrucción posterior a la iteración
 *Demand-Materialized / FIRST_MAP_WOW / AXIGLAND*\
+**Revision:** 2026-09-26\
+**Change:** AXIGNAL Economic Brain / Economic Opportunity Intelligence /
+Global Economic Sensors / Capability-Specific Economic Reach / Typed
+Economic Reasoning / Compounding Economic Intelligence\
 **Naturaleza:** documento vivo y normativo. Sustituye las hipótesis
 incompatibles de versiones anteriores.\
 **Propósito:** impedir deriva conceptual durante diseño, implementación
 y comercialización de AXIGNAL.
 
-> **Definición nuclear:** AXIGNAL cartografía de forma independiente la
-> economía real observable y mantiene un modelo económico canónico,
-> temporal y vivo que se materializa y profundiza según la demanda de
-> observación.
+> **Definición nuclear:** AXIGNAL es un cerebro económico que observa
+> continuamente, no un índice económico. Observa, comprende, recuerda,
+> conecta, compara, detecta cambios y demanda, razona, descubre y explica
+> la economía observable. AXIGLAND conserva memoria económica gobernada;
+> la cartografía es su sustrato cognitivo y la inteligencia económica
+> explicable, temporal, reutilizable y acumulativa es el producto.
+
+> **Observation without interpretation is incomplete. Interpretation
+> without evidence is invalid.**
 
 > **Contrato epistemológico:** **Users may direct AXIGNAL's attention,
 > but never its conclusions.**
@@ -1338,9 +1347,13 @@ parte de su sofisticación.
 
 ------------------------------------------------------------------------
 
-# 25. UX: el grafo es el producto
+# 25. UX: la inteligencia económica es el producto; el grafo es una proyección
 
-La UX debe expresar semántica epistemológica.
+La UX debe expresar semántica epistemológica. La cartografía y el grafo
+son proyecciones cognitivas de AXIGLAND: hacen legibles relaciones,
+contexto, caminos y evidencia, pero no agotan el producto ni sustituyen
+la inteligencia económica que permite descubrir qué cambió, qué importa
+y por qué merece atención.
 
 ## 25.1 Gramática visual
 
@@ -2315,15 +2328,30 @@ contra abuso sin impedir usos profesionales legítimos.
     networks.**
 44. **Si AXIGLAND no mejora independientemente del progreso del modelo,
     AXIGNAL corre riesgo de ser un wrapper.**
-45. **La calidad, independencia y utilidad del mapa son el producto.**
+45. **La cartografía es infraestructura cognitiva; la inteligencia
+    económica explicable es el producto.**
+46. **Economic Opportunity Intelligence y Compounding Economic
+    Intelligence son pilares inseparables.**
+47. **La oportunidad es derivada y POTENTIAL por defecto; nunca es FAXT,
+    cliente, lead ni relación observada por mera compatibilidad.**
+48. **El razonamiento económico debe ser tipado, descomponible,
+    temporal, basado en evidencia y explicable; no existe un score
+    universal opaco de oportunidad.**
+49. **El conocimiento reutilizado conserva procedencia, estado
+    epistémico e información de actualidad; reutilizar no equivale a
+    confiar para siempre.**
+50. **Sensores, resolución de entidades, contratos de decisión y
+    memoria temporal son activos reutilizables, no autoridad de verdad.**
+51. **La economía del valor se acumula en conocimiento gobernado
+    persistente; tokens baratos no constituyen el moat.**
 
 ------------------------------------------------------------------------
 
 # 47. Frases doctrinales
 
-> **AXIGNAL maps the observable real economy.**
+> **AXIGNAL observes and understands the observable real economy.**
 
-> **AXIGNAL maps the world as you explore it.**
+> **AXIGNAL builds economic understanding as it observes the world.**
 
 > **One world model. One canonical graph. Demand-driven
 > materialization.**
@@ -2575,8 +2603,9 @@ La experiencia ideal:
 
 # 52. Síntesis final
 
-> **AXIGNAL es un sistema autónomo e independiente de cartografía
-> económica. Mantiene AXIGLAND, un único mundo económico canónico,
+> **AXIGNAL es un cerebro económico que observa continuamente, no un
+> índice económico. Mantiene AXIGLAND, una memoria económica gobernada
+> dentro de un único mundo canónico,
 > temporal y basado en evidencia, que se materializa y profundiza según
 > la demanda. El usuario puede Xignal cualquier organización: asignar a
 > AXENT observación computacional persistente sobre ella. Esa acción
@@ -2608,3 +2637,265 @@ Si sí, probablemente pertenece a AXIGNAL.
 Si exige que el usuario configure la verdad, edite la realidad canónica
 o convierta AXIGNAL en workflow/CRM/red social, probablemente pertenece
 a otra herramienta.
+
+------------------------------------------------------------------------
+
+# 53. Cerebro económico, oportunidad y conocimiento que se acumula
+
+Esta sección consolida la doctrina de producto vigente desde 2026-09-26.
+La ontología y los principios epistemológicos anteriores siguen vigentes;
+esta sección los aplica a inteligencia de oportunidad económica y a la
+reutilización temporal de conocimiento. Este MASTER continúa siendo la
+única autoridad semántica.
+
+## 53.1 Dos pilares inseparables
+
+**Economic Opportunity Intelligence** descubre qué actividad económica
+merece atención, dónde ocurre, qué capacidades podrían ser pertinentes,
+qué actores y rutas intervienen, por qué AXIGNAL la considera relevante
+y qué sigue siendo incierto. **Compounding Economic Intelligence**
+reutiliza conocimiento gobernado que continúa vigente para producir más
+inteligencia útil con menos trabajo marginal. Ambos forman un ciclo:
+
+```text
+OBSERVE → GOVERNED MEMORY → REUSE VALID KNOWLEDGE → REASON OVER CURRENT STATE
+   → DISCOVER RELEVANCE → EXPLAIN → OBSERVE DELTA → LEARN AGAIN
+```
+
+AXIGNAL integra observación, memoria, cálculo determinista, juicio
+gobernado acotado, investigación, descubrimiento y explicación.
+AXIGLAND es memoria económica gobernada. AXENT investiga, aporta
+cognición contextual, explica y orquesta investigación. El sistema
+determinista conserva cálculo, normalización, reglas exactas, identidad,
+comparación temporal y validación estructural. Un evaluador estructurado
+reemplazable puede aportar juicio económico tipado cuando la
+determinación no alcance. La política de AXIGNAL compone resultados,
+aplica autoridad y elige acciones. La procedencia explica por qué algo
+se cree, deriva o presenta.
+
+Jev es únicamente un candidato experimental reemplazable para evaluación
+estructurada. No es el cerebro, no es autoridad canónica y su uso live no
+queda autorizado por esta doctrina. Ningún resultado de modelo se vuelve
+verdad sin las reglas de evidencia, composición y admisión de AXIGNAL.
+
+## 53.2 Señales y sensores económicos
+
+Una señal de demanda es evidencia o contexto observado que puede indicar
+necesidad económica. La demanda latente se distingue de actividad
+económica materializada. Las familias conceptuales incluyen demanda
+general/latente, proyecto, procurement y proyecto adjudicado.
+Son señales, no relaciones con clientes ni pruebas de fit comercial.
+
+AXIGNAL necesita una red global de Economic Sensors y un registro
+conceptual que permita descubrir y seleccionar fuentes según la pregunta,
+la cobertura, el tiempo y la calidad disponibles. TED es un ejemplo de
+sensor, no una arquitectura ni un dominio privilegiado. Ningún país,
+portal, organismo o fuente define el mercado total.
+
+Geografía informa el razonamiento económico, pero la jurisdicción de la
+sede no determina el mercado ni el alcance total de una empresa. Economic
+Reach puede variar por capacidad, ser observado, potencial o desconocido,
+y depender de entrega, logística, regulación, certificaciones, idioma,
+cobertura y acceso al mercado. La selección y ruta de sensores consideran
+la capacidad relevante, el alcance justificado y la geografía de la
+actividad. Estos son límites semánticos; no autorizan crawlers,
+integraciones, clases o esquemas.
+
+## 53.3 Oportunidad derivada y explicación
+
+Una oportunidad económica es una compatibilidad plausible, derivada,
+temporal y explicable entre una necesidad o demanda observable —latente o
+materializada— y capacidades observadas o justificadas. No es FAXT, cliente, lead, compra, relación
+observada ni afirmación de éxito. Su clase epistémica predeterminada es
+`POTENTIAL`; sólo hechos independientemente observados pueden sustentar
+hechos observados relacionados, sin convertir por ello la derivación en
+observación. Conceptualmente es conocimiento derivado (INXIGHT) con un
+estado económico `POTENTIAL`; no constituye un tipo de FAXT. La falta de
+oportunidad es preferible a presentar una oportunidad falsa.
+
+Un PATHX de oportunidad explica un recorrido económico mediante sus
+relaciones constituyentes; no afirma relación directa entre extremos.
+Una señal de procurement no implica cliente o relación. Una adjudicación
+no implica subcontratación. Una coincidencia de capacidad no implica fit
+comercial.
+
+El razonamiento de oportunidad conserva dimensiones inspeccionables:
+alineación capacidad-demanda, relevancia de requisitos, alcance
+geográfico, logística, elegibilidad regulatoria/procurement, acceso a
+mercado, accionabilidad temporal, coherencia de PATHX y prioridad de
+investigación. No se reducen a un score universal opaco.
+
+Cada pregunta elige un modo de ejecución: determinista, evaluador
+estructurado, investigación mediante AXENT o combinación gobernada. La
+determinación va primero. Se valida estado e información requerida antes
+de juicio. Si falta contexto, AXENT investiga; AXIGNAL no lo reemplaza
+con una conjetura de menor confianza. El juicio estructurado permanece
+acotado, reemplazable y no canónico. La política determinista compone
+resultados y conserva incertidumbre.
+
+“Why am I seeing this?” requiere una ExplanationTrace persistente con
+señales, hechos, evidencia, procedencia, estado temporal, dimensiones de
+razonamiento, incertidumbres y reglas de composición pertinentes. No se
+permite una justificación generativa posterior que invente una cadena de
+razonamiento. Un reto del usuario inicia inspección e investigación y
+puede mantener, revisar, retirar o dejar sin resolver la conclusión; no
+habilita editar la verdad canónica.
+
+## 53.4 Conocimiento económico acumulativo
+
+AXIGLAND conserva memoria económica reutilizable: sensores y cobertura,
+resoluciones de entidades, evidencia, contratos y resultados de
+razonamiento, procedencia, explicaciones e historia temporal. Reutilizar
+conocimiento válido evita comenzar cada investigación desde cero. Toda
+reutilización preserva fuente y procedencia, estado epistémico,
+dependencias, periodo de validez y estado de actualidad (currentness); cuando algo puede haber
+cambiado, se verifica o se marca stale/unknown según corresponda.
+
+Un cambio upstream debe permitir reevaluar conclusiones downstream sin
+borrar la historia. La acumulación de errores es un riesgo sistémico:
+calidad de evidencia, resolución, dependencias, frescura y errores
+previos deben seguir inspeccionables, y la incertidumbre no se elimina al
+reutilizar. La amortización cognitiva y la asimetría entre coste de
+reconstrucción y coste marginal de reutilización son hipótesis de valor,
+no resultados medidos en esta doctrina.
+
+La ventaja defendible es el conocimiento económico gobernado,
+persistentemente acumulado y reutilizable junto con infraestructura de
+razonamiento reusable; no el precio bajo de tokens. Direcciones futuras
+de medición incluyen reutilización de conocimiento/evidencia/entidades/
+sensores/contratos, investigación nueva evitada, investigación marginal
+por consulta recurrente, coste por descubrimiento útil u oportunidad
+explicable, tiempo hasta explicación, cobertura de procedencia,
+profundidad histórica, revalidación de conocimiento stale y coste
+cognitivo marginal por Xeed. Son métricas candidatas sin targets ni
+afirmaciones actuales.
+
+## 53.5 Producto y experiencia
+
+FIRST_MAP_WOW demuestra que AXIGNAL entiende la economía relevante de
+una organización: no maximiza nodos; explica identidad, actividad,
+capacidades, demanda y cambios relevantes, posibles oportunidades,
+relaciones y rutas con evidencia y límites epistémicos. La experiencia
+recurrente observa deltas, reusa conocimiento que sigue vigente,
+revalida lo que puede haber cambiado, investiga lo que falta y conserva
+la historia.
+
+Marketing comunica relevancia, demanda, capacidades y oportunidades
+explicables; ventas y desarrollo de negocio ven señales de actividad y
+encaje potencial sin convertirlas en CRM/lead; estrategia compara
+mercados, actividad, alcance y cambio temporal. AXIGNAL informa decisiones
+del usuario, no las ejecuta.
+
+La selección cognitiva prioriza reglas deterministas y contratos
+reutilizables antes de investigación o juicio. La experiencia de AXENT
+contextualiza respuestas sobre evidencia y alcance delimitado, explica
+qué sabe y qué no, y dirige investigación cuando falta información. Un
+proveedor no define la categoría, el razonamiento ni la autoridad de
+AXIGNAL.
+
+**Prueba rectora de producto:** AXIGNAL debe poder revelar actividad
+económica relevante que el usuario probablemente no estaba buscando,
+mostrar qué actividad causó la señal, qué capacidad podría encajar,
+dónde sucede, qué alcance tiene esa capacidad, qué actores y rutas
+intervienen, qué juicio acotado hizo, qué hechos lo sustentan y qué sigue
+incierto; luego debe recordar el conocimiento vigente. En la siguiente
+consulta: no empezar desde cero; observar el delta, reutilizar lo válido,
+verificar lo cambiante, investigar lo ausente, preservar historia y
+explicar el resultado.
+
+## 53.6 Semántica de proyecto y reach
+
+Economic Reach depende de la capacidad y puede incluir modo de entrega y
+portabilidad, logística, regulación, certificaciones, idioma, cobertura y
+acceso al mercado. Una capacidad es una aptitud económica observable para
+hacer, fabricar, suministrar, instalar, integrar, certificar, operar o prestar
+algo; no equivale a texto de marketing ni a una afirmación del usuario tratada
+como verdad.
+
+Una oportunidad derivada de un proyecto conserva la cadena entre evento
+económico, proyecto, requisito, demanda de capacidad, capacidad de la
+organización, compatibilidad geográfica/logística/regulatoria y oportunidad.
+Cada transición distingue OBSERVED, DERIVED, INFERRED y UNKNOWN; no se colapsa
+en un hecho único.
+
+La etapa de proyecto puede expresarse conceptualmente como planned, announced,
+tendered, awarded, execution o completed; no todos los proyectos usan cada
+etapa y esta doctrina no crea un enum. Cuando sea pertinente, estado, momento
+observado, validez y currentness permanecen diferenciados. El valor económico
+de una oportunidad depende también de cuándo se descubre: qué evento la creó,
+qué etapa atraviesa, qué cambió, si la ventana de acción sigue plausiblemente
+abierta, qué evidencia es nueva y si el estado está vigente. No existe un
+score opaco de accionabilidad.
+
+La representación conceptual puede referir a organización, familia,
+mercado/proyecto/ecosistema, señales de demanda/proyecto/procurement,
+capacidades requeridas y observadas, reach, geografía, jurisdicción, logística,
+regulación, derivación, organizaciones, FAXTs/relaciones/PATHX, evidencia,
+procedencia, tiempo, currentness, contradicciones, gaps y ExplanationTrace.
+La forma técnica exacta queda para P0-EOI-01; no se crea un schema aquí.
+Opportunity PATHX explica una trayectoria mediante relaciones constituyentes y
+nunca afirma una relación directa entre sus extremos.
+
+## 53.7 Preguntas tipadas, trazabilidad y Knowledge Frontier
+
+Las familias iniciales de razonamiento económico para P0-EOI-01 son:
+
+```text
+CAPABILITY_DEMAND_ALIGNMENT
+PROJECT_REQUIREMENT_RELEVANCE
+GEOGRAPHIC_ECONOMIC_REACH
+LOGISTICS_FEASIBILITY
+REGULATORY_ELIGIBILITY
+PROCUREMENT_ELIGIBILITY
+MARKET_ACCESS_FEASIBILITY
+TEMPORAL_ACTIONABILITY
+PATHX_ECONOMIC_COHERENCE
+OPPORTUNITY_RESEARCH_PRIORITY
+```
+
+Son familias candidatas, no DecisionContracts ejecutables. Por pregunta se
+elige explícitamente entre DETERMINISTIC, STRUCTURED_EVALUATOR, AXENT_RESEARCH
+o HYBRID. El cálculo determinista responde distancia, expiración o lookups
+exactos cuando bastan; juicio semántico sólo se evalúa si existe respuesta
+contestable y estado suficiente. DecisionContract, InformationRequirements,
+StateContract, ensamblaje y normalización deterministas, validación,
+fingerprint y AnswerabilityGate preceden juicio. Un gap activa investigación
+AXENT, evidencia nueva, reconstrucción del estado y nueva comprobación de
+answerability. Persistiendo la insuficiencia, UNKNOWN/abstención es válido.
+
+El flujo de composición es juicio tipado → composición determinista → política
+AXIGNAL → oportunidad derivada. Resultado de evaluador, confianza del modelo y
+salida cruda no son FAXT, write canónico ni verdad. “Why am I seeing this?”
+aplica también a hechos, relaciones, inferencias, mercados, anomalías y PATHX.
+Una ExplanationTrace guarda las señales/juicios, derivación, requisitos,
+capacidades, alcance geográfico/logístico/regulatorio/temporal,
+FAXTs/relaciones/PATHX, evidencia, linaje, observación/validez/currentness,
+gaps e incertidumbre. AXENT puede verbalizar la estructura persistida, pero
+no generar post hoc una justificación ni inventar conocimiento externo.
+Un reto del usuario activa inspección/reinvestigación y puede acabar UPHELD,
+REVISED, RETIRED o UNRESOLVED; reevaluación, no edición.
+
+La Knowledge Frontier prioriza relevancia económica esperada, incertidumbre,
+answerability, materialidad temporal, calidad/cobertura de sensores,
+conocimiento reutilizable actual, valor marginal de nueva investigación y
+coste, sujeta a límites de seguridad y plan. No optimiza recuento de nodos ni
+llamadas a modelos. Las siguientes son direcciones de medición futura, sin
+targets o afirmaciones de capacidad actual:
+
+```text
+KNOWLEDGE_REUSE_RATIO
+EVIDENCE_REUSE_RATIO
+ENTITY_RESOLUTION_REUSE_RATIO
+ECONOMIC_SENSOR_REUSE_RATIO
+DECISION_CONTRACT_REUSE_RATIO
+FRESH_RESEARCH_AVOIDED_RATIO
+AVERAGE_NEW_RESEARCH_PER_RETURN_QUERY
+COST_PER_USEFUL_DISCOVERY
+COST_PER_EXPLAINABLE_OPPORTUNITY
+TIME_TO_EXPLAINABLE_OPPORTUNITY
+PROVENANCE_COVERAGE
+TEMPORAL_HISTORY_DEPTH
+STALE_KNOWLEDGE_REVALIDATION_RATE
+MARGINAL_COGNITIVE_COST_PER_XEED
+MARGINAL_COGNITIVE_COST_PER_RETURNING_XEED
+```

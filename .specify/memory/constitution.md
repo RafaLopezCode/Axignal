@@ -158,6 +158,25 @@ risks being a wrapper. Internal compute efficiency is not itself a moat. Treat
 the AGI/model-owner/open-agent-network moat as unresolved. (MASTER §13.4, §30,
 §31, §44, §46.42, §46.43, §46.44)
 
+### XVI. Economic Brain and Explainable Opportunity
+
+AXIGNAL is an observing economic brain, not an economic index. Economic
+Opportunity Intelligence and Compounding Economic Intelligence are core and
+inseparable; cartography is cognitive substrate, not the final product.
+Economic reasoning must be evidence-backed, temporally contextual, typed,
+decomposable and explainable. A derived opportunity is `POTENTIAL` by default
+and must never become observed truth through presentation. No universal opaque
+opportunity score is permitted. A surfaced opportunity must retain its
+explanation and provenance. (MASTER §46, §53)
+
+### XVII. Reuse Preserves Epistemic State
+
+Reusable knowledge must retain provenance, epistemic state, dependencies and
+currentness. Reuse is not permanent trust; changed or stale inputs require
+verification, reevaluation or explicit uncertainty. Upstream changes must
+support downstream reevaluation without erasing history. Subscriber activity
+may direct attention, never canonical conclusions. (MASTER §5, §23, §53)
+
 ## Canonical Dependency Direction (enforced by Architecture Guard)
 
 ```
@@ -223,4 +242,4 @@ extraction is separate from the blocking structural Graphify check. See
   this file.
 - Report and stop if a requested implementation conflicts with doctrine.
 
-**Version**: 1.0.0 | **Ratified**: 2026-09-24 | **Last Amended**: 2026-09-24
+**Version**: 1.1.0 | **Ratified**: 2026-09-24 | **Last Amended**: 2026-09-26

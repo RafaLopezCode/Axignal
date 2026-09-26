@@ -1,9 +1,9 @@
 # AXIGNAL --- Communication & Market Narrative Strategy
 
 **Status:** Working strategic doctrine --- conversion architecture\
-**Version:** 0.3\
-**Date:** 2026-09-25\
-**Supersedes:** V0.2\
+**Version:** 0.4\
+**Date:** 2026-09-26\
+**Supersedes:** V0.3\
 **Scope:** Positioning, digital communication architecture,
 buyer-enablement, messaging hierarchy, proof system, information
 architecture, conversion journey, audience projections, trust, objection
@@ -79,6 +79,12 @@ V0.2 correctly established the product's strongest strategic ideas:
 -   replacement-cost asymmetry;
 -   inspectability through `WHY AM I SEEING THIS?`;
 -   Claim Review as reinvestigation rather than customer editing.
+
+V0.4 preserves this buyer-decision architecture and canonizes the product
+category beneath it: AXIGNAL is an observing economic brain, not an economic
+index. Its map is cognitive substrate; explainable economic intelligence is
+the product. Economic Opportunity Intelligence and Compounding Economic
+Intelligence are inseparable parts of that promise.
 
 V0.3 preserves those ideas but changes how they are communicated.
 
@@ -284,18 +290,18 @@ AXIGNAL should not compete for mental space as:
 
 The preferred category hypothesis remains:
 
-> **Independent, persistent economic observation.**
+> **Independent, persistent economic intelligence.**
 
 A shorter category expression:
 
-> **Persistent economic observation.**
+> **Persistent economic intelligence.**
 
 Plain-language explanation:
 
-> **AXIGNAL independently observes public economic evidence,
-> reconstructs how organizations exist in the observable economy,
-> connects those observations in AXIGLAND and keeps watching what
-> changes.**
+> **AXIGNAL independently observes public economic evidence, remembers
+> and connects what remains valid, detects relevant economic activity
+> and change, and explains what may matter, why, and what remains
+> uncertain.**
 
 Category and explanation have different jobs.
 
@@ -318,8 +324,8 @@ Buyer question:
 
 Required answer:
 
-> AXIGNAL is an independent system for persistent economic observation
-> of organizations.
+> AXIGNAL is an independent system for persistent, explainable economic
+> intelligence about the observable economy.
 
 Failure condition:
 
@@ -352,6 +358,8 @@ Required answer:
 
 -   outside economic perspective;
 -   connected economic context;
+-   relevant demand, projects and materialized economic activity;
+-   capability-specific reach and explainable potential opportunities;
 -   non-obvious discoveries;
 -   evidence-backed inspectability;
 -   persistent observation;
@@ -370,10 +378,11 @@ Buyer question:
 
 Required answer:
 
-> Because AXIGNAL does not end at generated text. It builds persistent,
-> structured, evidence-backed economic state, separates observation from
-> inference, preserves time, exposes provenance, supports challenge and
-> reinvestigation, and connects observations into AXIGLAND.
+> Because AXIGNAL does not end at generated text or a graph. It builds
+> persistent governed economic memory, reuses what remains current,
+> detects relevant activity, reasons across typed dimensions, separates
+> observation from inference, exposes provenance, supports challenge and
+> reinvestigation, and explains its conclusions through AXIGLAND.
 
 Failure condition:
 
@@ -3367,7 +3376,8 @@ EPISTEMIC MARKETING
 
 # Appendix C --- Canonical communication equation
 
-V0.3 replaces the previous price-centric communication equation with:
+V0.4 preserves the price separation and adds opportunity and compounding
+intelligence to the previous communication equation:
 
 ``` text
 OUTSIDE PERSPECTIVE
@@ -3378,7 +3388,13 @@ INSPECTABLE EVIDENCE
 +
 CONNECTED ECONOMIC CONTEXT
 +
+EXPLAINABLE ECONOMIC OPPORTUNITY
++
+CAPABILITY-SPECIFIC REACH
++
 TEMPORAL MEMORY
++
+COMPOUNDING INTELLIGENCE
 +
 PROFESSIONAL RELEVANCE
 =
@@ -3399,3 +3415,59 @@ PURCHASE
 
 This is the communication architecture AXIGNAL should now prove, test
 and evolve.
+
+------------------------------------------------------------------------
+
+# 57. Economic brain communication doctrine V0.4
+
+AXIGNAL is not communicated as an index, directory or graph viewer. The
+cartography is the cognitive substrate; customer value is economic
+intelligence that observes, remembers, connects, compares, detects change and
+demand, reasons, discovers and explains.
+
+The two inseparable value pillars are:
+
+| Pillar | Buyer value |
+| --- | --- |
+| Economic Opportunity Intelligence | Discover what activity may deserve attention, what capability could be relevant, where it occurs and why. |
+| Compounding Economic Intelligence | Reuse governed knowledge while current, preserve history and reduce repeated research from zero. |
+
+Communication by professional role:
+
+- **Marketing:** relevant market/project activity, demand and capability-fit
+  hypotheses with evidence and explicit limits; no promise of customers or
+  guaranteed pipeline.
+- **Sales / business development:** economic activity, actors, timing,
+  capability-specific reach and potential paths; signals are not leads,
+  customer relationships or commercial-fit guarantees.
+- **Strategy:** compare markets, projects, capabilities, reach and temporal
+  change over governed economic memory; preserve unknowns and alternative
+  interpretations.
+
+Every opportunity claim must communicate that it is derived and `POTENTIAL`
+by default. A procurement event does not imply a customer, an award does not
+imply subcontracting, a capability match does not imply commercial fit, and
+headquarters location does not set total market reach. A “Why am I seeing
+this?” promise requires an inspectable explanation trace; marketing may not
+promise post-hoc generated explanations as evidence.
+
+The compounding narrative is: observe once; preserve valid knowledge with its
+provenance, epistemic state and currentness; reuse what remains valid; verify
+what may have changed; investigate what is missing; retain history; explain
+the result. Compounding error is a risk and must not be hidden behind confident
+copy. Low token cost is not the moat. Persistent, governed, reusable, temporal
+economic understanding and reasoning infrastructure is the product-moat
+hypothesis; no outcome or metric target is claimed here.
+
+Future measurement directions include knowledge/evidence/entity/sensor/
+contract reuse, fresh research avoided, marginal research per returning
+query, cost and time per useful explainable discovery, provenance coverage,
+temporal history depth and stale-knowledge revalidation. These are candidate
+measures, not current performance claims or targets.
+
+The subscriber narrative converges with product doctrine: Today shows
+relevant activity and change; Explore supports markets, demand/projects,
+capability reach and potential opportunity; Evolution shows what changed and
+what was reused or revalidated; Evidence explains why a signal appeared and
+what is uncertain. AXENT contextualizes and researches when needed but does
+not replace evidence or provider-neutral AXIGNAL policy.
