@@ -19,7 +19,7 @@
 ## Phase 4: Verification and convergence
 
 - [x] T008 Run full deterministic repository gates, graph maintenance, no-provider audit, and diff audit. `pytest=154 passed`; Ruff, mypy, Architecture Guard and diff check pass. Governance reports only the pre-existing local ignored `.env` hygiene/no-generated-data violation; it was not read, staged, moved, or removed.
-- [ ] T009 Converge against specification, plan, tasks, and doctrine; open an unmerged repair PR only if all blocking gates pass.
+- [x] T009 Converge against specification, plan, tasks, and doctrine; open an unmerged repair PR only if all blocking gates pass. PR #17 remains open and unmerged; remote CI run 36232517361 passed for head `e2a94162a74b6bed2b2687309a978001aeb7c5e6`.
 
 ## Phase 5: Convergence
 
