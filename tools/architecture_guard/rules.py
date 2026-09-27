@@ -17,6 +17,7 @@ LAB_TYPESAFE_ADAPTER: Final[str] = "experiments.decision_lab.providers.typesafe"
 
 #: Domain is the innermost layer; these imports are forbidden from domain code.
 DOMAIN_FORBIDDEN_IMPORTS: Final[tuple[str, ...]] = (
+    "application",
     "pipeline",
     "cognition",
     "apps",

@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import dataclasses
 
+from domain.identity import OrganizationId
 from domain.organizations.model import Organization
 
 FORBIDDEN_SCOPE_FIELDS = {
@@ -25,5 +26,5 @@ def test_organization_has_no_subscriber_scope_fields() -> None:
 
 
 def test_organization_identity_is_observer_independent() -> None:
-    organization = Organization(id="org-acme", canonical_name="ACME")
-    assert organization.identity_key == "org-acme"
+    organization = Organization(id=OrganizationId("org-acme"), canonical_name="ACME")
+    assert organization.identity_key == OrganizationId("org-acme")

@@ -1,6 +1,7 @@
 # ADR-0017: Cognitive Continuity and Xeed Context Are Private Authorities Separate From AXIGLAND
 
-- **Status:** Accepted target architecture boundary; pre-implementation
+- **Status:** Accepted target architecture; Xeed authorization boundary
+  partially implemented by ADR-0018; remaining scope is pre-implementation
 - **Date:** 2026-09-26
 - **Authority:** MASTER §55; Engineering Constitution XX and XXI; existing Xeed architecture
 - **Scope:** cognitive continuity/provenance and governed AXENT context routing
@@ -92,3 +93,12 @@ private state into canonical truth as a shortcut.
 
 No table, migration, RLS policy, pgvector extension, embedding, vector DB, graph
 DB, broker/router runtime, AXENT tool, UI, provider or deployment is authorized.
+
+## Partial implementation status
+
+P0-CORE-01 and ADR-0018 implement canonical Principal/Tenant/Xeed identities,
+Principal–Tenant membership semantics and an in-memory-test-backed authorized
+Xeed read boundary. They do not implement authentication, production
+persistence, tenant/client storage, a Context Broker, Subscriber projections,
+knowledge-to-Xeed binding or private cognitive continuity. The target
+architecture in this ADR remains pre-implementation for those capabilities.

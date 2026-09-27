@@ -13,6 +13,8 @@ from __future__ import annotations
 from dataclasses import dataclass
 from datetime import datetime
 
+from domain.identity import OrganizationId
+
 
 class OrganizationError(Exception):
     """Error raised for invalid canonical organization state."""
@@ -27,7 +29,7 @@ class Organization:
     AXIGNAL into a claiming/social product (MASTER §32, §46.35).
     """
 
-    id: str
+    id: OrganizationId
     canonical_name: str
     aliases: tuple[str, ...] = ()
     locations: tuple[str, ...] = ()
@@ -45,7 +47,7 @@ class Organization:
             raise OrganizationError("organization canonical_name is required")
 
     @property
-    def identity_key(self) -> str:
+    def identity_key(self) -> OrganizationId:
         """Stable identity key. Independent of any observer."""
 
         return self.id
