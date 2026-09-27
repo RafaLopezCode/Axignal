@@ -15,7 +15,7 @@ uv run python -m tools.architecture_guard --json
 
 | Rule | Rejects | Doctrine |
 | --- | --- | --- |
-| `LAYER_IMPORT` | `domain/**` importing `pipeline`, `cognition`, `apps` or `tools`. | Constitution "Architectural Constraints" |
+| `LAYER_IMPORT` | `domain/**` importing `application`, `pipeline`, `cognition`, `apps` or `tools`. | Constitution "Architectural Constraints" |
 | `PROVIDER_SDK_IMPORT` | Importing a model-provider SDK outside `cognition/providers/`, except the official `typesafe_sdk` import in the exact experimental adapter `experiments/decision_lab/providers/typesafe.py`. | ADR-0006, MASTER §13; CTO-authorized P0-JEV-02 lab boundary |
 | `LAB_PRODUCTION_IMPORT` | Experimental Decision Laboratory importing `domain`, `pipeline` or `cognition`. | P0-JEV-02 isolation contract |
 | `PRODUCTION_LAB_IMPORT` | `domain`, `pipeline` or `cognition` importing the experimental Decision Laboratory. | P0-JEV-02 isolation contract |
@@ -37,6 +37,11 @@ The guard checks structure. The runtime invariants are checked by
 - Organization identity is canonical, not subscriber-scoped;
 - Xignal cannot mutate Organization canonical facts;
 - provider output is never canonical truth.
+
+The domain remains the innermost layer. Application authorities may consume
+domain identities and policy, while domain code cannot import application
+services or ports. `tests/architecture/test_repo_boundaries.py` checks this
+dependency direction.
 
 ## Negative tests
 

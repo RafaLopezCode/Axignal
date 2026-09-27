@@ -39,11 +39,12 @@ canonical truth authority.
 
 | Layer | Package(s) | May depend on | Must not |
 | --- | --- | --- | --- |
-| Domain | `domain/**` | stdlib + `domain` | import `pipeline`, `cognition`, `apps`, `tools` |
-| Pipeline | `pipeline/**` | stdlib + `domain` | write canonical state directly; skip admission |
-| Cognition | `cognition/**` | stdlib + `cognition` | import canonical writers; hard-wire a provider |
-| App | `apps/web/**` | query/projection surfaces | write canonical state; expose an edit-profile path |
-| Tools | `tools/**` | anything (governance only) | be imported by `domain` |
+| Domain | domain/** | stdlib + domain | import application, pipeline, cognition, apps, tools |
+| Application | application/** | stdlib + application + domain | authenticate actors, bypass domain authorization, retrieve private knowledge before an authorized context |
+| Pipeline | pipeline/** | stdlib + domain | write canonical state directly; skip admission |
+| Cognition | cognition/** | stdlib + cognition | import canonical writers; hard-wire a provider |
+| App | apps/web/** | query/projection surfaces | write canonical state; expose an edit-profile path |
+| Tools | tools/** | anything (governance only) | be imported by domain |
 
 ## Core invariants (enforced)
 
@@ -88,6 +89,21 @@ pre-implementation target only: typed scope-first AXENT retrieval, no direct
 database or arbitrary SQL access, and an unselected PostgreSQL/pgvector
 architecture hypothesis that requires measurement before implementation.
 
+### Private observer identity and authorized Xeed reads
+
+ADR-0018 establishes the current private identity boundary: Tenant owns
+private Xeeds; Principal–Tenant membership authorizes a selected Tenant;
+Organization remains global AXIGLAND identity. The application
+authorized-Xeed reader checks membership before resolving a Xeed and returns a
+distinct AuthorizedXeed result only after verifying ownership. Its trusted
+request context is not authentication.
+
+Implemented here are domain/application contracts and deterministic
+test/dev-only in-memory fixtures. Authentication adapters, production
+persistence, external API disclosure handling, Client/Workspace authority,
+knowledge-to-Xeed binding, Subscriber read models and Context Broker remain
+unimplemented. ObservationSeed is not a Xeed and has no inferred binding.
+
 ## Data model
 
 Conceptual entities (MASTER §36): `Organization`, `FAXT`, `Evidence`,
@@ -100,7 +116,12 @@ boundary-critical primitives; the full ontology is a later milestone (MASTER
 
 ```
 apps/web/                     presentation boundary (no features yet)
+application/
+  xeed_access/                membership-first authorized Xeed read boundary
 domain/
+  identity.py                 distinct string-backed canonical identity types
+  tenancy/                     Principal, Tenant and membership
+  xeed/                        private Xeed identity and Organization reference
   evidence/                   evidence + admission + epistemic states
   organizations/              canonical organizations
   faxt/                       evidence-backed canonical units
