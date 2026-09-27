@@ -15,6 +15,7 @@ from domain.evidence.admission import (
 )
 from domain.evidence.epistemics import EpistemicState
 from domain.faxt.model import FAXT, FAXTCreationError
+from domain.identity import FaxtId
 
 
 def _evidence(identifier: str = "ev-1") -> Evidence:
@@ -33,7 +34,7 @@ def test_faxt_can_be_created_with_admitted_evidence() -> None:
     evidence = _evidence()
     decision = EvidenceAdmission.admit(evidence)
     faxt = FAXT.create(
-        faxt_id="faxt-1",
+        faxt_id=FaxtId("faxt-1"),
         subject_id="org-acme",
         predicate="MANUFACTURES",
         object_or_value="industrial pumps",
@@ -41,6 +42,7 @@ def test_faxt_can_be_created_with_admitted_evidence() -> None:
         decision=decision,
     )
     assert faxt.epistemic_state is EpistemicState.OBSERVED
+    assert faxt.id == FaxtId("faxt-1")
     assert faxt.evidence_refs == ("ev-1",)
 
 
@@ -49,7 +51,7 @@ def test_faxt_creation_without_admission_fails_closed() -> None:
     forged = AdmissionDecision(admitted=True, evidence_id="ev-1", reason="forged")
     with pytest.raises(EvidenceAdmissionRequired):
         FAXT.create(
-            faxt_id="faxt-2",
+            faxt_id=FaxtId("faxt-2"),
             subject_id="org-acme",
             predicate="MANUFACTURES",
             object_or_value="industrial pumps",
@@ -63,7 +65,7 @@ def test_faxt_rejects_decision_for_different_evidence() -> None:
     decision = EvidenceAdmission.admit(_evidence("ev-2"))
     with pytest.raises(FAXTCreationError):
         FAXT.create(
-            faxt_id="faxt-3",
+            faxt_id=FaxtId("faxt-3"),
             subject_id="org-acme",
             predicate="MANUFACTURES",
             object_or_value="pumps",

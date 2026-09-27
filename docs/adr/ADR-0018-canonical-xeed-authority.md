@@ -1,7 +1,8 @@
 # ADR-0018: Canonical Xeed Identity and Tenant Authorization Boundary
 
-- **Status:** Accepted for P0-CORE-01; implemented as a domain/application
-  authority on the P0-CORE-01 branch
+- **Status:** Accepted; P0-CORE-01 identity/read authority and P0-CORE-02
+  FAXT contextual-read boundary are implemented as domain/application
+  contracts with deterministic test/dev authority
 - **Date:** 2026-09-27
 - **Authority:** CTO P0-CORE-01 decision; MASTER §§3–7, §55; Constitution
   IV, VI, XX and XXI
@@ -45,7 +46,7 @@ Tenant without authenticating either.
 - Future private external adapters must map unknown-Xeed and cross-Tenant
   denial to the same non-enumerating not-found response. No external API is
   implemented here.
-- Production persistence, migration, knowledge-to-Xeed binding, Client
+- Production persistence, migration, knowledge reference writing, Client
   authority, Workspace authority, Context Broker, Subscriber read model and
   AXIGLAND projection remain unimplemented. In-memory authority exists only
   as test/dev infrastructure.
@@ -83,7 +84,9 @@ of future, separately authorized work.
 - The in-memory test/dev authority is not production persistence.
 - Future APIs must conceal Xeed existence across unknown and cross-Tenant
   outcomes.
-- P0-HFX-01 remains not started because canonical knowledge-to-Xeed binding
-  is not implemented.
+- P0-CORE-02 establishes a private Xeed-to-global-FAXT reference and an
+  AuthorizedXeed-only read boundary. Production reference writing and
+  persistence remain unimplemented; see ADR-0019.
+- P0-HFX-01 remains not started.
 - ADR-0017 remains the broader target for private continuity and AXENT routing;
   this ADR implements only the root Xeed identity/read boundary.

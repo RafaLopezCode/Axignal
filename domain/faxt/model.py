@@ -18,6 +18,7 @@ from domain.evidence.admission import (
     EvidenceAdmissionError,
 )
 from domain.evidence.epistemics import Currentness, EpistemicState
+from domain.identity import FaxtId
 
 
 class FAXTCreationError(EvidenceAdmissionError):
@@ -28,7 +29,7 @@ class FAXTCreationError(EvidenceAdmissionError):
 class FAXT:
     """A canonical, evidence-backed unit of knowledge (MASTER §15.2)."""
 
-    id: str
+    id: FaxtId
     subject_id: str
     predicate: str
     object_or_value: str
@@ -42,7 +43,7 @@ class FAXT:
     def create(
         cls,
         *,
-        faxt_id: str,
+        faxt_id: FaxtId,
         subject_id: str,
         predicate: str,
         object_or_value: str,
@@ -55,6 +56,8 @@ class FAXT:
         """Create a canonical FAXT. Requires evidence admission."""
 
         EvidenceAdmission.require(decision)
+        if not faxt_id.strip():
+            raise FAXTCreationError("a canonical FAXT requires an id")
         if decision.evidence_id != evidence.id:
             raise FAXTCreationError("admission decision does not match the supplied evidence")
         if epistemic_state is EpistemicState.UNKNOWN:

@@ -5,6 +5,7 @@ from __future__ import annotations
 from typing import NewType
 
 OrganizationId = NewType("OrganizationId", str)
+FaxtId = NewType("FaxtId", str)
 PrincipalId = NewType("PrincipalId", str)
 TenantId = NewType("TenantId", str)
 XeedId = NewType("XeedId", str)
