@@ -98,11 +98,16 @@ authorized-Xeed reader checks membership before resolving a Xeed and returns a
 distinct AuthorizedXeed result only after verifying ownership. Its trusted
 request context is not authentication.
 
-Implemented here are domain/application contracts and deterministic
-test/dev-only in-memory fixtures. Authentication adapters, production
-persistence, external API disclosure handling, Client/Workspace authority,
-knowledge-to-Xeed binding, Subscriber read models and Context Broker remain
-unimplemented. ObservationSeed is not a Xeed and has no inferred binding.
+P0-CORE-02 adds a private contextual reference from a Xeed to a global FAXT
+and an application reader that requires AuthorizedXeed, checks the reference
+before resolving the shared FAXT, and returns the original canonical object.
+The reference conveys no ownership, truth, provenance, relevance, discovery,
+source rights or epistemic promotion. Test/dev fixtures provide deterministic
+in-memory references; production reference writing and persistence remain
+unimplemented. Authentication adapters, external API disclosure handling,
+Client/Workspace authority, Subscriber read models and Context Broker remain
+unimplemented. Evidence, Observation, Relationship, INXIGHT and PATHX have no
+direct Xeed binding. ObservationSeed is not a Xeed and grants no reference.
 
 ## Data model
 
@@ -118,6 +123,7 @@ boundary-critical primitives; the full ontology is a later milestone (MASTER
 apps/web/                     presentation boundary (no features yet)
 application/
   xeed_access/                membership-first authorized Xeed read boundary
+  xeed_knowledge/             AuthorizedXeed-only contextual FAXT read boundary
 domain/
   identity.py                 distinct string-backed canonical identity types
   tenancy/                     Principal, Tenant and membership
