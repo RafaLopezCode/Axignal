@@ -11,5 +11,5 @@
 - [x] No FAXT epistemic/currentness/provenance copy or mutation.
 - [x] Production writer/persistence and temporal/lifecycle semantics remain
   unimplemented/not established.
-- [ ] All applicable deterministic gates pass.
-- [ ] CTO self-audit passes; PR remains unmerged.
+- [x] All applicable deterministic gates pass.
+- [x] CTO self-audit passes; PR remains unmerged.

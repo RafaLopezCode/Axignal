@@ -17,6 +17,6 @@
 - [x] T007 Add authorization, isolation, reuse, enumeration and negative tests.
 - [x] T008 Add ADR and update architecture status without rewriting history.
 - [x] T009 Add Spec Kit artifacts following the next existing number.
-- [ ] T010 Run applicable local gates and Graphify structural update/check.
-- [ ] T011 Review diff and self-audit; commit, push and open unmerged PR only if
+- [x] T010 Run applicable local gates and Graphify structural update/check.
+- [x] T011 Review diff and self-audit; commit, push and open unmerged PR only if
   every required gate passes.
