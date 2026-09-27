@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>AXIGNAL Design System Reference · TEST_FIXTURE</title>
+    <link rel="stylesheet" href="../../design-system/global.css" />
+    <style>
+      .ax-reference {
+        max-inline-size: 56rem;
+        margin-inline: auto;
+        padding-block: var(--ax-space-8);
+        padding-inline: var(--ax-space-6);
+      }
+
+      .ax-reference__section {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: var(--ax-space-3);
+        padding-block: var(--ax-space-4);
+        border-block-start: var(--ax-border-hairline) solid var(--ax-hairline);
+      }
+
+      .ax-reference__meta {
+        flex-basis: 100%;
+      }
+
+      .ax-reference__heading {
+        margin-block-end: var(--ax-space-4);
+        font-size: clamp(1.5rem, 2.2vw, 2rem);
+      }
+
+      .ax-reference__input {
+        display: grid;
+        max-inline-size: 24rem;
+        gap: var(--ax-space-1);
+      }
+    </style>
+  </head>
+  <body>
+    <main class="ax-reference" data-fixture="TEST_FIXTURE">
+      <p class="ax-type-meta ax-muted">TEST_FIXTURE · P0-DS-01 REFERENCE SPECIMEN</p>
+      <h1 class="ax-type-display ax-reference__heading">A measured visual foundation</h1>
+      <p class="ax-type-body ax-muted">
+        Synthetic controls only. This page contains no Subscriber, AXENT, provenance, or timeline data.
+      </p>
+
+      <section class="ax-reference__section" aria-label="Button states">
+        <p class="ax-type-meta ax-reference__meta">BUTTON · KEYBOARD FOCUS · DISABLED</p>
+        <button class="ax-button" type="button">Why does this matter?</button>
+        <button class="ax-button" data-tone="quiet" type="button">Show evidence</button>
+        <button class="ax-button" type="button" disabled>Unavailable</button>
+      </section>
+
+      <section class="ax-reference__section" aria-label="Input and flexible pill">
+        <p class="ax-type-meta ax-reference__meta">INPUT · LOCALIZED CONTENT WIDTH</p>
+        <label class="ax-reference__input">
+          <span class="ax-type-meta">SEARCH LABEL</span>
+          <input class="ax-input" type="text" placeholder="A longer translated phrase" />
+        </label>
+        <span class="ax-pill"><span class="ax-pill__label">Long CJK-compatible label 長い表示名</span></span>
+        <span class="ax-pill" lang="ar" dir="rtl">
+          <span class="ax-pill__label">نص تجريبي طويل</span>
+        </span>
+      </section>
+
+      <section class="ax-reference__section" aria-label="Epistemic status states">
+        <p class="ax-type-meta ax-reference__meta">STATUS · SEMANTIC LABEL + VISUAL MARK</p>
+        <span class="ax-status" data-state="observed">Observed</span>
+        <span class="ax-status" data-state="potential">Potential</span>
+        <span class="ax-status" data-state="unknown">Unknown</span>
+        <span class="ax-status" data-state="stale">Stale</span>
+        <span class="ax-status" data-state="historical">Historical</span>
+      </section>
+    </main>
+  </body>
+</html>

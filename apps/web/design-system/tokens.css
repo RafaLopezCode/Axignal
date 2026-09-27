@@ -1,0 +1,73 @@
+/* AXIGNAL visual foundations extracted from the DeepSeek V2 Golden Master. */
+:root {
+  color-scheme: light;
+
+  /* Surfaces and text */
+  --ax-paper: #f2eee4;
+  --ax-paper-raised: #faf8f2;
+  --ax-paper-muted: #e9e4d7;
+  --ax-panel: rgb(250 248 242 / 60%);
+  --ax-ink: #201e19;
+  --ax-ink-subtle: #3d3a32;
+  --ax-ink-muted: #6a665b;
+  --ax-ink-faint: #9d978a;
+
+  /* Hairlines and the restrained brass accent */
+  --ax-hairline: rgb(32 30 25 / 11%);
+  --ax-hairline-strong: rgb(32 30 25 / 20%);
+  --ax-hairline-emphasis: rgb(32 30 25 / 32%);
+  --ax-brass: #967a2f;
+  --ax-brass-bright: #b99a4e;
+  --ax-brass-wash: rgb(150 122 47 / 12%);
+
+  /* Meaning-bearing colors; visual state never relies on color alone. */
+  --ax-epistemic-observed: #2f6b62;
+  --ax-epistemic-potential: #967a2f;
+  --ax-epistemic-unknown: #8b8677;
+  --ax-epistemic-stale: #8a6a33;
+  --ax-epistemic-historical: #9a968b;
+  --ax-epistemic-inference: #474c85;
+  --ax-reference-corroborated: #1f574f;
+  --ax-reference-contradicted: #a8553c;
+
+  /* Serif for editorial emphasis, sans for interface, mono for metadata. */
+  --ax-font-display: 'Fraunces', 'Iowan Old Style', 'Palatino Linotype', Georgia, serif;
+  --ax-font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --ax-font-mono: 'IBM Plex Mono', 'SFMono-Regular', Consolas, monospace;
+  --ax-font-size-micro: 9px;
+  --ax-font-size-meta: 10px;
+  --ax-font-size-small: 12px;
+  --ax-font-size-body: 15px;
+  --ax-font-size-large: 16px;
+  --ax-line-height-tight: 1.25;
+  --ax-line-height-body: 1.5;
+  --ax-line-height-open: 1.65;
+  --ax-tracking-meta: 0.16em;
+
+  /* Repeated V2 intervals; component-specific measurements stay local. */
+  --ax-space-1: 4px;
+  --ax-space-2: 8px;
+  --ax-space-3: 12px;
+  --ax-space-4: 16px;
+  --ax-space-6: 24px;
+  --ax-space-8: 32px;
+  --ax-space-10: 40px;
+
+  --ax-radius-control: 2px;
+  --ax-radius-card: 5px;
+  --ax-radius-pill: 999px;
+  --ax-border-hairline: 1px;
+  --ax-outline-focus: 1.6px;
+
+  --ax-opacity-muted: 0.72;
+  --ax-opacity-deemphasized: 0.5;
+  --ax-opacity-disabled: 0.5;
+  --ax-attention-selected-background: var(--ax-brass-wash);
+  --ax-attention-selected-stroke: var(--ax-brass-bright);
+  --ax-attention-active-ink: var(--ax-brass);
+
+  --ax-motion-quick-duration: 150ms;
+  --ax-motion-focus-duration: 440ms;
+  --ax-motion-focus-easing: cubic-bezier(0.22, 1, 0.36, 1);
+  --ax-motion-pulse-duration: 5.5s;
+}
