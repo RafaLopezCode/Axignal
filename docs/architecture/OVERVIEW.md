@@ -104,7 +104,10 @@ before resolving the shared FAXT, and returns the original canonical object.
 The reference conveys no ownership, truth, provenance, relevance, discovery,
 source rights or epistemic promotion. Test/dev fixtures provide deterministic
 in-memory references; production reference writing and persistence remain
-unimplemented. Authentication adapters, external API disclosure handling,
+unimplemented. P0-CORE-03 adds an AuthorizedXeed-only collection read that
+enumerates only that Xeed's references before resolving global FAXTs; a
+dangling reference fails the whole read. Its stable identity order is for
+determinism only. Authentication adapters, external API disclosure handling,
 Client/Workspace authority, Subscriber read models and Context Broker remain
 unimplemented. Evidence, Observation, Relationship, INXIGHT and PATHX have no
 direct Xeed binding. ObservationSeed is not a Xeed and grants no reference.
@@ -123,7 +126,7 @@ boundary-critical primitives; the full ontology is a later milestone (MASTER
 apps/web/                     presentation boundary (no features yet)
 application/
   xeed_access/                membership-first authorized Xeed read boundary
-  xeed_knowledge/             AuthorizedXeed-only contextual FAXT read boundary
+  xeed_knowledge/             AuthorizedXeed-only single and collection FAXT read boundaries
 domain/
   identity.py                 distinct string-backed canonical identity types
   tenancy/                     Principal, Tenant and membership
