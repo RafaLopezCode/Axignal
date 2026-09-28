@@ -28,6 +28,7 @@ Constitution (`.specify/memory/constitution.md`).
 | [ADR-0018](ADR-0018-canonical-xeed-authority.md) | Canonical Xeed Identity and Tenant Authorization Boundary (**ACCEPTED; P0-CORE-01 IMPLEMENTED**) | §§3–7, §55 |
 | [ADR-0019](ADR-0019-canonical-xeed-faxt-contextual-reference.md) | Canonical Xeed–FAXT Contextual Reference (**ACCEPTED; P0-CORE-02 IMPLEMENTED**) | §§4.5–6, §15, §20 |
 | [ADR-0020](ADR-0020-authorized-xeed-faxt-collection-read.md) | Authorized Xeed FAXT Collection Read (**ACCEPTED; P0-CORE-03 IMPLEMENTED**) | §§4.5–6, §15, §20 |
+| [ADR-0021](ADR-0021-authorized-xeed-organization-context-read.md) | Authorized Xeed Read of Its Global Organization Context (**ACCEPTED; P0-CORE-04 CONTRACT IMPLEMENTED**) | §§3, 6.1, 7.3, 15.2, 36 |
 
 ## Adding an ADR
 
