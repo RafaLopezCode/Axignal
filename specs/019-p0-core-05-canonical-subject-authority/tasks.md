@@ -16,4 +16,4 @@
 - [x] Verify Graphify, deterministic build, Golden Master manifest, local
   governance hygiene and changed-path scope; remote secret scan remains pending.
 - [x] Complete A01–A22 adversarial self-audit.
-- [ ] Commit, push, open one PR, and verify exact-head remote CI; do not merge.
+- [x] Commit, push, open one PR, and verify exact-head remote CI; do not merge.
