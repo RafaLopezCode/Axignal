@@ -1,0 +1,210 @@
+{
+  "schema_version": 1,
+  "baseline_name": "P0-HFX-00 accepted executable DeepSeek V2 source identity",
+  "root_policy": "External root supplied to the verifier; never stored here",
+  "included_paths": [
+    "index.html",
+    "package.json",
+    "pnpm-lock.yaml",
+    "src/main.tsx",
+    "src/styles/v2.css",
+    "src/v2/Axent.tsx",
+    "src/v2/Connections.tsx",
+    "src/v2/Field.tsx",
+    "src/v2/FocusTrail.tsx",
+    "src/v2/Gov.tsx",
+    "src/v2/Lens.tsx",
+    "src/v2/Logo.tsx",
+    "src/v2/Meridian.tsx",
+    "src/v2/Reader.tsx",
+    "src/v2/V2App.tsx",
+    "src/v2/XeedSwitcher.tsx",
+    "src/v2/content.ts",
+    "src/v2/data.ts",
+    "src/v2/marks.tsx",
+    "src/v2/rev.tsx",
+    "src/v2/store.tsx",
+    "src/v2/transforms/Compare.tsx",
+    "src/v2/transforms/Evidence.tsx",
+    "src/v2/transforms/Join.tsx",
+    "src/v2/transforms/Provenance.tsx",
+    "tsconfig.json",
+    "vite.config.ts"
+  ],
+  "recursive_source_roots": [
+    "src/v2"
+  ],
+  "excluded_paths": [
+    ".git/",
+    "node_modules/",
+    "dist/",
+    "coverage/",
+    ".vite/",
+    ".cache/",
+    ".env",
+    ".env.*",
+    "*.pem",
+    "*.key",
+    "credentials.json",
+    "*.p12",
+    "dev-server.log",
+    "temporary files",
+    "editor state",
+    "operating-system metadata",
+    "logs",
+    "inactive V1 source under src/App.tsx, src/components/, src/data/, src/lib/, src/state/, src/views/, and legacy styles"
+  ],
+  "policies": {
+    "path_representation": "relative POSIX paths",
+    "path_separator": "/",
+    "ordering": "ascending Unicode code-point lexicographic order",
+    "content_treatment": "exact source bytes; no newline or Unicode normalization",
+    "line_endings": "CRLF and LF differences change the file digest",
+    "symlinks": "rejected in included paths and recursive source roots",
+    "hash_algorithm": "SHA-256",
+    "per_file_record": "path, byte length, lowercase hexadecimal SHA-256",
+    "aggregate_construction": "SHA-256 of sorted UTF-8 records path NUL byte-length NUL per-file-digest LF",
+    "manifest_encoding": "UTF-8 JSON, two-space indentation, LF line endings, final LF; the manifest itself is not an input",
+    "missing_required_input": "fail closed",
+    "unexpected_source_behavior": "fail closed for any file under recursive_source_roots absent from included_paths",
+    "filesystem_metadata": "timestamps, permissions, and ownership are excluded"
+  },
+  "files": [
+    {
+      "path": "index.html",
+      "size_bytes": 1210,
+      "sha256": "0b55c5e51c6b4f535f7ba8c0ae93cd144dabf966faae9b7139d5e392be16a63a"
+    },
+    {
+      "path": "package.json",
+      "size_bytes": 575,
+      "sha256": "33036bbd80d2f69c1c28e2b7fbfdfb0bf8faceaf8e084ba13ffd01a1f066a436"
+    },
+    {
+      "path": "pnpm-lock.yaml",
+      "size_bytes": 36575,
+      "sha256": "cadddfd3dfbf4b74345a3f6246be918fbaa322088768f9763b2499616b9a7dc8"
+    },
+    {
+      "path": "src/main.tsx",
+      "size_bytes": 245,
+      "sha256": "1b5e82df96175e96e553606145a08ad84e17dabc5c9de9469e1bf04f30fe0eda"
+    },
+    {
+      "path": "src/styles/v2.css",
+      "size_bytes": 67735,
+      "sha256": "2efe4fbff09b37fb86a3edd6a29d87c508fc70e143f8b0ac4d8aec6887b36375"
+    },
+    {
+      "path": "src/v2/Axent.tsx",
+      "size_bytes": 4338,
+      "sha256": "165aa674ae3e8f3d2346a56b6ca134807ee01c699cfe98e50ccbe066be6061cf"
+    },
+    {
+      "path": "src/v2/Connections.tsx",
+      "size_bytes": 2249,
+      "sha256": "5a56e3d60ae38dd8af3a54e7f1cdfde44575bbc28668ee1744ed717a0b23dc73"
+    },
+    {
+      "path": "src/v2/Field.tsx",
+      "size_bytes": 18534,
+      "sha256": "11c79326d9b25c7625bbc652d3621a644dda6be870b7265b3732f302d55a077f"
+    },
+    {
+      "path": "src/v2/FocusTrail.tsx",
+      "size_bytes": 2349,
+      "sha256": "074f10b0b23dc65a0a4463e2d4cd73113f43d3a0432acb85c302f1fd31492fa3"
+    },
+    {
+      "path": "src/v2/Gov.tsx",
+      "size_bytes": 7170,
+      "sha256": "3a32b17fae89a44a19b5d94c80b53f5c8cbb0cb3c199e5badf20627615da5e1c"
+    },
+    {
+      "path": "src/v2/Lens.tsx",
+      "size_bytes": 2704,
+      "sha256": "1db0bc170cae73ec238f8e03c93603dcf1b45b9dc461530a15f6113ab9be774f"
+    },
+    {
+      "path": "src/v2/Logo.tsx",
+      "size_bytes": 938,
+      "sha256": "c3cf17edabb77588719ddcc0c5c0fd81e6f9371434cac07c2cc22e34234a2159"
+    },
+    {
+      "path": "src/v2/Meridian.tsx",
+      "size_bytes": 3500,
+      "sha256": "cb3f7981ae523edb58b61191af26dbb4ad0e42be40d5f3008ab848a173476ea1"
+    },
+    {
+      "path": "src/v2/Reader.tsx",
+      "size_bytes": 6343,
+      "sha256": "e773a56f04ecac1ee6f2c51bd2401d6ad97e72296886dcd668c38056720ba369"
+    },
+    {
+      "path": "src/v2/V2App.tsx",
+      "size_bytes": 3372,
+      "sha256": "200f7eff3ce483910e226b5c71b2696041d2bfbe1b09187a1b32cc053f0fa9f0"
+    },
+    {
+      "path": "src/v2/XeedSwitcher.tsx",
+      "size_bytes": 8040,
+      "sha256": "6f89328ff1b744eb9cc5627899bbe7a59c5839cb3ce2065a15e28d3d21b24332"
+    },
+    {
+      "path": "src/v2/content.ts",
+      "size_bytes": 7892,
+      "sha256": "7391a22d426bc6971f56238c00e36f99d504dcdf69fe3e9bee2ab6980292356e"
+    },
+    {
+      "path": "src/v2/data.ts",
+      "size_bytes": 21750,
+      "sha256": "9f6b2e683f31ed90c0df79b81279c52bfc828115ea8d25c4938291207bb54b1d"
+    },
+    {
+      "path": "src/v2/marks.tsx",
+      "size_bytes": 2341,
+      "sha256": "317d5709e4bbbbc9b9c0afe9a262cbb9b44dcad43269577aff017036fafe2131"
+    },
+    {
+      "path": "src/v2/rev.tsx",
+      "size_bytes": 577,
+      "sha256": "edc2d0f71f3042e8c3fc4c5a8b6eabf9a011665191741c2ca62e3681fcb228d9"
+    },
+    {
+      "path": "src/v2/store.tsx",
+      "size_bytes": 12927,
+      "sha256": "70509609cae213537c52197eb341a005b5c99628b05075d01eb30cf53949d69c"
+    },
+    {
+      "path": "src/v2/transforms/Compare.tsx",
+      "size_bytes": 2112,
+      "sha256": "e8a367b64a1d1183b842e17c42753a529492dcd5ec2a6184653e1afb70171fb0"
+    },
+    {
+      "path": "src/v2/transforms/Evidence.tsx",
+      "size_bytes": 4853,
+      "sha256": "c98ba2f4edf18eb9e241b0d8139037b561b04e3f329bae845d9d6be3e47349a1"
+    },
+    {
+      "path": "src/v2/transforms/Join.tsx",
+      "size_bytes": 3161,
+      "sha256": "9a575d8d717f529d424db50a6c65efe007b3d78107929636990eaf6d000bc931"
+    },
+    {
+      "path": "src/v2/transforms/Provenance.tsx",
+      "size_bytes": 1957,
+      "sha256": "1b3f36a3208b88988de88d4ea2f27c7047834c6ce68824ca6214518a9060d145"
+    },
+    {
+      "path": "tsconfig.json",
+      "size_bytes": 690,
+      "sha256": "7288689aacd156209fa06b663920aa7288b1278f2a58a2c97ca125e451344087"
+    },
+    {
+      "path": "vite.config.ts",
+      "size_bytes": 263,
+      "sha256": "6fc4ef010ad892246f1fc96fc5cc4d420fe73475344228f1d94b89b372854b2f"
+    }
+  ],
+  "aggregate_sha256": "1b4154dd152d9ecd20bfaeb7585daf78b4fbc79f182fce32a2f94ff017d6ad51"
+}
