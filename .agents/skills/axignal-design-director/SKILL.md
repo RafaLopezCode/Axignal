@@ -170,6 +170,18 @@ Only explicit human acceptance can close the visual gate.
 
 ## Anti-generic-AI constraints
 
+> Agents MUST NOT invent common interface icons. Use AXIGNAL's canonical icon
+> library. Custom iconography is reserved for AXIGNAL-specific semantics and
+> requires Design System governance.
+
+Select an icon by first naming the action or concept, then checking the
+canonical library and its semantics. Do not draw common icons, use Unicode
+glyphs, mix icon libraries or weights, or copy arbitrary SVG paths. If no
+canonical icon communicates the concept, use a text label or no icon. Keep the
+AXIGNAL brand mark as its governed brand asset. Treat existing improvised icons
+in the accepted Golden Master as `GOLDEN_MASTER_ICONOGRAPHY_DEBT`; do not migrate
+them without explicit visual authorization.
+
 Reject category-interchangeable output: generic SaaS dashboards, gratuitous card grids, arbitrary gradients, decorative metrics, fake activity feeds, oversized marketing typography inside product UI, excessive rounded containers, meaningless glassmorphism, and animation without cognitive purpose.
 
 Do not ban techniques categorically. A technique is valid when it serves AXIGNAL's cognitive model and accepted visual language.

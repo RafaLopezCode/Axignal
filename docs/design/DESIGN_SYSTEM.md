@@ -81,6 +81,75 @@ attenuation. These changes are classified
 extracted text foregrounds against paper are checked against WCAG AA in the
 tests.
 
+## Canonical iconography
+
+The single canonical library for common interface icons is **Lucide**, consumed
+as `lucide-react` by a future React/TypeScript product surface. The source
+selection is recorded in [ADR-0022](../adr/ADR-0022-canonical-iconography.md).
+The current repository has no product web runtime or React package manifest, so
+the package is intentionally not installed as an unused dependency. When a
+real consumer is introduced, pin its exact published package version and lock
+it with that consumer. Import named icons from the package entry points so
+production bundlers can tree-shake unused icons. Do not mix Lucide with
+Phosphor or another icon set.
+
+The icon grammar follows the existing AXIGNAL design tokens:
+
+- Use `1em` for an icon embedded in a text run, `16px` for ordinary controls,
+  and `20px` only for a prominent control with a dedicated slot. These values
+  are semantic roles, not per-screen sizing choices; add tokens when a real
+  consumer needs them.
+- Use outline icons with a normalized 1.5px stroke as the default. Avoid filled,
+  duotone, or mixed-weight variants for common controls. A filled treatment is
+  permitted only when the product contract assigns a persistent selected state
+  and a reviewed icon pair exists; color alone never communicates that state.
+- Active and inactive states retain the same icon shape and use the existing
+  semantic state tokens plus text or control state. Do not invent per-icon
+  colors.
+- Put icon and label on the same alignment axis with the existing
+  `--ax-space-2` gap. Center control icons in their hit area. Inline icons align
+  to the text line; any optical correction belongs in a shared consumer
+  primitive, not a screen-specific offset.
+- Choose the action or concept before searching for a symbol. When no Lucide
+  icon expresses it clearly, use a text label or omit the icon. Do not use
+  Unicode glyphs as product iconography.
+- An icon-only control needs a programmatic accessible name on the control.
+  Hide its icon from assistive technology when that name is on the control.
+  A tooltip may supplement the name and must appear on pointer hover and keyboard
+  focus; it cannot be the only accessible name. A labeled icon is decorative to
+  assistive technology unless the icon conveys additional meaning not in the
+  label.
+- Preserve the AXIGNAL isotipo and wordmark as governed brand assets; they are
+  not replaceable by a library mark.
+
+No `AxignalIcon` wrapper is added while there is no React consumer. At the first
+consumer, add only a thin wrapper if it is needed to enforce the source, the
+three semantic sizes, stroke, and accessible decorative/meaningful behavior.
+It must not become a general icon registry or accept arbitrary icon sources.
+
+### Golden Master iconography debt
+
+The accepted V2 Golden Master contains common-action Unicode glyphs. They are
+classified as `IMPROVISED_ICON` and held as
+`GOLDEN_MASTER_ICONOGRAPHY_DEBT`; this decision does not authorize changing the
+accepted reference:
+
+| Golden Master source | Existing glyph use | Classification | Treatment |
+| --- | --- | --- | --- |
+| `src/v2/FocusTrail.tsx` | Back/forward/home controls (`←`, `→`, `⌂`) | `IMPROVISED_ICON` | Preserve pending explicit visual authorization. |
+| `src/v2/Gov.tsx` | Home and sidebar direction glyphs (`⌂`, `«`, `»`) | `IMPROVISED_ICON` | Preserve pending explicit visual authorization. |
+| `src/v2/Field.tsx` | Viewport controls (`+`, `−`, `↻`, `⤢`, `◎`) | `IMPROVISED_ICON` | Preserve pending explicit visual authorization. |
+| `src/v2/Meridian.tsx` | Direction glyph (`→`) | `IMPROVISED_ICON` | Preserve pending explicit visual authorization. |
+| `src/v2/Reader.tsx` | Action-copy direction glyph (`→`) | `IMPROVISED_ICON` | Preserve pending explicit visual authorization. |
+| `src/v2/Logo.tsx` | AXIGNAL isotipo | `AXIGNAL_BRAND_ASSET` | Preserve; governed by brand authority. |
+| `src/v2/marks.tsx` | Epistemic state marks | `LEGITIMATE_CUSTOM_SEMANTIC_ICON` candidate | Preserve in the reference; govern before reuse outside it. |
+| `src/v2/Field.tsx`, `Evidence.tsx`, `Join.tsx` | Graph wires, minimap, evidence and trend diagrams | Not an interface icon | Preserve as data visualization. |
+
+The listed Golden Master paths are external to this repository and are not
+modified by the icon-library selection. Any future migration requires a
+separately authorized visual change and human review against the accepted
+reference.
+
 ## Golden Master validation
 
 The executable reference is `D:\AXIGNAL\UX DEEPSEEK`, active V2 at

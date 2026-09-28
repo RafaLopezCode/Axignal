@@ -3,6 +3,23 @@
   "scope": "AXIGNAL design-agent tooling provenance; not product or visual authority",
   "authority": "ADVISORY",
   "reviewed_on": "2026-09-28",
+  "canonical_iconography": {
+    "library": "Lucide",
+    "package": "lucide-react",
+    "status": "REFERENCED",
+    "canonical_selected": true,
+    "upstream": "https://github.com/lucide-icons/lucide",
+    "upstream_release": "1.48.0",
+    "license": "ISC package code; bundled license notices also include MIT terms for Feather-derived icons",
+    "install_method": "Not installed; no product React/TypeScript consumer exists in this repository. Pin the exact published package version when a real consumer is added.",
+    "files": [],
+    "executable_code": false,
+    "network_at_runtime": false,
+    "secrets_required": false,
+    "windows_compatible": true,
+    "authority": "Canonical source for common interface iconography; AXIGNAL Design System and ADR-0022 govern use",
+    "reason": "A consistent outline grammar suits AXIGNAL's technical controls and can be normalized to the existing design system. Its React package supports typed, tree-shakable named imports."
+  },
   "tools": [
     {
       "id": "anthropic-frontend-design",
