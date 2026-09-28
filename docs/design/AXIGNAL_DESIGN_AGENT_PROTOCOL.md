@@ -3,6 +3,8 @@
 **Status:** Tooling/process protocol; subordinate to MASTER, Constitution, ADRs, feature specs and accepted Golden Master.
 **Purpose:** Make AI-assisted design materially better without granting an AI authority over AXIGNAL product truth or human visual acceptance.
 
+Codex discovers the orchestrator at `.agents/skills/axignal-design-director/SKILL.md`. It is the routing entry point. Small bridges under `.agents/skills/frontend-design/` and `.agents/skills/ui-ux-pro-max/` delegate to the pinned shared sources under `.opencode/skills/`; they do not duplicate the upstream corpus. Adoption and supply-chain facts are recorded in [DESIGN_TOOLCHAIN.lock.json](DESIGN_TOOLCHAIN.lock.json).
+
 ## Design pipeline
 
 ```text
@@ -71,6 +73,18 @@ A model-generated preference, critique score, click pattern or visual detector r
 Material UI work cannot close from code review alone. Required evidence is proportional to scope, but normally includes rendered desktop and narrow states, primary interactions, affected edge states, accessibility checks, console/runtime health, and Golden Master delta where applicable.
 
 Automated tools may say `PASS` for their own bounded checks. They may not say `HUMAN_ACCEPTED`.
+
+Use the bounded loop `RENDER → INSPECT → BATCH ROOT CAUSES → REPAIR → CONFIRM`. A third pass needs a concrete observable defect. Record browser, viewport, route/state, and evidence path for a smoke or visual check. Never treat source inspection as rendered proof, and never expose secrets in screenshots or browser state.
+
+## Capability routing
+
+| Mode | Route |
+| --- | --- |
+| `PRESERVE` | Golden Master + relevant HFX contract + browser comparison; external creative direction is out unless explicitly in scope. |
+| `EXTEND` | AXIGNAL authority + only the relevant craft/UX/web references. |
+| `EXPLORE` | Explicit authorization + isolated lab + human review; no automatic promotion. |
+
+The orchestrator chooses only the smallest relevant capability set. The toolchain lock distinguishes installed, referenced, and rejected tools and records their provenance and executable/network surface. An external installer, hook, or downloaded executable is never run automatically.
 
 ## Integration rule
 

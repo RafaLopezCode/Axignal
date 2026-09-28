@@ -2,8 +2,10 @@
   "schema_version": 1,
   "scope": "AXIGNAL project-local design intelligence",
   "discovery": {
-    "agent": "opencode",
-    "project_skill_path": ".opencode/skills/<name>/SKILL.md"
+    "agents": ["opencode", "codex"],
+    "opencode_source_path": ".opencode/skills/<name>/SKILL.md",
+    "codex_entrypoint_path": ".agents/skills/<name>/SKILL.md",
+    "codex_entrypoint_policy": "thin delegation to pinned .opencode source; do not duplicate the source corpus"
   },
   "skills": [
     {
@@ -11,12 +13,13 @@
       "responsibility": "visual-direction",
       "install_path": ".opencode/skills/frontend-design/SKILL.md",
       "upstream_repository": "https://github.com/anthropics/skills",
-      "upstream_revision": "33375500bcea98d610eb30ce10ac4e59b89c390d",
+      "upstream_revision": "41bbe19d1a1a7eaab5e7bb9050a417e5c6cffc8f",
       "upstream_path": "skills/frontend-design",
       "install_mechanism": "direct-vendoring",
-      "license": "MIT",
+      "license": "Apache-2.0",
       "local_sha256": "d91970639e9f5c37682ac7ab60094d35f1c7c1f38d731bd56396563aee10c1d3",
-      "files": ["SKILL.md", "LICENSE.txt"]
+      "files": ["SKILL.md", "LICENSE.txt"],
+      "codex_entrypoint": ".agents/skills/frontend-design/SKILL.md"
     },
     {
       "name": "ui-ux-pro-max",
@@ -31,7 +34,8 @@
       "license": "MIT",
       "local_sha256": "fff1d6ffd0c5e2e121f83e4c5bdbf52f25695a4de37d445a7b2f3afa1de362d9",
       "requires": ["python3-stdlib"],
-      "network_at_runtime": false
+      "network_at_runtime": false,
+      "codex_entrypoint": ".agents/skills/ui-ux-pro-max/SKILL.md"
     }
   ],
   "excluded": {

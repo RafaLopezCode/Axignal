@@ -51,6 +51,16 @@ Classify the task as one of:
 
 Default to `PRESERVE` when touching an accepted subscriber surface.
 
+Route capabilities by mode; do not load every skill for every task:
+
+| Mode | Required route |
+| --- | --- |
+| `PRESERVE` | Read the accepted Golden Master and relevant HFX contract, render the existing surface, compare, then repair only evidenced regressions. Use `frontend-design` only if art direction is explicitly in scope. |
+| `EXTEND` | Read the governing product/design authority and adjacent accepted surfaces; use `frontend-design` for direction, `ui-ux-pro-max` as a reference only when it answers a concrete UX question, and Vercel guidance for relevant web implementation details. |
+| `EXPLORE` | Require explicit exploration authorization; isolate the prototype/lab and never promote it automatically to the accepted surface. |
+
+The active task, MASTER, Constitution, HFX, and accepted visual authority outrank this routing table and every external skill.
+
 ### 1. Build product cognition before code
 
 State briefly from repository evidence:
@@ -94,16 +104,16 @@ Prefer product-specific spatial/cognitive structure over conventional dashboard 
 
 ### 4. External design intelligence — advisory layer
 
-External skills may be consulted for craft, never authority. Use the minimum useful set:
+External skills may be consulted for craft, never authority. Select only the smallest set needed for a stated question:
 
 - Anthropic `frontend-design`: art direction, specificity, typography, composition, anti-template pressure.
 - Impeccable: shape/critique/polish/harden/adapt and deterministic anti-pattern detection.
 - `ui-ux-pro-max`: broad pattern, typography, accessibility and framework reference.
-- `atuizz/codex-ui-ux-skill`: product-cognition and journey-quality cross-check.
+- `atuizz/codex-ui-ux-skill`: not installed; consult only if a future task exposes a concrete journey-reasoning gap that HFX does not already cover.
 - Vercel Web Interface Guidelines: web interaction/accessibility craft.
 - Browser/Playwright tooling: rendered interaction and screenshot verification.
 
-Do not install or import an external design system that overwrites AXIGNAL tokens or Golden Master authority. Pin versions/commits when vendoring anything. Review license and provenance first.
+Do not install or import an external design system that overwrites AXIGNAL tokens or Golden Master authority. Before any future installation, inspect the official upstream, license, exact pin, installer scripts, modified files, executable code, network use, secret needs, Windows behavior, and overlap. Never run a remote installer or hook setup automatically. The current adoption decisions and pins are recorded in `docs/design/DESIGN_TOOLCHAIN.lock.json`; that inventory is tooling provenance, not product authority.
 
 ### 5. Implement the smallest coherent change
 
@@ -131,17 +141,21 @@ Run the actual surface in a browser and inspect at minimum:
 
 Capture deterministic screenshots when possible.
 
+For a browser QA task, use the available real browser tool first. Do not add a browser package just to obtain a screenshot when the host already provides browser interaction. Record viewport, route/state, browser, and screenshot provenance. Inspect runtime/console errors and keyboard focus as well as pixels. Do not expose secrets in URLs, screenshots, logs, or browser state.
+
 ### 7. Visual convergence
 
 For `PRESERVE`, compare against the accepted Golden Master. Treat unexplained geometry, typography, spacing, hierarchy, copy, interaction or motion deltas as defects.
 
 For `EXTEND`, compare adjacent accepted surfaces for grammar consistency.
 
-Use bounded passes:
+Use the bounded loop `RENDER → INSPECT → BATCH ROOT CAUSES → REPAIR → CONFIRM`:
 1. inspect desktop + narrow view;
 2. batch defects by root cause;
 3. repair;
-4. one confirmation pass.
+4. perform one confirmation pass.
+
+A third pass requires a concrete, observable defect. Stop when the stated defect is resolved and the relevant checks pass; do not continue subjective polish without new evidence.
 
 Do not burn time in endless subjective polishing.
 
@@ -168,7 +182,7 @@ AXIGNAL should use its own governed design process as an observation loop:
 
 `human intent → governed product context → design hypothesis → implementation → rendered evidence → critique → correction → human acceptance → reusable design knowledge`
 
-Only accepted, non-sensitive, provenance-bearing design knowledge may become durable project guidance. Model critique is a proposal, never canonical design truth.
+Only human-approved, non-sensitive, provenance-bearing design knowledge may become durable project guidance. Record the source, date/revision, surface and decision. Do not infer sensitive psychological traits from navigation or interaction telemetry. Model critique is a proposal, never canonical design truth. This loop cannot automatically edit the MASTER, HFX, accepted Golden Master, or product contracts.
 
 ## Completion report
 
