@@ -33,6 +33,7 @@
       "install_command": "npx ui-ux-pro-max-cli@2.15.0 init --ai opencode --offline",
       "license": "MIT",
       "local_sha256": "fff1d6ffd0c5e2e121f83e4c5bdbf52f25695a4de37d445a7b2f3afa1de362d9",
+      "files": ["SKILL.md", "LICENSE", "data/**", "scripts/**"],
       "requires": ["python3-stdlib"],
       "network_at_runtime": false,
       "codex_entrypoint": ".agents/skills/ui-ux-pro-max/SKILL.md"
