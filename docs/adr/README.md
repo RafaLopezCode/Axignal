@@ -26,6 +26,8 @@ Constitution (`.specify/memory/constitution.md`).
 | [ADR-0016](ADR-0016-human-first-cognitive-interface.md) | Human First Cognitive UX Is a Core AXIGNAL Product Capability (**ACCEPTED PRODUCT/INTERACTION DOCTRINE; PRE-IMPLEMENTATION**) | §55 |
 | [ADR-0017](ADR-0017-private-cognitive-continuity-and-context-boundaries.md) | Cognitive Continuity and Xeed Context Are Private Authorities Separate From AXIGLAND (**ACCEPTED TARGET ARCHITECTURE; PARTIALLY IMPLEMENTED**) | §55 |
 | [ADR-0018](ADR-0018-canonical-xeed-authority.md) | Canonical Xeed Identity and Tenant Authorization Boundary (**ACCEPTED; P0-CORE-01 IMPLEMENTED**) | §§3–7, §55 |
+| [ADR-0019](ADR-0019-canonical-xeed-faxt-contextual-reference.md) | Canonical Xeed–FAXT Contextual Reference (**ACCEPTED; P0-CORE-02 IMPLEMENTED**) | §§4.5–6, §15, §20 |
+| [ADR-0020](ADR-0020-authorized-xeed-faxt-collection-read.md) | Authorized Xeed FAXT Collection Read (**ACCEPTED; P0-CORE-03 IMPLEMENTED**) | §§4.5–6, §15, §20 |
 
 ## Adding an ADR
 

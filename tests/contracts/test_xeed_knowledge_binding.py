@@ -1,4 +1,4 @@
-"""P0-CORE-02 contextual FAXT reference and authorization invariants."""
+"""P0-CORE-02/03 contextual FAXT read and collection authorization invariants."""
 
 from __future__ import annotations
 
@@ -11,6 +11,7 @@ import pytest
 from application.xeed_access.reader import AuthorizedXeedReader, TrustedRequestContext
 from application.xeed_knowledge.reader import (
     AuthorizedXeedFaxt,
+    AuthorizedXeedFaxtCollectionReader,
     AuthorizedXeedKnowledgeReader,
     KnowledgeReadError,
     KnowledgeReadFailure,
@@ -96,6 +97,12 @@ def _setup() -> tuple[
 
 def _reference(xeed_id: str = "xeed-a", faxt_id: str = "faxt-shared") -> XeedFaxtReference:
     return XeedFaxtReference(XeedId(xeed_id), FaxtId(faxt_id))
+
+
+def _collection_reader(
+    authority: InMemoryXeedKnowledgeAuthority,
+) -> AuthorizedXeedFaxtCollectionReader:
+    return AuthorizedXeedFaxtCollectionReader(authority, authority)
 
 
 def test_authorized_xeed_reads_only_explicitly_referenced_global_faxt() -> None:
@@ -384,3 +391,276 @@ def test_faxt_id_is_a_distinct_static_identity_type() -> None:
 def test_reference_and_reader_accept_only_the_faxt_identity_type() -> None:
     assert get_type_hints(XeedFaxtReference)["faxt_id"] is FaxtId
     assert get_type_hints(AuthorizedXeedKnowledgeReader.read)["faxt_id"] is FaxtId
+
+
+def test_empty_authorized_context_returns_an_immutable_empty_collection() -> None:
+    _, authority, _, authorized = _setup()
+
+    result = _collection_reader(authority).read(authorized["a"])  # type: ignore[arg-type]
+
+    assert result == ()
+    assert isinstance(result, tuple)
+    assert authority.calls == ["references"]
+    assert authority.listed_xeeds == [XeedId("xeed-a")]
+
+
+def test_single_explicit_reference_returns_original_global_faxt() -> None:
+    _, authority, _, authorized = _setup()
+    faxt = _faxt()
+    authority.add_faxt(faxt)
+    authority.add_reference(_reference())
+
+    result = _collection_reader(authority).read(authorized["a"])  # type: ignore[arg-type]
+
+    assert len(result) == 1
+    assert result[0].faxt is faxt
+    assert result[0].reference == _reference()
+    assert result[0].authorized_xeed is authorized["a"]
+    assert authority.calls == ["references", "faxt"]
+
+
+def test_multiple_references_are_resolved_only_after_scoped_reference_enumeration() -> None:
+    _, authority, _, authorized = _setup()
+    faxt_b = _faxt("faxt-b")
+    faxt_a = _faxt("faxt-a")
+    authority.add_faxt(faxt_b)
+    authority.add_faxt(faxt_a)
+    authority.add_reference(_reference(faxt_id="faxt-b"))
+    authority.add_reference(_reference(faxt_id="faxt-a"))
+
+    result = _collection_reader(authority).read(authorized["a"])  # type: ignore[arg-type]
+
+    assert tuple(item.faxt.id for item in result) == (FaxtId("faxt-a"), FaxtId("faxt-b"))
+    assert result[0].faxt is faxt_a
+    assert result[1].faxt is faxt_b
+    assert authority.calls == ["references", "faxt", "faxt"]
+
+
+def test_same_global_faxt_is_returned_for_independently_referenced_xeeds_and_tenants() -> None:
+    _, authority, _, authorized = _setup()
+    faxt = _faxt()
+    authority.add_faxt(faxt)
+    authority.add_reference(_reference("xeed-a"))
+    authority.add_reference(_reference("xeed-b"))
+
+    result_a = _collection_reader(authority).read(authorized["a"])  # type: ignore[arg-type]
+    result_b = _collection_reader(authority).read(authorized["b"])  # type: ignore[arg-type]
+
+    assert result_a[0].faxt is result_b[0].faxt is faxt
+    assert result_a[0].reference != result_b[0].reference
+    assert authority.listed_xeeds == [XeedId("xeed-a"), XeedId("xeed-b")]
+
+
+def test_same_organization_different_xeed_does_not_imply_reference_membership() -> None:
+    _, authority, _, authorized = _setup()
+    authority.add_faxt(_faxt())
+    authority.add_reference(_reference("xeed-a"))
+
+    result = _collection_reader(authority).read(authorized["a2"])  # type: ignore[arg-type]
+
+    assert authorized["a"].xeed.organization_id == authorized["a2"].xeed.organization_id  # type: ignore[union-attr]
+    assert result == ()
+    assert authority.listed_xeeds == [XeedId("xeed-a2")]
+    assert authority.calls == ["references"]
+
+
+def test_same_tenant_different_xeed_isolation_uses_only_selected_xeed_references() -> None:
+    _, authority, _, authorized = _setup()
+    faxt_a = _faxt("faxt-a")
+    faxt_a2 = _faxt("faxt-a2")
+    authority.add_faxt(faxt_a)
+    authority.add_faxt(faxt_a2)
+    authority.add_reference(_reference("xeed-a", "faxt-a"))
+    authority.add_reference(_reference("xeed-a2", "faxt-a2"))
+
+    result = _collection_reader(authority).read(authorized["a"])  # type: ignore[arg-type]
+
+    assert tuple(item.faxt for item in result) == (faxt_a,)
+    assert authority.listed_xeeds == [XeedId("xeed-a")]
+
+
+def test_cross_tenant_isolation_does_not_release_another_xeeds_reference() -> None:
+    _, authority, _, authorized = _setup()
+    authority.add_faxt(_faxt())
+    authority.add_reference(_reference("xeed-a"))
+
+    result = _collection_reader(authority).read(authorized["b"])  # type: ignore[arg-type]
+
+    assert result == ()
+    assert authority.listed_xeeds == [XeedId("xeed-b")]
+    assert authority.calls == ["references"]
+
+
+@pytest.mark.parametrize(
+    "raw_context",
+    [None, XeedId("xeed-a"), TenantId("tenant-a"), OrganizationId("org-shared")],
+)
+def test_raw_ids_cannot_establish_collection_authority(raw_context: object) -> None:
+    _, authority, _, _ = _setup()
+
+    with pytest.raises(KnowledgeReadError) as error:
+        _collection_reader(authority).read(raw_context)  # type: ignore[arg-type]
+
+    assert error.value.failure is KnowledgeReadFailure.MISSING_AUTHORIZED_XEED
+    assert authority.calls == []
+    assert authority.listed_xeeds == []
+
+
+def test_unreferenced_global_faxt_is_not_returned_or_enumerated() -> None:
+    _, authority, _, authorized = _setup()
+    authority.add_faxt(_faxt())
+
+    result = _collection_reader(authority).read(authorized["a"])  # type: ignore[arg-type]
+
+    assert result == ()
+    assert authority.calls == ["references"]
+    assert not hasattr(authority, "list_all_faxts")
+
+
+def test_invalid_reference_result_fails_before_global_faxt_resolution() -> None:
+    _, authority, _, authorized = _setup()
+    authority.add_faxt(_faxt())
+    authority.list_for_xeed = lambda _xeed_id: (_reference("xeed-b"),)  # type: ignore[method-assign]
+
+    with pytest.raises(KnowledgeReadError) as error:
+        _collection_reader(authority).read(authorized["a"])  # type: ignore[arg-type]
+
+    assert error.value.failure is KnowledgeReadFailure.INVALID_REFERENCE
+    assert authority.calls == []
+
+
+def test_non_tuple_reference_collection_fails_closed() -> None:
+    _, authority, _, authorized = _setup()
+    authority.list_for_xeed = lambda _xeed_id: []  # type: ignore[method-assign]
+
+    with pytest.raises(KnowledgeReadError) as error:
+        _collection_reader(authority).read(authorized["a"])  # type: ignore[arg-type]
+
+    assert error.value.failure is KnowledgeReadFailure.INVALID_REFERENCE_COLLECTION
+    assert authority.calls == []
+
+
+def test_duplicate_reference_membership_fails_closed() -> None:
+    _, authority, _, authorized = _setup()
+    reference = _reference()
+    authority.list_for_xeed = lambda _xeed_id: (reference, reference)  # type: ignore[method-assign]
+
+    with pytest.raises(KnowledgeReadError) as error:
+        _collection_reader(authority).read(authorized["a"])  # type: ignore[arg-type]
+
+    assert error.value.failure is KnowledgeReadFailure.DUPLICATE_REFERENCE
+    assert authority.calls == []
+
+
+def test_dangling_reference_fails_closed_without_returning_a_partial_collection() -> None:
+    _, authority, _, authorized = _setup()
+    authority.add_faxt(_faxt("faxt-a"))
+    authority.add_reference(_reference(faxt_id="faxt-a"))
+    authority.add_reference(_reference(faxt_id="faxt-z-missing"))
+
+    with pytest.raises(KnowledgeReadError) as error:
+        _collection_reader(authority).read(authorized["a"])  # type: ignore[arg-type]
+
+    assert error.value.failure is KnowledgeReadFailure.FAXT_NOT_FOUND
+    assert authority.calls == ["references", "faxt", "faxt"]
+
+
+def test_mismatched_faxt_identity_fails_collection_closed() -> None:
+    _, authority, _, authorized = _setup()
+    authority.add_reference(_reference())
+    authority.get_faxt = lambda _faxt_id: _faxt("faxt-other")  # type: ignore[method-assign]
+
+    with pytest.raises(KnowledgeReadError) as error:
+        _collection_reader(authority).read(authorized["a"])  # type: ignore[arg-type]
+
+    assert error.value.failure is KnowledgeReadFailure.FAXT_NOT_FOUND
+    assert authority.calls == ["references"]
+
+
+def test_wrong_global_object_type_fails_collection_closed() -> None:
+    _, authority, _, authorized = _setup()
+    authority.add_reference(_reference())
+    authority.get_faxt = lambda _faxt_id: object()  # type: ignore[method-assign]
+
+    with pytest.raises(KnowledgeReadError) as error:
+        _collection_reader(authority).read(authorized["a"])  # type: ignore[arg-type]
+
+    assert error.value.failure is KnowledgeReadFailure.FAXT_NOT_FOUND
+    assert authority.calls == ["references"]
+
+
+def test_label_collision_or_mutation_does_not_change_collection_membership() -> None:
+    _, authority, _, authorized = _setup()
+    faxt = _faxt()
+    authority.add_faxt(faxt)
+    authority.add_reference(_reference())
+    original_authorized = authorized["a"]
+    identities = InMemoryXeedAuthority()
+    identities.add_principal(Principal(PrincipalId("principal-a")))
+    identities.add_tenant(Tenant(TenantId("tenant-a")))
+    identities.add_membership(
+        PrincipalTenantMembership(PrincipalId("principal-a"), TenantId("tenant-a"))
+    )
+    renamed_xeed = replace(original_authorized.xeed, label="Renamed label")  # type: ignore[union-attr]
+    identities.add_xeed(renamed_xeed)
+    renamed_authorized = AuthorizedXeedReader(identities, identities, identities).read(
+        TrustedRequestContext(PrincipalId("principal-a"), TenantId("tenant-a")),
+        renamed_xeed.id,
+    )
+
+    result = _collection_reader(authority).read(renamed_authorized)
+
+    assert result[0].faxt is faxt
+    assert result[0].reference == _reference()
+    assert result[0].authorized_xeed.xeed.label == "Renamed label"
+
+
+def test_unknown_epistemic_state_and_currentness_are_preserved_in_collection() -> None:
+    _, authority, _, authorized = _setup()
+    faxt = replace(
+        _faxt(),
+        epistemic_state=EpistemicState.UNKNOWN,
+        currentness=Currentness.UNKNOWN,
+    )
+    authority.add_faxt(faxt)
+    authority.add_reference(_reference())
+
+    result = _collection_reader(authority).read(authorized["a"])  # type: ignore[arg-type]
+
+    assert result[0].faxt is faxt
+    assert result[0].faxt.epistemic_state is EpistemicState.UNKNOWN
+    assert result[0].faxt.currentness is Currentness.UNKNOWN
+
+
+def test_collection_does_not_invent_provenance_or_dereference_evidence() -> None:
+    _, authority, _, authorized = _setup()
+    faxt = _faxt()
+    authority.add_faxt(faxt)
+    authority.add_reference(_reference())
+
+    result = _collection_reader(authority).read(authorized["a"])  # type: ignore[arg-type]
+
+    assert result[0].faxt is faxt
+    assert result[0].faxt.evidence_refs == faxt.evidence_refs
+    assert authority.calls == ["references", "faxt"]
+    assert "evidence" not in authority.calls
+
+
+def test_observation_seed_does_not_authorize_collection_membership() -> None:
+    from domain.xignal.observation_seed import ObservationSeed
+
+    assert "xeed_id" not in ObservationSeed.__dataclass_fields__
+    assert not hasattr(ObservationSeed, "faxt_id")
+
+
+def test_collection_result_reuses_authorized_xeed_faxt_without_public_constructor() -> None:
+    _, authority, _, authorized = _setup()
+    faxt = _faxt()
+    authority.add_faxt(faxt)
+    authority.add_reference(_reference())
+
+    result = _collection_reader(authority).read(authorized["a"])  # type: ignore[arg-type]
+
+    assert isinstance(result[0], AuthorizedXeedFaxt)
+    with pytest.raises(TypeError):
+        AuthorizedXeedFaxt(authorized["a"], _reference(), faxt)  # type: ignore[arg-type]

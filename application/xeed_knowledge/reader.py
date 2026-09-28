@@ -19,6 +19,9 @@ class KnowledgeReadFailure(StrEnum):
     INVALID_FAXT_ID = "INVALID_FAXT_ID"
     REFERENCE_NOT_FOUND = "REFERENCE_NOT_FOUND"
     FAXT_NOT_FOUND = "FAXT_NOT_FOUND"
+    INVALID_REFERENCE_COLLECTION = "INVALID_REFERENCE_COLLECTION"
+    INVALID_REFERENCE = "INVALID_REFERENCE"
+    DUPLICATE_REFERENCE = "DUPLICATE_REFERENCE"
 
 
 class KnowledgeReadError(Exception):
@@ -33,6 +36,12 @@ class XeedFaxtReferenceReader(Protocol):
     """Reads explicit private references for one Xeed identity."""
 
     def get_reference(self, xeed_id: XeedId, faxt_id: FaxtId) -> XeedFaxtReference | None: ...
+
+
+class XeedFaxtReferenceCollectionReader(Protocol):
+    """Lists references scoped to exactly one already-authorized Xeed."""
+
+    def list_for_xeed(self, xeed_id: XeedId) -> tuple[XeedFaxtReference, ...]: ...
 
 
 class CanonicalFaxtReader(Protocol):
@@ -119,3 +128,57 @@ class AuthorizedXeedKnowledgeReader:
             faxt,
             _token=_AUTHORIZED_XEED_FAXT_TOKEN,
         )
+
+
+class AuthorizedXeedFaxtCollectionReader:
+    """Reads only explicitly referenced global FAXTs for one AuthorizedXeed."""
+
+    def __init__(
+        self,
+        references: XeedFaxtReferenceCollectionReader,
+        faxts: CanonicalFaxtReader,
+    ) -> None:
+        self._references = references
+        self._faxts = faxts
+
+    def read(self, authorized_xeed: AuthorizedXeed) -> tuple[AuthorizedXeedFaxt, ...]:
+        """Return an immutable collection after private selection and validation."""
+
+        if not isinstance(authorized_xeed, AuthorizedXeed):
+            raise KnowledgeReadError(KnowledgeReadFailure.MISSING_AUTHORIZED_XEED)
+
+        xeed_id = authorized_xeed.xeed.id
+        references = self._references.list_for_xeed(xeed_id)
+        if not isinstance(references, tuple):
+            raise KnowledgeReadError(KnowledgeReadFailure.INVALID_REFERENCE_COLLECTION)
+
+        references_by_id: dict[FaxtId, XeedFaxtReference] = {}
+        for reference in references:
+            if (
+                not isinstance(reference, XeedFaxtReference)
+                or reference.xeed_id != xeed_id
+                or not isinstance(reference.faxt_id, str)
+                or not reference.faxt_id.strip()
+            ):
+                raise KnowledgeReadError(KnowledgeReadFailure.INVALID_REFERENCE)
+            if reference.faxt_id in references_by_id:
+                raise KnowledgeReadError(KnowledgeReadFailure.DUPLICATE_REFERENCE)
+            references_by_id[reference.faxt_id] = reference
+
+        # Stable identity order is for deterministic output only, never ranking.
+        result: list[AuthorizedXeedFaxt] = []
+        for faxt_id in sorted(references_by_id):
+            reference = references_by_id[faxt_id]
+            faxt = self._faxts.get_faxt(faxt_id)
+            if not isinstance(faxt, FAXT) or faxt.id != faxt_id:
+                raise KnowledgeReadError(KnowledgeReadFailure.FAXT_NOT_FOUND)
+            result.append(
+                AuthorizedXeedFaxt(
+                    authorized_xeed,
+                    reference,
+                    faxt,
+                    _token=_AUTHORIZED_XEED_FAXT_TOKEN,
+                )
+            )
+
+        return tuple(result)

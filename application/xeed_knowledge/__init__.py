@@ -2,6 +2,7 @@
 
 from application.xeed_knowledge.reader import (
     AuthorizedXeedFaxt,
+    AuthorizedXeedFaxtCollectionReader,
     AuthorizedXeedKnowledgeReader,
     KnowledgeReadError,
     KnowledgeReadFailure,
@@ -9,6 +10,7 @@ from application.xeed_knowledge.reader import (
 
 __all__ = [
     "AuthorizedXeedFaxt",
+    "AuthorizedXeedFaxtCollectionReader",
     "AuthorizedXeedKnowledgeReader",
     "KnowledgeReadError",
     "KnowledgeReadFailure",
