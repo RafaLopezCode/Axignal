@@ -112,6 +112,18 @@ Client/Workspace authority, Subscriber read models and Context Broker remain
 unimplemented. Evidence, Observation, Relationship, INXIGHT and PATHX have no
 direct Xeed binding. ObservationSeed is not a Xeed and grants no reference.
 
+P0-CORE-04 adds an `AuthorizedXeed`-only Organization context reader. It takes
+the OrganizationId from the authorized Xeed, resolves the original global
+Organization and fails closed for missing or mismatched canonical results.
+It does not copy Organization truth into Xeed or authorize access through a raw
+identifier. The contract is test/dev-backed; no production Organization
+repository is implemented. FAXT `subject_id` remains an untyped string because
+the MASTER does not establish that every FAXT subject is an Organization.
+Canonical Organization relationships exist independently, but Xeed–FAXT
+membership does not expose or imply those relationships. Organization
+capabilities and markets are direct fields, not FAXT cardinal assignments;
+Signals, Activity and FAXT-to-field mappings remain unsupported.
+
 ## Data model
 
 Conceptual entities (MASTER §36): `Organization`, `FAXT`, `Evidence`,
@@ -126,6 +138,7 @@ boundary-critical primitives; the full ontology is a later milestone (MASTER
 apps/web/                     presentation boundary (no features yet)
 application/
   xeed_access/                membership-first authorized Xeed read boundary
+                               plus AuthorizedXeed-only global Organization context read
   xeed_knowledge/             AuthorizedXeed-only single and collection FAXT read boundaries
 domain/
   identity.py                 distinct string-backed canonical identity types
