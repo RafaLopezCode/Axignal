@@ -1,7 +1,7 @@
 # Subscriber Projection Integration Matrix v1
 
 **Status:** HFX-01 handoff contract; pre-implementation
-**Authority:** P0-HFX-00 spec, MASTER §55, ADR-0003, ADR-0009, ADR-0016–0021
+**Authority:** P0-HFX-00 spec, MASTER §55, ADR-0003, ADR-0009, ADR-0016–0021, P0-CORE-05 reconciliation
 **Projection classes:** `CANONICAL_DIRECT`,
 `CANONICAL_DERIVED_DETERMINISTIC`, `PRESENTATION_STATE`,
 `UNKNOWN_UNSUPPORTED` only. `FIXTURE_ONLY` is not a projection class.
@@ -14,6 +14,11 @@ authority is reconciled. Nothing in this matrix implements the projection.
 P0-CORE-04 adds only the authorized global Organization context read and
 reconciles the existing Organization relationship and cardinal-field sources;
 it does not implement Subscriber Projection.
+P0-CORE-05 confirms that the MASTER's generic `FAXT.subject_id` has no governed
+subject-kind or cross-kind identity resolver. Keep the raw string directly
+available as a FAXT field, while its referent kind, identity resolution, and
+any subject-derived graph edge remain `UNKNOWN_UNSUPPORTED`; see
+[`specs/019-p0-core-05-canonical-subject-authority/spec.md`](../019-p0-core-05-canonical-subject-authority/spec.md).
 
 | Datum | Source | Source authority | Projection class | Identity semantics | Subscriber safe? | Rights check? | Unknown behavior | Golden Master target | HFX-01 status |
 |---|---|---|---|---|---|---|---|---|---|
@@ -23,7 +28,7 @@ it does not implement Subscriber Projection.
 | Organization canonical name | `Organization.canonical_name` | Domain model; ADR-0021 AuthorizedXeed-only global Organization read | CANONICAL_DIRECT | Global Organization display data, never Xeed identity | Available from the canonical object through AuthorizedXeed context | Reader derives ID from AuthorizedXeed; missing/mismatched object fails closed | Do not replace with Xeed label or fixture company name | Root title | Contract supported; production repository/auth absent |
 | Tenant/workspace display | No display field in authorized collection contract; Xeed carries tenant_id only | ADR-0018 forbids treating caller selection as authority | UNKNOWN_UNSUPPORTED | TenantId is not XeedId or OrganizationId | Not established | Authorization must already have occurred; no label reader exists here | Omit/unknown | Workspace chrome | Unsupported |
 | FaxtId | `AuthorizedXeedFaxt.faxt.id` | ADR-0019/0020; global FAXT model | CANONICAL_DIRECT | Global FAXT identity, independent of Xeed | Yes as an authorized reference; raw ID need not be user-facing | Collection reader validated explicit Xeed reference | Missing/dangling object fails entire collection | Node/object identity | Contract supported |
-| FAXT subject | `FAXT.subject_id: str` | MASTER §§15.2/36; domain model; no universal subject-kind rule | CANONICAL_DIRECT for raw string only; `SUBJECT_KIND=UNKNOWN_UNSUPPORTED` | Preserve opaque subject string; cannot prove every subject is OrganizationId | Field is in authorized FAXT; resolved display safety is not established | No implicit Organization resolution or cast | Keep subject kind unresolved; never equate to Xeed Organization | Node subject | Direct string available; semantic identity/link unsupported |
+| FAXT subject | `FAXT.subject_id: str` | MASTER §§4.5, 15.2, 36; CORE-05 reconciliation; no universal subject-kind rule | CANONICAL_DIRECT for raw string only; `SUBJECT_KIND=UNKNOWN_UNSUPPORTED` | Preserve opaque subject string; no exhaustive subject classes or shared identity plane is established | Field is in authorized FAXT; resolved display safety is not established | No implicit Organization resolution, string-equality cast, or type inference | Keep subject kind and resolution unknown; never equate to Xeed Organization or infer from fixture/predicate | Node subject | Direct string available; semantic identity/link unsupported |
 | FAXT predicate | `FAXT.predicate: str` | Canonical FAXT model | CANONICAL_DIRECT | Predicate text is not object identity | Context-bound display; preserve original string | No translation or semantic rewrite without a governed rule | Preserve raw value | Relationship/node description | Direct value available; localization rule absent |
 | FAXT value/object | `FAXT.object_or_value: str` | Canonical FAXT model | CANONICAL_DIRECT | Value is not a new canonical object unless a typed contract says so | Context-bound display; preserve original string | No model/fixture enrichment | Preserve raw value; do not fill gaps | Node detail | Direct value available |
 | Epistemic state | `FAXT.epistemic_state` | Canonical epistemics model; ADR-0003/0005 | CANONICAL_DIRECT | State of this FAXT, not a graph stratum | Yes, with a non-color-only state cue | Use unchanged; never infer from style/position | Preserve UNKNOWN/STALE/CONTRADICTED as-is | Node state marker | Direct field available; display treatment remains feature-level |
