@@ -102,6 +102,13 @@ hierarchy, color, opacity, stroke, radius, density, and transition behavior
 remain unchanged. No after-state comparison or visual-equivalence claim is
 recorded by this implementation attempt; the acceptance gate remains open.
 
+P0-HFX-00 adds a new, versioned byte-identity recipe for the currently accepted
+executable source: [DeepSeek V2 Golden Master Source Manifest v1](GOLDEN_MASTER_SOURCE_MANIFEST_V1.md).
+This source identity does not close the visual acceptance gate or replace the
+external P0-DS-01 before/after evidence. The unrecovered historical digest is
+retained as historical evidence in the v1 record and is not treated as a
+reproducible gate.
+
 ## Explicitly deferred
 
 No Subscriber production data, real AXENT/provider, real provenance, Timeline
