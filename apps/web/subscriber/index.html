@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="light" />
+    <meta name="description" content="Local test and development AXIGNAL subscriber projection." />
+    <title>AXIGNAL · AXIGLAND</title>
+    <link rel="stylesheet" href="/design-system/global.css" />
+    <link rel="stylesheet" href="/subscriber.css" />
+    <script src="/app.js" defer></script>
+  </head>
+  <body>
+    <div class="workspace" data-state="loading">
+      <aside class="context-rail" aria-label="Authorized context">
+        <div class="rail-top">
+          <div class="brand-lockup">
+          <span class="brand-mark" aria-hidden="true"><svg width="29" height="29" viewBox="-60 -60 120 120" fill="none"><g stroke="currentColor" stroke-width="8" stroke-linejoin="round" stroke-linecap="round"><path d="M -46 0 Q 0 -21 46 0 Q 0 21 -46 0 Z" transform="rotate(45)"/><path d="M -46 0 Q 0 -21 46 0 Q 0 21 -46 0 Z" transform="rotate(-45)"/></g></svg></span>
+            <div class="brand-name"><strong>Axignal</strong><span>AXIGLAND</span></div>
+          </div>
+          <button id="sidebar-toggle" class="sidebar-toggle" aria-label="Collapse sidebar" aria-expanded="true" title="Collapse sidebar">«</button>
+        </div>
+        <div class="reality-badge"><i aria-hidden="true"></i>TEST / DEV · IN-MEMORY</div>
+        <div class="rail-rule"></div>
+        <p class="eyebrow">AUTHORIZED XEED CONTEXT</p>
+        <p id="context-label" class="context-name">Loading context</p>
+        <p class="context-note">Private attention context. It does not own or alter the shared world.</p>
+        <div class="rail-rule"></div>
+        <p class="eyebrow">GLOBAL ORGANIZATION</p>
+        <h1 id="organization-name" class="organization-name">Loading AXIGLAND</h1>
+        <p class="identity-meta">Canonical Organization · global identity</p>
+        <div class="rail-rule"></div>
+        <div class="direct-fields">
+          <section>
+            <h2>Capabilities</h2>
+            <ul id="capabilities"><li class="unavailable">Unavailable in this context</li></ul>
+          </section>
+          <section>
+            <h2>Markets</h2>
+            <ul id="markets"><li class="unavailable">Unavailable in this context</li></ul>
+          </section>
+        </div>
+        <div class="rail-foot">
+          <span class="eyebrow">ONE CANONICAL WORLD</span>
+          <span>Context is private. Organization and FAXT identity stay global.</span>
+        </div>
+      </aside>
+
+      <main class="center-stage">
+        <header class="stage-head">
+          <div>
+            <p class="eyebrow">THE FIELD <span class="head-divider">/</span> AUTHORIZED CONTEXT</p>
+            <p class="stage-title" id="stage-title">A global Organization with explicitly referenced knowledge.</p>
+          </div>
+        </header>
+
+        <div id="load-state" class="load-state" role="status">Resolving authorized context…</div>
+        <section class="field-wrap" aria-label="AXIGLAND canonical field">
+          <div class="field-caption"><span class="eyebrow">CURRENT CONTEXT</span><span id="field-count">—</span></div>
+          <aside class="epistemic-axis" aria-label="Epistemic strata unavailable; no FAXT layer assignments">
+            <span class="eyebrow">EPISTEMIC</span>
+            <div class="epistemic-stops" aria-hidden="true">
+              <span>Meaning</span><span>Context</span><span>Inference</span><span>Evidence</span>
+            </div>
+            <span class="epistemic-unknown">No governed mapping</span>
+          </aside>
+          <div class="depth-switch" role="group" aria-label="Cognitive depth">
+            <span class="depth-label">DEPTH</span>
+            <button data-depth="GLANCE" aria-pressed="true">Glance</button>
+            <button data-depth="UNDERSTAND" aria-pressed="false">Understand</button>
+            <button data-depth="REASON" aria-pressed="false">Reason</button>
+            <button data-depth="PROVE" aria-pressed="false">Prove</button>
+          </div>
+          <svg id="field" class="field" viewBox="0 0 1000 600" role="group" aria-label="Canonical Organization and FAXTs explicitly referenced in the active Xeed context">
+            <title>Canonical Organization and explicitly referenced FAXT nodes</title>
+            <g id="camera-layer"></g>
+          </svg>
+          <div class="field-tools" aria-label="Field camera controls">
+            <button id="zoom-out" aria-label="Zoom out" title="Zoom out">−</button>
+            <button id="zoom-reset" aria-label="Reset camera" title="Reset camera">⌂</button>
+            <button id="zoom-in" aria-label="Zoom in" title="Zoom in">+</button>
+          </div>
+          <div class="minimap-wrap">
+            <span class="eyebrow">FIELD VIEW</span>
+            <svg id="minimap" viewBox="0 0 160 96" role="img" aria-label="Presentation-only camera minimap">
+              <g id="minimap-nodes"></g><rect id="minimap-window" x="4" y="4" width="152" height="88" />
+            </svg>
+          </div>
+          <p class="field-hint">Drag to move · scroll to zoom · select a node to focus</p>
+          <div class="membership-legend"><span aria-hidden="true">┄</span> Explicit Xeed context boundary · no semantic relationships shown</div>
+        </section>
+
+        <nav class="focus-trail" aria-label="Session focus history">
+          <div class="history-controls">
+            <button id="history-back" aria-label="Back" title="Back" disabled>←</button>
+            <button id="history-forward" aria-label="Forward" title="Forward" disabled>→</button>
+            <button id="history-home" aria-label="Home" title="Return to Organization">⌂</button>
+          </div>
+          <span class="eyebrow">FOCUS TRAIL</span>
+          <ol id="history-list"><li>Organization</li></ol>
+          <span class="session-only">This session only</span>
+        </nav>
+
+        <section class="bottom-context" aria-labelledby="bottom-title">
+          <div class="bottom-heading">
+            <div><p class="eyebrow">BOTTOM CONTEXT</p><h2 id="bottom-title">Organization context</h2></div>
+            <span id="selected-kind" class="selection-kind">GLOBAL ORGANIZATION</span>
+          </div>
+          <div id="bottom-fields" class="bottom-fields"><p class="unavailable">Waiting for authorized context.</p></div>
+        </section>
+
+        <footer class="time-rail" aria-label="Historical view unavailable">
+          <div class="time-mark"><b>NOW</b><span>Current authorized read</span></div>
+          <div class="time-line" aria-hidden="true"><i></i></div>
+          <button class="history-unavailable" disabled title="No historical AXIGLAND snapshot authority">History unavailable</button>
+        </footer>
+      </main>
+
+      <aside class="axent-rail" aria-label="AXENT active context">
+        <header class="axent-head">
+          <div class="axent-brand"><span class="axent-mark" aria-hidden="true"><svg width="23" height="23" viewBox="-60 -60 120 120" fill="none"><g stroke="currentColor" stroke-width="8" stroke-linejoin="round" stroke-linecap="round"><path d="M -46 0 Q 0 -21 46 0 Q 0 21 -46 0 Z" transform="rotate(45)"/><path d="M -46 0 Q 0 -21 46 0 Q 0 21 -46 0 Z" transform="rotate(-45)"/></g></svg></span><div><strong>AXENT</strong><span>ACTIVE CONTEXT</span></div></div>
+          <span class="context-indicator" aria-hidden="true"></span>
+        </header>
+        <section class="axent-focus">
+          <p class="eyebrow">CURRENT PROTAGONIST</p>
+          <h2 id="axent-selection">Organization context</h2>
+          <p id="axent-identity" class="mono">Canonical identity pending</p>
+        </section>
+        <div class="rail-rule"></div>
+        <section class="axent-scope">
+          <p class="eyebrow">AUTHORIZED SCOPE</p>
+          <span class="scope-line"><i></i>One AuthorizedXeed</span>
+          <span class="scope-line"><i></i>Explicit FAXT references</span>
+          <span class="scope-line muted"><i></i>No cross-context retrieval</span>
+        </section>
+        <div class="rail-rule"></div>
+        <section class="axent-limits">
+          <p class="eyebrow">AVAILABLE HERE</p>
+          <p>Selected canonical identity context only.</p>
+          <p class="unavailable">AXENT reasoning, evidence access, and transcript are not implemented in this slice.</p>
+        </section>
+        <div class="axent-foot"><span class="eyebrow">NO MODEL CALLS</span><span>Selection updates context only.</span></div>
+      </aside>
+    </div>
+    <div id="notice" class="notice" role="status" aria-live="polite"></div>
+  </body>
+</html>
