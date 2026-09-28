@@ -3,6 +3,13 @@
 **Status:** Implementation and local proof complete; exact-head remote proof
 pending. Human visual acceptance is still required before merge.
 
+**CTO repair supersession:** Human Visual QA subsequently failed the previous
+presentation and rejected the earlier `UNAUTHORIZED_VISUAL_DELTAS=0` assertion.
+The pre-repair visual statements below are historical evidence only; they are
+not accepted as fidelity closure. The repair record at the end of this file and
+the paired screenshot evidence supersede them. Human acceptance remains
+pending.
+
 ## Reentry and authority
 
 - Repository: `RafaLopezCode/Axignal`; origin refresh succeeded.
@@ -102,6 +109,49 @@ AXENT transcript, label identity, dependency, production persistence/writer,
 model call, secret access, deployment, unrelated VPS access, weakened gate,
 skipped browser interaction, unsupported visual/production claim, or future
 slice start.
+
+## Lossless Golden Master fidelity repair
+
+- Reentry resumed on the existing branch at `8d5c740db580e55b2566673a76525c8baa44fe0b`;
+  the three in-progress browser files and the pre-change delta register were
+  preserved and inspected before continuation.
+- Canonical authorization, readers, Subscriber Projection, server and domain
+  contracts remain unchanged. Only the browser surface, its visual delta
+  evidence, and a focused HTML presentation contract test changed.
+- The adapted stylesheet begins with the complete Golden Master `v2.css`
+  source byte content after normalizing its CRLF/LF line-ending difference;
+  presentation overrides follow it. The Golden Master itself remains
+  read-only.
+- CSP evidence: the browser served the subscriber app with `style-src 'self'`.
+  Static inline style attributes were removed; the depth stops now render at
+  their Golden Master positions. Browser console errors for the HFX runtime:
+  zero.
+- Real-browser E2E in Chrome used 1280×720 and 640×900, reduced motion, and a
+  route that aborted all non-localhost requests. V01–V18 passed. AXENT
+  structure, disabled capabilities, active canonical identity, empty
+  transcript, unavailable composer/moves, history/camera behavior, unknown
+  preservation, no semantic edges and empty/unavailable responses passed.
+- At 640×900, document scroll width was 640 px; the composer remained inside
+  the viewport. Reduced-motion focus caused zero `requestAnimationFrame`
+  calls.
+- Paired screenshots are stored outside the repository in the existing task
+  evidence directory. They include Golden Master and HFX default, AXENT,
+  selected-node and Bottom Context at 1280×720, plus HFX narrow at 640×900.
+- Golden Master Manifest V1 postcheck: 27 files, digest
+  `1b4154dd152d9ecd20bfaeb7585daf78b4fbc79f182fce32a2f94ff017d6ad51`, PASS.
+- Full local suite after the presentation test was added: 268 passed. Pytest
+  temporary files were directed to the task evidence directory because the
+  default Windows temp/cache locations are not writable in this sandbox.
+- Ruff format, Ruff check, mypy, Architecture Guard and AXIGNAL governance:
+  PASS. `uv sync --frozen`: PASS. `uv build --offline` built the sdist and
+  wheel outside the repository. Graphify structural update/check passed;
+  diagnostics report six dangling-endpoint edges and four self-loops, with no
+  missing endpoints or post-build errors.
+- Changed-path credential-pattern scan: no hits. Local Gitleaks executable is
+  unavailable; exact-head remote Secret scanning remains required.
+- Browser screenshots, scripts and build outputs remain outside the Git
+  worktree. Human Visual QA is still `PENDING`; automated browser evidence does
+  not close human acceptance.
 
 ## Remote proof
 

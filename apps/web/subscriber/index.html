@@ -4,144 +4,170 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="color-scheme" content="light" />
-    <meta name="description" content="Local test and development AXIGNAL subscriber projection." />
+    <meta name="description" content="AXIGNAL subscriber view of an authorized AXIGLAND context." />
     <title>AXIGNAL · AXIGLAND</title>
     <link rel="stylesheet" href="/design-system/global.css" />
     <link rel="stylesheet" href="/subscriber.css" />
     <script src="/app.js" defer></script>
   </head>
   <body>
-    <div class="workspace" data-state="loading">
-      <aside class="context-rail" aria-label="Authorized context">
-        <div class="rail-top">
-          <div class="brand-lockup">
-          <span class="brand-mark" aria-hidden="true"><svg width="29" height="29" viewBox="-60 -60 120 120" fill="none"><g stroke="currentColor" stroke-width="8" stroke-linejoin="round" stroke-linecap="round"><path d="M -46 0 Q 0 -21 46 0 Q 0 21 -46 0 Z" transform="rotate(45)"/><path d="M -46 0 Q 0 -21 46 0 Q 0 21 -46 0 Z" transform="rotate(-45)"/></g></svg></span>
-            <div class="brand-name"><strong>Axignal</strong><span>AXIGLAND</span></div>
-          </div>
-          <button id="sidebar-toggle" class="sidebar-toggle" aria-label="Collapse sidebar" aria-expanded="true" title="Collapse sidebar">«</button>
+    <div class="app2" data-state="loading">
+      <aside class="gov" aria-label="Workspace navigation">
+        <div class="gv-top">
+          <a class="gv-logo" href="#today" aria-label="AXIGNAL · Today">
+            <span class="gv-logo-full">
+              <span class="logo" aria-hidden="true"><svg class="logo-mark logo-glyph" width="26" height="26" viewBox="-60 -60 120 120" fill="none"><g stroke="currentColor" stroke-width="8" stroke-linejoin="round" stroke-linecap="round"><path d="M -46 0 Q 0 -21 46 0 Q 0 21 -46 0 Z" transform="rotate(45)"/><path d="M -46 0 Q 0 -21 46 0 Q 0 21 -46 0 Z" transform="rotate(-45)"/></g></svg><span class="logo-word">Axignal</span></span>
+            </span>
+        <span class="gv-logo-mark" aria-hidden="true"><svg class="logo-mark" width="26" height="26" viewBox="-60 -60 120 120" fill="none"><g stroke="currentColor" stroke-width="8" stroke-linejoin="round" stroke-linecap="round"><path d="M -46 0 Q 0 -21 46 0 Q 0 21 -46 0 Z" transform="rotate(45)"/><path d="M -46 0 Q 0 -21 46 0 Q 0 21 -46 0 Z" transform="rotate(-45)"/></g></svg></span>
+          </a>
+          <button id="sidebar-toggle" class="gv-toggle" aria-expanded="true" aria-label="Collapse sidebar" title="Collapse sidebar">«</button>
         </div>
-        <div class="reality-badge"><i aria-hidden="true"></i>TEST / DEV · IN-MEMORY</div>
-        <div class="rail-rule"></div>
-        <p class="eyebrow">AUTHORIZED XEED CONTEXT</p>
-        <p id="context-label" class="context-name">Loading context</p>
-        <p class="context-note">Private attention context. It does not own or alter the shared world.</p>
-        <div class="rail-rule"></div>
-        <p class="eyebrow">GLOBAL ORGANIZATION</p>
-        <h1 id="organization-name" class="organization-name">Loading AXIGLAND</h1>
-        <p class="identity-meta">Canonical Organization · global identity</p>
-        <div class="rail-rule"></div>
-        <div class="direct-fields">
-          <section>
-            <h2>Capabilities</h2>
-            <ul id="capabilities"><li class="unavailable">Unavailable in this context</li></ul>
+
+        <nav class="gv-scroll" aria-label="Workspace">
+          <button class="gv-today" id="today" aria-current="page"><i aria-hidden="true"></i>Today</button>
+
+          <section class="gv-sec">
+            <span class="gv-cap">Workspace</span>
+            <button class="gv-workspace" type="button" disabled aria-label="Workspace unavailable in this demonstration">
+              <span>Unavailable</span><i aria-hidden="true">›</i>
+            </button>
           </section>
-          <section>
-            <h2>Markets</h2>
-            <ul id="markets"><li class="unavailable">Unavailable in this context</li></ul>
+
+          <section class="gv-sec">
+            <span class="gv-cap">Xeed</span>
+            <button class="gv-xeedsel" id="xeed-current" type="button" disabled>
+              <span class="gv-xeed-dot"><i aria-hidden="true"></i></span>
+              <span class="gv-xeed-body"><b id="xeed-label">Current Xeed</b><em>Private context</em></span>
+              <span class="gv-xeed-chev" aria-hidden="true">⌄</span>
+            </button>
+            <button class="gv-plant" type="button" disabled>+ Plant Xeed</button>
           </section>
-        </div>
-        <div class="rail-foot">
-          <span class="eyebrow">ONE CANONICAL WORLD</span>
-          <span>Context is private. Organization and FAXT identity stay global.</span>
-        </div>
-      </aside>
 
-      <main class="center-stage">
-        <header class="stage-head">
-          <div>
-            <p class="eyebrow">THE FIELD <span class="head-divider">/</span> AUTHORIZED CONTEXT</p>
-            <p class="stage-title" id="stage-title">A global Organization with explicitly referenced knowledge.</p>
-          </div>
-        </header>
-
-        <div id="load-state" class="load-state" role="status">Resolving authorized context…</div>
-        <section class="field-wrap" aria-label="AXIGLAND canonical field">
-          <div class="field-caption"><span class="eyebrow">CURRENT CONTEXT</span><span id="field-count">—</span></div>
-          <aside class="epistemic-axis" aria-label="Epistemic strata unavailable; no FAXT layer assignments">
-            <span class="eyebrow">EPISTEMIC</span>
-            <div class="epistemic-stops" aria-hidden="true">
-              <span>Meaning</span><span>Context</span><span>Inference</span><span>Evidence</span>
-            </div>
-            <span class="epistemic-unknown">No governed mapping</span>
-          </aside>
-          <div class="depth-switch" role="group" aria-label="Cognitive depth">
-            <span class="depth-label">DEPTH</span>
-            <button data-depth="GLANCE" aria-pressed="true">Glance</button>
-            <button data-depth="UNDERSTAND" aria-pressed="false">Understand</button>
-            <button data-depth="REASON" aria-pressed="false">Reason</button>
-            <button data-depth="PROVE" aria-pressed="false">Prove</button>
-          </div>
-          <svg id="field" class="field" viewBox="0 0 1000 600" role="group" aria-label="Canonical Organization and FAXTs explicitly referenced in the active Xeed context">
-            <title>Canonical Organization and explicitly referenced FAXT nodes</title>
-            <g id="camera-layer"></g>
-          </svg>
-          <div class="field-tools" aria-label="Field camera controls">
-            <button id="zoom-out" aria-label="Zoom out" title="Zoom out">−</button>
-            <button id="zoom-reset" aria-label="Reset camera" title="Reset camera">⌂</button>
-            <button id="zoom-in" aria-label="Zoom in" title="Zoom in">+</button>
-          </div>
-          <div class="minimap-wrap">
-            <span class="eyebrow">FIELD VIEW</span>
-            <svg id="minimap" viewBox="0 0 160 96" role="img" aria-label="Presentation-only camera minimap">
-              <g id="minimap-nodes"></g><rect id="minimap-window" x="4" y="4" width="152" height="88" />
-            </svg>
-          </div>
-          <p class="field-hint">Drag to move · scroll to zoom · select a node to focus</p>
-          <div class="membership-legend"><span aria-hidden="true">┄</span> Explicit Xeed context boundary · no semantic relationships shown</div>
-        </section>
-
-        <nav class="focus-trail" aria-label="Session focus history">
-          <div class="history-controls">
-            <button id="history-back" aria-label="Back" title="Back" disabled>←</button>
-            <button id="history-forward" aria-label="Forward" title="Forward" disabled>→</button>
-            <button id="history-home" aria-label="Home" title="Return to Organization">⌂</button>
-          </div>
-          <span class="eyebrow">FOCUS TRAIL</span>
-          <ol id="history-list"><li>Organization</li></ol>
-          <span class="session-only">This session only</span>
+          <section class="gv-sec">
+            <span class="gv-cap">Governance</span>
+            <button class="gv-row" type="button" disabled><span class="gv-rk">Scope</span><span class="gv-rv">Private · current Xeed <i aria-hidden="true">›</i></span></button>
+            <button class="gv-row" type="button" disabled><span class="gv-rk">Memory</span><span class="gv-rv">Unavailable <i aria-hidden="true">›</i></span></button>
+            <button class="gv-row" id="research-depth" type="button"><span class="gv-rk">Research</span><span class="gv-rv">Glance <i aria-hidden="true">›</i></span></button>
+            <button class="gv-row toggle" type="button" disabled><span class="gv-rk">Uncertainty</span><span class="gv-rv">Unavailable <span class="gv-sw" aria-hidden="true"><i></i></span></span></button>
+          </section>
         </nav>
 
-        <section class="bottom-context" aria-labelledby="bottom-title">
-          <div class="bottom-heading">
-            <div><p class="eyebrow">BOTTOM CONTEXT</p><h2 id="bottom-title">Organization context</h2></div>
-            <span id="selected-kind" class="selection-kind">GLOBAL ORGANIZATION</span>
+        <div class="gv-account" aria-label="Account unavailable in this demonstration">
+          <span class="gv-avatarsm" aria-hidden="true">A</span><span class="gv-acct-name">Account</span><i aria-hidden="true">›</i>
+        </div>
+        <span class="hfx-demo-indicator">TEST / DEV · IN-MEMORY</span>
+      </aside>
+
+      <main class="center">
+        <section class="stage2" aria-label="AXIGLAND cognitive field">
+          <aside class="lens" aria-label="Epistemic axis and cognitive depth">
+            <span class="lens-cap">Epistemic</span>
+            <div class="lens-track">
+              <span class="lens-line"></span><span class="lens-fill" id="depth-fill"></span>
+              <div class="lens-hit" id="depth-slider" role="slider" tabindex="0" aria-label="Cognitive depth" aria-valuemin="0" aria-valuemax="3" aria-valuenow="0"></div>
+              <button class="lens-stop on" data-depth="0"><span class="lens-tick"></span><b>Meaning</b></button>
+              <button class="lens-stop" data-depth="1"><span class="lens-tick"></span><b>Context</b></button>
+              <button class="lens-stop" data-depth="2"><span class="lens-tick"></span><b>Inference</b></button>
+              <button class="lens-stop" data-depth="3"><span class="lens-tick"></span><b>Evidence</b></button>
+              <span class="lens-knob" id="depth-knob"><i></i></span>
+            </div>
+            <div class="lens-foot" aria-live="polite"><span class="mono">Depth</span><b id="depth-word">Glance</b></div>
+          </aside>
+
+          <div class="field" id="field" role="group" aria-label="AXIGLAND field">
+            <div id="zone-cap" class="zone on z-cap">capabilities</div>
+            <div id="zone-market" class="zone on z-mkt">markets</div>
+            <div id="zone-signal" class="zone on z-sig">signals</div>
+            <div id="zone-activity" class="zone on z-act">activity</div>
+            <div id="camera-layer" class="field-world"></div>
+            <button class="here" id="here" type="button" title="Center on current focus"><i aria-hidden="true"></i><b id="here-label">Organization</b><em>you are here</em></button>
+
+            <div class="canvas-tools" aria-label="Field controls">
+              <button id="zoom-in" type="button" title="Zoom in" aria-label="Zoom in">+</button>
+              <button id="zoom-out" type="button" title="Zoom out" aria-label="Zoom out">−</button>
+              <button id="zoom-fit" type="button" title="Fit the field" aria-label="Fit the field">⤢</button>
+              <button id="zoom-root" type="button" title="Center on Organization" aria-label="Center on Organization">◎</button>
+              <button id="field-reload" type="button" title="Reset field view" aria-label="Reset field view">◯</button>
+            </div>
+
+            <div class="minimap" id="minimap" role="button" tabindex="0" aria-label="Field minimap">
+              <svg viewBox="0 0 160 96" aria-hidden="true"><rect class="mm-bg" x="1" y="1" width="158" height="94" rx="2"></rect><g id="minimap-nodes"></g><rect class="mini-window" id="minimap-window" x="18" y="16" width="124" height="64"></rect></svg>
+            </div>
+            <p class="field-hint">Drag to move · scroll to zoom</p>
           </div>
-          <div id="bottom-fields" class="bottom-fields"><p class="unavailable">Waiting for authorized context.</p></div>
+
+          <nav class="trail" aria-label="Focus trail">
+            <div class="trail-nav">
+              <button id="history-back" type="button" disabled title="Back — previous attention" aria-label="Back">←</button>
+              <button id="history-forward" type="button" disabled title="Forward — next attention" aria-label="Forward">→</button>
+              <button id="history-home" type="button" title="Home — root Xeed" aria-label="Home">⌂</button>
+            </div>
+            <div class="trail-path" id="history-list"><button class="trail-item cur" id="history-current" aria-current="page">Today</button></div>
+            <span class="session-only">This session only</span>
+          </nav>
         </section>
 
-        <footer class="time-rail" aria-label="Historical view unavailable">
-          <div class="time-mark"><b>NOW</b><span>Current authorized read</span></div>
-          <div class="time-line" aria-hidden="true"><i></i></div>
-          <button class="history-unavailable" disabled title="No historical AXIGLAND snapshot authority">History unavailable</button>
+        <section class="bottom" aria-label="Bottom Context">
+          <section class="conn" aria-label="Relationships">
+            <div class="conn-row">
+              <span class="conn-cap">Connections · <span id="connections-focus">Today</span></span>
+              <div class="conn-list" id="connection-list"></div>
+              <span class="conn-toggle conn-muted" id="connections-state">Unavailable</span>
+            </div>
+            <div class="conn-detail muted" id="connections-detail">Connections are unavailable in this view.</div>
+          </section>
+          <section class="reader" id="reader" aria-live="polite">
+            <div class="reader-head"><span class="mono" id="reader-kicker">Today</span><span class="reader-state" id="selected-kind">GLOBAL ORGANIZATION</span></div>
+            <h1 id="bottom-title">AXIGLAND</h1>
+            <p class="reader-meaning" id="reader-meaning">A global Organization and the explicitly referenced knowledge in this Xeed.</p>
+            <div class="reader-fields" id="bottom-fields"></div>
+          </section>
+        </section>
+
+        <footer class="meridian" aria-label="Time">
+          <div class="mer-row">
+            <span class="mer-end"><b>Then</b><em>Unavailable</em></span>
+            <div class="mer-track unavailable" aria-disabled="true" aria-label="Historical reconstruction unavailable"><span class="mer-line"></span><span class="mer-knob at-now"><i></i></span></div>
+            <span class="mer-end r"><b>Now</b><em>Current read</em></span>
+            <button class="mer-btn" type="button" disabled title="Historical AXIGLAND state is unavailable">What changed?</button>
+          </div>
         </footer>
       </main>
 
-      <aside class="axent-rail" aria-label="AXENT active context">
-        <header class="axent-head">
-          <div class="axent-brand"><span class="axent-mark" aria-hidden="true"><svg width="23" height="23" viewBox="-60 -60 120 120" fill="none"><g stroke="currentColor" stroke-width="8" stroke-linejoin="round" stroke-linecap="round"><path d="M -46 0 Q 0 -21 46 0 Q 0 21 -46 0 Z" transform="rotate(45)"/><path d="M -46 0 Q 0 -21 46 0 Q 0 21 -46 0 Z" transform="rotate(-45)"/></g></svg></span><div><strong>AXENT</strong><span>ACTIVE CONTEXT</span></div></div>
-          <span class="context-indicator" aria-hidden="true"></span>
-        </header>
-        <section class="axent-focus">
-          <p class="eyebrow">CURRENT PROTAGONIST</p>
-          <h2 id="axent-selection">Organization context</h2>
-          <p id="axent-identity" class="mono">Canonical identity pending</p>
-        </section>
-        <div class="rail-rule"></div>
-        <section class="axent-scope">
-          <p class="eyebrow">AUTHORIZED SCOPE</p>
-          <span class="scope-line"><i></i>One AuthorizedXeed</span>
-          <span class="scope-line"><i></i>Explicit FAXT references</span>
-          <span class="scope-line muted"><i></i>No cross-context retrieval</span>
-        </section>
-        <div class="rail-rule"></div>
-        <section class="axent-limits">
-          <p class="eyebrow">AVAILABLE HERE</p>
-          <p>Selected canonical identity context only.</p>
-          <p class="unavailable">AXENT reasoning, evidence access, and transcript are not implemented in this slice.</p>
-        </section>
-        <div class="axent-foot"><span class="eyebrow">NO MODEL CALLS</span><span>Selection updates context only.</span></div>
+      <aside class="axent" aria-label="AXENT cognitive navigator">
+        <div class="ax-head">
+          <div class="ax-title"><span class="ax-glyph" aria-hidden="true"><svg class="logo-mark" width="16" height="16" viewBox="-60 -60 120 120" fill="none"><g stroke="currentColor" stroke-width="8" stroke-linejoin="round" stroke-linecap="round"><path d="M -46 0 Q 0 -21 46 0 Q 0 21 -46 0 Z" transform="rotate(45)"/><path d="M -46 0 Q 0 -21 46 0 Q 0 21 -46 0 Z" transform="rotate(-45)"/></g></svg></span>AXENT</div>
+          <div class="ax-sub">cognitive navigator</div>
+          <div class="ax-scopes"><div class="ax-scope"><i></i><span>Xeed · <span id="axent-xeed-label">Current context</span></span></div></div>
+        </div>
+
+        <div class="ax-moves" id="axent-moves" aria-label="Moves on the world">
+          <span class="mono">Moves · <span id="axent-moves-focus">Today</span></span>
+          <button class="ax-move" data-capability="UNAVAILABLE" type="button" disabled title="Unavailable in this demonstration">Why does this matter?</button>
+          <button class="ax-move" data-capability="UNAVAILABLE" type="button" disabled title="Unavailable in this demonstration">Why was I following this?</button>
+          <button class="ax-move" data-capability="UNAVAILABLE" type="button" disabled title="Unavailable in this demonstration">What changed?</button>
+          <button class="ax-move" data-capability="UNAVAILABLE" type="button" disabled title="Unavailable in this demonstration">Compare with Germany</button>
+          <button class="ax-move" data-capability="UNAVAILABLE" type="button" disabled title="Unavailable in this demonstration">What remains unknown?</button>
+          <button class="ax-move" data-capability="UNAVAILABLE" type="button" disabled title="Unavailable in this demonstration">Explain simply</button>
+        </div>
+
+        <div class="ax-log" id="axent-transcript" role="log" aria-label="AXENT conversation" aria-live="off"></div>
+
+        <form class="ax-ask" id="axent-composer">
+          <div class="ax-active">
+            <span class="ax-pill-hint mono">Ask about this node</span>
+            <span class="ax-pill UNKNOWN" id="axent-active-context" data-active-xeed-id="" data-active-kind="" data-active-canonical-id="">
+              <i aria-hidden="true"></i><b id="axent-pill-label">Organization</b>
+            </span>
+          </div>
+          <div class="ax-input">
+            <input id="axent-input" type="text" placeholder="Conversation unavailable in this demonstration" aria-label="Ask AXENT" disabled />
+            <button id="axent-ask" class="ax-send" type="submit" disabled>Ask</button>
+          </div>
+          <p class="ax-hint">AXENT conversation is unavailable in this demonstration.</p>
+        </form>
       </aside>
     </div>
-    <div id="notice" class="notice" role="status" aria-live="polite"></div>
+    <div id="notice" class="ax-flash" role="status" aria-live="polite"></div>
   </body>
 </html>

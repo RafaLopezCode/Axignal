@@ -21,6 +21,15 @@
   Graphify, JavaScript syntax, browser E2E, changed-path secret pattern scan,
   and scope.
 - [x] Complete the A01–A35 adversarial self-audit.
+- [x] Reconcile the rejected Human Visual QA result against the existing
+  implementation and register D01–D15 before continuing the in-progress UI
+  repair.
+- [x] Adapt the Golden Master V2 shell, CSS, field, Reader, AXENT, focus and
+  Meridian presentation at the canonical projection boundary; keep unavailable
+  capability states truthful and preserve all canonical contracts.
+- [x] Add AXENT/CSP contract assertions and re-run V01–V18 in Chrome with
+  external requests blocked; retain paired human-review screenshots outside
+  the repository.
 - [ ] Commit, push, open/reuse exactly one PR against `main`, and verify
   exact-head remote CI, including Gitleaks.
 - [x] Keep any PR unmerged, hand off required human visual acceptance, and do
