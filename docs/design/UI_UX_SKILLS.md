@@ -7,8 +7,8 @@
 
 | Skill | Responsibility | Install path |
 | --- | --- | --- |
-| `frontend-design` | Visual direction, art direction, composition, typography, hierarchy, spatial rhythm, motion language, interaction polish, distinctive visual identity, avoiding generic AI aesthetics. | `.opencode/skills/frontend-design/SKILL.md` |
-| `ui-ux-pro-max` | Information architecture, interaction design, usability, accessibility, responsive behavior, navigation, cognitive load, UX heuristics, consistency, component/state design, empty/loading/error states, data-density, dashboard ergonomics. | `.opencode/skills/ui-ux-pro-max/SKILL.md` |
+| `frontend-design` | Visual direction, art direction, composition, typography, hierarchy, spatial rhythm, motion language, interaction polish, distinctive visual identity, avoiding generic AI aesthetics. | Shared source: `.opencode/skills/frontend-design/SKILL.md`; Codex entry point: `.agents/skills/frontend-design/SKILL.md` |
+| `ui-ux-pro-max` | Information architecture, interaction design, usability, accessibility, responsive behavior, navigation, cognitive load, UX heuristics, consistency, component/state design, empty/loading/error states, data-density, dashboard ergonomics. | Shared corpus: `.opencode/skills/ui-ux-pro-max/SKILL.md`; Codex entry point: `.agents/skills/ui-ux-pro-max/SKILL.md` |
 | `axignal-graph-design` | AXIGLAND-specific economic cartography, semantic/epistemic/temporal grammar, evidence explainability, accessibility requirements, and renderer boundary. Authored for AXIGNAL; not an upstream super-skill. | `.opencode/skills/axignal-graph-design/SKILL.md` |
 
 The two upstream skills remain subordinate general design intelligence. The
@@ -19,7 +19,7 @@ does not change the provenance or pinned revisions of either upstream skill.
 
 | Skill | Upstream | Upstream revision | Install mechanism | Local `SKILL.md` SHA-256 |
 | --- | --- | --- | --- | --- |
-| `frontend-design` | [anthropics/skills](https://github.com/anthropics/skills) (`skills/frontend-design`) | `33375500bcea98d610eb30ce10ac4e59b89c390d` | Direct vendoring from the pinned revision (`SKILL.md` + `LICENSE.txt`) | `d91970639e9f5c37682ac7ab60094d35f1c7c1f38d731bd56396563aee10c1d3` |
+| `frontend-design` | [anthropics/skills](https://github.com/anthropics/skills) (`skills/frontend-design`) | `41bbe19d1a1a7eaab5e7bb9050a417e5c6cffc8f` | Direct vendoring from the pinned revision (`SKILL.md` + `LICENSE.txt`); Codex uses a thin entry point | `d91970639e9f5c37682ac7ab60094d35f1c7c1f38d731bd56396563aee10c1d3` |
 | `ui-ux-pro-max` | [nextlevelbuilder/ui-ux-pro-max-skill](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill) | source-of-truth repo `dcc40ff5133ef78276117db0cc34e7b83cc8aeba`; published package `ui-ux-pro-max-cli@2.15.0` | Official installer: `npx ui-ux-pro-max-cli@2.15.0 init --ai opencode --offline` | `fff1d6ffd0c5e2e121f83e4c5bdbf52f25695a4de37d445a7b2f3afa1de362d9` |
 
 Machine-readable form: [SKILLS.lock.json](SKILLS.lock.json).
@@ -55,7 +55,7 @@ sibling skills (`brand`, `design`, `design-system`, `slides`, `ui-styling`,
 scope, only the two selected upstream super-skills are kept; the AXIGNAL-authored
 graph skill is maintained separately.
 
-## Discovery (OpenCode)
+## Discovery (Codex and OpenCode)
 
 OpenCode discovers project skills at `.opencode/skills/<name>/SKILL.md`
 (and `.claude/skills/`, `.agents/skills/`). Each skill is loaded on demand via
@@ -65,9 +65,11 @@ the native `skill` tool. Validation rules:
 - `name` in frontmatter must match the containing directory.
 - `description` is required (1–1024 chars).
 
-All three project-local skills satisfy these rules. A **new agent session is required**
-for newly installed skills to appear in the available-skills list; a session
-started before installation will not surface them.
+OpenCode reads the shared sources under `.opencode/skills/`. Codex reads the
+thin project entry points under `.agents/skills/`; each entry point delegates
+to the shared pinned source and does not duplicate the corpus. A **new agent
+session may be required** for newly added skills to appear in a host's available
+skill list; a session started before installation may not surface them.
 
 `ui-ux-pro-max` additionally uses local Python 3 (standard library only) helper
 scripts under its own directory. These scripts install nothing and make no
@@ -94,7 +96,7 @@ host system.
 
 ## Licensing
 
-- `frontend-design`: MIT, © Anthropic. Full text vendored at
+- `frontend-design`: Apache-2.0, © Anthropic. Full text vendored at
   `.opencode/skills/frontend-design/LICENSE.txt`.
 - `ui-ux-pro-max`: MIT, © NextLevelBuilder (repository `LICENSE`). Bundled data
   catalogs carry their own provenance (`data/data-provenance.json`,
@@ -107,3 +109,5 @@ host system.
   an AXIGNAL-owned contract; no production graph engine dependency is added.
 - These skills recommend; they never override the MASTER, the Engineering
   Constitution, ADRs, or architecture contracts.
+- Reviewed install and supply-chain choices are tracked in
+  [DESIGN_TOOLCHAIN.lock.json](DESIGN_TOOLCHAIN.lock.json).

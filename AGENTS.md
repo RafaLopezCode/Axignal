@@ -96,10 +96,13 @@ IMPLEMENTATION
 
 ## Design intelligence (UI/UX)
 
-AXIGNAL has two project-local design skills under `.opencode/skills/`:
+AXIGNAL has shared design references under `.opencode/skills/`:
 `frontend-design` (visual direction) and `ui-ux-pro-max` (UX, IA, interaction,
 accessibility, data-density). See `docs/design/UI_UX_SKILLS.md` and
 `docs/design/SKILLS.lock.json` for pinned upstream revisions and update steps.
+Codex discovers the thin, project-local entry points under `.agents/skills/`;
+those entry points delegate to the shared references rather than copying their
+large corpora.
 
 - They are **design intelligence, not product authorities**. Precedence:
   `MASTER → Constitution → ADRs/contracts → Feature spec → Design brief →
