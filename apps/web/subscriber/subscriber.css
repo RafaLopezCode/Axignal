@@ -3762,3 +3762,22 @@ input {
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .001ms !important; animation-duration: .001ms !important; }
 }
+
+/* Official AXIGNAL artwork; sizing stays within the Golden Master logo slots. */
+.brand-logo {
+  display: block;
+  width: 104px;
+  height: auto;
+  flex: none;
+}
+.brand-isotope {
+  display: block;
+  width: 26px;
+  height: 26px;
+  flex: none;
+}
+.ax-glyph .brand-isotope-small {
+  width: 16px;
+  height: 16px;
+  animation: axbreathe 4.8s var(--ease) infinite;
+}

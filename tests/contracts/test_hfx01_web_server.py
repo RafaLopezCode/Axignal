@@ -12,15 +12,20 @@ from tests.support.hfx01_server import _Handler
 
 
 def _with_server(path: str) -> tuple[int, bytes]:
+    status, body, _ = _with_server_response(path)
+    return status, body
+
+
+def _with_server_response(path: str) -> tuple[int, bytes, str | None]:
     server = ThreadingHTTPServer(("127.0.0.1", 0), _Handler)
     thread = Thread(target=server.serve_forever, daemon=True)
     thread.start()
     try:
         try:
             with urlopen(f"http://127.0.0.1:{server.server_port}{path}") as response:
-                return response.status, response.read()
+                return response.status, response.read(), response.headers.get("Content-Type")
         except HTTPError as error:
-            return error.code, error.read()
+            return error.code, error.read(), error.headers.get("Content-Type")
     finally:
         server.shutdown()
         server.server_close()
@@ -75,12 +80,30 @@ def test_empty_authorized_context_is_distinct_from_unavailable_projection() -> N
 def test_server_binds_only_loopback_and_serves_local_assets() -> None:
     status, body = _with_server("/")
     assert status == 200
-    assert b"TEST / DEV" in body
+    assert b"DEMO \xc2\xb7 EXAMPLE DATA" in body
     for path in (
         "/app.js",
+        "/presentation.js",
         "/subscriber.css",
         "/design-system/global.css",
         "/design-system/tokens.css",
     ):
         status, _ = _with_server(path)
         assert status == 200
+
+
+def test_brand_assets_are_allowlisted_and_served_with_image_media_types() -> None:
+    assets = {
+        "/brand/logo-light.svg": "image/svg+xml",
+        "/brand/logo-dark.svg": "image/svg+xml",
+        "/brand/isotope.svg": "image/svg+xml",
+        "/brand/favicon.svg": "image/svg+xml",
+        "/brand/favicon-16x16.png": "image/png",
+        "/brand/favicon-32x32.png": "image/png",
+        "/brand/favicon.ico": "image/vnd.microsoft.icon",
+    }
+    for path, expected_type in assets.items():
+        status, body, content_type = _with_server_response(path)
+        assert status == 200
+        assert body
+        assert content_type == expected_type

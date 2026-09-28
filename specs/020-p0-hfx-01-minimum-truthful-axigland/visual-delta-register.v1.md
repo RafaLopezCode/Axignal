@@ -133,3 +133,40 @@ Stored outside the repository at:
 The directory contains paired 1280×720 Golden Master/HFX default, AXENT,
 selected-node and Bottom Context captures, plus the HFX 640×900 narrow capture.
 The browser blocked every non-localhost request. No provider/model call was made.
+
+### Authoritative brand source correction
+
+The later CTO branding authority designates `D:\AXIGNAL\LOGOS` as the artwork
+source of truth. The adapted inline LogoMark has been replaced in its existing
+Golden Master positions with the official horizontal light logo and isotope;
+the official dark wordmark is prepared as an unused dark-context asset. This is
+an expressly authorized brand-artwork delta only. Placement, shell geometry,
+spacing, hierarchy, and all non-brand presentation remain unchanged. Source
+inventory and output provenance are recorded in
+`docs/design/BRAND_ASSET_AUTHORITY_V1.md` and
+`apps/web/subscriber/assets/brand/brand-assets.v1.json`. The updated subscriber
+and light/dark/small-icon asset preview are captured as
+`hfx01-brand-applied-1280x720.png` and
+`axignal-brand-assets-light-dark-and-small-icons.png` in the external evidence
+directory above. Human Visual QA remains pending.
+
+### Presentation semantics copy re-audit
+
+The subsequent subscriber-copy audit supersedes the earlier wording where it
+mentioned implementation or capability states:
+
+| Surface | Previous wording/state | Current presentation decision | Semantic state |
+|---|---|---|---|
+| Predicate labels and accessible names | Raw predicate tokens such as `MAINTAINS_STANDARD` | Map canonical predicates through presentation keys to concise locale copy; unknown predicates use a neutral label | Canonical predicate is unchanged |
+| Bottom Context currentness | Raw `UNKNOWN` | Show a localized explanation that freshness has not been verified | Canonical `UNKNOWN` is unchanged |
+| Bottom Context subject kind/resolution | `UNKNOWN_UNSUPPORTED` fields | Omit both fields because neither is actionable in this surface | Canonical `UNKNOWN_UNSUPPORTED` values remain in the projection |
+| Sidebar and AXENT scope | Xeed/authorization contract vocabulary | Use neutral context language | Authorization and private-context boundary are unchanged |
+| Empty Connections and missing fields | “Unavailable” implementation explanation | Quietly omit non-actionable empty state and fields | Empty/unsupported capability is not converted into a domain conclusion |
+| Demo disclosure | Test/development implementation label | “DEMO · EXAMPLE DATA” | Synthetic reality-level remains internal and explicit |
+
+All subscriber static copy, accessible names, titles, and dynamic labels now
+resolve through the locale presentation catalog. English is the only populated
+locale; locale tags use BCP-47 parsing and copy selection does not modify
+canonical identity. The copy-leakage register and deterministic browser audit
+record the field-by-field decisions. Layout, interaction, geometry, and
+Golden Master inputs remain unchanged. Human Visual QA remains pending.

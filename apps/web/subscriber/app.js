@@ -1,4 +1,21 @@
 const $ = (selector) => document.querySelector(selector)
+const presentation = window.AXIGNAL_PRESENTATION.forLocale(document.documentElement.lang)
+
+for (const element of document.querySelectorAll('[data-copy]')) {
+  element.textContent = presentation.text(element.dataset.copy)
+}
+for (const element of document.querySelectorAll('[data-copy-aria-label]')) {
+  element.setAttribute('aria-label', presentation.text(element.dataset.copyAriaLabel))
+}
+for (const element of document.querySelectorAll('[data-copy-placeholder]')) {
+  element.setAttribute('placeholder', presentation.text(element.dataset.copyPlaceholder))
+}
+for (const element of document.querySelectorAll('[data-copy-title]')) {
+  element.setAttribute('title', presentation.text(element.dataset.copyTitle))
+}
+for (const element of document.querySelectorAll('[data-copy-content]')) {
+  element.setAttribute('content', presentation.text(element.dataset.copyContent))
+}
 
 const state = {
   projection: null,
@@ -47,12 +64,16 @@ function getNode(key) {
       key,
       id: node.id,
       kind: 'ORGANIZATION',
-      label: node.name,
+      label: presentation.isImplementationValue(node.name)
+        ? presentation.text('organization.label')
+        : node.name,
       source: node,
     }
   }
   const source = state.projection.nodes.find((item) => projectionKey('FAXT', item.id) === key)
-  return source ? { key, id: source.id, kind: 'FAXT', label: source.label, source } : null
+  return source
+    ? { key, id: source.id, kind: 'FAXT', label: presentation.describeFact(source).label, source }
+    : null
 }
 
 function focusedNode() {
@@ -60,10 +81,10 @@ function focusedNode() {
 }
 
 function depthName(value) {
-  if (value < 0.7) return 'Glance'
-  if (value < 1.5) return 'Understand'
-  if (value < 2.4) return 'Reason'
-  return 'Prove'
+  if (value < 0.7) return presentation.text('navigation.glance')
+  if (value < 1.5) return presentation.text('navigation.understand')
+  if (value < 2.4) return presentation.text('navigation.reason')
+  return presentation.text('navigation.prove')
 }
 
 function worldPositions() {
@@ -76,7 +97,7 @@ function worldPositions() {
       key: projectionKey('FAXT', source.id),
       id: source.id,
       kind: 'FAXT',
-      label: source.label,
+      label: presentation.describeFact(source).label,
       source,
       x: slot.x,
       y: Math.max(10, Math.min(90, slot.y + row * 4)),
@@ -143,12 +164,17 @@ function nodeLabel(node) {
     return label
   }
 
+  const fact = presentation.describeFact(node.source)
   const predicate = document.createElement('span')
-  predicate.textContent = node.source.predicate
+  predicate.textContent = fact.predicateLabel
   const value = document.createElement('span')
   value.className = 'node-value'
-  value.textContent = node.source.objectOrValue
-  label.append(predicate, value)
+  if (fact.valueLabel) {
+    value.textContent = fact.valueLabel
+    label.append(predicate, value)
+  } else {
+    label.append(predicate)
+  }
   return label
 }
 
@@ -165,12 +191,9 @@ function makeNode(node) {
   element.dataset.worldY = String(node.y)
   element.setAttribute('aria-pressed', String(selected))
   if (node.kind === 'ORGANIZATION') {
-    element.setAttribute('aria-label', `Organization: ${node.label}`)
+    element.setAttribute('aria-label', `${presentation.text('organization.label')}: ${node.label}`)
   } else {
-    element.setAttribute(
-      'aria-label',
-      `FAXT: ${node.source.predicate}, ${node.source.objectOrValue}. Subject kind unknown.`,
-    )
+    element.setAttribute('aria-label', node.label)
   }
   element.append(makeMark(node), nodeLabel(node))
   element.addEventListener('pointerdown', (event) => event.stopPropagation())
@@ -210,7 +233,7 @@ function renderMap() {
     const message = document.createElement('p')
     message.id = 'empty-field'
     message.className = 'empty-field'
-    message.textContent = 'This Xeed has no FAXT references in the current view.'
+    message.textContent = presentation.text('organization.empty')
     field.append(message)
   }
   updateCamera()
@@ -266,14 +289,14 @@ function navigate(key, { record = true, recenter = true } = {}) {
   if (recenter) focusCamera(key)
 }
 
-function setReaderField(target, value, unknown = false) {
+function setReaderField(target, value) {
+  if (value == null || value === '') return null
   const wrapper = document.createElement('div')
   wrapper.className = 'reader-field'
   const term = document.createElement('dt')
   term.textContent = target
   const detail = document.createElement('dd')
-  detail.textContent = value == null || value === '' ? 'Unavailable in this context' : String(value)
-  if (unknown || value == null || value === '') detail.classList.add('unknown')
+  detail.textContent = String(value)
   wrapper.append(term, detail)
   return wrapper
 }
@@ -288,7 +311,9 @@ function makeReaderHeader(kickerText, titleText, meaningText, kind) {
   const stateLabel = document.createElement('span')
   stateLabel.className = 'reader-state'
   stateLabel.id = 'selected-kind'
-  stateLabel.textContent = kind === 'ORGANIZATION' ? 'GLOBAL ORGANIZATION' : 'CANONICAL FAXT'
+  stateLabel.textContent = kind === 'ORGANIZATION'
+    ? presentation.text('organization.label')
+    : presentation.text('field.information')
   header.append(kicker, stateLabel)
 
   const title = document.createElement('h1')
@@ -305,33 +330,39 @@ function renderReader(node) {
   const target = $('#reader')
   target.replaceChildren()
   const isOrganization = node.kind === 'ORGANIZATION'
-  $('#connections-focus').textContent = isOrganization ? 'Today' : node.source.predicate
-  $('#connections-state').textContent = 'Unavailable'
 
   if (isOrganization) {
     const rootView = document.createElement('div')
     rootView.className = 'today'
-    const readerHeader = makeReaderHeader('Today', node.label, 'Canonical Organization · global identity', node.kind)
+    const readerHeader = makeReaderHeader(
+      presentation.text('copy.today'),
+      node.label,
+      presentation.text('organization.identity'),
+      node.kind,
+    )
     const head = document.createElement('header')
     head.className = 'today-top'
     const greeting = document.createElement('div')
     greeting.className = 'today-greet'
     const name = document.createElement('span')
     name.className = 'co'
-    name.textContent = 'Today'
+    name.textContent = presentation.text('copy.today')
     const title = readerHeader.title
     const summary = document.createElement('p')
     summary.className = 'turn'
-    summary.textContent = `${state.projection.nodes.length} canonical FAXT${state.projection.nodes.length === 1 ? '' : 's'} are explicitly referenced in this Xeed.`
+    summary.textContent = presentation.countDetails(state.projection.nodes.length)
     greeting.append(readerHeader.header, name, title, summary)
 
     const context = document.createElement('div')
     context.className = 'today-cont'
     const contextLabel = document.createElement('span')
     contextLabel.className = 'mono'
-    contextLabel.textContent = `Current context · ${state.projection.context.label ?? 'Xeed'}`
+    const contextName = state.projection.context.label
+    contextLabel.textContent = `${presentation.text('context.label')} · ${presentation.isImplementationValue(contextName)
+      ? presentation.text('context.current')
+      : contextName || presentation.text('context.current')}`
     const explanation = document.createElement('p')
-    explanation.textContent = 'The field shows the global Organization and only the knowledge explicitly referenced in this Xeed.'
+    explanation.textContent = presentation.text('copy.contextExplanation')
     context.append(contextLabel, explanation)
     head.append(greeting, context)
     rootView.append(head, readerHeader.meaning)
@@ -343,20 +374,19 @@ function renderReader(node) {
         const card = document.createElement('article')
         card.className = 'idea'
         const title = document.createElement('h3')
-        title.textContent = faxt.label
-        const detail = document.createElement('p')
-        detail.className = 'stmt'
-        detail.textContent = 'Explicitly referenced canonical FAXT. Subject kind remains unknown.'
+        const fact = presentation.describeFact(faxt)
+        title.textContent = fact.label
         const foot = document.createElement('div')
         foot.className = 'idea-foot'
         const stateLabel = document.createElement('span')
         stateLabel.className = 'state-word'
-        stateLabel.textContent = faxt.epistemicState
+        stateLabel.textContent = fact.epistemicLabel ?? ''
         const open = document.createElement('span')
         open.className = 'act'
-        open.textContent = 'OPEN →'
-        foot.append(stateLabel, open)
-        card.append(title, detail, foot)
+        open.textContent = presentation.text('action.open')
+        if (fact.epistemicLabel) foot.append(stateLabel)
+        foot.append(open)
+        card.append(title, foot)
         card.addEventListener('click', () => navigate(projectionKey('FAXT', faxt.id)))
         card.setAttribute('role', 'button')
         card.tabIndex = 0
@@ -374,35 +404,40 @@ function renderReader(node) {
     const fieldList = document.createElement('div')
     fieldList.id = 'bottom-fields'
     fieldList.className = 'reader-fields'
-    fieldList.append(
-      setReaderField('Capabilities', node.source.capabilities.join(' · ') || null),
-      setReaderField('Markets', node.source.markets.join(' · ') || null),
-      setReaderField('Relationships', null, true),
-    )
+    const fields = [
+      setReaderField(presentation.text('field.capabilities'), node.source.capabilities
+        .filter((value) => !presentation.isImplementationValue(value)).join(' · ')),
+      setReaderField(presentation.text('field.markets'), node.source.markets
+        .filter((value) => !presentation.isImplementationValue(value)).join(' · ')),
+    ].filter(Boolean)
+    fieldList.append(...fields)
     rootView.append(fieldList)
     return
   }
 
   const focusView = document.createElement('div')
   focusView.className = 'focusview'
-  const readerHeader = makeReaderHeader('Bottom Context', node.label, 'A canonical FAXT in the current Xeed context.', node.kind)
+  const fact = presentation.describeFact(node.source)
+  const readerHeader = makeReaderHeader(
+    presentation.text('context.current'),
+    fact.label,
+    presentation.text('copy.factMeaning'),
+    node.kind,
+  )
   const kicker = document.createElement('span')
   kicker.className = 'kicker'
-  kicker.textContent = 'Explicitly referenced FAXT'
+  kicker.textContent = presentation.text('field.information')
   const columns = document.createElement('div')
   columns.className = 'fv-cols'
   const direct = document.createElement('div')
   direct.className = 'reader-fields'
   direct.id = 'bottom-fields'
-  direct.append(
-    setReaderField('Predicate', node.source.predicate),
-    setReaderField('Object or value', node.source.objectOrValue),
-    setReaderField('Epistemic state', node.source.epistemicState),
-    setReaderField('Currentness', node.source.currentness),
-    setReaderField('Subject kind', 'UNKNOWN_UNSUPPORTED', true),
-    setReaderField('Subject resolution', 'UNKNOWN_UNSUPPORTED', true),
-    setReaderField('Observed at', node.source.observedAt),
-  )
+  direct.append(...[
+    setReaderField(presentation.text('field.detail'), fact.valueLabel),
+    setReaderField(presentation.text('field.knowledge'), fact.epistemicLabel),
+    setReaderField(presentation.text('field.currentness'), fact.currentnessLabel),
+    setReaderField(presentation.text('field.lastObserved'), presentation.formatDate(node.source.observedAt)),
+  ].filter(Boolean))
   columns.append(direct)
   focusView.append(readerHeader.header, kicker, readerHeader.title, readerHeader.meaning, columns)
   target.append(focusView)
@@ -416,7 +451,7 @@ function renderHistory() {
     const node = getNode(key)
     const item = document.createElement('button')
     item.className = `trail-item${index === state.historyIndex ? ' cur' : ''}`
-    item.textContent = index === 0 ? 'Today' : node?.label ?? 'Unavailable'
+    item.textContent = index === 0 ? presentation.text('copy.today') : node?.label ?? presentation.text('context.current')
     item.setAttribute('aria-current', String(index === state.historyIndex))
     item.addEventListener('click', () => {
       state.historyIndex = index
@@ -446,16 +481,22 @@ function render() {
   renderMap()
   renderReader(node)
   renderHistory()
-  $('#here-label').textContent = state.projection.organization.name
-  $('#axent-moves-focus').textContent = node.kind === 'ORGANIZATION' ? 'the world' : node.label
+  $('#here-label').textContent = getNode(organizationKey()).label
+  $('#axent-moves-focus').textContent = node.kind === 'ORGANIZATION'
+    ? presentation.text('organization.label')
+    : node.label
   $('#axent-pill-label').textContent = node.label
   const pill = $('#axent-active-context')
   pill.dataset.activeXeedId = state.projection.context.id
   pill.dataset.activeKind = node.kind
   pill.dataset.activeCanonicalId = node.id
   pill.className = `ax-pill ${node.kind === 'FAXT' ? node.source.epistemicState : 'UNKNOWN'}`
-  $('#axent-xeed-label').textContent = state.projection.context.label ?? 'Current context'
-  $('#xeed-label').textContent = state.projection.context.label ?? 'Current Xeed'
+  const contextLabel = state.projection.context.label
+  const displayContext = presentation.isImplementationValue(contextLabel)
+    ? presentation.text('context.current')
+    : contextLabel || presentation.text('context.current')
+  $('#axent-xeed-label').textContent = displayContext
+  $('#xeed-label').textContent = displayContext
   renderDepth()
 }
 
@@ -505,8 +546,11 @@ function bindInteractions() {
     const collapsed = $('.gov').classList.toggle('collapsed')
     app.classList.toggle('gov-off', collapsed)
     event.currentTarget.setAttribute('aria-expanded', String(!collapsed))
-    event.currentTarget.setAttribute('aria-label', collapsed ? 'Expand sidebar' : 'Collapse sidebar')
-    event.currentTarget.title = collapsed ? 'Expand sidebar' : 'Collapse sidebar'
+    const sidebarLabel = collapsed
+      ? presentation.text('navigation.expandSidebar')
+      : presentation.text('navigation.collapseSidebar')
+    event.currentTarget.setAttribute('aria-label', sidebarLabel)
+    event.currentTarget.title = sidebarLabel
     event.currentTarget.textContent = collapsed ? '»' : '«'
     requestAnimationFrame(() => { state.size = { width: field.clientWidth, height: field.clientHeight }; renderMap() })
   })
@@ -642,10 +686,10 @@ async function start() {
     const message = document.createElement('p')
     message.className = 'field-unavailable'
     message.setAttribute('role', 'status')
-    message.textContent = 'AXIGLAND is unavailable in this context.'
+    message.textContent = presentation.text('error.load')
     field.append(message)
-    $('#bottom-title').textContent = 'Unavailable'
-    $('#selected-kind').textContent = 'CURRENT CONTEXT'
+    $('#bottom-title').textContent = presentation.text('error.load')
+    $('#selected-kind').textContent = presentation.text('context.label')
     $('#bottom-fields').replaceChildren()
   }
 }

@@ -19,6 +19,7 @@ from tests.support.hfx01_demo import Hfx01Demo
 REPOSITORY_ROOT = Path(__file__).resolve().parents[2]
 WEB_ROOT = REPOSITORY_ROOT / "apps" / "web" / "subscriber"
 DESIGN_ROOT = REPOSITORY_ROOT / "apps" / "web" / "design-system"
+BRAND_ROOT = WEB_ROOT / "assets" / "brand"
 
 
 def serialize_projection(projection: Any) -> dict[str, Any]:
@@ -88,9 +89,17 @@ class _Handler(BaseHTTPRequestHandler):
             "/": WEB_ROOT / "index.html",
             "/index.html": WEB_ROOT / "index.html",
             "/app.js": WEB_ROOT / "app.js",
+            "/presentation.js": WEB_ROOT / "presentation.js",
             "/subscriber.css": WEB_ROOT / "subscriber.css",
             "/design-system/global.css": DESIGN_ROOT / "global.css",
             "/design-system/tokens.css": DESIGN_ROOT / "tokens.css",
+            "/brand/logo-light.svg": BRAND_ROOT / "logo-light.svg",
+            "/brand/logo-dark.svg": BRAND_ROOT / "logo-dark.svg",
+            "/brand/isotope.svg": BRAND_ROOT / "isotope.svg",
+            "/brand/favicon.svg": BRAND_ROOT / "favicon.svg",
+            "/brand/favicon-16x16.png": BRAND_ROOT / "favicon-16x16.png",
+            "/brand/favicon-32x32.png": BRAND_ROOT / "favicon-32x32.png",
+            "/brand/favicon.ico": BRAND_ROOT / "favicon.ico",
         }
         source = static_files.get(path)
         if source is None or not source.is_file():
@@ -101,6 +110,9 @@ class _Handler(BaseHTTPRequestHandler):
             ".css": "text/css; charset=utf-8",
             ".js": "text/javascript; charset=utf-8",
             ".html": "text/html; charset=utf-8",
+            ".svg": "image/svg+xml",
+            ".png": "image/png",
+            ".ico": "image/vnd.microsoft.icon",
         }.get(source.suffix, "application/octet-stream")
         self.send_response(200)
         self.send_header("Content-Type", content_type)

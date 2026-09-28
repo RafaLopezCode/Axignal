@@ -1,0 +1,93 @@
+{
+  "schema_version": 1,
+  "source_directory": "D:\\AXIGNAL\\LOGOS",
+  "generator": "tools/brand_assets/generate.mjs",
+  "rasterizer": "Chrome headless Canvas; direct SVG-to-PNG, no intermediate raster",
+  "rasterizer_user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.0.0 Safari/537.36",
+  "assets": [
+    {
+      "source_file": "logo_horizontal_light_fraunces.svg",
+      "source_sha256": "721b0fe9d610a2387f44ef08059a8099b0b0b9afb7e21321bfab9c15b964a2b9",
+      "role": "logo",
+      "variant": "light-background",
+      "composition": "horizontal",
+      "output_file": "logo-light.svg",
+      "output_dimensions": "viewBox 0 0 1542 389",
+      "output_format": "SVG",
+      "output_operation": "UTF-8/LF; trailing horizontal whitespace removed; vector markup retained",
+      "output_sha256": "38ba8a9523b2fd3647c37d2947c9e5130d8d86220020d7cc681157088fd4e881"
+    },
+    {
+      "source_file": "logo_horizontal_dark_fraunces.svg",
+      "source_sha256": "a60e6389320ae4dd1afc3d477e5e51ca11adf6afdca961bed65b6f816bc9e77a",
+      "role": "logo",
+      "variant": "dark-background",
+      "composition": "horizontal",
+      "output_file": "logo-dark.svg",
+      "output_dimensions": "viewBox 0 0 1542 389",
+      "output_format": "SVG",
+      "output_operation": "UTF-8/LF; trailing horizontal whitespace removed; vector markup retained",
+      "output_sha256": "d01d5fdc32680c23fc5bf65a25ffa848e4106b4fb03df5b4f7ad0de165ab2abc"
+    },
+    {
+      "source_file": "axignal_isotipo.svg",
+      "source_sha256": "b205bb55c8d9adc952ad2ce6219848bb37b99eaee9711cc9b724bce4ac482d63",
+      "role": "isotope",
+      "variant": "shared-light-and-dark",
+      "composition": "square",
+      "output_file": "isotope.svg",
+      "output_dimensions": "viewBox 0 0 3000 3000",
+      "output_format": "SVG",
+      "output_operation": "UTF-8/LF; trailing horizontal whitespace removed; vector markup retained",
+      "output_sha256": "925a8ee038e681c64707fcbb5db47b9c6ee235b91626b02074b9031ae5c2db0e"
+    },
+    {
+      "source_file": "favicon.svg",
+      "source_sha256": "aa3bf8a91bba84f02f1319b38bbc8cce30007843acbbb45314f11fcf8bbfbd67",
+      "role": "favicon",
+      "variant": "vector",
+      "composition": "square-with-brand-safe-padding",
+      "output_file": "favicon.svg",
+      "output_dimensions": "viewBox 0 0 3000 3000",
+      "output_format": "SVG",
+      "output_operation": "UTF-8/LF; trailing horizontal whitespace removed; vector markup retained",
+      "output_sha256": "d9a017f0b8b7c850248375bbb4e1f92ba55a500fd18f7dd36b484a9a1101c615"
+    },
+    {
+      "source_file": "favicon.svg",
+      "source_sha256": "aa3bf8a91bba84f02f1319b38bbc8cce30007843acbbb45314f11fcf8bbfbd67",
+      "role": "favicon",
+      "variant": "16x16",
+      "composition": "square-with-brand-safe-padding",
+      "output_file": "favicon-16x16.png",
+      "output_dimensions": "16x16",
+      "output_format": "PNG",
+      "output_operation": "Direct SVG-to-canvas rasterization",
+      "output_sha256": "207999db6eb130581f20d222d448e3a273f31b25b94460535aa1f31d50607d11"
+    },
+    {
+      "source_file": "favicon.svg",
+      "source_sha256": "aa3bf8a91bba84f02f1319b38bbc8cce30007843acbbb45314f11fcf8bbfbd67",
+      "role": "favicon",
+      "variant": "32x32",
+      "composition": "square-with-brand-safe-padding",
+      "output_file": "favicon-32x32.png",
+      "output_dimensions": "32x32",
+      "output_format": "PNG",
+      "output_operation": "Direct SVG-to-canvas rasterization",
+      "output_sha256": "76905115bf29a8c4ba2cca4c85b910c35b8a9f020c82f1666645c32759e47ea8"
+    },
+    {
+      "source_file": "favicon.svg",
+      "source_sha256": "aa3bf8a91bba84f02f1319b38bbc8cce30007843acbbb45314f11fcf8bbfbd67",
+      "role": "favicon",
+      "variant": "32x32-embedded-png",
+      "composition": "square-with-brand-safe-padding",
+      "output_file": "favicon.ico",
+      "output_dimensions": "32x32 embedded PNG",
+      "output_format": "ICO",
+      "output_operation": "ICO container around the direct 32x32 SVG-derived PNG",
+      "output_sha256": "caee9b3e4d91857276e6a21c59a9e9d21cf794923b483f5ce76d740b5bf911a4"
+    }
+  ]
+}

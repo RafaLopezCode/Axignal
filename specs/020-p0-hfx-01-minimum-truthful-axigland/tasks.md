@@ -30,6 +30,15 @@
 - [x] Add AXENT/CSP contract assertions and re-run V01–V18 in Chrome with
   external requests blocked; retain paired human-review screenshots outside
   the repository.
+- [x] Replace the adapted inline logo marks with authoritative `D:\AXIGNAL\LOGOS`
+  assets; create reproducible favicon derivatives and provenance; verify the
+  browser references, light/dark rendering, and source immutability.
+- [x] Audit subscriber copy across static markup, runtime text, and accessible
+  names; centralize predicate/state presentation semantics and keep raw
+  UNKNOWN/UNKNOWN_UNSUPPORTED values internal. Record each leak in
+  `presentation-copy-leakage-register.v1.md`.
+- [x] Verify the regression case in Chrome at 1280×720, run the HFX browser
+  states V01–V18, and retain copy-audit captures outside the repository.
 - [ ] Commit, push, open/reuse exactly one PR against `main`, and verify
   exact-head remote CI, including Gitleaks.
 - [x] Keep any PR unmerged, hand off required human visual acceptance, and do

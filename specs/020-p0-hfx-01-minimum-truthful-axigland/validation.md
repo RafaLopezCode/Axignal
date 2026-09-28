@@ -115,9 +115,10 @@ slice start.
 - Reentry resumed on the existing branch at `8d5c740db580e55b2566673a76525c8baa44fe0b`;
   the three in-progress browser files and the pre-change delta register were
   preserved and inspected before continuation.
-- Canonical authorization, readers, Subscriber Projection, server and domain
-  contracts remain unchanged. Only the browser surface, its visual delta
-  evidence, and a focused HTML presentation contract test changed.
+- Canonical authorization, readers, Subscriber Projection, and domain contracts
+  remain unchanged. The visual repair changed the browser surface and its
+  evidence/tests; the later brand-source follow-up adds only allowlisted local
+  asset serving, deterministic build-time generation, and asset provenance.
 - The adapted stylesheet begins with the complete Golden Master `v2.css`
   source byte content after normalizing its CRLF/LF line-ending difference;
   presentation overrides follow it. The Golden Master itself remains
@@ -152,6 +153,91 @@ slice start.
 - Browser screenshots, scripts and build outputs remain outside the Git
   worktree. Human Visual QA is still `PENDING`; automated browser evidence does
   not close human acceptance.
+
+## Authoritative brand assets
+
+- Read-only source inventory: five SVGs in `D:\AXIGNAL\LOGOS`. SHA-256 values
+  and visual classification are recorded in
+  `docs/design/BRAND_ASSET_AUTHORITY_V1.md`; source files were re-hashed after
+  generation and remain unchanged.
+- The former inline approximation is replaced in the same Golden Master logo
+  slots by the official horizontal light logo and official isotope. The
+  official horizontal dark logo is included for dark-background readiness;
+  no dark theme was introduced. Header/sidebar geometry is unchanged.
+- Seven assets are copied/generated in `apps/web/subscriber/assets/brand/`.
+  `brand-assets.v1.json` records source/output SHA-256, output dimensions and
+  format and transformation. SVG derivatives normalize line endings and
+  trailing horizontal whitespace only; vector paths, colors, viewBox, and
+  artwork remain unchanged. The two PNGs were rasterized directly from the
+  authoritative SVG by Chrome Canvas; ICO embeds the 32×32 PNG. No
+  raster-to-raster resizing or image dependency was added.
+- Browser favicon and all seven allowlisted asset URLs returned HTTP 200 with
+  the expected media types. Chrome rendered the light and dark wordmarks,
+  shared gold isotope, and 16×16/32×32 favicons without clipping or distortion;
+  the subscriber header uses the light logo at the Golden Master slot ratio.
+  Runtime console errors: zero; browser requests stayed on loopback.
+- Final full validation after this update: `uv sync --frozen`, Ruff format,
+  Ruff check, mypy, Architecture Guard, AXIGNAL governance, deterministic
+  build, and Manifest V1 all PASS; pytest: 270 passed. Graphify: 4,634 nodes,
+  7,613 raw edges, zero missing endpoints, six dangling endpoints, five
+  self-loops, no post-build error. `git diff --check` PASS.
+- No manifest/PWA, Apple touch icon, Open Graph image, public URL, social
+  profile, SEO metadata, or structured data was added: the repository has no
+  such consumer or canonical public routing to support those claims.
+
+## Human-First presentation semantics repair
+
+This section supersedes earlier copy-state descriptions and test counts above
+for the final precommit worktree. It does not supersede the canonical authority
+or Golden Master evidence.
+
+- `apps/web/subscriber/presentation.js` is the single subscriber-copy
+  authority. Canonical predicate/state identifiers map to semantic keys, then
+  to localized messages. Static labels, accessible names, titles, placeholders,
+  metadata and dynamic copy are bound to catalog keys; the UI does not derive
+  labels by editing machine tokens.
+- English is the only populated locale. Locale selection canonicalizes BCP-47
+  tags and falls back to English without changing any canonical field. No i18n
+  dependency was added.
+- `MAINTAINS_STANDARD` remains unchanged in the projection and maps to
+  `predicate.maintainsStandard` / “Maintains a standard”. Unrecognized
+  predicates use a neutral “Information” label. Presentation labels do not
+  determine identity.
+- Currentness `UNKNOWN` is rendered as “How current this information hasn't
+  been verified.” `subjectKind` and `subjectResolution` remain
+  `UNKNOWN_UNSUPPORTED` in the serialized projection and are omitted from the
+  primary UI because they are not actionable there. Neither state is collapsed
+  into the other or into false/absence.
+- Non-actionable empty Connections and missing fields are quiet. A load failure
+  has plain user-facing copy. The demo indicator says “DEMO · EXAMPLE DATA”;
+  test/dev and authorization-contract wording is not emitted to subscribers.
+- `presentation-copy-leakage-register.v1.md` records the source value,
+  previous render, surface, meaning, desired user copy, localization need and
+  repair. The visual-delta register records this as a copy-only supersession.
+- Dedicated Chrome regression: raw `UNKNOWN_UNSUPPORTED` visible NO; raw
+  `UNKNOWN` enum visible NO; canonical `UNKNOWN` preserved YES;
+  canonical `UNKNOWN_UNSUPPORTED` preserved YES; the raw
+  `MAINTAINS_STANDARD` token remains internal. Currentness, empty and load
+  failure copy pass. Browser errors: zero; requested hosts: loopback only.
+- Chrome V01–V18 pass at 1280×720 and 640×900, with reduced motion and
+  non-localhost requests blocked. The presentation-copy audit and paired
+  screenshots remain external evidence. Human Visual QA remains PENDING.
+- Final Python validation: `uv sync --frozen`, Ruff format check, Ruff check,
+  mypy, 273 pytest tests, Architecture Guard, AXIGNAL governance, and
+  deterministic source/wheel build all PASS. Build outputs are outside the
+  worktree.
+- Graphify update/check PASS: 4,650 nodes, 7,382 edges; zero unverified nodes,
+  missing endpoints, dangling endpoints, or post-build errors; five self-loops.
+  Semantic community labels were not refreshed because that step invokes an
+  LLM and is not required for structural checks.
+- Golden Master Manifest V1 PASS: 27 inputs; digest remains
+  `1b4154dd152d9ecd20bfaeb7585daf78b4fbc79f182fce32a2f94ff017d6ad51`.
+- Changed-path credential-pattern screen PASS with zero matches across 21
+  intended paths; `.env` and credentials were not read. Gitleaks is not
+  installed locally; exact-head remote Gitleaks remains a required gate.
+- Brand generator was rerun against the authoritative local source with output
+  directed outside the worktree; SHA-256 matched all seven assets and the
+  derivative manifest exactly.
 
 ## Remote proof
 
