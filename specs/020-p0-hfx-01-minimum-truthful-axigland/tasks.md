@@ -39,7 +39,7 @@
   `presentation-copy-leakage-register.v1.md`.
 - [x] Verify the regression case in Chrome at 1280×720, run the HFX browser
   states V01–V18, and retain copy-audit captures outside the repository.
-- [ ] Commit, push, open/reuse exactly one PR against `main`, and verify
+- [x] Commit, push, open/reuse exactly one PR against `main`, and verify
   exact-head remote CI, including Gitleaks.
 - [x] Keep any PR unmerged, hand off required human visual acceptance, and do
   not start HFX-02.
