@@ -11,4 +11,5 @@
   matrix; keep projection implementation out of scope.
 - [x] Run required local gates and exact external manifest verification twice.
 - [x] Complete adversarial self-audit.
-- [ ] Commit, push, open one PR, and verify exact-head CI for CTO review.
+- [x] Commit and push one PR; exact-head CI passed. PR remains open and
+  unmerged for CTO review.

@@ -18,5 +18,5 @@ establish human visual acceptance or production persistence.
 | Deterministic build | `uv build` | PASS — source distribution and wheel built; local artifacts removed |
 | Graphify | AST update, multigraph diagnostics and hook status; no semantic model extraction | PASS — update/diagnostics exit 0; graph reports 6 dangling and 3 self-loop edges |
 | Design System contracts | No frontend implementation changed; design/governance docs were checked | NOT_APPLICABLE — no frontend runtime contract tests exist in this repository |
-| Local secret scan | `gitleaks` executable availability | NOT_AVAILABLE — executable is not installed; exact-head remote CI remains required |
+| Secret scan | Local `gitleaks` availability; GitHub exact-head Gitleaks gate | Local scanner unavailable; remote Gitleaks is required for each PR head |
 | Human visual QA | Exact before/after comparison not established by machine inspection | REQUIRED |
