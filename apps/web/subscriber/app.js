@@ -112,7 +112,7 @@ const FIELD_SLOTS = [
   { x: 88, y: 76 },
   { x: 34, y: 18 },
 ]
-const MINIMAP = { width: 160, height: 96, inset: 5 }
+const MINIMAP = { width: 160, height: 96, inset: 8 }
 const EPISTEMIC_STATES = new Set([
   'OBSERVED', 'CORROBORATED', 'INFERRED', 'POTENTIAL', 'UNKNOWN', 'STALE', 'CONTRADICTED', 'HISTORICAL',
 ])

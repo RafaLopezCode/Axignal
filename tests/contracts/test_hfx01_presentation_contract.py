@@ -448,12 +448,14 @@ def test_field_controls_reset_view_and_minimap_respects_its_canvas_bounds() -> N
     assert ".minimap svg {\n  display: block;\n  width: 100%;\n  height: 100%;\n}" in css
     assert 'class="mm-bg"' not in html
     assert 'class="mini-window" id="minimap-window"' in html
+    assert "const MINIMAP = { width: 160, height: 96, inset: 8 }" in script
     minimap_rules = re.findall(r"\.minimap\s*\{([^}]*)\}", css)
-    assert any("background: #f0ecdf;" in rule for rule in minimap_rules)
+    assert any("background: #f0ebdf;" in rule for rule in minimap_rules)
     assert any("border: 1px solid var(--hair);" in rule for rule in minimap_rules)
     minimap_window_rules = re.findall(r"\.minimap \.mini-window\s*\{([^}]*)\}", css)
     assert len(minimap_window_rules) == 1
-    assert "stroke: var(--brass-2);" in minimap_window_rules[0]
+    assert "fill: transparent;" in minimap_window_rules[0]
+    assert "stroke: none;" in minimap_window_rules[0]
     assert "pointer-events: none;" in minimap_window_rules[0]
 
 

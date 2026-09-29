@@ -156,7 +156,7 @@ def test_minimap_fits_visible_graph_and_uses_the_same_bounds_for_navigation() ->
     )
 
     assert "function minimapBounds(nodes = state.worldNodes)" in script
-    assert "const MINIMAP = { width: 160, height: 96, inset: 5 }" in script
+    assert "const MINIMAP = { width: 160, height: 96, inset: 8 }" in script
     assert "function minimapPoint(x, y, bounds)" in script
     assert "const mapBounds = minimapBounds(state.worldNodes)" in script
     assert "const point = (node) => minimapPoint(node.x, node.y, bounds)" in script
@@ -177,7 +177,8 @@ def test_minimap_fits_visible_graph_and_uses_the_same_bounds_for_navigation() ->
     assert ".lab-edge.edge-compares { stroke:" not in stylesheet
     assert ".mini-edge.edge-compares { stroke:" not in stylesheet
     assert ".minimap .mini-window {" in stylesheet
-    assert "stroke: var(--brass-2);" in stylesheet
+    assert "fill: transparent;" in stylesheet
+    assert "stroke: none;" in stylesheet
 
 
 def test_test_instrumentation_does_not_add_product_overlay_or_change_layout_bounds() -> None:

@@ -2668,7 +2668,7 @@ input {
   height: 96px;
   border: 1px solid var(--hair);
   border-radius: 6px;
-  background: #f0ecdf;
+  background: #f0ebdf;
   overflow: hidden;
   cursor: pointer;
   z-index: 6;
@@ -3721,9 +3721,8 @@ input {
 .minimap .mini-node.epistemic-historical { fill: var(--st-historical); }
 .minimap .mini-node.organization { fill: var(--brass); }
 .minimap .mini-window {
-  fill: rgba(150, 122, 47, 0.08);
-  stroke: var(--brass-2);
-  stroke-width: 1;
+  fill: transparent;
+  stroke: none;
   pointer-events: none;
 }
 .minimap:focus-visible { outline: 1.6px solid var(--brass); outline-offset: 3px; }
