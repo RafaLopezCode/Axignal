@@ -75,3 +75,16 @@ def test_pricing_is_specific_and_xignals_are_not_billable_units() -> None:
     assert "+4,95 €" in HTML
     assert "The Xignals that germinate from your Xeeds are not billable units." in HTML
     assert "Los Xignals que germinan de tus Xeeds no son unidades facturables." in HTML
+
+
+def test_public_ctas_never_dead_end_or_fake_account_runtime() -> None:
+    assert 'id="loginButton"' in HTML
+    assert 'id="accessDialog"' in HTML
+    assert "function openAccessDialog()" in HTML
+    assert "'1:Primary CTA':()=>goTo(15,1)" in HTML
+    assert "'1:Secondary CTA':()=>goTo(2,1)" in HTML
+    assert "'5:Primary CTA':()=>goTo(15,1)" in HTML
+    assert "'7:Primary CTA':openAccessDialog" in HTML
+    assert "'15:Primary CTA':openAccessDialog" in HTML
+    assert "'15:Secondary CTA':()=>goTo(7,-1)" in HTML
+    assert "placeholder checkout or fake account flow" in HTML
