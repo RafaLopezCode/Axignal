@@ -73,3 +73,22 @@ def test_reference_fixture_is_marked_and_isolated_from_product_truth() -> None:
     assert "TEST_FIXTURE · P0-DS-01 REFERENCE SPECIMEN" in html
     assert "noindex, nofollow" in html
     assert "canonical evidence" not in html.lower()
+
+
+def test_global_typography_authority_loads_canonical_webfonts() -> None:
+    global_css = (DESIGN_SYSTEM / "global.css").read_text(encoding="utf-8")
+
+    assert "fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600" in global_css
+    assert "family=Inter:wght@300;400;500;600" in global_css
+    assert "family=IBM+Plex+Mono:wght@300;400;500" in global_css
+
+
+def test_subscriber_uses_global_typography_authority() -> None:
+    subscriber_css = (ROOT / "apps" / "web" / "subscriber" / "subscriber.css").read_text(encoding="utf-8")
+
+    assert "--serif: var(--ax-font-display);" in subscriber_css
+    assert "--sans: var(--ax-font-body);" in subscriber_css
+    assert "--mono: var(--ax-font-mono);" in subscriber_css
+    assert "--serif: 'Fraunces'" not in subscriber_css
+    assert "--sans: 'Inter'" not in subscriber_css
+    assert "--mono: 'IBM Plex Mono'" not in subscriber_css
