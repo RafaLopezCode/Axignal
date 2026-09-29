@@ -67,12 +67,13 @@ header{
 .brand{justify-self:start;display:inline-flex;align-items:center;min-width:0}
 .brand img{display:block;width:166px;height:auto}
 .main-nav{justify-self:center;display:flex;align-items:center;justify-content:center;gap:42px;white-space:nowrap}
-.main-nav button,.login{
+.main-nav button,.main-nav .nav-link,.login{
   border:0;background:transparent;color:rgba(246,241,231,.74);
   font-family:var(--ax-font-body);font-size:13px;font-weight:400;line-height:1;letter-spacing:.005em;padding:10px 0;
   transition:color var(--ax-motion-quick) ease,opacity var(--ax-motion-quick) ease
 }
-.main-nav button:hover,.main-nav button:focus-visible,.login:hover,.login:focus-visible{color:#fff}
+.main-nav button:hover,.main-nav button:focus-visible,.main-nav .nav-link:hover,.main-nav .nav-link:focus-visible,.login:hover,.login:focus-visible{color:#fff}
+.main-nav .nav-link{text-decoration:none}
 .main-nav button[aria-current="page"]{color:#fff;position:relative}
 .main-nav button[aria-current="page"]::after{content:"";position:absolute;left:0;right:0;bottom:1px;height:2px;background:var(--ax-brass);transform-origin:center}
 .login{min-height:38px;padding:9px 14px!important;border:1px solid rgba(246,241,231,.26)!important;border-radius:var(--ax-radius-control);background:rgba(246,241,231,.035)!important;color:rgba(246,241,231,.90)!important;font-weight:500!important}
@@ -273,7 +274,7 @@ body[data-chapter="14"] .copy{width:min(43rem,46vw)}
 </head>
 <body>
 <main class="scene" id="scene">
-  <div class="art art-current" id="artCurrent"></div>
+  <div class="art art-current" id="artCurrent" style="background-image:url('./assets/images/landing-01-outside.webp');background-position:68% 50%"></div>
   <div class="art art-next" id="artNext"></div>
   <div class="contrast"></div><div class="left-shade"></div><div class="transition-veil"></div>
   <header>
@@ -282,6 +283,7 @@ body[data-chapter="14"] .copy{width:min(43rem,46vw)}
       <button type="button" data-jump="2" data-label="what"></button>
       <button type="button" data-jump="4">AXIGLAND</button>
       <button type="button" data-jump="7" data-label="knows"></button>
+      <a class="nav-link" href="../knowledge/" data-label="knowledge"></a>
       <button type="button" data-jump="14" data-label="pricing"></button>
     </nav>
     <div class="header-actions">
@@ -360,12 +362,12 @@ const questionsPt=['Porque é que isto me deveria interessar?','O que faz realme
 const questionsByLocale={es:questionsEs,fr:questionsFr,de:questionsDe,it:questionsIt,pt:questionsPt};
 const localeNames={en:'English',es:'Español',fr:'Français',de:'Deutsch',it:'Italiano',pt:'Português'};
 const labels={
-  en:{what:'What is AXIGNAL?',knows:'How it knows',pricing:'Pricing',login:'Log in',plant:'Plant Xeed',questions:'Questions answered'},
-  es:{what:'¿Qué es AXIGNAL?',knows:'Cómo lo sabe',pricing:'Precio',login:'Entrar',plant:'Planta tu Xeed',questions:'Preguntas que responde'},
-  fr:{what:'Qu’est-ce qu’AXIGNAL ?',knows:'Comment il le sait',pricing:'Tarifs',login:'Connexion',plant:'Planter une Xeed',questions:'Questions traitées'},
-  de:{what:'Was ist AXIGNAL?',knows:'Woher es das weiß',pricing:'Preise',login:'Anmelden',plant:'Xeed pflanzen',questions:'Beantwortete Fragen'},
-  it:{what:'Cos’è AXIGNAL?',knows:'Come lo sa',pricing:'Prezzi',login:'Accedi',plant:'Pianta una Xeed',questions:'Domande a cui risponde'},
-  pt:{what:'O que é a AXIGNAL?',knows:'Como sabe',pricing:'Preço',login:'Entrar',plant:'Plantar uma Xeed',questions:'Perguntas a que responde'}
+  en:{what:'What is AXIGNAL?',knows:'How it knows',knowledge:'Knowledge',pricing:'Pricing',login:'Log in',plant:'Plant Xeed',questions:'Questions answered'},
+  es:{what:'¿Qué es AXIGNAL?',knows:'Cómo lo sabe',knowledge:'Conocimiento',pricing:'Precio',login:'Entrar',plant:'Planta tu Xeed',questions:'Preguntas que responde'},
+  fr:{what:'Qu’est-ce qu’AXIGNAL ?',knows:'Comment il le sait',knowledge:'Connaissance',pricing:'Tarifs',login:'Connexion',plant:'Planter une Xeed',questions:'Questions traitées'},
+  de:{what:'Was ist AXIGNAL?',knows:'Woher es das weiß',knowledge:'Wissen',pricing:'Preise',login:'Anmelden',plant:'Xeed pflanzen',questions:'Beantwortete Fragen'},
+  it:{what:'Cos’è AXIGNAL?',knows:'Come lo sa',knowledge:'Conoscenza',pricing:'Prezzi',login:'Accedi',plant:'Pianta una Xeed',questions:'Domande a cui risponde'},
+  pt:{what:'O que é a AXIGNAL?',knows:'Como sabe',knowledge:'Conhecimento',pricing:'Preço',login:'Entrar',plant:'Plantar uma Xeed',questions:'Perguntas a que responde'}
 };
 const params=new URLSearchParams(location.search);
 const stored=localStorage.getItem('axignal.storyboard.locale');
@@ -380,6 +382,7 @@ let lang=SUPPORTED.includes(params.get('lang'))?params.get('lang'):(SUPPORTED.in
 let chapter=Math.min(15,Math.max(1,Number(params.get('c')||1)));
 let data=[];
 let transitioning=false;
+let pendingNavigation=null;
 let wheelAccum=0;
 let wheelSign=0;
 let wheelResetTimer=0;
@@ -599,7 +602,8 @@ function renderStable(){
 }
 async function goTo(target,dir=1){
   target=Math.min(15,Math.max(1,target));
-  if(target===chapter||transitioning) return;
+  if(target===chapter&&!transitioning) return;
+  if(transitioning){pendingNavigation={target,dir};return}
   transitioning=true;
   const next=data[target-1];
   await preload(next);
@@ -626,12 +630,19 @@ async function goTo(target,dir=1){
     artNext.style.backgroundImage='none';
     copyInner.classList.remove('ax-morph-out','ax-morph-in');
     transitioning=false;
+    const pending=pendingNavigation;
+    pendingNavigation=null;
+    if(pending&&pending.target!==chapter) goTo(pending.target,pending.dir);
   },total);
 }
 function next(){ if(chapter<15) goTo(chapter+1,1); }
 function prev(){ if(chapter>1) goTo(chapter-1,-1); }
 
+function isInteractiveTarget(target){
+  return target instanceof Element && Boolean(target.closest('button,a,input,select,textarea,[role="option"],[role="menuitem"],dialog'));
+}
 function onWheel(e){
+  if(isInteractiveTarget(e.target)||!localeList.hidden||!chapterMenu.hidden||accessDialog.open||evidenceDialog.open) return;
   e.preventDefault();
   if(transitioning) return;
   const dominant=Math.abs(e.deltaY)>=Math.abs(e.deltaX)?e.deltaY:e.deltaX;
@@ -650,15 +661,17 @@ addEventListener('wheel',onWheel,{passive:false});
 addEventListener('keydown',e=>{
   if(!localeList.hidden||!chapterMenu.hidden){
     if(e.key==='Escape'){closeLocale();closeChapterMenu();return}
+    return;
   }
+  if(accessDialog.open||evidenceDialog.open||isInteractiveTarget(e.target)) return;
   if(['ArrowDown','PageDown','ArrowRight',' '].includes(e.key)){e.preventDefault();next()}
   if(['ArrowUp','PageUp','ArrowLeft'].includes(e.key)){e.preventDefault();prev()}
   if(e.key==='Home'){e.preventDefault();goTo(1,-1)}
   if(e.key==='End'){e.preventDefault();goTo(15,1)}
 });
-addEventListener('touchstart',e=>{touchY=e.changedTouches[0]?.clientY??null},{passive:true});
+addEventListener('touchstart',e=>{touchY=isInteractiveTarget(e.target)?null:(e.changedTouches[0]?.clientY??null)},{passive:true});
 addEventListener('touchend',e=>{
-  if(touchY===null||transitioning)return;
+  if(touchY===null||transitioning||!localeList.hidden||!chapterMenu.hidden||accessDialog.open||evidenceDialog.open)return;
   const dy=(e.changedTouches[0]?.clientY??touchY)-touchY; touchY=null;
   if(Math.abs(dy)>=48) dy<0?next():prev();
 },{passive:true});

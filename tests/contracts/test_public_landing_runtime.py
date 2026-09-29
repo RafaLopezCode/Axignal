@@ -100,3 +100,23 @@ def test_public_landing_has_indexable_metadata_and_real_robots_file() -> None:
     assert 'width="166" height="42"' in HTML
     robots = (LANDING / "robots.txt").read_text(encoding="utf-8")
     assert robots == "User-agent: *\nAllow: /\n"
+
+
+def test_public_header_exposes_governed_knowledge_surface() -> None:
+    assert 'href="../knowledge/" data-label="knowledge"' in HTML
+    assert "knowledge:'Knowledge'" in HTML
+    knowledge = (LANDING.parent / "knowledge" / "index.html").read_text(encoding="utf-8")
+    assert '<link rel="canonical" href="/knowledge/">' in knowledge
+    assert "CANONICAL KNOWLEDGE" in knowledge
+    assert "EDITORIAL INTELLIGENCE" in knowledge
+    assert "DISCOVERY SURFACES" in knowledge
+    assert "No doorway pages." in knowledge
+
+
+def test_global_pagination_does_not_hijack_interactive_controls() -> None:
+    assert "function isInteractiveTarget(target)" in HTML
+    assert "if(isInteractiveTarget(e.target)||!localeList.hidden||!chapterMenu.hidden" in HTML
+    assert (
+        "if(accessDialog.open||evidenceDialog.open||isInteractiveTarget(e.target)) return;" in HTML
+    )
+    assert "touchY=isInteractiveTarget(e.target)?null" in HTML
