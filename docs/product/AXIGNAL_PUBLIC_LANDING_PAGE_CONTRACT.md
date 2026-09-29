@@ -337,14 +337,17 @@ Human-provided master per chapter:
 1920x1080 PNG
 ```
 
-Production implementation MUST create WebP derivatives from those masters.
+Production implementation MUST create deterministic WebP derivatives from those masters. It SHOULD also create deterministic AVIF derivatives when browser support, visual-quality comparison and repository/runtime constraints are satisfied. WebP remains the required production fallback; AVIF, when accepted by the implementation slice, is the preferred modern source.
 
 Requirements:
 - the authoritative human-provided masters for this slice are 1920x1080 PNG;
-- preserve the master PNGs untouched as source material;
+- preserve the master PNGs untouched as source material and record their hashes before conversion;
 - because AXIGNAL governance scans the entire repository working tree (including untracked/ignored files) for files above 2 MiB, oversized PNG masters MUST live outside the repository root while they exceed that limit;
-- the repository MUST contain only production WebP derivatives (and any other assets) that satisfy the repository size gate;
-- production WebP derivatives are the Git-tracked/browser-served assets;
+- the repository MUST contain only governed production derivatives and other assets that satisfy the repository size gate;
+- required WebP derivatives are Git-tracked/browser-served fallback assets;
+- accepted AVIF derivatives MAY also be Git-tracked/browser-served assets and MUST map one-to-one to the same canonical chapter/image identity;
+- when both formats exist, responsive markup SHOULD prefer AVIF and fall back to WebP without semantic or focal-point differences;
+- record conversion tool/version, dimensions, quality settings and output bytes so the pipeline is reproducible;
 - preserve aspect ratio;
 - avoid destructive focal cropping;
 - use deterministic naming;
@@ -410,6 +413,43 @@ type LandingChapter = {
 ```
 
 The exact TypeScript shape is implementation-owned. This section defines semantics, not a mandated schema.
+
+### 11.1 Copy freeze
+
+The chapter semantics above are not a substitute for final production copy. Before layout implementation is treated as design-complete, the implementation slice MUST produce and review one governed Copy Deck covering all 15 chapters.
+
+The Copy Deck MUST define, for every chapter:
+- human question / narrative purpose;
+- eyebrow where used;
+- production headline;
+- body copy;
+- value line where used;
+- primary and secondary CTA copy where applicable;
+- optional microcopy only where it reduces friction or ambiguity;
+- relation between copy and artwork so the text does not merely narrate the image;
+- epistemic guardrails relevant to the chapter;
+- mobile copy strategy when the full desktop wording cannot remain readable without degrading hierarchy.
+
+English MUST be frozen first as translation-source authority. Spanish MUST then receive first-class semantic and human review before the remaining launch locales are considered copy-complete. French, German, Italian and Portuguese MUST derive from the frozen English meaning while preserving epistemic strength and CTA intent.
+
+`COPY_FREEZE` means the 15-chapter English production copy and reviewed Spanish equivalent are semantically approved. It does not prevent later editorial refinement that preserves the same contract.
+
+### 11.2 Storyboard freeze
+
+The final UI MUST NOT be improvised chapter-by-chapter during coding. Before implementation is treated as visually specified, the slice MUST produce a governed storyboard for all 15 chapters using the approved copy and the approved source artwork.
+
+For every chapter the storyboard MUST define at least:
+- copy zone and hierarchy;
+- desktop, tablet and mobile focal treatment;
+- headline/body maximum measure;
+- CTA configuration;
+- persistent-header contrast/readability treatment;
+- pagination treatment;
+- entry/exit transition intent;
+- reduced-motion equivalent;
+- any chapter-specific crop/focal metadata required to preserve the artwork subject.
+
+`STORYBOARD_FREEZE` means the 15 chapters have a coherent reviewed composition across representative desktop, tablet and mobile layouts. Coding MAY begin before every micro-detail is fixed, but implementation MUST NOT invent a conflicting visual grammar or bypass the storyboard without recording the reason.
 
 ## 12. Human First requirements
 
@@ -480,7 +520,9 @@ The landing is NOT complete merely because components render.
 DONE requires, as applicable:
 
 ```text
-IMPLEMENTED
+COPY_FREEZE
++ STORYBOARD_FREEZE
++ IMPLEMENTED
 + RELEVANT TESTS PASSED
 + I18N VERIFIED
 + ASSET PIPELINE VERIFIED
@@ -560,7 +602,7 @@ Measured-value still life: balance scale, observation marker/map token and modes
 ### 15 START
 One company visible in the middle distance at dawn; observer holds one simple map marker ready to place; surrounding suppliers, roads, markets and logistics imply a larger discoverable context; beginning and clarity, not hype.
 
-All source images for this slice are authored externally at 1920×1080 PNG. While they exceed the repository 2 MiB gate, they are retained outside the repository root as governed source masters and converted deterministically into Git-tracked production WebP derivatives.
+All source images for this slice are authored externally at 1920×1080 PNG. While they exceed the repository 2 MiB gate, they are retained outside the repository root as governed source masters and converted deterministically into Git-tracked production WebP derivatives, plus AVIF derivatives when the implementation slice accepts them through the governed quality/performance comparison.
 
 ## 17. Authority and change control
 
