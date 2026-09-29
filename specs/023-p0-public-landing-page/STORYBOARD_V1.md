@@ -28,7 +28,7 @@ Desktop:
 Mobile:
 - wordmark + compact primary action;
 - accessible menu for secondary header links;
-- compact chapter indicator with direct chapter access;
+- compact actionable chapter indicator with direct chapter access, using at least the governed meta-text scale rather than microtext;
 - no 15 tiny inaccessible targets.
 
 ## Motion baseline
@@ -190,7 +190,7 @@ Mobile:
 **Narrative beat:** make the trust model memorable.  
 **Copy zone:** far-left/upper-left dark margin, narrower than the global default; do not cover the seated investigator.
 **Artwork focus:** the independent investigator/cartographer is center-left while the payment offer enters from the right. Their tension must remain visible together.
-**Focal baseline:** desktop 54% 50% (hypothesis); tablet 56% 50% (hypothesis); mobile requires rendered decision and MAY require a deterministic responsive derivative to preserve both actors.
+**Responsive art direction:** desktop uses the canonical landscape master at approximately 54% 50%. Tablet and mobile MUST use deterministic responsive derivatives regenerated from the untouched master so the investigator and the recognizable payment offer remain visible together. The reviewed preview derivatives use 768×1024 and 390×844 canvases with the source composition retained in the upper field and copy-safe black space below; production derivatives must be regenerated after STORYBOARD_FREEZE from the verified master rather than promoted from preview assets.
 **CTA:** none.  
 **Hierarchy:** headline and canonical value line are the memorable pair; body is short.  
 **Transition:** restrained; no moralizing/villain animation.  
@@ -203,7 +203,7 @@ Mobile:
 **Artwork focus:** group portrait around one world, center/right.  
 **Focal baseline:** desktop 63% 50%; tablet 66% 50%; mobile 70% 50%.  
 **CTA:** optional direct role exploration only if it remains one canonical world.  
-**Hierarchy:** headline → general decision-use paragraph → SEO/GEO/AEO/AIO agency paragraph → canonical agency value line. On mobile the two body ideas may become separate paragraphs; do not compress them into a dense role list.
+**Hierarchy:** headline → general decision-use paragraph → SEO/GEO/AEO/AIO agency paragraph → canonical agency value line. On mobile the two body ideas MUST render as separate paragraphs at the governed normal mobile body scale; do not compress them into a dense role list or shrink only this chapter to make it fit.
 **Transition:** no role tabs required for P0 unless they improve comprehension measurably.  
 **Risk:** do not make AXIGNAL look like an SEO/GEO/AEO/AIO execution tool or imply causal attribution from a before/after observation. The agency value is independent observation of representation and change.
 ## 14 — PRICING

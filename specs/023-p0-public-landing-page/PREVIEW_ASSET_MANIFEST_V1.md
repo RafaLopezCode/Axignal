@@ -4,7 +4,7 @@
 **Runtime authority:** NONE
 **Repository inclusion:** NO — preview binaries remain outside repository/runtime
 
-## Conversion
+## Canonical preview set
 
 - Source masters: 15/15 SHA-256 verified before conversion.
 - Source dimensions: 1920×1080 PNG.
@@ -14,16 +14,16 @@
 - Preset: `picture`.
 - Quality: `88`.
 - Compression level: `6`.
-- Output dimensions: 1920×1080.
-- Output count: 15/15.
-- Preview WebP total bytes: 5418926.
+- Base output dimensions: 1920×1080.
+- Canonical base preview count: 15/15.
+- Canonical base WebP total bytes: 5418926.
 - Byte reduction vs source masters: 88.22%.
 - SSIM minimum: 0.98252.
 - SSIM average: 0.984754.
 
 These settings are evidence for storyboard review only. They do not freeze production encoding settings.
 
-## Files
+## Canonical base files
 
 | # | Preview file | Bytes | SHA-256 | SSIM |
 |---:|---|---:|---|---:|
@@ -43,10 +43,23 @@ These settings are evidence for storyboard review only. They do not freeze produ
 | 14 | `landing-14-pricing.webp` | 297328 | `9F5D646D9BA577D7939C96A14F565B199E70103C9C9D270BC653F23F045D17CD` | 0.986032 |
 | 15 | `landing-15-start.webp` | 310650 | `0BDF2F8688328FA42ABFCC5022E87002F2D373F9A539F06E2E930833FE15F27F` | 0.984612 |
 
+## Responsive review derivatives
+
+Chapter 12 requires portrait compositions to preserve the investigator/payment relationship while reserving lower mobile/tablet space for copy. These two derivatives are explicit storyboard-review assets, not extra chapters and not production authority.
+
+| Purpose | File | Dimensions | Bytes | SHA-256 | Deterministic source transform |
+|---|---|---|---:|---|---|
+| Chapter 12 tablet | `landing-12-independence-tablet.webp` | 768x1024 | 149234 | `83461CD671C0DC1B50E73165F5A3352B06DBD59E890898B9DBA7DF532C8613BD` | `crop=1080:1080:560:0, scale=768:768 lanczos, pad=768:1024 top-aligned black; libwebp picture q88 level6` |
+| Chapter 12 mobile | `landing-12-independence-mobile.webp` | 390x844 | 64124 | `287D1CB44CF09DB15B639ED6E4145BCA276879B2AFDBA494D8614E1034F30061` | `crop=810:1080:700:0, scale=390:520 lanczos, pad=390:844 top-aligned black; libwebp picture q88 level6` |
+
+- Actual external review directory WebP count: 17 = 15 canonical base + 2 governed responsive Chapter 12 derivatives.
+- Actual external review directory WebP bytes: 5632284.
+
 ## Guardrails
 
 - Preview derivatives are disposable review evidence, not product runtime assets.
 - Source masters remain untouched outside the repository.
 - Production WebP generation must rerun from verified source masters after STORYBOARD_FREEZE.
+- Responsive production derivatives, if still required after implementation QA, must be regenerated through the governed production pipeline rather than copied blindly from preview.
 - AVIF remains optional and evidence-gated.
 - No preview hash or encoding setting may silently become production authority.

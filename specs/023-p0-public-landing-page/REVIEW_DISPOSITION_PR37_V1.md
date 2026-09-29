@@ -24,10 +24,29 @@ It confirms the reviewer's spatial finding: chapter 08 explorers are left-of-cen
 
 Exact cover-crop percentages remain `INFERRED` until browser breakpoint evidence exists.
 
+## Rendered storyboard hostile review
+
+A second independent Codex read-only review inspected PR #37 at `a2ed7f679e5afad0f6fc86e84710a93b8bb30000`, all six EN/ES contact sheets, key full-resolution screenshots, source manifests and the external preview/evidence directories.
+
+Result: `PR37_RENDERED_REVIEW=REQUIRES_CHANGES`.
+
+The reviewer found no visual, narrative, copy-fit, agency-value or epistemic defect in the rendered storyboard. Two evidence-governance findings were accepted:
+
+| Finding | Disposition | Repair |
+|---|---|---|
+| 0/90 screenshot SHA-256 values matched the then-current screenshot files | ACCEPTED — BLOCKING | Regenerated the exact 90-capture set through Playwright, regenerated `render-evidence.json`, rebuilt the browser evidence manifest from those exact files, and independently rechecked 90/90 hashes: mismatch count 0. |
+| Chapter 12 tablet/mobile responsive preview derivatives were unmanifested | ACCEPTED — MINOR | Regenerated deterministic responsive derivatives from the untouched 1920×1080 master; documented dimensions, bytes, SHA-256, transform recipe and review-only purpose. Canonical base preview remains 15/15; actual external review directory is 17 WebPs = 15 base + 2 governed responsive derivatives. |
+
+Chapter 12 responsive review derivatives are not production authority. If still required after implementation QA, production equivalents must be regenerated from the verified source master through the governed production pipeline.
+
 ## Remaining human gates
 
-`COPY_FREEZE=PENDING_HUMAN_REVIEW`
+`COPY_FREEZE=PASS`
 
-`STORYBOARD_FREEZE=PENDING_RENDERED_HUMAN_REVIEW`
+`CTO_RENDERED_STORYBOARD_REVIEW=PASS_BASE_90_EN_ES`
+
+`HUMAN_STORYBOARD_ACCEPTANCE=PENDING`
+
+`STORYBOARD_FREEZE=PENDING_HUMAN_ACCEPTANCE`
 
 No runtime implementation is authorized by this disposition.
