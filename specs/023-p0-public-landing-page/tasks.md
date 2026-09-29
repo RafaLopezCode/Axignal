@@ -37,7 +37,7 @@
 - [ ] Wire truthful CTAs/routes.
 - [ ] Add minimal SEO.
 - [ ] Add minimum sufficient deterministic tests.
-- [ ] Run browser critique/repair loop and populate `BROWSER_QA_EVIDENCE_V1.md` with inspectable evidence references.
+- [ ] Run browser critique/repair loop and populate the current browser evidence manifest (`BROWSER_QA_EVIDENCE_V2.md` for this preproduction slice) with inspectable evidence references.
 - [ ] Run full gates.
 - [ ] Open reviewable PR.
 - [ ] Human visual acceptance.

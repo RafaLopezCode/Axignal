@@ -419,7 +419,7 @@ Then smoke all 15 chapters in all six locales for missing keys, clipping and ove
 
 Functional QA covers initial load, next/previous, direct navigation, wheel/trackpad, keyboard, touch, history/deep link if applicable, locale fallback, real Login/+ Xignal/Pricing/How-it-knows routes, reduced motion, refresh, console and broken assets.
 
-Every browser QA PASS must be evidence-backed. Maintain `BROWSER_QA_EVIDENCE_V1.md` with the exact tested HEAD SHA, viewport, locale, chapter/range, browser/tool, screenshot or recording reference, console result, network/loading result where relevant, defect/repair linkage and final verdict. Screenshots may live in CI/PR artifacts or a governed local review bundle rather than Git when binary size makes that safer, but the manifest must identify where the evidence can be inspected and record hashes when practical. Unsupported PASS values are invalid.
+Every browser QA PASS must be evidence-backed. Maintain the current browser evidence manifest (`BROWSER_QA_EVIDENCE_V2.md` for this preproduction slice) with the exact tested HEAD SHA, viewport, locale, chapter/range, browser/tool, screenshot or recording reference, console result, network/loading result where relevant, defect/repair linkage and final verdict. Screenshots may live in CI/PR artifacts or a governed local review bundle rather than Git when binary size makes that safer, but the manifest must identify where the evidence can be inspected and record hashes when practical. Unsupported PASS values are invalid.
 ## 20. Tests and gates
 
 Add only deterministic tests that cheaply protect:

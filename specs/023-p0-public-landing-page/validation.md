@@ -15,6 +15,8 @@
 - `022-p0-identity-account-authority` remains canonical Identity; Landing uses 023.
 - Independent Codex review of PR #37 HEAD `3bf8320067ea205079aac310ad34f078d2331598` returned `REQUIRES_CHANGES`; all substantive findings were dispositioned in `REVIEW_DISPOSITION_PR37_V1.md`.
 - Source-master contact-sheet inspection independently confirmed the spatial corrections required for chapters 08, 09, 12 and 15.
+- A second independent Codex rendered-storyboard review at PR #37 HEAD `a2ed7f679e5afad0f6fc86e84710a93b8bb30000` found no visual/narrative/copy-fit/epistemic defects, but correctly blocked freeze on stale screenshot hashes and two undocumented Chapter 12 responsive review derivatives. Both evidence-governance findings were repaired and recorded in `REVIEW_DISPOSITION_PR37_V1.md`.
+- Current screenshot evidence recomputation verifies 90/90 manifest hashes against the exact files with mismatch count 0.
 - Canonical image-generation briefs are present in `AXIGNAL_PUBLIC_LANDING_PAGE_CONTRACT.md` §16; the reviewer’s inability to confirm that source was not treated as a product defect.
 
 ## Current gate status
@@ -28,9 +30,13 @@ STORYBOARD=15/15 REVISED_AFTER_INDEPENDENT_REVIEW
 STORYBOARD_READY_FOR_RENDERED_REVIEW=YES
 CTO_RENDERED_STORYBOARD_REVIEW=PASS_BASE_90_EN_ES
 RENDERED_LAYOUT_OR_CONSOLE_FAILURES=0/90
+RENDERED_SCREENSHOT_HASH_MATCH=90/90
 STORYBOARD_FREEZE=PENDING_HUMAN_ACCEPTANCE
-PREVIEW_WEBP=15/15
-PREVIEW_WEBP_TOTAL_BYTES=5,418,926
+PREVIEW_WEBP_CANONICAL_BASE=15/15
+PREVIEW_WEBP_RESPONSIVE_REVIEW_DERIVATIVES=2
+PREVIEW_WEBP_EXTERNAL_DIRECTORY_COUNT=17
+PREVIEW_WEBP_CANONICAL_BASE_BYTES=5,418,926
+PREVIEW_WEBP_EXTERNAL_DIRECTORY_BYTES=5,632,284
 PREVIEW_WEBP_SSIM_MIN=0.98252
 PREVIEW_WEBP_SSIM_AVG=0.984754
 PRODUCTION_WEBP=0/15
@@ -48,7 +54,7 @@ DEPLOYMENT=NOT_STARTED
 - `uv run pytest -q -p no:cacheprovider`: PASS — 293 tests.
 - `uv run architecture-guard --root .`: PASS.
 - `uv run axignal-governance`: PASS — architecture, deps, docs, graphify, hygiene, no-generated-data, spec, terminology.
-- Graphify update/check: PASS — rebuilt 5,025 nodes / 7,870 edges / 438 communities. Graphify reported community labels need optional LLM refresh after community-set change; deterministic structural update/check still exited 0.
+- Graphify update/check: PASS — rebuilt 5,032 nodes / 7,876 edges / 422 communities. Graphify reported community labels need optional LLM refresh after community-set change; deterministic structural update/check still exited 0.
 - `git diff --check`: PASS.
 
 No runtime, image derivatives, browser surface or production state was changed by this preproduction slice.

@@ -34,7 +34,7 @@ The reviewer found no visual, narrative, copy-fit, agency-value or epistemic def
 
 | Finding | Disposition | Repair |
 |---|---|---|
-| 0/90 screenshot SHA-256 values matched the then-current screenshot files | ACCEPTED — BLOCKING | Regenerated the exact 90-capture set through Playwright, regenerated `render-evidence.json`, rebuilt the browser evidence manifest from those exact files, and independently rechecked 90/90 hashes: mismatch count 0. |
+| 0/90 screenshot SHA-256 values matched the then-current screenshot files | ACCEPTED — BLOCKING | Regenerated the exact 90-capture set through Playwright, regenerated `render-evidence.json`, wrote the corrected current manifest as `BROWSER_QA_EVIDENCE_V2.md`, and independently rechecked 90/90 hashes: mismatch count 0. `BROWSER_QA_EVIDENCE_V1.md` remains historical/superseded for rendered-storyboard hash provenance. |
 | Chapter 12 tablet/mobile responsive preview derivatives were unmanifested | ACCEPTED — MINOR | Regenerated deterministic responsive derivatives from the untouched 1920×1080 master; documented dimensions, bytes, SHA-256, transform recipe and review-only purpose. Canonical base preview remains 15/15; actual external review directory is 17 WebPs = 15 base + 2 governed responsive derivatives. |
 
 Chapter 12 responsive review derivatives are not production authority. If still required after implementation QA, production equivalents must be regenerated from the verified source master through the governed production pipeline.
