@@ -50,3 +50,7 @@ Thumbs.db
 # --- Local agent scratch (never canonical) ---
 .specify/feature.json
 specs/*/checklists/*.tmp
+
+
+# --- AXIGNAL landing source masters (local only; production derivatives are tracked) ---
+apps/web/landing/assets/images/source/
