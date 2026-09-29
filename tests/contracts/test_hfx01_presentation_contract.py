@@ -459,6 +459,34 @@ def test_field_controls_reset_view_and_minimap_respects_its_canvas_bounds() -> N
     assert "pointer-events: none;" in minimap_window_rules[0]
 
 
+def test_synthetic_field_controls_toggle_labels_and_expose_only_fixture_connections() -> None:
+    html = (SUBSCRIBER / "index.html").read_text(encoding="utf-8")
+    script = (SUBSCRIBER / "app.js").read_text(encoding="utf-8")
+    css = (SUBSCRIBER / "subscriber.css").read_text(encoding="utf-8")
+    presentation = (SUBSCRIBER / "presentation.js").read_text(encoding="utf-8")
+    elements = _Elements()
+    elements.feed(html)
+
+    _, section = _by_id(elements, "connection-section")
+    assert "hidden" in section
+    assert section.get("aria-hidden") is None
+    _, labels_toggle = _by_id(elements, "labels-toggle")
+    assert labels_toggle.get("type") == "button"
+    assert labels_toggle.get("aria-pressed") == "false"
+    assert "$('#labels-toggle').addEventListener('click'" in script
+    assert "field.classList.toggle('labels-hidden', state.labelsHidden)" in script
+    assert ".field.labels-hidden .anch-lbl { visibility: hidden !important; }" in css
+
+    assert "edge.syntheticFixture === true" in script
+    assert "edge.source === focusId || edge.target === focusId" in script
+    assert "button.addEventListener('click', () => navigate(target.key))" in script
+    assert "Synthetic links · demo" in presentation
+    assert "Enlaces sintéticos · demo" in presentation
+    assert "Synthetische Demo-Verbindungen" in presentation
+    assert "合成デモの接続" in presentation
+    assert "روابط تجريبية اصطناعية" in presentation
+
+
 def test_branding_uses_authoritative_assets_and_reproducible_derivatives() -> None:
     html = (SUBSCRIBER / "index.html").read_text(encoding="utf-8")
     elements = _Elements()

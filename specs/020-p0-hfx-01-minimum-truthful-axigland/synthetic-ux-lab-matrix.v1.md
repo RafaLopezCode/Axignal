@@ -258,3 +258,15 @@ available container. The graph itself and its world positions do not change.
 The reloaded `SYNTHETIC_NOMINAL` browser view shows the node/edge map fitted
 inside the minimap frame. Pan/zoom/resize interaction fidelity and human
 acceptance at 1280×720 remain pending.
+
+### Focus connections and label visibility
+
+The subscriber demo exposes pills only for UX-lab edges marked
+`syntheticFixture=true` that touch the current focus. Each pill is labeled as a
+synthetic demo link and navigates to its fixture endpoint; these edges remain
+outside the canonical projection and assert no production Relationship. A
+scenario with no fixture edge shows an explicit empty state. The “Hide text”
+control hides node labels while preserving node marks, edges, focus, and camera;
+it is reversible and presentation-only. Browser inspection at 1280×720
+confirmed the toggle and pill navigation. Production relationship support is
+still `UNKNOWN_UNSUPPORTED`.
