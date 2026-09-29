@@ -551,7 +551,6 @@ input {
   text-align: center;
 }
 .anch-lbl.is-decluttered { visibility: hidden; }
-.field.labels-hidden .anch-lbl { visibility: hidden !important; }
 .anch:hover .anch-lbl,
 .anch.is-focus .anch-lbl {
   color: var(--ink);
@@ -2427,9 +2426,23 @@ input {
   max-height: 66vh;
 }
 .bottom.collapsed {
-  height: auto;
-  min-height: 0;
-  max-height: none;
+  height: 42px;
+  min-height: 42px;
+  max-height: 42px;
+  overflow: hidden;
+}
+.bottom.collapsed .conn {
+  padding-block: 5px;
+}
+.bottom.collapsed .conn-row {
+  align-items: center;
+  justify-content: flex-end;
+}
+.bottom.collapsed .conn-cap,
+.bottom.collapsed .conn-list,
+.bottom.collapsed .conn-empty,
+.bottom.collapsed .reader {
+  display: none !important;
 }
 .reader {
   flex: 1;

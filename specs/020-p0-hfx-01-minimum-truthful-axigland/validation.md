@@ -589,6 +589,29 @@ unmerged. Human visual acceptance is still required; HFX-02 is not authorized.
   passed. This check does not claim full localization or complete human visual
   acceptance at 1280×720; that QA remains pending.
 
+## Locale fallback correction — 2026-09-29
+
+- Root cause: the automatic locale resolver treated partial UX-lab stress
+  profiles as fully supported UI languages. A Spanish browser preference thus
+  selected a partial Spanish overlay and silently fell back to English for
+  untranslated keys.
+- Automatic and canonical locale resolution now use only complete catalogs
+  (`en` currently). Partial Spanish, German, Japanese, and Arabic profiles stay
+  available as explicit, session-only synthetic layout previews and are not
+  restored as account/user locales or represented as complete translations.
+  Previously persisted stress-profile values are cleared so Automatic returns
+  to the complete-catalog browser negotiation path.
+- Canonical Organization identity, FAXT source-language values, and fixture
+  transcript content remain unchanged. No i18n dependency was added.
+
+## Bottom Tab control correction — 2026-09-29
+
+- The synthetic “Hide text” control now collapses the Bottom Tab content and
+  changes to “Show text” while collapsed. Canvas node labels remain visible;
+  the control no longer changes graph label visibility.
+- The collapsed Bottom Tab retains a compact control strip so it can be expanded
+  again. The Timeline remains outside the Bottom Tab and is unaffected.
+
 ## Q2 — reconcile with canonical Design Director / iconography authority
 
 - Re-entry confirmed branch `feature/p0-hfx-01-minimum-truthful-axigland`,

@@ -132,13 +132,13 @@
           </nav>
         </section>
 
-        <section class="bottom" data-copy-aria-label="navigation.details" aria-label="Details">
+        <section class="bottom" id="bottom-panel" data-copy-aria-label="navigation.details" aria-label="Details">
           <section class="conn" id="connection-section" hidden data-copy-aria-label="navigation.connections" aria-label="Connections">
             <div class="conn-row">
               <span class="conn-cap" data-copy="connections.fixture">Synthetic relationships</span>
               <div class="conn-list" id="connection-list"></div>
               <span class="conn-empty" id="connections-empty" data-copy="connections.empty" hidden>No synthetic links from this focus.</span>
-              <button class="conn-toggle" id="labels-toggle" type="button" aria-pressed="false" data-copy-title="navigation.hideText" title="Hide text">Hide text</button>
+              <button class="conn-toggle" id="labels-toggle" type="button" aria-controls="bottom-panel" aria-expanded="true" data-copy-title="navigation.hideText" title="Hide text">Hide text</button>
             </div>
           </section>
           <section class="reader" id="reader" aria-live="polite">

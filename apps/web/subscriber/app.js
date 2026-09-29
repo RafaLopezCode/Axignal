@@ -17,6 +17,12 @@ let storedLocale = null
 if (isLoopbackScenario) {
   try {
     storedLocale = window.localStorage.getItem(LOCALE_PREFERENCE_KEY)
+    // Layout-stress profiles are not complete UI languages. Clear any legacy
+    // preview persisted as though it were a user locale; previews stay explicit.
+    if (storedLocale && !window.AXIGNAL_PRESENTATION.isSupportedLocale(storedLocale)) {
+      window.localStorage.removeItem(LOCALE_PREFERENCE_KEY)
+      storedLocale = null
+    }
   } catch {
     storedLocale = null
   }
@@ -65,7 +71,7 @@ const state = {
   history: [],
   historyIndex: -1,
   depth: 0,
-  labelsHidden: false,
+  bottomTabCollapsed: false,
   camera: { x: 0, y: 0, zoom: 1 },
   pointer: null,
   cameraFrame: 0,
@@ -75,8 +81,8 @@ const state = {
 }
 
 function applyUiLocale(locale, { persist = false, selectionValue = locale } = {}) {
-  const resolvedLocale = window.AXIGNAL_PRESENTATION.canonicalBcp47Locale(locale)
-  presentation = window.AXIGNAL_PRESENTATION.forLocale(resolvedLocale)
+  const resolvedLocale = window.AXIGNAL_PRESENTATION.canonicalLayoutPreviewLocale(locale)
+  presentation = window.AXIGNAL_PRESENTATION.forLayoutPreview(resolvedLocale)
   document.documentElement.lang = presentation.locale
   document.documentElement.dir = presentation.direction
   app.dataset.uiLocale = presentation.locale
@@ -85,8 +91,13 @@ function applyUiLocale(locale, { persist = false, selectionValue = locale } = {}
   if (selector) selector.value = selectionValue
   if (persist && state.uxLab && isLoopbackScenario) {
     try {
-      window.localStorage.setItem(LOCALE_PREFERENCE_KEY, presentation.locale)
-      explicitUserLocale = presentation.locale
+      if (window.AXIGNAL_PRESENTATION.isSupportedLocale(resolvedLocale)) {
+        window.localStorage.setItem(LOCALE_PREFERENCE_KEY, resolvedLocale)
+        explicitUserLocale = resolvedLocale
+      } else {
+        window.localStorage.removeItem(LOCALE_PREFERENCE_KEY)
+        explicitUserLocale = null
+      }
     } catch {
       // Keep the in-page preference usable when browser storage is unavailable.
     }
@@ -488,15 +499,15 @@ function renderConnections(focus) {
   empty.hidden = list.childElementCount > 0
 }
 
-function renderLabelVisibility() {
-  field.classList.toggle('labels-hidden', state.labelsHidden)
-  const key = state.labelsHidden ? 'navigation.showText' : 'navigation.hideText'
+function renderBottomTabVisibility() {
+  $('.bottom').classList.toggle('collapsed', state.bottomTabCollapsed)
+  const key = state.bottomTabCollapsed ? 'navigation.showText' : 'navigation.hideText'
   const label = presentation.text(key)
   const toggle = $('#labels-toggle')
   toggle.textContent = label
   toggle.title = label
   toggle.setAttribute('aria-label', label)
-  toggle.setAttribute('aria-pressed', String(state.labelsHidden))
+  toggle.setAttribute('aria-expanded', String(!state.bottomTabCollapsed))
 }
 
 function updateMinimap() {
@@ -707,9 +718,11 @@ function navigate(key, { record = true, recenter = true } = {}) {
 
 function setBottomView(view, restoreFocus = false) {
   const showPreferences = view === 'preferences' && Boolean(state.uxLab)
+  if (showPreferences) state.bottomTabCollapsed = false
   $('#reader').hidden = showPreferences
   $('#preferences-view').hidden = !showPreferences
   $('.bottom').classList.toggle('preferences-open', showPreferences)
+  renderBottomTabVisibility()
   $('#preferences-open').setAttribute('aria-expanded', String(showPreferences))
   if (restoreFocus) $('#preferences-open').focus()
   else if (showPreferences) $('#ui-locale').focus()
@@ -936,7 +949,7 @@ function render() {
   renderMap()
   renderReader(node)
   renderConnections(node)
-  renderLabelVisibility()
+  renderBottomTabVisibility()
   renderHistory()
   $('#here-label').textContent = getNode(organizationKey()).label
   $('#axent-moves-focus').textContent = node.kind === 'ORGANIZATION'
@@ -1157,8 +1170,8 @@ function bindInteractions() {
   $('#zoom-root').addEventListener('click', () => focusCamera(organizationKey()))
   $('#field-reload').addEventListener('click', resetFieldView)
   $('#labels-toggle').addEventListener('click', () => {
-    state.labelsHidden = !state.labelsHidden
-    renderLabelVisibility()
+    state.bottomTabCollapsed = !state.bottomTabCollapsed
+    renderBottomTabVisibility()
   })
   $('#here').addEventListener('click', () => focusCamera(organizationKey()))
 
