@@ -24,7 +24,10 @@
 - [ ] Build deterministic production WebP 15/15.
 - [ ] Evaluate AVIF only if supported and worthwhile; generate candidates only when that evaluation is executed.
 - [ ] Record conversion tool/version/settings/bytes and the AVIF accept/reject decision with evidence.
-- [ ] Implement chapter model and six locale catalogs.
+- [ ] Implement chapter model and six locale catalogs: en/es/fr/de/it/pt.
+- [ ] Implement browser-language auto-resolution with `en` fallback and BCP-47 base-locale normalization.
+- [ ] Implement accessible language selector; explicit choice overrides browser detection and persists browser-locally without inventing account persistence.
+- [ ] Implement locale-aware document `lang` and metadata.
 - [ ] Implement persistent header.
 - [ ] Implement pagination/keyboard/touch/history behavior.
 - [ ] Implement all 15 chapters.

@@ -247,6 +247,31 @@ Launch locales:
 
 `en, es, fr, de, it, pt`
 
+English is the canonical translation source and the unconditional fallback locale. Spanish is the first-class human-reviewed locale. French, German, Italian and Portuguese are required launch locales and MUST be localized from the frozen English meaning after COPY_FREEZE.
+
+### Locale resolution and selector
+
+The public Landing MUST adapt automatically to the visitor's supported browser language while always offering an explicit accessible language selector.
+
+Resolution precedence:
+
+1. an explicit locale encoded by an addressable locale route, when the final routing architecture supports locale-addressable URLs;
+2. the visitor's explicit selector override persisted for that browser/session according to the chosen public-web persistence mechanism;
+3. a future authenticated Principal-owned locale preference, only when that governed runtime actually exists;
+4. the first supported language from `navigator.languages`, falling back to `navigator.language`;
+5. `en`.
+
+Normalize regional BCP-47 tags to the supported base locale where appropriate, for example `es-MX → es`, `fr-CA → fr`, `pt-BR → pt`. Unsupported languages MUST fall back to English without mutating canonical IDs, source language or product truth.
+
+The selector MUST:
+- expose all six launch locales: English, Español, Français, Deutsch, Italiano, Português;
+- be keyboard accessible and usable on desktop/mobile;
+- make the active locale obvious without relying on flag icons;
+- override browser detection immediately;
+- persist the explicit visitor choice without inventing account/profile persistence;
+- update the document `lang` and locale-aware metadata/content;
+- never translate protected product vocabulary inconsistently.
+
 Architecture must remain ready for:
 
 `zh, ja, ko`

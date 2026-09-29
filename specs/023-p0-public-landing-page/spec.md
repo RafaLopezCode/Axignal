@@ -28,6 +28,9 @@ The feature must not create new economic truth, subscriber authority, billing cl
 - persistent header;
 - 15 chapters;
 - six locale catalogs: en/es/fr/de/it/pt;
+- automatic supported-browser-locale resolution with `en` as unconditional fallback;
+- accessible explicit locale selector whose visitor override wins over browser detection and persists browser-locally until authenticated Principal preference runtime exists;
+- locale-aware document language/metadata without changing canonical product identifiers;
 - CJK-ready content architecture;
 - native/bounded chapter pagination;
 - responsive focal metadata;
