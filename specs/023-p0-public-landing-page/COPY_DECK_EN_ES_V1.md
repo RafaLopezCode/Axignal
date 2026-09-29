@@ -281,18 +281,18 @@
 **EN**
 - Eyebrow: Different questions
 - Headline: **One economic reality. Different decisions.**
-- Body: Leadership, sales, procurement, export, agencies and consultancies can explore the same underlying economic world from the perspective of the decision in front of them.
-- Value line: **Different perspectives. Same underlying world.**
+- Body: Leadership, sales, procurement, export teams and consultancies can explore the same underlying economic world from the perspective of the decision in front of them. For SEO, GEO, AEO and AIO agencies, AXIGNAL adds something especially valuable: an independent view of how search, assistants, generative systems and public surfaces represent each client—and what changed after the agency acted.
+- Value line: **You improve the company. AXIGNAL independently observes what changed.**
 
 **ES**
 - Eyebrow: Preguntas diferentes
 - Headline: **Una realidad económica. Decisiones diferentes.**
-- Body: Dirección, ventas, compras, exportación, agencias y consultoras pueden explorar el mismo mundo económico subyacente desde la perspectiva de la decisión que tienen delante.
-- Value line: **Distintas perspectivas. El mismo mundo subyacente.**
+- Body: Dirección, ventas, compras, exportación y consultoría pueden explorar el mismo mundo económico subyacente desde la perspectiva de la decisión que tienen delante. Para agencias de SEO, GEO, AEO y AIO, AXIGNAL añade un valor especialmente importante: una visión independiente de cómo buscadores, asistentes, sistemas generativos y superficies públicas representan a cada cliente, y qué ha cambiado después de la actuación de la agencia.
+- Value line: **Tú mejoras la empresa. AXIGNAL observa de forma independiente qué ha cambiado.**
 
-**Artwork relationship:** multiple roles study one shared economic world rather than separate dashboards/truths.
+**Artwork relationship:** multiple roles study one shared economic world rather than separate dashboards/truths. The agency perspective should read as an independent observer/measurement relationship, not as AXIGNAL performing agency work.
 
-**Guardrail:** no CRM/workflow execution claim and no role-specific canonical truth.
+**Guardrail:** AXIGNAL does not execute SEO/GEO/AEO/AIO, campaigns, reputation repair or client workflows. Any before/after comparison requires compatible query/surface/instrument/version/conditions/time coverage and must not imply causation without evidence.
 
 ---
 

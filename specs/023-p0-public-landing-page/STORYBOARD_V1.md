@@ -64,7 +64,7 @@ Mobile:
 | 10 TIME | ≤40rem | ≤88vw | Preserve currentness/revalidation meaning |
 | 11 AXENT | ≤42rem | ≤90vw | Keep truth-authority boundary visible |
 | 12 INDEPENDENCE | ≤40rem | ≤88vw | Headline + short body + canonical value line |
-| 13 USE_CASES | ≤42rem | ≤90vw | Role list must not turn into a dense card/grid substitute |
+| 13 USE_CASES | ≤46rem | ≤92vw | Preserve the SEO/GEO/AEO/AIO agency proposition and independent-observation value line; on mobile split the body into two readable paragraphs rather than shrinking type |
 | 14 PRICING | ≤40rem | ≤90vw | Exact price, additional-Xignal price, value line and CTA visible |
 | 15 START | ≤40rem | ≤88vw | Primary CTA visible; secondary CTA may move below primary |
 
@@ -198,14 +198,14 @@ Mobile:
 
 ## 13 — USE_CASES
 
-**Narrative beat:** broaden relevance without fragmenting the product.  
+**Narrative beat:** broaden relevance without fragmenting the product, and make the agency multiplier use case explicit.
 **Copy zone:** upper-left.  
 **Artwork focus:** group portrait around one world, center/right.  
 **Focal baseline:** desktop 63% 50%; tablet 66% 50%; mobile 70% 50%.  
 **CTA:** optional direct role exploration only if it remains one canonical world.  
-**Hierarchy:** headline → role list/body → same-world value line.  
+**Hierarchy:** headline → general decision-use paragraph → SEO/GEO/AEO/AIO agency paragraph → canonical agency value line. On mobile the two body ideas may become separate paragraphs; do not compress them into a dense role list.
 **Transition:** no role tabs required for P0 unless they improve comprehension measurably.  
-**Risk:** no CRM/workflow implication.
+**Risk:** do not make AXIGNAL look like an SEO/GEO/AEO/AIO execution tool or imply causal attribution from a before/after observation. The agency value is independent observation of representation and change.
 ## 14 — PRICING
 
 **Narrative beat:** convert understanding into proportional value.  
