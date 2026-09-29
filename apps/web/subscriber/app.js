@@ -65,6 +65,7 @@ const state = {
   history: [],
   historyIndex: -1,
   depth: 0,
+  labelsHidden: false,
   camera: { x: 0, y: 0, zoom: 1 },
   pointer: null,
   cameraFrame: 0,
@@ -440,6 +441,62 @@ function renderRelationships() {
     line.dataset.synthetic = String(edge.syntheticFixture)
     relationshipLayer.append(line)
   }
+}
+
+function renderConnections(focus) {
+  const section = $('#connection-section')
+  const list = $('#connection-list')
+  const empty = $('#connections-empty')
+  list.replaceChildren()
+  if (!state.uxLab) {
+    section.hidden = true
+    return
+  }
+
+  const focusId = focus?.id
+  const edges = (state.uxLab.edges ?? []).filter((edge) =>
+    edge.syntheticFixture === true && (edge.source === focusId || edge.target === focusId),
+  )
+  for (const edge of edges) {
+    const targetId = edge.source === focusId ? edge.target : edge.source
+    const target = state.worldNodes.find((node) => node.id === targetId)
+    if (!target) continue
+    const relation = presentation.text(`connections.type.${edge.type}`)
+    const accessibleName = presentation.text('connections.linkAccessibleName', {
+      relation,
+      label: target.label,
+    })
+    const button = document.createElement('button')
+    button.className = `conn-btn epistemic-${epistemicStateClass(edge.epistemicState)}`
+    button.type = 'button'
+    button.dataset.synthetic = 'true'
+    button.setAttribute('aria-label', accessibleName)
+    button.title = accessibleName
+    const stateDot = document.createElement('span')
+    stateDot.className = 'conn-state-dot'
+    stateDot.setAttribute('aria-hidden', 'true')
+    const relationLabel = document.createElement('i')
+    relationLabel.textContent = relation
+    const targetLabel = document.createElement('b')
+    targetLabel.textContent = target.label
+    button.append(stateDot, relationLabel, targetLabel)
+    button.addEventListener('click', () => navigate(target.key))
+    list.append(button)
+  }
+
+  section.hidden = false
+  empty.hidden = list.childElementCount > 0
+}
+
+function renderLabelVisibility() {
+  field.classList.toggle('labels-hidden', state.labelsHidden)
+  const key = state.labelsHidden ? 'navigation.showText' : 'navigation.hideText'
+  const label = presentation.text(key)
+  const toggle = $('#labels-toggle')
+  toggle.textContent = label
+  toggle.title = label
+  toggle.setAttribute('aria-label', label)
+  toggle.setAttribute('aria-pressed', String(state.labelsHidden))
 }
 
 function updateMinimap() {
@@ -878,6 +935,8 @@ function render() {
   const node = focusedNode()
   renderMap()
   renderReader(node)
+  renderConnections(node)
+  renderLabelVisibility()
   renderHistory()
   $('#here-label').textContent = getNode(organizationKey()).label
   $('#axent-moves-focus').textContent = node.kind === 'ORGANIZATION'
@@ -1097,6 +1156,10 @@ function bindInteractions() {
   $('#zoom-fit').addEventListener('click', fitCamera)
   $('#zoom-root').addEventListener('click', () => focusCamera(organizationKey()))
   $('#field-reload').addEventListener('click', resetFieldView)
+  $('#labels-toggle').addEventListener('click', () => {
+    state.labelsHidden = !state.labelsHidden
+    renderLabelVisibility()
+  })
   $('#here').addEventListener('click', () => focusCamera(organizationKey()))
 
   field.addEventListener('pointerdown', (event) => {

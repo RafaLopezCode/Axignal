@@ -551,6 +551,7 @@ input {
   text-align: center;
 }
 .anch-lbl.is-decluttered { visibility: hidden; }
+.field.labels-hidden .anch-lbl { visibility: hidden !important; }
 .anch:hover .anch-lbl,
 .anch.is-focus .anch-lbl {
   color: var(--ink);
@@ -2305,6 +2306,13 @@ input {
   flex-wrap: wrap;
   gap: 8px;
 }
+.conn-empty {
+  flex: 1;
+  min-width: 0;
+  padding: 6px 0;
+  color: var(--faint);
+  font-size: 11px;
+}
 .conn-btn {
   display: inline-flex;
   align-items: center;
@@ -2330,6 +2338,20 @@ input {
   text-transform: uppercase;
   color: var(--faint);
 }
+.conn-state-dot {
+  width: 6px;
+  height: 6px;
+  flex: none;
+  border-radius: 50%;
+  background: var(--st-unknown);
+}
+.conn-btn.epistemic-observed .conn-state-dot,
+.conn-btn.epistemic-corroborated .conn-state-dot { background: var(--st-observed); }
+.conn-btn.epistemic-inferred .conn-state-dot { background: var(--st-inferred); }
+.conn-btn.epistemic-potential .conn-state-dot { background: var(--st-potential); }
+.conn-btn.epistemic-stale .conn-state-dot { background: var(--st-stale); }
+.conn-btn.epistemic-contradicted .conn-state-dot { background: var(--st-contradicted); }
+.conn-btn.epistemic-historical .conn-state-dot { background: var(--st-historical); }
 .conn-btn:hover {
   border-color: var(--hair-3);
 }
@@ -3750,7 +3772,6 @@ input {
   text-align: center;
 }
 .trail { z-index: 6; }
-.conn-muted { flex: none; padding-top: 7px; color: var(--faint); font: 9px var(--mono); letter-spacing: .1em; text-transform: uppercase; }
 .reader { padding: 18px 26px 22px; }
 .reader-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 .reader-head .mono { margin: 0; }
