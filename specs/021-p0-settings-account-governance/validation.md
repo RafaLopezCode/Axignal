@@ -9,13 +9,12 @@ later implemented surface.
 
 ## Evidence checks
 
-- Base SHA checked against `origin/main`: `26f298425d88c67551cd432ab35da99d975c6a7a`.
-- PR #29 and PR #30 were inspected as open and mergeable; neither was changed.
+- Original proposal base: `26f298425d88c67551cd432ab35da99d975c6a7a`.
+- Reconciled against `origin/main` `08f113c18e3025960cf0733b0a51efb2be23f71d`, which includes merged P0 Identity PR #36.
+- PR #36 Identity authority was treated as the controlling lower-level feature authority for Settings identity dependencies.
 - The Settings authority matrix is cross-linked from `spec.md` and covers the
   requested fields/scopes and unresolved lifecycle behavior.
-- The code audit found Principal/Tenant/membership/Xeed/Organization contracts,
-  but no auth provider, billing provider, production persistence, Settings
-  mutation service, avatar store or product Settings UI on main.
+- The code/spec audit finds Principal/Tenant/membership/Xeed/Organization contracts and P0 Identity authority for authentication methods, identity mapping boundaries, Principal-owned durable locale preference, and entitlements; it still finds no selected auth provider/runtime, billing provider, production preference persistence, Settings mutation service, avatar store or product Settings UI.
 - Graphify code index was rebuilt offline; no directed edge path was found from
   `PrincipalTenantMembership` to `AuthorizedXeedReader`. Direct source remains
   the implementation authority.
@@ -26,11 +25,11 @@ later implemented surface.
 
 | Gate | Result |
 |---|---|
-| `uv sync --frozen` | PASS |
-| `uv run ruff format --check .` | PASS — 325 files |
+| `uv sync --frozen` | PASS — 14 locked packages checked |
+| `uv run ruff format --check .` | PASS — 356 files |
 | `uv run ruff check .` | PASS |
-| `uv run mypy` | PASS — 61 source files |
-| `uv run pytest -q -p no:cacheprovider --basetemp <dedicated temp>` | PASS — 252 tests |
+| `uv run mypy` | PASS — 63 source files |
+| `uv run pytest -q -p no:cacheprovider --basetemp <dedicated temp>` | PASS — 293 tests |
 | `uv run architecture-guard --root .` | PASS |
 | `uv run axignal-governance` | PASS — architecture, deps, docs, graphify, hygiene, no-generated-data, spec, terminology |
 | Local changed-doc secret-pattern scan | PASS — 0 matches; Gitleaks CLI unavailable locally |

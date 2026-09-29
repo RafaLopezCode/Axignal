@@ -15,16 +15,17 @@
 
 ## Blocked pending authority
 
-- [ ] Select authenticated identity provider/adapter and server-trusted actor
-  contract.
+- [ ] Select the authentication provider and implement the already-governed
+  provider-independent verified-identity → Principal adapter/runtime contract.
 - [ ] Select production persistence and write/read authority for user-scoped
   preferences/profile, if needed.
 - [ ] Decide whether Workspace/Subscriber is a real aggregate, how it relates
   to Tenant, and its exact identity/display-name permissions.
 - [ ] Decide whether membership needs roles/capabilities; do not assume
   OWNER/ADMIN/MEMBER.
-- [ ] Select supported locale catalog, product fallback and durable preference
-  owner; confirm account persistence policy.
+- [ ] Select supported locale catalog, product fallback, persistence lifecycle
+  and authenticated command. P0 Identity already resolves Principal as owner of
+  a future durable UI-locale preference.
 - [ ] Resolve avatar/object-storage policy, billing provider/authority, audit
   rules, retention, deletion and offboarding semantics.
 - [ ] Decide if a user may change a Xeed label or `Xeed.organization_id`, with

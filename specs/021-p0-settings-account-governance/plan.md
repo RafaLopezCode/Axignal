@@ -14,11 +14,14 @@
 
 ## Plan outcome
 
-Documentation-only governance spec. The audit found no safe Settings write
-vertical slice: all candidate values lack a production identity/authentication
-adapter and/or single durable source of truth, and membership/tenant/Xeed
-contracts are test/dev read authorities without mutation contracts. Do not
-implement synthetic persistence or tests for nonexistent mutation types.
+Documentation-only governance spec reconciled after P0 Identity PR #36. Identity
+now resolves the Principal/external-identity/Tenant/Membership/Xeed/Organization
+separation, product authentication methods, Principal ownership of a future
+durable UI-locale preference, and the provider-independent entitlement
+boundary. There is still no safe Settings write vertical slice because no auth
+provider/runtime, production preference store, bounded Settings command, or
+production membership/Tenant/Xeed mutation authority exists. Do not implement
+synthetic persistence or tests for nonexistent mutation types.
 
 ## Work packages
 

@@ -1,6 +1,6 @@
 # P0 Settings Authority Matrix
 
-**Base:** `26f298425d88c67551cd432ab35da99d975c6a7a` (`origin/main`)
+**Reconciled authority base:** `08f113c18e3025960cf0733b0a51efb2be23f71d` (`origin/main`, includes P0 Identity PR #36)
 **Status:** For review; no Settings field has production write authority.
 
 `NONE` means no implemented authority was found in this repository, not that a
@@ -36,9 +36,9 @@ future design, not a claim that the datum is currently stored.
 | Principal | `domain.tenancy.Principal` with `PrincipalId` | Internal identity contract only; authenticated outer boundary not implemented | No display name, email or avatar can be inferred from Principal ID |
 | Tenant / membership | `Tenant`, `PrincipalTenantMembership` | Domain contract and in-memory test/dev authority; no production persistence, role or mutation | Tenant is an isolation boundary, not a product Workspace/account profile |
 | Xeed | `domain.xeed.Xeed` | Domain data class; authorized reads via trusted context and membership; production store/writer absent | Current reference/label do not authorize user-edit commands |
-| Authentication | None selected | No auth provider or adapter | Do not implement identity/security settings |
+| Authentication | P0 Identity product contract: Google-first; verified email/password secondary; mandatory password-path TOTP + recovery codes; provider-independent AuthenticationPort | No provider, adapter or runtime selected/implemented | Settings may expose only provider-backed security capabilities after provider/runtime authority exists |
 | Billing | None selected | No billing provider or data contract | Do not implement billing settings |
-| User preferences | No account-level source | Browser/OS signals can influence presentation; local synthetic lab is not a production store | No persisted locale/theme/account preference claim |
+| User preferences | P0 Identity resolves Principal as owner of a future durable UI-locale preference; no broad profile authority | No preference model/store/writer; browser/OS signals remain presentation hints and synthetic lab is not production authority | Locale persistence may be Principal-scoped only after its runtime contract exists; other preference ownership remains field-specific |
 | Avatar object | None | No upload/storage service | No upload control |
 | AXENT/research | Attention/request boundary, independently observed evidence and admission | Separate from settings | No direct Settings→truth/research side effect |
 
@@ -47,10 +47,10 @@ future design, not a claim that the datum is currently stored.
 | Action | Current actor authority | Future minimum check | Current status |
 |---|---|---|---|
 | Read a Xeed in a Tenant | Trusted context + resolved Principal + membership + Xeed Tenant match | Authenticated server-established actor, membership lookup before target read, then object scope check | Read contract exists in test/dev; not production auth/storage |
-| Update user profile/avatar/locale | None | Authenticated Principal owns target user record; validate field-specific command and persist to one authority | Not authorized/absent |
+| Update user profile/avatar/locale | Locale owner is resolved as Principal; broad profile/avatar writes remain unauthorized | Authenticated Principal owns any authorized Principal preference target; each field requires a bounded command and one persistence authority | Locale ownership resolved but runtime absent; profile/avatar still doctrine gaps |
 | Update workspace identity | None; membership conveys no role | Explicit Workspace/Tenant policy and member capability resolved server-side; exact role policy required | Doctrine gap/absent |
 | Manage members/roles | None; membership is binary | Explicit role/capability model, invitation lifecycle and server-side target checks | Doctrine gap/absent |
-| Manage auth/security | None | Provider-native secure flow bound to verified actor | No provider/absent |
+| Manage auth/security | Product sign-in/MFA requirements are defined; no Settings command authority | Provider-native secure flow bound to verified actor and AXIGNAL provider-independent identity mapping | Provider/runtime absent; do not synthesize controls |
 | Manage billing | None | Billing-provider authorization and bounded provider command | No provider/absent |
 | Edit Xeed label or linked Organization | None | AuthorizedXeed plus explicit command contract, audit/concurrency policy, and real writer/store | No writer/persistence; policy gap |
 | Edit Organization truth | Subscriber/account role is never sufficient | Independent evidence investigation and EvidenceAdmission only | Settings mutation forbidden |
@@ -75,7 +75,7 @@ membership is not silently upgraded to RBAC.
 | Operation | What may be deleted | What is retained / policy gap | Current behavior |
 |---|---|---|---|
 | Clear avatar | Future user-owned avatar object/reference | Fallback and storage purge timing must be defined; no storage exists | Absent |
-| Clear locale override | Future user preference only | Re-resolve from supported browser locale then selected fallback; catalog/fallback not chosen | Absent |
+| Clear locale override | Future Principal-owned durable preference only | Re-resolve from supported browser locale then selected fallback; catalog/fallback and persistence lifecycle not chosen | Owner resolved; command/store absent |
 | Leave Tenant / remove member | Membership edge and perhaps user access | Xeed ownership transfer, user data, audit history and last-member behavior are unresolved | No membership writer |
 | Delete Principal/account | Provider identity and user-owned data per approved policy | Legal retention, anonymization, tenant data and provider effects are unresolved | No auth/account store |
 | Delete Tenant/subscriber | Tenant-private data according to future policy | Billing, membership, Xeed, cognitive state and statutory retention are unresolved | No lifecycle API |

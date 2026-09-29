@@ -2,7 +2,7 @@
 
 **Feature Branch**: `codex/p0-settings-account-governance`  
 **Created**: 2026-09-28  
-**Status**: Draft — authority audit complete; runtime implementation blocked  
+**Status**: Draft — reconciled with P0 Identity authority; runtime implementation remains blocked
 **Input**: AXIGNAL P0 Settings / Account Governance Authority request
 
 ## Scope and authority
@@ -27,9 +27,14 @@ authority. The local HFX checkout is not changed by this slice.
 Account-like labels can collapse distinct identities: authenticated Principal,
 Tenant, Xeed, a future subscriber/workspace, billing identity and global
 Organization. The repository has canonical Principal, Tenant,
-PrincipalTenantMembership, Xeed and Organization contracts, but no actual
-authentication adapter, user profile, Workspace/Subscriber authority, role
-model, production persistence, billing provider or Settings application. A UI
+PrincipalTenantMembership, Xeed and Organization contracts plus the P0 Identity
+authority in `specs/022-p0-identity-account-authority/`. Identity now defines
+provider-independent authentication and entitlement boundaries, Google-first
+sign-in, the verified email/password path with mandatory TOTP and recovery
+codes, and Principal ownership of a future durable UI-locale preference. It
+still provides no authentication runtime, broad user profile, Workspace/
+Subscriber authority, role model, production persistence, billing provider or
+Settings application. A UI
 control alone cannot authorize a write or make one persistent.
 
 ## User scenarios and acceptance
@@ -101,17 +106,6 @@ scope authorization and unchanged shared Organization identity.
   Organization`.
 - `Xeed reference != ownership`: `Xeed.organization_id` references the global
   Organization and grants no ownership, claim or write authority.
-- `Settings != domain`: Settings is a presentation/application aggregation
-  surface, not a domain aggregate.
-- `Tenant != Workspace`: Tenant is the current private Xeed isolation and
-  ownership boundary; no Workspace authority or alias is established.
-- `Account != Tenant` unless future explicit product authority establishes that
-  identity. No such authority currently exists.
-- `Account != Organization`; `Subscriber identity != canonical Organization`;
-  `Billing identity != canonical Organization`; `User profile != canonical
-  Organization`.
-- `Xeed reference != ownership`: `Xeed.organization_id` references the global
-  Organization and grants no ownership, claim or write authority.
 - `USER_CONFIG != CANONICAL_TRUTH`; `ACCOUNT_PROFILE != ORGANIZATION`;
   `WORKSPACE != ORGANIZATION`; `BILLING_IDENTITY != ORGANIZATION`;
   `XEED != ORGANIZATION`; `CLAIM != WRITE`.
@@ -148,11 +142,14 @@ supported explicit user preference
     > product fallback locale
 ```
 
-Current code does not provide a production locale authority or durable user
-override. Browser detection and `localStorage` in the local synthetic HFX lab
-are preview mechanics only. No account persistence, supported locale catalog,
-or product fallback locale is selected by this spec. Persist a user override
-only after authenticated user scope and a real preference store exist.
+P0 Identity authority now resolves the owner of a future durable human-level
+UI-locale preference as the Principal. Current code still provides no
+production preference store or durable override. Browser detection and
+`localStorage` in the synthetic HFX lab remain preview mechanics only. The
+supported locale catalog, resolution/fallback policy, persistence lifecycle and
+authenticated preference command remain presentation/runtime follow-ups.
+Persist an override only after authenticated Principal scope and a real
+preference store exist.
 
 ## Avatar contract boundary
 
@@ -189,8 +186,10 @@ concurrency policy is selected for nonexistent low-risk preference writes.
 ## Security, audit and deletion
 
 - Do not store passwords, tokens, MFA secrets or recovery codes in Settings.
-  Account-security controls belong to a verified identity provider's secure
-  flows if one is adopted.
+  P0 Identity authority requires Google-first sign-in and a secondary verified
+  email/password path with provider-owned mandatory TOTP and recovery codes;
+  Settings may only link into the selected provider's secure flows once runtime
+  authority exists.
 - No auth or billing provider is selected or implemented. Do not mirror
   provider-owned secrets, payment credentials or sensitive billing state.
 - Do not send routine setting changes to AXENT or research. A research hint
@@ -246,12 +245,16 @@ EvidenceAdmission change, database, migration, deployment, PR #29 or PR #30.
 
 ## Doctrine gaps
 
-`DOCTRINE_GAP`: product doctrine does not select or define account/profile
-ownership; provider; user/workspace/subscriber identity and cardinality;
-workspace naming/branding; member roles; write authority for `Xeed.label` or
-`Xeed.organization_id`; locale catalog/fallback and durable owner; avatar
-storage/retention; billing provider/identity; account security provider; audit
-requirements; deletion, offboarding, retention and legal policy. This spec
+`DOCTRINE_GAP`: P0 Identity authority resolves Principal/external-identity/
+Tenant/Membership/Xeed/Organization separation, Google-first and password-path
+authentication requirements, Principal ownership of a future durable UI-locale
+preference, and the provider-independent entitlement boundary. Product doctrine
+still does not select an auth provider; define payer/subscriber cardinality,
+broad profile fields, Workspace identity, workspace naming/branding, member
+roles, write authority for `Xeed.label` or `Xeed.organization_id`, locale
+catalog/fallback/persistence lifecycle, avatar storage/retention, billing
+provider/identity, audit requirements, or deletion/offboarding/retention/legal
+policy. This spec
 does not invent these decisions. CTO review/authority is required before a
 runtime slice.
 
