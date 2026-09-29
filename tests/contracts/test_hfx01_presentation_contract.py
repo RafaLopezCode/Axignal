@@ -167,20 +167,23 @@ def test_presentation_semantics_separate_canonical_values_from_locale_copy() -> 
       const otherCopy = presentation.forLocale('en').describeFact(otherIdentity)
       assert.notEqual(canonical.id, otherIdentity.id)
       assert.equal(english.label, otherCopy.label)
-      assert.equal(presentation.forLocale('es-ES').locale, 'es')
+      assert.equal(presentation.forLocale('es-ES').locale, 'en')
       assert.equal(presentation.forLocale('en-US').describeFact(canonical).label, english.label)
-      assert.equal(presentation.resolveLocale('es-MX', ['de-DE'], 'en'), 'es')
-      assert.equal(presentation.resolveLocale(null, ['fr-FR', 'de-DE'], 'en'), 'de')
-      assert.equal(presentation.resolveLocale('xx-YY', ['fr-FR'], 'ja'), 'ja')
+      assert.equal(presentation.forLayoutPreview('es-ES').locale, 'es')
+      assert.equal(presentation.resolveLocale('es-MX', ['de-DE'], 'en'), 'en')
+      assert.equal(presentation.resolveLocale(null, ['fr-FR', 'de-DE'], 'en'), 'en')
+      assert.equal(presentation.resolveLocale('xx-YY', ['fr-FR'], 'ja'), 'en')
       assert.equal(presentation.resolveLocale(null, ['fr-FR'], 'en'), 'en')
       for (const locale of ['en', 'es', 'de', 'ja', 'ar']) {{
-        const localized = presentation.forLocale(locale).describeFact(canonical)
+        const localized = presentation.forLayoutPreview(locale).describeFact(canonical)
         assert.equal(localized.valueLabel, 'ISO 9001')
         assert.equal(canonical.id, 'faxt-demo-a2')
         assert.equal(canonical.predicate, 'MAINTAINS_STANDARD')
       }}
-      assert.equal(presentation.forLocale('ar').direction, 'rtl')
-      assert.equal(presentation.forLocale('ja').direction, 'ltr')
+      assert.equal(presentation.forLayoutPreview('ar').direction, 'rtl')
+      assert.equal(presentation.forLayoutPreview('ja').direction, 'ltr')
+      assert.deepEqual([...presentation.supportedLocales], ['en'])
+      assert.deepEqual([...presentation.layoutPreviewLocales], ['en', 'es', 'de', 'ja', 'ar'])
     """
     subprocess.run(["node", "-e", script], check=True, capture_output=True, text=True)
 
@@ -265,8 +268,10 @@ def test_locale_preference_is_a_synthetic_account_preference_and_stresses_all_su
     assert "return supportedLocale(fallbackLocale) ?? 'en'" in presentation
     assert "navigator.languages" in script
     assert "window.localStorage.getItem(LOCALE_PREFERENCE_KEY)" in script
-    assert "window.localStorage.setItem(LOCALE_PREFERENCE_KEY, presentation.locale)" in script
+    assert "window.localStorage.setItem(LOCALE_PREFERENCE_KEY, resolvedLocale)" in script
     assert "window.localStorage.removeItem(LOCALE_PREFERENCE_KEY)" in script
+    assert "!window.AXIGNAL_PRESENTATION.isSupportedLocale(storedLocale)" in script
+    assert "window.AXIGNAL_PRESENTATION.forLayoutPreview(resolvedLocale)" in script
     assert (
         "window.AXIGNAL_PRESENTATION.resolveLocale(null, browserLocalePreferences, 'en')" in script
     )
@@ -288,7 +293,8 @@ def test_locale_preference_is_a_synthetic_account_preference_and_stresses_all_su
     keys = set(re.findall(r"'([\w.]+)'\s*:", presentation))
     assert stress_keys <= keys
     assert "const LOCALE_STRESS_COPY" in presentation
-    assert "Synthetic layout preview only. This is not a complete translation" in presentation
+    assert "Automatic uses a complete UI catalog" in presentation
+    assert "Vista sintética de maquetación. No es una traducción completa" in presentation
     assert "html[dir='rtl'] .axent" in stylesheet
 
 
@@ -459,7 +465,7 @@ def test_field_controls_reset_view_and_minimap_respects_its_canvas_bounds() -> N
     assert "pointer-events: none;" in minimap_window_rules[0]
 
 
-def test_synthetic_field_controls_toggle_labels_and_expose_only_fixture_connections() -> None:
+def test_synthetic_field_controls_collapse_bottom_tab_and_expose_only_fixture_connections() -> None:
     html = (SUBSCRIBER / "index.html").read_text(encoding="utf-8")
     script = (SUBSCRIBER / "app.js").read_text(encoding="utf-8")
     css = (SUBSCRIBER / "subscriber.css").read_text(encoding="utf-8")
@@ -472,10 +478,13 @@ def test_synthetic_field_controls_toggle_labels_and_expose_only_fixture_connecti
     assert section.get("aria-hidden") is None
     _, labels_toggle = _by_id(elements, "labels-toggle")
     assert labels_toggle.get("type") == "button"
-    assert labels_toggle.get("aria-pressed") == "false"
+    assert labels_toggle.get("aria-controls") == "bottom-panel"
+    assert labels_toggle.get("aria-expanded") == "true"
     assert "$('#labels-toggle').addEventListener('click'" in script
-    assert "field.classList.toggle('labels-hidden', state.labelsHidden)" in script
-    assert ".field.labels-hidden .anch-lbl { visibility: hidden !important; }" in css
+    assert "$('.bottom').classList.toggle('collapsed', state.bottomTabCollapsed)" in script
+    assert "state.bottomTabCollapsed = !state.bottomTabCollapsed" in script
+    assert ".bottom.collapsed .reader" in css
+    assert ".field.labels-hidden .anch-lbl" not in css
 
     assert "edge.syntheticFixture === true" in script
     assert "edge.source === focusId || edge.target === focusId" in script

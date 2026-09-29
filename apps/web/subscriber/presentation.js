@@ -146,8 +146,8 @@
       'copy.currentRead': 'Current view',
       'preferences.label': 'Settings',
       'locale.label': 'Display language · preview',
-      'locale.note': 'Synthetic layout preview only. This is not a complete translation or an account setting.',
-      'locale.auto': 'Automatic · browser preference',
+      'locale.note': 'Synthetic layout preview only. Not a complete translation or account setting. Automatic uses a complete UI catalog; other choices stress layout with partial sample copy.',
+      'locale.auto': 'Automatic · supported browser language',
       'locale.en': 'English · baseline',
       'locale.es': 'Español · sample copy',
       'locale.de': 'Deutsch · text expansion',
@@ -161,6 +161,14 @@
   const LOCALE_STRESS_COPY = Object.freeze({
     es: Object.freeze({
       'organization.label': 'Organización',
+      'locale.label': 'Idioma de visualización · vista previa',
+      'locale.note': 'Vista sintética de maquetación. No es una traducción completa ni una preferencia de cuenta. Automático usa un catálogo completo; los demás idiomas prueban la maquetación con textos de muestra parciales.',
+      'locale.auto': 'Automático · idioma compatible del navegador',
+      'locale.en': 'Inglés · catálogo completo',
+      'locale.es': 'Español · textos de muestra',
+      'locale.de': 'Alemán · expansión de texto',
+      'locale.ja': 'Japonés · maquetación CJK',
+      'locale.ar': 'Árabe · maquetación RTL',
       'connections.fixture': 'Enlaces sintéticos · demo',
       'connections.empty': 'No hay enlaces sintéticos en este foco.',
       'connections.linkAccessibleName': '{relation}: {label}; relación sintética de demostración.',
@@ -385,7 +393,13 @@
     }),
   })
 
-  const SUPPORTED_LOCALES = Object.freeze(['en', ...Object.keys(LOCALE_STRESS_COPY)])
+  // A locale is supported for automatic/user locale authority only when its
+  // complete UI catalog exists. Partial UX-lab profiles are explicit previews.
+  const SUPPORTED_LOCALES = Object.freeze(Object.keys(COPY))
+  const LAYOUT_PREVIEW_LOCALES = Object.freeze([
+    ...SUPPORTED_LOCALES,
+    ...Object.keys(LOCALE_STRESS_COPY),
+  ])
 
   const PREDICATE_KEYS = Object.freeze({
     MANUFACTURES: 'predicate.manufactures',
@@ -424,6 +438,21 @@
     return supportedLocale(locale) ?? 'en'
   }
 
+  function layoutPreviewLocale(locale) {
+    if (typeof locale !== 'string' || !locale.trim()) return null
+    try {
+      const [canonical] = Intl.getCanonicalLocales(locale.trim().replaceAll('_', '-'))
+      const language = canonical.split('-')[0].toLowerCase()
+      return LAYOUT_PREVIEW_LOCALES.includes(language) ? language : null
+    } catch {
+      return null
+    }
+  }
+
+  function canonicalLayoutPreviewLocale(locale) {
+    return layoutPreviewLocale(locale) ?? 'en'
+  }
+
   function resolveLocale(userLocale, browserLocales = [], fallbackLocale = 'en') {
     const explicit = supportedLocale(userLocale)
     if (explicit) return explicit
@@ -452,9 +481,7 @@
     )
   }
 
-  function forLocale(locale = requestedLocale()) {
-    const resolvedLocale = canonicalBcp47Locale(locale)
-    const messages = { ...COPY.en, ...(LOCALE_STRESS_COPY[resolvedLocale] ?? {}) }
+  function createPresentation(resolvedLocale, messages) {
     const text = (key, values = {}) => {
       const template = messages[key] ?? COPY.en[key] ?? ''
       return template.replace(/\{(\w+)\}/g, (_match, name) => String(values[name] ?? ''))
@@ -504,12 +531,27 @@
     })
   }
 
+  function forLocale(locale = requestedLocale()) {
+    const resolvedLocale = canonicalBcp47Locale(locale)
+    return createPresentation(resolvedLocale, COPY[resolvedLocale])
+  }
+
+  function forLayoutPreview(locale = 'en') {
+    const resolvedLocale = canonicalLayoutPreviewLocale(locale)
+    const messages = { ...COPY.en, ...(LOCALE_STRESS_COPY[resolvedLocale] ?? {}) }
+    return createPresentation(resolvedLocale, messages)
+  }
+
   root.AXIGNAL_PRESENTATION = Object.freeze({
     canonicalBcp47Locale,
     isSupportedLocale: (locale) => supportedLocale(locale) !== null,
     resolveLocale,
     supportedLocales: SUPPORTED_LOCALES,
+    canonicalLayoutPreviewLocale,
+    isLayoutPreviewLocale: (locale) => layoutPreviewLocale(locale) !== null,
+    layoutPreviewLocales: LAYOUT_PREVIEW_LOCALES,
     forLocale,
+    forLayoutPreview,
     predicateKeys: PREDICATE_KEYS,
     epistemicKeys: EPISTEMIC_KEYS,
     currentnessKeys: CURRENTNESS_KEYS,
