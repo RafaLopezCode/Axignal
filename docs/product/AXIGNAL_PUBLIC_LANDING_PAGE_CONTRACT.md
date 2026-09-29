@@ -125,13 +125,57 @@ Every chapter MUST retain the same header authority and hierarchy:
 - What is AXIGNAL?;
 - AXIGLAND;
 - How it knows;
+- Knowledge;
 - Pricing;
 - Log in;
 - + Plant Xeed.
 
 Labels are localized except protected product names.
 
+`Knowledge` is the canonical public entry point for AXIGNAL's editorial and
+machine-readable knowledge surface. The visible localized label MAY be
+`Knowledge`, `Insights`, `News` or `Blog`, but it MUST resolve to the same
+governed public knowledge architecture rather than fragmenting content into
+parallel marketing silos.
+
 Header navigation MUST remain usable independently of pagination.
+
+### 5.1 Public knowledge and organic acquisition contract
+
+AXIGNAL MUST provide a first-class public knowledge surface as a peer of the
+storytelling landing, not as a hidden footer feed. Its purpose is to publish
+useful, indexable economic knowledge and create qualified organic discovery
+paths into AXIGNAL.
+
+The knowledge surface MUST support three content classes:
+
+- **Canonical knowledge:** stable pages for AXIGNAL concepts and methodology,
+  including AXIGLAND, Xeed, persistent observation, evidence, temporal history,
+  observed versus potential relationships and Digital Representation
+  Intelligence.
+- **Editorial intelligence:** dated analysis, research notes and material
+  economic/digital-representation developments. Publication is not canonical
+  AXIGLAND truth merely because AXIGNAL publishes it.
+- **Programmatic and transactional discovery pages:** query- or intent-specific
+  pages only when backed by genuinely specific, useful and governable content.
+  Thin, doorway, templated keyword permutations and invented evidence are
+  prohibited.
+
+Programmatic SEO is an acquisition/distribution mechanism, never an authority
+path into AXIGLAND. Public content MUST preserve the same epistemic distinctions
+as the product: observation, claim, inference, potential, unknown, contradiction
+and staleness may not collapse into one another for search performance.
+
+Each indexable page MUST have a stable canonical URL, explicit locale, unique
+title and description, crawlable semantic HTML, provenance/date metadata where
+applicable, and deliberate internal links to the relevant canonical concept,
+evidence methodology, use case or product action. Locale variants MUST preserve
+meaning and MUST NOT create duplicate competing truths.
+
+High-intent transactional pages MAY lead directly to Pricing or Plant Xeed.
+Informational pages SHOULD lead to the next useful concept or evidence path
+before conversion. The public knowledge surface MUST NOT drift into an SEO/GEO
+execution product, generic news publisher, CRM or content farm.
 
 ## 6. Chapter semantic contracts
 
