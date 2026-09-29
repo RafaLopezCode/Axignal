@@ -101,6 +101,28 @@ Evidence and Ask AXENT.
    when known, what was unresolved, what AXIGNAL knew then, what changed and how
    to resume.
 
+### Contextual explanations
+
+Contextual explanations are secondary information, revealed on demand only
+where they materially improve comprehension. Distinguish a concept explanation
+(meaning and epistemic role) from an action explanation (effect and
+availability). Do not attach help to every label, add permanent explanation
+text by default, or make ordinary comprehension depend on AXENT or opening a
+hint.
+
+Resolve explanation wording through governed HFX presentation semantics and
+the user's resolved UI locale. Copy remains presentation: it must not redefine
+canonical meaning, change epistemic state, imply an unsupported capability, or
+grant authorization.
+
+A future explanation affordance must support pointer, keyboard, touch and
+screen-reader use; hover may supplement but cannot be the only access path.
+Support keyboard focus and dismissal, accessible naming or description where
+needed, viewport-aware placement and reduced motion. Follow the Design System's
+CJK and RTL rules. Feature validation must verify these behaviors while
+preserving the accepted Golden Master; this doctrine selects no component,
+visual treatment or production runtime.
+
 ## Human-level information taxonomy
 
 These families organize human questions. They do not map one-to-one to domain
