@@ -447,14 +447,14 @@ def test_field_controls_reset_view_and_minimap_respects_its_canvas_bounds() -> N
     assert "$('#field-reload').addEventListener('click', resetFieldView)" in script
     assert ".minimap svg {\n  display: block;\n  width: 100%;\n  height: 100%;\n}" in css
     assert 'class="mm-bg"' not in html
-    assert 'fill="transparent" stroke="none"' in html
+    assert 'class="mini-window" id="minimap-window"' in html
     minimap_rules = re.findall(r"\.minimap\s*\{([^}]*)\}", css)
     assert any("background: #f0ecdf;" in rule for rule in minimap_rules)
     assert any("border: 1px solid var(--hair);" in rule for rule in minimap_rules)
     minimap_window_rules = re.findall(r"\.minimap \.mini-window\s*\{([^}]*)\}", css)
     assert len(minimap_window_rules) == 1
-    assert "stroke: none;" in minimap_window_rules[0]
-    assert ".minimap .mm-view { fill: transparent; stroke: none; }" in css
+    assert "stroke: var(--brass-2);" in minimap_window_rules[0]
+    assert "pointer-events: none;" in minimap_window_rules[0]
 
 
 def test_branding_uses_authoritative_assets_and_reproducible_derivatives() -> None:

@@ -69,5 +69,7 @@
   compact long Focus Trails without discarding navigable history.
 - [x] Run the final deterministic suite, Graphify refresh, browser scenario
   checks, and Golden Master source-manifest verification after reconciliation.
+- [x] Restore a visible minimap camera window and continuous drag navigation;
+  align fixture node/edge colors with the canonical epistemic-state palette.
 - [ ] Complete Human QA of Nominal and Dense at 1280×720 across zoom levels,
   focus navigation, minimap synchronization, and edge readability.

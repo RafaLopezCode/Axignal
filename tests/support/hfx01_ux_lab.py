@@ -58,6 +58,16 @@ _EDGE_CASE_FACTS = (
 )
 
 _EDGE_TYPES = ("supports", "observes", "compares", "intersects")
+_EDGE_EPISTEMIC_STATES = (
+    "OBSERVED",
+    "CORROBORATED",
+    "INFERRED",
+    "POTENTIAL",
+    "STALE",
+    "CONTRADICTED",
+    "HISTORICAL",
+    "UNKNOWN",
+)
 
 
 def _extra_facts(demo: Hfx01Demo, facts: tuple[tuple[str, str, EpistemicState], ...]) -> None:
@@ -124,6 +134,7 @@ def _edges(scenario: str, object_ids: list[str]) -> list[dict[str, str]]:
                     "source": object_ids[source_index],
                     "target": object_ids[target_index],
                     "type": _EDGE_TYPES[index % len(_EDGE_TYPES)],
+                    "epistemicState": _EDGE_EPISTEMIC_STATES[index % len(_EDGE_EPISTEMIC_STATES)],
                     "syntheticFixture": True,
                 }
             )

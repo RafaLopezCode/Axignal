@@ -113,6 +113,13 @@ const FIELD_SLOTS = [
   { x: 34, y: 18 },
 ]
 const MINIMAP = { width: 160, height: 96, inset: 5 }
+const EPISTEMIC_STATES = new Set([
+  'OBSERVED', 'CORROBORATED', 'INFERRED', 'POTENTIAL', 'UNKNOWN', 'STALE', 'CONTRADICTED', 'HISTORICAL',
+])
+
+function epistemicStateClass(value) {
+  return EPISTEMIC_STATES.has(value) ? value.toLowerCase() : 'unknown'
+}
 
 function minimapBounds(nodes = state.worldNodes) {
   if (!nodes.length) return { x0: 0, x1: 100, y0: 0, y1: 100 }
@@ -426,7 +433,10 @@ function renderRelationships() {
     line.setAttribute('y2', String(end.y))
     const focus = state.worldNodes.find((node) => node.key === state.focus)
     const isAttentionEdge = focus && (edge.source === focus.id || edge.target === focus.id)
-    line.setAttribute('class', `lab-edge edge-${edge.type} ${isAttentionEdge ? 'is-attention' : 'is-attenuated'}`)
+    line.setAttribute(
+      'class',
+      `lab-edge edge-${edge.type} epistemic-${epistemicStateClass(edge.epistemicState)} ${isAttentionEdge ? 'is-attention' : 'is-attenuated'}`,
+    )
     line.dataset.synthetic = String(edge.syntheticFixture)
     relationshipLayer.append(line)
   }
@@ -467,7 +477,7 @@ function updateMinimap() {
     line.setAttribute('y1', String(start.y))
     line.setAttribute('x2', String(end.x))
     line.setAttribute('y2', String(end.y))
-    line.setAttribute('class', `mini-edge edge-${edge.type}`)
+    line.setAttribute('class', `mini-edge edge-${edge.type} epistemic-${epistemicStateClass(edge.epistemicState)}`)
     line.dataset.synthetic = String(edge.syntheticFixture)
     minimapRelationships.append(line)
   }
@@ -561,7 +571,13 @@ function renderMap() {
   for (const node of state.worldNodes) {
     cameraLayer.append(makeNode(node))
     const mini = document.createElementNS('http://www.w3.org/2000/svg', 'circle')
-    mini.setAttribute('class', `mini-node${node.kind === 'ORGANIZATION' ? ' organization' : ''}`)
+    const epistemicState = node.kind === 'ORGANIZATION'
+      ? 'UNKNOWN'
+      : state.uxLab?.presentationOverrides?.epistemicState?.[node.id] ?? node.source.epistemicState
+    mini.setAttribute(
+      'class',
+      `mini-node epistemic-${epistemicStateClass(epistemicState)}${node.kind === 'ORGANIZATION' ? ' organization' : ''}`,
+    )
     const mapPoint = minimapPoint(node.x, node.y, mapBounds)
     mini.setAttribute('cx', String(mapPoint.x))
     mini.setAttribute('cy', String(mapPoint.y))
@@ -1122,7 +1138,38 @@ function bindInteractions() {
     state.camera.y = state.size.height / 2 - (y / 100) * state.size.height * state.camera.zoom
     updateCamera()
   }
-  $('#minimap').addEventListener('click', moveMinimap)
+  const minimap = $('#minimap')
+  let minimapPointer = null
+  let suppressMinimapClick = false
+  minimap.addEventListener('pointerdown', (event) => {
+    if (event.button !== 0) return
+    minimapPointer = { id: event.pointerId, x: event.clientX, y: event.clientY, moved: false }
+    minimap.setPointerCapture(event.pointerId)
+    event.preventDefault()
+    moveMinimap(event)
+  })
+  minimap.addEventListener('pointermove', (event) => {
+    if (!minimapPointer || minimapPointer.id !== event.pointerId) return
+    if (Math.hypot(event.clientX - minimapPointer.x, event.clientY - minimapPointer.y) > 3) {
+      minimapPointer.moved = true
+    }
+    moveMinimap(event)
+  })
+  const finishMinimapPointer = (event) => {
+    if (!minimapPointer || minimapPointer.id !== event.pointerId) return
+    suppressMinimapClick = minimapPointer.moved
+    minimapPointer = null
+  }
+  minimap.addEventListener('pointerup', finishMinimapPointer)
+  minimap.addEventListener('pointercancel', finishMinimapPointer)
+  minimap.addEventListener('click', (event) => {
+    if (suppressMinimapClick) {
+      suppressMinimapClick = false
+      return
+    }
+    if (event.detail === 0) return
+    moveMinimap(event)
+  })
   $('#minimap').addEventListener('keydown', (event) => {
     if (event.key === 'Enter' || event.key === ' ') {
       event.preventDefault()

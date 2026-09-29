@@ -634,3 +634,31 @@ unmerged. Human visual acceptance is still required; HFX-02 is not authorized.
   Golden Master source bytes were not changed. Human visual acceptance remains
   pending for the exact rendered candidate; no merge is authorized until that
   acceptance is explicitly recorded.
+
+### Q2 follow-up — minimap navigation and epistemic color alignment
+
+- Reproduced the reported issue in `SYNTHETIC_DENSE` at 1280×720. Click-to-
+  center already moved the camera, but the camera window was invisible and the
+  minimap offered no continuous drag navigation. The camera window now has one
+  restrained inset outline/fill, and pointer dragging continuously recenters
+  the view. Click-to-center and Enter/Space centering remain available.
+- Node colors in the minimap now use the same epistemic-state tokens as field
+  nodes. Synthetic UX-lab edges now carry an explicit synthetic epistemic state;
+  line color and dash pattern follow the V2 epistemic palette. Relation type
+  no longer drives epistemic color or pattern. Missing/invalid states resolve
+  to neutral UNKNOWN. None of these fixtures enter canonical relationships or
+  product truth.
+- Browser verification: Dense field rendered at 1280×720; zooming changed the
+  minimap camera window, dragging inside it moved the graph, and Reset restored
+  the complete fitted view. Screenshot inspection showed epistemic colors on
+  field and minimap nodes/edges. This does not constitute human visual
+  acceptance.
+- Full local gates on these bytes: frozen sync, Ruff format/check, mypy,
+  `pytest` (**292 passed**), Architecture Guard, AXIGNAL governance (all eight
+  checks), JavaScript syntax, and `git diff --check` passed. Graphify update,
+  `check-update`, and multigraph diagnostics passed: 4,777 nodes, 7,596 edges,
+  zero unverified/missing/dangling/duplicate edges, five self-loops.
+- Golden Master Manifest V1 verification passed: 27 inputs and unchanged
+  digest `1b4154dd152d9ecd20bfaeb7585daf78b4fbc79f182fce32a2f94ff017d6ad51`.
+  Local Gitleaks remains unavailable; exact-head remote CI must be rerun after
+  push. Human Visual QA remains pending.

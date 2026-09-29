@@ -51,6 +51,16 @@ def test_presentation_relationships_never_enter_the_canonical_projection_shape()
     assert sparse["uxLab"]["edges"] == []
     assert len(dense["uxLab"]["edges"]) == 24
     assert all(edge["syntheticFixture"] is True for edge in dense["uxLab"]["edges"])
+    assert {edge["epistemicState"] for edge in dense["uxLab"]["edges"]} == {
+        "OBSERVED",
+        "CORROBORATED",
+        "INFERRED",
+        "POTENTIAL",
+        "STALE",
+        "CONTRADICTED",
+        "HISTORICAL",
+        "UNKNOWN",
+    }
     assert all(
         edge["source"] in {dense["organization"]["id"], *(node["id"] for node in dense["nodes"])}
         and edge["target"]
@@ -141,6 +151,9 @@ def test_label_decluttering_preserves_world_positions_and_prefers_attention() ->
 
 def test_minimap_fits_visible_graph_and_uses_the_same_bounds_for_navigation() -> None:
     script = (REPOSITORY_ROOT / "apps/web/subscriber/app.js").read_text(encoding="utf-8")
+    stylesheet = (REPOSITORY_ROOT / "apps/web/subscriber/subscriber.css").read_text(
+        encoding="utf-8"
+    )
 
     assert "function minimapBounds(nodes = state.worldNodes)" in script
     assert "const MINIMAP = { width: 160, height: 96, inset: 5 }" in script
@@ -150,6 +163,21 @@ def test_minimap_fits_visible_graph_and_uses_the_same_bounds_for_navigation() ->
     assert "const rect = $('#minimap svg').getBoundingClientRect()" in script
     assert "const bounds = minimapBounds()" in script
     assert "cameraTopLeft = minimapPoint(xLeft, yTop, bounds)" in script
+    assert "minimap.addEventListener('pointerdown'" in script
+    assert "minimap.addEventListener('pointermove'" in script
+    assert "minimap.setPointerCapture(event.pointerId)" in script
+    assert "epistemic-${epistemicStateClass(edge.epistemicState)}" in script
+    assert "const epistemicState = node.kind === 'ORGANIZATION'" in script
+    assert ".minimap .mini-node.epistemic-observed { fill: var(--st-observed); }" in stylesheet
+    assert (
+        ".mini-edge.epistemic-inferred { stroke: var(--st-inferred); stroke-dasharray: 5 4; }"
+        in stylesheet
+    )
+    assert ".lab-edge.epistemic-inferred { stroke: var(--st-inferred);" in stylesheet
+    assert ".lab-edge.edge-compares { stroke:" not in stylesheet
+    assert ".mini-edge.edge-compares { stroke:" not in stylesheet
+    assert ".minimap .mini-window {" in stylesheet
+    assert "stroke: var(--brass-2);" in stylesheet
 
 
 def test_test_instrumentation_does_not_add_product_overlay_or_change_layout_bounds() -> None:
