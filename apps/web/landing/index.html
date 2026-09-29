@@ -15,6 +15,7 @@
 <meta property="og:url" content="https://axignal.com/">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml">
+<link rel="preload" href="./assets/images/landing-01-outside.webp" as="image" type="image/webp" fetchpriority="high">
 <link rel="preload" href="./assets/fonts/font-01.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="./assets/fonts/font-16.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="./assets/fonts/fonts.css">
@@ -270,7 +271,7 @@ body[data-chapter="14"] .copy{width:min(43rem,46vw)}
 @keyframes axMorphIn{0%{opacity:0;filter:blur(9px);transform:translate3d(0,28px,0) scale(1.018)}100%{opacity:1;filter:blur(0);transform:translate3d(0,0,0) scale(1)}}
 @keyframes axTextReveal{0%{opacity:0;filter:blur(5px);transform:translate3d(0,14px,0)}100%{opacity:1;filter:blur(0);transform:translate3d(0,0,0)}}
 @media(prefers-reduced-motion:reduce){.copy-inner.ax-morph-out,.copy-inner.ax-morph-in,.copy-inner.ax-morph-in .eyebrow,.copy-inner.ax-morph-in h1,.copy-inner.ax-morph-in .body,.copy-inner.ax-morph-in .value,.copy-inner.ax-morph-in .pricing-panel,.copy-inner.ax-morph-in .actions{animation:none!important}}
-</style><link rel="preload" href="./assets/images/landing-01-outside.webp" as="image" type="image/webp" fetchpriority="high">
+</style>
 </head>
 <body>
 <main class="scene" id="scene">
@@ -303,9 +304,9 @@ body[data-chapter="14"] .copy{width:min(43rem,46vw)}
 
   <section class="copy" aria-live="polite">
     <div class="copy-inner" id="copyInner">
-      <p class="eyebrow" id="eyebrow"></p>
-      <h1 id="headline"></h1>
-      <div class="body" id="bodycopy"></div>
+      <p class="eyebrow" id="eyebrow">Outside your walls</p>
+      <h1 id="headline">Do you really know how your company looks from the outside?</h1>
+      <div class="body" id="bodycopy"><p>You already know what your company says about itself. AXIGNAL starts somewhere else: with what can be independently observed around it.</p></div>
       <p class="value" id="value"></p>
       <div class="pricing-panel" id="pricingPanel" aria-label="Pricing"></div>
       <div class="actions" id="actions"></div>
@@ -380,6 +381,25 @@ function browserLocale(){
 }
 let lang=SUPPORTED.includes(params.get('lang'))?params.get('lang'):(SUPPORTED.includes(stored)?stored:browserLocale());
 let chapter=Math.min(15,Math.max(1,Number(params.get('c')||1)));
+const criticalFirst={
+  en:{eyebrow:'Outside your walls',headline:'Do you really know how your company looks from the outside?',body:'You already know what your company says about itself. AXIGNAL starts somewhere else: with what can be independently observed around it.'},
+  es:{eyebrow:'Desde fuera',headline:'¿De verdad sabes cómo se ve tu empresa desde fuera?',body:'Ya sabes lo que tu empresa dice de sí misma. AXIGNAL empieza en otro lugar: en lo que puede observarse de forma independiente a su alrededor.'},
+  fr:{eyebrow:'Depuis l’extérieur',headline:'Savez-vous vraiment comment votre entreprise apparaît de l’extérieur ?',body:'Vous savez déjà ce que votre entreprise dit d’elle-même. AXIGNAL commence ailleurs : par ce qui peut être observé indépendamment autour d’elle.'},
+  de:{eyebrow:'Von außen',headline:'Wissen Sie wirklich, wie Ihr Unternehmen von außen aussieht?',body:'Sie wissen bereits, was Ihr Unternehmen über sich selbst sagt. AXIGNAL beginnt woanders: bei dem, was sich unabhängig in seinem Umfeld beobachten lässt.'},
+  it:{eyebrow:'Da fuori',headline:'Sai davvero come appare la tua azienda dall’esterno?',body:'Sai già cosa dice di sé la tua azienda. AXIGNAL parte da un altro punto: da ciò che può essere osservato in modo indipendente intorno ad essa.'},
+  pt:{eyebrow:'Visto de fora',headline:'Sabe realmente como a sua empresa é vista do exterior?',body:'Já sabe o que a sua empresa diz sobre si própria. A AXIGNAL começa noutro ponto: pelo que pode ser observado de forma independente à sua volta.'}
+};
+if(chapter===1){
+  const first=criticalFirst[lang]||criticalFirst.en;
+  document.documentElement.lang=lang;
+  document.getElementById('eyebrow').textContent=first.eyebrow;
+  document.getElementById('headline').textContent=first.headline;
+  document.getElementById('bodycopy').innerHTML='<p>'+first.body+'</p>';
+}else{
+  document.getElementById('eyebrow').textContent='';
+  document.getElementById('headline').textContent='';
+  document.getElementById('bodycopy').textContent='';
+}
 let data=[];
 let transitioning=false;
 let pendingNavigation=null;
