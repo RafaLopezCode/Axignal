@@ -88,3 +88,11 @@ def test_public_ctas_never_dead_end_or_fake_account_runtime() -> None:
     assert "'15:Primary CTA':openAccessDialog" in HTML
     assert "'15:Secondary CTA':()=>goTo(7,-1)" in HTML
     assert "placeholder checkout or fake account flow" in HTML
+
+
+def test_public_landing_has_indexable_metadata_and_real_robots_file() -> None:
+    assert '<link rel="canonical" href="https://axignal.com/">' in HTML
+    assert '<meta property="og:title"' in HTML
+    assert 'width="166" height="42"' in HTML
+    robots = (LANDING / "robots.txt").read_text(encoding="utf-8")
+    assert robots == "User-agent: *\nAllow: /\n"
