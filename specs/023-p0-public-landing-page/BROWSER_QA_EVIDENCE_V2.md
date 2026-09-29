@@ -5,6 +5,7 @@
 **Phase:** RENDERED STORYBOARD REVIEW
 **Runtime:** disposable external review harness; no product runtime implementation
 **Rendered specification HEAD:** `83d2868ff4929e1e6d1ab4dfbe54dade6da6d01b`
+**Evidence-governance HEAD before this refresh:** `3807dfde06d1eafcf27ecd1030050e5f2df5efa5`
 **Browser tool:** Playwright 1.55.0 using installed Chrome `153.0.8010.53`
 **Evidence root (machine-local):** `D:\AXIGNAL\_source_assets\landing\storyboard-review-v1\`
 
@@ -17,7 +18,7 @@
 - Horizontal document overflow: 0/90.
 - Copy box outside viewport: 0/90.
 - Page console errors: 0/90.
-- Chapter 12 tablet/mobile uses explicitly governed responsive review derivatives documented in `PREVIEW_ASSET_MANIFEST_V1.md`.
+- Chapter 12 tablet/mobile uses byte-identical copies of the explicitly governed responsive review derivatives documented in `PREVIEW_ASSET_MANIFEST_V1.md`.
 - Chapter 13 mobile keeps the normal mobile body scale and separates the agency proposition into a second paragraph without deleting qualifiers.
 - Mobile exposes AXIGNAL, compact `+ Xignal`, locale selector, and an actionable chapter indicator; no 15-dot rail is exposed.
 
@@ -66,7 +67,7 @@
 | tablet | es | 09 | `screenshots/tablet/09-es.png` | `1BD42E8E40E3830D86D960691420F51EFC264D5CA02D715A14C99D8C6DF74958` | PASS | 0 | `url("file:///D:/AXIGNAL/_source_assets/landing/storyboard-review-v1/assets/landing-09-digital-representation.webp")` |
 | tablet | es | 10 | `screenshots/tablet/10-es.png` | `1E066621681BDBE2939423F92CCAC9E45E780B6747E68CEA909571E418017891` | PASS | 0 | `url("file:///D:/AXIGNAL/_source_assets/landing/storyboard-review-v1/assets/landing-10-time.webp")` |
 | tablet | es | 11 | `screenshots/tablet/11-es.png` | `F1A6942D1DD693D1FC6C91474AD93D9BFFBF949F0843C06E2BF24A0C1605106C` | PASS | 0 | `url("file:///D:/AXIGNAL/_source_assets/landing/storyboard-review-v1/assets/landing-11-axent.webp")` |
-| tablet | es | 12 | `screenshots/tablet/12-es.png` | `3C5B8DAFEC48BEDABAF2E4A2002D9D63E369EBD2A953083E29CDBFC842E9BB4C` | PASS | 0 | `url("file:///D:/AXIGNAL/_source_assets/landing/storyboard-review-v1/assets/landing-12-independence-tablet.webp")` |
+| tablet | es | 12 | `screenshots/tablet/12-es.png` | `A81F9648795CBC10AC1AA4E7FFCF50159992603E2DA57F16A5FBDAA50BC29765` | PASS | 0 | `url("file:///D:/AXIGNAL/_source_assets/landing/storyboard-review-v1/assets/landing-12-independence-tablet.webp")` |
 | tablet | es | 13 | `screenshots/tablet/13-es.png` | `52A6B8C97413B3DBD37689E5DEA61C583A2437208A50E2BE690918DAD2324069` | PASS | 0 | `url("file:///D:/AXIGNAL/_source_assets/landing/storyboard-review-v1/assets/landing-13-use-cases.webp")` |
 | tablet | es | 14 | `screenshots/tablet/14-es.png` | `685694038370A3613EC8A68F120BA7940ED49AB9053BCF620E24142580034D01` | PASS | 0 | `url("file:///D:/AXIGNAL/_source_assets/landing/storyboard-review-v1/assets/landing-14-pricing.webp")` |
 | tablet | es | 15 | `screenshots/tablet/15-es.png` | `6F0A148CCFEE9440F5B1BD78CD42748218154AD787E8EB75BC1676AF533C6099` | PASS | 0 | `url("file:///D:/AXIGNAL/_source_assets/landing/storyboard-review-v1/assets/landing-15-start.webp")` |
@@ -81,7 +82,7 @@
 | tablet | en | 09 | `screenshots/tablet/09-en.png` | `21039F69BCD3A9C5C6ECAE114B84FA7142F7C9421D711D3A8AC8AC486AE82053` | PASS | 0 | `url("file:///D:/AXIGNAL/_source_assets/landing/storyboard-review-v1/assets/landing-09-digital-representation.webp")` |
 | tablet | en | 10 | `screenshots/tablet/10-en.png` | `A7DB3534640500FE26EFA423272AE7B3646D34875083696DFAC09B6067063639` | PASS | 0 | `url("file:///D:/AXIGNAL/_source_assets/landing/storyboard-review-v1/assets/landing-10-time.webp")` |
 | tablet | en | 11 | `screenshots/tablet/11-en.png` | `B03D8982EE9FD187845819893845BD4CC244E0E354B3CF84925678D367FBC529` | PASS | 0 | `url("file:///D:/AXIGNAL/_source_assets/landing/storyboard-review-v1/assets/landing-11-axent.webp")` |
-| tablet | en | 12 | `screenshots/tablet/12-en.png` | `1311909D1B0DAF3DE4BA628E1644A90D02FDD99CB958F3CC5B1A0D65914AB79F` | PASS | 0 | `url("file:///D:/AXIGNAL/_source_assets/landing/storyboard-review-v1/assets/landing-12-independence-tablet.webp")` |
+| tablet | en | 12 | `screenshots/tablet/12-en.png` | `C0B1BFB211496DE3EA7E5563B0D794B2E8468720623248808567880C877B21E0` | PASS | 0 | `url("file:///D:/AXIGNAL/_source_assets/landing/storyboard-review-v1/assets/landing-12-independence-tablet.webp")` |
 | tablet | en | 13 | `screenshots/tablet/13-en.png` | `1F153084549508B02F3D0F700ED1911E6BC7C9BE02697C10E2FB32F900D72F0A` | PASS | 0 | `url("file:///D:/AXIGNAL/_source_assets/landing/storyboard-review-v1/assets/landing-13-use-cases.webp")` |
 | tablet | en | 14 | `screenshots/tablet/14-en.png` | `602A9B9FC2D88BBB170630CAF99C4600E6822838870006381B534623CFB74B98` | PASS | 0 | `url("file:///D:/AXIGNAL/_source_assets/landing/storyboard-review-v1/assets/landing-14-pricing.webp")` |
 | tablet | en | 15 | `screenshots/tablet/15-en.png` | `BF26572C1C636ECA920656C4447771AA5BA54B0F2ECD2DEFCB2DD14103347975` | PASS | 0 | `url("file:///D:/AXIGNAL/_source_assets/landing/storyboard-review-v1/assets/landing-15-start.webp")` |
@@ -96,7 +97,7 @@
 | mobile | es | 09 | `screenshots/mobile/09-es.png` | `48362A199175DCDF856D8C92E83BDA749C7967A63C94DD0E98EC280193B4515A` | PASS | 0 | `url("file:///D:/AXIGNAL/_source_assets/landing/storyboard-review-v1/assets/landing-09-digital-representation.webp")` |
 | mobile | es | 10 | `screenshots/mobile/10-es.png` | `017EE4433774D498421F0D63DB85124C7FC0AC314AA472E62D991E7808BF8553` | PASS | 0 | `url("file:///D:/AXIGNAL/_source_assets/landing/storyboard-review-v1/assets/landing-10-time.webp")` |
 | mobile | es | 11 | `screenshots/mobile/11-es.png` | `9EE1FD2724AAA4C4035AFF4FDC2641FADF3F9CF39C3021731AA2372303535F68` | PASS | 0 | `url("file:///D:/AXIGNAL/_source_assets/landing/storyboard-review-v1/assets/landing-11-axent.webp")` |
-| mobile | es | 12 | `screenshots/mobile/12-es.png` | `EFA1B441C9C1A07D1DC7F4EB06271B225E7B75A49E3314D192F0689D44202F3A` | PASS | 0 | `url("file:///D:/AXIGNAL/_source_assets/landing/storyboard-review-v1/assets/landing-12-independence-mobile.webp")` |
+| mobile | es | 12 | `screenshots/mobile/12-es.png` | `03F7C91DFF22DE960A47EF444B4F79B4FBF0855526F08C7324101BA29AD0388C` | PASS | 0 | `url("file:///D:/AXIGNAL/_source_assets/landing/storyboard-review-v1/assets/landing-12-independence-mobile.webp")` |
 | mobile | es | 13 | `screenshots/mobile/13-es.png` | `0FBB2C3967D4B21F5D87626F9A97408616915422CB78F17A0CAC227A27828C1B` | PASS | 0 | `url("file:///D:/AXIGNAL/_source_assets/landing/storyboard-review-v1/assets/landing-13-use-cases.webp")` |
 | mobile | es | 14 | `screenshots/mobile/14-es.png` | `9F0DA1ED41B60F10901F237697E6B13A4816E7A0126FDD241A5F145C90D5AD70` | PASS | 0 | `url("file:///D:/AXIGNAL/_source_assets/landing/storyboard-review-v1/assets/landing-14-pricing.webp")` |
 | mobile | es | 15 | `screenshots/mobile/15-es.png` | `81D7E3DA13462262003295AE5E269C62A387862BCB874D721C8B14A89021FCF0` | PASS | 0 | `url("file:///D:/AXIGNAL/_source_assets/landing/storyboard-review-v1/assets/landing-15-start.webp")` |
@@ -111,22 +112,22 @@
 | mobile | en | 09 | `screenshots/mobile/09-en.png` | `4B367C860B2F50B79732D9B55890497AF4AF6C70BE43E8C0F5823BD8A862AA42` | PASS | 0 | `url("file:///D:/AXIGNAL/_source_assets/landing/storyboard-review-v1/assets/landing-09-digital-representation.webp")` |
 | mobile | en | 10 | `screenshots/mobile/10-en.png` | `DEEAA2EF1B14BEA9B4B22153B915D577CFA2352967DF9296FED5E928AA363E4A` | PASS | 0 | `url("file:///D:/AXIGNAL/_source_assets/landing/storyboard-review-v1/assets/landing-10-time.webp")` |
 | mobile | en | 11 | `screenshots/mobile/11-en.png` | `93087B6A3B45E7B2D864F6F8D1FF37F43824A71EA1891FCA968F927013737BD2` | PASS | 0 | `url("file:///D:/AXIGNAL/_source_assets/landing/storyboard-review-v1/assets/landing-11-axent.webp")` |
-| mobile | en | 12 | `screenshots/mobile/12-en.png` | `E202D906ED2DA146A7837A8BC5FA7808CF61A924B87319D29FDC055D19FC112F` | PASS | 0 | `url("file:///D:/AXIGNAL/_source_assets/landing/storyboard-review-v1/assets/landing-12-independence-mobile.webp")` |
+| mobile | en | 12 | `screenshots/mobile/12-en.png` | `C6BC13EC8D59085DD0D54545CF7845A93BFDAF3ED9AC68D419370D6BAFEB1024` | PASS | 0 | `url("file:///D:/AXIGNAL/_source_assets/landing/storyboard-review-v1/assets/landing-12-independence-mobile.webp")` |
 | mobile | en | 13 | `screenshots/mobile/13-en.png` | `B30994EDE5EB288D3EABFFE5372D3B2BBE672A5F1DE9804469EB16D9DF289B58` | PASS | 0 | `url("file:///D:/AXIGNAL/_source_assets/landing/storyboard-review-v1/assets/landing-13-use-cases.webp")` |
 | mobile | en | 14 | `screenshots/mobile/14-en.png` | `6825A56A20E4D9EAB5B4F93A0C4C4DA7CA889070B63289B9ABE19767FE930B2E` | PASS | 0 | `url("file:///D:/AXIGNAL/_source_assets/landing/storyboard-review-v1/assets/landing-14-pricing.webp")` |
 | mobile | en | 15 | `screenshots/mobile/15-en.png` | `018509169F03AC1282689728337AB05AFAB7376794B4B1138A488DC02354EDB4` | PASS | 0 | `url("file:///D:/AXIGNAL/_source_assets/landing/storyboard-review-v1/assets/landing-15-start.webp")` |
 
 ## Contact sheets
 - `contact-sheet-desktop-es.jpg` — SHA-256 `4BDBF142E02435CF5019C0621C13D653BC23DEF339D44582FA4B436F99EC1440`.
-- `contact-sheet-tablet-es.jpg` — SHA-256 `158B98CC277BF09D1C1ACB0EAEB43CA7BBBDDFC89C68326C10EB1622806E9632`.
-- `contact-sheet-mobile-es.jpg` — SHA-256 `50E4AEE11B1FAC72855CFFBA66045E400DF67D4ECC5DF37C5D51327B4BB76F17`.
+- `contact-sheet-tablet-es.jpg` — SHA-256 `5D31F2ABE7D861E1746D4FC6F2B14A08D874061CAD232EF2989DCEEBEE0B8700`.
+- `contact-sheet-mobile-es.jpg` — SHA-256 `D72BC278B3FD5390EE4D937E0F143F26AF5544C18283B0B42A6CF622ED2D668D`.
 - `contact-sheet-desktop-en.jpg` — SHA-256 `D83C1C432DCFFC73DDB244BABFDFB840A387D727F5E064E51CEB688E90106592`.
-- `contact-sheet-tablet-en.jpg` — SHA-256 `9169AD17A0300505CA33B22324E3AB3DF622DEE3FD4C3A9BA04EEF2D86949041`.
-- `contact-sheet-mobile-en.jpg` — SHA-256 `9843B1C18D7798EC1851E9EDF71E88344A0C3ECB6BC7F66344548A5806247B73`.
+- `contact-sheet-tablet-en.jpg` — SHA-256 `82794B0211AB4BD1478592215DF7A083C679EB12024765746AFF51C1DF9AE9BC`.
+- `contact-sheet-mobile-en.jpg` — SHA-256 `371127403C8977326A410B9742581D91D80C333A3776691F755642B5A27C4E7E`.
 
 ## Integrity rule
 
-The screenshot hashes above were calculated after the final 90-capture rerun that produced the referenced `render-evidence.json`. A review claiming visual-evidence integrity MUST recompute the hashes of these exact files and compare them to this table.
+The screenshot hashes above were calculated after the final 90-capture rerun that produced the referenced `render-evidence.json`. The Chapter 12 responsive assets in the render bundle were first synchronized byte-for-byte from the governed preview source directory. A review claiming visual-evidence integrity MUST recompute these hashes and asset hashes against the exact files.
 
 ## Current disposition
 

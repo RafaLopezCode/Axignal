@@ -39,6 +39,20 @@ The reviewer found no visual, narrative, copy-fit, agency-value or epistemic def
 
 Chapter 12 responsive review derivatives are not production authority. If still required after implementation QA, production equivalents must be regenerated from the verified source master through the governed production pipeline.
 
+### Follow-up rendered evidence re-review
+
+A follow-up Codex re-review at exact local HEAD `3807dfde06d1eafcf27ecd1030050e5f2df5efa5` verified the repaired screenshot provenance (`90/90`, mismatch `0`) and all layout/console metrics, but found that the Chapter 12 responsive files copied into the rendered-review bundle were older byte variants than the now-governed preview derivatives.
+
+Disposition: **ACCEPTED — BLOCKING evidence provenance defect**.
+
+Repair:
+- synchronized the rendered-review Chapter 12 tablet/mobile assets byte-for-byte from the governed preview source directory;
+- verified `2/2` source→review SHA-256 equality;
+- reran all `90` EN/ES desktop/tablet/mobile captures;
+- regenerated `render-evidence.json` and all six contact sheets;
+- regenerated `BROWSER_QA_EVIDENCE_V2.md` from the exact rerun;
+- independently rechecked `90/90` screenshot hashes with mismatch `0`, `0/90` overflow, `0/90` copy escape, `0/90` console errors, and `0/90` failed fit flags.
+
 ## Remaining human gates
 
 `COPY_FREEZE=PASS`
