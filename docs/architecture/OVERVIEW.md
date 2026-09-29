@@ -110,7 +110,9 @@ dangling reference fails the whole read. Its stable identity order is for
 determinism only. Authentication adapters, external API disclosure handling,
 Client/Workspace authority, Subscriber read models and Context Broker remain
 unimplemented. Evidence, Observation, Relationship, INXIGHT and PATHX have no
-direct Xeed binding. ObservationSeed is not a Xeed and grants no reference.
+direct Xeed binding. `XeedGerminationState` is lifecycle/work state keyed by a
+Xeed and grants no FAXT reference or canonical write authority. Xignals are
+observation-derived signals, not Xeed references or admitted truth.
 
 P0-CORE-04 adds an `AuthorizedXeed`-only Organization context reader. It takes
 the OrganizationId from the authorized Xeed, resolves the original global
@@ -126,11 +128,11 @@ Signals, Activity and FAXT-to-field mappings remain unsupported.
 
 ## Data model
 
-Conceptual entities (MASTER §36): `Organization`, `FAXT`, `Evidence`,
-`Relationship` (Observed / Potential), `PATHX`, `INXIGHT`, `TemporalEvent`,
-`ObservationSeed`, `KnowledgeFrontier`. The Python skeleton implements the
-boundary-critical primitives; the full ontology is a later milestone (MASTER
-§50, P2).
+Conceptual entities (MASTER §36): `Organization`, `Xeed`, `Xignal`, `FAXT`,
+`Evidence`, `Relationship` (Observed / Potential), `PATHX`, `INXIGHT`,
+`TemporalEvent`, `XeedGerminationState`, `KnowledgeFrontier`. The Python
+skeleton implements boundary-critical primitives; the full Xignal payload and
+full ontology remain later milestones (MASTER §50, P2).
 
 ## Repository layout
 

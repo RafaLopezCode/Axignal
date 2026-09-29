@@ -6,7 +6,7 @@
 ## Phase 1: Contract Tests First
 
 - [x] T001 [US1] Define identity and ownership acceptance matrix in spec/data model.
-- [x] T002 [US1] Add tests for distinct IDs, Organization reference, same-world multi-Tenant Xeeds, label collision/mutation, and ObservationSeed separation.
+- [x] T002 [US1] Add tests for distinct IDs, Organization reference, same-world multi-Tenant Xeeds, label collision/mutation, and germination-state separation from authorization/truth.
 - [x] T003 [US2] Add memory authority test fixture and authorized-read security matrix.
 - [x] T004 [US2] Verify membership-before-Xeed lookup and non-enumerating external contract.
 

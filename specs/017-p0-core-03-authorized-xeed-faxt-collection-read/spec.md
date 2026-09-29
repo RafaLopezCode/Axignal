@@ -47,7 +47,7 @@ multiple Xeeds/Tenants; same Organization with distinct Xeed isolation; raw
 Xeed/Tenant/Organization ID rejection; no global enumeration; unreferenced
 FAXT exclusion; malformed, duplicate and dangling references; mismatched and
 wrong-type FAXTs; label independence; UNKNOWN/currentness preservation; no
-Evidence dereference; ObservationSeed non-authority; and authorization and
+Evidence dereference; Xeed-germination-state non-authority; and authorization and
 lookup ordering.
 
 ## Out of scope

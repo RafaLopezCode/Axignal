@@ -28,10 +28,10 @@ y comercialización de AXIGNAL.
 > **Contrato epistemológico:** **Users may direct AXIGNAL's attention,
 > but never its conclusions.**
 
-> **Unidad comercial:** el usuario puede **Xignal a company**: asignar
-> observación computacional persistente a una organización. Esto no
-> concede capacidad para editar, configurar o influir en la
-> representación canónica de esa organización.
+> **Unidad comercial:** el usuario puede **plant a Xeed**: iniciar y mantener
+> un foco persistente de observación sobre una organización. El Brain germina
+> esa Xeed y produce múltiples Xignals. Los Xignals no son unidades facturables
+> ni conceden capacidad para editar, configurar o influir en AXIGLAND.
 
 > **Principio operativo:** **Compute once, learn permanently, verify
 > when necessary.**
@@ -55,7 +55,7 @@ Existe **un único mundo económico canónico**. Los usuarios no poseen
 nodos ni crean versiones privadas de la realidad. Seleccionan
 perspectivas y pueden decidir qué organizaciones merecen observación
 persistente. Esa asignación de atención computacional se denomina
-**XIGNAL**.
+**XEED**.
 
 AXIGNAL tiene una ontología global, pero **no debe precomputar el mundo
 entero**. El grafo se materializa según la demanda:
@@ -233,7 +233,7 @@ centra su atención en C, AXIGNAL empieza desde el estado existente y
 profundiza.
 
 ``` text
-XIGNAL A
+XEED A
    ↓
 A ── B
 │    │
@@ -241,7 +241,7 @@ C ── D
 
 later...
 
-XIGNAL D
+XEED D
    ↓
 reuse D
    ↓
@@ -298,25 +298,45 @@ AXENT no debe reducirse a un chatbot. La conversación es una interfaz
 posible hacia su trabajo, pero AXENT continúa trabajando de forma
 autónoma mediante jobs, revisitas, expansión, verificación y análisis.
 
-## 4.4 XIGNAL
+## 4.4 XEED
 
-Una **organización seleccionada como foco persistente de observación**.
+Una **Xeed** es la semilla que planta el usuario para iniciar una observación
+persistente sobre una organización.
 
-"Xignal a company" significa:
+> **Plant a Xeed** significa autorizar al Brain de AXIGNAL a dedicar
+> observación, investigación, verificación y cultivo continuo al entorno
+> económico observable de una organización.
 
-> asignar a AXIGNAL/AXENT presupuesto de observación persistente
-> alrededor de una organización.
+La Xeed es la unidad de intención del cliente y el contexto persistente desde
+el que el Brain germina conocimiento. No crea un perfil editable, no concede
+propiedad sobre la organización y no permite elegir las conclusiones.
 
-No significa:
+Una Xeed puede germinar en muchos Xignals.
 
--   crear un perfil;
--   reclamar una empresa;
--   decirle a AXIGNAL qué debe creer;
--   editar el nodo;
--   cargar la "verdad" del cliente.
+## 4.4A XIGNAL
 
-Técnicamente puede materializarse como `ObservationSeed`.
+Un **Xignal** es una señal económica observable que emerge del trabajo del
+Brain durante la germinación y evolución de una o más Xeeds.
 
+Un Xignal puede señalar actividad, cambio, representación, relación,
+contradicción, anomalía, demanda, oferta u otro fenómeno económico que merece
+ser observado, verificado o conectado.
+
+Un Xignal:
+
+- no es la Xeed que lo originó;
+- no es una unidad facturable;
+- no es un perfil de empresa;
+- no es por sí mismo un FAXT, INXIGHT, RELATIONSHIP ni PATHX;
+- no tiene autoridad de escritura canónica;
+- puede dirigir investigación y alimentar el proceso gobernado que materializa
+  conocimiento reutilizable en AXIGLAND.
+
+`XIGNAL ≠ XEED` y `XIGNAL ≠ CANONICAL WRITE`.
+
+Las Xeeds plantadas por los usuarios producen Xignals mediante el Brain; los
+Xignals gobernados, su evidencia y el conocimiento admitido que generan
+contribuyen al crecimiento de un único AXIGLAND canónico.
 ## 4.5 FAXT
 
 Unidad canónica de conocimiento sustentada por evidencia.
@@ -436,7 +456,7 @@ hechos.
 Un competidor malicioso puede pedir:
 
 ``` text
-+ Xignal competitor.com
++ Plant Xeed competitor.com
 ```
 
 El resultado es que AXIGNAL dedica más atención independiente al
@@ -472,7 +492,7 @@ USER
 ├── account
 ├── subscription
 ├── preferences
-├── Xignals
+├── Xeeds
 └── private view state
 
         ≠
@@ -514,67 +534,63 @@ No modifica AXIGLAND.
 
 ------------------------------------------------------------------------
 
-# 7. XIGNAL como unidad de observación persistente
+# 7. XEED como unidad de observación persistente
 
 ## 7.1 Qué compra realmente el usuario
 
-El usuario no compra acceso exclusivo a un nodo. Compra **atención
-computacional persistente**.
+El usuario compra **atención computacional persistente alrededor de una Xeed**,
+no un número de señales ni acceso exclusivo a un nodo.
 
 ``` text
-+ Xignal company
++ Plant Xeed
        ↓
 AXIGNAL resolves organization
        ↓
-AXENT builds FIRST MAP
+Brain germinates Xeed
        ↓
-ObservationSeed becomes LIVE
+many Xignals emerge
        ↓
-continuous monitoring
+evidence is evaluated and admitted under policy
        ↓
-knowledge frontier expands
+FIRST MAP / AXIGLAND projection
+       ↓
+continuous cultivation
 ```
 
-## 7.2 ObservationSeed técnico
+## 7.2 Xeed y germinación
 
-Modelo conceptual:
+La Xeed describe el **objetivo persistente de observación del usuario** y su
+contexto privado autorizado. Su germinación es trabajo del Brain.
+
+La identidad canónica de la organización permanece en AXIGLAND. La Xeed la
+referencia; no la duplica ni la posee.
+
+## 7.3 Una Xeed, muchos Xignals
+
+Una Xeed puede producir muchos Xignals durante su germinación y evolución.
 
 ``` text
-ObservationSeed
-  id
-  organization_id
-  initiated_by
-  created_at
-  status
-  observation_depth
-  monitoring_state
-  knowledge_frontier
-  expansion_budget
-  last_observed_at
-  next_observation_at
+               XEED
+                 |
+              BRAIN
+          /      |      \
+      Xignal   Xignal   Xignal
+          \      |      /
+        governed evidence
+                 |
+              AXIGLAND
 ```
 
-La semilla describe el **trabajo de AXIGNAL**, no la identidad declarada
-de la empresa.
+Los Xignals no se facturan individualmente y no se convierten automáticamente
+en verdad canónica. Pueden desencadenar investigación, evidencia y propuestas
+de materialización sujetas a `EvidenceAdmission`.
 
-## 7.3 Una organización canónica, múltiples Xignals
+## 7.4 Un AXIGLAND, múltiples Xeeds
 
-Si tres usuarios hacen Xignal sobre Coca-Cola, no existen tres
-Coca-Colas.
-
-``` text
-               Organization X
-                     │
-                  AXIGLAND
-                ↗    ↑    ↖
-             Xignal Xignal Xignal
-             User A User B User C
-```
-
-La atención puede acumularse sobre el mismo objeto canónico.
-
-------------------------------------------------------------------------
-
+Distintos usuarios o tenants pueden plantar Xeeds sobre la misma organización
+sin crear copias de la organización canónica. La atención puede acumularse y el
+conocimiento público legítimamente reutilizable puede beneficiar a múltiples
+Xeeds, siempre preservando autorización, provenance y fronteras public/private.
 # 8. Demand-Materialized Economic Graph
 
 AXIGNAL no debe intentar cartografiar toda la economía antes de tener
@@ -608,7 +624,8 @@ Market
 TemporalEvent
 PATHX
 INXIGHT
-ObservationSeed
+Xeed
+XeedGerminationState
 KnowledgeFrontier
 ```
 
@@ -621,7 +638,7 @@ MAP(organization, depth, layers, time)
 ## 8.3 Flywheel computacional
 
 ``` text
-USER QUERY / XIGNAL
+USER QUERY / PLANTED XEED / OBSERVED XIGNAL
         ↓
 COMPUTE
         ↓
@@ -760,7 +777,7 @@ Since your last visit
 + 2 new INXIGHTS
 ```
 
-El usuario debe **ver que su Xignal está vivo**.
+El usuario debe **ver que su Xeed está viva**.
 
 ------------------------------------------------------------------------
 
@@ -802,8 +819,8 @@ InformationGain(j)
 ExpectedComputeCost(j)
 }`{=tex} \]
 
-El `ReusePotential` es crítico: una investigación que mejora 500 Xignals
-puede tener prioridad sobre una que sólo mejora uno.
+El `ReusePotential` es crítico: una investigación que mejora 500 Xeeds
+puede tener prioridad sobre una que sólo mejora una.
 
 ------------------------------------------------------------------------
 
@@ -1269,9 +1286,9 @@ Y:
 > **See your clients as AXIGNAL can independently observe them --- not
 > as you configured them.**
 
-Una agencia puede Xignal 100 clientes, competidores o targets. No
-necesita demostrar que representa a cada uno porque Xignal **no escribe
-información sobre ellos**: sólo asigna observación.
+Una agencia puede plantar 100 Xeeds sobre clientes, competidores o targets. No
+necesita demostrar que representa a cada uno porque una Xeed **no escribe
+información sobre ellos**: sólo dirige observación persistente.
 
 Digital Representation Intelligence añade observación independiente de cómo
 superficies de búsqueda, generativas y de conversación pública representan a
@@ -1434,37 +1451,36 @@ Debe mostrar:
 
 ------------------------------------------------------------------------
 
-# 26. El Xignal en UX
+# 26. La Xeed y los Xignals en UX
 
 Acción primaria:
 
 ``` text
-+ Xignal company
++ Plant Xeed
 ```
 
 Estado posible:
 
 ``` text
-My Xignals
+My Xeeds
 
-ACME Industrial              ● LIVE
-7 new FAXTs
+ACME Industrial              → LIVE
+7 new Xignals
 3 new relationships
 
-Example Manufacturing        ● LIVE
-2 new INXIGHTS
+Example Manufacturing        → LIVE
+2 new INXIGHTs
 
-Example Logistics            ● EXPANDING
+Example Logistics            → GERMINATING
 Building economic neighbourhood...
 ```
 
-El usuario no debe aprender `ObservationSeed`, `KnowledgeFrontier`,
-`JEV`, `Batch`, tokens ni proveedores de modelos.
+La Xeed es el ancla persistente que el usuario planta y vuelve a visitar.
+Los Xignals son descubrimientos/señales que emergen durante el trabajo del
+Brain y se presentan con su estado epistemológico y explicación.
 
-Infraestructura invisible.
-
-------------------------------------------------------------------------
-
+El usuario no debe aprender `KnowledgeFrontier`, `JEV`, `Batch`, tokens ni
+proveedores de modelos. Infraestructura invisible.
 # 27. Pricing actual
 
 Hipótesis comercial actual:
@@ -1472,95 +1488,71 @@ Hipótesis comercial actual:
 ``` text
 AXIGNAL
 €9.95 / month
-includes 1 Xignal
+includes 1 Xeed
 
-Additional Xignal
+Additional Xeed
 €4.95 / month
 ```
 
 Fórmula:
 
-\[ MonthlyPrice(n)=9.95 + 4.95(n-1), `\quad `{=tex}n`\ge1`{=tex} \]
+\[ MonthlyPrice(n)=9.95 + 4.95(n-1), \quad n\ge1 \]
 
 Ejemplos:
 
-    Xignals activos   Precio mensual
-  ----------------- ----------------
-                  1            €9.95
-                  2           €14.90
-                  5           €29.75
-                 10           €54.50
-                 25          €128.75
-                 50          €252.50
-                100          €500.00
-                200          €995.00
+    Xeeds activas   Precio mensual
+  --------------- ----------------
+                1            €9.95
+                2           €14.90
+                5           €29.75
+               10           €54.50
+               25          €128.75
+               50          €252.50
+              100          €500.00
+              200          €995.00
 
-**Esta hipótesis sustituye el pricing anterior centrado principalmente
-en seats.**
+**Esta hipótesis sustituye el pricing anterior por Xignal.**
 
 ## 27.1 Qué representa €4.95
 
-No compra acceso a una empresa.
+No compra señales individuales ni acceso exclusivo a una empresa.
 
 Compra:
 
-> **mantener una organización como centro persistente de observación
-> AXIGNAL.**
+> **mantener una Xeed adicional bajo germinación, observación y cultivo
+> persistente de AXIGNAL.**
 
-Un Xignal puede descubrir cientos de organizaciones relacionadas sin que
-cada nodo descubierto sea facturable como Xignal.
+Una Xeed puede producir muchos Xignals y descubrir cientos de organizaciones
+relacionadas sin que cada Xignal u organización descubierta sea facturable.
 
 ## 27.2 Agencia
 
-Una agencia con 100 clientes puede mantener 100 Xignals por
-aproximadamente €500/mes según esta hipótesis.
-
-Eso equivale aproximadamente a €5 por cliente/mes, mientras recibe
-observación económica independiente y continua.
-
-## 27.3 Validación necesaria
-
-No congelar definitivamente €4.95 hasta medir:
-
-``` text
-COST_FIRST_MAP
-COST_MONTHLY_MAINTENANCE
-COST_REEXPANSION
-CACHE_REUSE
-CROSS_XIGNAL_REUSE
-BATCH_COST
-SEARCH / SOURCE COST
-STORAGE COST
-```
-
-Debe cumplirse con margen suficiente:
-
-\[ 4.95 `\gg `{=tex}C\_{marginal Xignal/month} \]
-
-------------------------------------------------------------------------
-
+Una agencia con 100 clientes puede mantener 100 Xeeds por aproximadamente
+€500/mes según esta hipótesis. Cada Xeed puede producir múltiples Xignals sobre
+cómo buscadores, agentes, sistemas generativos y otras superficies públicas
+representan al cliente y cómo esa representación cambia con el tiempo.
 # 28. Economía de red computacional
 
-El pricing por Xignal puede alinearse con el coste real y con el
+El pricing por Xeed puede alinearse con el coste real y con el
 crecimiento de AXIGLAND.
 
 ``` text
-Xignal A → discovers A,B,C,D
-Xignal X → needs B,C,E,F
+Xeed A → discovers A,B,C,D
+Xeed X → needs B,C,E,F
 ```
 
 B y C ya existen.
 
 Por tanto:
 
-\[ Xignals`\uparrow`{=tex}
+\[ Xeeds`\uparrow`{=tex}
 `\Rightarrow `{=tex}GraphDensity`\uparrow`{=tex}
 `\Rightarrow `{=tex}KnowledgeReuse`\uparrow`{=tex}
 `\Rightarrow `{=tex}MarginalComputeCost`\downarrow`{=tex} \]
 
 Y simultáneamente:
 
-\[ Xignals`\uparrow`{=tex}
+\[ Xeeds`\uparrow`{=tex}
 `\Rightarrow `{=tex}AXIGLANDKnowledge`\uparrow`{=tex}
 `\Rightarrow `{=tex}CustomerValue`\uparrow`{=tex} \]
 
@@ -1570,7 +1562,7 @@ La unidad adicional puede enriquecer más que al usuario que la paga.
 
 # 29. FIRST-MAP y mantenimiento: presupuesto computacional
 
-Cada Xignal necesita un `ComputeBudget` dinámico.
+Cada Xeed necesita un `ComputeBudget` dinámico.
 
 No debe funcionar como límite artificial visible, sino como política de
 asignación de recursos.
@@ -1725,48 +1717,26 @@ perfil.
 
 ------------------------------------------------------------------------
 
-# 33. Agencias como multiplicadores de Xignals
+# 33. Agencias como multiplicadores de Xeeds y Xignals
 
-Una agencia puede:
+Una agencia puede plantar y mantener muchas Xeeds, una por cada cliente,
+competidor o target que deba observar de forma persistente.
 
-``` text
-AGENCY
-  ├── Xignal Client A
-  ├── Xignal Client B
-  ├── Xignal Client C
-  ├── Xignal Competitor D
-  ├── Xignal Target E
-  └── ...
-```
+Cada Xeed puede germinar en muchos Xignals. Por tanto, una agencia multiplica
+la demanda de observación y, mediante conocimiento público legítimamente
+reutilizable, acelera el crecimiento del AXIGLAND compartido sin adquirir
+propiedad ni autoridad sobre ninguna organización.
 
-No necesita autorización de cada organización porque no habla en su
-nombre.
+Para agencias SEO, GEO, AEO y AIO existe un caso de uso especialmente valioso:
+AXIGNAL observa de forma independiente cómo buscadores, asistentes, sistemas
+generativos y superficies públicas representan a cada cliente, y qué cambia
+después de la actuación de la agencia.
 
-Puede utilizar AXIGNAL como observador independiente de:
+> **You improve the company. AXIGNAL independently observes what changed.**
 
--   clientes;
--   competidores;
--   targets;
--   proveedores;
--   mercados;
--   portfolios.
-
-Esto puede crear un canal B2B2B importante:
-
-``` text
-1 agency
-   ↓
-100 clients
-   ↓
-100 Xignals
-   ↓
-AXIGLAND grows
-```
-
-La agencia no es propietaria de esos nodos.
-
-------------------------------------------------------------------------
-
+AXIGNAL no ejecuta SEO/GEO/AEO/AIO ni atribuye causalidad por un simple
+antes/después. La comparación requiere instrumentos, consultas, superficies,
+versiones, condiciones y ventanas temporales compatibles.
 # 34. Controlled recursive expansion
 
 FIRST_MAP no debe limitarse al Hop 1 si eso impide comprender el
@@ -1901,13 +1871,11 @@ TemporalEvent
   new_state_ref?
   evidence_refs[]
 
-ObservationSeed
-  id
-  organization_id
+XeedGerminationState
+  xeed_id
   initiated_by
   status
   observation_depth
-  monitoring_state
   knowledge_frontier_id
   expansion_budget
   created_at
@@ -2139,9 +2107,9 @@ Evaluación cualitativa/experimental sobre empresas no vistas.
 
 ## KNOWLEDGE_DELTA
 
-Cantidad/calidad de nuevo conocimiento útil por Xignal y periodo.
+Cantidad/calidad de nuevo conocimiento útil por Xeed y periodo.
 
-## CROSS_XIGNAL_REUSE
+## CROSS_XEED_REUSE
 
 Proporción de trabajo que reutiliza conocimiento previo.
 
@@ -2149,9 +2117,9 @@ Proporción de trabajo que reutiliza conocimiento previo.
 
 Coste marginal real del primer mapa.
 
-## COST_PER_LIVE_XIGNAL
+## COST_PER_ACTIVE_XEED_MONTH
 
-Coste mensual de mantener un Xignal.
+Coste mensual de mantener una Xeed activa.
 
 ## EXPLANATION_COVERAGE
 
@@ -2279,7 +2247,7 @@ Posibles primitivas:
 -   FAXTs;
 -   INXIGHTS;
 -   currentness;
--   Xignal status.
+-   Xeed status.
 
 Las políticas de API deben preservar neutralidad, costes y protección
 contra abuso sin impedir usos profesionales legítimos.
@@ -2293,8 +2261,7 @@ contra abuso sin impedir usos profesionales legítimos.
     del cliente.**
 3.  **Global ontology, demand-driven materialization.**
 4.  **Perspective is a query, not a permission.**
-5.  **Xignal significa observación persistente, no ownership ni
-    claiming.**
+5.  **Xeed significa foco persistente de observación; Xignal es una señal económica emergente del Brain.**
 6.  **Users may direct attention, never conclusions.**
 7.  **Subscription buys observation, not influence.**
 8.  **The map cannot be bought. Observation can.**
@@ -2302,8 +2269,7 @@ contra abuso sin impedir usos profesionales legítimos.
 10. **No direct profile editing.**
 11. **Reevaluation, not editing.**
 12. **Hostile attention must not poison canonical truth.**
-13. **One canonical organization regardless of how many users Xignal
-    it.**
+13. **One canonical organization regardless of how many Xeeds observe it.**
 14. **Compute once, learn permanently, verify when necessary.**
 15. **FIRST_MAP_WOW es P0.**
 16. **Map Readiness Gate antes de declarar el mapa LIVE.**
@@ -2326,16 +2292,14 @@ contra abuso sin impedir usos profesionales legítimos.
 32. **AXIGLAND crece por utilización.**
 33. **Cada unidad de background compute debe maximizar information gain
     útil.**
-34. **Una agencia puede Xignal cientos de empresas sin poder
-    configurarlas.**
+34. **Una agencia puede plantar cientos de Xeeds sin poder configurar las organizaciones observadas.**
 35. **No convertir AXIGNAL en Facebook/LinkedIn empresarial.**
 36. **No pay-to-appear ni sponsored truth.**
 37. **No CRM ni workflow suite.**
 38. **Thin integrations.**
 39. **UX semantics before beauty.**
 40. **Infrastructure invisible.**
-41. **Pricing actual: €9.95 con 1 Xignal; +€4.95 por Xignal adicional,
-    pendiente de validación económica.**
+41. **Pricing actual: €9.95 con 1 Xeed; +€4.95 por Xeed adicional, pendiente de validación económica. Los Xignals no son unidades facturables.**
 42. **No confundir coste interno bajo con moat externo.**
 43. **No declarar resuelto el moat frente a AGI/model owners/open agent
     networks.**
@@ -2392,9 +2356,9 @@ contra abuso sin impedir usos profesionales legítimos.
 
 > **UNKNOWN ≠ FALSE.**
 
-> **Xignal a company. AXENT does the rest.**
+> **Plant a Xeed. AXIGNAL's Brain does the rest.**
 
-> **Xignal a company. AXENT finds the FAXTs. AXIGLAND connects them.**
+> **Plant a Xeed. The Brain surfaces Xignals. Evidence governs what AXIGLAND remembers.**
 
 > **You choose where AXIGNAL looks. You don't choose what AXIGNAL
 > sees.**
@@ -2434,8 +2398,7 @@ Mitigación: user input no escribe verdad canónica.
 
 ## Deriva hacia red social
 
-Mitigación: no profiles/claiming como requisito; Xignal = compute
-assignment.
+Mitigación: no profiles/claiming como requisito; Xeed = persistent observation seed; Xignal = emergent economic signal.
 
 ## Deriva hacia SaaS genérico
 
@@ -2469,7 +2432,7 @@ Estado: amenaza estratégica todavía abierta.
 3.  ¿Qué coste real tiene FIRST_MAP por tipo de empresa?
 4.  ¿Qué cadencia de reobservación maximiza valor/coste?
 5.  ¿Qué fuentes externas requieren presupuesto específico?
-6.  ¿€4.95/Xignal deja margen suficiente después de búsqueda, crawling y
+6.  ¿€4.95/Xeed deja margen suficiente después de búsqueda, crawling y
     mantenimiento?
 7.  ¿Debe existir descuento por volumen y a partir de qué densidad?
 8.  ¿Qué puede consultar un visitante gratuito?
@@ -2508,7 +2471,7 @@ precisión; - densidad; - explicación; - evaluación humana.
 
 Cerrar: - Organization; - FAXT; - Evidence; - Capability; - Product; -
 Market; - Relationship; - PATHX; - INXIGHT; - CorporateStructure; -
-TemporalEvent; - ObservationSeed; - KnowledgeFrontier.
+TemporalEvent; - Xeed; - XeedGerminationState; - KnowledgeFrontier; - Xignal semantics.
 
 ## P3 --- EVIDENCE ENGINE
 
@@ -2544,10 +2507,11 @@ Empresas, aliases, grupos, filiales, marcas, entidades jurídicas.
 
 Observed / Potential / Organizational / Historical / PATHX.
 
-## P8 --- XIGNAL / LIVE
+## P8 --- XEED GERMINATION / LIVE
 
--   `+ Xignal company`;
--   ObservationSeed;
+-   `+ Plant Xeed`;
+-   XeedGerminationState;
+-   Xignal emergence contract;
 -   scheduler;
 -   adaptive revisit;
 -   Knowledge Frontier;
@@ -2568,12 +2532,12 @@ convertirlo en chatbot genérico.
 
 ## P12 --- PRICING VALIDATION
 
-€9.95 + €4.95/Xignal adicional contra costes reales y
+€9.95 + €4.95/Xeed adicional contra costes reales y
 willingness-to-pay.
 
 ## P13 --- PROFESSIONAL PORTFOLIOS
 
-Agencias/consultoras con decenas o cientos de Xignals sin contaminar
+Agencias/consultoras con decenas o cientos de Xeeds, cada una capaz de producir muchos Xignals, sin contaminar
 canonical state.
 
 ## P14 --- THIN API / AGENT SURFACE
@@ -2600,8 +2564,8 @@ La experiencia ideal:
 10. puede seguir PATHX;
 11. puede abrir la evidencia que justifica una afirmación;
 12. puede cambiar la perspectiva a cualquier organización;
-13. puede hacer `+ Xignal company`;
-14. ese Xignal pasa a LIVE;
+13. puede hacer `+ Plant Xeed`;
+14. esa Xeed germina y pasa a LIVE cuando supera Map Readiness;
 15. AXENT continúa observando independientemente;
 16. al volver, el usuario ve qué cambió;
 17. el trabajo realizado enriquece AXIGLAND y puede reducir el
@@ -2620,8 +2584,8 @@ La experiencia ideal:
 > índice económico. Mantiene AXIGLAND, una memoria económica gobernada
 > dentro de un único mundo canónico,
 > temporal y basado en evidencia, que se materializa y profundiza según
-> la demanda. El usuario puede Xignal cualquier organización: asignar a
-> AXENT observación computacional persistente sobre ella. Esa acción
+> la demanda. El usuario puede plantar una Xeed sobre cualquier organización: asignar al
+> Brain observación computacional persistente sobre ella. Esa acción
 > dirige la atención de AXIGNAL, nunca sus conclusiones. AXENT
 > investiga, verifica, conecta y monitoriza; los hechos sustentados se
 > representan como FAXTs, el conocimiento derivado como INXIGHTS y las
@@ -2630,8 +2594,8 @@ La experiencia ideal:
 > pueden cambiar su presencia pública y solicitar reevaluación, pero el
 > mapa se recalcula independientemente. El primer mapa debe producir
 > FIRST_MAP_WOW y, una vez LIVE, continuar evolucionando. AXIGNAL cobra
-> actualmente como hipótesis €9.95/mes con un Xignal incluido y €4.95
-> por cada Xignal adicional, alineando precio con observación
+> actualmente como hipótesis €9.95/mes con una Xeed incluida y €4.95
+> por cada Xeed adicional; los Xignals emergentes no se facturan individualmente, alineando precio con observación
 > persistente y cómputo. Los modelos fundacionales, JEV y proveedores
 > son componentes reemplazables. AXIGNAL debe seguir sometiéndose a
 > pruebas duras contra el riesgo de wrapper, extracción masiva y futuras
@@ -3325,3 +3289,9 @@ recorded separately from doctrine. See [Human First Cognitive UX Doctrine](HFX_H
 [HFX HCI Research](../research/HFX_COGNITIVE_PSYCHOLOGY_AND_HCI_RESEARCH.md),
 [HFX Cognitive Continuity Architecture](../architecture/HFX_COGNITIVE_CONTINUITY_AND_MEMORY_ARCHITECTURE.md),
 and ADR-0016/0017.
+
+[executed on device: DESKTOP-7L6CMEJ (d615520f-0404-49b0-83c7-620cc18c31f4)]
+
+[executed on device: DESKTOP-7L6CMEJ (d615520f-0404-49b0-83c7-620cc18c31f4)]
+
+[executed on device: DESKTOP-7L6CMEJ (d615520f-0404-49b0-83c7-620cc18c31f4)]

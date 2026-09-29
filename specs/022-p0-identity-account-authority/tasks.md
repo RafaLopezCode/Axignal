@@ -15,7 +15,7 @@
 ## Deferred product/CTO decisions
 
 - [ ] Select payer/entitlement owner and Principal/Tenant/subscriber cardinalities.
-- [ ] Define the priced Xignal-capacity relation to Tenant, Xeed, Principal, or payer.
+- [ ] Define the priced Xeed-capacity relation to Tenant, Principal, payer, or another governed commercial reference.
 - [ ] Decide any profile fields beyond the Principal preference-owner boundary.
 - [ ] Define membership roles, invitations, removal, final-member behavior, and offboarding.
 - [ ] Define Principal, external identity, Tenant, Xeed, subscription, and private-history retention/deletion.

@@ -91,21 +91,21 @@ def test_organization_is_world_identity_not_tenant_identity() -> None:
     assert not hasattr(organization, "tenant_id")
 
 
-def test_observation_seed_id_is_not_xeed_id() -> None:
+def test_germination_state_is_scoped_by_xeed_id() -> None:
     from datetime import datetime
     from typing import get_type_hints as hints
 
-    from domain.xignal.observation_seed import ObservationSeed
+    from domain.xeed.germination import XeedGerminationState
 
-    assert hints(ObservationSeed)["id"] is str
+    assert hints(XeedGerminationState)["xeed_id"] is XeedId
     assert hints(Xeed)["id"] is XeedId
-    seed = ObservationSeed(
-        id="seed-1",
-        organization_id="org-acme",
+    state = XeedGerminationState(
+        xeed_id=XeedId("xeed-a"),
         initiated_by="unverified-actor",
         created_at=datetime(2026, 1, 1),
     )
-    assert not hasattr(seed, "xeed_id")
+    assert state.xeed_id == XeedId("xeed-a")
+    assert not hasattr(state, "organization_id")
 
 
 def test_authorized_owner_can_read_xeed_after_membership_check() -> None:

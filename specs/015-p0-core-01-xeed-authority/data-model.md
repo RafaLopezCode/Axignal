@@ -30,7 +30,7 @@ Labels and organization names do not participate in identity.
    copy Organization truth.
 3. Multiple Xeeds owned by different Tenants may reference the same
    Organization.
-4. ObservationSeed remains independent; no Xeed cardinality is asserted.
+4. `XeedGerminationState` is keyed by one Xeed and carries lifecycle/work state only; it does not replace Xeed identity or grant knowledge membership.
 5. A TrustedRequestContext is accepted only from a future trusted outer
    authentication boundary. It does not authenticate its Principal.
 6. The application reader verifies Principal identity and membership before
