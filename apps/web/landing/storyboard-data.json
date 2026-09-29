@@ -1,0 +1,750 @@
+[
+  {
+    "n": 1,
+    "id": "OUTSIDE",
+    "slug": "outside",
+    "question": "Why should I care?",
+    "image": "assets/images/landing-01-outside.webp",
+    "focal": {
+      "desktop": "68% 50%",
+      "tablet": "72% 50%",
+      "mobile": "76% 48%"
+    },
+    "en": {
+      "Eyebrow": "Outside your walls",
+      "Headline": "Do you really know how your company looks from the outside?",
+      "Body": "You already know what your company says about itself. AXIGNAL starts somewhere else: with what can be independently observed around it.",
+      "Primary CTA": "Plant a Xeed",
+      "Secondary CTA": "What is AXIGNAL?"
+    },
+    "es": {
+      "Eyebrow": "Desde fuera",
+      "Headline": "¿De verdad sabes cómo se ve tu empresa desde fuera?",
+      "Body": "Ya sabes lo que tu empresa dice de sí misma. AXIGNAL empieza en otro lugar: en lo que puede observarse de forma independiente a su alrededor.",
+      "Primary CTA": "Planta tu Xeed",
+      "Secondary CTA": "¿Qué es AXIGNAL?"
+    },
+    "fr": {
+      "Eyebrow": "Depuis l’extérieur",
+      "Headline": "Savez-vous vraiment comment votre entreprise apparaît de l’extérieur ?",
+      "Body": "Vous savez déjà ce que votre entreprise dit d’elle-même. AXIGNAL commence ailleurs : par ce qui peut être observé indépendamment autour d’elle.",
+      "Primary CTA": "Plantez une Xeed",
+      "Secondary CTA": "Qu’est-ce qu’AXIGNAL ?"
+    },
+    "de": {
+      "Eyebrow": "Von außen",
+      "Headline": "Wissen Sie wirklich, wie Ihr Unternehmen von außen aussieht?",
+      "Body": "Sie wissen bereits, was Ihr Unternehmen über sich selbst sagt. AXIGNAL beginnt woanders: bei dem, was sich unabhängig in seinem Umfeld beobachten lässt.",
+      "Primary CTA": "Xeed pflanzen",
+      "Secondary CTA": "Was ist AXIGNAL?"
+    },
+    "it": {
+      "Eyebrow": "Da fuori",
+      "Headline": "Sai davvero come appare la tua azienda dall’esterno?",
+      "Body": "Sai già cosa dice di sé la tua azienda. AXIGNAL parte da un altro punto: da ciò che può essere osservato in modo indipendente intorno ad essa.",
+      "Primary CTA": "Pianta una Xeed",
+      "Secondary CTA": "Cos’è AXIGNAL?"
+    },
+    "pt": {
+      "Eyebrow": "Visto de fora",
+      "Headline": "Sabe realmente como a sua empresa é vista do exterior?",
+      "Body": "Já sabe o que a sua empresa diz sobre si própria. A AXIGNAL começa noutro ponto: pelo que pode ser observado de forma independente à sua volta.",
+      "Primary CTA": "Plante uma Xeed",
+      "Secondary CTA": "O que é a AXIGNAL?"
+    }
+  },
+  {
+    "n": 2,
+    "id": "OBSERVE",
+    "slug": "observe",
+    "question": "What does AXIGNAL actually do?",
+    "image": "assets/images/landing-02-observe.webp",
+    "focal": {
+      "desktop": "69% 50%",
+      "tablet": "72% 50%",
+      "mobile": "76% 50%"
+    },
+    "en": {
+      "Eyebrow": "Independent observation",
+      "Headline": "Start with what can be observed.",
+      "Body": "Products. Capabilities. Markets. Relationships. Projects. Public sources and digital signals. AXIGNAL investigates evidence around an organization instead of asking it to maintain a profile.",
+      "Value line": "Observation before conclusion."
+    },
+    "es": {
+      "Eyebrow": "Observación independiente",
+      "Headline": "Empieza por lo que puede observarse.",
+      "Body": "Productos. Capacidades. Mercados. Relaciones. Proyectos. Fuentes públicas y señales digitales. AXIGNAL investiga evidencia alrededor de una organización en lugar de pedirle que mantenga un perfil.",
+      "Value line": "Observación antes que conclusión."
+    },
+    "fr": {
+      "Eyebrow": "Observation indépendante",
+      "Headline": "Commencez par ce qui peut être observé.",
+      "Body": "Produits. Capacités. Marchés. Relations. Projets. Sources publiques et signaux numériques. AXIGNAL examine les preuves autour d’une organisation au lieu de lui demander de maintenir un profil.",
+      "Value line": "L’observation avant la conclusion."
+    },
+    "de": {
+      "Eyebrow": "Unabhängige Beobachtung",
+      "Headline": "Beginnen Sie mit dem, was beobachtbar ist.",
+      "Body": "Produkte. Fähigkeiten. Märkte. Beziehungen. Projekte. Öffentliche Quellen und digitale Signale. AXIGNAL untersucht Evidenz rund um eine Organisation, statt sie ein Profil pflegen zu lassen.",
+      "Value line": "Beobachtung vor Schlussfolgerung."
+    },
+    "it": {
+      "Eyebrow": "Osservazione indipendente",
+      "Headline": "Parti da ciò che può essere osservato.",
+      "Body": "Prodotti. Capacità. Mercati. Relazioni. Progetti. Fonti pubbliche e segnali digitali. AXIGNAL indaga le evidenze intorno a un’organizzazione invece di chiederle di mantenere un profilo.",
+      "Value line": "Osservazione prima della conclusione."
+    },
+    "pt": {
+      "Eyebrow": "Observação independente",
+      "Headline": "Comece pelo que pode ser observado.",
+      "Body": "Produtos. Capacidades. Mercados. Relações. Projetos. Fontes públicas e sinais digitais. A AXIGNAL investiga evidências em torno de uma organização em vez de lhe pedir que mantenha um perfil.",
+      "Value line": "Observação antes da conclusão."
+    }
+  },
+  {
+    "n": 3,
+    "id": "UNDERSTAND",
+    "slug": "understand",
+    "question": "Is this just data collection?",
+    "image": "assets/images/landing-03-understand.webp",
+    "focal": {
+      "desktop": "66% 50%",
+      "tablet": "69% 50%",
+      "mobile": "73% 50%"
+    },
+    "en": {
+      "Eyebrow": "Economic context",
+      "Headline": "Information is easy. Context is the hard part.",
+      "Body": "AXIGNAL connects evidence to show what an organization does, where it operates, how it relates to markets and what the surrounding signals may mean.",
+      "Value line": "Less disconnected information. More economic context."
+    },
+    "es": {
+      "Eyebrow": "Contexto económico",
+      "Headline": "La información es fácil. El contexto es lo difícil.",
+      "Body": "AXIGNAL conecta evidencia para mostrar qué hace una organización, dónde opera, cómo se relaciona con los mercados y qué pueden significar las señales que la rodean.",
+      "Value line": "Menos información desconectada. Más contexto económico."
+    },
+    "fr": {
+      "Eyebrow": "Contexte économique",
+      "Headline": "L’information est facile. Le contexte est la partie difficile.",
+      "Body": "AXIGNAL relie les preuves pour montrer ce que fait une organisation, où elle opère, comment elle se rapporte aux marchés et ce que peuvent signifier les signaux qui l’entourent.",
+      "Value line": "Moins d’informations déconnectées. Plus de contexte économique."
+    },
+    "de": {
+      "Eyebrow": "Wirtschaftlicher Kontext",
+      "Headline": "Information ist einfach. Kontext ist der schwierige Teil.",
+      "Body": "AXIGNAL verbindet Evidenz, um zu zeigen, was eine Organisation tut, wo sie tätig ist, wie sie mit Märkten verbunden ist und was die Signale in ihrem Umfeld bedeuten könnten.",
+      "Value line": "Weniger isolierte Informationen. Mehr wirtschaftlicher Kontext."
+    },
+    "it": {
+      "Eyebrow": "Contesto economico",
+      "Headline": "L’informazione è facile. Il contesto è la parte difficile.",
+      "Body": "AXIGNAL collega le evidenze per mostrare cosa fa un’organizzazione, dove opera, come si relaziona ai mercati e cosa possono significare i segnali che la circondano.",
+      "Value line": "Meno informazioni scollegate. Più contesto economico."
+    },
+    "pt": {
+      "Eyebrow": "Contexto económico",
+      "Headline": "A informação é fácil. O contexto é a parte difícil.",
+      "Body": "A AXIGNAL liga evidências para mostrar o que uma organização faz, onde opera, como se relaciona com os mercados e o que podem significar os sinais à sua volta.",
+      "Value line": "Menos informação desligada. Mais contexto económico."
+    }
+  },
+  {
+    "n": 4,
+    "id": "AXIGLAND",
+    "slug": "axigland",
+    "question": "Where does the understanding persist?",
+    "image": "assets/images/landing-04-axigland.webp",
+    "focal": {
+      "desktop": "62% 50%",
+      "tablet": "64% 50%",
+      "mobile": "68% 50%"
+    },
+    "en": {
+      "Eyebrow": "One world, not one profile",
+      "Headline": "One economic world. Many perspectives.",
+      "Body": "AXIGLAND is AXIGNAL’s evolving economic memory: one underlying world, viewed from different perspectives. Changing perspective does not create a different truth for every customer.",
+      "Value line": "Change the perspective. Not the underlying truth."
+    },
+    "es": {
+      "Eyebrow": "Un mundo, no un perfil",
+      "Headline": "Un solo mundo económico. Muchas perspectivas.",
+      "Body": "AXIGLAND es la memoria económica en evolución de AXIGNAL: un mismo mundo subyacente visto desde distintas perspectivas. Cambiar la perspectiva no crea una verdad diferente para cada cliente.",
+      "Value line": "Cambia la perspectiva. No la verdad subyacente."
+    },
+    "fr": {
+      "Eyebrow": "Un monde, pas un profil",
+      "Headline": "Un seul monde économique. De multiples perspectives.",
+      "Body": "AXIGLAND est la mémoire économique évolutive d’AXIGNAL : un même monde sous-jacent, vu depuis différentes perspectives. Changer de perspective ne crée pas une vérité différente pour chaque client.",
+      "Value line": "Changez de perspective. Pas la vérité sous-jacente."
+    },
+    "de": {
+      "Eyebrow": "Eine Welt, kein Profil",
+      "Headline": "Eine Wirtschaftswelt. Viele Perspektiven.",
+      "Body": "AXIGLAND ist das sich entwickelnde wirtschaftliche Gedächtnis von AXIGNAL: eine zugrunde liegende Welt, aus verschiedenen Perspektiven betrachtet. Ein Perspektivwechsel erzeugt nicht für jeden Kunden eine andere Wahrheit.",
+      "Value line": "Ändern Sie die Perspektive. Nicht die zugrunde liegende Wahrheit."
+    },
+    "it": {
+      "Eyebrow": "Un mondo, non un profilo",
+      "Headline": "Un solo mondo economico. Molte prospettive.",
+      "Body": "AXIGLAND è la memoria economica in evoluzione di AXIGNAL: un unico mondo sottostante, visto da prospettive diverse. Cambiare prospettiva non crea una verità diversa per ogni cliente.",
+      "Value line": "Cambia la prospettiva. Non la verità sottostante."
+    },
+    "pt": {
+      "Eyebrow": "Um mundo, não um perfil",
+      "Headline": "Um único mundo económico. Muitas perspetivas.",
+      "Body": "AXIGLAND é a memória económica em evolução da AXIGNAL: um mesmo mundo subjacente, visto de diferentes perspetivas. Mudar de perspetiva não cria uma verdade diferente para cada cliente.",
+      "Value line": "Mude a perspetiva. Não a verdade subjacente."
+    }
+  },
+  {
+    "n": 5,
+    "id": "XEED",
+    "slug": "xeed",
+    "question": "What starts when I plant a company for AXIGNAL to observe?",
+    "image": "assets/images/landing-05-xeed.webp",
+    "focal": {
+      "desktop": "70% 52%",
+      "tablet": "73% 52%",
+      "mobile": "76% 54%"
+    },
+    "en": {
+      "Eyebrow": "Plant a Xeed",
+      "Headline": "Plant one Xeed. Let AXIGNAL germinate what can be observed around it.",
+      "Body": "A Xeed is the seed of persistent observation around one organization. AXIGNAL resolves the company, investigates its observable economic environment and lets the Brain surface many Xignals over time—without giving you ownership or edit rights in AXIGLAND.",
+      "Value line": "You plant the Xeed. AXIGNAL follows the evidence.",
+      "Primary CTA": "Plant a Xeed"
+    },
+    "es": {
+      "Eyebrow": "Planta una Xeed",
+      "Headline": "Planta una Xeed. Deja que AXIGNAL haga germinar lo que puede observarse a su alrededor.",
+      "Body": "Una Xeed es la semilla de observación persistente alrededor de una organización. AXIGNAL resuelve la empresa, investiga su entorno económico observable y deja que el Brain haga emerger muchos Xignals con el tiempo, sin darte propiedad ni derecho de edición sobre AXIGLAND.",
+      "Value line": "Tú plantas la Xeed. AXIGNAL sigue la evidencia.",
+      "Primary CTA": "Planta tu Xeed"
+    },
+    "fr": {
+      "Eyebrow": "Plantez une Xeed",
+      "Headline": "Plantez une Xeed. Laissez AXIGNAL faire germer ce qui peut être observé autour d’elle.",
+      "Body": "Une Xeed est la graine d’une observation persistante autour d’une organisation. AXIGNAL résout l’identité de l’entreprise, étudie son environnement économique observable et laisse le Brain faire émerger de nombreux Xignals au fil du temps, sans vous donner de propriété ni de droits d’édition dans AXIGLAND.",
+      "Value line": "Vous plantez la Xeed. AXIGNAL suit les preuves.",
+      "Primary CTA": "Plantez votre Xeed"
+    },
+    "de": {
+      "Eyebrow": "Eine Xeed pflanzen",
+      "Headline": "Pflanzen Sie eine Xeed. Lassen Sie AXIGNAL keimen, was sich um sie herum beobachten lässt.",
+      "Body": "Eine Xeed ist der Ausgangspunkt persistenter Beobachtung rund um eine Organisation. AXIGNAL löst das Unternehmen auf, untersucht sein beobachtbares wirtschaftliches Umfeld und lässt den Brain im Lauf der Zeit viele Xignals hervorbringen – ohne Ihnen Eigentum oder Bearbeitungsrechte an AXIGLAND zu geben.",
+      "Value line": "Sie pflanzen die Xeed. AXIGNAL folgt der Evidenz.",
+      "Primary CTA": "Ihre Xeed pflanzen"
+    },
+    "it": {
+      "Eyebrow": "Pianta una Xeed",
+      "Headline": "Pianta una Xeed. Lascia che AXIGNAL faccia germogliare ciò che può essere osservato intorno ad essa.",
+      "Body": "Una Xeed è il seme dell’osservazione persistente intorno a un’organizzazione. AXIGNAL risolve l’azienda, indaga il suo ambiente economico osservabile e lascia che il Brain faccia emergere molti Xignals nel tempo, senza darti proprietà o diritti di modifica in AXIGLAND.",
+      "Value line": "Tu pianti la Xeed. AXIGNAL segue le evidenze.",
+      "Primary CTA": "Pianta la tua Xeed"
+    },
+    "pt": {
+      "Eyebrow": "Plante uma Xeed",
+      "Headline": "Plante uma Xeed. Deixe a AXIGNAL fazer germinar o que pode ser observado à sua volta.",
+      "Body": "Uma Xeed é a semente da observação persistente em torno de uma organização. A AXIGNAL resolve a empresa, investiga o seu ambiente económico observável e deixa o Brain fazer emergir muitos Xignals ao longo do tempo, sem lhe dar propriedade nem direitos de edição sobre AXIGLAND.",
+      "Value line": "Você planta a Xeed. A AXIGNAL segue as evidências.",
+      "Primary CTA": "Plante a sua Xeed"
+    }
+  },
+  {
+    "n": 6,
+    "id": "FIRST_MAP",
+    "slug": "first-map",
+    "question": "What do I get first?",
+    "image": "assets/images/landing-06-first-map.webp",
+    "focal": {
+      "desktop": "68% 50%",
+      "tablet": "71% 50%",
+      "mobile": "74% 50%"
+    },
+    "en": {
+      "Eyebrow": "Your first map",
+      "Headline": "A useful map needs more than a company name.",
+      "Body": "AXIGNAL works toward enough evidence to connect identity, products, capabilities, markets, structure, relationships and sources into a useful first view—without pretending the map is complete.",
+      "Value line": "Useful depth. Explicit limits."
+    },
+    "es": {
+      "Eyebrow": "Tu primer mapa",
+      "Headline": "Un mapa útil necesita más que el nombre de una empresa.",
+      "Body": "AXIGNAL trabaja hasta reunir evidencia suficiente para conectar identidad, productos, capacidades, mercados, estructura, relaciones y fuentes en una primera vista útil, sin fingir que el mapa está completo.",
+      "Value line": "Profundidad útil. Límites explícitos."
+    },
+    "fr": {
+      "Eyebrow": "Votre première carte",
+      "Headline": "Une carte utile exige plus qu’un nom d’entreprise.",
+      "Body": "AXIGNAL cherche à réunir suffisamment de preuves pour relier identité, produits, capacités, marchés, structure, relations et sources dans une première vue utile, sans prétendre que la carte est complète.",
+      "Value line": "Une profondeur utile. Des limites explicites."
+    },
+    "de": {
+      "Eyebrow": "Ihre erste Karte",
+      "Headline": "Eine nützliche Karte braucht mehr als einen Unternehmensnamen.",
+      "Body": "AXIGNAL arbeitet auf genügend Evidenz hin, um Identität, Produkte, Fähigkeiten, Märkte, Struktur, Beziehungen und Quellen zu einer nützlichen ersten Sicht zu verbinden – ohne vorzugeben, die Karte sei vollständig.",
+      "Value line": "Nützliche Tiefe. Explizite Grenzen."
+    },
+    "it": {
+      "Eyebrow": "La tua prima mappa",
+      "Headline": "Una mappa utile richiede più del nome di un’azienda.",
+      "Body": "AXIGNAL lavora per raccogliere evidenze sufficienti a collegare identità, prodotti, capacità, mercati, struttura, relazioni e fonti in una prima vista utile, senza fingere che la mappa sia completa.",
+      "Value line": "Profondità utile. Limiti espliciti."
+    },
+    "pt": {
+      "Eyebrow": "O seu primeiro mapa",
+      "Headline": "Um mapa útil precisa de mais do que o nome de uma empresa.",
+      "Body": "A AXIGNAL procura reunir evidências suficientes para ligar identidade, produtos, capacidades, mercados, estrutura, relações e fontes numa primeira visão útil, sem fingir que o mapa está completo.",
+      "Value line": "Profundidade útil. Limites explícitos."
+    }
+  },
+  {
+    "n": 7,
+    "id": "EVIDENCE",
+    "slug": "evidence",
+    "question": "Why should I trust what it shows?",
+    "image": "assets/images/landing-07-evidence.webp",
+    "focal": {
+      "desktop": "69% 50%",
+      "tablet": "72% 50%",
+      "mobile": "75% 50%"
+    },
+    "en": {
+      "Eyebrow": "Evidence on demand",
+      "Headline": "Don’t just see the conclusion. Inspect why it deserves attention.",
+      "Body": "For important conclusions, you can trace the evidence behind them, see how recent it is, where sources disagree and what remains uncertain. Explanation is part of the product, not an afterthought.",
+      "Primary CTA": "Show me how AXIGNAL knows"
+    },
+    "es": {
+      "Eyebrow": "Evidencia cuando la necesitas",
+      "Headline": "No te quedes con la conclusión. Examina por qué merece atención.",
+      "Body": "En las conclusiones importantes puedes rastrear la evidencia que las sustenta, comprobar lo reciente que es, ver dónde discrepan las fuentes y qué sigue siendo incierto. La explicación forma parte del producto, no es un añadido posterior.",
+      "Primary CTA": "Muéstrame cómo lo sabe AXIGNAL"
+    },
+    "fr": {
+      "Eyebrow": "Preuves à la demande",
+      "Headline": "Ne regardez pas seulement la conclusion. Examinez pourquoi elle mérite votre attention.",
+      "Body": "Pour les conclusions importantes, vous pouvez retracer les preuves qui les soutiennent, voir leur récence, où les sources divergent et ce qui reste incertain. L’explication fait partie du produit, ce n’est pas un ajout tardif.",
+      "Primary CTA": "Montrez-moi comment AXIGNAL le sait"
+    },
+    "de": {
+      "Eyebrow": "Evidenz auf Abruf",
+      "Headline": "Sehen Sie nicht nur die Schlussfolgerung. Prüfen Sie, warum sie Aufmerksamkeit verdient.",
+      "Body": "Bei wichtigen Schlussfolgerungen können Sie die zugrunde liegende Evidenz verfolgen, ihre Aktualität sehen, erkennen, wo Quellen widersprechen und was unsicher bleibt. Erklärung ist Teil des Produkts, kein nachträglicher Zusatz.",
+      "Primary CTA": "Zeigen Sie mir, woher AXIGNAL das weiß"
+    },
+    "it": {
+      "Eyebrow": "Evidenze su richiesta",
+      "Headline": "Non guardare solo la conclusione. Esamina perché merita attenzione.",
+      "Body": "Per le conclusioni importanti puoi risalire alle evidenze che le sostengono, vedere quanto sono recenti, dove le fonti divergono e cosa resta incerto. La spiegazione è parte del prodotto, non un’aggiunta successiva.",
+      "Primary CTA": "Mostrami come lo sa AXIGNAL"
+    },
+    "pt": {
+      "Eyebrow": "Evidências quando precisa",
+      "Headline": "Não veja apenas a conclusão. Examine por que merece atenção.",
+      "Body": "Nas conclusões importantes, pode rastrear as evidências que as sustentam, ver quão recentes são, onde as fontes divergem e o que permanece incerto. A explicação faz parte do produto, não é um acrescento posterior.",
+      "Primary CTA": "Mostre-me como a AXIGNAL sabe"
+    }
+  },
+  {
+    "n": 8,
+    "id": "DISCOVER",
+    "slug": "discover",
+    "question": "Will it only tell me what I already know?",
+    "image": "assets/images/landing-08-discover.webp",
+    "focal": {
+      "desktop": "56% 48%",
+      "tablet": "58% 48%",
+      "mobile": "58% 48%"
+    },
+    "en": {
+      "Eyebrow": "Potential relevance",
+      "Headline": "What matters may sit outside the path you already know.",
+      "Body": "By connecting evidence across the economic world, AXIGNAL can surface activity or compatibility worth investigating. Potential stays potential until evidence says more.",
+      "Value line": "Potential is a reason to investigate, not a fact."
+    },
+    "es": {
+      "Eyebrow": "Relevancia potencial",
+      "Headline": "Lo que importa puede estar fuera del camino que ya conoces.",
+      "Body": "Al conectar evidencia de distintas partes del mundo económico, AXIGNAL puede sacar a la luz actividad o compatibilidad que merecen investigación. Lo potencial sigue siendo potencial hasta que la evidencia diga algo más.",
+      "Value line": "Lo potencial es un motivo para investigar, no un hecho."
+    },
+    "fr": {
+      "Eyebrow": "Pertinence potentielle",
+      "Headline": "Ce qui compte peut se trouver hors du chemin que vous connaissez déjà.",
+      "Body": "En reliant les preuves à travers le monde économique, AXIGNAL peut faire émerger une activité ou une compatibilité qui mérite d’être étudiée. Le potentiel reste potentiel tant que les preuves n’en disent pas davantage.",
+      "Value line": "Le potentiel est une raison d’enquêter, pas un fait."
+    },
+    "de": {
+      "Eyebrow": "Potenzielle Relevanz",
+      "Headline": "Was zählt, kann außerhalb des Weges liegen, den Sie bereits kennen.",
+      "Body": "Indem AXIGNAL Evidenz aus der Wirtschaftswelt verbindet, kann es Aktivitäten oder Kompatibilitäten sichtbar machen, die eine Untersuchung wert sind. Potenzial bleibt Potenzial, bis die Evidenz mehr sagt.",
+      "Value line": "Potenzial ist ein Grund zu untersuchen, keine Tatsache."
+    },
+    "it": {
+      "Eyebrow": "Rilevanza potenziale",
+      "Headline": "Ciò che conta può trovarsi fuori dal percorso che già conosci.",
+      "Body": "Collegando evidenze nel mondo economico, AXIGNAL può far emergere attività o compatibilità che meritano di essere indagate. Il potenziale resta potenziale finché le evidenze non dicono di più.",
+      "Value line": "Il potenziale è un motivo per indagare, non un fatto."
+    },
+    "pt": {
+      "Eyebrow": "Relevância potencial",
+      "Headline": "O que importa pode estar fora do caminho que já conhece.",
+      "Body": "Ao ligar evidências em todo o mundo económico, a AXIGNAL pode fazer emergir atividade ou compatibilidade que mereça investigação. O potencial continua a ser potencial até que as evidências digam mais.",
+      "Value line": "O potencial é uma razão para investigar, não um facto."
+    }
+  },
+  {
+    "n": 9,
+    "id": "DIGITAL_REPRESENTATION",
+    "slug": "digital-representation",
+    "question": "What do search engines and AI agents see when they look at this organization?",
+    "image": "assets/images/landing-09-digital-representation.webp",
+    "focal": {
+      "desktop": "56% 50%",
+      "tablet": "58% 50%",
+      "mobile": "58% 50%"
+    },
+    "en": {
+      "Eyebrow": "Search & AI representation",
+      "Headline": "What do search engines and AI agents see when they look at your company?",
+      "Body": "AXIGNAL independently observes how an organization appears across search, assistants, generative systems and public surfaces under explicit conditions—and preserves what changes over time. For SEO, GEO, AEO and AIO teams, that makes external representation inspectable instead of guessed.",
+      "Value line": "See the representation your agency is trying to improve—independently."
+    },
+    "es": {
+      "Eyebrow": "Buscadores y agentes de IA",
+      "Headline": "¿Qué ven los buscadores y los agentes de IA cuando miran tu empresa?",
+      "Body": "AXIGNAL observa de forma independiente cómo aparece una organización en buscadores, asistentes, sistemas generativos y superficies públicas bajo condiciones explícitas, y conserva qué cambia con el tiempo. Para equipos SEO, GEO, AEO y AIO, la representación externa deja de ser una suposición y pasa a ser algo inspeccionable.",
+      "Value line": "Observa de forma independiente la representación que tu agencia intenta mejorar."
+    },
+    "fr": {
+      "Eyebrow": "Représentation dans la recherche et l’IA",
+      "Headline": "Que voient les moteurs de recherche et les agents IA lorsqu’ils regardent votre entreprise ?",
+      "Body": "AXIGNAL observe indépendamment comment une organisation apparaît dans les moteurs de recherche, assistants, systèmes génératifs et espaces publics selon des conditions explicites, et conserve ce qui change dans le temps. Pour les équipes SEO, GEO, AEO et AIO, la représentation externe devient inspectable plutôt que supposée.",
+      "Value line": "Observez indépendamment la représentation que votre agence cherche à améliorer."
+    },
+    "de": {
+      "Eyebrow": "Darstellung in Suche und KI",
+      "Headline": "Was sehen Suchmaschinen und KI-Agenten, wenn sie Ihr Unternehmen betrachten?",
+      "Body": "AXIGNAL beobachtet unabhängig und unter expliziten Bedingungen, wie eine Organisation in Suche, Assistenten, generativen Systemen und öffentlichen Oberflächen erscheint, und bewahrt Veränderungen über die Zeit. Für SEO-, GEO-, AEO- und AIO-Teams wird externe Darstellung damit überprüfbar statt vermutet.",
+      "Value line": "Sehen Sie unabhängig die Darstellung, die Ihre Agentur verbessern will."
+    },
+    "it": {
+      "Eyebrow": "Rappresentazione in ricerca e IA",
+      "Headline": "Cosa vedono i motori di ricerca e gli agenti IA quando guardano la tua azienda?",
+      "Body": "AXIGNAL osserva in modo indipendente come un’organizzazione appare nei motori di ricerca, negli assistenti, nei sistemi generativi e negli spazi pubblici in condizioni esplicite, e conserva ciò che cambia nel tempo. Per i team SEO, GEO, AEO e AIO, la rappresentazione esterna diventa ispezionabile invece che presunta.",
+      "Value line": "Osserva in modo indipendente la rappresentazione che la tua agenzia sta cercando di migliorare."
+    },
+    "pt": {
+      "Eyebrow": "Representação em pesquisa e IA",
+      "Headline": "O que veem os motores de pesquisa e os agentes de IA quando olham para a sua empresa?",
+      "Body": "A AXIGNAL observa de forma independente como uma organização aparece em motores de pesquisa, assistentes, sistemas generativos e superfícies públicas sob condições explícitas, e preserva o que muda ao longo do tempo. Para equipas SEO, GEO, AEO e AIO, a representação externa torna-se inspecionável em vez de presumida.",
+      "Value line": "Veja de forma independente a representação que a sua agência procura melhorar."
+    }
+  },
+  {
+    "n": 10,
+    "id": "TIME",
+    "slug": "time",
+    "question": "Is this only a snapshot?",
+    "image": "assets/images/landing-10-time.webp",
+    "focal": {
+      "desktop": "62% 50%",
+      "tablet": "65% 50%",
+      "mobile": "68% 50%"
+    },
+    "en": {
+      "Eyebrow": "Change over time",
+      "Headline": "A snapshot tells you what was visible once.",
+      "Body": "AXIGNAL preserves history, change, how recent the evidence is and when it was checked again, so you can see what has changed without rebuilding the same understanding from zero.",
+      "Value line": "What changed can matter as much as what is observable now."
+    },
+    "es": {
+      "Eyebrow": "Cambio a lo largo del tiempo",
+      "Headline": "Una instantánea solo te dice lo que era visible una vez.",
+      "Body": "AXIGNAL conserva la historia, los cambios, lo reciente que es la evidencia y cuándo se volvió a comprobar, para que puedas ver qué ha cambiado sin reconstruir desde cero la misma visión.",
+      "Value line": "Lo que cambió puede importar tanto como lo que puede observarse ahora."
+    },
+    "fr": {
+      "Eyebrow": "Évolution dans le temps",
+      "Headline": "Un instantané vous dit seulement ce qui était visible à un moment donné.",
+      "Body": "AXIGNAL conserve l’historique, les changements, la récence des preuves et les dates de nouvelle vérification, afin que vous puissiez voir ce qui a changé sans reconstruire la même compréhension depuis zéro.",
+      "Value line": "Ce qui a changé peut compter autant que ce qui est observable maintenant."
+    },
+    "de": {
+      "Eyebrow": "Veränderung über die Zeit",
+      "Headline": "Eine Momentaufnahme zeigt nur, was einmal sichtbar war.",
+      "Body": "AXIGNAL bewahrt Historie, Veränderungen, die Aktualität der Evidenz und erneute Prüfungen, damit Sie sehen können, was sich verändert hat, ohne dasselbe Verständnis von null neu aufzubauen.",
+      "Value line": "Was sich verändert hat, kann ebenso wichtig sein wie das, was jetzt beobachtbar ist."
+    },
+    "it": {
+      "Eyebrow": "Cambiamento nel tempo",
+      "Headline": "Un’istantanea ti dice solo ciò che era visibile una volta.",
+      "Body": "AXIGNAL conserva storia, cambiamenti, quanto sono recenti le evidenze e quando sono state ricontrollate, così puoi vedere cosa è cambiato senza ricostruire da zero la stessa comprensione.",
+      "Value line": "Ciò che è cambiato può contare quanto ciò che è osservabile adesso."
+    },
+    "pt": {
+      "Eyebrow": "Mudança ao longo do tempo",
+      "Headline": "Uma fotografia instantânea diz apenas o que esteve visível uma vez.",
+      "Body": "A AXIGNAL preserva o histórico, as mudanças, quão recentes são as evidências e quando foram novamente verificadas, para que possa ver o que mudou sem reconstruir a mesma compreensão do zero.",
+      "Value line": "O que mudou pode importar tanto como o que é observável agora."
+    }
+  },
+  {
+    "n": 11,
+    "id": "AXENT",
+    "slug": "axent",
+    "question": "Is AXENT another chatbot?",
+    "image": "assets/images/landing-11-axent.webp",
+    "focal": {
+      "desktop": "68% 50%",
+      "tablet": "71% 50%",
+      "mobile": "74% 50%"
+    },
+    "en": {
+      "Eyebrow": "Contextual investigation",
+      "Headline": "Not another chatbot. A way to navigate the investigation.",
+      "Body": "AXENT helps investigate, compare, explain and move through evidence and context. It can orchestrate research, but it never decides what becomes truth in AXIGLAND.",
+      "Value line": "Conversation is the interface. Evidence still governs what the map can claim."
+    },
+    "es": {
+      "Eyebrow": "Investigación contextual",
+      "Headline": "No es otro chatbot. Es una forma de navegar la investigación.",
+      "Body": "AXENT ayuda a investigar, comparar, explicar y moverse entre evidencia y contexto. Puede orquestar investigación, pero nunca decide qué se convierte en verdad en AXIGLAND.",
+      "Value line": "La conversación es la interfaz. La evidencia sigue gobernando lo que el mapa puede afirmar."
+    },
+    "fr": {
+      "Eyebrow": "Investigation contextuelle",
+      "Headline": "Pas un chatbot de plus. Une façon de naviguer dans l’investigation.",
+      "Body": "AXENT aide à enquêter, comparer, expliquer et parcourir les preuves et le contexte. Il peut orchestrer la recherche, mais ne décide jamais de ce qui devient vérité dans AXIGLAND.",
+      "Value line": "La conversation est l’interface. Les preuves gouvernent toujours ce que la carte peut affirmer."
+    },
+    "de": {
+      "Eyebrow": "Kontextuelle Untersuchung",
+      "Headline": "Nicht noch ein Chatbot. Ein Weg, durch die Untersuchung zu navigieren.",
+      "Body": "AXENT hilft beim Untersuchen, Vergleichen, Erklären und Navigieren durch Evidenz und Kontext. Es kann Recherche orchestrieren, entscheidet aber nie, was in AXIGLAND zur Wahrheit wird.",
+      "Value line": "Konversation ist die Oberfläche. Evidenz bestimmt weiterhin, was die Karte behaupten darf."
+    },
+    "it": {
+      "Eyebrow": "Indagine contestuale",
+      "Headline": "Non un altro chatbot. Un modo per navigare l’indagine.",
+      "Body": "AXENT aiuta a indagare, confrontare, spiegare e muoversi tra evidenze e contesto. Può orchestrare la ricerca, ma non decide mai cosa diventa verità in AXIGLAND.",
+      "Value line": "La conversazione è l’interfaccia. Le evidenze continuano a governare ciò che la mappa può affermare."
+    },
+    "pt": {
+      "Eyebrow": "Investigação contextual",
+      "Headline": "Não é mais um chatbot. É uma forma de navegar pela investigação.",
+      "Body": "AXENT ajuda a investigar, comparar, explicar e navegar por evidências e contexto. Pode orquestrar investigação, mas nunca decide o que se torna verdade em AXIGLAND.",
+      "Value line": "A conversa é a interface. As evidências continuam a governar o que o mapa pode afirmar."
+    }
+  },
+  {
+    "n": 12,
+    "id": "INDEPENDENCE",
+    "slug": "independence",
+    "question": "Can someone pay to change what AXIGNAL says?",
+    "image": "assets/images/landing-12-independence.webp",
+    "focal": {
+      "desktop": "50% 50%",
+      "tablet": "50% 50%",
+      "mobile": "50% 50%"
+    },
+    "responsiveImages": {
+      "tablet": "assets/images/landing-12-independence-tablet.webp",
+      "mobile": "assets/images/landing-12-independence-mobile.webp"
+    },
+    "en": {
+      "Eyebrow": "Independent by design",
+      "Headline": "Pay for observation. Never for influence.",
+      "Body": "A subscription can ask AXIGNAL to keep watching. It cannot buy a different conclusion. If something is challenged, AXIGNAL can inspect it again—but nobody gets to edit the map directly.",
+      "Value line": "The map cannot be bought. Observation can."
+    },
+    "es": {
+      "Eyebrow": "Independencia por diseño",
+      "Headline": "Paga por observación. Nunca por influencia.",
+      "Body": "Una suscripción puede pedir a AXIGNAL que siga observando. No puede comprar una conclusión distinta. Si algo se cuestiona, AXIGNAL puede volver a investigarlo, pero nadie obtiene permiso para editar el mapa directamente.",
+      "Value line": "El mapa no se puede comprar. La observación, sí."
+    },
+    "fr": {
+      "Eyebrow": "Indépendant par conception",
+      "Headline": "Payez pour l’observation. Jamais pour l’influence.",
+      "Body": "Un abonnement peut demander à AXIGNAL de continuer à observer. Il ne peut pas acheter une conclusion différente. Si quelque chose est contesté, AXIGNAL peut l’examiner à nouveau, mais personne ne peut modifier directement la carte.",
+      "Value line": "La carte ne s’achète pas. L’observation, oui."
+    },
+    "de": {
+      "Eyebrow": "Unabhängig durch Design",
+      "Headline": "Bezahlen Sie für Beobachtung. Niemals für Einfluss.",
+      "Body": "Ein Abonnement kann AXIGNAL beauftragen, weiter zu beobachten. Es kann keine andere Schlussfolgerung kaufen. Wird etwas angezweifelt, kann AXIGNAL es erneut untersuchen – aber niemand darf die Karte direkt bearbeiten.",
+      "Value line": "Die Karte ist nicht käuflich. Beobachtung schon."
+    },
+    "it": {
+      "Eyebrow": "Indipendente per design",
+      "Headline": "Paga per l’osservazione. Mai per l’influenza.",
+      "Body": "Un abbonamento può chiedere ad AXIGNAL di continuare a osservare. Non può comprare una conclusione diversa. Se qualcosa viene contestato, AXIGNAL può riesaminarlo, ma nessuno può modificare direttamente la mappa.",
+      "Value line": "La mappa non si compra. L’osservazione sì."
+    },
+    "pt": {
+      "Eyebrow": "Independente por design",
+      "Headline": "Pague pela observação. Nunca pela influência.",
+      "Body": "Uma subscrição pode pedir à AXIGNAL que continue a observar. Não pode comprar uma conclusão diferente. Se algo for questionado, a AXIGNAL pode voltar a investigá-lo, mas ninguém pode editar diretamente o mapa.",
+      "Value line": "O mapa não se compra. A observação, sim."
+    }
+  },
+  {
+    "n": 13,
+    "id": "USE_CASES",
+    "slug": "use-cases",
+    "question": "Where is AXIGNAL especially valuable for agencies and decision teams?",
+    "image": "assets/images/landing-13-use-cases.webp",
+    "focal": {
+      "desktop": "63% 50%",
+      "tablet": "66% 50%",
+      "mobile": "70% 50%"
+    },
+    "en": {
+      "Eyebrow": "Agencies & decision teams",
+      "Headline": "Improve the company. Let AXIGNAL observe what changed.",
+      "Body": "For SEO, GEO, AEO and AIO agencies, AXIGNAL provides an independent view of how search engines, assistants, generative systems and public surfaces represent each client before and after your work. Leadership, sales, procurement, export teams and consultancies can explore the same economic world for their own questions—without creating separate truths.",
+      "Value line": "Your work changes the company. AXIGNAL observes the outside independently."
+    },
+    "es": {
+      "Eyebrow": "Agencias y equipos de decisión",
+      "Headline": "Mejora la empresa. Deja que AXIGNAL observe qué ha cambiado.",
+      "Body": "Para agencias SEO, GEO, AEO y AIO, AXIGNAL ofrece una visión independiente de cómo buscadores, asistentes, sistemas generativos y superficies públicas representan a cada cliente antes y después de tu trabajo. Dirección, ventas, compras, exportación y consultoría pueden explorar el mismo mundo económico para sus propias preguntas, sin crear verdades distintas.",
+      "Value line": "Tu trabajo cambia la empresa. AXIGNAL observa el exterior de forma independiente."
+    },
+    "fr": {
+      "Eyebrow": "Agences et équipes de décision",
+      "Headline": "Améliorez l’entreprise. Laissez AXIGNAL observer ce qui a changé.",
+      "Body": "Pour les agences SEO, GEO, AEO et AIO, AXIGNAL fournit une vue indépendante de la manière dont moteurs de recherche, assistants, systèmes génératifs et espaces publics représentent chaque client avant et après votre travail. Direction, ventes, achats, export et conseil peuvent explorer le même monde économique pour leurs propres questions, sans créer de vérités séparées.",
+      "Value line": "Votre travail change l’entreprise. AXIGNAL observe l’extérieur indépendamment."
+    },
+    "de": {
+      "Eyebrow": "Agenturen und Entscheidungsteams",
+      "Headline": "Verbessern Sie das Unternehmen. Lassen Sie AXIGNAL beobachten, was sich verändert hat.",
+      "Body": "Für SEO-, GEO-, AEO- und AIO-Agenturen liefert AXIGNAL eine unabhängige Sicht darauf, wie Suchmaschinen, Assistenten, generative Systeme und öffentliche Oberflächen jeden Kunden vor und nach Ihrer Arbeit darstellen. Führung, Vertrieb, Einkauf, Exportteams und Beratungen können dieselbe Wirtschaftswelt für ihre eigenen Fragen erkunden – ohne getrennte Wahrheiten zu schaffen.",
+      "Value line": "Ihre Arbeit verändert das Unternehmen. AXIGNAL beobachtet die Außenwelt unabhängig."
+    },
+    "it": {
+      "Eyebrow": "Agenzie e team decisionali",
+      "Headline": "Migliora l’azienda. Lascia che AXIGNAL osservi cosa è cambiato.",
+      "Body": "Per le agenzie SEO, GEO, AEO e AIO, AXIGNAL offre una vista indipendente di come motori di ricerca, assistenti, sistemi generativi e spazi pubblici rappresentano ogni cliente prima e dopo il tuo lavoro. Direzione, vendite, acquisti, export e consulenza possono esplorare lo stesso mondo economico per le proprie domande, senza creare verità separate.",
+      "Value line": "Il tuo lavoro cambia l’azienda. AXIGNAL osserva l’esterno in modo indipendente."
+    },
+    "pt": {
+      "Eyebrow": "Agências e equipas de decisão",
+      "Headline": "Melhore a empresa. Deixe a AXIGNAL observar o que mudou.",
+      "Body": "Para agências SEO, GEO, AEO e AIO, a AXIGNAL oferece uma visão independente de como motores de pesquisa, assistentes, sistemas generativos e superfícies públicas representam cada cliente antes e depois do seu trabalho. Direção, vendas, compras, exportação e consultoria podem explorar o mesmo mundo económico para as suas próprias perguntas, sem criar verdades separadas.",
+      "Value line": "O seu trabalho muda a empresa. A AXIGNAL observa o exterior de forma independente."
+    }
+  },
+  {
+    "n": 14,
+    "id": "PRICING",
+    "slug": "pricing",
+    "question": "What does persistent observation cost?",
+    "image": "assets/images/landing-14-pricing.webp",
+    "focal": {
+      "desktop": "68% 50%",
+      "tablet": "70% 50%",
+      "mobile": "74% 50%"
+    },
+    "en": {
+      "Eyebrow": "Simple Xeed pricing",
+      "Headline": "Start with one Xeed.",
+      "Body": "€9.95/month includes one Xeed. Keep another organization under persistent observation for €4.95/month per additional Xeed.",
+      "Value line": "One Xeed can produce many Xignals. You do not pay per signal or per organization AXIGNAL discovers around it.",
+      "Primary CTA": "Plant a Xeed"
+    },
+    "es": {
+      "Eyebrow": "Precio simple por Xeed",
+      "Headline": "Empieza con una Xeed.",
+      "Body": "9,95 €/mes incluye una Xeed. Mantén otra organización bajo observación persistente por 4,95 €/mes por cada Xeed adicional.",
+      "Value line": "Una Xeed puede producir muchos Xignals. No pagas por señal ni por cada organización que AXIGNAL descubre a su alrededor.",
+      "Primary CTA": "Planta tu Xeed"
+    },
+    "fr": {
+      "Eyebrow": "Tarification simple par Xeed",
+      "Headline": "Commencez avec une Xeed.",
+      "Body": "9,95 €/mois inclut une Xeed. Maintenez une autre organisation sous observation persistante pour 4,95 €/mois par Xeed supplémentaire.",
+      "Value line": "Une Xeed peut produire de nombreux Xignals. Vous ne payez ni par signal ni par organisation découverte autour d’elle.",
+      "Primary CTA": "Plantez votre Xeed"
+    },
+    "de": {
+      "Eyebrow": "Einfache Xeed-Preise",
+      "Headline": "Beginnen Sie mit einer Xeed.",
+      "Body": "9,95 €/Monat enthält eine Xeed. Halten Sie eine weitere Organisation für 4,95 €/Monat je zusätzlicher Xeed unter persistenter Beobachtung.",
+      "Value line": "Eine Xeed kann viele Xignals hervorbringen. Sie zahlen weder pro Signal noch pro Organisation, die AXIGNAL in ihrem Umfeld entdeckt.",
+      "Primary CTA": "Ihre Xeed pflanzen"
+    },
+    "it": {
+      "Eyebrow": "Prezzo semplice per Xeed",
+      "Headline": "Inizia con una Xeed.",
+      "Body": "9,95 €/mese include una Xeed. Mantieni un’altra organizzazione sotto osservazione persistente per 4,95 €/mese per ogni Xeed aggiuntiva.",
+      "Value line": "Una Xeed può produrre molti Xignals. Non paghi per segnale né per ogni organizzazione che AXIGNAL scopre intorno ad essa.",
+      "Primary CTA": "Pianta la tua Xeed"
+    },
+    "pt": {
+      "Eyebrow": "Preço simples por Xeed",
+      "Headline": "Comece com uma Xeed.",
+      "Body": "9,95 €/mês inclui uma Xeed. Mantenha outra organização sob observação persistente por 4,95 €/mês por cada Xeed adicional.",
+      "Value line": "Uma Xeed pode produzir muitos Xignals. Não paga por sinal nem por cada organização que a AXIGNAL descobre à sua volta.",
+      "Primary CTA": "Plante a sua Xeed"
+    }
+  },
+  {
+    "n": 15,
+    "id": "START",
+    "slug": "start",
+    "question": "What should I do now?",
+    "image": "assets/images/landing-15-start.webp",
+    "focal": {
+      "desktop": "56% 50%",
+      "tablet": "58% 50%",
+      "mobile": "58% 50%"
+    },
+    "en": {
+      "Eyebrow": "Plant the first seed",
+      "Headline": "Choose one organization. Plant its Xeed. See what emerges from the outside.",
+      "Body": "Start with one organization and evaluate AXIGNAL by the Xignals it surfaces, the map it builds, the evidence behind it and what changes over time.",
+      "Primary CTA": "Plant a Xeed",
+      "Secondary CTA": "How AXIGNAL knows"
+    },
+    "es": {
+      "Eyebrow": "Planta la primera semilla",
+      "Headline": "Elige una organización. Planta su Xeed. Mira qué emerge desde fuera.",
+      "Body": "Empieza con una organización y valora AXIGNAL por los Xignals que hace emerger, el mapa que construye, la evidencia que lo sustenta y lo que cambia con el tiempo.",
+      "Primary CTA": "Planta tu Xeed",
+      "Secondary CTA": "Cómo lo sabe AXIGNAL"
+    },
+    "fr": {
+      "Eyebrow": "Plantez la première graine",
+      "Headline": "Choisissez une organisation. Plantez sa Xeed. Voyez ce qui émerge de l’extérieur.",
+      "Body": "Commencez avec une organisation et évaluez AXIGNAL par les Xignals qu’il fait émerger, la carte qu’il construit, les preuves qui la soutiennent et ce qui change dans le temps.",
+      "Primary CTA": "Plantez une Xeed",
+      "Secondary CTA": "Comment AXIGNAL le sait"
+    },
+    "de": {
+      "Eyebrow": "Den ersten Samen pflanzen",
+      "Headline": "Wählen Sie eine Organisation. Pflanzen Sie ihre Xeed. Sehen Sie, was von außen entsteht.",
+      "Body": "Beginnen Sie mit einer Organisation und bewerten Sie AXIGNAL anhand der Xignals, die es sichtbar macht, der Karte, die es aufbaut, der Evidenz dahinter und dessen, was sich über die Zeit verändert.",
+      "Primary CTA": "Xeed pflanzen",
+      "Secondary CTA": "Woher AXIGNAL es weiß"
+    },
+    "it": {
+      "Eyebrow": "Pianta il primo seme",
+      "Headline": "Scegli un’organizzazione. Pianta la sua Xeed. Guarda cosa emerge dall’esterno.",
+      "Body": "Inizia con un’organizzazione e valuta AXIGNAL dai Xignals che fa emergere, dalla mappa che costruisce, dalle evidenze che la sostengono e da ciò che cambia nel tempo.",
+      "Primary CTA": "Pianta una Xeed",
+      "Secondary CTA": "Come lo sa AXIGNAL"
+    },
+    "pt": {
+      "Eyebrow": "Plante a primeira semente",
+      "Headline": "Escolha uma organização. Plante a sua Xeed. Veja o que emerge do exterior.",
+      "Body": "Comece com uma organização e avalie a AXIGNAL pelos Xignals que faz emergir, pelo mapa que constrói, pelas evidências que o sustentam e pelo que muda ao longo do tempo.",
+      "Primary CTA": "Plante uma Xeed",
+      "Secondary CTA": "Como a AXIGNAL sabe"
+    }
+  }
+]

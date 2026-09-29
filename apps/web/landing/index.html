@@ -1,0 +1,623 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AXIGNAL — Observe the economic world from the outside</title>
+<meta name="description" content="AXIGNAL observes the economic world around an organization, preserves evidence and change over time, and helps you explore what may matter next.">
+<meta name="theme-color" content="#050504">
+<meta name="robots" content="index,follow">
+<link rel="icon" href="./assets/favicon.svg" type="image/svg+xml">
+<link rel="preload" href="./assets/fonts/font-01.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="./assets/fonts/font-16.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="./assets/fonts/fonts.css">
+<style>
+:root{
+  --ax-brass:#afa68a;
+  --ax-brass-2:#8f8872;
+  --ax-ivory:#f6f1e7;
+  --ax-muted:rgba(246,241,231,.76);
+  --ax-hairline:rgba(246,241,231,.28);
+  --ax-panel:rgba(7,7,6,.88);
+  --ax-font-display:'Fraunces','Iowan Old Style','Palatino Linotype',Georgia,serif;
+  --ax-font-body:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  --ax-font-mono:'IBM Plex Mono','SFMono-Regular',Consolas,monospace;
+  --ax-radius-control:2px;
+  --ax-radius-pill:999px;
+  --ax-motion-quick:150ms;
+  --ax-motion-chapter:820ms;
+  --ax-motion-ease:cubic-bezier(.22,1,.36,1);
+}
+*{box-sizing:border-box}
+html,body{width:100%;height:100%;margin:0;overflow:hidden;background:#050504;color:var(--ax-ivory)}
+body{font-family:var(--ax-font-body);-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+button{font:inherit}
+button:focus-visible{outline:1.5px solid var(--ax-brass);outline-offset:3px}
+.scene{position:relative;width:100vw;height:100vh;isolation:isolate;overflow:hidden;background:#050504}
+.art{
+  position:absolute;inset:-1.2%;z-index:-5;
+  background-size:cover;background-repeat:no-repeat;background-position:50% 50%;
+  opacity:1;transform:scale(1);
+  will-change:opacity,transform;
+}
+.art-current{z-index:-5}
+.art-next{z-index:-4;transform:translate3d(0,100%,0);transition:transform var(--ax-motion-chapter) var(--ax-motion-ease)}
+.scene.is-transitioning .art-current{transform:none}
+.scene.is-transitioning .art-next{transform:translate3d(0,0,0)}
+.contrast{position:absolute;inset:0;z-index:-4;background:linear-gradient(to bottom,rgba(0,0,0,.78) 0%,rgba(0,0,0,.67) 32%,rgba(0,0,0,.52) 67%,rgba(0,0,0,.42) 100%);pointer-events:none}
+.left-shade{position:absolute;inset:0;z-index:-3;background:linear-gradient(90deg,rgba(0,0,0,.49) 0%,rgba(0,0,0,.22) 39%,rgba(0,0,0,.04) 67%,rgba(0,0,0,0) 78%);pointer-events:none}
+.transition-veil{position:absolute;inset:0;z-index:-2;background:#050504;opacity:0;pointer-events:none;transition:opacity 260ms var(--ax-motion-ease)}
+.scene.is-transitioning .transition-veil{opacity:0}
+
+header{
+  position:absolute;inset:0 0 auto 0;height:88px;z-index:30;
+  display:grid;grid-template-columns:minmax(250px,1fr) minmax(430px,auto) minmax(360px,1fr);
+  align-items:center;column-gap:38px;padding:0 clamp(34px,4vw,68px);
+  border-bottom:1px solid rgba(175,166,138,.16);
+  background:rgba(5,5,4,.84);
+  backdrop-filter:blur(18px) saturate(.82)
+}
+.brand{justify-self:start;display:inline-flex;align-items:center;min-width:0}
+.brand img{display:block;width:166px;height:auto}
+.main-nav{justify-self:center;display:flex;align-items:center;justify-content:center;gap:42px;white-space:nowrap}
+.main-nav button,.login{
+  border:0;background:transparent;color:rgba(246,241,231,.74);
+  font-family:var(--ax-font-body);font-size:13px;font-weight:400;line-height:1;letter-spacing:.005em;padding:10px 0;
+  transition:color var(--ax-motion-quick) ease,opacity var(--ax-motion-quick) ease
+}
+.main-nav button:hover,.main-nav button:focus-visible,.login:hover,.login:focus-visible{color:#fff}
+.main-nav button[aria-current="page"]{color:#fff;position:relative}
+.main-nav button[aria-current="page"]::after{content:"";position:absolute;left:0;right:0;bottom:1px;height:2px;background:var(--ax-brass);transform-origin:center}
+.login{min-height:38px;padding:9px 14px!important;border:1px solid rgba(246,241,231,.26)!important;border-radius:var(--ax-radius-control);background:rgba(246,241,231,.035)!important;color:rgba(246,241,231,.90)!important;font-weight:500!important}
+.login:hover,.login:focus-visible{border-color:rgba(175,166,138,.58)!important;background:rgba(175,166,138,.08)!important}
+.header-actions{justify-self:end;display:flex;align-items:center;gap:14px;white-space:nowrap}
+.seed-cta{
+  min-height:38px;padding:9px 16px;border:1px solid rgba(175,166,138,.74);
+  border-radius:var(--ax-radius-pill);background:rgba(175,166,138,.12);
+  color:#fff;font-family:var(--ax-font-body);font-size:13px;font-weight:500;line-height:1;letter-spacing:0
+}
+
+.locale-wrap{position:relative}
+.locale-button{
+  min-height:38px;min-width:126px;display:grid;grid-template-columns:1fr 10px;align-items:center;gap:9px;
+  padding:9px 11px 9px 12px;border:1px solid var(--ax-hairline);
+  border-radius:var(--ax-radius-control);background:rgba(7,7,6,.62);color:#fff;
+  font-family:var(--ax-font-body);font-size:13px;font-weight:400;line-height:1;text-align:left
+}
+.locale-button:hover,.locale-button[aria-expanded="true"]{border-color:rgba(246,241,231,.48);background:rgba(12,12,10,.82)}
+.chevron{width:7px;height:7px;border-right:1px solid currentColor;border-bottom:1px solid currentColor;transform:rotate(45deg) translateY(-2px);opacity:.7;transition:transform var(--ax-motion-quick) ease}
+.locale-button[aria-expanded="true"] .chevron{transform:rotate(225deg) translate(-1px,-1px)}
+.locale-list{
+  position:absolute;right:0;top:46px;z-index:40;width:178px;max-height:320px;overflow-y:auto;padding:5px;
+  border:1px solid rgba(246,241,231,.20);border-radius:var(--ax-radius-control);
+  background:rgba(7,7,6,.98);box-shadow:0 18px 54px rgba(0,0,0,.42);display:flex;flex-direction:column;gap:2px
+}
+.locale-list[hidden]{display:none!important}
+.locale-option{
+  display:block;flex:0 0 auto;width:100%;border:0;border-radius:var(--ax-radius-control);background:transparent;color:rgba(255,255,255,.68);
+  text-align:left;padding:9px 10px;font-size:12px
+}
+.locale-option:hover,.locale-option:focus-visible{background:rgba(175,166,138,.10);color:#fff}
+.locale-option[aria-selected="true"]{color:#fff;background:rgba(175,166,138,.15)}
+
+.copy{position:absolute;left:clamp(34px,7vw,120px);top:50%;transform:translateY(-46%);width:min(42rem,44vw);z-index:5;text-wrap:pretty}
+.copy-inner{will-change:opacity,transform;opacity:1;transform:translateY(0);transition:opacity 220ms var(--ax-motion-ease),transform 310ms var(--ax-motion-ease)}
+.copy-inner.leaving{opacity:0;transform:translateY(var(--copy-leave,-12px))}
+.copy-inner.entering{opacity:0;transform:translateY(var(--copy-enter,12px))}
+.eyebrow{font-family:var(--ax-font-mono);text-transform:uppercase;letter-spacing:.16em;color:var(--ax-brass);font-size:11px;margin:0 0 16px}
+h1{font-family:var(--ax-font-display);font-size:clamp(42px,4.05vw,70px);font-weight:300;line-height:1.025;letter-spacing:-.027em;margin:0 0 20px;text-shadow:0 2px 24px rgba(0,0,0,.34)}
+.body{font-size:clamp(15px,1.06vw,18.5px);line-height:1.54;color:var(--ax-muted);max-width:39rem;margin:0 0 16px;text-shadow:0 1px 14px rgba(0,0,0,.36)}
+.body p{margin:0}.body p+p{margin-top:8px}
+.value{font-family:var(--ax-font-display);font-size:clamp(17px,1.22vw,21px);font-weight:300;line-height:1.36;color:#fff;margin:21px 0 0;max-width:38rem}
+.actions{display:flex;align-items:center;gap:10px;margin-top:27px;flex-wrap:wrap}
+.cta{border:1px solid rgba(255,255,255,.46);padding:10px 16px;border-radius:var(--ax-radius-pill);font-size:12.5px;color:#fff;background:rgba(0,0,0,.14)}
+.cta.primary{background:rgba(175,166,138,.17);border-color:rgba(175,166,138,.78)}
+.cta:hover{background:rgba(246,241,231,.10);border-color:rgba(246,241,231,.72)}
+.cta.primary:hover{background:rgba(175,166,138,.24);border-color:var(--ax-brass)}
+
+.pricing-panel{display:none}
+body[data-chapter="14"] .copy{width:min(49rem,51vw);transform:translateY(-43%)}
+body[data-chapter="14"] .body{max-width:43rem;margin-bottom:13px}
+body[data-chapter="14"] .value{display:none}
+body[data-chapter="14"] .pricing-panel{
+  display:grid;grid-template-columns:minmax(0,1.45fr) minmax(190px,.85fr);gap:1px;
+  max-width:46rem;margin-top:22px;border:1px solid rgba(175,166,138,.42);
+  background:rgba(175,166,138,.26);box-shadow:0 22px 70px rgba(0,0,0,.22)
+}
+.price-tier{min-height:166px;padding:22px 24px;background:rgba(7,7,6,.76);backdrop-filter:blur(16px)}
+.price-tier.primary{background:linear-gradient(135deg,rgba(175,166,138,.14),rgba(7,7,6,.80) 58%)}
+.price-kicker{font:500 10px/1.2 var(--ax-font-mono);letter-spacing:.13em;text-transform:uppercase;color:var(--ax-brass);margin-bottom:10px}
+.price-line{display:flex;align-items:baseline;gap:8px;white-space:nowrap}
+.price-amount{font:300 clamp(38px,3.2vw,54px)/.95 var(--ax-font-display);letter-spacing:-.035em;color:#fff}
+.price-period{font:400 11px/1.2 var(--ax-font-body);color:rgba(246,241,231,.58)}
+.price-desc{margin:13px 0 0;max-width:28rem;font-size:12.5px;line-height:1.45;color:rgba(246,241,231,.72)}
+.price-truth{
+  grid-column:1/-1;display:flex;align-items:center;gap:10px;padding:11px 15px;
+  background:rgba(7,7,6,.91);font:400 10.5px/1.35 var(--ax-font-mono);letter-spacing:.015em;color:rgba(246,241,231,.72)
+}
+.price-truth::before{content:"";width:5px;height:5px;flex:0 0 5px;border-radius:50%;background:var(--ax-brass)}
+body[data-chapter="14"] .actions{margin-top:17px}
+
+.question-rail{
+  position:absolute;right:clamp(17px,2vw,34px);top:50%;z-index:12;transform:translateY(-48%);
+  width:min(430px,31vw);display:flex;flex-direction:column;justify-content:center;gap:17px
+}
+.question-item{
+  display:grid;grid-template-columns:minmax(0,1fr) 10px;align-items:center;gap:13px;
+  width:100%;border:0;background:transparent;padding:2px 0;color:#fff;opacity:.20;
+  transition:opacity var(--ax-motion-quick) ease,transform var(--ax-motion-quick) ease
+}
+.question-item:hover,.question-item:focus-visible{opacity:.68}
+.question-item.active{opacity:1;transform:translateX(-3px)}
+.question-text{
+  font-size:10px;line-height:1.18;text-align:right;white-space:nowrap;color:rgba(255,255,255,.84);
+  text-shadow:0 1px 8px rgba(0,0,0,.55)
+}
+.question-item.active .question-text{font-size:11px;color:#fff;font-weight:500}
+.question-dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.48);justify-self:end}
+.question-item.active .question-dot{background:#fff;box-shadow:0 0 0 4px rgba(175,166,138,.18)}
+
+.counter-button{
+  position:absolute;right:clamp(16px,2vw,34px);bottom:17px;z-index:20;
+  min-height:30px;padding:6px 8px;border:1px solid rgba(255,255,255,.16);
+  border-radius:var(--ax-radius-control);background:rgba(0,0,0,.28);color:rgba(255,255,255,.74);
+  font:10px/1 var(--ax-font-mono);letter-spacing:.10em
+}
+.chapter-menu{
+  position:absolute;right:16px;bottom:52px;z-index:40;width:min(320px,88vw);max-height:68vh;overflow:auto;
+  padding:6px;border:1px solid rgba(255,255,255,.18);border-radius:var(--ax-radius-control);
+  background:rgba(7,7,6,.98);box-shadow:0 18px 54px rgba(0,0,0,.42);display:flex;flex-direction:column;gap:2px
+}
+.chapter-menu[hidden]{display:none}
+.chapter-menu button{
+  width:100%;display:grid;grid-template-columns:30px 1fr;gap:9px;border:0;background:transparent;color:rgba(255,255,255,.65);
+  text-align:left;padding:9px 10px;border-radius:var(--ax-radius-control);font-size:11px;line-height:1.25
+}
+.chapter-menu button:hover,.chapter-menu button:focus-visible,.chapter-menu button.active{background:rgba(175,166,138,.11);color:#fff}
+.chapter-menu .num{font-family:var(--ax-font-mono);color:var(--ax-brass)}
+
+body[data-chapter="08"] .copy,body[data-chapter="09"] .copy,body[data-chapter="12"] .copy,body[data-chapter="15"] .copy{max-width:38vw}
+body[data-chapter="09"] .copy{max-width:40vw}
+body[data-chapter="13"] .copy{width:min(46rem,48vw)}
+body[data-chapter="14"] .copy{width:min(43rem,46vw)}
+
+@media(max-width:1180px){
+  header{grid-template-columns:minmax(160px,1fr) auto minmax(230px,1fr);padding:0 28px;column-gap:18px}
+  .brand img{width:160px}.main-nav{gap:24px}
+  .copy{left:42px;width:min(38rem,52vw)}
+  .question-rail{width:min(370px,32vw);right:18px;gap:13px}.question-text{font-size:9.5px}.question-item.active .question-text{font-size:10.5px}
+  body[data-chapter="08"] .copy,body[data-chapter="09"] .copy,body[data-chapter="12"] .copy,body[data-chapter="15"] .copy{max-width:47vw}
+  body[data-chapter="13"] .copy{width:min(42rem,56vw)}
+}
+@media(max-width:900px){
+  header{grid-template-columns:150px 1fr auto;height:66px;padding:0 22px}
+  .main-nav{display:none}.brand img{width:132px}.login{display:none}
+  .question-rail{width:10px;right:18px;gap:14px}
+  .question-item{grid-template-columns:10px;gap:0}
+  .question-text{display:none}
+  .copy{left:34px;width:min(35rem,54vw)}
+  h1{font-size:clamp(38px,5.5vw,54px)}.body{font-size:14.5px}
+}
+@media(max-width:620px){
+  header{height:58px;grid-template-columns:128px 1fr auto;padding:0 14px;column-gap:8px}
+  .brand img{width:118px}.header-actions{gap:7px}.seed-cta{min-height:32px;padding:6px 9px;font-size:10.5px}
+  .locale-button{min-height:32px;min-width:91px;padding:6px 8px;font-size:10.5px}
+  .locale-list{top:38px;width:144px}
+  .question-rail{display:none}
+  .contrast{background:linear-gradient(to bottom,rgba(0,0,0,.14) 0%,rgba(0,0,0,.20) 34%,rgba(0,0,0,.61) 61%,rgba(0,0,0,.84) 100%)}
+  .left-shade{background:linear-gradient(to bottom,rgba(0,0,0,.02),rgba(0,0,0,.08) 38%,rgba(0,0,0,.60) 70%,rgba(0,0,0,.74))}
+  .copy,body[data-chapter="01"] .copy,body[data-chapter="08"] .copy,body[data-chapter="09"] .copy,body[data-chapter="12"] .copy,body[data-chapter="15"] .copy,body[data-chapter="13"] .copy,body[data-chapter="14"] .copy{
+    left:20px;right:28px;top:auto;bottom:36px;transform:none;width:auto;max-width:none
+  }
+  .eyebrow{font-size:9px;margin-bottom:8px}h1{font-size:clamp(30px,9vw,39px);line-height:1.015;margin-bottom:11px}
+  .body{font-size:13.25px;line-height:1.42;margin-bottom:8px;max-width:none}.value{font-size:15px;margin-top:11px;line-height:1.28}
+  .actions{margin-top:14px;gap:7px}.cta{font-size:11px;padding:8px 11px}
+  body[data-chapter="09"] h1,body[data-chapter="13"] h1{font-size:30px}
+  body[data-chapter="09"] .body,body[data-chapter="13"] .body{font-size:12.8px;line-height:1.38}
+  body[data-chapter="14"] .copy{bottom:24px}
+  body[data-chapter="14"] h1{font-size:clamp(29px,8.4vw,37px);margin-bottom:9px}
+  body[data-chapter="14"] .body{font-size:12.5px;line-height:1.36;margin-bottom:0}
+  body[data-chapter="14"] .pricing-panel{grid-template-columns:1fr;margin-top:13px;max-width:none}
+  body[data-chapter="14"] .price-tier{min-height:0;padding:13px 15px}
+  body[data-chapter="14"] .price-amount{font-size:32px}
+  body[data-chapter="14"] .price-desc{font-size:11px;margin-top:7px}
+  body[data-chapter="14"] .price-truth{grid-column:1;padding:8px 12px;font-size:9px}
+  body[data-chapter="14"] .actions{margin-top:10px}
+  .counter-button{right:10px;bottom:10px}
+}
+@media(prefers-reduced-motion:reduce){
+  :root{--ax-motion-chapter:150ms}
+  .art-next{transition:transform 150ms linear!important}
+  .copy-inner{transition:opacity 120ms linear;transform:none!important}
+  .scene.is-transitioning .art-next{transform:translate3d(0,0,0)!important}
+}
+</style>
+<style id="ax-copy-morph">
+.copy-inner{will-change:transform,opacity,filter;transform-origin:left center}
+.copy-inner.ax-morph-out{animation:axMorphOut 300ms cubic-bezier(.4,0,.2,1) both}
+.copy-inner.ax-morph-in{animation:axMorphIn 570ms cubic-bezier(.16,1,.3,1) both}
+.copy-inner.ax-morph-in .eyebrow{animation:axTextReveal 420ms cubic-bezier(.16,1,.3,1) 0ms both}
+.copy-inner.ax-morph-in h1{animation:axTextReveal 560ms cubic-bezier(.16,1,.3,1) 35ms both}
+.copy-inner.ax-morph-in .body{animation:axTextReveal 500ms cubic-bezier(.16,1,.3,1) 105ms both}
+.copy-inner.ax-morph-in .value{animation:axTextReveal 480ms cubic-bezier(.16,1,.3,1) 155ms both}
+.copy-inner.ax-morph-in .pricing-panel{animation:axTextReveal 520ms cubic-bezier(.16,1,.3,1) 135ms both}
+.copy-inner.ax-morph-in .actions{animation:axTextReveal 460ms cubic-bezier(.16,1,.3,1) 190ms both}
+@keyframes axMorphOut{0%{opacity:1;filter:blur(0);transform:translate3d(0,0,0) scale(1)}100%{opacity:0;filter:blur(7px);transform:translate3d(0,-18px,0) scale(.985)}}
+@keyframes axMorphIn{0%{opacity:0;filter:blur(9px);transform:translate3d(0,28px,0) scale(1.018)}100%{opacity:1;filter:blur(0);transform:translate3d(0,0,0) scale(1)}}
+@keyframes axTextReveal{0%{opacity:0;filter:blur(5px);transform:translate3d(0,14px,0)}100%{opacity:1;filter:blur(0);transform:translate3d(0,0,0)}}
+@media(prefers-reduced-motion:reduce){.copy-inner.ax-morph-out,.copy-inner.ax-morph-in,.copy-inner.ax-morph-in .eyebrow,.copy-inner.ax-morph-in h1,.copy-inner.ax-morph-in .body,.copy-inner.ax-morph-in .value,.copy-inner.ax-morph-in .pricing-panel,.copy-inner.ax-morph-in .actions{animation:none!important}}
+</style><link rel="preload" href="./assets/images/landing-01-outside.webp" as="image" type="image/webp" fetchpriority="high">
+</head>
+<body>
+<main class="scene" id="scene">
+  <div class="art art-current" id="artCurrent"></div>
+  <div class="art art-next" id="artNext"></div>
+  <div class="contrast"></div><div class="left-shade"></div><div class="transition-veil"></div>
+  <header>
+    <div class="brand"><img src="./assets/brand/logo-dark.svg" alt="AXIGNAL"></div>
+    <nav class="main-nav" aria-label="Primary">
+      <button type="button" data-jump="2" data-label="what"></button>
+      <button type="button" data-jump="4">AXIGLAND</button>
+      <button type="button" data-jump="7" data-label="knows"></button>
+      <button type="button" data-jump="14" data-label="pricing"></button>
+    </nav>
+    <div class="header-actions">
+      <div class="locale-wrap">
+        <button id="localeButton" class="locale-button" type="button" aria-haspopup="listbox" aria-expanded="false">
+          <span id="localeLabel">English</span><span class="chevron" aria-hidden="true"></span>
+        </button>
+        <div id="localeList" class="locale-list" role="listbox" aria-label="Language" hidden>
+          <button type="button" class="locale-option" role="option" data-locale="en">English</button>
+          <button type="button" class="locale-option" role="option" data-locale="es">Español</button><button type="button" class="locale-option" role="option" data-locale="fr">Français</button><button type="button" class="locale-option" role="option" data-locale="de">Deutsch</button><button type="button" class="locale-option" role="option" data-locale="it">Italiano</button><button type="button" class="locale-option" role="option" data-locale="pt">Português</button>
+        </div>
+      </div>
+      <button type="button" class="seed-cta" data-jump="15" data-label="plant"></button>
+      <button type="button" class="login" data-label="login"></button>
+    </div>
+  </header>
+
+  <section class="copy" aria-live="polite">
+    <div class="copy-inner" id="copyInner">
+      <p class="eyebrow" id="eyebrow"></p>
+      <h1 id="headline"></h1>
+      <div class="body" id="bodycopy"></div>
+      <p class="value" id="value"></p>
+      <div class="pricing-panel" id="pricingPanel" aria-label="Pricing"></div>
+      <div class="actions" id="actions"></div>
+    </div>
+  </section>
+
+  <nav class="question-rail" id="questionRail" aria-label="Questions answered"></nav>
+  <button class="counter-button" id="counterButton" type="button" aria-haspopup="menu" aria-expanded="false"></button>
+  <div class="chapter-menu" id="chapterMenu" role="menu" hidden></div>
+</main>
+<script>
+const SUPPORTED=['en','es','fr','de','it','pt'];
+const questionsEs=[
+  '¿Por qué debería importarme?',
+  '¿Qué hace realmente AXIGNAL?',
+  '¿Solo recopila datos?',
+  '¿Dónde persiste lo que comprende?',
+  '¿Qué empieza cuando planto una Xeed?',
+  '¿Qué obtengo primero?',
+  '¿Por qué debería confiar en lo que muestra?',
+  '¿Solo me dirá lo que ya sé?',
+  '¿Qué ven los buscadores y los agentes de IA?',
+  '¿Es solo una instantánea?',
+  '¿AXENT es otro chatbot?',
+  '¿Alguien puede pagar para cambiar lo que dice AXIGNAL?',
+  '¿Dónde aporta más valor a agencias y equipos de decisión?',
+  '¿Cuánto cuesta la observación persistente?',
+  '¿Qué hago ahora?'
+];
+const questionsFr=['Pourquoi cela devrait-il m’intéresser ?','Que fait réellement AXIGNAL ?','S’agit-il seulement de collecter des données ?','Où cette compréhension persiste-t-elle ?','Que se passe-t-il lorsque je plante une Xeed ?','Qu’est-ce que j’obtiens en premier ?','Pourquoi faire confiance à ce qui est affiché ?','Me dira-t-il seulement ce que je sais déjà ?','Que voient les moteurs de recherche et les agents IA ?','Est-ce seulement un instantané ?','AXENT est-il un autre chatbot ?','Quelqu’un peut-il payer pour changer ce que dit AXIGNAL ?','Où AXIGNAL apporte-t-il le plus de valeur aux agences et équipes de décision ?','Combien coûte l’observation persistante ?','Que dois-je faire maintenant ?'];
+const questionsDe=['Warum sollte mich das interessieren?','Was macht AXIGNAL eigentlich?','Sammelt es nur Daten?','Wo bleibt dieses Verständnis erhalten?','Was beginnt, wenn ich eine Xeed pflanze?','Was bekomme ich zuerst?','Warum sollte ich dem Gezeigten vertrauen?','Sagt es mir nur, was ich bereits weiß?','Was sehen Suchmaschinen und KI-Agenten?','Ist das nur eine Momentaufnahme?','Ist AXENT ein weiterer Chatbot?','Kann jemand bezahlen, um zu ändern, was AXIGNAL sagt?','Wo schafft AXIGNAL besonders viel Wert für Agenturen und Entscheidungsteams?','Was kostet persistente Beobachtung?','Was soll ich jetzt tun?'];
+const questionsIt=['Perché dovrebbe interessarmi?','Cosa fa realmente AXIGNAL?','Raccoglie soltanto dati?','Dove persiste questa comprensione?','Cosa inizia quando pianto una Xeed?','Cosa ottengo per prima cosa?','Perché dovrei fidarmi di ciò che mostra?','Mi dirà soltanto ciò che so già?','Cosa vedono i motori di ricerca e gli agenti IA?','È solo un’istantanea?','AXENT è un altro chatbot?','Qualcuno può pagare per cambiare ciò che dice AXIGNAL?','Dove crea più valore AXIGNAL per agenzie e team decisionali?','Quanto costa l’osservazione persistente?','Cosa devo fare adesso?'];
+const questionsPt=['Porque é que isto me deveria interessar?','O que faz realmente a AXIGNAL?','Limita-se a recolher dados?','Onde persiste esta compreensão?','O que começa quando planto uma Xeed?','O que obtenho primeiro?','Porque devo confiar no que mostra?','Vai dizer-me apenas o que já sei?','O que veem os motores de pesquisa e os agentes de IA?','É apenas uma fotografia instantânea?','AXENT é outro chatbot?','Alguém pode pagar para mudar o que a AXIGNAL diz?','Onde cria mais valor para agências e equipas de decisão?','Quanto custa a observação persistente?','O que devo fazer agora?'];
+const questionsByLocale={es:questionsEs,fr:questionsFr,de:questionsDe,it:questionsIt,pt:questionsPt};
+const localeNames={en:'English',es:'Español',fr:'Français',de:'Deutsch',it:'Italiano',pt:'Português'};
+const labels={
+  en:{what:'What is AXIGNAL?',knows:'How it knows',pricing:'Pricing',login:'Log in',plant:'Plant Xeed',questions:'Questions answered'},
+  es:{what:'¿Qué es AXIGNAL?',knows:'Cómo lo sabe',pricing:'Precio',login:'Entrar',plant:'Planta tu Xeed',questions:'Preguntas que responde'},
+  fr:{what:'Qu’est-ce qu’AXIGNAL ?',knows:'Comment il le sait',pricing:'Tarifs',login:'Connexion',plant:'Planter une Xeed',questions:'Questions traitées'},
+  de:{what:'Was ist AXIGNAL?',knows:'Woher es das weiß',pricing:'Preise',login:'Anmelden',plant:'Xeed pflanzen',questions:'Beantwortete Fragen'},
+  it:{what:'Cos’è AXIGNAL?',knows:'Come lo sa',pricing:'Prezzi',login:'Accedi',plant:'Pianta una Xeed',questions:'Domande a cui risponde'},
+  pt:{what:'O que é a AXIGNAL?',knows:'Como sabe',pricing:'Preço',login:'Entrar',plant:'Plantar uma Xeed',questions:'Perguntas a que responde'}
+};
+const params=new URLSearchParams(location.search);
+const stored=localStorage.getItem('axignal.storyboard.locale');
+function browserLocale(){
+  for(const raw of navigator.languages||[navigator.language]){
+    const base=(raw||'').toLowerCase().split('-')[0];
+    if(SUPPORTED.includes(base)) return base;
+  }
+  return 'en';
+}
+let lang=SUPPORTED.includes(params.get('lang'))?params.get('lang'):(SUPPORTED.includes(stored)?stored:browserLocale());
+let chapter=Math.min(15,Math.max(1,Number(params.get('c')||1)));
+let data=[];
+let transitioning=false;
+let wheelAccum=0;
+let wheelSign=0;
+let wheelResetTimer=0;
+let touchY=null;
+let activeLocaleIndex=0;
+const reduced=matchMedia('(prefers-reduced-motion: reduce)');
+const $=id=>document.getElementById(id);
+const scene=$('scene'), artCurrent=$('artCurrent'), artNext=$('artNext'), copyInner=$('copyInner');
+const localeButton=$('localeButton'), localeList=$('localeList'), chapterMenu=$('chapterMenu');
+
+function questionFor(ch){
+  return questionsByLocale[lang]?.[ch.n-1] || ch.question;
+}
+function viewportKey(){
+  if(innerWidth<=620) return 'mobile';
+  if(innerWidth<=900) return 'tablet';
+  return 'desktop';
+}
+function imageFor(ch){
+  const key=viewportKey();
+  return ch.responsiveImages?.[key] || ch.image;
+}
+function focalFor(ch){
+  return ch.focal?.[viewportKey()] || ch.focal?.desktop || '50% 50%';
+}
+function copyFor(ch){ return ch[lang]||ch.en; }
+function field(copy,name){ return copy?.[name]||''; }
+function setArt(el,ch){
+  el.style.backgroundImage='url("'+imageFor(ch)+'")';
+  el.style.backgroundPosition=focalFor(ch);
+}
+function preload(ch){
+  const img=new Image();
+  img.src=imageFor(ch);
+  return img.decode ? img.decode().catch(()=>{}) : Promise.resolve();
+}
+function bodyMarkup(ch,text){
+  const safe=text.replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;');
+  if(ch.n===13){
+    const marker=lang==='es'?'trabajo. Dirección':'work. Leadership';
+    if(safe.includes(marker)){
+      const parts=safe.split(marker);
+      const first=parts[0]+(lang==='es'?'trabajo.':'work.');
+      const second=(lang==='es'?'Dirección':'Leadership')+parts.slice(1).join(marker);
+      return '<p>'+first+'</p><p>'+second+'</p>';
+    }
+  }
+  return '<p>'+safe+'</p>';
+}
+function updateHeader(){
+  document.querySelectorAll('[data-label]').forEach(el=>{
+    const key=el.dataset.label;
+    const ui=labels[lang]||labels.en;
+    if(ui[key]) el.textContent=ui[key];
+  });
+  localeLabel.textContent=localeNames[lang]||'English';
+  const ariaUi={
+    en:{nav:'Primary navigation',language:'Language'},es:{nav:'Navegación principal',language:'Idioma'},
+    fr:{nav:'Navigation principale',language:'Langue'},de:{nav:'Hauptnavigation',language:'Sprache'},
+    it:{nav:'Navigazione principale',language:'Lingua'},pt:{nav:'Navegação principal',language:'Idioma'}
+  };
+  const aria=ariaUi[lang]||ariaUi.en;
+  document.querySelector('.main-nav').setAttribute('aria-label',aria.nav);
+  localeList.setAttribute('aria-label',aria.language);
+  document.querySelectorAll('.main-nav [data-jump]').forEach(b=>{
+    const target=Number(b.dataset.jump);
+    const active=target===chapter;
+    if(active) b.setAttribute('aria-current','page');
+    else b.removeAttribute('aria-current');
+  });
+  document.querySelectorAll('.locale-option').forEach((b,i)=>{
+    const selected=b.dataset.locale===lang;
+    b.setAttribute('aria-selected',String(selected));
+    if(selected) activeLocaleIndex=i;
+  });
+}
+function fillCopy(ch){
+  const copy=copyFor(ch);
+  document.body.dataset.chapter=String(ch.n).padStart(2,'0');
+  document.documentElement.lang=lang;
+  const eyebrow=field(copy,'Eyebrow');
+  const headline=field(copy,'Headline');
+  if($('eyebrow').textContent!==eyebrow) $('eyebrow').textContent=eyebrow;
+  if($('headline').textContent!==headline) $('headline').textContent=headline;
+  const bodyHtml=bodyMarkup(ch,field(copy,'Body'));
+  if($('bodycopy').innerHTML!==bodyHtml) $('bodycopy').innerHTML=bodyHtml;
+  const value=field(copy,'Value line');
+  if($('value').textContent!==value) $('value').textContent=value;
+  $('value').hidden=!value;
+  const pricing=$('pricingPanel');
+  pricing.innerHTML='';
+  pricing.hidden=ch.n!==14;
+  if(ch.n===14){
+    const pricingCopy={
+      en:{first:'FIRST XEED',more:'ADDITIONAL XEED',month:'/ month',intro:'Plant a perspective. AXIGNAL keeps observing and lets as many Xignals germinate as the evidence supports.',firstDesc:'Persistent observation of a company, project, or economic subject.',moreDesc:'Expand your perspective on the same AXIGLAND.',truth:'The Xignals that germinate from your Xeeds are not billable units.',aria:'Pricing per Xeed',secondary:'See how it works'},
+      es:{first:'PRIMERA XEED',more:'XEED ADICIONAL',month:'/ mes',intro:'Planta una perspectiva. AXIGNAL mantiene la observación y deja que de ella germinen tantos Xignals como la evidencia permita.',firstDesc:'Observación persistente de una empresa, proyecto o sujeto económico.',moreDesc:'Amplía tu perspectiva sobre el mismo AXIGLAND.',truth:'Los Xignals que germinan de tus Xeeds no son unidades facturables.',aria:'Precio por Xeed',secondary:'Ver cómo funciona'},
+      fr:{first:'PREMIÈRE XEED',more:'XEED SUPPLÉMENTAIRE',month:'/ mois',intro:'Plantez une perspective. AXIGNAL maintient l’observation et laisse germer autant de Xignals que les preuves le permettent.',firstDesc:'Observation persistante d’une entreprise, d’un projet ou d’un sujet économique.',moreDesc:'Élargissez votre perspective sur le même AXIGLAND.',truth:'Les Xignals qui germent de vos Xeeds ne sont pas des unités facturables.',aria:'Tarification par Xeed',secondary:'Voir comment cela fonctionne'},
+      de:{first:'ERSTE XEED',more:'ZUSÄTZLICHE XEED',month:'/ Monat',intro:'Pflanzen Sie eine Perspektive. AXIGNAL beobachtet weiter und lässt so viele Xignals entstehen, wie die Evidenz trägt.',firstDesc:'Persistente Beobachtung eines Unternehmens, Projekts oder wirtschaftlichen Subjekts.',moreDesc:'Erweitern Sie Ihre Perspektive auf dasselbe AXIGLAND.',truth:'Xignals, die aus Ihren Xeeds entstehen, sind keine abrechenbaren Einheiten.',aria:'Preis pro Xeed',secondary:'So funktioniert es'},
+      it:{first:'PRIMA XEED',more:'XEED AGGIUNTIVA',month:'/ mese',intro:'Pianta una prospettiva. AXIGNAL mantiene l’osservazione e lascia germogliare tanti Xignals quanti le evidenze consentono.',firstDesc:'Osservazione persistente di un’azienda, progetto o soggetto economico.',moreDesc:'Amplia la tua prospettiva sullo stesso AXIGLAND.',truth:'I Xignals che germogliano dalle tue Xeeds non sono unità fatturabili.',aria:'Prezzo per Xeed',secondary:'Vedi come funziona'},
+      pt:{first:'PRIMEIRA XEED',more:'XEED ADICIONAL',month:'/ mês',intro:'Plante uma perspetiva. A AXIGNAL mantém a observação e deixa germinar tantos Xignals quantos as evidências permitirem.',firstDesc:'Observação persistente de uma empresa, projeto ou sujeito económico.',moreDesc:'Amplie a sua perspetiva sobre o mesmo AXIGLAND.',truth:'Os Xignals que germinam das suas Xeeds não são unidades faturáveis.',aria:'Preço por Xeed',secondary:'Ver como funciona'}
+    };
+    const p=pricingCopy[lang]||pricingCopy.en;
+    $('bodycopy').innerHTML='<p>'+p.intro+'</p>';
+    pricing.setAttribute('aria-label',p.aria);
+    pricing.innerHTML='<article class="price-tier primary"><div class="price-kicker">'+p.first+'</div><div class="price-line"><strong class="price-amount">9,95 €</strong><span class="price-period">'+p.month+'</span></div><p class="price-desc">'+p.firstDesc+'</p></article><article class="price-tier"><div class="price-kicker">'+p.more+'</div><div class="price-line"><strong class="price-amount">+4,95 €</strong><span class="price-period">'+p.month+'</span></div><p class="price-desc">'+p.moreDesc+'</p></article><div class="price-truth">'+p.truth+'</div>';
+  }
+  const actions=$('actions'); actions.innerHTML='';
+  for(const [key,cls] of [['Primary CTA','primary'],['Secondary CTA','secondary']]){
+    const txt=field(copy,key);
+    if(txt){
+      const b=document.createElement('button');
+      b.type='button'; b.className='cta '+cls; b.textContent=txt;
+      if(ch.n===14&&key==='Primary CTA') b.onclick=()=>goTo(15,1);
+      actions.appendChild(b);
+    }
+  }
+  if(ch.n===14&&!field(copy,'Secondary CTA')){
+    const secondary=document.createElement('button');
+    secondary.type='button'; secondary.className='cta secondary';
+    const pricingUi={en:'See how it works',es:'Ver cómo funciona',fr:'Voir comment cela fonctionne',de:'So funktioniert es',it:'Vedi come funziona',pt:'Ver como funciona'};
+    secondary.textContent=pricingUi[lang]||pricingUi.en;
+    secondary.onclick=()=>goTo(2,-1);
+    actions.appendChild(secondary);
+  }
+  $('counterButton').textContent=String(ch.n).padStart(2,'0')+' / 15';
+  const chapterAria={en:'Open chapters. Current: ',es:'Abrir capítulos. Actual: ',fr:'Ouvrir les chapitres. Actuel : ',de:'Kapitel öffnen. Aktuell: ',it:'Apri capitoli. Attuale: ',pt:'Abrir capítulos. Atual: '};
+  $('counterButton').setAttribute('aria-label',(chapterAria[lang]||chapterAria.en)+questionFor(ch));
+}
+function buildRail(){
+  const rail=$('questionRail'); rail.innerHTML=''; rail.setAttribute('aria-label',(labels[lang]||labels.en).questions);
+  for(const ch of data){
+    const b=document.createElement('button');
+    b.type='button'; b.className='question-item'+(ch.n===chapter?' active':'');
+    b.setAttribute('aria-current',ch.n===chapter?'step':'false');
+    b.setAttribute('aria-label',String(ch.n).padStart(2,'0')+'. '+questionFor(ch));
+    b.innerHTML='<span class="question-text"></span><span class="question-dot" aria-hidden="true"></span>';
+    b.querySelector('.question-text').textContent=questionFor(ch);
+    b.onclick=()=>goTo(ch.n,ch.n>chapter?1:-1);
+    rail.appendChild(b);
+  }
+}
+function buildChapterMenu(){
+  chapterMenu.innerHTML='';
+  for(const ch of data){
+    const b=document.createElement('button');
+    b.type='button'; b.role='menuitem'; b.className=ch.n===chapter?'active':'';
+    b.innerHTML='<span class="num">'+String(ch.n).padStart(2,'0')+'</span><span></span>';
+    b.lastElementChild.textContent=questionFor(ch);
+    b.onclick=()=>{closeChapterMenu();goTo(ch.n,ch.n>chapter?1:-1)};
+    chapterMenu.appendChild(b);
+  }
+}
+function updateUrl(){
+  const u=new URL(location.href);
+  u.searchParams.set('c',String(chapter)); u.searchParams.set('lang',lang);
+  history.replaceState({chapter,lang},'',u);
+}
+function renderStable(){
+  const ch=data[chapter-1];
+  setArt(artCurrent,ch);
+  artNext.style.backgroundImage='none';
+  fillCopy(ch); updateHeader(); buildRail(); buildChapterMenu(); updateUrl();
+}
+async function goTo(target,dir=1){
+  target=Math.min(15,Math.max(1,target));
+  if(target===chapter||transitioning) return;
+  transitioning=true;
+  const next=data[target-1];
+  await preload(next);
+  setArt(artNext,next);
+  scene.classList.add('is-transitioning');
+  if(!reduced.matches){
+    copyInner.classList.remove('ax-morph-in');
+    copyInner.classList.add('ax-morph-out');
+  }
+  const swapAt=reduced.matches?70:300;
+  const total=reduced.matches?150:820;
+  setTimeout(()=>{
+    chapter=target;
+    fillCopy(next); updateHeader(); buildRail(); buildChapterMenu(); updateUrl();
+    if(!reduced.matches){
+      copyInner.classList.remove('ax-morph-out');
+      void copyInner.offsetWidth;
+      copyInner.classList.add('ax-morph-in');
+    }
+  },swapAt);
+  setTimeout(()=>{
+    setArt(artCurrent,next);
+    scene.classList.remove('is-transitioning');
+    artNext.style.backgroundImage='none';
+    copyInner.classList.remove('ax-morph-out','ax-morph-in');
+    transitioning=false;
+  },total);
+}
+function next(){ if(chapter<15) goTo(chapter+1,1); }
+function prev(){ if(chapter>1) goTo(chapter-1,-1); }
+
+function onWheel(e){
+  e.preventDefault();
+  if(transitioning) return;
+  const dominant=Math.abs(e.deltaY)>=Math.abs(e.deltaX)?e.deltaY:e.deltaX;
+  if(Math.abs(dominant)<1) return;
+  const sign=Math.sign(dominant);
+  if(sign!==wheelSign){wheelAccum=0;wheelSign=sign}
+  wheelAccum+=Math.abs(dominant);
+  clearTimeout(wheelResetTimer);
+  wheelResetTimer=setTimeout(()=>{wheelAccum=0;wheelSign=0},140);
+  if(wheelAccum>=72){
+    wheelAccum=0;
+    sign>0?next():prev();
+  }
+}
+addEventListener('wheel',onWheel,{passive:false});
+addEventListener('keydown',e=>{
+  if(!localeList.hidden||!chapterMenu.hidden){
+    if(e.key==='Escape'){closeLocale();closeChapterMenu();return}
+  }
+  if(['ArrowDown','PageDown','ArrowRight',' '].includes(e.key)){e.preventDefault();next()}
+  if(['ArrowUp','PageUp','ArrowLeft'].includes(e.key)){e.preventDefault();prev()}
+  if(e.key==='Home'){e.preventDefault();goTo(1,-1)}
+  if(e.key==='End'){e.preventDefault();goTo(15,1)}
+});
+addEventListener('touchstart',e=>{touchY=e.changedTouches[0]?.clientY??null},{passive:true});
+addEventListener('touchend',e=>{
+  if(touchY===null||transitioning)return;
+  const dy=(e.changedTouches[0]?.clientY??touchY)-touchY; touchY=null;
+  if(Math.abs(dy)>=48) dy<0?next():prev();
+},{passive:true});
+
+document.querySelectorAll('[data-jump]').forEach(b=>b.onclick=()=>{
+  const target=Number(b.dataset.jump); goTo(target,target>chapter?1:-1);
+});
+
+function openLocale(){
+  localeList.hidden=false; localeButton.setAttribute('aria-expanded','true');
+  const options=[...localeList.querySelectorAll('.locale-option')];
+  options[activeLocaleIndex]?.focus();
+}
+function closeLocale(){ localeList.hidden=true; localeButton.setAttribute('aria-expanded','false') }
+localeButton.onclick=()=>localeList.hidden?openLocale():closeLocale();
+localeButton.onkeydown=e=>{if(['ArrowDown','Enter',' '].includes(e.key)){e.preventDefault();openLocale()}};
+localeList.addEventListener('keydown',e=>{
+  const options=[...localeList.querySelectorAll('.locale-option')];
+  let i=options.indexOf(document.activeElement);
+  if(e.key==='ArrowDown'){e.preventDefault();options[(i+1+options.length)%options.length].focus()}
+  if(e.key==='ArrowUp'){e.preventDefault();options[(i-1+options.length)%options.length].focus()}
+  if(e.key==='Escape'){e.preventDefault();closeLocale();localeButton.focus()}
+});
+localeList.querySelectorAll('.locale-option').forEach(b=>b.onclick=()=>{
+  lang=b.dataset.locale; localStorage.setItem('axignal.storyboard.locale',lang); closeLocale();
+  fillCopy(data[chapter-1]);updateHeader();buildRail();buildChapterMenu();updateUrl();localeButton.focus();
+});
+
+function openChapterMenu(){chapterMenu.hidden=false;$('counterButton').setAttribute('aria-expanded','true');chapterMenu.querySelector('.active')?.focus()}
+function closeChapterMenu(){chapterMenu.hidden=true;$('counterButton').setAttribute('aria-expanded','false')}
+$('counterButton').onclick=()=>chapterMenu.hidden?openChapterMenu():closeChapterMenu();
+
+addEventListener('click',e=>{
+  if(!e.target.closest('.locale-wrap')) closeLocale();
+  if(!e.target.closest('#chapterMenu')&&!e.target.closest('#counterButton')) closeChapterMenu();
+});
+addEventListener('resize',()=>{
+  if(!data.length)return;
+  setArt(artCurrent,data[chapter-1]);
+  buildRail();buildChapterMenu();
+});
+
+fetch('./storyboard-data.json')
+  .then(r=>{if(!r.ok) throw new Error('storyboard-data '+r.status);return r.json()})
+  .then(rows=>{
+    data=rows;
+    renderStable();
+    preload(data[chapter-1]);
+    data.slice(0,4).forEach(preload);
+    document.fonts?.ready?.then(()=>document.documentElement.classList.add('fonts-ready'));
+  })
+  .catch(err=>{
+    console.error(err);
+    $('headline').textContent='Storyboard data failed to load';
+    $('bodycopy').textContent=String(err);
+  });
+</script>
+</body>
+</html>
