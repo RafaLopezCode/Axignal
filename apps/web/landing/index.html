@@ -153,6 +153,13 @@ body[data-chapter="14"] .actions{margin-top:17px}
 .access-dialog-copy{margin:0;color:rgba(246,241,231,.72);font-size:14px;line-height:1.55}
 .access-dialog-actions{display:flex;justify-content:flex-end;margin-top:24px}
 .access-dialog-close{min-height:38px;padding:9px 15px;border:1px solid rgba(175,166,138,.5);border-radius:var(--ax-radius-control);background:rgba(175,166,138,.10);color:#fff;font-weight:500}
+.evidence-dialog{width:min(820px,calc(100vw - 32px))}
+.evidence-dialog-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:20px}
+.evidence-step{padding:14px 15px;border:1px solid rgba(175,166,138,.22);background:rgba(255,255,255,.025)}
+.evidence-step strong{display:block;margin-bottom:6px;font:500 10px/1.2 var(--ax-font-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--ax-brass)}
+.evidence-step span{display:block;font-size:12.5px;line-height:1.45;color:rgba(246,241,231,.74)}
+.evidence-note{margin:16px 0 0;padding-top:13px;border-top:1px solid rgba(175,166,138,.18);font-size:11.5px;line-height:1.45;color:rgba(246,241,231,.58)}
+@media(max-width:620px){.evidence-dialog-grid{grid-template-columns:1fr}.evidence-dialog .access-dialog-inner{padding:22px}}
 
 .question-rail{
   position:absolute;right:clamp(17px,2vw,34px);top:50%;z-index:12;transform:translateY(-48%);
@@ -312,6 +319,17 @@ body[data-chapter="14"] .copy{width:min(43rem,46vw)}
     </div>
   </dialog>
 
+  <dialog class="access-dialog evidence-dialog" id="evidenceDialog" aria-labelledby="evidenceDialogTitle">
+    <div class="access-dialog-inner">
+      <p class="access-dialog-kicker" id="evidenceDialogKicker"></p>
+      <h2 id="evidenceDialogTitle"></h2>
+      <p class="access-dialog-copy" id="evidenceDialogCopy"></p>
+      <div class="evidence-dialog-grid" id="evidenceDialogGrid"></div>
+      <p class="evidence-note" id="evidenceDialogNote"></p>
+      <div class="access-dialog-actions"><button type="button" class="access-dialog-close" id="evidenceDialogClose"></button></div>
+    </div>
+  </dialog>
+
   <nav class="question-rail" id="questionRail" aria-label="Questions answered"></nav>
   <button class="counter-button" id="counterButton" type="button" aria-haspopup="menu" aria-expanded="false"></button>
   <div class="chapter-menu" id="chapterMenu" role="menu" hidden></div>
@@ -390,6 +408,32 @@ function openAccessDialog(){
 }
 $('accessDialogClose').onclick=()=>accessDialog.close();
 $('loginButton').onclick=openAccessDialog;
+
+const evidenceDialog=$('evidenceDialog');
+const evidenceCopy={
+  en:{kicker:'EPISTEMIC TRACE',title:'How AXIGNAL knows',copy:'A material conclusion is not a black box. AXIGNAL preserves the route back to the supporting epistemic context.',steps:[['OBSERVATION','Public evidence is observed with source, time and provenance.'],['ADMISSION','Evidence is admitted under governed deterministic rules; CLAIM is not WRITE.'],['UNDERSTANDING','Observed facts remain distinct from inference, contradiction, staleness and unknown.'],['TRACE','The subscriber can navigate from a material conclusion back to its persisted supporting context.']],note:'This landing demonstrates the governed interaction contract. It does not fabricate a live company evidence trace before a Xeed and its canonical evidence exist.',close:'Return to evidence'},
+  es:{kicker:'TRAZA EPISTÉMICA',title:'Cómo lo sabe AXIGNAL',copy:'Una conclusión material no es una caja negra. AXIGNAL conserva el camino de vuelta al contexto epistémico que la sustenta.',steps:[['OBSERVACIÓN','La evidencia pública se observa conservando fuente, tiempo y procedencia.'],['ADMISIÓN','La evidencia se admite mediante reglas deterministas gobernadas; CLAIM no es WRITE.'],['COMPRENSIÓN','Los hechos observados permanecen separados de inferencias, contradicciones, obsolescencia y desconocidos.'],['TRAZA','El suscriptor puede navegar desde una conclusión material hasta su contexto de soporte persistido.']],note:'Esta landing demuestra el contrato de interacción gobernado. No fabrica una traza de evidencia empresarial en vivo antes de que existan una Xeed y su evidencia canónica.',close:'Volver a evidencia'},
+  fr:{kicker:'TRACE ÉPISTÉMIQUE',title:'Comment AXIGNAL le sait',copy:'Une conclusion matérielle n’est pas une boîte noire. AXIGNAL conserve le chemin vers le contexte épistémique qui la soutient.',steps:[['OBSERVATION','Les preuves publiques sont observées avec leur source, leur date et leur provenance.'],['ADMISSION','Les preuves sont admises selon des règles déterministes gouvernées ; CLAIM n’est pas WRITE.'],['COMPRÉHENSION','Les faits observés restent distincts des inférences, contradictions, données obsolètes et inconnues.'],['TRACE','L’abonné peut remonter d’une conclusion matérielle à son contexte de support persistant.']],note:'Cette landing démontre le contrat d’interaction gouverné sans fabriquer de trace d’entreprise en direct avant l’existence d’une Xeed et de ses preuves canoniques.',close:'Retour aux preuves'},
+  de:{kicker:'EPISTEMISCHE SPUR',title:'Woher AXIGNAL es weiß',copy:'Eine wesentliche Schlussfolgerung ist keine Blackbox. AXIGNAL bewahrt den Weg zurück zum stützenden epistemischen Kontext.',steps:[['BEOBACHTUNG','Öffentliche Evidenz wird mit Quelle, Zeitpunkt und Provenienz beobachtet.'],['ZULASSUNG','Evidenz wird nach geregelten deterministischen Regeln zugelassen; CLAIM ist nicht WRITE.'],['VERSTÄNDNIS','Beobachtete Fakten bleiben von Inferenz, Widerspruch, Veraltung und Unbekanntem getrennt.'],['SPUR','Abonnenten können von einer Schlussfolgerung zu ihrem persistenten Belegkontext zurücknavigieren.']],note:'Diese Landing demonstriert den geregelten Interaktionsvertrag, ohne vor einer Xeed und kanonischer Evidenz eine Live-Unternehmensspur zu erfinden.',close:'Zurück zur Evidenz'},
+  it:{kicker:'TRACCIA EPISTEMICA',title:'Come lo sa AXIGNAL',copy:'Una conclusione materiale non è una scatola nera. AXIGNAL conserva il percorso verso il contesto epistemico che la sostiene.',steps:[['OSSERVAZIONE','L’evidenza pubblica viene osservata conservando fonte, tempo e provenienza.'],['AMMISSIONE','L’evidenza è ammessa secondo regole deterministiche governate; CLAIM non è WRITE.'],['COMPRENSIONE','I fatti osservati restano distinti da inferenze, contraddizioni, obsolescenza e ignoto.'],['TRACCIA','L’abbonato può risalire da una conclusione materiale al suo contesto di supporto persistente.']],note:'Questa landing dimostra il contratto d’interazione governato senza inventare una traccia aziendale live prima dell’esistenza di una Xeed e della sua evidenza canonica.',close:'Torna all’evidenza'},
+  pt:{kicker:'RASTO EPISTÉMICO',title:'Como a AXIGNAL sabe',copy:'Uma conclusão material não é uma caixa negra. A AXIGNAL preserva o caminho de regresso ao contexto epistémico que a sustenta.',steps:[['OBSERVAÇÃO','A evidência pública é observada preservando fonte, tempo e proveniência.'],['ADMISSÃO','A evidência é admitida por regras determinísticas governadas; CLAIM não é WRITE.'],['COMPREENSÃO','Os factos observados permanecem distintos de inferência, contradição, obsolescência e desconhecido.'],['RASTO','O subscritor pode navegar de uma conclusão material até ao seu contexto de suporte persistente.']],note:'Esta landing demonstra o contrato de interação governado sem fabricar um rasto empresarial em direto antes de existirem uma Xeed e a sua evidência canónica.',close:'Voltar à evidência'}
+};
+function openEvidenceDialog(){
+  const copy=evidenceCopy[lang]||evidenceCopy.en;
+  $('evidenceDialogKicker').textContent=copy.kicker;
+  $('evidenceDialogTitle').textContent=copy.title;
+  $('evidenceDialogCopy').textContent=copy.copy;
+  $('evidenceDialogGrid').replaceChildren(...copy.steps.map(([title,body])=>{
+    const item=document.createElement('div'); item.className='evidence-step';
+    const strong=document.createElement('strong'); strong.textContent=title;
+    const span=document.createElement('span'); span.textContent=body;
+    item.append(strong,span); return item;
+  }));
+  $('evidenceDialogNote').textContent=copy.note;
+  $('evidenceDialogClose').textContent=copy.close;
+  evidenceDialog.showModal();
+}
+$('evidenceDialogClose').onclick=()=>evidenceDialog.close();
 
 function questionFor(ch){
   return questionsByLocale[lang]?.[ch.n-1] || ch.question;
@@ -497,7 +541,7 @@ function fillCopy(ch){
         '1:Primary CTA':()=>goTo(15,1),
         '1:Secondary CTA':()=>goTo(2,1),
         '5:Primary CTA':()=>goTo(15,1),
-        '7:Primary CTA':openAccessDialog,
+        '7:Primary CTA':openEvidenceDialog,
         '14:Primary CTA':()=>goTo(15,1),
         '15:Primary CTA':openAccessDialog,
         '15:Secondary CTA':()=>goTo(7,-1)
