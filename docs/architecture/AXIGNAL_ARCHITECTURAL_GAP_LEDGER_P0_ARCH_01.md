@@ -78,7 +78,7 @@ Status taxonomy is used exactly as follows:
 - `DOMAIN`: Compute and economic policy.
 - `TARGET_RESPONSIBILITY`: Enforce monetary, source, token, expansion, loop, and deadline budgets with marginal-value stopping.
 - `CURRENT_STATUS`: `SPECIFIED_NOT_IMPLEMENTED`.
-- `REPOSITORY_EVIDENCE`: `ObservationSeed.expansion_budget` and `BatchPackager.max_batch_size` exist, but no budget controller or cost accounting exists.
+- `REPOSITORY_EVIDENCE`: `XeedGerminationState.expansion_budget` and `BatchPackager.max_batch_size` exist, but no budget controller or cost accounting exists.
 - `MISSING_CAPABILITY`: Shared budgets, authorization, reservation/accounting, enforcement, and stop-reason records.
 - `DEPENDENCIES`: Research planner, Xeed, source/cognitive providers, reuse policy.
 - `AUTHORITY_BOUNDARY`: Allocates permitted compute only; budget or subscription cannot lower canonical truth standards.
@@ -213,7 +213,7 @@ Status taxonomy is used exactly as follows:
 - `DOMAIN`: Temporal orchestration.
 - `TARGET_RESPONSIBILITY`: Schedule reobservation from currentness, policy, priority, budget, and explicit stop conditions.
 - `CURRENT_STATUS`: `SPECIFIED_NOT_IMPLEMENTED`.
-- `REPOSITORY_EVIDENCE`: `ObservationSeed` has `last_observed_at` and `next_observation_at`; no scheduler, job queue, or reobservation dispatch code was found.
+- `REPOSITORY_EVIDENCE`: `XeedGerminationState` has `last_observed_at` and `next_observation_at`; no scheduler, job queue, or reobservation dispatch code was found.
 - `MISSING_CAPABILITY`: Schedule computation, dispatch, idempotency, budget integration, and rescheduling after evidence outcomes.
 - `DEPENDENCIES`: Temporal Engine, Research Planner, Knowledge Frontier, Budget Controller.
 - `AUTHORITY_BOUNDARY`: Schedules observation only; it cannot mutate canonical truth.
@@ -249,7 +249,7 @@ Status taxonomy is used exactly as follows:
 - `DOMAIN`: Persistent observation lifecycle.
 - `TARGET_RESPONSIBILITY`: Represent an observation objective and persistent focus with budgets, expansion, readiness, and LIVE cultivation.
 - `CURRENT_STATUS`: `PARTIALLY_IMPLEMENTED`.
-- `REPOSITORY_EVIDENCE`: `domain/xignal/observation_seed.py` implements `ObservationSeed`, `EXPANDING`/`LIVE`, shallow budget/timing fields; no Xeed model or germination state machine exists.
+- `REPOSITORY_EVIDENCE`: `domain/xeed/model.py` implements canonical Xeed identity and `domain/xeed/germination.py` implements shallow `GERMINATING`/`LIVE` lifecycle, budget and timing state. The complete Brain germination state machine, scheduler and productive runtime remain absent.
 - `MISSING_CAPABILITY`: Xeed, lifecycle phases, scheduler/orchestrator, full budgets, readiness and notification; exact Xeed/Xignal lifecycle mapping remains open in the Atlas.
 - `DEPENDENCIES`: Organization identity, Knowledge Frontier, Research Planner, Budget Controller, Map Readiness.
 - `AUTHORITY_BOUNDARY`: Xignal/Xeed allocate attention and compute, not ownership or canonical authority.
@@ -364,7 +364,7 @@ The target loops are explicitly specified in Atlas §§61–66. The codebase doe
 | Loop | Target definition | Current code coverage | Status in Graphify architecture knowledge |
 | --- | --- | --- | --- |
 | Research | Atlas §61: gap → question → acquisition → Python₁ → Luna → Python₂ → JEV → policy or structured gap → Python₃/Luna targeted acquisition. | Individual evidence, normalization, resolver, and provider primitives only; no connected loop. | Target loop explicitly indexed; status and code evidence linked here. |
-| Observation | Atlas §62: canonical state → time/decay → reobservation → frontier/research → uphold/revise/retire/unresolved. | Currentness/time fields and ObservationSeed timestamps only; no decay engine or scheduler. | Target loop explicitly indexed; runtime absent. |
+| Observation | Atlas §62: canonical state → time/decay → reobservation → frontier/research → uphold/revise/retire/unresolved. | Currentness/time fields and XeedGerminationState timestamps only; no decay engine or scheduler. | Target loop explicitly indexed; runtime absent. |
 | Map Readiness repair | Atlas §63: readiness failure → dimension gap → targeted research → canonical state → readiness. | No readiness gate or repair path. | Target loop explicitly indexed; runtime absent. |
 | Claim Review | Atlas §64: challenge → request/trigger → independent reinvestigation → evidence outcome. | No Claim Review runtime. No direct canonical path is implemented; direct edit authority is prohibited by doctrine. | Target loop explicitly indexed; direct-write transition prohibited. |
 | Graph expansion | Atlas §65: Hop0 → valuable Hop1 → selective Hop2 → gaps → information-gain research/stop. | No graph projection/expansion runtime. `KnowledgeFrontier.candidate_expansions` is a field only. | Target loop explicitly indexed; runtime absent. |

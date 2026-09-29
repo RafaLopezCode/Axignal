@@ -43,8 +43,8 @@ API, DB, migration, knowledge binding or HFX-01
 ## Reconciliation Findings
 
 - Organization is a global economic entity and has no owner/scope fields.
-- ObservationSeed is an Organization observation assignment with an
-  initiated_by string; it is not Xeed identity.
+- ADR-0023 reconciles the seed/germination vocabulary: the planted seed is the
+  Xeed itself; `XeedGerminationState` carries operational lifecycle keyed by Xeed.
 - Existing identity convention is string IDs. Distinct NewType aliases
   preserve that representation while giving mypy separate identity types.
 - No principal, tenant, membership, Xeed, authentication, repository, API or

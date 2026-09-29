@@ -1,19 +1,13 @@
-"""XIGNAL: persistent observation allocation.
+"""XIGNAL: observation-derived economic signal semantics.
 
-"Xignal a company" assigns persistent computational observation. It does not
-create a profile, claim a company, or grant authority to configure canonical
-truth. This package must not import ``domain.organizations`` and must not expose
-any Organization mutation.
+A Xignal is produced by AXIGNAL's Brain while Xeeds germinate and evolve.
+It can direct attention or further investigation, but it is not a Xeed,
+not a billable unit and not canonical truth. A concrete Xignal domain payload
+is intentionally deferred until its evidence/provenance contract is specified.
 
-Doctrine: MASTER §4.4, §7, §26, §32, §46.5, §46.14.
+Doctrine: MASTER §§4.4A, 7.3, 26; ADR-0023.
 """
 
 from __future__ import annotations
 
-from domain.xignal.observation_seed import (
-    ObservationSeed,
-    ObservationStatus,
-    XignalError,
-)
-
-__all__ = ["ObservationSeed", "ObservationStatus", "XignalError"]
+__all__: list[str] = []

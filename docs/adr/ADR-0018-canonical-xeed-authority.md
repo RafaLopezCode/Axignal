@@ -1,8 +1,6 @@
 # ADR-0018: Canonical Xeed Identity and Tenant Authorization Boundary
 
-- **Status:** Accepted; P0-CORE-01 identity/read authority and P0-CORE-02
-  FAXT contextual-read boundary are implemented as domain/application
-  contracts with deterministic test/dev authority
+- **Status:** Accepted; terminology reconciled by ADR-0023. P0-CORE-01 identity/read authority and P0-CORE-02 FAXT contextual-read boundary are implemented as domain/application contracts with deterministic test/dev authority
 - **Date:** 2026-09-27
 - **Authority:** CTO P0-CORE-01 decision; MASTER §§3–7, §55; Constitution
   IV, VI, XX and XXI
@@ -11,8 +9,10 @@
 ## Context
 
 Organization is a shared AXIGLAND world entity. It cannot identify private
-subscriber context or serve as an isolation boundary. ObservationSeed is an
-observation assignment associated with Organization; it is not a Xeed.
+subscriber context or serve as an isolation boundary. ADR-0023 later clarified
+that the customer-planted persistent observation seed is the Xeed itself;
+`XeedGerminationState` carries lifecycle/work state for that Xeed, while a
+Xignal is an observation-derived economic signal.
 P0-CORE-01 reconciliation found no Principal, Tenant, Xeed, authentication,
 authorization, persistence or application read implementation.
 
@@ -33,8 +33,9 @@ Tenant without authenticating either.
 - Each Xeed has a stable identity, belongs to exactly one Tenant, and
   references one Organization. Different Tenants may create distinct Xeeds
   referencing the same Organization. Labels are presentation data only.
-- ObservationSeed remains an Organization observation assignment. No
-  ObservationSeed–Xeed cardinality or binding is established.
+- `XeedGerminationState` is keyed by one Xeed and is operational/cognitive
+  lifecycle state only. It grants no knowledge membership or canonical write
+  authority. Xignals produced during germination are not authorization tokens.
 - The application read sequence is:
 
       trusted context → resolve Principal → verify membership
@@ -55,8 +56,9 @@ Tenant without authenticating either.
 
 - **Use Organization as the private boundary:** rejected; Organization is
   global, observer-independent world identity.
-- **Use ObservationSeed as Xeed identity:** rejected; it represents an
-  observation assignment and has no established Xeed ownership semantics.
+- **Keep a separate legacy ObservationSeed beside Xeed:** superseded by
+  ADR-0023; the planted seed is the Xeed, while germination lifecycle is a
+  separate state keyed by Xeed.
 - **Trust caller-provided tenant_id:** rejected; context selection cannot
   establish Principal membership.
 - **Add authentication or provider-specific identity:** rejected; a future
@@ -90,3 +92,5 @@ of future, separately authorized work.
 - P0-HFX-01 remains not started.
 - ADR-0017 remains the broader target for private continuity and AXENT routing;
   this ADR implements only the root Xeed identity/read boundary.
+
+[executed on device: DESKTOP-7L6CMEJ (d615520f-0404-49b0-83c7-620cc18c31f4)]

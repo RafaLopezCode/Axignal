@@ -64,7 +64,7 @@ Entitlement is separate from authentication, authorization, private scope, and c
 
 AXIGNAL owns the interpretation that maps verified commercial state to product capabilities and limits. A billing adapter may associate external billing references with the governed consumption scope, but external provider IDs and claims do not define Principal, Tenant, Membership, Xeed, or Organization. An unknown entitlement remains `UNKNOWN` and cannot grant new paid capacity; it must not be relabeled as `FALSE` or as a confirmed cancellation.
 
-No payer-to-Tenant cardinality, billing ownership, Xignal-capacity mapping, or commercial lifecycle is selected. These questions are deferred until product authority requires them. No billing provider or Stripe-specific ID enters this domain contract.
+No payer-to-Tenant cardinality, billing ownership, Xeed-capacity consumption mapping, or commercial lifecycle is selected. MASTER now establishes Xeed as the priced persistent-observation unit and Xignals as non-billable emergent signals; payer/consumption ownership still remains deferred. No billing provider or Stripe-specific ID enters this domain contract.
 
 ## Profile and preferences
 
@@ -107,7 +107,7 @@ PR #31 remains an independent governance proposal and is not modified by Q2. Its
 - Payer identity and its cardinality relative to Principal and Tenant.
 - Whether one Principal can belong to multiple Tenants as a product guarantee; the current pair shape does not decide cardinality.
 - Whether multiple Principals share one commercial subscriber scope, and how membership administration works.
-- How priced persistent Xignal capacity maps to Tenant, Xeed, Principal, or a distinct commercial reference.
+- How priced Xeed capacity maps to Tenant, Principal, payer, or another governed commercial reference. Xignals are not billable capacity units.
 - Cross-subscriber Xignal/attention cardinality for the same Organization; canonical Organization remains singular.
 - Profile fields beyond the Principal ownership boundary for durable human preferences.
 - Principal, external-identity, membership, Tenant, Xeed, and private-history deletion, retention, and offboarding policies.

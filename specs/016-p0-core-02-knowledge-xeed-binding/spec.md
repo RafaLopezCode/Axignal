@@ -82,6 +82,6 @@ adding production persistence/writing, or supporting another knowledge type.
 Deterministic tests cover authorized read, same-Tenant/different-Xeed
 isolation, cross-Tenant denial, shared global FAXT identity, raw-ID denial,
 enumeration, missing FAXT/reference, type identity, label independence,
-UNKNOWN/currentness/provenance preservation, ObservationSeed non-authority,
+UNKNOWN/currentness/provenance preservation, Xeed-germination-state non-authority,
 and lookup ordering. Repository gates are required before commit/PR; no merge
 is authorized.

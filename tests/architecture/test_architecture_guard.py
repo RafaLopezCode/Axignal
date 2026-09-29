@@ -113,13 +113,13 @@ def test_relative_import_resolution(tmp_path: Path) -> None:
         "from .sibling import helper\n"
         "import domain.faxt.model\n"
     )
-    path = tmp_path / "domain" / "xignal" / "observation_seed.py"
+    path = tmp_path / "domain" / "xignal" / "signal.py"
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(source, encoding="utf-8")
     import ast
 
     tree = ast.parse(source)
-    resolved = {name for name, _ in imported_modules("domain.xignal.observation_seed", False, tree)}
+    resolved = {name for name, _ in imported_modules("domain.xignal.signal", False, tree)}
     assert "domain.organizations.model" in resolved
     assert "domain.xignal.sibling" in resolved
     assert "domain.faxt.model" in resolved

@@ -1290,9 +1290,9 @@ Stable facts should be checked less often. Volatile relationships/events should 
 Multiple Xeeds must not create isolated copies of the same world.
 
 ```text
-User A Xignals ACME ─┐
-User B Xignals ACME ─┼──→ one canonical ACME knowledge state
-User C reaches ACME ─┘
+User A plants Xeed on ACME ─┐
+User B plants Xeed on ACME ─┼──→ one canonical ACME knowledge state
+User C reaches ACME ─────────┘
 ```
 
 User-specific state may include observation preferences, private context and perspective, but canonical public-economic knowledge is shared.
@@ -2087,7 +2087,7 @@ SUBSCRIBERS MAY CHALLENGE, NEVER EDIT
 AXENT REINVESTIGATES AND FOLLOWS THE EVIDENCE
 ```
 
-> **Xignal a company. Plant a Xeed. AXENT cultivates the evidence. The Brain turns it into knowledge. AXIGLAND remembers and connects it.**
+> **Plant a Xeed. The Brain germinates it into Xignals. Evidence governs what becomes knowledge. AXIGLAND remembers and connects it.**
 
 
 ---
@@ -2105,3 +2105,5 @@ These phrases express the intended relationship between AXIGNAL and the subscrib
 > **You know what your company is. AXIGNAL shows you what the observable economic world says it is — and why.**
 
 The final phrase captures the central germination promise: AXIGNAL does not replace internal management knowledge. It provides an independent, evidence-traceable external economic mirror.
+
+[executed on device: DESKTOP-7L6CMEJ (d615520f-0404-49b0-83c7-620cc18c31f4)]

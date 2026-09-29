@@ -3,6 +3,8 @@
 **Base**: e431e71091d3d1a1e7765bc3d3d2dca36b186230  
 **Mode**: Read-only canonical reconciliation
 
+> **2026-09-29 semantic reconciliation:** Findings F/G below record the repository state at the time of this historical research. ADR-0023 supersedes the separate `ObservationSeed` model: the planted seed is now canonically the Xeed; `XeedGerminationState` carries lifecycle state keyed by Xeed, and Xignals are emergent economic signals.
+
 ## Canonical questions A–J
 
 | Question | Finding |

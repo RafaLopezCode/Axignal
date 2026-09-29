@@ -16,7 +16,7 @@ WHY CARE
 → WHAT AXIGNAL OBSERVES
 → HOW OBSERVATION BECOMES ECONOMIC UNDERSTANDING
 → WHAT AXIGLAND IS
-→ WHAT A XIGNAL DOES
+→ WHAT PLANTING A XEED STARTS
 → WHAT THE FIRST MAP PROVIDES
 → HOW CLAIMS RETURN TO EVIDENCE
 → HOW POTENTIAL RELEVANCE IS DISCOVERED WITHOUT BECOMING FACT
@@ -26,7 +26,7 @@ WHY CARE
 → WHY AXIGNAL REMAINS INDEPENDENT
 → WHO CAN USE IT
 → WHAT OBSERVATION COSTS
-→ START ONE XIGNAL
+→ PLANT ONE XEED
 ```
 
 The landing MUST make AXIGNAL understandable without requiring prior knowledge of its ontology.
@@ -37,8 +37,10 @@ Public copy MUST preserve these invariants:
 
 ```text
 ONE_CANONICAL_AXIGLAND=YES
-XIGNAL_IS_PERSISTENT_OBSERVATION=YES
-XIGNAL_IS_OWNERSHIP=NO
+XEED_IS_PERSISTENT_OBSERVATION_FOCUS=YES
+XEED_IS_OWNERSHIP=NO
+XIGNAL_IS_OBSERVATION_DERIVED_SIGNAL=YES
+XIGNAL_IS_BILLABLE_UNIT=NO
 USER_DIRECTS_ATTENTION_NOT_CONCLUSIONS=YES
 CLAIM_IS_WRITE=NO
 OBSERVED_IS_POTENTIAL=NO
@@ -83,7 +85,7 @@ Canonical chapters and order:
 2. OBSERVE
 3. UNDERSTAND
 4. AXIGLAND
-5. XIGNAL
+5. XEED
 6. FIRST_MAP
 7. EVIDENCE
 8. DISCOVER
@@ -99,6 +101,22 @@ Navigation MAY jump directly to meaningful chapters. Direct navigation MUST NOT 
 
 Keyboard, pointer/wheel, touch and accessible navigation MUST converge on the same chapter state. Reduced-motion preferences MUST be respected.
 
+### 4.1 Premium chapter transition contract
+
+Wheel/trackpad pagination MUST feel intentional rather than like native document scrolling. One deliberate gesture advances at most one chapter; uncontrolled multi-chapter skipping, raw scroll-jacking and long lockouts are prohibited.
+
+The transition MUST preserve visual continuity through a restrained editorial motion grammar: current copy exits, artwork crossfades/reframes, next copy enters, and the chapter/question state updates as one coordinated transition. The target duration SHOULD remain in the approximate 420–700 ms range on standard motion, tuned by browser QA rather than by decorative animation goals.
+
+The interaction MUST include hysteresis/cooldown sufficient to prevent accidental double-advance while remaining responsive to a second deliberate gesture. Keyboard, click/direct navigation and touch MUST resolve through the same transition state machine.
+
+Reduced motion MUST switch to a short opacity/state change without spatial travel. Motion may never hide loading, delay content availability, or imply a different epistemic state.
+
+### 4.2 Question navigation rail
+
+Desktop/tablet chapter navigation MUST expose the human question answered by each chapter beside its navigation marker. The active chapter question MUST be legible and prominent; inactive questions MUST remain navigable but visually subordinate through reduced opacity rather than disappearing.
+
+The rail MUST provide enough vertical separation to scan questions without turning into a dense 15-dot control. On narrow mobile layouts, the full question rail MAY collapse to a compact chapter control/menu while preserving direct access to every chapter.
+
 ## 5. Persistent header contract
 
 Every chapter MUST retain the same header authority and hierarchy:
@@ -109,7 +127,7 @@ Every chapter MUST retain the same header authority and hierarchy:
 - How it knows;
 - Pricing;
 - Log in;
-- + Xignal.
+- + Plant Xeed.
 
 Labels are localized except protected product names.
 
@@ -129,7 +147,7 @@ Canonical EN headline:
 Canonical ES headline:
 > ¿De verdad sabes cómo se ve tu empresa desde fuera?
 
-Primary action: Xignal the visitor's company.
+Primary action: plant the visitor's Xeed.
 
 ### 6.2 OBSERVE
 
@@ -157,11 +175,11 @@ Required meaning: AXIGLAND is one canonical, temporal, governed economic world/m
 Required value statement:
 > Change the perspective. Not the underlying truth.
 
-### 6.5 XIGNAL
+### 6.5 XEED
 
 Question: **What happens when I add a company?**
 
-Required meaning: a Xignal assigns persistent observation to an organization. It MUST NOT be described as claiming, owning or editing that organization.
+Required meaning: planting a Xeed starts a persistent observation/germination objective around an organization. The Brain may produce many Xignals from that Xeed. The Xeed MUST NOT be described as claiming, owning or editing the organization; Xignals MUST NOT be presented as billable units.
 
 Required value statement:
 > You buy observation. Not ownership of the company profile.
@@ -195,7 +213,7 @@ Any opportunity/relevance derived only by compatibility MUST remain POTENTIAL. I
 
 ### 6.9 DIGITAL_REPRESENTATION
 
-Question: **Does AXIGNAL understand how the organization is represented digitally?**
+Question: **What do search engines and AI agents see when they look at this organization?**
 
 Required meaning: AXIGNAL may observe search, generative, public-conversation and public-experience representation under explicit conditions.
 
@@ -233,6 +251,8 @@ Question: **Who is AXIGNAL useful for?**
 
 The page MAY project the same canonical intelligence for leadership, sales/business development, procurement, export, agencies and consultancies.
 
+SEO, GEO, AEO and AIO agencies are a first-class acquisition audience, not an incidental mention. The Landing MUST make explicit that AXIGNAL independently observes how search engines, assistants, generative systems and public surfaces represent each client and how that representation changes over time.
+
 Role-specific copy MUST NOT create separate truths or imply CRM/workflow execution.
 
 ### 6.14 PRICING
@@ -241,12 +261,12 @@ Question: **What does persistent observation cost?**
 
 Current pricing hypothesis inherited from MASTER:
 
-- EUR 9.95/month including one Xignal.
-- EUR 4.95/month for each additional Xignal.
+- EUR 9.95/month including one Xeed.
+- EUR 4.95/month for each additional Xeed.
 
 This pricing is subordinate to MASTER and MUST change when the authoritative pricing doctrine changes.
 
-Required meaning: a paid Xignal assigns persistent observation. Organizations discovered around it MUST NOT be represented as automatically billable Xignals.
+Required meaning: a paid Xeed starts and maintains persistent observation/germination. Xignals produced by the Brain and organizations discovered around the Xeed MUST NOT be represented as separately billable units.
 
 ### 6.15 START
 
@@ -285,6 +305,7 @@ Protected product vocabulary:
 AXIGNAL
 AXIGLAND
 AXENT
+Xeed
 Xignal
 FAXT
 INXIGHT
@@ -541,14 +562,14 @@ A representative first-time user should be able to answer after the experience:
 
 1. What is AXIGNAL?
 2. What is AXIGLAND?
-3. What does a Xignal buy?
+3. What happens when I plant a Xeed?
 4. What does AXENT do?
 5. Why is AXIGNAL not just a database or chatbot?
 6. How can an important conclusion be inspected?
 7. What is the difference between observed reality and potential relevance?
 8. Why does AXIGNAL become more useful over time?
 9. Can a company pay to edit AXIGNAL's conclusion?
-10. What does one Xignal currently cost?
+10. What does one Xeed currently cost?
 11. What action should I take next?
 
 Failure on these questions is a product-comprehension failure even if visual QA passes.
@@ -569,7 +590,7 @@ Modern economic objects—industrial component, machine, shipping crate, technic
 ### 04 AXIGLAND
 Monumental cartographic oil painting of one shared economic world: globe/world map with ports, factories, cities, logistics, infrastructure and commercial corridors; multiple observers study the same world from different positions; no political-label emphasis, no neon network.
 
-### 05 XIGNAL
+### 05 XEED
 A Renaissance-clothed hand places a small marker/seed on a map-table or earth surface; a surrounding modern economic neighbourhood becomes progressively visible—manufacturer, warehouse, port, market, logistics and business district; knowledge germination without botanical fantasy.
 
 ### 06 FIRST_MAP
@@ -617,7 +638,7 @@ If this contract conflicts with a higher authority, the higher authority wins an
 Changes that alter any of the following require product-contract review:
 - meaning of AXIGNAL;
 - meaning of AXIGLAND;
-- meaning or billing semantics of Xignal;
+- meaning or billing semantics of Xeed or Xignal;
 - AXENT authority;
 - epistemic claims;
 - observed/potential distinction;
@@ -632,6 +653,8 @@ Pure copy refinements, localization improvements and image-composition refinemen
 
 The landing succeeds when a visitor leaves with this truthful mental model:
 
-> AXIGNAL is an independent economic observer. I choose a company to Xignal. AXIGNAL builds and maintains an evidence-grounded understanding of how that organization exists in the wider economic world, what is changing around it, how it is represented digitally, and where potential relevance may be emerging. It remembers governed knowledge, preserves uncertainty, and lets me inspect why important conclusions deserve attention. I pay for persistent observation, not for the ability to edit reality.
+> AXIGNAL is an independent economic observer. I plant a Xeed around an organization. AXIGNAL's Brain germinates that Xeed, producing many Xignals and building an evidence-grounded understanding of how the organization exists in the wider economic world, what is changing around it, how search engines and AI agents represent it, and where potential relevance may be emerging. AXIGLAND remembers governed knowledge, preserves uncertainty, and lets me inspect why important conclusions deserve attention. I pay for the persistent Xeed, not for individual Xignals or the ability to edit reality.
 
 That understanding is the acquisition contract.
+
+[executed on device: DESKTOP-7L6CMEJ (d615520f-0404-49b0-83c7-620cc18c31f4)]

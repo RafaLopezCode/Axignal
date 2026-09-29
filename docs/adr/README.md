@@ -29,6 +29,8 @@ Constitution (`.specify/memory/constitution.md`).
 | [ADR-0019](ADR-0019-canonical-xeed-faxt-contextual-reference.md) | Canonical Xeed–FAXT Contextual Reference (**ACCEPTED; P0-CORE-02 IMPLEMENTED**) | §§4.5–6, §15, §20 |
 | [ADR-0020](ADR-0020-authorized-xeed-faxt-collection-read.md) | Authorized Xeed FAXT Collection Read (**ACCEPTED; P0-CORE-03 IMPLEMENTED**) | §§4.5–6, §15, §20 |
 | [ADR-0021](ADR-0021-authorized-xeed-organization-context-read.md) | Authorized Xeed Read of Its Global Organization Context (**ACCEPTED; P0-CORE-04 CONTRACT IMPLEMENTED**) | §§3, 6.1, 7.3, 15.2, 36 |
+| [ADR-0022](ADR-0022-canonical-iconography.md) | Canonical Interface Iconography (**ACCEPTED; ADOPTION DEFERRED**) | Design System / Golden Master authority |
+| [ADR-0023](ADR-0023-xeed-seed-xignal-emergent-signal.md) | XEED Is the Planted Observation Seed; XIGNAL Is an Emergent Economic Signal (**ACCEPTED**) | §§4.4/4.4A, 7, 26, 27, 33 |
 
 ## Adding an ADR
 

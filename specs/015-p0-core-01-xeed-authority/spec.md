@@ -38,8 +38,8 @@ identical labels; prove distinct Xeed IDs and unchanged Organization identity.
    each Xeed has a distinct identity and its own tenant owner.
 2. Given equal or changed presentation labels, when identity is compared, then
    the Xeed ID remains unchanged and no cross-tenant identity collision occurs.
-3. Given an ObservationSeed, when its identity is inspected, then it remains an
-   observation assignment and is not treated as a Xeed.
+3. Given a Xeed germination state, when its identity is inspected, then it is
+   keyed by the Xeed and does not replace the Xeed's canonical private identity.
 
 ### User Story 2 — Read a Xeed only inside an authorized Tenant context (P1)
 
@@ -78,7 +78,7 @@ against deterministic in-memory test authorities.
   distinct internal outcomes.
 - Duplicate Xeed IDs cannot overwrite another record in the deterministic
   test authority.
-- ObservationSeed has no inferred Xeed relationship.
+- Xeed germination state grants no additional authorization or canonical write authority.
 
 ## Requirements
 
@@ -106,8 +106,8 @@ against deterministic in-memory test authorities.
   non-enumerating response; no HTTP API is added.
 - **FR-010**: The implementation MUST use only deterministic in-memory
   test/dev authority, with production persistence and authentication absent.
-- **FR-011**: ObservationSeed-to-Xeed and knowledge-to-Xeed bindings MUST
-  remain unestablished.
+- **FR-011**: Xeed germination lifecycle state MUST remain subordinate to the
+  authorized Xeed identity and MUST NOT itself grant knowledge membership or canonical write authority.
 - **FR-012**: Subscriber read model, Context Broker, AXIGLAND projection and
   P0-HFX-01 MUST remain unimplemented.
 

@@ -321,11 +321,11 @@ def test_reference_does_not_encode_discovery_relevance_or_source_rights() -> Non
     assert not hasattr(reference, "source_rights")
 
 
-def test_observation_seed_does_not_create_a_knowledge_reference() -> None:
-    from domain.xignal.observation_seed import ObservationSeed
+def test_xeed_germination_state_does_not_create_a_knowledge_reference() -> None:
+    from domain.xeed.germination import XeedGerminationState
 
-    assert "xeed_id" not in ObservationSeed.__dataclass_fields__
-    assert not hasattr(ObservationSeed, "faxt_id")
+    assert "xeed_id" in XeedGerminationState.__dataclass_fields__
+    assert "faxt_id" not in XeedGerminationState.__dataclass_fields__
 
 
 def test_label_collision_or_mutation_does_not_change_reference_identity() -> None:
@@ -646,11 +646,11 @@ def test_collection_does_not_invent_provenance_or_dereference_evidence() -> None
     assert "evidence" not in authority.calls
 
 
-def test_observation_seed_does_not_authorize_collection_membership() -> None:
-    from domain.xignal.observation_seed import ObservationSeed
+def test_xeed_germination_state_does_not_authorize_collection_membership() -> None:
+    from domain.xeed.germination import XeedGerminationState
 
-    assert "xeed_id" not in ObservationSeed.__dataclass_fields__
-    assert not hasattr(ObservationSeed, "faxt_id")
+    assert "xeed_id" in XeedGerminationState.__dataclass_fields__
+    assert "faxt_id" not in XeedGerminationState.__dataclass_fields__
 
 
 def test_collection_result_reuses_authorized_xeed_faxt_without_public_constructor() -> None:
