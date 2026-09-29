@@ -1,7 +1,7 @@
 # AXIGNAL Public Landing — Storyboard V1
 
 **Status:** PRODUCTION STORYBOARD DRAFT  
-**STORYBOARD_FREEZE:** PENDING RENDERED/HUMAN REVIEW  
+**STORYBOARD_FREEZE:** PENDING HUMAN STORYBOARD ACCEPTANCE
 **Authority:** MASTER → HFX → Landing Contract → Design System/Brand → this storyboard  
 **Image evidence:** spatial subject placement has been checked against a contact sheet generated directly from all 15 approved source masters. Exact crop/focal percentages remain hypotheses and MUST be verified against converted assets at the required browser breakpoints.
 
@@ -240,10 +240,11 @@ SOURCE_MASTER_SPATIAL_PLACEMENT=CONFIRMED_CONTACT_SHEET_15_OF_15
 FOCAL_METADATA=INFERRED_PENDING_BROWSER_BREAKPOINT_QA
 ACTUAL_CONVERTED_ASSET_VISUAL_VERIFICATION=PENDING
 INDEPENDENT_REVIEW_FINDINGS=REPAIRED
-READY_FOR_RENDERED_REVIEW=YES_AFTER_COPY_FREEZE
-RENDERED_BROWSER_REVIEW=PENDING
+READY_FOR_RENDERED_REVIEW=YES
+RENDERED_BROWSER_REVIEW=CTO_PASS_BASE_90_EN_ES
+RENDERED_EVIDENCE=BROWSER_QA_EVIDENCE_V1.md
 HUMAN_VISUAL_REVIEW=PENDING
-STORYBOARD_FREEZE=PENDING
+STORYBOARD_FREEZE=PENDING_HUMAN_ACCEPTANCE
 ```
 
 No focal percentage becomes canonical until browser evidence confirms the subject is preserved at the required breakpoints.

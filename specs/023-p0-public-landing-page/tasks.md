@@ -13,8 +13,9 @@
 - [x] CTO first-class review of ES copy, including independent-review repairs.
 - [x] Human owner review of EN/ES production copy.
 - [x] `COPY_FREEZE=PASS`.
-- [ ] Generate deterministic WebP preview derivatives outside repository/runtime.
-- [ ] Rendered visual review against preview derivatives at required desktop/tablet/mobile breakpoints.
+- [x] Generate deterministic WebP preview derivatives outside repository/runtime; 15/15 source hashes verified before conversion.
+- [x] CTO rendered visual review against preview derivatives: 90 captures = 15 chapters × desktop/tablet/mobile × EN/ES; 0 layout/console failures.
+- [ ] Human storyboard acceptance.
 - [ ] `STORYBOARD_FREEZE=PASS`.
 
 ## Implementation
