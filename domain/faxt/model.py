@@ -60,6 +60,10 @@ class FAXT:
             raise FAXTCreationError("a canonical FAXT requires an id")
         if decision.evidence_id != evidence.id:
             raise FAXTCreationError("admission decision does not match the supplied evidence")
+        if not subject_id.strip():
+            raise FAXTCreationError("a FAXT requires a subject id")
+        if not object_or_value.strip():
+            raise FAXTCreationError("a FAXT requires an object or value")
         if epistemic_state is EpistemicState.UNKNOWN:
             raise FAXTCreationError("a canonical FAXT cannot be created with UNKNOWN state")
         if not predicate.strip():

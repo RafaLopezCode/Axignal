@@ -366,8 +366,8 @@ No fake review/rating schema.
 
 Pricing authority:
 
-- EUR 9.95/month includes 1 Xignal.
-- EUR 4.95/month per additional Xignal.
+- EUR 9.95/month includes 1 Xeed.
+- EUR 4.95/month per additional Xeed; emergent Xignals are not billable units.
 
 Do not invent annual plans, free trials, enterprise pricing, discounts, tax handling, cancellation promises or usage limits.
 

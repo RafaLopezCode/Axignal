@@ -50,3 +50,42 @@ def test_empty_index_has_no_candidates() -> None:
 def test_unvalidated_bit_width_is_rejected() -> None:
     with pytest.raises(ValueError, match="4, 6, or 8"):
         TurboQuantSemanticIndex(dimension=3, num_bits=3)
+
+
+def test_upsert_remove_and_stats_keep_disposable_index_consistent() -> None:
+    index = TurboQuantSemanticIndex(dimension=2, num_bits=8, seed=11)
+    index.rebuild([rep("a", (1.0, 0.0)), rep("b", (0.0, 1.0))])
+
+    index.upsert(rep("a", (0.0, 1.0)))
+    assert index.stats.size == 2
+    assert index.stats.dimension == 2
+    assert index.search((0.0, 1.0), k=2)[0].representation_id in {"a", "b"}
+
+    assert index.remove("b") is True
+    assert index.remove("missing") is False
+    assert index.size == 1
+    assert index.search((0.0, 1.0), k=1)[0].representation_id == "a"
+
+
+def test_search_clamps_k_to_index_size() -> None:
+    index = TurboQuantSemanticIndex(dimension=2, num_bits=8)
+    index.rebuild([rep("only", (1.0, 0.0))])
+
+    assert [item.representation_id for item in index.search((1.0, 0.0), k=50)] == ["only"]
+
+
+def test_invalid_vector_values_fail_closed() -> None:
+    with pytest.raises(ValueError, match="id"):
+        rep(" ", (1.0, 0.0))
+    with pytest.raises(ValueError, match="vector"):
+        rep("empty", ())
+
+    index = TurboQuantSemanticIndex(dimension=2, num_bits=8)
+    with pytest.raises(ValueError, match="non-zero"):
+        index.rebuild([rep("zero", (0.0, 0.0))])
+    with pytest.raises(ValueError, match="finite"):
+        index.rebuild([rep("nan", (float("nan"), 1.0))])
+
+    index.rebuild([rep("ok", (1.0, 0.0))])
+    with pytest.raises(ValueError, match="finite and non-zero"):
+        index.search((0.0, 0.0), k=1)

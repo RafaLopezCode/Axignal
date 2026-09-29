@@ -4,6 +4,8 @@ from __future__ import annotations
 
 from datetime import datetime
 
+import pytest
+
 from domain.evidence.admission import (
     AdmissionDecision,
     Evidence,
@@ -65,3 +67,30 @@ def test_evidence_without_reference_is_not_admitted() -> None:
     )
     decision = EvidenceAdmission.admit(evidence)
     assert decision.admitted is False
+
+
+@pytest.mark.parametrize(
+    ("field", "reason"),
+    (("id", "id"), ("source", "source"), ("source_type", "source type")),
+)
+def test_incomplete_evidence_identity_is_never_admitted(field: str, reason: str) -> None:
+    values = {
+        "id": "ev-complete",
+        "source": "official",
+        "source_type": "web",
+    }
+    values[field] = " "
+    evidence = Evidence(
+        id=values["id"],
+        source=values["source"],
+        source_type=values["source_type"],
+        reference="https://example.test/evidence",
+        extracted_claim="Observed claim",
+        observed_at=datetime(2026, 9, 30),
+        authority=SourceAuthority.OFFICIAL_WEB,
+    )
+
+    decision = EvidenceAdmission.admit(evidence)
+
+    assert decision.is_canonical is False
+    assert reason in decision.reason

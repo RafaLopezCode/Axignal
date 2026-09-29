@@ -100,3 +100,31 @@ DONE requires:
 - CI green.
 
 Production activation is a separate decision after shadow evidence.
+
+## Execution evidence — 2026-09-30
+
+Implemented on the first germination slice:
+- provider-neutral index now supports rebuild, upsert, remove, search and stats;
+- deterministic structured filtering occurs after retrieval and before investigation;
+- candidate canonical-organization deduplication and self/stale/locale/geography rejection are fail-closed;
+- investigation findings must bind to the retrieved candidate subject;
+- admitted evidence is appended before the canonical FAXT writer is invoked;
+- a real TurboQuant adapter participates in the integration contract from AuthorizedXeed through EvidenceAdmission to FAXT write.
+
+The deterministic AXIGNAL-shaped V0 corpus contains 576 candidate representations, 72 Xeed queries, 12 economic archetypes, six locales and six geographies at 384 dimensions. It is explicitly synthetic and has **no promotion authority**. Its purpose is to expose quantization loss and retrieval/filter behavior before spending money or authority on a live embedding/evidence corpus.
+
+Latest V0 benchmark evidence is stored at `experiments/semantic_retrieval/results/axignal_corpus_latest.json`. The result must not be interpreted as production Germination Recall because relevance is synthetic and the vectors are deterministic facet representations, not production embeddings.
+
+### Newly exposed blockers
+
+Deep execution exposed four missing production authorities that were not visible at adapter level:
+1. no production semantic encoder/provider contract is implemented;
+2. no production candidate investigator/source-acquisition adapter exists;
+3. no production canonical Evidence/FAXT persistence writer exists;
+4. the concrete Xignal payload/provenance contract remains intentionally deferred, so this slice may admit FAXTs but MUST NOT fabricate a Xignal object.
+
+Therefore the slice remains **SHADOW-INELIGIBLE** despite green adapter/flow tests. The next corpus must be evidence-labeled and use the selected production embedding path before any recall threshold can be approved.
+
+### Defects exposed and repaired by deep integration
+
+The integration pass also exposed pre-existing inconsistencies outside TurboQuant itself. They were repaired rather than bypassed: the Engineering Constitution and landing execution order still described the superseded Xignal-based pricing/attention model; EvidenceAdmission could admit evidence with missing identity/source metadata; FAXT creation accepted an empty subject/value; the TurboQuant port lacked the upsert/remove/stats operations required by this spec; and the HFX synthetic lab encoded an empty canonical FAXT value to exercise a presentation edge case. The lab fixture now preserves the presentation intent without constructing canonically invalid knowledge.

@@ -104,6 +104,12 @@ class EvidenceAdmission:
     def admit(evidence: Evidence) -> AdmissionDecision:
         if not isinstance(evidence, Evidence):
             raise EvidenceAdmissionError("admission requires an Evidence instance")
+        if not evidence.id.strip():
+            return AdmissionDecision(False, evidence.id, "evidence has no id")
+        if not evidence.source.strip():
+            return AdmissionDecision(False, evidence.id, "evidence has no source")
+        if not evidence.source_type.strip():
+            return AdmissionDecision(False, evidence.id, "evidence has no source type")
         if evidence.authority in _ATTENTION_ONLY_AUTHORITIES:
             return AdmissionDecision(
                 admitted=False,

@@ -50,7 +50,7 @@ _EDGE_CASE_FACTS = (
     ("LABEL", "精密部品の製造", EpistemicState.OBSERVED),
     ("LABEL", "تصنيع المكوّنات الدقيقة", EpistemicState.CORROBORATED),
     ("LABEL", "Fabricación de componentes de precisión", EpistemicState.STALE),
-    ("LABEL", "", EpistemicState.DECLARED),
+    ("LABEL", "[presentation-empty-label fixture]", EpistemicState.DECLARED),
     ("LABEL", "Optional detail intentionally absent", EpistemicState.OBSERVED),
     ("LABEL", "An isolated synthetic information object", EpistemicState.INFERRED),
     ("LABEL", "A long label for checking narrow panels and wrap behavior", EpistemicState.OBSERVED),

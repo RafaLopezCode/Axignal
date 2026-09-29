@@ -1,0 +1,68 @@
+{
+  "corpus": {
+    "archetypes": 12,
+    "candidates": 576,
+    "dimension": 384,
+    "geographies": [
+      "ES",
+      "GB",
+      "FR",
+      "DE",
+      "IT",
+      "PT"
+    ],
+    "kind": "SYNTHETIC_AXIGNAL_SHAPED",
+    "locales": [
+      "es",
+      "en",
+      "fr",
+      "de",
+      "it",
+      "pt"
+    ],
+    "promotion_authority": false,
+    "queries": 72,
+    "warning": "Measures quantization loss only; not production embedding or evidence quality."
+  },
+  "exact": {
+    "germination_recall@10": 0.1753472222222222,
+    "germination_recall@100": 1.0,
+    "germination_recall@50": 1.0
+  },
+  "schema_version": 1,
+  "turboquant": {
+    "4": {
+      "build_seconds": 0.3145117999520153,
+      "compression_ratio": 7.836734693877551,
+      "germination_recall@10": 0.17881944444444445,
+      "germination_recall@100": 1.0,
+      "germination_recall@50": 1.0,
+      "query_ms_each": 0.9252430560688177,
+      "recall@10": 0.6819444444444445,
+      "recall@100": 0.9436111111111111,
+      "recall@50": 0.9830555555555556
+    },
+    "6": {
+      "build_seconds": 0.936725200037472,
+      "compression_ratio": 5.260273972602739,
+      "germination_recall@10": 0.1701388888888889,
+      "germination_recall@100": 1.0,
+      "germination_recall@50": 1.0,
+      "query_ms_each": 0.95134305593092,
+      "recall@10": 0.876388888888889,
+      "recall@100": 0.9849999999999999,
+      "recall@50": 0.9950000000000002
+    },
+    "8": {
+      "build_seconds": 3.714030500035733,
+      "compression_ratio": 3.9587628865979383,
+      "germination_recall@10": 0.1753472222222222,
+      "germination_recall@100": 1.0,
+      "germination_recall@50": 1.0,
+      "query_ms_each": 1.0843736122802108,
+      "recall@10": 0.9458333333333333,
+      "recall@100": 0.9933333333333335,
+      "recall@50": 0.9972222222222223
+    }
+  }
+}
