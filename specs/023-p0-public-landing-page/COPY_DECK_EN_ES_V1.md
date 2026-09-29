@@ -111,7 +111,7 @@
 **EN**
 - Eyebrow: Persistent observation
 - Headline: **Put one organization under persistent observation.**
-- Body: A Xignal directs AXIGNAL’s attention to an organization over time. It does not claim the company, give you ownership of its profile or let anyone rewrite the map.
+- Body: A Xignal directs AXIGNAL’s attention to an organization over time. It does not make the company yours or give anyone authority to rewrite it in AXIGLAND.
 - Value line: **You buy observation. Not ownership of the company profile.**
 - Primary CTA: **Create a Xignal**
 
@@ -176,13 +176,13 @@
 **EN**
 - Eyebrow: Potential relevance
 - Headline: **What matters may sit outside the path you already know.**
-- Body: By connecting governed knowledge, AXIGNAL can surface activity or compatibility worth investigating. Potential stays potential until evidence says more.
+- Body: By connecting evidence across the economic world, AXIGNAL can surface activity or compatibility worth investigating. Potential stays potential until evidence says more.
 - Value line: **Potential is a reason to investigate, not a fact.**
 
 **ES**
 - Eyebrow: Relevancia potencial
 - Headline: **Lo que importa puede estar fuera del camino que ya conoces.**
-- Body: Al conectar conocimiento gobernado, AXIGNAL puede sacar a la luz actividad o compatibilidad que merecen investigación. Lo potencial sigue siendo potencial hasta que la evidencia diga algo más.
+- Body: Al conectar evidencia de distintas partes del mundo económico, AXIGNAL puede sacar a la luz actividad o compatibilidad que merecen investigación. Lo potencial sigue siendo potencial hasta que la evidencia diga algo más.
 - Value line: **Lo potencial es un motivo para investigar, no un hecho.**
 
 **Artwork relationship:** a plausible route through real geography/trade suggests discovery without glowing certainty.
@@ -218,13 +218,13 @@
 **EN**
 - Eyebrow: Change over time
 - Headline: **A snapshot tells you what was visible once.**
-- Body: AXIGNAL preserves history, change, currentness and revalidation so you can see what has changed—and avoid rebuilding the same understanding from zero.
+- Body: AXIGNAL preserves history, change, how recent the evidence is and when it was checked again, so you can see what has changed without rebuilding the same understanding from zero.
 - Value line: **What changed can matter as much as what is observable now.**
 
 **ES**
 - Eyebrow: Cambio a lo largo del tiempo
 - Headline: **Una instantánea solo te dice lo que era visible una vez.**
-- Body: AXIGNAL conserva historia, cambios, vigencia y revalidación para que puedas ver qué ha cambiado y evitar reconstruir desde cero la misma visión.
+- Body: AXIGNAL conserva la historia, los cambios, lo reciente que es la evidencia y cuándo se volvió a comprobar, para que puedas ver qué ha cambiado sin reconstruir desde cero la misma visión.
 - Value line: **Lo que cambió puede importar tanto como lo que puede observarse ahora.**
 
 **Artwork relationship:** continuity across past/current/emerging states communicates temporal memory, not prediction.
@@ -239,13 +239,13 @@
 **EN**
 - Eyebrow: Contextual investigation
 - Headline: **Not another chatbot. A way to navigate the investigation.**
-- Body: AXENT helps investigate, compare, explain and move through evidence and context. It can orchestrate research, but it never becomes the authority for canonical truth.
+- Body: AXENT helps investigate, compare, explain and move through evidence and context. It can orchestrate research, but it never decides what becomes truth in AXIGLAND.
 - Value line: **Conversation is the interface. Evidence still governs what the map can claim.**
 
 **ES**
 - Eyebrow: Investigación contextual
 - Headline: **No es otro chatbot. Es una forma de navegar la investigación.**
-- Body: AXENT ayuda a investigar, comparar, explicar y moverse entre evidencia y contexto. Puede orquestar investigación, pero nunca se convierte en la autoridad de la verdad canónica.
+- Body: AXENT ayuda a investigar, comparar, explicar y moverse entre evidencia y contexto. Puede orquestar investigación, pero nunca decide qué se convierte en verdad en AXIGLAND.
 - Value line: **La conversación es la interfaz. La evidencia sigue gobernando lo que el mapa puede afirmar.**
 
 **Artwork relationship:** the investigator moves through real sources and objects; no robot or chat-bubble visual language.
@@ -260,13 +260,13 @@
 **EN**
 - Eyebrow: Independent by design
 - Headline: **Pay for observation. Never for influence.**
-- Body: A subscription can ask AXIGNAL to keep watching. It cannot buy a different conclusion. A challenge can trigger reinspection—not direct editing of the map.
+- Body: A subscription can ask AXIGNAL to keep watching. It cannot buy a different conclusion. If something is challenged, AXIGNAL can inspect it again—but nobody gets to edit the map directly.
 - Value line: **The map cannot be bought. Observation can.**
 
 **ES**
 - Eyebrow: Independencia por diseño
 - Headline: **Paga por observación. Nunca por influencia.**
-- Body: Una suscripción puede pedir a AXIGNAL que siga observando. No puede comprar una conclusión distinta. Una impugnación puede activar una nueva inspección, no la edición directa del mapa.
+- Body: Una suscripción puede pedir a AXIGNAL que siga observando. No puede comprar una conclusión distinta. Si algo se cuestiona, AXIGNAL puede volver a investigarlo, pero nadie obtiene permiso para editar el mapa directamente.
 - Value line: **El mapa no se puede comprar. La observación, sí.**
 
 **Artwork relationship:** payment and independent cartography coexist without villain caricature.
