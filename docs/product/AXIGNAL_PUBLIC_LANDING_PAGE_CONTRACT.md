@@ -341,9 +341,10 @@ Production implementation MUST create WebP derivatives from those masters.
 
 Requirements:
 - the authoritative human-provided masters for this slice are 1920x1080 PNG;
-- preserve the local master PNGs untouched as source material;
-- source PNG masters MUST NOT be committed while they exceed the repository's strict 2 MiB per-file governance limit;
-- production WebP derivatives are the Git-tracked/browser-served assets when they satisfy repository governance;
+- preserve the master PNGs untouched as source material;
+- because AXIGNAL governance scans the entire repository working tree (including untracked/ignored files) for files above 2 MiB, oversized PNG masters MUST live outside the repository root while they exceed that limit;
+- the repository MUST contain only production WebP derivatives (and any other assets) that satisfy the repository size gate;
+- production WebP derivatives are the Git-tracked/browser-served assets;
 - preserve aspect ratio;
 - avoid destructive focal cropping;
 - use deterministic naming;
@@ -559,7 +560,7 @@ Measured-value still life: balance scale, observation marker/map token and modes
 ### 15 START
 One company visible in the middle distance at dawn; observer holds one simple map marker ready to place; surrounding suppliers, roads, markets and logistics imply a larger discoverable context; beginning and clarity, not hype.
 
-All source images for this slice are authored externally at 1920×1080 PNG, retained locally as governed source masters while they exceed the repository size gate, and converted deterministically to Git-tracked production WebP derivatives.
+All source images for this slice are authored externally at 1920×1080 PNG. While they exceed the repository 2 MiB gate, they are retained outside the repository root as governed source masters and converted deterministically into Git-tracked production WebP derivatives.
 
 ## 17. Authority and change control
 
