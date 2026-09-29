@@ -138,6 +138,15 @@ body[data-chapter="14"] .pricing-panel{
 .price-truth::before{content:"";width:5px;height:5px;flex:0 0 5px;border-radius:50%;background:var(--ax-brass)}
 body[data-chapter="14"] .actions{margin-top:17px}
 
+.access-dialog{width:min(520px,calc(100vw - 32px));padding:0;border:1px solid rgba(175,166,138,.45);border-radius:3px;background:rgba(7,7,6,.97);color:var(--ax-ivory);box-shadow:0 28px 90px rgba(0,0,0,.62)}
+.access-dialog::backdrop{background:rgba(0,0,0,.72);backdrop-filter:blur(5px)}
+.access-dialog-inner{padding:30px}
+.access-dialog-kicker{margin:0 0 11px;font:500 10px/1.2 var(--ax-font-mono);letter-spacing:.13em;text-transform:uppercase;color:var(--ax-brass)}
+.access-dialog h2{margin:0 0 13px;font:300 34px/1.02 var(--ax-font-display);letter-spacing:-.025em}
+.access-dialog-copy{margin:0;color:rgba(246,241,231,.72);font-size:14px;line-height:1.55}
+.access-dialog-actions{display:flex;justify-content:flex-end;margin-top:24px}
+.access-dialog-close{min-height:38px;padding:9px 15px;border:1px solid rgba(175,166,138,.5);border-radius:var(--ax-radius-control);background:rgba(175,166,138,.10);color:#fff;font-weight:500}
+
 .question-rail{
   position:absolute;right:clamp(17px,2vw,34px);top:50%;z-index:12;transform:translateY(-48%);
   width:min(430px,31vw);display:flex;flex-direction:column;justify-content:center;gap:17px
@@ -272,7 +281,7 @@ body[data-chapter="14"] .copy{width:min(43rem,46vw)}
         </div>
       </div>
       <button type="button" class="seed-cta" data-jump="15" data-label="plant"></button>
-      <button type="button" class="login" data-label="login"></button>
+      <button type="button" class="login" id="loginButton" data-label="login"></button>
     </div>
   </header>
 
@@ -286,6 +295,15 @@ body[data-chapter="14"] .copy{width:min(43rem,46vw)}
       <div class="actions" id="actions"></div>
     </div>
   </section>
+
+  <dialog class="access-dialog" id="accessDialog" aria-labelledby="accessDialogTitle">
+    <div class="access-dialog-inner">
+      <p class="access-dialog-kicker" id="accessDialogKicker"></p>
+      <h2 id="accessDialogTitle"></h2>
+      <p class="access-dialog-copy" id="accessDialogCopy"></p>
+      <div class="access-dialog-actions"><button type="button" class="access-dialog-close" id="accessDialogClose"></button></div>
+    </div>
+  </dialog>
 
   <nav class="question-rail" id="questionRail" aria-label="Questions answered"></nav>
   <button class="counter-button" id="counterButton" type="button" aria-haspopup="menu" aria-expanded="false"></button>
@@ -346,6 +364,25 @@ const reduced=matchMedia('(prefers-reduced-motion: reduce)');
 const $=id=>document.getElementById(id);
 const scene=$('scene'), artCurrent=$('artCurrent'), artNext=$('artNext'), copyInner=$('copyInner');
 const localeButton=$('localeButton'), localeList=$('localeList'), chapterMenu=$('chapterMenu');
+const accessDialog=$('accessDialog');
+const accessCopy={
+  en:{kicker:'PRIVATE ACCESS',title:'AXIGNAL is not open for public access yet.',copy:'The public landing is live. Planting Xeeds and subscriber sign-in will open only through the governed AXIGNAL account runtime—not through a placeholder checkout or fake account flow.',close:'Continue exploring'},
+  es:{kicker:'ACCESO PRIVADO',title:'AXIGNAL todavía no está abierto al acceso público.',copy:'La landing pública ya está activa. Plantar Xeeds e iniciar sesión se habilitará únicamente mediante el runtime gobernado de cuentas de AXIGNAL, no mediante un checkout provisional ni un flujo de cuenta simulado.',close:'Seguir explorando'},
+  fr:{kicker:'ACCÈS PRIVÉ',title:'AXIGNAL n’est pas encore ouvert au public.',copy:'La landing publique est en ligne. La plantation de Xeeds et la connexion seront ouvertes uniquement via le runtime de compte gouverné d’AXIGNAL, sans faux checkout ni compte simulé.',close:'Continuer à explorer'},
+  de:{kicker:'PRIVATER ZUGANG',title:'AXIGNAL ist noch nicht öffentlich zugänglich.',copy:'Die öffentliche Landingpage ist live. Xeeds pflanzen und Anmeldung werden ausschließlich über die geregelte AXIGNAL-Kontolaufzeit freigeschaltet – ohne provisorischen Checkout oder simulierten Account.',close:'Weiter erkunden'},
+  it:{kicker:'ACCESSO PRIVATO',title:'AXIGNAL non è ancora aperto al pubblico.',copy:'La landing pubblica è online. La creazione di Xeeds e l’accesso saranno disponibili solo tramite il runtime account governato di AXIGNAL, senza checkout provvisori o account simulati.',close:'Continua a esplorare'},
+  pt:{kicker:'ACESSO PRIVADO',title:'A AXIGNAL ainda não está aberta ao acesso público.',copy:'A landing pública está ativa. Plantar Xeeds e iniciar sessão será disponibilizado apenas através do runtime de conta governado da AXIGNAL, sem checkout provisório nem conta simulada.',close:'Continuar a explorar'}
+};
+function openAccessDialog(){
+  const copy=accessCopy[lang]||accessCopy.en;
+  $('accessDialogKicker').textContent=copy.kicker;
+  $('accessDialogTitle').textContent=copy.title;
+  $('accessDialogCopy').textContent=copy.copy;
+  $('accessDialogClose').textContent=copy.close;
+  accessDialog.showModal();
+}
+$('accessDialogClose').onclick=()=>accessDialog.close();
+$('loginButton').onclick=openAccessDialog;
 
 function questionFor(ch){
   return questionsByLocale[lang]?.[ch.n-1] || ch.question;
@@ -449,7 +486,16 @@ function fillCopy(ch){
     if(txt){
       const b=document.createElement('button');
       b.type='button'; b.className='cta '+cls; b.textContent=txt;
-      if(ch.n===14&&key==='Primary CTA') b.onclick=()=>goTo(15,1);
+      const routes={
+        '1:Primary CTA':()=>goTo(15,1),
+        '1:Secondary CTA':()=>goTo(2,1),
+        '5:Primary CTA':()=>goTo(15,1),
+        '7:Primary CTA':openAccessDialog,
+        '14:Primary CTA':()=>goTo(15,1),
+        '15:Primary CTA':openAccessDialog,
+        '15:Secondary CTA':()=>goTo(7,-1)
+      };
+      b.onclick=routes[ch.n+':'+key]||null;
       actions.appendChild(b);
     }
   }
