@@ -72,13 +72,13 @@ influence. The map cannot be bought; observation can. Hostile attention must not
 poison canonical truth. ACCESS ≠ AUTHORITY; AUTHORITY ≠ TRUTH; USABLE ≠
 LEARNABLE. (MASTER §5, §6, §23, §39, §46.4, §46.6, §46.7, §46.8, §46.12)
 
-### V. XIGNAL Is Observation, Not Ownership
+### V. Xeed Directs Observation; Xignal Emerges, Neither Owns Truth
 
-XIGNAL assigns persistent computational observation (`ObservationSeed`). It is
-not a profile, not a claim, not ownership, and grants no ability to configure
-canonical truth. One canonical Organization regardless of how many users Xignal
-it. Agencies may Xignal many companies but cannot configure their canonical
-truth. (MASTER §4.4, §7, §26, §33, §46.5, §46.14)
+A Xeed assigns persistent computational observation around a subject. It is not
+a profile, claim, or ownership grant and cannot configure canonical truth. The
+Brain germinates a Xeed into many Xignals: emergent economic signals that direct
+attention but are neither the Xeed nor canonical writes. One canonical
+Organization exists regardless of how many Xeeds observe it. (MASTER §§4.4, 4.4A, §7, §26, §33, §46.5, §46.14)
 
 ### VI. CLAIM ≠ WRITE / Evidence Admission
 
@@ -134,8 +134,8 @@ maximize useful information gain. (MASTER §9, §10, §11, §12, §29, §46.15,
 No pay-to-appear, sponsored truth, boost, or sponsored/pay-to-rank canonical
 graph mutation. Sponsor or advertising surfaces (if any) must be structurally
 separated from the cartography. Pricing is an economic hypothesis, not an
-architectural invariant: €9.95/month with one Xignal and €4.95 per additional
-Xignal. (MASTER §27, §32, §39, §46.34, §46.36, §46.41)
+architectural invariant: €9.95/month with one Xeed and €4.95 per additional
+Xeed; emergent Xignals are not billable units. (MASTER §27, §32, §39, §46.34, §46.36, §46.41)
 
 ### XIII. Thin Integrations, Invisible Infrastructure
 
@@ -206,8 +206,8 @@ NORMALIZATION / ENTITY RESOLUTION
  PATHX / INXIGHT / PROJECTIONS
 ```
 
-XIGNAL controls ATTENTION / COMPUTE ALLOCATION. It MUST NOT bypass evidence
-admission. AXENT orchestrates investigation; AXENT MUST NOT itself become
+A planted Xeed controls persistent ATTENTION / COMPUTE ALLOCATION; Xignals emerge
+from Brain observation. Neither a Xeed nor a Xignal may bypass evidence admission. AXENT orchestrates investigation; AXENT MUST NOT itself become
 canonical truth authority.
 
 ## Canonical Terminology (do not rename casually)

@@ -72,3 +72,27 @@ def test_faxt_rejects_decision_for_different_evidence() -> None:
             evidence=evidence,
             decision=decision,
         )
+
+
+def test_faxt_rejects_empty_subject_and_value_even_with_admitted_evidence() -> None:
+    evidence = _evidence()
+    decision = EvidenceAdmission.admit(evidence)
+
+    with pytest.raises(FAXTCreationError, match="subject"):
+        FAXT.create(
+            faxt_id=FaxtId("faxt-empty-subject"),
+            subject_id=" ",
+            predicate="capability",
+            object_or_value="industrial pumps",
+            evidence=evidence,
+            decision=decision,
+        )
+    with pytest.raises(FAXTCreationError, match="object or value"):
+        FAXT.create(
+            faxt_id=FaxtId("faxt-empty-value"),
+            subject_id="org-acme",
+            predicate="capability",
+            object_or_value=" ",
+            evidence=evidence,
+            decision=decision,
+        )
