@@ -29,9 +29,9 @@
   --st-contradicted: #a8553c;
   --st-historical: #9a968b;
 
-  --serif: 'Fraunces', 'Iowan Old Style', Georgia, serif;
-  --sans: 'Inter', -apple-system, 'Segoe UI', sans-serif;
-  --mono: 'IBM Plex Mono', ui-monospace, monospace;
+  --serif: var(--ax-font-display);
+  --sans: var(--ax-font-body);
+  --mono: var(--ax-font-mono);
 
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
   color-scheme: light;
