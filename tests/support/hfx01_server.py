@@ -12,7 +12,7 @@ import json
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from typing import Any
-from urllib.parse import urlsplit
+from urllib.parse import parse_qs, urlsplit
 
 from tests.support.hfx01_demo import Hfx01Demo
 
@@ -20,6 +20,7 @@ REPOSITORY_ROOT = Path(__file__).resolve().parents[2]
 WEB_ROOT = REPOSITORY_ROOT / "apps" / "web" / "subscriber"
 DESIGN_ROOT = REPOSITORY_ROOT / "apps" / "web" / "design-system"
 BRAND_ROOT = WEB_ROOT / "assets" / "brand"
+ICON_ROOT = WEB_ROOT / "assets" / "icons" / "lucide"
 
 
 def serialize_projection(projection: Any) -> dict[str, Any]:
@@ -74,9 +75,14 @@ class _Handler(BaseHTTPRequestHandler):
     demo = Hfx01Demo()
 
     def do_GET(self) -> None:
-        path = urlsplit(self.path).path
+        request = urlsplit(self.path)
+        path = request.path
         if path == "/api/subscriber-context":
-            self._serve_projection()
+            scenario = parse_qs(request.query).get("scenario", [None])[0]
+            if scenario is not None:
+                self._serve_synthetic_scenario(scenario)
+            else:
+                self._serve_projection()
             return
         if path == "/api/demo/empty":
             self._serve_projection(empty_context=True)
@@ -100,6 +106,7 @@ class _Handler(BaseHTTPRequestHandler):
             "/brand/favicon-16x16.png": BRAND_ROOT / "favicon-16x16.png",
             "/brand/favicon-32x32.png": BRAND_ROOT / "favicon-32x32.png",
             "/brand/favicon.ico": BRAND_ROOT / "favicon.ico",
+            "/assets/icons/lucide/axignal-ui.svg": ICON_ROOT / "axignal-ui.svg",
         }
         source = static_files.get(path)
         if source is None or not source.is_file():
@@ -132,6 +139,16 @@ class _Handler(BaseHTTPRequestHandler):
             self._send_json(200, serialize_projection(projection))
         except Exception:  # a local demo fails closed with no cross-context detail
             self._send_json(503, {"error": "AXIGLAND projection unavailable."})
+
+    def _serve_synthetic_scenario(self, scenario: str) -> None:
+        """Serve only enumerated UX fixtures; never use them as a fallback."""
+
+        from tests.support.hfx01_ux_lab import build_scenario
+
+        try:
+            self._send_json(200, build_scenario(scenario))
+        except ValueError:
+            self._send_json(404, {"error": "Synthetic UX scenario not found."})
 
     def _send_json(self, status: int, payload: dict[str, Any]) -> None:
         body = json.dumps(payload, ensure_ascii=False, separators=(",", ":")).encode()

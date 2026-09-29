@@ -60,6 +60,7 @@ def test_browser_payload_is_assembled_through_authorized_contracts_and_allowlist
             "meaning": "XeedFaxtReference",
         },
     ]
+    assert "relationships" not in payload
     assert "evidence_refs" not in payload["nodes"][0]
     assert "evidenceRefs" not in payload["nodes"][0]
 
@@ -107,3 +108,45 @@ def test_brand_assets_are_allowlisted_and_served_with_image_media_types() -> Non
         assert status == 200
         assert body
         assert content_type == expected_type
+
+
+def test_canonical_dashboard_icon_sprite_is_served_locally() -> None:
+    status, body, content_type = _with_server_response("/assets/icons/lucide/axignal-ui.svg")
+    assert status == 200
+    assert body
+    assert content_type == "image/svg+xml"
+    assert b'id="settings"' in body
+    assert b'id="rotate-ccw"' in body
+
+
+def test_synthetic_ux_lab_route_is_allowlisted_and_not_a_production_fallback() -> None:
+    nominal_status, nominal_body = _with_server(
+        "/api/subscriber-context?scenario=SYNTHETIC_NOMINAL"
+    )
+    invalid_status, invalid_body = _with_server("/api/subscriber-context?scenario=UNLISTED")
+    canonical_status, canonical_body = _with_server("/api/subscriber-context")
+    nominal = json.loads(nominal_body)
+    invalid = json.loads(invalid_body)
+    canonical = json.loads(canonical_body)
+
+    assert nominal_status == 200
+    assert nominal["realityLevel"] == "SYNTHETIC_PRESENTATION_LAB"
+    assert nominal["uxLab"]["scenario"] == "SYNTHETIC_NOMINAL"
+    assert nominal["uxLab"]["scenarioObjectCount"] == 9
+    assert invalid_status == 404
+    assert invalid == {"error": "Synthetic UX scenario not found."}
+    assert canonical_status == 200
+    assert canonical["realityLevel"] == "TEST_DEV_IN_MEMORY_AUTHORITY"
+    assert "uxLab" not in canonical
+    assert "relationships" not in canonical
+
+
+def test_lab_controls_are_outside_product_geometry_and_default_route_has_no_scenario_ui() -> None:
+    status, body, _ = _with_server_response("/")
+    html = body.decode("utf-8")
+    assert status == 200
+    assert 'id="lab-toolbar"' not in html
+    assert 'id="lab-scenario"' not in html
+    assert 'id="lab-contexts" hidden' in html
+    assert 'id="relationship-layer"' in html
+    assert 'id="minimap-relationships"' in html

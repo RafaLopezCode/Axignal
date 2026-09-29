@@ -44,7 +44,7 @@ class _Organizations:
 class Hfx01Demo:
     """A local-only pair of tenant contexts over one global Organization."""
 
-    def __init__(self) -> None:
+    def __init__(self, organization_name: str = "Northwind Materials (synthetic demo)") -> None:
         self.identities = InMemoryXeedAuthority()
         self.knowledge = InMemoryXeedKnowledgeAuthority()
         self.organizations = _Organizations()
@@ -54,7 +54,7 @@ class Hfx01Demo:
 
         shared_org = Organization(
             OrganizationId("org-demo-shared"),
-            "Northwind Materials (synthetic demo)",
+            organization_name,
             capabilities=("Industrial materials manufacturing",),
             markets=("Northern Europe",),
         )

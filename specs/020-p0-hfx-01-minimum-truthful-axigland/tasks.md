@@ -39,7 +39,35 @@
   `presentation-copy-leakage-register.v1.md`.
 - [x] Verify the regression case in Chrome at 1280×720, run the HFX browser
   states V01–V18, and retain copy-audit captures outside the repository.
+- [ ] Close the subscriber shell parity repair: quiet missing workspace,
+  truthful governance rows, no fabricated account identity, Golden Master rail
+  behavior, keyboard/accessibility checks, focus-history separators and
+  constrained breadcrumb layout, floating field-control behavior, minimap
+  bounds, paired viewport comparison, gates, and exact-head remote proof;
+  retain Human Visual QA as pending.
 - [x] Commit, push, open/reuse exactly one PR against `main`, and verify
   exact-head remote CI, including Gitleaks.
 - [x] Keep any PR unmerged, hand off required human visual acceptance, and do
   not start HFX-02.
+- [x] Add the four-scenario synthetic UX laboratory behind the loopback-only
+  test/dev route; verify deterministic fixtures, same presentation path,
+  disabled default route, local-only browser requests, and representative
+  interactions. Record dense-renderer collisions and keep human QA pending.
+- [x] Repair synthetic lab instrumentation overlap and add deterministic label
+  placement/attention decluttering after inspecting the executable V2 renderer;
+  preserve world positions and record viewport-specific evidence limits.
+- [x] Fit minimap content to the current world-node bounds and use one mapping
+  for nodes, edges, camera window, and minimap navigation.
+- [x] Refine the Xeed sidebar into a subdued current-Xeed viewer with a
+  searchable 101-row synthetic list; keep non-authorized fixture Xeeds
+  disabled and keep the linked global Organization distinct.
+- [x] Audit locale authority and add a loopback UX-lab-only locale preference
+  for English, Spanish, German expansion, Japanese CJK, and Arabic RTL; verify
+  the supported copy surfaces without claiming complete localization.
+- [x] Reconcile HFX with Q1 ADR-0022 / Design System icon authority, remove the
+  duplicate HFX iconography rule, retain the licensed Lucide subset, and
+  compact long Focus Trails without discarding navigable history.
+- [x] Run the final deterministic suite, Graphify refresh, browser scenario
+  checks, and Golden Master source-manifest verification after reconciliation.
+- [ ] Complete Human QA of Nominal and Dense at 1280×720 across zoom levels,
+  focus navigation, minimap synchronization, and edge readability.

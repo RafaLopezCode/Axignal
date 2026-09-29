@@ -30,3 +30,18 @@ The presentation catalog currently populates English (`en`) and resolves locale
 tags using BCP-47-compatible language selection. Locale selection changes copy,
 never canonical identity. Additional locales require translated catalog entries;
 there is no predicate-token formatting fallback.
+
+## Sidebar editorial review
+
+| Source value/state | Previous render | Decision | Current presentation |
+|---|---|---|---|
+| No authorized workspace identity | Repeated `Workspace` value under the `Workspace` heading | Omit the value and retain a quiet, non-interactive placeholder to preserve section rhythm | No unavailable message or invented workspace |
+| Private Xeed context | `Private · current context` in the Scope value | Keep only the human-facing scope concept | Scope · “This view”; the Xeed card retains “Private view” |
+| Memory capability `UNAVAILABLE` | A disabled row with a chevron | Preserve the row and its geometry; remove a false affordance and visible state enum | Empty value; screen-reader-only “No memory setting is shown in this view.” |
+| Uncertainty capability `UNAVAILABLE` | A disabled row with a switch-shaped control | Preserve the row and its geometry without implying a usable setting | Empty value; screen-reader-only “No uncertainty setting is shown in this view.” |
+| No authenticated account identity | Letter avatar, `Account`, and chevron | Omit unsupported identity and account action | No account identity/action; the required demo disclosure remains a discreet sibling in the sidebar |
+| Collapsed sidebar | CSS supported a rail, but subscriber markup had no rail controls | Reuse the Golden Master rail structure only for truthful actions | Today navigates to the Organization; active Xeed is announced as a static group; create-context is disabled; Governance expands the sidebar |
+
+The sidebar records capability state in non-copy `data-capability` attributes:
+Scope is `READ_ONLY`, Memory and Uncertainty are `UNAVAILABLE`, and Research is
+`AVAILABLE`. Canonical Xeed identity and projection data are unchanged.

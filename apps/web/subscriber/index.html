@@ -25,40 +25,58 @@
             </span>
         <span class="gv-logo-mark" aria-hidden="true"><img class="brand-isotope" src="/brand/isotope.svg" alt="" /></span>
           </a>
-          <button id="sidebar-toggle" class="gv-toggle" aria-expanded="true" data-copy-aria-label="navigation.collapseSidebar" data-copy-title="navigation.collapseSidebar" aria-label="Collapse sidebar" title="Collapse sidebar">«</button>
+          <button id="sidebar-toggle" class="gv-toggle" aria-controls="sidebar-navigation" aria-expanded="true" data-copy-aria-label="navigation.collapseSidebar" data-copy-title="navigation.collapseSidebar" aria-label="Collapse sidebar" title="Collapse sidebar"><svg class="ax-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/lucide/axignal-ui.svg#panel-left-close"></use></svg></button>
         </div>
 
-        <nav class="gv-scroll" data-copy-aria-label="navigation.workspace" aria-label="Workspace">
+        <nav class="gv-scroll" id="sidebar-navigation" data-copy-aria-label="navigation.workspace" aria-label="Workspace">
           <button class="gv-today" id="today" aria-current="page"><i aria-hidden="true"></i><span data-copy="navigation.today">Today</span></button>
 
           <section class="gv-sec">
             <span class="gv-cap" data-copy="navigation.workspace">Workspace</span>
-            <button class="gv-workspace" type="button" disabled data-copy-aria-label="navigation.workspace" aria-label="Workspace">
-              <span data-copy="navigation.workspace">Workspace</span><i aria-hidden="true">›</i>
-            </button>
+            <div class="gv-workspace-placeholder" id="workspace-placeholder" aria-hidden="true"></div>
           </section>
 
           <section class="gv-sec">
-            <span class="gv-cap" data-copy="navigation.context">Context</span>
-            <button class="gv-xeedsel" id="xeed-current" type="button" disabled>
+            <span class="gv-cap" data-copy="navigation.xeed">Xeed</span>
+            <button class="gv-xeedsel" id="xeed-current" type="button" disabled aria-haspopup="listbox" aria-expanded="false" aria-controls="lab-contexts" data-copy-aria-label="context.activeAccessibleName" aria-label="Active Xeed">
               <span class="gv-xeed-dot"><i aria-hidden="true"></i></span>
               <span class="gv-xeed-body"><b id="xeed-label">Current context</b><em data-copy="context.private">Private view</em></span>
-              <span class="gv-xeed-chev" aria-hidden="true">⌄</span>
+              <span class="gv-xeed-chev" aria-hidden="true"><svg class="ax-icon" focusable="false"><use href="/assets/icons/lucide/axignal-ui.svg#chevron-down"></use></svg></span>
             </button>
-            <button class="gv-plant" type="button" disabled data-copy="navigation.createContext">+ New context</button>
+            <div class="lab-contexts" id="lab-contexts" hidden>
+              <label class="sr-only" for="lab-context-search" data-copy="context.searchLabel">Search Xeeds</label>
+              <input id="lab-context-search" type="search" data-copy-placeholder="context.searchPlaceholder" placeholder="Search Xeeds" />
+              <p class="lab-context-note" data-copy="context.switchUnavailable">Other Xeeds are not available in this demonstration.</p>
+              <div id="lab-context-list" role="listbox" data-copy-aria-label="context.availableXeeds" aria-label="Available Xeeds"></div>
+              <p class="lab-context-empty" id="lab-context-empty" data-copy="context.noMatches" hidden>No matching Xeeds.</p>
+            </div>
+            <button class="gv-plant" type="button" disabled><svg class="ax-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/lucide/axignal-ui.svg#plus"></use></svg><span data-copy="navigation.createXeed">Plant Xeed</span></button>
           </section>
 
-          <section class="gv-sec">
+          <section class="gv-sec" id="governance-section" tabindex="-1">
             <span class="gv-cap" data-copy="navigation.governance">Governance</span>
-            <button class="gv-row" type="button" disabled><span class="gv-rk" data-copy="navigation.scope">Focus</span><span class="gv-rv"><span data-copy="navigation.contextScope">Private · current context</span> <i aria-hidden="true">›</i></span></button>
-            <button class="gv-row" type="button" disabled><span class="gv-rk" data-copy="navigation.memory">Memory</span><span class="gv-rv" aria-hidden="true"><i aria-hidden="true">›</i></span></button>
-            <button class="gv-row" id="research-depth" type="button"><span class="gv-rk" data-copy="navigation.research">Research</span><span class="gv-rv"><span data-copy="navigation.glance">Glance</span> <i aria-hidden="true">›</i></span></button>
-            <button class="gv-row toggle" type="button" disabled data-copy-aria-label="navigation.uncertainty" aria-label="Uncertainty"><span class="gv-rk" data-copy="navigation.uncertainty">Uncertainty</span><span class="gv-rv" aria-hidden="true"><span class="gv-sw"><i></i></span></span></button>
+            <div class="gv-row" data-capability="READ_ONLY"><span class="gv-rk" data-copy="navigation.scope">Scope</span><span class="gv-rv"><span data-copy="navigation.contextScope">This view</span></span></div>
+            <div class="gv-row is-unavailable" data-capability="UNAVAILABLE" aria-disabled="true"><span class="gv-rk" data-copy="navigation.memory">Memory</span><span class="gv-rv" aria-hidden="true"></span><span class="sr-only" data-copy="navigation.memoryUnavailable">Memory settings aren't available in this view.</span></div>
+            <button class="gv-row" id="research-depth" type="button" data-capability="AVAILABLE"><span class="gv-rk" data-copy="navigation.research">Research</span><span class="gv-rv"><span data-copy="navigation.glance">Glance</span><svg class="ax-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/lucide/axignal-ui.svg#chevron-right"></use></svg></span></button>
+            <div class="gv-row is-unavailable" data-capability="UNAVAILABLE" aria-disabled="true"><span class="gv-rk" data-copy="navigation.uncertainty">Uncertainty</span><span class="gv-rv" aria-hidden="true"></span><span class="sr-only" data-copy="navigation.uncertaintyUnavailable">This setting isn't available in this view.</span></div>
           </section>
         </nav>
 
-        <div class="gv-account" data-copy-aria-label="navigation.account" aria-label="Account">
-          <span class="gv-avatarsm" aria-hidden="true">A</span><span class="gv-acct-name" data-copy="navigation.account">Account</span><i aria-hidden="true">›</i>
+        <nav class="gv-rail" data-copy-aria-label="navigation.workspace" aria-label="Workspace">
+          <button class="rail" id="today-rail" type="button" data-copy-title="navigation.today" data-copy-aria-label="navigation.today" title="Today" aria-label="Today" aria-current="true"><svg class="ax-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/lucide/axignal-ui.svg#house"></use></svg></button>
+          <div class="rail xeed" id="xeed-rail" role="group" data-copy-title="context.activeAccessibleName" title="Active view" aria-label="Active view"><span class="rail-xeed" aria-hidden="true">●</span></div>
+          <button class="rail" id="create-xeed-rail" type="button" disabled data-copy-title="navigation.createContext" data-copy-aria-label="navigation.createContext" title="Create a new context" aria-label="Create a new context"><svg class="ax-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/lucide/axignal-ui.svg#plus"></use></svg></button>
+          <div class="rail-sep" aria-hidden="true"></div>
+          <button class="rail" id="governance-rail" type="button" data-copy-title="navigation.governance" data-copy-aria-label="navigation.governance" title="Governance" aria-label="Governance"><svg class="ax-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/lucide/axignal-ui.svg#list-checks"></use></svg></button>
+          <div class="rail-spacer" aria-hidden="true"></div>
+        </nav>
+
+        <div class="lab-account" id="lab-account" hidden>
+          <button class="lab-preferences-open" id="preferences-open" type="button" aria-controls="preferences-view" aria-expanded="false" data-copy-aria-label="preferences.label" hidden>
+            <svg class="ax-icon lab-preferences-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/lucide/axignal-ui.svg#settings"></use></svg>
+            <span data-copy="preferences.label">Preferences</span>
+          </button>
+          <span class="lab-account-label" id="lab-account-label">QA operator · synthetic</span>
         </div>
         <span class="hfx-demo-indicator" data-copy="demo.sample">DEMO · EXAMPLE DATA</span>
       </aside>
@@ -84,28 +102,30 @@
             <div id="zone-market" class="zone on z-mkt" data-copy="navigation.markets">markets</div>
             <div id="zone-signal" class="zone on z-sig" data-copy="navigation.signals">signals</div>
             <div id="zone-activity" class="zone on z-act" data-copy="navigation.activity">activity</div>
-            <div id="camera-layer" class="field-world"></div>
+            <div id="camera-layer" class="field-world">
+              <svg id="relationship-layer" class="relationship-layer" aria-hidden="true" preserveAspectRatio="none"></svg>
+            </div>
             <button class="here" id="here" type="button" data-copy-title="navigation.centerFocus" title="Center on current focus"><i aria-hidden="true"></i><b id="here-label">Organization</b><em data-copy="navigation.youAreHere">you are here</em></button>
 
             <div class="canvas-tools" data-copy-aria-label="navigation.fieldControls" aria-label="Field controls">
-              <button id="zoom-in" type="button" data-copy-title="navigation.zoomIn" data-copy-aria-label="navigation.zoomIn" title="Zoom in" aria-label="Zoom in">+</button>
-              <button id="zoom-out" type="button" data-copy-title="navigation.zoomOut" data-copy-aria-label="navigation.zoomOut" title="Zoom out" aria-label="Zoom out">−</button>
-              <button id="zoom-fit" type="button" data-copy-title="navigation.fitField" data-copy-aria-label="navigation.fitField" title="Fit the field" aria-label="Fit the field">⤢</button>
-              <button id="zoom-root" type="button" data-copy-title="navigation.centerOrganization" data-copy-aria-label="navigation.centerOrganization" title="Center on Organization" aria-label="Center on Organization">◎</button>
-              <button id="field-reload" type="button" data-copy-title="navigation.resetField" data-copy-aria-label="navigation.resetField" title="Reset field view" aria-label="Reset field view">◯</button>
+              <button id="zoom-in" type="button" data-copy-title="navigation.zoomIn" data-copy-aria-label="navigation.zoomIn" title="Zoom in" aria-label="Zoom in"><svg class="ax-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/lucide/axignal-ui.svg#plus"></use></svg></button>
+              <button id="zoom-out" type="button" data-copy-title="navigation.zoomOut" data-copy-aria-label="navigation.zoomOut" title="Zoom out" aria-label="Zoom out"><svg class="ax-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/lucide/axignal-ui.svg#minus"></use></svg></button>
+              <button id="zoom-fit" type="button" data-copy-title="navigation.fitField" data-copy-aria-label="navigation.fitField" title="Fit the field" aria-label="Fit the field"><svg class="ax-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/lucide/axignal-ui.svg#maximize"></use></svg></button>
+              <button id="zoom-root" type="button" data-copy-title="navigation.centerOrganization" data-copy-aria-label="navigation.centerOrganization" title="Center on Organization" aria-label="Center on Organization"><svg class="ax-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/lucide/axignal-ui.svg#locate-fixed"></use></svg></button>
+              <button id="field-reload" type="button" data-copy-title="navigation.resetField" data-copy-aria-label="navigation.resetField" title="Reset field view" aria-label="Reset field view"><svg class="ax-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/lucide/axignal-ui.svg#rotate-ccw"></use></svg></button>
             </div>
 
             <div class="minimap" id="minimap" role="button" tabindex="0" data-copy-aria-label="navigation.fieldMinimap" aria-label="Field minimap">
-              <svg viewBox="0 0 160 96" aria-hidden="true"><rect class="mm-bg" x="1" y="1" width="158" height="94" rx="2"></rect><g id="minimap-nodes"></g><rect class="mini-window" id="minimap-window" x="18" y="16" width="124" height="64"></rect></svg>
+              <svg viewBox="0 0 160 96" aria-hidden="true"><g id="minimap-relationships"></g><g id="minimap-nodes"></g><rect class="mini-window" id="minimap-window" x="18" y="16" width="124" height="64" fill="transparent" stroke="none"></rect></svg>
             </div>
             <p class="field-hint" data-copy="navigation.dragZoomHint">Drag to move · scroll to zoom</p>
           </div>
 
           <nav class="trail" data-copy-aria-label="navigation.trail" aria-label="Focus trail">
             <div class="trail-nav">
-              <button id="history-back" type="button" disabled data-copy-title="navigation.back" data-copy-aria-label="navigation.back" title="Back" aria-label="Back">←</button>
-              <button id="history-forward" type="button" disabled data-copy-title="navigation.forward" data-copy-aria-label="navigation.forward" title="Forward" aria-label="Forward">→</button>
-              <button id="history-home" type="button" data-copy-title="navigation.organizationHome" data-copy-aria-label="navigation.home" title="Home — organization" aria-label="Home">⌂</button>
+              <button id="history-back" type="button" disabled data-copy-title="navigation.back" data-copy-aria-label="navigation.back" title="Back" aria-label="Back"><svg class="ax-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/lucide/axignal-ui.svg#arrow-left"></use></svg></button>
+              <button id="history-forward" type="button" disabled data-copy-title="navigation.forward" data-copy-aria-label="navigation.forward" title="Forward" aria-label="Forward"><svg class="ax-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/lucide/axignal-ui.svg#arrow-right"></use></svg></button>
+              <button id="history-home" type="button" data-copy-title="navigation.organizationHome" data-copy-aria-label="navigation.home" title="Home — organization" aria-label="Home"><svg class="ax-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/lucide/axignal-ui.svg#house"></use></svg></button>
             </div>
             <div class="trail-path" id="history-list"><button class="trail-item cur" id="history-current" data-copy="navigation.today" aria-current="page">Today</button></div>
             <span class="session-only" data-copy="navigation.historySession">This session only</span>
@@ -127,12 +147,35 @@
             <p class="reader-meaning" id="reader-meaning">This view brings together the organization and information available in this context.</p>
             <div class="reader-fields" id="bottom-fields"></div>
           </section>
+          <section class="preferences-view" id="preferences-view" aria-labelledby="preferences-title" hidden>
+            <header class="preferences-head">
+              <div>
+                <span class="mono" data-copy="navigation.account">Account</span>
+                <h2 id="preferences-title" data-copy="preferences.label">Preferences</h2>
+              </div>
+              <button class="preferences-close" id="preferences-close" type="button" data-copy-title="navigation.back" data-copy-aria-label="navigation.back" title="Back" aria-label="Back"><svg class="ax-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/lucide/axignal-ui.svg#arrow-left"></use></svg></button>
+            </header>
+            <div class="preferences-grid">
+              <div class="preference-card">
+                <label for="ui-locale" data-copy="locale.label">Display language · preview</label>
+                <select id="ui-locale" aria-describedby="locale-preview-note">
+                  <option value="auto" data-copy="locale.auto">Automatic · browser preference</option>
+                  <option value="en" data-copy="locale.en">English · baseline</option>
+                  <option value="es" data-copy="locale.es">Español · sample copy</option>
+                  <option value="de" data-copy="locale.de">Deutsch · text expansion</option>
+                  <option value="ja" data-copy="locale.ja">日本語 · CJK layout</option>
+                  <option value="ar" data-copy="locale.ar">العربية · RTL layout</option>
+                </select>
+                <p id="locale-preview-note" data-copy="locale.note">Synthetic layout preview only. This is not a complete translation or an account setting.</p>
+              </div>
+            </div>
+          </section>
         </section>
 
         <footer class="meridian" data-copy-aria-label="navigation.time" aria-label="Time">
           <div class="mer-row">
             <span class="mer-end"><b data-copy="navigation.then">Then</b><em></em></span>
-            <div class="mer-track unavailable" aria-disabled="true" data-copy-aria-label="navigation.timeline" aria-label="Timeline"><span class="mer-line"></span><span class="mer-knob at-now"><i></i></span></div>
+            <div class="mer-track unavailable" id="mer-track" aria-disabled="true" data-copy-aria-label="navigation.timeline" aria-label="Timeline"><span class="mer-line"></span><span class="mer-knob at-now"><i></i></span></div>
             <span class="mer-end r"><b data-copy="navigation.now">Now</b><em data-copy="copy.currentRead">Current view</em></span>
             <button class="mer-btn" type="button" disabled data-copy="navigation.whatChanged" data-copy-title="navigation.whatChanged" title="What changed?">What changed?</button>
           </div>
