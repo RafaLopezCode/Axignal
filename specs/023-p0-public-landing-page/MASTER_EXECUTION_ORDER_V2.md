@@ -1,5 +1,5 @@
 # AXIGNAL — MASTER EXECUTION ORDER V2
-## P0 Public Paginated Landing — COPY → STORYBOARD → ASSETS → IMPLEMENT → VERIFY → PR
+## P0 Public Paginated Landing — COPY → PREVIEW ASSETS → STORYBOARD → PRODUCTION ASSETS → IMPLEMENT → VERIFY → PR
 
 **Status:** EXECUTION AUTHORITY FOR THIS SLICE  
 **Base:** `10d6d130072c271357ce7db389301dc82ed31925`  
@@ -14,8 +14,9 @@ Build the public AXIGNAL landing as a 15-chapter, viewport-scale narrative that 
 The execution sequence is mandatory:
 
 ```text
-AUTHORITY → COPY_FREEZE → STORYBOARD_FREEZE → ASSET_PIPELINE
-→ IMPLEMENT → BROWSER_QA → REPAIR → FULL_GATES → PR
+AUTHORITY → COPY_FREEZE → PREVIEW_ASSETS → RENDERED_STORYBOARD_REVIEW
+→ STORYBOARD_FREEZE → PRODUCTION_ASSET_PIPELINE → IMPLEMENT
+→ BROWSER_QA → REPAIR → FULL_GATES → PR
 ```
 
 Code is not allowed to substitute for unresolved copy or unresolved visual composition.
@@ -122,7 +123,7 @@ English is source authority. Spanish is first-class reviewed locale.
 
 Do not translate into fr/de/it/pt until EN semantics are accepted and ES has passed semantic review.
 
-`COPY_FREEZE=PASS` requires CTO/human approval of EN 15/15 and ES 15/15. Until then, implementation may prototype layout but must not treat copy as final.
+`COPY_FREEZE=PASS` requires CTO/human approval of EN 15/15 and ES 15/15. Before that pass, only disposable non-runtime exploration is permitted when needed to evaluate copy fit. It must remain outside product runtime, create no reusable implementation credit and never be presented as an implemented Landing.
 ## 8. Copy quality guardrails
 
 Copy must:
@@ -139,16 +140,31 @@ Copy must:
 Each chapter should answer one human question and advance one narrative step.
 
 Final copy must make a first-time visitor able to explain AXIGNAL, AXIGLAND, Xignal, AXENT, evidence, time, POTENTIAL, independence, price and next action.
-## 9. GATE 2 — STORYBOARD_FREEZE
+## 9. GATE 2 — Preview assets and rendered storyboard review
 
-The file `STORYBOARD_V1.md` defines the initial production storyboard.
+The file `STORYBOARD_V1.md` defines the initial production storyboard, but STORYBOARD_FREEZE requires rendered evidence.
 
-For each chapter it must specify:
+Before that freeze:
+
+- verify all source hashes against `SOURCE_MASTER_MANIFEST_V1.md`;
+- generate deterministic WebP **preview derivatives outside the repository/runtime tree** from the approved masters;
+- use those preview derivatives in a disposable/static review harness or equivalent browser-renderable surface;
+- do not integrate that harness into the product runtime;
+- do not count preview work as implementation completion;
+- preserve the exact source aspect ratio and record the preview conversion tool/version/settings.
+
+AVIF evaluation is optional at this stage. Evaluate it only when a supported deterministic encoder is already available and the comparison can be made without introducing avoidable dependency or workflow cost.
+
+The preview stage exists only to make storyboard decisions observable. It must not create fake routes, fake auth, fake billing or reusable runtime code.
+
+## 10. GATE 3 — STORYBOARD_FREEZE
+
+For each chapter the storyboard must specify:
 
 - copy zone and information hierarchy;
 - artwork focal intent;
 - desktop/tablet/mobile focal treatment;
-- headline/body maximum measure;
+- chapter-specific copy-measure/fit guidance;
 - CTA configuration;
 - header readability/contrast treatment;
 - right-side pagination behavior;
@@ -156,10 +172,11 @@ For each chapter it must specify:
 - reduced-motion equivalent;
 - chapter-specific responsive risks.
 
-Focal percentages inferred from image briefs are not final evidence. They must be verified against the actual converted assets in browser.
+Focal percentages and crop assumptions are hypotheses until the actual preview derivatives are rendered at the required breakpoints.
 
-`STORYBOARD_FREEZE=PASS` requires a coherent 15/15 desktop/tablet/mobile composition reviewed against rendered evidence. No chapter may invent a conflicting visual grammar.
-## 10. GATE 3 — Governed asset pipeline
+`STORYBOARD_FREEZE=PASS` requires a coherent 15/15 desktop/tablet/mobile composition reviewed against browser-rendered evidence. No chapter may invent a conflicting visual grammar.
+
+## 11. GATE 4 — Governed production asset pipeline
 
 Authoritative masters remain outside the repository.
 
@@ -182,23 +199,23 @@ landing-13-use-cases
 landing-14-pricing
 landing-15-start
 ```
+
 For every source master:
 
 - verify SHA-256 against `SOURCE_MASTER_MANIFEST_V1.md`;
 - never overwrite or modify the master;
 - preserve 1920×1080 aspect ratio;
 - generate deterministic WebP fallback;
-- generate deterministic AVIF candidate;
 - record tool/version, dimensions, quality settings and bytes;
 - inspect dark gradients, brush texture, fabric, skin and fine edges;
 - reject banding, blocking, halos or focal damage.
 
-AVIF becomes the preferred `<source>` only if all target browsers render it correctly and it provides a meaningful size benefit without visible quality loss. Otherwise serve WebP only.
+AVIF is an evidence-gated optimization, not a completion requirement. Generate AVIF candidates only when the selected encoder/runtime/browser path is supported and the comparison is worth running. WebP-only satisfies the asset gate when AVIF is unavailable, unsupported or fails the quality/size comparison.
 
-Use `<picture>` when both are accepted: AVIF first, WebP fallback. Never let formats use different semantic crops.
+When both formats are accepted, use `<picture>` with AVIF first and WebP fallback. Never let formats use different semantic crops.
 
 No production derivative may violate repository asset-size governance.
-## 11. Loading and performance
+## 12. Loading and performance
 
 There are 15 hero-class images. Do not create a 15-image initial burst.
 
@@ -214,7 +231,7 @@ Target:
 Measure in browser/network tooling. Do not report performance improvements from file-size guesses alone.
 
 Do not add a heavyweight image dependency for 15 files if an existing trustworthy tool or small deterministic script is sufficient.
-## 12. GATE 4 — Implementation
+## 13. GATE 5 — Implementation
 
 Canonical chapter order is immutable:
 
@@ -235,7 +252,7 @@ Architecture must remain ready for:
 `zh, ja, ko`
 
 Protected vocabulary: AXIGNAL, AXIGLAND, AXENT, Xignal, FAXT, INXIGHT, PATHX.
-## 13. Header and navigation
+## 14. Header and navigation
 
 Persistent semantic actions:
 
@@ -260,7 +277,7 @@ Pagination must support:
 - coherent Back/Forward when chapters are addressable.
 
 Prefer native scroll-snap plus bounded state. No scroll trap, no double jump, no bespoke navigation engine without demonstrated need.
-## 14. Visual system and motion
+## 15. Visual system and motion
 
 Art direction:
 
@@ -280,7 +297,7 @@ Motion is restrained:
 No aggressive parallax, cinematic zoom, bounce, continuous ambient motion or decorative animation of every text block.
 
 `prefers-reduced-motion` must preserve the full story with no comprehension loss.
-## 15. Responsive and accessibility
+## 16. Responsive and accessibility
 
 Mandatory QA breakpoints:
 
@@ -309,7 +326,7 @@ Target WCAG 2.2 AA where applicable:
 - accessible pagination.
 
 Decorative background art does not need verbose alt copy when adjacent text carries the meaning.
-## 16. SEO and truthful acquisition
+## 17. SEO and truthful acquisition
 
 Implement only correct public metadata:
 
@@ -330,7 +347,7 @@ Pricing authority:
 Do not invent annual plans, free trials, enterprise pricing, discounts, tax handling, cancellation promises or usage limits.
 
 If real billing does not implement the pricing contract, expose no fake checkout path.
-## 17. GATE 5 — Browser quality loop
+## 18. GATE 6 — Browser quality loop
 
 Mandatory loop:
 
@@ -358,7 +375,7 @@ Inspect:
 - network loading.
 
 A third visual iteration must be motivated by observable defects, not perfectionism.
-## 18. Browser QA matrix
+## 19. Browser QA matrix
 
 Desktop: all 15 chapters at 1720×1080, 1440×900 and 1280×720.
 
@@ -376,7 +393,9 @@ For every locale visually inspect at minimum:
 Then smoke all 15 chapters in all six locales for missing keys, clipping and overflow.
 
 Functional QA covers initial load, next/previous, direct navigation, wheel/trackpad, keyboard, touch, history/deep link if applicable, locale fallback, real Login/+ Xignal/Pricing/How-it-knows routes, reduced motion, refresh, console and broken assets.
-## 19. Tests and gates
+
+Every browser QA PASS must be evidence-backed. Maintain `BROWSER_QA_EVIDENCE_V1.md` with the exact tested HEAD SHA, viewport, locale, chapter/range, browser/tool, screenshot or recording reference, console result, network/loading result where relevant, defect/repair linkage and final verdict. Screenshots may live in CI/PR artifacts or a governed local review bundle rather than Git when binary size makes that safer, but the manifest must identify where the evidence can be inspected and record hashes when practical. Unsupported PASS values are invalid.
+## 20. Tests and gates
 
 Add only deterministic tests that cheaply protect:
 
@@ -403,7 +422,7 @@ uv run axignal-governance
 ```
 
 Also run discovered real web build/tests, browser QA and console checks.
-## 20. Git and scope safety
+## 21. Git and scope safety
 
 Implementation branch after preproduction review:
 
@@ -420,7 +439,7 @@ Do not put prompts/specs inside asset directories.
 Do not merge or deploy production without explicit CTO authorization.
 
 Stop only for a real authority conflict, route collision, auth/billing requirement with no truthful path, missing/corrupt source assets, overlapping branch ownership or a change that would require weakening governance/architecture.
-## 21. Required implementation ledger
+## 22. Required implementation ledger
 
 Return:
 
@@ -436,6 +455,7 @@ STORYBOARD_FREEZE=
 UX_SKILLS_USED=
 DESIGN_DIRECTOR=
 BROWSER_VERIFICATION_TOOL=
+BROWSER_QA_EVIDENCE_MANIFEST=
 SOURCE_IMAGES_FOUND=15/15
 SOURCE_IMAGES_UNMODIFIED=
 SOURCE_MANIFEST_VERIFIED=
@@ -459,10 +479,16 @@ REDUCED_MOTION=
 RESPONSIVE=
 PERFORMANCE_LOADING=
 DESKTOP_BROWSER_QA=
+DESKTOP_BROWSER_QA_EVIDENCE=
 TABLET_BROWSER_QA=
+TABLET_BROWSER_QA_EVIDENCE=
 MOBILE_BROWSER_QA=
+MOBILE_BROWSER_QA_EVIDENCE=
 LOCALE_VISUAL_QA=
+LOCALE_VISUAL_QA_EVIDENCE=
 CONSOLE_ERRORS=
+CONSOLE_EVIDENCE=
+NETWORK_LOADING_EVIDENCE=
 DESIGN_CRITIQUE_PASS_1=
 DESIGN_REPAIR_PASS_1=
 DESIGN_CRITIQUE_PASS_2=
@@ -487,7 +513,7 @@ BLOCKERS=
 ```
 
 Evidence vocabulary in the ledger: `CONFIRMED`, `INFERRED`, `UNKNOWN`.
-## 22. Final acceptance question
+## 23. Final acceptance question
 
 Before requesting human review, verify that a first-time visitor can explain:
 

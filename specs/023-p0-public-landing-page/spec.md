@@ -16,10 +16,11 @@ The feature must not create new economic truth, subscriber authority, billing cl
 
 ## Preproduction gates
 
-1. `COPY_FREEZE`: EN 15/15 + reviewed ES 15/15.
-2. `STORYBOARD_FREEZE`: 15/15 coherent desktop/tablet/mobile compositions with rendered verification.
-3. `SOURCE_MANIFEST_VERIFIED`: all external masters match approved hashes.
-4. `ASSET_PIPELINE_VERIFIED`: WebP 15/15; AVIF candidates governed by quality/performance evidence.
+1. `SOURCE_MANIFEST_VERIFIED`: all external masters match approved hashes.
+2. `COPY_FREEZE`: EN 15/15 + reviewed ES 15/15.
+3. `PREVIEW_ASSETS_VERIFIED`: deterministic WebP preview derivatives remain outside repository/runtime and are used only for rendered storyboard review.
+4. `STORYBOARD_FREEZE`: 15/15 coherent desktop/tablet/mobile compositions with rendered verification.
+5. `ASSET_PIPELINE_VERIFIED`: WebP 15/15 is required; AVIF is optional and accepted only when browser/quality/size evidence justifies it.
 
 ## Implementation scope
 

@@ -8,20 +8,21 @@ This plan is subordinate to the canonical Landing Product Contract and delegates
 2. Verify the external source-master manifest.
 3. Review/freeze EN copy.
 4. Review/freeze ES copy.
-5. Produce and render the 15-chapter storyboard.
-6. Freeze storyboard after desktop/tablet/mobile review.
-7. Build deterministic WebP + AVIF candidate pipeline.
-8. Select accepted production formats from browser/quality/size evidence.
-9. Implement one chapter model and six locale catalogs.
-10. Implement persistent header and accessible pagination.
-11. Integrate all 15 chapters.
-12. Tune focal treatment at required breakpoints.
-13. Wire only truthful existing routes/CTAs.
-14. Add minimal SEO and accessibility behavior.
-15. Run rendered critique/repair loop.
-16. Run deterministic/full repository gates.
-17. Open implementation PR.
-18. Do not merge or deploy without CTO authorization.
+5. Generate deterministic WebP preview derivatives outside repository/runtime.
+6. Render and review the 15-chapter storyboard against those preview assets at required breakpoints.
+7. Freeze storyboard after desktop/tablet/mobile review.
+8. Build required deterministic production WebP derivatives.
+9. Evaluate AVIF only when supported and worthwhile; accept it only from browser/quality/size evidence.
+10. Implement one chapter model and six locale catalogs.
+11. Implement persistent header and accessible pagination.
+12. Integrate all 15 chapters.
+13. Tune focal treatment at required breakpoints.
+14. Wire only truthful existing routes/CTAs.
+15. Add minimal SEO and accessibility behavior.
+16. Run rendered critique/repair loop and retain browser evidence references.
+17. Run deterministic/full repository gates.
+18. Open implementation PR.
+19. Do not merge or deploy without CTO authorization.
 
 ## Rollback
 

@@ -69,13 +69,13 @@
 **EN**
 - Eyebrow: Economic context
 - Headline: **Information is easy. Context is the hard part.**
-- Body: AXIGNAL connects evidence into governed economic context: what an organization does, where it operates, how it relates to markets and what the surrounding signals may mean.
+- Body: AXIGNAL connects evidence to show what an organization does, where it operates, how it relates to markets and what the surrounding signals may mean.
 - Value line: **Less disconnected information. More economic context.**
 
 **ES**
 - Eyebrow: Contexto económico
 - Headline: **La información es fácil. El contexto es lo difícil.**
-- Body: AXIGNAL conecta evidencia en un contexto económico gobernado: qué hace una organización, dónde opera, cómo se relaciona con los mercados y qué pueden significar las señales que la rodean.
+- Body: AXIGNAL conecta evidencia para mostrar qué hace una organización, dónde opera, cómo se relaciona con los mercados y qué pueden significar las señales que la rodean.
 - Value line: **Menos información desconectada. Más contexto económico.**
 
 **Artwork relationship:** separate economic objects become meaningful through comparison; never add a literal glowing graph.
@@ -90,13 +90,13 @@
 **EN**
 - Eyebrow: One world, not one profile
 - Headline: **One economic world. Many perspectives.**
-- Body: AXIGLAND is AXIGNAL’s canonical, temporal memory of the economic world. You can change perspective without creating a different truth for every customer.
+- Body: AXIGLAND is AXIGNAL’s evolving economic memory: one underlying world, viewed from different perspectives. Changing perspective does not create a different truth for every customer.
 - Value line: **Change the perspective. Not the underlying truth.**
 
 **ES**
 - Eyebrow: Un mundo, no un perfil
 - Headline: **Un solo mundo económico. Muchas perspectivas.**
-- Body: AXIGLAND es la memoria económica canónica y temporal de AXIGNAL. Puedes cambiar la perspectiva sin crear una verdad distinta para cada cliente.
+- Body: AXIGLAND es la memoria económica en evolución de AXIGNAL: un mismo mundo subyacente visto desde distintas perspectivas. Cambiar la perspectiva no crea una verdad diferente para cada cliente.
 - Value line: **Cambia la perspectiva. No la verdad subyacente.**
 
 **Artwork relationship:** multiple observers study the same shared world from different positions.
@@ -118,7 +118,7 @@
 **ES**
 - Eyebrow: Observación persistente
 - Headline: **Pon una organización bajo observación persistente.**
-- Body: Un Xignal dirige la atención de AXIGNAL hacia una organización a lo largo del tiempo. No reclama la empresa, no te da propiedad sobre su perfil ni permite a nadie reescribir el mapa.
+- Body: Un Xignal dirige la atención de AXIGNAL hacia una organización a lo largo del tiempo. No significa que la empresa te pertenezca ni te da autoridad para editarla en AXIGLAND.
 - Value line: **Compras observación. No la propiedad del perfil de la empresa.**
 - Primary CTA: **Crear un Xignal**
 
@@ -155,13 +155,13 @@
 **EN**
 - Eyebrow: Evidence on demand
 - Headline: **Don’t just see the conclusion. Inspect why it deserves attention.**
-- Body: Material conclusions keep a path back to supporting evidence, currentness, contradiction and uncertainty. Explanation is part of the product, not an afterthought.
+- Body: For important conclusions, you can trace the evidence behind them, see how recent it is, where sources disagree and what remains uncertain. Explanation is part of the product, not an afterthought.
 - Primary CTA: **Show me how AXIGNAL knows**
 
 **ES**
 - Eyebrow: Evidencia cuando la necesitas
 - Headline: **No te quedes con la conclusión. Examina por qué merece atención.**
-- Body: Las conclusiones materiales conservan un camino de vuelta a la evidencia que las sustenta, su vigencia, sus contradicciones y su incertidumbre. La explicación forma parte del producto, no es un añadido posterior.
+- Body: En las conclusiones importantes puedes rastrear la evidencia que las sustenta, comprobar lo reciente que es, ver dónde discrepan las fuentes y qué sigue siendo incierto. La explicación forma parte del producto, no es un añadido posterior.
 - Primary CTA: **Muéstrame cómo lo sabe AXIGNAL**
 
 **Artwork relationship:** forensic comparison of sources communicates inspectability without turning documents into decorative “AI evidence”.
@@ -197,13 +197,13 @@
 **EN**
 - Eyebrow: Digital representation
 - Headline: **The world sees a representation of your company. It isn’t the company.**
-- Body: AXIGNAL can observe how an organization appears across search, generative systems, public conversation and customer experience—while keeping representation separate from reality.
+- Body: AXIGNAL can observe how an organization appears across search, generative systems, public conversation and specific publicly observable customer-experience signals—while keeping representation separate from reality.
 - Value line: **Representation is not reality. The gap can still matter.**
 
 **ES**
 - Eyebrow: Representación digital
 - Headline: **El mundo ve una representación de tu empresa. No es la empresa.**
-- Body: AXIGNAL puede observar cómo aparece una organización en buscadores, sistemas generativos, conversación pública y experiencia de clientes, manteniendo separadas la representación y la realidad.
+- Body: AXIGNAL puede observar cómo aparece una organización en buscadores, sistemas generativos, conversación pública y señales públicas observables sobre experiencias de clientes, manteniendo separadas la representación y la realidad.
 - Value line: **La representación no es la realidad. La diferencia puede seguir importando.**
 
 **Artwork relationship:** reflections represent incomplete contexts around one real subject.
@@ -218,13 +218,13 @@
 **EN**
 - Eyebrow: Change over time
 - Headline: **A snapshot tells you what was visible once.**
-- Body: AXIGNAL preserves history, change, currentness and revalidation so you can see what moved—and avoid rebuilding the same understanding from zero.
+- Body: AXIGNAL preserves history, change, currentness and revalidation so you can see what has changed—and avoid rebuilding the same understanding from zero.
 - Value line: **What changed can matter as much as what is observable now.**
 
 **ES**
 - Eyebrow: Cambio a lo largo del tiempo
 - Headline: **Una instantánea solo te dice lo que era visible una vez.**
-- Body: AXIGNAL conserva historia, cambios, vigencia y revalidación para que puedas ver qué se movió y evitar reconstruir desde cero la misma comprensión.
+- Body: AXIGNAL conserva historia, cambios, vigencia y revalidación para que puedas ver qué ha cambiado y evitar reconstruir desde cero la misma visión.
 - Value line: **Lo que cambió puede importar tanto como lo que puede observarse ahora.**
 
 **Artwork relationship:** continuity across past/current/emerging states communicates temporal memory, not prediction.
@@ -281,14 +281,14 @@
 **EN**
 - Eyebrow: Different questions
 - Headline: **One economic reality. Different decisions.**
-- Body: Leadership, sales, procurement, export, agencies and consultancies can explore the same governed world from the perspective of the decision in front of them.
-- Value line: **Different attention. Same underlying world.**
+- Body: Leadership, sales, procurement, export, agencies and consultancies can explore the same underlying economic world from the perspective of the decision in front of them.
+- Value line: **Different perspectives. Same underlying world.**
 
 **ES**
 - Eyebrow: Preguntas diferentes
 - Headline: **Una realidad económica. Decisiones diferentes.**
-- Body: Dirección, ventas, compras, exportación, agencias y consultoras pueden explorar el mismo mundo gobernado desde la perspectiva de la decisión que tienen delante.
-- Value line: **Atención diferente. El mismo mundo subyacente.**
+- Body: Dirección, ventas, compras, exportación, agencias y consultoras pueden explorar el mismo mundo económico subyacente desde la perspectiva de la decisión que tienen delante.
+- Value line: **Distintas perspectivas. El mismo mundo subyacente.**
 
 **Artwork relationship:** multiple roles study one shared economic world rather than separate dashboards/truths.
 
@@ -325,14 +325,14 @@
 **EN**
 - Eyebrow: Start with one
 - Headline: **Choose one company. See what can be observed from the outside.**
-- Body: Start with one organization and judge AXIGNAL by the map it builds, the evidence behind it and what changes over time.
+- Body: Start with one organization and evaluate AXIGNAL by the map it builds, the evidence behind it and what changes over time.
 - Primary CTA: **Create a Xignal**
 - Secondary CTA: How AXIGNAL knows
 
 **ES**
 - Eyebrow: Empieza con una
 - Headline: **Elige una empresa. Mira qué puede observarse desde fuera.**
-- Body: Empieza con una organización y juzga AXIGNAL por el mapa que construye, la evidencia que lo sustenta y lo que cambia con el tiempo.
+- Body: Empieza con una organización y valora AXIGNAL por el mapa que construye, la evidencia que lo sustenta y lo que cambia con el tiempo.
 - Primary CTA: **Crear un Xignal**
 - Secondary CTA: Cómo lo sabe AXIGNAL
 
@@ -345,9 +345,10 @@
 ## Copy-freeze decision record
 
 ```text
-EN_15_OF_15=COMPLETE_DRAFT
-ES_15_OF_15=COMPLETE_DRAFT
-SEMANTIC_REVIEW=CTO_PENDING
+EN_15_OF_15=REVISED_AFTER_INDEPENDENT_REVIEW
+ES_15_OF_15=REVISED_AFTER_INDEPENDENT_REVIEW
+SEMANTIC_REVIEW=CTO_PASS
+INDEPENDENT_REVIEW_FINDINGS=REPAIRED
 HUMAN_COPY_REVIEW=PENDING
 COPY_FREEZE=PENDING
 FR_DE_IT_PT=BLOCKED_UNTIL_COPY_FREEZE

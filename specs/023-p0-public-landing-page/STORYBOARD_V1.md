@@ -3,7 +3,7 @@
 **Status:** PRODUCTION STORYBOARD DRAFT  
 **STORYBOARD_FREEZE:** PENDING RENDERED/HUMAN REVIEW  
 **Authority:** MASTER → HFX → Landing Contract → Design System/Brand → this storyboard  
-**Image evidence:** focal guidance below is inferred from approved image briefs and MUST be verified against the actual production derivatives in browser.
+**Image evidence:** spatial subject placement has been checked against a contact sheet generated directly from all 15 approved source masters. Exact crop/focal percentages remain hypotheses and MUST be verified against converted assets at the required browser breakpoints.
 
 ## Global frame
 
@@ -46,6 +46,27 @@ Mobile:
 - Never crop away the semantic subject to center the image mechanically.
 - If a chapter cannot survive mobile crop, create a deterministic responsive derivative; never edit the source master.
 - Copy may reduce measure and spacing on mobile; it must not remove epistemic qualifiers merely to fit.
+- Fit targets below are design constraints, not proof. If a chapter misses them in browser, first reduce vertical spacing, then use the governed responsive type scale, then demote/reposition a secondary CTA. Never remove epistemic qualifiers or truncate production copy to force a pass.
+
+### Per-chapter copy-fit targets
+
+| Chapter | Desktop copy measure | Mobile target | Fit priority |
+|---|---:|---:|---|
+| 01 OUTSIDE | ≤40rem | ≤88vw | Headline ≤3 lines; body + primary CTA visible in initial viewport |
+| 02 OBSERVE | ≤40rem | ≤88vw | Preserve evidence-object body and value line |
+| 03 UNDERSTAND | ≤40rem | ≤88vw | Preserve headline/body/value line without squeezing artwork |
+| 04 AXIGLAND | ≤40rem | ≤88vw | Keep value line visible; no ontology-heavy overflow |
+| 05 XIGNAL | ≤42rem | ≤90vw | Primary CTA and ownership boundary must remain visible |
+| 06 FIRST_MAP | ≤42rem | ≤90vw | Preserve completeness qualifier and value line |
+| 07 EVIDENCE | ≤42rem | ≤90vw | Primary evidence CTA visible with full uncertainty wording |
+| 08 DISCOVER | ≤40rem | ≤88vw | Preserve POTENTIAL qualifier and value line |
+| 09 DIGITAL_REPRESENTATION | ≤42rem | ≤90vw | Preserve representation/reality boundary in full |
+| 10 TIME | ≤40rem | ≤88vw | Preserve currentness/revalidation meaning |
+| 11 AXENT | ≤42rem | ≤90vw | Keep truth-authority boundary visible |
+| 12 INDEPENDENCE | ≤40rem | ≤88vw | Headline + short body + canonical value line |
+| 13 USE_CASES | ≤42rem | ≤90vw | Role list must not turn into a dense card/grid substitute |
+| 14 PRICING | ≤40rem | ≤90vw | Exact price, additional-Xignal price, value line and CTA visible |
+| 15 START | ≤40rem | ≤88vw | Primary CTA visible; secondary CTA may move below primary |
 
 ---
 
@@ -125,9 +146,9 @@ Mobile:
 ## 08 — DISCOVER
 
 **Narrative beat:** introduce potential relevance and productive surprise.  
-**Copy zone:** left-center.  
-**Artwork focus:** navigator and economic route/landscape on right.  
-**Focal baseline:** desktop 70% 48%; tablet 72% 48%; mobile 76% 50%.  
+**Copy zone:** upper-left dark field only; do not extend into the explorers below/left of center.
+**Artwork focus:** explorers sit left of center while the economic route/landscape extends across the right. Both are semantically useful.
+**Focal baseline:** desktop 56% 48% (hypothesis); tablet 58% 48% (hypothesis); mobile requires rendered decision and MAY require a deterministic responsive derivative to preserve explorer + route context.
 **CTA:** none required.  
 **Hierarchy:** headline → body → explicit POTENTIAL value line.  
 **Transition:** no animated glowing route; geography and activity carry the metaphor.  
@@ -136,9 +157,9 @@ Mobile:
 ## 09 — DIGITAL_REPRESENTATION
 
 **Narrative beat:** distinguish digital representations from the organization itself.  
-**Copy zone:** left, protected from mirror highlights.  
-**Artwork focus:** real subject + contextual reflections center/right.  
-**Focal baseline:** desktop 65% 50%; tablet 68% 50%; mobile 72% 50%.  
+**Copy zone:** extreme-left dark curtain/negative field only; do not cover the primary figure left of center.
+**Artwork focus:** the real subject sits left of center; contextual reflections occupy the right. The subject/reflection contrast is the semantic point.
+**Focal baseline:** desktop 56% 50% (hypothesis); tablet 58% 50% (hypothesis); mobile requires rendered decision and MAY require a deterministic responsive derivative because losing either the subject or reflections weakens the chapter.
 **CTA:** none.  
 **Hierarchy:** headline should do most of the work; body stays concise; canonical value line visible.  
 **Transition:** simple cross-state; no mirror animation required.  
@@ -167,9 +188,9 @@ Mobile:
 ## 12 — INDEPENDENCE
 
 **Narrative beat:** make the trust model memorable.  
-**Copy zone:** left-center with enough visual space for the payment/cartography allegory.  
-**Artwork focus:** payment offer and independent investigator/cartographer on right.  
-**Focal baseline:** desktop 65% 50%; tablet 68% 50%; mobile 72% 50%.  
+**Copy zone:** far-left/upper-left dark margin, narrower than the global default; do not cover the seated investigator.
+**Artwork focus:** the independent investigator/cartographer is center-left while the payment offer enters from the right. Their tension must remain visible together.
+**Focal baseline:** desktop 54% 50% (hypothesis); tablet 56% 50% (hypothesis); mobile requires rendered decision and MAY require a deterministic responsive derivative to preserve both actors.
 **CTA:** none.  
 **Hierarchy:** headline and canonical value line are the memorable pair; body is short.  
 **Transition:** restrained; no moralizing/villain animation.  
@@ -199,9 +220,9 @@ Mobile:
 ## 15 — START
 
 **Narrative beat:** close with one concrete low-friction action.  
-**Copy zone:** left-center with generous negative space.  
-**Artwork focus:** company in middle distance + observer/marker on right.  
-**Focal baseline:** desktop 68% 50%; tablet 71% 50%; mobile 74% 50%.  
+**Copy zone:** upper-left dark field around/above the observer, never over the observer’s face or marker hand.
+**Artwork focus:** the observer/marker is on the left foreground; the company and wider economic landscape extend through the middle/right distance. Both must remain legible as one beginning-to-world composition.
+**Focal baseline:** desktop 56% 50% (hypothesis); tablet 58% 50% (hypothesis); mobile requires rendered decision and MAY require a deterministic responsive derivative if the observer/landscape relationship cannot survive cover cropping.
 **CTA:** Create a Xignal; secondary How AXIGNAL knows.  
 **Hierarchy:** final headline → one body paragraph → primary CTA; secondary remains quieter.  
 **Transition:** no confetti or hype; the chapter should feel like a beginning.  
@@ -215,8 +236,11 @@ CHAPTERS_DEFINED=15/15
 DESKTOP_COMPOSITION=DEFINED_DRAFT
 TABLET_COMPOSITION=DEFINED_DRAFT
 MOBILE_COMPOSITION=DEFINED_DRAFT
-FOCAL_METADATA=INFERRED_FROM_APPROVED_IMAGE_BRIEFS
-ACTUAL_ASSET_VISUAL_VERIFICATION=PENDING
+SOURCE_MASTER_SPATIAL_PLACEMENT=CONFIRMED_CONTACT_SHEET_15_OF_15
+FOCAL_METADATA=INFERRED_PENDING_BROWSER_BREAKPOINT_QA
+ACTUAL_CONVERTED_ASSET_VISUAL_VERIFICATION=PENDING
+INDEPENDENT_REVIEW_FINDINGS=REPAIRED
+READY_FOR_RENDERED_REVIEW=YES_AFTER_COPY_FREEZE
 RENDERED_BROWSER_REVIEW=PENDING
 HUMAN_VISUAL_REVIEW=PENDING
 STORYBOARD_FREEZE=PENDING
