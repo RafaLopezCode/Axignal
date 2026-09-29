@@ -513,8 +513,9 @@ def test_subscriber_icons_consume_the_canonical_lucide_grammar() -> None:
     design_system = (ROOT / "docs" / "design" / "DESIGN_SYSTEM.md").read_text(encoding="utf-8")
 
     symbols = re.findall(r'<symbol\b[^>]*stroke-width="([^"]+)"', sprite)
-    assert len(symbols) == 14
+    assert len(symbols) == 15
     assert set(symbols) == {"1.5"}
+    assert '<symbol id="send"' in sprite
     assert "ISC License" in license_text
     assert "The MIT License (MIT)" in license_text
     assert "## Canonical iconography" in design_system

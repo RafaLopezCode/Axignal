@@ -1911,12 +1911,29 @@ input {
   color: var(--faint);
 }
 .ax-send {
-  font-family: var(--mono);
-  font-size: 10px;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid var(--hair-2);
+  border-radius: 3px;
   color: var(--brass);
   flex: none;
+  transition: color 0.15s var(--ease), background 0.15s var(--ease), border-color 0.15s var(--ease);
+}
+.ax-send .ax-icon {
+  width: 16px;
+  height: 16px;
+}
+.ax-send:hover:not(:disabled) {
+  color: var(--ink);
+  border-color: var(--brass-2);
+  background: var(--brass-w);
+}
+.ax-send:focus-visible {
+  outline: 2px solid var(--brass-2);
+  outline-offset: 2px;
 }
 .ax-hint {
   margin-top: 8px;
@@ -3436,7 +3453,7 @@ input {
 /* ================= FOCUS TRAIL + EPHEMERAL FEEDBACK =================== */
 .trail {
   position: absolute;
-  left: 104px;
+  left: 144px;
   top: 14px;
   z-index: 6;
   display: flex;
