@@ -110,10 +110,11 @@ availability). Do not attach help to every label, add permanent explanation
 text by default, or make ordinary comprehension depend on AXENT or opening a
 hint.
 
-Resolve explanation wording through governed HFX presentation semantics and
-the user's resolved UI locale. Copy remains presentation: it must not redefine
-canonical meaning, change epistemic state, imply an unsupported capability, or
-grant authorization.
+Resolve explanation wording through the HFX Presentation Copy Leakage Register
+(`specs/020-p0-hfx-01-minimum-truthful-axigland/presentation-copy-leakage-register.v1.md`)
+and the user's resolved UI locale. Copy remains presentation: it must not
+redefine canonical meaning, change epistemic state, imply an unsupported
+capability, or grant authorization.
 
 A future explanation affordance must support pointer, keyboard, touch and
 screen-reader use; hover may supplement but cannot be the only access path.
