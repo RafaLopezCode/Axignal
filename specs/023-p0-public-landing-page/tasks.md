@@ -11,8 +11,8 @@
 - [x] Draft 15/15 storyboard.
 - [x] CTO semantic review of EN copy, including independent-review repairs.
 - [x] CTO first-class review of ES copy, including independent-review repairs.
-- [ ] Human owner review of EN/ES production copy.
-- [ ] `COPY_FREEZE=PASS`.
+- [x] Human owner review of EN/ES production copy.
+- [x] `COPY_FREEZE=PASS`.
 - [ ] Generate deterministic WebP preview derivatives outside repository/runtime.
 - [ ] Rendered visual review against preview derivatives at required desktop/tablet/mobile breakpoints.
 - [ ] `STORYBOARD_FREEZE=PASS`.
