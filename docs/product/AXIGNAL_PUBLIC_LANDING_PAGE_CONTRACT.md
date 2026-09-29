@@ -334,13 +334,16 @@ Images are explanatory atmosphere, not epistemic evidence.
 Human-provided master per chapter:
 
 ```text
-1720x1080 PNG
+1920x1080 PNG
 ```
 
 Production implementation MUST create WebP derivatives from those masters.
 
 Requirements:
-- preserve master PNG;
+- the authoritative human-provided masters for this slice are 1920x1080 PNG;
+- preserve the local master PNGs untouched as source material;
+- source PNG masters MUST NOT be committed while they exceed the repository's strict 2 MiB per-file governance limit;
+- production WebP derivatives are the Git-tracked/browser-served assets when they satisfy repository governance;
 - preserve aspect ratio;
 - avoid destructive focal cropping;
 - use deterministic naming;
@@ -556,7 +559,7 @@ Measured-value still life: balance scale, observation marker/map token and modes
 ### 15 START
 One company visible in the middle distance at dawn; observer holds one simple map marker ready to place; surrounding suppliers, roads, markets and logistics imply a larger discoverable context; beginning and clarity, not hype.
 
-All source images are authored externally at 1720×1080 PNG and converted to WebP by the implementation pipeline.
+All source images for this slice are authored externally at 1920×1080 PNG, retained locally as governed source masters while they exceed the repository size gate, and converted deterministically to Git-tracked production WebP derivatives.
 
 ## 17. Authority and change control
 
