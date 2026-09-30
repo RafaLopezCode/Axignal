@@ -31,7 +31,7 @@ A task is not DONE because code exists. Runtime/product work normally progresses
 
 NOT_STARTED · READY · IN_PROGRESS · BLOCKED · DONE · DEFERRED · REJECTED
 
-**CURRENT_TASK = FR-21**
+**CURRENT_TASK = FR-22**
 
 ## 4. Frontier closure rule
 
@@ -914,9 +914,36 @@ Goodhart/reward-hacking risk is governed by explicit promotion boundaries, not o
 
 ## FR-21 — StructuredEvaluatorPort Contract Evolution
 
-**Status:** NOT_STARTED  
-**Depends on:** FR-04  
+**Status:** DONE
+**Depends on:** FR-04
 **Priority:** P1
+
+**Closure evidence (2026-10-01):**
+- evolved `StructuredJudgment` into an explicit provider-neutral contract where selected choice is independent from optional distribution/confidence
+- added `DistributionCapability` (NEVER / OPTIONAL / ALWAYS) and `DistributionAvailability` (AVAILABLE / UNAVAILABLE)
+- UNAVAILABLE distribution must remain empty; no selected-choice → one-hot synthesis exists in the core contract
+- AVAILABLE distribution must be real, normalized, finite, uniquely labelled, contain the selected option and be permitted by the declared capability profile
+- added `ConfidenceCapability` and `ConfidenceSemantics`; confidence is accepted only with provider-defined semantics and matching capability
+- added deterministic `EvaluatorCapabilityProfile` fingerprint carrying distribution/confidence/replay capabilities
+- added `StructuredEvaluationRequest` binding DecisionContract, state, question, ChoiceSpace and exact option ids
+- added provider-neutral `StructuredEvaluatorPort` and `evaluate_structured()` validation boundary
+- boundary rejects capability-profile mismatch, DecisionContract mismatch, state/question/ChoiceSpace mismatch, selected options outside the ChoiceSpace and distribution labels outside the ChoiceSpace
+- structured evaluator boundary requires a concrete replay-reference capability and every returned judgment carries a replay reference
+- choice-only evaluator pattern is accepted with distribution/confidence explicitly unavailable; no fake probabilities are created
+- distribution-capable evaluator pattern is accepted without forcing confidence
+- distribution+provider-defined-confidence pattern preserves the real provider uncertainty signal
+- UNKNOWN/UNRESOLVED choice test proves semantic UNKNOWN survives with no fabricated probability or confidence
+- core evaluator contract contains no Jev/OpenAI/Luna/TypeSafe/Decisions provider names
+- ADR-0047 supersedes only ADR-0024's universal raw-distribution assumption; historical evidence is not rewritten
+- `DimensionEvaluation` and `EvidenceSupportJudgment` were confirmed as separate downstream/domain boundaries and intentionally not conflated with StructuredEvaluatorPort
+- focused FR-21 contract/economic-discovery suite: 22 PASS
+- full pytest: 576 PASS using external `--basetemp` to avoid the known Windows user-temp ACL issue
+- Ruff format/check: PASS
+- mypy: PASS (122 source files)
+- Architecture Guard: PASS
+- axignal-governance: PASS
+- git diff --check: PASS
+- ADR-0047 accepted and indexed
 
 ### Work
 Finalize the provider-neutral evaluator boundary, including the unresolved distribution issue: selected option; optional provider distribution; explicit distribution availability; optional confidence only when provider semantics define it; replay reference; capability profile. Never fabricate 1/0 probabilities for providers that return only a selected choice.
