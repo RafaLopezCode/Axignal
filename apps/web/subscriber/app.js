@@ -765,6 +765,36 @@ function makeReaderHeader(kickerText, titleText, meaningText, kind) {
   return { header, title, meaning }
 }
 
+function todayFixtureItems() {
+  const whyKey = (predicate) => ({
+    MANUFACTURES: 'today.why.manufactures',
+    SERVES_MARKET: 'today.why.servesMarket',
+    MAINTAINS_STANDARD: 'today.why.maintainsStandard',
+  })[predicate] ?? 'today.why.default'
+
+  return [...state.projection.nodes]
+    .map((source) => {
+      const fact = describeFactForView(source)
+      const observed = source.observedAt ? new Date(source.observedAt) : null
+      return {
+        source,
+        fact,
+        key: projectionKey('FAXT', source.id),
+        observedSort: observed && !Number.isNaN(observed.valueOf()) ? observed.valueOf() : Number.NEGATIVE_INFINITY,
+        why: presentation.text(whyKey(source.predicate)),
+      }
+    })
+    .sort((first, second) => second.observedSort - first.observedSort || first.source.id.localeCompare(second.source.id))
+    .slice(0, 3)
+}
+
+function openTodayEvidence(key) {
+  navigate(key, { recenter: false })
+  state.depth = 3
+  renderDepth()
+  $('#depth-slider').focus({ preventScroll: true })
+}
+
 function renderReader(node) {
   const target = $('#reader')
   target.replaceChildren()
@@ -775,8 +805,8 @@ function renderReader(node) {
     rootView.className = 'today'
     const readerHeader = makeReaderHeader(
       presentation.text('copy.today'),
-      node.label,
-      presentation.text('organization.identity'),
+      presentation.text('today.heading'),
+      presentation.text('today.subheading'),
       node.kind,
     )
     const head = document.createElement('header')
@@ -789,8 +819,8 @@ function renderReader(node) {
     const title = readerHeader.title
     const summary = document.createElement('p')
     summary.className = 'turn'
-    summary.textContent = presentation.countDetails(state.projection.nodes.length)
-    greeting.append(readerHeader.header, name, title, summary)
+    summary.textContent = node.label
+    greeting.append(name, title, summary)
 
     const context = document.createElement('div')
     context.className = 'today-cont'
@@ -801,56 +831,72 @@ function renderReader(node) {
       ? presentation.text('context.current')
       : contextName || presentation.text('context.current')}`
     const explanation = document.createElement('p')
-    explanation.textContent = presentation.text('copy.contextExplanation')
+    explanation.textContent = presentation.text('today.subheading')
     context.append(contextLabel, explanation)
     head.append(greeting, context)
-    rootView.append(head, readerHeader.meaning)
+    rootView.append(head)
 
-    if (state.projection.nodes.length) {
+    const todayItems = todayFixtureItems()
+    if (todayItems.length) {
       const cards = document.createElement('div')
       cards.className = 'today-ideas'
-      for (const faxt of state.projection.nodes) {
+      for (const item of todayItems) {
         const card = document.createElement('article')
-        card.className = 'idea'
+        card.className = 'idea today-item'
+
+        const eyebrow = document.createElement('div')
+        eyebrow.className = 'today-item-eyebrow'
+        eyebrow.textContent = presentation.text('today.currentObservation')
+
         const title = document.createElement('h3')
-        const fact = describeFactForView(faxt)
-        title.textContent = fact.label
-        const foot = document.createElement('div')
-        foot.className = 'idea-foot'
+        title.textContent = item.fact.label
+
+        const whyLabel = document.createElement('span')
+        whyLabel.className = 'today-why-label'
+        whyLabel.textContent = presentation.text('today.why')
+
+        const why = document.createElement('p')
+        why.className = 'stmt'
+        why.textContent = item.why
+
+        const meta = document.createElement('div')
+        meta.className = 'today-meta'
         const stateLabel = document.createElement('span')
         stateLabel.className = 'state-word'
-        stateLabel.textContent = fact.epistemicLabel ?? ''
-        const open = document.createElement('span')
-        open.className = 'act'
-        open.append(presentation.text('action.open'), axignalIcon('arrow-right'))
-        if (fact.epistemicLabel) foot.append(stateLabel)
-        foot.append(open)
-        card.append(title, foot)
-        card.addEventListener('click', () => navigate(projectionKey('FAXT', faxt.id)))
-        card.setAttribute('role', 'button')
-        card.tabIndex = 0
-        card.addEventListener('keydown', (event) => {
-          if (event.key === 'Enter' || event.key === ' ') {
-            event.preventDefault()
-            navigate(projectionKey('FAXT', faxt.id))
-          }
-        })
+        stateLabel.textContent = item.fact.epistemicLabel ?? ''
+        const dateLabel = document.createElement('span')
+        dateLabel.textContent = item.fact.observedAt ?? item.fact.currentnessLabel ?? ''
+        if (item.fact.epistemicLabel) meta.append(stateLabel)
+        if (dateLabel.textContent) meta.append(dateLabel)
+
+        const actions = document.createElement('div')
+        actions.className = 'today-actions'
+        const evidence = document.createElement('button')
+        evidence.className = 'today-primary'
+        evidence.type = 'button'
+        evidence.textContent = presentation.text('today.showHow')
+        evidence.addEventListener('click', () => openTodayEvidence(item.key))
+
+        const open = document.createElement('button')
+        open.className = 'today-secondary'
+        open.type = 'button'
+        open.append(presentation.text('today.openMap'), axignalIcon('arrow-right'))
+        open.addEventListener('click', () => navigate(item.key, { recenter: false }))
+
+        actions.append(evidence, open)
+        card.append(eyebrow, title, whyLabel, why, meta, actions)
         cards.append(card)
       }
       rootView.append(cards)
+    } else {
+      const empty = document.createElement('p')
+      empty.className = 'today-empty'
+      empty.textContent = state.projection.nodes.length
+        ? presentation.text('today.partial')
+        : presentation.text('today.empty')
+      rootView.append(empty)
     }
     target.append(rootView)
-    const fieldList = document.createElement('div')
-    fieldList.id = 'bottom-fields'
-    fieldList.className = 'reader-fields'
-    const fields = [
-      setReaderField(presentation.text('field.capabilities'), node.source.capabilities
-        .filter((value) => !presentation.isImplementationValue(value)).join(' · ')),
-      setReaderField(presentation.text('field.markets'), node.source.markets
-        .filter((value) => !presentation.isImplementationValue(value)).join(' · ')),
-    ].filter(Boolean)
-    fieldList.append(...fields)
-    rootView.append(fieldList)
     return
   }
 
@@ -974,6 +1020,7 @@ function render() {
   $('#xeed-rail').setAttribute('aria-label', activeViewName)
   $('#xeed-rail').title = activeViewName
   const onToday = node.kind === 'ORGANIZATION'
+  $('.bottom').classList.toggle('today-open', onToday && !state.bottomTabCollapsed)
   $('#today').setAttribute('aria-current', String(onToday))
   $('#today-rail').setAttribute('aria-current', String(onToday))
   renderDepth()
