@@ -369,7 +369,9 @@ def _safe_evaluate(
         )
 
 
-def _metrics(evaluations: tuple[ReplayEvaluation, ...]) -> PolicyCounterMetrics:
+def policy_counter_metrics(
+    evaluations: tuple[ReplayEvaluation, ...],
+) -> PolicyCounterMetrics:
     evaluated = tuple(
         item for item in evaluations if item.status is PolicyEvaluationStatus.EVALUATED
     )
@@ -471,5 +473,5 @@ def compare_policy_candidate(
         split_id=split.split_id,
         split_fingerprint=split.fingerprint,
         evaluations=evaluations,
-        metrics=_metrics(evaluations),
+        metrics=policy_counter_metrics(evaluations),
     )
