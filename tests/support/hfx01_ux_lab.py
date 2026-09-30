@@ -160,15 +160,33 @@ def _scenario_state(scenario: str) -> dict[str, Any]:
     }[scenario]
     axent = {
         "SYNTHETIC_SPARSE": {
-            "moves": [{"label": "Why does this matter?", "available": False}],
+            "moves": [
+                {
+                    "label": "Why does this matter?",
+                    "copyKey": "navigation.whyMatters",
+                    "available": False,
+                }
+            ],
             "messages": [],
             "composerEnabled": False,
         },
         "SYNTHETIC_NOMINAL": {
             "moves": [
-                {"label": "Why does this matter?", "available": True},
-                {"label": "Compare regions", "available": False},
-                {"label": "What remains unverified?", "available": False},
+                {
+                    "label": "Why does this matter?",
+                    "copyKey": "navigation.whyMatters",
+                    "available": True,
+                },
+                {
+                    "label": "Compare regions",
+                    "copyKey": "fixture.compareRegions",
+                    "available": False,
+                },
+                {
+                    "label": "What remains unverified?",
+                    "copyKey": "fixture.whatUnverified",
+                    "available": False,
+                },
             ],
             "messages": [
                 {"role": "you", "text": "Which capability is most relevant to this view?"},
@@ -178,15 +196,31 @@ def _scenario_state(scenario: str) -> dict[str, Any]:
                 },
             ],
             "composerEnabled": True,
-            "placeholder": "Try a question in this synthetic scenario",
+            "placeholderKey": "fixture.composerPlaceholder",
             "reply": "Synthetic fixture response. No model or provider was called.",
         },
         "SYNTHETIC_DENSE": {
             "moves": [
-                {"label": "Why does this matter?", "available": True},
-                {"label": "Compare regions", "available": True},
-                {"label": "Explain simply", "available": True},
-                {"label": "What remains unverified?", "available": False},
+                {
+                    "label": "Why does this matter?",
+                    "copyKey": "navigation.whyMatters",
+                    "available": True,
+                },
+                {
+                    "label": "Compare regions",
+                    "copyKey": "fixture.compareRegions",
+                    "available": True,
+                },
+                {
+                    "label": "Explain simply",
+                    "copyKey": "navigation.explainSimply",
+                    "available": True,
+                },
+                {
+                    "label": "What remains unverified?",
+                    "copyKey": "fixture.whatUnverified",
+                    "available": False,
+                },
             ],
             "messages": [
                 {"role": "axent", "text": "Synthetic long transcript fixture. " * 42},
@@ -194,7 +228,7 @@ def _scenario_state(scenario: str) -> dict[str, Any]:
                 {"role": "axent", "text": "Synthetic long response fixture. " * 56},
             ],
             "composerEnabled": True,
-            "placeholder": "Synthetic composer fixture",
+            "placeholderKey": "fixture.composerPlaceholder",
             "reply": "Synthetic fixture response. No model or provider was called.",
         },
         "SYNTHETIC_EDGE_CASES": {
@@ -224,7 +258,8 @@ def _scenario_state(scenario: str) -> dict[str, Any]:
         "contexts": [{"label": label, "syntheticFixture": True} for label in contexts],
         "contextSearch": scenario
         in {"SYNTHETIC_NOMINAL", "SYNTHETIC_DENSE", "SYNTHETIC_EDGE_CASES"},
-        "accountLabel": "QA operator · synthetic" if scenario != "SYNTHETIC_EDGE_CASES" else None,
+        "accountLabel": None,
+        "accountLabelKey": "fixture.accountLabel" if scenario != "SYNTHETIC_EDGE_CASES" else None,
         "governanceAvailable": scenario in {"SYNTHETIC_NOMINAL", "SYNTHETIC_DENSE"},
         "edges": [],
         "timeline": [],
@@ -232,6 +267,7 @@ def _scenario_state(scenario: str) -> dict[str, Any]:
         "messages": axent["messages"],
         "composerEnabled": axent["composerEnabled"],
         "composerPlaceholder": axent.get("placeholder", ""),
+        "composerPlaceholderKey": axent.get("placeholderKey"),
         "fixtureReply": axent.get("reply", ""),
     }
 

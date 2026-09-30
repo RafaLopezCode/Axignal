@@ -95,6 +95,7 @@ class _Handler(BaseHTTPRequestHandler):
             "/": WEB_ROOT / "index.html",
             "/index.html": WEB_ROOT / "index.html",
             "/app.js": WEB_ROOT / "app.js",
+            "/locale-es.js": WEB_ROOT / "locale-es.js",
             "/presentation.js": WEB_ROOT / "presentation.js",
             "/subscriber.css": WEB_ROOT / "subscriber.css",
             "/design-system/global.css": DESIGN_ROOT / "global.css",

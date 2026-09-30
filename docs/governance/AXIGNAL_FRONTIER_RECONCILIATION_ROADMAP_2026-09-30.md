@@ -31,7 +31,7 @@ A task is not DONE because code exists. Runtime/product work normally progresses
 
 NOT_STARTED · READY · IN_PROGRESS · BLOCKED · DONE · DEFERRED · REJECTED
 
-**CURRENT_TASK = FR-12**
+**CURRENT_TASK = FR-13**
 
 ## 4. Frontier closure rule
 
@@ -524,9 +524,31 @@ Future audit no longer identifies simultaneous permanent controls as a primary d
 
 ## FR-12 — Subscriber Terminology and Locale Coherence
 
-**Status:** NOT_STARTED  
-**Depends on:** FR-11  
+**Status:** DONE
+**Depends on:** FR-11
 **Priority:** P1 UX
+
+**Closure evidence (2026-09-30):**
+- subscriber terminology policy separates retained product vocabulary (AXIGNAL/AXIGLAND/Xeed/Xignal/AXENT), human descriptive labels and hidden internal ontology
+- FAXT, INXIGHT, PATHX and EvidenceAdmission remain canonical but are excluded from universal subscriber chrome
+- English and Spanish are complete supported subscriber locale catalogs with exact key parity
+- Spanish now resolves as `es` instead of silently falling back to English
+- German, Japanese and Arabic remain explicit QA layout previews only; they are not represented as complete product locales
+- stale partial Spanish layout-stress catalog removed so Spanish has one copy authority
+- runtime AXENT action labels, fixture role/status copy, account label and composer placeholder route through locale keys instead of hard-coded English
+- loopback server allowlists the Spanish catalog asset
+- SEO/GEO/AEO/AIO agencies remain first-class acquisition/use-case audiences under the Landing contract without being injected into universal subscriber chrome
+- ADR-0038 accepted and indexed
+- Chrome 1440×1000 synthetic dense scenario with persisted `es`: Today, Advanced controls, AXENT actions, More questions, Timeline, account label, composer placeholder, role/status copy all render in Spanish
+- same browser check found no visible FAXT/INXIGHT/PATHX and no selected English control leakage; pageerror count = 0
+- focused FR-12/HFX locale and presentation tests: 35 PASS
+- full pytest: 501 PASS using external `--basetemp` to avoid the known Windows user-temp ACL issue
+- Node syntax: PASS (`locale-es.js`, `presentation.js`, `app.js`)
+- Ruff format/check: PASS
+- mypy: PASS (118 source files)
+- Architecture Guard: PASS
+- axignal-governance: PASS
+- git diff --check: PASS
 
 ### Work
 Audit subscriber-facing terminology separately from canonical domain vocabulary. Preserve AXIGNAL/AXIGLAND/Xeed/Xignal/AXENT where product value warrants them; hide FAXT/INXIGHT/PATHX/internal epistemic jargon unless useful; eliminate mixed English/Spanish in a resolved locale; retain SEO/GEO/AEO agencies without reducing AXIGNAL to digital-representation monitoring.

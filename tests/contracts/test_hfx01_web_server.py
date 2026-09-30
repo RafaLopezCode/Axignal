@@ -84,6 +84,7 @@ def test_server_binds_only_loopback_and_serves_local_assets() -> None:
     assert b"DEMO \xc2\xb7 EXAMPLE DATA" in body
     for path in (
         "/app.js",
+        "/locale-es.js",
         "/presentation.js",
         "/subscriber.css",
         "/design-system/global.css",
