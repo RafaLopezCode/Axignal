@@ -6,6 +6,11 @@ import pytest
 
 from application.economic_discovery import (
     DimensionRoutingPolicy,
+    LearningCost,
+    LearningEventKind,
+    LearningMechanism,
+    LearningOutcome,
+    LearningYield,
     PrimeRoute,
     SemanticPrimitive,
     TypingDimensionContract,
@@ -19,6 +24,7 @@ from application.xeed_germination.bootstrap import (
     BootstrapSourceCandidate,
     build_bootstrap_plan,
 )
+from application.xeed_germination.learning import bootstrap_learning_event
 from domain.organizations.model import Organization
 from domain.tenancy.model import Principal
 from domain.xeed.model import Xeed
@@ -251,3 +257,42 @@ def test_bootstrap_policy_requires_explicit_minimum_state() -> None:
             version="1",
             initial_state_requirements=(),
         )
+
+
+def test_bootstrap_outcome_can_be_recorded_without_granting_policy_authority() -> None:
+    rich_state = _rich_state()
+    plan = build_bootstrap_plan(
+        seed=_seed(),
+        rich_state=rich_state,
+        reused_observation_count=0,
+        policy=_policy(),
+        known_sources=(),
+        contracts=(_contract(),),
+        routing_policies=_routing(),
+    )
+
+    event = bootstrap_learning_event(
+        event_id="learn:bootstrap:1",
+        plan=plan,
+        occurred_at=NOW,
+        code_sha="abc123",
+        outcome=LearningOutcome.COMPLETED,
+        after_state_fingerprint="state:after",
+        reason_code="ADAPTIVE_RESEARCH_FILLED_INITIAL_STATE",
+        cost=LearningCost(amount_microunits=50, currency="USD", latency_ms=80),
+        yield_=LearningYield(
+            observations_added=2,
+            state_fields_changed=1,
+            dimensions_became_answerable=1,
+        ),
+        output_fingerprint="bootstrap-result:1",
+    )
+
+    assert event.kind is LearningEventKind.BOOTSTRAP
+    assert event.mechanism is LearningMechanism.ADAPTIVE_RESEARCH
+    assert event.activity_ref == plan.plan_fingerprint
+    assert event.policy_id == plan.policy_id
+    assert event.policy_version == plan.policy_version
+    assert event.before_state_fingerprint == plan.state_fingerprint
+    assert event.after_state_fingerprint == "state:after"
+    assert not hasattr(event, "policy_update")

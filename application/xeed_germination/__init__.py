@@ -7,6 +7,7 @@ from application.xeed_germination.bootstrap import (
     BootstrapSourceCandidate,
     build_bootstrap_plan,
 )
+from application.xeed_germination.learning import bootstrap_learning_event
 from application.xeed_germination.semantic_flow import (
     AdmittedGerminationFinding,
     CandidateInvestigator,
@@ -47,5 +48,6 @@ __all__ = [
     "SemanticEncoder",
     "SemanticJudgmentWriter",
     "XeedSemanticGermination",
+    "bootstrap_learning_event",
     "build_bootstrap_plan",
 ]
