@@ -53,6 +53,7 @@ Constitution (`.specify/memory/constitution.md`).
 | [ADR-0043](ADR-0043-learning-events-from-real-execution.md) | Learning Events From Real Execution (**ACCEPTED**) | §§14, 46, 53, 56.13–56.20 |
 | [ADR-0044](ADR-0044-replay-reference-completeness.md) | Replay Reference Completeness (**ACCEPTED**) | §§14, 46, 53, 56.13–56.20 |
 | [ADR-0045](ADR-0045-governed-policy-candidate-replay-shadow.md) | Governed Policy Candidate, Replay and Shadow (**ACCEPTED**) | §§14, 46, 53, 56.13–56.20 |
+| [ADR-0046](ADR-0046-policy-promotion-rollback-gate.md) | Policy Promotion and Rollback Gate (**ACCEPTED**) | §§14, 46, 53, 56.13–56.20 |
 
 ## Adding an ADR
 

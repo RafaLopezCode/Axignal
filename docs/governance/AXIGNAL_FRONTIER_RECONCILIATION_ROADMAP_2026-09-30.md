@@ -31,7 +31,7 @@ A task is not DONE because code exists. Runtime/product work normally progresses
 
 NOT_STARTED · READY · IN_PROGRESS · BLOCKED · DONE · DEFERRED · REJECTED
 
-**CURRENT_TASK = FR-20**
+**CURRENT_TASK = FR-21**
 
 ## 4. Frontier closure rule
 
@@ -869,9 +869,35 @@ Future audit finds actual governed learning machinery rather than only an observ
 
 ## FR-20 — Policy Promotion / Rollback Gate
 
-**Status:** NOT_STARTED  
-**Depends on:** FR-19  
+**Status:** DONE
+**Depends on:** FR-19
 **Priority:** P2
+
+**Closure evidence (2026-10-01):**
+- introduced versioned `PromotionGatePolicy`, action-scoped `GovernanceApproval`, `PolicyDecisionRecord`, `ActivePolicyRef`, `RolloutPlan`, `ActivePolicyStore`, `promote_policy()` and `rollback_policy()`
+- promotion requires immutable FR-19 candidate + exact comparison report + explicit human/governance APPROVE + versioned gate + rollout + durable active-policy store
+- policy-governance module does not import LearningYield or Learning Memory and exposes no runtime-yield promotion path
+- gate recomputes FR-19 counter-metrics from sealed ReplayEvaluations and rejects caller-forged/stale report metrics
+- versioned evidence gate enforces minimum evaluated holdout cases, maximum non-replayable cases, governed-regression policy and canary requirement where configured
+- candidate baseline id/version must exactly match the current active policy; stale candidates fail closed
+- governance approval is scoped to PROMOTE or ROLLBACK; promotion approval cannot be reused for rollback
+- rollback approval targets the exact promotion decision and must match candidate/comparison/gate provenance
+- approval record retains approval id, action, approver identity, approval time, rationale and exact evidence/gate identity in the durable decision trace
+- RolloutPlan supports DIRECT or CANARY; canary is constrained to 1–99% and a gate can require CANARY
+- SQLite `append_and_activate()` atomically appends immutable decision history and moves the current pointer under `BEGIN IMMEDIATE`
+- durable store checks decision-id conflicts, exact from-policy and previous-decision pointers before changing active policy
+- existing policy-decision rows are never updated/deleted; rollback appends a new record with `rollback_of` and restores the prior policy pointer
+- `seed_active()` is limited to one-time pre-governance baseline establishment; it cannot overwrite an initialized family or run after governance history exists
+- integration test promotes v1→v2 under 10% canary, reopens durable SQLite state, performs approved rollback v2→v1, reopens again and proves both immutable records plus restored pointer survive
+- rejected approval, stale baseline, forged metrics, governed regressions, insufficient holdout, missing required canary, wrong evidence and wrong rollback target all fail closed without moving active policy
+- focused FR-20/FR-19/FR-18 promotion/replay/shadow suite: 30 PASS
+- full pytest: 561 PASS using external `--basetemp` to avoid the known Windows user-temp ACL issue
+- Ruff format/check: PASS
+- mypy: PASS (122 source files)
+- Architecture Guard: PASS
+- axignal-governance: PASS
+- git diff --check: PASS
+- ADR-0046 accepted and indexed
 
 ### Work
 Implement versioned human/governance promotion with evidence requirements, holdout, approval record, canary where applicable, rollback pointer and no history rewrite.
