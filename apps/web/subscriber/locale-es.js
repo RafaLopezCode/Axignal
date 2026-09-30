@@ -125,7 +125,7 @@
     'navigation.resetField': 'Restablecer la vista del campo',
     'navigation.fieldControls': 'Controles del campo',
     'navigation.fieldMinimap': 'Minimapa del campo',
-    'navigation.dragZoomHint': 'Arrastra para mover · desplaza para ampliar',
+    'navigation.dragZoomHint': 'Arrastra para mover · rueda/trackpad desplaza · Ctrl/⌘ + rueda amplía · +/- zoom · 0 ajusta',
     'spatial.world': 'Mundo',
     'spatial.neighborhood': 'Entorno',
     'spatial.relationProof': 'Relación / prueba',

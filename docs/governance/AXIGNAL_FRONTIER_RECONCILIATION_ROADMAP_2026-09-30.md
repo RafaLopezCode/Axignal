@@ -31,7 +31,7 @@ A task is not DONE because code exists. Runtime/product work normally progresses
 
 NOT_STARTED · READY · IN_PROGRESS · BLOCKED · DONE · DEFERRED · REJECTED
 
-**CURRENT_TASK = FR-14**
+**CURRENT_TASK = FR-15**
 
 ## 4. Frontier closure rule
 
@@ -608,9 +608,34 @@ Future audit no longer finds overview label density as an unresolved core naviga
 
 ## FR-14 — Motion/Input Contract
 
-**Status:** NOT_STARTED  
-**Depends on:** FR-13  
+**Status:** DONE
+**Depends on:** FR-13
 **Priority:** P1 UX
+
+**Closure evidence (2026-09-30):**
+- AXIGLAND wheel ownership is field-scoped rather than global; field controls/minimap/focus locator are excluded from canvas wheel capture
+- plain wheel/trackpad pans; Ctrl/Command + wheel performs pointer-anchored zoom; Shift + primarily vertical wheel performs horizontal pan
+- wheel delta normalization handles pixel, line and page delta modes
+- surrounding UI retains native scroll: dense AXENT transcript browser test scrolled 0→420 px while AXIGLAND spatial level/status remained unchanged
+- direct primary drag pans empty canvas; middle-button drag pans through a node without activating it (browser evidence: +90 px x / +40 px y, node remained unpressed)
+- AXIGLAND field is keyboard focusable; arrows pan, Shift+arrows accelerate pan, +/- zoom, 0 fits WORLD, Home centers organization and R resets
+- camera focus motion is explicitly 440 ms and reduced-motion applies the target camera immediately
+- browser checks at 1440×1000 and 1280×720 confirm plain wheel pan, control-wheel pass-through, Ctrl-wheel zoom, keyboard pan/zoom/fit and zero page errors
+- reduced-motion browser check confirms node focus enters NEIGHBORHOOD immediately without waiting for camera animation
+- landing standard chapter transition reduced from 820 ms to 640 ms total with 620 ms artwork motion and coordinated copy timings that finish inside the transition
+- landing backward navigation now reverses artwork and copy travel direction
+- landing wheel pagination uses threshold + quiet-period hysteresis; simulated inertial tail advanced chapter 1→2 only, then a later deliberate gesture advanced 2→3
+- landing reduced-motion removes spatial travel and uses a 120 ms opacity transition; browser computed art transform remained `none`
+- wheel/trackpad, keyboard, touch and direct landing controls continue to converge on the same `goTo` state machine
+- focused FR-14/FR-13/HFX/landing contracts: 44 PASS
+- full pytest: 510 PASS using external `--basetemp` to avoid the known Windows user-temp ACL issue
+- Node syntax: PASS (`app.js`, `presentation.js`, `locale-es.js`)
+- Ruff format/check: PASS
+- mypy: PASS (118 source files)
+- Architecture Guard: PASS
+- axignal-governance: PASS
+- git diff --check: PASS
+- ADR-0040 accepted and indexed
 
 ### Work
 Govern wheel zoom only when canvas owns input, page scroll outside canvas, trackpad, pan modifiers, keyboard controls, transition durations/easing, reduced motion and landing chapter transitions.

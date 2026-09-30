@@ -58,7 +58,7 @@ def test_spatial_scale_is_visible_and_announced_accessibly() -> None:
     css = (SUBSCRIBER / "subscriber.css").read_text(encoding="utf-8")
 
     assert 'id="spatial-status" role="status" aria-live="polite"' in html
-    assert 'aria-describedby="spatial-status"' in html
+    assert 'aria-describedby="spatial-status field-hint"' in html
     assert "field.dataset.spatialLevel = level.toLowerCase().replace('_', '-')" in script
     assert "function updateSpatialStatus(level = spatialLevel())" in script
     assert "'spatial.fieldAccessibleName'" in script

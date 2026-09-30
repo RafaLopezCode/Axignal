@@ -4417,3 +4417,32 @@ html[dir='rtl'] .trail { direction: rtl; }
   visibility: visible !important;
   color: var(--ink);
 }
+
+
+/* FR-14 — canvas input ownership and motion affordances. */
+.field {
+  cursor: grab;
+  user-select: none;
+}
+.field.panning {
+  cursor: grabbing;
+}
+.field:focus-visible {
+  outline: 1.6px solid var(--brass);
+  outline-offset: -3px;
+}
+.field .canvas-tools,
+.field .here,
+.field .minimap,
+.field .anch {
+  cursor: pointer;
+}
+.field.panning .anch {
+  cursor: grabbing;
+}
+@media (prefers-reduced-motion: reduce) {
+  .field,
+  .field * {
+    scroll-behavior: auto !important;
+  }
+}

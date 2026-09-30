@@ -131,7 +131,7 @@
       'navigation.resetField': 'Reset field view',
       'navigation.fieldControls': 'Field controls',
       'navigation.fieldMinimap': 'Field minimap',
-      'navigation.dragZoomHint': 'Drag to move · scroll to zoom',
+      'navigation.dragZoomHint': 'Drag to pan · wheel/trackpad pans · Ctrl/⌘ + wheel zooms · +/- zoom · 0 fit',
       'spatial.world': 'World',
       'spatial.neighborhood': 'Neighborhood',
       'spatial.relationProof': 'Relation / proof',

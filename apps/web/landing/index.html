@@ -33,7 +33,7 @@
   --ax-radius-control:2px;
   --ax-radius-pill:999px;
   --ax-motion-quick:150ms;
-  --ax-motion-chapter:820ms;
+  --ax-motion-chapter:620ms;
   --ax-motion-ease:cubic-bezier(.22,1,.36,1);
 }
 *{box-sizing:border-box}
@@ -49,7 +49,8 @@ button:focus-visible{outline:1.5px solid var(--ax-brass);outline-offset:3px}
   will-change:opacity,transform;
 }
 .art-current{z-index:-5}
-.art-next{z-index:-4;transform:translate3d(0,100%,0);transition:transform var(--ax-motion-chapter) var(--ax-motion-ease)}
+.art-next{z-index:-4;transform:translate3d(0,100%,0);transition:transform var(--ax-motion-chapter) var(--ax-motion-ease),opacity 180ms linear}
+.scene[data-direction="backward"] .art-next{transform:translate3d(0,-100%,0)}
 .scene.is-transitioning .art-current{transform:none}
 .scene.is-transitioning .art-next{transform:translate3d(0,0,0)}
 .contrast{position:absolute;inset:0;z-index:-4;background:linear-gradient(to bottom,rgba(0,0,0,.78) 0%,rgba(0,0,0,.67) 32%,rgba(0,0,0,.52) 67%,rgba(0,0,0,.42) 100%);pointer-events:none}
@@ -251,25 +252,36 @@ body[data-chapter="14"] .copy{width:min(43rem,46vw)}
   .counter-button{right:10px;bottom:10px}
 }
 @media(prefers-reduced-motion:reduce){
-  :root{--ax-motion-chapter:150ms}
-  .art-next{transition:transform 150ms linear!important}
-  .copy-inner{transition:opacity 120ms linear;transform:none!important}
-  .scene.is-transitioning .art-next{transform:translate3d(0,0,0)!important}
+  :root{--ax-motion-chapter:120ms}
+  .art-next{transform:none!important;opacity:0;transition:opacity 120ms linear!important}
+  .copy-inner{transition:opacity 100ms linear;transform:none!important}
+  .scene.is-transitioning .art-next{transform:none!important;opacity:1}
 }
 </style>
 <style id="ax-copy-morph">
 .copy-inner{will-change:transform,opacity,filter;transform-origin:left center}
-.copy-inner.ax-morph-out{animation:axMorphOut 300ms cubic-bezier(.4,0,.2,1) both}
-.copy-inner.ax-morph-in{animation:axMorphIn 570ms cubic-bezier(.16,1,.3,1) both}
-.copy-inner.ax-morph-in .eyebrow{animation:axTextReveal 420ms cubic-bezier(.16,1,.3,1) 0ms both}
-.copy-inner.ax-morph-in h1{animation:axTextReveal 560ms cubic-bezier(.16,1,.3,1) 35ms both}
-.copy-inner.ax-morph-in .body{animation:axTextReveal 500ms cubic-bezier(.16,1,.3,1) 105ms both}
-.copy-inner.ax-morph-in .value{animation:axTextReveal 480ms cubic-bezier(.16,1,.3,1) 155ms both}
-.copy-inner.ax-morph-in .pricing-panel{animation:axTextReveal 520ms cubic-bezier(.16,1,.3,1) 135ms both}
-.copy-inner.ax-morph-in .actions{animation:axTextReveal 460ms cubic-bezier(.16,1,.3,1) 190ms both}
+.copy-inner.ax-morph-out{animation:axMorphOut 180ms cubic-bezier(.4,0,.2,1) both}
+.copy-inner.ax-morph-in{animation:axMorphIn 400ms cubic-bezier(.16,1,.3,1) both}
+.copy-inner.ax-morph-in .eyebrow{animation:axTextReveal 280ms cubic-bezier(.16,1,.3,1) 0ms both}
+.copy-inner.ax-morph-in h1{animation:axTextReveal 340ms cubic-bezier(.16,1,.3,1) 20ms both}
+.copy-inner.ax-morph-in .body{animation:axTextReveal 320ms cubic-bezier(.16,1,.3,1) 60ms both}
+.copy-inner.ax-morph-in .value{animation:axTextReveal 300ms cubic-bezier(.16,1,.3,1) 90ms both}
+.copy-inner.ax-morph-in .pricing-panel{animation:axTextReveal 340ms cubic-bezier(.16,1,.3,1) 70ms both}
+.copy-inner.ax-morph-in .actions{animation:axTextReveal 300ms cubic-bezier(.16,1,.3,1) 110ms both}
 @keyframes axMorphOut{0%{opacity:1;filter:blur(0);transform:translate3d(0,0,0) scale(1)}100%{opacity:0;filter:blur(7px);transform:translate3d(0,-18px,0) scale(.985)}}
 @keyframes axMorphIn{0%{opacity:0;filter:blur(9px);transform:translate3d(0,28px,0) scale(1.018)}100%{opacity:1;filter:blur(0);transform:translate3d(0,0,0) scale(1)}}
+@keyframes axMorphOutBack{0%{opacity:1;filter:blur(0);transform:translate3d(0,0,0) scale(1)}100%{opacity:0;filter:blur(7px);transform:translate3d(0,18px,0) scale(.985)}}
+@keyframes axMorphInBack{0%{opacity:0;filter:blur(9px);transform:translate3d(0,-28px,0) scale(1.018)}100%{opacity:1;filter:blur(0);transform:translate3d(0,0,0) scale(1)}}
+.scene[data-direction="backward"] .copy-inner.ax-morph-out{animation-name:axMorphOutBack}
+.scene[data-direction="backward"] .copy-inner.ax-morph-in{animation-name:axMorphInBack}
 @keyframes axTextReveal{0%{opacity:0;filter:blur(5px);transform:translate3d(0,14px,0)}100%{opacity:1;filter:blur(0);transform:translate3d(0,0,0)}}
+@keyframes axTextRevealBack{0%{opacity:0;filter:blur(5px);transform:translate3d(0,-14px,0)}100%{opacity:1;filter:blur(0);transform:translate3d(0,0,0)}}
+.scene[data-direction="backward"] .copy-inner.ax-morph-in .eyebrow,
+.scene[data-direction="backward"] .copy-inner.ax-morph-in h1,
+.scene[data-direction="backward"] .copy-inner.ax-morph-in .body,
+.scene[data-direction="backward"] .copy-inner.ax-morph-in .value,
+.scene[data-direction="backward"] .copy-inner.ax-morph-in .pricing-panel,
+.scene[data-direction="backward"] .copy-inner.ax-morph-in .actions{animation-name:axTextRevealBack}
 @media(prefers-reduced-motion:reduce){.copy-inner.ax-morph-out,.copy-inner.ax-morph-in,.copy-inner.ax-morph-in .eyebrow,.copy-inner.ax-morph-in h1,.copy-inner.ax-morph-in .body,.copy-inner.ax-morph-in .value,.copy-inner.ax-morph-in .pricing-panel,.copy-inner.ax-morph-in .actions{animation:none!important}}
 </style>
 </head>
@@ -406,6 +418,8 @@ let pendingNavigation=null;
 let wheelAccum=0;
 let wheelSign=0;
 let wheelResetTimer=0;
+let wheelGestureArmed=true;
+let wheelQuietTimer=0;
 let touchY=null;
 let activeLocaleIndex=0;
 const reduced=matchMedia('(prefers-reduced-motion: reduce)');
@@ -625,6 +639,7 @@ async function goTo(target,dir=1){
   if(target===chapter&&!transitioning) return;
   if(transitioning){pendingNavigation={target,dir};return}
   transitioning=true;
+  scene.dataset.direction=dir<0?'backward':'forward';
   const next=data[target-1];
   await preload(next);
   setArt(artNext,next);
@@ -633,8 +648,8 @@ async function goTo(target,dir=1){
     copyInner.classList.remove('ax-morph-in');
     copyInner.classList.add('ax-morph-out');
   }
-  const swapAt=reduced.matches?70:300;
-  const total=reduced.matches?150:820;
+  const swapAt=reduced.matches?40:220;
+  const total=reduced.matches?120:640;
   setTimeout(()=>{
     chapter=target;
     fillCopy(next); updateHeader(); buildRail(); buildChapterMenu(); updateUrl();
@@ -661,10 +676,18 @@ function prev(){ if(chapter>1) goTo(chapter-1,-1); }
 function isInteractiveTarget(target){
   return target instanceof Element && Boolean(target.closest('button,a,input,select,textarea,[role="option"],[role="menuitem"],dialog'));
 }
+function armWheelAfterQuiet(){
+  clearTimeout(wheelQuietTimer);
+  wheelQuietTimer=setTimeout(()=>{
+    wheelGestureArmed=true;
+    wheelAccum=0;
+    wheelSign=0;
+  },180);
+}
 function onWheel(e){
   if(isInteractiveTarget(e.target)||!localeList.hidden||!chapterMenu.hidden||accessDialog.open||evidenceDialog.open) return;
   e.preventDefault();
-  if(transitioning) return;
+  if(transitioning||!wheelGestureArmed){armWheelAfterQuiet();return}
   const dominant=Math.abs(e.deltaY)>=Math.abs(e.deltaX)?e.deltaY:e.deltaX;
   if(Math.abs(dominant)<1) return;
   const sign=Math.sign(dominant);
@@ -673,7 +696,9 @@ function onWheel(e){
   clearTimeout(wheelResetTimer);
   wheelResetTimer=setTimeout(()=>{wheelAccum=0;wheelSign=0},140);
   if(wheelAccum>=72){
+    wheelGestureArmed=false;
     wheelAccum=0;
+    armWheelAfterQuiet();
     sign>0?next():prev();
   }
 }
