@@ -27,6 +27,17 @@ from application.economic_discovery.contracts import (
     StructuredJudgment,
 )
 from application.economic_discovery.demand import CampaignRelevanceProfile, DemandArchetype
+from application.economic_discovery.execution_budget import (
+    ExecutionBudgetDecision,
+    ExecutionBudgetDelta,
+    ExecutionBudgetPolicy,
+    ExecutionBudgetState,
+    ExecutionStopReason,
+    GovernedExecutionController,
+    advance_execution_budget,
+    evaluate_execution_budget,
+)
+from application.economic_discovery.execution_learning import execution_stop_learning_event
 from application.economic_discovery.explanation import (
     BasisContribution,
     BasisDatum,
@@ -115,8 +126,14 @@ __all__ = [
     "DiscoveryStage",
     "EconomicAssociationSnapshot",
     "EpistemicProfile",
+    "ExecutionBudgetDecision",
+    "ExecutionBudgetDelta",
+    "ExecutionBudgetPolicy",
+    "ExecutionBudgetState",
+    "ExecutionStopReason",
     "ExplainableAssociation",
     "ExplainableBasis",
+    "GovernedExecutionController",
     "GovernedObservation",
     "LearningCost",
     "LearningEvent",
@@ -160,6 +177,7 @@ __all__ = [
     "TypingDimensionContract",
     "XeedMarketMap",
     "XignalPresentation",
+    "advance_execution_budget",
     "affected_dimensions",
     "assess_dimension_work",
     "build_initial_prime_control_plan",
@@ -167,6 +185,8 @@ __all__ = [
     "build_work_plan",
     "compile_observation_state",
     "decide_research_value",
+    "evaluate_execution_budget",
+    "execution_stop_learning_event",
     "ingest_observation",
     "plan_dimension_work",
     "plan_market_observation",
