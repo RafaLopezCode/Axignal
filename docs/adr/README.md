@@ -46,6 +46,7 @@ Constitution (`.specify/memory/constitution.md`).
 | [ADR-0036](ADR-0036-axent-context-continuity-separation.md) | AXENT Context and Continuity Separation (**ACCEPTED**) | §§5, 23, 25, 26, 55 |
 | [ADR-0037](ADR-0037-initial-cognitive-load-progressive-disclosure.md) | Initial Cognitive Load Progressive Disclosure (**ACCEPTED**) | §§9, 25, 26, 46, 55 |
 | [ADR-0038](ADR-0038-subscriber-terminology-locale-coherence.md) | Subscriber Terminology and Locale Coherence (**ACCEPTED**) | §§9, 22, 25, 26, 55 |
+| [ADR-0039](ADR-0039-three-level-spatial-legibility.md) | Three-Level Spatial Legibility (**ACCEPTED**) | §§9, 25, 26, 46, 55 |
 
 ## Adding an ADR
 

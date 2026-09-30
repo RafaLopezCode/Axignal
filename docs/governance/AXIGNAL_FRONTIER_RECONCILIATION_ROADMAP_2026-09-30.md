@@ -31,7 +31,7 @@ A task is not DONE because code exists. Runtime/product work normally progresses
 
 NOT_STARTED · READY · IN_PROGRESS · BLOCKED · DONE · DEFERRED · REJECTED
 
-**CURRENT_TASK = FR-13**
+**CURRENT_TASK = FR-14**
 
 ## 4. Frontier closure rule
 
@@ -566,9 +566,33 @@ Future audit cannot cite mixed locale and excessive internal vocabulary as an on
 
 ## FR-13 — Three-Level Spatial Legibility
 
-**Status:** NOT_STARTED  
-**Depends on:** FR-09  
+**Status:** DONE
+**Depends on:** FR-09
 **Priority:** P1 UX
+
+**Closure evidence (2026-09-30):**
+- deterministic semantic zoom implemented with WORLD (<0.84), NEIGHBORHOOD (0.84–<1.55) and RELATION/PROOF (>=1.55)
+- Fit/Reset targets WORLD at zoom 0.72; focus navigation targets NEIGHBORHOOD at zoom 1.22
+- WORLD preserves every object mark but semantically suppresses non-priority labels and renders zero relationship lines
+- NEIGHBORHOOD prioritizes focus/organization/directly connected labels and renders at most six direct-focus relationships
+- RELATION/PROOF makes all labels semantically eligible subject to collision/off-screen decluttering and renders direct relationships plus one-hop context with a deterministic budget of twelve
+- no synthetic semantic clusters are created; WORLD uses reversible visual aggregation only
+- dense spatial fixture contains 17 objects and 24 relationships, so the visual budgets are exercised against a larger underlying graph
+- visible/live spatial status reports scale plus visible label/relation counts and is bound to the AXIGLAND field with aria-describedby
+- keyboard focus reveals any decluttered node label and restores full node contrast without hover
+- relationship list remains independent of visual edge budgets: in WORLD the map renders 0 edges while the focus list exposes 8 relationship buttons in the dense fixture
+- keyboard activation of a relationship-list item moves focus to the related object and enters NEIGHBORHOOD without page errors
+- Chrome 1440×1000 dense scenario verified WORLD=1 visible label/0 edges; NEIGHBORHOOD=6 visible labels/6 edges; RELATION/PROOF=3 currently in-viewport labels/12 edges; Fit returns to WORLD
+- visual review rejected the initial 24-edge RELATION/PROOF rendering as graph noise and reduced it to focus-first + one-hop budget 12
+- focused FR-13/HFX presentation contracts: 33 PASS
+- full pytest: 506 PASS using external `--basetemp` to avoid the known Windows user-temp ACL issue
+- Node syntax: PASS (`app.js`, `presentation.js`, `locale-es.js`)
+- Ruff format/check: PASS
+- mypy: PASS (118 source files)
+- Architecture Guard: PASS
+- axignal-governance: PASS
+- git diff --check: PASS
+- ADR-0039 accepted and indexed
 
 ### Work
 Define/test WORLD, NEIGHBORHOOD and RELATION/PROOF scales. At each level define visible labels, clustering/aggregation, edge density, focus and accessible equivalent. No graph-for-graph's-sake.

@@ -132,11 +132,13 @@ def test_label_decluttering_preserves_world_positions_and_prefers_attention() ->
         encoding="utf-8"
     )
 
-    assert "function layoutLabels()" in script
+    assert "function layoutLabels(level = spatialLevel())" in script
     assert "function segmentIntersectsRectangle(start, end, rect)" in script
-    assert "const OVERVIEW_LABEL_ZOOM = 0.78" in script
-    assert "state.camera.zoom < OVERVIEW_LABEL_ZOOM && priority > 1" in script
-    assert "label.dataset.layoutVisibility = 'semantic-zoom-hidden'" in script
+    assert "WORLD_MAX: 0.84" in script
+    assert "RELATION_PROOF_MIN: 1.55" in script
+    assert "(level === 'WORLD' && priority > 1)" in script
+    assert "(level === 'NEIGHBORHOOD' && priority > 2)" in script
+    assert "semantic-${level.toLowerCase()}-hidden" in script
     assert "querySelectorAll('.canvas-tools, .minimap, .here, .zone')" in script
     assert "labelPriority(first.node, connectedToFocus)" in script
     assert "if (node.key === state.focus) return 0" in script
