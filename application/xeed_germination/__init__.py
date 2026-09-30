@@ -1,5 +1,12 @@
 """Governed Xeed germination application flows."""
 
+from application.xeed_germination.bootstrap import (
+    BootstrapDisposition,
+    BootstrapPlan,
+    BootstrapPolicy,
+    BootstrapSourceCandidate,
+    build_bootstrap_plan,
+)
 from application.xeed_germination.semantic_flow import (
     AdmittedGerminationFinding,
     CandidateInvestigator,
@@ -21,6 +28,10 @@ from application.xeed_germination.semantic_flow import (
 
 __all__ = [
     "AdmittedGerminationFinding",
+    "BootstrapDisposition",
+    "BootstrapPlan",
+    "BootstrapPolicy",
+    "BootstrapSourceCandidate",
     "CandidateInvestigator",
     "CanonicalFaxtWriter",
     "EvidenceSupportClass",
@@ -36,4 +47,5 @@ __all__ = [
     "SemanticEncoder",
     "SemanticJudgmentWriter",
     "XeedSemanticGermination",
+    "build_bootstrap_plan",
 ]
