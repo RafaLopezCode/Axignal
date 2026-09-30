@@ -31,7 +31,7 @@ A task is not DONE because code exists. Runtime/product work normally progresses
 
 NOT_STARTED · READY · IN_PROGRESS · BLOCKED · DONE · DEFERRED · REJECTED
 
-**CURRENT_TASK = FR-08**
+**CURRENT_TASK = FR-09**
 
 ## 4. Frontier closure rule
 
@@ -361,9 +361,30 @@ Future audit can execute a first-Xeed flow instead of finding only disabled Plan
 
 ## FR-08 — FIRST_MAP Readiness Policy
 
-**Status:** NOT_STARTED  
+**Status:** DONE
 **Depends on:** FR-05, FR-07  
 **Priority:** P0
+
+**Closure evidence (2026-09-30):**
+- BASE_SHA: `8d3d4a5a575bce70d9d0515f73249185b516bfb6`
+- WORK_BRANCH: `architecture/fr-08-first-map-readiness`
+- deterministic qualitative `FirstMapReadinessPolicy` implemented; no scalar readiness score
+- explicit dispositions: `FIRST_MAP_READY`, `PARTIAL_MAP`, `SPARSE_MAP`, `INSUFFICIENT_EVIDENCE`
+- dimension answerability, Xignal readiness and FIRST_MAP readiness remain separate authorities
+- a single non-UNKNOWN explainable Xignal with a grounded Evidence Narrative can make a partial world FIRST_MAP_READY
+- POTENTIAL Xignal may qualify without being upgraded to OBSERVED
+- zero observations → `INSUFFICIENT_EVIDENCE` with no fabricated promotion decision
+- observations without first Xignal → `SPARSE_MAP`
+- first Xignal with missing/mismatched/ungrounded narrative or UNKNOWN-only semantics → `PARTIAL_MAP`
+- explicit contradictions and remaining unknowns are preserved and do not automatically block readiness
+- node count, graph density and completion percentage are absent from the policy contract
+- ready decisions bind to exact Xeed lifecycle state and are revalidated by FR-07 before LIVE promotion
+- ADR-0034 accepted and indexed
+- focused FR-08 + lifecycle tests: 14 PASS
+- full pytest: 485 PASS
+- mypy: PASS (117 source files)
+- Architecture Guard: PASS
+- git diff --check: PASS
 
 ### Work
 Separate dimension answerability, Xignal readiness and Map Readiness. Define inspectable readiness reasons instead of one opaque score. Support useful partial map, honest sparse map and insufficient-evidence state.
