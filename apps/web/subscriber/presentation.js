@@ -163,87 +163,34 @@
       'copy.connectionsEmpty': '',
       'copy.currentRead': 'Current view',
       'preferences.label': 'Settings',
-      'locale.label': 'Display language · preview',
-      'locale.note': 'Synthetic layout preview only. Not a complete translation or account setting. Automatic uses a complete UI catalog; other choices stress layout with partial sample copy.',
+      'locale.label': 'Display language',
+      'locale.note': 'In this UX lab, the choice is local to this browser. English and Spanish are complete interface languages; other choices are layout previews only.',
       'locale.auto': 'Automatic · supported browser language',
-      'locale.en': 'English · baseline',
-      'locale.es': 'Español · sample copy',
-      'locale.de': 'Deutsch · text expansion',
-      'locale.ja': '日本語 · CJK layout',
-      'locale.ar': 'العربية · RTL layout',
+      'locale.en': 'English',
+      'locale.es': 'Español',
+      'locale.de': 'Deutsch · layout preview',
+      'locale.ja': '日本語 · layout preview',
+      'locale.ar': 'العربية · layout preview',
+      'fixture.youRole': 'You · test data',
+      'fixture.axentRole': 'AXENT · test data',
+      'fixture.accountUnavailable': 'Account identity unavailable · synthetic test state',
+      'fixture.accountLabel': 'QA operator · synthetic',
+      'fixture.interactionHint': 'Synthetic test interaction · no live AXENT reasoning or provider call.',
+      'fixture.compareRegions': 'Compare regions',
+      'fixture.whatUnverified': 'What remains unverified?',
+      'fixture.composerPlaceholder': 'Ask a question in this synthetic scenario',
     }),
+  })
+
+  const SPANISH_COPY = Object.freeze(root.AXIGNAL_ES_COPY ?? {})
+  const COMPLETE_COPY = Object.freeze({
+    en: COPY.en,
+    es: SPANISH_COPY,
   })
 
   // A deliberately partial lab catalog for copy-length, script, and direction
   // stress. Missing keys fall back to English; this is not a translation set.
   const LOCALE_STRESS_COPY = Object.freeze({
-    es: Object.freeze({
-      'organization.label': 'Organización',
-      'locale.label': 'Idioma de visualización · vista previa',
-      'locale.note': 'Vista sintética de maquetación. No es una traducción completa ni una preferencia de cuenta. Automático usa un catálogo completo; los demás idiomas prueban la maquetación con textos de muestra parciales.',
-      'locale.auto': 'Automático · idioma compatible del navegador',
-      'locale.en': 'Inglés · catálogo completo',
-      'locale.es': 'Español · textos de muestra',
-      'locale.de': 'Alemán · expansión de texto',
-      'locale.ja': 'Japonés · maquetación CJK',
-      'locale.ar': 'Árabe · maquetación RTL',
-      'connections.fixture': 'Enlaces sintéticos · demo',
-      'connections.empty': 'No hay enlaces sintéticos en este foco.',
-      'connections.linkAccessibleName': '{relation}: {label}; relación sintética de demostración.',
-      'connections.type.supports': 'Apoya',
-      'connections.type.observes': 'Observa',
-      'connections.type.compares': 'Compara',
-      'connections.type.intersects': 'Se cruza con',
-      'navigation.hideText': 'Ocultar texto',
-      'navigation.showText': 'Mostrar texto',
-      'organization.identity': 'Organización en el mundo compartido',
-      'organization.meaning': 'Esta vista reúne la organización y la información disponible en este contexto.',
-      'context.private': 'Vista privada',
-      'predicate.manufactures': 'Fabrica',
-      'predicate.servesMarket': 'Atiende a un mercado',
-      'predicate.maintainsStandard': 'Mantiene una norma',
-      'navigation.today': 'Hoy',
-      'navigation.workspace': 'Espacio de trabajo',
-      'navigation.xeed': 'Xeed',
-      'navigation.createContext': 'Crear Xeed',
-      'navigation.createXeed': 'Crear Xeed',
-      'navigation.governance': 'Gobernanza',
-      'navigation.advancedControls': 'Controles avanzados',
-      'navigation.moreQuestions': 'Más preguntas',
-      'navigation.scope': 'Alcance',
-      'navigation.memory': 'Memoria',
-      'navigation.research': 'Investigación',
-      'navigation.uncertainty': 'Incertidumbre',
-      'navigation.meaning': 'Significado',
-      'navigation.context': 'Contexto',
-      'navigation.inference': 'Inferencia',
-      'navigation.evidence': 'Evidencia',
-      'navigation.depth': 'Profundidad',
-      'navigation.capabilities': 'Capacidades',
-      'navigation.markets': 'Mercados',
-      'navigation.signals': 'Señales',
-      'navigation.activity': 'Actividad',
-      'navigation.trail': 'Recorrido de enfoque',
-      'navigation.hiddenStops': '{count} pasos anteriores ocultos',
-      'navigation.back': 'Atrás',
-      'navigation.forward': 'Adelante',
-      'navigation.home': 'Inicio',
-      'navigation.details': 'Detalles',
-      'navigation.time': 'Tiempo',
-      'navigation.timeline': 'Línea temporal',
-      'navigation.then': 'Antes',
-      'navigation.now': 'Ahora',
-      'navigation.guide': 'Guía de contexto',
-      'navigation.questions': 'Preguntas',
-      'navigation.askAboutInformation': 'Preguntar sobre esta información',
-      'navigation.ask': 'Preguntar',
-      'navigation.zoomIn': 'Acercar',
-      'navigation.zoomOut': 'Alejar',
-      'navigation.fitField': 'Ajustar el campo',
-      'navigation.resetField': 'Restablecer la vista del campo',
-      'copy.contextExplanation': 'Esta vista muestra la organización y la información disponible en este contexto.',
-      'copy.details.many': 'Hay {count} detalles en este contexto.',
-    }),
     de: Object.freeze({
       'organization.label': 'Organisation',
       'connections.fixture': 'Synthetische Demo-Verbindungen',
@@ -415,10 +362,9 @@
 
   // A locale is supported for automatic/user locale authority only when its
   // complete UI catalog exists. Partial UX-lab profiles are explicit previews.
-  const SUPPORTED_LOCALES = Object.freeze(Object.keys(COPY))
+  const SUPPORTED_LOCALES = Object.freeze(Object.keys(COMPLETE_COPY))
   const LAYOUT_PREVIEW_LOCALES = Object.freeze([
-    ...SUPPORTED_LOCALES,
-    ...Object.keys(LOCALE_STRESS_COPY),
+    ...new Set([...SUPPORTED_LOCALES, ...Object.keys(LOCALE_STRESS_COPY)]),
   ])
 
   const PREDICATE_KEYS = Object.freeze({
@@ -503,7 +449,7 @@
 
   function createPresentation(resolvedLocale, messages) {
     const text = (key, values = {}) => {
-      const template = messages[key] ?? COPY.en[key] ?? ''
+      const template = messages[key] ?? COMPLETE_COPY.en[key] ?? ''
       return template.replace(/\{(\w+)\}/g, (_match, name) => String(values[name] ?? ''))
     }
 
@@ -553,12 +499,13 @@
 
   function forLocale(locale = requestedLocale()) {
     const resolvedLocale = canonicalBcp47Locale(locale)
-    return createPresentation(resolvedLocale, COPY[resolvedLocale])
+    return createPresentation(resolvedLocale, COMPLETE_COPY[resolvedLocale])
   }
 
   function forLayoutPreview(locale = 'en') {
     const resolvedLocale = canonicalLayoutPreviewLocale(locale)
-    const messages = { ...COPY.en, ...(LOCALE_STRESS_COPY[resolvedLocale] ?? {}) }
+    const messages = COMPLETE_COPY[resolvedLocale]
+      ?? { ...COMPLETE_COPY.en, ...(LOCALE_STRESS_COPY[resolvedLocale] ?? {}) }
     return createPresentation(resolvedLocale, messages)
   }
 

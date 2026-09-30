@@ -1384,7 +1384,9 @@ function appendFixtureMessageElement(container, message) {
   element.dataset.occurredAt = message.occurredAt
   const roleLabel = document.createElement('span')
   roleLabel.className = 'role'
-  const role = message.role === 'you' ? 'You · test fixture' : 'AXENT · test fixture'
+  const role = message.role === 'you'
+    ? presentation.text('fixture.youRole')
+    : presentation.text('fixture.axentRole')
   const when = presentation.formatDate(message.occurredAt)
   roleLabel.textContent = when ? `${role} · ${when}` : role
   const text = document.createElement('p')
@@ -1479,7 +1481,9 @@ function configureUxLab() {
   const labAccount = $('#lab-account')
   labAccount.hidden = false
   $('#preferences-open').hidden = false
-  $('#lab-account-label').textContent = lab.accountLabel ?? 'Account identity unavailable · synthetic test state'
+  $('#lab-account-label').textContent = lab.accountLabelKey
+    ? presentation.text(lab.accountLabelKey)
+    : lab.accountLabel ?? presentation.text('fixture.accountUnavailable')
   $('#ui-locale').value = explicitUserLocale ?? 'auto'
 
   const contexts = $('#lab-contexts')
@@ -1545,7 +1549,7 @@ function configureUxLab() {
     const button = document.createElement('button')
     button.type = 'button'
     button.className = 'ax-move'
-    button.textContent = move.label
+    button.textContent = move.copyKey ? presentation.text(move.copyKey) : move.label
     button.dataset.capability = 'SYNTHETIC_FIXTURE'
     button.addEventListener('click', () => {
       appendFixtureMessage('you', move.label)
@@ -1575,10 +1579,12 @@ function configureUxLab() {
   const submit = $('#axent-ask')
   input.disabled = !lab.composerEnabled
   submit.disabled = !lab.composerEnabled
-  input.placeholder = lab.composerPlaceholder || presentation.text('navigation.askPlaceholder')
+  input.placeholder = lab.composerPlaceholderKey
+    ? presentation.text(lab.composerPlaceholderKey)
+    : lab.composerPlaceholder || presentation.text('navigation.askPlaceholder')
   $('#axent-composer').dataset.syntheticFixture = 'true'
   $('.ax-hint').textContent = lab.composerEnabled
-    ? 'Synthetic fixture interaction only · no live AXENT reasoning or provider call.'
+    ? presentation.text('fixture.interactionHint')
     : ''
 }
 

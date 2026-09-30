@@ -115,11 +115,13 @@ def test_active_context_binds_canonical_identity_and_csp_needs_no_inline_style()
 
 def test_presentation_semantics_separate_canonical_values_from_locale_copy() -> None:
     javascript_path = json.dumps(str(PRESENTATION_SCRIPT))
+    spanish_path = json.dumps(str(SUBSCRIBER / "locale-es.js"))
     script = f"""
       const assert = require('node:assert/strict')
       const fs = require('node:fs')
       const vm = require('node:vm')
       const context = {{}}
+      vm.runInNewContext(fs.readFileSync({spanish_path}, 'utf8'), context)
       vm.runInNewContext(fs.readFileSync({javascript_path}, 'utf8'), context)
       const presentation = context.AXIGNAL_PRESENTATION
       const canonical = {{
@@ -167,10 +169,11 @@ def test_presentation_semantics_separate_canonical_values_from_locale_copy() -> 
       const otherCopy = presentation.forLocale('en').describeFact(otherIdentity)
       assert.notEqual(canonical.id, otherIdentity.id)
       assert.equal(english.label, otherCopy.label)
-      assert.equal(presentation.forLocale('es-ES').locale, 'en')
+      assert.equal(presentation.forLocale('es-ES').locale, 'es')
+      assert.equal(presentation.forLocale('es-ES').describeFact(canonical).label, 'Mantiene una norma · ISO 9001')
       assert.equal(presentation.forLocale('en-US').describeFact(canonical).label, english.label)
       assert.equal(presentation.forLayoutPreview('es-ES').locale, 'es')
-      assert.equal(presentation.resolveLocale('es-MX', ['de-DE'], 'en'), 'en')
+      assert.equal(presentation.resolveLocale('es-MX', ['de-DE'], 'en'), 'es')
       assert.equal(presentation.resolveLocale(null, ['fr-FR', 'de-DE'], 'en'), 'en')
       assert.equal(presentation.resolveLocale('xx-YY', ['fr-FR'], 'ja'), 'en')
       assert.equal(presentation.resolveLocale(null, ['fr-FR'], 'en'), 'en')
@@ -182,7 +185,7 @@ def test_presentation_semantics_separate_canonical_values_from_locale_copy() -> 
       }}
       assert.equal(presentation.forLayoutPreview('ar').direction, 'rtl')
       assert.equal(presentation.forLayoutPreview('ja').direction, 'ltr')
-      assert.deepEqual([...presentation.supportedLocales], ['en'])
+      assert.deepEqual([...presentation.supportedLocales], ['en', 'es'])
       assert.deepEqual([...presentation.layoutPreviewLocales], ['en', 'es', 'de', 'ja', 'ar'])
     """
     subprocess.run(["node", "-e", script], check=True, capture_output=True, text=True)
@@ -295,8 +298,8 @@ def test_locale_preference_is_a_synthetic_account_preference_and_stresses_all_su
     keys = set(re.findall(r"'([\w.]+)'\s*:", presentation))
     assert stress_keys <= keys
     assert "const LOCALE_STRESS_COPY" in presentation
-    assert "Automatic uses a complete UI catalog" in presentation
-    assert "Vista sintética de maquetación. No es una traducción completa" in presentation
+    assert "English and Spanish are complete interface languages" in presentation
+    assert "Partial UX-lab profiles are explicit previews" in presentation
     assert "html[dir='rtl'] .axent" in stylesheet
 
 
@@ -429,7 +432,12 @@ def test_focus_history_uses_distinct_nonsemantic_breadcrumb_separators() -> None
 
 
 def test_hidden_focus_trail_stops_use_locale_aware_copy() -> None:
-    presentation = (SUBSCRIBER / "presentation.js").read_text(encoding="utf-8")
+    presentation = "\n".join(
+        (
+            (SUBSCRIBER / "presentation.js").read_text(encoding="utf-8"),
+            (SUBSCRIBER / "locale-es.js").read_text(encoding="utf-8"),
+        )
+    )
     for copy in (
         "{count} earlier stops hidden",
         "{count} pasos anteriores ocultos",
@@ -473,7 +481,12 @@ def test_synthetic_field_controls_collapse_bottom_tab_and_expose_only_fixture_co
     html = (SUBSCRIBER / "index.html").read_text(encoding="utf-8")
     script = (SUBSCRIBER / "app.js").read_text(encoding="utf-8")
     css = (SUBSCRIBER / "subscriber.css").read_text(encoding="utf-8")
-    presentation = (SUBSCRIBER / "presentation.js").read_text(encoding="utf-8")
+    presentation = "\n".join(
+        (
+            (SUBSCRIBER / "presentation.js").read_text(encoding="utf-8"),
+            (SUBSCRIBER / "locale-es.js").read_text(encoding="utf-8"),
+        )
+    )
     elements = _Elements()
     elements.feed(html)
 
@@ -494,7 +507,7 @@ def test_synthetic_field_controls_collapse_bottom_tab_and_expose_only_fixture_co
     assert "edge.source === focusId || edge.target === focusId" in script
     assert "button.addEventListener('click', () => navigate(target.key))" in script
     assert "Synthetic links · demo" in presentation
-    assert "Enlaces sintéticos · demo" in presentation
+    assert "Relaciones sintéticas · demo" in presentation
     assert "Synthetische Demo-Verbindungen" in presentation
     assert "合成デモの接続" in presentation
     assert "روابط تجريبية اصطناعية" in presentation
