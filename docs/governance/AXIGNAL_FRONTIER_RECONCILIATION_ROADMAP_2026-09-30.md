@@ -31,7 +31,7 @@ A task is not DONE because code exists. Runtime/product work normally progresses
 
 NOT_STARTED · READY · IN_PROGRESS · BLOCKED · DONE · DEFERRED · REJECTED
 
-**CURRENT_TASK = FR-02**
+**CURRENT_TASK = FR-03**
 
 ## 4. Frontier closure rule
 
@@ -118,9 +118,27 @@ Future audit cannot accurately say Bootstrap blocks all value until one universa
 
 ## FR-02 — Add Research Value Gate
 
-**Status:** NOT_STARTED  
+**Status:** DONE
 **Depends on:** FR-01  
 **Priority:** P0
+
+**Closure evidence (2026-09-30):**
+- BASE_SHA: `5c9bc1172c24ead9920c9a6d5be3df8be404c415`
+- WORK_BRANCH: `architecture/fr-02-research-value-gate`
+- deterministic `ResearchValueGate` implemented with explicit dispositions: `RESEARCH_NOW`, `RETAIN_UNKNOWN`, `DEFER`, `BLOCKED_BY_BUDGET_OR_RIGHTS`
+- no opaque scalar score introduced
+- decisions bound to canonical subject, exact state fingerprint, dimension and missing requirements
+- Prime fails closed when a NOT_ANSWERABLE gap has no Research Value decision
+- only `RESEARCH_NOW` can produce `PrimeRoute.ADAPTIVE_RESEARCH`
+- low-value gaps remain UNKNOWN without research
+- Bootstrap no longer escalates automatically when no answerable dimension/source exists
+- ADR-0028 accepted and indexed
+- targeted tests: 24 PASS before full-suite closure
+- full pytest: 448 PASS
+- mypy: PASS (106 source files)
+- Architecture Guard: PASS
+- governance: PASS
+- git diff --check: PASS
 
 ### Frontier finding
 NOT_ANSWERABLE → ADAPTIVE_RESEARCH risks researching every unknown and optimizing taxonomy completion instead of useful economic knowledge.

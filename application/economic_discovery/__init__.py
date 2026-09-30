@@ -86,6 +86,15 @@ from application.economic_discovery.prime import (
     build_initial_prime_control_plan,
     build_prime_control_plan,
 )
+from application.economic_discovery.research_value import (
+    ResearchValueContext,
+    ResearchValueDecision,
+    ResearchValueDisposition,
+    ResearchValuePolicy,
+    ResearchValueReason,
+    ResearchValueSignal,
+    decide_research_value,
+)
 
 __all__ = [
     "AttentionDisposition",
@@ -137,6 +146,12 @@ __all__ = [
     "PrimeControlPlan",
     "PrimeRoute",
     "PrimeWorkItem",
+    "ResearchValueContext",
+    "ResearchValueDecision",
+    "ResearchValueDisposition",
+    "ResearchValuePolicy",
+    "ResearchValueReason",
+    "ResearchValueSignal",
     "SemanticPrimitive",
     "StateChange",
     "StateField",
@@ -151,6 +166,7 @@ __all__ = [
     "build_prime_control_plan",
     "build_work_plan",
     "compile_observation_state",
+    "decide_research_value",
     "ingest_observation",
     "plan_dimension_work",
     "plan_market_observation",

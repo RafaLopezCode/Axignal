@@ -10,8 +10,13 @@ from application.economic_discovery import (
     LearningOutcome,
     LearningYield,
     PrimeRoute,
+    ResearchValueContext,
+    ResearchValueDisposition,
+    ResearchValuePolicy,
+    ResearchValueSignal,
     SemanticPrimitive,
     TypingDimensionContract,
+    decide_research_value,
 )
 from application.source_representation import RichStateDatum, compile_rich_subject_state
 from application.xeed_access.organization_reader import AuthorizedXeedOrganizationReader
@@ -107,6 +112,31 @@ def _policy() -> BootstrapPolicy:
     )
 
 
+def _research_decision(
+    rich_state,
+    *,
+    signals: frozenset[ResearchValueSignal] = frozenset({ResearchValueSignal.MATERIALITY}),
+):
+    return decide_research_value(
+        context=ResearchValueContext(
+            subject_id="org:1",
+            state_fingerprint=rich_state.fingerprint,
+            dimension_id="market_mode",
+            missing_requirements=("document.home.visible_text",),
+            value_signals=signals,
+            rights_permit=True,
+            capability_available=True,
+            budget_permits=True,
+            known_source_available=False,
+        ),
+        policy=ResearchValuePolicy(
+            policy_id="research-value",
+            version="1",
+            research_signals=frozenset({ResearchValueSignal.MATERIALITY}),
+        ),
+    )
+
+
 def test_bootstrap_reuses_memory_and_hands_off_immediately_to_prime() -> None:
     rich_state = _rich_state(("document.home.visible_text", "Industrial pump manufacturer."))
 
@@ -155,15 +185,17 @@ def test_bootstrap_uses_explicit_known_source_before_adaptive_research() -> None
     assert plan.prime_plan is None
 
 
-def test_bootstrap_escalates_only_when_memory_and_known_sources_are_insufficient() -> None:
+def test_bootstrap_escalates_only_when_research_value_gate_authorizes_it() -> None:
+    rich_state = _rich_state()
     plan = build_bootstrap_plan(
         seed=_seed(),
-        rich_state=_rich_state(),
+        rich_state=rich_state,
         reused_observation_count=0,
         policy=_policy(),
         known_sources=(),
         contracts=(_contract(),),
         routing_policies=_routing(),
+        research_decisions=(_research_decision(rich_state),),
     )
 
     assert plan.disposition is BootstrapDisposition.ADAPTIVE_RESEARCH
@@ -182,14 +214,16 @@ def test_bootstrap_ignores_foreign_subject_sources() -> None:
         provides_fields=frozenset({"document.home.visible_text"}),
     )
 
+    rich_state = _rich_state()
     plan = build_bootstrap_plan(
         seed=_seed(),
-        rich_state=_rich_state(),
+        rich_state=rich_state,
         reused_observation_count=0,
         policy=_policy(),
         known_sources=(foreign,),
         contracts=(_contract(),),
         routing_policies=_routing(),
+        research_decisions=(_research_decision(rich_state),),
     )
 
     assert plan.disposition is BootstrapDisposition.ADAPTIVE_RESEARCH
@@ -266,6 +300,7 @@ def test_bootstrap_outcome_can_be_recorded_without_granting_policy_authority() -
         known_sources=(),
         contracts=(_contract(),),
         routing_policies=_routing(),
+        research_decisions=(_research_decision(rich_state),),
     )
 
     event = bootstrap_learning_event(
@@ -343,3 +378,24 @@ def test_bootstrap_hands_off_answerable_dimension_without_waiting_for_unrelated_
     assert plan.dimension_gaps[0].missing_requirements == ("document.reviews.visible_text",)
     assert plan.missing_requirements == ("document.reviews.visible_text",)
     assert plan.source_candidates == (reviews,)
+
+
+def test_bootstrap_can_retain_low_value_unknown_without_research() -> None:
+    rich_state = _rich_state()
+    decision = _research_decision(rich_state, signals=frozenset())
+
+    plan = build_bootstrap_plan(
+        seed=_seed(),
+        rich_state=rich_state,
+        reused_observation_count=0,
+        policy=_policy(),
+        known_sources=(),
+        contracts=(_contract(),),
+        routing_policies=_routing(),
+        research_decisions=(decision,),
+    )
+
+    assert decision.disposition is ResearchValueDisposition.RETAIN_UNKNOWN
+    assert plan.disposition is BootstrapDisposition.RETAIN_UNKNOWN
+    assert plan.prime_plan is None
+    assert plan.missing_requirements == ("document.home.visible_text",)

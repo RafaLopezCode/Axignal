@@ -14,6 +14,13 @@ from application.economic_discovery.prime import (
     build_initial_prime_control_plan,
     build_prime_control_plan,
 )
+from application.economic_discovery.research_value import (
+    ResearchValueContext,
+    ResearchValueDisposition,
+    ResearchValuePolicy,
+    ResearchValueSignal,
+    decide_research_value,
+)
 
 
 def _contract(
@@ -80,6 +87,25 @@ def test_prime_routes_missing_state_to_adaptive_research() -> None:
         dependencies=("document.capability",),
     )
 
+    decision = decide_research_value(
+        context=ResearchValueContext(
+            subject_id="org:1",
+            state_fingerprint="after",
+            dimension_id="capability",
+            missing_requirements=("source.currentness",),
+            value_signals=frozenset({ResearchValueSignal.MATERIALITY}),
+            rights_permit=True,
+            capability_available=True,
+            budget_permits=True,
+            known_source_available=False,
+        ),
+        policy=ResearchValuePolicy(
+            policy_id="research-value",
+            version="1",
+            research_signals=frozenset({ResearchValueSignal.MATERIALITY}),
+        ),
+    )
+
     plan = build_prime_control_plan(
         change=_change("document.capability"),
         contracts=(contract,),
@@ -91,10 +117,12 @@ def test_prime_routes_missing_state_to_adaptive_research() -> None:
                 answerable_route=PrimeRoute.DETERMINISTIC,
             ),
         ),
+        research_decisions=(decision,),
     )
 
     item = plan.items[0]
     assert item.disposition is DimensionDisposition.NOT_ANSWERABLE
+    assert item.research_disposition is ResearchValueDisposition.RESEARCH_NOW
     assert item.route is PrimeRoute.ADAPTIVE_RESEARCH
     assert item.missing_requirements == ("source.currentness",)
 
@@ -174,3 +202,66 @@ def test_initial_prime_plan_routes_only_answerable_dimensions() -> None:
 
     assert [item.dimension_id for item in plan.items] == ["market_mode"]
     assert plan.items[0].disposition is DimensionDisposition.ANSWERABLE
+
+
+def test_prime_fails_closed_when_gap_has_no_research_value_decision() -> None:
+    contract = _contract(
+        "capability",
+        requirements=("document.capability", "source.currentness"),
+        dependencies=("document.capability",),
+    )
+
+    with pytest.raises(ValueError, match="missing Research Value decision"):
+        build_prime_control_plan(
+            change=_change("document.capability"),
+            contracts=(contract,),
+            available_state_fields=frozenset({"document.capability"}),
+            routing_policies=(
+                DimensionRoutingPolicy(
+                    dimension_id="capability",
+                    version="routing-v1",
+                    answerable_route=PrimeRoute.DETERMINISTIC,
+                ),
+            ),
+        )
+
+
+def test_prime_rejects_stale_research_value_decision() -> None:
+    contract = _contract(
+        "capability",
+        requirements=("document.capability", "source.currentness"),
+        dependencies=("document.capability",),
+    )
+    stale = decide_research_value(
+        context=ResearchValueContext(
+            subject_id="org:1",
+            state_fingerprint="old-state",
+            dimension_id="capability",
+            missing_requirements=("source.currentness",),
+            value_signals=frozenset({ResearchValueSignal.MATERIALITY}),
+            rights_permit=True,
+            capability_available=True,
+            budget_permits=True,
+            known_source_available=False,
+        ),
+        policy=ResearchValuePolicy(
+            policy_id="research-value",
+            version="1",
+            research_signals=frozenset({ResearchValueSignal.MATERIALITY}),
+        ),
+    )
+
+    with pytest.raises(ValueError, match="does not match current gap state"):
+        build_prime_control_plan(
+            change=_change("document.capability"),
+            contracts=(contract,),
+            available_state_fields=frozenset({"document.capability"}),
+            routing_policies=(
+                DimensionRoutingPolicy(
+                    dimension_id="capability",
+                    version="routing-v1",
+                    answerable_route=PrimeRoute.DETERMINISTIC,
+                ),
+            ),
+            research_decisions=(stale,),
+        )
