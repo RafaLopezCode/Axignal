@@ -7,6 +7,12 @@ from application.subscriber_projection.axigland import (
     SubscriberAxiglandProjection,
     project_axigland,
 )
+from application.subscriber_projection.evidence_narrative import (
+    EvidenceNarrative,
+    EvidenceNarrativeKind,
+    EvidenceNarrativeStep,
+    build_evidence_narrative,
+)
 from application.subscriber_projection.xignal import (
     ExplainableXignalProjection,
     ExplanationStepKind,
@@ -16,6 +22,9 @@ from application.subscriber_projection.xignal import (
 )
 
 __all__ = [
+    "EvidenceNarrative",
+    "EvidenceNarrativeKind",
+    "EvidenceNarrativeStep",
     "ExplainableXignalProjection",
     "ExplanationStepKind",
     "ProjectionError",
@@ -24,6 +33,7 @@ __all__ = [
     "SubscriberAxiglandProjection",
     "XignalExplanationStep",
     "XignalExplanationTrail",
+    "build_evidence_narrative",
     "project_axigland",
     "project_explainable_xignal",
 ]
