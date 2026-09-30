@@ -1,0 +1,153 @@
+{
+    "schema_version":  "germination-jev-corpus.v0.1",
+    "authority":  "INDEPENDENTLY_LABELED_PUBLIC_EVIDENCE",
+    "promotion_authority":  false,
+    "observed_at":  "2026-09-30",
+    "decision_contract":  "CES.SUPPORT.vNext.2",
+    "cases":  [
+                  {
+                      "id":  "carrier-supported-temperature-control",
+                      "claim":  "Carrier provides cold-chain solutions for temperature-controlled transport.",
+                      "gold":  "SUPPORTED",
+                      "source":  {
+                                     "publisher":  "Carrier",
+                                     "url":  "https://www.carrier.com/us/en/cold-chain/",
+                                     "source_type":  "OFFICIAL_WEB",
+                                     "excerpt":  "Carrier\u0027s cold chain solutions help ensure intelligent, connected, temperature-controlled transport and monitoring across the end-to-end cold chain.",
+                                     "excerpt_sha256":  "85a6d1fe98b28492de9dcee69c381ca72c321ac7d098ef9ebb6dc6154eb06516"
+                                 }
+                  },
+                  {
+                      "id":  "carrier-supported-monitoring",
+                      "claim":  "Carrier\u0027s cold-chain offering includes monitoring.",
+                      "gold":  "SUPPORTED",
+                      "source":  {
+                                     "publisher":  "Carrier",
+                                     "url":  "https://www.carrier.com/us/en/cold-chain/",
+                                     "source_type":  "OFFICIAL_WEB",
+                                     "excerpt":  "Carrier\u0027s cold chain solutions help ensure intelligent, connected, temperature-controlled transport and monitoring across the end-to-end cold chain.",
+                                     "excerpt_sha256":  "85a6d1fe98b28492de9dcee69c381ca72c321ac7d098ef9ebb6dc6154eb06516"
+                                 }
+                  },
+                  {
+                      "id":  "carrier-no-evidence-manufacturing",
+                      "claim":  "Carrier manufactures bakery ovens for small food retailers.",
+                      "gold":  "NO_EVIDENCE",
+                      "source":  {
+                                     "publisher":  "Carrier",
+                                     "url":  "https://www.carrier.com/us/en/cold-chain/",
+                                     "source_type":  "OFFICIAL_WEB",
+                                     "excerpt":  "Carrier\u0027s cold chain solutions help ensure intelligent, connected, temperature-controlled transport and monitoring across the end-to-end cold chain.",
+                                     "excerpt_sha256":  "85a6d1fe98b28492de9dcee69c381ca72c321ac7d098ef9ebb6dc6154eb06516"
+                                 }
+                  },
+                  {
+                      "id":  "carrier-supported-container-refrigeration",
+                      "claim":  "Carrier Transicold offers container refrigeration units.",
+                      "gold":  "SUPPORTED",
+                      "source":  {
+                                     "publisher":  "Carrier",
+                                     "url":  "https://www.carrier.com/us/en/cold-chain/container/units/",
+                                     "source_type":  "OFFICIAL_WEB",
+                                     "excerpt":  "Experience the full range of Carrier Transicoldâ€™s innovative container refrigeration solutions.",
+                                     "excerpt_sha256":  "71df0180f5d009975e6a5579229db0dfa52a6d7b7a7de7c6a49fe751529f0c82"
+                                 }
+                  },
+                  {
+                      "id":  "carrier-contradicted-naturaline-synthetic",
+                      "claim":  "Carrier NaturaLINE uses a conventional synthetic refrigerant instead of carbon dioxide.",
+                      "gold":  "CONTRADICTED",
+                      "source":  {
+                                     "publisher":  "Carrier",
+                                     "url":  "https://www.carrier.com/us/en/cold-chain/container/units/",
+                                     "source_type":  "OFFICIAL_WEB",
+                                     "excerpt":  "The NaturaLINE reefer unit incorporates COâ‚‚ in place of conventional synthetic refrigerants.",
+                                     "excerpt_sha256":  "0a09a8b34053eab2048f024b37928d9e10d2cc86fdd743c8daf7a18cdd66745e"
+                                 }
+                  },
+                  {
+                      "id":  "carrier-supported-service-network",
+                      "claim":  "Carrier Transicold provides parts and service support through a worldwide network.",
+                      "gold":  "SUPPORTED",
+                      "source":  {
+                                     "publisher":  "Carrier",
+                                     "url":  "https://www.carrier.com/container-refrigeration/en/worldwide/about/about-carrier-transicold/",
+                                     "source_type":  "OFFICIAL_WEB",
+                                     "excerpt":  "With more than 600 dealers, distributors and parts depots worldwide, Carrier Transicold provides all the parts and related service support needed.",
+                                     "excerpt_sha256":  "3488ce95433ac4148ca979c926bdbf1b5453b42782c91fa4087953463f635585"
+                                 }
+                  },
+                  {
+                      "id":  "daikin-supported-small-retail",
+                      "claim":  "Daikin\u0027s JEHSCU-CM1 is a refrigeration solution for small food retailers.",
+                      "gold":  "SUPPORTED",
+                      "source":  {
+                                     "publisher":  "Daikin",
+                                     "url":  "https://www.daikin.eu/en_us/products/product.html/JEHSCU-CM1.html",
+                                     "source_type":  "OFFICIAL_WEB",
+                                     "excerpt":  "Refrigeration solution for small food retailers.",
+                                     "excerpt_sha256":  "30ed9e7ba24115032d940488755cc9cc8aa4a4328f93674ad5f92622266fc3ee"
+                                 }
+                  },
+                  {
+                      "id":  "daikin-supported-cold-rooms",
+                      "claim":  "Daikin\u0027s JEHSCU-CM1 is designed for cold-room applications.",
+                      "gold":  "SUPPORTED",
+                      "source":  {
+                                     "publisher":  "Daikin",
+                                     "url":  "https://www.daikin.eu/en_us/products/product.html/JEHSCU-CM1.html",
+                                     "source_type":  "OFFICIAL_WEB",
+                                     "excerpt":  "Designed specifically for small capacity refrigeration applications in small food stores, cold rooms, bottle coolers and display cabinets.",
+                                     "excerpt_sha256":  "e6c56d95ccdaa01592ab0ac607c01246860d18c371c18bb51c9ae47537421ffe"
+                                 }
+                  },
+                  {
+                      "id":  "daikin-contradicted-large-industrial",
+                      "claim":  "Daikin\u0027s JEHSCU-CM1 is designed specifically for large-capacity industrial refrigeration.",
+                      "gold":  "CONTRADICTED",
+                      "source":  {
+                                     "publisher":  "Daikin",
+                                     "url":  "https://www.daikin.eu/en_us/products/product.html/JEHSCU-CM1.html",
+                                     "source_type":  "OFFICIAL_WEB",
+                                     "excerpt":  "Designed specifically for small capacity refrigeration applications in small food stores, cold rooms, bottle coolers and display cabinets.",
+                                     "excerpt_sha256":  "e6c56d95ccdaa01592ab0ac607c01246860d18c371c18bb51c9ae47537421ffe"
+                                 }
+                  },
+                  {
+                      "id":  "daikin-supported-urban-quiet",
+                      "claim":  "Daikin describes the JEHSCU-CM1 as suitable for quiet urban applications.",
+                      "gold":  "SUPPORTED",
+                      "source":  {
+                                     "publisher":  "Daikin",
+                                     "url":  "https://www.daikin.eu/en_us/products/product.html/JEHSCU-CM1.html",
+                                     "source_type":  "OFFICIAL_WEB",
+                                     "excerpt":  "Ideal for urban applications: sound proofing and low operating sound levels mean the unit is quiet.",
+                                     "excerpt_sha256":  "eb255db2e43d41d6dddf067c1212b5605b4aab9ceb28f0ce4231c1ba3f1d400d"
+                                 }
+                  },
+                  {
+                      "id":  "daikin-no-evidence-telematics",
+                      "claim":  "Daikin\u0027s JEHSCU-CM1 includes a fleet telematics platform.",
+                      "gold":  "NO_EVIDENCE",
+                      "source":  {
+                                     "publisher":  "Daikin",
+                                     "url":  "https://www.daikin.eu/en_us/products/product.html/JEHSCU-CM1.html",
+                                     "source_type":  "OFFICIAL_WEB",
+                                     "excerpt":  "Refrigeration solution for small food retailers.",
+                                     "excerpt_sha256":  "30ed9e7ba24115032d940488755cc9cc8aa4a4328f93674ad5f92622266fc3ee"
+                                 }
+                  },
+                  {
+                      "id":  "carrier-no-evidence-small-retail",
+                      "claim":  "Carrier\u0027s container refrigeration units are designed specifically for small bakeries and butcher shops.",
+                      "gold":  "NO_EVIDENCE",
+                      "source":  {
+                                     "publisher":  "Carrier",
+                                     "url":  "https://www.carrier.com/us/en/cold-chain/container/units/",
+                                     "source_type":  "OFFICIAL_WEB",
+                                     "excerpt":  "Experience the full range of Carrier Transicoldâ€™s innovative container refrigeration solutions.",
+                                     "excerpt_sha256":  "71df0180f5d009975e6a5579229db0dfa52a6d7b7a7de7c6a49fe751529f0c82"
+                                 }
+                  }
+              ]
+}

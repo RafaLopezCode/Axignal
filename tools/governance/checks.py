@@ -253,7 +253,10 @@ def _check_master_hash(root: Path) -> list[Problem]:
     pinned = root / MASTER_HASH_REL
     if not master.exists() or not pinned.exists():
         return ["MASTER or its pinned hash file is missing"]
-    actual = hashlib.sha256(master.read_bytes()).hexdigest()
+    # Git canonicalizes text files to LF; hash that representation so the pin is
+    # deterministic across Windows and Linux checkouts.
+    canonical_bytes = master.read_bytes().replace(b"\r\n", b"\n")
+    actual = hashlib.sha256(canonical_bytes).hexdigest()
     expected = _read(pinned).split()[0].strip()
     if actual != expected:
         return [

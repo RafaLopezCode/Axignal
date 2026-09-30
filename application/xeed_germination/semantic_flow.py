@@ -6,6 +6,7 @@ from an investigator finding that survives EvidenceAdmission and FAXT creation.
 
 from __future__ import annotations
 
+import math
 from dataclasses import dataclass
 from enum import StrEnum
 from typing import Protocol
@@ -61,12 +62,52 @@ class GerminationBudget:
             raise ValueError("geography filter cannot be empty")
 
 
+class EvidenceSupportClass(StrEnum):
+    SUPPORTED = "SUPPORTED"
+    PARTIAL = "PARTIAL"
+    CONTRADICTED = "CONTRADICTED"
+    NOT_SUPPORTED = "NOT_SUPPORTED"
+    NO_EVIDENCE = "NO_EVIDENCE"
+    CONFLICTING = "CONFLICTING"
+    UNRESOLVED = "UNRESOLVED"
+
+
+@dataclass(frozen=True, slots=True)
+class EvidenceSupportJudgment:
+    support: EvidenceSupportClass
+    evaluator: str
+    contract_version: str
+    model: str | None = None
+    distribution: tuple[tuple[str, float], ...] = ()
+    confidence: float | None = None
+    state_fingerprint: str | None = None
+    question_fingerprint: str | None = None
+    raw_reference: str | None = None
+
+    def __post_init__(self) -> None:
+        if not self.evaluator.strip() or not self.contract_version.strip():
+            raise ValueError("semantic judgment provenance is required")
+        labels = [label for label, _ in self.distribution]
+        if len(labels) != len(set(labels)):
+            raise ValueError("semantic judgment distribution labels must be unique")
+        if any(
+            not label.strip() or not math.isfinite(probability) or not 0.0 <= probability <= 1.0
+            for label, probability in self.distribution
+        ):
+            raise ValueError("semantic judgment distribution is invalid")
+        if self.confidence is not None and (
+            not math.isfinite(self.confidence) or not 0.0 <= self.confidence <= 1.0
+        ):
+            raise ValueError("semantic judgment confidence is invalid")
+
+
 @dataclass(frozen=True, slots=True)
 class InvestigationFinding:
     faxt_id: FaxtId
     subject_id: OrganizationId
     predicate: str
     object_or_value: str
+    claim_proposition: str
     evidence: Evidence
     epistemic_state: EpistemicState = EpistemicState.OBSERVED
     currentness: Currentness = Currentness.UNKNOWN
@@ -78,6 +119,8 @@ class InvestigationFinding:
             raise ValueError("investigation finding predicate is required")
         if not self.object_or_value.strip():
             raise ValueError("investigation finding value is required")
+        if not self.claim_proposition.strip():
+            raise ValueError("investigation finding claim proposition is required")
         if not isinstance(self.evidence, Evidence):
             raise TypeError("investigation finding requires Evidence")
 
@@ -94,6 +137,7 @@ class GerminationRun:
     retrieved_count: int
     eligible_count: int
     investigated_count: int
+    rejected_semantic_count: int
     rejected_evidence_count: int
     admitted: tuple[AdmittedGerminationFinding, ...]
 
@@ -115,6 +159,18 @@ class CandidateInvestigator(Protocol):
     ) -> InvestigationFinding | None: ...
 
 
+class EvidenceSupportJudge(Protocol):
+    def judge(self, finding: InvestigationFinding) -> EvidenceSupportJudgment: ...
+
+
+class SemanticJudgmentWriter(Protocol):
+    def append(
+        self,
+        finding: InvestigationFinding,
+        judgment: EvidenceSupportJudgment,
+    ) -> None: ...
+
+
 class EvidenceWriter(Protocol):
     def append(self, evidence: Evidence) -> None: ...
 
@@ -133,6 +189,8 @@ class XeedSemanticGermination:
         index: SemanticIndex,
         catalog: GerminationCandidateCatalog,
         investigator: CandidateInvestigator,
+        support_judge: EvidenceSupportJudge,
+        judgment_writer: SemanticJudgmentWriter,
         evidence_writer: EvidenceWriter,
         faxt_writer: CanonicalFaxtWriter,
     ) -> None:
@@ -140,6 +198,8 @@ class XeedSemanticGermination:
         self._index = index
         self._catalog = catalog
         self._investigator = investigator
+        self._support_judge = support_judge
+        self._judgment_writer = judgment_writer
         self._evidence_writer = evidence_writer
         self._faxt_writer = faxt_writer
 
@@ -195,6 +255,7 @@ class XeedSemanticGermination:
             eligible.append((candidate, hit.similarity))
 
         admitted: list[AdmittedGerminationFinding] = []
+        rejected_semantic_count = 0
         rejected_evidence_count = 0
         investigated_count = 0
         for candidate, similarity in eligible[: budget.max_investigations]:
@@ -204,6 +265,13 @@ class XeedSemanticGermination:
                 continue
             if finding.subject_id != candidate.organization_id:
                 raise ValueError("investigation finding subject does not match retrieved candidate")
+            semantic = self._support_judge.judge(finding)
+            if not isinstance(semantic, EvidenceSupportJudgment):
+                raise TypeError("support judge must return EvidenceSupportJudgment")
+            self._judgment_writer.append(finding, semantic)
+            if semantic.support is not EvidenceSupportClass.SUPPORTED:
+                rejected_semantic_count += 1
+                continue
             decision = EvidenceAdmission.admit(finding.evidence)
             if not decision.is_canonical:
                 rejected_evidence_count += 1
@@ -232,6 +300,7 @@ class XeedSemanticGermination:
             retrieved_count=len(retrieved),
             eligible_count=len(eligible),
             investigated_count=investigated_count,
+            rejected_semantic_count=rejected_semantic_count,
             rejected_evidence_count=rejected_evidence_count,
             admitted=tuple(admitted),
         )
