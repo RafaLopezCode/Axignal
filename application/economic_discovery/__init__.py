@@ -26,6 +26,13 @@ from application.economic_discovery.contracts import (
     DiscoveryStage,
     StructuredJudgment,
 )
+from application.economic_discovery.explanation import (
+    BasisContribution,
+    BasisDatum,
+    ExplainableAssociation,
+    ExplainableBasis,
+    require_explainable_basis,
+)
 from application.economic_discovery.planner import (
     CognitiveWorkPlan,
     DimensionWork,
@@ -37,6 +44,8 @@ from application.economic_discovery.planner import (
 
 __all__ = [
     "AttentionDisposition",
+    "BasisContribution",
+    "BasisDatum",
     "CandidateLineageEvent",
     "ChoiceOption",
     "ChoiceSpaceContract",
@@ -49,6 +58,8 @@ __all__ = [
     "DiscoveryStage",
     "EconomicAssociationSnapshot",
     "EpistemicProfile",
+    "ExplainableAssociation",
+    "ExplainableBasis",
     "ObservationIngress",
     "ObservationMode",
     "ObservationPlan",
@@ -63,5 +74,6 @@ __all__ = [
     "affected_dimensions",
     "build_work_plan",
     "plan_dimension_work",
+    "require_explainable_basis",
     "route_retrieval",
 ]

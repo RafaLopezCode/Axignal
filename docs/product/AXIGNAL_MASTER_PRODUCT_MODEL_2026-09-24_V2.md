@@ -3432,3 +3432,20 @@ Germination SHOULD be recall-oriented and information-preserving; canonization r
 A public observation learned while serving one Xeed MAY enrich shared AXIGLAND subject to rights, tenant/privacy and provenance policy. A later Xeed SHOULD reuse governed shared observation memory rather than rediscover public facts from zero; Xeed-specific meaning is recomputed from the new relational state.
 
 INTELLIGENCE COST MUST FOLLOW INFORMATION VALUE: high-volume repetitive work belongs to deterministic sensors/retrieval; expensive adaptive intelligence is reserved for bootstrap, ambiguity, missing information and research decisions where it can change what AXIGNAL observes next.
+
+## 56.19 Explainable Basis: every visible semantic attribution must answer why
+Any subscriber-visible semantic attribution, node role, economic association, Xignal or derived relationship MUST have a reconstructible Explainable Basis. AXIGNAL MUST be able to answer `why?` at the exact semantic dimension being presented.
+
+OBSERVATION/DATA != EXPLAINABLE BASIS != CANONICAL EVIDENCE.
+VISIBLE ATTRIBUTION -> EXPLAINABLE BASIS REQUIRED.
+MODEL OUTPUT != EXPLANATION.
+JEV PROBABILITY != BASIS.
+EXPLANATION GENERATED AFTER THE FACT != PROVENANCE.
+
+An Explainable Basis references the governed observations that materially support the presented interpretation and preserves source/provenance, observation time, state fingerprint, semantic contract fingerprint, interpretation and uncertainty. Material contradictions MUST be preserved and exposed; explanation MUST NOT cherry-pick only supporting observations.
+
+Explainable Basis does not itself authorize FAXT or canonical RELATIONSHIP. EvidenceAdmission remains the truth firewall. Conversely, a POTENTIAL/non-canonical association may be subscriber-visible when its Explainable Basis is sufficient under presentation policy even though it is not canonically admissible.
+
+If AXIGNAL cannot reconstruct a supporting basis for a semantic attribution, that attribution MUST NOT be presented as an intelligible role/association to the subscriber. It may remain internal UNKNOWN/UNRESOLVED and trigger investigation.
+
+`Show me how AXIGNAL knows` MUST resolve from the visible asset to its exact Explainable Basis, not regenerate a plausible narrative. The subscriber receives the data that made the attribution worth considering and retains authority to accept, reject or reinterpret the business meaning.
