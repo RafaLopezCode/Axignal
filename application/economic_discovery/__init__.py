@@ -26,19 +26,30 @@ from application.economic_discovery.contracts import (
     DiscoveryStage,
     StructuredJudgment,
 )
+from application.economic_discovery.planner import (
+    CognitiveWorkPlan,
+    DimensionWork,
+    ObservationIngress,
+    build_work_plan,
+    plan_dimension_work,
+    route_retrieval,
+)
 
 __all__ = [
     "AttentionDisposition",
     "CandidateLineageEvent",
     "ChoiceOption",
     "ChoiceSpaceContract",
+    "CognitiveWorkPlan",
     "DimensionDisposition",
     "DimensionEvaluation",
+    "DimensionWork",
     "DiscoveryFailureClass",
     "DiscoveryRunTrace",
     "DiscoveryStage",
     "EconomicAssociationSnapshot",
     "EpistemicProfile",
+    "ObservationIngress",
     "ObservationMode",
     "ObservationPlan",
     "ObservationRecord",
@@ -50,4 +61,7 @@ __all__ = [
     "TypingDimensionContract",
     "XignalPresentation",
     "affected_dimensions",
+    "build_work_plan",
+    "plan_dimension_work",
+    "route_retrieval",
 ]
