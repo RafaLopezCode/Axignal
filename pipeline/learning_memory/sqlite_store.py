@@ -14,7 +14,9 @@ from application.economic_discovery.learning_memory import (
     LearningMechanism,
     LearningMemoryConflict,
     LearningOutcome,
+    LearningReplayReference,
     LearningYield,
+    ReplayDisposition,
 )
 
 
@@ -93,6 +95,11 @@ class SqliteLearningMemory:
             "after_state_fingerprint": event.after_state_fingerprint,
             "output_fingerprint": event.output_fingerprint,
             "corrects_event_id": event.corrects_event_id,
+            "replay": {
+                "disposition": event.replay.disposition.value,
+                "references": list(event.replay.references),
+                "reason_code": event.replay.reason_code,
+            },
             "cost": {
                 "amount_microunits": event.cost.amount_microunits,
                 "currency": event.cost.currency,
@@ -118,6 +125,18 @@ class SqliteLearningMemory:
         data = json.loads(payload)
         cost = data["cost"]
         yield_data = data["yield"]
+        replay_data = data.get("replay")
+        replay = (
+            LearningReplayReference.non_replayable("REPLAY_REFERENCE_NOT_RECORDED")
+            if replay_data is None
+            else LearningReplayReference(
+                disposition=ReplayDisposition(replay_data["disposition"]),
+                references=tuple(
+                    (str(name), str(value)) for name, value in replay_data.get("references", ())
+                ),
+                reason_code=replay_data.get("reason_code"),
+            )
+        )
         return LearningEvent(
             event_id=data["event_id"],
             kind=LearningEventKind(data["kind"]),
@@ -138,6 +157,7 @@ class SqliteLearningMemory:
             after_state_fingerprint=data["after_state_fingerprint"],
             output_fingerprint=data["output_fingerprint"],
             corrects_event_id=data["corrects_event_id"],
+            replay=replay,
             cost=LearningCost(
                 amount_microunits=cost["amount_microunits"],
                 currency=cost["currency"],

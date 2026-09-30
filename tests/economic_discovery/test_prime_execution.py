@@ -19,6 +19,7 @@ from application.economic_discovery.learning_memory import (
     LearningCost,
     LearningEventKind,
     LearningOutcome,
+    ReplayDisposition,
 )
 from application.economic_discovery.prime import DimensionRoutingPolicy, PrimeRoute
 from application.economic_discovery.prime_execution import (
@@ -324,6 +325,14 @@ def test_real_source_to_prime_composition_with_semantic_extraction(
         "SEMANTIC_EXTRACTION",
         "STRUCTURED_EVALUATION",
     ]
+    semantic_event = history[trace.learning_event_ids[3]]
+    structured_event = history[trace.learning_event_ids[4]]
+    assert semantic_event.replay.disposition is ReplayDisposition.NON_REPLAYABLE
+    assert semantic_event.replay.reason_code == "PROVIDER_MODEL_OR_HARNESS_REFERENCE_UNAVAILABLE"
+    assert semantic_event.replay.require("provider") == "fixture-semantic"
+    assert semantic_event.replay.require("provider_version") == "1"
+    assert structured_event.replay.disposition is ReplayDisposition.NON_REPLAYABLE
+    assert structured_event.replay.reason_code == "PROVIDER_MODEL_OR_HARNESS_REFERENCE_UNAVAILABLE"
 
 
 def test_budget_stop_blocks_second_prime_work_and_records_partial_learning(
@@ -600,6 +609,20 @@ def test_one_execution_reconstructs_bootstrap_to_prime_learning_sequence(
     assert history[0].cost.amount_microunits is None
     assert history[1].cost.amount_microunits is None
     assert history[4].cost.amount_microunits == 5
+
+    assert history[0].replay.disposition is ReplayDisposition.NON_REPLAYABLE
+    assert history[0].replay.reason_code == "BOOTSTRAP_PLAN_PAYLOAD_NOT_RETAINED"
+    assert history[1].replay.disposition is ReplayDisposition.REPLAYABLE
+    assert history[1].replay.require("artifact_ref") == history[1].activity_ref
+    assert history[1].replay.require("source_policy_fingerprint") == source_policy.fingerprint
+    assert history[2].replay.disposition is ReplayDisposition.REPLAYABLE
+    assert history[3].replay.disposition is ReplayDisposition.REPLAYABLE
+    assert history[3].replay.require("representation_version") == "html-document/0.1"
+    assert history[3].replay.require("normalization_version") == "visible-text/0.1"
+    assert history[4].replay.disposition is ReplayDisposition.REPLAYABLE
+    assert history[4].replay.require("routing_policy_version") == "routing-v1"
+    with pytest.raises(ValueError, match="version/value mismatch"):
+        history[3].replay.require("representation_version", "html-document/999")
 
 
 def test_adaptive_research_learning_yield_is_derived_from_real_work_item(

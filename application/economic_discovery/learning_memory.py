@@ -46,6 +46,71 @@ class LearningMechanism(StrEnum):
     GOVERNANCE = "GOVERNANCE"
 
 
+class ReplayDisposition(StrEnum):
+    REPLAYABLE = "REPLAYABLE"
+    NON_REPLAYABLE = "NON_REPLAYABLE"
+
+
+@dataclass(frozen=True, slots=True)
+class LearningReplayReference:
+    """Exact replay inputs or an explicit reason exact replay is unavailable."""
+
+    disposition: ReplayDisposition
+    references: tuple[tuple[str, str], ...] = ()
+    reason_code: str | None = None
+
+    def __post_init__(self) -> None:
+        names = [name for name, _ in self.references]
+        if len(names) != len(set(names)):
+            raise ValueError("replay reference names must be unique")
+        if any(not name.strip() or not value.strip() for name, value in self.references):
+            raise ValueError("replay reference names and values must be non-empty")
+        if self.disposition is ReplayDisposition.REPLAYABLE:
+            if self.reason_code is not None:
+                raise ValueError("replayable reference cannot carry a failure reason")
+            if not self.references:
+                raise ValueError("replayable reference requires exact references")
+        else:
+            if self.reason_code is None or not self.reason_code.strip():
+                raise ValueError("non-replayable reference requires an explicit reason")
+
+    @classmethod
+    def replayable(cls, **references: str) -> LearningReplayReference:
+        return cls(
+            disposition=ReplayDisposition.REPLAYABLE,
+            references=tuple(sorted(references.items())),
+        )
+
+    @classmethod
+    def non_replayable(
+        cls,
+        reason_code: str,
+        **references: str,
+    ) -> LearningReplayReference:
+        return cls(
+            disposition=ReplayDisposition.NON_REPLAYABLE,
+            references=tuple(sorted(references.items())),
+            reason_code=reason_code,
+        )
+
+    def get(self, name: str) -> str | None:
+        return next((value for key, value in self.references if key == name), None)
+
+    def require(self, name: str, expected: str | None = None) -> str:
+        value = self.get(name)
+        if value is None:
+            raise ValueError(f"replay reference {name!r} is unavailable")
+        if expected is not None and value != expected:
+            raise ValueError(
+                f"replay reference {name!r} version/value mismatch: "
+                f"recorded={value!r} expected={expected!r}"
+            )
+        return value
+
+
+_LEGACY_REPLAY_REFERENCE = LearningReplayReference.non_replayable("REPLAY_REFERENCE_NOT_RECORDED")
+
+
 @dataclass(frozen=True, slots=True)
 class LearningCost:
     """Measured operational cost. None means unknown; zero is measured zero."""
@@ -135,6 +200,7 @@ class LearningEvent:
     after_state_fingerprint: str | None = None
     output_fingerprint: str | None = None
     corrects_event_id: str | None = None
+    replay: LearningReplayReference = _LEGACY_REPLAY_REFERENCE
     cost: LearningCost = LearningCost()
     yield_: LearningYield = LearningYield()
 

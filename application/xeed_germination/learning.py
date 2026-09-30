@@ -10,6 +10,7 @@ from application.economic_discovery.learning_memory import (
     LearningEventKind,
     LearningMechanism,
     LearningOutcome,
+    LearningReplayReference,
     LearningYield,
 )
 from application.xeed_germination.bootstrap import BootstrapDisposition, BootstrapPlan
@@ -27,6 +28,7 @@ def bootstrap_learning_event(
     cost: LearningCost | None = None,
     yield_: LearningYield | None = None,
     output_fingerprint: str | None = None,
+    replay: LearningReplayReference | None = None,
 ) -> LearningEvent:
     """Record observed bootstrap outcome without changing bootstrap policy."""
 
@@ -57,6 +59,11 @@ def bootstrap_learning_event(
         reason_code=reason_code,
         before_state_fingerprint=plan.state_fingerprint,
         after_state_fingerprint=after_state_fingerprint,
+        replay=(
+            LearningReplayReference.non_replayable("BOOTSTRAP_PLAN_PAYLOAD_NOT_RETAINED")
+            if replay is None
+            else replay
+        ),
         cost=cost,
         yield_=yield_,
     )

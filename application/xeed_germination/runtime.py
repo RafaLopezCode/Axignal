@@ -8,6 +8,7 @@ from datetime import datetime
 from application.economic_discovery.learning_memory import (
     LearningMemory,
     LearningOutcome,
+    LearningReplayReference,
     LearningYield,
 )
 from application.economic_discovery.prime_execution import PrimeExecutionTrace
@@ -147,6 +148,14 @@ def apply_bootstrap_plan(
         reason_code=reason,
         yield_=LearningYield(observations_reused=plan.reused_observation_count),
         output_fingerprint=plan.plan_fingerprint,
+        replay=LearningReplayReference.non_replayable(
+            "BOOTSTRAP_PLAN_PAYLOAD_NOT_RETAINED",
+            code_sha=code_sha,
+            plan_fingerprint=plan.plan_fingerprint,
+            policy_id=plan.policy_id,
+            policy_version=plan.policy_version,
+            state_fingerprint=plan.state_fingerprint,
+        ),
     )
     learning_memory.append(event)
 
