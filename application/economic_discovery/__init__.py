@@ -1,5 +1,22 @@
-"""Measurable Economic Discovery Engine contracts."""
+"""Provider-neutral contracts for AXIGNAL's Economic Discovery Engine."""
 
+from application.economic_discovery.brain_contracts import (
+    AttentionDisposition,
+    DimensionDisposition,
+    DimensionEvaluation,
+    EconomicAssociationSnapshot,
+    EpistemicProfile,
+    ObservationMode,
+    ObservationPlan,
+    ObservationRecord,
+    ObservationTask,
+    SemanticPrimitive,
+    StateChange,
+    TypedJudgmentVector,
+    TypingDimensionContract,
+    XignalPresentation,
+    affected_dimensions,
+)
 from application.economic_discovery.contracts import (
     CandidateLineageEvent,
     ChoiceOption,
@@ -11,11 +28,26 @@ from application.economic_discovery.contracts import (
 )
 
 __all__ = [
+    "AttentionDisposition",
     "CandidateLineageEvent",
     "ChoiceOption",
     "ChoiceSpaceContract",
+    "DimensionDisposition",
+    "DimensionEvaluation",
     "DiscoveryFailureClass",
     "DiscoveryRunTrace",
     "DiscoveryStage",
+    "EconomicAssociationSnapshot",
+    "EpistemicProfile",
+    "ObservationMode",
+    "ObservationPlan",
+    "ObservationRecord",
+    "ObservationTask",
+    "SemanticPrimitive",
+    "StateChange",
     "StructuredJudgment",
+    "TypedJudgmentVector",
+    "TypingDimensionContract",
+    "XignalPresentation",
+    "affected_dimensions",
 ]

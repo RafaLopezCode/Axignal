@@ -3295,11 +3295,17 @@ and ADR-0016/0017.
 
 # 56. Economic Discovery Engine: cadena cognitiva medible
 
-## 56.1 Canonical chain
+## 56.1 Canonical cognitive loops
 
-OBSERVE -> REPRESENT -> RETRIEVE -> FILTER -> COMPILE STATE -> BUILD CHOICE SPACE -> STRUCTURED EVALUATE -> INTERPRET -> INVESTIGATE -> ADMIT
+AXIGNAL does not have one mandatory linear tool order. Python is the deterministic control plane around event-driven cognitive loops. Observation may begin through deterministic sensors, direct events, or targeted AXENT/LLM research. TurboQuant operates only on already observed/represented information and is bypassed when an observation is already bound to a known subject. JEV performs structured semantic typing over rich state and is bypassed for deterministic facts.
 
-AXIGNAL MUST explain both why it surfaced a discovery and at which boundary a true opportunity could have been lost. Every arrow is a versioned contract and a measurement boundary.
+Primary discovery loop:
+XEED -> OBSERVATION PLAN -> OBSERVE -> OBSERVATION MEMORY -> REPRESENT -> RETRIEVE WHEN NEEDED -> DETERMINISTIC ELIGIBILITY -> COMPILE RICH STATE -> STRUCTURED TYPE -> COMPOSE -> WARRANTED ATTENTION / INVESTIGATE -> NEW OBSERVATION -> LOOP.
+
+Canonical truth is a separate governed boundary:
+EVIDENCE -> CLAIM/EVIDENCE EVALUATION WHEN NEEDED -> EVIDENCE ADMISSION -> CANONICAL WRITE.
+
+INVESTIGATE returns observations to the discovery loop; ADMIT is not its automatic next stage. A state change MUST trigger dependency impact analysis and only affected semantic dimensions are reevaluated. AXIGNAL MUST explain why it surfaced a Xignal, why a candidate disappeared, and which boundary lost information. Every transition is a versioned contract and measurement boundary.
 
 ## 56.2 Authority boundaries
 OBSERVE owns acquisition record/provenance/time/instrument, not truth admission. REPRESENT owns disposable semantic representation, not knowledge. RETRIEVE owns candidate recall/ranking, not fit/evidence. FILTER owns deterministic incompatibility rules and MUST preserve UNKNOWN. COMPILE STATE owns deterministic assembly/fingerprints, never invented missing facts. BUILD CHOICE SPACE owns AXIGNAL's typed hypothesis universe, not provider behavior. STRUCTURED EVALUATE owns typed probabilistic judgment, not policy/write. INTERPRET owns deterministic composition/policy, not evidence rewriting. INVESTIGATE owns targeted evidence acquisition, not canonical truth. ADMIT remains the independent canonical boundary; derived opportunity remains INXIGHT/POTENTIAL.
@@ -3356,3 +3362,73 @@ BENCHMARK_SCORE != PRODUCT_TRUTH
 
 ## 56.12 Existing implementation disposition
 The current retrieval_k=50 default, SUPPORTED-only germination gate and 12-case germination corpus are experimental evidence only. They MUST NOT define canonical architecture. Claim-evidence support remains useful only for its narrow semantic target; economic opportunity requires richer DecisionContracts and Choice Spaces.
+
+## 56.13 Universal Semantic Typing Layer
+The Economic Discovery Engine MUST NOT reduce structured evaluation to one support gate. Every semantically rich candidate that survives deterministic eligibility may be evaluated through a declared set of orthogonal DecisionContracts/Choice Spaces.
+
+The unit of output is a Typed Judgment Vector, not a binary verdict. A candidate may simultaneously receive independent typed judgments for economic role, relationship kind/direction, capability relevance, need/problem class, market role, opportunity archetype, evidence support, temporal/currentness interpretation, contradiction/conflict and uncertainty/abstention where the corresponding StateContract is answerable.
+
+Classification is exhaustive in processing intent, not fabricated in semantics: AXIGNAL SHOULD attempt all applicable declared typing dimensions, but each dimension MUST preserve NONE/OTHER/UNKNOWN/UNRESOLVED/NOT_APPLICABLE semantics as required. "Type everything" MUST NEVER mean "force every object into a known class".
+
+Each typing dimension MUST be independently versioned, answerable, replayable and provider-neutral. JEV may evaluate many narrow questions over the same rich state; Python MUST compose the resulting vector deterministically. No single Choice Space, selected option, confidence or probability may collapse the full economic state.
+
+The pipeline therefore distinguishes:
+1. candidate discovery/retrieval;
+2. rich state compilation from all admissible available context;
+3. applicability/answerability per typing dimension;
+4. multi-axis structured evaluation;
+5. deterministic Typed Judgment Vector assembly;
+6. policy-driven interpretation/investigation;
+7. separately governed admission/derivation.
+
+This layer MUST retain negative and non-opportunity classifications. Discarded candidates are economically informative for calibration, replay, future re-interpretation and loss attribution, subject to retention/governance policy.
+
+Additional invariants:
+TYPED != TRUE
+CLASSIFIED != CANONICAL
+NO_MATCH != FALSE
+NOT_APPLICABLE != UNKNOWN
+ONE_CHOICE_SPACE != ECONOMIC_MODEL
+TYPED_JUDGMENT_VECTOR != OPAQUE_SCORE
+
+
+## 56.14 Observation economics and tool authority
+The LLM/AXENT is not the universal observer. Its privileged role is adaptive bootstrap, query/source discovery, investigation planning and resolution of high-value ambiguity. Repetitive observation SHOULD be industrialized through deterministic Sensors/Adapters governed by Python. A useful research result SHOULD be converted into reusable observation machinery when source stability, rights and economics justify it.
+
+Python is the control plane, not a pipeline stage. It owns orchestration, deterministic facts/calculation, identity, deduplication, authorization, budgets, temporal dependencies, applicability/answerability, fingerprints, policy, lineage and admission routing.
+
+TurboQuant is derived retrieval infrastructure. It MUST NOT crawl, establish truth, create economic roles or become a mandatory hop. Use it to reduce a large already-observed representation universe to a recall-oriented candidate set. Direct observations already bound to known subjects bypass retrieval and mutate state directly.
+
+JEV is a replaceable semantic typing provider. It receives rich state plus narrow governed questions; it MUST NOT be asked to recompute deterministic facts. Independent roles such as SUPPLIER and CUSTOMER MUST NOT be forced into one mutually-exclusive Choice Space. Primitive and exclusivity semantics are declared per dimension.
+
+## 56.15 Information survival and temporal associations
+INFORMATION SURVIVAL != TRUTH ADMISSION.
+NOT ADMISSIBLE != NOT VALUABLE.
+INSUFFICIENT EVIDENCE != DISCARD.
+ADMISSION != END OF OBSERVATION.
+
+Observation Memory preserves governed raw/normalized observations with provenance and time independently of FAXT admission. Structured typing creates temporal candidate economic associations, not canonical RELATIONSHIP by default. Economic roles are directional, scoped, temporal and potentially simultaneous.
+
+New evidence MUST preserve history. It creates a new state fingerprint and triggers dependency-aware impact analysis; only affected dimensions are reevaluated unless a governed contract requires broader replay.
+
+## 56.16 Xignal means warranted attention
+AXIGNAL does not promise that a surfaced business outcome exists or will materialize. A Xignal means that the observed and structured economic state contains enough governed reason to warrant human attention or further investigation.
+
+XIGNAL != CONCLUSION.
+XIGNAL != SALE PROBABILITY.
+COMMERCIAL OUTCOME != EPISTEMIC VALIDITY.
+WARRANTED ATTENTION != CANONICAL TRUTH.
+
+The customer remains the authority for business conclusion and action. Failure to contact, qualify, bid, negotiate or close MUST NOT retroactively falsify a correctly grounded Xignal.
+
+## 56.17 Epistemic presentation
+Every surfaced Xignal MUST carry an explainable epistemic state. Internally this state is multidimensional and MAY include evidence support, provenance quality, currentness, corroboration, contradiction, coverage and uncertainty. UX MAY compress those dimensions into a meter/bar only through an explicitly versioned deterministic policy.
+
+A JEV top probability, confidence, similarity score, opaque model score or downstream sale outcome MUST NOT directly become the Xignal meter. UNKNOWN MUST NOT be rendered as FALSE. Show me how AXIGNAL knows MUST preserve access to the underlying provenance, temporal state and reasoning trace.
+
+## 56.18 Germination principle
+Germination SHOULD be recall-oriented and information-preserving; canonization remains conservative. New observations may create new candidate nodes, typed dimensions, scoped associations, investigation targets and further observation plans without claiming canonical truth.
+
+A public observation learned while serving one Xeed MAY enrich shared AXIGLAND subject to rights, tenant/privacy and provenance policy. A later Xeed SHOULD reuse governed shared observation memory rather than rediscover public facts from zero; Xeed-specific meaning is recomputed from the new relational state.
+
+INTELLIGENCE COST MUST FOLLOW INFORMATION VALUE: high-volume repetitive work belongs to deterministic sensors/retrieval; expensive adaptive intelligence is reserved for bootstrap, ambiguity, missing information and research decisions where it can change what AXIGNAL observes next.

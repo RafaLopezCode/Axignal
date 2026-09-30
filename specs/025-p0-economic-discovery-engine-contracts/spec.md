@@ -50,3 +50,14 @@ No production promotion until contracts exist behind provider-neutral boundaries
 - Claim-evidence SUPPORTED gate is narrower than economic opportunity reasoning.
 - Current 12-case corpus is too narrow for promotion.
 - Production encoder, acquisition/investigation adapter and persistence remain unresolved.
+
+## Cognitive-loop amendment — required executable surfaces
+12. ObservationMode / ObservationTask / ObservationPlan separating deterministic sensors, active research and direct events.
+13. TypingDimensionContract declaring semantic primitive, exclusivity, state requirements, dependencies and abstention.
+14. DimensionEvaluation separating ANSWERABLE from NOT_APPLICABLE and NOT_ANSWERABLE without fabricated evaluator output.
+15. TypedJudgmentVector allowing simultaneous independent economic roles.
+16. StateChange + dependency impact for selective reevaluation.
+17. EconomicAssociationSnapshot preserving temporal history and Xeed-relative state.
+18. EpistemicProfile + XignalPresentation enforcing WARRANTED_ATTENTION and prohibiting sale probability.
+
+Additional gates: retrieval MUST be bypassable for direct subject-bound observations; JEV MUST be bypassable for deterministic facts; non-answerable dimensions MUST NOT contain synthetic model output; NOUL-style independent roles MUST NOT declare mutual exclusivity; association snapshots MUST match Xeed/candidate/state identity; Xignal presentation MUST retain explanation reference and MUST NOT encode commercial outcome probability.
