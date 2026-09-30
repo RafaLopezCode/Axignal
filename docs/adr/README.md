@@ -41,6 +41,7 @@ Constitution (`.specify/memory/constitution.md`).
 | [ADR-0031](ADR-0031-explainable-xignal-projection.md) | Explainable Xignal Projection (**ACCEPTED**) | §§4.4A, 7.3, 15, 19, 20, 26 |
 | [ADR-0032](ADR-0032-end-to-end-evidence-narrative.md) | End-to-End Evidence Narrative (**ACCEPTED**) | §§4.4A, 15, 19, 20, 26 |
 | [ADR-0033](ADR-0033-first-xeed-runtime-lifecycle.md) | First-Xeed Runtime Lifecycle (**ACCEPTED**) | §§2, 10, 14, 56.18 |
+| [ADR-0034](ADR-0034-first-map-readiness-policy.md) | FIRST_MAP Readiness Policy (**ACCEPTED**) | §§1, 9, 10, 46 |
 
 ## Adding an ADR
 
