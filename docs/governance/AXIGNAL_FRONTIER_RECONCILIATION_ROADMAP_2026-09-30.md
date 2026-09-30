@@ -31,7 +31,7 @@ A task is not DONE because code exists. Runtime/product work normally progresses
 
 NOT_STARTED · READY · IN_PROGRESS · BLOCKED · DONE · DEFERRED · REJECTED
 
-**CURRENT_TASK = FR-16**
+**CURRENT_TASK = FR-17**
 
 ## 4. Frontier closure rule
 
@@ -691,9 +691,36 @@ Future audit can verify a non-graph path to the same governed meaning.
 
 ## FR-16 — Mobile Value Subset
 
-**Status:** NOT_STARTED  
-**Depends on:** FR-09, FR-15  
+**Status:** DONE
+**Depends on:** FR-09, FR-15
 **Priority:** P1
+
+**Closure evidence (2026-10-01):**
+- mobile subscriber is now a deliberate reader-first product at <=680 CSS px rather than a shrunken AXIGLAND canvas
+- mobile default path is Today → Xignal → Why it matters → Evidence → Timeline → contextual AXENT
+- desktop AXIGLAND stage, workspace rail and desktop meridian are removed from the default mobile task; no mobile core step depends on hover, minimap or pan precision
+- Today retains the same bounded material-item policy; mobile item action is subscriber-facing `Open Xignal` rather than `View in map`
+- focused Xignal retains deterministic Why it matters copy derived from the same Today explanation policy
+- Evidence mobile navigation focuses ADR-0041's existing semantic evidence boundary; no mobile-only evidence truth model is introduced
+- Timeline mobile navigation exposes current observation/currentness state and explicitly states when historical timeline authority is not exposed
+- AXENT is a contextual bottom sheet that preserves the current Xignal scope and remembers the mobile surface from which it was opened
+- AXENT sheet uses dialog/aria-modal semantics while open, aria-hidden while closed, Escape close, focus restoration and Tab/Shift+Tab containment
+- mobile header preserves Back plus current Xignal label; bottom navigation exposes Today, Evidence, Timeline and AXENT
+- generic `navigate()` does not recenter AXIGLAND while the mobile breakpoint is active
+- mobile primary actions use >=44 CSS px touch targets; bottom navigation targets are 50 CSS px
+- Chrome touch/mobile flow verified at 390×844: Today → Open Xignal → Evidence → Timeline → AXENT → close → Back, with current Xignal context preserved and zero page errors
+- Chrome 360×800 baseline verified: canvas/workspace hidden, mobile header/nav visible, 3 Today items present, no horizontal body overflow
+- Chrome mobile screenshot review completed for Today, focused Xignal and AXENT sheet; layout is deliberate and readable rather than responsive-canvas compression
+- focused FR-16/FR-15/FR-14/FR-13/FR-12/FR-09/HFX contracts: 51 PASS after preserving the exact FR-09 desktop deep-link contract
+- final Chrome touch revalidation at 390×844 after FR-09 compatibility repair: Open Xignal → Evidence → Timeline → AXENT → close → Back; AXENT transform settled to open state, dialog/modal semantics correct, context preserved, no overflow, zero page errors
+- full pytest: 520 PASS using external `--basetemp` to avoid the known Windows user-temp ACL issue
+- Node syntax: PASS (`app.js`, `presentation.js`, `locale-es.js`)
+- Ruff format/check: PASS
+- mypy: PASS (118 source files)
+- Architecture Guard: PASS
+- axignal-governance: PASS
+- git diff --check: PASS
+- ADR-0042 accepted and indexed
 
 ### Work
 Do not shrink desktop AXIGLAND blindly. Mobile minimum: Today → Xignal → Why it matters → Evidence → Timeline → contextual AXENT. Full canvas is optional and must earn inclusion through task tests.

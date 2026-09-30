@@ -83,6 +83,19 @@
       </aside>
 
       <main class="center">
+        <header class="mobile-header" id="mobile-header">
+          <button class="mobile-back" id="mobile-back" type="button" data-copy-aria-label="navigation.back" aria-label="Back">
+            <svg class="ax-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/lucide/axignal-ui.svg#arrow-left"></use></svg>
+          </button>
+          <div class="mobile-header-copy">
+            <span class="mono" data-copy="mobile.context">Current Xignal</span>
+            <b id="mobile-focus-label">Today</b>
+          </div>
+          <button class="mobile-axent-open" id="mobile-axent-open" type="button" aria-controls="axent-panel" aria-expanded="false" data-copy-aria-label="mobile.openAxent" aria-label="Open AXENT">
+            <span aria-hidden="true">AX</span>
+          </button>
+        </header>
+
         <section class="stage2" data-copy-aria-label="navigation.axiglandField" aria-label="AXIGLAND cognitive field">
           <aside class="lens" data-copy-aria-label="navigation.knowledgeDepth" aria-label="Epistemic axis and cognitive depth">
             <span class="lens-cap" data-copy="navigation.epistemic">Knowledge</span>
@@ -174,6 +187,13 @@
           </section>
         </section>
 
+        <nav class="mobile-nav" data-copy-aria-label="mobile.navigation" aria-label="Mobile value navigation">
+          <button id="mobile-today" type="button" data-copy-aria-label="navigation.today" aria-label="Today"><svg class="ax-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/lucide/axignal-ui.svg#house"></use></svg><span data-copy="navigation.today">Today</span></button>
+          <button id="mobile-evidence" type="button" data-copy-aria-label="navigation.evidence" aria-label="Evidence"><svg class="ax-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/lucide/axignal-ui.svg#list-checks"></use></svg><span data-copy="navigation.evidence">Evidence</span></button>
+          <button id="mobile-timeline" type="button" data-copy-aria-label="navigation.timeline" aria-label="Timeline"><svg class="ax-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/lucide/axignal-ui.svg#rotate-ccw"></use></svg><span data-copy="navigation.timeline">Timeline</span></button>
+          <button id="mobile-axent" type="button" data-copy-aria-label="mobile.openAxent" aria-label="Open AXENT"><svg class="ax-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/lucide/axignal-ui.svg#send"></use></svg><span>AXENT</span></button>
+        </nav>
+
         <footer class="meridian" data-copy-aria-label="navigation.time" aria-label="Time">
           <div class="mer-row">
             <span class="mer-end"><b data-copy="navigation.then">Then</b><em></em></span>
@@ -184,7 +204,9 @@
         </footer>
       </main>
 
-      <aside class="axent" data-copy-aria-label="navigation.axentGuide" aria-label="AXENT context guide">
+      <div class="mobile-scrim" id="mobile-scrim" hidden></div>
+      <aside class="axent" id="axent-panel" data-copy-aria-label="navigation.axentGuide" aria-label="AXENT context guide">
+        <button class="mobile-axent-close" id="mobile-axent-close" type="button" data-copy-aria-label="mobile.closeAxent" aria-label="Close AXENT"><span aria-hidden="true">×</span></button>
         <div class="ax-head">
           <div class="ax-title"><span class="ax-glyph" aria-hidden="true"><img class="brand-isotope brand-isotope-small" src="/brand/isotope.svg" alt="" /></span>AXENT</div>
           <div class="ax-sub" data-copy="navigation.guide">View guide</div>
