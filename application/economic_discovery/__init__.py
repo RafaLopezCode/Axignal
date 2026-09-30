@@ -26,12 +26,19 @@ from application.economic_discovery.contracts import (
     DiscoveryStage,
     StructuredJudgment,
 )
+from application.economic_discovery.demand import CampaignRelevanceProfile, DemandArchetype
 from application.economic_discovery.explanation import (
     BasisContribution,
     BasisDatum,
     ExplainableAssociation,
     ExplainableBasis,
     require_explainable_basis,
+)
+from application.economic_discovery.market_entry import (
+    MarketParticipation,
+    MarketRelationship,
+    ParticipationState,
+    XeedMarketMap,
 )
 from application.economic_discovery.planner import (
     CognitiveWorkPlan,
@@ -46,10 +53,12 @@ __all__ = [
     "AttentionDisposition",
     "BasisContribution",
     "BasisDatum",
+    "CampaignRelevanceProfile",
     "CandidateLineageEvent",
     "ChoiceOption",
     "ChoiceSpaceContract",
     "CognitiveWorkPlan",
+    "DemandArchetype",
     "DimensionDisposition",
     "DimensionEvaluation",
     "DimensionWork",
@@ -60,16 +69,20 @@ __all__ = [
     "EpistemicProfile",
     "ExplainableAssociation",
     "ExplainableBasis",
+    "MarketParticipation",
+    "MarketRelationship",
     "ObservationIngress",
     "ObservationMode",
     "ObservationPlan",
     "ObservationRecord",
     "ObservationTask",
+    "ParticipationState",
     "SemanticPrimitive",
     "StateChange",
     "StructuredJudgment",
     "TypedJudgmentVector",
     "TypingDimensionContract",
+    "XeedMarketMap",
     "XignalPresentation",
     "affected_dimensions",
     "build_work_plan",
