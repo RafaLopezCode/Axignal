@@ -65,6 +65,13 @@ from application.economic_discovery.planner import (
     plan_dimension_work,
     route_retrieval,
 )
+from application.economic_discovery.prime import (
+    DimensionRoutingPolicy,
+    PrimeControlPlan,
+    PrimeRoute,
+    PrimeWorkItem,
+    build_prime_control_plan,
+)
 
 __all__ = [
     "AttentionDisposition",
@@ -78,6 +85,7 @@ __all__ = [
     "DemandArchetype",
     "DimensionDisposition",
     "DimensionEvaluation",
+    "DimensionRoutingPolicy",
     "DimensionWork",
     "DiscoveryFailureClass",
     "DiscoveryRunTrace",
@@ -103,6 +111,9 @@ __all__ = [
     "ObservationTask",
     "ObservedField",
     "ParticipationState",
+    "PrimeControlPlan",
+    "PrimeRoute",
+    "PrimeWorkItem",
     "SemanticPrimitive",
     "StateChange",
     "StateField",
@@ -112,6 +123,7 @@ __all__ = [
     "XeedMarketMap",
     "XignalPresentation",
     "affected_dimensions",
+    "build_prime_control_plan",
     "build_work_plan",
     "compile_observation_state",
     "ingest_observation",
