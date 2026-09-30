@@ -31,7 +31,7 @@ A task is not DONE because code exists. Runtime/product work normally progresses
 
 NOT_STARTED · READY · IN_PROGRESS · BLOCKED · DONE · DEFERRED · REJECTED
 
-**CURRENT_TASK = FR-03**
+**CURRENT_TASK = FR-04**
 
 ## 4. Frontier closure rule
 
@@ -160,9 +160,27 @@ Future audit cannot state that every knowledge gap automatically triggers adapti
 
 ## FR-03 — Implement Budget and Stop Contract
 
-**Status:** NOT_STARTED  
+**Status:** DONE
 **Depends on:** FR-02  
 **Priority:** P0
+
+**Closure evidence (2026-09-30):**
+- BASE_SHA: `3ff5c28a50ef57b64106268e311d54cf83f51fd8`
+- WORK_BRANCH: `architecture/fr-03-budget-stop-contract`
+- provider-neutral `ExecutionBudgetPolicy / State / Delta / Decision` contracts implemented
+- governed controller authorizes each next unit of work and refuses work after STOP
+- explicit stop reasons cover monetary budget, requests, sources, deadline, retries, loops, no-progress and UNKNOWN cost
+- UNKNOWN monetary cost remains UNKNOWN; zero is never fabricated
+- cross-currency accumulation fails closed
+- governed stop can be emitted to Learning Memory as `PARTIAL` with exact stop reason and measured cost/latency
+- budget exhaustion preserves partial/UNKNOWN state and does not weaken evidence standards
+- ADR-0029 accepted and indexed
+- targeted tests: 12 PASS
+- full pytest: 460 PASS
+- mypy: PASS (108 source files)
+- Architecture Guard: PASS
+- governance: PASS
+- git diff --check: PASS
 
 ### Frontier finding
 Current source-count limits do not bound monetary spend, wall-clock time, retries, loops or no-progress.
