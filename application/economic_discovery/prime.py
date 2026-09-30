@@ -15,7 +15,11 @@ from application.economic_discovery.brain_contracts import (
     StateChange,
     TypingDimensionContract,
 )
-from application.economic_discovery.planner import plan_dimension_work
+from application.economic_discovery.planner import (
+    DimensionWork,
+    assess_dimension_work,
+    plan_dimension_work,
+)
 
 
 class PrimeRoute(StrEnum):
@@ -81,24 +85,16 @@ class PrimeControlPlan:
             raise ValueError("prime control plan cannot duplicate dimensions")
 
 
-def build_prime_control_plan(
+def _route_work(
     *,
-    change: StateChange,
-    contracts: tuple[TypingDimensionContract, ...],
-    available_state_fields: frozenset[str],
+    subject_id: str,
+    state_fingerprint: str,
+    work: tuple[DimensionWork, ...],
     routing_policies: tuple[DimensionRoutingPolicy, ...],
 ) -> PrimeControlPlan:
-    """Route impacted dimensions without delegating routing authority to a model."""
-
     policies = {policy.dimension_id: policy for policy in routing_policies}
     if len(policies) != len(routing_policies):
         raise ValueError("dimension routing policies must be unique")
-
-    work = plan_dimension_work(
-        change=change,
-        contracts=contracts,
-        available_state_fields=available_state_fields,
-    )
 
     items: list[PrimeWorkItem] = []
     for dimension in work:
@@ -113,8 +109,6 @@ def build_prime_control_plan(
         elif dimension.disposition is DimensionDisposition.ANSWERABLE:
             route = policy.answerable_route
         else:
-            # NOT_APPLICABLE is currently produced only by explicit semantic
-            # evaluation, not by the pre-provider answerability gate.
             raise ValueError("pre-provider Prime planning cannot route NOT_APPLICABLE dimensions")
 
         items.append(
@@ -128,7 +122,56 @@ def build_prime_control_plan(
         )
 
     return PrimeControlPlan(
+        subject_id=subject_id,
+        state_fingerprint=state_fingerprint,
+        items=tuple(items),
+    )
+
+
+def build_prime_control_plan(
+    *,
+    change: StateChange,
+    contracts: tuple[TypingDimensionContract, ...],
+    available_state_fields: frozenset[str],
+    routing_policies: tuple[DimensionRoutingPolicy, ...],
+) -> PrimeControlPlan:
+    """Route impacted dimensions without delegating routing authority to a model."""
+
+    return _route_work(
         subject_id=change.subject_id,
         state_fingerprint=change.current_fingerprint,
-        items=tuple(items),
+        work=plan_dimension_work(
+            change=change,
+            contracts=contracts,
+            available_state_fields=available_state_fields,
+        ),
+        routing_policies=routing_policies,
+    )
+
+
+def build_initial_prime_control_plan(
+    *,
+    subject_id: str,
+    state_fingerprint: str,
+    contracts: tuple[TypingDimensionContract, ...],
+    available_state_fields: frozenset[str],
+    routing_policies: tuple[DimensionRoutingPolicy, ...],
+) -> PrimeControlPlan:
+    """Route only answerable initial dimensions; retain gaps outside Prime for policy."""
+
+    if not subject_id.strip() or not state_fingerprint.strip():
+        raise ValueError("initial Prime plan identity is required")
+
+    assessment = assess_dimension_work(
+        contracts=contracts,
+        available_state_fields=available_state_fields,
+    )
+    answerable = tuple(
+        item for item in assessment if item.disposition is DimensionDisposition.ANSWERABLE
+    )
+    return _route_work(
+        subject_id=subject_id,
+        state_fingerprint=state_fingerprint,
+        work=answerable,
+        routing_policies=routing_policies,
     )

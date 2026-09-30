@@ -5,6 +5,7 @@ from application.economic_discovery import (
     SemanticPrimitive,
     StateChange,
     TypingDimensionContract,
+    assess_dimension_work,
     build_work_plan,
     route_retrieval,
 )
@@ -64,3 +65,27 @@ def test_plan_only_re_evaluates_impacted_dimensions_and_researches_missing_state
     assert plan.evaluation[0].disposition is DimensionDisposition.NOT_ANSWERABLE
     assert plan.evaluation[1].disposition is DimensionDisposition.ANSWERABLE
     assert plan.research_dimensions == ("CUSTOMER_ROLE",)
+
+
+def test_initial_dimension_assessment_includes_completely_missing_dimensions() -> None:
+    contract = TypingDimensionContract(
+        dimension_id="reputation",
+        version="1",
+        semantic_target="public reputation",
+        primitive=SemanticPrimitive.CHOICE,
+        question="What public reputation state is supported?",
+        state_requirements=("document.reviews.visible_text",),
+        dependencies=("document.reviews.visible_text",),
+        mutually_exclusive=False,
+        abstention_policy="preserve UNKNOWN",
+    )
+
+    work = assess_dimension_work(
+        contracts=(contract,),
+        available_state_fields=frozenset(),
+    )
+
+    assert len(work) == 1
+    assert work[0].dimension_id == "reputation"
+    assert work[0].disposition is DimensionDisposition.NOT_ANSWERABLE
+    assert work[0].missing_requirements == ("document.reviews.visible_text",)

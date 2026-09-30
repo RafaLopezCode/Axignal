@@ -11,6 +11,7 @@ from application.economic_discovery.brain_contracts import (
 from application.economic_discovery.prime import (
     DimensionRoutingPolicy,
     PrimeRoute,
+    build_initial_prime_control_plan,
     build_prime_control_plan,
 )
 
@@ -138,3 +139,38 @@ def test_answerable_policy_cannot_delegate_routing_to_adaptive_research() -> Non
             version="routing-v1",
             answerable_route=PrimeRoute.ADAPTIVE_RESEARCH,
         )
+
+
+def test_initial_prime_plan_routes_only_answerable_dimensions() -> None:
+    answerable = _contract(
+        "market_mode",
+        requirements=("document.market",),
+        dependencies=("document.market",),
+    )
+    missing = _contract(
+        "reputation",
+        requirements=("document.reviews",),
+        dependencies=("document.reviews",),
+    )
+
+    plan = build_initial_prime_control_plan(
+        subject_id="org:1",
+        state_fingerprint="state:1",
+        contracts=(answerable, missing),
+        available_state_fields=frozenset({"document.market"}),
+        routing_policies=(
+            DimensionRoutingPolicy(
+                dimension_id="market_mode",
+                version="routing-v1",
+                answerable_route=PrimeRoute.STRUCTURED_EVALUATOR,
+            ),
+            DimensionRoutingPolicy(
+                dimension_id="reputation",
+                version="routing-v1",
+                answerable_route=PrimeRoute.STRUCTURED_EVALUATOR,
+            ),
+        ),
+    )
+
+    assert [item.dimension_id for item in plan.items] == ["market_mode"]
+    assert plan.items[0].disposition is DimensionDisposition.ANSWERABLE

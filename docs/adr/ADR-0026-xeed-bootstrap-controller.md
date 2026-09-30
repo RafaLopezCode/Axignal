@@ -56,3 +56,39 @@ It also does not require a mandatory LLM call when a Xeed is planted. Adaptive i
 - Missing information remains explicit and becomes research work rather than FALSE.
 - Provider changes do not affect bootstrap semantics.
 - Future learning has replayable bootstrap evidence but no authority to rewrite policy automatically.
+
+## 2026-09-30 amendment — FR-01 dimensional handoff
+
+The original V0 wording required a universal `minimum initial state` before Prime handoff. That requirement is superseded.
+
+Bootstrap now assesses every declared `TypingDimensionContract` independently against the current `RichSubjectState`.
+
+For each dimension:
+
+- requirements satisfied → the dimension is answerable and may be handed to Prime now;
+- requirements missing → the dimension remains an explicit bootstrap gap with the exact missing requirements.
+
+An unrelated gap MUST NOT block useful work in another answerable dimension.
+
+`BOOTSTRAP_COMPLETENESS != DIMENSION_ANSWERABILITY`
+
+`DIMENSION_A_UNKNOWN != DIMENSION_B_BLOCKED`
+
+`PARTIAL_STATE != FAILED_BOOTSTRAP`
+
+Prime receives only currently answerable bootstrap dimensions. Missing dimensions remain outside executable Prime work until a later policy determines what to do with them. FR-01 does not define that later research-value decision; FR-02 owns it.
+
+Explicit known source candidates may be selected for unresolved dimension requirements while answerable dimensions are already handed to Prime. Therefore source completion and useful partial work are no longer mutually exclusive phases.
+
+If no dimension is answerable, Bootstrap may still use explicit known sources. The current fallback to adaptive research when neither answerable work nor known sources exist is transitional and is intentionally subject to FR-02 Research Value Gate.
+
+The `BootstrapPolicy` no longer declares a universal set of `initial_state_requirements`. It remains versioned and currently governs bounded known source selection.
+
+This amendment preserves all previous authority boundaries:
+
+- Bootstrap is temporary application orchestration, not the Brain.
+- Known source candidate != authorized dispatch.
+- Missing information remains UNKNOWN.
+- Prime owns mechanism routing for executable dimensions.
+- Provider/model output has no truth authority.
+- EvidenceAdmission remains the canonical write firewall.

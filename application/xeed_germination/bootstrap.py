@@ -1,8 +1,8 @@
 """Temporal Xeed bootstrap controller that hands off to AXIGNAL Prime quickly.
 
-Bootstrap is deliberately short-lived: reuse governed memory, acquire only explicit
-known sources when they can satisfy declared minimum state, otherwise request adaptive
-research. Once minimum state exists, Prime owns all subsequent cognitive routing.
+Bootstrap is deliberately short-lived: assess every governed semantic dimension,
+handoff answerable work to Prime immediately, and preserve unresolved dimensions as
+explicit gaps. Known sources may continue filling those gaps without blocking useful work.
 """
 
 from __future__ import annotations
@@ -16,10 +16,11 @@ from application.economic_discovery import (
     DimensionRoutingPolicy,
     PrimeControlPlan,
     TypingDimensionContract,
-    build_prime_control_plan,
+    build_initial_prime_control_plan,
 )
-from application.economic_discovery.brain_contracts import StateChange
-from application.source_representation import RichSubjectState, compile_rich_subject_state
+from application.economic_discovery.brain_contracts import DimensionDisposition
+from application.economic_discovery.planner import assess_dimension_work
+from application.source_representation import RichSubjectState
 from application.xeed_access.organization_reader import AuthorizedXeedOrganization
 
 
@@ -33,18 +34,11 @@ class BootstrapDisposition(StrEnum):
 class BootstrapPolicy:
     policy_id: str
     version: str
-    initial_state_requirements: tuple[str, ...]
     max_known_sources: int = 3
 
     def __post_init__(self) -> None:
         if not self.policy_id.strip() or not self.version.strip():
             raise ValueError("bootstrap policy identity is required")
-        if not self.initial_state_requirements:
-            raise ValueError("bootstrap policy requires minimum initial state")
-        if len(set(self.initial_state_requirements)) != len(self.initial_state_requirements):
-            raise ValueError("bootstrap state requirements must be unique")
-        if any(not field.strip() for field in self.initial_state_requirements):
-            raise ValueError("bootstrap state requirements cannot be empty")
         if self.max_known_sources < 1:
             raise ValueError("bootstrap source budget must be positive")
 
@@ -76,6 +70,22 @@ class BootstrapSourceCandidate:
 
 
 @dataclass(frozen=True, slots=True)
+class BootstrapDimensionGap:
+    dimension_id: str
+    missing_requirements: tuple[str, ...]
+
+    def __post_init__(self) -> None:
+        if not self.dimension_id.strip():
+            raise ValueError("bootstrap dimension gap identity is required")
+        if not self.missing_requirements:
+            raise ValueError("bootstrap dimension gap requires missing state")
+        if len(set(self.missing_requirements)) != len(self.missing_requirements):
+            raise ValueError("bootstrap dimension gap requirements must be unique")
+        if any(not requirement.strip() for requirement in self.missing_requirements):
+            raise ValueError("bootstrap dimension gap requirements cannot be empty")
+
+
+@dataclass(frozen=True, slots=True)
 class BootstrapPlan:
     xeed_id: str
     subject_id: str
@@ -86,6 +96,7 @@ class BootstrapPlan:
     reused_observation_count: int
     available_state_fields: frozenset[str]
     missing_requirements: tuple[str, ...]
+    dimension_gaps: tuple[BootstrapDimensionGap, ...]
     source_candidates: tuple[BootstrapSourceCandidate, ...] = ()
     prime_plan: PrimeControlPlan | None = None
     plan_fingerprint: str = ""
@@ -96,11 +107,15 @@ class BootstrapPlan:
             raise ValueError("bootstrap plan identity is required")
         if self.reused_observation_count < 0:
             raise ValueError("reused observation count cannot be negative")
+        gap_ids = [gap.dimension_id for gap in self.dimension_gaps]
+        if len(gap_ids) != len(set(gap_ids)):
+            raise ValueError("bootstrap dimension gaps must be unique")
+
         if self.disposition is BootstrapDisposition.HANDOFF_TO_PRIME:
-            if self.prime_plan is None or self.missing_requirements or self.source_candidates:
-                raise ValueError("Prime handoff requires complete bootstrap state only")
-        elif self.prime_plan is not None:
-            raise ValueError("only Prime handoff may include a Prime control plan")
+            if self.prime_plan is None or not self.prime_plan.items:
+                raise ValueError("Prime handoff requires at least one answerable dimension")
+        elif self.prime_plan is not None and self.prime_plan.items:
+            raise ValueError("only Prime handoff may carry executable Prime work")
 
         if self.disposition is BootstrapDisposition.ACQUIRE_KNOWN_SOURCES and (
             not self.source_candidates or not self.missing_requirements
@@ -110,6 +125,10 @@ class BootstrapPlan:
             self.source_candidates or not self.missing_requirements
         ):
             raise ValueError("adaptive research requires unresolved missing state")
+        if self.missing_requirements and not self.dimension_gaps:
+            raise ValueError("missing bootstrap state requires explicit dimension gaps")
+        if not self.missing_requirements and self.dimension_gaps:
+            raise ValueError("dimension gaps require missing bootstrap state")
         if not self.plan_fingerprint.strip():
             raise ValueError("bootstrap plan fingerprint is required")
 
@@ -160,6 +179,7 @@ def _plan_fingerprint(
     state_fingerprint: str,
     disposition: BootstrapDisposition,
     missing: tuple[str, ...],
+    gaps: tuple[BootstrapDimensionGap, ...],
     sources: tuple[BootstrapSourceCandidate, ...],
     prime_plan: PrimeControlPlan | None,
 ) -> str:
@@ -171,6 +191,7 @@ def _plan_fingerprint(
             "state_fingerprint": state_fingerprint,
             "disposition": disposition.value,
             "missing": missing,
+            "gaps": [(gap.dimension_id, gap.missing_requirements) for gap in gaps],
             "sources": [item.candidate_id for item in sources],
             "prime_items": []
             if prime_plan is None
@@ -211,43 +232,50 @@ def build_bootstrap_plan(
     candidate_ids = [candidate.candidate_id for candidate in known_sources]
     if len(candidate_ids) != len(set(candidate_ids)):
         raise ValueError("bootstrap source candidate identities must be unique")
+    if not contracts:
+        raise ValueError("bootstrap requires at least one semantic dimension contract")
+
     available = rich_state.available_fields
+    assessment = assess_dimension_work(
+        contracts=contracts,
+        available_state_fields=available,
+    )
+    gaps = tuple(
+        BootstrapDimensionGap(
+            dimension_id=item.dimension_id,
+            missing_requirements=item.missing_requirements,
+        )
+        for item in assessment
+        if item.disposition is DimensionDisposition.NOT_ANSWERABLE
+    )
     missing = tuple(
-        requirement
-        for requirement in policy.initial_state_requirements
-        if requirement not in available
+        dict.fromkeys(requirement for gap in gaps for requirement in gap.missing_requirements)
+    )
+    sources = _select_known_sources(
+        subject_id=subject_id,
+        missing=missing,
+        candidates=known_sources,
+        limit=policy.max_known_sources,
     )
 
-    if not missing:
-        empty = compile_rich_subject_state(subject_id=subject_id, contributions=())
-        change = StateChange(
-            subject_id=subject_id,
-            changed_fields=available,
-            previous_fingerprint=empty.fingerprint,
-            current_fingerprint=rich_state.fingerprint,
-        )
+    initial_prime_plan = build_initial_prime_control_plan(
+        subject_id=subject_id,
+        state_fingerprint=rich_state.fingerprint,
+        contracts=contracts,
+        available_state_fields=available,
+        routing_policies=routing_policies,
+    )
 
-        prime_plan = build_prime_control_plan(
-            change=change,
-            contracts=contracts,
-            available_state_fields=available,
-            routing_policies=routing_policies,
-        )
+    prime_plan: PrimeControlPlan | None
+    if initial_prime_plan.items:
+        prime_plan = initial_prime_plan
         disposition = BootstrapDisposition.HANDOFF_TO_PRIME
-        sources: tuple[BootstrapSourceCandidate, ...] = ()
+    elif sources:
+        prime_plan = None
+        disposition = BootstrapDisposition.ACQUIRE_KNOWN_SOURCES
     else:
         prime_plan = None
-        sources = _select_known_sources(
-            subject_id=subject_id,
-            missing=missing,
-            candidates=known_sources,
-            limit=policy.max_known_sources,
-        )
-        disposition = (
-            BootstrapDisposition.ACQUIRE_KNOWN_SOURCES
-            if sources
-            else BootstrapDisposition.ADAPTIVE_RESEARCH
-        )
+        disposition = BootstrapDisposition.ADAPTIVE_RESEARCH
 
     fingerprint = _plan_fingerprint(
         xeed_id=xeed_id,
@@ -256,6 +284,7 @@ def build_bootstrap_plan(
         state_fingerprint=rich_state.fingerprint,
         disposition=disposition,
         missing=missing,
+        gaps=gaps,
         sources=sources,
         prime_plan=prime_plan,
     )
@@ -269,6 +298,7 @@ def build_bootstrap_plan(
         reused_observation_count=reused_observation_count,
         available_state_fields=available,
         missing_requirements=missing,
+        dimension_gaps=gaps,
         source_candidates=sources,
         prime_plan=prime_plan,
         plan_fingerprint=fingerprint,
