@@ -3997,8 +3997,10 @@ input {
 @media (max-width: 680px) {
   .app2 { grid-template-columns: 54px minmax(0, 1fr); grid-template-rows: minmax(0, 58vh) minmax(300px, 42vh); }
   .gov { grid-column: 1; grid-row: 1; }
-  .center { grid-column: 2; grid-row: 1; grid-template-rows: minmax(0, 1fr) auto; }
-  .center > .bottom, .center > .meridian { display: none; }
+  .center { grid-column: 2; grid-row: 1; grid-template-rows: minmax(0, 1fr) minmax(210px, 45vh); }
+  .center > .bottom { display: flex; max-height: 45vh; min-height: 210px; }
+  .center > .bottom .conn { display: none; }
+  .center > .meridian { display: none; }
   .axent { grid-column: 1 / -1; grid-row: 2; min-height: 300px; }
   .lens { width: 56px; }
   .lens-track { left: 0; right: 0; }
@@ -4444,5 +4446,174 @@ html[dir='rtl'] .trail { direction: rtl; }
   .field,
   .field * {
     scroll-behavior: auto !important;
+  }
+}
+
+
+/* FR-15 — accessible non-graph projection of focus, relationships, time and evidence. */
+.semantic-projection {
+  margin-top: 30px;
+  padding-top: 22px;
+  border-top: 1px solid var(--hair);
+  display: grid;
+  gap: 20px;
+}
+.semantic-head {
+  display: grid;
+  gap: 4px;
+}
+.semantic-head h2,
+.semantic-projection h3 {
+  margin: 0;
+  color: var(--ink);
+}
+.semantic-head h2 {
+  font: 400 clamp(1.25rem, 1.8vw, 1.65rem)/1.2 var(--serif);
+}
+.semantic-projection h3 {
+  font: 500 0.95rem/1.35 var(--sans);
+}
+.semantic-path ol {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.semantic-path li {
+  display: inline-flex;
+  align-items: center;
+  min-width: 0;
+}
+.semantic-path li + li::before {
+  content: '/';
+  margin-right: 12px;
+  color: var(--faint);
+}
+.semantic-path button {
+  min-height: 32px;
+  max-width: 100%;
+  padding: 4px 0;
+  color: var(--ink-3);
+  text-align: left;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+.semantic-path button[aria-current='page'] {
+  color: var(--ink);
+  font-weight: 500;
+  text-decoration: none;
+}
+.semantic-focus,
+.semantic-relationships,
+.semantic-time,
+.semantic-evidence {
+  display: grid;
+  gap: 10px;
+  min-width: 0;
+}
+.semantic-focus-name {
+  margin: 0;
+  color: var(--ink);
+  font: 500 1rem/1.45 var(--sans);
+  overflow-wrap: anywhere;
+}
+.semantic-state,
+.semantic-time dl,
+.semantic-evidence-detail dl {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+}
+.semantic-definition {
+  display: grid;
+  grid-template-columns: minmax(9rem, 0.45fr) minmax(0, 1fr);
+  gap: 14px;
+  align-items: baseline;
+}
+.semantic-definition dt {
+  color: var(--faint);
+  font: 500 0.68rem/1.35 var(--mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.semantic-definition dd {
+  margin: 0;
+  color: var(--ink-2);
+  overflow-wrap: anywhere;
+}
+.semantic-relation-list {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.semantic-relation-list li {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 14px;
+  align-items: center;
+  padding: 10px 12px;
+  border: 1px solid var(--hair);
+  border-radius: 5px;
+  background: rgba(255,255,255,.18);
+}
+.semantic-relation-copy {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+}
+.semantic-relation-copy strong {
+  color: var(--ink);
+  font-weight: 500;
+  overflow-wrap: anywhere;
+}
+.semantic-relation-copy span {
+  color: var(--ink-3);
+  font-size: 0.82rem;
+}
+.semantic-relation-list button,
+.semantic-evidence-action {
+  min-height: 36px;
+  padding: 7px 11px;
+  border: 1px solid var(--hair-2);
+  border-radius: 4px;
+  color: var(--ink-2);
+  background: var(--paper-2);
+}
+.semantic-relation-list button:hover,
+.semantic-evidence-action:hover {
+  color: var(--ink);
+  border-color: var(--brass-2);
+}
+.semantic-empty,
+.semantic-evidence-detail p {
+  margin: 0;
+  color: var(--ink-3);
+}
+.semantic-evidence-detail {
+  display: grid;
+  gap: 10px;
+  padding: 12px 14px;
+  border-left: 2px solid var(--hair-2);
+  outline: none;
+}
+.semantic-evidence-detail:focus-visible,
+#semantic-projection-title:focus-visible {
+  outline: 2px solid var(--brass-2);
+  outline-offset: 3px;
+}
+@media (max-width: 640px) {
+  .semantic-definition,
+  .semantic-relation-list li {
+    grid-template-columns: 1fr;
+  }
+  .semantic-relation-list button,
+  .semantic-evidence-action {
+    justify-self: stretch;
+    width: 100%;
   }
 }

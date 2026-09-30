@@ -553,6 +553,184 @@ function renderConnections(focus) {
   empty.hidden = list.childElementCount > 0
 }
 
+
+function epistemicText(value) {
+  const key = ({
+    OBSERVED: 'epistemic.observed',
+    DECLARED: 'epistemic.declared',
+    INFERRED: 'epistemic.inferred',
+    CORROBORATED: 'epistemic.corroborated',
+    CONTRADICTED: 'epistemic.contradicted',
+    STALE: 'epistemic.stale',
+    POTENTIAL: 'epistemic.potential',
+    HISTORICAL: 'epistemic.historical',
+    UNKNOWN: 'epistemic.unknown',
+  })[value] ?? 'epistemic.unknown'
+  return presentation.text(key)
+}
+
+function appendDefinition(list, termText, detailText) {
+  if (detailText == null || detailText === '') return
+  const row = document.createElement('div')
+  row.className = 'semantic-definition'
+  const term = document.createElement('dt')
+  term.textContent = termText
+  const detail = document.createElement('dd')
+  detail.textContent = String(detailText)
+  row.append(term, detail)
+  list.append(row)
+}
+
+function navigateNonGraph(key) {
+  navigate(key, { recenter: false })
+  $('#semantic-projection-title')?.focus({ preventScroll: true })
+}
+
+function renderAccessibleProjection(focus) {
+  const reader = $('#reader')
+  const section = document.createElement('section')
+  section.className = 'semantic-projection'
+  section.id = 'semantic-projection'
+  section.setAttribute('aria-labelledby', 'semantic-projection-title')
+
+  const header = document.createElement('header')
+  header.className = 'semantic-head'
+  const kicker = document.createElement('span')
+  kicker.className = 'mono'
+  kicker.textContent = presentation.text('accessible.kicker')
+  const title = document.createElement('h2')
+  title.id = 'semantic-projection-title'
+  title.tabIndex = -1
+  title.textContent = presentation.text('accessible.title')
+  header.append(kicker, title)
+
+  const pathNav = document.createElement('nav')
+  pathNav.className = 'semantic-path'
+  pathNav.setAttribute('aria-label', presentation.text('accessible.focusPath'))
+  const pathList = document.createElement('ol')
+  for (const key of state.history.slice(0, state.historyIndex + 1)) {
+    const node = getNode(key)
+    if (!node) continue
+    const item = document.createElement('li')
+    const button = document.createElement('button')
+    button.type = 'button'
+    button.textContent = key === organizationKey() ? presentation.text('organization.label') : node.label
+    if (key === focus.key) button.setAttribute('aria-current', 'page')
+    button.addEventListener('click', () => navigateNonGraph(key))
+    item.append(button)
+    pathList.append(item)
+  }
+  pathNav.append(pathList)
+
+  const focusSection = document.createElement('section')
+  focusSection.className = 'semantic-focus'
+  const focusTitle = document.createElement('h3')
+  focusTitle.textContent = presentation.text('accessible.focus')
+  const focusName = document.createElement('p')
+  focusName.className = 'semantic-focus-name'
+  focusName.textContent = focus.label
+  const stateList = document.createElement('dl')
+  stateList.className = 'semantic-state'
+  if (focus.kind === 'ORGANIZATION') {
+    appendDefinition(stateList, presentation.text('accessible.epistemicState'), presentation.text('accessible.organizationState'))
+  } else {
+    const fact = describeFactForView(focus.source)
+    appendDefinition(stateList, presentation.text('accessible.epistemicState'), fact.epistemicLabel ?? epistemicText(focus.source.epistemicState))
+    appendDefinition(stateList, presentation.text('accessible.currentness'), fact.currentnessLabel)
+    appendDefinition(stateList, presentation.text('accessible.observedAt'), fact.observedAt)
+  }
+  focusSection.append(focusTitle, focusName, stateList)
+
+  const relationships = document.createElement('section')
+  relationships.className = 'semantic-relationships'
+  const relationshipsTitle = document.createElement('h3')
+  relationshipsTitle.textContent = presentation.text('accessible.relationships')
+  const relationshipList = document.createElement('ul')
+  relationshipList.className = 'semantic-relation-list'
+  const focusId = focus.id
+  const edges = (state.uxLab?.edges ?? []).filter((edge) =>
+    edge.syntheticFixture === true && (edge.source === focusId || edge.target === focusId),
+  )
+  for (const edge of edges) {
+    const targetId = edge.source === focusId ? edge.target : edge.source
+    const target = state.worldNodes.find((node) => node.id === targetId)
+    if (!target) continue
+    const relation = presentation.text(`connections.type.${edge.type}`)
+    const item = document.createElement('li')
+    const description = document.createElement('div')
+    description.className = 'semantic-relation-copy'
+    const relationText = document.createElement('strong')
+    relationText.textContent = `${relation}: ${target.label}`
+    const stateText = document.createElement('span')
+    stateText.textContent = `${presentation.text('accessible.relationState')}: ${epistemicText(edge.epistemicState)}`
+    description.append(relationText, stateText)
+    const open = document.createElement('button')
+    open.type = 'button'
+    open.textContent = presentation.text('accessible.openRelated')
+    open.addEventListener('click', () => navigateNonGraph(target.key))
+    item.append(description, open)
+    relationshipList.append(item)
+  }
+  relationships.append(relationshipsTitle)
+  if (relationshipList.childElementCount) relationships.append(relationshipList)
+  else {
+    const empty = document.createElement('p')
+    empty.className = 'semantic-empty'
+    empty.textContent = presentation.text('accessible.relationshipsEmpty')
+    relationships.append(empty)
+  }
+
+  const timeSection = document.createElement('section')
+  timeSection.className = 'semantic-time'
+  const timeTitle = document.createElement('h3')
+  timeTitle.textContent = presentation.text('accessible.time')
+  const timeList = document.createElement('dl')
+  if (focus.kind === 'FAXT') {
+    const fact = describeFactForView(focus.source)
+    appendDefinition(timeList, presentation.text('accessible.observedAt'), fact.observedAt)
+    appendDefinition(timeList, presentation.text('accessible.currentness'), fact.currentnessLabel)
+  } else {
+    appendDefinition(timeList, presentation.text('accessible.currentness'), presentation.text('accessible.organizationState'))
+  }
+  timeSection.append(timeTitle, timeList)
+
+  const evidence = document.createElement('section')
+  evidence.className = 'semantic-evidence'
+  const evidenceTitle = document.createElement('h3')
+  evidenceTitle.textContent = presentation.text('accessible.evidence')
+  const evidenceButton = document.createElement('button')
+  evidenceButton.type = 'button'
+  evidenceButton.className = 'semantic-evidence-action'
+  evidenceButton.textContent = presentation.text('accessible.showEvidence')
+  evidenceButton.setAttribute('aria-expanded', 'false')
+  const evidenceDetail = document.createElement('div')
+  evidenceDetail.className = 'semantic-evidence-detail'
+  evidenceDetail.tabIndex = -1
+  evidenceDetail.hidden = true
+  const evidenceStatus = focus.kind === 'FAXT' ? focus.source.evidenceAccess : null
+  const evidenceAvailable = Boolean(evidenceStatus) && !presentation.isImplementationValue(evidenceStatus)
+  const evidenceMessage = document.createElement('p')
+  evidenceMessage.textContent = evidenceAvailable
+    ? presentation.text('accessible.evidenceAvailable')
+    : presentation.text('accessible.evidenceUnavailable')
+  const evidenceMeta = document.createElement('dl')
+  if (focus.kind === 'FAXT') {
+    appendDefinition(evidenceMeta, presentation.text('accessible.observedAt'), presentation.formatDate(focus.source.observedAt))
+  }
+  evidenceDetail.append(evidenceMessage, evidenceMeta)
+  evidenceButton.addEventListener('click', () => {
+    const expanded = evidenceButton.getAttribute('aria-expanded') === 'true'
+    evidenceButton.setAttribute('aria-expanded', String(!expanded))
+    evidenceButton.textContent = presentation.text(expanded ? 'accessible.showEvidence' : 'accessible.hideEvidence')
+    evidenceDetail.hidden = expanded
+    if (!expanded) evidenceDetail.focus({ preventScroll: true })
+  })
+  evidence.append(evidenceTitle, evidenceButton, evidenceDetail)
+
+  section.append(header, pathNav, focusSection, relationships, timeSection, evidence)
+  reader.append(section)
+}
+
 function renderBottomTabVisibility() {
   $('.bottom').classList.toggle('collapsed', state.bottomTabCollapsed)
   const key = state.bottomTabCollapsed ? 'navigation.showText' : 'navigation.hideText'
@@ -1067,6 +1245,7 @@ function render() {
   const node = focusedNode()
   renderMap()
   renderReader(node)
+  renderAccessibleProjection(node)
   renderConnections(node)
   renderBottomTabVisibility()
   renderHistory()

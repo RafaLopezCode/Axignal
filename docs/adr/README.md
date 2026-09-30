@@ -48,6 +48,7 @@ Constitution (`.specify/memory/constitution.md`).
 | [ADR-0038](ADR-0038-subscriber-terminology-locale-coherence.md) | Subscriber Terminology and Locale Coherence (**ACCEPTED**) | §§9, 22, 25, 26, 55 |
 | [ADR-0039](ADR-0039-three-level-spatial-legibility.md) | Three-Level Spatial Legibility (**ACCEPTED**) | §§9, 25, 26, 46, 55 |
 | [ADR-0040](ADR-0040-motion-input-ownership-contract.md) | Motion and Input Ownership Contract (**ACCEPTED**) | §§9, 25, 26, 46, 55 |
+| [ADR-0041](ADR-0041-accessible-non-graph-projection.md) | Accessible Non-Graph Projection (**ACCEPTED**) | §§9, 25, 26, 46, 55 |
 
 ## Adding an ADR
 
