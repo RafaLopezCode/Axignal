@@ -3449,3 +3449,30 @@ Explainable Basis does not itself authorize FAXT or canonical RELATIONSHIP. Evid
 If AXIGNAL cannot reconstruct a supporting basis for a semantic attribution, that attribution MUST NOT be presented as an intelligible role/association to the subscriber. It may remain internal UNKNOWN/UNRESOLVED and trigger investigation.
 
 `Show me how AXIGNAL knows` MUST resolve from the visible asset to its exact Explainable Basis, not regenerate a plausible narrative. The subscriber receives the data that made the attribution worth considering and retains authority to accept, reject or reinterpret the business meaning.
+
+## 56.20 Xeed Market Entry Classification
+Before broad germination, the Brain MUST classify the Xeed's current and plausible market-relationship modes independently across B2B, B2C and B2G. This is an observation-planning gate, not a permanent company type.
+
+XEED != SINGLE MARKET TYPE.
+OBSERVED MARKET != ONLY MARKET WORTH OBSERVING.
+POTENTIAL MARKET != OBSERVED PARTICIPATION.
+UNKNOWN MARKET != FALSE.
+MARKET RELATIONSHIP MODE != ECONOMIC/GEOGRAPHIC MARKET.
+
+Each B2B/B2C/B2G dimension is temporal and independently classified as OBSERVED, POTENTIAL, UNKNOWN or NOT_APPLICABLE. OBSERVED and POTENTIAL require their own Explainable Basis. A Xeed may therefore be B2C OBSERVED, B2B POTENTIAL and B2G UNKNOWN simultaneously. Both OBSERVED and POTENTIAL modes may create observation targets; UNKNOWN is preserved rather than silently discarded.
+
+This classification MUST occur early enough to shape the Observation Plan, sensors, search vocabulary, candidate object types and semantic questions. It MUST be reevaluated when relevant state changes. The Brain MUST NOT infer a permanent business identity from one observed channel.
+
+## 56.21 B2C Demand Intelligence
+For B2C, AXIGNAL models aggregate demand rather than named individual consumers. The primary economic object is a Demand Archetype composed from governed observations of need, intent, context, geography and channel where available.
+
+B2C DEMAND INTELLIGENCE != INDIVIDUAL PROFILING.
+DEMAND ARCHETYPE != PERSON.
+CAMPAIGN RELEVANCE != PURCHASE PROBABILITY.
+AGGREGATE DEMAND SIGNAL != ADDRESSABLE PLATFORM AUDIENCE.
+
+A Demand Archetype MUST NOT contain or require an individual consumer identity. It MUST have an Explainable Basis and remain temporal/reevaluable. AXIGNAL may describe observable demand patterns and their relationship to Xeed capabilities; advertising platforms remain responsible for materializing addressable audiences under their own systems and policies.
+
+Campaign relevance is multidimensional and versioned. Candidate dimensions include need fit, intent strength, demand strength, growth, geographic fit, channel fit, message fit, evidence quality, currentness and uncertainty. A compressed UX score MAY be derived deterministically by a versioned policy, but MUST NOT represent probability that an individual will purchase.
+
+Demand Archetypes are not limited to B2C: B2B/B2G observation MAY also surface aggregate need archetypes. Organizations and Demand Archetypes therefore coexist as different economic objects in AXIGLAND rather than forcing all demand into Organization-to-Organization relationships.
