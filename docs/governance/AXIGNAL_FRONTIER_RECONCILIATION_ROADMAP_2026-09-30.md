@@ -1,0 +1,712 @@
+# AXIGNAL Frontier Reconciliation Roadmap — 2026-09-30
+
+**Status:** ACTIVE EXECUTION CONTRACT
+**Type:** Subordinate implementation roadmap; not product doctrine or architectural authority.
+**Authority:** MASTER PRODUCT MODEL → Engineering Constitution → accepted ADRs → this roadmap.
+**Repository baseline:** main @ d435da1fe5472fe527c9d4ee008887f3c8c295f7
+**Frontier audit input:** D:\AXIGNAL\Asesor Frontera\AXIGNAL_FRONTIER_ADVISOR_2026-09-30_1750_FRONTIER.md
+**Audit signatures:** GPT-6.1 / Codex, 2026-09-30 17:50 and UX extension 18:10 Europe/Madrid.
+**Execution mode:** one active task at a time.
+
+## 1. Purpose
+
+This roadmap converts the Frontier Advisor architecture/moat audit and UI/UX audit into a finite sequence of governed engineering and product tasks. The objective is to remove or materially reduce every valid, evidenced weakness identified by the audits while preserving higher-order AXIGNAL doctrine.
+
+A task is not DONE because code exists. Runtime/product work normally progresses through IMPLEMENTED → PROVED → INTEGRATED → DEPLOYED → VERIFIED E2E. Documentation-only tasks require source reconciliation, deterministic checks and integration.
+
+## 2. Execution rules
+
+1. Only one task may be IN_PROGRESS unless an explicitly independent external-evidence task is marked PARALLEL.
+2. Do not start a later task to avoid closing the active task.
+3. New architecture is allowed only when required by an accepted task and not already represented by a reusable contract.
+4. Prefer reuse → repair → extend → consolidate → create.
+5. Preserve ONE CANONICAL AXIGLAND; XEED != ORGANIZATION; XIGNAL != XEED; CLAIM != WRITE; FAXT != INXIGHT; RELATIONSHIP != PATHX; OBSERVED != POTENTIAL; UNKNOWN != FALSE; LEARNING_MEMORY != OBSERVATION_MEMORY != AXIGLAND; provider output != truth; EvidenceAdmission remains the canonical write firewall.
+6. Product work preserves Human-First Cognitive UX and FIRST_MAP_WOW.
+7. No provider name becomes core architecture.
+8. No opaque score substitutes for inspectable state/reasoning.
+9. No commercial outcome becomes epistemic truth.
+10. Every task closes with evidence, not narrative.
+
+## 3. Status model
+
+NOT_STARTED · READY · IN_PROGRESS · BLOCKED · DONE · DEFERRED · REJECTED
+
+**CURRENT_TASK = FR-00**
+
+## 4. Frontier closure rule
+
+Each task contains a FRONTIER_CLOSURE condition. At the next Frontier audit, that weakness must either no longer be observable, be correctly declared as an intentional deferred boundary, or have new evidence explaining why the recommendation was rejected.
+
+# PHASE A — RECONCILE CURRENT TRUTH
+
+## FR-00 — Refresh Architectural Gap Ledger
+
+**Status:** READY  
+**Priority:** P0  
+**Goal:** make repository architecture documentation accurately reflect commits #55–61 and current main.
+
+### Frontier finding
+The audit found P0-ARCH-01 materially stale: it still reports Source Acquisition and other components as absent even though recent slices implemented them.
+
+### Work
+- Reconcile docs/architecture/AXIGNAL_ARCHITECTURAL_GAP_LEDGER_P0_ARCH_01.md against current main.
+- Update statuses/evidence for Observation Memory, Source Acquisition runtime, Document Representation / RichSubjectState, Semantic Claim Candidates, Prime Cognitive Control Plane, Xeed Bootstrap Controller, and Learning Memory V0.
+- Preserve the ledger as a reconciliation snapshot, not implementation authority.
+- Do not infer deployment from code existence.
+
+### Acceptance
+- Ledger SHA baseline updated.
+- Every changed status cites actual source/tests/ADR.
+- No stale NOT_IMPLEMENTED statement remains for #55–61 responsibilities.
+- Governance/docs checks green.
+
+### FRONTIER_CLOSURE
+A future auditor must not be able to cite the ledger as contradicting current implementation state.
+
+# PHASE B — FIX THE BRAIN GATES BEFORE AUTONOMY
+
+## FR-01 — Replace Universal Bootstrap Minimum With Dimensional Handoff
+
+**Status:** NOT_STARTED  
+**Depends on:** FR-00  
+**Priority:** P0
+
+### Frontier finding
+Minimum bootstrap state can delay useful partial value and confuses field presence with decision sufficiency.
+
+### Work
+- Evolve BootstrapPolicy from universal initial-state completion toward minimal identity/authorization seed plus planning context.
+- Let per-dimension contracts own answerability.
+- Permit Prime handoff while unrelated dimensions remain UNKNOWN.
+- Preserve explicit missing requirements and UNKNOWN != FALSE.
+- Keep Bootstrap temporary.
+
+### Acceptance
+- Tests prove one answerable dimension proceeds while another remains NOT_ANSWERABLE.
+- Bootstrap does not wait for unrelated state.
+- Existing authorized-source and replay invariants remain intact.
+- ADR-0026 is amended or superseded deliberately; no silent contradiction.
+
+### FRONTIER_CLOSURE
+Future audit cannot accurately say Bootstrap blocks all value until one universal state set is complete.
+
+## FR-02 — Add Research Value Gate
+
+**Status:** NOT_STARTED  
+**Depends on:** FR-01  
+**Priority:** P0
+
+### Frontier finding
+NOT_ANSWERABLE → ADAPTIVE_RESEARCH risks researching every unknown and optimizing taxonomy completion instead of useful economic knowledge.
+
+### Decision target
+ANSWERABILITY != WORTH_RESEARCHING.
+
+### Work
+Introduce a deterministic, versioned gate between missing state and adaptive research. It must support RETAIN_UNKNOWN, RESEARCH_NOW, DEFER and BLOCKED_BY_BUDGET_OR_RIGHTS. Inputs may include explicit materiality/relevance, expected decision impact, reusable-knowledge potential, freshness need, known-source availability, bounded estimated cost, rights/capability constraints and no-progress history. Do not create a universal opaque scalar score.
+
+### Acceptance
+- NOT_ANSWERABLE no longer necessarily routes to research.
+- Tests prove low-value missing state remains UNKNOWN without research.
+- Routing remains deterministic and replayable.
+- A model/provider cannot authorize its own research.
+
+### FRONTIER_CLOSURE
+Future audit cannot state that every knowledge gap automatically triggers adaptive research.
+
+## FR-03 — Implement Budget and Stop Contract
+
+**Status:** NOT_STARTED  
+**Depends on:** FR-02  
+**Priority:** P0
+
+### Frontier finding
+Current source-count limits do not bound monetary spend, wall-clock time, retries, loops or no-progress.
+
+### Work
+Implement provider-neutral execution budget/stop contracts for bootstrap/research: monetary budget when measurable, request/source budget, latency/deadline budget, retry limit, loop/expansion limit, no-progress stop and explicit stop reason. UNKNOWN cost remains UNKNOWN. Budget may restrict compute; it must never lower truth/evidence standards.
+
+### Acceptance
+- Deterministic exhaustion/stop tests.
+- No infinite/retry research loop possible through the governed executor.
+- Stop reasons enter Learning Memory.
+- Budget failure returns partial/UNKNOWN state, not fabricated completion.
+
+### FRONTIER_CLOSURE
+Future audit cannot truthfully report budget doctrine without an enforceable budget controller and stop reasons.
+
+# PHASE C — PROVE ONE REAL BRAIN PATH
+
+## FR-04 — Prime Execution Composition Root
+
+**Status:** NOT_STARTED  
+**Depends on:** FR-03  
+**Priority:** P0
+
+### Frontier finding
+Strong local components exist, but no demonstrated composition root connects the full cognitive path.
+
+### Work
+Compose the smallest real orchestration path from authorized Xeed state through shared Observation Memory reuse, governed source acquisition when needed, Document Representation, RichSubjectState, grounded semantic candidates where required, dimensional answerability, Research Value Gate, Prime routing and deterministic / structured-evaluator-port / adaptive-research-port dispatch. Emit Learning Memory events per hop. No canonical admission is required merely to prove cognitive composition.
+
+### Acceptance
+- Integration tests use real application modules, not a parallel fake architecture.
+- Trace contains state/policy/code/artifact fingerprints.
+- Failures and NO_CHANGE are recorded.
+- Legacy semantic_flow.py is isolated or retired deliberately.
+- Architecture Guard green.
+
+### FRONTIER_CLOSURE
+Future audit finds a real composition root and cannot say #55–61 are only disconnected local pieces.
+
+## FR-05 — Explainable Xignal Projection
+
+**Status:** NOT_STARTED  
+**Depends on:** FR-04  
+**Priority:** P0
+
+### Work
+Build the minimum subscriber-safe projection containing why attention is warranted, observed vs potential state, relevant relation/path, source/time/currentness, contradictions/unknowns, and an Explainable Basis reference. No sale probability or provider confidence may masquerade as truth. Projection cannot bypass EvidenceAdmission.
+
+### Acceptance
+- One integrated test produces an explainable Xignal from governed state.
+- Show how AXIGNAL knows traverses supporting refs deterministically.
+- UNKNOWN and POTENTIAL remain explicit.
+- Xignal creation does not canonize model output.
+
+### FRONTIER_CLOSURE
+Future audit can inspect a real Xignal path instead of only contracts and candidates.
+
+## FR-06 — End-to-End Evidence Narrative
+
+**Status:** NOT_STARTED  
+**Depends on:** FR-05  
+**Priority:** P0
+
+### Work
+Prove the product-grade causal path Xignal → relationship/claim → observation → source → time → what remains unknown. Preserve derivation and temporal context, provide deterministic return to parent focus, include currentness/contradiction where applicable, and never generate post-hoc explanations unsupported by lineage.
+
+### Acceptance
+- Integration test reconstructs the complete explanation path.
+- Evidence reference resolves to actual stored observation/artifact.
+- Trace survives replay.
+- UI-consumable object leaks no raw infrastructure detail.
+
+### FRONTIER_CLOSURE
+The auditor's strongest positive UX pattern is backed by real runtime lineage, not only Golden Master fixtures.
+
+# PHASE D — CLOSE THE FIRST-XEED PRODUCT LOOP
+
+## FR-07 — First-Xeed Runtime Contract
+
+**Status:** NOT_STARTED  
+**Depends on:** FR-04, FR-05  
+**Priority:** P0
+
+### Work
+Implement the minimum real lifecycle using existing authorities where possible: PLANTED, resolving/observing, PARTIAL_READY, FIRST_XIGNAL_READY, LIVE, INSUFFICIENT_EVIDENCE, FAILED/BLOCKED. Do not create duplicate lifecycle concepts if an existing model already governs them.
+
+### Acceptance
+- An authorized Xeed can traverse the lifecycle.
+- Partial state is a valid outcome.
+- Insufficient evidence is represented honestly.
+- No simulated truth or fake progress.
+
+### FRONTIER_CLOSURE
+Future audit can execute a first-Xeed flow instead of finding only disabled Plant Xeed controls and pre-populated experience.
+
+## FR-08 — FIRST_MAP Readiness Policy
+
+**Status:** NOT_STARTED  
+**Depends on:** FR-05, FR-07  
+**Priority:** P0
+
+### Work
+Separate dimension answerability, Xignal readiness and Map Readiness. Define inspectable readiness reasons instead of one opaque score. Support useful partial map, honest sparse map and insufficient-evidence state.
+
+### Acceptance
+- A partial world can become FIRST_MAP_READY when at least one warranted, explainable output exists.
+- Node count is not a readiness criterion.
+- Sparse/empty outcomes have governed behavior.
+
+### FRONTIER_CLOSURE
+Future audit no longer classifies FIRST_MAP_WOW as aspirational because germination requires a fully populated world.
+
+# PHASE E — HUMAN-FIRST PRODUCT SEQUENCE
+
+## FR-09 — Insight-First Today
+
+**Status:** NOT_STARTED  
+**Depends on:** FR-05, FR-08  
+**Priority:** P0 UX
+
+### Frontier finding
+The canvas asks users to parse the system before receiving the clearest value.
+
+### Work
+Make Today / What changed the default comprehension layer: 1–3 material items maximum by explicit policy; what changed; why it matters; epistemic state; time/currentness; primary Show how AXIGNAL knows action; deep-link into already focused AXIGLAND context. Do not turn Today into a conventional dashboard.
+
+### Acceptance
+- 10-second comprehension test protocol exists.
+- First view is understandable without internal AXIGNAL vocabulary.
+- Deep link preserves spatial context.
+- Empty/partial state covered.
+
+### FRONTIER_CLOSURE
+Future UX audit cannot truthfully say the user must understand the map before discovering why it matters.
+
+## FR-10 — AXENT Context/Continuity Separation
+
+**Status:** NOT_STARTED  
+**Depends on:** FR-09  
+**Priority:** P0 UX
+
+### Work
+Separate active object/focus, current contextual actions, prior investigation/continuity and historical transcript. AXENT remains always available but may be compact/contextual rather than full conversation.
+
+### Acceptance
+- Changing focus never presents old investigation text as if it described the current object.
+- Previous context is dated/labeled and resumable.
+- Each new response records Xeed/object/time scope.
+- No silent transcript deletion.
+
+### FRONTIER_CLOSURE
+Future auditor cannot reproduce the Germany-focus / France-greeting mismatch.
+
+## FR-11 — Initial Cognitive Load Reduction
+
+**Status:** NOT_STARTED  
+**Depends on:** FR-09, FR-10  
+**Priority:** P1 UX
+
+### Work
+Move nonessential expert/governance controls out of first-view prominence, including Memory COGNITIVE, CLIENT · PRIVATE, Uncertainty HIDDEN and advanced controls not immediately needed. Keep depth/evidence/timeline progressively available. Reduce contextual pills to the smallest useful set.
+
+### Acceptance
+- First screen has explicit information hierarchy.
+- Advanced controls remain reachable.
+- No semantics lost.
+- Before/after Golden Master comparison and accessibility pass.
+
+### FRONTIER_CLOSURE
+Future audit no longer identifies simultaneous permanent controls as a primary dashboardification defect.
+
+## FR-12 — Subscriber Terminology and Locale Coherence
+
+**Status:** NOT_STARTED  
+**Depends on:** FR-11  
+**Priority:** P1 UX
+
+### Work
+Audit subscriber-facing terminology separately from canonical domain vocabulary. Preserve AXIGNAL/AXIGLAND/Xeed/Xignal/AXENT where product value warrants them; hide FAXT/INXIGHT/PATHX/internal epistemic jargon unless useful; eliminate mixed English/Spanish in a resolved locale; retain SEO/GEO/AEO agencies without reducing AXIGNAL to digital-representation monitoring.
+
+### Acceptance
+- Locale catalog covers all first-view/action/status copy.
+- No unexplained mixed-language controls.
+- Canonical meaning remains unchanged.
+- Copy leakage tests updated.
+
+### FRONTIER_CLOSURE
+Future audit cannot cite mixed locale and excessive internal vocabulary as an onboarding barrier.
+
+# PHASE F — SPATIAL UX, ACCESSIBILITY AND MOBILE
+
+## FR-13 — Three-Level Spatial Legibility
+
+**Status:** NOT_STARTED  
+**Depends on:** FR-09  
+**Priority:** P1 UX
+
+### Work
+Define/test WORLD, NEIGHBORHOOD and RELATION/PROOF scales. At each level define visible labels, clustering/aggregation, edge density, focus and accessible equivalent. No graph-for-graph's-sake.
+
+### Acceptance
+- Dataset-size stress fixtures.
+- Labels do not carry equal visual weight.
+- Keyboard focus and non-hover alternative.
+- Semantic zoom deterministic.
+
+### FRONTIER_CLOSURE
+Future audit no longer finds overview label density as an unresolved core navigation flaw.
+
+## FR-14 — Motion/Input Contract
+
+**Status:** NOT_STARTED  
+**Depends on:** FR-13  
+**Priority:** P1 UX
+
+### Work
+Govern wheel zoom only when canvas owns input, page scroll outside canvas, trackpad, pan modifiers, keyboard controls, transition durations/easing, reduced motion and landing chapter transitions.
+
+### Acceptance
+- No accidental page/canvas navigation conflict.
+- Reduced motion verified.
+- Keyboard fallback for every critical spatial action.
+- Browser tests at desktop/laptop.
+
+### FRONTIER_CLOSURE
+Future audit cannot reproduce non-premium or ambiguous wheel/motion behavior as an unresolved issue.
+
+## FR-15 — Accessible Non-Graph Projection
+
+**Status:** NOT_STARTED  
+**Depends on:** FR-06, FR-13  
+**Priority:** P1
+
+### Work
+Provide an accessible equivalent for material graph relations: hierarchical/list relationship view, focus/breadcrumb, evidence action, temporal state and non-color epistemic state.
+
+### Acceptance
+- Keyboard-only core task.
+- Screen-reader-oriented semantic structure.
+- 200%/400% zoom review.
+- No critical state color-only.
+
+### FRONTIER_CLOSURE
+Future audit can verify a non-graph path to the same governed meaning.
+
+## FR-16 — Mobile Value Subset
+
+**Status:** NOT_STARTED  
+**Depends on:** FR-09, FR-15  
+**Priority:** P1
+
+### Work
+Do not shrink desktop AXIGLAND blindly. Mobile minimum: Today → Xignal → Why it matters → Evidence → Timeline → contextual AXENT. Full canvas is optional and must earn inclusion through task tests.
+
+### Acceptance
+- Core value task works on mobile viewport.
+- No dependency on hover/pan precision.
+- Drawers/sheets preserve back/context.
+- Evidence path complete.
+
+### FRONTIER_CLOSURE
+Future audit can evaluate a deliberate mobile product rather than responsive CSS alone.
+
+# PHASE G — MAKE LEARNING OPERATIONAL
+
+## FR-17 — Emit Learning Events From Real Execution
+
+**Status:** NOT_STARTED  
+**Depends on:** FR-04  
+**Priority:** P1
+
+### Frontier finding
+Learning Memory is a sound store but is not yet automatically fed by integrated execution.
+
+### Work
+Emit append-only events for source acquisition, observation ingestion, structured evaluation, adaptive research, bootstrap, failures, NO_CHANGE and stop/budget reasons. Derive counts from actual execution whenever possible; do not accept caller-invented reuse/yield when derivable.
+
+### Acceptance
+- One E2E run creates a reconstructible Learning Memory sequence.
+- Exact artifact/policy/code refs included.
+- Missing cost remains UNKNOWN.
+- Retry/failure events retained.
+
+### FRONTIER_CLOSURE
+Future audit cannot say Learning Memory is disconnected from execution.
+
+## FR-18 — Replay Reference Completeness
+
+**Status:** NOT_STARTED  
+**Depends on:** FR-17  
+**Priority:** P1
+
+### Work
+Guarantee replay identity for observation artifact, representation/compiler version, decision contract, state, provider/model/harness, interpretation policy, source policy and code SHA. Respect privacy/retention/rights.
+
+### Acceptance
+- Representative event can be replayed or explicitly classified non-replayable with reason.
+- Fingerprint is not treated as replay by itself.
+- Version mismatch is detectable.
+
+### FRONTIER_CLOSURE
+Future audit cannot correctly state fingerprint != replay as an unresolved Learning Memory flaw.
+
+## FR-19 — Governed Policy Candidate / Replay / Shadow
+
+**Status:** NOT_STARTED  
+**Depends on:** FR-18  
+**Priority:** P1
+
+### Work
+Implement offline-only immutable PolicyCandidate, baseline comparison, ReplayEvaluation, held-out organization/time split, ShadowPolicy with no side effects, counter-metrics and regression reporting. No automatic promotion.
+
+### Acceptance
+- Candidate cannot mutate production.
+- Comparison preserves UNKNOWN/abstention.
+- Negative/failed runs included.
+- No sealed-label tuning.
+
+### FRONTIER_CLOSURE
+Future audit finds actual governed learning machinery rather than only an observational ledger.
+
+## FR-20 — Policy Promotion / Rollback Gate
+
+**Status:** NOT_STARTED  
+**Depends on:** FR-19  
+**Priority:** P2
+
+### Work
+Implement versioned human/governance promotion with evidence requirements, holdout, approval record, canary where applicable, rollback pointer and no history rewrite.
+
+### Acceptance
+- Production policy cannot self-promote from runtime yield.
+- Rollback tested.
+- Decision trace durable.
+
+### FRONTIER_CLOSURE
+Goodhart/reward-hacking risk is governed by explicit promotion boundaries, not only documentation.
+
+# PHASE H — PROVIDER AND DECISION EVIDENCE
+
+## FR-21 — StructuredEvaluatorPort Contract Evolution
+
+**Status:** NOT_STARTED  
+**Depends on:** FR-04  
+**Priority:** P1
+
+### Work
+Finalize the provider-neutral evaluator boundary, including the unresolved distribution issue: selected option; optional provider distribution; explicit distribution availability; optional confidence only when provider semantics define it; replay reference; capability profile. Never fabricate 1/0 probabilities for providers that return only a selected choice.
+
+### Acceptance
+- Structured judgment semantics deliberately evolved/migrated.
+- Contract supports Jev, Decisions-like and Luna-structured baselines without provider leakage.
+- Tests preserve UNKNOWN.
+
+### FRONTIER_CLOSURE
+Future audit finds a real non-provider-specific evaluator contract suitable for bakeoff.
+
+## FR-22 — Evaluator Decision Lab Bakeoff
+
+**Status:** NOT_STARTED  
+**Depends on:** FR-21, FR-19  
+**Priority:** P1
+
+### Work
+Compare on the same versioned state/contracts: deterministic baseline where applicable, Luna structured, OpenAI Decisions if access/API terms permit, and TypeSafe Jev if rights/terms permit. Measure class errors, false OBSERVED/POTENTIAL, abstention/coverage, calibration when semantically valid, schema failure, latency, retries, known/unknown cost, language/context sensitivity and disagreement/error correlation.
+
+### Acceptance
+- No vendor declared winner without AXIGNAL-specific dataset evidence.
+- Same input/compiler contracts.
+- Costs measured or UNKNOWN.
+- Results stored through experiment/Learning Memory artifacts.
+
+### FRONTIER_CLOSURE
+Future audit can reference AXIGNAL-specific evidence instead of provider marketing or architectural speculation.
+
+# PHASE I — HIGH-RISK WORLD-MODEL FOUNDATIONS
+
+## FR-23 — Identity Resolution Hardening
+
+**Status:** NOT_STARTED  
+**Depends on:** FR-04  
+**Priority:** P1
+
+### Frontier finding
+Incorrect entity merge can poison shared AXIGLAND and many Xeeds.
+
+### Work
+Improve resolution beyond exact-name where justified; preserve ambiguity; add correction/reversal lineage; define merge/split policy; subscriber input remains attention/context, not truth authority.
+
+### Acceptance
+- Ambiguous identity fails closed or remains unresolved.
+- Correction does not erase history.
+- Shared observations cannot silently cross wrong entities.
+
+### FRONTIER_CLOSURE
+Future audit sees identity contamination as governed rather than an unbounded systemic risk.
+
+## FR-24 — Rights / Reuse / Applicability Contract
+
+**Status:** NOT_STARTED  
+**Depends on:** FR-04, FR-23  
+**Priority:** P1
+
+### Work
+Make reuse explicitly conditional on rights, provenance, currentness, scope/applicability and public/private boundary.
+
+### Acceptance
+- A reusable observation may still be rejected for current use.
+- Private scope cannot leak into global world.
+- STALE != FALSE and INACCESSIBLE != FALSE.
+
+### FRONTIER_CLOSURE
+Future audit cannot state shared reuse ignores rights/currentness/applicability.
+
+## FR-25 — Temporal Currentness / Reobservation Core
+
+**Status:** NOT_STARTED  
+**Depends on:** FR-24  
+**Priority:** P1/P2
+
+### Work
+Implement deterministic temporal-state transitions and reobservation requirements without erasing history.
+
+### Acceptance
+- CURRENT/STALE/UNKNOWN/HISTORICAL transitions tested.
+- Reobservation appends history rather than overwriting it.
+- Only affected dependent dimensions reevaluate.
+
+### FRONTIER_CLOSURE
+Future audit no longer describes temporal behavior as mostly timestamps without governed lifecycle.
+
+# PHASE J — ECONOMICS, PRODUCT VALIDATION AND PRODUCTION
+
+## FR-26 — Unit Economics Instrumentation
+
+**Status:** NOT_STARTED  
+**Depends on:** FR-17  
+**Priority:** P1 PARALLEL once real runs exist
+
+### Work
+Measure by Xeed/cohort first-value cost, germination cost, maintenance/refresh cost, cost coverage, reuse ratio, fresh reuse ratio, time to first useful Xignal, evidence inspection, corrections and contribution-margin inputs. Do not infer willingness-to-pay from usage alone.
+
+### Acceptance
+- Missing cost never silently becomes zero.
+- Shared/private cost attribution methodology explicit.
+- Economics trace reaches underlying learning events.
+
+### FRONTIER_CLOSURE
+Future audit can inspect real cost/reuse evidence rather than calling unit economics wholly unknown.
+
+## FR-27 — One Buyer / One Job Pilot Contract
+
+**Status:** NOT_STARTED  
+**Depends on:** FR-07, FR-09, FR-26  
+**Priority:** P0 PRODUCT
+
+### Work
+Choose one concrete job/buyer hypothesis without redefining AXIGNAL. Measure whether the Xignal advances a decision, whether evidence is trusted/inspected, whether the user returns because something changed, willingness to pay and value of additional Xeeds. Commercial outcome never validates truth.
+
+### Acceptance
+- Pilot protocol and evidence exist.
+- Failure is a valid documented outcome.
+- Pricing remains hypothesis until observed.
+
+### FRONTIER_CLOSURE
+Future audit has real buyer/job evidence instead of only product thesis.
+
+## FR-28 — Landing/Product Promise Reconciliation
+
+**Status:** NOT_STARTED  
+**Depends on:** FR-09, FR-27  
+**Priority:** P1 UX/Product
+
+### Work
+Align landing with demonstrated product: observing economic brain, concrete external-change example, agencies included but not totalizing the definition, no unsupported capability claims, and visual promise matching app experience.
+
+### Acceptance
+- Landing → Plant Xeed → first value story coherent.
+- No SEO/GEO-only narrowing.
+- No capability claim unsupported by product/runtime evidence.
+
+### FRONTIER_CLOSURE
+Future UX audit no longer finds a major landing/product expectation gap.
+
+## FR-29 — Production Runtime Integration
+
+**Status:** NOT_STARTED  
+**Depends on:** FR-06, FR-07, FR-17  
+**Priority:** P0 before production claims
+
+### Work
+Integrate the proven vertical path in the actual app/runtime using real persistence/configuration. Before production inspect deployment/service/proxy/ports/persistence/version, isolate AXIGNAL from other projects, define rollback and protect secrets.
+
+### Acceptance
+- Exact deployed SHA known.
+- Health/runtime verification complete.
+- No cross-project runner/service/port reuse.
+- Persisted observation/learning behavior verified.
+
+### FRONTIER_CLOSURE
+Future audit can inspect actual service integration instead of correctly reporting production as DESCONOCIDO.
+
+## FR-30 — Production E2E: First Xeed → First Proof
+
+**Status:** NOT_STARTED  
+**Depends on:** FR-29, FR-09, FR-10  
+**Priority:** GOAL
+
+### GOAL
+Verify in browser against production or explicitly production-equivalent environment: PLANT XEED → governed bootstrap → partial dimensional answerability → useful Xignal → Today → focused AXIGLAND → Show how AXIGNAL knows → evidence/currentness/UNKNOWN → Learning Memory event → return/reload continuity.
+
+### Acceptance
+- No demo/example data masquerading as real.
+- UI loading/errors/insufficient-evidence states tested.
+- Keyboard/responsive smoke completed.
+- Exact trace from UI Xignal to observations.
+- Learning Memory event linked.
+- User can state what changed and why AXIGNAL believes it.
+
+### FRONTIER_CLOSURE
+The core findings of both Frontier audits are materially closed; FIRST_MAP_WOW is no longer merely aspirational for the tested path.
+
+# PHASE K — FRONTIER RE-AUDIT
+
+## FR-31 — Frontier Re-Audit Preparation
+
+**Status:** NOT_STARTED  
+**Depends on:** FR-30  
+**Priority:** FINAL
+
+### Work
+Prepare current SHA, clean-tree evidence, validation output, task closure matrix, runtime/deployment evidence, UX screenshots/flows, unit-economics evidence where available and explicit remaining UNKNOWN/DEFERRED items. Do not tell the Frontier Advisor which conclusions to reach.
+
+### Acceptance
+- Every DONE task links evidence.
+- Remaining gaps explicit.
+- No stale roadmap status.
+- Fresh independent audit requested using the same core criteria.
+
+### FRONTIER_CLOSURE
+The next report evaluates the evolved product rather than rediscovering already-known, already-fixed gaps.
+
+# 5. Execution order
+
+Strict default order:
+
+FR-00 → FR-01 → FR-02 → FR-03 → FR-04 → FR-05 → FR-06 → FR-07 → FR-08 → FR-09 → FR-10 → FR-11 → FR-12 → FR-13 → FR-14 → FR-15 → FR-16 → FR-17 → FR-18 → FR-19 → FR-20 → FR-21 → FR-22 → FR-23 → FR-24 → FR-25 → FR-26 → FR-27 → FR-28 → FR-29 → FR-30 → FR-31
+
+Dependencies may permit selected independent work, but sequence changes require an explicit roadmap edit with rationale. Do not skip P0 gates to accelerate cosmetic UI.
+
+## 6. Global Definition of Done
+
+For each task record:
+- BASE_SHA
+- WORK_BRANCH
+- HEAD_SHA
+- root cause
+- changed files/contracts
+- tests run and exact result
+- Architecture Guard
+- governance
+- CI URL/run
+- merge SHA
+- deployment SHA where applicable
+- E2E evidence where applicable
+- remaining known gaps
+
+Never use DONE when the actual state is only IMPLEMENTED.
+
+## 7. Rejection criteria
+
+A proposed change is rejected if it weakens EvidenceAdmission; makes model/provider output canonical; conflates Xeed with Organization; introduces a second AXIGLAND; turns UNKNOWN into FALSE; promotes POTENTIAL to OBSERVED without evidence; makes commercial engagement a truth signal; introduces an opaque universal score; converts AXIGNAL into CRM/workflow suite; optimizes benchmark/yield at the expense of epistemic correctness; or creates architecture solely because the Frontier Advisor suggested it.
+
+## 8. Success condition
+
+This roadmap succeeds when AXIGNAL can demonstrate, with real integrated evidence:
+
+1. a Xeed reaches useful partial value without unnecessary completeness;
+2. research happens only when worthwhile and bounded;
+3. Prime executes through one governed composition path;
+4. a Xignal is explainable to source/time/unknown;
+5. the first user experience starts with meaning, not system complexity;
+6. AXENT preserves current context and continuity without conflation;
+7. Learning Memory records actual execution and enables replayable comparison;
+8. provider selection is evidence-driven and replaceable;
+9. world-model reuse is rights/currentness/applicability governed;
+10. unit economics and one buyer/job hypothesis have real evidence;
+11. the production first-Xeed-to-proof journey is verified E2E.
+
+At that point AXIGNAL has not finished. It has crossed from architectural promise to a measurable, governed product loop.
