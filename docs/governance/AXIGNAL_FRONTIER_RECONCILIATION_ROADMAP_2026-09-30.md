@@ -31,7 +31,7 @@ A task is not DONE because code exists. Runtime/product work normally progresses
 
 NOT_STARTED · READY · IN_PROGRESS · BLOCKED · DONE · DEFERRED · REJECTED
 
-**CURRENT_TASK = FR-18**
+**CURRENT_TASK = FR-19**
 
 ## 4. Frontier closure rule
 
@@ -785,9 +785,34 @@ Future audit cannot say Learning Memory is disconnected from execution.
 
 ## FR-18 — Replay Reference Completeness
 
-**Status:** NOT_STARTED  
-**Depends on:** FR-17  
+**Status:** DONE
+**Depends on:** FR-17
 **Priority:** P1
+
+**Closure evidence (2026-10-01):**
+- every Learning Event now carries a typed replay classification: REPLAYABLE or NON_REPLAYABLE
+- replayable events carry concrete named references rather than relying on fingerprints alone
+- missing replay inputs require an explicit non-replayable reason code
+- source acquisition replay captures immutable artifact ref, source policy id/fingerprint, observation fingerprint and code SHA
+- Observation Memory ingestion replay captures immutable artifact, governed observation id/fingerprint, source policy refs and code SHA
+- document representation replay captures source + representation artifacts, representation id/version, normalization version, source observation fingerprint, source policy fingerprint and code SHA
+- deterministic Prime work is replayable from exact state fingerprint, routing-policy version, route and code SHA
+- semantic extraction and structured/adaptive provider-bound work fail closed as NON_REPLAYABLE when exact model/harness identity is unavailable; provider/provider-version and other available refs remain retained
+- bootstrap is explicitly NON_REPLAYABLE until the full governed plan payload is retained; plan/policy/state/code refs remain inspectable
+- budget-stop events are explicitly NON_REPLAYABLE until exact controller policy/state payloads are retained; exact policy/state fingerprints and stop reason remain inspectable
+- LearningReplayReference.require(name, expected) detects absent references and version/value mismatch explicitly
+- SQLite persists replay disposition/references/reason; pre-FR-18 payloads remain readable as NON_REPLAYABLE: REPLAY_REFERENCE_NOT_RECORDED
+- replay metadata stores references/versions rather than duplicating protected payloads; existing rights/privacy/retention boundaries remain authoritative
+- representative E2E run proves captured source, ingestion, representation and deterministic evaluation replayability while bootstrap is explicitly classified non-replayable
+- structured semantic/evaluator integration proves provider-bound work is not falsely promoted to replayable when model/harness refs are missing
+- focused FR-18/FR-17/Learning/Prime/Bootstrap/Budget suite: 61 PASS
+- full pytest: 536 PASS using external `--basetemp` to avoid the known Windows user-temp ACL issue
+- Ruff format/check: PASS
+- mypy: PASS (118 source files)
+- Architecture Guard: PASS
+- axignal-governance: PASS
+- git diff --check: PASS
+- ADR-0044 accepted and indexed
 
 ### Work
 Guarantee replay identity for observation artifact, representation/compiler version, decision contract, state, provider/model/harness, interpretation policy, source policy and code SHA. Respect privacy/retention/rights.

@@ -28,6 +28,7 @@ from application.economic_discovery.learning_memory import (
     LearningMechanism,
     LearningMemory,
     LearningOutcome,
+    LearningReplayReference,
     LearningYield,
 )
 from application.economic_discovery.observation_memory import ObservationMemory
@@ -187,6 +188,7 @@ def _learning_event(
     after_state_fingerprint: str | None,
     cost: LearningCost,
     yield_: LearningYield,
+    replay: LearningReplayReference | None = None,
 ) -> LearningEvent:
     return LearningEvent(
         event_id=event_id,
@@ -205,6 +207,11 @@ def _learning_event(
         reason_code=reason_code,
         before_state_fingerprint=before_state_fingerprint,
         after_state_fingerprint=after_state_fingerprint,
+        replay=(
+            LearningReplayReference.non_replayable("EXACT_REPLAY_INPUTS_UNAVAILABLE")
+            if replay is None
+            else replay
+        ),
         cost=cost,
         yield_=yield_,
     )
@@ -322,6 +329,13 @@ def execute_prime_source_slice(
         after_state_fingerprint=None,
         cost=LearningCost(),
         yield_=LearningYield(),
+        replay=LearningReplayReference.replayable(
+            artifact_ref=observation.raw_observation_ref,
+            code_sha=code_sha,
+            observation_fingerprint=observation.observation_fingerprint,
+            source_policy_id=request.policy_id,
+            source_policy_fingerprint=request.policy_fingerprint,
+        ),
     )
     learning_memory.append(source_event)
 
@@ -393,6 +407,14 @@ def execute_prime_source_slice(
                 if source_result.mutation.change is None
                 else len(source_result.mutation.change.changed_fields)
             ),
+        ),
+        replay=LearningReplayReference.replayable(
+            artifact_ref=observation.raw_observation_ref,
+            code_sha=code_sha,
+            observation_id=source_observation_id(request, observation),
+            observation_fingerprint=observation.observation_fingerprint,
+            source_policy_id=request.policy_id,
+            source_policy_fingerprint=request.policy_fingerprint,
         ),
     )
     learning_memory.append(ingestion_event)
@@ -481,6 +503,16 @@ def execute_prime_source_slice(
             state_fields_changed=0 if state_change is None else len(state_change.changed_fields),
             dimensions_became_answerable=dimensions_became_answerable,
         ),
+        replay=LearningReplayReference.replayable(
+            code_sha=code_sha,
+            normalization_version=representation.normalization_version,
+            representation_artifact_ref=representation.artifact_ref,
+            representation_id=representation.representation_id,
+            representation_version=representation.representation_version,
+            source_artifact_ref=observation.raw_observation_ref,
+            source_observation_fingerprint=observation.observation_fingerprint,
+            source_policy_fingerprint=request.policy_fingerprint,
+        ),
     )
     learning_memory.append(representation_event)
 
@@ -549,6 +581,17 @@ def execute_prime_source_slice(
                 cost=LearningCost(),
                 yield_=LearningYield(
                     semantic_judgments_produced=len(candidate_set.candidates),
+                ),
+                replay=LearningReplayReference.non_replayable(
+                    "PROVIDER_MODEL_OR_HARNESS_REFERENCE_UNAVAILABLE",
+                    code_sha=code_sha,
+                    contract_fingerprint=semantic_contract.fingerprint,
+                    provider=candidate_set.provider,
+                    provider_version=candidate_set.provider_version,
+                    representation_artifact_ref=representation.artifact_ref,
+                    representation_id=representation.representation_id,
+                    representation_version=representation.representation_version,
+                    result_fingerprint=candidate_set.result_fingerprint,
                 ),
             )
         )
@@ -703,6 +746,23 @@ def execute_prime_source_slice(
             f"learn:{execution_id}:05-prime:{item_index:04d}:"
             f"{item.dimension_id}:{rich_state.fingerprint[:16]}"
         )
+        replay = (
+            LearningReplayReference.replayable(
+                code_sha=code_sha,
+                prime_route=item.route.value,
+                routing_policy_version=item.policy_version,
+                state_fingerprint=rich_state.fingerprint,
+            )
+            if item.route is PrimeRoute.DETERMINISTIC
+            else LearningReplayReference.non_replayable(
+                "PROVIDER_MODEL_OR_HARNESS_REFERENCE_UNAVAILABLE",
+                code_sha=code_sha,
+                prime_route=item.route.value,
+                representation_artifact_ref=representation.artifact_ref,
+                routing_policy_version=item.policy_version,
+                state_fingerprint=rich_state.fingerprint,
+            )
+        )
         learning_memory.append(
             _learning_event(
                 event_id=event_id,
@@ -726,6 +786,7 @@ def execute_prime_source_slice(
                 before_state_fingerprint=None,
                 after_state_fingerprint=None,
                 cost=result.cost,
+                replay=replay,
                 yield_=LearningYield(
                     state_fields_changed=result.state_fields_changed,
                     semantic_judgments_produced=result.semantic_judgments_produced,

@@ -53,8 +53,10 @@ from application.economic_discovery.learning_memory import (
     LearningMemory,
     LearningMemoryConflict,
     LearningOutcome,
+    LearningReplayReference,
     LearningSummary,
     LearningYield,
+    ReplayDisposition,
     summarize_learning,
 )
 from application.economic_discovery.market_entry import (
@@ -142,6 +144,7 @@ __all__ = [
     "LearningMemory",
     "LearningMemoryConflict",
     "LearningOutcome",
+    "LearningReplayReference",
     "LearningSummary",
     "LearningYield",
     "MarketObservationDirective",
@@ -163,6 +166,7 @@ __all__ = [
     "PrimeControlPlan",
     "PrimeRoute",
     "PrimeWorkItem",
+    "ReplayDisposition",
     "ResearchValueContext",
     "ResearchValueDecision",
     "ResearchValueDisposition",

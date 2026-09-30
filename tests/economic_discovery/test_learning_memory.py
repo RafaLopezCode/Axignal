@@ -13,7 +13,9 @@ from application.economic_discovery.learning_memory import (
     LearningMechanism,
     LearningMemoryConflict,
     LearningOutcome,
+    LearningReplayReference,
     LearningYield,
+    ReplayDisposition,
     summarize_learning,
 )
 from pipeline.learning_memory import SqliteLearningMemory
@@ -33,11 +35,14 @@ def _event(
     corrects_event_id: str | None = None,
     cost: LearningCost | None = None,
     yield_: LearningYield | None = None,
+    replay: LearningReplayReference | None = None,
 ) -> LearningEvent:
     if cost is None:
         cost = LearningCost()
     if yield_ is None:
         yield_ = LearningYield(state_fields_changed=1)
+    if replay is None:
+        replay = LearningReplayReference.non_replayable("TEST_FIXTURE_NOT_REPLAYABLE")
     return LearningEvent(
         event_id=event_id,
         kind=kind,
@@ -56,6 +61,7 @@ def _event(
         before_state_fingerprint="state:before",
         after_state_fingerprint="state:after",
         corrects_event_id=corrects_event_id,
+        replay=replay,
         cost=cost,
         yield_=yield_,
     )
@@ -239,3 +245,35 @@ def test_learning_summary_preserves_unknown_cost_and_avoids_opaque_score() -> No
     assert summary.yield_.observations_added == 1
     assert summary.yield_.state_fields_changed == 2
     assert not hasattr(summary, "score")
+
+
+def test_replay_reference_round_trips_and_detects_version_mismatch(tmp_path: Path) -> None:
+    memory = SqliteLearningMemory(tmp_path / "learning.sqlite3")
+    event = _event(
+        "learn:replay",
+        replay=LearningReplayReference.replayable(
+            artifact_ref="cas:sha256:" + "a" * 64,
+            code_sha="abc123",
+            representation_version="html-document/0.1",
+        ),
+    )
+
+    assert memory.append(event) is True
+    loaded = memory.get("learn:replay")
+    assert loaded is not None
+    assert loaded.replay.disposition is ReplayDisposition.REPLAYABLE
+    assert loaded.replay.require("artifact_ref") == "cas:sha256:" + "a" * 64
+    assert loaded.replay.require("representation_version", "html-document/0.1") == (
+        "html-document/0.1"
+    )
+    with pytest.raises(ValueError, match="version/value mismatch"):
+        loaded.replay.require("representation_version", "html-document/999")
+
+
+def test_fingerprint_without_replay_inputs_is_explicitly_non_replayable() -> None:
+    event = _event("learn:legacy-like")
+
+    assert event.input_fingerprint == "input:1"
+    assert event.output_fingerprint == "output:1"
+    assert event.replay.disposition is ReplayDisposition.NON_REPLAYABLE
+    assert event.replay.reason_code == "TEST_FIXTURE_NOT_REPLAYABLE"

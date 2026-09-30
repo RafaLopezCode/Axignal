@@ -15,6 +15,7 @@ from application.economic_discovery.learning_memory import (
     LearningEventKind,
     LearningMechanism,
     LearningOutcome,
+    LearningReplayReference,
     LearningYield,
 )
 
@@ -65,6 +66,13 @@ def execution_stop_learning_event(
         reason_code=decision.stop_reason.value,
         before_state_fingerprint=before_state_fingerprint,
         after_state_fingerprint=after_state_fingerprint,
+        replay=LearningReplayReference.non_replayable(
+            "EXECUTION_BUDGET_STATE_PAYLOAD_NOT_RETAINED",
+            code_sha=code_sha,
+            execution_budget_policy_fingerprint=policy.fingerprint,
+            execution_budget_state_fingerprint=state.fingerprint,
+            stop_reason=decision.stop_reason.value,
+        ),
         cost=cost,
         yield_=LearningYield(),
     )
