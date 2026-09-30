@@ -31,7 +31,7 @@ A task is not DONE because code exists. Runtime/product work normally progresses
 
 NOT_STARTED · READY · IN_PROGRESS · BLOCKED · DONE · DEFERRED · REJECTED
 
-**CURRENT_TASK = FR-17**
+**CURRENT_TASK = FR-18**
 
 ## 4. Frontier closure rule
 
@@ -738,9 +738,35 @@ Future audit can evaluate a deliberate mobile product rather than responsive CSS
 
 ## FR-17 — Emit Learning Events From Real Execution
 
-**Status:** NOT_STARTED  
-**Depends on:** FR-04  
+**Status:** DONE
+**Depends on:** FR-04
 **Priority:** P1
+
+**Closure evidence (2026-10-01):**
+- first-Xeed bootstrap application now requires Learning Memory, execution identity and code SHA and appends a BOOTSTRAP event automatically
+- bootstrap reuse count is derived from distinct observation ids in RichSubjectState; `build_bootstrap_plan()` no longer accepts caller-supplied reuse count
+- source acquisition and Observation Memory ingestion are separate Learning Event kinds and causal phases
+- successful source acquisition records the immutable CAS artifact ref, source policy identity/fingerprint and observation fingerprint
+- Observation Memory ingestion derives inserted/no-change state, exact before/after state fingerprints, observation count and changed-field count from the real mutation
+- representation derives dimensions-became-answerable from deterministic assessment before/after the actual RichSubjectState transition
+- semantic extraction count remains derived from the normalized candidate set
+- adaptive-research resolved-objective yield is derived from the governed Prime route plus actual made-progress result; the executor can no longer submit that count
+- causal event ids are ordered within one execution as 00-bootstrap → 01-source → 02-ingestion → 03-representation → 04-semantic → 05-prime:<index>, so same-timestamp durable history remains reconstructible
+- Prime budget stops retain the exact ADR-0029 stop reason; acquisition/ingestion/representation/semantic/Prime failures are appended before re-raise
+- a retry uses a distinct execution id and produces a separate append-only failure event rather than overwriting the previous attempt
+- LearningYield now retains `observations_reused`; SQLite persistence reads legacy payloads without that field as zero reuse
+- UNKNOWN operational cost remains `LearningCost(amount_microunits=None)`; no zero-cost claim is fabricated
+- E2E test proves one execution creates ordered BOOTSTRAP → SOURCE_ACQUISITION → OBSERVATION_INGESTION → REPRESENTATION → DETERMINISTIC_EVALUATION history with exact code/policy/artifact refs
+- adaptive research integration test emits ADAPTIVE_RESEARCH and derives one resolved research objective from real work progress
+- retry test retains two distinct failed SOURCE_ACQUISITION events with UNKNOWN cost
+- focused FR-17/bootstrap/Prime/Learning/Execution Budget suite: 54 PASS
+- full pytest: 529 PASS using external `--basetemp` to avoid the known Windows user-temp ACL issue
+- Ruff format/check: PASS
+- mypy: PASS (118 source files)
+- Architecture Guard: PASS
+- axignal-governance: PASS
+- git diff --check: PASS
+- ADR-0043 accepted and indexed
 
 ### Frontier finding
 Learning Memory is a sound store but is not yet automatically fed by integrated execution.

@@ -143,7 +143,6 @@ def test_bootstrap_reuses_memory_and_hands_off_immediately_to_prime() -> None:
     plan = build_bootstrap_plan(
         seed=_seed(),
         rich_state=rich_state,
-        reused_observation_count=1,
         policy=_policy(),
         known_sources=(),
         contracts=(_contract(),),
@@ -172,7 +171,6 @@ def test_bootstrap_uses_explicit_known_source_before_adaptive_research() -> None
     plan = build_bootstrap_plan(
         seed=_seed(),
         rich_state=_rich_state(),
-        reused_observation_count=0,
         policy=_policy(),
         known_sources=(source,),
         contracts=(_contract(),),
@@ -190,7 +188,6 @@ def test_bootstrap_escalates_only_when_research_value_gate_authorizes_it() -> No
     plan = build_bootstrap_plan(
         seed=_seed(),
         rich_state=rich_state,
-        reused_observation_count=0,
         policy=_policy(),
         known_sources=(),
         contracts=(_contract(),),
@@ -218,7 +215,6 @@ def test_bootstrap_ignores_foreign_subject_sources() -> None:
     plan = build_bootstrap_plan(
         seed=_seed(),
         rich_state=rich_state,
-        reused_observation_count=0,
         policy=_policy(),
         known_sources=(foreign,),
         contracts=(_contract(),),
@@ -247,7 +243,6 @@ def test_bootstrap_source_selection_is_budgeted_and_deterministic() -> None:
     plan = build_bootstrap_plan(
         seed=_seed(),
         rich_state=_rich_state(),
-        reused_observation_count=0,
         policy=_policy(),
         known_sources=sources,
         contracts=(_contract(),),
@@ -262,7 +257,6 @@ def test_bootstrap_plan_is_replay_stable() -> None:
     first = build_bootstrap_plan(
         seed=_seed(),
         rich_state=rich_state,
-        reused_observation_count=1,
         policy=_policy(),
         known_sources=(),
         contracts=(_contract(),),
@@ -271,7 +265,6 @@ def test_bootstrap_plan_is_replay_stable() -> None:
     second = build_bootstrap_plan(
         seed=_seed(),
         rich_state=rich_state,
-        reused_observation_count=1,
         policy=_policy(),
         known_sources=(),
         contracts=(_contract(),),
@@ -295,7 +288,6 @@ def test_bootstrap_outcome_can_be_recorded_without_granting_policy_authority() -
     plan = build_bootstrap_plan(
         seed=_seed(),
         rich_state=rich_state,
-        reused_observation_count=0,
         policy=_policy(),
         known_sources=(),
         contracts=(_contract(),),
@@ -364,7 +356,6 @@ def test_bootstrap_hands_off_answerable_dimension_without_waiting_for_unrelated_
     plan = build_bootstrap_plan(
         seed=_seed(),
         rich_state=rich_state,
-        reused_observation_count=1,
         policy=_policy(),
         known_sources=(reviews,),
         contracts=(market, reputation),
@@ -387,7 +378,6 @@ def test_bootstrap_can_retain_low_value_unknown_without_research() -> None:
     plan = build_bootstrap_plan(
         seed=_seed(),
         rich_state=rich_state,
-        reused_observation_count=0,
         policy=_policy(),
         known_sources=(),
         contracts=(_contract(),),

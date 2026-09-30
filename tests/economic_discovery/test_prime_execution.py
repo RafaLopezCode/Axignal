@@ -4,6 +4,8 @@ import socket
 from datetime import UTC, datetime
 from pathlib import Path
 
+import pytest
+
 from application.economic_discovery.brain_contracts import (
     SemanticPrimitive,
     TypingDimensionContract,
@@ -13,12 +15,22 @@ from application.economic_discovery.execution_budget import (
     ExecutionBudgetState,
     GovernedExecutionController,
 )
-from application.economic_discovery.learning_memory import LearningCost, LearningOutcome
+from application.economic_discovery.learning_memory import (
+    LearningCost,
+    LearningEventKind,
+    LearningOutcome,
+)
 from application.economic_discovery.prime import DimensionRoutingPolicy, PrimeRoute
 from application.economic_discovery.prime_execution import (
     PrimeExecutionPorts,
     PrimeMechanismResult,
     execute_prime_source_slice,
+)
+from application.economic_discovery.research_value import (
+    ResearchValueContext,
+    ResearchValuePolicy,
+    ResearchValueSignal,
+    decide_research_value,
 )
 from application.semantic_extraction import (
     SemanticExtractionContract,
@@ -37,6 +49,14 @@ from application.source_representation import (
 )
 from application.xeed_access.organization_reader import AuthorizedXeedOrganizationReader
 from application.xeed_access.reader import AuthorizedXeedReader, TrustedRequestContext
+from application.xeed_germination import (
+    BootstrapPolicy,
+    BootstrapSourceCandidate,
+    apply_bootstrap_plan,
+    begin_resolution,
+    build_bootstrap_plan,
+    plant_xeed_runtime,
+)
 from cognition.jobs.model import StructuredResult
 from cognition.router.router import ModelRouter
 from cognition.semantic_extraction_adapter import CognitiveSemanticExtractionAdapter
@@ -295,10 +315,11 @@ def test_real_source_to_prime_composition_with_semantic_extraction(
     assert structured.calls == ["market-mode"]
     assert trace.semantic_extraction_id is not None
     assert trace.source_artifact_ref.startswith("cas:sha256:")
-    assert len(trace.learning_event_ids) == 4
+    assert len(trace.learning_event_ids) == 5
     history = {event.event_id: event for event in learning_memory.for_xeed("xeed:1")}
     assert [history[event_id].kind.value for event_id in trace.learning_event_ids] == [
         "SOURCE_ACQUISITION",
+        "OBSERVATION_INGESTION",
         "REPRESENTATION",
         "SEMANTIC_EXTRACTION",
         "STRUCTURED_EVALUATION",
@@ -412,8 +433,9 @@ def test_exact_replay_no_change_does_not_execute_prime_again(
     assert trace.prime_plan is None
     assert deterministic.calls == []
     history = learning.for_xeed("xeed:1")
-    assert history[0].outcome is LearningOutcome.NO_CHANGE
+    assert history[0].outcome is LearningOutcome.COMPLETED
     assert history[1].outcome is LearningOutcome.NO_CHANGE
+    assert history[2].outcome is LearningOutcome.NO_CHANGE
 
 
 class _FailingExecutor:
@@ -472,3 +494,260 @@ def test_prime_executor_failure_is_recorded_before_reraise(
     ]
     assert len(failures) == 1
     assert failures[0].reason_code == "PRIME_EXECUTION_FAILED:RuntimeError"
+
+
+def test_one_execution_reconstructs_bootstrap_to_prime_learning_sequence(
+    monkeypatch,
+    tmp_path: Path,
+) -> None:
+    monkeypatch.setattr(socket, "getaddrinfo", _public_dns)
+    seed = _authorized_seed()
+    source_policy = _source_policy()
+    request = _request(source_policy)
+    sensor, artifacts = _sensor(tmp_path)
+    observation_memory = SqliteObservationMemory(tmp_path / "observations.sqlite3")
+    learning_memory = SqliteLearningMemory(tmp_path / "learning.sqlite3")
+    prior = compile_rich_subject_state(subject_id="org:acme", contributions=())
+    contract = _contract("market-mode")
+    routing = (
+        DimensionRoutingPolicy(
+            "market-mode",
+            "routing-v1",
+            PrimeRoute.DETERMINISTIC,
+        ),
+    )
+    bootstrap_plan = build_bootstrap_plan(
+        seed=seed,
+        rich_state=prior,
+        policy=BootstrapPolicy(
+            policy_id="xeed-bootstrap",
+            version="fr17-v1",
+            max_known_sources=1,
+        ),
+        known_sources=(
+            BootstrapSourceCandidate(
+                candidate_id="source:website",
+                subject_id="org:acme",
+                observation_slot="website",
+                source_ref=request.target_uri,
+                source_type=request.source_type,
+                provides_fields=frozenset({"document.website.visible_text"}),
+                priority=1,
+            ),
+        ),
+        contracts=(contract,),
+        routing_policies=routing,
+    )
+    lifecycle = plant_xeed_runtime(
+        seed=seed,
+        initiated_by="principal:1",
+        created_at=NOW,
+    )
+    begin_resolution(seed=seed, state=lifecycle, occurred_at=NOW)
+    apply_bootstrap_plan(
+        seed=seed,
+        state=lifecycle,
+        plan=bootstrap_plan,
+        occurred_at=NOW,
+        learning_memory=learning_memory,
+        execution_id="run:learning-e2e",
+        code_sha="abc123",
+    )
+
+    trace = execute_prime_source_slice(
+        execution_id="run:learning-e2e",
+        seed=seed,
+        code_sha="abc123",
+        occurred_at=NOW,
+        observation_memory=observation_memory,
+        learning_memory=learning_memory,
+        request=request,
+        source_policy=source_policy,
+        source_acquirer=sensor,
+        representation_port=HtmlDocumentRepresentationAdapter(artifacts),
+        prior_rich_state=prior,
+        contracts=(contract,),
+        routing_policies=routing,
+        research_decisions=(),
+        execution_controller=_budget(),
+        ports=PrimeExecutionPorts(
+            deterministic=_Executor("deterministic"),
+            structured_evaluator=_Executor("structured"),
+            adaptive_research=_Executor("adaptive"),
+        ),
+    )
+
+    history = learning_memory.for_xeed("xeed:1")
+    assert [event.kind for event in history] == [
+        LearningEventKind.BOOTSTRAP,
+        LearningEventKind.SOURCE_ACQUISITION,
+        LearningEventKind.OBSERVATION_INGESTION,
+        LearningEventKind.REPRESENTATION,
+        LearningEventKind.DETERMINISTIC_EVALUATION,
+    ]
+    assert ":00-bootstrap:" in history[0].event_id
+    assert ":01-source:" in history[1].event_id
+    assert ":02-ingestion:" in history[2].event_id
+    assert ":03-representation:" in history[3].event_id
+    assert ":05-prime:0000:" in history[4].event_id
+    assert tuple(event.event_id for event in history[1:]) == trace.learning_event_ids
+    assert all(event.code_sha == "abc123" for event in history)
+    assert history[0].policy_id == "xeed-bootstrap"
+    assert history[1].policy_id == source_policy.policy_id
+    assert history[1].activity_ref.startswith("cas:sha256:")
+    assert history[2].yield_.observations_added == 1
+    assert history[3].yield_.dimensions_became_answerable == 1
+    assert history[0].cost.amount_microunits is None
+    assert history[1].cost.amount_microunits is None
+    assert history[4].cost.amount_microunits == 5
+
+
+def test_adaptive_research_learning_yield_is_derived_from_real_work_item(
+    monkeypatch,
+    tmp_path: Path,
+) -> None:
+    monkeypatch.setattr(socket, "getaddrinfo", _public_dns)
+    seed = _authorized_seed()
+    source_policy = _source_policy()
+    request = _request(source_policy)
+    sensor, artifacts = _sensor(tmp_path)
+    representation_port = HtmlDocumentRepresentationAdapter(artifacts)
+    prior = compile_rich_subject_state(subject_id="org:acme", contributions=())
+
+    preview_observation = sensor.observe(request, source_policy)
+    preview_representation = representation_port.represent(
+        request=request,
+        observation=preview_observation,
+    )
+    expected_state = compile_rich_subject_state(
+        subject_id="org:acme",
+        contributions=representation_state_data(
+            preview_representation,
+            observation_slot="website",
+        ),
+    )
+    contract = TypingDimensionContract(
+        dimension_id="reputation",
+        version="1",
+        semantic_target="public reputation state",
+        primitive=SemanticPrimitive.CHOICE,
+        question="What reputation state is supported?",
+        state_requirements=("document.reviews.visible_text",),
+        dependencies=("document.website.visible_text",),
+        mutually_exclusive=False,
+        abstention_policy="preserve UNKNOWN",
+    )
+    research_decision = decide_research_value(
+        context=ResearchValueContext(
+            subject_id="org:acme",
+            state_fingerprint=expected_state.fingerprint,
+            dimension_id="reputation",
+            missing_requirements=("document.reviews.visible_text",),
+            value_signals=frozenset({ResearchValueSignal.MATERIALITY}),
+            rights_permit=True,
+            capability_available=True,
+            budget_permits=True,
+            known_source_available=False,
+        ),
+        policy=ResearchValuePolicy(
+            policy_id="research-value",
+            version="fr17-v1",
+            research_signals=frozenset({ResearchValueSignal.MATERIALITY}),
+        ),
+    )
+    learning = SqliteLearningMemory(tmp_path / "learning.sqlite3")
+
+    trace = execute_prime_source_slice(
+        execution_id="run:adaptive",
+        seed=seed,
+        code_sha="abc123",
+        occurred_at=NOW,
+        observation_memory=SqliteObservationMemory(tmp_path / "observations.sqlite3"),
+        learning_memory=learning,
+        request=request,
+        source_policy=source_policy,
+        source_acquirer=sensor,
+        representation_port=representation_port,
+        prior_rich_state=prior,
+        contracts=(contract,),
+        routing_policies=(
+            DimensionRoutingPolicy(
+                "reputation",
+                "routing-v1",
+                PrimeRoute.DETERMINISTIC,
+            ),
+        ),
+        research_decisions=(research_decision,),
+        execution_controller=_budget(),
+        ports=PrimeExecutionPorts(
+            deterministic=_Executor("deterministic"),
+            structured_evaluator=_Executor("structured"),
+            adaptive_research=_Executor("adaptive"),
+        ),
+    )
+
+    assert trace.prime_plan is not None
+    assert trace.prime_plan.items[0].route is PrimeRoute.ADAPTIVE_RESEARCH
+    adaptive = next(
+        event
+        for event in learning.for_xeed("xeed:1")
+        if event.kind is LearningEventKind.ADAPTIVE_RESEARCH
+    )
+    assert adaptive.outcome is LearningOutcome.COMPLETED
+    assert adaptive.yield_.research_objectives_resolved == 1
+    assert adaptive.mechanism.value == "ADAPTIVE_RESEARCH"
+
+
+class _FailingSourceAcquirer:
+    def observe(self, request, policy):
+        raise RuntimeError("fixture acquisition failure")
+
+
+def test_failed_source_retries_are_retained_as_distinct_learning_events(tmp_path: Path) -> None:
+    seed = _authorized_seed()
+    source_policy = _source_policy()
+    request = _request(source_policy)
+    _sensor_instance, artifacts = _sensor(tmp_path)
+    learning = SqliteLearningMemory(tmp_path / "learning.sqlite3")
+
+    for execution_id in ("run:retry:1", "run:retry:2"):
+        with pytest.raises(RuntimeError, match="fixture acquisition failure"):
+            execute_prime_source_slice(
+                execution_id=execution_id,
+                seed=seed,
+                code_sha="abc123",
+                occurred_at=NOW,
+                observation_memory=SqliteObservationMemory(tmp_path / "observations.sqlite3"),
+                learning_memory=learning,
+                request=request,
+                source_policy=source_policy,
+                source_acquirer=_FailingSourceAcquirer(),
+                representation_port=HtmlDocumentRepresentationAdapter(artifacts),
+                prior_rich_state=compile_rich_subject_state(
+                    subject_id="org:acme",
+                    contributions=(),
+                ),
+                contracts=(_contract("market-mode"),),
+                routing_policies=(
+                    DimensionRoutingPolicy(
+                        "market-mode",
+                        "routing-v1",
+                        PrimeRoute.DETERMINISTIC,
+                    ),
+                ),
+                research_decisions=(),
+                execution_controller=_budget(),
+                ports=PrimeExecutionPorts(
+                    deterministic=_Executor("deterministic"),
+                    structured_evaluator=_Executor("structured"),
+                    adaptive_research=_Executor("adaptive"),
+                ),
+            )
+
+    failures = learning.for_xeed("xeed:1")
+    assert len(failures) == 2
+    assert all(event.kind is LearningEventKind.SOURCE_ACQUISITION for event in failures)
+    assert all(event.outcome is LearningOutcome.FAILED for event in failures)
+    assert failures[0].event_id != failures[1].event_id
+    assert all(event.cost.amount_microunits is None for event in failures)
+    assert all(event.reason_code == "SOURCE_ACQUISITION_FAILED:RuntimeError" for event in failures)

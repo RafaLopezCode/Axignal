@@ -12,7 +12,10 @@ from dataclasses import dataclass, field
 from datetime import datetime
 from typing import Protocol
 
-from application.economic_discovery.brain_contracts import TypingDimensionContract
+from application.economic_discovery.brain_contracts import (
+    DimensionDisposition,
+    TypingDimensionContract,
+)
 from application.economic_discovery.execution_budget import (
     ExecutionBudgetDelta,
     GovernedExecutionController,
@@ -28,6 +31,7 @@ from application.economic_discovery.learning_memory import (
     LearningYield,
 )
 from application.economic_discovery.observation_memory import ObservationMemory
+from application.economic_discovery.planner import assess_dimension_work
 from application.economic_discovery.prime import (
     DimensionRoutingPolicy,
     PrimeControlPlan,
@@ -98,7 +102,6 @@ class PrimeMechanismResult:
     retries: int = 0
     state_fields_changed: int = 0
     semantic_judgments_produced: int = 0
-    research_objectives_resolved: int = 0
 
     def __post_init__(self) -> None:
         if not self.output_fingerprint.strip():
@@ -109,7 +112,6 @@ class PrimeMechanismResult:
             self.retries,
             self.state_fields_changed,
             self.semantic_judgments_produced,
-            self.research_objectives_resolved,
         ):
             if value < 0:
                 raise ValueError("Prime mechanism result counts cannot be negative")
@@ -208,6 +210,21 @@ def _learning_event(
     )
 
 
+def _answerable_dimensions(
+    *,
+    contracts: tuple[TypingDimensionContract, ...],
+    available_state_fields: frozenset[str],
+) -> frozenset[str]:
+    return frozenset(
+        item.dimension_id
+        for item in assess_dimension_work(
+            contracts=contracts,
+            available_state_fields=available_state_fields,
+        )
+        if item.disposition is DimensionDisposition.ANSWERABLE
+    )
+
+
 def _executor_for(
     route: PrimeRoute,
     ports: PrimeExecutionPorts,
@@ -256,9 +273,11 @@ def execute_prime_source_slice(
     ):
         raise ValueError("Prime execution source policy mismatch")
 
-    source_event_id = f"learn:{execution_id}:source:{request.request_id}"
+    source_event_id = f"learn:{execution_id}:01-source:{request.request_id}"
     try:
         observation = source_acquirer.observe(request, source_policy)
+        if observation.subject_id != subject_id:
+            raise ValueError("Prime execution cannot cross canonical subjects")
     except Exception as exc:
         learning_memory.append(
             _learning_event(
@@ -284,18 +303,66 @@ def execute_prime_source_slice(
         )
         raise
 
-    if observation.subject_id != subject_id:
-        raise ValueError("Prime execution cannot cross canonical subjects")
-
-    source_result = ingest_source_observation(
-        memory=observation_memory,
-        request=request,
-        observation=observation,
-        contracts=contracts,
-    )
     source_event = _learning_event(
         event_id=source_event_id,
         kind=LearningEventKind.SOURCE_ACQUISITION,
+        outcome=LearningOutcome.COMPLETED,
+        occurred_at=occurred_at,
+        subject_id=subject_id,
+        xeed_id=xeed_id,
+        activity_ref=observation.raw_observation_ref,
+        policy_id=request.policy_id,
+        policy_version=request.policy_fingerprint,
+        code_sha=code_sha,
+        mechanism=LearningMechanism.DETERMINISTIC,
+        input_fingerprint=request.policy_fingerprint,
+        output_fingerprint=observation.observation_fingerprint,
+        reason_code="SOURCE_ACQUIRED",
+        before_state_fingerprint=None,
+        after_state_fingerprint=None,
+        cost=LearningCost(),
+        yield_=LearningYield(),
+    )
+    learning_memory.append(source_event)
+
+    ingestion_event_id = (
+        f"learn:{execution_id}:02-ingestion:{source_observation_id(request, observation)}"
+    )
+    try:
+        source_result = ingest_source_observation(
+            memory=observation_memory,
+            request=request,
+            observation=observation,
+            contracts=contracts,
+        )
+    except Exception as exc:
+        learning_memory.append(
+            _learning_event(
+                event_id=ingestion_event_id,
+                kind=LearningEventKind.OBSERVATION_INGESTION,
+                outcome=LearningOutcome.FAILED,
+                occurred_at=occurred_at,
+                subject_id=subject_id,
+                xeed_id=xeed_id,
+                activity_ref=source_observation_id(request, observation),
+                policy_id=request.policy_id,
+                policy_version=request.policy_fingerprint,
+                code_sha=code_sha,
+                mechanism=LearningMechanism.DETERMINISTIC,
+                input_fingerprint=observation.observation_fingerprint,
+                output_fingerprint=None,
+                reason_code=f"OBSERVATION_INGESTION_FAILED:{type(exc).__name__}",
+                before_state_fingerprint=None,
+                after_state_fingerprint=None,
+                cost=LearningCost(),
+                yield_=LearningYield(),
+            )
+        )
+        raise
+
+    ingestion_event = _learning_event(
+        event_id=ingestion_event_id,
+        kind=LearningEventKind.OBSERVATION_INGESTION,
         outcome=(
             LearningOutcome.NO_CHANGE
             if source_result.mutation.change is None
@@ -304,17 +371,17 @@ def execute_prime_source_slice(
         occurred_at=occurred_at,
         subject_id=subject_id,
         xeed_id=xeed_id,
-        activity_ref=request.request_id,
+        activity_ref=source_observation_id(request, observation),
         policy_id=request.policy_id,
         policy_version=request.policy_fingerprint,
         code_sha=code_sha,
         mechanism=LearningMechanism.DETERMINISTIC,
-        input_fingerprint=request.policy_fingerprint,
-        output_fingerprint=observation.observation_fingerprint,
+        input_fingerprint=observation.observation_fingerprint,
+        output_fingerprint=source_result.mutation.current_state.fingerprint,
         reason_code=(
-            "IDEMPOTENT_OR_NO_STATE_CHANGE"
+            "OBSERVATION_REPLAY_NO_CHANGE"
             if source_result.mutation.change is None
-            else "SOURCE_OBSERVATION_INGESTED"
+            else "OBSERVATION_INGESTED"
         ),
         before_state_fingerprint=source_result.mutation.previous_state.fingerprint,
         after_state_fingerprint=source_result.mutation.current_state.fingerprint,
@@ -328,7 +395,7 @@ def execute_prime_source_slice(
             ),
         ),
     )
-    learning_memory.append(source_event)
+    learning_memory.append(ingestion_event)
 
     try:
         representation = representation_port.represent(
@@ -348,7 +415,7 @@ def execute_prime_source_slice(
     except Exception as exc:
         learning_memory.append(
             _learning_event(
-                event_id=f"learn:{execution_id}:representation:failed",
+                event_id=f"learn:{execution_id}:03-representation:failed",
                 kind=LearningEventKind.REPRESENTATION,
                 outcome=LearningOutcome.FAILED,
                 occurred_at=occurred_at,
@@ -379,9 +446,18 @@ def execute_prime_source_slice(
         contributions=(*prior_rich_state.data, *contribution),
     )
     state_change = rich_state_change(prior_rich_state, rich_state)
+    answerable_before = _answerable_dimensions(
+        contracts=contracts,
+        available_state_fields=prior_rich_state.available_fields,
+    )
+    answerable_after = _answerable_dimensions(
+        contracts=contracts,
+        available_state_fields=rich_state.available_fields,
+    )
+    dimensions_became_answerable = len(answerable_after - answerable_before)
 
     representation_event_id = (
-        f"learn:{execution_id}:representation:{representation.representation_id}"
+        f"learn:{execution_id}:03-representation:{representation.representation_id}"
     )
     representation_event = _learning_event(
         event_id=representation_event_id,
@@ -403,6 +479,7 @@ def execute_prime_source_slice(
         cost=LearningCost(),
         yield_=LearningYield(
             state_fields_changed=0 if state_change is None else len(state_change.changed_fields),
+            dimensions_became_answerable=dimensions_became_answerable,
         ),
     )
     learning_memory.append(representation_event)
@@ -425,7 +502,7 @@ def execute_prime_source_slice(
                 raise ValueError("semantic extraction result does not match governed execution")
         except Exception as exc:
             failed_semantic_id = (
-                f"learn:{execution_id}:semantic-failed:{representation.representation_id}"
+                f"learn:{execution_id}:04-semantic:failed:{representation.representation_id}"
             )
             learning_memory.append(
                 _learning_event(
@@ -450,7 +527,7 @@ def execute_prime_source_slice(
                 )
             )
             raise
-        semantic_event_id = f"learn:{execution_id}:semantic:{candidate_set.extraction_id}"
+        semantic_event_id = f"learn:{execution_id}:04-semantic:{candidate_set.extraction_id}"
         learning_memory.append(
             _learning_event(
                 event_id=semantic_event_id,
@@ -476,7 +553,7 @@ def execute_prime_source_slice(
             )
         )
 
-    learning_ids = [source_event_id, representation_event_id]
+    learning_ids = [source_event_id, ingestion_event_id, representation_event_id]
     if semantic_event_id is not None:
         learning_ids.append(semantic_event_id)
 
@@ -509,14 +586,17 @@ def execute_prime_source_slice(
     )
 
     stop_reason: str | None = None
-    for item in prime_plan.items:
+    for item_index, item in enumerate(prime_plan.items):
         if item.route is None:
             continue
         authorization = execution_controller.authorize_next()
         if not authorization.may_continue:
             stop_reason = authorization.stop_reason.value if authorization.stop_reason else None
             stop_event = execution_stop_learning_event(
-                event_id=f"learn:{execution_id}:stop:{item.dimension_id}:{execution_controller.state.fingerprint[:16]}",
+                event_id=(
+                    f"learn:{execution_id}:05-prime:{item_index:04d}:stop:"
+                    f"{item.dimension_id}:{execution_controller.state.fingerprint[:16]}"
+                ),
                 occurred_at=occurred_at,
                 subject_id=subject_id,
                 xeed_id=xeed_id,
@@ -553,8 +633,8 @@ def execute_prime_source_slice(
             )
         except Exception as exc:
             failed_id = (
-                f"learn:{execution_id}:prime-failed:{item.dimension_id}:"
-                f"{rich_state.fingerprint[:16]}"
+                f"learn:{execution_id}:05-prime:{item_index:04d}:failed:"
+                f"{item.dimension_id}:{rich_state.fingerprint[:16]}"
             )
             failed_kind = (
                 LearningEventKind.ADAPTIVE_RESEARCH
@@ -619,7 +699,10 @@ def execute_prime_source_slice(
             if item.route is PrimeRoute.STRUCTURED_EVALUATOR
             else LearningMechanism.DETERMINISTIC
         )
-        event_id = f"learn:{execution_id}:prime:{item.dimension_id}:{rich_state.fingerprint[:16]}"
+        event_id = (
+            f"learn:{execution_id}:05-prime:{item_index:04d}:"
+            f"{item.dimension_id}:{rich_state.fingerprint[:16]}"
+        )
         learning_memory.append(
             _learning_event(
                 event_id=event_id,
@@ -646,7 +729,11 @@ def execute_prime_source_slice(
                 yield_=LearningYield(
                     state_fields_changed=result.state_fields_changed,
                     semantic_judgments_produced=result.semantic_judgments_produced,
-                    research_objectives_resolved=result.research_objectives_resolved,
+                    research_objectives_resolved=(
+                        1
+                        if item.route is PrimeRoute.ADAPTIVE_RESEARCH and result.made_progress
+                        else 0
+                    ),
                 ),
             )
         )
