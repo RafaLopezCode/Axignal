@@ -11,6 +11,8 @@ from application.xeed_access.organization_reader import (
 )
 from application.xeed_access.reader import AuthorizedXeedReader, TrustedRequestContext
 from application.xeed_germination import (
+    EvidenceSupportClass,
+    EvidenceSupportJudgment,
     GerminationBudget,
     GerminationCandidate,
     GerminationQueryFamily,
@@ -102,6 +104,7 @@ class Investigator:
             subject_id=OrganizationId(str(subject)),
             predicate="capability",
             object_or_value="cold-chain logistics",
+            claim_proposition="The organization provides cold-chain logistics.",
             evidence=Evidence(
                 id=f"ev-{candidate.organization_id}",
                 source="fixture",
@@ -113,6 +116,27 @@ class Investigator:
             ),
             currentness=Currentness.CURRENT,
         )
+
+
+class SupportJudge:
+    def judge(self, finding: InvestigationFinding) -> EvidenceSupportJudgment:
+        return EvidenceSupportJudgment(
+            EvidenceSupportClass.SUPPORTED,
+            "deterministic-test-judge",
+            "test.v1",
+        )
+
+
+class JudgmentWriter:
+    def __init__(self) -> None:
+        self.items: list[tuple[InvestigationFinding, EvidenceSupportJudgment]] = []
+
+    def append(
+        self,
+        finding: InvestigationFinding,
+        judgment: EvidenceSupportJudgment,
+    ) -> None:
+        self.items.append((finding, judgment))
 
 
 class Writer:
@@ -158,11 +182,14 @@ def authorized_seed() -> AuthorizedXeedOrganization:
 def test_flow_filters_before_investigation_and_only_writes_admitted_evidence() -> None:
     investigator = Investigator()
     writer = Writer()
+    judgments = JudgmentWriter()
     evidence = EvidenceLedger()
     flow = XeedSemanticGermination(
         encoder=Encoder(),
         index=Index(),
         catalog=Catalog(),
+        judgment_writer=judgments,
+        support_judge=SupportJudge(),
         investigator=investigator,
         evidence_writer=evidence,
         faxt_writer=writer,
@@ -181,15 +208,19 @@ def test_flow_filters_before_investigation_and_only_writes_admitted_evidence() -
     assert [item.faxt.id for item in result.admitted] == [FaxtId("faxt-org-a")]
     assert writer.written == [result.admitted[0].faxt]
     assert tuple(item.id for item in evidence.entries) == ("ev-org-a",)
+    assert len(judgments.items) == 2
 
 
 def test_subject_mismatch_fails_closed_before_canonical_write() -> None:
     writer = Writer()
+    judgments = JudgmentWriter()
     evidence = EvidenceLedger()
     flow = XeedSemanticGermination(
         encoder=Encoder(),
         index=Index(),
         catalog=Catalog(),
+        judgment_writer=judgments,
+        support_judge=SupportJudge(),
         investigator=Investigator(mismatch=True),
         evidence_writer=evidence,
         faxt_writer=writer,
@@ -203,3 +234,59 @@ def test_subject_mismatch_fails_closed_before_canonical_write() -> None:
 
     assert writer.written == []
     assert evidence.entries == ()
+    assert judgments.items == []
+
+
+class RejectingSupportJudge:
+    def judge(self, finding: InvestigationFinding) -> EvidenceSupportJudgment:
+        return EvidenceSupportJudgment(
+            EvidenceSupportClass.NO_EVIDENCE,
+            "deterministic-test-judge",
+            "test.v1",
+        )
+
+
+def test_semantic_non_support_never_reaches_evidence_admission_or_writer() -> None:
+    writer = Writer()
+    judgments = JudgmentWriter()
+    evidence = EvidenceLedger()
+    flow = XeedSemanticGermination(
+        encoder=Encoder(),
+        index=Index(),
+        catalog=Catalog(),
+        investigator=Investigator(),
+        judgment_writer=judgments,
+        support_judge=RejectingSupportJudge(),
+        evidence_writer=evidence,
+        faxt_writer=writer,
+    )
+
+    result = flow.run(
+        authorized_seed(),
+        budget=GerminationBudget(retrieval_k=6, max_investigations=1, locale="en"),
+    )
+
+    assert result.rejected_semantic_count == 1
+    assert result.rejected_evidence_count == 0
+    assert result.admitted == ()
+    assert evidence.entries == ()
+    assert writer.written == []
+    assert len(judgments.items) == 1
+    assert judgments.items[0][1].support is EvidenceSupportClass.NO_EVIDENCE
+
+
+def test_semantic_judgment_rejects_invalid_provider_probability_data() -> None:
+    with pytest.raises(ValueError, match="distribution"):
+        EvidenceSupportJudgment(
+            EvidenceSupportClass.SUPPORTED,
+            "provider",
+            "contract.v1",
+            distribution=(("SUPPORTED", 1.2),),
+        )
+    with pytest.raises(ValueError, match="confidence"):
+        EvidenceSupportJudgment(
+            EvidenceSupportClass.SUPPORTED,
+            "provider",
+            "contract.v1",
+            confidence=float("nan"),
+        )

@@ -4,6 +4,9 @@ from application.xeed_germination.semantic_flow import (
     AdmittedGerminationFinding,
     CandidateInvestigator,
     CanonicalFaxtWriter,
+    EvidenceSupportClass,
+    EvidenceSupportJudge,
+    EvidenceSupportJudgment,
     EvidenceWriter,
     GerminationBudget,
     GerminationCandidate,
@@ -12,6 +15,7 @@ from application.xeed_germination.semantic_flow import (
     GerminationRun,
     InvestigationFinding,
     SemanticEncoder,
+    SemanticJudgmentWriter,
     XeedSemanticGermination,
 )
 
@@ -19,6 +23,9 @@ __all__ = [
     "AdmittedGerminationFinding",
     "CandidateInvestigator",
     "CanonicalFaxtWriter",
+    "EvidenceSupportClass",
+    "EvidenceSupportJudge",
+    "EvidenceSupportJudgment",
     "EvidenceWriter",
     "GerminationBudget",
     "GerminationCandidate",
@@ -27,5 +34,6 @@ __all__ = [
     "GerminationRun",
     "InvestigationFinding",
     "SemanticEncoder",
+    "SemanticJudgmentWriter",
     "XeedSemanticGermination",
 ]

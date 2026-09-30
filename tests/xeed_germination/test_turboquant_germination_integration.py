@@ -11,6 +11,8 @@ from application.xeed_access.organization_reader import (
 )
 from application.xeed_access.reader import AuthorizedXeedReader, TrustedRequestContext
 from application.xeed_germination import (
+    EvidenceSupportClass,
+    EvidenceSupportJudgment,
     GerminationBudget,
     GerminationCandidate,
     GerminationQueryFamily,
@@ -25,6 +27,7 @@ from domain.organizations.model import Organization
 from domain.tenancy.model import Principal, PrincipalTenantMembership, Tenant
 from domain.xeed.model import Xeed
 from pipeline.evidence import EvidenceLedger
+from pipeline.semantic_judgment import SemanticJudgmentLedger
 from pipeline.semantic_retrieval import TurboQuantSemanticIndex
 from tests.support.xeed_authority import InMemoryXeedAuthority
 
@@ -78,6 +81,7 @@ class Investigator:
             candidate.organization_id,
             "capability",
             "industrial refrigeration",
+            "The organization provides industrial refrigeration.",
             Evidence(
                 "ev-cold-capability",
                 "fixture",
@@ -89,6 +93,27 @@ class Investigator:
             ),
             currentness=Currentness.CURRENT,
         )
+
+
+class SupportJudge:
+    def judge(self, finding: InvestigationFinding) -> EvidenceSupportJudgment:
+        return EvidenceSupportJudgment(
+            EvidenceSupportClass.SUPPORTED,
+            "deterministic-test-judge",
+            "test.v1",
+        )
+
+
+class JudgmentWriter:
+    def __init__(self) -> None:
+        self.items: list[tuple[InvestigationFinding, EvidenceSupportJudgment]] = []
+
+    def append(
+        self,
+        finding: InvestigationFinding,
+        judgment: EvidenceSupportJudgment,
+    ) -> None:
+        self.items.append((finding, judgment))
 
 
 class Writer:
@@ -130,11 +155,14 @@ def test_authorized_xeed_reaches_canonical_writer_only_through_evidence_admissio
         )
     )
     writer = Writer()
+    judgments = SemanticJudgmentLedger()
     evidence = EvidenceLedger()
     flow = XeedSemanticGermination(
         encoder=Encoder(),
         index=index,
         catalog=Catalog(),
+        judgment_writer=judgments,
+        support_judge=SupportJudge(),
         investigator=Investigator(),
         evidence_writer=evidence,
         faxt_writer=writer,
@@ -150,3 +178,5 @@ def test_authorized_xeed_reaches_canonical_writer_only_through_evidence_admissio
     assert writer.written[0].id == FaxtId("faxt-cold-capability")
     assert writer.written[0].evidence_refs == ("ev-cold-capability",)
     assert tuple(item.id for item in evidence.entries) == ("ev-cold-capability",)
+    assert len(judgments.entries) == 1
+    assert judgments.entries[0].judgment.support is EvidenceSupportClass.SUPPORTED
