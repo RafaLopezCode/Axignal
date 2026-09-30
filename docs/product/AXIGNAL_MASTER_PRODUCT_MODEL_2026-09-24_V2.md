@@ -3476,3 +3476,14 @@ A Demand Archetype MUST NOT contain or require an individual consumer identity. 
 Campaign relevance is multidimensional and versioned. Candidate dimensions include need fit, intent strength, demand strength, growth, geographic fit, channel fit, message fit, evidence quality, currentness and uncertainty. A compressed UX score MAY be derived deterministically by a versioned policy, but MUST NOT represent probability that an individual will purchase.
 
 Demand Archetypes are not limited to B2C: B2B/B2G observation MAY also surface aggregate need archetypes. Organizations and Demand Archetypes therefore coexist as different economic objects in AXIGLAND rather than forcing all demand into Organization-to-Organization relationships.
+
+## 56.22 Market Posture drives observation strategy
+Xeed Market Entry Classification is the first semantic planning gate of Brain germination after Xeed authorization and bootstrap state acquisition. Its output MUST materially change the Observation Plan; classification that does not alter observation strategy is incomplete.
+
+For B2B, the Brain SHOULD observe organizations and aggregate demand archetypes and ask organization-role/need questions. For B2C, the Brain MUST target aggregate Demand Archetypes and MUST NOT create a person/consumer identity target. For B2G, the Brain SHOULD observe public bodies, procurement events and aggregate public-demand archetypes.
+
+OBSERVED participation and POTENTIAL participation MUST preserve different research intents. OBSERVED drives confirmation/currentness/expansion of an existing market posture. POTENTIAL drives investigation of whether an economically plausible market posture is supported by further observations. POTENTIAL MUST NOT be rendered or queried as if it were current participation.
+
+UNKNOWN remains explicit and MUST NOT silently become FALSE or an observation target merely to complete a taxonomy. New observations may later move UNKNOWN to OBSERVED or POTENTIAL through a new temporal Market Map with Explainable Basis.
+
+The Market Map is therefore not a marketing label and not a one-time onboarding field. It is a temporal control-plane input that selects sensors, search vocabulary, candidate object types, semantic questions and investigation routes while preserving the distinction between what the Xeed demonstrably does and what evidence says may deserve exploration.
