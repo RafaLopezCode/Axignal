@@ -122,6 +122,9 @@ const SPATIAL_ZOOM = Object.freeze({
 })
 const NEIGHBORHOOD_EDGE_BUDGET = 6
 const RELATION_PROOF_EDGE_BUDGET = 12
+const CAMERA_MOTION_MS = 440
+const KEYBOARD_PAN_STEP = 56
+const WHEEL_LINE_PX = 16
 const FIELD_SLOTS = [
   { x: 24, y: 34 },
   { x: 76, y: 58 },
@@ -681,7 +684,9 @@ function makeNode(node) {
     element.setAttribute('aria-label', node.label)
   }
   element.append(makeMark(node), nodeLabel(node))
-  element.addEventListener('pointerdown', (event) => event.stopPropagation())
+  element.addEventListener('pointerdown', (event) => {
+    if (event.button === 0) event.stopPropagation()
+  })
   element.addEventListener('click', (event) => {
     event.stopPropagation()
     navigate(node.key)
@@ -750,9 +755,8 @@ function animateCamera(target) {
     return
   }
   const started = performance.now()
-  const duration = 440
   const tick = (now) => {
-    const progress = Math.min(1, (now - started) / duration)
+    const progress = Math.min(1, (now - started) / CAMERA_MOTION_MS)
     const eased = 1 - Math.pow(1 - progress, 3)
     state.camera = {
       x: from.x + (target.x - from.x) * eased,
@@ -1153,6 +1157,26 @@ function screenPoint(event) {
   return { x: event.clientX - rect.left, y: event.clientY - rect.top }
 }
 
+function normalizedWheelDelta(event) {
+  const factor = event.deltaMode === WheelEvent.DOM_DELTA_LINE
+    ? WHEEL_LINE_PX
+    : event.deltaMode === WheelEvent.DOM_DELTA_PAGE
+      ? Math.max(field.clientHeight, 1)
+      : 1
+  return { x: event.deltaX * factor, y: event.deltaY * factor }
+}
+
+function canvasOwnsWheel(event) {
+  return !event.target.closest?.('.canvas-tools, .here, .minimap')
+}
+
+function panCameraBy(deltaX, deltaY) {
+  window.cancelAnimationFrame(state.cameraFrame)
+  state.camera.x -= deltaX
+  state.camera.y -= deltaY
+  updateCamera()
+}
+
 function setSidebarCollapsed(collapsed) {
   const sidebar = $('.gov')
   const toggle = $('#sidebar-toggle')
@@ -1306,7 +1330,13 @@ function bindInteractions() {
   $('#here').addEventListener('click', () => focusCamera(organizationKey()))
 
   field.addEventListener('pointerdown', (event) => {
-    if (event.target.closest?.('.anch, .canvas-tools, .here, .minimap, .trail, .lens-stop')) return
+    const onControl = event.target.closest?.('.canvas-tools, .here, .minimap')
+    const onNode = event.target.closest?.('.anch')
+    const middlePan = event.button === 1 && !onControl
+    const directPan = event.button === 0 && !onControl && !onNode
+    if (!middlePan && !directPan) return
+    event.preventDefault()
+    field.focus({ preventScroll: true })
     state.pointer = { id: event.pointerId, last: screenPoint(event) }
     field.setPointerCapture(event.pointerId)
     field.classList.add('panning')
@@ -1323,9 +1353,39 @@ function bindInteractions() {
   field.addEventListener('pointerup', stopPan)
   field.addEventListener('pointercancel', stopPan)
   field.addEventListener('wheel', (event) => {
+    if (!canvasOwnsWheel(event)) return
+    const delta = normalizedWheelDelta(event)
+    if (Math.abs(delta.x) < 0.1 && Math.abs(delta.y) < 0.1) return
     event.preventDefault()
-    changeZoom(state.camera.zoom * Math.exp(-event.deltaY * 0.0016), screenPoint(event))
+
+    if (event.ctrlKey || event.metaKey) {
+      const dominant = Math.abs(delta.y) >= Math.abs(delta.x) ? delta.y : delta.x
+      changeZoom(state.camera.zoom * Math.exp(-dominant * 0.002), screenPoint(event))
+      return
+    }
+
+    if (event.shiftKey && Math.abs(delta.x) < Math.abs(delta.y)) {
+      panCameraBy(delta.y, 0)
+      return
+    }
+    panCameraBy(delta.x, delta.y)
   }, { passive: false })
+
+  field.addEventListener('keydown', (event) => {
+    if (event.target !== field) return
+    const step = KEYBOARD_PAN_STEP * (event.shiftKey ? 2 : 1)
+    if (event.key === 'ArrowUp') panCameraBy(0, -step)
+    else if (event.key === 'ArrowDown') panCameraBy(0, step)
+    else if (event.key === 'ArrowLeft') panCameraBy(-step, 0)
+    else if (event.key === 'ArrowRight') panCameraBy(step, 0)
+    else if (event.key === '+' || event.key === '=') changeZoom(state.camera.zoom * 1.3)
+    else if (event.key === '-' || event.key === '_') changeZoom(state.camera.zoom / 1.3)
+    else if (event.key === '0') fitCamera()
+    else if (event.key === 'Home') focusCamera(organizationKey())
+    else if (event.key.toLowerCase() === 'r') resetFieldView()
+    else return
+    event.preventDefault()
+  })
 
   const moveMinimap = (event) => {
     const rect = $('#minimap svg').getBoundingClientRect()
