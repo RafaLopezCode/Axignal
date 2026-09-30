@@ -4141,3 +4141,102 @@ html[dir='rtl'] .trail { direction: rtl; }
   white-space: nowrap;
   border: 0;
 }
+
+
+/* FR-09 — Insight-first Today */
+.reader .today-ideas {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+.reader .today-item {
+  min-width: 0;
+  padding: 14px 0 0;
+  border-top: 1px solid var(--hair);
+  cursor: default;
+  transform: none;
+}
+.reader .today-item:hover { transform: none; }
+.today-item-eyebrow,
+.today-why-label {
+  font: 500 9px/1.3 var(--mono);
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+.today-item h3 {
+  margin-top: 6px;
+  font: 400 clamp(1rem, 1.35vw, 1.25rem)/1.25 var(--serif);
+}
+.today-why-label { display: block; margin-top: 12px; }
+.today-item .stmt {
+  margin-top: 4px;
+  color: var(--ink-2);
+  font: 300 13px/1.5 var(--serif);
+}
+.today-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+  margin-top: 12px;
+  color: var(--ink-3);
+  font: 500 9px/1.3 var(--mono);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+.today-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 14px;
+}
+.today-primary,
+.today-secondary {
+  min-height: 32px;
+  border-radius: 999px;
+  font: 500 11px/1 var(--sans);
+  cursor: pointer;
+}
+.today-primary {
+  padding: 0 14px;
+  border: 1px solid var(--ink);
+  background: var(--ink);
+  color: var(--paper);
+}
+.today-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 10px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--ink-2);
+}
+.today-secondary .ax-icon { width: 1em; height: 1em; }
+.today-primary:focus-visible,
+.today-secondary:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+.today-empty {
+  max-width: 52ch;
+  padding-top: 14px;
+  border-top: 1px solid var(--hair);
+  color: var(--ink-2);
+  font: 300 14px/1.55 var(--serif);
+}
+@media (max-width: 1000px) {
+  .reader .today-ideas { grid-template-columns: 1fr; }
+}
+
+.bottom.today-open {
+  height: 50vh;
+  min-height: 390px;
+  max-height: 60vh;
+}
+@media (max-width: 1000px) {
+  .bottom.today-open {
+    height: 46vh;
+    min-height: 360px;
+    max-height: 60vh;
+  }
+}

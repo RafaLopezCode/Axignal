@@ -31,7 +31,7 @@ A task is not DONE because code exists. Runtime/product work normally progresses
 
 NOT_STARTED · READY · IN_PROGRESS · BLOCKED · DONE · DEFERRED · REJECTED
 
-**CURRENT_TASK = FR-09**
+**CURRENT_TASK = FR-10**
 
 ## 4. Frontier closure rule
 
@@ -401,9 +401,35 @@ Future audit no longer classifies FIRST_MAP_WOW as aspirational because germinat
 
 ## FR-09 — Insight-First Today
 
-**Status:** NOT_STARTED  
+**Status:** DONE
 **Depends on:** FR-05, FR-08  
 **Priority:** P0 UX
+
+**Closure evidence (2026-09-30):**
+- BASE_SHA: `45566401808c322d64fb38f289ac9efb63022338`
+- WORK_BRANCH: `architecture/fr-09-insight-first-today`
+- provider-neutral `TodayProjection` / `TodayPolicy` added to subscriber projection
+- explicit policy caps surfaced material items at 1–3; no score, node count, graph density or completion metric
+- deterministic ordering prefers real change time when present, otherwise observation recency and stable identity
+- Today items retain why-it-matters, epistemic state, currentness, observation/change time, proof ref and spatial focus ref
+- partial and empty Today states are explicit; empty copy says observation is still underway
+- subscriber Today no longer renders every FAXT or leads with a detail count
+- synthetic fixture adapter surfaces at most three current observations and does not claim an unproven temporal change
+- primary action is `Show how AXIGNAL knows`; in the current lab it focuses the same governed object and switches cognitive depth to Evidence without inventing lineage
+- secondary action is human-first `View in map`; it deep-links with `recenter:false` so camera x/y/zoom are preserved
+- Today receives a reversible comprehension-height panel so material items/actions are visible without scrolling; focused item restores normal map geometry
+- 10-second comprehension protocol added at `docs/design/FIRST_VIEW_10_SECOND_COMPREHENSION_PROTOCOL.md`
+- browser visual verification: Chrome 1440×1000 and 860×1000 PASS for hierarchy/responsive/visible actions
+- browser interaction verification via Chrome DevTools Protocol: nominal fixture exposes exactly 3 primary + 3 secondary actions; Evidence action sets depth=3 and target focus; both actions preserve exact camera state
+- ADR-0035 accepted and indexed
+- focused projection/UI/server tests: 29 PASS
+- final full pytest after browser-driven geometry refinement: 493 PASS
+- Node syntax: PASS (`app.js`, `presentation.js`)
+- Ruff format/check: PASS
+- mypy: PASS (118 source files)
+- Architecture Guard: PASS
+- axignal-governance: PASS
+- git diff --check: PASS
 
 ### Frontier finding
 The canvas asks users to parse the system before receiving the clearest value.
