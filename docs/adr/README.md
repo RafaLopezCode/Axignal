@@ -40,6 +40,7 @@ Constitution (`.specify/memory/constitution.md`).
 | [ADR-0030](ADR-0030-prime-execution-composition-root.md) | Prime Execution Composition Root (**ACCEPTED**) | §§14, 46, 53, 56.13–56.20 |
 | [ADR-0031](ADR-0031-explainable-xignal-projection.md) | Explainable Xignal Projection (**ACCEPTED**) | §§4.4A, 7.3, 15, 19, 20, 26 |
 | [ADR-0032](ADR-0032-end-to-end-evidence-narrative.md) | End-to-End Evidence Narrative (**ACCEPTED**) | §§4.4A, 15, 19, 20, 26 |
+| [ADR-0033](ADR-0033-first-xeed-runtime-lifecycle.md) | First-Xeed Runtime Lifecycle (**ACCEPTED**) | §§2, 10, 14, 56.18 |
 
 ## Adding an ADR
 
