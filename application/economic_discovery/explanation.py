@@ -27,6 +27,7 @@ class BasisDatum:
     observed_at: datetime
     excerpt_or_summary: str
     contribution: BasisContribution
+    evidence_ref: str | None = None
 
     def __post_init__(self) -> None:
         _required(
@@ -38,6 +39,8 @@ class BasisDatum:
         )
         if self.observed_at.tzinfo is None:
             raise ValueError("basis datum time must be timezone-aware")
+        if self.evidence_ref is not None and not self.evidence_ref.strip():
+            raise ValueError("basis evidence ref must be non-empty when provided")
 
 
 @dataclass(frozen=True, slots=True)
