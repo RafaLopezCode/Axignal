@@ -1156,7 +1156,9 @@ function bindInteractions() {
   $('#today-rail').addEventListener('click', () => navigate(organizationKey()))
   $('#governance-rail').addEventListener('click', () => {
     setSidebarCollapsed(false)
-    $('#governance-section').focus()
+    const advanced = $('#governance-section')
+    advanced.open = true
+    advanced.querySelector('summary').focus()
   })
   const xeedSelector = $('#xeed-current')
   xeedSelector.addEventListener('click', () => {
@@ -1196,6 +1198,11 @@ function bindInteractions() {
   }
 
   const slider = $('#depth-slider')
+  const depthLens = $('.lens')
+  depthLens.addEventListener('focusin', () => depthLens.classList.add('is-expanded'))
+  depthLens.addEventListener('focusout', (event) => {
+    if (!depthLens.contains(event.relatedTarget)) depthLens.classList.remove('is-expanded')
+  })
   const setDepthFromPointer = (clientY) => {
     const rect = slider.getBoundingClientRect()
     state.depth = Math.max(0, Math.min(1, (clientY - rect.top) / rect.height)) * 3
@@ -1531,19 +1538,33 @@ function configureUxLab() {
   const moves = $('#axent-moves')
   const heading = moves.querySelector('.mono')
   moves.replaceChildren(heading)
-  for (const move of lab.moves) {
+  const availableMoves = lab.moves.filter((move) => move.available)
+  const primaryMoves = availableMoves.slice(0, 2)
+  const secondaryMoves = availableMoves.slice(2)
+  const createMoveButton = (move) => {
     const button = document.createElement('button')
     button.type = 'button'
     button.className = 'ax-move'
     button.textContent = move.label
-    button.disabled = !move.available
-    button.dataset.capability = move.available ? 'SYNTHETIC_FIXTURE' : 'UNAVAILABLE'
+    button.dataset.capability = 'SYNTHETIC_FIXTURE'
     button.addEventListener('click', () => {
-      if (button.disabled) return
       appendFixtureMessage('you', move.label)
       appendFixtureMessage('axent', lab.fixtureReply)
     })
-    moves.append(button)
+    return button
+  }
+  for (const move of primaryMoves) moves.append(createMoveButton(move))
+  if (secondaryMoves.length) {
+    const more = document.createElement('details')
+    more.className = 'ax-more-moves'
+    const summary = document.createElement('summary')
+    summary.textContent = presentation.text('navigation.moreQuestions')
+    more.append(summary)
+    const body = document.createElement('div')
+    body.className = 'ax-more-moves-body'
+    for (const move of secondaryMoves) body.append(createMoveButton(move))
+    more.append(body)
+    moves.append(more)
   }
   state.axentMessages = lab.messages.map((message) => ({
     ...message,
