@@ -31,7 +31,7 @@ A task is not DONE because code exists. Runtime/product work normally progresses
 
 NOT_STARTED · READY · IN_PROGRESS · BLOCKED · DONE · DEFERRED · REJECTED
 
-**CURRENT_TASK = FR-00**
+**CURRENT_TASK = FR-01**
 
 ## 4. Frontier closure rule
 
@@ -41,9 +41,19 @@ Each task contains a FRONTIER_CLOSURE condition. At the next Frontier audit, tha
 
 ## FR-00 — Refresh Architectural Gap Ledger
 
-**Status:** READY  
+**Status:** DONE
 **Priority:** P0  
 **Goal:** make repository architecture documentation accurately reflect commits #55–61 and current main.
+
+**Closure evidence (2026-09-30):**
+- BASE_SHA: `d4939101621f25c38b61a4998392dcb0eac30a8a`
+- WORK_BRANCH: `governance/fr-00-gap-ledger-refresh`
+- reconciled A–Z status count: 26/26 entries, internally consistent
+- bounded capabilities #55–61 listed explicitly with source/test/ADR evidence
+- `uv run axignal-governance`: PASS
+- `uv run architecture-guard --root .`: PASS
+- `git diff --check`: PASS
+- integration evidence: GitHub PR/merge recorded in repository history
 
 ### Frontier finding
 The audit found P0-ARCH-01 materially stale: it still reports Source Acquisition and other components as absent even though recent slices implemented them.
