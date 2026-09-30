@@ -31,7 +31,7 @@ A task is not DONE because code exists. Runtime/product work normally progresses
 
 NOT_STARTED · READY · IN_PROGRESS · BLOCKED · DONE · DEFERRED · REJECTED
 
-**CURRENT_TASK = FR-07**
+**CURRENT_TASK = FR-08**
 
 ## 4. Frontier closure rule
 
@@ -322,9 +322,30 @@ The auditor's strongest positive UX pattern is backed by real runtime lineage, n
 
 ## FR-07 — First-Xeed Runtime Contract
 
-**Status:** NOT_STARTED  
+**Status:** DONE
 **Depends on:** FR-04, FR-05  
 **Priority:** P0
+
+**Closure evidence (2026-09-30):**
+- BASE_SHA: `ce816756b30ac3b708924f7fc9fc65c16d2c02a6`
+- WORK_BRANCH: `architecture/fr-07-first-xeed-runtime`
+- existing `XeedGerminationState` evolved as the single lifecycle authority; no parallel lifecycle model created
+- explicit states implemented: `PLANTED`, `RESOLVING`, `OBSERVING`, `PARTIAL_READY`, `FIRST_XIGNAL_READY`, `LIVE`, `INSUFFICIENT_EVIDENCE`, `FAILED`, `BLOCKED`
+- legal transition graph rejects fake progress such as `PLANTED → LIVE`
+- every transition retains timezone-aware occurrence time and explicit reason code
+- runtime controller requires `AuthorizedXeedOrganization` and consumes real `BootstrapPlan`, `PrimeExecutionTrace` and `ExplainableXignalProjection`
+- real Prime progress can produce `PARTIAL_READY` without claiming a Xignal exists
+- `RETAIN_UNKNOWN` / `DEFER` map to honest `INSUFFICIENT_EVIDENCE`, not failure or false
+- budget/rights blocking and operational failure remain distinct explicit states
+- first explainable Xignal identity is recorded immutably before `FIRST_XIGNAL_READY`
+- readiness decisions are bound to Xeed id, first Xignal id, observation depth and lifecycle revision; stale/cross-state decisions fail closed
+- FR-07 consumes readiness decisions but deliberately does not define Map Readiness policy; FR-08 owns that authority
+- PARTIAL_READY can recover to LIVE through a later governed readiness decision without fabricating a second first Xignal
+- ADR-0033 accepted and indexed
+- targeted lifecycle/authority tests: 25 PASS after compatibility repair; focused lifecycle set: 11 PASS
+- full pytest: 478 PASS
+- mypy: PASS (116 source files)
+- git diff --check: PASS
 
 ### Work
 Implement the minimum real lifecycle using existing authorities where possible: PLANTED, resolving/observing, PARTIAL_READY, FIRST_XIGNAL_READY, LIVE, INSUFFICIENT_EVIDENCE, FAILED/BLOCKED. Do not create duplicate lifecycle concepts if an existing model already governs them.

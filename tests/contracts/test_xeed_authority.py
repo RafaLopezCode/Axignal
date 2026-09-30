@@ -92,7 +92,7 @@ def test_organization_is_world_identity_not_tenant_identity() -> None:
 
 
 def test_germination_state_is_scoped_by_xeed_id() -> None:
-    from datetime import datetime
+    from datetime import UTC, datetime
     from typing import get_type_hints as hints
 
     from domain.xeed.germination import XeedGerminationState
@@ -102,7 +102,7 @@ def test_germination_state_is_scoped_by_xeed_id() -> None:
     state = XeedGerminationState(
         xeed_id=XeedId("xeed-a"),
         initiated_by="unverified-actor",
-        created_at=datetime(2026, 1, 1),
+        created_at=datetime(2026, 1, 1, tzinfo=UTC),
     )
     assert state.xeed_id == XeedId("xeed-a")
     assert not hasattr(state, "organization_id")

@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from datetime import datetime
+from datetime import UTC, datetime
 from pathlib import Path
 
 from domain.identity import XeedId
@@ -10,22 +10,33 @@ from domain.xeed.germination import XeedGerminationState, XeedGerminationStatus
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 XIGNAL_DIR = REPO_ROOT / "domain" / "xignal"
+NOW = datetime(2026, 1, 1, tzinfo=UTC)
 
 
 def test_xeed_germination_status_has_no_done_state() -> None:
     assert "DONE" not in XeedGerminationStatus.__members__
-    assert {status.value for status in XeedGerminationStatus} == {"GERMINATING", "LIVE"}
+    assert {status.value for status in XeedGerminationStatus} == {
+        "PLANTED",
+        "RESOLVING",
+        "OBSERVING",
+        "PARTIAL_READY",
+        "FIRST_XIGNAL_READY",
+        "LIVE",
+        "INSUFFICIENT_EVIDENCE",
+        "FAILED",
+        "BLOCKED",
+    }
 
 
-def test_planted_xeed_can_become_live_but_never_done() -> None:
+def test_planted_xeed_requires_governed_readiness_before_live() -> None:
     state = XeedGerminationState(
         xeed_id=XeedId("xeed-1"),
         initiated_by="user-1",
-        created_at=datetime(2026, 1, 1),
+        created_at=NOW,
     )
-    state.mark_live()
-    assert state.is_live is True
-    assert state.status is not XeedGerminationStatus.__members__.get("DONE", None)
+    assert state.status is XeedGerminationStatus.PLANTED
+    assert state.is_live is False
+    assert not hasattr(state, "mark_live")
 
 
 def test_xignal_package_no_longer_owns_observation_seed() -> None:

@@ -9,6 +9,17 @@ from application.xeed_germination.bootstrap import (
     build_bootstrap_plan,
 )
 from application.xeed_germination.learning import bootstrap_learning_event
+from application.xeed_germination.runtime import (
+    FirstXeedReadinessDecision,
+    apply_bootstrap_plan,
+    apply_first_xignal,
+    apply_prime_trace,
+    apply_readiness_decision,
+    begin_resolution,
+    mark_runtime_blocked,
+    mark_runtime_failed,
+    plant_xeed_runtime,
+)
 from application.xeed_germination.semantic_flow import (
     AdmittedGerminationFinding,
     CandidateInvestigator,
@@ -41,6 +52,7 @@ __all__ = [
     "EvidenceSupportJudge",
     "EvidenceSupportJudgment",
     "EvidenceWriter",
+    "FirstXeedReadinessDecision",
     "GerminationBudget",
     "GerminationCandidate",
     "GerminationCandidateCatalog",
@@ -50,6 +62,14 @@ __all__ = [
     "SemanticEncoder",
     "SemanticJudgmentWriter",
     "XeedSemanticGermination",
+    "apply_bootstrap_plan",
+    "apply_first_xignal",
+    "apply_prime_trace",
+    "apply_readiness_decision",
+    "begin_resolution",
     "bootstrap_learning_event",
     "build_bootstrap_plan",
+    "mark_runtime_blocked",
+    "mark_runtime_failed",
+    "plant_xeed_runtime",
 ]
