@@ -78,6 +78,7 @@ const state = {
   size: { width: 0, height: 0 },
   worldNodes: [],
   uxLab: null,
+  axentMessages: [],
 }
 
 function applyUiLocale(locale, { persist = false, selectionValue = locale } = {}) {
@@ -1015,6 +1016,12 @@ function render() {
     : contextLabel || presentation.text('context.current')
   $('#axent-xeed-label').textContent = displayContext
   $('#xeed-label').textContent = displayContext
+  for (const move of document.querySelectorAll('#axent-moves .ax-move')) {
+    move.dataset.activeXeedId = state.projection.context.id
+    move.dataset.activeKind = node.kind
+    move.dataset.activeCanonicalId = node.id
+  }
+  renderAxentTranscript(node)
   const activeViewName = presentation.text('context.activeAccessibleName', { name: displayContext })
   $('#xeed-current').setAttribute('aria-label', activeViewName)
   $('#xeed-rail').setAttribute('aria-label', activeViewName)
@@ -1336,20 +1343,128 @@ function displayProjection(projection) {
   fitCamera()
 }
 
-function appendFixtureMessage(role, content) {
-  const log = $('#axent-transcript')
-  const message = document.createElement('div')
-  message.className = `ax-msg ${role === 'axent' ? 'is-axent' : 'is-you'}`
-  message.dataset.syntheticFixture = 'true'
+function axentScopeForNode(node = focusedNode()) {
+  return Object.freeze({
+    xeedId: state.projection.context.id,
+    objectId: node.id,
+    objectKind: node.kind,
+    label: node.label,
+  })
+}
+
+function axentScopeKey(scope) {
+  return `${scope.xeedId}|${scope.objectKind}|${scope.objectId}`
+}
+
+function keyForAxentScope(scope) {
+  if (!scope || scope.xeedId !== state.projection.context.id) return null
+  if (scope.objectKind === 'ORGANIZATION' && scope.objectId === state.projection.organization.id) {
+    return organizationKey()
+  }
+  if (scope.objectKind === 'FAXT' && state.projection.nodes.some((node) => node.id === scope.objectId)) {
+    return projectionKey('FAXT', scope.objectId)
+  }
+  return null
+}
+
+function appendFixtureMessageElement(container, message) {
+  const element = document.createElement('div')
+  element.className = `ax-msg ${message.role === 'axent' ? 'is-axent' : 'is-you'}`
+  element.dataset.syntheticFixture = 'true'
+  element.dataset.scopeXeedId = message.scope.xeedId
+  element.dataset.scopeKind = message.scope.objectKind
+  element.dataset.scopeCanonicalId = message.scope.objectId
+  element.dataset.occurredAt = message.occurredAt
   const roleLabel = document.createElement('span')
   roleLabel.className = 'role'
-  roleLabel.textContent = role === 'you' ? 'You · test fixture' : 'AXENT · test fixture'
+  const role = message.role === 'you' ? 'You · test fixture' : 'AXENT · test fixture'
+  const when = presentation.formatDate(message.occurredAt)
+  roleLabel.textContent = when ? `${role} · ${when}` : role
   const text = document.createElement('p')
-  text.textContent = content
+  text.textContent = message.text
   text.dir = 'auto'
-  message.append(roleLabel, text)
-  log.append(message)
-  log.scrollTop = log.scrollHeight
+  element.append(roleLabel, text)
+  container.append(element)
+}
+
+function renderAxentTranscript(node = focusedNode()) {
+  const log = $('#axent-transcript')
+  log.replaceChildren()
+  const currentScope = axentScopeForNode(node)
+  const currentKey = axentScopeKey(currentScope)
+  const current = state.axentMessages.filter((message) => axentScopeKey(message.scope) === currentKey)
+  const previous = state.axentMessages.filter((message) => axentScopeKey(message.scope) !== currentKey)
+
+  const currentHeading = document.createElement('div')
+  currentHeading.className = 'ax-thread-heading'
+  currentHeading.textContent = presentation.text('navigation.currentInvestigation', { label: node.label })
+  log.append(currentHeading)
+
+  if (current.length) {
+    for (const message of current) appendFixtureMessageElement(log, message)
+  } else {
+    const empty = document.createElement('p')
+    empty.className = 'ax-thread-empty'
+    empty.textContent = presentation.text('navigation.noConversationForFocus')
+    log.append(empty)
+  }
+
+  if (previous.length) {
+    const separator = document.createElement('div')
+    separator.className = 'ax-continuity-label'
+    separator.textContent = presentation.text('navigation.previousInvestigations')
+    log.append(separator)
+
+    const groups = new Map()
+    for (const message of previous) {
+      const key = axentScopeKey(message.scope)
+      if (!groups.has(key)) groups.set(key, [])
+      groups.get(key).push(message)
+    }
+
+    for (const messages of groups.values()) {
+      const scope = messages[0].scope
+      const section = document.createElement('section')
+      section.className = 'ax-continuity'
+      section.dataset.scopeXeedId = scope.xeedId
+      section.dataset.scopeKind = scope.objectKind
+      section.dataset.scopeCanonicalId = scope.objectId
+
+      const head = document.createElement('div')
+      head.className = 'ax-continuity-head'
+      const meta = document.createElement('span')
+      const last = messages.at(-1)
+      const when = presentation.formatDate(last.occurredAt)
+      meta.textContent = `${scope.label}${when ? ` · ${when}` : ''}`
+      const resume = document.createElement('button')
+      resume.type = 'button'
+      resume.className = 'ax-continuity-resume'
+      resume.textContent = presentation.text('navigation.resumeInvestigation')
+      const target = keyForAxentScope(scope)
+      resume.disabled = !target
+      resume.addEventListener('click', () => {
+        if (target) navigate(target, { recenter: false })
+      })
+      head.append(meta, resume)
+      section.append(head)
+      for (const message of messages) appendFixtureMessageElement(section, message)
+      log.append(section)
+    }
+  }
+
+  log.scrollTop = 0
+}
+
+function appendFixtureMessage(role, content) {
+  if (!state.projection || !state.uxLab) return
+  state.axentMessages.push({
+    role,
+    text: content,
+    syntheticFixture: true,
+    scope: axentScopeForNode(),
+    occurredAt: new Date().toISOString(),
+  })
+  renderAxentTranscript()
 }
 
 function configureUxLab() {
@@ -1430,9 +1545,11 @@ function configureUxLab() {
     })
     moves.append(button)
   }
-  const log = $('#axent-transcript')
-  log.replaceChildren()
-  for (const message of lab.messages) appendFixtureMessage(message.role, message.text)
+  state.axentMessages = lab.messages.map((message) => ({
+    ...message,
+    scope: Object.freeze({ ...message.scope }),
+  }))
+  renderAxentTranscript()
   const input = $('#axent-input')
   const submit = $('#axent-ask')
   input.disabled = !lab.composerEnabled
