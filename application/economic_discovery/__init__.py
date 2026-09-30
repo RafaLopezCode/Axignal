@@ -73,6 +73,7 @@ from application.economic_discovery.planner import (
     CognitiveWorkPlan,
     DimensionWork,
     ObservationIngress,
+    assess_dimension_work,
     build_work_plan,
     plan_dimension_work,
     route_retrieval,
@@ -82,6 +83,7 @@ from application.economic_discovery.prime import (
     PrimeControlPlan,
     PrimeRoute,
     PrimeWorkItem,
+    build_initial_prime_control_plan,
     build_prime_control_plan,
 )
 
@@ -144,6 +146,8 @@ __all__ = [
     "XeedMarketMap",
     "XignalPresentation",
     "affected_dimensions",
+    "assess_dimension_work",
+    "build_initial_prime_control_plan",
     "build_prime_control_plan",
     "build_work_plan",
     "compile_observation_state",

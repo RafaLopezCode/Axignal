@@ -49,17 +49,15 @@ def route_retrieval(ingress: ObservationIngress) -> bool:
     return ingress.requires_universe_discovery
 
 
-def plan_dimension_work(
+def assess_dimension_work(
     *,
-    change: StateChange,
     contracts: tuple[TypingDimensionContract, ...],
     available_state_fields: frozenset[str],
 ) -> tuple[DimensionWork, ...]:
-    impacted = set(affected_dimensions(change, contracts))
+    """Assess answerability for every supplied dimension without inventing state change."""
+
     work: list[DimensionWork] = []
     for contract in contracts:
-        if contract.dimension_id not in impacted:
-            continue
         missing = tuple(
             requirement
             for requirement in contract.state_requirements
@@ -70,6 +68,23 @@ def plan_dimension_work(
         )
         work.append(DimensionWork(contract.dimension_id, disposition, missing))
     return tuple(work)
+
+
+def plan_dimension_work(
+    *,
+    change: StateChange,
+    contracts: tuple[TypingDimensionContract, ...],
+    available_state_fields: frozenset[str],
+) -> tuple[DimensionWork, ...]:
+    impacted = set(affected_dimensions(change, contracts))
+    return tuple(
+        item
+        for item in assess_dimension_work(
+            contracts=contracts,
+            available_state_fields=available_state_fields,
+        )
+        if item.dimension_id in impacted
+    )
 
 
 def build_work_plan(

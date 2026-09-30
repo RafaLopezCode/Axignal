@@ -2,8 +2,6 @@ from __future__ import annotations
 
 from datetime import UTC, datetime
 
-import pytest
-
 from application.economic_discovery import (
     DimensionRoutingPolicy,
     LearningCost,
@@ -104,8 +102,7 @@ def _routing() -> tuple[DimensionRoutingPolicy, ...]:
 def _policy() -> BootstrapPolicy:
     return BootstrapPolicy(
         policy_id="xeed-bootstrap",
-        version="1",
-        initial_state_requirements=("document.home.visible_text",),
+        version="2",
         max_known_sources=2,
     )
 
@@ -250,13 +247,13 @@ def test_bootstrap_plan_is_replay_stable() -> None:
     assert first.plan_fingerprint == second.plan_fingerprint
 
 
-def test_bootstrap_policy_requires_explicit_minimum_state() -> None:
-    with pytest.raises(ValueError, match="minimum initial state"):
-        BootstrapPolicy(
-            policy_id="xeed-bootstrap",
-            version="1",
-            initial_state_requirements=(),
-        )
+def test_bootstrap_policy_does_not_define_universal_minimum_state() -> None:
+    policy = BootstrapPolicy(
+        policy_id="xeed-bootstrap",
+        version="2",
+    )
+
+    assert not hasattr(policy, "initial_state_requirements")
 
 
 def test_bootstrap_outcome_can_be_recorded_without_granting_policy_authority() -> None:
@@ -296,3 +293,53 @@ def test_bootstrap_outcome_can_be_recorded_without_granting_policy_authority() -
     assert event.before_state_fingerprint == plan.state_fingerprint
     assert event.after_state_fingerprint == "state:after"
     assert not hasattr(event, "policy_update")
+
+
+def test_bootstrap_hands_off_answerable_dimension_without_waiting_for_unrelated_gap() -> None:
+    market = _contract()
+    reputation = TypingDimensionContract(
+        dimension_id="reputation",
+        version="1",
+        semantic_target="public reputation",
+        primitive=SemanticPrimitive.CHOICE,
+        question="What public reputation state is supported?",
+        state_requirements=("document.reviews.visible_text",),
+        dependencies=("document.reviews.visible_text",),
+        mutually_exclusive=False,
+        abstention_policy="preserve UNKNOWN",
+    )
+    routing = (
+        *_routing(),
+        DimensionRoutingPolicy(
+            dimension_id="reputation",
+            version="routing-v1",
+            answerable_route=PrimeRoute.STRUCTURED_EVALUATOR,
+        ),
+    )
+    rich_state = _rich_state(("document.home.visible_text", "Industrial pump manufacturer."))
+    reviews = BootstrapSourceCandidate(
+        candidate_id="source:reviews",
+        subject_id="org:1",
+        observation_slot="reviews",
+        source_ref="https://reviews.example/acme",
+        source_type="PUBLIC_REVIEWS",
+        provides_fields=frozenset({"document.reviews.visible_text"}),
+    )
+
+    plan = build_bootstrap_plan(
+        seed=_seed(),
+        rich_state=rich_state,
+        reused_observation_count=1,
+        policy=_policy(),
+        known_sources=(reviews,),
+        contracts=(market, reputation),
+        routing_policies=routing,
+    )
+
+    assert plan.disposition is BootstrapDisposition.HANDOFF_TO_PRIME
+    assert plan.prime_plan is not None
+    assert [item.dimension_id for item in plan.prime_plan.items] == ["market_mode"]
+    assert plan.dimension_gaps[0].dimension_id == "reputation"
+    assert plan.dimension_gaps[0].missing_requirements == ("document.reviews.visible_text",)
+    assert plan.missing_requirements == ("document.reviews.visible_text",)
+    assert plan.source_candidates == (reviews,)

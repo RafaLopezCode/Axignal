@@ -1,6 +1,7 @@
 """Governed Xeed germination application flows."""
 
 from application.xeed_germination.bootstrap import (
+    BootstrapDimensionGap,
     BootstrapDisposition,
     BootstrapPlan,
     BootstrapPolicy,
@@ -29,6 +30,7 @@ from application.xeed_germination.semantic_flow import (
 
 __all__ = [
     "AdmittedGerminationFinding",
+    "BootstrapDimensionGap",
     "BootstrapDisposition",
     "BootstrapPlan",
     "BootstrapPolicy",

@@ -31,7 +31,7 @@ A task is not DONE because code exists. Runtime/product work normally progresses
 
 NOT_STARTED · READY · IN_PROGRESS · BLOCKED · DONE · DEFERRED · REJECTED
 
-**CURRENT_TASK = FR-01**
+**CURRENT_TASK = FR-02**
 
 ## 4. Frontier closure rule
 
@@ -77,9 +77,25 @@ A future auditor must not be able to cite the ledger as contradicting current im
 
 ## FR-01 — Replace Universal Bootstrap Minimum With Dimensional Handoff
 
-**Status:** NOT_STARTED  
+**Status:** DONE
 **Depends on:** FR-00  
 **Priority:** P0
+
+**Closure evidence (2026-09-30):**
+- BASE_SHA: `158588e7c6129b3ed9fbb0627bfcef38efd1cf78`
+- WORK_BRANCH: `architecture/fr-01-dimensional-bootstrap`
+- `BootstrapPolicy.initial_state_requirements` removed
+- all declared semantic dimensions are explicitly assessed at bootstrap
+- only answerable dimensions are handed to executable Prime work
+- unresolved dimensions are preserved as explicit `BootstrapDimensionGap` with missing requirements
+- known-source planning may continue for gaps without blocking useful Prime work
+- ADR-0026 explicitly amended; FR-02 retains authority over whether a gap deserves research
+- targeted tests: 19 PASS
+- full pytest: 439 PASS
+- mypy: PASS (105 source files)
+- Architecture Guard: PASS
+- governance: PASS
+- git diff --check: PASS
 
 ### Frontier finding
 Minimum bootstrap state can delay useful partial value and confuses field presence with decision sufficiency.
