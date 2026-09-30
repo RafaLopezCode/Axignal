@@ -31,7 +31,7 @@ A task is not DONE because code exists. Runtime/product work normally progresses
 
 NOT_STARTED · READY · IN_PROGRESS · BLOCKED · DONE · DEFERRED · REJECTED
 
-**CURRENT_TASK = FR-04**
+**CURRENT_TASK = FR-05**
 
 ## 4. Frontier closure rule
 
@@ -201,9 +201,31 @@ Future audit cannot truthfully report budget doctrine without an enforceable bud
 
 ## FR-04 — Prime Execution Composition Root
 
-**Status:** NOT_STARTED  
+**Status:** DONE
 **Depends on:** FR-03  
 **Priority:** P0
+
+**Closure evidence (2026-09-30):**
+- BASE_SHA: `2386ab0644820efb00bdfc7dbb603d9e5d2ca748`
+- WORK_BRANCH: `architecture/fr-04-prime-composition-root`
+- one application-level composition root added at `application/economic_discovery/prime_execution.py`
+- entry requires `AuthorizedXeedOrganization`, not raw subscriber organization identity
+- real governed HTTP acquisition can be invoked through the source-acquisition port
+- acquired observations flow through Observation Memory, deterministic HTML representation, RichSubjectState, optional semantic extraction, Prime routing, Research Value decisions, Budget/Stop authorization and mechanism executor ports
+- concrete adapters remain outside application: `HttpSourceSensor`, `HtmlDocumentRepresentationAdapter`, `CognitiveSemanticExtractionAdapter`
+- exact source/request/policy/observation/representation/state/semantic fingerprints retained in `PrimeExecutionTrace`
+- execution-scoped Learning Event ids avoid retry/idempotency collisions
+- acquisition, representation, semantic-extraction and Prime-executor failures are recorded before re-raise
+- NO_CHANGE replay does not re-execute Prime
+- budget STOP prevents subsequent work and records a PARTIAL Learning Event
+- legacy `application/xeed_germination/semantic_flow.py` explicitly isolated from the Prime composition path
+- ADR-0030 accepted and indexed
+- targeted integration tests: 4 PASS
+- full pytest: 464 PASS
+- mypy: PASS (111 source files)
+- Architecture Guard: PASS
+- governance: PASS
+- git diff --check: PASS
 
 ### Frontier finding
 Strong local components exist, but no demonstrated composition root connects the full cognitive path.
