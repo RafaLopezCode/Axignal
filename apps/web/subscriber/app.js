@@ -114,7 +114,14 @@ const minimapRelationships = $('#minimap-relationships')
 const minimapWindow = $('#minimap-window')
 const relationshipLayer = $('#relationship-layer')
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)')
-const OVERVIEW_LABEL_ZOOM = 0.78
+const SPATIAL_ZOOM = Object.freeze({
+  WORLD_MAX: 0.84,
+  RELATION_PROOF_MIN: 1.55,
+  WORLD_TARGET: 0.72,
+  NEIGHBORHOOD_TARGET: 1.22,
+})
+const NEIGHBORHOOD_EDGE_BUDGET = 6
+const RELATION_PROOF_EDGE_BUDGET = 12
 const FIELD_SLOTS = [
   { x: 24, y: 34 },
   { x: 76, y: 58 },
@@ -132,6 +139,20 @@ const EPISTEMIC_STATES = new Set([
 
 function epistemicStateClass(value) {
   return EPISTEMIC_STATES.has(value) ? value.toLowerCase() : 'unknown'
+}
+
+function spatialLevel(zoom = state.camera.zoom) {
+  if (zoom < SPATIAL_ZOOM.WORLD_MAX) return 'WORLD'
+  if (zoom < SPATIAL_ZOOM.RELATION_PROOF_MIN) return 'NEIGHBORHOOD'
+  return 'RELATION_PROOF'
+}
+
+function spatialLevelKey(level = spatialLevel()) {
+  return ({
+    WORLD: 'spatial.world',
+    NEIGHBORHOOD: 'spatial.neighborhood',
+    RELATION_PROOF: 'spatial.relationProof',
+  })[level]
 }
 
 function minimapBounds(nodes = state.worldNodes) {
@@ -236,6 +257,8 @@ function cameraPoint(node) {
 }
 
 function updateCamera() {
+  const level = spatialLevel()
+  field.dataset.spatialLevel = level.toLowerCase().replace('_', '-')
   for (const element of cameraLayer.querySelectorAll('.anch')) {
     const node = state.worldNodes.find((item) => item.key === element.dataset.key)
     if (!node) continue
@@ -243,9 +266,10 @@ function updateCamera() {
     element.style.left = `${point.x}px`
     element.style.top = `${point.y}px`
   }
-  layoutLabels()
-  renderRelationships()
-  updateMinimap()
+  layoutLabels(level)
+  renderRelationships(level)
+  updateMinimap(level)
+  updateSpatialStatus(level)
 }
 
 function rectanglesOverlap(first, second, clearance = 4) {
@@ -282,7 +306,7 @@ function labelPriority(node, connectedToFocus) {
   return 3
 }
 
-function layoutLabels() {
+function layoutLabels(level = spatialLevel()) {
   const fieldBounds = field.getBoundingClientRect()
   const focus = state.worldNodes.find((node) => node.key === state.focus)
   const connectedToFocus = new Set()
@@ -323,7 +347,7 @@ function layoutLabels() {
   const sides = ['right', 'left', 'below', 'above']
   const fixedObstacles = [...field.querySelectorAll('.canvas-tools, .minimap, .here, .zone')]
     .map((element) => element.getBoundingClientRect())
-  const edgeSegments = (state.uxLab?.edges ?? []).flatMap((edge) => {
+  const edgeSegments = spatialEdges(level).flatMap((edge) => {
     const source = state.worldNodes.find((node) => node.id === edge.source)
     const target = state.worldNodes.find((node) => node.id === edge.target)
     if (!source || !target) return []
@@ -367,10 +391,14 @@ function layoutLabels() {
     let accepted = null
     let attentionFallback = null
 
-    if (state.camera.zoom < OVERVIEW_LABEL_ZOOM && priority > 1) {
+    const hiddenBySemanticLevel = (
+      (level === 'WORLD' && priority > 1)
+      || (level === 'NEIGHBORHOOD' && priority > 2)
+    )
+    if (hiddenBySemanticLevel) {
       for (const side of sides) label.classList.remove(`side-${side}`)
       label.classList.add(`side-${preferred}`, 'is-decluttered')
-      label.dataset.layoutVisibility = 'semantic-zoom-hidden'
+      label.dataset.layoutVisibility = `semantic-${level.toLowerCase()}-hidden`
       continue
     }
 
@@ -428,11 +456,33 @@ function layoutLabels() {
   }
 }
 
-function renderRelationships() {
+function spatialEdges(level = spatialLevel()) {
+  const edges = [...(state.uxLab?.edges ?? [])]
+    .filter((edge) => edge.syntheticFixture === true)
+    .sort((first, second) => first.id.localeCompare(second.id))
+  if (level === 'WORLD') return []
+  const focus = state.worldNodes.find((node) => node.key === state.focus)
+  if (!focus) return []
+  const attention = edges.filter((edge) => edge.source === focus.id || edge.target === focus.id)
+  if (level === 'NEIGHBORHOOD') return attention.slice(0, NEIGHBORHOOD_EDGE_BUDGET)
+
+  const neighbors = new Set()
+  for (const edge of attention) {
+    neighbors.add(edge.source === focus.id ? edge.target : edge.source)
+  }
+  const oneHopContext = edges.filter((edge) =>
+    !attention.includes(edge)
+    && (neighbors.has(edge.source) || neighbors.has(edge.target)),
+  )
+  return [...attention, ...oneHopContext].slice(0, RELATION_PROOF_EDGE_BUDGET)
+}
+
+function renderRelationships(level = spatialLevel()) {
   if (!relationshipLayer) return
   relationshipLayer.replaceChildren()
-  const edges = state.uxLab?.edges ?? []
+  const edges = spatialEdges(level)
   relationshipLayer.setAttribute('viewBox', `0 0 ${state.size.width} ${state.size.height}`)
+  relationshipLayer.dataset.spatialLevel = level
   for (const edge of edges) {
     const source = state.worldNodes.find((node) => node.id === edge.source)
     const target = state.worldNodes.find((node) => node.id === edge.target)
@@ -511,7 +561,7 @@ function renderBottomTabVisibility() {
   toggle.setAttribute('aria-expanded', String(!state.bottomTabCollapsed))
 }
 
-function updateMinimap() {
+function updateMinimap(level = spatialLevel()) {
   const { width, height } = state.size
   if (!width || !height) return
   const bounds = minimapBounds()
@@ -534,7 +584,7 @@ function updateMinimap() {
   minimapWindow.setAttribute('height', String(Math.max(0, bottom - top)))
   if (!minimapRelationships) return
   minimapRelationships.replaceChildren()
-  for (const edge of state.uxLab?.edges ?? []) {
+  for (const edge of spatialEdges(level)) {
     const source = state.worldNodes.find((node) => node.id === edge.source)
     const target = state.worldNodes.find((node) => node.id === edge.target)
     if (!source || !target) continue
@@ -550,6 +600,24 @@ function updateMinimap() {
     line.dataset.synthetic = String(edge.syntheticFixture)
     minimapRelationships.append(line)
   }
+}
+
+function updateSpatialStatus(level = spatialLevel()) {
+  const labels = [...cameraLayer.querySelectorAll('.anch-lbl')]
+    .filter((label) => !label.classList.contains('is-decluttered')).length
+  const relations = relationshipLayer?.childElementCount ?? 0
+  const levelLabel = presentation.text(spatialLevelKey(level))
+  const status = $('#spatial-status')
+  status.textContent = presentation.text('spatial.status', {
+    level: levelLabel,
+    labels,
+    relations,
+  })
+  field.setAttribute('aria-label', presentation.text('spatial.fieldAccessibleName', {
+    level: levelLabel,
+    labels,
+    relations,
+  }))
 }
 
 function makeMark(node) {
@@ -700,7 +768,7 @@ function animateCamera(target) {
 function focusCamera(key) {
   const node = state.worldNodes.find((item) => item.key === key)
   if (!node) return
-  const zoom = 1.22
+  const zoom = SPATIAL_ZOOM.NEIGHBORHOOD_TARGET
   animateCamera({
     x: state.size.width / 2 - (node.x / 100) * state.size.width * zoom,
     y: state.size.height / 2 - (node.y / 100) * state.size.height * zoom,
@@ -1044,10 +1112,11 @@ function fitCamera() {
   const maxY = Math.max(...ys) + 8
   const boundsWidth = ((maxX - minX) / 100) * state.size.width
   const boundsHeight = ((maxY - minY) / 100) * state.size.height
-  const zoom = Math.max(0.5, Math.min(2.8, Math.min(
+  const fitZoom = Math.max(0.5, Math.min(2.8, Math.min(
     state.size.width / boundsWidth,
     state.size.height / boundsHeight,
   ) * 0.96))
+  const zoom = Math.min(fitZoom, SPATIAL_ZOOM.WORLD_TARGET)
   const midX = (minX + maxX) / 2
   const midY = (minY + maxY) / 2
   animateCamera({

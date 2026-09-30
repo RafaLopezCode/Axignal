@@ -4370,3 +4370,50 @@ html[dir='rtl'] .trail { direction: rtl; }
 .stage2 .lens.is-expanded .lens-stop b {
   opacity: 1;
 }
+
+
+/* FR-13 — deterministic semantic zoom: WORLD → NEIGHBORHOOD → RELATION/PROOF. */
+.spatial-status {
+  position: absolute;
+  left: 106px;
+  bottom: 22px;
+  z-index: 6;
+  margin: 0;
+  color: var(--ink-3);
+  font: 8px/1.4 var(--mono);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  pointer-events: none;
+}
+.dot.mk {
+  transition: transform .18s var(--ease), opacity .18s var(--ease);
+}
+.field[data-spatial-level='world'] .anch:not(.organization):not(.is-focus) .dot.mk {
+  transform: scale(.76);
+  opacity: .58;
+}
+.field[data-spatial-level='neighborhood'] .zone.on {
+  opacity: .42;
+}
+.field[data-spatial-level='relation-proof'] .zone.on {
+  opacity: .16;
+}
+.field[data-spatial-level='relation-proof'] .lab-edge.is-attenuated {
+  opacity: .16;
+}
+.anch:focus-visible {
+  z-index: 7;
+}
+.anch:focus-visible .anch-lbl {
+  visibility: visible !important;
+  color: var(--ink);
+}
+
+.anch:focus {
+  z-index: 7;
+  opacity: 1;
+}
+.anch:focus .anch-lbl {
+  visibility: visible !important;
+  color: var(--ink);
+}
