@@ -31,7 +31,7 @@ A task is not DONE because code exists. Runtime/product work normally progresses
 
 NOT_STARTED · READY · IN_PROGRESS · BLOCKED · DONE · DEFERRED · REJECTED
 
-**CURRENT_TASK = FR-19**
+**CURRENT_TASK = FR-20**
 
 ## 4. Frontier closure rule
 
@@ -827,9 +827,33 @@ Future audit cannot correctly state fingerprint != replay as an unresolved Learn
 
 ## FR-19 — Governed Policy Candidate / Replay / Shadow
 
-**Status:** NOT_STARTED  
-**Depends on:** FR-18  
+**Status:** DONE
+**Depends on:** FR-18
 **Priority:** P1
+
+**Closure evidence (2026-10-01):**
+- introduced immutable offline-only `PolicyCandidate`, `HeldOutPolicySplit`, `PolicyReplayInput`, `ReplayEvaluation`, `ShadowPolicy` and `PolicyComparisonReport`
+- candidate identity binds exact baseline policy/version, candidate version, code SHA, sealed split id/fingerprint, creation time, development event ids and parameters
+- candidate and shadow contracts expose `production_authority = False`; FR-19 contains no promotion API, active-policy writer, EvidenceAdmission port or AXIGLAND mutation port
+- candidate construction rejects holdout or out-of-development evidence instead of silently accepting sealed cases
+- held-out split is both organization- and time-based: development/holdout organizations must be disjoint and development_end_at must precede holdout_start_at
+- candidate is permanently bound to the exact deterministic split fingerprint used during development
+- evaluators receive sanitized `PolicyReplayInput`, not the historical LearningEvent; sealed source outcome, reason code and output fingerprint are excluded from evaluator input
+- only FR-18 REPLAYABLE events invoke baseline/candidate evaluators; NON_REPLAYABLE cases remain explicitly present in the report with reason and no fabricated decision
+- shadow evaluator exceptions become explicit FAILED decisions rather than dropped cases
+- PolicyDecision preserves VALUE / UNKNOWN / ABSTAIN / FAILED as distinct states; non-VALUE states cannot carry a value
+- counter-metrics report total/evaluated/non-replayable holdout cases, failed source cases, baseline/candidate UNKNOWN/ABSTAIN/FAILED counts, UNKNOWN lost, abstention lost, introduced failures and value disagreements
+- regression reporting is deliberately limited to explicit epistemic/safety regressions (UNKNOWN lost + abstention lost + new failure); value disagreement is descriptive and not treated as a quality verdict
+- FAILED historical Learning Events and NON_REPLAYABLE events remain in held-out reports, preventing optimization by dropping negative cases
+- comparison rejects development evidence at evaluation time, preventing the baseline/challenger holdout run from inspecting the development side through the governed API
+- focused FR-19/FR-18/FR-17/Learning/Prime suite: 43 PASS
+- full pytest: 547 PASS using external `--basetemp` to avoid the known Windows user-temp ACL issue
+- Ruff format/check: PASS
+- mypy: PASS (119 source files)
+- Architecture Guard: PASS
+- axignal-governance: PASS
+- git diff --check: PASS
+- ADR-0045 accepted and indexed
 
 ### Work
 Implement offline-only immutable PolicyCandidate, baseline comparison, ReplayEvaluation, held-out organization/time split, ShadowPolicy with no side effects, counter-metrics and regression reporting. No automatic promotion.
