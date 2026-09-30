@@ -1,6 +1,6 @@
 # AXIGNAL Architectural Gap Ledger — P0-ARCH-01
 
-**Reconciled against:** `092fe53dde0bae4e947cf29ba0eb0579e947eafb`
+**Reconciled against:** `d4939101621f25c38b61a4998392dcb0eac30a8a`
 **Architecture input:** [AXIGNAL Logical Architecture Atlas V0.1](AXIGNAL_LOGICAL_ARCHITECTURE_ATLAS_V0.1.md)
 **Atlas SHA-256:** `e168f3360890a4837192a1082ae3f9a01a6edc8a011d266d9fb89cd2c3dc274e`
 **Purpose:** Distinguish source-evidenced current implementation from the accepted or specified logical target. This ledger is a reconciliation snapshot, not runtime architecture or an implementation backlog.
@@ -65,13 +65,13 @@ Status taxonomy is used exactly as follows:
 
 - `DOMAIN`: Research orchestration.
 - `TARGET_RESPONSIBILITY`: Choose worthwhile research from gaps, relevance, reuse, freshness, cost, rights, and stop conditions.
-- `CURRENT_STATUS`: `SPECIFIED_NOT_IMPLEMENTED`.
-- `REPOSITORY_EVIDENCE`: No planner or research-priority implementation found; `pipeline/features/model.py` only holds separate feature signals.
-- `MISSING_CAPABILITY`: Prioritization, job creation, reuse checks, and explicit stop decisions.
+- `CURRENT_STATUS`: `PARTIALLY_IMPLEMENTED`.
+- `REPOSITORY_EVIDENCE`: `application/economic_discovery/planner.py` computes dimension work from state requirements and changed dependencies; `application/economic_discovery/prime.py` deterministically routes impacted dimensions through versioned policies; tests in `tests/economic_discovery/test_planner.py` and `test_prime.py` cover those contracts.
+- `MISSING_CAPABILITY`: A governed Research Value Gate, materiality/value-of-information policy, rights-aware prioritization, executable research-job creation, cost/no-progress integration, and explicit defer/retain-UNKNOWN decisions.
 - `DEPENDENCIES`: Research triggers, Knowledge Frontier, budget controller, source capability, current canonical knowledge.
-- `AUTHORITY_BOUNDARY`: May schedule permitted investigation; cannot determine canonical truth.
-- `FUTURE_SLICE`: Research planning, after source architecture and explicit authorization.
-- `BLOCKING_OR_NONBLOCKING`: Nonblocking for this reconciliation; required before research orchestration.
+- `AUTHORITY_BOUNDARY`: May schedule permitted investigation; cannot determine canonical truth. Prime routing remains AXIGNAL/Python-owned.
+- `FUTURE_SLICE`: Frontier roadmap FR-02/FR-03/FR-04.
+- `BLOCKING_OR_NONBLOCKING`: Nonblocking for this reconciliation; partial planning exists, but autonomous research remains blocked until value/budget/stop gates exist.
 
 ### E — Budget Controller
 
@@ -89,64 +89,64 @@ Status taxonomy is used exactly as follows:
 
 - `DOMAIN`: Observation/acquisition.
 - `TARGET_RESPONSIBILITY`: Select permitted source capabilities and acquire observations through replaceable source adapters.
-- `CURRENT_STATUS`: `ACCEPTED_NOT_IMPLEMENTED`.
-- `ARCHITECTURE_STATUS`: `SOURCE_ACQUISITION_ARCHITECTURE=ACCEPTED_NOT_IMPLEMENTED` (ADR-0010, CTO accepted 2026-09-25).
-- `ENGINE_SELECTION`: `SOURCE_ENGINE_SELECTION=OPEN_IMPLEMENTATION_DECISION`; initial HTTP and browser adapters remain deferred.
-- `RUNTIME_STATUS`: `SOURCE_RUNTIME=NOT_IMPLEMENTED`.
-- `REPOSITORY_EVIDENCE`: `pipeline/discovery/` and `pipeline/enrichment/` contain package boundaries only; no production acquisition adapter, router, or source capability contract was found. The candidate harness and adapters are experimental evidence only.
-- `MISSING_CAPABILITY`: Source contract, rights enforcement, routing/scoring, acquisition adapters, retry/failure state, and provenance attachment. The Atlas leaves stack and router scoring open.
-- `DEPENDENCIES`: Research planner, budget/rights policy, evidence ledger, Python Stage 1.
-- `AUTHORITY_BOUNDARY`: Sources provide observations, not truth or instruction authority.
-- `FUTURE_SLICE`: Source runtime and implementation-time adapter selection require separate authorization; the accepted architecture does not authorize implementation.
-- `BLOCKING_OR_NONBLOCKING`: Nonblocking for this reconciliation; blocks acquisition runtime.
+- `CURRENT_STATUS`: `PARTIALLY_IMPLEMENTED`.
+- `ARCHITECTURE_STATUS`: `SOURCE_ACQUISITION_ARCHITECTURE=ACCEPTED_AND_PARTIALLY_IMPLEMENTED` (ADR-0010 plus PR #56).
+- `ENGINE_SELECTION`: Governed HTTP acquisition is implemented for explicitly authorized public sources; broader source routing and browser acquisition remain open/deferred.
+- `RUNTIME_STATUS`: `SOURCE_HTTP_RUNTIME=IMPLEMENTED_BOUNDED`; `GENERAL_SOURCE_ROUTER=NOT_IMPLEMENTED`.
+- `REPOSITORY_EVIDENCE`: `application/source_acquisition/contracts.py`, `application/source_acquisition/runtime.py`, the governed HTTP transport/CAS path under `pipeline/source_acquisition/`, and `tests/source_acquisition/test_http_source_runtime.py` implement policy-bound public HTTP acquisition, redirect re-authorization, public DNS/IP controls, immutable raw-artifact references, conversion to GovernedObservation, Observation Memory ingestion and dependency-aware work planning.
+- `MISSING_CAPABILITY`: Multi-capability source router, rights/applicability model beyond current public-source policy, browser adapter if justified, integrated budget/stop accounting, and production orchestration across research jobs.
+- `DEPENDENCIES`: Research planner, budget/rights policy, evidence/provenance, Observation Memory.
+- `AUTHORITY_BOUNDARY`: Sources provide observations, not truth or instruction authority; acquisition never bypasses EvidenceAdmission.
+- `FUTURE_SLICE`: Frontier roadmap FR-03/FR-04/FR-24.
+- `BLOCKING_OR_NONBLOCKING`: HTTP acquisition itself is implemented and tested; general autonomous source routing remains incomplete.
 
 ### G — Evidence Ledger / Provenance
 
 - `DOMAIN`: Evidence and provenance.
 - `TARGET_RESPONSIBILITY`: Preserve raw observation, source/artifact, time, acquisition path, normalization, claim, and decision lineage.
 - `CURRENT_STATUS`: `PARTIALLY_IMPLEMENTED`.
-- `REPOSITORY_EVIDENCE`: `domain/evidence/admission.py` defines `Evidence`; `pipeline/evidence/ledger.py` is an append-only in-memory list; FAXT/relationship models retain evidence references.
-- `MISSING_CAPABILITY`: Durable artifact/fingerprint storage, acquisition and normalization provenance chain, claim/decision links, source rights, and replay/idempotency handling.
-- `DEPENDENCIES`: Source acquisition, deterministic preprocessing, canonical admission.
-- `AUTHORITY_BOUNDARY`: Evidence supports decisions; evidence existence alone is not canonical admission.
-- `FUTURE_SLICE`: Evidence/source runtime, separately authorized.
-- `BLOCKING_OR_NONBLOCKING`: Nonblocking for this reconciliation; required for auditable acquisition and canonical writes.
+- `REPOSITORY_EVIDENCE`: `domain/evidence/admission.py` defines canonical Evidence admission; governed source acquisition preserves immutable raw-observation references and request/policy fingerprints; persistent Observation Memory retains observation/source/time/content fingerprints; DocumentRepresentation/RichStateDatum preserve observation/representation/source/time lineage; semantic candidates bind representation/contract/result fingerprints. Legacy `pipeline/evidence/ledger.py` remains an in-memory primitive, not the whole provenance architecture.
+- `MISSING_CAPABILITY`: Unified durable evidence/provenance projection across acquisition → representation → candidate → judgment → explanation → admission, source-rights/applicability metadata, and complete replay references for every hop.
+- `DEPENDENCIES`: Source acquisition, Observation Memory, representation, semantic evaluation, canonical admission.
+- `AUTHORITY_BOUNDARY`: Evidence/provenance support decisions; existence, grounding or lineage alone is not canonical admission.
+- `FUTURE_SLICE`: Frontier roadmap FR-06/FR-18/FR-24.
+- `BLOCKING_OR_NONBLOCKING`: Material provenance primitives are implemented; the end-to-end evidence narrative and rights/replay closure remain incomplete.
 
 ### H — Python deterministic intelligence
 
-- `DOMAIN`: Deterministic processing.
-- `TARGET_RESPONSIBILITY`: Intake, normalization, identity/state canonicalization, temporal/features, next-action and stop computation.
+- `DOMAIN`: Deterministic processing and control plane.
+- `TARGET_RESPONSIBILITY`: Intake, normalization, identity/state canonicalization, temporal/features, answerability, next-action routing and stop computation.
 - `CURRENT_STATUS`: `PARTIALLY_IMPLEMENTED`.
-- `REPOSITORY_EVIDENCE`: `pipeline/normalization/text.py`, `pipeline/entity_resolution/resolver.py`, and `pipeline/features/model.py` provide text normalization, exact-name matching, and separate feature fields.
-- `MISSING_CAPABILITY`: The Atlas's complete Python Stages 1–3, evidence parsing/fingerprints, richer resolution, state building, decision-gap analysis, information-gain/budget/stop computation.
-- `DEPENDENCIES`: Evidence, canonical domain models, research state, policy contracts.
-- `AUTHORITY_BOUNDARY`: Python makes data/state deterministic; it is not semantic truth authority and cannot bypass policy admission.
-- `FUTURE_SLICE`: Python deterministic intelligence, separately authorized.
-- `BLOCKING_OR_NONBLOCKING`: Nonblocking for this reconciliation; required before the full cognitive loop.
+- `REPOSITORY_EVIDENCE`: Existing normalization/entity-resolution/features primitives are now complemented by persistent Observation Memory state reconstruction, deterministic DocumentRepresentation → RichSubjectState compilation, dependency-aware planner work, market planning, Prime mechanism routing, Bootstrap source selection and Learning Memory summaries. Tests cover these contracts independently.
+- `MISSING_CAPABILITY`: Richer identity resolution, dimensional sufficiency beyond field presence, Research Value Gate, enforceable budget/stop controller, complete temporal/currentness engine, integrated execution/composition and policy promotion gates.
+- `DEPENDENCIES`: Evidence/provenance, canonical domain models, rich state, research state, versioned policy contracts.
+- `AUTHORITY_BOUNDARY`: Python governs deterministic mechanisms/routing; deterministic policy is not evidence and cannot bypass canonical admission.
+- `FUTURE_SLICE`: Frontier roadmap FR-01 through FR-04, FR-20 and FR-23 through FR-25.
+- `BLOCKING_OR_NONBLOCKING`: Substantial deterministic control-plane primitives exist; the full closed loop remains incomplete.
 
 ### I — Cognitive provider and evaluator boundary
 
 - `DOMAIN`: Cognition/provider orchestration.
-- `TARGET_RESPONSIBILITY`: Send structured cognitive jobs through replaceable adapters; interpret evidence and targeted research without canonical write authority.
+- `TARGET_RESPONSIBILITY`: Send bounded semantic or adaptive cognitive work through replaceable adapters without canonical write or routing authority.
 - `CURRENT_STATUS`: `PARTIALLY_IMPLEMENTED`.
-- `REPOSITORY_EVIDENCE`: `cognition/jobs/model.py`, `cognition/providers/base.py`, `cognition/providers/echo.py`, `cognition/router/router.py`, and `cognition/batch/packager.py` implement job/result shapes, provider protocol, router, offline Echo adapter, and deterministic batching.
-- `MISSING_CAPABILITY`: Any separately authorized contextual-cognition or structured-evaluator adapter, optional asynchronous submission/result lifecycle, operational retry/idempotency and an integrated deterministic-first research loop.
-- `DEPENDENCIES`: Python preprocessing/state, evidence, provider abstraction, JEV contract.
-- `AUTHORITY_BOUNDARY`: `StructuredResult.is_canonical_truth` is always false; model output must pass deterministic policy/evidence admission.
-- `FUTURE_SLICE`: Explicitly authorized provider-neutral cognition and evaluator work after semantic contracts and preceding architecture decisions.
-- `BLOCKING_OR_NONBLOCKING`: Nonblocking for this reconciliation; runtime integration remains prohibited here.
+- `REPOSITORY_EVIDENCE`: `cognition/jobs/model.py`, provider/router/batching primitives and the Echo fixture remain; semantic extraction now defines a provider-neutral grounded proposal contract and cognition job bridge; Prime defines DETERMINISTIC / STRUCTURED_EVALUATOR / ADAPTIVE_RESEARCH mechanism families while explicitly keeping concrete providers outside the control plane.
+- `MISSING_CAPABILITY`: Production adaptive-research executor, final StructuredEvaluatorPort semantics, live evaluator/provider adapters, retries/fallback/shadow behavior, capability negotiation and integrated execution.
+- `DEPENDENCIES`: Rich state, semantic contracts, Prime, evidence/provenance, provider abstractions.
+- `AUTHORITY_BOUNDARY`: Model/evaluator output is proposal/judgment only; providers cannot choose their own routing or write canonical state.
+- `FUTURE_SLICE`: Frontier roadmap FR-04, FR-21 and FR-22.
+- `BLOCKING_OR_NONBLOCKING`: Provider-neutral cognitive contracts exist; production evaluator/research execution remains incomplete.
 
 ### J — Structured State Builder
 
 - `DOMAIN`: Deterministic state construction.
-- `TARGET_RESPONSIBILITY`: Convert normalized candidates and evidence into validated structured state for bounded decision evaluation.
-- `CURRENT_STATUS`: `SPECIFIED_NOT_IMPLEMENTED`.
-- `REPOSITORY_EVIDENCE`: FAXT, relationship, feature, and cognitive result models exist independently; no builder/orchestrator connecting them was found.
-- `MISSING_CAPABILITY`: Unified typed state assembly, contradiction/source-diversity/currentness features, and validation before any bounded structured evaluator.
-- `DEPENDENCIES`: Python Stage 2, evidence/provenance, canonical domain types.
-- `AUTHORITY_BOUNDARY`: Constructs decision input only; construction is not canonical admission.
-- `FUTURE_SLICE`: Python deterministic intelligence, separately authorized.
-- `BLOCKING_OR_NONBLOCKING`: Nonblocking for this reconciliation; required before JEV evaluation.
+- `TARGET_RESPONSIBILITY`: Convert normalized observations/representations into validated structured state for bounded decision evaluation.
+- `CURRENT_STATUS`: `PARTIALLY_IMPLEMENTED`.
+- `REPOSITORY_EVIDENCE`: `application/source_representation/contracts.py` defines DocumentRepresentation/RichStateDatum/RichSubjectState; `application/source_representation/runtime.py` deterministically compiles explicit represented semantics into provenance-preserving rich state and computes state deltas; `tests/source_representation/test_document_representation.py` verifies the contract. Grounded semantic candidates in `application/semantic_extraction/` are separately bound to exact representation/contract fingerprints.
+- `MISSING_CAPABILITY`: Complete decision-family state compilation, contradiction/source-diversity/currentness features, per-dimension sufficiency beyond field presence, and the integrated executor that supplies bounded evaluators.
+- `DEPENDENCIES`: Governed observation/representation, evidence/provenance, semantic contracts.
+- `AUTHORITY_BOUNDARY`: Constructs decision input only; state construction and semantic candidates are not canonical admission.
+- `FUTURE_SLICE`: Frontier roadmap FR-01/FR-04/FR-21.
+- `BLOCKING_OR_NONBLOCKING`: RichSubjectState exists and is tested; complete evaluator-ready state composition remains partial.
 
 ### K — JEV Decision Layer
 
@@ -164,13 +164,13 @@ Status taxonomy is used exactly as follows:
 
 - `DOMAIN`: Uncertainty representation.
 - `TARGET_RESPONSIBILITY`: Preserve why a decision is insufficient, ambiguous, contradictory, stale, unobservable, or intrinsically uncertain, and identify possible resolvers.
-- `CURRENT_STATUS`: `SPECIFIED_NOT_IMPLEMENTED`.
-- `REPOSITORY_EVIDENCE`: Epistemic and currentness enums plus `KnowledgeFrontier` exist; no structured `DecisionGap` analyzer/type was found.
-- `MISSING_CAPABILITY`: Distinct reasoned gap fields, contradiction/source/currentness diagnostics, and resolver candidates.
-- `DEPENDENCIES`: Structured state, JEV outcomes, Knowledge Frontier.
+- `CURRENT_STATUS`: `PARTIALLY_IMPLEMENTED`.
+- `REPOSITORY_EVIDENCE`: `TypingDimensionContract.state_requirements`, `DimensionDisposition.NOT_ANSWERABLE`, planner `missing_requirements`, Prime routing and Bootstrap missing-state output provide an explicit, replayable representation of some answerability gaps. Epistemic/currentness enums and `KnowledgeFrontier` remain separate supporting primitives.
+- `MISSING_CAPABILITY`: Rich reason codes for contradiction/staleness/rights/unobservability, evidence-quality diagnostics, resolver/value policy, and a unified decision-gap representation spanning structured evaluation and research.
+- `DEPENDENCIES`: Rich state, typed dimension contracts, Knowledge Frontier, temporal/currentness, evaluator results.
 - `AUTHORITY_BOUNDARY`: Represents uncertainty; it must not coerce UNKNOWN to FALSE or rewrite canonical state.
-- `FUTURE_SLICE`: JEV/Python decision-state work, separately authorized.
-- `BLOCKING_OR_NONBLOCKING`: Nonblocking for this reconciliation; required before uncertainty-driven research.
+- `FUTURE_SLICE`: Frontier roadmap FR-01/FR-02/FR-25.
+- `BLOCKING_OR_NONBLOCKING`: Basic missing-requirement analysis exists; materiality/research-worth and richer uncertainty remain incomplete.
 
 ### M — Canonical Policy Gate
 
@@ -247,14 +247,14 @@ Status taxonomy is used exactly as follows:
 ### S — Xeed / Xignal lifecycle
 
 - `DOMAIN`: Persistent observation lifecycle.
-- `TARGET_RESPONSIBILITY`: Represent an observation objective and persistent focus with budgets, expansion, readiness, and LIVE cultivation.
+- `TARGET_RESPONSIBILITY`: Represent an observation objective and persistent focus with governed bootstrap, budgets, expansion, readiness, and LIVE cultivation.
 - `CURRENT_STATUS`: `PARTIALLY_IMPLEMENTED`.
-- `REPOSITORY_EVIDENCE`: `domain/xeed/model.py` implements canonical Xeed identity and `domain/xeed/germination.py` implements shallow `GERMINATING`/`LIVE` lifecycle, budget and timing state. The complete Brain germination state machine, scheduler and productive runtime remain absent.
-- `MISSING_CAPABILITY`: Xeed, lifecycle phases, scheduler/orchestrator, full budgets, readiness and notification; exact Xeed/Xignal lifecycle mapping remains open in the Atlas.
-- `DEPENDENCIES`: Organization identity, Knowledge Frontier, Research Planner, Budget Controller, Map Readiness.
-- `AUTHORITY_BOUNDARY`: Xignal/Xeed allocate attention and compute, not ownership or canonical authority.
-- `FUTURE_SLICE`: Xeed lifecycle, separately authorized.
-- `BLOCKING_OR_NONBLOCKING`: Nonblocking for this reconciliation; lifecycle specifics remain open.
+- `REPOSITORY_EVIDENCE`: `domain/xeed/model.py` implements canonical Xeed identity; `domain/xeed/germination.py` retains shallow germination state; `application/xeed_germination/bootstrap.py` now implements a temporary authorized bootstrap plan over RichSubjectState, bounded known-source selection, explicit missing requirements, replay-stable fingerprints and handoff into Prime; `tests/xeed_germination/test_bootstrap.py` covers reuse, handoff, escalation, source isolation and replay.
+- `MISSING_CAPABILITY`: Dimensional handoff instead of the current universal bootstrap minimum, Research Value Gate, enforceable cost/stop budgets, productive executor, Map Readiness, persistent LIVE scheduling and an integrated Xignal lifecycle.
+- `DEPENDENCIES`: Organization identity, RichSubjectState, Prime, Research Value Gate, Budget Controller, Map Readiness.
+- `AUTHORITY_BOUNDARY`: Xeed authorizes attention; Bootstrap plans observation; Xignal is emergent attention/signal. None is canonical truth authority.
+- `FUTURE_SLICE`: Frontier roadmap FR-01 through FR-08.
+- `BLOCKING_OR_NONBLOCKING`: Temporary bootstrap planning is implemented; productive first-Xeed-to-Xignal lifecycle remains incomplete.
 
 ### T — Map Readiness
 
@@ -307,38 +307,54 @@ Status taxonomy is used exactly as follows:
 ### X — Subscriber Projection
 
 - `DOMAIN`: Subscriber/read projection.
-- `TARGET_RESPONSIBILITY`: Combine canonical state, private context, and view parameters without allowing private context to mutate AXIGLAND.
-- `CURRENT_STATUS`: `SPECIFIED_NOT_IMPLEMENTED`.
-- `REPOSITORY_EVIDENCE`: `apps/web/README.md` defines a query/presentation boundary; no app source or subscriber projection type exists.
-- `MISSING_CAPABILITY`: Projection/query runtime and isolated private-context storage/filters.
-- `DEPENDENCIES`: AXIGLAND projections, user view parameters, privacy boundary.
+- `TARGET_RESPONSIBILITY`: Combine governed economic state, private context, and view parameters without allowing private context to mutate AXIGLAND.
+- `CURRENT_STATUS`: `PARTIALLY_IMPLEMENTED`.
+- `REPOSITORY_EVIDENCE`: `apps/web/subscriber/` contains the subscriber demo/reference shell and interaction code; HFX presentation contracts/tests define subscriber-safe projection semantics and explicitly separate presentation from canonical truth. The Frontier UX audit verified the demo/Golden Master as a reference experience, not a connected production read model.
+- `MISSING_CAPABILITY`: Real query/read-model composition from governed runtime state, persisted private cognitive continuity, live Xeed switching/planting, explainable Xignal feed, and production integration.
+- `DEPENDENCIES`: Explainable Xignal/evidence projections, user/Xeed context, privacy boundary, product runtime.
 - `AUTHORITY_BOUNDARY`: Subscriber context affects view/attention only; no canonical write authority.
-- `FUTURE_SLICE`: Product projection/UI, separately authorized.
-- `BLOCKING_OR_NONBLOCKING`: Nonblocking for this reconciliation; product UI explicitly not authorized.
+- `FUTURE_SLICE`: Frontier roadmap FR-05 through FR-16 and FR-29/FR-30.
+- `BLOCKING_OR_NONBLOCKING`: Reference/demo projection exists; integrated subscriber runtime remains incomplete.
 
-### Y — Brain Telemetry
+### Y — Brain Telemetry / Learning Memory
 
-- `DOMAIN`: Internal operations/observability.
-- `TARGET_RESPONSIBILITY`: Observe economics, evidence yield, uncertainty, reuse, temporal freshness, readiness, and loop outcomes.
-- `CURRENT_STATUS`: `SPECIFIED_NOT_IMPLEMENTED`.
-- `REPOSITORY_EVIDENCE`: No Brain runtime, metrics, trace, or telemetry package/workflow found; current CI validates code and structure only.
-- `MISSING_CAPABILITY`: Event/metric schema, instrumentation, storage, dashboards, alerts, and privacy boundaries.
-- `DEPENDENCIES`: Research, cognition, source, temporal, reuse, and Map Readiness events.
-- `AUTHORITY_BOUNDARY`: Operational signals diagnose process; they do not define semantic truth.
-- `FUTURE_SLICE`: Brain operations/observability, separately authorized.
-- `BLOCKING_OR_NONBLOCKING`: Nonblocking for this reconciliation.
+- `DOMAIN`: Internal operations/observability and governed process learning.
+- `TARGET_RESPONSIBILITY`: Observe economics, evidence yield, uncertainty, reuse, temporal freshness, readiness, route outcomes, cost, latency and corrections without turning process metrics into truth.
+- `CURRENT_STATUS`: `PARTIALLY_IMPLEMENTED`.
+- `REPOSITORY_EVIDENCE`: `application/economic_discovery/learning_memory.py` defines provider-neutral append-only LearningEvent/Cost/Yield/Summary contracts; `pipeline/learning_memory/sqlite_store.py` provides durable replay-safe SQLite persistence; `application/xeed_germination/learning.py` binds bootstrap outcomes to exact plan/policy/state fingerprints; `tests/economic_discovery/test_learning_memory.py` covers persistence, idempotency, conflict, corrections, UNKNOWN-vs-zero cost, chronology, UTC and concurrent replay.
+- `MISSING_CAPABILITY`: Automatic emission from the real integrated executor, complete artifact/harness replay references, per-hop first-loss attribution, production metrics/alerts, offline PolicyCandidate/Replay/Shadow evaluation and governed promotion/rollback.
+- `DEPENDENCIES`: Real execution path, research/cognition/source events, temporal/reuse state and policy versions.
+- `AUTHORITY_BOUNDARY`: Learning/operational events diagnose AXIGNAL process only; they cannot mutate AXIGLAND, EvidenceAdmission or production policy automatically.
+- `FUTURE_SLICE`: Frontier roadmap FR-17 through FR-20 and FR-26.
+- `BLOCKING_OR_NONBLOCKING`: Durable Learning Memory V0 is implemented; operational instrumentation and policy learning remain incomplete.
 
 ### Z — Provider abstractions
 
-- `DOMAIN`: Replaceable source, cognition, and cartography organs.
+- `DOMAIN`: Replaceable source, cognition, evaluator, and cartography organs.
 - `TARGET_RESPONSIBILITY`: Keep provider/library details behind AXIGNAL-owned contracts and domain-independent identities.
 - `CURRENT_STATUS`: `PARTIALLY_IMPLEMENTED`.
-- `REPOSITORY_EVIDENCE`: Cognitive provider protocol/router/Echo adapter exist in `cognition/`; no source contract/adapter or renderer adapter exists. Architecture Guard forbids concrete model SDKs outside `cognition/providers/` and prevents provider canonical writes.
-- `MISSING_CAPABILITY`: Source and renderer contracts/adapters, real provider lifecycle, and broader integration tests.
-- `DEPENDENCIES`: Cognition jobs, source acquisition, graph projection/cartography.
-- `AUTHORITY_BOUNDARY`: Provider IDs/results cannot define canonical identity or truth. Sigma + Graphology remain replaceable and noncanonical.
-- `FUTURE_SLICE`: Add only after the corresponding source or graph architecture slice is authorized.
-- `BLOCKING_OR_NONBLOCKING`: Nonblocking for this reconciliation; no provider adoption is authorized here.
+- `REPOSITORY_EVIDENCE`: Cognitive provider protocol/router/Echo adapter exist in `cognition/`; governed source acquisition now uses AXIGNAL-owned request/observation contracts; semantic extraction is provider-neutral and normalizes untrusted proposal payloads; Prime routes by mechanism family rather than provider. Architecture Guard forbids concrete model SDK leakage and provider canonical writes.
+- `MISSING_CAPABILITY`: Final StructuredEvaluatorPort semantics, live evaluator adapters/bakeoff, broader source capability router, renderer adapter, real provider lifecycle/retries and integrated execution tests.
+- `DEPENDENCIES`: Cognition jobs, source acquisition, Prime, structured evaluation, graph projection/cartography.
+- `AUTHORITY_BOUNDARY`: Provider IDs/results cannot define canonical identity, routing authority or truth. Model agreement is not evidence corroboration.
+- `FUTURE_SLICE`: Frontier roadmap FR-21/FR-22 plus later renderer/source work when justified.
+- `BLOCKING_OR_NONBLOCKING`: Provider-neutral boundaries are materially implemented; live provider adoption and comparative evidence remain incomplete.
+
+## Recent governed runtime reconciliation — PRs #55–61
+
+These slices post-date the original Atlas reconciliation and cut across multiple A–Z domains. They are listed explicitly so the ledger does not hide implemented runtime behind older broad-domain wording.
+
+| Slice | Current status | Direct repository evidence | Still missing |
+| --- | --- | --- | --- |
+| Persistent Observation Memory (#55) | `IMPLEMENTED` as bounded runtime capability | `application/economic_discovery/observation_memory.py`, durable SQLite adapter under `pipeline/observation_memory/`, `tests/economic_discovery/test_observation_memory.py` | full product composition, rights/applicability policy, production storage guarantees |
+| Governed HTTP Source Observation (#56) | `IMPLEMENTED` as bounded HTTP acquisition capability | `application/source_acquisition/`, `pipeline/source_acquisition/`, `tests/source_acquisition/test_http_source_runtime.py` | general source router, browser capability if justified, integrated budget/research execution |
+| Document Representation + RichSubjectState (#57) | `IMPLEMENTED` as deterministic representation/state capability | `application/source_representation/`, `tests/source_representation/test_document_representation.py` | full decision-family sufficiency/currentness/conflict compilation |
+| Grounded Semantic Claim Candidates (#58) | `IMPLEMENTED` as candidate-only semantic extraction boundary | `application/semantic_extraction/`, `cognition/jobs/semantic_extraction.py`, `tests/semantic_extraction/test_semantic_claim_candidates.py` | live provider/evaluator integration, entailment/decision composition, canonical admission |
+| Prime Cognitive Control Plane (#59) | `IMPLEMENTED` as planning/routing contract | `application/economic_discovery/prime.py`, `tests/economic_discovery/test_prime.py`, ADR-0025 | execution composition root, Research Value Gate, structured/adaptive executors |
+| Temporal Xeed Bootstrap Controller (#60) | `IMPLEMENTED` as temporary planning contract | `application/xeed_germination/bootstrap.py`, `tests/xeed_germination/test_bootstrap.py`, ADR-0026 | dimensional handoff, budgets/stops, real dispatch/lifecycle integration |
+| Governed Learning Memory V0 (#61) | `IMPLEMENTED` as observational ledger/store | `application/economic_discovery/learning_memory.py`, `pipeline/learning_memory/sqlite_store.py`, `tests/economic_discovery/test_learning_memory.py`, ADR-0027 | automatic per-hop emission, replay completeness, policy-candidate/shadow/promotion machinery |
+
+`IMPLEMENTED` in this table is deliberately narrower than an A–Z domain status: it means the named slice capability exists and is deterministically tested. It does not mean the full Brain, product journey, production deployment or target domain is complete.
 
 ## Status counts
 
@@ -347,9 +363,9 @@ Counts cover the 26 broad domains A–Z above; they do not count individual clas
 | Status | Count |
 | --- | ---: |
 | `IMPLEMENTED` | 0 |
-| `PARTIALLY_IMPLEMENTED` | 10 |
-| `SPECIFIED_NOT_IMPLEMENTED` | 11 |
-| `ACCEPTED_NOT_IMPLEMENTED` | 4 |
+| `PARTIALLY_IMPLEMENTED` | 16 |
+| `SPECIFIED_NOT_IMPLEMENTED` | 6 |
+| `ACCEPTED_NOT_IMPLEMENTED` | 3 |
 | `OPEN_DECISION` | 1 |
 | `EXPERIMENTAL` | 0 |
 | `RETIRED` | 0 |
@@ -359,44 +375,44 @@ The graph-engine bakeoff is experimental research evidence, not an implemented A
 
 ## Closed-loop coverage in the target and repository
 
-The target loops are explicitly specified in Atlas §§61–66. The codebase does not currently execute any end-to-end loop. Graphify indexes the Atlas and this ledger as architecture documents; that makes target paths queryable as documentation, not implemented runtime paths.
+The target loops are explicitly specified in Atlas §§61–66. The repository now implements multiple bounded segments of the research/reuse path — governed acquisition, persistent Observation Memory, representation, rich state, semantic candidates, Prime planning, Bootstrap and Learning Memory — but it still does not execute the complete product/research loop end to end. Graphify indexes the Atlas and this ledger as architecture documents; that makes target paths queryable as documentation, not proof of runtime composition.
 
 | Loop | Target definition | Current code coverage | Status in Graphify architecture knowledge |
 | --- | --- | --- | --- |
-| Research | Atlas §61: gap → question → acquisition → Python₁ → Luna → Python₂ → JEV → policy or structured gap → Python₃/Luna targeted acquisition. | Individual evidence, normalization, resolver, and provider primitives only; no connected loop. | Target loop explicitly indexed; status and code evidence linked here. |
+| Research | Atlas §61: gap → question → acquisition → Python₁ → Luna → Python₂ → JEV → policy or structured gap → Python₃/Luna targeted acquisition. | Governed HTTP acquisition, persistent observations, rich state, grounded candidates, answerability planning, Prime routing and temporary Bootstrap exist; Research Value Gate, enforceable budget/stop, live structured/adaptive executors and connected composition root remain absent. | Target loop explicitly indexed; partial runtime evidence linked here. |
 | Observation | Atlas §62: canonical state → time/decay → reobservation → frontier/research → uphold/revise/retire/unresolved. | Currentness/time fields and XeedGerminationState timestamps only; no decay engine or scheduler. | Target loop explicitly indexed; runtime absent. |
 | Map Readiness repair | Atlas §63: readiness failure → dimension gap → targeted research → canonical state → readiness. | No readiness gate or repair path. | Target loop explicitly indexed; runtime absent. |
 | Claim Review | Atlas §64: challenge → request/trigger → independent reinvestigation → evidence outcome. | No Claim Review runtime. No direct canonical path is implemented; direct edit authority is prohibited by doctrine. | Target loop explicitly indexed; direct-write transition prohibited. |
 | Graph expansion | Atlas §65: Hop0 → valuable Hop1 → selective Hop2 → gaps → information-gain research/stop. | No graph projection/expansion runtime. `KnowledgeFrontier.candidate_expansions` is a field only. | Target loop explicitly indexed; runtime absent. |
-| Reuse | Atlas §66: new question → reusable/current canonical knowledge or gap/stale → research → learn for later reuse. | Canonical models exist; no reuse lookup, deduplication, or research short-circuit runtime. | Target loop explicitly indexed; runtime absent. |
+| Reuse | Atlas §66: new question → reusable/current canonical knowledge or gap/stale → research → learn for later reuse. | Persistent Observation Memory supports subject reuse and idempotency; Bootstrap accepts existing RichSubjectState/reuse evidence, but rights/currentness/applicability-aware reuse lookup and integrated research short-circuit remain incomplete. | Target loop explicitly indexed; partial runtime evidence linked here. |
 
 ## Cognitive authority and direct-write paths
 
-The Atlas's target cognitive flow is **Sources → deterministic Stage 1 → bounded replaceable contextual cognition when needed → deterministic Stage 2 and answerability → replaceable structured evaluator only when required and eligible → AXIGNAL Policy Gate, or (insufficient) structured gap → AXENT research → Source Router → new evidence**. In the current repository, normalization/exact-name resolution are partial Stage 1-like primitives; provider job/result abstractions and the Echo test adapter are not semantic cognition; domain models are not a Stage 2 builder; no production structured evaluator or Stage 3 research loop exists; the targeted return path is specified only.
+The Atlas's target cognitive flow is **Sources → deterministic Stage 1 → bounded replaceable contextual cognition when needed → deterministic Stage 2 and answerability → replaceable structured evaluator only when required and eligible → AXIGNAL Policy Gate, or (insufficient) structured gap → AXENT research → Source Router → new evidence**. The current repository now contains a bounded source runtime, persistent Observation Memory, deterministic DocumentRepresentation/RichSubjectState compilation, grounded semantic candidate normalization, typed answerability/planning, Prime routing and temporary Xeed Bootstrap. It still lacks the integrated composition root, Research Value Gate, enforceable budget/stop controller, production structured evaluator and adaptive-research executor required to close that loop.
 
 - `CLAIM_REVIEW_DIRECT_CANONICAL_PATH=NO`: no Claim Review runtime exists; the Atlas explicitly prohibits this edge.
 - `MODEL_DIRECT_CANONICAL_PATH=NO`: `StructuredResult.is_canonical_truth` is false; FAXT/observed relationships require `EvidenceAdmission`.
-- `SOURCE_DIRECT_CANONICAL_PATH=NO`: no acquisition adapters exist; `EvidenceAdmission` rejects attention-only authorities and requires references/claims.
+- `SOURCE_DIRECT_CANONICAL_PATH=NO`: governed acquisition adapters now exist, but they produce observations only; `EvidenceAdmission` remains required for canonical FAXT/observed-relationship writes and sources have no direct canonical authority.
 - `RENDERER_CANONICAL_AUTHORITY=NO`: ADR-0009 and graph-design contracts keep renderer types/authority outside canonical domain.
 - `ORGANIZATION_CONSTRUCTION_SURFACE`: `Organization` is directly constructible. No persistence or app write route exists in the current source tree, so a live external canonical-write path was not demonstrated. Guarded persistence is a future prerequisite, not something inferred from this model.
 
 ## Other current repository evidence
 
 - **Implemented support boundaries:** Architecture Guard (`tools/architecture_guard/`), deterministic governance (`tools/governance/`), Graphify, Spec Kit, existing design skills, and CI are engineering/governance systems, not AXIGLAND runtime domains.
-- **Minimal app:** `apps/web/README.md` states the presentation/query boundary; there are no tracked app implementation files.
+- **Subscriber reference/demo app:** `apps/web/subscriber/` contains tracked static/reference implementation and HFX interaction code. It is not evidence of a connected production subscriber read model; the Frontier UX audit observed demo/example-data and disabled real-Xeed actions.
 - **Cognitive test adapter:** `EchoProvider` is deterministic, offline boundary evidence, not a real model integration.
 - **Batch packaging:** `BatchPackager` chunks jobs in memory; it does not queue or submit asynchronous provider batches.
 - **Dependencies:** `pyproject.toml` and `uv.lock` contain no Sigma, Graphology, Cosmos, scraper, JEV, or model-provider runtime integration.
 - **Dependency-direction findings:** Architecture Guard reports zero violations at this baseline. No provider SDK imports occur in `domain/`; provider adapters are bounded under `cognition/providers/`.
-- **Current-to-target contract gap:** several target responsibilities (trigger, scheduler, policy, writer, readiness, telemetry) have no accepted runtime contracts or modules. They remain gaps; this slice adds no fake runtime types.
+- **Current-to-target contract gap:** trigger intake, full budget/stop enforcement, scheduler, complete canonical writer/policy expansion, Map Readiness, production evaluator/adaptive-research execution and integrated telemetry emission remain gaps. Learning Memory V0 now supplies an observational process ledger, but not full operational telemetry/policy learning.
 
 ## Open decisions and architecture conflicts
 
 `ARCHITECTURE_AUTHORITY_CONFLICT=NONE_FOUND` between this subordinate Atlas and the MASTER, Engineering Constitution, or accepted ADRs.
 
-Open decisions recorded by Atlas §70 remain open, including the Source Acquisition stack and source/router scoring, JEV selection/API, Python library and entity-resolution choices, persistence/graph storage, queues/orchestration, batch sizing, budget and readiness thresholds, observation frequencies, event transport, notification provider, and final public/commercial UI. These are not resolved by Graphify or by this ledger.
+Open decisions recorded by Atlas §70 remain open except where later accepted/implemented slices now provide bounded evidence. In particular, governed public HTTP acquisition is no longer wholly open, while broader source capability routing/scoring, browser acquisition if justified, evaluator selection/API, richer entity resolution, persistence/graph storage, queues/orchestration, batch sizing, budget/readiness thresholds, observation frequencies, event transport, notification provider, and final public/commercial UI remain unresolved or only partially implemented. These are not resolved by Graphify or by this ledger.
 
-`DEPENDENCY_DIRECTION_VIOLATIONS=0` at the verified baseline. `UNDOCUMENTED_CURRENT_COMPONENTS` were not found within the required product domains; current support tooling and the Echo/batch primitives are recorded above so they are not mistaken for target runtime.
+`DEPENDENCY_DIRECTION_VIOLATIONS=0` at the verified baseline. Recent runtime slices #55–61 are explicitly reconciled above so they are not mistaken for missing target responsibilities or for complete end-to-end product runtime.
 
 ## Graphify representation limits
 
