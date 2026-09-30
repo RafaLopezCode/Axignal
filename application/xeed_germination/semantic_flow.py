@@ -1,4 +1,8 @@
-"""Governed first semantic-retrieval flow for Xeed germination.
+"""Legacy isolated semantic-retrieval germination flow.
+
+This module predates the Prime execution composition root and is retained only
+for its existing governed experiments/tests. It is NOT the production Prime
+composition path and MUST NOT be called from prime_execution.py.
 
 Retrieval only chooses where to investigate. Canonical state is produced only
 from an investigator finding that survives EvidenceAdmission and FAXT creation.
