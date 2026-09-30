@@ -79,6 +79,8 @@ const state = {
   worldNodes: [],
   uxLab: null,
   axentMessages: [],
+  mobileSurface: 'reader',
+  mobileReturnSurface: 'reader',
 }
 
 function applyUiLocale(locale, { persist = false, selectionValue = locale } = {}) {
@@ -114,6 +116,7 @@ const minimapRelationships = $('#minimap-relationships')
 const minimapWindow = $('#minimap-window')
 const relationshipLayer = $('#relationship-layer')
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)')
+const mobileViewport = window.matchMedia('(max-width: 680px)')
 const SPATIAL_ZOOM = Object.freeze({
   WORLD_MAX: 0.84,
   RELATION_PROOF_MIN: 1.55,
@@ -963,8 +966,9 @@ function navigate(key, { record = true, recenter = true } = {}) {
   setBottomView('reader')
   if (record) pushHistory(key)
   state.focus = key
+  if (mobileViewport.matches && state.mobileSurface !== 'axent') state.mobileSurface = 'reader'
   render()
-  if (recenter) focusCamera(key)
+  if (recenter && !mobileViewport.matches) focusCamera(key)
 }
 
 function setBottomView(view, restoreFocus = false) {
@@ -1008,6 +1012,7 @@ function makeReaderHeader(kickerText, titleText, meaningText, kind) {
 
   const title = document.createElement('h1')
   title.id = 'bottom-title'
+  title.tabIndex = -1
   title.textContent = titleText
   const meaning = document.createElement('p')
   meaning.id = 'reader-meaning'
@@ -1016,13 +1021,16 @@ function makeReaderHeader(kickerText, titleText, meaningText, kind) {
   return { header, title, meaning }
 }
 
-function todayFixtureItems() {
-  const whyKey = (predicate) => ({
+function whyTextForSource(source) {
+  const key = ({
     MANUFACTURES: 'today.why.manufactures',
     SERVES_MARKET: 'today.why.servesMarket',
     MAINTAINS_STANDARD: 'today.why.maintainsStandard',
-  })[predicate] ?? 'today.why.default'
+  })[source?.predicate] ?? 'today.why.default'
+  return presentation.text(key)
+}
 
+function todayFixtureItems() {
   return [...state.projection.nodes]
     .map((source) => {
       const fact = describeFactForView(source)
@@ -1032,7 +1040,7 @@ function todayFixtureItems() {
         fact,
         key: projectionKey('FAXT', source.id),
         observedSort: observed && !Number.isNaN(observed.valueOf()) ? observed.valueOf() : Number.NEGATIVE_INFINITY,
-        why: presentation.text(whyKey(source.predicate)),
+        why: whyTextForSource(source),
       }
     })
     .sort((first, second) => second.observedSort - first.observedSort || first.source.id.localeCompare(second.source.id))
@@ -1041,6 +1049,15 @@ function todayFixtureItems() {
 
 function openTodayEvidence(key) {
   navigate(key, { recenter: false })
+  if (mobileViewport.matches) {
+    state.mobileSurface = 'evidence'
+    const evidence = $('.semantic-evidence-action')
+    if (evidence?.getAttribute('aria-expanded') !== 'true') evidence?.click()
+    evidence?.focus({ preventScroll: true })
+    $('.semantic-evidence')?.scrollIntoView({ block: 'start' })
+    updateMobileNavigation()
+    return
+  }
   state.depth = 3
   renderDepth()
   $('#depth-slider').focus({ preventScroll: true })
@@ -1131,8 +1148,17 @@ function renderReader(node) {
         const open = document.createElement('button')
         open.className = 'today-secondary'
         open.type = 'button'
-        open.append(presentation.text('today.openMap'), axignalIcon('arrow-right'))
+        const desktopOpenLabel = presentation.text('today.openMap')
+        const openLabel = mobileViewport.matches ? presentation.text('mobile.openXignal') : desktopOpenLabel
+        open.append(openLabel, axignalIcon('arrow-right'))
         open.addEventListener('click', () => navigate(item.key, { recenter: false }))
+        open.addEventListener('click', () => {
+          if (!mobileViewport.matches) return
+          state.mobileSurface = 'reader'
+          $('#reader').scrollTop = 0
+          $('#bottom-title')?.focus({ preventScroll: true })
+          updateMobileNavigation()
+        })
 
         actions.append(evidence, open)
         card.append(eyebrow, title, whyLabel, why, meta, actions)
@@ -1175,8 +1201,46 @@ function renderReader(node) {
     setReaderField(presentation.text('field.lastObserved'), presentation.formatDate(node.source.observedAt)),
   ].filter(Boolean))
   columns.append(direct)
-  focusView.append(readerHeader.header, kicker, readerHeader.title, readerHeader.meaning, columns)
+
+  const why = document.createElement('section')
+  why.className = 'mobile-why'
+  const whyTitle = document.createElement('h2')
+  whyTitle.textContent = presentation.text('mobile.why')
+  const whyCopy = document.createElement('p')
+  whyCopy.textContent = whyTextForSource(node.source)
+  why.append(whyTitle, whyCopy)
+
+  focusView.append(readerHeader.header, kicker, readerHeader.title, readerHeader.meaning, columns, why)
   target.append(focusView)
+}
+
+function renderMobileTimeline(node) {
+  const reader = $('#reader')
+  const section = document.createElement('section')
+  section.className = 'mobile-timeline-section'
+  section.id = 'mobile-timeline-section'
+  section.tabIndex = -1
+  const title = document.createElement('h2')
+  title.textContent = presentation.text('mobile.timelineTitle')
+  const current = document.createElement('div')
+  current.className = 'mobile-timeline-current'
+  const currentLabel = document.createElement('strong')
+  currentLabel.textContent = presentation.text('mobile.timelineCurrent')
+  const details = document.createElement('dl')
+  if (node.kind === 'FAXT') {
+    const fact = describeFactForView(node.source)
+    appendDefinition(details, presentation.text('accessible.observedAt'), fact.observedAt)
+    appendDefinition(details, presentation.text('accessible.currentness'), fact.currentnessLabel)
+    appendDefinition(details, presentation.text('accessible.epistemicState'), fact.epistemicLabel)
+  } else {
+    appendDefinition(details, presentation.text('accessible.currentness'), presentation.text('accessible.organizationState'))
+  }
+  current.append(currentLabel, details)
+  const unavailable = document.createElement('p')
+  unavailable.className = 'mobile-timeline-unavailable'
+  unavailable.textContent = presentation.text('mobile.timelineUnavailable')
+  section.append(title, current, unavailable)
+  reader.append(section)
 }
 
 function renderHistory() {
@@ -1246,6 +1310,7 @@ function render() {
   renderMap()
   renderReader(node)
   renderAccessibleProjection(node)
+  renderMobileTimeline(node)
   renderConnections(node)
   renderBottomTabVisibility()
   renderHistory()
@@ -1253,6 +1318,10 @@ function render() {
   $('#axent-moves-focus').textContent = node.kind === 'ORGANIZATION'
     ? presentation.text('organization.label')
     : node.label
+  $('#mobile-focus-label').textContent = node.kind === 'ORGANIZATION'
+    ? presentation.text('navigation.today')
+    : node.label
+  $('#mobile-back').disabled = state.historyIndex <= 0
   $('#axent-pill-label').textContent = node.label
   const pill = $('#axent-active-context')
   pill.dataset.activeXeedId = state.projection.context.id
@@ -1273,6 +1342,7 @@ function render() {
     move.dataset.activeCanonicalId = node.id
   }
   renderAxentTranscript(node)
+  updateMobileNavigation()
   const activeViewName = presentation.text('context.activeAccessibleName', { name: displayContext })
   $('#xeed-current').setAttribute('aria-label', activeViewName)
   $('#xeed-rail').setAttribute('aria-label', activeViewName)
@@ -1373,6 +1443,74 @@ function setSidebarCollapsed(collapsed) {
   })
 }
 
+function updateMobileNavigation() {
+  const mapping = {
+    reader: '#mobile-today',
+    evidence: '#mobile-evidence',
+    timeline: '#mobile-timeline',
+    axent: '#mobile-axent',
+  }
+  for (const button of document.querySelectorAll('.mobile-nav button')) {
+    button.removeAttribute('aria-current')
+  }
+  const activeSelector = state.mobileSurface === 'reader'
+    ? state.projection && focusedNode().kind === 'ORGANIZATION' ? '#mobile-today' : null
+    : mapping[state.mobileSurface]
+  const active = activeSelector ? $(activeSelector) : null
+  active?.setAttribute('aria-current', 'page')
+  const open = state.mobileSurface === 'axent'
+  $('#mobile-axent')?.setAttribute('aria-expanded', String(open))
+  $('#mobile-axent-open')?.setAttribute('aria-expanded', String(open))
+}
+
+function setMobileAxentOpen(open, { restoreFocus = true } = {}) {
+  if (!mobileViewport.matches) return
+  if (open) {
+    if (state.mobileSurface !== 'axent') state.mobileReturnSurface = state.mobileSurface
+    state.mobileSurface = 'axent'
+  } else {
+    state.mobileSurface = state.mobileReturnSurface || 'reader'
+  }
+  app.classList.toggle('mobile-axent-open', open)
+  const scrim = $('#mobile-scrim')
+  scrim.hidden = !open
+  const panel = $('#axent-panel')
+  if (open) {
+    panel.removeAttribute('aria-hidden')
+    panel.setAttribute('role', 'dialog')
+    panel.setAttribute('aria-modal', 'true')
+  } else {
+    panel.setAttribute('aria-hidden', 'true')
+    panel.removeAttribute('role')
+    panel.removeAttribute('aria-modal')
+  }
+  updateMobileNavigation()
+  if (open) $('#mobile-axent-close').focus({ preventScroll: true })
+  else if (restoreFocus) $('#mobile-axent').focus({ preventScroll: true })
+}
+
+function focusMobileSection(surface) {
+  if (!mobileViewport.matches) return
+  if (state.mobileSurface === 'axent') setMobileAxentOpen(false, { restoreFocus: false })
+  state.mobileSurface = surface
+  updateMobileNavigation()
+  const target = surface === 'evidence'
+    ? $('.semantic-evidence')
+    : surface === 'timeline'
+      ? $('#mobile-timeline-section')
+      : $('#reader')
+  if (surface === 'reader') {
+    $('#reader').scrollTop = 0
+    $('#bottom-title')?.focus({ preventScroll: true })
+    return
+  }
+  target?.scrollIntoView({ block: 'start' })
+  const focusTarget = surface === 'evidence'
+    ? $('.semantic-evidence-action')
+    : $('#mobile-timeline-section')
+  focusTarget?.focus({ preventScroll: true })
+}
+
 function setXeedMenuOpen(open, focusSearch = false) {
   if (!state.uxLab) return
   const selector = $('#xeed-current')
@@ -1387,6 +1525,60 @@ function bindInteractions() {
   const sidebarBreakpoint = window.matchMedia('(max-width: 900px)')
   setSidebarCollapsed(sidebarBreakpoint.matches)
   sidebarBreakpoint.addEventListener('change', (event) => setSidebarCollapsed(event.matches))
+  mobileViewport.addEventListener('change', (event) => {
+    if (!event.matches) {
+      app.classList.remove('mobile-axent-open')
+      $('#mobile-scrim').hidden = true
+      const panel = $('#axent-panel')
+      panel.removeAttribute('aria-hidden')
+      panel.removeAttribute('role')
+      panel.removeAttribute('aria-modal')
+      state.mobileSurface = 'reader'
+      state.mobileReturnSurface = 'reader'
+    }
+    if (state.projection) render()
+  })
+  $('#mobile-back').addEventListener('click', () => {
+    if (state.historyIndex <= 0) return
+    state.historyIndex -= 1
+    state.mobileSurface = 'reader'
+    navigate(state.history[state.historyIndex], { record: false, recenter: false })
+    focusMobileSection('reader')
+  })
+  $('#mobile-today').addEventListener('click', () => {
+    setMobileAxentOpen(false, { restoreFocus: false })
+    state.mobileSurface = 'reader'
+    navigate(organizationKey(), { recenter: false })
+    focusMobileSection('reader')
+  })
+  $('#mobile-evidence').addEventListener('click', () => focusMobileSection('evidence'))
+  $('#mobile-timeline').addEventListener('click', () => focusMobileSection('timeline'))
+  $('#mobile-axent').addEventListener('click', () => setMobileAxentOpen(true))
+  $('#mobile-axent-open').addEventListener('click', () => setMobileAxentOpen(true))
+  $('#mobile-axent-close').addEventListener('click', () => setMobileAxentOpen(false))
+  $('#mobile-scrim').addEventListener('click', () => setMobileAxentOpen(false))
+  $('#axent-panel').addEventListener('keydown', (event) => {
+    if (!mobileViewport.matches || state.mobileSurface !== 'axent') return
+    if (event.key === 'Escape') {
+      event.preventDefault()
+      setMobileAxentOpen(false)
+      return
+    }
+    if (event.key !== 'Tab') return
+    const focusable = [...$('#axent-panel').querySelectorAll(
+      'button:not([disabled]), input:not([disabled]), textarea:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])',
+    )].filter((element) => element.getClientRects().length > 0)
+    if (!focusable.length) return
+    const first = focusable[0]
+    const last = focusable.at(-1)
+    if (event.shiftKey && document.activeElement === first) {
+      event.preventDefault()
+      last.focus()
+    } else if (!event.shiftKey && document.activeElement === last) {
+      event.preventDefault()
+      first.focus()
+    }
+  })
   $('#preferences-open').addEventListener('click', () => setBottomView('preferences'))
   $('#preferences-close').addEventListener('click', () => setBottomView('reader', true))
   $('#preferences-view').addEventListener('keydown', (event) => {
