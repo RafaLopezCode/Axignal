@@ -31,7 +31,7 @@ A task is not DONE because code exists. Runtime/product work normally progresses
 
 NOT_STARTED · READY · IN_PROGRESS · BLOCKED · DONE · DEFERRED · REJECTED
 
-**CURRENT_TASK = FR-06**
+**CURRENT_TASK = FR-07**
 
 ## 4. Frontier closure rule
 
@@ -283,9 +283,28 @@ Future audit can inspect a real Xignal path instead of only contracts and candid
 
 ## FR-06 — End-to-End Evidence Narrative
 
-**Status:** NOT_STARTED  
+**Status:** DONE
 **Depends on:** FR-05  
 **Priority:** P0
+
+**Closure evidence (2026-09-30):**
+- BASE_SHA: `957213e92f9ec868326bf042dc1c0ac4231df22d`
+- WORK_BRANCH: `architecture/fr-06-evidence-narrative`
+- runtime-backed `EvidenceNarrative` resolver added in subscriber projection
+- narrative resolves authorized Xignal lineage through canonical claim/optional relationship/PATHX, stored Observation Memory record, public source, observation time, contradiction and explicit unknown
+- every Basis observation reference must resolve uniquely against the authorized canonical subject
+- source reference must match the persisted observation source or projection fails closed
+- immutable CAS artifacts are verified through an application-owned integrity port and concrete content-addressed adapter
+- artifact verification correctly treats acquisition-envelope CAS identity separately from observed-content fingerprint
+- UI DTO exposes no CAS refs, filesystem paths, peer IPs, headers or raw infrastructure identifiers
+- deterministic `focus_step_id` / `return_focus_step_id` return to the parent Xignal
+- exact Observation Memory replay reconstructs an equal narrative
+- ADR-0032 accepted and indexed
+- targeted narrative/Xignal tests: 7 PASS
+- full pytest: 471 PASS
+- mypy: PASS (115 source files)
+- Architecture Guard: PASS
+- git diff --check: PASS
 
 ### Work
 Prove the product-grade causal path Xignal → relationship/claim → observation → source → time → what remains unknown. Preserve derivation and temporal context, provide deterministic return to parent focus, include currentness/contradiction where applicable, and never generate post-hoc explanations unsupported by lineage.
