@@ -34,6 +34,18 @@ from application.economic_discovery.explanation import (
     ExplainableBasis,
     require_explainable_basis,
 )
+from application.economic_discovery.learning_memory import (
+    LearningCost,
+    LearningEvent,
+    LearningEventKind,
+    LearningMechanism,
+    LearningMemory,
+    LearningMemoryConflict,
+    LearningOutcome,
+    LearningSummary,
+    LearningYield,
+    summarize_learning,
+)
 from application.economic_discovery.market_entry import (
     MarketParticipation,
     MarketRelationship,
@@ -95,6 +107,15 @@ __all__ = [
     "ExplainableAssociation",
     "ExplainableBasis",
     "GovernedObservation",
+    "LearningCost",
+    "LearningEvent",
+    "LearningEventKind",
+    "LearningMechanism",
+    "LearningMemory",
+    "LearningMemoryConflict",
+    "LearningOutcome",
+    "LearningSummary",
+    "LearningYield",
     "MarketObservationDirective",
     "MarketParticipation",
     "MarketRelationship",
@@ -131,4 +152,5 @@ __all__ = [
     "plan_market_observation",
     "require_explainable_basis",
     "route_retrieval",
+    "summarize_learning",
 ]

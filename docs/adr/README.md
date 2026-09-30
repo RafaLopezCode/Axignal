@@ -31,6 +31,10 @@ Constitution (`.specify/memory/constitution.md`).
 | [ADR-0021](ADR-0021-authorized-xeed-organization-context-read.md) | Authorized Xeed Read of Its Global Organization Context (**ACCEPTED; P0-CORE-04 CONTRACT IMPLEMENTED**) | §§3, 6.1, 7.3, 15.2, 36 |
 | [ADR-0022](ADR-0022-canonical-iconography.md) | Canonical Interface Iconography (**ACCEPTED; ADOPTION DEFERRED**) | Design System / Golden Master authority |
 | [ADR-0023](ADR-0023-xeed-seed-xignal-emergent-signal.md) | XEED Is the Planted Observation Seed; XIGNAL Is an Emergent Economic Signal (**ACCEPTED**) | §§4.4/4.4A, 7, 26, 27, 33 |
+| [ADR-0024](ADR-0024-measurable-economic-discovery-engine.md) | Measurable Economic Discovery Engine (**ACCEPTED**) | §§14–16, 19, 35, 53 |
+| [ADR-0025](ADR-0025-axignal-prime-cognitive-control-plane.md) | AXIGNAL Prime Cognitive Control Plane (**ACCEPTED**) | §§56.13–56.20 |
+| [ADR-0026](ADR-0026-xeed-bootstrap-controller.md) | Temporal Xeed Bootstrap Controller (**ACCEPTED**) | §§4.4, 7, 56.14, 56.18, 56.20 |
+| [ADR-0027](ADR-0027-learning-memory-v0.md) | Governed Learning Memory V0 (**ACCEPTED**) | §§14, 46, 53, 56.13–56.20 |
 
 ## Adding an ADR
 
