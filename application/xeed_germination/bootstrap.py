@@ -20,6 +20,10 @@ from application.economic_discovery import (
 )
 from application.economic_discovery.brain_contracts import DimensionDisposition
 from application.economic_discovery.planner import assess_dimension_work
+from application.economic_discovery.research_value import (
+    ResearchValueDecision,
+    ResearchValueDisposition,
+)
 from application.source_representation import RichSubjectState
 from application.xeed_access.organization_reader import AuthorizedXeedOrganization
 
@@ -28,6 +32,9 @@ class BootstrapDisposition(StrEnum):
     ACQUIRE_KNOWN_SOURCES = "ACQUIRE_KNOWN_SOURCES"
     HANDOFF_TO_PRIME = "HANDOFF_TO_PRIME"
     ADAPTIVE_RESEARCH = "ADAPTIVE_RESEARCH"
+    RETAIN_UNKNOWN = "RETAIN_UNKNOWN"
+    DEFER = "DEFER"
+    BLOCKED_BY_BUDGET_OR_RIGHTS = "BLOCKED_BY_BUDGET_OR_RIGHTS"
 
 
 @dataclass(frozen=True, slots=True)
@@ -171,6 +178,41 @@ def _select_known_sources(
     return tuple(selected)
 
 
+def _resolve_research_disposition(
+    *,
+    subject_id: str,
+    state_fingerprint: str,
+    gaps: tuple[BootstrapDimensionGap, ...],
+    decisions: tuple[ResearchValueDecision, ...],
+) -> BootstrapDisposition:
+    indexed = {decision.dimension_id: decision for decision in decisions}
+    if len(indexed) != len(decisions):
+        raise ValueError("bootstrap research-value decisions must be unique")
+
+    resolved: list[ResearchValueDisposition] = []
+    for gap in gaps:
+        decision = indexed.get(gap.dimension_id)
+        if decision is None:
+            raise ValueError(
+                f"missing Research Value decision for bootstrap gap {gap.dimension_id!r}"
+            )
+        if (
+            decision.subject_id != subject_id
+            or decision.state_fingerprint != state_fingerprint
+            or decision.missing_requirements != gap.missing_requirements
+        ):
+            raise ValueError("bootstrap Research Value decision does not match current gap")
+        resolved.append(decision.disposition)
+
+    if ResearchValueDisposition.RESEARCH_NOW in resolved:
+        return BootstrapDisposition.ADAPTIVE_RESEARCH
+    if ResearchValueDisposition.BLOCKED_BY_BUDGET_OR_RIGHTS in resolved:
+        return BootstrapDisposition.BLOCKED_BY_BUDGET_OR_RIGHTS
+    if ResearchValueDisposition.DEFER in resolved:
+        return BootstrapDisposition.DEFER
+    return BootstrapDisposition.RETAIN_UNKNOWN
+
+
 def _plan_fingerprint(
     *,
     xeed_id: str,
@@ -182,6 +224,7 @@ def _plan_fingerprint(
     gaps: tuple[BootstrapDimensionGap, ...],
     sources: tuple[BootstrapSourceCandidate, ...],
     prime_plan: PrimeControlPlan | None,
+    research_decisions: tuple[ResearchValueDecision, ...],
 ) -> str:
     return _fingerprint(
         {
@@ -193,13 +236,23 @@ def _plan_fingerprint(
             "missing": missing,
             "gaps": [(gap.dimension_id, gap.missing_requirements) for gap in gaps],
             "sources": [item.candidate_id for item in sources],
+            "research_decisions": [
+                (
+                    item.dimension_id,
+                    item.disposition.value,
+                    item.policy_id,
+                    item.policy_version,
+                    item.context_fingerprint,
+                )
+                for item in research_decisions
+            ],
             "prime_items": []
             if prime_plan is None
             else [
                 (
                     item.dimension_id,
                     item.disposition.value,
-                    item.route.value,
+                    None if item.route is None else item.route.value,
                     item.policy_version,
                 )
                 for item in prime_plan.items
@@ -217,6 +270,7 @@ def build_bootstrap_plan(
     known_sources: tuple[BootstrapSourceCandidate, ...],
     contracts: tuple[TypingDimensionContract, ...],
     routing_policies: tuple[DimensionRoutingPolicy, ...],
+    research_decisions: tuple[ResearchValueDecision, ...] = (),
 ) -> BootstrapPlan:
     """Return the shortest governed path from planted Xeed to Prime."""
 
@@ -275,7 +329,12 @@ def build_bootstrap_plan(
         disposition = BootstrapDisposition.ACQUIRE_KNOWN_SOURCES
     else:
         prime_plan = None
-        disposition = BootstrapDisposition.ADAPTIVE_RESEARCH
+        disposition = _resolve_research_disposition(
+            subject_id=subject_id,
+            state_fingerprint=rich_state.fingerprint,
+            gaps=gaps,
+            decisions=research_decisions,
+        )
 
     fingerprint = _plan_fingerprint(
         xeed_id=xeed_id,
@@ -287,6 +346,7 @@ def build_bootstrap_plan(
         gaps=gaps,
         sources=sources,
         prime_plan=prime_plan,
+        research_decisions=research_decisions,
     )
     return BootstrapPlan(
         xeed_id=xeed_id,

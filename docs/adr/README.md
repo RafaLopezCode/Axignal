@@ -35,6 +35,7 @@ Constitution (`.specify/memory/constitution.md`).
 | [ADR-0025](ADR-0025-axignal-prime-cognitive-control-plane.md) | AXIGNAL Prime Cognitive Control Plane (**ACCEPTED**) | §§56.13–56.20 |
 | [ADR-0026](ADR-0026-xeed-bootstrap-controller.md) | Temporal Xeed Bootstrap Controller (**ACCEPTED**) | §§4.4, 7, 56.14, 56.18, 56.20 |
 | [ADR-0027](ADR-0027-learning-memory-v0.md) | Governed Learning Memory V0 (**ACCEPTED**) | §§14, 46, 53, 56.13–56.20 |
+| [ADR-0028](ADR-0028-research-value-gate.md) | Research Value Gate (**ACCEPTED**) | §§14, 46, 53, 56.13–56.20 |
 
 ## Adding an ADR
 

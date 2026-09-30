@@ -20,6 +20,10 @@ from application.economic_discovery.planner import (
     assess_dimension_work,
     plan_dimension_work,
 )
+from application.economic_discovery.research_value import (
+    ResearchValueDecision,
+    ResearchValueDisposition,
+)
 
 
 class PrimeRoute(StrEnum):
@@ -53,20 +57,52 @@ class PrimeWorkItem:
 
     dimension_id: str
     disposition: DimensionDisposition
-    route: PrimeRoute
+    route: PrimeRoute | None
     policy_version: str
     missing_requirements: tuple[str, ...]
+    research_disposition: ResearchValueDisposition | None = None
+    research_policy_id: str | None = None
+    research_policy_version: str | None = None
+    research_context_fingerprint: str | None = None
+    research_reason_codes: tuple[str, ...] = ()
 
     def __post_init__(self) -> None:
         if not self.dimension_id.strip() or not self.policy_version.strip():
             raise ValueError("prime work item identity is required")
         if self.disposition is DimensionDisposition.NOT_ANSWERABLE:
-            if self.route is not PrimeRoute.ADAPTIVE_RESEARCH:
-                raise ValueError("non-answerable work must route to adaptive research")
             if not self.missing_requirements:
-                raise ValueError("adaptive research requires explicit missing information")
-        elif self.missing_requirements:
-            raise ValueError("answerable work cannot carry missing requirements")
+                raise ValueError("non-answerable work requires explicit missing information")
+            if self.research_disposition is None:
+                raise ValueError("non-answerable work requires research-value disposition")
+            if any(
+                value is None or not value.strip()
+                for value in (
+                    self.research_policy_id,
+                    self.research_policy_version,
+                    self.research_context_fingerprint,
+                )
+            ):
+                raise ValueError("non-answerable work requires research-value provenance")
+            if not self.research_reason_codes:
+                raise ValueError("research-value decision requires explicit reasons")
+            if self.research_disposition is ResearchValueDisposition.RESEARCH_NOW:
+                if self.route is not PrimeRoute.ADAPTIVE_RESEARCH:
+                    raise ValueError("research-now work must route to adaptive research")
+            elif self.route is not None:
+                raise ValueError("non-research gap cannot carry an execution route")
+        else:
+            if self.missing_requirements:
+                raise ValueError("answerable work cannot carry missing requirements")
+            if self.route is None:
+                raise ValueError("answerable work requires an execution route")
+            if (
+                self.research_disposition is not None
+                or self.research_policy_id is not None
+                or self.research_policy_version is not None
+                or self.research_context_fingerprint is not None
+                or self.research_reason_codes
+            ):
+                raise ValueError("answerable work cannot carry research-value decision")
 
 
 @dataclass(frozen=True, slots=True)
@@ -91,10 +127,14 @@ def _route_work(
     state_fingerprint: str,
     work: tuple[DimensionWork, ...],
     routing_policies: tuple[DimensionRoutingPolicy, ...],
+    research_decisions: tuple[ResearchValueDecision, ...] = (),
 ) -> PrimeControlPlan:
     policies = {policy.dimension_id: policy for policy in routing_policies}
     if len(policies) != len(routing_policies):
         raise ValueError("dimension routing policies must be unique")
+    decisions = {decision.dimension_id: decision for decision in research_decisions}
+    if len(decisions) != len(research_decisions):
+        raise ValueError("research-value decisions must be unique")
 
     items: list[PrimeWorkItem] = []
     for dimension in work:
@@ -104,8 +144,33 @@ def _route_work(
                 f"missing Prime routing policy for dimension {dimension.dimension_id!r}"
             )
 
+        research_disposition: ResearchValueDisposition | None = None
+        research_policy_id: str | None = None
+        research_policy_version: str | None = None
+        research_context_fingerprint: str | None = None
+        research_reason_codes: tuple[str, ...] = ()
         if dimension.disposition is DimensionDisposition.NOT_ANSWERABLE:
-            route = PrimeRoute.ADAPTIVE_RESEARCH
+            decision = decisions.get(dimension.dimension_id)
+            if decision is None:
+                raise ValueError(
+                    f"missing Research Value decision for dimension {dimension.dimension_id!r}"
+                )
+            if (
+                decision.subject_id != subject_id
+                or decision.state_fingerprint != state_fingerprint
+                or decision.missing_requirements != dimension.missing_requirements
+            ):
+                raise ValueError("Research Value decision does not match current gap state")
+            research_disposition = decision.disposition
+            research_policy_id = decision.policy_id
+            research_policy_version = decision.policy_version
+            research_context_fingerprint = decision.context_fingerprint
+            research_reason_codes = tuple(reason.value for reason in decision.reason_codes)
+            route = (
+                PrimeRoute.ADAPTIVE_RESEARCH
+                if decision.disposition is ResearchValueDisposition.RESEARCH_NOW
+                else None
+            )
         elif dimension.disposition is DimensionDisposition.ANSWERABLE:
             route = policy.answerable_route
         else:
@@ -118,6 +183,11 @@ def _route_work(
                 route=route,
                 policy_version=policy.version,
                 missing_requirements=dimension.missing_requirements,
+                research_disposition=research_disposition,
+                research_policy_id=research_policy_id,
+                research_policy_version=research_policy_version,
+                research_context_fingerprint=research_context_fingerprint,
+                research_reason_codes=research_reason_codes,
             )
         )
 
@@ -134,6 +204,7 @@ def build_prime_control_plan(
     contracts: tuple[TypingDimensionContract, ...],
     available_state_fields: frozenset[str],
     routing_policies: tuple[DimensionRoutingPolicy, ...],
+    research_decisions: tuple[ResearchValueDecision, ...] = (),
 ) -> PrimeControlPlan:
     """Route impacted dimensions without delegating routing authority to a model."""
 
@@ -146,6 +217,7 @@ def build_prime_control_plan(
             available_state_fields=available_state_fields,
         ),
         routing_policies=routing_policies,
+        research_decisions=research_decisions,
     )
 
 
