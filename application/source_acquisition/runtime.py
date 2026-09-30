@@ -20,6 +20,14 @@ from application.economic_discovery import (
 from application.source_acquisition.contracts import SourceObservation, SourceRequest
 
 
+def source_observation_id(request: SourceRequest, observation: SourceObservation) -> str:
+    """Stable Observation Memory identity for one acquired source observation."""
+
+    if observation.request_id != request.request_id:
+        raise ValueError("source observation/request identity mismatch")
+    return f"source:{request.request_id}:{observation.observation_fingerprint[:24]}"
+
+
 def to_governed_observation(
     request: SourceRequest,
     observation: SourceObservation,
@@ -56,9 +64,7 @@ def to_governed_observation(
     content_fingerprint = observation.body_fingerprint or observation.observation_fingerprint
     return GovernedObservation(
         record=ObservationRecord(
-            observation_id=(
-                f"source:{request.request_id}:{observation.observation_fingerprint[:24]}"
-            ),
+            observation_id=source_observation_id(request, observation),
             subject_id=request.subject_id,
             source_ref=observation.final_uri,
             source_type=request.source_type,

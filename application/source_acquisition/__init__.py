@@ -10,6 +10,7 @@ from application.source_acquisition.contracts import (
 from application.source_acquisition.runtime import (
     SourceIngestionResult,
     ingest_source_observation,
+    source_observation_id,
     to_governed_observation,
 )
 
@@ -21,5 +22,6 @@ __all__ = [
     "SourceRequest",
     "SourceTargetRule",
     "ingest_source_observation",
+    "source_observation_id",
     "to_governed_observation",
 ]
