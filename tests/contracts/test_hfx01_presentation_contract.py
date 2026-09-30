@@ -233,11 +233,13 @@ def test_locale_preference_is_a_synthetic_account_preference_and_stresses_all_su
     assert preferences.get("class") == "lab-preferences-open"
     assert preferences.get("data-copy-aria-label") == "preferences.label"
     governance = re.search(
-        r'<section class="gv-sec" id="governance-section".*?</section>',
+        r'<details class="gv-sec gv-advanced" id="governance-section">.*?</details>',
         html,
         re.DOTALL,
     )
     assert governance is not None
+    assert " open" not in governance.group(0).split(">", 1)[0]
+    assert 'data-copy="navigation.advancedControls"' in governance.group(0)
     assert 'id="preferences-open"' not in governance.group(0)
     account = re.search(r'<div class="lab-account".*?</div>', html, re.DOTALL)
     assert account is not None
@@ -329,12 +331,12 @@ def test_sidebar_uses_quiet_truthful_states_and_golden_master_rail_contract() ->
     sidebar, _ = _by_id(elements, "sidebar-navigation")
     assert sidebar == "nav"
     assert re.search(
-        r'<section class="gv-sec" id="governance-section" tabindex="-1">\s*'
-        r'<span class="gv-cap" data-copy="navigation.governance">',
+        r'<details class="gv-sec gv-advanced" id="governance-section">\s*'
+        r'<summary class="gv-advanced-summary">\s*'
+        r'<span data-copy="navigation.advancedControls">',
         html,
     )
-    _, workspace = _by_id(elements, "workspace-placeholder")
-    assert workspace.get("aria-hidden") == "true"
+    assert 'id="workspace-placeholder"' not in html
     _, xeed = _by_id(elements, "xeed-current")
     assert xeed.get("type") == "button"
     assert "disabled" in xeed
@@ -347,6 +349,7 @@ def test_sidebar_uses_quiet_truthful_states_and_golden_master_rail_contract() ->
     assert xeed_list.get("role") == "listbox"
     assert 'id="xeed-organization-label"' not in html
     assert 'data-copy="context.organizationLabel"' not in html
+    assert '<em class="sr-only" data-copy="context.private">Private view</em>' in html
     assert 'data-copy="navigation.createXeed"' in html
     assert "Plant Xeed" in presentation
     assert "state.projection.organization.name" not in script
@@ -387,7 +390,8 @@ def test_sidebar_uses_quiet_truthful_states_and_golden_master_rail_contract() ->
     assert governance_rail.get("type") == "button"
     assert "#today-rail" in script
     assert "#governance-rail" in script
-    assert "#governance-section').focus()" in script
+    assert "advanced.open = true" in script
+    assert "advanced.querySelector('summary').focus()" in script
     assert "#today-rail').setAttribute('aria-current'" in script
     assert ".gov.collapsed .gv-rail { display: flex; }" in css
     assert ".gov.collapsed .gv-scroll" in css

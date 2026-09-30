@@ -31,7 +31,7 @@ A task is not DONE because code exists. Runtime/product work normally progresses
 
 NOT_STARTED · READY · IN_PROGRESS · BLOCKED · DONE · DEFERRED · REJECTED
 
-**CURRENT_TASK = FR-11**
+**CURRENT_TASK = FR-12**
 
 ## 4. Frontier closure rule
 
@@ -484,9 +484,31 @@ Future auditor cannot reproduce the Germany-focus / France-greeting mismatch.
 
 ## FR-11 — Initial Cognitive Load Reduction
 
-**Status:** NOT_STARTED  
-**Depends on:** FR-09, FR-10  
+**Status:** DONE
+**Depends on:** FR-09, FR-10
 **Priority:** P1 UX
+
+**Closure evidence (2026-09-30):**
+- default sidebar no longer exposes an empty Workspace section
+- Governance mechanics are retained under closed-by-default **Advanced controls**
+- Xeed private-scope copy remains assistive/governed context but is no longer visually prominent
+- compact rail preserves advanced access at secondary priority and opens/focuses the disclosure deterministically
+- cognitive-depth scale keeps direct keyboard/pointer access while only the active label is permanently visible
+- AXENT primary contextual actions are capped at two; further available actions remain reachable under **More questions**
+- unavailable synthetic AXENT actions are not rendered as first-view controls
+- ADR-0037 accepted and indexed
+- before/after Chrome 1440×1000 comparison against pre-FR-11 main confirms hierarchy reduction without layout drift to Today, AXIGLAND, Timeline or AXENT
+- narrow Chrome 860×1000 check confirms collapsed rail → Advanced controls expansion → summary focus
+- keyboard focus on depth control reveals the full semantic-depth labels without requiring pointer hover
+- focused FR-11/HFX presentation tests: 27 PASS
+- full pytest: 497 PASS using external `--basetemp` to avoid the known Windows user-temp ACL issue
+- Node syntax: PASS (`app.js`, `presentation.js`)
+- Ruff format/check: PASS
+- mypy: PASS (118 source files)
+- Architecture Guard: PASS
+- axignal-governance: PASS
+- git diff --check: PASS
+- production terminology/localization remains FR-12 scope
 
 ### Work
 Move nonessential expert/governance controls out of first-view prominence, including Memory COGNITIVE, CLIENT · PRIVATE, Uncertainty HIDDEN and advanced controls not immediately needed. Keep depth/evidence/timeline progressively available. Reduce contextual pills to the smallest useful set.

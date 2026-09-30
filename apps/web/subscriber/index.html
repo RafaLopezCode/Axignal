@@ -32,15 +32,10 @@
           <button class="gv-today" id="today" aria-current="page"><i aria-hidden="true"></i><span data-copy="navigation.today">Today</span></button>
 
           <section class="gv-sec">
-            <span class="gv-cap" data-copy="navigation.workspace">Workspace</span>
-            <div class="gv-workspace-placeholder" id="workspace-placeholder" aria-hidden="true"></div>
-          </section>
-
-          <section class="gv-sec">
             <span class="gv-cap" data-copy="navigation.xeed">Xeed</span>
             <button class="gv-xeedsel" id="xeed-current" type="button" disabled aria-haspopup="listbox" aria-expanded="false" aria-controls="lab-contexts" data-copy-aria-label="context.activeAccessibleName" aria-label="Active Xeed">
               <span class="gv-xeed-dot"><i aria-hidden="true"></i></span>
-              <span class="gv-xeed-body"><b id="xeed-label">Current context</b><em data-copy="context.private">Private view</em></span>
+              <span class="gv-xeed-body"><b id="xeed-label">Current context</b><em class="sr-only" data-copy="context.private">Private view</em></span>
               <span class="gv-xeed-chev" aria-hidden="true"><svg class="ax-icon" focusable="false"><use href="/assets/icons/lucide/axignal-ui.svg#chevron-down"></use></svg></span>
             </button>
             <div class="lab-contexts" id="lab-contexts" hidden>
@@ -53,22 +48,27 @@
             <button class="gv-plant" type="button" disabled><svg class="ax-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/lucide/axignal-ui.svg#plus"></use></svg><span data-copy="navigation.createXeed">Plant Xeed</span></button>
           </section>
 
-          <section class="gv-sec" id="governance-section" tabindex="-1">
-            <span class="gv-cap" data-copy="navigation.governance">Governance</span>
-            <div class="gv-row" data-capability="READ_ONLY"><span class="gv-rk" data-copy="navigation.scope">Scope</span><span class="gv-rv"><span data-copy="navigation.contextScope">This view</span></span></div>
-            <div class="gv-row is-unavailable" data-capability="UNAVAILABLE" aria-disabled="true"><span class="gv-rk" data-copy="navigation.memory">Memory</span><span class="gv-rv" aria-hidden="true"></span><span class="sr-only" data-copy="navigation.memoryUnavailable">Memory settings aren't available in this view.</span></div>
-            <button class="gv-row" id="research-depth" type="button" data-capability="AVAILABLE"><span class="gv-rk" data-copy="navigation.research">Research</span><span class="gv-rv"><span data-copy="navigation.glance">Glance</span><svg class="ax-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/lucide/axignal-ui.svg#chevron-right"></use></svg></span></button>
-            <div class="gv-row is-unavailable" data-capability="UNAVAILABLE" aria-disabled="true"><span class="gv-rk" data-copy="navigation.uncertainty">Uncertainty</span><span class="gv-rv" aria-hidden="true"></span><span class="sr-only" data-copy="navigation.uncertaintyUnavailable">This setting isn't available in this view.</span></div>
-          </section>
+          <details class="gv-sec gv-advanced" id="governance-section">
+            <summary class="gv-advanced-summary">
+              <span data-copy="navigation.advancedControls">Advanced controls</span>
+              <svg class="ax-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/lucide/axignal-ui.svg#chevron-down"></use></svg>
+            </summary>
+            <div class="gv-advanced-body">
+              <div class="gv-row" data-capability="READ_ONLY"><span class="gv-rk" data-copy="navigation.scope">Scope</span><span class="gv-rv"><span data-copy="navigation.contextScope">This view</span></span></div>
+              <div class="gv-row is-unavailable" data-capability="UNAVAILABLE" aria-disabled="true"><span class="gv-rk" data-copy="navigation.memory">Memory</span><span class="gv-rv" aria-hidden="true"></span><span class="sr-only" data-copy="navigation.memoryUnavailable">Memory settings aren't available in this view.</span></div>
+              <button class="gv-row" id="research-depth" type="button" data-capability="AVAILABLE"><span class="gv-rk" data-copy="navigation.research">Research</span><span class="gv-rv"><span data-copy="navigation.glance">Glance</span><svg class="ax-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/lucide/axignal-ui.svg#chevron-right"></use></svg></span></button>
+              <div class="gv-row is-unavailable" data-capability="UNAVAILABLE" aria-disabled="true"><span class="gv-rk" data-copy="navigation.uncertainty">Uncertainty</span><span class="gv-rv" aria-hidden="true"></span><span class="sr-only" data-copy="navigation.uncertaintyUnavailable">This setting isn't available in this view.</span></div>
+            </div>
+          </details>
         </nav>
 
         <nav class="gv-rail" data-copy-aria-label="navigation.workspace" aria-label="Workspace">
           <button class="rail" id="today-rail" type="button" data-copy-title="navigation.today" data-copy-aria-label="navigation.today" title="Today" aria-label="Today" aria-current="true"><svg class="ax-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/lucide/axignal-ui.svg#house"></use></svg></button>
           <div class="rail xeed" id="xeed-rail" role="group" data-copy-title="context.activeAccessibleName" title="Active view" aria-label="Active view"><span class="rail-xeed" aria-hidden="true">●</span></div>
           <button class="rail" id="create-xeed-rail" type="button" disabled data-copy-title="navigation.createContext" data-copy-aria-label="navigation.createContext" title="Create a new context" aria-label="Create a new context"><svg class="ax-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/lucide/axignal-ui.svg#plus"></use></svg></button>
-          <div class="rail-sep" aria-hidden="true"></div>
-          <button class="rail" id="governance-rail" type="button" data-copy-title="navigation.governance" data-copy-aria-label="navigation.governance" title="Governance" aria-label="Governance"><svg class="ax-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/lucide/axignal-ui.svg#list-checks"></use></svg></button>
           <div class="rail-spacer" aria-hidden="true"></div>
+          <div class="rail-sep" aria-hidden="true"></div>
+          <button class="rail" id="governance-rail" type="button" data-copy-title="navigation.advancedControls" data-copy-aria-label="navigation.advancedControls" title="Advanced controls" aria-label="Advanced controls"><svg class="ax-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/lucide/axignal-ui.svg#list-checks"></use></svg></button>
         </nav>
 
         <div class="lab-account" id="lab-account" hidden>

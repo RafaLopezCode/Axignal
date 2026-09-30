@@ -341,6 +341,12 @@ input {
   letter-spacing: 0.13em;
   text-transform: uppercase;
   font-weight: 400;
+  opacity: 0;
+}
+.lens-stop.on b,
+.lens:hover .lens-stop b,
+.lens.is-expanded .lens-stop b {
+  opacity: 1;
 }
 .lens-stop.on {
   color: var(--ink);
@@ -1837,6 +1843,33 @@ input {
   color: var(--ink);
   border-color: var(--brass-2);
 }
+.ax-more-moves {
+  flex-basis: 100%;
+  margin-top: 1px;
+}
+.ax-more-moves > summary {
+  width: fit-content;
+  color: var(--faint);
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  list-style: none;
+}
+.ax-more-moves > summary::-webkit-details-marker { display: none; }
+.ax-more-moves > summary::after {
+  content: ' +';
+}
+.ax-more-moves[open] > summary::after {
+  content: ' −';
+}
+.ax-more-moves-body {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  padding-top: 8px;
+}
 .ax-log {
   flex: 1;
   min-height: 0;
@@ -2087,6 +2120,36 @@ input {
 }
 .gv-sec:last-child {
   border-bottom: none;
+}
+.gv-advanced {
+  padding: 12px 0 14px;
+}
+.gv-advanced-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 34px;
+  color: var(--faint);
+  font: 400 12.5px/1.4 var(--sans);
+  cursor: pointer;
+  list-style: none;
+}
+.gv-advanced-summary::-webkit-details-marker { display: none; }
+.gv-advanced-summary .ax-icon {
+  width: 16px;
+  height: 16px;
+  transition: transform .18s var(--ease);
+}
+.gv-advanced[open] .gv-advanced-summary {
+  color: var(--ink-2);
+}
+.gv-advanced[open] .gv-advanced-summary .ax-icon {
+  transform: rotate(180deg);
+}
+.gv-advanced-body {
+  margin-top: 6px;
+  border-top: 1px solid var(--hair);
 }
 .gv-cap {
   display: block;
@@ -4299,4 +4362,11 @@ html[dir='rtl'] .trail { direction: rtl; }
     min-height: 360px;
     max-height: 60vh;
   }
+}
+
+
+/* FR-11 — progressive disclosure wins the final cascade intentionally. */
+.stage2 .lens:hover .lens-stop b,
+.stage2 .lens.is-expanded .lens-stop b {
+  opacity: 1;
 }
