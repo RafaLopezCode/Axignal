@@ -40,6 +40,12 @@ from application.economic_discovery.market_entry import (
     ParticipationState,
     XeedMarketMap,
 )
+from application.economic_discovery.market_planning import (
+    MarketObservationDirective,
+    MarketResearchIntent,
+    ObservationObjectType,
+    plan_market_observation,
+)
 from application.economic_discovery.planner import (
     CognitiveWorkPlan,
     DimensionWork,
@@ -69,10 +75,13 @@ __all__ = [
     "EpistemicProfile",
     "ExplainableAssociation",
     "ExplainableBasis",
+    "MarketObservationDirective",
     "MarketParticipation",
     "MarketRelationship",
+    "MarketResearchIntent",
     "ObservationIngress",
     "ObservationMode",
+    "ObservationObjectType",
     "ObservationPlan",
     "ObservationRecord",
     "ObservationTask",
@@ -87,6 +96,7 @@ __all__ = [
     "affected_dimensions",
     "build_work_plan",
     "plan_dimension_work",
+    "plan_market_observation",
     "require_explainable_basis",
     "route_retrieval",
 ]
