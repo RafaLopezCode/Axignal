@@ -38,6 +38,7 @@ Constitution (`.specify/memory/constitution.md`).
 | [ADR-0028](ADR-0028-research-value-gate.md) | Research Value Gate (**ACCEPTED**) | §§14, 46, 53, 56.13–56.20 |
 | [ADR-0029](ADR-0029-execution-budget-stop-contract.md) | Execution Budget and Stop Contract (**ACCEPTED**) | §§14, 46, 53, 56.13–56.20 |
 | [ADR-0030](ADR-0030-prime-execution-composition-root.md) | Prime Execution Composition Root (**ACCEPTED**) | §§14, 46, 53, 56.13–56.20 |
+| [ADR-0031](ADR-0031-explainable-xignal-projection.md) | Explainable Xignal Projection (**ACCEPTED**) | §§4.4A, 7.3, 15, 19, 20, 26 |
 
 ## Adding an ADR
 

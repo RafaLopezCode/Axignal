@@ -31,7 +31,7 @@ A task is not DONE because code exists. Runtime/product work normally progresses
 
 NOT_STARTED · READY · IN_PROGRESS · BLOCKED · DONE · DEFERRED · REJECTED
 
-**CURRENT_TASK = FR-05**
+**CURRENT_TASK = FR-06**
 
 ## 4. Frontier closure rule
 
@@ -245,9 +245,29 @@ Future audit finds a real composition root and cannot say #55–61 are only disc
 
 ## FR-05 — Explainable Xignal Projection
 
-**Status:** NOT_STARTED  
+**Status:** DONE
 **Depends on:** FR-04  
 **Priority:** P0
+
+**Closure evidence (2026-09-30):**
+- BASE_SHA: `8a1422699a0bf28c9852fa62dd27ac56253e1d70`
+- WORK_BRANCH: `architecture/fr-05-explainable-xignal`
+- concrete non-canonical `domain.xignal.Xignal` payload implemented
+- explicit subscriber-visible epistemic states: `OBSERVED`, `POTENTIAL`, `UNKNOWN`
+- private `xeed_id` and canonical observed `subject_id` are distinct in the Xignal contract
+- OBSERVED projection fails closed without canonical FAXT support created through EvidenceAdmission
+- OBSERVED Explainable Basis must reference admitted FAXT evidence through `BasisDatum.evidence_ref`
+- POTENTIAL and UNKNOWN remain explicit and never inherit OBSERVED semantics
+- projection carries why-attention, semantic target, interpretation, currentness, source/time provenance, contradictions, unknowns, optional relationship/PATHX refs, Explainable Basis ref and policy version
+- deterministic `XignalExplanationTrail` implements the supporting path required by Show how AXIGNAL knows
+- sale probability and provider confidence are forbidden from masquerading as Xignal truth
+- Xignal remains `is_canonical_truth = False`
+- ADR-0031 accepted and indexed
+- targeted Xignal/explanation tests: 9 PASS
+- full pytest: 469 PASS
+- mypy: PASS (113 source files)
+- Architecture Guard: PASS
+- git diff --check: PASS
 
 ### Work
 Build the minimum subscriber-safe projection containing why attention is warranted, observed vs potential state, relevant relation/path, source/time/currentness, contradictions/unknowns, and an Explainable Basis reference. No sale probability or provider confidence may masquerade as truth. Projection cannot bypass EvidenceAdmission.
