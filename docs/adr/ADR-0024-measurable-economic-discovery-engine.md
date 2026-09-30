@@ -1,12 +1,11 @@
 # ADR-0024 — Measurable Economic Discovery Engine
 
-**Status:** PROPOSED
+**Status:** ACCEPTED
 **Date:** 2026-09-30
 **Authority:** MASTER §§14–16, 19, 35, 53; Economic Discovery Engine Doctrine; Constitution IV–X, XVI–XVII
 
 ## Decision
-AXIGNAL adopts a provider-neutral measurable chain:
-OBSERVE -> REPRESENT -> RETRIEVE -> FILTER -> COMPILE_STATE -> BUILD_CHOICE_SPACE -> STRUCTURED_EVALUATE -> INTERPRET -> INVESTIGATE -> ADMIT.
+AXIGNAL adopts event-driven cognitive loops under a deterministic Python control plane, not one mandatory linear tool chain. Observation can originate from deterministic sensors, direct events, or targeted AXENT/LLM research. TurboQuant is optional recall-oriented retrieval over already-observed representations. JEV is optional structured semantic typing over rich state. Investigation returns new observations to the loop. EvidenceAdmission remains a separate canonical-truth boundary.
 
 Every boundary is a versioned contract and attribution point. Provider choices, retrieval budgets, probability thresholds and benchmark heuristics are configuration/policy, never architectural semantics.
 
@@ -34,3 +33,10 @@ Current retrieval_k=50, SUPPORTED-only germination gate and 12-case corpus remai
 
 ## Rejected alternatives
 Vector top-k directly becomes opportunity; JEV directly writes truth; universal SUPPORTED/NOT_SUPPORTED; opaque opportunity score; fixed 50% rule across Choice Spaces; benchmark optimization without stage attribution.
+
+## Cognitive-loop amendment
+Python is the control plane. Observation mode is explicit: DETERMINISTIC_SENSOR, ACTIVE_RESEARCH, or DIRECT_EVENT. Retrieval and semantic evaluation are optional hops selected by state and task, not mandatory ceremony. Stable LLM-discovered acquisition SHOULD migrate to reusable sensors where rights/economics permit.
+
+JEV primitive semantics are contract-owned. Independent economic roles are evaluated independently and may coexist; exclusivity is never inferred from a provider primitive. New observations preserve temporal history and invalidate only declared dependent typing dimensions.
+
+The surfaced product object is a Xignal meaning WARRANTED_ATTENTION. Its epistemic presentation cannot encode sale probability or use commercial outcome as truth validation. EvidenceAdmission remains independent and conservative.

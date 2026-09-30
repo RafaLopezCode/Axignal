@@ -1,14 +1,16 @@
 # AXIGNAL — Economic Discovery Engine Doctrine
 
-**Status:** CANONICAL DOCTRINE PROPOSAL FOR MASTER INTEGRATION
+**Status:** CANONICAL SUPPORTING DOCTRINE
 **Date:** 2026-09-30
-**Authority:** derives from MASTER §§14–16, 19, 35, 36, 53 and Constitution IV–X, XVI–XVII. Until merged into MASTER, any conflict is resolved in favor of MASTER.
+**Authority:** derives from MASTER §§14–16, 19, 35, 36, 53, 56 and Constitution IV–X, XVI–XVII. Any conflict is resolved in favor of MASTER.
 
-## 1. Canonical chain
+## 1. Canonical cognitive loops
 
-OBSERVE -> REPRESENT -> RETRIEVE -> FILTER -> COMPILE STATE -> BUILD CHOICE SPACE -> STRUCTURED EVALUATE -> INTERPRET -> INVESTIGATE -> ADMIT
+Python governs event-driven cognitive loops; there is no mandatory universal tool order. Observation originates through deterministic sensors, direct events, or targeted AXENT/LLM research. TurboQuant is used only when recall-oriented retrieval over already-observed representations is needed. JEV is used only for governed semantic typing over rich state. Direct observations bound to known subjects bypass retrieval.
 
-AXIGNAL MUST explain both why it surfaced a discovery and at which boundary a true opportunity could have been lost. Every arrow is a versioned contract and a measurement boundary.
+Primary loop: XEED -> OBSERVATION PLAN -> OBSERVE -> OBSERVATION MEMORY -> REPRESENT -> RETRIEVE WHEN NEEDED -> DETERMINISTIC ELIGIBILITY -> COMPILE RICH STATE -> STRUCTURED TYPE -> COMPOSE -> WARRANTED ATTENTION / INVESTIGATE -> NEW OBSERVATION -> LOOP.
+
+Canonical truth is separate: EVIDENCE -> CLAIM/EVIDENCE EVALUATION WHEN NEEDED -> EVIDENCE ADMISSION -> CANONICAL WRITE. Investigation returns observations to the loop; admission is not its automatic next stage. State changes trigger dependency-aware selective reevaluation.
 
 ## 2. Authority boundaries
 OBSERVE owns acquisition record/provenance/time/instrument, not truth admission. REPRESENT owns disposable semantic representation, not knowledge. RETRIEVE owns candidate recall/ranking, not fit/evidence. FILTER owns deterministic incompatibility rules and MUST preserve UNKNOWN. COMPILE STATE owns deterministic assembly/fingerprints, never invented missing facts. BUILD CHOICE SPACE owns AXIGNAL's typed hypothesis universe, not provider behavior. STRUCTURED EVALUATE owns typed probabilistic judgment, not policy/write. INTERPRET owns deterministic composition/policy, not evidence rewriting. INVESTIGATE owns targeted evidence acquisition, not canonical truth. ADMIT remains the independent canonical boundary; derived opportunity remains INXIGHT/POTENTIAL.
@@ -65,3 +67,15 @@ BENCHMARK_SCORE != PRODUCT_TRUTH
 
 ## 12. Existing implementation disposition
 The current retrieval_k=50 default, SUPPORTED-only germination gate and 12-case germination corpus are experimental evidence only. They MUST NOT define canonical architecture. Claim-evidence support remains useful only for its narrow semantic target; economic opportunity requires richer DecisionContracts and Choice Spaces.
+
+## 13. Observation economics
+The LLM/AXENT discovers how to observe and resolves high-value ambiguity; it is not the universal crawler. Python SHOULD industrialize stable repetitive acquisition as governed Sensors/Adapters. Intelligence cost follows information value. TurboQuant reduces large observed universes; it does not acquire world data. JEV structures semantic ambiguity; it does not recompute deterministic facts.
+
+## 14. Information survival and temporal reevaluation
+Observation Memory survives independently of canonical admission. NOT_ADMISSIBLE does not mean NOT_VALUABLE; INSUFFICIENT_EVIDENCE does not mean DISCARD. Typed economic associations are directional, scoped, temporal and may carry simultaneous roles. New observations create new state fingerprints and preserve prior snapshots. Dependency impact determines selective reevaluation.
+
+## 15. Xignal contract
+A Xignal is WARRANTED ATTENTION, not a business conclusion. XIGNAL != SALE_PROBABILITY and COMMERCIAL_OUTCOME != EPISTEMIC_VALIDITY. The human remains authority for business conclusion/action. Every surfaced Xignal carries a multidimensional epistemic profile and an explanation/provenance path. Any UX meter is a deterministic versioned compression of epistemic dimensions, never raw JEV confidence, vector similarity or downstream conversion.
+
+## 16. Germination
+Germination is aggressive in recall and information survival while canonization remains conservative. Structured non-canonical associations may enrich AXIGLAND without pretending to be canonical RELATIONSHIP. Shared public observations may be reused across Xeeds subject to rights/privacy/provenance; Xeed-relative economic meaning is recomputed from relational state.
