@@ -43,6 +43,7 @@ Constitution (`.specify/memory/constitution.md`).
 | [ADR-0033](ADR-0033-first-xeed-runtime-lifecycle.md) | First-Xeed Runtime Lifecycle (**ACCEPTED**) | §§2, 10, 14, 56.18 |
 | [ADR-0034](ADR-0034-first-map-readiness-policy.md) | FIRST_MAP Readiness Policy (**ACCEPTED**) | §§1, 9, 10, 46 |
 | [ADR-0035](ADR-0035-insight-first-today.md) | Insight-First Today (**ACCEPTED**) | §§9, 25, 26, 46 |
+| [ADR-0036](ADR-0036-axent-context-continuity-separation.md) | AXENT Context and Continuity Separation (**ACCEPTED**) | §§5, 23, 25, 26, 55 |
 
 ## Adding an ADR
 

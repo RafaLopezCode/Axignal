@@ -31,7 +31,7 @@ A task is not DONE because code exists. Runtime/product work normally progresses
 
 NOT_STARTED · READY · IN_PROGRESS · BLOCKED · DONE · DEFERRED · REJECTED
 
-**CURRENT_TASK = FR-10**
+**CURRENT_TASK = FR-11**
 
 ## 4. Frontier closure rule
 
@@ -448,9 +448,27 @@ Future UX audit cannot truthfully say the user must understand the map before di
 
 ## FR-10 — AXENT Context/Continuity Separation
 
-**Status:** NOT_STARTED  
-**Depends on:** FR-09  
+**Status:** DONE
+**Depends on:** FR-09
 **Priority:** P0 UX
+
+**Closure evidence (2026-09-30):**
+- scoped AXENT messages record Xeed, object kind/id and occurrence time
+- current-focus conversation is rendered separately from prior investigation continuity
+- focus changes retain prior transcript but cannot present it as current-object context
+- prior investigations are visibly labeled and resumable only when their recorded object resolves inside the authorized current projection
+- contextual AXENT question actions carry the active Xeed/object scope
+- synthetic fixture messages are scope/time annotated; new interactions capture scope/time at creation
+- ADR-0036 accepted and indexed
+- Chrome 1440×1000 interaction check: focus change isolates current conversation, exposes one labeled prior investigation, and Resume restores the original scoped conversation
+- focused UX/presentation tests: 24 PASS
+- full pytest: 494 PASS using an external `--basetemp` because the Windows user temp root was ACL-denied
+- Node syntax: PASS (`app.js`, `presentation.js`)
+- Ruff format/check: PASS
+- mypy: PASS (118 source files)
+- Architecture Guard: PASS
+- axignal-governance: PASS after removing generated local `.mypy_cache`
+- production persistence/Context Broker remains deliberately outside FR-10; ADR-0017 boundary preserved
 
 ### Work
 Separate active object/focus, current contextual actions, prior investigation/continuity and historical transcript. AXENT remains always available but may be compact/contextual rather than full conversation.

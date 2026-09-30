@@ -258,6 +258,14 @@ def build_scenario(scenario: str) -> dict[str, Any]:
     lab = _scenario_state(scenario)
     payload["context"]["label"] = lab["contexts"][0]["label"]
     object_ids = [payload["organization"]["id"], *(node["id"] for node in payload["nodes"])]
+    for index, message in enumerate(lab["messages"]):
+        message["scope"] = {
+            "xeedId": payload["context"]["id"],
+            "objectId": payload["organization"]["id"],
+            "objectKind": "ORGANIZATION",
+            "label": payload["organization"]["name"],
+        }
+        message["occurredAt"] = f"2026-09-01T12:{index:02d}:00+00:00"
     for node in payload["nodes"]:
         node["syntheticFixture"] = True
         node["fixtureClass"] = "CANONICAL_CONTRACT_BACKED_SYNTHETIC"

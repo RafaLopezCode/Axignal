@@ -87,6 +87,17 @@ def test_presentation_only_states_are_explicit_and_do_not_claim_authority() -> N
     assert nominal["uxLab"]["contexts"][0]["label"] == "Asterion focus"
     assert all(item["syntheticFixture"] is True for item in nominal["uxLab"]["moves"])
     assert all(item["syntheticFixture"] is True for item in nominal["uxLab"]["messages"])
+    assert all(
+        item["scope"]["xeedId"] == nominal["context"]["id"] for item in nominal["uxLab"]["messages"]
+    )
+    assert all(
+        item["scope"]["objectId"] == nominal["organization"]["id"]
+        for item in nominal["uxLab"]["messages"]
+    )
+    assert all(
+        item["scope"]["objectKind"] == "ORGANIZATION" for item in nominal["uxLab"]["messages"]
+    )
+    assert all(item["occurredAt"].endswith("+00:00") for item in nominal["uxLab"]["messages"])
     assert nominal["uxLab"]["composerEnabled"] is True
     assert "No model or provider was called" in nominal["uxLab"]["fixtureReply"]
     assert edge_cases["uxLab"]["accountLabel"] is None
@@ -147,6 +158,27 @@ def test_label_decluttering_preserves_world_positions_and_prefers_attention() ->
     assert ".lab-edge.is-attention { opacity: .68; }" in stylesheet
     assert "SYNTHETIC_NOMINAL" not in script
     assert "SYNTHETIC_DENSE" not in script
+
+
+def test_axent_context_and_continuity_are_separated_by_explicit_scope() -> None:
+    script = (REPOSITORY_ROOT / "apps/web/subscriber/app.js").read_text(encoding="utf-8")
+    stylesheet = (REPOSITORY_ROOT / "apps/web/subscriber/subscriber.css").read_text(
+        encoding="utf-8"
+    )
+
+    assert "function axentScopeForNode(node = focusedNode())" in script
+    assert "function axentScopeKey(scope)" in script
+    assert "function renderAxentTranscript(node = focusedNode())" in script
+    assert "message.scope.xeedId" in script
+    assert "message.scope.objectKind" in script
+    assert "message.scope.objectId" in script
+    assert "message.occurredAt" in script
+    assert "state.axentMessages.filter" in script
+    assert "navigation.previousInvestigations" in script
+    assert "navigation.resumeInvestigation" in script
+    assert "navigate(target, { recenter: false })" in script
+    assert ".ax-continuity {" in stylesheet
+    assert ".ax-continuity-resume" in stylesheet
 
 
 def test_minimap_fits_visible_graph_and_uses_the_same_bounds_for_navigation() -> None:
