@@ -31,7 +31,7 @@ A task is not DONE because code exists. Runtime/product work normally progresses
 
 NOT_STARTED · READY · IN_PROGRESS · BLOCKED · DONE · DEFERRED · REJECTED
 
-**CURRENT_TASK = FR-15**
+**CURRENT_TASK = FR-16**
 
 ## 4. Frontier closure rule
 
@@ -651,9 +651,31 @@ Future audit cannot reproduce non-premium or ambiguous wheel/motion behavior as 
 
 ## FR-15 — Accessible Non-Graph Projection
 
-**Status:** NOT_STARTED  
-**Depends on:** FR-06, FR-13  
+**Status:** DONE
+**Depends on:** FR-06, FR-13
 **Priority:** P1
+
+**Closure evidence (2026-09-30):**
+- reader now includes a visible semantic non-graph projection generated from the same current subscriber projection/focus
+- semantic structure includes ordered focus path, current focus, textual epistemic state, currentness, observation time, relationship list and evidence action
+- non-graph relationship rendering is independent of FR-13 visual edge budgets and does not call `spatialEdges` or camera focus
+- keyboard activation of a relationship updates focus without recentering the canvas and restores focus to the rebuilt semantic projection heading
+- relationship state is explicitly textual (for example `Estado de la relación: Observado`) so critical state is not color-only
+- evidence action fails closed when direct evidence access is not exposed; internal projection enums remain out of subscriber copy
+- Chrome accessibility tree exposes non-ignored region `Relaciones y evidencia`, navigation `Ruta de foco`, semantic headings and native relationship/evidence buttons
+- Chrome keyboard flow in dense scenario: focus relationship action → Enter → related focus/breadcrumb updated → semantic heading receives focus → evidence action expands and moves focus to evidence detail
+- dense fixture exposes 8 non-graph relationship actions from organization focus while WORLD can render 0 visual edges
+- reflow review at 1280, 640 (~200%) and 320 CSS px (~400%) keeps semantic projection visible with no horizontal overflow in the projection
+- at <=680 px the legacy compact connection strip is hidden and the semantic projection remains the relationship authority; 320 px global body overflow reduced to viewport width
+- focused FR-15/FR-14/FR-13/locale/HFX contracts: 42 PASS
+- full pytest: 515 PASS using external `--basetemp` to avoid the known Windows user-temp ACL issue
+- Node syntax: PASS (`app.js`, `presentation.js`, `locale-es.js`)
+- Ruff format/check: PASS
+- mypy: PASS (118 source files)
+- Architecture Guard: PASS
+- axignal-governance: PASS
+- git diff --check: PASS
+- ADR-0041 accepted and indexed
 
 ### Work
 Provide an accessible equivalent for material graph relations: hierarchical/list relationship view, focus/breadcrumb, evidence action, temporal state and non-color epistemic state.
