@@ -101,6 +101,7 @@ class SqliteLearningMemory:
                 "output_units": event.cost.output_units,
             },
             "yield": {
+                "observations_reused": event.yield_.observations_reused,
                 "observations_added": event.yield_.observations_added,
                 "state_fields_changed": event.yield_.state_fields_changed,
                 "dimensions_became_answerable": event.yield_.dimensions_became_answerable,
@@ -145,6 +146,7 @@ class SqliteLearningMemory:
                 output_units=cost["output_units"],
             ),
             yield_=LearningYield(
+                observations_reused=yield_data.get("observations_reused", 0),
                 observations_added=yield_data["observations_added"],
                 state_fields_changed=yield_data["state_fields_changed"],
                 dimensions_became_answerable=yield_data["dimensions_became_answerable"],

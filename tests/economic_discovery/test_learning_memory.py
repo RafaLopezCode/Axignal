@@ -213,6 +213,7 @@ def test_learning_summary_preserves_unknown_cost_and_avoids_opaque_score() -> No
                 output_units=5,
             ),
             yield_=LearningYield(
+                observations_reused=2,
                 observations_added=1,
                 state_fields_changed=2,
                 dimensions_became_answerable=1,
@@ -234,6 +235,7 @@ def test_learning_summary_preserves_unknown_cost_and_avoids_opaque_score() -> No
     assert summary.unknown_cost_event_count == 1
     assert summary.known_latency_event_count == 2
     assert summary.total_latency_ms == 50
+    assert summary.yield_.observations_reused == 2
     assert summary.yield_.observations_added == 1
     assert summary.yield_.state_fields_changed == 2
     assert not hasattr(summary, "score")

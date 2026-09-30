@@ -48,6 +48,15 @@ class _Organizations:
         return self.organization if organization_id == self.organization.id else None
 
 
+class _LearningMemory:
+    def __init__(self) -> None:
+        self.events = []
+
+    def append(self, event) -> bool:
+        self.events.append(event)
+        return True
+
+
 def _seed():
     authority = InMemoryXeedAuthority()
     authority.add_principal(Principal(PrincipalId("principal:1")))
@@ -196,6 +205,9 @@ def test_authorized_xeed_can_traverse_first_runtime_to_live() -> None:
         state=state,
         plan=_bootstrap(BootstrapDisposition.ADAPTIVE_RESEARCH),
         occurred_at=NOW,
+        learning_memory=_LearningMemory(),
+        execution_id="run:first-xeed",
+        code_sha="abc123",
     )
     assert state.status is XeedGerminationStatus.OBSERVING
 
@@ -229,6 +241,9 @@ def test_partial_ready_is_valid_and_can_later_recover_to_live() -> None:
         state=state,
         plan=_bootstrap(BootstrapDisposition.ADAPTIVE_RESEARCH),
         occurred_at=NOW,
+        learning_memory=_LearningMemory(),
+        execution_id="run:first-xeed",
+        code_sha="abc123",
     )
     apply_prime_trace(
         seed=seed,
@@ -271,6 +286,9 @@ def test_insufficient_evidence_is_honest_non_failure(
         state=state,
         plan=_bootstrap(disposition),
         occurred_at=NOW,
+        learning_memory=_LearningMemory(),
+        execution_id="run:first-xeed",
+        code_sha="abc123",
     )
 
     assert state.status is XeedGerminationStatus.INSUFFICIENT_EVIDENCE
@@ -287,6 +305,9 @@ def test_blocked_and_failed_are_explicit_runtime_states() -> None:
         state=blocked,
         plan=_bootstrap(BootstrapDisposition.BLOCKED_BY_BUDGET_OR_RIGHTS),
         occurred_at=NOW,
+        learning_memory=_LearningMemory(),
+        execution_id="run:first-xeed",
+        code_sha="abc123",
     )
     assert blocked.status is XeedGerminationStatus.BLOCKED
 
@@ -329,6 +350,9 @@ def test_stale_readiness_decision_cannot_promote_changed_lifecycle() -> None:
         state=state,
         plan=_bootstrap(BootstrapDisposition.ADAPTIVE_RESEARCH),
         occurred_at=NOW,
+        learning_memory=_LearningMemory(),
+        execution_id="run:first-xeed",
+        code_sha="abc123",
     )
     apply_prime_trace(seed=seed, state=state, trace=_prime_trace(), occurred_at=NOW)
     projection = _xignal()

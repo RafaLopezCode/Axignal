@@ -5,10 +5,16 @@ from __future__ import annotations
 from dataclasses import dataclass
 from datetime import datetime
 
+from application.economic_discovery.learning_memory import (
+    LearningMemory,
+    LearningOutcome,
+    LearningYield,
+)
 from application.economic_discovery.prime_execution import PrimeExecutionTrace
 from application.subscriber_projection.xignal import ExplainableXignalProjection
 from application.xeed_access.organization_reader import AuthorizedXeedOrganization
 from application.xeed_germination.bootstrap import BootstrapDisposition, BootstrapPlan
+from application.xeed_germination.learning import bootstrap_learning_event
 from domain.xeed.germination import XeedGerminationState, XeedGerminationStatus
 
 
@@ -88,10 +94,17 @@ def apply_bootstrap_plan(
     state: XeedGerminationState,
     plan: BootstrapPlan,
     occurred_at: datetime,
+    learning_memory: LearningMemory,
+    execution_id: str,
+    code_sha: str,
 ) -> None:
     """Map governed bootstrap outcome to lifecycle without inventing readiness."""
 
     _require_context(seed=seed, state=state)
+    if not execution_id.strip():
+        raise ValueError("bootstrap execution identity is required")
+    if not code_sha.strip():
+        raise ValueError("bootstrap code SHA is required")
     if plan.xeed_id != state.xeed_id or plan.subject_id != seed.organization.id:
         raise ValueError("bootstrap plan does not match first-Xeed runtime context")
     if state.status is not XeedGerminationStatus.RESOLVING:
@@ -111,6 +124,31 @@ def apply_bootstrap_plan(
         reason = f"BOOTSTRAP_{plan.disposition.value}"
 
     state.transition(target, occurred_at=occurred_at, reason_code=reason)
+
+    outcome = (
+        LearningOutcome.PARTIAL
+        if plan.disposition
+        in {
+            BootstrapDisposition.BLOCKED_BY_BUDGET_OR_RIGHTS,
+            BootstrapDisposition.RETAIN_UNKNOWN,
+            BootstrapDisposition.DEFER,
+        }
+        else LearningOutcome.COMPLETED
+    )
+    event = bootstrap_learning_event(
+        event_id=(
+            f"learn:{execution_id}:00-bootstrap:{state.xeed_id}:{plan.plan_fingerprint[:16]}"
+        ),
+        plan=plan,
+        occurred_at=occurred_at,
+        code_sha=code_sha,
+        outcome=outcome,
+        after_state_fingerprint=plan.state_fingerprint,
+        reason_code=reason,
+        yield_=LearningYield(observations_reused=plan.reused_observation_count),
+        output_fingerprint=plan.plan_fingerprint,
+    )
+    learning_memory.append(event)
 
 
 def apply_prime_trace(

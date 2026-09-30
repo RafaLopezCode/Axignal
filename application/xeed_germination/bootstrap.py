@@ -265,7 +265,6 @@ def build_bootstrap_plan(
     *,
     seed: AuthorizedXeedOrganization,
     rich_state: RichSubjectState,
-    reused_observation_count: int,
     policy: BootstrapPolicy,
     known_sources: tuple[BootstrapSourceCandidate, ...],
     contracts: tuple[TypingDimensionContract, ...],
@@ -281,8 +280,7 @@ def build_bootstrap_plan(
     subject_id = seed.organization.id
     if rich_state.subject_id != subject_id:
         raise ValueError("bootstrap rich state must belong to the Xeed organization")
-    if reused_observation_count < 0:
-        raise ValueError("reused observation count cannot be negative")
+    reused_observation_count = len({item.observation_id for item in rich_state.data})
     candidate_ids = [candidate.candidate_id for candidate in known_sources]
     if len(candidate_ids) != len(set(candidate_ids)):
         raise ValueError("bootstrap source candidate identities must be unique")

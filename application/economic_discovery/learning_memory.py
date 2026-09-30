@@ -75,6 +75,7 @@ class LearningCost:
 class LearningYield:
     """Observable output cardinality. Counts do not imply quality."""
 
+    observations_reused: int = 0
     observations_added: int = 0
     state_fields_changed: int = 0
     dimensions_became_answerable: int = 0
@@ -85,6 +86,7 @@ class LearningYield:
 
     def __post_init__(self) -> None:
         values = (
+            self.observations_reused,
             self.observations_added,
             self.state_fields_changed,
             self.dimensions_became_answerable,
@@ -100,6 +102,7 @@ class LearningYield:
     def total_observed_output(self) -> int:
         return sum(
             (
+                self.observations_reused,
                 self.observations_added,
                 self.state_fields_changed,
                 self.dimensions_became_answerable,
@@ -230,6 +233,7 @@ def summarize_learning(events: tuple[LearningEvent, ...]) -> LearningSummary:
     total_latency = 0
     corrections = 0
     yield_totals = {
+        "observations_reused": 0,
         "observations_added": 0,
         "state_fields_changed": 0,
         "dimensions_became_answerable": 0,
