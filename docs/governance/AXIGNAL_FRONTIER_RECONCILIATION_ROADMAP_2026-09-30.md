@@ -1258,7 +1258,7 @@ Future audit can inspect actual service integration instead of correctly reporti
 
 ## FR-30 — Production E2E: First Xeed → First Proof
 
-**Status:** IMPLEMENTED_PENDING_PRODUCTION_E2E
+**Status:** DONE
 **Depends on:** FR-29, FR-09, FR-10  
 **Priority:** GOAL
 
@@ -1275,15 +1275,21 @@ Verify in browser against production or explicitly production-equivalent environ
 - Real local production-equivalent execution against `https://axignal.com/` reached `LIVE`, artifact verification true, Today READY and six linked Learning Memory events.
 - Chrome E2E from a fresh runtime verified keyboard Plant Xeed, real observation, Today, keyboard evidence opening, exact evidence trace and reload continuity with no demo marker in the live DOM.
 - Responsive smoke at 390x844 had no horizontal overflow and exposed the mobile navigation.
-- Production-service deployment/E2E remains pending the green merge.
+- Production runtime is deployed at canonical code SHA `cb89cfe391a0ce6ba93bfc5e5b8a942795897769`; `axignal-runtime.service` is active with `AXIGNAL_FIRST_PROOF_ALLOWED_HOST=axignal.com`.
+- Production first proof persisted exactly one Xeed session, one governed Observation and six linked Learning Memory events; browser verification did not mutate those counts.
+- Persisted Xeed: `xeed:production-first-proof:1`; Xignal: `xignal:0ba83aceccb7ce1a141baba88e608873`; Observation: `source:request:fr30:1:official-homepage:sha256:0f877a33432e97d71`.
+- Production browser E2E through an SSH tunnel to loopback runtime passed at 1440x1000: app READY, demo marker absent, Today surfaced the real OBSERVED Xignal, trusted keyboard Enter opened `Show how AXIGNAL knows`, cognitive depth became `3.00`, evidence expanded, exact Observation/Learning/UNKNOWN/source trace rendered, and reload returned the same Today proof.
+- Mobile production smoke at 390x844 passed with `scrollWidth == innerWidth`, mobile navigation visible, keyboard-opened evidence and no horizontal overflow.
+- Public boundary remains closed: `/subscriber/` does not expose the runtime subscriber; public `POST /api/xeeds` returns 405; public `GET /api/subscriber-context` resolves only to landing HTML and contains no production Xeed JSON.
+- External `/healthz` reports the exact runtime SHA with healthy Observation/Learning stores and `write_surface=closed`.
 
 ### Acceptance
-- No demo/example data masquerading as real.
-- UI loading/errors/insufficient-evidence states tested.
-- Keyboard/responsive smoke completed.
-- Exact trace from UI Xignal to observations.
-- Learning Memory event linked.
-- User can state what changed and why AXIGNAL believes it.
+- No demo/example data masquerading as real. **PASS.**
+- UI loading/errors/insufficient-evidence states tested. **PASS.**
+- Keyboard/responsive smoke completed. **PASS.**
+- Exact trace from UI Xignal to observations. **PASS.**
+- Learning Memory event linked. **PASS ? six events, including the Xignal emission event.**
+- User can state what changed and why AXIGNAL believes it. **PASS ? the authorized public homepage was externally reachable with visible text; AXIGNAL traces that observation to the stored source observation while keeping all unobserved surfaces UNKNOWN.**
 
 ### FRONTIER_CLOSURE
 The core findings of both Frontier audits are materially closed; FIRST_MAP_WOW is no longer merely aspirational for the tested path.
