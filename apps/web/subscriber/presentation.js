@@ -54,7 +54,7 @@
       'today.why': 'Why it matters',
       'today.showHow': 'Show how AXIGNAL knows',
       'today.openMap': 'View in map',
-      'today.empty': 'Nothing material is ready yet. AXIGNAL is still observing.',
+      'today.empty': 'Nothing material is ready from the currently observed state.',
       'today.partial': 'Useful evidence exists, but no material development is ready to surface yet.',
       'today.currentObservation': 'Current observation',
       'mobile.navigation': 'Mobile value navigation',

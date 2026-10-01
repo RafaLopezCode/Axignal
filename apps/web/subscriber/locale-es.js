@@ -49,7 +49,7 @@
     'today.why': 'Por qué importa',
     'today.showHow': 'Ver cómo lo sabe AXIGNAL',
     'today.openMap': 'Ver en el mapa',
-    'today.empty': 'Todavía no hay nada relevante listo. AXIGNAL sigue observando.',
+    'today.empty': 'No hay nada material listo en el estado observado actualmente.',
     'today.partial': 'Hay evidencia útil, pero todavía no hay ninguna novedad relevante lista para mostrar.',
     'today.currentObservation': 'Observación actual',
     'mobile.navigation': 'Navegación de valor móvil',

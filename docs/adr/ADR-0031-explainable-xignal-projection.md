@@ -28,7 +28,7 @@ The projection separates the private `xeed_id` that receives the signal from the
 
 Subscriber-visible Xignal state is explicit:
 
-- `OBSERVED` — requires already-admitted canonical support;
+- `OBSERVED` — requires explicit governed support: already-admitted canonical support for business truth claims, or exact governed observation support for condition-bound observed phenomena such as digital representation;
 - `POTENTIAL` — explainable economic possibility, never displayed as observed;
 - `UNKNOWN` — an explicit unresolved knowledge state with named unknowns.
 
@@ -80,7 +80,7 @@ Basis data are ordered by contribution, observation time and stable datum id. Ea
 
 ## Basis evidence binding
 
-`BasisDatum` gains an optional `evidence_ref`. Existing non-canonical explainability use cases do not require it. An OBSERVED Xignal does.
+`BasisDatum` gains an optional `evidence_ref`. Existing non-canonical explainability use cases do not require it. An OBSERVED Xignal backed by canonical FAXT support does. An OBSERVED representation/activity signal may instead bind exact governed observation ids from supporting Basis data; this proves what was observed without promoting the observed surface output to business truth.
 
 ## Non-goals
 
@@ -88,4 +88,4 @@ FR-05 does not admit new FAXTs, relationships or PATHX. It does not infer sale p
 
 ## Consequences
 
-AXIGNAL now has a real subscriber-safe signal object that can explain why it exists and distinguish observed fact-supported attention from potential opportunity and unresolved uncertainty without weakening EvidenceAdmission.
+AXIGNAL now has a real subscriber-safe signal object that can explain why it exists and distinguish governed observed attention from potential opportunity and unresolved uncertainty without weakening EvidenceAdmission. Observation-backed representation signals remain observations of a surface, not admitted business truth.
