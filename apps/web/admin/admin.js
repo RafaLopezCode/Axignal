@@ -67,7 +67,9 @@
               ? 'AO-06 COGNITIVE OBSERVATORY'
               : current.slug === 'governance'
                 ? 'AO-07 GOVERNANCE CONTROL'
-                : 'ADMIN DOMAIN'
+                : current.slug === 'customers-crm'
+                  ? 'AO-08 PRIVATE COMMERCIAL'
+                  : 'ADMIN DOMAIN'
     }
     if (breadcrumb) breadcrumb.textContent = current.label
     if (title) title.textContent = current.label
@@ -613,6 +615,111 @@
         details.append(summary, body)
         card.append(header, facts, details)
         auditList.append(card)
+      }
+    }
+  }
+
+
+  const commercial = bootstrap.commercial
+  const commercialSection = document.getElementById('admin-commercial-observatory')
+  const commercialPrivacy = document.getElementById('admin-commercial-privacy')
+  const commercialGenerated = document.getElementById('admin-commercial-generated')
+  const commercialNotes = document.getElementById('admin-commercial-notes')
+  const commercialSummary = document.getElementById('admin-commercial-summary')
+  const commercialCompanyList = document.getElementById('admin-commercial-company-list')
+
+  if (current?.slug === 'customers-crm' && commercial && commercialSection) {
+    commercialSection.hidden = false
+    if (domainPreview) domainPreview.hidden = true
+    if (commercialPrivacy) commercialPrivacy.textContent = commercial.privacyClass || 'PRIVATE_FIRST_PARTY'
+    if (commercialGenerated) commercialGenerated.textContent = commercial.generatedAt ? `Generated ${commercial.generatedAt}` : ''
+
+    if (commercialNotes) {
+      commercialNotes.replaceChildren()
+      for (const noteText of commercial.coverageNotes || []) {
+        const note = document.createElement('p')
+        note.textContent = noteText
+        commercialNotes.append(note)
+      }
+    }
+
+    if (commercialSummary) {
+      commercialSummary.replaceChildren()
+      const panel = document.createElement('section')
+      panel.className = 'admin-observatory-panel'
+      const heading = document.createElement('h3')
+      heading.textContent = 'AXIGNAL first-party commercial state'
+      panel.append(heading)
+      const facts = document.createElement('div')
+      facts.className = 'admin-observatory-facts'
+      addFact(facts, 'Prospects', commercial.prospectCount, 'KNOWN')
+      addFact(facts, 'Companies', commercial.companyCount, 'KNOWN')
+      addFact(facts, 'Contacts', commercial.contactCount, 'KNOWN')
+      addFact(facts, 'Opportunities', commercial.opportunityCount, 'KNOWN')
+      addFact(facts, 'Deals', commercial.dealCount, 'KNOWN')
+      addFact(facts, 'Open follow-ups', commercial.openTaskCount, 'KNOWN')
+      addFact(facts, 'Commercial notes', commercial.noteCount, 'KNOWN')
+      addFact(facts, 'Audit records', commercial.auditCount, 'KNOWN')
+      addFact(facts, 'PII in projection', commercial.piiVisible ? 'VISIBLE' : 'EXCLUDED', 'KNOWN')
+      panel.append(facts)
+
+      const originDetails = document.createElement('details')
+      originDetails.className = 'admin-metric-lineage'
+      const originSummary = document.createElement('summary')
+      originSummary.textContent = 'Inspect provenance classes'
+      const originBody = document.createElement('p')
+      originBody.textContent = (commercial.originCounts || [])
+        .map(([origin, count]) => `${origin}: ${count}`)
+        .join(' · ') || 'Origin breakdown unavailable for this scope.'
+      originDetails.append(originSummary, originBody)
+      panel.append(originDetails)
+      commercialSummary.append(panel)
+    }
+
+    if (commercialCompanyList) {
+      commercialCompanyList.replaceChildren()
+      const companies = Array.isArray(commercial.companies) ? commercial.companies : []
+      if (!companies.length) {
+        const empty = document.createElement('article')
+        empty.className = 'admin-observatory-empty'
+        const strong = document.createElement('strong')
+        strong.textContent = 'No AXIGNAL commercial companies recorded'
+        const body = document.createElement('p')
+        body.textContent = 'This is private first-party business state. AXIGLAND observations do not silently create commercial relationships.'
+        empty.append(strong, body)
+        commercialCompanyList.append(empty)
+      }
+      for (const company of companies) {
+        const card = document.createElement('article')
+        card.className = 'admin-xeed-card'
+        const header = document.createElement('header')
+        const heading = document.createElement('h3')
+        heading.textContent = company.displayName
+        const state = document.createElement('span')
+        state.textContent = company.origin
+        header.append(heading, state)
+
+        const facts = document.createElement('div')
+        facts.className = 'admin-observatory-facts'
+        addFact(facts, 'Acquisition source', company.acquisitionSource, 'KNOWN')
+        addFact(facts, 'Consent basis', company.consentBasis, 'KNOWN')
+        addFact(facts, 'Contacts', company.contactCount, 'KNOWN')
+        addFact(facts, 'Opportunities', company.opportunityCount, 'KNOWN')
+        addFact(facts, 'Open follow-ups', company.openTaskCount, 'KNOWN')
+        addFact(facts, 'Notes', company.noteCount, 'KNOWN')
+        addFact(facts, 'AXIGNAL account ref', company.accountId, company.accountId ? 'KNOWN' : 'UNKNOWN')
+        addFact(facts, 'Observed Organization ref', company.observedOrganizationId, company.observedOrganizationId ? 'EXPLICIT_REFERENCE' : 'UNKNOWN')
+
+        const details = document.createElement('details')
+        details.className = 'admin-metric-lineage'
+        const summary = document.createElement('summary')
+        summary.textContent = 'Inspect authority boundary'
+        const body = document.createElement('p')
+        body.textContent = `Commercial company ${company.companyId} is AXIGNAL private operating state. Organization reference is navigation/deduplication only and grants no canonical write authority.`
+        details.append(summary, body)
+
+        card.append(header, facts, details)
+        commercialCompanyList.append(card)
       }
     }
   }
