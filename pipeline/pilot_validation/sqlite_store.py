@@ -1,4 +1,4 @@
-"""SQLite persistence for append-only FR-27 pilot evidence."""
+"""SQLite persistence for append-only FR-27 pilot evidence and observability."""
 
 from __future__ import annotations
 
@@ -13,12 +13,17 @@ from application.economic_discovery.pilot_validation import (
     PilotEvidenceConflict,
     PilotEvidenceKind,
     PilotEvidenceSource,
+    PilotObservabilityAssessment,
+    PilotObservabilityDisposition,
     PricingEvidenceKind,
+    PublicSurfaceObservation,
+    SurfaceObservation,
+    XeedAttentionPosture,
 )
 
 
 class SqlitePilotEvidenceMemory:
-    """Durable pilot-evidence ledger, separate from canonical economic truth."""
+    """Durable pilot-validation ledger, separate from canonical economic truth."""
 
     def __init__(self, database_path: str | Path) -> None:
         self._path = Path(database_path)
@@ -45,6 +50,23 @@ class SqlitePilotEvidenceMemory:
                 """
                 CREATE INDEX IF NOT EXISTS idx_pilot_evidence_time
                 ON pilot_evidence(pilot_id, occurred_at, evidence_id)
+                """
+            )
+            connection.execute(
+                """
+                CREATE TABLE IF NOT EXISTS pilot_observability (
+                    assessment_id TEXT PRIMARY KEY,
+                    pilot_id TEXT NOT NULL,
+                    xeed_id TEXT NOT NULL,
+                    assessed_at TEXT NOT NULL,
+                    payload_json TEXT NOT NULL
+                )
+                """
+            )
+            connection.execute(
+                """
+                CREATE INDEX IF NOT EXISTS idx_pilot_observability_time
+                ON pilot_observability(pilot_id, assessed_at, assessment_id)
                 """
             )
 
@@ -89,6 +111,50 @@ class SqlitePilotEvidenceMemory:
             currency=data["currency"],
         )
 
+    @staticmethod
+    def _observability_payload(assessment: PilotObservabilityAssessment) -> str:
+        data = {
+            "assessment_id": assessment.assessment_id,
+            "pilot_id": assessment.pilot_id,
+            "xeed_id": assessment.xeed_id,
+            "assessed_at": assessment.assessed_at.astimezone(UTC).isoformat(),
+            "disposition": assessment.disposition.value,
+            "attention_posture": assessment.attention_posture.value,
+            "private_context_declared": assessment.private_context_declared,
+            "assessment_ref": assessment.assessment_ref,
+            "surfaces": [
+                {
+                    "surface_id": item.surface_id,
+                    "result": item.result.value,
+                    "evidence_ref": item.evidence_ref,
+                }
+                for item in assessment.surfaces
+            ],
+        }
+        return json.dumps(data, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
+
+    @staticmethod
+    def _deserialize_observability(payload: str) -> PilotObservabilityAssessment:
+        data = json.loads(payload)
+        return PilotObservabilityAssessment(
+            assessment_id=data["assessment_id"],
+            pilot_id=data["pilot_id"],
+            xeed_id=data["xeed_id"],
+            assessed_at=datetime.fromisoformat(data["assessed_at"]),
+            disposition=PilotObservabilityDisposition(data["disposition"]),
+            attention_posture=XeedAttentionPosture(data["attention_posture"]),
+            surfaces=tuple(
+                SurfaceObservation(
+                    surface_id=item["surface_id"],
+                    result=PublicSurfaceObservation(item["result"]),
+                    evidence_ref=item["evidence_ref"],
+                )
+                for item in data["surfaces"]
+            ),
+            private_context_declared=bool(data["private_context_declared"]),
+            assessment_ref=data["assessment_ref"],
+        )
+
     def _load(
         self,
         connection: sqlite3.Connection,
@@ -99,6 +165,17 @@ class SqlitePilotEvidenceMemory:
             (evidence_id,),
         ).fetchone()
         return None if row is None else self._deserialize(str(row[0]))
+
+    def _load_observability(
+        self,
+        connection: sqlite3.Connection,
+        assessment_id: str,
+    ) -> PilotObservabilityAssessment | None:
+        row = connection.execute(
+            "SELECT payload_json FROM pilot_observability WHERE assessment_id = ?",
+            (assessment_id,),
+        ).fetchone()
+        return None if row is None else self._deserialize_observability(str(row[0]))
 
     def append(self, evidence: PilotEvidence) -> bool:
         if not isinstance(evidence, PilotEvidence):
@@ -128,6 +205,34 @@ class SqlitePilotEvidenceMemory:
             )
         return True
 
+    def append_observability(self, assessment: PilotObservabilityAssessment) -> bool:
+        if not isinstance(assessment, PilotObservabilityAssessment):
+            raise TypeError("pilot observability memory accepts PilotObservabilityAssessment only")
+        with self._connect() as connection:
+            connection.execute("BEGIN IMMEDIATE")
+            existing = self._load_observability(connection, assessment.assessment_id)
+            if existing is not None:
+                if existing == assessment:
+                    return False
+                raise PilotEvidenceConflict(
+                    "pilot observability assessment id already exists with different content"
+                )
+            connection.execute(
+                """
+                INSERT INTO pilot_observability (
+                    assessment_id, pilot_id, xeed_id, assessed_at, payload_json
+                ) VALUES (?, ?, ?, ?, ?)
+                """,
+                (
+                    assessment.assessment_id,
+                    assessment.pilot_id,
+                    assessment.xeed_id,
+                    assessment.assessed_at.astimezone(UTC).isoformat(),
+                    self._observability_payload(assessment),
+                ),
+            )
+        return True
+
     def for_pilot(self, pilot_id: str) -> tuple[PilotEvidence, ...]:
         if not pilot_id.strip():
             raise ValueError("pilot id is required")
@@ -142,3 +247,21 @@ class SqlitePilotEvidenceMemory:
                 (pilot_id,),
             ).fetchall()
         return tuple(self._deserialize(str(row[0])) for row in rows)
+
+    def observability_for_pilot(
+        self,
+        pilot_id: str,
+    ) -> tuple[PilotObservabilityAssessment, ...]:
+        if not pilot_id.strip():
+            raise ValueError("pilot id is required")
+        with self._connect() as connection:
+            rows = connection.execute(
+                """
+                SELECT payload_json
+                FROM pilot_observability
+                WHERE pilot_id = ?
+                ORDER BY assessed_at, assessment_id
+                """,
+                (pilot_id,),
+            ).fetchall()
+        return tuple(self._deserialize_observability(str(row[0])) for row in rows)

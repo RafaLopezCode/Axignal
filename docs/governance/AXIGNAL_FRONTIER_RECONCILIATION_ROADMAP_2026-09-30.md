@@ -1166,6 +1166,10 @@ Choose one concrete job/buyer hypothesis without redefining AXIGNAL. Measure whe
 ### Implementation evidence
 - Buyer/job hypothesis fixed as an agency external-change decision pilot without redefining AXIGNAL.
 - Append-only pilot evidence contract and SQLite persistence implemented.
+- A persisted `PilotObservabilityAssessment` now precedes discovery-value interpretation and distinguishes public, partial, private/non-observable and unknown territory.
+- Public-surface results distinguish presence, measured no-presence, not-observed, unavailable and outside-public-scope states.
+- Xeed-private attention posture (`GROW_VISIBILITY`, `MONITOR_VISIBILITY`, `LOW_PROFILE`, `UNKNOWN`) changes relevance only; it cannot configure canonical truth.
+- The same measured absence can become a visibility-gap candidate for a growth Xeed or low-exposure evidence for a low-profile Xeed; public presence can become an exposure candidate for low-profile monitoring.
 - Six required dimensions are represented independently: decision advancement, evidence inspection, evidence trust, return because change, willingness to pay, additional-Xeed value.
 - FR-26 UnitEconomicsReport must match the pilot primary Xeed.
 - Telemetry cannot establish trust, return causality or willingness to pay.
@@ -1174,6 +1178,9 @@ Choose one concrete job/buyer hypothesis without redefining AXIGNAL. Measure whe
 
 ### Acceptance
 - Pilot protocol and evidence exist. **PARTIAL:** protocol/evidence machinery exists; real pilot evidence pending.
+- Observability boundary is recorded before discovery quality/value is interpreted. **IMPLEMENTED.**
+- Measured public absence remains evidence; private/non-observable territory cannot be counted as discovery failure. **IMPLEMENTED.**
+- Xeed-private visibility intent changes relevance but never canonical organization truth. **IMPLEMENTED.**
 - Failure is a valid documented outcome. **IMPLEMENTED.**
 - Pricing remains hypothesis until observed. **IMPLEMENTED.**
 
