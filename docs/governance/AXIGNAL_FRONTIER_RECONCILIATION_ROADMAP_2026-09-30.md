@@ -1223,12 +1223,24 @@ Future UX audit no longer finds a major landing/product expectation gap.
 
 ## FR-29 — Production Runtime Integration
 
-**Status:** NOT_STARTED  
+**Status:** IMPLEMENTED_PENDING_DEPLOYMENT
 **Depends on:** FR-06, FR-07, FR-17  
 **Priority:** P0 before production claims
 
 ### Work
 Integrate the proven vertical path in the actual app/runtime using real persistence/configuration. Before production inspect deployment/service/proxy/ports/persistence/version, isolate AXIGNAL from other projects, define rollback and protect secrets.
+
+
+### Implementation evidence (2026-10-01)
+- Canonical `axignal-runtime` composition root added under `tools/runtime`; production configuration fails closed without exact SHA, persistent data path, web root and loopback bind.
+- Runtime assembles the production `SqliteObservationMemory` and `SqliteLearningMemory` adapters and exposes read-only `/healthz` plus loopback operational `/runtimez`.
+- Public HTTP mutation verbs fail closed; no EvidenceAdmission/FAXT/AXIGLAND write endpoint is introduced.
+- `axignal-runtime-probe` verifies isolated Observation/Learning append -> reopen and replay idempotence without writing subscriber/business data into live memories.
+- Production topology was directly inspected: `srv1597364`, Traefik on 80/443, AXIGNAL nginx on `127.0.0.1:18180`, Python 3.12.3, pre-FR-29 landing SHA `170edc8`, and free loopback port `18181`.
+- Deployment artifacts preserve `18180`, add runtime on `127.0.0.1:18181`, keep `/runtimez` and the current synthetic subscriber UI off the public proxy, and isolate writable persistence under `/var/lib/axignal/runtime`.
+- Browser verification of the loopback subscriber projection succeeded; because it still declares `DEMO ? DATOS DE EJEMPLO`, public exposure is intentionally deferred to FR-30.
+- Full local validation: 681 tests PASS; Ruff, mypy and focused FR-29 contracts PASS.
+- Production deployment and exact deployed SHA remain pending this merge.
 
 ### Acceptance
 - Exact deployed SHA known.
