@@ -63,7 +63,9 @@
           ? 'AO-04 EXECUTIVE PROJECTION'
           : current.slug === 'xeeds' || current.slug === 'axigland-quality'
             ? 'AO-05 RUNTIME OBSERVATORY'
-            : 'ADMIN DOMAIN'
+            : current.slug === 'axent-brain'
+              ? 'AO-06 COGNITIVE OBSERVATORY'
+              : 'ADMIN DOMAIN'
     }
     if (breadcrumb) breadcrumb.textContent = current.label
     if (title) title.textContent = current.label
@@ -282,6 +284,140 @@
 
         card.append(header, facts, details)
         xeedList.append(card)
+      }
+    }
+  }
+
+
+  const brainObservatory = bootstrap.brainObservatory
+  const brainSection = document.getElementById('admin-brain-observatory')
+  const brainCompleteness = document.getElementById('admin-brain-completeness')
+  const brainAsOf = document.getElementById('admin-brain-asof')
+  const brainNotes = document.getElementById('admin-brain-notes')
+  const brainSummary = document.getElementById('admin-brain-summary')
+  const providerList = document.getElementById('admin-provider-list')
+
+  if (current?.slug === 'axent-brain' && brainObservatory && brainSection) {
+    brainSection.hidden = false
+    if (domainPreview) domainPreview.hidden = true
+    if (brainCompleteness) brainCompleteness.textContent = brainObservatory.completeness || 'UNKNOWN'
+    if (brainAsOf) brainAsOf.textContent = brainObservatory.asOf ? `As of ${brainObservatory.asOf}` : ''
+
+    if (brainNotes) {
+      brainNotes.replaceChildren()
+      for (const noteText of brainObservatory.coverageNotes || []) {
+        const note = document.createElement('p')
+        note.textContent = noteText
+        brainNotes.append(note)
+      }
+    }
+
+    if (brainSummary) {
+      brainSummary.replaceChildren()
+
+      const executionPanel = document.createElement('section')
+      executionPanel.className = 'admin-observatory-panel'
+      const executionHeading = document.createElement('h3')
+      executionHeading.textContent = 'Brain execution evidence'
+      executionPanel.append(executionHeading)
+      const executionFacts = document.createElement('div')
+      executionFacts.className = 'admin-observatory-facts'
+      addFact(executionFacts, 'Learning events', brainObservatory.learningEventCount, 'KNOWN')
+      addFact(executionFacts, 'Cognitive events', brainObservatory.cognitiveEventCount, 'KNOWN')
+      addFact(executionFacts, 'Deterministic', brainObservatory.deterministicEventCount, 'KNOWN')
+      addFact(executionFacts, 'Structured evaluator', brainObservatory.structuredEvaluatorEventCount, 'KNOWN')
+      addFact(executionFacts, 'Adaptive research', brainObservatory.adaptiveResearchEventCount, 'KNOWN')
+      addFact(executionFacts, 'Failed', brainObservatory.failedEventCount, 'KNOWN')
+      addFact(executionFacts, 'Partial', brainObservatory.partialEventCount, 'KNOWN')
+      addFact(executionFacts, 'Semantic judgments produced', brainObservatory.semanticJudgmentsProduced, 'KNOWN')
+      addFact(executionFacts, 'Research objectives resolved', brainObservatory.researchObjectivesResolved, 'KNOWN')
+      addFact(executionFacts, 'Useful-output events', brainObservatory.usefulOutputEventCount, 'KNOWN')
+      addFact(executionFacts, 'Cost coverage', brainObservatory.costCompleteness, brainObservatory.costCompleteness)
+      addFact(executionFacts, 'Latency coverage', brainObservatory.latencyCompleteness, brainObservatory.latencyCompleteness)
+      addFact(executionFacts, 'Average observed latency (ms)', brainObservatory.averageLatencyMs, brainObservatory.latencyCompleteness)
+      addFact(executionFacts, 'Provider-attributed events', brainObservatory.providerAttributedEventCount, 'KNOWN')
+      addFact(executionFacts, 'Cognitive events without provider identity', brainObservatory.providerUnattributedCognitiveEventCount, 'KNOWN')
+      executionPanel.append(executionFacts)
+      brainSummary.append(executionPanel)
+
+      const control = brainObservatory.control || {}
+      const controlPanel = document.createElement('section')
+      controlPanel.className = 'admin-observatory-panel'
+      const controlHeading = document.createElement('h3')
+      controlHeading.textContent = 'Research control & Knowledge Frontier'
+      controlPanel.append(controlHeading)
+      const controlFacts = document.createElement('div')
+      controlFacts.className = 'admin-observatory-facts'
+      addFact(controlFacts, 'Research objective', control.researchObjectiveState, control.researchObjectiveCompleteness)
+      addFact(controlFacts, 'Routing', control.routingState, control.routingCompleteness)
+      addFact(controlFacts, 'Stop reason', control.stopState, control.stopCompleteness)
+      addFact(controlFacts, 'Budget', control.budgetState, control.budgetCompleteness)
+      addFact(controlFacts, 'No progress', control.noProgressState, control.noProgressCompleteness)
+      addFact(controlFacts, 'Retry', control.retryState, control.retryCompleteness)
+      addFact(controlFacts, 'Abstention', control.abstentionState, control.abstentionCompleteness)
+      addFact(controlFacts, 'Knowledge Frontier', control.knowledgeFrontierState, control.knowledgeFrontierCompleteness)
+      addFact(controlFacts, 'Unresolved gap', control.unresolvedGapState, control.unresolvedGapCompleteness)
+      controlPanel.append(controlFacts)
+
+      const controlLineage = document.createElement('details')
+      controlLineage.className = 'admin-metric-lineage'
+      const controlLineageSummary = document.createElement('summary')
+      controlLineageSummary.textContent = 'Inspect research-control lineage'
+      const controlLineageBody = document.createElement('p')
+      controlLineageBody.textContent = `Admin records: ${(control.sourceAdminRecordIds || []).join(', ') || 'None observed'} · Learning events: ${(control.sourceLearningEventIds || []).join(', ') || 'None observed'}`
+      controlLineage.append(controlLineageSummary, controlLineageBody)
+      controlPanel.append(controlLineage)
+      brainSummary.append(controlPanel)
+    }
+
+    if (providerList) {
+      providerList.replaceChildren()
+      const providers = Array.isArray(brainObservatory.providerSlices) ? brainObservatory.providerSlices : []
+      if (!providers.length) {
+        const empty = document.createElement('article')
+        empty.className = 'admin-observatory-empty'
+        const strong = document.createElement('strong')
+        strong.textContent = 'No provider-attributed cognitive usage observed'
+        const body = document.createElement('p')
+        body.textContent = 'This is not a claim of zero cognitive work. Provider identity or usage may be unavailable and remains explicit above.'
+        empty.append(strong, body)
+        providerList.append(empty)
+      }
+      for (const provider of providers) {
+        const card = document.createElement('article')
+        card.className = 'admin-xeed-card admin-provider-card'
+        const header = document.createElement('header')
+        const heading = document.createElement('h3')
+        heading.textContent = `${provider.provider} · ${provider.providerVersion}`
+        const state = document.createElement('span')
+        state.textContent = provider.operationClass
+        header.append(heading, state)
+
+        const facts = document.createElement('div')
+        facts.className = 'admin-observatory-facts'
+        addFact(facts, 'Events', provider.eventCount, 'KNOWN')
+        addFact(facts, 'Completed', provider.completedCount, 'KNOWN')
+        addFact(facts, 'Partial', provider.partialCount, 'KNOWN')
+        addFact(facts, 'Failed', provider.failedCount, 'KNOWN')
+        addFact(facts, 'Cost coverage', provider.costCompleteness, provider.costCompleteness)
+        addFact(facts, 'Latency coverage', provider.latencyCompleteness, provider.latencyCompleteness)
+        addFact(facts, 'Average latency (ms)', provider.averageLatencyMs, provider.latencyCompleteness)
+        addFact(facts, 'Input units observed', provider.totalInputUnits, provider.knownInputUnitEventCount ? 'PARTIAL' : 'UNKNOWN')
+        addFact(facts, 'Output units observed', provider.totalOutputUnits, provider.knownOutputUnitEventCount ? 'PARTIAL' : 'UNKNOWN')
+        addFact(facts, 'Semantic judgments', provider.semanticJudgmentsProduced, 'KNOWN')
+        addFact(facts, 'Research objectives resolved', provider.researchObjectivesResolved, 'KNOWN')
+        addFact(facts, 'Useful-output events', provider.usefulOutputEventCount, 'KNOWN')
+
+        const details = document.createElement('details')
+        details.className = 'admin-metric-lineage'
+        const detailsSummary = document.createElement('summary')
+        detailsSummary.textContent = 'Inspect provider slice'
+        const detailsBody = document.createElement('p')
+        const costs = (provider.knownCostsByCurrency || []).map(([currency, amount]) => `${amount} µ${currency}`).join(', ')
+        detailsBody.textContent = `Comparable only with matching key: ${provider.comparisonKey} · policy: ${provider.policyId}@${provider.policyVersion} · observed cost: ${costs || 'UNKNOWN'} · unknown-cost events: ${provider.unknownCostEventCount} · lineage: ${(provider.sourceLearningEventIds || []).join(', ') || 'None'}`
+        details.append(detailsSummary, detailsBody)
+        card.append(header, facts, details)
+        providerList.append(card)
       }
     }
   }

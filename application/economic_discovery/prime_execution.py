@@ -107,6 +107,8 @@ class PrimeMechanismResult:
     output_fingerprint: str
     made_progress: bool
     cost: LearningCost = field(default_factory=LearningCost)
+    provider: str | None = None
+    provider_version: str | None = None
     requests: int = 0
     sources: int = 0
     retries: int = 0
@@ -116,6 +118,12 @@ class PrimeMechanismResult:
     def __post_init__(self) -> None:
         if not self.output_fingerprint.strip():
             raise ValueError("Prime mechanism result fingerprint is required")
+        if (self.provider is None) != (self.provider_version is None):
+            raise ValueError("Prime mechanism provider and version must coexist")
+        if self.provider is not None and (
+            not self.provider.strip() or not (self.provider_version or "").strip()
+        ):
+            raise ValueError("Prime mechanism provider identity cannot be blank")
         for value in (
             self.requests,
             self.sources,
@@ -197,6 +205,8 @@ def _learning_event(
     after_state_fingerprint: str | None,
     cost: LearningCost,
     yield_: LearningYield,
+    provider: str | None = None,
+    provider_version: str | None = None,
     replay: LearningReplayReference | None = None,
 ) -> LearningEvent:
     return LearningEvent(
@@ -214,6 +224,8 @@ def _learning_event(
         input_fingerprint=input_fingerprint,
         output_fingerprint=output_fingerprint,
         reason_code=reason_code,
+        provider=provider,
+        provider_version=provider_version,
         before_state_fingerprint=before_state_fingerprint,
         after_state_fingerprint=after_state_fingerprint,
         replay=(
@@ -629,6 +641,8 @@ def execute_prime_source_slice(
                 yield_=LearningYield(
                     semantic_judgments_produced=len(candidate_set.candidates),
                 ),
+                provider=candidate_set.provider,
+                provider_version=candidate_set.provider_version,
                 replay=LearningReplayReference.non_replayable(
                     "PROVIDER_MODEL_OR_HARNESS_REFERENCE_UNAVAILABLE",
                     code_sha=code_sha,
@@ -833,7 +847,6 @@ def execute_prime_source_slice(
                 before_state_fingerprint=None,
                 after_state_fingerprint=None,
                 cost=result.cost,
-                replay=replay,
                 yield_=LearningYield(
                     state_fields_changed=result.state_fields_changed,
                     semantic_judgments_produced=result.semantic_judgments_produced,
@@ -843,6 +856,9 @@ def execute_prime_source_slice(
                         else 0
                     ),
                 ),
+                provider=result.provider,
+                provider_version=result.provider_version,
+                replay=replay,
             )
         )
         learning_ids.append(event_id)

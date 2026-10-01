@@ -22,6 +22,7 @@ from application.admin_access import (
     AdminAuthenticationError,
     AdminAuthorizationError,
 )
+from application.admin_brain_observatory import project_brain_provider_observatory
 from application.admin_command_center import COMMAND_CENTER_METRICS, project_command_center
 from application.admin_shell import (
     AdminShellProjection,
@@ -30,6 +31,7 @@ from application.admin_shell import (
     project_admin_shell,
 )
 from application.admin_xeed_observatory import project_xeed_axigland_observatory
+from domain.admin_brain_observatory import BrainProviderObservatory
 from domain.admin_command_center import AdminCommandCenterProjection
 from domain.admin_observability import AdminProjectionId, AdminProjectionSnapshot
 from domain.admin_xeed_observatory import XeedAxiglandObservatory
@@ -325,11 +327,124 @@ def _xeed_observatory_payload(
     }
 
 
+def _brain_observatory_projection(
+    runtime: AxignalRuntime, *, now: datetime
+) -> BrainProviderObservatory:
+    return project_brain_provider_observatory(
+        learning_events=runtime.learning_memory.all_events(),
+        admin_records=runtime.admin_observability.records_through(now),
+        as_of=now,
+        generated_at=now,
+    )
+
+
+def _brain_observatory_payload(
+    projection: BrainProviderObservatory,
+) -> dict[str, object]:
+    providers: list[dict[str, object]] = []
+    for item in projection.provider_slices:
+        providers.append(
+            {
+                "provider": item.provider,
+                "providerVersion": item.provider_version,
+                "operationClass": item.operation_class,
+                "policyId": item.policy_id,
+                "policyVersion": item.policy_version,
+                "comparisonKey": item.comparison_key,
+                "eventCount": item.event_count,
+                "completedCount": item.completed_count,
+                "partialCount": item.partial_count,
+                "noChangeCount": item.no_change_count,
+                "failedCount": item.failed_count,
+                "knownCostsByCurrency": [list(value) for value in item.known_costs_by_currency],
+                "unknownCostEventCount": item.unknown_cost_event_count,
+                "costCompleteness": item.cost_completeness.value,
+                "knownLatencyEventCount": item.known_latency_event_count,
+                "totalLatencyMs": item.total_latency_ms,
+                "averageLatencyMs": item.average_latency_ms,
+                "latencyCompleteness": item.latency_completeness.value,
+                "knownInputUnitEventCount": item.known_input_unit_event_count,
+                "knownOutputUnitEventCount": item.known_output_unit_event_count,
+                "totalInputUnits": item.total_input_units,
+                "totalOutputUnits": item.total_output_units,
+                "semanticJudgmentsProduced": item.semantic_judgments_produced,
+                "researchObjectivesResolved": item.research_objectives_resolved,
+                "usefulOutputEventCount": item.useful_output_event_count,
+                "sourceLearningEventIds": list(item.source_learning_event_ids),
+            }
+        )
+    control = projection.control
+    return {
+        "asOf": projection.as_of.isoformat(),
+        "generatedAt": projection.generated_at.isoformat(),
+        "completeness": projection.completeness.value,
+        "coverageNotes": list(projection.coverage_notes),
+        "learningEventCount": projection.learning_event_count,
+        "cognitiveEventCount": projection.cognitive_event_count,
+        "deterministicEventCount": projection.deterministic_event_count,
+        "structuredEvaluatorEventCount": projection.structured_evaluator_event_count,
+        "adaptiveResearchEventCount": projection.adaptive_research_event_count,
+        "governanceEventCount": projection.governance_event_count,
+        "completedEventCount": projection.completed_event_count,
+        "partialEventCount": projection.partial_event_count,
+        "noChangeEventCount": projection.no_change_event_count,
+        "failedEventCount": projection.failed_event_count,
+        "providerAttributedEventCount": projection.provider_attributed_event_count,
+        "providerUnattributedCognitiveEventCount": (
+            projection.provider_unattributed_cognitive_event_count
+        ),
+        "knownCostsByCurrency": [list(value) for value in projection.known_costs_by_currency],
+        "unknownCostEventCount": projection.unknown_cost_event_count,
+        "costCompleteness": projection.cost_completeness.value,
+        "knownLatencyEventCount": projection.known_latency_event_count,
+        "totalLatencyMs": projection.total_latency_ms,
+        "averageLatencyMs": projection.average_latency_ms,
+        "latencyCompleteness": projection.latency_completeness.value,
+        "semanticJudgmentsProduced": projection.semantic_judgments_produced,
+        "researchObjectivesResolved": projection.research_objectives_resolved,
+        "usefulOutputEventCount": projection.useful_output_event_count,
+        "providerSlices": providers,
+        "control": {
+            "researchObjectiveState": control.research_objective_state,
+            "researchObjectiveCompleteness": control.research_objective_completeness.value,
+            "researchObjectiveReason": control.research_objective_reason,
+            "routingState": control.routing_state,
+            "routingCompleteness": control.routing_completeness.value,
+            "routingReason": control.routing_reason,
+            "stopState": control.stop_state,
+            "stopCompleteness": control.stop_completeness.value,
+            "stopReason": control.stop_reason,
+            "budgetState": control.budget_state,
+            "budgetCompleteness": control.budget_completeness.value,
+            "budgetReason": control.budget_reason,
+            "noProgressState": control.no_progress_state,
+            "noProgressCompleteness": control.no_progress_completeness.value,
+            "noProgressReason": control.no_progress_reason,
+            "retryState": control.retry_state,
+            "retryCompleteness": control.retry_completeness.value,
+            "retryReason": control.retry_reason,
+            "abstentionState": control.abstention_state,
+            "abstentionCompleteness": control.abstention_completeness.value,
+            "abstentionReason": control.abstention_reason,
+            "knowledgeFrontierState": control.knowledge_frontier_state,
+            "knowledgeFrontierCompleteness": control.knowledge_frontier_completeness.value,
+            "knowledgeFrontierReason": control.knowledge_frontier_reason,
+            "unresolvedGapState": control.unresolved_gap_state,
+            "unresolvedGapCompleteness": control.unresolved_gap_completeness.value,
+            "unresolvedGapReason": control.unresolved_gap_reason,
+            "sourceAdminRecordIds": list(control.source_admin_record_ids),
+            "sourceLearningEventIds": list(control.source_learning_event_ids),
+        },
+        "sourceLearningEventIds": list(projection.source_learning_event_ids),
+    }
+
+
 def _admin_projection_payload(
     projection: AdminShellProjection,
     *,
     command_center: AdminCommandCenterProjection | None = None,
     xeed_observatory: XeedAxiglandObservatory | None = None,
+    brain_observatory: BrainProviderObservatory | None = None,
 ) -> dict[str, object]:
     payload: dict[str, object] = {
         "mode": projection.mode,
@@ -351,6 +466,8 @@ def _admin_projection_payload(
         payload["commandCenter"] = _command_center_payload(command_center)
     if xeed_observatory is not None:
         payload["xeedObservatory"] = _xeed_observatory_payload(xeed_observatory)
+    if brain_observatory is not None:
+        payload["brainObservatory"] = _brain_observatory_payload(brain_observatory)
     return payload
 
 
@@ -360,6 +477,7 @@ def _render_admin_shell(
     *,
     command_center: AdminCommandCenterProjection | None = None,
     xeed_observatory: XeedAxiglandObservatory | None = None,
+    brain_observatory: BrainProviderObservatory | None = None,
 ) -> bytes:
     template = (web_root / "admin" / "index.html").read_text(encoding="utf-8")
     payload = html.escape(
@@ -368,6 +486,7 @@ def _render_admin_shell(
                 projection,
                 command_center=command_center,
                 xeed_observatory=xeed_observatory,
+                brain_observatory=brain_observatory,
             ),
             sort_keys=True,
             separators=(",", ":"),
@@ -491,11 +610,17 @@ def make_handler(runtime: AxignalRuntime) -> type[BaseHTTPRequestHandler]:
                         if admin_projection.current_slug in {"xeeds", "axigland-quality"}
                         else None
                     )
+                    brain_observatory = (
+                        _brain_observatory_projection(runtime, now=now)
+                        if admin_projection.current_slug == "axent-brain"
+                        else None
+                    )
                     rendered = _render_admin_shell(
                         runtime.config.web_root,
                         admin_projection,
                         command_center=command_center,
                         xeed_observatory=xeed_observatory,
+                        brain_observatory=brain_observatory,
                     )
                 except AdminAuthenticationError:
                     self._admin_error(HTTPStatus.UNAUTHORIZED, "Admin authentication failed.")

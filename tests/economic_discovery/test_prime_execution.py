@@ -352,6 +352,8 @@ def test_real_source_to_prime_composition_with_semantic_extraction(
     ]
     semantic_event = history[trace.learning_event_ids[3]]
     structured_event = history[trace.learning_event_ids[4]]
+    assert semantic_event.provider == "fixture-semantic"
+    assert semantic_event.provider_version == "1"
     assert semantic_event.replay.disposition is ReplayDisposition.NON_REPLAYABLE
     assert semantic_event.replay.reason_code == "PROVIDER_MODEL_OR_HARNESS_REFERENCE_UNAVAILABLE"
     assert semantic_event.replay.require("provider") == "fixture-semantic"
