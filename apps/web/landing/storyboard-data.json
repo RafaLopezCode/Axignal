@@ -312,38 +312,38 @@
     },
     "en": {
       "Eyebrow": "Evidence on demand",
-      "Headline": "Don’t just see the conclusion. Inspect why it deserves attention.",
-      "Body": "For important conclusions, you can trace the evidence behind them, see how recent it is, where sources disagree and what remains uncertain. Explanation is part of the product, not an afterthought.",
+      "Headline": "Don't just see a Xignal. Inspect why it deserves attention.",
+      "Body": "For material Xignals, AXIGNAL preserves a path to supporting observations, currentness, contradictions and explicit unknowns. Explanation is part of the product, not a post-hoc justification.",
       "Primary CTA": "Show me how AXIGNAL knows"
     },
     "es": {
       "Eyebrow": "Evidencia cuando la necesitas",
-      "Headline": "No te quedes con la conclusión. Examina por qué merece atención.",
-      "Body": "En las conclusiones importantes puedes rastrear la evidencia que las sustenta, comprobar lo reciente que es, ver dónde discrepan las fuentes y qué sigue siendo incierto. La explicación forma parte del producto, no es un añadido posterior.",
+      "Headline": "No te quedes con un Xignal. Examina por qué merece atención.",
+      "Body": "Para los Xignals materiales, AXIGNAL conserva un camino hacia las observaciones de soporte, su actualidad, las contradicciones y los UNKNOWN explícitos. La explicación forma parte del producto, no es una justificación generada a posteriori.",
       "Primary CTA": "Muéstrame cómo lo sabe AXIGNAL"
     },
     "fr": {
       "Eyebrow": "Preuves à la demande",
-      "Headline": "Ne regardez pas seulement la conclusion. Examinez pourquoi elle mérite votre attention.",
-      "Body": "Pour les conclusions importantes, vous pouvez retracer les preuves qui les soutiennent, voir leur récence, où les sources divergent et ce qui reste incertain. L’explication fait partie du produit, ce n’est pas un ajout tardif.",
+      "Headline": "Ne vous contentez pas d’un Xignal. Examinez pourquoi il mérite votre attention.",
+      "Body": "Pour les Xignals matériels, AXIGNAL conserve un chemin vers les observations de support, leur actualité, les contradictions et les inconnues explicites. L’explication fait partie du produit, ce n’est pas une justification générée après coup.",
       "Primary CTA": "Montrez-moi comment AXIGNAL le sait"
     },
     "de": {
       "Eyebrow": "Evidenz auf Abruf",
-      "Headline": "Sehen Sie nicht nur die Schlussfolgerung. Prüfen Sie, warum sie Aufmerksamkeit verdient.",
-      "Body": "Bei wichtigen Schlussfolgerungen können Sie die zugrunde liegende Evidenz verfolgen, ihre Aktualität sehen, erkennen, wo Quellen widersprechen und was unsicher bleibt. Erklärung ist Teil des Produkts, kein nachträglicher Zusatz.",
+      "Headline": "Sehen Sie nicht nur einen Xignal. Prüfen Sie, warum er Aufmerksamkeit verdient.",
+      "Body": "Für wesentliche Xignals bewahrt AXIGNAL den Pfad zu unterstützenden Beobachtungen, Aktualität, Widersprüchen und expliziten Unbekannten. Erklärung ist Teil des Produkts und keine nachträglich erzeugte Rechtfertigung.",
       "Primary CTA": "Zeigen Sie mir, woher AXIGNAL das weiß"
     },
     "it": {
       "Eyebrow": "Evidenze su richiesta",
-      "Headline": "Non guardare solo la conclusione. Esamina perché merita attenzione.",
-      "Body": "Per le conclusioni importanti puoi risalire alle evidenze che le sostengono, vedere quanto sono recenti, dove le fonti divergono e cosa resta incerto. La spiegazione è parte del prodotto, non un’aggiunta successiva.",
+      "Headline": "Non limitarti a vedere un Xignal. Esamina perché merita attenzione.",
+      "Body": "Per i Xignal materiali, AXIGNAL conserva il percorso verso le osservazioni di supporto, la loro attualità, le contraddizioni e gli elementi esplicitamente sconosciuti. La spiegazione fa parte del prodotto, non è una giustificazione generata a posteriori.",
       "Primary CTA": "Mostrami come lo sa AXIGNAL"
     },
     "pt": {
       "Eyebrow": "Evidências quando precisa",
-      "Headline": "Não veja apenas a conclusão. Examine por que merece atenção.",
-      "Body": "Nas conclusões importantes, pode rastrear as evidências que as sustentam, ver quão recentes são, onde as fontes divergem e o que permanece incerto. A explicação faz parte do produto, não é um acrescento posterior.",
+      "Headline": "Não veja apenas um Xignal. Inspecione por que merece atenção.",
+      "Body": "Para Xignals materiais, a AXIGNAL preserva o caminho até às observações de suporte, atualidade, contradições e desconhecidos explícitos. A explicação faz parte do produto, não é uma justificação gerada a posteriori.",
       "Primary CTA": "Mostre-me como a AXIGNAL sabe"
     }
   },
@@ -407,40 +407,40 @@
       "mobile": "58% 50%"
     },
     "en": {
-      "Eyebrow": "Search & AI representation",
-      "Headline": "What do search engines and AI agents see when they look at your company?",
-      "Body": "AXIGNAL independently observes how an organization appears across search, assistants, generative systems and public surfaces under explicit conditions—and preserves what changes over time. For SEO, GEO, AEO and AIO teams, that makes external representation inspectable instead of guessed.",
-      "Value line": "See the representation your agency is trying to improve—independently."
+      "Eyebrow": "Condition-bound digital representation",
+      "Headline": "Search and AI surfaces can be observed without turning them into business truth.",
+      "Body": "AXIGNAL treats search, assistants, generative systems and other public surfaces as condition-bound observation instruments. When those surfaces are measured, presence, measured absence and change can become inspectable evidence -- without pretending to see the whole Internet.",
+      "Value line": "Representation is not reality. The measured gap can still matter."
     },
     "es": {
-      "Eyebrow": "Buscadores y agentes de IA",
-      "Headline": "¿Qué ven los buscadores y los agentes de IA cuando miran tu empresa?",
-      "Body": "AXIGNAL observa de forma independiente cómo aparece una organización en buscadores, asistentes, sistemas generativos y superficies públicas bajo condiciones explícitas, y conserva qué cambia con el tiempo. Para equipos SEO, GEO, AEO y AIO, la representación externa deja de ser una suposición y pasa a ser algo inspeccionable.",
-      "Value line": "Observa de forma independiente la representación que tu agencia intenta mejorar."
+      "Eyebrow": "Representación digital bajo condiciones",
+      "Headline": "Buscadores y superficies de IA pueden observarse sin convertirlos en verdad empresarial.",
+      "Body": "AXIGNAL trata buscadores, asistentes, sistemas generativos y otras superficies públicas como instrumentos de observación condicionados. Cuando esas superficies se miden, la presencia, la ausencia medida y el cambio pueden convertirse en evidencia inspeccionable, sin fingir que AXIGNAL ve todo Internet.",
+      "Value line": "La representación no es la realidad. La brecha medida puede seguir importando."
     },
     "fr": {
-      "Eyebrow": "Représentation dans la recherche et l’IA",
-      "Headline": "Que voient les moteurs de recherche et les agents IA lorsqu’ils regardent votre entreprise ?",
-      "Body": "AXIGNAL observe indépendamment comment une organisation apparaît dans les moteurs de recherche, assistants, systèmes génératifs et espaces publics selon des conditions explicites, et conserve ce qui change dans le temps. Pour les équipes SEO, GEO, AEO et AIO, la représentation externe devient inspectable plutôt que supposée.",
-      "Value line": "Observez indépendamment la représentation que votre agence cherche à améliorer."
+      "Eyebrow": "Représentation numérique sous conditions",
+      "Headline": "Les surfaces de recherche et d’IA peuvent être observées sans devenir une vérité sur l’entreprise.",
+      "Body": "AXIGNAL traite les moteurs de recherche, assistants, systèmes génératifs et autres surfaces publiques comme des instruments d’observation conditionnés. Lorsqu’elles sont mesurées, présence, absence mesurée et changement peuvent devenir des preuves inspectables, sans prétendre voir tout Internet.",
+      "Value line": "La représentation n’est pas la réalité. L’écart mesuré peut néanmoins compter."
     },
     "de": {
-      "Eyebrow": "Darstellung in Suche und KI",
-      "Headline": "Was sehen Suchmaschinen und KI-Agenten, wenn sie Ihr Unternehmen betrachten?",
-      "Body": "AXIGNAL beobachtet unabhängig und unter expliziten Bedingungen, wie eine Organisation in Suche, Assistenten, generativen Systemen und öffentlichen Oberflächen erscheint, und bewahrt Veränderungen über die Zeit. Für SEO-, GEO-, AEO- und AIO-Teams wird externe Darstellung damit überprüfbar statt vermutet.",
-      "Value line": "Sehen Sie unabhängig die Darstellung, die Ihre Agentur verbessern will."
+      "Eyebrow": "Bedingte digitale Repräsentation",
+      "Headline": "Such- und KI-Oberflächen können beobachtet werden, ohne zur Unternehmenswahrheit zu werden.",
+      "Body": "AXIGNAL behandelt Suche, Assistenten, generative Systeme und andere öffentliche Oberflächen als bedingungsgebundene Beobachtungsinstrumente. Wenn sie gemessen werden, können Präsenz, gemessene Abwesenheit und Veränderung zu prüfbarer Evidenz werden, ohne vorzugeben, das gesamte Internet zu sehen.",
+      "Value line": "Repräsentation ist nicht Realität. Die gemessene Lücke kann dennoch relevant sein."
     },
     "it": {
-      "Eyebrow": "Rappresentazione in ricerca e IA",
-      "Headline": "Cosa vedono i motori di ricerca e gli agenti IA quando guardano la tua azienda?",
-      "Body": "AXIGNAL osserva in modo indipendente come un’organizzazione appare nei motori di ricerca, negli assistenti, nei sistemi generativi e negli spazi pubblici in condizioni esplicite, e conserva ciò che cambia nel tempo. Per i team SEO, GEO, AEO e AIO, la rappresentazione esterna diventa ispezionabile invece che presunta.",
-      "Value line": "Osserva in modo indipendente la rappresentazione che la tua agenzia sta cercando di migliorare."
+      "Eyebrow": "Rappresentazione digitale condizionata",
+      "Headline": "Le superfici di ricerca e IA possono essere osservate senza diventare verità aziendale.",
+      "Body": "AXIGNAL tratta motori di ricerca, assistenti, sistemi generativi e altre superfici pubbliche come strumenti di osservazione legati a condizioni esplicite. Quando vengono misurati, presenza, assenza misurata e cambiamento possono diventare evidenze ispezionabili, senza fingere di vedere tutto Internet.",
+      "Value line": "La rappresentazione non è la realtà. Il divario misurato può comunque contare."
     },
     "pt": {
-      "Eyebrow": "Representação em pesquisa e IA",
-      "Headline": "O que veem os motores de pesquisa e os agentes de IA quando olham para a sua empresa?",
-      "Body": "A AXIGNAL observa de forma independente como uma organização aparece em motores de pesquisa, assistentes, sistemas generativos e superfícies públicas sob condições explícitas, e preserva o que muda ao longo do tempo. Para equipas SEO, GEO, AEO e AIO, a representação externa torna-se inspecionável em vez de presumida.",
-      "Value line": "Veja de forma independente a representação que a sua agência procura melhorar."
+      "Eyebrow": "Representação digital condicionada",
+      "Headline": "Superfícies de pesquisa e IA podem ser observadas sem se tornarem verdade empresarial.",
+      "Body": "A AXIGNAL trata motores de pesquisa, assistentes, sistemas generativos e outras superfícies públicas como instrumentos de observação condicionados. Quando são medidos, presença, ausência medida e mudança podem tornar-se evidência inspecionável, sem fingir que vê toda a Internet.",
+      "Value line": "Representação não é realidade. A lacuna medida pode continuar a importar."
     }
   },
   {
@@ -457,38 +457,38 @@
     "en": {
       "Eyebrow": "Change over time",
       "Headline": "A snapshot tells you what was visible once.",
-      "Body": "AXIGNAL preserves history, change, how recent the evidence is and when it was checked again, so you can see what has changed without rebuilding the same understanding from zero.",
-      "Value line": "What changed can matter as much as what is observable now."
+      "Body": "AXIGNAL preserves observed-at time, currentness and append-only reobservation so a governed change can be compared with what was known before. A material change can surface as a Xignal: inspect what changed, why it deserves attention and the evidence behind it.",
+      "Value line": "Change becomes useful when it is traceable."
     },
     "es": {
       "Eyebrow": "Cambio a lo largo del tiempo",
       "Headline": "Una instantánea solo te dice lo que era visible una vez.",
-      "Body": "AXIGNAL conserva la historia, los cambios, lo reciente que es la evidencia y cuándo se volvió a comprobar, para que puedas ver qué ha cambiado sin reconstruir desde cero la misma visión.",
-      "Value line": "Lo que cambió puede importar tanto como lo que puede observarse ahora."
+      "Body": "AXIGNAL conserva el momento observado, la actualidad y la reobservación append-only para comparar un cambio gobernado con lo que se sabía antes. Un cambio material puede emerger como Xignal: inspecciona qué cambió, por qué merece atención y la evidencia que lo sustenta.",
+      "Value line": "El cambio se vuelve útil cuando es trazable."
     },
     "fr": {
       "Eyebrow": "Évolution dans le temps",
       "Headline": "Un instantané vous dit seulement ce qui était visible à un moment donné.",
-      "Body": "AXIGNAL conserve l’historique, les changements, la récence des preuves et les dates de nouvelle vérification, afin que vous puissiez voir ce qui a changé sans reconstruire la même compréhension depuis zéro.",
-      "Value line": "Ce qui a changé peut compter autant que ce qui est observable maintenant."
+      "Body": "AXIGNAL conserve le moment observé, l’actualité et la réobservation append-only afin de comparer un changement gouverné à ce qui était connu auparavant. Un changement matériel peut émerger comme Xignal : examinez ce qui a changé, pourquoi il mérite l’attention et les preuves qui le soutiennent.",
+      "Value line": "Le changement devient utile lorsqu’il est traçable."
     },
     "de": {
       "Eyebrow": "Veränderung über die Zeit",
       "Headline": "Eine Momentaufnahme zeigt nur, was einmal sichtbar war.",
-      "Body": "AXIGNAL bewahrt Historie, Veränderungen, die Aktualität der Evidenz und erneute Prüfungen, damit Sie sehen können, was sich verändert hat, ohne dasselbe Verständnis von null neu aufzubauen.",
-      "Value line": "Was sich verändert hat, kann ebenso wichtig sein wie das, was jetzt beobachtbar ist."
+      "Body": "AXIGNAL bewahrt Beobachtungszeit, Aktualität und append-only Wiederbeobachtung, damit eine kontrollierte Veränderung mit dem zuvor bekannten Zustand verglichen werden kann. Eine wesentliche Veränderung kann als Xignal erscheinen: prüfen Sie, was sich geändert hat, warum es Aufmerksamkeit verdient und welche Evidenz dahintersteht.",
+      "Value line": "Veränderung wird nützlich, wenn sie nachvollziehbar ist."
     },
     "it": {
       "Eyebrow": "Cambiamento nel tempo",
       "Headline": "Un’istantanea ti dice solo ciò che era visibile una volta.",
-      "Body": "AXIGNAL conserva storia, cambiamenti, quanto sono recenti le evidenze e quando sono state ricontrollate, così puoi vedere cosa è cambiato senza ricostruire da zero la stessa comprensione.",
-      "Value line": "Ciò che è cambiato può contare quanto ciò che è osservabile adesso."
+      "Body": "AXIGNAL conserva il momento dell’osservazione, l’attualità e la riosservazione append-only per confrontare un cambiamento governato con ciò che era noto prima. Un cambiamento materiale può emergere come Xignal: esamina cosa è cambiato, perché merita attenzione e le evidenze che lo sostengono.",
+      "Value line": "Il cambiamento diventa utile quando è tracciabile."
     },
     "pt": {
       "Eyebrow": "Mudança ao longo do tempo",
       "Headline": "Uma fotografia instantânea diz apenas o que esteve visível uma vez.",
-      "Body": "A AXIGNAL preserva o histórico, as mudanças, quão recentes são as evidências e quando foram novamente verificadas, para que possa ver o que mudou sem reconstruir a mesma compreensão do zero.",
-      "Value line": "O que mudou pode importar tanto como o que é observável agora."
+      "Body": "A AXIGNAL preserva o momento observado, a atualidade e a reobservação append-only para comparar uma mudança governada com o que era conhecido antes. Uma mudança material pode emergir como Xignal: inspecione o que mudou, por que merece atenção e a evidência que o sustenta.",
+      "Value line": "A mudança torna-se útil quando é rastreável."
     }
   },
   {
@@ -503,40 +503,40 @@
       "mobile": "74% 50%"
     },
     "en": {
-      "Eyebrow": "Contextual investigation",
-      "Headline": "Not another chatbot. A way to navigate the investigation.",
-      "Body": "AXENT helps investigate, compare, explain and move through evidence and context. It can orchestrate research, but it never decides what becomes truth in AXIGLAND.",
-      "Value line": "Conversation is the interface. Evidence still governs what the map can claim."
+      "Eyebrow": "Evidence-loyal intelligence",
+      "Headline": "Not another chatbot. An intelligence exchange grounded in evidence.",
+      "Body": "AXENT can investigate, compare, explain, challenge your interpretation and suggest what deserves investigation next. It can disagree respectfully when governed observations do not match what you or an agency believe -- but it cannot turn a user statement into truth or write AXIGLAND.",
+      "Value line": "Friendly to you. Loyal to the evidence."
     },
     "es": {
-      "Eyebrow": "Investigación contextual",
-      "Headline": "No es otro chatbot. Es una forma de navegar la investigación.",
-      "Body": "AXENT ayuda a investigar, comparar, explicar y moverse entre evidencia y contexto. Puede orquestar investigación, pero nunca decide qué se convierte en verdad en AXIGLAND.",
-      "Value line": "La conversación es la interfaz. La evidencia sigue gobernando lo que el mapa puede afirmar."
+      "Eyebrow": "Inteligencia leal a la evidencia",
+      "Headline": "No es otro chatbot. Es un intercambio de inteligencia basado en evidencia.",
+      "Body": "AXENT puede investigar, comparar, explicar, cuestionar tu interpretación y sugerir qué merece investigarse después. Puede discrepar con respeto cuando las observaciones gobernadas no coinciden con lo que tú o una agencia creéis, pero no puede convertir una afirmación del usuario en verdad ni escribir AXIGLAND.",
+      "Value line": "Amable contigo. Leal a la evidencia."
     },
     "fr": {
-      "Eyebrow": "Investigation contextuelle",
-      "Headline": "Pas un chatbot de plus. Une façon de naviguer dans l’investigation.",
-      "Body": "AXENT aide à enquêter, comparer, expliquer et parcourir les preuves et le contexte. Il peut orchestrer la recherche, mais ne décide jamais de ce qui devient vérité dans AXIGLAND.",
-      "Value line": "La conversation est l’interface. Les preuves gouvernent toujours ce que la carte peut affirmer."
+      "Eyebrow": "Intelligence fidèle aux preuves",
+      "Headline": "Pas un chatbot de plus. Un échange d’intelligence fondé sur les preuves.",
+      "Body": "AXENT peut enquêter, comparer, expliquer, remettre en question votre interprétation et suggérer ce qui mérite d’être étudié ensuite. Il peut être en désaccord avec respect lorsque les observations gouvernées ne correspondent pas à ce que vous ou une agence croyez, mais il ne peut transformer une déclaration utilisateur en vérité ni écrire AXIGLAND.",
+      "Value line": "Respectueux envers vous. Fidèle aux preuves."
     },
     "de": {
-      "Eyebrow": "Kontextuelle Untersuchung",
-      "Headline": "Nicht noch ein Chatbot. Ein Weg, durch die Untersuchung zu navigieren.",
-      "Body": "AXENT hilft beim Untersuchen, Vergleichen, Erklären und Navigieren durch Evidenz und Kontext. Es kann Recherche orchestrieren, entscheidet aber nie, was in AXIGLAND zur Wahrheit wird.",
-      "Value line": "Konversation ist die Oberfläche. Evidenz bestimmt weiterhin, was die Karte behaupten darf."
+      "Eyebrow": "Evidenztreue Intelligenz",
+      "Headline": "Nicht noch ein Chatbot. Ein evidenzbasierter Intelligenzaustausch.",
+      "Body": "AXENT kann untersuchen, vergleichen, erklären, Ihre Interpretation hinterfragen und vorschlagen, was als Nächstes untersucht werden sollte. Es kann respektvoll widersprechen, wenn kontrollierte Beobachtungen nicht mit dem übereinstimmen, was Sie oder eine Agentur glauben, aber es kann eine Nutzeraussage weder zur Wahrheit machen noch AXIGLAND schreiben.",
+      "Value line": "Freundlich zu Ihnen. Der Evidenz verpflichtet."
     },
     "it": {
-      "Eyebrow": "Indagine contestuale",
-      "Headline": "Non un altro chatbot. Un modo per navigare l’indagine.",
-      "Body": "AXENT aiuta a indagare, confrontare, spiegare e muoversi tra evidenze e contesto. Può orchestrare la ricerca, ma non decide mai cosa diventa verità in AXIGLAND.",
-      "Value line": "La conversazione è l’interfaccia. Le evidenze continuano a governare ciò che la mappa può affermare."
+      "Eyebrow": "Intelligenza fedele alle evidenze",
+      "Headline": "Non un altro chatbot. Uno scambio di intelligenza fondato sulle evidenze.",
+      "Body": "AXENT può indagare, confrontare, spiegare, mettere in discussione la tua interpretazione e suggerire cosa merita di essere investigato dopo. Può dissentire con rispetto quando le osservazioni governate non coincidono con ciò che tu o un’agenzia credete, ma non può trasformare un’affermazione dell’utente in verità né scrivere AXIGLAND.",
+      "Value line": "Amichevole con te. Fedele alle evidenze."
     },
     "pt": {
-      "Eyebrow": "Investigação contextual",
-      "Headline": "Não é mais um chatbot. É uma forma de navegar pela investigação.",
-      "Body": "AXENT ajuda a investigar, comparar, explicar e navegar por evidências e contexto. Pode orquestrar investigação, mas nunca decide o que se torna verdade em AXIGLAND.",
-      "Value line": "A conversa é a interface. As evidências continuam a governar o que o mapa pode afirmar."
+      "Eyebrow": "Inteligência leal à evidência",
+      "Headline": "Não é mais um chatbot. É uma troca de inteligência baseada em evidência.",
+      "Body": "AXENT pode investigar, comparar, explicar, questionar a sua interpretação e sugerir o que merece ser investigado a seguir. Pode discordar com respeito quando as observações governadas não coincidem com aquilo em que você ou uma agência acreditam, mas não pode transformar uma afirmação do utilizador em verdade nem escrever AXIGLAND.",
+      "Value line": "Amável consigo. Leal à evidência."
     }
   },
   {
@@ -595,7 +595,7 @@
     "n": 13,
     "id": "USE_CASES",
     "slug": "use-cases",
-    "question": "Where is AXIGNAL especially valuable for agencies and decision teams?",
+    "question": "Who can use the same independent outside view?",
     "image": "assets/images/landing-13-use-cases.webp",
     "focal": {
       "desktop": "63% 50%",
@@ -603,40 +603,40 @@
       "mobile": "70% 50%"
     },
     "en": {
-      "Eyebrow": "Agencies & decision teams",
-      "Headline": "Improve the company. Let AXIGNAL observe what changed.",
-      "Body": "For SEO, GEO, AEO and AIO agencies, AXIGNAL provides an independent view of how search engines, assistants, generative systems and public surfaces represent each client before and after your work. Leadership, sales, procurement, export teams and consultancies can explore the same economic world for their own questions—without creating separate truths.",
-      "Value line": "Your work changes the company. AXIGNAL observes the outside independently."
+      "Eyebrow": "Decision teams & agencies",
+      "Headline": "Different questions. One observed economic world.",
+      "Body": "Leadership, sales and business development, procurement, export teams, consultancies and agencies can use the same governed observations for different decisions. For SEO, GEO, AEO and AIO agencies, measured external representation can provide an independent before/after view when those surfaces are actually observed.",
+      "Value line": "Your role changes the question. It does not change the evidence."
     },
     "es": {
-      "Eyebrow": "Agencias y equipos de decisión",
-      "Headline": "Mejora la empresa. Deja que AXIGNAL observe qué ha cambiado.",
-      "Body": "Para agencias SEO, GEO, AEO y AIO, AXIGNAL ofrece una visión independiente de cómo buscadores, asistentes, sistemas generativos y superficies públicas representan a cada cliente antes y después de tu trabajo. Dirección, ventas, compras, exportación y consultoría pueden explorar el mismo mundo económico para sus propias preguntas, sin crear verdades distintas.",
-      "Value line": "Tu trabajo cambia la empresa. AXIGNAL observa el exterior de forma independiente."
+      "Eyebrow": "Equipos de decisión y agencias",
+      "Headline": "Preguntas distintas. Un mismo mundo económico observado.",
+      "Body": "Dirección, ventas y desarrollo de negocio, compras, exportación, consultoría y agencias pueden utilizar las mismas observaciones gobernadas para decisiones distintas. Para agencias SEO, GEO, AEO y AIO, la representación externa medida puede ofrecer una visión independiente antes/después cuando esas superficies se observan realmente.",
+      "Value line": "Tu función cambia la pregunta. No cambia la evidencia."
     },
     "fr": {
-      "Eyebrow": "Agences et équipes de décision",
-      "Headline": "Améliorez l’entreprise. Laissez AXIGNAL observer ce qui a changé.",
-      "Body": "Pour les agences SEO, GEO, AEO et AIO, AXIGNAL fournit une vue indépendante de la manière dont moteurs de recherche, assistants, systèmes génératifs et espaces publics représentent chaque client avant et après votre travail. Direction, ventes, achats, export et conseil peuvent explorer le même monde économique pour leurs propres questions, sans créer de vérités séparées.",
-      "Value line": "Votre travail change l’entreprise. AXIGNAL observe l’extérieur indépendamment."
+      "Eyebrow": "Équipes de décision et agences",
+      "Headline": "Des questions différentes. Un même monde économique observé.",
+      "Body": "Direction, ventes et développement commercial, achats, export, conseil et agences peuvent utiliser les mêmes observations gouvernées pour des décisions différentes. Pour les agences SEO, GEO, AEO et AIO, une représentation externe mesurée peut fournir une vue indépendante avant/après lorsque ces surfaces sont effectivement observées.",
+      "Value line": "Votre rôle change la question. Il ne change pas les preuves."
     },
     "de": {
-      "Eyebrow": "Agenturen und Entscheidungsteams",
-      "Headline": "Verbessern Sie das Unternehmen. Lassen Sie AXIGNAL beobachten, was sich verändert hat.",
-      "Body": "Für SEO-, GEO-, AEO- und AIO-Agenturen liefert AXIGNAL eine unabhängige Sicht darauf, wie Suchmaschinen, Assistenten, generative Systeme und öffentliche Oberflächen jeden Kunden vor und nach Ihrer Arbeit darstellen. Führung, Vertrieb, Einkauf, Exportteams und Beratungen können dieselbe Wirtschaftswelt für ihre eigenen Fragen erkunden – ohne getrennte Wahrheiten zu schaffen.",
-      "Value line": "Ihre Arbeit verändert das Unternehmen. AXIGNAL beobachtet die Außenwelt unabhängig."
+      "Eyebrow": "Entscheidungsteams und Agenturen",
+      "Headline": "Unterschiedliche Fragen. Eine beobachtete Wirtschaftswelt.",
+      "Body": "Führung, Vertrieb und Business Development, Einkauf, Exportteams, Beratungen und Agenturen können dieselben kontrollierten Beobachtungen für unterschiedliche Entscheidungen nutzen. Für SEO-, GEO-, AEO- und AIO-Agenturen kann gemessene externe Repräsentation eine unabhängige Vorher/Nachher-Sicht liefern, wenn diese Oberflächen tatsächlich beobachtet werden.",
+      "Value line": "Ihre Rolle ändert die Frage. Nicht die Evidenz."
     },
     "it": {
-      "Eyebrow": "Agenzie e team decisionali",
-      "Headline": "Migliora l’azienda. Lascia che AXIGNAL osservi cosa è cambiato.",
-      "Body": "Per le agenzie SEO, GEO, AEO e AIO, AXIGNAL offre una vista indipendente di come motori di ricerca, assistenti, sistemi generativi e spazi pubblici rappresentano ogni cliente prima e dopo il tuo lavoro. Direzione, vendite, acquisti, export e consulenza possono esplorare lo stesso mondo economico per le proprie domande, senza creare verità separate.",
-      "Value line": "Il tuo lavoro cambia l’azienda. AXIGNAL osserva l’esterno in modo indipendente."
+      "Eyebrow": "Team decisionali e agenzie",
+      "Headline": "Domande diverse. Un unico mondo economico osservato.",
+      "Body": "Direzione, vendite e business development, acquisti, export, consulenza e agenzie possono usare le stesse osservazioni governate per decisioni diverse. Per agenzie SEO, GEO, AEO e AIO, la rappresentazione esterna misurata può offrire una vista indipendente prima/dopo quando tali superfici vengono realmente osservate.",
+      "Value line": "Il tuo ruolo cambia la domanda. Non cambia le evidenze."
     },
     "pt": {
-      "Eyebrow": "Agências e equipas de decisão",
-      "Headline": "Melhore a empresa. Deixe a AXIGNAL observar o que mudou.",
-      "Body": "Para agências SEO, GEO, AEO e AIO, a AXIGNAL oferece uma visão independente de como motores de pesquisa, assistentes, sistemas generativos e superfícies públicas representam cada cliente antes e depois do seu trabalho. Direção, vendas, compras, exportação e consultoria podem explorar o mesmo mundo económico para as suas próprias perguntas, sem criar verdades separadas.",
-      "Value line": "O seu trabalho muda a empresa. A AXIGNAL observa o exterior de forma independente."
+      "Eyebrow": "Equipas de decisão e agências",
+      "Headline": "Perguntas diferentes. Um único mundo económico observado.",
+      "Body": "Direção, vendas e desenvolvimento de negócio, compras, exportação, consultoria e agências podem usar as mesmas observações governadas para decisões diferentes. Para agências SEO, GEO, AEO e AIO, a representação externa medida pode oferecer uma visão independente antes/depois quando essas superfícies são realmente observadas.",
+      "Value line": "A sua função muda a pergunta. Não muda a evidência."
     }
   },
   {
@@ -707,42 +707,42 @@
     "en": {
       "Eyebrow": "Plant the first seed",
       "Headline": "Choose one organization. Plant its Xeed. See what emerges from the outside.",
-      "Body": "Start with one organization and evaluate AXIGNAL by the Xignals it surfaces, the map it builds, the evidence behind it and what changes over time.",
+      "Body": "Plant one Xeed. Let AXIGNAL build only from what it can governably observe. Judge the product by a concrete loop: a Xignal surfaces, you inspect why it deserves attention, follow the evidence and decide whether the change matters to you.",
       "Primary CTA": "Plant a Xeed",
       "Secondary CTA": "How AXIGNAL knows"
     },
     "es": {
       "Eyebrow": "Planta la primera semilla",
       "Headline": "Elige una organización. Planta su Xeed. Mira qué emerge desde fuera.",
-      "Body": "Empieza con una organización y valora AXIGNAL por los Xignals que hace emerger, el mapa que construye, la evidencia que lo sustenta y lo que cambia con el tiempo.",
+      "Body": "Planta una Xeed. Deja que AXIGNAL construya sólo con lo que puede observar de forma gobernada. Valora el producto por un bucle concreto: emerge un Xignal, inspeccionas por qué merece atención, sigues la evidencia y decides si el cambio te importa.",
       "Primary CTA": "Planta tu Xeed",
       "Secondary CTA": "Cómo lo sabe AXIGNAL"
     },
     "fr": {
       "Eyebrow": "Plantez la première graine",
       "Headline": "Choisissez une organisation. Plantez sa Xeed. Voyez ce qui émerge de l’extérieur.",
-      "Body": "Commencez avec une organisation et évaluez AXIGNAL par les Xignals qu’il fait émerger, la carte qu’il construit, les preuves qui la soutiennent et ce qui change dans le temps.",
+      "Body": "Plantez une Xeed. Laissez AXIGNAL construire uniquement à partir de ce qu’il peut observer de manière gouvernée. Évaluez le produit sur une boucle concrète : un Xignal émerge, vous examinez pourquoi il mérite l’attention, suivez les preuves et décidez si le changement compte pour vous.",
       "Primary CTA": "Plantez une Xeed",
       "Secondary CTA": "Comment AXIGNAL le sait"
     },
     "de": {
       "Eyebrow": "Den ersten Samen pflanzen",
       "Headline": "Wählen Sie eine Organisation. Pflanzen Sie ihre Xeed. Sehen Sie, was von außen entsteht.",
-      "Body": "Beginnen Sie mit einer Organisation und bewerten Sie AXIGNAL anhand der Xignals, die es sichtbar macht, der Karte, die es aufbaut, der Evidenz dahinter und dessen, was sich über die Zeit verändert.",
+      "Body": "Pflanzen Sie eine Xeed. Lassen Sie AXIGNAL nur auf dem aufbauen, was kontrolliert beobachtet werden kann. Bewerten Sie das Produkt anhand eines konkreten Kreislaufs: Ein Xignal erscheint, Sie prüfen, warum es Aufmerksamkeit verdient, folgen der Evidenz und entscheiden, ob die Veränderung für Sie relevant ist.",
       "Primary CTA": "Xeed pflanzen",
       "Secondary CTA": "Woher AXIGNAL es weiß"
     },
     "it": {
       "Eyebrow": "Pianta il primo seme",
       "Headline": "Scegli un’organizzazione. Pianta la sua Xeed. Guarda cosa emerge dall’esterno.",
-      "Body": "Inizia con un’organizzazione e valuta AXIGNAL dai Xignals che fa emergere, dalla mappa che costruisce, dalle evidenze che la sostengono e da ciò che cambia nel tempo.",
+      "Body": "Pianta una Xeed. Lascia che AXIGNAL costruisca solo su ciò che può osservare in modo governato. Valuta il prodotto attraverso un ciclo concreto: emerge un Xignal, esamini perché merita attenzione, segui le evidenze e decidi se il cambiamento conta per te.",
       "Primary CTA": "Pianta una Xeed",
       "Secondary CTA": "Come lo sa AXIGNAL"
     },
     "pt": {
       "Eyebrow": "Plante a primeira semente",
       "Headline": "Escolha uma organização. Plante a sua Xeed. Veja o que emerge do exterior.",
-      "Body": "Comece com uma organização e avalie a AXIGNAL pelos Xignals que faz emergir, pelo mapa que constrói, pelas evidências que o sustentam e pelo que muda ao longo do tempo.",
+      "Body": "Plante uma Xeed. Deixe a AXIGNAL construir apenas a partir do que consegue observar de forma governada. Avalie o produto através de um ciclo concreto: surge um Xignal, inspeciona por que merece atenção, segue a evidência e decide se a mudança é relevante para si.",
       "Primary CTA": "Plante uma Xeed",
       "Secondary CTA": "Como a AXIGNAL sabe"
     }

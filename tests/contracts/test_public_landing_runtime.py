@@ -120,3 +120,53 @@ def test_global_pagination_does_not_hijack_interactive_controls() -> None:
         "if(accessDialog.open||evidenceDialog.open||isInteractiveTarget(e.target)) return;" in HTML
     )
     assert "touchY=isInteractiveTarget(e.target)?null" in HTML
+
+
+def test_fr28_landing_promise_matches_demonstrated_runtime_boundaries() -> None:
+    by_id = {chapter["id"]: chapter for chapter in DATA}
+    serialized = json.dumps(DATA, ensure_ascii=False)
+
+    dri = by_id["DIGITAL_REPRESENTATION"]["en"]
+    assert "When those surfaces are measured" in dri["Body"]
+    assert "without pretending to see the whole Internet" in dri["Body"]
+    assert "Representation is not reality" in dri["Value line"]
+    assert (
+        "AXIGNAL independently observes how an organization appears across search" not in serialized
+    )
+
+    axent = by_id["AXENT"]["en"]
+    assert "challenge your interpretation" in axent["Body"]
+    assert "cannot turn a user statement into truth" in axent["Body"]
+    assert axent["Value line"] == "Friendly to you. Loyal to the evidence."
+
+    use_cases = by_id["USE_CASES"]["en"]
+    assert "Leadership, sales and business development" in use_cases["Body"]
+    assert "SEO, GEO, AEO and AIO agencies" in use_cases["Body"]
+    assert "when those surfaces are actually observed" in use_cases["Body"]
+    assert (
+        use_cases["Value line"]
+        == "Your role changes the question. It does not change the evidence."
+    )
+
+    start = by_id["START"]["en"]["Body"]
+    assert "a Xignal surfaces" in start
+    assert "follow the evidence" in start
+    assert "decide whether the change matters to you" in start
+
+
+def test_fr28_landing_preserves_xignal_not_conclusion_and_condition_bound_dri() -> None:
+    by_id = {chapter["id"]: chapter for chapter in DATA}
+    evidence = by_id["EVIDENCE"]
+    for locale in ("en", "es", "fr", "de", "it", "pt"):
+        assert "Xignal" in evidence[locale]["Headline"]
+
+    dri = by_id["DIGITAL_REPRESENTATION"]
+    for locale in ("en", "es", "fr", "de", "it", "pt"):
+        body = dri[locale]["Body"]
+        assert body.strip()
+        assert dri[locale]["Value line"].strip()
+
+    serialized = json.dumps(DATA, ensure_ascii=False)
+    assert "guaranteed opportunity" not in serialized.lower()
+    assert "predict who will buy" not in serialized.lower()
+    assert "whole Internet" in serialized

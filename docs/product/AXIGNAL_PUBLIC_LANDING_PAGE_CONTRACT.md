@@ -259,12 +259,12 @@ Any opportunity/relevance derived only by compatibility MUST remain POTENTIAL. I
 
 Question: **What do search engines and AI agents see when they look at this organization?**
 
-Required meaning: AXIGNAL may observe search, generative, public-conversation and public-experience representation under explicit conditions.
+Required meaning: search, generative, public-conversation and public-experience surfaces are condition-bound observation instruments in AXIGNAL. Public copy MUST distinguish the implemented observation contract from live sensor/runtime availability. It MUST NOT claim that AXIGNAL is currently observing a surface unless that capability is demonstrated in the actual runtime.
 
 Required boundary:
-> Representation is not reality. The gap can still matter.
+> Representation is not reality. The measured gap can still matter.
 
-The landing MUST NOT imply a global, context-free search ranking, universal model opinion, or objective reputation score.
+The landing MUST NOT imply a global, context-free search ranking, universal model opinion, objective reputation score, whole-Internet coverage or live provider execution that has not been demonstrated.
 
 ### 6.10 TIME
 
@@ -276,7 +276,9 @@ Required meaning: temporal change is first-class. Returning value comes from pre
 
 Question: **Is AXENT another chatbot?**
 
-Required meaning: AXENT is a contextual cognitive navigator and research/orchestration capability that can investigate, explain, compare and navigate to evidence. Conversation is an interface, not its complete product role.
+Required meaning: AXENT is a contextual intelligence-exchange and research/orchestration capability that can investigate, explain, compare, challenge an interpretation and navigate to evidence. Conversation is an interface, not its complete product role.
+
+AXENT MUST remain friendly to the user and loyal to governed evidence. User statements MUST NOT be presented as economic evidence or as a write path into AXIGLAND. AXENT advice MAY suggest bounded investigation levers but MUST NOT present them as proven causes.
 
 AXENT MUST NOT be presented as canonical truth authority.
 
@@ -291,11 +293,11 @@ Canonical value statement:
 
 ### 6.13 USE_CASES
 
-Question: **Who is AXIGNAL useful for?**
+Question: **Who can use the same independent outside view?**
 
 The page MAY project the same canonical intelligence for leadership, sales/business development, procurement, export, agencies and consultancies.
 
-SEO, GEO, AEO and AIO agencies are a first-class acquisition audience, not an incidental mention. The Landing MUST make explicit that AXIGNAL independently observes how search engines, assistants, generative systems and public surfaces represent each client and how that representation changes over time.
+SEO, GEO, AEO and AIO agencies are a first-class acquisition audience, not an incidental mention. The Landing MUST make explicit that measured external representation can provide an independent before/after view when those surfaces are actually observed. It MUST NOT imply that search/generative sensors are live merely because the DRI contract exists.
 
 Role-specific copy MUST NOT create separate truths or imply CRM/workflow execution.
 
@@ -316,7 +318,7 @@ Required meaning: a paid Xeed starts and maintains persistent observation/germin
 
 Question: **What should I do now?**
 
-Required action: start with one organization and evaluate the value of AXIGNAL's independent observation.
+Required action: start with one organization and evaluate the value of AXIGNAL's independent observation through a concrete loop: Xignal -> why attention is warranted -> evidence/currentness/unknowns -> human decision about whether the change matters.
 
 The final CTA MUST remain low-friction and MUST NOT require profile claiming or company editing.
 

@@ -1196,17 +1196,27 @@ Future audit has real buyer/job evidence instead of only product thesis.
 
 ## FR-28 — Landing/Product Promise Reconciliation
 
-**Status:** NOT_STARTED  
+**Status:** DONE
 **Depends on:** FR-09, FR-27  
 **Priority:** P1 UX/Product
 
 ### Work
 Align landing with demonstrated product: observing economic brain, concrete external-change example, agencies included but not totalizing the definition, no unsupported capability claims, and visual promise matching app experience.
 
+### Closure evidence (2026-10-01)
+- Public DRI copy now distinguishes the implemented condition-bound observation contract from live search/generative sensor availability; whole-Internet/live-provider overclaim removed.
+- Landing uses a concrete demonstrated value loop: Plant Xeed -> material Xignal -> inspect why attention is warranted -> follow evidence/currentness/unknowns -> human decides whether the change matters.
+- AXENT chapter reconciled with ADR-0054: evidence-loyal intelligence exchange, respectful disagreement, no user-claim ingestion and no AXIGLAND write authority.
+- Leadership, sales/BD, procurement, export, consultancies and agencies share the same observed world; SEO/GEO/AEO/AIO remains a first-class audience but not the product definition.
+- Evidence chapter now says Xignal rather than implying every surfaced item is a canonical conclusion.
+- Public Landing Contract amended so marketing copy cannot claim live sensor/runtime execution merely because a product doctrine/contract exists.
+- Six locale payloads remain present for all 15 chapters.
+- Chrome 1440x1000 render verification completed for DRI (09), AXENT (11) and Use Cases (13); copy remains legible, localized characters render correctly and the editorial/paginated composition is preserved.
+
 ### Acceptance
-- Landing → Plant Xeed → first value story coherent.
-- No SEO/GEO-only narrowing.
-- No capability claim unsupported by product/runtime evidence.
+- Landing -> Plant Xeed -> first value story coherent. **PASS.**
+- No SEO/GEO-only narrowing. **PASS.**
+- No capability claim unsupported by product/runtime evidence. **PASS for audited landing copy; live production runtime remains FR-29/30 scope.**
 
 ### FRONTIER_CLOSURE
 Future UX audit no longer finds a major landing/product expectation gap.
