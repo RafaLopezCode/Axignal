@@ -22,12 +22,16 @@ from application.admin_access import (
     AdminAuthenticationError,
     AdminAuthorizationError,
 )
+from application.admin_command_center import COMMAND_CENTER_METRICS, project_command_center
 from application.admin_shell import (
     AdminShellProjection,
     AdminShellRouteDenied,
     AdminShellRouteUnknown,
     project_admin_shell,
 )
+from domain.admin_command_center import AdminCommandCenterProjection
+from domain.admin_observability import AdminProjectionId, AdminProjectionSnapshot
+from pipeline.admin_observability import SqliteAdminObservabilityStore
 from pipeline.learning_memory import SqliteLearningMemory
 from pipeline.observation_memory import SqliteObservationMemory
 from tools.runtime.config import RuntimeConfig
@@ -43,6 +47,7 @@ class AxignalRuntime:
     config: RuntimeConfig
     observation_memory: SqliteObservationMemory
     learning_memory: SqliteLearningMemory
+    admin_observability: SqliteAdminObservabilityStore
     first_proof: FirstProofService | None = None
     admin_access: AdminAccessService | None = None
 
@@ -85,6 +90,9 @@ def build_runtime(config: RuntimeConfig) -> AxignalRuntime:
     learning_db = config.data_dir / "learning-memory.sqlite3"
     observation_memory = SqliteObservationMemory(observation_db)
     learning_memory = SqliteLearningMemory(learning_db)
+    admin_observability = SqliteAdminObservabilityStore(
+        config.data_dir / "admin-observability.sqlite3"
+    )
     first_proof = None
     if config.first_proof_allowed_host is not None:
         from pipeline.source_acquisition import ContentAddressedArtifactStore
@@ -101,6 +109,7 @@ def build_runtime(config: RuntimeConfig) -> AxignalRuntime:
         config=config,
         observation_memory=observation_memory,
         learning_memory=learning_memory,
+        admin_observability=admin_observability,
         first_proof=first_proof,
     )
 
@@ -167,8 +176,70 @@ def _admin_slug(request_path: str) -> str | None:
     return slug
 
 
-def _admin_projection_payload(projection: AdminShellProjection) -> dict[str, object]:
+def _command_center_projection(
+    runtime: AxignalRuntime, *, now: datetime
+) -> AdminCommandCenterProjection:
+    current: dict[AdminProjectionId, AdminProjectionSnapshot] = {}
+    previous: dict[AdminProjectionId, AdminProjectionSnapshot] = {}
+    for definition in COMMAND_CENTER_METRICS:
+        projection_id = definition.source_projection_id
+        snapshots = runtime.admin_observability.recent_snapshots(
+            projection_id, "global", limit=2, through=now
+        )
+        if snapshots:
+            current[projection_id] = snapshots[0]
+        if len(snapshots) > 1:
+            previous[projection_id] = snapshots[1]
+    return project_command_center(
+        current=current,
+        previous=previous,
+        as_of=now,
+        generated_at=now,
+    )
+
+
+def _command_center_payload(
+    projection: AdminCommandCenterProjection,
+) -> dict[str, object]:
+    metrics: list[dict[str, object]] = []
+    for item in projection.metrics:
+        metrics.append(
+            {
+                "metricId": item.definition.metric_id,
+                "label": item.definition.label,
+                "group": item.definition.group,
+                "purpose": item.definition.purpose,
+                "unit": item.definition.unit.value,
+                "value": item.value,
+                "currency": item.currency,
+                "completeness": item.completeness.value,
+                "unknownReason": item.unknown_reason,
+                "methodologyVersion": item.observed_methodology_version,
+                "expectedMethodologyVersion": item.definition.methodology_version,
+                "defaultWindow": item.definition.default_window,
+                "periodStart": None if item.period_start is None else item.period_start.isoformat(),
+                "periodEnd": None if item.period_end is None else item.period_end.isoformat(),
+                "sourceProjectionId": str(item.definition.source_projection_id),
+                "sourceRecordTypes": list(item.definition.source_record_types),
+                "sourceRecordIds": [str(value) for value in item.source_record_ids],
+                "comparisonState": item.comparison_state,
+                "previousValue": item.previous_value,
+            }
+        )
     return {
+        "asOf": projection.as_of.isoformat(),
+        "generatedAt": projection.generated_at.isoformat(),
+        "completeness": projection.completeness.value,
+        "metrics": metrics,
+    }
+
+
+def _admin_projection_payload(
+    projection: AdminShellProjection,
+    *,
+    command_center: AdminCommandCenterProjection | None = None,
+) -> dict[str, object]:
+    payload: dict[str, object] = {
         "mode": projection.mode,
         "principalId": projection.principal_id,
         "roles": list(projection.roles),
@@ -184,13 +255,21 @@ def _admin_projection_payload(projection: AdminShellProjection) -> dict[str, obj
             for item in projection.navigation
         ],
     }
+    if command_center is not None:
+        payload["commandCenter"] = _command_center_payload(command_center)
+    return payload
 
 
-def _render_admin_shell(web_root: Path, projection: AdminShellProjection) -> bytes:
+def _render_admin_shell(
+    web_root: Path,
+    projection: AdminShellProjection,
+    *,
+    command_center: AdminCommandCenterProjection | None = None,
+) -> bytes:
     template = (web_root / "admin" / "index.html").read_text(encoding="utf-8")
     payload = html.escape(
         json.dumps(
-            _admin_projection_payload(projection),
+            _admin_projection_payload(projection, command_center=command_center),
             sort_keys=True,
             separators=(",", ":"),
         ),
@@ -302,7 +381,16 @@ def make_handler(runtime: AxignalRuntime) -> type[BaseHTTPRequestHandler]:
                 try:
                     grant = runtime.admin_access.session_grant(token.strip(), now=datetime.now(UTC))
                     admin_projection = project_admin_shell(grant, requested_slug=admin_slug or None)
-                    rendered = _render_admin_shell(runtime.config.web_root, admin_projection)
+                    command_center = (
+                        _command_center_projection(runtime, now=datetime.now(UTC))
+                        if admin_projection.current_slug == "command-center"
+                        else None
+                    )
+                    rendered = _render_admin_shell(
+                        runtime.config.web_root,
+                        admin_projection,
+                        command_center=command_center,
+                    )
                 except AdminAuthenticationError:
                     self._admin_error(HTTPStatus.UNAUTHORIZED, "Admin authentication failed.")
                     return

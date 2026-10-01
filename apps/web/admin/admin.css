@@ -592,3 +592,145 @@
     scroll-behavior: auto !important;
   }
 }
+
+
+/* AO-04 — Command Center / Executive State. */
+.admin-command-center {
+  margin-top: 18px;
+}
+
+.admin-command-summary {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 18px 0;
+  border-top: 1px solid var(--hair);
+}
+
+.admin-command-summary h2 {
+  margin-top: 5px;
+  font: 400 23px/1.15 var(--serif);
+}
+
+.admin-command-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  color: var(--faint);
+  font: 500 8.5px/1.3 var(--mono);
+}
+
+.admin-metric-groups {
+  display: grid;
+  gap: 24px;
+}
+
+.admin-metric-group {
+  display: grid;
+  gap: 10px;
+}
+
+.admin-metric-group h3 {
+  color: var(--ink-2);
+  font: 500 10px/1.3 var(--mono);
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+}
+
+.admin-metric-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.admin-metric-card {
+  min-width: 0;
+  padding: 16px;
+  border: 1px solid var(--hair);
+  border-top: 2px solid var(--admin-private);
+  background: rgba(250, 248, 242, 0.62);
+}
+
+.admin-metric-card[data-completeness='UNKNOWN'],
+.admin-metric-card[data-completeness='UNAVAILABLE'] {
+  border-top-color: var(--st-unknown);
+}
+
+.admin-metric-card[data-completeness='PARTIAL'] {
+  border-top-color: var(--brass);
+}
+
+.admin-metric-label,
+.admin-metric-state {
+  display: block;
+  color: var(--faint);
+  font: 500 8.5px/1.25 var(--mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.admin-metric-value {
+  display: block;
+  margin-top: 10px;
+  overflow-wrap: anywhere;
+  color: var(--ink);
+  font: 400 25px/1.08 var(--serif);
+}
+
+.admin-metric-state {
+  margin-top: 8px;
+}
+
+.admin-metric-lineage {
+  margin-top: 14px;
+  padding-top: 11px;
+  border-top: 1px solid var(--hair);
+}
+
+.admin-metric-lineage summary {
+  cursor: pointer;
+  color: var(--admin-accent);
+  font: 500 9px/1.4 var(--mono);
+}
+
+.admin-metric-lineage dl {
+  display: grid;
+  grid-template-columns: minmax(90px, 0.7fr) minmax(0, 1.3fr);
+  gap: 5px 10px;
+  margin-top: 10px;
+  color: var(--ink-3);
+  font-size: 9.5px;
+  line-height: 1.45;
+}
+
+.admin-metric-lineage dt {
+  color: var(--faint);
+}
+
+.admin-metric-lineage dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 1100px) {
+  .admin-metric-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 700px) {
+  .admin-command-summary {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .admin-command-meta {
+    align-items: flex-start;
+  }
+
+  .admin-metric-grid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -246,3 +246,32 @@ class SqliteAdminObservabilityStore:
             if row is None
             else self._snapshot_from_payload(json.loads(str(row["payload_json"])))
         )
+
+    def recent_snapshots(
+        self,
+        projection_id: AdminProjectionId,
+        scope: str,
+        *,
+        limit: int = 2,
+        through: datetime | None = None,
+    ) -> tuple[AdminProjectionSnapshot, ...]:
+        """Return newest eligible snapshots first for governed temporal comparison."""
+        if limit < 1:
+            raise ValueError("limit must be >= 1")
+        with self._connect() as connection:
+            rows = connection.execute(
+                """
+                SELECT payload_json
+                FROM admin_projection_snapshots
+                WHERE projection_id = ? AND scope = ?
+                ORDER BY sequence DESC
+                """,
+                (projection_id, scope),
+            ).fetchall()
+        snapshots = (
+            self._snapshot_from_payload(json.loads(str(row["payload_json"]))) for row in rows
+        )
+        eligible = tuple(
+            snapshot for snapshot in snapshots if through is None or snapshot.as_of <= through
+        )
+        return eligible[:limit]

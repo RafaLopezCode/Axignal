@@ -99,7 +99,7 @@ Admin must distinguish measured flywheel behavior from the hypothesis above.
 
 `NOT_STARTED → READY → IN_PROGRESS → BLOCKED → DONE → DEFERRED → REJECTED`
 
-**CURRENT_TASK = AO-04**
+**CURRENT_TASK = AO-05**
 
 ## 7. Closure rule
 
@@ -256,9 +256,25 @@ A future UX audit cannot reasonably describe Admin as an unrelated dashboard or 
 `SPECIFIED_NOT_IMPLEMENTED` no longer applies to the Admin Projection substrate.
 ## AO-04 — Command Center / Executive State
 
-**Status:** NOT_STARTED
+**Status:** DONE
 **Depends on:** AO-03
 **Priority:** P0
+
+### Closure evidence (2026-10-01)
+- `domain/admin_command_center/` defines versioned metric definitions/readouts with explicit unit, source projection, default window, methodology and completeness semantics.
+- `application/admin_command_center/` composes 16 executive metrics exclusively from AO-03 `AdminProjectionSnapshot` read models; it does not query owning-domain tables or create a second KPI authority.
+- Missing source projections and incomplete values remain `UNKNOWN`/`UNAVAILABLE`; numeric zero cannot be smuggled through an incomplete source. `PARTIAL` values preserve explicit exclusion/unknown reasons and lineage.
+- Temporal comparison is fail-closed: methodology changes become `METHOD_CHANGED`, currency changes become `CURRENCY_CHANGED`, and future `as_of` snapshots are excluded from current executive state.
+- `/admin` / `/admin/command-center` remains behind AO-01 server authorization and receives a secret-free Command Center bootstrap projection.
+- Admin UI groups Business, Xeeds, System, AXIGLAND quality, Attention and Flywheel state and exposes `Why is this number here?` with definition, window, period, method, source projection/types/record IDs and unknown reason.
+- Chrome desktop QA PASS at 1440×900: left rail, executive surface and AXENT remain coherent; 16 metric cards render and no horizontal overflow was observed (`scrollWidth == clientWidth`).
+- Chrome compact/mobile-layout QA PASS: one-column metric layout activates below 700 px; headless Chrome's effective minimum viewport was 491 px and verified `scrollWidth == clientWidth` with all 16 cards rendered.
+- Focused AO-04 tests/contracts: 10 PASS.
+- Full pytest: 754 PASS.
+- Ruff format/check: PASS.
+- mypy: PASS (158 source files).
+- Architecture Guard: PASS.
+- `axignal-governance`: PASS in clean detached worktree at implementation commit `60374ef`.
 
 ### Work
 Implement the executive landing view over real read models:
