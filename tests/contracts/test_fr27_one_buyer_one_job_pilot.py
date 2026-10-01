@@ -1,5 +1,6 @@
 """FR-27 One Buyer / One Job Pilot Contract."""
 
+from dataclasses import replace
 from datetime import UTC, datetime, timedelta
 
 import pytest
@@ -15,12 +16,20 @@ from application.economic_discovery.learning_memory import (
 )
 from application.economic_discovery.pilot_validation import (
     FR27_AGENCY_CHANGE_PILOT,
+    DiscoveryEvaluability,
     PilotAnswer,
     PilotEvidence,
     PilotEvidenceConflict,
     PilotEvidenceKind,
     PilotEvidenceSource,
+    PilotObservabilityAssessment,
+    PilotObservabilityDisposition,
+    PresenceRelevance,
     PricingEvidenceKind,
+    PublicSurfaceObservation,
+    SurfaceObservation,
+    XeedAttentionPosture,
+    project_presence_relevance,
     summarize_pilot,
 )
 from application.economic_discovery.unit_economics import (
@@ -72,6 +81,39 @@ def _economics():
     )
 
 
+def _observability(
+    *,
+    posture: XeedAttentionPosture = XeedAttentionPosture.GROW_VISIBILITY,
+    disposition: PilotObservabilityDisposition = (
+        PilotObservabilityDisposition.PUBLICLY_OBSERVABLE
+    ),
+    surfaces: tuple[SurfaceObservation, ...] | None = None,
+) -> PilotObservabilityAssessment:
+    if surfaces is None:
+        surfaces = (
+            SurfaceObservation(
+                surface_id="search:google:es",
+                result=PublicSurfaceObservation.NO_PRESENCE_OBSERVED,
+                evidence_ref="measurement:search:1",
+            ),
+            SurfaceObservation(
+                surface_id="public-web:news",
+                result=PublicSurfaceObservation.PRESENCE_OBSERVED,
+                evidence_ref="measurement:news:1",
+            ),
+        )
+    return PilotObservabilityAssessment(
+        assessment_id="observability:1",
+        pilot_id=FR27_AGENCY_CHANGE_PILOT.pilot_id,
+        xeed_id=FR27_AGENCY_CHANGE_PILOT.primary_xeed_id,
+        assessed_at=T0,
+        disposition=disposition,
+        attention_posture=posture,
+        surfaces=surfaces,
+        assessment_ref="pilot-observability-note:1",
+    )
+
+
 def _evidence(
     evidence_id: str,
     kind: PilotEvidenceKind,
@@ -101,6 +143,116 @@ def test_canonical_pilot_is_one_buyer_and_one_job_hypothesis() -> None:
     assert "material externally observable change" in pilot.job_to_be_done
     assert pilot.base_price_microunits == 9_950_000
     assert pilot.additional_xeed_price_microunits == 4_950_000
+
+
+def test_no_presence_is_an_observed_result_only_with_provenance() -> None:
+    surface = SurfaceObservation(
+        surface_id="search:google:es",
+        result=PublicSurfaceObservation.NO_PRESENCE_OBSERVED,
+        evidence_ref="measurement:search:1",
+    )
+
+    assert surface.result is PublicSurfaceObservation.NO_PRESENCE_OBSERVED
+
+    with pytest.raises(ValueError, match="provenance"):
+        SurfaceObservation(
+            surface_id="search:google:es",
+            result=PublicSurfaceObservation.NO_PRESENCE_OBSERVED,
+        )
+
+
+def test_public_observability_requires_a_real_observed_surface() -> None:
+    with pytest.raises(ValueError, match="at least one observed public surface"):
+        _observability(
+            surfaces=(
+                SurfaceObservation(
+                    surface_id="search:google:es",
+                    result=PublicSurfaceObservation.NOT_OBSERVED,
+                ),
+            ),
+        )
+
+
+def test_private_or_non_observable_job_is_not_scored_as_discovery_failure() -> None:
+    assessment = _observability(
+        disposition=PilotObservabilityDisposition.PRIVATE_OR_NON_OBSERVABLE,
+        surfaces=(
+            SurfaceObservation(
+                surface_id="crm:pipeline",
+                result=PublicSurfaceObservation.OUTSIDE_PUBLIC_SCOPE,
+            ),
+        ),
+    )
+
+    assert assessment.discovery_evaluability is DiscoveryEvaluability.NOT_EVALUABLE
+    assert assessment.observed_surface_count == 0
+
+
+def test_low_public_presence_can_be_valid_for_growth_or_low_profile_posture() -> None:
+    surfaces = (
+        SurfaceObservation(
+            surface_id="search:google:es",
+            result=PublicSurfaceObservation.NO_PRESENCE_OBSERVED,
+            evidence_ref="measurement:search:1",
+        ),
+        SurfaceObservation(
+            surface_id="public-web:news",
+            result=PublicSurfaceObservation.NO_PRESENCE_OBSERVED,
+            evidence_ref="measurement:news:1",
+        ),
+    )
+    growth = _observability(
+        posture=XeedAttentionPosture.GROW_VISIBILITY,
+        surfaces=surfaces,
+    )
+    low_profile = replace(
+        growth,
+        assessment_id="observability:2",
+        attention_posture=XeedAttentionPosture.LOW_PROFILE,
+    )
+
+    assert growth.observed_no_presence_count == 2
+    assert low_profile.observed_no_presence_count == 2
+    assert growth.attention_posture is XeedAttentionPosture.GROW_VISIBILITY
+    assert low_profile.attention_posture is XeedAttentionPosture.LOW_PROFILE
+
+
+def test_same_low_presence_projects_different_private_relevance() -> None:
+    surfaces = (
+        SurfaceObservation(
+            surface_id="search:google:es",
+            result=PublicSurfaceObservation.NO_PRESENCE_OBSERVED,
+            evidence_ref="measurement:search:1",
+        ),
+    )
+    growth = _observability(
+        posture=XeedAttentionPosture.GROW_VISIBILITY,
+        surfaces=surfaces,
+    )
+    low_profile = replace(
+        growth,
+        assessment_id="observability:2",
+        attention_posture=XeedAttentionPosture.LOW_PROFILE,
+    )
+
+    assert project_presence_relevance(growth) is PresenceRelevance.VISIBILITY_GAP_CANDIDATE
+    assert project_presence_relevance(low_profile) is PresenceRelevance.LOW_EXPOSURE_OBSERVED
+
+
+def test_public_mention_is_exposure_candidate_for_low_profile_posture() -> None:
+    low_profile = _observability(posture=XeedAttentionPosture.LOW_PROFILE)
+
+    assert (
+        project_presence_relevance(low_profile) is PresenceRelevance.UNEXPECTED_EXPOSURE_CANDIDATE
+    )
+
+
+def test_attention_posture_does_not_become_canonical_truth() -> None:
+    assessment = _observability(posture=XeedAttentionPosture.LOW_PROFILE)
+
+    assert not hasattr(assessment, "canonical_truth")
+    assert not hasattr(assessment, "organization_profile")
+    assert not hasattr(assessment, "faxt")
 
 
 def test_usage_telemetry_cannot_establish_willingness_to_pay() -> None:
@@ -136,6 +288,7 @@ def test_trust_and_return_causality_require_explicit_user_report() -> None:
 def test_negative_pilot_evidence_is_preserved_as_valid_outcome() -> None:
     report = summarize_pilot(
         hypothesis=FR27_AGENCY_CHANGE_PILOT,
+        observability=_observability(),
         economics=_economics(),
         evidence=(
             _evidence(
@@ -192,6 +345,7 @@ def test_protocol_complete_requires_all_six_observation_dimensions() -> None:
 
     report = summarize_pilot(
         hypothesis=FR27_AGENCY_CHANGE_PILOT,
+        observability=_observability(),
         economics=_economics(),
         evidence=evidence,
     )
@@ -199,11 +353,13 @@ def test_protocol_complete_requires_all_six_observation_dimensions() -> None:
     assert report.coverage.protocol_complete
     assert report.pricing_evidence == (wtp,)
     assert report.additional_xeed_evidence[0].evidence_id == "xeed:1"
+    assert report.observability.discovery_evaluability is DiscoveryEvaluability.EVALUABLE
 
 
 def test_pricing_hypothesis_is_not_observation_until_wtp_evidence_exists() -> None:
     report = summarize_pilot(
         hypothesis=FR27_AGENCY_CHANGE_PILOT,
+        observability=_observability(),
         economics=_economics(),
         evidence=(
             _evidence(
@@ -218,41 +374,55 @@ def test_pricing_hypothesis_is_not_observation_until_wtp_evidence_exists() -> No
     assert report.pricing_evidence == ()
 
 
-def test_pilot_must_use_matching_fr26_xeed_economics() -> None:
+def test_pilot_must_use_matching_fr26_xeed_economics_and_observability() -> None:
     economics = _economics()
-    from dataclasses import replace
 
     with pytest.raises(ValueError, match="primary Xeed"):
         summarize_pilot(
             hypothesis=FR27_AGENCY_CHANGE_PILOT,
+            observability=_observability(),
             economics=replace(economics, xeed_id="xeed:other"),
             evidence=(),
         )
 
+    with pytest.raises(ValueError, match="observability assessment"):
+        summarize_pilot(
+            hypothesis=FR27_AGENCY_CHANGE_PILOT,
+            observability=replace(_observability(), xeed_id="xeed:other"),
+            economics=economics,
+            evidence=(),
+        )
 
-def test_sqlite_pilot_evidence_is_append_only_and_replay_safe(tmp_path) -> None:
+
+def test_sqlite_pilot_evidence_and_observability_are_append_only(tmp_path) -> None:
     memory = SqlitePilotEvidenceMemory(tmp_path / "pilot.sqlite3")
     evidence = _evidence("decision:durable", PilotEvidenceKind.DECISION_ADVANCEMENT)
+    observability = _observability()
 
     assert memory.append(evidence)
     assert not memory.append(evidence)
     assert memory.for_pilot(FR27_AGENCY_CHANGE_PILOT.pilot_id) == (evidence,)
 
-    conflicting = PilotEvidence(
-        **{
-            field: getattr(evidence, field)
-            for field in evidence.__dataclass_fields__
-            if field != "answer"
-        },
-        answer=PilotAnswer.NO,
-    )
+    assert memory.append_observability(observability)
+    assert not memory.append_observability(observability)
+    assert memory.observability_for_pilot(FR27_AGENCY_CHANGE_PILOT.pilot_id) == (observability,)
+
+    conflicting = replace(evidence, answer=PilotAnswer.NO)
     with pytest.raises(PilotEvidenceConflict):
         memory.append(conflicting)
+
+    conflicting_observability = replace(
+        observability,
+        attention_posture=XeedAttentionPosture.LOW_PROFILE,
+    )
+    with pytest.raises(PilotEvidenceConflict):
+        memory.append_observability(conflicting_observability)
 
 
 def test_pilot_report_does_not_expose_truth_or_success_score() -> None:
     report = summarize_pilot(
         hypothesis=FR27_AGENCY_CHANGE_PILOT,
+        observability=_observability(),
         economics=_economics(),
         evidence=(),
     )
