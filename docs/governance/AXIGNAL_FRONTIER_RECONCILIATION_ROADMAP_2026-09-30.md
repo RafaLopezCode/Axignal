@@ -1299,9 +1299,21 @@ The core findings of both Frontier audits are materially closed; FIRST_MAP_WOW i
 
 ## FR-31 — Frontier Re-Audit Preparation
 
-**Status:** NOT_STARTED  
+**Status:** IMPLEMENTED_PENDING_REAUDIT_REQUEST
 **Depends on:** FR-30  
 **Priority:** FINAL
+
+### Implementation evidence (2026-10-01)
+- Audit base fixed at `d78afb0f1acdfcb660fb1fb28d325b76ff65552d`, the integrated/deployed landing state after FR-14 directional-pagination reconciliation.
+- Main CI run `36872416171` is SUCCESS for the exact audit base.
+- Clean detached-worktree validation at the exact audit base: Ruff format/check PASS, mypy PASS (139 source files), pytest 689 PASS, Architecture Guard PASS, governance PASS after deleting generated `.mypy_cache` that hygiene correctly rejected.
+- `docs/audit/FR31_FRONTIER_REAUDIT_MANIFEST.json` records FR-00..FR-30 statuses, evidence paths, CI/runtime/deployment snapshot and explicit remaining gaps.
+- `docs/audit/FR31_FRONTIER_REAUDIT_EVIDENCE_MATRIX.md` links every DONE FR to existing primary evidence and keeps FR-27 visibly READY rather than DONE.
+- `docs/audit/FR31_FRONTIER_REAUDIT_REQUEST.md` asks an independent auditor to re-evaluate the evolved product using the same core criteria and invariants without prescribing a verdict.
+- `docs/audit/FR31_AUDIT_BASE_VALIDATION_SNAPSHOT.md` records clean-tree validation and current production evidence.
+- Production at preparation time: runtime `cb89cfe391a0ce6ba93bfc5e5b8a942795897769`, landing `d78afb0f1acdfcb660fb1fb28d325b76ff65552d`, both services active, health OK, public write surface closed, 1 first-proof session / 1 Observation / 6 Learning Events.
+- Explicit unresolved evidence remains visible: FR-27 empirical buyer/job evidence, willingness-to-pay evidence, constrained provider bake-off availability, and public subscriber/account exposure.
+- Formal external/independent re-audit request is the only remaining FR-31 acceptance item.
 
 ### Work
 Prepare current SHA, clean-tree evidence, validation output, task closure matrix, runtime/deployment evidence, UX screenshots/flows, unit-economics evidence where available and explicit remaining UNKNOWN/DEFERRED items. Do not tell the Frontier Advisor which conclusions to reach.
