@@ -6,15 +6,28 @@ behind governed application services and are not exposed by this host.
 
 from __future__ import annotations
 
+import html
 import json
 import mimetypes
 import sqlite3
 from dataclasses import dataclass
+from datetime import UTC, datetime
 from http import HTTPStatus
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import unquote, urlsplit
 
+from application.admin_access import (
+    AdminAccessService,
+    AdminAuthenticationError,
+    AdminAuthorizationError,
+)
+from application.admin_shell import (
+    AdminShellProjection,
+    AdminShellRouteDenied,
+    AdminShellRouteUnknown,
+    project_admin_shell,
+)
 from pipeline.learning_memory import SqliteLearningMemory
 from pipeline.observation_memory import SqliteObservationMemory
 from tools.runtime.config import RuntimeConfig
@@ -31,6 +44,7 @@ class AxignalRuntime:
     observation_memory: SqliteObservationMemory
     learning_memory: SqliteLearningMemory
     first_proof: FirstProofService | None = None
+    admin_access: AdminAccessService | None = None
 
     @property
     def observation_db(self) -> Path:
@@ -115,6 +129,8 @@ def _resolve_static(web_root: Path, raw_path: str) -> Path | None:
         "/presentation.js": "subscriber/presentation.js",
         "/locale-es.js": "subscriber/locale-es.js",
         "/app.js": "subscriber/app.js",
+        "/admin.css": "admin/admin.css",
+        "/admin.js": "admin/admin.js",
     }
     relative = exact.get(path)
     if relative is not None:
@@ -139,6 +155,53 @@ def _resolve_static(web_root: Path, raw_path: str) -> Path | None:
     return None
 
 
+def _admin_slug(request_path: str) -> str | None:
+    path = unquote(request_path).rstrip("/")
+    if path == "/admin":
+        return ""
+    if not path.startswith("/admin/"):
+        return None
+    slug = path[len("/admin/") :]
+    if not slug or "/" in slug:
+        return None
+    return slug
+
+
+def _admin_projection_payload(projection: AdminShellProjection) -> dict[str, object]:
+    return {
+        "mode": projection.mode,
+        "principalId": projection.principal_id,
+        "roles": list(projection.roles),
+        "scopes": list(projection.scopes),
+        "currentSlug": projection.current_slug,
+        "navigation": [
+            {
+                "slug": item.slug,
+                "label": item.label,
+                "eyebrow": item.eyebrow,
+                "description": item.description,
+            }
+            for item in projection.navigation
+        ],
+    }
+
+
+def _render_admin_shell(web_root: Path, projection: AdminShellProjection) -> bytes:
+    template = (web_root / "admin" / "index.html").read_text(encoding="utf-8")
+    payload = html.escape(
+        json.dumps(
+            _admin_projection_payload(projection),
+            sort_keys=True,
+            separators=(",", ":"),
+        ),
+        quote=False,
+    )
+    marker = "__AXIGNAL_ADMIN_BOOTSTRAP_JSON__"
+    if template.count(marker) != 1:
+        raise RuntimeError("Admin shell template bootstrap marker is invalid")
+    return template.replace(marker, payload).encode("utf-8")
+
+
 def make_handler(runtime: AxignalRuntime) -> type[BaseHTTPRequestHandler]:
     class Handler(BaseHTTPRequestHandler):
         server_version = "AXIGNALRuntime/1"
@@ -154,6 +217,35 @@ def make_handler(runtime: AxignalRuntime) -> type[BaseHTTPRequestHandler]:
             self.send_header("Content-Length", str(len(encoded)))
             self.send_header("Cache-Control", "no-store")
             self.send_header("X-Content-Type-Options", "nosniff")
+            self.end_headers()
+            self.wfile.write(encoded)
+
+        def _html(self, data: bytes, status: HTTPStatus = HTTPStatus.OK) -> None:
+            self.send_response(status)
+            self.send_header("Content-Type", "text/html; charset=utf-8")
+            self.send_header("Content-Length", str(len(data)))
+            self.send_header("Cache-Control", "no-store")
+            self.send_header("X-Content-Type-Options", "nosniff")
+            self.send_header("Referrer-Policy", "no-referrer")
+            self.send_header(
+                "Content-Security-Policy",
+                "default-src 'self'; img-src 'self' data:; style-src 'self'; script-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'none'; form-action 'none'",
+            )
+            self.end_headers()
+            self.wfile.write(data)
+
+        def _admin_error(self, status: HTTPStatus, message: str) -> None:
+            encoded = (
+                "<!doctype html><meta charset='utf-8'><title>AXIGNAL Admin</title>"
+                f"<h1>{status.value}</h1><p>{message}</p>"
+            ).encode()
+            self.send_response(status)
+            self.send_header("Content-Type", "text/html; charset=utf-8")
+            self.send_header("Content-Length", str(len(encoded)))
+            self.send_header("Cache-Control", "no-store")
+            self.send_header("X-Content-Type-Options", "nosniff")
+            if status is HTTPStatus.UNAUTHORIZED:
+                self.send_header("WWW-Authenticate", 'Bearer realm="AXIGNAL Admin"')
             self.end_headers()
             self.wfile.write(encoded)
 
@@ -191,6 +283,39 @@ def make_handler(runtime: AxignalRuntime) -> type[BaseHTTPRequestHandler]:
                     "loopback_first_proof_api": runtime.first_proof is not None,
                 }
                 self._json(payload)
+                return
+            admin_slug = _admin_slug(request_path)
+            if admin_slug is not None:
+                if runtime.admin_access is None:
+                    self.send_error(HTTPStatus.NOT_FOUND)
+                    return
+                authorization = self.headers.get("Authorization")
+                if authorization is None:
+                    self._admin_error(HTTPStatus.UNAUTHORIZED, "Admin authentication required.")
+                    return
+                scheme, separator, token = authorization.partition(" ")
+                if separator != " " or scheme != "Bearer" or not token.strip():
+                    self._admin_error(
+                        HTTPStatus.UNAUTHORIZED, "Invalid Admin authorization credential."
+                    )
+                    return
+                try:
+                    grant = runtime.admin_access.session_grant(token.strip(), now=datetime.now(UTC))
+                    admin_projection = project_admin_shell(grant, requested_slug=admin_slug or None)
+                    rendered = _render_admin_shell(runtime.config.web_root, admin_projection)
+                except AdminAuthenticationError:
+                    self._admin_error(HTTPStatus.UNAUTHORIZED, "Admin authentication failed.")
+                    return
+                except (AdminAuthorizationError, AdminShellRouteDenied):
+                    self._admin_error(HTTPStatus.FORBIDDEN, "Admin scope denied for this domain.")
+                    return
+                except AdminShellRouteUnknown:
+                    self.send_error(HTTPStatus.NOT_FOUND)
+                    return
+                except (OSError, RuntimeError):
+                    self.send_error(HTTPStatus.SERVICE_UNAVAILABLE)
+                    return
+                self._html(rendered)
                 return
             if request_path == "/api/subscriber-context":
                 if runtime.first_proof is None:

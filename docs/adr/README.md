@@ -64,6 +64,7 @@ Constitution (`.specify/memory/constitution.md`).
 | [ADR-0054](ADR-0054-axent-evidence-loyal-intelligence-exchange.md) | AXENT Evidence-Loyal Business Intelligence Exchange (**ACCEPTED**) | §§4.3, 5, 13, 23, 51–55 |
 | [ADR-0055](ADR-0055-admin-private-business-operations-separation.md) | Admin Private Business Operations Are Separate From AXIGLAND (**ACCEPTED**) | §§2.1–2.1A, 39, 46.2, 46.37, 48 |
 | [ADR-0056](ADR-0056-admin-identity-rbac-session-boundary.md) | Admin Identity, RBAC and Privileged Session Boundary (**ACCEPTED**) | §§2.1A, 5, 39, 46 |
+| [ADR-0057](ADR-0057-unified-admin-shell-and-server-authorized-navigation.md) | Unified Admin Shell and Server-Authorized Navigation (**ACCEPTED**) | §§2.1A, 5, 39, 46 |
 
 ## Adding an ADR
 

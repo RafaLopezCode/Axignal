@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="light" />
+    <meta name="description" content="AXIGNAL privileged Admin operating shell." />
+    <title>AXIGNAL · Admin</title>
+    <link rel="icon" type="image/svg+xml" href="/brand/favicon.svg" />
+    <link rel="stylesheet" href="/design-system/global.css" />
+    <link rel="stylesheet" href="/subscriber.css" />
+    <link rel="stylesheet" href="/admin.css" />
+    <script src="/admin.js" defer></script>
+  </head>
+  <body>
+    <div id="admin-bootstrap" hidden>__AXIGNAL_ADMIN_BOOTSTRAP_JSON__</div>
+    <div class="app2 admin-shell" id="admin-app" data-mode="ADMIN" data-state="loading">
+      <aside class="gov admin-gov" aria-label="Admin navigation">
+        <div class="gv-top">
+          <a class="gv-logo" href="/admin" aria-label="AXIGNAL Admin home">
+            <span class="gv-logo-full">
+              <img class="brand-logo" src="/brand/logo-light.svg" alt="" aria-hidden="true" />
+            </span>
+            <span class="gv-logo-mark" aria-hidden="true">
+              <img class="brand-isotope" src="/brand/isotope.svg" alt="" />
+            </span>
+          </a>
+          <span class="admin-mode-badge" aria-label="Privileged Admin mode">ADMIN</span>
+        </div>
+
+        <div class="admin-identity">
+          <span class="admin-identity-kicker">Privileged operating context</span>
+          <strong id="admin-principal">Admin</strong>
+          <span id="admin-role-summary">Role loading…</span>
+        </div>
+
+        <nav class="gv-scroll admin-nav" id="admin-nav" aria-label="Admin domains"></nav>
+
+        <div class="admin-boundary-note">
+          <span>PRIVATE OPERATIONS</span>
+          <p>Admin state is separate from AXIGLAND canonical economic truth.</p>
+        </div>
+      </aside>
+
+      <main class="center admin-center">
+        <header class="admin-topbar">
+          <div>
+            <span class="mono admin-context-label">AXIGNAL · ADMIN</span>
+            <nav class="admin-breadcrumb" aria-label="Admin breadcrumb">
+              <a href="/admin">Admin</a>
+              <span aria-hidden="true">/</span>
+              <span id="admin-breadcrumb-current" aria-current="page">Command Center</span>
+            </nav>
+          </div>
+          <div class="admin-state-chip">
+            <span aria-hidden="true"></span>
+            <strong>Operational projection</strong>
+            <em>not AXIGLAND evidence</em>
+          </div>
+        </header>
+
+        <section class="admin-surface" id="admin-surface" tabindex="-1" aria-labelledby="admin-title">
+          <div class="admin-surface-head">
+            <div>
+              <span class="mono" id="admin-eyebrow">Executive state</span>
+              <h1 id="admin-title">Command Center</h1>
+              <p id="admin-description">Operating state of AXIGNAL.</p>
+            </div>
+            <span class="admin-availability">SHELL READY · DATA PLANE PENDING AO-03</span>
+          </div>
+
+          <div class="admin-boundary-banner" role="note">
+            <div>
+              <strong>Administrative operational state</strong>
+              <p>This surface can operate AXIGNAL as a provider. It does not edit or redefine economic truth in AXIGLAND.</p>
+            </div>
+            <code>ADMIN_PRIVATE_OPERATIONS != AXIGLAND_CANONICAL_TRUTH</code>
+          </div>
+
+          <section class="admin-grid" aria-label="Admin domain preview">
+            <article class="admin-card">
+              <span class="admin-card-kicker">Authority</span>
+              <strong>Server-authorized view</strong>
+              <p id="admin-access-summary">This domain is visible because the current Admin session carries the required scope.</p>
+              <span class="admin-card-state">AO-01 RBAC</span>
+            </article>
+            <article class="admin-card">
+              <span class="admin-card-kicker">Data</span>
+              <strong>Not connected yet</strong>
+              <p>AO-02 establishes the shell only. Real metrics and projections arrive through AO-03 and later owning domains.</p>
+              <span class="admin-card-state is-pending">UNKNOWN · NOT ZERO</span>
+            </article>
+            <article class="admin-card">
+              <span class="admin-card-kicker">Epistemic boundary</span>
+              <strong>No canonical write authority</strong>
+              <p>Operational records, payments, CRM state and private analytics remain separate from FAXT, Xignal and AXIGLAND.</p>
+              <span class="admin-card-state">BOUNDARY ENFORCED</span>
+            </article>
+          </section>
+
+          <section class="admin-context-panel" aria-labelledby="admin-scope-title">
+            <header>
+              <div>
+                <span class="mono">CURRENT ADMIN AUTHORITY</span>
+                <h2 id="admin-scope-title">Granted scopes for this session</h2>
+              </div>
+            </header>
+            <div class="admin-scope-list" id="admin-scope-list"></div>
+          </section>
+        </section>
+      </main>
+
+      <aside class="axent admin-axent" aria-label="AXENT Admin context guide">
+        <div class="ax-head">
+          <div class="ax-title">
+            <span class="ax-glyph" aria-hidden="true"><img class="brand-isotope-small" src="/brand/isotope.svg" alt="" /></span>
+            <span>AXENT</span>
+          </div>
+          <p class="ax-sub">Admin intelligence · evidence-loyal</p>
+          <div class="ax-scopes">
+            <span class="ax-scope"><i></i><span id="axent-domain">Command Center</span></span>
+            <span class="ax-scope admin-scope-private"><i></i><span>Private operating context</span></span>
+          </div>
+        </div>
+        <div class="ax-moves" aria-label="Contextual questions">
+          <span class="mono">Context</span>
+          <button class="ax-move" type="button" disabled>What deserves attention here?</button>
+          <button class="ax-move" type="button" disabled>What evidence supports this?</button>
+          <button class="ax-move" type="button" disabled>What is still unknown?</button>
+        </div>
+        <div class="ax-log admin-axent-copy">
+          <div class="ax-msg is-axent">
+            <span class="role">AXENT · ADMIN</span>
+            <p id="axent-message">I can exchange business intelligence about this operational domain, but I cannot change AXIGLAND truth or elevate private Admin data into canonical evidence.</p>
+          </div>
+          <div class="admin-axent-boundary">
+            <span class="mono">AO-02 SHELL CONTRACT</span>
+            <p>Questions are contextual. Real Admin data and actions remain unavailable until their owning AO slices are implemented.</p>
+          </div>
+        </div>
+        <div class="ax-ask">
+          <div class="ax-input">
+            <input type="text" value="" placeholder="AXENT Admin interaction arrives in a later slice" disabled />
+            <button class="ax-send" type="button" disabled aria-label="Send">
+              <svg class="ax-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/lucide/axignal-ui.svg#arrow-up"></use></svg>
+            </button>
+          </div>
+          <p class="ax-hint">Private Admin context · no canonical write authority</p>
+        </div>
+      </aside>
+    </div>
+  </body>
+</html>

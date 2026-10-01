@@ -177,6 +177,19 @@ class AdminAccessService:
         self._store.append_session(session)
         return AdminSessionCredential(session_id=session.session_id, token=token)
 
+    def session_grant(self, token: str, *, now: datetime) -> AdminAuthorizationGrant:
+        """Resolve a live Admin session for shell bootstrap without granting route data."""
+
+        session = self._resolve_authenticated_session(token, now)
+        roles = self._store.roles_for_principal(session.principal_id)
+        return AdminAuthorizationGrant(
+            session_id=session.session_id,
+            principal_id=session.principal_id,
+            roles=roles,
+            scopes=scopes_for_roles(roles),
+            assurance=session.assurance,
+        )
+
     def authorize(
         self,
         token: str,
