@@ -459,6 +459,7 @@ Future UX audit cannot truthfully say the user must understand the map before di
 - focus changes retain prior transcript but cannot present it as current-object context
 - prior investigations are visibly labeled and resumable only when their recorded object resolves inside the authorized current projection
 - contextual AXENT question actions carry the active Xeed/object scope
+- FR-27 evidence-loyal exchange reconciliation (2026-10-01): scoped user statements remain conversational/private state only and cannot become economic evidence or canonical truth; AXENT may challenge with governed evidence, suggest bounded levers and collect explicit product-validation answers
 - synthetic fixture messages are scope/time annotated; new interactions capture scope/time at creation
 - ADR-0036 accepted and indexed
 - Chrome 1440×1000 interaction check: focus change isolates current conversation, exposes one labeled prior investigation, and Resume restores the original scoped conversation
@@ -1175,6 +1176,10 @@ Choose one concrete job/buyer hypothesis without redefining AXIGNAL. Measure whe
 - FR-26 UnitEconomicsReport must match the pilot primary Xeed.
 - Telemetry cannot establish trust, return causality or willingness to pay.
 - Protocol: `docs/research/fr27/pilot-protocol.md`.
+- AXENT proactive elicitation implemented as a typed application contract: each question requires a concrete trigger and promised intelligence return; explicit answers map to `DIRECT_USER_REPORT` or real-offer `OFFER_RESPONSE` only.
+- AXENT visibility advice can contrast measured public absence with a growth objective and suggest SEO/GEO/content/PR/communication/indexation/distribution as investigation levers without claiming causal proof.
+- User assertions remain non-authoritative conversational input: they cannot create FAXTs, alter Xignal support, enter EvidenceAdmission or write AXIGLAND.
+- FR-00?FR-27 reconciliation audit: FR-02 research-value gating, FR-05/06 evidence semantics, FR-07/08 lifecycle/readiness, FR-09 Today, FR-10 AXENT continuity, FR-11 progressive disclosure, FR-12 terminology, FR-13?16 presentation/accessibility, FR-17?20 learning/governance, FR-21?22 evaluator boundaries, FR-23 identity, FR-24 rights/reuse, FR-25 currentness and FR-26 economics remain compatible. No earlier FR grants AXENT truth-write authority or requires accepting user assertions as evidence.
 - Backward reconciliation audit (2026-10-01): FR-05 amended so OBSERVED Xignals can bind exact governed observations without misclassifying representation as business FAXT; FR-09 empty-state copy made observation-status neutral; FR-06 evidence narrative and FR-08 readiness already consume governed observations correctly and require no semantic change; FR-01/02/07/10/17–26 remain compatible or orthogonal.
 - **REAL_BUYER_JOB_EVIDENCE=PENDING; synthetic fixtures do not close FR-27.**
 

@@ -42,6 +42,16 @@ closed if a recorded object cannot be resolved inside the current projection.
 Contextual question actions carry the active Xeed, object kind and canonical
 object id. New fixture interactions record scope and time at creation.
 
+## Evidence-loyal exchange reconciliation (2026-10-01)
+
+FR-27 reconciliation extends the AXENT contract without changing its continuity authority. Scoped transcript text remains conversational state only. User claims cannot become economic evidence or canonical writes. AXENT may contrast those claims with governed Xignals/observations, suggest bounded investigation levers and ask proactive product-validation questions. Any explicit FR-27 answer is persisted as pilot evidence outside AXIGLAND.
+
+`USER STATEMENT != ECONOMIC EVIDENCE`
+
+`AXENT CONVERSATION != AXIGLAND INGESTION`
+
+`AXENT MAY CHALLENGE WITH EVIDENCE != AXENT MAY WRITE TRUTH`
+
 ## Consequences
 
 Changing focus can no longer present prior conversation as though it described

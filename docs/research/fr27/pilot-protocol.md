@@ -118,6 +118,18 @@ Restrictions:
 
 The pilot report must attach the exact FR-26 `UnitEconomicsReport` for the same Xeed. This provides cost, reuse, first-value and contribution-margin inputs without mixing them with user-validation evidence.
 
+## AXENT proactive elicitation
+
+AXENT may collect the explicit human evidence dimensions inside the product. It asks only after a concrete trigger and must return intelligence in exchange.
+
+- After evidence inspection, it may ask whether the Xignal advanced a decision and offer to investigate remaining uncertainty.
+- It may ask whether the evidence is sufficient for the user's next decision and expose missing or contradictory support when it is not.
+- After a later return following a real external change, it may ask whether that change caused the return.
+- After demonstrated value, it may present the real Xeed price and capture the explicit offer response.
+- When another monitored organization is relevant, it may ask whether an additional Xeed would have value.
+
+`AXENT QUESTION != PILOT EVIDENCE`. Only the human answer with provenance counts. Answers are product-validation evidence only. Statements about the observed company are never promoted into AXIGLAND. If the user disputes the observed state, AXENT may answer from governed Xignal/observation evidence and clearly state scope, conditions and uncertainty.
+
 ## Execution sequence
 
 1. Select one real agency and one real client decision context.
