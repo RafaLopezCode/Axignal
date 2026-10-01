@@ -135,6 +135,25 @@ AXIGNAL llega hasta **conocimiento económico accionable y explicable**.
 La ejecución empresarial posterior pertenece al usuario y a sus
 herramientas.
 
+## 2.1A Excepci?n estrecha: operaciones internas de AXIGNAL
+
+La prohibici?n anterior gobierna el **producto econ?mico AXIGNAL ofrecido al usuario** y el significado de AXIGLAND. No impide que AXIGNAL opere su propia empresa mediante dominios administrativos privados y separados.
+
+El modo Admin puede gestionar exclusivamente el estado first-party necesario para operar AXIGNAL como negocio: identidad y autorizaci?n de staff, CRM interno de AXIGNAL, cuentas y suscripciones, facturaci?n y pagos de AXIGNAL, marketing y adquisici?n propios, anal?tica privada, integraciones, costes, contabilidad, fiscalidad y operaciones de advisory. Esos dominios existen para gestionar **AXIGNAL como proveedor**, no para gestionar el negocio de las organizaciones observadas ni para convertir AXIGNAL en un CRM/ERP para sus clientes.
+
+La frontera es obligatoria:
+
+``` text
+AXIGNAL_INTERNAL_CRM_STATE != AXIGLAND_ECONOMIC_TRUTH
+COMMERCIAL_RELATIONSHIP_WITH_AXIGNAL != OBSERVED_ECONOMIC_RELATIONSHIP
+CUSTOMER_ACCOUNT_STATE != ORGANIZATION_STATE
+ADMIN_PRIVATE_OPERATIONS != AXIGLAND_CANONICAL_TRUTH
+```
+
+Un lead, cliente, pago, factura, m?trica privada, asiento contable o estado fiscal de AXIGNAL no crea ni modifica por s? mismo Organization, FAXT, Relationship, Xignal, INXIGHT, PATHX ni ninguna otra verdad can?nica. Si un dato privado tambi?n pudiera ser evidencia sobre el mundo econ?mico, deber? atravesar un contrato de observaci?n/admisi?n separado y expl?citamente autorizado; la mera existencia del dato en Admin no concede esa autoridad.
+
+Esta excepci?n tampoco autoriza un CRM, workflow suite, facturaci?n o automatizaci?n comercial como capacidad subscriber-facing. La prohibici?n de deriva del n?cleo permanece intacta.
+
 ## 2.2 La calle digital
 
 Internet funciona como una calle económica observable. Las

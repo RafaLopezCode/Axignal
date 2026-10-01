@@ -49,7 +49,7 @@ appendices → product/feature specs → plans/research.
 | ADR-0005 | FAXT, INXIGHT, PATHX, relationship and evidence semantics remain separate |
 | ADR-0006 | Provider/JEV are replaceable; provider output is not domain/canonical truth |
 | ADR-0007 | Deterministic, offline-required gates and Graphify structural validation remain intact |
-| ADR-0008 | Customer Operations is AXIGNAL first-party service state only; no CRM/workflow authority |
+| ADR-0008 + ADR-0055 | No CRM/workflow drift in product/core; MASTER ?2.1A narrowly authorizes AXIGNAL first-party internal CRM/business operations as a separate private authority |
 | ADR-0009 | AXIGNAL owns graph meaning/projection; renderer is mechanical and replaceable |
 | ADR-0010 | SourceRequest/SourceObservation, policy and provenance belong to AXIGNAL; sources provide observations, not truth; no adapter selection here |
 | Atlas / Brain architecture | Conceptual event flow can be modeled without choosing a queue; operational failure is distinct from epistemic state; metadata does not invent private business facts |

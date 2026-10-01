@@ -62,6 +62,7 @@ Constitution (`.specify/memory/constitution.md`).
 | [ADR-0052](ADR-0052-unit-economics-instrumentation.md) | Unit Economics Instrumentation Over Learning Memory (**ACCEPTED**) | §§49–50, 56.14, 56.16 |
 | [ADR-0053](ADR-0053-one-buyer-one-job-pilot-evidence.md) | One Buyer / One Job Pilot Evidence Contract (**ACCEPTED**) | §§22, 27–28, 33, 49–50, 56.16 |
 | [ADR-0054](ADR-0054-axent-evidence-loyal-intelligence-exchange.md) | AXENT Evidence-Loyal Business Intelligence Exchange (**ACCEPTED**) | §§4.3, 5, 13, 23, 51–55 |
+| [ADR-0055](ADR-0055-admin-private-business-operations-separation.md) | Admin Private Business Operations Are Separate From AXIGLAND (**ACCEPTED**) | §§2.1–2.1A, 39, 46.2, 46.37, 48 |
 
 ## Adding an ADR
 
