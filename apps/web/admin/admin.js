@@ -20,6 +20,7 @@
   const description = document.getElementById('admin-description')
   const domain = document.getElementById('axent-domain')
   const scopeList = document.getElementById('admin-scope-list')
+  const availability = document.getElementById('admin-availability')
 
   const items = Array.isArray(bootstrap.navigation) ? bootstrap.navigation : []
   const current = items.find((item) => item.slug === bootstrap.currentSlug) || items[0]
@@ -56,6 +57,14 @@
 
   if (current) {
     document.title = `AXIGNAL · Admin · ${current.label}`
+    if (availability) {
+      availability.textContent =
+        current.slug === 'command-center'
+          ? 'AO-04 EXECUTIVE PROJECTION'
+          : current.slug === 'xeeds' || current.slug === 'axigland-quality'
+            ? 'AO-05 RUNTIME OBSERVATORY'
+            : 'ADMIN DOMAIN'
+    }
     if (breadcrumb) breadcrumb.textContent = current.label
     if (title) title.textContent = current.label
     if (eyebrow) eyebrow.textContent = current.eyebrow
@@ -145,6 +154,135 @@
       }
       section.append(grid)
       metricGroups.append(section)
+    }
+  }
+
+  const observatory = bootstrap.xeedObservatory
+  const observatorySection = document.getElementById('admin-observatory')
+  const observatoryCompleteness = document.getElementById('admin-observatory-completeness')
+  const observatoryAsOf = document.getElementById('admin-observatory-asof')
+  const observatoryNotes = document.getElementById('admin-observatory-notes')
+  const observatorySummary = document.getElementById('admin-observatory-summary')
+  const xeedList = document.getElementById('admin-xeed-list')
+
+  const valueOrUnknown = (value, completeness) => {
+    if (value === null || value === undefined || value === '') return completeness || 'UNKNOWN'
+    return String(value)
+  }
+
+  const addFact = (container, label, value, completeness = 'KNOWN') => {
+    const row = document.createElement('div')
+    row.className = 'admin-observatory-fact'
+    const term = document.createElement('span')
+    term.textContent = label
+    const strong = document.createElement('strong')
+    strong.textContent = valueOrUnknown(value, completeness)
+    const state = document.createElement('em')
+    state.textContent = completeness
+    row.append(term, strong, state)
+    container.append(row)
+  }
+
+  if (
+    (current?.slug === 'xeeds' || current?.slug === 'axigland-quality') &&
+    observatory &&
+    observatorySection
+  ) {
+    observatorySection.hidden = false
+    if (domainPreview) domainPreview.hidden = true
+    if (observatoryCompleteness) observatoryCompleteness.textContent = observatory.completeness || 'UNKNOWN'
+    if (observatoryAsOf) observatoryAsOf.textContent = observatory.asOf ? `As of ${observatory.asOf}` : ''
+
+    if (observatoryNotes) {
+      observatoryNotes.replaceChildren()
+      for (const noteText of observatory.coverageNotes || []) {
+        const note = document.createElement('p')
+        note.textContent = noteText
+        observatoryNotes.append(note)
+      }
+    }
+
+    if (observatorySummary) {
+      observatorySummary.replaceChildren()
+      const axigland = observatory.axigland || {}
+      const summary = document.createElement('section')
+      summary.className = 'admin-observatory-panel'
+      const heading = document.createElement('h3')
+      heading.textContent = current.slug === 'axigland-quality' ? 'AXIGLAND runtime evidence' : 'Cross-Xeed evidence'
+      summary.append(heading)
+      const facts = document.createElement('div')
+      facts.className = 'admin-observatory-facts'
+      addFact(facts, 'Canonical admissions emitted', axigland.canonicalAdmissionEvents, 'KNOWN')
+      addFact(facts, 'Observations reused', axigland.observationsReused, 'KNOWN')
+      addFact(facts, 'Observations added', axigland.observationsAdded, 'KNOWN')
+      addFact(facts, 'Reuse ratio', axigland.reuseRatio, axigland.reuseRatio == null ? 'UNKNOWN' : 'KNOWN')
+      addFact(facts, 'AXIGLAND growth', axigland.growthState, axigland.growthCompleteness)
+      addFact(facts, 'Currentness', axigland.currentnessState, axigland.currentnessCompleteness)
+      addFact(facts, 'Provenance', axigland.provenanceState, axigland.provenanceCompleteness)
+      addFact(facts, 'Contradictions', axigland.contradictionState, axigland.contradictionCompleteness)
+      addFact(facts, 'Identity resolution', axigland.identityResolutionState, axigland.identityResolutionCompleteness)
+      summary.append(facts)
+
+      const lineage = document.createElement('details')
+      lineage.className = 'admin-metric-lineage'
+      const lineageSummary = document.createElement('summary')
+      lineageSummary.textContent = 'Inspect AXIGLAND runtime lineage'
+      const pre = document.createElement('p')
+      pre.textContent = `Learning events: ${(axigland.sourceLearningEventIds || []).join(', ') || 'None observed'} · Admin records: ${(axigland.sourceAdminRecordIds || []).join(', ') || 'None observed'}`
+      lineage.append(lineageSummary, pre)
+      summary.append(lineage)
+      observatorySummary.append(summary)
+    }
+
+    if (xeedList) {
+      xeedList.replaceChildren()
+      const xeeds = Array.isArray(observatory.xeeds) ? observatory.xeeds : []
+      if (!xeeds.length) {
+        const empty = document.createElement('article')
+        empty.className = 'admin-observatory-empty'
+        empty.innerHTML = '<strong>No governed Xeed runtime evidence observed</strong><p>This does not prove that zero Xeeds exist. It means the connected Learning/Admin evidence sources do not currently identify one.</p>'
+        xeedList.append(empty)
+      }
+      for (const xeed of xeeds) {
+        const card = document.createElement('article')
+        card.className = 'admin-xeed-card'
+        const header = document.createElement('header')
+        const heading = document.createElement('h3')
+        heading.textContent = xeed.xeedId
+        const state = document.createElement('span')
+        state.textContent = valueOrUnknown(xeed.lifecycleState, xeed.lifecycleCompleteness)
+        header.append(heading, state)
+
+        const facts = document.createElement('div')
+        facts.className = 'admin-observatory-facts'
+        addFact(facts, 'Learning events', xeed.learningEventCount, 'KNOWN')
+        addFact(facts, 'Currentness', xeed.currentnessState, xeed.currentnessCompleteness)
+        addFact(facts, 'Observation coverage', xeed.observationCoverageState, xeed.observationCoverageCompleteness)
+        addFact(facts, 'First activity', xeed.firstActivityAt, xeed.firstActivityAt ? 'KNOWN' : 'UNKNOWN')
+        addFact(facts, 'First useful Xignal', xeed.firstUsefulXignalAt, xeed.firstUsefulXignalAt ? 'KNOWN' : 'UNKNOWN')
+        addFact(facts, 'Time to first value (ms)', xeed.timeToFirstUsefulXignalMs, xeed.timeToFirstUsefulXignalMs == null ? 'UNKNOWN' : 'KNOWN')
+        addFact(facts, 'Observations reused', xeed.observationsReused, 'KNOWN')
+        addFact(facts, 'Observations added', xeed.observationsAdded, 'KNOWN')
+        addFact(facts, 'Reuse ratio', xeed.reuseRatio, xeed.reuseRatio == null ? 'UNKNOWN' : 'KNOWN')
+        addFact(facts, 'Xignals emitted', xeed.xignalsEmitted, 'KNOWN')
+        addFact(facts, 'Canonical admissions', xeed.canonicalAdmissions, 'KNOWN')
+        addFact(facts, 'Direct event cost coverage', xeed.directCostCompleteness, xeed.directCostCompleteness)
+        addFact(facts, 'Shared cost attribution', xeed.sharedCostCompleteness, xeed.sharedCostCompleteness)
+        addFact(facts, 'Triggered cost attribution', xeed.triggeredCostCompleteness, xeed.triggeredCostCompleteness)
+        addFact(facts, 'Revenue attribution', xeed.revenueAttributionCompleteness, xeed.revenueAttributionCompleteness)
+
+        const details = document.createElement('details')
+        details.className = 'admin-metric-lineage'
+        const detailsSummary = document.createElement('summary')
+        detailsSummary.textContent = 'Diagnose this Xeed'
+        const body = document.createElement('p')
+        const costs = (xeed.knownCostsByCurrency || []).map(([currency, amount]) => `${amount} µ${currency}`).join(', ')
+        body.textContent = `Observed direct costs: ${costs || 'UNKNOWN'} · unknown-cost events: ${xeed.unknownCostEventCount} · failed events: ${xeed.failedEventCount} · partial events: ${xeed.partialEventCount} · shared: ${xeed.sharedCostReason} · triggered: ${xeed.triggeredCostReason} · learning lineage: ${(xeed.sourceLearningEventIds || []).join(', ') || 'None'}`
+        details.append(detailsSummary, body)
+
+        card.append(header, facts, details)
+        xeedList.append(card)
+      }
     }
   }
 

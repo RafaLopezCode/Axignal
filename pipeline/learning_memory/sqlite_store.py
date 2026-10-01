@@ -256,3 +256,14 @@ class SqliteLearningMemory:
 
     def for_xeed(self, xeed_id: str) -> tuple[LearningEvent, ...]:
         return self._query("xeed_id", xeed_id)
+
+    def all_events(self) -> tuple[LearningEvent, ...]:
+        with self._connect() as connection:
+            rows = connection.execute(
+                """
+                SELECT payload_json
+                FROM learning_events
+                ORDER BY occurred_at, event_id
+                """
+            ).fetchall()
+        return tuple(self._deserialize(str(row[0])) for row in rows)

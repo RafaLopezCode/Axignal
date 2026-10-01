@@ -29,8 +29,10 @@ from application.admin_shell import (
     AdminShellRouteUnknown,
     project_admin_shell,
 )
+from application.admin_xeed_observatory import project_xeed_axigland_observatory
 from domain.admin_command_center import AdminCommandCenterProjection
 from domain.admin_observability import AdminProjectionId, AdminProjectionSnapshot
+from domain.admin_xeed_observatory import XeedAxiglandObservatory
 from pipeline.admin_observability import SqliteAdminObservabilityStore
 from pipeline.learning_memory import SqliteLearningMemory
 from pipeline.observation_memory import SqliteObservationMemory
@@ -234,10 +236,100 @@ def _command_center_payload(
     }
 
 
+def _xeed_observatory_projection(
+    runtime: AxignalRuntime, *, now: datetime
+) -> XeedAxiglandObservatory:
+    return project_xeed_axigland_observatory(
+        learning_events=runtime.learning_memory.all_events(),
+        admin_records=runtime.admin_observability.records_through(now),
+        as_of=now,
+        generated_at=now,
+    )
+
+
+def _xeed_observatory_payload(
+    projection: XeedAxiglandObservatory,
+) -> dict[str, object]:
+    xeeds: list[dict[str, object]] = []
+    for item in projection.xeeds:
+        xeeds.append(
+            {
+                "xeedId": item.xeed_id,
+                "subjectIds": list(item.subject_ids),
+                "lifecycleState": item.lifecycle_state,
+                "lifecycleCompleteness": item.lifecycle_completeness.value,
+                "lifecycleReason": item.lifecycle_reason,
+                "currentnessState": item.currentness_state,
+                "currentnessCompleteness": item.currentness_completeness.value,
+                "currentnessReason": item.currentness_reason,
+                "observationCoverageState": item.observation_coverage_state,
+                "observationCoverageCompleteness": item.observation_coverage_completeness.value,
+                "observationCoverageReason": item.observation_coverage_reason,
+                "firstActivityAt": None
+                if item.first_activity_at is None
+                else item.first_activity_at.isoformat(),
+                "lastActivityAt": None
+                if item.last_activity_at is None
+                else item.last_activity_at.isoformat(),
+                "firstUsefulXignalAt": None
+                if item.first_useful_xignal_at is None
+                else item.first_useful_xignal_at.isoformat(),
+                "timeToFirstUsefulXignalMs": item.time_to_first_useful_xignal_ms,
+                "learningEventCount": item.learning_event_count,
+                "failedEventCount": item.failed_event_count,
+                "partialEventCount": item.partial_event_count,
+                "observationsReused": item.observations_reused,
+                "observationsAdded": item.observations_added,
+                "reuseRatio": item.reuse_ratio,
+                "xignalsEmitted": item.xignals_emitted,
+                "canonicalAdmissions": item.canonical_admissions,
+                "knownCostsByCurrency": [list(value) for value in item.known_costs_by_currency],
+                "unknownCostEventCount": item.unknown_cost_event_count,
+                "directCostCompleteness": item.direct_cost_completeness.value,
+                "sharedCostCompleteness": item.shared_cost_completeness.value,
+                "sharedCostReason": item.shared_cost_reason,
+                "triggeredCostCompleteness": item.triggered_cost_completeness.value,
+                "triggeredCostReason": item.triggered_cost_reason,
+                "revenueAttributionCompleteness": item.revenue_attribution_completeness.value,
+                "revenueAttributionReason": item.revenue_attribution_reason,
+                "sourceLearningEventIds": list(item.source_learning_event_ids),
+                "sourceAdminRecordIds": list(item.source_admin_record_ids),
+            }
+        )
+    axigland = projection.axigland
+    return {
+        "asOf": projection.as_of.isoformat(),
+        "generatedAt": projection.generated_at.isoformat(),
+        "completeness": projection.completeness.value,
+        "coverageNotes": list(projection.coverage_notes),
+        "xeeds": xeeds,
+        "axigland": {
+            "completeness": axigland.completeness.value,
+            "canonicalAdmissionEvents": axigland.canonical_admission_events,
+            "observationsReused": axigland.observations_reused,
+            "observationsAdded": axigland.observations_added,
+            "reuseRatio": axigland.reuse_ratio,
+            "growthState": axigland.growth_state,
+            "growthCompleteness": axigland.growth_completeness.value,
+            "contradictionState": axigland.contradiction_state,
+            "contradictionCompleteness": axigland.contradiction_completeness.value,
+            "identityResolutionState": axigland.identity_resolution_state,
+            "identityResolutionCompleteness": axigland.identity_resolution_completeness.value,
+            "currentnessState": axigland.currentness_state,
+            "currentnessCompleteness": axigland.currentness_completeness.value,
+            "provenanceState": axigland.provenance_state,
+            "provenanceCompleteness": axigland.provenance_completeness.value,
+            "sourceLearningEventIds": list(axigland.source_learning_event_ids),
+            "sourceAdminRecordIds": list(axigland.source_admin_record_ids),
+        },
+    }
+
+
 def _admin_projection_payload(
     projection: AdminShellProjection,
     *,
     command_center: AdminCommandCenterProjection | None = None,
+    xeed_observatory: XeedAxiglandObservatory | None = None,
 ) -> dict[str, object]:
     payload: dict[str, object] = {
         "mode": projection.mode,
@@ -257,6 +349,8 @@ def _admin_projection_payload(
     }
     if command_center is not None:
         payload["commandCenter"] = _command_center_payload(command_center)
+    if xeed_observatory is not None:
+        payload["xeedObservatory"] = _xeed_observatory_payload(xeed_observatory)
     return payload
 
 
@@ -265,11 +359,16 @@ def _render_admin_shell(
     projection: AdminShellProjection,
     *,
     command_center: AdminCommandCenterProjection | None = None,
+    xeed_observatory: XeedAxiglandObservatory | None = None,
 ) -> bytes:
     template = (web_root / "admin" / "index.html").read_text(encoding="utf-8")
     payload = html.escape(
         json.dumps(
-            _admin_projection_payload(projection, command_center=command_center),
+            _admin_projection_payload(
+                projection,
+                command_center=command_center,
+                xeed_observatory=xeed_observatory,
+            ),
             sort_keys=True,
             separators=(",", ":"),
         ),
@@ -381,15 +480,22 @@ def make_handler(runtime: AxignalRuntime) -> type[BaseHTTPRequestHandler]:
                 try:
                     grant = runtime.admin_access.session_grant(token.strip(), now=datetime.now(UTC))
                     admin_projection = project_admin_shell(grant, requested_slug=admin_slug or None)
+                    now = datetime.now(UTC)
                     command_center = (
-                        _command_center_projection(runtime, now=datetime.now(UTC))
+                        _command_center_projection(runtime, now=now)
                         if admin_projection.current_slug == "command-center"
+                        else None
+                    )
+                    xeed_observatory = (
+                        _xeed_observatory_projection(runtime, now=now)
+                        if admin_projection.current_slug in {"xeeds", "axigland-quality"}
                         else None
                     )
                     rendered = _render_admin_shell(
                         runtime.config.web_root,
                         admin_projection,
                         command_center=command_center,
+                        xeed_observatory=xeed_observatory,
                     )
                 except AdminAuthenticationError:
                     self._admin_error(HTTPStatus.UNAUTHORIZED, "Admin authentication failed.")
