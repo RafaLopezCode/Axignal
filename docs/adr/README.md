@@ -59,6 +59,7 @@ Constitution (`.specify/memory/constitution.md`).
 | [ADR-0049](ADR-0049-canonical-identity-resolution-reversible-topology.md) | Canonical Identity Resolution and Reversible Topology Governance (**ACCEPTED**) | §§14, 35, 36, 46.1, 46.6, 46.10–13 |
 | [ADR-0050](ADR-0050-observation-rights-reuse-applicability-gate.md) | Observation Rights, Reuse and Applicability Gate (**ACCEPTED**) | §§14, 20, 46.14, 53–54 |
 | [ADR-0051](ADR-0051-temporal-currentness-append-only-reobservation.md) | Temporal Currentness and Append-Only Reobservation (**ACCEPTED**) | §§14, 20, 46, 53 |
+| [ADR-0052](ADR-0052-unit-economics-instrumentation.md) | Unit Economics Instrumentation Over Learning Memory (**ACCEPTED**) | §§49–50, 56.14, 56.16 |
 
 ## Adding an ADR
 

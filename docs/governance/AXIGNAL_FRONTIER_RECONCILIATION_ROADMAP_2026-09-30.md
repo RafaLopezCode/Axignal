@@ -31,7 +31,7 @@ A task is not DONE because code exists. Runtime/product work normally progresses
 
 NOT_STARTED · READY · IN_PROGRESS · BLOCKED · DONE · DEFERRED · REJECTED
 
-**CURRENT_TASK = FR-26**
+**CURRENT_TASK = FR-27**
 
 ## 4. Frontier closure rule
 
@@ -1139,7 +1139,7 @@ Future audit no longer describes temporal behavior as mostly timestamps without 
 
 ## FR-26 — Unit Economics Instrumentation
 
-**Status:** NOT_STARTED  
+**Status:** DONE — 2026-10-01
 **Depends on:** FR-17  
 **Priority:** P1 PARALLEL once real runs exist
 
