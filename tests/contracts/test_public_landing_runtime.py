@@ -117,7 +117,8 @@ def test_global_pagination_does_not_hijack_interactive_controls() -> None:
     assert "function isInteractiveTarget(target)" in HTML
     assert "if(isInteractiveTarget(e.target)||!localeList.hidden||!chapterMenu.hidden" in HTML
     assert (
-        "if(accessDialog.open||evidenceDialog.open||isInteractiveTarget(e.target)) return;" in HTML
+        "if(accessDialog.open||evidenceDialog.open||footerSheet.open||isInteractiveTarget(e.target)) return;"
+        in HTML
     )
     assert "isScrollableCopyTarget(e.target)" in HTML
     assert "touchY=(isInteractiveTarget(e.target)||isScrollableCopyTarget(e.target))" in HTML
@@ -194,3 +195,56 @@ def test_mobile_storyboard_uses_dynamic_viewport_and_safe_copy_floor() -> None:
     assert "env(safe-area-inset-bottom)" in HTML
     assert "max-height:calc(100dvh - 154px)" in HTML
     assert "overscroll-behavior:contain" in HTML
+
+
+def test_logo_is_a_real_home_control() -> None:
+    assert 'id="brandHome" href="./"' in HTML
+    assert "$('brandHome').addEventListener('click'" in HTML
+    assert "if(chapter!==1)" in HTML
+    assert "chapter=1;" in HTML
+    assert "renderStable();" in HTML
+
+
+def test_mobile_home_supports_explicit_pull_down_reload() -> None:
+    assert "if(chapter===1&&innerWidth<=900&&dy>=96){location.reload();return}" in HTML
+
+
+def test_collapsed_footer_opens_legal_bottom_sheet() -> None:
+    assert 'id="footerTab"' in HTML
+    assert 'id="footerSheet"' in HTML
+    assert 'class="footer-sheet"' in HTML
+    assert "footerTab.onclick=openFooterSheet" in HTML
+    assert "footerSheet.showModal()" in HTML
+    assert 'href="./legal/privacidad-rgpd/"' in HTML
+    assert 'href="./legal/cookies/"' in HTML
+    assert 'href="./legal/terminos/"' in HTML
+    assert 'href="./legal/accesibilidad/"' in HTML
+
+
+def test_public_legal_surfaces_exist_and_do_not_invent_controller_identity() -> None:
+    legal = LANDING / "legal"
+    required = {
+        "index.html",
+        "aviso-legal/index.html",
+        "privacidad-rgpd/index.html",
+        "cookies/index.html",
+        "terminos/index.html",
+        "accesibilidad/index.html",
+    }
+    for relative in required:
+        assert (legal / relative).is_file(), relative
+
+    privacy = (legal / "privacidad-rgpd" / "index.html").read_text(encoding="utf-8")
+    notice = (legal / "aviso-legal" / "index.html").read_text(encoding="utf-8")
+    cookies = (legal / "cookies" / "index.html").read_text(encoding="utf-8")
+
+    assert "RGPD / GDPR" in privacy
+    assert "identidad y datos de contacto del responsable" in privacy
+    assert "finalidades y base jurídica" in privacy
+    assert "transferencias internacionales" in privacy
+    assert "derechos de acceso, rectificación, supresión" in privacy
+    assert "Agencia Española de Protección de Datos" in privacy
+    assert "PENDIENTE DE CONFIRMACIÓN" in notice
+    assert "NIF/CIF" in notice
+    assert "axignal.storyboard.locale" in cookies
+    assert "no instala cookies publicitarias ni de analítica" in cookies

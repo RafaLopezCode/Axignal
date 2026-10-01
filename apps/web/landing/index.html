@@ -69,7 +69,7 @@ header{
   background:rgba(5,5,4,.84);
   backdrop-filter:blur(18px) saturate(.82)
 }
-.brand{justify-self:start;display:inline-flex;align-items:center;min-width:0}
+.brand{justify-self:start;display:inline-flex;align-items:center;min-width:0;text-decoration:none;color:inherit}
 .brand img{display:block;width:166px;height:auto}
 .main-nav{justify-self:center;display:flex;align-items:center;justify-content:center;gap:42px;white-space:nowrap}
 .main-nav button,.main-nav .nav-link,.login{
@@ -219,6 +219,35 @@ body[data-chapter="14"] .actions{margin-top:17px}
 .question-dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.48);justify-self:end}
 .question-item.active .question-dot{background:#fff;box-shadow:0 0 0 4px rgba(175,166,138,.18)}
 
+
+.footer-dock{position:absolute;left:10px;bottom:10px;z-index:21}
+.footer-tab{
+  min-height:30px;padding:6px 11px;border:1px solid rgba(255,255,255,.16);border-radius:var(--ax-radius-control);
+  background:rgba(0,0,0,.34);color:rgba(255,255,255,.78);font:10px/1 var(--ax-font-mono);letter-spacing:.08em;
+  backdrop-filter:blur(10px)
+}
+.footer-tab:hover,.footer-tab:focus-visible{border-color:rgba(175,166,138,.58);color:#fff;background:rgba(175,166,138,.10)}
+.footer-sheet{
+  width:100%;max-width:none;max-height:min(82dvh,720px);margin:auto 0 0;padding:0;border:0;border-top:1px solid rgba(175,166,138,.42);
+  background:rgba(7,7,6,.985);color:var(--ax-ivory);box-shadow:0 -24px 80px rgba(0,0,0,.56)
+}
+.footer-sheet::backdrop{background:rgba(0,0,0,.52);backdrop-filter:blur(4px)}
+.footer-sheet-inner{max-width:1180px;margin:0 auto;padding:24px clamp(18px,4vw,54px) max(28px,calc(env(safe-area-inset-bottom) + 18px))}
+.footer-sheet-header{display:flex;justify-content:space-between;align-items:flex-start;gap:18px;padding-bottom:18px;border-bottom:1px solid rgba(175,166,138,.18)}
+.footer-sheet-kicker{margin:0 0 7px;font:500 10px/1.2 var(--ax-font-mono);letter-spacing:.14em;text-transform:uppercase;color:var(--ax-brass)}
+.footer-sheet h2{margin:0;font:300 clamp(28px,4vw,42px)/1 var(--ax-font-display);letter-spacing:-.02em}
+.footer-sheet-close{width:42px;height:42px;border:1px solid rgba(246,241,231,.22);background:transparent;color:#fff;font-size:22px;line-height:1}
+.footer-links{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;margin-top:18px;border:1px solid rgba(175,166,138,.18);background:rgba(175,166,138,.18)}
+.footer-links a{display:flex;min-height:64px;align-items:center;padding:14px 16px;background:rgba(7,7,6,.96);color:rgba(246,241,231,.82);text-decoration:none;font-size:13px}
+.footer-links a:hover,.footer-links a:focus-visible{background:rgba(175,166,138,.10);color:#fff}
+.footer-legal-note{margin:16px 0 0;font-size:11px;line-height:1.5;color:rgba(246,241,231,.56)}
+@media(max-width:700px){
+  .footer-sheet{max-height:86dvh}
+  .footer-sheet-inner{padding:20px 16px max(22px,calc(env(safe-area-inset-bottom) + 14px))}
+  .footer-links{grid-template-columns:1fr}
+  .footer-links a{min-height:48px}
+}
+
 .counter-button{
   position:absolute;right:clamp(16px,2vw,34px);bottom:17px;z-index:20;
   min-height:30px;padding:6px 8px;border:1px solid rgba(255,255,255,.16);
@@ -345,7 +374,7 @@ body[data-chapter="14"] .copy{width:min(43rem,46vw)}
   <div class="art art-next" id="artNext"></div>
   <div class="contrast"></div><div class="left-shade"></div><div class="transition-veil"></div>
   <header>
-    <div class="brand"><img src="./assets/brand/logo-dark.svg" alt="AXIGNAL" width="166" height="42"></div>
+    <a class="brand" id="brandHome" href="./" aria-label="AXIGNAL — Home"><img src="./assets/brand/logo-dark.svg" alt="AXIGNAL" width="166" height="42"></a>
     <nav class="main-nav" aria-label="Primary">
       <button type="button" data-jump="2" data-label="what"></button>
       <button type="button" data-jump="4">AXIGLAND</button>
@@ -426,6 +455,30 @@ body[data-chapter="14"] .copy{width:min(43rem,46vw)}
   <nav class="question-rail" id="questionRail" aria-label="Questions answered"></nav>
   <button class="counter-button" id="counterButton" type="button" aria-haspopup="menu" aria-expanded="false"></button>
   <div class="chapter-menu" id="chapterMenu" role="menu" hidden></div>
+
+  <footer class="footer-dock" aria-label="Legal footer">
+    <button class="footer-tab" id="footerTab" type="button" aria-haspopup="dialog" aria-controls="footerSheet">Footer</button>
+  </footer>
+  <dialog class="footer-sheet" id="footerSheet" aria-labelledby="footerSheetTitle">
+    <div class="footer-sheet-inner">
+      <div class="footer-sheet-header">
+        <div>
+          <p class="footer-sheet-kicker">AXIGNAL · LEGAL & TRUST</p>
+          <h2 id="footerSheetTitle">Footer</h2>
+        </div>
+        <button class="footer-sheet-close" id="footerSheetClose" type="button" aria-label="Close footer">×</button>
+      </div>
+      <nav class="footer-links" aria-label="Legal">
+        <a href="./legal/">Centro legal</a>
+        <a href="./legal/aviso-legal/">Aviso legal</a>
+        <a href="./legal/privacidad-rgpd/">Privacidad · RGPD / GDPR</a>
+        <a href="./legal/cookies/">Cookies y almacenamiento local</a>
+        <a href="./legal/terminos/">Términos de uso</a>
+        <a href="./legal/accesibilidad/">Accesibilidad</a>
+      </nav>
+      <p class="footer-legal-note">La Landing pública está en fase pre-lanzamiento. Las superficies legales distinguen lo ya verificable del sitio de los datos jurídicos del responsable que aún deben confirmarse antes de activar captación de datos, cuentas o contratación pública.</p>
+    </div>
+  </dialog>
 </main>
 <script>
 const SUPPORTED=['en','es','fr','de','it','pt'];
@@ -505,6 +558,7 @@ const $=id=>document.getElementById(id);
 const scene=$('scene'), artCurrent=$('artCurrent'), artNext=$('artNext'), copyInner=$('copyInner');
 const localeButton=$('localeButton'), localeList=$('localeList'), chapterMenu=$('chapterMenu');
 const mobileMenuToggle=$('mobileMenuToggle'), mobileMenu=$('mobileMenu');
+const footerTab=$('footerTab'), footerSheet=$('footerSheet');
 const accessDialog=$('accessDialog');
 const accessCopy={
   en:{kicker:'PRIVATE ACCESS',title:'AXIGNAL is not open for public access yet.',copy:'The public landing is live. Planting Xeeds and subscriber sign-in will open only through the governed AXIGNAL account runtime—not through a placeholder checkout or fake account flow.',close:'Continue exploring'},
@@ -605,6 +659,16 @@ function closeMobileMenu({restoreFocus=false}={}){
 }
 function toggleMobileMenu(){
   mobileMenu.hidden?openMobileMenu():closeMobileMenu({restoreFocus:true});
+}
+function openFooterSheet(){
+  closeLocale();
+  closeChapterMenu();
+  if(!mobileMenu.hidden) closeMobileMenu();
+  footerSheet.showModal();
+}
+function closeFooterSheet({restoreFocus=false}={}){
+  if(footerSheet.open) footerSheet.close();
+  if(restoreFocus) footerTab.focus();
 }
 function updateHeader(){
   document.querySelectorAll('[data-label]').forEach(el=>{
@@ -801,7 +865,7 @@ function armWheelAfterQuiet(){
   },180);
 }
 function onWheel(e){
-  if(isInteractiveTarget(e.target)||!localeList.hidden||!chapterMenu.hidden||accessDialog.open||evidenceDialog.open) return;
+  if(isInteractiveTarget(e.target)||!localeList.hidden||!chapterMenu.hidden||footerSheet.open||accessDialog.open||evidenceDialog.open) return;
   e.preventDefault();
   if(transitioning||!wheelGestureArmed){armWheelAfterQuiet();return}
   const dominant=Math.abs(e.deltaY)>=Math.abs(e.deltaX)?e.deltaY:e.deltaX;
@@ -820,16 +884,17 @@ function onWheel(e){
 }
 addEventListener('wheel',onWheel,{passive:false});
 addEventListener('keydown',e=>{
-  if(!localeList.hidden||!chapterMenu.hidden||!mobileMenu.hidden){
+  if(!localeList.hidden||!chapterMenu.hidden||!mobileMenu.hidden||footerSheet.open){
     if(e.key==='Escape'){
       closeLocale();
       closeChapterMenu();
       if(!mobileMenu.hidden) closeMobileMenu({restoreFocus:true});
+      if(footerSheet.open) closeFooterSheet({restoreFocus:true});
       return;
     }
     if(!mobileMenu.hidden) return;
   }
-  if(accessDialog.open||evidenceDialog.open||isInteractiveTarget(e.target)) return;
+  if(accessDialog.open||evidenceDialog.open||footerSheet.open||isInteractiveTarget(e.target)) return;
   if(['ArrowDown','PageDown','ArrowRight',' '].includes(e.key)){e.preventDefault();next()}
   if(['ArrowUp','PageUp','ArrowLeft'].includes(e.key)){e.preventDefault();prev()}
   if(e.key==='Home'){e.preventDefault();goTo(1,-1)}
@@ -841,8 +906,9 @@ addEventListener('touchstart',e=>{
     :(e.changedTouches[0]?.clientY??null);
 },{passive:true});
 addEventListener('touchend',e=>{
-  if(touchY===null||transitioning||!localeList.hidden||!chapterMenu.hidden||!mobileMenu.hidden||accessDialog.open||evidenceDialog.open)return;
+  if(touchY===null||transitioning||!localeList.hidden||!chapterMenu.hidden||!mobileMenu.hidden||footerSheet.open||accessDialog.open||evidenceDialog.open)return;
   const dy=(e.changedTouches[0]?.clientY??touchY)-touchY; touchY=null;
+  if(chapter===1&&innerWidth<=900&&dy>=96){location.reload();return}
   if(Math.abs(dy)>=48) dy<0?next():prev();
 },{passive:true});
 
@@ -852,11 +918,25 @@ document.querySelectorAll('[data-jump]').forEach(b=>b.onclick=()=>{
   goTo(target,target>chapter?1:-1);
 });
 mobileMenuToggle.onclick=toggleMobileMenu;
+footerTab.onclick=openFooterSheet;
+$('footerSheetClose').onclick=()=>closeFooterSheet({restoreFocus:true});
 document.querySelector('.mobile-login').onclick=()=>{
   closeMobileMenu();
   openAccessDialog();
 };
 document.querySelector('.mobile-menu-nav .nav-link')?.addEventListener('click',()=>closeMobileMenu());
+$('brandHome').addEventListener('click',e=>{
+  e.preventDefault();
+  closeLocale();closeChapterMenu();
+  if(!mobileMenu.hidden) closeMobileMenu();
+  if(footerSheet.open) closeFooterSheet();
+  if(chapter!==1){
+    chapter=1;
+    renderStable();
+  }else{
+    updateUrl();
+  }
+});
 document.querySelectorAll('.mobile-locale').forEach(b=>b.onclick=()=>{
   lang=b.dataset.mobileLocale;
   localStorage.setItem('axignal.storyboard.locale',lang);
