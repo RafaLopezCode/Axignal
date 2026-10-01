@@ -99,7 +99,7 @@ Admin must distinguish measured flywheel behavior from the hypothesis above.
 
 `NOT_STARTED → READY → IN_PROGRESS → BLOCKED → DONE → DEFERRED → REJECTED`
 
-**CURRENT_TASK = AO-06**
+**CURRENT_TASK = AO-07**
 
 ## 7. Closure rule
 
@@ -337,9 +337,27 @@ Xeed economics and AXIGLAND reuse can be inspected from runtime evidence rather 
 
 ## AO-06 — AXENT / Brain / Provider Observatory
 
-**Status:** NOT_STARTED
+**Status:** DONE
 **Depends on:** AO-03
 **Priority:** P0
+
+### Closure evidence (2026-10-01)
+- `domain/admin_brain_observatory/` and `application/admin_brain_observatory/` implement a deterministic provider-neutral AO-06 read model over governed Learning Memory plus AO-03 Admin envelopes. No cognitive shadow store or second Brain was introduced.
+- C06/C07/C09/C10 semantics are preserved: Knowledge Frontier, research controls, provider/model usage, structured-evaluator observations, cost/latency, failure/abstention and unresolved gaps remain distinct from canonical economic truth.
+- Provider slices are comparable only when `operation_class + policy_id + policy_version` match through an inspectable `comparison_key`; AO-06 creates no global provider score, rank, winner or hidden quality metric.
+- Unknown provider identity, usage, price, latency, retry, abstention, budget or frontier state remains `UNKNOWN/PARTIAL`; missing cost is never free and missing usage is never zero activity.
+- Learning Memory stop events with exact governed `ExecutionStopReason` values feed routing/stop/budget/no-progress/retry observability directly, preserving LearningEvent lineage instead of duplicating the same operational fact into Admin envelopes.
+- Prime execution now propagates provider/provider-version from semantic extraction and provider-neutral `PrimeMechanismResult` into real Learning Events. Provider identity remains mutable execution policy and never establishes FAXT, Xignal or canonical correctness.
+- Commercial/customer Admin records are outside the AO-06 cognitive projection and cannot relabel model correctness, abstention or provider performance.
+- `/admin/axent-brain` uses the existing AO-01 authorized Admin shell and receives a secret-free `brainObservatory` bootstrap with Learning/Admin lineage.
+- Browser QA PASS: desktop 1440 px renders execution evidence, research-control/Knowledge-Frontier state and two compatible provider slices; compact effective 491 px renders two provider cards with `scrollWidth == clientWidth`.
+- Focused AO-06 + Prime + AO-02 regression set: 21 PASS.
+- Full pytest: 774 PASS.
+- Ruff format/check: PASS.
+- mypy: PASS (166 source files).
+- Node Admin JS syntax: PASS.
+- Architecture Guard: PASS.
+
 ### Work
 - Research objectives, routing, stop reasons, budget exhaustion and no-progress.
 - Provider/model usage through provider-neutral contracts.
