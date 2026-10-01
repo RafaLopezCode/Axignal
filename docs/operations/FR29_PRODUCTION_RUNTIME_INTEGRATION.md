@@ -1,6 +1,6 @@
 # FR-29 Production Runtime Integration
 
-**Status:** IMPLEMENTED_PENDING_DEPLOYMENT
+**Status:** DONE
 **Date:** 2026-10-01
 
 ## Observed production topology before FR-29
@@ -67,4 +67,17 @@ Rollback never touches Traefik or other projects:
 
 ## Completion evidence
 
-This document must be updated after deployment with the exact main SHA, service status, health/runtime result, persistence probe result and external verification. Until then FR-29 is not production-complete.
+Deployment completed 2026-10-01 from canonical main SHA `25b64844a9467cb2dd96fb654eb7b865d00268c8`.
+
+- `axignal-runtime.service`: enabled and active on `127.0.0.1:18181`.
+- `axignal-landing.service`: active on `127.0.0.1:18180`.
+- `/healthz`: `status=ok`; exact code SHA; Observation/Learning stores healthy; public write surface closed.
+- `/runtimez` on loopback: both SQLite memories healthy with zero live business rows at deployment time; public write API false.
+- isolated probe as `www-data`: Observation and Learning append/reopen PASS; second execution idempotent-replay PASS.
+- landing release moved from `170edc8` to `25b64844`; exact full SHA recorded in `/srv/axignal/landing/DEPLOYED_SHA`.
+- nginx pre-FR-29 rollback: `/etc/axignal/landing/nginx.conf.pre-fr29-20261001T114952Z`.
+- external `https://axignal.com/`: HTTP 200; FR-28 copy present.
+- external `/healthz`: full edge path reaches the runtime and returns the exact deployed SHA.
+- subscriber synthetic demo remains non-public; FR-30 owns real public E2E exposure.
+
+FR-29 is production-complete. FR-30 remains responsible for the real subscriber first-Xeed-to-first-proof E2E path.
