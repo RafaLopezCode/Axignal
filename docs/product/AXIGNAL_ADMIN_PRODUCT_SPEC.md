@@ -3,7 +3,7 @@ authority: Subordinate to AXIGNAL Master Product Model, Engineering
   Constitution, Accepted ADRs, and Logical Architecture Atlas
 date: 2026-10-01
 document_type: Product / Operational Governance Specification
-implementation_status: PRE_IMPLEMENTATION
+implementation_status: PARTIALLY_IMPLEMENTED
 iteration_policy: Living specification; evolve by reviewed versioned
   changes as architecture and runtime evidence mature
 status: ACCEPTED_GOVERNED_SPECIFICATION
@@ -1090,18 +1090,38 @@ Budget exhaustion changes operational state, not epistemic truth.
 
 ## 12.3 Security & audit
 
-Append-oriented audit for:
+AO-01 establishes a provider-neutral Admin security plane separate from subscriber tenancy. `PrincipalTenantMembership` does not grant Admin authority and provider roles/email domains are never sufficient authorization.
 
--   authentication events;
--   authorization failures;
+Admin roles:
+
+-   `FOUNDER`;
+-   `BUSINESS`;
+-   `FINANCE_FISCAL`;
+-   `OPERATIONS`;
+-   `RESEARCH_INTELLIGENCE`;
+-   `TECHNICAL_SYSTEM`;
+-   `SUPPORT`;
+-   `AGENT_SAFE_READER`.
+
+Roles expand deterministically to explicit `admin:*` scopes. Admin sessions are server-side, bounded and fail closed: default lifetime 8h, implementation maximum 12h, expiry/revocation checked on every authorization, and active roles are re-read so revocation applies to existing sessions. Only a SHA-256 digest of the opaque Admin bearer is persisted; raw credentials never enter Admin projections, exports or agent context.
+
+Risk classes are `READ`, `WRITE`, `SENSITIVE`, `CRITICAL`. Sensitive actions require `STEP_UP` no more than 15 minutes old. Critical actions require fresh step-up plus a distinct second Admin with fresh step-up and the same required scope. Founder-role changes use dual approval once a two-founder quorum exists; the initial founder may establish that second founder with step-up, and the last active founder cannot be revoked.
+
+Append-oriented audit covers at minimum:
+
+-   founder bootstrap;
+-   role grants/revocations;
+-   session issuance/revocation state;
+-   authorization failures when the outer runtime emits them;
 -   privileged actions;
 -   policy changes;
 -   administrative actions;
 -   exports;
--   agent access;
--   MCP access;
+-   agent/MCP access;
 -   destructive operations;
 -   incident lifecycle.
+
+See ADR-0056.
 
 ## 12.4 Admin actions
 
@@ -1401,17 +1421,11 @@ Exact tool contracts require a later specification/bakeoff.
 
 ## 19.3 Agent permissions
 
-Candidate scopes:
+AO-01 freezes `AGENT_SAFE_READER` as a dedicated Admin role with exactly one scope: `admin:agent-safe:read`. It does **not** inherit customer, billing, finance, fiscal, governance, integration, research, system or audit scopes.
 
--   `admin:executive:read`
--   `admin:economics:read`
--   `admin:customers:read`
--   `admin:research:read`
--   `admin:quality:read`
--   `admin:system:read`
--   `admin:governance:read`
+Human/staff Admin roles use the deterministic role→scope registry in `domain/admin_access/model.py`. Future Admin MCP tools must request the exact scope required by each tool and must not accept subscriber credentials or provider-side roles as authorization.
 
-Apply least privilege.
+Apply least privilege. Agent-safe reads consume redacted Admin projections; the role itself does not grant access to raw private stores.
 
 ## 19.4 Agent-safe exports
 
@@ -1675,10 +1689,11 @@ P0-ADMIN-01 disposition:
 
 - **RETAINED:** versioned observability contracts, metric lineage, Admin Projection semantics, export semantics, agent-safe read principles, provider/economic/quality observability.
 - **AMENDED:** Customer Operations may now include AXIGNAL's own CRM and bounded internal commercial workflow under MASTER ?2.1A / ADR-0055.
-- **NOT AUTHORIZED BY AO-00:** runtime implementation, storage choices, RBAC mechanics, Stripe, GSC, accounting, VeriFactu, advisory runtime or production deployment; those require their corresponding AO tasks.
+- **IMPLEMENTED BY AO-01:** provider-neutral Admin identity, RBAC scopes/roles, expiring/revocable server-side sessions, step-up/dual-approval policy, append-only privilege history and SQLite persistence for Admin security state.
+- **NOT YET AUTHORIZED/IMPLEMENTED:** Admin shell/routes, Admin Projection runtime, Stripe, GSC, accounting, VeriFactu, advisory runtime and production Admin deployment; those require their corresponding AO tasks.
 - **STILL FORBIDDEN:** subscriber-facing CRM/workflow drift, customer-owned CRM management, private-data-to-AXIGLAND shortcuts and direct Admin canonical writes.
 
-Active implementation sequence begins at AO-01 after AO-00 doctrine closure.
+Active implementation sequence advances to AO-02 after AO-01 security-boundary closure.
 
 ------------------------------------------------------------------------
 
@@ -1765,9 +1780,8 @@ The following are intentionally not frozen in V0.2:
 -   exact anomaly detection algorithms;
 -   Admin MCP protocol contracts and pagination;
 -   export retention;
--   RBAC implementation;
--   policy approval processes;
--   whether some operational actions require dual approval;
+-   concrete external Admin authentication provider and browser/session transport;
+-   policy approval processes beyond AO-01 privilege/high-impact security rules;
 -   exact privacy/PII retention rules;
 -   alert thresholds;
 -   attribution of fixed/shared infrastructure;

@@ -241,14 +241,7 @@ actions are observed separately and must route through domain authority.
 
 ## 11. Decisions intentionally open
 
-This proposed architecture does not decide event transport, persistence,
-retention periods, metrics backend, trace/log vendor, alert thresholds, full
-RBAC implementation, Admin UI layout, exact billing ingestion, allocation of
-shared/fixed costs, avoided-recompute valuation, activation semantics, or
-provider/source/JEV implementation. Exact wire schemas and deployment topology
-belong to separately authorized implementation design. No new accepted ADR is
-required to state these semantic boundaries; if implementation evidence later
-requires a new architectural choice, record it through the ADR process.
+This proposed architecture does not decide event transport, general Admin Projection persistence, retention periods, metrics backend, trace/log vendor, alert thresholds, Admin UI layout, exact billing ingestion, allocation of shared/fixed costs, avoided-recompute valuation, activation semantics, or provider/source/JEV implementation. AO-01 now resolves the provider-neutral Admin identity/RBAC/session boundary in ADR-0056 and implements its dedicated session/privilege store; the concrete external Admin authentication provider and browser/session transport remain open. Exact remaining wire schemas and deployment topology belong to separately authorized implementation design.
 
 ## 12. Invariants
 
@@ -262,6 +255,10 @@ ADMIN_OPERATIONAL_VISIBILITY_NOT_PRIVATE_CONTENT_ACCESS
 OBSERVABILITY_NOT_SHADOW_DATA_WAREHOUSE
 NO_RESEARCH_TRIGGER_HAS_CANONICAL_WRITE_AUTHORITY
 ADMIN_ACTION_DOES_NOT_BYPASS_DOMAIN_AUTHORITY
+ADMIN_AUTHORITY != SUBSCRIBER_TENANCY_AUTHORITY
+PROVIDER_ROLE != ADMIN_SCOPE
+RAW_ADMIN_TOKEN != ADMIN_PROJECTION
+ADMIN_AGENT_SAFE_READ != PRIVATE_STORE_ACCESS
 CUSTOMER_OPERATIONS_IS_FIRST_PARTY_AXIGNAL_SERVICE_STATE_ONLY
 LOG_IS_NOT_DOMAIN_EVENT
 METRIC_IS_NOT_SOURCE_EVENT

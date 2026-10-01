@@ -99,7 +99,7 @@ Admin must distinguish measured flywheel behavior from the hypothesis above.
 
 `NOT_STARTED → READY → IN_PROGRESS → BLOCKED → DONE → DEFERRED → REJECTED`
 
-**CURRENT_TASK = AO-01**
+**CURRENT_TASK = AO-02**
 
 ## 7. Closure rule
 
@@ -145,9 +145,21 @@ A future auditor cannot reasonably claim that Admin implementation expanded scop
 
 ## AO-01 — Admin Identity, RBAC and Privileged Session Boundary
 
-**Status:** NOT_STARTED
+**Status:** DONE
 **Depends on:** AO-00
 **Priority:** P0
+
+### Closure evidence (2026-10-01)
+- ADR-0056 accepted: separate provider-neutral Admin identity/RBAC/session authority; subscriber `PrincipalTenantMembership` remains unchanged.
+- `domain/admin_access/` implements 8 roles, explicit scopes, assurance/risk classes, secret-free authorization grants and Admin-only identity types.
+- `application/admin_access/` implements an `AdminAuthenticationPort`, fail-closed session issuance/authorization, 8h default/12h max sessions, 15-minute fresh step-up, role revocation on every authorization, founder bootstrap/quorum rules and dual approval for critical actions.
+- `pipeline/admin_access/` implements SQLite persistence with raw-token exclusion, hashed bearer credentials, session revocations and append-sequenced immutable privilege history.
+- `tools/runtime/admin_access.py` provides the HTTP bearer guard future Admin routes must use; no Admin route is exposed by AO-01 itself.
+- `AGENT_SAFE_READER` has exactly `admin:agent-safe:read` and no private customer/finance/system scope.
+- Focused AO-01 security + contracts: 34 PASS.
+- Full pytest: 731 PASS.
+- Ruff format/check: PASS.
+- mypy: PASS (146 source files).
 
 ### Work
 - Define staff/admin identity separate from subscriber authorization.

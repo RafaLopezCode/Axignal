@@ -29,11 +29,12 @@ def test_adr_0055_preserves_no_crm_product_boundary() -> None:
     assert "Internal CRM means **AXIGNAL's CRM for operating AXIGNAL**" in text
 
 
-def test_admin_v02_contains_new_operating_scope_without_runtime_claim() -> None:
+def test_admin_v02_contains_new_operating_scope_with_truthful_implementation_status() -> None:
     text = ADMIN.read_text(encoding="utf-8")
     assert "version: 0.2" in text
     assert "status: ACCEPTED_GOVERNED_SPECIFICATION" in text
-    assert "implementation_status: PRE_IMPLEMENTATION" in text
+    assert "implementation_status: PARTIALLY_IMPLEMENTED" in text
+    assert "**IMPLEMENTED BY AO-01:**" in text
     for required in (
         "AXIGNAL's own internal CRM",
         "private GSC/web analytics",
