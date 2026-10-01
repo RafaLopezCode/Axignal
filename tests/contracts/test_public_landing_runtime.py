@@ -248,3 +248,13 @@ def test_public_legal_surfaces_exist_and_do_not_invent_controller_identity() -> 
     assert "NIF/CIF" in notice
     assert "axignal.storyboard.locale" in cookies
     assert "no instala cookies publicitarias ni de analítica" in cookies
+
+
+def test_public_knowledge_uses_production_root_routes() -> None:
+    knowledge = (LANDING.parent / "knowledge" / "index.html").read_text(encoding="utf-8")
+    assert "../landing/" not in knowledge
+    assert 'href="/"' in knowledge
+    assert 'src="/assets/brand/logo-dark.svg"' in knowledge
+    assert 'href="/?c=4"' in knowledge
+    assert 'href="/?c=7"' in knowledge
+    assert 'href="/?c=14"' in knowledge
