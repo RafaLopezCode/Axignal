@@ -39,8 +39,11 @@
 *{box-sizing:border-box}
 html,body{width:100%;height:100%;margin:0;overflow:hidden;background:#050504;color:var(--ax-ivory)}
 body{font-family:var(--ax-font-body);-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+a,button{-webkit-tap-highlight-color:transparent}
+a:visited{color:inherit}
 button{font:inherit}
-button:focus-visible{outline:1.5px solid var(--ax-brass);outline-offset:3px}
+a:focus-visible,button:focus-visible{outline:1.5px solid var(--ax-brass);outline-offset:3px}
+a:active,button:active{opacity:.78}
 .scene{position:relative;width:100vw;height:100vh;height:100dvh;min-height:100svh;isolation:isolate;overflow:hidden;background:#050504}
 .art{
   position:absolute;inset:-1.2%;z-index:-5;

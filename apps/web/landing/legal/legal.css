@@ -7,7 +7,10 @@
 *{box-sizing:border-box}
 html{background:var(--bg);color:var(--text)}
 body{margin:0;font-family:var(--body);-webkit-font-smoothing:antialiased;background:linear-gradient(180deg,#050504,#080806 52%,#050504)}
-a{color:inherit}
+a{-webkit-tap-highlight-color:transparent;color:inherit}
+a:visited{color:inherit}
+a:focus-visible{outline:1.5px solid var(--brass);outline-offset:3px}
+a:active{opacity:.78}
 .legal-shell{min-height:100dvh}
 .legal-header{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;gap:20px;min-height:72px;padding:0 clamp(18px,4vw,54px);border-bottom:1px solid var(--hair);background:rgba(5,5,4,.92);backdrop-filter:blur(18px)}
 .legal-brand img{display:block;width:148px;height:auto}
