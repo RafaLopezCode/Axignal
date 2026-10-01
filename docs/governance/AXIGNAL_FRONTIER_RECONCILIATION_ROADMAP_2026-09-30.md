@@ -1223,7 +1223,7 @@ Future UX audit no longer finds a major landing/product expectation gap.
 
 ## FR-29 — Production Runtime Integration
 
-**Status:** IMPLEMENTED_PENDING_DEPLOYMENT
+**Status:** DONE
 **Depends on:** FR-06, FR-07, FR-17  
 **Priority:** P0 before production claims
 
@@ -1240,13 +1240,18 @@ Integrate the proven vertical path in the actual app/runtime using real persiste
 - Deployment artifacts preserve `18180`, add runtime on `127.0.0.1:18181`, keep `/runtimez` and the current synthetic subscriber UI off the public proxy, and isolate writable persistence under `/var/lib/axignal/runtime`.
 - Browser verification of the loopback subscriber projection succeeded; because it still declares `DEMO ? DATOS DE EJEMPLO`, public exposure is intentionally deferred to FR-30.
 - Full local validation: 681 tests PASS; Ruff, mypy and focused FR-29 contracts PASS.
-- Production deployment and exact deployed SHA remain pending this merge.
+- Production deployment completed on `srv1597364` from canonical main SHA `25b64844a9467cb2dd96fb654eb7b865d00268c8`.
+- `axignal-runtime.service` is enabled/active on `127.0.0.1:18181`; `axignal-landing.service` remains active on `127.0.0.1:18180`.
+- Production `/healthz` returns `status=ok`, exact code SHA, healthy Observation/Learning persistence and `write_surface=closed` through the full public edge.
+- Isolated persistence probe executed as `www-data`: first Observation/Learning append created, reopen succeeded, second run returned idempotent replay for both stores.
+- Prior landing target `/srv/axignal/landing/releases/170edc8` preserved; nginx rollback copy preserved at `/etc/axignal/landing/nginx.conf.pre-fr29-20261001T114952Z`.
+- External `https://axignal.com/` returned 200 and FR-28 copy; public `/subscriber/` did not expose the synthetic `DEMO ? DATOS DE EJEMPLO` projection.
 
 ### Acceptance
-- Exact deployed SHA known.
-- Health/runtime verification complete.
-- No cross-project runner/service/port reuse.
-- Persisted observation/learning behavior verified.
+- Exact deployed SHA known. **PASS ? `25b64844a9467cb2dd96fb654eb7b865d00268c8`.**
+- Health/runtime verification complete. **PASS.**
+- No cross-project runner/service/port reuse. **PASS.**
+- Persisted observation/learning behavior verified. **PASS.**
 
 ### FRONTIER_CLOSURE
 Future audit can inspect actual service integration instead of correctly reporting production as DESCONOCIDO.
