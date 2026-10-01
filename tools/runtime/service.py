@@ -24,6 +24,7 @@ from application.admin_access import (
 )
 from application.admin_brain_observatory import project_brain_provider_observatory
 from application.admin_command_center import COMMAND_CENTER_METRICS, project_command_center
+from application.admin_commercial import AdminCommercialProjection, project_admin_commercial
 from application.admin_governance import project_admin_governance
 from application.admin_shell import (
     AdminShellProjection,
@@ -32,11 +33,13 @@ from application.admin_shell import (
     project_admin_shell,
 )
 from application.admin_xeed_observatory import project_xeed_axigland_observatory
+from domain.admin_access import AdminAuthorizationGrant
 from domain.admin_brain_observatory import BrainProviderObservatory
 from domain.admin_command_center import AdminCommandCenterProjection
 from domain.admin_governance import AdminGovernanceProjection
 from domain.admin_observability import AdminProjectionId, AdminProjectionSnapshot
 from domain.admin_xeed_observatory import XeedAxiglandObservatory
+from pipeline.admin_commercial import SqliteAdminCommercialStore
 from pipeline.admin_governance import SqliteAdminGovernanceAuditStore
 from pipeline.admin_observability import SqliteAdminObservabilityStore
 from pipeline.learning_memory import SqliteLearningMemory
@@ -58,6 +61,7 @@ class AxignalRuntime:
     admin_observability: SqliteAdminObservabilityStore
     governance_policy_store: SqliteActivePolicyStore
     governance_audit_store: SqliteAdminGovernanceAuditStore
+    admin_commercial_store: SqliteAdminCommercialStore
     first_proof: FirstProofService | None = None
     admin_access: AdminAccessService | None = None
 
@@ -107,6 +111,9 @@ def build_runtime(config: RuntimeConfig) -> AxignalRuntime:
     governance_audit_store = SqliteAdminGovernanceAuditStore(
         config.data_dir / "admin-governance-audit.sqlite3"
     )
+    admin_commercial_store = SqliteAdminCommercialStore(
+        config.data_dir / "admin-commercial.sqlite3"
+    )
     first_proof = None
     if config.first_proof_allowed_host is not None:
         from pipeline.source_acquisition import ContentAddressedArtifactStore
@@ -126,6 +133,7 @@ def build_runtime(config: RuntimeConfig) -> AxignalRuntime:
         admin_observability=admin_observability,
         governance_policy_store=governance_policy_store,
         governance_audit_store=governance_audit_store,
+        admin_commercial_store=admin_commercial_store,
         first_proof=first_proof,
     )
 
@@ -532,6 +540,53 @@ def _governance_payload(
     }
 
 
+def _commercial_projection(
+    runtime: AxignalRuntime,
+    *,
+    grant: AdminAuthorizationGrant,
+    now: datetime,
+) -> AdminCommercialProjection:
+    return project_admin_commercial(
+        store=runtime.admin_commercial_store,
+        grant=grant,
+        generated_at=now,
+    )
+
+
+def _commercial_payload(projection: AdminCommercialProjection) -> dict[str, object]:
+    return {
+        "privacyClass": projection.privacy_class,
+        "generatedAt": projection.generated_at.isoformat(),
+        "prospectCount": projection.prospect_count,
+        "companyCount": projection.company_count,
+        "contactCount": projection.contact_count,
+        "opportunityCount": projection.opportunity_count,
+        "dealCount": projection.deal_count,
+        "noteCount": projection.note_count,
+        "openTaskCount": projection.open_task_count,
+        "originCounts": [list(value) for value in projection.origin_counts],
+        "auditCount": projection.audit_count,
+        "piiVisible": projection.pii_visible,
+        "coverageNotes": list(projection.coverage_notes),
+        "companies": [
+            {
+                "companyId": item.company_id,
+                "displayName": item.display_name,
+                "acquisitionSource": item.acquisition_source,
+                "consentBasis": item.consent_basis,
+                "origin": item.origin,
+                "observedOrganizationId": item.observed_organization_id,
+                "accountId": item.account_id,
+                "opportunityCount": item.opportunity_count,
+                "openTaskCount": item.open_task_count,
+                "noteCount": item.note_count,
+                "contactCount": item.contact_count,
+            }
+            for item in projection.companies
+        ],
+    }
+
+
 def _admin_projection_payload(
     projection: AdminShellProjection,
     *,
@@ -539,6 +594,7 @@ def _admin_projection_payload(
     xeed_observatory: XeedAxiglandObservatory | None = None,
     brain_observatory: BrainProviderObservatory | None = None,
     governance: AdminGovernanceProjection | None = None,
+    commercial: AdminCommercialProjection | None = None,
 ) -> dict[str, object]:
     payload: dict[str, object] = {
         "mode": projection.mode,
@@ -564,6 +620,8 @@ def _admin_projection_payload(
         payload["brainObservatory"] = _brain_observatory_payload(brain_observatory)
     if governance is not None:
         payload["governance"] = _governance_payload(governance)
+    if commercial is not None:
+        payload["commercial"] = _commercial_payload(commercial)
     return payload
 
 
@@ -575,6 +633,7 @@ def _render_admin_shell(
     xeed_observatory: XeedAxiglandObservatory | None = None,
     brain_observatory: BrainProviderObservatory | None = None,
     governance: AdminGovernanceProjection | None = None,
+    commercial: AdminCommercialProjection | None = None,
 ) -> bytes:
     template = (web_root / "admin" / "index.html").read_text(encoding="utf-8")
     payload = html.escape(
@@ -585,6 +644,7 @@ def _render_admin_shell(
                 xeed_observatory=xeed_observatory,
                 brain_observatory=brain_observatory,
                 governance=governance,
+                commercial=commercial,
             ),
             sort_keys=True,
             separators=(",", ":"),
@@ -718,6 +778,11 @@ def make_handler(runtime: AxignalRuntime) -> type[BaseHTTPRequestHandler]:
                         if admin_projection.current_slug == "governance"
                         else None
                     )
+                    commercial = (
+                        _commercial_projection(runtime, grant=grant, now=now)
+                        if admin_projection.current_slug == "customers-crm"
+                        else None
+                    )
                     rendered = _render_admin_shell(
                         runtime.config.web_root,
                         admin_projection,
@@ -725,6 +790,7 @@ def make_handler(runtime: AxignalRuntime) -> type[BaseHTTPRequestHandler]:
                         xeed_observatory=xeed_observatory,
                         brain_observatory=brain_observatory,
                         governance=governance,
+                        commercial=commercial,
                     )
                 except AdminAuthenticationError:
                     self._admin_error(HTTPStatus.UNAUTHORIZED, "Admin authentication failed.")

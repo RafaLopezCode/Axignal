@@ -99,7 +99,7 @@ Admin must distinguish measured flywheel behavior from the hypothesis above.
 
 `NOT_STARTED → READY → IN_PROGRESS → BLOCKED → DONE → DEFERRED → REJECTED`
 
-**CURRENT_TASK = AO-08**
+**CURRENT_TASK = AO-09**
 
 ## 7. Closure rule
 
@@ -427,9 +427,28 @@ Governance is executable/inspectable, not merely documented.
 
 ## AO-08 — Internal CRM Domain for AXIGNAL
 
-**Status:** NOT_STARTED
+**Status:** DONE
 **Depends on:** AO-00, AO-01, AO-03
 **Priority:** P0 Business
+
+### Closure evidence (2026-10-02)
+- `domain/admin_commercial/`, `application/admin_commercial/` and `pipeline/admin_commercial/` implement AXIGNAL's private first-party commercial authority without creating a forbidden `crm` package or weakening Architecture Guard.
+- The owning domain models explicit Prospect, Company, Contact, Opportunity, Deal, Note and Follow-up Task records with separate lifecycle states, acquisition source, consent basis, first-party provenance and immutable action audit.
+- Prospect lifecycle is explicit (`NEW / QUALIFIED / DISQUALIFIED / CONVERTED`); conversion requires an explicit internal Company reference. Opportunity, Deal and Follow-up lifecycles preserve before/after audit and operator reason.
+- Commercial provenance distinguishes `COMMERCIAL_CLAIM`, `USER_PROVIDED` and `PUBLIC_OBSERVATION_REFERENCE`; public-observation linkage is an explicit Organization ID reference plus mapping reason only, never semantic identity equivalence.
+- Account conversion linkage is an external AO-09 account-ID reference only. AO-08 does not implement or become account/subscription authority.
+- The application layer requires AO-01 `admin:commercial:write` for commercial mutation and `admin:customers:write` for account linkage. SUPPORT customer-read scope receives a reduced projection with no opportunity/note/audit/origin breakdown.
+- Contact email/phone remain in the private owning store and are excluded from the Admin bootstrap and export. Commercial export is classified `PRIVATE_FIRST_PARTY`, requires `admin:commercial:read`, and declares `piiIncluded=false`.
+- Contract evidence proves an AO-03 AXIGLAND Organization observation cannot create Prospect, Company, Contact, Opportunity or Deal records and cannot append commercial audit. AO-08 imports no Organization/FAXT/Relationship/Xignal/EvidenceAdmission writer.
+- Runtime composition persists `admin-commercial.sqlite3` independently from AXIGLAND and projects it only for the authorized `customers-crm` Admin domain.
+- Browser QA PASS: desktop 1440 px and compact 491 px render Customers / CRM, one full commercial scenario and explicit authority boundaries; compact DOM has `scrollWidth == clientWidth`, one company card and no visible contact PII.
+- Focused AO-08 semantic/contracts + roadmap + AO-02 regression: 20 PASS.
+- Full pytest: 796 PASS.
+- Ruff format/check: PASS.
+- mypy: PASS (178 source files).
+- Node Admin JS syntax: PASS.
+- Architecture Guard: PASS.
+
 ### Work
 Implement a first-party CRM strictly for AXIGNAL's own commercial operations:
 - prospect/company/contact records;
