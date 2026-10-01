@@ -9,7 +9,7 @@ def test_admin_operating_system_roadmap_has_complete_task_sequence() -> None:
     text = ROADMAP.read_text(encoding="utf-8")
     task_ids = re.findall(r"^## (AO-\d{2})", text, re.MULTILINE)
     assert task_ids == [f"AO-{index:02d}" for index in range(32)]
-    assert "**CURRENT_TASK = AO-02**" in text
+    assert "**CURRENT_TASK = AO-03**" in text
 
 
 def test_admin_operating_system_roadmap_preserves_authority_boundaries() -> None:

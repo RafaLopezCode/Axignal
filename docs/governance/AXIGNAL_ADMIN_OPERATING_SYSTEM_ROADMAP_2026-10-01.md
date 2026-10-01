@@ -99,7 +99,7 @@ Admin must distinguish measured flywheel behavior from the hypothesis above.
 
 `NOT_STARTED → READY → IN_PROGRESS → BLOCKED → DONE → DEFERRED → REJECTED`
 
-**CURRENT_TASK = AO-02**
+**CURRENT_TASK = AO-03**
 
 ## 7. Closure rule
 
@@ -178,9 +178,26 @@ A future auditor cannot reasonably claim that Admin implementation expanded scop
 Admin privilege is a verified security boundary, not a hidden route convention.
 ## AO-02 — Unified AXIGNAL Admin Shell
 
-**Status:** NOT_STARTED
+**Status:** DONE
 **Depends on:** AO-01
 **Priority:** P0 UX
+
+### Closure evidence (2026-10-01)
+- ADR-0057 accepted: Admin reuses the AXIGNAL shell grammar and server-authorized navigation; client-side hiding is never authorization.
+- `application/admin_shell/` provides the canonical 12-domain, scope-derived Admin navigation projection.
+- `apps/web/admin/` implements the privileged left rail ? central operating surface ? AXENT shell using the existing AXIGNAL Design System/subscriber shell language.
+- Admin operational/private state is explicitly distinguished from FAXT/Xignal/AXIGLAND truth.
+- `/admin` and `/admin/<domain>` are server-protected: uncomposed Admin security plane ? 404; missing/invalid Admin credential ? 401; known denied domain ? 403; unknown domain ? 404.
+- Rendered Admin HTML is `no-store`, CSP-protected and receives only a secret-free bootstrap projection; raw Admin tokens are never rendered.
+- Role-limited navigation verified: SUPPORT sees Customers/CRM + Xeeds and cannot open Finance/Fiscal.
+- Chrome desktop QA PASS: 1440?900 preserves left rail, central surface and AXENT; all 12 founder domains visible.
+- Chrome mobile QA PASS: 390?844 has no horizontal page overflow, compact horizontally scrollable domain rail and reachable in-flow AXENT.
+- Chrome interaction QA PASS: keyboard ArrowDown focus navigation and `/admin/finance-fiscal` deep-link context.
+- Focused AO-02 + AO-01 + FR-29 contracts: 18 PASS.
+- Full pytest: 735 PASS.
+- Ruff format/check: PASS.
+- mypy: PASS (148 source files).
+- Architecture Guard: PASS.
 
 ### Goal
 Admin must feel like privileged AXIGNAL, not a separate enterprise dashboard product.

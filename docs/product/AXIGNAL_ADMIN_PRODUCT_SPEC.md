@@ -1301,11 +1301,17 @@ ADMIN PROJECTION LAYER
 
 ## 17.2 Admin read models
 
-Admin should not construct every screen by joining arbitrary production
-tables at request time.
+Admin should not construct every screen by joining arbitrary production tables at request time.
 
-Create purpose-built, versioned read models derived from authoritative
-domain events and measurements.
+Create purpose-built, versioned read models derived from authoritative domain events and measurements.
+
+## 17.3 Unified AXIGNAL Admin shell
+
+AO-02 implements Admin as a privileged AXIGNAL shell rather than a separate dashboard product. Desktop preserves the same high-level grammar as the subscriber experience: left navigation rail, central context surface and persistent AXENT panel. Mobile uses a compact horizontally scrollable Admin-domain rail instead of shrinking the desktop sidebar.
+
+Admin domain visibility is derived from the live AO-01 `AdminAuthorizationGrant`; client-side hiding is never authorization. Deep links use `/admin/<domain-slug>` and are scope-checked on the server before rendering. `build_runtime()` leaves Admin unexposed unless an Admin security plane is explicitly composed.
+
+Operational/Admin state is visually marked as private operational projection and MUST NOT masquerade as FAXT, Xignal or AXIGLAND evidence. See ADR-0057.
 
 ------------------------------------------------------------------------
 
@@ -1690,10 +1696,11 @@ P0-ADMIN-01 disposition:
 - **RETAINED:** versioned observability contracts, metric lineage, Admin Projection semantics, export semantics, agent-safe read principles, provider/economic/quality observability.
 - **AMENDED:** Customer Operations may now include AXIGNAL's own CRM and bounded internal commercial workflow under MASTER ?2.1A / ADR-0055.
 - **IMPLEMENTED BY AO-01:** provider-neutral Admin identity, RBAC scopes/roles, expiring/revocable server-side sessions, step-up/dual-approval policy, append-only privilege history and SQLite persistence for Admin security state.
-- **NOT YET AUTHORIZED/IMPLEMENTED:** Admin shell/routes, Admin Projection runtime, Stripe, GSC, accounting, VeriFactu, advisory runtime and production Admin deployment; those require their corresponding AO tasks.
+- **IMPLEMENTED BY AO-02:** unified AXIGNAL Admin shell, scope-derived navigation, server-authorized deep links, explicit Admin/private-state visual boundary, responsive desktop/mobile presentation and protected HTTP shell rendering. Admin remains unexposed when no Admin security plane is composed.
+- **NOT YET AUTHORIZED/IMPLEMENTED:** Admin Projection runtime/data plane, Stripe, GSC, accounting, VeriFactu, advisory runtime and production Admin deployment; those require their corresponding AO tasks.
 - **STILL FORBIDDEN:** subscriber-facing CRM/workflow drift, customer-owned CRM management, private-data-to-AXIGLAND shortcuts and direct Admin canonical writes.
 
-Active implementation sequence advances to AO-02 after AO-01 security-boundary closure.
+Active implementation sequence advances to AO-03 after AO-02 unified-shell closure.
 
 ------------------------------------------------------------------------
 
