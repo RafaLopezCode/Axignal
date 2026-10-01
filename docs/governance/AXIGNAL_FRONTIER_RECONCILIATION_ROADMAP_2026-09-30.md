@@ -31,7 +31,7 @@ A task is not DONE because code exists. Runtime/product work normally progresses
 
 NOT_STARTED · READY · IN_PROGRESS · BLOCKED · DONE · DEFERRED · REJECTED
 
-**CURRENT_TASK = FR-22**
+**CURRENT_TASK = FR-23**
 
 ## 4. Frontier closure rule
 
@@ -958,9 +958,37 @@ Future audit finds a real non-provider-specific evaluator contract suitable for 
 
 ## FR-22 — Evaluator Decision Lab Bakeoff
 
-**Status:** NOT_STARTED  
-**Depends on:** FR-21, FR-19  
+**Status:** DONE
+**Depends on:** FR-21, FR-19
 **Priority:** P1
+
+**Closure evidence (2026-10-01):**
+- added executable `experiments/decision_lab/bakeoff_vnext.py` over the existing frozen vNext synthetic corpus; no new natural/golden corpus was created
+- all candidates bind to the same immutable 14-case compiled input manifest containing DecisionContract id, state-contract/compiler versions, state fingerprints and answerability status
+- provider-visible compiled state excludes expected outcome, label provenance and evaluator-only notes; tests verify no label leakage
+- candidate execution states are explicit EXECUTED / BLOCKED / UNAVAILABLE; blocked/unavailable providers are preserved rather than simulated
+- deterministic baseline executed using existing governed deterministic rules only; it receives no labels
+- current corpus has 11 answerable cases but no verified identifier evidence that activates the available deterministic entity rule, so baseline coverage is truthfully 0/11 with 11 abstentions
+- TypeSafe Jev remains BLOCKED by P0-JEV-04A `BLOCKED_NO_VALID_CORPUS` in open PR #18; FR-22 does not bypass the higher-authority rights/corpus gate
+- Luna structured is UNAVAILABLE in this governed run because no repository adapter/authorized model binding exists
+- OpenAI Decisions is UNAVAILABLE because governed access/API terms are not established in repository evidence
+- external provider monetary costs remain UNKNOWN with amount/currency absent; no unknown cost is converted to zero
+- deterministic baseline provider monetary cost is NOT_APPLICABLE rather than a fabricated zero compute-cost claim
+- result schema surfaces class errors, false OBSERVED/POTENTIAL applicability, coverage/abstention, calibration availability, schema failure, latency, retries, cost, language/context sensitivity and disagreement/error correlation
+- unavailable metrics are explicitly NOT_MEASURED / NOT_AVAILABLE / UNKNOWN with reason; missing measurement never silently becomes zero
+- calibration remains unavailable without a real semantically valid provider distribution, preserving ADR-0047
+- no vendor winner is declared because fewer than two provider evaluators executed and the current synthetic corpus is structural, not statistical/real-world model-quality evidence
+- immutable Decision Lab result stored at `experiments/decision_lab/artifacts/fr22-evaluator-bakeoff-v1.json`
+- result artifact verifies through the existing Decision Lab reader with result id `c94e07b04f7733476b09b382a5bfe961a833ac5f7c9b7d2954bc1e6dd79f78ad`
+- runner imports no provider SDK/network client and performs zero external provider calls
+- focused FR-22 + vNext Decision Lab suite: 45 PASS
+- full pytest: 586 PASS using external `--basetemp` to avoid the known Windows user-temp ACL issue
+- Ruff format/check: PASS
+- mypy: PASS (122 source files)
+- Architecture Guard: PASS
+- axignal-governance: PASS
+- git diff --check: PASS
+- ADR-0048 accepted and indexed
 
 ### Work
 Compare on the same versioned state/contracts: deterministic baseline where applicable, Luna structured, OpenAI Decisions if access/API terms permit, and TypeSafe Jev if rights/terms permit. Measure class errors, false OBSERVED/POTENTIAL, abstention/coverage, calibration when semantically valid, schema failure, latency, retries, known/unknown cost, language/context sensitivity and disagreement/error correlation.
