@@ -24,6 +24,7 @@ from application.admin_access import (
 )
 from application.admin_brain_observatory import project_brain_provider_observatory
 from application.admin_command_center import COMMAND_CENTER_METRICS, project_command_center
+from application.admin_governance import project_admin_governance
 from application.admin_shell import (
     AdminShellProjection,
     AdminShellRouteDenied,
@@ -33,11 +34,14 @@ from application.admin_shell import (
 from application.admin_xeed_observatory import project_xeed_axigland_observatory
 from domain.admin_brain_observatory import BrainProviderObservatory
 from domain.admin_command_center import AdminCommandCenterProjection
+from domain.admin_governance import AdminGovernanceProjection
 from domain.admin_observability import AdminProjectionId, AdminProjectionSnapshot
 from domain.admin_xeed_observatory import XeedAxiglandObservatory
+from pipeline.admin_governance import SqliteAdminGovernanceAuditStore
 from pipeline.admin_observability import SqliteAdminObservabilityStore
 from pipeline.learning_memory import SqliteLearningMemory
 from pipeline.observation_memory import SqliteObservationMemory
+from pipeline.policy_governance import SqliteActivePolicyStore
 from tools.runtime.config import RuntimeConfig
 from tools.runtime.first_proof import (
     FirstProofInsufficientEvidence,
@@ -52,6 +56,8 @@ class AxignalRuntime:
     observation_memory: SqliteObservationMemory
     learning_memory: SqliteLearningMemory
     admin_observability: SqliteAdminObservabilityStore
+    governance_policy_store: SqliteActivePolicyStore
+    governance_audit_store: SqliteAdminGovernanceAuditStore
     first_proof: FirstProofService | None = None
     admin_access: AdminAccessService | None = None
 
@@ -97,6 +103,10 @@ def build_runtime(config: RuntimeConfig) -> AxignalRuntime:
     admin_observability = SqliteAdminObservabilityStore(
         config.data_dir / "admin-observability.sqlite3"
     )
+    governance_policy_store = SqliteActivePolicyStore(config.data_dir / "policy-governance.sqlite3")
+    governance_audit_store = SqliteAdminGovernanceAuditStore(
+        config.data_dir / "admin-governance-audit.sqlite3"
+    )
     first_proof = None
     if config.first_proof_allowed_host is not None:
         from pipeline.source_acquisition import ContentAddressedArtifactStore
@@ -114,6 +124,8 @@ def build_runtime(config: RuntimeConfig) -> AxignalRuntime:
         observation_memory=observation_memory,
         learning_memory=learning_memory,
         admin_observability=admin_observability,
+        governance_policy_store=governance_policy_store,
+        governance_audit_store=governance_audit_store,
         first_proof=first_proof,
     )
 
@@ -439,12 +451,94 @@ def _brain_observatory_payload(
     }
 
 
+def _governance_projection(runtime: AxignalRuntime, *, now: datetime) -> AdminGovernanceProjection:
+    return project_admin_governance(
+        policy_store=runtime.governance_policy_store,
+        learning_events=runtime.learning_memory.all_events(),
+        admin_records=runtime.admin_observability.records_through(now),
+        audit_records=runtime.governance_audit_store.all(),
+        as_of=now,
+    )
+
+
+def _governance_payload(
+    projection: AdminGovernanceProjection,
+) -> dict[str, object]:
+    return {
+        "asOf": projection.as_of.isoformat(),
+        "completeness": projection.completeness.value,
+        "unsupportedCanonicalWriteTargetCount": (
+            projection.unsupported_canonical_write_target_count
+        ),
+        "coverageNotes": list(projection.coverage_notes),
+        "policies": [
+            {
+                "family": item.family.value,
+                "policyId": item.policy_id,
+                "policyVersion": item.policy_version,
+                "codeSha": item.code_sha,
+                "effectiveAt": (
+                    None if item.effective_at is None else item.effective_at.isoformat()
+                ),
+                "completeness": item.completeness.value,
+                "sourceRefs": list(item.source_refs),
+                "changeCount": item.change_count,
+            }
+            for item in projection.policies
+        ],
+        "policyChanges": [
+            {
+                "decisionId": item.decision_id,
+                "family": item.family,
+                "kind": item.kind,
+                "actor": item.actor,
+                "beforePolicyId": item.before_policy_id,
+                "beforeVersion": item.before_version,
+                "afterPolicyId": item.after_policy_id,
+                "afterVersion": item.after_version,
+                "reason": item.reason,
+                "effectiveAt": item.effective_at.isoformat(),
+            }
+            for item in projection.policy_changes
+        ],
+        "alerts": [
+            {
+                "alertClass": item.alert_class.value,
+                "count": item.count,
+                "completeness": item.completeness.value,
+                "reason": item.reason,
+                "sourceRefs": list(item.source_refs),
+            }
+            for item in projection.alerts
+        ],
+        "auditRecords": [
+            {
+                "auditId": item.audit_id,
+                "commandId": item.command_id,
+                "occurredAt": item.occurred_at.isoformat(),
+                "actorPrincipalId": item.actor_principal_id,
+                "target": item.target.value,
+                "action": item.action,
+                "reason": item.reason,
+                "requiredScope": item.required_scope,
+                "outcome": item.outcome.value,
+                "resultCode": item.result_code,
+                "beforeRef": item.before_ref,
+                "afterRef": item.after_ref,
+                "approvalRef": item.approval_ref,
+            }
+            for item in projection.audit_records
+        ],
+    }
+
+
 def _admin_projection_payload(
     projection: AdminShellProjection,
     *,
     command_center: AdminCommandCenterProjection | None = None,
     xeed_observatory: XeedAxiglandObservatory | None = None,
     brain_observatory: BrainProviderObservatory | None = None,
+    governance: AdminGovernanceProjection | None = None,
 ) -> dict[str, object]:
     payload: dict[str, object] = {
         "mode": projection.mode,
@@ -468,6 +562,8 @@ def _admin_projection_payload(
         payload["xeedObservatory"] = _xeed_observatory_payload(xeed_observatory)
     if brain_observatory is not None:
         payload["brainObservatory"] = _brain_observatory_payload(brain_observatory)
+    if governance is not None:
+        payload["governance"] = _governance_payload(governance)
     return payload
 
 
@@ -478,6 +574,7 @@ def _render_admin_shell(
     command_center: AdminCommandCenterProjection | None = None,
     xeed_observatory: XeedAxiglandObservatory | None = None,
     brain_observatory: BrainProviderObservatory | None = None,
+    governance: AdminGovernanceProjection | None = None,
 ) -> bytes:
     template = (web_root / "admin" / "index.html").read_text(encoding="utf-8")
     payload = html.escape(
@@ -487,6 +584,7 @@ def _render_admin_shell(
                 command_center=command_center,
                 xeed_observatory=xeed_observatory,
                 brain_observatory=brain_observatory,
+                governance=governance,
             ),
             sort_keys=True,
             separators=(",", ":"),
@@ -615,12 +713,18 @@ def make_handler(runtime: AxignalRuntime) -> type[BaseHTTPRequestHandler]:
                         if admin_projection.current_slug == "axent-brain"
                         else None
                     )
+                    governance = (
+                        _governance_projection(runtime, now=now)
+                        if admin_projection.current_slug == "governance"
+                        else None
+                    )
                     rendered = _render_admin_shell(
                         runtime.config.web_root,
                         admin_projection,
                         command_center=command_center,
                         xeed_observatory=xeed_observatory,
                         brain_observatory=brain_observatory,
+                        governance=governance,
                     )
                 except AdminAuthenticationError:
                     self._admin_error(HTTPStatus.UNAUTHORIZED, "Admin authentication failed.")

@@ -65,7 +65,9 @@
             ? 'AO-05 RUNTIME OBSERVATORY'
             : current.slug === 'axent-brain'
               ? 'AO-06 COGNITIVE OBSERVATORY'
-              : 'ADMIN DOMAIN'
+              : current.slug === 'governance'
+                ? 'AO-07 GOVERNANCE CONTROL'
+                : 'ADMIN DOMAIN'
     }
     if (breadcrumb) breadcrumb.textContent = current.label
     if (title) title.textContent = current.label
@@ -418,6 +420,199 @@
         details.append(detailsSummary, detailsBody)
         card.append(header, facts, details)
         providerList.append(card)
+      }
+    }
+  }
+
+
+  const governance = bootstrap.governance
+  const governanceSection = document.getElementById('admin-governance-observatory')
+  const governanceCompleteness = document.getElementById('admin-governance-completeness')
+  const governanceAsOf = document.getElementById('admin-governance-asof')
+  const governanceNotes = document.getElementById('admin-governance-notes')
+  const governanceSummary = document.getElementById('admin-governance-summary')
+  const policyList = document.getElementById('admin-policy-list')
+  const policyChangeList = document.getElementById('admin-policy-change-list')
+  const alertList = document.getElementById('admin-alert-list')
+  const auditList = document.getElementById('admin-audit-list')
+
+  if (current?.slug === 'governance' && governance && governanceSection) {
+    governanceSection.hidden = false
+    if (domainPreview) domainPreview.hidden = true
+    if (governanceCompleteness) governanceCompleteness.textContent = governance.completeness || 'UNKNOWN'
+    if (governanceAsOf) governanceAsOf.textContent = governance.asOf ? `As of ${governance.asOf}` : ''
+
+    if (governanceNotes) {
+      governanceNotes.replaceChildren()
+      for (const noteText of governance.coverageNotes || []) {
+        const note = document.createElement('p')
+        note.textContent = noteText
+        governanceNotes.append(note)
+      }
+    }
+
+    if (governanceSummary) {
+      governanceSummary.replaceChildren()
+      const panel = document.createElement('section')
+      panel.className = 'admin-observatory-panel'
+      const heading = document.createElement('h3')
+      heading.textContent = 'Governance invariants'
+      const facts = document.createElement('div')
+      facts.className = 'admin-observatory-facts'
+      addFact(facts, 'Unsupported canonical write targets', governance.unsupportedCanonicalWriteTargetCount, 'KNOWN')
+      addFact(facts, 'Registered policy families', (governance.policies || []).length, 'KNOWN')
+      addFact(facts, 'Alert classes', (governance.alerts || []).length, 'KNOWN')
+      addFact(facts, 'Privileged audit records', (governance.auditRecords || []).length, 'KNOWN')
+      panel.append(heading, facts)
+      governanceSummary.append(panel)
+    }
+
+    if (policyList) {
+      policyList.replaceChildren()
+      const title = document.createElement('h3')
+      title.textContent = 'Versioned policy registry'
+      policyList.append(title)
+      for (const policy of governance.policies || []) {
+        const card = document.createElement('article')
+        card.className = 'admin-xeed-card'
+        const header = document.createElement('header')
+        const heading = document.createElement('h3')
+        heading.textContent = policy.family
+        const state = document.createElement('span')
+        state.textContent = policy.completeness || 'UNKNOWN'
+        header.append(heading, state)
+        const facts = document.createElement('div')
+        facts.className = 'admin-observatory-facts'
+        addFact(facts, 'Policy ID', policy.policyId, policy.completeness)
+        addFact(facts, 'Version', policy.policyVersion, policy.completeness)
+        addFact(facts, 'Effective at', policy.effectiveAt, policy.completeness)
+        addFact(facts, 'Governed changes', policy.changeCount, 'KNOWN')
+        const details = document.createElement('details')
+        details.className = 'admin-metric-lineage'
+        const summary = document.createElement('summary')
+        summary.textContent = 'Inspect policy lineage'
+        const body = document.createElement('p')
+        body.textContent = `Code SHA: ${policy.codeSha || 'UNKNOWN'} · source refs: ${(policy.sourceRefs || []).join(', ') || 'None observed'}`
+        details.append(summary, body)
+        card.append(header, facts, details)
+        policyList.append(card)
+      }
+    }
+
+
+    if (policyChangeList) {
+      policyChangeList.replaceChildren()
+      const title = document.createElement('h3')
+      title.textContent = 'Governed policy changes'
+      policyChangeList.append(title)
+      const changes = Array.isArray(governance.policyChanges) ? governance.policyChanges : []
+      if (!changes.length) {
+        const empty = document.createElement('article')
+        empty.className = 'admin-observatory-empty'
+        const strong = document.createElement('strong')
+        strong.textContent = 'No policy promotion or rollback observed'
+        const body = document.createElement('p')
+        body.textContent = 'Active policy may still exist as a pre-governance baseline; absence of history is not absence of policy.'
+        empty.append(strong, body)
+        policyChangeList.append(empty)
+      }
+      for (const change of changes) {
+        const card = document.createElement('article')
+        card.className = 'admin-xeed-card'
+        const header = document.createElement('header')
+        const heading = document.createElement('h3')
+        heading.textContent = `${change.family} · ${change.kind}`
+        const state = document.createElement('span')
+        state.textContent = change.effectiveAt
+        header.append(heading, state)
+        const facts = document.createElement('div')
+        facts.className = 'admin-observatory-facts'
+        addFact(facts, 'Actor', change.actor, 'KNOWN')
+        addFact(facts, 'Before', `${change.beforePolicyId}@${change.beforeVersion}`, 'KNOWN')
+        addFact(facts, 'After', `${change.afterPolicyId}@${change.afterVersion}`, 'KNOWN')
+        addFact(facts, 'Effective version', change.afterVersion, 'KNOWN')
+        const details = document.createElement('details')
+        details.className = 'admin-metric-lineage'
+        const summary = document.createElement('summary')
+        summary.textContent = 'Inspect governance decision'
+        const body = document.createElement('p')
+        body.textContent = `Decision: ${change.decisionId} · reason: ${change.reason} · effective at: ${change.effectiveAt}`
+        details.append(summary, body)
+        card.append(header, facts, details)
+        policyChangeList.append(card)
+      }
+    }
+
+    if (alertList) {
+      alertList.replaceChildren()
+      const title = document.createElement('h3')
+      title.textContent = 'Governed alerts'
+      alertList.append(title)
+      for (const alert of governance.alerts || []) {
+        const card = document.createElement('article')
+        card.className = 'admin-xeed-card'
+        const header = document.createElement('header')
+        const heading = document.createElement('h3')
+        heading.textContent = alert.alertClass
+        const state = document.createElement('span')
+        state.textContent = alert.completeness || 'UNKNOWN'
+        header.append(heading, state)
+        const facts = document.createElement('div')
+        facts.className = 'admin-observatory-facts'
+        addFact(facts, 'Count', alert.count, alert.completeness)
+        addFact(facts, 'Evidence', alert.reason, alert.completeness)
+        const details = document.createElement('details')
+        details.className = 'admin-metric-lineage'
+        const summary = document.createElement('summary')
+        summary.textContent = 'Inspect alert lineage'
+        const body = document.createElement('p')
+        body.textContent = `Source refs: ${(alert.sourceRefs || []).join(', ') || 'None observed'}`
+        details.append(summary, body)
+        card.append(header, facts, details)
+        alertList.append(card)
+      }
+    }
+
+    if (auditList) {
+      auditList.replaceChildren()
+      const title = document.createElement('h3')
+      title.textContent = 'Privileged action audit'
+      auditList.append(title)
+      const records = Array.isArray(governance.auditRecords) ? governance.auditRecords : []
+      if (!records.length) {
+        const empty = document.createElement('article')
+        empty.className = 'admin-observatory-empty'
+        const strong = document.createElement('strong')
+        strong.textContent = 'No privileged governance commands observed'
+        const body = document.createElement('p')
+        body.textContent = 'Zero audit records means no recorded AO-07 command activity, not that governance controls are absent.'
+        empty.append(strong, body)
+        auditList.append(empty)
+      }
+      for (const audit of records) {
+        const card = document.createElement('article')
+        card.className = 'admin-xeed-card'
+        const header = document.createElement('header')
+        const heading = document.createElement('h3')
+        heading.textContent = `${audit.action} · ${audit.target}`
+        const state = document.createElement('span')
+        state.textContent = audit.outcome
+        header.append(heading, state)
+        const facts = document.createElement('div')
+        facts.className = 'admin-observatory-facts'
+        addFact(facts, 'Actor', audit.actorPrincipalId, 'KNOWN')
+        addFact(facts, 'Result', audit.resultCode, 'KNOWN')
+        addFact(facts, 'Before', audit.beforeRef, audit.beforeRef ? 'KNOWN' : 'NOT_APPLICABLE')
+        addFact(facts, 'After', audit.afterRef, audit.afterRef ? 'KNOWN' : 'NOT_APPLICABLE')
+        const details = document.createElement('details')
+        details.className = 'admin-metric-lineage'
+        const summary = document.createElement('summary')
+        summary.textContent = 'Inspect authorization and reason'
+        const body = document.createElement('p')
+        body.textContent = `Command: ${audit.commandId} · required scope: ${audit.requiredScope} · reason: ${audit.reason} · approval: ${audit.approvalRef || 'not supplied'}`
+        details.append(summary, body)
+        card.append(header, facts, details)
+        auditList.append(card)
       }
     }
   }

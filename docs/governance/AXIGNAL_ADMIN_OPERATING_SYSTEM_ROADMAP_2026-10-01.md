@@ -99,7 +99,7 @@ Admin must distinguish measured flywheel behavior from the hypothesis above.
 
 `NOT_STARTED → READY → IN_PROGRESS → BLOCKED → DONE → DEFERRED → REJECTED`
 
-**CURRENT_TASK = AO-07**
+**CURRENT_TASK = AO-08**
 
 ## 7. Closure rule
 
@@ -380,9 +380,28 @@ Admin can explain where cognitive spend goes and why, without provider lock or o
 
 ## AO-07 — Governance, Policy Registry, Audit and Alerts
 
-**Status:** NOT_STARTED
+**Status:** DONE
 **Depends on:** AO-01, AO-03
 **Priority:** P0
+
+### Closure evidence (2026-10-02)
+- Reuses the existing FR-20 append-only `ActivePolicyStore` as policy authority; AO-07 does not create a second promotion/rollback mechanism or a shadow policy truth.
+- Seven governed policy families are inspectable: execution budget, source acquisition, temporal currentness, retention, Prime/provider routing, canonical admission and alerting. Missing active policy evidence remains `UNKNOWN`.
+- Policy-decision history projects actor, before policy/version, after policy/version, approval rationale and effective time directly from immutable FR-20 decisions.
+- `AdminGovernanceService` is a bounded command router: it requires `admin:governance:manage` plus STEP_UP, requires an AO-01 dual-approval reference for CRITICAL commands, invokes the owning-service handler, then appends immutable result audit with actor, session, reason, scope, before/after refs and approval ref.
+- Admin command targets never include a writable canonical store. `AXIGLAND_CANONICAL` and `FAXT_STORE` attempts are rejected before handler invocation as `UNSUPPORTED_CANONICAL_WRITE_TARGET` and retained in the immutable governance audit.
+- AO-07 alert classes cover unsupported writes, stale coverage, source failure, provider failure, cost spike, payment failure, security incident and governance drift. Deterministically observable classes derive from Learning Memory/AO-03/audit; cost-spike and governance-drift remain `UNKNOWN` until explicit alert-policy/owner evidence exists rather than becoming false zeroes.
+- `pipeline/admin_governance/SqliteAdminGovernanceAuditStore` is append-only/idempotent and rejects reuse of an audit ID with changed content.
+- Runtime composition persists policy governance and privileged-action audit outside UI state and projects them only for the authorized `/admin/governance` domain.
+- Governance UI exposes invariants, versioned policy registry, governed policy changes, alerts, privileged action audit and lineage without granting canonical-write authority.
+- Browser QA PASS: desktop 1440 px and compact 491 px render Governance correctly; compact DOM has `scrollWidth == clientWidth`, seven policy cards and eight alert classes.
+- Focused AO-07 + AO-02 regression set: 14 PASS.
+- Full pytest: 784 PASS.
+- Ruff format/check: PASS.
+- mypy: PASS (172 source files).
+- Node Admin JS syntax: PASS.
+- Architecture Guard: PASS.
+
 ### Work
 - Versioned policy registry for budgets, source acquisition, currentness, retention, provider routing, canonical admission and alerts.
 - Immutable privileged-action audit.
