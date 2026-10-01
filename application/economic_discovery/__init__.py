@@ -107,6 +107,20 @@ from application.economic_discovery.observation_reuse import (
     evaluate_observation_reuse,
     select_reusable_observations,
 )
+from application.economic_discovery.pilot_validation import (
+    FR27_AGENCY_CHANGE_PILOT,
+    PilotAnswer,
+    PilotEvidence,
+    PilotEvidenceConflict,
+    PilotEvidenceCoverage,
+    PilotEvidenceKind,
+    PilotEvidenceMemory,
+    PilotEvidenceSource,
+    PilotHypothesis,
+    PilotReport,
+    PricingEvidenceKind,
+    summarize_pilot,
+)
 from application.economic_discovery.planner import (
     CognitiveWorkPlan,
     DimensionWork,
@@ -167,6 +181,7 @@ from application.economic_discovery.unit_economics import (
 )
 
 __all__ = [
+    "FR27_AGENCY_CHANGE_PILOT",
     "AttentionDisposition",
     "BasisContribution",
     "BasisDatum",
@@ -241,6 +256,16 @@ __all__ = [
     "ObservedField",
     "ParticipationState",
     "PhaseEconomics",
+    "PilotAnswer",
+    "PilotEvidence",
+    "PilotEvidenceConflict",
+    "PilotEvidenceCoverage",
+    "PilotEvidenceKind",
+    "PilotEvidenceMemory",
+    "PilotEvidenceSource",
+    "PilotHypothesis",
+    "PilotReport",
+    "PricingEvidenceKind",
     "PrimeControlPlan",
     "PrimeRoute",
     "PrimeWorkItem",
@@ -303,6 +328,7 @@ __all__ = [
     "select_reusable_observations",
     "summarize_cohort_unit_economics",
     "summarize_learning",
+    "summarize_pilot",
     "summarize_xeed_unit_economics",
     "temporal_dependency_change",
 ]

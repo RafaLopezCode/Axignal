@@ -1156,17 +1156,26 @@ Future audit can inspect real cost/reuse evidence rather than calling unit econo
 
 ## FR-27 — One Buyer / One Job Pilot Contract
 
-**Status:** NOT_STARTED  
+**Status:** READY — implementation/protocol complete; real buyer/job evidence pending
 **Depends on:** FR-07, FR-09, FR-26  
 **Priority:** P0 PRODUCT
 
 ### Work
 Choose one concrete job/buyer hypothesis without redefining AXIGNAL. Measure whether the Xignal advances a decision, whether evidence is trusted/inspected, whether the user returns because something changed, willingness to pay and value of additional Xeeds. Commercial outcome never validates truth.
 
+### Implementation evidence
+- Buyer/job hypothesis fixed as an agency external-change decision pilot without redefining AXIGNAL.
+- Append-only pilot evidence contract and SQLite persistence implemented.
+- Six required dimensions are represented independently: decision advancement, evidence inspection, evidence trust, return because change, willingness to pay, additional-Xeed value.
+- FR-26 UnitEconomicsReport must match the pilot primary Xeed.
+- Telemetry cannot establish trust, return causality or willingness to pay.
+- Protocol: `docs/research/fr27/pilot-protocol.md`.
+- **REAL_BUYER_JOB_EVIDENCE=PENDING; synthetic fixtures do not close FR-27.**
+
 ### Acceptance
-- Pilot protocol and evidence exist.
-- Failure is a valid documented outcome.
-- Pricing remains hypothesis until observed.
+- Pilot protocol and evidence exist. **PARTIAL:** protocol/evidence machinery exists; real pilot evidence pending.
+- Failure is a valid documented outcome. **IMPLEMENTED.**
+- Pricing remains hypothesis until observed. **IMPLEMENTED.**
 
 ### FRONTIER_CLOSURE
 Future audit has real buyer/job evidence instead of only product thesis.
