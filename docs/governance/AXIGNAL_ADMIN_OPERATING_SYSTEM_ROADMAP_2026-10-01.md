@@ -401,6 +401,13 @@ Admin can explain where cognitive spend goes and why, without provider lock or o
 - mypy: PASS (172 source files).
 - Node Admin JS syntax: PASS.
 - Architecture Guard: PASS.
+- Production runtime deployment PASS: canonical merge `efaa17a355ecd673517e38805484ba02a9bc6e02` replaced runtime `3fb818e6ef9703331b0ae6f054cacd4a95638c2c` through a new immutable release; rollback preserved the prior release and `/etc/axignal/runtime.env.pre-ao07-20261001T221018Z`.
+- Production health PASS on loopback and external `/healthz`: exact AO-07 SHA, `status=ok`, Observation/Learning persistence healthy and public write surface closed; existing runtime evidence remains `6` Learning events and `1` Observation.
+- Production governance persistence PASS: `policy-governance.sqlite3` and `admin-governance-audit.sqlite3` were created under persistent `/var/lib/axignal/runtime`, outside the immutable release tree.
+- Production AO-07 projection PASS over real stores: seven policy families, eight alert classes, `0` active policies, `0` policy changes, `0` privileged audit records and `0` `UNSUPPORTED_CANONICAL_WRITE_TARGET` events. Policy state therefore remains `UNKNOWN` rather than defaulting a version.
+- Production alerts preserve evidence boundaries: unsupported writes/source failures/provider failures/stale coverage/security incidents/payment failures are observed zero; `COST_SPIKE` and `GOVERNANCE_DRIFT` remain `UNKNOWN` because no explicit owner/policy signal exists.
+- Production privileged render PASS: real production stores produce a secret-free `governance` bootstrap with `currentSlug=governance`, unsupported-write count zero, UNKNOWN policy state and the Admin/AXIGLAND authority boundary.
+- Production Admin HTTP exposure remains deliberately CLOSED: loopback `/admin/governance` returns `404` while public `https://axignal.com/admin/governance` serves the public landing. No auth bypass or privileged write endpoint was added.
 
 ### Work
 - Versioned policy registry for budgets, source acquisition, currentness, retention, provider routing, canonical admission and alerts.
