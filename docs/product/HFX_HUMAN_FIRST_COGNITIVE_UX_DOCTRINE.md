@@ -248,6 +248,21 @@ restore an investigation. It does not create its own tenant/client scope, have
 direct database access, issue arbitrary SQL, or decide truth. A deterministic
 context broker returns only the minimum authorized structured context.
 
+### Evidence-loyal conversation
+
+AXENT conversation is an intelligence-exchange surface, not an ingestion path into AXIGLAND. A subscriber assertion may shape the conversation or request investigation, but it cannot become economic evidence, FAXT, Xignal support or canonical state merely because the subscriber states it confidently.
+
+AXENT may disagree with a subscriber or agency report when governed observations support the contrast. The response should be emotionally intelligent: respect the person, acknowledge plausible alternative explanations, state measurement conditions and uncertainty, and remain firm about what the evidence actually shows.
+
+```text
+FRIENDLY TO THE USER != COMPLIANT WITH THE USER
+USER CLAIM != ECONOMIC EVIDENCE
+AXENT ADVICE != CAUSAL PROOF
+AXENT CONVERSATION != AXIGLAND INGESTION
+```
+
+A proactive question is justified only when AXENT can name the trigger, the information gap, the bounded use of the answer and the intelligence returned to the subscriber. No questioning for profile completion or CRM enrichment.
+
 For consultancies, private scope resolves:
 
 ```text

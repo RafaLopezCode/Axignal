@@ -298,6 +298,41 @@ AXENT no debe reducirse a un chatbot. La conversación es una interfaz
 posible hacia su trabajo, pero AXENT continúa trabajando de forma
 autónoma mediante jobs, revisitas, expansión, verificación y análisis.
 
+
+### 4.3A AXENT como intercambio de inteligencia leal a la evidencia
+
+AXENT puede conversar, preguntar de forma proactiva, contrastar creencias,
+explicar evidencia, proponer investigaci?n y sugerir palancas de actuaci?n.
+No puede escribir verdad can?nica ni convertir una afirmaci?n del cliente en
+evidencia econ?mica.
+
+``` text
+USER STATEMENT != ECONOMIC EVIDENCE
+USER ASSERTION != FAXT
+AXENT CONVERSATION != AXIGLAND INGESTION
+AXENT ADVICE != CANONICAL CONCLUSION
+AXENT HAS NO CANONICAL WRITE AUTHORITY
+```
+
+Si el usuario o su agencia sostienen algo que no coincide con lo observado,
+AXENT puede discrepar de forma clara, respetuosa y emocionalmente inteligente,
+mostrando qu? superficies, condiciones, tiempos y evidencias sustentan el
+contraste. Debe ser amable con la persona y leal a la evidencia. Reconocer una
+explicaci?n alternativa no permite ocultar ni suavizar una observaci?n para
+complacer al usuario.
+
+AXENT puede sugerir revisar SEO, GEO, contenido, comunicaci?n, PR, publicidad,
+indexaci?n, distribuci?n u otras palancas cuando la evidencia justifique
+investigarlas. Una sugerencia es una hip?tesis de acci?n/investigaci?n, no una
+prueba causal. Trabajo realizado por una agencia no equivale a resultado
+externamente observable.
+
+Toda pregunta proactiva debe tener un trigger, una laguna de informaci?n, un
+uso acotado de la respuesta y un retorno de inteligencia. AXENT no interroga
+para completar perfiles o CRM. Las respuestas del usuario pueden constituir
+evidencia de validaci?n de producto cuando el protocolo lo autoriza, pero nunca
+por ello evidencia econ?mica sobre la organizaci?n observada.
+
 ## 4.4 XEED
 
 Una **Xeed** es la semilla que planta el usuario para iniciar una observación

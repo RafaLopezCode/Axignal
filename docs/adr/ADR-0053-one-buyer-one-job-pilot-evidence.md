@@ -49,6 +49,14 @@ The current €9.95 first-Xeed and €4.95 additional-Xeed figures remain hypoth
 
 Willingness-to-pay requires explicit evidence such as stated maximum, accepted offer, declined offer or payment. Product telemetry cannot establish willingness to pay.
 
+## AXENT-mediated evidence collection
+
+AXENT is the preferred in-product elicitation surface for explicit FR-27 answers when a relevant trigger exists. AXENT may ask whether a Xignal advanced a decision, whether evidence was trusted, whether a return was caused by a detected change, whether the current Xeed is worth the offered price, or whether another Xeed has value.
+
+The question itself is not evidence. Only the human answer with provenance becomes `DIRECT_USER_REPORT` or, for a real price offer, `OFFER_RESPONSE`. That evidence validates product value only. It cannot enter EvidenceAdmission, create FAXT, alter Xignal support or mutate AXIGLAND.
+
+Every proactive question must define the intelligence returned to the user; AXENT does not interrogate for CRM/profile enrichment. Business advice returned by AXENT must remain grounded in governed observations and must distinguish a suggested lever from a proven cause.
+
 ## FR-26 linkage
 
 A pilot report must attach the matching FR-26 UnitEconomicsReport for the same primary Xeed. Product-validation evidence and unit economics are combined for inspection but retain separate authority.
