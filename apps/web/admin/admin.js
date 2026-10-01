@@ -63,6 +63,91 @@
     if (domain) domain.textContent = current.label
   }
 
+  const commandCenter = bootstrap.commandCenter
+  const commandCenterSection = document.getElementById('admin-command-center')
+  const domainPreview = document.getElementById('admin-domain-preview')
+  const metricGroups = document.getElementById('admin-metric-groups')
+  const commandCompleteness = document.getElementById('command-center-completeness')
+  const commandAsOf = document.getElementById('command-center-asof')
+
+  const renderMetricValue = (metric) => {
+    if (metric.value == null) return metric.completeness || 'UNKNOWN'
+    if (metric.unit === 'CURRENCY') return `${metric.value} ${metric.currency || ''}`.trim()
+    if (metric.unit === 'RATIO') return metric.value
+    return metric.value
+  }
+
+  if (current?.slug === 'command-center' && commandCenter && commandCenterSection && metricGroups) {
+    commandCenterSection.hidden = false
+    if (domainPreview) domainPreview.hidden = true
+    if (commandCompleteness) commandCompleteness.textContent = commandCenter.completeness || 'UNKNOWN'
+    if (commandAsOf) commandAsOf.textContent = commandCenter.asOf ? `As of ${commandCenter.asOf}` : ''
+    const byGroup = new Map()
+    for (const metric of commandCenter.metrics || []) {
+      const values = byGroup.get(metric.group) || []
+      values.push(metric)
+      byGroup.set(metric.group, values)
+    }
+    metricGroups.replaceChildren()
+    for (const [group, metrics] of byGroup) {
+      const section = document.createElement('section')
+      section.className = 'admin-metric-group'
+      const heading = document.createElement('h3')
+      heading.textContent = group
+      section.append(heading)
+      const grid = document.createElement('div')
+      grid.className = 'admin-metric-grid'
+      for (const metric of metrics) {
+        const card = document.createElement('article')
+        card.className = 'admin-metric-card'
+        card.dataset.completeness = metric.completeness || 'UNKNOWN'
+
+        const label = document.createElement('span')
+        label.className = 'admin-metric-label'
+        label.textContent = metric.label
+
+        const value = document.createElement('strong')
+        value.className = 'admin-metric-value'
+        value.textContent = renderMetricValue(metric)
+
+        const state = document.createElement('span')
+        state.className = 'admin-metric-state'
+        state.textContent = metric.completeness || 'UNKNOWN'
+
+        const details = document.createElement('details')
+        details.className = 'admin-metric-lineage'
+        const summary = document.createElement('summary')
+        summary.textContent = 'Why is this number here?'
+        const body = document.createElement('dl')
+        const rows = [
+          ['Definition', metric.purpose],
+          ['Window', metric.defaultWindow],
+          ['Metric definition', metric.expectedMethodologyVersion],
+          ['Source method', metric.methodologyVersion || 'Unavailable'],
+          ['Period start', metric.periodStart || 'Unavailable'],
+          ['Period end', metric.periodEnd || 'Unavailable'],
+          ['Comparison', metric.comparisonState],
+          ['Source projection', metric.sourceProjectionId],
+          ['Source record types', (metric.sourceRecordTypes || []).join(', ')],
+          ['Source records', (metric.sourceRecordIds || []).join(', ') || 'None observed'],
+          ['Unknown / partial reason', metric.unknownReason || '—'],
+        ]
+        for (const [term, descriptionText] of rows) {
+          const dt = document.createElement('dt')
+          const dd = document.createElement('dd')
+          dt.textContent = term
+          dd.textContent = descriptionText || '—'
+          body.append(dt, dd)
+        }
+        details.append(summary, body)
+        card.append(label, value, state, details)
+        grid.append(card)
+      }
+      section.append(grid)
+      metricGroups.append(section)
+    }
+  }
+
   if (scopeList) {
     const scopes = Array.isArray(bootstrap.scopes) ? bootstrap.scopes : []
     scopeList.replaceChildren()
