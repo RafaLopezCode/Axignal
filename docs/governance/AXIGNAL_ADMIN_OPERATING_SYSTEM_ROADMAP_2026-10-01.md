@@ -156,7 +156,7 @@ A future auditor cannot reasonably claim that Admin implementation expanded scop
 - `pipeline/admin_access/` implements SQLite persistence with raw-token exclusion, hashed bearer credentials, session revocations and append-sequenced immutable privilege history.
 - `tools/runtime/admin_access.py` provides the HTTP bearer guard future Admin routes must use; no Admin route is exposed by AO-01 itself.
 - `AGENT_SAFE_READER` has exactly `admin:agent-safe:read` and no private customer/finance/system scope.
-- Focused AO-01 security + contracts: 30 PASS.
+- Focused AO-01 security + contracts: 34 PASS.
 - Full pytest: 731 PASS.
 - Ruff format/check: PASS.
 - mypy: PASS (146 source files).
