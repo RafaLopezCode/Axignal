@@ -32,6 +32,15 @@ from application.economic_discovery.learning_memory import (
     LearningYield,
 )
 from application.economic_discovery.observation_memory import ObservationMemory
+from application.economic_discovery.observation_reuse import (
+    ObservationReuseContext,
+    ObservationReusePolicy,
+    ObservationReuseRejected,
+    ReuseDisposition,
+    ReusePurpose,
+    ReuseTargetScope,
+    select_reusable_observations,
+)
 from application.economic_discovery.planner import assess_dimension_work
 from application.economic_discovery.prime import (
     DimensionRoutingPolicy,
@@ -263,6 +272,7 @@ def execute_prime_source_slice(
     ports: PrimeExecutionPorts,
     semantic_extractor: SemanticExtractionPort | None = None,
     semantic_contract: SemanticExtractionContract | None = None,
+    reuse_policy: ObservationReusePolicy | None = None,
 ) -> PrimeExecutionTrace:
     """Execute one governed source-to-Prime slice and retain exact lineage."""
 
@@ -274,6 +284,43 @@ def execute_prime_source_slice(
     subject_id = seed.organization.id
     if request.subject_id != subject_id:
         raise ValueError("Prime execution request does not match canonical subject")
+    if prior_rich_state.subject_id != subject_id:
+        raise ValueError("Prime execution prior rich state does not match canonical subject")
+
+    reused_ids = frozenset(item.observation_id for item in prior_rich_state.data)
+    if reused_ids:
+        if reuse_policy is None:
+            raise ValueError("Prime reused state requires an observation reuse policy")
+        reuse_context = ObservationReuseContext(
+            subject_id=str(subject_id),
+            xeed_id=str(xeed_id),
+            tenant_id=str(seed.authorized_xeed.xeed.tenant_id),
+            target_scope=ReuseTargetScope.TENANT_PRIVATE,
+            purpose=ReusePurpose.CURRENT_STATE,
+        )
+        selection = select_reusable_observations(
+            observation_memory,
+            context=reuse_context,
+            policy=reuse_policy,
+        )
+        decision_by_id = {decision.observation_id: decision for decision in selection.decisions}
+        observation_by_id = {
+            reusable.record.observation_id: reusable for reusable in selection.observations
+        }
+        for datum in prior_rich_state.data:
+            decision = decision_by_id.get(datum.observation_id)
+            if decision is None:
+                raise ValueError("Prime reused observation is absent from governed memory")
+            if decision.disposition is not ReuseDisposition.ALLOW:
+                raise ObservationReuseRejected(decision)
+            reusable_observation = observation_by_id[datum.observation_id]
+            if (
+                reusable_observation.record.source_ref != datum.source_ref
+                or reusable_observation.record.observed_at != datum.observed_at
+            ):
+                raise ValueError(
+                    "Prime prior rich-state provenance does not match reusable observation"
+                )
     if (
         request.policy_id != source_policy.policy_id
         or request.policy_fingerprint != source_policy.fingerprint

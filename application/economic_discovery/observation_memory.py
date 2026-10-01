@@ -6,9 +6,11 @@ import hashlib
 import json
 from dataclasses import dataclass
 from datetime import UTC, datetime
+from enum import StrEnum
 from typing import Protocol
 
 from application.economic_discovery.brain_contracts import ObservationRecord, StateChange
+from domain.evidence.epistemics import Currentness
 
 
 def _required(*values: str) -> None:
@@ -27,6 +29,48 @@ class ObservedField:
         _required(self.name, self.value)
 
 
+class ObservationRightsStatus(StrEnum):
+    PERMITTED = "PERMITTED"
+    PROHIBITED = "PROHIBITED"
+    UNKNOWN = "UNKNOWN"
+
+
+class ObservationAccessStatus(StrEnum):
+    ACCESSIBLE = "ACCESSIBLE"
+    INACCESSIBLE = "INACCESSIBLE"
+
+
+class ObservationReuseScope(StrEnum):
+    GLOBAL_PUBLIC = "GLOBAL_PUBLIC"
+    TENANT_PRIVATE = "TENANT_PRIVATE"
+    RESTRICTED = "RESTRICTED"
+
+
+@dataclass(frozen=True, slots=True)
+class ObservationReuseAuthority:
+    rights_status: ObservationRightsStatus = ObservationRightsStatus.UNKNOWN
+    access_status: ObservationAccessStatus = ObservationAccessStatus.ACCESSIBLE
+    scope: ObservationReuseScope = ObservationReuseScope.RESTRICTED
+    scope_owner_id: str | None = None
+    provenance_ref: str | None = None
+    currentness: Currentness = Currentness.UNKNOWN
+    applicable_subject_ids: tuple[str, ...] = ()
+    applicable_purposes: tuple[str, ...] = ()
+
+    def __post_init__(self) -> None:
+        if self.scope is ObservationReuseScope.TENANT_PRIVATE:
+            if self.scope_owner_id is None or not self.scope_owner_id.strip():
+                raise ValueError("private observation reuse scope requires owner")
+        elif self.scope_owner_id is not None:
+            raise ValueError("non-private observation reuse scope cannot carry owner")
+        if self.provenance_ref is not None and not self.provenance_ref.strip():
+            raise ValueError("observation reuse provenance ref cannot be empty")
+        if any(not value.strip() for value in self.applicable_subject_ids):
+            raise ValueError("observation applicability subjects must be non-empty")
+        if any(not value.strip() for value in self.applicable_purposes):
+            raise ValueError("observation applicability purposes must be non-empty")
+
+
 @dataclass(frozen=True, slots=True)
 class GovernedObservation:
     """Observation plus reconstructible raw material and normalized state contributions."""
@@ -35,6 +79,7 @@ class GovernedObservation:
     raw_content: str | None = None
     raw_artifact_ref: str | None = None
     fields: tuple[ObservedField, ...] = ()
+    reuse_authority: ObservationReuseAuthority = ObservationReuseAuthority()
 
     def __post_init__(self) -> None:
         if self.raw_content is None and self.raw_artifact_ref is None:
@@ -86,6 +131,44 @@ class ObservationState:
 
     def get(self, name: str) -> StateField | None:
         return next((field for field in self.fields if field.name == name), None)
+
+
+def observation_reuse_authority_payload(
+    authority: ObservationReuseAuthority,
+) -> dict[str, object]:
+    return {
+        "rights_status": authority.rights_status.value,
+        "access_status": authority.access_status.value,
+        "scope": authority.scope.value,
+        "scope_owner_id": authority.scope_owner_id,
+        "provenance_ref": authority.provenance_ref,
+        "currentness": authority.currentness.value,
+        "applicable_subject_ids": list(authority.applicable_subject_ids),
+        "applicable_purposes": list(authority.applicable_purposes),
+    }
+
+
+def observation_reuse_authority_from_payload(
+    payload: dict[str, object],
+) -> ObservationReuseAuthority:
+    subjects = payload.get("applicable_subject_ids", [])
+    purposes = payload.get("applicable_purposes", [])
+    if not isinstance(subjects, list) or not isinstance(purposes, list):
+        raise ValueError("observation reuse applicability payload must be arrays")
+    return ObservationReuseAuthority(
+        rights_status=ObservationRightsStatus(str(payload["rights_status"])),
+        access_status=ObservationAccessStatus(str(payload["access_status"])),
+        scope=ObservationReuseScope(str(payload["scope"])),
+        scope_owner_id=(
+            None if payload.get("scope_owner_id") is None else str(payload["scope_owner_id"])
+        ),
+        provenance_ref=(
+            None if payload.get("provenance_ref") is None else str(payload["provenance_ref"])
+        ),
+        currentness=Currentness(str(payload["currentness"])),
+        applicable_subject_ids=tuple(str(item) for item in subjects),
+        applicable_purposes=tuple(str(item) for item in purposes),
+    )
 
 
 class ObservationMemoryConflict(ValueError):

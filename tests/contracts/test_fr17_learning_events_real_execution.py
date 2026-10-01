@@ -42,7 +42,9 @@ def test_bootstrap_reuse_is_derived_from_rich_state_not_caller_input() -> None:
         0
     ]
     assert "reused_observation_count" not in signature
-    assert "len({item.observation_id for item in rich_state.data})" in bootstrap
+    assert "reused_ids = frozenset(item.observation_id for item in rich_state.data)" in bootstrap
+    assert "reused_observation_count = len(reused_ids)" in bootstrap
+    assert "select_reusable_observations(" in bootstrap
 
 
 def test_runtime_bootstrap_application_must_emit_learning_memory_event() -> None:

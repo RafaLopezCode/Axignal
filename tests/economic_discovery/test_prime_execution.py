@@ -6,6 +6,14 @@ from pathlib import Path
 
 import pytest
 
+from application.economic_discovery import (
+    ObservationAccessStatus,
+    ObservationReuseAuthority,
+    ObservationReusePolicy,
+    ObservationReuseScope,
+    ObservationRightsStatus,
+    ReusePurpose,
+)
 from application.economic_discovery.brain_contracts import (
     SemanticPrimitive,
     TypingDimensionContract,
@@ -61,6 +69,7 @@ from application.xeed_germination import (
 from cognition.jobs.model import StructuredResult
 from cognition.router.router import ModelRouter
 from cognition.semantic_extraction_adapter import CognitiveSemanticExtractionAdapter
+from domain.evidence.epistemics import Currentness
 from domain.identity import OrganizationId, PrincipalId, TenantId, XeedId
 from domain.organizations.model import Organization
 from domain.tenancy.model import Principal, PrincipalTenantMembership, Tenant
@@ -78,6 +87,22 @@ from pipeline.source_representation import HtmlDocumentRepresentationAdapter
 from tests.support.xeed_authority import InMemoryXeedAuthority
 
 NOW = datetime(2026, 9, 30, 18, 30, tzinfo=UTC)
+
+
+def _reuse_authority() -> ObservationReuseAuthority:
+    return ObservationReuseAuthority(
+        rights_status=ObservationRightsStatus.PERMITTED,
+        access_status=ObservationAccessStatus.ACCESSIBLE,
+        scope=ObservationReuseScope.GLOBAL_PUBLIC,
+        provenance_ref="provenance:prime-fixture",
+        currentness=Currentness.CURRENT,
+        applicable_subject_ids=("org:acme",),
+        applicable_purposes=(ReusePurpose.CURRENT_STATE.value,),
+    )
+
+
+def _reuse_policy() -> ObservationReusePolicy:
+    return ObservationReusePolicy("observation-reuse", "1")
 
 
 def _public_dns(*_args: object, **_kwargs: object) -> list[tuple[object, ...]]:
@@ -399,6 +424,7 @@ def test_exact_replay_no_change_does_not_execute_prime_again(
         request=request,
         observation=observation,
         contracts=(_contract("market-mode"),),
+        reuse_authority=_reuse_authority(),
     )
     prior = compile_rich_subject_state(
         subject_id="org:acme",
@@ -437,6 +463,7 @@ def test_exact_replay_no_change_does_not_execute_prime_again(
             structured_evaluator=_Executor("structured"),
             adaptive_research=_Executor("adaptive"),
         ),
+        reuse_policy=_reuse_policy(),
     )
 
     assert trace.prime_plan is None

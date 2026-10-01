@@ -12,6 +12,7 @@ from application.economic_discovery import (
     ObservationMode,
     ObservationMutation,
     ObservationRecord,
+    ObservationReuseAuthority,
     ObservedField,
     TypingDimensionContract,
     build_work_plan,
@@ -31,6 +32,8 @@ def source_observation_id(request: SourceRequest, observation: SourceObservation
 def to_governed_observation(
     request: SourceRequest,
     observation: SourceObservation,
+    *,
+    reuse_authority: ObservationReuseAuthority | None = None,
 ) -> GovernedObservation:
     """Translate acquisition lineage without granting truth or semantic authority."""
 
@@ -74,6 +77,9 @@ def to_governed_observation(
         ),
         raw_artifact_ref=observation.raw_observation_ref,
         fields=tuple(fields),
+        reuse_authority=(
+            ObservationReuseAuthority() if reuse_authority is None else reuse_authority
+        ),
     )
 
 
@@ -89,10 +95,28 @@ def ingest_source_observation(
     request: SourceRequest,
     observation: SourceObservation,
     contracts: tuple[TypingDimensionContract, ...],
+    reuse_authority: ObservationReuseAuthority | None = None,
 ) -> SourceIngestionResult:
     """Persist one source observation and route only its actual state impact."""
 
-    governed = to_governed_observation(request, observation)
+    if reuse_authority is None:
+        observation_id = source_observation_id(request, observation)
+        existing = next(
+            (
+                item
+                for item in memory.for_subject(request.subject_id)
+                if item.record.observation_id == observation_id
+            ),
+            None,
+        )
+        if existing is not None:
+            reuse_authority = existing.reuse_authority
+
+    governed = to_governed_observation(
+        request,
+        observation,
+        reuse_authority=reuse_authority,
+    )
     mutation = ingest_observation(memory, governed)
     if mutation.change is None:
         return SourceIngestionResult(mutation=mutation, work_plan=None)
