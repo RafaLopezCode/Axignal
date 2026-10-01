@@ -1,7 +1,7 @@
 ﻿# ADR-0054: AXENT Is Evidence-Loyal Business Intelligence Exchange, Not a Truth Writer
 
-**Status:** ACCEPTED  
-**Date:** 2026-10-01  
+**Status:** ACCEPTED
+**Date:** 2026-10-01
 **Authority:** MASTER §§4.3, 5, 13, 23, 51–55; ADR-0003, ADR-0014, ADR-0017, ADR-0036, ADR-0053.
 
 ## Context
