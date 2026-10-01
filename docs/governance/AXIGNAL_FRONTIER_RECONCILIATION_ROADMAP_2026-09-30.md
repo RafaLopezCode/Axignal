@@ -31,7 +31,7 @@ A task is not DONE because code exists. Runtime/product work normally progresses
 
 NOT_STARTED · READY · IN_PROGRESS · BLOCKED · DONE · DEFERRED · REJECTED
 
-**CURRENT_TASK = FR-23**
+**CURRENT_TASK = FR-24**
 
 ## 4. Frontier closure rule
 
@@ -1006,9 +1006,37 @@ Future audit can reference AXIGNAL-specific evidence instead of provider marketi
 
 ## FR-23 — Identity Resolution Hardening
 
-**Status:** NOT_STARTED  
-**Depends on:** FR-04  
+**Status:** DONE
+**Depends on:** FR-04
 **Priority:** P1
+
+**Closure evidence (2026-10-01):**
+- replaced silent first-match-wins normalized-name indexing with explicit RESOLVED / AMBIGUOUS / UNRESOLVED outcomes
+- normalized canonical-name and alias collisions now remain AMBIGUOUS; legacy resolve() returns None rather than choosing a candidate
+- added exact verified-identifier resolution with scheme/value/authority identity; verified identifier takes precedence over name
+- an unknown supplied verified identifier does not fall back to a coincident name, preventing same-name legal-person collapse
+- duplicate verified identifier across candidates is an explicit VERIFIED_IDENTIFIER_COLLISION and fails closed
+- no fuzzy similarity, opaque identity score or model/provider output can establish identity in the FR-23 resolver
+- introduced closed IdentityDecisionAuthority values GOVERNED_HUMAN / DETERMINISTIC_POLICY; raw untyped SUBSCRIBER authority is rejected at runtime
+- identity governance contracts contain no subscriber_id, tenant_id, xeed_id, account_id or profile-owner authority fields
+- introduced append-only MERGE / SPLIT / REVERSAL decisions with evidence refs, reason, authority, actor, timestamp and previous/reversal lineage
+- MERGE redirects only explicit ACTIVE absorbed identities to one retained ACTIVE identity; it does not rewrite historical observations
+- SPLIT leaves the old source AMBIGUOUS, never auto-selects a child, and marks source/children for revalidation
+- REVERSAL appends a correction record instead of deleting history; merge and split reversals are both tested
+- reversal fails closed when a later topology decision has touched an affected identity
+- SQLite identity topology store persists subject pointers plus immutable decision history and applies topology change atomically under BEGIN IMMEDIATE
+- identity_decisions rows are never updated/deleted; seed_subject cannot overwrite existing topology state
+- current-subject resolution fails closed for post-split ambiguity
+- shared-observation boundary requires exact current canonical subject; an observation bound to an absorbed/other subject is not silently migrated
+- durable reopen test proves merge + reversal decision history and restored subject state survive SQLite reopen
+- focused FR-23 resolution/governance/contract suite: 23 PASS
+- full pytest: 607 PASS using external `--basetemp` to avoid the known Windows user-temp ACL issue
+- Ruff format/check: PASS
+- mypy: PASS (125 source files)
+- Architecture Guard: PASS
+- axignal-governance: PASS
+- git diff --check: PASS
+- ADR-0049 accepted and indexed
 
 ### Frontier finding
 Incorrect entity merge can poison shared AXIGLAND and many Xeeds.
