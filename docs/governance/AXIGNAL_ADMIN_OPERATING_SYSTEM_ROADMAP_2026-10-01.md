@@ -351,12 +351,17 @@ Xeed economics and AXIGLAND reuse can be inspected from runtime evidence rather 
 - Commercial/customer Admin records are outside the AO-06 cognitive projection and cannot relabel model correctness, abstention or provider performance.
 - `/admin/axent-brain` uses the existing AO-01 authorized Admin shell and receives a secret-free `brainObservatory` bootstrap with Learning/Admin lineage.
 - Browser QA PASS: desktop 1440 px renders execution evidence, research-control/Knowledge-Frontier state and two compatible provider slices; compact effective 491 px renders two provider cards with `scrollWidth == clientWidth`.
-- Focused AO-06 + Prime + AO-02 regression set: 21 PASS.
+- Focused AO-06 + Prime + AO-02 + roadmap regression set: 25 PASS.
 - Full pytest: 774 PASS.
 - Ruff format/check: PASS.
 - mypy: PASS (166 source files).
 - Node Admin JS syntax: PASS.
 - Architecture Guard: PASS.
+- Production runtime deployment PASS: canonical merge `16b7d053ed0972899aa83869a60f40e4258b560a` replaced runtime `57f5f9c092d08b811912113a4d2462fb62069ec6` through a new immutable `/srv/axignal/runtime/releases/<sha>` target; `/var/lib/axignal/runtime` persistence remained outside the release and rollback preserved the prior release plus `/etc/axignal/runtime.env.pre-ao06-20261001T214253Z`.
+- Production health PASS on loopback and external `/healthz`: exact AO-06 runtime SHA, `status=ok`, Observation/Learning persistence healthy and public write surface closed; production retained `1` Observation and `6` Learning events.
+- Production AO-06 data-path PASS over real persisted evidence: `6` deterministic Learning events, `0` structured-evaluator events, `0` adaptive-research events, `0` provider-attributed events and `0` provider slices. Research objective/routing/stop/budget/no-progress/retry/abstention/Knowledge Frontier/unresolved-gap states remain `UNKNOWN` because production has no authoritative records for them; cost and latency coverage remain `PARTIAL` rather than fabricated complete telemetry.
+- Production render proof PASS: the privileged server render over real production stores contains the AO-06 `brainObservatory`, `axent-brain` slug, real FR-30 Learning lineage and `ADMIN_PRIVATE_OPERATIONS != AXIGLAND_CANONICAL_TRUTH` boundary.
+- Production Admin HTTP exposure remains deliberately CLOSED: the concrete external Admin authentication provider/browser session transport is still unconfigured, so loopback `/admin/axent-brain` returns `404`; public `https://axignal.com/admin/axent-brain` remains the public landing rather than exposing the Admin shell.
 
 ### Work
 - Research objectives, routing, stop reasons, budget exhaustion and no-progress.
