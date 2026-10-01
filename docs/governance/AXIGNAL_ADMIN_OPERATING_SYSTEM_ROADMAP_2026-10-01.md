@@ -315,6 +315,11 @@ Command Center is an inspectable projection rather than a collection of unexplai
 - mypy: PASS (162 source files).
 - Architecture Guard: PASS.
 - `axignal-governance`: PASS in clean detached worktree at implementation commit `310759f`.
+- Production runtime deployment PASS: canonical functional merge `d3081d59c336fbf0cbf677b2952a877e22db93f8` replaced runtime `cb89cfe391a0ce6ba93bfc5e5b8a942795897769` through a new immutable `/srv/axignal/runtime/releases/<sha>` target; `/var/lib/axignal/runtime` persistence stayed outside the release and rollback preserved the prior release plus `/etc/axignal/runtime.env.pre-ao05-20261001T210646Z`.
+- Production health PASS on loopback and external `/healthz`: exact AO-05 runtime SHA, `status=ok`, Observation/Learning stores healthy and public write surface closed; `runtimez` remained loopback-only with `1` Observation and `6` Learning events.
+- Production AO-05 data-path PASS: the real persisted `xeed:production-first-proof:1` projected `6` Learning events, `1` newly added observation and `1` emitted Xignal. Lifecycle/currentness/coverage/shared/triggered/revenue and AXIGLAND owner-state dimensions remained `UNKNOWN/PARTIAL` where no authoritative AO-03 owner records exist rather than being fabricated.
+- Production render proof PASS: the privileged AO-05 server render over the real production stores contained the Admin shell, `xeedObservatory` bootstrap, production Xeed, Learning lineage and `ADMIN_PRIVATE_OPERATIONS != AXIGLAND_CANONICAL_TRUTH` boundary.
+- Production Admin HTTP exposure remains deliberately CLOSED: the concrete external Admin authentication provider/browser session transport is still unconfigured, so the runtime returns `404` for `/admin/xeeds`; public `https://axignal.com/admin/xeeds` resolves the public landing and does not expose the Admin shell. AO-05 deployment therefore does not weaken AO-01 fail-closed behavior or manufacture an unauthenticated operator backdoor.
 
 ### Work
 - Xeed lifecycle, germination state, first-value timing, currentness, observation coverage and active/inactive state.
