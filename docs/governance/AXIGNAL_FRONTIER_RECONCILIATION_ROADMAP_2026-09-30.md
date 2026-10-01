@@ -626,6 +626,7 @@ Future audit no longer finds overview label density as an unresolved core naviga
 - reduced-motion browser check confirms node focus enters NEIGHBORHOOD immediately without waiting for camera animation
 - landing standard chapter transition reduced from 820 ms to 640 ms total with 620 ms artwork motion and coordinated copy timings that finish inside the transition
 - landing backward navigation now reverses artwork and copy travel direction
+- post-FR-30 directional-pagination reconciliation (2026-10-01): the current artwork now exits opposite the incoming page (`forward`: current up / next from below; `backward`: current down / previous from above), and both artwork layers are synchronously reset without transition before direction changes or rearming; Chrome computed-transform verification confirmed forward `currentY<0,nextY>0`, backward `currentY>0,nextY<0`, and zero end-state bounce
 - landing wheel pagination uses threshold + quiet-period hysteresis; simulated inertial tail advanced chapter 1→2 only, then a later deliberate gesture advanced 2→3
 - landing reduced-motion removes spatial travel and uses a 120 ms opacity transition; browser computed art transform remained `none`
 - wheel/trackpad, keyboard, touch and direct landing controls continue to converge on the same `goTo` state machine
