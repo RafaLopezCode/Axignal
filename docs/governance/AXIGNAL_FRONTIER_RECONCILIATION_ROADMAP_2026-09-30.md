@@ -1248,7 +1248,7 @@ Integrate the proven vertical path in the actual app/runtime using real persiste
 - External `https://axignal.com/` returned 200 and FR-28 copy; public `/subscriber/` did not expose the synthetic `DEMO ? DATOS DE EJEMPLO` projection.
 
 ### Acceptance
-- Exact deployed SHA known. **PASS ? `25b64844a9467cb2dd96fb654eb7b865d00268c8`.**
+- Exact deployed SHA known. **PASS — `25b64844a9467cb2dd96fb654eb7b865d00268c8`.**
 - Health/runtime verification complete. **PASS.**
 - No cross-project runner/service/port reuse. **PASS.**
 - Persisted observation/learning behavior verified. **PASS.**
@@ -1258,12 +1258,24 @@ Future audit can inspect actual service integration instead of correctly reporti
 
 ## FR-30 — Production E2E: First Xeed → First Proof
 
-**Status:** NOT_STARTED  
+**Status:** IMPLEMENTED_PENDING_PRODUCTION_E2E
 **Depends on:** FR-29, FR-09, FR-10  
 **Priority:** GOAL
 
 ### GOAL
 Verify in browser against production or explicitly production-equivalent environment: PLANT XEED → governed bootstrap → partial dimensional answerability → useful Xignal → Today → focused AXIGLAND → Show how AXIGNAL knows → evidence/currentness/UNKNOWN → Learning Memory event → return/reload continuity.
+
+### Implementation evidence (2026-10-01)
+- Real first-proof runtime path added: Plant Xeed -> governed bootstrap -> real HTTP observation -> durable Observation Memory -> deterministic representation/answerability -> observation-backed OBSERVED representation Xignal -> Today -> evidence narrative -> Learning Memory -> persisted reload read-model.
+- First controlled proof is AXIGNAL's own `https://axignal.com/`; no third-party business state is fabricated.
+- Subscriber runtime now treats `XIGNAL` as its own node kind; no FAXT is relabelled as a Xignal.
+- Evidence view exposes exact Observation ID, source, currentness, UNKNOWN and linked Learning Memory event IDs; "Show how AXIGNAL knows" expands the actual narrative.
+- Operator first-proof write API is loopback-only and remains absent from public nginx; unsupported/non-HTTPS targets fail closed.
+- `NO_XEED`, invalid target, explicit `INSUFFICIENT_EVIDENCE`, successful LIVE first proof and persisted reload are covered by runtime contracts.
+- Real local production-equivalent execution against `https://axignal.com/` reached `LIVE`, artifact verification true, Today READY and six linked Learning Memory events.
+- Chrome E2E from a fresh runtime verified keyboard Plant Xeed, real observation, Today, keyboard evidence opening, exact evidence trace and reload continuity with no demo marker in the live DOM.
+- Responsive smoke at 390x844 had no horizontal overflow and exposed the mobile navigation.
+- Production-service deployment/E2E remains pending the green merge.
 
 ### Acceptance
 - No demo/example data masquerading as real.

@@ -4990,3 +4990,52 @@ html[dir='rtl'] .trail { direction: rtl; }
   .axent { pointer-events: none; }
   .app2.mobile-axent-open .axent { pointer-events: auto; }
 }
+
+
+/* FR-30 ? real first-Xeed production proof. */
+.first-xeed-empty {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 14px;
+  padding: 48px;
+  text-align: center;
+}
+.first-xeed-empty h1 { margin: 0; font: 500 clamp(24px, 3vw, 42px)/1.1 var(--serif); }
+.first-xeed-empty p { max-width: 580px; margin: 0; color: var(--muted); }
+.plant-xeed-dialog {
+  width: min(560px, calc(100vw - 32px));
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 0;
+  background: var(--paper);
+  color: var(--ink);
+  box-shadow: 0 24px 80px rgba(0,0,0,.18);
+}
+.plant-xeed-dialog::backdrop { background: rgba(28, 25, 20, .34); backdrop-filter: blur(5px); }
+.plant-xeed-form { display: grid; gap: 18px; padding: 28px; }
+.plant-xeed-form h2 { margin: 0; font: 500 30px/1.1 var(--serif); }
+.plant-xeed-form > p { margin: 0; color: var(--muted); }
+.plant-xeed-form label { display: grid; gap: 7px; font: 500 12px/1.2 var(--sans); }
+.plant-xeed-form input {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(255,255,255,.34);
+  color: var(--ink);
+  padding: 11px 12px;
+  font: 400 14px/1.4 var(--sans);
+}
+.plant-xeed-form input:focus { outline: 2px solid var(--brass); outline-offset: 2px; }
+.plant-xeed-actions { display: flex; justify-content: flex-end; gap: 10px; }
+.plant-xeed-actions button { border: 1px solid var(--line); border-radius: 999px; padding: 9px 14px; background: transparent; cursor: pointer; }
+.plant-xeed-actions button:last-child { background: var(--ink); color: var(--paper); }
+.plant-xeed-actions button:disabled { opacity: .45; cursor: wait; }
+.plant-xeed-status { min-height: 1.4em; font: 400 12px/1.4 var(--mono); }
+.semantic-evidence-trace { display: grid; gap: 10px; margin: 14px 0 0; padding-left: 20px; }
+.semantic-evidence-trace li { display: grid; gap: 3px; }
+.semantic-evidence-trace strong { font: 600 10px/1.2 var(--mono); letter-spacing: .08em; }
+.semantic-evidence-trace code { overflow-wrap: anywhere; font-size: 10px; color: var(--muted); }

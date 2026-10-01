@@ -188,6 +188,30 @@ function projectionKey(kind, id) {
   return `${kind}:${id}`
 }
 
+function nodeKindForSource(source) {
+  return source?.nodeKind === 'XIGNAL' ? 'XIGNAL' : 'FAXT'
+}
+
+function nodeKeyForSource(source) {
+  return projectionKey(nodeKindForSource(source), source.id)
+}
+
+function describeNodeForView(source) {
+  if (nodeKindForSource(source) !== 'XIGNAL') return describeFactForView(source)
+  const date = source?.observedAt ? new Date(source.observedAt) : null
+  const observedAt = date && !Number.isNaN(date.valueOf())
+    ? new Intl.DateTimeFormat(presentation.locale, { dateStyle: 'medium', timeZone: 'UTC' }).format(date)
+    : null
+  return Object.freeze({
+    predicateLabel: presentation.text('xignal.label'),
+    valueLabel: source.interpretation ?? null,
+    label: source.title ?? presentation.text('xignal.label'),
+    epistemicLabel: source.epistemicState ?? null,
+    currentnessLabel: source.currentness ?? null,
+    observedAt,
+  })
+}
+
 function organizationKey() {
   return projectionKey('ORGANIZATION', state.projection.organization.id)
 }
@@ -219,9 +243,9 @@ function getNode(key) {
       source: node,
     }
   }
-  const source = state.projection.nodes.find((item) => projectionKey('FAXT', item.id) === key)
+  const source = state.projection.nodes.find((item) => nodeKeyForSource(item) === key)
   return source
-    ? { key, id: source.id, kind: 'FAXT', label: describeFactForView(source).label, source }
+    ? { key, id: source.id, kind: nodeKindForSource(source), label: describeNodeForView(source).label, source }
     : null
 }
 
@@ -243,10 +267,10 @@ function worldPositions() {
     const slot = FIELD_SLOTS[index % FIELD_SLOTS.length]
     const row = Math.floor(index / FIELD_SLOTS.length)
     nodes.push({
-      key: projectionKey('FAXT', source.id),
+      key: nodeKeyForSource(source),
       id: source.id,
-      kind: 'FAXT',
-      label: describeFactForView(source).label,
+      kind: nodeKindForSource(source),
+      label: describeNodeForView(source).label,
       source,
       x: slot.x,
       y: Math.max(10, Math.min(90, slot.y + row * 4)),
@@ -637,7 +661,7 @@ function renderAccessibleProjection(focus) {
   if (focus.kind === 'ORGANIZATION') {
     appendDefinition(stateList, presentation.text('accessible.epistemicState'), presentation.text('accessible.organizationState'))
   } else {
-    const fact = describeFactForView(focus.source)
+    const fact = describeNodeForView(focus.source)
     appendDefinition(stateList, presentation.text('accessible.epistemicState'), fact.epistemicLabel ?? epistemicText(focus.source.epistemicState))
     appendDefinition(stateList, presentation.text('accessible.currentness'), fact.currentnessLabel)
     appendDefinition(stateList, presentation.text('accessible.observedAt'), fact.observedAt)
@@ -688,8 +712,8 @@ function renderAccessibleProjection(focus) {
   const timeTitle = document.createElement('h3')
   timeTitle.textContent = presentation.text('accessible.time')
   const timeList = document.createElement('dl')
-  if (focus.kind === 'FAXT') {
-    const fact = describeFactForView(focus.source)
+  if (focus.kind === 'FAXT' || focus.kind === 'XIGNAL') {
+    const fact = describeNodeForView(focus.source)
     appendDefinition(timeList, presentation.text('accessible.observedAt'), fact.observedAt)
     appendDefinition(timeList, presentation.text('accessible.currentness'), fact.currentnessLabel)
   } else {
@@ -710,17 +734,46 @@ function renderAccessibleProjection(focus) {
   evidenceDetail.className = 'semantic-evidence-detail'
   evidenceDetail.tabIndex = -1
   evidenceDetail.hidden = true
-  const evidenceStatus = focus.kind === 'FAXT' ? focus.source.evidenceAccess : null
+  const evidenceStatus = (focus.kind === 'FAXT' || focus.kind === 'XIGNAL') ? focus.source.evidenceAccess : null
   const evidenceAvailable = Boolean(evidenceStatus) && !presentation.isImplementationValue(evidenceStatus)
   const evidenceMessage = document.createElement('p')
   evidenceMessage.textContent = evidenceAvailable
     ? presentation.text('accessible.evidenceAvailable')
     : presentation.text('accessible.evidenceUnavailable')
   const evidenceMeta = document.createElement('dl')
-  if (focus.kind === 'FAXT') {
+  if (focus.kind === 'FAXT' || focus.kind === 'XIGNAL') {
     appendDefinition(evidenceMeta, presentation.text('accessible.observedAt'), presentation.formatDate(focus.source.observedAt))
   }
-  evidenceDetail.append(evidenceMessage, evidenceMeta)
+  if (focus.kind === 'XIGNAL') {
+    for (const observationId of focus.source.observationSupportRefs ?? []) {
+      appendDefinition(evidenceMeta, presentation.text('evidence.observationId'), observationId)
+    }
+    for (const learningId of focus.source.learningEventIds ?? []) {
+      appendDefinition(evidenceMeta, presentation.text('evidence.learning'), learningId)
+    }
+    for (const unknown of focus.source.unknowns ?? []) {
+      appendDefinition(evidenceMeta, presentation.text('evidence.unknown'), unknown)
+    }
+    const trace = document.createElement('ol')
+    trace.className = 'semantic-evidence-trace'
+    for (const step of focus.source.evidenceNarrative?.steps ?? []) {
+      const item = document.createElement('li')
+      const kind = document.createElement('strong')
+      kind.textContent = step.kind
+      const label = document.createElement('span')
+      label.textContent = step.label
+      item.append(kind, label)
+      if (step.sourceRef) {
+        const source = document.createElement('code')
+        source.textContent = step.sourceRef
+        item.append(source)
+      }
+      trace.append(item)
+    }
+    evidenceDetail.append(evidenceMessage, evidenceMeta, trace)
+  } else {
+    evidenceDetail.append(evidenceMessage, evidenceMeta)
+  }
   evidenceButton.addEventListener('click', () => {
     const expanded = evidenceButton.getAttribute('aria-expanded') === 'true'
     evidenceButton.setAttribute('aria-expanded', String(!expanded))
@@ -831,7 +884,7 @@ function nodeLabel(node) {
     return label
   }
 
-  const fact = describeFactForView(node.source)
+  const fact = describeNodeForView(node.source)
   const predicate = document.createElement('span')
   predicate.textContent = fact.predicateLabel
   const value = document.createElement('span')
@@ -1030,17 +1083,17 @@ function whyTextForSource(source) {
   return presentation.text(key)
 }
 
-function todayFixtureItems() {
+function todayItemsForView() {
   return [...state.projection.nodes]
     .map((source) => {
-      const fact = describeFactForView(source)
+      const fact = describeNodeForView(source)
       const observed = source.observedAt ? new Date(source.observedAt) : null
       return {
         source,
         fact,
-        key: projectionKey('FAXT', source.id),
+        key: nodeKeyForSource(source),
         observedSort: observed && !Number.isNaN(observed.valueOf()) ? observed.valueOf() : Number.NEGATIVE_INFINITY,
-        why: whyTextForSource(source),
+        why: nodeKindForSource(source) === 'XIGNAL' ? source.whyAttention : whyTextForSource(source),
       }
     })
     .sort((first, second) => second.observedSort - first.observedSort || first.source.id.localeCompare(second.source.id))
@@ -1061,6 +1114,9 @@ function openTodayEvidence(key) {
   state.depth = 3
   renderDepth()
   $('#depth-slider').focus({ preventScroll: true })
+  const evidence = $('.semantic-evidence-action')
+  if (evidence?.getAttribute('aria-expanded') !== 'true') evidence?.click()
+  evidence?.focus({ preventScroll: true })
 }
 
 function renderReader(node) {
@@ -1104,7 +1160,7 @@ function renderReader(node) {
     head.append(greeting, context)
     rootView.append(head)
 
-    const todayItems = todayFixtureItems()
+    const todayItems = todayItemsForView()
     if (todayItems.length) {
       const cards = document.createElement('div')
       cards.className = 'today-ideas'
@@ -1179,7 +1235,7 @@ function renderReader(node) {
 
   const focusView = document.createElement('div')
   focusView.className = 'focusview'
-  const fact = describeFactForView(node.source)
+  const fact = describeNodeForView(node.source)
   const readerHeader = makeReaderHeader(
     presentation.text('context.current'),
     fact.label,
@@ -1227,8 +1283,8 @@ function renderMobileTimeline(node) {
   const currentLabel = document.createElement('strong')
   currentLabel.textContent = presentation.text('mobile.timelineCurrent')
   const details = document.createElement('dl')
-  if (node.kind === 'FAXT') {
-    const fact = describeFactForView(node.source)
+  if (node.kind === 'FAXT' || node.kind === 'XIGNAL') {
+    const fact = describeNodeForView(node.source)
     appendDefinition(details, presentation.text('accessible.observedAt'), fact.observedAt)
     appendDefinition(details, presentation.text('accessible.currentness'), fact.currentnessLabel)
     appendDefinition(details, presentation.text('accessible.epistemicState'), fact.epistemicLabel)
@@ -1329,7 +1385,7 @@ function render() {
   pill.dataset.activeCanonicalId = node.id
   const activeState = state.uxLab?.presentationOverrides?.epistemicState?.[node.id]
     ?? node.source?.epistemicState
-  pill.className = `ax-pill ${node.kind === 'FAXT' ? activeState : 'UNKNOWN'}`
+  pill.className = `ax-pill ${(node.kind === 'FAXT' || node.kind === 'XIGNAL') ? activeState : 'UNKNOWN'}`
   const contextLabel = state.projection.context.label
   const displayContext = presentation.isImplementationValue(contextLabel)
     ? presentation.text('context.current')
@@ -1834,15 +1890,22 @@ function bindInteractions() {
 function displayProjection(projection) {
   state.projection = projection
   state.uxLab = projection.uxLab ?? null
+  const demoIndicator = $('.hfx-demo-indicator')
+  if (demoIndicator) {
+    const synthetic = projection.realityLevel === 'SYNTHETIC_PRESENTATION_LAB'
+    demoIndicator.hidden = !synthetic
+    demoIndicator.textContent = synthetic ? presentation.text('demo.sample') : ''
+  }
+  for (const button of document.querySelectorAll('.gv-plant, #create-xeed-rail')) button.disabled = true
   const organization = organizationKey()
   const initialHistory = state.uxLab?.initialHistory ?? [projection.organization.id]
   state.history = initialHistory.map((id) => projection.nodes.some((node) => node.id === id)
-    ? projectionKey('FAXT', id)
+    ? nodeKeyForSource(projection.nodes.find((node) => node.id === id))
     : organization)
   state.historyIndex = state.history.length - 1
   const requestedFocus = state.uxLab?.initialFocus
   state.focus = requestedFocus && projection.nodes.some((node) => node.id === requestedFocus)
-    ? projectionKey('FAXT', requestedFocus)
+    ? nodeKeyForSource(projection.nodes.find((node) => node.id === requestedFocus))
     : organization
   if (state.uxLab) configureUxLab()
   app.dataset.state = 'ready'
@@ -1868,8 +1931,9 @@ function keyForAxentScope(scope) {
   if (scope.objectKind === 'ORGANIZATION' && scope.objectId === state.projection.organization.id) {
     return organizationKey()
   }
-  if (scope.objectKind === 'FAXT' && state.projection.nodes.some((node) => node.id === scope.objectId)) {
-    return projectionKey('FAXT', scope.objectId)
+  if ((scope.objectKind === 'FAXT' || scope.objectKind === 'XIGNAL') && state.projection.nodes.some((node) => node.id === scope.objectId)) {
+    const source = state.projection.nodes.find((node) => node.id === scope.objectId)
+    return source ? nodeKeyForSource(source) : null
   }
   return null
 }
@@ -2088,8 +2152,85 @@ function configureUxLab() {
     : ''
 }
 
+function displayNoXeed() {
+  state.projection = null
+  state.uxLab = null
+  app.dataset.state = 'no-xeed'
+  const demoIndicator = $('.hfx-demo-indicator')
+  if (demoIndicator) {
+    demoIndicator.hidden = true
+    demoIndicator.textContent = ''
+  }
+  for (const button of document.querySelectorAll('.gv-plant, #create-xeed-rail')) button.disabled = false
+  cameraLayer.replaceChildren()
+  const empty = document.createElement('section')
+  empty.className = 'first-xeed-empty'
+  const title = document.createElement('h1')
+  title.textContent = presentation.text('plant.emptyTitle')
+  const body = document.createElement('p')
+  body.textContent = presentation.text('plant.emptyBody')
+  const action = document.createElement('button')
+  action.type = 'button'
+  action.className = 'today-primary'
+  action.textContent = presentation.text('plant.title')
+  action.addEventListener('click', openPlantDialog)
+  empty.append(title, body, action)
+  cameraLayer.append(empty)
+  $('#bottom-title').textContent = presentation.text('plant.emptyTitle')
+  if ($('#reader-meaning')) $('#reader-meaning').textContent = presentation.text('plant.emptyBody')
+}
+
+function openPlantDialog() {
+  const dialog = $('#plant-xeed-dialog')
+  $('#plant-xeed-status').textContent = ''
+  if (!dialog.open) dialog.showModal()
+  $('#plant-xeed-label').focus()
+}
+
+function configurePlantXeed() {
+  for (const button of document.querySelectorAll('.gv-plant, #create-xeed-rail')) {
+    button.addEventListener('click', openPlantDialog)
+  }
+  $('#plant-xeed-cancel').addEventListener('click', () => $('#plant-xeed-dialog').close())
+  $('#plant-xeed-form').addEventListener('submit', async (event) => {
+    event.preventDefault()
+    const submit = $('#plant-xeed-submit')
+    const status = $('#plant-xeed-status')
+    submit.disabled = true
+    status.textContent = presentation.text('plant.observing')
+    try {
+      const response = await fetch('/api/xeeds', {
+        method: 'POST',
+        credentials: 'same-origin',
+        cache: 'no-store',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          label: $('#plant-xeed-label').value.trim(),
+          targetUri: $('#plant-xeed-target').value.trim(),
+        }),
+      })
+      if (!response.ok) {
+        const failure = await response.json().catch(() => ({}))
+        if (response.status === 422 && failure.state === 'INSUFFICIENT_EVIDENCE') {
+          status.textContent = presentation.text('plant.insufficient')
+          return
+        }
+        throw new Error('first proof failed')
+      }
+      const projection = await response.json()
+      $('#plant-xeed-dialog').close()
+      displayProjection(projection)
+    } catch {
+      status.textContent = presentation.text('plant.failed')
+    } finally {
+      submit.disabled = false
+    }
+  })
+}
+
 async function start() {
   bindInteractions()
+  configurePlantXeed()
   const scenario = new URLSearchParams(window.location.search).get('scenario')
   const demoState = new URLSearchParams(window.location.search).get('demo')
   const endpoint = scenario
@@ -2104,6 +2245,10 @@ async function start() {
     const response = await fetch(endpoint, { credentials: 'same-origin', cache: 'no-store' })
     if (!response.ok) throw new Error('unavailable')
     const projection = await response.json()
+    if (projection.state === 'NO_XEED') {
+      displayNoXeed()
+      return
+    }
     if (projection.uxLab && (
       window.location.hostname !== '127.0.0.1'
       || projection.realityLevel !== 'SYNTHETIC_PRESENTATION_LAB'

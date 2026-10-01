@@ -1,0 +1,316 @@
+from __future__ import annotations
+
+import hashlib
+import json
+import threading
+import urllib.error
+import urllib.request
+from datetime import UTC, datetime
+from http.server import ThreadingHTTPServer
+from pathlib import Path
+
+import pytest
+
+from application.source_acquisition import SourceObservation
+from pipeline.learning_memory import SqliteLearningMemory
+from pipeline.observation_memory import SqliteObservationMemory
+from pipeline.source_acquisition import ContentAddressedArtifactStore, HttpSourceSensor
+from tools.runtime.config import RuntimeConfig
+from tools.runtime.first_proof import (
+    FirstProofInsufficientEvidence,
+    FirstProofService,
+    FirstProofStore,
+)
+from tools.runtime.service import build_runtime, make_handler
+
+SHA = "b" * 40
+NOW = datetime(2026, 10, 1, 12, 30, tzinfo=UTC)
+
+
+def _service(tmp_path: Path) -> FirstProofService:
+    data = tmp_path / "runtime"
+    artifacts = ContentAddressedArtifactStore(data / "artifacts")
+    return FirstProofService(
+        code_sha=SHA,
+        allowed_host="axignal.com",
+        store=FirstProofStore(data / "first-proof.sqlite3"),
+        observation_memory=SqliteObservationMemory(data / "observation-memory.sqlite3"),
+        learning_memory=SqliteLearningMemory(data / "learning-memory.sqlite3"),
+        artifacts=artifacts,
+    )
+
+
+def _install_source(monkeypatch: pytest.MonkeyPatch, service: FirstProofService) -> None:
+    body = (
+        b"<!doctype html><html lang='en'><head><title>AXIGNAL</title>"
+        b"<meta name='description' content='Observe the economic world from the outside.'>"
+        b"</head><body><main>AXIGNAL observes the economic world from the outside.</main></body></html>"
+    )
+    body_ref = service.artifacts.put_bytes(body)
+    body_fingerprint = f"sha256:{hashlib.sha256(body).hexdigest()}"
+    envelope_ref = service.artifacts.put_json(
+        {
+            "schema": "axignal.source-observation/0.1",
+            "source": "fr30-controlled-test",
+            "body_artifact_ref": body_ref,
+            "body_fingerprint": body_fingerprint,
+        }
+    )
+    observation_fingerprint = f"sha256:{ContentAddressedArtifactStore.digest(envelope_ref)}"
+
+    def observe(self, request, policy):
+        del self
+        return SourceObservation(
+            request_id=request.request_id,
+            subject_id=request.subject_id,
+            observation_slot=request.observation_slot,
+            requested_uri=request.target_uri,
+            final_uri=request.target_uri,
+            retrieved_at=NOW,
+            http_status=200,
+            content_type="text/html; charset=utf-8",
+            body_fingerprint=body_fingerprint,
+            body_artifact_ref=body_ref,
+            raw_observation_ref=envelope_ref,
+            observation_fingerprint=observation_fingerprint,
+            instrument_ref="fr30-controlled-http/1",
+            policy_id=policy.policy_id,
+            policy_fingerprint=policy.fingerprint,
+            redirect_chain=(request.target_uri,),
+            peer_ips=("203.0.113.10",),
+            failure_state=None,
+        )
+
+    monkeypatch.setattr(HttpSourceSensor, "observe", observe)
+
+
+def test_first_proof_rejects_non_allowlisted_or_non_https_target(tmp_path: Path) -> None:
+    service = _service(tmp_path)
+    with pytest.raises(ValueError, match="configured HTTPS host"):
+        service.plant(label="bad", target_uri="https://example.com/")
+    with pytest.raises(ValueError, match="configured HTTPS host"):
+        service.plant(label="bad", target_uri="http://axignal.com/")
+
+
+def test_first_xeed_reaches_real_governed_first_proof_and_reload(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    service = _service(tmp_path)
+    _install_source(monkeypatch, service)
+    projection = service.plant(label="AXIGNAL first proof", target_uri="https://axignal.com/")
+    assert projection["realityLevel"] == "LIVE_PRODUCTION_FIRST_PROOF"
+    assert projection["runtimeCodeSha"] == SHA
+    assert projection["lifecycleStatus"] == "LIVE"
+    assert projection["reloadContinuity"] == "PERSISTED_RUNTIME_READ_MODEL"
+    assert projection["organization"] == {
+        "id": "org:axignal",
+        "name": "AXIGNAL",
+        "capabilities": [],
+        "markets": [],
+    }
+    nodes = projection["nodes"]
+    assert isinstance(nodes, list) and len(nodes) == 1
+    xignal = nodes[0]
+    assert xignal["nodeKind"] == "XIGNAL"
+    assert xignal["epistemicState"] == "OBSERVED"
+    assert xignal["currentness"] == "CURRENT"
+    assert xignal["observationSupportRefs"]
+    assert xignal["unknowns"]
+
+    narrative = xignal["evidenceNarrative"]
+    kinds = [step["kind"] for step in narrative["steps"]]
+    assert narrative["xignalId"] == xignal["id"]
+    assert kinds[0] == "XIGNAL"
+    assert {"OBSERVATION", "SOURCE", "UNKNOWN"}.issubset(kinds)
+    assert any(step["artifactVerified"] is True for step in narrative["steps"])
+    observations = service.observation_memory.for_subject("org:axignal")
+    assert len(observations) == 1
+    learning = service.learning_memory.for_xeed(projection["context"]["id"])
+    assert len(learning) >= 5
+    assert any(event.yield_.xignals_emitted == 1 for event in learning)
+    assert projection["learning"]["linkedXignalEventId"] in {event.event_id for event in learning}
+    assert projection["today"]["disposition"] == "READY"
+    assert FirstProofStore(service.store.path).latest() == projection
+
+
+def test_second_plant_is_distinct_private_xeed_same_canonical_org(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    service = _service(tmp_path)
+    _install_source(monkeypatch, service)
+    first = service.plant(label="First", target_uri="https://axignal.com/")
+    second = service.plant(label="Second", target_uri="https://axignal.com/")
+    assert first["context"]["id"] != second["context"]["id"]
+    assert first["organization"]["id"] == second["organization"]["id"] == "org:axignal"
+    assert service.current_projection() == second
+
+
+def test_persisted_payload_contains_no_demo_or_synthetic_markers(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    service = _service(tmp_path)
+    _install_source(monkeypatch, service)
+    projection = service.plant(label="AXIGNAL first proof", target_uri="https://axignal.com/")
+    serialized = json.dumps(projection).lower()
+    assert "demo" not in serialized
+    assert "synthetic" not in serialized
+    assert "sale_probability" not in serialized
+    assert "provider_confidence" not in serialized
+
+
+def test_observed_surface_without_usable_body_is_explicit_insufficient_evidence(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    service = _service(tmp_path)
+
+    def observe(self, request, policy):
+        del self
+        return SourceObservation(
+            request_id=request.request_id,
+            subject_id=request.subject_id,
+            observation_slot=request.observation_slot,
+            requested_uri=request.target_uri,
+            final_uri=request.target_uri,
+            retrieved_at=NOW,
+            http_status=200,
+            content_type="text/html; charset=utf-8",
+            body_fingerprint=None,
+            body_artifact_ref=None,
+            raw_observation_ref=service.artifacts.put_json({"failure": "response_too_large"}),
+            observation_fingerprint="sha256:" + "c" * 64,
+            instrument_ref="fr30-controlled-http/1",
+            policy_id=policy.policy_id,
+            policy_fingerprint=policy.fingerprint,
+            redirect_chain=(request.target_uri,),
+            peer_ips=("203.0.113.10",),
+            failure_state="response_too_large",
+        )
+
+    monkeypatch.setattr(HttpSourceSensor, "observe", observe)
+    with pytest.raises(FirstProofInsufficientEvidence, match="SOURCE_NOT_EVALUABLE"):
+        service.plant(label="AXIGNAL first proof", target_uri="https://axignal.com/")
+    assert service.current_projection() is None
+
+
+def _http_runtime(tmp_path: Path):
+    config = RuntimeConfig(
+        environment="production",
+        bind_host="127.0.0.1",
+        port=8765,
+        code_sha=SHA,
+        data_dir=tmp_path / "http-runtime",
+        web_root=Path(__file__).resolve().parents[2] / "apps" / "web",
+        first_proof_allowed_host="axignal.com",
+    )
+    runtime = build_runtime(config)
+    server = ThreadingHTTPServer(("127.0.0.1", 0), make_handler(runtime))
+    thread = threading.Thread(target=server.serve_forever, daemon=True)
+    thread.start()
+    host, port = server.server_address
+    return runtime, server, thread, f"http://{host}:{port}"
+
+
+def test_runtime_http_first_proof_no_xeed_plant_and_reload(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    runtime, server, thread, base = _http_runtime(tmp_path)
+    assert runtime.first_proof is not None
+    _install_source(monkeypatch, runtime.first_proof)
+    try:
+        with urllib.request.urlopen(base + "/api/subscriber-context", timeout=3) as response:
+            empty = json.loads(response.read())
+        assert empty == {"realityLevel": "LIVE_PRODUCTION_FIRST_PROOF", "state": "NO_XEED"}
+
+        body = json.dumps(
+            {"label": "HTTP first proof", "targetUri": "https://axignal.com/"}
+        ).encode()
+        request = urllib.request.Request(
+            base + "/api/xeeds", body, {"Content-Type": "application/json"}, method="POST"
+        )
+        with urllib.request.urlopen(request, timeout=3) as response:
+            assert response.status == 201
+            created = json.loads(response.read())
+        assert created["lifecycleStatus"] == "LIVE"
+
+        with urllib.request.urlopen(base + "/api/subscriber-context", timeout=3) as response:
+            reloaded = json.loads(response.read())
+        assert reloaded == created
+    finally:
+        server.shutdown()
+        server.server_close()
+        thread.join(timeout=3)
+
+
+def test_runtime_http_distinguishes_invalid_target_and_insufficient_evidence(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    runtime, server, thread, base = _http_runtime(tmp_path)
+    assert runtime.first_proof is not None
+    try:
+        invalid = urllib.request.Request(
+            base + "/api/xeeds",
+            json.dumps({"label": "bad", "targetUri": "https://example.com/"}).encode(),
+            {"Content-Type": "application/json"},
+            method="POST",
+        )
+        with pytest.raises(urllib.error.HTTPError) as invalid_error:
+            urllib.request.urlopen(invalid, timeout=3)
+        assert invalid_error.value.code == 400
+
+        def observe(self, request, policy):
+            del self
+            return SourceObservation(
+                request_id=request.request_id,
+                subject_id=request.subject_id,
+                observation_slot=request.observation_slot,
+                requested_uri=request.target_uri,
+                final_uri=request.target_uri,
+                retrieved_at=NOW,
+                http_status=200,
+                content_type="text/html; charset=utf-8",
+                body_fingerprint=None,
+                body_artifact_ref=None,
+                raw_observation_ref=runtime.first_proof.artifacts.put_json({"failure": "empty"}),
+                observation_fingerprint="sha256:" + "d" * 64,
+                instrument_ref="fr30-controlled-http/1",
+                policy_id=policy.policy_id,
+                policy_fingerprint=policy.fingerprint,
+                redirect_chain=(request.target_uri,),
+                peer_ips=("203.0.113.10",),
+                failure_state="empty_body",
+            )
+
+        monkeypatch.setattr(HttpSourceSensor, "observe", observe)
+        insufficient = urllib.request.Request(
+            base + "/api/xeeds",
+            json.dumps({"label": "insufficient", "targetUri": "https://axignal.com/"}).encode(),
+            {"Content-Type": "application/json"},
+            method="POST",
+        )
+        with pytest.raises(urllib.error.HTTPError) as insufficient_error:
+            urllib.request.urlopen(insufficient, timeout=3)
+        assert insufficient_error.value.code == 422
+        payload = json.loads(insufficient_error.value.read())
+        assert payload["state"] == "INSUFFICIENT_EVIDENCE"
+    finally:
+        server.shutdown()
+        server.server_close()
+        thread.join(timeout=3)
+
+
+def test_fr30_deployment_keeps_first_proof_write_api_loopback_only() -> None:
+    root = Path(__file__).resolve().parents[2]
+    env = (root / "deploy" / "production" / "runtime.env.example").read_text(encoding="utf-8")
+    nginx = (root / "deploy" / "production" / "axignal-landing-nginx.conf").read_text(
+        encoding="utf-8"
+    )
+    app = (root / "apps" / "web" / "subscriber" / "app.js").read_text(encoding="utf-8")
+
+    assert "AXIGNAL_FIRST_PROOF_ALLOWED_HOST=axignal.com" in env
+    assert "/api/xeeds" not in nginx
+    assert "/api/subscriber-context" not in nginx
+    assert "/subscriber" not in nginx
+    assert "response.status === 422" in app
+    assert "failure.state === 'INSUFFICIENT_EVIDENCE'" in app
+    assert "nodeKindForSource" in app
+    assert "projectionKey('FAXT'" not in app

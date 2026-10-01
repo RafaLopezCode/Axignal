@@ -15,6 +15,7 @@ class RuntimeConfig:
     code_sha: str
     data_dir: Path
     web_root: Path
+    first_proof_allowed_host: str | None = None
 
     @classmethod
     def from_env(cls) -> RuntimeConfig:
@@ -24,6 +25,9 @@ class RuntimeConfig:
         code_sha = os.getenv("AXIGNAL_CODE_SHA", "UNKNOWN").strip()
         data_raw = os.getenv("AXIGNAL_DATA_DIR", "").strip()
         web_raw = os.getenv("AXIGNAL_WEB_ROOT", "").strip()
+        first_proof_allowed_host = (
+            os.getenv("AXIGNAL_FIRST_PROOF_ALLOWED_HOST", "").strip().lower() or None
+        )
 
         if not bind_host:
             raise ValueError("AXIGNAL_BIND_HOST cannot be empty")
@@ -43,4 +47,12 @@ class RuntimeConfig:
         if not web_root.is_dir():
             raise ValueError("AXIGNAL_WEB_ROOT must exist and be a directory")
         data_dir.mkdir(parents=True, exist_ok=True)
-        return cls(environment, bind_host, port, code_sha, data_dir, web_root)
+        return cls(
+            environment,
+            bind_host,
+            port,
+            code_sha,
+            data_dir,
+            web_root,
+            first_proof_allowed_host,
+        )
