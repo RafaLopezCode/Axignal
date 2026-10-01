@@ -1,4 +1,4 @@
-"""Deterministic entity resolution.
+"""Canonical organization identity resolution.
 
 Companies, aliases, groups, subsidiaries, brands and legal entities.
 
@@ -10,6 +10,17 @@ from __future__ import annotations
 from pipeline.entity_resolution.resolver import (
     ExactNameResolver,
     ResolutionCandidate,
+    ResolutionResult,
+    ResolutionStatus,
+    VerifiedIdentifier,
 )
+from pipeline.entity_resolution.sqlite_store import SqliteIdentityGovernanceStore
 
-__all__ = ["ExactNameResolver", "ResolutionCandidate"]
+__all__ = [
+    "ExactNameResolver",
+    "ResolutionCandidate",
+    "ResolutionResult",
+    "ResolutionStatus",
+    "SqliteIdentityGovernanceStore",
+    "VerifiedIdentifier",
+]
