@@ -11,6 +11,8 @@ semantic authority; everything here is derived from it and must not override it.
 | [ARCHITECTURE_GUARD.md](ARCHITECTURE_GUARD.md) | What Architecture Guard rejects and why. |
 | [GRAPHIFY.md](GRAPHIFY.md) | Graphify scope, canonical vs generated artifacts, refresh and drift. |
 | [SPEC_KIT.md](SPEC_KIT.md) | Spec-driven lifecycle and MASTER precedence. |
+| [AXIGNAL_FRONTIER_RECONCILIATION_ROADMAP_2026-09-30.md](AXIGNAL_FRONTIER_RECONCILIATION_ROADMAP_2026-09-30.md) | FR-00→FR-31 product/architecture reconciliation history and closure evidence. |
+| [AXIGNAL_ADMIN_OPERATING_SYSTEM_ROADMAP_2026-10-01.md](AXIGNAL_ADMIN_OPERATING_SYSTEM_ROADMAP_2026-10-01.md) | AO-00→AO-31 implementation contract for Admin, business operations, acquisition, finance/fiscal control and deep re-audit. |
 
 Related:
 - Engineering Constitution: `.specify/memory/constitution.md`
