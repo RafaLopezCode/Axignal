@@ -96,6 +96,18 @@ def test_human_evidence_matrix_exposes_all_tasks_and_gaps() -> None:
         assert marker in matrix
 
 
+def test_formal_independent_reaudit_request_is_registered_without_target_verdict() -> None:
+    manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
+    request_record = manifest["independent_reaudit_request"]
+    statuses = _roadmap_statuses()
+
+    assert request_record["issue"] == 101
+    assert request_record["url"] == "https://github.com/RafaLopezCode/Axignal/issues/101"
+    assert request_record["status"] == "OPEN_REQUESTED"
+    assert request_record["desired_verdict"] is None
+    assert statuses["FR-31"] == "DONE"
+
+
 def test_independent_reaudit_request_does_not_prescribe_a_verdict() -> None:
     request = REQUEST.read_text(encoding="utf-8")
 

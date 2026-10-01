@@ -4,6 +4,7 @@
 **Audit-base CI:** [run 36872416171](https://github.com/RafaLopezCode/Axignal/actions/runs/36872416171) ? `SUCCESS`
 **Purpose:** give an independent Frontier Advisor direct evidence for FR-00 through FR-30 without prescribing a conclusion.
 **Clean audit-base validation:** [`docs/audit/FR31_AUDIT_BASE_VALIDATION_SNAPSHOT.md`](FR31_AUDIT_BASE_VALIDATION_SNAPSHOT.md)
+**Independent re-audit request:** [GitHub Issue #101](https://github.com/RafaLopezCode/Axignal/issues/101) ? OPEN / REQUESTED
 
 ## Status semantics
 

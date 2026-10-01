@@ -320,5 +320,11 @@
       "statement": "The production subscriber/runtime API remains loopback-only; public account/auth exposure is not claimed by FR-30."
     }
   ],
-  "validation_snapshot": "docs/audit/FR31_AUDIT_BASE_VALIDATION_SNAPSHOT.md"
+  "validation_snapshot": "docs/audit/FR31_AUDIT_BASE_VALIDATION_SNAPSHOT.md",
+  "independent_reaudit_request": {
+    "issue": 101,
+    "url": "https://github.com/RafaLopezCode/Axignal/issues/101",
+    "status": "OPEN_REQUESTED",
+    "desired_verdict": null
+  }
 }

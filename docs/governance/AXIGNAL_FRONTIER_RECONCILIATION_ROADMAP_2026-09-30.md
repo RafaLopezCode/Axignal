@@ -1299,7 +1299,7 @@ The core findings of both Frontier audits are materially closed; FIRST_MAP_WOW i
 
 ## FR-31 — Frontier Re-Audit Preparation
 
-**Status:** IMPLEMENTED_PENDING_REAUDIT_REQUEST
+**Status:** DONE
 **Depends on:** FR-30  
 **Priority:** FINAL
 
@@ -1313,16 +1313,16 @@ The core findings of both Frontier audits are materially closed; FIRST_MAP_WOW i
 - `docs/audit/FR31_AUDIT_BASE_VALIDATION_SNAPSHOT.md` records clean-tree validation and current production evidence.
 - Production at preparation time: runtime `cb89cfe391a0ce6ba93bfc5e5b8a942795897769`, landing `d78afb0f1acdfcb660fb1fb28d325b76ff65552d`, both services active, health OK, public write surface closed, 1 first-proof session / 1 Observation / 6 Learning Events.
 - Explicit unresolved evidence remains visible: FR-27 empirical buyer/job evidence, willingness-to-pay evidence, constrained provider bake-off availability, and public subscriber/account exposure.
-- Formal external/independent re-audit request is the only remaining FR-31 acceptance item.
+- Fresh independent re-audit formally requested in GitHub Issue #101 (`https://github.com/RafaLopezCode/Axignal/issues/101`) with the same core criteria, explicit gaps and no desired verdict.
 
 ### Work
 Prepare current SHA, clean-tree evidence, validation output, task closure matrix, runtime/deployment evidence, UX screenshots/flows, unit-economics evidence where available and explicit remaining UNKNOWN/DEFERRED items. Do not tell the Frontier Advisor which conclusions to reach.
 
 ### Acceptance
-- Every DONE task links evidence.
-- Remaining gaps explicit.
-- No stale roadmap status.
-- Fresh independent audit requested using the same core criteria.
+- Every DONE task links evidence. **PASS ? machine manifest + human evidence matrix.**
+- Remaining gaps explicit. **PASS ? FR-27 empirical/WTP, provider availability and public subscriber/account exposure remain visible.**
+- No stale roadmap status. **PASS ? manifest is contract-checked against FR-00..FR-30 roadmap statuses at audit base.**
+- Fresh independent audit requested using the same core criteria. **PASS ? GitHub Issue #101.**
 
 ### FRONTIER_CLOSURE
 The next report evaluates the evolved product rather than rediscovering already-known, already-fixed gaps.

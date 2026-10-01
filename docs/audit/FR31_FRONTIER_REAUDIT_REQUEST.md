@@ -1,5 +1,9 @@
 # FR-31 Independent Frontier Re-Audit Request
 
+## Formal request record
+
+A fresh independent re-audit was formally requested in [GitHub Issue #101](https://github.com/RafaLopezCode/Axignal/issues/101). The issue requests no target score, pass/fail result, or desired verdict.
+
 ## Audit target
 
 Audit AXIGNAL at repository evidence base `d78afb0f1acdfcb660fb1fb28d325b76ff65552d` plus the FR-31 evidence package that references it. The current production split is runtime `cb89cfe391a0ce6ba93bfc5e5b8a942795897769` and landing `d78afb0f1acdfcb660fb1fb28d325b76ff65552d`.
