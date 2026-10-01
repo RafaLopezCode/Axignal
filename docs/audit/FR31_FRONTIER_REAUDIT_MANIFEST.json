@@ -1,0 +1,330 @@
+{
+  "schema_version": 1,
+  "generated_for": "FR-31 Frontier Re-Audit Preparation",
+  "audit_base_sha": "d78afb0f1acdfcb660fb1fb28d325b76ff65552d",
+  "audit_base_ci": {
+    "run_id": 36872416171,
+    "url": "https://github.com/RafaLopezCode/Axignal/actions/runs/36872416171",
+    "conclusion": "success"
+  },
+  "production": {
+    "runtime_code_sha": "cb89cfe391a0ce6ba93bfc5e5b8a942795897769",
+    "landing_sha": "d78afb0f1acdfcb660fb1fb28d325b76ff65552d",
+    "runtime_service": "active",
+    "landing_service": "active",
+    "health": "ok",
+    "write_surface": "closed",
+    "first_proof_sessions": 1,
+    "observation_rows": 1,
+    "learning_event_rows": 6,
+    "runtime_detail": "docs/operations/FR29_PRODUCTION_RUNTIME_INTEGRATION.md",
+    "e2e_detail": "docs/operations/FR30_PRODUCTION_FIRST_XEED_FIRST_PROOF.md"
+  },
+  "tasks": [
+    {
+      "fr": "FR-00",
+      "status": "DONE",
+      "evidence": [
+        "docs/governance/AXIGNAL_FRONTIER_RECONCILIATION_ROADMAP_2026-09-30.md",
+        "tools/governance/checks.py"
+      ]
+    },
+    {
+      "fr": "FR-01",
+      "status": "DONE",
+      "evidence": [
+        "docs/governance/AXIGNAL_FRONTIER_RECONCILIATION_ROADMAP_2026-09-30.md",
+        "docs/adr/ADR-0026-xeed-bootstrap-controller.md"
+      ]
+    },
+    {
+      "fr": "FR-02",
+      "status": "DONE",
+      "evidence": [
+        "docs/governance/AXIGNAL_FRONTIER_RECONCILIATION_ROADMAP_2026-09-30.md",
+        "docs/adr/ADR-0028-research-value-gate.md"
+      ]
+    },
+    {
+      "fr": "FR-03",
+      "status": "DONE",
+      "evidence": [
+        "docs/governance/AXIGNAL_FRONTIER_RECONCILIATION_ROADMAP_2026-09-30.md",
+        "docs/adr/ADR-0029-execution-budget-stop-contract.md",
+        "tests/economic_discovery/test_execution_budget.py"
+      ]
+    },
+    {
+      "fr": "FR-04",
+      "status": "DONE",
+      "evidence": [
+        "docs/governance/AXIGNAL_FRONTIER_RECONCILIATION_ROADMAP_2026-09-30.md",
+        "docs/adr/ADR-0030-prime-execution-composition-root.md",
+        "tests/economic_discovery/test_prime_execution.py"
+      ]
+    },
+    {
+      "fr": "FR-05",
+      "status": "DONE",
+      "evidence": [
+        "docs/governance/AXIGNAL_FRONTIER_RECONCILIATION_ROADMAP_2026-09-30.md",
+        "docs/adr/ADR-0031-explainable-xignal-projection.md",
+        "tests/subscriber_projection/test_explainable_xignal.py"
+      ]
+    },
+    {
+      "fr": "FR-06",
+      "status": "DONE",
+      "evidence": [
+        "docs/governance/AXIGNAL_FRONTIER_RECONCILIATION_ROADMAP_2026-09-30.md",
+        "docs/adr/ADR-0032-end-to-end-evidence-narrative.md",
+        "tests/subscriber_projection/test_evidence_narrative.py"
+      ]
+    },
+    {
+      "fr": "FR-07",
+      "status": "DONE",
+      "evidence": [
+        "docs/governance/AXIGNAL_FRONTIER_RECONCILIATION_ROADMAP_2026-09-30.md",
+        "docs/adr/ADR-0033-first-xeed-runtime-lifecycle.md",
+        "tests/xeed_germination/test_first_xeed_runtime.py"
+      ]
+    },
+    {
+      "fr": "FR-08",
+      "status": "DONE",
+      "evidence": [
+        "docs/governance/AXIGNAL_FRONTIER_RECONCILIATION_ROADMAP_2026-09-30.md",
+        "docs/adr/ADR-0034-first-map-readiness-policy.md"
+      ]
+    },
+    {
+      "fr": "FR-09",
+      "status": "DONE",
+      "evidence": [
+        "docs/governance/AXIGNAL_FRONTIER_RECONCILIATION_ROADMAP_2026-09-30.md",
+        "docs/adr/ADR-0035-insight-first-today.md",
+        "tests/contracts/test_fr09_insight_first_today.py"
+      ]
+    },
+    {
+      "fr": "FR-10",
+      "status": "DONE",
+      "evidence": [
+        "docs/governance/AXIGNAL_FRONTIER_RECONCILIATION_ROADMAP_2026-09-30.md",
+        "docs/adr/ADR-0036-axent-context-continuity-separation.md",
+        "tests/contracts/test_axent_intelligence_exchange.py"
+      ]
+    },
+    {
+      "fr": "FR-11",
+      "status": "DONE",
+      "evidence": [
+        "docs/governance/AXIGNAL_FRONTIER_RECONCILIATION_ROADMAP_2026-09-30.md",
+        "docs/adr/ADR-0037-initial-cognitive-load-progressive-disclosure.md",
+        "tests/contracts/test_fr11_initial_cognitive_load.py"
+      ]
+    },
+    {
+      "fr": "FR-12",
+      "status": "DONE",
+      "evidence": [
+        "docs/governance/AXIGNAL_FRONTIER_RECONCILIATION_ROADMAP_2026-09-30.md",
+        "docs/adr/ADR-0038-subscriber-terminology-locale-coherence.md",
+        "tests/contracts/test_fr12_subscriber_locale_terminology.py"
+      ]
+    },
+    {
+      "fr": "FR-13",
+      "status": "DONE",
+      "evidence": [
+        "docs/governance/AXIGNAL_FRONTIER_RECONCILIATION_ROADMAP_2026-09-30.md",
+        "docs/adr/ADR-0039-three-level-spatial-legibility.md",
+        "tests/contracts/test_fr13_three_level_spatial_legibility.py"
+      ]
+    },
+    {
+      "fr": "FR-14",
+      "status": "DONE",
+      "evidence": [
+        "docs/governance/AXIGNAL_FRONTIER_RECONCILIATION_ROADMAP_2026-09-30.md",
+        "docs/adr/ADR-0040-motion-input-ownership-contract.md",
+        "tests/contracts/test_fr14_motion_input_contract.py"
+      ]
+    },
+    {
+      "fr": "FR-15",
+      "status": "DONE",
+      "evidence": [
+        "docs/governance/AXIGNAL_FRONTIER_RECONCILIATION_ROADMAP_2026-09-30.md",
+        "docs/adr/ADR-0041-accessible-non-graph-projection.md",
+        "tests/contracts/test_fr15_accessible_non_graph_projection.py"
+      ]
+    },
+    {
+      "fr": "FR-16",
+      "status": "DONE",
+      "evidence": [
+        "docs/governance/AXIGNAL_FRONTIER_RECONCILIATION_ROADMAP_2026-09-30.md",
+        "docs/adr/ADR-0042-mobile-value-subset.md",
+        "tests/contracts/test_fr16_mobile_value_subset.py"
+      ]
+    },
+    {
+      "fr": "FR-17",
+      "status": "DONE",
+      "evidence": [
+        "docs/governance/AXIGNAL_FRONTIER_RECONCILIATION_ROADMAP_2026-09-30.md",
+        "docs/adr/ADR-0043-learning-events-from-real-execution.md",
+        "tests/contracts/test_fr17_learning_events_real_execution.py"
+      ]
+    },
+    {
+      "fr": "FR-18",
+      "status": "DONE",
+      "evidence": [
+        "docs/governance/AXIGNAL_FRONTIER_RECONCILIATION_ROADMAP_2026-09-30.md",
+        "docs/adr/ADR-0044-replay-reference-completeness.md",
+        "tests/contracts/test_fr18_replay_reference_completeness.py"
+      ]
+    },
+    {
+      "fr": "FR-19",
+      "status": "DONE",
+      "evidence": [
+        "docs/governance/AXIGNAL_FRONTIER_RECONCILIATION_ROADMAP_2026-09-30.md",
+        "docs/adr/ADR-0045-governed-policy-candidate-replay-shadow.md",
+        "tests/contracts/test_fr19_governed_policy_shadow.py"
+      ]
+    },
+    {
+      "fr": "FR-20",
+      "status": "DONE",
+      "evidence": [
+        "docs/governance/AXIGNAL_FRONTIER_RECONCILIATION_ROADMAP_2026-09-30.md",
+        "docs/adr/ADR-0046-policy-promotion-rollback-gate.md",
+        "tests/contracts/test_fr20_policy_promotion_rollback.py"
+      ]
+    },
+    {
+      "fr": "FR-21",
+      "status": "DONE",
+      "evidence": [
+        "docs/governance/AXIGNAL_FRONTIER_RECONCILIATION_ROADMAP_2026-09-30.md",
+        "docs/adr/ADR-0047-provider-neutral-structured-evaluator-contract.md",
+        "tests/contracts/test_fr21_structured_evaluator_contract.py"
+      ]
+    },
+    {
+      "fr": "FR-22",
+      "status": "DONE",
+      "evidence": [
+        "docs/governance/AXIGNAL_FRONTIER_RECONCILIATION_ROADMAP_2026-09-30.md",
+        "docs/adr/ADR-0048-evaluator-decision-lab-bakeoff-governance.md",
+        "tests/experiments/test_fr22_evaluator_bakeoff.py"
+      ]
+    },
+    {
+      "fr": "FR-23",
+      "status": "DONE",
+      "evidence": [
+        "docs/governance/AXIGNAL_FRONTIER_RECONCILIATION_ROADMAP_2026-09-30.md",
+        "docs/adr/ADR-0049-canonical-identity-resolution-reversible-topology.md",
+        "tests/contracts/test_fr23_identity_resolution_hardening.py"
+      ]
+    },
+    {
+      "fr": "FR-24",
+      "status": "DONE",
+      "evidence": [
+        "docs/governance/AXIGNAL_FRONTIER_RECONCILIATION_ROADMAP_2026-09-30.md",
+        "docs/adr/ADR-0050-observation-rights-reuse-applicability-gate.md",
+        "tests/contracts/test_fr24_rights_reuse_applicability.py"
+      ]
+    },
+    {
+      "fr": "FR-25",
+      "status": "DONE",
+      "evidence": [
+        "docs/governance/AXIGNAL_FRONTIER_RECONCILIATION_ROADMAP_2026-09-30.md",
+        "docs/adr/ADR-0051-temporal-currentness-append-only-reobservation.md",
+        "tests/contracts/test_fr25_temporal_currentness_reobservation.py"
+      ]
+    },
+    {
+      "fr": "FR-26",
+      "status": "DONE — 2026-10-01",
+      "evidence": [
+        "docs/governance/AXIGNAL_FRONTIER_RECONCILIATION_ROADMAP_2026-09-30.md",
+        "docs/adr/ADR-0052-unit-economics-instrumentation.md",
+        "tests/contracts/test_fr26_unit_economics_instrumentation.py"
+      ]
+    },
+    {
+      "fr": "FR-27",
+      "status": "READY — implementation/protocol complete; real buyer/job evidence pending",
+      "evidence": [
+        "docs/governance/AXIGNAL_FRONTIER_RECONCILIATION_ROADMAP_2026-09-30.md",
+        "docs/adr/ADR-0053-one-buyer-one-job-pilot-evidence.md",
+        "tests/contracts/test_fr27_one_buyer_one_job_pilot.py",
+        "docs/research/fr27/pilot-protocol.md"
+      ]
+    },
+    {
+      "fr": "FR-28",
+      "status": "DONE",
+      "evidence": [
+        "docs/governance/AXIGNAL_FRONTIER_RECONCILIATION_ROADMAP_2026-09-30.md",
+        "tests/contracts/test_public_landing_runtime.py",
+        "docs/product/AXIGNAL_PUBLIC_LANDING_PAGE_CONTRACT.md"
+      ]
+    },
+    {
+      "fr": "FR-29",
+      "status": "DONE",
+      "evidence": [
+        "docs/governance/AXIGNAL_FRONTIER_RECONCILIATION_ROADMAP_2026-09-30.md",
+        "tests/contracts/test_fr29_production_runtime_integration.py",
+        "docs/operations/FR29_PRODUCTION_RUNTIME_INTEGRATION.md"
+      ]
+    },
+    {
+      "fr": "FR-30",
+      "status": "DONE",
+      "evidence": [
+        "docs/governance/AXIGNAL_FRONTIER_RECONCILIATION_ROADMAP_2026-09-30.md",
+        "tests/contracts/test_fr30_production_first_proof.py",
+        "docs/operations/FR30_PRODUCTION_FIRST_XEED_FIRST_PROOF.md"
+      ]
+    }
+  ],
+  "explicit_remaining_gaps": [
+    {
+      "id": "FR-27-EMPIRICAL",
+      "status": "PENDING",
+      "statement": "Real buyer/job empirical evidence is still pending; implementation/protocol completion is not market validation."
+    },
+    {
+      "id": "FR-27-WTP",
+      "status": "PENDING",
+      "statement": "Willingness to pay requires a real offer response or payment record; telemetry cannot establish it."
+    },
+    {
+      "id": "FR-22-PROVIDER-BAKEOFF",
+      "status": "DEFERRED",
+      "statement": "External provider bake-off remains constrained by governed corpus/provider availability; blocked/unavailable candidates must not be simulated."
+    },
+    {
+      "id": "PUBLIC-SUBSCRIBER-AUTH",
+      "status": "DEFERRED",
+      "statement": "The production subscriber/runtime API remains loopback-only; public account/auth exposure is not claimed by FR-30."
+    }
+  ],
+  "validation_snapshot": "docs/audit/FR31_AUDIT_BASE_VALIDATION_SNAPSHOT.md",
+  "independent_reaudit_request": {
+    "issue": 101,
+    "url": "https://github.com/RafaLopezCode/Axignal/issues/101",
+    "status": "OPEN_REQUESTED",
+    "desired_verdict": null
+  }
+}
