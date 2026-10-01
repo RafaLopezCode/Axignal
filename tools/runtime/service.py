@@ -18,6 +18,11 @@ from urllib.parse import unquote, urlsplit
 from pipeline.learning_memory import SqliteLearningMemory
 from pipeline.observation_memory import SqliteObservationMemory
 from tools.runtime.config import RuntimeConfig
+from tools.runtime.first_proof import (
+    FirstProofInsufficientEvidence,
+    FirstProofService,
+    FirstProofStore,
+)
 
 
 @dataclass(slots=True)
@@ -25,6 +30,7 @@ class AxignalRuntime:
     config: RuntimeConfig
     observation_memory: SqliteObservationMemory
     learning_memory: SqliteLearningMemory
+    first_proof: FirstProofService | None = None
 
     @property
     def observation_db(self) -> Path:
@@ -63,10 +69,25 @@ class AxignalRuntime:
 def build_runtime(config: RuntimeConfig) -> AxignalRuntime:
     observation_db = config.data_dir / "observation-memory.sqlite3"
     learning_db = config.data_dir / "learning-memory.sqlite3"
+    observation_memory = SqliteObservationMemory(observation_db)
+    learning_memory = SqliteLearningMemory(learning_db)
+    first_proof = None
+    if config.first_proof_allowed_host is not None:
+        from pipeline.source_acquisition import ContentAddressedArtifactStore
+
+        first_proof = FirstProofService(
+            code_sha=config.code_sha,
+            allowed_host=config.first_proof_allowed_host,
+            store=FirstProofStore(config.data_dir / "first-proof.sqlite3"),
+            observation_memory=observation_memory,
+            learning_memory=learning_memory,
+            artifacts=ContentAddressedArtifactStore(config.data_dir / "artifacts"),
+        )
     return AxignalRuntime(
         config=config,
-        observation_memory=SqliteObservationMemory(observation_db),
-        learning_memory=SqliteLearningMemory(learning_db),
+        observation_memory=observation_memory,
+        learning_memory=learning_memory,
+        first_proof=first_proof,
     )
 
 
@@ -167,8 +188,19 @@ def make_handler(runtime: AxignalRuntime) -> type[BaseHTTPRequestHandler]:
                     "learning_memory": "sqlite-append-only",
                     "first_xeed_runtime": "application-contract-loaded",
                     "public_write_api": False,
+                    "loopback_first_proof_api": runtime.first_proof is not None,
                 }
                 self._json(payload)
+                return
+            if request_path == "/api/subscriber-context":
+                if runtime.first_proof is None:
+                    self._json({"state": "NO_XEED", "realityLevel": "LIVE_PRODUCTION_FIRST_PROOF"})
+                    return
+                projection = runtime.first_proof.current_projection()
+                if projection is None:
+                    self._json({"state": "NO_XEED", "realityLevel": "LIVE_PRODUCTION_FIRST_PROOF"})
+                else:
+                    self._json(projection)
                 return
             static_path = _resolve_static(runtime.config.web_root, request_path)
             if static_path is None or not static_path.is_file():
@@ -177,6 +209,43 @@ def make_handler(runtime: AxignalRuntime) -> type[BaseHTTPRequestHandler]:
             self._static(static_path)
 
         def do_POST(self) -> None:
+            request_path = urlsplit(self.path).path
+            if request_path == "/api/xeeds" and runtime.first_proof is not None:
+                try:
+                    length = int(self.headers.get("Content-Length", "0"))
+                except ValueError:
+                    length = 0
+                if length < 1 or length > 8192:
+                    self._json(
+                        {"status": "rejected", "reason": "INVALID_REQUEST_SIZE"},
+                        HTTPStatus.BAD_REQUEST,
+                    )
+                    return
+                try:
+                    payload = json.loads(self.rfile.read(length).decode("utf-8"))
+                    if not isinstance(payload, dict):
+                        raise ValueError("body must be an object")
+                    projection = runtime.first_proof.plant(
+                        label=str(payload.get("label", "")),
+                        target_uri=str(payload.get("targetUri", "")),
+                    )
+                except ValueError as exc:
+                    self._json({"status": "rejected", "reason": str(exc)}, HTTPStatus.BAD_REQUEST)
+                    return
+                except FirstProofInsufficientEvidence as exc:
+                    self._json(
+                        {"state": "INSUFFICIENT_EVIDENCE", "reason": str(exc)},
+                        HTTPStatus.UNPROCESSABLE_ENTITY,
+                    )
+                    return
+                except Exception as exc:
+                    self._json(
+                        {"status": "failed", "reason": f"FIRST_PROOF_FAILED:{type(exc).__name__}"},
+                        HTTPStatus.BAD_GATEWAY,
+                    )
+                    return
+                self._json(projection, HTTPStatus.CREATED)
+                return
             self._json(
                 {"status": "rejected", "reason": "PUBLIC_WRITE_SURFACE_CLOSED"},
                 HTTPStatus.METHOD_NOT_ALLOWED,

@@ -241,5 +241,20 @@
       </aside>
     </div>
     <div id="notice" class="ax-flash" role="status" aria-live="polite"></div>
+
+    <dialog id="plant-xeed-dialog" class="plant-xeed-dialog">
+      <form id="plant-xeed-form" method="dialog" class="plant-xeed-form">
+        <div class="mono" data-copy="plant.eyebrow">FIRST OBSERVATION</div>
+        <h2 data-copy="plant.title">Plant a Xeed</h2>
+        <p data-copy="plant.help">Choose the private observation context and the authorized public surface AXIGNAL should inspect.</p>
+        <label><span data-copy="plant.label">Xeed name</span><input id="plant-xeed-label" name="label" value="AXIGNAL first proof" autocomplete="off" required maxlength="80"></label>
+        <label><span data-copy="plant.target">Public website</span><input id="plant-xeed-target" name="targetUri" value="https://axignal.com/" type="url" required></label>
+        <p id="plant-xeed-status" class="plant-xeed-status" role="status" aria-live="polite"></p>
+        <div class="plant-xeed-actions">
+          <button id="plant-xeed-cancel" type="button" data-copy="plant.cancel">Cancel</button>
+          <button id="plant-xeed-submit" type="submit" data-copy="plant.submit">Plant and observe</button>
+        </div>
+      </form>
+    </dialog>
   </body>
 </html>
