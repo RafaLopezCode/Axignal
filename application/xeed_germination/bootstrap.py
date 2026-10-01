@@ -14,9 +14,17 @@ from enum import StrEnum
 
 from application.economic_discovery import (
     DimensionRoutingPolicy,
+    ObservationMemory,
+    ObservationReuseContext,
+    ObservationReusePolicy,
+    ObservationReuseRejected,
     PrimeControlPlan,
+    ReuseDisposition,
+    ReusePurpose,
+    ReuseTargetScope,
     TypingDimensionContract,
     build_initial_prime_control_plan,
+    select_reusable_observations,
 )
 from application.economic_discovery.brain_contracts import DimensionDisposition
 from application.economic_discovery.planner import assess_dimension_work
@@ -270,6 +278,8 @@ def build_bootstrap_plan(
     contracts: tuple[TypingDimensionContract, ...],
     routing_policies: tuple[DimensionRoutingPolicy, ...],
     research_decisions: tuple[ResearchValueDecision, ...] = (),
+    observation_memory: ObservationMemory | None = None,
+    reuse_policy: ObservationReusePolicy | None = None,
 ) -> BootstrapPlan:
     """Return the shortest governed path from planted Xeed to Prime."""
 
@@ -280,7 +290,40 @@ def build_bootstrap_plan(
     subject_id = seed.organization.id
     if rich_state.subject_id != subject_id:
         raise ValueError("bootstrap rich state must belong to the Xeed organization")
-    reused_observation_count = len({item.observation_id for item in rich_state.data})
+
+    reused_ids = frozenset(item.observation_id for item in rich_state.data)
+    if reused_ids:
+        if observation_memory is None or reuse_policy is None:
+            raise ValueError("bootstrap reused state requires Observation Memory and reuse policy")
+        context = ObservationReuseContext(
+            subject_id=str(subject_id),
+            xeed_id=str(xeed_id),
+            tenant_id=str(seed.authorized_xeed.xeed.tenant_id),
+            target_scope=ReuseTargetScope.TENANT_PRIVATE,
+            purpose=ReusePurpose.CURRENT_STATE,
+        )
+        selection = select_reusable_observations(
+            observation_memory,
+            context=context,
+            policy=reuse_policy,
+        )
+        decision_by_id = {decision.observation_id: decision for decision in selection.decisions}
+        observation_by_id = {item.record.observation_id: item for item in selection.observations}
+        for item in rich_state.data:
+            decision = decision_by_id.get(item.observation_id)
+            if decision is None:
+                raise ValueError("bootstrap reused observation is absent from governed memory")
+            if decision.disposition is not ReuseDisposition.ALLOW:
+                raise ObservationReuseRejected(decision)
+            observation = observation_by_id[item.observation_id]
+            if (
+                observation.record.source_ref != item.source_ref
+                or observation.record.observed_at != item.observed_at
+            ):
+                raise ValueError(
+                    "bootstrap rich-state provenance does not match reusable observation"
+                )
+    reused_observation_count = len(reused_ids)
     candidate_ids = [candidate.candidate_id for candidate in known_sources]
     if len(candidate_ids) != len(set(candidate_ids)):
         raise ValueError("bootstrap source candidate identities must be unique")

@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 import sqlite3
 from datetime import UTC, datetime
 from pathlib import Path
@@ -10,7 +11,10 @@ from application.economic_discovery.brain_contracts import ObservationMode, Obse
 from application.economic_discovery.observation_memory import (
     GovernedObservation,
     ObservationMemoryConflict,
+    ObservationReuseAuthority,
     ObservedField,
+    observation_reuse_authority_from_payload,
+    observation_reuse_authority_payload,
 )
 
 
@@ -28,6 +32,12 @@ class SqliteObservationMemory:
         return connection
 
     def _initialize(self) -> None:
+        restricted_reuse_json = json.dumps(
+            observation_reuse_authority_payload(ObservationReuseAuthority()),
+            sort_keys=True,
+            separators=(",", ":"),
+            ensure_ascii=False,
+        )
         with self._connect() as connection:
             connection.execute(
                 """
@@ -41,10 +51,22 @@ class SqliteObservationMemory:
                     mode TEXT NOT NULL,
                     raw_content TEXT,
                     raw_artifact_ref TEXT,
+                    reuse_json TEXT NOT NULL,
                     CHECK (raw_content IS NOT NULL OR raw_artifact_ref IS NOT NULL)
                 )
                 """
             )
+            columns = {
+                str(row[1])
+                for row in connection.execute("PRAGMA table_info(observations)").fetchall()
+            }
+            if "reuse_json" not in columns:
+                connection.execute("ALTER TABLE observations ADD COLUMN reuse_json TEXT")
+                connection.execute(
+                    "UPDATE observations SET reuse_json = ? WHERE reuse_json IS NULL",
+                    (restricted_reuse_json,),
+                )
+
             connection.execute(
                 """
                 CREATE TABLE IF NOT EXISTS observation_fields (
@@ -79,6 +101,12 @@ class SqliteObservationMemory:
             record.mode.value,
             observation.raw_content,
             observation.raw_artifact_ref,
+            json.dumps(
+                observation_reuse_authority_payload(observation.reuse_authority),
+                sort_keys=True,
+                separators=(",", ":"),
+                ensure_ascii=False,
+            ),
         )
 
     @staticmethod
@@ -100,6 +128,7 @@ class SqliteObservationMemory:
             raw_content=None if row[7] is None else str(row[7]),
             raw_artifact_ref=None if row[8] is None else str(row[8]),
             fields=fields,
+            reuse_authority=observation_reuse_authority_from_payload(json.loads(str(row[9]))),
         )
 
     def _load_by_id(
@@ -110,7 +139,8 @@ class SqliteObservationMemory:
         row = connection.execute(
             """
             SELECT observation_id, subject_id, source_ref, source_type,
-                   observed_at, content_fingerprint, mode, raw_content, raw_artifact_ref
+                   observed_at, content_fingerprint, mode, raw_content, raw_artifact_ref,
+                   reuse_json
             FROM observations
             WHERE observation_id = ?
             """,
@@ -148,8 +178,9 @@ class SqliteObservationMemory:
                 """
                 INSERT INTO observations (
                     observation_id, subject_id, source_ref, source_type,
-                    observed_at, content_fingerprint, mode, raw_content, raw_artifact_ref
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    observed_at, content_fingerprint, mode, raw_content, raw_artifact_ref,
+                    reuse_json
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """,
                 self._serialize(observation),
             )
@@ -179,7 +210,8 @@ class SqliteObservationMemory:
             rows = connection.execute(
                 """
                 SELECT observation_id, subject_id, source_ref, source_type,
-                       observed_at, content_fingerprint, mode, raw_content, raw_artifact_ref
+                       observed_at, content_fingerprint, mode, raw_content, raw_artifact_ref,
+                       reuse_json
                 FROM observations
                 WHERE subject_id = ?
                 ORDER BY observed_at, observation_id

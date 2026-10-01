@@ -31,7 +31,7 @@ A task is not DONE because code exists. Runtime/product work normally progresses
 
 NOT_STARTED · READY · IN_PROGRESS · BLOCKED · DONE · DEFERRED · REJECTED
 
-**CURRENT_TASK = FR-24**
+**CURRENT_TASK = FR-25**
 
 ## 4. Frontier closure rule
 
@@ -1054,9 +1054,37 @@ Future audit sees identity contamination as governed rather than an unbounded sy
 
 ## FR-24 — Rights / Reuse / Applicability Contract
 
-**Status:** NOT_STARTED  
-**Depends on:** FR-04, FR-23  
+**Status:** DONE
+**Depends on:** FR-04, FR-23
 **Priority:** P1
+
+**Closure evidence (2026-10-01):**
+- introduced immutable `ObservationReuseAuthority` on every GovernedObservation with rights status, access status, reuse scope, optional private owner, provenance ref, currentness snapshot, exact applicable subjects and purposes
+- default reuse authority is deliberately restrictive: RIGHTS UNKNOWN, scope RESTRICTED, provenance absent, currentness UNKNOWN and no applicability; persistence alone never grants reuse
+- introduced deterministic versioned `ObservationReusePolicy`, exact `ObservationReuseContext`, ALLOW/REJECT `ObservationReuseDecision` and explicit reason codes; no opaque reuse score exists
+- reuse context binds canonical subject, Xeed, tenant, target scope and purpose
+- rights PERMITTED is required; RIGHTS_PROHIBITED and RIGHTS_UNKNOWN reject reuse without deleting or falsifying the observation
+- INACCESSIBLE rejects reuse while preserving history; INACCESSIBLE != FALSE
+- GLOBAL_PUBLIC / TENANT_PRIVATE / RESTRICTED scope is explicit; tenant-private reuse requires exact tenant and is rejected for GLOBAL_WORLD with PRIVATE_SCOPE_GLOBAL_LEAK
+- reuse requires explicit provenance; rights without provenance are insufficient
+- exact subject and purpose applicability are required; reusable-somewhere does not imply applicable-here
+- CURRENT_STATE accepts CURRENT only; STALE is rejected for current use but may be reused for HISTORICAL_REFERENCE; UNKNOWN currentness remains rejected
+- STALE != FALSE and current-use rejection does not erase historical evidence
+- `select_reusable_observations()` evaluates complete exact-subject Observation Memory and preserves rejected observations in durable history
+- bootstrap treats every non-empty prior RichSubjectState as reused state and requires Observation Memory + reuse policy; each observation id must exist, be ALLOWed and match source/time provenance before it contributes or counts as reused
+- Prime applies the same reuse gate to non-empty `prior_rich_state`, closing direct composition-root bypass around bootstrap
+- source acquisition accepts optional explicit reuse authority but creates restrictive authority by default; SOURCE_ACQUIRED != SOURCE_REUSABLE
+- exact source replay without a new authority preserves the already-stored authority instead of silently upgrading/downgrading it
+- SQLite Observation Memory persists reuse metadata and migrates legacy rows to the restrictive default rather than granting public/global reuse
+- FR-24 remains orthogonal to EvidenceAdmission: reuse permission does not admit canonical truth and cannot create FAXTs
+- focused FR-24 reuse/persistence/bootstrap/Prime/source/contract suite: 65 PASS
+- full pytest: 624 PASS using external `--basetemp` to avoid the known Windows user-temp ACL issue
+- Ruff format/check: PASS
+- mypy: PASS (126 source files)
+- Architecture Guard: PASS
+- axignal-governance: PASS
+- git diff --check: PASS
+- ADR-0050 accepted and indexed
 
 ### Work
 Make reuse explicitly conditional on rights, provenance, currentness, scope/applicability and public/private boundary.

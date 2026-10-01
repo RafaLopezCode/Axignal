@@ -4,16 +4,26 @@ from datetime import UTC, datetime
 
 from application.economic_discovery import (
     DimensionRoutingPolicy,
+    GovernedObservation,
     LearningCost,
     LearningEventKind,
     LearningMechanism,
     LearningOutcome,
     LearningYield,
+    ObservationAccessStatus,
+    ObservationMode,
+    ObservationRecord,
+    ObservationReuseAuthority,
+    ObservationReusePolicy,
+    ObservationReuseScope,
+    ObservationRightsStatus,
+    ObservedField,
     PrimeRoute,
     ResearchValueContext,
     ResearchValueDisposition,
     ResearchValuePolicy,
     ResearchValueSignal,
+    ReusePurpose,
     SemanticPrimitive,
     TypingDimensionContract,
     decide_research_value,
@@ -25,9 +35,12 @@ from application.xeed_germination.bootstrap import (
     BootstrapDisposition,
     BootstrapPolicy,
     BootstrapSourceCandidate,
-    build_bootstrap_plan,
+)
+from application.xeed_germination.bootstrap import (
+    build_bootstrap_plan as _raw_build_bootstrap_plan,
 )
 from application.xeed_germination.learning import bootstrap_learning_event
+from domain.evidence.epistemics import Currentness
 from domain.organizations.model import Organization
 from domain.tenancy.model import Principal
 from domain.xeed.model import Xeed
@@ -389,3 +402,55 @@ def test_bootstrap_can_retain_low_value_unknown_without_research() -> None:
     assert plan.disposition is BootstrapDisposition.RETAIN_UNKNOWN
     assert plan.prime_plan is None
     assert plan.missing_requirements == ("document.home.visible_text",)
+
+
+class _ReuseMemory:
+    def __init__(self) -> None:
+        self._observation = GovernedObservation(
+            record=ObservationRecord(
+                observation_id="obs:1",
+                subject_id="org:1",
+                source_ref="https://acme.example/",
+                source_type="PUBLIC_WEB",
+                observed_at=NOW,
+                content_fingerprint="sha256:bootstrap-fixture",
+                mode=ObservationMode.DETERMINISTIC_SENSOR,
+            ),
+            raw_artifact_ref="artifact:bootstrap:obs:1",
+            fields=(
+                ObservedField(
+                    "document.home.visible_text",
+                    "Industrial pump manufacturer.",
+                ),
+            ),
+            reuse_authority=ObservationReuseAuthority(
+                rights_status=ObservationRightsStatus.PERMITTED,
+                access_status=ObservationAccessStatus.ACCESSIBLE,
+                scope=ObservationReuseScope.GLOBAL_PUBLIC,
+                provenance_ref="provenance:bootstrap-fixture",
+                currentness=Currentness.CURRENT,
+                applicable_subject_ids=("org:1",),
+                applicable_purposes=(ReusePurpose.CURRENT_STATE.value,),
+            ),
+        )
+
+    def for_subject(self, subject_id: str):
+        return (self._observation,) if subject_id == "org:1" else ()
+
+    def append(self, observation):
+        raise AssertionError("bootstrap fixture memory is read-only")
+
+
+def _reuse_policy() -> ObservationReusePolicy:
+    return ObservationReusePolicy("observation-reuse", "1")
+
+
+def _build_bootstrap_plan(**kwargs):
+    return _raw_build_bootstrap_plan(
+        observation_memory=_ReuseMemory(),
+        reuse_policy=_reuse_policy(),
+        **kwargs,
+    )
+
+
+build_bootstrap_plan = _build_bootstrap_plan
