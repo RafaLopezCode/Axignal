@@ -31,8 +31,7 @@ contract deliverable only; it is not a runtime implementation plan.
   states remain distinct; unknown cost is not zero. **Pass.**
 - Provider-neutral `CognitiveProvider`/`ModelRouter` policy is preserved; no
   Luna SDK/model lock-in or universal JEV threshold is introduced. **Pass.**
-- Business & Customer Operations remains first-party AXIGNAL service state;
-  no CRM or workflow authority is added (ADR-0008). **Pass.**
+- Business & Customer Operations remains first-party AXIGNAL business/service state. MASTER ?2.1A / ADR-0055 now permit AXIGNAL internal CRM/commercial workflow behind separate owning services while subscriber/customer-business CRM/workflow authority remains forbidden. **Pass.**
 - V3 private content remains tenant-scoped and distinct from operational
   metadata; no private-content browser is specified. **Pass.**
 - No persistence, transport, telemetry vendor, API, dependency, migration,

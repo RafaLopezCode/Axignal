@@ -1,17 +1,17 @@
 ---
 authority: Subordinate to AXIGNAL Master Product Model, Engineering
   Constitution, Accepted ADRs, and Logical Architecture Atlas
-date: 2026-09-25
+date: 2026-10-01
 document_type: Product / Operational Governance Specification
 implementation_status: PRE_IMPLEMENTATION
 iteration_policy: Living specification; evolve by reviewed versioned
   changes as architecture and runtime evidence mature
-status: PROPOSED
-title: AXIGNAL Admin V0.1 --- Product & Governance Specification
-version: 0.1
+status: ACCEPTED_GOVERNED_SPECIFICATION
+title: AXIGNAL Admin V0.2 --- Product & Governance Specification
+version: 0.2
 ---
 
-# AXIGNAL Admin V0.1 --- Product & Governance Specification
+# AXIGNAL Admin V0.2 --- Product & Governance Specification
 
 ## 0. Executive definition
 
@@ -48,6 +48,14 @@ The governing product principle is:
 
 Admin is **Human First, Agent Ready**.
 
+### V0.2 authority reconciliation
+
+V0.2 preserves the V0.1 observability architecture and extends Admin into the governed internal operating system for AXIGNAL as a provider. MASTER ?2.1A and ADR-0055 explicitly authorize first-party internal business-operation domains while preserving the product/core no-CRM and no-workflow boundary.
+
+V0.2 therefore adds AXIGNAL's own internal CRM, acquisition/marketing, private GSC/web analytics, integration/API operations, Stripe/billing, finance/accounting, fiscal/VeriFactu operations and a staff-only Frontier Advisor workbench. None of those domains gains AXIGLAND write authority merely by existing in Admin.
+
+P0-ADMIN-01 contracts remain the observability substrate unless a later AO task amends them. Their previous absolute prohibition on CRM/sales workflow is superseded only for first-party AXIGNAL internal operations; it remains fully valid for subscriber-facing product scope, customer-owned CRM/workflow data and canonical economic state.
+
 A human operator must be able to understand global health rapidly,
 progressively drill into causes, and reach the underlying structured
 observations. Agents must consume the same administrative projection
@@ -60,11 +68,18 @@ screenshots.
 
 ## 1.1 What Admin governs
 
-Admin V0.1 governs observability and controlled operations across:
+Admin V0.2 governs observability and controlled operations across:
 
 -   AXIGNAL business performance;
+-   AXIGNAL's own internal CRM and commercial operations;
 -   first-party customer account and subscription observability for AXIGNAL's own service;
--   subscriptions and billing state;
+-   subscriptions, Stripe/payment and billing state;
+-   acquisition, marketing, consent and newsletter operations;
+-   private Search Console and web/product analytics for AXIGNAL;
+-   API, webhook and integration operations;
+-   finance, accounting and reconciliation state;
+-   fiscal/VeriFactu/AEAT operational state where separately implemented and compliant;
+-   premium External Intelligence / Frontier Advisor operations;
 -   Xeed lifecycle and economics;
 -   AXENT research activity;
 -   Knowledge Frontier;
@@ -97,10 +112,9 @@ Admin is not:
 -   a place where missing cost is silently represented as zero;
 -   proof that a specified subsystem is implemented.
 
-Customer Operations is limited to first-party operational state required to
-run AXIGNAL as a service. It does not authorize CRM functionality or
-representation of the private operations of organizations observed in
-AXIGLAND.
+Admin may contain CRM, billing, marketing, finance, accounting, fiscal and advisory operations **only for AXIGNAL's own first-party business operations**. It does not authorize customer-facing CRM/workflow functionality, management of the private business operations of organizations observed in AXIGLAND, or any shortcut from private commercial state into canonical economic truth.
+
+Admin remains forbidden from becoming an editable economic-world authority, a customer CRM product, a general-purpose ERP/workflow suite, or a mechanism for turning payment/commercial importance into truth priority.
 
 ## 1.3 Fundamental authority separation
 
@@ -116,8 +130,14 @@ Therefore:
 
 ``` text
 AXIGLAND FACT != ADMIN METRIC
-ADMIN EVENT   != FAXT
-ADMIN ACTION  != CANONICAL ECONOMIC TRUTH
+ADMIN EVENT != FAXT
+ADMIN ACTION != CANONICAL ECONOMIC TRUTH
+AXIGNAL_INTERNAL_CRM_STATE != AXIGLAND_ECONOMIC_TRUTH
+COMMERCIAL_RELATIONSHIP_WITH_AXIGNAL != OBSERVED_ECONOMIC_RELATIONSHIP
+CUSTOMER_ACCOUNT_STATE != ORGANIZATION_STATE
+STRIPE_STATE != AXIGLAND_TRUTH
+ACCOUNTING_STATE != AXIGLAND_TRUTH
+TAX_STATE != AXIGLAND_TRUTH
 ```
 
 ------------------------------------------------------------------------
@@ -159,27 +179,26 @@ No material Admin metric should exist without inspectable lineage.
 
 # 3. Information architecture
 
-Admin V0.1 is organized into eight primary domains plus one
-cross-cutting projection layer.
+Admin V0.2 is organized into twelve primary domains plus one cross-cutting projection layer.
 
 ``` text
 AXIGNAL ADMIN
-│
-├── 01 COMMAND CENTER
-├── 02 BUSINESS & CUSTOMER OPERATIONS
-├── 03 XEED OBSERVATORY
-├── 04 AXENT / RESEARCH
-├── 05 AXIGLAND / DATA QUALITY
-├── 06 ECONOMICS & UNIT ECONOMICS
-├── 07 SYSTEM & PROVIDERS
-├── 08 GOVERNANCE & AUDIT
-│
-└── ADMIN PROJECTION LAYER
-    ├── Human UI
-    ├── JSON
-    ├── CSV
-    ├── Markdown
-    └── Agent Bridge / MCP
+??? 01 COMMAND CENTER
+??? 02 CUSTOMERS / INTERNAL CRM
+??? 03 ACQUISITION / MARKETING
+??? 04 REVENUE / BILLING / ECONOMICS
+??? 05 XEED OBSERVATORY
+??? 06 AXIGLAND / DATA QUALITY
+??? 07 AXENT / BRAIN / PROVIDERS
+??? 08 GOVERNANCE / SECURITY / AUDIT
+??? 09 INTEGRATIONS / APIs
+??? 10 FINANCE / ACCOUNTING / FISCAL
+??? 11 FRONTIER ADVISOR WORKBENCH
+??? 12 SYSTEM / INCIDENTS
+??? ADMIN PROJECTION LAYER
+    ??? Human UI
+    ??? JSON / CSV / Markdown
+    ??? Internal Admin MCP / agent-safe read interfaces
 ```
 
 The UI is a projection, not the administrative data authority.
@@ -276,19 +295,9 @@ Time windows: 24h, 7d, 30d, 90d and custom where applicable.
 
 ## 5.1 Purpose
 
-Customer Operations exposes first-party AXIGNAL account and subscription
-state needed to operate AXIGNAL as a service. This administrative
-observability does not authorize CRM functionality.
+Business & Customer Operations owns first-party AXIGNAL service and commercial state needed to operate AXIGNAL as a provider. Under MASTER ?2.1A and ADR-0055, this includes AXIGNAL's own internal CRM, commercial funnel, account/subscription operations and bounded follow-up/workflow required to run AXIGNAL itself.
 
-Customer Operations must not become lead, prospect, opportunity, deal,
-sales-stage, pipeline, salesperson-assignment, outreach, email-sequence,
-follow-up-task, sales-intelligence, external-contact-enrichment, marketing
-automation, customer-success workflow, arbitrary CRM-object, or external
-company relationship management. Relationship notes must not become sales
-intelligence. It does not represent a customer's own CRM and is not an
-AXIGNAL customer-facing product capability. Any future CRM functionality
-requires a separate explicit doctrine and ADR process; Admin V0.1 does not
-authorize it.
+This authority is intentionally narrow. It does not represent a customer's own CRM or private operating workflow, does not make CRM a subscriber-facing AXIGNAL capability, and does not convert a private lead/prospect/customer/deal into an observed economic relationship. Any reference from CRM to an observed Organization is an explicit cross-authority reference, not identity or truth equivalence.
 
 ## 5.2 Account model
 
@@ -398,6 +407,36 @@ Track interpretable behavioral proxies:
 -   explicit feedback when collected.
 
 ------------------------------------------------------------------------
+
+## 5.7 Internal CRM and first-party commercial operations
+
+Admin may manage AXIGNAL's own prospect, contact, opportunity, deal, commercial-note and follow-up state. These records are private first-party operating records with their own provenance, privacy, retention and audit semantics.
+
+Mandatory boundary:
+
+``` text
+AXIGNAL CRM LEAD != AXIGLAND ORGANIZATION STATE
+AXIGNAL OPPORTUNITY != ECONOMIC OPPORTUNITY IN AXIGLAND
+AXIGNAL CUSTOMER != OBSERVED CUSTOMER RELATIONSHIP
+```
+
+A CRM record may reference a canonical Organization ID for navigation/deduplication only when that mapping is explicitly governed. The reference grants no canonical write authority.
+
+## 5.8 Acquisition, marketing and private analytics
+
+Admin may govern AXIGNAL's own acquisition sources, campaigns, consent, free-brief/newsletter operations, Search Console measurements, web/product analytics and conversion attribution. Private marketing metrics remain first-party operational observations and MUST NOT become public Digital Representation observations merely because the same organization appears in AXIGLAND.
+
+Attribution is versioned and evidentially modest: correlation/last-touch/multi-touch models are commercial analysis, not causal truth.
+
+## 5.9 Payments, finance, accounting and fiscal operations
+
+Admin may integrate Stripe/payment state, invoices, refunds, settlements, accounting records, costs, reconciliation and fiscal/VeriFactu/AEAT operational status through separately governed adapters and compliance gates. Displaying or reconciling such state does not make the Admin Projection the legal or fiscal system of record.
+
+No production path may claim tax or VeriFactu/SIF compliance from implementation alone; compliance evidence and effective-date rules are required.
+
+## 5.10 Premium advisory operations
+
+Admin may contain a staff-only Frontier Advisor workbench and associated delivery/commercial operations. Advisory drafts, human edits, reports and client-specific interpretations are private artifacts. They do not write AXIGLAND or gain canonical authority by being paid deliverables.
 
 # 6. Xeed Observatory
 
@@ -1412,8 +1451,7 @@ Admin MCP do not gain private customer-content access through that metadata.
 
 # 20. Event and lineage architecture
 
-Admin V0.1 should influence runtime design before Brain/Xeed
-implementation so that required observability is not retrofitted later.
+Admin V0.2 should influence runtime design before new Admin/business-runtime implementation so that required observability and authority boundaries are not retrofitted later.
 
 Candidate domain/operational events include:
 
@@ -1585,131 +1623,80 @@ metric computation and event infrastructure remain implementation decisions.
 
 ``` text
 ADMIN_IS_NOT_CANONICAL_AXIGLAND_AUTHORITY
-
-ADMIN_EVENT_IS_NOT_FAXT
-
+ADMIN_PRIVATE_OPERATIONS != AXIGLAND_CANONICAL_TRUTH
+AXIGNAL_INTERNAL_CRM_STATE != AXIGLAND_ECONOMIC_TRUTH
+COMMERCIAL_RELATIONSHIP_WITH_AXIGNAL != OBSERVED_ECONOMIC_RELATIONSHIP
+CUSTOMER_ACCOUNT_STATE != ORGANIZATION_STATE
+STRIPE_STATE != AXIGLAND_TRUTH
+ACCOUNTING_STATE != AXIGLAND_TRUTH
+TAX_STATE != AXIGLAND_TRUTH
+GSC_PRIVATE_METRIC != PUBLIC_OBSERVATION
+WEB_ANALYTICS_PRIVATE_METRIC != PUBLIC_OBSERVATION
+NEWSLETTER_ENGAGEMENT != BUSINESS_TRUTH
+COMMERCIAL_OUTCOME != EPISTEMIC_VALIDITY
+ADMIN_EVENT != FAXT
+ADMIN_ACTION != CANONICAL_WRITE
 ADMIN_METRIC_REQUIRES_LINEAGE
-
-SPECIFIED_IS_NOT_IMPLEMENTED
-
-DOCUMENTED_ARCHITECTURE_IS_NOT_RUNTIME_EVIDENCE
-
-UNKNOWN_IS_NOT_ZERO
-
-UNKNOWN_COST_IS_NOT_ZERO_COST
-
-MISSING_COST_IS_NOT_FREE
-
-FAILED_RESEARCH_IS_NOT_FALSE
-
-BUDGET_EXHAUSTED_IS_NOT_FALSE
-
-CUSTOMER_DISPUTE_IS_NOT_CANONICAL_CORRECTION
-
-ADMIN_CUSTOMER_OPERATIONS_IS_NOT_CRM
-
-ADMIN_CUSTOMER_OPERATIONS_IS_FIRST_PARTY_AXIGNAL_SERVICE_STATE_ONLY
-
-ADMIN_CUSTOMER_OPERATIONS_DOES_NOT_AUTHORIZE_SALES_WORKFLOW
-
+SPECIFIED != IMPLEMENTED
+DOCUMENTED_ARCHITECTURE != RUNTIME_EVIDENCE
+UNKNOWN != ZERO
+UNKNOWN_COST != ZERO_COST
+MISSING_COST != FREE
+FAILED_RESEARCH != FALSE
+BUDGET_EXHAUSTED != FALSE
+CUSTOMER_DISPUTE != CANONICAL_CORRECTION
 PRIVATE_CUSTOMER_DATA_NEVER_BECOMES_PUBLIC_AXIGLAND_TRUTH
-
-AGENT_ANALYSIS_IS_NOT_ADMIN_TRUTH
-
-ADMIN_MCP_V0_1_IS_READ_ONLY
-
+AGENT_ANALYSIS != ADMIN_TRUTH
+ADMIN_MCP_IS_READ_ONLY_BY_DEFAULT
+PRODUCT_MCP != ADMIN_MCP
 ADMIN_EXPORT_IS_A_TEMPORAL_PROJECTION
-
 UI_IS_NOT_ADMIN_DATA_AUTHORITY
-
 HUMAN_AND_AGENT_SURFACES_READ_THE_SAME_ADMIN_PROJECTION
-
 POLICY_CHANGES_ARE_VERSIONED_AND_AUDITED
-
 NO_MATERIAL_METRIC_WITHOUT_LINEAGE
-
 NO_SECRET_IN_EXPORTS
-
 NO_SECRET_IN_AGENT_CONTEXT
-
-TRIGGERED_COST_IS_NOT_ATTRIBUTED_COST
-
+TRIGGERED_COST != ATTRIBUTED_COST
 REUSE_MUST_NOT_BE_COUNTED_AS_NEW_KNOWLEDGE
-
-SPECIFICATION_IS_NOT_RUNTIME_EVIDENCE
-
-ADMIN_ACTION_DOES_NOT_ASSERT_AXIGLAND_TRUTH
-
-ADMIN_OPERATIONAL_VISIBILITY_IS_NOT_PRIVATE_CONTENT_ACCESS
-
+ADMIN_OPERATIONAL_VISIBILITY != PRIVATE_CONTENT ACCESS
 OBSERVABILITY_IS_NOT_A_SHADOW_CUSTOMER_DATA_WAREHOUSE
-
-V2_V3_ADMIN_TELEMETRY_IS_NOT_A_RUNTIME_CLAIM
-
 UNSUPPORTED_CANONICAL_WRITE_TARGET_IS_ZERO
 ```
+
+The superseded V0.1 invariants `ADMIN_CUSTOMER_OPERATIONS_IS_NOT_CRM` and `ADMIN_CUSTOMER_OPERATIONS_DOES_NOT_AUTHORIZE_SALES_WORKFLOW` no longer apply to AXIGNAL's own private first-party business operations. Their protective intent remains mandatory for subscriber-facing product scope, customer-owned CRM/workflow state and AXIGLAND.
 
 ------------------------------------------------------------------------
 
 # 26. Implementation slices
 
-Admin V0.1 may be implemented incrementally only after separate
-implementation authorization and as underlying runtimes become real. P0-ADMIN-01
-specifies observability contracts and does not authorize implementation.
+Admin V0.2 implementation is governed by `docs/governance/AXIGNAL_ADMIN_OPERATING_SYSTEM_ROADMAP_2026-10-01.md`. The older ADMIN-01A?01I labels remain historical decomposition from P0-ADMIN-01 and are not a competing active roadmap.
 
-## ADMIN-01A --- Observability Contracts
+P0-ADMIN-01 disposition:
 
-Event taxonomy, IDs, metric semantics, lineage and attribution
-contracts.
+- **RETAINED:** versioned observability contracts, metric lineage, Admin Projection semantics, export semantics, agent-safe read principles, provider/economic/quality observability.
+- **AMENDED:** Customer Operations may now include AXIGNAL's own CRM and bounded internal commercial workflow under MASTER ?2.1A / ADR-0055.
+- **NOT AUTHORIZED BY AO-00:** runtime implementation, storage choices, RBAC mechanics, Stripe, GSC, accounting, VeriFactu, advisory runtime or production deployment; those require their corresponding AO tasks.
+- **STILL FORBIDDEN:** subscriber-facing CRM/workflow drift, customer-owned CRM management, private-data-to-AXIGLAND shortcuts and direct Admin canonical writes.
 
-## ADMIN-01B --- Economics
-
-Costs, Xeed economics, providers, reuse and marginal economics.
-
-## ADMIN-01C --- Intelligence
-
-Research, Knowledge Frontier, AXENT and JEV observability.
-
-## ADMIN-01D --- Quality
-
-Evidence, currentness, provenance, contradictions and entity-resolution
-quality.
-
-## ADMIN-01E --- Business
-
-Customer account operations, billing, cohorts, retention and product funnel.
-
-## ADMIN-01F --- Human Console
-
-Command Center and progressive drill-down surfaces.
-
-## ADMIN-01G --- Portability
-
-JSON, Markdown and CSV exports with schema/fingerprint.
-
-## ADMIN-01H --- Agent Bridge
-
-Read-only Admin MCP and authorization scopes.
-
-## ADMIN-01I --- Governance
-
-Policies, audit, RBAC, alerts and bounded administrative commands.
-
-A slice must not pretend to observe a subsystem that has not been
-implemented.
+Active implementation sequence begins at AO-01 after AO-00 doctrine closure.
 
 ------------------------------------------------------------------------
 
-# 27. V0.1 specification Definition of Done
+# 27. V0.2 specification Definition of Done
 
-This checklist defines specification completeness for a future, separately
-authorized implementation-planning slice; satisfying it does not itself grant
-implementation authorization. The spec must define and reconcile:
+This checklist defines V0.2 specification completeness. It grants doctrine/scope authority only; it does not claim runtime implementation. The spec must define and reconcile:
 
 -   information architecture;
 -   event taxonomy;
 -   cost attribution model;
 -   customer account and subscription model;
+-   AXIGNAL internal CRM authority and AXIGLAND separation;
+-   acquisition/marketing/private-analytics boundaries;
+-   integrations/API/credential governance;
+-   payments/billing boundaries;
+-   finance/accounting/reconciliation boundaries;
+-   fiscal/VeriFactu compliance gate;
+-   premium advisory/workbench authority;
 -   economic metrics;
 -   Xeed economics;
 -   research metrics;
@@ -1737,7 +1724,7 @@ Open decisions must remain explicit rather than silently resolved.
 
 # 28. Iteration policy
 
-This document is intentionally **V0.1** and **PROPOSED**.
+This document is **V0.2** and an **ACCEPTED_GOVERNED_SPECIFICATION**. Runtime capabilities remain PRE_IMPLEMENTATION until their AO tasks produce evidence.
 
 It is a living specification and should evolve as AXIGNAL discovers
 better governance mechanisms, obtains runtime evidence, calibrates unit
@@ -1765,7 +1752,7 @@ Iteration rules:
 
 # 29. Open decisions for future iterations
 
-The following are intentionally not frozen in V0.1:
+The following are intentionally not frozen in V0.2:
 
 -   exact Admin frontend information architecture and visual system;
 -   exact event transport/persistence technology;
@@ -1791,9 +1778,9 @@ explicit architecture decisions rather than by assumption.
 
 ------------------------------------------------------------------------
 
-# 30. Canonical V0.1 outcome
+# 30. Canonical V0.2 outcome
 
-Admin V0.1 succeeds when a human operator can rapidly determine:
+Admin V0.2 succeeds when a human operator can rapidly determine:
 
 -   whether AXIGNAL is healthy;
 -   whether the business is growing;
@@ -1807,7 +1794,12 @@ Admin V0.1 succeeds when a human operator can rapidly determine:
 -   whether providers or sources are causing inefficiency;
 -   what changed and why;
 -   what policies govern the machine;
--   what requires human attention.
+-   what requires human attention;
+-   where prospects/customers sit in AXIGNAL's own commercial lifecycle without confusing that lifecycle with AXIGLAND;
+-   how acquisition, consent, GSC/private analytics and conversion are performing;
+-   how Stripe/billing, finance/accounting and fiscal operations reconcile;
+-   whether integrations/APIs are healthy and properly authorized;
+-   what premium advisory work exists, its evidence basis and its commercial economics.
 
 And an authorized agent must be able to inspect the same underlying
 administrative projection through structured, read-only, least-privilege

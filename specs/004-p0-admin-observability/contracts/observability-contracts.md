@@ -263,8 +263,7 @@ remain distinct. Correlation alone is not causation.
 - **Must convey**: AXIGNAL account/user scope, subscription/payment/product
   lifecycle, support/claim-review/export/Product MCP use and time/provenance
   appropriate to first-party operations.
-- **Invariant**: first-party AXIGNAL service state only (ADR-0008); no leads,
-  pipeline, customer CRM objects, outreach, sales tasks or workflow engine.
+- **Invariant**: first-party AXIGNAL business/service state only. MASTER ?2.1A / ADR-0055 permit AXIGNAL internal leads/opportunities and bounded commercial workflow; customer-owned CRM/workflow state and any private-commercial-to-AXIGLAND inference remain forbidden.
 - **Failure / unknown**: source-of-record uncertainty or missing lifecycle
   state remains explicit; this contract does not infer economic truth about an
   observed organization.

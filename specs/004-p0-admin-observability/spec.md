@@ -105,8 +105,7 @@ least-privilege and metadata-minimized; neither surface can mutate AXIGLAND.
   avoided-recompute semantics without double counting or false precision.
 - **FR-014**: Knowledge gain and reuse MUST remain decomposable, referenced and
   epistemically bounded; no universal opaque score is permitted.
-- **FR-015**: Customer Operations MUST cover only AXIGNAL's own service state
-  and MUST NOT acquire CRM/workflow authority (ADR-0008).
+- **FR-015**: Customer Operations MUST cover only AXIGNAL's own first-party business/service state. Under MASTER ?2.1A / ADR-0055 it MAY observe AXIGNAL's internal CRM/commercial workflow, but MUST NOT acquire subscriber-facing CRM authority, manage customer-owned CRM/workflow state, or infer AXIGLAND truth from private commercial state.
 - **FR-016**: V2 observability MUST remain report-local and noncanonical; V3
   observability MUST be metadata-first, tenant-scoped and private-content
   separated.

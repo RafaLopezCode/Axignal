@@ -53,9 +53,7 @@ state, system health and governance events). That ownership does not make Admin
 authority for public economic truth, canonical identity/relationships/FAXTs,
 public INXIGHTs/PATHXs, or private customer business truth.
 
-Admin is a projection, not a domain authority, canonical writer, CRM, workflow
-application, private-data browser, generic analytics dashboard, or replacement
-for observability infrastructure. Admin operations must call the owning domain
+Admin is a projection, not a canonical writer, private-data browser, generic analytics dashboard, or replacement for observability infrastructure. Under MASTER ?2.1A / ADR-0055, first-party AXIGNAL internal CRM/workflow domains may exist behind owning services; the Admin projection itself is still not their authority and subscriber-facing CRM/workflow drift remains forbidden. Admin operations must call the owning domain
 service through a future separately authorized command contract; Admin may not
 directly edit canonical truth.
 
@@ -216,9 +214,7 @@ may write canonical AXIGLAND.
 The projection supports Command Center; first-party Business & Customer
 Operations; Xeed; AXENT/research; AXIGLAND/data quality; economics; system and
 providers; governance and audit; and cross-cutting Admin projections. These are
-not service boundaries. Customer Operations refers only to AXIGNAL's own
-accounts, subscriptions, billing, use, support, claims, exports and Product MCP
-usage. It has no CRM objects, sales workflow or outreach authority (ADR-0008).
+not service boundaries. Customer Operations refers only to AXIGNAL's own first-party business/service operations. MASTER ?2.1A / ADR-0055 supersede the previous absolute CRM ban narrowly for AXIGNAL's internal CRM and bounded commercial workflow. Customer-owned CRM/workflow state, subscriber-facing CRM features and any inference from private commercial relationship to AXIGLAND remain forbidden.
 
 Human operators and future authorized agents consume the same semantically
 consistent projection. Human understanding does not depend on an agent. Admin

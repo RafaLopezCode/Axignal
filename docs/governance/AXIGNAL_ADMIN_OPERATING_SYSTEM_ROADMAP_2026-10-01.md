@@ -99,7 +99,7 @@ Admin must distinguish measured flywheel behavior from the hypothesis above.
 
 `NOT_STARTED → READY → IN_PROGRESS → BLOCKED → DONE → DEFERRED → REJECTED`
 
-**CURRENT_TASK = AO-00**
+**CURRENT_TASK = AO-01**
 
 ## 7. Closure rule
 
@@ -109,9 +109,21 @@ Every task contains an `AUDIT_CLOSURE` condition. When AO-00→AO-31 are complet
 
 ## AO-00 — Admin V0.2 / AXIGNAL Operating System Doctrine
 
-**Status:** NOT_STARTED
+**Status:** DONE
 **Priority:** P0
 **Goal:** reconcile Admin V0.1 with the newly authorized broader internal operating scope before implementation.
+
+### Closure evidence (2026-10-01)
+- MASTER amended with §2.1A, narrowly authorizing first-party internal AXIGNAL business operations while preserving the subscriber/core no-CRM boundary.
+- ADR-0055 accepted: `Admin Private Business Operations Are Separate From AXIGLAND`.
+- `AXIGNAL_ADMIN_PRODUCT_SPEC.md` advanced to V0.2 `ACCEPTED_GOVERNED_SPECIFICATION`; implementation remains `PRE_IMPLEMENTATION`.
+- V0.2 explicitly authorizes AXIGNAL's own internal CRM, acquisition/marketing, private GSC/web analytics, integrations/APIs, Stripe/billing, finance/accounting, fiscal/VeriFactu operations and staff-only Frontier Advisor workbench.
+- P0-ADMIN-01 observability architecture/contracts retained and amended narrowly: first-party AXIGNAL CRM/commercial workflow is permitted; subscriber/customer-owned CRM/workflow and private-state-to-AXIGLAND inference remain forbidden.
+- Focused AO-00 + roadmap contracts: 8 PASS.
+- Full pytest: 705 PASS.
+- Ruff format/check: PASS.
+- mypy: PASS (139 source files).
+- UTF-8 integrity check: PASS on MASTER/Admin/architecture/ADR-0055.
 
 ### Work
 - Update `AXIGNAL_ADMIN_PRODUCT_SPEC.md` from V0.1 to a living V0.2 specification.
