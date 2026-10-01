@@ -316,3 +316,22 @@ def test_missing_provenance_blocks_reuse_even_when_rights_are_permitted() -> Non
     )
 
     assert decision.reason is ReuseReason.PROVENANCE_MISSING
+
+
+def test_historical_currentness_is_not_current_but_remains_historical_evidence() -> None:
+    historical = _observation(authority=_authority(currentness=Currentness.HISTORICAL))
+
+    current = evaluate_observation_reuse(
+        historical,
+        context=_context(purpose=ReusePurpose.CURRENT_STATE),
+        policy=POLICY,
+    )
+    reference = evaluate_observation_reuse(
+        historical,
+        context=_context(purpose=ReusePurpose.HISTORICAL_REFERENCE),
+        policy=POLICY,
+    )
+
+    assert current.disposition is ReuseDisposition.REJECT
+    assert current.reason is ReuseReason.HISTORICAL_FOR_CURRENT_USE
+    assert reference.disposition is ReuseDisposition.ALLOW
