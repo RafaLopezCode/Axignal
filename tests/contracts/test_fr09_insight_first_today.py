@@ -21,7 +21,7 @@ def test_today_ui_is_insight_first_and_limited_to_three_items() -> None:
         "Why it matters",
         "Show how AXIGNAL knows",
         "View in map",
-        "Nothing material is ready yet. AXIGNAL is still observing.",
+        "Nothing material is ready from the currently observed state.",
     ):
         assert copy in presentation
 

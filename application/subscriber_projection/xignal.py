@@ -179,6 +179,7 @@ def project_explainable_xignal(
     emitted_at: datetime,
     policy_version: str,
     canonical_faxt: FAXT | None = None,
+    observation_support_refs: tuple[str, ...] = (),
     currentness: Currentness = Currentness.UNKNOWN,
     relationship_ref: str | None = None,
     pathx_ref: str | None = None,
@@ -197,17 +198,31 @@ def project_explainable_xignal(
         raise ValueError("Xignal basis candidate must match projection candidate")
 
     canonical_refs: tuple[str, ...] = ()
+    observed_refs = tuple(dict.fromkeys(observation_support_refs))
     effective_currentness = currentness
     if epistemic_state is XignalEpistemicState.OBSERVED:
-        if canonical_faxt is None:
-            raise ValueError("OBSERVED Xignal requires admitted canonical support")
-        if canonical_faxt.subject_id != subject_id:
-            raise ValueError("canonical Xignal support cannot cross subjects")
-        _validate_observed_support(basis=basis, faxt=canonical_faxt)
-        canonical_refs = (canonical_faxt.id,)
-        effective_currentness = canonical_faxt.currentness
-    elif canonical_faxt is not None:
-        raise ValueError("only OBSERVED Xignal may claim canonical FAXT support")
+        if canonical_faxt is None and not observed_refs:
+            raise ValueError(
+                "OBSERVED Xignal requires admitted canonical or governed observation support"
+            )
+        if canonical_faxt is not None:
+            if canonical_faxt.subject_id != subject_id:
+                raise ValueError("canonical Xignal support cannot cross subjects")
+            _validate_observed_support(basis=basis, faxt=canonical_faxt)
+            canonical_refs = (canonical_faxt.id,)
+            effective_currentness = canonical_faxt.currentness
+        if observed_refs:
+            supporting_observations = {
+                datum.observation_id
+                for datum in basis.data
+                if datum.contribution is BasisContribution.SUPPORTS
+            }
+            if not set(observed_refs).issubset(supporting_observations):
+                raise ValueError(
+                    "OBSERVED Xignal observation support must resolve to supporting basis observations"
+                )
+    elif canonical_faxt is not None or observed_refs:
+        raise ValueError("only OBSERVED Xignal may claim observed support")
 
     contradictions = tuple(
         datum.excerpt_or_summary
@@ -224,6 +239,8 @@ def project_explainable_xignal(
             "basis_id": basis.basis_id,
             "state_fingerprint": basis.state_fingerprint,
             "policy_version": policy_version,
+            "canonical_support_refs": canonical_refs,
+            "observation_support_refs": observed_refs,
         }
     )
     xignal = Xignal(
@@ -240,6 +257,7 @@ def project_explainable_xignal(
         currentness=effective_currentness,
         policy_version=policy_version,
         canonical_support_refs=canonical_refs,
+        observation_support_refs=observed_refs,
         relationship_ref=relationship_ref,
         pathx_ref=pathx_ref,
         contradictions=contradictions,

@@ -113,7 +113,7 @@ def _basis(*, with_evidence: bool = True, contradiction: bool = True) -> Explain
 
 
 def test_observed_xignal_requires_admitted_canonical_support() -> None:
-    with pytest.raises(ValueError, match="requires admitted canonical support"):
+    with pytest.raises(ValueError, match="canonical or governed observation support"):
         project_explainable_xignal(
             organization_context=_seed(),
             candidate_id="candidate:industrial-pumps",
@@ -125,6 +125,49 @@ def test_observed_xignal_requires_admitted_canonical_support() -> None:
             emitted_at=NOW,
             policy_version="xignal-v1",
         )
+
+
+def test_observed_representation_xignal_can_be_supported_by_governed_observation() -> None:
+    projection = project_explainable_xignal(
+        organization_context=_seed(),
+        candidate_id="candidate:representation:search",
+        kind=XignalKind.REPRESENTATION,
+        epistemic_state=XignalEpistemicState.OBSERVED,
+        title="No qualifying search presence observed",
+        why_attention="Measured public absence may matter for this Xeed.",
+        basis=ExplainableBasis(
+            basis_id="basis:representation:1",
+            subject_id="org:acme",
+            candidate_id="candidate:representation:search",
+            semantic_target="SEARCH_REPRESENTATION",
+            state_fingerprint="state:representation:1",
+            contract_fingerprint="contract:representation:1",
+            evaluated_at=NOW,
+            data=(
+                BasisDatum(
+                    datum_id="datum:search:1",
+                    observation_id="obs:search:1",
+                    source_ref="search:google:es",
+                    source_type="SEARCH_OBSERVATION",
+                    observed_at=NOW,
+                    excerpt_or_summary="No qualifying ACME presence was observed in the measured result set.",
+                    contribution=BasisContribution.SUPPORTS,
+                ),
+            ),
+            interpretation="Measured absence on this surface is itself observable representation state.",
+            uncertainty="Other queries, geographies and surfaces remain outside this observation.",
+        ),
+        emitted_at=NOW,
+        policy_version="xignal-v2",
+        observation_support_refs=("obs:search:1",),
+        currentness=Currentness.CURRENT,
+        unknowns=("Other digital surfaces remain UNKNOWN.",),
+    )
+
+    assert projection.xignal.epistemic_state is XignalEpistemicState.OBSERVED
+    assert projection.xignal.canonical_support_refs == ()
+    assert projection.xignal.observation_support_refs == ("obs:search:1",)
+    assert projection.xignal.is_canonical_truth is False
 
 
 def test_observed_xignal_traces_admitted_faxt_and_sources_deterministically() -> None:

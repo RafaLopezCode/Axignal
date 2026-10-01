@@ -255,13 +255,14 @@ Future audit finds a real composition root and cannot say #55–61 are only disc
 - concrete non-canonical `domain.xignal.Xignal` payload implemented
 - explicit subscriber-visible epistemic states: `OBSERVED`, `POTENTIAL`, `UNKNOWN`
 - private `xeed_id` and canonical observed `subject_id` are distinct in the Xignal contract
-- OBSERVED projection fails closed without canonical FAXT support created through EvidenceAdmission
-- OBSERVED Explainable Basis must reference admitted FAXT evidence through `BasisDatum.evidence_ref`
+- OBSERVED projection fails closed without explicit governed support: either admitted canonical FAXT support or exact supporting governed-observation ids
+- OBSERVED canonical-claim Basis must reference admitted FAXT evidence through `BasisDatum.evidence_ref`; observation-only representation support remains non-canonical business truth
 - POTENTIAL and UNKNOWN remain explicit and never inherit OBSERVED semantics
 - projection carries why-attention, semantic target, interpretation, currentness, source/time provenance, contradictions, unknowns, optional relationship/PATHX refs, Explainable Basis ref and policy version
 - deterministic `XignalExplanationTrail` implements the supporting path required by Show how AXIGNAL knows
 - sale probability and provider confidence are forbidden from masquerading as Xignal truth
 - Xignal remains `is_canonical_truth = False`
+- FR-27 backward reconciliation (2026-10-01): OBSERVED Xignal support now distinguishes admitted canonical FAXT support from exact governed observation support, allowing condition-bound representation observations (including measured absence) without upgrading them to business truth
 - ADR-0031 accepted and indexed
 - targeted Xignal/explanation tests: 9 PASS
 - full pytest: 469 PASS
@@ -412,7 +413,7 @@ Future audit no longer classifies FIRST_MAP_WOW as aspirational because germinat
 - explicit policy caps surfaced material items at 1–3; no score, node count, graph density or completion metric
 - deterministic ordering prefers real change time when present, otherwise observation recency and stable identity
 - Today items retain why-it-matters, epistemic state, currentness, observation/change time, proof ref and spatial focus ref
-- partial and empty Today states are explicit; empty copy says observation is still underway
+- partial and empty Today states are explicit; FR-27 backward reconciliation makes empty copy neutral about whether observation is still running, because completed low/no-presence measurement may itself be material
 - subscriber Today no longer renders every FAXT or leads with a detail count
 - synthetic fixture adapter surfaces at most three current observations and does not claim an unproven temporal change
 - primary action is `Show how AXIGNAL knows`; in the current lab it focuses the same governed object and switches cognitive depth to Evidence without inventing lineage
@@ -1174,6 +1175,7 @@ Choose one concrete job/buyer hypothesis without redefining AXIGNAL. Measure whe
 - FR-26 UnitEconomicsReport must match the pilot primary Xeed.
 - Telemetry cannot establish trust, return causality or willingness to pay.
 - Protocol: `docs/research/fr27/pilot-protocol.md`.
+- Backward reconciliation audit (2026-10-01): FR-05 amended so OBSERVED Xignals can bind exact governed observations without misclassifying representation as business FAXT; FR-09 empty-state copy made observation-status neutral; FR-06 evidence narrative and FR-08 readiness already consume governed observations correctly and require no semantic change; FR-01/02/07/10/17–26 remain compatible or orthogonal.
 - **REAL_BUYER_JOB_EVIDENCE=PENDING; synthetic fixtures do not close FR-27.**
 
 ### Acceptance

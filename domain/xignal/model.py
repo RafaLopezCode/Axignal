@@ -52,6 +52,7 @@ class Xignal:
     currentness: Currentness
     policy_version: str
     canonical_support_refs: tuple[str, ...] = ()
+    observation_support_refs: tuple[str, ...] = ()
     relationship_ref: str | None = None
     pathx_ref: str | None = None
     contradictions: tuple[str, ...] = ()
@@ -75,8 +76,9 @@ class Xignal:
         if (
             self.epistemic_state is XignalEpistemicState.OBSERVED
             and not self.canonical_support_refs
+            and not self.observation_support_refs
         ):
-            raise ValueError("OBSERVED Xignal requires canonical admitted support")
+            raise ValueError("OBSERVED Xignal requires canonical or governed observation support")
         if self.epistemic_state is XignalEpistemicState.UNKNOWN and not self.unknowns:
             raise ValueError("UNKNOWN Xignal requires explicit unknowns")
         if self.sale_probability is not None:
@@ -85,6 +87,8 @@ class Xignal:
             raise ValueError("provider confidence cannot masquerade as Xignal truth")
         if len(set(self.canonical_support_refs)) != len(self.canonical_support_refs):
             raise ValueError("canonical Xignal support refs must be unique")
+        if len(set(self.observation_support_refs)) != len(self.observation_support_refs):
+            raise ValueError("observation Xignal support refs must be unique")
 
     @property
     def is_canonical_truth(self) -> bool:

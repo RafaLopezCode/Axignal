@@ -56,7 +56,7 @@ Today is a comprehension layer over the same spatial world, not a separate dashb
 
 ## Empty and partial states
 
-If no material item is ready, Today states that AXIGNAL is still observing. Existing evidence that is not yet material does not become a fake insight. Empty does not mean false or nonexistent.
+If no material item is ready, Today states only that no material item is ready from the currently observed state. It does not claim observation is still running: a completed measurement with low/no public presence may itself be meaningful and should surface as a Xignal when material. Existing evidence that is not yet material does not become a fake insight. Empty does not mean false, nonexistent or unobserved.
 
 ## Browser evidence
 

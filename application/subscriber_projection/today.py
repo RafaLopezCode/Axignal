@@ -155,5 +155,5 @@ def project_today(
         policy_id=policy.policy_id,
         policy_version=policy.version,
         items=(),
-        message="No material change is ready yet. AXIGNAL is still observing.",
+        message="No material item is ready to surface from the current observed state.",
     )

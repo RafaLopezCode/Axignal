@@ -132,7 +132,7 @@ def test_today_partial_and_empty_states_are_explicit() -> None:
     assert partial.items == ()
     assert empty.disposition is TodayDisposition.EMPTY
     assert empty.items == ()
-    assert "still observing" in empty.message.lower()
+    assert "current observed state" in empty.message.lower()
 
 
 def test_today_item_preserves_state_time_and_currentness() -> None:
