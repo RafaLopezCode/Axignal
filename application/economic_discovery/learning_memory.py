@@ -276,6 +276,9 @@ class LearningMemory(Protocol):
     def for_xeed(self, xeed_id: str) -> tuple[LearningEvent, ...]:
         """Return the chronological learning history attributable to one Xeed."""
 
+    def all_events(self) -> tuple[LearningEvent, ...]:
+        """Return the chronological learning ledger for governed Admin projection."""
+
 
 @dataclass(frozen=True, slots=True)
 class LearningSummary:

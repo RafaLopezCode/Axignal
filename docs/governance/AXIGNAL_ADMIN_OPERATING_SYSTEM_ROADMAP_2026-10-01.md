@@ -99,7 +99,7 @@ Admin must distinguish measured flywheel behavior from the hypothesis above.
 
 `NOT_STARTED → READY → IN_PROGRESS → BLOCKED → DONE → DEFERRED → REJECTED`
 
-**CURRENT_TASK = AO-05**
+**CURRENT_TASK = AO-06**
 
 ## 7. Closure rule
 
@@ -295,9 +295,26 @@ Implement the executive landing view over real read models:
 Command Center is an inspectable projection rather than a collection of unexplained KPI cards.
 ## AO-05 — Xeed & AXIGLAND Observatory
 
-**Status:** NOT_STARTED
+**Status:** DONE
 **Depends on:** AO-03
 **Priority:** P0
+
+### Closure evidence (2026-10-01)
+- `domain/admin_xeed_observatory/` and `application/admin_xeed_observatory/` implement a deterministic AO-05 projection over governed Learning Memory plus AO-03 Admin envelopes; no route-local or canonical shadow store was introduced.
+- Xeed diagnostics expose lifecycle, currentness, observation coverage, first activity/first useful Xignal timing, failed/partial execution, reuse/new observations, Xignals, canonical-admission events, direct cost coverage and separate shared/triggered/revenue attribution states.
+- Missing lifecycle/currentness/coverage/shared/triggered/revenue owner evidence remains `UNKNOWN`; Learning Memory activity never fabricates those owning-domain states and missing cost never becomes free.
+- Reuse is measured independently from newly added observations and canonical-admission events. `observations_reused` never counts as AXIGLAND growth, and learning-event admissions are explicitly not presented as current FAXT cardinality.
+- AXIGLAND observability exposes explicit owner-record states for growth, currentness, provenance, contradictions and identity resolution. Future-dated learning/Admin evidence is excluded from the current `as_of` projection.
+- `SqliteLearningMemory.all_events()` provides the chronological governed ledger required by the Admin read model without changing Learning Memory authority.
+- `/admin/xeeds` and `/admin/axigland-quality` remain behind AO-01 server authorization and receive a secret-free AO-05 bootstrap. Per-Xeed and AXIGLAND lineage is inspectable from learning event IDs and Admin source-record IDs.
+- Browser QA PASS: Xeeds and AXIGLAND Quality render in the existing privileged AXIGNAL shell at desktop width; the Xeed view visibly distinguishes known direct-cost evidence from UNKNOWN shared/triggered/revenue attribution.
+- Compact-layout QA PASS at Chrome headless effective 491 px: one-column responsive layout, one governed Xeed card rendered and `scrollWidth == clientWidth`.
+- Focused AO-05 semantic/contracts: 10 PASS; AO-05 + AO-02 shell regression set: 14 PASS.
+- Full pytest: 764 PASS.
+- Ruff format/check: PASS.
+- mypy: PASS (162 source files).
+- Architecture Guard: PASS.
+- `axignal-governance`: PASS in clean detached worktree at implementation commit `310759f`.
 
 ### Work
 - Xeed lifecycle, germination state, first-value timing, currentness, observation coverage and active/inactive state.
