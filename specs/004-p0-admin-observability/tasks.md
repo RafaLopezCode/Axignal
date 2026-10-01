@@ -40,8 +40,7 @@ implementation.
 
 ## Deferred; requires separate authorization
 
-- [ ] T011 Implement Admin event/observation ingestion, metric computation or
-  Admin read models.
+- [x] T011 Implement shared Admin event/observation ingestion and Admin read-model substrate. **Implemented by AO-03**; purpose-specific metric/read models remain AO-04?AO-07.
 - [ ] T012 Implement Admin UI, API, exports, Admin MCP or operational commands.
 - [ ] T013 Implement telemetry, event transport, storage, queues, dashboards or
   provider/billing integrations.

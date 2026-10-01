@@ -99,7 +99,7 @@ Admin must distinguish measured flywheel behavior from the hypothesis above.
 
 `NOT_STARTED → READY → IN_PROGRESS → BLOCKED → DONE → DEFERRED → REJECTED`
 
-**CURRENT_TASK = AO-03**
+**CURRENT_TASK = AO-04**
 
 ## 7. Closure rule
 
@@ -221,9 +221,23 @@ A future UX audit cannot reasonably describe Admin as an unrelated dashboard or 
 
 ## AO-03 — Admin Event Envelope and Projection Runtime
 
-**Status:** NOT_STARTED
+**Status:** DONE
 **Depends on:** AO-00, AO-01
 **Priority:** P0
+
+### Closure evidence (2026-10-01)
+- ADR-0058 accepted: metadata-first append-oriented Admin observability runtime; no global event-sourcing authority.
+- `domain/admin_observability/` implements typed Admin record classes, temporal/completeness/privacy envelope semantics and versioned projection snapshots.
+- `application/admin_observability/` implements idempotent ingest, fail-closed conflicting replay, correction-by-supersession, historical `as_of` reconstruction and deterministic projection fingerprints.
+- `pipeline/admin_observability/` implements durable SQLite record/snapshot persistence with append sequence independent of random IDs.
+- P0-ADMIN-01 C01–C04 are now partially implemented by runtime; T011 marked implemented by AO-03.
+- Exact replay cannot double-count; later corrections do not rewrite earlier historical projections; correction cannot change owning domain or record type.
+- Logs, traces, Admin metrics, operational events and economic observations remain distinct record classes.
+- Focused AO-03 + roadmap contracts: 13 PASS.
+- Full pytest: 744 PASS.
+- Ruff format/check: PASS.
+- mypy: PASS (154 source files).
+- Architecture Guard: PASS.
 
 ### Work
 - Implement the first production Admin event/observation ingestion contracts from P0-ADMIN-01.

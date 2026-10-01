@@ -1,10 +1,9 @@
 # P0-ADMIN-01 Contract Catalogue
 
-**Status**: PROPOSED / PRE_IMPLEMENTATION\
+**Status**: ACCEPTED / PARTIALLY_IMPLEMENTED BY AO-03\
 **Authority**: Subordinate to MASTER, Constitution, accepted ADRs, Atlas and
 accepted domain architectures.\
-**Interpretation**: Semantic responsibilities only; not executable interfaces,
-database schemas, APIs, event sourcing, storage choices or runtime evidence.
+**Interpretation**: These contracts remain semantic authority. AO-03 now implements the shared envelope, temporal/idempotent ingestion and projection substrate for C01?C04 without turning the catalogue into a generic event-sourcing or canonical-write API.
 
 ## Shared envelope and rules
 

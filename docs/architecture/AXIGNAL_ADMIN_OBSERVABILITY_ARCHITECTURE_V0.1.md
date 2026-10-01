@@ -1,11 +1,11 @@
 # AXIGNAL Admin Observability Architecture V0.1
 
-**Status:** PROPOSED\
-**Implementation status:** PRE_IMPLEMENTATION\
+**Status:** ACCEPTED_SEMANTICS\
+**Implementation status:** PARTIALLY_IMPLEMENTED (AO-03 substrate)\
 **Classification:** PROPOSED_ADMIN_OBSERVABILITY_ARCHITECTURE\
 **Feature:** P0-ADMIN-01 (`specs/004-p0-admin-observability/`)
 
-This reference defines future observability semantics for AXIGNAL Admin. It is
+This reference defines AXIGNAL Admin observability semantics. AO-03 implements the shared event/projection substrate; purpose-specific projections and most producer instrumentation remain later AO work. It is
 subordinate to the MASTER Product Model, Engineering Constitution, accepted
 ADRs, Logical Architecture Atlas and accepted domain architectures. It does
 not approve an infrastructure choice, runtime, API, persistence model, UI,

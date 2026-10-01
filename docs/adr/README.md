@@ -65,6 +65,7 @@ Constitution (`.specify/memory/constitution.md`).
 | [ADR-0055](ADR-0055-admin-private-business-operations-separation.md) | Admin Private Business Operations Are Separate From AXIGLAND (**ACCEPTED**) | §§2.1–2.1A, 39, 46.2, 46.37, 48 |
 | [ADR-0056](ADR-0056-admin-identity-rbac-session-boundary.md) | Admin Identity, RBAC and Privileged Session Boundary (**ACCEPTED**) | §§2.1A, 5, 39, 46 |
 | [ADR-0057](ADR-0057-unified-admin-shell-and-server-authorized-navigation.md) | Unified Admin Shell and Server-Authorized Navigation (**ACCEPTED**) | §§2.1A, 5, 39, 46 |
+| [ADR-0058](ADR-0058-admin-observability-projection-runtime.md) | Admin Observability Projection Runtime (**ACCEPTED**) | Admin V0.2; P0-ADMIN-01 C01–C04 |
 
 ## Adding an ADR
 
