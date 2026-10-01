@@ -57,7 +57,19 @@ def test_landing_chapter_motion_is_directional_hysteretic_and_reduced_motion_saf
 
     assert "--ax-motion-chapter:620ms" in html
     assert '.scene[data-direction="backward"] .art-next' in html
+    assert '.scene[data-direction="forward"].is-transitioning .art-current' in html
+    assert "transform:translate3d(0,-100%,0)" in html
+    assert '.scene[data-direction="backward"].is-transitioning .art-current' in html
+    assert "transform:translate3d(0,100%,0)" in html
+    assert (
+        ".scene.is-resetting .art-current{transition:none!important;transform:none!important}"
+        in html
+    )
     assert "scene.dataset.direction=dir<0?'backward':'forward'" in html
+    assert (
+        "scene.classList.add('is-resetting');\n  scene.dataset.direction=dir<0?'backward':'forward';\n  void artNext.offsetWidth;\n  scene.classList.remove('is-resetting');"
+        in html
+    )
     assert "const total=reduced.matches?120:640" in html
     assert "const swapAt=reduced.matches?40:220" in html
     assert "let wheelGestureArmed=true" in html
@@ -66,11 +78,16 @@ def test_landing_chapter_motion_is_directional_hysteretic_and_reduced_motion_saf
     assert "if(transitioning||!wheelGestureArmed){armWheelAfterQuiet();return}" in html
     assert "if(wheelAccum>=72)" in html
     assert "wheelGestureArmed=false" in html
+    assert ".art-current{transition:none!important;transform:none!important}" in html
     assert (
         ".art-next{transform:none!important;opacity:0;transition:opacity 120ms linear!important}"
         in html
     )
     assert ".scene.is-transitioning .art-next{transform:none!important;opacity:1}" in html
+    assert "scene.classList.add('is-resetting')" in html
+    assert "void artCurrent.offsetWidth" in html
+    assert "void artNext.offsetWidth" in html
+    assert "requestAnimationFrame(()=>scene.classList.remove('is-resetting'))" in html
     assert "animation:none!important" in html
 
 
