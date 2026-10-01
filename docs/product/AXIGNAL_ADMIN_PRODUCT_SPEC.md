@@ -1697,10 +1697,11 @@ P0-ADMIN-01 disposition:
 - **AMENDED:** Customer Operations may now include AXIGNAL's own CRM and bounded internal commercial workflow under MASTER ?2.1A / ADR-0055.
 - **IMPLEMENTED BY AO-01:** provider-neutral Admin identity, RBAC scopes/roles, expiring/revocable server-side sessions, step-up/dual-approval policy, append-only privilege history and SQLite persistence for Admin security state.
 - **IMPLEMENTED BY AO-02:** unified AXIGNAL Admin shell, scope-derived navigation, server-authorized deep links, explicit Admin/private-state visual boundary, responsive desktop/mobile presentation and protected HTTP shell rendering. Admin remains unexposed when no Admin security plane is composed.
-- **NOT YET AUTHORIZED/IMPLEMENTED:** Admin Projection runtime/data plane, Stripe, GSC, accounting, VeriFactu, advisory runtime and production Admin deployment; those require their corresponding AO tasks.
+- **IMPLEMENTED BY AO-03:** metadata-first Admin event envelope, append-only/idempotent ingestion, temporal `as_of` replay, correction-by-supersession, durable versioned projection snapshots, deterministic projection fingerprints and SQLite persistence for the shared Admin Projection substrate.
+- **NOT YET AUTHORIZED/IMPLEMENTED:** purpose-specific Command Center/Xeed/Brain/Governance read models, Stripe, GSC, accounting, VeriFactu, advisory runtime and production Admin deployment; those require their corresponding AO tasks.
 - **STILL FORBIDDEN:** subscriber-facing CRM/workflow drift, customer-owned CRM management, private-data-to-AXIGLAND shortcuts and direct Admin canonical writes.
 
-Active implementation sequence advances to AO-03 after AO-02 unified-shell closure.
+Active implementation sequence advances to AO-04 after AO-03 projection-runtime closure.
 
 ------------------------------------------------------------------------
 
