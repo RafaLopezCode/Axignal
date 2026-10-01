@@ -60,6 +60,7 @@ Constitution (`.specify/memory/constitution.md`).
 | [ADR-0050](ADR-0050-observation-rights-reuse-applicability-gate.md) | Observation Rights, Reuse and Applicability Gate (**ACCEPTED**) | §§14, 20, 46.14, 53–54 |
 | [ADR-0051](ADR-0051-temporal-currentness-append-only-reobservation.md) | Temporal Currentness and Append-Only Reobservation (**ACCEPTED**) | §§14, 20, 46, 53 |
 | [ADR-0052](ADR-0052-unit-economics-instrumentation.md) | Unit Economics Instrumentation Over Learning Memory (**ACCEPTED**) | §§49–50, 56.14, 56.16 |
+| [ADR-0053](ADR-0053-one-buyer-one-job-pilot-evidence.md) | One Buyer / One Job Pilot Evidence Contract (**ACCEPTED**) | §§22, 27–28, 33, 49–50, 56.16 |
 
 ## Adding an ADR
 
