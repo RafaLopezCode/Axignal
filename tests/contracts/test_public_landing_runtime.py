@@ -119,7 +119,8 @@ def test_global_pagination_does_not_hijack_interactive_controls() -> None:
     assert (
         "if(accessDialog.open||evidenceDialog.open||isInteractiveTarget(e.target)) return;" in HTML
     )
-    assert "touchY=isInteractiveTarget(e.target)?null" in HTML
+    assert "isScrollableCopyTarget(e.target)" in HTML
+    assert "touchY=(isInteractiveTarget(e.target)||isScrollableCopyTarget(e.target))" in HTML
 
 
 def test_fr28_landing_promise_matches_demonstrated_runtime_boundaries() -> None:
@@ -170,3 +171,26 @@ def test_fr28_landing_preserves_xignal_not_conclusion_and_condition_bound_dri() 
     assert "guaranteed opportunity" not in serialized.lower()
     assert "predict who will buy" not in serialized.lower()
     assert "whole Internet" in serialized
+
+
+def test_mobile_header_is_a_real_navigation_surface_not_a_shrunk_desktop_header() -> None:
+    assert 'id="mobileMenuToggle"' in HTML
+    assert 'aria-controls="mobileMenu"' in HTML
+    assert 'id="mobileMenu" hidden' in HTML
+    assert 'class="mobile-menu-nav"' in HTML
+    assert 'class="login mobile-login"' in HTML
+    assert 'data-mobile-locale="es"' in HTML
+    assert ".main-nav,.header-actions{display:none}" in HTML
+    assert ".mobile-menu-toggle{display:inline-flex" in HTML
+    assert "function openMobileMenu()" in HTML
+    assert "function closeMobileMenu(" in HTML
+    assert "mobileMenuToggle.onclick=toggleMobileMenu" in HTML
+    assert "document.querySelector('.mobile-login').onclick" in HTML
+
+
+def test_mobile_storyboard_uses_dynamic_viewport_and_safe_copy_floor() -> None:
+    assert "height:100dvh" in HTML
+    assert "min-height:100svh" in HTML
+    assert "env(safe-area-inset-bottom)" in HTML
+    assert "max-height:calc(100dvh - 154px)" in HTML
+    assert "overscroll-behavior:contain" in HTML
