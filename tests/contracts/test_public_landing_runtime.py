@@ -258,3 +258,21 @@ def test_public_knowledge_uses_production_root_routes() -> None:
     assert 'href="/?c=4"' in knowledge
     assert 'href="/?c=7"' in knowledge
     assert 'href="/?c=14"' in knowledge
+
+
+def test_public_interaction_states_do_not_leak_browser_teal() -> None:
+    legal_css = (LANDING / "legal" / "legal.css").read_text(encoding="utf-8")
+    knowledge = (LANDING.parent / "knowledge" / "index.html").read_text(encoding="utf-8")
+
+    for surface in (HTML, legal_css, knowledge):
+        lowered = surface.lower()
+        assert "-webkit-tap-highlight-color:transparent" in lowered
+        assert "#2f6b62" not in lowered
+        assert "teal" not in lowered
+        assert "cyan" not in lowered
+        assert "a:visited{color:inherit}" in lowered
+
+    assert "a:focus-visible,button:focus-visible{outline:1.5px solid var(--ax-brass)" in HTML
+    assert "a:active,button:active{opacity:.78}" in HTML
+    assert "a:focus-visible{outline:1.5px solid var(--brass)" in legal_css
+    assert "a:active{opacity:.78}" in legal_css
