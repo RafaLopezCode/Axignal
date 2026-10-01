@@ -1,6 +1,6 @@
 # FR-30 Production E2E ? First Xeed to First Proof
 
-**Status:** IMPLEMENTED_PENDING_PRODUCTION_E2E
+**Status:** DONE
 **Date:** 2026-10-01
 
 ## Product path
@@ -31,4 +31,28 @@ Chrome E2E verified a fresh runtime from `NO_XEED`: keyboard navigation to Plant
 
 After green merge, deploy the exact canonical main SHA to `/srv/axignal/runtime/releases/<sha>`, add `AXIGNAL_FIRST_PROOF_ALLOWED_HOST=axignal.com` to `/etc/axignal/runtime.env`, restart only `axignal-runtime.service`, and keep nginx public exposure unchanged. Verify through an SSH tunnel to `127.0.0.1:18181`; do not expose `/api/xeeds`, `/api/subscriber-context`, or `/subscriber/` publicly.
 
-FR-30 becomes DONE only after that production-service browser E2E is repeated and the exact production Observation/Learning/Xignal lineage is recorded.
+## Production completion evidence
+
+Production runtime SHA: `cb89cfe391a0ce6ba93bfc5e5b8a942795897769`.
+
+Persisted lineage:
+
+- Xeed: `xeed:production-first-proof:1`;
+- Organization: `org:axignal`;
+- Xignal: `xignal:0ba83aceccb7ce1a141baba88e608873`;
+- epistemic state: `OBSERVED`; currentness: `CURRENT`;
+- Observation support: `source:request:fr30:1:official-homepage:sha256:0f877a33432e97d71`;
+- source: `https://axignal.com/`; artifact verification: true;
+- Learning Memory: 6 linked events, ending in `learn:run:fr30:1:06-xignal:xignal:0ba83aceccb7ce1a141baba88e608873`;
+- explicit UNKNOWN: search, generative, social, reputation and other unobserved surfaces.
+
+Production browser E2E through an SSH tunnel to runtime loopback passed:
+
+- desktop 1440x1000: READY, no demo marker, Today real Xignal visible, trusted keyboard Enter on `Show how AXIGNAL knows`, depth `3.00`, evidence expanded, exact Observation/Learning/source/UNKNOWN trace visible;
+- reload continuity: same Today title and why-attention text after hard reload;
+- mobile 390x844: no horizontal overflow, mobile navigation visible, evidence opens and remains readable;
+- database counts before/after browser verification remained `1 first_proof_session / 1 observation / 6 learning_events`, proving the verification itself was read-only.
+
+Public boundary remained closed: runtime subscriber/API are not reverse-proxied; public `POST /api/xeeds` returns 405 and public `GET /api/subscriber-context` is landing HTML, not runtime JSON. External `/healthz` reports the exact runtime SHA and healthy durable memories.
+
+FR-30 is DONE.
