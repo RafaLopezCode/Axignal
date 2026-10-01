@@ -31,7 +31,7 @@ A task is not DONE because code exists. Runtime/product work normally progresses
 
 NOT_STARTED · READY · IN_PROGRESS · BLOCKED · DONE · DEFERRED · REJECTED
 
-**CURRENT_TASK = FR-25**
+**CURRENT_TASK = FR-26**
 
 ## 4. Frontier closure rule
 
@@ -1099,9 +1099,30 @@ Future audit cannot state shared reuse ignores rights/currentness/applicability.
 
 ## FR-25 — Temporal Currentness / Reobservation Core
 
-**Status:** NOT_STARTED  
-**Depends on:** FR-24  
+**Status:** DONE
+**Depends on:** FR-24
 **Priority:** P1/P2
+
+**Closure evidence (2026-10-01):**
+- extended canonical Currentness with explicit HISTORICAL while preserving CURRENT / STALE / UNKNOWN
+- introduced versioned `TemporalCurrentnessPolicy` with deterministic `stale_after` and `historical_after` boundaries
+- CURRENT ages to STALE and then HISTORICAL by exact observation time + as-of time + policy; UNKNOWN remains UNKNOWN and HISTORICAL never freshens merely because time passes
+- introduced explicit `ReobservationRequirement` with NOT_REQUIRED / REQUIRED dispositions and CURRENT_ENOUGH / STALE / HISTORICAL / CURRENTNESS_UNKNOWN reasons
+- `plan_subject_reobservations()` evaluates only the latest observation per source for one exact canonical subject, preventing duplicate refresh work while retaining older history
+- `append_reobservation()` requires predecessor presence, exact subject/source continuity, a new observation id and later observation time; it appends through Observation Memory rather than updating/deleting the predecessor
+- same-value reobservation still changes provenance and emits a real StateChange, preserving temporal evidence lineage
+- temporal aging emits only the explicit `source.currentness` dependency field
+- `affected_temporal_dimensions()` reuses the existing dependency graph so only dimensions declaring currentness dependency reevaluate
+- no temporal transition emits no reevaluation signal
+- FR-24 current-state reuse now explicitly rejects HISTORICAL with HISTORICAL_FOR_CURRENT_USE while historical-reference reuse may still allow it when rights/scope/provenance/applicability pass
+- focused FR-25 temporal/reuse/contract suite: 26 PASS
+- full pytest: 640 PASS using external `--basetemp` to avoid the known Windows user-temp ACL issue
+- Ruff format/check: PASS
+- mypy: PASS (127 source files)
+- Architecture Guard: PASS
+- axignal-governance: PASS
+- git diff --check: PASS
+- ADR-0051 accepted and indexed
 
 ### Work
 Implement deterministic temporal-state transitions and reobservation requirements without erasing history.

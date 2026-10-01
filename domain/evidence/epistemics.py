@@ -28,6 +28,7 @@ class Currentness(StrEnum):
 
     CURRENT = "CURRENT"
     STALE = "STALE"
+    HISTORICAL = "HISTORICAL"
     UNKNOWN = "UNKNOWN"
 
 

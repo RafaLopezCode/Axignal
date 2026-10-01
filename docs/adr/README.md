@@ -58,6 +58,7 @@ Constitution (`.specify/memory/constitution.md`).
 | [ADR-0048](ADR-0048-evaluator-decision-lab-bakeoff-governance.md) | Evaluator Decision Lab Bakeoff Governance (**ACCEPTED**) | §§14–16, 19, 35, 53 |
 | [ADR-0049](ADR-0049-canonical-identity-resolution-reversible-topology.md) | Canonical Identity Resolution and Reversible Topology Governance (**ACCEPTED**) | §§14, 35, 36, 46.1, 46.6, 46.10–13 |
 | [ADR-0050](ADR-0050-observation-rights-reuse-applicability-gate.md) | Observation Rights, Reuse and Applicability Gate (**ACCEPTED**) | §§14, 20, 46.14, 53–54 |
+| [ADR-0051](ADR-0051-temporal-currentness-append-only-reobservation.md) | Temporal Currentness and Append-Only Reobservation (**ACCEPTED**) | §§14, 20, 46, 53 |
 
 ## Adding an ADR
 

@@ -45,6 +45,7 @@ class ReuseReason(StrEnum):
     SUBJECT_NOT_APPLICABLE = "SUBJECT_NOT_APPLICABLE"
     PURPOSE_NOT_APPLICABLE = "PURPOSE_NOT_APPLICABLE"
     STALE_FOR_CURRENT_USE = "STALE_FOR_CURRENT_USE"
+    HISTORICAL_FOR_CURRENT_USE = "HISTORICAL_FOR_CURRENT_USE"
     CURRENTNESS_UNKNOWN = "CURRENTNESS_UNKNOWN"
 
 
@@ -234,6 +235,14 @@ def evaluate_observation_reuse(
                 observation,
                 disposition=ReuseDisposition.REJECT,
                 reason=ReuseReason.STALE_FOR_CURRENT_USE,
+                context=context,
+                policy=policy,
+            )
+        if authority.currentness is Currentness.HISTORICAL:
+            return _decision(
+                observation,
+                disposition=ReuseDisposition.REJECT,
+                reason=ReuseReason.HISTORICAL_FOR_CURRENT_USE,
                 context=context,
                 policy=policy,
             )
