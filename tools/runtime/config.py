@@ -16,6 +16,7 @@ class RuntimeConfig:
     data_dir: Path
     web_root: Path
     first_proof_allowed_host: str | None = None
+    containerized: bool = False
 
     @classmethod
     def from_env(cls) -> RuntimeConfig:
@@ -28,6 +29,11 @@ class RuntimeConfig:
         first_proof_allowed_host = (
             os.getenv("AXIGNAL_FIRST_PROOF_ALLOWED_HOST", "").strip().lower() or None
         )
+        containerized = os.getenv("AXIGNAL_CONTAINERIZED", "").strip().lower() in {
+            "1",
+            "true",
+            "yes",
+        }
 
         if not bind_host:
             raise ValueError("AXIGNAL_BIND_HOST cannot be empty")
@@ -39,8 +45,14 @@ class RuntimeConfig:
             raise ValueError("AXIGNAL_WEB_ROOT is required")
         if environment == "production" and code_sha == "UNKNOWN":
             raise ValueError("AXIGNAL_CODE_SHA is required in production")
-        if environment == "production" and bind_host not in {"127.0.0.1", "::1"}:
-            raise ValueError("production runtime must bind to loopback behind the reverse proxy")
+        if (
+            environment == "production"
+            and bind_host not in {"127.0.0.1", "::1"}
+            and not (containerized and bind_host == "0.0.0.0")
+        ):
+            raise ValueError(
+                "production runtime must bind to loopback unless explicitly containerized"
+            )
 
         data_dir = Path(data_raw).expanduser().resolve()
         web_root = Path(web_raw).expanduser().resolve()
@@ -55,4 +67,5 @@ class RuntimeConfig:
             data_dir,
             web_root,
             first_proof_allowed_host,
+            containerized,
         )
