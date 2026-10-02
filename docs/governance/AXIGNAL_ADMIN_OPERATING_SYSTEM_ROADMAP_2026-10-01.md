@@ -686,9 +686,18 @@ The commercial flywheel is measurable rather than a narrative hypothesis.
 
 ## AO-18 — Integration Registry, Credentials and Connection Governance
 
-**Status:** NOT_STARTED
+**Status:** DONE
 **Depends on:** AO-01, AO-07
 **Priority:** P0 Infrastructure
+
+### Completion evidence
+- Provider-neutral `domain/admin_integrations`, `application/admin_integrations` and append-only `pipeline/admin_integrations` registry implemented without credential bytes or a second secret authority.
+- Definition, credential lifecycle and provider health remain separate; health freshness is explicit, `STALE` is derived, and out-of-order observations project by observation time rather than append order.
+- Provider work fails closed for missing/disabled/wrong-environment/revoked/expired/unresolvable credentials, insufficient scopes, missing/non-healthy/stale health and future observations.
+- Admin projection is read-only, scope-protected and secret-free; webhook URL/path stays server-side while browser receives only capability/configured metadata.
+- Focused AO-18/AO-02/roadmap regression: 24 PASS. Full repository: 841 PASS. Ruff, mypy, Architecture Guard, axignal-governance and `git diff --check`: PASS.
+- Browser QA PASS on the real Admin renderer at desktop and compact widths: Integration Registry renders governed Stripe fixture state, health/freshness and authority boundary without exposing the webhook path or credential material. Production deployment is not claimed by AO-18 and remains governed by the later production/deployment closure path.
+
 ### Work
 - Central registry of external integrations, scopes, owner, environment, status, credential reference, rotation/expiry, webhook endpoints, quotas and failure state.
 - Secrets remain in secret storage, never Admin database/export.

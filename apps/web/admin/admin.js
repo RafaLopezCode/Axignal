@@ -831,6 +831,93 @@
     }
   }
 
+  const integrations = bootstrap.integrations
+  const integrationSection = document.getElementById('admin-integration-observatory')
+  const integrationPrivacy = document.getElementById('admin-integration-privacy')
+  const integrationAsOf = document.getElementById('admin-integration-asof')
+  const integrationNotes = document.getElementById('admin-integration-notes')
+  const integrationList = document.getElementById('admin-integration-list')
+
+  if (current?.slug === 'integrations' && integrations && integrationSection) {
+    integrationSection.hidden = false
+    if (domainPreview) domainPreview.hidden = true
+    if (integrationPrivacy) integrationPrivacy.textContent = integrations.privacyClass || 'PRIVATE OPERATIONS'
+    if (integrationAsOf) integrationAsOf.textContent = integrations.asOf ? `As of ${integrations.asOf}` : ''
+    if (integrationNotes) {
+      integrationNotes.replaceChildren()
+      for (const noteText of integrations.coverageNotes || []) {
+        const note = document.createElement('p')
+        note.textContent = noteText
+        integrationNotes.append(note)
+      }
+    }
+    if (integrationList) {
+      integrationList.replaceChildren()
+      const entries = Array.isArray(integrations.integrations) ? integrations.integrations : []
+      if (!entries.length) {
+        const empty = document.createElement('article')
+        empty.className = 'admin-observatory-empty'
+        const heading = document.createElement('strong')
+        heading.textContent = 'No integration definitions are registered'
+        const body = document.createElement('p')
+        body.textContent = 'This registry has no governed integration entries yet. It does not verify or infer configuration outside this registry.'
+        empty.append(heading, body)
+        integrationList.append(empty)
+      }
+      for (const item of entries) {
+        const article = document.createElement('article')
+        article.className = 'admin-integration-entry'
+        const header = document.createElement('header')
+        const title = document.createElement('h3')
+        title.textContent = item.provider || item.integrationId
+        const state = document.createElement('span')
+        state.textContent = item.enabled ? 'ENABLED' : 'DISABLED'
+        header.append(title, state)
+
+        const purpose = document.createElement('p')
+        purpose.className = 'admin-integration-purpose'
+        purpose.textContent = item.purpose || 'Purpose unavailable'
+
+        const facts = document.createElement('dl')
+        facts.className = 'admin-integration-facts'
+        const addDetail = (label, value) => {
+          const wrapper = document.createElement('div')
+          const term = document.createElement('dt')
+          term.textContent = label
+          const description = document.createElement('dd')
+          description.textContent = value == null || value === '' ? 'UNKNOWN' : String(value)
+          wrapper.append(term, description)
+          facts.append(wrapper)
+        }
+        addDetail('Environment', item.environment)
+        addDetail('Owner', item.owner)
+        addDetail('Credential', item.credentialConfigured ? item.credentialState : 'MISSING')
+        addDetail('Connection health', item.health)
+        addDetail('Data direction', item.direction)
+        addDetail('Granted scopes', (item.scopes || []).join(', ') || 'None declared')
+        addDetail('Webhook capability', item.webhookCapable ? 'Available' : 'Not declared')
+        addDetail('Webhook endpoint', item.webhookConfigured ? 'Configured' : 'Missing')
+        addDetail('Health freshness window', `${item.healthFreshnessSeconds} seconds`)
+        addDetail('Last verified', item.lastVerifiedAt)
+        addDetail('Last success', item.lastSuccessAt)
+        addDetail('Last failure', item.lastFailureAt)
+        addDetail('Failure category', item.failureCategory)
+        addDetail('Rate limit posture', item.rateLimitPosture)
+
+        const boundary = document.createElement('details')
+        boundary.className = 'admin-metric-lineage'
+        const summary = document.createElement('summary')
+        summary.textContent = 'Inspect authority boundary'
+        const body = document.createElement('p')
+        body.textContent = item.authorityBoundary || 'Authority boundary is UNKNOWN.'
+        boundary.append(summary, body)
+
+        article.append(header, purpose, facts, boundary)
+        integrationList.append(article)
+      }
+    }
+  }
+
   document.addEventListener('keydown', (event) => {
     if (event.key !== 'ArrowDown' && event.key !== 'ArrowUp') return
     const links = [...document.querySelectorAll('.admin-nav-link')]
