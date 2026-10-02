@@ -522,9 +522,23 @@ AXIGNAL can operate real paying accounts without manual database intervention.
 
 ## AO-10 — Stripe Payments and Billing Integration
 
-**Status:** NOT_STARTED
+**Status:** BLOCKED
 **Depends on:** AO-09, AO-18
 **Priority:** P0 Revenue
+
+### Implementation / verification evidence
+- Provider-neutral AO-10 billing domain/application/persistence is implemented with explicit AXIGNAL Account ↔ Stripe Customer ↔ Stripe Subscription mapping. Stripe Connect is not used.
+- Canonical quantity contract is enforced: one base subscription quantity plus `max(0, xeed_capacity - 1)` additional-Xeed quantity. Xignal count is not a billing input.
+- `checkout.session.completed` links the verified Stripe mapping but leaves payment `EXTERNAL_PENDING`; only verified billing events can move service payment state to `VERIFIED/FAILED`.
+- Signed Stripe webhook ingress is bounded, replay-safe and ordered by provider event time. Duplicate delivery is idempotent and late-arriving older events cannot roll back newer payment/subscription facts.
+- Provider-authenticated effects use `BillingAuthorityGrant`, not a fabricated Admin identity. AO-18 remains the integration authority: `stripe-billing` must be registered, enabled, webhook-capable, environment-matched and credential-metadata-usable before ingress is accepted.
+- Xeed entitlement and Xeed service reads now fail closed unless billing is verified. MRR remains `UNKNOWN` and is explicitly deferred to AO-11.
+- Focused AO-09/AO-10/AO-18 regression: 42 PASS. Architecture-specific recheck after boundary correction: 15 PASS. Final local repository validation: 853 PASS; ruff, mypy, Architecture Guard, axignal-governance and `git diff --check` PASS. Clean GitHub CI is still required.
+- Connected Stripe context confirms AXIGNAL merchant `acct_1TybkH8feyjV8Pem` is LIVE. No live Stripe mutation or webhook enablement was performed.
+
+### BLOCKER
+A real Stripe sandbox/test context is not currently available through the connected Stripe account surface. AO-10 remains live-disabled and cannot be marked DONE until the required sandbox E2E is executed. This blocker is external evidence availability, not an implementation bypass.
+
 ### Work
 - Stripe customer/subscription/product/price mapping behind an adapter.
 - Support current commercial hypothesis: first-Xeed base plan + additional-Xeed quantity/entitlement without billing Xignals.

@@ -45,8 +45,11 @@ from domain.admin_access import AdminAuthorizationGrant
 from domain.admin_brain_observatory import BrainProviderObservatory
 from domain.admin_command_center import AdminCommandCenterProjection
 from domain.admin_governance import AdminGovernanceProjection
+from domain.admin_integrations import IntegrationEnvironment
 from domain.admin_observability import AdminProjectionId, AdminProjectionSnapshot
 from domain.admin_xeed_observatory import XeedAxiglandObservatory
+from pipeline.admin_billing import SqliteAdminBillingStore
+from pipeline.admin_billing.stripe import StripeWebhookDependencyError, StripeWebhookError
 from pipeline.admin_commercial import SqliteAdminCommercialStore
 from pipeline.admin_customer_accounts import SqliteAdminCustomerAccountStore
 from pipeline.admin_governance import SqliteAdminGovernanceAuditStore
@@ -61,6 +64,7 @@ from tools.runtime.first_proof import (
     FirstProofService,
     FirstProofStore,
 )
+from tools.runtime.stripe_billing import StripeWebhookRuntime
 
 
 @dataclass(slots=True)
@@ -73,7 +77,9 @@ class AxignalRuntime:
     governance_audit_store: SqliteAdminGovernanceAuditStore
     admin_commercial_store: SqliteAdminCommercialStore
     admin_customer_account_store: SqliteAdminCustomerAccountStore
+    admin_billing_store: SqliteAdminBillingStore
     admin_integration_store: SqliteAdminIntegrationStore
+    stripe_webhook: StripeWebhookRuntime | None = None
     first_proof: FirstProofService | None = None
     admin_access: AdminAccessService | None = None
 
@@ -108,6 +114,9 @@ class AxignalRuntime:
             "code_sha": self.config.code_sha,
             "persistence": {"observation_memory": observation, "learning_memory": learning},
             "write_surface": "closed",
+            "provider_ingress": (
+                "stripe-webhook-gated" if self.stripe_webhook is not None else "closed"
+            ),
         }
 
 
@@ -129,9 +138,29 @@ def build_runtime(config: RuntimeConfig) -> AxignalRuntime:
     admin_customer_account_store = SqliteAdminCustomerAccountStore(
         config.data_dir / "admin-customer-accounts.sqlite3"
     )
+    admin_billing_store = SqliteAdminBillingStore(config.data_dir / "admin-billing.sqlite3")
     admin_integration_store = SqliteAdminIntegrationStore(
         config.data_dir / "admin-integrations.sqlite3"
     )
+    stripe_webhook = None
+    if config.stripe_webhook_signing_secret is not None:
+        if (
+            config.stripe_account_id is None
+            or config.stripe_base_price_ref is None
+            or config.stripe_additional_xeed_price_ref is None
+        ):
+            raise ValueError("incomplete Stripe webhook runtime configuration")
+        stripe_webhook = StripeWebhookRuntime(
+            stripe_account_id=config.stripe_account_id,
+            base_price_ref=config.stripe_base_price_ref,
+            additional_xeed_price_ref=config.stripe_additional_xeed_price_ref,
+            signing_secret=config.stripe_webhook_signing_secret,
+            billing_store=admin_billing_store,
+            account_store=admin_customer_account_store,
+            integration_store=admin_integration_store,
+            runtime_environment=IntegrationEnvironment(config.environment.upper()),
+            require_livemode=config.environment == "production",
+        )
     first_proof = None
     if config.first_proof_allowed_host is not None:
         from pipeline.source_acquisition import ContentAddressedArtifactStore
@@ -153,7 +182,9 @@ def build_runtime(config: RuntimeConfig) -> AxignalRuntime:
         governance_audit_store=governance_audit_store,
         admin_commercial_store=admin_commercial_store,
         admin_customer_account_store=admin_customer_account_store,
+        admin_billing_store=admin_billing_store,
         admin_integration_store=admin_integration_store,
+        stripe_webhook=stripe_webhook,
         first_proof=first_proof,
     )
 
@@ -1000,6 +1031,66 @@ def make_handler(runtime: AxignalRuntime) -> type[BaseHTTPRequestHandler]:
 
         def do_POST(self) -> None:
             request_path = urlsplit(self.path).path
+            if request_path == "/internal/webhooks/stripe":
+                if runtime.stripe_webhook is None:
+                    self.send_error(HTTPStatus.NOT_FOUND)
+                    return
+                try:
+                    length = int(self.headers.get("Content-Length", "0"))
+                except ValueError:
+                    length = 0
+                if length < 1 or length > 1_048_576:
+                    self._json(
+                        {"status": "rejected", "reason": "INVALID_REQUEST_SIZE"},
+                        HTTPStatus.BAD_REQUEST,
+                    )
+                    return
+                signature = self.headers.get("Stripe-Signature", "")
+                if not signature:
+                    self._json(
+                        {"status": "rejected", "reason": "MISSING_STRIPE_SIGNATURE"},
+                        HTTPStatus.BAD_REQUEST,
+                    )
+                    return
+                payload = self.rfile.read(length)
+                try:
+                    result = runtime.stripe_webhook.handle(
+                        payload=payload,
+                        signature_header=signature,
+                        received_at=datetime.now(UTC),
+                    )
+                except StripeWebhookDependencyError:
+                    self._json(
+                        {"status": "retry", "reason": "STRIPE_DEPENDENCY_NOT_READY"},
+                        HTTPStatus.SERVICE_UNAVAILABLE,
+                    )
+                    return
+                except StripeWebhookError:
+                    self._json(
+                        {"status": "rejected", "reason": "INVALID_STRIPE_WEBHOOK"},
+                        HTTPStatus.BAD_REQUEST,
+                    )
+                    return
+                except LookupError:
+                    self._json(
+                        {"status": "retry", "reason": "BILLING_ACCOUNT_NOT_READY"},
+                        HTTPStatus.SERVICE_UNAVAILABLE,
+                    )
+                    return
+                except ValueError:
+                    self._json(
+                        {"status": "rejected", "reason": "BILLING_CONTRACT_CONFLICT"},
+                        HTTPStatus.CONFLICT,
+                    )
+                    return
+                self._json(
+                    {
+                        "status": "accepted",
+                        "eventId": result.event_id,
+                        "replayed": result.replayed,
+                    }
+                )
+                return
             if request_path == "/api/xeeds" and runtime.first_proof is not None:
                 try:
                     length = int(self.headers.get("Content-Length", "0"))

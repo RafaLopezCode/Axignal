@@ -18,6 +18,7 @@ from domain.admin_access import (
     AdminSessionId,
     scopes_for_roles,
 )
+from domain.admin_billing import BillingAuthorityGrant, BillingProvider
 from domain.admin_customer_accounts import (
     AccountStatus,
     AccountUserRole,
@@ -80,6 +81,19 @@ def _active_account(
         now=NOW + timedelta(seconds=2),
         reason="service activation before AO-10 payment verification",
     )
+    service.apply_billing_payment(
+        authority=BillingAuthorityGrant(
+            provider=BillingProvider.STRIPE,
+            integration_id="stripe-billing",
+            provider_event_id="evt_active_account_paid",
+            verified_at=NOW + timedelta(seconds=3),
+        ),
+        account_id="account:1",
+        provider_event_id="evt_active_account_paid",
+        verified=True,
+        now=NOW + timedelta(seconds=3),
+        reason="verified billing fixture",
+    )
     return service
 
 
@@ -108,7 +122,7 @@ def test_signup_is_private_service_state_and_payment_remains_unverified(tmp_path
     )
     assert projection.account_count == 1
     assert projection.mrr_eur is None
-    assert projection.payment_authority == "AO10_PENDING"
+    assert projection.payment_authority == "STRIPE_VERIFIED_EVENTS"
     assert projection.customers[0].mrr_eur is None
     assert projection.customers[0].pricing_hypothesis_monthly_eur == "9.95"
 
@@ -239,16 +253,32 @@ def test_suspension_and_cancellation_fail_closed_for_xeed_service_access(tmp_pat
         reader.read(context, XeedId("xeed:1"))
 
 
-def test_ao09_cannot_claim_paid_stage_before_ao10(tmp_path) -> None:
+def test_manual_account_operations_cannot_claim_paid_stage(tmp_path) -> None:
     store = SqliteAdminCustomerAccountStore(tmp_path / "accounts.sqlite3")
-    service = _active_account(store)
+    service = _account(store)
+    service.signup(
+        grant=_grant(),
+        account_id="account:1",
+        tenant_id="tenant:1",
+        display_name="Account One",
+        now=NOW,
+        reason="signup",
+    )
+    service.activate_subscription(
+        grant=_grant(),
+        account_id="account:1",
+        subscription_id="subscription:1",
+        xeed_capacity=1,
+        now=NOW + timedelta(seconds=1),
+        reason="pending billing verification",
+    )
     with pytest.raises(ValueError, match="AO-10"):
         service.record_funnel_stage(
             grant=_grant(),
             account_id="account:1",
             stage=FunnelStage.PAID,
             definition_version="activation-v1",
-            now=NOW + timedelta(seconds=3),
+            now=NOW + timedelta(seconds=2),
             reason="must be billing-owned",
         )
 
@@ -257,7 +287,7 @@ def test_ao09_cannot_claim_paid_stage_before_ao10(tmp_path) -> None:
         account_id="account:1",
         stage=FunnelStage.FIRST_MAP_VIEWED,
         definition_version="behavior-v1",
-        now=NOW + timedelta(seconds=4),
+        now=NOW + timedelta(seconds=3),
         reason="first map observed",
     )
     assert FunnelStage.FIRST_MAP_VIEWED in {stage for stage, _ in snapshot.funnel_stages}

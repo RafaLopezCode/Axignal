@@ -81,7 +81,7 @@ def test_axigland_observation_does_not_create_customer_account(tmp_path: Path) -
     assert runtime.admin_customer_account_store.all_events() == ()
 
 
-def test_runtime_customer_projection_keeps_mrr_unknown_until_ao10(tmp_path: Path) -> None:
+def test_runtime_customer_projection_keeps_mrr_unknown_until_ao11(tmp_path: Path) -> None:
     runtime = build_runtime(_config(tmp_path))
     service = AdminCustomerAccountService(runtime.admin_customer_account_store)
     service.signup(
@@ -109,13 +109,14 @@ def test_runtime_customer_projection_keeps_mrr_unknown_until_ao10(tmp_path: Path
         now=NOW + timedelta(seconds=2),
         reason="service activation",
     )
-    service.entitle_xeed(
-        grant=_grant(),
-        account_id="account:1",
-        xeed_id="xeed:1",
-        now=NOW + timedelta(seconds=3),
-        reason="first Xeed",
-    )
+    with pytest.raises(ValueError, match="verified billing"):
+        service.entitle_xeed(
+            grant=_grant(),
+            account_id="account:1",
+            xeed_id="xeed:1",
+            now=NOW + timedelta(seconds=3),
+            reason="must wait for verified Stripe billing",
+        )
     service.record_funnel_stage(
         grant=_grant(),
         account_id="account:1",
@@ -129,9 +130,9 @@ def test_runtime_customer_projection_keeps_mrr_unknown_until_ao10(tmp_path: Path
 
     assert projection.account_count == 1
     assert projection.active_account_count == 1
-    assert projection.total_entitled_xeeds == 1
+    assert projection.total_entitled_xeeds == 0
     assert projection.mrr_eur is None
-    assert projection.payment_authority == "AO10_PENDING"
+    assert projection.payment_authority == "STRIPE_VERIFIED_EVENTS"
     assert projection.customers[0].mrr_eur is None
     assert projection.customers[0].pricing_hypothesis_monthly_eur == "14.90"
 
@@ -169,7 +170,7 @@ def test_customers_admin_bootstrap_has_account_projection_without_user_identity(
 
     assert '"customerOperations":' in rendered
     assert '"privacyClass":"PRIVATE_FIRST_PARTY_SERVICE"' in rendered
-    assert '"paymentAuthority":"AO10_PENDING"' in rendered
+    assert '"paymentAuthority":"STRIPE_VERIFIED_EVENTS"' in rendered
     assert '"mrrEur":null' in rendered
     assert "private-user-id" not in rendered
     assert "private-principal-id" not in rendered
