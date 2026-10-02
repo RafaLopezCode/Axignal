@@ -9,6 +9,7 @@ from __future__ import annotations
 import html
 import json
 import mimetypes
+import secrets
 import sqlite3
 from dataclasses import dataclass
 from datetime import UTC, datetime
@@ -22,6 +23,13 @@ from application.admin_access import (
     AdminAuthenticationError,
     AdminAuthorizationError,
 )
+from application.admin_acquisition.lifecycle_service import AdminBriefLifecycleService
+from application.admin_acquisition.projection import (
+    AdminAcquisitionProjection,
+    project_admin_acquisition,
+)
+from application.admin_acquisition.public_service import PublicBriefRequestService
+from application.admin_acquisition.review_service import AdminBriefReviewService
 from application.admin_brain_observatory import project_brain_provider_observatory
 from application.admin_command_center import COMMAND_CENTER_METRICS, project_command_center
 from application.admin_commercial import AdminCommercialProjection, project_admin_commercial
@@ -48,6 +56,7 @@ from domain.admin_governance import AdminGovernanceProjection
 from domain.admin_integrations import IntegrationEnvironment
 from domain.admin_observability import AdminProjectionId, AdminProjectionSnapshot
 from domain.admin_xeed_observatory import XeedAxiglandObservatory
+from pipeline.admin_acquisition import SqliteAdminAcquisitionStore
 from pipeline.admin_billing import SqliteAdminBillingStore
 from pipeline.admin_billing.stripe import StripeWebhookDependencyError, StripeWebhookError
 from pipeline.admin_commercial import SqliteAdminCommercialStore
@@ -75,6 +84,7 @@ class AxignalRuntime:
     admin_observability: SqliteAdminObservabilityStore
     governance_policy_store: SqliteActivePolicyStore
     governance_audit_store: SqliteAdminGovernanceAuditStore
+    admin_acquisition_store: SqliteAdminAcquisitionStore
     admin_commercial_store: SqliteAdminCommercialStore
     admin_customer_account_store: SqliteAdminCustomerAccountStore
     admin_billing_store: SqliteAdminBillingStore
@@ -113,7 +123,9 @@ class AxignalRuntime:
             "environment": self.config.environment,
             "code_sha": self.config.code_sha,
             "persistence": {"observation_memory": observation, "learning_memory": learning},
-            "write_surface": "closed",
+            "write_surface": "weekly-brief-request-gated"
+            if self.config.weekly_brief_requests_enabled
+            else "closed",
             "provider_ingress": (
                 "stripe-webhook-gated" if self.stripe_webhook is not None else "closed"
             ),
@@ -131,6 +143,9 @@ def build_runtime(config: RuntimeConfig) -> AxignalRuntime:
     governance_policy_store = SqliteActivePolicyStore(config.data_dir / "policy-governance.sqlite3")
     governance_audit_store = SqliteAdminGovernanceAuditStore(
         config.data_dir / "admin-governance-audit.sqlite3"
+    )
+    admin_acquisition_store = SqliteAdminAcquisitionStore(
+        config.data_dir / "admin-acquisition.sqlite3"
     )
     admin_commercial_store = SqliteAdminCommercialStore(
         config.data_dir / "admin-commercial.sqlite3"
@@ -180,6 +195,7 @@ def build_runtime(config: RuntimeConfig) -> AxignalRuntime:
         admin_observability=admin_observability,
         governance_policy_store=governance_policy_store,
         governance_audit_store=governance_audit_store,
+        admin_acquisition_store=admin_acquisition_store,
         admin_commercial_store=admin_commercial_store,
         admin_customer_account_store=admin_customer_account_store,
         admin_billing_store=admin_billing_store,
@@ -215,6 +231,8 @@ def _resolve_static(web_root: Path, raw_path: str) -> Path | None:
         "/app.js": "subscriber/app.js",
         "/admin.css": "admin/admin.css",
         "/admin.js": "admin/admin.js",
+        "/admin-acquisition.js": "admin/admin-acquisition.js",
+        "/newsletter.js": "landing/newsletter.js",
     }
     relative = exact.get(path)
     if relative is not None:
@@ -591,6 +609,46 @@ def _governance_payload(
     }
 
 
+def _acquisition_projection(
+    runtime: AxignalRuntime,
+    *,
+    grant: AdminAuthorizationGrant,
+    now: datetime,
+) -> AdminAcquisitionProjection:
+    return project_admin_acquisition(
+        store=runtime.admin_acquisition_store,
+        grant=grant,
+        generated_at=now,
+    )
+
+
+def _acquisition_payload(projection: AdminAcquisitionProjection) -> dict[str, object]:
+    return {
+        "privacyClass": projection.privacy_class,
+        "generatedAt": projection.generated_at.isoformat(),
+        "requestCount": projection.request_count,
+        "acceptedCount": projection.accepted_count,
+        "consentedCount": projection.consented_count,
+        "deliveryEligibleCount": projection.delivery_eligible_count,
+        "piiVisible": projection.pii_visible,
+        "coverageNotes": list(projection.coverage_notes),
+        "requests": [
+            {
+                "requestId": item.request_id,
+                "companyName": item.company_name,
+                "companyDomain": item.company_domain,
+                "reviewState": item.review_state,
+                "coverageState": item.coverage_state,
+                "consentState": item.consent_state,
+                "deliveryEligible": item.delivery_eligible,
+                "requestedAt": item.requested_at.isoformat(),
+                "updatedAt": item.updated_at.isoformat(),
+            }
+            for item in projection.requests
+        ],
+    }
+
+
 def _commercial_projection(
     runtime: AxignalRuntime,
     *,
@@ -779,6 +837,7 @@ def _admin_projection_payload(
     xeed_observatory: XeedAxiglandObservatory | None = None,
     brain_observatory: BrainProviderObservatory | None = None,
     governance: AdminGovernanceProjection | None = None,
+    acquisition: AdminAcquisitionProjection | None = None,
     commercial: AdminCommercialProjection | None = None,
     customer_operations: CustomerOperationsProjection | None = None,
     integrations: AdminIntegrationProjection | None = None,
@@ -807,6 +866,8 @@ def _admin_projection_payload(
         payload["brainObservatory"] = _brain_observatory_payload(brain_observatory)
     if governance is not None:
         payload["governance"] = _governance_payload(governance)
+    if acquisition is not None:
+        payload["acquisition"] = _acquisition_payload(acquisition)
     if commercial is not None:
         payload["commercial"] = _commercial_payload(commercial)
     if customer_operations is not None:
@@ -824,6 +885,7 @@ def _render_admin_shell(
     xeed_observatory: XeedAxiglandObservatory | None = None,
     brain_observatory: BrainProviderObservatory | None = None,
     governance: AdminGovernanceProjection | None = None,
+    acquisition: AdminAcquisitionProjection | None = None,
     commercial: AdminCommercialProjection | None = None,
     customer_operations: CustomerOperationsProjection | None = None,
     integrations: AdminIntegrationProjection | None = None,
@@ -837,6 +899,7 @@ def _render_admin_shell(
                 xeed_observatory=xeed_observatory,
                 brain_observatory=brain_observatory,
                 governance=governance,
+                acquisition=acquisition,
                 commercial=commercial,
                 customer_operations=customer_operations,
                 integrations=integrations,
@@ -973,6 +1036,11 @@ def make_handler(runtime: AxignalRuntime) -> type[BaseHTTPRequestHandler]:
                         if admin_projection.current_slug == "governance"
                         else None
                     )
+                    acquisition = (
+                        _acquisition_projection(runtime, grant=grant, now=now)
+                        if admin_projection.current_slug == "acquisition"
+                        else None
+                    )
                     commercial = (
                         _commercial_projection(runtime, grant=grant, now=now)
                         if admin_projection.current_slug == "customers-crm"
@@ -995,6 +1063,7 @@ def make_handler(runtime: AxignalRuntime) -> type[BaseHTTPRequestHandler]:
                         xeed_observatory=xeed_observatory,
                         brain_observatory=brain_observatory,
                         governance=governance,
+                        acquisition=acquisition,
                         commercial=commercial,
                         customer_operations=customer_operations,
                         integrations=integrations,
@@ -1012,6 +1081,9 @@ def make_handler(runtime: AxignalRuntime) -> type[BaseHTTPRequestHandler]:
                     self.send_error(HTTPStatus.SERVICE_UNAVAILABLE)
                     return
                 self._html(rendered)
+                return
+            if request_path == "/api/weekly-brief/status":
+                self._json({"enabled": runtime.config.weekly_brief_requests_enabled})
                 return
             if request_path == "/api/subscriber-context":
                 if runtime.first_proof is None:
@@ -1031,6 +1103,201 @@ def make_handler(runtime: AxignalRuntime) -> type[BaseHTTPRequestHandler]:
 
         def do_POST(self) -> None:
             request_path = urlsplit(self.path).path
+            acquisition_admin_prefix = "/internal/admin/acquisition/requests/"
+            if request_path.startswith(acquisition_admin_prefix):
+                if runtime.admin_access is None:
+                    self.send_error(HTTPStatus.NOT_FOUND)
+                    return
+                tail = request_path[len(acquisition_admin_prefix) :]
+                encoded_request_id, separator, action = tail.rpartition("/")
+                if (
+                    separator != "/"
+                    or not encoded_request_id
+                    or action not in {"accept", "decline", "clarify", "suppress"}
+                ):
+                    self.send_error(HTTPStatus.NOT_FOUND)
+                    return
+                authorization = self.headers.get("Authorization")
+                if authorization is None:
+                    self._admin_error(HTTPStatus.UNAUTHORIZED, "Admin authentication required.")
+                    return
+                scheme, auth_separator, token = authorization.partition(" ")
+                if auth_separator != " " or scheme != "Bearer" or not token.strip():
+                    self._admin_error(
+                        HTTPStatus.UNAUTHORIZED, "Invalid Admin authorization credential."
+                    )
+                    return
+                try:
+                    length = int(self.headers.get("Content-Length", "0"))
+                except ValueError:
+                    length = 0
+                if length < 2 or length > 8192:
+                    self._json(
+                        {"status": "rejected", "reason": "INVALID_REQUEST_SIZE"},
+                        HTTPStatus.BAD_REQUEST,
+                    )
+                    return
+                try:
+                    payload = json.loads(self.rfile.read(length).decode("utf-8"))
+                except (UnicodeDecodeError, json.JSONDecodeError):
+                    self._json(
+                        {"status": "rejected", "reason": "INVALID_JSON"},
+                        HTTPStatus.BAD_REQUEST,
+                    )
+                    return
+                if not isinstance(payload, dict):
+                    self._json(
+                        {"status": "rejected", "reason": "INVALID_REQUEST"},
+                        HTTPStatus.BAD_REQUEST,
+                    )
+                    return
+                try:
+                    grant = runtime.admin_access.session_grant(token.strip(), now=datetime.now(UTC))
+                    request_id = unquote(encoded_request_id)
+                    reason = str(payload.get("reason", "")).strip()
+                    now = datetime.now(UTC)
+                    if action == "accept":
+                        snapshot = AdminBriefReviewService(runtime.admin_acquisition_store).accept(
+                            grant=grant,
+                            request_id=request_id,
+                            subject_reference=str(payload.get("subjectReference", "")),
+                            reason=reason,
+                            now=now,
+                        )
+                    elif action == "decline":
+                        snapshot = AdminBriefReviewService(runtime.admin_acquisition_store).decline(
+                            grant=grant,
+                            request_id=request_id,
+                            reason=reason,
+                            now=now,
+                        )
+                    elif action == "clarify":
+                        snapshot = AdminBriefLifecycleService(
+                            runtime.admin_acquisition_store
+                        ).require_clarification(
+                            grant=grant,
+                            request_id=request_id,
+                            reason=reason,
+                            now=now,
+                        )
+                    else:
+                        snapshot = AdminBriefLifecycleService(
+                            runtime.admin_acquisition_store
+                        ).block_delivery(
+                            grant=grant,
+                            request_id=request_id,
+                            reason=reason,
+                            now=now,
+                        )
+                except AdminAuthenticationError:
+                    self._admin_error(HTTPStatus.UNAUTHORIZED, "Admin authentication failed.")
+                    return
+                except (AdminAuthorizationError, PermissionError):
+                    self._admin_error(
+                        HTTPStatus.FORBIDDEN, "Admin scope or assurance denied for this action."
+                    )
+                    return
+                except LookupError:
+                    self.send_error(HTTPStatus.NOT_FOUND)
+                    return
+                except ValueError:
+                    self._json(
+                        {"status": "rejected", "reason": "ACQUISITION_STATE_CONFLICT"},
+                        HTTPStatus.CONFLICT,
+                    )
+                    return
+                self._json(
+                    {
+                        "status": "accepted",
+                        "requestId": str(snapshot.request_id),
+                        "reviewState": snapshot.review_state.value,
+                        "coverageState": snapshot.coverage_state.value,
+                        "consentState": snapshot.consent_state.value,
+                        "deliveryEligible": snapshot.delivery_eligible,
+                    }
+                )
+                return
+            if request_path == "/api/weekly-brief/requests":
+                if not runtime.config.weekly_brief_requests_enabled:
+                    self.send_error(HTTPStatus.NOT_FOUND)
+                    return
+                try:
+                    length = int(self.headers.get("Content-Length", "0"))
+                except ValueError:
+                    length = 0
+                if length < 2 or length > 16_384:
+                    self._json(
+                        {"status": "rejected", "reason": "INVALID_REQUEST_SIZE"},
+                        HTTPStatus.BAD_REQUEST,
+                    )
+                    return
+                try:
+                    payload = json.loads(self.rfile.read(length).decode("utf-8"))
+                except (UnicodeDecodeError, json.JSONDecodeError):
+                    self._json(
+                        {"status": "rejected", "reason": "INVALID_JSON"},
+                        HTTPStatus.BAD_REQUEST,
+                    )
+                    return
+                if not isinstance(payload, dict):
+                    self._json(
+                        {"status": "rejected", "reason": "INVALID_REQUEST"},
+                        HTTPStatus.BAD_REQUEST,
+                    )
+                    return
+                if payload.get("requestProcessingAcknowledged") is not True:
+                    self._json(
+                        {"status": "rejected", "reason": "REQUEST_NOTICE_REQUIRED"},
+                        HTTPStatus.BAD_REQUEST,
+                    )
+                    return
+                if payload.get("requestNoticeVersion") != "weekly-brief-request-v1":
+                    self._json(
+                        {"status": "rejected", "reason": "REQUEST_NOTICE_VERSION_INVALID"},
+                        HTTPStatus.BAD_REQUEST,
+                    )
+                    return
+                if (
+                    payload.get("newsletterConsent") is True
+                    and payload.get("newsletterNoticeVersion") != "weekly-newsletter-consent-v1"
+                ):
+                    self._json(
+                        {"status": "rejected", "reason": "NEWSLETTER_NOTICE_VERSION_INVALID"},
+                        HTTPStatus.BAD_REQUEST,
+                    )
+                    return
+                try:
+                    snapshot = PublicBriefRequestService(runtime.admin_acquisition_store).submit(
+                        request_id=f"brief:{secrets.token_hex(12)}",
+                        company_name=str(payload.get("companyName", "")),
+                        company_domain=str(payload.get("companyDomain", "")),
+                        professional_email=str(payload.get("professionalEmail", "")),
+                        purpose=str(payload.get("purpose", "")),
+                        request_notice_version=str(payload.get("requestNoticeVersion", "")),
+                        newsletter_consent=payload.get("newsletterConsent") is True,
+                        newsletter_notice_version=(
+                            str(payload["newsletterNoticeVersion"])
+                            if payload.get("newsletterConsent") is True
+                            and payload.get("newsletterNoticeVersion") is not None
+                            else None
+                        ),
+                        now=datetime.now(UTC),
+                    )
+                except ValueError:
+                    self._json(
+                        {"status": "rejected", "reason": "INVALID_REQUEST"},
+                        HTTPStatus.BAD_REQUEST,
+                    )
+                    return
+                self._json(
+                    {
+                        "status": "received",
+                        "requestId": str(snapshot.request_id),
+                        "reviewState": snapshot.review_state.value,
+                    },
+                    HTTPStatus.ACCEPTED,
+                )
+                return
             if request_path == "/internal/webhooks/stripe":
                 if runtime.stripe_webhook is None:
                     self.send_error(HTTPStatus.NOT_FOUND)

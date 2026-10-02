@@ -1,4 +1,4 @@
-(() => {
+﻿(() => {
   const bootstrapElement = document.getElementById('admin-bootstrap')
   if (!bootstrapElement) return
   let bootstrap = {}
@@ -31,6 +31,7 @@
   }
   const fact = (parent, label, value) => {
     const row = document.createElement('div')
+    row.className = 'admin-observatory-fact'
     const term = document.createElement('span')
     term.textContent = label
     const data = document.createElement('strong')

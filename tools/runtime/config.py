@@ -21,6 +21,7 @@ class RuntimeConfig:
     stripe_base_price_ref: str | None = None
     stripe_additional_xeed_price_ref: str | None = None
     stripe_webhook_signing_secret: str | None = field(default=None, repr=False)
+    weekly_brief_requests_enabled: bool = False
 
     @classmethod
     def from_env(cls) -> RuntimeConfig:
@@ -46,6 +47,9 @@ class RuntimeConfig:
         stripe_webhook_signing_secret = (
             os.getenv("AXIGNAL_STRIPE_WEBHOOK_SIGNING_SECRET", "").strip() or None
         )
+        weekly_brief_requests_enabled = os.getenv(
+            "AXIGNAL_WEEKLY_BRIEF_REQUESTS_ENABLED", ""
+        ).strip().lower() in {"1", "true", "yes"}
 
         if not bind_host:
             raise ValueError("AXIGNAL_BIND_HOST cannot be empty")
@@ -99,4 +103,5 @@ class RuntimeConfig:
             stripe_base_price_ref,
             stripe_additional_xeed_price_ref,
             stripe_webhook_signing_secret,
+            weekly_brief_requests_enabled,
         )

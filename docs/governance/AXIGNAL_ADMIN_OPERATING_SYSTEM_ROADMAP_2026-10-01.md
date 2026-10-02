@@ -635,9 +635,23 @@ Marketing/product decisions no longer depend on disconnected external dashboards
 
 ## AO-15 — Free Weekly Brief Request, Eligibility and Consent
 
-**Status:** NOT_STARTED
-**Depends on:** AO-08, AO-12
+**Status:** ACTIVE
+**Depends on:** AO-08
+**Integrates with:** AO-12 for later campaign/source attribution; AO-12 is not required for request/consent correctness.
 **Priority:** P1 Growth
+
+### Implementation / verification evidence
+- Append-only `admin_acquisition` request lifecycle implemented with explicit request, coverage-review and newsletter-consent states.
+- Public request surface is localized and can submit review requests without forcing newsletter consent; request-processing acknowledgement and newsletter consent remain separate versioned acts.
+- Coverage acceptance/decline, clarification and suppression are privileged server-side operations; acquisition mutations require `admin:acquisition:write` plus STEP_UP assurance.
+- Admin projection is private and PII-minimized: professional email and free-text purpose are not projected to the browser.
+- No AO-15 path creates a free Xeed, AXENT entitlement, subscriber account or AXIGLAND write.
+- Public ingress is closed by default behind `AXIGNAL_WEEKLY_BRIEF_REQUESTS_ENABLED=false`; production activation remains gated by verified legal-controller/contact data and privacy readiness.
+- Browser QA PASS on real landing/Admin renderers at desktop and compact breakpoints.
+- Focused AO-15 contracts: 15 PASS. AO-01/AO-02/AO-08/AO-15 regression: 28 PASS.
+- Full local repository validation: 868 PASS; Ruff, mypy, Architecture Guard, axignal-governance and `git diff --check` PASS.
+- GitHub CI, merge and production dormant-deployment evidence remain to close before status can move to DONE.
+
 ### Work
 - Public `Solicitar newsletter gratuita` surface plus Admin `BriefRequest` accepted/declined review flow.
 - Collect minimum company/domain, professional email and brief purpose; subject/company matching and clarification path.

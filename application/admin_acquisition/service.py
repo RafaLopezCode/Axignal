@@ -2,11 +2,11 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass, replace
+from dataclasses import replace
 from datetime import datetime
 from typing import Protocol
 
-from domain.admin_access import AdminAuthorizationGrant, AdminScope
+from domain.admin_access import AdminAssurance, AdminAuthorizationGrant, AdminScope
 from domain.admin_acquisition import (
     BriefRequestEvent,
     BriefRequestEventId,
@@ -16,8 +16,6 @@ from domain.admin_acquisition import (
     BriefReviewState,
     CoverageState,
     NewsletterConsentState,
-    normalize_domain,
-    normalize_email,
 )
 
 
@@ -38,6 +36,12 @@ def _payload_dict(event: BriefRequestEvent) -> dict[str, str]:
 def _require_scope(grant: AdminAuthorizationGrant, scope: AdminScope) -> None:
     if scope not in grant.scopes:
         raise PermissionError(f"acquisition operation requires {scope.value}")
+
+
+def _require_write_scope(grant: AdminAuthorizationGrant) -> None:
+    _require_scope(grant, AdminScope.ACQUISITION_WRITE)
+    if grant.assurance is not AdminAssurance.STEP_UP:
+        raise PermissionError("acquisition mutation requires STEP_UP assurance")
 
 
 def reduce_brief_request(events: tuple[BriefRequestEvent, ...]) -> BriefRequestSnapshot:

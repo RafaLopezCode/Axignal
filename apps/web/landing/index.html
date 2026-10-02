@@ -185,11 +185,16 @@ body[data-chapter="14"] .pricing-panel{
   background:rgba(7,7,6,.91);font:400 10.5px/1.35 var(--ax-font-mono);letter-spacing:.015em;color:rgba(246,241,231,.72)
 }
 .price-truth::before{content:"";width:5px;height:5px;flex:0 0 5px;border-radius:50%;background:var(--ax-brass)}
+.price-newsletter{grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;gap:18px;padding:14px 15px;background:rgba(7,7,6,.95);border-top:1px solid rgba(175,166,138,.24)}
+.price-newsletter-copy strong{display:block;font:500 10px/1.2 var(--ax-font-mono);letter-spacing:.12em;text-transform:uppercase;color:var(--ax-brass);margin-bottom:5px}
+.price-newsletter-copy span{display:block;max-width:31rem;font-size:11.5px;line-height:1.4;color:rgba(246,241,231,.68)}
+.price-newsletter button{flex:0 0 auto;min-height:34px;padding:8px 13px;border:1px solid rgba(175,166,138,.5);border-radius:var(--ax-radius-control);background:rgba(175,166,138,.08);color:#fff;font-size:11px}
+.price-newsletter button:hover,.price-newsletter button:focus-visible{background:rgba(175,166,138,.15);border-color:var(--ax-brass)}
 body[data-chapter="14"] .actions{margin-top:17px}
 
 .access-dialog{width:min(520px,calc(100vw - 32px));padding:0;border:1px solid rgba(175,166,138,.45);border-radius:3px;background:rgba(7,7,6,.97);color:var(--ax-ivory);box-shadow:0 28px 90px rgba(0,0,0,.62)}
 .access-dialog::backdrop{background:rgba(0,0,0,.72);backdrop-filter:blur(5px)}
-.access-dialog-inner{padding:30px}
+.access-dialog-inner{padding:30px;box-sizing:border-box;max-width:100%}
 .access-dialog-kicker{margin:0 0 11px;font:500 10px/1.2 var(--ax-font-mono);letter-spacing:.13em;text-transform:uppercase;color:var(--ax-brass)}
 .access-dialog h2{margin:0 0 13px;font:300 34px/1.02 var(--ax-font-display);letter-spacing:-.025em}
 .access-dialog-copy{margin:0;color:rgba(246,241,231,.72);font-size:14px;line-height:1.55}
@@ -201,7 +206,21 @@ body[data-chapter="14"] .actions{margin-top:17px}
 .evidence-step strong{display:block;margin-bottom:6px;font:500 10px/1.2 var(--ax-font-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--ax-brass)}
 .evidence-step span{display:block;font-size:12.5px;line-height:1.45;color:rgba(246,241,231,.74)}
 .evidence-note{margin:16px 0 0;padding-top:13px;border-top:1px solid rgba(175,166,138,.18);font-size:11.5px;line-height:1.45;color:rgba(246,241,231,.58)}
-@media(max-width:620px){.evidence-dialog-grid{grid-template-columns:1fr}.evidence-dialog .access-dialog-inner{padding:22px}}
+.newsletter-dialog{width:min(680px,calc(100vw - 32px))}
+.newsletter-form{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:20px}
+.newsletter-field{display:grid;gap:6px}
+.newsletter-field.wide,.newsletter-consents,.newsletter-status{grid-column:1/-1}
+.newsletter-field label,.newsletter-consents label{font:500 10px/1.3 var(--ax-font-mono);letter-spacing:.07em;color:rgba(246,241,231,.68)}
+.newsletter-field input,.newsletter-field textarea{width:100%;box-sizing:border-box;border:1px solid rgba(175,166,138,.32);border-radius:2px;background:rgba(255,255,255,.035);color:#fff;padding:10px 11px;font:13px/1.4 var(--ax-font-body);outline:none}
+.newsletter-field textarea{min-height:74px;resize:vertical}
+.newsletter-field input:focus,.newsletter-field textarea:focus{border-color:var(--ax-brass)}
+.newsletter-consents{display:grid;gap:9px;padding-top:3px}
+.newsletter-consents label{display:grid;grid-template-columns:18px 1fr;gap:8px;align-items:start;letter-spacing:0;font-family:var(--ax-font-body);font-size:11px;line-height:1.4}
+.newsletter-consents a{color:var(--ax-brass)}
+.newsletter-submit{min-height:38px;padding:9px 15px;border:1px solid rgba(175,166,138,.65);border-radius:var(--ax-radius-control);background:rgba(175,166,138,.15);color:#fff;font-weight:600}
+.newsletter-submit:disabled{opacity:.45;cursor:not-allowed}
+.newsletter-status{min-height:20px;font-size:11.5px;line-height:1.4;color:rgba(246,241,231,.68)}
+@media(max-width:620px){.evidence-dialog-grid,.newsletter-form{grid-template-columns:1fr}.evidence-dialog .access-dialog-inner,.newsletter-dialog .access-dialog-inner{padding:22px}.price-newsletter{align-items:flex-start;flex-direction:column;gap:10px}}
 
 .question-rail{
   position:absolute;right:clamp(17px,2vw,34px);top:50%;z-index:12;transform:translateY(-48%);
@@ -370,6 +389,7 @@ body[data-chapter="14"] .copy{width:min(43rem,46vw)}
 .scene[data-direction="backward"] .copy-inner.ax-morph-in .actions{animation-name:axTextRevealBack}
 @media(prefers-reduced-motion:reduce){.copy-inner.ax-morph-out,.copy-inner.ax-morph-in,.copy-inner.ax-morph-in .eyebrow,.copy-inner.ax-morph-in h1,.copy-inner.ax-morph-in .body,.copy-inner.ax-morph-in .value,.copy-inner.ax-morph-in .pricing-panel,.copy-inner.ax-morph-in .actions{animation:none!important}}
 </style>
+<script src="./newsletter.js" defer></script>
 </head>
 <body>
 <main class="scene" id="scene">
@@ -452,6 +472,29 @@ body[data-chapter="14"] .copy{width:min(43rem,46vw)}
       <div class="evidence-dialog-grid" id="evidenceDialogGrid"></div>
       <p class="evidence-note" id="evidenceDialogNote"></p>
       <div class="access-dialog-actions"><button type="button" class="access-dialog-close" id="evidenceDialogClose"></button></div>
+    </div>
+  </dialog>
+
+  <dialog class="access-dialog newsletter-dialog" id="newsletterDialog" aria-labelledby="newsletterDialogTitle">
+    <div class="access-dialog-inner">
+      <p class="access-dialog-kicker" id="newsletterDialogKicker"></p>
+      <h2 id="newsletterDialogTitle"></h2>
+      <p class="access-dialog-copy" id="newsletterDialogCopy"></p>
+      <form class="newsletter-form" id="newsletterForm">
+        <div class="newsletter-field"><label for="newsletterCompany" id="newsletterCompanyLabel"></label><input id="newsletterCompany" name="companyName" maxlength="160" required></div>
+        <div class="newsletter-field"><label for="newsletterDomain" id="newsletterDomainLabel"></label><input id="newsletterDomain" name="companyDomain" maxlength="253" placeholder="example.com" required></div>
+        <div class="newsletter-field wide"><label for="newsletterEmail" id="newsletterEmailLabel"></label><input id="newsletterEmail" name="professionalEmail" type="email" maxlength="320" required></div>
+        <div class="newsletter-field wide"><label for="newsletterPurpose" id="newsletterPurposeLabel"></label><textarea id="newsletterPurpose" name="purpose" maxlength="800" required></textarea></div>
+        <div class="newsletter-consents">
+          <label><input id="newsletterRequestNotice" type="checkbox" required><span><span id="newsletterRequestNoticeLabel"></span> <a id="newsletterPrivacyLink" href="/legal/privacidad-rgpd/" target="_blank" rel="noopener"></a></span></label>
+          <label><input id="newsletterConsent" type="checkbox"><span id="newsletterConsentLabel"></span></label>
+        </div>
+        <p class="newsletter-status" id="newsletterStatus" aria-live="polite"></p>
+        <div class="access-dialog-actions">
+          <button type="button" class="access-dialog-close" id="newsletterClose"></button>
+          <button type="submit" class="newsletter-submit" id="newsletterSubmit"></button>
+        </div>
+      </form>
     </div>
   </dialog>
 
@@ -738,6 +781,23 @@ function fillCopy(ch){
     $('bodycopy').innerHTML='<p>'+p.intro+'</p>';
     pricing.setAttribute('aria-label',p.aria);
     pricing.innerHTML='<article class="price-tier primary"><div class="price-kicker">'+p.first+'</div><div class="price-line"><strong class="price-amount">9,95 €</strong><span class="price-period">'+p.month+'</span></div><p class="price-desc">'+p.firstDesc+'</p></article><article class="price-tier"><div class="price-kicker">'+p.more+'</div><div class="price-line"><strong class="price-amount">+4,95 €</strong><span class="price-period">'+p.month+'</span></div><p class="price-desc">'+p.moreDesc+'</p></article><div class="price-truth">'+p.truth+'</div>';
+  }
+  if(ch.n===14){
+    const newsletterUi={
+      en:{k:'FREE WEEKLY OBSERVATION',d:'Up to three material public signals when the evidence supports them. Not a free AXIGNAL plan.',cta:'Request free newsletter'},
+      es:{k:'OBSERVACIÓN SEMANAL GRATUITA',d:'Hasta tres señales públicas materiales cuando la evidencia las sostenga. No es un plan gratuito de AXIGNAL.',cta:'Solicitar newsletter gratuita'},
+      fr:{k:'OBSERVATION HEBDOMADAIRE GRATUITE',d:'Jusqu’à trois signaux publics matériels lorsque les preuves le permettent. Ce n’est pas une offre AXIGNAL gratuite.',cta:'Demander la newsletter gratuite'},
+      de:{k:'KOSTENLOSE WÖCHENTLICHE BEOBACHTUNG',d:'Bis zu drei wesentliche öffentliche Signale, wenn die Evidenz sie trägt. Kein kostenloser AXIGNAL-Tarif.',cta:'Kostenlosen Newsletter anfragen'},
+      it:{k:'OSSERVAZIONE SETTIMANALE GRATUITA',d:'Fino a tre segnali pubblici materiali quando le evidenze lo consentono. Non è un piano AXIGNAL gratuito.',cta:'Richiedi newsletter gratuita'},
+      pt:{k:'OBSERVAÇÃO SEMANAL GRATUITA',d:'Até três sinais públicos materiais quando as evidências os sustentarem. Não é um plano gratuito da AXIGNAL.',cta:'Solicitar newsletter gratuita'}
+    };
+    const n=newsletterUi[lang]||newsletterUi.en;
+    const strip=document.createElement('div'); strip.className='price-newsletter';
+    const copyWrap=document.createElement('div'); copyWrap.className='price-newsletter-copy';
+    const strong=document.createElement('strong'); strong.textContent=n.k;
+    const span=document.createElement('span'); span.textContent=n.d;
+    const button=document.createElement('button'); button.type='button'; button.textContent=n.cta; button.dataset.newsletterTrigger='';
+    copyWrap.append(strong,span); strip.append(copyWrap,button); pricing.append(strip);
   }
   const actions=$('actions'); actions.innerHTML='';
   for(const [key,cls] of [['Primary CTA','primary'],['Secondary CTA','secondary']]){
