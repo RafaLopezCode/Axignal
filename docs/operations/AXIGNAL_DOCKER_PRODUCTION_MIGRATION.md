@@ -86,3 +86,92 @@ A migration is not DONE because containers are running. Record:
 - external health and Landing;
 - rollback evidence;
 - confirmation that unrelated containers/networks were untouched.
+
+
+## Production cutover evidence — 2026-10-02
+
+Canonical Docker cutover was executed from green main SHA:
+
+```text
+bed3c977281d5dab6785fd404faa40dccc51ba21
+```
+
+Observed before cutover:
+
+- `axignal-runtime.service` active/enabled on host `127.0.0.1:18181`;
+- `axignal-landing.service` active/enabled on host `127.0.0.1:18180`;
+- Docker project `axignal-prod` empty;
+- existing unrelated containers (Biocultor, IAmancha, Traefik) running and untouched;
+- canonical SQLite counts recorded under `/srv/axignal/docker/evidence/precutover-bed3c977281d5dab6785fd404faa40dccc51ba21.txt`.
+
+Pre-cutover staging on the same KVM2 passed with:
+
+- isolated temporary Docker network;
+- temporary persistence directory;
+- Landing on `127.0.0.1:18182`;
+- runtime with no published host port;
+- exact OCI revision labels;
+- read-only roots, `cap_drop=ALL`, `no-new-privileges`;
+- live production on `18180` remaining healthy throughout.
+
+The first production cutover attempt exercised rollback automatically after a verification-script status-code defect. Docker resources were removed and both systemd services returned to `active/enabled` with external health restored to the prior SHA. No persistence counts changed.
+
+The corrected cutover then completed successfully:
+
+- Compose project: `axignal-prod`;
+- containers:
+  - `axignal-prod-runtime`;
+  - `axignal-prod-landing`;
+- dedicated network: `axignal_prod_internal`;
+- runtime host-published ports: **none**;
+- Landing host publication: **only** `127.0.0.1:18180 -> 8080`;
+- systemd runtime/landing: `inactive/disabled`;
+- external `https://axignal.com/healthz`: `status=ok`, exact Docker SHA, write surface closed;
+- Landing, Privacy/RGPD and Knowledge routes: HTTP success;
+- unrelated containers remained running.
+
+Persistence before and after cutover was identical:
+
+```text
+admin-commercial.sqlite3
+  admin_commercial_audit=0
+  admin_commercial_records=0
+
+admin-customer-accounts.sqlite3
+  admin_customer_account_events=0
+
+admin-governance-audit.sqlite3
+  admin_governance_audit=0
+
+admin-observability.sqlite3
+  admin_observability_records=0
+  admin_projection_snapshots=0
+
+first-proof.sqlite3
+  first_proof_sessions=1
+
+learning-memory.sqlite3
+  learning_events=6
+
+observation-memory.sqlite3
+  observation_fields=5
+  observations=1
+
+policy-governance.sqlite3
+  active_policies=0
+  policy_decisions=0
+```
+
+Docker image evidence for the functional cutover:
+
+```text
+Runtime image ID:
+sha256:a7e6c6d3b6a3065539955c3bcf2a64d0eddb122bc69b5655412665e68bd294e1
+
+Landing image ID:
+sha256:cc8693b0225cfd565a3af1c3e91e962f78c72ff82d57e287a865cba2b7339a5b
+```
+
+Post-cutover delayed verification confirmed both containers remained `healthy`, only Docker owned host `127.0.0.1:18180`, no host listener existed on `18181`, systemd remained disabled/inactive, external health remained green and SQLite counts remained unchanged.
+
+The host-systemd units and their prior immutable releases remain preserved exclusively as rollback.

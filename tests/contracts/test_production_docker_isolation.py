@@ -86,3 +86,14 @@ def test_adr_and_runbook_keep_systemd_only_as_rollback() -> None:
     assert "systemctl enable --now axignal-runtime.service" in RUNBOOK
     assert "systemctl enable --now axignal-landing.service" in RUNBOOK
     assert "does not delete `/var/lib/axignal/runtime`" in RUNBOOK
+
+
+def test_runbook_records_completed_production_docker_cutover() -> None:
+    assert "## Production cutover evidence — 2026-10-02" in RUNBOOK
+    assert "axignal-prod-runtime" in RUNBOOK
+    assert "axignal-prod-landing" in RUNBOOK
+    assert "axignal_prod_internal" in RUNBOOK
+    assert "runtime host-published ports: **none**" in RUNBOOK
+    assert "systemd runtime/landing: `inactive/disabled`" in RUNBOOK
+    assert "Persistence before and after cutover was identical" in RUNBOOK
+    assert "rollback automatically" in RUNBOOK
