@@ -18,11 +18,15 @@ def test_obscura_candidate_is_reproducibly_pinned() -> None:
     candidate = manifest["candidate"]
     assert isinstance(candidate, dict)
     assert candidate["release"] == "v0.2.3"
-    assert candidate["platform"] == "linux-x86_64"
-    assert candidate["sha256"] == (
+    platforms = candidate["platforms"]
+    assert isinstance(platforms, dict)
+    assert platforms["linux-x86_64"]["sha256"] == (
         "1534d1e6ddaf3d080ec4091eb41d0a4d8cc042a48b607d3c410fc13b482a9eec"
     )
-    assert manifest["status"] == "PLANNED_NOT_EXECUTED"
+    assert platforms["windows-x86_64"]["sha256"] == (
+        "781a1b8bd12b65ec5aba95842e75e6f56b3101d360397506c0e35fe3f78536e8"
+    )
+    assert manifest["status"] == "EXECUTED_SYNTHETIC_PRODUCTION_REJECTED"
 
 
 def test_obscura_plan_forbids_evasion_and_truth_authority() -> None:
@@ -57,3 +61,31 @@ def test_obscura_docs_do_not_authorize_production_or_stealth() -> None:
     assert "Obscura stealth mode is forbidden" in spec
     assert "--stealth" in quickstart
     assert "Never use latest" in quickstart
+
+
+def test_obscura_execution_result_rejects_v023_for_production() -> None:
+    manifest = _manifest()
+    evidence = manifest["evidence"]
+    decision = manifest["decision"]
+    assert isinstance(evidence, dict)
+    assert isinstance(decision, dict)
+    assert evidence["cold_semantic_recovery_ratio"] == 1.0
+    assert evidence["persistent_semantic_recovery_ratio"] >= 0.95
+    assert evidence["hard_response_subresource_cap"] is False
+    assert evidence["redirect_hop_interposition"] is False
+    assert evidence["peer_ip_provenance"] is False
+    assert evidence["redirect_chain_provenance"] is False
+    assert evidence["public_corpus_executed"] is False
+    assert decision["production_adoption_v0_2_3"] == "REJECT"
+    assert decision["research_status"] == "EXPERIMENTAL_ONLY"
+    assert decision["chromium_fallback_remains_required"] is True
+
+
+def test_experimental_adapter_cannot_emit_production_observation() -> None:
+    source = (
+        ROOT / "experiments" / "source-acquisition-bakeoff" / "obscura_experimental_adapter.py"
+    ).read_text(encoding="utf-8")
+    assert "provenance_complete=False" in source
+    assert "peer IP is not available" in source
+    assert "redirect-hop lineage is incomplete" in source
+    assert "hard response/subresource byte cap is not enforced" in source

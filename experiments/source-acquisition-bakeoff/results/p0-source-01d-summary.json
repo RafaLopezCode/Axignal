@@ -1,0 +1,68 @@
+{
+  "experiment_id": "P0-SOURCE-01D",
+  "executed_at": "2026-10-02",
+  "candidate": {
+    "project": "h4ckf0r0day/obscura",
+    "release": "v0.2.3",
+    "windows_sha256": "781a1b8bd12b65ec5aba95842e75e6f56b3101d360397506c0e35fe3f78536e8",
+    "linux_sha256": "1534d1e6ddaf3d080ec4091eb41d0a4d8cc042a48b607d3c410fc13b482a9eec"
+  },
+  "cold_semantic_corpus": {
+    "iterations": 5,
+    "workloads": 12,
+    "obscura": {
+      "tokens": "60/60",
+      "mean_elapsed_ms": 95.394,
+      "mean_peak_rss_bytes": 19549935,
+      "mean_cpu_ms": 32.552
+    },
+    "chromium": {
+      "tokens": "60/60",
+      "mean_elapsed_ms": 1713.031,
+      "mean_peak_rss_bytes": 583304602,
+      "mean_cpu_ms": 2648.698
+    }
+  },
+  "persistent_session": {
+    "iterations": 5,
+    "workloads": 12,
+    "obscura": {
+      "tokens": "59/60",
+      "recovery_ratio": 0.983333,
+      "mean_navigation_ms": 273.277,
+      "peak_rss_bytes": 34426880,
+      "cpu_ms": 1656.25
+    },
+    "chromium": {
+      "tokens": "60/60",
+      "mean_navigation_ms": 209.294,
+      "peak_rss_bytes": 404983808,
+      "cpu_ms": 17031.25
+    },
+    "ratios": {
+      "navigation": 1.305709,
+      "peak_rss": 0.085008,
+      "cpu": 0.097248
+    },
+    "note": "One Obscura BIG_SUBRESOURCE navigation timed out in iteration 5; four of five succeeded."
+  },
+  "safety": {
+    "stealth_used": false,
+    "default_ssrf_loopback_guard": "PASS: blocked before fixture contact",
+    "hard_response_subresource_cap": "FAIL: 1.2 MB JS subresource loaded completely",
+    "redirect_hop_interposition": "FAIL: AXIGNAL cannot validate each browser redirect hop",
+    "peer_ip_provenance": "FAIL: CDP/Playwright server_addr unavailable",
+    "redirect_provenance": "FAIL: redirected navigation returned null response and empty redirect chain",
+    "runaway_js": "FAIL_FOR_PRODUCTION: outer watchdog killed Obscura around 6s for a 2s workload",
+    "redirect_loop": "PASS: detected and failed explicitly"
+  },
+  "public_corpus": {
+    "executed": false,
+    "reason": "Mandatory browser-boundary safety/provenance gate failed. Public dispatch is not authorized."
+  },
+  "decision": {
+    "production_adoption_v0_2_3": "REJECT",
+    "research_status": "EXPERIMENTAL_ONLY",
+    "rationale": "Safety/provenance failure is terminal regardless of performance. Re-evaluate newer releases through the upgrade gate."
+  }
+}

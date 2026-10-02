@@ -1,13 +1,20 @@
 {
   "experiment_id": "P0-SOURCE-01D",
-  "status": "PLANNED_NOT_EXECUTED",
+  "status": "EXECUTED_SYNTHETIC_PRODUCTION_REJECTED",
   "candidate": {
     "project": "h4ckf0r0day/obscura",
     "release": "v0.2.3",
     "license": "Apache-2.0",
-    "platform": "linux-x86_64",
-    "asset": "obscura-x86_64-linux.tar.gz",
-    "sha256": "1534d1e6ddaf3d080ec4091eb41d0a4d8cc042a48b607d3c410fc13b482a9eec"
+    "platforms": {
+      "linux-x86_64": {
+        "asset": "obscura-x86_64-linux.tar.gz",
+        "sha256": "1534d1e6ddaf3d080ec4091eb41d0a4d8cc042a48b607d3c410fc13b482a9eec"
+      },
+      "windows-x86_64": {
+        "asset": "obscura-x86_64-windows.zip",
+        "sha256": "781a1b8bd12b65ec5aba95842e75e6f56b3101d360397506c0e35fe3f78536e8"
+      }
+    }
   },
   "policy": {
     "stealth": false,
@@ -23,6 +30,25 @@
     "security_regressions_max": 0,
     "target_aggregate_resource_ratio_max": 0.6,
     "chromium_fallback_required": true
+  },
+  "evidence": {
+    "cold_semantic_recovery_ratio": 1,
+    "persistent_semantic_recovery_ratio": 0.983333,
+    "persistent_peak_rss_ratio": 0.085008,
+    "persistent_cpu_ratio": 0.097248,
+    "persistent_navigation_ratio": 1.305709,
+    "default_ssrf_loopback_guard": true,
+    "hard_response_subresource_cap": false,
+    "redirect_hop_interposition": false,
+    "peer_ip_provenance": false,
+    "redirect_chain_provenance": false,
+    "public_corpus_executed": false
+  },
+  "decision": {
+    "production_adoption_v0_2_3": "REJECT",
+    "research_status": "EXPERIMENTAL_ONLY",
+    "chromium_fallback_remains_required": true,
+    "public_corpus_blocked_by_predeclared_gate": true
   },
   "dispositions": [
     "REJECT",
