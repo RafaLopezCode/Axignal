@@ -37,7 +37,7 @@ axignal-runtime-probe = "tools.runtime.probe:main"
 [tool.ruff]
 line-length = 100
 target-version = "py311"
-extend-exclude = [".specify", ".opencode", "graphify-out", "data"]
+extend-exclude = [".specify", ".opencode", ".codex-uv-cache-*", ".pytest-*", "graphify-out", "data"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B", "SIM", "RUF"]
