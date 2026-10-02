@@ -50,8 +50,15 @@ from application.admin_shell import (
     AdminShellRouteUnknown,
     project_admin_shell,
 )
+from application.admin_weekly_brief import (
+    WEEKLY_BRIEF_PILOT_CURRENTNESS_POLICY,
+    MaterialObservationCandidate,
+    append_correction,
+    approve_issue,
+    compose_issue,
+)
 from application.admin_xeed_observatory import project_xeed_axigland_observatory
-from domain.admin_access import AdminAuthorizationGrant
+from domain.admin_access import AdminAssurance, AdminAuthorizationGrant, AdminScope
 from domain.admin_acquisition import MarketingEventKind
 from domain.admin_brain_observatory import BrainProviderObservatory
 from domain.admin_command_center import AdminCommandCenterProjection
@@ -67,6 +74,7 @@ from pipeline.admin_customer_accounts import SqliteAdminCustomerAccountStore
 from pipeline.admin_governance import SqliteAdminGovernanceAuditStore
 from pipeline.admin_integrations import SqliteAdminIntegrationStore
 from pipeline.admin_observability import SqliteAdminObservabilityStore
+from pipeline.admin_weekly_brief import SqliteWeeklyBriefStore
 from pipeline.learning_memory import SqliteLearningMemory
 from pipeline.observation_memory import SqliteObservationMemory
 from pipeline.policy_governance import SqliteActivePolicyStore
@@ -92,6 +100,7 @@ class AxignalRuntime:
     admin_customer_account_store: SqliteAdminCustomerAccountStore
     admin_billing_store: SqliteAdminBillingStore
     admin_integration_store: SqliteAdminIntegrationStore
+    admin_weekly_brief_store: SqliteWeeklyBriefStore
     stripe_webhook: StripeWebhookRuntime | None = None
     first_proof: FirstProofService | None = None
     admin_access: AdminAccessService | None = None
@@ -167,6 +176,9 @@ def build_runtime(config: RuntimeConfig) -> AxignalRuntime:
     admin_integration_store = SqliteAdminIntegrationStore(
         config.data_dir / "admin-integrations.sqlite3"
     )
+    admin_weekly_brief_store = SqliteWeeklyBriefStore(
+        config.data_dir / "admin-weekly-brief.sqlite3"
+    )
     stripe_webhook = None
     if config.stripe_webhook_signing_secret is not None:
         if (
@@ -210,6 +222,7 @@ def build_runtime(config: RuntimeConfig) -> AxignalRuntime:
         admin_customer_account_store=admin_customer_account_store,
         admin_billing_store=admin_billing_store,
         admin_integration_store=admin_integration_store,
+        admin_weekly_brief_store=admin_weekly_brief_store,
         stripe_webhook=stripe_webhook,
         first_proof=first_proof,
     )
@@ -1131,6 +1144,157 @@ def make_handler(runtime: AxignalRuntime) -> type[BaseHTTPRequestHandler]:
 
         def do_POST(self) -> None:
             request_path = urlsplit(self.path).path
+            weekly_brief_prefix = "/internal/admin/weekly-brief/issues"
+            if request_path == weekly_brief_prefix or request_path.startswith(
+                weekly_brief_prefix + "/"
+            ):
+                if runtime.admin_access is None:
+                    self.send_error(HTTPStatus.NOT_FOUND)
+                    return
+                authorization = self.headers.get("Authorization")
+                if authorization is None:
+                    self._admin_error(HTTPStatus.UNAUTHORIZED, "Admin authentication required.")
+                    return
+                scheme, auth_separator, token = authorization.partition(" ")
+                if auth_separator != " " or scheme != "Bearer" or not token.strip():
+                    self._admin_error(
+                        HTTPStatus.UNAUTHORIZED, "Invalid Admin authorization credential."
+                    )
+                    return
+                try:
+                    length = int(self.headers.get("Content-Length", "0"))
+                except ValueError:
+                    length = 0
+                if length < 2 or length > 16384:
+                    self._json(
+                        {"status": "rejected", "reason": "INVALID_REQUEST_SIZE"},
+                        HTTPStatus.BAD_REQUEST,
+                    )
+                    return
+                try:
+                    payload = json.loads(self.rfile.read(length).decode("utf-8"))
+                except (UnicodeDecodeError, json.JSONDecodeError):
+                    self._json(
+                        {"status": "rejected", "reason": "INVALID_JSON"},
+                        HTTPStatus.BAD_REQUEST,
+                    )
+                    return
+                if not isinstance(payload, dict):
+                    self._json(
+                        {"status": "rejected", "reason": "INVALID_REQUEST"},
+                        HTTPStatus.BAD_REQUEST,
+                    )
+                    return
+                try:
+                    now = datetime.now(UTC)
+                    grant = runtime.admin_access.session_grant(token.strip(), now=now)
+                    if (
+                        AdminScope.ACQUISITION_WRITE not in grant.scopes
+                        or grant.assurance is not AdminAssurance.STEP_UP
+                    ):
+                        raise PermissionError("weekly brief mutation requires acquisition STEP_UP")
+                    if request_path == weekly_brief_prefix:
+                        raw_candidates = payload.get("candidates", [])
+                        if not isinstance(raw_candidates, list):
+                            raise ValueError("weekly brief candidates must be a list")
+                        candidates = tuple(
+                            MaterialObservationCandidate(
+                                observation_id=str(item["observationId"]),
+                                why_may_matter=str(item["whyMayMatter"]),
+                                unknowns=tuple(str(value) for value in item["unknowns"]),
+                            )
+                            for item in raw_candidates
+                            if isinstance(item, dict) and isinstance(item.get("unknowns"), list)
+                        )
+                        if len(candidates) != len(raw_candidates):
+                            raise ValueError("weekly brief candidate structure is invalid")
+                        issue = compose_issue(
+                            store=runtime.admin_weekly_brief_store,
+                            acquisition_store=runtime.admin_acquisition_store,
+                            observation_memory=runtime.observation_memory,
+                            request_id=str(payload.get("requestId", "")),
+                            issue_id=str(payload.get("issueId", "")),
+                            issue_version=str(payload.get("issueVersion", "")),
+                            candidates=candidates,
+                            currentness_policy=WEEKLY_BRIEF_PILOT_CURRENTNESS_POLICY,
+                            now=now,
+                        )
+                        self._json(
+                            {
+                                "status": "composed",
+                                "issueId": issue.issue_id,
+                                "kind": issue.kind.value,
+                                "itemCount": len(issue.items),
+                                "evidenceFingerprint": issue.evidence_fingerprint,
+                                "humanApprovalRequired": True,
+                            },
+                            HTTPStatus.CREATED,
+                        )
+                        return
+
+                    tail = request_path[len(weekly_brief_prefix) + 1 :]
+                    encoded_issue_id, separator, action = tail.rpartition("/")
+                    if (
+                        separator != "/"
+                        or not encoded_issue_id
+                        or action not in {"approve", "correct"}
+                    ):
+                        self.send_error(HTTPStatus.NOT_FOUND)
+                        return
+                    issue_id = unquote(encoded_issue_id)
+                    if action == "approve":
+                        approval = approve_issue(
+                            store=runtime.admin_weekly_brief_store,
+                            grant=grant,
+                            issue_id=issue_id,
+                            now=now,
+                        )
+                        self._json(
+                            {
+                                "status": "approved",
+                                "issueId": approval.issue_id,
+                                "reviewerPrincipalId": approval.reviewer_principal_id,
+                                "approvedAt": approval.approved_at.isoformat(),
+                            }
+                        )
+                        return
+                    correction = append_correction(
+                        store=runtime.admin_weekly_brief_store,
+                        grant=grant,
+                        correction_id=str(payload.get("correctionId", "")),
+                        issue_id=issue_id,
+                        reason=str(payload.get("reason", "")),
+                        note=str(payload.get("note", "")),
+                        now=now,
+                    )
+                    self._json(
+                        {
+                            "status": "corrected",
+                            "issueId": correction.issue_id,
+                            "correctionId": correction.correction_id,
+                            "occurredAt": correction.occurred_at.isoformat(),
+                        }
+                    )
+                    return
+                except AdminAuthenticationError:
+                    self._admin_error(HTTPStatus.UNAUTHORIZED, "Admin authentication failed.")
+                    return
+                except (AdminAuthorizationError, PermissionError):
+                    self._admin_error(
+                        HTTPStatus.FORBIDDEN,
+                        "Admin scope, consent or assurance denied for this action.",
+                    )
+                    return
+                except LookupError:
+                    self.send_error(HTTPStatus.NOT_FOUND)
+                    return
+                except (KeyError, TypeError, ValueError):
+                    self._json(
+                        {"status": "rejected", "reason": "WEEKLY_BRIEF_STATE_CONFLICT"},
+                        HTTPStatus.CONFLICT,
+                    )
+                    return
+
             acquisition_admin_prefix = "/internal/admin/acquisition/requests/"
             if request_path.startswith(acquisition_admin_prefix):
                 if runtime.admin_access is None:
