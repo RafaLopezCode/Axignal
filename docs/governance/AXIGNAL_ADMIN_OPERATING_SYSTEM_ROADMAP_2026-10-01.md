@@ -635,7 +635,7 @@ Marketing/product decisions no longer depend on disconnected external dashboards
 
 ## AO-15 — Free Weekly Brief Request, Eligibility and Consent
 
-**Status:** ACTIVE
+**Status:** DONE
 **Depends on:** AO-08
 **Integrates with:** AO-12 for later campaign/source attribution; AO-12 is not required for request/consent correctness.
 **Priority:** P1 Growth
@@ -650,7 +650,12 @@ Marketing/product decisions no longer depend on disconnected external dashboards
 - Browser QA PASS on real landing/Admin renderers at desktop and compact breakpoints.
 - Focused AO-15 contracts: 15 PASS. AO-01/AO-02/AO-08/AO-15 regression: 28 PASS.
 - Full local repository validation: 868 PASS; Ruff, mypy, Architecture Guard, axignal-governance and `git diff --check` PASS.
-- GitHub CI, merge and production dormant-deployment evidence remain to close before status can move to DONE.
+- GitHub CI PASS for PR #127 (implementation) and PR #128 (production route), both merged into `main`.
+- Production deployment PASS at `5e9008d89efdc10d6a9790ed09a67ed6ceb3258e`: `axignal-prod-runtime` and `axignal-prod-landing` healthy and labeled with the exact deployed SHA.
+- Production ingress remains deliberately dormant: external `GET /api/weekly-brief/status` returns `200 {"enabled":false}`; external `POST /api/weekly-brief/requests` returns 404. The two exact routes are proxied; no generic `/api/` exposure was added.
+- Production browser/DOM verification PASS on `https://axignal.com/?c=14&lang=es`: canonical €9.95/+€4.95 pricing, Xignal non-billable copy, the localized free-weekly-observation strip and `Solicitar newsletter gratuita` CTA render from the deployed artifact.
+- Restart/persistence verification PASS: new `admin-acquisition.sqlite3` exists with zero requests while existing first-proof, Learning Memory and Observation Memory counts remain intact; runtime/landing logs show no errors after cutover.
+- Legal/privacy activation remains a separate operational gate: DONE here means the request/eligibility/consent capability is implemented, proved, integrated, deployed and verified in its intentionally closed production state; it does not authorize enabling collection before controller/contact/privacy readiness.
 
 ### Work
 - Public `Solicitar newsletter gratuita` surface plus Admin `BriefRequest` accepted/declined review flow.

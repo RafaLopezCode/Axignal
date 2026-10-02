@@ -12,5 +12,5 @@
 - [x] Focused contracts, Ruff and mypy.
 - [x] Browser QA desktop/compact for landing request dialog and Admin acquisition projection.
 - [x] Full repository deterministic validation: 868 PASS; Ruff, mypy, Architecture Guard, governance and diff checks PASS.
-- [ ] GitHub CI and merge.
-- [ ] Production deploy with request ingress remaining disabled unless legal activation gate is satisfied.
+- [x] GitHub CI PASS and merge: PR #127 implementation + PR #128 exact production routing.
+- [x] Production deploy at `5e9008d89efdc10d6a9790ed09a67ed6ceb3258e`; external status/POST gate, deployed landing DOM, persistence continuity and container health verified with request ingress still disabled.
