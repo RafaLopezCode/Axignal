@@ -97,3 +97,22 @@ hard response cap and per-hop redirect validation. DNS is checked but not
 pinned to the candidate connection. These limits are explicit reasons the
 public candidate decision remains deferred; the runner is not a production
 security subsystem.
+
+
+## P0-SOURCE-01D Obscura browser-provider bakeoff
+
+The next browser-specific experiment is defined in
+`specs/034-p0-obscura-browser-provider-bakeoff/` and pinned by
+`obscura-candidate.json`.
+
+It compares Obscura against the Chromium/Playwright baseline behind the same
+AXIGNAL-owned SourceRequest/SourceObservation semantics. It does not authorize
+production use. Obscura stealth mode, anti-bot/CAPTCHA bypass and public
+`--allow-private-network` are forbidden. Built-in Obscura SSRF controls are
+treated as defense in depth; AXIGNAL source policy remains authoritative.
+
+The candidate is promoted only by measured evidence. Safety/provenance gates
+are mandatory, useful-observation recovery must remain >=95% of Chromium on the
+eligible corpus, and the target aggregate resource ratio is <=60%. Chromium is
+retained as a deterministic compatibility fallback if Obscura is later
+approved as primary.

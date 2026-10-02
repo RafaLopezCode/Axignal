@@ -1,0 +1,33 @@
+{
+  "experiment_id": "P0-SOURCE-01D",
+  "status": "PLANNED_NOT_EXECUTED",
+  "candidate": {
+    "project": "h4ckf0r0day/obscura",
+    "release": "v0.2.3",
+    "license": "Apache-2.0",
+    "platform": "linux-x86_64",
+    "asset": "obscura-x86_64-linux.tar.gz",
+    "sha256": "1534d1e6ddaf3d080ec4091eb41d0a4d8cc042a48b607d3c410fc13b482a9eec"
+  },
+  "policy": {
+    "stealth": false,
+    "anti_bot_bypass": false,
+    "captcha_bypass": false,
+    "authenticated_scraping": false,
+    "public_allow_private_network": false,
+    "provider_is_truth_authority": false
+  },
+  "decision_gate": {
+    "useful_observation_recovery_ratio_min": 0.95,
+    "provenance_completeness_ratio_min": 1,
+    "security_regressions_max": 0,
+    "target_aggregate_resource_ratio_max": 0.6,
+    "chromium_fallback_required": true
+  },
+  "dispositions": [
+    "REJECT",
+    "EXPERIMENTAL_ONLY",
+    "OPTIONAL_FALLBACK",
+    "PRIMARY_WITH_CHROMIUM_FALLBACK"
+  ]
+}
