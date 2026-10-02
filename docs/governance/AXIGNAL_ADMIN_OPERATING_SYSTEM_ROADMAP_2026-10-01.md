@@ -639,12 +639,12 @@ Marketing/product decisions no longer depend on disconnected external dashboards
 **Depends on:** AO-08, AO-12
 **Priority:** P1 Growth
 ### Work
-- `BriefRequest` and accepted/declined review flow.
-- Subject/company matching and clarification path.
-- Objective fit/evidence-coverage criteria.
-- Separate request-processing permission from newsletter consent.
-- Decline/correction/retention/unsubscribe state.
-- No automatic free Xeed creation.
+- Public `Solicitar newsletter gratuita` surface plus Admin `BriefRequest` accepted/declined review flow.
+- Collect minimum company/domain, professional email and brief purpose; subject/company matching and clarification path.
+- Objective fit/evidence-coverage criteria; acceptance is coverage review, not a subjective score of the company.
+- Separate request-processing permission from affirmative newsletter consent and preserve notice/version/timestamp evidence.
+- Decline/correction/retention/suppression/unsubscribe state; every delivery path rechecks suppression before send.
+- No automatic free Xeed creation or AXENT entitlement; public copy must not present the newsletter as a free AXIGNAL plan.
 
 ### Acceptance
 - Request != subscriber != customer != lead truth in AXIGLAND.
@@ -660,7 +660,7 @@ The free acquisition hypothesis can be piloted without consent or ontology short
 **Depends on:** AO-15, AO-05, AO-06, AO-18
 **Priority:** P1 Growth
 ### Work
-- Up to three material evidence-backed items; fewer or no-send when appropriate.
+- Up to three material evidence-backed items; fewer items or an explicit no-material-change issue when appropriate.
 - Preserve source, date, observation condition, why-it-may-matter and UNKNOWN.
 - Deterministic eligibility/currentness/dedup gates before optional model drafting.
 - Human review during pilot.
@@ -854,7 +854,7 @@ Premium reports are measurement-governed rather than polished model opinion.
 ## AO-25 — Founder / Frontier Advisor Workbench
 
 **Status:** NOT_STARTED
-**Depends on:** AO-02, AO-24
+**Depends on:** AO-02, AO-09, AO-24
 **Priority:** P1 Advisory
 ### Work
 Internal staff-only flow:
@@ -878,11 +878,11 @@ Premium advisory reuses AXIGNAL's governed substrate instead of creating a secon
 ## AO-26 — Premium Advisory Commercial Operations
 
 **Status:** NOT_STARTED
-**Depends on:** AO-11, AO-25
+**Depends on:** AO-08, AO-10, AO-11, AO-25
 **Priority:** P1 Advisory
 ### Work
-- Define actual package, cadence, Xeed allowance, meetings, response boundaries and human-hour cap.
-- Quote/contract/subscription linkage through CRM/billing.
+- Implement the authorized launch package: €995/month + applicable VAT, one advisory-scoped Xeed, four weekly evidence-backed updates and one monthly strategic review; define response boundaries and human-hour cap from measured delivery.
+- Quote/contract/subscription linkage through CRM/billing; update Stripe catalog, customer account projection, public pricing and a dedicated advisory landing from the same package contract.
 - Measure advisor time, variable cost, corrections, renewals and WTP.
 - Separate advisory utility from epistemic correctness.
 

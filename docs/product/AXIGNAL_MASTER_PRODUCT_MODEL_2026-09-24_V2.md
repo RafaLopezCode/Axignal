@@ -1585,6 +1585,66 @@ Una agencia con 100 clientes puede mantener 100 Xeeds por aproximadamente
 €500/mes según esta hipótesis. Cada Xeed puede producir múltiples Xignals sobre
 cómo buscadores, agentes, sistemas generativos y otras superficies públicas
 representan al cliente y cómo esa representación cambia con el tiempo.
+
+## 27.3 Newsletter gratuita de observación
+
+AXIGNAL puede ofrecer una newsletter/brief semanal gratuita **bajo solicitud y
+aceptación**, como mecanismo de adquisición y demostración del método.
+
+No es un plan gratuito de AXIGNAL, no crea una Xeed gratuita y no concede
+AXENT, grafo completo ni historial navegable.
+
+Contrato de producto:
+
+- hasta tres señales públicas por semana cuando existan observaciones materiales;
+- cada señal conserva fuente, fecha/periodo y límites de cobertura;
+- una semana sin novedades materiales puede comunicar explícitamente que no se
+  observaron cambios materiales bajo el protocolo disponible;
+- solicitud, aceptación por cobertura, consentimiento de newsletter, baja y
+  conversión comercial son estados distintos;
+- el contenido gratuito nunca rellena una cuota inventando señales.
+
+## 27.4 AXIGNAL con asesoría humana
+
+Oferta premium separada del autoservicio:
+
+    AXIGNAL con asesoría humana
+    €995 / month + applicable VAT
+    includes 1 Xeed in the human-advisory scope
+    4 weekly evidence-backed updates
+    1 monthly strategic review
+
+La persona asesora interpreta evidencia pública gobernada y formula
+recomendaciones. El pago nunca compra una conclusión más favorable de AXIGNAL,
+ni permite modificar FAXTs, Xignals, relaciones, INXIGHTs, PATHXs o AXIGLAND.
+
+El informe humano es un artefacto privado, versionado y tenant-scoped. Debe
+distinguir observación, interpretación y recomendación, conservar referencias a
+evidencia y no reingresar al grafo como hecho observado.
+
+Una Xeed adicional de autoservicio sigue costando €4.95/mes. Una Xeed adicional
+que requiera trabajo humano de advisory **no queda incluida automáticamente por
+ese add-on** y necesita alcance/precio humano específico.
+
+La cifra €995/mes es el precio de lanzamiento autorizado para el servicio humano
+y sigue sujeta a validación de willingness-to-pay, capacidad, horas humanas,
+coste variable, renovación y margen. No debe presentarse como evidencia de que
+el mercado ya ha validado el precio.
+
+## 27.5 Separación de ofertas
+
+Las superficies públicas y privadas deben mantener cuatro conceptos distintos:
+
+1. autoservicio AXIGNAL: €9.95/mes con 1 Xeed;
+2. Xeed adicional de autoservicio: +€4.95/mes;
+3. newsletter gratuita solicitada: adquisición, sin entitlement de Xeed;
+4. asesoría humana AXIGNAL: €995/mes + IVA aplicable, un Xeed dentro del alcance
+   humano y entrega recurrente gobernada.
+
+No presentar estas cuatro opciones como tiers equivalentes de software. La
+newsletter es una muestra editorial; el autoservicio es producto; la asesoría es
+un servicio humano recurrente.
+
 # 28. Economía de red computacional
 
 El pricing por Xeed puede alinearse con el coste real y con el
