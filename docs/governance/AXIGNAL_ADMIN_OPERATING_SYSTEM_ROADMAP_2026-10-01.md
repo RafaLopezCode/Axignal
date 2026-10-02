@@ -99,7 +99,7 @@ Admin must distinguish measured flywheel behavior from the hypothesis above.
 
 `NOT_STARTED → READY → IN_PROGRESS → BLOCKED → DONE → DEFERRED → REJECTED`
 
-**CURRENT_TASK = AO-16**
+**CURRENT_TASK = AO-17**
 
 ## 7. Closure rule
 
@@ -695,7 +695,7 @@ The free acquisition hypothesis can be piloted without consent or ontology short
 
 ## AO-16 — Evidence-Backed Weekly Brief Pipeline
 
-**Status:** BLOCKED
+**Status:** DONE
 **Depends on:** AO-15, AO-05, AO-06, AO-18
 **Priority:** P1 Growth
 
@@ -711,8 +711,17 @@ The free acquisition hypothesis can be piloted without consent or ontology short
 - Focused AO-15/AO-16 regression: 23 PASS. Final repository validation: 891 PASS; Ruff format/check PASS; mypy PASS across 216 source files; Architecture Guard PASS; axignal-governance PASS; git diff --check PASS.
 - GitHub PR #136 merged green into canonical main as 04d1a5b93c80a1e5b9c8ef34a7165a7954393358; Deterministic validation, Secret scanning and Graphify structural checks PASS. Sourcery review was skipped by its external quota and is not a required gate.
 
-### BLOCKER
-Production is not yet on the AO-16 merge SHA. Current external https://axignal.com/healthz reports healthy production at 9822c4b0d4a352633b320a2d250d964a746efd39, while canonical main is 04d1a5b93c80a1e5b9c8ef34a7165a7954393358. The registered VPS Desktop Commander device srv1597364 is offline and the active workstation has no SSH identity/agent available for root@187.124.220.48, so deployment cannot be verified or executed from the current authorized tool path. AO-16 therefore remains BLOCKED rather than falsely DONE. External email sending also remains deliberately dormant until AO-15 legal/privacy activation and an AO-18-governed provider credential/adapter exist.
+### Production closure evidence (2026-10-02)
+- Canonical main `4b69b57ccbcb61b2dccda4d33d46fee8d5461cde` passed GitHub CI before deployment.
+- KVM2 production deployment completed through the isolated Docker Compose project `axignal-prod`; both `axignal-prod-runtime` and `axignal-prod-landing` reached and remained `healthy` with `RestartCount=0`.
+- Loopback and external `/healthz` both report exact `code_sha=4b69b57ccbcb61b2dccda4d33d46fee8d5461cde`, `status=ok`, Observation/Learning persistence `ok`, `provider_ingress=closed` and `write_surface=closed`.
+- Runtime has no published host port; Landing publishes only `127.0.0.1:18180 -> 8080`; systemd AXIGNAL runtime/landing remain inactive.
+- Pre/post persistence counts remained unchanged for existing canonical/admin stores. AO-16 initialized `admin-weekly-brief.sqlite3` with issue/approval/delivery/correction tables empty at deployment.
+- Landing, Legal, Privacy/RGPD, Terms and Knowledge routes returned HTTP 200 after cutover.
+- AO-16 modules import successfully inside the production runtime. `/api/weekly-brief/status` is `enabled=false`; public request POST is 404; external Admin weekly-brief mutation paths are blocked by Nginx and direct runtime probes are 404 because the Admin security plane is not composed in production.
+- No HTTP delivery route is exposed. External email sending remains deliberately dormant until AO-15 legal/privacy activation and an AO-18-governed email provider credential/adapter are configured and healthy, as required by ADR-0064.
+- Pre/post deployment evidence is stored on the VPS under `/srv/axignal/docker/evidence/`; the prior `9822c4b0d4a352633b320a2d250d964a746efd39` release/images remain available for rollback.
+
 ### Work
 - Up to three material evidence-backed items; fewer items or an explicit no-material-change issue when appropriate.
 - Preserve source, date, observation condition, why-it-may-matter and UNKNOWN.
