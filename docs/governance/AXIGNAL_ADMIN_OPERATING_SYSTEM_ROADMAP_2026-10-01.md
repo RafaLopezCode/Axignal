@@ -496,6 +496,13 @@ Internal CRM exists without turning AXIGNAL product or AXIGLAND into a CRM.
 - Ruff format/check: PASS.
 - mypy: PASS (184 source files).
 - Node Admin JS syntax: PASS.
+- Production runtime deployment PASS: canonical merge `44f9b264a013b8d87d003ca21bf61c060c4fb383` replaced runtime `2098d2bc88ab641af5b474e31558c9aeccf7b02a` through a new immutable release; rollback preserves the prior release plus `/etc/axignal/runtime.env.pre-ao09-20261002T054629Z`.
+- Production health PASS on exact AO-09 SHA with Observation/Learning persistence healthy and public write surface closed.
+- Production account persistence PASS: `/var/lib/axignal/runtime/admin-customer-accounts.sqlite3` is created outside the immutable release tree.
+- Production authority-boundary proof PASS over real stores: existing `1` Observation and `6` Learning events coexist with `0` customer-account events, `0` Accounts and `0` Xeed entitlements. Existing AXIGLAND/Learning evidence therefore does not silently create customer service state.
+- Production Customer Operations projection PASS: `accountCount=0`, `totalEntitledXeeds=0`, `mrrEur=null`, `paymentAuthority=AO10_PENDING`.
+- Production privileged render PASS: `customers-crm` contains the AO-09 customer projection, zero accounts, MRR UNKNOWN/AO10_PENDING and `CUSTOMER_ACCOUNT_STATE != ORGANIZATION_STATE`.
+- Production Admin HTTP exposure remains deliberately CLOSED under AO-01 until a concrete external Admin authentication/session transport is configured; no auth bypass was introduced for AO-09.
 - Payment collection itself is NOT claimed by AO-09; AO-10 remains the authority for Stripe/payment verification and real revenue state.
 
 ### Work
