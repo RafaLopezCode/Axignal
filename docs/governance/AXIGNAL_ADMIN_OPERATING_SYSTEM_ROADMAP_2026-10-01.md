@@ -443,11 +443,17 @@ Governance is executable/inspectable, not merely documented.
 - Runtime composition persists `admin-commercial.sqlite3` independently from AXIGLAND and projects it only for the authorized `customers-crm` Admin domain.
 - Browser QA PASS: desktop 1440 px and compact 491 px render Customers / CRM, one full commercial scenario and explicit authority boundaries; compact DOM has `scrollWidth == clientWidth`, one company card and no visible contact PII.
 - Focused AO-08 semantic/contracts + roadmap + AO-02 regression: 20 PASS.
-- Full pytest: 796 PASS.
+- Full pytest after rebase onto current main: 804 PASS.
 - Ruff format/check: PASS.
 - mypy: PASS (178 source files).
 - Node Admin JS syntax: PASS.
 - Architecture Guard: PASS.
+- Production runtime deployment PASS: canonical merge `f37e0c7b0c802e030d92a9f0da6519e6f11d4a5a` replaced runtime `c3435db728d1b6bbbd22f53185d8bc525770228e` through a new immutable release; rollback preserves the prior release plus `/etc/axignal/runtime.env.pre-ao08-20261002T000041Z`.
+- Production health PASS on exact AO-08 SHA with Observation/Learning persistence healthy and public write surface closed.
+- Production commercial persistence PASS: `/var/lib/axignal/runtime/admin-commercial.sqlite3` is created outside the immutable release tree.
+- Production authority-boundary proof PASS over real stores: existing `1` Observation and `6` Learning events coexist with `0` Prospect, Company, Contact, Opportunity, Deal, Note, Task and commercial-audit records. Existing AXIGLAND/Learning evidence therefore does not silently create commercial relationships.
+- Production privileged render PASS: `customers-crm` projects `PRIVATE_FIRST_PARTY`, `piiVisible=false`, all commercial counts zero and `ADMIN_PRIVATE_OPERATIONS != AXIGLAND_CANONICAL_TRUTH`.
+- Production Admin HTTP exposure remains deliberately CLOSED under AO-01 until a concrete external Admin authentication/session transport is configured; no auth bypass was introduced for AO-08.
 
 ### Work
 Implement a first-party CRM strictly for AXIGNAL's own commercial operations:
