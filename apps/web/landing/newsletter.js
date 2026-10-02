@@ -65,6 +65,7 @@
   }
 
   async function openDialog(){
+    window.AXIGNAL_ACQUISITION?.markWeeklyBriefOpened?.()
     applyCopy()
     status.textContent=''
     if(!statusKnown) await refreshStatus()
@@ -102,7 +103,10 @@
       requestNoticeVersion:'weekly-brief-request-v1',
       requestProcessingAcknowledged:$('newsletterRequestNotice').checked,
       newsletterConsent:$('newsletterConsent').checked,
-      newsletterNoticeVersion:$('newsletterConsent').checked?'weekly-newsletter-consent-v1':null
+      newsletterNoticeVersion:$('newsletterConsent').checked?'weekly-newsletter-consent-v1':null,
+      acquisitionSessionRef:window.AXIGNAL_ACQUISITION?.sessionRef?.()||null,
+      acquisitionLocale:(document.documentElement.lang||'en').slice(0,2),
+      acquisitionPath:window.location.pathname
     }
     try{
       const response=await fetch('/api/weekly-brief/requests',{

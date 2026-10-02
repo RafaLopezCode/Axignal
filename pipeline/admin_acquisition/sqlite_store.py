@@ -9,10 +9,15 @@ from datetime import datetime
 from pathlib import Path
 
 from domain.admin_acquisition import (
+    AnonymousSessionRef,
     BriefRequestEvent,
     BriefRequestEventId,
     BriefRequestEventKind,
     BriefRequestId,
+    MarketingEvent,
+    MarketingEventId,
+    MarketingEventKind,
+    MarketingIdentityClass,
 )
 
 
@@ -39,6 +44,21 @@ class SqliteAdminAcquisitionStore:
             connection.execute(
                 "CREATE INDEX IF NOT EXISTS idx_admin_acquisition_request "
                 "ON admin_acquisition_events(request_id, sequence)"
+            )
+            connection.execute(
+                "CREATE TABLE IF NOT EXISTS admin_marketing_events ("
+                "sequence INTEGER PRIMARY KEY AUTOINCREMENT,"
+                "event_id TEXT NOT NULL UNIQUE,"
+                "session_ref TEXT NOT NULL,"
+                "kind TEXT NOT NULL,"
+                "occurred_at TEXT NOT NULL,"
+                "received_at TEXT NOT NULL,"
+                "fingerprint TEXT NOT NULL,"
+                "payload_json TEXT NOT NULL)"
+            )
+            connection.execute(
+                "CREATE INDEX IF NOT EXISTS idx_admin_marketing_session "
+                "ON admin_marketing_events(session_ref, sequence)"
             )
 
     def _connect(self) -> sqlite3.Connection:
@@ -122,3 +142,101 @@ class SqliteAdminAcquisitionStore:
                 "SELECT * FROM admin_acquisition_events ORDER BY sequence"
             ).fetchall()
         return tuple(self._event(row) for row in rows)
+
+    @staticmethod
+    def _marketing_payload(event: MarketingEvent) -> str:
+        values = {
+            "event_id": str(event.event_id),
+            "occurred_at": event.occurred_at.isoformat(),
+            "received_at": event.received_at.isoformat(),
+            "kind": event.kind.value,
+            "identity_class": event.identity_class.value,
+            "session_ref": str(event.session_ref),
+            "surface": event.surface,
+            "locale": event.locale,
+            "path": event.path,
+            "request_id": event.request_id,
+            "chapter": event.chapter,
+            "cta": event.cta,
+            "referrer_origin": event.referrer_origin,
+            "utm_source": event.utm_source,
+            "utm_medium": event.utm_medium,
+            "utm_campaign": event.utm_campaign,
+            "utm_content": event.utm_content,
+            "utm_term": event.utm_term,
+            "attribution_model": event.attribution_model.value,
+        }
+        return json.dumps(values, sort_keys=True, separators=(",", ":"))
+
+    def append_marketing_event(self, event: MarketingEvent) -> bool:
+        payload = self._marketing_payload(event)
+        fingerprint_values = json.loads(payload)
+        fingerprint_values.pop("received_at", None)
+        fingerprint_payload = json.dumps(fingerprint_values, sort_keys=True, separators=(",", ":"))
+        fingerprint = self._fingerprint(fingerprint_payload)
+        with self._connect() as connection:
+            existing = connection.execute(
+                "SELECT fingerprint FROM admin_marketing_events WHERE event_id = ?",
+                (str(event.event_id),),
+            ).fetchone()
+            if existing is not None:
+                if str(existing["fingerprint"]) == fingerprint:
+                    return False
+                raise AcquisitionStoreConflict("marketing event id reused with different content")
+            connection.execute(
+                "INSERT INTO admin_marketing_events("
+                "event_id, session_ref, kind, occurred_at, received_at, fingerprint, payload_json"
+                ") VALUES (?, ?, ?, ?, ?, ?, ?)",
+                (
+                    str(event.event_id),
+                    str(event.session_ref),
+                    event.kind.value,
+                    event.occurred_at.isoformat(),
+                    event.received_at.isoformat(),
+                    fingerprint,
+                    payload,
+                ),
+            )
+        return True
+
+    @staticmethod
+    def _marketing_event(row: sqlite3.Row) -> MarketingEvent:
+        from domain.admin_acquisition import AttributionModelVersion
+
+        payload = json.loads(str(row["payload_json"]))
+        return MarketingEvent(
+            event_id=MarketingEventId(payload["event_id"]),
+            occurred_at=datetime.fromisoformat(payload["occurred_at"]),
+            received_at=datetime.fromisoformat(payload["received_at"]),
+            kind=MarketingEventKind(payload["kind"]),
+            identity_class=MarketingIdentityClass(payload["identity_class"]),
+            session_ref=AnonymousSessionRef(payload["session_ref"]),
+            surface=payload["surface"],
+            locale=payload["locale"],
+            path=payload["path"],
+            request_id=payload.get("request_id"),
+            chapter=payload.get("chapter"),
+            cta=payload.get("cta"),
+            referrer_origin=payload.get("referrer_origin"),
+            utm_source=payload.get("utm_source"),
+            utm_medium=payload.get("utm_medium"),
+            utm_campaign=payload.get("utm_campaign"),
+            utm_content=payload.get("utm_content"),
+            utm_term=payload.get("utm_term"),
+            attribution_model=AttributionModelVersion(payload["attribution_model"]),
+        )
+
+    def marketing_events(self) -> tuple[MarketingEvent, ...]:
+        with self._connect() as connection:
+            rows = connection.execute(
+                "SELECT * FROM admin_marketing_events ORDER BY sequence"
+            ).fetchall()
+        return tuple(self._marketing_event(row) for row in rows)
+
+    def marketing_events_for_session(self, session_ref: str) -> tuple[MarketingEvent, ...]:
+        with self._connect() as connection:
+            rows = connection.execute(
+                "SELECT * FROM admin_marketing_events WHERE session_ref = ? ORDER BY sequence",
+                (session_ref,),
+            ).fetchall()
+        return tuple(self._marketing_event(row) for row in rows)

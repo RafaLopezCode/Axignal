@@ -99,7 +99,7 @@ Admin must distinguish measured flywheel behavior from the hypothesis above.
 
 `NOT_STARTED → READY → IN_PROGRESS → BLOCKED → DONE → DEFERRED → REJECTED`
 
-**CURRENT_TASK = AO-10**
+**CURRENT_TASK = AO-12**
 
 ## 7. Closure rule
 
@@ -577,9 +577,24 @@ The next audit can inspect measured unit economics rather than only pricing theo
 
 ## AO-12 — Marketing & Acquisition Event Model
 
-**Status:** NOT_STARTED
+**Status:** ACTIVE
 **Depends on:** AO-03, AO-08
+**Integrates with:** AO-15 weekly-brief request linkage; AO-14/AO-17 may later consume the same observed-touch events.
 **Priority:** P1 Growth
+
+### Implementation / verification evidence
+- AO-12 extends the existing private `admin_acquisition` domain with append-only `MarketingEvent` records and versioned `OBSERVED_TOUCH_V1` attribution; it does not create a second analytics authority.
+- Anonymous activity uses a random session-scoped opaque reference stored only in browser `sessionStorage`; no cookie, localStorage identity, user-agent fingerprint or cross-device identity is used.
+- Public ingestion is explicit allow-list and rejects name, email, company identity, free-text purpose, user/principal IDs and other person-identifying request fields.
+- Landing location is reduced to path-only and referrer to origin-only before persistence; full query/referrer paths and IP/user-agent are not persisted.
+- UTM/source/campaign tokens are bounded and missing values remain `UNATTRIBUTED`.
+- Weekly-brief requests can be linked to prior observed-touch lineage by a separate marketing event without retroactively converting anonymous history into person/CRM identity. Telemetry failure cannot reject a valid AO-15 request.
+- Admin acquisition projection exposes private aggregate event/session/source/campaign counts plus request-level observed source/campaign/event provenance, explicitly labeled non-causal.
+- Public AO-12 ingress has an independent `AXIGNAL_ACQUISITION_EVENTS_ENABLED` gate, closed by default. Production Nginx exposes only the two exact AO-12 routes and does not add a generic `/api/` proxy.
+- Focused AO-12 + AO-15 contracts: 23 PASS. Ruff and mypy: PASS.
+- Browser QA PASS: with AO-12 enabled, landing chapter 14 persisted exactly LANDING_VIEWED + CHAPTER_VIEWED under one session-scoped opaque ref with youtube/video/launch UTM and path-only location; with AO-12 disabled, the same browser flow persisted zero marketing events.
+- Full local repository validation PASS: 877 tests; Ruff format/check, strict mypy, Architecture Guard, axignal-governance and `git diff --check` all PASS.
+- GitHub CI/merge and dormant production deployment remain to close before status can move to DONE.
 
 ### Work
 - First-party campaign/source/content/landing/request events.

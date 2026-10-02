@@ -6,6 +6,7 @@ behind governed application services and are not exposed by this host.
 
 from __future__ import annotations
 
+import contextlib
 import html
 import json
 import mimetypes
@@ -24,6 +25,7 @@ from application.admin_access import (
     AdminAuthorizationError,
 )
 from application.admin_acquisition.lifecycle_service import AdminBriefLifecycleService
+from application.admin_acquisition.marketing_service import PublicMarketingEventService
 from application.admin_acquisition.projection import (
     AdminAcquisitionProjection,
     project_admin_acquisition,
@@ -50,6 +52,7 @@ from application.admin_shell import (
 )
 from application.admin_xeed_observatory import project_xeed_axigland_observatory
 from domain.admin_access import AdminAuthorizationGrant
+from domain.admin_acquisition import MarketingEventKind
 from domain.admin_brain_observatory import BrainProviderObservatory
 from domain.admin_command_center import AdminCommandCenterProjection
 from domain.admin_governance import AdminGovernanceProjection
@@ -123,9 +126,16 @@ class AxignalRuntime:
             "environment": self.config.environment,
             "code_sha": self.config.code_sha,
             "persistence": {"observation_memory": observation, "learning_memory": learning},
-            "write_surface": "weekly-brief-request-gated"
-            if self.config.weekly_brief_requests_enabled
-            else "closed",
+            "write_surface": (
+                "weekly-brief+acquisition-gated"
+                if self.config.weekly_brief_requests_enabled
+                and self.config.acquisition_events_enabled
+                else "weekly-brief-request-gated"
+                if self.config.weekly_brief_requests_enabled
+                else "acquisition-events-gated"
+                if self.config.acquisition_events_enabled
+                else "closed"
+            ),
             "provider_ingress": (
                 "stripe-webhook-gated" if self.stripe_webhook is not None else "closed"
             ),
@@ -233,6 +243,7 @@ def _resolve_static(web_root: Path, raw_path: str) -> Path | None:
         "/admin.js": "admin/admin.js",
         "/admin-acquisition.js": "admin/admin-acquisition.js",
         "/newsletter.js": "landing/newsletter.js",
+        "/marketing.js": "landing/marketing.js",
     }
     relative = exact.get(path)
     if relative is not None:
@@ -630,6 +641,12 @@ def _acquisition_payload(projection: AdminAcquisitionProjection) -> dict[str, ob
         "acceptedCount": projection.accepted_count,
         "consentedCount": projection.consented_count,
         "deliveryEligibleCount": projection.delivery_eligible_count,
+        "marketingEventCount": projection.marketing_event_count,
+        "anonymousSessionCount": projection.anonymous_session_count,
+        "attributedRequestCount": projection.attributed_request_count,
+        "sourceCounts": [list(value) for value in projection.source_counts],
+        "campaignCounts": [list(value) for value in projection.campaign_counts],
+        "attributionModel": projection.attribution_model,
         "piiVisible": projection.pii_visible,
         "coverageNotes": list(projection.coverage_notes),
         "requests": [
@@ -641,6 +658,9 @@ def _acquisition_payload(projection: AdminAcquisitionProjection) -> dict[str, ob
                 "coverageState": item.coverage_state,
                 "consentState": item.consent_state,
                 "deliveryEligible": item.delivery_eligible,
+                "observedSource": item.observed_source,
+                "observedCampaign": item.observed_campaign,
+                "attributionEventId": item.attribution_event_id,
                 "requestedAt": item.requested_at.isoformat(),
                 "updatedAt": item.updated_at.isoformat(),
             }
@@ -1085,6 +1105,14 @@ def make_handler(runtime: AxignalRuntime) -> type[BaseHTTPRequestHandler]:
             if request_path == "/api/weekly-brief/status":
                 self._json({"enabled": runtime.config.weekly_brief_requests_enabled})
                 return
+            if request_path == "/api/acquisition/status":
+                self._json(
+                    {
+                        "enabled": runtime.config.acquisition_events_enabled,
+                        "model": "OBSERVED_TOUCH_V1",
+                    }
+                )
+                return
             if request_path == "/api/subscriber-context":
                 if runtime.first_proof is None:
                     self._json({"state": "NO_XEED", "realityLevel": "LIVE_PRODUCTION_FIRST_PROOF"})
@@ -1217,6 +1245,106 @@ def make_handler(runtime: AxignalRuntime) -> type[BaseHTTPRequestHandler]:
                     }
                 )
                 return
+            if request_path == "/api/acquisition/events":
+                if not runtime.config.acquisition_events_enabled:
+                    self.send_error(HTTPStatus.NOT_FOUND)
+                    return
+                try:
+                    length = int(self.headers.get("Content-Length", "0"))
+                except ValueError:
+                    length = 0
+                if length < 2 or length > 8192:
+                    self._json(
+                        {"status": "rejected", "reason": "INVALID_REQUEST_SIZE"},
+                        HTTPStatus.BAD_REQUEST,
+                    )
+                    return
+                try:
+                    payload = json.loads(self.rfile.read(length).decode("utf-8"))
+                except (UnicodeDecodeError, json.JSONDecodeError):
+                    self._json(
+                        {"status": "rejected", "reason": "INVALID_JSON"},
+                        HTTPStatus.BAD_REQUEST,
+                    )
+                    return
+                if not isinstance(payload, dict):
+                    self._json(
+                        {"status": "rejected", "reason": "INVALID_REQUEST"},
+                        HTTPStatus.BAD_REQUEST,
+                    )
+                    return
+                forbidden = {
+                    "email",
+                    "professionalEmail",
+                    "companyName",
+                    "companyDomain",
+                    "purpose",
+                    "name",
+                    "userId",
+                    "principalId",
+                }
+                if forbidden.intersection(payload):
+                    self._json(
+                        {"status": "rejected", "reason": "PII_NOT_ALLOWED"},
+                        HTTPStatus.BAD_REQUEST,
+                    )
+                    return
+                try:
+                    kind = MarketingEventKind(str(payload.get("kind", "")))
+                    occurred_at = datetime.fromisoformat(str(payload.get("occurredAt", "")))
+                    inserted = PublicMarketingEventService(runtime.admin_acquisition_store).ingest(
+                        event_id=str(payload.get("eventId", "")),
+                        session_ref=str(payload.get("sessionRef", "")),
+                        kind=kind,
+                        occurred_at=occurred_at,
+                        received_at=datetime.now(UTC),
+                        surface=str(payload.get("surface", "landing")),
+                        locale=str(payload.get("locale", "en")),
+                        path=str(payload.get("path", "/")),
+                        chapter=(
+                            int(payload["chapter"]) if payload.get("chapter") is not None else None
+                        ),
+                        cta=(str(payload["cta"]) if payload.get("cta") is not None else None),
+                        referrer=(
+                            str(payload["referrer"])
+                            if payload.get("referrer") is not None
+                            else None
+                        ),
+                        utm_source=(
+                            str(payload["utmSource"])
+                            if payload.get("utmSource") is not None
+                            else None
+                        ),
+                        utm_medium=(
+                            str(payload["utmMedium"])
+                            if payload.get("utmMedium") is not None
+                            else None
+                        ),
+                        utm_campaign=(
+                            str(payload["utmCampaign"])
+                            if payload.get("utmCampaign") is not None
+                            else None
+                        ),
+                        utm_content=(
+                            str(payload["utmContent"])
+                            if payload.get("utmContent") is not None
+                            else None
+                        ),
+                        utm_term=(
+                            str(payload["utmTerm"]) if payload.get("utmTerm") is not None else None
+                        ),
+                    )
+                except (TypeError, ValueError):
+                    self._json(
+                        {"status": "rejected", "reason": "INVALID_MARKETING_EVENT"},
+                        HTTPStatus.BAD_REQUEST,
+                    )
+                    return
+                self._json(
+                    {"status": "accepted", "replayed": not inserted},
+                    HTTPStatus.ACCEPTED,
+                )
+                return
             if request_path == "/api/weekly-brief/requests":
                 if not runtime.config.weekly_brief_requests_enabled:
                     self.send_error(HTTPStatus.NOT_FOUND)
@@ -1289,6 +1417,23 @@ def make_handler(runtime: AxignalRuntime) -> type[BaseHTTPRequestHandler]:
                         HTTPStatus.BAD_REQUEST,
                     )
                     return
+                if runtime.config.acquisition_events_enabled:
+                    session_ref = payload.get("acquisitionSessionRef")
+                    if isinstance(session_ref, str) and session_ref:
+                        linked_at = datetime.now(UTC)
+                        with contextlib.suppress(ValueError):
+                            PublicMarketingEventService(
+                                runtime.admin_acquisition_store
+                            ).link_brief_request(
+                                event_id=f"mkt:req:{secrets.token_hex(12)}",
+                                session_ref=session_ref,
+                                request_id=str(snapshot.request_id),
+                                occurred_at=linked_at,
+                                received_at=linked_at,
+                                surface="landing",
+                                locale=str(payload.get("acquisitionLocale", "en")),
+                                path=str(payload.get("acquisitionPath", "/")),
+                            )
                 self._json(
                     {
                         "status": "received",

@@ -1,3 +1,13 @@
+from domain.admin_acquisition.marketing import (
+    AnonymousSessionRef,
+    AttributionModelVersion,
+    MarketingAttributionSummary,
+    MarketingEvent,
+    MarketingEventId,
+    MarketingEventKind,
+    MarketingIdentityClass,
+    normalize_campaign_token,
+)
 from domain.admin_acquisition.model import (
     BriefRequestEvent,
     BriefRequestEventId,
@@ -12,6 +22,8 @@ from domain.admin_acquisition.model import (
 )
 
 __all__ = [
+    "AnonymousSessionRef",
+    "AttributionModelVersion",
     "BriefRequestEvent",
     "BriefRequestEventId",
     "BriefRequestEventKind",
@@ -19,7 +31,13 @@ __all__ = [
     "BriefRequestSnapshot",
     "BriefReviewState",
     "CoverageState",
+    "MarketingAttributionSummary",
+    "MarketingEvent",
+    "MarketingEventId",
+    "MarketingEventKind",
+    "MarketingIdentityClass",
     "NewsletterConsentState",
+    "normalize_campaign_token",
     "normalize_domain",
     "normalize_email",
 ]
