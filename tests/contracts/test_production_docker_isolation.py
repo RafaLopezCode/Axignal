@@ -71,6 +71,15 @@ def test_landing_image_is_non_root_read_only_and_contains_public_surfaces() -> N
     assert "/admin" not in LANDING_NGINX
 
 
+def test_ao15_production_proxy_exposes_only_exact_weekly_brief_routes() -> None:
+    assert "location = /api/weekly-brief/status" in LANDING_NGINX
+    assert "proxy_pass http://axignal_runtime/api/weekly-brief/status;" in LANDING_NGINX
+    assert "location = /api/weekly-brief/requests" in LANDING_NGINX
+    assert "proxy_pass http://axignal_runtime/api/weekly-brief/requests;" in LANDING_NGINX
+    assert "location /api/" not in LANDING_NGINX
+    assert "location ^~ /api/" not in LANDING_NGINX
+
+
 def test_images_and_runtime_require_exact_canonical_sha() -> None:
     marker = "AXIGNAL_CODE_SHA: $" + "{AXIGNAL_CODE_SHA:?AXIGNAL_CODE_SHA is required}"
     assert marker in COMPOSE
