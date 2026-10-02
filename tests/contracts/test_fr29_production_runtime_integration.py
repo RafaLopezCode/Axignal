@@ -41,6 +41,16 @@ def test_production_config_fails_closed_without_exact_sha_or_loopback(
 
     monkeypatch.setenv("AXIGNAL_CODE_SHA", SHA)
     monkeypatch.setenv("AXIGNAL_BIND_HOST", "0.0.0.0")
+    monkeypatch.delenv("AXIGNAL_CONTAINERIZED", raising=False)
+    with pytest.raises(ValueError, match="loopback"):
+        RuntimeConfig.from_env()
+
+    monkeypatch.setenv("AXIGNAL_CONTAINERIZED", "true")
+    config = RuntimeConfig.from_env()
+    assert config.bind_host == "0.0.0.0"
+    assert config.containerized is True
+
+    monkeypatch.setenv("AXIGNAL_BIND_HOST", "192.0.2.10")
     with pytest.raises(ValueError, match="loopback"):
         RuntimeConfig.from_env()
 

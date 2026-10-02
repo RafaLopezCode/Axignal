@@ -1,0 +1,102 @@
+name: axignal-prod
+
+services:
+  runtime:
+    build:
+      context: ../..
+      dockerfile: deploy/production/docker/runtime.Dockerfile
+      args:
+        AXIGNAL_CODE_SHA: ${AXIGNAL_CODE_SHA:?AXIGNAL_CODE_SHA is required}
+    image: axignal-runtime:${AXIGNAL_CODE_SHA:?AXIGNAL_CODE_SHA is required}
+    container_name: axignal-prod-runtime
+    restart: unless-stopped
+    init: true
+    user: "33:33"
+    read_only: true
+    tmpfs:
+      - /tmp:size=64m,mode=1777
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    environment:
+      AXIGNAL_ENV: production
+      AXIGNAL_CONTAINERIZED: "true"
+      AXIGNAL_BIND_HOST: 0.0.0.0
+      AXIGNAL_PORT: "18181"
+      AXIGNAL_CODE_SHA: ${AXIGNAL_CODE_SHA:?AXIGNAL_CODE_SHA is required}
+      AXIGNAL_DATA_DIR: /var/lib/axignal/runtime
+      AXIGNAL_WEB_ROOT: /app/apps/web
+      AXIGNAL_FIRST_PROOF_ALLOWED_HOST: axignal.com
+    volumes:
+      - /var/lib/axignal/runtime:/var/lib/axignal/runtime
+    expose:
+      - "18181"
+    networks:
+      - internal
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - "import urllib.request; urllib.request.urlopen('http://127.0.0.1:18181/healthz', timeout=3).read()"
+      interval: 10s
+      timeout: 5s
+      retries: 6
+      start_period: 5s
+    pids_limit: 128
+    mem_limit: 768m
+    cpus: 1.5
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: "3"
+
+  landing:
+    build:
+      context: ../..
+      dockerfile: deploy/production/docker/landing.Dockerfile
+      args:
+        AXIGNAL_CODE_SHA: ${AXIGNAL_CODE_SHA:?AXIGNAL_CODE_SHA is required}
+    image: axignal-landing:${AXIGNAL_CODE_SHA:?AXIGNAL_CODE_SHA is required}
+    container_name: axignal-prod-landing
+    restart: unless-stopped
+    init: true
+    read_only: true
+    tmpfs:
+      - /tmp:size=32m,mode=1777
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    depends_on:
+      runtime:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:18180:8080"
+    networks:
+      - internal
+    healthcheck:
+      test:
+        - CMD
+        - wget
+        - -qO-
+        - http://127.0.0.1:8080/healthz
+      interval: 10s
+      timeout: 5s
+      retries: 6
+      start_period: 5s
+    pids_limit: 64
+    mem_limit: 128m
+    cpus: 0.5
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: "3"
+
+networks:
+  internal:
+    name: axignal_prod_internal
+    driver: bridge

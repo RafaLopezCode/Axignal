@@ -1,7 +1,9 @@
 # FR-29 Production Runtime Integration
 
-**Status:** DONE
+**Status:** DONE · HISTORICAL HOST-SYSTEMD BASELINE
 **Date:** 2026-10-01
+
+> **Current production execution authority:** ADR-0059 and `deploy/production/compose.yml` supersede the host-systemd steady-state topology documented below. The FR-29 systemd artifacts are retained as rollback only; its epistemic/runtime invariants remain binding.
 
 ## Observed production topology before FR-29
 
