@@ -30,6 +30,10 @@ from application.admin_customer_accounts import (
     project_customer_operations,
 )
 from application.admin_governance import project_admin_governance
+from application.admin_integrations.service import (
+    AdminIntegrationProjection,
+    project_admin_integrations,
+)
 from application.admin_shell import (
     AdminShellProjection,
     AdminShellRouteDenied,
@@ -46,6 +50,7 @@ from domain.admin_xeed_observatory import XeedAxiglandObservatory
 from pipeline.admin_commercial import SqliteAdminCommercialStore
 from pipeline.admin_customer_accounts import SqliteAdminCustomerAccountStore
 from pipeline.admin_governance import SqliteAdminGovernanceAuditStore
+from pipeline.admin_integrations import SqliteAdminIntegrationStore
 from pipeline.admin_observability import SqliteAdminObservabilityStore
 from pipeline.learning_memory import SqliteLearningMemory
 from pipeline.observation_memory import SqliteObservationMemory
@@ -68,6 +73,7 @@ class AxignalRuntime:
     governance_audit_store: SqliteAdminGovernanceAuditStore
     admin_commercial_store: SqliteAdminCommercialStore
     admin_customer_account_store: SqliteAdminCustomerAccountStore
+    admin_integration_store: SqliteAdminIntegrationStore
     first_proof: FirstProofService | None = None
     admin_access: AdminAccessService | None = None
 
@@ -123,6 +129,9 @@ def build_runtime(config: RuntimeConfig) -> AxignalRuntime:
     admin_customer_account_store = SqliteAdminCustomerAccountStore(
         config.data_dir / "admin-customer-accounts.sqlite3"
     )
+    admin_integration_store = SqliteAdminIntegrationStore(
+        config.data_dir / "admin-integrations.sqlite3"
+    )
     first_proof = None
     if config.first_proof_allowed_host is not None:
         from pipeline.source_acquisition import ContentAddressedArtifactStore
@@ -144,6 +153,7 @@ def build_runtime(config: RuntimeConfig) -> AxignalRuntime:
         governance_audit_store=governance_audit_store,
         admin_commercial_store=admin_commercial_store,
         admin_customer_account_store=admin_customer_account_store,
+        admin_integration_store=admin_integration_store,
         first_proof=first_proof,
     )
 
@@ -662,6 +672,75 @@ def _customer_operations_payload(
     }
 
 
+def _integration_projection(
+    runtime: AxignalRuntime, *, grant: AdminAuthorizationGrant, now: datetime
+) -> AdminIntegrationProjection:
+    return project_admin_integrations(
+        store=runtime.admin_integration_store,
+        grant=grant,
+        as_of=now,
+    )
+
+
+def _integration_payload(projection: AdminIntegrationProjection) -> dict[str, object]:
+    return {
+        "asOf": projection.as_of.isoformat(),
+        "privacyClass": projection.privacy_class,
+        "coverageNotes": list(projection.coverage_notes),
+        "integrations": [
+            {
+                "integrationId": item.definition.integration_id,
+                "provider": item.definition.provider,
+                "purpose": item.definition.purpose,
+                "owner": item.definition.owner,
+                "environment": item.definition.environment.value,
+                "enabled": item.definition.enabled,
+                "credentialState": item.definition.credential.state.value,
+                "credentialConfigured": item.definition.credential.reference is not None,
+                "rotationAt": (
+                    None
+                    if item.definition.credential.last_rotated_at is None
+                    else item.definition.credential.last_rotated_at.isoformat()
+                ),
+                "expiresAt": (
+                    None
+                    if item.definition.credential.expires_at is None
+                    else item.definition.credential.expires_at.isoformat()
+                ),
+                "revokedAt": (
+                    None
+                    if item.definition.credential.revoked_at is None
+                    else item.definition.credential.revoked_at.isoformat()
+                ),
+                "scopes": list(item.definition.scopes),
+                "direction": item.definition.direction.value,
+                "authorityBoundary": item.definition.authority_boundary,
+                "webhookCapable": item.definition.webhook_capable,
+                "webhookConfigured": item.definition.webhook_endpoint is not None,
+                "rateLimitPosture": item.definition.rate_limit_posture,
+                "healthFreshnessSeconds": item.definition.health_freshness_seconds,
+                "health": (item.health_state.value),
+                "lastVerifiedAt": None
+                if item.health is None
+                else item.health.observed_at.isoformat(),
+                "lastSuccessAt": (
+                    None
+                    if item.health is None or item.health.last_success_at is None
+                    else item.health.last_success_at.isoformat()
+                ),
+                "lastFailureAt": (
+                    None
+                    if item.health is None or item.health.last_failure_at is None
+                    else item.health.last_failure_at.isoformat()
+                ),
+                "failureCategory": None if item.health is None else item.health.failure_category,
+                "sourceRef": None if item.health is None else item.health.source_ref,
+            }
+            for item in projection.integrations
+        ],
+    }
+
+
 def _admin_projection_payload(
     projection: AdminShellProjection,
     *,
@@ -671,6 +750,7 @@ def _admin_projection_payload(
     governance: AdminGovernanceProjection | None = None,
     commercial: AdminCommercialProjection | None = None,
     customer_operations: CustomerOperationsProjection | None = None,
+    integrations: AdminIntegrationProjection | None = None,
 ) -> dict[str, object]:
     payload: dict[str, object] = {
         "mode": projection.mode,
@@ -700,6 +780,8 @@ def _admin_projection_payload(
         payload["commercial"] = _commercial_payload(commercial)
     if customer_operations is not None:
         payload["customerOperations"] = _customer_operations_payload(customer_operations)
+    if integrations is not None:
+        payload["integrations"] = _integration_payload(integrations)
     return payload
 
 
@@ -713,6 +795,7 @@ def _render_admin_shell(
     governance: AdminGovernanceProjection | None = None,
     commercial: AdminCommercialProjection | None = None,
     customer_operations: CustomerOperationsProjection | None = None,
+    integrations: AdminIntegrationProjection | None = None,
 ) -> bytes:
     template = (web_root / "admin" / "index.html").read_text(encoding="utf-8")
     payload = html.escape(
@@ -725,6 +808,7 @@ def _render_admin_shell(
                 governance=governance,
                 commercial=commercial,
                 customer_operations=customer_operations,
+                integrations=integrations,
             ),
             sort_keys=True,
             separators=(",", ":"),
@@ -868,6 +952,11 @@ def make_handler(runtime: AxignalRuntime) -> type[BaseHTTPRequestHandler]:
                         if admin_projection.current_slug == "customers-crm"
                         else None
                     )
+                    integrations = (
+                        _integration_projection(runtime, grant=grant, now=now)
+                        if admin_projection.current_slug == "integrations"
+                        else None
+                    )
                     rendered = _render_admin_shell(
                         runtime.config.web_root,
                         admin_projection,
@@ -877,6 +966,7 @@ def make_handler(runtime: AxignalRuntime) -> type[BaseHTTPRequestHandler]:
                         governance=governance,
                         commercial=commercial,
                         customer_operations=customer_operations,
+                        integrations=integrations,
                     )
                 except AdminAuthenticationError:
                     self._admin_error(HTTPStatus.UNAUTHORIZED, "Admin authentication failed.")
