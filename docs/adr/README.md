@@ -67,6 +67,7 @@ Constitution (`.specify/memory/constitution.md`).
 | [ADR-0057](ADR-0057-unified-admin-shell-and-server-authorized-navigation.md) | Unified Admin Shell and Server-Authorized Navigation (**ACCEPTED**) | §§2.1A, 5, 39, 46 |
 | [ADR-0058](ADR-0058-admin-observability-projection-runtime.md) | Admin Observability Projection Runtime (**ACCEPTED**) | Admin V0.2; P0-ADMIN-01 C01–C04 |
 | [ADR-0060](ADR-0060-private-integration-registry.md) | Private Integration Registry and Credential Boundary (**ACCEPTED**) | MASTER §2.1A; Admin V0.2; AO-18 |
+| [ADR-0061](ADR-0061-stripe-billing-payment-authority.md) | Stripe Billing Facts Are External Payment Authority; AXIGNAL Owns Service Entitlement (**ACCEPTED; LIVE GATED**) | MASTER §2.1A, §27, §46; AO-09; AO-10; AO-18 |
 
 ## Adding an ADR
 

@@ -10,6 +10,7 @@ from typing import Protocol
 
 from application.xeed_access import AuthorizedXeed, AuthorizedXeedReader, TrustedRequestContext
 from domain.admin_access import AdminAuthorizationGrant, AdminScope
+from domain.admin_billing import BillingAuthorityGrant
 from domain.admin_customer_accounts import (
     SELF_SERVICE_V1,
     AccountCohort,
@@ -93,7 +94,10 @@ def replay_account(events: tuple[AccountEvent, ...]) -> AccountSnapshot:
             )
         elif event.kind is AccountEventKind.USER_REMOVED:
             users.pop(_required(event, "user_id"), None)
-        elif event.kind is AccountEventKind.SUBSCRIPTION_ACTIVATED:
+        elif event.kind in {
+            AccountEventKind.SUBSCRIPTION_ACTIVATED,
+            AccountEventKind.BILLING_SUBSCRIPTION_LINKED,
+        }:
             subscription_id = SubscriptionId(_required(event, "subscription_id"))
             subscription_status = SubscriptionStatus.ACTIVE
             status = AccountStatus.ACTIVE
@@ -107,6 +111,16 @@ def replay_account(events: tuple[AccountEvent, ...]) -> AccountSnapshot:
             new_capacity = _int_value(event, "xeed_capacity")
             if new_capacity < len(entitled_xeeds):
                 raise ValueError("plan change cannot reduce capacity below active entitlements")
+            xeed_capacity = new_capacity
+        elif event.kind is AccountEventKind.BILLING_PAYMENT_VERIFIED:
+            payment_verification = PaymentVerificationState.VERIFIED
+            funnel.setdefault(FunnelStage.PAID, event.occurred_at)
+        elif event.kind is AccountEventKind.BILLING_PAYMENT_FAILED:
+            payment_verification = PaymentVerificationState.FAILED
+        elif event.kind is AccountEventKind.BILLING_CAPACITY_SYNCED:
+            new_capacity = _int_value(event, "xeed_capacity")
+            if new_capacity < len(entitled_xeeds):
+                raise ValueError("billing capacity cannot fall below active entitlements")
             xeed_capacity = new_capacity
         elif event.kind is AccountEventKind.XEED_ENTITLED:
             if (
@@ -209,6 +223,31 @@ class AdminCustomerAccountService:
         self._store.append(event)
         return event
 
+    def _append_billing(
+        self,
+        *,
+        account_id: str,
+        event_id: str,
+        kind: AccountEventKind,
+        authority: BillingAuthorityGrant,
+        now: datetime,
+        reason: str,
+        payload: tuple[tuple[str, str], ...],
+    ) -> AccountEvent:
+        if str(authority.provider_event_id) not in event_id:
+            raise ValueError("billing account event must reference provider event id")
+        event = AccountEvent(
+            event_id=AccountEventId(event_id),
+            account_id=AccountId(account_id),
+            kind=kind,
+            occurred_at=now,
+            actor=f"provider:{authority.provider.value}:{authority.integration_id}",
+            reason=reason,
+            payload=payload,
+        )
+        self._store.append(event)
+        return event
+
     def signup(
         self,
         *,
@@ -303,6 +342,40 @@ class AdminCustomerAccountService:
         )
         return self._snapshot(account_id)
 
+    def link_billing_subscription(
+        self,
+        *,
+        authority: BillingAuthorityGrant,
+        account_id: str,
+        subscription_id: str,
+        xeed_capacity: int,
+        now: datetime,
+        reason: str,
+    ) -> AccountSnapshot:
+        snapshot = self._snapshot(account_id)
+        if snapshot.status is AccountStatus.CANCELLED:
+            raise ValueError("cancelled account cannot link billing subscription")
+        if snapshot.subscription_id is not None:
+            if str(snapshot.subscription_id) == subscription_id:
+                return snapshot
+            raise ValueError("account already linked to a different subscription")
+        if xeed_capacity < 1:
+            raise ValueError("Xeed capacity must be positive")
+        self._append_billing(
+            account_id=account_id,
+            event_id=f"billing:{authority.provider_event_id}:subscription-link",
+            kind=AccountEventKind.BILLING_SUBSCRIPTION_LINKED,
+            authority=authority,
+            now=now,
+            reason=reason,
+            payload=_payload(
+                subscription_id=subscription_id,
+                xeed_capacity=xeed_capacity,
+                payment_verification=PaymentVerificationState.EXTERNAL_PENDING.value,
+            ),
+        )
+        return self._snapshot(account_id)
+
     def change_plan_capacity(
         self,
         *,
@@ -333,6 +406,63 @@ class AdminCustomerAccountService:
         )
         return self._snapshot(account_id)
 
+    def apply_billing_payment(
+        self,
+        *,
+        authority: BillingAuthorityGrant,
+        account_id: str,
+        provider_event_id: str,
+        verified: bool,
+        now: datetime,
+        reason: str,
+    ) -> AccountSnapshot:
+        snapshot = self._snapshot(account_id)
+        if snapshot.subscription_id is None:
+            raise ValueError("billing payment requires a linked subscription")
+        self._append_billing(
+            account_id=account_id,
+            event_id=f"billing:{provider_event_id}:payment",
+            kind=(
+                AccountEventKind.BILLING_PAYMENT_VERIFIED
+                if verified
+                else AccountEventKind.BILLING_PAYMENT_FAILED
+            ),
+            authority=authority,
+            now=now,
+            reason=reason,
+            payload=_payload(provider_event_id=provider_event_id),
+        )
+        return self._snapshot(account_id)
+
+    def sync_billing_capacity(
+        self,
+        *,
+        authority: BillingAuthorityGrant,
+        account_id: str,
+        provider_event_id: str,
+        xeed_capacity: int,
+        now: datetime,
+        reason: str,
+    ) -> AccountSnapshot:
+        snapshot = self._snapshot(account_id)
+        if snapshot.subscription_id is None:
+            raise ValueError("billing capacity requires a linked subscription")
+        if xeed_capacity < 1 or xeed_capacity < len(snapshot.entitled_xeed_ids):
+            raise ValueError("billing capacity cannot invalidate active entitlements")
+        self._append_billing(
+            account_id=account_id,
+            event_id=f"billing:{provider_event_id}:capacity",
+            kind=AccountEventKind.BILLING_CAPACITY_SYNCED,
+            authority=authority,
+            now=now,
+            reason=reason,
+            payload=_payload(
+                provider_event_id=provider_event_id,
+                xeed_capacity=xeed_capacity,
+            ),
+        )
+        return self._snapshot(account_id)
+
     def entitle_xeed(
         self,
         *,
@@ -349,6 +479,8 @@ class AdminCustomerAccountService:
             or snapshot.subscription_status is not SubscriptionStatus.ACTIVE
         ):
             raise ValueError("Xeed entitlement requires active account/subscription")
+        if snapshot.payment_verification is not PaymentVerificationState.VERIFIED:
+            raise ValueError("Xeed entitlement requires verified billing")
         if xeed_id in snapshot.entitled_xeed_ids:
             return snapshot
         if len(snapshot.entitled_xeed_ids) >= snapshot.xeed_capacity:
@@ -655,11 +787,12 @@ def project_customer_operations(
         cohorts=cohorts,
         funnel_counts=funnel_counts,
         mrr_eur=None,
-        payment_authority="AO10_PENDING",
+        payment_authority="STRIPE_VERIFIED_EVENTS",
         coverage_notes=(
             "CUSTOMER_ACCOUNT_STATE != ORGANIZATION_STATE.",
             "Subscription buys observation entitlement, never influence over AXIGLAND conclusions.",
-            "MRR/payment state remain UNKNOWN until AO-10 billing evidence is integrated.",
+            "Payment state changes only from verified AO-10 Stripe events; EXTERNAL_PENDING is not VERIFIED.",
+            "MRR remains UNKNOWN until AO-11 derives governed recurring-revenue metrics.",
             "Pricing displayed here is the current MASTER hypothesis, not measured revenue.",
             "Xeed entitlement is private service authority and does not own or duplicate the observed Organization.",
         ),
@@ -692,6 +825,8 @@ class EntitledXeedReader:
             raise ServiceXeedAccessError("AXIGNAL account is not active")
         if account.subscription_status is not SubscriptionStatus.ACTIVE:
             raise ServiceXeedAccessError("AXIGNAL subscription is not active")
+        if account.payment_verification is not PaymentVerificationState.VERIFIED:
+            raise ServiceXeedAccessError("AXIGNAL billing is not verified")
         if str(xeed_id) not in account.entitled_xeed_ids:
             raise ServiceXeedAccessError("Xeed is not entitled for this account")
         return authorized

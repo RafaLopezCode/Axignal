@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import os
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 
 
@@ -17,6 +17,10 @@ class RuntimeConfig:
     web_root: Path
     first_proof_allowed_host: str | None = None
     containerized: bool = False
+    stripe_account_id: str | None = None
+    stripe_base_price_ref: str | None = None
+    stripe_additional_xeed_price_ref: str | None = None
+    stripe_webhook_signing_secret: str | None = field(default=None, repr=False)
 
     @classmethod
     def from_env(cls) -> RuntimeConfig:
@@ -34,6 +38,14 @@ class RuntimeConfig:
             "true",
             "yes",
         }
+        stripe_account_id = os.getenv("AXIGNAL_STRIPE_ACCOUNT_ID", "").strip() or None
+        stripe_base_price_ref = os.getenv("AXIGNAL_STRIPE_BASE_PRICE_REF", "").strip() or None
+        stripe_additional_xeed_price_ref = (
+            os.getenv("AXIGNAL_STRIPE_ADDITIONAL_XEED_PRICE_REF", "").strip() or None
+        )
+        stripe_webhook_signing_secret = (
+            os.getenv("AXIGNAL_STRIPE_WEBHOOK_SIGNING_SECRET", "").strip() or None
+        )
 
         if not bind_host:
             raise ValueError("AXIGNAL_BIND_HOST cannot be empty")
@@ -54,6 +66,21 @@ class RuntimeConfig:
                 "production runtime must bind to loopback unless explicitly containerized"
             )
 
+        stripe_values = (
+            stripe_account_id,
+            stripe_base_price_ref,
+            stripe_additional_xeed_price_ref,
+            stripe_webhook_signing_secret,
+        )
+        if any(value is not None for value in stripe_values) and not all(
+            value is not None for value in stripe_values
+        ):
+            raise ValueError(
+                "Stripe webhook runtime requires account, both price refs and signing secret"
+            )
+        if stripe_account_id is not None and not stripe_account_id.startswith("acct_"):
+            raise ValueError("AXIGNAL_STRIPE_ACCOUNT_ID must be a Stripe account id")
+
         data_dir = Path(data_raw).expanduser().resolve()
         web_root = Path(web_raw).expanduser().resolve()
         if not web_root.is_dir():
@@ -68,4 +95,8 @@ class RuntimeConfig:
             web_root,
             first_proof_allowed_host,
             containerized,
+            stripe_account_id,
+            stripe_base_price_ref,
+            stripe_additional_xeed_price_ref,
+            stripe_webhook_signing_secret,
         )
