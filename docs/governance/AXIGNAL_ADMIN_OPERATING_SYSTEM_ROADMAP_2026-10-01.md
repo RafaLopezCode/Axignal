@@ -695,9 +695,24 @@ The free acquisition hypothesis can be piloted without consent or ontology short
 
 ## AO-16 — Evidence-Backed Weekly Brief Pipeline
 
-**Status:** NOT_STARTED
+**Status:** BLOCKED
 **Depends on:** AO-15, AO-05, AO-06, AO-18
 **Priority:** P1 Growth
+
+### Implementation / verification evidence
+- AO-16 is implemented as a private acquisition projection over governed Observation Memory; it does not write AXIGLAND or call EvidenceAdmission.
+- Composition admits zero to three CURRENT, public-reusable, subject/purpose-applicable observations after deterministic evidence deduplication. Zero eligible material observations produces explicit NO_MATERIAL_CHANGE; there is no quota filler.
+- Every material item freezes observation/source/date/content fingerprint/currentness/observed-field summary plus why_may_matter and explicit UNKNOWN statements. The evidence fingerprint excludes interpretive wording.
+- Optional model drafting can change only why_may_matter for already-selected evidence and is applied before the immutable issue snapshot is persisted; it cannot introduce an observation or rewrite source/date/currentness/observed fields.
+- Pilot mutation requires private Admin admin:acquisition:write with STEP_UP. Private runtime routes support compose/approve/correct; no HTTP delivery route exists.
+- Delivery service requires exact human approval, replays AO-15 consent/suppression eligibility immediately before provider work, requires an AO-18 healthy email:send connection, passes a delivery idempotency key to the provider and refuses duplicate issue delivery.
+- SQLite issue/approval/delivery/correction records are durable and append-only; exact replay is idempotent and conflicting identity reuse fails closed. Corrections never rewrite the original issue.
+- ADR-0064 records the authority boundary, pilot currentness policy and deliberately dormant production-send posture.
+- Focused AO-15/AO-16 regression: 23 PASS. Final repository validation: 891 PASS; Ruff format/check PASS; mypy PASS across 216 source files; Architecture Guard PASS; axignal-governance PASS; git diff --check PASS.
+- GitHub PR #136 merged green into canonical main as 04d1a5b93c80a1e5b9c8ef34a7165a7954393358; Deterministic validation, Secret scanning and Graphify structural checks PASS. Sourcery review was skipped by its external quota and is not a required gate.
+
+### BLOCKER
+Production is not yet on the AO-16 merge SHA. Current external https://axignal.com/healthz reports healthy production at 9822c4b0d4a352633b320a2d250d964a746efd39, while canonical main is 04d1a5b93c80a1e5b9c8ef34a7165a7954393358. The registered VPS Desktop Commander device srv1597364 is offline and the active workstation has no SSH identity/agent available for root@187.124.220.48, so deployment cannot be verified or executed from the current authorized tool path. AO-16 therefore remains BLOCKED rather than falsely DONE. External email sending also remains deliberately dormant until AO-15 legal/privacy activation and an AO-18-governed provider credential/adapter exist.
 ### Work
 - Up to three material evidence-backed items; fewer items or an explicit no-material-change issue when appropriate.
 - Preserve source, date, observation condition, why-it-may-matter and UNKNOWN.
