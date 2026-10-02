@@ -69,6 +69,7 @@ Constitution (`.specify/memory/constitution.md`).
 | [ADR-0060](ADR-0060-private-integration-registry.md) | Private Integration Registry and Credential Boundary (**ACCEPTED**) | MASTER §2.1A; Admin V0.2; AO-18 |
 | [ADR-0061](ADR-0061-stripe-billing-payment-authority.md) | Stripe Billing Facts Are External Payment Authority; AXIGNAL Owns Service Entitlement (**ACCEPTED; LIVE GATED**) | MASTER §2.1A, §27, §46; AO-09; AO-10; AO-18 |
 | [ADR-0062](ADR-0062-free-weekly-brief-request-consent-boundary.md) | Free Weekly Brief Request and Consent Boundary (**ACCEPTED; ACTIVATION GATED**) | MASTER §2.1A, §27.3, §27.5; AO-08; AO-15 |
+| [ADR-0063](ADR-0063-first-party-marketing-observed-touch-boundary.md) | First-Party Marketing Events Are Private Observed Touches, Not Identity or Causality (**ACCEPTED; COLLECTION GATED**) | MASTER §2.1A, §27.3; AO-03; AO-08; AO-12; AO-15 |
 
 ## Adding an ADR
 

@@ -51,6 +51,10 @@
     fact(facts, 'Accepted coverage', acquisition.acceptedCount)
     fact(facts, 'Consented', acquisition.consentedCount)
     fact(facts, 'Delivery eligible', acquisition.deliveryEligibleCount)
+    fact(facts, 'Marketing events', acquisition.marketingEventCount || 0)
+    fact(facts, 'Anonymous sessions', acquisition.anonymousSessionCount || 0)
+    fact(facts, 'Attributed requests', acquisition.attributedRequestCount || 0)
+    fact(facts, 'Attribution model', acquisition.attributionModel || 'OBSERVED_TOUCH_V1')
     panel.append(heading, facts)
     summary.append(panel)
   }
@@ -72,6 +76,9 @@
       fact(facts, 'Coverage', request.coverageState)
       fact(facts, 'Consent', request.consentState)
       fact(facts, 'Delivery', request.deliveryEligible ? 'ELIGIBLE' : 'NOT ELIGIBLE')
+      fact(facts, 'Observed source', request.observedSource || 'UNATTRIBUTED')
+      fact(facts, 'Observed campaign', request.observedCampaign || 'UNATTRIBUTED')
+      fact(facts, 'Attribution event', request.attributionEventId || 'NONE')
       card.append(header, facts)
       requestList.append(card)
     }

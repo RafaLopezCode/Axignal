@@ -22,6 +22,7 @@ class RuntimeConfig:
     stripe_additional_xeed_price_ref: str | None = None
     stripe_webhook_signing_secret: str | None = field(default=None, repr=False)
     weekly_brief_requests_enabled: bool = False
+    acquisition_events_enabled: bool = False
 
     @classmethod
     def from_env(cls) -> RuntimeConfig:
@@ -49,6 +50,9 @@ class RuntimeConfig:
         )
         weekly_brief_requests_enabled = os.getenv(
             "AXIGNAL_WEEKLY_BRIEF_REQUESTS_ENABLED", ""
+        ).strip().lower() in {"1", "true", "yes"}
+        acquisition_events_enabled = os.getenv(
+            "AXIGNAL_ACQUISITION_EVENTS_ENABLED", ""
         ).strip().lower() in {"1", "true", "yes"}
 
         if not bind_host:
@@ -104,4 +108,5 @@ class RuntimeConfig:
             stripe_additional_xeed_price_ref,
             stripe_webhook_signing_secret,
             weekly_brief_requests_enabled,
+            acquisition_events_enabled,
         )
