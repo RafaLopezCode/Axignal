@@ -99,7 +99,7 @@ Admin must distinguish measured flywheel behavior from the hypothesis above.
 
 `NOT_STARTED → READY → IN_PROGRESS → BLOCKED → DONE → DEFERRED → REJECTED`
 
-**CURRENT_TASK = AO-12**
+**CURRENT_TASK = AO-16**
 
 ## 7. Closure rule
 
@@ -577,7 +577,7 @@ The next audit can inspect measured unit economics rather than only pricing theo
 
 ## AO-12 — Marketing & Acquisition Event Model
 
-**Status:** ACTIVE
+**Status:** DONE
 **Depends on:** AO-03, AO-08
 **Integrates with:** AO-15 weekly-brief request linkage; AO-14/AO-17 may later consume the same observed-touch events.
 **Priority:** P1 Growth
@@ -594,7 +594,12 @@ The next audit can inspect measured unit economics rather than only pricing theo
 - Focused AO-12 + AO-15 contracts: 23 PASS. Ruff and mypy: PASS.
 - Browser QA PASS: with AO-12 enabled, landing chapter 14 persisted exactly LANDING_VIEWED + CHAPTER_VIEWED under one session-scoped opaque ref with youtube/video/launch UTM and path-only location; with AO-12 disabled, the same browser flow persisted zero marketing events.
 - Full local repository validation PASS: 877 tests; Ruff format/check, strict mypy, Architecture Guard, axignal-governance and `git diff --check` all PASS.
-- GitHub CI/merge and dormant production deployment remain to close before status can move to DONE.
+- GitHub CI #310 PASS for PR #130: Graphify structural checks, secret scanning and deterministic validation all succeeded; PR #130 merged into `main` at `9822c4b0d4a352633b320a2d250d964a746efd39`.
+- Production deployment PASS at the exact merged SHA: `axignal-prod-runtime` and `axignal-prod-landing` are healthy and labeled `9822c4b0d4a352633b320a2d250d964a746efd39`.
+- Production collection remains deliberately dormant: external `GET /api/acquisition/status` returns `200 {"enabled":false,"model":"OBSERVED_TOUCH_V1"}`; external `POST /api/acquisition/events` returns 404; AO-15 request ingress also remains disabled.
+- External browser verification PASS on `https://axignal.com/?c=14&lang=es&utm_source=production_qa&utm_medium=test&utm_campaign=ao12`: deployed DOM loads `marketing.js`, canonical pricing/newsletter content remains intact, and the disabled gate prevents telemetry writes.
+- Post-visit persistence verification PASS: `admin_marketing_events=0` and `admin_acquisition_events=0`; existing first-proof (1), Learning Memory (6), Observation Memory observations (1) and fields (5) remain intact. Runtime/landing logs show no errors after cutover.
+- AO-12 is therefore implemented, proved, integrated, deployed and verified E2E in its intentionally closed production state. Enabling collection remains a separate privacy/legal operational decision.
 
 ### Work
 - First-party campaign/source/content/landing/request events.

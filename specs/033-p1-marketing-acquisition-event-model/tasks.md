@@ -13,5 +13,5 @@
 - [x] Focused AO-12/AO-15 contracts, Ruff and mypy.
 - [x] Browser QA: enabled mode persists minimized landing/chapter observed-touch events; disabled mode persists zero events.
 - [x] Full deterministic repository validation: 877 PASS; Ruff, mypy, Architecture Guard, governance and diff checks PASS.
-- [ ] GitHub CI and merge.
-- [ ] Production deploy with AO-12 collection disabled unless privacy/legal activation is authorized.
+- [x] GitHub CI #310 PASS and PR #130 merged to main at `9822c4b0d4a352633b320a2d250d964a746efd39`.
+- [x] Production deploy/E2E PASS with AO-12 collection disabled: exact SHA healthy, external status false, POST 404, deployed browser artifact verified, zero telemetry persisted after external UTM visit, persistence continuity and logs clean.
