@@ -426,6 +426,10 @@ A CRM record may reference a canonical Organization ID for navigation/deduplicat
 
 Admin may govern AXIGNAL's own acquisition sources, campaigns, consent, free-brief/newsletter operations, Search Console measurements, web/product analytics and conversion attribution. Private marketing metrics remain first-party operational observations and MUST NOT become public Digital Representation observations merely because the same organization appears in AXIGLAND.
 
+The free weekly observation newsletter is a request/consent-driven acquisition surface, not a free product plan. Admin MUST keep distinct: request, identity clarification, coverage eligibility, acceptance/decline, affirmative newsletter consent, suppression/unsubscribe, delivery and later paid conversion. Acceptance never creates a free Xeed or subscriber entitlement.
+
+A weekly issue may contain up to three material evidence-backed items and may contain fewer or none. Filler content is forbidden. Every delivered item preserves source, date/period, observation condition and limits.
+
 Attribution is versioned and evidentially modest: correlation/last-touch/multi-touch models are commercial analysis, not causal truth.
 
 ## 5.9 Payments, finance, accounting and fiscal operations
@@ -437,6 +441,12 @@ No production path may claim tax or VeriFactu/SIF compliance from implementation
 ## 5.10 Premium advisory operations
 
 Admin may contain a staff-only Frontier Advisor workbench and associated delivery/commercial operations. Advisory drafts, human edits, reports and client-specific interpretations are private artifacts. They do not write AXIGLAND or gain canonical authority by being paid deliverables.
+
+The authorized launch offer is **AXIGNAL con asesoría humana — €995/month + applicable VAT**, scoped initially to one customer organization/Xeed, four weekly evidence-backed updates and one monthly strategic review. The price is commercially authorized for launch but remains unvalidated until real paid evidence exists.
+
+The €995 service includes one Xeed within the human-advisory scope. Additional self-service Xeeds continue under the normal +€4.95/month product pricing, but an additional Xeed requiring human advisory work needs separately governed scope/pricing and is not silently included by the self-service add-on.
+
+The Workbench MUST resolve account → tenant → authorized Xeed → observed organization server-side before generation. Generation produces a reviewable draft from a versioned evidence snapshot; human approval and delivery are separate actions. Advisor text is stored separately from primary evidence and must preserve authorship, version and delivery lineage.
 
 # 6. Xeed Observatory
 
