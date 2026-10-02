@@ -47,9 +47,11 @@ Thumbs.db
 .idea/
 .vscode/
 
-# --- Local agent scratch (never canonical) ---
+# --- Local agent scratch / task-scoped test state (never canonical) ---
 .specify/feature.json
 specs/*/checklists/*.tmp
+.codex-uv-cache-*/
+.pytest-*/
 
 
 # --- AXIGNAL landing source masters (local only; production derivatives are tracked) ---
