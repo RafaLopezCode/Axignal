@@ -99,7 +99,7 @@ Admin must distinguish measured flywheel behavior from the hypothesis above.
 
 `NOT_STARTED → READY → IN_PROGRESS → BLOCKED → DONE → DEFERRED → REJECTED`
 
-**CURRENT_TASK = AO-09**
+**CURRENT_TASK = AO-10**
 
 ## 7. Closure rule
 
@@ -475,9 +475,29 @@ Internal CRM exists without turning AXIGNAL product or AXIGLAND into a CRM.
 
 ## AO-09 — Account, Subscription and Customer Operations
 
-**Status:** NOT_STARTED
+**Status:** DONE
 **Depends on:** AO-08
 **Priority:** P0 Business
+
+### Closure evidence (2026-10-02)
+- `domain/admin_customer_accounts/`, `application/admin_customer_accounts/` and `pipeline/admin_customer_accounts/` implement first-party AXIGNAL Account, AccountUser, Plan, Subscription and Xeed-entitlement authority as a separate operational domain from Organization/AXIGLAND.
+- Account state is append-only event-sourced. Current state is reconstructed deterministically by replay of signup, user, subscription, plan-capacity, Xeed entitlement/revocation, suspend/reactivate/cancel, funnel, support and claim-review events.
+- The current self-service plan is versioned as `SELF_SERVICE_V1 / MASTER-27-v1`: one included Xeed, current pricing hypothesis €9.95 base + €4.95 per additional Xeed. The model marks this as a pricing hypothesis; it is not billing evidence.
+- Payment verification is `EXTERNAL_PENDING` and MRR remains `UNKNOWN/null` until AO-10. AO-09 rejects attempts to write funnel stage `PAID`, preserving billing authority for the Stripe integration.
+- `EntitledXeedReader` adds a second server-side authorization gate after Principal/Tenant/Xeed ownership. Missing account, inactive account/subscription or absent Xeed entitlement fails closed even when tenant membership is valid.
+- Xeed capacity is enforced deterministically; expansion/downgrade cannot invalidate active entitlements. Suspension blocks service access, reactivation restores eligible access and cancellation clears active Xeed entitlements.
+- Customer 360 projects first-party service state, lifecycle, Xeed capacity/usage, funnel stages, support/correction/claim-review references and event lineage without exposing individual AccountUser principal IDs.
+- Product-funnel stages are versioned observations. Exact activation semantics remain explicitly calibratable; no opaque activation/WOW score was introduced.
+- Cohort read models are derived from signup month and replayed account state; measured revenue retention remains deferred to AO-10/AO-11.
+- Runtime persists `admin-customer-accounts.sqlite3` independently from AXIGLAND, CRM and billing-provider state. Existing AXIGLAND/Admin observations cannot create Account or entitlement events.
+- Admin Customers / CRM now presents AO-09 Account/Subscription authority separately above AO-08 Internal CRM. Browser QA PASS on desktop and compact 491 px; compact DOM has `scrollWidth == clientWidth`, one account card and MRR visibly UNKNOWN.
+- Focused AO-09 + AO-08/AO-02/roadmap regressions: 27 PASS.
+- Full pytest: 818 PASS.
+- Ruff format/check: PASS.
+- mypy: PASS (184 source files).
+- Node Admin JS syntax: PASS.
+- Payment collection itself is NOT claimed by AO-09; AO-10 remains the authority for Stripe/payment verification and real revenue state.
+
 ### Work
 - Account/users/plan/subscription/Xeed entitlement model.
 - Signup, activation, first-Xeed, upgrade/downgrade/cancel/suspend states.

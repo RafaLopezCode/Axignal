@@ -68,7 +68,7 @@
               : current.slug === 'governance'
                 ? 'AO-07 GOVERNANCE CONTROL'
                 : current.slug === 'customers-crm'
-                  ? 'AO-08 PRIVATE COMMERCIAL'
+                  ? 'AO-09 CUSTOMER OPERATIONS'
                   : 'ADMIN DOMAIN'
     }
     if (breadcrumb) breadcrumb.textContent = current.label
@@ -619,6 +619,102 @@
     }
   }
 
+
+
+  const customerOperations = bootstrap.customerOperations
+  const customerOperationsNotes = document.getElementById('admin-customer-operations-notes')
+  const customerOperationsSummary = document.getElementById('admin-customer-operations-summary')
+  const customerAccountList = document.getElementById('admin-customer-account-list')
+
+  if (current?.slug === 'customers-crm' && customerOperations) {
+    if (customerOperationsNotes) {
+      customerOperationsNotes.replaceChildren()
+      for (const noteText of customerOperations.coverageNotes || []) {
+        const note = document.createElement('p')
+        note.textContent = noteText
+        customerOperationsNotes.append(note)
+      }
+    }
+
+    if (customerOperationsSummary) {
+      customerOperationsSummary.replaceChildren()
+      const panel = document.createElement('section')
+      panel.className = 'admin-observatory-panel'
+      const heading = document.createElement('h3')
+      heading.textContent = 'AXIGNAL account / subscription authority'
+      panel.append(heading)
+      const facts = document.createElement('div')
+      facts.className = 'admin-observatory-facts'
+      addFact(facts, 'Accounts', customerOperations.accountCount, 'KNOWN')
+      addFact(facts, 'Active', customerOperations.activeAccountCount, 'KNOWN')
+      addFact(facts, 'Suspended', customerOperations.suspendedAccountCount, 'KNOWN')
+      addFact(facts, 'Cancelled', customerOperations.cancelledAccountCount, 'KNOWN')
+      addFact(facts, 'Entitled Xeeds', customerOperations.totalEntitledXeeds, 'KNOWN')
+      addFact(facts, 'MRR', customerOperations.mrrEur, customerOperations.mrrEur ? 'KNOWN' : 'UNKNOWN')
+      addFact(facts, 'Payment authority', customerOperations.paymentAuthority, 'BOUNDARY')
+      panel.append(facts)
+
+      const funnel = document.createElement('details')
+      funnel.className = 'admin-metric-lineage'
+      const funnelSummary = document.createElement('summary')
+      funnelSummary.textContent = 'Inspect product funnel'
+      const funnelBody = document.createElement('p')
+      funnelBody.textContent = (customerOperations.funnelCounts || [])
+        .map(([stage, count]) => `${stage}: ${count}`)
+        .join(' · ')
+      funnel.append(funnelSummary, funnelBody)
+      panel.append(funnel)
+      customerOperationsSummary.append(panel)
+    }
+
+    if (customerAccountList) {
+      customerAccountList.replaceChildren()
+      const customers = Array.isArray(customerOperations.customers) ? customerOperations.customers : []
+      if (!customers.length) {
+        const empty = document.createElement('article')
+        empty.className = 'admin-observatory-empty'
+        const strong = document.createElement('strong')
+        strong.textContent = 'No AXIGNAL service accounts recorded'
+        const body = document.createElement('p')
+        body.textContent = 'Account state is first-party service authority. AXIGLAND observations never create accounts or entitlements.'
+        empty.append(strong, body)
+        customerAccountList.append(empty)
+      }
+      for (const account of customers) {
+        const card = document.createElement('article')
+        card.className = 'admin-xeed-card'
+        const header = document.createElement('header')
+        const heading = document.createElement('h3')
+        heading.textContent = account.displayName
+        const state = document.createElement('span')
+        state.textContent = `${account.accountStatus} · ${account.subscriptionStatus}`
+        header.append(heading, state)
+
+        const facts = document.createElement('div')
+        facts.className = 'admin-observatory-facts'
+        addFact(facts, 'Account', account.accountId, 'PRIVATE_SERVICE')
+        addFact(facts, 'Tenant', account.tenantId, 'PRIVATE_SERVICE')
+        addFact(facts, 'Plan', `${account.planCode} · ${account.planVersion}`, 'KNOWN')
+        addFact(facts, 'Xeed capacity', account.xeedCapacity, 'KNOWN')
+        addFact(facts, 'Active Xeeds', account.activeXeedCount, 'KNOWN')
+        addFact(facts, 'Users', account.userCount, 'KNOWN')
+        addFact(facts, 'Payment', account.paymentState, account.paymentState === 'EXTERNAL_PENDING' ? 'UNKNOWN' : 'KNOWN')
+        addFact(facts, 'MRR', account.mrrEur, account.mrrEur ? 'KNOWN' : 'UNKNOWN')
+        addFact(facts, 'Pricing hypothesis', `€${account.pricingHypothesisMonthlyEur}/mo`, 'HYPOTHESIS')
+        addFact(facts, 'Lifecycle events', account.eventCount, 'KNOWN')
+
+        const details = document.createElement('details')
+        details.className = 'admin-metric-lineage'
+        const summary = document.createElement('summary')
+        summary.textContent = 'Inspect service authority'
+        const body = document.createElement('p')
+        body.textContent = `Entitled Xeeds: ${(account.entitledXeedIds || []).join(', ') || 'none'} · Funnel: ${(account.funnelStages || []).join(' → ') || 'SIGNUP only'} · CUSTOMER_ACCOUNT_STATE != ORGANIZATION_STATE.`
+        details.append(summary, body)
+        card.append(header, facts, details)
+        customerAccountList.append(card)
+      }
+    }
+  }
 
   const commercial = bootstrap.commercial
   const commercialSection = document.getElementById('admin-commercial-observatory')
