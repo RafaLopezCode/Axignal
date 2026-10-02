@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="/subscriber.css" />
     <link rel="stylesheet" href="/admin.css" />
     <script src="/admin.js" defer></script>
+    <script src="/admin-acquisition.js" defer></script>
   </head>
   <body>
     <div id="admin-bootstrap" hidden>__AXIGNAL_ADMIN_BOOTSTRAP_JSON__</div>
@@ -140,6 +141,22 @@
             <div class="admin-xeed-list" id="admin-policy-change-list"></div>
             <div class="admin-xeed-list" id="admin-alert-list"></div>
             <div class="admin-xeed-list" id="admin-audit-list"></div>
+          </section>
+
+          <section class="admin-observatory admin-acquisition-observatory" id="admin-acquisition-observatory" hidden aria-label="AXIGNAL acquisition and newsletter operations">
+            <header class="admin-command-summary">
+              <div>
+                <span class="mono">AO-15 · PRIVATE ACQUISITION</span>
+                <h2>Free Weekly Brief Requests</h2>
+              </div>
+              <div class="admin-command-meta">
+                <span id="admin-acquisition-privacy">PRIVATE</span>
+                <time id="admin-acquisition-generated"></time>
+              </div>
+            </header>
+            <div class="admin-observatory-notes" id="admin-acquisition-notes"></div>
+            <div class="admin-observatory-summary" id="admin-acquisition-summary"></div>
+            <div class="admin-xeed-list" id="admin-acquisition-request-list"></div>
           </section>
 
           <section class="admin-observatory admin-commercial-observatory" id="admin-commercial-observatory" hidden aria-label="AXIGNAL internal commercial operations">
