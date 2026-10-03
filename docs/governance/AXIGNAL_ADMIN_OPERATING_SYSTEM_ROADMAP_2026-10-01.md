@@ -634,6 +634,51 @@ Acquisition performance becomes measurable without contaminating product epistem
 ### AUDIT_CLOSURE
 AXIGNAL's own search performance can be operated from Admin with the private/public observation boundary intact.
 
+## DE-01 — Digital Representation Evidence Sensors
+
+**Status:** NOT_STARTED
+**Depends on:** AO-13, AO-18
+**Integrates with:** AO-24, AO-25, AO-30
+**Priority:** P1 Growth / Evidence
+
+### Goal
+Add provider-neutral, deterministic sensors for observable SEO/GEO/AEO representation without turning SEO scores, tool opinions or model answers into AXIGLAND truth.
+
+### Candidate sensor strategy
+- Primary technical SEO/GEO candidate: seo-skills/seo-audit-skill as an external/tool adapter, not a core authority.
+- Outcome/search-performance evidence remains owned by AO-13 Google Search Console and future first-party analytics sources.
+- CrUX/PageSpeed may provide observed/lab performance evidence through replaceable adapters.
+- AI visibility/citation probes are experimental provider-specific observations and must retain provider, model, prompt, locale, time and response provenance.
+- Alternative/open-source tools may be evaluated per capability; no repository becomes canonical merely because it is integrated.
+
+### Work
+- Define a versioned DigitalRepresentationObservation contract for subject, surface, check/metric, value/state, observation time, source/provider/method, URL, locale, user-agent or render mode when relevant, raw-artifact reference/content hash and measurement state.
+- Build adapter boundary under tools/ so crawlers/auditors remain replaceable and cannot write AXIGLAND directly.
+- Ingest deterministic technical observations for canonical, robots directives, sitemap, hreflang, HTTP/redirect state, initial-vs-rendered HTML, structured data/schema, semantic structure, AI crawler access, llms.txt, accessibility/performance evidence where supported.
+- Preserve stable external rule/check IDs when useful, but normalize them into AXIGNAL-owned typed observation semantics.
+- Distinguish GEO readiness from GEO outcome evidence:
+  - readiness: crawlability, structured data, semantic markup, AI-bot access, llms.txt, representation consistency;
+  - outcomes: actual GSC/search performance or provider-specific AI citation/mention observations.
+- Add temporal diffing so changed technical representation becomes a new observation/change event rather than mutation of prior evidence.
+- Preserve NOT_MEASURED / unavailable / unsupported as UNKNOWN; never coerce missing evidence into false or zero.
+- Store raw artifacts by reference/hash where policy permits; do not persist unnecessary page/user PII or credentials.
+- Add provenance and confidence/measurement-state fields sufficient to reproduce or challenge a result.
+- Evaluate third-party dependency license, maintenance, security, SSRF/crawl bounds, deterministic behavior and update strategy before production adoption.
+- Do not expose or rely on a universal SEO/GEO score as product truth. Any third-party score remains vendor-derived metadata only.
+
+### Acceptance
+- SEO_TOOL_SCORE != FAXT and GEO_READINESS != GEO_PERFORMANCE are enforced by contracts/tests.
+- A technical check can be traced to source URL, method/tool version, observed timestamp and raw-artifact/content fingerprint.
+- Server HTML vs rendered DOM observations remain distinguishable.
+- AI citation/mention observations preserve provider/model/prompt/time provenance and cannot be generalized into timeless truth.
+- Missing/unsupported checks render UNKNOWN/NOT_MEASURED.
+- Sensor adapters cannot call EvidenceAdmission or mutate canonical AXIGLAND state directly.
+- Re-running the same artifact/check is replay-safe; changed artifact fingerprints create new temporal evidence rather than rewriting history.
+- The chosen technical sensor can be replaced without changing the normalized domain contract.
+
+### AUDIT_CLOSURE
+AXIGNAL can observe a company's digital/search/AI representation as governed evidence without becoming an SEO scoring product or allowing third-party tooling to define economic truth.
+
 ## AO-14 — Web/Product Analytics and Attribution
 
 **Status:** DONE
@@ -1118,7 +1163,7 @@ The next Frontier audit can judge AXIGNAL's business/flywheel from real cohort e
 ## AO-31 — Deep Frontier Re-Audit Package
 
 **Status:** NOT_STARTED
-**Depends on:** AO-00 through AO-30
+**Depends on:** AO-00 through AO-30, plus DE-01
 **Priority:** P0 Governance
 
 ### Goal
