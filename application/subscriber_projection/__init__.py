@@ -13,6 +13,12 @@ from application.subscriber_projection.evidence_narrative import (
     EvidenceNarrativeStep,
     build_evidence_narrative,
 )
+from application.subscriber_projection.observation_support import (
+    GovernedObservationSupportResolver,
+    ObservationPhenomenon,
+    ObservationSupport,
+    ObservationSupportMapResolver,
+)
 from application.subscriber_projection.today import (
     TodayCandidate,
     TodayDisposition,
@@ -35,6 +41,10 @@ __all__ = [
     "EvidenceNarrativeStep",
     "ExplainableXignalProjection",
     "ExplanationStepKind",
+    "GovernedObservationSupportResolver",
+    "ObservationPhenomenon",
+    "ObservationSupport",
+    "ObservationSupportMapResolver",
     "ProjectionError",
     "ProjectionNode",
     "ProjectionStatus",

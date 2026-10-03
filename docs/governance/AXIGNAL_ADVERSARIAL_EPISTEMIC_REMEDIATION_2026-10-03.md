@@ -111,8 +111,18 @@ Canonical types can be directly constructed and relationships can consume unrela
 ## AUD-03 — Claim-Kind Governed OBSERVED Projection
 
 **Severity:** HIGH
-**Status:** READY
+**Status:** DONE
 **Depends on:** AUD-01, AUD-02
+
+### Completion evidence
+- Direct observation support now resolves through a GovernedObservationSupportResolver instead of trusting bare observation IDs in BasisDatum.
+- ObservationSupport carries subject, phenomenon kind, instrument ref/version, scope, provenance, source, observed time and currentness.
+- Direct observation policy is claim-kind specific: REPRESENTATION accepts PUBLIC_REPRESENTATION; business kinds do not inherit authority from surface observation.
+- SUPPLY + OBSERVED + observation ID + no canonical FAXT now fails closed even when the observation is present in the supporting basis.
+- Valid REPRESENTATION support must resolve, match subject/source/time, be CURRENT and carry governed instrument/scope/provenance.
+- FR-30 first proof now supplies the resolver from its actual governed SourceObservation and remains OBSERVED for the condition-bound public representation only.
+- Missing resolver, stale support and cross-subject support fail closed.
+- ADR-0074 records the policy and leaves exact narrative verification to AUD-04.
 
 ### Problem
 Observation-support IDs can currently authorize business-facing OBSERVED signals even where only a surface representation was directly measured.
@@ -130,7 +140,7 @@ Observation-support IDs can currently authorize business-facing OBSERVED signals
 ## AUD-04 — Exact Explainable Basis and Narrative Verification
 
 **Severity:** HIGH
-**Status:** BLOCKED
+**Status:** READY
 **Depends on:** AUD-01, AUD-03
 
 ### Problem

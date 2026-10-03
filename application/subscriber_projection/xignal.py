@@ -12,6 +12,10 @@ from application.economic_discovery.explanation import (
     BasisContribution,
     ExplainableBasis,
 )
+from application.subscriber_projection.observation_support import (
+    GovernedObservationSupportResolver,
+    validate_direct_observation_support,
+)
 from application.xeed_access.organization_reader import AuthorizedXeedOrganization
 from domain.evidence.epistemics import Currentness, EpistemicState
 from domain.faxt.model import FAXT
@@ -182,6 +186,7 @@ def project_explainable_xignal(
     policy_version: str,
     canonical_faxt: FAXT | None = None,
     observation_support_refs: tuple[str, ...] = (),
+    observation_support_resolver: GovernedObservationSupportResolver | None = None,
     currentness: Currentness = Currentness.UNKNOWN,
     relationship_ref: str | None = None,
     pathx_ref: str | None = None,
@@ -214,15 +219,38 @@ def project_explainable_xignal(
             canonical_refs = (canonical_faxt.id,)
             effective_currentness = canonical_faxt.currentness
         if observed_refs:
+            if observation_support_resolver is None:
+                raise ValueError("OBSERVED direct observation support requires governed resolver")
             supporting_observations = {
-                datum.observation_id
+                datum.observation_id: datum
                 for datum in basis.data
                 if datum.contribution is BasisContribution.SUPPORTS
             }
-            if not set(observed_refs).issubset(supporting_observations):
-                raise ValueError(
-                    "OBSERVED Xignal observation support must resolve to supporting basis observations"
+            for observation_id in observed_refs:
+                datum = supporting_observations.get(observation_id)
+                if datum is None:
+                    raise ValueError(
+                        "OBSERVED Xignal observation support must resolve to supporting basis observations"
+                    )
+                support = observation_support_resolver.resolve(observation_id)
+                if support is None:
+                    raise ValueError(
+                        "OBSERVED direct observation support is not governed or resolvable"
+                    )
+                validate_direct_observation_support(
+                    kind=kind,
+                    subject_id=subject_id,
+                    support=support,
                 )
+                if support.source_ref != datum.source_ref:
+                    raise ValueError(
+                        "OBSERVED direct observation source must match supporting basis datum"
+                    )
+                if support.observed_at != datum.observed_at:
+                    raise ValueError(
+                        "OBSERVED direct observation time must match supporting basis datum"
+                    )
+                effective_currentness = support.currentness
     elif canonical_faxt is not None or observed_refs:
         raise ValueError("only OBSERVED Xignal may claim observed support")
 

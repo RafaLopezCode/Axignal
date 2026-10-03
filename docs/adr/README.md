@@ -86,3 +86,4 @@ Constitution (`.specify/memory/constitution.md`).
 | [ADR-0071](ADR-0071-governed-measurement-registry.md) | Governed Measurement Registry and Instrument Compatibility (**ACCEPTED**) | AO-03; AO-04; AO-05; AO-06; AO-24; AO-25 |
 | [ADR-0072](ADR-0072-proposition-bound-evidence-admission.md) | Proposition-Bound Evidence Admission (**ACCEPTED**) | AUD-01; EvidenceAdmission; FAXT |
 | [ADR-0073](ADR-0073-canonical-materialization-relationship-admission.md) | Canonical Materialization and Relationship Admission Boundary (**ACCEPTED**) | AUD-02; FAXT; Organization; Relationship |
+| [ADR-0074](ADR-0074-claim-kind-governed-observed-projection.md) | Claim-Kind Governed OBSERVED Projection (**ACCEPTED**) | AUD-03; subscriber projection; observation support |

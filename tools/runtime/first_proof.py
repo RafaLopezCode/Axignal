@@ -57,6 +57,9 @@ from application.source_acquisition import (
 )
 from application.source_representation import RichSubjectState, compile_rich_subject_state
 from application.subscriber_projection import (
+    ObservationPhenomenon,
+    ObservationSupport,
+    ObservationSupportMapResolver,
     TodayCandidate,
     TodayPolicy,
     build_evidence_narrative,
@@ -409,6 +412,22 @@ class FirstProofService:
             emitted_at=now,
             policy_version="fr30-xignal-v1",
             observation_support_refs=(observation_id,),
+            observation_support_resolver=ObservationSupportMapResolver(
+                {
+                    observation_id: ObservationSupport(
+                        observation_id=observation_id,
+                        subject_id=ORGANIZATION_ID,
+                        phenomenon=ObservationPhenomenon.PUBLIC_REPRESENTATION,
+                        instrument_ref=observation.instrument_ref,
+                        instrument_version=observation.instrument_ref.rsplit("/", 1)[-1],
+                        scope_ref=request.observation_slot,
+                        provenance_ref=observation.raw_observation_ref,
+                        source_ref=observation.final_uri,
+                        observed_at=observation.retrieved_at,
+                        currentness=Currentness.CURRENT,
+                    )
+                }
+            ),
             currentness=Currentness.CURRENT,
             unknowns=(uncertainty,),
         )

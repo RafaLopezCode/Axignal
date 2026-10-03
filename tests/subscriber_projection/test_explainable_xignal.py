@@ -7,7 +7,13 @@ from application.economic_discovery.explanation import (
     BasisDatum,
     ExplainableBasis,
 )
-from application.subscriber_projection import ExplanationStepKind, project_explainable_xignal
+from application.subscriber_projection import (
+    ExplanationStepKind,
+    ObservationPhenomenon,
+    ObservationSupport,
+    ObservationSupportMapResolver,
+    project_explainable_xignal,
+)
 from application.xeed_access.organization_reader import AuthorizedXeedOrganizationReader
 from application.xeed_access.reader import AuthorizedXeedReader, TrustedRequestContext
 from domain.evidence import Currentness, EpistemicState
@@ -78,6 +84,29 @@ def _faxt() -> FAXT:
         ),
         observed_at=NOW,
         currentness=Currentness.CURRENT,
+    )
+
+
+def _representation_resolver(
+    *,
+    subject_id: str = "org:acme",
+    currentness: Currentness = Currentness.CURRENT,
+) -> ObservationSupportMapResolver:
+    return ObservationSupportMapResolver(
+        {
+            "obs:search:1": ObservationSupport(
+                observation_id="obs:search:1",
+                subject_id=subject_id,
+                phenomenon=ObservationPhenomenon.PUBLIC_REPRESENTATION,
+                instrument_ref="search-probe",
+                instrument_version="1",
+                scope_ref="google:es:query-set-v1",
+                provenance_ref="artifact:search:1",
+                source_ref="search:google:es",
+                observed_at=NOW,
+                currentness=currentness,
+            )
+        }
     )
 
 
@@ -168,6 +197,7 @@ def test_observed_representation_xignal_can_be_supported_by_governed_observation
         emitted_at=NOW,
         policy_version="xignal-v2",
         observation_support_refs=("obs:search:1",),
+        observation_support_resolver=_representation_resolver(),
         currentness=Currentness.CURRENT,
         unknowns=("Other digital surfaces remain UNKNOWN.",),
     )
@@ -336,4 +366,120 @@ def test_inferred_faxt_cannot_support_observed_business_xignal() -> None:
             emitted_at=NOW,
             policy_version="xignal-v1",
             canonical_faxt=inferred,
+        )
+
+
+def test_observed_supply_cannot_use_direct_observation_support_without_faxt() -> None:
+    with pytest.raises(ValueError, match="requires canonical support"):
+        project_explainable_xignal(
+            organization_context=_seed(),
+            candidate_id="candidate:industrial-pumps",
+            kind=XignalKind.SUPPLY,
+            epistemic_state=XignalEpistemicState.OBSERVED,
+            title="Industrial pump manufacturing observed",
+            why_attention="This capability changes the observable supply map.",
+            basis=_basis(with_evidence=False, contradiction=False),
+            emitted_at=NOW,
+            policy_version="xignal-v2",
+            observation_support_refs=("obs:web:1",),
+            observation_support_resolver=ObservationSupportMapResolver(
+                {
+                    "obs:web:1": ObservationSupport(
+                        observation_id="obs:web:1",
+                        subject_id="org:acme",
+                        phenomenon=ObservationPhenomenon.PUBLIC_REPRESENTATION,
+                        instrument_ref="web-sensor",
+                        instrument_version="1",
+                        scope_ref="company-homepage",
+                        provenance_ref="artifact:web:1",
+                        source_ref="https://example.test/company",
+                        observed_at=NOW,
+                        currentness=Currentness.CURRENT,
+                    )
+                }
+            ),
+        )
+
+
+def test_observed_representation_requires_governed_resolver() -> None:
+    with pytest.raises(ValueError, match="governed resolver"):
+        project_explainable_xignal(
+            organization_context=_seed(),
+            candidate_id="candidate:representation:search",
+            kind=XignalKind.REPRESENTATION,
+            epistemic_state=XignalEpistemicState.OBSERVED,
+            title="Observed representation",
+            why_attention="Measured public representation.",
+            basis=ExplainableBasis(
+                basis_id="basis:representation:resolver",
+                subject_id="org:acme",
+                candidate_id="candidate:representation:search",
+                semantic_target="SEARCH_REPRESENTATION",
+                state_fingerprint="state:representation:resolver",
+                contract_fingerprint="contract:representation:resolver",
+                evaluated_at=NOW,
+                data=(
+                    BasisDatum(
+                        datum_id="datum:search:resolver",
+                        observation_id="obs:search:1",
+                        source_ref="search:google:es",
+                        source_type="SEARCH_OBSERVATION",
+                        observed_at=NOW,
+                        excerpt_or_summary="Observed search representation.",
+                        contribution=BasisContribution.SUPPORTS,
+                    ),
+                ),
+                interpretation="Observed representation.",
+                uncertainty="Bounded query scope.",
+            ),
+            emitted_at=NOW,
+            policy_version="xignal-v2",
+            observation_support_refs=("obs:search:1",),
+        )
+
+
+@pytest.mark.parametrize(
+    "resolver",
+    [
+        _representation_resolver(subject_id="org:other"),
+        _representation_resolver(currentness=Currentness.STALE),
+    ],
+)
+def test_observed_representation_rejects_wrong_subject_or_stale_support(
+    resolver: ObservationSupportMapResolver,
+) -> None:
+    with pytest.raises(ValueError):
+        project_explainable_xignal(
+            organization_context=_seed(),
+            candidate_id="candidate:representation:search",
+            kind=XignalKind.REPRESENTATION,
+            epistemic_state=XignalEpistemicState.OBSERVED,
+            title="Observed representation",
+            why_attention="Measured public representation.",
+            basis=ExplainableBasis(
+                basis_id="basis:representation:guard",
+                subject_id="org:acme",
+                candidate_id="candidate:representation:search",
+                semantic_target="SEARCH_REPRESENTATION",
+                state_fingerprint="state:representation:guard",
+                contract_fingerprint="contract:representation:guard",
+                evaluated_at=NOW,
+                data=(
+                    BasisDatum(
+                        datum_id="datum:search:guard",
+                        observation_id="obs:search:1",
+                        source_ref="search:google:es",
+                        source_type="SEARCH_OBSERVATION",
+                        observed_at=NOW,
+                        excerpt_or_summary="Observed search representation.",
+                        contribution=BasisContribution.SUPPORTS,
+                    ),
+                ),
+                interpretation="Observed representation.",
+                uncertainty="Bounded query scope.",
+            ),
+            emitted_at=NOW,
+            policy_version="xignal-v2",
+            observation_support_refs=("obs:search:1",),
+            observation_support_resolver=resolver,
         )
