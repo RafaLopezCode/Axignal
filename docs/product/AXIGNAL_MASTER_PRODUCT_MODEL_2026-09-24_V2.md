@@ -4,12 +4,12 @@
 arquitectura conceptual\
 **Versión:** 2026-09-24 --- reconstrucción posterior a la iteración
 *Demand-Materialized / FIRST_MAP_WOW / AXIGLAND*\
-**Revision:** 2026-09-26\
+**Revision:** 2026-10-03\
 **Change:** AXIGNAL Economic Brain / Economic Opportunity Intelligence /
 Global Economic Sensors / Capability-Specific Economic Reach / Typed
 Economic Reasoning / Compounding Economic Intelligence / Digital
 Representation Intelligence / Digital Observation and Measurement Instruments /
-Representation Gaps / Public Reputation and Experience Intelligence\
+Representation Gaps / Public Reputation and Experience Intelligence / Brand Monocle Identity / Human Product Terminology\
 **Naturaleza:** documento vivo y normativo. Sustituye las hipótesis
 incompatibles de versiones anteriores.\
 **Propósito:** impedir deriva conceptual durante diseño, implementación
@@ -28,11 +28,12 @@ y comercialización de AXIGNAL.
 > **Contrato epistemológico:** **Users may direct AXIGNAL's attention,
 > but never its conclusions.**
 
-> **Unidad comercial:** el usuario puede **plant a Xeed**: iniciar y mantener
-> un foco persistente de observación sobre una organización. El Brain germina
-> esa Xeed y produce múltiples Xignals. Los Xignals no son unidades facturables
-> ni conceden capacidad para editar, configurar o influir en AXIGLAND.
-
+> **Unidad comercial:** el usuario selecciona una **Organización** para mantener
+> observación persistente. Internamente, AXIGNAL crea un **Foco de observación**
+> que asigna atención y cómputo alrededor de esa Organización canónica. El Brain
+> produce múltiples **Señales**. Las Señales no son unidades facturables ni
+> conceden capacidad para editar, configurar o influir en AXIGLAND.
+>
 > **Principio operativo:** **Compute once, learn permanently, verify
 > when necessary.**
 
@@ -55,7 +56,7 @@ Existe **un único mundo económico canónico**. Los usuarios no poseen
 nodos ni crean versiones privadas de la realidad. Seleccionan
 perspectivas y pueden decidir qué organizaciones merecen observación
 persistente. Esa asignación de atención computacional se denomina
-**XEED**.
+**FOCO DE OBSERVACIÓN**.
 
 AXIGNAL tiene una ontología global, pero **no debe precomputar el mundo
 entero**. El grafo se materializa según la demanda:
@@ -101,6 +102,34 @@ económico.
 
 Una vez alcanzada la preparación mínima, el mapa pasa a estado **LIVE**
 y continúa evolucionando. AXIGNAL no tiene un estado conceptual `DONE`.
+
+------------------------------------------------------------------------
+
+## 1.1 Lenguaje de producto humano (revisión 2026-10-03)
+
+La arquitectura conserva un único AXIGLAND canónico, pero la interfaz pública no
+debe exigir al usuario aprender neologismos para comprender el producto.
+
+Vocabulario preferido en producto:
+
+- **Organización**: sujeto económico que el usuario decide observar.
+- **Foco de observación / Observation Focus**: asignación persistente de atención
+  y cómputo alrededor de una Organización canónica. Es el concepto interno que
+  sustituye a la antigua denominación `Xeed`.
+- **Señal / Signal**: hallazgo económico emergente que merece atención. Sustituye
+  a la antigua denominación `Xignal`.
+- **Panorama**: nombre humano de una proyección de AXIGLAND para el usuario.
+  `Panorama != AXIGLAND`; no crea un segundo mundo ni una verdad privada.
+- **Evidencia, Relación, Cambio, Oportunidad**: términos públicos preferidos para
+  sus conceptos correspondientes.
+
+En pricing y UX, una persona compra observación persistente de **organizaciones**,
+no una palabra de marca. El contrato económico subyacente sigue siendo una
+asignación persistente de cómputo por Organización observada.
+
+Los identificadores técnicos históricos que todavía contengan `Xeed` o
+`Xignal` son deuda de migración de implementación y no deben volver a
+aparecer en nuevo copy, nuevas APIs públicas ni nuevos contratos de producto.
 
 ------------------------------------------------------------------------
 
@@ -150,7 +179,7 @@ CUSTOMER_ACCOUNT_STATE != ORGANIZATION_STATE
 ADMIN_PRIVATE_OPERATIONS != AXIGLAND_CANONICAL_TRUTH
 ```
 
-Un lead, cliente, pago, factura, m?trica privada, asiento contable o estado fiscal de AXIGNAL no crea ni modifica por s? mismo Organization, FAXT, Relationship, Xignal, INXIGHT, PATHX ni ninguna otra verdad can?nica. Si un dato privado tambi?n pudiera ser evidencia sobre el mundo econ?mico, deber? atravesar un contrato de observaci?n/admisi?n separado y expl?citamente autorizado; la mera existencia del dato en Admin no concede esa autoridad.
+Un lead, cliente, pago, factura, m?trica privada, asiento contable o estado fiscal de AXIGNAL no crea ni modifica por s? mismo Organization, FAXT, Relationship, Señal, INXIGHT, PATHX ni ninguna otra verdad can?nica. Si un dato privado tambi?n pudiera ser evidencia sobre el mundo econ?mico, deber? atravesar un contrato de observaci?n/admisi?n separado y expl?citamente autorizado; la mera existencia del dato en Admin no concede esa autoridad.
 
 Esta excepci?n tampoco autoriza un CRM, workflow suite, facturaci?n o automatizaci?n comercial como capacidad subscriber-facing. La prohibici?n de deriva del n?cleo permanece intacta.
 
@@ -252,7 +281,7 @@ centra su atención en C, AXIGNAL empieza desde el estado existente y
 profundiza.
 
 ``` text
-XEED A
+FOCO DE OBSERVACIÓN A
    ↓
 A ── B
 │    │
@@ -260,7 +289,7 @@ C ── D
 
 later...
 
-XEED D
+FOCO DE OBSERVACIÓN D
    ↓
 reuse D
    ↓
@@ -352,33 +381,33 @@ para completar perfiles o CRM. Las respuestas del usuario pueden constituir
 evidencia de validaci?n de producto cuando el protocolo lo autoriza, pero nunca
 por ello evidencia econ?mica sobre la organizaci?n observada.
 
-## 4.4 XEED
+## 4.4 FOCO DE OBSERVACIÓN
 
-Una **Xeed** es la semilla que planta el usuario para iniciar una observación
+Una **Foco de observación** es la asignación persistente que crea el usuario para iniciar una observación
 persistente sobre una organización.
 
-> **Plant a Xeed** significa autorizar al Brain de AXIGNAL a dedicar
+> **Add an organization** significa autorizar al Brain de AXIGNAL a dedicar
 > observación, investigación, verificación y cultivo continuo al entorno
 > económico observable de una organización.
 
-La Xeed es la unidad de intención del cliente y el contexto persistente desde
-el que el Brain germina conocimiento. No crea un perfil editable, no concede
+El Foco de observación es la unidad de intención del cliente y el contexto persistente desde
+el que el Brain produce conocimiento. No crea un perfil editable, no concede
 propiedad sobre la organización y no permite elegir las conclusiones.
 
-Una Xeed puede germinar en muchos Xignals.
+Un Foco de observación puede producir muchas Señales.
 
-## 4.4A XIGNAL
+## 4.4A SEÑAL
 
-Un **Xignal** es una señal económica observable que emerge del trabajo del
-Brain durante la germinación y evolución de una o más Xeeds.
+Un **Señal** es una señal económica observable que emerge del trabajo del
+Brain durante la observación y evolución de una o más Focos de observación.
 
-Un Xignal puede señalar actividad, cambio, representación, relación,
+Una Señal puede señalar actividad, cambio, representación, relación,
 contradicción, anomalía, demanda, oferta u otro fenómeno económico que merece
 ser observado, verificado o conectado.
 
-Un Xignal:
+Una Señal:
 
-- no es la Xeed que lo originó;
+- no es el Foco de observación que lo originó;
 - no es una unidad facturable;
 - no es un perfil de empresa;
 - no es por sí mismo un FAXT, INXIGHT, RELATIONSHIP ni PATHX;
@@ -386,10 +415,10 @@ Un Xignal:
 - puede dirigir investigación y alimentar el proceso gobernado que materializa
   conocimiento reutilizable en AXIGLAND.
 
-`XIGNAL ≠ XEED` y `XIGNAL ≠ CANONICAL WRITE`.
+`SEÑAL ≠ FOCO DE OBSERVACIÓN` y `SEÑAL ≠ CANONICAL WRITE`.
 
-Las Xeeds plantadas por los usuarios producen Xignals mediante el Brain; los
-Xignals gobernados, su evidencia y el conocimiento admitido que generan
+Los Focos de observación creados por los usuarios producen Señales mediante el Brain; los
+Señales gobernadas, su evidencia y el conocimiento admitido que generan
 contribuyen al crecimiento de un único AXIGLAND canónico.
 ## 4.5 FAXT
 
@@ -438,22 +467,27 @@ Large industrial group
 PATHX sustituye conceptualmente al nombre de producto `EconomicPath`,
 aunque internamente puede conservarse un tipo técnico equivalente.
 
-## 4.8 Identidad visual de la X
+## 4.8 Identidad visual: el monóculo de observación
 
-El isotipo de AXIGNAL representa una **X formada por dos trayectorias
-orbitales alrededor de una esfera implícita**.
+El isotipo canónico de AXIGNAL es un **monóculo/lente de observación** simple,
+circular y escalable. No representa una letra X ni necesita justificar el nombre
+AXIGNAL mediante terminología de producto prefijada con X.
 
-La X no debe entenderse como adorno tipográfico. Puede expresar:
+Lectura conceptual:
 
--   intersección;
--   trayectoria;
--   observación;
--   conexión;
--   múltiples perspectivas sobre un mismo mundo.
+-   lente / monóculo → observación focal y examen;
+-   círculo → atención delimitada sobre un sujeto sin apropiarse de él;
+-   pequeño apoyo inferior → gesto de sostener la lente y dirigir la mirada;
+-   azul AXIGNAL `#354F98` → identidad de marca y voz editorial;
+-   wordmark Fraunces → carácter editorial, sobrio y reconocible.
 
-AXIGLAND es el mundo implícito; AXENT lo recorre; PATHX expresa
-trayectorias económicas; FAXTs aparecen donde la observación produce
-conocimiento sustentado.
+El mismo isotipo puede ser sostenido como monóculo por **El Observador**, el
+personaje visual de AXIGNAL. Esa relación es de identidad de marca, no de
+autoridad epistemológica: el personaje guía la atención; nunca decide verdad.
+
+La marca debe funcionar desde favicon/SERP/avatar hasta cabeceras y superficies
+de producto. Las variantes oficiales y sus hashes se gobiernan en
+`docs/design/BRAND_ASSET_AUTHORITY_V2.md`.
 
 ------------------------------------------------------------------------
 
@@ -510,7 +544,7 @@ hechos.
 Un competidor malicioso puede pedir:
 
 ``` text
-+ Plant Xeed competitor.com
++ Add organization competitor.com
 ```
 
 El resultado es que AXIGNAL dedica más atención independiente al
@@ -546,7 +580,7 @@ USER
 ├── account
 ├── subscription
 ├── preferences
-├── Xeeds
+├── Focos de observación
 └── private view state
 
         ≠
@@ -588,21 +622,21 @@ No modifica AXIGLAND.
 
 ------------------------------------------------------------------------
 
-# 7. XEED como unidad de observación persistente
+# 7. FOCO DE OBSERVACIÓN como unidad de observación persistente
 
 ## 7.1 Qué compra realmente el usuario
 
-El usuario compra **atención computacional persistente alrededor de una Xeed**,
+El usuario compra **atención computacional persistente alrededor de un Foco de observación**,
 no un número de señales ni acceso exclusivo a un nodo.
 
 ``` text
-+ Plant Xeed
++ Add organization
        ↓
 AXIGNAL resolves organization
        ↓
-Brain germinates Xeed
+Brain activates Observation Focus
        ↓
-many Xignals emerge
+many Signals emerge
        ↓
 evidence is evaluated and admitted under policy
        ↓
@@ -611,40 +645,40 @@ FIRST MAP / AXIGLAND projection
 continuous cultivation
 ```
 
-## 7.2 Xeed y germinación
+## 7.2 Foco de observación: activación y evolución
 
-La Xeed describe el **objetivo persistente de observación del usuario** y su
-contexto privado autorizado. Su germinación es trabajo del Brain.
+El Foco de observación describe el **objetivo persistente de observación del usuario** y su
+contexto privado autorizado. Su activación y evolución son trabajo del Brain.
 
-La identidad canónica de la organización permanece en AXIGLAND. La Xeed la
+La identidad canónica de la organización permanece en AXIGLAND. El Foco de observación la
 referencia; no la duplica ni la posee.
 
-## 7.3 Una Xeed, muchos Xignals
+## 7.3 Un Foco de observación, muchas Señales
 
-Una Xeed puede producir muchos Xignals durante su germinación y evolución.
+Un Foco de observación puede producir muchas Señales durante su observación y evolución.
 
 ``` text
-               XEED
+               FOCO DE OBSERVACIÓN
                  |
               BRAIN
           /      |      \
-      Xignal   Xignal   Xignal
+      Señal   Señal   Señal
           \      |      /
         governed evidence
                  |
               AXIGLAND
 ```
 
-Los Xignals no se facturan individualmente y no se convierten automáticamente
+Las Señales no se facturan individualmente y no se convierten automáticamente
 en verdad canónica. Pueden desencadenar investigación, evidencia y propuestas
 de materialización sujetas a `EvidenceAdmission`.
 
-## 7.4 Un AXIGLAND, múltiples Xeeds
+## 7.4 Un AXIGLAND, múltiples Focos de observación
 
-Distintos usuarios o tenants pueden plantar Xeeds sobre la misma organización
+Distintos usuarios o tenants pueden crear Focos de observación sobre la misma organización
 sin crear copias de la organización canónica. La atención puede acumularse y el
 conocimiento público legítimamente reutilizable puede beneficiar a múltiples
-Xeeds, siempre preservando autorización, provenance y fronteras public/private.
+Focos de observación, siempre preservando autorización, provenance y fronteras public/private.
 # 8. Demand-Materialized Economic Graph
 
 AXIGNAL no debe intentar cartografiar toda la economía antes de tener
@@ -678,7 +712,7 @@ Market
 TemporalEvent
 PATHX
 INXIGHT
-Xeed
+Foco de observación
 XeedGerminationState
 KnowledgeFrontier
 ```
@@ -692,7 +726,7 @@ MAP(organization, depth, layers, time)
 ## 8.3 Flywheel computacional
 
 ``` text
-USER QUERY / PLANTED XEED / OBSERVED XIGNAL
+USER QUERY / ACTIVE OBSERVATION FOCUS / OBSERVED SIGNAL
         ↓
 COMPUTE
         ↓
@@ -831,7 +865,7 @@ Since your last visit
 + 2 new INXIGHTS
 ```
 
-El usuario debe **ver que su Xeed está viva**.
+El usuario debe **ver que su Foco de observación está vivo**.
 
 ------------------------------------------------------------------------
 
@@ -873,7 +907,7 @@ InformationGain(j)
 ExpectedComputeCost(j)
 }`{=tex} \]
 
-El `ReusePotential` es crítico: una investigación que mejora 500 Xeeds
+El `ReusePotential` es crítico: una investigación que mejora 500 Focos de observación
 puede tener prioridad sobre una que sólo mejora una.
 
 ------------------------------------------------------------------------
@@ -1340,8 +1374,8 @@ Y:
 > **See your clients as AXIGNAL can independently observe them --- not
 > as you configured them.**
 
-Una agencia puede plantar 100 Xeeds sobre clientes, competidores o targets. No
-necesita demostrar que representa a cada uno porque una Xeed **no escribe
+Una agencia puede crear 100 Focos de observación sobre clientes, competidores o targets. No
+necesita demostrar que representa a cada uno porque un Foco de observación **no escribe
 información sobre ellos**: sólo dirige observación persistente.
 
 Digital Representation Intelligence añade observación independiente de cómo
@@ -1393,41 +1427,34 @@ misma.
 
 ------------------------------------------------------------------------
 
-# 24. El logo y la semántica orbital
+# 24. El logo y la semántica de observación
 
-El isotipo de AXIGNAL es una X formada por dos trayectorias que pueden
-interpretarse como órbitas alrededor de una esfera implícita.
+AXIGNAL adopta como símbolo canónico un **monóculo/lente de observación**.
 
-Lectura conceptual:
+La metáfora ya no depende de una X orbital. La marca expresa de forma más directa
+el comportamiento del producto: mirar con foco, examinar evidencia, conectar
+contexto y hacer comprensible el mundo económico observable.
 
-``` text
-trajectory A
-      ╲
-       ╲
-        ╳  intersection / knowledge
-       ╱
-      ╱
-trajectory B
-
-     [implicit world = AXIGLAND]
-```
-
-La marca puede asociar X con:
+El sistema de marca queda compuesto por:
 
 ``` text
-COMPANY × MARKET
-COMPANY × COMPANY
-CAPABILITY × DEMAND
-PRODUCT × MARKET
-EVIDENCE × CLAIM
-ORGANIZATION × TIME
+MONÓCULO / LENTE     observación · foco · examen
+AXIGNAL / FRAUNCES   marca editorial
+AZUL #354F98         identidad / anotación / isotipo
+#3C3C3C              neutral oscuro principal de interfaz
 ```
 
-La X representa intersección, conexión y trayectoria alrededor de un
-mundo económico.
+El monóculo es también el objeto que sostiene El Observador. Debe ser una única
+lente, sin cadena, mantenida con una mano cuando el personaje la utiliza.
 
-No es necesario hacer el isotipo más literal. La esfera implícita forma
-parte de su sofisticación.
+El isotipo debe conservar legibilidad en 16–48 px y funcionar como favicon,
+avatar social y marca de aplicación. Para SERP se proporciona una variante
+raster cuadrada de al menos 48 px; para datos estructurados y superficies de
+marca se proporciona una variante raster de 512 px.
+
+La X de AXIGNAL no impone ya una narrativa visual ni obliga a crear vocabulario
+de producto artificial. La marca AXIGNAL permanece; la experiencia pública
+prefiere términos humanos y descriptivos.
 
 ------------------------------------------------------------------------
 
@@ -1505,21 +1532,21 @@ Debe mostrar:
 
 ------------------------------------------------------------------------
 
-# 26. La Xeed y los Xignals en UX
+# 26. El Foco de observación y las Señales en UX
 
 Acción primaria:
 
 ``` text
-+ Plant Xeed
++ Add organization
 ```
 
 Estado posible:
 
 ``` text
-My Xeeds
+My Focos de observación
 
 ACME Industrial              → LIVE
-7 new Xignals
+7 new Señales
 3 new relationships
 
 Example Manufacturing        → LIVE
@@ -1529,8 +1556,8 @@ Example Logistics            → GERMINATING
 Building economic neighbourhood...
 ```
 
-La Xeed es el ancla persistente que el usuario planta y vuelve a visitar.
-Los Xignals son descubrimientos/señales que emergen durante el trabajo del
+El Foco de observación es el ancla persistente que el usuario crea y vuelve a visitar.
+Las Señales son descubrimientos/señales que emergen durante el trabajo del
 Brain y se presentan con su estado epistemológico y explicación.
 
 El usuario no debe aprender `KnowledgeFrontier`, `JEV`, `Batch`, tokens ni
@@ -1542,9 +1569,9 @@ Hipótesis comercial actual:
 ``` text
 AXIGNAL
 €9.95 / month
-includes 1 Xeed
+includes 1 Foco de observación
 
-Additional Xeed
+Additional Foco de observación
 €4.95 / month
 ```
 
@@ -1554,7 +1581,7 @@ Fórmula:
 
 Ejemplos:
 
-    Xeeds activas   Precio mensual
+    Focos de observación activas   Precio mensual
   --------------- ----------------
                 1            €9.95
                 2           €14.90
@@ -1565,7 +1592,7 @@ Ejemplos:
               100          €500.00
               200          €995.00
 
-**Esta hipótesis sustituye el pricing anterior por Xignal.**
+**Esta hipótesis sustituye el pricing anterior por Señal.**
 
 ## 27.1 Qué representa €4.95
 
@@ -1573,16 +1600,16 @@ No compra señales individuales ni acceso exclusivo a una empresa.
 
 Compra:
 
-> **mantener una Xeed adicional bajo germinación, observación y cultivo
+> **mantener un Foco de observación adicional bajo observación persistente
 > persistente de AXIGNAL.**
 
-Una Xeed puede producir muchos Xignals y descubrir cientos de organizaciones
-relacionadas sin que cada Xignal u organización descubierta sea facturable.
+Un Foco de observación puede producir muchas Señales y descubrir cientos de organizaciones
+relacionadas sin que cada Señal u organización descubierta sea facturable.
 
 ## 27.2 Agencia
 
-Una agencia con 100 clientes puede mantener 100 Xeeds por aproximadamente
-€500/mes según esta hipótesis. Cada Xeed puede producir múltiples Xignals sobre
+Una agencia con 100 clientes puede mantener 100 Focos de observación por aproximadamente
+€500/mes según esta hipótesis. Cada Foco de observación puede producir múltiples Señales sobre
 cómo buscadores, agentes, sistemas generativos y otras superficies públicas
 representan al cliente y cómo esa representación cambia con el tiempo.
 
@@ -1591,7 +1618,7 @@ representan al cliente y cómo esa representación cambia con el tiempo.
 AXIGNAL puede ofrecer una newsletter/brief semanal gratuita **bajo solicitud y
 aceptación**, como mecanismo de adquisición y demostración del método.
 
-No es un plan gratuito de AXIGNAL, no crea una Xeed gratuita y no concede
+No es un plan gratuito de AXIGNAL, no crea un Foco de observación gratuita y no concede
 AXENT, grafo completo ni historial navegable.
 
 Contrato de producto:
@@ -1610,19 +1637,19 @@ Oferta premium separada del autoservicio:
 
     AXIGNAL con asesoría humana
     €995 / month + applicable VAT
-    includes 1 Xeed in the human-advisory scope
+    includes 1 Foco de observación in the human-advisory scope
     4 weekly evidence-backed updates
     1 monthly strategic review
 
 La persona asesora interpreta evidencia pública gobernada y formula
 recomendaciones. El pago nunca compra una conclusión más favorable de AXIGNAL,
-ni permite modificar FAXTs, Xignals, relaciones, INXIGHTs, PATHXs o AXIGLAND.
+ni permite modificar FAXTs, Señales, relaciones, INXIGHTs, PATHXs o AXIGLAND.
 
 El informe humano es un artefacto privado, versionado y tenant-scoped. Debe
 distinguir observación, interpretación y recomendación, conservar referencias a
 evidencia y no reingresar al grafo como hecho observado.
 
-Una Xeed adicional de autoservicio sigue costando €4.95/mes. Una Xeed adicional
+Un Foco de observación adicional de autoservicio sigue costando €4.95/mes. Un Foco de observación adicional
 que requiera trabajo humano de advisory **no queda incluida automáticamente por
 ese add-on** y necesita alcance/precio humano específico.
 
@@ -1635,10 +1662,10 @@ el mercado ya ha validado el precio.
 
 Las superficies públicas y privadas deben mantener cuatro conceptos distintos:
 
-1. autoservicio AXIGNAL: €9.95/mes con 1 Xeed;
-2. Xeed adicional de autoservicio: +€4.95/mes;
-3. newsletter gratuita solicitada: adquisición, sin entitlement de Xeed;
-4. asesoría humana AXIGNAL: €995/mes + IVA aplicable, un Xeed dentro del alcance
+1. autoservicio AXIGNAL: €9.95/mes con 1 Foco de observación;
+2. Foco de observación adicional de autoservicio: +€4.95/mes;
+3. newsletter gratuita solicitada: adquisición, sin entitlement de Foco de observación;
+4. asesoría humana AXIGNAL: €995/mes + IVA aplicable, un Foco de observación dentro del alcance
    humano y entrega recurrente gobernada.
 
 No presentar estas cuatro opciones como tiers equivalentes de software. La
@@ -1647,26 +1674,26 @@ un servicio humano recurrente.
 
 # 28. Economía de red computacional
 
-El pricing por Xeed puede alinearse con el coste real y con el
+El pricing por Foco de observación puede alinearse con el coste real y con el
 crecimiento de AXIGLAND.
 
 ``` text
-Xeed A → discovers A,B,C,D
-Xeed X → needs B,C,E,F
+Foco de observación A → discovers A,B,C,D
+Foco de observación X → needs B,C,E,F
 ```
 
 B y C ya existen.
 
 Por tanto:
 
-\[ Xeeds`\uparrow`{=tex}
+\[ Focos de observación`\uparrow`{=tex}
 `\Rightarrow `{=tex}GraphDensity`\uparrow`{=tex}
 `\Rightarrow `{=tex}KnowledgeReuse`\uparrow`{=tex}
 `\Rightarrow `{=tex}MarginalComputeCost`\downarrow`{=tex} \]
 
 Y simultáneamente:
 
-\[ Xeeds`\uparrow`{=tex}
+\[ Focos de observación`\uparrow`{=tex}
 `\Rightarrow `{=tex}AXIGLANDKnowledge`\uparrow`{=tex}
 `\Rightarrow `{=tex}CustomerValue`\uparrow`{=tex} \]
 
@@ -1676,7 +1703,7 @@ La unidad adicional puede enriquecer más que al usuario que la paga.
 
 # 29. FIRST-MAP y mantenimiento: presupuesto computacional
 
-Cada Xeed necesita un `ComputeBudget` dinámico.
+Cada Foco de observación necesita un `ComputeBudget` dinámico.
 
 No debe funcionar como límite artificial visible, sino como política de
 asignación de recursos.
@@ -1824,19 +1851,19 @@ Eso introduciría:
 -   data poisoning;
 -   dependencia de participación empresarial.
 
-La doctrina actual rechaza que "plantar una semilla" signifique crear un
+La doctrina actual rechaza que iniciar observación persistente signifique crear un
 perfil.
 
-> **La semilla es autorización de cómputo, no declaración empresarial.**
+> **El Foco de observación es autorización de cómputo, no declaración empresarial.**
 
 ------------------------------------------------------------------------
 
-# 33. Agencias como multiplicadores de Xeeds y Xignals
+# 33. Agencias como multiplicadores de Focos de observación y Señales
 
-Una agencia puede plantar y mantener muchas Xeeds, una por cada cliente,
+Una agencia puede crear y mantener muchos Focos de observación, una por cada cliente,
 competidor o target que deba observar de forma persistente.
 
-Cada Xeed puede germinar en muchos Xignals. Por tanto, una agencia multiplica
+Cada Foco de observación puede producir muchas Señales. Por tanto, una agencia multiplica
 la demanda de observación y, mediante conocimiento público legítimamente
 reutilizable, acelera el crecimiento del AXIGLAND compartido sin adquirir
 propiedad ni autoridad sobre ninguna organización.
@@ -2221,7 +2248,7 @@ Evaluación cualitativa/experimental sobre empresas no vistas.
 
 ## KNOWLEDGE_DELTA
 
-Cantidad/calidad de nuevo conocimiento útil por Xeed y periodo.
+Cantidad/calidad de nuevo conocimiento útil por Foco de observación y periodo.
 
 ## CROSS_XEED_REUSE
 
@@ -2233,7 +2260,7 @@ Coste marginal real del primer mapa.
 
 ## COST_PER_ACTIVE_XEED_MONTH
 
-Coste mensual de mantener una Xeed activa.
+Coste mensual de mantener un Foco de observación activa.
 
 ## EXPLANATION_COVERAGE
 
@@ -2361,7 +2388,7 @@ Posibles primitivas:
 -   FAXTs;
 -   INXIGHTS;
 -   currentness;
--   Xeed status.
+-   Foco de observación status.
 
 Las políticas de API deben preservar neutralidad, costes y protección
 contra abuso sin impedir usos profesionales legítimos.
@@ -2375,7 +2402,7 @@ contra abuso sin impedir usos profesionales legítimos.
     del cliente.**
 3.  **Global ontology, demand-driven materialization.**
 4.  **Perspective is a query, not a permission.**
-5.  **Xeed significa foco persistente de observación; Xignal es una señal económica emergente del Brain.**
+5.  **Foco de observación significa foco persistente de observación; Señal es una señal económica emergente del Brain.**
 6.  **Users may direct attention, never conclusions.**
 7.  **Subscription buys observation, not influence.**
 8.  **The map cannot be bought. Observation can.**
@@ -2383,7 +2410,7 @@ contra abuso sin impedir usos profesionales legítimos.
 10. **No direct profile editing.**
 11. **Reevaluation, not editing.**
 12. **Hostile attention must not poison canonical truth.**
-13. **One canonical organization regardless of how many Xeeds observe it.**
+13. **One canonical organization regardless of how many Focos de observación observe it.**
 14. **Compute once, learn permanently, verify when necessary.**
 15. **FIRST_MAP_WOW es P0.**
 16. **Map Readiness Gate antes de declarar el mapa LIVE.**
@@ -2406,14 +2433,14 @@ contra abuso sin impedir usos profesionales legítimos.
 32. **AXIGLAND crece por utilización.**
 33. **Cada unidad de background compute debe maximizar information gain
     útil.**
-34. **Una agencia puede plantar cientos de Xeeds sin poder configurar las organizaciones observadas.**
+34. **Una agencia puede crear cientos de Focos de observación sin poder configurar las organizaciones observadas.**
 35. **No convertir AXIGNAL en Facebook/LinkedIn empresarial.**
 36. **No pay-to-appear ni sponsored truth.**
 37. **No CRM ni workflow suite.**
 38. **Thin integrations.**
 39. **UX semantics before beauty.**
 40. **Infrastructure invisible.**
-41. **Pricing actual: €9.95 con 1 Xeed; +€4.95 por Xeed adicional, pendiente de validación económica. Los Xignals no son unidades facturables.**
+41. **Pricing actual: €9.95 con 1 Foco de observación; +€4.95 por Foco de observación adicional, pendiente de validación económica. Las Señales no son unidades facturables.**
 42. **No confundir coste interno bajo con moat externo.**
 43. **No declarar resuelto el moat frente a AGI/model owners/open agent
     networks.**
@@ -2470,9 +2497,9 @@ contra abuso sin impedir usos profesionales legítimos.
 
 > **UNKNOWN ≠ FALSE.**
 
-> **Plant a Xeed. AXIGNAL's Brain does the rest.**
+> **Add an organization. AXIGNAL's Brain does the rest.**
 
-> **Plant a Xeed. The Brain surfaces Xignals. Evidence governs what AXIGLAND remembers.**
+> **Add an organization. The Brain surfaces Señales. Evidence governs what AXIGLAND remembers.**
 
 > **You choose where AXIGNAL looks. You don't choose what AXIGNAL
 > sees.**
@@ -2512,7 +2539,7 @@ Mitigación: user input no escribe verdad canónica.
 
 ## Deriva hacia red social
 
-Mitigación: no profiles/claiming como requisito; Xeed = persistent observation seed; Xignal = emergent economic signal.
+Mitigación: no profiles/claiming como requisito; Foco de observación = persistent observation seed; Señal = emergent economic signal.
 
 ## Deriva hacia SaaS genérico
 
@@ -2546,7 +2573,7 @@ Estado: amenaza estratégica todavía abierta.
 3.  ¿Qué coste real tiene FIRST_MAP por tipo de empresa?
 4.  ¿Qué cadencia de reobservación maximiza valor/coste?
 5.  ¿Qué fuentes externas requieren presupuesto específico?
-6.  ¿€4.95/Xeed deja margen suficiente después de búsqueda, crawling y
+6.  ¿€4.95/Foco de observación deja margen suficiente después de búsqueda, crawling y
     mantenimiento?
 7.  ¿Debe existir descuento por volumen y a partir de qué densidad?
 8.  ¿Qué puede consultar un visitante gratuito?
@@ -2585,7 +2612,7 @@ precisión; - densidad; - explicación; - evaluación humana.
 
 Cerrar: - Organization; - FAXT; - Evidence; - Capability; - Product; -
 Market; - Relationship; - PATHX; - INXIGHT; - CorporateStructure; -
-TemporalEvent; - Xeed; - XeedGerminationState; - KnowledgeFrontier; - Xignal semantics.
+TemporalEvent; - Foco de observación; - XeedGerminationState; - KnowledgeFrontier; - Señal semantics.
 
 ## P3 --- EVIDENCE ENGINE
 
@@ -2621,11 +2648,11 @@ Empresas, aliases, grupos, filiales, marcas, entidades jurídicas.
 
 Observed / Potential / Organizational / Historical / PATHX.
 
-## P8 --- XEED GERMINATION / LIVE
+## P8 --- FOCO DE OBSERVACIÓN GERMINATION / LIVE
 
--   `+ Plant Xeed`;
+-   `+ Add organization`;
 -   XeedGerminationState;
--   Xignal emergence contract;
+-   Señal emergence contract;
 -   scheduler;
 -   adaptive revisit;
 -   Knowledge Frontier;
@@ -2646,12 +2673,12 @@ convertirlo en chatbot genérico.
 
 ## P12 --- PRICING VALIDATION
 
-€9.95 + €4.95/Xeed adicional contra costes reales y
+€9.95 + €4.95/Foco de observación adicional contra costes reales y
 willingness-to-pay.
 
 ## P13 --- PROFESSIONAL PORTFOLIOS
 
-Agencias/consultoras con decenas o cientos de Xeeds, cada una capaz de producir muchos Xignals, sin contaminar
+Agencias/consultoras con decenas o cientos de Focos de observación, cada una capaz de producir muchas Señales, sin contaminar
 canonical state.
 
 ## P14 --- THIN API / AGENT SURFACE
@@ -2678,8 +2705,8 @@ La experiencia ideal:
 10. puede seguir PATHX;
 11. puede abrir la evidencia que justifica una afirmación;
 12. puede cambiar la perspectiva a cualquier organización;
-13. puede hacer `+ Plant Xeed`;
-14. esa Xeed germina y pasa a LIVE cuando supera Map Readiness;
+13. puede hacer `+ Add organization`;
+14. ese Foco de observación evoluciona y pasa a LIVE cuando supera Map Readiness;
 15. AXENT continúa observando independientemente;
 16. al volver, el usuario ve qué cambió;
 17. el trabajo realizado enriquece AXIGLAND y puede reducir el
@@ -2698,7 +2725,7 @@ La experiencia ideal:
 > índice económico. Mantiene AXIGLAND, una memoria económica gobernada
 > dentro de un único mundo canónico,
 > temporal y basado en evidencia, que se materializa y profundiza según
-> la demanda. El usuario puede plantar una Xeed sobre cualquier organización: asignar al
+> la demanda. El usuario puede crear un Foco de observación sobre cualquier organización: asignar al
 > Brain observación computacional persistente sobre ella. Esa acción
 > dirige la atención de AXIGNAL, nunca sus conclusiones. AXENT
 > investiga, verifica, conecta y monitoriza; los hechos sustentados se
@@ -2708,8 +2735,8 @@ La experiencia ideal:
 > pueden cambiar su presencia pública y solicitar reevaluación, pero el
 > mapa se recalcula independientemente. El primer mapa debe producir
 > FIRST_MAP_WOW y, una vez LIVE, continuar evolucionando. AXIGNAL cobra
-> actualmente como hipótesis €9.95/mes con una Xeed incluida y €4.95
-> por cada Xeed adicional; los Xignals emergentes no se facturan individualmente, alineando precio con observación
+> actualmente como hipótesis €9.95/mes con un Foco de observación incluido y €4.95
+> por cada Foco de observación adicional; las Señales emergentes no se facturan individualmente, alineando precio con observación
 > persistente y cómputo. Los modelos fundacionales, JEV y proveedores
 > son componentes reemplazables. AXIGNAL debe seguir sometiéndose a
 > pruebas duras contra el riesgo de wrapper, extracción masiva y futuras
@@ -2858,7 +2885,7 @@ sensores/contratos, investigación nueva evitada, investigación marginal
 por consulta recurrente, coste por descubrimiento útil u oportunidad
 explicable, tiempo hasta explicación, cobertura de procedencia,
 profundidad histórica, revalidación de conocimiento stale y coste
-cognitivo marginal por Xeed. Son métricas candidatas sin targets ni
+cognitivo marginal por Foco de observación. Son métricas candidatas sin targets ni
 afirmaciones actuales.
 
 ## 53.5 Producto y experiencia
@@ -3230,7 +3257,7 @@ reviewers y considera borrado, retirada de contenido, límites de cita y
 redistribución. No se asume retención perpetua del texto crudo. Reviews exactas,
 sindicadas, cross-posted o ingeridas más de una vez no se convierten en N
 evidencias de N experiencias. Una observación pública permitida se adquiere y
-resuelve una vez, puede servir proyecciones/Xignals pertinentes sin doble
+resuelve una vez, puede servir proyecciones/Señales pertinentes sin doble
 conteo y conserva lineage; el estado privado permanece aislado.
 
 La selección futura de un `DIGITAL_REPRESENTATION_SENSOR` considera cobertura,
@@ -3241,7 +3268,7 @@ derechos, modelo de costo, frescura/profundidad histórica, retención de datos,
 semántica de medición, comportamiento estocástico y potencial de reutilización.
 Cuando varios sensores gobernados satisfacen el mismo requisito informativo,
 se prefiere el sensor suficiente de menor costo. El costo se evalúa por
-observación legítimamente reutilizable, no sólo por Xeed. No se define router,
+observación legítimamente reutilizable, no sólo por Foco de observación. No se define router,
 registro ejecutable ni fórmula en este slice.
 
 La observación pública se adquiere una vez cuando sea posible y se reutiliza
@@ -3368,14 +3395,14 @@ AXIGNAL separates three authorities:
 AXIGLAND
 shared canonical economic truth
         ≠
-XEED GERMINATION CONTEXT
-tenant/client/Xeed research process and authorized private references
+FOCO DE OBSERVACIÓN GERMINATION CONTEXT
+tenant/client/Foco de observación research process and authorized private references
         ≠
 PRIVATE COGNITIVE CONTINUITY
-user/client/Xeed investigation and attention state
+user/client/Foco de observación investigation and attention state
 ```
 
-Xeed germination context and private cognitive state may direct research,
+Observation Focus lifecycle context and private cognitive state may direct research,
 projection and retrieval within authorization. Neither creates a second
 canonical company truth nor mutates AXIGLAND; any public knowledge still passes
 existing evidence admission. Private attention is task/context state, not a
@@ -3385,7 +3412,7 @@ across subscribers, tenants or client contexts.
 AXENT is a contextual cognitive navigator: it can focus, compare, explain,
 restore an investigation and navigate to evidence. It is not the sole route to
 comprehension and has no unrestricted database access or arbitrary SQL
-authority. Private routing resolves tenant, client context, Xeed, thread and
+authority. Private routing resolves tenant, client context, Foco de observación, thread and
 permissions before retrieval. Client scope is explicit; portfolio scope is
 explicit and separately authorized. Similarity never grants authorization or
 switches client context.
@@ -3414,12 +3441,12 @@ and ADR-0016/0017.
 AXIGNAL does not have one mandatory linear tool order. Python is the deterministic control plane around event-driven cognitive loops. Observation may begin through deterministic sensors, direct events, or targeted AXENT/LLM research. TurboQuant operates only on already observed/represented information and is bypassed when an observation is already bound to a known subject. JEV performs structured semantic typing over rich state and is bypassed for deterministic facts.
 
 Primary discovery loop:
-XEED -> OBSERVATION PLAN -> OBSERVE -> OBSERVATION MEMORY -> REPRESENT -> RETRIEVE WHEN NEEDED -> DETERMINISTIC ELIGIBILITY -> COMPILE RICH STATE -> STRUCTURED TYPE -> COMPOSE -> WARRANTED ATTENTION / INVESTIGATE -> NEW OBSERVATION -> LOOP.
+FOCO DE OBSERVACIÓN -> OBSERVATION PLAN -> OBSERVE -> OBSERVATION MEMORY -> REPRESENT -> RETRIEVE WHEN NEEDED -> DETERMINISTIC ELIGIBILITY -> COMPILE RICH STATE -> STRUCTURED TYPE -> COMPOSE -> WARRANTED ATTENTION / INVESTIGATE -> NEW OBSERVATION -> LOOP.
 
 Canonical truth is a separate governed boundary:
 EVIDENCE -> CLAIM/EVIDENCE EVALUATION WHEN NEEDED -> EVIDENCE ADMISSION -> CANONICAL WRITE.
 
-INVESTIGATE returns observations to the discovery loop; ADMIT is not its automatic next stage. A state change MUST trigger dependency impact analysis and only affected semantic dimensions are reevaluated. AXIGNAL MUST explain why it surfaced a Xignal, why a candidate disappeared, and which boundary lost information. Every transition is a versioned contract and measurement boundary.
+INVESTIGATE returns observations to the discovery loop; ADMIT is not its automatic next stage. A state change MUST trigger dependency impact analysis and only affected semantic dimensions are reevaluated. AXIGNAL MUST explain why it surfaced a Señal, why a candidate disappeared, and which boundary lost information. Every transition is a versioned contract and measurement boundary.
 
 ## 56.2 Authority boundaries
 OBSERVE owns acquisition record/provenance/time/instrument, not truth admission. REPRESENT owns disposable semantic representation, not knowledge. RETRIEVE owns candidate recall/ranking, not fit/evidence. FILTER owns deterministic incompatibility rules and MUST preserve UNKNOWN. COMPILE STATE owns deterministic assembly/fingerprints, never invented missing facts. BUILD CHOICE SPACE owns AXIGNAL's typed hypothesis universe, not provider behavior. STRUCTURED EVALUATE owns typed probabilistic judgment, not policy/write. INTERPRET owns deterministic composition/policy, not evidence rewriting. INVESTIGATE owns targeted evidence acquisition, not canonical truth. ADMIT remains the independent canonical boundary; derived opportunity remains INXIGHT/POTENTIAL.
@@ -3475,7 +3502,7 @@ DERIVED_OPPORTUNITY != FAXT
 BENCHMARK_SCORE != PRODUCT_TRUTH
 
 ## 56.12 Existing implementation disposition
-The current retrieval_k=50 default, SUPPORTED-only germination gate and 12-case germination corpus are experimental evidence only. They MUST NOT define canonical architecture. Claim-evidence support remains useful only for its narrow semantic target; economic opportunity requires richer DecisionContracts and Choice Spaces.
+The current retrieval_k=50 default, SUPPORTED-only observation-readiness gate and 12-case observation-readiness corpus are experimental evidence only. They MUST NOT define canonical architecture. Claim-evidence support remains useful only for its narrow semantic target; economic opportunity requires richer DecisionContracts and Choice Spaces.
 
 ## 56.13 Universal Semantic Typing Layer
 The Economic Discovery Engine MUST NOT reduce structured evaluation to one support gate. Every semantically rich candidate that survives deterministic eligibility may be evaluated through a declared set of orthogonal DecisionContracts/Choice Spaces.
@@ -3525,30 +3552,30 @@ Observation Memory preserves governed raw/normalized observations with provenanc
 
 New evidence MUST preserve history. It creates a new state fingerprint and triggers dependency-aware impact analysis; only affected dimensions are reevaluated unless a governed contract requires broader replay.
 
-## 56.16 Xignal means warranted attention
-AXIGNAL does not promise that a surfaced business outcome exists or will materialize. A Xignal means that the observed and structured economic state contains enough governed reason to warrant human attention or further investigation.
+## 56.16 Señal means warranted attention
+AXIGNAL does not promise that a surfaced business outcome exists or will materialize. A Señal means that the observed and structured economic state contains enough governed reason to warrant human attention or further investigation.
 
-XIGNAL != CONCLUSION.
-XIGNAL != SALE PROBABILITY.
+SEÑAL != CONCLUSION.
+SEÑAL != SALE PROBABILITY.
 COMMERCIAL OUTCOME != EPISTEMIC VALIDITY.
 WARRANTED ATTENTION != CANONICAL TRUTH.
 
-The customer remains the authority for business conclusion and action. Failure to contact, qualify, bid, negotiate or close MUST NOT retroactively falsify a correctly grounded Xignal.
+The customer remains the authority for business conclusion and action. Failure to contact, qualify, bid, negotiate or close MUST NOT retroactively falsify a correctly grounded Señal.
 
 ## 56.17 Epistemic presentation
-Every surfaced Xignal MUST carry an explainable epistemic state. Internally this state is multidimensional and MAY include evidence support, provenance quality, currentness, corroboration, contradiction, coverage and uncertainty. UX MAY compress those dimensions into a meter/bar only through an explicitly versioned deterministic policy.
+Every surfaced Señal MUST carry an explainable epistemic state. Internally this state is multidimensional and MAY include evidence support, provenance quality, currentness, corroboration, contradiction, coverage and uncertainty. UX MAY compress those dimensions into a meter/bar only through an explicitly versioned deterministic policy.
 
-A JEV top probability, confidence, similarity score, opaque model score or downstream sale outcome MUST NOT directly become the Xignal meter. UNKNOWN MUST NOT be rendered as FALSE. Show me how AXIGNAL knows MUST preserve access to the underlying provenance, temporal state and reasoning trace.
+A JEV top probability, confidence, similarity score, opaque model score or downstream sale outcome MUST NOT directly become the Señal meter. UNKNOWN MUST NOT be rendered as FALSE. Show me how AXIGNAL knows MUST preserve access to the underlying provenance, temporal state and reasoning trace.
 
 ## 56.18 Germination principle
 Germination SHOULD be recall-oriented and information-preserving; canonization remains conservative. New observations may create new candidate nodes, typed dimensions, scoped associations, investigation targets and further observation plans without claiming canonical truth.
 
-A public observation learned while serving one Xeed MAY enrich shared AXIGLAND subject to rights, tenant/privacy and provenance policy. A later Xeed SHOULD reuse governed shared observation memory rather than rediscover public facts from zero; Xeed-specific meaning is recomputed from the new relational state.
+A public observation learned while serving one Foco de observación MAY enrich shared AXIGLAND subject to rights, tenant/privacy and provenance policy. A later Foco de observación SHOULD reuse governed shared observation memory rather than rediscover public facts from zero; Foco de observación-specific meaning is recomputed from the new relational state.
 
 INTELLIGENCE COST MUST FOLLOW INFORMATION VALUE: high-volume repetitive work belongs to deterministic sensors/retrieval; expensive adaptive intelligence is reserved for bootstrap, ambiguity, missing information and research decisions where it can change what AXIGNAL observes next.
 
 ## 56.19 Explainable Basis: every visible semantic attribution must answer why
-Any subscriber-visible semantic attribution, node role, economic association, Xignal or derived relationship MUST have a reconstructible Explainable Basis. AXIGNAL MUST be able to answer `why?` at the exact semantic dimension being presented.
+Any subscriber-visible semantic attribution, node role, economic association, Señal or derived relationship MUST have a reconstructible Explainable Basis. AXIGNAL MUST be able to answer `why?` at the exact semantic dimension being presented.
 
 OBSERVATION/DATA != EXPLAINABLE BASIS != CANONICAL EVIDENCE.
 VISIBLE ATTRIBUTION -> EXPLAINABLE BASIS REQUIRED.
@@ -3564,16 +3591,16 @@ If AXIGNAL cannot reconstruct a supporting basis for a semantic attribution, tha
 
 `Show me how AXIGNAL knows` MUST resolve from the visible asset to its exact Explainable Basis, not regenerate a plausible narrative. The subscriber receives the data that made the attribution worth considering and retains authority to accept, reject or reinterpret the business meaning.
 
-## 56.20 Xeed Market Entry Classification
-Before broad germination, the Brain MUST classify the Xeed's current and plausible market-relationship modes independently across B2B, B2C and B2G. This is an observation-planning gate, not a permanent company type.
+## 56.20 Observation Focus Market Entry Classification
+Before broad observation, the Brain MUST classify the Foco de observación's current and plausible market-relationship modes independently across B2B, B2C and B2G. This is an observation-planning gate, not a permanent company type.
 
-XEED != SINGLE MARKET TYPE.
+FOCO DE OBSERVACIÓN != SINGLE MARKET TYPE.
 OBSERVED MARKET != ONLY MARKET WORTH OBSERVING.
 POTENTIAL MARKET != OBSERVED PARTICIPATION.
 UNKNOWN MARKET != FALSE.
 MARKET RELATIONSHIP MODE != ECONOMIC/GEOGRAPHIC MARKET.
 
-Each B2B/B2C/B2G dimension is temporal and independently classified as OBSERVED, POTENTIAL, UNKNOWN or NOT_APPLICABLE. OBSERVED and POTENTIAL require their own Explainable Basis. A Xeed may therefore be B2C OBSERVED, B2B POTENTIAL and B2G UNKNOWN simultaneously. Both OBSERVED and POTENTIAL modes may create observation targets; UNKNOWN is preserved rather than silently discarded.
+Each B2B/B2C/B2G dimension is temporal and independently classified as OBSERVED, POTENTIAL, UNKNOWN or NOT_APPLICABLE. OBSERVED and POTENTIAL require their own Explainable Basis. A Foco de observación may therefore be B2C OBSERVED, B2B POTENTIAL and B2G UNKNOWN simultaneously. Both OBSERVED and POTENTIAL modes may create observation targets; UNKNOWN is preserved rather than silently discarded.
 
 This classification MUST occur early enough to shape the Observation Plan, sensors, search vocabulary, candidate object types and semantic questions. It MUST be reevaluated when relevant state changes. The Brain MUST NOT infer a permanent business identity from one observed channel.
 
@@ -3585,14 +3612,14 @@ DEMAND ARCHETYPE != PERSON.
 CAMPAIGN RELEVANCE != PURCHASE PROBABILITY.
 AGGREGATE DEMAND SIGNAL != ADDRESSABLE PLATFORM AUDIENCE.
 
-A Demand Archetype MUST NOT contain or require an individual consumer identity. It MUST have an Explainable Basis and remain temporal/reevaluable. AXIGNAL may describe observable demand patterns and their relationship to Xeed capabilities; advertising platforms remain responsible for materializing addressable audiences under their own systems and policies.
+A Demand Archetype MUST NOT contain or require an individual consumer identity. It MUST have an Explainable Basis and remain temporal/reevaluable. AXIGNAL may describe observable demand patterns and their relationship to Foco de observación capabilities; advertising platforms remain responsible for materializing addressable audiences under their own systems and policies.
 
 Campaign relevance is multidimensional and versioned. Candidate dimensions include need fit, intent strength, demand strength, growth, geographic fit, channel fit, message fit, evidence quality, currentness and uncertainty. A compressed UX score MAY be derived deterministically by a versioned policy, but MUST NOT represent probability that an individual will purchase.
 
 Demand Archetypes are not limited to B2C: B2B/B2G observation MAY also surface aggregate need archetypes. Organizations and Demand Archetypes therefore coexist as different economic objects in AXIGLAND rather than forcing all demand into Organization-to-Organization relationships.
 
 ## 56.22 Market Posture drives observation strategy
-Xeed Market Entry Classification is the first semantic planning gate of Brain germination after Xeed authorization and bootstrap state acquisition. Its output MUST materially change the Observation Plan; classification that does not alter observation strategy is incomplete.
+Observation Focus Market Entry Classification is the first semantic planning gate of Brain observation lifecycle after Foco de observación authorization and bootstrap state acquisition. Its output MUST materially change the Observation Plan; classification that does not alter observation strategy is incomplete.
 
 For B2B, the Brain SHOULD observe organizations and aggregate demand archetypes and ask organization-role/need questions. For B2C, the Brain MUST target aggregate Demand Archetypes and MUST NOT create a person/consumer identity target. For B2G, the Brain SHOULD observe public bodies, procurement events and aggregate public-demand archetypes.
 
@@ -3600,4 +3627,4 @@ OBSERVED participation and POTENTIAL participation MUST preserve different resea
 
 UNKNOWN remains explicit and MUST NOT silently become FALSE or an observation target merely to complete a taxonomy. New observations may later move UNKNOWN to OBSERVED or POTENTIAL through a new temporal Market Map with Explainable Basis.
 
-The Market Map is therefore not a marketing label and not a one-time onboarding field. It is a temporal control-plane input that selects sensors, search vocabulary, candidate object types, semantic questions and investigation routes while preserving the distinction between what the Xeed demonstrably does and what evidence says may deserve exploration.
+The Market Map is therefore not a marketing label and not a one-time onboarding field. It is a temporal control-plane input that selects sensors, search vocabulary, candidate object types, semantic questions and investigation routes while preserving the distinction between what the Foco de observación demonstrably does and what evidence says may deserve exploration.

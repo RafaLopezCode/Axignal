@@ -14,42 +14,42 @@
       "Eyebrow": "Outside your walls",
       "Headline": "Do you really know how your company looks from the outside?",
       "Body": "You already know what your company says about itself. AXIGNAL starts somewhere else: with what can be independently observed around it.",
-      "Primary CTA": "Plant a Xeed",
+      "Primary CTA": "Add a organization",
       "Secondary CTA": "What is AXIGNAL?"
     },
     "es": {
       "Eyebrow": "Desde fuera",
       "Headline": "¿De verdad sabes cómo se ve tu empresa desde fuera?",
       "Body": "Ya sabes lo que tu empresa dice de sí misma. AXIGNAL empieza en otro lugar: en lo que puede observarse de forma independiente a su alrededor.",
-      "Primary CTA": "Planta tu Xeed",
+      "Primary CTA": "Añade tu organización",
       "Secondary CTA": "¿Qué es AXIGNAL?"
     },
     "fr": {
       "Eyebrow": "Depuis l’extérieur",
       "Headline": "Savez-vous vraiment comment votre entreprise apparaît de l’extérieur ?",
       "Body": "Vous savez déjà ce que votre entreprise dit d’elle-même. AXIGNAL commence ailleurs : par ce qui peut être observé indépendamment autour d’elle.",
-      "Primary CTA": "Plantez une Xeed",
+      "Primary CTA": "Ajoutez une organisation",
       "Secondary CTA": "Qu’est-ce qu’AXIGNAL ?"
     },
     "de": {
       "Eyebrow": "Von außen",
       "Headline": "Wissen Sie wirklich, wie Ihr Unternehmen von außen aussieht?",
       "Body": "Sie wissen bereits, was Ihr Unternehmen über sich selbst sagt. AXIGNAL beginnt woanders: bei dem, was sich unabhängig in seinem Umfeld beobachten lässt.",
-      "Primary CTA": "Xeed pflanzen",
+      "Primary CTA": "Organisation hinzufügen",
       "Secondary CTA": "Was ist AXIGNAL?"
     },
     "it": {
       "Eyebrow": "Da fuori",
       "Headline": "Sai davvero come appare la tua azienda dall’esterno?",
       "Body": "Sai già cosa dice di sé la tua azienda. AXIGNAL parte da un altro punto: da ciò che può essere osservato in modo indipendente intorno ad essa.",
-      "Primary CTA": "Pianta una Xeed",
+      "Primary CTA": "Aggiungi una organizzazione",
       "Secondary CTA": "Cos’è AXIGNAL?"
     },
     "pt": {
       "Eyebrow": "Visto de fora",
       "Headline": "Sabe realmente como a sua empresa é vista do exterior?",
       "Body": "Já sabe o que a sua empresa diz sobre si própria. A AXIGNAL começa noutro ponto: pelo que pode ser observado de forma independente à sua volta.",
-      "Primary CTA": "Plante uma Xeed",
+      "Primary CTA": "Adicione uma organização",
       "Secondary CTA": "O que é a AXIGNAL?"
     }
   },
@@ -199,7 +199,7 @@
   },
   {
     "n": 5,
-    "id": "XEED",
+    "id": "ORGANIZATION",
     "slug": "xeed",
     "question": "What starts when I plant a company for AXIGNAL to observe?",
     "image": "assets/images/landing-05-xeed.webp",
@@ -209,46 +209,46 @@
       "mobile": "76% 54%"
     },
     "en": {
-      "Eyebrow": "Plant a Xeed",
-      "Headline": "Plant one Xeed. Let AXIGNAL germinate what can be observed around it.",
-      "Body": "A Xeed is the seed of persistent observation around one organization. AXIGNAL resolves the company, investigates its observable economic environment and lets the Brain surface many Xignals over time—without giving you ownership or edit rights in AXIGLAND.",
-      "Value line": "You plant the Xeed. AXIGNAL follows the evidence.",
-      "Primary CTA": "Plant a Xeed"
+      "Eyebrow": "Add an organization",
+      "Headline": "Add one organization. Let AXIGNAL surface what can be observed around it.",
+      "Body": "An organization is the starting point for persistent observation. AXIGNAL resolves its identity, investigates its observable economic environment and lets the Brain surface many signals over time—without giving you ownership or edit rights in AXIGLAND.",
+      "Value line": "You choose the organization. AXIGNAL follows the evidence.",
+      "Primary CTA": "Add organization"
     },
     "es": {
-      "Eyebrow": "Planta una Xeed",
-      "Headline": "Planta una Xeed. Deja que AXIGNAL haga germinar lo que puede observarse a su alrededor.",
-      "Body": "Una Xeed es la semilla de observación persistente alrededor de una organización. AXIGNAL resuelve la empresa, investiga su entorno económico observable y deja que el Brain haga emerger muchos Xignals con el tiempo, sin darte propiedad ni derecho de edición sobre AXIGLAND.",
-      "Value line": "Tú plantas la Xeed. AXIGNAL sigue la evidencia.",
-      "Primary CTA": "Planta tu Xeed"
+      "Eyebrow": "Añade una organización",
+      "Headline": "Añade una organización. Deja que AXIGNAL haga emerger lo que puede observarse a su alrededor.",
+      "Body": "Una organización es el punto de partida de la observación persistente. AXIGNAL resuelve su identidad, investiga su entorno económico observable y deja que el Brain haga emerger muchas señales con el tiempo, sin darte propiedad ni derecho de edición sobre AXIGLAND.",
+      "Value line": "Tú eliges la organización. AXIGNAL sigue la evidencia.",
+      "Primary CTA": "Añade una organización"
     },
     "fr": {
-      "Eyebrow": "Plantez une Xeed",
-      "Headline": "Plantez une Xeed. Laissez AXIGNAL faire germer ce qui peut être observé autour d’elle.",
-      "Body": "Une Xeed est la graine d’une observation persistante autour d’une organisation. AXIGNAL résout l’identité de l’entreprise, étudie son environnement économique observable et laisse le Brain faire émerger de nombreux Xignals au fil du temps, sans vous donner de propriété ni de droits d’édition dans AXIGLAND.",
-      "Value line": "Vous plantez la Xeed. AXIGNAL suit les preuves.",
-      "Primary CTA": "Plantez votre Xeed"
+      "Eyebrow": "Ajoutez une organisation",
+      "Headline": "Ajoutez une organisation. Laissez AXIGNAL faire émerger ce qui peut être observé autour d’elle.",
+      "Body": "Une organisation est le point de départ d’une observation persistante. AXIGNAL résout son identité, étudie son environnement économique observable et fait émerger de nombreux signaux au fil du temps, sans vous donner de propriété ni de droits d’édition dans AXIGLAND.",
+      "Value line": "Vous choisissez l’organisation. AXIGNAL suit les preuves.",
+      "Primary CTA": "Ajoutez une organisation"
     },
     "de": {
-      "Eyebrow": "Eine Xeed pflanzen",
-      "Headline": "Pflanzen Sie eine Xeed. Lassen Sie AXIGNAL keimen, was sich um sie herum beobachten lässt.",
-      "Body": "Eine Xeed ist der Ausgangspunkt persistenter Beobachtung rund um eine Organisation. AXIGNAL löst das Unternehmen auf, untersucht sein beobachtbares wirtschaftliches Umfeld und lässt den Brain im Lauf der Zeit viele Xignals hervorbringen – ohne Ihnen Eigentum oder Bearbeitungsrechte an AXIGLAND zu geben.",
-      "Value line": "Sie pflanzen die Xeed. AXIGNAL folgt der Evidenz.",
-      "Primary CTA": "Ihre Xeed pflanzen"
+      "Eyebrow": "Organisation hinzufügen",
+      "Headline": "Fügen Sie eine Organisation hinzu. AXIGNAL zeigt, was sich in ihrem Umfeld beobachten lässt.",
+      "Body": "Eine Organisation ist der Ausgangspunkt persistenter Beobachtung. AXIGNAL löst ihre Identität auf, untersucht ihr beobachtbares wirtschaftliches Umfeld und macht im Lauf der Zeit viele Signale sichtbar – ohne Ihnen Eigentum oder Bearbeitungsrechte an AXIGLAND zu geben.",
+      "Value line": "Sie wählen die Organisation. AXIGNAL folgt der Evidenz.",
+      "Primary CTA": "Organisation hinzufügen"
     },
     "it": {
-      "Eyebrow": "Pianta una Xeed",
-      "Headline": "Pianta una Xeed. Lascia che AXIGNAL faccia germogliare ciò che può essere osservato intorno ad essa.",
-      "Body": "Una Xeed è il seme dell’osservazione persistente intorno a un’organizzazione. AXIGNAL risolve l’azienda, indaga il suo ambiente economico osservabile e lascia che il Brain faccia emergere molti Xignals nel tempo, senza darti proprietà o diritti di modifica in AXIGLAND.",
-      "Value line": "Tu pianti la Xeed. AXIGNAL segue le evidenze.",
-      "Primary CTA": "Pianta la tua Xeed"
+      "Eyebrow": "Aggiungi un’organizzazione",
+      "Headline": "Aggiungi un’organizzazione. Lascia che AXIGNAL faccia emergere ciò che può essere osservato intorno ad essa.",
+      "Body": "Un’organizzazione è il punto di partenza dell’osservazione persistente. AXIGNAL ne risolve l’identità, indaga il suo ambiente economico osservabile e fa emergere molti segnali nel tempo, senza darti proprietà o diritti di modifica in AXIGLAND.",
+      "Value line": "Tu scegli l’organizzazione. AXIGNAL segue le evidenze.",
+      "Primary CTA": "Aggiungi un’organizzazione"
     },
     "pt": {
-      "Eyebrow": "Plante uma Xeed",
-      "Headline": "Plante uma Xeed. Deixe a AXIGNAL fazer germinar o que pode ser observado à sua volta.",
-      "Body": "Uma Xeed é a semente da observação persistente em torno de uma organização. A AXIGNAL resolve a empresa, investiga o seu ambiente económico observável e deixa o Brain fazer emergir muitos Xignals ao longo do tempo, sem lhe dar propriedade nem direitos de edição sobre AXIGLAND.",
-      "Value line": "Você planta a Xeed. A AXIGNAL segue as evidências.",
-      "Primary CTA": "Plante a sua Xeed"
+      "Eyebrow": "Adicione uma organização",
+      "Headline": "Adicione uma organização. Deixe a AXIGNAL revelar o que pode ser observado à sua volta.",
+      "Body": "Uma organização é o ponto de partida da observação persistente. A AXIGNAL resolve a sua identidade, investiga o seu ambiente económico observável e faz surgir muitos sinais ao longo do tempo, sem lhe dar propriedade nem direitos de edição sobre AXIGLAND.",
+      "Value line": "Escolhe a organização. A AXIGNAL segue as evidências.",
+      "Primary CTA": "Adicione uma organização"
     }
   },
   {
@@ -312,38 +312,38 @@
     },
     "en": {
       "Eyebrow": "Evidence on demand",
-      "Headline": "Don't just see a Xignal. Inspect why it deserves attention.",
-      "Body": "For material Xignals, AXIGNAL preserves a path to supporting observations, currentness, contradictions and explicit unknowns. Explanation is part of the product, not a post-hoc justification.",
+      "Headline": "Don't just see a signal. Inspect why it deserves attention.",
+      "Body": "For material signals, AXIGNAL preserves a path to supporting observations, currentness, contradictions and explicit unknowns. Explanation is part of the product, not a post-hoc justification.",
       "Primary CTA": "Show me how AXIGNAL knows"
     },
     "es": {
       "Eyebrow": "Evidencia cuando la necesitas",
-      "Headline": "No te quedes con un Xignal. Examina por qué merece atención.",
-      "Body": "Para los Xignals materiales, AXIGNAL conserva un camino hacia las observaciones de soporte, su actualidad, las contradicciones y los UNKNOWN explícitos. La explicación forma parte del producto, no es una justificación generada a posteriori.",
+      "Headline": "No te quedes con una señal. Examina por qué merece atención.",
+      "Body": "Para las señales materiales, AXIGNAL conserva un camino hacia las observaciones de soporte, su actualidad, las contradicciones y los UNKNOWN explícitos. La explicación forma parte del producto, no es una justificación generada a posteriori.",
       "Primary CTA": "Muéstrame cómo lo sabe AXIGNAL"
     },
     "fr": {
       "Eyebrow": "Preuves à la demande",
-      "Headline": "Ne vous contentez pas d’un Xignal. Examinez pourquoi il mérite votre attention.",
-      "Body": "Pour les Xignals matériels, AXIGNAL conserve un chemin vers les observations de support, leur actualité, les contradictions et les inconnues explicites. L’explication fait partie du produit, ce n’est pas une justification générée après coup.",
+      "Headline": "Ne vous contentez pas d’un signal. Examinez pourquoi il mérite votre attention.",
+      "Body": "Pour les signaux matériels, AXIGNAL conserve un chemin vers les observations de support, leur actualité, les contradictions et les inconnues explicites. L’explication fait partie du produit, ce n’est pas une justification générée après coup.",
       "Primary CTA": "Montrez-moi comment AXIGNAL le sait"
     },
     "de": {
       "Eyebrow": "Evidenz auf Abruf",
-      "Headline": "Sehen Sie nicht nur einen Xignal. Prüfen Sie, warum er Aufmerksamkeit verdient.",
-      "Body": "Für wesentliche Xignals bewahrt AXIGNAL den Pfad zu unterstützenden Beobachtungen, Aktualität, Widersprüchen und expliziten Unbekannten. Erklärung ist Teil des Produkts und keine nachträglich erzeugte Rechtfertigung.",
+      "Headline": "Sehen Sie nicht nur ein Signal. Prüfen Sie, warum es Aufmerksamkeit verdient.",
+      "Body": "Für wesentliche Signale bewahrt AXIGNAL den Pfad zu unterstützenden Beobachtungen, Aktualität, Widersprüchen und expliziten Unbekannten. Erklärung ist Teil des Produkts und keine nachträglich erzeugte Rechtfertigung.",
       "Primary CTA": "Zeigen Sie mir, woher AXIGNAL das weiß"
     },
     "it": {
       "Eyebrow": "Evidenze su richiesta",
-      "Headline": "Non limitarti a vedere un Xignal. Esamina perché merita attenzione.",
-      "Body": "Per i Xignal materiali, AXIGNAL conserva il percorso verso le osservazioni di supporto, la loro attualità, le contraddizioni e gli elementi esplicitamente sconosciuti. La spiegazione fa parte del prodotto, non è una giustificazione generata a posteriori.",
+      "Headline": "Non limitarti a vedere un segnale. Esamina perché merita attenzione.",
+      "Body": "Per i segnali materiali, AXIGNAL conserva il percorso verso le osservazioni di supporto, la loro attualità, le contraddizioni e gli elementi esplicitamente sconosciuti. La spiegazione fa parte del prodotto, non è una giustificazione generata a posteriori.",
       "Primary CTA": "Mostrami come lo sa AXIGNAL"
     },
     "pt": {
       "Eyebrow": "Evidências quando precisa",
-      "Headline": "Não veja apenas um Xignal. Inspecione por que merece atenção.",
-      "Body": "Para Xignals materiais, a AXIGNAL preserva o caminho até às observações de suporte, atualidade, contradições e desconhecidos explícitos. A explicação faz parte do produto, não é uma justificação gerada a posteriori.",
+      "Headline": "Não veja apenas um sinal. Inspecione por que merece atenção.",
+      "Body": "Para sinais materiais, a AXIGNAL preserva o caminho até às observações de suporte, atualidade, contradições e desconhecidos explícitos. A explicação faz parte do produto, não é uma justificação gerada a posteriori.",
       "Primary CTA": "Mostre-me como a AXIGNAL sabe"
     }
   },
@@ -457,37 +457,37 @@
     "en": {
       "Eyebrow": "Change over time",
       "Headline": "A snapshot tells you what was visible once.",
-      "Body": "AXIGNAL preserves observed-at time, currentness and append-only reobservation so a governed change can be compared with what was known before. A material change can surface as a Xignal: inspect what changed, why it deserves attention and the evidence behind it.",
+      "Body": "AXIGNAL preserves observed-at time, currentness and append-only reobservation so a governed change can be compared with what was known before. A material change can surface as a signal: inspect what changed, why it deserves attention and the evidence behind it.",
       "Value line": "Change becomes useful when it is traceable."
     },
     "es": {
       "Eyebrow": "Cambio a lo largo del tiempo",
       "Headline": "Una instantánea solo te dice lo que era visible una vez.",
-      "Body": "AXIGNAL conserva el momento observado, la actualidad y la reobservación append-only para comparar un cambio gobernado con lo que se sabía antes. Un cambio material puede emerger como Xignal: inspecciona qué cambió, por qué merece atención y la evidencia que lo sustenta.",
+      "Body": "AXIGNAL conserva el momento observado, la actualidad y la reobservación append-only para comparar un cambio gobernado con lo que se sabía antes. Un cambio material puede emerger como señal: inspecciona qué cambió, por qué merece atención y la evidencia que lo sustenta.",
       "Value line": "El cambio se vuelve útil cuando es trazable."
     },
     "fr": {
       "Eyebrow": "Évolution dans le temps",
       "Headline": "Un instantané vous dit seulement ce qui était visible à un moment donné.",
-      "Body": "AXIGNAL conserve le moment observé, l’actualité et la réobservation append-only afin de comparer un changement gouverné à ce qui était connu auparavant. Un changement matériel peut émerger comme Xignal : examinez ce qui a changé, pourquoi il mérite l’attention et les preuves qui le soutiennent.",
+      "Body": "AXIGNAL conserve le moment observé, l’actualité et la réobservation append-only afin de comparer un changement gouverné à ce qui était connu auparavant. Un changement matériel peut émerger comme signal : examinez ce qui a changé, pourquoi il mérite l’attention et les preuves qui le soutiennent.",
       "Value line": "Le changement devient utile lorsqu’il est traçable."
     },
     "de": {
       "Eyebrow": "Veränderung über die Zeit",
       "Headline": "Eine Momentaufnahme zeigt nur, was einmal sichtbar war.",
-      "Body": "AXIGNAL bewahrt Beobachtungszeit, Aktualität und append-only Wiederbeobachtung, damit eine kontrollierte Veränderung mit dem zuvor bekannten Zustand verglichen werden kann. Eine wesentliche Veränderung kann als Xignal erscheinen: prüfen Sie, was sich geändert hat, warum es Aufmerksamkeit verdient und welche Evidenz dahintersteht.",
+      "Body": "AXIGNAL bewahrt Beobachtungszeit, Aktualität und append-only Wiederbeobachtung, damit eine kontrollierte Veränderung mit dem zuvor bekannten Zustand verglichen werden kann. Eine wesentliche Veränderung kann als Signal erscheinen: prüfen Sie, was sich geändert hat, warum es Aufmerksamkeit verdient und welche Evidenz dahintersteht.",
       "Value line": "Veränderung wird nützlich, wenn sie nachvollziehbar ist."
     },
     "it": {
       "Eyebrow": "Cambiamento nel tempo",
       "Headline": "Un’istantanea ti dice solo ciò che era visibile una volta.",
-      "Body": "AXIGNAL conserva il momento dell’osservazione, l’attualità e la riosservazione append-only per confrontare un cambiamento governato con ciò che era noto prima. Un cambiamento materiale può emergere come Xignal: esamina cosa è cambiato, perché merita attenzione e le evidenze che lo sostengono.",
+      "Body": "AXIGNAL conserva il momento dell’osservazione, l’attualità e la riosservazione append-only per confrontare un cambiamento governato con ciò che era noto prima. Un cambiamento materiale può emergere come segnale: esamina cosa è cambiato, perché merita attenzione e le evidenze che lo sostengono.",
       "Value line": "Il cambiamento diventa utile quando è tracciabile."
     },
     "pt": {
       "Eyebrow": "Mudança ao longo do tempo",
       "Headline": "Uma fotografia instantânea diz apenas o que esteve visível uma vez.",
-      "Body": "A AXIGNAL preserva o momento observado, a atualidade e a reobservação append-only para comparar uma mudança governada com o que era conhecido antes. Uma mudança material pode emergir como Xignal: inspecione o que mudou, por que merece atenção e a evidência que o sustenta.",
+      "Body": "A AXIGNAL preserva o momento observado, a atualidade e a reobservação append-only para comparar uma mudança governada com o que era conhecido antes. Uma mudança material pode emergir como sinal: inspecione o que mudou, por que merece atenção e a evidência que o sustenta.",
       "Value line": "A mudança torna-se útil quando é rastreável."
     }
   },
@@ -651,46 +651,46 @@
       "mobile": "74% 50%"
     },
     "en": {
-      "Eyebrow": "Simple Xeed pricing",
-      "Headline": "Start with one Xeed.",
-      "Body": "€9.95/month includes one Xeed. Keep another organization under persistent observation for €4.95/month per additional Xeed.",
-      "Value line": "One Xeed can produce many Xignals. You do not pay per signal or per organization AXIGNAL discovers around it.",
-      "Primary CTA": "Plant a Xeed"
+      "Eyebrow": "Simple organization pricing",
+      "Headline": "Start with one organization.",
+      "Body": "€9.95/month includes one organization. Keep another organization under persistent observation for €4.95/month per additional organization.",
+      "Value line": "AXIGNAL can surface many signals around one organization. You do not pay per signal or per organization AXIGNAL discovers around it.",
+      "Primary CTA": "Add organization"
     },
     "es": {
-      "Eyebrow": "Precio simple por Xeed",
-      "Headline": "Empieza con una Xeed.",
-      "Body": "9,95 €/mes incluye una Xeed. Mantén otra organización bajo observación persistente por 4,95 €/mes por cada Xeed adicional.",
-      "Value line": "Una Xeed puede producir muchos Xignals. No pagas por señal ni por cada organización que AXIGNAL descubre a su alrededor.",
-      "Primary CTA": "Planta tu Xeed"
+      "Eyebrow": "Precio simple por organización",
+      "Headline": "Empieza con una organización.",
+      "Body": "9,95 €/mes incluye una organización. Mantén otra organización bajo observación persistente por 4,95 €/mes por cada organización adicional.",
+      "Value line": "AXIGNAL puede hacer emerger muchas señales alrededor de una organización. No pagas por señal ni por cada organización que AXIGNAL descubre a su alrededor.",
+      "Primary CTA": "Añade tu organización"
     },
     "fr": {
-      "Eyebrow": "Tarification simple par Xeed",
-      "Headline": "Commencez avec une Xeed.",
-      "Body": "9,95 €/mois inclut une Xeed. Maintenez une autre organisation sous observation persistante pour 4,95 €/mois par Xeed supplémentaire.",
-      "Value line": "Une Xeed peut produire de nombreux Xignals. Vous ne payez ni par signal ni par organisation découverte autour d’elle.",
-      "Primary CTA": "Plantez votre Xeed"
+      "Eyebrow": "Tarification simple par organisation",
+      "Headline": "Commencez avec une organisation.",
+      "Body": "9,95 €/mois inclut une organisation. Maintenez une autre organisation sous observation persistante pour 4,95 €/mois par organisation supplémentaire.",
+      "Value line": "AXIGNAL peut faire émerger de nombreux signaux autour d’une organisation. Vous ne payez ni par signal ni par organisation découverte autour d’elle.",
+      "Primary CTA": "Ajoutez votre organisation"
     },
     "de": {
-      "Eyebrow": "Einfache Xeed-Preise",
-      "Headline": "Beginnen Sie mit einer Xeed.",
-      "Body": "9,95 €/Monat enthält eine Xeed. Halten Sie eine weitere Organisation für 4,95 €/Monat je zusätzlicher Xeed unter persistenter Beobachtung.",
-      "Value line": "Eine Xeed kann viele Xignals hervorbringen. Sie zahlen weder pro Signal noch pro Organisation, die AXIGNAL in ihrem Umfeld entdeckt.",
-      "Primary CTA": "Ihre Xeed pflanzen"
+      "Eyebrow": "Einfache Organisation-Preise",
+      "Headline": "Beginnen Sie mit einer Organisation.",
+      "Body": "9,95 €/Monat enthält eine Organisation. Halten Sie eine weitere Organisation für 4,95 €/Monat je zusätzlicher Organisation unter persistenter Beobachtung.",
+      "Value line": "AXIGNAL kann rund um eine Organisation viele Signale sichtbar machen. Sie zahlen weder pro Signal noch pro Organisation, die AXIGNAL in ihrem Umfeld entdeckt.",
+      "Primary CTA": "Ihre Organisation hinzufügen"
     },
     "it": {
-      "Eyebrow": "Prezzo semplice per Xeed",
-      "Headline": "Inizia con una Xeed.",
-      "Body": "9,95 €/mese include una Xeed. Mantieni un’altra organizzazione sotto osservazione persistente per 4,95 €/mese per ogni Xeed aggiuntiva.",
-      "Value line": "Una Xeed può produrre molti Xignals. Non paghi per segnale né per ogni organizzazione che AXIGNAL scopre intorno ad essa.",
-      "Primary CTA": "Pianta la tua Xeed"
+      "Eyebrow": "Prezzo semplice per organizzazione",
+      "Headline": "Inizia con un’organizzazione.",
+      "Body": "9,95 €/mese include un’organizzazione. Mantieni un’altra organizzazione sotto osservazione persistente per 4,95 €/mese per ogni organizzazione aggiuntiva.",
+      "Value line": "AXIGNAL può far emergere molti segnali intorno a un’organizzazione. Non paghi per segnale né per ogni organizzazione che AXIGNAL scopre intorno ad essa.",
+      "Primary CTA": "Aggiungi la tua organizzazione"
     },
     "pt": {
-      "Eyebrow": "Preço simples por Xeed",
-      "Headline": "Comece com uma Xeed.",
-      "Body": "9,95 €/mês inclui uma Xeed. Mantenha outra organização sob observação persistente por 4,95 €/mês por cada Xeed adicional.",
-      "Value line": "Uma Xeed pode produzir muitos Xignals. Não paga por sinal nem por cada organização que a AXIGNAL descobre à sua volta.",
-      "Primary CTA": "Plante a sua Xeed"
+      "Eyebrow": "Preço simples por organização",
+      "Headline": "Comece com uma organização.",
+      "Body": "9,95 €/mês inclui uma organização. Mantenha outra organização sob observação persistente por 4,95 €/mês por cada organização adicional.",
+      "Value line": "A AXIGNAL pode fazer surgir muitos sinais em torno de uma organização. Não paga por sinal nem por cada organização que a AXIGNAL descobre à sua volta.",
+      "Primary CTA": "Adicione a sua organização"
     }
   },
   {
@@ -705,45 +705,45 @@
       "mobile": "58% 50%"
     },
     "en": {
-      "Eyebrow": "Plant the first seed",
-      "Headline": "Choose one organization. Plant its Xeed. See what emerges from the outside.",
-      "Body": "Plant one Xeed. Let AXIGNAL build only from what it can governably observe. Judge the product by a concrete loop: a Xignal surfaces, you inspect why it deserves attention, follow the evidence and decide whether the change matters to you.",
-      "Primary CTA": "Plant a Xeed",
+      "Eyebrow": "Start observing",
+      "Headline": "Choose one organization. Let AXIGNAL observe it. See what emerges from the outside.",
+      "Body": "Add one organization. Let AXIGNAL build only from what it can governably observe. Judge the product by a concrete loop: a signal surfaces, you inspect why it deserves attention, follow the evidence and decide whether the change matters to you.",
+      "Primary CTA": "Add organization",
       "Secondary CTA": "How AXIGNAL knows"
     },
     "es": {
-      "Eyebrow": "Planta la primera semilla",
-      "Headline": "Elige una organización. Planta su Xeed. Mira qué emerge desde fuera.",
-      "Body": "Planta una Xeed. Deja que AXIGNAL construya sólo con lo que puede observar de forma gobernada. Valora el producto por un bucle concreto: emerge un Xignal, inspeccionas por qué merece atención, sigues la evidencia y decides si el cambio te importa.",
-      "Primary CTA": "Planta tu Xeed",
+      "Eyebrow": "Empieza a observar",
+      "Headline": "Elige una organización. Deja que AXIGNAL la observe. Mira qué emerge desde fuera.",
+      "Body": "Añade una organización. Deja que AXIGNAL construya sólo con lo que puede observar de forma gobernada. Valora el producto por un bucle concreto: emerge una señal, inspeccionas por qué merece atención, sigues la evidencia y decides si el cambio te importa.",
+      "Primary CTA": "Añade una organización",
       "Secondary CTA": "Cómo lo sabe AXIGNAL"
     },
     "fr": {
-      "Eyebrow": "Plantez la première graine",
-      "Headline": "Choisissez une organisation. Plantez sa Xeed. Voyez ce qui émerge de l’extérieur.",
-      "Body": "Plantez une Xeed. Laissez AXIGNAL construire uniquement à partir de ce qu’il peut observer de manière gouvernée. Évaluez le produit sur une boucle concrète : un Xignal émerge, vous examinez pourquoi il mérite l’attention, suivez les preuves et décidez si le changement compte pour vous.",
-      "Primary CTA": "Plantez une Xeed",
+      "Eyebrow": "Commencez à observer",
+      "Headline": "Choisissez une organisation. Laissez AXIGNAL l’observer. Voyez ce qui émerge de l’extérieur.",
+      "Body": "Ajoutez une organisation. Laissez AXIGNAL construire uniquement à partir de ce qu’il peut observer de manière gouvernée. Évaluez le produit sur une boucle concrète : un signal émerge, vous examinez pourquoi il mérite l’attention, suivez les preuves et décidez si le changement compte pour vous.",
+      "Primary CTA": "Ajoutez une organisation",
       "Secondary CTA": "Comment AXIGNAL le sait"
     },
     "de": {
-      "Eyebrow": "Den ersten Samen pflanzen",
-      "Headline": "Wählen Sie eine Organisation. Pflanzen Sie ihre Xeed. Sehen Sie, was von außen entsteht.",
-      "Body": "Pflanzen Sie eine Xeed. Lassen Sie AXIGNAL nur auf dem aufbauen, was kontrolliert beobachtet werden kann. Bewerten Sie das Produkt anhand eines konkreten Kreislaufs: Ein Xignal erscheint, Sie prüfen, warum es Aufmerksamkeit verdient, folgen der Evidenz und entscheiden, ob die Veränderung für Sie relevant ist.",
-      "Primary CTA": "Xeed pflanzen",
+      "Eyebrow": "Beobachtung starten",
+      "Headline": "Wählen Sie eine Organisation. Lassen Sie AXIGNAL sie beobachten. Sehen Sie, was von außen sichtbar wird.",
+      "Body": "Fügen Sie eine Organisation hinzu. Lassen Sie AXIGNAL nur auf dem aufbauen, was kontrolliert beobachtet werden kann. Bewerten Sie das Produkt anhand eines konkreten Kreislaufs: Ein Signal erscheint, Sie prüfen, warum es Aufmerksamkeit verdient, folgen der Evidenz und entscheiden, ob die Veränderung für Sie relevant ist.",
+      "Primary CTA": "Organisation hinzufügen",
       "Secondary CTA": "Woher AXIGNAL es weiß"
     },
     "it": {
-      "Eyebrow": "Pianta il primo seme",
-      "Headline": "Scegli un’organizzazione. Pianta la sua Xeed. Guarda cosa emerge dall’esterno.",
-      "Body": "Pianta una Xeed. Lascia che AXIGNAL costruisca solo su ciò che può osservare in modo governato. Valuta il prodotto attraverso un ciclo concreto: emerge un Xignal, esamini perché merita attenzione, segui le evidenze e decidi se il cambiamento conta per te.",
-      "Primary CTA": "Pianta una Xeed",
+      "Eyebrow": "Inizia a osservare",
+      "Headline": "Scegli un’organizzazione. Lascia che AXIGNAL la osservi. Guarda cosa emerge dall’esterno.",
+      "Body": "Aggiungi un’organizzazione. Lascia che AXIGNAL costruisca solo su ciò che può osservare in modo governato. Valuta il prodotto attraverso un ciclo concreto: emerge un segnale, esamini perché merita attenzione, segui le evidenze e decidi se il cambiamento conta per te.",
+      "Primary CTA": "Aggiungi un’organizzazione",
       "Secondary CTA": "Come lo sa AXIGNAL"
     },
     "pt": {
-      "Eyebrow": "Plante a primeira semente",
-      "Headline": "Escolha uma organização. Plante a sua Xeed. Veja o que emerge do exterior.",
-      "Body": "Plante uma Xeed. Deixe a AXIGNAL construir apenas a partir do que consegue observar de forma governada. Avalie o produto através de um ciclo concreto: surge um Xignal, inspeciona por que merece atenção, segue a evidência e decide se a mudança é relevante para si.",
-      "Primary CTA": "Plante uma Xeed",
+      "Eyebrow": "Comece a observar",
+      "Headline": "Escolha uma organização. Deixe a AXIGNAL observá-la. Veja o que emerge do exterior.",
+      "Body": "Adicione uma organização. Deixe a AXIGNAL construir apenas a partir do que consegue observar de forma governada. Avalie o produto através de um ciclo concreto: surge um sinal, inspeciona por que merece atenção, segue a evidência e decide se a mudança é relevante para si.",
+      "Primary CTA": "Adicione uma organização",
       "Secondary CTA": "Como a AXIGNAL sabe"
     }
   }

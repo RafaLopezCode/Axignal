@@ -20,16 +20,16 @@ def test_public_landing_is_a_fifteen_chapter_runtime_not_a_review_fixture() -> N
     assert 'data-jump="15"' in HTML
 
 
-def test_runtime_preserves_xeed_xignal_commercial_semantics() -> None:
+def test_runtime_preserves_organization_signal_commercial_semantics() -> None:
     serialized = json.dumps(DATA, ensure_ascii=False)
-    assert "Start with one Xeed." in serialized
-    assert "Empieza con una Xeed." in serialized
-    assert "€9.95/month includes one Xeed." in serialized
-    assert "9,95 €/mes incluye una Xeed." in serialized
-    assert "One Xeed can produce many Xignals." in serialized
-    assert "Una Xeed puede producir muchos Xignals." in serialized
-    assert "€4.95/month per additional Xeed" in serialized
-    assert "4,95 €/mes por cada Xeed adicional" in serialized
+    assert "Start with one organization." in serialized
+    assert "Empieza con una organización." in serialized
+    assert "€9.95/month includes one organization." in serialized
+    assert "9,95 €/mes incluye una organización." in serialized
+    assert "AXIGNAL can surface many signals around one organization." in serialized
+    assert "AXIGNAL puede hacer emerger muchas señales alrededor de una organización." in serialized
+    assert "€4.95/month per additional organization" in serialized
+    assert "4,95 €/mes por cada organización adicional" in serialized
 
 
 def test_six_locales_are_present_for_every_chapter() -> None:
@@ -70,11 +70,14 @@ def test_accessible_navigation_and_reduced_motion_are_structural_contracts() -> 
     assert "aria-current" in HTML
 
 
-def test_pricing_is_specific_and_xignals_are_not_billable_units() -> None:
+def test_pricing_is_specific_and_signals_are_not_billable_units() -> None:
     assert "9,95 €" in HTML
     assert "+4,95 €" in HTML
-    assert "The Xignals that germinate from your Xeeds are not billable units." in HTML
-    assert "Los Xignals que germinan de tus Xeeds no son unidades facturables." in HTML
+    assert "Signals surfaced around your organizations are not billable units." in HTML
+    assert (
+        "Las señales que emergen alrededor de tus organizaciones no son unidades facturables."
+        in HTML
+    )
 
 
 def test_public_ctas_never_dead_end_or_fake_account_runtime() -> None:
@@ -151,16 +154,25 @@ def test_fr28_landing_promise_matches_demonstrated_runtime_boundaries() -> None:
     )
 
     start = by_id["START"]["en"]["Body"]
-    assert "a Xignal surfaces" in start
+    assert "a signal surfaces" in start
     assert "follow the evidence" in start
     assert "decide whether the change matters to you" in start
 
 
-def test_fr28_landing_preserves_xignal_not_conclusion_and_condition_bound_dri() -> None:
+def test_fr28_landing_preserves_signal_not_conclusion_and_condition_bound_dri() -> None:
     by_id = {chapter["id"]: chapter for chapter in DATA}
     evidence = by_id["EVIDENCE"]
-    for locale in ("en", "es", "fr", "de", "it", "pt"):
-        assert "Xignal" in evidence[locale]["Headline"]
+    signal_terms = {
+        "en": "signal",
+        "es": "señal",
+        "fr": "signal",
+        "de": "Signal",
+        "it": "segnale",
+        "pt": "sinal",
+    }
+    for locale, signal_term in signal_terms.items():
+        assert signal_term in evidence[locale]["Headline"]
+        assert "Xignal" not in evidence[locale]["Headline"]
 
     dri = by_id["DIGITAL_REPRESENTATION"]
     for locale in ("en", "es", "fr", "de", "it", "pt"):

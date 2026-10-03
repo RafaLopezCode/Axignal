@@ -39,7 +39,7 @@ conventions must therefore not automatically dominate the product (MASTER §25).
 | **AXIGNAL** | The system. |
 | **AXIGLAND** | The canonical economic world — the implicit sphere at the centre. |
 | **AXENT** | The autonomous observing/investigating intelligence that traverses it. |
-| **XIGNAL** | Persistent allocation of observation (not ownership, not a profile). |
+| **Signal** | Emergent economic signal that directs attention; not canonical truth by presentation alone. |
 | **FAXT** | Evidence-backed canonical fact. |
 | **INXIGHT** | Derived interpretation. |
 | **PATHX** | Explainable economic path. |
@@ -48,30 +48,21 @@ See `../architecture/TERMINOLOGY.md`.
 
 ### Isotipo
 
-The AXIGNAL isotipo is an **X formed by two orbital trajectories around an
-implicit sphere/world** (MASTER §4.8, §24):
+The canonical AXIGNAL isotipo is a **single observation monocle/lens**.
 
-```
-trajectory A
-      ╲
-       ╲
-        ╳   intersection / knowledge
-       ╱
-      ╱
-trajectory B
+- form: one circular lens with the approved lower support gesture;
+- canonical brand blue: `#354F98`;
+- meaning: observation, focus, examination, evidence and contextual attention;
+- scalable role: favicon, SERP mark, social avatar, application icon and product identity;
+- shared character language: El Observador holds the same isotipo as a monocle,
+  with one hand and no chain;
+- the isotipo no longer encodes an orbital X narrative.
 
-     [implicit world = AXIGLAND]
-```
+The AXIGNAL wordmark is Fraunces-derived outlined artwork in the approved source
+SVGs. The brand does not require X-prefixed product vocabulary.
 
-- sphere/world → AXIGLAND
-- orbital trajectories → observation / exploration
-- intersection / X → economic intersections
-- movement → continuous observation
-
-Potential intersections to express: COMPANY × COMPANY · COMPANY × MARKET ·
-CAPABILITY × DEMAND · PRODUCT × MARKET · EVIDENCE × CLAIM · ORGANIZATION × TIME.
-
-Do not reduce the X to decorative typography.
+Authoritative source artwork and generated derivatives are governed by
+`BRAND_ASSET_AUTHORITY_V2.md`.
 
 ## Epistemic UX
 

@@ -1,38 +1,61 @@
 # AXIGNAL Canonical Terminology
 
-> Canonical vocabulary from the MASTER PRODUCT MODEL §4 and §47. These names are
-> **brand and domain primitives**. Do not rename them casually. Renaming requires
-> an explicit CTO change to the MASTER.
+> Canonical vocabulary derived from the MASTER Product Model. New public
+> surfaces use human-readable language. Legacy X-prefixed product terms are
+> deprecated unless they remain inside migration-bound implementation identifiers.
 
 | Term | Meaning | Do not confuse with |
 | --- | --- | --- |
-| **AXIGNAL** | The complete system: product, architecture, experience and epistemic contract. The name encodes *assign*. | An "AI website analyzer", an SEO tool, a directory. |
-| **AXIGLAND** | The one canonical, temporal, living economic world AXIGNAL builds and maintains. Replaces the provisional internal name "Amazonas". | A downloadable database or a per-customer graph. |
-| **AXENT** | AXIGNAL's autonomous agent/intelligence: observe → investigate → resolve → verify → connect → monitor → explain. | A generic chatbot. Conversation is one interface, not its identity. |
-| **XEED** | The seed planted by a customer to start a persistent observation/germination objective around one canonical Organization. A Living Xeed is the persistent customer context that AXIGNAL continues to cultivate. | An Organization copy, ownership, canonical truth, or a Xignal. |
-| **XIGNAL** | An economic signal that emerges from Brain observation/research while Xeeds germinate and evolve. One Xeed may produce many Xignals. | A Xeed, billable unit, FAXT, INXIGHT, RELATIONSHIP, PATHX, or canonical write. |
-| **FAXT** | A canonical, evidence-backed unit of knowledge with subject, predicate, object, evidence, provenance, temporality, currentness, epistemic state and contradictions. | An opinion, a commercial possibility, or an INXIGHT. |
-| **INXIGHT** | Interpretation/derived knowledge from several FAXTs and/or relationships. Must be explainable down to its sources and must degrade when they go stale. | A FAXT. |
-| **PATHX** | An explainable economic path between entities. Replaces the provisional product name `EconomicPath` (a technical equivalent type may remain internally). | A single relationship. |
-| **Digital Representation Intelligence** | AXIGNAL's source-neutral observation of how authorized digital surfaces represent an organization, with explicit conditions, instrument/version, time and uncertainty. | SEO/GEO execution, social management or business truth. |
-| **Public Experience Intelligence** | A DRI capability that derives explainable, temporal signals from public experience observations without treating reviews as truth. | A separate reputation product, customer population census or FAXT. |
-| **RepresentationGap** | An explainable INXIGHT derived by comparing economic knowledge with condition-bound digital representation. | A FAXT or proof that a capability is absent. |
-| **ReviewObservation** | A future semantic observation of a public review and its source-reported attributes, subject resolution, time/currentness and permitted lineage. | A verified fact about the underlying experience. |
+| **AXIGNAL** | The complete system: product, architecture, experience and epistemic contract. | An SEO tool, company directory, CRM or generic AI wrapper. |
+| **AXIGLAND** | The one canonical, temporal, living economic world AXIGNAL builds and maintains. Primarily an internal architectural name. | A customer-owned graph, dashboard or downloadable database. |
+| **Panorama** | Human-facing projection of relevant AXIGLAND knowledge for a task, focus and time. | AXIGLAND itself or a second truth. |
+| **AXENT** | Autonomous investigation/orchestration intelligence: observe → investigate → resolve → verify → connect → monitor → explain. | Truth authority or a generic chatbot. |
+| **Organization** | Canonical economic subject. Public UX anchors observation on an Organization. | A customer profile or tenant-owned copy. |
+| **Observation Focus / Foco de observación** | Persistent allocation of compute and attention around one canonical Organization. | Ownership, canonical truth or the Organization entity itself. |
+| **Signal / Señal** | Emergent economic signal surfaced by Brain observation/research. | A billable object, FAXT, INXIGHT, Relationship, PATHX or canonical write. |
+| **FAXT** | Evidence-backed canonical unit with provenance, temporality, currentness and epistemic state. | Opinion, opportunity or INXIGHT. |
+| **INXIGHT** | Derived explainable knowledge supported by canonical inputs. | FAXT. |
+| **PATHX** | Explainable economic path between entities. | A single Relationship. |
+| **Evidence** | Permitted support/provenance reachable from a material output. | A claim merely because a model generated it. |
+| **Opportunity** | Derived possible economic relevance; POTENTIAL by default. | Observed truth. |
 
-## Doctrinal statements (preserve verbatim)
+## Public product vocabulary
 
-- AXIGNAL maps the observable real economy.
-- One world model. One canonical graph. Demand-driven materialization.
+Preferred new copy:
+- **Add an organization**
+- **Organizations**
+- **Signals**
+- **Panorama / Panorama general**
+- **Evidence**
+- **Relationships**
+- **Changes**
+- **Opportunities**
+- **Show me how AXIGNAL knows**
+
+Do not introduce new public copy using `Xeed`, `Xignal` or planting/germination
+metaphors.
+
+## Legacy aliases
+
+`Xeed` → **Observation Focus**
+`Xignal` → **Signal**
+
+Legacy code identifiers such as `XeedGerminationState`,
+`CROSS_XEED_REUSE` or `XIGNAL_STATE_CHANGED` may remain temporarily until
+a separately governed implementation migration. Their presence does not make
+the old terms valid public vocabulary.
+
+## Doctrinal statements
+
+- AXIGNAL models the observable real economy; it does not manage the customer's business.
+- One world model. One canonical AXIGLAND. Demand-driven materialization.
 - Compute once, learn permanently, verify when necessary.
 - Perspective is a query, not a permission.
 - Users may direct AXIGNAL's attention, but never its conclusions.
-- Planting a Xeed buys persistent observation, not influence.
-- One Xeed may produce many Xignals; Xignals are not individually billable.
+- An Observation Focus buys persistent observation, not influence.
+- One Observation Focus may surface many Signals; Signals are not individually billable.
 - The map cannot be bought. Observation can.
-- Hostile attention improves the map instead of poisoning it.
-- Observed evidence outranks inferred compatibility when describing what exists.
-- UNKNOWN ≠ FALSE.
-- You choose where AXIGNAL looks. You don't choose what AXIGNAL sees.
+- UNKNOWN != FALSE.
+- OBSERVED != POTENTIAL.
+- You choose where AXIGNAL looks. You do not choose what AXIGNAL sees.
 - LIVE, never DONE.
-
-[executed on device: DESKTOP-7L6CMEJ (d615520f-0404-49b0-83c7-620cc18c31f4)]

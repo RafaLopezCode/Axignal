@@ -31,21 +31,21 @@ const chromePath = path.resolve(
 
 const svgAssets = [
   {
-    source: "logo_horizontal_light_fraunces.svg",
+    source: "Logo_Claro.svg",
     output: "logo-light.svg",
     role: "logo",
     variant: "light-background",
     composition: "horizontal",
   },
   {
-    source: "logo_horizontal_dark_fraunces.svg",
+    source: "Logo_Oscuro.svg",
     output: "logo-dark.svg",
     role: "logo",
     variant: "dark-background",
     composition: "horizontal",
   },
   {
-    source: "axignal_isotipo.svg",
+    source: "rrss.svg",
     output: "isotope.svg",
     role: "isotope",
     variant: "shared-light-and-dark",
@@ -77,20 +77,26 @@ async function sendCdp(socket, method, params = {}) {
 sendCdp.nextId = 1;
 sendCdp.pending = new Map();
 
-function makeIco(png) {
-  const header = Buffer.alloc(22);
+function makeIco(entries) {
+  const count = entries.length;
+  const header = Buffer.alloc(6 + count * 16);
   header.writeUInt16LE(0, 0);
   header.writeUInt16LE(1, 2);
-  header.writeUInt16LE(1, 4);
-  header.writeUInt8(32, 6);
-  header.writeUInt8(32, 7);
-  header.writeUInt8(0, 8);
-  header.writeUInt8(0, 9);
-  header.writeUInt16LE(1, 10);
-  header.writeUInt16LE(32, 12);
-  header.writeUInt32LE(png.length, 14);
-  header.writeUInt32LE(header.length, 18);
-  return Buffer.concat([header, png]);
+  header.writeUInt16LE(count, 4);
+  let offset = header.length;
+  entries.forEach(({ size, png }, index) => {
+    const base = 6 + index * 16;
+    header.writeUInt8(size >= 256 ? 0 : size, base);
+    header.writeUInt8(size >= 256 ? 0 : size, base + 1);
+    header.writeUInt8(0, base + 2);
+    header.writeUInt8(0, base + 3);
+    header.writeUInt16LE(1, base + 4);
+    header.writeUInt16LE(32, base + 6);
+    header.writeUInt32LE(png.length, base + 8);
+    header.writeUInt32LE(offset, base + 12);
+    offset += png.length;
+  });
+  return Buffer.concat([header, ...entries.map(({ png }) => png)]);
 }
 
 async function rasterizeFavicon(sourceBytes) {
@@ -153,7 +159,7 @@ async function rasterizeFavicon(sourceBytes) {
       `  image.src = ${JSON.stringify(faviconData)};`,
       "  await image.decode();",
       "  const output = {};",
-      "  for (const size of [16, 32]) {",
+      "  for (const size of [16, 32, 48, 96, 180, 192, 512]) {",
       "    const canvas = document.createElement('canvas');",
       "    canvas.width = size;",
       "    canvas.height = size;",
@@ -224,7 +230,7 @@ for (const asset of svgAssets) {
 }
 
 const rasterized = await rasterizeFavicon(sourceBytesByName.get("favicon.svg"));
-for (const size of [16, 32]) {
+for (const size of [16, 32, 48, 96, 180, 192, 512]) {
   const outputFile = `favicon-${size}x${size}.png`;
   const bytes = rasterized.pngs[size];
   await writeFile(path.join(outputDirectory, outputFile), bytes);
@@ -242,19 +248,74 @@ for (const size of [16, 32]) {
   });
 }
 
-const icoBytes = makeIco(rasterized.pngs[32]);
+const icoBytes = makeIco([16, 32, 48].map((size) => ({ size, png: rasterized.pngs[size] })));
 await writeFile(path.join(outputDirectory, "favicon.ico"), icoBytes);
 outputRecords.push({
   source_file: "favicon.svg",
   source_sha256: digest(sourceBytesByName.get("favicon.svg")),
   role: "favicon",
-  variant: "32x32-embedded-png",
+  variant: "16x16-32x32-48x48-embedded-pngs",
   composition: "square-with-brand-safe-padding",
   output_file: "favicon.ico",
-  output_dimensions: "32x32 embedded PNG",
+  output_dimensions: "16x16, 32x32 and 48x48 embedded PNGs",
   output_format: "ICO",
-  output_operation: "ICO container around the direct 32x32 SVG-derived PNG",
+  output_operation: "Multi-resolution ICO container around direct 16x16, 32x32 and 48x48 SVG-derived PNGs",
   output_sha256: digest(icoBytes),
+});
+
+
+const aliasAssets = [
+  ["apple-touch-icon.png", rasterized.pngs[180], "apple-touch-icon", "180x180"],
+  ["icon-192.png", rasterized.pngs[192], "app-icon", "192x192"],
+  ["icon-512.png", rasterized.pngs[512], "app-icon", "512x512"],
+  ["organization-logo-512.png", rasterized.pngs[512], "structured-data-logo", "512x512"],
+  ["serp-logo-512.png", rasterized.pngs[512], "search-logo", "512x512"],
+];
+for (const [outputFile, bytes, role, dimensions] of aliasAssets) {
+  await writeFile(path.join(outputDirectory, outputFile), bytes);
+  outputRecords.push({
+    source_file: "favicon.svg",
+    source_sha256: digest(sourceBytesByName.get("favicon.svg")),
+    role,
+    variant: dimensions,
+    composition: "square-with-brand-safe-padding",
+    output_file: outputFile,
+    output_dimensions: dimensions,
+    output_format: "PNG",
+    output_operation: "Alias of direct SVG-to-canvas rasterization at target size",
+    output_sha256: digest(bytes),
+  });
+}
+const socialAvatar = normalizedSvg(sourceBytesByName.get("rrss.svg"));
+await writeFile(path.join(outputDirectory, "social-avatar.svg"), socialAvatar);
+outputRecords.push({
+  source_file: "rrss.svg",
+  source_sha256: digest(sourceBytesByName.get("rrss.svg")),
+  role: "social-avatar",
+  variant: "vector",
+  composition: "square",
+  output_file: "social-avatar.svg",
+  output_dimensions: "viewBox 0 0 901 900",
+  output_format: "SVG",
+  output_operation: "UTF-8/LF normalization only",
+  output_sha256: digest(socialAvatar),
+});
+const pinnedTab = Buffer.from(
+  sourceBytesByName.get("favicon.svg").toString("utf8").replaceAll("rgb(53,79,152)", "rgb(0,0,0)"),
+  "utf8",
+);
+await writeFile(path.join(outputDirectory, "safari-pinned-tab.svg"), pinnedTab);
+outputRecords.push({
+  source_file: "favicon.svg",
+  source_sha256: digest(sourceBytesByName.get("favicon.svg")),
+  role: "safari-pinned-tab",
+  variant: "monochrome",
+  composition: "square",
+  output_file: "safari-pinned-tab.svg",
+  output_dimensions: "viewBox 0 0 901 900",
+  output_format: "SVG",
+  output_operation: "Canonical geometry; brand fill mapped to monochrome black for mask use",
+  output_sha256: digest(pinnedTab),
 });
 
 const manifest = {

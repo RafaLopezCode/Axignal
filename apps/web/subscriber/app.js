@@ -2070,7 +2070,7 @@ function configureUxLab() {
     button.title = label
     button.addEventListener('click', () => {
       // Only the context already represented by the authorized projection is
-      // selectable. Other fixture labels do not grant Xeed read authority.
+      // selectable. Other fixture labels do not grant Observation Focus read authority.
       setXeedMenuOpen(false)
     })
     list.append(button)

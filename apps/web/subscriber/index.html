@@ -33,20 +33,20 @@
           <button class="gv-today" id="today" aria-current="page"><i aria-hidden="true"></i><span data-copy="navigation.today">Today</span></button>
 
           <section class="gv-sec">
-            <span class="gv-cap" data-copy="navigation.xeed">Xeed</span>
-            <button class="gv-xeedsel" id="xeed-current" type="button" disabled aria-haspopup="listbox" aria-expanded="false" aria-controls="lab-contexts" data-copy-aria-label="context.activeAccessibleName" aria-label="Active Xeed">
+            <span class="gv-cap" data-copy="navigation.xeed">Organization</span>
+            <button class="gv-xeedsel" id="xeed-current" type="button" disabled aria-haspopup="listbox" aria-expanded="false" aria-controls="lab-contexts" data-copy-aria-label="context.activeAccessibleName" aria-label="Active organization">
               <span class="gv-xeed-dot"><i aria-hidden="true"></i></span>
               <span class="gv-xeed-body"><b id="xeed-label">Current context</b><em class="sr-only" data-copy="context.private">Private view</em></span>
               <span class="gv-xeed-chev" aria-hidden="true"><svg class="ax-icon" focusable="false"><use href="/assets/icons/lucide/axignal-ui.svg#chevron-down"></use></svg></span>
             </button>
             <div class="lab-contexts" id="lab-contexts" hidden>
-              <label class="sr-only" for="lab-context-search" data-copy="context.searchLabel">Search Xeeds</label>
-              <input id="lab-context-search" type="search" data-copy-placeholder="context.searchPlaceholder" placeholder="Search Xeeds" />
-              <p class="lab-context-note" data-copy="context.switchUnavailable">Other Xeeds are not available in this demonstration.</p>
-              <div id="lab-context-list" role="listbox" data-copy-aria-label="context.availableXeeds" aria-label="Available Xeeds"></div>
-              <p class="lab-context-empty" id="lab-context-empty" data-copy="context.noMatches" hidden>No matching Xeeds.</p>
+              <label class="sr-only" for="lab-context-search" data-copy="context.searchLabel">Search organizations</label>
+              <input id="lab-context-search" type="search" data-copy-placeholder="context.searchPlaceholder" placeholder="Search organizations" />
+              <p class="lab-context-note" data-copy="context.switchUnavailable">Other organizations are not available in this demonstration.</p>
+              <div id="lab-context-list" role="listbox" data-copy-aria-label="context.availableXeeds" aria-label="Available organizations"></div>
+              <p class="lab-context-empty" id="lab-context-empty" data-copy="context.noMatches" hidden>No matching organizations.</p>
             </div>
-            <button class="gv-plant" type="button" disabled><svg class="ax-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/lucide/axignal-ui.svg#plus"></use></svg><span data-copy="navigation.createXeed">Plant Xeed</span></button>
+            <button class="gv-plant" type="button" disabled><svg class="ax-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/lucide/axignal-ui.svg#plus"></use></svg><span data-copy="navigation.createXeed">Add organization</span></button>
           </section>
 
           <details class="gv-sec gv-advanced" id="governance-section">
@@ -88,7 +88,7 @@
             <svg class="ax-icon" aria-hidden="true" focusable="false"><use href="/assets/icons/lucide/axignal-ui.svg#arrow-left"></use></svg>
           </button>
           <div class="mobile-header-copy">
-            <span class="mono" data-copy="mobile.context">Current Xignal</span>
+            <span class="mono" data-copy="mobile.context">Current signal</span>
             <b id="mobile-focus-label">Today</b>
           </div>
           <button class="mobile-axent-open" id="mobile-axent-open" type="button" aria-controls="axent-panel" aria-expanded="false" data-copy-aria-label="mobile.openAxent" aria-label="Open AXENT">
@@ -245,9 +245,9 @@
     <dialog id="plant-xeed-dialog" class="plant-xeed-dialog">
       <form id="plant-xeed-form" method="dialog" class="plant-xeed-form">
         <div class="mono" data-copy="plant.eyebrow">FIRST OBSERVATION</div>
-        <h2 data-copy="plant.title">Plant a Xeed</h2>
+        <h2 data-copy="plant.title">Add an organization</h2>
         <p data-copy="plant.help">Choose the private observation context and the authorized public surface AXIGNAL should inspect.</p>
-        <label><span data-copy="plant.label">Xeed name</span><input id="plant-xeed-label" name="label" value="AXIGNAL first proof" autocomplete="off" required maxlength="80"></label>
+        <label><span data-copy="plant.label">Organization name</span><input id="plant-xeed-label" name="label" value="AXIGNAL first proof" autocomplete="off" required maxlength="80"></label>
         <label><span data-copy="plant.target">Public website</span><input id="plant-xeed-target" name="targetUri" value="https://axignal.com/" type="url" required></label>
         <p id="plant-xeed-status" class="plant-xeed-status" role="status" aria-live="polite"></p>
         <div class="plant-xeed-actions">

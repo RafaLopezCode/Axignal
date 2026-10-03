@@ -1,3 +1,7 @@
+> **SUPERSEDED 2026-10-03:** Historical record only. Current authority is
+> [BRAND_ASSET_AUTHORITY_V2.md](./BRAND_ASSET_AUTHORITY_V2.md). The gold/orbital-X
+> artwork documented below is retired and must not be used by current runtime.
+
 # AXIGNAL Brand Asset Authority V1
 
 `D:\AXIGNAL\LOGOS` is the authoritative, read-only artwork source. The SVGs

@@ -120,8 +120,8 @@ def test_ao05_ui_distinguishes_reuse_growth_and_cost_scopes() -> None:
     assert "Canonical admissions" in js
     assert "Shared cost attribution" in js
     assert "Triggered cost attribution" in js
-    assert "Diagnose this Xeed" in js
-    assert "does not prove that zero Xeeds exist" in js
+    assert "Diagnose this Observation Focus" in js
+    assert "does not prove that zero Observation Focuses exist" in js
     assert 'id="admin-observatory"' in html
 
 

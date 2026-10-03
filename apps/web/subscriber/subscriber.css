@@ -17,7 +17,7 @@
   --brass: #967a2f;
   --brass-2: #b99a4e;
   --brass-w: rgba(150, 122, 47, 0.12);
-  --logo-gold: #b3a778;
+  --logo-blue: #354f98;
   --panel: rgba(250, 248, 242, 0.6);
 
   --st-observed: #2f6b62;
@@ -193,7 +193,7 @@ input {
   gap: 10px;
 }
 .logo-glyph {
-  color: var(--logo-gold);
+  color: var(--logo-blue);
   flex: none;
 }
 .logo-word {
@@ -1771,7 +1771,7 @@ input {
 .ax-glyph {
   display: inline-grid;
   place-items: center;
-  color: var(--logo-gold);
+  color: var(--logo-blue);
 }
 .ax-glyph .logo-mark {
   animation: axbreathe 4.8s var(--ease) infinite;
@@ -2744,7 +2744,7 @@ input {
   color: var(--ink);
 }
 
-/* persistent Xeed anchor */
+/* persistent organization anchor */
 .here {
   position: absolute;
   left: 106px;
@@ -2869,7 +2869,7 @@ input {
   border-radius: 999px;
 }
 
-/* ===================== SIDEBAR IA + XEED SWITCHER ====================== */
+/* ===================== SIDEBAR IA + ORGANIZATION SWITCHER ====================== */
 .gv-today {
   display: flex;
   align-items: center;
@@ -3820,7 +3820,7 @@ input {
   text-decoration: none;
 }
 .gv-logo-full .logo { gap: 9px; }
-.gv-logo-mark { display: none; color: var(--logo-gold); }
+.gv-logo-mark { display: none; color: var(--logo-blue); }
 .gov.collapsed .gv-logo-full { display: none; }
 .gov.collapsed .gv-logo-mark { display: block; }
 .gv-workspace,
@@ -4992,7 +4992,7 @@ html[dir='rtl'] .trail { direction: rtl; }
 }
 
 
-/* FR-30 ? real first-Xeed production proof. */
+/* FR-30 ? real first-organization production proof. */
 .first-xeed-empty {
   position: absolute;
   inset: 0;

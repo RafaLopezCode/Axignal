@@ -347,14 +347,14 @@ def test_sidebar_uses_quiet_truthful_states_and_golden_master_rail_contract() ->
     assert xeed.get("aria-expanded") == "false"
     assert xeed.get("aria-controls") == "lab-contexts"
     assert 'id="lab-contexts" hidden' in html
-    assert "Other Xeeds are not available in this demonstration." in html
+    assert "Other organizations are not available in this demonstration." in html
     _, xeed_list = _by_id(elements, "lab-context-list")
     assert xeed_list.get("role") == "listbox"
     assert 'id="xeed-organization-label"' not in html
     assert 'data-copy="context.organizationLabel"' not in html
     assert '<em class="sr-only" data-copy="context.private">Private view</em>' in html
     assert 'data-copy="navigation.createXeed"' in html
-    assert "Plant Xeed" in presentation
+    assert "Add organization" in presentation
     assert "state.projection.organization.name" not in script
     assert "aria-selected" in script
     assert "setXeedMenuOpen(true, true)" in script
@@ -538,7 +538,19 @@ def test_branding_uses_authoritative_assets_and_reproducible_derivatives() -> No
         "favicon.svg",
         "favicon-16x16.png",
         "favicon-32x32.png",
+        "favicon-48x48.png",
+        "favicon-96x96.png",
+        "favicon-180x180.png",
+        "favicon-192x192.png",
+        "favicon-512x512.png",
         "favicon.ico",
+        "apple-touch-icon.png",
+        "icon-192.png",
+        "icon-512.png",
+        "organization-logo-512.png",
+        "serp-logo-512.png",
+        "social-avatar.svg",
+        "safari-pinned-tab.svg",
     }
     for filename, record in records.items():
         output = manifest_path.parent / filename
@@ -546,7 +558,7 @@ def test_branding_uses_authoritative_assets_and_reproducible_derivatives() -> No
         assert hashlib.sha256(content).hexdigest() == record["output_sha256"]
         assert record["source_sha256"]
 
-    for size in (16, 32):
+    for size in (16, 32, 48, 96, 180, 192, 512):
         png = (manifest_path.parent / f"favicon-{size}x{size}.png").read_bytes()
         assert png.startswith(b"\x89PNG\r\n\x1a\n")
         assert int.from_bytes(png[16:20], "big") == size
@@ -554,8 +566,14 @@ def test_branding_uses_authoritative_assets_and_reproducible_derivatives() -> No
 
     ico = (manifest_path.parent / "favicon.ico").read_bytes()
     assert ico[:4] == b"\x00\x00\x01\x00"
-    assert int.from_bytes(ico[4:6], "little") == 1
-    assert ico[22:].startswith(b"\x89PNG\r\n\x1a\n")
+    assert int.from_bytes(ico[4:6], "little") == 3
+    sizes = [ico[6 + index * 16] or 256 for index in range(3)]
+    assert sizes == [16, 32, 48]
+    for index in range(3):
+        base = 6 + index * 16
+        size = int.from_bytes(ico[base + 8 : base + 12], "little")
+        offset = int.from_bytes(ico[base + 12 : base + 16], "little")
+        assert ico[offset : offset + min(size, 8)].startswith(b"\x89PNG\r\n\x1a\n")
 
 
 def test_subscriber_icons_consume_the_canonical_lucide_grammar() -> None:

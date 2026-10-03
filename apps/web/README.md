@@ -6,7 +6,7 @@ during the governance bootstrap.
 ## Rules
 
 - The web app is a **presentation and query layer**. It reads from AXIGLAND
-  projections and may issue XIGNAL (observation) requests.
+  projections and may issue SIGNAL (observation) requests.
 - The web app MUST NOT write canonical state directly. Canonical writes happen
   only through the domain layer after evidence admission.
 - No `Edit company profile` capability may exist (MASTER §23, §32).

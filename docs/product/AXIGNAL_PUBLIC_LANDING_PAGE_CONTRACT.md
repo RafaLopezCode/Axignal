@@ -13,20 +13,20 @@ The visitor journey MUST answer, in order:
 
 ```text
 WHY CARE
-→ WHAT AXIGNAL OBSERVES
-→ HOW OBSERVATION BECOMES ECONOMIC UNDERSTANDING
-→ WHAT AXIGLAND IS
-→ WHAT PLANTING A XEED STARTS
-→ WHAT THE FIRST MAP PROVIDES
-→ HOW CLAIMS RETURN TO EVIDENCE
-→ HOW POTENTIAL RELEVANCE IS DISCOVERED WITHOUT BECOMING FACT
-→ HOW DIGITAL REPRESENTATION IS OBSERVED
-→ HOW CHANGE IS PRESERVED OVER TIME
-→ WHAT AXENT DOES
-→ WHY AXIGNAL REMAINS INDEPENDENT
-→ WHO CAN USE IT
-→ WHAT OBSERVATION COSTS
-→ PLANT ONE XEED
+â†’ WHAT AXIGNAL OBSERVES
+â†’ HOW OBSERVATION BECOMES ECONOMIC UNDERSTANDING
+â†’ WHAT AXIGLAND IS
+â†’ WHAT ADDING AN ORGANIZATION STARTS
+â†’ WHAT THE FIRST MAP PROVIDES
+â†’ HOW CLAIMS RETURN TO EVIDENCE
+â†’ HOW POTENTIAL RELEVANCE IS DISCOVERED WITHOUT BECOMING FACT
+â†’ HOW DIGITAL REPRESENTATION IS OBSERVED
+â†’ HOW CHANGE IS PRESERVED OVER TIME
+â†’ WHAT AXENT DOES
+â†’ WHY AXIGNAL REMAINS INDEPENDENT
+â†’ WHO CAN USE IT
+â†’ WHAT OBSERVATION COSTS
+â†’ ADD ONE ORGANIZATION
 ```
 
 The landing MUST make AXIGNAL understandable without requiring prior knowledge of its ontology.
@@ -37,10 +37,10 @@ Public copy MUST preserve these invariants:
 
 ```text
 ONE_CANONICAL_AXIGLAND=YES
-XEED_IS_PERSISTENT_OBSERVATION_FOCUS=YES
-XEED_IS_OWNERSHIP=NO
-XIGNAL_IS_OBSERVATION_DERIVED_SIGNAL=YES
-XIGNAL_IS_BILLABLE_UNIT=NO
+OBSERVATION_FOCUS_IS_PERSISTENT=YES
+OBSERVATION_FOCUS_IS_OWNERSHIP=NO
+SIGNAL_IS_OBSERVATION_DERIVED=YES
+SIGNAL_IS_BILLABLE_UNIT=NO
 USER_DIRECTS_ATTENTION_NOT_CONCLUSIONS=YES
 CLAIM_IS_WRITE=NO
 OBSERVED_IS_POTENTIAL=NO
@@ -84,8 +84,8 @@ Canonical chapters and order:
 1. OUTSIDE
 2. OBSERVE
 3. UNDERSTAND
-4. AXIGLAND
-5. XEED
+4. PANORAMA
+5. ORGANIZATION
 6. FIRST_MAP
 7. EVIDENCE
 8. DISCOVER
@@ -105,7 +105,7 @@ Keyboard, pointer/wheel, touch and accessible navigation MUST converge on the sa
 
 Wheel/trackpad pagination MUST feel intentional rather than like native document scrolling. One deliberate gesture advances at most one chapter; uncontrolled multi-chapter skipping, raw scroll-jacking and long lockouts are prohibited.
 
-The transition MUST preserve visual continuity through a restrained editorial motion grammar: current copy exits, artwork crossfades/reframes, next copy enters, and the chapter/question state updates as one coordinated transition. The target duration SHOULD remain in the approximate 420–700 ms range on standard motion, tuned by browser QA rather than by decorative animation goals.
+The transition MUST preserve visual continuity through a restrained editorial motion grammar: current copy exits, artwork crossfades/reframes, next copy enters, and the chapter/question state updates as one coordinated transition. The target duration SHOULD remain in the approximate 420â€“700 ms range on standard motion, tuned by browser QA rather than by decorative animation goals.
 
 The interaction MUST include hysteresis/cooldown sufficient to prevent accidental double-advance while remaining responsive to a second deliberate gesture. Keyboard, click/direct navigation and touch MUST resolve through the same transition state machine.
 
@@ -123,12 +123,12 @@ Every chapter MUST retain the same header authority and hierarchy:
 
 - AXIGNAL logo/wordmark;
 - What is AXIGNAL?;
-- AXIGLAND;
+- Panorama;
 - How it knows;
 - Knowledge;
 - Pricing;
 - Log in;
-- + Plant Xeed.
+- + Add organization.
 
 Labels are localized except protected product names.
 
@@ -150,7 +150,7 @@ paths into AXIGNAL.
 The knowledge surface MUST support three content classes:
 
 - **Canonical knowledge:** stable pages for AXIGNAL concepts and methodology,
-  including AXIGLAND, Xeed, persistent observation, evidence, temporal history,
+  including AXIGLAND, Organization, Observation Focus, Signals, evidence, temporal history,
   observed versus potential relationships and Digital Representation
   Intelligence.
 - **Editorial intelligence:** dated analysis, research notes and material
@@ -172,7 +172,7 @@ applicable, and deliberate internal links to the relevant canonical concept,
 evidence methodology, use case or product action. Locale variants MUST preserve
 meaning and MUST NOT create duplicate competing truths.
 
-High-intent transactional pages MAY lead directly to Pricing or Plant Xeed.
+High-intent transactional pages MAY lead directly to Pricing or Add organization.
 Informational pages SHOULD lead to the next useful concept or evidence path
 before conversion. The public knowledge surface MUST NOT drift into an SEO/GEO
 execution product, generic news publisher, CRM or content farm.
@@ -189,9 +189,9 @@ Canonical EN headline:
 > Do you really know how your company looks from the outside?
 
 Canonical ES headline:
-> ¿De verdad sabes cómo se ve tu empresa desde fuera?
+> Â¿De verdad sabes cÃ³mo se ve tu empresa desde fuera?
 
-Primary action: plant the visitor's Xeed.
+Primary action: add the visitor's organization for persistent observation.
 
 ### 6.2 OBSERVE
 
@@ -210,20 +210,20 @@ Required meaning: AXIGNAL's product value is governed economic understanding, no
 Required value statement:
 > Less disconnected information. More economic context.
 
-### 6.4 AXIGLAND
+### 6.4 PANORAMA
 
-Question: **Where does the understanding persist?**
+Question: **How does AXIGNAL organize what matters around this organization?**
 
-Required meaning: AXIGLAND is one canonical, temporal, governed economic world/memory. Perspective changes MUST NOT imply multiple customer-owned truths.
+Required meaning: Panorama is the human-facing projection of relevant knowledge for the current focus and time. It is backed by one canonical, temporal, governed AXIGLAND. Perspective changes MUST NOT imply multiple customer-owned truths.
 
 Required value statement:
 > Change the perspective. Not the underlying truth.
 
-### 6.5 XEED
+### 6.5 ORGANIZATION / OBSERVATION FOCUS
 
 Question: **What happens when I add a company?**
 
-Required meaning: planting a Xeed starts a persistent observation/germination objective around an organization. The Brain may produce many Xignals from that Xeed. The Xeed MUST NOT be described as claiming, owning or editing the organization; Xignals MUST NOT be presented as billable units.
+Required meaning: adding an Organization starts a persistent Observation Focus around that canonical Organization. The Brain may surface many Signals from one Observation Focus. The Observation Focus MUST NOT be described as claiming, owning or editing the Organization; Signals MUST NOT be presented as billable units.
 
 Required value statement:
 > You buy observation. Not ownership of the company profile.
@@ -307,18 +307,18 @@ Question: **What does persistent observation cost?**
 
 Current pricing hypothesis inherited from MASTER:
 
-- EUR 9.95/month including one Xeed.
-- EUR 4.95/month for each additional Xeed.
+- EUR 9.95/month including one Organization under persistent observation.
+- EUR 4.95/month for each additional Organization / Observation Focus.
 
 This pricing is subordinate to MASTER and MUST change when the authoritative pricing doctrine changes.
 
-Required meaning: a paid Xeed starts and maintains persistent observation/germination. Xignals produced by the Brain and organizations discovered around the Xeed MUST NOT be represented as separately billable units.
+Required meaning: a paid Observation Focus starts and maintains persistent observation around one canonical Organization. Signals produced by the Brain and organizations discovered around that focus MUST NOT be represented as separately billable units.
 
 ### 6.15 START
 
 Question: **What should I do now?**
 
-Required action: start with one organization and evaluate the value of AXIGNAL's independent observation through a concrete loop: Xignal -> why attention is warranted -> evidence/currentness/unknowns -> human decision about whether the change matters.
+Required action: start with one Organization and evaluate AXIGNAL's independent observation through a concrete loop: Signal -> why attention is warranted -> evidence/currentness/unknowns -> human decision about whether the change matters.
 
 The final CTA MUST remain low-friction and MUST NOT require profile claiming or company editing.
 
@@ -351,8 +351,10 @@ Protected product vocabulary:
 AXIGNAL
 AXIGLAND
 AXENT
-Xeed
-Xignal
+Organization
+Observation Focus
+Signal
+Panorama
 FAXT
 INXIGHT
 PATHX
@@ -375,23 +377,28 @@ Literal translation is NOT required when idiomatic localization communicates the
 
 All 15 chapters belong to one coherent art direction:
 
-> Renaissance ways of seeing applied to the contemporary economic world.
+> Editorial observation language built around El Observador, the monocle identity, evidence and a contemporary economic world.
 
 Required:
-- museum-grade Renaissance/late-Renaissance oil-painting language;
-- unmistakable 2026 economic settings and technology;
-- human, serious, editorial composition;
-- chiaroscuro and realistic material texture;
-- composition supporting readable foreground copy.
+- the same canonical El Observador in every chapter where the character appears;
+- abstract line-based editorial illustration rather than realistic imagery;
+- AXIGNAL monocle isotipo held with one hand, no chain and no second lens;
+- dark charcoal line work with Bic-blue monocle and handwritten annotations;
+- low-saturation, luminous supporting colors;
+- Fraunces-led editorial hierarchy and generous negative space;
+- contemporary economic subject matter expressed through restrained diagrams, cards and environments;
+- compositions designed to support scroll-driven motion, progressive reveal and readable foreground copy.
 
 Forbidden as default art direction:
-- cyberpunk;
-- holographic dashboards;
-- generic glowing AI brains;
-- stock SaaS photography;
-- cartoon rendering;
-- readable generated text;
-- literal generated AXIGNAL UI screenshots;
+- realistic or stock photography;
+- photorealistic people;
+- Renaissance oil painting or museum-painting simulation;
+- Pixar/Disney-like character rendering;
+- 3D toy/mascot styling;
+- cyberpunk, holographic dashboards or generic glowing AI imagery;
+- saturated marketing illustration;
+- generated readable text inside artwork when actual HTML can carry it;
+- literal fake AXIGNAL screenshots presented as evidence;
 - visual effects that falsely imply canonical graph relations.
 
 Images are explanatory atmosphere, not epistemic evidence.
@@ -428,8 +435,8 @@ Canonical naming:
 landing-01-outside
 landing-02-observe
 landing-03-understand
-landing-04-axigland
-landing-05-xignal
+landing-04-panorama
+landing-05-organization
 landing-06-first-map
 landing-07-evidence
 landing-08-discover
@@ -608,68 +615,85 @@ A representative first-time user should be able to answer after the experience:
 
 1. What is AXIGNAL?
 2. What is AXIGLAND?
-3. What happens when I plant a Xeed?
+3. What happens when I add an organization?
 4. What does AXENT do?
 5. Why is AXIGNAL not just a database or chatbot?
 6. How can an important conclusion be inspected?
 7. What is the difference between observed reality and potential relevance?
 8. Why does AXIGNAL become more useful over time?
 9. Can a company pay to edit AXIGNAL's conclusion?
-10. What does one Xeed currently cost?
+10. What does persistent observation of one organization currently cost?
 11. What action should I take next?
 
 Failure on these questions is a product-comprehension failure even if visual QA passes.
 
-## 16. Canonical image-generation briefs
+## 16. Canonical visual-generation briefs
 
-Image prompts are production inputs subordinate to the visual contract. They MAY be refined for composition while preserving the semantic purpose below.
+Visual generation is a production input subordinate to the current AXIGNAL brand and Frontend/Brand/Generative Experience Master Brief.
+
+### Global visual rule
+
+All landing visuals MUST belong to the same editorial universe as **El Observador**:
+- abstract line-based illustration;
+- no realistic photography;
+- no photorealistic or Pixar-like people;
+- no saturated AI-art compositions;
+- dark/charcoal line work;
+- muted luminous palette;
+- Bic-blue handwritten annotations and the monocle isotipo;
+- generous negative space;
+- Fraunces-led editorial hierarchy;
+- soft, sober geometry;
+- motion-ready layered compositions where useful.
+
+El Observador is the recurring narrative thread, always the same canonical character: flat/newsboy cap, two eyes conceptually present, one free eye, one single AXIGNAL monocle held with one hand, no chain, no glasses, no second lens.
 
 ### 01 OUTSIDE
-Contemporary 2026 European city street rendered as museum-grade late-Renaissance oil painting; Renaissance-dressed people naturally using smartphones; serious human atmosphere; modern transit and commerce; calm dark upper-left/left-center copy zone; figures center-right; rich chiaroscuro, umber, crimson, muted gold; no readable text, logos, sci-fi or cartoon styling.
+El Observador stands beside a simple abstract Organization silhouette and looks outward toward a sparse economic panorama. Handwritten Bic-blue note: the outside view reveals what internal knowledge cannot. Keep the composition calm and spacious.
 
 ### 02 OBSERVE
-Renaissance natural-philosopher/cartographer visual language applied to a modern logistics/commercial environment; modern factory, warehouse, products, public documents, laptop and phones; disciplined observation of public economic evidence, not surveillance; dark left copy zone; no HUD or AI-brain imagery.
+El Observador examines several minimal evidence cards representing public sources, activity and digital surfaces. No surveillance imagery. Observation is careful, independent and evidence-led.
 
 ### 03 UNDERSTAND
-Modern economic objects—industrial component, machine, shipping crate, technical/certification artifacts, project and product—examined together by Renaissance scholars/merchants so coherent economic meaning emerges from separate evidence; no floating graph.
+Scattered signals progressively connect into a coherent Panorama around the Organization. El Observador follows the connections. The visual should communicate cognitive compression, not a literal dense graph.
 
-### 04 AXIGLAND
-Monumental cartographic oil painting of one shared economic world: globe/world map with ports, factories, cities, logistics, infrastructure and commercial corridors; multiple observers study the same world from different positions; no political-label emphasis, no neon network.
+### 04 PANORAMA
+One shared economic world projection with Organizations, Markets, Relationships, Demand and Context represented as restrained editorial modules around a central focus. Different views, one underlying truth.
 
-### 05 XEED
-A Renaissance-clothed hand places a small marker/seed on a map-table or earth surface; a surrounding modern economic neighbourhood becomes progressively visible—manufacturer, warehouse, port, market, logistics and business district; knowledge germination without botanical fantasy.
+### 05 ORGANIZATION
+El Observador adds one Organization to persistent observation. No seed, planting or germination metaphor. A simple focus ring or observation affordance activates around the Organization.
 
-### 06 FIRST_MAP
-One contemporary company center-right with increasingly visible suppliers, distributors, transport, certification, customers, corporate structure and export context; relationships communicated through real activity, exchange and geography rather than a literal node graph.
+### 06 FIRST VIEW
+A first useful Panorama forms around the Organization: Value, Markets, Relationships, Activity, Reputation and Evidence become visible through progressive disclosure. Do not imply completeness.
 
 ### 07 EVIDENCE
-Forensic Renaissance evidence examination in a 2026 setting; experts compare registry/certification/technical/product/public-web/shipping/report/photo artifacts; rigorous calm chiaroscuro; no readable document text or holographic evidence wall.
+El Observador leans toward an evidence trail. Source, date, state and provenance layers reveal progressively. Handwritten note may say â€œShow me how AXIGNAL knows.â€
 
 ### 08 DISCOVER
-Renaissance navigator/merchant looking across a real modern economic landscape linking factory, infrastructure, project, port and foreign market; unexpected plausible economic route suggested through geography and trade, never glowing lines.
+A non-obvious but plausible POTENTIAL relationship or market relevance emerges from connected evidence. The visual must make potentiality visibly distinct from observed reality.
 
-### 09 DIGITAL_REPRESENTATION
-Hall-of-mirrors metaphor: one real contemporary company/product and several contextual reflections suggesting search, generative description, public conversation and customer experience; same subject, different incomplete representations; reflections clearly distinct from reality.
+### 09 DIGITAL REPRESENTATION
+One Organization is shown beside several restrained representations: search, generative answer, public conversation and public experience. Same subject, different observed surfaces. Representation != reality.
 
 ### 10 TIME
-One identifiable contemporary company/place shown continuously through earlier, present and emerging states inside one canvas; facilities/activity/market surroundings subtly change; no clock cliché or sci-fi timeline.
+The global timeline shifts and the same Panorama updates coherently. El Observador remains anchored while cards, changes and evidence re-project across time.
 
 ### 11 AXENT
-Human Renaissance investigator moving through a contemporary economic archive/work environment, comparing sources, industrial samples, maps, laptop, records and real-world activity; autonomous investigation and contextual guidance; no robot, chatbot bubbles or glowing AI.
+AXENT appears as the conversational/research rail while El Observador remains in the main canvas. They coexist but are not the same entity.
 
 ### 12 INDEPENDENCE
-Wealthy merchant/executive offers payment while an investigator/cartographer continues updating a map from independent evidence instead of accepting direction; restrained allegory, not villain caricature.
+A subtle attempt to influence the outcome is visually separated from the evidence path. El Observador continues following evidence. No villain caricature.
 
-### 13 USE_CASES
-Grand group portrait around one shared economic world: leadership, commercial/sales, procurement, export, consultancy/agency perspectives using modern tools while studying the same underlying reality.
+### 13 USE CASES
+The same Panorama changes focus across SEO/search visibility, GEO/AEO representation, Reputation, Relationships, Markets, Demand and competitive context. Avoid separate product silos.
 
 ### 14 PRICING
-Measured-value still life: balance scale, observation marker/map token and modest business evidence artifacts; one company under quiet continuous observation in background; clarity and proportional value, no sale imagery or visible price text.
+One Organization under persistent observation, with a simple pricing explanation. No sale stickers, countdowns or aggressive conversion graphics.
 
 ### 15 START
-One company visible in the middle distance at dawn; observer holds one simple map marker ready to place; surrounding suppliers, roads, markets and logistics imply a larger discoverable context; beginning and clarity, not hype.
+El Observador invites the visitor to add one Organization. The Panorama is still mostly empty, with just enough emerging context to imply what AXIGNAL will begin to observe.
 
-All source images for this slice are authored externally at 1920×1080 PNG. While they exceed the repository 2 MiB gate, they are retained outside the repository root as governed source masters and converted deterministically into Git-tracked production WebP derivatives, plus AVIF derivatives when the implementation slice accepts them through the governed quality/performance comparison.
+All visual assets must preserve character consistency and remain editable/layerable enough for motion design where feasible.
 
 ## 17. Authority and change control
 
@@ -684,7 +708,7 @@ If this contract conflicts with a higher authority, the higher authority wins an
 Changes that alter any of the following require product-contract review:
 - meaning of AXIGNAL;
 - meaning of AXIGLAND;
-- meaning or billing semantics of Xeed or Xignal;
+- meaning or billing semantics of Organization, Observation Focus or Signal;
 - AXENT authority;
 - epistemic claims;
 - observed/potential distinction;
@@ -699,7 +723,7 @@ Pure copy refinements, localization improvements and image-composition refinemen
 
 The landing succeeds when a visitor leaves with this truthful mental model:
 
-> AXIGNAL is an independent economic observer. I plant a Xeed around an organization. AXIGNAL's Brain germinates that Xeed, producing many Xignals and building an evidence-grounded understanding of how the organization exists in the wider economic world, what is changing around it, how search engines and AI agents represent it, and where potential relevance may be emerging. AXIGLAND remembers governed knowledge, preserves uncertainty, and lets me inspect why important conclusions deserve attention. I pay for the persistent Xeed, not for individual Xignals or the ability to edit reality.
+> AXIGNAL is an independent economic observer. I add an Organization and AXIGNAL maintains a persistent Observation Focus around it. The Brain surfaces Signals and builds an evidence-grounded understanding of how that Organization exists in the wider economic world, what is changing around it, how search engines and AI agents represent it, and where potential relevance may be emerging. AXIGLAND remembers governed knowledge, preserves uncertainty, and the Panorama lets me inspect why important conclusions deserve attention. I pay for persistent observation, not for individual Signals or the ability to edit reality.
 
 That understanding is the acquisition contract.
 

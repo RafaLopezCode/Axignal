@@ -5,7 +5,7 @@
 > PRODUCT MODEL. This document only translates that doctrine into enforceable
 > engineering constraints.
 
-**Version**: 1.0.0 | **Ratified**: 2026-09-24 | **Last Amended**: 2026-09-24
+**Version**: 1.1.0 | **Ratified**: 2026-09-24 | **Last Amended**: 2026-10-03
 
 ## Upstream Authority (READ FIRST)
 
@@ -72,13 +72,17 @@ influence. The map cannot be bought; observation can. Hostile attention must not
 poison canonical truth. ACCESS ≠ AUTHORITY; AUTHORITY ≠ TRUTH; USABLE ≠
 LEARNABLE. (MASTER §5, §6, §23, §39, §46.4, §46.6, §46.7, §46.8, §46.12)
 
-### V. Xeed Directs Observation; Xignal Emerges, Neither Owns Truth
+### V. Observation Focus Directs Observation; Signals Emerge, Neither Owns Truth
 
-A Xeed assigns persistent computational observation around a subject. It is not
-a profile, claim, or ownership grant and cannot configure canonical truth. The
-Brain germinates a Xeed into many Xignals: emergent economic signals that direct
-attention but are neither the Xeed nor canonical writes. One canonical
-Organization exists regardless of how many Xeeds observe it. (MASTER §§4.4, 4.4A, §7, §26, §33, §46.5, §46.14)
+An **Observation Focus** assigns persistent computational observation around one
+canonical Organization. It is not a profile, claim, ownership grant or truth
+authority. The Brain may surface many **Signals** from one Observation Focus.
+Signals direct attention but are neither the Observation Focus nor canonical
+writes. One canonical Organization exists regardless of how many Observation
+Focuses observe it. Public UX should normally say **Organization** and **Signal**.
+The legacy names `Xeed` and `Xignal` are deprecated and may remain only
+in migration-bound implementation identifiers until explicitly refactored.
+(MASTER §§4.4, 4.4A, §7, §26, §33, §46.5, §46.14)
 
 ### VI. CLAIM ≠ WRITE / Evidence Admission
 
@@ -134,8 +138,9 @@ maximize useful information gain. (MASTER §9, §10, §11, §12, §29, §46.15,
 No pay-to-appear, sponsored truth, boost, or sponsored/pay-to-rank canonical
 graph mutation. Sponsor or advertising surfaces (if any) must be structurally
 separated from the cartography. Pricing is an economic hypothesis, not an
-architectural invariant: €9.95/month with one Xeed and €4.95 per additional
-Xeed; emergent Xignals are not billable units. (MASTER §27, §32, §39, §46.34, §46.36, §46.41)
+architectural invariant: €9.95/month with one Organization under persistent
+observation and €4.95 per additional Organization/Observation Focus; emergent
+Signals are not billable units. (MASTER §27, §32, §39, §46.34, §46.36, §46.41)
 
 ### XIII. Thin Integrations, Invisible Infrastructure
 
@@ -206,17 +211,24 @@ NORMALIZATION / ENTITY RESOLUTION
  PATHX / INXIGHT / PROJECTIONS
 ```
 
-A planted Xeed controls persistent ATTENTION / COMPUTE ALLOCATION; Xignals emerge
-from Brain observation. Neither a Xeed nor a Xignal may bypass evidence admission. AXENT orchestrates investigation; AXENT MUST NOT itself become
-canonical truth authority.
+An Observation Focus controls persistent ATTENTION / COMPUTE ALLOCATION; Signals
+emerge from Brain observation. Neither an Observation Focus nor a Signal may
+bypass evidence admission. AXENT orchestrates investigation; AXENT MUST NOT
+itself become canonical truth authority.
 
-## Canonical Terminology (do not rename casually)
+## Canonical Terminology
 
 `AXIGNAL` (the system) · `AXIGLAND` (the one canonical living economic world) ·
-`AXENT` (autonomous investigation agent, not merely a chatbot) · `XIGNAL`
-(persistent observation allocation, not ownership) · `FAXT` (evidence-backed
-canonical unit) · `INXIGHT` (derived, explainable knowledge) · `PATHX`
-(explainable economic path). See `docs/architecture/TERMINOLOGY.md`.
+`AXENT` (autonomous investigation agent, not merely a chatbot) ·
+`OBSERVATION FOCUS` (persistent compute/attention allocation around one
+Organization; never ownership) · `SIGNAL` (emergent economic signal) ·
+`FAXT` (evidence-backed canonical unit) · `INXIGHT` (derived, explainable
+knowledge) · `PATHX` (explainable economic path).
+
+Public UX prefers Organization, Signal, Panorama, Evidence, Relationship, Change
+and Opportunity. `Panorama != AXIGLAND`. Legacy `Xeed`/`Xignal` names are
+deprecated aliases and MUST NOT be introduced into new public copy or contracts.
+See `docs/architecture/TERMINOLOGY.md`.
 
 ## Architectural Constraints
 
@@ -264,8 +276,8 @@ can deterministically perform rather than transferring them to the user.
 
 ### XX. Cognitive State Is Not Canonical Truth
 
-AXIGLAND, Xeed germination process/context and private cognitive continuity are
-distinct authorities. Xeed-private or user-attention state MUST NOT create or
+AXIGLAND, Observation Focus lifecycle/context and private cognitive continuity are
+distinct authorities. Observation-Focus-private or user-attention state MUST NOT create or
 mutate canonical AXIGLAND facts. Public knowledge still passes the existing
 EvidenceAdmission authority. Cognitive continuity stores task/context, not a
 sensitive psychological profile; it must not infer sensitive traits from
@@ -274,7 +286,7 @@ navigation or clicks. (MASTER §§5, 6, 23, 55)
 ### XXI. Governed Context Routing
 
 Any future private AXENT retrieval MUST resolve and authorize tenant, client
-context, Xeed and user/thread scope before retrieval. Default private scope is
+context, Observation Focus and user/thread scope before retrieval. Default private scope is
 one selected client. Portfolio scope requires explicit intent and authorization.
 Semantic/vector similarity MUST NOT grant authorization or switch client
 context. AXENT MUST use typed Context Broker operations and MUST NOT receive

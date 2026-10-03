@@ -214,7 +214,7 @@
       const summary = document.createElement('section')
       summary.className = 'admin-observatory-panel'
       const heading = document.createElement('h3')
-      heading.textContent = current.slug === 'axigland-quality' ? 'AXIGLAND runtime evidence' : 'Cross-Xeed evidence'
+      heading.textContent = current.slug === 'axigland-quality' ? 'AXIGLAND runtime evidence' : 'Cross-observation evidence'
       summary.append(heading)
       const facts = document.createElement('div')
       facts.className = 'admin-observatory-facts'
@@ -246,7 +246,7 @@
       if (!xeeds.length) {
         const empty = document.createElement('article')
         empty.className = 'admin-observatory-empty'
-        empty.innerHTML = '<strong>No governed Xeed runtime evidence observed</strong><p>This does not prove that zero Xeeds exist. It means the connected Learning/Admin evidence sources do not currently identify one.</p>'
+        empty.innerHTML = '<strong>No governed Observation Focus runtime evidence observed</strong><p>This does not prove that zero Observation Focuses exist. It means the connected Learning/Admin evidence sources do not currently identify one.</p>'
         xeedList.append(empty)
       }
       for (const xeed of xeeds) {
@@ -265,12 +265,12 @@
         addFact(facts, 'Currentness', xeed.currentnessState, xeed.currentnessCompleteness)
         addFact(facts, 'Observation coverage', xeed.observationCoverageState, xeed.observationCoverageCompleteness)
         addFact(facts, 'First activity', xeed.firstActivityAt, xeed.firstActivityAt ? 'KNOWN' : 'UNKNOWN')
-        addFact(facts, 'First useful Xignal', xeed.firstUsefulXignalAt, xeed.firstUsefulXignalAt ? 'KNOWN' : 'UNKNOWN')
+        addFact(facts, 'First useful Signal', xeed.firstUsefulXignalAt, xeed.firstUsefulXignalAt ? 'KNOWN' : 'UNKNOWN')
         addFact(facts, 'Time to first value (ms)', xeed.timeToFirstUsefulXignalMs, xeed.timeToFirstUsefulXignalMs == null ? 'UNKNOWN' : 'KNOWN')
         addFact(facts, 'Observations reused', xeed.observationsReused, 'KNOWN')
         addFact(facts, 'Observations added', xeed.observationsAdded, 'KNOWN')
         addFact(facts, 'Reuse ratio', xeed.reuseRatio, xeed.reuseRatio == null ? 'UNKNOWN' : 'KNOWN')
-        addFact(facts, 'Xignals emitted', xeed.xignalsEmitted, 'KNOWN')
+        addFact(facts, 'Signals emitted', xeed.xignalsEmitted, 'KNOWN')
         addFact(facts, 'Canonical admissions', xeed.canonicalAdmissions, 'KNOWN')
         addFact(facts, 'Direct event cost coverage', xeed.directCostCompleteness, xeed.directCostCompleteness)
         addFact(facts, 'Shared cost attribution', xeed.sharedCostCompleteness, xeed.sharedCostCompleteness)
@@ -280,7 +280,7 @@
         const details = document.createElement('details')
         details.className = 'admin-metric-lineage'
         const detailsSummary = document.createElement('summary')
-        detailsSummary.textContent = 'Diagnose this Xeed'
+        detailsSummary.textContent = 'Diagnose this Observation Focus'
         const body = document.createElement('p')
         const costs = (xeed.knownCostsByCurrency || []).map(([currency, amount]) => `${amount} µ${currency}`).join(', ')
         body.textContent = `Observed direct costs: ${costs || 'UNKNOWN'} · unknown-cost events: ${xeed.unknownCostEventCount} · failed events: ${xeed.failedEventCount} · partial events: ${xeed.partialEventCount} · shared: ${xeed.sharedCostReason} · triggered: ${xeed.triggeredCostReason} · learning lineage: ${(xeed.sourceLearningEventIds || []).join(', ') || 'None'}`
@@ -649,7 +649,7 @@
       addFact(facts, 'Active', customerOperations.activeAccountCount, 'KNOWN')
       addFact(facts, 'Suspended', customerOperations.suspendedAccountCount, 'KNOWN')
       addFact(facts, 'Cancelled', customerOperations.cancelledAccountCount, 'KNOWN')
-      addFact(facts, 'Entitled Xeeds', customerOperations.totalEntitledXeeds, 'KNOWN')
+      addFact(facts, 'Entitled organizations', customerOperations.totalEntitledXeeds, 'KNOWN')
       addFact(facts, 'MRR', customerOperations.mrrEur, customerOperations.mrrEur ? 'KNOWN' : 'UNKNOWN')
       addFact(facts, 'Payment authority', customerOperations.paymentAuthority, 'BOUNDARY')
       panel.append(facts)
@@ -695,8 +695,8 @@
         addFact(facts, 'Account', account.accountId, 'PRIVATE_SERVICE')
         addFact(facts, 'Tenant', account.tenantId, 'PRIVATE_SERVICE')
         addFact(facts, 'Plan', `${account.planCode} · ${account.planVersion}`, 'KNOWN')
-        addFact(facts, 'Xeed capacity', account.xeedCapacity, 'KNOWN')
-        addFact(facts, 'Active Xeeds', account.activeXeedCount, 'KNOWN')
+        addFact(facts, 'Organization capacity', account.xeedCapacity, 'KNOWN')
+        addFact(facts, 'Active organizations', account.activeXeedCount, 'KNOWN')
         addFact(facts, 'Users', account.userCount, 'KNOWN')
         addFact(facts, 'Payment', account.paymentState, account.paymentState === 'EXTERNAL_PENDING' ? 'UNKNOWN' : 'KNOWN')
         addFact(facts, 'MRR', account.mrrEur, account.mrrEur ? 'KNOWN' : 'UNKNOWN')
@@ -708,7 +708,7 @@
         const summary = document.createElement('summary')
         summary.textContent = 'Inspect service authority'
         const body = document.createElement('p')
-        body.textContent = `Entitled Xeeds: ${(account.entitledXeedIds || []).join(', ') || 'none'} · Funnel: ${(account.funnelStages || []).join(' → ') || 'SIGNUP only'} · CUSTOMER_ACCOUNT_STATE != ORGANIZATION_STATE.`
+        body.textContent = `Entitled organizations: ${(account.entitledXeedIds || []).join(', ') || 'none'} · Funnel: ${(account.funnelStages || []).join(' → ') || 'SIGNUP only'} · CUSTOMER_ACCOUNT_STATE != ORGANIZATION_STATE.`
         details.append(summary, body)
         card.append(header, facts, details)
         customerAccountList.append(card)
