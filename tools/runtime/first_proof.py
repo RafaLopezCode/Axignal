@@ -12,9 +12,11 @@ from __future__ import annotations
 import hashlib
 import json
 import sqlite3
+from collections.abc import Callable
 from dataclasses import dataclass
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
+from typing import cast
 from urllib.parse import urlsplit
 
 from application.economic_discovery.brain_contracts import (
@@ -56,6 +58,10 @@ from application.economic_discovery.prime_execution import (
     PrimeExecutionPorts,
     PrimeMechanismResult,
     execute_prime_source_slice,
+)
+from application.economic_discovery.temporal_currentness import (
+    TemporalCurrentnessPolicy,
+    evaluate_currentness,
 )
 from application.semantic_extraction import SemanticCandidateSet
 from application.source_acquisition import (
@@ -112,6 +118,13 @@ from pipeline.source_acquisition import (
     PublicSourcePolicyGate,
 )
 from pipeline.source_representation import HtmlDocumentRepresentationAdapter
+
+FIRST_PROOF_TEMPORAL_POLICY = TemporalCurrentnessPolicy(
+    policy_id="first-proof-currentness",
+    version="aud06-v1",
+    stale_after=timedelta(days=30),
+    historical_after=timedelta(days=90),
+)
 
 
 class FirstProofInsufficientEvidence(RuntimeError):
@@ -229,9 +242,83 @@ class FirstProofService:
     observation_memory: SqliteObservationMemory
     learning_memory: SqliteLearningMemory
     artifacts: ContentAddressedArtifactStore
+    clock: Callable[[], datetime] = lambda: datetime.now(UTC)
 
-    def current_projection(self) -> dict[str, object] | None:
-        return self.store.latest()
+    def current_projection(self, *, as_of: datetime | None = None) -> dict[str, object] | None:
+        stored = self.store.latest()
+        if stored is None:
+            return None
+        evaluated_at = self.clock() if as_of is None else as_of
+        if evaluated_at.tzinfo is None:
+            raise ValueError("first-proof projection as_of must be timezone-aware")
+
+        projection = cast(dict[str, object], json.loads(json.dumps(stored)))
+        nodes = projection.get("nodes")
+        if not isinstance(nodes, list):
+            return projection
+
+        any_non_current = False
+        for node in nodes:
+            if not isinstance(node, dict):
+                continue
+            refs = node.get("observationSupportRefs")
+            if not isinstance(refs, list) or not refs:
+                continue
+
+            effective: list[Currentness] = []
+            for observation_id in refs:
+                if not isinstance(observation_id, str):
+                    continue
+                observation = self.observation_memory.get_observation(
+                    str(ORGANIZATION_ID),
+                    observation_id,
+                )
+                if observation is None:
+                    effective.append(Currentness.UNKNOWN)
+                    continue
+                decision = evaluate_currentness(
+                    observation,
+                    as_of=evaluated_at,
+                    policy=FIRST_PROOF_TEMPORAL_POLICY,
+                )
+                effective.append(decision.current)
+
+            if not effective:
+                continue
+            if Currentness.UNKNOWN in effective:
+                node_currentness = Currentness.UNKNOWN
+            elif Currentness.HISTORICAL in effective:
+                node_currentness = Currentness.HISTORICAL
+            elif Currentness.STALE in effective:
+                node_currentness = Currentness.STALE
+            else:
+                node_currentness = Currentness.CURRENT
+
+            node["currentness"] = node_currentness.value
+            any_non_current = any_non_current or node_currentness is not Currentness.CURRENT
+
+            narrative = node.get("evidenceNarrative")
+            if isinstance(narrative, dict):
+                steps = narrative.get("steps")
+                if isinstance(steps, list):
+                    for step in steps:
+                        if not isinstance(step, dict):
+                            continue
+                        if step.get("kind") in {
+                            "XIGNAL",
+                            "OBSERVATION",
+                            "SOURCE",
+                            "CONTRADICTION",
+                        }:
+                            step["currentness"] = node_currentness.value
+
+        if any_non_current:
+            today = projection.get("today")
+            if isinstance(today, dict):
+                today["disposition"] = "EMPTY"
+                today["items"] = []
+
+        return projection
 
     def _validate_target(self, target_uri: str) -> str:
         parsed = urlsplit(target_uri.strip())
@@ -249,7 +336,7 @@ class FirstProofService:
         if not label:
             raise ValueError("Xeed label is required")
         target_uri = self._validate_target(target_uri)
-        now = datetime.now(UTC)
+        now = self.clock()
         sequence = self.store.next_sequence()
         xeed_id = XeedId(f"xeed:production-first-proof:{sequence}")
         xeed = Xeed(xeed_id, TENANT_ID, ORGANIZATION_ID, label)
@@ -299,6 +386,8 @@ class FirstProofService:
             ),
             contracts=(contract,),
             routing_policies=routing,
+            temporal_policy=FIRST_PROOF_TEMPORAL_POLICY,
+            as_of=now,
         )
         execution_id = f"run:fr30:{sequence}"
         apply_bootstrap_plan(
@@ -338,6 +427,7 @@ class FirstProofService:
             artifacts=self.artifacts,
         )
         observation = sensor.observe(request, source_policy)
+        projection_as_of = max(now, observation.retrieved_at)
         if observation.failure_state is not None or observation.body_artifact_ref is None:
             raise FirstProofInsufficientEvidence(
                 f"SOURCE_NOT_EVALUABLE:{observation.failure_state or 'NO_BODY'}"
@@ -348,7 +438,7 @@ class FirstProofService:
             execution_id=execution_id,
             seed=seed,
             code_sha=self.code_sha,
-            occurred_at=now,
+            occurred_at=projection_as_of,
             observation_memory=self.observation_memory,
             learning_memory=self.learning_memory,
             request=request,
@@ -375,6 +465,7 @@ class FirstProofService:
                 state=ExecutionBudgetState(amount_microunits=0, currency="EUR"),
             ),
             ports=PrimeExecutionPorts(executor, executor, executor),
+            temporal_currentness_policy=FIRST_PROOF_TEMPORAL_POLICY,
             ingested_observation_reuse_authority=ObservationReuseAuthority(
                 rights_status=ObservationRightsStatus.PERMITTED,
                 access_status=ObservationAccessStatus.ACCESSIBLE,
@@ -385,7 +476,7 @@ class FirstProofService:
                 applicable_purposes=(ReusePurpose.CURRENT_STATE.value,),
             ),
         )
-        apply_prime_trace(seed=seed, state=lifecycle, trace=trace, occurred_at=now)
+        apply_prime_trace(seed=seed, state=lifecycle, trace=trace, occurred_at=projection_as_of)
         representation = representation_adapter.represent(request=request, observation=observation)
         observation_id = source_observation_id(request, observation)
         excerpt = (
@@ -408,7 +499,7 @@ class FirstProofService:
                     "routing": routing[0].version,
                 }
             ),
-            evaluated_at=now,
+            evaluated_at=projection_as_of,
             data=(
                 BasisDatum(
                     datum_id=f"datum:fr30:{sequence}:homepage",
@@ -435,7 +526,7 @@ class FirstProofService:
                 "AXIGNAL retrieved the public homepage through the governed source sensor and can trace this Xignal back to the stored observation."
             ),
             basis=basis,
-            emitted_at=now,
+            emitted_at=projection_as_of,
             policy_version="fr30-xignal-v1",
             observation_support_refs=(observation_id,),
             observation_support_resolver=ObservationSupportMapResolver(
@@ -458,7 +549,7 @@ class FirstProofService:
             unknowns=(uncertainty,),
         )
         apply_first_xignal(
-            seed=seed, state=lifecycle, projection=xignal_projection, occurred_at=now
+            seed=seed, state=lifecycle, projection=xignal_projection, occurred_at=projection_as_of
         )
         narrative = build_evidence_narrative(
             organization_context=seed,
@@ -488,12 +579,13 @@ class FirstProofService:
                 tenant_id=str(seed.authorized_xeed.xeed.tenant_id),
                 target_scope=ReuseTargetScope.TENANT_PRIVATE,
                 purpose=ReusePurpose.CURRENT_STATE,
-                as_of=now,
+                as_of=projection_as_of,
             ),
             reuse_policy=ObservationReusePolicy(
                 "subscriber-evidence-narrative",
                 "1",
             ),
+            temporal_policy=FIRST_PROOF_TEMPORAL_POLICY,
         )
         readiness = evaluate_first_map_readiness(
             seed=seed,
@@ -510,7 +602,7 @@ class FirstProofService:
             seed=seed,
             state=lifecycle,
             decision=readiness.decision,
-            occurred_at=now,
+            occurred_at=projection_as_of,
         )
         today = project_today(
             candidates=(
@@ -527,7 +619,7 @@ class FirstProofService:
             event_id=f"learn:{execution_id}:06-xignal:{xignal_projection.xignal.xignal_id}",
             kind=LearningEventKind.DETERMINISTIC_EVALUATION,
             outcome=LearningOutcome.COMPLETED,
-            occurred_at=now,
+            occurred_at=projection_as_of,
             subject_id=ORGANIZATION_ID,
             xeed_id=xeed_id,
             activity_ref=xignal_projection.xignal.xignal_id,

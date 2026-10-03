@@ -89,3 +89,4 @@ Constitution (`.specify/memory/constitution.md`).
 | [ADR-0074](ADR-0074-claim-kind-governed-observed-projection.md) | Claim-Kind Governed OBSERVED Projection (**ACCEPTED**) | AUD-03; subscriber projection; observation support |
 | [ADR-0075](ADR-0075-exact-explainable-basis-narrative-verification.md) | Exact Explainable Basis and Narrative Verification (**ACCEPTED**) | AUD-04; EvidenceNarrative; ExplainableBasis |
 | [ADR-0076](ADR-0076-tenant-reuse-authorization-before-narrative-access.md) | Tenant/Reuse Authorization Before Narrative Access (**ACCEPTED**) | AUD-05; tenant-private evidence; narrative |
+| [ADR-0077](ADR-0077-temporal-currentness-propagation-at-consumption.md) | Temporal Currentness Propagation at Consumption (**ACCEPTED**) | AUD-06; reuse; narrative; subscriber read model |

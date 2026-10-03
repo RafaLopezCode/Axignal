@@ -21,6 +21,7 @@ from application.economic_discovery.observation_reuse import (
     ReuseTargetScope,
     evaluate_observation_reuse_metadata,
 )
+from application.economic_discovery.temporal_currentness import TemporalCurrentnessPolicy
 
 
 class NarrativeObservationMemory(Protocol):
@@ -70,6 +71,7 @@ class NarrativeAccessContext:
             tenant_id=self.tenant_id,
             target_scope=self.target_scope,
             purpose=self.purpose,
+            as_of=self.as_of,
         )
 
 
@@ -90,11 +92,13 @@ def authorize_narrative_observation(
     *,
     context: NarrativeAccessContext,
     policy: ObservationReusePolicy,
+    temporal_policy: TemporalCurrentnessPolicy,
 ) -> AuthorizedNarrativeObservation:
     decision = evaluate_observation_reuse_metadata(
         metadata,
         context=context.reuse_context,
         policy=policy,
+        temporal_policy=temporal_policy,
     )
     if decision.disposition is not ReuseDisposition.ALLOW:
         raise NarrativeObservationAuthorizationError(decision)

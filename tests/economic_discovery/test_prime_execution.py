@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import socket
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
 import pytest
@@ -10,9 +10,11 @@ from application.economic_discovery import (
     ObservationAccessStatus,
     ObservationReuseAuthority,
     ObservationReusePolicy,
+    ObservationReuseRejected,
     ObservationReuseScope,
     ObservationRightsStatus,
     ReusePurpose,
+    TemporalCurrentnessPolicy,
 )
 from application.economic_discovery.brain_contracts import (
     SemanticPrimitive,
@@ -103,6 +105,15 @@ def _reuse_authority() -> ObservationReuseAuthority:
 
 def _reuse_policy() -> ObservationReusePolicy:
     return ObservationReusePolicy("observation-reuse", "1")
+
+
+def _temporal_policy() -> TemporalCurrentnessPolicy:
+    return TemporalCurrentnessPolicy(
+        "prime-currentness",
+        "aud06-v1",
+        stale_after=timedelta(days=30),
+        historical_after=timedelta(days=90),
+    )
 
 
 def _public_dns(*_args: object, **_kwargs: object) -> list[tuple[object, ...]]:
@@ -466,6 +477,7 @@ def test_exact_replay_no_change_does_not_execute_prime_again(
             adaptive_research=_Executor("adaptive"),
         ),
         reuse_policy=_reuse_policy(),
+        temporal_currentness_policy=_temporal_policy(),
     )
 
     assert trace.prime_plan is None
@@ -473,6 +485,42 @@ def test_exact_replay_no_change_does_not_execute_prime_again(
     history = learning.for_xeed("xeed:1")
     assert history[0].outcome is LearningOutcome.COMPLETED
     assert history[1].outcome is LearningOutcome.NO_CHANGE
+
+    with pytest.raises(ObservationReuseRejected) as rejected:
+        execute_prime_source_slice(
+            execution_id="run:replay:aged",
+            seed=seed,
+            code_sha="abc123",
+            occurred_at=NOW + timedelta(days=120),
+            observation_memory=memory,
+            learning_memory=learning,
+            request=request,
+            source_policy=policy,
+            source_acquirer=sensor,
+            representation_port=representation_adapter,
+            prior_rich_state=prior,
+            contracts=(_contract("market-mode"),),
+            routing_policies=(
+                DimensionRoutingPolicy(
+                    "market-mode",
+                    "routing-v1",
+                    PrimeRoute.DETERMINISTIC,
+                ),
+            ),
+            research_decisions=(),
+            execution_controller=_budget(),
+            ports=PrimeExecutionPorts(
+                deterministic=deterministic,
+                structured_evaluator=_Executor("structured"),
+                adaptive_research=_Executor("adaptive"),
+            ),
+            reuse_policy=_reuse_policy(),
+            temporal_currentness_policy=_temporal_policy(),
+        )
+
+    assert rejected.value.decision.reason.value == "HISTORICAL_FOR_CURRENT_USE"
+    assert rejected.value.decision.effective_currentness is Currentness.HISTORICAL
+    assert deterministic.calls == []
     assert history[2].outcome is LearningOutcome.NO_CHANGE
 
 

@@ -10,6 +10,7 @@ from __future__ import annotations
 import hashlib
 import json
 from dataclasses import dataclass
+from datetime import datetime
 from enum import StrEnum
 
 from application.economic_discovery import (
@@ -22,6 +23,7 @@ from application.economic_discovery import (
     ReuseDisposition,
     ReusePurpose,
     ReuseTargetScope,
+    TemporalCurrentnessPolicy,
     TypingDimensionContract,
     build_initial_prime_control_plan,
     select_reusable_observations,
@@ -280,6 +282,8 @@ def build_bootstrap_plan(
     research_decisions: tuple[ResearchValueDecision, ...] = (),
     observation_memory: ObservationMemory | None = None,
     reuse_policy: ObservationReusePolicy | None = None,
+    temporal_policy: TemporalCurrentnessPolicy | None = None,
+    as_of: datetime | None = None,
 ) -> BootstrapPlan:
     """Return the shortest governed path from planted Xeed to Prime."""
 
@@ -293,19 +297,29 @@ def build_bootstrap_plan(
 
     reused_ids = frozenset(item.observation_id for item in rich_state.data)
     if reused_ids:
-        if observation_memory is None or reuse_policy is None:
-            raise ValueError("bootstrap reused state requires Observation Memory and reuse policy")
+        if (
+            observation_memory is None
+            or reuse_policy is None
+            or temporal_policy is None
+            or as_of is None
+        ):
+            raise ValueError(
+                "bootstrap reused state requires Observation Memory and reuse policy; "
+                "temporal policy/as_of are also required"
+            )
         context = ObservationReuseContext(
             subject_id=str(subject_id),
             xeed_id=str(xeed_id),
             tenant_id=str(seed.authorized_xeed.xeed.tenant_id),
             target_scope=ReuseTargetScope.TENANT_PRIVATE,
             purpose=ReusePurpose.CURRENT_STATE,
+            as_of=as_of,
         )
         selection = select_reusable_observations(
             observation_memory,
             context=context,
             policy=reuse_policy,
+            temporal_policy=temporal_policy,
         )
         decision_by_id = {decision.observation_id: decision for decision in selection.decisions}
         observation_by_id = {item.record.observation_id: item for item in selection.observations}

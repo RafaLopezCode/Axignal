@@ -5,7 +5,7 @@ import json
 import threading
 import urllib.error
 import urllib.request
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
 from http.server import ThreadingHTTPServer
 from pathlib import Path
 
@@ -66,7 +66,7 @@ def _install_source(monkeypatch: pytest.MonkeyPatch, service: FirstProofService)
             observation_slot=request.observation_slot,
             requested_uri=request.target_uri,
             final_uri=request.target_uri,
-            retrieved_at=NOW,
+            retrieved_at=service.clock(),
             http_status=200,
             content_type="text/html; charset=utf-8",
             body_fingerprint=body_fingerprint,
@@ -314,3 +314,102 @@ def test_fr30_deployment_keeps_first_proof_write_api_loopback_only() -> None:
     assert "failure.state === 'INSUFFICIENT_EVIDENCE'" in app
     assert "nodeKindForSource" in app
     assert "projectionKey('FAXT'" not in app
+
+
+def test_current_projection_recomputes_visible_currentness_without_mutating_snapshot(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    service = _service(tmp_path)
+    service.clock = lambda: NOW
+    _install_source(monkeypatch, service)
+    created = service.plant(
+        label="Temporal first proof",
+        target_uri="https://axignal.com/",
+    )
+    stored = FirstProofStore(service.store.path).latest()
+    assert stored == created
+
+    recent = service.current_projection(as_of=NOW + timedelta(days=10))
+    assert recent == created
+
+    future = service.current_projection(as_of=NOW + timedelta(days=120))
+    assert future is not None
+    node = future["nodes"][0]
+    assert node["currentness"] == "HISTORICAL"
+    assert future["today"] == {"disposition": "EMPTY", "items": []}
+    relevant_steps = [
+        step
+        for step in node["evidenceNarrative"]["steps"]
+        if step["kind"] in {"XIGNAL", "OBSERVATION", "SOURCE", "CONTRADICTION"}
+    ]
+    assert relevant_steps
+    assert all(step["currentness"] == "HISTORICAL" for step in relevant_steps)
+
+    # Reprojection is derived; the persisted historical snapshot is unchanged.
+    assert FirstProofStore(service.store.path).latest() == created
+    assert created["nodes"][0]["currentness"] == "CURRENT"
+    assert created["today"]["disposition"] == "READY"
+
+
+def test_fresh_reobservation_restores_current_projection_without_freshening_old_record(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    service = _service(tmp_path)
+    service.clock = lambda: NOW
+    _install_source(monkeypatch, service)
+    first = service.plant(label="First", target_uri="https://axignal.com/")
+
+    future_at = NOW + timedelta(days=120)
+    service.clock = lambda: future_at
+    aged = service.current_projection()
+    assert aged is not None
+    assert aged["nodes"][0]["currentness"] == "HISTORICAL"
+
+    second = service.plant(label="Fresh", target_uri="https://axignal.com/")
+    assert second["nodes"][0]["currentness"] == "CURRENT"
+    assert second["today"]["disposition"] == "READY"
+    assert service.current_projection() == second
+
+    observations = service.observation_memory.for_subject("org:axignal")
+    assert len(observations) == 2
+    assert observations[0].record.observed_at == NOW
+    assert observations[1].record.observed_at == future_at
+    assert observations[0].reuse_authority.currentness.value == "CURRENT"
+    assert first["nodes"][0]["currentness"] == "CURRENT"
+
+
+def test_http_subscriber_context_reprojects_under_future_runtime_clock(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    runtime, server, thread, base = _http_runtime(tmp_path)
+    assert runtime.first_proof is not None
+    runtime.first_proof.clock = lambda: NOW
+    _install_source(monkeypatch, runtime.first_proof)
+    try:
+        body = json.dumps(
+            {"label": "Temporal HTTP proof", "targetUri": "https://axignal.com/"}
+        ).encode()
+        request = urllib.request.Request(
+            base + "/api/xeeds",
+            body,
+            {"Content-Type": "application/json"},
+            method="POST",
+        )
+        with urllib.request.urlopen(request, timeout=3) as response:
+            created = json.loads(response.read())
+        assert created["nodes"][0]["currentness"] == "CURRENT"
+
+        runtime.first_proof.clock = lambda: NOW + timedelta(days=120)
+        with urllib.request.urlopen(base + "/api/subscriber-context", timeout=3) as response:
+            future = json.loads(response.read())
+
+        assert future["nodes"][0]["currentness"] == "HISTORICAL"
+        assert future["today"] == {"disposition": "EMPTY", "items": []}
+        assert runtime.first_proof.store.latest() == created
+    finally:
+        server.shutdown()
+        server.server_close()
+        thread.join(timeout=3)

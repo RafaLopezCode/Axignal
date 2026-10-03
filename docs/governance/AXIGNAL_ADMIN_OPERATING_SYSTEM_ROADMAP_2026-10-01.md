@@ -99,7 +99,7 @@ Admin must distinguish measured flywheel behavior from the hypothesis above.
 
 `NOT_STARTED → READY → IN_PROGRESS → BLOCKED → DONE → DEFERRED → REJECTED`
 
-**CURRENT_TASK = AUD-06**
+**CURRENT_TASK = AUD-07**
 
 ## 7. Closure rule
 

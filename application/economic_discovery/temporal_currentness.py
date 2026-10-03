@@ -117,20 +117,22 @@ class SubjectReobservationPlan:
         )
 
 
-def evaluate_currentness(
-    observation: GovernedObservation,
+def evaluate_effective_currentness(
     *,
+    observation_id: str,
+    observed_at: datetime,
+    previous: Currentness,
     as_of: datetime,
     policy: TemporalCurrentnessPolicy,
 ) -> TemporalCurrentnessDecision:
-    if as_of.tzinfo is None:
-        raise ValueError("currentness evaluation time must be timezone-aware")
-    if as_of < observation.record.observed_at:
+    if not observation_id.strip():
+        raise ValueError("currentness evaluation requires observation id")
+    if observed_at.tzinfo is None or as_of.tzinfo is None:
+        raise ValueError("currentness evaluation times must be timezone-aware")
+    if as_of < observed_at:
         raise ValueError("currentness cannot be evaluated before observation time")
 
-    previous = observation.reuse_authority.currentness
-    age = as_of - observation.record.observed_at
-
+    age = as_of - observed_at
     if previous is Currentness.UNKNOWN:
         current = Currentness.UNKNOWN
     elif previous is Currentness.HISTORICAL or age >= policy.historical_after:
@@ -141,12 +143,29 @@ def evaluate_currentness(
         current = Currentness.CURRENT
 
     return TemporalCurrentnessDecision(
-        observation_id=observation.record.observation_id,
+        observation_id=observation_id,
         previous=previous,
         current=current,
         as_of=as_of,
         policy_id=policy.policy_id,
         policy_version=policy.version,
+    )
+
+
+def evaluate_currentness(
+    observation: GovernedObservation,
+    *,
+    as_of: datetime,
+    policy: TemporalCurrentnessPolicy,
+) -> TemporalCurrentnessDecision:
+    if as_of < observation.record.observed_at:
+        raise ValueError("currentness cannot be evaluated before observation time")
+    return evaluate_effective_currentness(
+        observation_id=observation.record.observation_id,
+        observed_at=observation.record.observed_at,
+        previous=observation.reuse_authority.currentness,
+        as_of=as_of,
+        policy=policy,
     )
 
 

@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import sqlite3
 from dataclasses import replace
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
 from application.economic_discovery import (
@@ -20,6 +20,7 @@ from application.economic_discovery import (
     ReusePurpose,
     ReuseReason,
     ReuseTargetScope,
+    TemporalCurrentnessPolicy,
     evaluate_observation_reuse,
     select_reusable_observations,
 )
@@ -28,6 +29,12 @@ from pipeline.observation_memory import SqliteObservationMemory
 
 NOW = datetime(2026, 10, 1, 8, 0, tzinfo=UTC)
 POLICY = ObservationReusePolicy("observation-reuse", "1")
+TEMPORAL_POLICY = TemporalCurrentnessPolicy(
+    "reuse-currentness",
+    "aud06-v1",
+    stale_after=timedelta(days=30),
+    historical_after=timedelta(days=90),
+)
 
 
 def _authority(
@@ -61,6 +68,7 @@ def _observation(
     observation_id: str = "obs:1",
     subject_id: str = "org:acme",
     authority: ObservationReuseAuthority | None = None,
+    observed_at: datetime = NOW,
 ) -> GovernedObservation:
     return GovernedObservation(
         record=ObservationRecord(
@@ -68,7 +76,7 @@ def _observation(
             subject_id=subject_id,
             source_ref="https://public.example/acme",
             source_type="PUBLIC_WEB",
-            observed_at=NOW,
+            observed_at=observed_at,
             content_fingerprint="sha256:content",
             mode=ObservationMode.DETERMINISTIC_SENSOR,
         ),
@@ -84,6 +92,7 @@ def _context(
     target_scope: ReuseTargetScope = ReuseTargetScope.TENANT_PRIVATE,
     purpose: ReusePurpose = ReusePurpose.CURRENT_STATE,
     subject_id: str = "org:acme",
+    as_of: datetime | None = None,
 ) -> ObservationReuseContext:
     return ObservationReuseContext(
         subject_id=subject_id,
@@ -91,6 +100,7 @@ def _context(
         tenant_id=tenant_id,
         target_scope=target_scope,
         purpose=purpose,
+        as_of=as_of,
     )
 
 
@@ -335,3 +345,69 @@ def test_historical_currentness_is_not_current_but_remains_historical_evidence()
     assert current.disposition is ReuseDisposition.REJECT
     assert current.reason is ReuseReason.HISTORICAL_FOR_CURRENT_USE
     assert reference.disposition is ReuseDisposition.ALLOW
+
+
+def test_120_day_current_snapshot_is_historical_for_current_reuse() -> None:
+    observation = _observation()
+    as_of = NOW + timedelta(days=120)
+
+    decision = evaluate_observation_reuse(
+        observation,
+        context=_context(as_of=as_of),
+        policy=POLICY,
+        temporal_policy=TEMPORAL_POLICY,
+    )
+
+    assert decision.disposition is ReuseDisposition.REJECT
+    assert decision.reason is ReuseReason.HISTORICAL_FOR_CURRENT_USE
+    assert decision.effective_currentness is Currentness.HISTORICAL
+    assert decision.evaluated_as_of == as_of
+    assert decision.temporal_policy_id == TEMPORAL_POLICY.policy_id
+    assert observation.reuse_authority.currentness is Currentness.CURRENT
+
+
+def test_120_day_evidence_remains_available_for_historical_reference() -> None:
+    observation = _observation()
+    as_of = NOW + timedelta(days=120)
+
+    decision = evaluate_observation_reuse(
+        observation,
+        context=_context(
+            purpose=ReusePurpose.HISTORICAL_REFERENCE,
+            as_of=as_of,
+        ),
+        policy=POLICY,
+        temporal_policy=TEMPORAL_POLICY,
+    )
+
+    assert decision.disposition is ReuseDisposition.ALLOW
+    assert decision.reason is ReuseReason.ALLOWED
+    assert decision.effective_currentness is Currentness.HISTORICAL
+
+
+def test_new_reobservation_can_be_current_without_freshening_old_observation() -> None:
+    old = _observation(observation_id="obs:old")
+    fresh_at = NOW + timedelta(days=120)
+    fresh = _observation(
+        observation_id="obs:new",
+        observed_at=fresh_at,
+    )
+
+    old_decision = evaluate_observation_reuse(
+        old,
+        context=_context(as_of=fresh_at),
+        policy=POLICY,
+        temporal_policy=TEMPORAL_POLICY,
+    )
+    fresh_decision = evaluate_observation_reuse(
+        fresh,
+        context=_context(as_of=fresh_at),
+        policy=POLICY,
+        temporal_policy=TEMPORAL_POLICY,
+    )
+
+    assert old_decision.effective_currentness is Currentness.HISTORICAL
+    assert old_decision.disposition is ReuseDisposition.REJECT
+    assert fresh_decision.effective_currentness is Currentness.CURRENT
+    assert fresh_decision.disposition is ReuseDisposition.ALLOW
+    assert old.reuse_authority.currentness is Currentness.CURRENT

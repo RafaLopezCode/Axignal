@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import json
 from dataclasses import asdict, replace
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
 import pytest
@@ -25,6 +25,7 @@ from application.economic_discovery.observation_reuse import (
     ReusePurpose,
     ReuseTargetScope,
 )
+from application.economic_discovery.temporal_currentness import TemporalCurrentnessPolicy
 from application.subscriber_projection import (
     EvidenceNarrativeKind,
     NarrativeAccessContext,
@@ -56,6 +57,12 @@ from pipeline.source_acquisition import (
 from tests.support.xeed_authority import InMemoryXeedAuthority
 
 NOW = datetime(2026, 9, 30, 19, 0, tzinfo=UTC)
+TEMPORAL_POLICY = TemporalCurrentnessPolicy(
+    "subscriber-narrative-currentness",
+    "aud06-v1",
+    stale_after=timedelta(days=30),
+    historical_after=timedelta(days=90),
+)
 
 
 class _Organizations:
@@ -141,7 +148,10 @@ def _observation(
                 provenance_ref="policy:public-test",
                 currentness=Currentness.CURRENT,
                 applicable_subject_ids=("org:acme",),
-                applicable_purposes=(ReusePurpose.CURRENT_STATE.value,),
+                applicable_purposes=(
+                    ReusePurpose.CURRENT_STATE.value,
+                    ReusePurpose.HISTORICAL_REFERENCE.value,
+                ),
             )
             if authority is None
             else authority
@@ -196,6 +206,7 @@ def _access_context(
     tenant_id: str = "tenant:1",
     target_scope: ReuseTargetScope = ReuseTargetScope.TENANT_PRIVATE,
     purpose: ReusePurpose = ReusePurpose.CURRENT_STATE,
+    as_of: datetime = NOW,
 ) -> NarrativeAccessContext:
     return NarrativeAccessContext(
         subject_id="org:acme",
@@ -203,7 +214,7 @@ def _access_context(
         tenant_id=tenant_id,
         target_scope=target_scope,
         purpose=purpose,
-        as_of=NOW,
+        as_of=as_of,
     )
 
 
@@ -311,6 +322,7 @@ def test_complete_evidence_narrative_resolves_runtime_lineage_and_is_ui_safe(
         material_resolver=_material_resolver(),
         access_context=_access_context(),
         reuse_policy=NARRATIVE_POLICY,
+        temporal_policy=TEMPORAL_POLICY,
         graph_resolver=_graph_resolver(),
         canonical_faxts=(_faxt(),),
     )
@@ -368,6 +380,7 @@ def test_evidence_narrative_survives_exact_observation_replay(tmp_path: Path) ->
         material_resolver=_material_resolver(),
         access_context=_access_context(),
         reuse_policy=NARRATIVE_POLICY,
+        temporal_policy=TEMPORAL_POLICY,
         canonical_faxts=(_faxt(),),
     )
 
@@ -383,6 +396,7 @@ def test_evidence_narrative_survives_exact_observation_replay(tmp_path: Path) ->
         material_resolver=_material_resolver(),
         access_context=_access_context(),
         reuse_policy=NARRATIVE_POLICY,
+        temporal_policy=TEMPORAL_POLICY,
         canonical_faxts=(_faxt(),),
     )
 
@@ -421,6 +435,7 @@ def test_narrative_rejects_altered_summary_with_same_ids(tmp_path: Path) -> None
             material_resolver=_material_resolver(),
             access_context=_access_context(),
             reuse_policy=NARRATIVE_POLICY,
+            temporal_policy=TEMPORAL_POLICY,
             canonical_faxts=(_faxt(),),
         )
 
@@ -454,6 +469,7 @@ def test_narrative_rejects_altered_type_or_version_with_same_ids(tmp_path: Path)
             material_resolver=_material_resolver(),
             access_context=_access_context(),
             reuse_policy=NARRATIVE_POLICY,
+            temporal_policy=TEMPORAL_POLICY,
             canonical_faxts=(_faxt(),),
         )
 
@@ -483,6 +499,7 @@ def test_narrative_rejects_altered_type_or_version_with_same_ids(tmp_path: Path)
             material_resolver=_material_resolver(),
             access_context=_access_context(),
             reuse_policy=NARRATIVE_POLICY,
+            temporal_policy=TEMPORAL_POLICY,
             canonical_faxts=(_faxt(),),
         )
 
@@ -513,6 +530,7 @@ def test_narrative_cannot_omit_material_contradiction(tmp_path: Path) -> None:
             material_resolver=_material_resolver(),
             access_context=_access_context(),
             reuse_policy=NARRATIVE_POLICY,
+            temporal_policy=TEMPORAL_POLICY,
             canonical_faxts=(_faxt(),),
         )
 
@@ -543,6 +561,7 @@ def test_narrative_rejects_unresolved_graph_reference(tmp_path: Path) -> None:
             material_resolver=_material_resolver(),
             access_context=_access_context(),
             reuse_policy=NARRATIVE_POLICY,
+            temporal_policy=TEMPORAL_POLICY,
             graph_resolver=_graph_resolver(),
             canonical_faxts=(_faxt(),),
         )
@@ -652,6 +671,7 @@ def test_private_evidence_from_different_owner_is_rejected_before_material_resol
             material_resolver=_private_material_resolver(),
             access_context=_access_context(),
             reuse_policy=NARRATIVE_POLICY,
+            temporal_policy=TEMPORAL_POLICY,
             canonical_faxts=(_faxt(),),
         )
 
@@ -697,6 +717,7 @@ def test_prohibited_unknown_or_restricted_private_material_is_rejected(
             material_resolver=_private_material_resolver(),
             access_context=_access_context(),
             reuse_policy=NARRATIVE_POLICY,
+            temporal_policy=TEMPORAL_POLICY,
             canonical_faxts=(_faxt(),),
         )
 
@@ -715,6 +736,7 @@ def test_correct_private_owner_gets_explicit_private_projection_without_cas_leak
         material_resolver=_private_material_resolver(),
         access_context=_access_context(),
         reuse_policy=NARRATIVE_POLICY,
+        temporal_policy=TEMPORAL_POLICY,
         canonical_faxts=(_faxt(),),
     )
     evidence_steps = [
@@ -745,6 +767,7 @@ def test_private_evidence_cannot_be_projected_to_global_world(tmp_path: Path) ->
             material_resolver=_private_material_resolver(),
             access_context=_access_context(target_scope=ReuseTargetScope.GLOBAL_WORLD),
             reuse_policy=NARRATIVE_POLICY,
+            temporal_policy=TEMPORAL_POLICY,
             canonical_faxts=(_faxt(),),
         )
 
@@ -780,5 +803,96 @@ def test_private_material_is_not_resolved_before_owner_authorization(tmp_path: P
             material_resolver=_ResolverMustNotReadPrivateMaterial(),
             access_context=_access_context(),
             reuse_policy=NARRATIVE_POLICY,
+            temporal_policy=TEMPORAL_POLICY,
             canonical_faxts=(_faxt(),),
         )
+
+
+def test_narrative_rejects_aged_evidence_for_current_presentation(tmp_path: Path) -> None:
+    artifacts, memory, _web, _registry = _runtime(tmp_path)
+    basis = _basis()
+    projection = project_explainable_xignal(
+        organization_context=_seed(),
+        candidate_id=basis.candidate_id,
+        kind=XignalKind.SUPPLY,
+        epistemic_state=XignalEpistemicState.OBSERVED,
+        title="Industrial pump manufacturing observed",
+        why_attention="Observed supply capability warrants attention.",
+        basis=basis,
+        emitted_at=NOW,
+        policy_version="xignal-v1",
+        canonical_faxt=_faxt(),
+    )
+
+    with pytest.raises(ValueError, match="HISTORICAL_FOR_CURRENT_USE"):
+        build_evidence_narrative(
+            organization_context=_seed(),
+            projection=projection,
+            basis=basis,
+            observation_memory=memory,
+            artifact_integrity=ContentAddressedArtifactIntegrityAdapter(artifacts),
+            material_resolver=_material_resolver(),
+            access_context=_access_context(as_of=NOW + timedelta(days=120)),
+            reuse_policy=NARRATIVE_POLICY,
+            temporal_policy=TEMPORAL_POLICY,
+            canonical_faxts=(_faxt(),),
+        )
+
+
+def test_historical_narrative_is_reproducible_and_visibly_historical(tmp_path: Path) -> None:
+    artifacts, memory, _web, _registry = _runtime(tmp_path)
+    basis = _basis()
+    projection = project_explainable_xignal(
+        organization_context=_seed(),
+        candidate_id=basis.candidate_id,
+        kind=XignalKind.SUPPLY,
+        epistemic_state=XignalEpistemicState.OBSERVED,
+        title="Industrial pump manufacturing observed",
+        why_attention="Observed supply capability warrants attention.",
+        basis=basis,
+        emitted_at=NOW,
+        policy_version="xignal-v1",
+        canonical_faxt=_faxt(),
+    )
+    as_of = NOW + timedelta(days=120)
+
+    first = build_evidence_narrative(
+        organization_context=_seed(),
+        projection=projection,
+        basis=basis,
+        observation_memory=memory,
+        artifact_integrity=ContentAddressedArtifactIntegrityAdapter(artifacts),
+        material_resolver=_material_resolver(),
+        access_context=_access_context(
+            purpose=ReusePurpose.HISTORICAL_REFERENCE,
+            as_of=as_of,
+        ),
+        reuse_policy=NARRATIVE_POLICY,
+        temporal_policy=TEMPORAL_POLICY,
+        canonical_faxts=(_faxt(),),
+    )
+    second = build_evidence_narrative(
+        organization_context=_seed(),
+        projection=projection,
+        basis=basis,
+        observation_memory=memory,
+        artifact_integrity=ContentAddressedArtifactIntegrityAdapter(artifacts),
+        material_resolver=_material_resolver(),
+        access_context=_access_context(
+            purpose=ReusePurpose.HISTORICAL_REFERENCE,
+            as_of=as_of,
+        ),
+        reuse_policy=NARRATIVE_POLICY,
+        temporal_policy=TEMPORAL_POLICY,
+        canonical_faxts=(_faxt(),),
+    )
+
+    assert first == second
+    assert first.steps[0].currentness == Currentness.HISTORICAL.value
+    evidence_steps = [
+        step
+        for step in first.steps
+        if step.kind in (EvidenceNarrativeKind.OBSERVATION, EvidenceNarrativeKind.SOURCE)
+    ]
+    assert evidence_steps
+    assert all(step.currentness == Currentness.HISTORICAL.value for step in evidence_steps)

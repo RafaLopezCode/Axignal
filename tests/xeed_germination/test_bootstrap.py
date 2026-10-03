@@ -1,6 +1,8 @@
 from __future__ import annotations
 
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
+
+import pytest
 
 from application.economic_discovery import (
     DimensionRoutingPolicy,
@@ -15,6 +17,7 @@ from application.economic_discovery import (
     ObservationRecord,
     ObservationReuseAuthority,
     ObservationReusePolicy,
+    ObservationReuseRejected,
     ObservationReuseScope,
     ObservationRightsStatus,
     ObservedField,
@@ -25,6 +28,7 @@ from application.economic_discovery import (
     ResearchValueSignal,
     ReusePurpose,
     SemanticPrimitive,
+    TemporalCurrentnessPolicy,
     TypingDimensionContract,
     decide_research_value,
 )
@@ -445,12 +449,43 @@ def _reuse_policy() -> ObservationReusePolicy:
     return ObservationReusePolicy("observation-reuse", "1")
 
 
+def _temporal_policy() -> TemporalCurrentnessPolicy:
+    return TemporalCurrentnessPolicy(
+        "bootstrap-currentness",
+        "aud06-v1",
+        stale_after=timedelta(days=30),
+        historical_after=timedelta(days=90),
+    )
+
+
 def _build_bootstrap_plan(**kwargs):
+    as_of = kwargs.pop("as_of", NOW)
+    temporal_policy = kwargs.pop("temporal_policy", _temporal_policy())
     return _raw_build_bootstrap_plan(
         observation_memory=_ReuseMemory(),
         reuse_policy=_reuse_policy(),
+        temporal_policy=temporal_policy,
+        as_of=as_of,
         **kwargs,
     )
 
 
 build_bootstrap_plan = _build_bootstrap_plan
+
+
+def test_bootstrap_rejects_120_day_prior_state_for_current_use() -> None:
+    rich_state = _rich_state(("document.home.visible_text", "Industrial pump manufacturer."))
+
+    with pytest.raises(ObservationReuseRejected) as rejected:
+        build_bootstrap_plan(
+            seed=_seed(),
+            rich_state=rich_state,
+            policy=_policy(),
+            known_sources=(),
+            contracts=(_contract(),),
+            routing_policies=_routing(),
+            as_of=NOW + timedelta(days=120),
+        )
+
+    assert rejected.value.decision.reason.value == "HISTORICAL_FOR_CURRENT_USE"
+    assert rejected.value.decision.effective_currentness is Currentness.HISTORICAL

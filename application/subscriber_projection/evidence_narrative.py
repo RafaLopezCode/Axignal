@@ -2,13 +2,14 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from datetime import datetime
 from enum import StrEnum
 from typing import Protocol
 
 from application.economic_discovery.explanation import BasisContribution, ExplainableBasis
 from application.economic_discovery.observation_reuse import ObservationReusePolicy
+from application.economic_discovery.temporal_currentness import TemporalCurrentnessPolicy
 from application.subscriber_projection.narrative_access import (
     NarrativeAccessContext,
     NarrativeEvidenceScope,
@@ -86,7 +87,8 @@ def _authorized_scope_by_id(
     observation_id: str,
     access_context: NarrativeAccessContext,
     reuse_policy: ObservationReusePolicy,
-) -> NarrativeEvidenceScope:
+    temporal_policy: TemporalCurrentnessPolicy,
+) -> tuple[NarrativeEvidenceScope, str]:
     metadata = memory.access_metadata(subject_id, observation_id)
     if metadata is None:
         raise ValueError("evidence narrative observation reference does not resolve")
@@ -94,8 +96,9 @@ def _authorized_scope_by_id(
         metadata,
         context=access_context,
         policy=reuse_policy,
+        temporal_policy=temporal_policy,
     )
-    return authorization.evidence_scope
+    return authorization.evidence_scope, authorization.decision.effective_currentness.value
 
 
 def build_evidence_narrative(
@@ -108,6 +111,7 @@ def build_evidence_narrative(
     material_resolver: NarrativeMaterialResolver,
     access_context: NarrativeAccessContext,
     reuse_policy: ObservationReusePolicy,
+    temporal_policy: TemporalCurrentnessPolicy,
     graph_resolver: NarrativeGraphResolver | None = None,
     canonical_faxts: tuple[FAXT, ...] = (),
 ) -> EvidenceNarrative:
@@ -211,9 +215,22 @@ def build_evidence_narrative(
             observation_id=observation_id,
             access_context=access_context,
             reuse_policy=reuse_policy,
+            temporal_policy=temporal_policy,
         )
         for observation_id in considered_ids
     }
+    effective_values = [value[1] for value in evidence_scope_by_id.values()]
+    currentness_rank = {
+        "CURRENT": 0,
+        "STALE": 1,
+        "HISTORICAL": 2,
+        "UNKNOWN": 3,
+    }
+    root_currentness = max(
+        effective_values,
+        key=lambda value: currentness_rank.get(value, currentness_rank["UNKNOWN"]),
+    )
+    steps[0] = replace(steps[0], currentness=root_currentness)
     material_by_id = {}
     for observation_id in considered_ids:
         material = material_resolver.resolve(observation_id)
@@ -244,7 +261,7 @@ def build_evidence_narrative(
     ):
         if datum.observation_id not in material_by_id:
             raise ValueError("basis observation was not in governed considered evidence")
-        evidence_scope = evidence_scope_by_id[datum.observation_id]
+        evidence_scope, effective_currentness = evidence_scope_by_id[datum.observation_id]
         observation = observation_memory.get_observation(subject_id, datum.observation_id)
         if observation is None:
             raise ValueError("authorized evidence narrative observation disappeared")
@@ -292,6 +309,7 @@ def build_evidence_narrative(
                 label=datum.excerpt_or_summary,
                 parent_step_id=parent_for_observation,
                 observed_at=observation.record.observed_at,
+                currentness=effective_currentness,
                 artifact_verified=verified,
                 evidence_scope=evidence_scope,
             )
@@ -304,6 +322,7 @@ def build_evidence_narrative(
                 parent_step_id=observation_step_id,
                 source_ref=datum.source_ref,
                 observed_at=observation.record.observed_at,
+                currentness=effective_currentness,
                 artifact_verified=verified,
                 evidence_scope=evidence_scope,
             )

@@ -53,6 +53,7 @@ from application.economic_discovery.prime import (
     build_prime_control_plan,
 )
 from application.economic_discovery.research_value import ResearchValueDecision
+from application.economic_discovery.temporal_currentness import TemporalCurrentnessPolicy
 from application.semantic_extraction import (
     SemanticCandidateSet,
     SemanticExtractionContract,
@@ -288,6 +289,7 @@ def execute_prime_source_slice(
     semantic_extractor: SemanticExtractionPort | None = None,
     semantic_contract: SemanticExtractionContract | None = None,
     reuse_policy: ObservationReusePolicy | None = None,
+    temporal_currentness_policy: TemporalCurrentnessPolicy | None = None,
     ingested_observation_reuse_authority: ObservationReuseAuthority | None = None,
 ) -> PrimeExecutionTrace:
     """Execute one governed source-to-Prime slice and retain exact lineage."""
@@ -305,19 +307,24 @@ def execute_prime_source_slice(
 
     reused_ids = frozenset(item.observation_id for item in prior_rich_state.data)
     if reused_ids:
-        if reuse_policy is None:
-            raise ValueError("Prime reused state requires an observation reuse policy")
+        if reuse_policy is None or temporal_currentness_policy is None:
+            raise ValueError(
+                "Prime reused state requires an observation reuse policy; "
+                "temporal currentness policy is also required"
+            )
         reuse_context = ObservationReuseContext(
             subject_id=str(subject_id),
             xeed_id=str(xeed_id),
             tenant_id=str(seed.authorized_xeed.xeed.tenant_id),
             target_scope=ReuseTargetScope.TENANT_PRIVATE,
             purpose=ReusePurpose.CURRENT_STATE,
+            as_of=occurred_at,
         )
         selection = select_reusable_observations(
             observation_memory,
             context=reuse_context,
             policy=reuse_policy,
+            temporal_policy=temporal_currentness_policy,
         )
         decision_by_id = {decision.observation_id: decision for decision in selection.decisions}
         observation_by_id = {

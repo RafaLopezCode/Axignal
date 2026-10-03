@@ -205,8 +205,21 @@ Reuse policy can reject tenant-private evidence while evidence narrative still r
 ## AUD-06 — Temporal Currentness Propagation
 
 **Severity:** HIGH
-**Status:** READY
+**Status:** DONE
 **Depends on:** AUD-05
+
+### Completion evidence
+- Effective currentness is derived at consumption from stored currentness + observed_at + as_of + versioned TemporalCurrentnessPolicy; Observation Memory is not mutated.
+- ObservationReuseContext and ObservationReuseDecision now carry temporal decision provenance, including effective currentness, as-of and temporal policy version.
+- 120-day evidence under a 30/90 policy is rejected for CURRENT_STATE while remaining available for authorized HISTORICAL_REFERENCE.
+- Bootstrap and Prime apply the temporal gate to reused RichSubjectState; aged replay is rejected before cognitive mechanisms execute.
+- EvidenceNarrative applies the same policy through its metadata-first access gate and exposes effective currentness on evidence and root Xignal steps.
+- FR-30 current_projection re-evaluates exact observation dependencies, marks aged nodes STALE/HISTORICAL and removes non-current items from Today without mutating the persisted snapshot.
+- A fresh reobservation can produce a new CURRENT projection while the predecessor remains historically unchanged.
+- FR-30 uses projection_as_of = max(execution start, observation retrieved_at), preventing evaluation before evidence exists.
+- Existing temporal dependency invalidation continues to affect only dimensions depending on source.currentness.
+- Runtime HTTP /api/subscriber-context has a future-clock regression proving visible currentness propagation.
+- ADR-0077 records the temporal consumption boundary.
 
 ### Problem
 Temporal aging can classify evidence HISTORICAL while reuse and visible read model still claim CURRENT.
