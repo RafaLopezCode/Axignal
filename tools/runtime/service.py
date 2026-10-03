@@ -59,6 +59,7 @@ from application.admin_integrations.service import (
     AdminIntegrationProjection,
     project_admin_integrations,
 )
+from application.admin_measurements import project_measurement_registry
 from application.admin_shell import (
     AdminShellProjection,
     AdminShellRouteDenied,
@@ -81,6 +82,7 @@ from domain.admin_brain_observatory import BrainProviderObservatory
 from domain.admin_command_center import AdminCommandCenterProjection
 from domain.admin_governance import AdminGovernanceProjection
 from domain.admin_integrations import IntegrationEnvironment
+from domain.admin_measurements import MeasurementRegistryProjection
 from domain.admin_observability import AdminProjectionId, AdminProjectionSnapshot
 from domain.admin_tax_operations import TaxOperationsProjection
 from domain.admin_xeed_observatory import XeedAxiglandObservatory
@@ -95,6 +97,7 @@ from pipeline.admin_financial_documents import SqliteFinancialDocumentStore
 from pipeline.admin_fiscal_compliance import SqliteFiscalComplianceStore
 from pipeline.admin_governance import SqliteAdminGovernanceAuditStore
 from pipeline.admin_integrations import SqliteAdminIntegrationStore
+from pipeline.admin_measurements import SqliteMeasurementRegistryStore
 from pipeline.admin_observability import SqliteAdminObservabilityStore
 from pipeline.admin_tax_operations import SqliteTaxOperationsStore
 from pipeline.admin_weekly_brief import SqliteWeeklyBriefStore
@@ -128,6 +131,7 @@ class AxignalRuntime:
     admin_fiscal_compliance_store: SqliteFiscalComplianceStore
     admin_tax_operations_store: SqliteTaxOperationsStore
     admin_integration_store: SqliteAdminIntegrationStore
+    admin_measurement_store: SqliteMeasurementRegistryStore
     admin_weekly_brief_store: SqliteWeeklyBriefStore
     stripe_webhook: StripeWebhookRuntime | None = None
     first_proof: FirstProofService | None = None
@@ -221,6 +225,9 @@ def build_runtime(config: RuntimeConfig) -> AxignalRuntime:
     admin_integration_store = SqliteAdminIntegrationStore(
         config.data_dir / "admin-integrations.sqlite3"
     )
+    admin_measurement_store = SqliteMeasurementRegistryStore(
+        config.data_dir / "admin-measurements.sqlite3"
+    )
     admin_weekly_brief_store = SqliteWeeklyBriefStore(
         config.data_dir / "admin-weekly-brief.sqlite3"
     )
@@ -274,6 +281,7 @@ def build_runtime(config: RuntimeConfig) -> AxignalRuntime:
         admin_fiscal_compliance_store=admin_fiscal_compliance_store,
         admin_tax_operations_store=admin_tax_operations_store,
         admin_integration_store=admin_integration_store,
+        admin_measurement_store=admin_measurement_store,
         admin_weekly_brief_store=admin_weekly_brief_store,
         stripe_webhook=stripe_webhook,
         first_proof=first_proof,
@@ -1047,6 +1055,74 @@ def _tax_operations_payload(projection: TaxOperationsProjection) -> dict[str, ob
     }
 
 
+def _measurement_registry_projection(
+    runtime: AxignalRuntime, *, grant: AdminAuthorizationGrant, now: datetime
+) -> MeasurementRegistryProjection:
+    return project_measurement_registry(
+        store=runtime.admin_measurement_store,
+        grant=grant,
+        generated_at=now,
+    )
+
+
+def _measurement_registry_payload(
+    projection: MeasurementRegistryProjection,
+) -> dict[str, object]:
+    return {
+        "generatedAt": projection.generated_at.isoformat(),
+        "privacyClass": projection.privacy_class,
+        "coverageNotes": list(projection.coverage_notes),
+        "definitions": [
+            {
+                "measureId": item.measure_id,
+                "version": item.version,
+                "label": item.label,
+                "questionServed": item.question_served,
+                "decisionServed": item.decision_served,
+                "formulaOrCodingRule": item.formula_or_coding_rule,
+                "unit": item.unit.value,
+                "sourceFamily": item.source_family,
+                "instrumentId": item.instrument_id,
+                "instrumentVersion": item.instrument_version,
+                "subjectScope": item.subject_scope,
+                "defaultWindow": item.default_window,
+                "freshnessSeconds": item.freshness_seconds,
+                "minimumSampleSize": item.minimum_sample_size,
+                "uncertaintyPolicy": item.uncertainty_policy,
+                "compatibilityKey": item.compatibility_key,
+                "interpretationLimits": list(item.interpretation_limits),
+                "evaluationCases": list(item.evaluation_cases),
+                "effectiveAt": item.effective_at.isoformat(),
+            }
+            for item in projection.definitions
+        ],
+        "readouts": [
+            {
+                "observationId": item.observation.observation_id,
+                "measureId": item.observation.measure_id,
+                "definitionVersion": item.observation.definition_version,
+                "subjectRef": item.observation.subject_ref,
+                "instrumentId": item.observation.instrument_id,
+                "instrumentVersion": item.observation.instrument_version,
+                "state": item.observation.state.value,
+                "observedAt": item.observation.observed_at.isoformat(),
+                "windowStart": item.observation.window_start.isoformat(),
+                "windowEnd": item.observation.window_end.isoformat(),
+                "sampleSize": item.observation.sample_size,
+                "informativeSampleSize": item.observation.informative_sample_size,
+                "value": item.observation.value,
+                "currency": item.observation.currency,
+                "uncertainty": item.observation.uncertainty,
+                "sourceRefs": list(item.observation.source_refs),
+                "freshness": item.freshness.value,
+                "usable": item.usable,
+                "reason": item.reason,
+            }
+            for item in projection.readouts
+        ],
+    }
+
+
 def _integration_projection(
     runtime: AxignalRuntime, *, grant: AdminAuthorizationGrant, now: datetime
 ) -> AdminIntegrationProjection:
@@ -1192,6 +1268,7 @@ def _admin_projection_payload(
     accounting_reconciliation: AccountingReconciliationProjection | None = None,
     fiscal_compliance: FiscalComplianceProjection | None = None,
     tax_operations: TaxOperationsProjection | None = None,
+    measurement_registry: MeasurementRegistryProjection | None = None,
 ) -> dict[str, object]:
     payload: dict[str, object] = {
         "mode": projection.mode,
@@ -1237,6 +1314,8 @@ def _admin_projection_payload(
         payload["fiscalCompliance"] = _fiscal_compliance_payload(fiscal_compliance)
     if tax_operations is not None:
         payload["taxOperations"] = _tax_operations_payload(tax_operations)
+    if measurement_registry is not None:
+        payload["measurementRegistry"] = _measurement_registry_payload(measurement_registry)
     return payload
 
 
@@ -1257,6 +1336,7 @@ def _render_admin_shell(
     accounting_reconciliation: AccountingReconciliationProjection | None = None,
     fiscal_compliance: FiscalComplianceProjection | None = None,
     tax_operations: TaxOperationsProjection | None = None,
+    measurement_registry: MeasurementRegistryProjection | None = None,
 ) -> bytes:
     template = (web_root / "admin" / "index.html").read_text(encoding="utf-8")
     payload = html.escape(
@@ -1276,6 +1356,7 @@ def _render_admin_shell(
                 accounting_reconciliation=accounting_reconciliation,
                 fiscal_compliance=fiscal_compliance,
                 tax_operations=tax_operations,
+                measurement_registry=measurement_registry,
             ),
             sort_keys=True,
             separators=(",", ":"),
@@ -1494,6 +1575,11 @@ def make_handler(runtime: AxignalRuntime) -> type[BaseHTTPRequestHandler]:
                         if admin_projection.current_slug == "finance-fiscal"
                         else None
                     )
+                    measurement_registry = (
+                        _measurement_registry_projection(runtime, grant=grant, now=now)
+                        if admin_projection.current_slug == "frontier-advisor"
+                        else None
+                    )
                     rendered = _render_admin_shell(
                         runtime.config.web_root,
                         admin_projection,
@@ -1510,6 +1596,7 @@ def make_handler(runtime: AxignalRuntime) -> type[BaseHTTPRequestHandler]:
                         accounting_reconciliation=accounting_reconciliation,
                         fiscal_compliance=fiscal_compliance,
                         tax_operations=tax_operations,
+                        measurement_registry=measurement_registry,
                     )
                 except AdminAuthenticationError:
                     self._admin_error(HTTPStatus.UNAUTHORIZED, "Admin authentication failed.")

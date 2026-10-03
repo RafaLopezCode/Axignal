@@ -99,7 +99,7 @@ Admin must distinguish measured flywheel behavior from the hypothesis above.
 
 `NOT_STARTED → READY → IN_PROGRESS → BLOCKED → DONE → DEFERRED → REJECTED`
 
-**CURRENT_TASK = AO-24**
+**CURRENT_TASK = AO-25**
 
 ## 7. Closure rule
 
@@ -1025,9 +1025,25 @@ Tax operations are inspectable and controlled without turning AXENT into a tax a
 
 ## AO-24 — Governed KPI & Measurement Registry
 
-**Status:** NOT_STARTED
+**Status:** DONE
 **Depends on:** AO-03, AO-05, AO-06
 **Priority:** P1 Advisory
+
+### Completion evidence
+- Materialized ADR-0015 measurement doctrine into an executable, private AO-24 registry for advisory/reporting.
+- Added immutable sequential MeasurementDefinition versions covering question/decision served, formula/coding rule, unit, source family, instrument identity/version, subject scope, default window, freshness, minimum sample, uncertainty policy, compatibility key, interpretation limits and evaluation cases.
+- Added append-only MeasurementObservation records preserving definition version, subject, instrument/version, compatibility key, observation/window times, sample/informative sample, value, currency where applicable, uncertainty and source references.
+- Measurement observations are accepted only against an explicitly registered definition; a model/provider cannot create arbitrary KPI authority.
+- MEASURED / NOT_MEASURED / INSUFFICIENT are distinct. NOT_MEASURED and INSUFFICIENT cannot carry a value and never become numeric zero.
+- A MEASURED observation below the registered minimum informative sample fails closed and must be recorded as INSUFFICIENT.
+- Historical comparison rejects different measure identity, compatibility key, subject or instrument identity/version. No implicit bridge exists across instrument drift.
+- Freshness is evaluated at projection time. Stale measurements retain their historical value/provenance but are unusable for current advisory decisions.
+- Registry writes require admin:advisory:write plus STEP_UP and emit Admin governance audit records under the ADVISORY target.
+- Runtime composes durable admin-measurements.sqlite3 storage. The registry deliberately starts empty; no convenient KPI is seeded without explicit governance.
+- Frontier Advisor Admin now exposes definitions, readouts, samples, freshness, uncertainty and missing-measurement states. An empty registry explicitly says no governed KPI definitions are registered.
+- ADR-0071 records registry authority, compatibility rules and the no-canonical-write boundary.
+- Focused AO-24 contracts/runtime tests PASS; full deterministic repository gates are required before integration.
+
 ### Work
 Define versioned measures for advisory/report use:
 - question/decision served;

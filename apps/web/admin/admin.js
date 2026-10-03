@@ -1385,6 +1385,133 @@
     }
   }
 
+  const measurementRegistry = bootstrap.measurementRegistry
+  const measurementSection = document.getElementById('admin-measurement-registry')
+  if (current?.slug === 'frontier-advisor' && measurementRegistry && measurementSection) {
+    measurementSection.hidden = false
+    if (domainPreview) domainPreview.hidden = true
+
+    const privacy = document.getElementById('admin-measurement-privacy')
+    const generated = document.getElementById('admin-measurement-generated')
+    const notes = document.getElementById('admin-measurement-notes')
+    const summary = document.getElementById('admin-measurement-summary')
+    const definitions = document.getElementById('admin-measurement-definitions')
+    const readouts = document.getElementById('admin-measurement-readouts')
+
+    if (privacy) privacy.textContent = measurementRegistry.privacyClass || 'PRIVATE ADVISORY'
+    if (generated) generated.textContent = measurementRegistry.generatedAt ? 'As of ' + measurementRegistry.generatedAt : ''
+
+    if (notes) {
+      notes.replaceChildren()
+      for (const noteText of measurementRegistry.coverageNotes || []) {
+        const note = document.createElement('p')
+        note.textContent = noteText
+        notes.append(note)
+      }
+    }
+
+    const definitionRows = Array.isArray(measurementRegistry.definitions)
+      ? measurementRegistry.definitions
+      : []
+    const readoutRows = Array.isArray(measurementRegistry.readouts)
+      ? measurementRegistry.readouts
+      : []
+
+    if (summary) {
+      summary.replaceChildren()
+      const facts = [
+        ['Definitions', definitionRows.length],
+        ['Observations', readoutRows.length],
+        ['Usable now', readoutRows.filter((item) => item.usable === true).length],
+        ['Stale', readoutRows.filter((item) => item.freshness === 'STALE').length],
+        ['Not measured', readoutRows.filter((item) => item.state === 'NOT_MEASURED').length],
+        ['Insufficient', readoutRows.filter((item) => item.state === 'INSUFFICIENT').length],
+      ]
+      for (const pair of facts) {
+        const card = document.createElement('article')
+        card.className = 'admin-observatory-stat'
+        const strong = document.createElement('strong')
+        strong.textContent = String(pair[1])
+        const span = document.createElement('span')
+        span.textContent = pair[0]
+        card.append(strong, span)
+        summary.append(card)
+      }
+    }
+
+    if (definitions) {
+      definitions.replaceChildren()
+      if (!definitionRows.length) {
+        const empty = document.createElement('article')
+        empty.className = 'admin-observatory-empty'
+        const heading = document.createElement('strong')
+        heading.textContent = 'No governed KPI definitions registered'
+        const body = document.createElement('p')
+        body.textContent = 'No model may choose an arbitrary KPI. Advisory measurement remains unavailable until a versioned definition is explicitly registered.'
+        empty.append(heading, body)
+        definitions.append(empty)
+      }
+      for (const item of definitionRows) {
+        const article = document.createElement('article')
+        article.className = 'admin-integration-entry'
+        const header = document.createElement('header')
+        const title = document.createElement('h3')
+        title.textContent = item.label + ' · v' + item.version
+        const badge = document.createElement('span')
+        badge.textContent = item.unit
+        header.append(title, badge)
+        const body = document.createElement('p')
+        body.textContent = item.questionServed + ' · Decision: ' + item.decisionServed
+        const facts = document.createElement('dl')
+        facts.className = 'admin-integration-facts'
+        const addDetail = (label, value) => {
+          const wrapper = document.createElement('div')
+          const term = document.createElement('dt')
+          term.textContent = label
+          const description = document.createElement('dd')
+          description.textContent = value == null || value === '' ? 'UNKNOWN' : String(value)
+          wrapper.append(term, description)
+          facts.append(wrapper)
+        }
+        addDetail('Measure ID', item.measureId)
+        addDetail('Instrument', item.instrumentId + '@' + item.instrumentVersion)
+        addDetail('Compatibility', item.compatibilityKey)
+        addDetail('Window', item.defaultWindow)
+        addDetail('Minimum sample', item.minimumSampleSize)
+        addDetail('Freshness seconds', item.freshnessSeconds)
+        addDetail('Formula / coding rule', item.formulaOrCodingRule)
+        addDetail('Uncertainty', item.uncertaintyPolicy)
+        addDetail('Interpretation limits', (item.interpretationLimits || []).join(' | '))
+        article.append(header, body, facts)
+        definitions.append(article)
+      }
+    }
+
+    if (readouts) {
+      readouts.replaceChildren()
+      for (const item of readoutRows) {
+        const article = document.createElement('article')
+        article.className = 'admin-integration-entry'
+        const header = document.createElement('header')
+        const title = document.createElement('h3')
+        title.textContent = item.measureId + ' · ' + item.subjectRef
+        const badge = document.createElement('span')
+        badge.textContent = item.state + ' · ' + item.freshness
+        header.append(title, badge)
+        const body = document.createElement('p')
+        body.textContent = item.value == null
+          ? 'No numeric value'
+          : 'Value: ' + item.value + (item.currency ? ' ' + item.currency : '')
+        const detail = document.createElement('p')
+        detail.textContent = 'Sample: ' + (item.informativeSampleSize ?? 'UNKNOWN') +
+          '/' + (item.sampleSize ?? 'UNKNOWN') + ' · ' + item.reason +
+          ' · Uncertainty: ' + item.uncertainty
+        article.append(header, body, detail)
+        readouts.append(article)
+      }
+    }
+  }
+
   document.addEventListener('keydown', (event) => {
     if (event.key !== 'ArrowDown' && event.key !== 'ArrowUp') return
     const links = [...document.querySelectorAll('.admin-nav-link')]
