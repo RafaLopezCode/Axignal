@@ -1,0 +1,256 @@
+# AXIGNAL Adversarial Epistemic Remediation Roadmap — 2026-10-03
+
+**Status:** ACTIVE EXECUTION GATE
+**Authority:** MASTER PRODUCT MODEL -> Engineering Constitution -> accepted ADRs -> this remediation plan -> Admin roadmap.
+**Source audit:** D:/AXIGNAL/.validation/adversarial-audit-2026-10-03/AXIGNAL_ADVERSARIAL_ARCHITECTURE_AUDIT_2026-10-03.md
+**Frozen audit snapshot:** 5d20cc98732e963c95bd097f7fc6175f51b0a444
+**Revalidated against:** 3669b7baf4e930c8c2231c7f0084ac244d2accde
+**Revalidation evidence:** D:/AXIGNAL/.validation/adversarial-audit-2026-10-03/results-current-main.json
+
+## 1. Why this gate exists
+
+The adversarial audit found 7 HIGH and 3 MEDIUM findings across canonical truth admission, observed/potential boundaries, narrative/provenance, private reuse, temporal currentness, fiscal fail-closed semantics, legacy evidence identity, CI coverage and URL privacy.
+
+The original audit harness was replayed against current main 3669b7b with loopback HTTP checks enabled. All audit assertions still reproduced. AO-24 did not remediate these boundaries.
+
+AO-25 and later premium advisory work MUST NOT build on known broken truth/presentation boundaries.
+
+## 2. Execution policy
+
+- Fix root causes in dependency order.
+- Preserve MASTER/Constitution semantics.
+- Do not weaken Architecture Guard, governance, tests or negative scenarios.
+- Prefer repair over new abstractions.
+- Every fix requires a reproducer that fails before and passes after.
+- Every task closes with full deterministic repository validation.
+- No task is DONE solely because a unit test passes.
+- Production deployment is separate from repository closure unless explicitly required.
+- The frozen audit artifacts remain immutable evidence; new revalidation outputs use separate filenames.
+
+## 3. Priority and dependency graph
+
+AUD-01 -> AUD-02 -> AUD-03 -> AUD-04
+AUD-02 -> AUD-05 -> AUD-06
+AUD-01 -> AUD-08
+AUD-07 independent HIGH
+AUD-09 independent MEDIUM
+AUD-05 -> AUD-10
+
+AO-25 is blocked until AUD-01 through AUD-10 are closed and the adversarial harness no longer reproduces the repaired negative behaviors.
+
+## AUD-01 — Proposition-Bound EvidenceAdmission
+
+**Severity:** HIGH
+**Status:** READY
+**Depends on:** none
+
+### Problem
+Admission currently proves an evidence identity/token, not the exact proposition/content/authority/subject/predicate/value/time being authorized. A prior valid decision can be reused against changed evidence and a different claim.
+
+### Required change
+- Make source-authority validation positive and fail-closed.
+- Bind admission to an immutable request containing evidence content fingerprint, subject, predicate/value, authority, observed time and applicable policy.
+- Consumers must verify the same binding before canonical materialization.
+- LLM/support-judge output cannot be sufficient authorization.
+
+### Required tests
+- Same evidence_id with altered claim, authority, observed_at, subject, predicate or object/value fails.
+- Unknown authority fails.
+- Erroneous SUPPORTED model verdict over contradictory/negative evidence cannot produce the positive canonical FAXT.
+- Exact replay remains idempotent.
+
+### Acceptance
+Current-main audit checks for admission and legacy model-error path no longer reproduce the unsafe behavior.
+
+## AUD-02 — Canonical Construction and Relationship Admission Boundary
+
+**Severity:** HIGH
+**Status:** BLOCKED
+**Depends on:** AUD-01
+
+### Problem
+Canonical types can be directly constructed and relationships can consume unrelated admission decisions or empty evidence references.
+
+### Required change
+- Restrict effective canonical materialization/rehydration to verified factories/boundaries.
+- Validate evidence references against the exact admission binding.
+- Validate relationship endpoints/type/times and evidence compatibility.
+- Prevent inferred canonical FAXT from projecting as OBSERVED.
+
+### Required tests
+- Direct unsupported canonical construction rejected at materialization/write boundary.
+- Unrelated decision or empty refs rejected for OBSERVED relationship.
+- INFERRED FAXT cannot become OBSERVED capability.
+- Accredited replay remains valid.
+
+## AUD-03 — Claim-Kind Governed OBSERVED Projection
+
+**Severity:** HIGH
+**Status:** BLOCKED
+**Depends on:** AUD-01, AUD-02
+
+### Problem
+Observation-support IDs can currently authorize business-facing OBSERVED signals even where only a surface representation was directly measured.
+
+### Required change
+- Resolve support through a governed support port and explicit policy by claim/dimension kind.
+- Direct observations may prove only the phenomenon actually measured.
+- Business truths such as supply/capability/relationship require canonical compatible admission.
+- Do not whitelist providers as a substitute for semantic authority.
+
+### Required tests
+- Commercial supply/capability without admitted FAXT fails even with observation IDs.
+- Representation/page observation with instrument/scope/provenance may remain OBSERVED for representation only.
+
+## AUD-04 — Exact Explainable Basis and Narrative Verification
+
+**Severity:** HIGH
+**Status:** BLOCKED
+**Depends on:** AUD-01, AUD-03
+
+### Problem
+Narrative verifies bytes/IDs but can accept altered semantic summary/type/graph references while presenting a convincing evidence story.
+
+### Required change
+- Bind explainable basis to exact stored extraction/content versions.
+- Derive or verify excerpt/type/time against stored governed material.
+- Resolve relationship/PATHX references against authorized repositories or omit them as unverified.
+- Preserve explicit considered-evidence and material-contradiction ledger.
+
+### Required tests
+- Altered summary/type with unchanged IDs fails.
+- Missing graph refs fail or are omitted as unverified.
+- Material contradiction cannot disappear merely because caller omitted it.
+- Exact replay remains stable.
+
+## AUD-05 — Tenant/Reuse Authorization Before Narrative Access
+
+**Severity:** HIGH
+**Status:** BLOCKED
+**Depends on:** AUD-03
+
+### Problem
+Reuse policy can reject tenant-private evidence while evidence narrative still retrieves and exposes it.
+
+### Required change
+- Apply scope/rights/currentness authorization before private material retrieval.
+- Presentation/reuse context includes tenant, purpose and as_of.
+- Public and private evidence remain explicitly separated.
+- CAS/raw private artifacts never leak into subscriber payload.
+
+### Required tests
+- Different private owner rejected.
+- PROHIBITED/UNKNOWN/RESTRICTED reuse rejected.
+- Correct owner + permitted purpose may get clearly private projection only.
+- No private evidence is promoted to global AXIGLAND truth.
+
+## AUD-06 — Temporal Currentness Propagation
+
+**Severity:** HIGH
+**Status:** BLOCKED
+**Depends on:** AUD-05
+
+### Problem
+Temporal aging can classify evidence HISTORICAL while reuse and visible read model still claim CURRENT.
+
+### Required change
+- Evaluate effective currentness at consumption time with as_of + policy.
+- Reprojection marks visible state stale/historical without mutating historical observation.
+- Invalidation propagates only to affected dependencies.
+- Historical as-of views remain reproducible.
+
+### Required tests
+- 120-day evidence under 30/90 policy cannot be used as current.
+- Visible currentness changes under future as_of.
+- Historical authorized use remains available.
+- New observation restores currentness.
+- Old snapshot keeps old as-of meaning.
+
+## AUD-07 — Fiscal Evidence Verification and As-Of Gate
+
+**Severity:** HIGH
+**Status:** READY
+**Depends on:** none
+
+### Problem
+AO-22 can allow live/compliance claim from a complete set of opaque references, including evidence observed in the future relative to projection time.
+
+### Required change
+- Evidence must be observed on/before as_of.
+- Resolve/verify evidence artifacts and effective human approval.
+- Bind selected provider product version, adapter version, ruleset and approval context.
+- Provider/version drift invalidates completeness until re-evidenced.
+- Registry version is not presumed to equal deployed SIF binary/product version.
+
+### Required tests
+- Future evidence, missing artifact, mismatched effective version or absent approval cannot enable claims/live.
+- Complete, verified same-version evidence at/before as_of may pass.
+
+## AUD-08 — Legacy Evidence Identity Replay Conflict
+
+**Severity:** MEDIUM
+**Status:** BLOCKED
+**Depends on:** AUD-01
+
+### Problem
+Legacy evidence ledger permits duplicated/contradictory content under reused evidence identity.
+
+### Required change
+- Exact replay idempotent.
+- Existing evidence ID + different fingerprint -> conflict.
+- New observation/version requires new ID.
+- Reuse existing persistence; no new storage layer.
+
+### Required tests
+- Identical append stores once.
+- Same ID with altered claim/time/authority fails.
+- New ID preserves history.
+
+## AUD-09 — CI Cognitive/Authority Coverage
+
+**Severity:** MEDIUM
+**Status:** READY
+**Depends on:** none
+
+### Problem
+CI does not prove that all critical cognitive/epistemic suites are collected/executed.
+
+### Required change
+- Execute full deterministic suite in CI or explicitly enumerate all required suites with collection coverage validation.
+- Permanently include adversarial negative cases.
+- Keep network/LLM/provider calls out of deterministic CI.
+
+### Required tests
+- Deliberately failing test in each critical suite family causes CI failure.
+- Admission mutation, tenant leak, stale currentness and model-error cases are collected.
+
+## AUD-10 — Sensitive URL / Public Source Reference Redaction
+
+**Severity:** MEDIUM
+**Status:** BLOCKED
+**Depends on:** AUD-05
+
+### Problem
+Credential-like query parameters can reach CAS metadata, persisted read models and visible sourceRefs.
+
+### Required change
+- Reject credential-bearing public acquisition URLs or separate private locator from redacted public source reference.
+- Apply same policy across redirects.
+- Preserve semantically useful non-sensitive query parameters.
+- Errors/logs must not echo secret values.
+
+### Required tests
+- access_token/api_key/password/userinfo never appear in CAS metadata, persisted read model, logs or sourceRefs.
+- Allowed public query parameters retain semantics and traceability.
+- Sensitive redirects fail closed.
+
+## 4. Closure gate before AO-25
+
+AUD remediation is closed only when:
+
+1. AUD-01 through AUD-10 are DONE.
+2. Full deterministic suite, Ruff, mypy, Architecture Guard and governance pass.
+3. The current-main replay harness is updated to expected repaired semantics and all negative regressions pass.
+4. Frozen original audit evidence remains unchanged.
+5. A concise re-audit delta records each finding as repaired or explicitly UNKNOWN.
+6. AO-25 is then unblocked and becomes CURRENT_TASK again.
