@@ -10,8 +10,10 @@ import {
   LoaderCircle,
   BookOpen,
   LockKeyhole,
+  Languages,
 } from "lucide-react";
 import { useLocale } from "@/lib/locale";
+import { locales, type Locale } from "@/lib/languages";
 import type { Epistemic } from "@/lib/projection";
 export function Brand({
   dark = false,
@@ -45,15 +47,20 @@ export function Brand({
 export function LocaleToggle() {
   const { locale, setLocale, t } = useLocale();
   return (
-    <button
-      className="locale-toggle"
-      onClick={() => setLocale(locale === "es" ? "en" : "es")}
-      aria-label={t("Cambiar a inglés", "Switch to Spanish")}
-    >
-      <span className={locale === "es" ? "active" : ""}>ES</span>
-      <span aria-hidden="true">/</span>
-      <span className={locale === "en" ? "active" : ""}>EN</span>
-    </button>
+    <label className="locale-selector">
+      <Languages size={16} aria-hidden="true" />
+      <span className="sr-only">{t("Idioma", "Language")}</span>
+      <select
+        value={locale}
+        onChange={(e) => setLocale(e.target.value as Locale)}
+      >
+        {locales.map((l) => (
+          <option value={l.id} key={l.id} lang={l.id}>
+            {l.name}
+          </option>
+        ))}
+      </select>
+    </label>
   );
 }
 export function Observer({
@@ -61,26 +68,68 @@ export function Observer({
   pose = "standing",
 }: {
   className?: string;
-  pose?: "standing" | "thinking";
+  pose?:
+    | "standing"
+    | "thinking"
+    | "analyzing"
+    | "connecting"
+    | "guiding"
+    | "pointing"
+    | "walking"
+    | "accompanying";
 }) {
   const clipId = useId().replaceAll(":", "");
+  const views = {
+    analyzing: "352 646 175 237",
+    connecting: "599 648 194 235",
+    guiding: "862 654 225 231",
+    pointing: "597 1064 235 194",
+    walking: "873 1057 216 201",
+    accompanying: "309 1064 238 194",
+  };
+  const poseMasks = {
+    analyzing:
+      "451,686 480,688 499,706 505,749 497,767 505,817 495,844 484,856 494,870 524,874 524,882 352,882 352,874 395,870 405,851 390,838 384,817 392,789 410,767 394,756 375,744 374,728 387,710 420,694",
+    connecting: "599,648 793,648 793,883 599,883",
+    guiding:
+      "901,664 941,663 970,674 983,692 983,738 972,751 1000,746 1072,732 1083,743 1074,762 1054,781 993,798 982,811 984,852 1003,873 1087,878 1087,883 862,883 862,876 894,870 894,856 878,843 871,820 878,793 899,766 904,755 880,748 861,730 860,713 876,686",
+    pointing:
+      "645,1066 688,1067 713,1080 723,1101 831,1098 831,1211 714,1211 712,1225 734,1248 832,1252 832,1258 597,1258 597,1250 630,1245 644,1225 624,1211 610,1196 608,1180 617,1156 636,1138 621,1129 600,1117 597,1101 610,1081",
+    walking:
+      "927,1057 969,1057 998,1076 1010,1101 1015,1127 1010,1151 1028,1172 1024,1211 1052,1214 1056,1236 1031,1253 1089,1254 1089,1258 873,1258 873,1253 898,1249 902,1221 912,1195 912,1177 922,1156 903,1149 889,1136 882,1121 887,1102 903,1078",
+    accompanying:
+      "349,1069 397,1068 423,1084 431,1106 432,1137 448,1149 464,1149 467,1131 477,1109 500,1103 524,1111 535,1129 535,1153 550,1178 550,1258 309,1258 309,1077",
+  };
+  const actionPose = pose !== "standing" && pose !== "thinking";
   return (
     <svg
       className={"observer " + className}
-      viewBox={pose === "standing" ? "582 112 293 421" : "522 860 263 262"}
+      viewBox={
+        actionPose
+          ? views[pose as keyof typeof views]
+          : pose === "standing"
+            ? "582 112 293 421"
+            : "522 860 263 262"
+      }
       role="img"
       aria-label="El Observador AXIGNAL"
     >
       <defs>
         <clipPath id={clipId}>
-          <polygon points="740,110 792,111 836,129 850,145 858,173 844,194 850,222 859,241 860,260 849,277 838,290 852,311 862,344 861,390 853,413 835,434 817,437 804,437 813,496 828,522 879,527 879,534 582,534 582,527 635,524 655,510 670,477 645,470 635,449 634,411 645,378 659,349 687,326 657,314 639,297 624,278 617,267 597,263 589,245 589,222 600,195 621,164 660,138 702,120" />
+          <polygon
+            points={
+              actionPose
+                ? poseMasks[pose as keyof typeof poseMasks]
+                : "740,110 792,111 836,129 850,145 858,173 844,194 850,222 859,241 860,260 849,277 838,290 852,311 862,344 861,390 853,413 835,434 817,437 804,437 813,496 828,522 879,527 879,534 582,534 582,527 635,524 655,510 670,477 645,470 635,449 634,411 645,378 659,349 687,326 657,314 639,297 624,278 617,267 597,263 589,245 589,222 600,195 621,164 660,138 702,120"
+            }
+          />
         </clipPath>
       </defs>
       <image
-        href="/observer/reference.png"
+        href={actionPose ? "/observer/actions.png" : "/observer/reference.png"}
         width="1122"
         height="1402"
-        clipPath={pose === "standing" ? "url(#" + clipId + ")" : undefined}
+        clipPath={pose !== "thinking" ? "url(#" + clipId + ")" : undefined}
       />
     </svg>
   );
@@ -149,6 +198,7 @@ export function Dialog({
   className?: string;
 }) {
   const ref = useRef<HTMLDialogElement>(null);
+  const titleId = useId();
   const { t } = useLocale();
   useEffect(() => {
     const previous = document.activeElement as HTMLElement | null;
@@ -165,16 +215,17 @@ export function Dialog({
       className={"dialog " + className}
       onCancel={(e) => {
         e.preventDefault();
+        e.stopPropagation();
         onClose();
       }}
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
-      aria-labelledby="dialog-title"
+      aria-labelledby={titleId}
     >
       <div className="dialog-body">
         <header className="dialog-header">
-          <h2 id="dialog-title">{title}</h2>
+          <h2 id={titleId}>{title}</h2>
           <IconButton label={t("Cerrar", "Close")} onClick={onClose}>
             <X size={20} />
           </IconButton>
@@ -275,6 +326,14 @@ export function StatePanel({
     </section>
   );
 }
+export function AxentIdentity() {
+  return (
+    <div className="axent-identity">
+      <img src="/brand/isotope.svg" alt="" width={25} height={27} />
+      <span className="axent-wordmark">Axent</span>
+    </div>
+  );
+}
 export function MiniFooter() {
   const { t } = useLocale();
   return (
@@ -283,7 +342,22 @@ export function MiniFooter() {
       <span>
         {t("Una mirada que conecta.", "A perspective that connects.")}
       </span>
-      <Link href="/design">{t("Sistema visual", "Visual system")}</Link>
+      <nav aria-label={t("Más sobre AXIGNAL", "More about AXIGNAL")}>
+        <Link href="/knowledge">Knowledge</Link>
+        <a
+          href="https://www.linkedin.com/company/axignal/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          LinkedIn
+        </a>
+        <Link href="/contact">{t("Contacto", "Contact")}</Link>
+        <Link href="/policies">{t("Políticas", "Policies")}</Link>
+        <Link href="/gdpr">GDPR</Link>
+        <Link href="/login">{t("Acceder", "Sign in")}</Link>
+        <Link href="/signup">{t("Crear cuenta", "Sign up")}</Link>
+        <Link href="/design">{t("Sistema visual", "Visual system")}</Link>
+      </nav>
       <Link href="/admin">Admin</Link>
     </footer>
   );

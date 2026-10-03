@@ -1,5 +1,14 @@
 "use client";
 import Link from "next/link";
+import { PublicHeader } from "./public-shell";
+import {
+  UseCaseLens,
+  ReferencePricing,
+  LandingNotebook,
+  TrustProof,
+  NewsletterInvitation,
+  ChapterNavigation,
+} from "./landing-extras";
 import { useEffect, useRef, useState } from "react";
 import {
   ArrowRight,
@@ -18,6 +27,7 @@ import {
 import { useLocale } from "@/lib/locale";
 import {
   Brand,
+  AxentIdentity,
   LocaleToggle,
   Observer,
   Badge,
@@ -217,24 +227,67 @@ export function Landing() {
       ),
       tag: t("Relaciones → Perspectiva", "Relationships → Perspective"),
     },
+    {
+      name: t("SEO y presencia digital", "SEO & digital presence"),
+      title: t("Entender cómo te encuentran.", "Understand how you are found."),
+      text: t(
+        "Observar cómo buscadores y sistemas generativos representan una organización. Una mención, una cita y una recomendación no son lo mismo; el contexto de medida importa.",
+        "Observe how search and generative systems represent an organization. A mention, a citation and an endorsement differ; measurement context matters.",
+      ),
+      tag: t("Representación → Contexto", "Representation → Context"),
+    },
+    {
+      name: t("Marketing", "Marketing"),
+      title: t(
+        "Leer el contexto antes del mensaje.",
+        "Read the context before the message.",
+      ),
+      text: t(
+        "Comprender necesidades, capacidades y cambios para hacer mejores preguntas. AXIGNAL observa; no ejecuta campañas ni promete resultados.",
+        "Understand needs, capabilities and changes to ask better questions. AXIGNAL observes; it does not execute campaigns or promise outcomes.",
+      ),
+      tag: t("Cambio → Pregunta", "Change → Question"),
+    },
+    {
+      name: t("Comunicación", "Communications"),
+      title: t(
+        "Separar percepción y evidencia.",
+        "Separate perception and evidence.",
+      ),
+      text: t(
+        "Explorar la representación pública y reconocer lo que sostiene una lectura. La visibilidad de una organización no equivale a la verdad de su negocio.",
+        "Explore public representation and recognize what supports a reading. An organization's visibility is not its business truth.",
+      ),
+      tag: t("Representación → Evidencia", "Representation → Evidence"),
+    },
+    {
+      name: t("Investigación", "Research"),
+      title: t(
+        "Abrir una pregunta con método.",
+        "Open a question with method.",
+      ),
+      text: t(
+        "Relacionar actores, fuentes y momentos conservando procedencia, contradicciones y preguntas abiertas. Axent ayuda a investigar sin admitir verdad por su cuenta.",
+        "Relate actors, sources and moments while preserving provenance, contradictions and open questions. Axent helps research without admitting truth on its own.",
+      ),
+      tag: t("Pregunta → Fundamento", "Question → Basis"),
+    },
+    {
+      name: t("Periodismo", "Journalism"),
+      title: t(
+        "Seguir el hilo hasta la fuente.",
+        "Follow the thread to its source.",
+      ),
+      text: t(
+        "Comprender el contexto económico y volver a la evidencia que lo sostiene. Una explicación es un punto de partida para contrastar, no una fuente periodística fabricada.",
+        "Understand economic context and return to its supporting evidence. An explanation starts verification; it is not a fabricated journalistic source.",
+      ),
+      tag: t("Contexto → Verificación", "Context → Verification"),
+    },
   ];
   return (
     <div className="landing">
-      <header className="landing-header">
-        <Brand />
-        <nav aria-label={t("Principal", "Main")}>
-          <a href="#start">{t("Cómo funciona", "How it works")}</a>
-          <a href="#explore">{t("Explorar", "Explore")}</a>
-          <a href="#subscription">{t("Suscripción", "Subscription")}</a>
-        </nav>
-        <div className="header-actions">
-          <LocaleToggle />
-          <Link className="button small secondary" href="/panorama">
-            {t("Entrar al Panorama", "Enter Panorama")}
-            <ArrowUpRight size={15} />
-          </Link>
-        </div>
-      </header>
+      <PublicHeader landing />
       <main id="main">
         <section className="hero" id="what">
           <div className="hero-copy">
@@ -552,6 +605,10 @@ export function Landing() {
               <em>{t("Para preguntas mejores.", "For better questions.")}</em>
             </h2>
           </Reveal>
+          <UseCaseLens
+            names={cases.map((item) => item.name)}
+            selected={useCase}
+          />
           <div
             className="use-tabs"
             role="tablist"
@@ -564,6 +621,26 @@ export function Landing() {
                 id={"case-tab-" + i}
                 aria-selected={useCase === i}
                 aria-controls="case-panel"
+                tabIndex={useCase === i ? 0 : -1}
+                onKeyDown={(e) => {
+                  const step =
+                    e.key === "ArrowRight" || e.key === "ArrowDown"
+                      ? 1
+                      : e.key === "ArrowLeft" || e.key === "ArrowUp"
+                        ? -1
+                        : 0;
+                  if (step || e.key === "Home" || e.key === "End") {
+                    e.preventDefault();
+                    const next =
+                      e.key === "Home"
+                        ? 0
+                        : e.key === "End"
+                          ? cases.length - 1
+                          : (i + step + cases.length) % cases.length;
+                    setUseCase(next);
+                    document.getElementById("case-tab-" + next)?.focus();
+                  }
+                }}
                 onClick={() => setUseCase(i)}
               >
                 {item.name}
@@ -584,7 +661,23 @@ export function Landing() {
               {t("Ver un ejemplo", "See an example")}
               <ArrowRight size={16} />
             </Link>
-            <Observer className="use-observer" />
+            <Observer
+              className="use-observer"
+              pose={
+                (
+                  [
+                    "guiding",
+                    "analyzing",
+                    "connecting",
+                    "pointing",
+                    "thinking",
+                    "accompanying",
+                    "connecting",
+                    "pointing",
+                  ] as const
+                )[useCase]
+              }
+            />
           </div>
         </section>
         <section className="chapter explore-section" id="explore">
@@ -673,8 +766,7 @@ export function Landing() {
                 </div>
               </div>
               <div className="preview-axent">
-                <img src="/brand/isotope.svg" alt="" width={29} height={31} />
-                <strong>AXENT</strong>
+                <AxentIdentity />
                 <p>
                   {t(
                     "¿Qué cambia si miramos un poco más cerca?",
@@ -691,90 +783,10 @@ export function Landing() {
             </div>
           </Reveal>
         </section>
-        <section className="chapter subscription-section" id="subscription">
-          <Reveal className="subscription-copy">
-            <span className="eyebrow">07 / {chapters[6]}</span>
-            <h2>
-              {t("Elige dónde", "Choose where")}
-              <br />
-              <em>{t("poner la atención.", "to pay attention.")}</em>
-            </h2>
-            <p>
-              {t(
-                "Tu suscripción asigna focos persistentes de observación alrededor de organizaciones. El conocimiento económico compartido sigue siendo un único mundo.",
-                "Your subscription allocates persistent observation focuses around organizations. Shared economic knowledge remains a single world.",
-              )}
-            </p>
-            <span className="hand-note">
-              {t(
-                "la atención se asigna. el contexto se comparte.",
-                "attention is allocated. context is shared.",
-              )}
-            </span>
-          </Reveal>
-          <Reveal className="subscription-card">
-            <span className="mono">
-              {t("EXPLORA TU ALCANCE", "EXPLORE YOUR SCOPE")}
-            </span>
-            <div
-              className="focus-choice"
-              role="group"
-              aria-label={t("Focos de ejemplo", "Example focuses")}
-            >
-              {[1, 3, 6].map((n) => (
-                <button
-                  key={n}
-                  aria-pressed={focuses === n}
-                  onClick={() => setFocuses(n)}
-                >
-                  {n}
-                  <span>
-                    {n === 1 ? t("foco", "focus") : t("focos", "focuses")}
-                  </span>
-                </button>
-              ))}
-            </div>
-            <p>
-              {focuses === 1
-                ? t(
-                    "Una organización, observada con continuidad.",
-                    "One organization, observed continuously.",
-                  )
-                : t(
-                    "Varias organizaciones, con atención diferenciada y contexto compartido.",
-                    "Several organizations, with distinct attention and shared context.",
-                  )}
-            </p>
-            <ul>
-              {[
-                t("Observación persistente", "Persistent observation"),
-                t(
-                  "Panorama contextual y temporal",
-                  "Contextual, temporal Panorama",
-                ),
-                t(
-                  "Evidencia y límites inspeccionables",
-                  "Inspectable evidence and limits",
-                ),
-              ].map((x) => (
-                <li key={x}>
-                  <Check size={16} />
-                  {x}
-                </li>
-              ))}
-            </ul>
-            <Link href="/panorama" className="button primary">
-              {t("Explorar antes de elegir", "Explore before choosing")}
-              <ArrowRight size={17} />
-            </Link>
-            <small>
-              {t(
-                "Selector ilustrativo. Condiciones comerciales disponibles con una oferta autorizada.",
-                "Illustrative selector. Commercial terms require an authorized offer.",
-              )}
-            </small>
-          </Reveal>
-        </section>
+        <TrustProof />
+        <ReferencePricing focuses={focuses} onChange={setFocuses} />
+        <LandingNotebook />
+        <NewsletterInvitation />
         <section className="closing-scene">
           <span className="eyebrow">AXIGNAL</span>
           <h2>
@@ -786,10 +798,11 @@ export function Landing() {
             {t("Entrar en el Panorama", "Enter Panorama")}
             <ArrowRight size={18} />
           </Link>
-          <Observer className="closing-observer" />
+          <Observer className="closing-observer" pose="walking" />
         </section>
       </main>
       <MiniFooter />
+      <ChapterNavigation />
       <div className="landing-legal">
         <span>© 2026 AXIGNAL</span>
         <button className="text-link" onClick={() => setAbout(true)}>

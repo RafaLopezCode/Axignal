@@ -1,0 +1,30 @@
+[
+  {
+    "source": "https://developers.google.com/static/identity/images/g-logo.png",
+    "sha256": "D1CE9C2AF0B10A7333ABC99BC706F9A6A199E5B65BF3E3009624F076B8638E6A",
+    "recordedAt": "2026-10-03T13:51:52.9289299Z",
+    "path": "public/providers/google-g.png",
+    "transformation": "none; official original served locally"
+  },
+  {
+    "source": "https://developers.openai.com/assets/siwc/sign-in-buttons/chatgpt-logo-black.svg",
+    "sha256": "B8B9ABA7BA591F54BF1805F422BC23F32C44EE993643CC378CC77F766061F7A1",
+    "recordedAt": "2026-10-03T13:51:52.9336493Z",
+    "path": "public/providers/chatgpt-black.svg",
+    "transformation": "none; official original served locally"
+  },
+  {
+    "source": "https://fonts.gstatic.com/s/googlesans/v71/4Ua_rENHsxJlGDuGo1OIlJfC6l_24rlCK1Yo_Iqcsih3SAyH6cAwhX9RFD48TE63OOYKtrw2IKli.ttf",
+    "sha256": "81AF36B42B8C5F66FB29FE04995D43BA3C6589B62AD34E9FE428FB2C162715A5",
+    "recordedAt": "2026-10-03T13:51:52.9405054Z",
+    "path": "public/providers/google-sans-medium.ttf",
+    "transformation": "none; official original served locally"
+  },
+  {
+    "source": "human attachment: Imagen de ChatGPT 3 oct 2026, 02_17_04-2.png",
+    "sha256": "851B1DDB931AC214D39A5CCAB133F18DD21A257F8351A5B891C1DF8A274B2E73",
+    "recordedAt": "2026-10-03T13:51:52.9491532Z",
+    "path": "public/observer/actions.png",
+    "transformation": "none; observer display uses SVG viewports/masks"
+  }
+]

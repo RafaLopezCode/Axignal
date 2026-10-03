@@ -1,7 +1,8 @@
 "use client";
 import { createContext, useContext, useEffect, useState } from "react";
-export type Locale = "es" | "en";
-export type Copy = { es: string; en: string };
+import { isLocale, type Locale, type Copy } from "./languages";
+import { translate } from "./copy-catalog";
+export type { Locale, Copy } from "./languages";
 const LocaleContext = createContext({
   reducedMotion: false,
   setReducedMotion: (_: boolean) => {},
@@ -12,10 +13,23 @@ const LocaleContext = createContext({
 });
 export function LocaleProvider({ children }: { children: React.ReactNode }) {
   const [locale, setLocale] = useState<Locale>("es");
+  const [ready, setReady] = useState(false);
   const [reducedMotion, setReducedMotion] = useState(false);
   useEffect(() => {
+    try {
+      const saved = localStorage.getItem("axignal.locale.v1");
+      if (isLocale(saved)) setLocale(saved);
+    } catch {}
+    setReady(true);
+  }, []);
+  useEffect(() => {
     document.documentElement.lang = locale;
-  }, [locale]);
+    if (ready) {
+      try {
+        localStorage.setItem("axignal.locale.v1", locale);
+      } catch {}
+    }
+  }, [locale, ready]);
   useEffect(() => {
     document.documentElement.dataset.motion = reducedMotion
       ? "reduced"
@@ -28,8 +42,8 @@ export function LocaleProvider({ children }: { children: React.ReactNode }) {
         setReducedMotion,
         locale,
         setLocale,
-        t: (es, en) => (locale === "es" ? es : en),
-        copy: (c) => c[locale],
+        t: (es, en) => translate(es, en, locale),
+        copy: (c) => translate(c.es, c.en, locale),
       }}
     >
       {children}

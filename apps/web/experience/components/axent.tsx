@@ -20,7 +20,7 @@ import {
 } from "@/lib/projection";
 import { validatePlan, type CompositionPlan } from "@/lib/governance";
 import type { AxentMessage } from "@/lib/axent-contract";
-import { Badge, Observer } from "./ui";
+import { Badge, Observer, AxentIdentity } from "./ui";
 
 export function Axent({
   chat,
@@ -80,10 +80,7 @@ export function Axent({
   return (
     <div className="axent-panel">
       <header className="axent-header">
-        <div className="axent-identity">
-          <img src="/brand/isotope.svg" alt="" width={27} height={30} />
-          <span>AXENT</span>
-        </div>
+        <AxentIdentity />
         <button
           className="icon-button"
           aria-label={t(
@@ -188,7 +185,7 @@ export function Axent({
           messages.map((message) => (
             <div className={"axent-message " + message.role} key={message.id}>
               <span className="message-author">
-                {message.role === "user" ? t("Tú", "You") : "AXENT"}
+                {message.role === "user" ? t("Tú", "You") : "Axent"}
               </span>
               {message.parts.map((part, i) =>
                 part.type === "text" ? (

@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import "./public.css";
 import { LocaleProvider } from "@/lib/locale";
+import { PrivacyNotice } from "@/components/privacy-notice";
 
 export const metadata: Metadata = {
   metadataBase: new URL("http://127.0.0.1:3810"),
@@ -28,6 +30,7 @@ export default function RootLayout({
             Ir al contenido / Skip to content
           </a>
           {children}
+          <PrivacyNotice />
         </LocaleProvider>
       </body>
     </html>

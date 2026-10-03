@@ -7,12 +7,13 @@ import {
   type CompositionPlan,
 } from "@/lib/governance";
 import { project } from "@/lib/projection";
+import { translate } from "@/lib/copy-catalog";
 import type { AxentMessage } from "@/lib/axent-contract";
 
 const requestSchema = z
   .object({
     context: z.unknown(),
-    locale: z.enum(["es", "en"]).default("es"),
+    locale: z.enum(["es", "en", "de", "pt", "fr", "it"]).default("es"),
     messages: z
       .array(
         z
@@ -75,6 +76,8 @@ export async function POST(request: Request) {
   const context = validated.data,
     p = project(context),
     locale = parsed.data.locale;
+  const t = (es: string, en: string) => translate(es, en, locale);
+  const copy = (value: { es: string; en: string }) => t(value.es, value.en);
   const user = parsed.data.messages.findLast((m) => m.role === "user");
   const prompt =
     user?.parts
@@ -93,15 +96,18 @@ export async function POST(request: Request) {
   const signal =
     p.signals.find((s) => s.id === context.signalId) ??
     p.signals.find((s) => s.family === context.family);
-  const sourceIntent = /evidenc|fuente|source|basis|base|sostiene/i.test(
-      prompt,
-    ),
+  const sourceIntent =
+      /evidenc|fuente|source|basis|base|sostiene|beleg|quelle|fonte|preuve/i.test(
+        prompt,
+      ),
     reasonIntent =
-      /por qué|why|razon|reason|encaj|fit|limit|abierto|open/i.test(prompt);
+      /por qué|why|razon|reason|encaj|fit|limit|abierto|open|warum|porquê|pourquoi|perché|grenze/i.test(
+        prompt,
+      );
   const supported =
     sourceIntent ||
     reasonIntent ||
-    /context|contexto|cambi|change|señal|signal|explic|explain|panorama|comprend|understand|investig/i.test(
+    /context|contexto|cambi|change|señal|signal|explic|explain|panorama|comprend|understand|investig|kontext|erklär|versteh|sinal|spieg|segnal|compreend/i.test(
       prompt,
     );
   const items: CompositionPlan["items"] = signal
@@ -123,23 +129,25 @@ export async function POST(request: Request) {
   const planResult = validatePlan(plan, context);
   if (!planResult.success)
     return Response.json({ error: "COMPOSITION_REJECTED" }, { status: 422 });
-  const prefix =
-    locale === "es"
-      ? "Esta es una explicación ilustrativa, sin investigación en vivo. "
-      : "This is an illustrative explanation, without live research. ";
+  const prefix = t(
+    "Esta es una explicación ilustrativa, sin investigación en vivo. ",
+    "This is an illustrative explanation, without live research. ",
+  );
   const answer = !supported
-    ? locale === "es"
-      ? "En esta demo puedo explicar el contexto seleccionado, sus límites y su evidencia. Para una investigación nueva haría falta un proveedor y herramientas autorizados."
-      : "In this demo I can explain the selected context, its limits and evidence. New research would require an authorized provider and tools."
+    ? t(
+        "En esta demo puedo explicar el contexto seleccionado, sus límites y su evidencia. Para una investigación nueva haría falta un proveedor y herramientas autorizados.",
+        "In this demo I can explain the selected context, its limits and evidence. New research would require an authorized provider and tools.",
+      )
     : signal
       ? sourceIntent
-        ? [signal.derivation[locale], signal.limitation[locale]].join("\n\n")
+        ? [copy(signal.derivation), copy(signal.limitation)].join("\n\n")
         : reasonIntent
-          ? [signal.why[locale], signal.limitation[locale]].join("\n\n")
-          : [signal.summary[locale], signal.next[locale]].join("\n\n")
-      : locale === "es"
-        ? "No hay una señal sustentada en este corte. La ausencia de conocimiento no permite concluir que algo no existe."
-        : "There is no supported signal at this time. Absence of knowledge does not allow us to conclude that something does not exist.";
+          ? [copy(signal.why), copy(signal.limitation)].join("\n\n")
+          : [copy(signal.summary), copy(signal.next)].join("\n\n")
+      : t(
+          "No hay una señal sustentada en este corte. La ausencia de conocimiento no permite concluir que algo no existe.",
+          "There is no supported signal at this time. Absence of knowledge does not allow us to conclude that something does not exist.",
+        );
   const stream = createUIMessageStream<AxentMessage>({
     execute: ({ writer }) => {
       writer.write({
@@ -167,9 +175,10 @@ export async function POST(request: Request) {
       writer.write({ type: "finish", finishReason: "stop" });
     },
     onError: () =>
-      locale === "es"
-        ? "La explicación no está disponible. Puedes volver a intentarlo."
-        : "The explanation is unavailable. You can try again.",
+      t(
+        "La explicación no está disponible. Puedes volver a intentarlo.",
+        "The explanation is unavailable. You can try again.",
+      ),
   });
   return createUIMessageStreamResponse({
     stream,

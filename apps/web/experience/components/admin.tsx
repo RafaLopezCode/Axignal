@@ -24,6 +24,7 @@ import {
 import { useLocale } from "@/lib/locale";
 import {
   Brand,
+  AxentIdentity,
   LocaleToggle,
   DemoLabel,
   Dialog,
@@ -404,10 +405,7 @@ export function Admin() {
           </main>
           <aside className="axent-desktop admin-guide">
             <header className="axent-header">
-              <div className="axent-identity">
-                <img src="/brand/isotope.svg" alt="" width={27} height={30} />
-                <span>AXENT</span>
-              </div>
+              <AxentIdentity />
               <span className="admin-context-chip">
                 {t("Operación", "Operations")}
               </span>

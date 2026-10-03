@@ -1,3 +1,5 @@
+import { translate } from "./copy-catalog";
+import type { Locale } from "./languages";
 import type { Copy } from "./locale";
 const c = (es: string, en: string): Copy => ({ es, en });
 export type Epistemic = "OBSERVED" | "POTENTIAL" | "UNKNOWN";
@@ -492,15 +494,13 @@ export function project(context: ProjectionContext) {
     families,
   };
 }
-export function dateLabel(date: string | null, locale: "es" | "en") {
+export function dateLabel(date: string | null, locale: Locale) {
   return date
-    ? new Intl.DateTimeFormat(locale === "es" ? "es-ES" : "en-GB", {
+    ? new Intl.DateTimeFormat(locale === "en" ? "en-GB" : locale, {
         day: "numeric",
         month: "short",
         year: "numeric",
         timeZone: "UTC",
       }).format(new Date(date + "T12:00:00Z"))
-    : locale === "es"
-      ? "Sin fecha acreditada"
-      : "No supported date";
+    : translate("Sin fecha acreditada", "No supported date", locale);
 }

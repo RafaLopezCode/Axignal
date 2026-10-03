@@ -1,0 +1,165 @@
+{
+  "feature": "036-public-trust-knowledge",
+  "browser": "Codex In-app Browser",
+  "captureTool": "cua_repl",
+  "date": "2026-10-03",
+  "status": "VISUAL_EVIDENCE_READY + HUMAN_VISUAL_ACCEPTANCE_PENDING",
+  "screenshots": [
+    {
+      "path": "screenshots/036-access-mobile.png",
+      "route": "http://127.0.0.1:3810/login",
+      "state": "Prepared identity choices",
+      "locale": "es",
+      "viewport": {
+        "height": 4292542531,
+        "width": 65536
+      },
+      "capturedAt": "2026-10-03T13:48:09.5045450Z",
+      "sha256": "500A1F220F60F5FDA31BAF97895C332DCAD70270AE1749821474C35838DEDE41",
+      "transformation": "none; original browser screenshot bytes"
+    },
+    {
+      "path": "screenshots/036-cases-accompanying-desktop.png",
+      "route": "http://127.0.0.1:3810/#use",
+      "state": "Communication selected, ribbon paused",
+      "locale": "es",
+      "viewport": {
+        "height": 4292542531,
+        "width": 65536
+      },
+      "capturedAt": "2026-10-03T14:57:37.9532845Z",
+      "sha256": "2784607CA1DBE1308FA0B8DCDF50DFC8E9819BBB06135B3371B19E91B83DD87F",
+      "transformation": "none; original browser screenshot bytes"
+    },
+    {
+      "path": "screenshots/036-cases-guiding-desktop.png",
+      "route": "http://127.0.0.1:3810/#use",
+      "state": "Strategic direction selected, ribbon paused",
+      "locale": "es",
+      "viewport": {
+        "height": 4292542531,
+        "width": 65536
+      },
+      "capturedAt": "2026-10-03T14:57:29.1548673Z",
+      "sha256": "503009A7475B02CE1FFC2C45EC3E05BAAB6F1915D480C2C5BA1E20A0234E3576",
+      "transformation": "none; original browser screenshot bytes"
+    },
+    {
+      "path": "screenshots/036-cases-pointing-desktop.png",
+      "route": "http://127.0.0.1:3810/#use",
+      "state": "SEO/public representation selected, ribbon paused",
+      "locale": "es",
+      "viewport": {
+        "height": 4292542531,
+        "width": 65536
+      },
+      "capturedAt": "2026-10-03T14:57:46.9941117Z",
+      "sha256": "77E0B1B5C8534C54A4BF099075DB315E8F30A7C28916B272CAC1DCB53ACE38CD",
+      "transformation": "none; original browser screenshot bytes"
+    },
+    {
+      "path": "screenshots/036-chapter-navigation-mobile.png",
+      "route": "http://127.0.0.1:3810/#explore",
+      "state": "Mobile chapter jump completed, dialog closed",
+      "locale": "es",
+      "viewport": {
+        "height": 4292542531,
+        "width": 65536
+      },
+      "capturedAt": "2026-10-03T14:59:36.8817264Z",
+      "sha256": "7F57FBADF2D181B190EF914E0723661A1620289B08E75D992D25A605DF77225D",
+      "transformation": "none; original browser screenshot bytes"
+    },
+    {
+      "path": "screenshots/036-explore-axent-desktop.png",
+      "route": "http://127.0.0.1:3810/#explore",
+      "state": "Fraunces Axent #333333, matched mark/word centres, keyboard focus",
+      "locale": "es",
+      "viewport": {
+        "height": 4292542531,
+        "width": 65536
+      },
+      "capturedAt": "2026-10-03T14:56:40.0297186Z",
+      "sha256": "E2268ED703F00A7AAD451A4CB4EBB73D4D45B6CBE30C037F032641C853E7705E",
+      "transformation": "none; original browser screenshot bytes"
+    },
+    {
+      "path": "screenshots/036-footer-linkedin.png",
+      "route": "http://127.0.0.1:3810/",
+      "state": "Footer LinkedIn and walking Observer; Contact keyboard focus",
+      "locale": "es",
+      "viewport": {
+        "height": 4292542531,
+        "width": 65536
+      },
+      "capturedAt": "2026-10-03T14:58:47.7135977Z",
+      "sha256": "A109B5B6B521A8D96D7880EED024E20DD49BA3826A0383BA5697089EA1B0916C",
+      "transformation": "none; original browser screenshot bytes"
+    },
+    {
+      "path": "screenshots/036-knowledge-desktop.png",
+      "route": "http://127.0.0.1:3810/knowledge",
+      "state": "Editorial index",
+      "locale": "es",
+      "viewport": {
+        "height": 4292542531,
+        "width": 65536
+      },
+      "capturedAt": "2026-10-03T13:45:38.6829420Z",
+      "sha256": "3DB518D2345E9BFAD7C83FBB2EE8C62E69EBB5405B708E0AFF7B6DBE912A6CEC",
+      "transformation": "none; original browser screenshot bytes"
+    },
+    {
+      "path": "screenshots/036-newsletter-draft-mobile.png",
+      "route": "http://127.0.0.1:3810/#newsletter",
+      "state": "Nested local preview, fictional QA data, not sent",
+      "locale": "es",
+      "viewport": {
+        "height": 4292542531,
+        "width": 65536
+      },
+      "capturedAt": "2026-10-03T13:48:57.1303936Z",
+      "sha256": "AA089221732848680945FF4A3B934A59905E20F49E9190DC48744CBE54BE6391",
+      "transformation": "none; original browser screenshot bytes"
+    },
+    {
+      "path": "screenshots/036-panorama-desktop.png",
+      "route": "http://127.0.0.1:3810/panorama",
+      "state": "Full organization centre, current illustrative snapshot, composer and timeline",
+      "locale": "es",
+      "viewport": {
+        "height": 4292542531,
+        "width": 65536
+      },
+      "capturedAt": "2026-10-03T15:05:35.0883982Z",
+      "sha256": "51900FB99C05A9004C476A61EA6022333C38CA9C13ED26B74AA896C6FCECEFCC",
+      "transformation": "none; original browser screenshot bytes"
+    },
+    {
+      "path": "screenshots/036-panorama-mobile.png",
+      "route": "http://127.0.0.1:3810/panorama",
+      "state": "Narrow product view and three available snapshots",
+      "locale": "es",
+      "viewport": {
+        "height": 4292542531,
+        "width": 65536
+      },
+      "capturedAt": "2026-10-03T13:54:34.9415718Z",
+      "sha256": "399581E33E9F7ED16F3259BB271CCCECF488AAF447480829B4E12DAB9AB15224",
+      "transformation": "none; original browser screenshot bytes"
+    },
+    {
+      "path": "screenshots/036-privacy-mobile.png",
+      "route": "http://127.0.0.1:3810/",
+      "state": "Privacy details dialog open",
+      "locale": "es",
+      "viewport": {
+        "height": 4292542531,
+        "width": 65536
+      },
+      "capturedAt": "2026-10-03T13:53:12.9141210Z",
+      "sha256": "749BC09FAC60B5AB878C9FA7A97AE43307C13BBA492A29584D756DF7C1A116D4",
+      "transformation": "none; original browser screenshot bytes"
+    }
+  ]
+}

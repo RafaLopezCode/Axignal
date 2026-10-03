@@ -1,0 +1,6445 @@
+[
+  {
+    "en": "AXIGNAL / Your next perspective",
+    "es": "AXIGNAL / Tu próxima mirada",
+    "files": [
+      "components/access.tsx"
+    ]
+  },
+  {
+    "en": "Context awaits.",
+    "es": "El contexto espera.",
+    "files": [
+      "components/access.tsx"
+    ]
+  },
+  {
+    "en": "Come closer.",
+    "es": "Acércate.",
+    "files": [
+      "components/access.tsx"
+    ]
+  },
+  {
+    "en": "A simple entrance to a deeper way of observing. Your identity opens access; evidence supports what you see.",
+    "es": "Una entrada sencilla a una forma más profunda de observar. Tu identidad abre el acceso; la evidencia sostiene lo que ves.",
+    "files": [
+      "components/access.tsx"
+    ]
+  },
+  {
+    "en": "Context",
+    "es": "Contexto",
+    "files": [
+      "components/access.tsx",
+      "components/landing-extras.tsx",
+      "components/landing.tsx",
+      "components/panorama.tsx",
+      "lib/projection.ts"
+    ]
+  },
+  {
+    "en": "What connects.",
+    "es": "Lo que conecta.",
+    "files": [
+      "components/access.tsx"
+    ]
+  },
+  {
+    "en": "Signal",
+    "es": "Señal",
+    "files": [
+      "components/access.tsx"
+    ]
+  },
+  {
+    "en": "What deserves your attention.",
+    "es": "Lo que merece tu atención.",
+    "files": [
+      "components/access.tsx",
+      "components/panorama.tsx"
+    ]
+  },
+  {
+    "en": "a perspective that continues",
+    "es": "una mirada que continúa",
+    "files": [
+      "components/access.tsx"
+    ]
+  },
+  {
+    "en": "Access type",
+    "es": "Tipo de acceso",
+    "files": [
+      "components/access.tsx"
+    ]
+  },
+  {
+    "en": "Sign in",
+    "es": "Acceder",
+    "files": [
+      "components/access.tsx",
+      "components/public-shell.tsx",
+      "components/ui.tsx"
+    ]
+  },
+  {
+    "en": "Sign up",
+    "es": "Crear cuenta",
+    "files": [
+      "components/access.tsx",
+      "components/ui.tsx"
+    ]
+  },
+  {
+    "en": "Return to your perspective.",
+    "es": "Vuelve a tu mirada.",
+    "files": [
+      "components/access.tsx"
+    ]
+  },
+  {
+    "en": "Your first perspective.",
+    "es": "Tu primera mirada.",
+    "files": [
+      "components/access.tsx"
+    ]
+  },
+  {
+    "en": "Choose the identity you want to continue with.",
+    "es": "Elige la identidad con la que quieres continuar.",
+    "files": [
+      "components/access.tsx"
+    ]
+  },
+  {
+    "en": "Choose how you would like to enter AXIGNAL.",
+    "es": "Elige cómo te gustaría entrar en AXIGNAL.",
+    "files": [
+      "components/access.tsx"
+    ]
+  },
+  {
+    "en": "Access is being prepared. Google and ChatGPT are not connected yet; this version creates no accounts or sessions.",
+    "es": "Acceso en preparación. Google y ChatGPT aún no están conectados; esta versión no crea cuentas ni sesiones.",
+    "files": [
+      "components/access.tsx"
+    ]
+  },
+  {
+    "en": "Continue with Google",
+    "es": "Continuar con Google",
+    "files": [
+      "components/access.tsx"
+    ]
+  },
+  {
+    "en": "Continue with ChatGPT",
+    "es": "Continuar con ChatGPT",
+    "files": [
+      "components/access.tsx"
+    ]
+  },
+  {
+    "en": "Checking availability…",
+    "es": "Comprobando disponibilidad…",
+    "files": [
+      "components/access.tsx"
+    ]
+  },
+  {
+    "en": "We could not check access.",
+    "es": "No pudimos comprobar el acceso.",
+    "files": [
+      "components/access.tsx"
+    ]
+  },
+  {
+    "en": "This connection is not active yet.",
+    "es": "Esta conexión todavía no está activa.",
+    "files": [
+      "components/access.tsx"
+    ]
+  },
+  {
+    "en": "The connection did not respond as expected. This version has established no session. You can check again.",
+    "es": "La conexión no respondió como esperábamos. Esta versión no ha establecido una sesión. Puedes volver a comprobarlo.",
+    "files": [
+      "components/access.tsx"
+    ]
+  },
+  {
+    "en": "Continue with ChatGPT requires an OpenAI-approved web client and a connected AXIGNAL identity service.",
+    "es": "Continuar con ChatGPT requiere un cliente de OpenAI aprobado para acceso web y el servicio de identidad de AXIGNAL conectado.",
+    "files": [
+      "components/access.tsx"
+    ]
+  },
+  {
+    "en": "Google requires a registered OAuth client and a connected AXIGNAL identity service.",
+    "es": "Google requiere un cliente OAuth registrado y el servicio de identidad de AXIGNAL conectado.",
+    "files": [
+      "components/access.tsx"
+    ]
+  },
+  {
+    "en": "Back to options",
+    "es": "Volver a las opciones",
+    "files": [
+      "components/access.tsx"
+    ]
+  },
+  {
+    "en": "Identity only, for access.",
+    "es": "Solo identidad para entrar.",
+    "files": [
+      "components/access.tsx"
+    ]
+  },
+  {
+    "en": "The planned integration requests an identifier, name and email. No Gmail, Drive, ChatGPT conversation access or use of your AI plan.",
+    "es": "La integración prevista solicita identificador, nombre y correo. No acceso a Gmail, Drive, conversaciones de ChatGPT ni uso de tu plan de IA.",
+    "files": [
+      "components/access.tsx"
+    ]
+  },
+  {
+    "en": "Legal texts are pending publication.",
+    "es": "Los textos legales están pendientes de publicación.",
+    "files": [
+      "components/access.tsx"
+    ]
+  },
+  {
+    "en": "Use and limitations",
+    "es": "Uso y límites",
+    "files": [
+      "components/access.tsx",
+      "components/trust.tsx"
+    ]
+  },
+  {
+    "en": "Privacy",
+    "es": "Privacidad",
+    "files": [
+      "components/access.tsx",
+      "components/privacy-notice.tsx",
+      "components/trust.tsx"
+    ]
+  },
+  {
+    "en": "Meanwhile, discover how it feels.",
+    "es": "Mientras tanto, descubre cómo se siente.",
+    "files": [
+      "components/access.tsx"
+    ]
+  },
+  {
+    "en": "Explore the illustrative demo",
+    "es": "Explorar la demo ilustrativa",
+    "files": [
+      "components/access.tsx"
+    ]
+  },
+  {
+    "en": "Admin navigation",
+    "es": "Navegación Admin",
+    "files": [
+      "components/admin.tsx"
+    ]
+  },
+  {
+    "en": "Close navigation",
+    "es": "Cerrar navegación",
+    "files": [
+      "components/admin.tsx",
+      "components/panorama.tsx"
+    ]
+  },
+  {
+    "en": "Private operations",
+    "es": "Operaciones privadas",
+    "files": [
+      "components/admin.tsx"
+    ]
+  },
+  {
+    "en": "OBSERVE",
+    "es": "OBSERVAR",
+    "files": [
+      "components/admin.tsx",
+      "components/panorama.tsx"
+    ]
+  },
+  {
+    "en": "OPERATE",
+    "es": "OPERAR",
+    "files": [
+      "components/admin.tsx"
+    ]
+  },
+  {
+    "en": "GOVERN",
+    "es": "GOBERNAR",
+    "files": [
+      "components/admin.tsx"
+    ]
+  },
+  {
+    "en": "Subscriber view",
+    "es": "Vista de suscriptor",
+    "files": [
+      "components/admin.tsx"
+    ]
+  },
+  {
+    "en": "AXIGNAL system",
+    "es": "Sistema AXIGNAL",
+    "files": [
+      "components/admin.tsx",
+      "components/panorama.tsx"
+    ]
+  },
+  {
+    "en": "Open navigation",
+    "es": "Abrir navegación",
+    "files": [
+      "components/admin.tsx",
+      "components/panorama.tsx",
+      "components/public-shell.tsx"
+    ]
+  },
+  {
+    "en": "Local review",
+    "es": "Revisión local",
+    "files": [
+      "components/admin.tsx"
+    ]
+  },
+  {
+    "en": "PRIVATE OPERATIONAL PLANE",
+    "es": "PLANO OPERATIVO PRIVADO",
+    "files": [
+      "components/admin.tsx"
+    ]
+  },
+  {
+    "en": "Attention, with authority.",
+    "es": "Atención, con autoridad.",
+    "files": [
+      "components/admin.tsx"
+    ]
+  },
+  {
+    "en": "Illustrative read models",
+    "es": "Read models ilustrativos",
+    "files": [
+      "components/admin.tsx"
+    ]
+  },
+  {
+    "en": "REVIEW MATTERS",
+    "es": "LA REVISIÓN IMPORTA",
+    "files": [
+      "components/admin.tsx"
+    ]
+  },
+  {
+    "en": "A source change can change a reading.",
+    "es": "Un cambio de fuente puede cambiar una lectura.",
+    "files": [
+      "components/admin.tsx"
+    ]
+  },
+  {
+    "en": "The right operation is reassessment through its service. An interface does not edit the truth it observes.",
+    "es": "La operación correcta es reevaluar desde su servicio. Una interfaz no edita la verdad que observa.",
+    "files": [
+      "components/admin.tsx"
+    ]
+  },
+  {
+    "en": "Inspect the case",
+    "es": "Inspeccionar el caso",
+    "files": [
+      "components/admin.tsx"
+    ]
+  },
+  {
+    "en": "Every action retains scope, owning service and authority level.",
+    "es": "Cada acción conserva alcance, servicio propietario y nivel de autoridad.",
+    "files": [
+      "components/admin.tsx"
+    ]
+  },
+  {
+    "en": "Understand the boundary",
+    "es": "Entender el límite",
+    "files": [
+      "components/admin.tsx"
+    ]
+  },
+  {
+    "en": "Search this view…",
+    "es": "Buscar en esta vista…",
+    "files": [
+      "components/admin.tsx"
+    ]
+  },
+  {
+    "en": "Search operational records",
+    "es": "Buscar registros operativos",
+    "files": [
+      "components/admin.tsx"
+    ]
+  },
+  {
+    "en": "Filter by state",
+    "es": "Filtrar por estado",
+    "files": [
+      "components/admin.tsx"
+    ]
+  },
+  {
+    "en": "All states",
+    "es": "Todos los estados",
+    "files": [
+      "components/admin.tsx"
+    ]
+  },
+  {
+    "en": "Needs review",
+    "es": "Necesita revisión",
+    "files": [
+      "components/admin.tsx"
+    ]
+  },
+  {
+    "en": "Basis retained",
+    "es": "Base conservada",
+    "files": [
+      "components/admin.tsx"
+    ]
+  },
+  {
+    "en": "Limited information",
+    "es": "Información limitada",
+    "files": [
+      "components/admin.tsx"
+    ]
+  },
+  {
+    "en": "RECORD / CONTEXT",
+    "es": "REGISTRO / CONTEXTO",
+    "files": [
+      "components/admin.tsx"
+    ]
+  },
+  {
+    "en": "STATE",
+    "es": "ESTADO",
+    "files": [
+      "components/admin.tsx"
+    ]
+  },
+  {
+    "en": "AUTHORITY",
+    "es": "AUTORIDAD",
+    "files": [
+      "components/admin.tsx"
+    ]
+  },
+  {
+    "en": "No records match this filter.",
+    "es": "No hay registros para este filtro.",
+    "files": [
+      "components/admin.tsx"
+    ]
+  },
+  {
+    "en": "Clear filters",
+    "es": "Limpiar filtros",
+    "files": [
+      "components/admin.tsx"
+    ]
+  },
+  {
+    "en": "Close detail",
+    "es": "Cerrar detalle",
+    "files": [
+      "components/admin.tsx"
+    ]
+  },
+  {
+    "en": "Data plane",
+    "es": "Plano de datos",
+    "files": [
+      "components/admin.tsx"
+    ]
+  },
+  {
+    "en": "Private · operational · illustrative",
+    "es": "Privado · operativo · ilustrativo",
+    "files": [
+      "components/admin.tsx"
+    ]
+  },
+  {
+    "en": "Required authority",
+    "es": "Autoridad requerida",
+    "files": [
+      "components/admin.tsx"
+    ]
+  },
+  {
+    "en": "Two distinct principals",
+    "es": "Dos principales distintos",
+    "files": [
+      "components/admin.tsx"
+    ]
+  },
+  {
+    "en": "Privileged session + step-up",
+    "es": "Sesión privilegiada + step-up",
+    "files": [
+      "components/admin.tsx"
+    ]
+  },
+  {
+    "en": "Write permission and scope",
+    "es": "Permiso de escritura y alcance",
+    "files": [
+      "components/admin.tsx"
+    ]
+  },
+  {
+    "en": "Authorized read",
+    "es": "Lectura autorizada",
+    "files": [
+      "components/admin.tsx"
+    ]
+  },
+  {
+    "en": "The interface observes the service.",
+    "es": "La interfaz observa el servicio.",
+    "files": [
+      "components/admin.tsx"
+    ]
+  },
+  {
+    "en": "This local app has no privileged session and performs no real operations. The owning service retains authority.",
+    "es": "Esta aplicación local no tiene sesión privilegiada ni realiza operaciones reales. El servicio propietario conserva la autoridad.",
+    "files": [
+      "components/admin.tsx"
+    ]
+  },
+  {
+    "en": "Operations",
+    "es": "Operación",
+    "files": [
+      "components/admin.tsx"
+    ]
+  },
+  {
+    "en": "SEPARATE PRIVILEGED CONTEXT",
+    "es": "CONTEXTO PRIVILEGIADO SEPARADO",
+    "files": [
+      "components/admin.tsx"
+    ]
+  },
+  {
+    "en": "Illustrative guide · no live research",
+    "es": "Guía ilustrativa · sin investigación en vivo",
+    "files": [
+      "components/admin.tsx"
+    ]
+  },
+  {
+    "en": "Authority comes before action.",
+    "es": "La autoridad precede a la acción.",
+    "files": [
+      "components/admin.tsx"
+    ]
+  },
+  {
+    "en": "Let’s inspect before acting.",
+    "es": "Inspeccionemos antes de actuar.",
+    "files": [
+      "components/admin.tsx"
+    ]
+  },
+  {
+    "en": "Conversation does not grant permission.",
+    "es": "La conversación no concede permisos.",
+    "files": [
+      "components/admin.tsx"
+    ]
+  },
+  {
+    "en": "Scope and session are validated in the service. Neither a visible role nor a recommendation authorizes changes.",
+    "es": "El alcance y la sesión se validan en el servicio. Ni el rol visible ni una recomendación autorizan cambios.",
+    "files": [
+      "components/admin.tsx"
+    ]
+  },
+  {
+    "en": "Return to context",
+    "es": "Volver al contexto",
+    "files": [
+      "components/admin.tsx"
+    ]
+  },
+  {
+    "en": "What authority does it require?",
+    "es": "¿Qué autoridad requiere?",
+    "files": [
+      "components/admin.tsx"
+    ]
+  },
+  {
+    "en": "Read after scope authorization.",
+    "es": "Lectura tras autorización de alcance.",
+    "files": [
+      "components/admin.tsx"
+    ]
+  },
+  {
+    "en": "Command permission in the owning service.",
+    "es": "Permiso de comando en el servicio propietario.",
+    "files": [
+      "components/admin.tsx"
+    ]
+  },
+  {
+    "en": "Privileged session and additional verification.",
+    "es": "Sesión privilegiada y verificación adicional.",
+    "files": [
+      "components/admin.tsx"
+    ]
+  },
+  {
+    "en": "Approval by two distinct principals.",
+    "es": "Aprobación de dos principales distintos.",
+    "files": [
+      "components/admin.tsx"
+    ]
+  },
+  {
+    "en": "AXIGNAL · First-party operations · Private information is not canonical economic evidence.",
+    "es": "AXIGNAL · Operaciones propias · La información privada no es evidencia económica canónica.",
+    "files": [
+      "components/admin.tsx"
+    ]
+  },
+  {
+    "en": "Illustrative read projection",
+    "es": "Proyección de lectura ilustrativa",
+    "files": [
+      "components/admin.tsx"
+    ]
+  },
+  {
+    "en": "Authority",
+    "es": "Autoridad",
+    "files": [
+      "components/admin.tsx"
+    ]
+  },
+  {
+    "en": "Owning authority",
+    "es": "Autoridad propietaria",
+    "files": [
+      "components/admin.tsx"
+    ]
+  },
+  {
+    "en": "Scope of this review",
+    "es": "Alcance de esta revisión",
+    "files": [
+      "components/admin.tsx"
+    ]
+  },
+  {
+    "en": "Demo impact: check command authority. No records are written, reconciled, approved or altered. Real execution would require the owning service’s contract and session.",
+    "es": "Impacto de esta demo: comprobar autoridad del comando. No escribe, concilia, aprueba ni altera registros. La ejecución real requeriría el contrato y la sesión del servicio propietario.",
+    "files": [
+      "components/admin.tsx"
+    ]
+  },
+  {
+    "en": "This panel prepares a review. Execution requires privileged identity, scope and authorization from the existing service. The demo session does not have them.",
+    "es": "Este panel prepara una revisión. Para ejecutar se necesita identidad privilegiada, alcance y autorización del servicio existente. La sesión de demo no los tiene.",
+    "files": [
+      "components/admin.tsx"
+    ]
+  },
+  {
+    "en": "No execution authority",
+    "es": "Sin autoridad de ejecución",
+    "files": [
+      "components/admin.tsx"
+    ]
+  },
+  {
+    "en": "The server denied the command. No data was changed.",
+    "es": "El servidor denegó el comando. No se modificó ningún dato.",
+    "files": [
+      "components/admin.tsx"
+    ]
+  },
+  {
+    "en": "Checking authority…",
+    "es": "Comprobando autoridad…",
+    "files": [
+      "components/admin.tsx"
+    ]
+  },
+  {
+    "en": "Check command authority",
+    "es": "Comprobar autoridad del comando",
+    "files": [
+      "components/admin.tsx"
+    ]
+  },
+  {
+    "en": "Why does it deserve attention?",
+    "es": "¿Por qué merece atención?",
+    "files": [
+      "components/axent.tsx"
+    ]
+  },
+  {
+    "en": "What evidence supports it?",
+    "es": "¿Qué evidencia la sostiene?",
+    "files": [
+      "components/axent.tsx"
+    ]
+  },
+  {
+    "en": "Explain this context",
+    "es": "Explícame este contexto",
+    "files": [
+      "components/axent.tsx"
+    ]
+  },
+  {
+    "en": "What remains open?",
+    "es": "¿Qué sigue abierto?",
+    "files": [
+      "components/axent.tsx"
+    ]
+  },
+  {
+    "en": "New contextual conversation",
+    "es": "Nueva conversación contextual",
+    "files": [
+      "components/axent.tsx"
+    ]
+  },
+  {
+    "en": "New conversation",
+    "es": "Nueva conversación",
+    "files": [
+      "components/axent.tsx"
+    ]
+  },
+  {
+    "en": "INVESTIGATES · EXPLAINS · GUIDES",
+    "es": "INVESTIGA · EXPLICA · ACOMPAÑA",
+    "files": [
+      "components/axent.tsx"
+    ]
+  },
+  {
+    "en": "Selected signal",
+    "es": "Señal seleccionada",
+    "files": [
+      "components/axent.tsx"
+    ]
+  },
+  {
+    "en": "Let’s look with a little more context.",
+    "es": "Miremos con un poco más de contexto.",
+    "files": [
+      "components/axent.tsx"
+    ]
+  },
+  {
+    "en": "I can explain this signal, examine its basis and point to what we do not yet know.",
+    "es": "Puedo explicar esta señal, contrastar lo que sostiene y señalar lo que todavía no sabemos.",
+    "files": [
+      "components/axent.tsx"
+    ]
+  },
+  {
+    "en": "I help you investigate and understand this part of the panorama.",
+    "es": "Te acompaño a investigar y entender esta parte del panorama.",
+    "files": [
+      "components/axent.tsx"
+    ]
+  },
+  {
+    "en": "Contextual explanation demo · no live model",
+    "es": "Demo de explicación contextual · sin modelo en vivo",
+    "files": [
+      "components/axent.tsx"
+    ]
+  },
+  {
+    "en": "Fewer questions",
+    "es": "Menos preguntas",
+    "files": [
+      "components/axent.tsx"
+    ]
+  },
+  {
+    "en": "Another perspective",
+    "es": "Otra perspectiva",
+    "files": [
+      "components/axent.tsx"
+    ]
+  },
+  {
+    "en": "How does context change over time?",
+    "es": "¿Cómo cambia el contexto en el tiempo?",
+    "files": [
+      "components/axent.tsx"
+    ]
+  },
+  {
+    "en": "What changes over time?",
+    "es": "¿Qué cambia en el tiempo?",
+    "files": [
+      "components/axent.tsx"
+    ]
+  },
+  {
+    "en": "You",
+    "es": "Tú",
+    "files": [
+      "components/axent.tsx"
+    ]
+  },
+  {
+    "en": "This composition could not be prepared.",
+    "es": "Esta composición no pudo prepararse.",
+    "files": [
+      "components/axent.tsx"
+    ]
+  },
+  {
+    "en": "Preparing the example explanation…",
+    "es": "Preparando explicación del ejemplo…",
+    "files": [
+      "components/axent.tsx"
+    ]
+  },
+  {
+    "en": "We could not get the explanation. Your context is preserved.",
+    "es": "No pudimos obtener la explicación. Tu contexto sigue intacto.",
+    "files": [
+      "components/axent.tsx"
+    ]
+  },
+  {
+    "en": "Retry",
+    "es": "Reintentar",
+    "files": [
+      "components/axent.tsx"
+    ]
+  },
+  {
+    "en": "Ask about this context",
+    "es": "Pregunta sobre este contexto",
+    "files": [
+      "components/axent.tsx"
+    ]
+  },
+  {
+    "en": "Ask about this context…",
+    "es": "Pregunta sobre este contexto…",
+    "files": [
+      "components/axent.tsx"
+    ]
+  },
+  {
+    "en": "Stop response",
+    "es": "Detener respuesta",
+    "files": [
+      "components/axent.tsx"
+    ]
+  },
+  {
+    "en": "Send question",
+    "es": "Enviar pregunta",
+    "files": [
+      "components/axent.tsx"
+    ]
+  },
+  {
+    "en": "Explains evidence. Does not decide truth.",
+    "es": "Explica la evidencia. No decide la verdad.",
+    "files": [
+      "components/axent.tsx"
+    ]
+  },
+  {
+    "en": "Composition outside context. Request it again.",
+    "es": "Composición fuera de contexto. Vuelve a solicitarla.",
+    "files": [
+      "components/axent.tsx"
+    ]
+  },
+  {
+    "en": "Open in Panorama",
+    "es": "Abrir en el Panorama",
+    "files": [
+      "components/axent.tsx"
+    ]
+  },
+  {
+    "en": "Context remains open; there is no conclusion to invent.",
+    "es": "El contexto permanece abierto; no hay una conclusión que inventar.",
+    "files": [
+      "components/axent.tsx"
+    ]
+  },
+  {
+    "en": "Landing",
+    "es": "Landing",
+    "files": [
+      "components/design.tsx"
+    ]
+  },
+  {
+    "en": "Product",
+    "es": "Producto",
+    "files": [
+      "components/design.tsx"
+    ]
+  },
+  {
+    "en": "AXIGNAL / EXPERIENCE SYSTEM",
+    "es": "AXIGNAL / SISTEMA DE EXPERIENCIA",
+    "files": [
+      "components/design.tsx"
+    ]
+  },
+  {
+    "en": "One perspective.",
+    "es": "Una mirada.",
+    "files": [
+      "components/design.tsx"
+    ]
+  },
+  {
+    "en": "A coherent language.",
+    "es": "Un lenguaje coherente.",
+    "files": [
+      "components/design.tsx"
+    ]
+  },
+  {
+    "en": "Beauty directs attention. Structure preserves meaning. Evidence limits what we can assert.",
+    "es": "La belleza orienta atención. La estructura conserva el significado. La evidencia limita lo que podemos afirmar.",
+    "files": [
+      "components/design.tsx"
+    ]
+  },
+  {
+    "en": "Human visual review pending",
+    "es": "Revisión visual humana pendiente",
+    "files": [
+      "components/design.tsx"
+    ]
+  },
+  {
+    "en": "Exact identity, distinctive voice.",
+    "es": "Identidad exacta, voz propia.",
+    "files": [
+      "components/design.tsx"
+    ]
+  },
+  {
+    "en": "The Observer · supplied source",
+    "es": "El Observador · fuente suministrada",
+    "files": [
+      "components/design.tsx"
+    ]
+  },
+  {
+    "en": "Hierarchy has a voice.",
+    "es": "La jerarquía tiene una voz.",
+    "files": [
+      "components/design.tsx"
+    ]
+  },
+  {
+    "en": "PERSPECTIVE",
+    "es": "PERSPECTIVA",
+    "files": [
+      "components/design.tsx"
+    ]
+  },
+  {
+    "en": "Context transforms perspective.",
+    "es": "El contexto transforma la mirada.",
+    "files": [
+      "components/design.tsx"
+    ]
+  },
+  {
+    "en": "READING",
+    "es": "LECTURA",
+    "files": [
+      "components/design.tsx"
+    ]
+  },
+  {
+    "en": "A capability can meet a new demand context. Understanding the overlap begins an investigation; it is not a commercial promise.",
+    "es": "Una capacidad puede encontrar un nuevo contexto de demanda. Entender la coincidencia es el comienzo de una investigación; no una promesa comercial.",
+    "files": [
+      "components/design.tsx"
+    ]
+  },
+  {
+    "en": "look a little closer",
+    "es": "mira un poco más cerca",
+    "files": [
+      "components/design.tsx",
+      "components/landing.tsx"
+    ]
+  },
+  {
+    "en": "Color guides. Words clarify.",
+    "es": "El color orienta. Las palabras precisan.",
+    "files": [
+      "components/design.tsx"
+    ]
+  },
+  {
+    "en": "Charcoal",
+    "es": "Carbón",
+    "files": [
+      "components/design.tsx"
+    ]
+  },
+  {
+    "en": "Soft blue",
+    "es": "Azul suave",
+    "files": [
+      "components/design.tsx"
+    ]
+  },
+  {
+    "en": "Sage",
+    "es": "Salvia",
+    "files": [
+      "components/design.tsx"
+    ]
+  },
+  {
+    "en": "Lavender",
+    "es": "Lavanda",
+    "files": [
+      "components/design.tsx"
+    ]
+  },
+  {
+    "en": "Sand",
+    "es": "Arena",
+    "files": [
+      "components/design.tsx"
+    ]
+  },
+  {
+    "en": "Epistemic state never depends on color alone. A derived possibility retains its distinction from what is observed.",
+    "es": "El estado epistémico no depende solo del color. Una posibilidad derivada conserva su diferencia con lo observado.",
+    "files": [
+      "components/design.tsx"
+    ]
+  },
+  {
+    "en": "Uncertainty is designed too.",
+    "es": "La incertidumbre también se diseña.",
+    "files": [
+      "components/design.tsx"
+    ]
+  },
+  {
+    "en": "Recovery states",
+    "es": "Estados de recuperación",
+    "files": [
+      "components/design.tsx"
+    ]
+  },
+  {
+    "en": "Empty",
+    "es": "Vacío",
+    "files": [
+      "components/design.tsx"
+    ]
+  },
+  {
+    "en": "Unknown",
+    "es": "Desconocido",
+    "files": [
+      "components/design.tsx",
+      "components/ui.tsx",
+      "lib/projection.ts"
+    ]
+  },
+  {
+    "en": "Loading",
+    "es": "Carga",
+    "files": [
+      "components/design.tsx"
+    ]
+  },
+  {
+    "en": "Error",
+    "es": "Error",
+    "files": [
+      "components/design.tsx"
+    ]
+  },
+  {
+    "en": "Unavailable",
+    "es": "No disponible",
+    "files": [
+      "components/design.tsx"
+    ]
+  },
+  {
+    "en": "Test this state in the product",
+    "es": "Probar este estado en el producto",
+    "files": [
+      "components/design.tsx"
+    ]
+  },
+  {
+    "en": "Creativity with a clear boundary.",
+    "es": "Creatividad con una frontera clara.",
+    "files": [
+      "components/design.tsx"
+    ]
+  },
+  {
+    "en": "The person directs attention.",
+    "es": "La persona dirige atención.",
+    "files": [
+      "components/design.tsx"
+    ]
+  },
+  {
+    "en": "An organization is not its focus. Panorama is not AXIGLAND.",
+    "es": "Una organización no equivale a su foco. Panorama no equivale a AXIGLAND.",
+    "files": [
+      "components/design.tsx"
+    ]
+  },
+  {
+    "en": "The reading retains its basis.",
+    "es": "La lectura conserva su base.",
+    "files": [
+      "components/design.tsx"
+    ]
+  },
+  {
+    "en": "State, evidence, derivation and time remain inspectable.",
+    "es": "Estado, evidencia, derivación y temporalidad permanecen inspeccionables.",
+    "files": [
+      "components/design.tsx"
+    ]
+  },
+  {
+    "en": "Composition is governed.",
+    "es": "La composición es gobernada.",
+    "files": [
+      "components/design.tsx"
+    ]
+  },
+  {
+    "en": "AI SDK 7 UI + component registry. A plan selects references; it does not invent content or authority.",
+    "es": "AI SDK 7 UI + registro de componentes. El plan selecciona referencias; no inventa contenido ni autoridad.",
+    "files": [
+      "components/design.tsx"
+    ]
+  },
+  {
+    "en": "Privilege lives in the service.",
+    "es": "El privilegio vive en el servicio.",
+    "files": [
+      "components/design.tsx"
+    ]
+  },
+  {
+    "en": "Admin uses a private plane and denies commands without owning-service authorization.",
+    "es": "Admin usa un plano privado y deniega comandos sin autorización del servicio propietario.",
+    "files": [
+      "components/design.tsx"
+    ]
+  },
+  {
+    "en": "DESIGNED TO UNDERSTAND",
+    "es": "DISEÑADO PARA COMPRENDER",
+    "files": [
+      "components/design.tsx"
+    ]
+  },
+  {
+    "en": "With a keyboard too. Without motion too.",
+    "es": "También con teclado. También sin movimiento.",
+    "files": [
+      "components/design.tsx"
+    ]
+  },
+  {
+    "en": "Linear reading as an alternative to spatial composition. Visible focus, named controls, dialogs that return focus and states expressed in words. On mobile, content breathes in a readable sequence.",
+    "es": "Lectura lineal alternativa a la composición espacial. Foco visible, controles con nombre, diálogos con retorno de foco y estados expresados con palabras. En móvil, el contenido respira en una secuencia legible.",
+    "files": [
+      "components/design.tsx"
+    ]
+  },
+  {
+    "en": "Explore the experience",
+    "es": "Explorar la experiencia",
+    "files": [
+      "components/design.tsx"
+    ]
+  },
+  {
+    "en": "Inspect Admin",
+    "es": "Inspeccionar Admin",
+    "files": [
+      "components/design.tsx"
+    ]
+  },
+  {
+    "en": "Back to the notebook",
+    "es": "Volver al cuaderno",
+    "files": [
+      "components/doctrine-basis.tsx",
+      "components/knowledge.tsx"
+    ]
+  },
+  {
+    "en": "The basis of our ideas",
+    "es": "La base de nuestras ideas",
+    "files": [
+      "components/doctrine-basis.tsx"
+    ]
+  },
+  {
+    "en": "Selected excerpts from AXIGNAL doctrine. We retain the original language and meaning; these are neither a research publication nor evidence of economic outcomes.",
+    "es": "Extractos seleccionados de la doctrina de AXIGNAL. Conservamos el idioma y el significado del original; no son una publicación de investigación ni evidencia de resultados económicos.",
+    "files": [
+      "components/doctrine-basis.tsx"
+    ]
+  },
+  {
+    "en": "Product source · reference copy from 3 October 2026",
+    "es": "Fuente de producto · copia de referencia del 3 de octubre de 2026",
+    "files": [
+      "components/doctrine-basis.tsx"
+    ]
+  },
+  {
+    "en": "In this source",
+    "es": "En esta fuente",
+    "files": [
+      "components/doctrine-basis.tsx"
+    ]
+  },
+  {
+    "en": "Original excerpts",
+    "es": "Extractos del original",
+    "files": [
+      "components/doctrine-basis.tsx"
+    ]
+  },
+  {
+    "en": "A reference with clear limits.",
+    "es": "Una referencia con límites claros.",
+    "files": [
+      "components/doctrine-basis.tsx"
+    ]
+  },
+  {
+    "en": "This selection explains the basis of the notebook readings. It does not replace the complete document or establish that every described capability is available in this demo.",
+    "es": "Esta selección explica la base de las lecturas del cuaderno. No reemplaza el documento completo ni acredita que todas las capacidades descritas estén disponibles en esta demo.",
+    "files": [
+      "components/doctrine-basis.tsx"
+    ]
+  },
+  {
+    "en": "Keep reading",
+    "es": "Seguir leyendo",
+    "files": [
+      "components/doctrine-basis.tsx"
+    ]
+  },
+  {
+    "en": "Enter a name (maximum 100 characters).",
+    "es": "Indica un nombre (máximo 100 caracteres).",
+    "files": [
+      "components/drafts.tsx"
+    ]
+  },
+  {
+    "en": "Enter a valid email.",
+    "es": "Indica un correo válido.",
+    "files": [
+      "components/drafts.tsx"
+    ]
+  },
+  {
+    "en": "Write between 15 and 3,000 characters.",
+    "es": "Escribe entre 15 y 3.000 caracteres.",
+    "files": [
+      "components/drafts.tsx"
+    ]
+  },
+  {
+    "en": "Prepare a draft",
+    "es": "Preparar un borrador",
+    "files": [
+      "components/drafts.tsx"
+    ]
+  },
+  {
+    "en": "Your message",
+    "es": "Tu mensaje",
+    "files": [
+      "components/drafts.tsx"
+    ]
+  },
+  {
+    "en": "Only on this page",
+    "es": "Solo en esta página",
+    "files": [
+      "components/drafts.tsx"
+    ]
+  },
+  {
+    "en": "The sending channel is pending publication. You can review and download your text; nothing is sent or lodged as a request.",
+    "es": "El canal de envío está pendiente de publicación. Puedes revisar y descargar tu texto; no se envía ni se registra una solicitud.",
+    "files": [
+      "components/drafts.tsx"
+    ]
+  },
+  {
+    "en": "Name",
+    "es": "Nombre",
+    "files": [
+      "components/drafts.tsx"
+    ]
+  },
+  {
+    "en": "Your email",
+    "es": "Tu correo",
+    "files": [
+      "components/drafts.tsx"
+    ]
+  },
+  {
+    "en": "What you want to request",
+    "es": "Qué quieres solicitar",
+    "files": [
+      "components/drafts.tsx"
+    ]
+  },
+  {
+    "en": "What would you like to discuss",
+    "es": "Qué te gustaría conversar",
+    "files": [
+      "components/drafts.tsx"
+    ]
+  },
+  {
+    "en": "Avoid passwords, identity documents and confidential information.",
+    "es": "Evita contraseñas, documentos de identidad e información confidencial.",
+    "files": [
+      "components/drafts.tsx"
+    ]
+  },
+  {
+    "en": "Review the indicated fields before opening the preview.",
+    "es": "Revisa los campos indicados antes de abrir la vista previa.",
+    "files": [
+      "components/drafts.tsx"
+    ]
+  },
+  {
+    "en": "The draft remains while this page stays open. It is not saved on the server.",
+    "es": "El borrador se conserva mientras esta página permanece abierta. No se guarda en el servidor.",
+    "files": [
+      "components/drafts.tsx"
+    ]
+  },
+  {
+    "en": "Review draft",
+    "es": "Revisar borrador",
+    "files": [
+      "components/drafts.tsx"
+    ]
+  },
+  {
+    "en": "Your text, before sending.",
+    "es": "Tu texto, antes de enviarlo.",
+    "files": [
+      "components/drafts.tsx"
+    ]
+  },
+  {
+    "en": "Local draft · not sent",
+    "es": "Borrador local · no enviado",
+    "files": [
+      "components/drafts.tsx"
+    ]
+  },
+  {
+    "en": "Keep editing",
+    "es": "Seguir editando",
+    "files": [
+      "components/drafts.tsx"
+    ]
+  },
+  {
+    "en": "Download draft",
+    "es": "Descargar borrador",
+    "files": [
+      "components/drafts.tsx"
+    ]
+  },
+  {
+    "en": "Download prepared. Your text is still unsent; this download does not prove receipt.",
+    "es": "Descarga preparada. Tu texto sigue sin enviarse; esta descarga no acredita recepción.",
+    "files": [
+      "components/drafts.tsx"
+    ]
+  },
+  {
+    "en": "Get to know AXIGNAL",
+    "es": "Conocer AXIGNAL",
+    "files": [
+      "components/drafts.tsx"
+    ]
+  },
+  {
+    "en": "A product question",
+    "es": "Una pregunta de producto",
+    "files": [
+      "components/drafts.tsx"
+    ]
+  },
+  {
+    "en": "Privacy and data",
+    "es": "Privacidad y datos",
+    "files": [
+      "components/drafts.tsx"
+    ]
+  },
+  {
+    "en": "Contact / An open conversation",
+    "es": "Contacto / Una conversación abierta",
+    "files": [
+      "components/drafts.tsx"
+    ]
+  },
+  {
+    "en": "Good questions",
+    "es": "Las buenas preguntas",
+    "files": [
+      "components/drafts.tsx"
+    ]
+  },
+  {
+    "en": "bring us closer.",
+    "es": "nos acercan.",
+    "files": [
+      "components/drafts.tsx"
+    ]
+  },
+  {
+    "en": "Tell us what you are trying to understand. A question with context is the best place to start.",
+    "es": "Cuéntanos qué intentas comprender. El mejor punto de partida es una pregunta con contexto.",
+    "files": [
+      "components/drafts.tsx"
+    ]
+  },
+  {
+    "en": "Message topic",
+    "es": "Tema del mensaje",
+    "files": [
+      "components/drafts.tsx"
+    ]
+  },
+  {
+    "en": "A question.",
+    "es": "Una pregunta.",
+    "files": [
+      "components/drafts.tsx"
+    ]
+  },
+  {
+    "en": "More perspective.",
+    "es": "Más perspectiva.",
+    "files": [
+      "components/drafts.tsx",
+      "components/landing.tsx"
+    ]
+  },
+  {
+    "en": "we read with care",
+    "es": "te leemos con atención",
+    "files": [
+      "components/drafts.tsx"
+    ]
+  },
+  {
+    "en": "Controller, country and public email: pending publication.",
+    "es": "Responsable, país y correo público: pendientes de publicación.",
+    "files": [
+      "components/drafts.tsx"
+    ]
+  },
+  {
+    "en": "Return to evidence",
+    "es": "Volver a la evidencia",
+    "files": [
+      "components/evidence.tsx"
+    ]
+  },
+  {
+    "en": "Preserved source · example",
+    "es": "Fuente conservada · ejemplo",
+    "files": [
+      "components/evidence.tsx"
+    ]
+  },
+  {
+    "en": "Published",
+    "es": "Publicado",
+    "files": [
+      "components/evidence.tsx",
+      "components/knowledge.tsx"
+    ]
+  },
+  {
+    "en": "Observed by AXIGNAL",
+    "es": "Observado por AXIGNAL",
+    "files": [
+      "components/evidence.tsx"
+    ]
+  },
+  {
+    "en": "What the source contains",
+    "es": "Qué contiene la fuente",
+    "files": [
+      "components/evidence.tsx"
+    ]
+  },
+  {
+    "en": "What supports this reading",
+    "es": "Qué sostiene esta lectura",
+    "files": [
+      "components/evidence.tsx"
+    ]
+  },
+  {
+    "en": "OBSERVATION CONDITIONS",
+    "es": "CONDICIONES DE OBSERVACIÓN",
+    "files": [
+      "components/evidence.tsx"
+    ]
+  },
+  {
+    "en": "Its scope ends here",
+    "es": "Su alcance termina aquí",
+    "files": [
+      "components/evidence.tsx"
+    ]
+  },
+  {
+    "en": "Open illustrative document",
+    "es": "Abrir documento ilustrativo",
+    "files": [
+      "components/evidence.tsx"
+    ]
+  },
+  {
+    "en": "Insufficient basis. We do not show sources that do not support this conclusion.",
+    "es": "Sin base suficiente. No mostramos fuentes que no sostienen esta conclusión.",
+    "files": [
+      "components/evidence.tsx"
+    ]
+  },
+  {
+    "en": "Observed",
+    "es": "Observado",
+    "files": [
+      "components/evidence.tsx",
+      "components/knowledge.tsx",
+      "components/ui.tsx"
+    ]
+  },
+  {
+    "en": "The state belongs to the signal; the source retains its own scope.",
+    "es": "El estado pertenece a la señal; la fuente conserva su propio alcance.",
+    "files": [
+      "components/evidence.tsx"
+    ]
+  },
+  {
+    "en": "What we know",
+    "es": "Lo que sabemos",
+    "files": [
+      "components/knowledge.tsx"
+    ]
+  },
+  {
+    "en": "What if…?",
+    "es": "¿Y si…?",
+    "files": [
+      "components/knowledge.tsx"
+    ]
+  },
+  {
+    "en": "evidence comes first",
+    "es": "primero, la evidencia",
+    "files": [
+      "components/knowledge.tsx"
+    ]
+  },
+  {
+    "en": "Currentness",
+    "es": "Vigencia",
+    "files": [
+      "components/knowledge.tsx"
+    ]
+  },
+  {
+    "en": "every moment matters",
+    "es": "cada momento cuenta",
+    "files": [
+      "components/knowledge.tsx"
+    ]
+  },
+  {
+    "en": "One world",
+    "es": "Un mundo",
+    "files": [
+      "components/knowledge.tsx"
+    ]
+  },
+  {
+    "en": "Your focus",
+    "es": "Tu foco",
+    "files": [
+      "components/knowledge.tsx"
+    ]
+  },
+  {
+    "en": "the question stays open",
+    "es": "la pregunta sigue abierta",
+    "files": [
+      "components/knowledge.tsx"
+    ]
+  },
+  {
+    "en": "What supports this reading?",
+    "es": "¿Qué sostiene esta lectura?",
+    "files": [
+      "components/knowledge.tsx"
+    ]
+  },
+  {
+    "en": "always with context",
+    "es": "con contexto, siempre",
+    "files": [
+      "components/knowledge.tsx"
+    ]
+  },
+  {
+    "en": "Context that compounds",
+    "es": "Contexto que se acumula",
+    "files": [
+      "components/knowledge.tsx"
+    ]
+  },
+  {
+    "en": "look again",
+    "es": "volver a mirar",
+    "files": [
+      "components/knowledge.tsx"
+    ]
+  },
+  {
+    "en": "The Observer's notebook",
+    "es": "El cuaderno del Observador",
+    "files": [
+      "components/knowledge.tsx"
+    ]
+  },
+  {
+    "en": "The world changes.",
+    "es": "El mundo cambia.",
+    "files": [
+      "components/knowledge.tsx",
+      "components/landing.tsx"
+    ]
+  },
+  {
+    "en": "Learn to look.",
+    "es": "Aprende a mirarlo.",
+    "files": [
+      "components/knowledge.tsx"
+    ]
+  },
+  {
+    "en": "Ideas for reading signals, asking better questions and understanding what supports a conclusion.",
+    "es": "Ideas para leer señales, hacer mejores preguntas y entender qué sostiene una conclusión.",
+    "files": [
+      "components/knowledge.tsx"
+    ]
+  },
+  {
+    "en": "curiosity has a method",
+    "es": "la curiosidad tiene método",
+    "files": [
+      "components/knowledge.tsx"
+    ]
+  },
+  {
+    "en": "Start here",
+    "es": "Empieza por aquí",
+    "files": [
+      "components/knowledge.tsx"
+    ]
+  },
+  {
+    "en": "Open the notebook",
+    "es": "Abrir el cuaderno",
+    "files": [
+      "components/knowledge.tsx",
+      "app/not-found.tsx"
+    ]
+  },
+  {
+    "en": "read",
+    "es": "de lectura",
+    "files": [
+      "components/knowledge.tsx"
+    ]
+  },
+  {
+    "en": "One idea opens another.",
+    "es": "Una idea abre otra.",
+    "files": [
+      "components/knowledge.tsx"
+    ]
+  },
+  {
+    "en": "Search Knowledge",
+    "es": "Buscar en Knowledge",
+    "files": [
+      "components/knowledge.tsx"
+    ]
+  },
+  {
+    "en": "What would you like to understand?",
+    "es": "¿Qué quieres comprender?",
+    "files": [
+      "components/knowledge.tsx"
+    ]
+  },
+  {
+    "en": "Notebook topics",
+    "es": "Temas del cuaderno",
+    "files": [
+      "components/knowledge.tsx"
+    ]
+  },
+  {
+    "en": "readings",
+    "es": "lecturas",
+    "files": [
+      "components/knowledge.tsx"
+    ]
+  },
+  {
+    "en": "This notebook page is still open.",
+    "es": "Esta página del cuaderno sigue abierta.",
+    "files": [
+      "components/knowledge.tsx"
+    ]
+  },
+  {
+    "en": "No readings match this search. Try another word or return to all topics.",
+    "es": "No hay lecturas que coincidan con esta búsqueda. Prueba otra palabra o vuelve a todos los temas.",
+    "files": [
+      "components/knowledge.tsx"
+    ]
+  },
+  {
+    "en": "See the whole notebook",
+    "es": "Ver todo el cuaderno",
+    "files": [
+      "components/knowledge.tsx"
+    ]
+  },
+  {
+    "en": "From idea to perspective.",
+    "es": "De la idea a la mirada.",
+    "files": [
+      "components/knowledge.tsx"
+    ]
+  },
+  {
+    "en": "Explore how context, signals and evidence relate in an illustrative demo.",
+    "es": "Explora cómo se relacionan contexto, señales y evidencia en una demo ilustrativa.",
+    "files": [
+      "components/knowledge.tsx"
+    ]
+  },
+  {
+    "en": "Open Panorama",
+    "es": "Abrir Panorama",
+    "files": [
+      "components/knowledge.tsx"
+    ]
+  },
+  {
+    "en": "In this reading",
+    "es": "En esta lectura",
+    "files": [
+      "components/knowledge.tsx",
+      "components/knowledge.tsx"
+    ]
+  },
+  {
+    "en": "The basis of this idea",
+    "es": "La base de esta idea",
+    "files": [
+      "components/knowledge.tsx",
+      "components/knowledge.tsx"
+    ]
+  },
+  {
+    "en": "An editorial explanation based on product doctrine. Examples are conceptual and do not establish economic facts.",
+    "es": "Explicación editorial basada en la doctrina de producto. Los ejemplos son conceptuales y no acreditan hechos económicos.",
+    "files": [
+      "components/knowledge.tsx"
+    ]
+  },
+  {
+    "en": "Follow the thread.",
+    "es": "Sigue el hilo.",
+    "files": [
+      "components/knowledge.tsx"
+    ]
+  },
+  {
+    "en": "A question, in focus",
+    "es": "Una pregunta, en foco",
+    "files": [
+      "components/landing-extras.tsx"
+    ]
+  },
+  {
+    "en": "Different questions. The same world.",
+    "es": "Distintas preguntas. El mismo mundo.",
+    "files": [
+      "components/landing-extras.tsx"
+    ]
+  },
+  {
+    "en": "Reduced motion",
+    "es": "Movimiento reducido",
+    "files": [
+      "components/landing-extras.tsx"
+    ]
+  },
+  {
+    "en": "Resume motion",
+    "es": "Activar movimiento",
+    "files": [
+      "components/landing-extras.tsx"
+    ]
+  },
+  {
+    "en": "Pause motion",
+    "es": "Pausar movimiento",
+    "files": [
+      "components/landing-extras.tsx"
+    ]
+  },
+  {
+    "en": "Pricing · Persistent observation",
+    "es": "Pricing · Observación persistente",
+    "files": [
+      "components/landing-extras.tsx"
+    ]
+  },
+  {
+    "en": "Choose where",
+    "es": "Elige dónde",
+    "files": [
+      "components/landing-extras.tsx"
+    ]
+  },
+  {
+    "en": "to pay attention.",
+    "es": "poner la atención.",
+    "files": [
+      "components/landing-extras.tsx"
+    ]
+  },
+  {
+    "en": "Observe organizations continuously. Emerging signals are not billed individually, and the economic world remains shared.",
+    "es": "Observas organizaciones con continuidad. Las señales que emergen no se cobran una a una y el mundo económico sigue siendo compartido.",
+    "files": [
+      "components/landing-extras.tsx"
+    ]
+  },
+  {
+    "en": "your attention finds its scope",
+    "es": "tu atención encuentra su alcance",
+    "files": [
+      "components/landing-extras.tsx"
+    ]
+  },
+  {
+    "en": "AXIGNAL · Self-service",
+    "es": "AXIGNAL · Autoservicio",
+    "files": [
+      "components/landing-extras.tsx"
+    ]
+  },
+  {
+    "en": "month",
+    "es": "mes",
+    "files": [
+      "components/landing-extras.tsx",
+      "components/landing-extras.tsx"
+    ]
+  },
+  {
+    "en": "organization under observation",
+    "es": "organización bajo observación",
+    "files": [
+      "components/landing-extras.tsx"
+    ]
+  },
+  {
+    "en": "organizations under observation",
+    "es": "organizaciones bajo observación",
+    "files": [
+      "components/landing-extras.tsx"
+    ]
+  },
+  {
+    "en": "Organizations you want to observe",
+    "es": "Organizaciones que quieres observar",
+    "files": [
+      "components/landing-extras.tsx"
+    ]
+  },
+  {
+    "en": "Choose scope",
+    "es": "Elegir alcance",
+    "files": [
+      "components/landing-extras.tsx"
+    ]
+  },
+  {
+    "en": "includes the first organization;",
+    "es": "incluye la primera organización;",
+    "files": [
+      "components/landing-extras.tsx"
+    ]
+  },
+  {
+    "en": "for each additional observation.",
+    "es": "por cada observación adicional.",
+    "files": [
+      "components/landing-extras.tsx"
+    ]
+  },
+  {
+    "en": "Contextual, temporal Panorama",
+    "es": "Panorama contextual y temporal",
+    "files": [
+      "components/landing-extras.tsx"
+    ]
+  },
+  {
+    "en": "Inspectable evidence and limits",
+    "es": "Evidencia y límites inspeccionables",
+    "files": [
+      "components/landing-extras.tsx"
+    ]
+  },
+  {
+    "en": "Axent for research and understanding",
+    "es": "Axent para investigar y comprender",
+    "files": [
+      "components/landing-extras.tsx"
+    ]
+  },
+  {
+    "en": "Prepare my access",
+    "es": "Preparar mi acceso",
+    "files": [
+      "components/landing-extras.tsx"
+    ]
+  },
+  {
+    "en": "Product-model reference prices, pending economic validation. Taxes and contracting terms are pending publication. This demo does not charge you.",
+    "es": "Precios de referencia del modelo de producto, pendientes de validación económica. Impuestos y condiciones de contratación pendientes de publicación. Esta demo no realiza cobros.",
+    "files": [
+      "components/landing-extras.tsx"
+    ]
+  },
+  {
+    "en": "A separate human service",
+    "es": "Un servicio humano, separado",
+    "files": [
+      "components/landing-extras.tsx"
+    ]
+  },
+  {
+    "en": "AXIGNAL with human advisory",
+    "es": "AXIGNAL con asesoría humana",
+    "files": [
+      "components/landing-extras.tsx"
+    ]
+  },
+  {
+    "en": "One organization within the agreed scope, four evidence-backed weekly updates and one monthly strategic review. Additional observation involving human work requires its own scope.",
+    "es": "Una organización dentro del alcance acordado, cuatro actualizaciones semanales con evidencia y una revisión estratégica mensual. Las observaciones con trabajo humano adicional requieren un alcance propio.",
+    "files": [
+      "components/landing-extras.tsx"
+    ]
+  },
+  {
+    "en": "+ applicable VAT · launch price",
+    "es": "+ IVA aplicable · precio de lanzamiento",
+    "files": [
+      "components/landing-extras.tsx"
+    ]
+  },
+  {
+    "en": "Discuss the scope",
+    "es": "Conversar sobre el alcance",
+    "files": [
+      "components/landing-extras.tsx"
+    ]
+  },
+  {
+    "en": "Curiosity",
+    "es": "La curiosidad",
+    "files": [
+      "components/landing-extras.tsx"
+    ]
+  },
+  {
+    "en": "grows with care, too.",
+    "es": "también se cultiva.",
+    "files": [
+      "components/landing-extras.tsx"
+    ]
+  },
+  {
+    "en": "The whole notebook",
+    "es": "Todo el cuaderno",
+    "files": [
+      "components/landing-extras.tsx",
+      "lib/editorial.ts"
+    ]
+  },
+  {
+    "en": "Editorial reading",
+    "es": "Lectura editorial",
+    "files": [
+      "components/landing-extras.tsx"
+    ]
+  },
+  {
+    "en": "A basis you can read.",
+    "es": "Una base que puedes leer.",
+    "files": [
+      "components/landing-extras.tsx"
+    ]
+  },
+  {
+    "en": "Notebook ideas lead to excerpts of the doctrine that supports them.",
+    "es": "Las ideas del cuaderno llevan a extractos de la doctrina que las sostiene.",
+    "files": [
+      "components/landing-extras.tsx"
+    ]
+  },
+  {
+    "en": "Inspect the basis",
+    "es": "Inspeccionar la base",
+    "files": [
+      "components/landing-extras.tsx"
+    ]
+  },
+  {
+    "en": "The past retains its limits.",
+    "es": "El pasado conserva sus límites.",
+    "files": [
+      "components/landing-extras.tsx"
+    ]
+  },
+  {
+    "en": "Explore a historical demo view: a later source does not enter that reading.",
+    "es": "Explora una vista histórica de la demo: una fuente posterior no entra en esa lectura.",
+    "files": [
+      "components/landing-extras.tsx"
+    ]
+  },
+  {
+    "en": "Explore July",
+    "es": "Explorar julio",
+    "files": [
+      "components/landing-extras.tsx"
+    ]
+  },
+  {
+    "en": "Trust begins with clarity.",
+    "es": "La confianza empieza por la claridad.",
+    "files": [
+      "components/landing-extras.tsx"
+    ]
+  },
+  {
+    "en": "Understand this version's scope and which information is still pending publication.",
+    "es": "Conoce el alcance de esta versión y los datos que siguen pendientes de publicación.",
+    "files": [
+      "components/landing-extras.tsx"
+    ]
+  },
+  {
+    "en": "Read our limits",
+    "es": "Leer nuestros límites",
+    "files": [
+      "components/landing-extras.tsx"
+    ]
+  },
+  {
+    "en": "See for yourself",
+    "es": "Compruébalo por ti",
+    "files": [
+      "components/landing-extras.tsx"
+    ]
+  },
+  {
+    "en": "Trust",
+    "es": "La confianza",
+    "files": [
+      "components/landing-extras.tsx",
+      "components/public-shell.tsx"
+    ]
+  },
+  {
+    "en": "can be inspected.",
+    "es": "se comprueba.",
+    "files": [
+      "components/landing-extras.tsx"
+    ]
+  },
+  {
+    "en": "Before asking for trust, we bring its basis closer. This demo offers inspectable paths; it does not present unvalidated testimonials or customer results.",
+    "es": "Antes de pedirte confianza, te acercamos su fundamento. Esta demo ofrece recorridos inspeccionables; no presenta testimonios ni resultados de clientes sin validar.",
+    "files": [
+      "components/landing-extras.tsx"
+    ]
+  },
+  {
+    "en": "The Observer's brief",
+    "es": "El brief del Observador",
+    "files": [
+      "components/landing-extras.tsx"
+    ]
+  },
+  {
+    "en": "One week.",
+    "es": "Una semana.",
+    "files": [
+      "components/landing-extras.tsx"
+    ]
+  },
+  {
+    "en": "A perspective with context.",
+    "es": "Una mirada con contexto.",
+    "files": [
+      "components/landing-extras.tsx"
+    ]
+  },
+  {
+    "en": "Request a free editorial sample around an organization. Up to three public signals a week when material observations exist, with sources, dates and limits.",
+    "es": "Solicita una muestra editorial gratuita alrededor de una organización. Hasta tres señales públicas por semana cuando existan observaciones materiales, con fuente, fecha y límites.",
+    "files": [
+      "components/landing-extras.tsx"
+    ]
+  },
+  {
+    "en": "Request, acceptance based on coverage and delivery consent are separate steps. This creates no free plan, observation focus or Axent access.",
+    "es": "La solicitud, la aceptación por cobertura y el consentimiento de envío son pasos distintos. No abre un plan gratuito, un foco de observación ni acceso a Axent.",
+    "files": [
+      "components/landing-extras.tsx"
+    ]
+  },
+  {
+    "en": "Prepare my request",
+    "es": "Preparar mi solicitud",
+    "files": [
+      "components/landing-extras.tsx"
+    ]
+  },
+  {
+    "en": "Sending channel pending publication. You can prepare a local draft.",
+    "es": "Canal de envío pendiente de publicación. Puedes preparar un borrador local.",
+    "files": [
+      "components/landing-extras.tsx"
+    ]
+  },
+  {
+    "en": "Less noise.",
+    "es": "Menos ruido.",
+    "files": [
+      "components/landing-extras.tsx"
+    ]
+  },
+  {
+    "en": "More basis.",
+    "es": "Más fundamento.",
+    "files": [
+      "components/landing-extras.tsx"
+    ]
+  },
+  {
+    "en": "Source · Date · Context",
+    "es": "Fuente · Fecha · Contexto",
+    "files": [
+      "components/landing-extras.tsx"
+    ]
+  },
+  {
+    "en": "if nothing changes, we say so",
+    "es": "si no hay cambios, también lo decimos",
+    "files": [
+      "components/landing-extras.tsx"
+    ]
+  },
+  {
+    "en": "Request the Observer's brief",
+    "es": "Solicitar el brief del Observador",
+    "files": [
+      "components/landing-extras.tsx"
+    ]
+  },
+  {
+    "en": "Describe the organization or website you would like to observe. This version does not send the request; the draft proves neither acceptance nor recorded consent.",
+    "es": "Indica la organización o la web que te gustaría observar. La solicitud no se envía desde esta versión; el borrador no acredita aceptación ni consentimiento registrado.",
+    "files": [
+      "components/landing-extras.tsx"
+    ]
+  },
+  {
+    "en": "Observation newsletter request",
+    "es": "Solicitud de newsletter de observación",
+    "files": [
+      "components/landing-extras.tsx"
+    ]
+  },
+  {
+    "en": "Home",
+    "es": "Inicio",
+    "files": [
+      "components/landing-extras.tsx"
+    ]
+  },
+  {
+    "en": "How to start",
+    "es": "Cómo empezar",
+    "files": [
+      "components/landing-extras.tsx",
+      "components/landing.tsx"
+    ]
+  },
+  {
+    "en": "Time",
+    "es": "El tiempo",
+    "files": [
+      "components/landing-extras.tsx",
+      "components/landing.tsx"
+    ]
+  },
+  {
+    "en": "Use cases",
+    "es": "Casos de uso",
+    "files": [
+      "components/landing-extras.tsx"
+    ]
+  },
+  {
+    "en": "Explore",
+    "es": "Explora",
+    "files": [
+      "components/landing-extras.tsx",
+      "components/landing.tsx"
+    ]
+  },
+  {
+    "en": "The basis",
+    "es": "El fundamento",
+    "files": [
+      "components/landing-extras.tsx"
+    ]
+  },
+  {
+    "en": "The brief",
+    "es": "El brief",
+    "files": [
+      "components/landing-extras.tsx"
+    ]
+  },
+  {
+    "en": "Landing chapters",
+    "es": "Capítulos de la Landing",
+    "files": [
+      "components/landing-extras.tsx"
+    ]
+  },
+  {
+    "en": "Explore page",
+    "es": "Explorar página",
+    "files": [
+      "components/landing-extras.tsx"
+    ]
+  },
+  {
+    "en": "Back to the top",
+    "es": "Volver al inicio de la página",
+    "files": [
+      "components/landing-extras.tsx"
+    ]
+  },
+  {
+    "en": "Follow the thread",
+    "es": "Sigue el hilo",
+    "files": [
+      "components/landing-extras.tsx"
+    ]
+  },
+  {
+    "en": "One world. More context.",
+    "es": "Un mundo. Más contexto.",
+    "files": [
+      "components/landing.tsx"
+    ]
+  },
+  {
+    "en": "Organization",
+    "es": "Organización",
+    "files": [
+      "components/landing.tsx",
+      "lib/projection.ts"
+    ]
+  },
+  {
+    "en": "A known capability.",
+    "es": "Una capacidad conocida.",
+    "files": [
+      "components/landing.tsx"
+    ]
+  },
+  {
+    "en": "Renovation",
+    "es": "Rehabilitación",
+    "files": [
+      "components/landing.tsx",
+      "components/panorama.tsx"
+    ]
+  },
+  {
+    "en": "An emerging need.",
+    "es": "Una necesidad emergente.",
+    "files": [
+      "components/landing.tsx"
+    ]
+  },
+  {
+    "en": "Change observation layer",
+    "es": "Cambiar la capa de observación",
+    "files": [
+      "components/landing.tsx"
+    ]
+  },
+  {
+    "en": "Observe",
+    "es": "Observa",
+    "files": [
+      "components/landing.tsx",
+      "components/landing.tsx"
+    ]
+  },
+  {
+    "en": "Connect",
+    "es": "Conecta",
+    "files": [
+      "components/landing.tsx",
+      "components/landing.tsx"
+    ]
+  },
+  {
+    "en": "Understand",
+    "es": "Comprende",
+    "files": [
+      "components/landing.tsx",
+      "components/landing.tsx",
+      "components/panorama.tsx"
+    ]
+  },
+  {
+    "en": "Something deserves attention.",
+    "es": "Algo merece atención.",
+    "files": [
+      "components/landing.tsx"
+    ]
+  },
+  {
+    "en": "A possibility. With evidence and limits.",
+    "es": "Una posibilidad. Con evidencia y límites.",
+    "files": [
+      "components/landing.tsx"
+    ]
+  },
+  {
+    "en": "Connections change what you see.",
+    "es": "Las conexiones cambian lo que ves.",
+    "files": [
+      "components/landing.tsx"
+    ]
+  },
+  {
+    "en": "Observation layers",
+    "es": "Capas de observación",
+    "files": [
+      "components/landing.tsx"
+    ]
+  },
+  {
+    "en": "Illustrative example",
+    "es": "Ejemplo ilustrativo",
+    "files": [
+      "components/landing.tsx"
+    ]
+  },
+  {
+    "en": "What it is",
+    "es": "Qué es",
+    "files": [
+      "components/landing.tsx"
+    ]
+  },
+  {
+    "en": "What grows",
+    "es": "Qué acumula",
+    "files": [
+      "components/landing.tsx"
+    ]
+  },
+  {
+    "en": "For whom",
+    "es": "Para quién",
+    "files": [
+      "components/landing.tsx"
+    ]
+  },
+  {
+    "en": "Subscription",
+    "es": "Suscripción",
+    "files": [
+      "components/landing.tsx",
+      "components/panorama.tsx"
+    ]
+  },
+  {
+    "en": "Strategic leadership",
+    "es": "Dirección estratégica",
+    "files": [
+      "components/landing.tsx"
+    ]
+  },
+  {
+    "en": "See before deciding.",
+    "es": "Ver antes de decidir.",
+    "files": [
+      "components/landing.tsx"
+    ]
+  },
+  {
+    "en": "Understand a change, its connections and the limits of what we know. Economic context comes before a decision.",
+    "es": "Entender un cambio, sus conexiones y los límites de lo que sabemos. El contexto económico precede a la decisión.",
+    "files": [
+      "components/landing.tsx"
+    ]
+  },
+  {
+    "en": "Context → Understanding",
+    "es": "Contexto → Comprensión",
+    "files": [
+      "components/landing.tsx"
+    ]
+  },
+  {
+    "en": "Business development",
+    "es": "Desarrollo de negocio",
+    "files": [
+      "components/landing.tsx"
+    ]
+  },
+  {
+    "en": "Investigate a possibility.",
+    "es": "Investigar una posibilidad.",
+    "files": [
+      "components/landing.tsx"
+    ]
+  },
+  {
+    "en": "Recognize needs related to capabilities, without turning an overlap into a customer or a possibility into a promise.",
+    "es": "Reconocer necesidades relacionadas con capacidades, sin convertir una coincidencia en un cliente ni una posibilidad en una promesa.",
+    "files": [
+      "components/landing.tsx"
+    ]
+  },
+  {
+    "en": "Capability → Possibility",
+    "es": "Capacidad → Posibilidad",
+    "files": [
+      "components/landing.tsx"
+    ]
+  },
+  {
+    "en": "Ecosystems & analysis",
+    "es": "Ecosistemas y análisis",
+    "files": [
+      "components/landing.tsx"
+    ]
+  },
+  {
+    "en": "Connect without oversimplifying.",
+    "es": "Conectar sin simplificar.",
+    "files": [
+      "components/landing.tsx"
+    ]
+  },
+  {
+    "en": "Explore actors, relationships and temporal context. Each path retains its meaning and evidence.",
+    "es": "Explorar actores, relaciones y contexto temporal. Cada camino conserva su significado y su evidencia.",
+    "files": [
+      "components/landing.tsx"
+    ]
+  },
+  {
+    "en": "Relationships → Perspective",
+    "es": "Relaciones → Perspectiva",
+    "files": [
+      "components/landing.tsx"
+    ]
+  },
+  {
+    "en": "SEO & digital presence",
+    "es": "SEO y presencia digital",
+    "files": [
+      "components/landing.tsx"
+    ]
+  },
+  {
+    "en": "Understand how you are found.",
+    "es": "Entender cómo te encuentran.",
+    "files": [
+      "components/landing.tsx"
+    ]
+  },
+  {
+    "en": "Observe how search and generative systems represent an organization. A mention, a citation and an endorsement differ; measurement context matters.",
+    "es": "Observar cómo buscadores y sistemas generativos representan una organización. Una mención, una cita y una recomendación no son lo mismo; el contexto de medida importa.",
+    "files": [
+      "components/landing.tsx"
+    ]
+  },
+  {
+    "en": "Representation → Context",
+    "es": "Representación → Contexto",
+    "files": [
+      "components/landing.tsx"
+    ]
+  },
+  {
+    "en": "Marketing",
+    "es": "Marketing",
+    "files": [
+      "components/landing.tsx"
+    ]
+  },
+  {
+    "en": "Read the context before the message.",
+    "es": "Leer el contexto antes del mensaje.",
+    "files": [
+      "components/landing.tsx"
+    ]
+  },
+  {
+    "en": "Understand needs, capabilities and changes to ask better questions. AXIGNAL observes; it does not execute campaigns or promise outcomes.",
+    "es": "Comprender necesidades, capacidades y cambios para hacer mejores preguntas. AXIGNAL observa; no ejecuta campañas ni promete resultados.",
+    "files": [
+      "components/landing.tsx"
+    ]
+  },
+  {
+    "en": "Change → Question",
+    "es": "Cambio → Pregunta",
+    "files": [
+      "components/landing.tsx"
+    ]
+  },
+  {
+    "en": "Communications",
+    "es": "Comunicación",
+    "files": [
+      "components/landing.tsx"
+    ]
+  },
+  {
+    "en": "Separate perception and evidence.",
+    "es": "Separar percepción y evidencia.",
+    "files": [
+      "components/landing.tsx"
+    ]
+  },
+  {
+    "en": "Explore public representation and recognize what supports a reading. An organization's visibility is not its business truth.",
+    "es": "Explorar la representación pública y reconocer lo que sostiene una lectura. La visibilidad de una organización no equivale a la verdad de su negocio.",
+    "files": [
+      "components/landing.tsx"
+    ]
+  },
+  {
+    "en": "Representation → Evidence",
+    "es": "Representación → Evidencia",
+    "files": [
+      "components/landing.tsx"
+    ]
+  },
+  {
+    "en": "Research",
+    "es": "Investigación",
+    "files": [
+      "components/landing.tsx"
+    ]
+  },
+  {
+    "en": "Open a question with method.",
+    "es": "Abrir una pregunta con método.",
+    "files": [
+      "components/landing.tsx"
+    ]
+  },
+  {
+    "en": "Relate actors, sources and moments while preserving provenance, contradictions and open questions. Axent helps research without admitting truth on its own.",
+    "es": "Relacionar actores, fuentes y momentos conservando procedencia, contradicciones y preguntas abiertas. Axent ayuda a investigar sin admitir verdad por su cuenta.",
+    "files": [
+      "components/landing.tsx"
+    ]
+  },
+  {
+    "en": "Question → Basis",
+    "es": "Pregunta → Fundamento",
+    "files": [
+      "components/landing.tsx"
+    ]
+  },
+  {
+    "en": "Journalism",
+    "es": "Periodismo",
+    "files": [
+      "components/landing.tsx"
+    ]
+  },
+  {
+    "en": "Follow the thread to its source.",
+    "es": "Seguir el hilo hasta la fuente.",
+    "files": [
+      "components/landing.tsx"
+    ]
+  },
+  {
+    "en": "Understand economic context and return to its supporting evidence. An explanation starts verification; it is not a fabricated journalistic source.",
+    "es": "Comprender el contexto económico y volver a la evidencia que lo sostiene. Una explicación es un punto de partida para contrastar, no una fuente periodística fabricada.",
+    "files": [
+      "components/landing.tsx"
+    ]
+  },
+  {
+    "en": "Context → Verification",
+    "es": "Contexto → Verificación",
+    "files": [
+      "components/landing.tsx"
+    ]
+  },
+  {
+    "en": "Economic intelligence that observes",
+    "es": "Inteligencia económica que observa",
+    "files": [
+      "components/landing.tsx"
+    ]
+  },
+  {
+    "en": "So does your perspective.",
+    "es": "Tu mirada también.",
+    "files": [
+      "components/landing.tsx"
+    ]
+  },
+  {
+    "en": "Find meaning in what happens. Connect signals, understand their context and discover what deserves your attention.",
+    "es": "Encuentra sentido en lo que ocurre. Conecta señales, entiende su contexto y descubre qué merece tu atención.",
+    "files": [
+      "components/landing.tsx"
+    ]
+  },
+  {
+    "en": "Discover my Panorama",
+    "es": "Descubrir mi Panorama",
+    "files": [
+      "components/landing.tsx"
+    ]
+  },
+  {
+    "en": "Look a little closer",
+    "es": "Acércate un poco",
+    "files": [
+      "components/landing.tsx"
+    ]
+  },
+  {
+    "en": "Continuous observation. Understanding that compounds.",
+    "es": "Observación continua. Comprensión que se acumula.",
+    "files": [
+      "components/landing.tsx"
+    ]
+  },
+  {
+    "en": "THE ECONOMIC OBSERVER",
+    "es": "EL OBSERVADOR ECONÓMICO",
+    "files": [
+      "components/landing.tsx"
+    ]
+  },
+  {
+    "en": "Keep discovering",
+    "es": "Seguir descubriendo",
+    "files": [
+      "components/landing.tsx"
+    ]
+  },
+  {
+    "en": "There is more beneath the surface",
+    "es": "Hay más debajo de la superficie",
+    "files": [
+      "components/landing.tsx"
+    ]
+  },
+  {
+    "en": "Start with an organization.",
+    "es": "Empieza por una organización.",
+    "files": [
+      "components/landing.tsx"
+    ]
+  },
+  {
+    "en": "Open your view to its world.",
+    "es": "Abre la mirada a su mundo.",
+    "files": [
+      "components/landing.tsx"
+    ]
+  },
+  {
+    "en": "Environment",
+    "es": "Entorno",
+    "files": [
+      "components/landing.tsx"
+    ]
+  },
+  {
+    "en": "Capabilities",
+    "es": "Capacidades",
+    "files": [
+      "components/landing.tsx"
+    ]
+  },
+  {
+    "en": "Relationships",
+    "es": "Relaciones",
+    "files": [
+      "components/landing.tsx",
+      "components/landing.tsx",
+      "lib/projection.ts"
+    ]
+  },
+  {
+    "en": "Your organization",
+    "es": "Tu organización",
+    "files": [
+      "components/landing.tsx"
+    ]
+  },
+  {
+    "en": "The point of attention",
+    "es": "El punto de atención",
+    "files": [
+      "components/landing.tsx"
+    ]
+  },
+  {
+    "en": "the focus is yours; the world is shared",
+    "es": "el foco es tuyo; el mundo es compartido",
+    "files": [
+      "components/landing.tsx"
+    ]
+  },
+  {
+    "en": "Choose what to observe.",
+    "es": "Selecciona qué observar.",
+    "files": [
+      "components/landing.tsx"
+    ]
+  },
+  {
+    "en": "An organization directs a persistent focus of attention. It does not create an isolated world.",
+    "es": "Una organización orienta un foco persistente de atención. No crea un mundo aislado.",
+    "files": [
+      "components/landing.tsx"
+    ]
+  },
+  {
+    "en": "Let context connect.",
+    "es": "Deja que el contexto se conecte.",
+    "files": [
+      "components/landing.tsx"
+    ]
+  },
+  {
+    "en": "AXIGNAL investigates the surroundings and preserves economic memory, evidence and time.",
+    "es": "AXIGNAL investiga el entorno y conserva memoria económica, evidencia y temporalidad.",
+    "files": [
+      "components/landing.tsx"
+    ]
+  },
+  {
+    "en": "Understand what emerges.",
+    "es": "Comprende lo que emerge.",
+    "files": [
+      "components/landing.tsx"
+    ]
+  },
+  {
+    "en": "Your Panorama brings what matters closer. AXENT helps you investigate and explain it.",
+    "es": "Tu Panorama acerca lo relevante. AXENT te ayuda a investigarlo y explicarlo.",
+    "files": [
+      "components/landing.tsx"
+    ]
+  },
+  {
+    "en": "Every observation leaves context.",
+    "es": "Cada observación deja contexto.",
+    "files": [
+      "components/landing.tsx"
+    ]
+  },
+  {
+    "en": "Context leaves understanding.",
+    "es": "El contexto deja comprensión.",
+    "files": [
+      "components/landing.tsx"
+    ]
+  },
+  {
+    "en": "AXIGNAL remembers, compares and looks again. What is known can be reassessed when its sources or conditions change. Intelligence grows without treating a conclusion as eternal.",
+    "es": "AXIGNAL recuerda, contrasta y vuelve a mirar. Lo conocido puede reevaluarse cuando cambian sus fuentes o sus condiciones. La inteligencia crece sin dar por eterna una conclusión.",
+    "files": [
+      "components/landing.tsx"
+    ]
+  },
+  {
+    "en": "A shared economic memory. A perspective for you.",
+    "es": "Una memoria económica compartida. Una perspectiva para ti.",
+    "files": [
+      "components/landing.tsx"
+    ]
+  },
+  {
+    "en": "WHAT IS KNOWN",
+    "es": "LO CONOCIDO",
+    "files": [
+      "components/landing.tsx"
+    ]
+  },
+  {
+    "en": "A capability.",
+    "es": "Una capacidad.",
+    "files": [
+      "components/landing.tsx"
+    ]
+  },
+  {
+    "en": "WHAT CHANGES",
+    "es": "LO QUE CAMBIA",
+    "files": [
+      "components/landing.tsx"
+    ]
+  },
+  {
+    "en": "A new context.",
+    "es": "Un nuevo contexto.",
+    "files": [
+      "components/landing.tsx"
+    ]
+  },
+  {
+    "en": "WHAT EMERGES",
+    "es": "LO QUE EMERGE",
+    "files": [
+      "components/landing.tsx"
+    ]
+  },
+  {
+    "en": "A grounded possibility.",
+    "es": "Una posibilidad con fundamento.",
+    "files": [
+      "components/landing.tsx"
+    ]
+  },
+  {
+    "en": "And questions that still deserve answers.",
+    "es": "Y preguntas que aún merecen respuesta.",
+    "files": [
+      "components/landing.tsx"
+    ]
+  },
+  {
+    "en": "Retains its evidence",
+    "es": "Conserva su evidencia",
+    "files": [
+      "components/landing.tsx"
+    ]
+  },
+  {
+    "en": "understanding compounds",
+    "es": "la comprensión se acumula",
+    "files": [
+      "components/landing.tsx"
+    ]
+  },
+  {
+    "en": "A signal has a before.",
+    "es": "Una señal tiene un antes.",
+    "files": [
+      "components/landing.tsx"
+    ]
+  },
+  {
+    "en": "And a reason to matter now.",
+    "es": "Y una razón para importar ahora.",
+    "files": [
+      "components/landing.tsx"
+    ]
+  },
+  {
+    "en": "Move through time to distinguish what happened, what we learned later and what we cannot yet support.",
+    "es": "Recorre el tiempo para distinguir lo que ocurrió, lo que conocimos después y lo que todavía no podemos sostener.",
+    "files": [
+      "components/landing.tsx"
+    ]
+  },
+  {
+    "en": "01 JUL 2026 · INITIAL CONTEXT",
+    "es": "01 JUL 2026 · CONTEXTO INICIAL",
+    "files": [
+      "components/landing.tsx"
+    ]
+  },
+  {
+    "en": "01 SEP 2026 · NEW CONTEXT",
+    "es": "01 SEP 2026 · NUEVO CONTEXTO",
+    "files": [
+      "components/landing.tsx"
+    ]
+  },
+  {
+    "en": "03 OCT 2026 · CURRENT VIEW",
+    "es": "03 OCT 2026 · PERSPECTIVA ACTUAL",
+    "files": [
+      "components/landing.tsx"
+    ]
+  },
+  {
+    "en": "We know the capability it declares.",
+    "es": "Sabemos qué capacidad declara.",
+    "files": [
+      "components/landing.tsx"
+    ]
+  },
+  {
+    "en": "A related need appears.",
+    "es": "Aparece una necesidad relacionada.",
+    "files": [
+      "components/landing.tsx"
+    ]
+  },
+  {
+    "en": "We understand what to investigate and what remains open.",
+    "es": "Entendemos qué investigar y qué sigue abierto.",
+    "files": [
+      "components/landing.tsx"
+    ]
+  },
+  {
+    "en": "We do not yet know the programme. The future does not enter this view.",
+    "es": "No conocemos aún el programa. El futuro no entra en esta vista.",
+    "files": [
+      "components/landing.tsx"
+    ]
+  },
+  {
+    "en": "A thematic overlap opens a possibility; it does not establish a contract.",
+    "es": "Una coincidencia temática abre una posibilidad; no demuestra un contrato.",
+    "files": [
+      "components/landing.tsx"
+    ]
+  },
+  {
+    "en": "Each new observation reframes the signal without erasing its limits.",
+    "es": "Cada nueva observación vuelve a situar la señal sin borrar sus límites.",
+    "files": [
+      "components/landing.tsx"
+    ]
+  },
+  {
+    "en": "Explore time",
+    "es": "Explorar el tiempo",
+    "files": [
+      "components/landing.tsx"
+    ]
+  },
+  {
+    "en": "A capability",
+    "es": "Una capacidad",
+    "files": [
+      "components/landing.tsx"
+    ]
+  },
+  {
+    "en": "A change",
+    "es": "Un cambio",
+    "files": [
+      "components/landing.tsx"
+    ]
+  },
+  {
+    "en": "A new reading",
+    "es": "Una nueva lectura",
+    "files": [
+      "components/landing.tsx"
+    ]
+  },
+  {
+    "en": "For better questions.",
+    "es": "Para preguntas mejores.",
+    "files": [
+      "components/landing.tsx"
+    ]
+  },
+  {
+    "en": "Ways to use AXIGNAL",
+    "es": "Formas de usar AXIGNAL",
+    "files": [
+      "components/landing.tsx"
+    ]
+  },
+  {
+    "en": "See an example",
+    "es": "Ver un ejemplo",
+    "files": [
+      "components/landing.tsx"
+    ]
+  },
+  {
+    "en": "Understanding feels",
+    "es": "La comprensión se siente",
+    "files": [
+      "components/landing.tsx"
+    ]
+  },
+  {
+    "en": "different when you can explore.",
+    "es": "cuando puedes explorar.",
+    "files": [
+      "components/landing.tsx"
+    ]
+  },
+  {
+    "en": "Bring a family closer, open a signal, return to its evidence. You do not need to start a conversation to understand what matters.",
+    "es": "Acerca una familia, abre una señal, vuelve a su evidencia. No necesitas empezar una conversación para entender lo esencial.",
+    "files": [
+      "components/landing.tsx"
+    ]
+  },
+  {
+    "en": "Open experience",
+    "es": "Abrir experiencia",
+    "files": [
+      "components/landing.tsx"
+    ]
+  },
+  {
+    "en": "YOUR PERSPECTIVE",
+    "es": "TU MIRADA",
+    "files": [
+      "components/landing.tsx"
+    ]
+  },
+  {
+    "en": "Panorama",
+    "es": "Panorama",
+    "files": [
+      "components/landing.tsx",
+      "components/panorama.tsx",
+      "components/panorama.tsx"
+    ]
+  },
+  {
+    "en": "Markets",
+    "es": "Mercados",
+    "files": [
+      "components/landing.tsx",
+      "lib/projection.ts"
+    ]
+  },
+  {
+    "en": "Presence",
+    "es": "Presencia",
+    "files": [
+      "components/landing.tsx",
+      "lib/projection.ts"
+    ]
+  },
+  {
+    "en": "Norte Renovable / Markets",
+    "es": "Norte Renovable / Mercados",
+    "files": [
+      "components/landing.tsx"
+    ]
+  },
+  {
+    "en": "Renovation opens a new conversation.",
+    "es": "La rehabilitación abre una nueva conversación.",
+    "files": [
+      "components/landing.tsx",
+      "lib/projection.ts"
+    ]
+  },
+  {
+    "en": "A known capability meets a demand context. Its commercial fit remains open.",
+    "es": "Una capacidad conocida encuentra un contexto de demanda. Su encaje comercial sigue abierto.",
+    "files": [
+      "components/landing.tsx"
+    ]
+  },
+  {
+    "en": "Understand this signal",
+    "es": "Entender esta señal",
+    "files": [
+      "components/landing.tsx"
+    ]
+  },
+  {
+    "en": "2 illustrative sources · visible limits",
+    "es": "2 fuentes ilustrativas · límites visibles",
+    "files": [
+      "components/landing.tsx"
+    ]
+  },
+  {
+    "en": "What changes if we look a little closer?",
+    "es": "¿Qué cambia si miramos un poco más cerca?",
+    "files": [
+      "components/landing.tsx"
+    ]
+  },
+  {
+    "en": "Investigates. Explains. Guides.",
+    "es": "Investiga. Explica. Acompaña.",
+    "files": [
+      "components/landing.tsx"
+    ]
+  },
+  {
+    "en": "The world has more to say.",
+    "es": "El mundo tiene más que decir.",
+    "files": [
+      "components/landing.tsx"
+    ]
+  },
+  {
+    "en": "Let’s learn to observe it.",
+    "es": "Aprendamos a mirarlo.",
+    "files": [
+      "components/landing.tsx"
+    ]
+  },
+  {
+    "en": "Enter Panorama",
+    "es": "Entrar en el Panorama",
+    "files": [
+      "components/landing.tsx"
+    ]
+  },
+  {
+    "en": "About this experience",
+    "es": "Sobre esta experiencia",
+    "files": [
+      "components/landing.tsx"
+    ]
+  },
+  {
+    "en": "An experience to explore",
+    "es": "Una experiencia para explorar",
+    "files": [
+      "components/landing.tsx"
+    ]
+  },
+  {
+    "en": "This local version presents AXIGNAL’s new language with fictional organizations, sources and operations. It does not connect an AI model or process payments. Brand assets are official; the experience awaits human visual review.",
+    "es": "Esta versión local presenta el nuevo lenguaje de AXIGNAL con organizaciones, fuentes y operaciones ficticias. No conecta un modelo de IA ni realiza pagos. Las fuentes de marca son oficiales; la experiencia espera revisión visual humana.",
+    "files": [
+      "components/landing.tsx"
+    ]
+  },
+  {
+    "en": "View the system and its states",
+    "es": "Ver el sistema y sus estados",
+    "files": [
+      "components/landing.tsx"
+    ]
+  },
+  {
+    "en": "Product navigation",
+    "es": "Navegación del producto",
+    "files": [
+      "components/panorama.tsx"
+    ]
+  },
+  {
+    "en": "Observation focus",
+    "es": "Foco de observación",
+    "files": [
+      "components/panorama.tsx"
+    ]
+  },
+  {
+    "en": "Today",
+    "es": "Hoy",
+    "files": [
+      "components/panorama.tsx"
+    ]
+  },
+  {
+    "en": "Organizations",
+    "es": "Organizaciones",
+    "files": [
+      "components/panorama.tsx"
+    ]
+  },
+  {
+    "en": "FAMILIES",
+    "es": "FAMILIAS",
+    "files": [
+      "components/panorama.tsx"
+    ]
+  },
+  {
+    "en": "My observation",
+    "es": "Mi observación",
+    "files": [
+      "components/panorama.tsx"
+    ]
+  },
+  {
+    "en": "Preferences",
+    "es": "Preferencias",
+    "files": [
+      "components/panorama.tsx"
+    ]
+  },
+  {
+    "en": "Back",
+    "es": "Atrás",
+    "files": [
+      "components/panorama.tsx"
+    ]
+  },
+  {
+    "en": "Forward",
+    "es": "Adelante",
+    "files": [
+      "components/panorama.tsx"
+    ]
+  },
+  {
+    "en": "Open AXENT",
+    "es": "Abrir AXENT",
+    "files": [
+      "components/panorama.tsx"
+    ]
+  },
+  {
+    "en": "Demonstration session",
+    "es": "Sesión de demostración",
+    "files": [
+      "components/panorama.tsx"
+    ]
+  },
+  {
+    "en": "Current perspective",
+    "es": "Perspectiva actual",
+    "files": [
+      "components/panorama.tsx"
+    ]
+  },
+  {
+    "en": "Your world, in context.",
+    "es": "Tu mundo, en contexto.",
+    "files": [
+      "components/panorama.tsx"
+    ]
+  },
+  {
+    "en": "A brief reading of the signals available at this point in time.",
+    "es": "Una lectura breve de las señales disponibles en este corte temporal.",
+    "files": [
+      "components/panorama.tsx"
+    ]
+  },
+  {
+    "en": "Bring a family closer. Follow a signal. Understand what supports it.",
+    "es": "Acerca una familia. Sigue una señal. Entiende lo que la sostiene.",
+    "files": [
+      "components/panorama.tsx"
+    ]
+  },
+  {
+    "en": "Reading mode",
+    "es": "Forma de lectura",
+    "files": [
+      "components/panorama.tsx"
+    ]
+  },
+  {
+    "en": "Spatial view",
+    "es": "Vista espacial",
+    "files": [
+      "components/panorama.tsx"
+    ]
+  },
+  {
+    "en": "Reading view",
+    "es": "Vista de lectura",
+    "files": [
+      "components/panorama.tsx"
+    ]
+  },
+  {
+    "en": "ATTENTION LENSES",
+    "es": "LENTES DE ATENCIÓN",
+    "files": [
+      "components/panorama.tsx"
+    ]
+  },
+  {
+    "en": "Energy",
+    "es": "Energía",
+    "files": [
+      "components/panorama.tsx"
+    ]
+  },
+  {
+    "en": "Reach",
+    "es": "Alcance",
+    "files": [
+      "components/panorama.tsx",
+      "lib/projection.ts"
+    ]
+  },
+  {
+    "en": "Signals",
+    "es": "Señales",
+    "files": [
+      "components/panorama.tsx"
+    ]
+  },
+  {
+    "en": "Limits",
+    "es": "Límites",
+    "files": [
+      "components/panorama.tsx"
+    ]
+  },
+  {
+    "en": "This lens still has questions.",
+    "es": "Esta lente todavía tiene preguntas.",
+    "files": [
+      "components/panorama.tsx"
+    ]
+  },
+  {
+    "en": "There is no supported signal for this family at the selected time. Context remains open.",
+    "es": "No hay una señal sustentada para esta familia en el corte seleccionado. El contexto sigue abierto.",
+    "files": [
+      "components/panorama.tsx"
+    ]
+  },
+  {
+    "en": "Explore context with AXENT",
+    "es": "Explorar el contexto con AXENT",
+    "files": [
+      "components/panorama.tsx"
+    ]
+  },
+  {
+    "en": "WIDEN THE PERSPECTIVE",
+    "es": "AMPLÍA LA PERSPECTIVA",
+    "files": [
+      "components/panorama.tsx"
+    ]
+  },
+  {
+    "en": "Available at this time. “Detected” does not mean it happened today.",
+    "es": "Disponible en este corte. “Detectado” no significa que ocurrió hoy.",
+    "files": [
+      "components/panorama.tsx"
+    ]
+  },
+  {
+    "en": "A SIGNAL TO LOOK CLOSER",
+    "es": "UNA SEÑAL PARA MIRAR MÁS CERCA",
+    "files": [
+      "components/panorama.tsx"
+    ]
+  },
+  {
+    "en": "Understand why it matters",
+    "es": "Entender por qué importa",
+    "files": [
+      "components/panorama.tsx"
+    ]
+  },
+  {
+    "en": "a possibility,",
+    "es": "una posibilidad,",
+    "files": [
+      "components/panorama.tsx"
+    ]
+  },
+  {
+    "en": "with a basis",
+    "es": "con fundamento",
+    "files": [
+      "components/panorama.tsx"
+    ]
+  },
+  {
+    "en": "TEN WAYS TO BRING THE WORLD CLOSER",
+    "es": "DIEZ FORMAS DE ACERCAR EL MUNDO",
+    "files": [
+      "components/panorama.tsx"
+    ]
+  },
+  {
+    "en": "Families of understanding",
+    "es": "Familias de comprensión",
+    "files": [
+      "components/panorama.tsx"
+    ]
+  },
+  {
+    "en": "One focus. One shared world.",
+    "es": "Un foco. Un mundo compartido.",
+    "files": [
+      "components/panorama.tsx"
+    ]
+  },
+  {
+    "en": "Open context",
+    "es": "Contexto abierto",
+    "files": [
+      "components/panorama.tsx"
+    ]
+  },
+  {
+    "en": "Position directs attention; it does not represent economic relationships.",
+    "es": "La posición orienta la atención; no representa relaciones económicas.",
+    "files": [
+      "components/panorama.tsx"
+    ]
+  },
+  {
+    "en": "CONTINUOUS OBSERVATION",
+    "es": "OBSERVACIÓN CONTINUA",
+    "files": [
+      "components/panorama.tsx"
+    ]
+  },
+  {
+    "en": "The panorama does not end here.",
+    "es": "El panorama no termina aquí.",
+    "files": [
+      "components/panorama.tsx"
+    ]
+  },
+  {
+    "en": "The focus persists. Each new piece of evidence can change the reading and its limits.",
+    "es": "El foco persiste. Cada nueva evidencia puede cambiar la lectura y sus límites.",
+    "files": [
+      "components/panorama.tsx"
+    ]
+  },
+  {
+    "en": "View my focus",
+    "es": "Ver mi foco",
+    "files": [
+      "components/panorama.tsx"
+    ]
+  },
+  {
+    "en": "Human projection of AXIGLAND · fictional data for review.",
+    "es": "Proyección humana de AXIGLAND · datos ficticios para revisión.",
+    "files": [
+      "components/panorama.tsx"
+    ]
+  },
+  {
+    "en": "Time changes the perspective",
+    "es": "El tiempo cambia la mirada",
+    "files": [
+      "components/panorama.tsx"
+    ]
+  },
+  {
+    "en": "Current demonstration snapshot",
+    "es": "Corte actual de demostración",
+    "files": [
+      "components/panorama.tsx"
+    ]
+  },
+  {
+    "en": "Historical view · no future knowledge",
+    "es": "Vista histórica · sin conocimiento futuro",
+    "files": [
+      "components/panorama.tsx"
+    ]
+  },
+  {
+    "en": "Global as-of snapshot",
+    "es": "Corte temporal global",
+    "files": [
+      "components/panorama.tsx"
+    ]
+  },
+  {
+    "en": "AXENT · Investigate and understand",
+    "es": "AXENT · Investigar y comprender",
+    "files": [
+      "components/panorama.tsx"
+    ]
+  },
+  {
+    "en": "Where we direct attention",
+    "es": "Dónde ponemos atención",
+    "files": [
+      "components/panorama.tsx"
+    ]
+  },
+  {
+    "en": "A persistent observation focus",
+    "es": "Un foco persistente de observación",
+    "files": [
+      "components/panorama.tsx"
+    ]
+  },
+  {
+    "en": "Your observation scope",
+    "es": "Tu alcance de observación",
+    "files": [
+      "components/panorama.tsx"
+    ]
+  },
+  {
+    "en": "Reading preferences",
+    "es": "Preferencias de lectura",
+    "files": [
+      "components/panorama.tsx"
+    ]
+  },
+  {
+    "en": "The organization is the economic subject. The focus is the attention you allocate around it.",
+    "es": "La organización es el sujeto económico. El foco es la atención que asignas alrededor de ella.",
+    "files": [
+      "components/panorama.tsx"
+    ]
+  },
+  {
+    "en": "This focus directs persistent attention; it does not create or own a copy of AXIGLAND. Knowledge is retained in the shared economic memory.",
+    "es": "Este foco dirige atención persistente; no crea ni posee una copia de AXIGLAND. El conocimiento se conserva en la memoria económica compartida.",
+    "files": [
+      "components/panorama.tsx"
+    ]
+  },
+  {
+    "en": "Illustrative focus state",
+    "es": "Estado del foco ilustrativo",
+    "files": [
+      "components/panorama.tsx"
+    ]
+  },
+  {
+    "en": "Persistent",
+    "es": "Persistente",
+    "files": [
+      "components/panorama.tsx"
+    ]
+  },
+  {
+    "en": "Unassigned",
+    "es": "Sin asignar",
+    "files": [
+      "components/panorama.tsx"
+    ]
+  },
+  {
+    "en": "Since",
+    "es": "Desde",
+    "files": [
+      "components/panorama.tsx"
+    ]
+  },
+  {
+    "en": "A subscription allocates attention, not ownership of economic truth. Signals are not billing units.",
+    "es": "La suscripción asigna atención, no propiedad sobre la verdad económica. Las señales no son unidades de facturación.",
+    "files": [
+      "components/panorama.tsx"
+    ]
+  },
+  {
+    "en": "Scope view",
+    "es": "Vista de alcance",
+    "files": [
+      "components/panorama.tsx"
+    ]
+  },
+  {
+    "en": "Demonstration",
+    "es": "Demostración",
+    "files": [
+      "components/panorama.tsx"
+    ]
+  },
+  {
+    "en": "Plans, allowances and payments require the subscription service’s authorized offer and session. This demo does not process payments.",
+    "es": "Planes, cuotas y pagos requieren la oferta y sesión autorizadas del servicio de suscripciones. Esta demo no procesa pagos.",
+    "files": [
+      "components/panorama.tsx"
+    ]
+  },
+  {
+    "en": "Understand subscription",
+    "es": "Entender la suscripción",
+    "files": [
+      "components/panorama.tsx"
+    ]
+  },
+  {
+    "en": "Choose how to read. Motion respects your system preference.",
+    "es": "Elige cómo leer. El movimiento respeta la preferencia de tu sistema.",
+    "files": [
+      "components/panorama.tsx"
+    ]
+  },
+  {
+    "en": "Linear reading",
+    "es": "Lectura lineal",
+    "files": [
+      "components/panorama.tsx"
+    ]
+  },
+  {
+    "en": "Spatial composition",
+    "es": "Composición espacial",
+    "files": [
+      "components/panorama.tsx"
+    ]
+  },
+  {
+    "en": "Reduce motion",
+    "es": "Reducir movimiento",
+    "files": [
+      "components/panorama.tsx"
+    ]
+  },
+  {
+    "en": "Accessibility and states",
+    "es": "Accesibilidad y estados",
+    "files": [
+      "components/panorama.tsx"
+    ]
+  },
+  {
+    "en": "Insufficient basis",
+    "es": "Base insuficiente",
+    "files": [
+      "components/panorama.tsx"
+    ]
+  },
+  {
+    "en": "Detected",
+    "es": "Detectado",
+    "files": [
+      "components/panorama.tsx",
+      "components/panorama.tsx"
+    ]
+  },
+  {
+    "en": "Glance",
+    "es": "Síntesis",
+    "files": [
+      "components/panorama.tsx"
+    ]
+  },
+  {
+    "en": "Reasoning",
+    "es": "Razonamiento",
+    "files": [
+      "components/panorama.tsx"
+    ]
+  },
+  {
+    "en": "Evidence",
+    "es": "Evidencia",
+    "files": [
+      "components/panorama.tsx",
+      "lib/editorial.ts"
+    ]
+  },
+  {
+    "en": "Return to",
+    "es": "Volver a",
+    "files": [
+      "components/panorama.tsx"
+    ]
+  },
+  {
+    "en": "ILLUSTRATIVE SIGNAL",
+    "es": "SEÑAL ILUSTRATIVA",
+    "files": [
+      "components/panorama.tsx"
+    ]
+  },
+  {
+    "en": "Event",
+    "es": "Evento",
+    "files": [
+      "components/panorama.tsx"
+    ]
+  },
+  {
+    "en": "Depth of understanding",
+    "es": "Profundidad de comprensión",
+    "files": [
+      "components/panorama.tsx"
+    ]
+  },
+  {
+    "en": "What matters, with its limits.",
+    "es": "Lo esencial, con sus límites.",
+    "files": [
+      "components/panorama.tsx"
+    ]
+  },
+  {
+    "en": "What remains open",
+    "es": "Qué sigue abierto",
+    "files": [
+      "components/panorama.tsx"
+    ]
+  },
+  {
+    "en": "WHY IT DESERVES ATTENTION",
+    "es": "POR QUÉ MERECE ATENCIÓN",
+    "files": [
+      "components/panorama.tsx"
+    ]
+  },
+  {
+    "en": "Context brings two pieces closer.",
+    "es": "El contexto acerca dos piezas.",
+    "files": [
+      "components/panorama.tsx"
+    ]
+  },
+  {
+    "en": "A question needs a better basis.",
+    "es": "Una pregunta necesita mejor base.",
+    "files": [
+      "components/panorama.tsx"
+    ]
+  },
+  {
+    "en": "An observation has a scope.",
+    "es": "Una observación tiene un alcance.",
+    "files": [
+      "components/panorama.tsx"
+    ]
+  },
+  {
+    "en": "the next good question",
+    "es": "la siguiente buena pregunta",
+    "files": [
+      "components/panorama.tsx"
+    ]
+  },
+  {
+    "en": "PRESERVED DERIVATION",
+    "es": "DERIVACIÓN CONSERVADA",
+    "files": [
+      "components/panorama.tsx"
+    ]
+  },
+  {
+    "en": "How we reached this reading.",
+    "es": "Cómo llegamos a esta lectura.",
+    "files": [
+      "components/panorama.tsx"
+    ]
+  },
+  {
+    "en": "Documented basis",
+    "es": "Base documentada",
+    "files": [
+      "components/panorama.tsx"
+    ]
+  },
+  {
+    "en": "Temporal context",
+    "es": "Contexto temporal",
+    "files": [
+      "components/panorama.tsx"
+    ]
+  },
+  {
+    "en": "What we cannot conclude",
+    "es": "Lo que no podemos concluir",
+    "files": [
+      "components/panorama.tsx"
+    ]
+  },
+  {
+    "en": "Review the original basis",
+    "es": "Revisar la base original",
+    "files": [
+      "components/panorama.tsx"
+    ]
+  },
+  {
+    "en": "BASIS OF THIS SIGNAL",
+    "es": "BASE DE ESTA SEÑAL",
+    "files": [
+      "components/panorama.tsx"
+    ]
+  },
+  {
+    "en": "Evidence, in plain sight.",
+    "es": "La evidencia, a la vista.",
+    "files": [
+      "components/panorama.tsx"
+    ]
+  },
+  {
+    "en": "A source supports part of the reading. We do not give it more authority than it has.",
+    "es": "Una fuente sostiene una parte de la lectura. No le atribuimos más autoridad que la que tiene.",
+    "files": [
+      "components/panorama.tsx"
+    ]
+  },
+  {
+    "en": "Every reading retains its basis and limits.",
+    "es": "Cada lectura conserva su base y sus límites.",
+    "files": [
+      "components/panorama.tsx"
+    ]
+  },
+  {
+    "en": "View evidence",
+    "es": "Ver evidencia",
+    "files": [
+      "components/panorama.tsx"
+    ]
+  },
+  {
+    "en": "As-of snapshot",
+    "es": "Corte temporal",
+    "files": [
+      "components/panorama.tsx"
+    ]
+  },
+  {
+    "en": "Privacy in this version",
+    "es": "Privacidad en esta versión",
+    "files": [
+      "components/privacy-notice.tsx"
+    ]
+  },
+  {
+    "en": "A visit, with clarity.",
+    "es": "Una visita, con claridad.",
+    "files": [
+      "components/privacy-notice.tsx"
+    ]
+  },
+  {
+    "en": "This version activates no analytics, advertising or sign-in cookies. It only remembers your language and whether you have seen this notice in this browser. Controller details remain pending publication.",
+    "es": "Esta versión no activa analítica, publicidad ni cookies de acceso. Solo recuerda tu idioma y si has visto este aviso en este navegador. Los datos del responsable siguen pendientes de publicación.",
+    "files": [
+      "components/privacy-notice.tsx"
+    ]
+  },
+  {
+    "en": "See details",
+    "es": "Ver detalles",
+    "files": [
+      "components/privacy-notice.tsx"
+    ]
+  },
+  {
+    "en": "Necessary only",
+    "es": "Solo lo necesario",
+    "files": [
+      "components/privacy-notice.tsx"
+    ]
+  },
+  {
+    "en": "Your data and rights",
+    "es": "Tus datos y derechos",
+    "files": [
+      "components/privacy-notice.tsx",
+      "components/privacy-notice.tsx",
+      "components/public-shell.tsx",
+      "components/trust.tsx"
+    ]
+  },
+  {
+    "en": "Privacy and preferences",
+    "es": "Privacidad y preferencias",
+    "files": [
+      "components/privacy-notice.tsx"
+    ]
+  },
+  {
+    "en": "Information about this local version",
+    "es": "Información de esta versión local",
+    "files": [
+      "components/privacy-notice.tsx"
+    ]
+  },
+  {
+    "en": "Preferences in your browser",
+    "es": "Preferencias en tu navegador",
+    "files": [
+      "components/privacy-notice.tsx"
+    ]
+  },
+  {
+    "en": "Your language remains until you change it or clear site data. Notice dismissal is remembered for up to 180 days. Open these details whenever you want through Privacy.",
+    "es": "El idioma se conserva hasta que lo cambies o borres los datos del sitio. La visualización del aviso se recuerda hasta 180 días. Puedes abrir estos detalles cuando quieras desde Privacidad.",
+    "files": [
+      "components/privacy-notice.tsx"
+    ]
+  },
+  {
+    "en": "No optional technologies active",
+    "es": "Sin tecnologías opcionales activas",
+    "files": [
+      "components/privacy-notice.tsx"
+    ]
+  },
+  {
+    "en": "This application integrates no advertising pixels or analytics tools. Fonts and images are served locally. Closing this notice activates no tracking and does not accept a contract.",
+    "es": "Esta aplicación no integra píxeles de publicidad ni herramientas de analítica. Las fuentes tipográficas y las imágenes se sirven localmente. Cerrar este aviso no activa seguimiento ni supone aceptar un contrato.",
+    "files": [
+      "components/privacy-notice.tsx"
+    ]
+  },
+  {
+    "en": "Forms keep drafts in the page and do not send them. This notice describes this build; it does not certify compliance of a future deployed service.",
+    "es": "Los formularios mantienen los borradores en la página y no los envían. El aviso describe esta compilación; no certifica el cumplimiento de un futuro servicio desplegado.",
+    "files": [
+      "components/privacy-notice.tsx"
+    ]
+  },
+  {
+    "en": "Cookies and storage",
+    "es": "Cookies y almacenamiento",
+    "files": [
+      "components/privacy-notice.tsx",
+      "components/trust.tsx"
+    ]
+  },
+  {
+    "en": "Privacy policy",
+    "es": "Política de privacidad",
+    "files": [
+      "components/privacy-notice.tsx"
+    ]
+  },
+  {
+    "en": "Keep necessary only",
+    "es": "Mantener solo lo necesario",
+    "files": [
+      "components/privacy-notice.tsx"
+    ]
+  },
+  {
+    "en": "How it works",
+    "es": "Cómo funciona",
+    "files": [
+      "components/public-shell.tsx"
+    ]
+  },
+  {
+    "en": "Contact",
+    "es": "Contacto",
+    "files": [
+      "components/public-shell.tsx",
+      "components/ui.tsx"
+    ]
+  },
+  {
+    "en": "Main",
+    "es": "Principal",
+    "files": [
+      "components/public-shell.tsx"
+    ]
+  },
+  {
+    "en": "Explore AXIGNAL",
+    "es": "Explora AXIGNAL",
+    "files": [
+      "components/public-shell.tsx"
+    ]
+  },
+  {
+    "en": "Mobile navigation",
+    "es": "Navegación móvil",
+    "files": [
+      "components/public-shell.tsx"
+    ]
+  },
+  {
+    "en": "Explore the demo",
+    "es": "Explorar la demo",
+    "files": [
+      "components/public-shell.tsx"
+    ]
+  },
+  {
+    "en": "Editorial notebook · draft",
+    "es": "Cuaderno editorial · borrador",
+    "files": [
+      "components/public-shell.tsx"
+    ]
+  },
+  {
+    "en": "Draft · pending publication",
+    "es": "Borrador · pendiente de publicación",
+    "files": [
+      "components/public-shell.tsx"
+    ]
+  },
+  {
+    "en": "Published:",
+    "es": "Publicado:",
+    "files": [
+      "components/source-document.tsx"
+    ]
+  },
+  {
+    "en": "Observed:",
+    "es": "Observado:",
+    "files": [
+      "components/source-document.tsx"
+    ]
+  },
+  {
+    "en": "Illustrative content",
+    "es": "Contenido ilustrativo",
+    "files": [
+      "components/source-document.tsx"
+    ]
+  },
+  {
+    "en": "Basis and scope",
+    "es": "Base y alcance",
+    "files": [
+      "components/source-document.tsx"
+    ]
+  },
+  {
+    "en": "This page is a fictional source for reviewing the experience. It does not correspond to a real document or establish an economic fact.",
+    "es": "Esta página es una fuente ficticia para revisar la experiencia. No corresponde a un documento real ni acredita un hecho económico.",
+    "files": [
+      "components/source-document.tsx"
+    ]
+  },
+  {
+    "en": "Return to Panorama",
+    "es": "Volver al Panorama",
+    "files": [
+      "components/source-document.tsx"
+    ]
+  },
+  {
+    "en": "Which data this experience uses, why, and what remains before publication.",
+    "es": "Qué datos hay en esta experiencia, para qué se usan y qué falta antes de publicarla.",
+    "files": [
+      "components/trust.tsx"
+    ]
+  },
+  {
+    "en": "Controller and scope",
+    "es": "Responsable y alcance",
+    "files": [
+      "components/trust.tsx"
+    ]
+  },
+  {
+    "en": "The controller's identity, country and contact email are pending publication. This document is a draft for the local experience, not an approved production-service policy. Before collecting real data, applicable disclosures and processing need to be completed and validated.",
+    "es": "La identidad del responsable, su país y el correo de contacto están pendientes de publicación. Este documento es un borrador para la experiencia local; no sustituye una política aprobada del servicio de producción. Antes de recoger datos reales habrá que completar la información aplicable y validar el tratamiento correspondiente.",
+    "files": [
+      "components/trust.tsx"
+    ]
+  },
+  {
+    "en": "What happens in this version",
+    "es": "Lo que ocurre en esta versión",
+    "files": [
+      "components/trust.tsx"
+    ]
+  },
+  {
+    "en": "Contact and GDPR forms prepare text in this page's memory. They do not send it to the server or lodge requests. Knowledge searches and language preferences are interface state. Panorama content is illustrative. Typography and brand assets are served by the application itself.",
+    "es": "Los formularios de Contacto y GDPR preparan texto en la memoria de esta página. No lo envían al servidor ni registran solicitudes. Las búsquedas de Knowledge y la preferencia de idioma son estados de interfaz. Los contenidos de Panorama son ilustrativos. Los recursos tipográficos y de marca se sirven desde la propia aplicación.",
+    "files": [
+      "components/trust.tsx"
+    ]
+  },
+  {
+    "en": "Pending purposes and legal bases",
+    "es": "Finalidades y bases pendientes",
+    "files": [
+      "components/trust.tsx"
+    ]
+  },
+  {
+    "en": "Future access, enquiries, subscriptions and rights handling require defined purposes, legal bases and data categories before activation. We do not assume that every processing activity relies on consent. This version activates no commercial communications, account registration or advertising measurement.",
+    "es": "La futura gestión de acceso, consultas, suscripciones y derechos necesita definir sus finalidades, base jurídica y categorías de datos antes de activarse. No asumimos que todo tratamiento se base en consentimiento. Esta versión no activa comunicaciones comerciales, registro de cuentas ni medición publicitaria.",
+    "files": [
+      "components/trust.tsx"
+    ]
+  },
+  {
+    "en": "Recipients, transfers and retention",
+    "es": "Destinatarios, transferencias y conservación",
+    "files": [
+      "components/trust.tsx"
+    ]
+  },
+  {
+    "en": "Production providers, recipients, locations, transfer safeguards, retention periods and deployment logging practices have not been established here. They must be documented per processing activity. We do not promise a location, period or absence of logs this interface cannot verify.",
+    "es": "No se han establecido aquí los proveedores, destinatarios, ubicaciones, garantías de transferencia, plazos de conservación ni las prácticas de registros del despliegue de producción. Deben documentarse por tratamiento. No prometemos una ubicación, un plazo o una ausencia de registros que esta interfaz no puede verificar.",
+    "files": [
+      "components/trust.tsx"
+    ]
+  },
+  {
+    "en": "Rights and requests",
+    "es": "Derechos y solicitudes",
+    "files": [
+      "components/trust.tsx"
+    ]
+  },
+  {
+    "en": "The GDPR centre explains rights and lets you prepare a draft. The controller's channel remains pending. A download does not prove receipt. A real request must be assessed under applicable law, including information originating in public sources. Shared-memory architecture does not replace that assessment.",
+    "es": "El centro GDPR explica los derechos y permite preparar un borrador. El canal del responsable sigue pendiente. Una descarga no acredita recepción. Una solicitud real debe evaluarse conforme a la normativa aplicable, también cuando la información proceda de fuentes públicas. La arquitectura de memoria compartida no sustituye esa evaluación.",
+    "files": [
+      "components/trust.tsx"
+    ]
+  },
+  {
+    "en": "What you can explore, what is illustrative and what is not a commercial conclusion.",
+    "es": "Qué puedes explorar, qué es ilustrativo y qué no constituye una conclusión comercial.",
+    "files": [
+      "components/trust.tsx"
+    ]
+  },
+  {
+    "en": "An experience for review",
+    "es": "Una experiencia de revisión",
+    "files": [
+      "components/trust.tsx"
+    ]
+  },
+  {
+    "en": "These terms are an informational draft for the local experience. The operator, country, contractual terms, offer and contracting procedure remain pending. Opening the demo or downloading a draft creates neither an account nor a subscription or acceptance of a paid contract.",
+    "es": "Estas condiciones son un borrador informativo de la experiencia local. El titular, país, condiciones contractuales, oferta y procedimiento de contratación están pendientes. Acceder a la demo o descargar un borrador no crea una cuenta, una suscripción ni la aceptación de un contrato de pago.",
+    "files": [
+      "components/trust.tsx"
+    ]
+  },
+  {
+    "en": "Observation and possibility",
+    "es": "Observación y posibilidad",
+    "files": [
+      "components/trust.tsx"
+    ]
+  },
+  {
+    "en": "AXIGNAL supports economic understanding. A potential signal does not establish a customer, an award, a commercial relationship or a future outcome. Missing evidence is not a false answer. Review scope, sources and time before interpreting a material reading.",
+    "es": "AXIGNAL orienta comprensión económica. Una señal potencial no acredita un cliente, una adjudicación, una relación comercial o un resultado futuro. Una ausencia de evidencia no equivale a una respuesta falsa. Revisa el alcance, la fuente y la temporalidad antes de interpretar una lectura material.",
+    "files": [
+      "components/trust.tsx"
+    ]
+  },
+  {
+    "en": "Your attention and the shared world",
+    "es": "Tu atención y el mundo compartido",
+    "files": [
+      "components/trust.tsx"
+    ]
+  },
+  {
+    "en": "Selecting an organization directs an observation focus; it does not authorize editing its economic truth. Panorama presents a human projection of the canonical world. AXENT helps research and explain without authority to admit facts. Private permissions, identity and subscriptions require their owning services.",
+    "es": "Seleccionar una organización dirige un foco de observación; no permite editar su verdad económica. Panorama presenta una proyección humana del mundo canónico. AXENT ayuda a investigar y explicar sin autoridad para admitir hechos. Los permisos privados, la identidad y la suscripción requieren sus servicios propietarios.",
+    "files": [
+      "components/trust.tsx"
+    ]
+  },
+  {
+    "en": "Availability and integrations",
+    "es": "Disponibilidad e integraciones",
+    "files": [
+      "components/trust.tsx"
+    ]
+  },
+  {
+    "en": "The demo labels its illustrative data. Google and ChatGPT access is prepared but not connected. Contact and GDPR generate local drafts. None of these surfaces guarantees completed research, authentication or receipt of requests. Final terms must describe the actually operational service.",
+    "es": "La demo identifica sus datos ilustrativos. El acceso Google y ChatGPT está preparado, pero no conectado. Contacto y GDPR generan borradores locales. Ninguna de estas superficies garantiza investigación ejecutada, autenticación o recepción de solicitudes. Las condiciones finales deberán describir el servicio realmente operativo.",
+    "files": [
+      "components/trust.tsx"
+    ]
+  },
+  {
+    "en": "A concrete view of what this application stores and what is not yet connected.",
+    "es": "Una vista concreta de lo que esta aplicación guarda y lo que aún no está conectado.",
+    "files": [
+      "components/trust.tsx"
+    ]
+  },
+  {
+    "en": "Scope of this inventory",
+    "es": "Alcance de este inventario",
+    "files": [
+      "components/trust.tsx"
+    ]
+  },
+  {
+    "en": "This inventory describes the local experience's code. It does not establish the practices of future infrastructure, a proxy or a provider. This application implements no analytics or advertising cookies and integrates no third-party pixels. Fonts are hosted locally.",
+    "es": "Este inventario describe el código de la experiencia local. No acredita las prácticas de una futura infraestructura, proxy o proveedor. Esta aplicación no implementa cookies analíticas o publicitarias, ni integra píxeles de terceros. Las fuentes se alojan localmente.",
+    "files": [
+      "components/trust.tsx"
+    ]
+  },
+  {
+    "en": "What is stored and what stays in the page",
+    "es": "Qué se guarda y qué permanece en la página",
+    "files": [
+      "components/trust.tsx"
+    ]
+  },
+  {
+    "en": "Your language is stored locally as a preference until you change it or clear site data. Privacy notice dismissal is remembered for up to 180 days. Editorial search and drafts remain only as page state. This application does not save drafts in localStorage, cookies or a database. Leaving the page or closing the tab discards the draft. A browser may apply its own autofill features, independently of AXIGNAL storage.",
+    "es": "El idioma se guarda localmente como preferencia hasta que lo cambies o borres los datos del sitio. El cierre del aviso de privacidad se recuerda hasta 180 días. La búsqueda editorial y los borradores permanecen solo como estado de la página. Los borradores no se guardan en localStorage, cookies o base de datos por esta aplicación. Cambiar de página o cerrar la pestaña descarta el borrador. El navegador puede aplicar sus propias funciones de autocompletado, independientes del almacenamiento de AXIGNAL.",
+    "files": [
+      "components/trust.tsx"
+    ]
+  },
+  {
+    "en": "Future access and preferences",
+    "es": "Acceso y preferencias futuras",
+    "files": [
+      "components/trust.tsx"
+    ]
+  },
+  {
+    "en": "These prepared flows connect no authenticated session and issue no sign-in cookie. Activating the service requires an inventory of necessary storage, duration and provider. If optional technologies are introduced, people's choices must be clear, revocable and actually respected before activation.",
+    "es": "No hay sesión autenticada conectada ni cookie de acceso emitida por estos flujos preparados. Cuando se active el servicio, habrá que inventariar almacenamiento necesario, duración y proveedor. Si se incorporan tecnologías opcionales, las decisiones de la persona deberán ser claras, revocables y efectivamente respetadas antes de activarlas.",
+    "files": [
+      "components/trust.tsx"
+    ]
+  },
+  {
+    "en": "Policies / The trust centre",
+    "es": "Políticas / El centro de confianza",
+    "files": [
+      "components/trust.tsx"
+    ]
+  },
+  {
+    "en": "Trust also",
+    "es": "La confianza también",
+    "files": [
+      "components/trust.tsx"
+    ]
+  },
+  {
+    "en": "needs context.",
+    "es": "necesita contexto.",
+    "files": [
+      "components/trust.tsx"
+    ]
+  },
+  {
+    "en": "A place to understand your data, AXIGNAL's scope and the boundaries protecting each reading.",
+    "es": "Un lugar para entender tus datos, el alcance de AXIGNAL y las fronteras que cuidan cada lectura.",
+    "files": [
+      "components/trust.tsx"
+    ]
+  },
+  {
+    "en": "Clarity about",
+    "es": "Claridad sobre",
+    "files": [
+      "components/trust.tsx"
+    ]
+  },
+  {
+    "en": "what matters.",
+    "es": "lo que importa.",
+    "files": [
+      "components/trust.tsx"
+    ]
+  },
+  {
+    "en": "fine print, clearly visible",
+    "es": "la letra pequeña, bien visible",
+    "files": [
+      "components/trust.tsx"
+    ]
+  },
+  {
+    "en": "Before publication",
+    "es": "Antes de publicar",
+    "files": [
+      "components/trust.tsx"
+    ]
+  },
+  {
+    "en": "Controller, country and public email are pending. These texts are review drafts and not a compliance certification.",
+    "es": "Responsable, país y correo público pendientes. Estos textos son borradores de revisión y no una certificación de cumplimiento.",
+    "files": [
+      "components/trust.tsx"
+    ]
+  },
+  {
+    "en": "Policy documents",
+    "es": "Documentos de políticas",
+    "files": [
+      "components/trust.tsx"
+    ]
+  },
+  {
+    "en": "Read draft",
+    "es": "Leer borrador",
+    "files": [
+      "components/trust.tsx"
+    ]
+  },
+  {
+    "en": "Personal data / GDPR",
+    "es": "Datos personales / GDPR",
+    "files": [
+      "components/trust.tsx"
+    ]
+  },
+  {
+    "en": "Understanding also means",
+    "es": "Comprender es también",
+    "files": [
+      "components/trust.tsx"
+    ]
+  },
+  {
+    "en": "knowing your rights.",
+    "es": "conocer tus derechos.",
+    "files": [
+      "components/trust.tsx"
+    ]
+  },
+  {
+    "en": "Explore what you can request, what a request needs and how to prepare your text.",
+    "es": "Explora qué puedes solicitar, qué información necesita una petición y cómo preparar tu texto.",
+    "files": [
+      "components/trust.tsx"
+    ]
+  },
+  {
+    "en": "My data and rights",
+    "es": "Mis datos y derechos",
+    "files": [
+      "components/trust.tsx",
+      "components/trust.tsx"
+    ]
+  },
+  {
+    "en": "Your private context has its own boundary.",
+    "es": "Tu contexto privado tiene su propia frontera.",
+    "files": [
+      "components/trust.tsx"
+    ]
+  },
+  {
+    "en": "Shared economic memory does not mix your identity, permissions or private conversations with the truth of the observed world.",
+    "es": "La memoria económica compartida no mezcla tu identidad, tus permisos o tus conversaciones privadas con la verdad del mundo observado.",
+    "files": [
+      "components/trust.tsx"
+    ]
+  },
+  {
+    "en": "Trust centre",
+    "es": "Centro de confianza",
+    "files": [
+      "components/trust.tsx"
+    ]
+  },
+  {
+    "en": "Document contents",
+    "es": "Índice del documento",
+    "files": [
+      "components/trust.tsx"
+    ]
+  },
+  {
+    "en": "In this document",
+    "es": "En este documento",
+    "files": [
+      "components/trust.tsx"
+    ]
+  },
+  {
+    "en": "Pending information",
+    "es": "Información pendiente",
+    "files": [
+      "components/trust.tsx"
+    ]
+  },
+  {
+    "en": "Controller, country, contact email and legal review of the service: pending publication.",
+    "es": "Responsable, país, correo de contacto y validación jurídica del servicio: pendientes de publicación.",
+    "files": [
+      "components/trust.tsx"
+    ]
+  },
+  {
+    "en": "Prepare an enquiry",
+    "es": "Preparar una consulta",
+    "files": [
+      "components/trust.tsx"
+    ]
+  },
+  {
+    "en": "Access",
+    "es": "Acceso",
+    "files": [
+      "components/trust.tsx"
+    ]
+  },
+  {
+    "en": "Learn whether your data is processed and access the data and processing information.",
+    "es": "Conocer si se tratan tus datos y obtener acceso a ellos y a la información del tratamiento.",
+    "files": [
+      "components/trust.tsx"
+    ]
+  },
+  {
+    "en": "Rectification",
+    "es": "Rectificación",
+    "files": [
+      "components/trust.tsx"
+    ]
+  },
+  {
+    "en": "Request correction of inaccurate personal data or completion of incomplete data.",
+    "es": "Solicitar que se corrijan datos personales inexactos o se completen datos incompletos.",
+    "files": [
+      "components/trust.tsx"
+    ]
+  },
+  {
+    "en": "Erasure",
+    "es": "Supresión",
+    "files": [
+      "components/trust.tsx"
+    ]
+  },
+  {
+    "en": "Request deletion where applicable. The request requires assessment of relevant conditions and exceptions.",
+    "es": "Solicitar la eliminación cuando proceda. La petición necesita valorar las condiciones y excepciones aplicables.",
+    "files": [
+      "components/trust.tsx"
+    ]
+  },
+  {
+    "en": "Restriction",
+    "es": "Limitación",
+    "files": [
+      "components/trust.tsx"
+    ]
+  },
+  {
+    "en": "Request that processing be restricted in the situations provided by law.",
+    "es": "Solicitar que se restrinja el tratamiento en los supuestos previstos por la normativa.",
+    "files": [
+      "components/trust.tsx"
+    ]
+  },
+  {
+    "en": "Portability",
+    "es": "Portabilidad",
+    "files": [
+      "components/trust.tsx"
+    ]
+  },
+  {
+    "en": "Request data in an appropriate format and transmission when the conditions for this right are met.",
+    "es": "Solicitar datos en un formato adecuado y su transmisión cuando se cumplan las condiciones del derecho.",
+    "files": [
+      "components/trust.tsx"
+    ]
+  },
+  {
+    "en": "Objection",
+    "es": "Oposición",
+    "files": [
+      "components/trust.tsx"
+    ]
+  },
+  {
+    "en": "Object to certain processing depending on its basis and circumstances. The controller must assess the request.",
+    "es": "Oponerte a determinados tratamientos según su base y circunstancias. El responsable debe valorar la petición.",
+    "files": [
+      "components/trust.tsx"
+    ]
+  },
+  {
+    "en": "Automated decisions",
+    "es": "Decisiones automatizadas",
+    "files": [
+      "components/trust.tsx"
+    ]
+  },
+  {
+    "en": "Understand safeguards concerning solely automated decisions with legal or similarly significant effects.",
+    "es": "Conocer las garantías frente a decisiones exclusivamente automatizadas con efectos jurídicos o de importancia similar.",
+    "files": [
+      "components/trust.tsx"
+    ]
+  },
+  {
+    "en": "A clear perspective",
+    "es": "Una mirada clara",
+    "files": [
+      "components/trust.tsx"
+    ]
+  },
+  {
+    "en": "on your data.",
+    "es": "sobre tus datos.",
+    "files": [
+      "components/trust.tsx"
+    ]
+  },
+  {
+    "en": "Know your rights, understand this version's limits and prepare a request in your own words.",
+    "es": "Conoce tus derechos, entiende los límites de esta versión y prepara una solicitud con tus propias palabras.",
+    "files": [
+      "components/trust.tsx"
+    ]
+  },
+  {
+    "en": "Your identity.",
+    "es": "Tu identidad.",
+    "files": [
+      "components/trust.tsx"
+    ]
+  },
+  {
+    "en": "Your private context.",
+    "es": "Tu contexto privado.",
+    "files": [
+      "components/trust.tsx"
+    ]
+  },
+  {
+    "en": "They are distinct from an economic organization and the memory of the observed world.",
+    "es": "Son distintos de una organización económica y de la memoria del mundo observado.",
+    "files": [
+      "components/trust.tsx"
+    ]
+  },
+  {
+    "en": "each thing in its place",
+    "es": "cada cosa, en su lugar",
+    "files": [
+      "components/trust.tsx"
+    ]
+  },
+  {
+    "en": "Your rights, in human language.",
+    "es": "Los derechos, en lenguaje humano.",
+    "files": [
+      "components/trust.tsx"
+    ]
+  },
+  {
+    "en": "EDPB reference",
+    "es": "Referencia EDPB",
+    "files": [
+      "components/trust.tsx"
+    ]
+  },
+  {
+    "en": "New tab",
+    "es": "Nueva pestaña",
+    "files": [
+      "components/trust.tsx",
+      "components/trust.tsx"
+    ]
+  },
+  {
+    "en": "Applicability depends on the processing and legal conditions. This explanation does not decide your case.",
+    "es": "Su aplicación depende del tratamiento y de las condiciones legales. Esta explicación no decide tu caso.",
+    "files": [
+      "components/trust.tsx"
+    ]
+  },
+  {
+    "en": "Right you want to explore",
+    "es": "Derecho que quieres explorar",
+    "files": [
+      "components/trust.tsx"
+    ]
+  },
+  {
+    "en": "From a right to a draft",
+    "es": "Del derecho al borrador",
+    "files": [
+      "components/trust.tsx"
+    ]
+  },
+  {
+    "en": "Put your request",
+    "es": "Dale forma",
+    "files": [
+      "components/trust.tsx"
+    ]
+  },
+  {
+    "en": "into words.",
+    "es": "a tu solicitud.",
+    "files": [
+      "components/trust.tsx"
+    ]
+  },
+  {
+    "en": "Describe which data or processing concerns you. You do not need to upload an identity document here.",
+    "es": "Describe qué datos o tratamiento te preocupan. No necesitas subir un documento de identidad a esta página.",
+    "files": [
+      "components/trust.tsx"
+    ]
+  },
+  {
+    "en": "Channel pending publication",
+    "es": "Canal pendiente de publicación",
+    "files": [
+      "components/trust.tsx"
+    ]
+  },
+  {
+    "en": "The controller and email are not yet defined. This draft neither starts response deadlines nor proves receipt. A real request must reach the controller's designated channel.",
+    "es": "El responsable y su correo aún no están definidos. Este borrador no inicia plazos ni acredita recepción. Una solicitud real debe llegar al canal habilitado del responsable.",
+    "files": [
+      "components/trust.tsx"
+    ]
+  },
+  {
+    "en": "Public information may also contain personal data. AXIGNAL's architecture does not prevent a legal assessment of access, rectification or erasure.",
+    "es": "La información pública también puede contener datos personales. La arquitectura de AXIGNAL no impide una valoración legal de acceso, rectificación o supresión.",
+    "files": [
+      "components/trust.tsx"
+    ]
+  },
+  {
+    "en": "Learn about rights · AEPD",
+    "es": "Conocer los derechos · AEPD",
+    "files": [
+      "components/trust.tsx"
+    ]
+  },
+  {
+    "en": "Read the privacy draft",
+    "es": "Leer el borrador de privacidad",
+    "files": [
+      "components/trust.tsx"
+    ]
+  },
+  {
+    "en": "Request for ",
+    "es": "Solicitud de ",
+    "files": [
+      "components/trust.tsx"
+    ]
+  },
+  {
+    "en": "AXIGNAL · Home",
+    "es": "AXIGNAL · Inicio",
+    "files": [
+      "components/ui.tsx"
+    ]
+  },
+  {
+    "en": "Language",
+    "es": "Idioma",
+    "files": [
+      "components/ui.tsx"
+    ]
+  },
+  {
+    "en": "Potential",
+    "es": "Potencial",
+    "files": [
+      "components/ui.tsx"
+    ]
+  },
+  {
+    "en": "Private view · illustrative data",
+    "es": "Vista privada · datos ilustrativos",
+    "files": [
+      "components/ui.tsx"
+    ]
+  },
+  {
+    "en": "Demo · illustrative data",
+    "es": "Demo · datos ilustrativos",
+    "files": [
+      "components/ui.tsx"
+    ]
+  },
+  {
+    "en": "Close",
+    "es": "Cerrar",
+    "files": [
+      "components/ui.tsx"
+    ]
+  },
+  {
+    "en": "Everything begins with a look.",
+    "es": "Todo comienza con una mirada.",
+    "files": [
+      "components/ui.tsx"
+    ]
+  },
+  {
+    "en": "Select an organization to direct a persistent observation focus.",
+    "es": "Selecciona una organización para orientar un foco de observación persistente.",
+    "files": [
+      "components/ui.tsx"
+    ]
+  },
+  {
+    "en": "There is not yet a basis to conclude.",
+    "es": "Aún no hay base para concluir.",
+    "files": [
+      "components/ui.tsx"
+    ]
+  },
+  {
+    "en": "What we do not know remains open. Absence of evidence is not a negative answer.",
+    "es": "Lo que no sabemos sigue abierto. Una ausencia de evidencia no es una respuesta negativa.",
+    "files": [
+      "components/ui.tsx"
+    ]
+  },
+  {
+    "en": "Preparing this view…",
+    "es": "Preparando esta vista…",
+    "files": [
+      "components/ui.tsx"
+    ]
+  },
+  {
+    "en": "Reading the projection. This state does not represent research progress.",
+    "es": "Estamos leyendo la proyección. Este estado no representa progreso de investigación.",
+    "files": [
+      "components/ui.tsx"
+    ]
+  },
+  {
+    "en": "This view could not be loaded.",
+    "es": "Esta vista no pudo cargarse.",
+    "files": [
+      "components/ui.tsx"
+    ]
+  },
+  {
+    "en": "Your context is preserved. You can try again.",
+    "es": "Tu contexto se conserva. Puedes volver a intentarlo.",
+    "files": [
+      "components/ui.tsx"
+    ]
+  },
+  {
+    "en": "This information is unavailable.",
+    "es": "Esta información no está disponible.",
+    "files": [
+      "components/ui.tsx"
+    ]
+  },
+  {
+    "en": "There is no authorized projection for this context. We do not fill gaps with assumptions.",
+    "es": "No existe una proyección autorizada para este contexto. No completamos los huecos con suposiciones.",
+    "files": [
+      "components/ui.tsx"
+    ]
+  },
+  {
+    "en": "Choose organization",
+    "es": "Elegir organización",
+    "files": [
+      "components/ui.tsx"
+    ]
+  },
+  {
+    "en": "Return to view",
+    "es": "Volver a la vista",
+    "files": [
+      "components/ui.tsx"
+    ]
+  },
+  {
+    "en": "A perspective that connects.",
+    "es": "Una mirada que conecta.",
+    "files": [
+      "components/ui.tsx"
+    ]
+  },
+  {
+    "en": "More about AXIGNAL",
+    "es": "Más sobre AXIGNAL",
+    "files": [
+      "components/ui.tsx"
+    ]
+  },
+  {
+    "en": "Policies",
+    "es": "Políticas",
+    "files": [
+      "components/ui.tsx"
+    ]
+  },
+  {
+    "en": "Visual system",
+    "es": "Sistema visual",
+    "files": [
+      "components/ui.tsx"
+    ]
+  },
+  {
+    "en": "Attention centre",
+    "es": "Centro de atención",
+    "files": [
+      "lib/admin-model.ts"
+    ]
+  },
+  {
+    "en": "What needs human review?",
+    "es": "¿Qué necesita una revisión humana?",
+    "files": [
+      "lib/admin-model.ts"
+    ]
+  },
+  {
+    "en": "Accounts & subscriptions",
+    "es": "Cuentas y suscripciones",
+    "files": [
+      "lib/admin-model.ts"
+    ]
+  },
+  {
+    "en": "Does allocated attention match the subscription?",
+    "es": "¿La atención asignada coincide con la suscripción?",
+    "files": [
+      "lib/admin-model.ts"
+    ]
+  },
+  {
+    "en": "Acquisition",
+    "es": "Adquisición",
+    "files": [
+      "lib/admin-model.ts"
+    ]
+  },
+  {
+    "en": "What do we know about the origin of requests?",
+    "es": "¿Qué sabemos del origen de las solicitudes?",
+    "files": [
+      "lib/admin-model.ts"
+    ]
+  },
+  {
+    "en": "Revenue",
+    "es": "Ingresos",
+    "files": [
+      "lib/admin-model.ts"
+    ]
+  },
+  {
+    "en": "What state is confirmed by the payment service?",
+    "es": "¿Qué estado está confirmado por el servicio de pagos?",
+    "files": [
+      "lib/admin-model.ts"
+    ]
+  },
+  {
+    "en": "Observation focuses",
+    "es": "Focos de observación",
+    "files": [
+      "lib/admin-model.ts"
+    ]
+  },
+  {
+    "en": "Where is attention allocated, and with what scope?",
+    "es": "¿Dónde se asigna atención y con qué alcance?",
+    "files": [
+      "lib/admin-model.ts"
+    ]
+  },
+  {
+    "en": "AXIGLAND quality",
+    "es": "Calidad de AXIGLAND",
+    "files": [
+      "lib/admin-model.ts"
+    ]
+  },
+  {
+    "en": "What needs reassessment without editing truth?",
+    "es": "¿Qué necesita reevaluación sin editar verdad?",
+    "files": [
+      "lib/admin-model.ts"
+    ]
+  },
+  {
+    "en": "AXENT & Brain",
+    "es": "AXENT y Brain",
+    "files": [
+      "lib/admin-model.ts"
+    ]
+  },
+  {
+    "en": "Does research preserve its limits and authority?",
+    "es": "¿La investigación conserva sus límites y autoridad?",
+    "files": [
+      "lib/admin-model.ts"
+    ]
+  },
+  {
+    "en": "Governance",
+    "es": "Gobernanza",
+    "files": [
+      "lib/admin-model.ts"
+    ]
+  },
+  {
+    "en": "Can we reconstruct authority and scope?",
+    "es": "¿Podemos reconstruir la autoridad y el alcance?",
+    "files": [
+      "lib/admin-model.ts"
+    ]
+  },
+  {
+    "en": "Integrations",
+    "es": "Integraciones",
+    "files": [
+      "lib/admin-model.ts"
+    ]
+  },
+  {
+    "en": "Which connection is authorized, and under what conditions?",
+    "es": "¿Qué conexión está autorizada y bajo qué condiciones?",
+    "files": [
+      "lib/admin-model.ts"
+    ]
+  },
+  {
+    "en": "Finance & tax",
+    "es": "Finanzas y fiscalidad",
+    "files": [
+      "lib/admin-model.ts"
+    ]
+  },
+  {
+    "en": "Is information reconciled and in its period?",
+    "es": "¿La información está conciliada y en su periodo?",
+    "files": [
+      "lib/admin-model.ts"
+    ]
+  },
+  {
+    "en": "Frontier Advisor",
+    "es": "Frontier Advisor",
+    "files": [
+      "lib/admin-model.ts"
+    ]
+  },
+  {
+    "en": "Which recommendation requires judgment and approval?",
+    "es": "¿Qué recomendación requiere criterio y aprobación?",
+    "files": [
+      "lib/admin-model.ts"
+    ]
+  },
+  {
+    "en": "System",
+    "es": "Sistema",
+    "files": [
+      "lib/admin-model.ts"
+    ]
+  },
+  {
+    "en": "Is the available projection current and reliable?",
+    "es": "¿La proyección disponible es actual y fiable?",
+    "files": [
+      "lib/admin-model.ts"
+    ]
+  },
+  {
+    "en": "A basis requires reassessment",
+    "es": "Una base requiere reevaluación",
+    "files": [
+      "lib/admin-model.ts"
+    ]
+  },
+  {
+    "en": "Human review",
+    "es": "Revisión humana",
+    "files": [
+      "lib/admin-model.ts"
+    ]
+  },
+  {
+    "en": "An illustrative source changed version. Reassessment belongs to its owning service; the economic profile must not be edited.",
+    "es": "Una fuente ilustrativa cambió de versión. Corresponde solicitar reevaluación a su servicio propietario; no editar el perfil económico.",
+    "files": [
+      "lib/admin-model.ts"
+    ]
+  },
+  {
+    "en": "Request reassessment",
+    "es": "Solicitar reevaluación",
+    "files": [
+      "lib/admin-model.ts"
+    ]
+  },
+  {
+    "en": "An account’s observation scope",
+    "es": "Alcance de observación de una cuenta",
+    "files": [
+      "lib/admin-model.ts"
+    ]
+  },
+  {
+    "en": "Illustrative",
+    "es": "Ilustrativo",
+    "files": [
+      "lib/admin-model.ts",
+      "lib/admin-model.ts"
+    ]
+  },
+  {
+    "en": "The example account has one allocated focus. This private view does not make the subscriber the owner of AXIGLAND.",
+    "es": "La cuenta de ejemplo tiene un foco asignado. Esta vista es privada y no convierte al suscriptor en propietario de AXIGLAND.",
+    "files": [
+      "lib/admin-model.ts"
+    ]
+  },
+  {
+    "en": "Review allocation",
+    "es": "Revisar asignación",
+    "files": [
+      "lib/admin-model.ts"
+    ]
+  },
+  {
+    "en": "Origin of a request",
+    "es": "Origen de una solicitud",
+    "files": [
+      "lib/admin-model.ts"
+    ]
+  },
+  {
+    "en": "Limited basis",
+    "es": "Base limitada",
+    "files": [
+      "lib/admin-model.ts"
+    ]
+  },
+  {
+    "en": "Attribution is incomplete. We do not infer campaigns or conversions unsupported by the read model.",
+    "es": "La atribución no está completa. No inferimos campañas o conversiones que el read model no acredita.",
+    "files": [
+      "lib/admin-model.ts"
+    ]
+  },
+  {
+    "en": "Review lineage",
+    "es": "Revisar trazabilidad",
+    "files": [
+      "lib/admin-model.ts"
+    ]
+  },
+  {
+    "en": "A subscription’s state",
+    "es": "Estado de una suscripción",
+    "files": [
+      "lib/admin-model.ts"
+    ]
+  },
+  {
+    "en": "Pending reconciliation",
+    "es": "Pendiente de conciliar",
+    "files": [
+      "lib/admin-model.ts"
+    ]
+  },
+  {
+    "en": "State must be confirmed in the billing service. An isolated webhook does not authorize this interface to change terms.",
+    "es": "El estado debe confirmarse en el servicio de facturación. Un webhook aislado no autoriza esta interfaz a cambiar condiciones.",
+    "files": [
+      "lib/admin-model.ts"
+    ]
+  },
+  {
+    "en": "Review reconciliation",
+    "es": "Revisar conciliación",
+    "files": [
+      "lib/admin-model.ts"
+    ]
+  },
+  {
+    "en": "Persistent attention around Norte",
+    "es": "Atención persistente alrededor de Norte",
+    "files": [
+      "lib/admin-model.ts"
+    ]
+  },
+  {
+    "en": "Illustrative allocation",
+    "es": "Asignación ilustrativa",
+    "files": [
+      "lib/admin-model.ts"
+    ]
+  },
+  {
+    "en": "The focus directs research and does not duplicate the canonical world. Its LIVE state is not a task that ends.",
+    "es": "El foco dirige investigación y no duplica el mundo canónico. Su estado LIVE no representa una tarea que termine.",
+    "files": [
+      "lib/admin-model.ts"
+    ]
+  },
+  {
+    "en": "Review focus scope",
+    "es": "Revisar alcance del foco",
+    "files": [
+      "lib/admin-model.ts"
+    ]
+  },
+  {
+    "en": "Source change and currentness",
+    "es": "Cambio de fuente y vigencia",
+    "files": [
+      "lib/admin-model.ts"
+    ]
+  },
+  {
+    "en": "Reassessment pending",
+    "es": "Reevaluación pendiente",
+    "files": [
+      "lib/admin-model.ts"
+    ]
+  },
+  {
+    "en": "Reusing a conclusion requires epistemic state, provenance and currentness. Evidence admission belongs to the canonical service.",
+    "es": "Reutilizar una conclusión requiere estado epistémico, provenance y vigencia. La admisión de evidencia pertenece al servicio canónico.",
+    "files": [
+      "lib/admin-model.ts"
+    ]
+  },
+  {
+    "en": "Review admission decision",
+    "es": "Revisar decisión de admisión",
+    "files": [
+      "lib/admin-model.ts"
+    ]
+  },
+  {
+    "en": "Bounded research",
+    "es": "Investigación acotada",
+    "files": [
+      "lib/admin-model.ts"
+    ]
+  },
+  {
+    "en": "No provider in demo",
+    "es": "Sin proveedor en demo",
+    "files": [
+      "lib/admin-model.ts"
+    ]
+  },
+  {
+    "en": "The local explanation is deterministic. A real execution must pass through cognition/router and configured provider authority.",
+    "es": "La explicación local es determinista. Una ejecución real debe pasar por cognition/router y la autoridad del proveedor configurado.",
+    "files": [
+      "lib/admin-model.ts"
+    ]
+  },
+  {
+    "en": "Review execution authority",
+    "es": "Revisar autoridad de ejecución",
+    "files": [
+      "lib/admin-model.ts"
+    ]
+  },
+  {
+    "en": "Identity separation",
+    "es": "Separación de identidades",
+    "files": [
+      "lib/admin-model.ts"
+    ]
+  },
+  {
+    "en": "Boundary preserved",
+    "es": "Límite conservado",
+    "files": [
+      "lib/admin-model.ts"
+    ]
+  },
+  {
+    "en": "AdminPrincipal and privileged session are separate from subscriber identity. A browser role selector never grants authorization.",
+    "es": "AdminPrincipal y sesión privilegiada están separados del suscriptor. Un selector de rol en navegador nunca concede autorización.",
+    "files": [
+      "lib/admin-model.ts"
+    ]
+  },
+  {
+    "en": "Review access policy",
+    "es": "Revisar política de acceso",
+    "files": [
+      "lib/admin-model.ts"
+    ]
+  },
+  {
+    "en": "Connection registry",
+    "es": "Registro de conexión",
+    "files": [
+      "lib/admin-model.ts"
+    ]
+  },
+  {
+    "en": "Not connected",
+    "es": "No conectada",
+    "files": [
+      "lib/admin-model.ts"
+    ]
+  },
+  {
+    "en": "This demo uses no credentials and retrieves no external data. Each integration needs explicit conditions, scope and authorization.",
+    "es": "Esta demo no usa credenciales ni obtiene datos externos. Cada integración necesita condiciones, alcance y autorización explícitos.",
+    "files": [
+      "lib/admin-model.ts"
+    ]
+  },
+  {
+    "en": "Review connection contract",
+    "es": "Revisar contrato de conexión",
+    "files": [
+      "lib/admin-model.ts"
+    ]
+  },
+  {
+    "en": "Example operational period",
+    "es": "Periodo operativo de ejemplo",
+    "files": [
+      "lib/admin-model.ts"
+    ]
+  },
+  {
+    "en": "Financial information belongs to a private read model. It is not economic evidence about observed organizations.",
+    "es": "La información financiera pertenece a un read model privado. No es evidencia económica de las organizaciones observadas.",
+    "files": [
+      "lib/admin-model.ts"
+    ]
+  },
+  {
+    "en": "Review period",
+    "es": "Revisar periodo",
+    "files": [
+      "lib/admin-model.ts"
+    ]
+  },
+  {
+    "en": "A proposal to review",
+    "es": "Una propuesta para revisar",
+    "files": [
+      "lib/admin-model.ts"
+    ]
+  },
+  {
+    "en": "Non-binding",
+    "es": "No vinculante",
+    "files": [
+      "lib/admin-model.ts"
+    ]
+  },
+  {
+    "en": "The recommendation guides human review; it does not automatically become policy or canonical knowledge.",
+    "es": "La recomendación orienta una revisión humana; no se convierte en política ni conocimiento canónico de forma automática.",
+    "files": [
+      "lib/admin-model.ts"
+    ]
+  },
+  {
+    "en": "Inspect proposal",
+    "es": "Inspeccionar propuesta",
+    "files": [
+      "lib/admin-model.ts"
+    ]
+  },
+  {
+    "en": "Local projection available",
+    "es": "Proyección local disponible",
+    "files": [
+      "lib/admin-model.ts"
+    ]
+  },
+  {
+    "en": "Local demo",
+    "es": "Demo local",
+    "files": [
+      "lib/admin-model.ts"
+    ]
+  },
+  {
+    "en": "The state confirms availability of this local app, without claiming production health or performance.",
+    "es": "El estado confirma disponibilidad de esta aplicación local, sin atribuir salud o rendimiento a producción.",
+    "files": [
+      "lib/admin-model.ts"
+    ]
+  },
+  {
+    "en": "View state scope",
+    "es": "Ver alcance del estado",
+    "files": [
+      "lib/admin-model.ts"
+    ]
+  },
+  {
+    "en": "An architecture for understanding.",
+    "es": "Una arquitectura para comprender.",
+    "files": [
+      "lib/doctrine-basis.ts"
+    ]
+  },
+  {
+    "en": "Depth can feel simple.",
+    "es": "La profundidad puede ser sencilla.",
+    "files": [
+      "lib/doctrine-basis.ts"
+    ]
+  },
+  {
+    "en": "Perspective",
+    "es": "Perspectiva",
+    "files": [
+      "lib/editorial.ts"
+    ]
+  },
+  {
+    "en": "Inside AXIGNAL",
+    "es": "Dentro de AXIGNAL",
+    "files": [
+      "lib/editorial.ts"
+    ]
+  },
+  {
+    "en": "A signal is not a certainty.",
+    "es": "Una señal no es una certeza.",
+    "files": [
+      "lib/editorial.ts"
+    ]
+  },
+  {
+    "en": "The difference between something worth noticing and something we can establish.",
+    "es": "La diferencia entre algo que merece atención y algo que podemos afirmar.",
+    "files": [
+      "lib/editorial.ts"
+    ]
+  },
+  {
+    "en": "A possibility opens a question. Evidence defines the limits of the answer.",
+    "es": "Una posibilidad abre una pregunta. La evidencia delimita la respuesta.",
+    "files": [
+      "lib/editorial.ts"
+    ]
+  },
+  {
+    "en": "First, what we know",
+    "es": "Primero, qué sabemos",
+    "files": [
+      "lib/editorial.ts"
+    ]
+  },
+  {
+    "en": "AXIGNAL distinguishes observed from potential. An observation requires admitted evidence supporting a specific claim. Even then, ask what was observed: a statement of capability does not, by itself, establish a completed operation. The scope of the source matters as much as its existence. A signal focuses attention on a relevant change or connection; its appearance does not automatically turn that interpretation into a fact.",
+    "es": "AXIGNAL distingue lo observado de lo potencial. Lo observado requiere evidencia admitida que sostenga una afirmación concreta. Incluso entonces, conviene preguntar qué se observó: una declaración de capacidad no acredita por sí sola una operación realizada. El alcance de la fuente importa tanto como su existencia. Una señal concentra atención sobre un cambio o una conexión relevante; su aparición no transforma automáticamente esa interpretación en un hecho.",
+    "files": [
+      "lib/editorial.ts"
+    ]
+  },
+  {
+    "en": "A match opens an investigation",
+    "es": "Una coincidencia abre investigación",
+    "files": [
+      "lib/editorial.ts"
+    ]
+  },
+  {
+    "en": "Consider a conceptual example: an organization declares a capability and a programme publishes a related need. The match may deserve investigation. It does not establish a customer, supplier, award recipient or confirmed commercial opportunity. Scope, conditions, timing and suitability still need to be understood. AXIGNAL keeps that possibility potential and makes the reasoning connecting it to its sources inspectable.",
+    "es": "Imagina un ejemplo conceptual: una organización declara una capacidad y un programa publica una necesidad relacionada. La coincidencia puede merecer investigación. No demuestra que la organización sea cliente, proveedora, adjudicataria o una oportunidad comercial confirmada. Falta comprender alcance, condiciones, temporalidad y adecuación. AXIGNAL conserva esa posibilidad como potencial y hace inspeccionable el razonamiento que la conecta con sus fuentes.",
+    "files": [
+      "lib/editorial.ts"
+    ]
+  },
+  {
+    "en": "Look closer at the basis",
+    "es": "Acércate hasta la base",
+    "files": [
+      "lib/editorial.ts"
+    ]
+  },
+  {
+    "en": "Read what deserves your attention first. Then, if needed, open the explanation, inspect the reasoning and reach the evidence. These depths are directly available, rather than mandatory steps. Check dates and limitations before acting. A useful conclusion may be that we still do not know enough. That clarity protects the decision and helps direct the next question.",
+    "es": "Lee primero qué merece tu atención. Después, si lo necesitas, abre la explicación, revisa el razonamiento y llega a la evidencia. Esas profundidades están disponibles directamente; no son pasos obligatorios. Comprueba las fechas y los límites antes de actuar. Una conclusión útil también puede ser que todavía no sabemos suficiente. Esa claridad protege la decisión y permite orientar mejor la siguiente pregunta.",
+    "files": [
+      "lib/editorial.ts"
+    ]
+  },
+  {
+    "en": "An organization. A focus. A world.",
+    "es": "Una organización. Una mirada. Un mundo.",
+    "files": [
+      "lib/editorial.ts"
+    ]
+  },
+  {
+    "en": "Three connected things that need to remain distinct.",
+    "es": "Tres cosas conectadas que conviene mantener distintas.",
+    "files": [
+      "lib/editorial.ts"
+    ]
+  },
+  {
+    "en": "You choose where to look. The observed world keeps its independence.",
+    "es": "Tú eliges dónde mirar. El mundo observado conserva su independencia.",
+    "files": [
+      "lib/editorial.ts"
+    ]
+  },
+  {
+    "en": "The organization exists beyond your view",
+    "es": "La organización existe fuera de tu vista",
+    "files": [
+      "lib/editorial.ts"
+    ]
+  },
+  {
+    "en": "An organization is an economic subject. It may have capabilities, activities and relationships supported by evidence. Selecting it in an interface neither creates it nor makes it the observer's property. AXIGNAL maintains one canonical economic world, AXIGLAND, with governed temporal memory. Different people's attention may meet around the same entity without creating private versions of its truth.",
+    "es": "Una organización es un sujeto económico. Puede tener capacidades, actividades y relaciones sostenidas por evidencia. Elegirla en una interfaz no crea esa organización ni la convierte en propiedad de quien la observa. AXIGNAL mantiene un único mundo económico canónico, AXIGLAND, con memoria temporal y gobernada. La atención de distintas personas puede coincidir sobre una misma entidad sin crear versiones privadas de su verdad.",
+    "files": [
+      "lib/editorial.ts"
+    ]
+  },
+  {
+    "en": "The focus sustains attention",
+    "es": "El foco mantiene la atención",
+    "files": [
+      "lib/editorial.ts"
+    ]
+  },
+  {
+    "en": "The observation focus, historically Xeed, is a persistent allocation of attention around that subject. Organization and focus are related, but are not synonyms. The first answers who we observe; the second concerns the continuity of our attention. Private context and its permissions have their own boundary. No personal preference can directly edit canonical economic facts.",
+    "es": "El foco de observación, históricamente Xeed, es la asignación persistente de atención alrededor de ese sujeto. Organización y foco se relacionan, pero no son sinónimos. La primera responde a quién estamos observando; el segundo, a la continuidad de nuestra atención. El contexto privado y sus permisos pertenecen a su propia frontera. Ninguna preferencia de la persona puede editar directamente hechos económicos canónicos.",
+    "files": [
+      "lib/editorial.ts"
+    ]
+  },
+  {
+    "en": "Panorama helps you understand",
+    "es": "Panorama te ayuda a comprender",
+    "files": [
+      "lib/editorial.ts"
+    ]
+  },
+  {
+    "en": "Panorama is the human projection of that world: a composition selecting context, changes and signals to make them understandable. It is not AXIGLAND itself. Two views can emphasize different aspects while remaining faithful to the same basis. Human language makes the experience easier without replacing the architecture that preserves its distinctions.",
+    "es": "Panorama es la proyección humana de ese mundo: una composición que selecciona contexto, cambios y señales para hacerlos comprensibles. No es AXIGLAND mismo. Dos vistas pueden destacar aspectos distintos y seguir siendo fieles a la misma base. Humanizar el lenguaje hace más fácil la experiencia sin sustituir la arquitectura que preserva sus distinciones.",
+    "files": [
+      "lib/editorial.ts"
+    ]
+  },
+  {
+    "en": "Context has a date, too.",
+    "es": "El contexto también tiene fecha.",
+    "files": [
+      "lib/editorial.ts"
+    ]
+  },
+  {
+    "en": "Yesterday's source can explain the past without describing the present.",
+    "es": "Una fuente de ayer puede explicar el pasado sin describir el presente.",
+    "files": [
+      "lib/editorial.ts"
+    ]
+  },
+  {
+    "en": "Published, observed and current answer different questions.",
+    "es": "Publicado, observado y vigente responden a preguntas diferentes.",
+    "files": [
+      "lib/editorial.ts"
+    ]
+  },
+  {
+    "en": "One date cannot tell the whole story",
+    "es": "Una fecha no cuenta toda la historia",
+    "files": [
+      "lib/editorial.ts"
+    ]
+  },
+  {
+    "en": "A publication date tells us when a source appeared. An observation date tells us when an observation was obtained. Currentness asks whether that basis still applies to the context we are reading. Confusing them can make a signal appear newer or stronger than it is. Time is therefore part of meaning, rather than a footnote.",
+    "es": "La fecha de publicación indica cuándo apareció una fuente. La fecha de observación indica cuándo se obtuvo una observación. La vigencia pregunta si esa base sigue siendo aplicable al contexto que estamos leyendo. Confundirlas puede hacer que una señal parezca más reciente o más sólida de lo que realmente es. Por eso la temporalidad forma parte del significado, no solo de un pie de página.",
+    "files": [
+      "lib/editorial.ts"
+    ]
+  },
+  {
+    "en": "Changing the moment changes the question",
+    "es": "Cambiar de momento cambia la pregunta",
+    "files": [
+      "lib/editorial.ts"
+    ]
+  },
+  {
+    "en": "When you explore an earlier snapshot, you ask what was available at that time. Future evidence must not enter that reading. A timeline reconstructs context without treating history as a news feed. Later facts may justify a current reevaluation, but do not silently rewrite what a person could know before.",
+    "es": "Cuando exploras una instantánea anterior, preguntas qué estaba disponible en ese momento. No debemos introducir evidencia futura en esa lectura. La línea de tiempo permite reconstruir el contexto sin tratar la historia como una lista de novedades. Los hechos posteriores pueden justificar una reevaluación actual, pero no reescriben silenciosamente lo que una persona podía conocer antes.",
+    "files": [
+      "lib/editorial.ts"
+    ]
+  },
+  {
+    "en": "Memory is not permanent trust",
+    "es": "La memoria no es confianza eterna",
+    "files": [
+      "lib/editorial.ts"
+    ]
+  },
+  {
+    "en": "Reusing knowledge avoids starting from scratch. Yet reuse must preserve provenance, epistemic state and currentness. When a relevant source changes, dependent conclusions must be open to review. Context compounds precisely because its limits stay visible: we can recognize what holds, what changed and what needs another look.",
+    "es": "Reutilizar conocimiento evita empezar de cero. Sin embargo, reutilizar exige conservar procedencia, estado epistémico y actualidad. Si cambia una fuente relevante, las conclusiones dependientes deben poder revisarse. El contexto se acumula precisamente porque sus límites permanecen visibles: podemos reconocer qué se mantiene, qué cambió y qué necesita otra mirada.",
+    "files": [
+      "lib/editorial.ts"
+    ]
+  },
+  {
+    "en": "Not knowing is a useful state.",
+    "es": "No saber es un estado útil.",
+    "files": [
+      "lib/editorial.ts"
+    ]
+  },
+  {
+    "en": "How an absence of evidence can guide the next question.",
+    "es": "Cómo una ausencia de evidencia puede orientar la siguiente pregunta.",
+    "files": [
+      "lib/editorial.ts"
+    ]
+  },
+  {
+    "en": "Unknown does not mean false. It means the question remains open.",
+    "es": "Desconocido no significa falso. Significa que la pregunta sigue abierta.",
+    "files": [
+      "lib/editorial.ts"
+    ]
+  },
+  {
+    "en": "The gap has meaning",
+    "es": "El hueco tiene significado",
+    "files": [
+      "lib/editorial.ts"
+    ]
+  },
+  {
+    "en": "Not finding a relationship does not prove that it does not exist. Coverage, a suitable source or enough context to answer may be missing. AXIGNAL keeps UNKNOWN distinct from FALSE. Turning every gap into a negative answer would create a simpler but less faithful picture of the world. The interface should help you recognize that limit without requiring technical vocabulary.",
+    "es": "No encontrar una relación no demuestra que esa relación no exista. Puede faltar cobertura, una fuente adecuada o un contexto suficiente para responder. AXIGNAL conserva UNKNOWN como un estado distinto de FALSE. Convertir cada hueco en una respuesta negativa produciría una imagen del mundo más sencilla, pero también menos fiel. La interfaz debe ayudarte a reconocer ese límite sin obligarte a descifrar lenguaje técnico.",
+    "files": [
+      "lib/editorial.ts"
+    ]
+  },
+  {
+    "en": "Ask whether it can be answered",
+    "es": "Pregunta si es posible responder",
+    "files": [
+      "lib/editorial.ts"
+    ]
+  },
+  {
+    "en": "Before making a judgment, check which question we are asking and which basis it requires. A structured evaluation does not create that basis. A model can help interpret within a defined boundary, but its answer does not become canonical truth by itself. When context is missing, the useful outcome is governed research or abstaining from a conclusion.",
+    "es": "Antes de formular un juicio, conviene comprobar qué pregunta estamos haciendo y qué base necesitamos. Una evaluación estructurada no crea esa base. El modelo puede ayudar a interpretar dentro de una frontera definida, pero su respuesta no se convierte por sí sola en verdad canónica. Si falta contexto, la salida útil es investigar de manera gobernada o abstenerse de concluir.",
+    "files": [
+      "lib/editorial.ts"
+    ]
+  },
+  {
+    "en": "Recovery with direction",
+    "es": "Una recuperación con dirección",
+    "files": [
+      "lib/editorial.ts"
+    ]
+  },
+  {
+    "en": "An empty view, an unknown answer and a loading error need different messages. The first invites you to direct attention. The second explains what is missing for a conclusion. The third lets you recover the view without losing context. Distinguishing these states prevents a silent screen from looking like a statement about the economy.",
+    "es": "Una vista vacía, una respuesta desconocida y un error de carga necesitan mensajes diferentes. La primera invita a orientar la atención. La segunda explica qué falta para concluir. El tercero permite recuperar la vista sin perder el contexto. Distinguir estos estados evita que una pantalla silenciosa parezca una afirmación sobre la economía.",
+    "files": [
+      "lib/editorial.ts"
+    ]
+  },
+  {
+    "en": "AXENT: a conversation with context.",
+    "es": "AXENT: una conversación con contexto.",
+    "files": [
+      "lib/editorial.ts"
+    ]
+  },
+  {
+    "en": "Research and explanation rooted in what you are viewing, with an inspectable basis.",
+    "es": "Investigar y explicar desde lo que estás mirando, con una base que puedes inspeccionar.",
+    "files": [
+      "lib/editorial.ts"
+    ]
+  },
+  {
+    "en": "AXENT can guide your attention. Evidence authority remains separate.",
+    "es": "AXENT puede orientar tu mirada. La autoridad de la evidencia permanece separada.",
+    "files": [
+      "lib/editorial.ts"
+    ]
+  },
+  {
+    "en": "A question starts in your context",
+    "es": "La pregunta empieza en tu contexto",
+    "files": [
+      "lib/editorial.ts"
+    ]
+  },
+  {
+    "en": "A useful conversation should not require you to repeat every organization, signal and date already in view. AXENT retains reading context to research, explain and help navigate. That context is not the interface's action history. Changing a tab should not become an answer; a conversation should add understanding to your question.",
+    "es": "Una conversación útil no necesita que repitas cada organización, señal y fecha que ya estás mirando. AXENT conserva el contexto de lectura para investigar, explicar y ayudar a navegar. Ese contexto no equivale al historial de acciones de la interfaz. Cambiar una pestaña no debe convertirse en una respuesta; una conversación debe aportar comprensión a la pregunta que haces.",
+    "files": [
+      "lib/editorial.ts"
+    ]
+  },
+  {
+    "en": "Explanation keeps the boundaries",
+    "es": "Explicar conserva las fronteras",
+    "files": [
+      "lib/editorial.ts"
+    ]
+  },
+  {
+    "en": "AXENT has no authority to invent or admit economic truth. A material interpretation must retain a path to evidence, derivation and temporal limits. The environment's actual capabilities matter too: a demo without a live model must say so. Research cannot be treated as completed merely because an interface shows an animation or a convincing sentence.",
+    "es": "AXENT no tiene autoridad para inventar o admitir verdad económica. Cuando presenta una lectura material, debe mantener un camino hacia su evidencia, derivación y límites temporales. Las capacidades reales del entorno también importan: una demo sin modelo en vivo debe decirlo. Una tarea de investigación no puede darse por realizada solo porque la interfaz muestre una animación o una frase convincente.",
+    "files": [
+      "lib/editorial.ts"
+    ]
+  },
+  {
+    "en": "Composition is governed, too",
+    "es": "La composición también es gobernada",
+    "files": [
+      "lib/editorial.ts"
+    ]
+  },
+  {
+    "en": "AI may suggest where attention belongs and which authorized references to display. A controlled component registry turns that proposal into a readable composition. The plan contains neither new facts nor arbitrary code. The application checks scope and currentness before rendering. A generative experience can then be expressive without turning presentation into a new authority.",
+    "es": "La IA puede sugerir dónde poner la atención y qué referencias autorizadas conviene mostrar. Un registro controlado de componentes transforma esa propuesta en una composición legible. El plan no contiene hechos nuevos ni código arbitrario. La aplicación comprueba alcance y actualidad antes de renderizar. Así, una experiencia generativa puede ser expresiva sin convertir la presentación en una nueva autoridad.",
+    "files": [
+      "lib/editorial.ts"
+    ]
+  },
+  {
+    "en": "Understand without starting from scratch.",
+    "es": "Comprender sin empezar de cero.",
+    "files": [
+      "lib/editorial.ts"
+    ]
+  },
+  {
+    "en": "Economic memory matters when it also preserves how it came to know.",
+    "es": "La memoria económica importa cuando conserva también cómo llegó a saber.",
+    "files": [
+      "lib/editorial.ts"
+    ]
+  },
+  {
+    "en": "Knowledge compounds. Its conditions must travel with it.",
+    "es": "El conocimiento se acumula. Sus condiciones también deben acompañarlo.",
+    "files": [
+      "lib/editorial.ts"
+    ]
+  },
+  {
+    "en": "Continuity supports better questions",
+    "es": "La continuidad permite mejores preguntas",
+    "files": [
+      "lib/editorial.ts"
+    ]
+  },
+  {
+    "en": "An isolated observation can be useful. Memory connecting observations, context and change makes different questions possible. AXIGNAL seeks compounding economic intelligence: future readings use what was learned without confusing information volume with understanding. Cartography supports that reasoning; it is not an index whose only purpose is to list entities.",
+    "es": "Una observación aislada puede ser útil. Una memoria que conecta observaciones, contexto y cambio permite preguntar de manera diferente. AXIGNAL busca inteligencia económica que se acumula: las próximas lecturas aprovechan lo aprendido sin confundir cantidad de información con comprensión. La cartografía es el sustrato de ese razonamiento, no un índice cuyo único propósito sea enumerar entidades.",
+    "files": [
+      "lib/editorial.ts"
+    ]
+  },
+  {
+    "en": "Sharing does not erase boundaries",
+    "es": "Compartir no borra los límites",
+    "files": [
+      "lib/editorial.ts"
+    ]
+  },
+  {
+    "en": "An authorized public observation may be reused in relevant contexts while retaining rights, provenance, state and currentness. That does not permit private information to be mixed across people or scopes. The same basis can inform different questions, but focus-specific meaning must be recomputed for each context. We do not count an observation twice to make a conclusion appear stronger.",
+    "es": "Una observación pública autorizada puede reutilizarse en contextos pertinentes, conservando derechos, procedencia, estado y actualidad. Esa posibilidad no permite mezclar información privada entre personas o ámbitos. La misma base puede alimentar preguntas distintas, pero el significado específico del foco necesita recalcularse para cada contexto. No contamos dos veces una observación para que una conclusión parezca más fuerte.",
+    "files": [
+      "lib/editorial.ts"
+    ]
+  },
+  {
+    "en": "Remembering includes reevaluation",
+    "es": "Recordar incluye reevaluar",
+    "files": [
+      "lib/editorial.ts"
+    ]
+  },
+  {
+    "en": "Memory must not freeze the world. Sources and circumstances change; a conclusion may need review. Preserving traceability helps explain what depends on what. The human experience begins with a simple reading and lets you go deeper when a decision warrants it. Clarity and rigor together make context something we can use, not merely store.",
+    "es": "La memoria no debe inmovilizar el mundo. Fuentes y circunstancias cambian; una conclusión puede necesitar revisión. Conservar la trazabilidad ayuda a entender qué depende de qué. La experiencia humana empieza con una lectura simple y permite profundizar cuando una decisión lo merece. Esa combinación de claridad y rigor hace que el contexto sea algo que podemos usar, no solo almacenar.",
+    "files": [
+      "lib/editorial.ts"
+    ]
+  },
+  {
+    "en": "How an organization becomes visible.",
+    "es": "Cómo se hace visible una organización.",
+    "files": [
+      "lib/projection.ts"
+    ]
+  },
+  {
+    "en": "Reputation",
+    "es": "Reputación",
+    "files": [
+      "lib/projection.ts"
+    ]
+  },
+  {
+    "en": "What is expressed publicly, and its limits.",
+    "es": "Qué se expresa públicamente y con qué límites.",
+    "files": [
+      "lib/projection.ts"
+    ]
+  },
+  {
+    "en": "Value",
+    "es": "Valor",
+    "files": [
+      "lib/projection.ts"
+    ]
+  },
+  {
+    "en": "What capabilities could add value, and under what conditions.",
+    "es": "Qué capacidades pueden aportar valor y bajo qué condiciones.",
+    "files": [
+      "lib/projection.ts"
+    ]
+  },
+  {
+    "en": "Where context changes for observed capabilities.",
+    "es": "Dónde cambia el contexto para las capacidades observadas.",
+    "files": [
+      "lib/projection.ts"
+    ]
+  },
+  {
+    "en": "Evidence-backed relationships; paths worth investigating.",
+    "es": "Vínculos sostenidos por evidencia; caminos que merecen investigación.",
+    "files": [
+      "lib/projection.ts"
+    ]
+  },
+  {
+    "en": "Demand",
+    "es": "Demanda",
+    "files": [
+      "lib/projection.ts"
+    ]
+  },
+  {
+    "en": "Economic needs, without turning them into customers.",
+    "es": "Necesidades económicas, sin convertirlas en clientes.",
+    "files": [
+      "lib/projection.ts"
+    ]
+  },
+  {
+    "en": "Activity",
+    "es": "Actividad",
+    "files": [
+      "lib/projection.ts"
+    ]
+  },
+  {
+    "en": "What happens, and when we can support that it happened.",
+    "es": "Qué ocurre y cuándo podemos sostener que ocurrió.",
+    "files": [
+      "lib/projection.ts"
+    ]
+  },
+  {
+    "en": "Economics",
+    "es": "Economía",
+    "files": [
+      "lib/projection.ts"
+    ]
+  },
+  {
+    "en": "Economic conditions and the limits of our knowledge.",
+    "es": "Condiciones económicas y límites de lo que sabemos.",
+    "files": [
+      "lib/projection.ts"
+    ]
+  },
+  {
+    "en": "The economic subject and its observed capabilities.",
+    "es": "El sujeto económico y sus capacidades observadas.",
+    "files": [
+      "lib/projection.ts"
+    ]
+  },
+  {
+    "en": "Understand the surroundings before interpreting a signal.",
+    "es": "Entender el entorno antes de interpretar una señal.",
+    "files": [
+      "lib/projection.ts"
+    ]
+  },
+  {
+    "en": "Energy renovation · fictional example",
+    "es": "Rehabilitación energética · ejemplo ficticio",
+    "files": [
+      "lib/projection.ts"
+    ]
+  },
+  {
+    "en": "Recovered materials · fictional example",
+    "es": "Materiales recuperados · ejemplo ficticio",
+    "files": [
+      "lib/projection.ts"
+    ]
+  },
+  {
+    "en": "No organization selected",
+    "es": "Sin organización seleccionada",
+    "files": [
+      "lib/projection.ts"
+    ]
+  },
+  {
+    "en": "July",
+    "es": "Julio",
+    "files": [
+      "lib/projection.ts"
+    ]
+  },
+  {
+    "en": "September",
+    "es": "Septiembre",
+    "files": [
+      "lib/projection.ts"
+    ]
+  },
+  {
+    "en": "Now",
+    "es": "Ahora",
+    "files": [
+      "lib/projection.ts"
+    ]
+  },
+  {
+    "en": "A declared, documented capability",
+    "es": "Una capacidad declarada y documentada",
+    "files": [
+      "lib/projection.ts"
+    ]
+  },
+  {
+    "en": "Public technical sheet · illustrative source",
+    "es": "Ficha técnica pública · fuente ilustrativa",
+    "files": [
+      "lib/projection.ts"
+    ]
+  },
+  {
+    "en": "The example sheet describes thermal renovation and technical building coordination. It does not establish contracts, solvency or available capacity.",
+    "es": "La ficha de ejemplo describe rehabilitación térmica y coordinación técnica de edificios. No acredita contratos, solvencia ni capacidad disponible.",
+    "files": [
+      "lib/projection.ts"
+    ]
+  },
+  {
+    "en": "Explicit statement in the document; scope limited to the capability described.",
+    "es": "Declaración explícita del documento; alcance limitado a la capacidad descrita.",
+    "files": [
+      "lib/projection.ts"
+    ]
+  },
+  {
+    "en": "The declaration does not establish execution or current availability.",
+    "es": "La declaración no demuestra ejecución ni disponibilidad actual.",
+    "files": [
+      "lib/projection.ts"
+    ]
+  },
+  {
+    "en": "A programme opens a demand context",
+    "es": "Un programa abre un contexto de demanda",
+    "files": [
+      "lib/projection.ts"
+    ]
+  },
+  {
+    "en": "Programme announcement · illustrative source",
+    "es": "Anuncio de programa · fuente ilustrativa",
+    "files": [
+      "lib/projection.ts"
+    ]
+  },
+  {
+    "en": "The fictional announcement concerns energy renovation of buildings. Its schedule and requirements create research context, not a commercial relationship.",
+    "es": "El anuncio ficticio contempla actuaciones de rehabilitación energética en edificios. Su calendario y requisitos crean un contexto de investigación; no una relación comercial.",
+    "files": [
+      "lib/projection.ts"
+    ]
+  },
+  {
+    "en": "Scope published in the announcement and programme date.",
+    "es": "Ámbito publicado en el anuncio y fecha del programa.",
+    "files": [
+      "lib/projection.ts"
+    ]
+  },
+  {
+    "en": "Awarded budget, specific eligibility and commercial fit are unknown.",
+    "es": "Desconocemos presupuesto adjudicado, elegibilidad concreta y encaje comercial.",
+    "files": [
+      "lib/projection.ts"
+    ]
+  },
+  {
+    "en": "A recovered-materials pilot is published",
+    "es": "Se publica un piloto de materiales recuperados",
+    "files": [
+      "lib/projection.ts"
+    ]
+  },
+  {
+    "en": "Project report · illustrative source",
+    "es": "Memoria del proyecto · fuente ilustrativa",
+    "files": [
+      "lib/projection.ts"
+    ]
+  },
+  {
+    "en": "The fictional report describes a local pilot and its materials. It supports the pilot announcement, without establishing a contractual relationship between actors.",
+    "es": "La memoria ficticia describe un piloto local y sus materiales. Es evidencia del anuncio del piloto, sin demostrar una relación contractual entre actores.",
+    "files": [
+      "lib/projection.ts"
+    ]
+  },
+  {
+    "en": "Explicit publication of the pilot; do not infer customers from co-occurrence.",
+    "es": "Publicación explícita del piloto; no inferir clientes a partir de coapariciones.",
+    "files": [
+      "lib/projection.ts"
+    ]
+  },
+  {
+    "en": "Results, scaling and commercial relationships are unverified.",
+    "es": "Resultados, escalado y relaciones comerciales no verificados.",
+    "files": [
+      "lib/projection.ts"
+    ]
+  },
+  {
+    "en": "A mention changes in a public sample",
+    "es": "Una mención cambia en una muestra pública",
+    "files": [
+      "lib/projection.ts"
+    ]
+  },
+  {
+    "en": "Generative response sample · illustrative",
+    "es": "Muestra de respuesta generativa · ilustrativa",
+    "files": [
+      "lib/projection.ts"
+    ]
+  },
+  {
+    "en": "The organization name appears in two example responses. The observed mention does not imply citation, endorsement, market share or business reality.",
+    "es": "En dos respuestas de ejemplo aparece el nombre de la organización. La mención observada no implica cita, recomendación, cuota de mercado ni realidad del negocio.",
+    "files": [
+      "lib/projection.ts"
+    ]
+  },
+  {
+    "en": "Preserved surface response under specific conditions.",
+    "es": "Respuesta de superficie preservada bajo condiciones concretas.",
+    "files": [
+      "lib/projection.ts"
+    ]
+  },
+  {
+    "en": "DEMO-DRI v1 instrument · illustrative prompt · Spanish · 2 samples · 30 Sep 2026. No population estimate.",
+    "es": "Instrumento DEMO-DRI v1 · consulta ilustrativa · español · 2 muestras · 30 sep 2026. Sin estimación poblacional.",
+    "files": [
+      "lib/projection.ts"
+    ]
+  },
+  {
+    "en": "Small sample; uncertainty not quantified. Does not represent stability or performance.",
+    "es": "Muestra pequeña; incertidumbre no cuantificada. No representa estabilidad ni rendimiento.",
+    "files": [
+      "lib/projection.ts"
+    ]
+  },
+  {
+    "en": "A known capability meets a demand context. There is a possibility to investigate; commercial fit remains open.",
+    "es": "Una capacidad conocida encuentra un contexto de demanda. Hay una posibilidad que investigar; el encaje comercial sigue abierto.",
+    "files": [
+      "lib/projection.ts"
+    ]
+  },
+  {
+    "en": "The programme covers work related to Norte Renovable's described capability. That overlap is a reason to look closer.",
+    "es": "El programa contempla actuaciones relacionadas con la capacidad descrita por Norte Renovable. La coincidencia es una razón para mirar más de cerca.",
+    "files": [
+      "lib/projection.ts"
+    ]
+  },
+  {
+    "en": "Declared capability + programme scope + temporal context → derived possibility. No award, customer or contract has been observed.",
+    "es": "Capacidad declarada + ámbito del programa + contexto temporal → posibilidad derivada. No se ha observado adjudicación, cliente ni contrato.",
+    "files": [
+      "lib/projection.ts"
+    ]
+  },
+  {
+    "en": "Eligibility, geographic reach per capability, available resources and economic conditions remain unresolved.",
+    "es": "Elegibilidad, alcance geográfico por capacidad, recursos disponibles y condiciones económicas pendientes.",
+    "files": [
+      "lib/projection.ts"
+    ]
+  },
+  {
+    "en": "Investigate requirements and reach before assessing fit.",
+    "es": "Investigar requisitos y alcance antes de evaluar el encaje.",
+    "files": [
+      "lib/projection.ts"
+    ]
+  },
+  {
+    "en": "Capability",
+    "es": "Capacidad",
+    "files": [
+      "lib/projection.ts"
+    ]
+  },
+  {
+    "en": "Thematic overlap",
+    "es": "Coincidencia temática",
+    "files": [
+      "lib/projection.ts"
+    ]
+  },
+  {
+    "en": "To verify",
+    "es": "Por verificar",
+    "files": [
+      "lib/projection.ts"
+    ]
+  },
+  {
+    "en": "Conditions",
+    "es": "Condiciones",
+    "files": [
+      "lib/projection.ts"
+    ]
+  },
+  {
+    "en": "A mention appears. Its meaning has limits.",
+    "es": "Una mención aparece. Su significado tiene límites.",
+    "files": [
+      "lib/projection.ts"
+    ]
+  },
+  {
+    "en": "The organization appears in a generative sample. We observe the surface without equating it with endorsement or business reality.",
+    "es": "La organización aparece en una muestra generativa. Observamos la superficie, sin confundirla con una recomendación o con el negocio.",
+    "files": [
+      "lib/projection.ts"
+    ]
+  },
+  {
+    "en": "It is useful to understand how the organization is publicly represented and what information accompanies the mention.",
+    "es": "Conviene entender cómo se representa públicamente la organización y qué información acompaña a la mención.",
+    "files": [
+      "lib/projection.ts"
+    ]
+  },
+  {
+    "en": "Observation of a response under documented conditions. Scope restricted to this sample.",
+    "es": "Observación de una respuesta bajo condiciones documentadas. Alcance exclusivo de esa muestra.",
+    "files": [
+      "lib/projection.ts"
+    ]
+  },
+  {
+    "en": "Does not establish citation, endorsement, general reputation or business knowledge.",
+    "es": "No acredita cita, endorsement, reputación general ni conocimiento del negocio.",
+    "files": [
+      "lib/projection.ts"
+    ]
+  },
+  {
+    "en": "Expand the sample through authorized research.",
+    "es": "Ampliar la muestra con investigación autorizada.",
+    "files": [
+      "lib/projection.ts"
+    ]
+  },
+  {
+    "en": "Sample",
+    "es": "Muestra",
+    "files": [
+      "lib/projection.ts"
+    ]
+  },
+  {
+    "en": "2 responses",
+    "es": "2 respuestas",
+    "files": [
+      "lib/projection.ts"
+    ]
+  },
+  {
+    "en": "Instrument",
+    "es": "Instrumento",
+    "files": [
+      "lib/projection.ts"
+    ]
+  },
+  {
+    "en": "DEMO-DRI v1",
+    "es": "DEMO-DRI v1",
+    "files": [
+      "lib/projection.ts"
+    ]
+  },
+  {
+    "en": "A capability helps frame the panorama.",
+    "es": "Una capacidad ayuda a situar el panorama.",
+    "files": [
+      "lib/projection.ts"
+    ]
+  },
+  {
+    "en": "A public sheet describes thermal renovation. It is documented context with a specific scope.",
+    "es": "Una ficha pública describe rehabilitación térmica. Es contexto documentado, con un alcance concreto.",
+    "files": [
+      "lib/projection.ts"
+    ]
+  },
+  {
+    "en": "Understanding the described capability helps direct attention without inventing a commercial profile.",
+    "es": "Entender la capacidad descrita permite orientar atención sin inventar un perfil comercial.",
+    "files": [
+      "lib/projection.ts"
+    ]
+  },
+  {
+    "en": "Explicit declaration in an example sheet; observation limited to that declaration.",
+    "es": "Declaración explícita en una ficha de ejemplo; observación limitada a esa declaración.",
+    "files": [
+      "lib/projection.ts"
+    ]
+  },
+  {
+    "en": "Executed experience and available resources are unverified.",
+    "es": "Experiencia ejecutada y recursos disponibles no verificados.",
+    "files": [
+      "lib/projection.ts"
+    ]
+  },
+  {
+    "en": "Compare the declaration with additional evidence.",
+    "es": "Contrastar la declaración con evidencia adicional.",
+    "files": [
+      "lib/projection.ts"
+    ]
+  },
+  {
+    "en": "We cannot yet support a reputation reading.",
+    "es": "Aún no podemos sostener una lectura de reputación.",
+    "files": [
+      "lib/projection.ts"
+    ]
+  },
+  {
+    "en": "A sufficient, contextualized sample is missing. Absence of knowledge is not a negative assessment.",
+    "es": "Falta una muestra suficiente y contextualizada. La ausencia de conocimiento no es una valoración negativa.",
+    "files": [
+      "lib/projection.ts"
+    ]
+  },
+  {
+    "en": "A conclusion would be premature.",
+    "es": "Una conclusión sería prematura.",
+    "files": [
+      "lib/projection.ts"
+    ]
+  },
+  {
+    "en": "Sufficiency check: no adequate basis exists in this demonstration.",
+    "es": "Comprobación de suficiencia: no existe una base adecuada en esta demostración.",
+    "files": [
+      "lib/projection.ts"
+    ]
+  },
+  {
+    "en": "Insufficient basis to compare or assess.",
+    "es": "Sin base suficiente para comparar o valorar.",
+    "files": [
+      "lib/projection.ts"
+    ]
+  },
+  {
+    "en": "Define bounded research.",
+    "es": "Definir una investigación acotada.",
+    "files": [
+      "lib/projection.ts"
+    ]
+  },
+  {
+    "en": "A pilot puts context in motion.",
+    "es": "Un piloto pone el contexto en movimiento.",
+    "files": [
+      "lib/projection.ts"
+    ]
+  },
+  {
+    "en": "A recovered-materials experience is published. The announcement expands context without establishing commercial relationships.",
+    "es": "Se publica una experiencia de materiales recuperados. El anuncio amplía el contexto, sin establecer vínculos comerciales.",
+    "files": [
+      "lib/projection.ts"
+    ]
+  },
+  {
+    "en": "The pilot allows research into capabilities and conditions for scaling.",
+    "es": "El piloto permite investigar capacidades y condiciones de escalado.",
+    "files": [
+      "lib/projection.ts"
+    ]
+  },
+  {
+    "en": "Explicit publication of the pilot in an illustrative report.",
+    "es": "Publicación explícita del piloto en una memoria ilustrativa.",
+    "files": [
+      "lib/projection.ts"
+    ]
+  },
+  {
+    "en": "Results and continuity are not yet verified.",
+    "es": "Resultados y continuidad todavía no verificados.",
+    "files": [
+      "lib/projection.ts"
+    ]
+  },
+  {
+    "en": "Examine published results when evidence exists.",
+    "es": "Examinar los resultados publicados cuando exista evidencia.",
+    "files": [
+      "lib/projection.ts"
+    ]
+  },
+  {
+    "en": "No supported date",
+    "es": "Sin fecha acreditada",
+    "files": [
+      "lib/projection.ts"
+    ]
+  },
+  {
+    "en": "AXIGNAL · LOCAL DRAFT · NOT SENT",
+    "es": "AXIGNAL · BORRADOR LOCAL · NO ENVIADO",
+    "files": [
+      "lib/public-contracts.ts"
+    ]
+  },
+  {
+    "en": "Recipient: pending publication",
+    "es": "Destinatario: pendiente de publicación",
+    "files": [
+      "lib/public-contracts.ts"
+    ]
+  },
+  {
+    "en": "Subject: ",
+    "es": "Asunto: ",
+    "files": [
+      "lib/public-contracts.ts"
+    ]
+  },
+  {
+    "en": "Name: ",
+    "es": "Nombre: ",
+    "files": [
+      "lib/public-contracts.ts"
+    ]
+  },
+  {
+    "en": "This draft does not lodge a request or prove receipt.",
+    "es": "Este borrador no registra una solicitud ni acredita recepción.",
+    "files": [
+      "lib/public-contracts.ts"
+    ]
+  },
+  {
+    "en": "This is an illustrative explanation, without live research. ",
+    "es": "Esta es una explicación ilustrativa, sin investigación en vivo. ",
+    "files": [
+      "app/api/axent/route.ts"
+    ]
+  },
+  {
+    "en": "In this demo I can explain the selected context, its limits and evidence. New research would require an authorized provider and tools.",
+    "es": "En esta demo puedo explicar el contexto seleccionado, sus límites y su evidencia. Para una investigación nueva haría falta un proveedor y herramientas autorizados.",
+    "files": [
+      "app/api/axent/route.ts"
+    ]
+  },
+  {
+    "en": "There is no supported signal at this time. Absence of knowledge does not allow us to conclude that something does not exist.",
+    "es": "No hay una señal sustentada en este corte. La ausencia de conocimiento no permite concluir que algo no existe.",
+    "files": [
+      "app/api/axent/route.ts"
+    ]
+  },
+  {
+    "en": "The explanation is unavailable. You can try again.",
+    "es": "La explicación no está disponible. Puedes volver a intentarlo.",
+    "files": [
+      "app/api/axent/route.ts"
+    ]
+  },
+  {
+    "en": "Page unavailable",
+    "es": "Página no disponible",
+    "files": [
+      "app/not-found.tsx"
+    ]
+  },
+  {
+    "en": "Let's follow another thread.",
+    "es": "Sigamos otro hilo.",
+    "files": [
+      "app/not-found.tsx"
+    ]
+  },
+  {
+    "en": "We could not find this page. Return home or open the notebook to keep exploring.",
+    "es": "No encontramos esta página. Puedes volver al inicio o abrir el cuaderno para seguir explorando.",
+    "files": [
+      "app/not-found.tsx"
+    ]
+  },
+  {
+    "en": "Return home",
+    "es": "Volver al inicio",
+    "files": [
+      "app/not-found.tsx"
+    ]
+  }
+]

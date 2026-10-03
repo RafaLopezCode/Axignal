@@ -744,7 +744,7 @@ export function Panorama() {
               )}
             </div>
           </main>
-          <aside className="axent-desktop" aria-label="AXENT">
+          <aside className="axent-desktop" aria-label="Axent">
             <Axent
               chat={chat}
               draft={draft}
