@@ -13,7 +13,7 @@ from application.economic_discovery.explanation import (
     ExplainableBasis,
 )
 from application.xeed_access.organization_reader import AuthorizedXeedOrganization
-from domain.evidence.epistemics import Currentness
+from domain.evidence.epistemics import Currentness, EpistemicState
 from domain.faxt.model import FAXT
 from domain.xignal import Xignal, XignalEpistemicState, XignalKind
 
@@ -156,6 +156,8 @@ def _trail(
 
 
 def _validate_observed_support(*, basis: ExplainableBasis, faxt: FAXT) -> None:
+    if faxt.epistemic_state not in (EpistemicState.OBSERVED, EpistemicState.CORROBORATED):
+        raise ValueError("OBSERVED Xignal requires OBSERVED or CORROBORATED canonical FAXT")
     if basis.subject_id != faxt.subject_id:
         raise ValueError("OBSERVED Xignal basis subject must match canonical FAXT subject")
     support_evidence = {

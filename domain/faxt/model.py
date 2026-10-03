@@ -1,7 +1,7 @@
 """Canonical FAXT model.
 
-FAXT.create requires an exact proposition-bound AdmissionDecision.
-Doctrine: MASTER §4.5, §15.1, §15.2, §46.9.
+Canonical FAXT values are materialized only through FAXT.create after an exact
+proposition-bound EvidenceAdmission decision.
 """
 
 from __future__ import annotations
@@ -24,9 +24,9 @@ class FAXTCreationError(EvidenceAdmissionError):
     """Raised when a FAXT cannot be created canonically."""
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, init=False)
 class FAXT:
-    """A canonical, evidence-backed unit of knowledge (MASTER §15.2)."""
+    """A canonical, evidence-backed unit of knowledge."""
 
     id: FaxtId
     subject_id: str
@@ -37,6 +37,35 @@ class FAXT:
     epistemic_state: EpistemicState
     currentness: Currentness = Currentness.UNKNOWN
     contradictions: tuple[str, ...] = ()
+
+    def __init__(self, *_args: object, **_kwargs: object) -> None:
+        raise TypeError("FAXT can only be materialized through FAXT.create")
+
+    @classmethod
+    def _materialize(
+        cls,
+        *,
+        faxt_id: FaxtId,
+        subject_id: str,
+        predicate: str,
+        object_or_value: str,
+        evidence_refs: tuple[str, ...],
+        observed_at: datetime,
+        epistemic_state: EpistemicState,
+        currentness: Currentness,
+        contradictions: tuple[str, ...] = (),
+    ) -> FAXT:
+        value = object.__new__(cls)
+        object.__setattr__(value, "id", faxt_id)
+        object.__setattr__(value, "subject_id", subject_id)
+        object.__setattr__(value, "predicate", predicate)
+        object.__setattr__(value, "object_or_value", object_or_value)
+        object.__setattr__(value, "evidence_refs", evidence_refs)
+        object.__setattr__(value, "observed_at", observed_at)
+        object.__setattr__(value, "epistemic_state", epistemic_state)
+        object.__setattr__(value, "currentness", currentness)
+        object.__setattr__(value, "contradictions", contradictions)
+        return value
 
     @classmethod
     def create(
@@ -53,7 +82,7 @@ class FAXT:
         observed_at: datetime | None = None,
         currentness: Currentness = Currentness.UNKNOWN,
     ) -> FAXT:
-        """Create a canonical FAXT from one exact admitted proposition."""
+        """Create canonical state from one exact admitted proposition."""
 
         if not faxt_id.strip():
             raise FAXTCreationError("a canonical FAXT requires an id")
@@ -83,8 +112,8 @@ class FAXT:
         )
         EvidenceAdmission.require_claim(decision, request)
 
-        return cls(
-            id=faxt_id,
+        return cls._materialize(
+            faxt_id=faxt_id,
             subject_id=subject_id,
             predicate=predicate,
             object_or_value=object_or_value,

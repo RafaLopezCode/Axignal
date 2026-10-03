@@ -55,8 +55,6 @@ class Hfx01Demo:
         shared_org = Organization(
             OrganizationId("org-demo-shared"),
             organization_name,
-            capabilities=("Industrial materials manufacturing",),
-            markets=("Northern Europe",),
         )
         self.organizations.items[shared_org.id] = shared_org
 

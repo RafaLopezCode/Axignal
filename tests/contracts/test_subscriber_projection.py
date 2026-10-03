@@ -12,6 +12,9 @@ from application.subscriber_projection.axigland import (
     project_axigland,
 )
 from application.xeed_access.reader import TrustedRequestContext
+from domain.evidence.admission import AdmissionRequest, Evidence, EvidenceAdmission, SourceAuthority
+from domain.evidence.epistemics import Currentness
+from domain.faxt.model import FAXT
 from tests.support.hfx01_demo import Hfx01Demo
 
 
@@ -23,8 +26,8 @@ def test_projection_preserves_global_and_private_identities_and_direct_values() 
     assert projection.xeed_id == "xeed-demo-a"
     assert projection.organization.identity != projection.xeed_id
     assert projection.organization.label == "Northwind Materials (synthetic demo)"
-    assert projection.organization.capabilities == ("Industrial materials manufacturing",)
-    assert projection.organization.markets == ("Northern Europe",)
+    assert projection.organization.capabilities == ()
+    assert projection.organization.markets == ()
     assert tuple(node.identity for node in projection.faxt_nodes) == (
         "faxt-demo-a",
         "faxt-demo-a2",
@@ -116,7 +119,7 @@ def test_duplicate_canonical_identity_fails_closed() -> None:
 
 
 def test_equal_raw_ids_in_distinct_identity_planes_keep_distinct_projection_keys() -> None:
-    from dataclasses import replace
+    from datetime import UTC, datetime
 
     from domain.identity import FaxtId, XeedId
     from domain.xeed.knowledge_reference import XeedFaxtReference
@@ -127,7 +130,31 @@ def test_equal_raw_ids_in_distinct_identity_planes_keep_distinct_projection_keys
     )
     organization = demo.organization_reader.read(authorized)
     original = demo.knowledge.faxts.pop(FaxtId("faxt-demo-a"))
-    colliding_faxt = replace(original, id=FaxtId(organization.organization.id))
+    evidence = Evidence(
+        id="evidence-id-collision",
+        source="synthetic://projection-id-collision",
+        source_type="test",
+        reference="synthetic://projection-id-collision",
+        extracted_claim="Synthetic collision capability is observed.",
+        observed_at=datetime(2026, 9, 1, tzinfo=UTC),
+        authority=SourceAuthority.OFFICIAL_WEB,
+    )
+    request = AdmissionRequest(
+        evidence=evidence,
+        subject_id=original.subject_id,
+        predicate="capability",
+        object_or_value=original.object_or_value,
+        claim_proposition=evidence.extracted_claim,
+    )
+    colliding_faxt = FAXT.create(
+        faxt_id=FaxtId(organization.organization.id),
+        subject_id=original.subject_id,
+        predicate="capability",
+        object_or_value=original.object_or_value,
+        evidence=evidence,
+        decision=EvidenceAdmission.admit_claim(request),
+        currentness=Currentness.UNKNOWN,
+    )
     demo.knowledge.faxts[colliding_faxt.id] = colliding_faxt
     demo.knowledge.references.pop((XeedId("xeed-demo-a"), FaxtId("faxt-demo-a")))
     demo.knowledge.add_reference(XeedFaxtReference(XeedId("xeed-demo-a"), colliding_faxt.id))

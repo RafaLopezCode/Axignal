@@ -172,8 +172,6 @@ def authorized_seed() -> AuthorizedXeedOrganization:
     organization = Organization(
         OrganizationId("org-seed"),
         "ColdChain Seed",
-        capabilities=("industrial refrigeration",),
-        markets=("food logistics",),
         locations=("ES",),
     )
     return AuthorizedXeedOrganizationReader(Organizations(organization)).read(authorized_xeed)

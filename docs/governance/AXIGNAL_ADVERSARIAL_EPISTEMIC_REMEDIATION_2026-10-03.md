@@ -78,8 +78,20 @@ Current-main audit checks for admission and legacy model-error path no longer re
 ## AUD-02 — Canonical Construction and Relationship Admission Boundary
 
 **Severity:** HIGH
-**Status:** READY
+**Status:** DONE
 **Depends on:** AUD-01
+
+### Completion evidence
+- FAXT direct constructor is blocked; only FAXT.create can materialize canonical state after exact proposition admission.
+- dataclasses.replace cannot manufacture altered canonical FAXTs.
+- ObservedRelationship direct construction is blocked and exact create/replay requires Evidence + proposition-bound AdmissionDecision.
+- Relationship evidence refs are derived/verified against exact admitted evidence; empty or unrelated refs fail closed.
+- Relationship endpoint identity and observed interval are validated; evidence observed_at must fall inside that interval.
+- Organization economic profile fields cannot be injected through the ordinary constructor; governed profile materialization accepts only same-subject OBSERVED/CORROBORATED FAXTs.
+- INFERRED canonical FAXT cannot support an OBSERVED business subscriber projection.
+- Accredited exact relationship replay remains valid.
+- AUD-02 adversarial reproduction now blocks all tested bypasses: direct FAXT, unadmitted Organization profile, unrelated relationship decision, empty refs and INFERRED-to-OBSERVED promotion.
+- ADR-0073 records the materialization boundary and leaves claim-kind observation governance to AUD-03.
 
 ### Problem
 Canonical types can be directly constructed and relationships can consume unrelated admission decisions or empty evidence references.
@@ -99,7 +111,7 @@ Canonical types can be directly constructed and relationships can consume unrela
 ## AUD-03 — Claim-Kind Governed OBSERVED Projection
 
 **Severity:** HIGH
-**Status:** BLOCKED
+**Status:** READY
 **Depends on:** AUD-01, AUD-02
 
 ### Problem

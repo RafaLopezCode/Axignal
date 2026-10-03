@@ -140,7 +140,6 @@ def seed() -> AuthorizedXeedOrganization:
     organization = Organization(
         OrganizationId("org-seed"),
         "Food Producer",
-        markets=("food logistics",),
         locations=("ES",),
     )
     return AuthorizedXeedOrganizationReader(Organizations(organization)).read(authorized)

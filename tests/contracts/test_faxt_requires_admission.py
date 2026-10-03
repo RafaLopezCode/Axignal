@@ -142,3 +142,23 @@ def test_canonical_observed_at_cannot_diverge_from_admitted_evidence() -> None:
             decision,
             observed_at=evidence.observed_at + timedelta(seconds=1),
         )
+
+
+def test_direct_faxt_constructor_is_blocked() -> None:
+    with pytest.raises(TypeError, match=r"FAXT\.create"):
+        FAXT(
+            id=FaxtId("faxt-forged"),
+            subject_id="org-acme",
+            predicate="MANUFACTURES",
+            object_or_value="industrial pumps",
+            evidence_refs=(),
+            observed_at=NOW,
+            epistemic_state=EpistemicState.OBSERVED,
+        )
+
+
+def test_dataclass_replace_cannot_relabel_canonical_faxt() -> None:
+    evidence = _evidence()
+    faxt = _create(evidence, _decision(evidence))
+    with pytest.raises(TypeError, match=r"FAXT\.create"):
+        replace(faxt, epistemic_state=EpistemicState.INFERRED)

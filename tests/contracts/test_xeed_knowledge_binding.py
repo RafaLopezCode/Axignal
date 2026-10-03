@@ -27,7 +27,11 @@ from tests.support.xeed_authority import InMemoryXeedAuthority
 from tests.support.xeed_knowledge import InMemoryXeedKnowledgeAuthority
 
 
-def _faxt(faxt_id: str = "faxt-shared") -> FAXT:
+def _faxt(
+    faxt_id: str = "faxt-shared",
+    *,
+    currentness: Currentness = Currentness.UNKNOWN,
+) -> FAXT:
     evidence = Evidence(
         id="evidence-1",
         source="https://example.test",
@@ -52,6 +56,7 @@ def _faxt(faxt_id: str = "faxt-shared") -> FAXT:
                 claim_proposition=evidence.extracted_claim,
             )
         ),
+        currentness=currentness,
     )
 
 
@@ -285,7 +290,7 @@ def test_invalid_faxt_id_fails_before_any_private_or_global_lookup() -> None:
 
 def test_binding_preserves_global_faxt_identity_state_and_currentness() -> None:
     _, authority, reader, authorized = _setup()
-    faxt = replace(_faxt(), currentness=Currentness.STALE)
+    faxt = _faxt(currentness=Currentness.STALE)
     authority.add_faxt(faxt)
     authority.add_reference(_reference())
     before = (faxt.id, faxt.epistemic_state, faxt.currentness, faxt.evidence_refs)
@@ -297,16 +302,10 @@ def test_binding_preserves_global_faxt_identity_state_and_currentness() -> None:
     assert set(vars(result.reference)) == {"xeed_id", "faxt_id"}
 
 
-def test_unknown_epistemic_state_is_not_promoted_by_reference_or_read() -> None:
-    _, authority, reader, authorized = _setup()
-    faxt = replace(_faxt(), epistemic_state=EpistemicState.UNKNOWN)
-    authority.add_faxt(faxt)
-    authority.add_reference(_reference())
-
-    result = reader.read(authorized["a"], FaxtId("faxt-shared"))  # type: ignore[arg-type]
-
-    assert result.faxt is faxt
-    assert result.faxt.epistemic_state is EpistemicState.UNKNOWN
+def test_unknown_epistemic_state_cannot_be_forged_for_authorized_read() -> None:
+    faxt = _faxt()
+    with pytest.raises(TypeError, match=r"FAXT\.create"):
+        replace(faxt, epistemic_state=EpistemicState.UNKNOWN)
 
 
 def test_reference_contains_no_provenance_or_epistemic_claims() -> None:
@@ -623,21 +622,14 @@ def test_label_collision_or_mutation_does_not_change_collection_membership() -> 
     assert result[0].authorized_xeed.xeed.label == "Renamed label"
 
 
-def test_unknown_epistemic_state_and_currentness_are_preserved_in_collection() -> None:
-    _, authority, _, authorized = _setup()
-    faxt = replace(
-        _faxt(),
-        epistemic_state=EpistemicState.UNKNOWN,
-        currentness=Currentness.UNKNOWN,
-    )
-    authority.add_faxt(faxt)
-    authority.add_reference(_reference())
-
-    result = _collection_reader(authority).read(authorized["a"])  # type: ignore[arg-type]
-
-    assert result[0].faxt is faxt
-    assert result[0].faxt.epistemic_state is EpistemicState.UNKNOWN
-    assert result[0].faxt.currentness is Currentness.UNKNOWN
+def test_unknown_epistemic_state_cannot_be_forged_for_collection() -> None:
+    faxt = _faxt()
+    with pytest.raises(TypeError, match=r"FAXT\.create"):
+        replace(
+            faxt,
+            epistemic_state=EpistemicState.UNKNOWN,
+            currentness=Currentness.UNKNOWN,
+        )
 
 
 def test_collection_does_not_invent_provenance_or_dereference_evidence() -> None:

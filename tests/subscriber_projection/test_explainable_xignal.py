@@ -10,7 +10,7 @@ from application.economic_discovery.explanation import (
 from application.subscriber_projection import ExplanationStepKind, project_explainable_xignal
 from application.xeed_access.organization_reader import AuthorizedXeedOrganizationReader
 from application.xeed_access.reader import AuthorizedXeedReader, TrustedRequestContext
-from domain.evidence import Currentness
+from domain.evidence import Currentness, EpistemicState
 from domain.evidence.admission import AdmissionRequest, Evidence, EvidenceAdmission, SourceAuthority
 from domain.faxt.model import FAXT
 from domain.identity import OrganizationId, PrincipalId, TenantId, XeedId
@@ -302,3 +302,38 @@ def test_unknown_xignal_requires_and_preserves_explicit_unknowns() -> None:
     assert projection.xignal.epistemic_state is XignalEpistemicState.UNKNOWN
     assert projection.xignal.unknowns == ("Current export activity is UNKNOWN.",)
     assert projection.trail.steps[-1].kind is ExplanationStepKind.UNKNOWN
+
+
+def test_inferred_faxt_cannot_support_observed_business_xignal() -> None:
+    evidence = _evidence()
+    request = AdmissionRequest(
+        evidence=evidence,
+        subject_id="org:acme",
+        predicate="manufactures",
+        object_or_value="industrial pumps",
+        claim_proposition=evidence.extracted_claim,
+    )
+    inferred = FAXT.create(
+        faxt_id="faxt:inferred-pumps",
+        subject_id="org:acme",
+        predicate="manufactures",
+        object_or_value="industrial pumps",
+        evidence=evidence,
+        decision=EvidenceAdmission.admit_claim(request),
+        epistemic_state=EpistemicState.INFERRED,
+        observed_at=NOW,
+        currentness=Currentness.CURRENT,
+    )
+    with pytest.raises(ValueError, match="OBSERVED or CORROBORATED"):
+        project_explainable_xignal(
+            organization_context=_seed(),
+            candidate_id="candidate:industrial-pumps",
+            kind=XignalKind.SUPPLY,
+            epistemic_state=XignalEpistemicState.OBSERVED,
+            title="Industrial pump manufacturing observed",
+            why_attention="This capability changes the observable supply map.",
+            basis=_basis(),
+            emitted_at=NOW,
+            policy_version="xignal-v1",
+            canonical_faxt=inferred,
+        )
