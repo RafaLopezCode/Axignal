@@ -22,6 +22,11 @@ class FiscalEvidenceKind(StrEnum):
     HUMAN_APPROVAL = "HUMAN_APPROVAL"
 
 
+class FiscalApprovalDecision(StrEnum):
+    APPROVED = "APPROVED"
+    REVOKED = "REVOKED"
+
+
 class FiscalEnablementState(StrEnum):
     NO_PROVIDER = "NO_PROVIDER"
     EVIDENCE_INCOMPLETE = "EVIDENCE_INCOMPLETE"
@@ -75,12 +80,21 @@ class FiscalProviderSelection:
     route: FiscalArchitectureRoute
     selected_at: datetime
     decision_ref: str
+    provider_product_version: str
+    adapter_version: str
+    integration_definition_version: int
+    ruleset_id: str
 
     def __post_init__(self) -> None:
         _identifier(self.selection_id, "selection_id")
         _identifier(self.integration_id, "integration_id")
         _aware(self.selected_at, "selected_at")
         _identifier(self.decision_ref, "decision_ref")
+        _identifier(self.provider_product_version, "provider_product_version")
+        _identifier(self.adapter_version, "adapter_version")
+        _identifier(self.ruleset_id, "ruleset_id")
+        if self.integration_definition_version < 1:
+            raise ValueError("integration_definition_version must be positive")
         if self.route is not FiscalArchitectureRoute.EXTERNAL_SIF_PROVIDER:
             raise ValueError(
                 "AXIGNAL-owned SIF is not authorized by AO-22; separate ADR/compliance project required"
@@ -92,23 +106,63 @@ class FiscalComplianceEvidence:
     evidence_id: str
     integration_id: str
     kind: FiscalEvidenceKind
-    provider_version: str
+    provider_product_version: str
+    adapter_version: str
+    integration_definition_version: int
+    ruleset_id: str
     observed_at: datetime
     source_ref: str
+    artifact_ref: str
     artifact_fingerprint: str
 
     def __post_init__(self) -> None:
         for value, name in (
             (self.evidence_id, "evidence_id"),
             (self.integration_id, "integration_id"),
-            (self.provider_version, "provider_version"),
+            (self.provider_product_version, "provider_product_version"),
+            (self.adapter_version, "adapter_version"),
+            (self.ruleset_id, "ruleset_id"),
             (self.source_ref, "source_ref"),
+            (self.artifact_ref, "artifact_ref"),
             (self.artifact_fingerprint, "artifact_fingerprint"),
         ):
             _identifier(value, name)
         _aware(self.observed_at, "observed_at")
+        if self.integration_definition_version < 1:
+            raise ValueError("integration_definition_version must be positive")
+        if not self.artifact_ref.startswith("cas:sha256:"):
+            raise ValueError("artifact_ref must be a content-addressed sha256 reference")
         if not self.artifact_fingerprint.startswith("sha256:"):
             raise ValueError("artifact fingerprint must be sha256")
+
+
+@dataclass(frozen=True, slots=True)
+class FiscalApprovalEvent:
+    approval_event_id: str
+    integration_id: str
+    provider_product_version: str
+    adapter_version: str
+    integration_definition_version: int
+    ruleset_id: str
+    decision: FiscalApprovalDecision
+    occurred_at: datetime
+    actor_ref: str
+    decision_ref: str
+
+    def __post_init__(self) -> None:
+        for value, name in (
+            (self.approval_event_id, "approval_event_id"),
+            (self.integration_id, "integration_id"),
+            (self.provider_product_version, "provider_product_version"),
+            (self.adapter_version, "adapter_version"),
+            (self.ruleset_id, "ruleset_id"),
+            (self.actor_ref, "actor_ref"),
+            (self.decision_ref, "decision_ref"),
+        ):
+            _identifier(value, name)
+        if self.integration_definition_version < 1:
+            raise ValueError("integration_definition_version must be positive")
+        _aware(self.occurred_at, "occurred_at")
 
 
 @dataclass(frozen=True, slots=True)
@@ -119,8 +173,12 @@ class FiscalComplianceProjection:
     ruleset: FiscalRuleSet
     integration_id: str | None
     provider_version: str | None
+    adapter_version: str | None
+    integration_definition_version: int | None
+    approval_effective: bool
     evidence_kinds: tuple[FiscalEvidenceKind, ...]
     missing_evidence: tuple[FiscalEvidenceKind, ...]
     live_enablement_allowed: bool
     compliance_claim_allowed: bool
+    invalid_reasons: tuple[str, ...]
     coverage_notes: tuple[str, ...]

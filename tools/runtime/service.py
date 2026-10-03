@@ -983,12 +983,20 @@ def _accounting_reconciliation_payload(
 def _fiscal_compliance_projection(
     runtime: AxignalRuntime, *, grant: AdminAuthorizationGrant, now: datetime
 ) -> FiscalComplianceProjection:
+    from pipeline.source_acquisition import (
+        ContentAddressedArtifactIntegrityAdapter,
+        ContentAddressedArtifactStore,
+    )
+
     return project_fiscal_compliance(
         store=runtime.admin_fiscal_compliance_store,
         integration_store=runtime.admin_integration_store,
         ruleset=canonical_es_sif_ruleset(),
         grant=grant,
         generated_at=now,
+        artifact_integrity=ContentAddressedArtifactIntegrityAdapter(
+            ContentAddressedArtifactStore(runtime.config.data_dir / "artifacts")
+        ),
     )
 
 
@@ -1001,10 +1009,14 @@ def _fiscal_compliance_payload(
         "state": projection.state.value,
         "integrationId": projection.integration_id,
         "providerVersion": projection.provider_version,
+        "adapterVersion": projection.adapter_version,
+        "integrationDefinitionVersion": projection.integration_definition_version,
+        "approvalEffective": projection.approval_effective,
         "liveEnablementAllowed": projection.live_enablement_allowed,
         "complianceClaimAllowed": projection.compliance_claim_allowed,
         "evidenceKinds": [item.value for item in projection.evidence_kinds],
         "missingEvidence": [item.value for item in projection.missing_evidence],
+        "invalidReasons": list(projection.invalid_reasons),
         "coverageNotes": list(projection.coverage_notes),
         "ruleset": {
             "rulesetId": projection.ruleset.ruleset_id,

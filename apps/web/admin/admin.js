@@ -1256,7 +1256,10 @@
       const ruleset = fiscal.ruleset || {}
       const facts = [
         ['Provider', fiscal.integrationId],
-        ['Provider version', fiscal.providerVersion],
+        ['Provider product version', fiscal.providerVersion],
+        ['Adapter version', fiscal.adapterVersion],
+        ['Integration definition', fiscal.integrationDefinitionVersion],
+        ['Human approval', fiscal.approvalEffective === true ? 'EFFECTIVE' : 'NOT EFFECTIVE'],
         ['Corporate deadline', ruleset.corporateDeadline],
         ['Other taxpayer deadline', ruleset.otherTaxpayerDeadline],
         ['Live enablement', fiscal.liveEnablementAllowed === true ? 'ALLOWED' : 'BLOCKED'],
@@ -1278,13 +1281,16 @@
       evidence.replaceChildren()
       const missing = Array.isArray(fiscal.missingEvidence) ? fiscal.missingEvidence : []
       const observed = Array.isArray(fiscal.evidenceKinds) ? fiscal.evidenceKinds : []
+      const invalid = Array.isArray(fiscal.invalidReasons) ? fiscal.invalidReasons : []
       const card = document.createElement('article')
       card.className = 'admin-integration-entry'
       const header = document.createElement('header')
       const title = document.createElement('h3')
       title.textContent = 'Compliance evidence'
       const badge = document.createElement('span')
-      badge.textContent = missing.length ? 'INCOMPLETE' : 'READY'
+      badge.textContent = fiscal.liveEnablementAllowed === true
+        ? 'LIVE ALLOWED'
+        : (missing.length || invalid.length ? 'BLOCKED' : 'READY')
       header.append(title, badge)
       const body = document.createElement('p')
       body.textContent = 'Observed: ' + (observed.length ? observed.join(', ') : 'none') +

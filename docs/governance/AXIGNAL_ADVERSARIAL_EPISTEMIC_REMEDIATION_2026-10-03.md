@@ -240,8 +240,21 @@ Temporal aging can classify evidence HISTORICAL while reuse and visible read mod
 ## AUD-07 — Fiscal Evidence Verification and As-Of Gate
 
 **Severity:** HIGH
-**Status:** READY
+**Status:** DONE
 **Depends on:** none
+
+### Completion evidence
+- Fiscal provider selection now binds provider product version, AXIGNAL adapter version, AO-18 integration definition version and ruleset id independently.
+- Fiscal evidence carries the exact deployment binding plus CAS artifact reference/fingerprint and only counts when observed on/before as_of.
+- Projection resolves the real CAS artifact and verifies that artifact_ref and sha256 fingerprint identify the same immutable bytes.
+- Future, missing, corrupt/unresolvable or differently-bound evidence cannot satisfy documentary completeness.
+- Human approval is now an append-only APPROVED/REVOKED event ledger rather than authority inferred from a HUMAN_APPROVAL evidence kind.
+- Approval mutation requires STEP_UP fiscal write authority and the approval actor must match the authenticated admin principal.
+- Approval effectiveness is reconstructed as-of for the exact selected binding; later revocation does not rewrite historical authorization.
+- AO-18 registry definition version is explicitly separate from provider product version; definition drift blocks enablement.
+- Historical drift evidence remains inspectable but does not poison a newly complete exact-binding evidence set.
+- Admin fiscal projection surfaces adapter/integration versions, effective approval and invalid/drift reasons.
+- ADR-0078 records the exact-binding, artifact-verification and as-of authority boundary.
 
 ### Problem
 AO-22 can allow live/compliance claim from a complete set of opaque references, including evidence observed in the future relative to projection time.
@@ -260,7 +273,7 @@ AO-22 can allow live/compliance claim from a complete set of opaque references, 
 ## AUD-08 — Legacy Evidence Identity Replay Conflict
 
 **Severity:** MEDIUM
-**Status:** BLOCKED
+**Status:** READY
 **Depends on:** AUD-01
 
 ### Problem

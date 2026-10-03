@@ -8,6 +8,8 @@ from typing import Protocol
 
 from domain.admin_access import AdminAssurance, AdminAuthorizationGrant, AdminScope
 from domain.admin_fiscal_compliance import (
+    FiscalApprovalDecision,
+    FiscalApprovalEvent,
     FiscalArchitectureRoute,
     FiscalComplianceEvidence,
     FiscalComplianceProjection,
@@ -24,6 +26,12 @@ class FiscalComplianceStore(Protocol):
     def selection(self) -> FiscalProviderSelection | None: ...
     def append_evidence(self, evidence: FiscalComplianceEvidence) -> bool: ...
     def evidence(self) -> tuple[FiscalComplianceEvidence, ...]: ...
+    def append_approval(self, event: FiscalApprovalEvent) -> bool: ...
+    def approvals(self) -> tuple[FiscalApprovalEvent, ...]: ...
+
+
+class FiscalArtifactIntegrity(Protocol):
+    def verify(self, reference: str) -> bool: ...
 
 
 class IntegrationStore(Protocol):
@@ -49,7 +57,6 @@ _REQUIRED_EVIDENCE = (
     FiscalEvidenceKind.PROVIDER_RESPONSIBLE_DECLARATION,
     FiscalEvidenceKind.PROVIDER_TECHNICAL_CONTRACT,
     FiscalEvidenceKind.NON_PRODUCTION_TEST,
-    FiscalEvidenceKind.HUMAN_APPROVAL,
 )
 
 
@@ -148,6 +155,21 @@ class FiscalComplianceService:
         _configured_provider(self._integration_store, evidence.integration_id)
         return self._store.append_evidence(evidence)
 
+    def record_approval(
+        self,
+        *,
+        grant: AdminAuthorizationGrant,
+        event: FiscalApprovalEvent,
+    ) -> bool:
+        _require_write(grant)
+        selection = self._store.selection()
+        if selection is None or selection.integration_id != event.integration_id:
+            raise ValueError("fiscal approval must belong to selected SIF provider")
+        if event.actor_ref != str(grant.principal_id):
+            raise ValueError("fiscal approval actor must match the STEP_UP admin principal")
+        _configured_provider(self._integration_store, event.integration_id)
+        return self._store.append_approval(event)
+
 
 def project_fiscal_compliance(
     *,
@@ -156,6 +178,7 @@ def project_fiscal_compliance(
     ruleset: FiscalRuleSet,
     grant: AdminAuthorizationGrant,
     generated_at: datetime,
+    artifact_integrity: FiscalArtifactIntegrity,
 ) -> FiscalComplianceProjection:
     _require_read(grant)
     selection = store.selection()
@@ -167,10 +190,14 @@ def project_fiscal_compliance(
             ruleset=ruleset,
             integration_id=None,
             provider_version=None,
+            adapter_version=None,
+            integration_definition_version=None,
+            approval_effective=False,
             evidence_kinds=(),
             missing_evidence=_REQUIRED_EVIDENCE,
             live_enablement_allowed=False,
             compliance_claim_allowed=False,
+            invalid_reasons=("NO_PROVIDER",),
             coverage_notes=(
                 "AO-22 chooses an external SIF provider route; no provider is selected yet.",
                 "AXIGNAL-owned SIF remains unauthorized.",
@@ -178,17 +205,75 @@ def project_fiscal_compliance(
             ),
         )
 
-    _configured_provider(integration_store, selection.integration_id)
-    provider_evidence = tuple(
-        item for item in store.evidence() if item.integration_id == selection.integration_id
-    )
-    versions = {item.provider_version for item in provider_evidence}
-    provider_version = next(iter(versions)) if len(versions) == 1 else None
-    kinds = tuple(sorted({item.kind for item in provider_evidence}, key=lambda item: item.value))
+    definition = _configured_provider(integration_store, selection.integration_id)
+    invalid_reasons: list[str] = []
+
+    if generated_at.tzinfo is None or generated_at.utcoffset() is None:
+        raise ValueError("fiscal compliance generated_at must be timezone-aware")
+    if selection.selected_at > generated_at:
+        invalid_reasons.append("SELECTION_FROM_FUTURE")
+    if ruleset.ruleset_id != selection.ruleset_id:
+        invalid_reasons.append("RULESET_DRIFT")
+    if definition.version != selection.integration_definition_version:
+        invalid_reasons.append("INTEGRATION_DEFINITION_DRIFT")
+
+    eligible: list[FiscalComplianceEvidence] = []
+    for item in store.evidence():
+        if item.integration_id != selection.integration_id:
+            continue
+        if item.observed_at > generated_at:
+            invalid_reasons.append(f"FUTURE_EVIDENCE:{item.evidence_id}")
+            continue
+        if item.provider_product_version != selection.provider_product_version:
+            invalid_reasons.append(f"PROVIDER_PRODUCT_VERSION_DRIFT:{item.evidence_id}")
+            continue
+        if item.adapter_version != selection.adapter_version:
+            invalid_reasons.append(f"ADAPTER_VERSION_DRIFT:{item.evidence_id}")
+            continue
+        if item.integration_definition_version != selection.integration_definition_version:
+            invalid_reasons.append(f"INTEGRATION_VERSION_DRIFT:{item.evidence_id}")
+            continue
+        if item.ruleset_id != selection.ruleset_id:
+            invalid_reasons.append(f"EVIDENCE_RULESET_DRIFT:{item.evidence_id}")
+            continue
+        expected_ref = "cas:" + item.artifact_fingerprint
+        if item.artifact_ref != expected_ref or not artifact_integrity.verify(item.artifact_ref):
+            invalid_reasons.append(f"ARTIFACT_UNVERIFIED:{item.evidence_id}")
+            continue
+        eligible.append(item)
+
+    kinds = tuple(sorted({item.kind for item in eligible}, key=lambda item: item.value))
     missing = tuple(item for item in _REQUIRED_EVIDENCE if item not in kinds)
 
-    if provider_version is None or missing:
+    approval_events = sorted(
+        (
+            event
+            for event in store.approvals()
+            if event.integration_id == selection.integration_id
+            and event.provider_product_version == selection.provider_product_version
+            and event.adapter_version == selection.adapter_version
+            and event.integration_definition_version == selection.integration_definition_version
+            and event.ruleset_id == selection.ruleset_id
+            and event.occurred_at <= generated_at
+        ),
+        key=lambda event: (event.occurred_at, event.approval_event_id),
+    )
+    approval_effective = bool(
+        approval_events and approval_events[-1].decision is FiscalApprovalDecision.APPROVED
+    )
+    if not approval_effective:
+        invalid_reasons.append("HUMAN_APPROVAL_NOT_EFFECTIVE")
+
+    binding_blockers = {
+        "SELECTION_FROM_FUTURE",
+        "RULESET_DRIFT",
+        "INTEGRATION_DEFINITION_DRIFT",
+    }
+    if missing or any(reason in binding_blockers for reason in invalid_reasons):
         state = FiscalEnablementState.EVIDENCE_INCOMPLETE
+        allowed = False
+    elif not approval_effective:
+        state = FiscalEnablementState.EVIDENCE_READY
         allowed = False
     else:
         state = FiscalEnablementState.LIVE_ENABLEMENT_ALLOWED
@@ -200,13 +285,19 @@ def project_fiscal_compliance(
         state=state,
         ruleset=ruleset,
         integration_id=selection.integration_id,
-        provider_version=provider_version,
+        provider_version=selection.provider_product_version,
+        adapter_version=selection.adapter_version,
+        integration_definition_version=selection.integration_definition_version,
+        approval_effective=approval_effective,
         evidence_kinds=kinds,
         missing_evidence=missing,
         live_enablement_allowed=allowed,
         compliance_claim_allowed=allowed,
+        invalid_reasons=tuple(sorted(set(invalid_reasons))),
         coverage_notes=(
-            "Provider evidence is version-specific; changing provider version invalidates a complete evidence set.",
+            "Evidence is artifact-verified and evaluated as-of against the exact provider product, adapter, integration definition and ruleset binding.",
+            "A HUMAN_APPROVAL evidence kind is not authority; effective approval comes only from the governed approval event ledger.",
+            "Provider/version drift invalidates a complete evidence set until the exact deployed binding is re-evidenced and re-approved.",
             "Third-party SIF use does not remove the taxpayer's legal responsibility.",
             "Compliance status is private operational evidence and never AXIGLAND truth.",
         ),
