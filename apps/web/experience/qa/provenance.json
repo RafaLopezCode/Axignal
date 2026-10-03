@@ -1,0 +1,72 @@
+[
+  {
+    "capturedAt": "2026-10-03T11:36:02.2609925+02:00",
+    "browser": "Codex In-app Browser",
+    "file": "axignal-admin-authority.jpg",
+    "capture": "Actual CUA browser screenshot, fixture-only data",
+    "sha256": "aea87264e64d8d0e2baecd2c16314b55dfc6309a99b55fd64d844bfdaf1cdaa5",
+    "bytes": 73076,
+    "viewport": "1440x900",
+    "route": "/admin"
+  },
+  {
+    "capturedAt": "2026-10-03T11:34:18.4270849+02:00",
+    "browser": "Codex In-app Browser",
+    "file": "axignal-axent-mobile.jpg",
+    "capture": "Actual CUA browser screenshot, fixture-only data",
+    "sha256": "8dd5c1b73690b3e41e2208c0ab91591d5beadec3842e7a21c3fad5b73060cd49",
+    "bytes": 34255,
+    "viewport": "390x844",
+    "route": "/panorama"
+  },
+  {
+    "capturedAt": "2026-10-03T11:27:30.2328013+02:00",
+    "browser": "Codex In-app Browser",
+    "file": "axignal-landing-desktop.jpg",
+    "capture": "Actual CUA browser screenshot, fixture-only data",
+    "sha256": "57e2b621acb22c46fbaf26381448924a016f2af4f3fb27d3e1b87dbc24110246",
+    "bytes": 74156,
+    "viewport": "1440x900",
+    "route": "/"
+  },
+  {
+    "capturedAt": "2026-10-03T11:35:29.5359804+02:00",
+    "browser": "Codex In-app Browser",
+    "file": "axignal-panorama-atlas.jpg",
+    "capture": "Actual CUA browser screenshot, fixture-only data",
+    "sha256": "f384f2e21b4d886e7443d54d4395bb13c0c94ba66837d3ee174da0a591fd0cd1",
+    "bytes": 104493,
+    "viewport": "1440x900",
+    "route": "/panorama"
+  },
+  {
+    "capturedAt": "2026-10-03T11:27:48.1498976+02:00",
+    "browser": "Codex In-app Browser",
+    "file": "axignal-panorama-desktop.jpg",
+    "capture": "Actual CUA browser screenshot, fixture-only data",
+    "sha256": "f4676db223e89ef1420cb4cd15022312512e1e356df85579bacd20a91774d476",
+    "bytes": 105124,
+    "viewport": "1440x900",
+    "route": "/panorama"
+  },
+  {
+    "capturedAt": "2026-10-03T11:34:18.5213319+02:00",
+    "browser": "Codex In-app Browser",
+    "file": "axignal-panorama-mobile.jpg",
+    "capture": "Actual CUA browser screenshot, fixture-only data",
+    "sha256": "95e22308e14ee670840a3f04efb4fbce3ec827a832c96d95555ba34d99fc691a",
+    "bytes": 35773,
+    "viewport": "390x844",
+    "route": "/panorama"
+  },
+  {
+    "capturedAt": "2026-10-03T11:27:58.4435755+02:00",
+    "browser": "Codex In-app Browser",
+    "file": "axignal-signal-axent.jpg",
+    "capture": "Actual CUA browser screenshot, fixture-only data",
+    "sha256": "629a1c13a1ef169464aa421e56a79f9911283835b78a8dacc9a2c71505f0203c",
+    "bytes": 97765,
+    "viewport": "1440x900",
+    "route": "/panorama"
+  }
+]

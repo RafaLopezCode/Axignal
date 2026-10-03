@@ -1,0 +1,132 @@
+{
+  "authority": "BRAND_ASSET_AUTHORITY_V2",
+  "assets": [
+    {
+      "sha256": "3df29aa09f405b6a5de898841c90c7775909dfbdf344e17a5b6dc73a39c4e8b4",
+      "status": "VERIFIED_OFFICIAL_DERIVATIVE",
+      "source": "Logo_Claro.svg",
+      "derivative": "logo-light.svg"
+    },
+    {
+      "sha256": "15e6c61ccea2134c546ee34cf3d64e6761b34a3278d71642133ee97946ad8fcf",
+      "status": "VERIFIED_OFFICIAL_DERIVATIVE",
+      "source": "Logo_Oscuro.svg",
+      "derivative": "logo-dark.svg"
+    },
+    {
+      "sha256": "a685a164c1b05862da26825c0f74ed9228f6152ddef96f29a199dbbfe6dddd61",
+      "status": "VERIFIED_OFFICIAL_DERIVATIVE",
+      "source": "rrss.svg",
+      "derivative": "isotope.svg"
+    },
+    {
+      "sha256": "77e45a7b31d0ccabe3df4bd10963e4e6e857ae1be949c23f067f061908ae18a2",
+      "status": "VERIFIED_OFFICIAL_DERIVATIVE",
+      "source": "favicon.svg",
+      "derivative": "favicon.svg"
+    },
+    {
+      "sha256": "26395cf322047da76ce9d3f7f52884bdac79e5182425291d0bf6c24f12f9dcc7",
+      "status": "VERIFIED_OFFICIAL_DERIVATIVE",
+      "source": "favicon.svg",
+      "derivative": "favicon-16x16.png"
+    },
+    {
+      "sha256": "f1886e4dc3f3fce8161d721f93899bca9189571648df5ac94a3fc1d80be70361",
+      "status": "VERIFIED_OFFICIAL_DERIVATIVE",
+      "source": "favicon.svg",
+      "derivative": "favicon-32x32.png"
+    },
+    {
+      "sha256": "f552555b84ab631b0ee28783de16e23666f7ac9072f56a5b8756b229c0dce194",
+      "status": "VERIFIED_OFFICIAL_DERIVATIVE",
+      "source": "favicon.svg",
+      "derivative": "favicon-48x48.png"
+    },
+    {
+      "sha256": "e883127321c5f6c04b2eab4c91ae56e24136afbb079ddbdb15b2b8bd712a4831",
+      "status": "VERIFIED_OFFICIAL_DERIVATIVE",
+      "source": "favicon.svg",
+      "derivative": "favicon-96x96.png"
+    },
+    {
+      "sha256": "4c87e3b6027aa1ffa5849b530c43198056dd7c912a3436cc984fcf229d899a56",
+      "status": "VERIFIED_OFFICIAL_DERIVATIVE",
+      "source": "favicon.svg",
+      "derivative": "favicon-180x180.png"
+    },
+    {
+      "sha256": "4605bc85d73d122e8d36c83a78dddd04a0dc0ae5713a5bf42feed38b25019faf",
+      "status": "VERIFIED_OFFICIAL_DERIVATIVE",
+      "source": "favicon.svg",
+      "derivative": "favicon-192x192.png"
+    },
+    {
+      "sha256": "151dd2e520051d26fefda27156c5c019568e6303cb40ad0b4c77833c0751f15a",
+      "status": "VERIFIED_OFFICIAL_DERIVATIVE",
+      "source": "favicon.svg",
+      "derivative": "favicon-512x512.png"
+    },
+    {
+      "sha256": "deab12571e1024286942592361f279e75fe8572abcd674c740e118e9f7afe772",
+      "status": "VERIFIED_OFFICIAL_DERIVATIVE",
+      "source": "favicon.svg",
+      "derivative": "favicon.ico"
+    },
+    {
+      "sha256": "4c87e3b6027aa1ffa5849b530c43198056dd7c912a3436cc984fcf229d899a56",
+      "status": "VERIFIED_OFFICIAL_DERIVATIVE",
+      "source": "favicon.svg",
+      "derivative": "apple-touch-icon.png"
+    },
+    {
+      "sha256": "4605bc85d73d122e8d36c83a78dddd04a0dc0ae5713a5bf42feed38b25019faf",
+      "status": "VERIFIED_OFFICIAL_DERIVATIVE",
+      "source": "favicon.svg",
+      "derivative": "icon-192.png"
+    },
+    {
+      "sha256": "151dd2e520051d26fefda27156c5c019568e6303cb40ad0b4c77833c0751f15a",
+      "status": "VERIFIED_OFFICIAL_DERIVATIVE",
+      "source": "favicon.svg",
+      "derivative": "icon-512.png"
+    },
+    {
+      "sha256": "151dd2e520051d26fefda27156c5c019568e6303cb40ad0b4c77833c0751f15a",
+      "status": "VERIFIED_OFFICIAL_DERIVATIVE",
+      "source": "favicon.svg",
+      "derivative": "organization-logo-512.png"
+    },
+    {
+      "sha256": "151dd2e520051d26fefda27156c5c019568e6303cb40ad0b4c77833c0751f15a",
+      "status": "VERIFIED_OFFICIAL_DERIVATIVE",
+      "source": "favicon.svg",
+      "derivative": "serp-logo-512.png"
+    },
+    {
+      "sha256": "a685a164c1b05862da26825c0f74ed9228f6152ddef96f29a199dbbfe6dddd61",
+      "status": "VERIFIED_OFFICIAL_DERIVATIVE",
+      "source": "rrss.svg",
+      "derivative": "social-avatar.svg"
+    },
+    {
+      "sha256": "72f64d1361cc3332f5ffb6ef8fa0d7f2da6cb5cec499660362205ba0978394a4",
+      "status": "VERIFIED_OFFICIAL_DERIVATIVE",
+      "source": "favicon.svg",
+      "derivative": "safari-pinned-tab.svg"
+    }
+  ],
+  "date": "2026-10-03",
+  "fonts": {
+    "display": "Fraunces / local font",
+    "annotations": "Caveat / OFL / Bic notes only",
+    "body": "Manrope / Google Fonts OFL",
+    "metadata": "IBM Plex Mono / local font"
+  },
+  "observer": {
+    "sha256": "5579FC81014FD3737251E46D7721766ECCB97A826075E79DDCD7FC6C733C2DD7",
+    "transform": "SVG viewport framing; source pixels unchanged",
+    "source": "User attachment: Imagen de ChatGPT 3 oct 2026, 02_17_05-4.png"
+  },
+  "mode": "EXPLORE"
+}
