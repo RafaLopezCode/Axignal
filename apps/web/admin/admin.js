@@ -1231,6 +1231,69 @@
     }
   }
 
+  const fiscal = bootstrap.fiscalCompliance
+  if (current?.slug === 'finance-fiscal' && fiscal) {
+    const route = document.getElementById('admin-fiscal-route')
+    const state = document.getElementById('admin-fiscal-state')
+    const notes = document.getElementById('admin-fiscal-notes')
+    const summary = document.getElementById('admin-fiscal-summary')
+    const evidence = document.getElementById('admin-fiscal-evidence')
+
+    if (route) route.textContent = fiscal.route || 'EXTERNAL_SIF_PROVIDER'
+    if (state) state.textContent = fiscal.state || 'UNKNOWN'
+
+    if (notes) {
+      notes.replaceChildren()
+      for (const noteText of fiscal.coverageNotes || []) {
+        const note = document.createElement('p')
+        note.textContent = noteText
+        notes.append(note)
+      }
+    }
+
+    if (summary) {
+      summary.replaceChildren()
+      const ruleset = fiscal.ruleset || {}
+      const facts = [
+        ['Provider', fiscal.integrationId],
+        ['Provider version', fiscal.providerVersion],
+        ['Corporate deadline', ruleset.corporateDeadline],
+        ['Other taxpayer deadline', ruleset.otherTaxpayerDeadline],
+        ['Live enablement', fiscal.liveEnablementAllowed === true ? 'ALLOWED' : 'BLOCKED'],
+        ['Compliance claim', fiscal.complianceClaimAllowed === true ? 'ALLOWED' : 'BLOCKED'],
+      ]
+      for (const pair of facts) {
+        const card = document.createElement('article')
+        card.className = 'admin-observatory-stat'
+        const strong = document.createElement('strong')
+        strong.textContent = pair[1] == null || pair[1] === '' ? 'UNKNOWN' : String(pair[1])
+        const span = document.createElement('span')
+        span.textContent = pair[0]
+        card.append(strong, span)
+        summary.append(card)
+      }
+    }
+
+    if (evidence) {
+      evidence.replaceChildren()
+      const missing = Array.isArray(fiscal.missingEvidence) ? fiscal.missingEvidence : []
+      const observed = Array.isArray(fiscal.evidenceKinds) ? fiscal.evidenceKinds : []
+      const card = document.createElement('article')
+      card.className = 'admin-integration-entry'
+      const header = document.createElement('header')
+      const title = document.createElement('h3')
+      title.textContent = 'Compliance evidence'
+      const badge = document.createElement('span')
+      badge.textContent = missing.length ? 'INCOMPLETE' : 'READY'
+      header.append(title, badge)
+      const body = document.createElement('p')
+      body.textContent = 'Observed: ' + (observed.length ? observed.join(', ') : 'none') +
+        ' · Missing: ' + (missing.length ? missing.join(', ') : 'none')
+      card.append(header, body)
+      evidence.append(card)
+    }
+  }
+
   document.addEventListener('keydown', (event) => {
     if (event.key !== 'ArrowDown' && event.key !== 'ArrowUp') return
     const links = [...document.querySelectorAll('.admin-nav-link')]

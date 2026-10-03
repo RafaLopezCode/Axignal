@@ -99,7 +99,7 @@ Admin must distinguish measured flywheel behavior from the hypothesis above.
 
 `NOT_STARTED → READY → IN_PROGRESS → BLOCKED → DONE → DEFERRED → REJECTED`
 
-**CURRENT_TASK = AO-22**
+**CURRENT_TASK = AO-23**
 
 ## 7. Closure rule
 
@@ -953,9 +953,22 @@ Financial reporting has a reconciled source trail rather than manually combined 
 
 ## AO-22 — VeriFactu / SIF Compliance Architecture Decision
 
-**Status:** NOT_STARTED
+**Status:** DONE
 **Depends on:** AO-20, AO-21
 **Priority:** P0 Compliance
+
+### Completion evidence
+- Reconciled the current official SIF/VERI*FACTU baseline against BOE and AEAT sources as of 2026-10-03. Current published deadlines are 2027-01-01 for article 3.1.a) taxpayers and 2027-07-01 for the remaining article 3.1 taxpayers; the ruleset is versioned and must be revalidated before live enablement.
+- Build-vs-integrate decision: EXTERNAL_SIF_PROVIDER selected. AXIGNAL_OWN_SIF is explicitly not authorized by AO-22 and would require a separate ADR and dedicated compliance project.
+- ADR-0069 records the external SIF architecture and authority boundary. AO-20 financial documents and AO-21 accounting remain private operational domains and do not become SIF/fiscal authority.
+- Added a provider-neutral fiscal compliance domain/store with immutable provider selection and version-specific evidence records.
+- Fiscal provider selection requires an AO-18 registered, enabled, credential-configured integration explicitly declared for SIF/VERI*FACTU/invoicing use.
+- Live enablement/compliance wording is fail-closed until one provider version has: provider responsible declaration, provider technical/adapter contract evidence, successful non-production test evidence and explicit human approval.
+- Mixed provider versions invalidate evidence completeness. Missing provider/evidence renders NO_PROVIDER or EVIDENCE_INCOMPLETE rather than compliant.
+- Admin Finance / Fiscal now exposes the AO-22 route, current ruleset/deadlines, provider/version, missing evidence and whether live enablement/compliance claims are blocked.
+- Research baseline stored at docs/research/ao22/VERIFACTU_SIF_COMPLIANCE_BASELINE_2026-10-03.md with official source ledger and build-vs-integrate matrix.
+- Focused AO-22 contracts PASS; full deterministic repository gates are required before integration.
+
 ### Work
 - Reconcile current official AEAT VeriFactu/SIF technical and legal requirements at implementation time.
 - Default evaluation: integrate a compliant external SIF/VeriFactu provider through an adapter rather than silently making AXIGNAL itself regulated invoicing software.

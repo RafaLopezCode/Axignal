@@ -49,6 +49,11 @@ from application.admin_financial_documents import (
     FinancialDocumentProjection,
     project_financial_documents,
 )
+from application.admin_fiscal_compliance import (
+    FiscalComplianceProjection,
+    canonical_es_sif_ruleset,
+    project_fiscal_compliance,
+)
 from application.admin_governance import project_admin_governance
 from application.admin_integrations.service import (
     AdminIntegrationProjection,
@@ -85,6 +90,7 @@ from pipeline.admin_billing.stripe import StripeWebhookDependencyError, StripeWe
 from pipeline.admin_commercial import SqliteAdminCommercialStore
 from pipeline.admin_customer_accounts import SqliteAdminCustomerAccountStore
 from pipeline.admin_financial_documents import SqliteFinancialDocumentStore
+from pipeline.admin_fiscal_compliance import SqliteFiscalComplianceStore
 from pipeline.admin_governance import SqliteAdminGovernanceAuditStore
 from pipeline.admin_integrations import SqliteAdminIntegrationStore
 from pipeline.admin_observability import SqliteAdminObservabilityStore
@@ -116,6 +122,7 @@ class AxignalRuntime:
     admin_customer_account_store: SqliteAdminCustomerAccountStore
     admin_billing_store: SqliteAdminBillingStore
     admin_financial_document_store: SqliteFinancialDocumentStore
+    admin_fiscal_compliance_store: SqliteFiscalComplianceStore
     admin_integration_store: SqliteAdminIntegrationStore
     admin_weekly_brief_store: SqliteWeeklyBriefStore
     stripe_webhook: StripeWebhookRuntime | None = None
@@ -199,6 +206,9 @@ def build_runtime(config: RuntimeConfig) -> AxignalRuntime:
     admin_financial_document_store = SqliteFinancialDocumentStore(
         config.data_dir / "admin-financial-documents.sqlite3"
     )
+    admin_fiscal_compliance_store = SqliteFiscalComplianceStore(
+        config.data_dir / "admin-fiscal-compliance.sqlite3"
+    )
     admin_integration_store = SqliteAdminIntegrationStore(
         config.data_dir / "admin-integrations.sqlite3"
     )
@@ -252,6 +262,7 @@ def build_runtime(config: RuntimeConfig) -> AxignalRuntime:
         admin_customer_account_store=admin_customer_account_store,
         admin_billing_store=admin_billing_store,
         admin_financial_document_store=admin_financial_document_store,
+        admin_fiscal_compliance_store=admin_fiscal_compliance_store,
         admin_integration_store=admin_integration_store,
         admin_weekly_brief_store=admin_weekly_brief_store,
         stripe_webhook=stripe_webhook,
@@ -951,6 +962,43 @@ def _accounting_reconciliation_payload(
     }
 
 
+def _fiscal_compliance_projection(
+    runtime: AxignalRuntime, *, grant: AdminAuthorizationGrant, now: datetime
+) -> FiscalComplianceProjection:
+    return project_fiscal_compliance(
+        store=runtime.admin_fiscal_compliance_store,
+        integration_store=runtime.admin_integration_store,
+        ruleset=canonical_es_sif_ruleset(),
+        grant=grant,
+        generated_at=now,
+    )
+
+
+def _fiscal_compliance_payload(
+    projection: FiscalComplianceProjection,
+) -> dict[str, object]:
+    return {
+        "generatedAt": projection.generated_at.isoformat(),
+        "route": projection.route.value,
+        "state": projection.state.value,
+        "integrationId": projection.integration_id,
+        "providerVersion": projection.provider_version,
+        "liveEnablementAllowed": projection.live_enablement_allowed,
+        "complianceClaimAllowed": projection.compliance_claim_allowed,
+        "evidenceKinds": [item.value for item in projection.evidence_kinds],
+        "missingEvidence": [item.value for item in projection.missing_evidence],
+        "coverageNotes": list(projection.coverage_notes),
+        "ruleset": {
+            "rulesetId": projection.ruleset.ruleset_id,
+            "jurisdiction": projection.ruleset.jurisdiction,
+            "effectiveAt": projection.ruleset.effective_at.isoformat(),
+            "corporateDeadline": projection.ruleset.corporate_deadline.isoformat(),
+            "otherTaxpayerDeadline": (projection.ruleset.other_taxpayer_deadline.isoformat()),
+            "sourceRefs": list(projection.ruleset.source_refs),
+        },
+    }
+
+
 def _integration_projection(
     runtime: AxignalRuntime, *, grant: AdminAuthorizationGrant, now: datetime
 ) -> AdminIntegrationProjection:
@@ -1094,6 +1142,7 @@ def _admin_projection_payload(
     api_operations: ApiOperationsProjection | None = None,
     financial_documents: FinancialDocumentProjection | None = None,
     accounting_reconciliation: AccountingReconciliationProjection | None = None,
+    fiscal_compliance: FiscalComplianceProjection | None = None,
 ) -> dict[str, object]:
     payload: dict[str, object] = {
         "mode": projection.mode,
@@ -1135,6 +1184,8 @@ def _admin_projection_payload(
         payload["accountingReconciliation"] = _accounting_reconciliation_payload(
             accounting_reconciliation
         )
+    if fiscal_compliance is not None:
+        payload["fiscalCompliance"] = _fiscal_compliance_payload(fiscal_compliance)
     return payload
 
 
@@ -1153,6 +1204,7 @@ def _render_admin_shell(
     api_operations: ApiOperationsProjection | None = None,
     financial_documents: FinancialDocumentProjection | None = None,
     accounting_reconciliation: AccountingReconciliationProjection | None = None,
+    fiscal_compliance: FiscalComplianceProjection | None = None,
 ) -> bytes:
     template = (web_root / "admin" / "index.html").read_text(encoding="utf-8")
     payload = html.escape(
@@ -1170,6 +1222,7 @@ def _render_admin_shell(
                 api_operations=api_operations,
                 financial_documents=financial_documents,
                 accounting_reconciliation=accounting_reconciliation,
+                fiscal_compliance=fiscal_compliance,
             ),
             sort_keys=True,
             separators=(",", ":"),
@@ -1378,6 +1431,11 @@ def make_handler(runtime: AxignalRuntime) -> type[BaseHTTPRequestHandler]:
                         if admin_projection.current_slug == "finance-fiscal"
                         else None
                     )
+                    fiscal_compliance = (
+                        _fiscal_compliance_projection(runtime, grant=grant, now=now)
+                        if admin_projection.current_slug == "finance-fiscal"
+                        else None
+                    )
                     rendered = _render_admin_shell(
                         runtime.config.web_root,
                         admin_projection,
@@ -1392,6 +1450,7 @@ def make_handler(runtime: AxignalRuntime) -> type[BaseHTTPRequestHandler]:
                         api_operations=api_operations,
                         financial_documents=financial_documents,
                         accounting_reconciliation=accounting_reconciliation,
+                        fiscal_compliance=fiscal_compliance,
                     )
                 except AdminAuthenticationError:
                     self._admin_error(HTTPStatus.UNAUTHORIZED, "Admin authentication failed.")

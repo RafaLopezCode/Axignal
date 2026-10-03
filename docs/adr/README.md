@@ -81,3 +81,4 @@ Constitution (`.specify/memory/constitution.md`).
 | [ADR-0066](ADR-0066-api-webhook-operations-boundary.md) | API/Webhook Operations Boundary (**ACCEPTED**) | AO-18; AO-19 |
 | [ADR-0067](ADR-0067-private-financial-document-ledger.md) | Private Financial Document Ledger Boundary (**ACCEPTED**) | AO-10; AO-20; AO-21 |
 | [ADR-0068](ADR-0068-external-accounting-adapter-reconciliation.md) | External Accounting Adapter and Reconciliation Boundary (**ACCEPTED**) | AO-18; AO-20; AO-21 |
+| [ADR-0069](ADR-0069-external-sif-verifactu-provider.md) | External SIF / VERI*FACTU Provider Architecture (**ACCEPTED**) | AO-18; AO-20; AO-21; AO-22 |
