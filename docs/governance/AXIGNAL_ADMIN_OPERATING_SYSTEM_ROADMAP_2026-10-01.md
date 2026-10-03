@@ -99,7 +99,7 @@ Admin must distinguish measured flywheel behavior from the hypothesis above.
 
 `NOT_STARTED → READY → IN_PROGRESS → BLOCKED → DONE → DEFERRED → REJECTED`
 
-**CURRENT_TASK = AO-23**
+**CURRENT_TASK = AO-24**
 
 ## 7. Closure rule
 
@@ -986,9 +986,26 @@ A future auditor cannot find an improvised or falsely compliant fiscal subsystem
 
 ## AO-23 — Tax / VAT / AEAT Operations
 
-**Status:** NOT_STARTED
+**Status:** DONE
 **Depends on:** AO-21, AO-22
 **Priority:** P0 Compliance
+
+### Completion evidence
+- Verified an official 2026-10-03 AEAT baseline for VAT operations. Initial canonical rule scope covers model 303 monthly/quarterly, model 390 annual/conditional and model 349 monthly/quarterly/conditional.
+- Rules are versioned by jurisdiction/effective baseline and preserve official source references plus general deadline/applicability policy.
+- Exact operational deadlines are not guessed from generic month arithmetic. Every instantiated obligation carries due_at plus deadline_source_ref from an official calendar or authorized adviser source.
+- Added distinct applicability states UNKNOWN / APPLIES / NOT_APPLICABLE. UNKNOWN never becomes DUE merely because time passes; NOT_APPLICABLE requires explicit applicability evidence.
+- Added distinct filing states UNKNOWN / DUE / PREPARED / FILED / ACCEPTED / REJECTED / NOT_APPLICABLE.
+- PREPARED requires applicability, source-document-set, reconciliation and human-approval evidence. FILED additionally requires a filing receipt. Applicable obligations become complete only with AEAT acceptance evidence.
+- AEAT rejection overrides positive intermediate filing state and remains incomplete.
+- Added immutable source/fingerprint evidence records, replay/conflict protection, overdue projection and deterministic accountant/adviser exports preserving deadline/evidence provenance.
+- Fiscal mutations require admin:fiscal:write plus STEP_UP and emit governance audit records under the FISCAL target.
+- Runtime creates a durable admin-tax-operations store and idempotently installs the current versioned rule registry. No tax obligation is auto-created merely because a rule exists.
+- Admin Finance / Fiscal now exposes obligation counts, accepted/prepared/filed/rejected/unknown/overdue states, exact deadlines, deadline source, applicability and missing evidence.
+- Research baseline stored at docs/research/ao23/TAX_VAT_AEAT_OPERATIONS_BASELINE_2026-10-03.md.
+- ADR-0070 records the evidence-backed tax-operations boundary. AXENT/LLMs have no tax/legal authority and AO-23 does not automatically submit to AEAT.
+- Focused AO-23 contracts/runtime tests PASS; full deterministic repository gates are required before integration.
+
 ### Work
 - VAT/tax-period operational views based on accounting/fiscal-system records.
 - Filing calendar, obligations, statuses, source documents and reconciliation checks.

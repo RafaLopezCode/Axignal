@@ -1294,6 +1294,97 @@
     }
   }
 
+  const taxOperations = bootstrap.taxOperations
+  if (current?.slug === 'finance-fiscal' && taxOperations) {
+    const ruleset = document.getElementById('admin-tax-ruleset')
+    const generated = document.getElementById('admin-tax-generated')
+    const notes = document.getElementById('admin-tax-notes')
+    const summary = document.getElementById('admin-tax-summary')
+    const obligations = document.getElementById('admin-tax-obligations')
+
+    if (ruleset) ruleset.textContent = taxOperations.rulesetVersion || 'UNKNOWN'
+    if (generated) generated.textContent = taxOperations.generatedAt ? 'As of ' + taxOperations.generatedAt : ''
+
+    if (notes) {
+      notes.replaceChildren()
+      for (const noteText of taxOperations.coverageNotes || []) {
+        const note = document.createElement('p')
+        note.textContent = noteText
+        notes.append(note)
+      }
+    }
+
+    const rows = Array.isArray(taxOperations.obligations) ? taxOperations.obligations : []
+    if (summary) {
+      summary.replaceChildren()
+      const facts = [
+        ['Obligations', rows.length],
+        ['Accepted', rows.filter((item) => item.state === 'ACCEPTED').length],
+        ['Prepared', rows.filter((item) => item.state === 'PREPARED').length],
+        ['Filed', rows.filter((item) => item.state === 'FILED').length],
+        ['Rejected', rows.filter((item) => item.state === 'REJECTED').length],
+        ['Unknown', rows.filter((item) => item.state === 'UNKNOWN').length],
+        ['Overdue', rows.filter((item) => item.overdue === true).length],
+      ]
+      for (const pair of facts) {
+        const card = document.createElement('article')
+        card.className = 'admin-observatory-stat'
+        const strong = document.createElement('strong')
+        strong.textContent = String(pair[1])
+        const span = document.createElement('span')
+        span.textContent = pair[0]
+        card.append(strong, span)
+        summary.append(card)
+      }
+    }
+
+    if (obligations) {
+      obligations.replaceChildren()
+      if (!rows.length) {
+        const empty = document.createElement('article')
+        empty.className = 'admin-observatory-empty'
+        const heading = document.createElement('strong')
+        heading.textContent = 'No instantiated tax obligations'
+        const body = document.createElement('p')
+        body.textContent = 'Rules exist, but no filing is due/complete/unknown until applicability and an official deadline are instantiated with evidence.'
+        empty.append(heading, body)
+        obligations.append(empty)
+      }
+      for (const item of rows) {
+        const article = document.createElement('article')
+        article.className = 'admin-integration-entry'
+        const header = document.createElement('header')
+        const title = document.createElement('h3')
+        title.textContent = 'Modelo ' + item.modelCode + ' · ' + item.obligationId
+        const badge = document.createElement('span')
+        badge.textContent = item.state + (item.overdue ? ' · OVERDUE' : '')
+        header.append(title, badge)
+
+        const facts = document.createElement('dl')
+        facts.className = 'admin-integration-facts'
+        const addDetail = (label, value) => {
+          const wrapper = document.createElement('div')
+          const term = document.createElement('dt')
+          term.textContent = label
+          const description = document.createElement('dd')
+          description.textContent = value == null || value === '' ? 'UNKNOWN' : String(value)
+          wrapper.append(term, description)
+          facts.append(wrapper)
+        }
+        addDetail('Applicability', item.applicability)
+        addDetail('Period start', item.periodStart)
+        addDetail('Period end', item.periodEnd)
+        addDetail('Due', item.dueAt)
+        addDetail('Deadline source', item.deadlineSourceRef)
+        addDetail('Complete', item.complete)
+        addDetail('Evidence', (item.evidenceKinds || []).join(', ') || 'none')
+        addDetail('Missing evidence', (item.missingEvidence || []).join(', ') || 'none')
+        article.append(header, facts)
+        obligations.append(article)
+      }
+    }
+  }
+
   document.addEventListener('keydown', (event) => {
     if (event.key !== 'ArrowDown' && event.key !== 'ArrowUp') return
     const links = [...document.querySelectorAll('.admin-nav-link')]
