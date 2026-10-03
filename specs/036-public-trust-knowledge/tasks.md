@@ -33,3 +33,10 @@ Foundation precedes stories. Knowledge and trust content can be authored indepen
 - [x] T020 Add compact first-visit privacy notice, persistent preference access and chapter/back-to-top navigation; verify keyboard, storage boundary and reduced motion.
 
 - [x] T021 Link the human-specified LinkedIn company profile from the shared public footer; verify actual URL, accessible label, new-tab rel and browser evidence.
+
+## Subsequent rendered feedback repairs
+- [x] T022 Separate and compact the shared native language control with group focus and a 44px interaction area; inspect desktop German and mobile.
+- [x] T023 Give public navigation visible current-page/current-location states, including mobile, nested routes and fragment history.
+- [x] T024 Style the Acceder CTA with a restrained filled/bordered surface; verify German header at 320px without horizontal overflow.
+- [x] T025 Make the public header sticky and reserve anchor scroll space; verify actual nonzero desktop/mobile scroll positions.
+- [x] T026 Constrain the rotated next-question annotation to its text width and separate it from the paragraph; verify unchanged signal content in desktop/mobile and record screenshots.

@@ -1,0 +1,121 @@
+{
+  "browser": "Codex In-app Browser",
+  "captureTool": "cua_repl",
+  "date": "2026-10-03",
+  "status": "VISUAL_EVIDENCE_READY + HUMAN_VISUAL_ACCEPTANCE_PENDING",
+  "screenshots": [
+    {
+      "path": "screenshots/036-header-contact-refinement.png",
+      "route": "http://127.0.0.1:3810/contact",
+      "locale": "es",
+      "viewport": {
+        "width": 1743,
+        "height": 1188
+      },
+      "state": "header and Contact introduction",
+      "clip": {
+        "x": 0,
+        "width": 1743,
+        "height": 290,
+        "y": 0
+      },
+      "capturedAt": "2026-10-03T15:30:25.7479982Z",
+      "sha256": "348315A3AAD91645ED30F80B929E9BC64DCEE58FD687D661CFBB3579BAA5A764",
+      "transformation": "none; original browser screenshot bytes"
+    },
+    {
+      "path": "screenshots/036-header-language-focus.png",
+      "route": "http://127.0.0.1:3810/contact",
+      "locale": "de",
+      "viewport": {
+        "width": 1743,
+        "height": 1188
+      },
+      "state": "language group focus and access CTA",
+      "clip": {
+        "x": 1190,
+        "width": 400,
+        "height": 270,
+        "y": 0
+      },
+      "capturedAt": "2026-10-03T15:25:26.7068975Z",
+      "sha256": "C7F24EA978C05E2E6EA2C7598203263ADA715E5D3B1013A481917B325C61FA0F",
+      "transformation": "none; original browser screenshot bytes"
+    },
+    {
+      "path": "screenshots/036-header-menu-mobile-refinement.png",
+      "route": "http://127.0.0.1:3810/contact",
+      "locale": "de",
+      "viewport": {
+        "width": 320,
+        "height": 844
+      },
+      "state": "mobile menu with Contact active",
+      "clip": null,
+      "capturedAt": "2026-10-03T15:35:28.6512594Z",
+      "sha256": "A4B77103DD97E138A58B4FE7DE69B7A01E62E2068904F5607C74187DFC60BB4E",
+      "transformation": "none; original browser screenshot bytes"
+    },
+    {
+      "path": "screenshots/036-header-sticky-pricing.png",
+      "route": "http://127.0.0.1:3810/#subscription",
+      "locale": "es",
+      "viewport": {
+        "width": 1743,
+        "height": 1188
+      },
+      "state": "sticky header and Pricing active, scrollY 5785",
+      "clip": null,
+      "capturedAt": "2026-10-03T15:36:21.4367512Z",
+      "sha256": "17D721E7D803484A212D22A0FC079240BB2CF08F743CE56A5D76FC0C9EFFB46E",
+      "transformation": "none; original browser screenshot bytes"
+    },
+    {
+      "path": "screenshots/036-header-sticky-mobile.png",
+      "route": "http://127.0.0.1:3810/#subscription",
+      "locale": "es",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "state": "sticky header during mobile scrollY 6038",
+      "clip": null,
+      "capturedAt": "2026-10-03T15:37:11.1966061Z",
+      "sha256": "711B436C72E7E499EC5F7056578330EE23DBD3AEF4A86B2959B523B5FA85C2AE",
+      "transformation": "none; original browser screenshot bytes"
+    },
+    {
+      "path": "screenshots/036-signal-annotation-desktop.png",
+      "route": "http://127.0.0.1:3810/panorama?signal=renovation",
+      "locale": "en",
+      "viewport": {
+        "width": 1743,
+        "height": 1188
+      },
+      "state": "Understand, transformed annotation and paragraph separate",
+      "clip": {
+        "x": 245,
+        "width": 1120,
+        "height": 478,
+        "y": 550
+      },
+      "capturedAt": "2026-10-03T15:32:17.0168533Z",
+      "sha256": "AB18A7C95566E6C8983FD0E978757ED6E71E131E2BAB95758722B30828DAB099",
+      "transformation": "none; original browser screenshot bytes"
+    },
+    {
+      "path": "screenshots/036-signal-annotation-mobile.png",
+      "route": "http://127.0.0.1:3810/panorama?signal=renovation",
+      "locale": "en",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "state": "Understand, annotation and paragraph separate",
+      "clip": null,
+      "capturedAt": "2026-10-03T15:32:44.2126223Z",
+      "sha256": "D8913C9951C362ADADD3DD6A775A499075E9A93B950176AE7CF5BE8B602F3E93",
+      "transformation": "none; original browser screenshot bytes"
+    }
+  ]
+}

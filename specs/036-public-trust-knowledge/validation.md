@@ -66,3 +66,17 @@ Legal responsible entity, jurisdiction and public contact mailbox remain pending
 ## Evidence
 
 Unedited original browser PNGs are under `apps/web/experience/qa/036-public-trust-knowledge/screenshots/`; viewport, route/state, capture time and SHA256 are in `evidence-manifest.json`. Provider/Observer asset provenance is in `asset-provenance.json`. Human visual acceptance remains pending.
+## Subsequent human-review refinements — 2026-10-03
+
+MODE: PRESERVE/repair of the incumbent exploratory presentation. AUTHORITY_READ: existing feature authority and Design Director reused; no semantic or backend changes. CHANGE: language/control spacing, active navigation, access CTA, sticky public header and signal annotation flow. GOLDEN_MASTER_DELTA: human-requested corrections only; no accepted authority promotion. EPISTEMIC_INVARIANTS: all previous invariants and exact signal text unchanged. STATUS: implemented, locally built and rendered; human visual acceptance remains pending.
+
+BROWSER_QA: original Codex in-app browser PNGs below, separate QA tab to avoid reloading the user's form. Desktop 1743×1188; mobile 390×844 and narrow 320×844.
+- Locale: 12px icon/control gap, 86×32px desktop native select inside a 44px group; visible focus includes the icon and control without collisions. All six native options remain available.
+- Current Contact link has aria-current=page and a 2px underline with an 8px offset. Mobile Contact is highlighted with a pale surface and an inset line. Landing Pricing has aria-current=location at its fragment. Page matching uses exact path/segment boundaries; fragment synchronization and history events preserve the distinction.
+- Acceder: quiet blue surface/border, 44px high, clear hover/focus. German 320px viewport: document and available client width both 305px after accounting for the browser scrollbar; menu right edge 293.45px, no horizontal overflow. Required controls keep their 44px interaction area.
+- Sticky desktop proof: scrollY=5785px, header top=0px, bottom=91px; Pricing section top=107.625px and scroll-padding=108px. Mobile proof: scrollY=6038px, header top=0px, height=79px, scroll-padding=96px; client/content both 375px.
+- Signal annotation cause: the rotated block previously spanned the reading column, so rotation displaced the left edge onto the paragraph. Now fit-content/max-width plus a left transform origin and a 20px grid gap reserve separate geometry. Actual transformed label/paragraph separation=20.0479px on desktop and mobile. English next-question text and its uncertainty remain unchanged.
+- ACCESSIBILITY: native control/keyboard semantics retained, explicit group focus, active indicators beyond color, native mobile dialog Escape/focus continuity and no clipped controls. No motion added.
+- Final browser warning/error query: empty. AUTOMATED_GATES: optimized build including TypeScript PASS; 20 existing frontend tests PASS; 912 catalog entries without missing translations; Architecture Guard PASS; all eight governance checks PASS; AST-only Graphify update (9971 nodes, 23036 edges), no LLM calls; diff whitespace check PASS. These narrow presentation repairs require no new mirrored tests or repeated Python suite.
+
+Evidence and hashes for these refinements are in `qa/036-public-trust-knowledge/refinement-evidence.json`. HUMAN_VISUAL_ACCEPTANCE remains pending; automation does not accept the visual result.

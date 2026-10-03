@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ArrowUpRight, Menu, ArrowRight } from "lucide-react";
 import { useLocale } from "@/lib/locale";
 import { Brand, LocaleToggle, Dialog, MiniFooter } from "./ui";
@@ -10,6 +10,30 @@ export function PublicHeader({ landing = false }: { landing?: boolean }) {
   const { t } = useLocale();
   const path = usePathname();
   const [menu, setMenu] = useState(false);
+  const [hash, setHash] = useState("");
+  useEffect(() => {
+    const syncHash = () => setHash(window.location.hash);
+    syncHash();
+    window.addEventListener("hashchange", syncHash);
+    window.addEventListener("popstate", syncHash);
+    return () => {
+      window.removeEventListener("hashchange", syncHash);
+      window.removeEventListener("popstate", syncHash);
+    };
+  }, [path]);
+  const isCurrentPage = (href: string) =>
+    !href.includes("#") && (path === href || path.startsWith(href + "/"));
+  const currentFor = (href: string) => {
+    const fragment = href.indexOf("#");
+    if (fragment >= 0)
+      return path === "/" && hash === href.slice(fragment)
+        ? ("location" as const)
+        : undefined;
+    return isCurrentPage(href) ? ("page" as const) : undefined;
+  };
+  const selectLink = (href: string) => {
+    if (href.includes("#")) setHash(href.slice(href.indexOf("#")));
+  };
   const links = [
     {
       href: landing ? "#start" : "/#start",
@@ -29,13 +53,8 @@ export function PublicHeader({ landing = false }: { landing?: boolean }) {
             <Link
               key={link.href}
               href={link.href}
-              aria-current={
-                path.startsWith(link.href) &&
-                link.href.startsWith("/") &&
-                !link.href.includes("#")
-                  ? "page"
-                  : undefined
-              }
+              aria-current={currentFor(link.href)}
+              onClick={() => selectLink(link.href)}
             >
               {link.name}
             </Link>
@@ -67,13 +86,21 @@ export function PublicHeader({ landing = false }: { landing?: boolean }) {
               <Link
                 key={link.href}
                 href={link.href}
-                onClick={() => setMenu(false)}
+                aria-current={currentFor(link.href)}
+                onClick={() => {
+                  selectLink(link.href);
+                  setMenu(false);
+                }}
               >
                 {link.name}
                 <ArrowRight size={18} />
               </Link>
             ))}
-            <Link href="/gdpr" onClick={() => setMenu(false)}>
+            <Link
+              href="/gdpr"
+              aria-current={path === "/gdpr" ? "page" : undefined}
+              onClick={() => setMenu(false)}
+            >
               {t("Tus datos y derechos", "Your data and rights")}
               <ArrowRight size={18} />
             </Link>
