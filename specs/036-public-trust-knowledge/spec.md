@@ -67,3 +67,5 @@ The human authorizes material refinement of the isolated Landing and Panorama. T
 - Give Acceder a restrained button surface and sufficient presence, keeping all header controls visible at 320px.
 - Keep the shared public header sticky and reserve scroll space for section destinations.
 - Remove the witnessed overlap between the next-question handwritten annotation and its paragraph in the signal Understand view, preserving exact content and epistemic states.
+## Observer atelier and language focus — human steering
+Replace Panorama centre circles/logo with the exact supplied laptop Observer, handwritten Trabajando!!!! and a looping IBM Plex Mono illustrative line. Keep organization focus access, local pause, reduced motion and evidence semantics. No actual research progress is asserted. Native locale focus styling must disappear after pointer selection while remaining visible for keyboard interaction.

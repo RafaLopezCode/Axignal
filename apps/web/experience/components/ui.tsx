@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { useEffect, useRef, useId } from "react";
+import { useEffect, useRef, useId, useState } from "react";
 import {
   ArrowRight,
   X,
@@ -45,13 +45,19 @@ export function Brand({
   );
 }
 export function LocaleToggle() {
+  const [keyboardFocus, setKeyboardFocus] = useState(false);
+  const pointerInteraction = useRef(false);
   const { locale, setLocale, t } = useLocale();
   return (
-    <label className="locale-selector">
+    <label className={"locale-selector" + (keyboardFocus ? " keyboard-focus" : "")}>
       <Languages size={16} aria-hidden="true" />
       <span className="sr-only">{t("Idioma", "Language")}</span>
       <select
         value={locale}
+        onPointerDown={() => { pointerInteraction.current = true; setKeyboardFocus(false); }}
+        onKeyDown={() => { pointerInteraction.current = false; setKeyboardFocus(true); }}
+        onFocus={(e) => setKeyboardFocus(!pointerInteraction.current && e.target.matches(":focus-visible"))}
+        onBlur={() => { pointerInteraction.current = false; setKeyboardFocus(false); }}
         onChange={(e) => setLocale(e.target.value as Locale)}
       >
         {locales.map((l) => (

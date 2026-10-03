@@ -40,3 +40,5 @@ Foundation precedes stories. Knowledge and trust content can be authored indepen
 - [x] T024 Style the Acceder CTA with a restrained filled/bordered surface; verify German header at 320px without horizontal overflow.
 - [x] T025 Make the public header sticky and reserve anchor scroll space; verify actual nonzero desktop/mobile scroll positions.
 - [x] T026 Constrain the rotated next-question annotation to its text width and separate it from the paragraph; verify unchanged signal content in desktop/mobile and record screenshots.
+- [x] T027 Reuse exact human laptop artwork with provenance; replace centre rings with a responsive, pausable illustrative terminal and preserve organization focus access.
+- [x] T028 Repair modality-aware native locale focus; verify pointer selection and keyboard access in the actual browser.

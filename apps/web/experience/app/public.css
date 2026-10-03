@@ -3088,7 +3088,7 @@ html[data-motion="reduced"] .case-strip {
 .locale-selector > svg {
   flex: 0 0 16px;
 }
-.locale-selector:focus-within {
+.locale-selector.keyboard-focus {
   outline: 2px solid var(--blue);
   outline-offset: 3px;
 }
@@ -3282,4 +3282,54 @@ html[data-motion="reduced"] .case-strip {
   .public-header .header-actions {
     gap: 4px;
   }
+}
+
+/* Human-supplied Observer: illustration, never a research status. */
+.family-constellation:not(.reading-mode):before,
+.family-constellation:not(.reading-mode):after { display: none; }
+.family-atlas-centre.observation-atelier {
+  width: min(100%, 290px); height: auto; min-width: 0;
+  border: 0; border-radius: 0; background: transparent;
+  padding: 0; gap: 8px;
+}
+.observation-atelier .atelier-note {
+  font-family: "Bic Notes", cursive; font-size: 29px; line-height: 1.15;
+  color: var(--blue); max-width: none; transform: rotate(-5deg);
+}
+.atelier-observer { display: block; width: 190px; height: 222px; max-width: 100%; }
+.atelier-terminal {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  font-family: "IBM Plex Mono", monospace; font-size: 10px; line-height: 1.8;
+  color: #536789; width: 100%; min-width: 0;
+}
+.atelier-terminal code {
+  display: block; font: inherit; width: 23ch; white-space: nowrap;
+  overflow: hidden; border-right: 1px solid var(--blue);
+  animation: atelier-code 6s steps(23, end) infinite;
+}
+@keyframes atelier-code {
+  0%, 8% { width: 0; }
+  68%, 88% { width: 23ch; }
+  100% { width: 0; }
+}
+.atelier-motion { display: flex; align-items: center; justify-content: center; gap: 4px; }
+.atelier-motion > span { font-size: 9px; color: #68788e; }
+.atelier-motion button {
+  display: grid; place-items: center; width: 44px; height: 44px;
+  color: #536789; border-radius: 8px;
+}
+.atelier-motion button:hover { background: #edf2fa; }
+.atelier-focus {
+  font-family: Fraunces, serif; font-size: 19px; color: var(--blue);
+  min-height: 44px; max-width: 100%; padding: 6px 10px; border-radius: 8px;
+}
+.atelier-focus:hover { background: #edf2fa; }
+.observation-atelier[data-paused="true"] .atelier-terminal code { animation: none; width: 23ch; }
+html[data-motion="reduced"] .atelier-terminal code { animation: none; width: 23ch; }
+@media (prefers-reduced-motion: reduce) {
+  .atelier-terminal code { animation: none; width: 23ch; }
+}
+@media (max-width: 900px) {
+  .family-atlas-centre.observation-atelier { display: flex; margin: 12px auto 24px; }
+  .atelier-observer { width: 160px; height: 187px; }
 }

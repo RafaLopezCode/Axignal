@@ -1,0 +1,42 @@
+[
+  {
+    "file": "screenshots/036-observer-atelier-desktop.png",
+    "sha256": "55b888c6414eaee0703d3446ef0affdadaf7a7d2c8f8dbbd19d141624ae014c0",
+    "browser": "Codex in-app browser",
+    "viewport": "1743x1188",
+    "route": "/panorama",
+    "state": "Spanish; paused terminal, original Observer; organization focus preserved",
+    "capturedAt": "2026-10-03T15:58:16.2281714Z",
+    "clip": "full viewport"
+  },
+  {
+    "file": "screenshots/036-observer-atelier-mobile.png",
+    "sha256": "7a86b285eef118df06ecef91ee7b2409f85e8f636c13e136fb340166bf5cd0b6",
+    "browser": "Codex in-app browser",
+    "viewport": "390x844",
+    "route": "/panorama",
+    "state": "Spanish; reduced motion; responsive illustration above families",
+    "capturedAt": "2026-10-03T15:56:19.1247719Z",
+    "clip": "full viewport"
+  },
+  {
+    "file": "screenshots/036-locale-keyboard-focus.png",
+    "sha256": "e41dc6b9f2b60eda8bd09c999b4aaa3ced1cf09ab3b3f55b1543e8215b2bac33",
+    "browser": "Codex in-app browser",
+    "viewport": "1743x1188",
+    "route": "/",
+    "state": "French; select focused via native Tab then Shift+Tab; visible group outline",
+    "capturedAt": "2026-10-03T15:57:52.6038724Z",
+    "clip": "1170,0,440,130"
+  },
+  {
+    "file": "screenshots/036-locale-pointer-selection.png",
+    "sha256": "9c6ac7a6b5fcf223425cf1a8b2c694f014859001822e807b4b223f6d9373f4a3",
+    "browser": "Codex in-app browser",
+    "viewport": "1743x1188",
+    "route": "/",
+    "state": "Spanish; pointer-selected; collapsed native popup; no outline",
+    "capturedAt": "2026-10-03T15:58:15.3545406Z",
+    "clip": "1170,0,440,130"
+  }
+]

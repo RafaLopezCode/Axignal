@@ -55,6 +55,7 @@ import {
 } from "./ui";
 import { EvidenceDialog, EvidenceList } from "./evidence";
 import { Axent } from "./axent";
+import { ObservationAtelier } from "./observation-atelier";
 
 export function Panorama() {
   const { t, copy, locale, reducedMotion, setReducedMotion } = useLocale();
@@ -635,24 +636,7 @@ export function Panorama() {
                         }
                       >
                         {layout === "spatial" && (
-                          <button
-                            className="family-atlas-centre"
-                            onClick={() => setUtility("focus")}
-                          >
-                            <img
-                              src="/brand/isotope.svg"
-                              alt=""
-                              width={48}
-                              height={50}
-                            />
-                            <strong>{organization.name}</strong>
-                            <span>
-                              {t(
-                                "Un foco. Un mundo compartido.",
-                                "One focus. One shared world.",
-                              )}
-                            </span>
-                          </button>
+                          <ObservationAtelier organization={organization.name} onFocus={() => setUtility("focus")} />
                         )}
                         {families.map((f, i) => {
                           const signal = projection.signals.find(
