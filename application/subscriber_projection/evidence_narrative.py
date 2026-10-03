@@ -9,6 +9,12 @@ from typing import Protocol
 
 from application.economic_discovery.explanation import BasisContribution, ExplainableBasis
 from application.economic_discovery.observation_memory import GovernedObservation, ObservationMemory
+from application.subscriber_projection.narrative_verification import (
+    NarrativeGraphKind,
+    NarrativeGraphResolver,
+    NarrativeMaterialContribution,
+    NarrativeMaterialResolver,
+)
 from application.subscriber_projection.xignal import ExplainableXignalProjection
 from application.xeed_access.organization_reader import AuthorizedXeedOrganization
 from domain.faxt.model import FAXT
@@ -89,6 +95,8 @@ def build_evidence_narrative(
     basis: ExplainableBasis,
     observation_memory: ObservationMemory,
     artifact_integrity: ArtifactIntegrityPort,
+    material_resolver: NarrativeMaterialResolver,
+    graph_resolver: NarrativeGraphResolver | None = None,
     canonical_faxts: tuple[FAXT, ...] = (),
 ) -> EvidenceNarrative:
     """Resolve Xignal lineage to stored observations and return a UI-safe causal narrative."""
@@ -131,21 +139,30 @@ def build_evidence_narrative(
             )
         )
 
-    if xignal.relationship_ref is not None:
-        steps.append(
-            EvidenceNarrativeStep(
-                step_id=f"narrative:relationship:{xignal.relationship_ref}",
-                kind=EvidenceNarrativeKind.RELATIONSHIP,
-                label="Relevant economic relationship",
-                parent_step_id=root_id,
-            )
+    for graph_ref_id, graph_kind, narrative_kind in (
+        (
+            xignal.relationship_ref,
+            NarrativeGraphKind.RELATIONSHIP,
+            EvidenceNarrativeKind.RELATIONSHIP,
+        ),
+        (xignal.pathx_ref, NarrativeGraphKind.PATHX, EvidenceNarrativeKind.PATHX),
+    ):
+        if graph_ref_id is None:
+            continue
+        if graph_resolver is None:
+            raise ValueError("evidence narrative graph reference requires governed resolver")
+        graph_ref = graph_resolver.resolve(
+            ref=graph_ref_id,
+            kind=graph_kind,
+            authorized_subject_id=subject_id,
         )
-    if xignal.pathx_ref is not None:
+        if graph_ref is None:
+            raise ValueError("evidence narrative graph reference is unresolved or unauthorized")
         steps.append(
             EvidenceNarrativeStep(
-                step_id=f"narrative:pathx:{xignal.pathx_ref}",
-                kind=EvidenceNarrativeKind.PATHX,
-                label="Relevant economic path",
+                step_id=f"narrative:{graph_kind.value.lower()}:{graph_ref_id}",
+                kind=narrative_kind,
+                label=graph_ref.label,
                 parent_step_id=root_id,
             )
         )
@@ -159,6 +176,23 @@ def build_evidence_narrative(
         BasisContribution.CONTRADICTS: 1,
         BasisContribution.CONTEXT: 2,
     }
+    considered = material_resolver.considered(
+        subject_id=subject_id,
+        candidate_id=basis.candidate_id,
+    )
+    material_contradictions = {
+        item.observation_id
+        for item in considered
+        if item.contribution is NarrativeMaterialContribution.CONTRADICTS
+    }
+    basis_contradictions = {
+        item.observation_id
+        for item in basis.data
+        if item.contribution is BasisContribution.CONTRADICTS
+    }
+    if not material_contradictions.issubset(basis_contradictions):
+        raise ValueError("evidence narrative basis omits material contradiction")
+
     for datum in sorted(
         basis.data,
         key=lambda item: (
@@ -172,8 +206,35 @@ def build_evidence_narrative(
             subject_id=subject_id,
             observation_id=datum.observation_id,
         )
-        if observation.record.source_ref != datum.source_ref:
-            raise ValueError("basis source does not match stored observation")
+        material = material_resolver.resolve(datum.observation_id)
+        if material is None:
+            raise ValueError("basis observation has no exact governed narrative material")
+        expected_contribution = NarrativeMaterialContribution(datum.contribution.value)
+        if material.subject_id != subject_id or material.candidate_id != basis.candidate_id:
+            raise ValueError("basis narrative material crosses subject/candidate boundary")
+        if (
+            observation.record.source_ref != datum.source_ref
+            or material.source_ref != datum.source_ref
+        ):
+            raise ValueError("basis source does not match stored observation/material")
+        if (
+            observation.record.source_type != datum.source_type
+            or material.source_type != datum.source_type
+        ):
+            raise ValueError("basis source type does not match stored observation/material")
+        if (
+            observation.record.observed_at != datum.observed_at
+            or material.observed_at != datum.observed_at
+        ):
+            raise ValueError("basis observed time does not match stored observation/material")
+        if material.excerpt_or_summary != datum.excerpt_or_summary:
+            raise ValueError("basis summary does not match exact governed material")
+        if material.contribution is not expected_contribution:
+            raise ValueError("basis contribution does not match considered evidence ledger")
+        if datum.representation_fingerprint != material.representation_fingerprint:
+            raise ValueError("basis representation fingerprint does not match governed material")
+        if datum.extraction_fingerprint != material.extraction_fingerprint:
+            raise ValueError("basis extraction fingerprint does not match governed material")
         verified = False
         if observation.raw_artifact_ref is not None:
             verified = artifact_integrity.verify(observation.raw_artifact_ref)

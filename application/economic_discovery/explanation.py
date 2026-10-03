@@ -28,6 +28,8 @@ class BasisDatum:
     excerpt_or_summary: str
     contribution: BasisContribution
     evidence_ref: str | None = None
+    representation_fingerprint: str | None = None
+    extraction_fingerprint: str | None = None
 
     def __post_init__(self) -> None:
         _required(
@@ -41,6 +43,13 @@ class BasisDatum:
             raise ValueError("basis datum time must be timezone-aware")
         if self.evidence_ref is not None and not self.evidence_ref.strip():
             raise ValueError("basis evidence ref must be non-empty when provided")
+        if (
+            self.representation_fingerprint is not None
+            and not self.representation_fingerprint.strip()
+        ):
+            raise ValueError("basis representation fingerprint cannot be empty")
+        if self.extraction_fingerprint is not None and not self.extraction_fingerprint.strip():
+            raise ValueError("basis extraction fingerprint cannot be empty")
 
 
 @dataclass(frozen=True, slots=True)

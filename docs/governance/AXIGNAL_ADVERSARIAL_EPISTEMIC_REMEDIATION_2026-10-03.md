@@ -140,8 +140,19 @@ Observation-support IDs can currently authorize business-facing OBSERVED signals
 ## AUD-04 — Exact Explainable Basis and Narrative Verification
 
 **Severity:** HIGH
-**Status:** READY
+**Status:** DONE
 **Depends on:** AUD-01, AUD-03
+
+### Completion evidence
+- Explainable Basis data can bind exact representation/extraction fingerprints.
+- EvidenceNarrative requires a NarrativeMaterialResolver and verifies exact summary, source type/ref, observed time, contribution and material version.
+- Resolver considered-evidence ledger makes material contradictions mandatory in the Basis; omission fails closed.
+- Relationship and PATHX references require governed graph resolution and authorized subject scope before narrative rendering.
+- Altered summary/type/version with unchanged IDs fails.
+- Unresolved graph refs fail.
+- Exact replay remains deterministic.
+- FR-30 now binds narrative to its actual DocumentRepresentation fingerprint.
+- ADR-0075 records the boundary and leaves private reuse/currentness to AUD-05/AUD-06.
 
 ### Problem
 Narrative verifies bytes/IDs but can accept altered semantic summary/type/graph references while presenting a convincing evidence story.
@@ -161,7 +172,7 @@ Narrative verifies bytes/IDs but can accept altered semantic summary/type/graph 
 ## AUD-05 — Tenant/Reuse Authorization Before Narrative Access
 
 **Severity:** HIGH
-**Status:** BLOCKED
+**Status:** READY
 **Depends on:** AUD-03
 
 ### Problem

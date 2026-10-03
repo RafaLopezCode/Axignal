@@ -1,9 +1,11 @@
 from __future__ import annotations
 
 import json
-from dataclasses import asdict
+from dataclasses import asdict, replace
 from datetime import UTC, datetime
 from pathlib import Path
+
+import pytest
 
 from application.economic_discovery.brain_contracts import ObservationMode, ObservationRecord
 from application.economic_discovery.explanation import (
@@ -14,6 +16,12 @@ from application.economic_discovery.explanation import (
 from application.economic_discovery.observation_memory import GovernedObservation
 from application.subscriber_projection import (
     EvidenceNarrativeKind,
+    NarrativeGraphKind,
+    NarrativeGraphMapResolver,
+    NarrativeGraphReference,
+    NarrativeMaterial,
+    NarrativeMaterialContribution,
+    NarrativeMaterialMapResolver,
     build_evidence_narrative,
     project_explainable_xignal,
 )
@@ -133,6 +141,8 @@ def _basis() -> ExplainableBasis:
                 excerpt_or_summary="ACME manufactures industrial pumps.",
                 contribution=BasisContribution.SUPPORTS,
                 evidence_ref="evidence:web:1",
+                representation_fingerprint="repr:web:v1",
+                extraction_fingerprint="extract:web:v1",
             ),
             BasisDatum(
                 datum_id="datum:registry",
@@ -142,10 +152,62 @@ def _basis() -> ExplainableBasis:
                 observed_at=NOW,
                 excerpt_or_summary="Registry wording does not explicitly mention pump manufacturing.",
                 contribution=BasisContribution.CONTRADICTS,
+                representation_fingerprint="repr:registry:v1",
+                extraction_fingerprint="extract:registry:v1",
             ),
         ),
         interpretation="Pump manufacturing is observed but registry wording is broader.",
         uncertainty="Geographic availability remains unresolved.",
+    )
+
+
+def _material_resolver() -> NarrativeMaterialMapResolver:
+    return NarrativeMaterialMapResolver(
+        (
+            NarrativeMaterial(
+                observation_id="obs:web",
+                subject_id="org:acme",
+                candidate_id="candidate:industrial-pumps",
+                source_ref="https://example.test/company",
+                source_type="OFFICIAL_WEB",
+                observed_at=NOW,
+                excerpt_or_summary="ACME manufactures industrial pumps.",
+                contribution=NarrativeMaterialContribution.SUPPORTS,
+                representation_fingerprint="repr:web:v1",
+                extraction_fingerprint="extract:web:v1",
+            ),
+            NarrativeMaterial(
+                observation_id="obs:registry",
+                subject_id="org:acme",
+                candidate_id="candidate:industrial-pumps",
+                source_ref="registry:acme",
+                source_type="PUBLIC_REGISTRY",
+                observed_at=NOW,
+                excerpt_or_summary="Registry wording does not explicitly mention pump manufacturing.",
+                contribution=NarrativeMaterialContribution.CONTRADICTS,
+                representation_fingerprint="repr:registry:v1",
+                extraction_fingerprint="extract:registry:v1",
+            ),
+        )
+    )
+
+
+def _graph_resolver() -> NarrativeGraphMapResolver:
+    return NarrativeGraphMapResolver(
+        (
+            NarrativeGraphReference(
+                ref="relationship:supply:1",
+                kind=NarrativeGraphKind.RELATIONSHIP,
+                label="ACME supplies industrial pumps",
+                subject_ids=("org:acme", "org:buyer"),
+            ),
+            NarrativeGraphReference(
+                ref="pathx:supply:1",
+                kind=NarrativeGraphKind.PATHX,
+                label="ACME to buyer supply path",
+                subject_ids=("org:acme", "org:buyer"),
+            ),
+        )
     )
 
 
@@ -200,6 +262,8 @@ def test_complete_evidence_narrative_resolves_runtime_lineage_and_is_ui_safe(
         basis=basis,
         observation_memory=memory,
         artifact_integrity=ContentAddressedArtifactIntegrityAdapter(artifacts),
+        material_resolver=_material_resolver(),
+        graph_resolver=_graph_resolver(),
         canonical_faxts=(_faxt(),),
     )
 
@@ -252,6 +316,7 @@ def test_evidence_narrative_survives_exact_observation_replay(tmp_path: Path) ->
         basis=basis,
         observation_memory=memory,
         artifact_integrity=adapter,
+        material_resolver=_material_resolver(),
         canonical_faxts=(_faxt(),),
     )
 
@@ -264,7 +329,157 @@ def test_evidence_narrative_survives_exact_observation_replay(tmp_path: Path) ->
         basis=basis,
         observation_memory=memory,
         artifact_integrity=adapter,
+        material_resolver=_material_resolver(),
         canonical_faxts=(_faxt(),),
     )
 
     assert after == before
+
+
+def test_narrative_rejects_altered_summary_with_same_ids(tmp_path: Path) -> None:
+    artifacts, memory, _web, _registry = _runtime(tmp_path)
+    basis = _basis()
+    altered = replace(
+        basis,
+        data=(
+            replace(basis.data[0], excerpt_or_summary="ACME is the market leader in pumps."),
+            basis.data[1],
+        ),
+    )
+    projection = project_explainable_xignal(
+        organization_context=_seed(),
+        candidate_id=altered.candidate_id,
+        kind=XignalKind.SUPPLY,
+        epistemic_state=XignalEpistemicState.OBSERVED,
+        title="Industrial pump manufacturing observed",
+        why_attention="Observed supply capability warrants attention.",
+        basis=altered,
+        emitted_at=NOW,
+        policy_version="xignal-v1",
+        canonical_faxt=_faxt(),
+    )
+    with pytest.raises(ValueError, match="summary"):
+        build_evidence_narrative(
+            organization_context=_seed(),
+            projection=projection,
+            basis=altered,
+            observation_memory=memory,
+            artifact_integrity=ContentAddressedArtifactIntegrityAdapter(artifacts),
+            material_resolver=_material_resolver(),
+            canonical_faxts=(_faxt(),),
+        )
+
+
+def test_narrative_rejects_altered_type_or_version_with_same_ids(tmp_path: Path) -> None:
+    artifacts, memory, _web, _registry = _runtime(tmp_path)
+    basis = _basis()
+    altered_type = replace(
+        basis,
+        data=(replace(basis.data[0], source_type="BLOG"), basis.data[1]),
+    )
+    projection = project_explainable_xignal(
+        organization_context=_seed(),
+        candidate_id=altered_type.candidate_id,
+        kind=XignalKind.SUPPLY,
+        epistemic_state=XignalEpistemicState.OBSERVED,
+        title="Industrial pump manufacturing observed",
+        why_attention="Observed supply capability warrants attention.",
+        basis=altered_type,
+        emitted_at=NOW,
+        policy_version="xignal-v1",
+        canonical_faxt=_faxt(),
+    )
+    with pytest.raises(ValueError, match="source type"):
+        build_evidence_narrative(
+            organization_context=_seed(),
+            projection=projection,
+            basis=altered_type,
+            observation_memory=memory,
+            artifact_integrity=ContentAddressedArtifactIntegrityAdapter(artifacts),
+            material_resolver=_material_resolver(),
+            canonical_faxts=(_faxt(),),
+        )
+
+    altered_version = replace(
+        basis,
+        data=(replace(basis.data[0], representation_fingerprint="repr:web:forged"), basis.data[1]),
+    )
+    projection2 = project_explainable_xignal(
+        organization_context=_seed(),
+        candidate_id=altered_version.candidate_id,
+        kind=XignalKind.SUPPLY,
+        epistemic_state=XignalEpistemicState.OBSERVED,
+        title="Industrial pump manufacturing observed",
+        why_attention="Observed supply capability warrants attention.",
+        basis=altered_version,
+        emitted_at=NOW,
+        policy_version="xignal-v1",
+        canonical_faxt=_faxt(),
+    )
+    with pytest.raises(ValueError, match="representation fingerprint"):
+        build_evidence_narrative(
+            organization_context=_seed(),
+            projection=projection2,
+            basis=altered_version,
+            observation_memory=memory,
+            artifact_integrity=ContentAddressedArtifactIntegrityAdapter(artifacts),
+            material_resolver=_material_resolver(),
+            canonical_faxts=(_faxt(),),
+        )
+
+
+def test_narrative_cannot_omit_material_contradiction(tmp_path: Path) -> None:
+    artifacts, memory, _web, _registry = _runtime(tmp_path)
+    basis = _basis()
+    omitted = replace(basis, data=(basis.data[0],))
+    projection = project_explainable_xignal(
+        organization_context=_seed(),
+        candidate_id=omitted.candidate_id,
+        kind=XignalKind.SUPPLY,
+        epistemic_state=XignalEpistemicState.OBSERVED,
+        title="Industrial pump manufacturing observed",
+        why_attention="Observed supply capability warrants attention.",
+        basis=omitted,
+        emitted_at=NOW,
+        policy_version="xignal-v1",
+        canonical_faxt=_faxt(),
+    )
+    with pytest.raises(ValueError, match="omits material contradiction"):
+        build_evidence_narrative(
+            organization_context=_seed(),
+            projection=projection,
+            basis=omitted,
+            observation_memory=memory,
+            artifact_integrity=ContentAddressedArtifactIntegrityAdapter(artifacts),
+            material_resolver=_material_resolver(),
+            canonical_faxts=(_faxt(),),
+        )
+
+
+def test_narrative_rejects_unresolved_graph_reference(tmp_path: Path) -> None:
+    artifacts, memory, _web, _registry = _runtime(tmp_path)
+    basis = _basis()
+    projection = project_explainable_xignal(
+        organization_context=_seed(),
+        candidate_id=basis.candidate_id,
+        kind=XignalKind.SUPPLY,
+        epistemic_state=XignalEpistemicState.OBSERVED,
+        title="Industrial pump manufacturing observed",
+        why_attention="Observed supply capability warrants attention.",
+        basis=basis,
+        emitted_at=NOW,
+        policy_version="xignal-v1",
+        canonical_faxt=_faxt(),
+        relationship_ref="relationship:missing",
+    )
+    with pytest.raises(ValueError, match="unresolved or unauthorized"):
+        build_evidence_narrative(
+            organization_context=_seed(),
+            projection=projection,
+            basis=basis,
+            observation_memory=memory,
+            artifact_integrity=ContentAddressedArtifactIntegrityAdapter(artifacts),
+            material_resolver=_material_resolver(),
+            graph_resolver=_graph_resolver(),
+            canonical_faxts=(_faxt(),),
+        )

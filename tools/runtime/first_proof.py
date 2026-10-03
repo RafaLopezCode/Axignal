@@ -57,6 +57,9 @@ from application.source_acquisition import (
 )
 from application.source_representation import RichSubjectState, compile_rich_subject_state
 from application.subscriber_projection import (
+    NarrativeMaterial,
+    NarrativeMaterialContribution,
+    NarrativeMaterialMapResolver,
     ObservationPhenomenon,
     ObservationSupport,
     ObservationSupportMapResolver,
@@ -394,6 +397,8 @@ class FirstProofService:
                     observed_at=observation.retrieved_at,
                     excerpt_or_summary=excerpt,
                     contribution=BasisContribution.SUPPORTS,
+                    representation_fingerprint=representation.fingerprint,
+                    extraction_fingerprint=None,
                 ),
             ),
             interpretation="The authorized public homepage was reachable and contained visible text when AXIGNAL observed it.",
@@ -440,6 +445,22 @@ class FirstProofService:
             basis=basis,
             observation_memory=self.observation_memory,
             artifact_integrity=ContentAddressedArtifactIntegrityAdapter(self.artifacts),
+            material_resolver=NarrativeMaterialMapResolver(
+                (
+                    NarrativeMaterial(
+                        observation_id=observation_id,
+                        subject_id=ORGANIZATION_ID,
+                        candidate_id=basis.candidate_id,
+                        source_ref=observation.final_uri,
+                        source_type=request.source_type,
+                        observed_at=observation.retrieved_at,
+                        excerpt_or_summary=excerpt,
+                        contribution=NarrativeMaterialContribution.SUPPORTS,
+                        representation_fingerprint=representation.fingerprint,
+                        extraction_fingerprint=None,
+                    ),
+                )
+            ),
         )
         readiness = evaluate_first_map_readiness(
             seed=seed,

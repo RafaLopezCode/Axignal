@@ -13,6 +13,16 @@ from application.subscriber_projection.evidence_narrative import (
     EvidenceNarrativeStep,
     build_evidence_narrative,
 )
+from application.subscriber_projection.narrative_verification import (
+    NarrativeGraphKind,
+    NarrativeGraphMapResolver,
+    NarrativeGraphReference,
+    NarrativeGraphResolver,
+    NarrativeMaterial,
+    NarrativeMaterialContribution,
+    NarrativeMaterialMapResolver,
+    NarrativeMaterialResolver,
+)
 from application.subscriber_projection.observation_support import (
     GovernedObservationSupportResolver,
     ObservationPhenomenon,
@@ -42,6 +52,14 @@ __all__ = [
     "ExplainableXignalProjection",
     "ExplanationStepKind",
     "GovernedObservationSupportResolver",
+    "NarrativeGraphKind",
+    "NarrativeGraphMapResolver",
+    "NarrativeGraphReference",
+    "NarrativeGraphResolver",
+    "NarrativeMaterial",
+    "NarrativeMaterialContribution",
+    "NarrativeMaterialMapResolver",
+    "NarrativeMaterialResolver",
     "ObservationPhenomenon",
     "ObservationSupport",
     "ObservationSupportMapResolver",

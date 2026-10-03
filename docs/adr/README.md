@@ -87,3 +87,4 @@ Constitution (`.specify/memory/constitution.md`).
 | [ADR-0072](ADR-0072-proposition-bound-evidence-admission.md) | Proposition-Bound Evidence Admission (**ACCEPTED**) | AUD-01; EvidenceAdmission; FAXT |
 | [ADR-0073](ADR-0073-canonical-materialization-relationship-admission.md) | Canonical Materialization and Relationship Admission Boundary (**ACCEPTED**) | AUD-02; FAXT; Organization; Relationship |
 | [ADR-0074](ADR-0074-claim-kind-governed-observed-projection.md) | Claim-Kind Governed OBSERVED Projection (**ACCEPTED**) | AUD-03; subscriber projection; observation support |
+| [ADR-0075](ADR-0075-exact-explainable-basis-narrative-verification.md) | Exact Explainable Basis and Narrative Verification (**ACCEPTED**) | AUD-04; EvidenceNarrative; ExplainableBasis |
