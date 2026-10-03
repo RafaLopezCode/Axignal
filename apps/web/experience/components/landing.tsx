@@ -1,4 +1,5 @@
 "use client";
+import { FramedObserver } from "./observer-frame";
 import Link from "next/link";
 import { PublicHeader } from "./public-shell";
 import {
@@ -654,6 +655,7 @@ export function Landing() {
             id="case-panel"
             aria-labelledby={"case-tab-" + useCase}
           >
+            <div className="use-panel-content">
             <span className="mono">{cases[useCase].tag}</span>
             <h3>{cases[useCase].title}</h3>
             <p>{cases[useCase].text}</p>
@@ -661,22 +663,12 @@ export function Landing() {
               {t("Ver un ejemplo", "See an example")}
               <ArrowRight size={16} />
             </Link>
-            <Observer
-              className="use-observer"
-              pose={
-                (
-                  [
-                    "guiding",
-                    "analyzing",
-                    "connecting",
-                    "pointing",
-                    "thinking",
-                    "accompanying",
-                    "connecting",
-                    "pointing",
-                  ] as const
-                )[useCase]
-              }
+            </div>
+            <FramedObserver className="use-observer"
+              pose={([
+                "guiding", "analyzing", "connecting", "pointing",
+                "reflecting", "accompanying", "connecting", "pointing",
+              ] as const)[useCase]}
             />
           </div>
         </section>

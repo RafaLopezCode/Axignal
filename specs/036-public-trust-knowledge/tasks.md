@@ -42,3 +42,7 @@ Foundation precedes stories. Knowledge and trust content can be authored indepen
 - [x] T026 Constrain the rotated next-question annotation to its text width and separate it from the paragraph; verify unchanged signal content in desktop/mobile and record screenshots.
 - [x] T027 Reuse exact human laptop artwork with provenance; replace centre rings with a responsive, pausable illustrative terminal and preserve organization focus access.
 - [x] T028 Repair modality-aware native locale focus; verify pointer selection and keyboard access in the actual browser.
+
+- [x] T029 Repair all eight use-case illustrations using the original gesture sheet at a common scale/baseline; verify complete silhouettes, no editorial remnants, desktop/mobile and keyboard tab behavior.
+
+- [x] T030 Apply the corrected frame to Knowledge feature and article illustrations; inspect desktop/mobile with complete figure and unchanged editorial semantics.

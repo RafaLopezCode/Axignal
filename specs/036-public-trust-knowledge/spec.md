@@ -69,3 +69,8 @@ The human authorizes material refinement of the isolated Landing and Panorama. T
 - Remove the witnessed overlap between the next-question handwritten annotation and its paragraph in the signal Understand view, preserving exact content and epistemic states.
 ## Observer atelier and language focus — human steering
 Replace Panorama centre circles/logo with the exact supplied laptop Observer, handwritten Trabajando!!!! and a looping IBM Plex Mono illustrative line. Keep organization focus access, local pause, reduced motion and evidence semantics. No actual research progress is asserted. Native locale focus styling must disappear after pointer selection while remaining visible for keyboard interaction.
+
+## Use-case Observer framing — human repair request
+Correct clipped and inconsistently scaled case illustrations. Reuse original approved action-sheet pixels; common source-pixel scale, baseline and presentation frame. Exclude editorial labels; reserve illustration space on desktop and mobile. Other accepted composition and product semantics remain unchanged.
+
+The same witnessed clipping defect is also authorized for repair in Knowledge editorial illustrations. Reuse the corrected presentation frame without changing editorial statements or epistemic badges.

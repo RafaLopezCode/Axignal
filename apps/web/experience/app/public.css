@@ -3333,3 +3333,44 @@ html[data-motion="reduced"] .atelier-terminal code { animation: none; width: 23c
   .family-atlas-centre.observation-atelier { display: flex; margin: 12px auto 24px; }
   .atelier-observer { width: 160px; height: 187px; }
 }
+/* Case illustrations share scale, baseline and a reserved layout column. */
+.use-panel {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 240px;
+  align-items: center;
+  gap: 36px;
+  padding: 43px 0 30px;
+}
+.use-panel-content { min-width: 0; }
+.use-panel-content > .mono { color: #7083a5; font-size: 9px; }
+.use-panel .use-observer {
+  position: static;
+  width: 240px;
+  height: 215.17px;
+  display: block;
+  justify-self: end;
+}
+@media (max-width: 700px) {
+  .use-panel { grid-template-columns: minmax(0, 1fr); gap: 18px; min-height: 0; padding: 30px 0; }
+  .use-panel p { padding-right: 0; }
+  .use-panel .use-observer { width: 180px; height: 161.38px; margin-right: 4px; }
+}
+/* Editorial poses use the same complete frame as the use-case illustrations. */
+.editorial-art .art-observer {
+  width: 180px;
+  height: 161.38px;
+  bottom: 12px;
+  left: calc(50% - 90px);
+}
+@media (max-width: 700px) {
+  .editorial-art .art-observer { width: 160px; height: 143.45px; left: calc(50% - 80px); }
+}
+.use-panel .use-observer, .editorial-art .art-observer { mix-blend-mode: multiply; }
+@media (max-width: 700px) {
+  .art-certainty:not(.art-compact) { min-height: 360px; }
+  .art-certainty:not(.art-compact) .slip-known { top: 36px; }
+  .art-certainty:not(.art-compact) .slip-potential { top: 88px; bottom: auto; }
+}
+/* Reserve the lower figure zone below editorial labels in article artwork. */
+.article-title-spread .editorial-art:not(.art-compact) { min-height: 410px; }
+.art-unknown:not(.art-compact) .art-note { top: 24px; bottom: auto; }

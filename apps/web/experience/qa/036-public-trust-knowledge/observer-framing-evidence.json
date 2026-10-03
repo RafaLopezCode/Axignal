@@ -1,0 +1,152 @@
+[
+  {
+    "file": "screenshots/036-case-pose-0-desktop.png",
+    "sha256": "19acc7282ace06871c872da5dc73493fedd6c56f1478431f356ed012e42a3e6c",
+    "browser": "Codex in-app browser",
+    "viewport": "1743x1188",
+    "route": "/#use",
+    "state": "Spanish; complete original gesture-sheet pose, unchanged product/editorial content",
+    "capturedAt": "2026-10-03T16:13:55.7078381Z",
+    "clip": "full viewport"
+  },
+  {
+    "file": "screenshots/036-case-pose-1-desktop.png",
+    "sha256": "740831f768647ce5653b871b5c9dcc90f3fa66efc5ab9610ed0acdf77cca014e",
+    "browser": "Codex in-app browser",
+    "viewport": "1743x1188",
+    "route": "/#use",
+    "state": "Spanish; complete original gesture-sheet pose, unchanged product/editorial content",
+    "capturedAt": "2026-10-03T16:13:56.1044331Z",
+    "clip": "full viewport"
+  },
+  {
+    "file": "screenshots/036-case-pose-2-desktop.png",
+    "sha256": "25325aaf4cc17286c82e5f0a023e09a61a2bb2ba10cb9ad111fe1e63a73b9ca8",
+    "browser": "Codex in-app browser",
+    "viewport": "1743x1188",
+    "route": "/#use",
+    "state": "Spanish; complete original gesture-sheet pose, unchanged product/editorial content",
+    "capturedAt": "2026-10-03T16:13:56.5053289Z",
+    "clip": "full viewport"
+  },
+  {
+    "file": "screenshots/036-case-pose-3-desktop.png",
+    "sha256": "f973f8191b54864eb1b198f856c63570bfed37ec13e39ce80e125dd73030a130",
+    "browser": "Codex in-app browser",
+    "viewport": "1743x1188",
+    "route": "/#use",
+    "state": "Spanish; complete original gesture-sheet pose, unchanged product/editorial content",
+    "capturedAt": "2026-10-03T16:13:56.8881700Z",
+    "clip": "full viewport"
+  },
+  {
+    "file": "screenshots/036-case-pose-4-desktop.png",
+    "sha256": "e11510b4a97a64650c4d05abee16913a6cd425ba7d3024e7a8740bbc0ff917d8",
+    "browser": "Codex in-app browser",
+    "viewport": "1743x1188",
+    "route": "/#use",
+    "state": "Spanish; complete original gesture-sheet pose, unchanged product/editorial content",
+    "capturedAt": "2026-10-03T16:13:57.2798215Z",
+    "clip": "full viewport"
+  },
+  {
+    "file": "screenshots/036-case-pose-5-desktop.png",
+    "sha256": "241c23a6f48a6a6dc4adf8872c90ca2172b92f55300246dbd14a05adeaa6ecf4",
+    "browser": "Codex in-app browser",
+    "viewport": "1743x1188",
+    "route": "/#use",
+    "state": "Spanish; complete original gesture-sheet pose, unchanged product/editorial content",
+    "capturedAt": "2026-10-03T16:13:57.6814436Z",
+    "clip": "full viewport"
+  },
+  {
+    "file": "screenshots/036-case-pose-6-desktop.png",
+    "sha256": "908bd8208c902109e43ebc9c634269798b27e6557e8ae0a3293abec38c8ba18e",
+    "browser": "Codex in-app browser",
+    "viewport": "1743x1188",
+    "route": "/#use",
+    "state": "Spanish; complete original gesture-sheet pose, unchanged product/editorial content",
+    "capturedAt": "2026-10-03T16:13:58.0561028Z",
+    "clip": "full viewport"
+  },
+  {
+    "file": "screenshots/036-case-pose-7-desktop.png",
+    "sha256": "3137579a99e226c995a3778c792fdd866e6e7d5fa00d2c98b343e77385aba2b3",
+    "browser": "Codex in-app browser",
+    "viewport": "1743x1188",
+    "route": "/#use",
+    "state": "Spanish; complete original gesture-sheet pose, unchanged product/editorial content",
+    "capturedAt": "2026-10-03T16:13:58.4627909Z",
+    "clip": "full viewport"
+  },
+  {
+    "file": "screenshots/036-case-observer-mobile.png",
+    "sha256": "b5a034847c07dad33cd24e90d9ba52ed599fb5f0b4db5f807585829d249f4dc1",
+    "browser": "Codex in-app browser",
+    "viewport": "390x844",
+    "route": "/#use",
+    "state": "Spanish; complete original gesture-sheet pose, unchanged product/editorial content",
+    "capturedAt": "2026-10-03T16:14:19.5568094Z",
+    "clip": "full viewport"
+  },
+  {
+    "file": "screenshots/036-knowledge-observer-desktop.png",
+    "sha256": "358f0c297885901b946ecec3b41d4c7d0cf87e7897349291b177dea3c4f0eb45",
+    "browser": "Codex in-app browser",
+    "viewport": "1743x1188",
+    "route": "/knowledge",
+    "state": "Spanish; complete original gesture-sheet pose, unchanged product/editorial content",
+    "capturedAt": "2026-10-03T16:25:24.5524327Z",
+    "clip": "full viewport"
+  },
+  {
+    "file": "screenshots/036-knowledge-observer-mobile.png",
+    "sha256": "d2fe9d81fa1b70ec8d2e32efcf7616f72d2d0b7abd8acd9a83f213eed3b66a39",
+    "browser": "Codex in-app browser",
+    "viewport": "390x844",
+    "route": "/knowledge",
+    "state": "Spanish; complete original gesture-sheet pose, unchanged product/editorial content",
+    "capturedAt": "2026-10-03T16:19:00.2989084Z",
+    "clip": "full viewport"
+  },
+  {
+    "file": "screenshots/036-article-observer-mobile.png",
+    "sha256": "796ab9123941faecf2fbf2804c60955f096c289042f2b97e81915faf5e0886c2",
+    "browser": "Codex in-app browser",
+    "viewport": "390x844",
+    "route": "/knowledge/una-senal-no-es-una-certeza",
+    "state": "Spanish; complete original gesture-sheet pose, unchanged product/editorial content",
+    "capturedAt": "2026-10-03T16:25:23.8998628Z",
+    "clip": "full viewport"
+  },
+  {
+    "file": "screenshots/036-article-unknown-desktop.png",
+    "sha256": "405a1e29351c4488578e2db62171da0dc113a06fbec95ce814cb9619a1849a3f",
+    "browser": "Codex in-app browser",
+    "viewport": "1743x1188",
+    "route": "/knowledge/no-saber-es-un-estado-util",
+    "state": "Spanish; complete original gesture-sheet pose, unchanged product/editorial content",
+    "capturedAt": "2026-10-03T16:24:52.9213137Z",
+    "clip": "full viewport"
+  },
+  {
+    "file": "screenshots/036-article-unknown-mobile.png",
+    "sha256": "86ed9114d6dac960539967d2f6d8b173bb37c78d7c50bfce0b907527ab939f15",
+    "browser": "Codex in-app browser",
+    "viewport": "390x844",
+    "route": "/knowledge/no-saber-es-un-estado-util",
+    "state": "Spanish; complete original gesture-sheet pose, unchanged product/editorial content",
+    "capturedAt": "2026-10-03T16:25:24.3313032Z",
+    "clip": "full viewport"
+  },
+  {
+    "file": "screenshots/036-article-layers-desktop.png",
+    "sha256": "df19eb64f7a8e0913d18060e1711ed0a06075d0ba2795753d0ea61f6751c7815",
+    "browser": "Codex in-app browser",
+    "viewport": "1743x1188",
+    "route": "/knowledge/una-organizacion-una-mirada-un-mundo",
+    "state": "Spanish; complete original gesture-sheet pose, unchanged product/editorial content",
+    "capturedAt": "2026-10-03T16:24:53.1381070Z",
+    "clip": "full viewport"
+  }
+]

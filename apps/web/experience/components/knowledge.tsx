@@ -17,7 +17,8 @@ import {
   readingMinutes,
   type Article,
 } from "@/lib/editorial";
-import { Observer, Badge } from "./ui";
+import { Badge } from "./ui";
+import { FramedObserver } from "./observer-frame";
 import { PublicShell, PublicationNote } from "./public-shell";
 
 export function EditorialArt({
@@ -111,7 +112,7 @@ export function EditorialArt({
           </span>
         </>
       )}
-      <Observer
+      <FramedObserver
         className="art-observer"
         pose={
           kind === "time"
@@ -121,7 +122,7 @@ export function EditorialArt({
               : kind === "conversation"
                 ? "accompanying"
                 : kind === "unknown"
-                  ? "thinking"
+                  ? "reflecting"
                   : kind === "memory"
                     ? "connecting"
                     : "analyzing"
