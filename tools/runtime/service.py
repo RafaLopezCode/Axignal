@@ -25,6 +25,10 @@ from application.admin_access import (
     AdminAuthenticationError,
     AdminAuthorizationError,
 )
+from application.admin_accounting import (
+    AccountingReconciliationProjection,
+    project_accounting_reconciliation,
+)
 from application.admin_acquisition.lifecycle_service import AdminBriefLifecycleService
 from application.admin_acquisition.marketing_service import PublicMarketingEventService
 from application.admin_acquisition.projection import (
@@ -73,6 +77,7 @@ from domain.admin_governance import AdminGovernanceProjection
 from domain.admin_integrations import IntegrationEnvironment
 from domain.admin_observability import AdminProjectionId, AdminProjectionSnapshot
 from domain.admin_xeed_observatory import XeedAxiglandObservatory
+from pipeline.admin_accounting import SqliteAccountingReconciliationStore
 from pipeline.admin_acquisition import SqliteAdminAcquisitionStore
 from pipeline.admin_api_operations import SqliteApiOperationsStore
 from pipeline.admin_billing import SqliteAdminBillingStore
@@ -105,6 +110,7 @@ class AxignalRuntime:
     governance_policy_store: SqliteActivePolicyStore
     governance_audit_store: SqliteAdminGovernanceAuditStore
     admin_acquisition_store: SqliteAdminAcquisitionStore
+    admin_accounting_store: SqliteAccountingReconciliationStore
     admin_api_operations_store: SqliteApiOperationsStore
     admin_commercial_store: SqliteAdminCommercialStore
     admin_customer_account_store: SqliteAdminCustomerAccountStore
@@ -177,6 +183,9 @@ def build_runtime(config: RuntimeConfig) -> AxignalRuntime:
     admin_acquisition_store = SqliteAdminAcquisitionStore(
         config.data_dir / "admin-acquisition.sqlite3"
     )
+    admin_accounting_store = SqliteAccountingReconciliationStore(
+        config.data_dir / "admin-accounting-reconciliation.sqlite3"
+    )
     admin_api_operations_store = SqliteApiOperationsStore(
         config.data_dir / "admin-api-operations.sqlite3"
     )
@@ -237,6 +246,7 @@ def build_runtime(config: RuntimeConfig) -> AxignalRuntime:
         governance_policy_store=governance_policy_store,
         governance_audit_store=governance_audit_store,
         admin_acquisition_store=admin_acquisition_store,
+        admin_accounting_store=admin_accounting_store,
         admin_api_operations_store=admin_api_operations_store,
         admin_commercial_store=admin_commercial_store,
         admin_customer_account_store=admin_customer_account_store,
@@ -861,6 +871,86 @@ def _financial_document_payload(
     }
 
 
+def _accounting_reconciliation_projection(
+    runtime: AxignalRuntime, *, grant: AdminAuthorizationGrant, now: datetime
+) -> AccountingReconciliationProjection:
+    return project_accounting_reconciliation(
+        store=runtime.admin_accounting_store,
+        financial_store=runtime.admin_financial_document_store,
+        integration_store=runtime.admin_integration_store,
+        grant=grant,
+        generated_at=now,
+    )
+
+
+def _accounting_reconciliation_payload(
+    projection: AccountingReconciliationProjection,
+) -> dict[str, object]:
+    return {
+        "generatedAt": projection.generated_at.isoformat(),
+        "privacyClass": projection.privacy_class,
+        "adapterStrategy": projection.adapter_strategy,
+        "configuredIntegrations": list(projection.configured_integrations),
+        "coverageNotes": list(projection.coverage_notes),
+        "totals": [
+            {
+                "currency": item.currency,
+                "billedMinor": item.billed_minor,
+                "paidMinor": item.paid_minor,
+                "refundedMinor": item.refunded_minor,
+                "creditNoteMinor": item.credit_note_minor,
+                "settledGrossMinor": item.settled_gross_minor,
+                "processorFeeMinor": item.processor_fee_minor,
+                "settledNetMinor": item.settled_net_minor,
+                "accountedMinor": item.accounted_minor,
+                "infrastructureCostMinor": item.infrastructure_cost_minor,
+                "businessExpenseMinor": item.business_expense_minor,
+            }
+            for item in projection.totals
+        ],
+        "mappings": [
+            {
+                "mappingId": item.mapping_id,
+                "integrationId": item.integration_id,
+                "category": item.category.value,
+                "accountCode": item.account_code,
+                "effectiveAt": item.effective_at.isoformat(),
+                "version": item.version,
+            }
+            for item in projection.mappings
+        ],
+        "issues": [
+            {
+                "issueId": item.issue_id,
+                "kind": item.kind.value,
+                "state": item.state.value,
+                "openedAt": item.opened_at.isoformat(),
+                "currency": item.currency,
+                "expectedMinor": item.expected_minor,
+                "observedMinor": item.observed_minor,
+                "financialRecordId": item.financial_record_id,
+                "accountingEntryId": item.accounting_entry_id,
+                "settlementId": item.settlement_id,
+                "resolvedAt": (None if item.resolved_at is None else item.resolved_at.isoformat()),
+                "resolutionRef": item.resolution_ref,
+            }
+            for item in projection.issues
+        ],
+        "periods": [
+            {
+                "periodId": item.period_id,
+                "periodStart": item.period_start.isoformat(),
+                "periodEnd": item.period_end.isoformat(),
+                "state": item.state.value,
+                "evaluatedAt": item.evaluated_at.isoformat(),
+                "closedAt": None if item.closed_at is None else item.closed_at.isoformat(),
+                "sourceRef": item.source_ref,
+            }
+            for item in projection.periods
+        ],
+    }
+
+
 def _integration_projection(
     runtime: AxignalRuntime, *, grant: AdminAuthorizationGrant, now: datetime
 ) -> AdminIntegrationProjection:
@@ -1003,6 +1093,7 @@ def _admin_projection_payload(
     integrations: AdminIntegrationProjection | None = None,
     api_operations: ApiOperationsProjection | None = None,
     financial_documents: FinancialDocumentProjection | None = None,
+    accounting_reconciliation: AccountingReconciliationProjection | None = None,
 ) -> dict[str, object]:
     payload: dict[str, object] = {
         "mode": projection.mode,
@@ -1040,6 +1131,10 @@ def _admin_projection_payload(
         payload["apiOperations"] = _api_operations_payload(api_operations)
     if financial_documents is not None:
         payload["financialDocuments"] = _financial_document_payload(financial_documents)
+    if accounting_reconciliation is not None:
+        payload["accountingReconciliation"] = _accounting_reconciliation_payload(
+            accounting_reconciliation
+        )
     return payload
 
 
@@ -1057,6 +1152,7 @@ def _render_admin_shell(
     integrations: AdminIntegrationProjection | None = None,
     api_operations: ApiOperationsProjection | None = None,
     financial_documents: FinancialDocumentProjection | None = None,
+    accounting_reconciliation: AccountingReconciliationProjection | None = None,
 ) -> bytes:
     template = (web_root / "admin" / "index.html").read_text(encoding="utf-8")
     payload = html.escape(
@@ -1073,6 +1169,7 @@ def _render_admin_shell(
                 integrations=integrations,
                 api_operations=api_operations,
                 financial_documents=financial_documents,
+                accounting_reconciliation=accounting_reconciliation,
             ),
             sort_keys=True,
             separators=(",", ":"),
@@ -1276,6 +1373,11 @@ def make_handler(runtime: AxignalRuntime) -> type[BaseHTTPRequestHandler]:
                         if admin_projection.current_slug == "finance-fiscal"
                         else None
                     )
+                    accounting_reconciliation = (
+                        _accounting_reconciliation_projection(runtime, grant=grant, now=now)
+                        if admin_projection.current_slug == "finance-fiscal"
+                        else None
+                    )
                     rendered = _render_admin_shell(
                         runtime.config.web_root,
                         admin_projection,
@@ -1289,6 +1391,7 @@ def make_handler(runtime: AxignalRuntime) -> type[BaseHTTPRequestHandler]:
                         integrations=integrations,
                         api_operations=api_operations,
                         financial_documents=financial_documents,
+                        accounting_reconciliation=accounting_reconciliation,
                     )
                 except AdminAuthenticationError:
                     self._admin_error(HTTPStatus.UNAUTHORIZED, "Admin authentication failed.")

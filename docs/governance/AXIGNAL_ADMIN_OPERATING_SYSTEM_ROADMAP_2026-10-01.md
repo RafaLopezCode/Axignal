@@ -99,7 +99,7 @@ Admin must distinguish measured flywheel behavior from the hypothesis above.
 
 `NOT_STARTED → READY → IN_PROGRESS → BLOCKED → DONE → DEFERRED → REJECTED`
 
-**CURRENT_TASK = AO-21**
+**CURRENT_TASK = AO-22**
 
 ## 7. Closure rule
 
@@ -873,9 +873,24 @@ AXIGNAL can explain revenue documents end-to-end rather than relying on Stripe U
 
 ## AO-21 — Accounting Adapter and Reconciliation
 
-**Status:** NOT_STARTED
+**Status:** DONE
 **Depends on:** AO-20, AO-18
 **Priority:** P0 Finance
+
+### Completion evidence
+- Chosen architecture: EXTERNAL_PROVIDER_ADAPTER_VIA_AO18. No AXIGNAL-owned accounting ledger is authorized. The concrete accounting vendor remains AO-18 integration configuration, not domain doctrine.
+- Accounting imports require a registered, enabled AO-18 integration with credential metadata in CONFIGURED or ROTATION_DUE state. Disabled, missing or unconfigured adapters fail closed.
+- Added versioned chart-of-accounts mappings across REVENUE, REFUND, PROCESSOR_FEE, SETTLEMENT, INFRASTRUCTURE_COST, BUSINESS_EXPENSE and TAX categories.
+- Added immutable provider accounting-entry imports with source provenance, optional AO-20 financial-record linkage and optional processor-settlement linkage.
+- Added processor settlement evidence with gross, fee and net invariants. Settlement reconciliation checks both imported settlement/fee entries and aggregate paid-minus-refund versus settled gross by currency.
+- Added business/infrastructure cost imports with source references; unmapped imported costs remain explicit MISSING_ACCOUNT_MAPPING discrepancies.
+- Reconciliation projects billed, paid, refunds, credit notes, settled gross, processor fees, settled net, accounted amounts and operating costs independently by currency.
+- Unknown/unmatched financial records, accounting entries, amount/currency mismatches, mapping gaps and settlement mismatches enter an explicit discrepancy queue. Reconciliation never invents balancing entries.
+- Period close is OPEN/BLOCKED/CLOSED. Any unresolved discrepancy blocks close; close requires an external accounting source reference.
+- Finance mutations, imports, reconciliation runs, discrepancy resolutions and period evaluations emit Admin governance audit records with FINANCE target and finance-write authority.
+- Admin Finance / Fiscal now shows the AO-21 adapter posture, configured accounting integrations, reconciliation totals, discrepancy queue and period-close state. It exposes no arbitrary journal-entry UI.
+- Focused AO-18/AO-20/AO-21 contracts and runtime composition PASS; full deterministic repository gates are required before integration.
+
 ### Work
 - Choose/integrate an accounting system/provider or explicitly authorize an AXIGNAL-owned ledger only through a separate architecture decision.
 - Chart-of-accounts mapping, income/expense/cost categories and reconciliation references.

@@ -1110,6 +1110,127 @@
     }
   }
 
+  const accounting = bootstrap.accountingReconciliation
+  if (current?.slug === 'finance-fiscal' && accounting) {
+    const strategy = document.getElementById('admin-accounting-strategy')
+    const generated = document.getElementById('admin-accounting-generated')
+    const notes = document.getElementById('admin-accounting-notes')
+    const summary = document.getElementById('admin-accounting-summary')
+    const issues = document.getElementById('admin-accounting-issues')
+    const periods = document.getElementById('admin-accounting-periods')
+
+    if (strategy) strategy.textContent = accounting.adapterStrategy || 'EXTERNAL PROVIDER ADAPTER'
+    if (generated) generated.textContent = accounting.generatedAt ? 'As of ' + accounting.generatedAt : ''
+
+    if (notes) {
+      notes.replaceChildren()
+      const configured = Array.isArray(accounting.configuredIntegrations)
+        ? accounting.configuredIntegrations
+        : []
+      const adapterNote = document.createElement('p')
+      adapterNote.textContent = configured.length
+        ? 'Configured accounting integration(s): ' + configured.join(', ')
+        : 'No accounting provider is configured yet. AXIGNAL-owned accounting ledger remains unauthorized.'
+      notes.append(adapterNote)
+      for (const noteText of accounting.coverageNotes || []) {
+        const note = document.createElement('p')
+        note.textContent = noteText
+        notes.append(note)
+      }
+    }
+
+    if (summary) {
+      summary.replaceChildren()
+      for (const total of accounting.totals || []) {
+        const facts = [
+          ['Billed · ' + total.currency, total.billedMinor],
+          ['Paid · ' + total.currency, total.paidMinor],
+          ['Refunded · ' + total.currency, total.refundedMinor],
+          ['Credit notes · ' + total.currency, total.creditNoteMinor],
+          ['Settled gross · ' + total.currency, total.settledGrossMinor],
+          ['Processor fee · ' + total.currency, total.processorFeeMinor],
+          ['Settled net · ' + total.currency, total.settledNetMinor],
+          ['Accounted · ' + total.currency, total.accountedMinor],
+          ['Infrastructure cost · ' + total.currency, total.infrastructureCostMinor],
+          ['Business expense · ' + total.currency, total.businessExpenseMinor],
+        ]
+        for (const pair of facts) {
+          const card = document.createElement('article')
+          card.className = 'admin-observatory-stat'
+          const strong = document.createElement('strong')
+          strong.textContent = pair[1] == null ? 'UNKNOWN' : String(pair[1])
+          const span = document.createElement('span')
+          span.textContent = pair[0]
+          card.append(strong, span)
+          summary.append(card)
+        }
+      }
+    }
+
+    if (issues) {
+      issues.replaceChildren()
+      const rows = Array.isArray(accounting.issues) ? accounting.issues : []
+      if (!rows.length) {
+        const empty = document.createElement('article')
+        empty.className = 'admin-observatory-empty'
+        const heading = document.createElement('strong')
+        heading.textContent = 'No reconciliation discrepancies'
+        const body = document.createElement('p')
+        body.textContent = 'No unresolved mismatch is currently recorded. This is not a claim that an external accounting provider is configured.'
+        empty.append(heading, body)
+        issues.append(empty)
+      }
+      for (const item of rows) {
+        const article = document.createElement('article')
+        article.className = 'admin-integration-entry'
+        const header = document.createElement('header')
+        const title = document.createElement('h3')
+        title.textContent = item.kind + ' · ' + item.issueId
+        const state = document.createElement('span')
+        state.textContent = item.state || 'UNKNOWN'
+        header.append(title, state)
+        const facts = document.createElement('dl')
+        facts.className = 'admin-integration-facts'
+        const addDetail = (label, value) => {
+          const wrapper = document.createElement('div')
+          const term = document.createElement('dt')
+          term.textContent = label
+          const description = document.createElement('dd')
+          description.textContent = value == null || value === '' ? 'UNKNOWN' : String(value)
+          wrapper.append(term, description)
+          facts.append(wrapper)
+        }
+        addDetail('Currency', item.currency)
+        addDetail('Expected minor', item.expectedMinor)
+        addDetail('Observed minor', item.observedMinor)
+        addDetail('Financial record', item.financialRecordId)
+        addDetail('Accounting entry', item.accountingEntryId)
+        addDetail('Settlement', item.settlementId)
+        addDetail('Resolution', item.resolutionRef)
+        article.append(header, facts)
+        issues.append(article)
+      }
+    }
+
+    if (periods) {
+      periods.replaceChildren()
+      for (const item of accounting.periods || []) {
+        const article = document.createElement('article')
+        article.className = 'admin-integration-entry'
+        const header = document.createElement('header')
+        const title = document.createElement('h3')
+        title.textContent = 'Period · ' + item.periodId
+        const state = document.createElement('span')
+        state.textContent = item.state || 'UNKNOWN'
+        header.append(title, state)
+        const body = document.createElement('p')
+        body.textContent = item.periodStart + ' → ' + item.periodEnd + ' · source ' + (item.sourceRef || 'UNKNOWN')
+        article.append(header, body)
+        periods.append(article)
+      }
+    }
+  }
+
   document.addEventListener('keydown', (event) => {
     if (event.key !== 'ArrowDown' && event.key !== 'ArrowUp') return
     const links = [...document.querySelectorAll('.admin-nav-link')]
