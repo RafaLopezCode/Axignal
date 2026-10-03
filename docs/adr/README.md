@@ -84,3 +84,4 @@ Constitution (`.specify/memory/constitution.md`).
 | [ADR-0069](ADR-0069-external-sif-verifactu-provider.md) | External SIF / VERI*FACTU Provider Architecture (**ACCEPTED**) | AO-18; AO-20; AO-21; AO-22 |
 | [ADR-0070](ADR-0070-evidence-backed-tax-operations.md) | Evidence-Backed Tax / VAT / AEAT Operations (**ACCEPTED**) | AO-20; AO-21; AO-22; AO-23 |
 | [ADR-0071](ADR-0071-governed-measurement-registry.md) | Governed Measurement Registry and Instrument Compatibility (**ACCEPTED**) | AO-03; AO-04; AO-05; AO-06; AO-24; AO-25 |
+| [ADR-0072](ADR-0072-proposition-bound-evidence-admission.md) | Proposition-Bound Evidence Admission (**ACCEPTED**) | AUD-01; EvidenceAdmission; FAXT |

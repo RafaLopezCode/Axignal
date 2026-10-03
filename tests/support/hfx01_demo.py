@@ -13,7 +13,7 @@ from application.xeed_access.organization_reader import (
 )
 from application.xeed_access.reader import AuthorizedXeedReader, TrustedRequestContext
 from application.xeed_knowledge.reader import AuthorizedXeedFaxtCollectionReader
-from domain.evidence.admission import Evidence, EvidenceAdmission, SourceAuthority
+from domain.evidence.admission import AdmissionRequest, Evidence, EvidenceAdmission, SourceAuthority
 from domain.evidence.epistemics import Currentness, EpistemicState
 from domain.faxt.model import FAXT
 from domain.identity import (
@@ -91,7 +91,7 @@ class Hfx01Demo:
             (
                 "faxt-demo-b",
                 "subject-demo-b-unknown-kind",
-                "SERVES_MARKET",
+                "capability",
                 "specialty industrial buyers",
                 EpistemicState.STALE,
             ),
@@ -103,6 +103,11 @@ class Hfx01Demo:
                 EpistemicState.STALE,
             ),
         ):
+            authority = (
+                SourceAuthority.CERTIFIER
+                if predicate == "MAINTAINS_STANDARD"
+                else SourceAuthority.OFFICIAL_WEB
+            )
             evidence = Evidence(
                 id=f"evidence-{faxt_id}",
                 source="synthetic://hfx01-test-fixture",
@@ -110,7 +115,7 @@ class Hfx01Demo:
                 reference=f"synthetic://{faxt_id}",
                 extracted_claim=f"Synthetic demo field for {faxt_id}",
                 observed_at=datetime(2026, 9, 1, tzinfo=UTC),
-                authority=SourceAuthority.OFFICIAL_WEB,
+                authority=authority,
             )
             faxt = FAXT.create(
                 faxt_id=FaxtId(faxt_id),
@@ -118,7 +123,15 @@ class Hfx01Demo:
                 predicate=predicate,
                 object_or_value=value,
                 evidence=evidence,
-                decision=EvidenceAdmission.admit(evidence),
+                decision=EvidenceAdmission.admit_claim(
+                    AdmissionRequest(
+                        evidence=evidence,
+                        subject_id=subject_id,
+                        predicate=predicate,
+                        object_or_value=value,
+                        claim_proposition=evidence.extracted_claim,
+                    )
+                ),
                 epistemic_state=epistemic_state,
                 currentness=Currentness.UNKNOWN,
             )

@@ -11,7 +11,7 @@ from application.subscriber_projection import ExplanationStepKind, project_expla
 from application.xeed_access.organization_reader import AuthorizedXeedOrganizationReader
 from application.xeed_access.reader import AuthorizedXeedReader, TrustedRequestContext
 from domain.evidence import Currentness
-from domain.evidence.admission import Evidence, EvidenceAdmission, SourceAuthority
+from domain.evidence.admission import AdmissionRequest, Evidence, EvidenceAdmission, SourceAuthority
 from domain.faxt.model import FAXT
 from domain.identity import OrganizationId, PrincipalId, TenantId, XeedId
 from domain.organizations.model import Organization
@@ -67,7 +67,15 @@ def _faxt() -> FAXT:
         predicate="manufactures",
         object_or_value="industrial pumps",
         evidence=evidence,
-        decision=EvidenceAdmission.admit(evidence),
+        decision=EvidenceAdmission.admit_claim(
+            AdmissionRequest(
+                evidence=evidence,
+                subject_id="org:acme",
+                predicate="manufactures",
+                object_or_value="industrial pumps",
+                claim_proposition=evidence.extracted_claim,
+            )
+        ),
         observed_at=NOW,
         currentness=Currentness.CURRENT,
     )

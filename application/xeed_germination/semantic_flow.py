@@ -17,7 +17,7 @@ from typing import Protocol
 
 from application.semantic_retrieval import SemanticIndex
 from application.xeed_access.organization_reader import AuthorizedXeedOrganization
-from domain.evidence.admission import Evidence, EvidenceAdmission
+from domain.evidence.admission import AdmissionRequest, Evidence, EvidenceAdmission
 from domain.evidence.epistemics import Currentness, EpistemicState
 from domain.faxt.model import FAXT
 from domain.identity import FaxtId, OrganizationId
@@ -276,7 +276,14 @@ class XeedSemanticGermination:
             if semantic.support is not EvidenceSupportClass.SUPPORTED:
                 rejected_semantic_count += 1
                 continue
-            decision = EvidenceAdmission.admit(finding.evidence)
+            request = AdmissionRequest(
+                evidence=finding.evidence,
+                subject_id=finding.subject_id,
+                predicate=finding.predicate,
+                object_or_value=finding.object_or_value,
+                claim_proposition=finding.claim_proposition,
+            )
+            decision = EvidenceAdmission.admit_claim(request)
             if not decision.is_canonical:
                 rejected_evidence_count += 1
                 continue
@@ -287,6 +294,7 @@ class XeedSemanticGermination:
                 object_or_value=finding.object_or_value,
                 evidence=finding.evidence,
                 decision=decision,
+                claim_proposition=finding.claim_proposition,
                 epistemic_state=finding.epistemic_state,
                 currentness=finding.currentness,
             )

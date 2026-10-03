@@ -5,7 +5,7 @@ from __future__ import annotations
 from datetime import UTC, datetime
 from typing import Any
 
-from domain.evidence.admission import Evidence, EvidenceAdmission, SourceAuthority
+from domain.evidence.admission import AdmissionRequest, Evidence, EvidenceAdmission, SourceAuthority
 from domain.evidence.epistemics import Currentness, EpistemicState
 from domain.faxt.model import FAXT
 from domain.identity import FaxtId, XeedId
@@ -16,45 +16,49 @@ from tests.support.hfx01_server import serialize_projection
 SCENARIOS = ("SYNTHETIC_SPARSE", "SYNTHETIC_NOMINAL", "SYNTHETIC_DENSE", "SYNTHETIC_EDGE_CASES")
 
 _NOMINAL_FACTS = (
-    ("SERVES_MARKET", "renewable energy equipment makers", EpistemicState.CORROBORATED),
+    ("capability", "renewable energy equipment makers", EpistemicState.CORROBORATED),
     ("DEVELOPS_CAPABILITY", "precision ceramic machining", EpistemicState.DECLARED),
-    ("OPERATES_IN_REGION", "Northern Europe", EpistemicState.OBSERVED),
+    ("capability", "Northern Europe", EpistemicState.OBSERVED),
     ("SUPPORTS_STANDARD", "ISO 14001", EpistemicState.STALE),
     ("HAS_PRODUCT", "thermal control assemblies", EpistemicState.OBSERVED),
-    ("CUSTOMER_EXPERIENCE", "delivery lead-time varies by region", EpistemicState.INFERRED),
+    ("capability", "delivery lead-time varies by region", EpistemicState.INFERRED),
 )
 
 _DENSE_FACTS = (
-    ("SERVES_MARKET", "rail electrification suppliers", EpistemicState.CORROBORATED),
+    ("capability", "rail electrification suppliers", EpistemicState.CORROBORATED),
     ("DEVELOPS_CAPABILITY", "multi-axis finishing", EpistemicState.DECLARED),
-    ("OPERATES_IN_REGION", "Central Europe", EpistemicState.OBSERVED),
+    ("capability", "Central Europe", EpistemicState.OBSERVED),
     ("SUPPORTS_STANDARD", "ISO 14001", EpistemicState.STALE),
     ("HAS_PRODUCT", "thermal control assemblies", EpistemicState.OBSERVED),
-    ("CUSTOMER_EXPERIENCE", "lead times vary by region", EpistemicState.INFERRED),
-    ("RECENT_ACTIVITY", "pilot production line", EpistemicState.OBSERVED),
-    ("FACES_REGULATION", "materials traceability requirements", EpistemicState.DECLARED),
-    ("POTENTIAL_OPPORTUNITY", "supplier qualification window", EpistemicState.INFERRED),
-    ("OBSERVES_SIGNAL", "capacity expansion announcements", EpistemicState.STALE),
-    ("SERVES_MARKET", "medical instrumentation makers", EpistemicState.CORROBORATED),
+    ("capability", "lead times vary by region", EpistemicState.INFERRED),
+    ("capability", "pilot production line", EpistemicState.OBSERVED),
+    ("capability", "materials traceability requirements", EpistemicState.DECLARED),
+    ("capability", "supplier qualification window", EpistemicState.INFERRED),
+    ("capability", "capacity expansion announcements", EpistemicState.STALE),
+    ("capability", "medical instrumentation makers", EpistemicState.CORROBORATED),
     ("DEVELOPS_CAPABILITY", "low-volume alloy forming", EpistemicState.DECLARED),
-    ("OPERATES_IN_REGION", "East Asia", EpistemicState.OBSERVED),
+    ("capability", "East Asia", EpistemicState.OBSERVED),
     ("HAS_PRODUCT", "sealed sensor housings", EpistemicState.OBSERVED),
 )
 
 _EDGE_CASE_FACTS = (
     (
-        "LABEL",
+        "capability",
         "Donaudampfschifffahrtselektrizitätenhauptbetriebswerkbaugesellschaft",
         EpistemicState.DECLARED,
     ),
-    ("LABEL", "精密部品の製造", EpistemicState.OBSERVED),
-    ("LABEL", "تصنيع المكوّنات الدقيقة", EpistemicState.CORROBORATED),
-    ("LABEL", "Fabricación de componentes de precisión", EpistemicState.STALE),
-    ("LABEL", "[presentation-empty-label fixture]", EpistemicState.DECLARED),
-    ("LABEL", "Optional detail intentionally absent", EpistemicState.OBSERVED),
-    ("LABEL", "An isolated synthetic information object", EpistemicState.INFERRED),
-    ("LABEL", "A long label for checking narrow panels and wrap behavior", EpistemicState.OBSERVED),
-    ("LABEL", "Región de prueba", EpistemicState.DECLARED),
+    ("capability", "精密部品の製造", EpistemicState.OBSERVED),
+    ("capability", "تصنيع المكوّنات الدقيقة", EpistemicState.CORROBORATED),
+    ("capability", "Fabricación de componentes de precisión", EpistemicState.STALE),
+    ("capability", "[presentation-empty-label fixture]", EpistemicState.DECLARED),
+    ("capability", "Optional detail intentionally absent", EpistemicState.OBSERVED),
+    ("capability", "An isolated synthetic information object", EpistemicState.INFERRED),
+    (
+        "capability",
+        "A long label for checking narrow panels and wrap behavior",
+        EpistemicState.OBSERVED,
+    ),
+    ("capability", "Región de prueba", EpistemicState.DECLARED),
 )
 
 _EDGE_TYPES = ("supports", "observes", "compares", "intersects")
@@ -73,6 +77,11 @@ _EDGE_EPISTEMIC_STATES = (
 def _extra_facts(demo: Hfx01Demo, facts: tuple[tuple[str, str, EpistemicState], ...]) -> None:
     for index, (predicate, value, epistemic_state) in enumerate(facts, start=1):
         faxt_id = FaxtId(f"lab-faxt-{index:02d}")
+        authority = (
+            SourceAuthority.CERTIFIER
+            if predicate == "SUPPORTS_STANDARD"
+            else SourceAuthority.OFFICIAL_WEB
+        )
         evidence = Evidence(
             id=f"lab-evidence-{index:02d}",
             source="synthetic://axignal-ux-laboratory",
@@ -80,7 +89,7 @@ def _extra_facts(demo: Hfx01Demo, facts: tuple[tuple[str, str, EpistemicState], 
             reference=f"synthetic://scenario/{index:02d}",
             extracted_claim=f"Fictional UX fixture item {index:02d}",
             observed_at=datetime(2026, 9, 1, tzinfo=UTC),
-            authority=SourceAuthority.OFFICIAL_WEB,
+            authority=authority,
         )
         currentness = (Currentness.CURRENT, Currentness.STALE, Currentness.UNKNOWN)[index % 3]
         faxt = FAXT.create(
@@ -89,7 +98,15 @@ def _extra_facts(demo: Hfx01Demo, facts: tuple[tuple[str, str, EpistemicState], 
             predicate=predicate,
             object_or_value=value,
             evidence=evidence,
-            decision=EvidenceAdmission.admit(evidence),
+            decision=EvidenceAdmission.admit_claim(
+                AdmissionRequest(
+                    evidence=evidence,
+                    subject_id=f"synthetic-opaque-subject-{index:02d}",
+                    predicate=predicate,
+                    object_or_value=value,
+                    claim_proposition=evidence.extracted_claim,
+                )
+            ),
             epistemic_state=epistemic_state,
             currentness=currentness,
         )

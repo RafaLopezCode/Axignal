@@ -8,6 +8,7 @@ from __future__ import annotations
 
 from domain.evidence.admission import (
     AdmissionDecision,
+    AdmissionRequest,
     Evidence,
     EvidenceAdmission,
     EvidenceAdmissionError,
@@ -25,6 +26,7 @@ from domain.evidence.epistemics import (
 
 __all__ = [
     "AdmissionDecision",
+    "AdmissionRequest",
     "Currentness",
     "EpistemicState",
     "Evidence",

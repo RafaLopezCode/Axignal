@@ -290,3 +290,65 @@ def test_semantic_judgment_rejects_invalid_provider_probability_data() -> None:
             "contract.v1",
             confidence=float("nan"),
         )
+
+
+class ContradictingInvestigator(Investigator):
+    def investigate(
+        self,
+        *,
+        seed: object,
+        candidate: GerminationCandidate,
+    ) -> InvestigationFinding:
+        finding = super().investigate(seed=seed, candidate=candidate)
+        return InvestigationFinding(
+            faxt_id=finding.faxt_id,
+            subject_id=finding.subject_id,
+            predicate=finding.predicate,
+            object_or_value=finding.object_or_value,
+            claim_proposition=finding.claim_proposition,
+            evidence=Evidence(
+                id=finding.evidence.id,
+                source=finding.evidence.source,
+                source_type=finding.evidence.source_type,
+                reference=finding.evidence.reference,
+                extracted_claim="The organization does not provide cold-chain logistics.",
+                observed_at=finding.evidence.observed_at,
+                authority=finding.evidence.authority,
+            ),
+            epistemic_state=finding.epistemic_state,
+            currentness=finding.currentness,
+        )
+
+
+def test_supported_judgment_cannot_override_contradictory_evidence_claim() -> None:
+    writer = Writer()
+    judgments = JudgmentWriter()
+    evidence = EvidenceLedger()
+    flow = XeedSemanticGermination(
+        encoder=Encoder(),
+        index=Index(),
+        catalog=Catalog(),
+        investigator=ContradictingInvestigator(),
+        judgment_writer=judgments,
+        support_judge=SupportJudge(),
+        evidence_writer=evidence,
+        faxt_writer=writer,
+    )
+
+    result = flow.run(
+        authorized_seed(),
+        budget=GerminationBudget(
+            retrieval_k=6,
+            max_investigations=1,
+            locale="en",
+            geography="ES",
+        ),
+    )
+
+    assert result.rejected_semantic_count == 0
+    assert result.rejected_evidence_count == 1
+    assert result.admitted == ()
+    assert evidence.entries == ()
+    assert writer.written == []
+    assert len(judgments.items) == 1
+    assert judgments.items[0][1].support is EvidenceSupportClass.SUPPORTED

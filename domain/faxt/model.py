@@ -1,9 +1,7 @@
 """Canonical FAXT model.
 
-``FAXT.create`` requires an admitted ``AdmissionDecision``; there is no public
-constructor that bypasses evidence admission.
-
-Doctrine: MASTER §4.5, §15.1 (CLAIM != WRITE), §15.2, §46.9.
+FAXT.create requires an exact proposition-bound AdmissionDecision.
+Doctrine: MASTER §4.5, §15.1, §15.2, §46.9.
 """
 
 from __future__ import annotations
@@ -13,6 +11,7 @@ from datetime import datetime
 
 from domain.evidence.admission import (
     AdmissionDecision,
+    AdmissionRequest,
     Evidence,
     EvidenceAdmission,
     EvidenceAdmissionError,
@@ -49,17 +48,15 @@ class FAXT:
         object_or_value: str,
         evidence: Evidence,
         decision: AdmissionDecision,
+        claim_proposition: str | None = None,
         epistemic_state: EpistemicState = EpistemicState.OBSERVED,
         observed_at: datetime | None = None,
         currentness: Currentness = Currentness.UNKNOWN,
     ) -> FAXT:
-        """Create a canonical FAXT. Requires evidence admission."""
+        """Create a canonical FAXT from one exact admitted proposition."""
 
-        EvidenceAdmission.require(decision)
         if not faxt_id.strip():
             raise FAXTCreationError("a canonical FAXT requires an id")
-        if decision.evidence_id != evidence.id:
-            raise FAXTCreationError("admission decision does not match the supplied evidence")
         if not subject_id.strip():
             raise FAXTCreationError("a FAXT requires a subject id")
         if not object_or_value.strip():
@@ -68,13 +65,31 @@ class FAXT:
             raise FAXTCreationError("a canonical FAXT cannot be created with UNKNOWN state")
         if not predicate.strip():
             raise FAXTCreationError("a FAXT requires a predicate")
+
+        canonical_observed_at = observed_at if observed_at is not None else evidence.observed_at
+        if canonical_observed_at != evidence.observed_at:
+            raise FAXTCreationError(
+                "canonical FAXT observed_at must match admitted evidence observed_at"
+            )
+        proposition = (
+            claim_proposition if claim_proposition is not None else evidence.extracted_claim
+        )
+        request = AdmissionRequest(
+            evidence=evidence,
+            subject_id=subject_id,
+            predicate=predicate,
+            object_or_value=object_or_value,
+            claim_proposition=proposition,
+        )
+        EvidenceAdmission.require_claim(decision, request)
+
         return cls(
             id=faxt_id,
             subject_id=subject_id,
             predicate=predicate,
             object_or_value=object_or_value,
             evidence_refs=(evidence.id,),
-            observed_at=observed_at if observed_at is not None else evidence.observed_at,
+            observed_at=canonical_observed_at,
             epistemic_state=epistemic_state,
             currentness=currentness,
         )

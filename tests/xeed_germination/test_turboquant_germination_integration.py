@@ -81,7 +81,7 @@ class Investigator:
             candidate.organization_id,
             "capability",
             "industrial refrigeration",
-            "The organization provides industrial refrigeration.",
+            "Industrial refrigeration systems for food logistics.",
             Evidence(
                 "ev-cold-capability",
                 "fixture",

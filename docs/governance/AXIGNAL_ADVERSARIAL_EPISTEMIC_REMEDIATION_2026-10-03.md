@@ -41,8 +41,21 @@ AO-25 is blocked until AUD-01 through AUD-10 are closed and the adversarial harn
 ## AUD-01 — Proposition-Bound EvidenceAdmission
 
 **Severity:** HIGH
-**Status:** READY
+**Status:** DONE
 **Depends on:** none
+
+### Completion evidence
+- AdmissionDecision now binds deterministic evidence and proposition digests instead of evidence ID alone.
+- AdmissionRequest binds exact evidence content, source authority, observed time, subject, predicate, object/value, extracted claim and predicate-authority policy.
+- FAXT.create requires proposition-bound admission; evidence-only admission cannot authorize a FAXT.
+- SourceAuthority validation is positive/fail-closed and predicate-specific under MASTER §15.3. Unknown authority and unknown predicate policy are rejected.
+- claim_proposition must exactly match the normalized extracted evidence claim in this version; semantic judge/model paraphrase is not admission authority.
+- Canonical FAXT observed_at cannot diverge from the admitted Evidence observed_at.
+- Canonical token is init=False so dataclasses.replace/manual reconstruction does not preserve canonical authority.
+- Legacy semantic germination independently performs proposition-bound admission after semantic judgment; erroneous SUPPORTED over contradictory evidence writes zero FAXTs.
+- The exact adversarial same-ID/evidence-substitution attack now raises EvidenceAdmissionRequired; unknown runtime authority is not admitted.
+- ADR-0072 records this boundary and explicitly leaves relationship/materialization hardening to AUD-02.
+- Focused admission/FAXT/germination/consumer/HFX regressions pass; full deterministic gates must pass before integration.
 
 ### Problem
 Admission currently proves an evidence identity/token, not the exact proposition/content/authority/subject/predicate/value/time being authorized. A prior valid decision can be reused against changed evidence and a different claim.
@@ -65,7 +78,7 @@ Current-main audit checks for admission and legacy model-error path no longer re
 ## AUD-02 — Canonical Construction and Relationship Admission Boundary
 
 **Severity:** HIGH
-**Status:** BLOCKED
+**Status:** READY
 **Depends on:** AUD-01
 
 ### Problem

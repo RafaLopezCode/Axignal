@@ -16,7 +16,7 @@ from application.xeed_knowledge.reader import (
     KnowledgeReadError,
     KnowledgeReadFailure,
 )
-from domain.evidence.admission import Evidence, EvidenceAdmission, SourceAuthority
+from domain.evidence.admission import AdmissionRequest, Evidence, EvidenceAdmission, SourceAuthority
 from domain.evidence.epistemics import Currentness, EpistemicState
 from domain.faxt.model import FAXT
 from domain.identity import FaxtId, OrganizationId, PrincipalId, TenantId, XeedId
@@ -43,7 +43,15 @@ def _faxt(faxt_id: str = "faxt-shared") -> FAXT:
         predicate="MANUFACTURES",
         object_or_value="pumps",
         evidence=evidence,
-        decision=EvidenceAdmission.admit(evidence),
+        decision=EvidenceAdmission.admit_claim(
+            AdmissionRequest(
+                evidence=evidence,
+                subject_id="org-shared",
+                predicate="MANUFACTURES",
+                object_or_value="pumps",
+                claim_proposition=evidence.extracted_claim,
+            )
+        ),
     )
 
 
