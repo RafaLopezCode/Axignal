@@ -41,6 +41,10 @@ from application.admin_customer_accounts import (
     CustomerOperationsProjection,
     project_customer_operations,
 )
+from application.admin_financial_documents import (
+    FinancialDocumentProjection,
+    project_financial_documents,
+)
 from application.admin_governance import project_admin_governance
 from application.admin_integrations.service import (
     AdminIntegrationProjection,
@@ -75,6 +79,7 @@ from pipeline.admin_billing import SqliteAdminBillingStore
 from pipeline.admin_billing.stripe import StripeWebhookDependencyError, StripeWebhookError
 from pipeline.admin_commercial import SqliteAdminCommercialStore
 from pipeline.admin_customer_accounts import SqliteAdminCustomerAccountStore
+from pipeline.admin_financial_documents import SqliteFinancialDocumentStore
 from pipeline.admin_governance import SqliteAdminGovernanceAuditStore
 from pipeline.admin_integrations import SqliteAdminIntegrationStore
 from pipeline.admin_observability import SqliteAdminObservabilityStore
@@ -104,6 +109,7 @@ class AxignalRuntime:
     admin_commercial_store: SqliteAdminCommercialStore
     admin_customer_account_store: SqliteAdminCustomerAccountStore
     admin_billing_store: SqliteAdminBillingStore
+    admin_financial_document_store: SqliteFinancialDocumentStore
     admin_integration_store: SqliteAdminIntegrationStore
     admin_weekly_brief_store: SqliteWeeklyBriefStore
     stripe_webhook: StripeWebhookRuntime | None = None
@@ -181,6 +187,9 @@ def build_runtime(config: RuntimeConfig) -> AxignalRuntime:
         config.data_dir / "admin-customer-accounts.sqlite3"
     )
     admin_billing_store = SqliteAdminBillingStore(config.data_dir / "admin-billing.sqlite3")
+    admin_financial_document_store = SqliteFinancialDocumentStore(
+        config.data_dir / "admin-financial-documents.sqlite3"
+    )
     admin_integration_store = SqliteAdminIntegrationStore(
         config.data_dir / "admin-integrations.sqlite3"
     )
@@ -206,6 +215,7 @@ def build_runtime(config: RuntimeConfig) -> AxignalRuntime:
             runtime_environment=IntegrationEnvironment(config.environment.upper()),
             require_livemode=config.environment == "production",
             operations_store=admin_api_operations_store,
+            financial_store=admin_financial_document_store,
         )
     first_proof = None
     if config.first_proof_allowed_host is not None:
@@ -231,6 +241,7 @@ def build_runtime(config: RuntimeConfig) -> AxignalRuntime:
         admin_commercial_store=admin_commercial_store,
         admin_customer_account_store=admin_customer_account_store,
         admin_billing_store=admin_billing_store,
+        admin_financial_document_store=admin_financial_document_store,
         admin_integration_store=admin_integration_store,
         admin_weekly_brief_store=admin_weekly_brief_store,
         stripe_webhook=stripe_webhook,
@@ -804,6 +815,52 @@ def _customer_operations_payload(
     }
 
 
+def _financial_document_projection(
+    runtime: AxignalRuntime, *, grant: AdminAuthorizationGrant, now: datetime
+) -> FinancialDocumentProjection:
+    return project_financial_documents(
+        store=runtime.admin_financial_document_store,
+        grant=grant,
+        generated_at=now,
+    )
+
+
+def _financial_document_payload(
+    projection: FinancialDocumentProjection,
+) -> dict[str, object]:
+    totals: dict[str, int] = {}
+    for row in projection.exports:
+        totals[row.currency] = totals.get(row.currency, 0) + row.signed_gross_minor
+    return {
+        "generatedAt": projection.generated_at.isoformat(),
+        "privacyClass": projection.privacy_class,
+        "coverageNotes": list(projection.coverage_notes),
+        "netDocumentFlowByCurrencyMinor": totals,
+        "records": [
+            {
+                "recordId": record.record_id,
+                "accountId": record.account_id,
+                "kind": record.kind.value,
+                "state": record.state.value,
+                "occurredAt": record.occurred_at.isoformat(),
+                "currency": record.currency,
+                "grossMinor": record.gross_minor,
+                "sourceSystem": record.source.system,
+                "sourceObjectRef": record.source.object_ref,
+                "sourceEventRef": record.source.event_ref,
+                "adapterRef": record.source.adapter_ref,
+                "billingEventId": record.billing_event_id,
+                "documentNumber": record.document_number,
+                "taxBasisState": record.tax_basis_state.value,
+                "netMinor": record.net_minor,
+                "taxMinor": record.tax_minor,
+                "correctsRecordId": record.corrects_record_id,
+            }
+            for record in projection.records
+        ],
+    }
+
+
 def _integration_projection(
     runtime: AxignalRuntime, *, grant: AdminAuthorizationGrant, now: datetime
 ) -> AdminIntegrationProjection:
@@ -945,6 +1002,7 @@ def _admin_projection_payload(
     customer_operations: CustomerOperationsProjection | None = None,
     integrations: AdminIntegrationProjection | None = None,
     api_operations: ApiOperationsProjection | None = None,
+    financial_documents: FinancialDocumentProjection | None = None,
 ) -> dict[str, object]:
     payload: dict[str, object] = {
         "mode": projection.mode,
@@ -980,6 +1038,8 @@ def _admin_projection_payload(
         payload["integrations"] = _integration_payload(integrations)
     if api_operations is not None:
         payload["apiOperations"] = _api_operations_payload(api_operations)
+    if financial_documents is not None:
+        payload["financialDocuments"] = _financial_document_payload(financial_documents)
     return payload
 
 
@@ -996,6 +1056,7 @@ def _render_admin_shell(
     customer_operations: CustomerOperationsProjection | None = None,
     integrations: AdminIntegrationProjection | None = None,
     api_operations: ApiOperationsProjection | None = None,
+    financial_documents: FinancialDocumentProjection | None = None,
 ) -> bytes:
     template = (web_root / "admin" / "index.html").read_text(encoding="utf-8")
     payload = html.escape(
@@ -1011,6 +1072,7 @@ def _render_admin_shell(
                 customer_operations=customer_operations,
                 integrations=integrations,
                 api_operations=api_operations,
+                financial_documents=financial_documents,
             ),
             sort_keys=True,
             separators=(",", ":"),
@@ -1209,6 +1271,11 @@ def make_handler(runtime: AxignalRuntime) -> type[BaseHTTPRequestHandler]:
                         if admin_projection.current_slug == "integrations"
                         else None
                     )
+                    financial_documents = (
+                        _financial_document_projection(runtime, grant=grant, now=now)
+                        if admin_projection.current_slug == "finance-fiscal"
+                        else None
+                    )
                     rendered = _render_admin_shell(
                         runtime.config.web_root,
                         admin_projection,
@@ -1221,6 +1288,7 @@ def make_handler(runtime: AxignalRuntime) -> type[BaseHTTPRequestHandler]:
                         customer_operations=customer_operations,
                         integrations=integrations,
                         api_operations=api_operations,
+                        financial_documents=financial_documents,
                     )
                 except AdminAuthenticationError:
                     self._admin_error(HTTPStatus.UNAUTHORIZED, "Admin authentication failed.")

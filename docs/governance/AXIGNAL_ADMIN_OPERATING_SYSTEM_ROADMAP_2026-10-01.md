@@ -99,7 +99,7 @@ Admin must distinguish measured flywheel behavior from the hypothesis above.
 
 `NOT_STARTED → READY → IN_PROGRESS → BLOCKED → DONE → DEFERRED → REJECTED`
 
-**CURRENT_TASK = AO-20**
+**CURRENT_TASK = AO-21**
 
 ## 7. Closure rule
 
@@ -842,9 +842,20 @@ Integration failures become operable without SSH/database archaeology.
 
 ## AO-20 — Invoice and Financial Document Domain
 
-**Status:** NOT_STARTED
+**Status:** DONE
 **Depends on:** AO-10
 **Priority:** P0 Finance
+
+### Completion evidence
+- Added a private append-only financial-document domain distinct from AO-10 billing facts. INVOICE, PAYMENT, REFUND and CREDIT_NOTE are separate immutable records with account, currency, occurrence/recording time, source system/object/event, optional adapter reference and optional billing-event linkage.
+- Verified Stripe invoice.paid now materializes two records: one INVOICE and one PAYMENT. Replay of the same provider event returns the already-materialized records and cannot duplicate or rewrite financial history.
+- Stripe refund events materialize a separate REFUND record. PAYMENT_FAILED may materialize a failed PAYMENT reference without being treated as revenue.
+- CREDIT_NOTE is append-only and must reference the prior record it corrects. The original invoice remains unchanged and inspectable.
+- Tax basis is explicit: KNOWN requires net + tax = gross; otherwise tax values remain absent and the state is UNKNOWN/NOT_APPLICABLE. AXIGNAL does not infer VAT from Stripe amount alone.
+- External accounting/fiscal documents can be appended only with finance write authority, STEP_UP assurance and an explicit adapter reference, preserving the future AO-21 provider boundary.
+- Versioned export rows preserve source references and signed gross semantics; refunds and credit notes export as negative magnitudes while source records remain positive immutable magnitudes.
+- Admin Finance / Fiscal renders the private financial document ledger, source references, tax-basis status, corrections and per-currency net document flow. The UI explicitly states that Admin is not the legal/fiscal system of record.
+- Focused AO-10/AO-20 E2E and contract tests PASS; full deterministic repository validation is required before integration.
 
 ### Work
 - Internal invoice/payment/refund/credit-note references and immutable lifecycle.

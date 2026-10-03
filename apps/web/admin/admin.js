@@ -1002,6 +1002,114 @@
     }
   }
 
+  const financialDocuments = bootstrap.financialDocuments
+  const financeSection = document.getElementById('admin-finance-observatory')
+  if (current?.slug === 'finance-fiscal' && financialDocuments && financeSection) {
+    financeSection.hidden = false
+    if (domainPreview) domainPreview.hidden = true
+
+    const privacy = document.getElementById('admin-finance-privacy')
+    const generated = document.getElementById('admin-finance-generated')
+    const notes = document.getElementById('admin-finance-notes')
+    const summary = document.getElementById('admin-finance-summary')
+    const list = document.getElementById('admin-finance-list')
+
+    if (privacy) privacy.textContent = financialDocuments.privacyClass || 'PRIVATE FINANCIAL OPERATIONS'
+    if (generated) generated.textContent = financialDocuments.generatedAt ? 'As of ' + financialDocuments.generatedAt : ''
+
+    if (notes) {
+      notes.replaceChildren()
+      for (const noteText of financialDocuments.coverageNotes || []) {
+        const note = document.createElement('p')
+        note.textContent = noteText
+        notes.append(note)
+      }
+    }
+
+    if (summary) {
+      summary.replaceChildren()
+      const totals = financialDocuments.netDocumentFlowByCurrencyMinor || {}
+      const records = Array.isArray(financialDocuments.records) ? financialDocuments.records : []
+      const facts = [
+        ['Records', records.length],
+        ['Invoices', records.filter((item) => item.kind === 'INVOICE').length],
+        ['Payments', records.filter((item) => item.kind === 'PAYMENT').length],
+        ['Refunds', records.filter((item) => item.kind === 'REFUND').length],
+        ['Credit notes', records.filter((item) => item.kind === 'CREDIT_NOTE').length],
+      ]
+      for (const pair of facts) {
+        const card = document.createElement('article')
+        card.className = 'admin-observatory-stat'
+        const strong = document.createElement('strong')
+        strong.textContent = String(pair[1])
+        const span = document.createElement('span')
+        span.textContent = pair[0]
+        card.append(strong, span)
+        summary.append(card)
+      }
+      for (const [currency, minor] of Object.entries(totals)) {
+        const card = document.createElement('article')
+        card.className = 'admin-observatory-stat'
+        const strong = document.createElement('strong')
+        strong.textContent = String(minor)
+        const span = document.createElement('span')
+        span.textContent = 'Net document flow · ' + currency + ' minor'
+        card.append(strong, span)
+        summary.append(card)
+      }
+    }
+
+    if (list) {
+      list.replaceChildren()
+      const records = Array.isArray(financialDocuments.records) ? financialDocuments.records : []
+      if (!records.length) {
+        const empty = document.createElement('article')
+        empty.className = 'admin-observatory-empty'
+        const heading = document.createElement('strong')
+        heading.textContent = 'No financial document records yet'
+        const body = document.createElement('p')
+        body.textContent = 'Verified billing/document events will appear here. Missing tax basis remains UNKNOWN.'
+        empty.append(heading, body)
+        list.append(empty)
+      }
+      for (const item of records) {
+        const article = document.createElement('article')
+        article.className = 'admin-integration-entry'
+        const header = document.createElement('header')
+        const title = document.createElement('h3')
+        title.textContent = item.kind + ' · ' + (item.documentNumber || item.sourceObjectRef)
+        const state = document.createElement('span')
+        state.textContent = item.state || 'UNKNOWN'
+        header.append(title, state)
+
+        const facts = document.createElement('dl')
+        facts.className = 'admin-integration-facts'
+        const addDetail = (label, value) => {
+          const wrapper = document.createElement('div')
+          const term = document.createElement('dt')
+          term.textContent = label
+          const description = document.createElement('dd')
+          description.textContent = value == null || value === '' ? 'UNKNOWN' : String(value)
+          wrapper.append(term, description)
+          facts.append(wrapper)
+        }
+        addDetail('Account', item.accountId)
+        addDetail('Gross minor', item.grossMinor)
+        addDetail('Currency', item.currency)
+        addDetail('Tax basis', item.taxBasisState)
+        addDetail('Net minor', item.netMinor)
+        addDetail('Tax minor', item.taxMinor)
+        addDetail('Source system', item.sourceSystem)
+        addDetail('Source object', item.sourceObjectRef)
+        addDetail('Billing event', item.billingEventId)
+        addDetail('Adapter', item.adapterRef)
+        addDetail('Corrects', item.correctsRecordId)
+        article.append(header, facts)
+        list.append(article)
+      }
+    }
+  }
+
   document.addEventListener('keydown', (event) => {
     if (event.key !== 'ArrowDown' && event.key !== 'ArrowUp') return
     const links = [...document.querySelectorAll('.admin-nav-link')]

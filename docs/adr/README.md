@@ -79,3 +79,4 @@ Constitution (`.specify/memory/constitution.md`).
 4. Add the row above. `tools/governance` verifies the index and citations.
 | [ADR-0065](ADR-0065-private-analytics-growth-observatory.md) | Private Analytics and Growth Observatory Boundary (**ACCEPTED**) | AO-14; AO-17 |
 | [ADR-0066](ADR-0066-api-webhook-operations-boundary.md) | API/Webhook Operations Boundary (**ACCEPTED**) | AO-18; AO-19 |
+| [ADR-0067](ADR-0067-private-financial-document-ledger.md) | Private Financial Document Ledger Boundary (**ACCEPTED**) | AO-10; AO-20; AO-21 |

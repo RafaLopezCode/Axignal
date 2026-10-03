@@ -616,6 +616,9 @@ def test_runtime_stripe_webhook_http_flow_is_signed_and_replay_safe(tmp_path: Pa
         replay = post(paid_raw, paid_at)
         assert first["replayed"] is False
         assert replay["replayed"] is True
+        financial = runtime.admin_financial_document_store.for_billing_event("evt_http_paid")
+        assert [record.kind.value for record in financial] == ["INVOICE", "PAYMENT"]
+        assert len(runtime.admin_financial_document_store.all()) == 2
 
         verified = runtime.admin_customer_account_store.snapshot_for_tenant("tenant:1")
         assert verified is not None

@@ -9,6 +9,7 @@ from typing import Protocol
 from application.admin_api_operations import WebhookOperationsService
 from application.admin_billing import AdminBillingService
 from application.admin_customer_accounts import AdminCustomerAccountService
+from application.admin_financial_documents import AdminFinancialDocumentService
 from domain.admin_billing import BillingAuthorityGrant, BillingProvider
 from domain.admin_integrations import (
     CredentialState,
@@ -27,6 +28,7 @@ from pipeline.admin_billing.stripe import (
     checkout_mapping_from_verified_event,
 )
 from pipeline.admin_customer_accounts import SqliteAdminCustomerAccountStore
+from pipeline.admin_financial_documents import SqliteFinancialDocumentStore
 
 
 class IntegrationRegistryReader(Protocol):
@@ -55,6 +57,7 @@ class StripeWebhookRuntime:
         runtime_environment: IntegrationEnvironment,
         require_livemode: bool,
         operations_store: SqliteApiOperationsStore | None = None,
+        financial_store: SqliteFinancialDocumentStore | None = None,
     ) -> None:
         if not stripe_account_id.startswith("acct_"):
             raise ValueError("Stripe account id is invalid")
@@ -73,6 +76,9 @@ class StripeWebhookRuntime:
             AdminCustomerAccountService(account_store),
         )
         self._normalizer = StripeEventNormalizer(billing_store)
+        self._financial_documents = (
+            None if financial_store is None else AdminFinancialDocumentService(financial_store)
+        )
         self._operations = (
             None if operations_store is None else WebhookOperationsService(operations_store)
         )
@@ -146,6 +152,8 @@ class StripeWebhookRuntime:
             event=event,
             now=received_at,
         )
+        if self._financial_documents is not None:
+            self._financial_documents.ingest_billing_event(event)
         return StripeWebhookResult(
             event_id=verified.event_id,
             event_type=verified.event_type,
