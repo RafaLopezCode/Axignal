@@ -81,6 +81,7 @@ from application.economic_discovery.market_planning import (
 )
 from application.economic_discovery.observation_memory import (
     GovernedObservation,
+    ObservationAccessMetadata,
     ObservationAccessStatus,
     ObservationMemory,
     ObservationMemoryConflict,
@@ -105,6 +106,7 @@ from application.economic_discovery.observation_reuse import (
     ReuseSelection,
     ReuseTargetScope,
     evaluate_observation_reuse,
+    evaluate_observation_reuse_metadata,
     select_reusable_observations,
 )
 from application.economic_discovery.pilot_validation import (
@@ -244,6 +246,7 @@ __all__ = [
     "MarketParticipation",
     "MarketRelationship",
     "MarketResearchIntent",
+    "ObservationAccessMetadata",
     "ObservationAccessStatus",
     "ObservationIngress",
     "ObservationMemory",
@@ -331,6 +334,7 @@ __all__ = [
     "evaluate_currentness",
     "evaluate_execution_budget",
     "evaluate_observation_reuse",
+    "evaluate_observation_reuse_metadata",
     "evaluate_structured",
     "execution_stop_learning_event",
     "ingest_observation",

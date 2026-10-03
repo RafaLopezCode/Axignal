@@ -31,7 +31,10 @@ from application.economic_discovery.learning_memory import (
     LearningReplayReference,
     LearningYield,
 )
-from application.economic_discovery.observation_memory import ObservationMemory
+from application.economic_discovery.observation_memory import (
+    ObservationMemory,
+    ObservationReuseAuthority,
+)
 from application.economic_discovery.observation_reuse import (
     ObservationReuseContext,
     ObservationReusePolicy,
@@ -285,6 +288,7 @@ def execute_prime_source_slice(
     semantic_extractor: SemanticExtractionPort | None = None,
     semantic_contract: SemanticExtractionContract | None = None,
     reuse_policy: ObservationReusePolicy | None = None,
+    ingested_observation_reuse_authority: ObservationReuseAuthority | None = None,
 ) -> PrimeExecutionTrace:
     """Execute one governed source-to-Prime slice and retain exact lineage."""
 
@@ -407,6 +411,7 @@ def execute_prime_source_slice(
             request=request,
             observation=observation,
             contracts=contracts,
+            reuse_authority=ingested_observation_reuse_authority,
         )
     except Exception as exc:
         learning_memory.append(

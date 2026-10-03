@@ -13,9 +13,22 @@ from application.economic_discovery.explanation import (
     BasisDatum,
     ExplainableBasis,
 )
-from application.economic_discovery.observation_memory import GovernedObservation
+from application.economic_discovery.observation_memory import (
+    GovernedObservation,
+    ObservationAccessStatus,
+    ObservationReuseAuthority,
+    ObservationReuseScope,
+    ObservationRightsStatus,
+)
+from application.economic_discovery.observation_reuse import (
+    ObservationReusePolicy,
+    ReusePurpose,
+    ReuseTargetScope,
+)
 from application.subscriber_projection import (
     EvidenceNarrativeKind,
+    NarrativeAccessContext,
+    NarrativeEvidenceScope,
     NarrativeGraphKind,
     NarrativeGraphMapResolver,
     NarrativeGraphReference,
@@ -107,6 +120,7 @@ def _observation(
     source_type: str,
     artifact_ref: str,
     fingerprint: str,
+    authority: ObservationReuseAuthority | None = None,
 ) -> GovernedObservation:
     return GovernedObservation(
         record=ObservationRecord(
@@ -119,6 +133,19 @@ def _observation(
             mode=ObservationMode.DETERMINISTIC_SENSOR,
         ),
         raw_artifact_ref=artifact_ref,
+        reuse_authority=(
+            ObservationReuseAuthority(
+                rights_status=ObservationRightsStatus.PERMITTED,
+                access_status=ObservationAccessStatus.ACCESSIBLE,
+                scope=ObservationReuseScope.GLOBAL_PUBLIC,
+                provenance_ref="policy:public-test",
+                currentness=Currentness.CURRENT,
+                applicable_subject_ids=("org:acme",),
+                applicable_purposes=(ReusePurpose.CURRENT_STATE.value,),
+            )
+            if authority is None
+            else authority
+        ),
     )
 
 
@@ -158,6 +185,25 @@ def _basis() -> ExplainableBasis:
         ),
         interpretation="Pump manufacturing is observed but registry wording is broader.",
         uncertainty="Geographic availability remains unresolved.",
+    )
+
+
+NARRATIVE_POLICY = ObservationReusePolicy("subscriber-evidence-narrative", "1")
+
+
+def _access_context(
+    *,
+    tenant_id: str = "tenant:1",
+    target_scope: ReuseTargetScope = ReuseTargetScope.TENANT_PRIVATE,
+    purpose: ReusePurpose = ReusePurpose.CURRENT_STATE,
+) -> NarrativeAccessContext:
+    return NarrativeAccessContext(
+        subject_id="org:acme",
+        xeed_id="xeed:1",
+        tenant_id=tenant_id,
+        target_scope=target_scope,
+        purpose=purpose,
+        as_of=NOW,
     )
 
 
@@ -263,6 +309,8 @@ def test_complete_evidence_narrative_resolves_runtime_lineage_and_is_ui_safe(
         observation_memory=memory,
         artifact_integrity=ContentAddressedArtifactIntegrityAdapter(artifacts),
         material_resolver=_material_resolver(),
+        access_context=_access_context(),
+        reuse_policy=NARRATIVE_POLICY,
         graph_resolver=_graph_resolver(),
         canonical_faxts=(_faxt(),),
     )
@@ -283,6 +331,7 @@ def test_complete_evidence_narrative_resolves_runtime_lineage_and_is_ui_safe(
     assert all(step.artifact_verified is True for step in source_steps)
     assert source_steps[0].source_ref == "https://example.test/company"
     assert source_steps[0].observed_at == NOW
+    assert all(step.evidence_scope is NarrativeEvidenceScope.GLOBAL_PUBLIC for step in source_steps)
     assert narrative.steps[1].currentness == Currentness.CURRENT.value
 
     rendered = json.dumps(asdict(narrative), default=str, sort_keys=True)
@@ -317,6 +366,8 @@ def test_evidence_narrative_survives_exact_observation_replay(tmp_path: Path) ->
         observation_memory=memory,
         artifact_integrity=adapter,
         material_resolver=_material_resolver(),
+        access_context=_access_context(),
+        reuse_policy=NARRATIVE_POLICY,
         canonical_faxts=(_faxt(),),
     )
 
@@ -330,6 +381,8 @@ def test_evidence_narrative_survives_exact_observation_replay(tmp_path: Path) ->
         observation_memory=memory,
         artifact_integrity=adapter,
         material_resolver=_material_resolver(),
+        access_context=_access_context(),
+        reuse_policy=NARRATIVE_POLICY,
         canonical_faxts=(_faxt(),),
     )
 
@@ -366,6 +419,8 @@ def test_narrative_rejects_altered_summary_with_same_ids(tmp_path: Path) -> None
             observation_memory=memory,
             artifact_integrity=ContentAddressedArtifactIntegrityAdapter(artifacts),
             material_resolver=_material_resolver(),
+            access_context=_access_context(),
+            reuse_policy=NARRATIVE_POLICY,
             canonical_faxts=(_faxt(),),
         )
 
@@ -397,6 +452,8 @@ def test_narrative_rejects_altered_type_or_version_with_same_ids(tmp_path: Path)
             observation_memory=memory,
             artifact_integrity=ContentAddressedArtifactIntegrityAdapter(artifacts),
             material_resolver=_material_resolver(),
+            access_context=_access_context(),
+            reuse_policy=NARRATIVE_POLICY,
             canonical_faxts=(_faxt(),),
         )
 
@@ -424,6 +481,8 @@ def test_narrative_rejects_altered_type_or_version_with_same_ids(tmp_path: Path)
             observation_memory=memory,
             artifact_integrity=ContentAddressedArtifactIntegrityAdapter(artifacts),
             material_resolver=_material_resolver(),
+            access_context=_access_context(),
+            reuse_policy=NARRATIVE_POLICY,
             canonical_faxts=(_faxt(),),
         )
 
@@ -452,6 +511,8 @@ def test_narrative_cannot_omit_material_contradiction(tmp_path: Path) -> None:
             observation_memory=memory,
             artifact_integrity=ContentAddressedArtifactIntegrityAdapter(artifacts),
             material_resolver=_material_resolver(),
+            access_context=_access_context(),
+            reuse_policy=NARRATIVE_POLICY,
             canonical_faxts=(_faxt(),),
         )
 
@@ -480,6 +541,244 @@ def test_narrative_rejects_unresolved_graph_reference(tmp_path: Path) -> None:
             observation_memory=memory,
             artifact_integrity=ContentAddressedArtifactIntegrityAdapter(artifacts),
             material_resolver=_material_resolver(),
+            access_context=_access_context(),
+            reuse_policy=NARRATIVE_POLICY,
             graph_resolver=_graph_resolver(),
+            canonical_faxts=(_faxt(),),
+        )
+
+
+def _private_authority(
+    *,
+    owner: str = "tenant:1",
+    rights: ObservationRightsStatus = ObservationRightsStatus.PERMITTED,
+    scope: ObservationReuseScope = ObservationReuseScope.TENANT_PRIVATE,
+    purposes: tuple[str, ...] = (ReusePurpose.CURRENT_STATE.value,),
+) -> ObservationReuseAuthority:
+    return ObservationReuseAuthority(
+        rights_status=rights,
+        access_status=ObservationAccessStatus.ACCESSIBLE,
+        scope=scope,
+        scope_owner_id=owner if scope is ObservationReuseScope.TENANT_PRIVATE else None,
+        provenance_ref="policy:private-test",
+        currentness=Currentness.CURRENT,
+        applicable_subject_ids=("org:acme",),
+        applicable_purposes=purposes,
+    )
+
+
+def _private_runtime(tmp_path: Path, authority: ObservationReuseAuthority):
+    artifacts = ContentAddressedArtifactStore(tmp_path / "private-artifacts")
+    ref = artifacts.put_json({"private": "billing note", "amount": "secret"})
+    memory = SqliteObservationMemory(tmp_path / "private-observations.sqlite3")
+    private = _observation(
+        observation_id="obs:web",
+        source_ref="private://tenant-note",
+        source_type="PRIVATE_BILLING",
+        artifact_ref=ref,
+        fingerprint="fingerprint:private",
+        authority=authority,
+    )
+    assert memory.append(private)
+    return artifacts, memory
+
+
+def _private_basis() -> ExplainableBasis:
+    basis = _basis()
+    return replace(
+        basis,
+        data=(
+            replace(
+                basis.data[0],
+                source_ref="private://tenant-note",
+                source_type="PRIVATE_BILLING",
+                excerpt_or_summary="Private tenant billing note.",
+                representation_fingerprint="repr:private:v1",
+                extraction_fingerprint="extract:private:v1",
+            ),
+        ),
+    )
+
+
+def _private_material_resolver() -> NarrativeMaterialMapResolver:
+    return NarrativeMaterialMapResolver(
+        (
+            NarrativeMaterial(
+                observation_id="obs:web",
+                subject_id="org:acme",
+                candidate_id="candidate:industrial-pumps",
+                source_ref="private://tenant-note",
+                source_type="PRIVATE_BILLING",
+                observed_at=NOW,
+                excerpt_or_summary="Private tenant billing note.",
+                contribution=NarrativeMaterialContribution.SUPPORTS,
+                representation_fingerprint="repr:private:v1",
+                extraction_fingerprint="extract:private:v1",
+            ),
+        )
+    )
+
+
+def _private_projection(basis: ExplainableBasis):
+    return project_explainable_xignal(
+        organization_context=_seed(),
+        candidate_id=basis.candidate_id,
+        kind=XignalKind.SUPPLY,
+        epistemic_state=XignalEpistemicState.OBSERVED,
+        title="Private tenant-supported view",
+        why_attention="Private context may inform this tenant-only presentation.",
+        basis=basis,
+        emitted_at=NOW,
+        policy_version="xignal-private-v1",
+        canonical_faxt=_faxt(),
+    )
+
+
+def test_private_evidence_from_different_owner_is_rejected_before_material_resolution(
+    tmp_path: Path,
+) -> None:
+    artifacts, memory = _private_runtime(
+        tmp_path,
+        _private_authority(owner="tenant:other"),
+    )
+    basis = _private_basis()
+    with pytest.raises(ValueError, match="PRIVATE_SCOPE_MISMATCH"):
+        build_evidence_narrative(
+            organization_context=_seed(),
+            projection=_private_projection(basis),
+            basis=basis,
+            observation_memory=memory,
+            artifact_integrity=ContentAddressedArtifactIntegrityAdapter(artifacts),
+            material_resolver=_private_material_resolver(),
+            access_context=_access_context(),
+            reuse_policy=NARRATIVE_POLICY,
+            canonical_faxts=(_faxt(),),
+        )
+
+
+@pytest.mark.parametrize(
+    "authority",
+    [
+        _private_authority(rights=ObservationRightsStatus.PROHIBITED),
+        ObservationReuseAuthority(
+            rights_status=ObservationRightsStatus.UNKNOWN,
+            access_status=ObservationAccessStatus.ACCESSIBLE,
+            scope=ObservationReuseScope.TENANT_PRIVATE,
+            scope_owner_id="tenant:1",
+            provenance_ref="policy:private-test",
+            currentness=Currentness.CURRENT,
+            applicable_subject_ids=("org:acme",),
+            applicable_purposes=(ReusePurpose.CURRENT_STATE.value,),
+        ),
+        ObservationReuseAuthority(
+            rights_status=ObservationRightsStatus.PERMITTED,
+            access_status=ObservationAccessStatus.ACCESSIBLE,
+            scope=ObservationReuseScope.RESTRICTED,
+            provenance_ref="policy:restricted-test",
+            currentness=Currentness.CURRENT,
+            applicable_subject_ids=("org:acme",),
+            applicable_purposes=(ReusePurpose.CURRENT_STATE.value,),
+        ),
+    ],
+)
+def test_prohibited_unknown_or_restricted_private_material_is_rejected(
+    tmp_path: Path,
+    authority: ObservationReuseAuthority,
+) -> None:
+    artifacts, memory = _private_runtime(tmp_path, authority)
+    basis = _private_basis()
+    with pytest.raises(ValueError, match="narrative observation access rejected"):
+        build_evidence_narrative(
+            organization_context=_seed(),
+            projection=_private_projection(basis),
+            basis=basis,
+            observation_memory=memory,
+            artifact_integrity=ContentAddressedArtifactIntegrityAdapter(artifacts),
+            material_resolver=_private_material_resolver(),
+            access_context=_access_context(),
+            reuse_policy=NARRATIVE_POLICY,
+            canonical_faxts=(_faxt(),),
+        )
+
+
+def test_correct_private_owner_gets_explicit_private_projection_without_cas_leak(
+    tmp_path: Path,
+) -> None:
+    artifacts, memory = _private_runtime(tmp_path, _private_authority())
+    basis = _private_basis()
+    narrative = build_evidence_narrative(
+        organization_context=_seed(),
+        projection=_private_projection(basis),
+        basis=basis,
+        observation_memory=memory,
+        artifact_integrity=ContentAddressedArtifactIntegrityAdapter(artifacts),
+        material_resolver=_private_material_resolver(),
+        access_context=_access_context(),
+        reuse_policy=NARRATIVE_POLICY,
+        canonical_faxts=(_faxt(),),
+    )
+    evidence_steps = [
+        step
+        for step in narrative.steps
+        if step.kind in (EvidenceNarrativeKind.OBSERVATION, EvidenceNarrativeKind.SOURCE)
+    ]
+    assert evidence_steps
+    assert all(
+        step.evidence_scope is NarrativeEvidenceScope.TENANT_PRIVATE for step in evidence_steps
+    )
+    rendered = json.dumps(asdict(narrative), default=str, sort_keys=True)
+    assert "cas:sha256:" not in rendered
+    assert "raw_artifact_ref" not in rendered
+    assert str(tmp_path) not in rendered
+
+
+def test_private_evidence_cannot_be_projected_to_global_world(tmp_path: Path) -> None:
+    artifacts, memory = _private_runtime(tmp_path, _private_authority())
+    basis = _private_basis()
+    with pytest.raises(ValueError, match="PRIVATE_SCOPE_GLOBAL_LEAK"):
+        build_evidence_narrative(
+            organization_context=_seed(),
+            projection=_private_projection(basis),
+            basis=basis,
+            observation_memory=memory,
+            artifact_integrity=ContentAddressedArtifactIntegrityAdapter(artifacts),
+            material_resolver=_private_material_resolver(),
+            access_context=_access_context(target_scope=ReuseTargetScope.GLOBAL_WORLD),
+            reuse_policy=NARRATIVE_POLICY,
+            canonical_faxts=(_faxt(),),
+        )
+
+
+class _ResolverMustNotReadPrivateMaterial:
+    def considered_observation_ids(
+        self,
+        *,
+        subject_id: str,
+        candidate_id: str,
+    ) -> tuple[str, ...]:
+        assert subject_id == "org:acme"
+        assert candidate_id == "candidate:industrial-pumps"
+        return ("obs:web",)
+
+    def resolve(self, observation_id: str):
+        raise AssertionError("material resolver must not run before authorization")
+
+
+def test_private_material_is_not_resolved_before_owner_authorization(tmp_path: Path) -> None:
+    artifacts, memory = _private_runtime(
+        tmp_path,
+        _private_authority(owner="tenant:other"),
+    )
+    basis = _private_basis()
+    with pytest.raises(ValueError, match="PRIVATE_SCOPE_MISMATCH"):
+        build_evidence_narrative(
+            organization_context=_seed(),
+            projection=_private_projection(basis),
+            basis=basis,
+            observation_memory=memory,
+            artifact_integrity=ContentAddressedArtifactIntegrityAdapter(artifacts),
+            material_resolver=_ResolverMustNotReadPrivateMaterial(),
+            access_context=_access_context(),
+            reuse_policy=NARRATIVE_POLICY,
             canonical_faxts=(_faxt(),),
         )

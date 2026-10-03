@@ -10,6 +10,7 @@ from pathlib import Path
 from application.economic_discovery.brain_contracts import ObservationMode, ObservationRecord
 from application.economic_discovery.observation_memory import (
     GovernedObservation,
+    ObservationAccessMetadata,
     ObservationMemoryConflict,
     ObservationReuseAuthority,
     ObservedField,
@@ -201,6 +202,47 @@ class SqliteObservationMemory:
                 ),
             )
         return True
+
+    def access_metadata(
+        self,
+        subject_id: str,
+        observation_id: str,
+    ) -> ObservationAccessMetadata | None:
+        if not subject_id.strip() or not observation_id.strip():
+            raise ValueError("observation access identity is required")
+        with self._connect() as connection:
+            row = connection.execute(
+                "SELECT observation_id, subject_id, source_ref, source_type, observed_at, content_fingerprint, mode, reuse_json "
+                "FROM observations WHERE subject_id = ? AND observation_id = ?",
+                (subject_id, observation_id),
+            ).fetchone()
+        if row is None:
+            return None
+        return ObservationAccessMetadata(
+            record=ObservationRecord(
+                observation_id=str(row[0]),
+                subject_id=str(row[1]),
+                source_ref=str(row[2]),
+                source_type=str(row[3]),
+                observed_at=datetime.fromisoformat(str(row[4])),
+                content_fingerprint=str(row[5]),
+                mode=ObservationMode(str(row[6])),
+            ),
+            reuse_authority=observation_reuse_authority_from_payload(json.loads(str(row[7]))),
+        )
+
+    def get_observation(
+        self,
+        subject_id: str,
+        observation_id: str,
+    ) -> GovernedObservation | None:
+        if not subject_id.strip() or not observation_id.strip():
+            raise ValueError("observation access identity is required")
+        with self._connect() as connection:
+            observation = self._load_by_id(connection, observation_id)
+        if observation is None or observation.record.subject_id != subject_id:
+            return None
+        return observation
 
     def for_subject(self, subject_id: str) -> tuple[GovernedObservation, ...]:
         if not subject_id.strip():

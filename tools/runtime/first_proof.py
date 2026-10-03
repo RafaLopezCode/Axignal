@@ -40,6 +40,17 @@ from application.economic_discovery.learning_memory import (
     LearningReplayReference,
     LearningYield,
 )
+from application.economic_discovery.observation_memory import (
+    ObservationAccessStatus,
+    ObservationReuseAuthority,
+    ObservationReuseScope,
+    ObservationRightsStatus,
+)
+from application.economic_discovery.observation_reuse import (
+    ObservationReusePolicy,
+    ReusePurpose,
+    ReuseTargetScope,
+)
 from application.economic_discovery.prime import DimensionRoutingPolicy, PrimeRoute, PrimeWorkItem
 from application.economic_discovery.prime_execution import (
     PrimeExecutionPorts,
@@ -57,6 +68,7 @@ from application.source_acquisition import (
 )
 from application.source_representation import RichSubjectState, compile_rich_subject_state
 from application.subscriber_projection import (
+    NarrativeAccessContext,
     NarrativeMaterial,
     NarrativeMaterialContribution,
     NarrativeMaterialMapResolver,
@@ -363,6 +375,15 @@ class FirstProofService:
                 state=ExecutionBudgetState(amount_microunits=0, currency="EUR"),
             ),
             ports=PrimeExecutionPorts(executor, executor, executor),
+            ingested_observation_reuse_authority=ObservationReuseAuthority(
+                rights_status=ObservationRightsStatus.PERMITTED,
+                access_status=ObservationAccessStatus.ACCESSIBLE,
+                scope=ObservationReuseScope.GLOBAL_PUBLIC,
+                provenance_ref=f"source-policy:{source_policy.fingerprint}",
+                currentness=Currentness.CURRENT,
+                applicable_subject_ids=(str(ORGANIZATION_ID),),
+                applicable_purposes=(ReusePurpose.CURRENT_STATE.value,),
+            ),
         )
         apply_prime_trace(seed=seed, state=lifecycle, trace=trace, occurred_at=now)
         representation = representation_adapter.represent(request=request, observation=observation)
@@ -460,6 +481,18 @@ class FirstProofService:
                         extraction_fingerprint=None,
                     ),
                 )
+            ),
+            access_context=NarrativeAccessContext(
+                subject_id=str(ORGANIZATION_ID),
+                xeed_id=str(seed.authorized_xeed.xeed.id),
+                tenant_id=str(seed.authorized_xeed.xeed.tenant_id),
+                target_scope=ReuseTargetScope.TENANT_PRIVATE,
+                purpose=ReusePurpose.CURRENT_STATE,
+                as_of=now,
+            ),
+            reuse_policy=ObservationReusePolicy(
+                "subscriber-evidence-narrative",
+                "1",
             ),
         )
         readiness = evaluate_first_map_readiness(

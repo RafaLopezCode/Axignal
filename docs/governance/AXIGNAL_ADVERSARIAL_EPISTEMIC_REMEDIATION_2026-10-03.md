@@ -172,8 +172,20 @@ Narrative verifies bytes/IDs but can accept altered semantic summary/type/graph 
 ## AUD-05 — Tenant/Reuse Authorization Before Narrative Access
 
 **Severity:** HIGH
-**Status:** READY
+**Status:** DONE
 **Depends on:** AUD-03
+
+### Completion evidence
+- NarrativeAccessContext now binds subject, authorized Xeed, tenant, target scope, reuse purpose and as-of time.
+- EvidenceNarrative applies the existing ADR-0050 reuse policy before resolving narrative material or artifact content.
+- SqliteObservationMemory now provides metadata-only authorization lookup excluding raw content/artifact references; full observation load occurs only after ALLOW.
+- Considered-evidence IDs are authorized before NarrativeMaterial is resolved, including contradictions omitted by the caller.
+- Different private owner, PROHIBITED, UNKNOWN and RESTRICTED reuse all fail closed.
+- Correct private owner + permitted purpose renders evidence explicitly TENANT_PRIVATE.
+- TENANT_PRIVATE evidence is rejected for GLOBAL_WORLD projection and has no canonical write path.
+- Subscriber narrative does not expose raw_content, raw_artifact_ref or CAS references.
+- FR-30 now assigns explicit governed GLOBAL_PUBLIC reuse authority to its public homepage observation instead of relying on the restrictive default.
+- ADR-0076 records the access ordering and leaves dynamic temporal aging to AUD-06.
 
 ### Problem
 Reuse policy can reject tenant-private evidence while evidence narrative still retrieves and exposes it.
@@ -193,7 +205,7 @@ Reuse policy can reject tenant-private evidence while evidence narrative still r
 ## AUD-06 — Temporal Currentness Propagation
 
 **Severity:** HIGH
-**Status:** BLOCKED
+**Status:** READY
 **Depends on:** AUD-05
 
 ### Problem

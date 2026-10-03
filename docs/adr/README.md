@@ -88,3 +88,4 @@ Constitution (`.specify/memory/constitution.md`).
 | [ADR-0073](ADR-0073-canonical-materialization-relationship-admission.md) | Canonical Materialization and Relationship Admission Boundary (**ACCEPTED**) | AUD-02; FAXT; Organization; Relationship |
 | [ADR-0074](ADR-0074-claim-kind-governed-observed-projection.md) | Claim-Kind Governed OBSERVED Projection (**ACCEPTED**) | AUD-03; subscriber projection; observation support |
 | [ADR-0075](ADR-0075-exact-explainable-basis-narrative-verification.md) | Exact Explainable Basis and Narrative Verification (**ACCEPTED**) | AUD-04; EvidenceNarrative; ExplainableBasis |
+| [ADR-0076](ADR-0076-tenant-reuse-authorization-before-narrative-access.md) | Tenant/Reuse Authorization Before Narrative Access (**ACCEPTED**) | AUD-05; tenant-private evidence; narrative |

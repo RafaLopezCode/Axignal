@@ -48,12 +48,12 @@ class NarrativeMaterial:
 class NarrativeMaterialResolver(Protocol):
     def resolve(self, observation_id: str) -> NarrativeMaterial | None: ...
 
-    def considered(
+    def considered_observation_ids(
         self,
         *,
         subject_id: str,
         candidate_id: str,
-    ) -> tuple[NarrativeMaterial, ...]: ...
+    ) -> tuple[str, ...]: ...
 
 
 class NarrativeMaterialMapResolver:
@@ -65,14 +65,14 @@ class NarrativeMaterialMapResolver:
     def resolve(self, observation_id: str) -> NarrativeMaterial | None:
         return self._materials.get(observation_id)
 
-    def considered(
+    def considered_observation_ids(
         self,
         *,
         subject_id: str,
         candidate_id: str,
-    ) -> tuple[NarrativeMaterial, ...]:
+    ) -> tuple[str, ...]:
         return tuple(
-            item
+            item.observation_id
             for item in self._materials.values()
             if item.subject_id == subject_id and item.candidate_id == candidate_id
         )

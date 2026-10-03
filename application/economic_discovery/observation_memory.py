@@ -72,6 +72,14 @@ class ObservationReuseAuthority:
 
 
 @dataclass(frozen=True, slots=True)
+class ObservationAccessMetadata:
+    """Authorization-only observation metadata; excludes raw content/artifacts."""
+
+    record: ObservationRecord
+    reuse_authority: ObservationReuseAuthority
+
+
+@dataclass(frozen=True, slots=True)
 class GovernedObservation:
     """Observation plus reconstructible raw material and normalized state contributions."""
 

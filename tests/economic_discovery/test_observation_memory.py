@@ -283,3 +283,25 @@ def test_state_fingerprint_is_timezone_representation_independent() -> None:
     cet_state = compile_observation_state("org:acme", (cet_observation,))
 
     assert utc_state.fingerprint == cet_state.fingerprint
+
+
+def test_access_metadata_does_not_load_raw_observation_material(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    memory = SqliteObservationMemory(tmp_path / "metadata-only.sqlite3")
+    observation = _observation("obs:metadata")
+    assert memory.append(observation) is True
+
+    def fail_full_load(*_args, **_kwargs):
+        raise AssertionError("metadata authorization must not load raw observation material")
+
+    monkeypatch.setattr(memory, "_load_by_id", fail_full_load)
+
+    metadata = memory.access_metadata("org:acme", "obs:metadata")
+
+    assert metadata is not None
+    assert metadata.record.observation_id == "obs:metadata"
+    assert metadata.record.subject_id == "org:acme"
+    assert not hasattr(metadata, "raw_content")
+    assert not hasattr(metadata, "raw_artifact_ref")

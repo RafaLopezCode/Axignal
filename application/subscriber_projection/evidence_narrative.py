@@ -8,7 +8,13 @@ from enum import StrEnum
 from typing import Protocol
 
 from application.economic_discovery.explanation import BasisContribution, ExplainableBasis
-from application.economic_discovery.observation_memory import GovernedObservation, ObservationMemory
+from application.economic_discovery.observation_reuse import ObservationReusePolicy
+from application.subscriber_projection.narrative_access import (
+    NarrativeAccessContext,
+    NarrativeEvidenceScope,
+    NarrativeObservationMemory,
+    authorize_narrative_observation,
+)
 from application.subscriber_projection.narrative_verification import (
     NarrativeGraphKind,
     NarrativeGraphResolver,
@@ -45,6 +51,7 @@ class EvidenceNarrativeStep:
     observed_at: datetime | None = None
     currentness: str | None = None
     artifact_verified: bool | None = None
+    evidence_scope: NarrativeEvidenceScope | None = None
 
     def __post_init__(self) -> None:
         if not self.step_id.strip() or not self.label.strip():
@@ -72,20 +79,23 @@ class EvidenceNarrative:
             raise ValueError("evidence narrative focus refs must resolve inside the narrative")
 
 
-def _observation_by_id(
+def _authorized_scope_by_id(
     *,
-    memory: ObservationMemory,
+    memory: NarrativeObservationMemory,
     subject_id: str,
     observation_id: str,
-) -> GovernedObservation:
-    matches = [
-        item
-        for item in memory.for_subject(subject_id)
-        if item.record.observation_id == observation_id
-    ]
-    if len(matches) != 1:
-        raise ValueError("evidence narrative observation reference does not resolve uniquely")
-    return matches[0]
+    access_context: NarrativeAccessContext,
+    reuse_policy: ObservationReusePolicy,
+) -> NarrativeEvidenceScope:
+    metadata = memory.access_metadata(subject_id, observation_id)
+    if metadata is None:
+        raise ValueError("evidence narrative observation reference does not resolve")
+    authorization = authorize_narrative_observation(
+        metadata,
+        context=access_context,
+        policy=reuse_policy,
+    )
+    return authorization.evidence_scope
 
 
 def build_evidence_narrative(
@@ -93,9 +103,11 @@ def build_evidence_narrative(
     organization_context: AuthorizedXeedOrganization,
     projection: ExplainableXignalProjection,
     basis: ExplainableBasis,
-    observation_memory: ObservationMemory,
+    observation_memory: NarrativeObservationMemory,
     artifact_integrity: ArtifactIntegrityPort,
     material_resolver: NarrativeMaterialResolver,
+    access_context: NarrativeAccessContext,
+    reuse_policy: ObservationReusePolicy,
     graph_resolver: NarrativeGraphResolver | None = None,
     canonical_faxts: tuple[FAXT, ...] = (),
 ) -> EvidenceNarrative:
@@ -110,6 +122,13 @@ def build_evidence_narrative(
         raise ValueError("evidence narrative basis does not match Xignal")
     if projection.trail.basis_id != basis.basis_id:
         raise ValueError("evidence narrative trail/basis mismatch")
+
+    if (
+        access_context.subject_id != subject_id
+        or access_context.xeed_id != xeed_id
+        or access_context.tenant_id != organization_context.authorized_xeed.xeed.tenant_id
+    ):
+        raise ValueError("evidence narrative access context does not match authorized Xeed")
 
     root_id = f"narrative:xignal:{xignal.xignal_id}"
     steps: list[EvidenceNarrativeStep] = [
@@ -176,13 +195,35 @@ def build_evidence_narrative(
         BasisContribution.CONTRADICTS: 1,
         BasisContribution.CONTEXT: 2,
     }
-    considered = material_resolver.considered(
+    considered_ids = material_resolver.considered_observation_ids(
         subject_id=subject_id,
         candidate_id=basis.candidate_id,
     )
+    if not considered_ids:
+        raise ValueError("evidence narrative requires governed considered evidence")
+    if len(considered_ids) != len(set(considered_ids)):
+        raise ValueError("considered evidence ids must be unique")
+
+    evidence_scope_by_id = {
+        observation_id: _authorized_scope_by_id(
+            memory=observation_memory,
+            subject_id=subject_id,
+            observation_id=observation_id,
+            access_context=access_context,
+            reuse_policy=reuse_policy,
+        )
+        for observation_id in considered_ids
+    }
+    material_by_id = {}
+    for observation_id in considered_ids:
+        material = material_resolver.resolve(observation_id)
+        if material is None:
+            raise ValueError("considered evidence has no governed narrative material")
+        material_by_id[observation_id] = material
+
     material_contradictions = {
         item.observation_id
-        for item in considered
+        for item in material_by_id.values()
         if item.contribution is NarrativeMaterialContribution.CONTRADICTS
     }
     basis_contradictions = {
@@ -201,14 +242,13 @@ def build_evidence_narrative(
             item.datum_id,
         ),
     ):
-        observation = _observation_by_id(
-            memory=observation_memory,
-            subject_id=subject_id,
-            observation_id=datum.observation_id,
-        )
-        material = material_resolver.resolve(datum.observation_id)
-        if material is None:
-            raise ValueError("basis observation has no exact governed narrative material")
+        if datum.observation_id not in material_by_id:
+            raise ValueError("basis observation was not in governed considered evidence")
+        evidence_scope = evidence_scope_by_id[datum.observation_id]
+        observation = observation_memory.get_observation(subject_id, datum.observation_id)
+        if observation is None:
+            raise ValueError("authorized evidence narrative observation disappeared")
+        material = material_by_id[datum.observation_id]
         expected_contribution = NarrativeMaterialContribution(datum.contribution.value)
         if material.subject_id != subject_id or material.candidate_id != basis.candidate_id:
             raise ValueError("basis narrative material crosses subject/candidate boundary")
@@ -253,6 +293,7 @@ def build_evidence_narrative(
                 parent_step_id=parent_for_observation,
                 observed_at=observation.record.observed_at,
                 artifact_verified=verified,
+                evidence_scope=evidence_scope,
             )
         )
         steps.append(
@@ -264,6 +305,7 @@ def build_evidence_narrative(
                 source_ref=datum.source_ref,
                 observed_at=observation.record.observed_at,
                 artifact_verified=verified,
+                evidence_scope=evidence_scope,
             )
         )
 

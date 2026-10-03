@@ -9,8 +9,10 @@ from enum import StrEnum
 
 from application.economic_discovery.observation_memory import (
     GovernedObservation,
+    ObservationAccessMetadata,
     ObservationAccessStatus,
     ObservationMemory,
+    ObservationReuseAuthority,
     ObservationReuseScope,
     ObservationRightsStatus,
 )
@@ -123,7 +125,7 @@ class ObservationReuseRejected(ValueError):
 
 
 def _decision(
-    observation: GovernedObservation,
+    observation_id: str,
     *,
     disposition: ReuseDisposition,
     reason: ReuseReason,
@@ -131,12 +133,144 @@ def _decision(
     policy: ObservationReusePolicy,
 ) -> ObservationReuseDecision:
     return ObservationReuseDecision(
-        observation_id=observation.record.observation_id,
+        observation_id=observation_id,
         disposition=disposition,
         reason=reason,
         policy_id=policy.policy_id,
         policy_version=policy.version,
         context_fingerprint=context.fingerprint,
+    )
+
+
+def _evaluate_reuse(
+    *,
+    observation_id: str,
+    observation_subject_id: str,
+    authority: ObservationReuseAuthority,
+    context: ObservationReuseContext,
+    policy: ObservationReusePolicy,
+) -> ObservationReuseDecision:
+    if observation_subject_id != context.subject_id:
+        return _decision(
+            observation_id,
+            disposition=ReuseDisposition.REJECT,
+            reason=ReuseReason.SUBJECT_MISMATCH,
+            context=context,
+            policy=policy,
+        )
+    if authority.rights_status is ObservationRightsStatus.PROHIBITED:
+        return _decision(
+            observation_id,
+            disposition=ReuseDisposition.REJECT,
+            reason=ReuseReason.RIGHTS_PROHIBITED,
+            context=context,
+            policy=policy,
+        )
+    if authority.rights_status is ObservationRightsStatus.UNKNOWN:
+        return _decision(
+            observation_id,
+            disposition=ReuseDisposition.REJECT,
+            reason=ReuseReason.RIGHTS_UNKNOWN,
+            context=context,
+            policy=policy,
+        )
+    if authority.access_status is ObservationAccessStatus.INACCESSIBLE:
+        return _decision(
+            observation_id,
+            disposition=ReuseDisposition.REJECT,
+            reason=ReuseReason.INACCESSIBLE,
+            context=context,
+            policy=policy,
+        )
+    if authority.provenance_ref is None:
+        return _decision(
+            observation_id,
+            disposition=ReuseDisposition.REJECT,
+            reason=ReuseReason.PROVENANCE_MISSING,
+            context=context,
+            policy=policy,
+        )
+    if authority.scope is ObservationReuseScope.RESTRICTED:
+        return _decision(
+            observation_id,
+            disposition=ReuseDisposition.REJECT,
+            reason=ReuseReason.RESTRICTED_SCOPE,
+            context=context,
+            policy=policy,
+        )
+    if authority.scope is ObservationReuseScope.TENANT_PRIVATE:
+        if context.target_scope is ReuseTargetScope.GLOBAL_WORLD:
+            return _decision(
+                observation_id,
+                disposition=ReuseDisposition.REJECT,
+                reason=ReuseReason.PRIVATE_SCOPE_GLOBAL_LEAK,
+                context=context,
+                policy=policy,
+            )
+        if authority.scope_owner_id != context.tenant_id:
+            return _decision(
+                observation_id,
+                disposition=ReuseDisposition.REJECT,
+                reason=ReuseReason.PRIVATE_SCOPE_MISMATCH,
+                context=context,
+                policy=policy,
+            )
+    if context.subject_id not in authority.applicable_subject_ids:
+        return _decision(
+            observation_id,
+            disposition=ReuseDisposition.REJECT,
+            reason=ReuseReason.SUBJECT_NOT_APPLICABLE,
+            context=context,
+            policy=policy,
+        )
+    if context.purpose.value not in authority.applicable_purposes:
+        return _decision(
+            observation_id,
+            disposition=ReuseDisposition.REJECT,
+            reason=ReuseReason.PURPOSE_NOT_APPLICABLE,
+            context=context,
+            policy=policy,
+        )
+    if context.purpose is ReusePurpose.CURRENT_STATE:
+        if authority.currentness is Currentness.STALE:
+            return _decision(
+                observation_id,
+                disposition=ReuseDisposition.REJECT,
+                reason=ReuseReason.STALE_FOR_CURRENT_USE,
+                context=context,
+                policy=policy,
+            )
+        if authority.currentness is Currentness.HISTORICAL:
+            return _decision(
+                observation_id,
+                disposition=ReuseDisposition.REJECT,
+                reason=ReuseReason.HISTORICAL_FOR_CURRENT_USE,
+                context=context,
+                policy=policy,
+            )
+        if authority.currentness is Currentness.UNKNOWN:
+            return _decision(
+                observation_id,
+                disposition=ReuseDisposition.REJECT,
+                reason=ReuseReason.CURRENTNESS_UNKNOWN,
+                context=context,
+                policy=policy,
+            )
+    elif authority.currentness is Currentness.UNKNOWN:
+        return _decision(
+            observation_id,
+            disposition=ReuseDisposition.REJECT,
+            reason=ReuseReason.CURRENTNESS_UNKNOWN,
+            context=context,
+            policy=policy,
+        )
+
+    return _decision(
+        observation_id,
+        disposition=ReuseDisposition.ALLOW,
+        reason=ReuseReason.ALLOWED,
+        context=context,
+        policy=policy,
     )
 
 
@@ -146,127 +280,25 @@ def evaluate_observation_reuse(
     context: ObservationReuseContext,
     policy: ObservationReusePolicy,
 ) -> ObservationReuseDecision:
-    authority = observation.reuse_authority
+    return _evaluate_reuse(
+        observation_id=observation.record.observation_id,
+        observation_subject_id=observation.record.subject_id,
+        authority=observation.reuse_authority,
+        context=context,
+        policy=policy,
+    )
 
-    if observation.record.subject_id != context.subject_id:
-        return _decision(
-            observation,
-            disposition=ReuseDisposition.REJECT,
-            reason=ReuseReason.SUBJECT_MISMATCH,
-            context=context,
-            policy=policy,
-        )
-    if authority.rights_status is ObservationRightsStatus.PROHIBITED:
-        return _decision(
-            observation,
-            disposition=ReuseDisposition.REJECT,
-            reason=ReuseReason.RIGHTS_PROHIBITED,
-            context=context,
-            policy=policy,
-        )
-    if authority.rights_status is ObservationRightsStatus.UNKNOWN:
-        return _decision(
-            observation,
-            disposition=ReuseDisposition.REJECT,
-            reason=ReuseReason.RIGHTS_UNKNOWN,
-            context=context,
-            policy=policy,
-        )
-    if authority.access_status is ObservationAccessStatus.INACCESSIBLE:
-        return _decision(
-            observation,
-            disposition=ReuseDisposition.REJECT,
-            reason=ReuseReason.INACCESSIBLE,
-            context=context,
-            policy=policy,
-        )
-    if authority.provenance_ref is None:
-        return _decision(
-            observation,
-            disposition=ReuseDisposition.REJECT,
-            reason=ReuseReason.PROVENANCE_MISSING,
-            context=context,
-            policy=policy,
-        )
-    if authority.scope is ObservationReuseScope.RESTRICTED:
-        return _decision(
-            observation,
-            disposition=ReuseDisposition.REJECT,
-            reason=ReuseReason.RESTRICTED_SCOPE,
-            context=context,
-            policy=policy,
-        )
-    if authority.scope is ObservationReuseScope.TENANT_PRIVATE:
-        if context.target_scope is ReuseTargetScope.GLOBAL_WORLD:
-            return _decision(
-                observation,
-                disposition=ReuseDisposition.REJECT,
-                reason=ReuseReason.PRIVATE_SCOPE_GLOBAL_LEAK,
-                context=context,
-                policy=policy,
-            )
-        if authority.scope_owner_id != context.tenant_id:
-            return _decision(
-                observation,
-                disposition=ReuseDisposition.REJECT,
-                reason=ReuseReason.PRIVATE_SCOPE_MISMATCH,
-                context=context,
-                policy=policy,
-            )
-    if context.subject_id not in authority.applicable_subject_ids:
-        return _decision(
-            observation,
-            disposition=ReuseDisposition.REJECT,
-            reason=ReuseReason.SUBJECT_NOT_APPLICABLE,
-            context=context,
-            policy=policy,
-        )
-    if context.purpose.value not in authority.applicable_purposes:
-        return _decision(
-            observation,
-            disposition=ReuseDisposition.REJECT,
-            reason=ReuseReason.PURPOSE_NOT_APPLICABLE,
-            context=context,
-            policy=policy,
-        )
-    if context.purpose is ReusePurpose.CURRENT_STATE:
-        if authority.currentness is Currentness.STALE:
-            return _decision(
-                observation,
-                disposition=ReuseDisposition.REJECT,
-                reason=ReuseReason.STALE_FOR_CURRENT_USE,
-                context=context,
-                policy=policy,
-            )
-        if authority.currentness is Currentness.HISTORICAL:
-            return _decision(
-                observation,
-                disposition=ReuseDisposition.REJECT,
-                reason=ReuseReason.HISTORICAL_FOR_CURRENT_USE,
-                context=context,
-                policy=policy,
-            )
-        if authority.currentness is Currentness.UNKNOWN:
-            return _decision(
-                observation,
-                disposition=ReuseDisposition.REJECT,
-                reason=ReuseReason.CURRENTNESS_UNKNOWN,
-                context=context,
-                policy=policy,
-            )
-    elif authority.currentness is Currentness.UNKNOWN:
-        return _decision(
-            observation,
-            disposition=ReuseDisposition.REJECT,
-            reason=ReuseReason.CURRENTNESS_UNKNOWN,
-            context=context,
-            policy=policy,
-        )
 
-    return _decision(
-        observation,
-        disposition=ReuseDisposition.ALLOW,
-        reason=ReuseReason.ALLOWED,
+def evaluate_observation_reuse_metadata(
+    metadata: ObservationAccessMetadata,
+    *,
+    context: ObservationReuseContext,
+    policy: ObservationReusePolicy,
+) -> ObservationReuseDecision:
+    return _evaluate_reuse(
+        observation_id=metadata.record.observation_id,
+        observation_subject_id=metadata.record.subject_id,
+        authority=metadata.reuse_authority,
         context=context,
         policy=policy,
     )
