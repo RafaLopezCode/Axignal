@@ -77,3 +77,4 @@ Constitution (`.specify/memory/constitution.md`).
 2. Create `docs/adr/ADR-####-short-title.md` using the existing format.
 3. Cite the MASTER section(s) the decision derives from.
 4. Add the row above. `tools/governance` verifies the index and citations.
+| [ADR-0065](ADR-0065-private-analytics-growth-observatory.md) | Private Analytics and Growth Observatory Boundary (**ACCEPTED**) | AO-14; AO-17 |

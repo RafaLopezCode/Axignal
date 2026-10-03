@@ -295,3 +295,22 @@ class SqliteWeeklyBriefStore:
                 )
             )
         return tuple(result)
+
+    def all_issues(self) -> tuple[WeeklyBriefIssue, ...]:
+        with self._connect() as connection:
+            rows = connection.execute(
+                "SELECT payload_json FROM weekly_brief_issues ORDER BY issue_id"
+            ).fetchall()
+        return tuple(self._issue_from_payload(json.loads(str(row["payload_json"]))) for row in rows)
+
+    def all_deliveries(self) -> tuple[WeeklyBriefDelivery, ...]:
+        result: list[WeeklyBriefDelivery] = []
+        for issue in self.all_issues():
+            result.extend(self.deliveries_for_issue(issue.issue_id))
+        return tuple(result)
+
+    def all_corrections(self) -> tuple[WeeklyBriefCorrection, ...]:
+        result: list[WeeklyBriefCorrection] = []
+        for issue in self.all_issues():
+            result.extend(self.corrections_for_issue(issue.issue_id))
+        return tuple(result)

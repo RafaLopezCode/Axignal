@@ -1,3 +1,10 @@
+from domain.admin_acquisition.analytics import (
+    ANALYTICS_DEFINITION_VERSION,
+    AnalyticsEvent,
+    AnalyticsEventId,
+    AnalyticsEventKind,
+    TrafficClassification,
+)
 from domain.admin_acquisition.marketing import (
     AnonymousSessionRef,
     AttributionModelVersion,
@@ -22,6 +29,10 @@ from domain.admin_acquisition.model import (
 )
 
 __all__ = [
+    "ANALYTICS_DEFINITION_VERSION",
+    "AnalyticsEvent",
+    "AnalyticsEventId",
+    "AnalyticsEventKind",
     "AnonymousSessionRef",
     "AttributionModelVersion",
     "BriefRequestEvent",
@@ -37,6 +48,7 @@ __all__ = [
     "MarketingEventKind",
     "MarketingIdentityClass",
     "NewsletterConsentState",
+    "TrafficClassification",
     "normalize_campaign_token",
     "normalize_domain",
     "normalize_email",

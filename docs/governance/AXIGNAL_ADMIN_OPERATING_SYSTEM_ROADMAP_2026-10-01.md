@@ -99,7 +99,7 @@ Admin must distinguish measured flywheel behavior from the hypothesis above.
 
 `NOT_STARTED → READY → IN_PROGRESS → BLOCKED → DONE → DEFERRED → REJECTED`
 
-**CURRENT_TASK = AO-17**
+**CURRENT_TASK = AO-19**
 
 ## 7. Closure rule
 
@@ -636,9 +636,18 @@ AXIGNAL's own search performance can be operated from Admin with the private/pub
 
 ## AO-14 — Web/Product Analytics and Attribution
 
-**Status:** NOT_STARTED
+**Status:** DONE
 **Depends on:** AO-12, AO-18
 **Priority:** P1 Growth
+
+### Completion evidence
+- Versioned AO14_V1 first-party analytics events cover signup, first-Xeed, Today/evidence interaction, return behavior and growth linkage without storing subscriber content.
+- Existing AO-12 landing/chapter/CTA observations remain the public-touch source; AO-14 adds opaque session/account/Xeed references rather than a second marketing event authority.
+- Traffic is explicitly classified as HUMAN, BOT, AMBIGUOUS, INTERNAL or UNKNOWN. Human engagement is not inferred from opens when classification is unavailable.
+- The growth read model traces observed landing/CTA → signup → first Xeed → return/use → paid behavior while stating explicitly that sequence/attribution is correlation, not causation.
+- Analytics persistence is append-only and replay-safe; conflicting event-id reuse fails closed.
+- AO-14/AO-17 focused contracts PASS together with AO-10/12/15/16 regression; final repository gates are recorded under AO-17 closure.
+
 ### Work
 - Landing/product events for page/chapter navigation, CTA, signup, first-Xeed, Today/evidence interaction, return behavior and conversion.
 - Privacy-minimized analytics ingestion from selected provider(s) or AXIGNAL-owned events.
@@ -739,9 +748,19 @@ The free brief demonstrates AXIGNAL honestly rather than becoming an AI-content 
 
 ## AO-17 — Acquisition Funnel and Conversion Observatory
 
-**Status:** NOT_STARTED
+**Status:** DONE
 **Depends on:** AO-14, AO-15, AO-16, AO-10
 **Priority:** P1 Growth
+
+### Completion evidence
+- GrowthObservatoryProjection combines governed AO-12/14 analytics, AO-15 request/consent state, AO-16 delivery/correction history and AO-10 Stripe-owned payment/capacity facts without writing AXIGLAND.
+- Request, acceptance, current consent, delivery, classified engagement, evidence clicks, recurring readership, explicit request→account linkage, paid conversion time and additional-Xeed attach are inspectable.
+- Bot, ambiguous and internal engagement remain separate from human engagement. Evidence-click counts include human-classified events only.
+- Premium-advisory inquiry/close, complaints, unsubscribe state, corrections and delivery costs are explicit observed commercial events rather than inferred product truth.
+- Paid revenue and delivery cost are aggregated per currency; gross contribution is derived only inside the private commercial projection and currencies are never silently combined.
+- Professional email, request purpose and subscriber content never enter the analytics event contract or browser-facing growth projection.
+- Focused AO-17 contracts and AO-10/12/15/16 regression pass; deterministic repository validation is required before integration.
+
 ### Work
 Measure:
 - request/accept/consent/delivery/engagement;

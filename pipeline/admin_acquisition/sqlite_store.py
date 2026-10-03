@@ -9,6 +9,9 @@ from datetime import datetime
 from pathlib import Path
 
 from domain.admin_acquisition import (
+    AnalyticsEvent,
+    AnalyticsEventId,
+    AnalyticsEventKind,
     AnonymousSessionRef,
     BriefRequestEvent,
     BriefRequestEventId,
@@ -18,6 +21,7 @@ from domain.admin_acquisition import (
     MarketingEventId,
     MarketingEventKind,
     MarketingIdentityClass,
+    TrafficClassification,
 )
 
 
@@ -59,6 +63,19 @@ class SqliteAdminAcquisitionStore:
             connection.execute(
                 "CREATE INDEX IF NOT EXISTS idx_admin_marketing_session "
                 "ON admin_marketing_events(session_ref, sequence)"
+            )
+            connection.execute(
+                "CREATE TABLE IF NOT EXISTS admin_analytics_events ("
+                "sequence INTEGER PRIMARY KEY AUTOINCREMENT,"
+                "event_id TEXT NOT NULL UNIQUE,"
+                "kind TEXT NOT NULL,"
+                "occurred_at TEXT NOT NULL,"
+                "fingerprint TEXT NOT NULL,"
+                "payload_json TEXT NOT NULL)"
+            )
+            connection.execute(
+                "CREATE INDEX IF NOT EXISTS idx_admin_analytics_kind "
+                "ON admin_analytics_events(kind, sequence)"
             )
 
     def _connect(self) -> sqlite3.Connection:
@@ -240,3 +257,79 @@ class SqliteAdminAcquisitionStore:
                 (session_ref,),
             ).fetchall()
         return tuple(self._marketing_event(row) for row in rows)
+
+    @staticmethod
+    def _analytics_payload(event: AnalyticsEvent) -> str:
+        values = {
+            "event_id": str(event.event_id),
+            "kind": event.kind.value,
+            "occurred_at": event.occurred_at.isoformat(),
+            "classification": event.classification.value,
+            "session_ref": event.session_ref,
+            "request_id": event.request_id,
+            "issue_id": event.issue_id,
+            "account_id": event.account_id,
+            "xeed_id": event.xeed_id,
+            "evidence_ref": event.evidence_ref,
+            "advisory_ref": event.advisory_ref,
+            "amount_minor": event.amount_minor,
+            "currency": event.currency,
+            "definition_version": event.definition_version,
+        }
+        return json.dumps(values, sort_keys=True, separators=(",", ":"))
+
+    def append_analytics_event(self, event: AnalyticsEvent) -> bool:
+        payload = self._analytics_payload(event)
+        fingerprint = self._fingerprint(payload)
+        with self._connect() as connection:
+            existing = connection.execute(
+                "SELECT fingerprint, payload_json FROM admin_analytics_events WHERE event_id = ?",
+                (str(event.event_id),),
+            ).fetchone()
+            if existing is not None:
+                if (
+                    str(existing["fingerprint"]) == fingerprint
+                    and str(existing["payload_json"]) == payload
+                ):
+                    return False
+                raise AcquisitionStoreConflict("analytics event id reused with different content")
+            connection.execute(
+                "INSERT INTO admin_analytics_events("
+                "event_id, kind, occurred_at, fingerprint, payload_json"
+                ") VALUES (?, ?, ?, ?, ?)",
+                (
+                    str(event.event_id),
+                    event.kind.value,
+                    event.occurred_at.isoformat(),
+                    fingerprint,
+                    payload,
+                ),
+            )
+        return True
+
+    @staticmethod
+    def _analytics_event(row: sqlite3.Row) -> AnalyticsEvent:
+        payload = json.loads(str(row["payload_json"]))
+        return AnalyticsEvent(
+            event_id=AnalyticsEventId(payload["event_id"]),
+            kind=AnalyticsEventKind(payload["kind"]),
+            occurred_at=datetime.fromisoformat(payload["occurred_at"]),
+            classification=TrafficClassification(payload["classification"]),
+            session_ref=payload.get("session_ref"),
+            request_id=payload.get("request_id"),
+            issue_id=payload.get("issue_id"),
+            account_id=payload.get("account_id"),
+            xeed_id=payload.get("xeed_id"),
+            evidence_ref=payload.get("evidence_ref"),
+            advisory_ref=payload.get("advisory_ref"),
+            amount_minor=payload.get("amount_minor"),
+            currency=payload.get("currency"),
+            definition_version=payload["definition_version"],
+        )
+
+    def analytics_events(self) -> tuple[AnalyticsEvent, ...]:
+        with self._connect() as connection:
+            rows = connection.execute(
+                "SELECT * FROM admin_analytics_events ORDER BY sequence"
+            ).fetchall()
+        return tuple(self._analytics_event(row) for row in rows)
