@@ -6,6 +6,7 @@ from dataclasses import dataclass
 from datetime import datetime
 from typing import Protocol
 
+from application.admin_api_operations import WebhookOperationsService
 from application.admin_billing import AdminBillingService
 from application.admin_customer_accounts import AdminCustomerAccountService
 from domain.admin_billing import BillingAuthorityGrant, BillingProvider
@@ -15,11 +16,14 @@ from domain.admin_integrations import (
     IntegrationDirection,
     IntegrationEnvironment,
 )
+from pipeline.admin_api_operations import SqliteApiOperationsStore
 from pipeline.admin_billing import SqliteAdminBillingStore
 from pipeline.admin_billing.stripe import (
     StripeEventNormalizer,
+    StripeWebhookDependencyError,
     StripeWebhookError,
     StripeWebhookVerifier,
+    VerifiedStripeEvent,
     checkout_mapping_from_verified_event,
 )
 from pipeline.admin_customer_accounts import SqliteAdminCustomerAccountStore
@@ -50,6 +54,7 @@ class StripeWebhookRuntime:
         integration_store: IntegrationRegistryReader,
         runtime_environment: IntegrationEnvironment,
         require_livemode: bool,
+        operations_store: SqliteApiOperationsStore | None = None,
     ) -> None:
         if not stripe_account_id.startswith("acct_"):
             raise ValueError("Stripe account id is invalid")
@@ -68,6 +73,9 @@ class StripeWebhookRuntime:
             AdminCustomerAccountService(account_store),
         )
         self._normalizer = StripeEventNormalizer(billing_store)
+        self._operations = (
+            None if operations_store is None else WebhookOperationsService(operations_store)
+        )
 
     def _require_governed_integration(self) -> IntegrationDefinition:
         matches = tuple(
@@ -100,28 +108,12 @@ class StripeWebhookRuntime:
             raise StripeWebhookError("Stripe integration credential reference is missing")
         return definition
 
-    def handle(
+    def _process_verified(
         self,
         *,
-        payload: bytes,
-        signature_header: str,
+        verified: VerifiedStripeEvent,
         received_at: datetime,
     ) -> StripeWebhookResult:
-        self._require_governed_integration()
-        verified = self._verifier.verify(
-            payload=payload,
-            signature_header=signature_header,
-            received_at=received_at,
-        )
-        account = verified.payload.get("account")
-        if account is not None and account != self._stripe_account_id:
-            raise StripeWebhookError("Stripe event account does not match AXIGNAL merchant")
-        livemode = verified.payload.get("livemode")
-        if self._require_livemode and livemode is not True:
-            raise StripeWebhookError("production Stripe webhook requires livemode event")
-        if not self._require_livemode and livemode is True:
-            raise StripeWebhookError("non-production Stripe webhook rejects livemode event")
-
         authority = BillingAuthorityGrant(
             provider=BillingProvider.STRIPE,
             integration_id="stripe-billing",
@@ -160,3 +152,57 @@ class StripeWebhookRuntime:
             replayed=ingest_result.replayed,
             account_id=ingest_result.account_id,
         )
+
+    def handle(
+        self,
+        *,
+        payload: bytes,
+        signature_header: str,
+        received_at: datetime,
+    ) -> StripeWebhookResult:
+        self._require_governed_integration()
+        verified = self._verifier.verify(
+            payload=payload,
+            signature_header=signature_header,
+            received_at=received_at,
+        )
+        account = verified.payload.get("account")
+        if account is not None and account != self._stripe_account_id:
+            raise StripeWebhookError("Stripe event account does not match AXIGNAL merchant")
+        livemode = verified.payload.get("livemode")
+        if self._require_livemode and livemode is not True:
+            raise StripeWebhookError("production Stripe webhook requires livemode event")
+        if not self._require_livemode and livemode is True:
+            raise StripeWebhookError("non-production Stripe webhook rejects livemode event")
+
+        if self._operations is None:
+            return self._process_verified(verified=verified, received_at=received_at)
+
+        envelope, result, _replayed = self._operations.receive_and_process(
+            integration_id="stripe-billing",
+            provider_event_id=verified.event_id,
+            event_type=verified.event_type,
+            payload=payload,
+            schema_version="stripe-event-v1",
+            received_at=received_at,
+            processor=lambda: self._process_verified(
+                verified=verified,
+                received_at=received_at,
+            ),
+            transient_exceptions=(StripeWebhookDependencyError, LookupError),
+        )
+        if result is not None:
+            return result
+        if envelope.disposition.value == "SUCCEEDED":
+            # Signature was verified above. Re-running the existing AO-10 handler
+            # is safe because provider event identity is idempotent at billing/account stores.
+            replay_result = self._process_verified(verified=verified, received_at=received_at)
+            return StripeWebhookResult(
+                event_id=replay_result.event_id,
+                event_type=replay_result.event_type,
+                replayed=True,
+                account_id=replay_result.account_id,
+            )
+        if envelope.disposition.value == "DEAD_LETTER":
+            raise StripeWebhookDependencyError("Stripe webhook exhausted AO-19 retry budget")
+        raise StripeWebhookError("Stripe webhook is not processable")

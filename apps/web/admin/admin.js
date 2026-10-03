@@ -916,6 +916,90 @@
         integrationList.append(article)
       }
     }
+
+    const apiOperations = bootstrap.apiOperations
+    const apiPrivacy = document.getElementById('admin-api-operations-privacy')
+    const apiGenerated = document.getElementById('admin-api-operations-generated')
+    const apiNotes = document.getElementById('admin-api-operations-notes')
+    const apiSummary = document.getElementById('admin-api-operations-summary')
+    const apiList = document.getElementById('admin-api-operations-list')
+    if (apiOperations) {
+      if (apiPrivacy) apiPrivacy.textContent = apiOperations.privacyClass || 'PRIVATE OPERATIONS'
+      if (apiGenerated) apiGenerated.textContent = apiOperations.generatedAt ? 'As of ' + apiOperations.generatedAt : ''
+      if (apiNotes) {
+        apiNotes.replaceChildren()
+        for (const noteText of apiOperations.coverageNotes || []) {
+          const note = document.createElement('p')
+          note.textContent = noteText
+          apiNotes.append(note)
+        }
+      }
+      if (apiSummary) {
+        apiSummary.replaceChildren()
+        const webhooks = apiOperations.webhooks || {}
+        const facts = [
+          ['Webhook inbox', webhooks.received],
+          ['Succeeded', webhooks.succeeded],
+          ['Retry pending', webhooks.retryPending],
+          ['Dead letter', webhooks.deadLetter],
+          ['Rejected', webhooks.rejected],
+        ]
+        for (const pair of facts) {
+          const card = document.createElement('article')
+          card.className = 'admin-observatory-stat'
+          const strong = document.createElement('strong')
+          strong.textContent = pair[1] == null ? 'UNKNOWN' : String(pair[1])
+          const span = document.createElement('span')
+          span.textContent = pair[0]
+          card.append(strong, span)
+          apiSummary.append(card)
+        }
+      }
+      if (apiList) {
+        apiList.replaceChildren()
+        for (const item of apiOperations.endpoints || []) {
+          const article = document.createElement('article')
+          article.className = 'admin-integration-entry'
+          const header = document.createElement('header')
+          const title = document.createElement('h3')
+          title.textContent = item.method + ' ' + item.pathTemplate
+          const state = document.createElement('span')
+          state.textContent = item.exposure || 'UNKNOWN'
+          header.append(title, state)
+
+          const facts = document.createElement('dl')
+          facts.className = 'admin-integration-facts'
+          const addDetail = (label, value) => {
+            const wrapper = document.createElement('div')
+            const term = document.createElement('dt')
+            term.textContent = label
+            const description = document.createElement('dd')
+            description.textContent = value == null || value === '' ? 'UNKNOWN' : String(value)
+            wrapper.append(term, description)
+            facts.append(wrapper)
+          }
+          addDetail('Schema', item.schemaVersion)
+          addDetail('Requests', item.requestCount)
+          addDetail('Errors', item.errorCount)
+          addDetail('Error rate', item.errorRate == null ? null : (item.errorRate * 100).toFixed(1) + '%')
+          addDetail('Average latency', item.averageLatencyMs == null ? null : item.averageLatencyMs + ' ms')
+          addDetail('Last status', item.lastStatusCode)
+          addDetail('Last observed', item.lastObservedAt)
+          addDetail('Quota remaining', item.quotaRemaining)
+          addDetail('Rate limited', item.rateLimited)
+
+          const boundary = document.createElement('details')
+          boundary.className = 'admin-metric-lineage'
+          const summary = document.createElement('summary')
+          summary.textContent = 'Inspect API authority boundary'
+          const body = document.createElement('p')
+          body.textContent = item.authorityBoundary || 'Authority boundary is UNKNOWN.'
+          boundary.append(summary, body)
+          article.append(header, facts, boundary)
+          apiList.append(article)
+        }
+      }
+    }
   }
 
   document.addEventListener('keydown', (event) => {

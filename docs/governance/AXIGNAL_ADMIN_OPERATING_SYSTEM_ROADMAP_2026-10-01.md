@@ -99,7 +99,7 @@ Admin must distinguish measured flywheel behavior from the hypothesis above.
 
 `NOT_STARTED → READY → IN_PROGRESS → BLOCKED → DONE → DEFERRED → REJECTED`
 
-**CURRENT_TASK = AO-19**
+**CURRENT_TASK = AO-20**
 
 ## 7. Closure rule
 
@@ -809,9 +809,21 @@ External services are governed capabilities, not scattered credentials and ad-ho
 
 ## AO-19 — API/Webhook Operations Console
 
-**Status:** NOT_STARTED
+**Status:** DONE
 **Depends on:** AO-18
 **Priority:** P1 Infrastructure
+
+### Completion evidence
+- Added a bounded canonical inventory of AXIGNAL public/internal/Admin API surfaces with explicit exposure, direction, schema version, integration reference and authority boundary.
+- Added private operation telemetry for request count, HTTP status/error rate, latency, quota/rate-limit evidence and last observation. Missing metrics remain UNKNOWN rather than zero.
+- Added a replay-safe SQLite webhook inbox storing only bounded metadata, payload fingerprint and payload size; request bodies, authorization headers and credential bytes are never persisted or projected.
+- Webhook identity uses integration id, provider event id and payload fingerprint. Exact processed replay is recognized; same provider event with a different payload fails closed.
+- Transient processing is bounded to a configured retry budget and transitions to DEAD_LETTER after exhaustion. Permanent failures are classified as REJECTED.
+- Stripe webhook ingress verifies provider signature/account/environment before AO-19 replay handling, while AO-10 billing/account stores remain the final idempotent side-effect authority.
+- Runtime HTTP responses automatically emit AO-19 operation observations for governed routes, including measured request latency and status without logging payload/header content.
+- The existing Admin Integrations surface now renders API/Webhook Operations, webhook inbox/DLQ counts and endpoint health/schema/error/latency/quota visibility. There is no arbitrary request console.
+- AO-19 focused runtime/contracts: PASS. AO-10/AO-18/runtime regression and full deterministic repository gates are required before integration.
+
 ### Work
 - Inventory AXIGNAL public/internal APIs and webhooks.
 - Health, latency, error rate, quota/rate-limit and schema/version visibility.

@@ -12,6 +12,7 @@ import json
 import mimetypes
 import secrets
 import sqlite3
+import time
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from http import HTTPStatus
@@ -32,6 +33,7 @@ from application.admin_acquisition.projection import (
 )
 from application.admin_acquisition.public_service import PublicBriefRequestService
 from application.admin_acquisition.review_service import AdminBriefReviewService
+from application.admin_api_operations import ApiOperationsProjection, project_api_operations
 from application.admin_brain_observatory import project_brain_provider_observatory
 from application.admin_command_center import COMMAND_CENTER_METRICS, project_command_center
 from application.admin_commercial import AdminCommercialProjection, project_admin_commercial
@@ -60,6 +62,7 @@ from application.admin_weekly_brief import (
 from application.admin_xeed_observatory import project_xeed_axigland_observatory
 from domain.admin_access import AdminAssurance, AdminAuthorizationGrant, AdminScope
 from domain.admin_acquisition import MarketingEventKind
+from domain.admin_api_operations import ApiOperationObservation
 from domain.admin_brain_observatory import BrainProviderObservatory
 from domain.admin_command_center import AdminCommandCenterProjection
 from domain.admin_governance import AdminGovernanceProjection
@@ -67,6 +70,7 @@ from domain.admin_integrations import IntegrationEnvironment
 from domain.admin_observability import AdminProjectionId, AdminProjectionSnapshot
 from domain.admin_xeed_observatory import XeedAxiglandObservatory
 from pipeline.admin_acquisition import SqliteAdminAcquisitionStore
+from pipeline.admin_api_operations import SqliteApiOperationsStore
 from pipeline.admin_billing import SqliteAdminBillingStore
 from pipeline.admin_billing.stripe import StripeWebhookDependencyError, StripeWebhookError
 from pipeline.admin_commercial import SqliteAdminCommercialStore
@@ -96,6 +100,7 @@ class AxignalRuntime:
     governance_policy_store: SqliteActivePolicyStore
     governance_audit_store: SqliteAdminGovernanceAuditStore
     admin_acquisition_store: SqliteAdminAcquisitionStore
+    admin_api_operations_store: SqliteApiOperationsStore
     admin_commercial_store: SqliteAdminCommercialStore
     admin_customer_account_store: SqliteAdminCustomerAccountStore
     admin_billing_store: SqliteAdminBillingStore
@@ -166,6 +171,9 @@ def build_runtime(config: RuntimeConfig) -> AxignalRuntime:
     admin_acquisition_store = SqliteAdminAcquisitionStore(
         config.data_dir / "admin-acquisition.sqlite3"
     )
+    admin_api_operations_store = SqliteApiOperationsStore(
+        config.data_dir / "admin-api-operations.sqlite3"
+    )
     admin_commercial_store = SqliteAdminCommercialStore(
         config.data_dir / "admin-commercial.sqlite3"
     )
@@ -197,6 +205,7 @@ def build_runtime(config: RuntimeConfig) -> AxignalRuntime:
             integration_store=admin_integration_store,
             runtime_environment=IntegrationEnvironment(config.environment.upper()),
             require_livemode=config.environment == "production",
+            operations_store=admin_api_operations_store,
         )
     first_proof = None
     if config.first_proof_allowed_host is not None:
@@ -218,6 +227,7 @@ def build_runtime(config: RuntimeConfig) -> AxignalRuntime:
         governance_policy_store=governance_policy_store,
         governance_audit_store=governance_audit_store,
         admin_acquisition_store=admin_acquisition_store,
+        admin_api_operations_store=admin_api_operations_store,
         admin_commercial_store=admin_commercial_store,
         admin_customer_account_store=admin_customer_account_store,
         admin_billing_store=admin_billing_store,
@@ -804,6 +814,66 @@ def _integration_projection(
     )
 
 
+def _api_operations_projection(
+    runtime: AxignalRuntime, *, grant: AdminAuthorizationGrant, now: datetime
+) -> ApiOperationsProjection:
+    return project_api_operations(
+        store=runtime.admin_api_operations_store,
+        grant=grant,
+        generated_at=now,
+    )
+
+
+def _api_operations_payload(projection: ApiOperationsProjection) -> dict[str, object]:
+    return {
+        "generatedAt": projection.generated_at.isoformat(),
+        "privacyClass": projection.privacy_class,
+        "coverageNotes": list(projection.coverage_notes),
+        "webhooks": {
+            "received": projection.webhook_received_count,
+            "succeeded": projection.webhook_success_count,
+            "retryPending": projection.webhook_retry_pending_count,
+            "deadLetter": projection.webhook_dead_letter_count,
+            "rejected": projection.webhook_rejected_count,
+        },
+        "deadLetters": [
+            {
+                "integrationId": item.integration_id,
+                "providerEventId": item.provider_event_id,
+                "eventType": item.event_type,
+                "receivedAt": item.received_at.isoformat(),
+                "attemptCount": item.attempt_count,
+                "maxAttempts": item.max_attempts,
+                "failureCategory": item.failure_category,
+            }
+            for item in projection.dead_letters
+        ],
+        "endpoints": [
+            {
+                "endpointId": item.endpoint.endpoint_id,
+                "method": item.endpoint.method,
+                "pathTemplate": item.endpoint.path_template,
+                "exposure": item.endpoint.exposure.value,
+                "direction": item.endpoint.direction.value,
+                "schemaVersion": item.endpoint.schema_version,
+                "integrationId": item.endpoint.integration_id,
+                "authorityBoundary": item.endpoint.authority_boundary,
+                "requestCount": item.request_count,
+                "errorCount": item.error_count,
+                "errorRate": item.error_rate,
+                "averageLatencyMs": item.average_latency_ms,
+                "lastStatusCode": item.last_status_code,
+                "lastObservedAt": (
+                    None if item.last_observed_at is None else item.last_observed_at.isoformat()
+                ),
+                "quotaRemaining": item.quota_remaining,
+                "rateLimited": item.rate_limited,
+            }
+            for item in projection.endpoints
+        ],
+    }
+
+
 def _integration_payload(projection: AdminIntegrationProjection) -> dict[str, object]:
     return {
         "asOf": projection.as_of.isoformat(),
@@ -874,6 +944,7 @@ def _admin_projection_payload(
     commercial: AdminCommercialProjection | None = None,
     customer_operations: CustomerOperationsProjection | None = None,
     integrations: AdminIntegrationProjection | None = None,
+    api_operations: ApiOperationsProjection | None = None,
 ) -> dict[str, object]:
     payload: dict[str, object] = {
         "mode": projection.mode,
@@ -907,6 +978,8 @@ def _admin_projection_payload(
         payload["customerOperations"] = _customer_operations_payload(customer_operations)
     if integrations is not None:
         payload["integrations"] = _integration_payload(integrations)
+    if api_operations is not None:
+        payload["apiOperations"] = _api_operations_payload(api_operations)
     return payload
 
 
@@ -922,6 +995,7 @@ def _render_admin_shell(
     commercial: AdminCommercialProjection | None = None,
     customer_operations: CustomerOperationsProjection | None = None,
     integrations: AdminIntegrationProjection | None = None,
+    api_operations: ApiOperationsProjection | None = None,
 ) -> bytes:
     template = (web_root / "admin" / "index.html").read_text(encoding="utf-8")
     payload = html.escape(
@@ -936,6 +1010,7 @@ def _render_admin_shell(
                 commercial=commercial,
                 customer_operations=customer_operations,
                 integrations=integrations,
+                api_operations=api_operations,
             ),
             sort_keys=True,
             separators=(",", ":"),
@@ -956,6 +1031,43 @@ def make_handler(runtime: AxignalRuntime) -> type[BaseHTTPRequestHandler]:
             # Keep default stderr access logging but never log headers/bodies/secrets.
             super().log_message(fmt, *args)
 
+        def _operation_endpoint_id(self) -> str | None:
+            path = urlsplit(self.path).path
+            exact = {
+                "/healthz": "public.healthz",
+                "/runtimez": "public.runtimez",
+                "/api/acquisition/events": "public.acquisition.events",
+                "/api/weekly-brief/requests": "public.weekly-brief.requests",
+                "/internal/webhooks/stripe": "internal.stripe.webhook",
+            }
+            if path in exact:
+                return exact[path]
+            if _admin_slug(path) is not None:
+                return "admin.shell"
+            return None
+
+        def _observe_http(self, status: HTTPStatus) -> None:
+            endpoint_id = self._operation_endpoint_id()
+            if endpoint_id is None:
+                return
+            started = getattr(self, "_request_started_ns", None)
+            latency_ms = (
+                None
+                if started is None
+                else max(0, (time.perf_counter_ns() - int(started)) // 1_000_000)
+            )
+            with contextlib.suppress(Exception):
+                runtime.admin_api_operations_store.append_observation(
+                    ApiOperationObservation(
+                        observation_id=f"apiobs:{secrets.token_hex(12)}",
+                        endpoint_id=endpoint_id,
+                        occurred_at=datetime.now(UTC),
+                        latency_ms=latency_ms,
+                        status_code=status.value,
+                        error_category=None if status.value < 400 else f"HTTP_{status.value}",
+                    )
+                )
+
         def _json(self, payload: dict[str, object], status: HTTPStatus = HTTPStatus.OK) -> None:
             encoded = json.dumps(payload, sort_keys=True, separators=(",", ":")).encode("utf-8")
             self.send_response(status)
@@ -965,6 +1077,7 @@ def make_handler(runtime: AxignalRuntime) -> type[BaseHTTPRequestHandler]:
             self.send_header("X-Content-Type-Options", "nosniff")
             self.end_headers()
             self.wfile.write(encoded)
+            self._observe_http(status)
 
         def _html(self, data: bytes, status: HTTPStatus = HTTPStatus.OK) -> None:
             self.send_response(status)
@@ -979,6 +1092,7 @@ def make_handler(runtime: AxignalRuntime) -> type[BaseHTTPRequestHandler]:
             )
             self.end_headers()
             self.wfile.write(data)
+            self._observe_http(status)
 
         def _admin_error(self, status: HTTPStatus, message: str) -> None:
             encoded = (
@@ -1011,6 +1125,7 @@ def make_handler(runtime: AxignalRuntime) -> type[BaseHTTPRequestHandler]:
             self.wfile.write(data)
 
         def do_GET(self) -> None:
+            self._request_started_ns = time.perf_counter_ns()
             request_path = urlsplit(self.path).path
             if request_path == "/healthz":
                 payload = runtime.health_payload()
@@ -1089,6 +1204,11 @@ def make_handler(runtime: AxignalRuntime) -> type[BaseHTTPRequestHandler]:
                         if admin_projection.current_slug == "integrations"
                         else None
                     )
+                    api_operations = (
+                        _api_operations_projection(runtime, grant=grant, now=now)
+                        if admin_projection.current_slug == "integrations"
+                        else None
+                    )
                     rendered = _render_admin_shell(
                         runtime.config.web_root,
                         admin_projection,
@@ -1100,6 +1220,7 @@ def make_handler(runtime: AxignalRuntime) -> type[BaseHTTPRequestHandler]:
                         commercial=commercial,
                         customer_operations=customer_operations,
                         integrations=integrations,
+                        api_operations=api_operations,
                     )
                 except AdminAuthenticationError:
                     self._admin_error(HTTPStatus.UNAUTHORIZED, "Admin authentication failed.")
@@ -1143,6 +1264,7 @@ def make_handler(runtime: AxignalRuntime) -> type[BaseHTTPRequestHandler]:
             self._static(static_path)
 
         def do_POST(self) -> None:
+            self._request_started_ns = time.perf_counter_ns()
             request_path = urlsplit(self.path).path
             weekly_brief_prefix = "/internal/admin/weekly-brief/issues"
             if request_path == weekly_brief_prefix or request_path.startswith(

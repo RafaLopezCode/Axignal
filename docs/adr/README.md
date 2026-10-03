@@ -78,3 +78,4 @@ Constitution (`.specify/memory/constitution.md`).
 3. Cite the MASTER section(s) the decision derives from.
 4. Add the row above. `tools/governance` verifies the index and citations.
 | [ADR-0065](ADR-0065-private-analytics-growth-observatory.md) | Private Analytics and Growth Observatory Boundary (**ACCEPTED**) | AO-14; AO-17 |
+| [ADR-0066](ADR-0066-api-webhook-operations-boundary.md) | API/Webhook Operations Boundary (**ACCEPTED**) | AO-18; AO-19 |
