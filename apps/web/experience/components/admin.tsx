@@ -163,7 +163,7 @@ export function Admin({
               onClick={() => choose("customer-zero")}
             >
               <span className="admin-nav-line" />
-              AXIGNAL / Customer Zero
+              {t("AXIGNAL / Cliente cero", "AXIGNAL / Customer Zero")}
               <ChevronRight size={12} />
             </button>
           </div>

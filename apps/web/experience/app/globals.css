@@ -6571,7 +6571,6 @@ html[data-motion="reduced"] {
 .admin-product-navigation[hidden] { display: none; }
 .admin-product-toolbar[hidden] { display: none; }
 .admin-product-toolbar { flex: 1; min-width: 0; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
-.admin-product-toolbar:empty::before { content: "AXIGNAL / Customer Zero"; font-size: 12px; color: var(--blue); }
 .admin-product-navigation .organization-switch { width: 100%; margin: 12px 0; }
 .admin-product-navigation .nav-item { min-height: 40px; padding: 9px 12px; }
 .admin-shell > .product-sidebar .nav-item,

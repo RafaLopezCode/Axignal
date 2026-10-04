@@ -164,6 +164,15 @@ test("Customer Zero only sends canonical attention, and consumes the real read e
       't("Cliente cero · Controles internos", "Customer Zero · Staff controls")',
     ),
   );
+  assert.ok(
+    readFileSync("components/admin.tsx", "utf8").includes(
+      't("AXIGNAL / Cliente cero", "AXIGNAL / Customer Zero")',
+    ),
+  );
+  assert.doesNotMatch(
+    readFileSync("app/globals.css", "utf8"),
+    /content:\s*["']AXIGNAL \/ Customer Zero["']/,
+  );
   assert.doesNotMatch(client, />\s*Customer Zero · \{t\(/);
   assert.ok(client.includes('t("Volver a Admin", "Return to Admin")'));
 });
