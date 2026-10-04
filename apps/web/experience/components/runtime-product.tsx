@@ -29,6 +29,7 @@ import {
   presentSignal,
   presentSourceObservedLabel,
 } from "@/lib/runtime-presentation";
+import { latestObservedSignal, signalGroups } from "@/lib/runtime-reading";
 import {
   safeSourceLink,
   type RuntimeProjection,
@@ -247,6 +248,8 @@ export function RuntimeProductProjection({
         : focus.view === "timeline" ? t("Tiempo y evidencia", "Time and evidence")
           : t("Panorama", "Panorama");
   const dates = [...new Set(projection.nodes.map((s) => s.observedAt))].sort();
+  const groupedSignals = signalGroups(projection.nodes);
+  const latestSignal = latestObservedSignal(projection);
   useEffect(() => {
     main.current?.scrollTo({ top: 0 });
     main.current
@@ -471,35 +474,111 @@ export function RuntimeProductProjection({
                     </button>
                   </section>
                 ) : focus.view === "today" ? (
-                  <section className="today-list" aria-label="Today">
+                  <section className="today-list" aria-label={t("Hoy", "Today")}>
                     <span className="eyebrow">{t("Hoy", "Today")}</span>
                     {projection.today.items.length ? (
-                      projection.today.items.map((item, i) => (
-                        <div className="today-item" key={item.xignalId}>
-                          <span className="today-number">
-                            {String(i + 1).padStart(2, "0")}
-                          </span>
-                          <article>
-                            <h2>{presentRuntimeText(item.whatChanged, projection.organization.name, locale)}</h2>
-                            <p>{presentRuntimeText(item.whyItMatters, projection.organization.name, locale)}</p>
-                            <button
-                              className="text-link"
-                              onClick={() => enter(item.xignalId)}
-                            >
-                              {t(
-                                "Ver señal y evidencia",
-                                "Read signal and evidence",
-                              )}
-                              <ArrowRight size={16} />
-                            </button>
-                          </article>
-                        </div>
-                      ))
+                      <>
+                        <p className="today-context">
+                          {t(
+                            "Novedad confirmada por una observación de hoy.",
+                            "Novelty confirmed by an observation from today.",
+                          )}
+                        </p>
+                        {projection.today.items.map((item, i) => (
+                          <div className="today-item" key={item.xignalId}>
+                            <span className="today-number">
+                              {String(i + 1).padStart(2, "0")}
+                            </span>
+                            <article>
+                              <span className="today-status">
+                                {t("Observado hoy", "Observed today")} ·{" "}
+                                {new Date(item.observedAt).toLocaleString(locale)}
+                              </span>
+                              <h2>{presentRuntimeText(item.whatChanged, projection.organization.name, locale)}</h2>
+                              <p>{presentRuntimeText(item.whyItMatters, projection.organization.name, locale)}</p>
+                              <button
+                                className="text-link"
+                                onClick={() => enter(item.xignalId)}
+                              >
+                                {t(
+                                  "Ver señal y evidencia",
+                                  "Read signal and evidence",
+                                )}
+                                <ArrowRight size={16} />
+                              </button>
+                            </article>
+                          </div>
+                        ))}
+                      </>
+                    ) : latestSignal ? (
+                      <div className="today-fallback">
+                        <Badge state={latestSignal.epistemicState} />
+                        <span className="today-status">
+                          {t("Última observación relevante", "Latest relevant observation")} ·{" "}
+                          {new Date(latestSignal.observedAt).toLocaleString(locale)}
+                        </span>
+                        <h2>{presentRuntimeText(latestSignal.title, projection.organization.name, locale)}</h2>
+                        <p>{presentRuntimeText(latestSignal.whyAttention, projection.organization.name, locale)}</p>
+                        <p className="temporal-note">
+                          {t(
+                            "No hay novedad confirmada hoy. Esta referencia conserva contexto; no convierte una observación anterior en un evento de hoy.",
+                            "There is no confirmed novelty today. This reference preserves context; it does not turn an earlier observation into a today event.",
+                          )}
+                        </p>
+                        <button className="text-link" onClick={() => enter(latestSignal.id)}>
+                          {t("Abrir última observación", "Open latest observation")}
+                          <ArrowRight size={16} />
+                        </button>
+                      </div>
                     ) : (
                       <p>
                         {t(
-                          "El runtime no tiene señales vigentes para Hoy. Esto no convierte las observaciones anteriores en falsas.",
-                          "The runtime has no current signals for Today. Earlier observations do not become false.",
+                          "Todavía no hay observaciones disponibles para aportar contexto a Hoy.",
+                          "There are no observations available yet to provide context for Today.",
+                        )}
+                      </p>
+                    )}
+                  </section>
+                ) : focus.view === "dimension" && focus.dimension === "signals" ? (
+                  <section className="signals-lens" aria-label={t("Señales", "Signals")}>
+                    <div className="signals-lens-intro">
+                      <span className="eyebrow">{t("Señales", "Signals")}</span>
+                      <p>
+                        {t(
+                          "Prioriza lo observado, distingue lo potencial y mantiene lo desconocido abierto. El orden usa estado, vigencia y recencia; no es un scoring económico.",
+                          "Prioritize what is observed, distinguish what is potential, and keep the unknown open. Ordering uses state, currentness and recency; it is not an economic score.",
+                        )}
+                      </p>
+                    </div>
+                    {groupedSignals.length ? groupedSignals.map((group) => (
+                      <section className="signal-group" key={group.state}>
+                        <header>
+                          <Badge state={group.state} />
+                          <span>{group.signals.length}</span>
+                        </header>
+                        <div className="signal-group-list">
+                          {group.signals.map((signal) => (
+                            <button className="signal-reading-row" key={signal.id} onClick={() => enter(signal.id)}>
+                              <div>
+                                <h2>{presentRuntimeText(signal.title, projection.organization.name, locale)}</h2>
+                                <p>{presentRuntimeText(signal.whyAttention, projection.organization.name, locale)}</p>
+                              </div>
+                              <div className="signal-reading-meta">
+                                <span>{presentRuntimeCode(signal.currentness, locale)}</span>
+                                <time dateTime={signal.observedAt}>
+                                  {new Date(signal.observedAt).toLocaleString(locale)}
+                                </time>
+                                <ArrowRight size={15} />
+                              </div>
+                            </button>
+                          ))}
+                        </div>
+                      </section>
+                    )) : (
+                      <p>
+                        {t(
+                          "Todavía no hay señales expuestas en esta proyección.",
+                          "There are no signals exposed in this projection yet.",
                         )}
                       </p>
                     )}

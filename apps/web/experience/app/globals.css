@@ -6640,3 +6640,25 @@ html[data-motion="reduced"] {
 .runtime-organizations input { width: 100%; min-width: 0; min-height: 44px; border: 1px solid var(--line); border-radius: 8px; padding: 12px; }
 .runtime-organizations .organization-entry { display: grid; gap: 12px; padding: 16px; border: 1px solid var(--line); border-radius: 8px; }
 .runtime-organizations .organization-entry > span { color: var(--muted); }
+
+/* T017/T018: purpose-built Signals lens and honest Today context. */
+.canonical-product .signals-lens { display:grid; gap:26px; margin-top:28px; }
+.canonical-product .signals-lens-intro { max-width:760px; display:grid; gap:10px; }
+.canonical-product .signals-lens-intro p,
+.canonical-product .today-context { margin:0; color:var(--muted); font-size:12px; line-height:1.8; }
+.canonical-product .signal-group { display:grid; gap:10px; }
+.canonical-product .signal-group > header { display:flex; align-items:center; gap:10px; border-bottom:1px solid var(--line); padding-bottom:10px; }
+.canonical-product .signal-group > header > span { font-family:"IBM Plex Mono", monospace; color:var(--muted); font-size:10px; }
+.canonical-product .signal-group-list { display:grid; gap:10px; }
+.canonical-product .signal-reading-row { width:100%; display:grid; grid-template-columns:minmax(0,1fr) auto; gap:24px; align-items:center; text-align:left; border:1px solid var(--line); border-radius:10px; background:#fff; padding:18px 20px; }
+.canonical-product .signal-reading-row h2 { margin:0 0 7px; font-family:Fraunces,serif; font-size:22px; line-height:1.25; }
+.canonical-product .signal-reading-row p { margin:0; color:var(--muted); font-size:12px; line-height:1.65; }
+.canonical-product .signal-reading-meta { display:grid; justify-items:end; gap:6px; color:var(--muted); font-size:10px; white-space:nowrap; }
+.canonical-product .today-fallback { display:grid; gap:12px; max-width:760px; border:1px solid var(--line); border-radius:12px; padding:22px; background:#f7f9fc; }
+.canonical-product .today-fallback h2 { margin:0; font-family:Fraunces,serif; font-size:25px; line-height:1.25; }
+.canonical-product .today-fallback > p { margin:0; }
+.canonical-product .today-status { font-family:"IBM Plex Mono", monospace; color:var(--muted); font-size:10px; }
+@media (max-width:700px) {
+  .canonical-product .signal-reading-row { grid-template-columns:1fr; gap:12px; }
+  .canonical-product .signal-reading-meta { justify-items:start; }
+}
