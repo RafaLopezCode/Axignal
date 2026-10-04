@@ -112,22 +112,7 @@ export function EditorialArt({
           </span>
         </>
       )}
-      <FramedObserver
-        className="art-observer"
-        pose={
-          kind === "time"
-            ? "pointing"
-            : kind === "layers"
-              ? "connecting"
-              : kind === "conversation"
-                ? "accompanying"
-                : kind === "unknown"
-                  ? "reflecting"
-                  : kind === "memory"
-                    ? "connecting"
-                    : "analyzing"
-        }
-      />
+      <FramedObserver className="art-observer" scene={kind} />
     </div>
   );
 }

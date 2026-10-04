@@ -495,7 +495,7 @@ export function Panorama() {
                       </div>
                     ) : (
                       <div className="family-empty">
-                        <Observer className="family-observer" />
+                        <Observer scene="unknown" className="family-observer" />
                         <h2>
                           {t(
                             "Esta lente todavía tiene preguntas.",
@@ -690,7 +690,7 @@ export function Panorama() {
                       </p>
                     </section>
                     <section className="continuity-note">
-                      <Observer className="continuity-observer" />
+
                       <div>
                         <span className="eyebrow">
                           {t("OBSERVACIÓN CONTINUA", "CONTINUOUS OBSERVATION")}
@@ -878,7 +878,7 @@ export function Panorama() {
             </>
           ) : utility === "focus" ? (
             <>
-              <Observer className="dialog-observer" />
+
               <h3>{organization.name}</h3>
               <p>
                 {t(

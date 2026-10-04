@@ -1,0 +1,120 @@
+{
+  "status": "Exploratory illustrations; human visual acceptance pending",
+  "constraints": "Faithful to supplied Observer character sheets: classic flat cap, charcoal line, white figure, two coherent arms, two oval eyes, one blue monocle held by a hand, complete feet, flat transparent artwork. No approval/evidence marks, text, rankings, gradients, 3D or false research status.",
+  "sceneIntents": {
+    "initial": [
+      [
+        "discover",
+        "Leaning forward slightly, looking through the monocle held at the right eye, carefully examining a small open paper field notebook supported by the left hand. Curious attentive posture, both legs and cap complete."
+      ],
+      [
+        "connect",
+        "Holding a small pale blue tablet in left hand, extending right arm in a calm explanatory gesture toward three small connected paper notes beside the character. Monocle at right eye. Shows connecting context, not triumph."
+      ],
+      [
+        "reason",
+        "Standing quietly, blue monocle at right eye, considering two small documents held side by side, head tilted thoughtfully, no duplicated arms. Comparing evidence and an open question."
+      ],
+      [
+        "focus",
+        "Sitting at a low desk studying a folded map with a few small ink points, holding the single blue monocle at right eye. Notebook alongside map. Full character and desk, thoughtful choice of where to look."
+      ],
+      [
+        "dispatch",
+        "Standing reading a folded paper letter held in one hand, other hand holding blue monocle at right eye. One small closed notebook tucked under arm. Thoughtfully checking a report before sharing it."
+      ],
+      [
+        "journey",
+        "Walking calmly toward the right while carrying a closed notebook under left arm and holding blue monocle at right eye with right hand. Purposeful full stride, both legs entirely visible, no motion streaks."
+      ]
+    ],
+    "useCases": [
+      [
+        "strategy",
+        "Standing beside an unfolded simple map, thoughtfully looking at two paths with one hand holding monocle, left arm supporting a closed notebook. Calm strategic perspective."
+      ],
+      [
+        "business",
+        "Leaning gently toward an open field notebook containing two small abstract document slips, carefully comparing capabilities. Other hand holds monocle."
+      ],
+      [
+        "ecosystems",
+        "Standing beside three small dark-line connected circular nodes drawn on a small upright board, holding monocle to eye, notebook under left arm. Studying connections, not growth charts."
+      ],
+      [
+        "representation",
+        "Looking closely at a small tablet with a tiny generic browser page on its screen, monocle held at eye, tablet supported by other hand. One digital surface being examined."
+      ],
+      [
+        "marketing",
+        "Studying three overlapping small paper message cards held in left hand while holding monocle at right eye. Thoughtful, no megaphone, no persuasion, no rankings."
+      ],
+      [
+        "communication",
+        "Reading a small open printed page with two tiny neutral quote marks; monocle held at eye. Careful interpretation of public communication, no speech bubble."
+      ],
+      [
+        "research",
+        "Seated on a low plain stool with an open notebook balanced on knees, monocle held up to eye, one paper source beside the stool. Patient research, full silhouette."
+      ],
+      [
+        "journalism",
+        "Standing beside a small stack of documents with an open reporter notebook in left hand, holding monocle to right eye. Leaning toward sources, checking a story before asserting it."
+      ]
+    ],
+    "additional": [
+      [
+        "dispatch-v2",
+        "Only two arms. Left hand holds ONE folded letter which the character reads. Right hand holds monocle. No notebook or other prop. Patient, verifying a report before sharing."
+      ],
+      [
+        "connect-v2",
+        "Only two arms. Right hand holds monocle. Left hand holds a pale grey tablet turned toward three small connected paper notes resting on a low narrow surface beside character. Full standing character, connecting context."
+      ],
+      [
+        "reason-v2",
+        "Only two arms. Right hand holds monocle. Left hand holds two overlapping paper slips together, comparing the slips. Full standing figure, slight head tilt, carefully contrasting a claim with a question."
+      ],
+      [
+        "contact",
+        "Only two arms. Right hand holds monocle. Left hand supports a single open letter in a pale grey envelope. Character seated cross legged, patiently reading a visitor's question."
+      ],
+      [
+        "welcome",
+        "Only two arms. Right hand holds monocle. Left hand holds an open small notebook outward in a gentle welcoming gesture. Character standing half turned toward viewer, inviting a visitor to begin observing."
+      ],
+      [
+        "boundaries",
+        "Only two arms. Right hand holds monocle. Left hand traces one line on a large open book sitting on a thin stand. Character leaning to read carefully. Fine print matters, no lock or shield."
+      ],
+      [
+        "explain",
+        "Only two arms. Right hand holds monocle. Left hand points at a small upright board displaying two simple document slips connected by a line. Character seated on a simple stool, explaining what supports a reading."
+      ],
+      [
+        "certainty",
+        "Only two arms. Right hand holds monocle. Left hand lifts ONE printed document toward eye. Full character bending slightly forward to inspect its basis. No checkmark, no success signal."
+      ],
+      [
+        "time",
+        "Only two arms. Right hand holds monocle. Left hand points to a narrow accordion paper strip resting on a low surface, with three simple unlabelled ticks at different positions. Full standing character investigating sequence."
+      ],
+      [
+        "layers",
+        "Only two arms. Right hand holds monocle. Left hand lifts top sheet of a three-page small stack on a low stand. Full standing character looking beneath the first reading."
+      ],
+      [
+        "unknown",
+        "Only two arms. Right hand holds monocle. Left hand rests on a blank open notebook balanced on knees. Full seated figure, patiently holding an unanswered question open."
+      ],
+      [
+        "conversation",
+        "Only two arms. Right hand holds monocle. Left hand offers an open notebook toward a second abstract plain human silhouette beside character. Clearly two different people with no overlapping limbs. Calm dialogue."
+      ],
+      [
+        "memory",
+        "Only two arms. Right hand holds monocle. Left hand holds a closed notebook while looking at three open paper source folders on a narrow low stand. Full standing character revisiting accumulated context."
+      ]
+    ]
+  }
+}

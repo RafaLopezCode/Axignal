@@ -302,7 +302,7 @@ export function Contact() {
               <i />
               <img src="/brand/isotope.svg" alt="" width={32} height={35} />
             </div>
-            <Observer />
+            <Observer scene="contact" />
             <span className="hand-note">
               {t("te leemos con atención", "we read with care")}
             </span>

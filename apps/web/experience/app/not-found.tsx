@@ -3,7 +3,7 @@ import Link from "next/link";
 import { ArrowLeft, BookOpen } from "lucide-react";
 import { useLocale } from "@/lib/locale";
 import { PublicShell } from "@/components/public-shell";
-import { Observer } from "@/components/ui";
+
 export default function NotFound() {
   const { t } = useLocale();
   return (
@@ -12,7 +12,7 @@ export default function NotFound() {
         <span className="eyebrow">
           404 / {t("Página no disponible", "Page unavailable")}
         </span>
-        <Observer />
+
         <h1>{t("Sigamos otro hilo.", "Let's follow another thread.")}</h1>
         <p>
           {t(

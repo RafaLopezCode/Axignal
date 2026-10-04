@@ -46,3 +46,8 @@ Foundation precedes stories. Knowledge and trust content can be authored indepen
 - [x] T029 Repair all eight use-case illustrations using the original gesture sheet at a common scale/baseline; verify complete silhouettes, no editorial remnants, desktop/mobile and keyboard tab behavior.
 
 - [x] T030 Apply the corrected frame to Knowledge feature and article illustrations; inspect desktop/mobile with complete figure and unchanged editorial semantics.
+
+- [x] T031 Repair remaining shared action-pose rendering in Pricing, newsletter and closing; retire silhouette-tracing masks, add complete walking frame and preserve original source pixels. Work directly on main at the human's explicit instruction after branch merge.
+- [x] T032 Confirm the repaired figures in desktop/mobile/narrow browser views; separate mobile brief text from the figure, preserve keyboard pricing behavior and record deterministic gates and original visual evidence.
+- [x] T033 Audit every visual narrator on main; replace repeated masked-sheet poses with contextual transparent illustrations and exclude all human-rejected anatomical variants.
+- [x] T034 Verify eight distinct use cases at desktop/320px, inspect editorial/public/product contexts, preserve epistemic boundaries, and record provenance, rejection reasons, geometry and browser screenshots. Human visual acceptance remains pending.

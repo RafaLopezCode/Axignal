@@ -107,7 +107,7 @@ export function ReferencePricing({
             "Observe organizations continuously. Emerging signals are not billed individually, and the economic world remains shared.",
           )}
         </p>
-        <Observer pose="analyzing" />
+        <Observer scene="focus" />
         <span className="hand-note">
           {t(
             "tu atención encuentra su alcance",
@@ -400,7 +400,6 @@ export function NewsletterInvitation() {
             {t("Fuente · Fecha · Contexto", "Source · Date · Context")}
           </span>
         </div>
-        <Observer pose="connecting" />
         <span className="hand-note">
           {t(
             "si no hay cambios, también lo decimos",

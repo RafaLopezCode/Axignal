@@ -1,0 +1,100 @@
+{
+  "date": "2026-10-03",
+  "checkout": "D:/AXIGNAL/Axignal",
+  "branch": "main",
+  "base_revision": "66542a1",
+  "source_art_sha256": "851b1ddb931ac214d39a5ccab133f18dd21a257f8351a5b891c1df8a274b2e73",
+  "evidence": [
+    {
+      "file": "screenshots/036-observer-pricing-main-desktop.png",
+      "source": "C:\\Users\\usuario\\.codex-clean\\visualizations\\2026\\10\\03\\01a100ab-20a0-73a0-a233-e08244270974\\036-observer-pricing-main-desktop.png",
+      "captured_at": "2026-10-03T18:16:32.0709880Z",
+      "sha256": "4d6f52929076059969a45ff21ff4002b3c35da3aadd19c81f73763487825e891",
+      "viewport": [
+        1743,
+        1188
+      ],
+      "route": "/#subscription",
+      "browser": "Codex In-app Browser",
+      "manipulation": "none"
+    },
+    {
+      "file": "screenshots/036-observer-closing-main-desktop.png",
+      "source": "C:\\Users\\usuario\\.codex-clean\\visualizations\\2026\\10\\03\\01a100ab-20a0-73a0-a233-e08244270974\\036-observer-closing-main-desktop.png",
+      "captured_at": "2026-10-03T18:16:22.2135549Z",
+      "sha256": "ae273d3a58c25d51a17aee7af1b53d8acc9eaaee1e24fc1e0541b28ea5d1a47d",
+      "viewport": [
+        1743,
+        1188
+      ],
+      "route": "/#subscription (scrolled to closing)",
+      "browser": "Codex In-app Browser",
+      "manipulation": "none"
+    },
+    {
+      "file": "screenshots/036-observer-newsletter-main-desktop.png",
+      "source": "C:\\Users\\usuario\\.codex-clean\\visualizations\\2026\\10\\03\\01a100ab-20a0-73a0-a233-e08244270974\\036-observer-newsletter-main-desktop.png",
+      "captured_at": "2026-10-03T18:16:46.1963139Z",
+      "sha256": "634106d67a3e0ebc32ab8f2ad5d07c653685b4468c706d102cf2eeadf42be82c",
+      "viewport": [
+        1743,
+        1188
+      ],
+      "route": "/#newsletter (scrolled to illustration)",
+      "browser": "Codex In-app Browser",
+      "manipulation": "none"
+    },
+    {
+      "file": "screenshots/036-observer-newsletter-main-mobile.png",
+      "source": "C:\\Users\\usuario\\.codex-clean\\visualizations\\2026\\10\\03\\01a100ab-20a0-73a0-a233-e08244270974\\036-observer-newsletter-main-mobile.png",
+      "captured_at": "2026-10-03T18:19:15.3873074Z",
+      "sha256": "ac68b73d46b652ca83164c8c69a02dc701deaabfcecb9e5edf23b784073da4f0",
+      "viewport": [
+        390,
+        844
+      ],
+      "route": "/#newsletter (scrolled to illustration)",
+      "browser": "Codex In-app Browser",
+      "manipulation": "none"
+    },
+    {
+      "file": "screenshots/036-observer-closing-main-mobile.png",
+      "source": "C:\\Users\\usuario\\.codex-clean\\visualizations\\2026\\10\\03\\01a100ab-20a0-73a0-a233-e08244270974\\036-observer-closing-main-mobile.png",
+      "captured_at": "2026-10-03T18:19:27.4072393Z",
+      "sha256": "17a7e61ff0a505a5565d747008be7218cc056800e1fc54805814415f85ddb117",
+      "viewport": [
+        390,
+        844
+      ],
+      "route": "/#newsletter (scrolled to illustration)",
+      "browser": "Codex In-app Browser",
+      "manipulation": "none"
+    },
+    {
+      "file": "screenshots/036-observer-newsletter-main-narrow.png",
+      "source": "C:\\Users\\usuario\\.codex-clean\\visualizations\\2026\\10\\03\\01a100ab-20a0-73a0-a233-e08244270974\\036-observer-newsletter-main-narrow.png",
+      "captured_at": "2026-10-03T18:20:12.5342048Z",
+      "sha256": "602164b3ed2a8d71fe8b0c43197796da28133496f83f8be169e1b822f61c08ae",
+      "viewport": [
+        320,
+        844
+      ],
+      "route": "/#newsletter (scrolled to illustration)",
+      "browser": "Codex In-app Browser",
+      "manipulation": "none"
+    },
+    {
+      "file": "screenshots/036-observer-closing-main-narrow.png",
+      "source": "C:\\Users\\usuario\\.codex-clean\\visualizations\\2026\\10\\03\\01a100ab-20a0-73a0-a233-e08244270974\\036-observer-closing-main-narrow.png",
+      "captured_at": "2026-10-03T18:19:39.8178367Z",
+      "sha256": "02e1f34a5031ac222e338424ec7d5ae5476c3b133bda78abac440140ec9c2a74",
+      "viewport": [
+        320,
+        844
+      ],
+      "route": "/#newsletter (scrolled to illustration)",
+      "browser": "Codex In-app Browser",
+      "manipulation": "none"
+    }
+  ]
+}

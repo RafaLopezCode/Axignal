@@ -155,7 +155,7 @@ export function LensScene({ compact = false }: { compact?: boolean }) {
         <span className="hand-note scene-note">
           {t("mira un poco más cerca", "look a little closer")}
         </span>
-        <Observer className="scene-observer" />
+        <Observer className="scene-observer" scene={(["discover", "connect", "reason"] as const)[mode]} />
       </div>
       <div className="scene-bottom">
         <div
@@ -665,9 +665,9 @@ export function Landing() {
             </Link>
             </div>
             <FramedObserver className="use-observer"
-              pose={([
-                "guiding", "analyzing", "connecting", "pointing",
-                "reflecting", "accompanying", "connecting", "pointing",
+              scene={([
+                "strategy", "business", "ecosystems", "representation",
+                "marketing", "communication", "research", "journalism",
               ] as const)[useCase]}
             />
           </div>
@@ -790,7 +790,7 @@ export function Landing() {
             {t("Entrar en el Panorama", "Enter Panorama")}
             <ArrowRight size={18} />
           </Link>
-          <Observer className="closing-observer" pose="walking" />
+          <Observer className="closing-observer" scene="journey" />
         </section>
       </main>
       <MiniFooter />

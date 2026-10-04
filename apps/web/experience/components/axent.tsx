@@ -123,7 +123,7 @@ export function Axent({
       >
         {messages.length === 0 ? (
           <div className="axent-welcome">
-            <Observer className="axent-observer" />
+            <Observer scene="explain" className="axent-observer" />
             <h2>
               {t(
                 "Miremos con un poco más de contexto.",

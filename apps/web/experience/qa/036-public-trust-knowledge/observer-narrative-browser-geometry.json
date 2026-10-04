@@ -1,0 +1,309 @@
+{
+  "status": "Human visual acceptance pending",
+  "useCasesDesktop": [
+    {
+      "height": 215.15625,
+      "image": true,
+      "scene": "strategy",
+      "width": 240
+    },
+    {
+      "height": 215.15625,
+      "image": true,
+      "scene": "business",
+      "width": 240
+    },
+    {
+      "height": 215.15625,
+      "image": true,
+      "scene": "ecosystems",
+      "width": 240
+    },
+    {
+      "height": 215.15625,
+      "image": true,
+      "scene": "representation",
+      "width": 240
+    },
+    {
+      "height": 215.15625,
+      "image": true,
+      "scene": "marketing",
+      "width": 240
+    },
+    {
+      "height": 215.15625,
+      "image": true,
+      "scene": "communication",
+      "width": 240
+    },
+    {
+      "height": 215.15625,
+      "image": true,
+      "scene": "research",
+      "width": 240
+    },
+    {
+      "height": 215.15625,
+      "image": true,
+      "scene": "journalism",
+      "width": 240
+    }
+  ],
+  "useCases320": [
+    {
+      "rect": {
+        "bottom": 578.3125,
+        "height": 161.375,
+        "left": 102.703125,
+        "right": 282.703125,
+        "top": 416.9375,
+        "width": 180,
+        "x": 102.703125,
+        "y": 416.9375
+      },
+      "scene": "strategy",
+      "scrollWidth": 305
+    },
+    {
+      "rect": {
+        "bottom": 578.75,
+        "height": 161.375,
+        "left": 102.703125,
+        "right": 282.703125,
+        "top": 417.375,
+        "width": 180,
+        "x": 102.703125,
+        "y": 417.375
+      },
+      "scene": "business",
+      "scrollWidth": 305
+    },
+    {
+      "rect": {
+        "bottom": 578.3125,
+        "height": 161.375,
+        "left": 102.703125,
+        "right": 282.703125,
+        "top": 416.9375,
+        "width": 180,
+        "x": 102.703125,
+        "y": 416.9375
+      },
+      "scene": "ecosystems",
+      "scrollWidth": 305
+    },
+    {
+      "rect": {
+        "bottom": 578.1875,
+        "height": 161.375,
+        "left": 102.703125,
+        "right": 282.703125,
+        "top": 416.8125,
+        "width": 180,
+        "x": 102.703125,
+        "y": 416.8125
+      },
+      "scene": "representation",
+      "scrollWidth": 305
+    },
+    {
+      "rect": {
+        "bottom": 578.75,
+        "height": 161.375,
+        "left": 102.703125,
+        "right": 282.703125,
+        "top": 417.375,
+        "width": 180,
+        "x": 102.703125,
+        "y": 417.375
+      },
+      "scene": "marketing",
+      "scrollWidth": 305
+    },
+    {
+      "rect": {
+        "bottom": 578.703125,
+        "height": 161.375,
+        "left": 102.703125,
+        "right": 282.703125,
+        "top": 417.328125,
+        "width": 180,
+        "x": 102.703125,
+        "y": 417.328125
+      },
+      "scene": "communication",
+      "scrollWidth": 305
+    },
+    {
+      "rect": {
+        "bottom": 578.703125,
+        "height": 161.375,
+        "left": 102.703125,
+        "right": 282.703125,
+        "top": 417.328125,
+        "width": 180,
+        "x": 102.703125,
+        "y": 417.328125
+      },
+      "scene": "research",
+      "scrollWidth": 305
+    },
+    {
+      "rect": {
+        "bottom": 578.1875,
+        "height": 161.375,
+        "left": 102.703125,
+        "right": 282.703125,
+        "top": 416.8125,
+        "width": 180,
+        "x": 102.703125,
+        "y": 416.8125
+      },
+      "scene": "journalism",
+      "scrollWidth": 305
+    }
+  ],
+  "editorial1743": [
+    {
+      "parent": {
+        "bottom": 607,
+        "height": 410,
+        "left": 968.78125,
+        "right": 1439,
+        "top": 197,
+        "width": 470.21875,
+        "x": 968.78125,
+        "y": 197
+      },
+      "rect": {
+        "bottom": 595,
+        "height": 161.375,
+        "left": 1113.890625,
+        "right": 1293.890625,
+        "top": 433.625,
+        "width": 180,
+        "x": 1113.890625,
+        "y": 433.625
+      },
+      "scene": "certainty"
+    },
+    {
+      "parent": {
+        "bottom": 607,
+        "height": 410,
+        "left": 968.78125,
+        "right": 1439,
+        "top": 197,
+        "width": 470.21875,
+        "x": 968.78125,
+        "y": 197
+      },
+      "rect": {
+        "bottom": 595,
+        "height": 161.375,
+        "left": 1113.890625,
+        "right": 1293.890625,
+        "top": 433.625,
+        "width": 180,
+        "x": 1113.890625,
+        "y": 433.625
+      },
+      "scene": "layers"
+    },
+    {
+      "parent": {
+        "bottom": 607,
+        "height": 410,
+        "left": 968.78125,
+        "right": 1439,
+        "top": 197,
+        "width": 470.21875,
+        "x": 968.78125,
+        "y": 197
+      },
+      "rect": {
+        "bottom": 595,
+        "height": 161.375,
+        "left": 1113.890625,
+        "right": 1293.890625,
+        "top": 433.625,
+        "width": 180,
+        "x": 1113.890625,
+        "y": 433.625
+      },
+      "scene": "time"
+    },
+    {
+      "parent": {
+        "bottom": 607,
+        "height": 410,
+        "left": 968.78125,
+        "right": 1439,
+        "top": 197,
+        "width": 470.21875,
+        "x": 968.78125,
+        "y": 197
+      },
+      "rect": {
+        "bottom": 595,
+        "height": 161.375,
+        "left": 1113.890625,
+        "right": 1293.890625,
+        "top": 433.625,
+        "width": 180,
+        "x": 1113.890625,
+        "y": 433.625
+      },
+      "scene": "unknown"
+    },
+    {
+      "parent": {
+        "bottom": 607,
+        "height": 410,
+        "left": 968.78125,
+        "right": 1439,
+        "top": 197,
+        "width": 470.21875,
+        "x": 968.78125,
+        "y": 197
+      },
+      "rect": {
+        "bottom": 595,
+        "height": 161.375,
+        "left": 1113.890625,
+        "right": 1293.890625,
+        "top": 433.625,
+        "width": 180,
+        "x": 1113.890625,
+        "y": 433.625
+      },
+      "scene": "conversation"
+    },
+    {
+      "parent": {
+        "bottom": 607,
+        "height": 410,
+        "left": 968.78125,
+        "right": 1439,
+        "top": 197,
+        "width": 470.21875,
+        "x": 968.78125,
+        "y": 197
+      },
+      "rect": {
+        "bottom": 595,
+        "height": 161.375,
+        "left": 1113.890625,
+        "right": 1293.890625,
+        "top": 433.625,
+        "width": 180,
+        "x": 1113.890625,
+        "y": 433.625
+      },
+      "scene": "memory"
+    }
+  ],
+  "consoleWarningsOrErrors": [],
+  "pricingBelow800": "Decorative drawing remains hidden by existing responsive design"
+}

@@ -94,7 +94,7 @@ export function Access({ intent }: { intent: AuthStartRequest["intent"] }) {
               </span>
               <i />
             </div>
-            <Observer />
+            <Observer scene="welcome" />
             <span className="hand-note">
               {t("una mirada que continúa", "a perspective that continues")}
             </span>

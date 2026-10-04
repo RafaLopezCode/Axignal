@@ -1,0 +1,339 @@
+{
+  "discover": {
+    "source": "C:/Users/usuario/.codex-clean/generated_images/01a100ab-20a0-73a0-a233-e08244270974/exec-c9369549-f7da-490f-8de0-d2139369dd39.png",
+    "sha256": "fbd0f6a12cc1be7ade6b77f6aa6d866866f24f73949eb9d97babee25ab99bf35",
+    "alphaBounds": [
+      65,
+      32,
+      1343,
+      977
+    ],
+    "framePadding": 24,
+    "treatment": "Original generated PNG bytes. Alpha-only bounds plus safety margin; no pixel editing.",
+    "review": "Agent anatomical inspection complete; human visual acceptance pending.",
+    "epistemic": "PRESENTATION_STATE; illustration, never evidence or research status."
+  },
+  "connect": {
+    "source": "C:/Users/usuario/.codex-clean/generated_images/01a100ab-20a0-73a0-a233-e08244270974/exec-a955ae24-2c09-4a5f-b133-69cd7af88ffe.png",
+    "sha256": "7ffd69f3c495681be81f11ec9d30baeadc727a07e167efd264f2e34fe3034549",
+    "alphaBounds": [
+      65,
+      36,
+      1465,
+      983
+    ],
+    "framePadding": 24,
+    "treatment": "Original generated PNG bytes. Alpha-only bounds plus safety margin; no pixel editing.",
+    "review": "Agent anatomical inspection complete; human visual acceptance pending.",
+    "epistemic": "PRESENTATION_STATE; illustration, never evidence or research status."
+  },
+  "reason": {
+    "source": "C:/Users/usuario/.codex-clean/generated_images/01a100ab-20a0-73a0-a233-e08244270974/exec-a7de7ce2-00f5-475b-a369-4bd0f79e7103.png",
+    "sha256": "b22722733925e4e8bec24e5b1dc067ae393368c2e83645ea603eeca2bf7ec454",
+    "alphaBounds": [
+      65,
+      32,
+      1339,
+      991
+    ],
+    "framePadding": 24,
+    "treatment": "Original generated PNG bytes. Alpha-only bounds plus safety margin; no pixel editing.",
+    "review": "Agent anatomical inspection complete; human visual acceptance pending.",
+    "epistemic": "PRESENTATION_STATE; illustration, never evidence or research status."
+  },
+  "focus": {
+    "source": "C:/Users/usuario/.codex-clean/generated_images/01a100ab-20a0-73a0-a233-e08244270974/exec-7ddc08f8-71b5-43e1-9da5-51cf38f53eee.png",
+    "sha256": "abf64237c992efbe7bceb7ecea5fc25bb22578ec8fc1a0ffcd02713ef9205845",
+    "alphaBounds": [
+      122,
+      75,
+      1414,
+      951
+    ],
+    "framePadding": 24,
+    "treatment": "Original generated PNG bytes. Alpha-only bounds plus safety margin; no pixel editing.",
+    "review": "Agent anatomical inspection complete; human visual acceptance pending.",
+    "epistemic": "PRESENTATION_STATE; illustration, never evidence or research status."
+  },
+  "dispatch": {
+    "source": "C:/Users/usuario/.codex-clean/generated_images/01a100ab-20a0-73a0-a233-e08244270974/exec-0b192695-6985-4f01-8a0d-a8b8baf20a8e.png",
+    "sha256": "8ec54baccf6cbfcaf83b85fef85735488c87b8141533d3ae4ff9fa4f497d174d",
+    "alphaBounds": [
+      81,
+      26,
+      1218,
+      1105
+    ],
+    "framePadding": 24,
+    "treatment": "Original generated PNG bytes. Alpha-only bounds plus safety margin; no pixel editing.",
+    "review": "REJECTED BY HUMAN: missing shoulder. Removed from runtime atlas and public assets on 2026-10-03. Do not reuse.",
+    "epistemic": "PRESENTATION_STATE; illustration, never evidence or research status.",
+    "distributed": false
+  },
+  "journey": {
+    "source": "C:/Users/usuario/.codex-clean/generated_images/01a100ab-20a0-73a0-a233-e08244270974/exec-dd19d4d6-4353-4859-abcf-21b242fbfda3.png",
+    "sha256": "d8ba6910354687deb353d21fed51d0541a41deaf1a924bb9b2f219239b88c43b",
+    "alphaBounds": [
+      49,
+      41,
+      1078,
+      1401
+    ],
+    "framePadding": 24,
+    "treatment": "Original generated PNG bytes. Alpha-only bounds plus safety margin; no pixel editing.",
+    "review": "Agent anatomical inspection complete; human visual acceptance pending.",
+    "epistemic": "PRESENTATION_STATE; illustration, never evidence or research status."
+  },
+  "strategy": {
+    "source": "C:/Users/usuario/.codex-clean/generated_images/01a100ab-20a0-73a0-a233-e08244270974/exec-ac065be8-0b57-4aa8-8d0e-b6645096e5e6.png",
+    "sha256": "869a98dadae04022740c6ca1259212c8040e9c66e84c6eda4d3cf1e45afca3f4",
+    "alphaBounds": [
+      65,
+      56,
+      1378,
+      962
+    ],
+    "framePadding": 24,
+    "treatment": "Original generated PNG bytes. Alpha-only bounds plus safety margin; no pixel editing.",
+    "review": "Agent anatomical inspection complete; human visual acceptance pending.",
+    "epistemic": "PRESENTATION_STATE; illustration, never evidence or research status."
+  },
+  "business": {
+    "source": "C:/Users/usuario/.codex-clean/generated_images/01a100ab-20a0-73a0-a233-e08244270974/exec-0ca38d40-500f-49ae-9929-cb255feb70dc.png",
+    "sha256": "a00f9ef0e3cb35514c4a011320ee105c3ad7fd66ee722aaa3b8d9c1ac05958af",
+    "alphaBounds": [
+      65,
+      16,
+      1225,
+      1006
+    ],
+    "framePadding": 24,
+    "treatment": "Original generated PNG bytes. Alpha-only bounds plus safety margin; no pixel editing.",
+    "review": "Agent anatomical inspection complete; human visual acceptance pending.",
+    "epistemic": "PRESENTATION_STATE; illustration, never evidence or research status."
+  },
+  "ecosystems": {
+    "source": "C:/Users/usuario/.codex-clean/generated_images/01a100ab-20a0-73a0-a233-e08244270974/exec-9232eaa3-7aa7-4de0-a8a1-24134513021a.png",
+    "sha256": "cd4e2eddc954cf7c6a268ea992ccd2131ebf0a1d701f4b73fe2908daca1870d7",
+    "alphaBounds": [
+      323,
+      32,
+      1357,
+      999
+    ],
+    "framePadding": 24,
+    "treatment": "Original generated PNG bytes. Alpha-only bounds plus safety margin; no pixel editing.",
+    "review": "Agent anatomical inspection complete; human visual acceptance pending.",
+    "epistemic": "PRESENTATION_STATE; illustration, never evidence or research status."
+  },
+  "representation": {
+    "source": "C:/Users/usuario/.codex-clean/generated_images/01a100ab-20a0-73a0-a233-e08244270974/exec-2db97e44-1a84-4db0-86db-17a2092564c2.png",
+    "sha256": "8f5c5af8697fe03f4beefdd6e05d14828347a47c3748bf1329134eaa21260870",
+    "alphaBounds": [
+      65,
+      17,
+      1123,
+      1105
+    ],
+    "framePadding": 24,
+    "treatment": "Original generated PNG bytes. Alpha-only bounds plus safety margin; no pixel editing.",
+    "review": "Agent anatomical inspection complete; human visual acceptance pending.",
+    "epistemic": "PRESENTATION_STATE; illustration, never evidence or research status."
+  },
+  "marketing": {
+    "source": "C:/Users/usuario/.codex-clean/generated_images/01a100ab-20a0-73a0-a233-e08244270974/exec-9c7c3c0d-d3d9-41bc-affa-401ea34a9095.png",
+    "sha256": "8b1e67c639b777e476b0f883a8dd2794f9b3063819dbadbc2cffe5f390fe5a72",
+    "alphaBounds": [
+      65,
+      32,
+      1341,
+      996
+    ],
+    "framePadding": 24,
+    "treatment": "Original generated PNG bytes. Alpha-only bounds plus safety margin; no pixel editing.",
+    "review": "Agent anatomical inspection complete; human visual acceptance pending.",
+    "epistemic": "PRESENTATION_STATE; illustration, never evidence or research status."
+  },
+  "communication": {
+    "source": "C:/Users/usuario/.codex-clean/generated_images/01a100ab-20a0-73a0-a233-e08244270974/exec-1feb9953-1609-40e7-8244-0852d3b48a28.png",
+    "sha256": "4cc0290a72adef282933f44e0c149b9625de82bf62144c99bbeea4412d4dc8e8",
+    "alphaBounds": [
+      81,
+      67,
+      1065,
+      1069
+    ],
+    "framePadding": 24,
+    "treatment": "Original generated PNG bytes. Alpha-only bounds plus safety margin; no pixel editing.",
+    "review": "Agent anatomical inspection complete; human visual acceptance pending.",
+    "epistemic": "PRESENTATION_STATE; illustration, never evidence or research status."
+  },
+  "research": {
+    "source": "C:/Users/usuario/.codex-clean/generated_images/01a100ab-20a0-73a0-a233-e08244270974/exec-0e0b1131-ebaa-44d1-9a70-846bfc8d4b5f.png",
+    "sha256": "5eccedd7e889b1b6ddbeb34e4de47157da391d544e94a380ddb1faac54584bd6",
+    "alphaBounds": [
+      71,
+      19,
+      1341,
+      992
+    ],
+    "framePadding": 24,
+    "treatment": "Original generated PNG bytes. Alpha-only bounds plus safety margin; no pixel editing.",
+    "review": "Agent anatomical inspection complete; human visual acceptance pending.",
+    "epistemic": "PRESENTATION_STATE; illustration, never evidence or research status."
+  },
+  "journalism": {
+    "source": "C:/Users/usuario/.codex-clean/generated_images/01a100ab-20a0-73a0-a233-e08244270974/exec-2d9c5b48-1b34-4ea1-9500-55af470ee63f.png",
+    "sha256": "cf7dfee96f21541e558a28f42b820ea5c448b37f9ea22fcf77c2b5eebc31db6a",
+    "alphaBounds": [
+      65,
+      50,
+      1435,
+      971
+    ],
+    "framePadding": 24,
+    "treatment": "Original generated PNG bytes. Alpha-only bounds plus safety margin; no pixel editing.",
+    "review": "Agent anatomical inspection complete; human visual acceptance pending.",
+    "epistemic": "PRESENTATION_STATE; illustration, never evidence or research status."
+  },
+  "contact": {
+    "source": "C:/Users/usuario/.codex-clean/generated_images/01a100ab-20a0-73a0-a233-e08244270974/exec-05ec44d8-7eee-4220-9d5a-b3be78aca218.png",
+    "sha256": "3519d1fd098835bb636945a24172e4367a216b35b484e358bbb03df10b3a488b",
+    "alphaBounds": [
+      304,
+      54,
+      1126,
+      1081
+    ],
+    "framePadding": 24,
+    "treatment": "Original generated PNG bytes. Alpha-only bounds plus safety margin; no pixel editing.",
+    "review": "Agent anatomical inspection complete; human visual acceptance pending.",
+    "epistemic": "PRESENTATION_STATE; illustration, never evidence or research status."
+  },
+  "welcome": {
+    "source": "C:/Users/usuario/.codex-clean/generated_images/01a100ab-20a0-73a0-a233-e08244270974/exec-3bb964f1-a57f-45a7-ba9a-f6c6b47a0fdf.png",
+    "sha256": "f92de3bf099debf8a88c5b948a2f21dfa942bfcd68996e5be4fef4f1d8ccefc6",
+    "alphaBounds": [
+      0,
+      21,
+      1099,
+      1164
+    ],
+    "framePadding": 24,
+    "treatment": "Original generated PNG bytes. Alpha-only bounds plus safety margin; no pixel editing.",
+    "review": "Agent anatomical inspection complete; human visual acceptance pending.",
+    "epistemic": "PRESENTATION_STATE; illustration, never evidence or research status."
+  },
+  "boundaries": {
+    "source": "C:/Users/usuario/.codex-clean/generated_images/01a100ab-20a0-73a0-a233-e08244270974/exec-62510249-9771-4081-9010-2bee4c8dc1ce.png",
+    "sha256": "16c75d9a99c0bf582609395ca834013ea959b4dac8af16a8e81436411cc6b186",
+    "alphaBounds": [
+      71,
+      35,
+      1449,
+      991
+    ],
+    "framePadding": 24,
+    "treatment": "Original generated PNG bytes. Alpha-only bounds plus safety margin; no pixel editing.",
+    "review": "Agent anatomical inspection complete; human visual acceptance pending.",
+    "epistemic": "PRESENTATION_STATE; illustration, never evidence or research status."
+  },
+  "explain": {
+    "source": "C:/Users/usuario/.codex-clean/generated_images/01a100ab-20a0-73a0-a233-e08244270974/exec-211a1df6-e31f-4da5-b2bb-0a5df3a73dbd.png",
+    "sha256": "790b2c05ecdcbd54ed03ca6f4570ac01b14b3aee438e3fec73ff26f5a08f3c17",
+    "alphaBounds": [
+      65,
+      43,
+      1519,
+      937
+    ],
+    "framePadding": 24,
+    "treatment": "Original generated PNG bytes. Alpha-only bounds plus safety margin; no pixel editing.",
+    "review": "Agent anatomical inspection complete; human visual acceptance pending.",
+    "epistemic": "PRESENTATION_STATE; illustration, never evidence or research status."
+  },
+  "certainty": {
+    "source": "C:/Users/usuario/.codex-clean/generated_images/01a100ab-20a0-73a0-a233-e08244270974/exec-27ebcfd7-5ab4-4515-ad5f-34adbbe0845e.png",
+    "sha256": "3aa6b22a87e69ef5cea3997d9ba78c726a5440d80674ab1b311dba38f4f9121d",
+    "alphaBounds": [
+      366,
+      72,
+      1041,
+      1060
+    ],
+    "framePadding": 24,
+    "treatment": "Original generated PNG bytes. Alpha-only bounds plus safety margin; no pixel editing.",
+    "review": "Agent anatomical inspection complete; human visual acceptance pending.",
+    "epistemic": "PRESENTATION_STATE; illustration, never evidence or research status."
+  },
+  "time": {
+    "source": "C:/Users/usuario/.codex-clean/generated_images/01a100ab-20a0-73a0-a233-e08244270974/exec-65cc1630-b677-4e33-9f7c-173b837d6ec7.png",
+    "sha256": "4d68fcaec2cc45537613774e71a1b8d4387802a8a6bfd7b70cd55c749190e764",
+    "alphaBounds": [
+      65,
+      32,
+      1343,
+      975
+    ],
+    "framePadding": 24,
+    "treatment": "Original generated PNG bytes. Alpha-only bounds plus safety margin; no pixel editing.",
+    "review": "Agent anatomical inspection complete; human visual acceptance pending.",
+    "epistemic": "PRESENTATION_STATE; illustration, never evidence or research status."
+  },
+  "layers": {
+    "source": "C:/Users/usuario/.codex-clean/generated_images/01a100ab-20a0-73a0-a233-e08244270974/exec-c4d29800-513b-4074-a486-2d01a6f70a5f.png",
+    "sha256": "88b6926668ea3669fb7299133cb3d0a797cbb90239523f9c089e9f7d351f5d4e",
+    "alphaBounds": [
+      65,
+      38,
+      1371,
+      985
+    ],
+    "framePadding": 24,
+    "treatment": "Original generated PNG bytes. Alpha-only bounds plus safety margin; no pixel editing.",
+    "review": "Agent anatomical inspection complete; human visual acceptance pending.",
+    "epistemic": "PRESENTATION_STATE; illustration, never evidence or research status."
+  },
+  "unknown": {
+    "source": "C:/Users/usuario/.codex-clean/generated_images/01a100ab-20a0-73a0-a233-e08244270974/exec-004d4b13-ee99-40fb-856b-b3a15a0fcd30.png",
+    "sha256": "e375e7a7c3b49fdbbdb22d255289c4cb629d231aa87563655a4dd42c9ec78db1",
+    "alphaBounds": [
+      81,
+      21,
+      1090,
+      1069
+    ],
+    "framePadding": 24,
+    "treatment": "Original generated PNG bytes. Alpha-only bounds plus safety margin; no pixel editing.",
+    "review": "Agent anatomical inspection complete; human visual acceptance pending.",
+    "epistemic": "PRESENTATION_STATE; illustration, never evidence or research status."
+  },
+  "conversation": {
+    "source": "C:/Users/usuario/.codex-clean/generated_images/01a100ab-20a0-73a0-a233-e08244270974/exec-840b69e8-39ad-420c-98e5-b4242bacc05a.png",
+    "sha256": "e13ad9fcbf911aebd8a171c4b540ee747e9c24c59fc7e8b4590b200f5decdda5",
+    "alphaBounds": [
+      81,
+      13,
+      1409,
+      1049
+    ],
+    "framePadding": 24,
+    "treatment": "Original generated PNG bytes. Alpha-only bounds plus safety margin; no pixel editing.",
+    "review": "Agent anatomical inspection complete; human visual acceptance pending.",
+    "epistemic": "PRESENTATION_STATE; illustration, never evidence or research status."
+  },
+  "memory": {
+    "source": "C:/Users/usuario/.codex-clean/generated_images/01a100ab-20a0-73a0-a233-e08244270974/exec-206ba551-ab03-4551-ae08-697fa8218284.png",
+    "sha256": "3cd759e6474e9f6ffa88a34486222ae2ff4bc7a61004be35f2fada4038f91535",
+    "alphaBounds": [
+      223,
+      38,
+      1456,
+      997
+    ],
+    "framePadding": 24,
+    "treatment": "Original generated PNG bytes. Alpha-only bounds plus safety margin; no pixel editing.",
+    "review": "Agent anatomical inspection complete; human visual acceptance pending.",
+    "epistemic": "PRESENTATION_STATE; illustration, never evidence or research status."
+  }
+}

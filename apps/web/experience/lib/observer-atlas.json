@@ -1,0 +1,140 @@
+{
+  "discover": {
+    "src": "/observer/narrative-v2/discover.png",
+    "width": 1536,
+    "height": 1024,
+    "viewBox": "41 8 1327 994"
+  },
+  "connect": {
+    "src": "/observer/narrative-v2/connect.png",
+    "width": 1536,
+    "height": 1024,
+    "viewBox": "41 12 1449 996"
+  },
+  "reason": {
+    "src": "/observer/narrative-v2/reason.png",
+    "width": 1536,
+    "height": 1024,
+    "viewBox": "41 8 1323 1008"
+  },
+  "focus": {
+    "src": "/observer/narrative-v2/focus.png",
+    "width": 1536,
+    "height": 1024,
+    "viewBox": "98 51 1341 925"
+  },
+  "journey": {
+    "src": "/observer/narrative-v2/journey.png",
+    "width": 1122,
+    "height": 1402,
+    "viewBox": "25 17 1078 1409"
+  },
+  "strategy": {
+    "src": "/observer/narrative-v2/strategy.png",
+    "width": 1536,
+    "height": 1024,
+    "viewBox": "41 32 1362 955"
+  },
+  "business": {
+    "src": "/observer/narrative-v2/business.png",
+    "width": 1536,
+    "height": 1024,
+    "viewBox": "41 -8 1209 1039"
+  },
+  "ecosystems": {
+    "src": "/observer/narrative-v2/ecosystems.png",
+    "width": 1536,
+    "height": 1024,
+    "viewBox": "299 8 1083 1016"
+  },
+  "representation": {
+    "src": "/observer/narrative-v2/representation.png",
+    "width": 1402,
+    "height": 1122,
+    "viewBox": "41 -7 1107 1137"
+  },
+  "marketing": {
+    "src": "/observer/narrative-v2/marketing.png",
+    "width": 1536,
+    "height": 1024,
+    "viewBox": "41 8 1325 1013"
+  },
+  "communication": {
+    "src": "/observer/narrative-v2/communication.png",
+    "width": 1402,
+    "height": 1122,
+    "viewBox": "57 43 1033 1051"
+  },
+  "research": {
+    "src": "/observer/narrative-v2/research.png",
+    "width": 1536,
+    "height": 1024,
+    "viewBox": "47 -5 1319 1022"
+  },
+  "journalism": {
+    "src": "/observer/narrative-v2/journalism.png",
+    "width": 1536,
+    "height": 1024,
+    "viewBox": "41 26 1419 970"
+  },
+  "contact": {
+    "src": "/observer/narrative-v2/contact.png",
+    "width": 1402,
+    "height": 1122,
+    "viewBox": "280 30 871 1076"
+  },
+  "welcome": {
+    "src": "/observer/narrative-v2/welcome.png",
+    "width": 1275,
+    "height": 1233,
+    "viewBox": "-24 -3 1148 1192"
+  },
+  "boundaries": {
+    "src": "/observer/narrative-v2/boundaries.png",
+    "width": 1536,
+    "height": 1024,
+    "viewBox": "47 11 1427 1005"
+  },
+  "explain": {
+    "src": "/observer/narrative-v2/explain.png",
+    "width": 1536,
+    "height": 1024,
+    "viewBox": "41 19 1503 943"
+  },
+  "certainty": {
+    "src": "/observer/narrative-v2/certainty.png",
+    "width": 1402,
+    "height": 1122,
+    "viewBox": "342 48 724 1037"
+  },
+  "time": {
+    "src": "/observer/narrative-v2/time.png",
+    "width": 1536,
+    "height": 1024,
+    "viewBox": "41 8 1327 992"
+  },
+  "layers": {
+    "src": "/observer/narrative-v2/layers.png",
+    "width": 1536,
+    "height": 1024,
+    "viewBox": "41 14 1355 996"
+  },
+  "unknown": {
+    "src": "/observer/narrative-v2/unknown.png",
+    "width": 1402,
+    "height": 1122,
+    "viewBox": "57 -3 1058 1097"
+  },
+  "conversation": {
+    "src": "/observer/narrative-v2/conversation.png",
+    "width": 1440,
+    "height": 1092,
+    "viewBox": "57 -11 1377 1085"
+  },
+  "memory": {
+    "src": "/observer/narrative-v2/memory.png",
+    "width": 1536,
+    "height": 1024,
+    "viewBox": "199 14 1282 1008"
+  }
+}

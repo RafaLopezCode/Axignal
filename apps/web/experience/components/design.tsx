@@ -92,11 +92,11 @@ export function Design() {
               <span className="mono">Logo_Oscuro.svg</span>
             </div>
             <div>
-              <Observer className="design-observer" />
+              <Observer scene="discover" className="design-observer" />
               <span>
                 {t(
-                  "El Observador · fuente suministrada",
-                  "The Observer · supplied source",
+                  "El Observador · ilustración narrativa",
+                  "The Observer · narrative illustration",
                 )}
               </span>
             </div>

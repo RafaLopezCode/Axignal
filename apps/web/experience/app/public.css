@@ -2554,10 +2554,16 @@ html[data-motion="reduced"] .provider-button {
   line-height: 1.9;
 }
 .pricing-perspective .observer {
-  width: 166px;
-  height: 212px;
-  margin: 30px 50px 0;
+  width: 260px;
+  height: auto;
+  aspect-ratio: 290 / 260;
+  margin: 30px 0 0;
   display: block;
+}
+.pricing-perspective .observer,
+.newsletter-art .observer,
+.closing-observer {
+  mix-blend-mode: multiply;
 }
 .pricing-perspective .hand-note {
   display: block;
@@ -2820,13 +2826,13 @@ html[data-motion="reduced"] .provider-button {
 .brief-paper {
   position: absolute;
   top: 0;
-  left: 10px;
+  left: 50%;
   width: 250px;
   background: #fff;
   padding: 25px;
   border: 1px solid #dae3ee;
   border-radius: 10px;
-  transform: rotate(-5deg);
+  transform: translateX(-50%) rotate(-5deg);
 }
 .brief-paper .mono {
   font-size: 8px;
@@ -2854,17 +2860,12 @@ html[data-motion="reduced"] .provider-button {
   font-size: 9px;
   color: #677891;
 }
-.newsletter-art .observer {
-  position: absolute;
-  width: 190px;
-  height: 245px;
-  right: -4px;
-  bottom: 0;
-}
 .newsletter-art .hand-note {
   position: absolute;
   bottom: -45px;
-  left: 15px;
+  left: 0;
+  right: 0;
+  text-align: center;
   font-size: 22px;
 }
 .newsletter-request {
@@ -3045,13 +3046,12 @@ html[data-motion="reduced"] .provider-button {
   .notebook-preview-grid .editorial-art {
     height: 150px;
   }
-  .newsletter-art .observer {
-    width: 145px;
-    right: 0;
+  .newsletter-art {
+    height: 350px;
   }
   .brief-paper {
     width: 220px;
-    left: 0;
+    left: 50%;
   }
   .landing-quick-navigation {
     bottom: 12px;
@@ -3366,6 +3366,22 @@ html[data-motion="reduced"] .atelier-terminal code { animation: none; width: 23c
   .editorial-art .art-observer { width: 160px; height: 143.45px; left: calc(50% - 80px); }
 }
 .use-panel .use-observer, .editorial-art .art-observer { mix-blend-mode: multiply; }
+/* Independent narrator drawings retain their complete silhouette and alpha.
+   A stable outer frame prevents case changes from moving the text column. */
+svg.observer.narrator {
+  aspect-ratio: 290 / 260;
+  overflow: visible;
+  mix-blend-mode: normal;
+}
+.lens-scene .scene-observer.narrator { width: 205px; height: auto; right: -14px; }
+.axent-welcome .axent-observer.narrator { width: 126px; height: auto; }
+.contact-illustration .narrator { width: 178px; height: auto; right: 6px; }
+.trust-illustration > .narrator { width: 215px; height: auto; }
+@media (max-width: 700px) {
+  .lens-scene .scene-observer.narrator { width: 133px; right: 0; }
+  .contact-illustration .narrator { width: 140px; right: 0; }
+  .trust-illustration > .narrator { width: 170px; }
+}
 @media (max-width: 700px) {
   .art-certainty:not(.art-compact) { min-height: 360px; }
   .art-certainty:not(.art-compact) .slip-known { top: 36px; }
