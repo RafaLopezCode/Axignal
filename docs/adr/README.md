@@ -91,3 +91,4 @@ Constitution (`.specify/memory/constitution.md`).
 | [ADR-0076](ADR-0076-tenant-reuse-authorization-before-narrative-access.md) | Tenant/Reuse Authorization Before Narrative Access (**ACCEPTED**) | AUD-05; tenant-private evidence; narrative |
 | [ADR-0077](ADR-0077-temporal-currentness-propagation-at-consumption.md) | Temporal Currentness Propagation at Consumption (**ACCEPTED**) | AUD-06; reuse; narrative; subscriber read model |
 | [ADR-0078](ADR-0078-fiscal-evidence-verification-as-of-gate.md) | Fiscal Evidence Verification and As-Of Gate (**ACCEPTED**) | AUD-07; AO-22; fiscal evidence |
+| [ADR-0079](ADR-0079-immutable-legacy-evidence-identity-replay-conflict.md) | Immutable Legacy Evidence Identity and Replay Conflict (**ACCEPTED**) | AUD-08; EvidenceLedger; legacy germination |

@@ -222,8 +222,13 @@ def _digest(payload: dict[str, str]) -> str:
     return "sha256:" + hashlib.sha256(encoded).hexdigest()
 
 
-def _evidence_digest(evidence: Evidence) -> str:
+def evidence_fingerprint(evidence: Evidence) -> str:
+    """Stable digest over the complete immutable evidence identity/content."""
     return _digest(_evidence_payload(evidence))
+
+
+def _evidence_digest(evidence: Evidence) -> str:
+    return evidence_fingerprint(evidence)
 
 
 def _proposition_digest(request: AdmissionRequest) -> str:

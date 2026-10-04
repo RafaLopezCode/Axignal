@@ -14,6 +14,7 @@ from domain.evidence.admission import (
     EvidenceAdmissionError,
     EvidenceAdmissionRequired,
     SourceAuthority,
+    evidence_fingerprint,
 )
 from domain.evidence.epistemics import (
     Currentness,
@@ -36,6 +37,7 @@ __all__ = [
     "Observability",
     "SourceAuthority",
     "UnknownIsNotFalseError",
+    "evidence_fingerprint",
     "require_boolean",
     "truth_value",
 ]

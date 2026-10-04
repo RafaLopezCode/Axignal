@@ -8,6 +8,6 @@ Doctrine: MASTER §15 (evidence), §46.9 (CLAIM != WRITE).
 
 from __future__ import annotations
 
-from pipeline.evidence.ledger import EvidenceLedger
+from pipeline.evidence.ledger import EvidenceLedger, EvidenceLedgerConflict
 
-__all__ = ["EvidenceLedger"]
+__all__ = ["EvidenceLedger", "EvidenceLedgerConflict"]

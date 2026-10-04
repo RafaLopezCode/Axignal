@@ -14,6 +14,7 @@ from domain.evidence.admission import (
     EvidenceAdmission,
     EvidenceAdmissionRequired,
     SourceAuthority,
+    evidence_fingerprint,
 )
 
 
@@ -119,6 +120,7 @@ def test_claim_admission_is_bound_to_evidence_and_proposition_digests() -> None:
     assert decision.is_canonical is True
     assert decision.is_proposition_bound is True
     assert decision.evidence_digest is not None
+    assert decision.evidence_digest == evidence_fingerprint(evidence)
     assert decision.proposition_digest is not None
     EvidenceAdmission.require_claim(decision, request)
 

@@ -26,7 +26,7 @@ from domain.identity import FaxtId, OrganizationId, PrincipalId, TenantId, XeedI
 from domain.organizations.model import Organization
 from domain.tenancy.model import Principal, PrincipalTenantMembership, Tenant
 from domain.xeed.model import Xeed
-from pipeline.evidence import EvidenceLedger
+from pipeline.evidence import EvidenceLedger, EvidenceLedgerConflict
 from tests.support.xeed_authority import InMemoryXeedAuthority
 
 
@@ -350,3 +350,123 @@ def test_supported_judgment_cannot_override_contradictory_evidence_claim() -> No
     assert writer.written == []
     assert len(judgments.items) == 1
     assert judgments.items[0][1].support is EvidenceSupportClass.SUPPORTED
+
+
+class ChangedReplayInvestigator(Investigator):
+    def investigate(
+        self,
+        *,
+        seed: object,
+        candidate: GerminationCandidate,
+    ) -> InvestigationFinding:
+        finding = super().investigate(seed=seed, candidate=candidate)
+        return InvestigationFinding(
+            faxt_id=finding.faxt_id,
+            subject_id=finding.subject_id,
+            predicate=finding.predicate,
+            object_or_value=finding.object_or_value,
+            claim_proposition=finding.claim_proposition,
+            evidence=Evidence(
+                id=finding.evidence.id,
+                source=finding.evidence.source,
+                source_type=finding.evidence.source_type,
+                reference=finding.evidence.reference,
+                extracted_claim=finding.evidence.extracted_claim,
+                observed_at=datetime(2026, 10, 1, tzinfo=UTC),
+                authority=finding.evidence.authority,
+            ),
+            epistemic_state=finding.epistemic_state,
+            currentness=finding.currentness,
+        )
+
+
+def test_legacy_semantic_flow_replay_conflict_stops_before_second_faxt_write() -> None:
+    evidence = EvidenceLedger()
+    writer = Writer()
+
+    first = XeedSemanticGermination(
+        encoder=Encoder(),
+        index=Index(),
+        catalog=Catalog(),
+        judgment_writer=JudgmentWriter(),
+        support_judge=SupportJudge(),
+        investigator=Investigator(),
+        evidence_writer=evidence,
+        faxt_writer=writer,
+    )
+    first.run(
+        authorized_seed(),
+        budget=GerminationBudget(
+            retrieval_k=6,
+            max_investigations=1,
+            locale="en",
+            geography="ES",
+        ),
+    )
+    assert len(evidence) == 1
+    assert len(writer.written) == 1
+
+    changed = XeedSemanticGermination(
+        encoder=Encoder(),
+        index=Index(),
+        catalog=Catalog(),
+        judgment_writer=JudgmentWriter(),
+        support_judge=SupportJudge(),
+        investigator=ChangedReplayInvestigator(),
+        evidence_writer=evidence,
+        faxt_writer=writer,
+    )
+
+    with pytest.raises(EvidenceLedgerConflict, match="different immutable content"):
+        changed.run(
+            authorized_seed(),
+            budget=GerminationBudget(
+                retrieval_k=6,
+                max_investigations=1,
+                locale="en",
+                geography="ES",
+            ),
+        )
+
+    assert len(evidence) == 1
+    assert len(writer.written) == 1
+
+
+def test_legacy_semantic_flow_exact_replay_is_end_to_end_idempotent() -> None:
+    evidence = EvidenceLedger()
+    writer = Writer()
+
+    flow = XeedSemanticGermination(
+        encoder=Encoder(),
+        index=Index(),
+        catalog=Catalog(),
+        judgment_writer=JudgmentWriter(),
+        support_judge=SupportJudge(),
+        investigator=Investigator(),
+        evidence_writer=evidence,
+        faxt_writer=writer,
+    )
+
+    first = flow.run(
+        authorized_seed(),
+        budget=GerminationBudget(
+            retrieval_k=6,
+            max_investigations=1,
+            locale="en",
+            geography="ES",
+        ),
+    )
+    second = flow.run(
+        authorized_seed(),
+        budget=GerminationBudget(
+            retrieval_k=6,
+            max_investigations=1,
+            locale="en",
+            geography="ES",
+        ),
+    )
+
+    assert len(evidence) == 1
+    assert len(writer.written) == 1
+    assert len(first.admitted) == 1
+    assert second.admitted == ()

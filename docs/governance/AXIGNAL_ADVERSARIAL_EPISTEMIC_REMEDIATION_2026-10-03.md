@@ -273,8 +273,19 @@ AO-22 can allow live/compliance claim from a complete set of opaque references, 
 ## AUD-08 — Legacy Evidence Identity Replay Conflict
 
 **Severity:** MEDIUM
-**Status:** READY
+**Status:** DONE
 **Depends on:** AUD-01
+
+### Completion evidence
+- EvidenceLedger now indexes immutable evidence identity and uses the same deterministic evidence fingerprint as EvidenceAdmission.
+- Exact replay returns idempotently without appending a duplicate entry.
+- Reuse of an existing evidence id with changed claim, source, source type, reference, observed_at or authority raises EvidenceLedgerConflict and preserves the original entry.
+- A materially new observation/version must use a new evidence id and both historical entries remain append-only.
+- EvidenceLedger.get resolves one exact content for an evidence id.
+- XeedSemanticGermination now treats exact evidence replay as an end-to-end no-op and does not re-emit a duplicate FAXT.
+- Altered replay conflicts before a second FAXT writer effect.
+- No new persistence/storage layer was introduced; the change is confined to the legacy experiment path.
+- ADR-0079 records immutable evidence identity and replay semantics.
 
 ### Problem
 Legacy evidence ledger permits duplicated/contradictory content under reused evidence identity.

@@ -176,7 +176,7 @@ class SemanticJudgmentWriter(Protocol):
 
 
 class EvidenceWriter(Protocol):
-    def append(self, evidence: Evidence) -> None: ...
+    def append(self, evidence: Evidence) -> bool: ...
 
 
 class CanonicalFaxtWriter(Protocol):
@@ -298,7 +298,9 @@ class XeedSemanticGermination:
                 epistemic_state=finding.epistemic_state,
                 currentness=finding.currentness,
             )
-            self._evidence_writer.append(finding.evidence)
+            inserted = self._evidence_writer.append(finding.evidence)
+            if not inserted:
+                continue
             self._faxt_writer.write(faxt)
             admitted.append(
                 AdmittedGerminationFinding(
