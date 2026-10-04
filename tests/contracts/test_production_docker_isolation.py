@@ -10,6 +10,9 @@ RUNTIME_DOCKERFILE = (ROOT / "deploy" / "production" / "docker" / "runtime.Docke
 LANDING_DOCKERFILE = (ROOT / "deploy" / "production" / "docker" / "landing.Dockerfile").read_text(
     encoding="utf-8"
 )
+EXPERIENCE_DOCKERFILE = (
+    ROOT / "deploy" / "production" / "docker" / "experience.Dockerfile"
+).read_text(encoding="utf-8")
 LANDING_NGINX = (ROOT / "deploy" / "production" / "docker" / "landing-nginx.conf").read_text(
     encoding="utf-8"
 )
@@ -24,6 +27,7 @@ RUNBOOK = (ROOT / "docs" / "operations" / "AXIGNAL_DOCKER_PRODUCTION_MIGRATION.m
 def test_axignal_compose_owns_project_specific_containers_and_network() -> None:
     assert "name: axignal-prod" in COMPOSE
     assert "container_name: axignal-prod-runtime" in COMPOSE
+    assert "container_name: axignal-prod-experience" in COMPOSE
     assert "container_name: axignal-prod-landing" in COMPOSE
     assert "name: axignal_prod_internal" in COMPOSE
     assert "axignal-pilot" not in COMPOSE
@@ -32,19 +36,32 @@ def test_axignal_compose_owns_project_specific_containers_and_network() -> None:
     assert "inkdie" not in COMPOSE.lower()
 
 
-def test_runtime_is_private_to_docker_network_and_landing_is_loopback_only() -> None:
+def test_runtime_private_landing_public_edge_and_experience_operator_loopback() -> None:
     assert 'AXIGNAL_CONTAINERIZED: "true"' in COMPOSE
     assert "AXIGNAL_BIND_HOST: 0.0.0.0" in COMPOSE
     assert 'AXIGNAL_PORT: "18181"' in COMPOSE
     assert '      - "18181"' in COMPOSE
     assert '      - "127.0.0.1:18180:8080"' in COMPOSE
+    assert '      - "127.0.0.1:18182:3810"' in COMPOSE
     assert "server runtime:18181;" in LANDING_NGINX
     assert "listen 8080;" in LANDING_NGINX
 
-    runtime_section, landing_section = COMPOSE.split("  landing:", maxsplit=1)
+    runtime_section = COMPOSE.split("  runtime:", maxsplit=1)[1].split(
+        "  experience:", maxsplit=1
+    )[0]
+    experience_section = COMPOSE.split("  experience:", maxsplit=1)[1].split(
+        "  landing:", maxsplit=1
+    )[0]
+    landing_section = COMPOSE.split("  landing:", maxsplit=1)[1]
+
     assert "ports:" not in runtime_section
     assert "expose:" in runtime_section
+    assert "ports:" in experience_section
+    assert "127.0.0.1:18182:3810" in experience_section
+    assert "0.0.0.0:18182" not in experience_section
     assert "ports:" in landing_section
+    assert "127.0.0.1:18180:8080" in landing_section
+    assert "18181:" not in experience_section
     assert "18181:" not in landing_section
 
 
@@ -84,6 +101,7 @@ def test_images_and_runtime_require_exact_canonical_sha() -> None:
     marker = "AXIGNAL_CODE_SHA: $" + "{AXIGNAL_CODE_SHA:?AXIGNAL_CODE_SHA is required}"
     assert marker in COMPOSE
     assert "org.opencontainers.image.revision" in RUNTIME_DOCKERFILE
+    assert "org.opencontainers.image.revision" in EXPERIENCE_DOCKERFILE
     assert "org.opencontainers.image.revision" in LANDING_DOCKERFILE
 
 
