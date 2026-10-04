@@ -1,7 +1,7 @@
 "use client";
 import { useChat, type Chat } from "@ai-sdk/react";
 
-import { useEffect, useId, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   ArrowRight,
   ArrowUpRight,
@@ -21,6 +21,7 @@ import {
 import { validatePlan, type CompositionPlan } from "@/lib/governance";
 import type { AxentMessage } from "@/lib/axent-contract";
 import { Badge, Observer, AxentIdentity } from "./ui";
+import { AxentComposer } from "./axent-composer";
 
 export function Axent({
   chat,
@@ -38,7 +39,6 @@ export function Axent({
   onEvidence: (id: string) => void;
 }) {
   const { t, copy, locale } = useLocale();
-  const fieldId = useId();
   const input = draft;
   const setInput = onDraft;
   const [more, setMore] = useState(false);
@@ -237,64 +237,13 @@ export function Axent({
           </div>
         )}
       </div>
-      <div className="axent-compose">
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            void ask(input);
-          }}
-        >
-          <label className="sr-only" htmlFor={"axent-input-" + fieldId}>
-            {t("Pregunta sobre este contexto", "Ask about this context")}
-          </label>
-          <textarea
-            id={"axent-input-" + fieldId}
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            maxLength={1000}
-            placeholder={t(
-              "Pregunta sobre este contexto…",
-              "Ask about this context…",
-            )}
-            rows={2}
-            onKeyDown={(e) => {
-              if (
-                e.key === "Enter" &&
-                !e.shiftKey &&
-                !e.nativeEvent.isComposing
-              ) {
-                e.preventDefault();
-                void ask(input);
-              }
-            }}
-          />
-          {busy ? (
-            <button
-              type="button"
-              className="send-button"
-              onClick={() => void stop()}
-              aria-label={t("Detener respuesta", "Stop response")}
-            >
-              <Square size={13} />
-            </button>
-          ) : (
-            <button
-              className="send-button"
-              type="submit"
-              disabled={!input.trim()}
-              aria-label={t("Enviar pregunta", "Send question")}
-            >
-              <ArrowUpRight size={18} />
-            </button>
-          )}
-        </form>
-        <p>
-          {t(
-            "Explica la evidencia. No decide la verdad.",
-            "Explains evidence. Does not decide truth.",
-          )}
-        </p>
-      </div>
+      <AxentComposer
+        value={input}
+        onChange={setInput}
+        onSubmit={() => void ask(input)}
+        busy={busy}
+        onStop={() => void stop()}
+      />
     </div>
   );
 }

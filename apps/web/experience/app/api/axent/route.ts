@@ -9,6 +9,9 @@ import {
 import { project } from "@/lib/projection";
 import { translate } from "@/lib/copy-catalog";
 import type { AxentMessage } from "@/lib/axent-contract";
+import { customerZeroProxy } from "@/lib/customer-zero-server";
+import { readCustomerZeroResponse } from "@/lib/runtime-projection";
+import { explainRuntime } from "@/lib/runtime-axent";
 
 const requestSchema = z
   .object({
@@ -66,6 +69,56 @@ export async function POST(request: Request) {
       { error: "INVALID_OR_OVERSIZED_BODY" },
       { status: 400 },
     );
+  }
+  // The real product branch never reads browser-supplied economic data or the
+  // illustrative project(). AO-01 authorizes a fresh runtime read per question.
+  if (
+    typeof input === "object" &&
+    input !== null &&
+    "mode" in input &&
+    input.mode === "runtime"
+  ) {
+    const question = z
+      .object({
+        mode: z.literal("runtime"),
+        prompt: z.string().trim().min(1).max(1000),
+        signalId: z.string().max(200).optional(),
+      })
+      .strict()
+      .safeParse(input);
+    if (!question.success)
+      return Response.json(
+        { error: "INVALID_RUNTIME_QUESTION" },
+        { status: 400 },
+      );
+    const response = await customerZeroProxy(request);
+    const result = readCustomerZeroResponse(
+      await response.json(),
+      response.status,
+    );
+    if (result.state !== "success")
+      return Response.json(
+        { error: "AUTHORIZED_PROJECTION_UNAVAILABLE" },
+        {
+          status: response.ok ? 409 : response.status,
+          headers: { "Cache-Control": "no-store" },
+        },
+      );
+    try {
+      return Response.json(
+        explainRuntime(
+          result.projection,
+          question.data.prompt,
+          question.data.signalId,
+        ),
+        { headers: { "Cache-Control": "no-store" } },
+      );
+    } catch {
+      return Response.json(
+        { error: "FOCUS_OUTSIDE_PROJECTION" },
+        { status: 409 },
+      );
+    }
   }
   const parsed = requestSchema.safeParse(input);
   if (!parsed.success)

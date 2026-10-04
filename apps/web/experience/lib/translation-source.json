@@ -49,7 +49,8 @@
     "en": "Signal",
     "es": "Señal",
     "files": [
-      "components/access.tsx"
+      "components/access.tsx",
+      "components/runtime-product.tsx"
     ]
   },
   {
@@ -57,7 +58,8 @@
     "es": "Lo que merece tu atención.",
     "files": [
       "components/access.tsx",
-      "components/panorama.tsx"
+      "components/panorama.tsx",
+      "components/runtime-product.tsx"
     ]
   },
   {
@@ -268,15 +270,15 @@
     "es": "Cerrar navegación",
     "files": [
       "components/admin.tsx",
-      "components/panorama.tsx"
+      "components/panorama.tsx",
+      "components/runtime-product.tsx"
     ]
   },
   {
     "en": "USE AXIGNAL",
     "es": "USAR AXIGNAL",
     "files": [
-      "components/admin.tsx",
-      "components/customer-zero.tsx"
+      "components/admin.tsx"
     ]
   },
   {
@@ -284,7 +286,8 @@
     "es": "OBSERVAR",
     "files": [
       "components/admin.tsx",
-      "components/panorama.tsx"
+      "components/panorama.tsx",
+      "components/runtime-product.tsx"
     ]
   },
   {
@@ -322,7 +325,8 @@
     "files": [
       "components/admin.tsx",
       "components/panorama.tsx",
-      "components/public-shell.tsx"
+      "components/public-shell.tsx",
+      "components/runtime-product.tsx"
     ]
   },
   {
@@ -725,6 +729,41 @@
     ]
   },
   {
+    "en": "Ask about this context",
+    "es": "Pregunta sobre este contexto",
+    "files": [
+      "components/axent-composer.tsx"
+    ]
+  },
+  {
+    "en": "Ask about this context…",
+    "es": "Pregunta sobre este contexto…",
+    "files": [
+      "components/axent-composer.tsx"
+    ]
+  },
+  {
+    "en": "Stop response",
+    "es": "Detener respuesta",
+    "files": [
+      "components/axent-composer.tsx"
+    ]
+  },
+  {
+    "en": "Send question",
+    "es": "Enviar pregunta",
+    "files": [
+      "components/axent-composer.tsx"
+    ]
+  },
+  {
+    "en": "Explains evidence. Does not decide truth.",
+    "es": "Explica la evidencia. No decide la verdad.",
+    "files": [
+      "components/axent-composer.tsx"
+    ]
+  },
+  {
     "en": "Why does it deserve attention?",
     "es": "¿Por qué merece atención?",
     "files": [
@@ -756,7 +795,8 @@
     "en": "New contextual conversation",
     "es": "Nueva conversación contextual",
     "files": [
-      "components/axent.tsx"
+      "components/axent.tsx",
+      "components/runtime-axent.tsx"
     ]
   },
   {
@@ -777,14 +817,18 @@
     "en": "Selected signal",
     "es": "Señal seleccionada",
     "files": [
-      "components/axent.tsx"
+      "components/axent.tsx",
+      "components/runtime-axent.tsx",
+      "components/runtime-product.tsx",
+      "components/runtime-product.tsx"
     ]
   },
   {
     "en": "Let’s look with a little more context.",
     "es": "Miremos con un poco más de contexto.",
     "files": [
-      "components/axent.tsx"
+      "components/axent.tsx",
+      "components/runtime-axent.tsx"
     ]
   },
   {
@@ -872,41 +916,6 @@
     ]
   },
   {
-    "en": "Ask about this context",
-    "es": "Pregunta sobre este contexto",
-    "files": [
-      "components/axent.tsx"
-    ]
-  },
-  {
-    "en": "Ask about this context…",
-    "es": "Pregunta sobre este contexto…",
-    "files": [
-      "components/axent.tsx"
-    ]
-  },
-  {
-    "en": "Stop response",
-    "es": "Detener respuesta",
-    "files": [
-      "components/axent.tsx"
-    ]
-  },
-  {
-    "en": "Send question",
-    "es": "Enviar pregunta",
-    "files": [
-      "components/axent.tsx"
-    ]
-  },
-  {
-    "en": "Explains evidence. Does not decide truth.",
-    "es": "Explica la evidencia. No decide la verdad.",
-    "files": [
-      "components/axent.tsx"
-    ]
-  },
-  {
     "en": "Composition outside context. Request it again.",
     "es": "Composición fuera de contexto. Vuelve a solicitarla.",
     "files": [
@@ -977,8 +986,30 @@
     ]
   },
   {
-    "en": "The product on its own organization, with the same evidence burden as any customer.",
-    "es": "El producto sobre su propia organización, con la misma carga de evidencia que cualquier cliente.",
+    "en": "Staff controls",
+    "es": "Controles Staff",
+    "files": [
+      "components/customer-zero.tsx"
+    ]
+  },
+  {
+    "en": "Return to Admin",
+    "es": "Volver a Admin",
+    "files": [
+      "components/customer-zero.tsx",
+      "components/customer-zero.tsx"
+    ]
+  },
+  {
+    "en": "Read persisted state",
+    "es": "Leer estado persistido",
+    "files": [
+      "components/customer-zero.tsx"
+    ]
+  },
+  {
+    "en": "Reobserve the public source",
+    "es": "Reobservar la fuente pública",
     "files": [
       "components/customer-zero.tsx"
     ]
@@ -998,29 +1029,8 @@
     ]
   },
   {
-    "en": "Open live Panorama",
-    "es": "Abrir Panorama real",
-    "files": [
-      "components/customer-zero.tsx"
-    ]
-  },
-  {
-    "en": "Read persisted state",
-    "es": "Leer estado persistido",
-    "files": [
-      "components/customer-zero.tsx"
-    ]
-  },
-  {
-    "en": "Reobserve the public source",
-    "es": "Reobservar la fuente pública",
-    "files": [
-      "components/customer-zero.tsx"
-    ]
-  },
-  {
-    "en": "A first look, grounded in evidence.",
-    "es": "Una primera mirada, con evidencia.",
+    "en": "Retrieving context",
+    "es": "Recuperando contexto",
     "files": [
       "components/customer-zero.tsx"
     ]
@@ -1040,15 +1050,15 @@
     ]
   },
   {
-    "en": "The unknown remains open",
-    "es": "Lo desconocido sigue abierto",
+    "en": "A first look, grounded in evidence.",
+    "es": "Una primera mirada, con evidencia.",
     "files": [
       "components/customer-zero.tsx"
     ]
   },
   {
-    "en": "The runtime is unavailable",
-    "es": "El runtime no está disponible",
+    "en": "The unknown remains open",
+    "es": "Lo desconocido sigue abierto",
     "files": [
       "components/customer-zero.tsx"
     ]
@@ -1061,17 +1071,32 @@
     ]
   },
   {
-    "en": "Retrieving context",
-    "es": "Recuperando contexto",
+    "en": "The runtime is unavailable",
+    "es": "El runtime no está disponible",
     "files": [
       "components/customer-zero.tsx"
     ]
   },
   {
-    "en": "Runtime reason",
-    "es": "Causa del runtime",
+    "en": "Panorama",
+    "es": "Panorama",
     "files": [
-      "components/customer-zero.tsx"
+      "components/customer-zero.tsx",
+      "components/landing.tsx",
+      "components/panorama.tsx",
+      "components/panorama.tsx",
+      "components/product-navigation.tsx",
+      "components/runtime-axent.tsx",
+      "components/runtime-product.tsx",
+      "components/runtime-product.tsx"
+    ]
+  },
+  {
+    "en": "Technical diagnostics",
+    "es": "Diagnóstico técnico",
+    "files": [
+      "components/customer-zero.tsx",
+      "components/runtime-product.tsx"
     ]
   },
   {
@@ -1096,8 +1121,8 @@
     ]
   },
   {
-    "en": "Plant AXIGNAL",
-    "es": "Plant AXIGNAL",
+    "en": "Observe AXIGNAL",
+    "es": "Observar AXIGNAL",
     "files": [
       "components/customer-zero.tsx"
     ]
@@ -1297,6 +1322,7 @@
     "es": "Desconocido",
     "files": [
       "components/design.tsx",
+      "components/runtime-product.tsx",
       "components/ui.tsx",
       "lib/projection.ts"
     ]
@@ -2489,7 +2515,8 @@
     "es": "El tiempo",
     "files": [
       "components/landing-extras.tsx",
-      "components/landing.tsx"
+      "components/landing.tsx",
+      "components/runtime-product.tsx"
     ]
   },
   {
@@ -2994,7 +3021,8 @@
     "en": "Capabilities",
     "es": "Capacidades",
     "files": [
-      "components/landing.tsx"
+      "components/landing.tsx",
+      "components/runtime-product.tsx"
     ]
   },
   {
@@ -3329,20 +3357,11 @@
     ]
   },
   {
-    "en": "Panorama",
-    "es": "Panorama",
-    "files": [
-      "components/landing.tsx",
-      "components/panorama.tsx",
-      "components/panorama.tsx",
-      "components/runtime-panorama.tsx"
-    ]
-  },
-  {
     "en": "Markets",
     "es": "Mercados",
     "files": [
       "components/landing.tsx",
+      "components/runtime-product.tsx",
       "lib/projection.ts"
     ]
   },
@@ -3492,14 +3511,18 @@
     "en": "Product navigation",
     "es": "Navegación del producto",
     "files": [
-      "components/panorama.tsx"
+      "components/panorama.tsx",
+      "components/runtime-product.tsx"
     ]
   },
   {
     "en": "Observation focus",
     "es": "Foco de observación",
     "files": [
-      "components/panorama.tsx"
+      "components/panorama.tsx",
+      "components/runtime-product.tsx",
+      "components/runtime-product.tsx",
+      "components/runtime-product.tsx"
     ]
   },
   {
@@ -3507,6 +3530,8 @@
     "es": "Hoy",
     "files": [
       "components/panorama.tsx",
+      "components/runtime-product.tsx",
+      "components/runtime-product.tsx",
       "components/runtime-product.tsx"
     ]
   },
@@ -3539,24 +3564,11 @@
     ]
   },
   {
-    "en": "Back",
-    "es": "Atrás",
-    "files": [
-      "components/panorama.tsx"
-    ]
-  },
-  {
-    "en": "Forward",
-    "es": "Adelante",
-    "files": [
-      "components/panorama.tsx"
-    ]
-  },
-  {
     "en": "Open AXENT",
     "es": "Abrir AXENT",
     "files": [
-      "components/panorama.tsx"
+      "components/panorama.tsx",
+      "components/runtime-product.tsx"
     ]
   },
   {
@@ -3577,7 +3589,8 @@
     "en": "Your world, in context.",
     "es": "Tu mundo, en contexto.",
     "files": [
-      "components/panorama.tsx"
+      "components/panorama.tsx",
+      "components/runtime-product.tsx"
     ]
   },
   {
@@ -3598,21 +3611,24 @@
     "en": "Reading mode",
     "es": "Forma de lectura",
     "files": [
-      "components/panorama.tsx"
+      "components/panorama.tsx",
+      "components/runtime-product.tsx"
     ]
   },
   {
     "en": "Spatial view",
     "es": "Vista espacial",
     "files": [
-      "components/panorama.tsx"
+      "components/panorama.tsx",
+      "components/runtime-product.tsx"
     ]
   },
   {
     "en": "Reading view",
     "es": "Vista de lectura",
     "files": [
-      "components/panorama.tsx"
+      "components/panorama.tsx",
+      "components/runtime-product.tsx"
     ]
   },
   {
@@ -3642,7 +3658,6 @@
     "es": "Señales",
     "files": [
       "components/panorama.tsx",
-      "components/runtime-product.tsx",
       "components/runtime-product.tsx"
     ]
   },
@@ -3657,7 +3672,8 @@
     "en": "This lens still has questions.",
     "es": "Esta lente todavía tiene preguntas.",
     "files": [
-      "components/panorama.tsx"
+      "components/panorama.tsx",
+      "components/runtime-product.tsx"
     ]
   },
   {
@@ -3671,7 +3687,8 @@
     "en": "Explore context with AXENT",
     "es": "Explorar el contexto con AXENT",
     "files": [
-      "components/panorama.tsx"
+      "components/panorama.tsx",
+      "components/runtime-product.tsx"
     ]
   },
   {
@@ -3699,7 +3716,8 @@
     "en": "Understand why it matters",
     "es": "Entender por qué importa",
     "files": [
-      "components/panorama.tsx"
+      "components/panorama.tsx",
+      "components/runtime-product.tsx"
     ]
   },
   {
@@ -3783,7 +3801,8 @@
     "en": "Time changes the perspective",
     "es": "El tiempo cambia la mirada",
     "files": [
-      "components/panorama.tsx"
+      "components/panorama.tsx",
+      "components/runtime-product.tsx"
     ]
   },
   {
@@ -3811,14 +3830,16 @@
     "en": "AXENT · Investigate and understand",
     "es": "AXENT · Investigar y comprender",
     "files": [
-      "components/panorama.tsx"
+      "components/panorama.tsx",
+      "components/runtime-product.tsx"
     ]
   },
   {
     "en": "Where we direct attention",
     "es": "Dónde ponemos atención",
     "files": [
-      "components/panorama.tsx"
+      "components/panorama.tsx",
+      "components/runtime-product.tsx"
     ]
   },
   {
@@ -3988,6 +4009,7 @@
     "es": "Evidencia",
     "files": [
       "components/panorama.tsx",
+      "components/runtime-product.tsx",
       "lib/editorial.ts"
     ]
   },
@@ -4031,6 +4053,8 @@
     "es": "Qué sigue abierto",
     "files": [
       "components/panorama.tsx",
+      "components/runtime-axent.tsx",
+      "components/runtime-product.tsx",
       "components/runtime-product.tsx"
     ]
   },
@@ -4270,6 +4294,20 @@
     ]
   },
   {
+    "en": "Back",
+    "es": "Atrás",
+    "files": [
+      "components/product-navigation.tsx"
+    ]
+  },
+  {
+    "en": "Forward",
+    "es": "Adelante",
+    "files": [
+      "components/product-navigation.tsx"
+    ]
+  },
+  {
     "en": "How it works",
     "es": "Cómo funciona",
     "files": [
@@ -4327,22 +4365,104 @@
     ]
   },
   {
-    "en": "Return to Customer Zero",
-    "es": "Volver a Customer Zero",
+    "en": "What do you know",
+    "es": "Qué sabes",
     "files": [
-      "components/runtime-panorama.tsx"
+      "components/runtime-axent.tsx"
     ]
   },
   {
-    "en": "This reading requires an authorized session and a real runtime projection. Return to Customer Zero to review its state.",
-    "es": "Esta lectura depende de una sesión autorizada y una proyección real del runtime. Vuelve a Customer Zero para revisar su estado.",
+    "en": "What changed",
+    "es": "Qué cambió",
     "files": [
-      "components/runtime-panorama.tsx"
+      "components/runtime-axent.tsx"
+    ]
+  },
+  {
+    "en": "Why it matters",
+    "es": "Por qué importa",
+    "files": [
+      "components/runtime-axent.tsx"
+    ]
+  },
+  {
+    "en": "How do you know",
+    "es": "Cómo lo sabes",
+    "files": [
+      "components/runtime-axent.tsx"
+    ]
+  },
+  {
+    "en": "What would you investigate next",
+    "es": "Qué investigarías después",
+    "files": [
+      "components/runtime-axent.tsx"
+    ]
+  },
+  {
+    "en": "AUTHORIZED CONTEXT",
+    "es": "CONTEXTO AUTORIZADO",
+    "files": [
+      "components/runtime-axent.tsx"
+    ]
+  },
+  {
+    "en": "Reading available evidence. New research requires authorized tools.",
+    "es": "Lectura de la evidencia disponible. La investigación nueva requiere herramientas autorizadas.",
+    "files": [
+      "components/runtime-axent.tsx"
+    ]
+  },
+  {
+    "en": "No research tools are connected to this reading. These questions remain open.",
+    "es": "No hay herramientas de investigación conectadas a esta lectura. Estas preguntas siguen abiertas.",
+    "files": [
+      "components/runtime-axent.tsx"
+    ]
+  },
+  {
+    "en": "Read signal and evidence",
+    "es": "Ver señal y evidencia",
+    "files": [
+      "components/runtime-axent.tsx",
+      "components/runtime-product.tsx"
+    ]
+  },
+  {
+    "en": "Reading authorized context…",
+    "es": "Leyendo el contexto autorizado…",
+    "files": [
+      "components/runtime-axent.tsx"
+    ]
+  },
+  {
+    "en": "The explanation is unavailable. You can try again.",
+    "es": "La explicación no está disponible. Puedes volver a intentarlo.",
+    "files": [
+      "components/runtime-axent.tsx",
+      "app/api/axent/route.ts"
     ]
   },
   {
     "en": "How AXIGNAL knows",
     "es": "Cómo lo sabe AXIGNAL",
+    "files": [
+      "components/runtime-product.tsx",
+      "components/runtime-product.tsx",
+      "components/runtime-product.tsx",
+      "components/runtime-product.tsx"
+    ]
+  },
+  {
+    "en": "Observation",
+    "es": "Observación",
+    "files": [
+      "components/runtime-product.tsx"
+    ]
+  },
+  {
+    "en": "Source",
+    "es": "Fuente",
     "files": [
       "components/runtime-product.tsx"
     ]
@@ -4376,36 +4496,48 @@
     ]
   },
   {
-    "en": "Product projection",
-    "es": "Proyección de producto",
+    "en": "Activity",
+    "es": "Actividad",
+    "files": [
+      "components/runtime-product.tsx",
+      "lib/projection.ts"
+    ]
+  },
+  {
+    "en": "DIMENSIONS",
+    "es": "DIMENSIONES",
     "files": [
       "components/runtime-product.tsx"
     ]
   },
   {
-    "en": "ECONOMIC OBSERVATION",
-    "es": "OBSERVACIÓN ECONÓMICA",
+    "en": "Time and evidence",
+    "es": "Tiempo y evidencia",
+    "files": [
+      "components/runtime-product.tsx",
+      "components/runtime-product.tsx",
+      "components/runtime-product.tsx",
+      "components/runtime-product.tsx",
+      "components/runtime-product.tsx"
+    ]
+  },
+  {
+    "en": "A signal, in context.",
+    "es": "Una señal, con contexto.",
     "files": [
       "components/runtime-product.tsx"
     ]
   },
   {
-    "en": "Persisted runtime projection",
-    "es": "Proyección persistida del runtime",
+    "en": "Bring a signal closer. Understand its basis and what remains open.",
+    "es": "Acerca una señal. Entiende qué la sostiene y qué sigue abierto.",
     "files": [
       "components/runtime-product.tsx"
     ]
   },
   {
-    "en": "Context and version",
-    "es": "Contexto y versión",
-    "files": [
-      "components/runtime-product.tsx"
-    ]
-  },
-  {
-    "en": "Read signal and evidence",
-    "es": "Ver señal y evidencia",
+    "en": "The authorized projection exposes no data for this dimension. Absence of evidence does not mean absence of capability, market or activity.",
+    "es": "La proyección autorizada no expone datos de esta dimensión. Ausencia de evidencia no significa ausencia de capacidad, mercado o actividad.",
     "files": [
       "components/runtime-product.tsx"
     ]
@@ -4413,6 +4545,41 @@
   {
     "en": "The runtime has no current signals for Today. Earlier observations do not become false.",
     "es": "El runtime no tiene señales vigentes para Hoy. Esto no convierte las observaciones anteriores en falsas.",
+    "files": [
+      "components/runtime-product.tsx"
+    ]
+  },
+  {
+    "en": "Spatial panorama",
+    "es": "Panorama espacial",
+    "files": [
+      "components/runtime-product.tsx"
+    ]
+  },
+  {
+    "en": "No relationships are exposed in this projection. Visual proximity asserts no economic link.",
+    "es": "No hay relaciones expuestas en esta proyección. La cercanía visual no afirma un vínculo económico.",
+    "files": [
+      "components/runtime-product.tsx"
+    ]
+  },
+  {
+    "en": "Mobile reading",
+    "es": "Lectura móvil",
+    "files": [
+      "components/runtime-product.tsx"
+    ]
+  },
+  {
+    "en": "This projection contains one authorized focus. No other focuses are available in this contract.",
+    "es": "Esta proyección contiene un único foco autorizado. No hay otros focos disponibles en este contrato.",
+    "files": [
+      "components/runtime-product.tsx"
+    ]
+  },
+  {
+    "en": "The runtime exposes the current observation, not a navigable historical snapshot series. An observation date does not prove when an economic change happened.",
+    "es": "El runtime expone la observación actual, no una serie de snapshots históricos navegables. Una fecha de observación no prueba cuándo ocurrió un cambio económico.",
     "files": [
       "components/runtime-product.tsx"
     ]
@@ -6206,13 +6373,6 @@
     ]
   },
   {
-    "en": "Activity",
-    "es": "Actividad",
-    "files": [
-      "lib/projection.ts"
-    ]
-  },
-  {
     "en": "What happens, and when we can support that it happened.",
     "es": "Qué ocurre y cuándo podemos sostener que ocurrió.",
     "files": [
@@ -6754,13 +6914,6 @@
   {
     "en": "There is no supported signal at this time. Absence of knowledge does not allow us to conclude that something does not exist.",
     "es": "No hay una señal sustentada en este corte. La ausencia de conocimiento no permite concluir que algo no existe.",
-    "files": [
-      "app/api/axent/route.ts"
-    ]
-  },
-  {
-    "en": "The explanation is unavailable. You can try again.",
-    "es": "La explicación no está disponible. Puedes volver a intentarlo.",
     "files": [
       "app/api/axent/route.ts"
     ]

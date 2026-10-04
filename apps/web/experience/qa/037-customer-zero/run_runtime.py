@@ -12,7 +12,14 @@ from datetime import UTC, datetime
 from pathlib import Path
 
 from application.admin_access import AdminAccessService, VerifiedAdminIdentity
-from domain.admin_access import AdminAssurance, AdminPrincipalId
+from application.admin_access.service import AdminAuthenticationError
+from domain.admin_access import (
+    AdminAccessError,
+    AdminAssurance,
+    AdminPrincipalId,
+    AdminRiskClass,
+    AdminScope,
+)
 from pipeline.admin_access import SqliteAdminAccessStore
 from tools.runtime.config import RuntimeConfig
 from tools.runtime.first_proof import FirstProofInsufficientEvidence, FirstProofService
@@ -64,7 +71,18 @@ def main() -> None:
             reason="AO-24A isolated local browser verification",
         )
     token_path = data / "admin-session.key"
-    if not token_path.exists():
+    renew_session = not token_path.exists()
+    if not renew_session:
+        try:
+            authority.authorize(
+                token_path.read_text(encoding="utf-8"),
+                required_scope=AdminScope.XEEDS_READ,
+                risk=AdminRiskClass.READ,
+                now=now,
+            )
+        except (AdminAccessError, AdminAuthenticationError):
+            renew_session = True
+    if renew_session:
         token_path.write_text(
             authority.issue_session("ao24a-local-validation", authenticated_at=now).token,
             encoding="utf-8",

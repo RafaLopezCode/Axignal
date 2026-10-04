@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { ArrowRight, RefreshCw, ShieldCheck } from "lucide-react";
+import { ArrowRight, RefreshCw } from "lucide-react";
 import { useLocale } from "@/lib/locale";
 import {
   customerZeroCommand,
@@ -9,8 +9,12 @@ import {
   type CustomerZeroState,
 } from "@/lib/runtime-projection";
 import { RuntimeProductProjection } from "./runtime-product";
+import { Brand, LocaleToggle } from "./ui";
 
 export function CustomerZero() {
+  return <RuntimeExperience staff />;
+}
+export function RuntimeExperience({ staff = false }: { staff?: boolean }) {
   const { t } = useLocale();
   const [result, setResult] = useState<CustomerZeroState>({ state: "loading" });
   const [token, setToken] = useState("");
@@ -104,95 +108,91 @@ export function CustomerZero() {
       "Connect an existing Admin session. This interface grants no roles and does not replace service authorization.",
     ),
   };
+  const controls = staff ? (
+    <details className="staff-utility">
+      <summary>
+        Customer Zero · {t("Controles Staff", "Staff controls")}
+      </summary>
+      <div>
+        <Link className="text-link" href="/admin">
+          {t("Volver a Admin", "Return to Admin")}
+        </Link>
+        <button className="text-link" onClick={() => load()}>
+          <RefreshCw size={15} />
+          {t("Leer estado persistido", "Read persisted state")}
+        </button>
+        <button className="text-link" onClick={() => load(true)}>
+          {t("Reobservar la fuente pública", "Reobserve the public source")}
+        </button>
+      </div>
+      <p>
+        {t("Observar no es operar", "Observation is separate from operations")}.{" "}
+        {t(
+          "Los datos privados de cuentas, finanzas e integraciones no alimentan esta proyección. Solo el runtime gobernado puede producirla.",
+          "Private account, finance and integration data do not feed this projection. Only the governed runtime can produce it.",
+        )}
+      </p>
+    </details>
+  ) : undefined;
+  if (result.state === "success")
+    return (
+      <RuntimeProductProjection
+        projection={result.projection}
+        staffControls={controls}
+      />
+    );
+  const headings = {
+    loading: t("Recuperando contexto", "Retrieving context"),
+    planting: t("Observación en curso", "Observation in progress"),
+    unauthorized: t(
+      "Tu sesión conserva la autoridad",
+      "Your session retains authority",
+    ),
+    NO_XEED: t(
+      "Una primera mirada, con evidencia.",
+      "A first look, grounded in evidence.",
+    ),
+    INSUFFICIENT_EVIDENCE: t(
+      "Lo desconocido sigue abierto",
+      "The unknown remains open",
+    ),
+    rejected: t(
+      "La observación no está autorizada",
+      "Observation is not authorized",
+    ),
+    failure: t("El runtime no está disponible", "The runtime is unavailable"),
+  };
   return (
-    <div className="customer-zero" data-runtime-state={result.state}>
-      <div className="panorama-intro">
-        <div>
-          <span className="eyebrow">{t("USAR AXIGNAL", "USE AXIGNAL")}</span>
-          <h1>AXIGNAL / Customer Zero</h1>
-          <p>
-            {t(
-              "El producto sobre su propia organización, con la misma carga de evidencia que cualquier cliente.",
-              "The product on its own organization, with the same evidence burden as any customer.",
-            )}
-          </p>
-        </div>
-        <ShieldCheck size={22} />
-      </div>
-      <div className="customer-zero-boundary">
-        <strong>
-          {t(
-            "Observar no es operar",
-            "Observation is separate from operations",
-          )}
-        </strong>
-        <p>
-          {t(
-            "Los datos privados de cuentas, finanzas e integraciones no alimentan esta proyección. Solo el runtime gobernado puede producirla.",
-            "Private account, finance and integration data do not feed this projection. Only the governed runtime can produce it.",
-          )}
-        </p>
-      </div>
-      {result.state === "success" ? (
-        <>
-          <div className="customer-zero-controls">
-            <Link className="text-link" href="/panorama/live">
-              {t("Abrir Panorama real", "Open live Panorama")}
-            </Link>
-            <button className="button secondary" onClick={() => load()}>
-              <RefreshCw size={15} />
-              {t("Leer estado persistido", "Read persisted state")}
-            </button>
-            <button className="text-link" onClick={() => load(true)}>
-              {t("Reobservar la fuente pública", "Reobserve the public source")}
-            </button>
-          </div>
-          <RuntimeProductProjection projection={result.projection} />
-        </>
-      ) : (
+    <div className="runtime-entry" data-runtime-state={result.state}>
+      <header className="product-topbar">
+        <Brand />
+        <LocaleToggle />
+      </header>
+      <main id="main" className="customer-zero">
+        {staff && (
+          <Link className="text-link" href="/admin">
+            {t("Volver a Admin", "Return to Admin")}
+          </Link>
+        )}
+        <span className="eyebrow">
+          {staff ? "Customer Zero" : t("Panorama", "Panorama")}
+        </span>
         <section
           className={`customer-zero-state state-${result.state}`}
           aria-live="polite"
           aria-busy={result.state === "loading" || result.state === "planting"}
         >
-          <span className="mono">{result.state}</span>
-          <h2>
-            {result.state === "NO_XEED"
-              ? t(
-                  "Una primera mirada, con evidencia.",
-                  "A first look, grounded in evidence.",
-                )
-              : result.state === "planting"
-                ? t("Observación en curso", "Observation in progress")
-                : result.state === "unauthorized"
-                  ? t(
-                      "Tu sesión conserva la autoridad",
-                      "Your session retains authority",
-                    )
-                  : result.state === "INSUFFICIENT_EVIDENCE"
-                    ? t(
-                        "Lo desconocido sigue abierto",
-                        "The unknown remains open",
-                      )
-                    : result.state === "failure"
-                      ? t(
-                          "El runtime no está disponible",
-                          "The runtime is unavailable",
-                        )
-                      : result.state === "rejected"
-                        ? t(
-                            "La observación no está autorizada",
-                            "Observation is not authorized",
-                          )
-                        : t("Recuperando contexto", "Retrieving context")}
-          </h2>
+          <h1>{headings[result.state]}</h1>
           <p>{descriptions[result.state]}</p>
-          {"reason" in result && (
-            <details>
-              <summary>{t("Causa del runtime", "Runtime reason")}</summary>
-              <code>{result.reason}</code>
-            </details>
-          )}
+          <details>
+            <summary>
+              {t("Diagnóstico técnico", "Technical diagnostics")}
+            </summary>
+            <code>
+              {result.state}
+              {"reason" in result ? " · " + result.reason : ""}
+            </code>
+          </details>
           {result.state === "unauthorized" && (
             <form onSubmit={connect}>
               <label>
@@ -201,7 +201,7 @@ export function CustomerZero() {
                   type="password"
                   autoComplete="off"
                   value={token}
-                  onChange={(event) => setToken(event.target.value)}
+                  onChange={(e) => setToken(e.target.value)}
                   required
                 />
               </label>
@@ -214,7 +214,7 @@ export function CustomerZero() {
           )}
           {result.state === "NO_XEED" && (
             <button className="button" onClick={() => load(true)}>
-              {t("Plant AXIGNAL", "Plant AXIGNAL")}
+              {t("Observar AXIGNAL", "Observe AXIGNAL")}
               <ArrowRight size={16} />
             </button>
           )}
@@ -231,7 +231,7 @@ export function CustomerZero() {
             </button>
           )}
         </section>
-      )}
+      </main>
     </div>
   );
 }

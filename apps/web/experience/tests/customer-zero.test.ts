@@ -7,6 +7,12 @@ import {
   safeSourceLink,
 } from "../lib/runtime-projection";
 import { POST as connectSession } from "../app/api/admin/session/route";
+import { explainRuntime } from "../lib/runtime-axent";
+import { focusHistory, productHome } from "../lib/product-navigation";
+import { createElement } from "react";
+import { renderToStaticMarkup } from "react-dom/server";
+import { RuntimeProductProjection } from "../components/runtime-product";
+import { POST as askAxent } from "../app/api/axent/route";
 
 const projection = {
   realityLevel: "CONTROLLED_TEST",
@@ -138,8 +144,65 @@ test("Customer Zero only sends canonical attention, and consumes the real read e
   assert.ok(renderer.includes("signal.evidenceNarrative.steps"));
   assert.ok(renderer.includes("signal.uncertainty"));
   assert.ok(renderer.includes("signal.currentness"));
-  assert.ok(subscriber.includes("<RuntimeProductProjection"));
+  assert.ok(subscriber.includes("<RuntimeExperience"));
   assert.ok(client.includes("<RuntimeProductProjection"));
+});
+
+test("product focus back/forward/home is reversible and never changes runtime truth", () => {
+  const original = JSON.stringify(projection);
+  let history = {trail:[productHome],cursor:0};
+  history=focusHistory(history,{type:"go",focus:{...productHome,view:"today"}});
+  history=focusHistory(history,{type:"go",focus:{...productHome,signalId:"signal:test"}});
+  history=focusHistory(history,{type:"back"});
+  assert.equal(history.trail[history.cursor].view,"today");
+  history=focusHistory(history,{type:"forward"});
+  assert.equal(history.trail[history.cursor].signalId,"signal:test");
+  history=focusHistory(history,{type:"home"});
+  assert.deepEqual(history.trail[history.cursor],productHome);
+  history=focusHistory(history,{type:"back"});
+  history=focusHistory(history,{type:"go",focus:{...productHome,view:"timeline"}});
+  assert.equal(focusHistory(history,{type:"forward"}).cursor,history.cursor);
+  assert.equal(JSON.stringify(projection),original);
+});
+
+test("runtime AXENT selects exact authorized evidence and preserves uncertainty without writes",()=>{
+  const result=readCustomerZeroResponse(projection,200);
+  assert.equal(result.state,"success"); if(result.state!=="success")throw new Error("Invalid test projection");
+  const p=result.projection, original=JSON.stringify(p);
+  assert.deepEqual(explainRuntime(p,"qué cambió").passages,["Surface observed"]);
+  assert.deepEqual(explainRuntime(p,"por qué importa").passages,["Source changed"]);
+  assert.deepEqual(explainRuntime(p,"muéstrame la evidencia").passages,["Observed source"]);
+  const unknown=explainRuntime(p,"what remains UNKNOWN");
+  assert.deepEqual(unknown.passages,["Other surfaces remain unknown","Reach unknown"]);
+  assert.equal(explainRuntime(p,"qué investigarías después").action,"research-unavailable");
+  assert.throws(()=>explainRuntime(p,"evidence","foreign:signal"),/FOCUS_OUTSIDE_PROJECTION/);
+  assert.equal(JSON.stringify(p),original);
+  assert.deepEqual(unknown.sourceRefs,["https://example.org/"]);
+  assert.ok(!JSON.stringify(unknown).includes("privateRevenue"));
+});
+
+test("subscriber and Customer Zero render the same economic shell; Staff adds only utility",()=>{
+  const result=readCustomerZeroResponse(projection,200);
+  if(result.state!=="success")throw new Error("Invalid contract");
+  const plain=renderToStaticMarkup(createElement(RuntimeProductProjection,{projection:result.projection}));
+  const staff=renderToStaticMarkup(createElement(RuntimeProductProjection,{projection:result.projection,staffControls:createElement("details",{"data-staff-test":true},"Staff only")}));
+  assert.equal(staff.replace('<details data-staff-test="true">Staff only</details>',""),plain);
+  assert.ok(plain.includes("product-shell canonical-product"));
+  assert.ok(plain.includes("Contract subject"));
+  assert.ok(plain.includes("Observed surface"));
+  assert.ok(plain.includes("Navegación del producto"));
+  assert.doesNotMatch(plain,/Norte|Atlas|Demo|privateRevenue|privateAccounts/);
+});
+
+test("runtime AXENT refuses economic input and foreign origin before authorized reading",async()=>{
+  for(const [body,origin,expected] of [
+    [{mode:"runtime",prompt:"evidence",projection},"http://127.0.0.1:3810",400],
+    [{mode:"runtime",prompt:"evidence",organizationId:"org:foreign"},"http://127.0.0.1:3810",400],
+    [{mode:"runtime",prompt:"evidence"},"https://foreign.example",403],
+  ] as const){
+    const response=await askAxent(new Request("http://127.0.0.1:3810/api/axent",{method:"POST",headers:{origin,host:"127.0.0.1:3810","content-type":"application/json"},body:JSON.stringify(body)}));
+    assert.equal(response.status,expected);
+  }
 });
 test("session transport rejects foreign origin, malformed, oversized and non-JSON bodies", async () => {
   const url = "http://127.0.0.1:3810/api/admin/session";

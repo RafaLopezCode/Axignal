@@ -6438,3 +6438,74 @@ html[data-motion="reduced"] {
     width: 100%;
   }
 }
+
+/* One runtime product surface; Staff is a separate optional utility layer. */
+.canonical-product .panorama-main { scroll-padding-top: 24px; }
+.canonical-product .panorama-main h1 { font-size: clamp(28px, 3vw, 42px); }
+.canonical-product .panorama-main h1:focus { outline: none; }
+.focus-trail { display:flex; align-items:center; gap:8px; margin-bottom:20px; color:var(--muted); font-size:11px; }
+.runtime-canvas { display:grid; grid-template-columns:minmax(150px,.7fr) minmax(220px,1.3fr); align-items:center; gap:32px; min-height:410px; padding:30px 0; }
+.runtime-organization-focus { text-align:center; padding:28px 12px; }
+.runtime-organization-focus h2 { font-family:Fraunces, serif; color:var(--blue); margin:16px 0 6px; font-size:28px; }
+.runtime-organization-focus span { font-size:11px; color:var(--muted); }
+.runtime-canvas-signals { display:grid; gap:18px; min-width:0; }
+.runtime-node { text-align:left; padding:24px; border:1px solid var(--line); border-radius:12px; background:#f1f5fb; box-shadow:0 8px 24px #243b5a08; min-width:0; }
+.runtime-node h2 { font-family:Fraunces, serif; font-size:25px; line-height:1.25; margin:15px 0; }
+.runtime-node p { font-size:12px; line-height:1.8; color:var(--muted); }
+.runtime-node small { display:block; margin:18px 0; color:var(--muted); }
+.runtime-canvas.reading-mode { grid-template-columns:1fr; min-height:0; }
+.runtime-canvas.reading-mode .runtime-organization-focus { display:none; }
+.runtime-signal { max-width:850px; }
+.runtime-signal h2 { font-family:Fraunces, serif; font-size:30px; margin:18px 0; }
+.runtime-signal p,.runtime-temporal p,.evidence-journey p { font-size:13px; line-height:1.9; }
+.runtime-signal > .button { margin:22px 0; }
+.runtime-temporal { margin:28px 0; border-top:1px solid var(--line); padding-top:24px; }
+.runtime-temporal h2 { font-family:Fraunces, serif; font-size:25px; }
+.temporal-observation { padding:18px 0; border-bottom:1px solid var(--line); }
+.temporal-observation time { display:block; margin-top:6px; font-size:12px; color:var(--muted); }
+.runtime-technical { margin:35px 0 20px; font-size:12px; color:var(--muted); }
+.runtime-technical dd,.evidence-journey dd { overflow-wrap:anywhere; margin:6px 0 18px; }
+.runtime-technical dt { font-family:"IBM Plex Mono", monospace; font-size:10px; }
+.staff-utility { flex-shrink:0; border-top:1px solid var(--line); background:#f8fafc; padding:10px 24px; max-height:180px; overflow:auto; font-size:11px; }
+.staff-utility > div { display:flex; flex-wrap:wrap; gap:14px; padding:10px 0; }
+.staff-utility p { max-width:720px; line-height:1.8; }
+.runtime-meridian { flex-shrink:0; }
+.runtime-mobile-tools { display:none; }
+.runtime-entry { min-height:100dvh; }
+.runtime-entry .customer-zero { margin:48px auto; padding:0 24px; max-width:900px; }
+.runtime-entry .eyebrow { display:block; margin:30px 0 10px; }
+.runtime-entry .customer-zero-state h1 { font-family:Fraunces, serif; font-size:clamp(28px,4vw,44px); margin-bottom:20px; }
+.runtime-entry .customer-zero-state details { margin:24px 0; }
+.canonical-product .axent-scope strong { display:block; margin:12px 0 6px; }
+.canonical-product .axent-questions button { min-height:40px; }
+.runtime-evidence-dialog { width:min(760px,calc(100vw - 32px)); }
+.runtime-evidence-dialog ol { padding-left:22px; }
+.runtime-evidence-dialog li { padding:18px 0; border-bottom:1px solid var(--line); }
+.runtime-evidence-dialog a { overflow-wrap:anywhere; }
+.canonical-product .nav-item { min-height:44px; }
+.canonical-product .icon-button { min-width:40px; min-height:40px; }
+@media(max-width:1100px) {
+  .canonical-product .axent-desktop { display:none; }
+}
+@media(max-width:680px) {
+  .canonical-product .panorama-main { padding:22px 18px; }
+  .canonical-product .product-topbar { padding:0 10px; gap:4px; }
+  .canonical-product .topbar-right { gap:3px; }
+  .canonical-product .breadcrumb-family { display:none; }
+  .canonical-product .navigation-controls { gap:0; }
+  .canonical-product .icon-button { min-width:36px; padding:6px; }
+  .runtime-canvas { display:block; padding:0; min-height:0; }
+  .runtime-organization-focus { display:none; }
+  .runtime-node { padding:20px; }
+  .runtime-node h2 { font-size:25px; }
+  .runtime-signal h2 { font-size:25px; }
+  .runtime-meridian { display:none; }
+  .runtime-mobile-tools { display:flex; flex-shrink:0; border-top:1px solid var(--line); justify-content:space-around; background:#fff; }
+  .runtime-mobile-tools button { min-height:48px; padding:10px 6px; font-size:11px; }
+  .staff-utility { padding:10px 18px; max-height:130px; }
+  .canonical-product .runtime-technical { margin-bottom:10px; }
+  .runtime-evidence-dialog { width:calc(100vw - 20px); }
+}
+@media(prefers-reduced-motion:reduce) {
+  .canonical-product * { transition:none !important; scroll-behavior:auto !important; }
+}

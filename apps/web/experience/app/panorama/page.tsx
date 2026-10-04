@@ -1,15 +1,4 @@
-import { Suspense } from "react";
-import { Panorama } from "@/components/panorama";
+import { RuntimePanorama } from "@/components/runtime-panorama";
 export default function Page() {
-  return (
-    <Suspense
-      fallback={
-        <main id="main" className="route-loading">
-          Preparando la vista…
-        </main>
-      }
-    >
-      <Panorama />
-    </Suspense>
-  );
+  return <RuntimePanorama />;
 }

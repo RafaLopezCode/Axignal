@@ -56,6 +56,7 @@ import {
 import { EvidenceDialog, EvidenceList } from "./evidence";
 import { Axent } from "./axent";
 import { ObservationAtelier } from "./observation-atelier";
+import { ProductNavigation } from "./product-navigation";
 
 export function Panorama() {
   const { t, copy, locale, reducedMotion, setReducedMotion } = useLocale();
@@ -161,7 +162,7 @@ export function Panorama() {
     Object.entries(changes).forEach(([k, v]) =>
       v === null ? next.delete(k) : next.set(k, v),
     );
-    router.push("/panorama" + (next.size ? "?" + next.toString() : ""), {
+    router.push("/design/panorama" + (next.size ? "?" + next.toString() : ""), {
       scroll: false,
     });
     setMobileNav(false);
@@ -322,18 +323,18 @@ export function Panorama() {
             >
               <Menu size={20} />
             </IconButton>
-            <IconButton
-              label={t("Atrás", "Back")}
-              onClick={() => router.back()}
-            >
-              <ArrowLeft size={17} />
-            </IconButton>
-            <IconButton
-              label={t("Adelante", "Forward")}
-              onClick={() => router.forward()}
-            >
-              <ArrowRight size={17} />
-            </IconButton>
+            <ProductNavigation
+              onBack={() => router.back()}
+              onForward={() => router.forward()}
+              onHome={() =>
+                navigate({
+                  view: null,
+                  family: null,
+                  signal: null,
+                  depth: null,
+                })
+              }
+            />
             <span className="nav-divider" />
             <button
               className="breadcrumb-root"
@@ -636,7 +637,10 @@ export function Panorama() {
                         }
                       >
                         {layout === "spatial" && (
-                          <ObservationAtelier organization={organization.name} onFocus={() => setUtility("focus")} />
+                          <ObservationAtelier
+                            organization={organization.name}
+                            onFocus={() => setUtility("focus")}
+                          />
                         )}
                         {families.map((f, i) => {
                           const signal = projection.signals.find(
@@ -690,7 +694,6 @@ export function Panorama() {
                       </p>
                     </section>
                     <section className="continuity-note">
-
                       <div>
                         <span className="eyebrow">
                           {t("OBSERVACIÓN CONTINUA", "CONTINUOUS OBSERVATION")}
@@ -878,7 +881,6 @@ export function Panorama() {
             </>
           ) : utility === "focus" ? (
             <>
-
               <h3>{organization.name}</h3>
               <p>
                 {t(

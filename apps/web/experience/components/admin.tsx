@@ -63,7 +63,11 @@ export function Admin({
   useEffect(() => {
     const navigate = () => {
       const id = window.location.hash.slice(1);
-      if (id === "customer-zero" || adminDomains.some((d) => d.id === id))
+      if (id === "customer-zero") {
+        window.location.replace("/admin/customer-zero");
+        return;
+      }
+      if (adminDomains.some((d) => d.id === id))
         setDomainId(id);
     };
     navigate();
