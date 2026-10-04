@@ -1068,6 +1068,7 @@ Premium reports are measurement-governed rather than polished model opinion.
 **Status:** READY
 **Depends on:** FR-30, AO-01, AO-03, AO-17, AUD-01..AUD-10
 **Priority:** P0 Product Proof
+**Implementation appendix:** `docs/governance/AXIGNAL_ADMIN_CUSTOMER_ZERO_APPENDIX_2026-10-04.md`
 
 ### Purpose
 
