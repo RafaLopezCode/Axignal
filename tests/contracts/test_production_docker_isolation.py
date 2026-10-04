@@ -38,6 +38,7 @@ def test_axignal_compose_owns_project_specific_containers_and_network() -> None:
 
 def test_runtime_private_landing_public_edge_and_experience_operator_loopback() -> None:
     assert 'AXIGNAL_CONTAINERIZED: "true"' in COMPOSE
+    assert 'AXIGNAL_ADMIN_ACCESS_ENABLED: "true"' in COMPOSE
     assert "AXIGNAL_BIND_HOST: 0.0.0.0" in COMPOSE
     assert 'AXIGNAL_PORT: "18181"' in COMPOSE
     assert '      - "18181"' in COMPOSE

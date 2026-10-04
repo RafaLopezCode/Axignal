@@ -73,6 +73,29 @@ The build MUST finish before stopping host services.
    - Landing/Legal/Knowledge routes remain 200.
 6. Verify systemd services remain disabled/inactive.
 
+## Customer Zero authenticated operator check
+
+After the Compose services are healthy, use the exact deployed immutable release
+through authenticated root SSH to issue a one-hour AO-01 session:
+
+    python3 -m tools.runtime.admin_session issue \
+      --data-dir /var/lib/axignal/runtime \
+      --principal-id admin:founder:operator \
+      --output-file /run/axignal-admin-session.key \
+      --hours 1
+
+Use the token only through the operator channel to establish the HttpOnly Customer
+Zero cookie. Verify authorized organization inventory, persisted AXIGNAL selection,
+Today/EvidenceNarrative/AXENT, reobservation, reload and runtime restart continuity.
+Then revoke the session:
+
+    python3 -m tools.runtime.admin_session revoke \
+      --data-dir /var/lib/axignal/runtime \
+      --token-file /run/axignal-admin-session.key
+
+Never route port 18182 through public Traefik and never persist the raw bearer in
+Git, environment files, logs or the Admin database.
+
 ## Rollback
 
 Rollback does not delete `/var/lib/axignal/runtime`.

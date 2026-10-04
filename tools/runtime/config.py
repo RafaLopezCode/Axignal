@@ -24,6 +24,7 @@ class RuntimeConfig:
     weekly_brief_requests_enabled: bool = False
     acquisition_events_enabled: bool = False
     organization_catalog_path: Path | None = None
+    admin_access_enabled: bool = False
 
     @classmethod
     def from_env(cls) -> RuntimeConfig:
@@ -55,6 +56,11 @@ class RuntimeConfig:
         acquisition_events_enabled = os.getenv(
             "AXIGNAL_ACQUISITION_EVENTS_ENABLED", ""
         ).strip().lower() in {"1", "true", "yes"}
+        admin_access_enabled = os.getenv("AXIGNAL_ADMIN_ACCESS_ENABLED", "").strip().lower() in {
+            "1",
+            "true",
+            "yes",
+        }
 
         if not bind_host:
             raise ValueError("AXIGNAL_BIND_HOST cannot be empty")
@@ -113,4 +119,5 @@ class RuntimeConfig:
             Path(os.environ["AXIGNAL_ORGANIZATION_CATALOG"]).expanduser().resolve()
             if os.getenv("AXIGNAL_ORGANIZATION_CATALOG")
             else None,
+            admin_access_enabled,
         )

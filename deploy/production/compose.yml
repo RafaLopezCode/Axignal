@@ -28,6 +28,7 @@ services:
       AXIGNAL_DATA_DIR: /var/lib/axignal/runtime
       AXIGNAL_WEB_ROOT: /app/apps/web
       AXIGNAL_FIRST_PROOF_ALLOWED_HOST: axignal.com
+      AXIGNAL_ADMIN_ACCESS_ENABLED: "true"
     volumes:
       - /var/lib/axignal/runtime:/var/lib/axignal/runtime
     expose:

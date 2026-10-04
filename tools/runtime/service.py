@@ -104,7 +104,10 @@ from pipeline.admin_weekly_brief import SqliteWeeklyBriefStore
 from pipeline.learning_memory import SqliteLearningMemory
 from pipeline.observation_memory import SqliteObservationMemory
 from pipeline.policy_governance import SqliteActivePolicyStore
-from tools.runtime.admin_access import AdminHttpAccessGuard
+from tools.runtime.admin_access import (
+    AdminHttpAccessGuard,
+    build_validation_only_admin_access,
+)
 from tools.runtime.config import RuntimeConfig
 from tools.runtime.first_proof import (
     FirstProofInsufficientEvidence,
@@ -267,6 +270,9 @@ def build_runtime(config: RuntimeConfig) -> AxignalRuntime:
             learning_memory=learning_memory,
             artifacts=ContentAddressedArtifactStore(config.data_dir / "artifacts"),
         )
+    admin_access = (
+        build_validation_only_admin_access(config.data_dir) if config.admin_access_enabled else None
+    )
     organization_attention = (
         None
         if first_proof is None
@@ -297,6 +303,7 @@ def build_runtime(config: RuntimeConfig) -> AxignalRuntime:
         stripe_webhook=stripe_webhook,
         first_proof=first_proof,
         organization_attention=organization_attention,
+        admin_access=admin_access,
     )
 
 
