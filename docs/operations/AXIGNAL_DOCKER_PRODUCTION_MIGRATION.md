@@ -2,17 +2,25 @@
 
 **Status:** ACTIVE RUNBOOK
 **Date:** 2026-10-02
-**Authority:** ADR-0059
+**Authority:** ADR-0059 + ADR-0082
 
 ## Canonical topology
 
 ```text
+Public:
 Traefik host :80/:443
   -> 127.0.0.1:18180
   -> axignal-prod-landing:8080
   -> axignal_prod_internal
   -> axignal-prod-runtime:18181
   -> /var/lib/axignal/runtime
+
+Operator-only:
+authenticated SSH tunnel
+  -> 127.0.0.1:18182
+  -> axignal-prod-experience:3810
+  -> axignal_prod_internal
+  -> axignal-prod-runtime:18181
 ```
 
 The Compose project is `axignal-prod`. Do not reuse any pilot, preview, MERXAT, INKDIE or other project network/container/volume.
@@ -23,8 +31,9 @@ The Compose project is `axignal-prod`. Do not reuse any pilot, preview, MERXAT, 
 - `docker version` and `docker compose version` succeed;
 - `/var/lib/axignal/runtime` exists and remains owned/readable-writable by runtime UID/GID 33;
 - host `127.0.0.1:18180` currently belongs only to AXIGNAL;
+- host `127.0.0.1:18182` is free or already belongs only to `axignal-prod-experience`;
 - existing systemd services are healthy and preserved as rollback;
-- Traefik continues to target host `127.0.0.1:18180`.
+- Traefik continues to target host `127.0.0.1:18180`; no Traefik route targets `18182`.
 
 ## Build without cutover
 
@@ -39,7 +48,7 @@ The build MUST finish before stopping host services.
 
 ## Cutover
 
-1. Record current runtime/landing targets and `/etc/axignal/runtime.env`.
+1. Record current runtime/landing targets, Compose config, persistence counts and `/etc/axignal/runtime.env`.
 2. Stop and disable only:
    - `axignal-runtime.service`
    - `axignal-landing.service`
@@ -48,12 +57,15 @@ The build MUST finish before stopping host services.
    export AXIGNAL_CODE_SHA=<exact-main-sha>
    docker compose -p axignal-prod -f deploy/production/compose.yml up -d
    ```
-4. Require both containers healthy.
+4. Require runtime, landing and experience containers healthy.
 5. Verify:
    - `curl http://127.0.0.1:18180/healthz`;
+   - `curl http://127.0.0.1:18182/admin/customer-zero` through the operator channel;
+   - unauthenticated `http://127.0.0.1:18182/api/subscriber-context` fails closed;
    - external `https://axignal.com/healthz`;
    - external Landing;
-   - exact code SHA;
+   - no public Traefik route exposes Admin/Customer Zero;
+   - exact code SHA on runtime, landing and experience images;
    - public write surface closed;
    - runtime has **no published host port**;
    - only `127.0.0.1:18180` is published;
