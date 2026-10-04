@@ -1132,6 +1132,21 @@ Implementation/E2E are complete locally; no production deployment or push.
 The design-director skill requires human visual acceptance for material visual
 changes, so this entry does not assert that acceptance or prematurely mark DONE.
 
+### Runtime subscriber UX reconciliation — TASK 4, 2026-10-04
+
+Implementation `5ccd6a0`, dialogue focus repair `3eec376`: Customer Zero and
+`/panorama` now consume the same canonical product shell and FR-30 controller.
+Staff utility is a separate optional layer. Real canvas, Today, signal focus,
+EvidenceNarrative, temporal boundaries and authorized AXENT reading are integrated;
+unsupported dimensions/history/research remain explicit. Fixtures are isolated
+outside this path. Compiled-browser real observation/reobservation, persisted
+reload and full runtime restart passed, alongside six responsive widths and
+keyboard/mobile recovery. Python 1,035 PASS; frontend 29 PASS; required gates,
+typecheck/build/i18n PASS. No frontend lint script exists.
+
+Evidence: `specs/037-admin-customer-zero/unification-validation.md`.
+Human visual acceptance remains pending. No production deployment or push.
+
 ### Work
 
 1. Add a staff-only Admin domain/surface: AXIGNAL / Customer Zero.

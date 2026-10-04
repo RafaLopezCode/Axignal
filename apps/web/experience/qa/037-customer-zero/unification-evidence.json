@@ -1,0 +1,87 @@
+{
+  "implementationSha": "5ccd6a08080637a02e4b44179098bab536857ec3",
+  "dialogRepairSha": "3eec376",
+  "firstObservation": {
+    "observedAt": "2026-10-04T10:48:07.145891+00:00",
+    "signal": "xignal:d265352b44bec63c396a3be2350e2e05"
+  },
+  "reobservation": {
+    "observedAt": "2026-10-04T10:49:17.137943+00:00",
+    "signal": "xignal:737c35e849d6393e23cf067ce1141940"
+  },
+  "reload": {
+    "observedAt": "2026-10-04T10:49:17.137943+00:00",
+    "signal": "xignal:737c35e849d6393e23cf067ce1141940"
+  },
+  "runtimeRestart": {
+    "observedAt": "2026-10-04T10:49:17.137943+00:00",
+    "signal": "xignal:737c35e849d6393e23cf067ce1141940"
+  },
+  "reloadEqual": true,
+  "restartEqual": true,
+  "responsive": [
+    {
+      "documentWidth": 1440,
+      "height": 1000,
+      "leak": false,
+      "mainClient": 934,
+      "mainScroll": 934,
+      "width": 1440
+    },
+    {
+      "documentWidth": 1280,
+      "height": 720,
+      "leak": false,
+      "mainClient": 774,
+      "mainScroll": 774,
+      "width": 1280
+    },
+    {
+      "documentWidth": 1024,
+      "height": 900,
+      "leak": false,
+      "mainClient": 828,
+      "mainScroll": 828,
+      "width": 1024
+    },
+    {
+      "documentWidth": 768,
+      "height": 900,
+      "leak": false,
+      "mainClient": 573,
+      "mainScroll": 573,
+      "width": 768
+    },
+    {
+      "documentWidth": 390,
+      "height": 844,
+      "leak": false,
+      "mainClient": 380,
+      "mainScroll": 380,
+      "width": 390
+    },
+    {
+      "documentWidth": 320,
+      "height": 900,
+      "leak": false,
+      "mainClient": 310,
+      "mainScroll": 310,
+      "width": 320
+    }
+  ],
+  "states": {
+    "noXeed": "real isolated runtime empty store",
+    "observing": "real public acquisition",
+    "success": "real persisted FR-30 projection",
+    "insufficient": "controlled QA admission failure; no successful projection fabricated",
+    "failure": "controlled QA runtime failure",
+    "rejection": "controlled QA governed rejection",
+    "unauthorized": "AO-01 absent/stale session refused"
+  },
+  "evidenceNarrative": "runtime-authored signal → observation → public source → uncertainty, artifact verified",
+  "axent": "existing API authorized runtime mode; exact runtime passages; no research tools; mobile transcript retained",
+  "keyboard": "native modal + explicit Tab/Shift+Tab wrap verified; Escape restores opener",
+  "privateData": "subscriber-safe projection allowlist; no Admin operational fields; no fixture fallback",
+  "humanVisualAcceptance": "PENDING",
+  "productionDeployment": "NOT_PERFORMED"
+}

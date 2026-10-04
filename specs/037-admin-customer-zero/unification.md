@@ -51,9 +51,12 @@ of human visual acceptance or of illustrative data into economic authority.
 
 ## Tasks
 
-- [ ] Shared product controller, shell and navigation
-- [ ] Runtime-focused canvas, Today, evidence and temporal boundaries
-- [ ] Authorized AXENT runtime explanation using existing endpoint
-- [ ] Behavior and fail-closed tests
-- [ ] Browser E2E and responsive/accessibility checks
-- [ ] Deterministic gates, commits and evidence-backed convergence
+- [x] Shared product controller, shell and navigation
+- [x] Runtime-focused canvas, Today, evidence and temporal boundaries
+- [x] Authorized AXENT runtime explanation using existing endpoint
+- [x] Behavior and fail-closed tests
+- [x] Browser E2E and responsive/accessibility checks
+- [x] Deterministic gates, commits and evidence-backed convergence
+
+Convergence evidence: [unification-validation.md](unification-validation.md).
+Human visual acceptance remains PENDING; no production deployment or push.
