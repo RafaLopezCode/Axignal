@@ -1098,6 +1098,22 @@ and its governed chain:
 
 No parallel Customer Zero datastore, fixture projection or duplicate Brain is authorized.
 
+### Backend HTTP preflight evidence — 2026-10-04
+
+Before UI integration, the existing FR-30 Customer Zero runtime was exercised through its real HTTP boundary against the live public `https://axignal.com/` source using isolated local persistence:
+
+- initial `GET /api/subscriber-context` returned `NO_XEED`;
+- `POST /api/xeeds` returned HTTP 201 for `org:axignal`;
+- the resulting projection contained one `OBSERVED`, `CURRENT` Xignal backed by `https://axignal.com/`;
+- `Today` returned `READY`;
+- `EvidenceNarrative` exposed the governed observation/source/unknown lineage;
+- immediate `GET /api/subscriber-context` returned the same persisted projection;
+- the runtime process was terminated completely and rebuilt against the same `AXIGNAL_DATA_DIR`;
+- post-restart `GET /api/subscriber-context` preserved Xeed id, organization id, Xignal id, observed_at, epistemic state, currentness, source refs, narrative, Today and runtime SHA;
+- `tests/contracts/test_fr30_production_first_proof.py` now protects full-runtime restart persistence deterministically in CI.
+
+This is backend/runtime evidence only. AO-24A remains open until the Admin UI is wired, browser-verified and the complete Customer Zero product path is exercised there.
+
 ### Work
 
 1. Add a staff-only Admin domain/surface: AXIGNAL / Customer Zero.

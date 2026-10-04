@@ -242,6 +242,55 @@ def test_runtime_http_first_proof_no_xeed_plant_and_reload(
         thread.join(timeout=3)
 
 
+def test_runtime_http_persists_customer_zero_across_full_runtime_restart(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    runtime, server, thread, base = _http_runtime(tmp_path)
+    assert runtime.first_proof is not None
+    _install_source(monkeypatch, runtime.first_proof)
+    try:
+        body = json.dumps(
+            {"label": "AXIGNAL Customer Zero", "targetUri": "https://axignal.com/"}
+        ).encode()
+        request = urllib.request.Request(
+            base + "/api/xeeds",
+            body,
+            {"Content-Type": "application/json"},
+            method="POST",
+        )
+        with urllib.request.urlopen(request, timeout=3) as response:
+            assert response.status == 201
+            created = json.loads(response.read())
+    finally:
+        server.shutdown()
+        server.server_close()
+        thread.join(timeout=3)
+
+    restarted, restarted_server, restarted_thread, restarted_base = _http_runtime(tmp_path)
+    assert restarted.first_proof is not None
+    try:
+        with urllib.request.urlopen(
+            restarted_base + "/api/subscriber-context", timeout=3
+        ) as response:
+            reloaded = json.loads(response.read())
+
+        assert reloaded["context"] == created["context"]
+        assert reloaded["organization"] == created["organization"]
+        assert reloaded["runtimeCodeSha"] == created["runtimeCodeSha"]
+        assert reloaded["reloadContinuity"] == "PERSISTED_RUNTIME_READ_MODEL"
+        assert reloaded["nodes"][0]["id"] == created["nodes"][0]["id"]
+        assert reloaded["nodes"][0]["observedAt"] == created["nodes"][0]["observedAt"]
+        assert reloaded["nodes"][0]["epistemicState"] == "OBSERVED"
+        assert reloaded["nodes"][0]["currentness"] == created["nodes"][0]["currentness"]
+        assert reloaded["nodes"][0]["sourceRefs"] == ["https://axignal.com/"]
+        assert reloaded["nodes"][0]["evidenceNarrative"] == created["nodes"][0]["evidenceNarrative"]
+        assert reloaded["today"] == created["today"]
+    finally:
+        restarted_server.shutdown()
+        restarted_server.server_close()
+        restarted_thread.join(timeout=3)
+
+
 def test_runtime_http_distinguishes_invalid_target_and_insufficient_evidence(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:
