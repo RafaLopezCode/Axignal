@@ -75,7 +75,7 @@ from application.admin_weekly_brief import (
     compose_issue,
 )
 from application.admin_xeed_observatory import project_xeed_axigland_observatory
-from domain.admin_access import AdminAssurance, AdminAuthorizationGrant, AdminScope
+from domain.admin_access import AdminAssurance, AdminAuthorizationGrant, AdminRiskClass, AdminScope
 from domain.admin_acquisition import MarketingEventKind
 from domain.admin_api_operations import ApiOperationObservation
 from domain.admin_brain_observatory import BrainProviderObservatory
@@ -104,6 +104,7 @@ from pipeline.admin_weekly_brief import SqliteWeeklyBriefStore
 from pipeline.learning_memory import SqliteLearningMemory
 from pipeline.observation_memory import SqliteObservationMemory
 from pipeline.policy_governance import SqliteActivePolicyStore
+from tools.runtime.admin_access import AdminHttpAccessGuard
 from tools.runtime.config import RuntimeConfig
 from tools.runtime.first_proof import (
     FirstProofInsufficientEvidence,
@@ -1385,6 +1386,33 @@ def make_handler(runtime: AxignalRuntime) -> type[BaseHTTPRequestHandler]:
     class Handler(BaseHTTPRequestHandler):
         server_version = "AXIGNALRuntime/1"
 
+        def _customer_zero_authority(
+            self, *, write: bool = False
+        ) -> AdminAuthorizationGrant | None:
+            if runtime.admin_access is None:
+                self._json(
+                    {"status": "rejected", "reason": "ADMIN_NOT_COMPOSED"}, HTTPStatus.NOT_FOUND
+                )
+                return None
+            try:
+                return AdminHttpAccessGuard(runtime.admin_access).authorize_header(
+                    self.headers.get("Authorization"),
+                    required_scope=AdminScope.RESEARCH_OPERATE if write else AdminScope.XEEDS_READ,
+                    risk=AdminRiskClass.WRITE if write else AdminRiskClass.READ,
+                    now=datetime.now(UTC),
+                )
+            except AdminAuthenticationError:
+                self._json(
+                    {"status": "rejected", "reason": "ADMIN_SESSION_REQUIRED"},
+                    HTTPStatus.UNAUTHORIZED,
+                )
+                return None
+            except AdminAuthorizationError:
+                self._json(
+                    {"status": "rejected", "reason": "ADMIN_SCOPE_REQUIRED"}, HTTPStatus.FORBIDDEN
+                )
+                return None
+
         def log_message(self, fmt: str, *args: object) -> None:
             # Keep default stderr access logging but never log headers/bodies/secrets.
             super().log_message(fmt, *args)
@@ -1635,7 +1663,20 @@ def make_handler(runtime: AxignalRuntime) -> type[BaseHTTPRequestHandler]:
                     }
                 )
                 return
+            if request_path == "/internal/admin/customer-zero/access":
+                customer_zero_grant = self._customer_zero_authority()
+                if customer_zero_grant is None:
+                    return
+                self._json(
+                    {
+                        "authorized": True,
+                        "canObserve": AdminScope.RESEARCH_OPERATE in customer_zero_grant.scopes,
+                    }
+                )
+                return
             if request_path == "/api/subscriber-context":
+                if runtime.admin_access is not None and not self._customer_zero_authority():
+                    return
                 if runtime.first_proof is None:
                     self._json({"state": "NO_XEED", "realityLevel": "LIVE_PRODUCTION_FIRST_PROOF"})
                     return
@@ -2178,6 +2219,10 @@ def make_handler(runtime: AxignalRuntime) -> type[BaseHTTPRequestHandler]:
                 )
                 return
             if request_path == "/api/xeeds" and runtime.first_proof is not None:
+                if runtime.admin_access is not None and not self._customer_zero_authority(
+                    write=True
+                ):
+                    return
                 try:
                     length = int(self.headers.get("Content-Length", "0"))
                 except ValueError:

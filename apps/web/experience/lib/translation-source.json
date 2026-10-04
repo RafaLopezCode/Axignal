@@ -242,6 +242,21 @@
     ]
   },
   {
+    "en": "AXIGNAL / Customer Zero",
+    "es": "AXIGNAL / Customer Zero",
+    "files": [
+      "components/admin.tsx"
+    ]
+  },
+  {
+    "en": "Private operations",
+    "es": "Operaciones privadas",
+    "files": [
+      "components/admin.tsx",
+      "components/admin.tsx"
+    ]
+  },
+  {
     "en": "Admin navigation",
     "es": "Navegación Admin",
     "files": [
@@ -257,10 +272,11 @@
     ]
   },
   {
-    "en": "Private operations",
-    "es": "Operaciones privadas",
+    "en": "USE AXIGNAL",
+    "es": "USAR AXIGNAL",
     "files": [
-      "components/admin.tsx"
+      "components/admin.tsx",
+      "components/customer-zero.tsx"
     ]
   },
   {
@@ -307,6 +323,13 @@
       "components/admin.tsx",
       "components/panorama.tsx",
       "components/public-shell.tsx"
+    ]
+  },
+  {
+    "en": "Private · real product",
+    "es": "Privado · producto real",
+    "files": [
+      "components/admin.tsx"
     ]
   },
   {
@@ -905,6 +928,195 @@
     ]
   },
   {
+    "en": "Reading the persisted projection.",
+    "es": "Leyendo la proyección persistida.",
+    "files": [
+      "components/customer-zero.tsx"
+    ]
+  },
+  {
+    "en": "AXIGNAL is acquiring the public source and evaluating its evidence. No conclusion is available yet.",
+    "es": "AXIGNAL está adquiriendo la fuente pública y evaluando su evidencia. Todavía no hay una conclusión disponible.",
+    "files": [
+      "components/customer-zero.tsx"
+    ]
+  },
+  {
+    "en": "There is no self-observation focus yet. Direct attention; evidence determines what AXIGNAL can support.",
+    "es": "Aún no hay un foco de autoobservación. Indica dónde mirar; la evidencia determinará qué puede sostener AXIGNAL.",
+    "files": [
+      "components/customer-zero.tsx"
+    ]
+  },
+  {
+    "en": "Acquisition did not yield sufficient evidence. No signal was fabricated. Review the cause before observing again.",
+    "es": "La adquisición no produjo evidencia suficiente. No se ha fabricado una señal. Revisa la causa antes de volver a observar.",
+    "files": [
+      "components/customer-zero.tsx"
+    ]
+  },
+  {
+    "en": "The request does not meet observation authority or conditions. No economic write was executed.",
+    "es": "La solicitud no cumple la autoridad o las condiciones de observación. No se ha ejecutado una escritura económica.",
+    "files": [
+      "components/customer-zero.tsx"
+    ]
+  },
+  {
+    "en": "Communication with the runtime could not complete. Read its state before repeating an observation that may have finished.",
+    "es": "No se pudo completar la comunicación con el runtime. Vuelve a leer el estado antes de repetir una observación que podría haber terminado.",
+    "files": [
+      "components/customer-zero.tsx"
+    ]
+  },
+  {
+    "en": "Connect an existing Admin session. This interface grants no roles and does not replace service authorization.",
+    "es": "Conecta una sesión Admin existente. La interfaz no concede roles ni sustituye la autorización del servicio.",
+    "files": [
+      "components/customer-zero.tsx"
+    ]
+  },
+  {
+    "en": "The product on its own organization, with the same evidence burden as any customer.",
+    "es": "El producto sobre su propia organización, con la misma carga de evidencia que cualquier cliente.",
+    "files": [
+      "components/customer-zero.tsx"
+    ]
+  },
+  {
+    "en": "Observation is separate from operations",
+    "es": "Observar no es operar",
+    "files": [
+      "components/customer-zero.tsx"
+    ]
+  },
+  {
+    "en": "Private account, finance and integration data do not feed this projection. Only the governed runtime can produce it.",
+    "es": "Los datos privados de cuentas, finanzas e integraciones no alimentan esta proyección. Solo el runtime gobernado puede producirla.",
+    "files": [
+      "components/customer-zero.tsx"
+    ]
+  },
+  {
+    "en": "Open live Panorama",
+    "es": "Abrir Panorama real",
+    "files": [
+      "components/customer-zero.tsx"
+    ]
+  },
+  {
+    "en": "Read persisted state",
+    "es": "Leer estado persistido",
+    "files": [
+      "components/customer-zero.tsx"
+    ]
+  },
+  {
+    "en": "Reobserve the public source",
+    "es": "Reobservar la fuente pública",
+    "files": [
+      "components/customer-zero.tsx"
+    ]
+  },
+  {
+    "en": "A first look, grounded in evidence.",
+    "es": "Una primera mirada, con evidencia.",
+    "files": [
+      "components/customer-zero.tsx"
+    ]
+  },
+  {
+    "en": "Observation in progress",
+    "es": "Observación en curso",
+    "files": [
+      "components/customer-zero.tsx"
+    ]
+  },
+  {
+    "en": "Your session retains authority",
+    "es": "Tu sesión conserva la autoridad",
+    "files": [
+      "components/customer-zero.tsx"
+    ]
+  },
+  {
+    "en": "The unknown remains open",
+    "es": "Lo desconocido sigue abierto",
+    "files": [
+      "components/customer-zero.tsx"
+    ]
+  },
+  {
+    "en": "The runtime is unavailable",
+    "es": "El runtime no está disponible",
+    "files": [
+      "components/customer-zero.tsx"
+    ]
+  },
+  {
+    "en": "Observation is not authorized",
+    "es": "La observación no está autorizada",
+    "files": [
+      "components/customer-zero.tsx"
+    ]
+  },
+  {
+    "en": "Retrieving context",
+    "es": "Recuperando contexto",
+    "files": [
+      "components/customer-zero.tsx"
+    ]
+  },
+  {
+    "en": "Runtime reason",
+    "es": "Causa del runtime",
+    "files": [
+      "components/customer-zero.tsx"
+    ]
+  },
+  {
+    "en": "Admin session credential",
+    "es": "Credencial de sesión Admin",
+    "files": [
+      "components/customer-zero.tsx"
+    ]
+  },
+  {
+    "en": "Verifying session",
+    "es": "Verificando sesión",
+    "files": [
+      "components/customer-zero.tsx"
+    ]
+  },
+  {
+    "en": "Connect session",
+    "es": "Conectar sesión",
+    "files": [
+      "components/customer-zero.tsx"
+    ]
+  },
+  {
+    "en": "Plant AXIGNAL",
+    "es": "Plant AXIGNAL",
+    "files": [
+      "components/customer-zero.tsx"
+    ]
+  },
+  {
+    "en": "Read state again",
+    "es": "Volver a leer el estado",
+    "files": [
+      "components/customer-zero.tsx"
+    ]
+  },
+  {
+    "en": "Observe the source again",
+    "es": "Volver a observar la fuente",
+    "files": [
+      "components/customer-zero.tsx"
+    ]
+  },
+  {
     "en": "Landing",
     "es": "Landing",
     "files": [
@@ -961,8 +1173,8 @@
     ]
   },
   {
-    "en": "The Observer · supplied source",
-    "es": "El Observador · fuente suministrada",
+    "en": "The Observer · narrative illustration",
+    "es": "El Observador · ilustración narrativa",
     "files": [
       "components/design.tsx"
     ]
@@ -1581,6 +1793,7 @@
     "files": [
       "components/evidence.tsx",
       "components/knowledge.tsx",
+      "components/runtime-product.tsx",
       "components/ui.tsx"
     ]
   },
@@ -3121,7 +3334,8 @@
     "files": [
       "components/landing.tsx",
       "components/panorama.tsx",
-      "components/panorama.tsx"
+      "components/panorama.tsx",
+      "components/runtime-panorama.tsx"
     ]
   },
   {
@@ -3240,6 +3454,41 @@
     ]
   },
   {
+    "en": "Working!!!!",
+    "es": "Trabajando!!!!",
+    "files": [
+      "components/observation-atelier.tsx"
+    ]
+  },
+  {
+    "en": "The Observer with a laptop",
+    "es": "El Observador con su portátil",
+    "files": [
+      "components/observation-atelier.tsx"
+    ]
+  },
+  {
+    "en": "Illustrative animation",
+    "es": "Animación ilustrativa",
+    "files": [
+      "components/observation-atelier.tsx"
+    ]
+  },
+  {
+    "en": "Resume animation",
+    "es": "Reanudar animación",
+    "files": [
+      "components/observation-atelier.tsx"
+    ]
+  },
+  {
+    "en": "Pause animation",
+    "es": "Pausar animación",
+    "files": [
+      "components/observation-atelier.tsx"
+    ]
+  },
+  {
     "en": "Product navigation",
     "es": "Navegación del producto",
     "files": [
@@ -3257,7 +3506,8 @@
     "en": "Today",
     "es": "Hoy",
     "files": [
-      "components/panorama.tsx"
+      "components/panorama.tsx",
+      "components/runtime-product.tsx"
     ]
   },
   {
@@ -3391,7 +3641,9 @@
     "en": "Signals",
     "es": "Señales",
     "files": [
-      "components/panorama.tsx"
+      "components/panorama.tsx",
+      "components/runtime-product.tsx",
+      "components/runtime-product.tsx"
     ]
   },
   {
@@ -3474,13 +3726,6 @@
   {
     "en": "Families of understanding",
     "es": "Familias de comprensión",
-    "files": [
-      "components/panorama.tsx"
-    ]
-  },
-  {
-    "en": "One focus. One shared world.",
-    "es": "Un foco. Un mundo compartido.",
     "files": [
       "components/panorama.tsx"
     ]
@@ -3785,7 +4030,8 @@
     "en": "What remains open",
     "es": "Qué sigue abierto",
     "files": [
-      "components/panorama.tsx"
+      "components/panorama.tsx",
+      "components/runtime-product.tsx"
     ]
   },
   {
@@ -3922,8 +4168,8 @@
     ]
   },
   {
-    "en": "This version activates no analytics, advertising or sign-in cookies. It only remembers your language and whether you have seen this notice in this browser. Controller details remain pending publication.",
-    "es": "Esta versión no activa analítica, publicidad ni cookies de acceso. Solo recuerda tu idioma y si has visto este aviso en este navegador. Los datos del responsable siguen pendientes de publicación.",
+    "en": "Public navigation activates no analytics, advertising or sign-in cookies. It remembers your language and this notice. Customer Zero uses a necessary cookie when staff connect an Admin session. Controller details remain pending publication.",
+    "es": "La navegación pública no activa analítica, publicidad ni cookies de acceso. Recuerda tu idioma y este aviso. Customer Zero utiliza una cookie necesaria cuando el personal conecta una sesión Admin. Los datos del responsable siguen pendientes de publicación.",
     "files": [
       "components/privacy-notice.tsx"
     ]
@@ -4078,6 +4324,97 @@
     "es": "Borrador · pendiente de publicación",
     "files": [
       "components/public-shell.tsx"
+    ]
+  },
+  {
+    "en": "Return to Customer Zero",
+    "es": "Volver a Customer Zero",
+    "files": [
+      "components/runtime-panorama.tsx"
+    ]
+  },
+  {
+    "en": "This reading requires an authorized session and a real runtime projection. Return to Customer Zero to review its state.",
+    "es": "Esta lectura depende de una sesión autorizada y una proyección real del runtime. Vuelve a Customer Zero para revisar su estado.",
+    "files": [
+      "components/runtime-panorama.tsx"
+    ]
+  },
+  {
+    "en": "How AXIGNAL knows",
+    "es": "Cómo lo sabe AXIGNAL",
+    "files": [
+      "components/runtime-product.tsx"
+    ]
+  },
+  {
+    "en": "Artifact verified",
+    "es": "Artefacto verificado",
+    "files": [
+      "components/runtime-product.tsx"
+    ]
+  },
+  {
+    "en": "Artifact not verified",
+    "es": "Artefacto no verificado",
+    "files": [
+      "components/runtime-product.tsx"
+    ]
+  },
+  {
+    "en": "Lineage identifiers",
+    "es": "Identificadores de trazabilidad",
+    "files": [
+      "components/runtime-product.tsx"
+    ]
+  },
+  {
+    "en": "Sources and limits",
+    "es": "Fuentes y límites",
+    "files": [
+      "components/runtime-product.tsx"
+    ]
+  },
+  {
+    "en": "Product projection",
+    "es": "Proyección de producto",
+    "files": [
+      "components/runtime-product.tsx"
+    ]
+  },
+  {
+    "en": "ECONOMIC OBSERVATION",
+    "es": "OBSERVACIÓN ECONÓMICA",
+    "files": [
+      "components/runtime-product.tsx"
+    ]
+  },
+  {
+    "en": "Persisted runtime projection",
+    "es": "Proyección persistida del runtime",
+    "files": [
+      "components/runtime-product.tsx"
+    ]
+  },
+  {
+    "en": "Context and version",
+    "es": "Contexto y versión",
+    "files": [
+      "components/runtime-product.tsx"
+    ]
+  },
+  {
+    "en": "Read signal and evidence",
+    "es": "Ver señal y evidencia",
+    "files": [
+      "components/runtime-product.tsx"
+    ]
+  },
+  {
+    "en": "The runtime has no current signals for Today. Earlier observations do not become false.",
+    "es": "El runtime no tiene señales vigentes para Hoy. Esto no convierte las observaciones anteriores en falsas.",
+    "files": [
+      "components/runtime-product.tsx"
     ]
   },
   {
@@ -4307,6 +4644,20 @@
   {
     "en": "These prepared flows connect no authenticated session and issue no sign-in cookie. Activating the service requires an inventory of necessary storage, duration and provider. If optional technologies are introduced, people's choices must be clear, revocable and actually respected before activation.",
     "es": "No hay sesión autenticada conectada ni cookie de acceso emitida por estos flujos preparados. Cuando se active el servicio, habrá que inventariar almacenamiento necesario, duración y proveedor. Si se incorporan tecnologías opcionales, las decisiones de la persona deberán ser claras, revocables y efectivamente respetadas antes de activarlas.",
+    "files": [
+      "components/trust.tsx"
+    ]
+  },
+  {
+    "en": "Private Admin session",
+    "es": "Sesión privada de Admin",
+    "files": [
+      "components/trust.tsx"
+    ]
+  },
+  {
+    "en": "Customer Zero transports an existing Admin session in an HttpOnly, SameSite Strict cookie for up to eight hours. The runtime checks its validity and scope on every request; the cookie grants no economic authority.",
+    "es": "Customer Zero transporta una sesión Admin existente en una cookie HttpOnly y SameSite Strict, hasta ocho horas. El runtime comprueba de nuevo su vigencia y alcance en cada solicitud; la cookie no concede autoridad económica.",
     "files": [
       "components/trust.tsx"
     ]

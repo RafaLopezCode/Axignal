@@ -57,8 +57,8 @@ export function PrivacyNotice() {
           </div>
           <p>
             {t(
-              "Esta versión no activa analítica, publicidad ni cookies de acceso. Solo recuerda tu idioma y si has visto este aviso en este navegador. Los datos del responsable siguen pendientes de publicación.",
-              "This version activates no analytics, advertising or sign-in cookies. It only remembers your language and whether you have seen this notice in this browser. Controller details remain pending publication.",
+              "La navegación pública no activa analítica, publicidad ni cookies de acceso. Recuerda tu idioma y este aviso. Customer Zero utiliza una cookie necesaria cuando el personal conecta una sesión Admin. Los datos del responsable siguen pendientes de publicación.",
+              "Public navigation activates no analytics, advertising or sign-in cookies. It remembers your language and this notice. Customer Zero uses a necessary cookie when staff connect an Admin session. Controller details remain pending publication.",
             )}
           </p>
           <div>
