@@ -29,7 +29,7 @@ import {
   presentSignal,
   presentSourceObservedLabel,
 } from "@/lib/runtime-presentation";
-import { latestObservedSignal, signalGroups } from "@/lib/runtime-reading";
+import { firstMapBrief, latestObservedSignal, signalGroups } from "@/lib/runtime-reading";
 import { temporalHistoryForSource } from "@/lib/runtime-temporal";
 import {
   safeSourceLink,
@@ -251,6 +251,7 @@ export function RuntimeProductProjection({
   const dates = [...new Set(projection.nodes.map((s) => s.observedAt))].sort();
   const groupedSignals = signalGroups(projection.nodes);
   const latestSignal = latestObservedSignal(projection);
+  const mapBrief = firstMapBrief(projection);
   useEffect(() => {
     main.current?.scrollTo({ top: 0 });
     main.current
@@ -587,8 +588,99 @@ export function RuntimeProductProjection({
                 ) : (
                   <>
                     <section
+                      className={"first-map-brief " + (mapBrief.isSparse ? "sparse" : "")}
+                      aria-label={t("Resumen del primer mapa", "First map brief")}
+                    >
+                      <article>
+                        <span className="eyebrow">
+                          {t("Lo que AXIGNAL aprendió", "What AXIGNAL learned")}
+                        </span>
+                        <strong>
+                          {mapBrief.observedCount} {t("señales observadas", "observed signals")}
+                        </strong>
+                        <p>
+                          {mapBrief.sourceCount} {t("fuentes públicas", "public sources")} ·{" "}
+                          {mapBrief.observationCount} {t("observaciones gobernadas", "governed observations")} ·{" "}
+                          {mapBrief.currentCount} {t("vigentes ahora", "current now")}
+                        </p>
+                        <button
+                          className="text-link"
+                          onClick={() => go({ ...focus, view: "timeline", signalId: null })}
+                        >
+                          {t("Ver memoria temporal", "View temporal memory")}
+                          <ArrowRight size={14} />
+                        </button>
+                      </article>
+                      <article>
+                        <span className="eyebrow">
+                          {t("Lo que AXIGNAL encontró", "What AXIGNAL found")}
+                        </span>
+                        {mapBrief.primarySignal ? (
+                          <>
+                            <Badge state={mapBrief.primarySignal.epistemicState} />
+                            <strong>
+                              {presentRuntimeText(
+                                mapBrief.primarySignal.title,
+                                projection.organization.name,
+                                locale,
+                              )}
+                            </strong>
+                            <p>
+                              {presentRuntimeText(
+                                mapBrief.primarySignal.whyAttention,
+                                projection.organization.name,
+                                locale,
+                              )}
+                            </p>
+                            <button
+                              className="text-link"
+                              onClick={() => enter(mapBrief.primarySignal!.id)}
+                            >
+                              {t("Abrir hallazgo", "Open finding")}
+                              <ArrowRight size={14} />
+                            </button>
+                          </>
+                        ) : (
+                          <p>
+                            {t(
+                              "Todavía no hay una señal gobernada que pueda elevarse como hallazgo.",
+                              "There is not yet a governed signal that can be elevated as a finding.",
+                            )}
+                          </p>
+                        )}
+                      </article>
+                      <article>
+                        <span className="eyebrow">
+                          {t("Lo que sigue abierto", "What remains open")}
+                        </span>
+                        <strong>
+                          {mapBrief.openQuestions.length
+                            ? mapBrief.openQuestions.length + " " + t("preguntas abiertas", "open questions")
+                            : t("Sin preguntas abiertas expuestas", "No exposed open questions")}
+                        </strong>
+                        <p>
+                          {mapBrief.openQuestions[0]
+                            ? presentRuntimeText(
+                                mapBrief.openQuestions[0],
+                                projection.organization.name,
+                                locale,
+                              )
+                            : t(
+                                "AXIGNAL no inventa un hallazgo no obvio cuando la evidencia disponible no lo sostiene.",
+                                "AXIGNAL does not invent a non-obvious finding when the available evidence does not support one.",
+                              )}
+                        </p>
+                        <button className="text-link" onClick={() => setAxent(true)}>
+                          {t("Investigar lo abierto", "Investigate what is open")}
+                          <ArrowRight size={14} />
+                        </button>
+                      </article>
+                    </section>
+                    <section
                       className={
-                        "runtime-canvas " + (!spatial ? "reading-mode" : "")
+                        "runtime-canvas " +
+                        (!spatial ? "reading-mode " : "") +
+                        (mapBrief.isSparse ? "sparse" : "")
                       }
                       aria-label={t("Panorama espacial", "Spatial panorama")}
                     >

@@ -47,7 +47,7 @@ organization was requested or admitted in this slice. AO-24A remains IN_PROGRESS
 - [x] T019 Make AXENT a cognitive synthesis layer rather than a field echo. Answer in the active locale, summarize governed evidence naturally, preserve provenance, distinguish known/unknown, and turn UNKNOWN areas into prioritized proposed research steps without claiming those investigations were executed.
 - [x] T020 Add explicit post-reobservation feedback: completion, timestamp/currentness and any material change detected. Do not manufacture novelty when nothing material changed.
 - [x] T021 Evolve Time and evidence from a single technical timestamp into canonical temporal reading when history exists. With one observation, say so clearly; with multiple observations, expose navigable change history without synthesizing unsupported snapshots.
-- [ ] T022 Improve FIRST_MAP_WOW and information density in sparse AXIGLAND states while preserving honest emptiness.
+- [x] T022 Improve FIRST_MAP_WOW and information density in sparse AXIGLAND states while preserving honest emptiness.
 - [ ] T023 Improve Staff-controls discoverability without moving operator actions into the subscriber journey.
 
 T015-T023 are production-dogfooding improvements and do not weaken UNKNOWN/POTENTIAL/OBSERVED, EvidenceAdmission, provenance or temporal governance.

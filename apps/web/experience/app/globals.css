@@ -6694,3 +6694,61 @@ html[data-motion="reduced"] {
   .temporal-history-item { min-width:0; width:100%; }
   .temporal-reading dl div { grid-template-columns:1fr; gap:3px; }
 }
+
+/* T022: comprehension-dense FIRST_MAP_WOW for honest sparse projections. */
+.first-map-brief {
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:12px;
+  margin:2px 0 14px;
+}
+.first-map-brief article {
+  min-width:0;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  padding:16px 17px;
+  border:1px solid var(--line);
+  border-radius:12px;
+  background:#fbfcfe;
+}
+.first-map-brief .eyebrow {
+  margin:0;
+  color:var(--muted);
+  font-size:9px;
+}
+.first-map-brief strong {
+  font-family:Fraunces,serif;
+  font-size:17px;
+  line-height:1.25;
+  font-weight:500;
+}
+.first-map-brief p {
+  margin:0;
+  color:var(--muted);
+  font-size:11px;
+  line-height:1.65;
+}
+.first-map-brief .text-link {
+  margin-top:auto;
+  align-self:flex-start;
+}
+.runtime-canvas.sparse {
+  min-height:285px;
+  padding:18px 0 22px;
+  gap:22px;
+}
+.runtime-canvas.sparse .runtime-organization-focus {
+  padding:18px 12px;
+}
+.runtime-canvas.sparse .runtime-node {
+  padding:20px 22px;
+}
+@media(max-width:900px) {
+  .first-map-brief { grid-template-columns:1fr; }
+}
+@media(max-width:680px) {
+  .first-map-brief { gap:8px; margin-bottom:18px; }
+  .first-map-brief article { padding:14px; }
+  .runtime-canvas.sparse { min-height:0; padding:0; }
+}

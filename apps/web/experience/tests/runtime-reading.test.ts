@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { latestObservedSignal, orderedSignals, signalGroups } from "../lib/runtime-reading";
-import type { RuntimeSignal } from "../lib/runtime-projection";
+import { firstMapBrief, latestObservedSignal, orderedSignals, signalGroups } from "../lib/runtime-reading";
+import { runtimeProjectionSchema, type RuntimeSignal } from "../lib/runtime-projection";
 
 function signal(
   id: string,
@@ -59,4 +59,66 @@ test("Today fallback selects latest known observation but does not fabricate a T
 
 test("Today fallback is null when no observation exists", () => {
   assert.equal(latestObservedSignal({ nodes: [] }), null);
+});
+
+
+test("FIRST_MAP brief increases comprehension density without inventing graph facts", () => {
+  const projection = runtimeProjectionSchema.parse({
+    realityLevel: "LIVE",
+    runtimeCodeSha: "sha",
+    lifecycleStatus: "LIVE",
+    context: { id: "ctx", label: "Subject" },
+    organization: { id: "org", name: "Subject" },
+    nodes: [{
+      id: "signal:one",
+      nodeKind: "XIGNAL",
+      title: "Public surface observed",
+      whyAttention: "Governed source observed",
+      interpretation: "The source was reachable",
+      uncertainty: "Commercial relationships remain UNKNOWN",
+      epistemicState: "OBSERVED",
+      currentness: "CURRENT",
+      observedAt: "2026-10-04T10:00:00Z",
+      evidenceAccess: "AVAILABLE",
+      sourceRefs: ["https://example.org/"],
+      observationSupportRefs: ["obs:one"],
+      unknowns: ["Customers remain UNKNOWN"],
+      evidenceNarrative: {
+        xignalId: "signal:one",
+        focusStepId: "obs:one",
+        steps: [],
+      },
+    }],
+    temporalHistory: {
+      disposition: "MULTIPLE_OBSERVATIONS",
+      items: [
+        { observationId:"obs:one", sourceRef:"https://example.org/", sourceType:"OFFICIAL_WEB", observedAt:"2026-10-03T10:00:00Z", currentness:"CURRENT", normalizedStateChanged:null },
+        { observationId:"obs:two", sourceRef:"https://example.org/", sourceType:"OFFICIAL_WEB", observedAt:"2026-10-04T10:00:00Z", currentness:"CURRENT", normalizedStateChanged:false },
+      ],
+    },
+    today: { disposition: "READY", items: [] },
+    reloadContinuity: "PERSISTED_RUNTIME_READ_MODEL",
+  });
+  const before = JSON.stringify(projection);
+  const brief = firstMapBrief(projection);
+  assert.equal(brief.isSparse, true);
+  assert.equal(brief.signalCount, 1);
+  assert.equal(brief.observedCount, 1);
+  assert.equal(brief.sourceCount, 1);
+  assert.equal(brief.observationCount, 2);
+  assert.equal(brief.currentCount, 1);
+  assert.equal(brief.primarySignal?.id, "signal:one");
+  assert.deepEqual(brief.openQuestions, [
+    "Commercial relationships remain UNKNOWN",
+    "Customers remain UNKNOWN",
+  ]);
+  assert.equal(JSON.stringify(projection), before);
+});
+
+test("FIRST_MAP brief never fabricates a finding for an empty projection", () => {
+  const brief = firstMapBrief({ nodes: [], temporalHistory: { disposition:"EMPTY", items:[] } });
+  assert.equal(brief.isSparse, true);
+  assert.equal(brief.primarySignal, null);
+  assert.deepEqual(brief.openQuestions, []);
+  assert.equal(brief.sourceCount, 0);
 });
