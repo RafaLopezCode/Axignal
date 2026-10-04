@@ -304,8 +304,17 @@ Legacy evidence ledger permits duplicated/contradictory content under reused evi
 ## AUD-09 — CI Cognitive/Authority Coverage
 
 **Severity:** MEDIUM
-**Status:** READY
+**Status:** DONE
 **Depends on:** none
+
+### Completion evidence
+- Canonical GitHub Actions validation now runs exactly one unfiltered `uv run pytest`, honoring pyproject `testpaths = ["tests"]`.
+- The previous path-filtered CI collected 706 tests versus 1017 in the complete pre-AUD-09 suite, leaving 311 tests outside the gate; that omission is removed.
+- A permanent AUD-09 CI contract fails if pytest is narrowed back to explicit test directories.
+- The contract executes pytest collection over representative authority families and requires permanent negatives for admission mutation, OBSERVED materialization, tenant leak, stale currentness, model/extraction failure, fiscal as-of evidence and legacy replay conflict.
+- Critical families including economic_discovery, pipeline, semantic_extraction, source_acquisition, source_representation, subscriber_projection and xeed_germination are included automatically through the full testpath.
+- Deterministic CI remains offline with respect to external LLM/provider services; existing fixtures, temporary stores and loopback-only runtime tests remain deterministic.
+- ADR-0080 records the full deterministic CI authority boundary.
 
 ### Problem
 CI does not prove that all critical cognitive/epistemic suites are collected/executed.
@@ -322,7 +331,7 @@ CI does not prove that all critical cognitive/epistemic suites are collected/exe
 ## AUD-10 — Sensitive URL / Public Source Reference Redaction
 
 **Severity:** MEDIUM
-**Status:** BLOCKED
+**Status:** READY
 **Depends on:** AUD-05
 
 ### Problem

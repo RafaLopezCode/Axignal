@@ -46,17 +46,8 @@ jobs:
       - name: Strict typecheck
         run: uv run mypy
 
-      - name: Unit tests
-        run: uv run pytest tests/unit
-
-      - name: Offline experiment tests
-        run: uv run pytest tests/experiments
-
-      - name: Contract tests
-        run: uv run pytest tests/contracts
-
-      - name: Architecture tests
-        run: uv run pytest tests/architecture
+      - name: Full deterministic test suite
+        run: uv run pytest
 
       - name: Architecture Guard
         run: uv run architecture-guard --root .
