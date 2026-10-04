@@ -13,6 +13,7 @@ import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { RuntimeProductProjection } from "../components/runtime-product";
 import { Admin } from "../components/admin";
+import { RuntimeOrganizations } from "../components/runtime-organizations";
 import { POST as askAxent } from "../app/api/axent/route";
 
 const projection = {
@@ -260,4 +261,23 @@ test("session transport rejects foreign origin, malformed, oversized and non-JSO
     assert.equal(response.status, expected);
     assert.equal(response.headers.get("set-cookie"), null);
   }
+});
+
+test("organization availability separates internal no-payment use from unknown subscriber capacity", () => {
+  const props = {name:"Authorized subject",onReturn:()=>{}};
+  const internal = renderToStaticMarkup(createElement(RuntimeOrganizations,{...props,internal:true}));
+  const subscriber = renderToStaticMarkup(createElement(RuntimeOrganizations,{...props,internal:false}));
+  assert.match(internal,/sin checkout ni pago/);
+  assert.match(internal,/autorización interna del servicio/);
+  assert.doesNotMatch(subscriber,/sin checkout ni pago/);
+  assert.match(subscriber,/no informa del plan/);
+  for (const html of [internal, subscriber]) {
+    assert.match(html,/Authorized subject/);
+    assert.match(html,/disabled="" aria-describedby="organization-availability"/);
+    assert.match(html,/Todavía no disponible/);
+    assert.doesNotMatch(html,/<form|<input|\/checkout|Norte|Atlas/);
+  }
+  const admin = renderToStaticMarkup(createElement(Admin,{initialDomain:"command"}));
+  assert.match(admin,/href="\/panorama\/live"/);
+  assert.doesNotMatch(admin,/href="\/panorama"/);
 });

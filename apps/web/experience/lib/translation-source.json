@@ -262,6 +262,8 @@
     "en": "Admin navigation",
     "es": "Navegación Admin",
     "files": [
+      "components/admin.tsx",
+      "components/admin.tsx",
       "components/admin.tsx"
     ]
   },
@@ -277,6 +279,13 @@
   {
     "en": "USE AXIGNAL",
     "es": "USAR AXIGNAL",
+    "files": [
+      "components/admin.tsx"
+    ]
+  },
+  {
+    "en": "OPERATE AXIGNAL",
+    "es": "OPERAR AXIGNAL",
     "files": [
       "components/admin.tsx"
     ]
@@ -317,16 +326,6 @@
     "files": [
       "components/admin.tsx",
       "components/panorama.tsx"
-    ]
-  },
-  {
-    "en": "Open navigation",
-    "es": "Abrir navegación",
-    "files": [
-      "components/admin.tsx",
-      "components/panorama.tsx",
-      "components/public-shell.tsx",
-      "components/runtime-product.tsx"
     ]
   },
   {
@@ -3512,6 +3511,7 @@
     "es": "Navegación del producto",
     "files": [
       "components/panorama.tsx",
+      "components/runtime-product.tsx",
       "components/runtime-product.tsx"
     ]
   },
@@ -3521,7 +3521,6 @@
     "files": [
       "components/panorama.tsx",
       "components/runtime-product.tsx",
-      "components/runtime-product.tsx",
       "components/runtime-product.tsx"
     ]
   },
@@ -3530,6 +3529,7 @@
     "es": "Hoy",
     "files": [
       "components/panorama.tsx",
+      "components/runtime-product.tsx",
       "components/runtime-product.tsx",
       "components/runtime-product.tsx",
       "components/runtime-product.tsx"
@@ -3561,6 +3561,15 @@
     "es": "Preferencias",
     "files": [
       "components/panorama.tsx"
+    ]
+  },
+  {
+    "en": "Open navigation",
+    "es": "Abrir navegación",
+    "files": [
+      "components/panorama.tsx",
+      "components/public-shell.tsx",
+      "components/runtime-product.tsx"
     ]
   },
   {
@@ -3838,8 +3847,7 @@
     "en": "Where we direct attention",
     "es": "Dónde ponemos atención",
     "files": [
-      "components/panorama.tsx",
-      "components/runtime-product.tsx"
+      "components/panorama.tsx"
     ]
   },
   {
@@ -4444,12 +4452,67 @@
     ]
   },
   {
+    "en": "These are the organizations available in your current context.",
+    "es": "Estas son las organizaciones disponibles en tu contexto actual.",
+    "files": [
+      "components/runtime-organizations.tsx"
+    ]
+  },
+  {
+    "en": "Return to observation",
+    "es": "Volver a la observación",
+    "files": [
+      "components/runtime-organizations.tsx"
+    ]
+  },
+  {
+    "en": "Add another organization",
+    "es": "Añadir otra organización",
+    "files": [
+      "components/runtime-organizations.tsx"
+    ]
+  },
+  {
+    "en": "Not available yet: the current service only supports observing AXIGNAL. It cannot add or save other observation focuses.",
+    "es": "Todavía no disponible: el servicio actual solo permite observar AXIGNAL. No puede añadir ni guardar otros focos de observación.",
+    "files": [
+      "components/runtime-organizations.tsx"
+    ]
+  },
+  {
+    "en": "Add organization",
+    "es": "Añadir organización",
+    "files": [
+      "components/runtime-organizations.tsx"
+    ]
+  },
+  {
+    "en": "Customer Zero is internal Admin use, without checkout or payment. Adding other focuses requires internal service authorization, with the same evidence rules.",
+    "es": "Customer Zero es uso interno del Admin, sin checkout ni pago. Añadir otros focos requiere autorización interna del servicio, con las mismas reglas de evidencia.",
+    "files": [
+      "components/runtime-organizations.tsx"
+    ]
+  },
+  {
+    "en": "This context does not report your plan or its available capacity. Your limit cannot be inferred from the visible organization.",
+    "es": "Este contexto no informa del plan ni de su capacidad disponible. No se puede deducir tu límite a partir de la organización visible.",
+    "files": [
+      "components/runtime-organizations.tsx"
+    ]
+  },
+  {
     "en": "How AXIGNAL knows",
     "es": "Cómo lo sabe AXIGNAL",
     "files": [
       "components/runtime-product.tsx",
       "components/runtime-product.tsx",
-      "components/runtime-product.tsx",
+      "components/runtime-product.tsx"
+    ]
+  },
+  {
+    "en": "From signal to source, without hiding what remains open.",
+    "es": "De la señal a la fuente, sin ocultar lo que sigue abierto.",
+    "files": [
       "components/runtime-product.tsx"
     ]
   },
@@ -4504,13 +4567,6 @@
     ]
   },
   {
-    "en": "DIMENSIONS",
-    "es": "DIMENSIONES",
-    "files": [
-      "components/runtime-product.tsx"
-    ]
-  },
-  {
     "en": "Time and evidence",
     "es": "Tiempo y evidencia",
     "files": [
@@ -4518,6 +4574,14 @@
       "components/runtime-product.tsx",
       "components/runtime-product.tsx",
       "components/runtime-product.tsx",
+      "components/runtime-product.tsx",
+      "components/runtime-product.tsx"
+    ]
+  },
+  {
+    "en": "DIMENSIONS",
+    "es": "DIMENSIONES",
+    "files": [
       "components/runtime-product.tsx"
     ]
   },
@@ -4571,8 +4635,8 @@
     ]
   },
   {
-    "en": "This projection contains one authorized focus. No other focuses are available in this contract.",
-    "es": "Esta proyección contiene un único foco autorizado. No hay otros focos disponibles en este contrato.",
+    "en": "Your organizations",
+    "es": "Tus organizaciones",
     "files": [
       "components/runtime-product.tsx"
     ]
@@ -6919,6 +6983,42 @@
     ]
   },
   {
+    "en": "Reading interrupted",
+    "es": "Lectura interrumpida",
+    "files": [
+      "app/error.tsx"
+    ]
+  },
+  {
+    "en": "Let's pick up the thread.",
+    "es": "Retomemos el hilo.",
+    "files": [
+      "app/error.tsx"
+    ]
+  },
+  {
+    "en": "We could not display this page. Try recovering it or return home. We will not repeat any observation or operation from here.",
+    "es": "No pudimos mostrar esta página. Puedes intentar recuperarla o volver al inicio. No repetiremos ninguna observación ni operación desde aquí.",
+    "files": [
+      "app/error.tsx"
+    ]
+  },
+  {
+    "en": "Try again",
+    "es": "Volver a intentar",
+    "files": [
+      "app/error.tsx"
+    ]
+  },
+  {
+    "en": "Return home",
+    "es": "Volver al inicio",
+    "files": [
+      "app/error.tsx",
+      "app/not-found.tsx"
+    ]
+  },
+  {
     "en": "Page unavailable",
     "es": "Página no disponible",
     "files": [
@@ -6937,20 +7037,6 @@
     "es": "No encontramos esta página. Puedes volver al inicio o abrir el cuaderno para seguir explorando.",
     "files": [
       "app/not-found.tsx"
-    ]
-  },
-  {
-    "en": "Return home",
-    "es": "Volver al inicio",
-    "files": [
-      "app/not-found.tsx"
-    ]
-  },
-  {
-    "en": "From signal to source, without hiding what remains open.",
-    "es": "De la señal a la fuente, sin ocultar lo que sigue abierto.",
-    "files": [
-      "components/runtime-product.tsx"
     ]
   }
 ]

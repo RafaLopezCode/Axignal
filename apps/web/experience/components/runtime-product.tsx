@@ -19,6 +19,7 @@ import {
   type ProductFocus,
 } from "@/lib/product-navigation";
 import { ProductNavigation } from "./product-navigation";
+import { RuntimeOrganizations } from "./runtime-organizations";
 import { RuntimeAxent, useRuntimeAxent } from "./runtime-axent";
 import { useLocale } from "@/lib/locale";
 import {
@@ -620,22 +621,12 @@ export function RuntimeProductProjection({
       )}
       {organizations && (
         <Dialog
-          title={t("Dónde ponemos atención", "Where we direct attention")}
+          title={t("Tus organizaciones", "Your organizations")}
           onClose={() => setOrganizations(false)}
+          className="runtime-organizations-dialog"
         >
-          <button
-            className="organization-switch"
-            onClick={() => setOrganizations(false)}
-          >
-            <strong>{projection.organization.name}</strong>
-            <span>{t("Foco de observación", "Observation focus")}</span>
-          </button>
-          <p>
-            {t(
-              "Esta proyección contiene un único foco autorizado. No hay otros focos disponibles en este contrato.",
-              "This projection contains one authorized focus. No other focuses are available in this contract.",
-            )}
-          </p>
+          <RuntimeOrganizations name={projection.organization.name} internal={embedded}
+            onReturn={() => setOrganizations(false)} />
         </Dialog>
       )}
     </div>

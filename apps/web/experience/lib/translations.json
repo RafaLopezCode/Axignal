@@ -1,28 +1,16 @@
 {
-  "Try again": [
-    "Erneut versuchen",
-    "Tentar novamente",
-    "Réessayer",
-    "Riprova"
-  ],
-  "Reading interrupted": [
-    "Lesen unterbrochen",
-    "Leitura interrompida",
-    "Lecture interrompue",
-    "Lettura interrotta"
-  ],
-  "Let's pick up the thread.": [
-    "Nehmen wir den Faden wieder auf.",
-    "Retomemos o fio.",
-    "Reprenons le fil.",
-    "Riprendiamo il filo."
-  ],
-  "We could not display this page. Try recovering it or return home. We will not repeat any observation or operation from here.": [
-    "Diese Seite konnte nicht angezeigt werden. Versuche, sie wiederherzustellen, oder kehre zur Startseite zurück. Von hier aus wiederholen wir keine Beobachtung oder Operation.",
-    "Não foi possível mostrar esta página. Tenta recuperá-la ou volta ao início. Não repetiremos nenhuma observação ou operação a partir daqui.",
-    "Nous n’avons pas pu afficher cette page. Essayez de la récupérer ou revenez à l’accueil. Nous ne répéterons aucune observation ni opération depuis cette page.",
-    "Non è stato possibile visualizzare questa pagina. Prova a recuperarla o torna alla pagina iniziale. Non ripeteremo alcuna osservazione o operazione da qui."
-  ],
+  "Your organizations": ["Deine Organisationen", "As tuas organizações", "Vos organisations", "Le tue organizzazioni"],
+  "These are the organizations available in your current context.": ["Diese Organisationen sind in deinem aktuellen Kontext verfügbar.", "Estas são as organizações disponíveis no teu contexto atual.", "Voici les organisations disponibles dans votre contexte actuel.", "Queste sono le organizzazioni disponibili nel tuo contesto attuale."],
+  "Return to observation": ["Zur Beobachtung zurückkehren", "Voltar à observação", "Revenir à l’observation", "Torna all’osservazione"],
+  "Add another organization": ["Weitere Organisation hinzufügen", "Adicionar outra organização", "Ajouter une autre organisation", "Aggiungi un’altra organizzazione"],
+  "Add organization": ["Organisation hinzufügen", "Adicionar organização", "Ajouter une organisation", "Aggiungi organizzazione"],
+  "Not available yet: the current service only supports observing AXIGNAL. It cannot add or save other observation focuses.": ["Noch nicht verfügbar: Der aktuelle Dienst unterstützt nur die Beobachtung von AXIGNAL. Andere Beobachtungsfokusse können nicht hinzugefügt oder gespeichert werden.", "Ainda não disponível: o serviço atual só permite observar AXIGNAL. Não pode adicionar nem guardar outros focos de observação.", "Pas encore disponible : le service actuel permet uniquement d’observer AXIGNAL. Il ne peut pas ajouter ni enregistrer d’autres sujets d’observation.", "Non ancora disponibile: il servizio attuale permette solo di osservare AXIGNAL. Non può aggiungere o salvare altri oggetti di osservazione."],
+  "Customer Zero is internal Admin use, without checkout or payment. Adding other focuses requires internal service authorization, with the same evidence rules.": ["Customer Zero ist interne Admin-Nutzung ohne Checkout oder Zahlung. Weitere Beobachtungsfokusse benötigen interne Dienstautorisierung mit denselben Evidenzregeln.", "Customer Zero é uso interno do Admin, sem checkout nem pagamento. Adicionar outros focos requer autorização interna do serviço, com as mesmas regras de evidência.", "Customer Zero est un usage interne Admin, sans paiement. Ajouter d’autres sujets nécessite une autorisation interne du service, avec les mêmes règles de preuve.", "Customer Zero è uso interno Admin, senza checkout né pagamento. Aggiungere altri oggetti richiede autorizzazione interna del servizio, con le stesse regole di evidenza."],
+  "This context does not report your plan or its available capacity. Your limit cannot be inferred from the visible organization.": ["Dieser Kontext enthält keinen Tarif oder verfügbare Kapazität. Dein Limit lässt sich nicht aus der sichtbaren Organisation ableiten.", "Este contexto não informa o plano nem a capacidade disponível. O teu limite não pode ser deduzido da organização visível.", "Ce contexte n’indique ni votre abonnement ni sa capacité disponible. Votre limite ne peut pas être déduite de l’organisation visible.", "Questo contesto non indica il piano né la capacità disponibile. Il tuo limite non può essere dedotto dall’organizzazione visibile."],
+  "Try again": ["Erneut versuchen", "Tentar novamente", "Réessayer", "Riprova"],
+  "Reading interrupted": ["Lesen unterbrochen", "Leitura interrompida", "Lecture interrompue", "Lettura interrotta"],
+  "Let's pick up the thread.": ["Nehmen wir den Faden wieder auf.", "Retomemos o fio.", "Reprenons le fil.", "Riprendiamo il filo."],
+  "We could not display this page. Try recovering it or return home. We will not repeat any observation or operation from here.": ["Diese Seite konnte nicht angezeigt werden. Versuche, sie wiederherzustellen, oder kehre zur Startseite zurück. Von hier aus wiederholen wir keine Beobachtung oder Operation.", "Não foi possível mostrar esta página. Tenta recuperá-la ou volta ao início. Não repetiremos nenhuma observação ou operação a partir daqui.", "Nous n’avons pas pu afficher cette page. Essayez de la récupérer ou revenez à l’accueil. Nous ne répéterons aucune observation ni opération depuis cette page.", "Non è stato possibile visualizzare questa pagina. Prova a recuperarla o torna alla pagina iniziale. Non ripeteremo alcuna osservazione o operazione da qui."],
   "OPERATE AXIGNAL": [
     "AXIGNAL BETREIBEN",
     "GERIR AXIGNAL",
@@ -262,6 +250,12 @@
     "GOVERNAR",
     "GOUVERNER",
     "GOVERNARE"
+  ],
+  "Open product separately": [
+    "Produkt separat öffnen",
+    "Abrir produto separadamente",
+    "Ouvrir le produit séparément",
+    "Apri il prodotto separatamente"
   ],
   "AXIGNAL system": [
     "AXIGNAL-System",
@@ -5717,6 +5711,12 @@
     "Artefact non vérifié",
     "Artefatto non verificato"
   ],
+  "Technical details": [
+    "Technische Details",
+    "Detalhes técnicos",
+    "Détails techniques",
+    "Dettagli tecnici"
+  ],
   "Sources and limits": [
     "Quellen und Grenzen",
     "Fontes e limites",
@@ -5944,18 +5944,6 @@
     "O runtime expõe a observação atual, não uma série histórica navegável. Uma data de observação não prova quando ocorreu uma mudança económica.",
     "Le runtime expose l’observation actuelle, pas une série historique navigable. Une date d’observation ne prouve pas quand un changement économique a eu lieu.",
     "Il runtime espone l’osservazione attuale, non una serie storica navigabile. Una data di osservazione non prova quando è avvenuto un cambiamento economico."
-  ],
-  "Open product separately": [
-    "Produkt separat öffnen",
-    "Abrir produto separadamente",
-    "Ouvrir le produit séparément",
-    "Apri il prodotto separatamente"
-  ],
-  "Technical details": [
-    "Technische Details",
-    "Detalhes técnicos",
-    "Détails techniques",
-    "Dettagli tecnici"
   ],
   "From signal to source, without hiding what remains open.": [
     "Vom Signal zur Quelle, ohne offene Fragen zu verbergen.",

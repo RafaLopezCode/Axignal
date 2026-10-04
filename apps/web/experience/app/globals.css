@@ -6621,3 +6621,17 @@ html[data-motion="reduced"] {
   .admin-using-product > .product-workspace > .product-topbar .demo-label { display: none; }
   .canonical-product .runtime-meridian { display: none; }
 }
+
+/* Shared organization management: explicit capability boundary, readable return. */
+.runtime-organizations, .runtime-organizations section {
+  display: grid;
+  gap: var(--space-4, 16px);
+}
+.runtime-organizations p, .runtime-organizations h3,
+.runtime-organizations .organization-switch { margin: 0; }
+.runtime-organizations section { border-top: 1px solid var(--line); padding-top: 24px; }
+.runtime-organizations .organization-switch { justify-content: space-between; flex-wrap: wrap; }
+.runtime-organizations .organization-switch strong { font-size: inherit; }
+.runtime-organizations button { min-height: 44px; }
+.runtime-organizations button:disabled { opacity: .65; cursor: not-allowed; }
+.runtime-organizations-dialog .dialog-header .icon-button { min-width: 44px; min-height: 44px; }
