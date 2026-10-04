@@ -9,7 +9,7 @@ import {
 import { project } from "@/lib/projection";
 import { translate } from "@/lib/copy-catalog";
 import type { AxentMessage } from "@/lib/axent-contract";
-import { customerZeroProxy } from "@/lib/customer-zero-server";
+import { customerZeroProxy, sameOrigin } from "@/lib/customer-zero-server";
 import { readCustomerZeroResponse } from "@/lib/runtime-projection";
 import { explainRuntime } from "@/lib/runtime-axent";
 
@@ -55,7 +55,7 @@ async function boundedBody(request: Request) {
 }
 export async function POST(request: Request) {
   if (
-    !validateBrowserOrigin(
+    !sameOrigin(request) && !validateBrowserOrigin(
       request.headers.get("origin"),
       request.headers.get("host"),
     )
@@ -78,11 +78,13 @@ export async function POST(request: Request) {
     "mode" in input &&
     input.mode === "runtime"
   ) {
+    if (!sameOrigin(request)) return Response.json({error:"ORIGIN_MISMATCH"},{status:403});
     const question = z
       .object({
         mode: z.literal("runtime"),
         prompt: z.string().trim().min(1).max(1000),
-        signalId: z.string().max(200).optional(),
+         signalId: z.string().max(200).optional(),
+         contextId: z.string().max(200).optional(),
       })
       .strict()
       .safeParse(input);
@@ -96,7 +98,7 @@ export async function POST(request: Request) {
       await response.json(),
       response.status,
     );
-    if (result.state !== "success")
+      if (result.state !== "success")
       return Response.json(
         { error: "AUTHORIZED_PROJECTION_UNAVAILABLE" },
         {
@@ -104,6 +106,8 @@ export async function POST(request: Request) {
           headers: { "Cache-Control": "no-store" },
         },
       );
+      if (question.data.contextId && question.data.contextId !== result.projection.context.id)
+        return Response.json({error:"CONTEXT_CHANGED"},{status:409,headers:{"Cache-Control":"no-store"}});
     try {
       return Response.json(
         explainRuntime(

@@ -11,6 +11,7 @@ import {
 } from "@/lib/runtime-projection";
 import { RuntimeProductProjection } from "./runtime-product";
 import { Brand, LocaleToggle } from "./ui";
+import { organizationInventorySchema, type AttentionCommand } from "@/lib/organization-attention";
 
 export type RuntimeHost = {
   embedded?: boolean;
@@ -33,7 +34,7 @@ export function RuntimeExperience({
   const [token, setToken] = useState("");
   const [connecting, setConnecting] = useState(false);
   const requestRevision = useRef(0);
-  async function load(write = false) {
+  async function load(write = false, command?: AttentionCommand) {
     const revision = ++requestRevision.current;
     setResult({ state: write ? "planting" : "loading" });
     try {
@@ -45,7 +46,7 @@ export function RuntimeExperience({
           ...(write
             ? {
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(customerZeroCommand),
+                body: JSON.stringify(command ?? customerZeroCommand),
               }
             : {}),
         },
@@ -54,11 +55,25 @@ export function RuntimeExperience({
         await response.json(),
         response.status,
       );
+      if (write && next.state === "success") {
+        const persisted = await fetch("/api/subscriber-context", {cache:"no-store"});
+        const reread = readCustomerZeroResponse(await persisted.json(), persisted.status);
+        if (revision === requestRevision.current) setResult(reread);
+        return;
+      }
       if (revision === requestRevision.current) setResult(next);
     } catch {
       if (revision === requestRevision.current)
         setResult({ state: "failure", reason: "RUNTIME_UNAVAILABLE" });
     }
+  }
+  async function reobserveSelected() {
+    try {
+      const response = await fetch("/api/organizations", {cache:"no-store"});
+      const inventory = organizationInventorySchema.parse(await response.json());
+      if (!response.ok || !inventory.canObserve || !inventory.selectedId) throw new Error("FOCUS_NOT_AVAILABLE");
+      await load(true, {action:"reobserve", id:inventory.selectedId});
+    } catch { setResult({state:"rejected",reason:"FOCUS_NOT_AVAILABLE"}); }
   }
   useEffect(() => {
     void load();
@@ -134,7 +149,7 @@ export function RuntimeExperience({
           <RefreshCw size={15} />
           {t("Leer estado persistido", "Read persisted state")}
         </button>
-        <button className="text-link" onClick={() => load(true)}>
+        <button className="text-link" onClick={() => void reobserveSelected()}>
           {t("Reobservar la fuente pública", "Reobserve the public source")}
         </button>
       </div>
@@ -150,7 +165,9 @@ export function RuntimeExperience({
   if (result.state === "success")
     return (
       <RuntimeProductProjection
+        key={result.projection.context.id}
         projection={result.projection}
+        onProjection={projection => {requestRevision.current++; setResult({state:"success",projection});}}
         staffControls={controls}
         mainId={embedded ? "customer-zero-main" : "main"}
         embedded={embedded}
@@ -248,7 +265,7 @@ export function RuntimeExperience({
             </button>
           )}
           {result.state === "INSUFFICIENT_EVIDENCE" && (
-            <button className="text-link" onClick={() => load(true)}>
+            <button className="text-link" onClick={() => void reobserveSelected()}>
               {t("Volver a observar la fuente", "Observe the source again")}
             </button>
           )}

@@ -10,9 +10,12 @@ from datetime import UTC, datetime
 from http.server import ThreadingHTTPServer
 from pathlib import Path
 
+import pytest
+
 from application.admin_access import AdminAccessService, VerifiedAdminIdentity
 from domain.admin_access import AdminAssurance, AdminPrincipalId, AdminRole, PrivilegeChangeKind
 from pipeline.admin_access import SqliteAdminAccessStore
+from tests.contracts.test_fr30_production_first_proof import _install_source
 from tools.runtime.config import RuntimeConfig
 from tools.runtime.service import build_runtime, make_handler
 
@@ -33,7 +36,9 @@ class LocalAuthenticator:
         )
 
 
-def test_staff_authority_precedes_fr30_read_and_attention(tmp_path: Path) -> None:
+def test_staff_authority_precedes_fr30_read_and_attention(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
     runtime = build_runtime(
         RuntimeConfig(
             "development",
@@ -98,6 +103,50 @@ def test_staff_authority_precedes_fr30_read_and_attention(tmp_path: Path) -> Non
         assert runtime.first_proof is not None
         assert runtime.first_proof.current_projection() is None
         assert runtime.first_proof.observation_memory.for_subject("org:axignal") == ()
+        assert request("/api/organizations")[0] == 401
+        assert request("/api/organizations", token=support.token)[1]["canObserve"] is False
+        attention = {"action": "add", "name": "AXIGNAL", "targetUri": "https://axignal.com/"}
+        assert request("/api/xeeds", token=support.token, body=attention)[0] == 403
+        assert (
+            request(
+                "/api/xeeds", token=session.token, body={**attention, "epistemicState": "OBSERVED"}
+            )[0]
+            == 400
+        )
+        _install_source(monkeypatch, runtime.first_proof)
+        status, projection = request("/api/xeeds", token=session.token, body=attention)
+        assert status == 201
+        inventory = request("/api/organizations", token=session.token)[1]
+        assert len(inventory["organizations"]) == 1
+        identifier = inventory["selectedId"]
+        assert request("/api/subscriber-context", token=session.token)[1] == projection
+        assert request("/api/xeeds", token=session.token, body=attention)[1] == projection
+        assert (
+            request("/api/xeeds", token=session.token, body={"action": "select", "id": identifier})[
+                1
+            ]
+            == projection
+        )
+        assert len(runtime.first_proof.observation_memory.for_subject("org:axignal")) == 1
+        status, unresolved = request(
+            "/api/xeeds",
+            token=session.token,
+            body={"action": "add", "name": "Unknown", "targetUri": "https://unresolved.example/"},
+        )
+        assert status == 202 and unresolved["state"] == "IDENTITY_UNRESOLVED"
+        assert request("/api/subscriber-context", token=session.token)[1] == projection
+        assert (
+            request("/api/xeeds", token=support.token, body={"action": "select", "id": identifier})[
+                0
+            ]
+            == 403
+        )
+        assert (
+            request("/api/xeeds", token=session.token, body={"action": "select", "id": "foreign"})[
+                0
+            ]
+            == 400
+        )
     finally:
         server.shutdown()
         server.server_close()

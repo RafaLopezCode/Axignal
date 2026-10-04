@@ -274,10 +274,22 @@ test("organization availability separates internal no-payment use from unknown s
   for (const html of [internal, subscriber]) {
     assert.match(html,/Authorized subject/);
     assert.match(html,/disabled="" aria-describedby="organization-availability"/);
-    assert.match(html,/Todavía no disponible/);
-    assert.doesNotMatch(html,/<form|<input|\/checkout|Norte|Atlas/);
+    assert.match(html,/<form/);
+    assert.match(html,/Web pública/);
+    assert.match(html,/verificará la identidad/);
+    assert.doesNotMatch(html,/\/checkout|Norte|Atlas/);
   }
   const admin = renderToStaticMarkup(createElement(Admin,{initialDomain:"command"}));
   assert.match(admin,/href="\/panorama\/live"/);
   assert.doesNotMatch(admin,/href="\/panorama"/);
+});
+import { attentionCommandSchema, organizationInventorySchema } from "../lib/organization-attention";
+test("attention contracts reject economic authority and strip private inventory metadata", () => {
+  assert.equal(attentionCommandSchema.safeParse({action:"add",name:"Requested",targetUri:"https://public.example/"}).success,true);
+  for (const extra of [{organizationId:"org:spoof"},{role:"ADMIN"},{epistemicState:"OBSERVED"},{billing:false}])
+    assert.equal(attentionCommandSchema.safeParse({action:"add",name:"Requested",targetUri:"https://public.example/",...extra}).success,false);
+  const inventory=organizationInventorySchema.parse({accessMode:"INTERNAL_ADMIN",canObserve:false,selectedId:null,organizations:[],available:[],session:"secret",privateRevenue:999});
+  assert.equal("session" in inventory,false);
+  assert.equal("privateRevenue" in inventory,false);
+  assert.equal(inventory.canObserve,false);
 });

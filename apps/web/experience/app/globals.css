@@ -6635,3 +6635,8 @@ html[data-motion="reduced"] {
 .runtime-organizations button { min-height: 44px; }
 .runtime-organizations button:disabled { opacity: .65; cursor: not-allowed; }
 .runtime-organizations-dialog .dialog-header .icon-button { min-width: 44px; min-height: 44px; }
+.runtime-organizations form { display: grid; gap: var(--space-4, 16px); }
+.runtime-organizations label { display: grid; gap: var(--space-2, 8px); }
+.runtime-organizations input { width: 100%; min-width: 0; min-height: 44px; border: 1px solid var(--line); border-radius: 8px; padding: 12px; }
+.runtime-organizations .organization-entry { display: grid; gap: 12px; padding: 16px; border: 1px solid var(--line); border-radius: 8px; }
+.runtime-organizations .organization-entry > span { color: var(--muted); }

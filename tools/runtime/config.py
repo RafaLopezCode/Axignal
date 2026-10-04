@@ -23,6 +23,7 @@ class RuntimeConfig:
     stripe_webhook_signing_secret: str | None = field(default=None, repr=False)
     weekly_brief_requests_enabled: bool = False
     acquisition_events_enabled: bool = False
+    organization_catalog_path: Path | None = None
 
     @classmethod
     def from_env(cls) -> RuntimeConfig:
@@ -109,4 +110,7 @@ class RuntimeConfig:
             stripe_webhook_signing_secret,
             weekly_brief_requests_enabled,
             acquisition_events_enabled,
+            Path(os.environ["AXIGNAL_ORGANIZATION_CATALOG"]).expanduser().resolve()
+            if os.getenv("AXIGNAL_ORGANIZATION_CATALOG")
+            else None,
         )

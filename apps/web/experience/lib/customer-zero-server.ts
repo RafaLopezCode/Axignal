@@ -1,4 +1,5 @@
 import { cookies } from "next/headers";
+import { attentionCommandSchema, organizationInventorySchema } from "./organization-attention";
 import {
   customerZeroCommand,
   readCustomerZeroResponse,
@@ -46,6 +47,7 @@ export async function runtimeRequest(
   path: string,
   token: string,
   write = false,
+  body: Record<string,string> = customerZeroCommand,
 ) {
   const configured = process.env.AXIGNAL_RUNTIME_ORIGIN;
   if (!configured) throw new Error("RUNTIME_NOT_CONFIGURED");
@@ -59,7 +61,7 @@ export async function runtimeRequest(
       Authorization: `Bearer ${token}`,
       "Content-Type": "application/json",
     },
-    ...(write ? { body: JSON.stringify(customerZeroCommand) } : {}),
+    ...(write ? { body: JSON.stringify(body) } : {}),
   });
 }
 export async function customerZeroProxy(request: Request, write = false) {
@@ -75,6 +77,19 @@ export async function customerZeroProxy(request: Request, write = false) {
       { status: 401, headers: noStore },
     );
   try {
+    let command: Record<string,string> = customerZeroCommand;
+    if(write){
+      const raw = await request.text();
+      if(new TextEncoder().encode(raw).length>8192) return Response.json({status:"rejected",reason:"BODY_LIMIT"},{status:413,headers:noStore});
+      let body:unknown;
+      try {body=JSON.parse(raw);} catch {return Response.json({status:"rejected",reason:"INVALID_JSON"},{status:400,headers:noStore});}
+      const parsed=attentionCommandSchema.safeParse(body);
+      if(parsed.success) command=parsed.data;
+      else if(!(typeof body === "object" && body !== null && Object.keys(body).length===2 &&
+          "label" in body && body.label===customerZeroCommand.label &&
+          "targetUri" in body && body.targetUri===customerZeroCommand.targetUri))
+        return Response.json({status:"rejected",reason:"INVALID_ATTENTION_COMMAND"},{status:400,headers:noStore});
+    }
     const access = await runtimeRequest(
       "/internal/admin/customer-zero/access",
       token,
@@ -102,9 +117,13 @@ export async function customerZeroProxy(request: Request, write = false) {
       write ? "/api/xeeds" : "/api/subscriber-context",
       token,
       write,
+      command,
     );
+    const payload:unknown = await response.json();
+    if(response.status===202 && typeof payload==="object" && payload!==null && "state" in payload && payload.state==="IDENTITY_UNRESOLVED")
+      return Response.json({state:"IDENTITY_UNRESOLVED"},{status:202,headers:noStore});
     const result = readCustomerZeroResponse(
-      await response.json(),
+      payload,
       response.status,
     );
     return Response.json(
@@ -117,4 +136,16 @@ export async function customerZeroProxy(request: Request, write = false) {
       { status: 502, headers: noStore },
     );
   }
+}
+
+export async function organizationInventoryProxy() {
+  const token=(await cookies()).get(customerZeroCookie)?.value;
+  if(!token)return Response.json({reason:"ADMIN_SESSION_REQUIRED"},{status:401,headers:noStore});
+  try {
+    const response=await runtimeRequest("/api/organizations",token);
+    if(!response.ok)return Response.json({reason:"ATTENTION_AUTHORITY_UNAVAILABLE"},{status:response.status,headers:noStore});
+    const parsed=organizationInventorySchema.safeParse(await response.json());
+    if(!parsed.success)throw new Error("INVALID_INVENTORY");
+    return Response.json(parsed.data,{headers:noStore});
+  }catch{return Response.json({reason:"RUNTIME_UNAVAILABLE"},{status:502,headers:noStore});}
 }

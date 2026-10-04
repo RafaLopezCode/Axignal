@@ -170,6 +170,7 @@ export function RuntimeProductProjection({
   navigationHost,
   toolbarHost,
   onNavigate,
+  onProjection,
 }: {
   projection: RuntimeProjection;
   staffControls?: React.ReactNode;
@@ -178,6 +179,7 @@ export function RuntimeProductProjection({
   navigationHost?: HTMLElement | null;
   toolbarHost?: HTMLElement | null;
   onNavigate?: () => void;
+  onProjection?: (projection: RuntimeProjection) => void;
 }) {
   const { t, locale } = useLocale();
   const [history, dispatch] = useReducer(focusHistory, {
@@ -626,6 +628,7 @@ export function RuntimeProductProjection({
           className="runtime-organizations-dialog"
         >
           <RuntimeOrganizations name={projection.organization.name} internal={embedded}
+            onProjection={onProjection}
             onReturn={() => setOrganizations(false)} />
         </Dialog>
       )}

@@ -245,3 +245,26 @@ AO-25 Founder / Frontier Advisor Workbench remains a later, separate capability.
 AO-24A must prove that the base AXIGNAL product works for AXIGNAL itself before premium/advisory synthesis is layered on top.
 
 Customer Zero validates the product substrate; AO-25 consumes that governed substrate.
+
+## 12. Persistent internal organization attention extension
+
+Human authorization 2026-10-04: develop the function now, without adding a second
+real organization. Admin must not pass through checkout.
+
+The strict internal contract is specs/037-admin-customer-zero/organizations-contract.md.
+GET /api/organizations reads an AO-01-authorized internal inventory. Existing
+POST /api/xeeds now accepts add/select/reobserve; submitted names and domains only
+direct attention. Unknown/ambiguous identity persists as IDENTITY_UNRESOLVED.
+Resolved observation reuses FR-30, not a second backend or economic writer.
+Selection persists per Admin principal. Duplicate addition does not reacquire.
+Reobservation creates a new projection and retains earlier evidence.
+
+Only existing canonical identities with approved server source bindings can
+produce projections. AXIGNAL_ORGANIZATION_CATALOG optionally supplies those
+bindings; it is not an identity admission API. The default contains only AXIGNAL.
+External subscriber memberships/entitlements and autonomous identity admission
+are separate contracts. Internal authorization implies no commercial charge.
+
+Validation and convergence: specs/037-admin-customer-zero/organizations-validation.md.
+AO-24A remains IN_PROGRESS pending human visual acceptance and the recorded
+follow-on boundaries; this extension does not declare commercial onboarding DONE.

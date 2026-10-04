@@ -1451,3 +1451,11 @@ DEEP_FRONTIER_REAUDIT_REQUEST               OPEN
 ```
 
 A green CI build, a dashboard screenshot, a synthetic cohort or a Stripe test payment alone is not roadmap completion.
+
+2026-10-04 authorized organization-attention extension: persistent internal
+inventory and selected focus now reuse FR-30. Admin add/select/reobserve require
+AO-01 authority without checkout; unresolved identity cannot create a Xignal.
+Contract and evidence: specs/037-admin-customer-zero/organizations-contract.md and
+organizations-validation.md. No second real organization was requested or added.
+Commercial onboarding/entitlements and new canonical identity admission remain
+separate. CURRENT_TASK remains AO-24A, IN_PROGRESS pending human acceptance.

@@ -155,3 +155,18 @@ DONE by this audit, and multi-organization readiness is not declared.
 Status: audit completed and bounded repairs validated; P0 multiple-organization
 journey and representative-user/visual acceptance remain open. This is not a
 production deployment or an assertion that the account onboarding premise works.
+
+## Follow-up implementation: persistent internal attention
+
+The above audit describes the pre-extension finding. Human authorization then
+requested runtime implementation, with no second real organization now.
+The internal Admin portion of P0 is implemented for already-canonical authorized
+targets: persisted inventory, add/select/reobserve, duplicate handling, unresolved
+identity, failure/insufficiency and Axent scope isolation. No checkout is used.
+Controlled browser QA and runtime restart are recorded in
+specs/037-admin-customer-zero/organizations-validation.md.
+
+The complete external account/onboarding journey remains OPEN. Internal Admin
+authority is not commercial entitlement; unknown identities cannot be admitted
+merely by typing a name/domain. The former disabled-button repair is superseded
+by the functional shared dialog. Human visual acceptance remains pending.

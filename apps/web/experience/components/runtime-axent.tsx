@@ -40,6 +40,7 @@ export function useRuntimeAxent(
         body: JSON.stringify({
           mode: "runtime",
           prompt: question,
+          contextId: projection.context.id,
           ...(signalId ? { signalId } : {}),
         }),
         signal: request.signal,

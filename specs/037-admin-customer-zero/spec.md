@@ -55,3 +55,18 @@ Design mode: EXTEND. Preserve adjacent editorial typography, brand blue, shell
 geometry and meaningful evidence access. Narrow view stacks product content;
 native details expose technical provenance without dominating human reading.
 Human visual acceptance remains pending until explicitly granted.
+
+## Authorized extension: organization attention
+
+Human request 2026-10-04 extends this specification: implement persistent
+additional organization attention for internal Admin use without checkout.
+No second real organization is requested now. This supersedes the earlier
+single-command transport restriction only for the strict authorized commands
+defined in [organizations-contract.md](organizations-contract.md).
+
+Reuse FR-30 and its read-model store. Persist unresolved identity as private
+attention, not canonical Organization or Xignal. Additional economic projections
+require an already-canonical identity and approved server source binding.
+Selection persists per authenticated Admin principal in the existing internal
+workspace. Commercial subscriber identity, memberships and entitlements are not
+inferred from this internal grant. See plan.md and tasks.md for this extension.

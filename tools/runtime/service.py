@@ -111,6 +111,7 @@ from tools.runtime.first_proof import (
     FirstProofService,
     FirstProofStore,
 )
+from tools.runtime.organization_attention import OrganizationAttention, load_observation_catalog
 from tools.runtime.stripe_billing import StripeWebhookRuntime
 
 
@@ -137,6 +138,7 @@ class AxignalRuntime:
     stripe_webhook: StripeWebhookRuntime | None = None
     first_proof: FirstProofService | None = None
     admin_access: AdminAccessService | None = None
+    organization_attention: OrganizationAttention | None = None
 
     @property
     def observation_db(self) -> Path:
@@ -265,6 +267,14 @@ def build_runtime(config: RuntimeConfig) -> AxignalRuntime:
             learning_memory=learning_memory,
             artifacts=ContentAddressedArtifactStore(config.data_dir / "artifacts"),
         )
+    organization_attention = (
+        None
+        if first_proof is None
+        else OrganizationAttention(
+            first_proof,
+            load_observation_catalog(config.organization_catalog_path, first_proof.allowed_host),
+        )
+    )
     return AxignalRuntime(
         config=config,
         observation_memory=observation_memory,
@@ -286,6 +296,7 @@ def build_runtime(config: RuntimeConfig) -> AxignalRuntime:
         admin_weekly_brief_store=admin_weekly_brief_store,
         stripe_webhook=stripe_webhook,
         first_proof=first_proof,
+        organization_attention=organization_attention,
     )
 
 
@@ -1675,16 +1686,40 @@ def make_handler(runtime: AxignalRuntime) -> type[BaseHTTPRequestHandler]:
                 )
                 return
             if request_path == "/api/subscriber-context":
-                if runtime.admin_access is not None and not self._customer_zero_authority():
-                    return
+                reading_grant = None
+                if runtime.admin_access is not None:
+                    reading_grant = self._customer_zero_authority()
+                    if reading_grant is None:
+                        return
                 if runtime.first_proof is None:
                     self._json({"state": "NO_XEED", "realityLevel": "LIVE_PRODUCTION_FIRST_PROOF"})
                     return
-                projection = runtime.first_proof.current_projection()
+                projection = (
+                    runtime.organization_attention.projection(str(reading_grant.principal_id))
+                    if runtime.organization_attention is not None and reading_grant is not None
+                    else runtime.first_proof.current_projection()
+                )
                 if projection is None:
                     self._json({"state": "NO_XEED", "realityLevel": "LIVE_PRODUCTION_FIRST_PROOF"})
                 else:
                     self._json(projection)
+                return
+            if request_path == "/api/organizations":
+                inventory_grant = self._customer_zero_authority()
+                if inventory_grant is None:
+                    return
+                if runtime.organization_attention is None:
+                    self._json(
+                        {"state": "failure", "reason": "RUNTIME_NOT_CONFIGURED"},
+                        HTTPStatus.SERVICE_UNAVAILABLE,
+                    )
+                    return
+                self._json(
+                    runtime.organization_attention.inventory(
+                        str(inventory_grant.principal_id),
+                        can_observe=AdminScope.RESEARCH_OPERATE in inventory_grant.scopes,
+                    )
+                )
                 return
             static_path = _resolve_static(runtime.config.web_root, request_path)
             if static_path is None or not static_path.is_file():
@@ -2219,10 +2254,17 @@ def make_handler(runtime: AxignalRuntime) -> type[BaseHTTPRequestHandler]:
                 )
                 return
             if request_path == "/api/xeeds" and runtime.first_proof is not None:
-                if runtime.admin_access is not None and not self._customer_zero_authority(
-                    write=True
-                ):
+                if self.command != "POST":
+                    self._json(
+                        {"status": "rejected", "reason": "METHOD_NOT_ALLOWED"},
+                        HTTPStatus.METHOD_NOT_ALLOWED,
+                    )
                     return
+                command_grant = None
+                if runtime.admin_access is not None:
+                    command_grant = self._customer_zero_authority(write=True)
+                    if command_grant is None:
+                        return
                 try:
                     length = int(self.headers.get("Content-Length", "0"))
                 except ValueError:
@@ -2237,10 +2279,37 @@ def make_handler(runtime: AxignalRuntime) -> type[BaseHTTPRequestHandler]:
                     payload = json.loads(self.rfile.read(length).decode("utf-8"))
                     if not isinstance(payload, dict):
                         raise ValueError("body must be an object")
-                    projection = runtime.first_proof.plant(
-                        label=str(payload.get("label", "")),
-                        target_uri=str(payload.get("targetUri", "")),
-                    )
+                    if not all(isinstance(value, str) for value in payload.values()):
+                        raise ValueError("INVALID_COMMAND_FIELDS")
+                    if "action" in payload:
+                        if command_grant is None or runtime.organization_attention is None:
+                            raise ValueError("INTERNAL_ATTENTION_AUTHORITY_REQUIRED")
+                        principal = str(command_grant.principal_id)
+                        action = payload["action"]
+                        if action == "add" and set(payload) == {"action", "name", "targetUri"}:
+                            projection = runtime.organization_attention.add(
+                                principal, payload["name"], payload["targetUri"]
+                            )
+                        elif action == "select" and set(payload) == {"action", "id"}:
+                            projection = runtime.organization_attention.select(
+                                principal, payload["id"]
+                            )
+                        elif action == "reobserve" and set(payload) == {"action", "id"}:
+                            projection = runtime.organization_attention.reobserve(
+                                principal, payload["id"]
+                            )
+                        else:
+                            raise ValueError("INVALID_ATTENTION_COMMAND")
+                    else:
+                        if set(payload) != {"label", "targetUri"}:
+                            raise ValueError("INVALID_LEGACY_COMMAND")
+                        projection = runtime.first_proof.plant(
+                            label=payload["label"], target_uri=payload["targetUri"]
+                        )
+                        if command_grant is not None and runtime.organization_attention is not None:
+                            runtime.organization_attention.record_legacy(
+                                str(command_grant.principal_id), projection
+                            )
                 except ValueError as exc:
                     self._json({"status": "rejected", "reason": str(exc)}, HTTPStatus.BAD_REQUEST)
                     return
@@ -2256,7 +2325,12 @@ def make_handler(runtime: AxignalRuntime) -> type[BaseHTTPRequestHandler]:
                         HTTPStatus.BAD_GATEWAY,
                     )
                     return
-                self._json(projection, HTTPStatus.CREATED)
+                self._json(
+                    projection,
+                    HTTPStatus.ACCEPTED
+                    if projection.get("state") == "IDENTITY_UNRESOLVED"
+                    else HTTPStatus.CREATED,
+                )
                 return
             self._json(
                 {"status": "rejected", "reason": "PUBLIC_WRITE_SURFACE_CLOSED"},

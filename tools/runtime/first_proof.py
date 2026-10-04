@@ -210,12 +210,18 @@ class FirstProofStore:
                 )
                 """
             )
+            connection.execute(
+                "CREATE TABLE IF NOT EXISTS first_proof_sequence (id INTEGER PRIMARY KEY CHECK(id=1), value INTEGER NOT NULL)"
+            )
+            connection.execute(
+                "INSERT OR IGNORE INTO first_proof_sequence SELECT 1, COALESCE(MAX(sequence),0) FROM first_proof_sessions"
+            )
 
     def next_sequence(self) -> int:
         with sqlite3.connect(self.path) as connection:
-            row = connection.execute(
-                "SELECT COALESCE(MAX(sequence), 0) + 1 FROM first_proof_sessions"
-            ).fetchone()
+            connection.execute("BEGIN IMMEDIATE")
+            connection.execute("UPDATE first_proof_sequence SET value=value+1 WHERE id=1")
+            row = connection.execute("SELECT value FROM first_proof_sequence WHERE id=1").fetchone()
         return int(row[0])
 
     def append(
@@ -235,6 +241,13 @@ class FirstProofStore:
             ).fetchone()
         return None if row is None else json.loads(str(row[0]))
 
+    def get(self, xeed_id: str) -> dict[str, object] | None:
+        with sqlite3.connect(self.path) as connection:
+            row = connection.execute(
+                "SELECT projection_json FROM first_proof_sessions WHERE xeed_id=?", (xeed_id,)
+            ).fetchone()
+        return None if row is None else json.loads(str(row[0]))
+
 
 @dataclass(slots=True)
 class FirstProofService:
@@ -246,8 +259,10 @@ class FirstProofService:
     artifacts: ContentAddressedArtifactStore
     clock: Callable[[], datetime] = lambda: datetime.now(UTC)
 
-    def current_projection(self, *, as_of: datetime | None = None) -> dict[str, object] | None:
-        stored = self.store.latest()
+    def current_projection(
+        self, *, as_of: datetime | None = None, xeed_id: str | None = None
+    ) -> dict[str, object] | None:
+        stored = self.store.latest() if xeed_id is None else self.store.get(xeed_id)
         if stored is None:
             return None
         evaluated_at = self.clock() if as_of is None else as_of
@@ -271,8 +286,11 @@ class FirstProofService:
             for observation_id in refs:
                 if not isinstance(observation_id, str):
                     continue
+                organization_data = projection.get("organization")
+                if not isinstance(organization_data, dict):
+                    return None
                 observation = self.observation_memory.get_observation(
-                    str(ORGANIZATION_ID),
+                    str(organization_data["id"]),
                     observation_id,
                 )
                 if observation is None:
@@ -339,11 +357,25 @@ class FirstProofService:
         if not label:
             raise ValueError("Xeed label is required")
         target_uri = self._validate_target(target_uri)
+        return self.observe_resolved(
+            label=label,
+            target_uri=target_uri,
+            organization=Organization(ORGANIZATION_ID, "AXIGNAL"),
+        )
+
+    def observe_resolved(
+        self, *, label: str, target_uri: str, organization: Organization
+    ) -> dict[str, object]:
+        """Composition-only entry: caller supplies already-resolved canonical authority.
+
+        Public HTTP must never forward user name/id here; attention resolution
+        binds a server-owned catalog target before using this same FR-30 path.
+        """
+        organization_id = organization.id
         now = self.clock()
         sequence = self.store.next_sequence()
         xeed_id = XeedId(f"xeed:production-first-proof:{sequence}")
-        xeed = Xeed(xeed_id, TENANT_ID, ORGANIZATION_ID, label)
-        organization = Organization(ORGANIZATION_ID, "AXIGNAL")
+        xeed = Xeed(xeed_id, TENANT_ID, organization_id, label)
         authority = _SingleSeedAuthority(xeed, organization)
         authorized = AuthorizedXeedReader(authority, authority, authority).read(
             TrustedRequestContext(PRINCIPAL_ID, TENANT_ID), xeed_id
@@ -371,7 +403,7 @@ class FirstProofService:
                 answerable_route=PrimeRoute.DETERMINISTIC,
             ),
         )
-        prior = compile_rich_subject_state(subject_id=ORGANIZATION_ID, contributions=())
+        prior = compile_rich_subject_state(subject_id=organization_id, contributions=())
         bootstrap = build_bootstrap_plan(
             seed=seed,
             rich_state=prior,
@@ -379,7 +411,7 @@ class FirstProofService:
             known_sources=(
                 BootstrapSourceCandidate(
                     candidate_id="source:official-homepage",
-                    subject_id=ORGANIZATION_ID,
+                    subject_id=organization_id,
                     observation_slot="website",
                     source_ref=public_source_reference(target_uri),
                     source_type="OFFICIAL_WEB",
@@ -403,11 +435,11 @@ class FirstProofService:
             code_sha=self.code_sha,
         )
 
-        host = self.allowed_host
+        host = urlsplit(target_uri).hostname or ""
         source_policy = SourceDispatchPolicy(
             policy_id="source:fr30-official-web:v1",
             disposition=DispatchDisposition.ALLOW,
-            decision_basis="FR-30 operator-authorized official AXIGNAL public homepage",
+            decision_basis="Operator-authorized canonical organization public homepage",
             targets=(
                 SourceTargetRule(host, "/", ("https",)),
                 SourceTargetRule(f"www.{host}", "/", ("https",)),
@@ -417,7 +449,7 @@ class FirstProofService:
         )
         request = SourceRequest(
             request_id=f"request:fr30:{sequence}:official-homepage",
-            subject_id=ORGANIZATION_ID,
+            subject_id=organization_id,
             observation_slot="website",
             target_uri=target_uri,
             source_type="OFFICIAL_WEB",
@@ -475,7 +507,7 @@ class FirstProofService:
                 scope=ObservationReuseScope.GLOBAL_PUBLIC,
                 provenance_ref=f"source-policy:{source_policy.fingerprint}",
                 currentness=Currentness.CURRENT,
-                applicable_subject_ids=(str(ORGANIZATION_ID),),
+                applicable_subject_ids=(str(organization_id),),
                 applicable_purposes=(ReusePurpose.CURRENT_STATE.value,),
             ),
         )
@@ -491,7 +523,7 @@ class FirstProofService:
         )
         basis = ExplainableBasis(
             basis_id=f"basis:fr30:{sequence}:{_digest(trace.rich_state_fingerprint)[:16]}",
-            subject_id=ORGANIZATION_ID,
+            subject_id=organization_id,
             candidate_id="candidate:public-homepage-representation",
             semantic_target="condition-bound public website representation",
             state_fingerprint=trace.rich_state_fingerprint,
@@ -524,7 +556,7 @@ class FirstProofService:
             candidate_id=basis.candidate_id,
             kind=XignalKind.REPRESENTATION,
             epistemic_state=XignalEpistemicState.OBSERVED,
-            title="AXIGNAL's public homepage is observable from the outside",
+            title=f"{organization.canonical_name}'s public homepage is observable from the outside",
             why_attention=(
                 "AXIGNAL retrieved the public homepage through the governed source sensor and can trace this Xignal back to the stored observation."
             ),
@@ -536,7 +568,7 @@ class FirstProofService:
                 {
                     observation_id: ObservationSupport(
                         observation_id=observation_id,
-                        subject_id=ORGANIZATION_ID,
+                        subject_id=organization_id,
                         phenomenon=ObservationPhenomenon.PUBLIC_REPRESENTATION,
                         instrument_ref=observation.instrument_ref,
                         instrument_version=observation.instrument_ref.rsplit("/", 1)[-1],
@@ -564,7 +596,7 @@ class FirstProofService:
                 (
                     NarrativeMaterial(
                         observation_id=observation_id,
-                        subject_id=ORGANIZATION_ID,
+                        subject_id=organization_id,
                         candidate_id=basis.candidate_id,
                         source_ref=public_source_reference(observation.final_uri),
                         source_type=request.source_type,
@@ -577,7 +609,7 @@ class FirstProofService:
                 )
             ),
             access_context=NarrativeAccessContext(
-                subject_id=str(ORGANIZATION_ID),
+                subject_id=str(organization_id),
                 xeed_id=str(seed.authorized_xeed.xeed.id),
                 tenant_id=str(seed.authorized_xeed.xeed.tenant_id),
                 target_scope=ReuseTargetScope.TENANT_PRIVATE,
@@ -623,7 +655,7 @@ class FirstProofService:
             kind=LearningEventKind.DETERMINISTIC_EVALUATION,
             outcome=LearningOutcome.COMPLETED,
             occurred_at=projection_as_of,
-            subject_id=ORGANIZATION_ID,
+            subject_id=organization_id,
             xeed_id=xeed_id,
             activity_ref=xignal_projection.xignal.xignal_id,
             policy_id="xignal-projection",
@@ -686,7 +718,7 @@ class FirstProofService:
             "lifecycleStatus": lifecycle.status.value,
             "context": {"id": str(xeed_id), "label": label},
             "organization": {
-                "id": str(ORGANIZATION_ID),
+                "id": str(organization_id),
                 "name": organization.canonical_name,
                 "capabilities": [],
                 "markets": [],
