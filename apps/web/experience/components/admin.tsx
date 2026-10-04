@@ -59,7 +59,7 @@ export function Admin({
     domainId === "customer-zero"
       ? {
           name: {
-            es: "AXIGNAL / Customer Zero",
+            es: "AXIGNAL / Cliente cero",
             en: "AXIGNAL / Customer Zero",
           },
           question: { es: "Operaciones privadas", en: "Private operations" },

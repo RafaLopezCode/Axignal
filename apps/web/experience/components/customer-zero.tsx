@@ -186,7 +186,7 @@ export function RuntimeExperience({
       )}
       <details className="staff-utility">
       <summary>
-        Customer Zero · {t("Controles Staff", "Staff controls")}
+        {t("Cliente cero · Controles internos", "Customer Zero · Staff controls")}
       </summary>
       <div>
         {!embedded && <Link className="text-link" href="/admin">

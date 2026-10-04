@@ -159,6 +159,13 @@ test("Customer Zero only sends canonical attention, and consumes the real read e
   assert.ok(renderer.includes("signal.currentness"));
   assert.ok(subscriber.includes("<RuntimeExperience"));
   assert.ok(client.includes("<RuntimeProductProjection"));
+  assert.ok(
+    client.includes(
+      't("Cliente cero · Controles internos", "Customer Zero · Staff controls")',
+    ),
+  );
+  assert.doesNotMatch(client, />\s*Customer Zero · \{t\(/);
+  assert.ok(client.includes('t("Volver a Admin", "Return to Admin")'));
 });
 
 test("product focus back/forward/home is reversible and never changes runtime truth", () => {
