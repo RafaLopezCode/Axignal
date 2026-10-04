@@ -1,8 +1,28 @@
 {
-  "Try again": ["Erneut versuchen", "Tentar novamente", "Réessayer", "Riprova"],
-  "Reading interrupted": ["Lesen unterbrochen", "Leitura interrompida", "Lecture interrompue", "Lettura interrotta"],
-  "Let's pick up the thread.": ["Nehmen wir den Faden wieder auf.", "Retomemos o fio.", "Reprenons le fil.", "Riprendiamo il filo."],
-  "We could not display this page. Try recovering it or return home. We will not repeat any observation or operation from here.": ["Diese Seite konnte nicht angezeigt werden. Versuche, sie wiederherzustellen, oder kehre zur Startseite zurück. Von hier aus wiederholen wir keine Beobachtung oder Operation.", "Não foi possível mostrar esta página. Tenta recuperá-la ou volta ao início. Não repetiremos nenhuma observação ou operação a partir daqui.", "Nous n’avons pas pu afficher cette page. Essayez de la récupérer ou revenez à l’accueil. Nous ne répéterons aucune observation ni opération depuis cette page.", "Non è stato possibile visualizzare questa pagina. Prova a recuperarla o torna alla pagina iniziale. Non ripeteremo alcuna osservazione o operazione da qui."],
+  "Try again": [
+    "Erneut versuchen",
+    "Tentar novamente",
+    "Réessayer",
+    "Riprova"
+  ],
+  "Reading interrupted": [
+    "Lesen unterbrochen",
+    "Leitura interrompida",
+    "Lecture interrompue",
+    "Lettura interrotta"
+  ],
+  "Let's pick up the thread.": [
+    "Nehmen wir den Faden wieder auf.",
+    "Retomemos o fio.",
+    "Reprenons le fil.",
+    "Riprendiamo il filo."
+  ],
+  "We could not display this page. Try recovering it or return home. We will not repeat any observation or operation from here.": [
+    "Diese Seite konnte nicht angezeigt werden. Versuche, sie wiederherzustellen, oder kehre zur Startseite zurück. Von hier aus wiederholen wir keine Beobachtung oder Operation.",
+    "Não foi possível mostrar esta página. Tenta recuperá-la ou volta ao início. Não repetiremos nenhuma observação ou operação a partir daqui.",
+    "Nous n’avons pas pu afficher cette page. Essayez de la récupérer ou revenez à l’accueil. Nous ne répéterons aucune observation ni opération depuis cette page.",
+    "Non è stato possibile visualizzare questa pagina. Prova a recuperarla o torna alla pagina iniziale. Non ripeteremo alcuna osservazione o operazione da qui."
+  ],
   "OPERATE AXIGNAL": [
     "AXIGNAL BETREIBEN",
     "GERIR AXIGNAL",
@@ -242,12 +262,6 @@
     "GOVERNAR",
     "GOUVERNER",
     "GOVERNARE"
-  ],
-  "Subscriber view": [
-    "Abonnentenansicht",
-    "Vista de assinante",
-    "Vue abonné",
-    "Vista abbonato"
   ],
   "AXIGNAL system": [
     "AXIGNAL-System",
@@ -5703,12 +5717,6 @@
     "Artefact non vérifié",
     "Artefatto non verificato"
   ],
-  "Lineage identifiers": [
-    "Herkunftskennungen",
-    "Identificadores de proveniência",
-    "Identifiants de traçabilité",
-    "Identificatori di provenienza"
-  ],
   "Sources and limits": [
     "Quellen und Grenzen",
     "Fontes e limites",
@@ -5936,5 +5944,23 @@
     "O runtime expõe a observação atual, não uma série histórica navegável. Uma data de observação não prova quando ocorreu uma mudança económica.",
     "Le runtime expose l’observation actuelle, pas une série historique navigable. Une date d’observation ne prouve pas quand un changement économique a eu lieu.",
     "Il runtime espone l’osservazione attuale, non una serie storica navigabile. Una data di osservazione non prova quando è avvenuto un cambiamento economico."
+  ],
+  "Open product separately": [
+    "Produkt separat öffnen",
+    "Abrir produto separadamente",
+    "Ouvrir le produit séparément",
+    "Apri il prodotto separatamente"
+  ],
+  "Technical details": [
+    "Technische Details",
+    "Detalhes técnicos",
+    "Détails techniques",
+    "Dettagli tecnici"
+  ],
+  "From signal to source, without hiding what remains open.": [
+    "Vom Signal zur Quelle, ohne offene Fragen zu verbergen.",
+    "Do sinal à fonte, sem ocultar o que continua em aberto.",
+    "Du signal à la source, sans masquer ce qui reste ouvert.",
+    "Dal segnale alla fonte, senza nascondere ciò che resta aperto."
   ]
 }

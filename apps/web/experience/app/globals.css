@@ -6491,13 +6491,27 @@ html[data-motion="reduced"] {
 .runtime-evidence-dialog ol { padding-left:22px; }
 .runtime-evidence-dialog li { padding:18px 0; border-bottom:1px solid var(--line); }
 .runtime-evidence-dialog a { overflow-wrap:anywhere; }
+.evidence-intro { max-width:58ch; margin:0 0 18px; color:var(--muted); }
+.evidence-path { list-style:none; margin:0; padding:0; }
+.evidence-path li {
+  display:grid;
+  grid-template-columns:118px minmax(0,1fr);
+  column-gap:18px;
+  row-gap:6px;
+  padding:18px 0;
+  border-bottom:1px solid var(--line);
+}
+.evidence-path li > .mono { grid-column:1; grid-row:1 / span 5; }
+.evidence-path li > :not(.mono) { grid-column:2; margin-top:0; margin-bottom:0; }
+.evidence-technical { margin-top:20px; }
+
 .canonical-product .nav-item { min-height:44px; }
 .canonical-product .icon-button { min-width:40px; min-height:40px; }
 @media(max-width:1100px) {
   .canonical-product .axent-desktop { display:none; }
 }
 @media(max-width:680px) {
-  .canonical-product .panorama-main { padding:22px 18px; }
+  .canonical-product .panorama-main { padding:20px 14px; }
   .canonical-product .product-topbar { padding:0 10px; gap:4px; }
   .canonical-product .topbar-right { gap:3px; }
   .canonical-product .breadcrumb-family { display:none; }
@@ -6514,6 +6528,10 @@ html[data-motion="reduced"] {
   .staff-utility { padding:10px 18px; max-height:130px; }
   .canonical-product .runtime-technical { margin-bottom:10px; }
   .runtime-evidence-dialog { width:calc(100vw - 20px); }
+  .evidence-path li { grid-template-columns:1fr; padding:16px 0; }
+  .evidence-path li > .mono,
+  .evidence-path li > :not(.mono) { grid-column:1; grid-row:auto; }
+
 }
 @media(prefers-reduced-motion:reduce) {
   .canonical-product * { transition:none !important; scroll-behavior:auto !important; }
@@ -6531,7 +6549,8 @@ html[data-motion="reduced"] {
   min-height: 44px;
 }
 @media (max-width: 700px) {
-  .canonical-product .family-empty { --space-panel-inset: var(--space-6); }
+  .canonical-product .family-empty { --space-panel-inset: 18px; }
+  .canonical-product .family-empty h2 { font-size:27px; line-height:1.08; }
 }
 .root-recovery { max-width: 740px; margin: 0 auto; padding: 70px 24px; text-align: center; }
 .root-recovery > a { display: block; margin-bottom: 60px; }

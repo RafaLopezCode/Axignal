@@ -305,8 +305,8 @@
     ]
   },
   {
-    "en": "Subscriber view",
-    "es": "Vista de suscriptor",
+    "en": "Open product separately",
+    "es": "Abrir producto por separado",
     "files": [
       "components/admin.tsx"
     ]
@@ -4482,8 +4482,8 @@
     ]
   },
   {
-    "en": "Lineage identifiers",
-    "es": "Identificadores de trazabilidad",
+    "en": "Technical details",
+    "es": "Detalles técnicos",
     "files": [
       "components/runtime-product.tsx"
     ]
@@ -6944,6 +6944,13 @@
     "es": "Volver al inicio",
     "files": [
       "app/not-found.tsx"
+    ]
+  },
+  {
+    "en": "From signal to source, without hiding what remains open.",
+    "es": "De la señal a la fuente, sin ocultar lo que sigue abierto.",
+    "files": [
+      "components/runtime-product.tsx"
     ]
   }
 ]

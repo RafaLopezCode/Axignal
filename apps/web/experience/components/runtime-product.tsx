@@ -81,9 +81,13 @@ export function RuntimeEvidenceJourney({ signal }: { signal: RuntimeSignal }) {
       className="evidence-journey"
       aria-label={t("Cómo lo sabe AXIGNAL", "How AXIGNAL knows")}
     >
-      <details className="runtime-narrative" open>
-        <summary>{t("Cómo lo sabe AXIGNAL", "How AXIGNAL knows")}</summary>
-        <ol>
+      <p className="evidence-intro">
+        {t(
+          "De la señal a la fuente, sin ocultar lo que sigue abierto.",
+          "From signal to source, without hiding what remains open.",
+        )}
+      </p>
+      <ol className="evidence-path">
           {signal.evidenceNarrative.steps.map((step) => (
             <li key={step.id}>
               <span className="mono">
@@ -114,11 +118,9 @@ export function RuntimeEvidenceJourney({ signal }: { signal: RuntimeSignal }) {
               {step.sourceRef && <SourceReference reference={step.sourceRef} />}
             </li>
           ))}
-        </ol>
-        <details>
-          <summary>
-            {t("Identificadores de trazabilidad", "Lineage identifiers")}
-          </summary>
+      </ol>
+      <details className="evidence-technical">
+        <summary>{t("Detalles técnicos", "Technical details")}</summary>
           <dl>
             <dt>Signal</dt>
             <dd>{signal.id}</dd>
@@ -127,9 +129,8 @@ export function RuntimeEvidenceJourney({ signal }: { signal: RuntimeSignal }) {
             <dt>EvidenceNarrative</dt>
             <dd>{signal.evidenceNarrative.focusStepId}</dd>
           </dl>
-        </details>
       </details>
-      <details className="runtime-sources" open>
+      <details className="runtime-sources">
         <summary>
           {t("Fuentes y límites", "Sources and limits")} (
           {signal.sourceRefs.length})

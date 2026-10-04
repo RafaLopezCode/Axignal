@@ -204,7 +204,7 @@ export function Admin({
             className="nav-item"
           >
             <Eye size={17} />
-            {t("Vista de suscriptor", "Subscriber view")}
+            {t("Abrir producto por separado", "Open product separately")}
           </Link>
           <Link href="/design" className="sidebar-system">
             {t("Sistema AXIGNAL", "AXIGNAL system")}
