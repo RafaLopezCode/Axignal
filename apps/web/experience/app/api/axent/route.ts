@@ -85,6 +85,7 @@ export async function POST(request: Request) {
         prompt: z.string().trim().min(1).max(1000),
          signalId: z.string().max(200).optional(),
          contextId: z.string().max(200).optional(),
+         locale: z.enum(["es", "en", "de", "pt", "fr", "it"]).default("es"),
       })
       .strict()
       .safeParse(input);
@@ -114,6 +115,7 @@ export async function POST(request: Request) {
           result.projection,
           question.data.prompt,
           question.data.signalId,
+          question.data.locale,
         ),
         { headers: { "Cache-Control": "no-store" } },
       );

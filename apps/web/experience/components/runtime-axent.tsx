@@ -4,14 +4,14 @@ import { RotateCcw } from "lucide-react";
 import type { RuntimeProjection } from "@/lib/runtime-projection";
 import type { RuntimeAnswer } from "@/lib/runtime-axent";
 import { useLocale } from "@/lib/locale";
-import { presentRuntimePassage } from "@/lib/runtime-presentation";
+import { presentRuntimeCode, presentRuntimePassage } from "@/lib/runtime-presentation";
 import { AxentIdentity, IconButton } from "./ui";
 import { AxentComposer } from "./axent-composer";
 export function useRuntimeAxent(
   projection: RuntimeProjection,
   signalId: string | null,
 ) {
-  const { t } = useLocale();
+  const { t, locale } = useLocale();
   const [draft, setDraft] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState(false);
@@ -42,6 +42,7 @@ export function useRuntimeAxent(
           mode: "runtime",
           prompt: question,
           contextId: projection.context.id,
+          locale,
           ...(signalId ? { signalId } : {}),
         }),
         signal: request.signal,
@@ -156,16 +157,63 @@ export function RuntimeAxent({
             </div>
             <div className="axent-message">
               <span className="message-author">AXENT</span>
-              {message.answer.passages.map((p, j) => (
-                <p key={j}>{presentRuntimePassage(p, projection, locale)}</p>
-              ))}
+              <p className="axent-synthesis">{message.answer.summary}</p>
+              {["changed", "why"].includes(message.answer.intent) &&
+                message.answer.passages.length > 0 && (
+                  <section className="axent-answer-section">
+                    <strong>{t("Lectura focal", "Focused reading")}</strong>
+                    {message.answer.passages.map((value, j) => (
+                      <p key={j}>{presentRuntimePassage(value, projection, locale)}</p>
+                    ))}
+                  </section>
+                )}
+              {message.answer.known.length > 0 && (
+                <section className="axent-answer-section">
+                  <strong>{t("Lo que sabemos", "What we know")}</strong>
+                  {message.answer.known.map((value, j) => (
+                    <p key={j}>{presentRuntimePassage(value, projection, locale)}</p>
+                  ))}
+                </section>
+              )}
+              {message.answer.openQuestions.length > 0 && (
+                <section className="axent-answer-section">
+                  <strong>{t("Lo que sigue abierto", "What remains open")}</strong>
+                  {message.answer.openQuestions.map((value, j) => (
+                    <p key={j}>{presentRuntimePassage(value, projection, locale)}</p>
+                  ))}
+                </section>
+              )}
+              {message.answer.action === "evidence" && message.answer.evidenceBasis.length > 0 && (
+                <section className="axent-answer-section">
+                  <strong>{t("Base de evidencia", "Evidence basis")}</strong>
+                  {message.answer.evidenceBasis.map((value, j) => (
+                    <p key={j}>{presentRuntimePassage(value, projection, locale)}</p>
+                  ))}
+                </section>
+              )}
               {message.answer.action === "research-unavailable" && (
-                <p>
-                  {t(
-                    "No hay herramientas de investigación conectadas a esta lectura. Estas preguntas siguen abiertas.",
-                    "No research tools are connected to this reading. These questions remain open.",
-                  )}
-                </p>
+                <section className="axent-answer-section proposed-research">
+                  <strong>{t("Investigación propuesta", "Proposed research")}</strong>
+                  {message.answer.researchPlan.map((step) => <p key={step}>{step}</p>)}
+                  <small>
+                    {t(
+                      "Propuesta de investigación; no ejecutada.",
+                      "Research proposal; not executed.",
+                    )}
+                  </small>
+                </section>
+              )}
+              {message.answer.sourceRefs.length > 0 && (
+                <section className="axent-answer-section axent-provenance">
+                  <strong>{t("Proveniencia", "Provenance")}</strong>
+                  {message.answer.sourceRefs.map((ref) => <p key={ref}>{ref}</p>)}
+                  {message.answer.observedAt.map((value) => (
+                    <p key={value}>{new Date(value).toLocaleString(locale)}</p>
+                  ))}
+                  {message.answer.currentness.map((value) => (
+                    <p key={value}>{presentRuntimeCode(value, locale)}</p>
+                  ))}
+                </section>
               )}
               <button
                 className="text-link"

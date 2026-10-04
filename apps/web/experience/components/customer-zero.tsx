@@ -12,6 +12,11 @@ import {
 import { RuntimeProductProjection } from "./runtime-product";
 import { Brand, LocaleToggle } from "./ui";
 import { organizationInventorySchema, type AttentionCommand } from "@/lib/organization-attention";
+import {
+  hasMaterialReobservationChange,
+  latestObservationStatus,
+} from "@/lib/reobservation-feedback";
+import { presentRuntimeCode } from "@/lib/runtime-presentation";
 
 export type RuntimeHost = {
   embedded?: boolean;
@@ -29,10 +34,15 @@ export function RuntimeExperience({
   toolbarHost,
   onNavigate,
 }: { staff?: boolean } & RuntimeHost) {
-  const { t } = useLocale();
+  const { t, locale } = useLocale();
   const [result, setResult] = useState<CustomerZeroState>({ state: "loading" });
   const [token, setToken] = useState("");
   const [connecting, setConnecting] = useState(false);
+  const [reobserveFeedback, setReobserveFeedback] = useState<{
+    observedAt: string | null;
+    currentness: string | null;
+    materialChange: boolean;
+  } | null>(null);
   const requestRevision = useRef(0);
   async function load(write = false, command?: AttentionCommand) {
     const revision = ++requestRevision.current;
@@ -59,20 +69,31 @@ export function RuntimeExperience({
         const persisted = await fetch("/api/subscriber-context", {cache:"no-store"});
         const reread = readCustomerZeroResponse(await persisted.json(), persisted.status);
         if (revision === requestRevision.current) setResult(reread);
-        return;
+        return reread;
       }
       if (revision === requestRevision.current) setResult(next);
+      return next;
     } catch {
       if (revision === requestRevision.current)
         setResult({ state: "failure", reason: "RUNTIME_UNAVAILABLE" });
+      return null;
     }
   }
   async function reobserveSelected() {
     try {
+      const before = result.state === "success" ? result.projection : null;
       const response = await fetch("/api/organizations", {cache:"no-store"});
       const inventory = organizationInventorySchema.parse(await response.json());
       if (!response.ok || !inventory.canObserve || !inventory.selectedId) throw new Error("FOCUS_NOT_AVAILABLE");
-      await load(true, {action:"reobserve", id:inventory.selectedId});
+      const after = await load(true, {action:"reobserve", id:inventory.selectedId});
+      if (before && after?.state === "success") {
+        const latest = latestObservationStatus(after.projection);
+        setReobserveFeedback({
+          observedAt: latest?.observedAt ?? null,
+          currentness: latest?.currentness ?? null,
+          materialChange: hasMaterialReobservationChange(before, after.projection),
+        });
+      }
     } catch { setResult({state:"rejected",reason:"FOCUS_NOT_AVAILABLE"}); }
   }
   useEffect(() => {
@@ -137,7 +158,33 @@ export function RuntimeExperience({
     ),
   };
   const controls = staff ? (
-    <details className="staff-utility">
+    <>
+      {reobserveFeedback && (
+        <div className="reobserve-feedback" role="status">
+          <strong>{t("Reobservación completada", "Reobservation completed")}</strong>
+          <span>
+            {reobserveFeedback.observedAt
+              ? new Date(reobserveFeedback.observedAt).toLocaleString(locale)
+              : t("Hora de observación no disponible", "Observation time unavailable")}
+            {" · "}
+            {reobserveFeedback.currentness
+              ? presentRuntimeCode(reobserveFeedback.currentness, locale)
+              : t("Vigencia no disponible", "Currentness unavailable")}
+          </span>
+          <p>
+            {reobserveFeedback.materialChange
+              ? t(
+                  "La nueva proyección contiene diferencias materiales respecto a la lectura anterior. Esto no prueba por sí solo cuándo ocurrió un cambio económico.",
+                  "The new projection contains material differences from the previous reading. By itself, this does not prove when an economic change occurred.",
+                )
+              : t(
+                  "No se detectaron diferencias materiales en la proyección. La observación actual se renovó sin fabricar novedad.",
+                  "No material differences were detected in the projection. The current observation was refreshed without fabricating novelty.",
+                )}
+          </p>
+        </div>
+      )}
+      <details className="staff-utility">
       <summary>
         Customer Zero · {t("Controles Staff", "Staff controls")}
       </summary>
@@ -160,14 +207,15 @@ export function RuntimeExperience({
           "Private account, finance and integration data do not feed this projection. Only the governed runtime can produce it.",
         )}
       </p>
-    </details>
+      </details>
+    </>
   ) : undefined;
   if (result.state === "success")
     return (
       <RuntimeProductProjection
         key={result.projection.context.id}
         projection={result.projection}
-        onProjection={projection => {requestRevision.current++; setResult({state:"success",projection});}}
+        onProjection={projection => {requestRevision.current++; setReobserveFeedback(null); setResult({state:"success",projection});}}
         staffControls={controls}
         mainId={embedded ? "customer-zero-main" : "main"}
         embedded={embedded}
