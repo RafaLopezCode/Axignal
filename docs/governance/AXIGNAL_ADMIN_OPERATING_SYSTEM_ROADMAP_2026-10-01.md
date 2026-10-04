@@ -99,7 +99,7 @@ Admin must distinguish measured flywheel behavior from the hypothesis above.
 
 `NOT_STARTED → READY → IN_PROGRESS → BLOCKED → DONE → DEFERRED → REJECTED`
 
-**CURRENT_TASK = AO-25**
+**CURRENT_TASK = AO-24A**
 
 ## 7. Closure rule
 
@@ -1061,6 +1061,84 @@ Define versioned measures for advisory/report use:
 
 ### AUDIT_CLOSURE
 Premium reports are measurement-governed rather than polished model opinion.
+
+
+### AO-24A — AXIGNAL Customer Zero / Self-Observation Admin Runtime
+
+**Status:** READY
+**Depends on:** FR-30, AO-01, AO-03, AO-17, AUD-01..AUD-10
+**Priority:** P0 Product Proof
+
+### Purpose
+
+AXIGNAL becomes its own first governed customer. The private Admin embeds the real subscriber/product experience for the economic subject org:axignal, using the same runtime, evidence, temporal and explainability boundaries that apply to any other observed organization.
+
+This is not an Admin analytics mock, a second AXIGLAND, an editable company profile or a privileged truth path.
+
+### Existing runtime authority to reuse
+
+The implementation MUST reuse the existing FR-30 customer-zero vertical:
+
+    OrganizationId("org:axignal")
+    Organization("AXIGNAL")
+    POST /api/xeeds
+    GET  /api/subscriber-context
+
+and its governed chain:
+
+    public source
+    → HttpSourceSensor
+    → Observation Memory
+    → RichSubjectState / Prime
+    → Explainable Basis
+    → Xignal
+    → EvidenceNarrative
+    → Today / subscriber-safe projection
+
+No parallel Customer Zero datastore, fixture projection or duplicate Brain is authorized.
+
+### Work
+
+1. Add a staff-only Admin domain/surface: AXIGNAL / Customer Zero.
+2. Show the current real self-observation state from /api/subscriber-context.
+3. When no Xeed exists, allow an authorized Admin operator to plant the AXIGNAL first Xeed through /api/xeeds with the canonical target https://axignal.com/.
+4. Render the returned subscriber-safe projection inside Admin using the same human product semantics/components as the subscriber experience wherever practical.
+5. Expose evidence lineage, currentness, uncertainty, Today disposition and how AXIGNAL knows from the actual projection; do not synthesize substitute copy.
+6. Provide explicit states for NO_XEED, planting/loading, INSUFFICIENT_EVIDENCE, governed rejection, runtime failure and persisted reload.
+7. Keep Admin-private operational controls visually and architecturally separate from the economic projection.
+8. Treat AXIGNAL exactly like any other observed economic subject: no Admin edit can create FAXT/INXIGHT/RELATIONSHIP/Xignal truth.
+9. Use this surface as the initial product-proof harness before onboarding external customer-zero-like pilots.
+
+### Acceptance
+
+- The Admin Customer Zero surface contains no Norte/Atlas/demo organization fixture in its actual data path.
+- organization.id == org:axignal and organization.name == AXIGNAL come from the runtime projection, not UI constants used as evidence.
+- Planting from Admin calls the governed /api/xeeds runtime path; it does not construct Xignals client-side.
+- Reload reads /api/subscriber-context and reproduces the persisted projection.
+- Evidence/source references shown in Admin are subscriber-safe and preserve AUD-05/AUD-06/AUD-10 authorization, temporal and redaction contracts.
+- NO_XEED, INSUFFICIENT_EVIDENCE, rejection and runtime-failure states are visibly distinguishable.
+- A successful initial run proves at least one real observation-backed Xignal for AXIGNAL from an authorized public AXIGNAL source and exposes its EvidenceNarrative.
+- Reobservation does not mutate historical evidence; temporal aging/reload behavior remains FR-30 compliant.
+- Browser QA verifies interaction, loading, failures, reload, responsive behavior and actual runtime data.
+- No second AXIGLAND, second Brain, editable economic profile or privileged self-observation bypass is introduced.
+
+### Initial test path
+
+    Admin
+    → AXIGNAL / Customer Zero
+    → state NO_XEED
+    → Plant AXIGNAL
+    → POST /api/xeeds { label, targetUri: "https://axignal.com/" }
+    → governed observation/germination
+    → subscriber-safe projection
+    → inspect Xignal + EvidenceNarrative + currentness
+    → reload Admin
+    → GET /api/subscriber-context
+    → same persisted projection
+
+### AUDIT_CLOSURE
+
+AXIGNAL dogfoods the same governed product path it sells. Internal ownership of the product grants no special authority over economic truth.
 
 ## AO-25 — Founder / Frontier Advisor Workbench
 

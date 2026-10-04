@@ -22,7 +22,7 @@ def test_adversarial_remediation_has_complete_task_sequence() -> None:
 
 def test_ao25_is_unblocked_after_adversarial_remediation_closes() -> None:
     text = ADMIN_ROADMAP.read_text(encoding="utf-8")
-    assert "**CURRENT_TASK = AO-25**" in text
+    assert "**CURRENT_TASK = AO-24A**" in text
     assert "**Status:** READY" in text
     assert "**Depends on:** AO-02, AO-09, AO-24, AUD-01..AUD-10" in text
 
