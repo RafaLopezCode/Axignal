@@ -30,6 +30,7 @@ import {
   presentSourceObservedLabel,
 } from "@/lib/runtime-presentation";
 import { latestObservedSignal, signalGroups } from "@/lib/runtime-reading";
+import { temporalHistoryForSource } from "@/lib/runtime-temporal";
 import {
   safeSourceLink,
   type RuntimeProjection,
@@ -745,28 +746,115 @@ function RuntimeTemporal({
   signal?: RuntimeSignal;
 }) {
   const { t, locale } = useLocale();
-  const nodes = signal ? [signal] : projection.nodes;
+  const history = temporalHistoryForSource(projection, signal?.sourceRefs);
+  const [selectedId, setSelectedId] = useState<string | null>(
+    history[0]?.observationId ?? null,
+  );
+  useEffect(() => {
+    if (!history.some((item) => item.observationId === selectedId))
+      setSelectedId(history[0]?.observationId ?? null);
+  }, [history, selectedId]);
+  const selected =
+    history.find((item) => item.observationId === selectedId) ?? history[0] ?? null;
+  const multiple = history.length > 1;
+
   return (
     <section
       className="runtime-temporal"
       aria-label={t("Tiempo y evidencia", "Time and evidence")}
     >
       <h2>{t("Tiempo y evidencia", "Time and evidence")}</h2>
-      {nodes.map((s) => (
-        <div className="temporal-observation" key={s.id}>
-          <span>{presentRuntimeCode(s.currentness, locale)}</span>
-          <time dateTime={s.observedAt}>
-            {new Date(s.observedAt).toLocaleString(locale)}
-          </time>
-          <p>{presentRuntimeText(s.title, projection.organization.name, locale)}</p>
-        </div>
-      ))}
-      <p>
-        {t(
-          "El runtime expone la observación actual, no una serie de snapshots históricos navegables. Una fecha de observación no prueba cuándo ocurrió un cambio económico.",
-          "The runtime exposes the current observation, not a navigable historical snapshot series. An observation date does not prove when an economic change happened.",
-        )}
-      </p>
+      {!history.length ? (
+        <p>
+          {t(
+            "Todavía no hay observaciones gobernadas disponibles para construir una lectura temporal.",
+            "There are no governed observations available yet to build a temporal reading.",
+          )}
+        </p>
+      ) : (
+        <>
+          <p className="temporal-summary">
+            {multiple
+              ? history.length +
+                " " +
+                t(
+                  "observaciones gobernadas forman la historia disponible. Puedes recorrerlas sin convertir cada lectura en un snapshot económico.",
+                  "governed observations form the available history. You can navigate them without turning each reading into an economic snapshot.",
+                )
+              : t(
+                  "Existe una sola observación gobernada. Aún no hay una serie histórica comparable.",
+                  "There is one governed observation. There is not yet a comparable historical series.",
+                )}
+          </p>
+          <div
+            className="temporal-history"
+            aria-label={t("Historia de observaciones", "Observation history")}
+          >
+            {history.map((item, index) => (
+              <button
+                key={item.observationId}
+                className={
+                  "temporal-history-item " +
+                  (item.observationId === selected?.observationId ? "active" : "")
+                }
+                aria-pressed={item.observationId === selected?.observationId}
+                onClick={() => setSelectedId(item.observationId)}
+              >
+                <span className="mono">
+                  {t("Observación", "Observation")} {history.length - index}
+                </span>
+                <time dateTime={item.observedAt}>
+                  {new Date(item.observedAt).toLocaleString(locale)}
+                </time>
+                <small>{presentRuntimeCode(item.currentness, locale)}</small>
+              </button>
+            ))}
+          </div>
+          {selected && (
+            <article className="temporal-reading">
+              <header>
+                <strong>{t("Lectura observada", "Observed reading")}</strong>
+                <span>{presentRuntimeCode(selected.currentness, locale)}</span>
+              </header>
+              <time dateTime={selected.observedAt}>
+                {new Date(selected.observedAt).toLocaleString(locale)}
+              </time>
+              <p>
+                {selected.normalizedStateChanged === null
+                  ? t(
+                      "Primera observación disponible; no existe una predecesora con la que comparar estado normalizado.",
+                      "First available observation; there is no predecessor against which to compare normalized state.",
+                    )
+                  : selected.normalizedStateChanged
+                    ? t(
+                        "Los campos normalizados difieren de la observación anterior. Esto no prueba por sí solo cuándo ocurrió un cambio económico.",
+                        "Normalized fields differ from the previous observation. By itself, this does not prove when an economic change occurred.",
+                      )
+                    : t(
+                        "Los campos normalizados coinciden con la observación anterior. La reobservación conserva continuidad sin fabricar novedad.",
+                        "Normalized fields match the previous observation. Reobservation preserves continuity without fabricating novelty.",
+                      )}
+              </p>
+              <dl>
+                <div>
+                  <dt>{t("Fuente", "Source")}</dt>
+                  <dd>{selected.sourceRef}</dd>
+                </div>
+                <div>
+                  <dt>{t("Tipo de fuente", "Source type")}</dt>
+                  <dd>{presentRuntimeCode(selected.sourceType, locale)}</dd>
+                </div>
+              </dl>
+            </article>
+          )}
+          <p className="temporal-caveat">
+            {t(
+              "La historia muestra observaciones reales almacenadas. Una fecha de observación indica cuándo AXIGNAL leyó la evidencia, no cuándo ocurrió necesariamente un cambio en el mundo.",
+              "The history shows real stored observations. An observation date says when AXIGNAL read the evidence, not necessarily when a change happened in the world.",
+            )}
+          </p>
+        </>
+      )}
     </section>
   );
 }

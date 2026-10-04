@@ -37,6 +37,17 @@ const base = runtimeProjectionSchema.parse({
       }],
     },
   }],
+  temporalHistory: {
+    disposition: "SINGLE_OBSERVATION",
+    items: [{
+      observationId: "obs:one",
+      sourceRef: "https://example.org/",
+      sourceType: "OFFICIAL_WEB",
+      observedAt: "2026-10-04T10:00:00Z",
+      currentness: "CURRENT",
+      normalizedStateChanged: null,
+    }],
+  },
   today: { disposition: "READY", items: [] },
   reloadContinuity: "PERSISTED_RUNTIME_READ_MODEL",
 });

@@ -55,6 +55,19 @@ export const runtimeProjectionSchema = z.object({
   context: z.object({ id: text, label: text }),
   organization: z.object({ id: text, name: text }),
   nodes: z.array(runtimeSignalSchema),
+  temporalHistory: z.object({
+    disposition: z.enum(["EMPTY", "SINGLE_OBSERVATION", "MULTIPLE_OBSERVATIONS"]),
+    items: z.array(
+      z.object({
+        observationId: text,
+        sourceRef: text,
+        sourceType: text,
+        observedAt: text,
+        currentness: z.enum(["CURRENT", "STALE", "HISTORICAL", "UNKNOWN"]),
+        normalizedStateChanged: z.boolean().nullable(),
+      }),
+    ),
+  }),
   today: z.object({
     disposition: text,
     items: z.array(

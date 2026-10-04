@@ -58,6 +58,17 @@ const projection = {
       },
     },
   ],
+  temporalHistory: {
+    disposition: "SINGLE_OBSERVATION",
+    items: [{
+      observationId: "observation:test",
+      sourceRef: "https://example.org/",
+      sourceType: "OFFICIAL_WEB",
+      observedAt: "2026-10-04T00:00:00Z",
+      currentness: "CURRENT",
+      normalizedStateChanged: null,
+    }],
+  },
   today: {
     disposition: "READY",
     items: [

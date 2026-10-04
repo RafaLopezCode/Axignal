@@ -6673,3 +6673,25 @@ html[data-motion="reduced"] {
 .canonical-product .reobserve-feedback strong { font-size:11px; }
 .canonical-product .reobserve-feedback span { font-family:"IBM Plex Mono", monospace; font-size:9px; color:var(--muted); }
 .canonical-product .reobserve-feedback p { margin:0; font-size:11px; color:var(--muted); line-height:1.6; }
+
+/* T021 canonical temporal history. */
+.runtime-temporal { display:grid; gap:18px; }
+.temporal-summary,.temporal-caveat { max-width:720px; color:var(--muted); line-height:1.65; }
+.temporal-history { display:flex; gap:8px; overflow-x:auto; padding-bottom:4px; }
+.temporal-history-item { min-width:180px; display:grid; gap:5px; text-align:left; border:1px solid var(--line); background:var(--surface); padding:12px; border-radius:10px; cursor:pointer; }
+.temporal-history-item.active { border-color:var(--ink); box-shadow:inset 0 0 0 1px var(--ink); }
+.temporal-history-item time { font-size:11px; }
+.temporal-history-item small { color:var(--muted); }
+.temporal-reading { max-width:720px; display:grid; gap:10px; padding:18px; border:1px solid var(--line); border-radius:12px; background:var(--surface); }
+.temporal-reading header { display:flex; justify-content:space-between; gap:16px; }
+.temporal-reading > time { font-family:"IBM Plex Mono",monospace; font-size:10px; color:var(--muted); }
+.temporal-reading p { margin:0; line-height:1.65; }
+.temporal-reading dl { display:grid; gap:8px; margin:0; }
+.temporal-reading dl div { display:grid; grid-template-columns:120px 1fr; gap:10px; }
+.temporal-reading dt { color:var(--muted); }
+.temporal-reading dd { margin:0; overflow-wrap:anywhere; }
+@media (max-width:700px) {
+  .temporal-history { display:grid; overflow:visible; }
+  .temporal-history-item { min-width:0; width:100%; }
+  .temporal-reading dl div { grid-template-columns:1fr; gap:3px; }
+}

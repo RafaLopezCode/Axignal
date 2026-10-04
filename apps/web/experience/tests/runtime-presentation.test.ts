@@ -80,6 +80,17 @@ const projection = {
       },
     },
   ],
+  temporalHistory: {
+    disposition: "SINGLE_OBSERVATION",
+    items: [{
+      observationId: "obs:1",
+      sourceRef: "https://axignal.com/",
+      sourceType: "OFFICIAL_WEB",
+      observedAt: "2026-10-04T20:22:04Z",
+      currentness: "CURRENT",
+      normalizedStateChanged: null,
+    }],
+  },
   today: { disposition: "READY", items: [] },
   reloadContinuity: "PERSISTED_RUNTIME_READ_MODEL",
 } as RuntimeProjection;

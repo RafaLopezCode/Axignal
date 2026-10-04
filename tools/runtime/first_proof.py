@@ -259,6 +259,47 @@ class FirstProofService:
     artifacts: ContentAddressedArtifactStore
     clock: Callable[[], datetime] = lambda: datetime.now(UTC)
 
+    def _temporal_history_payload(self, *, subject_id: str, as_of: datetime) -> dict[str, object]:
+        history = self.observation_memory.for_subject(subject_id)
+        ordered_history = sorted(
+            history,
+            key=lambda item: (item.record.observed_at, item.record.observation_id),
+        )
+        temporal_items: list[dict[str, object]] = []
+        previous_fields: tuple[tuple[str, str], ...] | None = None
+        for observation in ordered_history:
+            effective_currentness = evaluate_currentness(
+                observation,
+                as_of=as_of,
+                policy=FIRST_PROOF_TEMPORAL_POLICY,
+            ).current
+            normalized_fields = tuple(
+                sorted((field.name, field.value) for field in observation.fields)
+            )
+            temporal_items.append(
+                {
+                    "observationId": observation.record.observation_id,
+                    "sourceRef": observation.record.source_ref,
+                    "sourceType": observation.record.source_type,
+                    "observedAt": observation.record.observed_at.astimezone(UTC).isoformat(),
+                    "currentness": effective_currentness.value,
+                    "normalizedStateChanged": (
+                        None if previous_fields is None else normalized_fields != previous_fields
+                    ),
+                }
+            )
+            previous_fields = normalized_fields
+        return {
+            "disposition": (
+                "EMPTY"
+                if not temporal_items
+                else "SINGLE_OBSERVATION"
+                if len(temporal_items) == 1
+                else "MULTIPLE_OBSERVATIONS"
+            ),
+            "items": temporal_items,
+        }
+
     def current_projection(
         self, *, as_of: datetime | None = None, xeed_id: str | None = None
     ) -> dict[str, object] | None:
@@ -270,6 +311,13 @@ class FirstProofService:
             raise ValueError("first-proof projection as_of must be timezone-aware")
 
         projection = cast(dict[str, object], json.loads(json.dumps(stored)))
+        organization_data = projection.get("organization")
+        if isinstance(organization_data, dict) and isinstance(organization_data.get("id"), str):
+            projection["temporalHistory"] = self._temporal_history_payload(
+                subject_id=str(organization_data["id"]),
+                as_of=evaluated_at,
+            )
+
         nodes = projection.get("nodes")
         if not isinstance(nodes, list):
             return projection
@@ -286,7 +334,6 @@ class FirstProofService:
             for observation_id in refs:
                 if not isinstance(observation_id, str):
                     continue
-                organization_data = projection.get("organization")
                 if not isinstance(organization_data, dict):
                     return None
                 observation = self.observation_memory.get_observation(
@@ -724,6 +771,10 @@ class FirstProofService:
                 "markets": [],
             },
             "nodes": [node],
+            "temporalHistory": self._temporal_history_payload(
+                subject_id=str(organization_id),
+                as_of=projection_as_of,
+            ),
             "memberships": [
                 {"from": str(xeed_id), "to": node["id"], "meaning": "Xeed observes Xignal"}
             ],

@@ -55,6 +55,13 @@ def test_resolved_add_duplicate_selection_reobserve_restart_and_evidence(
     assert attention.projection("operator:a") == second
     repeated = attention.reobserve("operator:a", inventory["selectedId"])
     assert repeated["context"]["id"] != second["context"]["id"]
+    history = repeated["temporalHistory"]
+    assert history["disposition"] == "MULTIPLE_OBSERVATIONS"
+    assert len(history["items"]) == 2
+    assert history["items"][0]["normalizedStateChanged"] is None
+    assert history["items"][1]["normalizedStateChanged"] is False
+    assert history["items"][0]["sourceRef"] == "https://controlled.example/"
+    assert history["items"][1]["sourceRef"] == "https://controlled.example/"
     assert attention.proof.store.get(second["context"]["id"]) == second
     restarted = OrganizationAttention(_service(tmp_path), attention.catalog)
     assert restarted.projection("operator:a") == repeated
