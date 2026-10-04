@@ -12,13 +12,18 @@ def test_adversarial_remediation_has_complete_task_sequence() -> None:
     text = ROADMAP.read_text(encoding="utf-8")
     task_ids = re.findall(r"^## (AUD-\d{2})", text, re.MULTILINE)
     assert task_ids == [f"AUD-{index:02d}" for index in range(1, 11)]
-    assert "**Revalidated against:** 3669b7baf4e930c8c2231c7f0084ac244d2accde" in text
+    assert (
+        "**Revalidated against:** current canonical integration state; exact SHA recorded in results-current-main.json"
+        in text
+    )
+    assert "**Status:** CLOSED — AUD-01..AUD-10 REPAIRED" in text
+    assert "AXIGNAL_ADVERSARIAL_REAUDIT_DELTA_2026-10-04.md" in text
 
 
-def test_ao25_is_blocked_until_adversarial_remediation_closes() -> None:
+def test_ao25_is_unblocked_after_adversarial_remediation_closes() -> None:
     text = ADMIN_ROADMAP.read_text(encoding="utf-8")
-    assert "**CURRENT_TASK = AUD-10**" in text
-    assert "**Status:** BLOCKED_BY_ADVERSARIAL_REMEDIATION" in text
+    assert "**CURRENT_TASK = AO-25**" in text
+    assert "**Status:** READY" in text
     assert "**Depends on:** AO-02, AO-09, AO-24, AUD-01..AUD-10" in text
 
 

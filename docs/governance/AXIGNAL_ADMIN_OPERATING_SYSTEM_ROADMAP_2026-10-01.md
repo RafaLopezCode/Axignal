@@ -99,7 +99,7 @@ Admin must distinguish measured flywheel behavior from the hypothesis above.
 
 `NOT_STARTED → READY → IN_PROGRESS → BLOCKED → DONE → DEFERRED → REJECTED`
 
-**CURRENT_TASK = AUD-10**
+**CURRENT_TASK = AO-25**
 
 ## 7. Closure rule
 
@@ -1064,10 +1064,10 @@ Premium reports are measurement-governed rather than polished model opinion.
 
 ## AO-25 — Founder / Frontier Advisor Workbench
 
-**Status:** BLOCKED_BY_ADVERSARIAL_REMEDIATION
+**Status:** READY
 **Depends on:** AO-02, AO-09, AO-24, AUD-01..AUD-10
 
-> Execution gate: the 2026-10-03 adversarial audit was replayed successfully against main @ 3669b7b. AO-25 MUST NOT start until docs/governance/AXIGNAL_ADVERSARIAL_EPISTEMIC_REMEDIATION_2026-10-03.md is closed.
+> Execution gate closed 2026-10-04: AUD-01..AUD-10 are repaired at repository level, current-main replay is green, frozen audit evidence is unchanged, and the re-audit delta is recorded. Production deployment remains separately governed.
 **Priority:** P1 Advisory
 ### Work
 Internal staff-only flow:

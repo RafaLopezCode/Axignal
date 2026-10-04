@@ -47,10 +47,11 @@ class HttpSourceSensor:
 
         requested_uri = request.target_uri
         current_uri = requested_uri
-        redirect_chain = [requested_uri]
+        redirect_chain: list[str] = []
         peer_ips: list[str] = []
         final_response: RawHttpResponse | None = None
         failure_state: str | None = None
+        final_uri = requested_uri
 
         for hop in range(policy.max_redirects + 1):
             try:
@@ -60,6 +61,10 @@ class HttpSourceSensor:
                     raise
                 failure_state = "redirect_policy_rejected"
                 break
+
+            if not redirect_chain or redirect_chain[-1] != resolved.uri:
+                redirect_chain.append(resolved.uri)
+            final_uri = resolved.uri
 
             try:
                 response = self._transport.fetch(
@@ -90,7 +95,6 @@ class HttpSourceSensor:
                 failure_state = "redirect_limit_exceeded"
                 break
             current_uri = urljoin(resolved.uri, location)
-            redirect_chain.append(current_uri)
 
         retrieved_at = self._clock()
         if retrieved_at.tzinfo is None:
@@ -102,15 +106,13 @@ class HttpSourceSensor:
         body_fingerprint = f"sha256:{hashlib.sha256(body).hexdigest()}" if body else None
         status = final_response.status if final_response is not None else None
         content_type = final_response.header("Content-Type") if final_response is not None else None
-        final_uri = current_uri
-
         envelope = {
             "schema": "axignal.source-observation/0.1",
             "request": {
                 "request_id": request.request_id,
                 "subject_id": request.subject_id,
                 "observation_slot": request.observation_slot,
-                "requested_uri": requested_uri,
+                "requested_uri": redirect_chain[0],
                 "source_type": request.source_type,
             },
             "policy": {
@@ -148,7 +150,7 @@ class HttpSourceSensor:
             request_id=request.request_id,
             subject_id=request.subject_id,
             observation_slot=request.observation_slot,
-            requested_uri=requested_uri,
+            requested_uri=redirect_chain[0],
             final_uri=final_uri,
             retrieved_at=retrieved_at,
             http_status=status,

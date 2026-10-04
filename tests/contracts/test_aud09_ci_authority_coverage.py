@@ -18,6 +18,7 @@ CRITICAL_COLLECTION = (
     "tests/semantic_extraction/test_semantic_claim_candidates.py",
     "tests/contracts/test_ao22_verifactu_sif_decision.py",
     "tests/pipeline/test_evidence_ledger.py",
+    "tests/source_acquisition/test_http_source_runtime.py",
 )
 
 REQUIRED_NEGATIVE_NODE_FRAGMENTS = (
@@ -28,6 +29,7 @@ REQUIRED_NEGATIVE_NODE_FRAGMENTS = (
     "test_ungrounded_claim_fails_closed",
     "test_future_evidence_cannot_enable_as_of_projection",
     "test_same_evidence_id_with_changed_immutable_content_fails_closed",
+    "test_sensitive_public_target_is_rejected_before_dns_or_cas",
 )
 
 

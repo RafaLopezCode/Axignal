@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import sqlite3
 import threading
 import urllib.error
 import urllib.request
@@ -413,3 +414,44 @@ def test_http_subscriber_context_reprojects_under_future_runtime_clock(
         server.shutdown()
         server.server_close()
         thread.join(timeout=3)
+
+
+def test_first_proof_rejects_sensitive_target_before_persisting_any_session(
+    tmp_path: Path,
+) -> None:
+    service = _service(tmp_path)
+    secret = "AUDIT_SYNTHETIC_TOKEN"
+    target = f"https://axignal.com/?locale=es&access_token={secret}&page=2"
+
+    with pytest.raises(ValueError) as rejected:
+        service.plant(label="sensitive", target_uri=target)
+
+    assert secret not in str(rejected.value)
+    with sqlite3.connect(service.store.path) as connection:
+        count = connection.execute("SELECT COUNT(*) FROM first_proof_sessions").fetchone()[0]
+    assert count == 0
+    assert secret.encode() not in service.store.path.read_bytes()
+
+
+def test_first_proof_preserves_safe_query_semantics_in_persisted_public_refs(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    service = _service(tmp_path)
+    _install_source(monkeypatch, service)
+    target = "https://axignal.com/?locale=es&page=2&view=overview"
+
+    projection = service.plant(label="safe query", target_uri=target)
+
+    with sqlite3.connect(service.store.path) as connection:
+        stored_target = connection.execute(
+            "SELECT target_uri FROM first_proof_sessions ORDER BY sequence DESC LIMIT 1"
+        ).fetchone()[0]
+    assert stored_target == target
+    assert target in projection["nodes"][0]["sourceRefs"]
+    narrative_refs = [
+        step["sourceRef"]
+        for step in projection["nodes"][0]["evidenceNarrative"]["steps"]
+        if step["sourceRef"] is not None
+    ]
+    assert target in narrative_refs

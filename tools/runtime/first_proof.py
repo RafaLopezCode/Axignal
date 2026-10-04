@@ -70,6 +70,8 @@ from application.source_acquisition import (
     SourceObservation,
     SourceRequest,
     SourceTargetRule,
+    public_acquisition_rejection_reason,
+    public_source_reference,
     source_observation_id,
 )
 from application.source_representation import RichSubjectState, compile_rich_subject_state
@@ -325,11 +327,12 @@ class FirstProofService:
         host = (parsed.hostname or "").rstrip(".").lower()
         if parsed.scheme != "https" or host != self.allowed_host:
             raise ValueError("FR-30 first proof permits only the configured HTTPS host")
-        if parsed.username or parsed.password or parsed.port not in (None, 443):
-            raise ValueError(
-                "FR-30 target must use canonical HTTPS without credentials/custom port"
-            )
-        return parsed.geturl()
+        privacy_rejection = public_acquisition_rejection_reason(target_uri)
+        if privacy_rejection is not None:
+            raise ValueError("FR-30 target contains private credential material")
+        if parsed.port not in (None, 443):
+            raise ValueError("FR-30 target must use canonical HTTPS without custom port")
+        return public_source_reference(parsed.geturl())
 
     def plant(self, *, label: str, target_uri: str) -> dict[str, object]:
         label = label.strip()
@@ -378,7 +381,7 @@ class FirstProofService:
                     candidate_id="source:official-homepage",
                     subject_id=ORGANIZATION_ID,
                     observation_slot="website",
-                    source_ref=target_uri,
+                    source_ref=public_source_reference(target_uri),
                     source_type="OFFICIAL_WEB",
                     provides_fields=frozenset({"document.website.visible_text"}),
                     priority=1,
@@ -504,7 +507,7 @@ class FirstProofService:
                 BasisDatum(
                     datum_id=f"datum:fr30:{sequence}:homepage",
                     observation_id=observation_id,
-                    source_ref=observation.final_uri,
+                    source_ref=public_source_reference(observation.final_uri),
                     source_type=request.source_type,
                     observed_at=observation.retrieved_at,
                     excerpt_or_summary=excerpt,
@@ -539,7 +542,7 @@ class FirstProofService:
                         instrument_version=observation.instrument_ref.rsplit("/", 1)[-1],
                         scope_ref=request.observation_slot,
                         provenance_ref=observation.raw_observation_ref,
-                        source_ref=observation.final_uri,
+                        source_ref=public_source_reference(observation.final_uri),
                         observed_at=observation.retrieved_at,
                         currentness=Currentness.CURRENT,
                     )
@@ -563,7 +566,7 @@ class FirstProofService:
                         observation_id=observation_id,
                         subject_id=ORGANIZATION_ID,
                         candidate_id=basis.candidate_id,
-                        source_ref=observation.final_uri,
+                        source_ref=public_source_reference(observation.final_uri),
                         source_type=request.source_type,
                         observed_at=observation.retrieved_at,
                         excerpt_or_summary=excerpt,

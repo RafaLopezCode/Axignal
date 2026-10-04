@@ -1,17 +1,17 @@
 # AXIGNAL Adversarial Epistemic Remediation Roadmap — 2026-10-03
 
-**Status:** ACTIVE EXECUTION GATE
+**Status:** CLOSED — AUD-01..AUD-10 REPAIRED
 **Authority:** MASTER PRODUCT MODEL -> Engineering Constitution -> accepted ADRs -> this remediation plan -> Admin roadmap.
 **Source audit:** D:/AXIGNAL/.validation/adversarial-audit-2026-10-03/AXIGNAL_ADVERSARIAL_ARCHITECTURE_AUDIT_2026-10-03.md
 **Frozen audit snapshot:** 5d20cc98732e963c95bd097f7fc6175f51b0a444
-**Revalidated against:** 3669b7baf4e930c8c2231c7f0084ac244d2accde
+**Revalidated against:** current canonical integration state; exact SHA recorded in results-current-main.json
 **Revalidation evidence:** D:/AXIGNAL/.validation/adversarial-audit-2026-10-03/results-current-main.json
 
 ## 1. Why this gate exists
 
 The adversarial audit found 7 HIGH and 3 MEDIUM findings across canonical truth admission, observed/potential boundaries, narrative/provenance, private reuse, temporal currentness, fiscal fail-closed semantics, legacy evidence identity, CI coverage and URL privacy.
 
-The original audit harness was replayed against current main 3669b7b with loopback HTTP checks enabled. All audit assertions still reproduced. AO-24 did not remediate these boundaries.
+The frozen original audit remains immutable. The separate current-main harness now validates repaired semantics; AUD-01 through AUD-10 pass against the repaired repository state, with the exact canonical integration SHA recorded by the mutable revalidation output.
 
 AO-25 and later premium advisory work MUST NOT build on known broken truth/presentation boundaries.
 
@@ -331,8 +331,20 @@ CI does not prove that all critical cognitive/epistemic suites are collected/exe
 ## AUD-10 — Sensitive URL / Public Source Reference Redaction
 
 **Severity:** MEDIUM
-**Status:** READY
+**Status:** DONE
 **Depends on:** AUD-05
+
+### Completion evidence
+- Public source URL privacy is now a shared application contract: credential-like query keys and URL userinfo are rejected for new public acquisition before DNS/fetch.
+- Rejection reasons classify parameter names only and never echo credential values.
+- Safe public query parameters retain ordering, raw encoding and traceability.
+- Redirect destinations pass the same gate before they can be fetched or persisted; rejected redirect locations never enter redirect_chain/final_uri.
+- HttpSourceSensor CAS envelopes persist only authorized URIs.
+- FirstProof rejects a sensitive target before creating a first-proof session and defensively projects safe public refs through SourceCatalog, Basis, Observation metadata, NarrativeMaterial and visible sourceRefs.
+- EvidenceNarrative applies the same public-reference projection to coherent historical material, preventing legacy URL contamination from reaching subscriber-visible sourceRefs without weakening source identity verification.
+- AUD-10 is permanently included in the full CI authority collection contract introduced by AUD-09.
+- Focused source/narrative/FirstProof and cross-surface regressions pass, including synthetic access_token/api_key/password/userinfo/redirect cases.
+- ADR-0081 records the private acquisition locator versus public provenance boundary.
 
 ### Problem
 Credential-like query parameters can reach CAS metadata, persisted read models and visible sourceRefs.
@@ -358,3 +370,12 @@ AUD remediation is closed only when:
 4. Frozen original audit evidence remains unchanged.
 5. A concise re-audit delta records each finding as repaired or explicitly UNKNOWN.
 6. AO-25 is then unblocked and becomes CURRENT_TASK again.
+
+### Closure evidence — 2026-10-04
+
+- AUD-01 through AUD-10 are DONE.
+- The mutable current-main replay harness validates repaired semantics and returns 10/10 PASS on the repaired repository state.
+- Frozen audit evidence hashes were rechecked and remain byte-identical to the originals.
+- `AXIGNAL_ADVERSARIAL_REAUDIT_DELTA_2026-10-04.md` records every finding as REPAIRED; no repository-level audit finding remains UNKNOWN.
+- Full deterministic repository validation is required immediately before canonical integration and is not inferred from focused tests.
+- AO-25 is unblocked at repository-governance level; production deployment of individual remediations remains a separate status.

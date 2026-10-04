@@ -20,6 +20,8 @@ from application.source_acquisition import (
     SourceRequest,
     SourceTargetRule,
     ingest_source_observation,
+    public_acquisition_rejection_reason,
+    public_source_reference,
 )
 from pipeline.observation_memory import SqliteObservationMemory
 from pipeline.source_acquisition import (
@@ -380,10 +382,8 @@ def test_redirect_is_reauthorized_and_cannot_escape_policy(
 
     assert transport.calls == 1
     assert observation.failure_state == "redirect_policy_rejected"
-    assert observation.redirect_chain == (
-        "https://example.test/docs/company",
-        "https://evil.test/private",
-    )
+    assert observation.redirect_chain == ("https://example.test/docs/company",)
+    assert observation.final_uri == "https://example.test/docs/company"
     assert observation.peer_ips == ("8.8.8.8",)
 
 
@@ -414,3 +414,135 @@ def test_request_policy_fingerprint_mismatch_fails_before_dns(
 
     with pytest.raises(SourcePolicyRejected, match="request_policy_fingerprint_mismatch"):
         sensor.observe(request, policy)
+
+
+@pytest.mark.parametrize(
+    "uri",
+    [
+        "https://example.test/docs/company?access_token=AUDIT_SYNTHETIC_TOKEN",
+        "https://example.test/docs/company?api_key=AUDIT_SYNTHETIC_KEY",
+        "https://example.test/docs/company?password=AUDIT_SYNTHETIC_PASSWORD",
+        "https://example.test/docs/company?client_secret=AUDIT_SYNTHETIC_SECRET",
+        "https://example.test/docs/company?X-Amz-Signature=AUDIT_SYNTHETIC_SIGNATURE",
+        "https://example.test/docs/company?%61ccess_token=AUDIT_SYNTHETIC_TOKEN",
+        "https://user:AUDIT_SYNTHETIC_PASSWORD@example.test/docs/company",
+    ],
+)
+def test_sensitive_public_target_is_rejected_before_dns_or_cas(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+    uri: str,
+) -> None:
+    def forbidden_dns(*_args: object, **_kwargs: object) -> list[tuple[object, ...]]:
+        raise AssertionError("sensitive public URI must fail before DNS")
+
+    monkeypatch.setattr(socket, "getaddrinfo", forbidden_dns)
+    policy = _policy()
+    request = SourceRequest(
+        request_id="request:sensitive",
+        subject_id="org:acme",
+        observation_slot="website",
+        target_uri=uri,
+        source_type="OFFICIAL_WEB",
+        policy_id=policy.policy_id,
+        policy_fingerprint=policy.fingerprint,
+    )
+    store = ContentAddressedArtifactStore(tmp_path / "artifacts")
+    sensor = HttpSourceSensor(
+        policy_gate=PublicSourcePolicyGate(),
+        transport=_StubTransport(),
+        artifacts=store,
+        clock=lambda: NOW,
+    )
+
+    with pytest.raises(SourcePolicyRejected) as rejected:
+        sensor.observe(request, policy)
+
+    rendered_error = str(rejected.value)
+    assert "AUDIT_SYNTHETIC" not in rendered_error
+    assert list((tmp_path / "artifacts").rglob("*")) == []
+
+
+def test_safe_query_parameters_are_preserved_exactly_for_traceability(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(socket, "getaddrinfo", _public_dns)
+    uri = "https://example.test/docs/company?locale=es&page=2&category=industrial%20pumps"
+
+    resolved = PublicSourcePolicyGate().resolve(uri, _policy())
+
+    assert resolved.uri == uri
+    assert resolved.path_and_query == "/docs/company?locale=es&page=2&category=industrial%20pumps"
+    assert public_acquisition_rejection_reason(uri) is None
+    assert public_source_reference(uri) == uri
+
+
+def test_public_source_reference_redacts_only_sensitive_material() -> None:
+    contaminated = (
+        "https://user:AUDIT_SYNTHETIC_PASSWORD@example.test/docs/company"
+        "?locale=es&access_token=AUDIT_SYNTHETIC_TOKEN&page=2"
+        "&api_key=AUDIT_SYNTHETIC_KEY"
+    )
+
+    safe = public_source_reference(contaminated)
+
+    assert safe == "https://example.test/docs/company?locale=es&page=2"
+    assert "AUDIT_SYNTHETIC" not in safe
+    assert "access_token" not in safe
+    assert "api_key" not in safe
+
+
+class _SensitiveRedirectTransport(PinnedHttpTransport):
+    instrument_ref = "test-pinned-http/sensitive-redirect"
+
+    def __init__(self) -> None:
+        super().__init__()
+        self.calls = 0
+
+    def fetch(
+        self,
+        target: ResolvedTarget,
+        *,
+        timeout_ms: int,
+        max_response_bytes: int,
+    ) -> RawHttpResponse:
+        self.calls += 1
+        if self.calls == 1:
+            return RawHttpResponse(
+                status=302,
+                headers=(
+                    (
+                        "Location",
+                        "/docs/company?locale=es&access_token=AUDIT_SYNTHETIC_TOKEN",
+                    ),
+                ),
+                body=b"",
+                peer_ip=target.addresses[0],
+            )
+        raise AssertionError("sensitive redirect must never be fetched")
+
+
+def test_sensitive_redirect_fails_closed_without_persisting_secret(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    monkeypatch.setattr(socket, "getaddrinfo", _public_dns)
+    policy = _policy()
+    store = ContentAddressedArtifactStore(tmp_path / "artifacts")
+    transport = _SensitiveRedirectTransport()
+    sensor = HttpSourceSensor(
+        policy_gate=PublicSourcePolicyGate(),
+        transport=transport,
+        artifacts=store,
+        clock=lambda: NOW,
+    )
+
+    observation = sensor.observe(_request(policy), policy)
+    envelope = store.read(observation.raw_observation_ref).decode()
+
+    assert transport.calls == 1
+    assert observation.failure_state == "redirect_policy_rejected"
+    assert observation.redirect_chain == ("https://example.test/docs/company",)
+    assert observation.final_uri == "https://example.test/docs/company"
+    assert "AUDIT_SYNTHETIC_TOKEN" not in envelope
+    assert "access_token" not in envelope

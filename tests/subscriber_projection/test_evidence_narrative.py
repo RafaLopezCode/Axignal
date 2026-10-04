@@ -896,3 +896,80 @@ def test_historical_narrative_is_reproducible_and_visibly_historical(tmp_path: P
     ]
     assert evidence_steps
     assert all(step.currentness == Currentness.HISTORICAL.value for step in evidence_steps)
+
+
+def test_narrative_redacts_sensitive_query_from_historical_source_ref(tmp_path: Path) -> None:
+    contaminated = (
+        "https://example.test/company?locale=es&access_token=AUDIT_SYNTHETIC_TOKEN&page=2"
+    )
+    artifacts = ContentAddressedArtifactStore(tmp_path / "artifacts")
+    web_ref = artifacts.put_json({"source": "web", "claim": "industrial pumps"})
+    registry_ref = artifacts.put_json({"source": "registry", "scope": "manufacturing"})
+    memory = SqliteObservationMemory(tmp_path / "observations.sqlite3")
+    web = _observation(
+        observation_id="obs:web",
+        source_ref=contaminated,
+        source_type="OFFICIAL_WEB",
+        artifact_ref=web_ref,
+        fingerprint="fingerprint:web",
+    )
+    registry = _observation(
+        observation_id="obs:registry",
+        source_ref="registry:acme",
+        source_type="PUBLIC_REGISTRY",
+        artifact_ref=registry_ref,
+        fingerprint="fingerprint:registry",
+    )
+    assert memory.append(web)
+    assert memory.append(registry)
+
+    basis = _basis()
+    contaminated_basis = replace(
+        basis,
+        data=(replace(basis.data[0], source_ref=contaminated), *basis.data[1:]),
+    )
+    base_materials = _material_resolver()
+    web_material = base_materials.resolve("obs:web")
+    registry_material = base_materials.resolve("obs:registry")
+    assert web_material is not None
+    assert registry_material is not None
+    contaminated_materials = NarrativeMaterialMapResolver(
+        (
+            replace(web_material, source_ref=contaminated),
+            registry_material,
+        )
+    )
+    projection = project_explainable_xignal(
+        organization_context=_seed(),
+        candidate_id=contaminated_basis.candidate_id,
+        kind=XignalKind.SUPPLY,
+        epistemic_state=XignalEpistemicState.OBSERVED,
+        title="Industrial pump manufacturing observed",
+        why_attention="Observed supply capability warrants attention.",
+        basis=contaminated_basis,
+        emitted_at=NOW,
+        policy_version="xignal-v1",
+        canonical_faxt=_faxt(),
+    )
+
+    narrative = build_evidence_narrative(
+        organization_context=_seed(),
+        projection=projection,
+        basis=contaminated_basis,
+        observation_memory=memory,
+        artifact_integrity=ContentAddressedArtifactIntegrityAdapter(artifacts),
+        material_resolver=contaminated_materials,
+        access_context=_access_context(),
+        reuse_policy=NARRATIVE_POLICY,
+        temporal_policy=TEMPORAL_POLICY,
+        canonical_faxts=(_faxt(),),
+    )
+
+    source_refs = [
+        step.source_ref
+        for step in narrative.steps
+        if step.kind is EvidenceNarrativeKind.SOURCE and step.source_ref is not None
+    ]
+    assert "https://example.test/company?locale=es&page=2" in source_refs
+    assert all("AUDIT_SYNTHETIC_TOKEN" not in ref for ref in source_refs)
+    assert all("access_token" not in ref for ref in source_refs)

@@ -93,3 +93,4 @@ Constitution (`.specify/memory/constitution.md`).
 | [ADR-0078](ADR-0078-fiscal-evidence-verification-as-of-gate.md) | Fiscal Evidence Verification and As-Of Gate (**ACCEPTED**) | AUD-07; AO-22; fiscal evidence |
 | [ADR-0079](ADR-0079-immutable-legacy-evidence-identity-replay-conflict.md) | Immutable Legacy Evidence Identity and Replay Conflict (**ACCEPTED**) | AUD-08; EvidenceLedger; legacy germination |
 | [ADR-0080](ADR-0080-full-deterministic-ci-authority-coverage.md) | Full Deterministic CI Authority Coverage (**ACCEPTED**) | AUD-09; CI; cognitive/epistemic gates |
+| [ADR-0081](ADR-0081-credential-safe-public-source-url-boundary.md) | Credential-Safe Public Source URL Boundary (**ACCEPTED**) | AUD-10; acquisition; provenance/privacy |

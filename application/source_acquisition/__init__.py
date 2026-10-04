@@ -13,6 +13,11 @@ from application.source_acquisition.runtime import (
     source_observation_id,
     to_governed_observation,
 )
+from application.source_acquisition.url_privacy import (
+    is_sensitive_query_key,
+    public_acquisition_rejection_reason,
+    public_source_reference,
+)
 
 __all__ = [
     "DispatchDisposition",
@@ -22,6 +27,9 @@ __all__ = [
     "SourceRequest",
     "SourceTargetRule",
     "ingest_source_observation",
+    "is_sensitive_query_key",
+    "public_acquisition_rejection_reason",
+    "public_source_reference",
     "source_observation_id",
     "to_governed_observation",
 ]

@@ -10,6 +10,7 @@ from typing import Protocol
 from application.economic_discovery.explanation import BasisContribution, ExplainableBasis
 from application.economic_discovery.observation_reuse import ObservationReusePolicy
 from application.economic_discovery.temporal_currentness import TemporalCurrentnessPolicy
+from application.source_acquisition import public_source_reference
 from application.subscriber_projection.narrative_access import (
     NarrativeAccessContext,
     NarrativeEvidenceScope,
@@ -320,7 +321,7 @@ def build_evidence_narrative(
                 kind=EvidenceNarrativeKind.SOURCE,
                 label=datum.source_type,
                 parent_step_id=observation_step_id,
-                source_ref=datum.source_ref,
+                source_ref=public_source_reference(datum.source_ref),
                 observed_at=observation.record.observed_at,
                 currentness=effective_currentness,
                 artifact_verified=verified,

@@ -12,6 +12,7 @@ from application.source_acquisition import (
     DispatchDisposition,
     SourceDispatchPolicy,
     SourceTargetRule,
+    public_acquisition_rejection_reason,
 )
 
 
@@ -71,8 +72,11 @@ class PublicSourcePolicyGate:
         parsed = urlsplit(uri)
         if parsed.scheme not in {"http", "https"}:
             raise SourcePolicyRejected("scheme_not_http_or_https")
-        if parsed.username or parsed.password or not parsed.hostname:
-            raise SourcePolicyRejected("userinfo_or_missing_host")
+        privacy_rejection = public_acquisition_rejection_reason(uri)
+        if privacy_rejection is not None:
+            raise SourcePolicyRejected(privacy_rejection)
+        if not parsed.hostname:
+            raise SourcePolicyRejected("missing_host")
         if parsed.fragment:
             raise SourcePolicyRejected("fragment_not_allowed")
         try:
