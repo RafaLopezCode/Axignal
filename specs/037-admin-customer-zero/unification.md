@@ -65,3 +65,9 @@ of human visual acceptance or of illustrative data into economic authority.
 Convergence evidence: [unification-validation.md](unification-validation.md).
 Dashboard hosting correction: [admin-embedding-validation.md](admin-embedding-validation.md).
 Human visual acceptance remains PENDING; no production deployment or push.
+
+The embedded framing was subsequently reconciled into one Admin sidebar and
+header using placement slots for the canonical product controls. This supersedes
+the earlier full-shell embedding, without creating another product controller.
+See [unified-admin-chrome-validation.md](unified-admin-chrome-validation.md) for
+typography, recovery-page audit and final browser/gate evidence.

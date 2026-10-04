@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useReducer, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import {
   Compass,
   Home,
@@ -163,10 +164,18 @@ export function RuntimeProductProjection({
   projection,
   staffControls,
   mainId = "main",
+  embedded = false,
+  navigationHost,
+  toolbarHost,
+  onNavigate,
 }: {
   projection: RuntimeProjection;
   staffControls?: React.ReactNode;
   mainId?: string;
+  embedded?: boolean;
+  navigationHost?: HTMLElement | null;
+  toolbarHost?: HTMLElement | null;
+  onNavigate?: () => void;
 }) {
   const { t, locale } = useLocale();
   const [history, dispatch] = useReducer(focusHistory, {
@@ -192,6 +201,7 @@ export function RuntimeProductProjection({
     dispatch({ type: "go", focus: next });
     setNav(false);
     setEvidence(null);
+    onNavigate?.();
   }
   function enter(id: string) {
     if (projection.nodes.some((s) => s.id === id))
@@ -204,6 +214,12 @@ export function RuntimeProductProjection({
     { id: "activity", label: t("Actividad", "Activity") },
   ] as const;
   const dimension = dimensions.find((d) => d.id === focus.dimension)!;
+  const focusLabel = selected
+    ? t("Señal seleccionada", "Selected signal")
+    : focus.view === "dimension" ? dimension.label
+      : focus.view === "today" ? t("Hoy", "Today")
+        : focus.view === "timeline" ? t("Tiempo y evidencia", "Time and evidence")
+          : t("Panorama", "Panorama");
   const dates = [...new Set(projection.nodes.map((s) => s.observedAt))].sort();
   useEffect(() => {
     main.current?.scrollTo({ top: 0 });
@@ -221,6 +237,7 @@ export function RuntimeProductProjection({
       conversation={conversation}
       projection={projection}
       signalId={selected?.id ?? null}
+      focusLabel={focusLabel}
       onEvidence={() => {
         setAxent(false);
         showEvidence();
@@ -231,12 +248,72 @@ export function RuntimeProductProjection({
       }}
     />
   );
+  // The product owns these controls and their state; Admin supplies placement only.
+  const productMenu = (
+    <>
+      <button className="organization-switch" onClick={() => {
+        setOrganizations(true);
+        onNavigate?.();
+      }}>
+        <span className="org-monogram">{projection.organization.name.slice(0, 1)}</span>
+        <span><strong>{projection.organization.name}</strong><small>{t("Foco de observación", "Observation focus")}</small></span>
+        <ChevronDown size={14} />
+      </button>
+      <nav aria-label={t("Navegación del producto", "Product navigation")}>
+        <span className="nav-group-label">{t("OBSERVAR", "OBSERVE")}</span>
+        <button className={"nav-item " + (focus.view === "today" && !selected ? "active" : "")} onClick={() => go({ ...productHome, view: "today" })}>
+          <Home size={18} />{t("Hoy", "Today")}
+        </button>
+        <button className={"nav-item " + (focus.view === "panorama" && !selected ? "active" : "")} onClick={() => go(productHome)}>
+          <Compass size={18} />{t("Panorama", "Panorama")}
+        </button>
+        <span className="nav-group-label">{t("DIMENSIONES", "DIMENSIONS")}</span>
+        {dimensions.map((d) => <button key={d.id} className={"nav-item " + (focus.view === "dimension" && focus.dimension === d.id && !selected ? "active" : "")} onClick={() => go({ view: "dimension", dimension: d.id, signalId: null })}>{d.label}</button>)}
+        <button className={"nav-item " + (focus.view === "timeline" && !selected ? "active" : "")} onClick={() => go({ ...focus, view: "timeline", signalId: null })}>
+          <CalendarDays size={18} />{t("Tiempo y evidencia", "Time and evidence")}
+        </button>
+      </nav>
+      <div className={embedded ? "admin-product-axent" : "sidebar-bottom"}>
+        <button className="nav-item" onClick={() => { setAxent(true); onNavigate?.(); }}><MessageCircle size={18} />AXENT</button>
+      </div>
+    </>
+  );
+  const productToolbar = (<>
+          <div className="navigation-controls">
+            {!embedded && <IconButton
+              className="mobile-only"
+              label={t("Abrir navegación", "Open navigation")}
+              onClick={() => setNav(true)}
+            >
+              <Menu size={20} />
+            </IconButton>}
+            <ProductNavigation
+              onBack={() => dispatch({ type: "back" })}
+              onForward={() => dispatch({ type: "forward" })}
+              onHome={() => dispatch({ type: "home" })}
+              canBack={history.cursor > 0}
+              canForward={history.cursor < history.trail.length - 1}
+            />
+            <span className="breadcrumb-family">
+              {focusLabel}
+            </span>
+          </div>
+          <div className="topbar-right">
+            <LocaleToggle />
+            <IconButton
+              label={t("Abrir AXENT", "Open AXENT")}
+              onClick={() => setAxent(true)}
+            >
+              <MessageCircle size={20} />
+            </IconButton>
+          </div>
+  </>);
   return (
     <div
-      className="product-shell canonical-product"
+      className={"product-shell canonical-product" + (embedded ? " product-with-host-navigation" : "")}
       data-runtime-state="success"
     >
-      <aside
+      {embedded ? (navigationHost ? createPortal(productMenu, navigationHost) : null) : <aside
         ref={sidebar}
         className={"product-sidebar " + (nav ? "mobile-open" : "")}
         role={nav ? "dialog" : "complementary"}
@@ -253,112 +330,10 @@ export function RuntimeProductProjection({
             <X size={19} />
           </IconButton>
         </div>
-        <button
-          className="organization-switch"
-          onClick={() => setOrganizations(true)}
-        >
-          <span className="org-monogram">
-            {projection.organization.name.slice(0, 1)}
-          </span>
-          <span>
-            <strong>{projection.organization.name}</strong>
-            <small>{t("Foco de observación", "Observation focus")}</small>
-          </span>
-          <ChevronDown size={14} />
-        </button>
-        <nav>
-          <span className="nav-group-label">{t("OBSERVAR", "OBSERVE")}</span>
-          <button
-            className={
-              "nav-item " +
-              (focus.view === "today" && !selected ? "active" : "")
-            }
-            onClick={() => go({ ...productHome, view: "today" })}
-          >
-            <Home size={18} />
-            {t("Hoy", "Today")}
-          </button>
-          <button
-            className={
-              "nav-item " +
-              (focus.view === "panorama" && !selected ? "active" : "")
-            }
-            onClick={() => go(productHome)}
-          >
-            <Compass size={18} />
-            {t("Panorama", "Panorama")}
-          </button>
-          <span className="nav-group-label">
-            {t("DIMENSIONES", "DIMENSIONS")}
-          </span>
-          {dimensions.map((d) => (
-            <button
-              key={d.id}
-              className={
-                "nav-item " +
-                (focus.view === "dimension" &&
-                focus.dimension === d.id &&
-                !selected
-                  ? "active"
-                  : "")
-              }
-              onClick={() =>
-                go({ view: "dimension", dimension: d.id, signalId: null })
-              }
-            >
-              {d.label}
-            </button>
-          ))}
-          <button
-            className="nav-item"
-            onClick={() => go({ ...focus, view: "timeline", signalId: null })}
-          >
-            <CalendarDays size={18} />
-            {t("Tiempo y evidencia", "Time and evidence")}
-          </button>
-        </nav>
-        <div className="sidebar-bottom">
-          <button className="nav-item" onClick={() => setAxent(true)}>
-            <MessageCircle size={18} />
-            AXENT
-          </button>
-        </div>
-      </aside>
+        {productMenu}
+      </aside>}
       <div className="product-workspace">
-        <header className="product-topbar">
-          <div className="navigation-controls">
-            <IconButton
-              className="mobile-only"
-              label={t("Abrir navegación", "Open navigation")}
-              onClick={() => setNav(true)}
-            >
-              <Menu size={20} />
-            </IconButton>
-            <ProductNavigation
-              onBack={() => dispatch({ type: "back" })}
-              onForward={() => dispatch({ type: "forward" })}
-              onHome={() => dispatch({ type: "home" })}
-              canBack={history.cursor > 0}
-              canForward={history.cursor < history.trail.length - 1}
-            />
-            <span className="breadcrumb-family">
-              {selected
-                ? t("Señal seleccionada", "Selected signal")
-                : focus.view === "dimension"
-                  ? dimension.label
-                  : t("Panorama", "Panorama")}
-            </span>
-          </div>
-          <div className="topbar-right">
-            <LocaleToggle />
-            <IconButton
-              label={t("Abrir AXENT", "Open AXENT")}
-              onClick={() => setAxent(true)}
-            >
-              <MessageCircle size={20} />
-            </IconButton>
-          </div>
-        </header>
+        {embedded ? (toolbarHost ? createPortal(productToolbar, toolbarHost) : null) : <header className="product-topbar">{productToolbar}</header>}
         <div className="workspace-content">
           <main
             id={mainId}

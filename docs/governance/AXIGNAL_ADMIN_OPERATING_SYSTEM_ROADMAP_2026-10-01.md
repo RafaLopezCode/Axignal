@@ -1156,6 +1156,12 @@ compiled-browser dashboard navigation, narrow drawers, evidence, AXENT and reloa
 verified. Evidence: `specs/037-admin-customer-zero/admin-embedding-validation.md`.
 AO-24A remains IN_PROGRESS pending explicit human visual acceptance.
 
+2026-10-04 framing correction: canonical product controls now occupy the Admin
+sidebar/header through placement slots, removing the duplicate application
+shell. Shared typography roles and branded recovery boundaries are implemented.
+Local browser and gate evidence, including limitations, is recorded in
+`specs/037-admin-customer-zero/unified-admin-chrome-validation.md`.
+
 ### Work
 
 1. Add a staff-only Admin domain/surface: AXIGNAL / Customer Zero.

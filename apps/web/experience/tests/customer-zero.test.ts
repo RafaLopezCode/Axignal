@@ -207,8 +207,22 @@ test("Admin hosts the real product with retained administrative navigation and o
   assert.ok(!html.includes('class="panorama-main admin-main"'));
   const admin=readFileSync("components/admin.tsx","utf8");
   assert.doesNotMatch(admin,/window\.location\.(assign|replace)/);
-  assert.ok(admin.includes('<CustomerZero embedded />'));
+  assert.ok(admin.includes('<CustomerZero embedded navigationHost={productNavigationHost}'));
   assert.ok(admin.includes('hidden={domainId !== "customer-zero"}'));
+});
+
+test("host navigation removes the duplicate product frame while preserving the actual reading",()=>{
+  const result=readCustomerZeroResponse(projection,200);
+  assert.equal(result.state,"success");
+  if(result.state!=="success") return;
+  const plain=renderToStaticMarkup(createElement(RuntimeProductProjection,{projection:result.projection}));
+  const embedded=renderToStaticMarkup(createElement(RuntimeProductProjection,{projection:result.projection,embedded:true}));
+  assert.equal(embedded.match(/<main[\s\S]*?<\/main>/)?.[0],plain.match(/<main[\s\S]*?<\/main>/)?.[0]);
+  assert.doesNotMatch(embedded,/<aside[^>]*class="product-sidebar/);
+  assert.doesNotMatch(embedded,/sidebar-brand|Abrir navegación/);
+  assert.doesNotMatch(embedded,/<header class="product-topbar">/);
+  assert.ok(plain.includes('<header class="product-topbar">'));
+  assert.ok(embedded.includes('aria-label="AXENT"'));
 });
 
 test("runtime AXENT refuses economic input and foreign origin before authorized reading",async()=>{

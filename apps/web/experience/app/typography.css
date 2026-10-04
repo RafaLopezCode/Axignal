@@ -1,0 +1,74 @@
+/* Shared semantic roles. Geometry may adapt; a role's family and weight do not. */
+:root {
+  --font-editorial: Fraunces, Georgia, serif;
+  --font-metadata: "IBM Plex Mono", monospace;
+  --type-body: 14px;
+  --type-control: 13px;
+  --type-meta: 11px;
+  --type-caption: 10px;
+  --type-label: 10px;
+  --type-panel-title: 24px;
+  --weight-reading: 400;
+  --weight-control: 500;
+  --weight-emphasis: 600;
+  --leading-reading: 1.65;
+  --leading-control: 1.4;
+}
+body, .type-body { font-family: var(--font-ui); font-size: var(--type-body); font-weight: var(--weight-reading); line-height: var(--leading-reading); }
+.type-control { font-family: var(--font-ui); font-size: var(--type-control); font-weight: var(--weight-control); line-height: var(--leading-control); }
+.type-meta { font-family: var(--font-ui); font-size: var(--type-meta); font-weight: var(--weight-reading); line-height: 1.5; }
+.type-label { font-family: var(--font-metadata); font-size: var(--type-label); font-weight: var(--weight-reading); line-height: 1.5; letter-spacing: .06em; }
+.type-panel-title { font-family: var(--font-editorial); font-size: var(--type-panel-title); font-weight: var(--weight-reading); line-height: 1.25; }
+
+/* The same action has the same type in public, product, Admin and AXENT. */
+:is(.product-shell, .public-page) .button,
+.public-header nav a, .public-header .public-access-link,
+.locale-selector select, .locale-selector select:focus,
+.product-shell .text-link,
+.admin-shell > .product-sidebar :is(.nav-item, .admin-nav-item),
+.canonical-product .nav-item,
+:is(.axent-panel, .axent-modal) .axent-questions button,
+:is(.axent-panel, .axent-modal) .axent-compose textarea {
+  font-family: var(--font-ui);
+  font-size: var(--type-control);
+  font-weight: var(--weight-control);
+  line-height: var(--leading-control);
+}
+.admin-shell > .product-sidebar :is(.nav-item.active, .admin-nav-item.active),
+.canonical-product .nav-item.active { font-weight: var(--weight-emphasis); }
+.product-shell .nav-group-label,
+:is(.axent-panel, .axent-modal) .axent-scope > .mono,
+.product-shell .eyebrow {
+  font-family: var(--font-metadata);
+  font-size: var(--type-label);
+  font-weight: var(--weight-reading);
+  line-height: 1.5;
+  letter-spacing: .06em;
+}
+.admin-shell > .product-sidebar :is(.admin-plane strong, .organization-switch strong),
+:is(.axent-panel, .axent-modal) .axent-scope strong {
+  font-family: var(--font-ui); font-size: var(--type-control); font-weight: var(--weight-emphasis); line-height: var(--leading-control);
+}
+.admin-shell > .product-sidebar :is(.admin-plane span, .organization-switch small, .sidebar-system),
+:is(.axent-panel, .axent-modal) .axent-scope small,
+.product-shell .runtime-date,
+.product-shell .staff-utility,
+.product-shell .runtime-meridian {
+  font-family: var(--font-ui); font-size: var(--type-meta); font-weight: var(--weight-reading); line-height: 1.5;
+}
+:is(.axent-panel, .axent-modal) .axent-welcome h2 {
+  font-family: var(--font-editorial); font-size: var(--type-panel-title); font-weight: var(--weight-reading); line-height: 1.25;
+}
+:is(.axent-panel, .axent-modal) :is(.axent-welcome > p, .axent-message > p),
+.canonical-product :is(.runtime-signal > p, .limit-note p, .today-item p, .family-empty p) {
+  font-family: var(--font-ui); font-size: var(--type-body); font-weight: var(--weight-reading); line-height: var(--leading-reading);
+}
+:is(.axent-panel, .axent-modal) .axent-compose > p {
+  font-size: var(--type-meta); font-weight: var(--weight-reading); line-height: 1.5;
+}
+.public-page :is(label, .field-label) { font-size: var(--type-control); font-weight: var(--weight-control); line-height: var(--leading-control); }
+
+@media (max-width: 700px) {
+  :is(.axent-panel, .axent-modal) .axent-welcome h2 { font-size: var(--type-panel-title); }
+  :is(.axent-panel, .axent-modal) :is(.axent-welcome > p, .axent-message > p) { font-size: var(--type-body); }
+}

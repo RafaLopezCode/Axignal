@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import Link from "next/link";
 import { ArrowRight, RefreshCw } from "lucide-react";
 import { useLocale } from "@/lib/locale";
@@ -11,13 +12,22 @@ import {
 import { RuntimeProductProjection } from "./runtime-product";
 import { Brand, LocaleToggle } from "./ui";
 
-export function CustomerZero({ embedded = false }: { embedded?: boolean }) {
-  return <RuntimeExperience staff embedded={embedded} />;
+export type RuntimeHost = {
+  embedded?: boolean;
+  navigationHost?: HTMLElement | null;
+  toolbarHost?: HTMLElement | null;
+  onNavigate?: () => void;
+};
+export function CustomerZero(props: RuntimeHost) {
+  return <RuntimeExperience staff {...props} />;
 }
 export function RuntimeExperience({
   staff = false,
   embedded = false,
-}: { staff?: boolean; embedded?: boolean }) {
+  navigationHost,
+  toolbarHost,
+  onNavigate,
+}: { staff?: boolean } & RuntimeHost) {
   const { t } = useLocale();
   const [result, setResult] = useState<CustomerZeroState>({ state: "loading" });
   const [token, setToken] = useState("");
@@ -143,6 +153,10 @@ export function RuntimeExperience({
         projection={result.projection}
         staffControls={controls}
         mainId={embedded ? "customer-zero-main" : "main"}
+        embedded={embedded}
+        navigationHost={navigationHost}
+        toolbarHost={toolbarHost}
+        onNavigate={onNavigate}
       />
     );
   const headings = {
@@ -168,10 +182,14 @@ export function RuntimeExperience({
   };
   return (
     <div className="runtime-entry" data-runtime-state={result.state}>
-      <header className="product-topbar">
-        <Brand />
+      {embedded && toolbarHost && createPortal(<>
+        <div className="navigation-controls"><span className="breadcrumb-root">AXIGNAL / Customer Zero</span></div>
+        <div className="topbar-right"><LocaleToggle /></div>
+      </>, toolbarHost)}
+      {!embedded && <header className="product-topbar">
+        {!embedded && <Brand />}
         <LocaleToggle />
-      </header>
+      </header>}
       <main id={embedded ? "customer-zero-main" : "main"} className="customer-zero">
         {staff && !embedded && (
           <Link className="text-link" href="/admin">

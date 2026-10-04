@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import "./public.css";
+import "./typography.css";
 import { LocaleProvider } from "@/lib/locale";
 import { PrivacyNotice } from "@/components/privacy-notice";
 

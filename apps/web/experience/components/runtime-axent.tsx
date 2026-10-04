@@ -84,12 +84,14 @@ export function RuntimeAxent({
   onEvidence,
   onSignal,
   conversation,
+  focusLabel,
 }: {
   projection: RuntimeProjection;
   signalId: string | null;
   onEvidence: () => void;
   onSignal: (id: string) => void;
   conversation: ReturnType<typeof useRuntimeAxent>;
+  focusLabel?: string;
 }) {
   const { t } = useLocale();
   const { draft, setDraft, busy, error, messages, ask, stop, clear } =
@@ -122,9 +124,9 @@ export function RuntimeAxent({
         </span>
         <strong>{projection.organization.name}</strong>
         <small>
-          {signalId
+          {focusLabel ?? (signalId
             ? t("Señal seleccionada", "Selected signal")
-            : t("Panorama", "Panorama")}
+            : t("Panorama", "Panorama"))}
         </small>
       </div>
       <div className="axent-messages" aria-live="polite" aria-busy={busy}>

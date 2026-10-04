@@ -6509,6 +6509,11 @@ html[data-motion="reduced"] {
 @media(prefers-reduced-motion:reduce) {
   .canonical-product * { transition:none !important; scroll-behavior:auto !important; }
 }
+.root-recovery { max-width: 740px; margin: 0 auto; padding: 70px 24px; text-align: center; }
+.root-recovery > a { display: block; margin-bottom: 60px; }
+.root-recovery .eyebrow { display: block; }
+.root-recovery h1 { font-size: clamp(38px, 6vw, 66px); }
+.root-recovery .recovery-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 14px; margin-top: 28px; }
 
 /* Admin hosts the canonical product; it never supplies economic context. */
 .admin-product-host {
@@ -6520,13 +6525,31 @@ html[data-motion="reduced"] {
   overflow: hidden;
 }
 .admin-product-host[hidden] { display: none; }
+.admin-product-navigation[hidden] { display: none; }
+.admin-product-toolbar[hidden] { display: none; }
+.admin-product-toolbar { flex: 1; min-width: 0; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.admin-product-toolbar:empty::before { content: "AXIGNAL / Customer Zero"; font-size: 12px; color: var(--blue); }
+.admin-product-navigation .organization-switch { width: 100%; margin: 12px 0; }
+.admin-product-navigation .nav-item { min-height: 40px; padding: 9px 12px; }
+.admin-shell > .product-sidebar .nav-item,
+.admin-shell > .product-sidebar .admin-nav-item {
+  min-height: 44px;
+  padding: 10px 12px;
+}
+.admin-product-navigation .nav-group-label { margin-top: 14px; }
+.admin-product-axent { border-top: 1px solid var(--line); margin-top: 12px; padding-top: 8px; }
+.admin-operations-navigation { border-top: 1px solid var(--line); margin-top: 18px; padding-top: 8px; }
+.admin-operations-navigation > summary { cursor: pointer; min-height: 44px; display: flex; align-items: center; justify-content: space-between; }
+.admin-operations-navigation > summary::after { content: "+"; font-size: 16px; }
+.admin-operations-navigation[open] > summary::after { content: "−"; }
 .admin-product-host > .canonical-product { width: 100%; height: 100%; }
 .admin-product-host > .runtime-entry { width: 100%; min-height: 0; overflow-y: auto; }
 .admin-product-host .product-workspace { height: 100%; }
 .admin-using-product > .product-workspace > .product-topbar {
-  height: 48px;
-  min-height: 48px;
+  height: 64px;
+  min-height: 64px;
 }
+.admin-using-product > .product-workspace > .product-topbar > .mobile-only { order: -1; }
 .admin-using-product > .product-workspace > .product-topbar .admin-session { display: none; }
 .admin-using-product > .product-workspace > .product-topbar .breadcrumb-root { display: inline; }
 .admin-using-product > .product-workspace > .admin-footer { display: none; }
@@ -6548,6 +6571,7 @@ html[data-motion="reduced"] {
   .canonical-product .runtime-mobile-tools button { min-height: 48px; padding: 10px 6px; font-size: 11px; }
 }
 @media (max-width: 700px) {
+  .admin-using-product > .product-workspace > .product-topbar > .mobile-only { display: flex !important; }
   .admin-product-host > .canonical-product { display: flex; }
   .admin-product-host .product-workspace { height: 100%; }
   .admin-product-host .product-sidebar { width: 240px; }

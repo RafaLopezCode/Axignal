@@ -49,6 +49,8 @@ export function Admin({
     [busy, setBusy] = useState(false),
     [guidance, setGuidance] = useState(false);
   const sidebarRef = useRef<HTMLElement>(null);
+  const [productNavigationHost, setProductNavigationHost] = useState<HTMLDivElement | null>(null);
+  const [productToolbarHost, setProductToolbarHost] = useState<HTMLDivElement | null>(null);
   const [productStarted, setProductStarted] = useState(
     initialDomain === "customer-zero",
   );
@@ -165,6 +167,9 @@ export function Admin({
               <ChevronRight size={12} />
             </button>
           </div>
+          <div ref={setProductNavigationHost} className="admin-product-navigation" hidden={domainId !== "customer-zero"} />
+          <details className="admin-operations-navigation" open={domainId !== "customer-zero"}>
+          <summary className="nav-group-label">{t("OPERAR AXIGNAL", "OPERATE AXIGNAL")}</summary>
           {["observe", "operate", "govern"].map((group) => (
             <div key={group}>
               <span className="nav-group-label">
@@ -191,6 +196,7 @@ export function Admin({
                 ))}
             </div>
           ))}
+          </details>
         </nav>
         <div className="sidebar-bottom">
           <Link
@@ -208,6 +214,8 @@ export function Admin({
       </aside>
       <div className="product-workspace">
         <header className="product-topbar">
+          <div className="admin-product-toolbar" ref={setProductToolbarHost} hidden={domainId !== "customer-zero"} />
+          {domainId === "customer-zero" ? <IconButton className="mobile-only" label={t("Navegación Admin", "Admin navigation")} onClick={() => setMobile(true)}><Menu size={20} /></IconButton> : <>
           <div className="navigation-controls">
             <IconButton
               className="mobile-only"
@@ -235,6 +243,7 @@ export function Admin({
               {t("Revisión local", "Local review")}
             </span>
           </div>
+          </>}
         </header>
         <div className="workspace-content">
           {productStarted && (
@@ -244,7 +253,7 @@ export function Admin({
               hidden={domainId !== "customer-zero"}
               tabIndex={-1}
             >
-              <CustomerZero embedded />
+              <CustomerZero embedded navigationHost={productNavigationHost} toolbarHost={productToolbarHost} onNavigate={() => setMobile(false)} />
             </div>
           )}
           {domainId !== "customer-zero" && (

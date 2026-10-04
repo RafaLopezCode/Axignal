@@ -1,0 +1,114 @@
+[
+  {
+    "route": "/design",
+    "status": 200
+  },
+  {
+    "route": "/",
+    "status": 200
+  },
+  {
+    "route": "/knowledge",
+    "status": 200
+  },
+  {
+    "route": "/login",
+    "status": 200
+  },
+  {
+    "route": "/signup",
+    "status": 200
+  },
+  {
+    "route": "/policies/terms",
+    "status": 200
+  },
+  {
+    "route": "/policies/privacy",
+    "status": 200
+  },
+  {
+    "route": "/panorama",
+    "status": 200
+  },
+  {
+    "route": "/admin",
+    "status": 200
+  },
+  {
+    "route": "/contact",
+    "status": 200
+  },
+  {
+    "route": "/knowledge/basis/product-model",
+    "status": 200
+  },
+  {
+    "route": "/policies",
+    "status": 200
+  },
+  {
+    "route": "/gdpr",
+    "status": 200
+  },
+  {
+    "route": "/policies/cookies",
+    "status": 200
+  },
+  {
+    "route": "/knowledge/basis/human-first",
+    "status": 200
+  },
+  {
+    "route": "/admin/customer-zero",
+    "status": 200
+  },
+  {
+    "route": "/design/panorama",
+    "status": 200
+  },
+  {
+    "route": "/design/recovery",
+    "status": 200
+  },
+  {
+    "route": "/knowledge/axent-una-conversacion-con-contexto",
+    "status": 200
+  },
+  {
+    "route": "/knowledge/comprender-sin-empezar-de-cero",
+    "status": 200
+  },
+  {
+    "route": "/knowledge/el-contexto-tambien-tiene-fecha",
+    "status": 200
+  },
+  {
+    "route": "/knowledge/no-saber-es-un-estado-util",
+    "status": 200
+  },
+  {
+    "route": "/knowledge/una-organizacion-una-mirada-un-mundo",
+    "status": 200
+  },
+  {
+    "route": "/knowledge/una-senal-no-es-una-certeza",
+    "status": 200
+  },
+  {
+    "route": "/panorama/live",
+    "status": 200
+  },
+  {
+    "route": "/ruta-no-encontrada",
+    "status": 404
+  },
+  {
+    "route": "/knowledge/no-existe",
+    "status": 404
+  },
+  {
+    "route": "/sources/no-existe",
+    "status": 404
+  }
+]

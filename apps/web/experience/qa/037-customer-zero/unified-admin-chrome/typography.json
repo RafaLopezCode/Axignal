@@ -1,0 +1,54 @@
+{
+  "headers": 1,
+  "roles": [
+    {
+      "font": "Manrope, Arial, sans-serif",
+      "selector": ".admin-product-navigation .nav-item",
+      "size": "13px",
+      "weight": "500"
+    },
+    {
+      "font": "Manrope, Arial, sans-serif",
+      "selector": ".axent-questions button",
+      "size": "13px",
+      "weight": "500"
+    },
+    {
+      "font": "\"IBM Plex Mono\", monospace",
+      "selector": ".nav-group-label",
+      "size": "10px",
+      "weight": "400"
+    },
+    {
+      "font": "\"IBM Plex Mono\", monospace",
+      "selector": ".axent-scope > .mono",
+      "size": "10px",
+      "weight": "400"
+    },
+    {
+      "font": "Manrope, Arial, sans-serif",
+      "selector": ".organization-switch small",
+      "size": "11px",
+      "weight": "400"
+    },
+    {
+      "font": "Manrope, Arial, sans-serif",
+      "selector": ".axent-scope small",
+      "size": "11px",
+      "weight": "400"
+    },
+    {
+      "font": "Fraunces, Georgia, serif",
+      "selector": ".axent-welcome h2",
+      "size": "24px",
+      "weight": "400"
+    },
+    {
+      "font": "Manrope, Arial, sans-serif",
+      "selector": ".axent-welcome > p",
+      "size": "14px",
+      "weight": "400"
+    }
+  ],
+  "sidebars": 1
+}
