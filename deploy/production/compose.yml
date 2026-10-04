@@ -53,6 +53,57 @@ services:
         max-size: 10m
         max-file: "3"
 
+  experience:
+    build:
+      context: ../..
+      dockerfile: deploy/production/docker/experience.Dockerfile
+      args:
+        AXIGNAL_CODE_SHA: ${AXIGNAL_CODE_SHA:?AXIGNAL_CODE_SHA is required}
+    image: axignal-experience:${AXIGNAL_CODE_SHA:?AXIGNAL_CODE_SHA is required}
+    container_name: axignal-prod-experience
+    restart: unless-stopped
+    init: true
+    user: "1000:1000"
+    read_only: true
+    tmpfs:
+      - /tmp:size=64m,mode=1777
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    depends_on:
+      runtime:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      NEXT_TELEMETRY_DISABLED: "1"
+      AXIGNAL_CONTAINERIZED: "true"
+      AXIGNAL_CODE_SHA: ${AXIGNAL_CODE_SHA:?AXIGNAL_CODE_SHA is required}
+      AXIGNAL_RUNTIME_ORIGIN: http://runtime:18181
+      AXIGNAL_EXPERIENCE_ORIGIN: http://127.0.0.1:18182
+    ports:
+      - "127.0.0.1:18182:3810"
+    networks:
+      - internal
+    healthcheck:
+      test:
+        - CMD
+        - node
+        - -e
+        - "fetch('http://127.0.0.1:3810/admin/customer-zero').then(r=>{if(r.status>=500)process.exit(1)}).catch(()=>process.exit(1))"
+      interval: 10s
+      timeout: 5s
+      retries: 6
+      start_period: 10s
+    pids_limit: 128
+    mem_limit: 512m
+    cpus: 1.0
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: "3"
+
   landing:
     build:
       context: ../..

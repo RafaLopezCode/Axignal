@@ -17,6 +17,31 @@ export function sameOrigin(request: Request): boolean {
     new URL(origin).host === request.headers.get("host")
   );
 }
+export function resolveRuntimeOrigin(
+  configured: string,
+  containerized = process.env.AXIGNAL_CONTAINERIZED === "true",
+): URL {
+  const origin = new URL(configured);
+  const loopback = ["127.0.0.1", "localhost", "[::1]"].includes(
+    origin.hostname,
+  );
+  const composeRuntime =
+    containerized &&
+    origin.protocol === "http:" &&
+    origin.hostname === "runtime" &&
+    origin.port === "18181";
+  if (
+    origin.protocol !== "http:" ||
+    (!loopback && !composeRuntime) ||
+    origin.username ||
+    origin.password ||
+    origin.search ||
+    origin.hash ||
+    origin.pathname !== "/"
+  )
+    throw new Error("RUNTIME_ORIGIN_REJECTED");
+  return origin;
+}
 export async function runtimeRequest(
   path: string,
   token: string,
@@ -24,15 +49,7 @@ export async function runtimeRequest(
 ) {
   const configured = process.env.AXIGNAL_RUNTIME_ORIGIN;
   if (!configured) throw new Error("RUNTIME_NOT_CONFIGURED");
-  const origin = new URL(configured);
-  if (
-    !["127.0.0.1", "localhost", "[::1]"].includes(origin.hostname) ||
-    origin.username ||
-    origin.password ||
-    origin.search ||
-    origin.hash
-  )
-    throw new Error("RUNTIME_ORIGIN_REJECTED");
+  const origin = resolveRuntimeOrigin(configured);
   return fetch(new URL(path, origin), {
     method: write ? "POST" : "GET",
     cache: "no-store",
