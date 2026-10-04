@@ -1475,3 +1475,34 @@ separate. CURRENT_TASK remains AO-24A, IN_PROGRESS pending human acceptance.
 
 These items are dogfooding-derived UX improvements. They do not reopen or block
 AO-24A once its acceptance criteria are otherwise satisfied.
+
+### Task 6 — first production dogfooding findings
+
+The first authenticated Customer Zero production session exercised:
+
+Panorama -> Today -> Signals -> focused Xignal -> Evidence Journey -> AXENT -> organization selector -> reobserve AXIGNAL -> AXENT reset -> browser reload -> Today -> Time and evidence.
+
+Confirmed product behavior:
+- AO-01 authenticated Customer Zero access works in production.
+- AXIGNAL remains the selected governed focus.
+- Reobservation updates currentness and timestamp.
+- AXENT resets after the observation context changes.
+- The new projection survives browser reload.
+- Today transitions from no-current-day signal to the reobserved signal after a same-day reobservation.
+- Evidence Journey preserves Xignal -> observation -> source -> open uncertainty.
+- Organization attention does not become an editable company profile or CRM.
+
+Dogfooding work now queued:
+1. Localize runtime projection consistently across all six supported locales while keeping raw source text distinct from AXIGNAL interpretation.
+2. Humanize internal runtime codes such as OFFICIAL_WEB, UNKNOWN and artifact verification states in product-level UX; retain raw values in diagnostics.
+3. Differentiate Signals from Panorama so the dimension adds signal-specific value rather than rendering an almost identical view.
+4. Make Today useful when no same-day novelty exists by showing the latest relevant observation without fabricating a new event.
+5. Upgrade AXENT from field echo to evidence-grounded cognitive synthesis and proposed research planning, without claiming unexecuted investigation.
+6. Add explicit reobservation completion/change feedback.
+7. Evolve Time and evidence toward canonical navigable temporal history as real history accumulates.
+8. Improve FIRST_MAP_WOW/information density in sparse AXIGLAND states.
+9. Improve discoverability of Staff-controls disclosure while keeping it secondary to the subscriber product.
+
+These are production-derived product improvements, not evidence defects and not permission to weaken UNKNOWN/POTENTIAL/OBSERVED, EvidenceAdmission, provenance or temporal governance.
+
+2026-10-04 T015/T016 implementation: product presentation now localizes AXIGNAL-authored runtime discourse into es/en/fr/de/it/pt while preserving source-observed text literally. Product surfaces humanize internal metadata such as OFFICIAL_WEB and currentness states; canonical runtime values remain unchanged and continue to appear in technical diagnostics. Dedicated frontend tests cover all six locales, raw-source preservation, AXENT presentation and dynamic organization titles.

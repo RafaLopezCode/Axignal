@@ -4,6 +4,7 @@ import { RotateCcw } from "lucide-react";
 import type { RuntimeProjection } from "@/lib/runtime-projection";
 import type { RuntimeAnswer } from "@/lib/runtime-axent";
 import { useLocale } from "@/lib/locale";
+import { presentRuntimePassage } from "@/lib/runtime-presentation";
 import { AxentIdentity, IconButton } from "./ui";
 import { AxentComposer } from "./axent-composer";
 export function useRuntimeAxent(
@@ -94,7 +95,7 @@ export function RuntimeAxent({
   conversation: ReturnType<typeof useRuntimeAxent>;
   focusLabel?: string;
 }) {
-  const { t } = useLocale();
+  const { t, locale } = useLocale();
   const { draft, setDraft, busy, error, messages, ask, stop, clear } =
     conversation;
   const questions = [
@@ -125,9 +126,10 @@ export function RuntimeAxent({
         </span>
         <strong>{projection.organization.name}</strong>
         <small>
-          {focusLabel ?? (signalId
-            ? t("Señal seleccionada", "Selected signal")
-            : t("Panorama", "Panorama"))}
+          {focusLabel ??
+            (signalId
+              ? t("Señal seleccionada", "Selected signal")
+              : t("Panorama", "Panorama"))}
         </small>
       </div>
       <div className="axent-messages" aria-live="polite" aria-busy={busy}>
@@ -155,7 +157,7 @@ export function RuntimeAxent({
             <div className="axent-message">
               <span className="message-author">AXENT</span>
               {message.answer.passages.map((p, j) => (
-                <p key={j}>{p}</p>
+                <p key={j}>{presentRuntimePassage(p, projection, locale)}</p>
               ))}
               {message.answer.action === "research-unavailable" && (
                 <p>

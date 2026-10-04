@@ -5966,5 +5966,11 @@
     "Do sinal à fonte, sem ocultar o que continua em aberto.",
     "Du signal à la source, sans masquer ce qui reste ouvert.",
     "Dal segnale alla fonte, senza nascondere ciò che resta aperto."
-  ]
+  ],
+  "Source-observed text": ["In der Quelle beobachteter Text", "Texto observado na fonte", "Texte observé dans la source", "Testo osservato nella fonte"],
+  "Official web": ["Offizielle Website", "Web oficial", "Web officiel", "Sito web ufficiale"],
+  "Current": ["Aktuell", "Atual", "Actuel", "Attuale"],
+  "Stale": ["Veraltet", "Desatualizado", "Périmé", "Obsoleto"],
+  "Historical": ["Historisch", "Histórico", "Historique", "Storico"],
+  "Available": ["Verfügbar", "Disponível", "Disponible", "Disponibile"]
 }

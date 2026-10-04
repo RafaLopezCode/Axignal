@@ -23,6 +23,13 @@ import { RuntimeOrganizations } from "./runtime-organizations";
 import { RuntimeAxent, useRuntimeAxent } from "./runtime-axent";
 import { useLocale } from "@/lib/locale";
 import {
+  presentEvidenceStepLabel,
+  presentRuntimeCode,
+  presentRuntimeText,
+  presentSignal,
+  presentSourceObservedLabel,
+} from "@/lib/runtime-presentation";
+import {
   safeSourceLink,
   type RuntimeProjection,
   type RuntimeSignal,
@@ -39,24 +46,32 @@ import {
 export function RuntimeSignalReading({
   signal,
   onEvidence,
+  organizationName = "AXIGNAL",
 }: {
   signal: RuntimeSignal;
   onEvidence?: () => void;
+  organizationName?: string;
 }) {
   const { t, locale } = useLocale();
+  const presented = presentSignal(signal, organizationName, locale);
+  const presentedUncertainty = presentRuntimeText(
+    signal.uncertainty,
+    organizationName,
+    locale,
+  );
   return (
     <article className="runtime-signal" id={signal.id} tabIndex={-1}>
       <div className="runtime-status">
         <Badge state={signal.epistemicState} />
-        <span className="operation-status">{signal.currentness}</span>
+        <span className="operation-status">{presented.currentness}</span>
       </div>
-      <h2>{signal.title}</h2>
-      <p>{signal.whyAttention}</p>
-      <p>{signal.interpretation}</p>
+      <h2>{presented.title}</h2>
+      <p>{presented.whyAttention}</p>
+      <p>{presented.interpretation}</p>
       <div className="limit-note">
         <div>
           <strong>{t("Lo que sigue abierto", "What remains open")}</strong>
-          <p>{signal.uncertainty}</p>
+          <p>{presentedUncertainty}</p>
         </div>
       </div>
       <p className="runtime-date">
@@ -75,7 +90,7 @@ export function RuntimeSignalReading({
     </article>
   );
 }
-export function RuntimeEvidenceJourney({ signal }: { signal: RuntimeSignal }) {
+export function RuntimeEvidenceJourney({ signal, organizationName = "AXIGNAL" }: { signal: RuntimeSignal; organizationName?: string }) {
   const { t, locale } = useLocale();
   return (
     <section
@@ -102,8 +117,15 @@ export function RuntimeEvidenceJourney({ signal }: { signal: RuntimeSignal }) {
                         ? t("Lo que sigue abierto", "What remains open")
                         : step.kind}
               </span>
-              <p>{step.label}</p>
-              {step.currentness && <small>{step.currentness}</small>}
+              {step.kind === "OBSERVATION" && (
+                <small className="source-content-label">
+                  {presentSourceObservedLabel(locale)}
+                </small>
+              )}
+              <p>{presentEvidenceStepLabel(step, organizationName, locale)}</p>
+              {step.currentness && (
+                <small>{presentRuntimeCode(step.currentness, locale)}</small>
+              )}
               {step.observedAt && (
                 <time dateTime={step.observedAt}>
                   {new Date(step.observedAt).toLocaleString(locale)}
@@ -145,7 +167,7 @@ export function RuntimeEvidenceJourney({ signal }: { signal: RuntimeSignal }) {
         </ul>
         <ul>
           {signal.unknowns.map((unknown) => (
-            <li key={unknown}>{unknown}</li>
+            <li key={unknown}>{presentRuntimeText(unknown, organizationName, locale)}</li>
           ))}
         </ul>
       </details>
@@ -363,6 +385,7 @@ export function RuntimeProductProjection({
                 </h1>
                 <RuntimeSignalReading
                   signal={selected}
+                  organizationName={projection.organization.name}
                   onEvidence={showEvidence}
                 />
                 <RuntimeTemporal projection={projection} signal={selected} />
@@ -457,8 +480,8 @@ export function RuntimeProductProjection({
                             {String(i + 1).padStart(2, "0")}
                           </span>
                           <article>
-                            <h2>{item.whatChanged}</h2>
-                            <p>{item.whyItMatters}</p>
+                            <h2>{presentRuntimeText(item.whatChanged, projection.organization.name, locale)}</h2>
+                            <p>{presentRuntimeText(item.whyItMatters, projection.organization.name, locale)}</p>
                             <button
                               className="text-link"
                               onClick={() => enter(item.xignalId)}
@@ -509,9 +532,9 @@ export function RuntimeProductProjection({
                             onClick={() => enter(signal.id)}
                           >
                             <Badge state={signal.epistemicState} />
-                            <h2>{signal.title}</h2>
-                            <p>{signal.whyAttention}</p>
-                            <small>{signal.currentness}</small>
+                            <h2>{presentRuntimeText(signal.title, projection.organization.name, locale)}</h2>
+                            <p>{presentRuntimeText(signal.whyAttention, projection.organization.name, locale)}</p>
+                            <small>{presentRuntimeCode(signal.currentness, locale)}</small>
                             <span className="text-link">
                               {t(
                                 "Entender por qué importa",
@@ -606,7 +629,7 @@ export function RuntimeProductProjection({
           onClose={() => setEvidence(null)}
           className="runtime-evidence-dialog"
         >
-          <RuntimeEvidenceJourney signal={evidenceSignal} />
+          <RuntimeEvidenceJourney signal={evidenceSignal} organizationName={projection.organization.name} />
         </Dialog>
       )}
       {axent && (
@@ -652,11 +675,11 @@ function RuntimeTemporal({
       <h2>{t("Tiempo y evidencia", "Time and evidence")}</h2>
       {nodes.map((s) => (
         <div className="temporal-observation" key={s.id}>
-          <span>{s.currentness}</span>
+          <span>{presentRuntimeCode(s.currentness, locale)}</span>
           <time dateTime={s.observedAt}>
             {new Date(s.observedAt).toLocaleString(locale)}
           </time>
-          <p>{s.title}</p>
+          <p>{presentRuntimeText(s.title, projection.organization.name, locale)}</p>
         </div>
       ))}
       <p>
