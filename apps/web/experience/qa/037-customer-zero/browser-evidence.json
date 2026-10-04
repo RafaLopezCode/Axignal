@@ -1,0 +1,68 @@
+{
+  "task": "AO-24A",
+  "codeSha": "1ae70d0e0a89e9af69ed53d5dbbaf1de8bd86b0b",
+  "environment": "isolated local development, real public HttpSourceSensor acquisition",
+  "firstPlant": {
+    "identity": "AXIGNAL",
+    "observedAt": "2026-10-04T01:47:04.639201+00:00",
+    "signal": "xignal:21691e27372ce304be7d864c7c34557e",
+    "source": "https://axignal.com/",
+    "state": "success"
+  },
+  "firstBrowserReload": {
+    "identity": "AXIGNAL",
+    "observedAt": "2026-10-04T01:47:04.639201+00:00",
+    "signal": "xignal:21691e27372ce304be7d864c7c34557e",
+    "source": "https://axignal.com/",
+    "state": "success"
+  },
+  "sharedSubscriberRead": {
+    "fixtureLeak": false,
+    "identity": "AXIGNAL",
+    "observedAt": "2026-10-04T01:47:04.639201+00:00",
+    "signal": "xignal:21691e27372ce304be7d864c7c34557e",
+    "source": "https://axignal.com/"
+  },
+  "reobserve": {
+    "context": "Organizationorg:axignalObservation focusxeed:production-first-proof:2Reality levelLIVE_PRODUCTION_FIRST_PROOFRuntime SHA1ae70d0e0a89e9af69ed53d5dbbaf1de8bd86b0bReloadPERSISTED_RUNTIME_READ_MODEL",
+    "identity": "AXIGNAL",
+    "narrative": "XIGNALAXIGNAL retrieved the public homepage through the governed source sensor and can trace this Xignal back to the stored observation.CURRENTOBSERVATIONAXIGNAL — Observe the economic world from the outsideCURRENT4/10/2026, 4:19:19Artefacto verificadoSOURCEOFFICIAL_WEBCURRENT4/10/2026, 4:19:19Artefacto verificadohttps://axignal.com/UNKNOWNThis observation covers only the authorized public homepage at this observation time. Search, generative, social, reputation and other public surfaces remain UNKNOWN.",
+    "observedAt": "2026-10-04T02:19:19.943586+00:00",
+    "signal": "xignal:0a938c6f77e90932e01b52debd0e8087",
+    "source": "https://axignal.com/"
+  },
+  "processRestartAndBrowserReload": {
+    "fixtures": false,
+    "identity": "AXIGNAL",
+    "observedAt": "2026-10-04T02:19:19.943586+00:00",
+    "signal": "xignal:0a938c6f77e90932e01b52debd0e8087"
+  },
+  "mobile": {
+    "mainScroll": 380,
+    "mainWidth": 380,
+    "scroll": 390,
+    "width": 390
+  },
+  "statesVerified": [
+    "unauthorized",
+    "NO_XEED",
+    "loading",
+    "planting",
+    "success",
+    "INSUFFICIENT_EVIDENCE",
+    "failure",
+    "rejected"
+  ],
+  "controlledFailures": {
+    "insufficient": "CONTROLLED_QA_SOURCE_NOT_EVALUABLE",
+    "failure": "FIRST_PROOF_FAILED:RuntimeError",
+    "rejection": "CONTROLLED_QA_GOVERNED_REJECTION",
+    "manufacturedSuccess": false
+  },
+  "narrowWidths": [
+    320,
+    390
+  ],
+  "consoleErrors": [],
+  "humanVisualAcceptance": "PENDING"
+}

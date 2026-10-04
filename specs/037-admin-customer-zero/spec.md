@@ -45,11 +45,11 @@ remain in the runtime. Graphify query examined Admin / first_proof composition.
 
 ## Tasks
 
-- [ ] Runtime authorization and frontend transport
-- [ ] Shared projection and Customer Zero states/navigation
-- [ ] Focused contract/state tests
-- [ ] Browser QA and real acquisition/reload
-- [ ] Full gates and evidence-backed convergence
+- [x] Runtime authorization and frontend transport
+- [x] Shared projection and Customer Zero states/navigation
+- [x] Focused contract/state tests
+- [x] Browser QA and real acquisition/reload
+- [x] Full gates and evidence-backed convergence
 
 Design mode: EXTEND. Preserve adjacent editorial typography, brand blue, shell
 geometry and meaningful evidence access. Narrow view stacks product content;

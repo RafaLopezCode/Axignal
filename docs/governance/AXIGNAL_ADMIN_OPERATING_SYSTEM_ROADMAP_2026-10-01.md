@@ -1065,7 +1065,7 @@ Premium reports are measurement-governed rather than polished model opinion.
 
 ### AO-24A — AXIGNAL Customer Zero / Self-Observation Admin Runtime
 
-**Status:** READY
+**Status:** IN_PROGRESS — implementation and real E2E verified; human visual acceptance pending
 **Depends on:** FR-30, AO-01, AO-03, AO-17, AUD-01..AUD-10
 **Priority:** P0 Product Proof
 **Implementation appendix:** `docs/governance/AXIGNAL_ADMIN_CUSTOMER_ZERO_APPENDIX_2026-10-04.md`
@@ -1113,6 +1113,24 @@ Before UI integration, the existing FR-30 Customer Zero runtime was exercised th
 - `tests/contracts/test_fr30_production_first_proof.py` now protects full-runtime restart persistence deterministically in CI.
 
 This is backend/runtime evidence only. AO-24A remains open until the Admin UI is wired, browser-verified and the complete Customer Zero product path is exercised there.
+
+### Admin product-path evidence — 2026-10-04
+
+Code `1ae70d0e0a89e9af69ed53d5dbbaf1de8bd86b0b` reconciles the existing Admin
+with the same FR-30 runtime and shared product projection used by `/panorama/live`.
+Actual compiled-browser execution completed NO_XEED → Plant AXIGNAL → public
+acquisition → OBSERVED/CURRENT Xignal → Today → EvidenceNarrative/sourceRefs →
+reload. Real reobservation appended a second Xeed; process restart and browser
+reload retained the second signal and timestamp while preserving the first record.
+Controlled insufficient evidence, rejection and runtime failure were exercised
+without manufacturing success. Desktop, mobile/narrow, navigation and private
+data/fixture separation were verified. Full deterministic gates, 1,035 Python
+tests, 25 frontend tests, typecheck and build pass.
+
+Evidence and limitations: `specs/037-admin-customer-zero/validation.md`.
+Implementation/E2E are complete locally; no production deployment or push.
+The design-director skill requires human visual acceptance for material visual
+changes, so this entry does not assert that acceptance or prematurely mark DONE.
 
 ### Work
 
