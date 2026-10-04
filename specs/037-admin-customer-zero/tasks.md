@@ -21,5 +21,19 @@ CURRENT_TASK = AO-24A
 - [ ] T011 Separate external subscriber identity, tenant membership and commercial
   entitlement journey before claiming post-onboarding commercial completion.
 
-T010/T011 are explicit follow-on boundaries; no second real organization was
-requested or admitted in this slice. AO-24A remains IN_PROGRESS.
+## Follow-up UX opportunities — non-blocking for AO-24A
+
+- [ ] T012 Move "Read persisted state" out of the primary organization-management
+  journey into Staff/diagnostics progressive disclosure. The persisted read remains
+  available for operators, but should not compete with normal product actions.
+- [ ] T013 Scale the organization selector for larger inventories with search/filter
+  and a clear separation between observable/available organizations and pending or
+  unresolved attention requests. Do not infer commercial entitlement from the
+  inventory and do not turn the selector into a CRM/company editor.
+- [ ] T014 Replace generic "Review and retry" recovery copy with cause-specific,
+  actionable recovery for IDENTITY_UNRESOLVED, INSUFFICIENT_EVIDENCE and
+  RUNTIME_FAILURE while preserving the prior valid reading and epistemic state.
+
+T012-T014 are recorded dogfooding improvements, not AO-24A closure blockers.
+T010/T011 remain explicit follow-on capability boundaries; no second real
+organization was requested or admitted in this slice. AO-24A remains IN_PROGRESS.

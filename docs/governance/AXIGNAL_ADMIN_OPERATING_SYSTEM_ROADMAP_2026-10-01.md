@@ -1459,3 +1459,19 @@ Contract and evidence: specs/037-admin-customer-zero/organizations-contract.md a
 organizations-validation.md. No second real organization was requested or added.
 Commercial onboarding/entitlements and new canonical identity admission remain
 separate. CURRENT_TASK remains AO-24A, IN_PROGRESS pending human acceptance.
+
+### AO-24A post-acceptance UX follow-ups — non-blocking
+
+1. Move **Read persisted state** from the primary organization journey into
+   Staff/diagnostics progressive disclosure so operator tooling does not compete
+   with normal product actions.
+2. Scale the organization selector for larger inventories with search/filter and
+   explicit separation between observable/available organizations and pending or
+   unresolved attention requests. This must not infer entitlement or drift into a
+   CRM/company editor.
+3. Replace generic **Review and retry** recovery with cause-specific actionable
+   guidance for IDENTITY_UNRESOLVED, INSUFFICIENT_EVIDENCE and RUNTIME_FAILURE,
+   preserving the previous valid reading and epistemic state.
+
+These items are dogfooding-derived UX improvements. They do not reopen or block
+AO-24A once its acceptance criteria are otherwise satisfied.
