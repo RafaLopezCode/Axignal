@@ -162,9 +162,11 @@ function SourceReference({ reference }: { reference: string }) {
 export function RuntimeProductProjection({
   projection,
   staffControls,
+  mainId = "main",
 }: {
   projection: RuntimeProjection;
   staffControls?: React.ReactNode;
+  mainId?: string;
 }) {
   const { t, locale } = useLocale();
   const [history, dispatch] = useReducer(focusHistory, {
@@ -359,7 +361,7 @@ export function RuntimeProductProjection({
         </header>
         <div className="workspace-content">
           <main
-            id="main"
+            id={mainId}
             ref={main}
             className="panorama-main"
             data-product-view={selected ? "focus" : focus.view}

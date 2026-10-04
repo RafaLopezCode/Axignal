@@ -49,6 +49,9 @@ export function Admin({
     [busy, setBusy] = useState(false),
     [guidance, setGuidance] = useState(false);
   const sidebarRef = useRef<HTMLElement>(null);
+  const [productStarted, setProductStarted] = useState(
+    initialDomain === "customer-zero",
+  );
   useFocusTrap(mobile, sidebarRef, () => setMobile(false));
   const domain =
     domainId === "customer-zero"
@@ -63,16 +66,25 @@ export function Admin({
   useEffect(() => {
     const navigate = () => {
       const id = window.location.hash.slice(1);
-      if (id === "customer-zero") {
-        window.location.replace("/admin/customer-zero");
+      // Content anchors (for example the skip link) do not change Admin domains.
+      if (id && id !== "customer-zero" && !adminDomains.some((d) => d.id === id))
         return;
-      }
-      if (adminDomains.some((d) => d.id === id))
-        setDomainId(id);
+      const next = id === "customer-zero" || adminDomains.some((d) => d.id === id)
+        ? id
+        : window.location.pathname === "/admin/customer-zero"
+          ? "customer-zero"
+          : "command";
+      if (next === "customer-zero") setProductStarted(true);
+      setDomainId(next);
+      setMobile(false);
     };
     navigate();
     window.addEventListener("hashchange", navigate);
-    return () => window.removeEventListener("hashchange", navigate);
+    window.addEventListener("popstate", navigate);
+    return () => {
+      window.removeEventListener("hashchange", navigate);
+      window.removeEventListener("popstate", navigate);
+    };
   }, []);
   const records = (
     domainId === "command"
@@ -84,15 +96,8 @@ export function Admin({
       (copy(r.title) + " " + r.id).toLowerCase().includes(query.toLowerCase()),
   );
   function choose(id: string) {
-    if (id === "customer-zero" && initialDomain !== "customer-zero") {
-      window.location.assign("/admin/customer-zero");
-      return;
-    }
-    if (id !== "customer-zero" && initialDomain === "customer-zero") {
-      window.location.assign("/admin#" + id);
-      return;
-    }
-    window.location.hash = id;
+    if (id === "customer-zero") setProductStarted(true);
+    window.history.pushState(null, "", "/admin#" + id);
     setDomainId(id);
     setRecord(null);
     setQuery("");
@@ -116,7 +121,8 @@ export function Admin({
     }
   }
   return (
-    <div className="product-shell admin-shell">
+    <div className={"product-shell admin-shell " +
+      (domainId === "customer-zero" ? "admin-using-product" : "")}>
       <aside
         ref={sidebarRef}
         role={mobile ? "dialog" : "complementary"}
@@ -205,7 +211,7 @@ export function Admin({
           <div className="navigation-controls">
             <IconButton
               className="mobile-only"
-              label={t("Abrir navegación", "Open navigation")}
+              label={t("Navegación Admin", "Admin navigation")}
               onClick={() => setMobile(true)}
             >
               <Menu size={20} />
@@ -223,7 +229,7 @@ export function Admin({
             ) : (
               <DemoLabel privateMode />
             )}
-            <LocaleToggle />
+            {domainId !== "customer-zero" && <LocaleToggle />}
             <span className="admin-session">
               <ShieldCheck size={15} />
               {t("Revisión local", "Local review")}
@@ -231,10 +237,18 @@ export function Admin({
           </div>
         </header>
         <div className="workspace-content">
-          <main id="main" className="panorama-main admin-main">
-            {domainId === "customer-zero" ? (
-              <CustomerZero />
-            ) : (
+          {productStarted && (
+            <div
+              id={domainId === "customer-zero" ? "main" : "customer-zero-region"}
+              className="admin-product-host"
+              hidden={domainId !== "customer-zero"}
+              tabIndex={-1}
+            >
+              <CustomerZero embedded />
+            </div>
+          )}
+          {domainId !== "customer-zero" && (
+            <main id="main" className="panorama-main admin-main">
               <>
                 <div className="panorama-intro">
                   <div>
@@ -484,8 +498,8 @@ export function Admin({
                   </div>
                 </div>
               </>
-            )}
-          </main>
+            </main>
+          )}
           {domainId !== "customer-zero" && (
             <aside className="axent-desktop admin-guide">
               <header className="axent-header">

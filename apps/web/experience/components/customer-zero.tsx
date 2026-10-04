@@ -11,10 +11,13 @@ import {
 import { RuntimeProductProjection } from "./runtime-product";
 import { Brand, LocaleToggle } from "./ui";
 
-export function CustomerZero() {
-  return <RuntimeExperience staff />;
+export function CustomerZero({ embedded = false }: { embedded?: boolean }) {
+  return <RuntimeExperience staff embedded={embedded} />;
 }
-export function RuntimeExperience({ staff = false }: { staff?: boolean }) {
+export function RuntimeExperience({
+  staff = false,
+  embedded = false,
+}: { staff?: boolean; embedded?: boolean }) {
   const { t } = useLocale();
   const [result, setResult] = useState<CustomerZeroState>({ state: "loading" });
   const [token, setToken] = useState("");
@@ -114,9 +117,9 @@ export function RuntimeExperience({ staff = false }: { staff?: boolean }) {
         Customer Zero · {t("Controles Staff", "Staff controls")}
       </summary>
       <div>
-        <Link className="text-link" href="/admin">
+        {!embedded && <Link className="text-link" href="/admin">
           {t("Volver a Admin", "Return to Admin")}
-        </Link>
+        </Link>}
         <button className="text-link" onClick={() => load()}>
           <RefreshCw size={15} />
           {t("Leer estado persistido", "Read persisted state")}
@@ -139,6 +142,7 @@ export function RuntimeExperience({ staff = false }: { staff?: boolean }) {
       <RuntimeProductProjection
         projection={result.projection}
         staffControls={controls}
+        mainId={embedded ? "customer-zero-main" : "main"}
       />
     );
   const headings = {
@@ -168,8 +172,8 @@ export function RuntimeExperience({ staff = false }: { staff?: boolean }) {
         <Brand />
         <LocaleToggle />
       </header>
-      <main id="main" className="customer-zero">
-        {staff && (
+      <main id={embedded ? "customer-zero-main" : "main"} className="customer-zero">
+        {staff && !embedded && (
           <Link className="text-link" href="/admin">
             {t("Volver a Admin", "Return to Admin")}
           </Link>

@@ -12,6 +12,7 @@ import { focusHistory, productHome } from "../lib/product-navigation";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { RuntimeProductProjection } from "../components/runtime-product";
+import { Admin } from "../components/admin";
 import { POST as askAxent } from "../app/api/axent/route";
 
 const projection = {
@@ -192,6 +193,22 @@ test("subscriber and Customer Zero render the same economic shell; Staff adds on
   assert.ok(plain.includes("Observed surface"));
   assert.ok(plain.includes("Navegación del producto"));
   assert.doesNotMatch(plain,/Norte|Atlas|Demo|privateRevenue|privateAccounts/);
+  const embedded=renderToStaticMarkup(createElement(RuntimeProductProjection,{projection:result.projection,mainId:"customer-zero-main"}));
+  assert.equal(embedded.replace('id="customer-zero-main"','id="main"'),plain);
+});
+
+test("Admin hosts the real product with retained administrative navigation and one skip target",()=>{
+  const html=renderToStaticMarkup(createElement(Admin,{initialDomain:"customer-zero"}));
+  assert.ok(html.includes('aria-label="Navegación Admin"'));
+  assert.ok(html.includes('class="admin-product-host"'));
+  assert.ok(html.includes('data-runtime-state="loading"'));
+  assert.ok(html.includes('id="customer-zero-main"'));
+  assert.equal((html.match(/id="main"/g)||[]).length,1);
+  assert.ok(!html.includes('class="panorama-main admin-main"'));
+  const admin=readFileSync("components/admin.tsx","utf8");
+  assert.doesNotMatch(admin,/window\.location\.(assign|replace)/);
+  assert.ok(admin.includes('<CustomerZero embedded />'));
+  assert.ok(admin.includes('hidden={domainId !== "customer-zero"}'));
 });
 
 test("runtime AXENT refuses economic input and foreign origin before authorized reading",async()=>{

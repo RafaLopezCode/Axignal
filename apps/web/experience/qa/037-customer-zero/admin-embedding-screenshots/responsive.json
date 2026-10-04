@@ -1,0 +1,74 @@
+[
+  {
+    "axent": true,
+    "doc": 1440,
+    "height": 1000,
+    "host": 1216,
+    "main": 710,
+    "mainHeight": 784,
+    "mainScroll": 710,
+    "privateLeak": false,
+    "toolHeight": 952,
+    "width": 1440
+  },
+  {
+    "axent": true,
+    "doc": 1280,
+    "height": 720,
+    "host": 1056,
+    "main": 550,
+    "mainHeight": 504,
+    "mainScroll": 550,
+    "privateLeak": false,
+    "toolHeight": 672,
+    "width": 1280
+  },
+  {
+    "axent": false,
+    "doc": 1024,
+    "height": 900,
+    "host": 819,
+    "main": 623,
+    "mainHeight": 684,
+    "mainScroll": 623,
+    "privateLeak": false,
+    "toolHeight": 852,
+    "width": 1024
+  },
+  {
+    "axent": false,
+    "doc": 768,
+    "height": 900,
+    "host": 563,
+    "main": 553,
+    "mainHeight": 700,
+    "mainScroll": 553,
+    "privateLeak": false,
+    "toolHeight": 852,
+    "width": 768
+  },
+  {
+    "axent": false,
+    "doc": 390,
+    "height": 844,
+    "host": 390,
+    "main": 380,
+    "mainHeight": 651,
+    "mainScroll": 380,
+    "privateLeak": false,
+    "toolHeight": 796,
+    "width": 390
+  },
+  {
+    "axent": false,
+    "doc": 320,
+    "height": 900,
+    "host": 320,
+    "main": 310,
+    "mainHeight": 707,
+    "mainScroll": 310,
+    "privateLeak": false,
+    "toolHeight": 852,
+    "width": 320
+  }
+]

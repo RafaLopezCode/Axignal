@@ -1147,6 +1147,15 @@ typecheck/build/i18n PASS. No frontend lint script exists.
 Evidence: `specs/037-admin-customer-zero/unification-validation.md`.
 Human visual acceptance remains pending. No production deployment or push.
 
+Human correction, 2026-10-04: standalone Customer Zero hosting was rejected.
+The canonical subscriber product and AXENT now remain inside the Admin dashboard,
+with persistent Admin navigation and preserved product focus/conversation while
+switching operational domains. This supersedes the earlier hosting interpretation,
+not the recorded runtime evidence. Frontend tests: 30 PASS; Python: 1,035 PASS;
+compiled-browser dashboard navigation, narrow drawers, evidence, AXENT and reload
+verified. Evidence: `specs/037-admin-customer-zero/admin-embedding-validation.md`.
+AO-24A remains IN_PROGRESS pending explicit human visual acceptance.
+
 ### Work
 
 1. Add a staff-only Admin domain/surface: AXIGNAL / Customer Zero.

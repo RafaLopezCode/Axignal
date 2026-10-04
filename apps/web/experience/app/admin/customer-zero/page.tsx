@@ -1,4 +1,4 @@
-import { CustomerZero } from "@/components/customer-zero";
+import { Admin } from "@/components/admin";
 export default function Page() {
-  return <CustomerZero />;
+  return <Admin initialDomain="customer-zero" />;
 }

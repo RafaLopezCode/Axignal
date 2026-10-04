@@ -30,8 +30,12 @@ unavailable/UNKNOWN; prepare UI boundaries without simulating data.
 ## Plan / architecture review
 
 1. Consolidate both real entries around one controller and canonical product
-   presentation. Customer Zero renders the product directly, without Admin shell.
-   Staff utility disclosure is a separate optional layer; no subscriber-view hop.
+   presentation. Human feedback supersedes the previous standalone interpretation:
+   Customer Zero hosts that product **inside** the Admin dashboard, retaining Admin
+   navigation. The product stays mounted when switching operational sections so
+   signal focus and contextual AXENT conversation survive returning. Staff utility
+   disclosure is separate; no subscriber-view hop or private operational context
+   passed into the product. The standalone subscriber consumes the same renderer.
 2. Reuse existing shell classes/primitives and extract focus navigation for the
    existing illustrative Panorama and the runtime experience. No graph engine.
 3. Real spatial signal canvas, Today, focused reader, evidence journey, temporal
@@ -59,4 +63,5 @@ of human visual acceptance or of illustrative data into economic authority.
 - [x] Deterministic gates, commits and evidence-backed convergence
 
 Convergence evidence: [unification-validation.md](unification-validation.md).
+Dashboard hosting correction: [admin-embedding-validation.md](admin-embedding-validation.md).
 Human visual acceptance remains PENDING; no production deployment or push.
