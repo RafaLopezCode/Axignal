@@ -1,4 +1,4 @@
-FROM node:22-alpine AS build
+﻿FROM node:22-alpine AS build
 
 ARG AXIGNAL_CODE_SHA
 WORKDIR /app/apps/web/experience
@@ -10,7 +10,6 @@ COPY apps/web/experience/app ./app
 COPY apps/web/experience/components ./components
 COPY apps/web/experience/lib ./lib
 COPY apps/web/experience/public ./public
-COPY apps/web/experience/next-env.d.ts ./
 COPY apps/web/experience/next.config.ts ./
 COPY apps/web/experience/tsconfig.json ./
 
