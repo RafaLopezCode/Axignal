@@ -159,6 +159,10 @@ test("Customer Zero only sends canonical attention, and consumes the real read e
   assert.ok(renderer.includes("signal.currentness"));
   assert.ok(subscriber.includes("<RuntimeExperience"));
   assert.ok(client.includes("<RuntimeProductProjection"));
+  assert.ok(renderer.includes('t("señal observada", "observed signal")'));
+  assert.ok(renderer.includes('t("fuente pública", "public source")'));
+  assert.ok(renderer.includes('t("observación gobernada", "governed observation")'));
+  assert.ok(renderer.includes('t("vigente ahora", "current now")'));
   assert.ok(
     client.includes(
       't("Cliente cero · Controles internos", "Customer Zero · Staff controls")',

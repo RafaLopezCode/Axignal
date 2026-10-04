@@ -596,12 +596,24 @@ export function RuntimeProductProjection({
                           {t("Lo que AXIGNAL aprendió", "What AXIGNAL learned")}
                         </span>
                         <strong>
-                          {mapBrief.observedCount} {t("señales observadas", "observed signals")}
+                          {mapBrief.observedCount}{" "}
+                          {mapBrief.observedCount === 1
+                            ? t("señal observada", "observed signal")
+                            : t("señales observadas", "observed signals")}
                         </strong>
                         <p>
-                          {mapBrief.sourceCount} {t("fuentes públicas", "public sources")} ·{" "}
-                          {mapBrief.observationCount} {t("observaciones gobernadas", "governed observations")} ·{" "}
-                          {mapBrief.currentCount} {t("vigentes ahora", "current now")}
+                          {mapBrief.sourceCount}{" "}
+                          {mapBrief.sourceCount === 1
+                            ? t("fuente pública", "public source")
+                            : t("fuentes públicas", "public sources")} ·{" "}
+                          {mapBrief.observationCount}{" "}
+                          {mapBrief.observationCount === 1
+                            ? t("observación gobernada", "governed observation")
+                            : t("observaciones gobernadas", "governed observations")} ·{" "}
+                          {mapBrief.currentCount}{" "}
+                          {mapBrief.currentCount === 1
+                            ? t("vigente ahora", "current now")
+                            : t("vigentes ahora", "current now")}
                         </p>
                         <button
                           className="text-link"
