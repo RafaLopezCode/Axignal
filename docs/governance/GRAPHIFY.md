@@ -19,6 +19,7 @@ Graphify never touches other projects.
 | `graphify-out/graph.json` | Generated structural graph | **No** (gitignored) |
 | `graphify-out/*.html`, reports, caches | Generated | **No** |
 | `.graphifyignore` | Configuration | **Yes** |
+| `.codex/skills/graphify/`, `.codex/hooks.json` | Codex project integration | **Yes** |
 | Graphify git hooks | Local tooling | **No** (installed by script) |
 | `docs/governance/GRAPHIFY.md` | Documentation | **Yes** |
 
@@ -30,11 +31,23 @@ documents but cannot promote target descriptions into implementation evidence.
 
 ## Install / verify
 
+The official PyPI package is `graphifyy` (double-y); it installs the
+`graphify` command. AXIGNAL uses an isolated `uv tool` installation so the
+CLI is available to humans and coding agents without coupling it to the
+application environment.
+
 ```powershell
+uv tool install graphifyy
+uv tool update-shell
 graphify --version
+graphify codex install --project
 graphify hook install
 graphify hook status
 ```
+
+The project-scoped Codex install creates `.codex/skills/graphify/` and
+`.codex/hooks.json`. These are tracked repository configuration; the generated
+`graphify-out/` graph remains untracked.
 
 Repository helper:
 

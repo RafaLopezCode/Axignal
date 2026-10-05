@@ -333,9 +333,24 @@ def check_architecture(root: Path) -> list[Problem]:
 
 
 def check_graphify(root: Path) -> list[Problem]:
+    configured = (root / ".graphifyignore").exists() and (
+        root / "docs" / "governance" / "GRAPHIFY.md"
+    ).exists()
+    if not configured:
+        return []
+
+    graph_path = root / "graphify-out" / "graph.json"
     executable = shutil.which("graphify")
     if executable is None:
-        return []
+        return [
+            "graphify is required by AXIGNAL repository configuration, "
+            "but the graphify executable is not available on PATH"
+        ]
+    if not graph_path.exists():
+        return [
+            "graphify is configured but graphify-out/graph.json is missing; "
+            "run graphify update . before governance"
+        ]
     completed = subprocess.run(
         [executable, "check-update", str(root)],
         capture_output=True,

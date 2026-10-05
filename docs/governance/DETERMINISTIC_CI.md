@@ -16,9 +16,15 @@ uv run axignal-governance
 ```
 
 `uv run axignal-governance` runs: hygiene, terminology, docs, spec, deps,
-no-generated-data, architecture and (if the `graphify` binary exists) graphify.
-The docs check also verifies the pinned SHA-256 of the logical architecture
-Atlas so the reconciled input remains byte-stable unless its pin is reviewed.
+no-generated-data, architecture and graphify. When the repository declares
+Graphify through its tracked configuration, the CLI and generated structural
+graph are mandatory: a missing `graphify` executable or missing
+`graphify-out/graph.json` is a governance failure rather than a skipped check.
+The dedicated
+CI Graphify job installs the official `graphifyy` package before generating
+the structural graph and then runs the same governance gate. The docs check
+also verifies the pinned SHA-256 of the logical architecture Atlas so the
+reconciled input remains byte-stable unless its pin is reviewed.
 
 ## Required gates
 
@@ -37,7 +43,7 @@ Atlas so the reconciled input remains byte-stable unless its pin is reviewed.
 | 11 | Canonical terminology | `uv run axignal-governance terminology` |
 | 12 | Secret scanning | `gitleaks detect` (CI: `gitleaks/gitleaks-action`) |
 | 13 | Deterministic build | `uv build` |
-| 14 | Graphify structural checks | `graphify update <root> --no-cluster`, `graphify diagnose multigraph --json`, `graphify hook install && graphify hook status` |
+| 14 | Graphify structural checks | `graphify update <root> --no-cluster`, `graphify diagnose multigraph --json`, `graphify hook install && graphify hook status`, `uv run axignal-governance graphify` |
 | 15 | Docs / reference integrity | `uv run axignal-governance docs` |
 | 16 | No generated/raw/private data | `uv run axignal-governance no-generated-data` |
 

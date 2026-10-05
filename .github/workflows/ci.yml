@@ -85,6 +85,9 @@ jobs:
       - name: Freshness flag
         run: graphify check-update .
 
+      - name: Governance Graphify gate
+        run: uv run axignal-governance graphify
+
   secret-scan:
     name: Secret scanning
     runs-on: ubuntu-latest
