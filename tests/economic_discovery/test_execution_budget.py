@@ -203,6 +203,39 @@ def test_reservation_rejects_dispatch_that_would_exceed_request_budget() -> None
     assert controller.active_reservation_ids == ("source:1",)
 
 
+def test_resource_specific_reservation_can_continue_after_source_budget_is_exactly_used() -> None:
+    controller = GovernedExecutionController(
+        policy=_policy(max_sources=2, max_requests=4),
+        state=ExecutionBudgetState(
+            amount_microunits=0,
+            currency="USD",
+            sources=2,
+            requests=2,
+        ),
+    )
+
+    semantic = controller.reserve(
+        ExecutionBudgetReservation(
+            reservation_id="semantic:1",
+            requests=1,
+            sources=0,
+        )
+    )
+    assert semantic.reservation_id == "semantic:1"
+    controller.release("semantic:1")
+
+    with pytest.raises(ExecutionReservationRejected) as exc_info:
+        controller.reserve(
+            ExecutionBudgetReservation(
+                reservation_id="source:3",
+                requests=1,
+                sources=1,
+            )
+        )
+
+    assert exc_info.value.decision.stop_reason is ExecutionStopReason.SOURCE_BUDGET_EXHAUSTED
+
+
 def test_unknown_cost_reservation_fails_closed_when_policy_requires() -> None:
     controller = GovernedExecutionController(
         policy=_policy(stop_on_unknown_cost=True),

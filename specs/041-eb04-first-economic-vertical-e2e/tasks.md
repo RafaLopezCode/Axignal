@@ -1,0 +1,21 @@
+# EB-04 tasks
+
+- [x] E4-01 Compose Source Registry → acquisition → representation.
+- [x] E4-02 Compose representation → grounded semantic candidates.
+- [x] E4-03 Bind canonical subject identity to exact support.
+- [x] E4-04 Route capability canonicalization through EvidenceAdmission only.
+- [x] E4-05 Materialize evidence-backed RichSubjectState.
+- [x] E4-06 Reuse multi-axis first_vertical reasoning and TypedJudgmentVector.
+- [x] E4-07 Compile Explainable Basis → Human Output with exact support spans.
+- [x] E4-08 Govern source/semantic/evaluator dispatches through EB-01 budget controller.
+- [x] E4-09 Preserve explicit unknown cost and monotonic elapsed-time accounting.
+- [x] E4-10 Add aligned POTENTIAL/WARRANTED_ATTENTION E2E test.
+- [x] E4-11 Add missing-context UNKNOWN/INVESTIGATE test.
+- [x] E4-12 Add evaluator-outage safe degradation test.
+- [x] E4-13 Add contradiction-blocks-positive test.
+- [x] E4-14 Add pre-dispatch source-budget rejection test.
+- [x] E4-15 Add semantic replay reproducibility test.
+- [x] E4-16 Add governed-dispatch isolated contracts.
+- [x] E4-17 Reconcile resource-specific reservation semantics discovered E2E.
+- [x] E4-18 Run full repository gates and record evidence.
+- [ ] E4-19 Integrate to main, push and confirm GitHub CI.

@@ -430,7 +430,7 @@ def run_economic_vertical(
         evaluated_at=as_of,
         evaluations=tuple(evaluations),
     )
-    blockers = tuple(
+    core_blockers = tuple(
         item
         for item in evaluations
         if item.dimension_id in _CORE
@@ -438,6 +438,15 @@ def run_economic_vertical(
         and (
             item.disposition is not DimensionDisposition.ANSWERABLE or item.selected_option != "YES"
         )
+    )
+    supplier_role = next(item for item in evaluations if item.dimension_id == "supplier_role")
+    supplier_material_block = supplier_role.selected_option == "NO" or (
+        supplier_role.disposition is DimensionDisposition.NOT_ANSWERABLE
+        and "CONTRADICTION:" in (supplier_role.reason or "")
+    )
+    blockers = (
+        *core_blockers,
+        *((supplier_role,) if supplier_material_block else ()),
     )
     interpretation = EconomicInterpretation(
         epistemic_state=XignalEpistemicState.UNKNOWN

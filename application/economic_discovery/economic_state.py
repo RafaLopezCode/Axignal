@@ -48,6 +48,15 @@ class EconomicObservation:
         if not self.rights_basis_ref.strip():
             raise ValueError("economic evidence requires an upstream public reuse rights reference")
         span = self.datum.supporting_span
+        if self.basis.extraction_fingerprint is not None:
+            if self.representation is None or span is None:
+                raise ValueError(
+                    "semantically extracted economic material requires verifiable representation and span"
+                )
+            if self.basis.excerpt_or_summary not in self.representation.text:
+                raise ValueError(
+                    "semantically extracted economic basis must remain literal source material"
+                )
         if self.representation is not None and span is None:
             raise ValueError("economic representation requires exact supporting span")
         if span is not None:

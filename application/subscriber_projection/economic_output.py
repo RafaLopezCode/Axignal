@@ -104,6 +104,18 @@ class EconomicHumanOutput:
                     "contribution": item.basis.contribution.value,
                     "representation_ref": item.datum.representation_id,
                     "representation_fingerprint": item.basis.representation_fingerprint,
+                    "support_span": (
+                        {
+                            "representation_id": item.datum.supporting_span.representation_id,
+                            "representation_fingerprint": (
+                                item.datum.supporting_span.representation_fingerprint
+                            ),
+                            "start": item.datum.supporting_span.start,
+                            "end": item.datum.supporting_span.end,
+                        }
+                        if item.datum.supporting_span is not None
+                        else None
+                    ),
                     "extraction_fingerprint": item.basis.extraction_fingerprint,
                     "canonical_support_ref": item.canonical_support.id
                     if item.canonical_support

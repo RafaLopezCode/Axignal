@@ -388,6 +388,35 @@ def _reserved_projection(
     )
 
 
+def _pre_reservation_global_stop_reason(
+    *,
+    policy: ExecutionBudgetPolicy,
+    state: ExecutionBudgetState,
+) -> ExecutionStopReason | None:
+    """Stop every dispatch only for constraints that are globally exhausted."""
+
+    if (
+        policy.stop_on_unknown_cost
+        and policy.max_amount_microunits is not None
+        and not state.cost_complete
+    ):
+        return ExecutionStopReason.COST_UNKNOWN
+    if (
+        policy.max_amount_microunits is not None
+        and state.amount_microunits is not None
+        and state.amount_microunits >= policy.max_amount_microunits
+    ):
+        return ExecutionStopReason.MONETARY_BUDGET_EXHAUSTED
+    if policy.max_elapsed_ms is not None and state.elapsed_ms >= policy.max_elapsed_ms:
+        return ExecutionStopReason.DEADLINE_EXCEEDED
+    if (
+        policy.max_no_progress_streak is not None
+        and state.no_progress_streak >= policy.max_no_progress_streak
+    ):
+        return ExecutionStopReason.NO_PROGRESS
+    return None
+
+
 def _reservation_stop_reason(
     *,
     policy: ExecutionBudgetPolicy,
@@ -441,9 +470,21 @@ class GovernedExecutionController:
     def reserve(self, reservation: ExecutionBudgetReservation) -> ExecutionBudgetReservation:
         if reservation.reservation_id in self._reservations:
             raise ValueError("execution reservation id is already active")
-        current = self.authorize_next()
-        if not current.may_continue:
-            raise ExecutionReservationRejected(current)
+        global_reason = _pre_reservation_global_stop_reason(
+            policy=self.policy,
+            state=self.state,
+        )
+        if global_reason is not None:
+            raise ExecutionReservationRejected(
+                ExecutionBudgetDecision(
+                    may_continue=False,
+                    policy_id=self.policy.policy_id,
+                    policy_version=self.policy.version,
+                    policy_fingerprint=self.policy.fingerprint,
+                    state_fingerprint=self.state.fingerprint,
+                    stop_reason=global_reason,
+                )
+            )
 
         projected = _reserved_projection(
             self.state,
