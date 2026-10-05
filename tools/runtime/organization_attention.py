@@ -11,7 +11,9 @@ import ipaddress
 import json
 import sqlite3
 import threading
+import uuid
 from dataclasses import dataclass
+from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Any
 from urllib.parse import urlsplit
@@ -126,6 +128,10 @@ class OrganizationAttention:
               organization_id TEXT, projection_id TEXT, occurred_at TEXT NOT NULL)""")
             db.execute("""CREATE TABLE IF NOT EXISTS organization_attention_selection (
               principal_id TEXT PRIMARY KEY, attention_id TEXT NOT NULL)""")
+            db.execute("""CREATE TABLE IF NOT EXISTS organization_attention_leases (
+              attention_id TEXT PRIMARY KEY, lease_token TEXT NOT NULL,
+              operation_key TEXT NOT NULL, acquired_at TEXT NOT NULL,
+              expires_at TEXT NOT NULL)""")
         # Adopt accepted legacy FR-30 self-observation only. General runs must have
         # an explicit inventory record and cannot become a global default.
         prior = proof.store.latest()
@@ -157,6 +163,78 @@ class OrganizationAttention:
     def _id(target: str) -> str:
         return "attention:" + hashlib.sha256(target.encode()).hexdigest()[:24]
 
+    def _claim_lease(self, identifier: str, operation_key: str) -> str | None:
+        now = self.proof.clock()
+        if now.tzinfo is None:
+            raise ValueError("attention lease clock must be timezone-aware")
+        expires_at = now + timedelta(seconds=60)
+        token = f"lease:{uuid.uuid4().hex}"
+        with self._connect() as db:
+            db.execute("BEGIN IMMEDIATE")
+            row = db.execute(
+                "SELECT lease_token, expires_at FROM organization_attention_leases "
+                "WHERE attention_id=?",
+                (identifier,),
+            ).fetchone()
+            if row is not None:
+                existing_expires = datetime.fromisoformat(str(row["expires_at"]))
+                if existing_expires > now:
+                    return None
+                db.execute(
+                    "DELETE FROM organization_attention_leases WHERE attention_id=?",
+                    (identifier,),
+                )
+            db.execute(
+                """INSERT INTO organization_attention_leases
+                (attention_id,lease_token,operation_key,acquired_at,expires_at)
+                VALUES (?,?,?,?,?)""",
+                (
+                    identifier,
+                    token,
+                    operation_key,
+                    now.isoformat(),
+                    expires_at.isoformat(),
+                ),
+            )
+        return token
+
+    def _release_lease(self, identifier: str, token: str) -> None:
+        with self._connect() as db:
+            db.execute(
+                "DELETE FROM organization_attention_leases WHERE attention_id=? AND lease_token=?",
+                (identifier, token),
+            )
+
+    def _owns_lease(self, identifier: str, token: str) -> bool:
+        now = self.proof.clock()
+        if now.tzinfo is None:
+            raise ValueError("attention lease clock must be timezone-aware")
+        with self._connect() as db:
+            row = db.execute(
+                "SELECT lease_token, expires_at FROM organization_attention_leases "
+                "WHERE attention_id=?",
+                (identifier,),
+            ).fetchone()
+        return (
+            row is not None
+            and str(row["lease_token"]) == token
+            and datetime.fromisoformat(str(row["expires_at"])) > now
+        )
+
+    def _active_lease_ids(self) -> frozenset[str]:
+        now = self.proof.clock()
+        if now.tzinfo is None:
+            raise ValueError("attention lease clock must be timezone-aware")
+        with self._connect() as db:
+            rows = db.execute(
+                "SELECT attention_id, expires_at FROM organization_attention_leases"
+            ).fetchall()
+        return frozenset(
+            str(row["attention_id"])
+            for row in rows
+            if datetime.fromisoformat(str(row["expires_at"])) > now
+        )
+
     def _append(
         self,
         identifier: str,
@@ -186,6 +264,7 @@ class OrganizationAttention:
         with self._connect() as db:
             rows = db.execute("""SELECT * FROM organization_attention_attempts WHERE sequence IN
               (SELECT MAX(sequence) FROM organization_attention_attempts GROUP BY id) ORDER BY sequence""").fetchall()
+        active_leases = self._active_lease_ids()
         by_id = {str(t.organization.id): t for t in self.catalog}
         entries = []
         for row in rows:
@@ -195,8 +274,8 @@ class OrganizationAttention:
                 canonical is None or canonical.target_uri != row["target_uri"]
             ):
                 state = "AUTHORIZATION_REVOKED"
-            if state == "PLANTING":
-                state = "RUN_INTERRUPTED"  # never silently retry an interrupted acquisition
+            if state == "PLANTING" and row["id"] not in active_leases:
+                state = "RUN_INTERRUPTED"  # only an unleased run is interrupted
             entries.append(
                 {
                     "id": row["id"],
@@ -272,6 +351,7 @@ class OrganizationAttention:
             raise ValueError("INVALID_ATTENTION_REQUEST")
         target = attention_target(uri)
         identifier = self._id(target)
+
         with self._lock:
             existing = next((e for e in self._entries() if e["id"] == identifier), None)
             result = self._resolver.resolve_identity(name)
@@ -293,26 +373,47 @@ class OrganizationAttention:
                 return {"state": "IDENTITY_UNRESOLVED", "attentionId": identifier}
             if not reobserve and existing and existing["projectionContextId"]:
                 return self.select(principal, identifier)
+
             old_context = None if existing is None else existing["projectionContextId"]
+            operation_key = "reobserve" if reobserve else "observe"
+            lease_token = self._claim_lease(identifier, operation_key)
+            if lease_token is None:
+                if existing and existing["projectionContextId"]:
+                    projection = self.proof.current_projection(
+                        xeed_id=existing["projectionContextId"]
+                    )
+                    if projection is not None:
+                        return projection
+                return {"state": "PLANTING", "attentionId": identifier}
+
             self._append(identifier, name, target, "PLANTING", canonical, old_context)
-            try:
-                projection = self.proof.observe_resolved(
-                    label=f"Observation of {canonical.organization.canonical_name}",
-                    target_uri=target,
-                    organization=canonical.organization,
-                )
-            except FirstProofInsufficientEvidence:
+
+        try:
+            projection = self.proof.observe_resolved(
+                label=f"Observation of {canonical.organization.canonical_name}",
+                target_uri=target,
+                organization=canonical.organization,
+            )
+        except FirstProofInsufficientEvidence:
+            with self._lock:
                 self._append(
                     identifier, name, target, "INSUFFICIENT_EVIDENCE", canonical, old_context
                 )
-                raise
-            except Exception:
+            raise
+        except Exception:
+            with self._lock:
                 self._append(identifier, name, target, "RUNTIME_FAILURE", canonical, old_context)
-                raise
+            raise
+        else:
             context = projection.get("context")
             assert isinstance(context, dict)
-            self._append(identifier, name, target, "LIVE", canonical, str(context["id"]))
+            with self._lock:
+                if not self._owns_lease(identifier, lease_token):
+                    raise ValueError("RUN_LEASE_LOST")
+                self._append(identifier, name, target, "LIVE", canonical, str(context["id"]))
             return self.select(principal, identifier)
+        finally:
+            self._release_lease(identifier, lease_token)
 
     def reobserve(self, principal: str, identifier: str) -> dict[str, object]:
         entry = next((e for e in self._entries() if e["id"] == identifier), None)

@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import time
 from dataclasses import dataclass, field
 from datetime import datetime
 from typing import Protocol
@@ -18,6 +19,8 @@ from application.economic_discovery.brain_contracts import (
 )
 from application.economic_discovery.execution_budget import (
     ExecutionBudgetDelta,
+    ExecutionBudgetReservation,
+    ExecutionReservationRejected,
     GovernedExecutionController,
 )
 from application.economic_discovery.execution_learning import execution_stop_learning_event
@@ -351,11 +354,55 @@ def execute_prime_source_slice(
         raise ValueError("Prime execution source policy mismatch")
 
     source_event_id = f"learn:{execution_id}:01-source:{request.request_id}"
+    source_reservation_id = f"reserve:{execution_id}:source:{request.request_id}"
+    try:
+        execution_controller.reserve(
+            ExecutionBudgetReservation(
+                reservation_id=source_reservation_id,
+                elapsed_ms=source_policy.timeout_ms,
+                requests=1,
+                sources=1,
+            )
+        )
+    except ExecutionReservationRejected as exc:
+        learning_memory.append(
+            execution_stop_learning_event(
+                event_id=f"{source_event_id}:budget-stop",
+                occurred_at=occurred_at,
+                subject_id=subject_id,
+                xeed_id=xeed_id,
+                activity_ref=request.request_id,
+                code_sha=code_sha,
+                kind=LearningEventKind.SOURCE_ACQUISITION,
+                mechanism=LearningMechanism.DETERMINISTIC,
+                policy=execution_controller.policy,
+                state=execution_controller.state,
+                decision=exc.decision,
+                execution_id=execution_id,
+                reservation_id=source_reservation_id,
+                attempt_no=1,
+                deadline_budget_ms=source_policy.timeout_ms,
+            )
+        )
+        raise
+
+    source_started_ns = time.monotonic_ns()
     try:
         observation = source_acquirer.observe(request, source_policy)
         if observation.subject_id != subject_id:
             raise ValueError("Prime execution cannot cross canonical subjects")
     except Exception as exc:
+        source_elapsed_ms = max(0, (time.monotonic_ns() - source_started_ns) // 1_000_000)
+        execution_controller.reconcile(
+            source_reservation_id,
+            ExecutionBudgetDelta(
+                elapsed_ms=source_elapsed_ms,
+                requests=1,
+                sources=1,
+                loops=0,
+                made_progress=False,
+            ),
+        )
         learning_memory.append(
             _learning_event(
                 event_id=source_event_id,
@@ -374,12 +421,32 @@ def execute_prime_source_slice(
                 reason_code=f"SOURCE_ACQUISITION_FAILED:{type(exc).__name__}",
                 before_state_fingerprint=None,
                 after_state_fingerprint=None,
-                cost=LearningCost(),
+                cost=LearningCost(latency_ms=source_elapsed_ms),
                 yield_=LearningYield(),
+                replay=LearningReplayReference.non_replayable(
+                    "SOURCE_ATTEMPT_FAILED",
+                    execution_id=execution_id,
+                    reservation_id=source_reservation_id,
+                    attempt_no="1",
+                    deadline_budget_ms=str(source_policy.timeout_ms),
+                    source_request_id=request.request_id,
+                    source_policy_fingerprint=request.policy_fingerprint,
+                ),
             )
         )
         raise
 
+    source_elapsed_ms = max(0, (time.monotonic_ns() - source_started_ns) // 1_000_000)
+    execution_controller.reconcile(
+        source_reservation_id,
+        ExecutionBudgetDelta(
+            elapsed_ms=source_elapsed_ms,
+            requests=1,
+            sources=1,
+            loops=0,
+            made_progress=True,
+        ),
+    )
     source_event = _learning_event(
         event_id=source_event_id,
         kind=LearningEventKind.SOURCE_ACQUISITION,
@@ -397,7 +464,7 @@ def execute_prime_source_slice(
         reason_code="SOURCE_ACQUIRED",
         before_state_fingerprint=None,
         after_state_fingerprint=None,
-        cost=LearningCost(),
+        cost=LearningCost(latency_ms=source_elapsed_ms),
         yield_=LearningYield(),
         replay=LearningReplayReference.replayable(
             artifact_ref=observation.raw_observation_ref,
@@ -405,6 +472,10 @@ def execute_prime_source_slice(
             observation_fingerprint=observation.observation_fingerprint,
             source_policy_id=request.policy_id,
             source_policy_fingerprint=request.policy_fingerprint,
+            execution_id=execution_id,
+            reservation_id=source_reservation_id,
+            attempt_no="1",
+            deadline_budget_ms=str(source_policy.timeout_ms),
         ),
     )
     learning_memory.append(source_event)
@@ -592,6 +663,42 @@ def execute_prime_source_slice(
     if semantic_contract is not None:
         if semantic_extractor is None:
             raise ValueError("semantic contract requires a semantic extraction port")
+        semantic_reservation_id = (
+            f"reserve:{execution_id}:semantic:{representation.representation_id}"
+        )
+        try:
+            execution_controller.reserve(
+                ExecutionBudgetReservation(
+                    reservation_id=semantic_reservation_id,
+                    requests=1,
+                )
+            )
+        except ExecutionReservationRejected as exc:
+            learning_memory.append(
+                execution_stop_learning_event(
+                    event_id=(
+                        f"learn:{execution_id}:04-semantic:budget-stop:"
+                        f"{representation.representation_id}"
+                    ),
+                    occurred_at=occurred_at,
+                    subject_id=subject_id,
+                    xeed_id=xeed_id,
+                    activity_ref=representation.representation_id,
+                    code_sha=code_sha,
+                    kind=LearningEventKind.SEMANTIC_EXTRACTION,
+                    mechanism=LearningMechanism.STRUCTURED_EVALUATOR,
+                    policy=execution_controller.policy,
+                    state=execution_controller.state,
+                    decision=exc.decision,
+                    execution_id=execution_id,
+                    reservation_id=semantic_reservation_id,
+                    attempt_no=1,
+                    deadline_budget_ms=execution_controller.policy.max_elapsed_ms,
+                )
+            )
+            raise
+
+        semantic_started_ns = time.monotonic_ns()
         try:
             candidate_set = semantic_extractor.extract(
                 representation=representation,
@@ -604,6 +711,19 @@ def execute_prime_source_slice(
             ):
                 raise ValueError("semantic extraction result does not match governed execution")
         except Exception as exc:
+            semantic_elapsed_ms = max(
+                0,
+                (time.monotonic_ns() - semantic_started_ns) // 1_000_000,
+            )
+            execution_controller.reconcile(
+                semantic_reservation_id,
+                ExecutionBudgetDelta(
+                    elapsed_ms=semantic_elapsed_ms,
+                    requests=1,
+                    loops=0,
+                    made_progress=False,
+                ),
+            )
             failed_semantic_id = (
                 f"learn:{execution_id}:04-semantic:failed:{representation.representation_id}"
             )
@@ -625,11 +745,32 @@ def execute_prime_source_slice(
                     reason_code=f"SEMANTIC_EXTRACTION_FAILED:{type(exc).__name__}",
                     before_state_fingerprint=None,
                     after_state_fingerprint=None,
-                    cost=LearningCost(),
+                    cost=LearningCost(latency_ms=semantic_elapsed_ms),
                     yield_=LearningYield(),
+                    replay=LearningReplayReference.non_replayable(
+                        "SEMANTIC_ATTEMPT_FAILED",
+                        execution_id=execution_id,
+                        reservation_id=semantic_reservation_id,
+                        attempt_no="1",
+                        contract_fingerprint=semantic_contract.fingerprint,
+                        representation_id=representation.representation_id,
+                    ),
                 )
             )
             raise
+        semantic_elapsed_ms = max(
+            0,
+            (time.monotonic_ns() - semantic_started_ns) // 1_000_000,
+        )
+        execution_controller.reconcile(
+            semantic_reservation_id,
+            ExecutionBudgetDelta(
+                elapsed_ms=semantic_elapsed_ms,
+                requests=1,
+                loops=0,
+                made_progress=True,
+            ),
+        )
         semantic_event_id = f"learn:{execution_id}:04-semantic:{candidate_set.extraction_id}"
         learning_memory.append(
             _learning_event(
@@ -649,7 +790,7 @@ def execute_prime_source_slice(
                 reason_code="GROUNDED_CANDIDATES_NORMALIZED",
                 before_state_fingerprint=None,
                 after_state_fingerprint=None,
-                cost=LearningCost(),
+                cost=LearningCost(latency_ms=semantic_elapsed_ms),
                 yield_=LearningYield(
                     semantic_judgments_produced=len(candidate_set.candidates),
                 ),
@@ -665,6 +806,9 @@ def execute_prime_source_slice(
                     representation_id=representation.representation_id,
                     representation_version=representation.representation_version,
                     result_fingerprint=candidate_set.result_fingerprint,
+                    execution_id=execution_id,
+                    reservation_id=semantic_reservation_id,
+                    attempt_no="1",
                 ),
             )
         )
@@ -705,9 +849,19 @@ def execute_prime_source_slice(
     for item_index, item in enumerate(prime_plan.items):
         if item.route is None:
             continue
-        authorization = execution_controller.authorize_next()
-        if not authorization.may_continue:
-            stop_reason = authorization.stop_reason.value if authorization.stop_reason else None
+
+        prime_reservation_id = f"reserve:{execution_id}:prime:{item_index:04d}:{item.dimension_id}"
+        reserved_requests = 0 if item.route is PrimeRoute.DETERMINISTIC else 1
+        try:
+            execution_controller.reserve(
+                ExecutionBudgetReservation(
+                    reservation_id=prime_reservation_id,
+                    requests=reserved_requests,
+                    loops=1,
+                )
+            )
+        except ExecutionReservationRejected as exc:
+            stop_reason = exc.decision.stop_reason.value if exc.decision.stop_reason else None
             stop_event = execution_stop_learning_event(
                 event_id=(
                     f"learn:{execution_id}:05-prime:{item_index:04d}:stop:"
@@ -734,13 +888,18 @@ def execute_prime_source_slice(
                 ),
                 policy=execution_controller.policy,
                 state=execution_controller.state,
-                decision=authorization,
+                decision=exc.decision,
+                execution_id=execution_id,
+                reservation_id=prime_reservation_id,
+                attempt_no=1,
+                deadline_budget_ms=execution_controller.policy.max_elapsed_ms,
             )
             learning_memory.append(stop_event)
             learning_ids.append(stop_event.event_id)
             break
 
         executor = _executor_for(item.route, ports)
+        prime_started_ns = time.monotonic_ns()
         try:
             result = executor.execute(
                 item=item,
@@ -748,6 +907,30 @@ def execute_prime_source_slice(
                 semantic_candidates=candidate_set,
             )
         except Exception as exc:
+            prime_elapsed_ms = max(
+                0,
+                (time.monotonic_ns() - prime_started_ns) // 1_000_000,
+            )
+            failure_amount = (
+                0
+                if item.route is PrimeRoute.DETERMINISTIC
+                and execution_controller.policy.currency is not None
+                else None
+            )
+            failure_currency = (
+                execution_controller.policy.currency if failure_amount is not None else None
+            )
+            execution_controller.reconcile(
+                prime_reservation_id,
+                ExecutionBudgetDelta(
+                    amount_microunits=failure_amount,
+                    currency=failure_currency,
+                    elapsed_ms=prime_elapsed_ms,
+                    requests=reserved_requests,
+                    loops=1,
+                    made_progress=False,
+                ),
+            )
             failed_id = (
                 f"learn:{execution_id}:05-prime:{item_index:04d}:failed:"
                 f"{item.dimension_id}:{rich_state.fingerprint[:16]}"
@@ -784,22 +967,41 @@ def execute_prime_source_slice(
                     reason_code=f"PRIME_EXECUTION_FAILED:{type(exc).__name__}",
                     before_state_fingerprint=None,
                     after_state_fingerprint=None,
-                    cost=LearningCost(),
+                    cost=LearningCost(
+                        amount_microunits=failure_amount,
+                        currency=failure_currency,
+                        latency_ms=prime_elapsed_ms,
+                    ),
                     yield_=LearningYield(),
+                    replay=LearningReplayReference.non_replayable(
+                        "PRIME_ATTEMPT_FAILED",
+                        execution_id=execution_id,
+                        reservation_id=prime_reservation_id,
+                        attempt_no="1",
+                        prime_route=item.route.value,
+                        routing_policy_version=item.policy_version,
+                        state_fingerprint=rich_state.fingerprint,
+                    ),
                 )
             )
             raise
-        execution_controller.record(
+
+        prime_elapsed_ms = max(
+            0,
+            (time.monotonic_ns() - prime_started_ns) // 1_000_000,
+        )
+        execution_controller.reconcile(
+            prime_reservation_id,
             ExecutionBudgetDelta(
                 amount_microunits=result.cost.amount_microunits,
                 currency=result.cost.currency,
-                elapsed_ms=result.cost.latency_ms or 0,
+                elapsed_ms=max(prime_elapsed_ms, result.cost.latency_ms or 0),
                 requests=result.requests,
                 sources=result.sources,
                 retries=result.retries,
                 loops=1,
                 made_progress=result.made_progress,
-            )
+            ),
         )
         kind = (
             LearningEventKind.ADAPTIVE_RESEARCH
@@ -825,6 +1027,9 @@ def execute_prime_source_slice(
                 prime_route=item.route.value,
                 routing_policy_version=item.policy_version,
                 state_fingerprint=rich_state.fingerprint,
+                execution_id=execution_id,
+                reservation_id=prime_reservation_id,
+                attempt_no="1",
             )
             if item.route is PrimeRoute.DETERMINISTIC
             else LearningReplayReference.non_replayable(
@@ -834,6 +1039,9 @@ def execute_prime_source_slice(
                 representation_artifact_ref=representation.artifact_ref,
                 routing_policy_version=item.policy_version,
                 state_fingerprint=rich_state.fingerprint,
+                execution_id=execution_id,
+                reservation_id=prime_reservation_id,
+                attempt_no="1",
             )
         )
         learning_memory.append(

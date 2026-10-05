@@ -35,6 +35,10 @@ def execution_stop_learning_event(
     xeed_id: str | None = None,
     before_state_fingerprint: str | None = None,
     after_state_fingerprint: str | None = None,
+    execution_id: str | None = None,
+    reservation_id: str | None = None,
+    attempt_no: int | None = None,
+    deadline_budget_ms: int | None = None,
 ) -> LearningEvent:
     """Record a governed stop as partial operational evidence, never as success."""
 
@@ -50,6 +54,20 @@ def execution_stop_learning_event(
         currency=state.currency,
         latency_ms=state.elapsed_ms,
     )
+    attempt_refs: dict[str, str] = {}
+    if execution_id is not None:
+        attempt_refs["execution_id"] = execution_id
+    if reservation_id is not None:
+        attempt_refs["reservation_id"] = reservation_id
+    if attempt_no is not None:
+        if attempt_no < 1:
+            raise ValueError("execution attempt number must be positive")
+        attempt_refs["attempt_no"] = str(attempt_no)
+    if deadline_budget_ms is not None:
+        if deadline_budget_ms < 1:
+            raise ValueError("execution attempt deadline budget must be positive")
+        attempt_refs["deadline_budget_ms"] = str(deadline_budget_ms)
+
     return LearningEvent(
         event_id=event_id,
         kind=kind,
@@ -72,6 +90,7 @@ def execution_stop_learning_event(
             execution_budget_policy_fingerprint=policy.fingerprint,
             execution_budget_state_fingerprint=state.fingerprint,
             stop_reason=decision.stop_reason.value,
+            **attempt_refs,
         ),
         cost=cost,
         yield_=LearningYield(),

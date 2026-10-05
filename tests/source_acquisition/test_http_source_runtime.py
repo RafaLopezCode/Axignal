@@ -4,6 +4,7 @@ import http.server
 import json
 import socket
 import threading
+import time
 from datetime import UTC, datetime
 from pathlib import Path
 
@@ -31,6 +32,7 @@ from pipeline.source_acquisition import (
     PublicSourcePolicyGate,
     RawHttpResponse,
     ResolvedTarget,
+    SourceDeadlineExceeded,
     SourcePolicyRejected,
 )
 
@@ -215,6 +217,53 @@ def test_pinned_transport_fails_closed_on_response_budget() -> None:
         thread.join(timeout=2)
 
 
+class _SlowTrickleHandler(http.server.BaseHTTPRequestHandler):
+    body = b"0123456789"
+
+    def do_GET(self) -> None:
+        self.send_response(200)
+        self.send_header("Content-Type", "application/octet-stream")
+        self.send_header("Content-Length", str(len(self.body)))
+        self.end_headers()
+        for byte in self.body:
+            try:
+                self.wfile.write(bytes((byte,)))
+                self.wfile.flush()
+            except (BrokenPipeError, ConnectionResetError):
+                break
+            time.sleep(0.03)
+
+    def log_message(self, _format: str, *_args: object) -> None:
+        return
+
+
+def test_pinned_transport_enforces_total_deadline_against_slow_trickle() -> None:
+    server = http.server.ThreadingHTTPServer(("127.0.0.1", 0), _SlowTrickleHandler)
+    thread = threading.Thread(target=server.serve_forever, daemon=True)
+    thread.start()
+    try:
+        target = ResolvedTarget(
+            uri="http://fixture.test/",
+            scheme="http",
+            host="fixture.test",
+            port=server.server_port,
+            path_and_query="/",
+            addresses=("127.0.0.1",),
+        )
+        started = time.monotonic()
+        with pytest.raises(SourceDeadlineExceeded):
+            PinnedHttpTransport().fetch(
+                target,
+                timeout_ms=100,
+                max_response_bytes=10_000,
+            )
+        assert time.monotonic() - started < 1.0
+    finally:
+        server.shutdown()
+        server.server_close()
+        thread.join(timeout=2)
+
+
 class _StubTransport(PinnedHttpTransport):
     instrument_ref = "test-pinned-http/1"
 
@@ -225,7 +274,7 @@ class _StubTransport(PinnedHttpTransport):
         timeout_ms: int,
         max_response_bytes: int,
     ) -> RawHttpResponse:
-        assert timeout_ms == 1_500
+        assert 1 <= timeout_ms <= 1_500
         assert max_response_bytes == 2_000_000
         return RawHttpResponse(
             status=200,

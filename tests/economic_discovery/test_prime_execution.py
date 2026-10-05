@@ -23,6 +23,8 @@ from application.economic_discovery.brain_contracts import (
 from application.economic_discovery.execution_budget import (
     ExecutionBudgetPolicy,
     ExecutionBudgetState,
+    ExecutionReservationRejected,
+    ExecutionStopReason,
     GovernedExecutionController,
 )
 from application.economic_discovery.learning_memory import (
@@ -138,7 +140,7 @@ class _Transport:
         timeout_ms: int,
         max_response_bytes: int,
     ) -> RawHttpResponse:
-        assert timeout_ms == 1_500
+        assert 1 <= timeout_ms <= 1_500
         body = (
             b"<html lang='en'><head><title>ACME Pumps</title></head>"
             b"<body>ACME manufactures industrial pumps for food factories.</body></html>"
@@ -150,6 +152,24 @@ class _Transport:
             body=body,
             peer_ip=target.addresses[0],
         )
+
+
+class _NeverSourceAcquirer:
+    def __init__(self) -> None:
+        self.calls = 0
+
+    def observe(self, request, policy):
+        self.calls += 1
+        raise AssertionError("source acquisition must not run after budget rejection")
+
+
+class _MeteredFailingSourceAcquirer:
+    def __init__(self) -> None:
+        self.calls = 0
+
+    def observe(self, request, policy):
+        self.calls += 1
+        raise RuntimeError("fixture source failure")
 
 
 class _Organizations:
@@ -253,7 +273,11 @@ class _Executor:
 class _SemanticProvider:
     name = "fixture-semantic"
 
+    def __init__(self) -> None:
+        self.calls = 0
+
     def complete(self, job):
+        self.calls += 1
         text = str(job.context["visible_text"])
         excerpt = "ACME manufactures industrial pumps for food factories."
         assert excerpt in text
@@ -371,6 +395,189 @@ def test_real_source_to_prime_composition_with_semantic_extraction(
     assert semantic_event.replay.require("provider_version") == "1"
     assert structured_event.replay.disposition is ReplayDisposition.NON_REPLAYABLE
     assert structured_event.replay.reason_code == "PROVIDER_MODEL_OR_HARNESS_REFERENCE_UNAVAILABLE"
+
+
+def test_budget_reservation_blocks_source_before_fetch(
+    tmp_path: Path,
+) -> None:
+    seed = _authorized_seed()
+    policy = _source_policy()
+    request = _request(policy)
+    acquirer = _NeverSourceAcquirer()
+    controller = GovernedExecutionController(
+        policy=ExecutionBudgetPolicy(
+            policy_id="source-budget",
+            version="1",
+            currency="USD",
+            max_amount_microunits=100,
+            max_requests=5,
+            max_sources=5,
+            max_elapsed_ms=1_000,
+            max_loops=5,
+        ),
+        state=ExecutionBudgetState(amount_microunits=0, currency="USD"),
+    )
+    executor = _Executor("unused")
+
+    with pytest.raises(ExecutionReservationRejected) as exc_info:
+        execute_prime_source_slice(
+            execution_id="run:source-budget-stop",
+            seed=seed,
+            code_sha="abc123",
+            occurred_at=NOW,
+            observation_memory=SqliteObservationMemory(tmp_path / "observations.sqlite3"),
+            learning_memory=SqliteLearningMemory(tmp_path / "learning.sqlite3"),
+            request=request,
+            source_policy=policy,
+            source_acquirer=acquirer,
+            representation_port=HtmlDocumentRepresentationAdapter(
+                ContentAddressedArtifactStore(tmp_path / "artifacts")
+            ),
+            prior_rich_state=compile_rich_subject_state(
+                subject_id="org:acme",
+                contributions=(),
+            ),
+            contracts=(_contract("market-mode"),),
+            routing_policies=(
+                DimensionRoutingPolicy(
+                    "market-mode",
+                    "routing-v1",
+                    PrimeRoute.DETERMINISTIC,
+                ),
+            ),
+            research_decisions=(),
+            execution_controller=controller,
+            ports=PrimeExecutionPorts(executor, executor, executor),
+        )
+
+    assert exc_info.value.decision.stop_reason is ExecutionStopReason.DEADLINE_EXCEEDED
+    assert acquirer.calls == 0
+    assert controller.state.requests == 0
+    assert controller.state.sources == 0
+    assert controller.active_reservation_ids == ()
+
+
+def test_failed_source_attempt_is_reconciled_as_unknown_cost(
+    tmp_path: Path,
+) -> None:
+    seed = _authorized_seed()
+    policy = _source_policy()
+    request = _request(policy)
+    acquirer = _MeteredFailingSourceAcquirer()
+    controller = _budget()
+    learning = SqliteLearningMemory(tmp_path / "learning.sqlite3")
+    executor = _Executor("unused")
+
+    with pytest.raises(RuntimeError, match="fixture source failure"):
+        execute_prime_source_slice(
+            execution_id="run:source-failure",
+            seed=seed,
+            code_sha="abc123",
+            occurred_at=NOW,
+            observation_memory=SqliteObservationMemory(tmp_path / "observations.sqlite3"),
+            learning_memory=learning,
+            request=request,
+            source_policy=policy,
+            source_acquirer=acquirer,
+            representation_port=HtmlDocumentRepresentationAdapter(
+                ContentAddressedArtifactStore(tmp_path / "artifacts")
+            ),
+            prior_rich_state=compile_rich_subject_state(
+                subject_id="org:acme",
+                contributions=(),
+            ),
+            contracts=(_contract("market-mode"),),
+            routing_policies=(
+                DimensionRoutingPolicy(
+                    "market-mode",
+                    "routing-v1",
+                    PrimeRoute.DETERMINISTIC,
+                ),
+            ),
+            research_decisions=(),
+            execution_controller=controller,
+            ports=PrimeExecutionPorts(executor, executor, executor),
+        )
+
+    assert acquirer.calls == 1
+    assert controller.state.requests == 1
+    assert controller.state.sources == 1
+    assert controller.state.cost_complete is False
+    assert controller.active_reservation_ids == ()
+    event = learning.for_xeed("xeed:1")[-1]
+    assert event.kind is LearningEventKind.SOURCE_ACQUISITION
+    assert event.outcome is LearningOutcome.FAILED
+    assert event.cost.amount_microunits is None
+    assert event.cost.latency_ms is not None
+
+
+def test_source_usage_can_exhaust_budget_before_semantic_provider_dispatch(
+    monkeypatch,
+    tmp_path: Path,
+) -> None:
+    monkeypatch.setattr(socket, "getaddrinfo", _public_dns)
+    seed = _authorized_seed()
+    policy = _source_policy()
+    request = _request(policy)
+    sensor, artifacts = _sensor(tmp_path)
+    provider = _SemanticProvider()
+    semantic_adapter = CognitiveSemanticExtractionAdapter(ModelRouter((provider,)))
+    extraction_contract = SemanticExtractionContract(
+        contract_id="semantic:market-mode",
+        version="1",
+        targets=(SemanticTarget("market-mode", "economic market mode"),),
+    )
+    controller = GovernedExecutionController(
+        policy=ExecutionBudgetPolicy(
+            policy_id="single-request-budget",
+            version="1",
+            currency="USD",
+            max_amount_microunits=100,
+            max_requests=1,
+            max_sources=2,
+            max_elapsed_ms=10_000,
+            max_loops=5,
+        ),
+        state=ExecutionBudgetState(amount_microunits=0, currency="USD"),
+    )
+    executor = _Executor("unused")
+
+    with pytest.raises(ExecutionReservationRejected) as exc_info:
+        execute_prime_source_slice(
+            execution_id="run:semantic-budget-stop",
+            seed=seed,
+            code_sha="abc123",
+            occurred_at=NOW,
+            observation_memory=SqliteObservationMemory(tmp_path / "observations.sqlite3"),
+            learning_memory=SqliteLearningMemory(tmp_path / "learning.sqlite3"),
+            request=request,
+            source_policy=policy,
+            source_acquirer=sensor,
+            representation_port=HtmlDocumentRepresentationAdapter(artifacts),
+            prior_rich_state=compile_rich_subject_state(
+                subject_id="org:acme",
+                contributions=(),
+            ),
+            contracts=(_contract("market-mode"),),
+            routing_policies=(
+                DimensionRoutingPolicy(
+                    "market-mode",
+                    "routing-v1",
+                    PrimeRoute.STRUCTURED_EVALUATOR,
+                ),
+            ),
+            research_decisions=(),
+            execution_controller=controller,
+            ports=PrimeExecutionPorts(executor, executor, executor),
+            semantic_extractor=semantic_adapter,
+            semantic_contract=extraction_contract,
+        )
+
+    assert exc_info.value.decision.stop_reason is ExecutionStopReason.REQUEST_BUDGET_EXHAUSTED
+    assert provider.calls == 0
+    assert controller.state.requests == 1
+    assert controller.state.sources == 1
+    assert controller.active_reservation_ids == ()
 
 
 def test_budget_stop_blocks_second_prime_work_and_records_partial_learning(

@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import sqlite3
+import threading
 from pathlib import Path
 
 import pytest
@@ -172,6 +173,112 @@ def test_failed_or_interrupted_acquisition_survives_restart_without_false_succes
     assert entry["state"] == ("RUN_INTERRUPTED" if interrupted else "RUNTIME_FAILURE")
     assert entry["projectionContextId"] is None
     assert restarted.proof.observation_memory.for_subject("org:controlled-second") == ()
+
+
+def test_network_work_runs_outside_attention_lock_and_same_intent_is_leased(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    attention = _attention(tmp_path)
+    _install_source(monkeypatch, attention.proof)
+    original = attention.proof.observe_resolved
+    started = threading.Event()
+    release = threading.Event()
+    inventory_completed = threading.Event()
+    calls = 0
+    result_box: dict[str, object] = {}
+    error_box: list[BaseException] = []
+
+    def blocking_observe(self, **kwargs):
+        nonlocal calls
+        del self
+        calls += 1
+        started.set()
+        if not release.wait(timeout=2):
+            raise RuntimeError("fixture observation release timeout")
+        return original(**kwargs)
+
+    monkeypatch.setattr(type(attention.proof), "observe_resolved", blocking_observe)
+
+    def run_add() -> None:
+        try:
+            result_box["projection"] = attention.add(
+                "operator:a",
+                "Controlled second",
+                "https://controlled.example/",
+            )
+        except BaseException as exc:  # capture thread failure for assertion below
+            error_box.append(exc)
+
+    worker = threading.Thread(target=run_add, daemon=True)
+    worker.start()
+    assert started.wait(timeout=1)
+
+    inventory_box: dict[str, object] = {}
+
+    def read_inventory() -> None:
+        inventory_box["value"] = attention.inventory("operator:b", can_observe=True)
+        inventory_completed.set()
+
+    reader = threading.Thread(target=read_inventory, daemon=True)
+    reader.start()
+    if not inventory_completed.wait(timeout=0.5):
+        release.set()
+        worker.join(timeout=2)
+        reader.join(timeout=2)
+        pytest.fail("attention inventory blocked behind network acquisition")
+
+    inventory = inventory_box["value"]
+    assert isinstance(inventory, dict)
+    active = next(
+        item
+        for item in inventory["organizations"]
+        if item["organizationId"] == "org:controlled-second"
+    )
+    assert active["state"] == "PLANTING"
+
+    duplicate = attention.add(
+        "operator:b",
+        "Controlled second",
+        "https://controlled.example/",
+    )
+    assert duplicate["state"] == "PLANTING"
+    assert calls == 1
+
+    release.set()
+    worker.join(timeout=2)
+    reader.join(timeout=2)
+    assert not worker.is_alive()
+    assert not error_box
+    projection = result_box["projection"]
+    assert isinstance(projection, dict)
+    assert projection["organization"]["id"] == "org:controlled-second"
+    assert calls == 1
+
+
+def test_expired_lease_can_be_reclaimed_and_old_token_is_fenced(tmp_path: Path) -> None:
+    attention = _attention(tmp_path)
+    identifier = attention._id("https://controlled.example/")
+    first = attention._claim_lease(identifier, "observe")
+    assert first is not None
+    assert attention._owns_lease(identifier, first)
+
+    with sqlite3.connect(attention.proof.store.path) as db:
+        db.execute(
+            "UPDATE organization_attention_leases SET expires_at=? WHERE attention_id=?",
+            ("2000-01-01T00:00:00+00:00", identifier),
+        )
+
+    second = attention._claim_lease(identifier, "observe")
+    assert second is not None
+    assert second != first
+    assert not attention._owns_lease(identifier, first)
+    assert attention._owns_lease(identifier, second)
+
+    attention._release_lease(identifier, first)
+    assert attention._owns_lease(identifier, second)
+    attention._release_lease(identifier, second)
+    assert not attention._owns_lease(identifier, second)
 
 
 @pytest.mark.parametrize(

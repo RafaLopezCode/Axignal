@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import hashlib
+import time
 from collections.abc import Callable
 from datetime import UTC, datetime
 from urllib.parse import urljoin
@@ -13,7 +14,11 @@ from application.source_acquisition import (
     SourceRequest,
 )
 from pipeline.source_acquisition.artifacts import ContentAddressedArtifactStore
-from pipeline.source_acquisition.http_transport import PinnedHttpTransport, RawHttpResponse
+from pipeline.source_acquisition.http_transport import (
+    PinnedHttpTransport,
+    RawHttpResponse,
+    SourceDeadlineExceeded,
+)
 from pipeline.source_acquisition.policy import PublicSourcePolicyGate, SourcePolicyRejected
 
 _REDIRECT_STATUSES = frozenset({301, 302, 303, 307, 308})
@@ -29,11 +34,13 @@ class HttpSourceSensor:
         transport: PinnedHttpTransport,
         artifacts: ContentAddressedArtifactStore,
         clock: Callable[[], datetime] | None = None,
+        monotonic_ns: Callable[[], int] | None = None,
     ) -> None:
         self._policy_gate = policy_gate
         self._transport = transport
         self._artifacts = artifacts
         self._clock = clock or (lambda: datetime.now(UTC))
+        self._monotonic_ns = monotonic_ns or time.monotonic_ns
 
     def observe(
         self,
@@ -47,13 +54,18 @@ class HttpSourceSensor:
 
         requested_uri = request.target_uri
         current_uri = requested_uri
-        redirect_chain: list[str] = []
+        redirect_chain: list[str] = [requested_uri]
         peer_ips: list[str] = []
         final_response: RawHttpResponse | None = None
         failure_state: str | None = None
         final_uri = requested_uri
+        deadline_ns = self._monotonic_ns() + policy.timeout_ms * 1_000_000
 
         for hop in range(policy.max_redirects + 1):
+            if self._monotonic_ns() >= deadline_ns:
+                failure_state = "deadline_exceeded"
+                break
+
             try:
                 resolved = self._policy_gate.resolve(current_uri, policy)
             except SourcePolicyRejected:
@@ -62,16 +74,29 @@ class HttpSourceSensor:
                 failure_state = "redirect_policy_rejected"
                 break
 
-            if not redirect_chain or redirect_chain[-1] != resolved.uri:
+            if self._monotonic_ns() >= deadline_ns:
+                failure_state = "deadline_exceeded"
+                break
+
+            if redirect_chain[-1] != resolved.uri:
                 redirect_chain.append(resolved.uri)
             final_uri = resolved.uri
+
+            remaining_ns = deadline_ns - self._monotonic_ns()
+            if remaining_ns <= 0:
+                failure_state = "deadline_exceeded"
+                break
+            remaining_ms = max(1, (remaining_ns + 999_999) // 1_000_000)
 
             try:
                 response = self._transport.fetch(
                     resolved,
-                    timeout_ms=policy.timeout_ms,
+                    timeout_ms=remaining_ms,
                     max_response_bytes=policy.max_response_bytes,
                 )
+            except SourceDeadlineExceeded:
+                failure_state = "deadline_exceeded"
+                break
             except OSError as exc:
                 failure_state = f"transport_error:{type(exc).__name__}"
                 break
@@ -107,7 +132,7 @@ class HttpSourceSensor:
         status = final_response.status if final_response is not None else None
         content_type = final_response.header("Content-Type") if final_response is not None else None
         envelope = {
-            "schema": "axignal.source-observation/0.1",
+            "schema": "axignal.source-observation/0.2",
             "request": {
                 "request_id": request.request_id,
                 "subject_id": request.subject_id,

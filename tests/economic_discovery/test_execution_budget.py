@@ -5,7 +5,9 @@ import pytest
 from application.economic_discovery.execution_budget import (
     ExecutionBudgetDelta,
     ExecutionBudgetPolicy,
+    ExecutionBudgetReservation,
     ExecutionBudgetState,
+    ExecutionReservationRejected,
     ExecutionStopReason,
     GovernedExecutionController,
     advance_execution_budget,
@@ -175,6 +177,108 @@ def test_incomplete_known_lower_bound_can_fail_closed_on_unknown_cost_policy() -
     )
 
     assert decision.stop_reason is ExecutionStopReason.COST_UNKNOWN
+
+
+def test_reservation_rejects_dispatch_that_would_exceed_request_budget() -> None:
+    controller = GovernedExecutionController(
+        policy=_policy(max_requests=1),
+        state=ExecutionBudgetState(amount_microunits=0, currency="USD"),
+    )
+    controller.reserve(
+        ExecutionBudgetReservation(
+            reservation_id="source:1",
+            requests=1,
+        )
+    )
+
+    with pytest.raises(ExecutionReservationRejected) as exc_info:
+        controller.reserve(
+            ExecutionBudgetReservation(
+                reservation_id="source:2",
+                requests=1,
+            )
+        )
+
+    assert exc_info.value.decision.stop_reason is ExecutionStopReason.REQUEST_BUDGET_EXHAUSTED
+    assert controller.active_reservation_ids == ("source:1",)
+
+
+def test_unknown_cost_reservation_fails_closed_when_policy_requires() -> None:
+    controller = GovernedExecutionController(
+        policy=_policy(stop_on_unknown_cost=True),
+        state=ExecutionBudgetState(amount_microunits=0, currency="USD"),
+    )
+
+    with pytest.raises(ExecutionReservationRejected) as exc_info:
+        controller.reserve(
+            ExecutionBudgetReservation(
+                reservation_id="provider:1",
+                requests=1,
+            )
+        )
+
+    assert exc_info.value.decision.stop_reason is ExecutionStopReason.COST_UNKNOWN
+    assert controller.active_reservation_ids == ()
+
+
+def test_reconciliation_records_unknown_attempt_and_releases_reservation() -> None:
+    controller = GovernedExecutionController(
+        policy=_policy(),
+        state=ExecutionBudgetState(amount_microunits=7, currency="USD"),
+    )
+    controller.reserve(
+        ExecutionBudgetReservation(
+            reservation_id="source:1",
+            requests=1,
+            sources=1,
+            elapsed_ms=50,
+        )
+    )
+
+    state = controller.reconcile(
+        "source:1",
+        ExecutionBudgetDelta(
+            elapsed_ms=12,
+            requests=1,
+            sources=1,
+            made_progress=False,
+        ),
+    )
+
+    assert state.amount_microunits == 7
+    assert state.cost_complete is False
+    assert state.requests == 1
+    assert state.sources == 1
+    assert state.elapsed_ms == 12
+    assert controller.active_reservation_ids == ()
+
+
+def test_reconciliation_records_actual_usage_even_if_it_exceeds_reservation() -> None:
+    controller = GovernedExecutionController(
+        policy=_policy(max_requests=2),
+        state=ExecutionBudgetState(amount_microunits=0, currency="USD"),
+    )
+    controller.reserve(
+        ExecutionBudgetReservation(
+            reservation_id="provider:1",
+            amount_microunits=10,
+            currency="USD",
+            requests=1,
+        )
+    )
+
+    state = controller.reconcile(
+        "provider:1",
+        ExecutionBudgetDelta(
+            amount_microunits=125,
+            currency="USD",
+            requests=2,
+        ),
+    )
+
+    assert state.amount_microunits == 125
+    assert state.requests == 2
+    assert controller.authorize_next().stop_reason is ExecutionStopReason.MONETARY_BUDGET_EXHAUSTED
 
 
 def test_governed_controller_cannot_continue_after_loop_limit() -> None:

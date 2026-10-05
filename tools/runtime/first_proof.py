@@ -162,12 +162,25 @@ class _SingleSeedAuthority:
         return self._organization if organization_id == self._organization.id else None
 
 
-class _FixedSourceAcquirer:
-    def __init__(self, observation: SourceObservation) -> None:
-        self._observation = observation
+class _RecordingSourceAcquirer:
+    """Composition adapter that exposes the exact observation Prime acquired."""
+
+    def __init__(self, delegate: HttpSourceSensor) -> None:
+        self._delegate = delegate
+        self._observation: SourceObservation | None = None
 
     def observe(self, request: SourceRequest, policy: SourceDispatchPolicy) -> SourceObservation:
-        del request, policy
+        observation = self._delegate.observe(request, policy)
+        self._observation = observation
+        if observation.failure_state is not None or observation.body_artifact_ref is None:
+            raise FirstProofInsufficientEvidence(
+                f"SOURCE_NOT_EVALUABLE:{observation.failure_state or 'NO_BODY'}"
+            )
+        return observation
+
+    def require_observation(self) -> SourceObservation:
+        if self._observation is None:
+            raise RuntimeError("governed source acquisition did not produce an observation")
         return self._observation
 
 
@@ -508,24 +521,19 @@ class FirstProofService:
             transport=PinnedHttpTransport(),
             artifacts=self.artifacts,
         )
-        observation = sensor.observe(request, source_policy)
-        projection_as_of = max(now, observation.retrieved_at)
-        if observation.failure_state is not None or observation.body_artifact_ref is None:
-            raise FirstProofInsufficientEvidence(
-                f"SOURCE_NOT_EVALUABLE:{observation.failure_state or 'NO_BODY'}"
-            )
+        source_acquirer = _RecordingSourceAcquirer(sensor)
         representation_adapter = HtmlDocumentRepresentationAdapter(self.artifacts)
         executor = _AnswerabilityExecutor()
         trace = execute_prime_source_slice(
             execution_id=execution_id,
             seed=seed,
             code_sha=self.code_sha,
-            occurred_at=projection_as_of,
+            occurred_at=now,
             observation_memory=self.observation_memory,
             learning_memory=self.learning_memory,
             request=request,
             source_policy=source_policy,
-            source_acquirer=_FixedSourceAcquirer(observation),
+            source_acquirer=source_acquirer,
             representation_port=representation_adapter,
             prior_rich_state=prior,
             contracts=(contract,),
@@ -558,6 +566,8 @@ class FirstProofService:
                 applicable_purposes=(ReusePurpose.CURRENT_STATE.value,),
             ),
         )
+        observation = source_acquirer.require_observation()
+        projection_as_of = max(now, observation.retrieved_at)
         apply_prime_trace(seed=seed, state=lifecycle, trace=trace, occurred_at=projection_as_of)
         representation = representation_adapter.represent(request=request, observation=observation)
         observation_id = source_observation_id(request, observation)

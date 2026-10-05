@@ -8,7 +8,7 @@ from __future__ import annotations
 
 import hashlib
 import json
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import StrEnum
 
 
@@ -171,6 +171,50 @@ class ExecutionBudgetDelta:
 
 
 @dataclass(frozen=True, slots=True)
+class ExecutionBudgetReservation:
+    """Capacity held before a costly dispatch and reconciled afterward."""
+
+    reservation_id: str
+    amount_microunits: int | None = None
+    currency: str | None = None
+    elapsed_ms: int = 0
+    requests: int = 0
+    sources: int = 0
+    retries: int = 0
+    loops: int = 0
+
+    def __post_init__(self) -> None:
+        if not self.reservation_id.strip():
+            raise ValueError("execution reservation identity is required")
+        if (self.amount_microunits is None) != (self.currency is None):
+            raise ValueError("reserved monetary amount and currency must coexist")
+        if self.amount_microunits is not None and self.amount_microunits < 0:
+            raise ValueError("reserved execution cost cannot be negative")
+        if self.currency is not None:
+            currency = self.currency.strip().upper()
+            if len(currency) != 3 or not currency.isalpha():
+                raise ValueError("reservation currency must be a three-letter code")
+            object.__setattr__(self, "currency", currency)
+        for value in (
+            self.elapsed_ms,
+            self.requests,
+            self.sources,
+            self.retries,
+            self.loops,
+        ):
+            if value < 0:
+                raise ValueError("execution reservation counters cannot be negative")
+
+
+class ExecutionReservationRejected(RuntimeError):
+    """Raised when a pre-dispatch reservation would exceed governed capacity."""
+
+    def __init__(self, decision: ExecutionBudgetDecision) -> None:
+        self.decision = decision
+        super().__init__(f"execution reservation rejected: {decision.stop_reason}")
+
+
+@dataclass(frozen=True, slots=True)
 class ExecutionBudgetDecision:
     may_continue: bool
     policy_id: str
@@ -250,17 +294,12 @@ def evaluate_execution_budget(
     )
 
 
-def advance_execution_budget(
+def _accumulate_execution_delta(
     *,
-    policy: ExecutionBudgetPolicy,
     state: ExecutionBudgetState,
     delta: ExecutionBudgetDelta,
 ) -> ExecutionBudgetState:
-    """Record one completed unit of work after pre-dispatch authorization."""
-
-    before = evaluate_execution_budget(policy=policy, state=state)
-    if not before.may_continue:
-        raise RuntimeError(f"execution already stopped: {before.stop_reason}")
+    """Accumulate measured usage without deciding whether dispatch was allowed."""
 
     if (
         state.currency is not None
@@ -291,15 +330,155 @@ def advance_execution_budget(
     )
 
 
+def advance_execution_budget(
+    *,
+    policy: ExecutionBudgetPolicy,
+    state: ExecutionBudgetState,
+    delta: ExecutionBudgetDelta,
+) -> ExecutionBudgetState:
+    """Record one completed unit of work after pre-dispatch authorization."""
+
+    before = evaluate_execution_budget(policy=policy, state=state)
+    if not before.may_continue:
+        raise RuntimeError(f"execution already stopped: {before.stop_reason}")
+    return _accumulate_execution_delta(state=state, delta=delta)
+
+
+def _reserved_projection(
+    state: ExecutionBudgetState,
+    reservations: tuple[ExecutionBudgetReservation, ...],
+) -> ExecutionBudgetState:
+    amount = state.amount_microunits
+    currency = state.currency
+    complete = bool(state.cost_complete)
+    elapsed_ms = state.elapsed_ms
+    requests = state.requests
+    sources = state.sources
+    retries = state.retries
+    loops = state.loops
+
+    for reservation in reservations:
+        if (
+            currency is not None
+            and reservation.currency is not None
+            and currency != reservation.currency
+        ):
+            raise ValueError("reservation currency does not match accumulated currency")
+        if reservation.amount_microunits is None:
+            complete = False
+        else:
+            currency = currency or reservation.currency
+            amount = (amount or 0) + reservation.amount_microunits
+        elapsed_ms += reservation.elapsed_ms
+        requests += reservation.requests
+        sources += reservation.sources
+        retries += reservation.retries
+        loops += reservation.loops
+
+    return ExecutionBudgetState(
+        amount_microunits=amount,
+        currency=currency,
+        cost_complete=complete,
+        elapsed_ms=elapsed_ms,
+        requests=requests,
+        sources=sources,
+        retries=retries,
+        loops=loops,
+        no_progress_streak=state.no_progress_streak,
+    )
+
+
+def _reservation_stop_reason(
+    *,
+    policy: ExecutionBudgetPolicy,
+    projected: ExecutionBudgetState,
+) -> ExecutionStopReason | None:
+    if (
+        policy.stop_on_unknown_cost
+        and policy.max_amount_microunits is not None
+        and not projected.cost_complete
+    ):
+        return ExecutionStopReason.COST_UNKNOWN
+    if (
+        policy.max_amount_microunits is not None
+        and projected.amount_microunits is not None
+        and projected.amount_microunits > policy.max_amount_microunits
+    ):
+        return ExecutionStopReason.MONETARY_BUDGET_EXHAUSTED
+
+    checks = (
+        (policy.max_requests, projected.requests, ExecutionStopReason.REQUEST_BUDGET_EXHAUSTED),
+        (policy.max_sources, projected.sources, ExecutionStopReason.SOURCE_BUDGET_EXHAUSTED),
+        (policy.max_elapsed_ms, projected.elapsed_ms, ExecutionStopReason.DEADLINE_EXCEEDED),
+        (policy.max_retries, projected.retries, ExecutionStopReason.RETRY_LIMIT_REACHED),
+        (policy.max_loops, projected.loops, ExecutionStopReason.LOOP_LIMIT_REACHED),
+    )
+    for limit, reserved, reason in checks:
+        if limit is not None and reserved > limit:
+            return reason
+    return None
+
+
 @dataclass(slots=True)
 class GovernedExecutionController:
-    """Small stateful guard used by executors to prevent unbounded work."""
+    """Stateful pre-dispatch reservation and post-dispatch accounting guard."""
 
     policy: ExecutionBudgetPolicy
     state: ExecutionBudgetState = ExecutionBudgetState()
+    _reservations: dict[str, ExecutionBudgetReservation] = field(
+        default_factory=dict,
+        init=False,
+        repr=False,
+    )
 
     def authorize_next(self) -> ExecutionBudgetDecision:
         return evaluate_execution_budget(policy=self.policy, state=self.state)
+
+    @property
+    def active_reservation_ids(self) -> tuple[str, ...]:
+        return tuple(sorted(self._reservations))
+
+    def reserve(self, reservation: ExecutionBudgetReservation) -> ExecutionBudgetReservation:
+        if reservation.reservation_id in self._reservations:
+            raise ValueError("execution reservation id is already active")
+        current = self.authorize_next()
+        if not current.may_continue:
+            raise ExecutionReservationRejected(current)
+
+        projected = _reserved_projection(
+            self.state,
+            (*self._reservations.values(), reservation),
+        )
+        reason = _reservation_stop_reason(policy=self.policy, projected=projected)
+        if reason is not None:
+            raise ExecutionReservationRejected(
+                ExecutionBudgetDecision(
+                    may_continue=False,
+                    policy_id=self.policy.policy_id,
+                    policy_version=self.policy.version,
+                    policy_fingerprint=self.policy.fingerprint,
+                    state_fingerprint=self.state.fingerprint,
+                    stop_reason=reason,
+                )
+            )
+        self._reservations[reservation.reservation_id] = reservation
+        return reservation
+
+    def reconcile(
+        self,
+        reservation_id: str,
+        delta: ExecutionBudgetDelta,
+    ) -> ExecutionBudgetState:
+        if reservation_id not in self._reservations:
+            raise ValueError("execution reservation is not active")
+        next_state = _accumulate_execution_delta(state=self.state, delta=delta)
+        self._reservations.pop(reservation_id)
+        self.state = next_state
+        return self.state
+
+    def release(self, reservation_id: str) -> None:
+        if self._reservations.pop(reservation_id, None) is None:
+            raise ValueError("execution reservation is not active")
 
     def record(self, delta: ExecutionBudgetDelta) -> ExecutionBudgetState:
         self.state = advance_execution_budget(
