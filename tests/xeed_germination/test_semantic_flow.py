@@ -27,6 +27,7 @@ from domain.organizations.model import Organization
 from domain.tenancy.model import Principal, PrincipalTenantMembership, Tenant
 from domain.xeed.model import Xeed
 from pipeline.evidence import EvidenceLedger, EvidenceLedgerConflict
+from tests.support.grounding import with_synthetic_representation
 from tests.support.xeed_authority import InMemoryXeedAuthority
 
 
@@ -105,24 +106,26 @@ class Investigator:
             predicate="capability",
             object_or_value="cold-chain logistics",
             claim_proposition="The organization provides cold-chain logistics.",
-            evidence=Evidence(
-                id=f"ev-{candidate.organization_id}",
-                source="fixture",
-                source_type="web",
-                reference=f"https://example.test/{candidate.organization_id}",
-                extracted_claim="The organization provides cold-chain logistics.",
-                observed_at=datetime(2026, 9, 30, tzinfo=UTC),
-                authority=authority,
-                observation_subject_id=str(subject),
-                grounded_claim=GroundedClaim(
-                    subject_id=str(subject),
-                    predicate="capability",
-                    object_or_value="cold-chain logistics",
-                    subject_mention="The organization",
-                    predicate_mention="provides",
-                    object_mention="cold-chain logistics",
-                    supporting_excerpt="The organization provides cold-chain logistics.",
-                ),
+            evidence=with_synthetic_representation(
+                Evidence(
+                    id=f"ev-{candidate.organization_id}",
+                    source="fixture",
+                    source_type="web",
+                    reference=f"https://example.test/{candidate.organization_id}",
+                    extracted_claim="The organization provides cold-chain logistics.",
+                    observed_at=datetime(2026, 9, 30, tzinfo=UTC),
+                    authority=authority,
+                    observation_subject_id=str(subject),
+                    grounded_claim=GroundedClaim(
+                        subject_id=str(subject),
+                        predicate="capability",
+                        object_or_value="cold-chain logistics",
+                        subject_mention="The organization",
+                        predicate_mention="provides",
+                        object_mention="cold-chain logistics",
+                        supporting_excerpt="The organization provides cold-chain logistics.",
+                    ),
+                )
             ),
             currentness=Currentness.CURRENT,
         )
@@ -314,24 +317,26 @@ class ContradictingInvestigator(Investigator):
             predicate=finding.predicate,
             object_or_value=finding.object_or_value,
             claim_proposition=finding.claim_proposition,
-            evidence=Evidence(
-                id=finding.evidence.id,
-                source=finding.evidence.source,
-                source_type=finding.evidence.source_type,
-                reference=finding.evidence.reference,
-                extracted_claim="The organization does not provide cold-chain logistics.",
-                observed_at=finding.evidence.observed_at,
-                authority=finding.evidence.authority,
-                observation_subject_id=finding.evidence.observation_subject_id,
-                grounded_claim=GroundedClaim(
-                    subject_id=finding.subject_id,
-                    predicate=finding.predicate,
-                    object_or_value=finding.object_or_value,
-                    subject_mention="The organization",
-                    predicate_mention="provide",
-                    object_mention="cold-chain logistics",
-                    supporting_excerpt="The organization does not provide cold-chain logistics.",
-                ),
+            evidence=with_synthetic_representation(
+                Evidence(
+                    id=finding.evidence.id,
+                    source=finding.evidence.source,
+                    source_type=finding.evidence.source_type,
+                    reference=finding.evidence.reference,
+                    extracted_claim="The organization does not provide cold-chain logistics.",
+                    observed_at=finding.evidence.observed_at,
+                    authority=finding.evidence.authority,
+                    observation_subject_id=finding.evidence.observation_subject_id,
+                    grounded_claim=GroundedClaim(
+                        subject_id=finding.subject_id,
+                        predicate=finding.predicate,
+                        object_or_value=finding.object_or_value,
+                        subject_mention="The organization",
+                        predicate_mention="provide",
+                        object_mention="cold-chain logistics",
+                        supporting_excerpt="The organization does not provide cold-chain logistics.",
+                    ),
+                )
             ),
             epistemic_state=finding.epistemic_state,
             currentness=finding.currentness,
@@ -386,16 +391,18 @@ class ChangedReplayInvestigator(Investigator):
             predicate=finding.predicate,
             object_or_value=finding.object_or_value,
             claim_proposition=finding.claim_proposition,
-            evidence=Evidence(
-                id=finding.evidence.id,
-                source=finding.evidence.source,
-                source_type=finding.evidence.source_type,
-                reference=finding.evidence.reference,
-                extracted_claim=finding.evidence.extracted_claim,
-                observed_at=datetime(2026, 10, 1, tzinfo=UTC),
-                authority=finding.evidence.authority,
-                observation_subject_id=finding.evidence.observation_subject_id,
-                grounded_claim=finding.evidence.grounded_claim,
+            evidence=with_synthetic_representation(
+                Evidence(
+                    id=finding.evidence.id,
+                    source=finding.evidence.source,
+                    source_type=finding.evidence.source_type,
+                    reference=finding.evidence.reference,
+                    extracted_claim=finding.evidence.extracted_claim,
+                    observed_at=datetime(2026, 10, 1, tzinfo=UTC),
+                    authority=finding.evidence.authority,
+                    observation_subject_id=finding.evidence.observation_subject_id,
+                    grounded_claim=finding.evidence.grounded_claim,
+                )
             ),
             epistemic_state=finding.epistemic_state,
             currentness=finding.currentness,

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from collections.abc import Mapping, Sequence
+from dataclasses import asdict
 
 from application.semantic_extraction.contracts import (
     EconomicClaimCandidate,
@@ -13,11 +14,14 @@ from application.semantic_extraction.contracts import (
     fingerprint,
 )
 from application.source_representation import DocumentRepresentation
+from domain.representation import RepresentationSpan, TextRepresentation
 
 _JOB_INSTRUCTION = (
     "Extract only candidate economic statements grounded in the supplied document. "
     "Return provider_version and candidates. Each candidate must contain semantic_target, "
-    "statement, excerpt and grounding_surface. Do not assert canonical truth."
+    "statement, excerpt and grounding_surface. Prefer an exact span with representation_id, "
+    "representation_fingerprint, start and end (half-open Unicode code-point offsets). "
+    "Structured spans also require structured_index. Do not assert canonical truth."
 )
 
 
@@ -40,6 +44,21 @@ def build_semantic_extraction_request(
         "description": representation.description,
         "visible_text": representation.visible_text,
         "structured_data": representation.structured_data,
+        "grounding_surfaces": tuple(
+            {
+                "representation_id": item.representation_id,
+                "representation_fingerprint": item.fingerprint,
+                "text": item.text,
+                "surface": item.surface.value,
+            }
+            for item in (
+                representation.text_representation(),
+                *(
+                    representation.text_representation(index)
+                    for index in range(len(representation.structured_data))
+                ),
+            )
+        ),
         "semantic_targets": tuple(
             {"target_id": target.target_id, "meaning": target.meaning}
             for target in contract.targets
@@ -65,10 +84,10 @@ def build_semantic_extraction_request(
     )
 
 
-def _required_string(value: object, name: str) -> str:
+def _required_string(value: object, name: str, *, strip: bool = True) -> str:
     if not isinstance(value, str) or not value.strip():
         raise ValueError(f"semantic extraction result requires non-empty {name}")
-    return value.strip()
+    return value.strip() if strip else value
 
 
 def _candidate_rows(payload: Mapping[str, object]) -> Sequence[object]:
@@ -83,13 +102,49 @@ def _grounded_excerpt(
     excerpt: str,
     surface: GroundingSurface,
     representation: DocumentRepresentation,
-) -> None:
-    if surface is GroundingSurface.VISIBLE_TEXT:
-        if excerpt not in representation.visible_text:
-            raise ValueError("candidate excerpt is not grounded in represented visible text")
-        return
-    if not any(excerpt in item for item in representation.structured_data):
-        raise ValueError("candidate excerpt is not grounded in represented structured data")
+    raw_span: object,
+) -> tuple[TextRepresentation, RepresentationSpan]:
+    surfaces = (
+        (representation.text_representation(),)
+        if surface is GroundingSurface.VISIBLE_TEXT
+        else tuple(
+            representation.text_representation(index)
+            for index in range(len(representation.structured_data))
+        )
+    )
+    if raw_span is not None:
+        if not isinstance(raw_span, Mapping):
+            raise ValueError("candidate span must be an object")
+        start, end = raw_span.get("start"), raw_span.get("end")
+        if type(start) is not int or type(end) is not int:
+            raise ValueError("candidate span offsets must be integers")
+        span = RepresentationSpan(
+            _required_string(raw_span.get("representation_id"), "span representation_id"),
+            _required_string(
+                raw_span.get("representation_fingerprint"), "span representation_fingerprint"
+            ),
+            start,
+            end,
+        )
+        if surface is GroundingSurface.STRUCTURED_DATA:
+            index = raw_span.get("structured_index")
+            if type(index) is not int:
+                raise ValueError("structured span requires integer structured_index")
+            selected = representation.text_representation(index)
+        else:
+            if "structured_index" in raw_span:
+                raise ValueError("visible span cannot select structured data")
+            selected = surfaces[0]
+        if span.extract(selected) != excerpt:
+            raise ValueError("candidate excerpt does not match exact span")
+        return selected, span
+    matches = tuple(item for item in surfaces if excerpt in item.text)
+    if not matches:
+        raise ValueError("candidate excerpt is not grounded in represented surface")
+    if len(matches) != 1:
+        raise ValueError("ambiguous excerpt requires explicit offsets")
+    selected = matches[0]
+    return selected, selected.unique_span(excerpt)
 
 
 def normalize_semantic_extraction_payload(
@@ -127,13 +182,20 @@ def normalize_semantic_extraction_payload(
         if semantic_target not in contract.target_ids:
             raise ValueError("semantic extraction candidate target is outside contract")
         statement = _required_string(row.get("statement"), "statement")
-        excerpt = _required_string(row.get("excerpt"), "excerpt")
+        excerpt = _required_string(row.get("excerpt"), "excerpt", strip=False)
         raw_surface = _required_string(row.get("grounding_surface"), "grounding_surface")
         try:
             surface = GroundingSurface(raw_surface)
         except ValueError as exc:
             raise ValueError("semantic extraction grounding surface is invalid") from exc
-        _grounded_excerpt(excerpt=excerpt, surface=surface, representation=representation)
+        if "span" in row and row["span"] is None:
+            raise ValueError("candidate span cannot be null")
+        supporting_representation, supporting_span = _grounded_excerpt(
+            excerpt=excerpt,
+            surface=surface,
+            representation=representation,
+            raw_span=row.get("span"),
+        )
 
         key = (semantic_target, statement, excerpt, surface)
         if key in semantic_keys:
@@ -147,6 +209,7 @@ def normalize_semantic_extraction_payload(
                 "excerpt": excerpt,
                 "grounding_surface": surface.value,
                 "contract_fingerprint": contract.fingerprint,
+                "supporting_span": asdict(supporting_span),
             }
         )
         candidates.append(
@@ -166,6 +229,8 @@ def normalize_semantic_extraction_payload(
                 extractor_version=provider_version,
                 contract_fingerprint=contract.fingerprint,
                 result_fingerprint=result_fingerprint,
+                supporting_span=supporting_span,
+                supporting_representation=supporting_representation,
             )
         )
 

@@ -56,6 +56,7 @@ from domain.faxt.model import FAXT
 from domain.identity import FaxtId
 from domain.relationships.model import ObservedRelationship
 from domain.xignal import XignalEpistemicState
+from tests.support.grounding import with_synthetic_representation
 
 CORPUS = json.loads((Path(__file__).parent / "fixtures/refrigeration-v1.json").read_text())
 AS_OF = datetime.fromisoformat(CORPUS["as_of"])
@@ -80,24 +81,26 @@ def _capability_evidence() -> Evidence:
     document = CORPUS["documents"][0]
     claim = document["text"].split(". ", 1)[0] + "."
     value = document["fields"]["capability"]
-    return Evidence(
-        id=f"evidence:{document['id']}:capability",
-        source=document["source_ref"],
-        source_type=document["source_type"],
-        reference=f"fixture:refrigeration-v1:{document['id']}",
-        extracted_claim=claim,
-        observed_at=datetime.fromisoformat(CORPUS["observed_at"]),
-        authority=SourceAuthority.OFFICIAL_WEB,
-        observation_subject_id=document["subject_id"],
-        grounded_claim=GroundedClaim(
-            subject_id=document["subject_id"],
-            predicate="capability",
-            object_or_value=value,
-            subject_mention=document["subject_mention"],
-            predicate_mention=document["capability_predicate_mention"],
-            object_mention=value,
-            supporting_excerpt=claim,
-        ),
+    return with_synthetic_representation(
+        Evidence(
+            id=f"evidence:{document['id']}:capability",
+            source=document["source_ref"],
+            source_type=document["source_type"],
+            reference=f"fixture:refrigeration-v1:{document['id']}",
+            extracted_claim=claim,
+            observed_at=datetime.fromisoformat(CORPUS["observed_at"]),
+            authority=SourceAuthority.OFFICIAL_WEB,
+            observation_subject_id=document["subject_id"],
+            grounded_claim=GroundedClaim(
+                subject_id=document["subject_id"],
+                predicate="capability",
+                object_or_value=value,
+                subject_mention=document["subject_mention"],
+                predicate_mention=document["capability_predicate_mention"],
+                object_mention=value,
+                supporting_excerpt=claim,
+            ),
+        )
     )
 
 

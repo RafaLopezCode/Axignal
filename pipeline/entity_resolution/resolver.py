@@ -9,11 +9,19 @@ Doctrine: MASTER §14, §35, §36, §46.6, §46.11-13; FR-23.
 
 from __future__ import annotations
 
+import unicodedata
 from collections.abc import Iterable
 from dataclasses import dataclass
+from datetime import datetime
 from enum import StrEnum
 
-from pipeline.normalization.text import normalize_name
+from domain.identity import GovernedIdentityName, IdentityBindingAuthority, identity_name_key
+from domain.identity_binding import (
+    GovernedIdentityBinding,
+    IdentityBindingAdmission,
+    IdentityBindingRequest,
+)
+from domain.representation import RepresentationSpan, TextRepresentation
 
 
 class ResolutionStatus(StrEnum):
@@ -35,9 +43,13 @@ class VerifiedIdentifier:
     @property
     def key(self) -> tuple[str, str, str]:
         return (
-            self.scheme.strip().upper(),
-            self.value.strip().upper(),
-            self.authority.strip().upper(),
+            unicodedata.normalize("NFC", self.scheme.strip().upper()),
+            (
+                self.value.strip().upper()
+                if self.scheme.strip().upper() == "LEI"
+                else unicodedata.normalize("NFC", self.value.strip())
+            ),
+            unicodedata.normalize("NFC", self.authority.strip().upper()),
         )
 
 
@@ -49,6 +61,7 @@ class ResolutionCandidate:
     canonical_name: str
     aliases: tuple[str, ...] = ()
     verified_identifiers: tuple[VerifiedIdentifier, ...] = ()
+    name_history: tuple[GovernedIdentityName, ...] = ()
 
     def __post_init__(self) -> None:
         if not self.organization_id.strip() or not self.canonical_name.strip():
@@ -57,6 +70,10 @@ class ResolutionCandidate:
             raise ValueError("resolution candidate aliases must be non-empty")
         if len(self.verified_identifiers) != len(set(self.verified_identifiers)):
             raise ValueError("resolution candidate identifiers must be unique")
+        if any(record.entity_id != self.organization_id for record in self.name_history):
+            raise ValueError("identity name history cannot cross organizations")
+        if len({record.decision_id for record in self.name_history}) != len(self.name_history):
+            raise ValueError("identity name history decisions must be unique")
 
 
 @dataclass(frozen=True)
@@ -93,6 +110,7 @@ class ExactNameResolver:
         by_name: dict[str, list[ResolutionCandidate]] = {}
         by_identifier: dict[tuple[str, str, str], list[ResolutionCandidate]] = {}
         seen_organizations: set[str] = set()
+        history: dict[str, list[tuple[ResolutionCandidate, GovernedIdentityName]]] = {}
 
         for candidate in candidates:
             if candidate.organization_id in seen_organizations:
@@ -100,12 +118,15 @@ class ExactNameResolver:
             seen_organizations.add(candidate.organization_id)
 
             for raw_name in (candidate.canonical_name, *candidate.aliases):
-                key = normalize_name(raw_name)
+                key = identity_name_key(raw_name)
                 if not key:
                     continue
                 bucket = by_name.setdefault(key, [])
                 if candidate not in bucket:
                     bucket.append(candidate)
+
+            for record in candidate.name_history:
+                history.setdefault(identity_name_key(record.name), []).append((candidate, record))
 
             for identifier in candidate.verified_identifiers:
                 bucket = by_identifier.setdefault(identifier.key, [])
@@ -120,13 +141,17 @@ class ExactNameResolver:
             key: tuple(sorted(value, key=lambda item: item.organization_id))
             for key, value in by_identifier.items()
         }
+        self._history = history
 
     def resolve_identity(
         self,
         name: str,
         *,
         verified_identifiers: tuple[VerifiedIdentifier, ...] = (),
+        as_of: datetime | None = None,
     ) -> ResolutionResult:
+        if as_of is not None and as_of.tzinfo is None:
+            raise ValueError("identity resolution as-of must be timezone-aware")
         if not name.strip() and not verified_identifiers:
             return ResolutionResult(
                 ResolutionStatus.UNRESOLVED,
@@ -136,8 +161,10 @@ class ExactNameResolver:
         if verified_identifiers:
             matches: dict[str, ResolutionCandidate] = {}
             collision = False
+            missing = False
             for identifier in verified_identifiers:
                 candidates = self._by_identifier.get(identifier.key, ())
+                missing = missing or not candidates
                 if len(candidates) > 1:
                     collision = True
                 for candidate in candidates:
@@ -151,6 +178,10 @@ class ExactNameResolver:
                     candidates=ordered,
                 )
             if len(ordered) == 1:
+                if missing:
+                    return ResolutionResult(
+                        ResolutionStatus.UNRESOLVED, "VERIFIED_IDENTIFIER_NOT_FOUND"
+                    )
                 return ResolutionResult(
                     ResolutionStatus.RESOLVED,
                     "VERIFIED_IDENTIFIER_EXACT",
@@ -162,7 +193,15 @@ class ExactNameResolver:
                 "VERIFIED_IDENTIFIER_NOT_FOUND",
             )
 
-        candidates = self._by_name.get(normalize_name(name), ())
+        key = identity_name_key(name)
+        matching = {item.organization_id: item for item in self._by_name.get(key, ())}
+        history = self._history.get(key, ())
+        if history and as_of is None:
+            return ResolutionResult(ResolutionStatus.UNRESOLVED, "NAME_HISTORY_REQUIRES_AS_OF")
+        for candidate, record in history:
+            if as_of is not None and record.applies_at(as_of):
+                matching[candidate.organization_id] = candidate
+        candidates = tuple(sorted(matching.values(), key=lambda item: item.organization_id))
         if len(candidates) == 1:
             candidate = candidates[0]
             return ResolutionResult(
@@ -185,3 +224,45 @@ class ExactNameResolver:
     def resolve(self, name: str) -> ResolutionCandidate | None:
         result = self.resolve_identity(name)
         return result.candidate if result.status is ResolutionStatus.RESOLVED else None
+
+    def bind_mention(
+        self,
+        *,
+        representation: TextRepresentation,
+        mention_span: RepresentationSpan,
+        decision_id: str,
+        evidence_refs: tuple[str, ...],
+        authority: IdentityBindingAuthority,
+        decided_by: str,
+        decided_at: datetime,
+        as_of: datetime,
+        verified_identifiers: tuple[VerifiedIdentifier, ...] = (),
+    ) -> GovernedIdentityBinding:
+        """Bind only a resolved governed identity; a collision cannot issue a receipt."""
+        mention = mention_span.extract(representation)
+        result = self.resolve_identity(
+            mention, as_of=as_of, verified_identifiers=verified_identifiers
+        )
+        if result.status is not ResolutionStatus.RESOLVED or result.candidate is None:
+            raise ValueError(f"identity binding requires RESOLVED identity: {result.reason_code}")
+        history_refs = tuple(
+            ref
+            for record in result.candidate.name_history
+            if identity_name_key(record.name) == identity_name_key(mention)
+            and record.applies_at(as_of)
+            for ref in (record.decision_id, *record.evidence_refs)
+        )
+        return IdentityBindingAdmission.bind(
+            IdentityBindingRequest(
+                entity_id=result.candidate.organization_id,
+                mention=mention,
+                mention_span=mention_span,
+                decision_id=decision_id,
+                evidence_refs=tuple(dict.fromkeys((*evidence_refs, *history_refs))),
+                authority=authority,
+                decided_by=decided_by,
+                decided_at=decided_at,
+                policy_version="exact-identity-binding:v1",
+            ),
+            representation,
+        )

@@ -10,6 +10,8 @@ from dataclasses import dataclass
 from datetime import datetime
 from enum import StrEnum
 
+from domain.representation import RepresentationSpan, TextRepresentation
+
 _TARGET = re.compile(r"^[a-z0-9][a-z0-9_.-]*$")
 
 
@@ -91,6 +93,8 @@ class EconomicClaimCandidate:
     extractor_version: str
     contract_fingerprint: str
     result_fingerprint: str
+    supporting_span: RepresentationSpan
+    supporting_representation: TextRepresentation
 
     def __post_init__(self) -> None:
         _required(
@@ -110,6 +114,23 @@ class EconomicClaimCandidate:
         )
         if self.observed_at.tzinfo is None:
             raise ValueError("semantic candidate observation time must be timezone-aware")
+        if self.supporting_span.extract(self.supporting_representation) != self.excerpt:
+            raise ValueError("semantic candidate excerpt does not match exact span")
+        if (
+            self.subject_id != self.supporting_representation.subject_id
+            or self.observation_id != self.supporting_representation.observation_id
+            or self.source_ref != self.supporting_representation.source_ref
+            or self.source_type != self.supporting_representation.source_type
+            or self.observed_at != self.supporting_representation.observed_at
+            or self.grounding_surface.value != self.supporting_representation.surface.value
+            or (
+                self.supporting_representation.representation_id != self.representation_id
+                and not self.supporting_representation.representation_id.startswith(
+                    f"{self.representation_id}#structured:"
+                )
+            )
+        ):
+            raise ValueError("semantic candidate representation lineage mismatch")
 
     @property
     def is_canonical_truth(self) -> bool:

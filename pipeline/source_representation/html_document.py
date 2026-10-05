@@ -13,9 +13,74 @@ from application.source_representation import DocumentRepresentation
 from pipeline.normalization import normalize_whitespace
 from pipeline.source_acquisition import ContentAddressedArtifactStore
 
-_REPRESENTATION_VERSION = "html-document/0.1"
-_NORMALIZATION_VERSION = "visible-text/0.1"
-_HIDDEN = frozenset({"script", "style", "noscript", "template", "svg"})
+_REPRESENTATION_VERSION = "html-document/0.2"
+_NORMALIZATION_VERSION = "visible-text/0.2"
+_HIDDEN = frozenset(
+    {
+        "script",
+        "style",
+        "noscript",
+        "template",
+        "svg",
+        "head",
+        "title",
+        "iframe",
+        "object",
+        "canvas",
+    }
+)
+_VOID = frozenset(
+    {
+        "area",
+        "base",
+        "br",
+        "col",
+        "embed",
+        "hr",
+        "img",
+        "input",
+        "link",
+        "meta",
+        "param",
+        "source",
+        "track",
+        "wbr",
+    }
+)
+_BLOCK = frozenset(
+    {
+        "address",
+        "article",
+        "aside",
+        "blockquote",
+        "br",
+        "div",
+        "dl",
+        "dt",
+        "dd",
+        "footer",
+        "h1",
+        "h2",
+        "h3",
+        "h4",
+        "h5",
+        "h6",
+        "header",
+        "hr",
+        "li",
+        "main",
+        "nav",
+        "ol",
+        "p",
+        "pre",
+        "section",
+        "table",
+        "td",
+        "th",
+        "tr",
+        "ul",
+    }
+)
 _CHARSET = re.compile(r"charset\s*=\s*[\"']?([^;\s\"']+)", re.IGNORECASE)
 
 
@@ -23,12 +88,126 @@ class DocumentRepresentationError(ValueError):
     """Source material cannot be represented by this deterministic adapter."""
 
 
-class _HtmlCollector(HTMLParser):
+def _hidden_style(style: str) -> bool:
+    style = re.sub(r"/\*.*?\*/", "", style, flags=re.DOTALL)
+    if "/*" in style or "*/" in style:
+        raise DocumentRepresentationError("stylesheet visibility comment is unresolved")
+    for declaration in style.split(";"):
+        key, separator, value = declaration.partition(":")
+        if not separator:
+            continue
+        key = key.strip().casefold()
+        value = value.split("!", 1)[0].strip().casefold()
+        if "var(" in value or "\\" in declaration:
+            raise DocumentRepresentationError("inline stylesheet visibility is unresolved")
+        if key in {"opacity", "font-size"} and "(" in value:
+            raise DocumentRepresentationError("computed stylesheet visibility is unresolved")
+        if key in {
+            "clip",
+            "clip-path",
+            "transform",
+            "filter",
+            "mask",
+            "position",
+            "animation",
+            "animation-name",
+        }:
+            raise DocumentRepresentationError("layout stylesheet visibility is unresolved")
+        if (
+            (key == "display" and value == "none")
+            or (key == "visibility" and value in {"hidden", "collapse"})
+            or (key == "content-visibility" and value == "hidden")
+            or (
+                key in {"opacity", "font-size"}
+                and re.fullmatch(r"[+-]?(?:0+(?:\.0*)?|\.0+)(?:[a-z%]+)?", value) is not None
+            )
+            or (key == "color" and value == "transparent")
+        ):
+            return True
+        allowed_values = {
+            "display": {
+                "block",
+                "inline",
+                "inline-block",
+                "contents",
+                "flex",
+                "inline-flex",
+                "grid",
+                "inline-grid",
+                "table",
+                "table-row",
+                "table-cell",
+                "list-item",
+                "flow-root",
+            },
+            "visibility": {"visible"},
+            "content-visibility": {"visible"},
+        }
+        if key in allowed_values and value in allowed_values[key]:
+            continue
+        if key == "opacity" and re.fullmatch(r"(?:\d+(?:\.\d*)?|\.\d+)%?", value):
+            continue
+        if key == "font-size" and (
+            value in {"xx-small", "x-small", "small", "medium", "large", "x-large", "xx-large"}
+            or re.fullmatch(r"(?:\d+(?:\.\d*)?|\.\d+)(?:px|em|rem|pt|pc|in|cm|mm|%)", value)
+        ):
+            continue
+        raise DocumentRepresentationError("stylesheet visibility declaration is unresolved")
+    return False
+
+
+class _StylesheetCollector(HTMLParser):
+    """Bounded static visibility: unresolved stylesheet rules fail closed."""
+
     def __init__(self) -> None:
         super().__init__(convert_charrefs=True)
-        self.hidden_depth = 0
-        self.title_depth = 0
-        self.body_depth = 0
+        self.in_style = False
+        self.styles: list[str] = []
+        self.external = False
+
+    def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
+        values: dict[str, str | None] = {}
+        for key, value in attrs:
+            values.setdefault(key, value)
+        if tag == "style":
+            self.in_style = True
+        if tag == "link" and "stylesheet" in (values.get("rel") or "").casefold().split():
+            self.external = True
+
+    def handle_endtag(self, tag: str) -> None:
+        if tag == "style":
+            self.in_style = False
+
+    def handle_data(self, data: str) -> None:
+        if self.in_style:
+            self.styles.append(data)
+
+    def hidden_selectors(self) -> tuple[str, ...]:
+        if self.external:
+            raise DocumentRepresentationError("external stylesheet visibility is unresolved")
+        css = re.sub(r"/\*.*?\*/", "", "".join(self.styles), flags=re.DOTALL)
+        rules = re.findall(r"([^{}]+)\{([^{}]*)\}", css)
+        if re.sub(r"[^{}]+\{[^{}]*\}", "", css).strip():
+            raise DocumentRepresentationError("stylesheet visibility is unresolved")
+        selectors: list[str] = []
+        for raw_selectors, declarations in rules:
+            if not _hidden_style(declarations):
+                continue
+            for raw_selector in raw_selectors.split(","):
+                selector = raw_selector.strip()
+                if not re.fullmatch(r"(?:[.#][\w-]+|[a-zA-Z][\w-]*|\*)", selector):
+                    raise DocumentRepresentationError(
+                        "stylesheet visibility selector is unresolved"
+                    )
+                selectors.append(selector)
+        return tuple(selectors)
+
+
+class _HtmlCollector(HTMLParser):
+    def __init__(self, hidden_selectors: tuple[str, ...]) -> None:
+        super().__init__(convert_charrefs=True)
+        self._stack: list[tuple[str, bool]] = []
+        self._hidden_selectors = hidden_selectors
         self.text: list[str] = []
         self.title: list[str] = []
         self.language: str | None = None
@@ -39,14 +218,32 @@ class _HtmlCollector(HTMLParser):
         self._jsonld_buffer: list[str] = []
 
     def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
-        attributes = {key.lower(): value for key, value in attrs}
+        attributes: dict[str, str | None] = {}
+        for key, value in attrs:
+            attributes.setdefault(key.lower(), value)
         lowered = tag.lower()
-        if lowered in _HIDDEN:
-            self.hidden_depth += 1
-        if lowered == "title":
-            self.title_depth += 1
-        if lowered == "body":
-            self.body_depth += 1
+        hidden = (
+            (bool(self._stack) and self._stack[-1][1])
+            or lowered in _HIDDEN
+            or "hidden" in attributes
+            or (lowered in {"details", "dialog"} and "open" not in attributes)
+            or (attributes.get("aria-hidden") or "").strip().casefold() == "true"
+            or _hidden_style(attributes.get("style") or "")
+            or any(
+                selector == "*"
+                or selector.casefold() == lowered
+                or (
+                    selector.startswith(".")
+                    and selector[1:] in (attributes.get("class") or "").split()
+                )
+                or (selector.startswith("#") and selector[1:] == attributes.get("id"))
+                for selector in self._hidden_selectors
+            )
+        )
+        if lowered in _BLOCK:
+            self.text.append(" ")
+        if lowered not in _VOID:
+            self._stack.append((lowered, hidden))
         if lowered == "html" and self.language is None:
             self.language = attributes.get("lang")
         if lowered == "meta" and self.description is None:
@@ -63,6 +260,11 @@ class _HtmlCollector(HTMLParser):
                 self._jsonld_depth = 1
                 self._jsonld_buffer = []
 
+    def handle_startendtag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
+        self.handle_starttag(tag, attrs)
+        if tag not in _VOID:
+            self.handle_endtag(tag)
+
     def handle_endtag(self, tag: str) -> None:
         lowered = tag.lower()
         if lowered == "script" and self._jsonld_depth:
@@ -71,19 +273,23 @@ class _HtmlCollector(HTMLParser):
                 self.jsonld.append(raw)
             self._jsonld_depth = 0
             self._jsonld_buffer = []
-        if lowered in _HIDDEN and self.hidden_depth:
-            self.hidden_depth -= 1
-        if lowered == "title" and self.title_depth:
-            self.title_depth -= 1
-        if lowered == "body" and self.body_depth:
-            self.body_depth -= 1
+        for index in range(len(self._stack) - 1, -1, -1):
+            if self._stack[index][0] == lowered:
+                if any(hidden for _, hidden in self._stack[index + 1 :]):
+                    raise DocumentRepresentationError(
+                        "malformed hidden ancestry visibility is unresolved"
+                    )
+                del self._stack[index:]
+                break
+        if lowered in _BLOCK:
+            self.text.append(" ")
 
     def handle_data(self, data: str) -> None:
         if self._jsonld_depth:
             self._jsonld_buffer.append(data)
-        if self.title_depth:
+        if any(tag == "title" for tag, _ in self._stack):
             self.title.append(data)
-        if self.body_depth and not self.hidden_depth:
+        if any(tag == "body" for tag, _ in self._stack) and not self._stack[-1][1]:
             self.text.append(data)
 
 
@@ -129,6 +335,8 @@ def represent_html_observation(
 
     charset = _charset(content_type)
     raw = artifacts.read(observation.body_artifact_ref)
+    if f"sha256:{hashlib.sha256(raw).hexdigest()}" != observation.body_fingerprint:
+        raise DocumentRepresentationError("source bytes do not match observation fingerprint")
     try:
         decoded = raw.decode(charset, errors="strict")
     except (LookupError, UnicodeDecodeError) as exc:
@@ -136,10 +344,13 @@ def represent_html_observation(
             "document charset cannot be decoded deterministically"
         ) from exc
 
-    collector = _HtmlCollector()
+    styles = _StylesheetCollector()
+    styles.feed(decoded)
+    styles.close()
+    collector = _HtmlCollector(styles.hidden_selectors())
     collector.feed(decoded)
     collector.close()
-    visible_text = normalize_whitespace(" ".join(collector.text))
+    visible_text = normalize_whitespace("".join(collector.text))
     if not visible_text:
         raise DocumentRepresentationError("document has no visible text")
 
@@ -153,7 +364,7 @@ def represent_html_observation(
     text_fingerprint = f"sha256:{hashlib.sha256(visible_text.encode('utf-8')).hexdigest()}"
 
     envelope = {
-        "schema": "axignal.document-representation/0.1",
+        "schema": "axignal.document-representation/0.2",
         "observation_id": observation_id,
         "subject_id": observation.subject_id,
         "source_ref": observation.final_uri,
@@ -161,6 +372,8 @@ def represent_html_observation(
         "observed_at": observation.retrieved_at.isoformat(),
         "source_observation_fingerprint": observation.observation_fingerprint,
         "source_content_fingerprint": observation.body_fingerprint,
+        "source_artifact_ref": observation.body_artifact_ref,
+        "source_observation_artifact_ref": observation.raw_observation_ref,
         "media_type": media_type,
         "charset": charset,
         "title": title,
@@ -201,4 +414,6 @@ def represent_html_observation(
         representation_version=_REPRESENTATION_VERSION,
         normalization_version=_NORMALIZATION_VERSION,
         artifact_ref=artifact_ref,
+        source_artifact_ref=observation.body_artifact_ref,
+        source_observation_artifact_ref=observation.raw_observation_ref,
     )

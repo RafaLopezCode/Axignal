@@ -21,6 +21,7 @@ from domain.evidence.admission import (
 )
 from domain.evidence.epistemics import Currentness
 from domain.faxt.model import FAXT
+from tests.support.grounding import with_synthetic_representation
 from tests.support.hfx01_demo import Hfx01Demo
 
 
@@ -137,24 +138,26 @@ def test_equal_raw_ids_in_distinct_identity_planes_keep_distinct_projection_keys
     organization = demo.organization_reader.read(authorized)
     original = demo.knowledge.faxts.pop(FaxtId("faxt-demo-a"))
     collision_claim = f"{original.subject_id} capability {original.object_or_value}"
-    evidence = Evidence(
-        id="evidence-id-collision",
-        source="synthetic://projection-id-collision",
-        source_type="test",
-        reference="synthetic://projection-id-collision",
-        extracted_claim=collision_claim,
-        observed_at=datetime(2026, 9, 1, tzinfo=UTC),
-        authority=SourceAuthority.OFFICIAL_WEB,
-        observation_subject_id=original.subject_id,
-        grounded_claim=GroundedClaim(
-            subject_id=original.subject_id,
-            predicate="capability",
-            object_or_value=original.object_or_value,
-            subject_mention=original.subject_id,
-            predicate_mention="capability",
-            object_mention=original.object_or_value,
-            supporting_excerpt=collision_claim,
-        ),
+    evidence = with_synthetic_representation(
+        Evidence(
+            id="evidence-id-collision",
+            source="synthetic://projection-id-collision",
+            source_type="test",
+            reference="synthetic://projection-id-collision",
+            extracted_claim=collision_claim,
+            observed_at=datetime(2026, 9, 1, tzinfo=UTC),
+            authority=SourceAuthority.OFFICIAL_WEB,
+            observation_subject_id=original.subject_id,
+            grounded_claim=GroundedClaim(
+                subject_id=original.subject_id,
+                predicate="capability",
+                object_or_value=original.object_or_value,
+                subject_mention=original.subject_id,
+                predicate_mention="capability",
+                object_mention=original.object_or_value,
+                supporting_excerpt=collision_claim,
+            ),
+        )
     )
     request = AdmissionRequest(
         evidence=evidence,

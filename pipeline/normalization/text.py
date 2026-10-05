@@ -6,10 +6,10 @@ Doctrine: MASTER §14.
 from __future__ import annotations
 
 import re
-import unicodedata
+
+from domain.identity import identity_name_key
 
 _WHITESPACE = re.compile(r"\s+")
-_NON_ALNUM = re.compile(r"[^0-9a-z]+")
 
 
 def normalize_whitespace(value: str) -> str:
@@ -19,13 +19,5 @@ def normalize_whitespace(value: str) -> str:
 
 
 def normalize_name(value: str) -> str:
-    """Canonicalize a name for deterministic matching.
-
-    Accent-fold, casefold, remove punctuation and collapse whitespace.
-    """
-
-    decomposed = unicodedata.normalize("NFKD", value)
-    ascii_only = "".join(char for char in decomposed if not unicodedata.combining(char))
-    folded = ascii_only.casefold()
-    tokenized = _NON_ALNUM.sub(" ", folded)
-    return normalize_whitespace(tokenized)
+    """Normalize an exact identity key without discarding accents or scripts."""
+    return identity_name_key(value)

@@ -29,6 +29,7 @@ from domain.xeed.model import Xeed
 from pipeline.evidence import EvidenceLedger
 from pipeline.semantic_judgment import SemanticJudgmentLedger
 from pipeline.semantic_retrieval import TurboQuantSemanticIndex
+from tests.support.grounding import with_synthetic_representation
 from tests.support.xeed_authority import InMemoryXeedAuthority
 
 
@@ -83,24 +84,26 @@ class Investigator:
             "capability",
             "industrial refrigeration",
             claim,
-            Evidence(
-                "ev-cold-capability",
-                "fixture",
-                "official_web",
-                "https://cold.example.test/capabilities",
-                claim,
-                datetime(2026, 9, 30, tzinfo=UTC),
-                SourceAuthority.OFFICIAL_WEB,
-                observation_subject_id="org-cold",
-                grounded_claim=GroundedClaim(
-                    subject_id="org-cold",
-                    predicate="capability",
-                    object_or_value="industrial refrigeration",
-                    subject_mention="org-cold",
-                    predicate_mention="capability",
-                    object_mention="industrial refrigeration",
-                    supporting_excerpt=claim,
-                ),
+            with_synthetic_representation(
+                Evidence(
+                    "ev-cold-capability",
+                    "fixture",
+                    "official_web",
+                    "https://cold.example.test/capabilities",
+                    claim,
+                    datetime(2026, 9, 30, tzinfo=UTC),
+                    SourceAuthority.OFFICIAL_WEB,
+                    observation_subject_id="org-cold",
+                    grounded_claim=GroundedClaim(
+                        subject_id="org-cold",
+                        predicate="capability",
+                        object_or_value="industrial refrigeration",
+                        subject_mention="org-cold",
+                        predicate_mention="capability",
+                        object_mention="industrial refrigeration",
+                        supporting_excerpt=claim,
+                    ),
+                )
             ),
             currentness=Currentness.CURRENT,
         )

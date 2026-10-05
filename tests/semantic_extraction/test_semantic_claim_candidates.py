@@ -17,6 +17,7 @@ from cognition.jobs import (
     normalize_semantic_extraction_result,
 )
 from cognition.router import ModelRouter
+from domain.representation import text_fingerprint
 
 NOW = datetime(2026, 9, 30, 15, 20, tzinfo=UTC)
 
@@ -38,11 +39,15 @@ def _representation() -> DocumentRepresentation:
         description="Industrial pumps",
         canonical_uri="https://example.test/company",
         visible_text="ACME manufactures industrial pumps for food processing plants in Spain.",
-        visible_text_fingerprint="sha256:text",
+        visible_text_fingerprint=text_fingerprint(
+            "ACME manufactures industrial pumps for food processing plants in Spain."
+        ),
         structured_data=('{"@type":"Organization","name":"ACME Pumps"}',),
         representation_version="html-document/0.1",
         normalization_version="visible-text/0.1",
         artifact_ref="cas:sha256:representation",
+        source_artifact_ref="synthetic:source-content",
+        source_observation_artifact_ref="synthetic:source-observation",
     )
 
 

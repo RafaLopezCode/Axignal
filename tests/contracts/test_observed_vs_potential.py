@@ -22,6 +22,7 @@ from domain.relationships.model import (
     RelationshipError,
     deserialize_relationship,
 )
+from tests.support.grounding import with_synthetic_representation
 
 NOW = datetime(2026, 1, 15, tzinfo=UTC)
 
@@ -31,24 +32,26 @@ def _evidence(
     identifier: str = "ev-rel",
     claim: str = "ACME supplies org-beta.",
 ) -> Evidence:
-    return Evidence(
-        id=identifier,
-        source="Beta official counterparty confirmation",
-        source_type="counterparty",
-        reference="https://beta.example.test/suppliers/acme",
-        extracted_claim=claim,
-        observed_at=NOW,
-        authority=SourceAuthority.COUNTERPARTY,
-        observation_subject_id="org-acme",
-        grounded_claim=GroundedClaim(
-            subject_id="org-acme",
-            predicate="SUPPLIES",
-            object_or_value="org-beta",
-            subject_mention="ACME",
-            predicate_mention="supplies",
-            object_mention="org-beta",
-            supporting_excerpt=claim,
-        ),
+    return with_synthetic_representation(
+        Evidence(
+            id=identifier,
+            source="Beta official counterparty confirmation",
+            source_type="counterparty",
+            reference="https://beta.example.test/suppliers/acme",
+            extracted_claim=claim,
+            observed_at=NOW,
+            authority=SourceAuthority.COUNTERPARTY,
+            observation_subject_id="org-acme",
+            grounded_claim=GroundedClaim(
+                subject_id="org-acme",
+                predicate="SUPPLIES",
+                object_or_value="org-beta",
+                subject_mention="ACME",
+                predicate_mention="supplies",
+                object_mention="org-beta",
+                supporting_excerpt=claim,
+            ),
+        )
     )
 
 

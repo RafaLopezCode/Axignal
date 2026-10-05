@@ -23,6 +23,7 @@ from application.source_representation import (
 )
 from domain.evidence.epistemics import Currentness, EpistemicState
 from domain.faxt.model import FAXT
+from domain.representation import TextRepresentation
 
 
 def fingerprint(payload: object) -> str:
@@ -41,10 +42,28 @@ class EconomicObservation:
     contradicts_fields: tuple[str, ...] = ()
     valid_from: datetime | None = None
     valid_until: datetime | None = None
+    representation: TextRepresentation | None = None
 
     def __post_init__(self) -> None:
         if not self.rights_basis_ref.strip():
             raise ValueError("economic evidence requires an upstream public reuse rights reference")
+        span = self.datum.supporting_span
+        if self.representation is not None and span is None:
+            raise ValueError("economic representation requires exact supporting span")
+        if span is not None:
+            representation = self.representation
+            if representation is None:
+                raise ValueError("economic datum span requires its verifiable representation")
+            if (
+                span.extract(representation) != self.datum.value
+                or representation.observation_id != self.datum.observation_id
+                or representation.representation_id != self.datum.representation_id
+                or representation.source_ref != self.datum.source_ref
+                or representation.source_type != self.basis.source_type
+                or representation.observed_at != self.datum.observed_at
+                or representation.document_fingerprint != self.basis.representation_fingerprint
+            ):
+                raise ValueError("economic datum exact representation support mismatch")
         if (
             self.datum.observation_id != self.basis.observation_id
             or self.datum.source_ref != self.basis.source_ref
@@ -121,6 +140,11 @@ class EvidenceBackedEconomicState:
         if compiled != self.state:
             raise ValueError("economic state must retain every considered observation exactly")
         for item in self.observations:
+            if (
+                item.representation is not None
+                and item.representation.subject_id != self.state.subject_id
+            ):
+                raise ValueError("representation support cannot cross economic subjects")
             if (
                 item.canonical_support is not None
                 and item.canonical_support.subject_id != self.state.subject_id

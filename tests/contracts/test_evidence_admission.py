@@ -17,27 +17,30 @@ from domain.evidence.admission import (
     SourceAuthority,
     evidence_fingerprint,
 )
+from tests.support.grounding import with_synthetic_representation
 
 
 def _evidence(authority: SourceAuthority) -> Evidence:
-    return Evidence(
-        id="ev-1",
-        source="https://example.com",
-        source_type="web",
-        reference="https://example.com/about",
-        extracted_claim="ACME manufactures industrial pumps.",
-        observed_at=datetime(2026, 1, 1, 12, 0, 0),
-        authority=authority,
-        observation_subject_id="org-acme",
-        grounded_claim=GroundedClaim(
-            subject_id="org-acme",
-            predicate="MANUFACTURES",
-            object_or_value="industrial pumps",
-            subject_mention="ACME",
-            predicate_mention="manufactures",
-            object_mention="industrial pumps",
-            supporting_excerpt="ACME manufactures industrial pumps.",
-        ),
+    return with_synthetic_representation(
+        Evidence(
+            id="ev-1",
+            source="https://example.com",
+            source_type="web",
+            reference="https://example.com/about",
+            extracted_claim="ACME manufactures industrial pumps.",
+            observed_at=datetime(2026, 1, 1, 12, 0, 0),
+            authority=authority,
+            observation_subject_id="org-acme",
+            grounded_claim=GroundedClaim(
+                subject_id="org-acme",
+                predicate="MANUFACTURES",
+                object_or_value="industrial pumps",
+                subject_mention="ACME",
+                predicate_mention="manufactures",
+                object_mention="industrial pumps",
+                supporting_excerpt="ACME manufactures industrial pumps.",
+            ),
+        )
     )
 
 

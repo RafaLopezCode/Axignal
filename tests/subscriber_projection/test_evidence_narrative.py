@@ -60,6 +60,7 @@ from pipeline.source_acquisition import (
     ContentAddressedArtifactIntegrityAdapter,
     ContentAddressedArtifactStore,
 )
+from tests.support.grounding import with_synthetic_representation
 from tests.support.xeed_authority import InMemoryXeedAuthority
 
 NOW = datetime(2026, 9, 30, 19, 0, tzinfo=UTC)
@@ -97,24 +98,26 @@ def _seed():
 
 
 def _faxt() -> FAXT:
-    evidence = Evidence(
-        id="evidence:web:1",
-        source="ACME corporate website",
-        source_type="OFFICIAL_WEB",
-        reference="https://example.test/company",
-        extracted_claim="ACME manufactures industrial pumps.",
-        observed_at=NOW,
-        authority=SourceAuthority.OFFICIAL_WEB,
-        observation_subject_id="org:acme",
-        grounded_claim=GroundedClaim(
-            subject_id="org:acme",
-            predicate="manufactures",
-            object_or_value="industrial pumps",
-            subject_mention="ACME",
-            predicate_mention="manufactures",
-            object_mention="industrial pumps",
-            supporting_excerpt="ACME manufactures industrial pumps.",
-        ),
+    evidence = with_synthetic_representation(
+        Evidence(
+            id="evidence:web:1",
+            source="ACME corporate website",
+            source_type="OFFICIAL_WEB",
+            reference="https://example.test/company",
+            extracted_claim="ACME manufactures industrial pumps.",
+            observed_at=NOW,
+            authority=SourceAuthority.OFFICIAL_WEB,
+            observation_subject_id="org:acme",
+            grounded_claim=GroundedClaim(
+                subject_id="org:acme",
+                predicate="manufactures",
+                object_or_value="industrial pumps",
+                subject_mention="ACME",
+                predicate_mention="manufactures",
+                object_mention="industrial pumps",
+                supporting_excerpt="ACME manufactures industrial pumps.",
+            ),
+        )
     )
     return FAXT.create(
         faxt_id="faxt:manufactures-pumps",

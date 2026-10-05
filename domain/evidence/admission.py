@@ -11,10 +11,14 @@ from __future__ import annotations
 
 import hashlib
 import json
-from dataclasses import dataclass, field
+from dataclasses import asdict, dataclass, field
 from datetime import datetime
 from enum import StrEnum
 from typing import Final
+
+from domain.identity import identity_name_key
+from domain.identity_binding import GovernedIdentityBinding, IdentityBindingAdmission
+from domain.representation import RepresentationSpan, TextRepresentation
 
 __all__ = [
     "AdmissionDecision",
@@ -135,7 +139,10 @@ class GroundedClaim:
     predicate_mention: str
     object_mention: str
     supporting_excerpt: str
-    grounding_version: str = "grounded-claim:v1"
+    grounding_version: str = "grounded-claim:v2"
+    supporting_span: RepresentationSpan | None = None
+    subject_binding: GovernedIdentityBinding | None = None
+    object_binding: GovernedIdentityBinding | None = None
 
     def __post_init__(self) -> None:
         for value, name in (
@@ -165,6 +172,7 @@ class Evidence:
     authority: SourceAuthority
     observation_subject_id: str | None = None
     grounded_claim: GroundedClaim | None = None
+    representation: TextRepresentation | None = None
 
 
 @dataclass(frozen=True)
@@ -228,6 +236,14 @@ def _datetime_text(value: datetime) -> str:
     return value.isoformat(timespec="microseconds")
 
 
+def _binding_payload(binding: GovernedIdentityBinding | None) -> str:
+    if binding is None:
+        return ""
+    payload = asdict(binding.request)
+    payload["decided_at"] = binding.request.decided_at.isoformat()
+    return json.dumps(payload, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
+
+
 def _evidence_payload(evidence: Evidence) -> dict[str, str]:
     authority = evidence.authority
     if not isinstance(authority, SourceAuthority):
@@ -250,6 +266,14 @@ def _evidence_payload(evidence: Evidence) -> dict[str, str]:
         "grounded_object_mention": grounded.object_mention if grounded is not None else "",
         "grounded_supporting_excerpt": grounded.supporting_excerpt if grounded is not None else "",
         "grounding_version": grounded.grounding_version if grounded is not None else "",
+        "representation_fingerprint": evidence.representation.fingerprint
+        if evidence.representation
+        else "",
+        "supporting_span": json.dumps(asdict(grounded.supporting_span), sort_keys=True)
+        if grounded and grounded.supporting_span
+        else "",
+        "subject_binding": _binding_payload(grounded.subject_binding) if grounded else "",
+        "object_binding": _binding_payload(grounded.object_binding) if grounded else "",
     }
 
 
@@ -286,7 +310,7 @@ def _proposition_digest(request: AdmissionRequest) -> str:
 
 
 def _normalized_text(value: str) -> str:
-    return " ".join(value.casefold().split())
+    return identity_name_key(value)
 
 
 def _grounding_reason(request: AdmissionRequest) -> str | None:
@@ -298,6 +322,28 @@ def _grounding_reason(request: AdmissionRequest) -> str | None:
         return "claim subject does not match observed evidence subject"
     if grounded is None:
         return "canonical claim requires structured semantic grounding"
+    if grounded.grounding_version != "grounded-claim:v2":
+        return "canonical claim grounding version is unsupported for new admission"
+    representation = evidence.representation
+    span = grounded.supporting_span
+    if representation is None or span is None:
+        return "canonical claim requires exact representation span"
+    if (
+        representation.subject_id != evidence.observation_subject_id
+        or representation.source_ref != evidence.reference
+        or representation.source_type != evidence.source_type
+        or representation.observed_at != evidence.observed_at
+    ):
+        return "evidence representation provenance mismatch"
+    try:
+        supporting_text = span.extract(representation)
+    except ValueError as exc:
+        return str(exc)
+    if (
+        supporting_text != grounded.supporting_excerpt
+        or supporting_text != evidence.extracted_claim
+    ):
+        return "supporting excerpt does not match exact representation span"
     if grounded.subject_id != request.subject_id:
         return "grounded claim subject does not match requested subject"
     if _normalized_text(grounded.predicate) != _normalized_text(request.predicate):
@@ -307,17 +353,35 @@ def _grounding_reason(request: AdmissionRequest) -> str | None:
     if grounded.supporting_excerpt.strip() != evidence.extracted_claim.strip():
         return "grounded claim excerpt does not exactly match extracted evidence claim"
 
-    excerpt = _normalized_text(grounded.supporting_excerpt)
+    excerpt = grounded.supporting_excerpt
     for mention, name in (
         (grounded.subject_mention, "subject"),
         (grounded.predicate_mention, "predicate"),
         (grounded.object_mention, "object/value"),
     ):
-        if _normalized_text(mention) not in excerpt:
+        if mention not in excerpt:
             return f"grounded claim {name} mention is not present in supporting excerpt"
 
-    if _normalized_text(grounded.object_or_value) != _normalized_text(grounded.object_mention):
-        return "canonical claim object/value must be literally grounded in supporting excerpt"
+    for entity_id, mention, binding, name in (
+        (grounded.subject_id, grounded.subject_mention, grounded.subject_binding, "subject"),
+        (
+            grounded.object_or_value,
+            grounded.object_mention,
+            grounded.object_binding,
+            "object/value",
+        ),
+    ):
+        if binding is not None:
+            if not IdentityBindingAdmission.matches(
+                binding,
+                entity_id=entity_id,
+                mention=mention,
+                support=span,
+                representation=representation,
+            ):
+                return f"canonical claim {name} identity binding is not governed for this support"
+        elif _normalized_text(entity_id) != _normalized_text(mention):
+            return f"canonical claim {name} must be literally grounded or have governed identity binding"
     return None
 
 

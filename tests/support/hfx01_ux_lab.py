@@ -16,6 +16,7 @@ from domain.evidence.epistemics import Currentness, EpistemicState
 from domain.faxt.model import FAXT
 from domain.identity import FaxtId, XeedId
 from domain.xeed.knowledge_reference import XeedFaxtReference
+from tests.support.grounding import with_synthetic_representation
 from tests.support.hfx01_demo import Hfx01Demo
 from tests.support.hfx01_server import serialize_projection
 
@@ -90,24 +91,26 @@ def _extra_facts(demo: Hfx01Demo, facts: tuple[tuple[str, str, EpistemicState], 
         )
         subject_id = f"synthetic-opaque-subject-{index:02d}"
         claim = f"{subject_id} {predicate} {value}"
-        evidence = Evidence(
-            id=f"lab-evidence-{index:02d}",
-            source="synthetic://axignal-ux-laboratory",
-            source_type="test",
-            reference=f"synthetic://scenario/{index:02d}",
-            extracted_claim=claim,
-            observed_at=datetime(2026, 9, 1, tzinfo=UTC),
-            authority=authority,
-            observation_subject_id=subject_id,
-            grounded_claim=GroundedClaim(
-                subject_id=subject_id,
-                predicate=predicate,
-                object_or_value=value,
-                subject_mention=subject_id,
-                predicate_mention=predicate,
-                object_mention=value,
-                supporting_excerpt=claim,
-            ),
+        evidence = with_synthetic_representation(
+            Evidence(
+                id=f"lab-evidence-{index:02d}",
+                source="synthetic://axignal-ux-laboratory",
+                source_type="test",
+                reference=f"synthetic://scenario/{index:02d}",
+                extracted_claim=claim,
+                observed_at=datetime(2026, 9, 1, tzinfo=UTC),
+                authority=authority,
+                observation_subject_id=subject_id,
+                grounded_claim=GroundedClaim(
+                    subject_id=subject_id,
+                    predicate=predicate,
+                    object_or_value=value,
+                    subject_mention=subject_id,
+                    predicate_mention=predicate,
+                    object_mention=value,
+                    supporting_excerpt=claim,
+                ),
+            )
         )
         currentness = (Currentness.CURRENT, Currentness.STALE, Currentness.UNKNOWN)[index % 3]
         faxt = FAXT.create(

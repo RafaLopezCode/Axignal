@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+from dataclasses import asdict
 
 from application.economic_discovery import StateChange
 from application.source_representation.contracts import (
@@ -24,6 +25,7 @@ def _state_fingerprint(subject_id: str, data: tuple[RichStateDatum, ...]) -> str
                 "representation_id": item.representation_id,
                 "source_ref": item.source_ref,
                 "observed_at": item.observed_at.isoformat(),
+                "supporting_span": asdict(item.supporting_span) if item.supporting_span else None,
             }
             for item in data
         ],
@@ -67,6 +69,11 @@ def representation_state_data(
             representation_id=representation.representation_id,
             source_ref=representation.source_ref,
             observed_at=representation.observed_at,
+            supporting_span=(
+                representation.text_representation().span(0, len(value))
+                if name == f"{prefix}.visible_text"
+                else None
+            ),
         )
         for name, value in values
     )

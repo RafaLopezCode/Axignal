@@ -19,29 +19,32 @@ from domain.evidence.admission import (
 from domain.evidence.epistemics import EpistemicState
 from domain.faxt.model import FAXT, FAXTCreationError
 from domain.identity import FaxtId
+from tests.support.grounding import with_synthetic_representation
 
 NOW = datetime(2026, 1, 1, tzinfo=UTC)
 
 
 def _evidence(identifier: str = "ev-1") -> Evidence:
-    return Evidence(
-        id=identifier,
-        source="https://example.com",
-        source_type="web",
-        reference="https://example.com/about",
-        extracted_claim="ACME manufactures industrial pumps.",
-        observed_at=NOW,
-        authority=SourceAuthority.OFFICIAL_WEB,
-        observation_subject_id="org-acme",
-        grounded_claim=GroundedClaim(
-            subject_id="org-acme",
-            predicate="MANUFACTURES",
-            object_or_value="industrial pumps",
-            subject_mention="ACME",
-            predicate_mention="manufactures",
-            object_mention="industrial pumps",
-            supporting_excerpt="ACME manufactures industrial pumps.",
-        ),
+    return with_synthetic_representation(
+        Evidence(
+            id=identifier,
+            source="https://example.com",
+            source_type="web",
+            reference="https://example.com/about",
+            extracted_claim="ACME manufactures industrial pumps.",
+            observed_at=NOW,
+            authority=SourceAuthority.OFFICIAL_WEB,
+            observation_subject_id="org-acme",
+            grounded_claim=GroundedClaim(
+                subject_id="org-acme",
+                predicate="MANUFACTURES",
+                object_or_value="industrial pumps",
+                subject_mention="ACME",
+                predicate_mention="manufactures",
+                object_mention="industrial pumps",
+                supporting_excerpt="ACME manufactures industrial pumps.",
+            ),
+        )
     )
 
 

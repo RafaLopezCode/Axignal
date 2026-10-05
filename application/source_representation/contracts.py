@@ -8,6 +8,13 @@ from dataclasses import dataclass
 from datetime import datetime
 from typing import Protocol
 
+from domain.representation import (
+    RepresentationSpan,
+    TextRepresentation,
+    TextSurface,
+    text_fingerprint,
+)
+
 
 def _required(*values: str) -> None:
     if any(not value.strip() for value in values):
@@ -43,6 +50,8 @@ class DocumentRepresentation:
     representation_version: str
     normalization_version: str
     artifact_ref: str
+    source_artifact_ref: str
+    source_observation_artifact_ref: str
 
     def __post_init__(self) -> None:
         _required(
@@ -60,16 +69,28 @@ class DocumentRepresentation:
             self.representation_version,
             self.normalization_version,
             self.artifact_ref,
+            self.source_artifact_ref,
+            self.source_observation_artifact_ref,
         )
         if self.observed_at.tzinfo is None:
             raise ValueError("representation observation time must be timezone-aware")
         if any(not item.strip() for item in self.structured_data):
             raise ValueError("structured-data entries cannot be empty")
+        if self.visible_text_fingerprint != text_fingerprint(self.visible_text):
+            raise ValueError("visible text does not match its fingerprint")
 
     @property
     def fingerprint(self) -> str:
         return _fingerprint(
             {
+                "representation_id": self.representation_id,
+                "subject_id": self.subject_id,
+                "source_ref": self.source_ref,
+                "source_type": self.source_type,
+                "observed_at": self.observed_at.isoformat(),
+                "source_artifact_ref": self.source_artifact_ref,
+                "source_observation_artifact_ref": self.source_observation_artifact_ref,
+                "artifact_ref": self.artifact_ref,
                 "observation_id": self.observation_id,
                 "source_observation_fingerprint": self.source_observation_fingerprint,
                 "source_content_fingerprint": self.source_content_fingerprint,
@@ -84,6 +105,39 @@ class DocumentRepresentation:
                 "representation_version": self.representation_version,
                 "normalization_version": self.normalization_version,
             }
+        )
+
+    def text_representation(self, structured_index: int | None = None) -> TextRepresentation:
+        """Project one exact surface for verifiable support; never grant truth."""
+        if structured_index is not None:
+            if type(structured_index) is not int or not 0 <= structured_index < len(
+                self.structured_data
+            ):
+                raise ValueError("structured surface index is out of range")
+            text = self.structured_data[structured_index]
+            surface = TextSurface.STRUCTURED_DATA
+            representation_id = f"{self.representation_id}#structured:{structured_index}"
+        else:
+            text = self.visible_text
+            surface = TextSurface.VISIBLE_TEXT
+            representation_id = self.representation_id
+        return TextRepresentation(
+            representation_id=representation_id,
+            observation_id=self.observation_id,
+            subject_id=self.subject_id,
+            source_ref=self.source_ref,
+            source_type=self.source_type,
+            observed_at=self.observed_at,
+            text=text,
+            surface=surface,
+            representation_version=self.representation_version,
+            normalization_version=self.normalization_version,
+            source_content_fingerprint=self.source_content_fingerprint,
+            source_observation_fingerprint=self.source_observation_fingerprint,
+            source_artifact_ref=self.source_artifact_ref,
+            source_observation_artifact_ref=self.source_observation_artifact_ref,
+            artifact_ref=self.artifact_ref,
+            document_fingerprint=self.fingerprint,
         )
 
 
@@ -101,6 +155,7 @@ class RichStateDatum:
     representation_id: str
     source_ref: str
     observed_at: datetime
+    supporting_span: RepresentationSpan | None = None
 
     def __post_init__(self) -> None:
         _required(

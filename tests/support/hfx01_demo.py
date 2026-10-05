@@ -33,6 +33,7 @@ from domain.organizations.model import Organization
 from domain.tenancy.model import Principal, PrincipalTenantMembership, Tenant
 from domain.xeed.knowledge_reference import XeedFaxtReference
 from domain.xeed.model import Xeed
+from tests.support.grounding import with_synthetic_representation
 from tests.support.xeed_authority import InMemoryXeedAuthority
 from tests.support.xeed_knowledge import InMemoryXeedKnowledgeAuthority
 
@@ -113,24 +114,26 @@ class Hfx01Demo:
                 else SourceAuthority.OFFICIAL_WEB
             )
             claim = f"{subject_id} {predicate} {value}"
-            evidence = Evidence(
-                id=f"evidence-{faxt_id}",
-                source="synthetic://hfx01-test-fixture",
-                source_type="test",
-                reference=f"synthetic://{faxt_id}",
-                extracted_claim=claim,
-                observed_at=datetime(2026, 9, 1, tzinfo=UTC),
-                authority=authority,
-                observation_subject_id=subject_id,
-                grounded_claim=GroundedClaim(
-                    subject_id=subject_id,
-                    predicate=predicate,
-                    object_or_value=value,
-                    subject_mention=subject_id,
-                    predicate_mention=predicate,
-                    object_mention=value,
-                    supporting_excerpt=claim,
-                ),
+            evidence = with_synthetic_representation(
+                Evidence(
+                    id=f"evidence-{faxt_id}",
+                    source="synthetic://hfx01-test-fixture",
+                    source_type="test",
+                    reference=f"synthetic://{faxt_id}",
+                    extracted_claim=claim,
+                    observed_at=datetime(2026, 9, 1, tzinfo=UTC),
+                    authority=authority,
+                    observation_subject_id=subject_id,
+                    grounded_claim=GroundedClaim(
+                        subject_id=subject_id,
+                        predicate=predicate,
+                        object_or_value=value,
+                        subject_mention=subject_id,
+                        predicate_mention=predicate,
+                        object_mention=value,
+                        supporting_excerpt=claim,
+                    ),
+                )
             )
             faxt = FAXT.create(
                 faxt_id=FaxtId(faxt_id),

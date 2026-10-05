@@ -29,6 +29,7 @@ from domain.identity import FaxtId, OrganizationId, PrincipalId, TenantId, XeedI
 from domain.tenancy.model import Principal, PrincipalTenantMembership, Tenant
 from domain.xeed.knowledge_reference import XeedFaxtReference
 from domain.xeed.model import Xeed
+from tests.support.grounding import with_synthetic_representation
 from tests.support.xeed_authority import InMemoryXeedAuthority
 from tests.support.xeed_knowledge import InMemoryXeedKnowledgeAuthority
 
@@ -38,24 +39,26 @@ def _faxt(
     *,
     currentness: Currentness = Currentness.UNKNOWN,
 ) -> FAXT:
-    evidence = Evidence(
-        id="evidence-1",
-        source="https://example.test",
-        source_type="web",
-        reference="https://example.test/claim",
-        extracted_claim="The organization manufactures pumps.",
-        observed_at=datetime(2026, 1, 1),
-        authority=SourceAuthority.OFFICIAL_WEB,
-        observation_subject_id="org-shared",
-        grounded_claim=GroundedClaim(
-            subject_id="org-shared",
-            predicate="MANUFACTURES",
-            object_or_value="pumps",
-            subject_mention="The organization",
-            predicate_mention="manufactures",
-            object_mention="pumps",
-            supporting_excerpt="The organization manufactures pumps.",
-        ),
+    evidence = with_synthetic_representation(
+        Evidence(
+            id="evidence-1",
+            source="https://example.test",
+            source_type="web",
+            reference="https://example.test/claim",
+            extracted_claim="The organization manufactures pumps.",
+            observed_at=datetime(2026, 1, 1),
+            authority=SourceAuthority.OFFICIAL_WEB,
+            observation_subject_id="org-shared",
+            grounded_claim=GroundedClaim(
+                subject_id="org-shared",
+                predicate="MANUFACTURES",
+                object_or_value="pumps",
+                subject_mention="The organization",
+                predicate_mention="manufactures",
+                object_mention="pumps",
+                supporting_excerpt="The organization manufactures pumps.",
+            ),
+        )
     )
     return FAXT.create(
         faxt_id=FaxtId(faxt_id),
