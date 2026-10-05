@@ -46,6 +46,7 @@ def test_runtime_private_landing_public_edge_and_experience_operator_loopback() 
     assert '      - "127.0.0.1:18182:3810"' in COMPOSE
     assert "server runtime:18181;" in LANDING_NGINX
     assert "listen 8080;" in LANDING_NGINX
+    assert "absolute_redirect off;" in LANDING_NGINX
 
     runtime_section = COMPOSE.split("  runtime:", maxsplit=1)[1].split("  experience:", maxsplit=1)[
         0
