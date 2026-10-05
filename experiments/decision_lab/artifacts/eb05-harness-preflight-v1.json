@@ -1,0 +1,566 @@
+{
+  "artifact_type": "decision-lab-result",
+  "authority": "EXPERIMENTAL_ONLY; no live calls, no policy promotion, EvidenceAdmission or AXIGLAND writes",
+  "batch_vs_singles": {
+    "fixture_mechanics": "IMPLEMENTED_TESTED_SEPARATELY_NOT_PROVIDER_EVIDENCE",
+    "reason_code": "NO_AUTHORIZED_LIVE_EVALUATOR_AND_JEV_CORPUS_GATE_CLOSED",
+    "status": "LIVE_COMPARISON_BLOCKED"
+  },
+  "calibration_rule": "CALCULATE_ONLY_WHEN_REAL_PROVIDER_DISTRIBUTION_HAS_VALID_SEMANTICS",
+  "candidates": [
+    {
+      "candidate": {
+        "amount_microunits": null,
+        "candidate_id": "deterministic-baseline",
+        "cost_knowledge": "NOT_APPLICABLE",
+        "currency": null,
+        "evidence_ref": "ADR-0024; experiments/decision_lab/contracts_vnext.py",
+        "reason_code": "LOCAL_DETERMINISTIC_RULES_ONLY",
+        "status": "EXECUTED"
+      },
+      "input_manifest_sha256": "3aec583ca23c53fb1dd9c5dc89552f4c615ab933c3158c43c6d916644e045965",
+      "metrics": {
+        "abstention": 11,
+        "answerable_cases": 11,
+        "answered_cases": 0,
+        "calibration": "NOT_AVAILABLE_NO_PROVIDER_DISTRIBUTION",
+        "class_errors": null,
+        "classification": {
+          "accuracy": null,
+          "calibration_status": "NOT_VALIDATED",
+          "confusion_matrix": {},
+          "interpretation": "descriptive synthetic/experimental metric only",
+          "n": 0
+        },
+        "cost": {
+          "amount_microunits": null,
+          "currency": null,
+          "knowledge": "NOT_APPLICABLE"
+        },
+        "coverage": 0.0,
+        "false_observed_potential": "NOT_APPLICABLE_NO_OBSERVED_POTENTIAL_PROJECTION_IN_FR22_LAB",
+        "language_context_sensitivity": "NOT_MEASURED_NO_PAIRED_VARIANTS",
+        "latency_ms": "UNKNOWN_NOT_INSTRUMENTED_FOR_LOCAL_DETERMINISTIC_RULE",
+        "reason_code": "LOCAL_DETERMINISTIC_RULES_ONLY",
+        "retries": 0,
+        "schema_failures": 0,
+        "scoreable_answered_cases": 0,
+        "status": "EXECUTED"
+      },
+      "records": [
+        {
+          "amount_microunits": null,
+          "answerability_status": "ANSWERABLE",
+          "case_id": "CES-N-01",
+          "confidence": null,
+          "confidence_semantics": "UNAVAILABLE",
+          "cost_knowledge": "NOT_APPLICABLE",
+          "currency": null,
+          "distribution": null,
+          "distribution_availability": "UNAVAILABLE",
+          "latency_ms": null,
+          "reason_code": "ABSTAIN_NO_APPLICABLE_DETERMINISTIC_RULE",
+          "retries": 0,
+          "schema_failure": false,
+          "selected_option": null,
+          "state_fingerprint": "508987c1a61153ec9d54f4a948961f17f8a6da259ae20bf0d09796b9dd442d63"
+        },
+        {
+          "amount_microunits": null,
+          "answerability_status": "ANSWERABLE",
+          "case_id": "CES-N-02",
+          "confidence": null,
+          "confidence_semantics": "UNAVAILABLE",
+          "cost_knowledge": "NOT_APPLICABLE",
+          "currency": null,
+          "distribution": null,
+          "distribution_availability": "UNAVAILABLE",
+          "latency_ms": null,
+          "reason_code": "ABSTAIN_NO_APPLICABLE_DETERMINISTIC_RULE",
+          "retries": 0,
+          "schema_failure": false,
+          "selected_option": null,
+          "state_fingerprint": "407d2c3aa0ee68368373032e4d7284115a67b39c166ee6f5ac51e110b93f3ae7"
+        },
+        {
+          "amount_microunits": null,
+          "answerability_status": "ANSWERABLE",
+          "case_id": "CES-N-03",
+          "confidence": null,
+          "confidence_semantics": "UNAVAILABLE",
+          "cost_knowledge": "NOT_APPLICABLE",
+          "currency": null,
+          "distribution": null,
+          "distribution_availability": "UNAVAILABLE",
+          "latency_ms": null,
+          "reason_code": "ABSTAIN_NO_APPLICABLE_DETERMINISTIC_RULE",
+          "retries": 0,
+          "schema_failure": false,
+          "selected_option": null,
+          "state_fingerprint": "e492f69c4007ddfa5c3c425895d14e0ba064a72c8eadc270477be44bed17942e"
+        },
+        {
+          "amount_microunits": null,
+          "answerability_status": "ANSWERABLE",
+          "case_id": "CES-N-04",
+          "confidence": null,
+          "confidence_semantics": "UNAVAILABLE",
+          "cost_knowledge": "NOT_APPLICABLE",
+          "currency": null,
+          "distribution": null,
+          "distribution_availability": "UNAVAILABLE",
+          "latency_ms": null,
+          "reason_code": "ABSTAIN_NO_APPLICABLE_DETERMINISTIC_RULE",
+          "retries": 0,
+          "schema_failure": false,
+          "selected_option": null,
+          "state_fingerprint": "bf28307d017b91046c11ed52461f32efc089a4fd844e5e462129a321c2c13eed"
+        },
+        {
+          "amount_microunits": null,
+          "answerability_status": "NOT_ANSWERABLE",
+          "case_id": "CES-N-05",
+          "confidence": null,
+          "confidence_semantics": "UNAVAILABLE",
+          "cost_knowledge": "NOT_APPLICABLE",
+          "currency": null,
+          "distribution": null,
+          "distribution_availability": "UNAVAILABLE",
+          "latency_ms": null,
+          "reason_code": "ABSTAIN_NOT_ANSWERABLE",
+          "retries": 0,
+          "schema_failure": false,
+          "selected_option": null,
+          "state_fingerprint": "d6973594e0d995366e17e59d6cb0664535503983ed5d68c3421c2e91f6648108"
+        },
+        {
+          "amount_microunits": null,
+          "answerability_status": "ANSWERABLE",
+          "case_id": "CES-N-06",
+          "confidence": null,
+          "confidence_semantics": "UNAVAILABLE",
+          "cost_knowledge": "NOT_APPLICABLE",
+          "currency": null,
+          "distribution": null,
+          "distribution_availability": "UNAVAILABLE",
+          "latency_ms": null,
+          "reason_code": "ABSTAIN_NO_APPLICABLE_DETERMINISTIC_RULE",
+          "retries": 0,
+          "schema_failure": false,
+          "selected_option": null,
+          "state_fingerprint": "b064e961f65307cfc026a1aa27a73b7ecfed87516da124f994aae23f4b302fd7"
+        },
+        {
+          "amount_microunits": null,
+          "answerability_status": "ANSWERABLE",
+          "case_id": "ENT-N-01",
+          "confidence": null,
+          "confidence_semantics": "UNAVAILABLE",
+          "cost_knowledge": "NOT_APPLICABLE",
+          "currency": null,
+          "distribution": null,
+          "distribution_availability": "UNAVAILABLE",
+          "latency_ms": null,
+          "reason_code": "ABSTAIN_NO_APPLICABLE_DETERMINISTIC_RULE",
+          "retries": 0,
+          "schema_failure": false,
+          "selected_option": null,
+          "state_fingerprint": "8a423f195d1353d8b610cffe08da53806dd28588fad9e452efd8ad509fabea5c"
+        },
+        {
+          "amount_microunits": null,
+          "answerability_status": "ANSWERABLE",
+          "case_id": "ENT-N-02",
+          "confidence": null,
+          "confidence_semantics": "UNAVAILABLE",
+          "cost_knowledge": "NOT_APPLICABLE",
+          "currency": null,
+          "distribution": null,
+          "distribution_availability": "UNAVAILABLE",
+          "latency_ms": null,
+          "reason_code": "ABSTAIN_NO_APPLICABLE_DETERMINISTIC_RULE",
+          "retries": 0,
+          "schema_failure": false,
+          "selected_option": null,
+          "state_fingerprint": "4b425595d7f5a2d6ed4abca71190c7e0a9e991aae653524791b95c13433c048d"
+        },
+        {
+          "amount_microunits": null,
+          "answerability_status": "ANSWERABLE",
+          "case_id": "ENT-N-03",
+          "confidence": null,
+          "confidence_semantics": "UNAVAILABLE",
+          "cost_knowledge": "NOT_APPLICABLE",
+          "currency": null,
+          "distribution": null,
+          "distribution_availability": "UNAVAILABLE",
+          "latency_ms": null,
+          "reason_code": "ABSTAIN_NO_APPLICABLE_DETERMINISTIC_RULE",
+          "retries": 0,
+          "schema_failure": false,
+          "selected_option": null,
+          "state_fingerprint": "0ae2ab1068d0b5f55897299d5d6cba708816819daadd85373574e9decc29231e"
+        },
+        {
+          "amount_microunits": null,
+          "answerability_status": "NOT_ANSWERABLE",
+          "case_id": "ENT-N-04",
+          "confidence": null,
+          "confidence_semantics": "UNAVAILABLE",
+          "cost_knowledge": "NOT_APPLICABLE",
+          "currency": null,
+          "distribution": null,
+          "distribution_availability": "UNAVAILABLE",
+          "latency_ms": null,
+          "reason_code": "ABSTAIN_NOT_ANSWERABLE",
+          "retries": 0,
+          "schema_failure": false,
+          "selected_option": null,
+          "state_fingerprint": "966f71b53a4c70778acbb0985047c6fced0ff057a1c9990cc400fa56f4e3fed2"
+        },
+        {
+          "amount_microunits": null,
+          "answerability_status": "ANSWERABLE",
+          "case_id": "REL-N-01",
+          "confidence": null,
+          "confidence_semantics": "UNAVAILABLE",
+          "cost_knowledge": "NOT_APPLICABLE",
+          "currency": null,
+          "distribution": null,
+          "distribution_availability": "UNAVAILABLE",
+          "latency_ms": null,
+          "reason_code": "ABSTAIN_NO_APPLICABLE_DETERMINISTIC_RULE",
+          "retries": 0,
+          "schema_failure": false,
+          "selected_option": null,
+          "state_fingerprint": "9ef8417841544525ab063377c9ee13e4c74db55431d173a46f1627367502eaaf"
+        },
+        {
+          "amount_microunits": null,
+          "answerability_status": "ANSWERABLE",
+          "case_id": "REL-N-02",
+          "confidence": null,
+          "confidence_semantics": "UNAVAILABLE",
+          "cost_knowledge": "NOT_APPLICABLE",
+          "currency": null,
+          "distribution": null,
+          "distribution_availability": "UNAVAILABLE",
+          "latency_ms": null,
+          "reason_code": "ABSTAIN_NO_APPLICABLE_DETERMINISTIC_RULE",
+          "retries": 0,
+          "schema_failure": false,
+          "selected_option": null,
+          "state_fingerprint": "6150e7a6d73e158b46976fab9527a187b363ec3a017c0283311bdbfd4b56f7a7"
+        },
+        {
+          "amount_microunits": null,
+          "answerability_status": "ANSWERABLE",
+          "case_id": "REL-N-03",
+          "confidence": null,
+          "confidence_semantics": "UNAVAILABLE",
+          "cost_knowledge": "NOT_APPLICABLE",
+          "currency": null,
+          "distribution": null,
+          "distribution_availability": "UNAVAILABLE",
+          "latency_ms": null,
+          "reason_code": "ABSTAIN_NO_APPLICABLE_DETERMINISTIC_RULE",
+          "retries": 0,
+          "schema_failure": false,
+          "selected_option": null,
+          "state_fingerprint": "64ed1e4e776def40766c69a18e9589058f3f91273f48e8f595cc5d17522cf9cd"
+        },
+        {
+          "amount_microunits": null,
+          "answerability_status": "NOT_ANSWERABLE",
+          "case_id": "REL-N-04",
+          "confidence": null,
+          "confidence_semantics": "UNAVAILABLE",
+          "cost_knowledge": "NOT_APPLICABLE",
+          "currency": null,
+          "distribution": null,
+          "distribution_availability": "UNAVAILABLE",
+          "latency_ms": null,
+          "reason_code": "ABSTAIN_NOT_ANSWERABLE",
+          "retries": 0,
+          "schema_failure": false,
+          "selected_option": null,
+          "state_fingerprint": "31431bc16c90ad11a3113a0ff05f2ff58f9bfc3ebf882a7675f3b81391382259"
+        }
+      ]
+    },
+    {
+      "candidate": {
+        "amount_microunits": null,
+        "candidate_id": "luna-structured",
+        "cost_knowledge": "UNKNOWN",
+        "currency": null,
+        "evidence_ref": "FR-22 execution preflight 2026-10-01",
+        "reason_code": "NO_GOVERNED_API_ADAPTER_OR_AUTHORIZED_MODEL_BINDING",
+        "status": "UNAVAILABLE"
+      },
+      "input_manifest_sha256": "3aec583ca23c53fb1dd9c5dc89552f4c615ab933c3158c43c6d916644e045965",
+      "metrics": {
+        "abstention": "NOT_MEASURED",
+        "calibration": "NOT_MEASURED",
+        "class_errors": "NOT_MEASURED",
+        "cost": {
+          "amount_microunits": null,
+          "currency": null,
+          "knowledge": "UNKNOWN"
+        },
+        "coverage": "NOT_MEASURED",
+        "false_observed_potential": "NOT_MEASURED",
+        "language_context_sensitivity": "NOT_MEASURED",
+        "latency_ms": "UNKNOWN",
+        "reason_code": "NO_GOVERNED_API_ADAPTER_OR_AUTHORIZED_MODEL_BINDING",
+        "retries": "NOT_MEASURED",
+        "schema_failures": "NOT_MEASURED",
+        "status": "UNAVAILABLE"
+      },
+      "records": null
+    },
+    {
+      "candidate": {
+        "amount_microunits": null,
+        "candidate_id": "openai-decisions",
+        "cost_knowledge": "UNKNOWN",
+        "currency": null,
+        "evidence_ref": "FR-22 execution preflight 2026-10-01",
+        "reason_code": "ACCESS_AND_API_TERMS_NOT_ESTABLISHED",
+        "status": "UNAVAILABLE"
+      },
+      "input_manifest_sha256": "3aec583ca23c53fb1dd9c5dc89552f4c615ab933c3158c43c6d916644e045965",
+      "metrics": {
+        "abstention": "NOT_MEASURED",
+        "calibration": "NOT_MEASURED",
+        "class_errors": "NOT_MEASURED",
+        "cost": {
+          "amount_microunits": null,
+          "currency": null,
+          "knowledge": "UNKNOWN"
+        },
+        "coverage": "NOT_MEASURED",
+        "false_observed_potential": "NOT_MEASURED",
+        "language_context_sensitivity": "NOT_MEASURED",
+        "latency_ms": "UNKNOWN",
+        "reason_code": "ACCESS_AND_API_TERMS_NOT_ESTABLISHED",
+        "retries": "NOT_MEASURED",
+        "schema_failures": "NOT_MEASURED",
+        "status": "UNAVAILABLE"
+      },
+      "records": null
+    },
+    {
+      "candidate": {
+        "amount_microunits": null,
+        "candidate_id": "typesafe-jev",
+        "cost_knowledge": "UNKNOWN",
+        "currency": null,
+        "evidence_ref": "GitHub PR #18 research/p0-jev-04a-golden-corpus-authority",
+        "reason_code": "P0_JEV_04A_BLOCKED_NO_VALID_CORPUS",
+        "status": "BLOCKED"
+      },
+      "input_manifest_sha256": "3aec583ca23c53fb1dd9c5dc89552f4c615ab933c3158c43c6d916644e045965",
+      "metrics": {
+        "abstention": "NOT_MEASURED",
+        "calibration": "NOT_MEASURED",
+        "class_errors": "NOT_MEASURED",
+        "cost": {
+          "amount_microunits": null,
+          "currency": null,
+          "knowledge": "UNKNOWN"
+        },
+        "coverage": "NOT_MEASURED",
+        "false_observed_potential": "NOT_MEASURED",
+        "language_context_sensitivity": "NOT_MEASURED",
+        "latency_ms": "UNKNOWN",
+        "reason_code": "P0_JEV_04A_BLOCKED_NO_VALID_CORPUS",
+        "retries": "NOT_MEASURED",
+        "schema_failures": "NOT_MEASURED",
+        "status": "BLOCKED"
+      },
+      "records": null
+    }
+  ],
+  "cost_rule": "MISSING_OR_UNMEASURED_COST_REMAINS_UNKNOWN_NEVER_ZERO",
+  "data_mode": "SYNTHETIC_AXIGNAL_STRUCTURAL_FIXTURES",
+  "dimension_measurement_basis": {
+    "answerability_precedes_quality_metrics": true,
+    "dimensions": [
+      "CES.SUPPORT.vNext",
+      "ENT.ALIGN.vNext",
+      "REL.EXISTENCE.vNext"
+    ],
+    "labels_visible_to_evaluator": false
+  },
+  "disagreement_error_correlation": "NOT_AVAILABLE_FEWER_THAN_TWO_EXECUTED_PROVIDER_EVALUATORS",
+  "experiment_id": "EB-05-governed-evaluator-preflight-v1",
+  "frozen_input_manifest": {
+    "case_count": 14,
+    "cases": [
+      {
+        "answerability_status": "ANSWERABLE",
+        "case_id": "CES-N-01",
+        "compiler_version": "decision-state-compiler.vNext.1",
+        "contract_id": "CES.SUPPORT.vNext",
+        "family": "CLAIM_EVIDENCE_SUPPORT",
+        "state_contract_version": "claim-evidence.vNext.1",
+        "state_fingerprint": "508987c1a61153ec9d54f4a948961f17f8a6da259ae20bf0d09796b9dd442d63"
+      },
+      {
+        "answerability_status": "ANSWERABLE",
+        "case_id": "CES-N-02",
+        "compiler_version": "decision-state-compiler.vNext.1",
+        "contract_id": "CES.SUPPORT.vNext",
+        "family": "CLAIM_EVIDENCE_SUPPORT",
+        "state_contract_version": "claim-evidence.vNext.1",
+        "state_fingerprint": "407d2c3aa0ee68368373032e4d7284115a67b39c166ee6f5ac51e110b93f3ae7"
+      },
+      {
+        "answerability_status": "ANSWERABLE",
+        "case_id": "CES-N-03",
+        "compiler_version": "decision-state-compiler.vNext.1",
+        "contract_id": "CES.SUPPORT.vNext",
+        "family": "CLAIM_EVIDENCE_SUPPORT",
+        "state_contract_version": "claim-evidence.vNext.1",
+        "state_fingerprint": "e492f69c4007ddfa5c3c425895d14e0ba064a72c8eadc270477be44bed17942e"
+      },
+      {
+        "answerability_status": "ANSWERABLE",
+        "case_id": "CES-N-04",
+        "compiler_version": "decision-state-compiler.vNext.1",
+        "contract_id": "CES.SUPPORT.vNext",
+        "family": "CLAIM_EVIDENCE_SUPPORT",
+        "state_contract_version": "claim-evidence.vNext.1",
+        "state_fingerprint": "bf28307d017b91046c11ed52461f32efc089a4fd844e5e462129a321c2c13eed"
+      },
+      {
+        "answerability_status": "NOT_ANSWERABLE",
+        "case_id": "CES-N-05",
+        "compiler_version": "decision-state-compiler.vNext.1",
+        "contract_id": "CES.SUPPORT.vNext",
+        "family": "CLAIM_EVIDENCE_SUPPORT",
+        "state_contract_version": "claim-evidence.vNext.1",
+        "state_fingerprint": "d6973594e0d995366e17e59d6cb0664535503983ed5d68c3421c2e91f6648108"
+      },
+      {
+        "answerability_status": "ANSWERABLE",
+        "case_id": "CES-N-06",
+        "compiler_version": "decision-state-compiler.vNext.1",
+        "contract_id": "CES.SUPPORT.vNext",
+        "family": "CLAIM_EVIDENCE_SUPPORT",
+        "state_contract_version": "claim-evidence.vNext.1",
+        "state_fingerprint": "b064e961f65307cfc026a1aa27a73b7ecfed87516da124f994aae23f4b302fd7"
+      },
+      {
+        "answerability_status": "ANSWERABLE",
+        "case_id": "ENT-N-01",
+        "compiler_version": "decision-state-compiler.vNext.1",
+        "contract_id": "ENT.ALIGN.vNext",
+        "family": "ENTITY_ALIGNMENT",
+        "state_contract_version": "entity-alignment.vNext.1",
+        "state_fingerprint": "8a423f195d1353d8b610cffe08da53806dd28588fad9e452efd8ad509fabea5c"
+      },
+      {
+        "answerability_status": "ANSWERABLE",
+        "case_id": "ENT-N-02",
+        "compiler_version": "decision-state-compiler.vNext.1",
+        "contract_id": "ENT.ALIGN.vNext",
+        "family": "ENTITY_ALIGNMENT",
+        "state_contract_version": "entity-alignment.vNext.1",
+        "state_fingerprint": "4b425595d7f5a2d6ed4abca71190c7e0a9e991aae653524791b95c13433c048d"
+      },
+      {
+        "answerability_status": "ANSWERABLE",
+        "case_id": "ENT-N-03",
+        "compiler_version": "decision-state-compiler.vNext.1",
+        "contract_id": "ENT.ALIGN.vNext",
+        "family": "ENTITY_ALIGNMENT",
+        "state_contract_version": "entity-alignment.vNext.1",
+        "state_fingerprint": "0ae2ab1068d0b5f55897299d5d6cba708816819daadd85373574e9decc29231e"
+      },
+      {
+        "answerability_status": "NOT_ANSWERABLE",
+        "case_id": "ENT-N-04",
+        "compiler_version": "decision-state-compiler.vNext.1",
+        "contract_id": "ENT.ALIGN.vNext",
+        "family": "ENTITY_ALIGNMENT",
+        "state_contract_version": "entity-alignment.vNext.1",
+        "state_fingerprint": "966f71b53a4c70778acbb0985047c6fced0ff057a1c9990cc400fa56f4e3fed2"
+      },
+      {
+        "answerability_status": "ANSWERABLE",
+        "case_id": "REL-N-01",
+        "compiler_version": "decision-state-compiler.vNext.1",
+        "contract_id": "REL.EXISTENCE.vNext",
+        "family": "ECONOMIC_RELATIONSHIP",
+        "state_contract_version": "economic-relationship.vNext.1",
+        "state_fingerprint": "9ef8417841544525ab063377c9ee13e4c74db55431d173a46f1627367502eaaf"
+      },
+      {
+        "answerability_status": "ANSWERABLE",
+        "case_id": "REL-N-02",
+        "compiler_version": "decision-state-compiler.vNext.1",
+        "contract_id": "REL.EXISTENCE.vNext",
+        "family": "ECONOMIC_RELATIONSHIP",
+        "state_contract_version": "economic-relationship.vNext.1",
+        "state_fingerprint": "6150e7a6d73e158b46976fab9527a187b363ec3a017c0283311bdbfd4b56f7a7"
+      },
+      {
+        "answerability_status": "ANSWERABLE",
+        "case_id": "REL-N-03",
+        "compiler_version": "decision-state-compiler.vNext.1",
+        "contract_id": "REL.EXISTENCE.vNext",
+        "family": "ECONOMIC_RELATIONSHIP",
+        "state_contract_version": "economic-relationship.vNext.1",
+        "state_fingerprint": "64ed1e4e776def40766c69a18e9589058f3f91273f48e8f595cc5d17522cf9cd"
+      },
+      {
+        "answerability_status": "NOT_ANSWERABLE",
+        "case_id": "REL-N-04",
+        "compiler_version": "decision-state-compiler.vNext.1",
+        "contract_id": "REL.EXISTENCE.vNext",
+        "family": "ECONOMIC_RELATIONSHIP",
+        "state_contract_version": "economic-relationship.vNext.1",
+        "state_fingerprint": "31431bc16c90ad11a3113a0ff05f2ff58f9bfc3ebf882a7675f3b81391382259"
+      }
+    ],
+    "corpus_ref": "experiments/decision_lab/corpus/vnext/cases.json@vNext.1",
+    "manifest_sha256": "3aec583ca23c53fb1dd9c5dc89552f4c615ab933c3158c43c6d916644e045965",
+    "provider_view_rule": "provider receives compiled state/contracts only; expected_outcome, label_provenance and evaluator-only notes are excluded"
+  },
+  "limitations": [
+    "The vNext corpus is synthetic structural evidence, not real-world model-quality evidence.",
+    "TypeSafe Jev is blocked by P0-JEV-04A authority/rights gates in open PR #18.",
+    "Luna structured has no governed adapter/authorized model binding in this repository.",
+    "OpenAI Decisions access and API terms are not established in this repository.",
+    "No vendor ranking or winner is authorized from this artifact."
+  ],
+  "live_provider_eligibility": [
+    {
+      "candidate_id": "deterministic-baseline",
+      "eligibility": "ELIGIBLE",
+      "reason_code": "LOCAL_RULES_NO_PROVIDER_CALL"
+    },
+    {
+      "candidate_id": "typesafe-jev",
+      "eligibility": "BLOCKED",
+      "reason_code": "P0_JEV_04A_BLOCKED_NO_VALID_CORPUS"
+    },
+    {
+      "candidate_id": "luna-structured",
+      "eligibility": "UNAVAILABLE",
+      "reason_code": "NO_GOVERNED_ADAPTER_OR_AUTHORIZED_MODEL_BINDING"
+    },
+    {
+      "candidate_id": "openai-decisions",
+      "eligibility": "UNAVAILABLE",
+      "reason_code": "ACCESS_AND_API_TERMS_NOT_ESTABLISHED"
+    }
+  ],
+  "provider_quality_claim": "NOT_ESTABLISHED",
+  "result_id": "dd5c8ac2f581bf670fec7414b8d6056cc999e6b92b8698ade2160b3a8c359780",
+  "same_input_contract": true,
+  "winner_reason": "INSUFFICIENT_COMPARABLE_PROVIDER_EVIDENCE; blocked/unavailable candidates are not simulated and synthetic fixtures are not statistical evidence",
+  "winner_status": "NOT_DECLARED"
+}

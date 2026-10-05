@@ -36,11 +36,15 @@ def normalize_judgment(
         raw_value = answer.get("probability_yes")
     distribution = answer.get("distribution")
     confidence = answer.get("confidence")
-    valid_distribution = None
+    valid_distribution: dict[str, float] | None = None
     distribution_valid = distribution is None or (
         isinstance(distribution, dict)
         and all(
-            isinstance(key, (str, int)) and isinstance(value, (float, int)) and 0 <= value <= 1
+            isinstance(key, (str, int))
+            and isinstance(value, (float, int))
+            and not isinstance(value, bool)
+            and math.isfinite(value)
+            and 0 <= value <= 1
             for key, value in distribution.items()
         )
     )
@@ -54,11 +58,19 @@ def normalize_judgment(
         isinstance(value, int) and not isinstance(value, bool) and value >= 0
         for value in usage.values()
     )
-    distribution_valid = distribution_valid and (
-        valid_distribution is None or abs(sum(valid_distribution.values()) - 1.0) <= 0.05
-    )
+    if isinstance(distribution, dict) and distribution_valid:
+        normalized_labels = [str(key) for key in distribution]
+        distribution_valid = (
+            bool(distribution)
+            and len(normalized_labels) == len(set(normalized_labels))
+            and math.isclose(
+                sum(float(value) for value in distribution.values()), 1.0, abs_tol=1e-6
+            )
+        )
     if isinstance(distribution, dict) and distribution_valid:
         valid_distribution = {str(key): float(value) for key, value in distribution.items()}
+    else:
+        valid_distribution = None
     if raw_value is None:
         status = "MISSING"
     elif (

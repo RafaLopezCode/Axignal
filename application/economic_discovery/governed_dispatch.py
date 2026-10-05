@@ -116,6 +116,7 @@ class GovernedDispatchRecorder:
         cost: DispatchCost,
         call: Callable[[], T],
         success: Callable[[T], bool] | None = None,
+        reported_cost: Callable[[T], DispatchCost] | None = None,
     ) -> T:
         self.controller.reserve(
             ExecutionBudgetReservation(
@@ -129,16 +130,21 @@ class GovernedDispatchRecorder:
         )
         started_ns = self.monotonic_ns()
         succeeded = False
+        # A reservation estimate is not measured spend. With dynamic reporting,
+        # a failed transport may have incurred an unknown charge.
+        actual_cost = cost if reported_cost is None else DispatchCost()
         try:
             result = call()
+            if reported_cost is not None:
+                actual_cost = reported_cost(result)
             succeeded = True if success is None else success(result)
         except Exception:
             elapsed_ms = max(0, (self.monotonic_ns() - started_ns) // 1_000_000)
             self.controller.reconcile(
                 reservation_id,
                 ExecutionBudgetDelta(
-                    amount_microunits=cost.amount_microunits,
-                    currency=cost.currency,
+                    amount_microunits=actual_cost.amount_microunits,
+                    currency=actual_cost.currency,
                     elapsed_ms=elapsed_ms,
                     requests=requests,
                     sources=sources,
@@ -155,8 +161,8 @@ class GovernedDispatchRecorder:
                     requests=requests,
                     sources=sources,
                     loops=loops,
-                    amount_microunits=cost.amount_microunits,
-                    currency=cost.currency,
+                    amount_microunits=actual_cost.amount_microunits,
+                    currency=actual_cost.currency,
                 )
             )
             raise
@@ -165,8 +171,8 @@ class GovernedDispatchRecorder:
         self.controller.reconcile(
             reservation_id,
             ExecutionBudgetDelta(
-                amount_microunits=cost.amount_microunits,
-                currency=cost.currency,
+                amount_microunits=actual_cost.amount_microunits,
+                currency=actual_cost.currency,
                 elapsed_ms=elapsed_ms,
                 requests=requests,
                 sources=sources,
@@ -183,8 +189,8 @@ class GovernedDispatchRecorder:
                 requests=requests,
                 sources=sources,
                 loops=loops,
-                amount_microunits=cost.amount_microunits,
-                currency=cost.currency,
+                amount_microunits=actual_cost.amount_microunits,
+                currency=actual_cost.currency,
             )
         )
         return result

@@ -141,6 +141,28 @@ def test_choice_score_and_noul_normalization_preserves_raw_typed_values() -> Non
     assert compose_support(noul)["outcome"] == {"probability_yes": 0.41}
 
 
+@pytest.mark.parametrize(
+    "distribution",
+    [
+        {"A": 0.7, "B": 0.7},
+        {"A": True, "B": 0.0},
+        {"A": float("nan"), "B": 0.0},
+        {1: 0.5, "1": 0.5},
+        {},
+    ],
+)
+def test_invalid_choice_distributions_are_malformed(distribution: dict) -> None:
+    judgment = normalize_judgment(
+        "q",
+        "CHOICE",
+        {"selected": "A", "distribution": distribution},
+        evaluator="fixture",
+    )
+
+    assert judgment.status == "MALFORMED"
+    assert judgment.distribution is None
+
+
 def test_malformed_answer_and_unknown_metadata_remain_nonsemantic() -> None:
     judgment = normalize_judgment(
         "q", "NOUL", {"probability_yes": 1.5}, evaluator="unknown", resolved_model=None
