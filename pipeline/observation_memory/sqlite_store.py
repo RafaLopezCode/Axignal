@@ -11,6 +11,7 @@ from application.economic_discovery.brain_contracts import ObservationMode, Obse
 from application.economic_discovery.observation_memory import (
     GovernedObservation,
     ObservationAccessMetadata,
+    ObservationFieldState,
     ObservationMemoryConflict,
     ObservationReuseAuthority,
     ObservedField,
@@ -74,6 +75,8 @@ class SqliteObservationMemory:
                     observation_id TEXT NOT NULL,
                     field_name TEXT NOT NULL,
                     field_value TEXT NOT NULL,
+                    field_state TEXT NOT NULL DEFAULT 'VALUE',
+                    competing_values_json TEXT NOT NULL DEFAULT '[]',
                     field_position INTEGER NOT NULL,
                     PRIMARY KEY (observation_id, field_name),
                     FOREIGN KEY (observation_id)
@@ -82,6 +85,21 @@ class SqliteObservationMemory:
                 )
                 """
             )
+            field_columns = {
+                str(row[1])
+                for row in connection.execute("PRAGMA table_info(observation_fields)").fetchall()
+            }
+            if "field_state" not in field_columns:
+                connection.execute(
+                    "ALTER TABLE observation_fields "
+                    "ADD COLUMN field_state TEXT NOT NULL DEFAULT 'VALUE'"
+                )
+            if "competing_values_json" not in field_columns:
+                connection.execute(
+                    "ALTER TABLE observation_fields "
+                    "ADD COLUMN competing_values_json TEXT NOT NULL DEFAULT '[]'"
+                )
+
             connection.execute(
                 """
                 CREATE INDEX IF NOT EXISTS idx_observation_subject_time
@@ -151,14 +169,22 @@ class SqliteObservationMemory:
             return None
         field_rows = connection.execute(
             """
-            SELECT field_name, field_value
+            SELECT field_name, field_value, field_state, competing_values_json
             FROM observation_fields
             WHERE observation_id = ?
             ORDER BY field_position
             """,
             (observation_id,),
         ).fetchall()
-        fields = tuple(ObservedField(str(item[0]), str(item[1])) for item in field_rows)
+        fields = tuple(
+            ObservedField(
+                str(item[0]),
+                str(item[1]),
+                ObservationFieldState(str(item[2])),
+                tuple(str(value) for value in json.loads(str(item[3]))),
+            )
+            for item in field_rows
+        )
         return self._deserialize(row, fields)
 
     def append(self, observation: GovernedObservation) -> bool:
@@ -188,14 +214,21 @@ class SqliteObservationMemory:
             connection.executemany(
                 """
                 INSERT INTO observation_fields (
-                    observation_id, field_name, field_value, field_position
-                ) VALUES (?, ?, ?, ?)
+                    observation_id, field_name, field_value, field_state,
+                    competing_values_json, field_position
+                ) VALUES (?, ?, ?, ?, ?, ?)
                 """,
                 (
                     (
                         observation.record.observation_id,
                         field.name,
                         field.value,
+                        field.state.value,
+                        json.dumps(
+                            field.competing_values,
+                            separators=(",", ":"),
+                            ensure_ascii=False,
+                        ),
                         position,
                     )
                     for position, field in enumerate(observation.fields)
@@ -265,13 +298,21 @@ class SqliteObservationMemory:
                 observation_id = str(row[0])
                 field_rows = connection.execute(
                     """
-                    SELECT field_name, field_value
+                    SELECT field_name, field_value, field_state, competing_values_json
                     FROM observation_fields
                     WHERE observation_id = ?
                     ORDER BY field_position
                     """,
                     (observation_id,),
                 ).fetchall()
-                fields = tuple(ObservedField(str(item[0]), str(item[1])) for item in field_rows)
+                fields = tuple(
+                    ObservedField(
+                        str(item[0]),
+                        str(item[1]),
+                        ObservationFieldState(str(item[2])),
+                        tuple(str(value) for value in json.loads(str(item[3]))),
+                    )
+                    for item in field_rows
+                )
                 observations.append(self._deserialize(row, fields))
         return tuple(observations)

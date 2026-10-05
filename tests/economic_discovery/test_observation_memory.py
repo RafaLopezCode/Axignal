@@ -8,10 +8,15 @@ import pytest
 
 from application.economic_discovery import (
     GovernedObservation,
+    ObservationFieldState,
     ObservationMemoryConflict,
     ObservationMode,
     ObservationRecord,
     ObservedField,
+    SemanticPrimitive,
+    TemporalFieldChangeKind,
+    TypingDimensionContract,
+    affected_dimensions,
     compile_observation_state,
     ingest_observation,
 )
@@ -305,3 +310,259 @@ def test_access_metadata_does_not_load_raw_observation_material(
     assert metadata.record.subject_id == "org:acme"
     assert not hasattr(metadata, "raw_content")
     assert not hasattr(metadata, "raw_artifact_ref")
+
+
+def _dimension(dimension_id: str, *dependencies: str) -> TypingDimensionContract:
+    return TypingDimensionContract(
+        dimension_id=dimension_id,
+        version="1",
+        semantic_target=dimension_id,
+        primitive=SemanticPrimitive.CHOICE,
+        question=f"{dimension_id}?",
+        state_requirements=(),
+        dependencies=dependencies,
+        mutually_exclusive=False,
+        abstention_policy="ALLOW_UNKNOWN",
+    )
+
+
+def test_as_of_reconstruction_excludes_future_observations_without_mutating_history(
+    tmp_path: Path,
+) -> None:
+    memory = SqliteObservationMemory(tmp_path / "memory.sqlite3")
+    first = _observation(
+        "obs:first",
+        fields=(ObservedField("markets", "Spain"),),
+    )
+    second = _observation(
+        "obs:second",
+        minute=10,
+        fields=(ObservedField("markets", "France"),),
+    )
+    memory.append(first)
+    memory.append(second)
+
+    history = memory.for_subject("org:acme")
+    before_second = compile_observation_state(
+        "org:acme",
+        history,
+        as_of=NOW + timedelta(minutes=5),
+    )
+    after_second = compile_observation_state(
+        "org:acme",
+        history,
+        as_of=NOW + timedelta(minutes=10),
+    )
+
+    assert before_second.get("markets") == compile_observation_state("org:acme", (first,)).get(
+        "markets"
+    )
+    assert after_second == compile_observation_state("org:acme", history)
+    assert memory.for_subject("org:acme") == (first, second)
+
+
+def test_as_of_requires_timezone_and_is_offset_representation_independent() -> None:
+    cet = timezone(timedelta(hours=2))
+    observation = _observation(
+        "obs:1",
+        fields=(ObservedField("markets", "Spain"),),
+    )
+    utc_state = compile_observation_state(
+        "org:acme",
+        (observation,),
+        as_of=datetime(2026, 9, 30, 12, 0, tzinfo=UTC),
+    )
+    cet_state = compile_observation_state(
+        "org:acme",
+        (observation,),
+        as_of=datetime(2026, 9, 30, 14, 0, tzinfo=cet),
+    )
+
+    assert utc_state == cet_state
+    with pytest.raises(ValueError, match="timezone-aware"):
+        compile_observation_state(
+            "org:acme",
+            (observation,),
+            as_of=datetime(2026, 9, 30, 12, 0),
+        )
+
+
+def test_incremental_projection_equals_full_replay(tmp_path: Path) -> None:
+    memory = SqliteObservationMemory(tmp_path / "memory.sqlite3")
+    observations = (
+        _observation(
+            "obs:1",
+            fields=(
+                ObservedField("markets", "Spain"),
+                ObservedField("capability", "CNC machining"),
+            ),
+        ),
+        _observation(
+            "obs:2",
+            minute=10,
+            fields=(ObservedField("markets", "Spain | France"),),
+        ),
+        _observation(
+            "obs:3",
+            minute=20,
+            fields=(ObservedField("capability", "CNC machining"),),
+        ),
+    )
+
+    mutation = None
+    for observation in observations:
+        mutation = ingest_observation(memory, observation)
+
+    assert mutation is not None
+    replay = compile_observation_state("org:acme", memory.for_subject("org:acme"))
+    assert mutation.current_state == replay
+    assert mutation.current_state.fingerprint == replay.fingerprint
+
+
+@pytest.mark.parametrize(
+    ("state", "kind"),
+    [
+        (ObservationFieldState.MEASURED_ABSENCE, TemporalFieldChangeKind.MEASURED_ABSENCE),
+        (ObservationFieldState.WITHDRAWN, TemporalFieldChangeKind.WITHDRAWN),
+        (ObservationFieldState.CONFLICTING, TemporalFieldChangeKind.CONFLICTING),
+        (ObservationFieldState.UNKNOWN, TemporalFieldChangeKind.UNKNOWN),
+    ],
+)
+def test_explicit_temporal_field_states_remain_typed_not_false(
+    tmp_path: Path,
+    state: ObservationFieldState,
+    kind: TemporalFieldChangeKind,
+) -> None:
+    memory = SqliteObservationMemory(tmp_path / f"{state.value}.sqlite3")
+    initial = _observation(
+        "obs:initial",
+        fields=(ObservedField("market_presence", "Spain"),),
+    )
+    competing_values = ("Spain", "France") if state is ObservationFieldState.CONFLICTING else ()
+    explicit = _observation(
+        "obs:explicit",
+        minute=5,
+        fields=(
+            ObservedField(
+                "market_presence",
+                f"explicit:{state.value}",
+                state,
+                competing_values,
+            ),
+        ),
+    )
+    ingest_observation(memory, initial)
+    mutation = ingest_observation(memory, explicit)
+
+    selected = mutation.current_state.get("market_presence")
+    assert selected is not None
+    assert selected.state is state
+    assert selected.value != "FALSE"
+    assert mutation.typed_changes[0].kind is kind
+    assert memory.for_subject("org:acme") == (initial, explicit)
+
+
+def test_value_change_and_refresh_are_distinct_typed_changes(tmp_path: Path) -> None:
+    memory = SqliteObservationMemory(tmp_path / "memory.sqlite3")
+    first = _observation(
+        "obs:1",
+        fields=(ObservedField("markets", "Spain"),),
+    )
+    changed = _observation(
+        "obs:2",
+        minute=5,
+        fields=(ObservedField("markets", "France"),),
+    )
+    refreshed = _observation(
+        "obs:3",
+        minute=10,
+        fields=(ObservedField("markets", "France"),),
+    )
+
+    ingest_observation(memory, first)
+    changed_mutation = ingest_observation(memory, changed)
+    refreshed_mutation = ingest_observation(memory, refreshed)
+
+    assert changed_mutation.typed_changes[0].kind is TemporalFieldChangeKind.VALUE_CHANGED
+    assert refreshed_mutation.typed_changes[0].kind is TemporalFieldChangeKind.REFRESHED
+
+
+def test_conflict_and_withdrawal_preserve_competing_history(tmp_path: Path) -> None:
+    memory = SqliteObservationMemory(tmp_path / "memory.sqlite3")
+    original = _observation(
+        "obs:original",
+        fields=(ObservedField("capability", "industrial refrigeration"),),
+    )
+    conflicting = _observation(
+        "obs:conflict",
+        minute=5,
+        fields=(
+            ObservedField(
+                "capability",
+                "sources disagree on current capability",
+                ObservationFieldState.CONFLICTING,
+                ("industrial refrigeration", "commercial HVAC"),
+            ),
+        ),
+    )
+    withdrawn = _observation(
+        "obs:withdrawn",
+        minute=10,
+        fields=(
+            ObservedField(
+                "capability",
+                "official statement withdrawn",
+                ObservationFieldState.WITHDRAWN,
+            ),
+        ),
+    )
+    for observation in (original, conflicting, withdrawn):
+        ingest_observation(memory, observation)
+
+    history = memory.for_subject("org:acme")
+    assert history == (original, conflicting, withdrawn)
+    assert history[0].fields[0].state is ObservationFieldState.VALUE
+    assert history[1].fields[0].state is ObservationFieldState.CONFLICTING
+    assert history[1].fields[0].competing_values == (
+        "industrial refrigeration",
+        "commercial HVAC",
+    )
+    assert (
+        compile_observation_state("org:acme", history).get("capability").state
+        is ObservationFieldState.WITHDRAWN
+    )  # type: ignore[union-attr]
+
+
+def test_state_change_invalidates_only_dimensions_depending_on_changed_fields(
+    tmp_path: Path,
+) -> None:
+    memory = SqliteObservationMemory(tmp_path / "memory.sqlite3")
+    ingest_observation(
+        memory,
+        _observation(
+            "obs:1",
+            fields=(
+                ObservedField("markets", "Spain"),
+                ObservedField("capability", "CNC machining"),
+            ),
+        ),
+    )
+    mutation = ingest_observation(
+        memory,
+        _observation(
+            "obs:2",
+            minute=5,
+            fields=(ObservedField("markets", "France"),),
+        ),
+    )
+    assert mutation.change is not None
+
+    contracts = (
+        _dimension("MARKET_ROLE", "markets"),
+        _dimension("CAPABILITY_ROLE", "capability"),
+        _dimension("COMBINED", "markets", "capability"),
+    )
+    assert affected_dimensions(mutation.change, contracts) == (
+        "MARKET_ROLE",
+        "COMBINED",
+    )

@@ -18,15 +18,34 @@ def _required(*values: str) -> None:
         raise ValueError("observation-memory identity and values must be non-empty")
 
 
+class ObservationFieldState(StrEnum):
+    """Explicit temporal meaning of one observed field contribution."""
+
+    VALUE = "VALUE"
+    MEASURED_ABSENCE = "MEASURED_ABSENCE"
+    WITHDRAWN = "WITHDRAWN"
+    CONFLICTING = "CONFLICTING"
+    UNKNOWN = "UNKNOWN"
+
+
 @dataclass(frozen=True, slots=True)
 class ObservedField:
     """One normalized state contribution carried by an observation."""
 
     name: str
     value: str
+    state: ObservationFieldState = ObservationFieldState.VALUE
+    competing_values: tuple[str, ...] = ()
 
     def __post_init__(self) -> None:
         _required(self.name, self.value)
+        if self.state is ObservationFieldState.CONFLICTING:
+            if len(set(self.competing_values)) < 2 or any(
+                not value.strip() for value in self.competing_values
+            ):
+                raise ValueError("CONFLICTING field requires at least two competing values")
+        elif self.competing_values:
+            raise ValueError("only CONFLICTING fields can carry competing values")
 
 
 class ObservationRightsStatus(StrEnum):
@@ -130,11 +149,15 @@ class StateField:
     observation_id: str
     source_ref: str
     observed_at: datetime
+    state: ObservationFieldState = ObservationFieldState.VALUE
+    competing_values: tuple[str, ...] = ()
 
     def __post_init__(self) -> None:
         _required(self.name, self.value, self.observation_id, self.source_ref)
         if self.observed_at.tzinfo is None:
             raise ValueError("state field time must be timezone-aware")
+        if self.state is ObservationFieldState.CONFLICTING and len(set(self.competing_values)) < 2:
+            raise ValueError("CONFLICTING state requires competing values")
 
 
 @dataclass(frozen=True, slots=True)
@@ -237,12 +260,34 @@ class ObservationMemory(Protocol):
         """Return the complete governed history for one subject."""
 
 
+class TemporalFieldChangeKind(StrEnum):
+    INITIALIZED = "INITIALIZED"
+    VALUE_CHANGED = "VALUE_CHANGED"
+    REFRESHED = "REFRESHED"
+    MEASURED_ABSENCE = "MEASURED_ABSENCE"
+    WITHDRAWN = "WITHDRAWN"
+    CONFLICTING = "CONFLICTING"
+    UNKNOWN = "UNKNOWN"
+
+
+@dataclass(frozen=True, slots=True)
+class TemporalFieldChange:
+    field_name: str
+    kind: TemporalFieldChangeKind
+    previous: StateField | None
+    current: StateField
+
+    def __post_init__(self) -> None:
+        _required(self.field_name)
+
+
 @dataclass(frozen=True, slots=True)
 class ObservationMutation:
     inserted: bool
     previous_state: ObservationState
     current_state: ObservationState
     change: StateChange | None
+    typed_changes: tuple[TemporalFieldChange, ...] = ()
 
 
 def _state_fingerprint(subject_id: str, fields: tuple[StateField, ...]) -> str:
@@ -255,6 +300,8 @@ def _state_fingerprint(subject_id: str, fields: tuple[StateField, ...]) -> str:
                 "observation_id": field.observation_id,
                 "source_ref": field.source_ref,
                 "observed_at": field.observed_at.astimezone(UTC).isoformat(),
+                "state": field.state.value,
+                "competing_values": list(field.competing_values),
             }
             for field in fields
         ],
@@ -266,24 +313,39 @@ def _state_fingerprint(subject_id: str, fields: tuple[StateField, ...]) -> str:
 def compile_observation_state(
     subject_id: str,
     observations: tuple[GovernedObservation, ...],
+    *,
+    as_of: datetime | None = None,
 ) -> ObservationState:
     """Select the latest contribution per field without discarding history."""
 
     _required(subject_id)
+    if as_of is not None and (as_of.tzinfo is None or as_of.utcoffset() is None):
+        raise ValueError("as_of must be timezone-aware")
+    cutoff = None if as_of is None else as_of.astimezone(UTC)
     latest: dict[str, StateField] = {}
     for observation in sorted(
         observations,
-        key=lambda item: (item.record.observed_at, item.record.observation_id),
+        key=lambda item: (
+            item.record.observed_at.astimezone(UTC),
+            item.record.observation_id,
+        ),
     ):
         if observation.record.subject_id != subject_id:
             raise ValueError("state compilation cannot mix observation subjects")
+        observed_at = observation.record.observed_at
+        if observed_at.tzinfo is None or observed_at.utcoffset() is None:
+            raise ValueError("observation time must be timezone-aware")
+        if cutoff is not None and observed_at.astimezone(UTC) > cutoff:
+            continue
         for field in observation.fields:
             latest[field.name] = StateField(
                 name=field.name,
                 value=field.value,
                 observation_id=observation.record.observation_id,
                 source_ref=observation.record.source_ref,
-                observed_at=observation.record.observed_at,
+                observed_at=observed_at,
+                state=field.state,
+                competing_values=tuple(sorted(field.competing_values)),
             )
 
     selected = tuple(latest[name] for name in sorted(latest))
@@ -291,6 +353,32 @@ def compile_observation_state(
         subject_id=subject_id,
         fields=selected,
         fingerprint=_state_fingerprint(subject_id, selected),
+    )
+
+
+def _typed_field_change(
+    previous: StateField | None,
+    current: StateField,
+) -> TemporalFieldChange:
+    if previous is None:
+        kind = TemporalFieldChangeKind.INITIALIZED
+    elif current.state is ObservationFieldState.MEASURED_ABSENCE:
+        kind = TemporalFieldChangeKind.MEASURED_ABSENCE
+    elif current.state is ObservationFieldState.WITHDRAWN:
+        kind = TemporalFieldChangeKind.WITHDRAWN
+    elif current.state is ObservationFieldState.CONFLICTING:
+        kind = TemporalFieldChangeKind.CONFLICTING
+    elif current.state is ObservationFieldState.UNKNOWN:
+        kind = TemporalFieldChangeKind.UNKNOWN
+    elif previous.value != current.value or previous.state is not current.state:
+        kind = TemporalFieldChangeKind.VALUE_CHANGED
+    else:
+        kind = TemporalFieldChangeKind.REFRESHED
+    return TemporalFieldChange(
+        field_name=current.name,
+        kind=kind,
+        previous=previous,
+        current=current,
     )
 
 
@@ -306,7 +394,7 @@ def ingest_observation(
     current = compile_observation_state(subject_id, memory.for_subject(subject_id))
 
     if not inserted or previous.fingerprint == current.fingerprint:
-        return ObservationMutation(inserted, previous, current, None)
+        return ObservationMutation(inserted, previous, current, None, ())
 
     previous_by_name = {field.name: field for field in previous.fields}
     current_by_name = {field.name: field for field in current.fields}
@@ -316,8 +404,13 @@ def ingest_observation(
         if previous_by_name.get(name) != current_by_name.get(name)
     )
     if not changed:
-        return ObservationMutation(inserted, previous, current, None)
+        return ObservationMutation(inserted, previous, current, None, ())
 
+    typed_changes = tuple(
+        _typed_field_change(previous_by_name.get(name), current_by_name[name])
+        for name in sorted(changed)
+        if name in current_by_name
+    )
     return ObservationMutation(
         inserted=True,
         previous_state=previous,
@@ -328,4 +421,5 @@ def ingest_observation(
             previous_fingerprint=previous.fingerprint,
             current_fingerprint=current.fingerprint,
         ),
+        typed_changes=typed_changes,
     )
