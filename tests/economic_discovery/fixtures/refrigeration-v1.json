@@ -1,0 +1,52 @@
+{
+  "corpus_id": "axignal-synthetic-refrigeration:v1",
+  "rights_basis_ref": "rights:axignal-authored-synthetic:v1",
+  "rights": "Wholly synthetic, authored for AXIGNAL deterministic tests. All entities are fictional. Reserved .example URLs identify source fixtures and are never fetched. No third-party text or private data.",
+  "observed_at": "2026-10-01T12:00:00+00:00",
+  "as_of": "2026-10-05T12:00:00+00:00",
+  "documents": [
+    {
+      "id": "arbor-capabilities",
+      "subject_id": "org:arbor-cooling",
+      "subject_mention": "Arbor Cooling",
+      "capability_predicate_mention": "designs and installs",
+      "source_ref": "https://arbor-cooling.example/capabilities",
+      "source_type": "OFFICIAL_WEB",
+      "text": "Arbor Cooling designs and installs industrial refrigeration for cold-storage warehouses. As a supplier, Arbor Cooling offers installation services to warehouse operators. As a customer, Arbor Cooling purchases electronic refrigeration controls. Capability delivery scope: region:atlantic. Delivery mode: onsite. Refrigerant qualification: refrigerant-handling:v1.",
+      "fields": {
+        "capability": "designs and installs industrial refrigeration for cold-storage warehouses",
+        "supply_activity": "offers installation services to warehouse operators",
+        "purchase_activity": "purchases electronic refrigeration controls",
+        "reach_region": "region:atlantic",
+        "delivery_mode": "onsite",
+        "certification": "refrigerant-handling:v1"
+      }
+    },
+    {
+      "id": "harbor-project",
+      "subject_id": "org:harbor-storage",
+      "source_ref": "https://harbor-storage.example/announcements/cold-store",
+      "source_type": "CORPORATE_DOCUMENT",
+      "text": "Harbor Storage announces a planned cold-storage warehouse expansion. The project requires industrial refrigeration design and installation. Project region: region:atlantic. Required delivery mode: onsite. Qualification requirement: refrigerant-handling:v1. The public project attention window ends at 2026-11-01T00:00:00+00:00. The announcement names no installation supplier, purchase contract, budget or incumbent.",
+      "fields": {
+        "event": "announces a planned cold-storage warehouse expansion",
+        "required_capability": "industrial refrigeration design and installation",
+        "region": "region:atlantic",
+        "delivery_mode": "onsite",
+        "required_certification": "refrigerant-handling:v1",
+        "action_until": "2026-11-01T00:00:00+00:00"
+      }
+    },
+    {
+      "id": "arbor-dispute",
+      "subject_id": "org:arbor-cooling",
+      "source_ref": "https://arbor-cooling.example/notices/installation-dispute",
+      "source_type": "OFFICIAL_WEB",
+      "text": "Arbor Cooling states that industrial refrigeration installation is suspended pending review. This conflicts with the capability statement over the same current scope; no resolution is available.",
+      "fields": {
+        "capability_dispute": "industrial refrigeration installation is suspended pending review"
+      },
+      "contradicts_fields": ["capability"]
+    }
+  ]
+}

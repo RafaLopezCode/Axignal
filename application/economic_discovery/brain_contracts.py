@@ -121,20 +121,29 @@ class DimensionEvaluation:
     score: float | None = None
     confidence: float | None = None
     reason: str | None = None
+    selected_option: str | None = None
+    replay_reference: str | None = None
 
     def __post_init__(self) -> None:
         _required(self.dimension_id, self.contract_fingerprint)
         if self.disposition is not DimensionDisposition.ANSWERABLE:
             if (
                 self.evaluator
+                or self.evaluator_version is not None
                 or self.distribution
                 or self.score is not None
                 or self.confidence is not None
+                or self.selected_option is not None
+                or self.replay_reference is not None
             ):
                 raise ValueError("non-answerable dimensions cannot fabricate evaluator output")
             _required(self.reason or "")
             return
         _required(self.evaluator or "", self.evaluator_version or "")
+        if self.selected_option is not None:
+            _required(self.selected_option)
+        if self.replay_reference is not None:
+            _required(self.replay_reference)
         labels = [label for label, _ in self.distribution]
         if len(labels) != len(set(labels)):
             raise ValueError("distribution labels must be unique")
