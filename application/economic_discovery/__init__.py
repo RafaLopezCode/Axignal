@@ -17,6 +17,15 @@ from application.economic_discovery.brain_contracts import (
     XignalPresentation,
     affected_dimensions,
 )
+from application.economic_discovery.continuous_observation import (
+    ObservationWorkLease,
+    ObservationWorkState,
+    SharedObservationIntent,
+    SharedObservationWork,
+    SharedObservationWorkMemory,
+    intents_from_prime_plan,
+    schedule_prime_research,
+)
 from application.economic_discovery.contracts import (
     CandidateLineageEvent,
     ChoiceOption,
@@ -111,6 +120,10 @@ from application.economic_discovery.observation_reuse import (
     evaluate_observation_reuse,
     evaluate_observation_reuse_metadata,
     select_reusable_observations,
+)
+from application.economic_discovery.opportunity import (
+    EconomicOpportunity,
+    derive_economic_opportunity,
 )
 from application.economic_discovery.pilot_validation import (
     FR27_AGENCY_CHANGE_PILOT,
@@ -224,6 +237,7 @@ __all__ = [
     "DistributionAvailability",
     "DistributionCapability",
     "EconomicAssociationSnapshot",
+    "EconomicOpportunity",
     "EconomicsPhase",
     "EpistemicProfile",
     "EvaluatorCapabilityProfile",
@@ -270,6 +284,8 @@ __all__ = [
     "ObservationRightsStatus",
     "ObservationState",
     "ObservationTask",
+    "ObservationWorkLease",
+    "ObservationWorkState",
     "ObservedField",
     "ParticipationState",
     "PhaseEconomics",
@@ -309,6 +325,9 @@ __all__ = [
     "ReuseTargetScope",
     "ScopeEconomics",
     "SemanticPrimitive",
+    "SharedObservationIntent",
+    "SharedObservationWork",
+    "SharedObservationWorkMemory",
     "StateChange",
     "StateField",
     "StructuredEvaluationRequest",
@@ -338,6 +357,7 @@ __all__ = [
     "build_work_plan",
     "compile_observation_state",
     "decide_research_value",
+    "derive_economic_opportunity",
     "evaluate_currentness",
     "evaluate_effective_currentness",
     "evaluate_execution_budget",
@@ -346,6 +366,7 @@ __all__ = [
     "evaluate_structured",
     "execution_stop_learning_event",
     "ingest_observation",
+    "intents_from_prime_plan",
     "plan_dimension_work",
     "plan_market_observation",
     "plan_subject_reobservations",
@@ -353,6 +374,7 @@ __all__ = [
     "reobservation_requirement",
     "require_explainable_basis",
     "route_retrieval",
+    "schedule_prime_research",
     "select_reusable_observations",
     "summarize_cohort_unit_economics",
     "summarize_learning",
