@@ -426,7 +426,17 @@ def test_fresh_reobservation_restores_current_projection_without_freshening_old_
     assert len(observations) == 2
     assert observations[0].record.observed_at == NOW
     assert observations[1].record.observed_at == future_at
-    assert observations[0].reuse_authority.currentness.value == "CURRENT"
+    first_authority = observations[0].reuse_authority
+    assert first_authority.currentness.value == "CURRENT"
+    assert first_authority.authority_id == "fr30-official-homepage"
+    assert first_authority.authority_version == "1"
+    assert first_authority.scope.value == "GLOBAL_PUBLIC"
+    assert first_authority.reuse_reason
+    assert first_authority.retention_policy_ref == "fr30-public-evidence-retention@1"
+    assert first_authority.robots_policy_ref == "robots:single-public-root-document:v1"
+    assert first_authority.rate_policy_ref == "fr30-public-root-rate@1"
+    assert first_authority.provenance_ref is not None
+    assert first_authority.provenance_ref.startswith("source-registry:fr30-official-homepage@1:")
     assert first["nodes"][0]["currentness"] == "CURRENT"
 
 

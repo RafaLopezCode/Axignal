@@ -44,7 +44,6 @@ from application.economic_discovery.learning_memory import (
 )
 from application.economic_discovery.observation_memory import (
     ObservationAccessStatus,
-    ObservationReuseAuthority,
     ObservationReuseScope,
     ObservationRightsStatus,
 )
@@ -59,13 +58,20 @@ from application.economic_discovery.prime_execution import (
     PrimeMechanismResult,
     execute_prime_source_slice,
 )
+from application.economic_discovery.source_registry import (
+    RobotsDecision,
+    RobotsRequirement,
+    SourceRatePolicy,
+    SourceRegistryEntry,
+    SourceRetentionPolicy,
+    StaticSourceRegistry,
+)
 from application.economic_discovery.temporal_currentness import (
     TemporalCurrentnessPolicy,
     evaluate_currentness,
 )
 from application.semantic_extraction import SemanticCandidateSet
 from application.source_acquisition import (
-    DispatchDisposition,
     SourceDispatchPolicy,
     SourceObservation,
     SourceRequest,
@@ -496,29 +502,67 @@ class FirstProofService:
         )
 
         host = urlsplit(target_uri).hostname or ""
-        source_policy = SourceDispatchPolicy(
-            policy_id="source:fr30-official-web:v1",
-            disposition=DispatchDisposition.ALLOW,
-            decision_basis="Operator-authorized canonical organization public homepage",
-            targets=(
-                SourceTargetRule(host, "/", ("https",)),
-                SourceTargetRule(f"www.{host}", "/", ("https",)),
-            ),
-            timeout_ms=8_000,
-            max_redirects=3,
+        transport = PinnedHttpTransport()
+        registry = StaticSourceRegistry(
+            (
+                SourceRegistryEntry(
+                    source_id="fr30-official-homepage",
+                    version="1",
+                    source_type="OFFICIAL_WEB",
+                    instrument_ref=transport.instrument_ref,
+                    decision_basis=(
+                        "Operator-authorized canonical organization public homepage; "
+                        "single root document only, no crawl/subresource authority"
+                    ),
+                    targets=(
+                        SourceTargetRule(host, "/", ("https",)),
+                        SourceTargetRule(f"www.{host}", "/", ("https",)),
+                    ),
+                    allowed_purposes=(ReusePurpose.CURRENT_STATE,),
+                    rights_status=ObservationRightsStatus.PERMITTED,
+                    access_status=ObservationAccessStatus.ACCESSIBLE,
+                    reuse_scope=ObservationReuseScope.GLOBAL_PUBLIC,
+                    reuse_reason=(
+                        "registered public homepage observation may be reused for current "
+                        "state while provenance/currentness remain valid"
+                    ),
+                    temporal_policy=FIRST_PROOF_TEMPORAL_POLICY,
+                    retention_policy=SourceRetentionPolicy(
+                        policy_id="fr30-public-evidence-retention",
+                        version="1",
+                        raw_retention_days=90,
+                        metadata_retention_days=365,
+                    ),
+                    rate_policy=SourceRatePolicy(
+                        policy_id="fr30-public-root-rate",
+                        version="1",
+                        max_requests=6,
+                        window_seconds=60,
+                    ),
+                    robots_requirement=RobotsRequirement.NOT_REQUIRED_SINGLE_DOCUMENT,
+                    robots_decision=RobotsDecision.NOT_APPLICABLE,
+                    robots_policy_ref="robots:single-public-root-document:v1",
+                    currentness=Currentness.CURRENT,
+                    timeout_ms=8_000,
+                    max_redirects=3,
+                ),
+            )
         )
-        request = SourceRequest(
+        authorization = registry.authorize(
+            source_id="fr30-official-homepage",
             request_id=f"request:fr30:{sequence}:official-homepage",
             subject_id=organization_id,
             observation_slot="website",
             target_uri=target_uri,
             source_type="OFFICIAL_WEB",
-            policy_id=source_policy.policy_id,
-            policy_fingerprint=source_policy.fingerprint,
+            purpose=ReusePurpose.CURRENT_STATE,
+            instrument_ref=transport.instrument_ref,
         )
+        source_policy = authorization.dispatch_policy
+        request = authorization.request
         sensor = HttpSourceSensor(
             policy_gate=PublicSourcePolicyGate(),
-            transport=PinnedHttpTransport(),
+            transport=transport,
             artifacts=self.artifacts,
         )
         source_acquirer = _RecordingSourceAcquirer(sensor)
@@ -555,16 +599,8 @@ class FirstProofService:
                 state=ExecutionBudgetState(amount_microunits=0, currency="EUR"),
             ),
             ports=PrimeExecutionPorts(executor, executor, executor),
-            temporal_currentness_policy=FIRST_PROOF_TEMPORAL_POLICY,
-            ingested_observation_reuse_authority=ObservationReuseAuthority(
-                rights_status=ObservationRightsStatus.PERMITTED,
-                access_status=ObservationAccessStatus.ACCESSIBLE,
-                scope=ObservationReuseScope.GLOBAL_PUBLIC,
-                provenance_ref=f"source-policy:{source_policy.fingerprint}",
-                currentness=Currentness.CURRENT,
-                applicable_subject_ids=(str(organization_id),),
-                applicable_purposes=(ReusePurpose.CURRENT_STATE.value,),
-            ),
+            temporal_currentness_policy=authorization.temporal_policy,
+            ingested_observation_reuse_authority=authorization.reuse_authority,
         )
         observation = source_acquirer.require_observation()
         projection_as_of = max(now, observation.retrieved_at)

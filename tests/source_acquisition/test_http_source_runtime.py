@@ -5,6 +5,7 @@ import json
 import socket
 import threading
 import time
+from dataclasses import replace
 from datetime import UTC, datetime
 from pathlib import Path
 
@@ -64,6 +65,7 @@ def _request(policy: SourceDispatchPolicy) -> SourceRequest:
         source_type="OFFICIAL_WEB",
         policy_id=policy.policy_id,
         policy_fingerprint=policy.fingerprint,
+        policy_version=policy.policy_version,
     )
 
 
@@ -119,6 +121,45 @@ def test_policy_rejects_target_expansion_before_dispatch(
 
     with pytest.raises(SourcePolicyRejected, match=reason):
         PublicSourcePolicyGate().resolve(uri, _policy())
+
+
+def test_sensor_rejects_policy_version_mismatch_before_dns(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    policy = SourceDispatchPolicy(
+        policy_id="policy:web-root:v1",
+        policy_version="2",
+        disposition=DispatchDisposition.ALLOW,
+        decision_basis="versioned public corporate site policy",
+        targets=(SourceTargetRule("example.test", "/docs", ("https",)),),
+        timeout_ms=1_500,
+        max_redirects=2,
+    )
+    request = SourceRequest(
+        request_id="request:version-mismatch",
+        subject_id="org:acme",
+        observation_slot="website",
+        target_uri="https://example.test/docs/company",
+        source_type="OFFICIAL_WEB",
+        policy_id=policy.policy_id,
+        policy_fingerprint=policy.fingerprint,
+        policy_version="1",
+    )
+
+    def forbidden_dns(*_args: object, **_kwargs: object) -> list[tuple[object, ...]]:
+        raise AssertionError("policy version mismatch must fail before DNS")
+
+    monkeypatch.setattr(socket, "getaddrinfo", forbidden_dns)
+    sensor = HttpSourceSensor(
+        policy_gate=PublicSourcePolicyGate(),
+        transport=PinnedHttpTransport(),
+        artifacts=ContentAddressedArtifactStore(tmp_path / "artifacts"),
+        clock=lambda: NOW,
+    )
+
+    with pytest.raises(SourcePolicyRejected, match="request_policy_version_mismatch"):
+        sensor.observe(request, policy)
 
 
 def test_policy_rejects_nonpublic_dns_answer(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -306,9 +347,11 @@ def test_sensor_preserves_raw_body_policy_and_instrument(
         store.read(observation.body_artifact_ref) == b"<html><h1>ACME industrial pumps</h1></html>"
     )
     assert observation.policy_fingerprint == policy.fingerprint
+    assert observation.policy_version == policy.policy_version
     assert observation.instrument_ref == "test-pinned-http/1"
     assert observation.peer_ips == ("8.8.8.8",)
     assert envelope["policy"]["policy_fingerprint"] == policy.fingerprint
+    assert envelope["policy"]["policy_version"] == policy.policy_version
     assert envelope["instrument_ref"] == "test-pinned-http/1"
 
 
@@ -388,6 +431,34 @@ def test_exact_source_replay_is_idempotent(
     assert replay.mutation.inserted is False
     assert replay.mutation.change is None
     assert replay.work_plan is None
+
+
+def test_ingestion_rejects_observation_policy_version_mismatch_without_persisting(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    monkeypatch.setattr(socket, "getaddrinfo", _public_dns)
+    policy = _policy()
+    request = _request(policy)
+    memory = SqliteObservationMemory(tmp_path / "observation-memory.sqlite3")
+    sensor = HttpSourceSensor(
+        policy_gate=PublicSourcePolicyGate(),
+        transport=_StubTransport(),
+        artifacts=ContentAddressedArtifactStore(tmp_path / "artifacts"),
+        clock=lambda: NOW,
+    )
+    observation = sensor.observe(request, policy)
+    mismatched = replace(observation, policy_version="other-version")
+
+    with pytest.raises(ValueError, match="policy version mismatch"):
+        ingest_source_observation(
+            memory=memory,
+            request=request,
+            observation=mismatched,
+            contracts=(),
+        )
+
+    assert memory.for_subject("org:acme") == ()
 
 
 class _RedirectEscapeTransport(PinnedHttpTransport):

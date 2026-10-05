@@ -56,6 +56,12 @@ class ObservationReuseAuthority:
     currentness: Currentness = Currentness.UNKNOWN
     applicable_subject_ids: tuple[str, ...] = ()
     applicable_purposes: tuple[str, ...] = ()
+    authority_id: str | None = None
+    authority_version: str | None = None
+    reuse_reason: str | None = None
+    retention_policy_ref: str | None = None
+    robots_policy_ref: str | None = None
+    rate_policy_ref: str | None = None
 
     def __post_init__(self) -> None:
         if self.scope is ObservationReuseScope.TENANT_PRIVATE:
@@ -65,6 +71,18 @@ class ObservationReuseAuthority:
             raise ValueError("non-private observation reuse scope cannot carry owner")
         if self.provenance_ref is not None and not self.provenance_ref.strip():
             raise ValueError("observation reuse provenance ref cannot be empty")
+        if (self.authority_id is None) != (self.authority_version is None):
+            raise ValueError("observation reuse authority id/version must coexist")
+        for value in (
+            self.authority_id,
+            self.authority_version,
+            self.reuse_reason,
+            self.retention_policy_ref,
+            self.robots_policy_ref,
+            self.rate_policy_ref,
+        ):
+            if value is not None and not value.strip():
+                raise ValueError("observation reuse authority metadata cannot be empty")
         if any(not value.strip() for value in self.applicable_subject_ids):
             raise ValueError("observation applicability subjects must be non-empty")
         if any(not value.strip() for value in self.applicable_purposes):
@@ -153,6 +171,12 @@ def observation_reuse_authority_payload(
         "currentness": authority.currentness.value,
         "applicable_subject_ids": list(authority.applicable_subject_ids),
         "applicable_purposes": list(authority.applicable_purposes),
+        "authority_id": authority.authority_id,
+        "authority_version": authority.authority_version,
+        "reuse_reason": authority.reuse_reason,
+        "retention_policy_ref": authority.retention_policy_ref,
+        "robots_policy_ref": authority.robots_policy_ref,
+        "rate_policy_ref": authority.rate_policy_ref,
     }
 
 
@@ -176,6 +200,26 @@ def observation_reuse_authority_from_payload(
         currentness=Currentness(str(payload["currentness"])),
         applicable_subject_ids=tuple(str(item) for item in subjects),
         applicable_purposes=tuple(str(item) for item in purposes),
+        authority_id=(
+            None if payload.get("authority_id") is None else str(payload["authority_id"])
+        ),
+        authority_version=(
+            None if payload.get("authority_version") is None else str(payload["authority_version"])
+        ),
+        reuse_reason=(
+            None if payload.get("reuse_reason") is None else str(payload["reuse_reason"])
+        ),
+        retention_policy_ref=(
+            None
+            if payload.get("retention_policy_ref") is None
+            else str(payload["retention_policy_ref"])
+        ),
+        robots_policy_ref=(
+            None if payload.get("robots_policy_ref") is None else str(payload["robots_policy_ref"])
+        ),
+        rate_policy_ref=(
+            None if payload.get("rate_policy_ref") is None else str(payload["rate_policy_ref"])
+        ),
     )
 
 

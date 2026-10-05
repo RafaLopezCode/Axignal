@@ -49,6 +49,8 @@ def to_governed_observation(
         raise ValueError("source observation/request policy mismatch")
     if observation.policy_fingerprint != request.policy_fingerprint:
         raise ValueError("source observation/request policy fingerprint mismatch")
+    if observation.policy_version != request.policy_version:
+        raise ValueError("source observation/request policy version mismatch")
 
     prefix = f"source.{request.observation_slot}"
     fields: list[ObservedField] = [

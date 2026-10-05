@@ -349,6 +349,7 @@ def execute_prime_source_slice(
                 )
     if (
         request.policy_id != source_policy.policy_id
+        or request.policy_version != source_policy.policy_version
         or request.policy_fingerprint != source_policy.fingerprint
     ):
         raise ValueError("Prime execution source policy mismatch")
@@ -413,7 +414,7 @@ def execute_prime_source_slice(
                 xeed_id=xeed_id,
                 activity_ref=request.request_id,
                 policy_id=request.policy_id,
-                policy_version=request.policy_fingerprint,
+                policy_version=request.policy_version,
                 code_sha=code_sha,
                 mechanism=LearningMechanism.DETERMINISTIC,
                 input_fingerprint=request.policy_fingerprint,
@@ -456,7 +457,7 @@ def execute_prime_source_slice(
         xeed_id=xeed_id,
         activity_ref=observation.raw_observation_ref,
         policy_id=request.policy_id,
-        policy_version=request.policy_fingerprint,
+        policy_version=request.policy_version,
         code_sha=code_sha,
         mechanism=LearningMechanism.DETERMINISTIC,
         input_fingerprint=request.policy_fingerprint,
@@ -502,7 +503,7 @@ def execute_prime_source_slice(
                 xeed_id=xeed_id,
                 activity_ref=source_observation_id(request, observation),
                 policy_id=request.policy_id,
-                policy_version=request.policy_fingerprint,
+                policy_version=request.policy_version,
                 code_sha=code_sha,
                 mechanism=LearningMechanism.DETERMINISTIC,
                 input_fingerprint=observation.observation_fingerprint,
@@ -529,7 +530,7 @@ def execute_prime_source_slice(
         xeed_id=xeed_id,
         activity_ref=source_observation_id(request, observation),
         policy_id=request.policy_id,
-        policy_version=request.policy_fingerprint,
+        policy_version=request.policy_version,
         code_sha=code_sha,
         mechanism=LearningMechanism.DETERMINISTIC,
         input_fingerprint=observation.observation_fingerprint,

@@ -51,9 +51,10 @@ class SourceDispatchPolicy:
     max_response_bytes: int = 2_000_000
     timeout_ms: int = 5_000
     max_redirects: int = 3
+    policy_version: str = "1"
 
     def __post_init__(self) -> None:
-        _required(self.policy_id, self.decision_basis)
+        _required(self.policy_id, self.policy_version, self.decision_basis)
         if self.disposition is DispatchDisposition.ALLOW and not self.targets:
             raise ValueError("allowed source policy requires at least one bounded target")
         if self.max_response_bytes < 1 or self.max_response_bytes > 20_000_000:
@@ -67,6 +68,7 @@ class SourceDispatchPolicy:
     def fingerprint(self) -> str:
         payload = {
             "policy_id": self.policy_id,
+            "policy_version": self.policy_version,
             "disposition": self.disposition.value,
             "decision_basis": self.decision_basis,
             "targets": [
@@ -94,6 +96,7 @@ class SourceRequest:
     source_type: str
     policy_id: str
     policy_fingerprint: str
+    policy_version: str = "1"
 
     def __post_init__(self) -> None:
         _required(
@@ -104,6 +107,7 @@ class SourceRequest:
             self.source_type,
             self.policy_id,
             self.policy_fingerprint,
+            self.policy_version,
         )
         if not _SLOT.fullmatch(self.observation_slot):
             raise ValueError("observation slot must be a stable lowercase identifier")
@@ -131,6 +135,7 @@ class SourceObservation:
     redirect_chain: tuple[str, ...]
     peer_ips: tuple[str, ...]
     failure_state: str | None
+    policy_version: str = "1"
 
     def __post_init__(self) -> None:
         _required(
@@ -144,6 +149,7 @@ class SourceObservation:
             self.instrument_ref,
             self.policy_id,
             self.policy_fingerprint,
+            self.policy_version,
         )
         if self.retrieved_at.tzinfo is None:
             raise ValueError("source retrieval time must be timezone-aware")

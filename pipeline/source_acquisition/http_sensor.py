@@ -51,6 +51,8 @@ class HttpSourceSensor:
             raise SourcePolicyRejected("request_policy_id_mismatch")
         if request.policy_fingerprint != policy.fingerprint:
             raise SourcePolicyRejected("request_policy_fingerprint_mismatch")
+        if request.policy_version != policy.policy_version:
+            raise SourcePolicyRejected("request_policy_version_mismatch")
 
         requested_uri = request.target_uri
         current_uri = requested_uri
@@ -142,6 +144,7 @@ class HttpSourceSensor:
             },
             "policy": {
                 "policy_id": policy.policy_id,
+                "policy_version": policy.policy_version,
                 "policy_fingerprint": policy.fingerprint,
                 "decision_basis": policy.decision_basis,
                 "disposition": policy.disposition.value,
@@ -187,6 +190,7 @@ class HttpSourceSensor:
             instrument_ref=self._transport.instrument_ref,
             policy_id=policy.policy_id,
             policy_fingerprint=policy.fingerprint,
+            policy_version=policy.policy_version,
             redirect_chain=tuple(redirect_chain),
             peer_ips=tuple(peer_ips),
             failure_state=failure_state,
