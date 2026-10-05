@@ -7,6 +7,6 @@
 - [x] Add SQLite backup/restore proof and local measurements.
 - [x] Add frontend RuntimeProjection/first-map economic Xignal contract test.
 - [x] Run frontend test/typecheck/build and repository gates.
-- [ ] Verify controlled browser E2E: Today, AXIGLAND, evidence, reload continuity, mobile.
+- [x] Verify controlled browser E2E: Today, AXIGLAND, evidence, reload continuity, mobile.
 - [ ] Integrate candidate SHA and verify CI.
 - [ ] Deploy exact integrated SHA and verify external production E2E/health only after browser proof.
