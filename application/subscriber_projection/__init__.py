@@ -7,6 +7,10 @@ from application.subscriber_projection.axigland import (
     SubscriberAxiglandProjection,
     project_axigland,
 )
+from application.subscriber_projection.economic_runtime import (
+    attach_economic_output,
+    economic_output_runtime_signal,
+)
 from application.subscriber_projection.evidence_narrative import (
     EvidenceNarrative,
     EvidenceNarrativeKind,
@@ -86,7 +90,9 @@ __all__ = [
     "TodayProjection",
     "XignalExplanationStep",
     "XignalExplanationTrail",
+    "attach_economic_output",
     "build_evidence_narrative",
+    "economic_output_runtime_signal",
     "project_axigland",
     "project_explainable_xignal",
     "project_today",
