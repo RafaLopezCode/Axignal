@@ -7,7 +7,13 @@ from datetime import UTC, datetime
 
 import pytest
 
-from domain.evidence.admission import AdmissionRequest, Evidence, EvidenceAdmission, SourceAuthority
+from domain.evidence.admission import (
+    AdmissionRequest,
+    Evidence,
+    EvidenceAdmission,
+    GroundedClaim,
+    SourceAuthority,
+)
 from domain.evidence.epistemics import EpistemicState
 from domain.faxt.model import FAXT
 from domain.identity import OrganizationId
@@ -55,6 +61,16 @@ def test_organization_profile_materializes_from_observed_faxt() -> None:
         extracted_claim="ACME manufactures industrial pumps.",
         observed_at=now,
         authority=SourceAuthority.OFFICIAL_WEB,
+        observation_subject_id="org-acme",
+        grounded_claim=GroundedClaim(
+            subject_id="org-acme",
+            predicate="MANUFACTURES",
+            object_or_value="industrial pumps",
+            subject_mention="ACME",
+            predicate_mention="manufactures",
+            object_mention="industrial pumps",
+            supporting_excerpt="ACME manufactures industrial pumps.",
+        ),
     )
     request = AdmissionRequest(
         evidence=evidence,
@@ -91,6 +107,16 @@ def test_organization_profile_rejects_inferred_faxt_promotion() -> None:
         extracted_claim="ACME manufactures industrial pumps.",
         observed_at=now,
         authority=SourceAuthority.OFFICIAL_WEB,
+        observation_subject_id="org-acme",
+        grounded_claim=GroundedClaim(
+            subject_id="org-acme",
+            predicate="MANUFACTURES",
+            object_or_value="industrial pumps",
+            subject_mention="ACME",
+            predicate_mention="manufactures",
+            object_mention="industrial pumps",
+            supporting_excerpt="ACME manufactures industrial pumps.",
+        ),
     )
     request = AdmissionRequest(
         evidence=evidence,

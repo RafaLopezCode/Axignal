@@ -23,6 +23,7 @@ __all__ = [
     "EvidenceAdmission",
     "EvidenceAdmissionError",
     "EvidenceAdmissionRequired",
+    "GroundedClaim",
     "SourceAuthority",
 ]
 
@@ -124,6 +125,34 @@ def _predicate_policy(
 
 
 @dataclass(frozen=True)
+class GroundedClaim:
+    """Versioned structured proposition grounded in one exact observed claim."""
+
+    subject_id: str
+    predicate: str
+    object_or_value: str
+    subject_mention: str
+    predicate_mention: str
+    object_mention: str
+    supporting_excerpt: str
+    grounding_version: str = "grounded-claim:v1"
+
+    def __post_init__(self) -> None:
+        for value, name in (
+            (self.subject_id, "subject_id"),
+            (self.predicate, "predicate"),
+            (self.object_or_value, "object_or_value"),
+            (self.subject_mention, "subject_mention"),
+            (self.predicate_mention, "predicate_mention"),
+            (self.object_mention, "object_mention"),
+            (self.supporting_excerpt, "supporting_excerpt"),
+            (self.grounding_version, "grounding_version"),
+        ):
+            if not isinstance(value, str) or not value.strip():
+                raise EvidenceAdmissionError(f"grounded claim requires {name}")
+
+
+@dataclass(frozen=True)
 class Evidence:
     """A public, observable source observation (MASTER §36, Evidence)."""
 
@@ -134,6 +163,8 @@ class Evidence:
     extracted_claim: str
     observed_at: datetime
     authority: SourceAuthority
+    observation_subject_id: str | None = None
+    grounded_claim: GroundedClaim | None = None
 
 
 @dataclass(frozen=True)
@@ -201,6 +232,7 @@ def _evidence_payload(evidence: Evidence) -> dict[str, str]:
     authority = evidence.authority
     if not isinstance(authority, SourceAuthority):
         raise EvidenceAdmissionError("evidence authority must be a known SourceAuthority")
+    grounded = evidence.grounded_claim
     return {
         "id": evidence.id,
         "source": evidence.source,
@@ -209,6 +241,15 @@ def _evidence_payload(evidence: Evidence) -> dict[str, str]:
         "extracted_claim": evidence.extracted_claim,
         "observed_at": _datetime_text(evidence.observed_at),
         "authority": authority.value,
+        "observation_subject_id": evidence.observation_subject_id or "",
+        "grounded_subject_id": grounded.subject_id if grounded is not None else "",
+        "grounded_predicate": grounded.predicate if grounded is not None else "",
+        "grounded_object_or_value": grounded.object_or_value if grounded is not None else "",
+        "grounded_subject_mention": grounded.subject_mention if grounded is not None else "",
+        "grounded_predicate_mention": grounded.predicate_mention if grounded is not None else "",
+        "grounded_object_mention": grounded.object_mention if grounded is not None else "",
+        "grounded_supporting_excerpt": grounded.supporting_excerpt if grounded is not None else "",
+        "grounding_version": grounded.grounding_version if grounded is not None else "",
     }
 
 
@@ -242,6 +283,42 @@ def _proposition_digest(request: AdmissionRequest) -> str:
             "policy_id": request.policy_id,
         }
     )
+
+
+def _normalized_text(value: str) -> str:
+    return " ".join(value.casefold().split())
+
+
+def _grounding_reason(request: AdmissionRequest) -> str | None:
+    evidence = request.evidence
+    grounded = evidence.grounded_claim
+    if not evidence.observation_subject_id or not evidence.observation_subject_id.strip():
+        return "canonical claim evidence has no observation subject binding"
+    if evidence.observation_subject_id != request.subject_id:
+        return "claim subject does not match observed evidence subject"
+    if grounded is None:
+        return "canonical claim requires structured semantic grounding"
+    if grounded.subject_id != request.subject_id:
+        return "grounded claim subject does not match requested subject"
+    if _normalized_text(grounded.predicate) != _normalized_text(request.predicate):
+        return "grounded claim predicate does not match requested predicate"
+    if grounded.object_or_value != request.object_or_value:
+        return "grounded claim object/value does not match requested object/value"
+    if grounded.supporting_excerpt.strip() != evidence.extracted_claim.strip():
+        return "grounded claim excerpt does not exactly match extracted evidence claim"
+
+    excerpt = _normalized_text(grounded.supporting_excerpt)
+    for mention, name in (
+        (grounded.subject_mention, "subject"),
+        (grounded.predicate_mention, "predicate"),
+        (grounded.object_mention, "object/value"),
+    ):
+        if _normalized_text(mention) not in excerpt:
+            return f"grounded claim {name} mention is not present in supporting excerpt"
+
+    if _normalized_text(grounded.object_or_value) != _normalized_text(grounded.object_mention):
+        return "canonical claim object/value must be literally grounded in supporting excerpt"
+    return None
 
 
 def _canonical_decision(
@@ -337,6 +414,9 @@ class EvidenceAdmission:
                 evidence.id,
                 "source authority is not authorized for this predicate",
             )
+        grounding_reason = _grounding_reason(request)
+        if grounding_reason is not None:
+            return AdmissionDecision(False, evidence.id, grounding_reason)
         effective_request = AdmissionRequest(
             evidence=request.evidence,
             subject_id=request.subject_id,
@@ -380,6 +460,9 @@ class EvidenceAdmission:
             raise EvidenceAdmissionRequired(
                 "canonical FAXT predicate has no admission authority policy"
             )
+        grounding_reason = _grounding_reason(request)
+        if grounding_reason is not None:
+            raise EvidenceAdmissionRequired(grounding_reason)
         allowed_authorities, policy_id = policy
         if request.evidence.authority not in allowed_authorities:
             raise EvidenceAdmissionRequired(

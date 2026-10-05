@@ -13,7 +13,13 @@ from application.xeed_access.organization_reader import (
 )
 from application.xeed_access.reader import AuthorizedXeedReader, TrustedRequestContext
 from application.xeed_knowledge.reader import AuthorizedXeedFaxtCollectionReader
-from domain.evidence.admission import AdmissionRequest, Evidence, EvidenceAdmission, SourceAuthority
+from domain.evidence.admission import (
+    AdmissionRequest,
+    Evidence,
+    EvidenceAdmission,
+    GroundedClaim,
+    SourceAuthority,
+)
 from domain.evidence.epistemics import Currentness, EpistemicState
 from domain.faxt.model import FAXT
 from domain.identity import (
@@ -106,14 +112,25 @@ class Hfx01Demo:
                 if predicate == "MAINTAINS_STANDARD"
                 else SourceAuthority.OFFICIAL_WEB
             )
+            claim = f"{subject_id} {predicate} {value}"
             evidence = Evidence(
                 id=f"evidence-{faxt_id}",
                 source="synthetic://hfx01-test-fixture",
                 source_type="test",
                 reference=f"synthetic://{faxt_id}",
-                extracted_claim=f"Synthetic demo field for {faxt_id}",
+                extracted_claim=claim,
                 observed_at=datetime(2026, 9, 1, tzinfo=UTC),
                 authority=authority,
+                observation_subject_id=subject_id,
+                grounded_claim=GroundedClaim(
+                    subject_id=subject_id,
+                    predicate=predicate,
+                    object_or_value=value,
+                    subject_mention=subject_id,
+                    predicate_mention=predicate,
+                    object_mention=value,
+                    supporting_excerpt=claim,
+                ),
             )
             faxt = FAXT.create(
                 faxt_id=FaxtId(faxt_id),

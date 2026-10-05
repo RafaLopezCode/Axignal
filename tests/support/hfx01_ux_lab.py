@@ -5,7 +5,13 @@ from __future__ import annotations
 from datetime import UTC, datetime
 from typing import Any
 
-from domain.evidence.admission import AdmissionRequest, Evidence, EvidenceAdmission, SourceAuthority
+from domain.evidence.admission import (
+    AdmissionRequest,
+    Evidence,
+    EvidenceAdmission,
+    GroundedClaim,
+    SourceAuthority,
+)
 from domain.evidence.epistemics import Currentness, EpistemicState
 from domain.faxt.model import FAXT
 from domain.identity import FaxtId, XeedId
@@ -82,26 +88,38 @@ def _extra_facts(demo: Hfx01Demo, facts: tuple[tuple[str, str, EpistemicState], 
             if predicate == "SUPPORTS_STANDARD"
             else SourceAuthority.OFFICIAL_WEB
         )
+        subject_id = f"synthetic-opaque-subject-{index:02d}"
+        claim = f"{subject_id} {predicate} {value}"
         evidence = Evidence(
             id=f"lab-evidence-{index:02d}",
             source="synthetic://axignal-ux-laboratory",
             source_type="test",
             reference=f"synthetic://scenario/{index:02d}",
-            extracted_claim=f"Fictional UX fixture item {index:02d}",
+            extracted_claim=claim,
             observed_at=datetime(2026, 9, 1, tzinfo=UTC),
             authority=authority,
+            observation_subject_id=subject_id,
+            grounded_claim=GroundedClaim(
+                subject_id=subject_id,
+                predicate=predicate,
+                object_or_value=value,
+                subject_mention=subject_id,
+                predicate_mention=predicate,
+                object_mention=value,
+                supporting_excerpt=claim,
+            ),
         )
         currentness = (Currentness.CURRENT, Currentness.STALE, Currentness.UNKNOWN)[index % 3]
         faxt = FAXT.create(
             faxt_id=faxt_id,
-            subject_id=f"synthetic-opaque-subject-{index:02d}",
+            subject_id=subject_id,
             predicate=predicate,
             object_or_value=value,
             evidence=evidence,
             decision=EvidenceAdmission.admit_claim(
                 AdmissionRequest(
                     evidence=evidence,
-                    subject_id=f"synthetic-opaque-subject-{index:02d}",
+                    subject_id=subject_id,
                     predicate=predicate,
                     object_or_value=value,
                     claim_proposition=evidence.extracted_claim,

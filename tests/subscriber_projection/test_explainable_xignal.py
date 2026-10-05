@@ -17,7 +17,13 @@ from application.subscriber_projection import (
 from application.xeed_access.organization_reader import AuthorizedXeedOrganizationReader
 from application.xeed_access.reader import AuthorizedXeedReader, TrustedRequestContext
 from domain.evidence import Currentness, EpistemicState
-from domain.evidence.admission import AdmissionRequest, Evidence, EvidenceAdmission, SourceAuthority
+from domain.evidence.admission import (
+    AdmissionRequest,
+    Evidence,
+    EvidenceAdmission,
+    GroundedClaim,
+    SourceAuthority,
+)
 from domain.faxt.model import FAXT
 from domain.identity import OrganizationId, PrincipalId, TenantId, XeedId
 from domain.organizations.model import Organization
@@ -62,6 +68,16 @@ def _evidence() -> Evidence:
         extracted_claim="ACME manufactures industrial pumps.",
         observed_at=NOW,
         authority=SourceAuthority.OFFICIAL_WEB,
+        observation_subject_id="org:acme",
+        grounded_claim=GroundedClaim(
+            subject_id="org:acme",
+            predicate="manufactures",
+            object_or_value="industrial pumps",
+            subject_mention="ACME",
+            predicate_mention="manufactures",
+            object_mention="industrial pumps",
+            supporting_excerpt="ACME manufactures industrial pumps.",
+        ),
     )
 
 

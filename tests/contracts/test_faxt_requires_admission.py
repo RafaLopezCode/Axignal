@@ -13,6 +13,7 @@ from domain.evidence.admission import (
     Evidence,
     EvidenceAdmission,
     EvidenceAdmissionRequired,
+    GroundedClaim,
     SourceAuthority,
 )
 from domain.evidence.epistemics import EpistemicState
@@ -31,6 +32,16 @@ def _evidence(identifier: str = "ev-1") -> Evidence:
         extracted_claim="ACME manufactures industrial pumps.",
         observed_at=NOW,
         authority=SourceAuthority.OFFICIAL_WEB,
+        observation_subject_id="org-acme",
+        grounded_claim=GroundedClaim(
+            subject_id="org-acme",
+            predicate="MANUFACTURES",
+            object_or_value="industrial pumps",
+            subject_mention="ACME",
+            predicate_mention="manufactures",
+            object_mention="industrial pumps",
+            supporting_excerpt="ACME manufactures industrial pumps.",
+        ),
     )
 
 

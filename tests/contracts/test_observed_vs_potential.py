@@ -11,6 +11,7 @@ from domain.evidence.admission import (
     Evidence,
     EvidenceAdmission,
     EvidenceAdmissionRequired,
+    GroundedClaim,
     SourceAuthority,
 )
 from domain.evidence.epistemics import Currentness
@@ -28,7 +29,7 @@ NOW = datetime(2026, 1, 15, tzinfo=UTC)
 def _evidence(
     *,
     identifier: str = "ev-rel",
-    claim: str = "ACME supplies Beta.",
+    claim: str = "ACME supplies org-beta.",
 ) -> Evidence:
     return Evidence(
         id=identifier,
@@ -38,6 +39,16 @@ def _evidence(
         extracted_claim=claim,
         observed_at=NOW,
         authority=SourceAuthority.COUNTERPARTY,
+        observation_subject_id="org-acme",
+        grounded_claim=GroundedClaim(
+            subject_id="org-acme",
+            predicate="SUPPLIES",
+            object_or_value="org-beta",
+            subject_mention="ACME",
+            predicate_mention="supplies",
+            object_mention="org-beta",
+            supporting_excerpt=claim,
+        ),
     )
 
 

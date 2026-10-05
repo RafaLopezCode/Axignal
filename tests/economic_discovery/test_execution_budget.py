@@ -129,6 +129,52 @@ def test_unknown_cost_is_not_silently_converted_to_zero() -> None:
 
     assert next_state.amount_microunits is None
     assert next_state.currency is None
+    assert next_state.cost_complete is False
+
+
+def test_known_lower_bound_survives_unknown_then_known_cost() -> None:
+    state = ExecutionBudgetState(amount_microunits=7, currency="USD")
+
+    incomplete = advance_execution_budget(
+        policy=_policy(),
+        state=state,
+        delta=ExecutionBudgetDelta(
+            elapsed_ms=5,
+            requests=1,
+        ),
+    )
+    recovered = advance_execution_budget(
+        policy=_policy(),
+        state=incomplete,
+        delta=ExecutionBudgetDelta(
+            amount_microunits=1,
+            currency="USD",
+            elapsed_ms=5,
+            requests=1,
+        ),
+    )
+
+    assert incomplete.amount_microunits == 7
+    assert incomplete.currency == "USD"
+    assert incomplete.cost_complete is False
+    assert recovered.amount_microunits == 8
+    assert recovered.currency == "USD"
+    assert recovered.cost_complete is False
+
+
+def test_incomplete_known_lower_bound_can_fail_closed_on_unknown_cost_policy() -> None:
+    state = ExecutionBudgetState(
+        amount_microunits=8,
+        currency="USD",
+        cost_complete=False,
+    )
+
+    decision = evaluate_execution_budget(
+        policy=_policy(stop_on_unknown_cost=True),
+        state=state,
+    )
+
+    assert decision.stop_reason is ExecutionStopReason.COST_UNKNOWN
 
 
 def test_governed_controller_cannot_continue_after_loop_limit() -> None:

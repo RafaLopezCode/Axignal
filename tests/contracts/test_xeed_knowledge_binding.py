@@ -16,7 +16,13 @@ from application.xeed_knowledge.reader import (
     KnowledgeReadError,
     KnowledgeReadFailure,
 )
-from domain.evidence.admission import AdmissionRequest, Evidence, EvidenceAdmission, SourceAuthority
+from domain.evidence.admission import (
+    AdmissionRequest,
+    Evidence,
+    EvidenceAdmission,
+    GroundedClaim,
+    SourceAuthority,
+)
 from domain.evidence.epistemics import Currentness, EpistemicState
 from domain.faxt.model import FAXT
 from domain.identity import FaxtId, OrganizationId, PrincipalId, TenantId, XeedId
@@ -40,6 +46,16 @@ def _faxt(
         extracted_claim="The organization manufactures pumps.",
         observed_at=datetime(2026, 1, 1),
         authority=SourceAuthority.OFFICIAL_WEB,
+        observation_subject_id="org-shared",
+        grounded_claim=GroundedClaim(
+            subject_id="org-shared",
+            predicate="MANUFACTURES",
+            object_or_value="pumps",
+            subject_mention="The organization",
+            predicate_mention="manufactures",
+            object_mention="pumps",
+            supporting_excerpt="The organization manufactures pumps.",
+        ),
     )
     return FAXT.create(
         faxt_id=FaxtId(faxt_id),

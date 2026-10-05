@@ -19,7 +19,7 @@ from application.xeed_germination import (
     InvestigationFinding,
     XeedSemanticGermination,
 )
-from domain.evidence.admission import Evidence, SourceAuthority
+from domain.evidence.admission import Evidence, GroundedClaim, SourceAuthority
 from domain.evidence.epistemics import Currentness
 from domain.faxt.model import FAXT
 from domain.identity import FaxtId, OrganizationId, PrincipalId, TenantId, XeedId
@@ -76,20 +76,31 @@ class Investigator:
     ) -> InvestigationFinding | None:
         if candidate.organization_id != OrganizationId("org-cold"):
             return None
+        claim = "org-cold capability industrial refrigeration."
         return InvestigationFinding(
             FaxtId("faxt-cold-capability"),
             candidate.organization_id,
             "capability",
             "industrial refrigeration",
-            "Industrial refrigeration systems for food logistics.",
+            claim,
             Evidence(
                 "ev-cold-capability",
                 "fixture",
                 "official_web",
                 "https://cold.example.test/capabilities",
-                "Industrial refrigeration systems for food logistics.",
+                claim,
                 datetime(2026, 9, 30, tzinfo=UTC),
                 SourceAuthority.OFFICIAL_WEB,
+                observation_subject_id="org-cold",
+                grounded_claim=GroundedClaim(
+                    subject_id="org-cold",
+                    predicate="capability",
+                    object_or_value="industrial refrigeration",
+                    subject_mention="org-cold",
+                    predicate_mention="capability",
+                    object_mention="industrial refrigeration",
+                    supporting_excerpt=claim,
+                ),
             ),
             currentness=Currentness.CURRENT,
         )

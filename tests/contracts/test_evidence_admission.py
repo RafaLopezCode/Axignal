@@ -13,6 +13,7 @@ from domain.evidence.admission import (
     Evidence,
     EvidenceAdmission,
     EvidenceAdmissionRequired,
+    GroundedClaim,
     SourceAuthority,
     evidence_fingerprint,
 )
@@ -27,6 +28,16 @@ def _evidence(authority: SourceAuthority) -> Evidence:
         extracted_claim="ACME manufactures industrial pumps.",
         observed_at=datetime(2026, 1, 1, 12, 0, 0),
         authority=authority,
+        observation_subject_id="org-acme",
+        grounded_claim=GroundedClaim(
+            subject_id="org-acme",
+            predicate="MANUFACTURES",
+            object_or_value="industrial pumps",
+            subject_mention="ACME",
+            predicate_mention="manufactures",
+            object_mention="industrial pumps",
+            supporting_excerpt="ACME manufactures industrial pumps.",
+        ),
     )
 
 
@@ -137,6 +148,79 @@ def test_claim_admission_rejects_proposition_not_equal_to_extracted_claim() -> N
     decision = EvidenceAdmission.admit_claim(request)
     assert decision.is_canonical is False
     assert "does not exactly match" in decision.reason
+
+
+def test_claim_admission_rejects_wrong_subject_even_with_same_claim_text() -> None:
+    evidence = _evidence(SourceAuthority.OFFICIAL_WEB)
+    request = AdmissionRequest(
+        evidence=evidence,
+        subject_id="org-unrelated",
+        predicate="MANUFACTURES",
+        object_or_value="industrial pumps",
+        claim_proposition=evidence.extracted_claim,
+    )
+
+    decision = EvidenceAdmission.admit_claim(request)
+
+    assert decision.is_canonical is False
+    assert "subject" in decision.reason
+
+
+def test_claim_admission_rejects_wrong_object_even_with_same_claim_text() -> None:
+    evidence = _evidence(SourceAuthority.OFFICIAL_WEB)
+    request = AdmissionRequest(
+        evidence=evidence,
+        subject_id="org-acme",
+        predicate="MANUFACTURES",
+        object_or_value="nuclear weapons",
+        claim_proposition=evidence.extracted_claim,
+    )
+
+    decision = EvidenceAdmission.admit_claim(request)
+
+    assert decision.is_canonical is False
+    assert "object/value" in decision.reason
+
+
+def test_claim_admission_requires_structured_grounding() -> None:
+    grounded = _evidence(SourceAuthority.OFFICIAL_WEB)
+    evidence = replace(grounded, grounded_claim=None)
+    request = AdmissionRequest(
+        evidence=evidence,
+        subject_id="org-acme",
+        predicate="MANUFACTURES",
+        object_or_value="industrial pumps",
+        claim_proposition=evidence.extracted_claim,
+    )
+
+    decision = EvidenceAdmission.admit_claim(request)
+
+    assert decision.is_canonical is False
+    assert "structured semantic grounding" in decision.reason
+
+
+def test_non_literal_object_binding_fails_closed_until_identity_binding_is_governed() -> None:
+    original = _evidence(SourceAuthority.OFFICIAL_WEB)
+    assert original.grounded_claim is not None
+    evidence = replace(
+        original,
+        grounded_claim=replace(
+            original.grounded_claim,
+            object_or_value="capability:industrial-pumps",
+        ),
+    )
+    request = AdmissionRequest(
+        evidence=evidence,
+        subject_id="org-acme",
+        predicate="MANUFACTURES",
+        object_or_value="capability:industrial-pumps",
+        claim_proposition=evidence.extracted_claim,
+    )
+
+    decision = EvidenceAdmission.admit_claim(request)
+
+    assert decision.is_canonical is False
+    assert "literally grounded" in decision.reason
 
 
 def test_dataclass_replace_of_canonical_decision_loses_authority() -> None:

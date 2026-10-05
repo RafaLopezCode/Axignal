@@ -87,6 +87,7 @@ class ExecutionBudgetPolicy:
 class ExecutionBudgetState:
     amount_microunits: int | None = None
     currency: str | None = None
+    cost_complete: bool | None = None
     elapsed_ms: int = 0
     requests: int = 0
     sources: int = 0
@@ -99,6 +100,11 @@ class ExecutionBudgetState:
             raise ValueError("execution cost amount and currency must coexist")
         if self.amount_microunits is not None and self.amount_microunits < 0:
             raise ValueError("execution cost cannot be negative")
+        inferred_complete = self.amount_microunits is not None
+        if self.cost_complete is None:
+            object.__setattr__(self, "cost_complete", inferred_complete)
+        elif not isinstance(self.cost_complete, bool):
+            raise ValueError("execution cost completeness must be boolean")
         if self.currency is not None:
             currency = self.currency.strip().upper()
             if len(currency) != 3 or not currency.isalpha():
@@ -121,6 +127,7 @@ class ExecutionBudgetState:
             {
                 "amount_microunits": self.amount_microunits,
                 "currency": self.currency,
+                "cost_complete": self.cost_complete,
                 "elapsed_ms": self.elapsed_ms,
                 "requests": self.requests,
                 "sources": self.sources,
@@ -201,7 +208,7 @@ def evaluate_execution_budget(
     if (
         policy.stop_on_unknown_cost
         and policy.max_amount_microunits is not None
-        and state.amount_microunits is None
+        and not state.cost_complete
     ):
         reason = ExecutionStopReason.COST_UNKNOWN
 
@@ -255,26 +262,26 @@ def advance_execution_budget(
     if not before.may_continue:
         raise RuntimeError(f"execution already stopped: {before.stop_reason}")
 
-    if state.amount_microunits is not None and delta.amount_microunits is None:
-        next_amount: int | None = None
-        next_currency: str | None = None
-    elif state.amount_microunits is None and delta.amount_microunits is None:
-        next_amount = None
-        next_currency = None
+    if (
+        state.currency is not None
+        and delta.currency is not None
+        and state.currency != delta.currency
+    ):
+        raise ValueError("execution delta currency does not match accumulated currency")
+
+    if delta.amount_microunits is None:
+        next_amount = state.amount_microunits
+        next_currency = state.currency
+        next_complete = False
     else:
-        known_currency = state.currency or delta.currency
-        if (
-            state.currency is not None
-            and delta.currency is not None
-            and state.currency != delta.currency
-        ):
-            raise ValueError("execution delta currency does not match accumulated currency")
-        next_amount = (state.amount_microunits or 0) + (delta.amount_microunits or 0)
-        next_currency = known_currency
+        next_currency = state.currency or delta.currency
+        next_amount = (state.amount_microunits or 0) + delta.amount_microunits
+        next_complete = bool(state.cost_complete)
 
     return ExecutionBudgetState(
         amount_microunits=next_amount,
         currency=next_currency,
+        cost_complete=next_complete,
         elapsed_ms=state.elapsed_ms + delta.elapsed_ms,
         requests=state.requests + delta.requests,
         sources=state.sources + delta.sources,
