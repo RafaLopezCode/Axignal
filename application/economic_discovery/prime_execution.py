@@ -17,6 +17,10 @@ from application.economic_discovery.brain_contracts import (
     DimensionDisposition,
     TypingDimensionContract,
 )
+from application.economic_discovery.continuous_observation import (
+    SharedObservationWorkMemory,
+    schedule_prime_research,
+)
 from application.economic_discovery.execution_budget import (
     ExecutionBudgetDelta,
     ExecutionBudgetReservation,
@@ -294,6 +298,7 @@ def execute_prime_source_slice(
     reuse_policy: ObservationReusePolicy | None = None,
     temporal_currentness_policy: TemporalCurrentnessPolicy | None = None,
     ingested_observation_reuse_authority: ObservationReuseAuthority | None = None,
+    research_work_memory: SharedObservationWorkMemory | None = None,
 ) -> PrimeExecutionTrace:
     """Execute one governed source-to-Prime slice and retain exact lineage."""
 
@@ -846,9 +851,18 @@ def execute_prime_source_slice(
         research_decisions=research_decisions,
     )
 
+    if research_work_memory is not None:
+        schedule_prime_research(
+            research_work_memory,
+            plan=prime_plan,
+            requester_ref=f"prime:{execution_id}",
+        )
+
     stop_reason: str | None = None
     for item_index, item in enumerate(prime_plan.items):
         if item.route is None:
+            continue
+        if item.route is PrimeRoute.ADAPTIVE_RESEARCH and research_work_memory is not None:
             continue
 
         prime_reservation_id = f"reserve:{execution_id}:prime:{item_index:04d}:{item.dimension_id}"

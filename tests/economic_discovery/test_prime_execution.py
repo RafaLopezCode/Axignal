@@ -20,6 +20,7 @@ from application.economic_discovery.brain_contracts import (
     SemanticPrimitive,
     TypingDimensionContract,
 )
+from application.economic_discovery.continuous_observation import schedule_prime_research
 from application.economic_discovery.execution_budget import (
     ExecutionBudgetPolicy,
     ExecutionBudgetState,
@@ -78,6 +79,7 @@ from domain.identity import OrganizationId, PrincipalId, TenantId, XeedId
 from domain.organizations.model import Organization
 from domain.tenancy.model import Principal, PrincipalTenantMembership, Tenant
 from domain.xeed.model import Xeed
+from pipeline.continuous_observation import SqliteSharedObservationWorkMemory
 from pipeline.learning_memory import SqliteLearningMemory
 from pipeline.observation_memory import SqliteObservationMemory
 from pipeline.source_acquisition import (
@@ -963,6 +965,8 @@ def test_adaptive_research_learning_yield_is_derived_from_real_work_item(
         ),
     )
     learning = SqliteLearningMemory(tmp_path / "learning.sqlite3")
+    research_memory = SqliteSharedObservationWorkMemory(tmp_path / "research.sqlite3")
+    adaptive_executor = _Executor("adaptive")
 
     trace = execute_prime_source_slice(
         execution_id="run:adaptive",
@@ -989,20 +993,26 @@ def test_adaptive_research_learning_yield_is_derived_from_real_work_item(
         ports=PrimeExecutionPorts(
             deterministic=_Executor("deterministic"),
             structured_evaluator=_Executor("structured"),
-            adaptive_research=_Executor("adaptive"),
+            adaptive_research=adaptive_executor,
         ),
+        research_work_memory=research_memory,
     )
 
     assert trace.prime_plan is not None
     assert trace.prime_plan.items[0].route is PrimeRoute.ADAPTIVE_RESEARCH
-    adaptive = next(
-        event
+    assert adaptive_executor.calls == []
+    intent = schedule_prime_research(
+        research_memory,
+        plan=trace.prime_plan,
+        requester_ref="prime:assertion",
+    )[0]
+    durable = research_memory.get(intent.work_key)
+    assert durable is not None
+    assert durable.intent.dimension_id == "reputation"
+    assert not any(
+        event.kind is LearningEventKind.ADAPTIVE_RESEARCH
         for event in learning.for_xeed("xeed:1")
-        if event.kind is LearningEventKind.ADAPTIVE_RESEARCH
     )
-    assert adaptive.outcome is LearningOutcome.COMPLETED
-    assert adaptive.yield_.research_objectives_resolved == 1
-    assert adaptive.mechanism.value == "ADAPTIVE_RESEARCH"
 
 
 class _FailingSourceAcquirer:
