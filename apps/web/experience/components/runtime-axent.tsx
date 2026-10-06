@@ -43,7 +43,13 @@ export function useRuntimeAxent(
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          ...(subscriber ? { revision: subscriber.revision, cognition: subscriber.cognition } : { mode: "runtime" }),
+          ...(subscriber
+            ? {
+                revision: subscriber.revision,
+                cognition: subscriber.cognition,
+                ...(messages.at(-1)?.answer.memory ? { memory: messages.at(-1)?.answer.memory } : {}),
+              }
+            : { mode: "runtime" }),
           prompt: question,
           contextId: projection.context.id,
           locale,

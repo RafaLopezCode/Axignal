@@ -40,6 +40,12 @@ class SubscriberOutputPort(Protocol):
     ) -> dict[str, object]: ...
 
 
+class SubscriberAxentPort(Protocol):
+    def ask(
+        self, context: TrustedSubscriberContext, focus_id: XeedId, payload: Mapping[str, object]
+    ) -> dict[str, object]: ...
+
+
 @dataclass(frozen=True, slots=True)
 class SubscriberHttpResponse:
     status: int
@@ -104,6 +110,7 @@ class SubscriberHttpFacade:
         outputs: SubscriberOutputPort,
         billing_webhook: SubscriberBillingWebhook | None = None,
         available_providers: frozenset[str] | None = None,
+        axent: SubscriberAxentPort | None = None,
     ) -> None:
         self.settings = settings
         self.identity = identity
@@ -111,6 +118,7 @@ class SubscriberHttpFacade:
         self.outputs = outputs
         self.billing_webhook = billing_webhook
         self.available_providers = available_providers
+        self.axent = axent
 
     def handle_webhook(self, raw_body: bytes, signature: str) -> SubscriberHttpResponse:
         if not self.settings.enabled or self.billing_webhook is None:
@@ -227,6 +235,22 @@ class SubscriberHttpFacade:
                     raise SubscriberRequestError("invalid focus reference")
                 return SubscriberHttpResponse(
                     200, self.outputs.output(context, XeedId(focus_id), datetime.now(UTC))
+                )
+            if (
+                method == "POST"
+                and path.startswith("/subscriber/organizations/")
+                and path.endswith("/axent")
+            ):
+                focus_id = unquote(
+                    path.removeprefix("/subscriber/organizations/").removesuffix("/axent")
+                )
+                if not _REFERENCE.fullmatch(focus_id):
+                    raise SubscriberRequestError("invalid focus reference")
+                if self.axent is None:
+                    return self._denied("AXENT_NOT_CONFIGURED", 503)
+                # Scope comes from the session and the path; the body only carries the question.
+                return SubscriberHttpResponse(
+                    200, self.axent.ask(context, XeedId(focus_id), payload or {})
                 )
             return self._denied("NOT_FOUND", 404)
         except SubscriberIdentityError as exc:

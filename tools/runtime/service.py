@@ -119,6 +119,7 @@ from tools.runtime.first_proof import (
 )
 from tools.runtime.organization_attention import OrganizationAttention, load_observation_catalog
 from tools.runtime.stripe_billing import StripeWebhookRuntime
+from tools.runtime.subscriber_axent import luna_reasoner_from_env
 from tools.runtime.subscriber_composition import build_subscriber_facade
 from tools.runtime.subscriber_http import SubscriberHttpFacade, is_subscriber_path
 from tools.runtime.subscriber_provisioning import (
@@ -329,6 +330,7 @@ def build_runtime(config: RuntimeConfig) -> AxignalRuntime:
             code_sha=config.code_sha,
             stripe_settings=stripe_settings,
             offer_catalogue_reader=offer_catalogue_reader,
+            axent_reasoner=luna_reasoner_from_env(),
         )
     return AxignalRuntime(
         config=config,

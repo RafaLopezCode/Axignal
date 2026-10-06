@@ -21,6 +21,10 @@ export type RuntimeAnswer = {
   sourceRefs: string[];
   observedAt: string[];
   currentness: string[];
+  /** Present when tenant-grounded AXENT answered: claims, evidence, research request. */
+  grounding?: unknown;
+  /** Compact memory of this turn, sent back with the next question. */
+  memory?: Record<string, unknown>;
 };
 
 function unique(values: string[]): string[] {

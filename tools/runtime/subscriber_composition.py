@@ -18,6 +18,7 @@ from application.admin_billing.subscriber_checkout import (
 from application.admin_billing.subscriber_checkout import (
     EntitlementSnapshot as BillingEntitlementSnapshot,
 )
+from application.axent.grounded import GroundedReasoner
 from application.economic_discovery.observation_memory import ObservationMemory
 from application.economic_discovery.observation_reuse import ObservationReusePolicy
 from application.economic_discovery.temporal_currentness import TemporalCurrentnessPolicy
@@ -56,6 +57,7 @@ from pipeline.source_acquisition import (
     ContentAddressedArtifactIntegrityAdapter,
     ContentAddressedArtifactStore,
 )
+from tools.runtime.subscriber_axent import build_subscriber_axent
 from tools.runtime.subscriber_checkout import (
     StripeSubscriberRuntimeSettings,
     SubscriberCheckoutRuntime,
@@ -668,6 +670,7 @@ def build_subscriber_facade(
     execution_plan_reader: SubscriberEconomicExecutionPlanReader | None = None,
     observation_plan_reader: SubscriberObservationExecutionPlanReader | None = None,
     clock: Clock | None = None,
+    axent_reasoner: GroundedReasoner | None = None,
 ) -> SubscriberHttpFacade:
     """Compose real durable subscriber services from root-authorized inputs.
 
@@ -810,6 +813,11 @@ def build_subscriber_facade(
         workflow=workflow,
         outputs=_SubscriberOutputs(workflow, economic),
         billing_webhook=None if checkout is None else _BillingWebhookAdapter(checkout),
+        # AXENT answers through the same authorized read; without a reasoner it stays
+        # deterministic or extractive and never calls a model.
+        axent=build_subscriber_axent(
+            reader=economic, clock=effective_clock.now, data_dir=root, reasoner=axent_reasoner
+        ),
         available_providers=frozenset(
             provider.value.casefold()
             for provider, config in _oidc_provider_configs(settings).items()

@@ -144,6 +144,20 @@ export async function subscriberLogout(request: Request): Promise<Response> {
     return Response.json({ state: "signed_out" }, { headers: { ...headers, "Set-Cookie": setCookie(subscriberSessionCookie, "", 0) } });
   } catch { return rejected("SESSION_REVOCATION_UNAVAILABLE", 503); }
 }
+/** Tenant-grounded AXENT turn. Scope comes from the session cookie and path only. */
+export async function subscriberAxent(request: Request, contextId: string, body: { question: string; locale: string; memory?: unknown }): Promise<Record<string, unknown> | null> {
+  const token = cookie(request, subscriberSessionCookie);
+  if (!token) return null;
+  try {
+    const response = await upstream(`/subscriber/organizations/${encodeURIComponent(contextId)}/axent`, token, body);
+    if (!response.ok) return null;
+    const payload = await checkedJson(response);
+    return typeof payload === "object" && payload !== null ? (payload as Record<string, unknown>) : null;
+  } catch {
+    return null;
+  }
+}
+
 export async function subscriberProxy(request: Request, path: string, write = false): Promise<Response> {
   if (write && !subscriberSameOrigin(request)) return rejected("ORIGIN_REQUIRED", 403);
   const token = cookie(request, subscriberSessionCookie);
