@@ -1,0 +1,377 @@
+{
+  "mode": "live",
+  "model": "gpt-6-luna",
+  "rows": [
+    {
+      "query": "A_seo",
+      "question": "¿Cómo está mi SEO?",
+      "before": {
+        "input_tokens": 4665,
+        "output_tokens": 112,
+        "model_calls": 1,
+        "claims": 2,
+        "grounded_claims": 1,
+        "ungrounded_claims": 1,
+        "latency_ms": 3500,
+        "context_chars": 14833
+      },
+      "after": {
+        "route": "MODEL",
+        "input_tokens": 644,
+        "output_tokens": 155,
+        "model_calls": 1,
+        "measured_tokens": true,
+        "corpus_items": 20,
+        "in_scope_items": 7,
+        "sent_items": 7,
+        "evidence_tokens": 350,
+        "claims": 1,
+        "grounded_claims": 1,
+        "dropped_ungrounded_claims": 1,
+        "abstained": false,
+        "research_requested": false,
+        "latency_ms": 1889,
+        "answer": "Solo consta que se observaron páginas públicas del sitio, incluida la página principal y las secciones de contacto, empresa, proyectos y servicios; esto no permite evaluar su rendimiento SEO. (E2, E3, E4, E5, E6)"
+      },
+      "before_answer": "El estado de tu SEO no se ha medido, así que no puedo valorar su rendimiento ni visibilidad. La lectura no contiene una medición de representación digital: figura como NOT_MEASURED, con el motivo «No measurement»."
+    },
+    {
+      "query": "B_reputation",
+      "question": "¿Qué dicen de nosotros?",
+      "before": {
+        "input_tokens": 4723,
+        "output_tokens": 137,
+        "model_calls": 1,
+        "claims": 2,
+        "grounded_claims": 1,
+        "ungrounded_claims": 1,
+        "latency_ms": 2032,
+        "context_chars": 15083
+      },
+      "after": {
+        "route": "ABSTAINED",
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "model_calls": 0,
+        "measured_tokens": false,
+        "corpus_items": 20,
+        "in_scope_items": 0,
+        "sent_items": 0,
+        "evidence_tokens": 0,
+        "claims": 0,
+        "grounded_claims": 0,
+        "dropped_ungrounded_claims": 0,
+        "abstained": true,
+        "research_requested": true,
+        "latency_ms": 0,
+        "answer": "No tengo evidencia suficiente en AXIGNAL para responder esto sobre Solartec Levante. He pedido a AXIGNAL que observe reputación; la respuesta no se da por supuesta mientras tanto."
+      },
+      "before_answer": "La lectura no recoge comentarios, reseñas ni menciones de terceros sobre Solartec Levante; por tanto, no puedo decir qué dicen de vosotros. Sí recoge información de vuestra web: declara instalaciones fotovoltaicas de autoconsumo y baja tensión, pero esta afirmación se basa en una observación autoriz"
+    },
+    {
+      "query": "C_opportunities",
+      "question": "¿Qué oportunidades hay?",
+      "before": {
+        "input_tokens": 4808,
+        "output_tokens": 500,
+        "model_calls": 1,
+        "claims": 0,
+        "grounded_claims": 0,
+        "ungrounded_claims": 0,
+        "latency_ms": 4562,
+        "context_chars": 15483
+      },
+      "after": {
+        "route": "MODEL",
+        "input_tokens": 695,
+        "output_tokens": 199,
+        "model_calls": 1,
+        "measured_tokens": true,
+        "corpus_items": 20,
+        "in_scope_items": 8,
+        "sent_items": 5,
+        "evidence_tokens": 373,
+        "claims": 3,
+        "grounded_claims": 3,
+        "dropped_ungrounded_claims": 0,
+        "abstained": false,
+        "research_requested": false,
+        "latency_ms": 2171,
+        "answer": "Hay oportunidades potenciales para instalaciones de autoconsumo fotovoltaico en edificios municipales de Getafe y polideportivos de Elche. También figuran el suministro e instalación de módulos fotovoltaicos en depuradoras de Córdoba, trabajos de baja tensión en edificios administrativos de la Junta"
+      },
+      "before_answer": ""
+    },
+    {
+      "query": "D_relationships",
+      "question": "¿Qué clientes aparecen?",
+      "before": {
+        "input_tokens": 4819,
+        "output_tokens": 228,
+        "model_calls": 1,
+        "claims": 1,
+        "grounded_claims": 0,
+        "ungrounded_claims": 1,
+        "latency_ms": 2906,
+        "context_chars": 15521
+      },
+      "after": {
+        "route": "ABSTAINED",
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "model_calls": 0,
+        "measured_tokens": false,
+        "corpus_items": 20,
+        "in_scope_items": 0,
+        "sent_items": 0,
+        "evidence_tokens": 0,
+        "claims": 0,
+        "grounded_claims": 0,
+        "dropped_ungrounded_claims": 0,
+        "abstained": true,
+        "research_requested": true,
+        "latency_ms": 0,
+        "answer": "No tengo evidencia suficiente en AXIGNAL para responder esto sobre Solartec Levante. He pedido a AXIGNAL que observe relaciones; la respuesta no se da por supuesta mientras tanto."
+      },
+      "before_answer": "En las oportunidades de contratación pública aparecen estos compradores: Ayuntamiento de Getafe, EMACSA Córdoba, Ayuntamiento de Alicante, Diputación de Valencia, Comunidad de Madrid, Ayuntamiento de Elche, Junta de Andalucía y Ayuntamiento de Murcia. Son compradores potenciales asociados a licitaci"
+    },
+    {
+      "query": "E_change",
+      "question": "¿Qué ha cambiado?",
+      "before": {
+        "input_tokens": 4896,
+        "output_tokens": 277,
+        "model_calls": 1,
+        "claims": 2,
+        "grounded_claims": 2,
+        "ungrounded_claims": 0,
+        "latency_ms": 3343,
+        "context_chars": 15903
+      },
+      "after": {
+        "route": "MODEL",
+        "input_tokens": 571,
+        "output_tokens": 86,
+        "model_calls": 1,
+        "measured_tokens": true,
+        "corpus_items": 20,
+        "in_scope_items": 5,
+        "sent_items": 5,
+        "evidence_tokens": 291,
+        "claims": 2,
+        "grounded_claims": 2,
+        "dropped_ungrounded_claims": 0,
+        "abstained": false,
+        "research_requested": false,
+        "latency_ms": 1391,
+        "answer": "La página pública observada cambió respecto de la observación anterior. El 6 de octubre se publicó una nueva licitación compatible de la Diputación de Valencia; el comprador tiene adjudicaciones previas compatibles."
+      },
+      "before_answer": "El cambio más reciente es una nueva licitación compatible publicada por la Diputación de Valencia. Se considera una oportunidad potencial, no una adjudicación ni un cliente confirmado. La lectura indica que ese comprador tiene adjudicaciones previas compatibles, pero no confirma que Solartec Levante"
+    },
+    {
+      "query": "F_unknown",
+      "question": "¿Qué no sabemos todavía?",
+      "before": {
+        "input_tokens": 4967,
+        "output_tokens": 310,
+        "model_calls": 1,
+        "claims": 5,
+        "grounded_claims": 5,
+        "ungrounded_claims": 0,
+        "latency_ms": 2967,
+        "context_chars": 16265
+      },
+      "after": {
+        "route": "DETERMINISTIC",
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "model_calls": 0,
+        "measured_tokens": false,
+        "corpus_items": 20,
+        "in_scope_items": 20,
+        "sent_items": 0,
+        "evidence_tokens": 467,
+        "claims": 0,
+        "grounded_claims": 0,
+        "dropped_ungrounded_claims": 0,
+        "abstained": false,
+        "research_requested": false,
+        "latency_ms": 0,
+        "answer": "Esto es lo que AXIGNAL todavía no sabe o no puede sostener:"
+      },
+      "before_answer": "No sabemos si Solartec Levante cumple los requisitos de elegibilidad para las oportunidades identificadas. Tampoco consta la capacidad disponible de la empresa para asumir nuevos trabajos. Para las licitaciones, siguen sin conocerse los requisitos técnicos completos ni si hay un proveedor incumbente"
+    },
+    {
+      "query": "G_cross_tenant",
+      "question": "¿Qué oportunidades tiene FrioNord en Lyon?",
+      "before": {
+        "input_tokens": 5089,
+        "output_tokens": 57,
+        "model_calls": 1,
+        "claims": 0,
+        "grounded_claims": 0,
+        "ungrounded_claims": 0,
+        "latency_ms": 1313,
+        "context_chars": 16894
+      },
+      "after": {
+        "route": "ABSTAINED",
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "model_calls": 0,
+        "measured_tokens": false,
+        "corpus_items": 20,
+        "in_scope_items": 8,
+        "sent_items": 0,
+        "evidence_tokens": 373,
+        "claims": 0,
+        "grounded_claims": 0,
+        "dropped_ungrounded_claims": 0,
+        "abstained": true,
+        "research_requested": false,
+        "latency_ms": 0,
+        "answer": "La evidencia autorizada de Solartec Levante no menciona FrioNord, Lyon; no puedo afirmar nada sobre ello."
+      },
+      "before_answer": ""
+    },
+    {
+      "query": "H_why",
+      "question": "¿Por qué dices que la oportunidad de Getafe encaja?",
+      "before": {
+        "input_tokens": 5108,
+        "output_tokens": 189,
+        "model_calls": 1,
+        "claims": 2,
+        "grounded_claims": 2,
+        "ungrounded_claims": 0,
+        "latency_ms": 2000,
+        "context_chars": 16960
+      },
+      "after": {
+        "route": "MODEL",
+        "input_tokens": 701,
+        "output_tokens": 114,
+        "model_calls": 1,
+        "measured_tokens": true,
+        "corpus_items": 20,
+        "in_scope_items": 8,
+        "sent_items": 5,
+        "evidence_tokens": 373,
+        "claims": 2,
+        "grounded_claims": 2,
+        "dropped_ungrounded_claims": 0,
+        "abstained": false,
+        "research_requested": false,
+        "latency_ms": 1811,
+        "answer": "Porque la demanda publicada de Getafe es para instalar autoconsumo fotovoltaico en edificios municipales y coincide con un código de capacidad observado. El encaje es potencial, no confirmado; la evidencia no detalla los requisitos técnicos ni al proveedor actual."
+      },
+      "before_answer": "La oportunidad de Getafe encaja de forma potencial porque la licitación es para instalar fotovoltaica de autoconsumo en edificios municipales, y la web de Solartec Levante declara instalaciones fotovoltaicas. La lectura vincula esa demanda con la capacidad observada; no confirma que la empresa cumpl"
+    },
+    {
+      "query": "I_follow_up",
+      "question": "¿Y en Francia?",
+      "before": {
+        "input_tokens": 5215,
+        "output_tokens": 121,
+        "model_calls": 1,
+        "claims": 1,
+        "grounded_claims": 0,
+        "ungrounded_claims": 1,
+        "latency_ms": 1953,
+        "context_chars": 17463
+      },
+      "after": {
+        "route": "ABSTAINED",
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "model_calls": 0,
+        "measured_tokens": false,
+        "corpus_items": 20,
+        "in_scope_items": 0,
+        "sent_items": 0,
+        "evidence_tokens": 0,
+        "claims": 0,
+        "grounded_claims": 0,
+        "dropped_ungrounded_claims": 0,
+        "abstained": true,
+        "research_requested": true,
+        "latency_ms": 0,
+        "answer": "No tengo evidencia suficiente en AXIGNAL para responder esto sobre Solartec Levante. He pedido a AXIGNAL que observe demanda (EU/FR); la respuesta no se da por supuesta mientras tanto."
+      },
+      "before_answer": "La lectura no identifica oportunidades de contratación pública en Francia para Solartec Levante. Las oportunidades registradas corresponden al mercado EU/ES y a compradores de España."
+    },
+    {
+      "query": "J_count",
+      "question": "¿Cuántas oportunidades potenciales hay?",
+      "before": {
+        "input_tokens": 5263,
+        "output_tokens": 120,
+        "model_calls": 1,
+        "claims": 2,
+        "grounded_claims": 2,
+        "ungrounded_claims": 0,
+        "latency_ms": 1593,
+        "context_chars": 17700
+      },
+      "after": {
+        "route": "DETERMINISTIC",
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "model_calls": 0,
+        "measured_tokens": false,
+        "corpus_items": 20,
+        "in_scope_items": 8,
+        "sent_items": 0,
+        "evidence_tokens": 373,
+        "claims": 1,
+        "grounded_claims": 1,
+        "dropped_ungrounded_claims": 0,
+        "abstained": false,
+        "research_requested": false,
+        "latency_ms": 0,
+        "answer": "En la lectura actual AXIGNAL tiene 8 oportunidades potenciales. Son posibles, no confirmadas."
+      },
+      "before_answer": "Hay 8 oportunidades potenciales de contratación pública registradas para Solartec Levante. Todas están marcadas como POTENTIAL, no como contratos confirmados. Las otras dos oportunidades registradas también son potenciales."
+    }
+  ],
+  "summary": {
+    "turns": 10,
+    "before": {
+      "input_tokens": 49553,
+      "output_tokens": 2051,
+      "model_calls": 10,
+      "grounded_claims": 13,
+      "ungrounded_claims": 4,
+      "latency_ms": 26169,
+      "cost": {
+        "currency": "EUR",
+        "per_turn": "0.000000",
+        "per_100_turns": "0.0000",
+        "per_subscriber_month": "0.0000"
+      }
+    },
+    "after": {
+      "input_tokens": 2611,
+      "output_tokens": 554,
+      "model_calls": 4,
+      "grounded_claims": 9,
+      "ungrounded_claims_dropped": 1,
+      "abstentions": 4,
+      "research_requests": 3,
+      "latency_ms": 7262,
+      "cost": {
+        "currency": "EUR",
+        "per_turn": "0.000000",
+        "per_100_turns": "0.0000",
+        "per_subscriber_month": "0.0000"
+      }
+    },
+    "input_tokens_avoided": 46942,
+    "cost_per_1m_tokens_avoided": "0.0000 EUR",
+    "rates": {
+      "input_per_million": "0",
+      "output_per_million": "0",
+      "currency": "EUR"
+    },
+    "turns_per_subscriber_month": 200
+  }
+}

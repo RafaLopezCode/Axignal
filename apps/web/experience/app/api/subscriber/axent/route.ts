@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { boundedSubscriberJson, subscriberProxy, subscriberSameOrigin } from "@/lib/subscriber-server";
+import { boundedSubscriberJson, subscriberAxent, subscriberProxy, subscriberSameOrigin } from "@/lib/subscriber-server";
 import { subscriberOutputSchema } from "@/lib/subscriber-contracts";
 import { cognitiveReadingPlan, cognitiveReadingRequestSchema } from "@/lib/subscriber-presentation";
 import { explainRuntime } from "@/lib/runtime-axent";
@@ -13,6 +13,8 @@ const inputSchema = z.object({
   signalId: z.string().min(1).max(200).optional(),
   locale: z.enum(["es", "en", "de", "pt", "fr", "it"]),
   cognition: cognitiveReadingRequestSchema.optional(),
+  // Compact, non-authoritative memory of the previous turn; never a transcript.
+  memory: z.object({}).passthrough().optional(),
 }).strict();
 
 export async function POST(request: Request) {
@@ -32,7 +34,15 @@ export async function POST(request: Request) {
       nodes: output.projection.nodes.filter(node => Date.parse(node.observedAt) <= Date.parse(cut)),
       today: { ...output.projection.today, items: output.projection.today.items.filter(item => Date.parse(item.observedAt) <= Date.parse(cut)) },
     } : output.projection;
-    const answer = explainRuntime(projection, input.prompt, input.signalId, input.locale);
+    // Grounded AXENT (authorized retrieval, verified claims) when the runtime serves it;
+    // otherwise the deterministic explanation of the same authorized reading.
+    // Off unless this environment enables it (staged rollout, like the reasoner behind it).
+    const grounded = process.env.AXIGNAL_AXENT_GROUNDED === "true"
+      ? await subscriberAxent(request, input.contextId, {
+          question: input.prompt, locale: input.locale, ...(input.memory ? { memory: input.memory } : {}),
+        })
+      : null;
+    const answer = grounded ? (grounded as unknown as ReturnType<typeof explainRuntime>) : explainRuntime(projection, input.prompt, input.signalId, input.locale);
     const plan = input.cognition ? cognitiveReadingPlan(output.projection, input.cognition) : null;
     if (input.cognition) {
       const facts = runtimeFactsAt(output.projection, input.cognition.family, input.cognition.asOf);
