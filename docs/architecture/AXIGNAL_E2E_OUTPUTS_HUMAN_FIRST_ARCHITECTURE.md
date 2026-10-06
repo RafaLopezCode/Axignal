@@ -159,7 +159,7 @@ Comparar un adapter directo con OpenSEO como intermediario usando la misma pregu
 
 **Utopia:** referencia para tiempo, queries tipadas, provenance y correcciones. No se adopta como autoridad canÃ³nica o modelo de datos alternativo. Su documentaciÃ³n MCP distingue world time y record time y reconoce lÃ­mites del proof histÃ³rico/export; esas limitaciones deben formar parte del bakeoff, no ocultarse por la presencia de un grafo temporal. [Contrato MCP](https://github.com/deeplethe/utopia/blob/main/web/src/docs/mcp.md).
 
-Los detalles de integraciÃ³n, incompatibilidades, versiones y experimentos estÃ¡n en el [registro tÃ©cnico](../research/e2e-outputs-2026-10-05/DECISIONES_Y_EVIDENCIA.md). La arquitectura funciona sin que un proveedor concreto estÃ© disponible; informa de la cobertura que pierde.
+Los detalles de integraciÃ³n, incompatibilidades, versiones y experimentos estÃ¡n en el registro técnico local `docs/research/e2e-outputs-2026-10-05/DECISIONES_Y_EVIDENCIA.md`. La arquitectura funciona sin que un proveedor concreto estÃ© disponible; informa de la cobertura que pierde.
 
 ## 9. Jev como motor semÃ¡ntico econÃ³mico
 
