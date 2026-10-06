@@ -201,6 +201,24 @@ class SubscriberRuntimeRead:
 
 
 @dataclass(frozen=True, slots=True)
+class SubscriberObservationLoopExecutionPlan:
+    """Server-owned plan for one bounded Opportunity Intelligence observation loop."""
+
+    observation_context: XeedObservationContext
+    strategy: ObservationStrategy
+    adapters: Mapping[str, SourceObservationPort]
+    coverage: EvidenceCoverageMap
+    learning: OperationalLearning
+    registry: SourceRegistry
+
+    def __post_init__(self) -> None:
+        if self.strategy.xeed_id != self.observation_context.xeed_id:
+            raise ValueError("observation loop plan Xeed identity mismatch")
+        if self.strategy.as_of != self.observation_context.as_of:
+            raise ValueError("observation loop plan temporal cut mismatch")
+
+
+@dataclass(frozen=True, slots=True)
 class SubscriberEconomicExecutionPlan:
     """Server-owned, already-authorized inputs for one bounded EB-04 run."""
 
@@ -712,6 +730,28 @@ class SubscriberEconomicRuntime:
     ) -> AuthorizedXeedOrganization:
         authorized_xeed = self.authorized_xeeds.read(authorized_context, xeed_id)
         return self.organization_reader.read(authorized_xeed)
+
+    def observation_seed(
+        self,
+        authorized_context: TrustedRequestContext,
+        xeed_id: XeedId,
+        *,
+        as_of: datetime,
+    ) -> tuple[AuthorizedXeedOrganization, tuple[tuple[GovernedObservation, Currentness], ...]]:
+        """Authorize one Focus and expose only reusable public history for plan construction."""
+
+        authorized = self._read_context(authorized_context, xeed_id)
+        xeed = authorized.authorized_xeed.xeed
+        history = _authorized_public_history(
+            memory=self.observation_memory,
+            organization_id=authorized.organization.id,
+            xeed_id=xeed.id,
+            tenant_id=xeed.tenant_id,
+            as_of=as_of,
+            reuse_policy=self.reuse_policy,
+            temporal_policy=self.temporal_policy,
+        )
+        return authorized, history
 
     def publish(
         self,

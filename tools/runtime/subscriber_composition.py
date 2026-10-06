@@ -44,6 +44,7 @@ from application.subscriber_portfolio.service import (
 from application.subscriber_projection.subscriber_runtime import (
     SubscriberEconomicExecutionPlan,
     SubscriberEconomicRuntime,
+    SubscriberObservationLoopExecutionPlan,
 )
 from domain.admin_billing.checkout_binding import ApprovedOfferCatalogue
 from domain.evidence.epistemics import Currentness
@@ -78,11 +79,19 @@ from tools.runtime.subscriber_portfolio import (
 
 
 class SubscriberEconomicExecutionPlanReader(Protocol):
-    """Return only an operator-authorized plan for this current private scope."""
+    """Return only an operator-authorized EB-04 plan for this current private scope."""
 
     def plan_for(
         self, context: TrustedSubscriberContext, focus_id: XeedId
     ) -> SubscriberEconomicExecutionPlan | None: ...
+
+
+class SubscriberObservationExecutionPlanReader(Protocol):
+    """Return only a server-authorized Opportunity Intelligence plan for this scope."""
+
+    def observation_plan_for(
+        self, context: TrustedSubscriberContext, focus_id: XeedId
+    ) -> SubscriberObservationLoopExecutionPlan | None: ...
 
 
 @dataclass(slots=True)
@@ -285,10 +294,12 @@ class _ObservationTrigger:
         self,
         *,
         plans: SubscriberEconomicExecutionPlanReader | None,
+        observation_plans: SubscriberObservationExecutionPlanReader | None = None,
     ) -> None:
         self._portfolio: SubscriberPortfolioRuntime | None = None
         self._economic: SubscriberEconomicRuntime | None = None
         self._plans = plans
+        self._observation_plans = observation_plans
         self.last_state_by_focus: dict[str, str] = {}
 
     def bind(
@@ -296,6 +307,11 @@ class _ObservationTrigger:
     ) -> None:
         self._portfolio = portfolio
         self._economic = economic
+
+    def bind_observation_plans(
+        self, plans: SubscriberObservationExecutionPlanReader | None
+    ) -> None:
+        self._observation_plans = plans
 
     def trigger(
         self,
@@ -308,15 +324,35 @@ class _ObservationTrigger:
         if self._portfolio is None or self._economic is None:
             return "NOT_READY"
         entry = self._portfolio.store.get_authorized(context, focus_id)
-        if entry is None or self._plans is None:
+        if entry is None:
             state = "NOT_READY"
         else:
-            plan = self._plans.plan_for(context, focus_id)
-            state = (
-                "NOT_READY"
-                if plan is None
-                else self._economic.execute(context, focus_id, plan).state
+            observation_plan = (
+                None
+                if self._observation_plans is None
+                else self._observation_plans.observation_plan_for(context, focus_id)
             )
+            if observation_plan is not None:
+                self._economic.execute_observation_loop(
+                    context,
+                    focus_id,
+                    observation_context=observation_plan.observation_context,
+                    strategy=observation_plan.strategy,
+                    adapters=observation_plan.adapters,
+                    coverage=observation_plan.coverage,
+                    learning=observation_plan.learning,
+                    registry=observation_plan.registry,
+                )
+                state = "COMPLETED"
+            elif self._plans is None:
+                state = "NOT_READY"
+            else:
+                plan = self._plans.plan_for(context, focus_id)
+                state = (
+                    "NOT_READY"
+                    if plan is None
+                    else self._economic.execute(context, focus_id, plan).state
+                )
         self.last_state_by_focus[str(focus_id)] = state
         return state
 
@@ -630,6 +666,7 @@ def build_subscriber_facade(
     stripe_settings: StripeSubscriberRuntimeSettings | None = None,
     offer_catalogue_reader: OfferCatalogueReader | None = None,
     execution_plan_reader: SubscriberEconomicExecutionPlanReader | None = None,
+    observation_plan_reader: SubscriberObservationExecutionPlanReader | None = None,
     clock: Clock | None = None,
 ) -> SubscriberHttpFacade:
     """Compose real durable subscriber services from root-authorized inputs.
@@ -697,7 +734,10 @@ def build_subscriber_facade(
         integrity=ContentAddressedArtifactIntegrityAdapter(artifacts),
         governance=governance,
     )
-    observation_trigger = _ObservationTrigger(plans=execution_plan_reader)
+    observation_trigger = _ObservationTrigger(
+        plans=execution_plan_reader,
+        observation_plans=observation_plan_reader,
+    )
     portfolio = build_subscriber_portfolio_runtime(
         root,
         identity.store,
@@ -728,7 +768,26 @@ def build_subscriber_facade(
         temporal_policy=temporal_policy,
         code_sha=code_sha,
     )
+    resolved_observation_plans = observation_plan_reader
+    if resolved_observation_plans is None:
+        configured_plan_path = settings.values.get(
+            "AXIGNAL_SUBSCRIBER_OBSERVATION_PLAN_FILE", ""
+        ).strip()
+        if configured_plan_path:
+            from tools.runtime.subscriber_observation import (
+                ConfiguredSubscriberObservationPlanReader,
+                load_observation_attention,
+            )
+
+            resolved_observation_plans = ConfiguredSubscriberObservationPlanReader(
+                economic=economic,
+                clock=effective_clock,
+                attention=load_observation_attention(
+                    Path(configured_plan_path).expanduser().resolve()
+                ),
+            )
     observation_trigger.bind(portfolio, economic)
+    observation_trigger.bind_observation_plans(resolved_observation_plans)
     workflow = _SubscriberWorkflow(
         settings=settings,
         clock=effective_clock,
@@ -761,5 +820,6 @@ def build_subscriber_facade(
 
 __all__ = [
     "SubscriberEconomicExecutionPlanReader",
+    "SubscriberObservationExecutionPlanReader",
     "build_subscriber_facade",
 ]

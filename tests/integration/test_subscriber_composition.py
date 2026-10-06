@@ -19,6 +19,14 @@ from application.admin_billing.subscriber_checkout import (
     BillingProjection,
     PurchaseAttempt,
 )
+from application.economic_discovery.brain_contracts import ObservationMode, ObservationRecord
+from application.economic_discovery.observation_memory import (
+    GovernedObservation,
+    ObservationAccessStatus,
+    ObservationReuseAuthority,
+    ObservationReuseScope,
+    ObservationRightsStatus,
+)
 from application.economic_discovery.observation_reuse import ObservationReusePolicy
 from application.economic_discovery.temporal_currentness import TemporalCurrentnessPolicy
 from application.subscriber_identity.runtime import (
@@ -37,16 +45,20 @@ from domain.admin_billing.checkout_binding import (
     RecurringTerms,
 )
 from domain.evidence.admission import EvidenceAdmission
+from domain.evidence.epistemics import Currentness
 from domain.identity import PrincipalId, TenantId
 from pipeline.admin_billing.subscriber_store import SqliteSubscriberBillingStore
 from pipeline.entity_resolution.organization_store import SqliteCanonicalOrganizationStore
 from pipeline.entity_resolution.sqlite_store import SqliteIdentityGovernanceStore
+from pipeline.observation_intelligence import UrllibTedTransport
 from pipeline.observation_memory.sqlite_store import SqliteObservationMemory
 from pipeline.source_acquisition import (
     ContentAddressedArtifactIntegrityAdapter,
     ContentAddressedArtifactStore,
 )
 from tests.contracts.test_admitted_organization_store import admitted_identity
+from tests.observation_intelligence.scenarios import AS_OF, HOMEPAGES
+from tests.observation_intelligence.ted_fixture import FixtureTedTransport
 from tools.runtime.subscriber_checkout import StripeSubscriberRuntimeSettings
 from tools.runtime.subscriber_composition import (
     _oidc_provider_configs,
@@ -77,25 +89,31 @@ class _ControlledOidc:
         return VerifiedExternalIdentity(config.issuer, code, config.client_id)
 
 
-def _settings(tmp_path: Path, *, contracting: bool = False) -> SubscriberSettings:
+def _settings(
+    tmp_path: Path,
+    *,
+    contracting: bool = False,
+    observation_plan_path: Path | None = None,
+) -> SubscriberSettings:
     secret_path = tmp_path / "controlled-oidc-client-secret"
     secret_path.write_text("test-only", encoding="utf-8")
-    return load_subscriber_settings(
-        {
-            "AXIGNAL_SUBSCRIBER_ENABLED": "true",
-            "AXIGNAL_EXPERIENCE_ORIGIN": "https://axignal.com",
-            "AXIGNAL_GOOGLE_CLIENT_ID": "controlled-google-client",
-            "AXIGNAL_GOOGLE_CLIENT_SECRET_FILE": str(secret_path),
-            "AXIGNAL_GOOGLE_REDIRECT_URI": "https://axignal.com/api/auth/callback/google",
-            "AXIGNAL_GOOGLE_REGISTERED": "true",
-            "AXIGNAL_SUBSCRIBER_CONTRACTING_ENABLED": "true" if contracting else "false",
-            "AXIGNAL_LEGAL_OPERATOR_NAME": "Axignal SLU",
-            "AXIGNAL_LEGAL_TAX_ID": "test-tax-id",
-            "AXIGNAL_LEGAL_ADDRESS": "Test address",
-            "AXIGNAL_LEGAL_CONTACT": "legal@example.test",
-            "AXIGNAL_LEGAL_TERMS_VERSION": "test-terms-v1",
-        }
-    )
+    values = {
+        "AXIGNAL_SUBSCRIBER_ENABLED": "true",
+        "AXIGNAL_EXPERIENCE_ORIGIN": "https://axignal.com",
+        "AXIGNAL_GOOGLE_CLIENT_ID": "controlled-google-client",
+        "AXIGNAL_GOOGLE_CLIENT_SECRET_FILE": str(secret_path),
+        "AXIGNAL_GOOGLE_REDIRECT_URI": "https://axignal.com/api/auth/callback/google",
+        "AXIGNAL_GOOGLE_REGISTERED": "true",
+        "AXIGNAL_SUBSCRIBER_CONTRACTING_ENABLED": "true" if contracting else "false",
+        "AXIGNAL_LEGAL_OPERATOR_NAME": "Axignal SLU",
+        "AXIGNAL_LEGAL_TAX_ID": "test-tax-id",
+        "AXIGNAL_LEGAL_ADDRESS": "Test address",
+        "AXIGNAL_LEGAL_CONTACT": "legal@example.test",
+        "AXIGNAL_LEGAL_TERMS_VERSION": "test-terms-v1",
+    }
+    if observation_plan_path is not None:
+        values["AXIGNAL_SUBSCRIBER_OBSERVATION_PLAN_FILE"] = str(observation_plan_path)
+    return load_subscriber_settings(values)
 
 
 def _build(
@@ -105,8 +123,14 @@ def _build(
     offer_catalogue_reader: ConfiguredOfferCatalogueReader | None = None,
     contracting: bool = False,
     checkout_configured: bool = False,
+    observation_plan_reader=None,
+    observation_plan_path: Path | None = None,
 ) -> SubscriberHttpFacade:
-    settings = _settings(tmp_path, contracting=contracting)
+    settings = _settings(
+        tmp_path,
+        contracting=contracting,
+        observation_plan_path=observation_plan_path,
+    )
     facade = build_subscriber_facade(
         settings,
         tmp_path,
@@ -142,6 +166,7 @@ def _build(
             )
         ),
         offer_catalogue_reader=offer_catalogue_reader,
+        observation_plan_reader=observation_plan_reader,
         clock=SystemClock(),
     )
     facade.identity.auth._provider = _ControlledOidc()
@@ -184,6 +209,37 @@ def _register_canonical_organization(tmp_path: Path) -> None:
     )
     request = admitted_identity(artifacts, "org:registry:shared", "Shared Registry Example SLU")
     assert store.register(request, EvidenceAdmission.admit_claim(request))
+
+
+def _append_opportunity_capability_source(tmp_path: Path) -> None:
+    memory = SqliteObservationMemory(tmp_path / "observation-memory.sqlite3")
+    observed_at = AS_OF - timedelta(hours=1)
+    memory.append(
+        GovernedObservation(
+            record=ObservationRecord(
+                observation_id="obs:xeed:solartec:homepage",
+                subject_id="org:registry:shared",
+                source_ref="https://solartec.example/",
+                source_type="PUBLIC_WEBSITE",
+                observed_at=observed_at,
+                content_fingerprint="homepage-fingerprint",
+                mode=ObservationMode.DETERMINISTIC_SENSOR,
+            ),
+            raw_content=HOMEPAGES["xeed:solartec"],
+            raw_artifact_ref="artifact:homepage:solar",
+            reuse_authority=ObservationReuseAuthority(
+                rights_status=ObservationRightsStatus.PERMITTED,
+                access_status=ObservationAccessStatus.ACCESSIBLE,
+                scope=ObservationReuseScope.GLOBAL_PUBLIC,
+                provenance_ref="provenance:homepage:solar",
+                currentness=Currentness.CURRENT,
+                applicable_subject_ids=("org:registry:shared",),
+                applicable_purposes=("HISTORICAL_REFERENCE",),
+                authority_id="public-homepage-rights",
+                authority_version="1",
+            ),
+        )
+    )
 
 
 def _commit_verified_projection(
@@ -366,6 +422,77 @@ def test_composed_portfolios_are_private_and_output_stays_honest_without_plan(
     )
     persisted = cast(list[dict[str, object]], portfolio_after_restart.body["organizations"])
     assert [item["focusId"] for item in persisted] == [added_a["focusId"]]
+
+
+def test_reobserve_executes_authorized_opportunity_plan_and_persists_reading(
+    monkeypatch,
+    tmp_path: Path,
+) -> None:
+    _register_canonical_organization(tmp_path)
+    plan_path = tmp_path / "subscriber-observation-plan.json"
+    plan_path.write_text(
+        '[{"organizationId":"org:registry:shared","markets":'
+        '[{"jurisdiction":"EU/ES","roles":["PUBLIC_BUYERS"]}]}]',
+        encoding="utf-8",
+    )
+    ted_fixture = FixtureTedTransport()
+    monkeypatch.setattr(UrllibTedTransport, "post", lambda self, body: ted_fixture.post(body))
+    facade = _build(tmp_path, observation_plan_path=plan_path)
+    token, tenant_id = _signup(facade, "subject:opportunity")
+    billing_store = SqliteSubscriberBillingStore(tmp_path / "subscriber-billing.sqlite3")
+    _commit_verified_projection(billing_store, tenant_id, now=datetime.now(UTC))
+
+    added = facade.handle(
+        "POST",
+        "/subscriber/portfolio",
+        {"Origin": "https://axignal.com", "Authorization": f"Bearer {token}"},
+        {
+            "action": "add",
+            "requestRef": "add:opportunity",
+            "locator": "Shared Registry Example SLU",
+        },
+    )
+    assert added.status == 200
+    focus_id = str(added.body["focusId"])
+    _append_opportunity_capability_source(tmp_path)
+
+    reobserved = facade.handle(
+        "POST",
+        "/subscriber/portfolio",
+        {"Origin": "https://axignal.com", "Authorization": f"Bearer {token}"},
+        {
+            "action": "reobserve",
+            "requestRef": "reobserve:opportunity",
+            "focusId": focus_id,
+        },
+    )
+    assert reobserved.status == 200
+    assert reobserved.body["state"] == "COMPLETED"
+    assert reobserved.body["observationState"] == "COMPLETED"
+
+    output = facade.handle(
+        "GET",
+        f"/subscriber/organizations/{focus_id}/output",
+        {"Authorization": f"Bearer {token}"},
+    )
+    assert output.status == 200
+    projection = cast(dict[str, object], output.body["projection"])
+    cognition = cast(dict[str, object], projection["cognition"])
+    opportunities = cast(list[dict[str, object]], cognition["opportunities"])
+    assert opportunities
+    assert all(item["epistemic"] == "POTENTIAL" for item in opportunities)
+    assert all(item["opportunityFamily"] == "PUBLIC_PROCUREMENT" for item in opportunities)
+
+    restarted = _build(tmp_path)
+    persisted = restarted.handle(
+        "GET",
+        f"/subscriber/organizations/{focus_id}/output",
+        {"Authorization": f"Bearer {token}"},
+    )
+    assert persisted.status == 200
+    persisted_projection = cast(dict[str, object], persisted.body["projection"])
+    persisted_cognition = cast(dict[str, object], persisted_projection["cognition"])
+    assert cast(list[dict[str, object]], persisted_cognition["opportunities"])
 
 
 def test_billing_snapshot_freshness_fails_closed_for_old_future_or_mismatched_evidence(

@@ -25,6 +25,7 @@ _KEYS = frozenset(
         "AXIGNAL_STRIPE_WEBHOOK_SIGNING_SECRET_FILE",
         "AXIGNAL_STRIPE_BASE_PRICE_REF",
         "AXIGNAL_STRIPE_ADDITIONAL_XEED_PRICE_REF",
+        "AXIGNAL_SUBSCRIBER_OBSERVATION_PLAN_FILE",
         *(
             f"AXIGNAL_{provider}_{suffix}"
             for provider in ("GOOGLE", "CHATGPT")
