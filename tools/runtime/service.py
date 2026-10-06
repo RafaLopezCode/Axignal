@@ -101,6 +101,7 @@ from pipeline.admin_measurements import SqliteMeasurementRegistryStore
 from pipeline.admin_observability import SqliteAdminObservabilityStore
 from pipeline.admin_tax_operations import SqliteTaxOperationsStore
 from pipeline.admin_weekly_brief import SqliteWeeklyBriefStore
+from pipeline.continuous_observation import SqliteSharedObservationWorkMemory
 from pipeline.learning_memory import SqliteLearningMemory
 from pipeline.observation_memory import SqliteObservationMemory
 from pipeline.policy_governance import SqliteActivePolicyStore
@@ -122,6 +123,7 @@ from tools.runtime.stripe_billing import StripeWebhookRuntime
 class AxignalRuntime:
     config: RuntimeConfig
     observation_memory: SqliteObservationMemory
+    research_work_memory: SqliteSharedObservationWorkMemory
     learning_memory: SqliteLearningMemory
     admin_observability: SqliteAdminObservabilityStore
     governance_policy_store: SqliteActivePolicyStore
@@ -148,6 +150,10 @@ class AxignalRuntime:
         return self.config.data_dir / "observation-memory.sqlite3"
 
     @property
+    def research_work_db(self) -> Path:
+        return self.config.data_dir / "research-work.sqlite3"
+
+    @property
     def learning_db(self) -> Path:
         return self.config.data_dir / "learning-memory.sqlite3"
 
@@ -162,17 +168,23 @@ class AxignalRuntime:
 
     def health_payload(self, *, detailed: bool = False) -> dict[str, object]:
         observation = self._sqlite_status(self.observation_db, "observations")
+        research = self._sqlite_status(self.research_work_db, "shared_observation_work")
         learning = self._sqlite_status(self.learning_db, "learning_events")
-        healthy = observation.get("status") == "ok" and learning.get("status") == "ok"
+        healthy = all(item.get("status") == "ok" for item in (observation, research, learning))
         if not detailed:
             observation = {"status": observation["status"]}
+            research = {"status": research["status"]}
             learning = {"status": learning["status"]}
         return {
             "status": "ok" if healthy else "degraded",
             "service": "axignal-runtime",
             "environment": self.config.environment,
             "code_sha": self.config.code_sha,
-            "persistence": {"observation_memory": observation, "learning_memory": learning},
+            "persistence": {
+                "observation_memory": observation,
+                "research_work_memory": research,
+                "learning_memory": learning,
+            },
             "write_surface": (
                 "weekly-brief+acquisition-gated"
                 if self.config.weekly_brief_requests_enabled
@@ -191,8 +203,10 @@ class AxignalRuntime:
 
 def build_runtime(config: RuntimeConfig) -> AxignalRuntime:
     observation_db = config.data_dir / "observation-memory.sqlite3"
+    research_work_db = config.data_dir / "research-work.sqlite3"
     learning_db = config.data_dir / "learning-memory.sqlite3"
     observation_memory = SqliteObservationMemory(observation_db)
+    research_work_memory = SqliteSharedObservationWorkMemory(research_work_db)
     learning_memory = SqliteLearningMemory(learning_db)
     admin_observability = SqliteAdminObservabilityStore(
         config.data_dir / "admin-observability.sqlite3"
@@ -267,6 +281,7 @@ def build_runtime(config: RuntimeConfig) -> AxignalRuntime:
             allowed_host=config.first_proof_allowed_host,
             store=FirstProofStore(config.data_dir / "first-proof.sqlite3"),
             observation_memory=observation_memory,
+            research_work_memory=research_work_memory,
             learning_memory=learning_memory,
             artifacts=ContentAddressedArtifactStore(config.data_dir / "artifacts"),
         )
@@ -284,6 +299,7 @@ def build_runtime(config: RuntimeConfig) -> AxignalRuntime:
     return AxignalRuntime(
         config=config,
         observation_memory=observation_memory,
+        research_work_memory=research_work_memory,
         learning_memory=learning_memory,
         admin_observability=admin_observability,
         governance_policy_store=governance_policy_store,

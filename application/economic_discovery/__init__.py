@@ -20,6 +20,7 @@ from application.economic_discovery.brain_contracts import (
 from application.economic_discovery.continuous_observation import (
     ObservationWorkLease,
     ObservationWorkState,
+    PrimeResearchAuthority,
     SharedObservationIntent,
     SharedObservationWork,
     SharedObservationWorkMemory,
@@ -164,6 +165,9 @@ from application.economic_discovery.prime import (
     build_initial_prime_control_plan,
     build_prime_control_plan,
 )
+from application.economic_discovery.research_revalidation import (
+    PrimeCurrentnessResearchRevalidator,
+)
 from application.economic_discovery.research_value import (
     ResearchValueContext,
     ResearchValueDecision,
@@ -303,6 +307,8 @@ __all__ = [
     "PresenceRelevance",
     "PricingEvidenceKind",
     "PrimeControlPlan",
+    "PrimeCurrentnessResearchRevalidator",
+    "PrimeResearchAuthority",
     "PrimeRoute",
     "PrimeWorkItem",
     "PublicSurfaceObservation",

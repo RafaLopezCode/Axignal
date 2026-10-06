@@ -63,14 +63,17 @@ def test_runtime_builds_real_durable_observation_and_learning_stores(tmp_path: P
     assert payload["code_sha"] == SHA
     assert payload["write_surface"] == "closed"
     assert runtime.observation_db.is_file()
+    assert runtime.research_work_db.is_file()
     assert runtime.learning_db.is_file()
     assert payload["persistence"] == {
         "observation_memory": {"status": "ok"},
+        "research_work_memory": {"status": "ok"},
         "learning_memory": {"status": "ok"},
     }
     detailed = runtime.health_payload(detailed=True)
     assert detailed["persistence"] == {
         "observation_memory": {"status": "ok", "rows": 0},
+        "research_work_memory": {"status": "ok", "rows": 0},
         "learning_memory": {"status": "ok", "rows": 0},
     }
 

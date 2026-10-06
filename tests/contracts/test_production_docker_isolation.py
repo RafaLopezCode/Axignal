@@ -7,6 +7,9 @@ COMPOSE = (ROOT / "deploy" / "production" / "compose.yml").read_text(encoding="u
 RUNTIME_DOCKERFILE = (ROOT / "deploy" / "production" / "docker" / "runtime.Dockerfile").read_text(
     encoding="utf-8"
 )
+RESEARCH_CANARY_DOCKERFILE = (
+    ROOT / "deploy" / "production" / "docker" / "research-canary.Dockerfile"
+).read_text(encoding="utf-8")
 LANDING_DOCKERFILE = (ROOT / "deploy" / "production" / "docker" / "landing.Dockerfile").read_text(
     encoding="utf-8"
 )
@@ -76,6 +79,34 @@ def test_runtime_preserves_existing_host_persistence_and_runs_hardened() -> None
     assert "mem_limit:" in COMPOSE
     assert "max-size: 10m" in COMPOSE
     assert "USER 33:33" in RUNTIME_DOCKERFILE
+
+
+def test_research_canary_is_opt_in_bounded_private_and_dependency_isolated() -> None:
+    section = COMPOSE.split("  research-canary:", maxsplit=1)[1].split("  experience:", maxsplit=1)[
+        0
+    ]
+    assert "profiles:" in section
+    assert "- research-canary" in section
+    assert 'restart: "no"' in section
+    assert "ports:" not in section
+    assert "expose:" not in section
+    assert "/var/lib/axignal/runtime:/var/lib/axignal/runtime" in section
+    assert 'user: "33:33"' in section
+    assert "read_only: true" in section
+    assert "cap_drop:" in section
+    assert "no-new-privileges:true" in section
+    assert "AXIGNAL_RESEARCH_CANARY_MAX_TICKS:-12" in section
+    assert "AXIGNAL_RESEARCH_CANARY_INTERVAL_SECONDS:-300" in section
+    assert "OPENAI_API_KEY:" not in section
+    assert "secrets:" in section
+    assert "- openai_api_key" in section
+    assert "--openai-api-key-file" in section
+    assert "/run/secrets/openai_api_key" in section
+    assert "AXIGNAL_OPENAI_API_KEY_FILE:-/etc/axignal/secrets/openai_api_key" in COMPOSE
+    assert 'pip install --no-cache-dir "openai==3.24.0"' in RESEARCH_CANARY_DOCKERFILE
+    assert 'ENTRYPOINT ["python", "-m", "tools.runtime.live_research"]' in (
+        RESEARCH_CANARY_DOCKERFILE
+    )
 
 
 def test_landing_image_is_non_root_read_only_and_contains_public_surfaces() -> None:

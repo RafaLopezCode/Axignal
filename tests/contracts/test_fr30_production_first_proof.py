@@ -13,6 +13,7 @@ from pathlib import Path
 import pytest
 
 from application.source_acquisition import SourceObservation
+from pipeline.continuous_observation import SqliteSharedObservationWorkMemory
 from pipeline.learning_memory import SqliteLearningMemory
 from pipeline.observation_memory import SqliteObservationMemory
 from pipeline.source_acquisition import ContentAddressedArtifactStore, HttpSourceSensor
@@ -36,6 +37,7 @@ def _service(tmp_path: Path) -> FirstProofService:
         allowed_host="axignal.com",
         store=FirstProofStore(data / "first-proof.sqlite3"),
         observation_memory=SqliteObservationMemory(data / "observation-memory.sqlite3"),
+        research_work_memory=SqliteSharedObservationWorkMemory(data / "research-work.sqlite3"),
         learning_memory=SqliteLearningMemory(data / "learning-memory.sqlite3"),
         artifacts=artifacts,
     )

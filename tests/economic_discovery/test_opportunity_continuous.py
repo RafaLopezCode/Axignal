@@ -36,6 +36,16 @@ from pipeline.continuous_observation import SqliteSharedObservationWorkMemory
 NOW = datetime(2026, 10, 5, 12, 0, tzinfo=UTC)
 
 
+def _authority_args() -> dict[str, object]:
+    return {
+        "observation_watermark_at": NOW,
+        "observation_watermark_id": "obs:authority",
+        "valid_until": NOW + timedelta(days=30),
+        "temporal_policy_id": "test-currentness",
+        "temporal_policy_version": "1",
+    }
+
+
 def _basis() -> ExplainableBasis:
     return ExplainableBasis(
         basis_id="basis:opportunity",
@@ -168,8 +178,10 @@ def test_same_governed_intent_is_shared_across_requesters_without_double_count(
     memory = SqliteSharedObservationWorkMemory(tmp_path / "work.sqlite3")
     plan = _research_plan()
 
-    first = schedule_prime_research(memory, plan=plan, requester_ref="focus:a")
-    second = schedule_prime_research(memory, plan=plan, requester_ref="focus:b")
+    first = schedule_prime_research(memory, plan=plan, requester_ref="focus:a", **_authority_args())
+    second = schedule_prime_research(
+        memory, plan=plan, requester_ref="focus:b", **_authority_args()
+    )
 
     assert first == second
     work = memory.get(first[0].work_key)
@@ -318,7 +330,9 @@ def test_state_change_routes_only_impacted_research_into_shared_work(tmp_path) -
     )
     memory = SqliteSharedObservationWorkMemory(tmp_path / "change-work.sqlite3")
 
-    intents = schedule_prime_research(memory, plan=plan, requester_ref="focus:a")
+    intents = schedule_prime_research(
+        memory, plan=plan, requester_ref="focus:a", **_authority_args()
+    )
 
     assert tuple(item.dimension_id for item in plan.items) == ("commercial_access",)
     assert tuple(item.dimension_id for item in intents) == ("commercial_access",)

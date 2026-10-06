@@ -20,7 +20,7 @@ from application.economic_discovery.brain_contracts import (
     SemanticPrimitive,
     TypingDimensionContract,
 )
-from application.economic_discovery.continuous_observation import schedule_prime_research
+from application.economic_discovery.continuous_observation import intents_from_prime_plan
 from application.economic_discovery.execution_budget import (
     ExecutionBudgetPolicy,
     ExecutionBudgetState,
@@ -995,17 +995,14 @@ def test_adaptive_research_learning_yield_is_derived_from_real_work_item(
             structured_evaluator=_Executor("structured"),
             adaptive_research=adaptive_executor,
         ),
+        temporal_currentness_policy=_temporal_policy(),
         research_work_memory=research_memory,
     )
 
     assert trace.prime_plan is not None
     assert trace.prime_plan.items[0].route is PrimeRoute.ADAPTIVE_RESEARCH
     assert adaptive_executor.calls == []
-    intent = schedule_prime_research(
-        research_memory,
-        plan=trace.prime_plan,
-        requester_ref="prime:assertion",
-    )[0]
+    intent = intents_from_prime_plan(trace.prime_plan)[0]
     durable = research_memory.get(intent.work_key)
     assert durable is not None
     assert durable.intent.dimension_id == "reputation"

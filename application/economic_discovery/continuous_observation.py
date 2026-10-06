@@ -68,6 +68,37 @@ class SharedObservationIntent:
 
 
 @dataclass(frozen=True, slots=True)
+class PrimeResearchAuthority:
+    subject_id: str
+    state_fingerprint: str
+    authorized_work_keys: frozenset[str]
+    observation_watermark_at: datetime
+    observation_watermark_id: str
+    valid_until: datetime
+    temporal_policy_id: str
+    temporal_policy_version: str
+
+    def __post_init__(self) -> None:
+        if any(
+            not value.strip()
+            for value in (
+                self.subject_id,
+                self.state_fingerprint,
+                self.observation_watermark_id,
+                self.temporal_policy_id,
+                self.temporal_policy_version,
+            )
+        ):
+            raise ValueError("Prime research authority identity is required")
+        if self.observation_watermark_at.tzinfo is None or self.valid_until.tzinfo is None:
+            raise ValueError("Prime research authority times must be timezone-aware")
+        if self.valid_until <= self.observation_watermark_at:
+            raise ValueError("Prime research authority must expire after its observation watermark")
+        if any(not key.strip() for key in self.authorized_work_keys):
+            raise ValueError("Prime research authority work keys cannot be blank")
+
+
+@dataclass(frozen=True, slots=True)
 class SharedObservationWork:
     intent: SharedObservationIntent
     state: ObservationWorkState
@@ -101,6 +132,12 @@ class ObservationWorkLease:
 
 
 class SharedObservationWorkMemory(Protocol):
+    def replace_prime_authority(self, authority: PrimeResearchAuthority) -> None:
+        """Replace the current Prime research authority snapshot for one subject."""
+
+    def prime_authority(self, subject_id: str) -> PrimeResearchAuthority | None:
+        """Return the latest Prime research authority snapshot for one subject."""
+
     def enqueue(self, intent: SharedObservationIntent, requester_ref: str) -> bool:
         """Return True only when a new shared work row is created."""
 
@@ -164,12 +201,29 @@ def schedule_prime_research(
     *,
     plan: PrimeControlPlan,
     requester_ref: str,
+    observation_watermark_at: datetime,
+    observation_watermark_id: str,
+    valid_until: datetime,
+    temporal_policy_id: str,
+    temporal_policy_version: str,
 ) -> tuple[SharedObservationIntent, ...]:
-    """Persist authorized research once while retaining every attention requester."""
+    """Persist authorized research and replace the subject's temporal Prime authority."""
 
     if not requester_ref.strip():
         raise ValueError("shared observation requester ref is required")
     intents = intents_from_prime_plan(plan)
+    memory.replace_prime_authority(
+        PrimeResearchAuthority(
+            subject_id=plan.subject_id,
+            state_fingerprint=plan.state_fingerprint,
+            authorized_work_keys=frozenset(intent.work_key for intent in intents),
+            observation_watermark_at=observation_watermark_at,
+            observation_watermark_id=observation_watermark_id,
+            valid_until=valid_until,
+            temporal_policy_id=temporal_policy_id,
+            temporal_policy_version=temporal_policy_version,
+        )
+    )
     for intent in intents:
         memory.enqueue(intent, requester_ref)
     return intents

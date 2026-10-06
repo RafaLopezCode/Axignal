@@ -116,6 +116,7 @@ from domain.organizations.model import Organization
 from domain.tenancy.model import Principal
 from domain.xeed import Xeed
 from domain.xignal import XignalEpistemicState, XignalKind
+from pipeline.continuous_observation import SqliteSharedObservationWorkMemory
 from pipeline.learning_memory import SqliteLearningMemory
 from pipeline.observation_memory import SqliteObservationMemory
 from pipeline.source_acquisition import (
@@ -274,6 +275,7 @@ class FirstProofService:
     allowed_host: str
     store: FirstProofStore
     observation_memory: SqliteObservationMemory
+    research_work_memory: SqliteSharedObservationWorkMemory
     learning_memory: SqliteLearningMemory
     artifacts: ContentAddressedArtifactStore
     clock: Callable[[], datetime] = lambda: datetime.now(UTC)
@@ -601,6 +603,7 @@ class FirstProofService:
             ports=PrimeExecutionPorts(executor, executor, executor),
             temporal_currentness_policy=authorization.temporal_policy,
             ingested_observation_reuse_authority=authorization.reuse_authority,
+            research_work_memory=self.research_work_memory,
         )
         observation = source_acquirer.require_observation()
         projection_as_of = max(now, observation.retrieved_at)

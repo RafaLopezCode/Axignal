@@ -54,6 +54,52 @@ services:
         max-size: 10m
         max-file: "3"
 
+  research-canary:
+    profiles:
+      - research-canary
+    build:
+      context: ../..
+      dockerfile: deploy/production/docker/research-canary.Dockerfile
+      args:
+        AXIGNAL_CODE_SHA: ${AXIGNAL_CODE_SHA:?AXIGNAL_CODE_SHA is required}
+    image: axignal-research-canary:${AXIGNAL_CODE_SHA:?AXIGNAL_CODE_SHA is required}
+    container_name: axignal-prod-research-canary
+    restart: "no"
+    init: true
+    user: "33:33"
+    read_only: true
+    tmpfs:
+      - /tmp:size=64m,mode=1777
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    environment:
+      AXIGNAL_DATA_DIR: /var/lib/axignal/runtime
+    secrets:
+      - openai_api_key
+    command:
+      - --openai-api-key-file
+      - /run/secrets/openai_api_key
+      - --subject-id
+      - ${AXIGNAL_RESEARCH_CANARY_SUBJECT_ID:-}
+      - --max-ticks
+      - ${AXIGNAL_RESEARCH_CANARY_MAX_TICKS:-12}
+      - --interval-seconds
+      - ${AXIGNAL_RESEARCH_CANARY_INTERVAL_SECONDS:-300}
+    volumes:
+      - /var/lib/axignal/runtime:/var/lib/axignal/runtime
+    networks:
+      - internal
+    pids_limit: 96
+    mem_limit: 512m
+    cpus: 1.0
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: "3"
+
   experience:
     build:
       context: ../..
@@ -152,3 +198,7 @@ networks:
   internal:
     name: axignal_prod_internal
     driver: bridge
+
+secrets:
+  openai_api_key:
+    file: ${AXIGNAL_OPENAI_API_KEY_FILE:-/etc/axignal/secrets/openai_api_key}

@@ -852,10 +852,28 @@ def execute_prime_source_slice(
     )
 
     if research_work_memory is not None:
+        if temporal_currentness_policy is None:
+            raise ValueError(
+                "durable Prime research scheduling requires temporal currentness policy"
+            )
+        if not rich_state.data:
+            raise ValueError("durable Prime research scheduling requires rich-state provenance")
+        watermark = max(
+            rich_state.data,
+            key=lambda item: (item.observed_at, item.observation_id),
+        )
         schedule_prime_research(
             research_work_memory,
             plan=prime_plan,
             requester_ref=f"prime:{execution_id}",
+            observation_watermark_at=watermark.observed_at,
+            observation_watermark_id=watermark.observation_id,
+            valid_until=min(
+                item.observed_at + temporal_currentness_policy.stale_after
+                for item in rich_state.data
+            ),
+            temporal_policy_id=temporal_currentness_policy.policy_id,
+            temporal_policy_version=temporal_currentness_policy.version,
         )
 
     stop_reason: str | None = None

@@ -11,6 +11,7 @@ from pathlib import Path
 from application.economic_discovery.continuous_observation import (
     ObservationWorkLease,
     ObservationWorkState,
+    PrimeResearchAuthority,
     SharedObservationIntent,
     SharedObservationWork,
 )
@@ -93,6 +94,128 @@ class SqliteSharedObservationWorkMemory:
                 )
                 """
             )
+            db.execute(
+                """
+                CREATE TABLE IF NOT EXISTS prime_research_authority (
+                    subject_id TEXT PRIMARY KEY,
+                    state_fingerprint TEXT NOT NULL,
+                    observation_watermark_at TEXT NOT NULL,
+                    observation_watermark_id TEXT NOT NULL,
+                    valid_until TEXT NOT NULL,
+                    temporal_policy_id TEXT NOT NULL,
+                    temporal_policy_version TEXT NOT NULL
+                )
+                """
+            )
+            authority_columns = {
+                str(row[1])
+                for row in db.execute("PRAGMA table_info(prime_research_authority)").fetchall()
+            }
+            for column in (
+                "observation_watermark_at",
+                "observation_watermark_id",
+                "valid_until",
+                "temporal_policy_id",
+                "temporal_policy_version",
+            ):
+                if column not in authority_columns:
+                    db.execute(f"ALTER TABLE prime_research_authority ADD COLUMN {column} TEXT")
+
+            db.execute(
+                """
+                CREATE TABLE IF NOT EXISTS prime_research_authorized_work (
+                    subject_id TEXT NOT NULL,
+                    state_fingerprint TEXT NOT NULL,
+                    work_key TEXT NOT NULL,
+                    PRIMARY KEY (subject_id, work_key),
+                    FOREIGN KEY (subject_id) REFERENCES prime_research_authority(subject_id)
+                        ON DELETE CASCADE
+                )
+                """
+            )
+
+    def replace_prime_authority(self, authority: PrimeResearchAuthority) -> None:
+        with self._connect() as db:
+            db.execute("BEGIN IMMEDIATE")
+            db.execute(
+                """
+                INSERT INTO prime_research_authority(
+                    subject_id, state_fingerprint, observation_watermark_at,
+                    observation_watermark_id, valid_until, temporal_policy_id,
+                    temporal_policy_version
+                )
+                VALUES (?, ?, ?, ?, ?, ?, ?)
+                ON CONFLICT(subject_id) DO UPDATE SET
+                    state_fingerprint=excluded.state_fingerprint,
+                    observation_watermark_at=excluded.observation_watermark_at,
+                    observation_watermark_id=excluded.observation_watermark_id,
+                    valid_until=excluded.valid_until,
+                    temporal_policy_id=excluded.temporal_policy_id,
+                    temporal_policy_version=excluded.temporal_policy_version
+                """,
+                (
+                    authority.subject_id,
+                    authority.state_fingerprint,
+                    authority.observation_watermark_at.astimezone(UTC).isoformat(),
+                    authority.observation_watermark_id,
+                    authority.valid_until.astimezone(UTC).isoformat(),
+                    authority.temporal_policy_id,
+                    authority.temporal_policy_version,
+                ),
+            )
+            db.execute(
+                "DELETE FROM prime_research_authorized_work WHERE subject_id=?",
+                (authority.subject_id,),
+            )
+            db.executemany(
+                """
+                INSERT INTO prime_research_authorized_work(
+                    subject_id, state_fingerprint, work_key
+                ) VALUES (?, ?, ?)
+                """,
+                (
+                    (authority.subject_id, authority.state_fingerprint, work_key)
+                    for work_key in sorted(authority.authorized_work_keys)
+                ),
+            )
+
+    def prime_authority(self, subject_id: str) -> PrimeResearchAuthority | None:
+        if not subject_id.strip():
+            raise ValueError("Prime research authority subject is required")
+        with self._connect() as db:
+            row = db.execute(
+                "SELECT * FROM prime_research_authority WHERE subject_id=?",
+                (subject_id,),
+            ).fetchone()
+            if row is None:
+                return None
+            required = (
+                row["observation_watermark_at"],
+                row["observation_watermark_id"],
+                row["valid_until"],
+                row["temporal_policy_id"],
+                row["temporal_policy_version"],
+            )
+            if any(value is None for value in required):
+                return None
+            keys = db.execute(
+                """
+                SELECT work_key FROM prime_research_authorized_work
+                WHERE subject_id=? AND state_fingerprint=?
+                ORDER BY work_key
+                """,
+                (subject_id, str(row["state_fingerprint"])),
+            ).fetchall()
+        return PrimeResearchAuthority(
+            subject_id=subject_id,
+            state_fingerprint=str(row["state_fingerprint"]),
+            authorized_work_keys=frozenset(str(item["work_key"]) for item in keys),
+            observation_watermark_at=datetime.fromisoformat(str(row["observation_watermark_at"])),
+            observation_watermark_id=str(row["observation_watermark_id"]),
+            valid_until=datetime.fromisoformat(str(row["valid_until"])),
+            temporal_policy_id=str(row["temporal_policy_id"]),
+            temporal_policy_version=str(row["temporal_policy_version"]),
+        )
 
     @staticmethod
     def _intent_from_row(row: sqlite3.Row) -> SharedObservationIntent:
