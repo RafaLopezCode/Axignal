@@ -5,17 +5,34 @@ from __future__ import annotations
 import io
 import json
 from collections.abc import Sequence
-from typing import Any
-
-from openai import OpenAI
+from importlib import import_module
+from typing import Any, Protocol, cast
 
 from cognition.jobs.model import CognitiveJob, StructuredResult
 from cognition.providers.openai_batch import BatchPoll, BatchState
 
 
+class _OpenAISdk(Protocol):
+    files: Any
+    batches: Any
+
+
+def _default_sdk() -> _OpenAISdk:
+    try:
+        module = import_module("openai")
+    except ModuleNotFoundError as exc:
+        raise RuntimeError(
+            "PB-10 live canary requires the optional research-canary-live dependency group"
+        ) from exc
+    factory = vars(module).get("OpenAI")
+    if factory is None:
+        raise RuntimeError("installed OpenAI package does not expose OpenAI")
+    return cast(_OpenAISdk, factory())
+
+
 class OpenAISdkBatchClient:
-    def __init__(self, client: OpenAI | None = None) -> None:
-        self._client = client or OpenAI()
+    def __init__(self, client: _OpenAISdk | None = None) -> None:
+        self._client = client if client is not None else _default_sdk()
 
     def submit(self, *, model: str, jobs: Sequence[CognitiveJob]) -> str:
         content = self._jsonl(model=model, jobs=jobs)
