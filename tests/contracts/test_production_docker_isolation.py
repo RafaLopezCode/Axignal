@@ -92,6 +92,8 @@ def test_research_canary_is_opt_in_bounded_private_and_dependency_isolated() -> 
     assert "expose:" not in section
     assert "/var/lib/axignal/runtime:/var/lib/axignal/runtime" in section
     assert 'user: "33:33"' in section
+    assert "group_add:" in section
+    assert "AXIGNAL_RESEARCH_SECRET_GID:-1991" in section
     assert "read_only: true" in section
     assert "cap_drop:" in section
     assert "no-new-privileges:true" in section
