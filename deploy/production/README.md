@@ -42,3 +42,38 @@ delete the token file:
 
 This SSH operator adapter is internal bootstrap/session issuance for Customer Zero,
 not the future general Admin browser identity provider. See ADR-0083.
+
+## Autonomous observation daily timer
+
+The autonomous observation entrypoint is deployed as a bounded one-shot container,
+scheduled by `axignal-observation-daily.timer` once per UTC day. The timer may be
+enabled before subscriber enrollment exists: the service has systemd
+`ConditionPathExists` guards and therefore skips cleanly until both server-owned
+files exist:
+
+- `/etc/axignal/observation-runtime/attention.json`
+- `/etc/axignal/observation-runtime/enrollment.json`
+
+Do not create placeholder tenant, principal, focus, market, or source-rights
+values. Enrollment must refer to real authorized subscriber state. The runner
+resolves `/srv/axignal/docker/current` on every invocation, uses that exact
+runtime image, mounts canonical persistence, publishes no port, runs as UID 33,
+and does not receive model credentials.
+
+Install/update the scheduler from the deployed immutable release:
+
+    install -o root -g root -m 0755 \
+      deploy/production/run-observation-daily.sh \
+      /srv/axignal/docker/current/deploy/production/run-observation-daily.sh
+    install -o root -g root -m 0644 \
+      deploy/production/axignal-observation-daily.service \
+      /etc/systemd/system/axignal-observation-daily.service
+    install -o root -g root -m 0644 \
+      deploy/production/axignal-observation-daily.timer \
+      /etc/systemd/system/axignal-observation-daily.timer
+    systemctl daemon-reload
+    systemctl enable --now axignal-observation-daily.timer
+
+A skipped service because enrollment/configuration is absent is not evidence of
+an autonomous observation E2E. Verify the first configured tick manually before
+claiming production E2E.

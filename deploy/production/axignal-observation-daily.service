@@ -1,0 +1,22 @@
+[Unit]
+Description=AXIGNAL daily autonomous observation tick
+Requires=docker.service
+After=docker.service network-online.target
+Wants=network-online.target
+ConditionPathExists=/srv/axignal/docker/current/deploy/production/run-observation-daily.sh
+ConditionPathExists=/etc/axignal/observation-runtime/attention.json
+ConditionPathExists=/etc/axignal/observation-runtime/enrollment.json
+
+[Service]
+Type=oneshot
+User=root
+Group=root
+ExecStart=/srv/axignal/docker/current/deploy/production/run-observation-daily.sh
+TimeoutStartSec=30min
+Nice=10
+IOSchedulingClass=idle
+IOSchedulingPriority=7
+NoNewPrivileges=true
+ProtectHome=true
+ProtectSystem=strict
+ReadWritePaths=/var/lib/axignal/runtime /run /var/run
