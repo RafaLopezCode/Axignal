@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import math
+from collections.abc import Iterable
 from pathlib import Path
 from typing import Any
 
@@ -19,7 +20,13 @@ def normalize_judgment(
     requested_model: str | None = None,
     resolved_model: str | None = None,
     usage: dict[str, int] | None = None,
+    options: Iterable[str] | None = None,
 ) -> NormalizedJudgment:
+    """Normalize one typed answer; structural inconsistency is MALFORMED, never repaired.
+
+    ``options`` is the declared Choice answer space when the caller knows it. A
+    selection or distribution label outside it is rejected rather than coerced.
+    """
     if primitive not in {"CHOICE", "SCORE", "NOUL"}:
         return NormalizedJudgment(
             question_id,
@@ -71,10 +78,13 @@ def normalize_judgment(
         valid_distribution = {str(key): float(value) for key, value in distribution.items()}
     else:
         valid_distribution = None
+    legend = answer.get("legend")
+    membership_valid = _membership_valid(primitive, raw_value, valid_distribution, legend, options)
     if raw_value is None:
         status = "MISSING"
     elif (
-        not distribution_valid
+        not membership_valid
+        or not distribution_valid
         or not confidence_valid
         or not usage_valid
         or (
@@ -118,6 +128,54 @@ def normalize_judgment(
         if isinstance(answer.get("legend"), dict)
         else None,
     )
+
+
+def _membership_valid(
+    primitive: str,
+    raw_value: Any,
+    distribution: dict[str, float] | None,
+    legend: Any,
+    options: Iterable[str] | None,
+) -> bool:
+    """Check that the selected value belongs to the answer space it was drawn from."""
+    if raw_value is None:
+        return True
+    if primitive == "CHOICE":
+        if not isinstance(raw_value, str) or not raw_value.strip():
+            return False
+        allowed = {str(option) for option in options} if options is not None else None
+        if allowed is not None and raw_value not in allowed:
+            return False
+        if distribution is not None:
+            if raw_value not in distribution:
+                return False
+            if allowed is not None and not set(distribution) <= allowed:
+                return False
+        return True
+    if primitive == "SCORE":
+        if isinstance(raw_value, bool) or not isinstance(raw_value, (int, float)):
+            return True  # type errors are reported by the primitive check
+        if distribution is not None and not any(
+            _numeric_label(label) == float(raw_value) for label in distribution
+        ):
+            return False
+        if isinstance(legend, dict) and legend:
+            bounds = [_numeric_label(key) for key in legend]
+            if any(bound is None for bound in bounds):
+                return False
+            numeric = [bound for bound in bounds if bound is not None]
+            if not min(numeric) <= float(raw_value) <= max(numeric):
+                return False
+        return True
+    return True
+
+
+def _numeric_label(label: Any) -> float | None:
+    try:
+        value = float(label)
+    except (TypeError, ValueError):
+        return None
+    return value if math.isfinite(value) else None
 
 
 def compose_support(judgment: NormalizedJudgment) -> dict[str, Any]:

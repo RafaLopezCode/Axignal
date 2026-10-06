@@ -39,9 +39,23 @@ class LunaBatchProvider:
 
         if not jobs:
             return ()
-        return tuple(
+        submitted = tuple(jobs)
+        job_ids = {job.id for job in submitted}
+        if len(job_ids) != len(submitted):
+            raise ValueError("Luna batch job identities must be unique")
+        results = tuple(
             self._transport.complete_batch(
                 model=self._authorized_model,
-                jobs=tuple(jobs),
+                jobs=submitted,
             )
         )
+        # Missing results stay absent (not negative); foreign or repeated
+        # identities cannot be attributed to a submitted job and are refused.
+        seen: set[str] = set()
+        for result in results:
+            if result.job_id not in job_ids:
+                raise ValueError(f"Luna batch returned unknown job identity: {result.job_id!r}")
+            if result.job_id in seen:
+                raise ValueError(f"Luna batch returned duplicate job identity: {result.job_id!r}")
+            seen.add(result.job_id)
+        return results

@@ -152,6 +152,11 @@ class DimensionEvaluation:
             for label, value in self.distribution
         ):
             raise ValueError("distribution values must be finite probabilities")
+        if self.distribution:
+            if not math.isclose(sum(value for _, value in self.distribution), 1.0, abs_tol=1e-6):
+                raise ValueError("distribution probabilities must sum to one")
+            if self.selected_option is not None and self.selected_option not in labels:
+                raise ValueError("selected option must be present in its distribution")
         if self.confidence is not None and (
             not math.isfinite(self.confidence) or not 0.0 <= self.confidence <= 1.0
         ):

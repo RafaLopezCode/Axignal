@@ -172,3 +172,107 @@ def test_eb05_preflight_artifact_is_reproducible_and_keeps_provider_gates(tmp_pa
         "experiments/decision_lab/artifacts/eb05-harness-preflight-v1.json"
     )
     assert read_result(root_artifact) == repeated
+
+
+def _harness_case(contract_id: str):  # type: ignore[no-untyped-def]
+    return next(item for item in load_compiled_cases() if item.contract_id == contract_id)
+
+
+def _judged(case, primitive: str, answer: dict) -> tuple[str, str | None]:  # type: ignore[no-untyped-def]
+    from experiments.decision_lab.harness_vnext import _validated_judgment
+    from experiments.decision_lab.judgments import normalize_judgment
+
+    return _validated_judgment(
+        case, normalize_judgment(case.contract_id, primitive, answer, evaluator="fixture")
+    )
+
+
+@pytest.mark.parametrize(
+    ("primitive", "answer", "expected"),
+    [
+        ("CHOICE", {"selected": "SAME_LEGAL_ENTITY"}, ("ANSWERED", None)),
+        (
+            "CHOICE",
+            {"selected": "CUSTOMER"},
+            ("SCHEMA_FAILURE", "CHOICE_OUTSIDE_DECLARED_CONTRACT"),
+        ),
+        (
+            "CHOICE",
+            {
+                "selected": "SAME_LEGAL_ENTITY",
+                "distribution": {"SAME_LEGAL_ENTITY": 0.6, "UNRESOLVED": 0.4},
+            },
+            ("ANSWERED", None),
+        ),
+        (
+            "CHOICE",
+            {
+                "selected": "SAME_LEGAL_ENTITY",
+                "distribution": {"SAME_LEGAL_ENTITY": 0.5, "CUSTOMER": 0.5},
+            },
+            ("SCHEMA_FAILURE", "DISTRIBUTION_OUTSIDE_DECLARED_CONTRACT"),
+        ),
+        ("CHOICE", {}, ("ABSTAINED", None)),
+        ("SCORE", {"value": 3}, ("SCHEMA_FAILURE", "PRIMITIVE_OUTSIDE_DECLARED_CONTRACT")),
+        (
+            "NOUL",
+            {"probability_yes": 0.9},
+            ("SCHEMA_FAILURE", "PRIMITIVE_OUTSIDE_DECLARED_CONTRACT"),
+        ),
+    ],
+)
+def test_choice_contract_validation_is_discriminative(
+    primitive: str, answer: dict, expected: tuple[str, str | None]
+) -> None:
+    assert _judged(_harness_case("ENT.ALIGN.vNext"), primitive, answer) == expected
+
+
+@pytest.mark.parametrize(
+    ("primitive", "answer", "expected"),
+    [
+        ("NOUL", {"probability_yes": 0.0}, ("ANSWERED", None)),
+        ("NOUL", {"probability_yes": 1.0}, ("ANSWERED", None)),
+        ("NOUL", {"probability_yes": 1.2}, ("SCHEMA_FAILURE", "MALFORMED_TYPED_JUDGMENT")),
+        (
+            "CHOICE",
+            {"selected": "probability_yes"},
+            ("SCHEMA_FAILURE", "PRIMITIVE_OUTSIDE_DECLARED_CONTRACT"),
+        ),
+    ],
+)
+def test_noul_contract_validation_is_discriminative(
+    primitive: str, answer: dict, expected: tuple[str, str | None]
+) -> None:
+    assert _judged(_harness_case("REL.EXISTENCE.vNext"), primitive, answer) == expected
+
+
+@pytest.mark.parametrize(
+    ("answer", "expected"),
+    [
+        ({"value": 2}, ("ANSWERED", None)),
+        ({"value": 2.0, "distribution": {"1": 0.2, "2": 0.8}}, ("ANSWERED", None)),
+        ({"value": 7}, ("SCHEMA_FAILURE", "SCORE_VALUE_OUTSIDE_CONTRACT")),
+        (
+            {"value": 2, "distribution": {"2": 0.5, "9": 0.5}},
+            ("SCHEMA_FAILURE", "DISTRIBUTION_OUTSIDE_DECLARED_CONTRACT"),
+        ),
+        ({"value": True}, ("SCHEMA_FAILURE", "MALFORMED_TYPED_JUDGMENT")),
+    ],
+)
+def test_score_contract_validation_is_discriminative(
+    monkeypatch: pytest.MonkeyPatch, answer: dict, expected: tuple[str, str | None]
+) -> None:
+    from dataclasses import replace
+
+    from experiments.decision_lab import contracts_vnext
+    from experiments.decision_lab.contracts_vnext import Primitive
+
+    case = _harness_case("ENT.ALIGN.vNext")
+    score_contract = replace(
+        DECISION_CONTRACTS[case.contract_id],
+        primitive=Primitive.SCORE,
+        answer_space=("1", "2", "3"),
+    )
+    monkeypatch.setitem(contracts_vnext.DECISION_CONTRACTS, case.contract_id, score_contract)
+
+    assert _judged(case, "SCORE", answer) == expected

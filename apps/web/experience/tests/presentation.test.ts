@@ -64,3 +64,46 @@ test("all six languages can receive a scoped deterministic Axent stream; other l
     }
   }
 });
+async function askIllustrativeAxent(text: string) {
+  const response = await POST(
+    new Request("http://127.0.0.1:3810/api/axent", {
+      method: "POST",
+      headers: {
+        origin: "http://127.0.0.1:3810",
+        host: "127.0.0.1:3810",
+        "content-type": "application/json",
+      },
+      body: JSON.stringify({
+        locale: "en",
+        context: makeContext(),
+        messages: [{ role: "user", parts: [{ type: "text", text }] }],
+      }),
+    }),
+  );
+  assert.equal(response.status, 200);
+  return response.text();
+}
+test("a 'why' answer composes its evidence and labels what is still unknown", async () => {
+  const why = await askIllustrativeAxent("Why does this deserve attention?");
+  assert.ok(why.includes('"component":"signal"'));
+  assert.ok(why.includes('"component":"evidence"'));
+  assert.ok(why.includes("Still unknown: "));
+  // The plan only references authorized items; it carries no epistemic state to raise.
+  const planLine = why
+    .split("\n")
+    .find((line) => line.includes("tool-output-available"));
+  assert.ok(planLine);
+  const plan = JSON.parse(planLine.replace(/^data: /, "")).output as {
+    items: { component: string; priority: string }[];
+  };
+  for (const item of plan.items)
+    assert.deepEqual(Object.keys(item).sort(), ["component", "priority", "ref"]);
+  assert.equal(
+    plan.items.find((item) => item.component === "evidence")?.priority,
+    "supporting",
+  );
+  const overview = await askIllustrativeAxent("Explain this context");
+  assert.ok(overview.includes('"component":"signal"'));
+  assert.equal(overview.includes('"component":"evidence"'), false);
+  assert.equal(overview.includes("Still unknown: "), false);
+});

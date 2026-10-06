@@ -142,6 +142,36 @@ def test_choice_score_and_noul_normalization_preserves_raw_typed_values() -> Non
 
 
 @pytest.mark.parametrize(
+    ("primitive", "answer", "options"),
+    [
+        ("CHOICE", {"selected": "Z", "distribution": {"A": 0.5, "B": 0.5}}, None),
+        ("CHOICE", {"selected": "Z"}, ["A", "B"]),
+        ("CHOICE", {"selected": "A", "distribution": {"A": 0.5, "Z": 0.5}}, ["A", "B"]),
+        ("CHOICE", {"selected": "  "}, None),
+        ("SCORE", {"value": 3, "distribution": {"1": 0.2, "5": 0.8}}, None),
+        ("SCORE", {"value": 7, "legend": {"1": "low", "5": "high"}}, None),
+        ("SCORE", {"value": 2, "legend": {"low": "1", "high": "5"}}, None),
+    ],
+)
+def test_answers_outside_their_answer_space_are_malformed(
+    primitive: str, answer: dict, options: list[str] | None
+) -> None:
+    judgment = normalize_judgment("q", primitive, answer, evaluator="fixture", options=options)
+    assert judgment.status == "MALFORMED"
+
+
+def test_declared_choice_options_accept_member_answers() -> None:
+    judgment = normalize_judgment(
+        "q",
+        "CHOICE",
+        {"selected": "A", "distribution": {"A": 0.6, "B": 0.4}},
+        evaluator="fixture",
+        options=["A", "B", "C"],
+    )
+    assert judgment.status == "ANSWERED"
+
+
+@pytest.mark.parametrize(
     "distribution",
     [
         {"A": 0.7, "B": 0.7},

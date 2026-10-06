@@ -287,9 +287,14 @@ function RegisteredComposition({
     evidence: (ref: string) => {
       const e = p.evidence.find((e) => e.id === ref)!;
       return (
+        // Evidence explains the basis of the signal; it never restates or raises its state.
         <button className="generated-evidence" onClick={() => onEvidence(ref)}>
           <BookOpen size={16} />
-          <span>{copy(e.title)}</span>
+          <span>
+            <small>{t("Base", "Basis")}</small>
+            {copy(e.title)}
+            <em>{copy(e.limitation)}</em>
+          </span>
           <ArrowUpRight size={15} />
         </button>
       );

@@ -178,7 +178,8 @@ export async function POST(request: Request) {
           priority: "primary",
         },
       ];
-  if (sourceIntent && signal?.evidenceIds[0])
+  // A reason is only readable next to its basis: "why" also composes the evidence.
+  if ((sourceIntent || reasonIntent) && signal?.evidenceIds[0])
     items.push({
       component: "evidence",
       ref: signal.evidenceIds[0],
@@ -192,6 +193,7 @@ export async function POST(request: Request) {
     "Esta es una explicación ilustrativa, sin investigación en vivo. ",
     "This is an illustrative explanation, without live research. ",
   );
+  const stillUnknown = t("Todavía no sabemos: ", "Still unknown: ");
   const answer = !supported
     ? t(
         "En esta demo puedo explicar el contexto seleccionado, sus límites y su evidencia. Para una investigación nueva haría falta un proveedor y herramientas autorizados.",
@@ -199,9 +201,9 @@ export async function POST(request: Request) {
       )
     : signal
       ? sourceIntent
-        ? [copy(signal.derivation), copy(signal.limitation)].join("\n\n")
+        ? [copy(signal.derivation), stillUnknown + copy(signal.limitation)].join("\n\n")
         : reasonIntent
-          ? [copy(signal.why), copy(signal.limitation)].join("\n\n")
+          ? [copy(signal.why), stillUnknown + copy(signal.limitation)].join("\n\n")
           : [copy(signal.summary), copy(signal.next)].join("\n\n")
       : t(
           "No hay una señal sustentada en este corte. La ausencia de conocimiento no permite concluir que algo no existe.",

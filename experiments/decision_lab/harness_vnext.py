@@ -147,27 +147,48 @@ def _validated_judgment(
         return "SCHEMA_FAILURE", "MALFORMED_TYPED_JUDGMENT"
     if judgment.status == "MISSING":
         return "ABSTAINED", None
-    if judgment.primitive == "CHOICE" and (
-        not isinstance(judgment.value, str) or judgment.value not in _answer_space(case)
+    # Validate against the declared contract, never against what the evaluator claims to be.
+    contract = _contract(case)
+    primitive = str(contract.primitive.value)
+    if judgment.primitive != primitive:
+        return "SCHEMA_FAILURE", "PRIMITIVE_OUTSIDE_DECLARED_CONTRACT"
+    answer_space = set(contract.answer_space)
+    if primitive == "CHOICE" and (
+        not isinstance(judgment.value, str) or judgment.value not in answer_space
     ):
         return "SCHEMA_FAILURE", "CHOICE_OUTSIDE_DECLARED_CONTRACT"
-    if judgment.primitive == "NOUL" and (
+    if (
+        primitive in {"CHOICE", "SCORE"}
+        and judgment.distribution is not None
+        and not set(judgment.distribution) <= answer_space
+    ):
+        return "SCHEMA_FAILURE", "DISTRIBUTION_OUTSIDE_DECLARED_CONTRACT"
+    if primitive == "NOUL" and (
         not isinstance(judgment.value, (int, float))
         or isinstance(judgment.value, bool)
         or not 0 <= judgment.value <= 1
     ):
         return "SCHEMA_FAILURE", "NOUL_VALUE_OUTSIDE_CONTRACT"
-    if judgment.primitive == "SCORE" and (
-        not isinstance(judgment.value, (int, float)) or isinstance(judgment.value, bool)
+    if primitive == "SCORE" and (
+        not isinstance(judgment.value, (int, float))
+        or isinstance(judgment.value, bool)
+        or not any(_same_score(judgment.value, label) for label in answer_space)
     ):
         return "SCHEMA_FAILURE", "SCORE_VALUE_OUTSIDE_CONTRACT"
     return "ANSWERED", None
 
 
-def _answer_space(case: CompiledBakeoffCase) -> tuple[str, ...]:
+def _same_score(value: float, label: str) -> bool:
+    try:
+        return float(label) == float(value)
+    except ValueError:
+        return False
+
+
+def _contract(case: CompiledBakeoffCase) -> Any:
     from experiments.decision_lab.contracts_vnext import DECISION_CONTRACTS
 
-    return DECISION_CONTRACTS[case.contract_id].answer_space
+    return DECISION_CONTRACTS[case.contract_id]
 
 
 def run_fixture_mode(

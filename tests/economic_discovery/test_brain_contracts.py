@@ -196,3 +196,37 @@ def test_xignal_score_is_epistemic_not_sale_probability() -> None:
             "attention.v1",
             0.8,  # type: ignore[arg-type]
         )
+
+
+@pytest.mark.parametrize(
+    ("distribution", "selected", "message"),
+    [
+        ((("YES", 0.8), ("NO", 0.8)), None, "sum to one"),
+        ((("YES", 0.5), ("NO", 0.5)), "MAYBE", "present in its distribution"),
+    ],
+)
+def test_answerable_dimension_rejects_output_outside_its_answer_space(
+    distribution: tuple[tuple[str, float], ...], selected: str | None, message: str
+) -> None:
+    with pytest.raises(ValueError, match=message):
+        DimensionEvaluation(
+            dimension_id="CUSTOMER_ROLE",
+            contract_fingerprint="contract",
+            disposition=DimensionDisposition.ANSWERABLE,
+            evaluator="jev",
+            evaluator_version="1.13.0",
+            distribution=distribution,
+            selected_option=selected,
+        )
+
+
+def test_deterministic_selection_without_distribution_remains_valid() -> None:
+    evaluation = DimensionEvaluation(
+        dimension_id="CUSTOMER_ROLE",
+        contract_fingerprint="contract",
+        disposition=DimensionDisposition.ANSWERABLE,
+        evaluator="python",
+        evaluator_version="1",
+        selected_option="UNKNOWN",
+    )
+    assert evaluation.distribution == ()

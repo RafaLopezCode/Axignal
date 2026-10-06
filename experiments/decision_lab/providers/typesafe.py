@@ -155,6 +155,9 @@ class TypeSafeLabEvaluator:
                     requested_model=model,
                     resolved_model=resolved if isinstance(resolved, str) else None,
                     usage=usage or None,
+                    options=definition["criteria"]
+                    if primitive == "CHOICE" and isinstance(definition.get("criteria"), dict)
+                    else None,
                 )
             )
         safe_meta: dict[str, Any] = (

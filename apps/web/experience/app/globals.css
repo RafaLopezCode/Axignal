@@ -2656,6 +2656,17 @@ em {
 }
 .generated-evidence > span {
   flex: 1;
+  display: grid;
+  gap: 3px;
+}
+.generated-evidence small {
+  font-size: 8px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.generated-evidence em {
+  font-style: normal;
+  color: #6b7a91;
 }
 .generated-context {
   padding: 15px;
