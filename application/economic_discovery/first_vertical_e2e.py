@@ -18,7 +18,11 @@ from application.economic_discovery.economic_state import (
     EvidenceBackedEconomicState,
 )
 from application.economic_discovery.execution_budget import (
+    ExecutionBudgetDecision,
+    ExecutionBudgetReservation,
     ExecutionBudgetState,
+    ExecutionReservationRejected,
+    ExecutionStopReason,
     GovernedExecutionController,
 )
 from application.economic_discovery.explanation import BasisContribution, BasisDatum
@@ -27,6 +31,7 @@ from application.economic_discovery.first_vertical import (
     run_economic_vertical,
 )
 from application.economic_discovery.governed_dispatch import (
+    DispatchCost,
     ExecutionAttemptRecord,
     GovernedDispatchRecorder,
     GovernedSemanticExtractor,
@@ -45,6 +50,7 @@ from application.semantic_extraction import (
     SemanticExtractionContract,
 )
 from application.source_representation import (
+    DocumentRepresentation,
     RichStateDatum,
     compile_rich_subject_state,
 )
@@ -65,7 +71,41 @@ from domain.identity import FaxtId
 from domain.identity_binding import GovernedIdentityBinding
 from domain.representation import RepresentationSpan, TextRepresentation
 
-_E2E_VERSION = "economic-first-vertical-e2e:v1"
+_E2E_VERSION = "economic-first-vertical-e2e:v2"
+_EPISTEMIC_POLICY_VERSION = "eb04-source-predicate-epistemics:v1"
+_EPISTEMIC_STATE_BY_AUTHORITY_AND_PREDICATE: dict[tuple[SourceAuthority, str], EpistemicState] = {
+    **{
+        (SourceAuthority.OFFICIAL_WEB, predicate): EpistemicState.DECLARED
+        for predicate in (
+            "capability",
+            "manufactures",
+            "product",
+            "products",
+            "has_product",
+            "develops_capability",
+            "serves_market",
+            "operates_in_region",
+            "recent_activity",
+        )
+    },
+    **{
+        (SourceAuthority.REGISTRY, predicate): EpistemicState.OBSERVED
+        for predicate in ("identity", "legal_identity", "registration")
+    },
+}
+
+
+def _epistemic_state_for_canonical_field(field: EconomicFieldSpec) -> EpistemicState:
+    authority = field.canonical_authority
+    if authority is None:
+        raise ValueError("epistemic policy requires canonical source authority")
+    state = _EPISTEMIC_STATE_BY_AUTHORITY_AND_PREDICATE.get((authority, field.field_name))
+    if state is None:
+        raise ValueError(
+            "canonical economic input has no approved epistemic policy: "
+            f"{_EPISTEMIC_POLICY_VERSION} ({authority.value}, {field.field_name})"
+        )
+    return state
 
 
 class SubjectIdentityBindingPort(Protocol):
@@ -123,9 +163,19 @@ class FirstVerticalSourcePlan:
             raise ValueError("source plan field target is absent from extraction contract")
 
 
+class SourceMaterializationNotMeasured(ValueError):
+    """A governed source attempt did not produce an informative document measure."""
+
+    def __init__(self, reason_code: str, detail_code: str) -> None:
+        self.reason_code = reason_code
+        self.detail_code = detail_code
+        super().__init__(f"{reason_code}:{detail_code}")
+
+
 @dataclass(frozen=True, slots=True)
 class MaterializedEconomicSource:
     authorization: SourceRegistryAuthorization
+    representation: DocumentRepresentation
     candidates: SemanticCandidateSet
     state: EvidenceBackedEconomicState
 
@@ -140,6 +190,69 @@ class FirstEconomicVerticalE2EResult:
     attempts: tuple[ExecutionAttemptRecord, ...]
     replay_refs: tuple[str, ...]
     pipeline_version: str = _E2E_VERSION
+    epistemic_policy_version: str = _EPISTEMIC_POLICY_VERSION
+
+
+@dataclass(frozen=True, slots=True)
+class FirstVerticalDispatchCosts:
+    """Server-declared per-attempt reservation basis for the maximum EB-04 fan-out."""
+
+    source: DispatchCost
+    semantic_extraction: DispatchCost
+    evaluator: DispatchCost
+
+
+def _preflight_dispatches(
+    *,
+    controller: GovernedExecutionController,
+    costs: FirstVerticalDispatchCosts,
+) -> set[str]:
+    """Reserve both sources, both extractions and every possible semantic judgment."""
+    work = (
+        ("source", costs.source, 1, 1, 0),
+        ("semantic", costs.semantic_extraction, 1, 0, 0),
+        ("source", costs.source, 1, 1, 0),
+        ("semantic", costs.semantic_extraction, 1, 0, 0),
+        ("structured-evaluate", costs.evaluator, 1, 0, 1),
+        ("structured-evaluate", costs.evaluator, 1, 0, 1),
+        ("structured-evaluate", costs.evaluator, 1, 0, 1),
+    )
+    unknown_costs = tuple(
+        item[1]
+        for item in work
+        if not item[1].known or item[1].basis_ref is None or item[1].basis_version is None
+    )
+    if unknown_costs:
+        raise ExecutionReservationRejected(
+            ExecutionBudgetDecision(
+                may_continue=False,
+                policy_id=controller.policy.policy_id,
+                policy_version=controller.policy.version,
+                policy_fingerprint=controller.policy.fingerprint,
+                state_fingerprint=controller.state.fingerprint,
+                stop_reason=ExecutionStopReason.COST_UNKNOWN,
+            )
+        )
+    held: set[str] = set()
+    try:
+        for sequence, (kind, cost, requests, sources, loops) in enumerate(work, start=1):
+            reservation_id = f"dispatch:{sequence:04d}:{kind}"
+            controller.reserve(
+                ExecutionBudgetReservation(
+                    reservation_id=reservation_id,
+                    amount_microunits=cost.amount_microunits,
+                    currency=cost.currency,
+                    requests=requests,
+                    sources=sources,
+                    loops=loops,
+                )
+            )
+            held.add(reservation_id)
+    except Exception:
+        for reservation_id in tuple(held):
+            controller.release(reservation_id)
+        raise
+    return held
 
 
 def _faxt_id(candidate: EconomicClaimCandidate, field: EconomicFieldSpec) -> FaxtId:
@@ -156,6 +269,7 @@ def _canonical_support(
     subject_mention: str,
     binding_port: SubjectIdentityBindingPort,
     currentness: Currentness,
+    epistemic_state: EpistemicState,
 ) -> FAXT:
     if field.canonical_authority is None or field.predicate_mention is None:
         raise ValueError("canonical support requires explicit authority and predicate mention")
@@ -212,6 +326,7 @@ def _canonical_support(
         object_or_value=candidate.statement,
         evidence=evidence,
         decision=decision,
+        epistemic_state=epistemic_state,
         currentness=currentness,
     )
 
@@ -235,16 +350,28 @@ def _materialize_source(
     binding_port: SubjectIdentityBindingPort,
 ) -> MaterializedEconomicSource:
     authorization = plan.authorization
-    observation = source_acquirer.observe(
-        authorization.request,
-        authorization.dispatch_policy,
-    )
+    try:
+        observation = source_acquirer.observe(
+            authorization.request,
+            authorization.dispatch_policy,
+        )
+    except (OSError, TimeoutError, ValueError) as exc:
+        raise SourceMaterializationNotMeasured(
+            "SOURCE_ACQUISITION_FAILED", type(exc).__name__
+        ) from exc
     if observation.failure_state is not None:
-        raise ValueError(f"economic source acquisition failed: {observation.failure_state}")
-    representation = representation_port.represent(
-        request=authorization.request,
-        observation=observation,
-    )
+        raise SourceMaterializationNotMeasured(
+            "SOURCE_ACQUISITION_FAILED", observation.failure_state.upper()
+        )
+    try:
+        representation = representation_port.represent(
+            request=authorization.request,
+            observation=observation,
+        )
+    except (OSError, TimeoutError, ValueError) as exc:
+        raise SourceMaterializationNotMeasured(
+            "PAGE_REPRESENTATION_UNAVAILABLE", type(exc).__name__
+        ) from exc
     candidates = semantic_extractor.extract(
         representation=representation,
         contract=plan.extraction_contract,
@@ -278,14 +405,15 @@ def _materialize_source(
         support = None
         epistemic_state = EpistemicState.DECLARED
         if field_spec.canonical_authority is not None:
+            epistemic_state = _epistemic_state_for_canonical_field(field_spec)
             support = _canonical_support(
                 candidate=candidate,
                 field=field_spec,
                 subject_mention=plan.subject_mention,
                 binding_port=binding_port,
                 currentness=authorization.reuse_authority.currentness,
+                epistemic_state=epistemic_state,
             )
-            epistemic_state = EpistemicState.OBSERVED
 
         observations.append(
             EconomicObservation(
@@ -325,6 +453,7 @@ def _materialize_source(
     )
     return MaterializedEconomicSource(
         authorization=authorization,
+        representation=representation,
         candidates=candidates,
         state=EvidenceBackedEconomicState(state=state, observations=tuple(observations)),
     )
@@ -341,6 +470,7 @@ def run_first_economic_vertical_e2e(
     evaluator: StructuredEvaluatorPort,
     execution_controller: GovernedExecutionController,
     as_of: datetime,
+    dispatch_costs: FirstVerticalDispatchCosts | None = None,
 ) -> FirstEconomicVerticalE2EResult:
     """Run the governed EB-04 reference chain without provider-specific authority."""
 
@@ -355,52 +485,75 @@ def run_first_economic_vertical_e2e(
     if execution_controller.active_reservation_ids:
         raise ValueError("EB-04 execution controller must start without active reservations")
 
-    recorder = GovernedDispatchRecorder(execution_controller)
-    budgeted_source = GovernedSourceAcquirer(source_acquirer, recorder)
-    budgeted_semantic = GovernedSemanticExtractor(semantic_extractor, recorder)
-    budgeted_evaluator = GovernedStructuredEvaluator(evaluator, recorder)
+    held = (
+        set()
+        if dispatch_costs is None
+        else _preflight_dispatches(
+            controller=execution_controller,
+            costs=dispatch_costs,
+        )
+    )
+    recorder = GovernedDispatchRecorder(execution_controller, pre_reserved_ids=held)
+    budgeted_source = GovernedSourceAcquirer(
+        source_acquirer,
+        recorder,
+        DispatchCost() if dispatch_costs is None else dispatch_costs.source,
+    )
+    budgeted_semantic = GovernedSemanticExtractor(
+        semantic_extractor,
+        recorder,
+        DispatchCost() if dispatch_costs is None else dispatch_costs.semantic_extraction,
+    )
+    budgeted_evaluator = GovernedStructuredEvaluator(
+        evaluator, recorder, DispatchCost() if dispatch_costs is None else dispatch_costs.evaluator
+    )
 
-    subject_source = _materialize_source(
-        plan=subject_plan,
-        source_acquirer=budgeted_source,
-        representation_port=representation_port,
-        semantic_extractor=budgeted_semantic,
-        binding_port=binding_port,
-    )
-    activity_source = _materialize_source(
-        plan=activity_plan,
-        source_acquirer=budgeted_source,
-        representation_port=representation_port,
-        semantic_extractor=budgeted_semantic,
-        binding_port=binding_port,
-    )
-    temporal_policy = subject_plan.authorization.temporal_policy
-    if activity_plan.authorization.temporal_policy != temporal_policy:
-        raise ValueError("EB-04 source temporal policies must be identical for one evaluation")
+    try:
+        subject_source = _materialize_source(
+            plan=subject_plan,
+            source_acquirer=budgeted_source,
+            representation_port=representation_port,
+            semantic_extractor=budgeted_semantic,
+            binding_port=binding_port,
+        )
+        activity_source = _materialize_source(
+            plan=activity_plan,
+            source_acquirer=budgeted_source,
+            representation_port=representation_port,
+            semantic_extractor=budgeted_semantic,
+            binding_port=binding_port,
+        )
+        temporal_policy = subject_plan.authorization.temporal_policy
+        if activity_plan.authorization.temporal_policy != temporal_policy:
+            raise ValueError("EB-04 source temporal policies must be identical for one evaluation")
 
-    reasoning = run_economic_vertical(
-        subject=subject_source.state,
-        activity=activity_source.state,
-        evaluator=budgeted_evaluator,
-        as_of=as_of,
-        temporal_policy=temporal_policy,
-    )
-    human_output = compile_economic_human_output(reasoning, as_of=as_of)
-    replay_refs = (
-        f"source:{subject_source.authorization.source_id}@{subject_source.authorization.source_version}:"
-        f"{subject_source.authorization.source_fingerprint}",
-        f"semantic:{subject_source.candidates.result_fingerprint}",
-        f"source:{activity_source.authorization.source_id}@{activity_source.authorization.source_version}:"
-        f"{activity_source.authorization.source_fingerprint}",
-        f"semantic:{activity_source.candidates.result_fingerprint}",
-        *(item.replay_reference for item in reasoning.raw_judgments),
-    )
-    return FirstEconomicVerticalE2EResult(
-        subject_source=subject_source,
-        activity_source=activity_source,
-        reasoning=reasoning,
-        human_output=human_output,
-        execution_state=execution_controller.state,
-        attempts=tuple(recorder.records),
-        replay_refs=replay_refs,
-    )
+        reasoning = run_economic_vertical(
+            subject=subject_source.state,
+            activity=activity_source.state,
+            evaluator=budgeted_evaluator,
+            as_of=as_of,
+            temporal_policy=temporal_policy,
+        )
+        human_output = compile_economic_human_output(reasoning, as_of=as_of)
+        replay_refs = (
+            f"source:{subject_source.authorization.source_id}@{subject_source.authorization.source_version}:"
+            f"{subject_source.authorization.source_fingerprint}",
+            f"semantic:{subject_source.candidates.result_fingerprint}",
+            f"source:{activity_source.authorization.source_id}@{activity_source.authorization.source_version}:"
+            f"{activity_source.authorization.source_fingerprint}",
+            f"semantic:{activity_source.candidates.result_fingerprint}",
+            *(item.replay_reference for item in reasoning.raw_judgments),
+        )
+        return FirstEconomicVerticalE2EResult(
+            subject_source=subject_source,
+            activity_source=activity_source,
+            reasoning=reasoning,
+            human_output=human_output,
+            execution_state=execution_controller.state,
+            attempts=tuple(recorder.records),
+            replay_refs=replay_refs,
+        )
+    finally:
+        for reservation_id in tuple(held):
+            if reservation_id in execution_controller.active_reservation_ids:
+                execution_controller.release(reservation_id)

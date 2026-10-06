@@ -101,7 +101,7 @@ test("start endpoint rejects malformed/cross-site/oversized and wrong content ty
   assert.equal((await POST(missingOrigin)).status, 403);
 });
 test("status discloses identity-only scopes and unavailable connections", async () => {
-  const response = GET();
+  const response = await GET();
   const result = await response.json();
   assert.deepEqual(result.identityScopes, ["openid", "profile", "email"]);
   assert.equal(result.sessionCreated, false);

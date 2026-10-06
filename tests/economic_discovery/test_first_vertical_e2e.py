@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import socket
+from dataclasses import replace
 from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Any, cast
@@ -54,13 +55,13 @@ from application.semantic_extraction import (
     build_semantic_extraction_request,
     normalize_semantic_extraction_payload,
 )
-from application.source_acquisition import SourceTargetRule
+from application.source_acquisition import SourceObservation, SourceRequest, SourceTargetRule
 from application.source_representation import DocumentRepresentation
 from domain.evidence.admission import SourceAuthority
 from domain.evidence.epistemics import Currentness, EpistemicState
 from domain.identity import IdentityBindingAuthority
 from domain.identity_binding import GovernedIdentityBinding
-from domain.representation import RepresentationSpan, TextRepresentation
+from domain.representation import RepresentationSpan, TextRepresentation, TextSurface
 from domain.xignal import XignalEpistemicState
 from pipeline.entity_resolution import ExactNameResolver, ResolutionCandidate
 from pipeline.source_acquisition import (
@@ -149,14 +150,19 @@ class FixtureSemanticExtractor:
                 continue
             value = fields[target.target_id]
             excerpt = value
-            if target.target_id == "capability":
-                excerpt = representation.visible_text.split(". ", 1)[0] + "."
+            if target.target_id in {"capability", "legal_identity", "revenue"}:
+                first_sentence = representation.visible_text.split(". ", 1)[0]
+                excerpt = first_sentence if first_sentence.endswith(".") else f"{first_sentence}."
             rows.append(
                 {
                     "semantic_target": target.target_id,
                     "statement": value,
                     "excerpt": excerpt,
-                    "grounding_surface": GroundingSurface.VISIBLE_TEXT.value,
+                    "grounding_surface": (
+                        GroundingSurface.VISIBLE_TEXT.value
+                        if representation.visibility_resolved
+                        else GroundingSurface.EXTRACTED_TEXT.value
+                    ),
                 }
             )
         request = build_semantic_extraction_request(representation, contract)
@@ -249,6 +255,22 @@ def _html(text: str) -> bytes:
     return f"<html><body><main><p>{text}</p></main></body></html>".encode()
 
 
+class UnresolvedVisibilityRepresentationPort:
+    def __init__(self, delegate: HtmlDocumentRepresentationAdapter) -> None:
+        self._delegate = delegate
+
+    def represent(
+        self, *, request: SourceRequest, observation: SourceObservation
+    ) -> DocumentRepresentation:
+        representation = self._delegate.represent(request=request, observation=observation)
+        return replace(
+            representation,
+            extracted_text=representation.document_text,
+            extracted_text_fingerprint=representation.document_text_fingerprint,
+            visibility_resolved=False,
+        )
+
+
 def _entry(document: dict[str, object], instrument_ref: str) -> SourceRegistryEntry:
     source_ref = str(document["source_ref"])
     host = source_ref.split("/")[2]
@@ -327,6 +349,7 @@ def _run_fixture(
     evaluator: AlwaysYesEvaluator | None = None,
     budget_policy: ExecutionBudgetPolicy | None = None,
     transport: FixtureTransport | None = None,
+    unresolved_visibility: bool = False,
 ) -> tuple[
     FirstEconomicVerticalE2EResult,
     FixtureTransport,
@@ -360,7 +383,12 @@ def _run_fixture(
         artifacts=artifacts,
         clock=lambda: OBSERVED_AT,
     )
-    representation_port = HtmlDocumentRepresentationAdapter(artifacts)
+    representation_adapter = HtmlDocumentRepresentationAdapter(artifacts)
+    representation_port = (
+        UnresolvedVisibilityRepresentationPort(representation_adapter)
+        if unresolved_visibility
+        else representation_adapter
+    )
 
     subject_fields = dict(subject["fields"])
     all_activity_fields = dict(activity["fields"])
@@ -541,9 +569,12 @@ def test_first_economic_vertical_composes_real_governed_boundaries(
 
     assert transport.calls == ["arbor-cooling.example", "harbor-storage.example"]
     assert semantic_extractor.calls == ["org:arbor-cooling", "org:harbor-storage"]
+    assert result.pipeline_version == "economic-first-vertical-e2e:v2"
+    assert result.epistemic_policy_version == "eb04-source-predicate-epistemics:v1"
     assert subject_capability is not None
-    assert subject_capability.epistemic_state is EpistemicState.OBSERVED
+    assert subject_capability.epistemic_state is EpistemicState.DECLARED
     assert subject_capability.canonical_support is not None
+    assert subject_capability.canonical_support.epistemic_state is EpistemicState.DECLARED
     assert activity_event is not None
     assert activity_event.epistemic_state is EpistemicState.DECLARED
     assert result.reasoning.interpretation.epistemic_state is XignalEpistemicState.POTENTIAL
@@ -587,6 +618,94 @@ def test_first_economic_vertical_composes_real_governed_boundaries(
         item["support_span"]["start"] < item["support_span"]["end"] for item in wire["evidence"]
     )
     assert "sale probability" in " ".join(wire["coverage_limits"]).lower()
+
+
+def test_official_web_capability_stays_declared_with_unresolved_visibility(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    result, _transport, _extractor, _evaluator, _controller = _run_fixture(
+        monkeypatch,
+        tmp_path,
+        unresolved_visibility=True,
+    )
+    capability = next(
+        item for item in result.subject_source.state.observations if item.datum.name == "capability"
+    )
+
+    assert capability.epistemic_state is EpistemicState.DECLARED
+    assert capability.canonical_support is not None
+    assert capability.canonical_support.epistemic_state is EpistemicState.DECLARED
+    assert capability.representation is not None
+    assert capability.representation.surface is TextSurface.EXTRACTED_TEXT
+    assert capability.canonical_support.evidence_refs == (capability.basis.evidence_ref,)
+
+
+def test_registry_legal_identity_is_observed_as_a_registry_proposition(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    subject_doc = dict(CORPUS["documents"][0])
+    subject_doc.update(
+        {
+            "source_type": "REGISTRY",
+            "text": "Arbor Cooling is registered as a limited company.",
+            "fields": {"legal_identity": "Arbor Cooling"},
+            "capability_predicate_mention": "is registered",
+        }
+    )
+    spec = EconomicFieldSpec(
+        semantic_target="legal_identity",
+        field_name="legal_identity",
+        canonical_authority=SourceAuthority.REGISTRY,
+        predicate_mention="is registered",
+    )
+    result, *_ = _run_fixture(
+        monkeypatch,
+        tmp_path,
+        subject_doc=subject_doc,
+        subject_specs=(spec,),
+    )
+    identity = next(
+        item
+        for item in result.subject_source.state.observations
+        if item.datum.name == "legal_identity"
+    )
+
+    assert identity.epistemic_state is EpistemicState.OBSERVED
+    assert identity.canonical_support is not None
+    assert identity.canonical_support.epistemic_state is EpistemicState.OBSERVED
+    assert identity.canonical_support.predicate == "legal_identity"
+    assert identity.canonical_support.object_or_value == "Arbor Cooling"
+
+
+def test_admitted_corporate_revenue_pair_without_epistemic_rule_fails_closed(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    subject_doc = dict(CORPUS["documents"][0])
+    subject_doc.update(
+        {
+            "source_type": "CORPORATE_DOCUMENT",
+            "text": "Arbor Cooling reported revenue of $4m.",
+            "fields": {"revenue": "$4m"},
+            "capability_predicate_mention": "reported revenue",
+        }
+    )
+    spec = EconomicFieldSpec(
+        semantic_target="revenue",
+        field_name="revenue",
+        canonical_authority=SourceAuthority.CORPORATE_DOCUMENT,
+        predicate_mention="reported revenue",
+    )
+
+    with pytest.raises(ValueError, match="no approved epistemic policy"):
+        _run_fixture(
+            monkeypatch,
+            tmp_path,
+            subject_doc=subject_doc,
+            subject_specs=(spec,),
+        )
 
 
 def test_missing_material_context_stays_unknown_and_routes_to_investigation(

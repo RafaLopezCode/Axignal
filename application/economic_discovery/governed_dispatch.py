@@ -47,6 +47,8 @@ class DispatchCost:
 
     amount_microunits: int | None = None
     currency: str | None = None
+    basis_ref: str | None = None
+    basis_version: str | None = None
 
     def __post_init__(self) -> None:
         if (self.amount_microunits is None) != (self.currency is None):
@@ -58,6 +60,12 @@ class DispatchCost:
             if len(currency) != 3 or not currency.isalpha():
                 raise ValueError("dispatch cost currency must be a three-letter code")
             object.__setattr__(self, "currency", currency)
+        if (self.basis_ref is None) != (self.basis_version is None):
+            raise ValueError("dispatch cost basis reference and version must coexist")
+        if self.basis_ref is not None and (
+            not self.basis_ref.strip() or not (self.basis_version or "").strip()
+        ):
+            raise ValueError("dispatch cost basis identity cannot be empty")
 
     @property
     def known(self) -> bool:
@@ -97,6 +105,7 @@ class GovernedDispatchRecorder:
     controller: GovernedExecutionController
     records: list[ExecutionAttemptRecord] = field(default_factory=list)
     sequence: int = 0
+    pre_reserved_ids: set[str] = field(default_factory=set)
     monotonic_ns: Callable[[], int] = time.monotonic_ns
 
     def next_id(self, kind: str) -> str:
@@ -118,16 +127,20 @@ class GovernedDispatchRecorder:
         success: Callable[[T], bool] | None = None,
         reported_cost: Callable[[T], DispatchCost] | None = None,
     ) -> T:
-        self.controller.reserve(
-            ExecutionBudgetReservation(
-                reservation_id=reservation_id,
-                amount_microunits=cost.amount_microunits,
-                currency=cost.currency,
-                requests=requests,
-                sources=sources,
-                loops=loops,
-            )
+        reservation = ExecutionBudgetReservation(
+            reservation_id=reservation_id,
+            amount_microunits=cost.amount_microunits,
+            currency=cost.currency,
+            requests=requests,
+            sources=sources,
+            loops=loops,
         )
+        if reservation_id in self.pre_reserved_ids:
+            if reservation_id not in self.controller.active_reservation_ids:
+                raise ValueError("pre-reserved dispatch capacity is no longer active")
+            self.pre_reserved_ids.remove(reservation_id)
+        else:
+            self.controller.reserve(reservation)
         started_ns = self.monotonic_ns()
         succeeded = False
         # A reservation estimate is not measured spend. With dynamic reporting,

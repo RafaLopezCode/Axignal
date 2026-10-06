@@ -1,4 +1,4 @@
-import { RuntimePanorama } from "@/components/runtime-panorama";
+import { redirect } from "next/navigation";
 export default function Page() {
-  return <RuntimePanorama />;
+  redirect("/account");
 }

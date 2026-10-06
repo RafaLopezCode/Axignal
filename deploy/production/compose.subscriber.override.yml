@@ -1,0 +1,32 @@
+# Optional subscriber edge/configuration overlay. Leave the canonical compose.yml
+# unchanged; apply this only after external registration and host prerequisites.
+services:
+  runtime:
+    build:
+      context: ../..
+      dockerfile: deploy/production/docker/subscriber-runtime.Dockerfile
+      args:
+        AXIGNAL_CODE_SHA: ${AXIGNAL_CODE_SHA:?AXIGNAL_CODE_SHA is required}
+    environment:
+      AXIGNAL_SUBSCRIBER_CONFIGURATION_FILE: /run/secrets/subscriber_configuration
+    secrets:
+      - subscriber_configuration
+      - google_client_secret
+
+  experience:
+    environment:
+      AXIGNAL_RUNTIME_ORIGIN: http://runtime:18181
+      AXIGNAL_EXPERIENCE_ORIGIN: https://axignal.com
+
+  landing:
+    depends_on:
+      experience:
+        condition: service_healthy
+    volumes:
+      - ./subscriber-edge-nginx.conf:/etc/nginx/nginx.conf:ro
+
+secrets:
+  subscriber_configuration:
+    file: ${AXIGNAL_SUBSCRIBER_CONFIGURATION_HOST_FILE:-/etc/axignal/subscriber-runtime.conf}
+  google_client_secret:
+    file: ${AXIGNAL_GOOGLE_CLIENT_SECRET_HOST_FILE:-/etc/axignal/secrets/google_client_secret}

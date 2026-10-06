@@ -22,13 +22,25 @@ export function Access({ intent }: { intent: AuthStartRequest["intent"] }) {
   const { t } = useLocale();
   const controller = useRef<AbortController | null>(null);
   const [busy, setBusy] = useState<string | null>(null);
+  const [available, setAvailable] = useState(false);
+  const [chatgptAvailable, setChatgptAvailable] = useState(false);
   const [outcome, setOutcome] = useState<{
     provider: string;
     error: boolean;
   } | null>(null);
   useEffect(() => () => controller.current?.abort(), []);
+  useEffect(() => {
+    const current = new AbortController();
+    void fetch("/api/auth/status", { cache: "no-store", signal: current.signal }).then(response => response.json()).then(data => {
+      if (!current.signal.aborted && Array.isArray(data.providers)) {
+        setAvailable(data.providers.some((item: { status?: string }) => item.status === "AVAILABLE"));
+        setChatgptAvailable(data.providers.some((item: { id?: string; status?: string }) => item.id === "openai" && item.status === "AVAILABLE"));
+      }
+    }).catch(() => {});
+    return () => current.abort();
+  }, []);
   async function start(provider: AuthStartRequest["provider"]) {
-    if (busy) return;
+    if (busy || (provider === "openai" && !chatgptAvailable)) return;
     setOutcome(null);
     setBusy(provider);
     controller.current?.abort();
@@ -42,11 +54,18 @@ export function Access({ intent }: { intent: AuthStartRequest["intent"] }) {
         signal: current.signal,
       });
       const data = await response.json();
+      if (response.ok && data.status === "REDIRECT" && typeof data.authorizationUrl === "string") {
+        const target = new URL(data.authorizationUrl);
+        const host = provider === "google" ? "accounts.google.com" : "auth.openai.com";
+        if (target.protocol !== "https:" || target.hostname !== host || target.username || target.password || (target.port && target.port !== "443")) throw new Error("PROVIDER_URL_REJECTED");
+        window.location.assign(target.href);
+        return;
+      }
       setOutcome({
         provider,
         error:
           response.status !== 503 ||
-          data.code !== "AUTHENTICATION_PORT_NOT_CONNECTED",
+          !["AUTHENTICATION_PORT_NOT_CONNECTED", "AUTH_PROVIDER_UNAVAILABLE"].includes(data.code),
       });
     } catch {
       if (!current.signal.aborted) setOutcome({ provider, error: true });
@@ -138,7 +157,7 @@ export function Access({ intent }: { intent: AuthStartRequest["intent"] }) {
           <div className="access-availability">
             <Info size={17} />
             <p>
-              {t(
+              {available ? t("Elige una identidad conectada para continuar de forma segura.", "Choose a connected identity to continue securely.") : t(
                 "Acceso en preparación. Google y ChatGPT aún no están conectados; esta versión no crea cuentas ni sesiones.",
                 "Access is being prepared. Google and ChatGPT are not connected yet; this version creates no accounts or sessions.",
               )}
@@ -150,7 +169,8 @@ export function Access({ intent }: { intent: AuthStartRequest["intent"] }) {
                 className={"provider-button provider-" + provider.id}
                 key={provider.id}
                 onClick={() => void start(provider.id)}
-                disabled={!!busy}
+                disabled={!!busy || (provider.id === "openai" && !chatgptAvailable)}
+                aria-label={provider.id === "openai" && !chatgptAvailable ? t("ChatGPT · Próximamente", "ChatGPT · Coming soon") : undefined}
               >
                 <img
                   src={
@@ -165,7 +185,7 @@ export function Access({ intent }: { intent: AuthStartRequest["intent"] }) {
                 <span>
                   {provider.id === "google"
                     ? t("Continuar con Google", "Continue with Google")
-                    : t("Continuar con ChatGPT", "Continue with ChatGPT")}
+                    : chatgptAvailable ? t("Continuar con ChatGPT", "Continue with ChatGPT") : t("Próximamente", "Coming soon")}
                 </span>
                 {busy === provider.id ? (
                   <LoaderCircle className="spin" size={18} />

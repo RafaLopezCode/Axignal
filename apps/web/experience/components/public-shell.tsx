@@ -124,7 +124,7 @@ export function PublicShell({
   return (
     <div className={"public-page " + className}>
       <PublicHeader />
-      <main id="main">{children}</main>
+      <main id="main" tabIndex={-1}>{children}</main>
       <MiniFooter />
     </div>
   );

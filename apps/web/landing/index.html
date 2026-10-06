@@ -643,7 +643,16 @@ function openAccessDialog(){
   accessDialog.showModal();
 }
 $('accessDialogClose').onclick=()=>accessDialog.close();
-$('loginButton').onclick=openAccessDialog;
+async function openSubscriberAccess(intent){
+  try{
+    const response=await fetch('/api/auth/status',{cache:'no-store',redirect:'error',signal:AbortSignal.timeout(5000)});
+    if(!response.ok) throw new Error('ACCESS_UNAVAILABLE');
+    const status=await response.json();
+    if(!Array.isArray(status.providers)||!status.providers.some(provider=>provider.id==='google'&&provider.status==='AVAILABLE')) throw new Error('ACCESS_UNAVAILABLE');
+    location.assign(intent==='signup'?'/signup':'/login');
+  }catch{openAccessDialog()}
+}
+$('loginButton').onclick=()=>openSubscriberAccess('login');
 
 const evidenceDialog=$('evidenceDialog');
 const evidenceCopy={
@@ -831,7 +840,7 @@ function fillCopy(ch){
         '5:Primary CTA':()=>goTo(15,1),
         '7:Primary CTA':openEvidenceDialog,
         '14:Primary CTA':()=>goTo(15,1),
-        '15:Primary CTA':openAccessDialog,
+        '15:Primary CTA':()=>openSubscriberAccess('signup'),
         '15:Secondary CTA':()=>goTo(7,-1)
       };
       b.onclick=routes[ch.n+':'+key]||null;
@@ -1005,7 +1014,7 @@ footerTab.onclick=openFooterSheet;
 $('footerSheetClose').onclick=()=>closeFooterSheet({restoreFocus:true});
 document.querySelector('.mobile-login').onclick=()=>{
   closeMobileMenu();
-  openAccessDialog();
+  openSubscriberAccess('login');
 };
 document.querySelector('.mobile-menu-nav .nav-link')?.addEventListener('click',()=>closeMobileMenu());
 $('brandHome').addEventListener('click',e=>{

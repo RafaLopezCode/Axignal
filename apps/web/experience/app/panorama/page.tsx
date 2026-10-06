@@ -1,4 +1,6 @@
-import { RuntimePanorama } from "@/components/runtime-panorama";
+import { Suspense } from "react";
+import { Panorama } from "@/components/panorama";
+export const metadata = { title: "Panorama · Demo ilustrativa", robots: { index: false, follow: false } };
 export default function Page() {
-  return <RuntimePanorama />;
+  return <Suspense><Panorama /></Suspense>;
 }

@@ -40,8 +40,11 @@ export function acceptsPublicAuthOrigin(
   host: string | null,
 ) {
   if (!origin || !host) return false;
-  const allowed = ["http://127.0.0.1:3810", "http://localhost:3810"];
-  return allowed.includes(origin) && new URL(origin).host === host;
+  const allowed = process.env.AXIGNAL_EXPERIENCE_ORIGIN
+    ? [process.env.AXIGNAL_EXPERIENCE_ORIGIN]
+    : ["http://127.0.0.1:3810", "http://localhost:3810"];
+  try { return allowed.includes(origin) && new URL(origin).host === host; }
+  catch { return false; }
 }
 export const localDraftSchema = z
   .object({

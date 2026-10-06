@@ -92,7 +92,12 @@ def test_public_ctas_never_dead_end_or_fake_account_runtime() -> None:
     assert "function openEvidenceDialog()" in HTML
     assert "persisted supporting context" in HTML
     assert "does not fabricate a live company evidence trace" in HTML
-    assert "'15:Primary CTA':openAccessDialog" in HTML
+    assert "'15:Primary CTA':()=>openSubscriberAccess('signup')" in HTML
+    assert "$('loginButton').onclick=()=>openSubscriberAccess('login')" in HTML
+    assert "fetch('/api/auth/status',{cache:'no-store',redirect:'error'" in HTML
+    assert "provider.id==='google'&&provider.status==='AVAILABLE'" in HTML
+    assert "location.assign(intent==='signup'?'/signup':'/login')" in HTML
+    assert "catch{openAccessDialog()}" in HTML
     assert "'15:Secondary CTA':()=>goTo(7,-1)" in HTML
     assert "placeholder checkout or fake account flow" in HTML
 

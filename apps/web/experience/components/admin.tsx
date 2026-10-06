@@ -200,7 +200,7 @@ export function Admin({
         </nav>
         <div className="sidebar-bottom">
           <Link
-            href="/panorama/live"
+            href="/admin/customer-zero"
             className="nav-item"
           >
             <Eye size={17} />

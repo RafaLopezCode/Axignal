@@ -14,7 +14,9 @@ dev = [
   "ruff>=0.6",
   "mypy>=1.11",
   { include-group = "semantic-retrieval" },
+  { include-group = "subscriber-auth" },
 ]
+subscriber-auth = ["PyJWT[crypto]>=2.10.1,<3"]
 decision-lab-live = ["typesafe-sdk==0.7.1"]
 semantic-retrieval = [
   "numpy>=1.26,<2.3",

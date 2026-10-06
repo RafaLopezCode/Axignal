@@ -14,7 +14,7 @@ import secrets
 import sqlite3
 import time
 from dataclasses import dataclass
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
 from http import HTTPStatus
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
@@ -75,6 +75,8 @@ from application.admin_weekly_brief import (
     compose_issue,
 )
 from application.admin_xeed_observatory import project_xeed_axigland_observatory
+from application.economic_discovery.observation_reuse import ObservationReusePolicy
+from application.economic_discovery.temporal_currentness import TemporalCurrentnessPolicy
 from domain.admin_access import AdminAssurance, AdminAuthorizationGrant, AdminRiskClass, AdminScope
 from domain.admin_acquisition import MarketingEventKind
 from domain.admin_api_operations import ApiOperationObservation
@@ -117,6 +119,12 @@ from tools.runtime.first_proof import (
 )
 from tools.runtime.organization_attention import OrganizationAttention, load_observation_catalog
 from tools.runtime.stripe_billing import StripeWebhookRuntime
+from tools.runtime.subscriber_composition import build_subscriber_facade
+from tools.runtime.subscriber_http import SubscriberHttpFacade, is_subscriber_path
+from tools.runtime.subscriber_provisioning import (
+    SubscriberBillingConfigurationError,
+    build_subscriber_billing_inputs,
+)
 
 
 @dataclass(slots=True)
@@ -144,6 +152,7 @@ class AxignalRuntime:
     first_proof: FirstProofService | None = None
     admin_access: AdminAccessService | None = None
     organization_attention: OrganizationAttention | None = None
+    subscriber: SubscriberHttpFacade | None = None
 
     @property
     def observation_db(self) -> Path:
@@ -296,6 +305,31 @@ def build_runtime(config: RuntimeConfig) -> AxignalRuntime:
             load_observation_catalog(config.organization_catalog_path, first_proof.allowed_host),
         )
     )
+    subscriber = None
+    if config.subscriber_settings is not None and config.subscriber_settings.enabled:
+        try:
+            stripe_settings, offer_catalogue_reader = build_subscriber_billing_inputs(
+                config.subscriber_settings, config.data_dir
+            )
+        except SubscriberBillingConfigurationError:
+            # Billing configuration cannot disable an independently configured login.
+            # The facade reports NOT_CONFIGURED and grants no billing authority.
+            stripe_settings, offer_catalogue_reader = None, None
+        subscriber = build_subscriber_facade(
+            config.subscriber_settings,
+            config.data_dir,
+            observation_memory=observation_memory,
+            reuse_policy=ObservationReusePolicy("subscriber-output-reuse", "051-v1"),
+            temporal_policy=TemporalCurrentnessPolicy(
+                policy_id="subscriber-public-observation-currentness",
+                version="051-v1",
+                stale_after=timedelta(days=30),
+                historical_after=timedelta(days=90),
+            ),
+            code_sha=config.code_sha,
+            stripe_settings=stripe_settings,
+            offer_catalogue_reader=offer_catalogue_reader,
+        )
     return AxignalRuntime(
         config=config,
         observation_memory=observation_memory,
@@ -320,6 +354,7 @@ def build_runtime(config: RuntimeConfig) -> AxignalRuntime:
         first_proof=first_proof,
         organization_attention=organization_attention,
         admin_access=admin_access,
+        subscriber=subscriber,
     )
 
 
@@ -1449,7 +1484,111 @@ def make_handler(runtime: AxignalRuntime) -> type[BaseHTTPRequestHandler]:
 
         def log_message(self, fmt: str, *args: object) -> None:
             # Keep default stderr access logging but never log headers/bodies/secrets.
-            super().log_message(fmt, *args)
+            if (
+                is_subscriber_path(self.path)
+                or urlsplit(self.path).path == "/internal/webhooks/subscriber-stripe"
+            ):
+                # The default request line includes query strings; redact callbacks.
+                super().log_message("subscriber request %s", self.command)
+            else:
+                super().log_message(fmt, *args)
+
+        def _subscriber(self, method: str, path: str) -> None:
+            if runtime.subscriber is None:
+                self._json(
+                    {"state": "rejected", "code": "SUBSCRIBER_RUNTIME_DISABLED"},
+                    HTTPStatus.SERVICE_UNAVAILABLE,
+                )
+                return
+            for name in ("Origin", "Authorization", "Content-Length", "Content-Type"):
+                if len(self.headers.get_all(name, [])) > 1:
+                    self._json(
+                        {"state": "rejected", "code": "AMBIGUOUS_HEADERS"}, HTTPStatus.BAD_REQUEST
+                    )
+                    return
+            payload: dict[str, object] | None = None
+            if method == "POST":
+                if self.headers.get("Transfer-Encoding") is not None:
+                    self._json(
+                        {"state": "rejected", "code": "TRANSFER_ENCODING_REJECTED"},
+                        HTTPStatus.BAD_REQUEST,
+                    )
+                    return
+                if self.headers.get("Content-Type", "").split(";")[0].strip() != "application/json":
+                    self._json(
+                        {"state": "rejected", "code": "JSON_REQUIRED"},
+                        HTTPStatus.UNSUPPORTED_MEDIA_TYPE,
+                    )
+                    return
+                try:
+                    length = int(self.headers.get("Content-Length", "0"))
+                    if not 0 < length <= 8192:
+                        self._json(
+                            {"state": "rejected", "code": "BODY_LIMIT"},
+                            HTTPStatus.REQUEST_ENTITY_TOO_LARGE,
+                        )
+                        return
+                    self.connection.settimeout(10)
+                    raw_body = self.rfile.read(length)
+                    if len(raw_body) != length:
+                        raise ValueError("truncated body")
+                    decoded = json.loads(raw_body.decode("utf-8"))
+                    if not isinstance(decoded, dict) or any(
+                        not isinstance(key, str) for key in decoded
+                    ):
+                        raise ValueError("invalid payload")
+                    payload = decoded
+                except (ValueError, UnicodeError, OSError):
+                    self._json(
+                        {"state": "rejected", "code": "INVALID_REQUEST"}, HTTPStatus.BAD_REQUEST
+                    )
+                    return
+            try:
+                result = runtime.subscriber.handle(
+                    method, path, dict(self.headers.items()), payload
+                )
+                self._json(result.body, HTTPStatus(result.status))
+            except Exception:
+                # Internal failures must not disclose SQLite paths, tokens or user input.
+                self._json(
+                    {"state": "rejected", "code": "SUBSCRIBER_RUNTIME_UNAVAILABLE"},
+                    HTTPStatus.SERVICE_UNAVAILABLE,
+                )
+
+        def _subscriber_stripe_webhook(self) -> None:
+            if runtime.subscriber is None:
+                self._json(
+                    {"accepted": False, "disposition": "NOT_CONFIGURED"},
+                    HTTPStatus.SERVICE_UNAVAILABLE,
+                )
+                return
+            try:
+                for name in ("Stripe-Signature", "Content-Length", "Content-Type"):
+                    if len(self.headers.get_all(name, [])) != 1:
+                        raise ValueError("ambiguous webhook header")
+                if self.headers.get("Transfer-Encoding") is not None:
+                    raise ValueError("unsupported transport")
+                if self.headers.get("Content-Type", "").split(";")[0].strip() != "application/json":
+                    raise ValueError("JSON required")
+                length = int(self.headers["Content-Length"])
+                signature = self.headers["Stripe-Signature"]
+                if not 0 < length <= 1_000_000 or not signature or len(signature) > 4096:
+                    raise ValueError("webhook bounds")
+                self.connection.settimeout(10)
+                raw = self.rfile.read(length)
+                if len(raw) != length:
+                    raise ValueError("truncated body")
+                result = runtime.subscriber.handle_webhook(raw, signature)
+                self._json(result.body, HTTPStatus(result.status))
+            except (ValueError, UnicodeError):
+                self._json(
+                    {"accepted": False, "disposition": "INVALID_REQUEST"}, HTTPStatus.BAD_REQUEST
+                )
+            except Exception:
+                self._json(
+                    {"accepted": False, "disposition": "INGRESS_UNAVAILABLE"},
+                    HTTPStatus.SERVICE_UNAVAILABLE,
+                )
 
         def _operation_endpoint_id(self) -> str | None:
             path = urlsplit(self.path).path
@@ -1547,6 +1686,9 @@ def make_handler(runtime: AxignalRuntime) -> type[BaseHTTPRequestHandler]:
         def do_GET(self) -> None:
             self._request_started_ns = time.perf_counter_ns()
             request_path = urlsplit(self.path).path
+            if is_subscriber_path(request_path):
+                self._subscriber("GET", request_path)
+                return
             if request_path == "/healthz":
                 payload = runtime.health_payload()
                 status = (
@@ -1753,6 +1895,12 @@ def make_handler(runtime: AxignalRuntime) -> type[BaseHTTPRequestHandler]:
         def do_POST(self) -> None:
             self._request_started_ns = time.perf_counter_ns()
             request_path = urlsplit(self.path).path
+            if request_path == "/internal/webhooks/subscriber-stripe":
+                self._subscriber_stripe_webhook()
+                return
+            if is_subscriber_path(request_path):
+                self._subscriber("POST", request_path)
+                return
             weekly_brief_prefix = "/internal/admin/weekly-brief/issues"
             if request_path == weekly_brief_prefix or request_path.startswith(
                 weekly_brief_prefix + "/"

@@ -1,8 +1,8 @@
 import {
   authStartSchema,
   acceptsPublicAuthOrigin,
-  preparedAuthStart,
 } from "@/lib/public-contracts";
+import { subscriberAuthStart } from "@/lib/subscriber-server";
 export const runtime = "nodejs";
 export async function POST(request: Request) {
   const headers = { "Cache-Control": "no-store" };
@@ -45,10 +45,7 @@ export async function POST(request: Request) {
         { code: "INVALID_REQUEST" },
         { status: 400, headers },
       );
-    return Response.json(preparedAuthStart(parsed.data), {
-      status: 503,
-      headers,
-    });
+    return subscriberAuthStart(parsed.data);
   } catch {
     return Response.json({ code: "INVALID_REQUEST" }, { status: 400, headers });
   }

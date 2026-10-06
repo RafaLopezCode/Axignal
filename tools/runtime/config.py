@@ -6,6 +6,8 @@ import os
 from dataclasses import dataclass, field
 from pathlib import Path
 
+from tools.runtime.subscriber_configuration import SubscriberSettings, load_subscriber_settings
+
 
 @dataclass(frozen=True, slots=True)
 class RuntimeConfig:
@@ -25,6 +27,7 @@ class RuntimeConfig:
     acquisition_events_enabled: bool = False
     organization_catalog_path: Path | None = None
     admin_access_enabled: bool = False
+    subscriber_settings: SubscriberSettings | None = field(default=None, repr=False)
 
     @classmethod
     def from_env(cls) -> RuntimeConfig:
@@ -120,4 +123,10 @@ class RuntimeConfig:
             if os.getenv("AXIGNAL_ORGANIZATION_CATALOG")
             else None,
             admin_access_enabled,
+            load_subscriber_settings(
+                os.environ,
+                configuration_file=Path(os.environ["AXIGNAL_SUBSCRIBER_CONFIGURATION_FILE"])
+                if os.getenv("AXIGNAL_SUBSCRIBER_CONFIGURATION_FILE")
+                else None,
+            ),
         )

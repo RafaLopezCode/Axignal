@@ -323,7 +323,7 @@ test("organization availability separates internal no-payment use from unknown s
     assert.doesNotMatch(html,/\/checkout|Norte|Atlas/);
   }
   const admin = renderToStaticMarkup(createElement(Admin,{initialDomain:"command"}));
-  assert.match(admin,/href="\/panorama\/live"/);
+  assert.match(admin,/href="\/admin\/customer-zero"/);
   assert.doesNotMatch(admin,/href="\/panorama"/);
 });
 import { attentionCommandSchema, organizationInventorySchema } from "../lib/organization-attention";
