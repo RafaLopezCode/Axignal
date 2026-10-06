@@ -83,9 +83,7 @@ class CognitiveResearchBatchExecutor:
         if len(set(result_ids)) != len(result_ids) or set(result_ids) != expected_ids:
             raise ValueError("cognitive research result population does not match claimed work")
 
-        work_by_job = {
-            job.id: item for job, item in zip(jobs, claimed, strict=True)
-        }
+        work_by_job = {job.id: item for job, item in zip(jobs, claimed, strict=True)}
         result_by_job = {result.job_id: result for result in results}
         settled: list[ResearchBatchItemResult] = []
         for job in jobs:

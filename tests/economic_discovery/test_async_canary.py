@@ -83,9 +83,7 @@ def test_submit_persists_exact_claims_and_restart_does_not_resubmit(tmp_path) ->
 def test_collect_completes_only_admitted_dimension_and_releases_other(tmp_path) -> None:
     memory, intents, client, coordinator = _setup(tmp_path)
     keys = tuple(item.work_key for item in intents)
-    coordinator.tick(
-        subject_id="org:axignal", execution_id="canary:1", work_keys=keys, now=NOW
-    )
+    coordinator.tick(subject_id="org:axignal", execution_id="canary:1", work_keys=keys, now=NOW)
     jobs = client.submits[0][1]
     client.next_poll = BatchPoll(
         "batch:1",
@@ -110,9 +108,7 @@ def test_collect_completes_only_admitted_dimension_and_releases_other(tmp_path) 
 def test_provider_failure_releases_owned_work_without_marking_complete(tmp_path) -> None:
     memory, intents, client, coordinator = _setup(tmp_path)
     keys = tuple(item.work_key for item in intents)
-    coordinator.tick(
-        subject_id="org:axignal", execution_id="canary:1", work_keys=keys, now=NOW
-    )
+    coordinator.tick(subject_id="org:axignal", execution_id="canary:1", work_keys=keys, now=NOW)
     client.next_poll = BatchPoll("batch:1", BatchState.FAILED, error_code="BATCH_EXPIRED")
     failed = coordinator.tick(
         subject_id="org:axignal", execution_id="ignored", work_keys=keys, now=NOW

@@ -36,10 +36,14 @@ class BatchSemanticExtractionAdapter:
         self._provider = provider
         self._packager = BatchPackager(max_batch_size=max_batch_size)
 
-    def extract_batch(self, work: Sequence[SemanticExtractionWork]) -> tuple[SemanticCandidateSet, ...]:
+    def extract_batch(
+        self, work: Sequence[SemanticExtractionWork]
+    ) -> tuple[SemanticCandidateSet, ...]:
         if not work:
             return ()
-        jobs = tuple(build_semantic_extraction_job(item.representation, item.contract) for item in work)
+        jobs = tuple(
+            build_semantic_extraction_job(item.representation, item.contract) for item in work
+        )
         if len({job.id for job in jobs}) != len(jobs):
             raise ValueError("batch semantic extraction requires unique job identities")
         work_by_id = {job.id: item for job, item in zip(jobs, work, strict=True)}
@@ -56,7 +60,9 @@ class BatchSemanticExtractionAdapter:
             for result in results:
                 item = work_by_id[result.job_id]
                 normalized[result.job_id] = normalize_semantic_extraction_result(
-                    job=job_by_id[result.job_id], result=result,
-                    representation=item.representation, contract=item.contract,
+                    job=job_by_id[result.job_id],
+                    result=result,
+                    representation=item.representation,
+                    contract=item.contract,
                 )
         return tuple(normalized[job.id] for job in jobs)

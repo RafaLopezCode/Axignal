@@ -1010,8 +1010,7 @@ def test_adaptive_research_learning_yield_is_derived_from_real_work_item(
     assert durable is not None
     assert durable.intent.dimension_id == "reputation"
     assert not any(
-        event.kind is LearningEventKind.ADAPTIVE_RESEARCH
-        for event in learning.for_xeed("xeed:1")
+        event.kind is LearningEventKind.ADAPTIVE_RESEARCH for event in learning.for_xeed("xeed:1")
     )
 
 

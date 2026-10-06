@@ -68,6 +68,7 @@ class SqliteResearchRuntimeStore:
         with self._connect() as db:
             row = db.execute("SELECT * FROM research_runtime_control WHERE singleton=1").fetchone()
         assert row is not None
+
         def parse(value: object) -> datetime | None:
             return None if value is None else datetime.fromisoformat(str(value))
 
@@ -93,7 +94,12 @@ class SqliteResearchRuntimeStore:
                 SET kill_switch=?, status=?
                 WHERE singleton=1
                 """,
-                (int(enabled), ResearchRuntimeStatus.DISABLED.value if enabled else ResearchRuntimeStatus.IDLE.value),
+                (
+                    int(enabled),
+                    ResearchRuntimeStatus.DISABLED.value
+                    if enabled
+                    else ResearchRuntimeStatus.IDLE.value,
+                ),
             )
 
     def try_acquire(self, *, subject_id: str, now: datetime, policy: ResearchRuntimePolicy) -> bool:
@@ -122,7 +128,10 @@ class SqliteResearchRuntimeStore:
                 "SELECT kill_switch, global_inflight FROM research_runtime_control WHERE singleton=1"
             ).fetchone()
             assert control is not None
-            if bool(control["kill_switch"]) or int(control["global_inflight"]) >= policy.max_global_inflight:
+            if (
+                bool(control["kill_switch"])
+                or int(control["global_inflight"]) >= policy.max_global_inflight
+            ):
                 return False
             subject_inflight = int(
                 db.execute(

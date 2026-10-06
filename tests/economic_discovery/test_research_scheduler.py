@@ -119,8 +119,14 @@ def test_no_progress_is_backed_off_durably_across_store_reopen(tmp_path) -> None
     memory, intents = _memory(tmp_path, "seo")
     executor = _Executor()
     run_autonomous_research_cycle(
-        memory=memory, ledger=memory, execution_controller=_controller(),
-        executor=executor, revalidator=_Revalidator(), policy=_policy(), now=NOW, execution_id="pb08:first",
+        memory=memory,
+        ledger=memory,
+        execution_controller=_controller(),
+        executor=executor,
+        revalidator=_Revalidator(),
+        policy=_policy(),
+        now=NOW,
+        execution_id="pb08:first",
     )
     state = memory.get_schedule(intents[0].work_key)
     assert state is not None
@@ -129,8 +135,13 @@ def test_no_progress_is_backed_off_durably_across_store_reopen(tmp_path) -> None
 
     reopened = SqliteSharedObservationWorkMemory(path)
     second = run_autonomous_research_cycle(
-        memory=reopened, ledger=reopened, execution_controller=_controller(),
-        executor=executor, revalidator=_Revalidator(), policy=_policy(), now=NOW + timedelta(minutes=4),
+        memory=reopened,
+        ledger=reopened,
+        execution_controller=_controller(),
+        executor=executor,
+        revalidator=_Revalidator(),
+        policy=_policy(),
+        now=NOW + timedelta(minutes=4),
         execution_id="pb08:too-soon",
     )
     assert second.selected_work_keys == ()
@@ -143,8 +154,13 @@ def test_backoff_is_exponential_and_capped(tmp_path) -> None:
     policy = _policy(max_attempts=5)
     for index, minute in enumerate((0, 5, 15), start=1):
         run_autonomous_research_cycle(
-            memory=memory, ledger=memory, execution_controller=_controller(),
-            executor=executor, revalidator=_Revalidator(), policy=policy, now=NOW + timedelta(minutes=minute),
+            memory=memory,
+            ledger=memory,
+            execution_controller=_controller(),
+            executor=executor,
+            revalidator=_Revalidator(),
+            policy=policy,
+            now=NOW + timedelta(minutes=minute),
             execution_id=f"pb08:{index}",
         )
     state = memory.get_schedule(intents[0].work_key)
@@ -159,12 +175,23 @@ def test_attempt_limit_terminally_suppresses_work_without_completing_it(tmp_path
     executor = _Executor()
     policy = _policy(max_attempts=1)
     run_autonomous_research_cycle(
-        memory=memory, ledger=memory, execution_controller=_controller(),
-        executor=executor, revalidator=_Revalidator(), policy=policy, now=NOW, execution_id="pb08:first",
+        memory=memory,
+        ledger=memory,
+        execution_controller=_controller(),
+        executor=executor,
+        revalidator=_Revalidator(),
+        policy=policy,
+        now=NOW,
+        execution_id="pb08:first",
     )
     later = run_autonomous_research_cycle(
-        memory=memory, ledger=memory, execution_controller=_controller(),
-        executor=executor, revalidator=_Revalidator(), policy=policy, now=NOW + timedelta(days=1),
+        memory=memory,
+        ledger=memory,
+        execution_controller=_controller(),
+        executor=executor,
+        revalidator=_Revalidator(),
+        policy=policy,
+        now=NOW + timedelta(days=1),
         execution_id="pb08:later",
     )
     assert later.selected_work_keys == ()
@@ -177,9 +204,14 @@ def test_global_budget_stop_prevents_claim_and_provider_execution(tmp_path) -> N
     memory, _ = _memory(tmp_path, "seo")
     executor = _Executor()
     cycle = run_autonomous_research_cycle(
-        memory=memory, ledger=memory,
+        memory=memory,
+        ledger=memory,
         execution_controller=_controller(no_progress=2, max_no_progress=2),
-        executor=executor, revalidator=_Revalidator(), policy=_policy(), now=NOW, execution_id="pb08:stopped",
+        executor=executor,
+        revalidator=_Revalidator(),
+        policy=_policy(),
+        now=NOW,
+        execution_id="pb08:stopped",
     )
     assert cycle.stop_reason is ExecutionStopReason.NO_PROGRESS
     assert executor.calls == []
@@ -189,18 +221,26 @@ def test_provider_failure_is_backed_off_and_lease_is_released(tmp_path) -> None:
     memory, intents = _memory(tmp_path, "seo")
     with pytest.raises(RuntimeError, match="governed research batch execution failed"):
         run_autonomous_research_cycle(
-            memory=memory, ledger=memory, execution_controller=_controller(),
-            executor=_Executor(fail=True), revalidator=_Revalidator(), policy=_policy(), now=NOW,
+            memory=memory,
+            ledger=memory,
+            execution_controller=_controller(),
+            executor=_Executor(fail=True),
+            revalidator=_Revalidator(),
+            policy=_policy(),
+            now=NOW,
             execution_id="pb08:failure",
         )
     state = memory.get_schedule(intents[0].work_key)
     assert state is not None
     assert state.last_outcome is ResearchScheduleOutcome.FAILED
-    assert memory.claim(
-        intents[0].work_key,
-        now=NOW + timedelta(seconds=1),
-        lease_for=timedelta(minutes=1),
-    ) is not None
+    assert (
+        memory.claim(
+            intents[0].work_key,
+            now=NOW + timedelta(seconds=1),
+            lease_for=timedelta(minutes=1),
+        )
+        is not None
+    )
 
 
 def test_revalidation_blocks_stale_work_before_lease_or_budget(tmp_path) -> None:

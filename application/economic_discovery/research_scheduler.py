@@ -130,11 +130,13 @@ def _record(
 ) -> None:
     prior = ledger.get_schedule(work_key)
     attempts = 1 if prior is None else prior.attempt_count + 1
-    no_progress = 0 if outcome is ResearchScheduleOutcome.RESOLVED else (
-        1 if prior is None else prior.no_progress_count + 1
+    no_progress = (
+        0
+        if outcome is ResearchScheduleOutcome.RESOLVED
+        else (1 if prior is None else prior.no_progress_count + 1)
     )
-    next_eligible = now if outcome is ResearchScheduleOutcome.RESOLVED else now + _backoff(
-        policy, no_progress
+    next_eligible = (
+        now if outcome is ResearchScheduleOutcome.RESOLVED else now + _backoff(policy, no_progress)
     )
     ledger.record_schedule(
         ResearchScheduleState(

@@ -23,7 +23,9 @@ def _policy(mode=ResearchRuntimeMode.ENABLED, *, global_limit=2, subject_limit=1
         max_global_inflight=global_limit,
         max_subject_inflight=subject_limit,
         inflight_lease_for=timedelta(minutes=15),
-        canary_subject_ids=frozenset({"org:canary"}) if mode is ResearchRuntimeMode.CANARY else frozenset(),
+        canary_subject_ids=frozenset({"org:canary"})
+        if mode is ResearchRuntimeMode.CANARY
+        else frozenset(),
     )
 
 
@@ -43,8 +45,12 @@ def test_disabled_runtime_never_executes(tmp_path) -> None:
     store = SqliteResearchRuntimeStore(tmp_path / "runtime.sqlite3")
     runner = _Runner()
     tick = run_research_runtime_tick(
-        store=store, runner=runner, policy=_policy(ResearchRuntimeMode.DISABLED),
-        subject_id="org:a", now=NOW, execution_id="tick:1",
+        store=store,
+        runner=runner,
+        policy=_policy(ResearchRuntimeMode.DISABLED),
+        subject_id="org:a",
+        now=NOW,
+        execution_id="tick:1",
     )
     assert not tick.ran
     assert runner.calls == []
@@ -57,8 +63,12 @@ def test_kill_switch_is_durable_and_prevents_dispatch(tmp_path) -> None:
     reopened = SqliteResearchRuntimeStore(path)
     runner = _Runner()
     tick = run_research_runtime_tick(
-        store=reopened, runner=runner, policy=_policy(),
-        subject_id="org:a", now=NOW, execution_id="tick:1",
+        store=reopened,
+        runner=runner,
+        policy=_policy(),
+        subject_id="org:a",
+        now=NOW,
+        execution_id="tick:1",
     )
     assert tick.reason == "disabled"
     assert runner.calls == []
@@ -68,8 +78,12 @@ def test_canary_allowlist_is_enforced_before_acquire(tmp_path) -> None:
     store = SqliteResearchRuntimeStore(tmp_path / "runtime.sqlite3")
     runner = _Runner()
     denied = run_research_runtime_tick(
-        store=store, runner=runner, policy=_policy(ResearchRuntimeMode.CANARY),
-        subject_id="org:not-canary", now=NOW, execution_id="tick:1",
+        store=store,
+        runner=runner,
+        policy=_policy(ResearchRuntimeMode.CANARY),
+        subject_id="org:not-canary",
+        now=NOW,
+        execution_id="tick:1",
     )
     assert denied.reason == "outside-canary"
     assert store.snapshot().cycles_started == 0
@@ -80,14 +94,22 @@ def test_wake_interval_survives_restart(tmp_path) -> None:
     store = SqliteResearchRuntimeStore(path)
     runner = _Runner()
     first = run_research_runtime_tick(
-        store=store, runner=runner, policy=_policy(),
-        subject_id="org:a", now=NOW, execution_id="tick:1",
+        store=store,
+        runner=runner,
+        policy=_policy(),
+        subject_id="org:a",
+        now=NOW,
+        execution_id="tick:1",
     )
     assert first.ran
     reopened = SqliteResearchRuntimeStore(path)
     second = run_research_runtime_tick(
-        store=reopened, runner=runner, policy=_policy(),
-        subject_id="org:a", now=NOW + timedelta(minutes=4), execution_id="tick:2",
+        store=reopened,
+        runner=runner,
+        policy=_policy(),
+        subject_id="org:a",
+        now=NOW + timedelta(minutes=4),
+        execution_id="tick:2",
     )
     assert second.reason == "not-due"
     assert len(runner.calls) == 1
@@ -107,8 +129,12 @@ def test_failure_releases_capacity_and_records_health(tmp_path) -> None:
     store = SqliteResearchRuntimeStore(tmp_path / "runtime.sqlite3")
     with pytest.raises(RuntimeError, match="cycle failure"):
         run_research_runtime_tick(
-            store=store, runner=_Runner(fail=True), policy=_policy(),
-            subject_id="org:a", now=NOW, execution_id="tick:fail",
+            store=store,
+            runner=_Runner(fail=True),
+            policy=_policy(),
+            subject_id="org:a",
+            now=NOW,
+            execution_id="tick:fail",
         )
     snapshot = store.snapshot()
     assert snapshot.global_inflight == 0
@@ -120,8 +146,12 @@ def test_failure_releases_capacity_and_records_health(tmp_path) -> None:
 def test_success_records_operational_snapshot_without_epistemic_payload(tmp_path) -> None:
     store = SqliteResearchRuntimeStore(tmp_path / "runtime.sqlite3")
     tick = run_research_runtime_tick(
-        store=store, runner=_Runner(), policy=_policy(),
-        subject_id="org:a", now=NOW, execution_id="tick:ok",
+        store=store,
+        runner=_Runner(),
+        policy=_policy(),
+        subject_id="org:a",
+        now=NOW,
+        execution_id="tick:ok",
     )
     assert tick.ran
     assert tick.snapshot.global_inflight == 0

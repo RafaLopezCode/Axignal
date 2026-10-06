@@ -135,9 +135,7 @@ def test_budget_rejection_releases_all_claims_without_provider_call(tmp_path) ->
 
 
 @pytest.mark.parametrize(("invalid", "fail"), [(True, False), (False, True)])
-def test_batch_failure_releases_leases_and_records_no_progress(
-    tmp_path, invalid, fail
-) -> None:
+def test_batch_failure_releases_leases_and_records_no_progress(tmp_path, invalid, fail) -> None:
     memory, intents = _memory(tmp_path, "seo", "geo")
     controller = _controller()
 

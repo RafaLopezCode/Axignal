@@ -56,12 +56,14 @@ def _result(job: CognitiveJob, *, excerpt: str = "industrial pumps") -> Structur
         provider="batch-fixture",
         payload={
             "provider_version": "fixture/1",
-            "candidates": [{
-                "semantic_target": "capability",
-                "statement": "The source declares industrial pump manufacturing.",
-                "excerpt": excerpt,
-                "grounding_surface": "VISIBLE_TEXT",
-            }],
+            "candidates": [
+                {
+                    "semantic_target": "capability",
+                    "statement": "The source declares industrial pump manufacturing.",
+                    "excerpt": excerpt,
+                    "grounding_surface": "VISIBLE_TEXT",
+                }
+            ],
         },
     )
 
