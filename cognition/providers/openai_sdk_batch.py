@@ -55,10 +55,53 @@ class OpenAISdkBatchClient:
             body = {
                 "model": model,
                 "reasoning": {"effort": "high"},
+                "tools": [{"type": "web_search"}],
                 "input": (
                     f"{job.instruction}\n\nGoverned context JSON:\n"
                     + json.dumps(job.context, sort_keys=True, ensure_ascii=False)
+                    + "\n\nReturn only structured research evidence. Every evidence candidate "
+                    "must bind exactly one governed missing requirement to a public source URL "
+                    "and a short supporting excerpt. Do not invent evidence."
                 ),
+                "text": {
+                    "format": {
+                        "type": "json_schema",
+                        "name": "axignal_research_evidence",
+                        "strict": True,
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": False,
+                            "properties": {
+                                "status": {
+                                    "type": "string",
+                                    "enum": ["EVIDENCE_FOUND", "NO_EVIDENCE"],
+                                },
+                                "evidence_candidates": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "additionalProperties": False,
+                                        "properties": {
+                                            "requirement": {"type": "string"},
+                                            "source_url": {"type": "string"},
+                                            "excerpt": {"type": "string"},
+                                        },
+                                        "required": ["requirement", "source_url", "excerpt"],
+                                    },
+                                },
+                                "unresolved_requirements": {
+                                    "type": "array",
+                                    "items": {"type": "string"},
+                                },
+                            },
+                            "required": [
+                                "status",
+                                "evidence_candidates",
+                                "unresolved_requirements",
+                            ],
+                        },
+                    }
+                },
             }
             lines.append(
                 json.dumps(
@@ -79,11 +122,16 @@ class OpenAISdkBatchClient:
             record: dict[str, Any] = json.loads(line)
             custom_id = str(record.get("custom_id", ""))
             response = record.get("response")
-            if not custom_id or not isinstance(response, dict) or response.get("status_code") != 200:
+            if (
+                not custom_id
+                or not isinstance(response, dict)
+                or response.get("status_code") != 200
+            ):
                 raise ValueError("batch output contains failed or malformed response")
             body = response.get("body")
             if not isinstance(body, dict):
                 raise ValueError("batch output response body is missing")
+            research = cls._research_payload(body)
             results.append(
                 StructuredResult(
                     job_id=custom_id,
@@ -91,9 +139,32 @@ class OpenAISdkBatchClient:
                     payload={
                         "provider_version": str(body.get("model", "unknown")),
                         "response_id": str(body.get("id", "")),
-                        "output": body.get("output", ()),
+                        "research": research,
                         "usage": body.get("usage", {}),
                     },
                 )
             )
         return tuple(results)
+
+    @staticmethod
+    def _research_payload(body: dict[str, Any]) -> dict[str, Any]:
+        output = body.get("output")
+        if not isinstance(output, list):
+            raise ValueError("batch response output is missing")
+        for item in output:
+            if not isinstance(item, dict) or item.get("type") != "message":
+                continue
+            content = item.get("content")
+            if not isinstance(content, list):
+                continue
+            for part in content:
+                if not isinstance(part, dict) or part.get("type") != "output_text":
+                    continue
+                raw = part.get("text")
+                if not isinstance(raw, str) or not raw.strip():
+                    raise ValueError("batch structured output text is missing")
+                parsed = json.loads(raw)
+                if not isinstance(parsed, dict):
+                    raise ValueError("batch structured output must be an object")
+                return parsed
+        raise ValueError("batch structured research output is missing")

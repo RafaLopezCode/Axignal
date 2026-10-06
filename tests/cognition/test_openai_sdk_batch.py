@@ -61,6 +61,9 @@ def test_submission_uses_responses_batch() -> None:
     record = json.loads(sdk.files.created[0]["file"][1].read().decode())
     assert record["custom_id"] == "job:1"
     assert record["body"]["reasoning"]["effort"] == "high"
+    schema = record["body"]["text"]["format"]
+    assert schema["type"] == "json_schema"
+    assert schema["strict"] is True
 
 
 def test_poll_is_non_blocking_while_pending() -> None:
@@ -71,18 +74,43 @@ def test_completed_output_maps_identity_and_remains_noncanonical() -> None:
     sdk = _Sdk()
     sdk.batches.status = "completed"
     sdk.files.output = (
-        json.dumps({
-            "custom_id": "job:1",
-            "response": {
-                "status_code": 200,
-                "body": {
-                    "id": "resp:1",
-                    "model": "authorized-luna",
-                    "output": [{"type": "message"}],
-                    "usage": {"input_tokens": 12, "output_tokens": 3},
+        json.dumps(
+            {
+                "custom_id": "job:1",
+                "response": {
+                    "status_code": 200,
+                    "body": {
+                        "id": "resp:1",
+                        "model": "authorized-luna",
+                        "output": [
+                            {
+                                "type": "message",
+                                "content": [
+                                    {
+                                        "type": "output_text",
+                                        "text": json.dumps(
+                                            {
+                                                "status": "EVIDENCE_FOUND",
+                                                "evidence_candidates": [
+                                                    {
+                                                        "requirement": "seo evidence",
+                                                        "source_url": "https://axignal.com/",
+                                                        "excerpt": "evidence",
+                                                    }
+                                                ],
+                                                "unresolved_requirements": [],
+                                            }
+                                        ),
+                                    }
+                                ],
+                            }
+                        ],
+                        "usage": {"input_tokens": 12, "output_tokens": 3},
+                    },
                 },
-            },
-        }).encode() + b"\n"
+            }
+        ).encode()
+        + b"\n"
     )
     result = OpenAISdkBatchClient(sdk).poll("batch:1")
     assert result.state is BatchState.COMPLETED
