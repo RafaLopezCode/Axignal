@@ -8,7 +8,7 @@ El usuario ha fijado el propÃ³sito: outputs que permitan entender una Organiza
 
 **ValidaciÃ³n de la entrega, incluida la aclaraciÃ³n Customer Zero:** `uv run axignal-governance` pasÃ³ architecture, deps, docs, graphify, hygiene, no-generated-data, spec y terminology. Se verificaron 94 destinos locales, las veinte secciones consecutivas y los bloques de cÃ³digo de los tres documentos nuevos. `git diff --check` pasÃ³. El inventario conserva hashes del corpus previo a la entrega; `docs/README.md` es el Ãºnico archivo inventariado cambiado por este trabajo. No se repitiÃ³ la suite de producto para esta ediciÃ³n documental. Design mode: EXTEND arquitectÃ³nico; browser QA, Golden Master delta y human visual acceptance no se activaron porque no se cambiÃ³ una superficie visual.
 
-Se indexaron 388 documentos Markdown de `docs/` y `specs/` para navegaciÃ³n. Indexar no equivale a leer Ã­ntegramente cada documento. La revisiÃ³n profunda se concentrÃ³ en MASTER Â§Â§1â€“2, 14â€“23, 53â€“56; HFX; las especificaciones Subscriber, DRI, Admin, V2 y V3; Atlas/continuidad/interacciÃ³n; brief generativo; ADRs y fuentes de cÃ³digo citadas. El [inventario con hashes](D:/AXIGNAL/Axignal/docs/research/e2e-outputs-2026-10-05/document-inventory.json) permite identificar el corpus; el [registro de decisiones y fuentes](D:/AXIGNAL/Axignal/docs/research/e2e-outputs-2026-10-05/DECISIONES_Y_EVIDENCIA.md) distingue evidencia, prestaciones externas y propuestas.
+Se indexaron 388 documentos Markdown de `docs/` y `specs/` para navegaciÃ³n. Indexar no equivale a leer Ã­ntegramente cada documento. La revisiÃ³n profunda se concentrÃ³ en MASTER Â§Â§1â€“2, 14â€“23, 53â€“56; HFX; las especificaciones Subscriber, DRI, Admin, V2 y V3; Atlas/continuidad/interacciÃ³n; brief generativo; ADRs y fuentes de cÃ³digo citadas. El inventario local con hashes `docs/research/e2e-outputs-2026-10-05/document-inventory.json` permite identificar el corpus; el registro local de decisiones y fuentes `docs/research/e2e-outputs-2026-10-05/DECISIONES_Y_EVIDENCIA.md` distingue evidencia, prestaciones externas y propuestas.
 
 ## 1. Objetivo: comprar comprensiÃ³n persistente
 
@@ -33,7 +33,7 @@ Un output puede tener valor sin una gran cantidad de datos: Â«No podemos descr
 | Â¿Por quÃ© deberÃ­a creerlo? | Prueba navegable desde el output | Material exacto, provenance, contradicciones y reglas | Una cita decorativa no fundamenta cualquier frase |
 | Â¿DÃ³nde lo dejamos? | InvestigaciÃ³n restaurada y cambios desde el checkpoint | Memoria privada de pregunta/origen/corte | El origen ausente sigue UNKNOWN |
 
-V1 ofrece observaciÃ³n viva y estas proyecciones segÃºn cobertura real. V2/AEAP interroga recursivamente ese conocimiento para un informe ejecutivo; V3 lo cruza con evidencia privada autorizada. V2/V3 son especificaciones propuestas, no capacidades desplegadas. Las slices internas no constituyen por sÃ­ mismas un producto de valor completo para vender. [Subscriber](D:/AXIGNAL/Axignal/docs/product/AXIGNAL_SUBSCRIBER_EXPERIENCE_ASK_AXENT_PRODUCT_SPEC.md), [V2](D:/AXIGNAL/Axignal/docs/product/AXIGNAL_V2_DEEP_REPORT_EXECUTIVE_ANALYSIS_SPEC.md), [V3](D:/AXIGNAL/Axignal/docs/product/AXIGNAL_V3_PRIVATE_CROSS_INTELLIGENCE_SPEC.md).
+V1 ofrece observaciÃ³n viva y estas proyecciones segÃºn cobertura real. V2/AEAP interroga recursivamente ese conocimiento para un informe ejecutivo; V3 lo cruza con evidencia privada autorizada. V2/V3 son especificaciones propuestas, no capacidades desplegadas. Las slices internas no constituyen por sÃ­ mismas un producto de valor completo para vender. [Subscriber](../product/AXIGNAL_SUBSCRIBER_EXPERIENCE_ASK_AXENT_PRODUCT_SPEC.md), [V2](../product/AXIGNAL_V2_DEEP_REPORT_EXECUTIVE_ANALYSIS_SPEC.md), [V3](../product/AXIGNAL_V3_PRIVATE_CROSS_INTELLIGENCE_SPEC.md).
 
 ## 3. Arquitectura lÃ³gica y bucles
 
@@ -71,7 +71,7 @@ flowchart TD
 
 Es un sistema de bucles, no una cadena que obliga a pasar por LLMâ†’Jevâ†’admisiÃ³n. Una fuente directamente atribuible puede evitar retrieval; un cÃ¡lculo exacto evita modelo; una INXIGHT POTENTIAL puede ser Ãºtil sin crear nuevos FAXT. Una pregunta sin contexto provoca investigaciÃ³n o abstenciÃ³n. La presentaciÃ³n no reentra como evidencia del mundo.
 
-Los seis Ã¡mbitos son: percepciÃ³n; conocimiento/tiempo; razonamiento econÃ³mico; outputs humanos; interacciÃ³n generativa; operaciones del proveedor. Son lÃ­mites de responsabilidad, no seis microservicios obligatorios. [Atlas](D:/AXIGNAL/Axignal/docs/architecture/AXIGNAL_LOGICAL_ARCHITECTURE_ATLAS_V0.1.md), [doctrina de discovery](D:/AXIGNAL/Axignal/docs/product/AXIGNAL_ECONOMIC_DISCOVERY_ENGINE_DOCTRINE_2026-09-30.md).
+Los seis Ã¡mbitos son: percepciÃ³n; conocimiento/tiempo; razonamiento econÃ³mico; outputs humanos; interacciÃ³n generativa; operaciones del proveedor. Son lÃ­mites de responsabilidad, no seis microservicios obligatorios. [Atlas](AXIGNAL_LOGICAL_ARCHITECTURE_ATLAS_V0.1.md), [doctrina de discovery](../product/AXIGNAL_ECONOMIC_DISCOVERY_ENGINE_DOCTRINE_2026-09-30.md).
 
 ## 4. Autoridades y aislamiento
 
@@ -86,7 +86,7 @@ Los seis Ã¡mbitos son: percepciÃ³n; conocimiento/tiempo; razonamiento econÃ
 
 La autorizaciÃ³n se evalÃºa antes de recuperar contenido y de nuevo al liberarlo. Un ID de organizaciÃ³n, una URL, una elecciÃ³n de modelo o una suscripciÃ³n no concede acceso a datos privados. Client A y Client B siguen separados aunque observen la misma OrganizaciÃ³n. El cambio de cliente invalida requests/streams anteriores mediante context version.
 
-El CRM interno autorizado por ADR-0055 opera AXIGNAL; no gestiona el negocio del suscriptor ni acredita relaciones de AXIGLAND. El registro AO-24 de medidas es privado Admin/advisory: reutilizar su patrÃ³n de contratos no lo convierte en autoridad universal de mediciÃ³n pÃºblica DRI. [ADR-0055](D:/AXIGNAL/Axignal/docs/adr/ADR-0055-admin-private-business-operations-separation.md), [ADR-0071](D:/AXIGNAL/Axignal/docs/adr/ADR-0071-governed-measurement-registry.md), [ADR-0076](D:/AXIGNAL/Axignal/docs/adr/ADR-0076-tenant-reuse-authorization-before-narrative-access.md).
+El CRM interno autorizado por ADR-0055 opera AXIGNAL; no gestiona el negocio del suscriptor ni acredita relaciones de AXIGLAND. El registro AO-24 de medidas es privado Admin/advisory: reutilizar su patrÃ³n de contratos no lo convierte en autoridad universal de mediciÃ³n pÃºblica DRI. [ADR-0055](../adr/ADR-0055-admin-private-business-operations-separation.md), [ADR-0071](../adr/ADR-0071-governed-measurement-registry.md), [ADR-0076](../adr/ADR-0076-tenant-reuse-authorization-before-narrative-access.md).
 
 ## 5. Entrada, investigaciÃ³n y primera entrega
 
@@ -103,7 +103,7 @@ El CRM interno autorizado por ADR-0055 opera AXIGNAL; no gestiona el negocio del
 
 Customer Zero significa **AXIGNAL como usuario de su propio producto**. Puede usar el mismo Brain y la misma proyecciÃ³n de producto para testar y aprovechar informaciÃ³n real. Observar AXIGNAL tiene la misma carga de evidencia que observar otra OrganizaciÃ³n. No es un mock ni una fuente alternativa de verdad.
 
-El formulario interno Â«nombre y URLÂ» y la autorizaciÃ³n de staff pertenecen a esa entrada operativa. Su existencia no prueba que estÃ©n implementados identidad comercial, membresÃ­as, entitlements, altas masivas o aislamiento de suscriptores. Esas capacidades necesitan su propio recorrido y validaciÃ³n de producciÃ³n. Reutilizar el motor no equivale a reutilizar un grant administrativo como permiso del suscriptor. [Appendix Customer Zero](D:/AXIGNAL/Axignal/docs/governance/AXIGNAL_ADMIN_CUSTOMER_ZERO_APPENDIX_2026-10-04.md), [spec AO-24A](D:/AXIGNAL/Axignal/specs/037-admin-customer-zero/spec.md).
+El formulario interno Â«nombre y URLÂ» y la autorizaciÃ³n de staff pertenecen a esa entrada operativa. Su existencia no prueba que estÃ©n implementados identidad comercial, membresÃ­as, entitlements, altas masivas o aislamiento de suscriptores. Esas capacidades necesitan su propio recorrido y validaciÃ³n de producciÃ³n. Reutilizar el motor no equivale a reutilizar un grant administrativo como permiso del suscriptor. [Appendix Customer Zero](../governance/AXIGNAL_ADMIN_CUSTOMER_ZERO_APPENDIX_2026-10-04.md), [spec AO-24A](../../specs/037-admin-customer-zero/spec.md).
 
 ### 5.2 Contrato de entrada de 1, 2 o 100 Organizaciones
 
@@ -159,7 +159,7 @@ Comparar un adapter directo con OpenSEO como intermediario usando la misma pregu
 
 **Utopia:** referencia para tiempo, queries tipadas, provenance y correcciones. No se adopta como autoridad canÃ³nica o modelo de datos alternativo. Su documentaciÃ³n MCP distingue world time y record time y reconoce lÃ­mites del proof histÃ³rico/export; esas limitaciones deben formar parte del bakeoff, no ocultarse por la presencia de un grafo temporal. [Contrato MCP](https://github.com/deeplethe/utopia/blob/main/web/src/docs/mcp.md).
 
-Los detalles de integraciÃ³n, incompatibilidades, versiones y experimentos estÃ¡n en el [registro tÃ©cnico](D:/AXIGNAL/Axignal/docs/research/e2e-outputs-2026-10-05/DECISIONES_Y_EVIDENCIA.md). La arquitectura funciona sin que un proveedor concreto estÃ© disponible; informa de la cobertura que pierde.
+Los detalles de integraciÃ³n, incompatibilidades, versiones y experimentos estÃ¡n en el [registro tÃ©cnico](../research/e2e-outputs-2026-10-05/DECISIONES_Y_EVIDENCIA.md). La arquitectura funciona sin que un proveedor concreto estÃ© disponible; informa de la cobertura que pierde.
 
 ## 9. Jev como motor semÃ¡ntico econÃ³mico
 
@@ -169,17 +169,17 @@ Supplier y customer pueden coexistir. Identidad exacta, fechas, montos, counters
 
 Preguntas independientes con el mismo estado pueden agruparse; un segundo ciclo obtiene datos que dependan de una respuesta anterior. Batch es transporte, no unidad indivisible de cache ni corroboraciÃ³n entre respuestas. Reuse/invalidaciÃ³n es por dimensiÃ³n y sus inputs. [Fan-out](https://docs.typesafe.ai/patterns/fan-out).
 
-El adapter local aÃºn construye `[definition]` por llamada. La propuesta requiere variantes neutrales Noul/Choice/Score y un request-set con gate por dimensiÃ³n; no forzar todo al puerto Choice existente. La selecciÃ³n productiva requiere corpus, derechos y comparaciÃ³n real. El [estudio Jev](D:/AXIGNAL/Axignal/docs/audits/brain-2026-10-04/JEV_ARQUITECTURA_Y_POTENCIAL_AXIGNAL_2026-10-05.md) desarrolla economÃ­a, defectos del lab y evaluaciÃ³n.
+El adapter local aÃºn construye `[definition]` por llamada. La propuesta requiere variantes neutrales Noul/Choice/Score y un request-set con gate por dimensiÃ³n; no forzar todo al puerto Choice existente. La selecciÃ³n productiva requiere corpus, derechos y comparaciÃ³n real. El estudio Jev local `docs/audits/brain-2026-10-04/JEV_ARQUITECTURA_Y_POTENCIAL_AXIGNAL_2026-10-05.md` desarrolla economÃ­a, defectos del lab y evaluaciÃ³n.
 
 ## 10. Memoria, identidad, tiempo y canonizaciÃ³n
 
 Identity Resolution conserva candidatos, aliases, scope y merges reversibles; la semejanza no es autoridad. Entity legal, marca, producto y sede se distinguen antes de atribuir ausencia o experiencia. Un sujeto ambiguo retiene UNRESOLVED y puede requerir desambiguaciÃ³n humana como atenciÃ³n, sin conceder ediciÃ³n de verdad.
 
-Observation Memory conserva observaciones valiosas aunque no sean admisibles como FAXT. EvidenceAdmission autentica contenido y proposiciÃ³n exactos, autoridad por predicate, sujeto, valor, observaciÃ³n y policy. Factories/replay no aceptan una decisiÃ³n para otro tuple. Un structured verdict aporta soporte auxiliar, nunca permiso de write. [ADR-0072](D:/AXIGNAL/Axignal/docs/adr/ADR-0072-proposition-bound-evidence-admission.md), [ADR-0073](D:/AXIGNAL/Axignal/docs/adr/ADR-0073-canonical-materialization-relationship-admission.md).
+Observation Memory conserva observaciones valiosas aunque no sean admisibles como FAXT. EvidenceAdmission autentica contenido y proposiciÃ³n exactos, autoridad por predicate, sujeto, valor, observaciÃ³n y policy. Factories/replay no aceptan una decisiÃ³n para otro tuple. Un structured verdict aporta soporte auxiliar, nunca permiso de write. [ADR-0072](../adr/ADR-0072-proposition-bound-evidence-admission.md), [ADR-0073](../adr/ADR-0073-canonical-materialization-relationship-admission.md).
 
 La extensiÃ³n temporal propuesta distingue observed/retrieved time, valid time cuando estÃ© sustentado y recorded time. Fecha de publicaciÃ³n no es fecha de inicio econÃ³mico. Un dato tardÃ­o puede alterar quÃ© sabemos ahora sobre el pasado, conservando quÃ© sabÃ­amos entonces. El valor temporal permanece UNKNOWN si la fuente no lo establece.
 
-Effective currentness se calcula al consumir y proyectar, con as_of y policy version. Raw/history no se reescribe al envejecer. Una reobservaciÃ³n fresca no refresca silenciosamente el soporte de una seÃ±al vieja. Cambios de fuente, derechos, mÃ©todo, contrato o modelo invalidan las derivaciones pertinentes; el borrado puede dejar una referencia no disponible y limitar el replay. [ADR-0077](D:/AXIGNAL/Axignal/docs/adr/ADR-0077-temporal-currentness-propagation-at-consumption.md), [ADR-0079](D:/AXIGNAL/Axignal/docs/adr/ADR-0079-immutable-legacy-evidence-identity-replay-conflict.md).
+Effective currentness se calcula al consumir y proyectar, con as_of y policy version. Raw/history no se reescribe al envejecer. Una reobservaciÃ³n fresca no refresca silenciosamente el soporte de una seÃ±al vieja. Cambios de fuente, derechos, mÃ©todo, contrato o modelo invalidan las derivaciones pertinentes; el borrado puede dejar una referencia no disponible y limitar el replay. [ADR-0077](../adr/ADR-0077-temporal-currentness-propagation-at-consumption.md), [ADR-0079](../adr/ADR-0079-immutable-legacy-evidence-identity-replay-conflict.md).
 
 ## 11. Economic Reasoner y polÃ­tica de investigaciÃ³n
 
@@ -189,7 +189,7 @@ Research Value Gate controla derechos/capability, materialidad informativa, pres
 
 Paradas explÃ­citas: pregunta contestada con suficiencia; falta privada sin acceso; fuente no autorizada; reserva insuficiente; no progreso tras intentos delimitados; ambiguity irreducible; o deadline. Preservar pregunta, exploraciones y motivo de parada evita volver a pagar la misma investigaciÃ³n. Los outputs describen esa frontera sin fingir que el anÃ¡lisis terminÃ³ el mundo econÃ³mico.
 
-AXENT propone queries/fuentes, investiga huecos, contrasta alternativas y explica el basis. No posee SQL arbitrario, credenciales de base de datos o un escritor canÃ³nico. Sus tools son operaciones de un Context Broker autorizado y acotado. [Continuidad/contexto](D:/AXIGNAL/Axignal/docs/architecture/HFX_COGNITIVE_CONTINUITY_AND_MEMORY_ARCHITECTURE.md).
+AXENT propone queries/fuentes, investiga huecos, contrasta alternativas y explica el basis. No posee SQL arbitrario, credenciales de base de datos o un escritor canÃ³nico. Sus tools son operaciones de un Context Broker autorizado y acotado. [Continuidad/contexto](HFX_COGNITIVE_CONTINUITY_AND_MEMORY_ARCHITECTURE.md).
 
 ## 12. Human Output Compiler: la frontera que faltaba en la tesis E2E
 
@@ -215,13 +215,13 @@ HumanOutput (propuesta v0.1)
 
 Son ejes independientes: familia, estado epistÃ©mico, temporalidad, atenciÃ³n y arquetipo. No un estado combinado Â«bueno/maloÂ». El modelo puede proponer palabras; el contrato exige referencias y conserva limitaciones materiales. La variante sin modelo usa copy determinista y mantiene utilidad.
 
-VerificaciÃ³n previa a publicaciÃ³n: resolver sujeto y revisiÃ³n; autorizar metadata antes de material; validar basis contra representaciÃ³n/extracciÃ³n exactas; incluir contradicciones consideradas; comprobar cÃ¡lculo/unidades/denominador/instrumento; resolver relaciones/caminos; verificar alcance de cada afirmaciÃ³n; preservar UNKNOWN y effective currentness. Material narrativo rechazado no se sustituye por una historia plausible. [ADR-0075](D:/AXIGNAL/Axignal/docs/adr/ADR-0075-exact-explainable-basis-narrative-verification.md), [HFX](D:/AXIGNAL/Axignal/docs/product/HFX_HUMAN_FIRST_COGNITIVE_UX_DOCTRINE.md).
+VerificaciÃ³n previa a publicaciÃ³n: resolver sujeto y revisiÃ³n; autorizar metadata antes de material; validar basis contra representaciÃ³n/extracciÃ³n exactas; incluir contradicciones consideradas; comprobar cÃ¡lculo/unidades/denominador/instrumento; resolver relaciones/caminos; verificar alcance de cada afirmaciÃ³n; preservar UNKNOWN y effective currentness. Material narrativo rechazado no se sustituye por una historia plausible. [ADR-0075](../adr/ADR-0075-exact-explainable-basis-narrative-verification.md), [HFX](../product/HFX_HUMAN_FIRST_COGNITIVE_UX_DOCTRINE.md).
 
 Persistir output y versiÃ³n de su basis permite replay, explicaciÃ³n y export coherentes. No es una segunda base de hechos: es proyecciÃ³n con refs a las autoridades originales. Markdown/JSON/Product MCP y UI consumen la misma revisiÃ³n autorizada.
 
 ## 13. UI generativa gobernada con AI SDK 7
 
-Se conserva el brief: LEFT navegaciÃ³n estable; CENTER canvas de observaciÃ³n adaptable; RIGHT AXENT contextual; BOTTOM tiempo global; TOP recorrido/back/forward. Today, Explore, Evolution y Evidence siguen siendo modos de comprensiÃ³n. La experiencia bÃ¡sica entrega valor sin prompt. [Brief aceptado](D:/AXIGNAL/Axignal/docs/design/AXIGNAL_FRONTEND_BRAND_GENERATIVE_EXPERIENCE_MASTER_BRIEF.md).
+Se conserva el brief: LEFT navegaciÃ³n estable; CENTER canvas de observaciÃ³n adaptable; RIGHT AXENT contextual; BOTTOM tiempo global; TOP recorrido/back/forward. Today, Explore, Evolution y Evidence siguen siendo modos de comprensiÃ³n. La experiencia bÃ¡sica entrega valor sin prompt. [Brief aceptado](../design/AXIGNAL_FRONTEND_BRAND_GENERATIVE_EXPERIENCE_MASTER_BRIEF.md).
 
 AI SDK 7 es la direcciÃ³n solicitada y ya estÃ¡ instalado (`ai` 7.0.127, `@ai-sdk/react` 4.0.130). La documentaciÃ³n oficial permite componentes propios asociados a salidas tipadas y streaming de data parts. La arquitectura aprovecha AI SDK UI; no presupone que Generative UI signifique JSX libre o un nuevo framework visual. [Generative UI](https://ai-sdk.dev/docs/ai-sdk-ui/generative-user-interfaces), [custom data](https://ai-sdk.dev/docs/ai-sdk-ui/streaming-data).
 
@@ -263,7 +263,7 @@ Rechazar conserva el output pÃºblico y bloquea sÃ³lo la rama dependiente. La
 
 Search Console es evidencia privada contextual, no representaciÃ³n pÃºblica canÃ³nica. Su API advierte que devuelve top rows y no garantiza todas las filas: falta de una fila no acredita cero impresiones globales. [API oficial](https://developers.google.com/webmaster-tools/v1/searchanalytics/query). La propia GSC de AXIGNAL en Admin y GSC concedida por un suscriptor son autoridades privadas distintas.
 
-Se aplicaron los principios de scoped grant, progressive scope, receipt y revocaciÃ³n de la [skill agent-consent-patterns](C:/Users/usuario/.codex-clean/plugins/cache/openai-curated-remote/agent-consent-patterns/0.1.1/skills/agent-consent-patterns/SKILL.md), subordinados a V3 Â§44 y contratos de interacciÃ³n. No se instalÃ³ su librerÃ­a ni se creÃ³ una conexiÃ³n.
+Se aplicaron los principios de scoped grant, progressive scope, receipt y revocaciÃ³n de la skill local `agent-consent-patterns`, subordinados a V3 Â§44 y contratos de interacciÃ³n. No se instalÃ³ su librerÃ­a ni se creÃ³ una conexiÃ³n.
 
 ## 16. TopologÃ­a fÃ­sica y economÃ­a
 
@@ -303,22 +303,22 @@ InspecciÃ³n de cÃ³digo, no nueva verificaciÃ³n runtime E2E. Los documentos
 
 | Pieza | Evidencia local actual | Delta target |
 |---|---|---|
-| UI / AI SDK | [package](D:/AXIGNAL/Axignal/apps/web/experience/package.json), [stream](D:/AXIGNAL/Axignal/apps/web/experience/app/api/axent/route.ts), [plan validator](D:/AXIGNAL/Axignal/apps/web/experience/lib/governance.ts) | SDK7 y composiciÃ³n limitada existen; generalizar desde contexto/demo a outputs del Brain autorizado sin fixture fallback |
-| UX runtime | [runtime AXENT](D:/AXIGNAL/Axignal/apps/web/experience/lib/runtime-axent.ts), [projection contract](D:/AXIGNAL/Axignal/apps/web/experience/lib/runtime-projection.ts) | ExplicaciÃ³n determinista e intents regex; faltan investigaciÃ³n/evaluaciÃ³n semÃ¡ntica y continuidad completa |
-| Primera fuente | [FirstProof](D:/AXIGNAL/Axignal/tools/runtime/first_proof.py) | Homepage/persistencia/proyecciÃ³n acotadas; capabilities y markets aÃºn vacÃ­os en ese read model; no demostrar con ello un Brain econÃ³mico completo |
-| Proveedores | [router](D:/AXIGNAL/Axignal/cognition/router/router.py), [protocol](D:/AXIGNAL/Axignal/cognition/providers/base.py), [Jev lab](D:/AXIGNAL/Axignal/experiments/decision_lab/providers/typesafe.py) | Router explÃ­cito bÃ¡sico; Jev single-question experimental, no vector productivo compuesto |
-| Contratos de Brain | [brain_contracts](D:/AXIGNAL/Axignal/application/economic_discovery/brain_contracts.py), [Prime execution](D:/AXIGNAL/Axignal/application/economic_discovery/prime_execution.py) | Reusar dimensiones/deps/control; completar mixed-primitive batch, persistencia/replay y ejecutores reales |
-| Memoria | [observations](D:/AXIGNAL/Axignal/pipeline/observation_memory/sqlite_store.py), [learning](D:/AXIGNAL/Axignal/pipeline/learning_memory/sqlite_store.py) | Existen stores delimitados; composiciÃ³n durable/scheduler/output revisions requieren trabajo |
-| Evidence / narrative | [admission](D:/AXIGNAL/Axignal/domain/evidence/admission.py), [narrative verification](D:/AXIGNAL/Axignal/application/subscriber_projection/narrative_verification.py), [access](D:/AXIGNAL/Axignal/application/subscriber_projection/narrative_access.py) | Hardening posterior al audit ya tiene contratos/cÃ³digo; preservar y extender, sin declarar vigentes todos los P0 histÃ³ricos |
-| Tiempo | [currentness](D:/AXIGNAL/Axignal/application/economic_discovery/temporal_currentness.py), FirstProof + ADR-0077 | Aging al consumo y refs concretas existen; scheduler y rederivaciÃ³n general no quedan demostrados |
-| Medidas | [AO-24 model](D:/AXIGNAL/Axignal/domain/admin_measurements/model.py), [service](D:/AXIGNAL/Axignal/application/admin_measurements/service.py) | PatrÃ³n implementado en plano privado; instrumento DRI y primera definiciÃ³n pÃºblica requieren su propio contrato |
-| Oportunidad | [market entry](D:/AXIGNAL/Axignal/application/economic_discovery/market_entry.py), [explanation](D:/AXIGNAL/Axignal/application/economic_discovery/explanation.py) | Contratos de razonamiento Ãºtiles; falta vertical real desde necesidad/capability hasta comprensiÃ³n humana |
+| UI / AI SDK | [package](../../apps/web/experience/package.json), [stream](../../apps/web/experience/app/api/axent/route.ts), [plan validator](../../apps/web/experience/lib/governance.ts) | SDK7 y composiciÃ³n limitada existen; generalizar desde contexto/demo a outputs del Brain autorizado sin fixture fallback |
+| UX runtime | [runtime AXENT](../../apps/web/experience/lib/runtime-axent.ts), [projection contract](../../apps/web/experience/lib/runtime-projection.ts) | ExplicaciÃ³n determinista e intents regex; faltan investigaciÃ³n/evaluaciÃ³n semÃ¡ntica y continuidad completa |
+| Primera fuente | [FirstProof](../../tools/runtime/first_proof.py) | Homepage/persistencia/proyecciÃ³n acotadas; capabilities y markets aÃºn vacÃ­os en ese read model; no demostrar con ello un Brain econÃ³mico completo |
+| Proveedores | [router](../../cognition/router/router.py), [protocol](../../cognition/providers/base.py), [Jev lab](../../experiments/decision_lab/providers/typesafe.py) | Router explÃ­cito bÃ¡sico; Jev single-question experimental, no vector productivo compuesto |
+| Contratos de Brain | [brain_contracts](../../application/economic_discovery/brain_contracts.py), [Prime execution](../../application/economic_discovery/prime_execution.py) | Reusar dimensiones/deps/control; completar mixed-primitive batch, persistencia/replay y ejecutores reales |
+| Memoria | [observations](../../pipeline/observation_memory/sqlite_store.py), [learning](../../pipeline/learning_memory/sqlite_store.py) | Existen stores delimitados; composiciÃ³n durable/scheduler/output revisions requieren trabajo |
+| Evidence / narrative | [admission](../../domain/evidence/admission.py), [narrative verification](../../application/subscriber_projection/narrative_verification.py), [access](../../application/subscriber_projection/narrative_access.py) | Hardening posterior al audit ya tiene contratos/cÃ³digo; preservar y extender, sin declarar vigentes todos los P0 histÃ³ricos |
+| Tiempo | [currentness](../../application/economic_discovery/temporal_currentness.py), FirstProof + ADR-0077 | Aging al consumo y refs concretas existen; scheduler y rederivaciÃ³n general no quedan demostrados |
+| Medidas | [AO-24 model](../../domain/admin_measurements/model.py), [service](../../application/admin_measurements/service.py) | PatrÃ³n implementado en plano privado; instrumento DRI y primera definiciÃ³n pÃºblica requieren su propio contrato |
+| Oportunidad | [market entry](../../application/economic_discovery/market_entry.py), [explanation](../../application/economic_discovery/explanation.py) | Contratos de razonamiento Ãºtiles; falta vertical real desde necesidad/capability hasta comprensiÃ³n humana |
 
 La anterior auditorÃ­a sigue siendo evidencia de su snapshot, no permiso para repetir conclusiones obsoletas. Esta propuesta no declara que existan integraciones OpenSEO/Utopia ni resultados de precisiÃ³n/latencia con Jev.
 
 ## 19. ImplementaciÃ³n incremental y demostraciÃ³n E2E
 
-Orden por dependencia de valor; detalle en el [handoff](D:/AXIGNAL/Axignal/docs/research/e2e-outputs-2026-10-05/IMPLEMENTATION_HANDOFF.md). Cada feature no trivial sigue specifyâ†’clarifyâ†’planâ†’architecture reviewâ†’tasksâ†’implementâ†’converge. Este documento es entrada a ese proceso, no reemplazo de sus gates.
+Orden por dependencia de valor; detalle en el handoff local `docs/research/e2e-outputs-2026-10-05/IMPLEMENTATION_HANDOFF.md`. Cada feature no trivial sigue specifyâ†’clarifyâ†’planâ†’architecture reviewâ†’tasksâ†’implementâ†’converge. Este documento es entrada a ese proceso, no reemplazo de sus gates.
 
 | Slice | Entrega verificable | Dependencias / criterio de salida |
 |---|---|---|
@@ -343,6 +343,6 @@ Gates de verdad/seguridad son independientes del modelo: no canonical bypass; no
 
 Gates de servicio se fijan antes del piloto con baseline: time-to-first-useful-output; age/delivery lag; recovery; complete cost coverage; coste por output Ãºtil/reutilizable; pÃ©rdida de candidatos por capa; precisiÃ³n/riskâ€“coverage por dimensiÃ³n e idioma. No prometer p95, throughput, coste global o proveedor ganador sin workload medido.
 
-Gates humanos siguen el [protocolo de diez segundos](D:/AXIGNAL/Axignal/docs/design/FIRST_VIEW_10_SECOND_COMPREHENSION_PROTOCOL.md) y [HFX research](D:/AXIGNAL/Axignal/docs/research/HFX_USER_RESEARCH_AND_VALIDATION_PROTOCOL.md): identificar significado, relevancia, certeza, cambio, lÃ­mites y ruta a evidencia; acceso experto sin perder contexto; restauraciÃ³n sin origen inventado. Today respeta su mÃ¡ximo actual de tres Ã­tems primarios. Una UX atractiva sin comprensiÃ³n epistÃ©mica falla.
+Gates humanos siguen el [protocolo de diez segundos](../design/FIRST_VIEW_10_SECOND_COMPREHENSION_PROTOCOL.md) y [HFX research](../research/HFX_USER_RESEARCH_AND_VALIDATION_PROTOCOL.md): identificar significado, relevancia, certeza, cambio, lÃ­mites y ruta a evidencia; acceso experto sin perder contexto; restauraciÃ³n sin origen inventado. Today respeta su mÃ¡ximo actual de tres Ã­tems primarios. Una UX atractiva sin comprensiÃ³n epistÃ©mica falla.
 
 La hipÃ³tesis competitiva es que memoria econÃ³mica y memoria de comprensiÃ³n se amortizan juntas: observar una vez cuando procede, componer muchas preguntas, explicar a distintas profundidades y recordar dÃ³nde estaba la persona. El valor acumulativo debe demostrarse en utilidad y coste, conservando independencia de la observaciÃ³n. Esa es la tesis E2E que este diseÃ±o convierte en responsabilidades, contratos y slices revisables.
