@@ -39,7 +39,7 @@ export function CurrentnessTag({ state }: { state: Currentness }) {
     UNKNOWN: t("Vigencia desconocida", "Currentness unknown"),
   }[state];
   return (
-    <span className={"cg-currentness cg-currentness-" + state.toLowerCase()} data-currentness={state}>
+    <span className={"badge cg-currentness cg-currentness-" + state.toLowerCase()} data-currentness={state}>
       {label}
     </span>
   );

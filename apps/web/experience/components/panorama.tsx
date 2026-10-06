@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Chat } from "@ai-sdk/react";
 import { DefaultChatTransport } from "ai";
@@ -63,6 +63,7 @@ export function Panorama() {
   const { t, copy, locale, reducedMotion, setReducedMotion } = useLocale();
   const params = useSearchParams(),
     router = useRouter();
+  const pathname = usePathname();
   const organizationId = organizations.some(
     (o) => o.id === params.get("organization"),
   )
@@ -106,7 +107,7 @@ export function Panorama() {
   }, [chat]);
   const organization = projection.organization;
   const depth = params.get("depth") ?? "understand";
-  const [layout, setLayout] = useState<"spatial" | "reading">("spatial");
+  const layout = params.get("layout") === "reading" ? "reading" : "spatial";
   const [mobileNav, setMobileNav] = useState(false),
     [mobileAxent, setMobileAxent] = useState(false);
   const [evidenceId, setEvidenceId] = useState<string | null>(null);
@@ -163,11 +164,15 @@ export function Panorama() {
     Object.entries(changes).forEach(([k, v]) =>
       v === null ? next.delete(k) : next.set(k, v),
     );
-    router.push("/design/panorama" + (next.size ? "?" + next.toString() : ""), {
+    router.push(pathname + (next.size ? "?" + next.toString() : ""), {
       scroll: false,
     });
     setMobileNav(false);
     setEvidenceId(null);
+  }
+  function changeLayout(mode: "spatial" | "reading") {
+    navigate({ layout: mode, view: "panorama", family: null, signal: null, depth: null });
+    setUtility(null);
   }
   function focusSignal(s: Signal) {
     navigate({
@@ -434,14 +439,14 @@ export function Panorama() {
                       <IconButton
                         label={t("Vista espacial", "Spatial view")}
                         className={layout === "spatial" ? "selected" : ""}
-                        onClick={() => setLayout("spatial")}
+                        onClick={() => changeLayout("spatial")}
                       >
                         <Network size={17} />
                       </IconButton>
                       <IconButton
                         label={t("Vista de lectura", "Reading view")}
                         className={layout === "reading" ? "selected" : ""}
-                        onClick={() => setLayout("reading")}
+                        onClick={() => changeLayout("reading")}
                       >
                         <List size={17} />
                       </IconButton>
@@ -947,20 +952,16 @@ export function Panorama() {
               <div className="settings-options">
                 <button
                   className="button secondary"
-                  onClick={() => {
-                    setLayout("reading");
-                    setUtility(null);
-                  }}
+                  aria-pressed={layout === "reading"}
+                  onClick={() => changeLayout("reading")}
                 >
                   <List size={17} />
                   {t("Lectura lineal", "Linear reading")}
                 </button>
                 <button
                   className="button secondary"
-                  onClick={() => {
-                    setLayout("spatial");
-                    setUtility(null);
-                  }}
+                  aria-pressed={layout === "spatial"}
+                  onClick={() => changeLayout("spatial")}
                 >
                   <Network size={17} />
                   {t("Composición espacial", "Spatial composition")}

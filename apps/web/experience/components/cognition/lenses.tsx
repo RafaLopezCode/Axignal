@@ -400,10 +400,12 @@ function TerritoryMatrix({ facts, glance }: Props) {
             <Mark state={m.state} />
             <strong>{copy(m.label)}</strong>
             <CurrentnessTag state={m.currentness} />
-            <Detail glance={glance}>
-              {m.signal ? <span>{copy(m.signal)}</span> : <UnknownValue label={t("Sin evidencia observada", "No observed evidence")} />}
-              {m.sourceId && <SourceRef source={sources.get(m.sourceId)} />}
-            </Detail>
+            <div className="cg-tile-detail">
+              <Detail glance={glance}>
+                {m.signal ? <span>{copy(m.signal)}</span> : <UnknownValue label={t("Sin evidencia observada", "No observed evidence")} />}
+                {m.sourceId && <SourceRef source={sources.get(m.sourceId)} />}
+              </Detail>
+            </div>
           </li>
         ))}
       </ul>

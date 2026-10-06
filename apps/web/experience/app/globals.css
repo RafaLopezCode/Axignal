@@ -2876,6 +2876,18 @@ em {
   flex-wrap: wrap;
   margin: 25px 0;
 }
+.settings-options .locale-selector {
+  min-height: 48px;
+  padding: 8px 12px;
+  border: 1px solid #ccd3df;
+  border-radius: 9px;
+  background: #fff;
+  color: var(--blue);
+}
+.settings-options .button[aria-pressed="true"] {
+  border-color: var(--blue);
+  background: var(--soft-blue);
+}
 .state-panel {
   display: flex;
   align-items: center;
