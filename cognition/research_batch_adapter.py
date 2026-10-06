@@ -23,7 +23,7 @@ class ResearchResultAdmissionPort(Protocol):
     ) -> bool: ...
 
 
-def _job(work: ClaimedResearchWork) -> CognitiveJob:
+def build_research_job(work: ClaimedResearchWork) -> CognitiveJob:
     intent = work.work.intent
     return CognitiveJob(
         id=f"research:{work.lease.work_key}",
@@ -76,7 +76,7 @@ class CognitiveResearchBatchExecutor:
     ) -> tuple[ResearchBatchItemResult, ...]:
         if not claimed:
             return ()
-        jobs = tuple(_job(item) for item in claimed)
+        jobs = tuple(build_research_job(item) for item in claimed)
         results = tuple(self._provider.complete_batch(jobs))
         result_ids = tuple(result.job_id for result in results)
         expected_ids = {job.id for job in jobs}

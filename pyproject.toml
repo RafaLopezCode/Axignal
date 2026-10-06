@@ -20,6 +20,9 @@ semantic-retrieval = [
   "numpy>=1.26,<2.3",
   "turboquant",
 ]
+research-canary-live = [
+    "openai>=3.24.0",
+]
 
 [build-system]
 requires = ["hatchling"]
