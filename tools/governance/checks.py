@@ -133,7 +133,21 @@ def check_hygiene(root: Path) -> list[Problem]:
             problems.append(f"forbidden file present: {forbidden}")
 
     skip = {".git", ".venv", "node_modules", "graphify-out", "data"}
-    for path in root.rglob("*"):
+    candidate_paths: Iterable[Path]
+    if (root / ".git").exists():
+        result = subprocess.run(
+            ["git", "ls-files", "--cached", "--others", "--exclude-standard", "-z"],
+            cwd=root,
+            check=True,
+            capture_output=True,
+        )
+        candidate_paths = (
+            root / relative.decode("utf-8") for relative in result.stdout.split(b"\0") if relative
+        )
+    else:
+        candidate_paths = root.rglob("*")
+
+    for path in candidate_paths:
         relative = path.relative_to(root)
         if set(relative.parts) & skip:
             continue
