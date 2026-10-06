@@ -96,7 +96,7 @@ def _backoff(policy: AutonomousResearchPolicy, no_progress_count: int) -> timede
     return candidate if candidate <= policy.max_backoff else policy.max_backoff
 
 
-def _eligible_keys(
+def select_research_work_keys(
     *,
     memory: SharedObservationWorkMemory,
     ledger: ResearchScheduleLedger,
@@ -104,6 +104,8 @@ def _eligible_keys(
     revalidator: ResearchWorkRevalidator,
     now: datetime,
 ) -> tuple[tuple[str, ...], tuple[str, ...]]:
+    """Select durable work without claiming or dispatching it."""
+
     eligible: list[str] = []
     exhausted: list[str] = []
     for work_key in memory.pending_work_keys():
@@ -120,7 +122,7 @@ def _eligible_keys(
     return tuple(eligible[: policy.max_batch_size]), tuple(exhausted)
 
 
-def _record(
+def record_research_schedule_outcome(
     ledger: ResearchScheduleLedger,
     *,
     work_key: str,
@@ -128,6 +130,7 @@ def _record(
     now: datetime,
     policy: AutonomousResearchPolicy,
 ) -> None:
+    """Persist one terminal scheduler outcome for durable research work."""
     prior = ledger.get_schedule(work_key)
     attempts = 1 if prior is None else prior.attempt_count + 1
     no_progress = (
@@ -172,7 +175,7 @@ def run_autonomous_research_cycle(
     if not budget.may_continue:
         return AutonomousResearchCycle((), None, budget.stop_reason)
 
-    selected, exhausted = _eligible_keys(
+    selected, exhausted = select_research_work_keys(
         memory=memory,
         ledger=ledger,
         policy=policy,
@@ -195,7 +198,7 @@ def run_autonomous_research_cycle(
         )
     except ResearchBatchExecutionFailed as exc:
         for work_key in exc.claimed_work_keys:
-            _record(
+            record_research_schedule_outcome(
                 ledger,
                 work_key=work_key,
                 outcome=ResearchScheduleOutcome.FAILED,
@@ -209,7 +212,7 @@ def run_autonomous_research_cycle(
     for work_key in selected:
         if work_key not in claimed:
             continue
-        _record(
+        record_research_schedule_outcome(
             ledger,
             work_key=work_key,
             outcome=(
