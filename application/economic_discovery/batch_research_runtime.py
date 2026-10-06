@@ -38,6 +38,14 @@ class ResearchBatchItemResult:
             raise ValueError("research provider and version must coexist")
 
 
+class ResearchBatchExecutionFailed(RuntimeError):
+    """Execution failed after leases were acquired; exposes exact attempted work."""
+
+    def __init__(self, claimed_work_keys: tuple[str, ...]) -> None:
+        self.claimed_work_keys = claimed_work_keys
+        super().__init__("governed research batch execution failed")
+
+
 class ResearchBatchExecutor(Protocol):
     """Execute research and report resolution only after governed admission."""
 
@@ -138,4 +146,4 @@ def execute_governed_research_batch(
                 made_progress=False,
             ),
         )
-        raise
+        raise ResearchBatchExecutionFailed(claimed_keys) from None

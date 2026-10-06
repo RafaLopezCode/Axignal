@@ -106,6 +106,9 @@ class SharedObservationWorkMemory(Protocol):
 
     def get(self, work_key: str) -> SharedObservationWork | None: ...
 
+    def pending_work_keys(self) -> tuple[str, ...]:
+        """Return pending work in deterministic durable order."""
+
     def claim(
         self,
         work_key: str,

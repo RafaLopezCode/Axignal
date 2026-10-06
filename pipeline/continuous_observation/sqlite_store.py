@@ -14,6 +14,10 @@ from application.economic_discovery.continuous_observation import (
     SharedObservationIntent,
     SharedObservationWork,
 )
+from application.economic_discovery.research_scheduler import (
+    ResearchScheduleOutcome,
+    ResearchScheduleState,
+)
 
 
 def _utc(value: datetime, label: str) -> datetime:
@@ -70,6 +74,20 @@ class SqliteSharedObservationWorkMemory:
                     lease_token TEXT NOT NULL,
                     acquired_at TEXT NOT NULL,
                     expires_at TEXT NOT NULL,
+                    FOREIGN KEY (work_key) REFERENCES shared_observation_work(work_key)
+                        ON DELETE RESTRICT
+                )
+                """
+            )
+            db.execute(
+                """
+                CREATE TABLE IF NOT EXISTS shared_observation_schedule (
+                    work_key TEXT PRIMARY KEY,
+                    attempt_count INTEGER NOT NULL,
+                    no_progress_count INTEGER NOT NULL,
+                    next_eligible_at TEXT NOT NULL,
+                    last_outcome TEXT NOT NULL,
+                    updated_at TEXT NOT NULL,
                     FOREIGN KEY (work_key) REFERENCES shared_observation_work(work_key)
                         ON DELETE RESTRICT
                 )
@@ -163,6 +181,59 @@ class SqliteSharedObservationWorkMemory:
             requester_refs=tuple(str(item["requester_ref"]) for item in requesters),
             completed_at=None if completed is None else datetime.fromisoformat(str(completed)),
         )
+
+    def get_schedule(self, work_key: str) -> ResearchScheduleState | None:
+        with self._connect() as db:
+            row = db.execute(
+                "SELECT * FROM shared_observation_schedule WHERE work_key=?",
+                (work_key,),
+            ).fetchone()
+        if row is None:
+            return None
+        return ResearchScheduleState(
+            work_key=str(row["work_key"]),
+            attempt_count=int(row["attempt_count"]),
+            no_progress_count=int(row["no_progress_count"]),
+            next_eligible_at=datetime.fromisoformat(str(row["next_eligible_at"])),
+            last_outcome=ResearchScheduleOutcome(str(row["last_outcome"])),
+            updated_at=datetime.fromisoformat(str(row["updated_at"])),
+        )
+
+    def record_schedule(self, state: ResearchScheduleState) -> None:
+        with self._connect() as db:
+            db.execute(
+                """
+                INSERT INTO shared_observation_schedule (
+                    work_key, attempt_count, no_progress_count, next_eligible_at,
+                    last_outcome, updated_at
+                ) VALUES (?, ?, ?, ?, ?, ?)
+                ON CONFLICT(work_key) DO UPDATE SET
+                    attempt_count=excluded.attempt_count,
+                    no_progress_count=excluded.no_progress_count,
+                    next_eligible_at=excluded.next_eligible_at,
+                    last_outcome=excluded.last_outcome,
+                    updated_at=excluded.updated_at
+                """,
+                (
+                    state.work_key,
+                    state.attempt_count,
+                    state.no_progress_count,
+                    state.next_eligible_at.astimezone(UTC).isoformat(),
+                    state.last_outcome.value,
+                    state.updated_at.astimezone(UTC).isoformat(),
+                ),
+            )
+
+    def pending_work_keys(self) -> tuple[str, ...]:
+        with self._connect() as db:
+            rows = db.execute(
+                """
+                SELECT work_key FROM shared_observation_work
+                WHERE state=? ORDER BY work_key
+                """,
+                (ObservationWorkState.PENDING.value,),
+            ).fetchall()
+        return tuple(str(row["work_key"]) for row in rows)
 
     def claim(
         self,
