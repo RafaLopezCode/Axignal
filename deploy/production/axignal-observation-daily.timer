@@ -1,0 +1,12 @@
+[Unit]
+Description=Run AXIGNAL autonomous observation once per UTC day
+
+[Timer]
+OnCalendar=*-*-* 03:17:00 UTC
+Persistent=true
+RandomizedDelaySec=15m
+AccuracySec=1m
+Unit=axignal-observation-daily.service
+
+[Install]
+WantedBy=timers.target
