@@ -6,6 +6,7 @@ import sqlite3
 import threading
 import urllib.error
 import urllib.request
+from dataclasses import replace
 from datetime import UTC, datetime, timedelta
 from http.server import ThreadingHTTPServer
 from pathlib import Path
@@ -17,6 +18,10 @@ from pipeline.continuous_observation import SqliteSharedObservationWorkMemory
 from pipeline.learning_memory import SqliteLearningMemory
 from pipeline.observation_memory import SqliteObservationMemory
 from pipeline.source_acquisition import ContentAddressedArtifactStore, HttpSourceSensor
+from pipeline.source_representation import (
+    DocumentRepresentationError,
+    HtmlDocumentRepresentationAdapter,
+)
 from tools.runtime.config import RuntimeConfig
 from tools.runtime.first_proof import (
     FirstProofInsufficientEvidence,
@@ -40,11 +45,17 @@ def _service(tmp_path: Path) -> FirstProofService:
         research_work_memory=SqliteSharedObservationWorkMemory(data / "research-work.sqlite3"),
         learning_memory=SqliteLearningMemory(data / "learning-memory.sqlite3"),
         artifacts=artifacts,
+        clock=lambda: NOW,
     )
 
 
-def _install_source(monkeypatch: pytest.MonkeyPatch, service: FirstProofService) -> None:
-    body = (
+def _install_source(
+    monkeypatch: pytest.MonkeyPatch,
+    service: FirstProofService,
+    *,
+    body: bytes | None = None,
+) -> None:
+    body = body or (
         b"<!doctype html><html lang='en'><head><title>AXIGNAL</title>"
         b"<meta name='description' content='Observe the economic world from the outside.'>"
         b"</head><body><main>AXIGNAL observes the economic world from the outside.</main></body></html>"
@@ -79,6 +90,7 @@ def _install_source(monkeypatch: pytest.MonkeyPatch, service: FirstProofService)
             instrument_ref="fr30-controlled-http/1",
             policy_id=policy.policy_id,
             policy_fingerprint=policy.fingerprint,
+            policy_version=request.policy_version,
             redirect_chain=(request.target_uri,),
             peer_ips=("203.0.113.10",),
             failure_state=None,
@@ -93,6 +105,25 @@ def test_first_proof_rejects_non_allowlisted_or_non_https_target(tmp_path: Path)
         service.plant(label="bad", target_uri="https://example.com/")
     with pytest.raises(ValueError, match="configured HTTPS host"):
         service.plant(label="bad", target_uri="http://axignal.com/")
+
+
+def test_first_proof_rejects_wrong_observation_policy_version_without_persisting(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    service = _service(tmp_path)
+    _install_source(monkeypatch, service)
+    authorized_observe = HttpSourceSensor.observe
+
+    def observe(self, request, policy):
+        observation = authorized_observe(self, request, policy)
+        return replace(observation, policy_version="unauthorized-version")
+
+    monkeypatch.setattr(HttpSourceSensor, "observe", observe)
+    with pytest.raises(ValueError, match="policy version mismatch"):
+        service.plant(label="Version mismatch", target_uri="https://axignal.com/")
+
+    assert service.store.latest() is None
+    assert service.observation_memory.for_subject("org:axignal") == ()
 
 
 def test_first_xeed_reaches_real_governed_first_proof_and_reload(
@@ -184,6 +215,7 @@ def test_observed_surface_without_usable_body_is_explicit_insufficient_evidence(
             instrument_ref="fr30-controlled-http/1",
             policy_id=policy.policy_id,
             policy_fingerprint=policy.fingerprint,
+            policy_version=request.policy_version,
             redirect_chain=(request.target_uri,),
             peer_ips=("203.0.113.10",),
             failure_state="response_too_large",
@@ -206,6 +238,8 @@ def _http_runtime(tmp_path: Path):
         first_proof_allowed_host="axignal.com",
     )
     runtime = build_runtime(config)
+    assert runtime.first_proof is not None
+    runtime.first_proof.clock = lambda: NOW
     server = ThreadingHTTPServer(("127.0.0.1", 0), make_handler(runtime))
     thread = threading.Thread(target=server.serve_forever, daemon=True)
     thread.start()
@@ -242,6 +276,94 @@ def test_runtime_http_first_proof_no_xeed_plant_and_reload(
         server.shutdown()
         server.server_close()
         thread.join(timeout=3)
+
+
+def test_first_proof_persists_source_when_stylesheet_visibility_is_unresolved(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    service = _service(tmp_path)
+    body = (
+        b"<!doctype html><html lang='en'><head><title>AXIGNAL</title>"
+        b"<style>.hero { color: var(--brand-ink); }</style></head>"
+        b"<body><main class='hero'>AXIGNAL observes the economic world.</main></body></html>"
+    )
+    _install_source(monkeypatch, service, body=body)
+    created = service.plant(
+        label="Visibility-limited proof",
+        target_uri="https://axignal.com/",
+    )
+
+    # Bootstrap has entered OBSERVING; representation failure must not advance
+    # this lifecycle to PARTIAL_READY or LIVE.
+    assert created["lifecycleStatus"] == "OBSERVING"
+    assert created["context"]["id"] == "xeed:production-first-proof:1"
+    assert created["nodes"] == []
+    assert created["today"] == {"disposition": "EMPTY", "items": []}
+    assert created["digitalRepresentation"]["state"] == "NOT_MEASURED"
+    assert created["digitalRepresentation"]["reason"]["code"] == (
+        "REPRESENTATION_VISIBILITY_UNRESOLVED"
+    )
+    assert created["digitalRepresentation"]["reason"]["detailCode"] == (
+        "inline stylesheet visibility is unresolved"
+    )
+
+    temporal = created["temporalHistory"]["items"]
+    sources = created["cognition"]["sources"]
+    assert len(temporal) == len(sources) == 1
+    source = sources[0]
+    assert source["id"] == temporal[0]["observationId"]
+    assert source["sourceRef"] == temporal[0]["sourceRef"] == "https://axignal.com/"
+    assert source["provenanceRef"]
+    assert source["observedAt"] == temporal[0]["observedAt"] == NOW.isoformat()
+    assert source["currentness"] == temporal[0]["currentness"] == "CURRENT"
+    assert source["currentnessEvaluatedAt"] == created["cognition"]["asOf"]
+    assert created["cognition"]["signals"] == []
+    assert created["cognition"]["opportunities"] == []
+    assert service.store.get(created["context"]["id"]) == created
+
+    reloaded = service.current_projection()
+    assert reloaded == created
+
+    before_observation = service.current_projection(as_of=NOW - timedelta(seconds=1))
+    assert before_observation is not None
+    assert before_observation["nodes"] == []
+    assert before_observation["temporalHistory"]["items"] == []
+    assert before_observation["cognition"]["sources"] == []
+    assert before_observation["digitalRepresentation"]["state"] == "NOT_MEASURED"
+
+    aged = service.current_projection(as_of=NOW + timedelta(days=120))
+    assert aged is not None
+    assert len(aged["temporalHistory"]["items"]) == 1
+    assert aged["temporalHistory"]["items"][0]["currentness"] == "HISTORICAL"
+    assert aged["cognition"]["sources"][0]["currentness"] == "HISTORICAL"
+    assert (
+        aged["cognition"]["sources"][0]["currentnessEvaluatedAt"]
+        == (NOW + timedelta(days=120)).isoformat()
+    )
+    assert aged["cognition"]["signals"] == []
+
+
+def test_non_visibility_representation_errors_are_not_downgraded_to_partial_proof(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    service = _service(tmp_path)
+    _install_source(monkeypatch, service)
+
+    def reject_fingerprint(self, *, request, observation):
+        del self, request, observation
+        raise DocumentRepresentationError("source bytes do not match observation fingerprint")
+
+    monkeypatch.setattr(HtmlDocumentRepresentationAdapter, "represent", reject_fingerprint)
+    with pytest.raises(
+        DocumentRepresentationError,
+        match="source bytes do not match observation fingerprint",
+    ):
+        service.plant(label="Integrity failure", target_uri="https://axignal.com/")
+
+    assert service.store.latest() is None
+    assert len(service.observation_memory.for_subject("org:axignal")) == 1
 
 
 def test_runtime_http_persists_customer_zero_across_full_runtime_restart(
@@ -327,6 +449,7 @@ def test_runtime_http_distinguishes_invalid_target_and_insufficient_evidence(
                 instrument_ref="fr30-controlled-http/1",
                 policy_id=policy.policy_id,
                 policy_fingerprint=policy.fingerprint,
+                policy_version=request.policy_version,
                 redirect_chain=(request.target_uri,),
                 peer_ips=("203.0.113.10",),
                 failure_state="empty_body",
@@ -383,7 +506,11 @@ def test_current_projection_recomputes_visible_currentness_without_mutating_snap
     assert stored == created
 
     recent = service.current_projection(as_of=NOW + timedelta(days=10))
-    assert recent == created
+    assert recent is not None
+    assert {key: value for key, value in recent.items() if key != "cognition"} == {
+        key: value for key, value in created.items() if key != "cognition"
+    }
+    assert recent["cognition"]["asOf"] == (NOW + timedelta(days=10)).isoformat()
 
     future = service.current_projection(as_of=NOW + timedelta(days=120))
     assert future is not None
@@ -402,6 +529,13 @@ def test_current_projection_recomputes_visible_currentness_without_mutating_snap
     assert FirstProofStore(service.store.path).latest() == created
     assert created["nodes"][0]["currentness"] == "CURRENT"
     assert created["today"]["disposition"] == "READY"
+
+    before = service.current_projection(as_of=NOW - timedelta(seconds=1))
+    assert before is not None
+    assert before["nodes"] == []
+    assert before["temporalHistory"]["items"] == []
+    assert before["cognition"]["sources"] == []
+    assert before["today"]["items"] == []
 
 
 def test_fresh_reobservation_restores_current_projection_without_freshening_old_record(
@@ -431,14 +565,14 @@ def test_fresh_reobservation_restores_current_projection_without_freshening_old_
     first_authority = observations[0].reuse_authority
     assert first_authority.currentness.value == "CURRENT"
     assert first_authority.authority_id == "fr30-official-homepage"
-    assert first_authority.authority_version == "1"
+    assert first_authority.authority_version == "2"
     assert first_authority.scope.value == "GLOBAL_PUBLIC"
     assert first_authority.reuse_reason
     assert first_authority.retention_policy_ref == "fr30-public-evidence-retention@1"
     assert first_authority.robots_policy_ref == "robots:single-public-root-document:v1"
     assert first_authority.rate_policy_ref == "fr30-public-root-rate@1"
     assert first_authority.provenance_ref is not None
-    assert first_authority.provenance_ref.startswith("source-registry:fr30-official-homepage@1:")
+    assert first_authority.provenance_ref.startswith("source-registry:fr30-official-homepage@2:")
     assert first["nodes"][0]["currentness"] == "CURRENT"
 
 

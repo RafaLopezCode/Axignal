@@ -11,4 +11,12 @@
 - [ ] T9 Adapters for adopted national sources (PLACSP, BOAMP) and US (USAspending, SAM.gov).
 - [ ] T10 Non-procurement families: first adopted source and interpreter.
 - [ ] T11 Durable strategy/coverage/learning persistence and scheduler wiring.
-- [ ] T12 Generative UI components bound to OpportunityCard.
+- [x] T12 Generative UI components bound to governed opportunities using the accepted cognitive grammar.
+
+### Subscriber wiring delivery (2026-10-06)
+
+- [x] W1 Governed runtime sources/families and temporal-cut transport.
+- [x] W2 Authorized durable opportunity publication and read integration.
+- [x] W3 Real-facts adapter into accepted FamilyFacts and component registry.
+- [x] W4 Subscriber reading/AXENT composition with revision and time validation.
+- [x] W5 Desktop/narrow browser execution, regressions repaired, gates and local main consolidation (no remote push or deployment; production boundaries remain in the execution evidence).

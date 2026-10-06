@@ -21,6 +21,7 @@ import {
 import { ProductNavigation } from "./product-navigation";
 import { RuntimeOrganizations } from "./runtime-organizations";
 import { RuntimeAxent, useRuntimeAxent } from "./runtime-axent";
+import { RuntimeLens } from "./cognition/runtime-lens";
 import { useLocale } from "@/lib/locale";
 import {
   presentEvidenceStepLabel,
@@ -48,10 +49,12 @@ import {
 export function RuntimeSignalReading({
   signal,
   onEvidence,
+  onFocusSignal,
   organizationName = "AXIGNAL",
 }: {
   signal: RuntimeSignal;
   onEvidence?: () => void;
+  onFocusSignal?: () => void;
   organizationName?: string;
 }) {
   const { t, locale } = useLocale();
@@ -88,6 +91,11 @@ export function RuntimeSignalReading({
         </button>
       ) : (
         <RuntimeEvidenceJourney signal={signal} />
+      )}
+      {onFocusSignal && (
+        <button className="text-link" onClick={onFocusSignal}>
+          {t("Enfocar esta señal en AXENT", "Focus this signal in AXENT")}
+        </button>
       )}
     </article>
   );
@@ -688,6 +696,12 @@ export function RuntimeProductProjection({
                         </button>
                       </article>
                     </section>
+                    <RuntimeLens
+                      key={`${projection.context.id}:${projection.runtimeCodeSha}:${projection.cognition?.asOf ?? "no-cut"}`}
+                      projection={projection}
+                      revision={projection.runtimeCodeSha}
+                      initialFamily="organization"
+                    />
                     <section
                       className={
                         "runtime-canvas " +

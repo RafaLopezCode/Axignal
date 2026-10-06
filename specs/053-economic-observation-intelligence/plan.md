@@ -31,5 +31,17 @@ planning/permits, private projects, regulation-driven demand, buyer expansion)
 - Matching is narrow-only (notice code inside a capability code); sibling codes
   revealed by awards are explicit adjacency with their own basis.
 - Closed calls are demand evidence, not opportunities.
+
+## Product wiring slice
+
+1. Extend the existing runtime read contract with provenance-bearing sources,
+   explicit family bindings and opportunity facts. No illustrative fallback.
+2. Persist loop outputs after authorized context validation, consume on each
+   subscriber read, reauthorize and refresh support currentness.
+3. Map that contract into accepted FamilyFacts; reuse compose/registry/lenses.
+4. Bind subscriber streaming presentation and contextual AXENT to the same
+   facts, revision and temporal cut; validate both ends.
+5. Exercise real-source internal Customer Zero separately from controlled
+   subscriber authorization tests; record browser evidence and run gates.
 - Rejected tools: semantic/similarity caches and near-duplicate reuse (grounding
   risk); gateway prompt caches (never hit, lock-in). Trafilatura deferred.

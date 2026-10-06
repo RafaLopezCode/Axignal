@@ -82,6 +82,7 @@
     "files": [
       "components/access.tsx",
       "components/public-shell.tsx",
+      "components/subscriber-portfolio.tsx",
       "components/ui.tsx"
     ]
   },
@@ -122,8 +123,22 @@
     ]
   },
   {
+    "en": "Choose a connected identity to continue securely.",
+    "es": "Elige una identidad conectada para continuar de forma segura.",
+    "files": [
+      "components/access.tsx"
+    ]
+  },
+  {
     "en": "Access is being prepared. Google and ChatGPT are not connected yet; this version creates no accounts or sessions.",
     "es": "Acceso en preparación. Google y ChatGPT aún no están conectados; esta versión no crea cuentas ni sesiones.",
+    "files": [
+      "components/access.tsx"
+    ]
+  },
+  {
+    "en": "ChatGPT · Coming soon",
+    "es": "ChatGPT · Próximamente",
     "files": [
       "components/access.tsx"
     ]
@@ -138,6 +153,13 @@
   {
     "en": "Continue with ChatGPT",
     "es": "Continuar con ChatGPT",
+    "files": [
+      "components/access.tsx"
+    ]
+  },
+  {
+    "en": "Coming soon",
+    "es": "Próximamente",
     "files": [
       "components/access.tsx"
     ]
@@ -245,8 +267,9 @@
   },
   {
     "en": "AXIGNAL / Customer Zero",
-    "es": "AXIGNAL / Customer Zero",
+    "es": "AXIGNAL / Cliente cero",
     "files": [
+      "components/admin.tsx",
       "components/admin.tsx"
     ]
   },
@@ -929,10 +952,701 @@
     ]
   },
   {
+    "en": "Basis",
+    "es": "Base",
+    "files": [
+      "components/axent.tsx"
+    ]
+  },
+  {
     "en": "Context remains open; there is no conclusion to invent.",
     "es": "El contexto permanece abierto; no hay una conclusión que inventar.",
     "files": [
       "components/axent.tsx"
+    ]
+  },
+  {
+    "en": "Unknown",
+    "es": "Desconocido",
+    "files": [
+      "components/cognition/grammar.tsx",
+      "components/cognition/lenses.tsx",
+      "components/design.tsx",
+      "components/runtime-product.tsx",
+      "components/subscriber-representation.tsx",
+      "components/ui.tsx",
+      "lib/cognition/runtime-facts.ts",
+      "lib/projection.ts",
+      "lib/runtime-presentation.ts"
+    ]
+  },
+  {
+    "en": "Current",
+    "es": "Actual",
+    "files": [
+      "components/cognition/grammar.tsx",
+      "components/subscriber-representation.tsx",
+      "lib/runtime-presentation.ts"
+    ]
+  },
+  {
+    "en": "Stale",
+    "es": "Envejecida",
+    "files": [
+      "components/cognition/grammar.tsx",
+      "components/subscriber-representation.tsx",
+      "lib/runtime-presentation.ts"
+    ]
+  },
+  {
+    "en": "Historical",
+    "es": "Histórica",
+    "files": [
+      "components/cognition/grammar.tsx",
+      "components/subscriber-representation.tsx",
+      "lib/runtime-presentation.ts"
+    ]
+  },
+  {
+    "en": "Currentness unknown",
+    "es": "Vigencia desconocida",
+    "files": [
+      "components/cognition/grammar.tsx"
+    ]
+  },
+  {
+    "en": "No source: this is a hypothesis",
+    "es": "Sin fuente: es una hipótesis",
+    "files": [
+      "components/cognition/grammar.tsx"
+    ]
+  },
+  {
+    "en": "Source",
+    "es": "Fuente",
+    "files": [
+      "components/cognition/grammar.tsx",
+      "components/runtime-product.tsx",
+      "components/runtime-product.tsx"
+    ]
+  },
+  {
+    "en": "Why does it matter?",
+    "es": "¿Por qué importa?",
+    "files": [
+      "components/cognition/grammar.tsx"
+    ]
+  },
+  {
+    "en": "How does AXIGNAL know?",
+    "es": "¿Cómo lo sabe AXIGNAL?",
+    "files": [
+      "components/cognition/grammar.tsx"
+    ]
+  },
+  {
+    "en": "Inspect all the evidence",
+    "es": "Ver toda la evidencia",
+    "files": [
+      "components/cognition/grammar.tsx"
+    ]
+  },
+  {
+    "en": "See detail",
+    "es": "Ver detalle",
+    "files": [
+      "components/cognition/lenses.tsx"
+    ]
+  },
+  {
+    "en": "Visibility in the sample",
+    "es": "Visibilidad en la muestra",
+    "files": [
+      "components/cognition/lenses.tsx"
+    ]
+  },
+  {
+    "en": "points",
+    "es": "puntos",
+    "files": [
+      "components/cognition/lenses.tsx",
+      "components/cognition/lenses.tsx"
+    ]
+  },
+  {
+    "en": "There are not yet two comparable measurements.",
+    "es": "Todavía no hay dos mediciones comparables.",
+    "files": [
+      "components/cognition/lenses.tsx"
+    ]
+  },
+  {
+    "en": "Search presence",
+    "es": "Presencia en búsqueda",
+    "files": [
+      "components/cognition/lenses.tsx"
+    ]
+  },
+  {
+    "en": "gains presence",
+    "es": "gana presencia",
+    "files": [
+      "components/cognition/lenses.tsx"
+    ]
+  },
+  {
+    "en": "loses presence",
+    "es": "pierde presencia",
+    "files": [
+      "components/cognition/lenses.tsx"
+    ]
+  },
+  {
+    "en": "stable",
+    "es": "estable",
+    "files": [
+      "components/cognition/lenses.tsx"
+    ]
+  },
+  {
+    "en": "not measured",
+    "es": "sin medición",
+    "files": [
+      "components/cognition/lenses.tsx"
+    ]
+  },
+  {
+    "en": "Where it gains or loses",
+    "es": "Dónde gana o pierde",
+    "files": [
+      "components/cognition/lenses.tsx"
+    ]
+  },
+  {
+    "en": "Not measured",
+    "es": "Sin medición",
+    "files": [
+      "components/cognition/lenses.tsx",
+      "lib/cognition/facts.ts"
+    ]
+  },
+  {
+    "en": "Cited",
+    "es": "Citada",
+    "files": [
+      "components/cognition/lenses.tsx"
+    ]
+  },
+  {
+    "en": "Mentioned",
+    "es": "Mencionada",
+    "files": [
+      "components/cognition/lenses.tsx"
+    ]
+  },
+  {
+    "en": "Absent",
+    "es": "Ausente",
+    "files": [
+      "components/cognition/lenses.tsx"
+    ]
+  },
+  {
+    "en": "Not observed",
+    "es": "No observado",
+    "files": [
+      "components/cognition/lenses.tsx",
+      "components/cognition/lenses.tsx"
+    ]
+  },
+  {
+    "en": "Presence in generative answers",
+    "es": "Presencia en respuestas generativas",
+    "files": [
+      "components/cognition/lenses.tsx"
+    ]
+  },
+  {
+    "en": "Appears in",
+    "es": "Aparece en",
+    "files": [
+      "components/cognition/lenses.tsx"
+    ]
+  },
+  {
+    "en": "observed questions",
+    "es": "preguntas observadas",
+    "files": [
+      "components/cognition/lenses.tsx"
+    ]
+  },
+  {
+    "en": "some surfaces are unobserved",
+    "es": "hay superficies sin observar",
+    "files": [
+      "components/cognition/lenses.tsx"
+    ]
+  },
+  {
+    "en": "Question",
+    "es": "Pregunta",
+    "files": [
+      "components/cognition/lenses.tsx",
+      "components/cognition/runtime-lens.tsx"
+    ]
+  },
+  {
+    "en": "no sample",
+    "es": "sin muestra",
+    "files": [
+      "components/cognition/lenses.tsx"
+    ]
+  },
+  {
+    "en": "Appears alongside",
+    "es": "Aparece junto a",
+    "files": [
+      "components/cognition/lenses.tsx"
+    ]
+  },
+  {
+    "en": "Supported by evidence",
+    "es": "Respaldada por evidencia",
+    "files": [
+      "components/cognition/lenses.tsx"
+    ]
+  },
+  {
+    "en": "No observed support",
+    "es": "Sin respaldo observado",
+    "files": [
+      "components/cognition/lenses.tsx"
+    ]
+  },
+  {
+    "en": "Contradicted",
+    "es": "Contradicha",
+    "files": [
+      "components/cognition/lenses.tsx"
+    ]
+  },
+  {
+    "en": "Not yet verifiable",
+    "es": "No verificable aún",
+    "files": [
+      "components/cognition/lenses.tsx"
+    ]
+  },
+  {
+    "en": "How it is described",
+    "es": "Cómo la describen",
+    "files": [
+      "components/cognition/lenses.tsx"
+    ]
+  },
+  {
+    "en": "Where value may exist",
+    "es": "Dónde puede existir valor",
+    "files": [
+      "components/cognition/lenses.tsx"
+    ]
+  },
+  {
+    "en": "potential opportunities; none confirmed.",
+    "es": "oportunidades potenciales; ninguna confirmada.",
+    "files": [
+      "components/cognition/lenses.tsx"
+    ]
+  },
+  {
+    "en": "Deadline",
+    "es": "Plazo",
+    "files": [
+      "components/cognition/lenses.tsx"
+    ]
+  },
+  {
+    "en": "closed",
+    "es": "cerrado",
+    "files": [
+      "components/cognition/lenses.tsx"
+    ]
+  },
+  {
+    "en": "Deadline unknown",
+    "es": "Plazo desconocido",
+    "files": [
+      "components/cognition/lenses.tsx"
+    ]
+  },
+  {
+    "en": "Why it fits",
+    "es": "Por qué encaja",
+    "files": [
+      "components/cognition/lenses.tsx"
+    ]
+  },
+  {
+    "en": "The company declares",
+    "es": "La empresa declara",
+    "files": [
+      "components/cognition/lenses.tsx"
+    ]
+  },
+  {
+    "en": "The buyer asks for",
+    "es": "El comprador pide",
+    "files": [
+      "components/cognition/lenses.tsx"
+    ]
+  },
+  {
+    "en": "No published code",
+    "es": "Sin código publicado",
+    "files": [
+      "components/cognition/lenses.tsx"
+    ]
+  },
+  {
+    "en": "What we know and what we do not",
+    "es": "Lo que sabemos y lo que no",
+    "files": [
+      "components/cognition/lenses.tsx"
+    ]
+  },
+  {
+    "en": "Potential relevance does not confirm a commercial relationship. Known details do not establish fit or an observed opportunity.",
+    "es": "La relevancia potencial no confirma una relación comercial. Los datos conocidos no demuestran encaje ni una oportunidad observada.",
+    "files": [
+      "components/cognition/lenses.tsx"
+    ]
+  },
+  {
+    "en": "observed relationships",
+    "es": "relaciones observadas",
+    "files": [
+      "components/cognition/lenses.tsx"
+    ]
+  },
+  {
+    "en": "potential to investigate",
+    "es": "potenciales por investigar",
+    "files": [
+      "components/cognition/lenses.tsx"
+    ]
+  },
+  {
+    "en": "since",
+    "es": "desde",
+    "files": [
+      "components/cognition/lenses.tsx"
+    ]
+  },
+  {
+    "en": "Relationships",
+    "es": "Relaciones",
+    "files": [
+      "components/cognition/lenses.tsx",
+      "components/landing.tsx",
+      "components/landing.tsx",
+      "lib/projection.ts"
+    ]
+  },
+  {
+    "en": "Observed, with evidence",
+    "es": "Observadas, con evidencia",
+    "files": [
+      "components/cognition/lenses.tsx"
+    ]
+  },
+  {
+    "en": "Potential: hypotheses to investigate",
+    "es": "Potenciales: hipótesis por investigar",
+    "files": [
+      "components/cognition/lenses.tsx"
+    ]
+  },
+  {
+    "en": "Markets",
+    "es": "Mercados",
+    "files": [
+      "components/cognition/lenses.tsx",
+      "components/landing.tsx",
+      "components/runtime-product.tsx",
+      "lib/projection.ts"
+    ]
+  },
+  {
+    "en": "with evidence",
+    "es": "con evidencia",
+    "files": [
+      "components/cognition/lenses.tsx"
+    ]
+  },
+  {
+    "en": "potential",
+    "es": "potenciales",
+    "files": [
+      "components/cognition/lenses.tsx"
+    ]
+  },
+  {
+    "en": "unknown",
+    "es": "desconocidos",
+    "files": [
+      "components/cognition/lenses.tsx"
+    ]
+  },
+  {
+    "en": "No observed evidence",
+    "es": "Sin evidencia observada",
+    "files": [
+      "components/cognition/lenses.tsx"
+    ]
+  },
+  {
+    "en": "low",
+    "es": "baja",
+    "files": [
+      "components/cognition/lenses.tsx"
+    ]
+  },
+  {
+    "en": "medium",
+    "es": "media",
+    "files": [
+      "components/cognition/lenses.tsx"
+    ]
+  },
+  {
+    "en": "high",
+    "es": "alta",
+    "files": [
+      "components/cognition/lenses.tsx"
+    ]
+  },
+  {
+    "en": "What is being said",
+    "es": "Qué se dice",
+    "files": [
+      "components/cognition/lenses.tsx"
+    ]
+  },
+  {
+    "en": "observed public statements",
+    "es": "afirmaciones públicas observadas",
+    "files": [
+      "components/cognition/lenses.tsx"
+    ]
+  },
+  {
+    "en": "with contradictions",
+    "es": "con contradicciones",
+    "files": [
+      "components/cognition/lenses.tsx"
+    ]
+  },
+  {
+    "en": "not a measure of general opinion",
+    "es": "no es una medida de opinión general",
+    "files": [
+      "components/cognition/lenses.tsx"
+    ]
+  },
+  {
+    "en": "materiality",
+    "es": "materialidad",
+    "files": [
+      "components/cognition/lenses.tsx"
+    ]
+  },
+  {
+    "en": "Contradicts another observed statement",
+    "es": "Contradice otra afirmación observada",
+    "files": [
+      "components/cognition/lenses.tsx"
+    ]
+  },
+  {
+    "en": "Evidence arrives",
+    "es": "Llega evidencia",
+    "files": [
+      "components/cognition/lenses.tsx"
+    ]
+  },
+  {
+    "en": "Material change",
+    "es": "Cambio material",
+    "files": [
+      "components/cognition/lenses.tsx"
+    ]
+  },
+  {
+    "en": "Becomes stale",
+    "es": "Envejece",
+    "files": [
+      "components/cognition/lenses.tsx"
+    ]
+  },
+  {
+    "en": "Hypothesis updated",
+    "es": "Hipótesis actualizada",
+    "files": [
+      "components/cognition/lenses.tsx"
+    ]
+  },
+  {
+    "en": "What changed",
+    "es": "Qué ha cambiado",
+    "files": [
+      "components/cognition/lenses.tsx",
+      "components/cognition/runtime-lens.tsx",
+      "components/runtime-axent.tsx"
+    ]
+  },
+  {
+    "en": "changes in this cut",
+    "es": "cambios en este corte",
+    "files": [
+      "components/cognition/lenses.tsx"
+    ]
+  },
+  {
+    "en": "the latest",
+    "es": "el más reciente",
+    "files": [
+      "components/cognition/lenses.tsx"
+    ]
+  },
+  {
+    "en": "How AXIGNAL knows",
+    "es": "Cómo lo sabe AXIGNAL",
+    "files": [
+      "components/cognition/lenses.tsx",
+      "components/cognition/runtime-lens.tsx",
+      "components/runtime-product.tsx",
+      "components/runtime-product.tsx",
+      "components/runtime-product.tsx",
+      "components/subscriber-reading.tsx"
+    ]
+  },
+  {
+    "en": "sources in this cut",
+    "es": "fuentes en este corte",
+    "files": [
+      "components/cognition/lenses.tsx",
+      "components/cognition/runtime-lens.tsx"
+    ]
+  },
+  {
+    "en": "Sources and currentness",
+    "es": "Fuentes y vigencia",
+    "files": [
+      "components/cognition/runtime-lens.tsx"
+    ]
+  },
+  {
+    "en": "Open original source",
+    "es": "Abrir fuente original",
+    "files": [
+      "components/cognition/runtime-lens.tsx"
+    ]
+  },
+  {
+    "en": "The source is recorded, but its address is unavailable for safe navigation.",
+    "es": "La fuente está registrada, pero su dirección no está disponible para una navegación segura.",
+    "files": [
+      "components/cognition/runtime-lens.tsx"
+    ]
+  },
+  {
+    "en": "Evidence reference",
+    "es": "Referencia de evidencia",
+    "files": [
+      "components/cognition/runtime-lens.tsx"
+    ]
+  },
+  {
+    "en": "Currentness evaluated",
+    "es": "Vigencia evaluada",
+    "files": [
+      "components/cognition/runtime-lens.tsx"
+    ]
+  },
+  {
+    "en": "This projection does not include a governed cognitive reading.",
+    "es": "Esta proyección no incluye una lectura cognitiva gobernada.",
+    "files": [
+      "components/cognition/runtime-lens.tsx"
+    ]
+  },
+  {
+    "en": "There are not enough governed observations to answer at this cut. This does not establish absence.",
+    "es": "No hay observaciones gobernadas suficientes para responder en este corte. Esto no demuestra ausencia.",
+    "files": [
+      "components/cognition/runtime-lens.tsx"
+    ]
+  },
+  {
+    "en": "Understand",
+    "es": "Comprender",
+    "files": [
+      "components/cognition/runtime-lens.tsx",
+      "components/landing.tsx",
+      "components/landing.tsx",
+      "components/panorama.tsx",
+      "components/subscriber-reading.tsx"
+    ]
+  },
+  {
+    "en": "Why it matters",
+    "es": "Por qué importa",
+    "files": [
+      "components/cognition/runtime-lens.tsx",
+      "components/runtime-axent.tsx"
+    ]
+  },
+  {
+    "en": "Cognitive reading",
+    "es": "Lectura cognitiva",
+    "files": [
+      "components/cognition/runtime-lens.tsx"
+    ]
+  },
+  {
+    "en": "Perspective",
+    "es": "Perspectiva",
+    "files": [
+      "components/cognition/runtime-lens.tsx",
+      "lib/editorial.ts"
+    ]
+  },
+  {
+    "en": "Knowledge cut (UTC)",
+    "es": "Corte de conocimiento (UTC)",
+    "files": [
+      "components/cognition/runtime-lens.tsx"
+    ]
+  },
+  {
+    "en": "Enter a date and time in UTC. The cut cannot exceed the latest available reading.",
+    "es": "Introduce la fecha y hora en UTC. El corte no puede superar la última lectura disponible.",
+    "files": [
+      "components/cognition/runtime-lens.tsx"
+    ]
+  },
+  {
+    "en": "Knowledge cut",
+    "es": "Corte de conocimiento",
+    "files": [
+      "components/cognition/runtime-lens.tsx"
+    ]
+  },
+  {
+    "en": "The reading did not pass validation and remains hidden.",
+    "es": "La lectura no superó la validación y permanece oculta.",
+    "files": [
+      "components/cognition/runtime-lens.tsx"
     ]
   },
   {
@@ -985,8 +1699,43 @@
     ]
   },
   {
-    "en": "Staff controls",
-    "es": "Controles Staff",
+    "en": "Reobservation completed",
+    "es": "Reobservación completada",
+    "files": [
+      "components/customer-zero.tsx"
+    ]
+  },
+  {
+    "en": "Observation time unavailable",
+    "es": "Hora de observación no disponible",
+    "files": [
+      "components/customer-zero.tsx"
+    ]
+  },
+  {
+    "en": "Currentness unavailable",
+    "es": "Vigencia no disponible",
+    "files": [
+      "components/customer-zero.tsx"
+    ]
+  },
+  {
+    "en": "The new projection contains material differences from the previous reading. By itself, this does not prove when an economic change occurred.",
+    "es": "La nueva proyección contiene diferencias materiales respecto a la lectura anterior. Esto no prueba por sí solo cuándo ocurrió un cambio económico.",
+    "files": [
+      "components/customer-zero.tsx"
+    ]
+  },
+  {
+    "en": "No material differences were detected in the projection. The current observation was refreshed without fabricating novelty.",
+    "es": "No se detectaron diferencias materiales en la proyección. La observación actual se renovó sin fabricar novedad.",
+    "files": [
+      "components/customer-zero.tsx"
+    ]
+  },
+  {
+    "en": "Customer Zero · Staff controls",
+    "es": "Cliente cero · Controles internos",
     "files": [
       "components/customer-zero.tsx"
     ]
@@ -1003,7 +1752,8 @@
     "en": "Read persisted state",
     "es": "Leer estado persistido",
     "files": [
-      "components/customer-zero.tsx"
+      "components/customer-zero.tsx",
+      "components/runtime-organizations.tsx"
     ]
   },
   {
@@ -1314,16 +2064,6 @@
     "es": "Vacío",
     "files": [
       "components/design.tsx"
-    ]
-  },
-  {
-    "en": "Unknown",
-    "es": "Desconocido",
-    "files": [
-      "components/design.tsx",
-      "components/runtime-product.tsx",
-      "components/ui.tsx",
-      "lib/projection.ts"
     ]
   },
   {
@@ -1819,7 +2559,8 @@
       "components/evidence.tsx",
       "components/knowledge.tsx",
       "components/runtime-product.tsx",
-      "components/ui.tsx"
+      "components/ui.tsx",
+      "lib/runtime-presentation.ts"
     ]
   },
   {
@@ -1833,7 +2574,8 @@
     "en": "What we know",
     "es": "Lo que sabemos",
     "files": [
-      "components/knowledge.tsx"
+      "components/knowledge.tsx",
+      "components/runtime-axent.tsx"
     ]
   },
   {
@@ -1854,7 +2596,8 @@
     "en": "Currentness",
     "es": "Vigencia",
     "files": [
-      "components/knowledge.tsx"
+      "components/knowledge.tsx",
+      "components/subscriber-representation.tsx"
     ]
   },
   {
@@ -2636,15 +3379,6 @@
     ]
   },
   {
-    "en": "Understand",
-    "es": "Comprende",
-    "files": [
-      "components/landing.tsx",
-      "components/landing.tsx",
-      "components/panorama.tsx"
-    ]
-  },
-  {
     "en": "Something deserves attention.",
     "es": "Algo merece atención.",
     "files": [
@@ -2999,7 +3733,8 @@
     "en": "Start with an organization.",
     "es": "Empieza por una organización.",
     "files": [
-      "components/landing.tsx"
+      "components/landing.tsx",
+      "components/subscriber-portfolio.tsx"
     ]
   },
   {
@@ -3022,15 +3757,6 @@
     "files": [
       "components/landing.tsx",
       "components/runtime-product.tsx"
-    ]
-  },
-  {
-    "en": "Relationships",
-    "es": "Relaciones",
-    "files": [
-      "components/landing.tsx",
-      "components/landing.tsx",
-      "lib/projection.ts"
     ]
   },
   {
@@ -3356,15 +4082,6 @@
     ]
   },
   {
-    "en": "Markets",
-    "es": "Mercados",
-    "files": [
-      "components/landing.tsx",
-      "components/runtime-product.tsx",
-      "lib/projection.ts"
-    ]
-  },
-  {
     "en": "Presence",
     "es": "Presencia",
     "files": [
@@ -3532,6 +4249,7 @@
       "components/runtime-product.tsx",
       "components/runtime-product.tsx",
       "components/runtime-product.tsx",
+      "components/runtime-product.tsx",
       "components/runtime-product.tsx"
     ]
   },
@@ -3667,6 +4385,8 @@
     "es": "Señales",
     "files": [
       "components/panorama.tsx",
+      "components/runtime-product.tsx",
+      "components/runtime-product.tsx",
       "components/runtime-product.tsx"
     ]
   },
@@ -4062,8 +4782,11 @@
     "files": [
       "components/panorama.tsx",
       "components/runtime-axent.tsx",
+      "components/runtime-axent.tsx",
       "components/runtime-product.tsx",
-      "components/runtime-product.tsx"
+      "components/runtime-product.tsx",
+      "components/runtime-product.tsx",
+      "components/subscriber-reading.tsx"
     ]
   },
   {
@@ -4380,20 +5103,6 @@
     ]
   },
   {
-    "en": "What changed",
-    "es": "Qué cambió",
-    "files": [
-      "components/runtime-axent.tsx"
-    ]
-  },
-  {
-    "en": "Why it matters",
-    "es": "Por qué importa",
-    "files": [
-      "components/runtime-axent.tsx"
-    ]
-  },
-  {
     "en": "How do you know",
     "es": "Cómo lo sabes",
     "files": [
@@ -4422,8 +5131,36 @@
     ]
   },
   {
-    "en": "No research tools are connected to this reading. These questions remain open.",
-    "es": "No hay herramientas de investigación conectadas a esta lectura. Estas preguntas siguen abiertas.",
+    "en": "Focused reading",
+    "es": "Lectura focal",
+    "files": [
+      "components/runtime-axent.tsx"
+    ]
+  },
+  {
+    "en": "Evidence basis",
+    "es": "Base de evidencia",
+    "files": [
+      "components/runtime-axent.tsx"
+    ]
+  },
+  {
+    "en": "Proposed research",
+    "es": "Investigación propuesta",
+    "files": [
+      "components/runtime-axent.tsx"
+    ]
+  },
+  {
+    "en": "Research proposal; not executed.",
+    "es": "Propuesta de investigación; no ejecutada.",
+    "files": [
+      "components/runtime-axent.tsx"
+    ]
+  },
+  {
+    "en": "Provenance",
+    "es": "Proveniencia",
     "files": [
       "components/runtime-axent.tsx"
     ]
@@ -4452,6 +5189,35 @@
     ]
   },
   {
+    "en": "The authorized inventory could not be read. Read its state before repeating an observation.",
+    "es": "No se pudo leer el inventario autorizado. Vuelve a leer el estado antes de repetir una observación.",
+    "files": [
+      "components/runtime-organizations.tsx"
+    ]
+  },
+  {
+    "en": "Attention is saved. Identity remains unresolved: no economic organization or signal has been created.",
+    "es": "La atención queda guardada. La identidad sigue sin resolver: no se ha creado una organización económica ni una señal.",
+    "files": [
+      "components/runtime-organizations.tsx"
+    ]
+  },
+  {
+    "en": "The request is saved, but evidence is insufficient for a signal. Your previous reading remains available.",
+    "es": "La solicitud queda guardada, pero no hay evidencia suficiente para una señal. Tu lectura anterior sigue disponible.",
+    "files": [
+      "components/runtime-organizations.tsx"
+    ]
+  },
+  {
+    "en": "The operation could not be confirmed. Read its state before repeating it; your context has not been replaced.",
+    "es": "No se pudo confirmar la operación. Lee su estado antes de repetirla; tu contexto no se ha sustituido.",
+    "files": [
+      "components/runtime-organizations.tsx",
+      "components/subscriber-portfolio.tsx"
+    ]
+  },
+  {
     "en": "These are the organizations available in your current context.",
     "es": "Estas son las organizaciones disponibles en tu contexto actual.",
     "files": [
@@ -4459,8 +5225,66 @@
     ]
   },
   {
+    "en": "Reading saved focuses",
+    "es": "Leyendo los focos guardados",
+    "files": [
+      "components/runtime-organizations.tsx"
+    ]
+  },
+  {
+    "en": "Observation available",
+    "es": "Observación disponible",
+    "files": [
+      "components/runtime-organizations.tsx"
+    ]
+  },
+  {
+    "en": "Identity unresolved",
+    "es": "Identidad sin resolver",
+    "files": [
+      "components/runtime-organizations.tsx",
+      "components/subscriber-portfolio.tsx"
+    ]
+  },
+  {
+    "en": "Insufficient evidence",
+    "es": "Evidencia insuficiente",
+    "files": [
+      "components/runtime-organizations.tsx"
+    ]
+  },
+  {
+    "en": "Authorization withdrawn",
+    "es": "Autorización retirada",
+    "files": [
+      "components/runtime-organizations.tsx"
+    ]
+  },
+  {
+    "en": "Observation interrupted",
+    "es": "Observación interrumpida",
+    "files": [
+      "components/runtime-organizations.tsx"
+    ]
+  },
+  {
     "en": "Return to observation",
     "es": "Volver a la observación",
+    "files": [
+      "components/runtime-organizations.tsx",
+      "components/runtime-organizations.tsx"
+    ]
+  },
+  {
+    "en": "Open this organization",
+    "es": "Abrir esta organización",
+    "files": [
+      "components/runtime-organizations.tsx"
+    ]
+  },
+  {
+    "en": "Review and retry",
+    "es": "Revisar y reintentar",
     "files": [
       "components/runtime-organizations.tsx"
     ]
@@ -4473,8 +5297,29 @@
     ]
   },
   {
-    "en": "Not available yet: the current service only supports observing AXIGNAL. It cannot add or save other observation focuses.",
-    "es": "Todavía no disponible: el servicio actual solo permite observar AXIGNAL. No puede añadir ni guardar otros focos de observación.",
+    "en": "Direct observation. The service will verify identity and acquire evidence; a name or website does not establish a conclusion.",
+    "es": "Indica dónde observar. El servicio verificará la identidad y adquirirá evidencia; un nombre o una web no establecen una conclusión.",
+    "files": [
+      "components/runtime-organizations.tsx"
+    ]
+  },
+  {
+    "en": "Organization name",
+    "es": "Nombre de la organización",
+    "files": [
+      "components/runtime-organizations.tsx"
+    ]
+  },
+  {
+    "en": "Public website",
+    "es": "Web pública",
+    "files": [
+      "components/runtime-organizations.tsx"
+    ]
+  },
+  {
+    "en": "Verifying identity and evidence",
+    "es": "Verificando identidad y evidencia",
     "files": [
       "components/runtime-organizations.tsx"
     ]
@@ -4483,7 +5328,8 @@
     "en": "Add organization",
     "es": "Añadir organización",
     "files": [
-      "components/runtime-organizations.tsx"
+      "components/runtime-organizations.tsx",
+      "components/subscriber-portfolio.tsx"
     ]
   },
   {
@@ -4501,32 +5347,26 @@
     ]
   },
   {
-    "en": "How AXIGNAL knows",
-    "es": "Cómo lo sabe AXIGNAL",
+    "en": "Focus this signal in AXENT",
+    "es": "Enfocar esta señal en AXENT",
     "files": [
       "components/runtime-product.tsx",
-      "components/runtime-product.tsx",
-      "components/runtime-product.tsx"
+      "components/subscriber-reading.tsx"
     ]
   },
   {
     "en": "From signal to source, without hiding what remains open.",
     "es": "De la señal a la fuente, sin ocultar lo que sigue abierto.",
     "files": [
-      "components/runtime-product.tsx"
+      "components/runtime-product.tsx",
+      "app/api/subscriber/reading/route.ts"
     ]
   },
   {
     "en": "Observation",
     "es": "Observación",
     "files": [
-      "components/runtime-product.tsx"
-    ]
-  },
-  {
-    "en": "Source",
-    "es": "Fuente",
-    "files": [
+      "components/runtime-product.tsx",
       "components/runtime-product.tsx"
     ]
   },
@@ -4607,8 +5447,177 @@
     ]
   },
   {
-    "en": "The runtime has no current signals for Today. Earlier observations do not become false.",
-    "es": "El runtime no tiene señales vigentes para Hoy. Esto no convierte las observaciones anteriores en falsas.",
+    "en": "Novelty confirmed by an observation from today.",
+    "es": "Novedad confirmada por una observación de hoy.",
+    "files": [
+      "components/runtime-product.tsx"
+    ]
+  },
+  {
+    "en": "Observed today",
+    "es": "Observado hoy",
+    "files": [
+      "components/runtime-product.tsx"
+    ]
+  },
+  {
+    "en": "Latest relevant observation",
+    "es": "Última observación relevante",
+    "files": [
+      "components/runtime-product.tsx"
+    ]
+  },
+  {
+    "en": "There is no confirmed novelty today. This reference preserves context; it does not turn an earlier observation into a today event.",
+    "es": "No hay novedad confirmada hoy. Esta referencia conserva contexto; no convierte una observación anterior en un evento de hoy.",
+    "files": [
+      "components/runtime-product.tsx"
+    ]
+  },
+  {
+    "en": "Open latest observation",
+    "es": "Abrir última observación",
+    "files": [
+      "components/runtime-product.tsx"
+    ]
+  },
+  {
+    "en": "There are no observations available yet to provide context for Today.",
+    "es": "Todavía no hay observaciones disponibles para aportar contexto a Hoy.",
+    "files": [
+      "components/runtime-product.tsx"
+    ]
+  },
+  {
+    "en": "Prioritize what is observed, distinguish what is potential, and keep the unknown open. Ordering uses state, currentness and recency; it is not an economic score.",
+    "es": "Prioriza lo observado, distingue lo potencial y mantiene lo desconocido abierto. El orden usa estado, vigencia y recencia; no es un scoring económico.",
+    "files": [
+      "components/runtime-product.tsx"
+    ]
+  },
+  {
+    "en": "There are no signals exposed in this projection yet.",
+    "es": "Todavía no hay señales expuestas en esta proyección.",
+    "files": [
+      "components/runtime-product.tsx"
+    ]
+  },
+  {
+    "en": "First map brief",
+    "es": "Resumen del primer mapa",
+    "files": [
+      "components/runtime-product.tsx"
+    ]
+  },
+  {
+    "en": "What AXIGNAL learned",
+    "es": "Lo que AXIGNAL aprendió",
+    "files": [
+      "components/runtime-product.tsx"
+    ]
+  },
+  {
+    "en": "observed signal",
+    "es": "señal observada",
+    "files": [
+      "components/runtime-product.tsx"
+    ]
+  },
+  {
+    "en": "observed signals",
+    "es": "señales observadas",
+    "files": [
+      "components/runtime-product.tsx"
+    ]
+  },
+  {
+    "en": "public source",
+    "es": "fuente pública",
+    "files": [
+      "components/runtime-product.tsx"
+    ]
+  },
+  {
+    "en": "public sources",
+    "es": "fuentes públicas",
+    "files": [
+      "components/runtime-product.tsx"
+    ]
+  },
+  {
+    "en": "governed observation",
+    "es": "observación gobernada",
+    "files": [
+      "components/runtime-product.tsx"
+    ]
+  },
+  {
+    "en": "governed observations",
+    "es": "observaciones gobernadas",
+    "files": [
+      "components/runtime-product.tsx"
+    ]
+  },
+  {
+    "en": "current now",
+    "es": "vigente ahora",
+    "files": [
+      "components/runtime-product.tsx",
+      "components/runtime-product.tsx"
+    ]
+  },
+  {
+    "en": "View temporal memory",
+    "es": "Ver memoria temporal",
+    "files": [
+      "components/runtime-product.tsx"
+    ]
+  },
+  {
+    "en": "What AXIGNAL found",
+    "es": "Lo que AXIGNAL encontró",
+    "files": [
+      "components/runtime-product.tsx"
+    ]
+  },
+  {
+    "en": "Open finding",
+    "es": "Abrir hallazgo",
+    "files": [
+      "components/runtime-product.tsx"
+    ]
+  },
+  {
+    "en": "There is not yet a governed signal that can be elevated as a finding.",
+    "es": "Todavía no hay una señal gobernada que pueda elevarse como hallazgo.",
+    "files": [
+      "components/runtime-product.tsx"
+    ]
+  },
+  {
+    "en": "open questions",
+    "es": "preguntas abiertas",
+    "files": [
+      "components/runtime-product.tsx"
+    ]
+  },
+  {
+    "en": "No exposed open questions",
+    "es": "Sin preguntas abiertas expuestas",
+    "files": [
+      "components/runtime-product.tsx"
+    ]
+  },
+  {
+    "en": "AXIGNAL does not invent a non-obvious finding when the available evidence does not support one.",
+    "es": "AXIGNAL no inventa un hallazgo no obvio cuando la evidencia disponible no lo sostiene.",
+    "files": [
+      "components/runtime-product.tsx"
+    ]
+  },
+  {
+    "en": "Investigate what is open",
+    "es": "Investigar lo abierto",
     "files": [
       "components/runtime-product.tsx"
     ]
@@ -4638,12 +5647,76 @@
     "en": "Your organizations",
     "es": "Tus organizaciones",
     "files": [
+      "components/runtime-product.tsx",
+      "components/subscriber-portfolio.tsx"
+    ]
+  },
+  {
+    "en": "There are no governed observations available yet to build a temporal reading.",
+    "es": "Todavía no hay observaciones gobernadas disponibles para construir una lectura temporal.",
+    "files": [
       "components/runtime-product.tsx"
     ]
   },
   {
-    "en": "The runtime exposes the current observation, not a navigable historical snapshot series. An observation date does not prove when an economic change happened.",
-    "es": "El runtime expone la observación actual, no una serie de snapshots históricos navegables. Una fecha de observación no prueba cuándo ocurrió un cambio económico.",
+    "en": "governed observations form the available history. You can navigate them without turning each reading into an economic snapshot.",
+    "es": "observaciones gobernadas forman la historia disponible. Puedes recorrerlas sin convertir cada lectura en un snapshot económico.",
+    "files": [
+      "components/runtime-product.tsx"
+    ]
+  },
+  {
+    "en": "There is one governed observation. There is not yet a comparable historical series.",
+    "es": "Existe una sola observación gobernada. Aún no hay una serie histórica comparable.",
+    "files": [
+      "components/runtime-product.tsx"
+    ]
+  },
+  {
+    "en": "Observation history",
+    "es": "Historia de observaciones",
+    "files": [
+      "components/runtime-product.tsx"
+    ]
+  },
+  {
+    "en": "Observed reading",
+    "es": "Lectura observada",
+    "files": [
+      "components/runtime-product.tsx"
+    ]
+  },
+  {
+    "en": "First available observation; there is no predecessor against which to compare normalized state.",
+    "es": "Primera observación disponible; no existe una predecesora con la que comparar estado normalizado.",
+    "files": [
+      "components/runtime-product.tsx"
+    ]
+  },
+  {
+    "en": "Normalized fields differ from the previous observation. By itself, this does not prove when an economic change occurred.",
+    "es": "Los campos normalizados difieren de la observación anterior. Esto no prueba por sí solo cuándo ocurrió un cambio económico.",
+    "files": [
+      "components/runtime-product.tsx"
+    ]
+  },
+  {
+    "en": "Normalized fields match the previous observation. Reobservation preserves continuity without fabricating novelty.",
+    "es": "Los campos normalizados coinciden con la observación anterior. La reobservación conserva continuidad sin fabricar novedad.",
+    "files": [
+      "components/runtime-product.tsx"
+    ]
+  },
+  {
+    "en": "Source type",
+    "es": "Tipo de fuente",
+    "files": [
+      "components/runtime-product.tsx"
+    ]
+  },
+  {
+    "en": "The history shows real stored observations. An observation date says when AXIGNAL read the evidence, not necessarily when a change happened in the world.",
+    "es": "La historia muestra observaciones reales almacenadas. Una fecha de observación indica cuándo AXIGNAL leyó la evidencia, no cuándo ocurrió necesariamente un cambio en el mundo.",
     "files": [
       "components/runtime-product.tsx"
     ]
@@ -4688,6 +5761,574 @@
     "es": "Volver al Panorama",
     "files": [
       "components/source-document.tsx"
+    ]
+  },
+  {
+    "en": "The check is complete. The portfolio shows verified capacity.",
+    "es": "La comprobación ha terminado. La cartera muestra la capacidad verificada.",
+    "files": [
+      "components/subscriber-portfolio.tsx"
+    ]
+  },
+  {
+    "en": "Payment or capacity could not be confirmed yet. No new capacity has been granted.",
+    "es": "El pago o la capacidad todavía no se han podido confirmar. No se ha concedido capacidad nueva.",
+    "files": [
+      "components/subscriber-portfolio.tsx"
+    ]
+  },
+  {
+    "en": "The purchase awaits your confirmation. Capacity changes only after payment is verified.",
+    "es": "La compra espera tu confirmación. La capacidad solo cambia tras verificar el pago.",
+    "files": [
+      "components/subscriber-portfolio.tsx"
+    ]
+  },
+  {
+    "en": "Your attention is saved. Observation requires an authorized plan; it has not run yet.",
+    "es": "Tu atención está guardada. La observación necesita un plan autorizado; aún no se ha ejecutado.",
+    "files": [
+      "components/subscriber-portfolio.tsx"
+    ]
+  },
+  {
+    "en": "Observation stopped at its execution limits. There is no new conclusion.",
+    "es": "La observación se ha detenido por sus límites de ejecución. No hay una conclusión nueva.",
+    "files": [
+      "components/subscriber-portfolio.tsx"
+    ]
+  },
+  {
+    "en": "Observation is partial. Read the evidence and its limits before interpreting the result.",
+    "es": "La observación es parcial. Lee las evidencias y sus límites antes de interpretar el resultado.",
+    "files": [
+      "components/subscriber-portfolio.tsx"
+    ]
+  },
+  {
+    "en": "Identity unresolved. Your request is saved; there is no organization or conclusion yet.",
+    "es": "Identidad por resolver. Tu solicitud está guardada; todavía no hay una organización ni una conclusión.",
+    "files": [
+      "components/subscriber-portfolio.tsx"
+    ]
+  },
+  {
+    "en": "Capacity is not confirmed yet. Check its state before repeating the operation.",
+    "es": "La capacidad aún no está confirmada. Comprueba el estado antes de repetir la operación.",
+    "files": [
+      "components/subscriber-portfolio.tsx"
+    ]
+  },
+  {
+    "en": "The operation is recorded. The reading retains its sources and limits.",
+    "es": "La operación está registrada. La lectura conserva sus fuentes y límites.",
+    "files": [
+      "components/subscriber-portfolio.tsx"
+    ]
+  },
+  {
+    "en": "The authorized reading is unavailable. Check the state again.",
+    "es": "La lectura autorizada no está disponible. Vuelve a comprobar el estado.",
+    "files": [
+      "components/subscriber-portfolio.tsx"
+    ]
+  },
+  {
+    "en": "Sign-out could not be confirmed.",
+    "es": "No se pudo confirmar el cierre de sesión.",
+    "files": [
+      "components/subscriber-portfolio.tsx"
+    ]
+  },
+  {
+    "en": "Your perspective continues.",
+    "es": "Tu mirada continúa.",
+    "files": [
+      "components/subscriber-portfolio.tsx"
+    ]
+  },
+  {
+    "en": "Organizations, context and evidence to understand what deserves your attention.",
+    "es": "Organizaciones, contexto y evidencias para comprender lo que merece tu atención.",
+    "files": [
+      "components/subscriber-portfolio.tsx"
+    ]
+  },
+  {
+    "en": "Sign out",
+    "es": "Cerrar sesión",
+    "files": [
+      "components/subscriber-portfolio.tsx"
+    ]
+  },
+  {
+    "en": "Reading your context…",
+    "es": "Leyendo tu contexto…",
+    "files": [
+      "components/subscriber-portfolio.tsx"
+    ]
+  },
+  {
+    "en": "Your identity opens access.",
+    "es": "Tu identidad abre el acceso.",
+    "files": [
+      "components/subscriber-portfolio.tsx"
+    ]
+  },
+  {
+    "en": "Sign in to read your private portfolio and its evidence.",
+    "es": "Accede para leer tu cartera privada y sus evidencias.",
+    "files": [
+      "components/subscriber-portfolio.tsx"
+    ]
+  },
+  {
+    "en": "We could not read your context.",
+    "es": "No pudimos leer tu contexto.",
+    "files": [
+      "components/subscriber-portfolio.tsx"
+    ]
+  },
+  {
+    "en": "Check again",
+    "es": "Volver a comprobar",
+    "files": [
+      "components/subscriber-portfolio.tsx",
+      "components/subscriber-portfolio.tsx"
+    ]
+  },
+  {
+    "en": "Refresh",
+    "es": "Actualizar",
+    "files": [
+      "components/subscriber-portfolio.tsx"
+    ]
+  },
+  {
+    "en": "Unconfirmed capacity",
+    "es": "Capacidad sin confirmar",
+    "files": [
+      "components/subscriber-portfolio.tsx",
+      "components/subscriber-portfolio.tsx"
+    ]
+  },
+  {
+    "en": "Paused organizations retain their space.",
+    "es": "Las organizaciones pausadas conservan su espacio.",
+    "files": [
+      "components/subscriber-portfolio.tsx"
+    ]
+  },
+  {
+    "en": "You can explore your account. Germination starts when you add an organization and its identity and observation access are resolved.",
+    "es": "Puedes explorar tu cuenta. La germinación empieza al añadir una organización y resolver su identidad y el acceso a observarla.",
+    "files": [
+      "components/subscriber-portfolio.tsx"
+    ]
+  },
+  {
+    "en": "Direct observation. A name or URL guides research; it does not establish truth.",
+    "es": "Indica dónde observar. El nombre o la URL orientan la investigación; no establecen lo que es verdad.",
+    "files": [
+      "components/subscriber-portfolio.tsx"
+    ]
+  },
+  {
+    "en": "Identity not admitted",
+    "es": "Identidad no admitida",
+    "files": [
+      "components/subscriber-portfolio.tsx"
+    ]
+  },
+  {
+    "en": "Capacity pending",
+    "es": "Pendiente de capacidad",
+    "files": [
+      "components/subscriber-portfolio.tsx"
+    ]
+  },
+  {
+    "en": "Purchase authority pending",
+    "es": "Autoridad de compra pendiente",
+    "files": [
+      "components/subscriber-portfolio.tsx"
+    ]
+  },
+  {
+    "en": "Paused",
+    "es": "Pausada",
+    "files": [
+      "components/subscriber-portfolio.tsx"
+    ]
+  },
+  {
+    "en": "Active observation",
+    "es": "Observación activa",
+    "files": [
+      "components/subscriber-portfolio.tsx"
+    ]
+  },
+  {
+    "en": "Open the reading",
+    "es": "Abrir la lectura",
+    "files": [
+      "components/subscriber-portfolio.tsx"
+    ]
+  },
+  {
+    "en": "Resume",
+    "es": "Reanudar",
+    "files": [
+      "components/subscriber-portfolio.tsx"
+    ]
+  },
+  {
+    "en": "Pause",
+    "es": "Pausar",
+    "files": [
+      "components/subscriber-portfolio.tsx"
+    ]
+  },
+  {
+    "en": "Observe again",
+    "es": "Volver a observar",
+    "files": [
+      "components/subscriber-portfolio.tsx"
+    ]
+  },
+  {
+    "en": "Replace organization",
+    "es": "Sustituir organización",
+    "files": [
+      "components/subscriber-portfolio.tsx",
+      "components/subscriber-portfolio.tsx"
+    ]
+  },
+  {
+    "en": "Remove from my portfolio",
+    "es": "Retirar de mi cartera",
+    "files": [
+      "components/subscriber-portfolio.tsx"
+    ]
+  },
+  {
+    "en": "Name or public website",
+    "es": "Nombre o sitio público",
+    "files": [
+      "components/subscriber-portfolio.tsx",
+      "components/subscriber-portfolio.tsx"
+    ]
+  },
+  {
+    "en": "Replacement preserves private history. The current organization remains until the new identity is resolved.",
+    "es": "La sustitución conserva el historial privado. La organización actual permanece hasta resolver la nueva identidad.",
+    "files": [
+      "components/subscriber-portfolio.tsx"
+    ]
+  },
+  {
+    "en": "Cancel",
+    "es": "Cancelar",
+    "files": [
+      "components/subscriber-portfolio.tsx"
+    ]
+  },
+  {
+    "en": "Room to observe",
+    "es": "Espacio para observar",
+    "files": [
+      "components/subscriber-portfolio.tsx"
+    ]
+  },
+  {
+    "en": "Expand your perspective.",
+    "es": "Amplía tu mirada.",
+    "files": [
+      "components/subscriber-portfolio.tsx"
+    ]
+  },
+  {
+    "en": "Choose the total number of organizations to observe. Signals are not billed separately.",
+    "es": "Elige el total de organizaciones que quieres observar. Las señales no se facturan por separado.",
+    "files": [
+      "components/subscriber-portfolio.tsx"
+    ]
+  },
+  {
+    "en": "Total organizations",
+    "es": "Total de organizaciones",
+    "files": [
+      "components/subscriber-portfolio.tsx"
+    ]
+  },
+  {
+    "en": "Monthly total excluding VAT; checkout confirms applicable taxes.",
+    "es": "Total mensual sin IVA; el pago confirma los impuestos aplicables.",
+    "files": [
+      "components/subscriber-portfolio.tsx"
+    ]
+  },
+  {
+    "en": "Review the purchase",
+    "es": "Revisar la compra",
+    "files": [
+      "components/subscriber-portfolio.tsx"
+    ]
+  },
+  {
+    "en": "Contracting is not active yet.",
+    "es": "La contratación todavía no está activa.",
+    "files": [
+      "components/subscriber-portfolio.tsx"
+    ]
+  },
+  {
+    "en": "Check payment and capacity",
+    "es": "Comprobar pago y capacidad",
+    "files": [
+      "components/subscriber-portfolio.tsx"
+    ]
+  },
+  {
+    "en": "Purchase authority is not confirmed for this context.",
+    "es": "La autoridad de compra no está confirmada para este contexto.",
+    "files": [
+      "components/subscriber-portfolio.tsx"
+    ]
+  },
+  {
+    "en": "Continue to payment",
+    "es": "Continuar al pago",
+    "files": [
+      "components/subscriber-portfolio.tsx"
+    ]
+  },
+  {
+    "en": "Reading the evidence…",
+    "es": "Leyendo las evidencias…",
+    "files": [
+      "components/subscriber-portfolio.tsx",
+      "components/subscriber-reading.tsx"
+    ]
+  },
+  {
+    "en": "Your reading",
+    "es": "Tu lectura",
+    "files": [
+      "components/subscriber-portfolio.tsx",
+      "components/subscriber-reading.tsx"
+    ]
+  },
+  {
+    "en": "Evidence is not yet sufficient for a conclusion. Absence in this reading does not prove absence in the world.",
+    "es": "Todavía no hay evidencia suficiente para una conclusión. Una ausencia en esta lectura no demuestra ausencia en el mundo.",
+    "files": [
+      "components/subscriber-portfolio.tsx",
+      "app/api/subscriber/reading/route.ts"
+    ]
+  },
+  {
+    "en": "The reading has changed or is unavailable. Refresh the context before continuing.",
+    "es": "La lectura ha cambiado o no está disponible. Actualiza el contexto antes de continuar.",
+    "files": [
+      "components/subscriber-reading.tsx"
+    ]
+  },
+  {
+    "en": "Ask AXENT in this context",
+    "es": "Preguntar a AXENT en este contexto",
+    "files": [
+      "components/subscriber-reading.tsx"
+    ]
+  },
+  {
+    "en": "Subscriber reading",
+    "es": "Lectura de suscripción",
+    "files": [
+      "components/subscriber-reading.tsx"
+    ]
+  },
+  {
+    "en": "Undetermined",
+    "es": "Sin determinar",
+    "files": [
+      "components/subscriber-representation.tsx"
+    ]
+  },
+  {
+    "en": "Public representation",
+    "es": "Representación pública",
+    "files": [
+      "components/subscriber-representation.tsx"
+    ]
+  },
+  {
+    "en": "What could be observed on the page",
+    "es": "Qué se pudo observar en la página",
+    "files": [
+      "components/subscriber-representation.tsx"
+    ]
+  },
+  {
+    "en": "Measurement unavailable. This does not establish that the organization has no public presence.",
+    "es": "Medición no disponible. Esto no demuestra que la organización no tenga presencia pública.",
+    "files": [
+      "components/subscriber-representation.tsx"
+    ]
+  },
+  {
+    "en": "The captured title contains the organization name.",
+    "es": "El título capturado contiene el nombre de la organización.",
+    "files": [
+      "components/subscriber-representation.tsx"
+    ]
+  },
+  {
+    "en": "The name does not appear in this page title. The cause is unknown.",
+    "es": "El nombre no aparece en el título de esta página. La causa es desconocida.",
+    "files": [
+      "components/subscriber-representation.tsx"
+    ]
+  },
+  {
+    "en": "The title does not support a conclusion about the name.",
+    "es": "El título no permite concluir si aparece el nombre.",
+    "files": [
+      "components/subscriber-representation.tsx"
+    ]
+  },
+  {
+    "en": "The scope is one page. It does not measure presence in search, AI answers or social media, or SEO or GEO quality.",
+    "es": "El alcance es una página. No mide la presencia en buscadores, respuestas de IA o redes sociales, ni la calidad del SEO o GEO.",
+    "files": [
+      "components/subscriber-representation.tsx"
+    ]
+  },
+  {
+    "en": "Before recommending a change",
+    "es": "Antes de recomendar un cambio",
+    "files": [
+      "components/subscriber-representation.tsx"
+    ]
+  },
+  {
+    "en": "The purpose of this page and its expected public name still need confirmation. If it identifies the organization and the expected name matches the name compared, you can review the title with the responsible team.",
+    "es": "Falta confirmar para qué sirve esta página y qué nombre público debe utilizar. Si identifica a la organización y el nombre esperado coincide con el comparado, puedes revisar el título con el equipo responsable.",
+    "files": [
+      "components/subscriber-representation.tsx"
+    ]
+  },
+  {
+    "en": "The recommendation requires context and human review. No performance improvement has been established.",
+    "es": "La recomendación requiere contexto y revisión humana. No se ha demostrado una mejora de rendimiento.",
+    "files": [
+      "components/subscriber-representation.tsx"
+    ]
+  },
+  {
+    "en": "See how it was measured",
+    "es": "Ver cómo se midió",
+    "files": [
+      "components/subscriber-representation.tsx"
+    ]
+  },
+  {
+    "en": "Previous record",
+    "es": "Registro anterior",
+    "files": [
+      "components/subscriber-representation.tsx"
+    ]
+  },
+  {
+    "en": "Open public source",
+    "es": "Abrir fuente pública",
+    "files": [
+      "components/subscriber-representation.tsx"
+    ]
+  },
+  {
+    "en": "Observation date",
+    "es": "Fecha de observación",
+    "files": [
+      "components/subscriber-representation.tsx"
+    ]
+  },
+  {
+    "en": "Sample",
+    "es": "Muestra",
+    "files": [
+      "components/subscriber-representation.tsx",
+      "lib/projection.ts"
+    ]
+  },
+  {
+    "en": "Instrument and version",
+    "es": "Instrumento y versión",
+    "files": [
+      "components/subscriber-representation.tsx"
+    ]
+  },
+  {
+    "en": "Observation conditions",
+    "es": "Condiciones de observación",
+    "files": [
+      "components/subscriber-representation.tsx"
+    ]
+  },
+  {
+    "en": "Rights and access",
+    "es": "Derechos y acceso",
+    "files": [
+      "components/subscriber-representation.tsx"
+    ]
+  },
+  {
+    "en": "Source use permitted",
+    "es": "Uso de fuente permitido",
+    "files": [
+      "components/subscriber-representation.tsx"
+    ]
+  },
+  {
+    "en": "Source use prohibited",
+    "es": "Uso de fuente prohibido",
+    "files": [
+      "components/subscriber-representation.tsx"
+    ]
+  },
+  {
+    "en": "Rights undetermined",
+    "es": "Derechos sin determinar",
+    "files": [
+      "components/subscriber-representation.tsx"
+    ]
+  },
+  {
+    "en": "Source accessible",
+    "es": "Fuente accesible",
+    "files": [
+      "components/subscriber-representation.tsx"
+    ]
+  },
+  {
+    "en": "Source inaccessible",
+    "es": "Fuente inaccesible",
+    "files": [
+      "components/subscriber-representation.tsx"
+    ]
+  },
+  {
+    "en": "Access undetermined",
+    "es": "Acceso sin determinar",
+    "files": [
+      "components/subscriber-representation.tsx"
+    ]
+  },
+  {
+    "en": "One page may be incomplete or unrepresentative. It cannot explain causes or support conclusions about the whole organization.",
+    "es": "Una página puede ser incompleta o poco representativa. No permite explicar las causas ni generalizar a toda la organización.",
+    "files": [
+      "components/subscriber-representation.tsx"
     ]
   },
   {
@@ -5333,7 +6974,8 @@
     "en": "Potential",
     "es": "Potencial",
     "files": [
-      "components/ui.tsx"
+      "components/ui.tsx",
+      "lib/runtime-presentation.ts"
     ]
   },
   {
@@ -5968,6 +7610,708 @@
     ]
   },
   {
+    "en": "How is my presence changing, and where do I exist in generative answers?",
+    "es": "¿Cómo está cambiando mi presencia y dónde existo en las respuestas generativas?",
+    "files": [
+      "lib/cognition/compose.ts"
+    ]
+  },
+  {
+    "en": "What is said, where, and how material is it?",
+    "es": "¿Qué se dice, dónde y con qué materialidad?",
+    "files": [
+      "lib/cognition/compose.ts"
+    ]
+  },
+  {
+    "en": "Where could economic value exist, and what do we really know about it?",
+    "es": "¿Dónde puede existir valor económico y qué sabemos realmente sobre él?",
+    "files": [
+      "lib/cognition/compose.ts",
+      "lib/cognition/compose.ts"
+    ]
+  },
+  {
+    "en": "Where does it operate, where is there evidence, and which markets remain unknown?",
+    "es": "¿Dónde opera, dónde hay evidencia y qué mercados siguen desconocidos?",
+    "files": [
+      "lib/cognition/compose.ts"
+    ]
+  },
+  {
+    "en": "With whom is there an observable relationship, and which are worth investigating?",
+    "es": "¿Con quién hay una relación observable y cuáles merece la pena investigar?",
+    "files": [
+      "lib/cognition/compose.ts"
+    ]
+  },
+  {
+    "en": "What changed, and since when can we support it?",
+    "es": "¿Qué ha cambiado y desde cuándo podemos sostenerlo?",
+    "files": [
+      "lib/cognition/compose.ts",
+      "lib/cognition/compose.ts",
+      "lib/cognition/compose.ts"
+    ]
+  },
+  {
+    "en": "How does AXIGNAL know what it knows about this company?",
+    "es": "¿Cómo sabe AXIGNAL lo que sabe de esta empresa?",
+    "files": [
+      "lib/cognition/compose.ts"
+    ]
+  },
+  {
+    "en": "Web search sample",
+    "es": "Muestra de búsquedas web",
+    "files": [
+      "lib/cognition/facts.ts"
+    ]
+  },
+  {
+    "en": "40 fixed queries, first page, Spain",
+    "es": "40 consultas fijas, primera página, España",
+    "files": [
+      "lib/cognition/facts.ts",
+      "lib/cognition/facts.ts"
+    ]
+  },
+  {
+    "en": "Small sample; not all traffic.",
+    "es": "Muestra pequeña; no representa todo el tráfico.",
+    "files": [
+      "lib/cognition/facts.ts"
+    ]
+  },
+  {
+    "en": "Generative answer sample",
+    "es": "Muestra de respuestas generativas",
+    "files": [
+      "lib/cognition/facts.ts"
+    ]
+  },
+  {
+    "en": "12 questions, one assistant, one run",
+    "es": "12 preguntas, un asistente, una ejecución",
+    "files": [
+      "lib/cognition/facts.ts"
+    ]
+  },
+  {
+    "en": "A mention is neither a citation nor an endorsement.",
+    "es": "Una mención no es una cita ni un respaldo.",
+    "files": [
+      "lib/cognition/facts.ts"
+    ]
+  },
+  {
+    "en": "Company public technical sheet",
+    "es": "Ficha técnica pública de la empresa",
+    "files": [
+      "lib/cognition/facts.ts"
+    ]
+  },
+  {
+    "en": "Public document, deterministic reading",
+    "es": "Documento público, lectura determinista",
+    "files": [
+      "lib/cognition/facts.ts",
+      "lib/cognition/facts.ts"
+    ]
+  },
+  {
+    "en": "A declaration does not prove execution.",
+    "es": "Una declaración no demuestra ejecución.",
+    "files": [
+      "lib/cognition/facts.ts"
+    ]
+  },
+  {
+    "en": "Regional renovation programme",
+    "es": "Programa autonómico de rehabilitación",
+    "files": [
+      "lib/cognition/facts.ts"
+    ]
+  },
+  {
+    "en": "Official gazette, deterministic reading",
+    "es": "Boletín oficial, lectura determinista",
+    "files": [
+      "lib/cognition/facts.ts"
+    ]
+  },
+  {
+    "en": "Does not set a budget per action.",
+    "es": "No establece presupuesto por actuación.",
+    "files": [
+      "lib/cognition/facts.ts"
+    ]
+  },
+  {
+    "en": "Public tender notice",
+    "es": "Anuncio de licitación pública",
+    "files": [
+      "lib/cognition/facts.ts"
+    ]
+  },
+  {
+    "en": "Procurement portal, CPV search",
+    "es": "Portal de contratación, búsqueda por CPV",
+    "files": [
+      "lib/cognition/facts.ts"
+    ]
+  },
+  {
+    "en": "Technical requirements in unread tender documents.",
+    "es": "Requisitos técnicos en pliegos no leídos.",
+    "files": [
+      "lib/cognition/facts.ts"
+    ]
+  },
+  {
+    "en": "Project case published by the company",
+    "es": "Caso de proyecto publicado por la empresa",
+    "files": [
+      "lib/cognition/facts.ts"
+    ]
+  },
+  {
+    "en": "Self-declared; not confirmed by the client.",
+    "es": "Autodeclarado; sin confirmación del cliente.",
+    "files": [
+      "lib/cognition/facts.ts"
+    ]
+  },
+  {
+    "en": "Reviews on a professional directory",
+    "es": "Reseñas en un directorio profesional",
+    "files": [
+      "lib/cognition/facts.ts"
+    ]
+  },
+  {
+    "en": "6 public reviews read",
+    "es": "6 reseñas públicas leídas",
+    "files": [
+      "lib/cognition/facts.ts"
+    ]
+  },
+  {
+    "en": "Minimal sample; does not measure overall satisfaction.",
+    "es": "Muestra mínima; no mide satisfacción general.",
+    "files": [
+      "lib/cognition/facts.ts"
+    ]
+  },
+  {
+    "en": "Sample queries with the site on page one",
+    "es": "Consultas de la muestra con la web en primera página",
+    "files": [
+      "lib/cognition/facts.ts"
+    ]
+  },
+  {
+    "en": "40 queries",
+    "es": "40 consultas",
+    "files": [
+      "lib/cognition/facts.ts"
+    ]
+  },
+  {
+    "en": "energy renovation",
+    "es": "rehabilitación energética",
+    "files": [
+      "lib/cognition/facts.ts"
+    ]
+  },
+  {
+    "en": "thermal insulation",
+    "es": "aislamiento térmico",
+    "files": [
+      "lib/cognition/facts.ts"
+    ]
+  },
+  {
+    "en": "renovation grants",
+    "es": "ayudas a la rehabilitación",
+    "files": [
+      "lib/cognition/facts.ts"
+    ]
+  },
+  {
+    "en": "heat pumps",
+    "es": "aerotermia",
+    "files": [
+      "lib/cognition/facts.ts"
+    ]
+  },
+  {
+    "en": "Assistant A",
+    "es": "Asistente A",
+    "files": [
+      "lib/cognition/facts.ts"
+    ]
+  },
+  {
+    "en": "Assistant B",
+    "es": "Asistente B",
+    "files": [
+      "lib/cognition/facts.ts"
+    ]
+  },
+  {
+    "en": "Who renovates buildings in Navarre?",
+    "es": "¿Quién rehabilita edificios en Navarra?",
+    "files": [
+      "lib/cognition/facts.ts"
+    ]
+  },
+  {
+    "en": "Thermal insulation firms near Pamplona",
+    "es": "Empresas de aislamiento térmico cerca de Pamplona",
+    "files": [
+      "lib/cognition/facts.ts"
+    ]
+  },
+  {
+    "en": "How to improve a block's energy rating?",
+    "es": "¿Cómo mejorar la certificación energética de un bloque?",
+    "files": [
+      "lib/cognition/facts.ts"
+    ]
+  },
+  {
+    "en": "Renovates residential buildings",
+    "es": "Rehabilita edificios residenciales",
+    "files": [
+      "lib/cognition/facts.ts"
+    ]
+  },
+  {
+    "en": "Installs heat pumps",
+    "es": "Instala aerotermia",
+    "files": [
+      "lib/cognition/facts.ts"
+    ]
+  },
+  {
+    "en": "Works in the Basque Country",
+    "es": "Trabaja en el País Vasco",
+    "files": [
+      "lib/cognition/facts.ts"
+    ]
+  },
+  {
+    "en": "Energy renovation of social housing",
+    "es": "Rehabilitación energética de vivienda social",
+    "files": [
+      "lib/cognition/facts.ts"
+    ]
+  },
+  {
+    "en": "Regional housing agency",
+    "es": "Agencia autonómica de vivienda",
+    "files": [
+      "lib/cognition/facts.ts"
+    ]
+  },
+  {
+    "en": "Navarre, Spain",
+    "es": "Navarra, España",
+    "files": [
+      "lib/cognition/facts.ts",
+      "lib/cognition/facts.ts"
+    ]
+  },
+  {
+    "en": "Public programme",
+    "es": "Programa público",
+    "files": [
+      "lib/cognition/facts.ts"
+    ]
+  },
+  {
+    "en": "Thermal building renovation",
+    "es": "Rehabilitación térmica de edificios",
+    "files": [
+      "lib/cognition/facts.ts",
+      "lib/cognition/facts.ts"
+    ]
+  },
+  {
+    "en": "“thermal renovation and technical building coordination”",
+    "es": "«rehabilitación térmica y coordinación técnica de edificios»",
+    "files": [
+      "lib/cognition/facts.ts",
+      "lib/cognition/facts.ts"
+    ]
+  },
+  {
+    "en": "Thermal envelope works",
+    "es": "Actuaciones sobre la envolvente térmica",
+    "files": [
+      "lib/cognition/facts.ts"
+    ]
+  },
+  {
+    "en": "Scope",
+    "es": "Ámbito",
+    "files": [
+      "lib/cognition/facts.ts"
+    ]
+  },
+  {
+    "en": "Social housing",
+    "es": "Vivienda social",
+    "files": [
+      "lib/cognition/facts.ts"
+    ]
+  },
+  {
+    "en": "Horizon",
+    "es": "Horizonte",
+    "files": [
+      "lib/cognition/facts.ts"
+    ]
+  },
+  {
+    "en": "Until 2027",
+    "es": "Hasta 2027",
+    "files": [
+      "lib/cognition/facts.ts"
+    ]
+  },
+  {
+    "en": "Budget per action",
+    "es": "Presupuesto por actuación",
+    "files": [
+      "lib/cognition/facts.ts"
+    ]
+  },
+  {
+    "en": "Required solvency",
+    "es": "Solvencia exigida",
+    "files": [
+      "lib/cognition/facts.ts"
+    ]
+  },
+  {
+    "en": "Company's available capacity",
+    "es": "Capacidad disponible de la empresa",
+    "files": [
+      "lib/cognition/facts.ts"
+    ]
+  },
+  {
+    "en": "Published demand and a declared capability fit; no source confirms the company can or wants to bid.",
+    "es": "Hay demanda publicada y una capacidad declarada que encajan; ninguna fuente confirma que la empresa pueda o quiera optar.",
+    "files": [
+      "lib/cognition/facts.ts"
+    ]
+  },
+  {
+    "en": "Roof insulation in public schools",
+    "es": "Aislamiento de cubiertas en colegios públicos",
+    "files": [
+      "lib/cognition/facts.ts"
+    ]
+  },
+  {
+    "en": "Pamplona City Council",
+    "es": "Ayuntamiento de Pamplona",
+    "files": [
+      "lib/cognition/facts.ts"
+    ]
+  },
+  {
+    "en": "Open tender",
+    "es": "Licitación abierta",
+    "files": [
+      "lib/cognition/facts.ts"
+    ]
+  },
+  {
+    "en": "Thermal insulation work",
+    "es": "Trabajos de aislamiento térmico",
+    "files": [
+      "lib/cognition/facts.ts"
+    ]
+  },
+  {
+    "en": "Bid deadline",
+    "es": "Plazo de oferta",
+    "files": [
+      "lib/cognition/facts.ts"
+    ]
+  },
+  {
+    "en": "28 Oct 2026",
+    "es": "28 oct 2026",
+    "files": [
+      "lib/cognition/facts.ts"
+    ]
+  },
+  {
+    "en": "Procedure",
+    "es": "Procedimiento",
+    "files": [
+      "lib/cognition/facts.ts"
+    ]
+  },
+  {
+    "en": "Open",
+    "es": "Abierto",
+    "files": [
+      "lib/cognition/facts.ts"
+    ]
+  },
+  {
+    "en": "Technical requirements in tender documents",
+    "es": "Requisitos técnicos de los pliegos",
+    "files": [
+      "lib/cognition/facts.ts"
+    ]
+  },
+  {
+    "en": "Required contractor classification",
+    "es": "Clasificación empresarial exigida",
+    "files": [
+      "lib/cognition/facts.ts"
+    ]
+  },
+  {
+    "en": "Incumbent supplier",
+    "es": "Proveedor actual",
+    "files": [
+      "lib/cognition/facts.ts"
+    ]
+  },
+  {
+    "en": "The buyer asks for a category the company declares; tender documents and eligibility are unread.",
+    "es": "El comprador pide una categoría que la empresa declara ofrecer; los pliegos y su elegibilidad no se han leído.",
+    "files": [
+      "lib/cognition/facts.ts"
+    ]
+  },
+  {
+    "en": "Observed company",
+    "es": "Empresa observada",
+    "files": [
+      "lib/cognition/facts.ts"
+    ]
+  },
+  {
+    "en": "Client",
+    "es": "Cliente",
+    "files": [
+      "lib/cognition/facts.ts"
+    ]
+  },
+  {
+    "en": "Supplier",
+    "es": "Proveedor",
+    "files": [
+      "lib/cognition/facts.ts"
+    ]
+  },
+  {
+    "en": "Public buyer",
+    "es": "Comprador público",
+    "files": [
+      "lib/cognition/facts.ts"
+    ]
+  },
+  {
+    "en": "Technical partner",
+    "es": "Socio técnico",
+    "files": [
+      "lib/cognition/facts.ts"
+    ]
+  },
+  {
+    "en": "carried out works for",
+    "es": "ejecutó una obra para",
+    "files": [
+      "lib/cognition/facts.ts"
+    ]
+  },
+  {
+    "en": "Published project case",
+    "es": "Caso de proyecto publicado",
+    "files": [
+      "lib/cognition/facts.ts"
+    ]
+  },
+  {
+    "en": "supplied material to",
+    "es": "suministró material a",
+    "files": [
+      "lib/cognition/facts.ts"
+    ]
+  },
+  {
+    "en": "Named in the same case",
+    "es": "Nombrado en el mismo caso",
+    "files": [
+      "lib/cognition/facts.ts"
+    ]
+  },
+  {
+    "en": "could bid for programmes of",
+    "es": "podría optar a programas de",
+    "files": [
+      "lib/cognition/facts.ts"
+    ]
+  },
+  {
+    "en": "Programme compatible with its capability",
+    "es": "Programa compatible con su capacidad",
+    "files": [
+      "lib/cognition/facts.ts"
+    ]
+  },
+  {
+    "en": "could partner with",
+    "es": "podría colaborar con",
+    "files": [
+      "lib/cognition/facts.ts"
+    ]
+  },
+  {
+    "en": "Complementary capabilities in the same area",
+    "es": "Capacidades complementarias en la misma zona",
+    "files": [
+      "lib/cognition/facts.ts"
+    ]
+  },
+  {
+    "en": "Navarre",
+    "es": "Navarra",
+    "files": [
+      "lib/cognition/facts.ts"
+    ]
+  },
+  {
+    "en": "Own published works and open public demand",
+    "es": "Obras propias publicadas y demanda pública abierta",
+    "files": [
+      "lib/cognition/facts.ts"
+    ]
+  },
+  {
+    "en": "Basque Country",
+    "es": "País Vasco",
+    "files": [
+      "lib/cognition/facts.ts"
+    ]
+  },
+  {
+    "en": "Compatible regional programme",
+    "es": "Programa regional compatible",
+    "files": [
+      "lib/cognition/facts.ts"
+    ]
+  },
+  {
+    "en": "La Rioja",
+    "es": "La Rioja",
+    "files": [
+      "lib/cognition/facts.ts"
+    ]
+  },
+  {
+    "en": "Nouvelle-Aquitaine",
+    "es": "Nueva Aquitania",
+    "files": [
+      "lib/cognition/facts.ts"
+    ]
+  },
+  {
+    "en": "Praise the punctuality of works",
+    "es": "Destacan la puntualidad de las obras",
+    "files": [
+      "lib/cognition/facts.ts"
+    ]
+  },
+  {
+    "en": "Professional directory",
+    "es": "Directorio profesional",
+    "files": [
+      "lib/cognition/facts.ts",
+      "lib/cognition/facts.ts"
+    ]
+  },
+  {
+    "en": "4 of 6 reviews",
+    "es": "4 de 6 reseñas",
+    "files": [
+      "lib/cognition/facts.ts"
+    ]
+  },
+  {
+    "en": "One review mentions a delay",
+    "es": "Una reseña menciona un retraso",
+    "files": [
+      "lib/cognition/facts.ts"
+    ]
+  },
+  {
+    "en": "1 of 6 reviews",
+    "es": "1 de 6 reseñas",
+    "files": [
+      "lib/cognition/facts.ts"
+    ]
+  },
+  {
+    "en": "No observed coverage in trade press",
+    "es": "Sin cobertura observada en prensa sectorial",
+    "files": [
+      "lib/cognition/facts.ts"
+    ]
+  },
+  {
+    "en": "No observed reviews on other platforms",
+    "es": "Sin reseñas observadas en otras plataformas",
+    "files": [
+      "lib/cognition/facts.ts"
+    ]
+  },
+  {
+    "en": "Technical sheet observed",
+    "es": "Ficha técnica observada",
+    "files": [
+      "lib/cognition/facts.ts"
+    ]
+  },
+  {
+    "en": "Regional programme published",
+    "es": "Programa regional publicado",
+    "files": [
+      "lib/cognition/facts.ts"
+    ]
+  },
+  {
+    "en": "Potential opportunity in social housing",
+    "es": "Oportunidad potencial en vivienda social",
+    "files": [
+      "lib/cognition/facts.ts"
+    ]
+  },
+  {
+    "en": "New compatible tender",
+    "es": "Nueva licitación compatible",
+    "files": [
+      "lib/cognition/facts.ts"
+    ]
+  },
+  {
+    "en": "The technical sheet passes 90 days",
+    "es": "La ficha técnica supera los 90 días",
+    "files": [
+      "lib/cognition/facts.ts"
+    ]
+  },
+  {
     "en": "An architecture for understanding.",
     "es": "Una arquitectura para comprender.",
     "files": [
@@ -5979,13 +8323,6 @@
     "es": "La profundidad puede ser sencilla.",
     "files": [
       "lib/doctrine-basis.ts"
-    ]
-  },
-  {
-    "en": "Perspective",
-    "es": "Perspectiva",
-    "files": [
-      "lib/editorial.ts"
     ]
   },
   {
@@ -6766,13 +9103,6 @@
     ]
   },
   {
-    "en": "Sample",
-    "es": "Muestra",
-    "files": [
-      "lib/projection.ts"
-    ]
-  },
-  {
     "en": "2 responses",
     "es": "2 respuestas",
     "files": [
@@ -6962,8 +9292,106 @@
     ]
   },
   {
+    "en": "Current evidence lets us separate what is known from what remains open. The following is a proposed research plan; no new research has been executed.",
+    "es": "La evidencia actual permite delimitar qué sabemos y qué sigue abierto. Lo siguiente es un plan propuesto de investigación; no se ha ejecutado ninguna investigación nueva.",
+    "files": [
+      "lib/runtime-axent.ts"
+    ]
+  },
+  {
+    "en": "The current reading preserves explicit limits: what has not been observed remains open and is not interpreted as false.",
+    "es": "La lectura actual conserva límites explícitos: lo no observado sigue abierto y no se interpreta como falso.",
+    "files": [
+      "lib/runtime-axent.ts"
+    ]
+  },
+  {
+    "en": "This reading is supported only by the authorized, traceable evidence shown below.",
+    "es": "Esta lectura se sostiene únicamente en la evidencia autorizada y trazable que figura a continuación.",
+    "files": [
+      "lib/runtime-axent.ts"
+    ]
+  },
+  {
+    "en": "There is an observation recorded in Today for this context. That describes a new reading; by itself it does not prove when an economic change occurred.",
+    "es": "Hay una observación registrada en Hoy para este contexto. Eso describe una nueva lectura, no prueba por sí solo cuándo ocurrió un cambio económico.",
+    "files": [
+      "lib/runtime-axent.ts"
+    ]
+  },
+  {
+    "en": "There is no novelty recorded in Today for this context. Absence of novelty does not invalidate earlier observations.",
+    "es": "No hay una novedad registrada en Hoy para este contexto. La ausencia de novedad no invalida observaciones anteriores.",
+    "files": [
+      "lib/runtime-axent.ts"
+    ]
+  },
+  {
+    "en": "AXIGNAL prioritizes this signal because governed evidence supports a concrete reading while keeping its limits visible.",
+    "es": "AXIGNAL prioriza esta señal porque la evidencia gobernada permite sostener una lectura concreta, manteniendo visibles sus límites.",
+    "files": [
+      "lib/runtime-axent.ts"
+    ]
+  },
+  {
+    "en": "AXIGNAL can support the known reading below, but it does not extend that evidence to surfaces it has not observed.",
+    "es": "AXIGNAL puede sostener la lectura conocida que sigue, pero no extiende esa evidencia a superficies que no ha observado.",
+    "files": [
+      "lib/runtime-axent.ts"
+    ]
+  },
+  {
+    "en": "1. Check the leading uncertainty against an additional authorized public source.",
+    "es": "1. Contrastar la principal incertidumbre con una fuente pública adicional y autorizada.",
+    "files": [
+      "lib/runtime-axent.ts"
+    ]
+  },
+  {
+    "en": "2. Reobserve the same scope later to distinguish persistence from change.",
+    "es": "2. Reobservar el mismo alcance más adelante para distinguir persistencia de cambio.",
+    "files": [
+      "lib/runtime-axent.ts"
+    ]
+  },
+  {
+    "en": "3. Seek independent public corroboration before promoting any potential conclusion.",
+    "es": "3. Buscar corroboración pública independiente antes de elevar cualquier conclusión potencial.",
+    "files": [
+      "lib/runtime-axent.ts"
+    ]
+  },
+  {
+    "en": "Source-observed text",
+    "es": "Texto observado en la fuente",
+    "files": [
+      "lib/runtime-presentation.ts"
+    ]
+  },
+  {
+    "en": "Official web",
+    "es": "Web oficial",
+    "files": [
+      "lib/runtime-presentation.ts"
+    ]
+  },
+  {
+    "en": "Available",
+    "es": "Disponible",
+    "files": [
+      "lib/runtime-presentation.ts"
+    ]
+  },
+  {
     "en": "This is an illustrative explanation, without live research. ",
     "es": "Esta es una explicación ilustrativa, sin investigación en vivo. ",
+    "files": [
+      "app/api/axent/route.ts"
+    ]
+  },
+  {
+    "en": "Still unknown: ",
+    "es": "Todavía no sabemos: ",
     "files": [
       "app/api/axent/route.ts"
     ]

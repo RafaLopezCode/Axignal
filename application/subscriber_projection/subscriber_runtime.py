@@ -8,6 +8,7 @@ snapshot evidence against reusable Observation Memory at the requested time.
 
 from __future__ import annotations
 
+from collections.abc import Mapping
 from copy import deepcopy
 from dataclasses import dataclass
 from datetime import datetime
@@ -71,7 +72,23 @@ from application.economic_discovery.temporal_currentness import (
     TemporalCurrentnessPolicy,
     evaluate_effective_currentness,
 )
+from application.observation_intelligence.contracts import MarketRole, XeedObservationContext
+from application.observation_intelligence.coverage import EvidenceCoverageMap
+from application.observation_intelligence.learning import OperationalLearning
+from application.observation_intelligence.loop import (
+    LoopResult,
+    SourceObservationPort,
+    run_observation_loop,
+)
+from application.observation_intelligence.registry import SourceRegistry
+from application.observation_intelligence.strategy import ObservationStrategy
+from application.observation_intelligence.subscriber_projection import (
+    SubscriberOpportunityProjection,
+    SubscriberOpportunityProjectionError,
+    project_observation_opportunities,
+)
 from application.semantic_extraction import EconomicClaimCandidate
+from application.subscriber_projection.cognitive_projection import observation_cognition
 from application.subscriber_projection.dri_measurement import (
     DRI_INSTRUMENT_REF,
     DRI_INSTRUMENT_VERSION,
@@ -99,6 +116,14 @@ class SubscriberRuntimeStatus(StrEnum):
 
 class SubscriberEconomicStoreError(ValueError):
     """A persisted output is malformed, mismatched, or conflicts with history."""
+
+
+_CURRENTNESS_PRECEDENCE = {
+    Currentness.CURRENT: 0,
+    Currentness.STALE: 1,
+    Currentness.HISTORICAL: 2,
+    Currentness.UNKNOWN: 3,
+}
 
 
 @dataclass(frozen=True, slots=True)
@@ -145,6 +170,21 @@ class SubscriberEconomicOutputStore(Protocol):
         as_of: datetime,
     ) -> StoredEconomicOutput | None:
         """Read the latest output in this exact private context, effective by as_of."""
+
+
+class SubscriberOpportunityProjectionStore(Protocol):
+    def append(self, projection: SubscriberOpportunityProjection) -> bool:
+        """Append an immutable cognition projection; False means exact replay."""
+
+    def latest(
+        self,
+        *,
+        tenant_id: str,
+        xeed_id: str,
+        organization_id: str,
+        as_of: datetime,
+    ) -> SubscriberOpportunityProjection | None:
+        """Read only the latest projection in this exact authorized context."""
 
 
 @dataclass(frozen=True, slots=True)
@@ -408,6 +448,134 @@ def _temporal_history(
     }
 
 
+def _currentness_at(
+    source: dict[str, object], *, as_of: datetime, policy: TemporalCurrentnessPolicy
+) -> Currentness:
+    source_id = source.get("id")
+    observed_at = source.get("observedAt")
+    if not isinstance(source_id, str) or not isinstance(observed_at, str):
+        return Currentness.UNKNOWN
+    try:
+        previous = Currentness(str(source.get("currentness")))
+        observed_time = datetime.fromisoformat(observed_at)
+        return evaluate_effective_currentness(
+            observation_id=source_id,
+            observed_at=observed_time,
+            previous=previous,
+            as_of=as_of,
+            policy=policy,
+        ).current
+    except (TypeError, ValueError):
+        return Currentness.UNKNOWN
+
+
+def _merge_opportunity_cognition(
+    *,
+    base: dict[str, object],
+    stored: SubscriberOpportunityProjection | None,
+    as_of: datetime,
+    policy: TemporalCurrentnessPolicy,
+) -> dict[str, object]:
+    """Merge persisted opportunity facts with this read's authorized evidence."""
+    cognition = deepcopy(base)
+    cognition["asOf"] = _iso(as_of)
+    if stored is None:
+        return cognition
+
+    stored_cognition = stored.cognition
+    base_sources = cognition.get("sources")
+    stored_sources = stored_cognition.get("sources")
+    base_signals = cognition.get("signals")
+    stored_signals = stored_cognition.get("signals")
+    base_opportunities = cognition.get("opportunities")
+    stored_opportunities = stored_cognition.get("opportunities")
+    if not all(
+        isinstance(items, list)
+        for items in (
+            base_sources,
+            stored_sources,
+            base_signals,
+            stored_signals,
+            base_opportunities,
+            stored_opportunities,
+        )
+    ):
+        raise SubscriberEconomicStoreError("persisted cognition collections are malformed")
+    assert isinstance(base_sources, list)
+    assert isinstance(stored_sources, list)
+    assert isinstance(base_signals, list)
+    assert isinstance(stored_signals, list)
+    assert isinstance(base_opportunities, list)
+    assert isinstance(stored_opportunities, list)
+
+    sources_by_id: dict[str, dict[str, object]] = {}
+    for value in (*base_sources, *stored_sources):
+        if not isinstance(value, dict) or not isinstance(value.get("id"), str):
+            continue
+        sources_by_id[str(value["id"])] = deepcopy(value)
+    effective_sources: dict[str, Currentness] = {}
+    for source_id, source in sources_by_id.items():
+        currentness = _currentness_at(source, as_of=as_of, policy=policy)
+        source["currentness"] = currentness.value
+        source["currentnessEvaluatedAt"] = _iso(as_of)
+        effective_sources[source_id] = currentness
+
+    opportunities: list[dict[str, object]] = []
+    for value in stored_opportunities:
+        if not isinstance(value, dict):
+            continue
+        opportunity = deepcopy(value)
+        capability = opportunity.get("capability")
+        demand = opportunity.get("demand")
+        source_ids = (
+            capability.get("sourceId") if isinstance(capability, dict) else None,
+            demand.get("sourceId") if isinstance(demand, dict) else None,
+        )
+        statuses = [
+            effective_sources.get(source_id, Currentness.UNKNOWN)
+            for source_id in source_ids
+            if isinstance(source_id, str)
+        ]
+        currentness = (
+            max(statuses, key=_CURRENTNESS_PRECEDENCE.__getitem__)
+            if len(statuses) == 2
+            else Currentness.UNKNOWN
+        )
+        opportunity["currentness"] = currentness.value
+        opportunity["currentnessEvaluatedAt"] = _iso(as_of)
+        if currentness is not Currentness.CURRENT:
+            opportunity["epistemic"] = "UNKNOWN"
+            unknowns = opportunity.get("unknown")
+            opportunity["unknown"] = list(
+                dict.fromkeys(
+                    [
+                        *(unknowns if isinstance(unknowns, list) else []),
+                        "Supporting evidence is stale or its currentness cannot be verified.",
+                    ]
+                )
+            )
+        opportunities.append(opportunity)
+
+    signal_by_id: dict[str, dict[str, str]] = {}
+    for value in (*base_signals, *stored_signals):
+        if (
+            isinstance(value, dict)
+            and isinstance(value.get("id"), str)
+            and isinstance(value.get("familyId"), str)
+        ):
+            signal_by_id[str(value["id"])] = {
+                "id": str(value["id"]),
+                "familyId": str(value["familyId"]),
+            }
+    cognition["sources"] = [sources_by_id[key] for key in sorted(sources_by_id)]
+    cognition["signals"] = [signal_by_id[key] for key in sorted(signal_by_id)]
+    cognition["opportunities"] = sorted(
+        opportunities,
+        key=lambda item: (str(item.get("observedAt", "")), str(item.get("id", ""))),
+    )
+    return cognition
+
+
 def _output_evidence_currentness(
     *,
     output: StoredEconomicOutput,
@@ -528,6 +696,7 @@ class SubscriberEconomicRuntime:
     organization_reader: AuthorizedXeedOrganizationReader
     observation_memory: ObservationMemory
     output_store: SubscriberEconomicOutputStore
+    opportunity_store: SubscriberOpportunityProjectionStore
     reuse_policy: ObservationReusePolicy
     temporal_policy: TemporalCurrentnessPolicy
     code_sha: str
@@ -582,6 +751,154 @@ class SubscriberEconomicRuntime:
                 runtime_signal=signal,
             )
         )
+
+    def publish_observation_loop(
+        self,
+        authorized_context: TrustedRequestContext,
+        xeed_id: XeedId,
+        *,
+        observation_context: XeedObservationContext,
+        strategy: ObservationStrategy,
+        result: LoopResult,
+        coverage: EvidenceCoverageMap,
+        registry: SourceRegistry | None = None,
+    ) -> bool:
+        """Persist a real opportunity-loop result after exact-scope authorization."""
+        authorized = self._read_context(authorized_context, xeed_id)
+        output_as_of = max(
+            (
+                observation_context.as_of,
+                *(candidate.observed_at for candidate in result.candidates),
+            )
+        )
+        xeed = authorized.authorized_xeed.xeed
+        observations = _authorized_public_history(
+            memory=self.observation_memory,
+            organization_id=authorized.organization.id,
+            xeed_id=xeed.id,
+            tenant_id=xeed.tenant_id,
+            as_of=output_as_of,
+            reuse_policy=self.reuse_policy,
+            temporal_policy=self.temporal_policy,
+        )
+        projection = project_observation_opportunities(
+            authorized_context=authorized,
+            context=observation_context,
+            strategy=strategy,
+            result=result,
+            coverage=coverage,
+            observations=observations,
+            registry=registry,
+        )
+        if projection is None:
+            return False
+        return self.opportunity_store.append(projection)
+
+    def execute_observation_loop(
+        self,
+        authorized_context: TrustedRequestContext,
+        xeed_id: XeedId,
+        *,
+        observation_context: XeedObservationContext,
+        strategy: ObservationStrategy,
+        adapters: Mapping[str, SourceObservationPort],
+        coverage: EvidenceCoverageMap,
+        learning: OperationalLearning,
+        registry: SourceRegistry | None = None,
+    ) -> LoopResult:
+        """Authorize and validate the observation seed before dispatching adapters."""
+        authorized = self._read_context(authorized_context, xeed_id)
+        xeed = authorized.authorized_xeed.xeed
+        organization = authorized.organization
+        if (
+            observation_context.xeed_id != xeed.id
+            or strategy.xeed_id != xeed.id
+            or strategy.as_of != observation_context.as_of
+            or organization.id != xeed.organization_id
+        ):
+            raise SubscriberOpportunityProjectionError(
+                "observation seed must match the authorized Observation Focus and Organization"
+            )
+
+        seed_history = _authorized_public_history(
+            memory=self.observation_memory,
+            organization_id=organization.id,
+            xeed_id=xeed.id,
+            tenant_id=xeed.tenant_id,
+            as_of=observation_context.as_of,
+            reuse_policy=self.reuse_policy,
+            temporal_policy=self.temporal_policy,
+        )
+        admitted_evidence = {
+            (item.record.observation_id, item.record.source_ref, item.record.observed_at): item
+            for item, _currentness in seed_history
+            if item.record.subject_id == organization.id
+        }
+        if any(
+            not capability.basis
+            or any(
+                (
+                    observation := admitted_evidence.get(
+                        (basis.observation_id, basis.source_ref, basis.observed_at)
+                    )
+                )
+                is None
+                or observation.raw_content is None
+                or basis.excerpt not in observation.raw_content
+                for basis in capability.basis
+            )
+            for capability in observation_context.capabilities
+        ):
+            raise SubscriberOpportunityProjectionError(
+                "observation capabilities require evidence admitted for this Organization"
+            )
+
+        resolved_registry = registry or SourceRegistry()
+        capability_ids = {item.capability_id for item in observation_context.capabilities}
+        market_scopes = observation_context.markets
+        for action in strategy.actions:
+            if (
+                action.capability_id is not None and action.capability_id not in capability_ids
+            ) or not any(
+                action.market.within(market.geography) and MarketRole.PUBLIC_BUYERS in market.roles
+                for market in market_scopes
+            ):
+                raise SubscriberOpportunityProjectionError(
+                    "observation strategy action falls outside the authorized seed"
+                )
+            try:
+                source = resolved_registry.get(action.source_id)
+            except KeyError as error:
+                raise SubscriberOpportunityProjectionError(
+                    "observation strategy references an unregistered source"
+                ) from error
+            if (
+                not source.routable
+                or not source.covers(action.market)
+                or not action.query.capabilities <= source.capabilities
+            ):
+                raise SubscriberOpportunityProjectionError(
+                    "observation strategy source is not adopted for the target jurisdiction"
+                )
+
+        result = run_observation_loop(
+            strategy,
+            observation_context,
+            adapters=adapters,
+            coverage=coverage,
+            learning=learning,
+            registry=resolved_registry,
+        )
+        self.publish_observation_loop(
+            authorized_context,
+            xeed_id,
+            observation_context=observation_context,
+            strategy=strategy,
+            result=result,
+            coverage=coverage,
+            registry=resolved_registry,
+        )
+        return result
 
     def execute(
         self,
@@ -868,6 +1185,19 @@ class SubscriberEconomicRuntime:
         )
         projection["temporalHistory"] = _temporal_history(public_history)
 
+        stored_opportunities = self.opportunity_store.latest(
+            tenant_id=authorized_xeed.tenant_id,
+            xeed_id=authorized_xeed.id,
+            organization_id=organization.id,
+            as_of=as_of,
+        )
+        projection["cognition"] = _merge_opportunity_cognition(
+            base=observation_cognition(public_history, as_of=as_of),
+            stored=stored_opportunities,
+            as_of=as_of,
+            policy=self.temporal_policy,
+        )
+
         stored = self.output_store.latest(
             tenant_id=authorized_xeed.tenant_id,
             xeed_id=authorized_xeed.id,
@@ -875,6 +1205,10 @@ class SubscriberEconomicRuntime:
             as_of=as_of,
         )
         if stored is None:
+            cognition = projection.get("cognition")
+            opportunities = cognition.get("opportunities") if isinstance(cognition, dict) else None
+            if isinstance(opportunities, list) and opportunities:
+                return SubscriberRuntimeRead(SubscriberRuntimeStatus.SUCCESS, projection)
             return SubscriberRuntimeRead(
                 SubscriberRuntimeStatus.INSUFFICIENT_EVIDENCE,
                 projection,

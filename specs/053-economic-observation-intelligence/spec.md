@@ -68,3 +68,21 @@ observation → capability/family hypotheses (POTENTIAL, evidence-bound)
 
 Live production scheduling, persistence of strategies, non-procurement source
 adapters, EvidenceAdmission of procurement facts, frontend components.
+
+## Authorized product wiring extension — 2026-10-06
+
+The CTO delivery connects accepted outputs to the existing subscriber reading
+and cognitive registry. It adds no economic evaluator or canonical writer.
+Authorized, persisted opportunity snapshots retain exact tenant/focus/subject,
+POTENTIAL, capability and demand source references, missing requirements and
+their observation/currentness clocks. The read refreshes evidence before
+publication; missing authority or provenance abstains. Real sources can power
+provenance and change lenses without inventing trends, maps or commercial fit.
+
+The subscriber reading and AXENT compose and validate the same real facts on
+server and client, bound to revision, family and temporal cut. Illustrative
+Panorama retains explicit fixtures; a real reading never falls back to them.
+Acceptance: future observations excluded, cross-tenant/focus access denied,
+unknown requirements preserved, evidence reachable on desktop/narrow screens.
+Production execution remains gated by configured authorized sources and ports;
+controlled tests cannot establish live acquisition, login or payment readiness.

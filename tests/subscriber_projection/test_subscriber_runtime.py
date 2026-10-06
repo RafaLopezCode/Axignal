@@ -32,6 +32,9 @@ from domain.organizations.model import Organization
 from domain.tenancy.model import Principal
 from domain.xeed.model import Xeed
 from pipeline.observation_memory.sqlite_store import SqliteObservationMemory
+from pipeline.subscriber_projection.opportunity_store import (
+    SqliteSubscriberOpportunityProjectionStore,
+)
 from pipeline.subscriber_projection.sqlite_store import SqliteSubscriberEconomicOutputStore
 from tests.economic_discovery.test_first_vertical_e2e import _run_fixture
 
@@ -124,6 +127,9 @@ def _runtime(
         organization_reader=AuthorizedXeedOrganizationReader(_Organizations({org.id: org})),
         observation_memory=memory,
         output_store=SqliteSubscriberEconomicOutputStore(tmp_path / "subscriber-output.sqlite3"),
+        opportunity_store=SqliteSubscriberOpportunityProjectionStore(
+            tmp_path / "subscriber-output.sqlite3"
+        ),
         reuse_policy=ObservationReusePolicy("subscriber-read", "1"),
         temporal_policy=TemporalCurrentnessPolicy(
             "subscriber-currentness", "1", timedelta(days=7), timedelta(days=30)

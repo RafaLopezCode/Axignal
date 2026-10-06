@@ -56,7 +56,7 @@ export function SourceRef({ source }: { source: FactSource | undefined }) {
   return (
     <details className="cg-source" data-provenance={source.id}>
       <summary>
-        {t("Fuente", "Source")}: {copy(source.title)} · {dateLabel(source.observedAt, locale)}
+        {t("Fuente", "Source")}: {copy(source.title)} · {dateLabel(source.observedAt.slice(0, 10), locale)}
       </summary>
       <p>{copy(source.instrument)}</p>
       <p className="cg-limit">{copy(source.limitation)}</p>

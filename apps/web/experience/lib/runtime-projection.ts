@@ -4,6 +4,18 @@ import { z } from "zod";
 // are stripped so private operational extensions cannot reach product rendering.
 const text = z.string().min(1);
 const currentness = z.enum(["CURRENT", "STALE", "HISTORICAL", "UNKNOWN"]);
+const familyId = z.enum([
+  "presence",
+  "reputation",
+  "value",
+  "markets",
+  "relationships",
+  "demand",
+  "activity",
+  "economics",
+  "organization",
+  "context",
+]);
 const instrument = z.object({ ref: text, version: text });
 const pageMeasurementSchema = z.object({
   kind: z.literal("DRI_PUBLIC_PAGE_REPRESENTATION"), instrument,
@@ -59,6 +71,54 @@ const step = z.object({
   currentness: z.string().nullable(),
   artifactVerified: z.boolean().nullable(),
 });
+const cognitionSourceSchema = z.object({
+  id: text,
+  title: text,
+  observedAt: text,
+  currentness,
+  currentnessEvaluatedAt: text,
+  instrument: text,
+  limitation: text,
+  sourceRef: text,
+  provenanceRef: text,
+});
+const cognitionSignalSchema = z.object({ id: text, familyId });
+const opportunityFamily = z.enum([
+  "PUBLIC_PROCUREMENT",
+  "PUBLIC_INVESTMENT",
+  "GRANTS_AND_SUBSIDIES",
+  "PLANNING_AND_PERMITS",
+  "PRIVATE_PROJECT_SIGNALS",
+  "REGULATION_DRIVEN_DEMAND",
+  "BUYER_EXPANSION_SIGNALS",
+]);
+const cognitionOpportunitySchema = z.object({
+  id: text,
+  familyId: z.enum(["value", "demand"]),
+  opportunityFamily: opportunityFamily.optional(),
+  title: text,
+  buyer: text.nullable(),
+  market: text,
+  form: text,
+  deadline: text.nullable(),
+  epistemic: z.enum(["POTENTIAL", "UNKNOWN"]),
+  capability: z.object({ label: text, excerpt: text, sourceId: text }),
+  demand: z.object({ label: text, code: text.nullable(), sourceId: text }),
+  known: z.array(z.object({ label: text, value: text })),
+  unknown: z.array(text),
+  matchBasis: z.array(text).optional(),
+  whyPotential: text,
+  whyLooked: z.array(text),
+  observedAt: text,
+  currentness,
+  currentnessEvaluatedAt: text,
+});
+export const runtimeCognitionSchema = z.object({
+  asOf: text,
+  sources: z.array(cognitionSourceSchema),
+  signals: z.array(cognitionSignalSchema),
+  opportunities: z.array(cognitionOpportunitySchema),
+});
 export const runtimeSignalSchema = z.object({
   id: text,
   nodeKind: z.literal("XIGNAL"),
@@ -86,6 +146,7 @@ export const runtimeProjectionSchema = z.object({
   context: z.object({ id: text, label: text }),
   organization: z.object({ id: text, name: text }),
   nodes: z.array(runtimeSignalSchema),
+  cognition: runtimeCognitionSchema.optional(),
   digitalRepresentation: digitalRepresentationSchema.optional(),
   temporalHistory: z.object({
     disposition: z.enum(["EMPTY", "SINGLE_OBSERVATION", "MULTIPLE_OBSERVATIONS"]),
@@ -116,6 +177,7 @@ export const runtimeProjectionSchema = z.object({
 });
 export type RuntimeProjection = z.infer<typeof runtimeProjectionSchema>;
 export type RuntimeSignal = z.infer<typeof runtimeSignalSchema>;
+export type RuntimeCognition = z.infer<typeof runtimeCognitionSchema>;
 export type CustomerZeroState =
   | { state: "loading" | "planting" | "NO_XEED" }
   | {

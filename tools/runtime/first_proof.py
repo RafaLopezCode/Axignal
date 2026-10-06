@@ -13,7 +13,7 @@ import hashlib
 import json
 import sqlite3
 from collections.abc import Callable
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import cast
@@ -43,14 +43,18 @@ from application.economic_discovery.learning_memory import (
     LearningYield,
 )
 from application.economic_discovery.observation_memory import (
+    GovernedObservation,
     ObservationAccessStatus,
     ObservationReuseScope,
     ObservationRightsStatus,
 )
 from application.economic_discovery.observation_reuse import (
+    ObservationReuseContext,
     ObservationReusePolicy,
+    ReuseDisposition,
     ReusePurpose,
     ReuseTargetScope,
+    evaluate_observation_reuse,
 )
 from application.economic_discovery.prime import DimensionRoutingPolicy, PrimeRoute, PrimeWorkItem
 from application.economic_discovery.prime_execution import (
@@ -95,6 +99,7 @@ from application.subscriber_projection import (
     project_explainable_xignal,
     project_today,
 )
+from application.subscriber_projection.cognitive_projection import observation_cognition
 from application.xeed_access.organization_reader import AuthorizedXeedOrganizationReader
 from application.xeed_access.reader import AuthorizedXeedReader, TrustedRequestContext
 from application.xeed_germination import (
@@ -115,6 +120,7 @@ from domain.identity import OrganizationId, PrincipalId, TenantId, XeedId
 from domain.organizations.model import Organization
 from domain.tenancy.model import Principal
 from domain.xeed import Xeed
+from domain.xeed.germination import XeedGerminationState
 from domain.xignal import XignalEpistemicState, XignalKind
 from pipeline.continuous_observation import SqliteSharedObservationWorkMemory
 from pipeline.learning_memory import SqliteLearningMemory
@@ -126,13 +132,33 @@ from pipeline.source_acquisition import (
     PinnedHttpTransport,
     PublicSourcePolicyGate,
 )
-from pipeline.source_representation import HtmlDocumentRepresentationAdapter
+from pipeline.source_representation import (
+    DocumentRepresentationError,
+    HtmlDocumentRepresentationAdapter,
+)
 
 FIRST_PROOF_TEMPORAL_POLICY = TemporalCurrentnessPolicy(
     policy_id="first-proof-currentness",
     version="aud06-v1",
     stale_after=timedelta(days=30),
     historical_after=timedelta(days=90),
+)
+
+# These failures mean the governed source bytes were acquired, but this bounded
+# HTML adapter cannot establish visibility. Other representation failures can
+# indicate integrity, authorization, or unusable-source problems and must keep
+# their existing failure behavior.
+_VISIBILITY_REPRESENTATION_LIMITS = frozenset(
+    {
+        "stylesheet visibility comment is unresolved",
+        "inline stylesheet visibility is unresolved",
+        "computed stylesheet visibility is unresolved",
+        "layout stylesheet visibility is unresolved",
+        "stylesheet visibility declaration is unresolved",
+        "stylesheet visibility is unresolved",
+        "stylesheet visibility selector is unresolved",
+        "malformed hidden ancestry visibility is unresolved",
+    }
 )
 
 
@@ -280,8 +306,34 @@ class FirstProofService:
     artifacts: ContentAddressedArtifactStore
     clock: Callable[[], datetime] = lambda: datetime.now(UTC)
 
-    def _temporal_history_payload(self, *, subject_id: str, as_of: datetime) -> dict[str, object]:
-        history = self.observation_memory.for_subject(subject_id)
+    def _authorized_history(
+        self, *, subject_id: str, xeed_id: str, as_of: datetime
+    ) -> tuple[GovernedObservation, ...]:
+        context = ObservationReuseContext(
+            subject_id=subject_id,
+            xeed_id=xeed_id,
+            tenant_id=str(TENANT_ID),
+            target_scope=ReuseTargetScope.GLOBAL_WORLD,
+            purpose=ReusePurpose.HISTORICAL_REFERENCE,
+            as_of=as_of,
+        )
+        return tuple(
+            item
+            for item in self.observation_memory.for_subject(subject_id)
+            if item.record.observed_at <= as_of
+            and evaluate_observation_reuse(
+                item,
+                context=context,
+                policy=ObservationReusePolicy("first-proof-history", "2"),
+                temporal_policy=FIRST_PROOF_TEMPORAL_POLICY,
+            ).disposition
+            is ReuseDisposition.ALLOW
+        )
+
+    def _temporal_history_payload(
+        self, *, subject_id: str, xeed_id: str, as_of: datetime
+    ) -> dict[str, object]:
+        history = self._authorized_history(subject_id=subject_id, xeed_id=xeed_id, as_of=as_of)
         ordered_history = sorted(
             history,
             key=lambda item: (item.record.observed_at, item.record.observation_id),
@@ -289,6 +341,8 @@ class FirstProofService:
         temporal_items: list[dict[str, object]] = []
         previous_fields: tuple[tuple[str, str], ...] | None = None
         for observation in ordered_history:
+            if observation.record.observed_at > as_of:
+                continue
             effective_currentness = evaluate_currentness(
                 observation,
                 as_of=as_of,
@@ -321,6 +375,92 @@ class FirstProofService:
             "items": temporal_items,
         }
 
+    def _cognition_payload(
+        self,
+        *,
+        subject_id: str,
+        xeed_id: str,
+        as_of: datetime,
+        signals: tuple[tuple[str, str], ...],
+    ) -> dict[str, object]:
+        observations = tuple(
+            (
+                item,
+                evaluate_currentness(item, as_of=as_of, policy=FIRST_PROOF_TEMPORAL_POLICY).current,
+            )
+            for item in self._authorized_history(
+                subject_id=subject_id, xeed_id=xeed_id, as_of=as_of
+            )
+            if item.record.observed_at <= as_of
+            and item.reuse_authority.scope is ObservationReuseScope.GLOBAL_PUBLIC
+            and item.reuse_authority.rights_status is ObservationRightsStatus.PERMITTED
+            and item.reuse_authority.access_status is ObservationAccessStatus.ACCESSIBLE
+        )
+        return observation_cognition(observations, as_of=as_of, signals=signals)
+
+    def _persist_visibility_limited_projection(
+        self,
+        *,
+        xeed_id: XeedId,
+        label: str,
+        organization: Organization,
+        target_uri: str,
+        created_at: datetime,
+        lifecycle: XeedGerminationState,
+        as_of: datetime,
+        error: DocumentRepresentationError,
+    ) -> dict[str, object]:
+        """Persist admitted evidence when deterministic page visibility is unresolved."""
+        if str(error) not in _VISIBILITY_REPRESENTATION_LIMITS:
+            raise error
+
+        organization_id = str(organization.id)
+        projection: dict[str, object] = {
+            "realityLevel": "LIVE_PRODUCTION_FIRST_PROOF",
+            "runtimeCodeSha": self.code_sha,
+            "lifecycleStatus": lifecycle.status.value,
+            "context": {"id": str(xeed_id), "label": label},
+            "organization": {"id": organization_id, "name": organization.canonical_name},
+            "nodes": [],
+            "temporalHistory": self._temporal_history_payload(
+                subject_id=organization_id,
+                xeed_id=str(xeed_id),
+                as_of=as_of,
+            ),
+            "memberships": [],
+            "today": {"disposition": "EMPTY", "items": []},
+            "digitalRepresentation": {
+                "state": "NOT_MEASURED",
+                "reason": {
+                    "code": "REPRESENTATION_VISIBILITY_UNRESOLVED",
+                    "explanation": (
+                        "AXIGNAL acquired and retained the authorized public source, but its "
+                        "deterministic HTML adapter could not resolve stylesheet visibility. "
+                        "No page representation or Xignal was emitted."
+                    ),
+                    "detailCode": str(error),
+                },
+                "scopeLimit": (
+                    "Source acquisition and provenance are available; rendered-page visibility "
+                    "remains UNKNOWN under this representation limit."
+                ),
+            },
+            "reloadContinuity": "PERSISTED_RUNTIME_READ_MODEL",
+        }
+        projection["cognition"] = self._cognition_payload(
+            subject_id=organization_id,
+            xeed_id=str(xeed_id),
+            as_of=as_of,
+            signals=(),
+        )
+        self.store.append(
+            xeed_id=str(xeed_id),
+            created_at=created_at,
+            target_uri=target_uri,
+            projection=projection,
+        )
+        return projection
+
     def current_projection(
         self, *, as_of: datetime | None = None, xeed_id: str | None = None
     ) -> dict[str, object] | None:
@@ -336,12 +476,38 @@ class FirstProofService:
         if isinstance(organization_data, dict) and isinstance(organization_data.get("id"), str):
             projection["temporalHistory"] = self._temporal_history_payload(
                 subject_id=str(organization_data["id"]),
+                xeed_id=str(cast(dict[str, object], projection["context"])["id"]),
                 as_of=evaluated_at,
             )
 
         nodes = projection.get("nodes")
         if not isinstance(nodes, list):
             return projection
+
+        nodes[:] = [
+            node
+            for node in nodes
+            if isinstance(node, dict)
+            and isinstance(node.get("observedAt"), str)
+            and datetime.fromisoformat(str(node["observedAt"])) <= evaluated_at
+        ]
+        today = projection.get("today")
+        if isinstance(today, dict) and isinstance(today.get("items"), list):
+            visible = {str(node["id"]) for node in nodes}
+            today["items"] = [
+                item
+                for item in today["items"]
+                if isinstance(item, dict) and item.get("xignalId") in visible
+            ]
+            if not today["items"]:
+                today["disposition"] = "EMPTY"
+        if isinstance(organization_data, dict):
+            projection["cognition"] = self._cognition_payload(
+                subject_id=str(organization_data["id"]),
+                xeed_id=str(cast(dict[str, object], projection["context"])["id"]),
+                as_of=evaluated_at,
+                signals=tuple((str(node["id"]), "presence") for node in nodes),
+            )
 
         any_non_current = False
         for node in nodes:
@@ -509,7 +675,7 @@ class FirstProofService:
             (
                 SourceRegistryEntry(
                     source_id="fr30-official-homepage",
-                    version="1",
+                    version="2",
                     source_type="OFFICIAL_WEB",
                     instrument_ref=transport.instrument_ref,
                     decision_basis=(
@@ -520,13 +686,17 @@ class FirstProofService:
                         SourceTargetRule(host, "/", ("https",)),
                         SourceTargetRule(f"www.{host}", "/", ("https",)),
                     ),
-                    allowed_purposes=(ReusePurpose.CURRENT_STATE,),
+                    allowed_purposes=(
+                        ReusePurpose.CURRENT_STATE,
+                        ReusePurpose.HISTORICAL_REFERENCE,
+                    ),
                     rights_status=ObservationRightsStatus.PERMITTED,
                     access_status=ObservationAccessStatus.ACCESSIBLE,
                     reuse_scope=ObservationReuseScope.GLOBAL_PUBLIC,
                     reuse_reason=(
                         "registered public homepage observation may be reused for current "
-                        "state while provenance/currentness remain valid"
+                        "state and historical evidence reference while provenance/currentness "
+                        "and retention remain valid"
                     ),
                     temporal_policy=FIRST_PROOF_TEMPORAL_POLICY,
                     retention_policy=SourceRetentionPolicy(
@@ -560,6 +730,25 @@ class FirstProofService:
             purpose=ReusePurpose.CURRENT_STATE,
             instrument_ref=transport.instrument_ref,
         )
+        # Authorize historical evidence reuse separately. The registry's single
+        # acquisition grant intentionally covers only its requested purpose.
+        historical_authorization = registry.authorize(
+            source_id="fr30-official-homepage",
+            request_id=f"request:fr30:{sequence}:historical-reference",
+            subject_id=organization_id,
+            observation_slot="website",
+            target_uri=target_uri,
+            source_type="OFFICIAL_WEB",
+            purpose=ReusePurpose.HISTORICAL_REFERENCE,
+            instrument_ref=transport.instrument_ref,
+        )
+        reuse_authority = replace(
+            authorization.reuse_authority,
+            applicable_purposes=(
+                authorization.purpose.value,
+                historical_authorization.purpose.value,
+            ),
+        )
         source_policy = authorization.dispatch_policy
         request = authorization.request
         sensor = HttpSourceSensor(
@@ -570,41 +759,56 @@ class FirstProofService:
         source_acquirer = _RecordingSourceAcquirer(sensor)
         representation_adapter = HtmlDocumentRepresentationAdapter(self.artifacts)
         executor = _AnswerabilityExecutor()
-        trace = execute_prime_source_slice(
-            execution_id=execution_id,
-            seed=seed,
-            code_sha=self.code_sha,
-            occurred_at=now,
-            observation_memory=self.observation_memory,
-            learning_memory=self.learning_memory,
-            request=request,
-            source_policy=source_policy,
-            source_acquirer=source_acquirer,
-            representation_port=representation_adapter,
-            prior_rich_state=prior,
-            contracts=(contract,),
-            routing_policies=routing,
-            research_decisions=(),
-            execution_controller=GovernedExecutionController(
-                policy=ExecutionBudgetPolicy(
-                    policy_id="fr30-first-proof-budget",
-                    version="1",
-                    currency="EUR",
-                    max_amount_microunits=1,
-                    max_requests=4,
-                    max_sources=2,
-                    max_elapsed_ms=15_000,
-                    max_retries=1,
-                    max_loops=2,
-                    max_no_progress_streak=1,
+        try:
+            trace = execute_prime_source_slice(
+                execution_id=execution_id,
+                seed=seed,
+                code_sha=self.code_sha,
+                occurred_at=now,
+                observation_memory=self.observation_memory,
+                learning_memory=self.learning_memory,
+                request=request,
+                source_policy=source_policy,
+                source_acquirer=source_acquirer,
+                representation_port=representation_adapter,
+                prior_rich_state=prior,
+                contracts=(contract,),
+                routing_policies=routing,
+                research_decisions=(),
+                execution_controller=GovernedExecutionController(
+                    policy=ExecutionBudgetPolicy(
+                        policy_id="fr30-first-proof-budget",
+                        version="1",
+                        currency="EUR",
+                        max_amount_microunits=1,
+                        max_requests=4,
+                        max_sources=2,
+                        max_elapsed_ms=15_000,
+                        max_retries=1,
+                        max_loops=2,
+                        max_no_progress_streak=1,
+                    ),
+                    state=ExecutionBudgetState(amount_microunits=0, currency="EUR"),
                 ),
-                state=ExecutionBudgetState(amount_microunits=0, currency="EUR"),
-            ),
-            ports=PrimeExecutionPorts(executor, executor, executor),
-            temporal_currentness_policy=authorization.temporal_policy,
-            ingested_observation_reuse_authority=authorization.reuse_authority,
-            research_work_memory=self.research_work_memory,
-        )
+                ports=PrimeExecutionPorts(executor, executor, executor),
+                temporal_currentness_policy=authorization.temporal_policy,
+                ingested_observation_reuse_authority=reuse_authority,
+                research_work_memory=self.research_work_memory,
+            )
+        except DocumentRepresentationError as error:
+            if str(error) not in _VISIBILITY_REPRESENTATION_LIMITS:
+                raise
+            observation = source_acquirer.require_observation()
+            return self._persist_visibility_limited_projection(
+                xeed_id=xeed_id,
+                label=label,
+                organization=organization,
+                target_uri=target_uri,
+                created_at=now,
+                lifecycle=lifecycle,
+                as_of=max(now, observation.retrieved_at),
+                error=error,
+            )
         observation = source_acquirer.require_observation()
         projection_as_of = max(now, observation.retrieved_at)
         apply_prime_trace(seed=seed, state=lifecycle, trace=trace, occurred_at=projection_as_of)
@@ -826,6 +1030,7 @@ class FirstProofService:
             "nodes": [node],
             "temporalHistory": self._temporal_history_payload(
                 subject_id=str(organization_id),
+                xeed_id=str(xeed_id),
                 as_of=projection_as_of,
             ),
             "memberships": [
@@ -850,6 +1055,12 @@ class FirstProofService:
             },
             "reloadContinuity": "PERSISTED_RUNTIME_READ_MODEL",
         }
+        projection["cognition"] = self._cognition_payload(
+            subject_id=str(organization_id),
+            xeed_id=str(xeed_id),
+            as_of=projection_as_of,
+            signals=((str(node["id"]), "presence"),),
+        )
         self.store.append(
             xeed_id=str(xeed_id), created_at=now, target_uri=target_uri, projection=projection
         )

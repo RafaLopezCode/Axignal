@@ -57,3 +57,25 @@ EPERM cache-directory error; a rebuild with the preview stopped passed. The firs
 Python suite run was affected by sandbox socket permissions (WinError 10013),
 so a separately authorized complete rerun is used for the final result:
 **1035 passed in 133.46s**. No Python implementation or gate was changed.
+
+## Cognitive reader rendered check (2026-10-06)
+
+`measureCognitiveReadingLayout` and `validateCognitiveReadingLayout`, in the same
+read-only browser QA module, additionally check the subscriber reading and AXENT
+against TYPOGRAPHY_ROLES: body 14/400, control 13/500, metadata 11/400, section
+label IBM Plex Mono 10/400, AXENT invitation Fraunces 24/400, heading hierarchy,
+44px targets, evidence-panel inset and viewport overflow. Open an organization
+reading with retained source provenance and expand AXENT before measuring.
+
+Fresh browser measurements at 1280/768/390/320px rejected 36px targets,
+12px/650 control type, editorial section labels and a 320px header overflow.
+These regressions were repaired without changing epistemic meaning. The existing
+unknown-state contract also rejected an 18px mobile inset; it is restored to
+24px. Both contracts now return no failures at all four widths. Escape from the
+mobile AXENT dialog restores focus to its invoking control.
+
+Measurements and screenshots are retained outside the source checkout under
+`D:\AXIGNAL\Worktrees\test-artifacts\cognitive-e2e-20261006`. This is automated
+and rendered evidence, not human visual acceptance; that acceptance remains
+pending. The subscriber browser scenario uses controlled identity/capacity and
+a genuinely acquired public source, and does not verify production onboarding.

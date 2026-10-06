@@ -1,8 +1,12 @@
 import type { Locale } from "./languages";
 import { translate } from "./copy-catalog";
 import type { RuntimeProjection } from "./runtime-projection";
+import type { CognitiveReadingRequest } from "./subscriber-presentation";
+import type { CognitivePlan } from "./cognition/compose";
 
 export type RuntimeAnswer = {
+  revision?: string;
+  cognition?: { request: CognitiveReadingRequest; plan: CognitivePlan };
   organizationId: string;
   contextId: string;
   signalIds: string[];

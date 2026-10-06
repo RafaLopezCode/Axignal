@@ -24,6 +24,9 @@ from application.xeed_access.reader import (
     PrincipalReader,
     XeedReader,
 )
+from pipeline.subscriber_projection.opportunity_store import (
+    SqliteSubscriberOpportunityProjectionStore,
+)
 from pipeline.subscriber_projection.sqlite_store import SqliteSubscriberEconomicOutputStore
 
 
@@ -49,6 +52,7 @@ def build_subscriber_economic_runtime(
         organization_reader=AuthorizedXeedOrganizationReader(organizations),
         observation_memory=observation_memory,
         output_store=SqliteSubscriberEconomicOutputStore(database_path),
+        opportunity_store=SqliteSubscriberOpportunityProjectionStore(database_path),
         reuse_policy=reuse_policy,
         temporal_policy=temporal_policy,
         code_sha=code_sha,

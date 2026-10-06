@@ -22,6 +22,10 @@ export function SubscriberPortfolioExperience() {
   const [paymentUrl, setPaymentUrl] = useState<string | null>(null);
   const [projection, setProjection] = useState<RuntimeProjection | null>(null);
   const [revision, setRevision] = useState<string | null>(null);
+  const canReadProjection = Boolean(projection && (
+    projection.nodes.length > 0 ||
+    (projection.cognition && (projection.cognition.sources.length > 0 || projection.cognition.opportunities.length > 0))
+  ));
   const [reading, setReading] = useState(false);
   const [selected, setSelected] = useState<string | null>(null);
   const [replacing, setReplacing] = useState<string | null>(null);
@@ -150,7 +154,7 @@ export function SubscriberPortfolioExperience() {
         </aside></div>
         <section className="subscriber-operation" aria-live="polite">{message && <p>{message}</p>}{paymentUrl && <a className="button primary" href={paymentUrl}>{t("Continuar al pago", "Continue to payment")}<ArrowRight size={16}/></a>}</section>
         {reading && <p role="status">{t("Leyendo las evidencias…", "Reading the evidence…")}</p>}
-        {projection && <section className="subscriber-reading" aria-labelledby="reading-title"><span className="eyebrow">{t("Tu lectura", "Your reading")}</span><h2 id="reading-title">{projection.organization.name}</h2>{projection.digitalRepresentation && <SubscriberRepresentation measurement={projection.digitalRepresentation}/>}{projection.nodes.length && revision ? <SubscriberReading key={revision} projection={projection} revision={revision}/> : <p>{t("Todavía no hay evidencia suficiente para una conclusión. Una ausencia en esta lectura no demuestra ausencia en el mundo.", "Evidence is not yet sufficient for a conclusion. Absence in this reading does not prove absence in the world.")}</p>}</section>}
+        {projection && <section className="subscriber-reading" aria-labelledby="reading-title"><span className="eyebrow">{t("Tu lectura", "Your reading")}</span><h2 id="reading-title">{projection.organization.name}</h2>{projection.digitalRepresentation && <SubscriberRepresentation measurement={projection.digitalRepresentation}/>}{canReadProjection && revision ? <SubscriberReading key={revision} projection={projection} revision={revision}/> : <p>{t("Todavía no hay evidencia suficiente para una conclusión. Una ausencia en esta lectura no demuestra ausencia en el mundo.", "Evidence is not yet sufficient for a conclusion. Absence in this reading does not prove absence in the world.")}</p>}</section>}
       </>}
     </div>
   </PublicShell>;

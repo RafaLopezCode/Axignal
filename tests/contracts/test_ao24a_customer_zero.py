@@ -51,6 +51,8 @@ def test_staff_authority_precedes_fr30_read_and_attention(
         )
     )
     now = datetime.now(UTC)
+    assert runtime.first_proof is not None
+    runtime.first_proof.clock = lambda: now
     authority = AdminAccessService(
         SqliteAdminAccessStore(tmp_path / "admin-access.sqlite3"), LocalAuthenticator()
     )

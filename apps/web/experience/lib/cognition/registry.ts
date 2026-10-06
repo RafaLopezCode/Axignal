@@ -112,7 +112,7 @@ export const COGNITIVE_REGISTRY: Record<CognitiveComponentId, ComponentDeclarati
     shapes: ["DEMAND_MATCH"],
     answers: ["why", "how_known"],
     layer: 3,
-    epistemicStates: ["OBSERVED", "UNKNOWN"],
+    epistemicStates: ["POTENTIAL", "UNKNOWN"],
     requires: (f) => (f.opportunities?.length ?? 0) > 0,
     responsive: "list-fallback",
     accessibleFallback: "two lists: known requirements and still unknown requirements",

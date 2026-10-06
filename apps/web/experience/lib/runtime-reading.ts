@@ -58,18 +58,23 @@ export type FirstMapBrief = {
 };
 
 export function firstMapBrief(
-  projection: Pick<RuntimeProjection, "nodes" | "temporalHistory">,
+  projection: Pick<RuntimeProjection, "nodes" | "temporalHistory"> & Partial<Pick<RuntimeProjection, "digitalRepresentation">>,
 ): FirstMapBrief {
   const ordered = orderedSignals(projection.nodes);
   const sourceRefs = new Set(
-    projection.nodes.flatMap((signal) => signal.sourceRefs),
+    [...projection.nodes.flatMap((signal) => signal.sourceRefs),
+      ...projection.temporalHistory.items.map(observation => observation.sourceRef)],
   );
+  const unavailable = projection.digitalRepresentation && "state" in projection.digitalRepresentation
+    ? projection.digitalRepresentation : null;
   const openQuestions = [
     ...new Set(
-      projection.nodes.flatMap((signal) => [
+      [...projection.nodes.flatMap((signal) => [
         signal.uncertainty,
         ...signal.unknowns,
-      ]),
+      ]), ...(unavailable ? [
+        typeof unavailable.reason === "string" ? unavailable.reason : unavailable.reason.explanation,
+      ] : [])],
     ),
   ].filter(Boolean);
 

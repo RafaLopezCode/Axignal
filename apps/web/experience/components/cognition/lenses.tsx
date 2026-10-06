@@ -7,7 +7,7 @@
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { useLocale } from "@/lib/locale";
 import { dateLabel, type FamilyId } from "@/lib/projection";
-import { factsAt, type FactSource, type FamilyFacts } from "@/lib/cognition/facts";
+import { factsAt, type FamilyFacts } from "@/lib/cognition/facts";
 import { composeFamily, FAMILY_QUESTION, type Device } from "@/lib/cognition/compose";
 import type { CognitiveComponentId, Intent, Layer } from "@/lib/cognition/registry";
 import { CurrentnessTag, Headline, LayerSection, Mark, SourceRef, UnknownValue } from "./grammar";
@@ -300,12 +300,21 @@ function RequirementMatrix({ facts }: Props) {
   return (
     <Frame id="requirement-matrix" title={t("Lo que sabemos y lo que no", "What we know and what we do not")}>
       {facts.opportunities!.map((o) => (
-        <div key={o.id} className="cg-requirements">
-          <strong>{copy(o.title)}</strong>
+        <div key={o.id} className="cg-requirements" data-epistemic={o.epistemic}>
+          <div className="cg-requirement-heading">
+            <Mark state={o.epistemic} />
+            <strong>{copy(o.title)}</strong>
+          </div>
+          <p className="cg-limit">
+            {t(
+              "La relevancia potencial no confirma una relación comercial. Los datos conocidos no demuestran encaje ni una oportunidad observada.",
+              "Potential relevance does not confirm a commercial relationship. Known details do not establish fit or an observed opportunity.",
+            )}
+          </p>
           <ul>
             {o.known.map((k) => (
-              <li key={k.label.es} data-epistemic="OBSERVED">
-                ✓ {copy(k.label)}: {copy(k.value)}
+              <li key={k.label.es}>
+                {copy(k.label)}: {copy(k.value)}
               </li>
             ))}
             {o.unknown.map((u) => (
@@ -487,8 +496,6 @@ function ChangeTimeline({ facts, glance }: Props) {
 
 function ProvenanceTrail({ facts, asOf, glance }: Props) {
   const { t, copy, locale } = useLocale();
-  const age = (s: FactSource) =>
-    (Date.parse(asOf) - Date.parse(s.observedAt)) / 86_400_000 > 90 ? "STALE" : "CURRENT";
   return (
     <Frame id="provenance-trail" title={t("Cómo lo sabe AXIGNAL", "How AXIGNAL knows")}>
       <Headline>
@@ -511,7 +518,7 @@ function ProvenanceTrail({ facts, asOf, glance }: Props) {
               <span className="cg-meta">
                 {dateLabel(s.observedAt, locale)} · {copy(s.instrument)}
               </span>
-              <CurrentnessTag state={age(s)} />
+              <CurrentnessTag state={s.currentness ?? "UNKNOWN"} />
               <span className="cg-limit">{copy(s.limitation)}</span>
             </li>
           ))}

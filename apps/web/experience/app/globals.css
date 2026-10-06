@@ -6560,7 +6560,7 @@ html[data-motion="reduced"] {
   min-height: 44px;
 }
 @media (max-width: 700px) {
-  .canonical-product .family-empty { --space-panel-inset: 18px; }
+  .canonical-product .family-empty { --space-panel-inset: 24px; }
   .canonical-product .family-empty h2 { font-size:27px; line-height:1.08; }
 }
 .root-recovery { max-width: 740px; margin: 0 auto; padding: 70px 24px; text-align: center; }

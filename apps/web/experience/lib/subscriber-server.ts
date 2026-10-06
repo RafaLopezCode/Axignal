@@ -2,6 +2,7 @@ import { z } from "zod";
 import { createHash } from "node:crypto";
 import { authStartSchema, preparedAuthStart, preparedProviders } from "./public-contracts";
 import { approvedPaymentUrl, portfolioSchema, subscriberCommandSchema, subscriberOutputSchema, subscriberResultSchema } from "./subscriber-contracts";
+import type { RuntimeProjection } from "./runtime-projection";
 
 export const subscriberSessionCookie = "__Host-axignal-subscriber";
 const transactionCookie = "__Host-axignal-oidc";
@@ -160,11 +161,30 @@ export async function subscriberProxy(request: Request, path: string, write = fa
     }
     const safeResult = !write && path.endsWith("/output") ? {
       ...subscriberOutputSchema.parse(result),
-      revision: createHash("sha256").update(JSON.stringify(subscriberOutputSchema.parse(result).projection)).digest("hex"),
+      revision: subscriberProjectionRevision(subscriberOutputSchema.parse(result).projection),
     } : result;
     return Response.json(safeResult, { status: response.status, headers });
   } catch (error) {
     if (error instanceof z.ZodError) return rejected("INVALID_REQUEST_OR_RESPONSE", 400);
     return rejected("RUNTIME_UNAVAILABLE", 503);
   }
+}
+
+/** A reevaluation clock does not invalidate an otherwise identical reading.
+ * Evidence, support refs, effective currentness and content remain in the hash.
+ */
+export function subscriberProjectionRevision(projection: RuntimeProjection): string {
+  const canonical = JSON.parse(JSON.stringify(projection)) as RuntimeProjection;
+  if (canonical.cognition) {
+    const { asOf: _evaluationClock, ...content } = canonical.cognition;
+    const sources = content.sources.map(({ currentnessEvaluatedAt: _clock, ...source }) => source);
+    const opportunities = content.opportunities.map(({ currentnessEvaluatedAt: _clock, ...opportunity }) => opportunity);
+    Object.assign(canonical, { cognition: { ...content, sources, opportunities } });
+  }
+  const measurement = canonical.digitalRepresentation;
+  if (measurement && "kind" in measurement && measurement.currentnessEvaluation) {
+    const { asOf: _evaluationClock, ...evaluation } = measurement.currentnessEvaluation;
+    Object.assign(measurement, { currentnessEvaluation: evaluation });
+  }
+  return createHash("sha256").update(JSON.stringify(canonical)).digest("hex");
 }

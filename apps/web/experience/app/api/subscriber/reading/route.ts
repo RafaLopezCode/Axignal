@@ -1,7 +1,7 @@
 import { createUIMessageStream, createUIMessageStreamResponse } from "ai";
 import { boundedSubscriberJson, subscriberProxy, subscriberSameOrigin } from "@/lib/subscriber-server";
 import { subscriberOutputSchema } from "@/lib/subscriber-contracts";
-import { acceptsReadingPlan, readingRequestSchema, type ReadingPlan, type SubscriberReadingMessage } from "@/lib/subscriber-presentation";
+import { acceptsReadingPlan, cognitiveReadingPlan, readingRequestSchema, type ReadingPlan, type SubscriberReadingMessage } from "@/lib/subscriber-presentation";
 import { translate } from "@/lib/copy-catalog";
 import { presentSignal, presentRuntimeText } from "@/lib/runtime-presentation";
 export const runtime = "nodejs";
@@ -17,6 +17,12 @@ export async function POST(request: Request) {
   if (output.revision !== input.revision) return Response.json({ code: "READING_CHANGED" }, { status: 409, headers });
   const plan: ReadingPlan = { version: 1, revision: input.revision, intent: input.intent,
     refs: output.projection.nodes.map(item => item.id), method: "DETERMINISTIC_EVIDENCE_PRESENTATION" };
+  if (input.cognition) {
+    try {
+      const composed = cognitiveReadingPlan(output.projection, input.cognition);
+      if (composed) plan.cognition = { request: input.cognition, plan: composed };
+    } catch { return Response.json({ code: "INVALID_COGNITIVE_CUT" }, { status: 422, headers }); }
+  }
   if (!acceptsReadingPlan(plan, output.projection, input.revision)) return Response.json({ code: "PRESENTATION_REJECTED" }, { status: 422, headers });
   const t = (es: string, en: string) => translate(es, en, input.locale);
   const explanation = !plan.refs.length ? t("Todavía no hay evidencia suficiente para una conclusión. Una ausencia en esta lectura no demuestra ausencia en el mundo.", "Evidence is not yet sufficient for a conclusion. Absence in this reading does not prove absence in the world.")

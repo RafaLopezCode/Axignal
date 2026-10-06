@@ -40,6 +40,7 @@ export type FactSource = {
   id: string;
   title: Copy;
   observedAt: string;
+  currentness?: Currentness;
   instrument: Copy;
   limitation: Copy;
 };

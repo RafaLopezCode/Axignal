@@ -38,3 +38,64 @@ export function validateUnknownStateSpacing(sample) {
   if (sample.overflow) failures.push('Document overflows viewport');
   return failures;
 }
+
+// Semantic roles from docs/design/TYPOGRAPHY_ROLES.md, measured on the actual
+// subscriber reading. This probe never changes the DOM or invents product data.
+export function measureCognitiveReadingLayout() {
+  const pick = selector => {
+    const element = document.querySelector(selector);
+    if (!element) return null;
+    const style = getComputedStyle(element);
+    return {
+      font: style.fontFamily, size: Number.parseFloat(style.fontSize),
+      weight: Number(style.fontWeight), tag: element.tagName,
+      height: element.getBoundingClientRect().height,
+      padding: [style.paddingTop, style.paddingRight, style.paddingBottom, style.paddingLeft]
+        .map(value => Number.parseFloat(value)),
+    };
+  };
+  return {
+    present: Boolean(document.querySelector('.runtime-cognitive-lens')),
+    viewport: innerWidth, overflow: document.documentElement.scrollWidth > innerWidth,
+    h1: pick('main h1'), h2: pick('.subscriber-reading h2'),
+    body: pick('.runtime-cognitive-lens p.cg-unknown'),
+    question: pick('.runtime-cognitive-lens .cg-question'),
+    metadata: pick('.runtime-cognitive-lens .cg-meta'),
+    control: pick('.runtime-cognitive-controls button'),
+    input: pick('.runtime-cut-control input'),
+    component: pick('.runtime-cognitive-lens .cg-component'),
+    label: pick('.runtime-cognitive-lens .cg-title'),
+    axentTitle: pick('.axent-welcome h2'), axentBody: pick('.axent-welcome p'),
+    axentControl: pick('.axent-questions button'),
+    fontsReady: document.fonts.status,
+  };
+}
+
+export function validateCognitiveReadingLayout(sample) {
+  if (!sample.present) return ['Cognitive reading not rendered'];
+  const failures = [];
+  const roles = {
+    body: [14, 400, 'Manrope'], question: [14, 600, 'Manrope'],
+    metadata: [11, 400, 'Manrope'], label: [10, 400, 'IBM Plex Mono'],
+    control: [13, 500, 'Manrope'], input: [13, 500, 'Manrope'],
+    axentTitle: [24, 400, 'Fraunces'], axentBody: [14, 400, 'Manrope'],
+    axentControl: [13, 500, 'Manrope'],
+  };
+  for (const [name, [size, weight, family]] of Object.entries(roles)) {
+    const role = sample[name];
+    if (!role || role.size !== size || role.weight !== weight || !role.font.includes(family))
+      failures.push(`${name}: missing or incorrect typography role`);
+  }
+  for (const name of ['control', 'input', 'axentControl']) {
+    if (!Number.isFinite(sample[name]?.height) || sample[name].height < 43)
+      failures.push(`${name}: target below 44px`);
+  }
+  if (!sample.component || sample.component.padding.some(value => !Number.isFinite(value) || value < 15))
+    failures.push('Evidence panel: missing or insufficient inset');
+  if (!sample.h1 || !sample.h2 || sample.h1.tag !== 'H1' || sample.h2.tag !== 'H2' ||
+      sample.label?.tag !== 'H3' || !(sample.h1.size > sample.h2.size && sample.h2.size > 14))
+    failures.push('Heading hierarchy missing or collapsed');
+  if (sample.overflow) failures.push('Document overflows viewport');
+  if (sample.fontsReady !== 'loaded') failures.push('Fonts not settled');
+  return failures;
+}

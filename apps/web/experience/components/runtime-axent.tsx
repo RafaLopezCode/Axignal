@@ -1,15 +1,19 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import { RotateCcw } from "lucide-react";
-import type { RuntimeProjection } from "@/lib/runtime-projection";
+import { safeSourceLink, type RuntimeProjection } from "@/lib/runtime-projection";
 import type { RuntimeAnswer } from "@/lib/runtime-axent";
 import { useLocale } from "@/lib/locale";
 import { presentRuntimeCode, presentRuntimePassage } from "@/lib/runtime-presentation";
 import { AxentIdentity, IconButton } from "./ui";
 import { AxentComposer } from "./axent-composer";
+import { acceptsReadingPlan, type CognitiveReadingRequest } from "@/lib/subscriber-presentation";
+import { runtimeFactsAt } from "@/lib/cognition/runtime-facts";
+import { CognitiveComponent } from "./cognition/lenses";
 export function useRuntimeAxent(
   projection: RuntimeProjection,
   signalId: string | null,
+  subscriber?: { revision: string; cognition?: CognitiveReadingRequest },
 ) {
   const { t, locale } = useLocale();
   const [draft, setDraft] = useState("");
@@ -26,7 +30,7 @@ export function useRuntimeAxent(
     setError(false);
     setDraft("");
     return () => controller.current?.abort();
-  }, [projection.context.id, signalId]);
+  }, [projection.context.id, signalId, subscriber?.revision, subscriber?.cognition?.family, subscriber?.cognition?.asOf]);
   async function ask(question: string) {
     if (!question.trim() || busy) return;
     const request = new AbortController();
@@ -35,11 +39,11 @@ export function useRuntimeAxent(
     setError(false);
     setDraft("");
     try {
-      const response = await fetch("/api/axent", {
+      const response = await fetch(subscriber ? "/api/subscriber/axent" : "/api/axent", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          mode: "runtime",
+          ...(subscriber ? { revision: subscriber.revision, cognition: subscriber.cognition } : { mode: "runtime" }),
           prompt: question,
           contextId: projection.context.id,
           locale,
@@ -55,6 +59,14 @@ export function useRuntimeAxent(
         answer.organizationId !== projection.organization.id
       )
         throw new Error("CONTEXT_CHANGED");
+      if (subscriber) {
+        const candidate = answer as RuntimeAnswer & { revision?: string; cognition?: unknown };
+        if (candidate.revision !== subscriber.revision || !acceptsReadingPlan({
+          version: 1, revision: subscriber.revision, intent: "summary", refs: answer.signalIds,
+          method: "DETERMINISTIC_EVIDENCE_PRESENTATION",
+          ...(candidate.cognition ? { cognition: candidate.cognition } : {}),
+        }, projection, subscriber.revision)) throw new Error("READING_CHANGED");
+      }
       if (!request.signal.aborted)
         setMessages((previous) => [...previous, { question, answer }]);
     } catch {
@@ -158,6 +170,11 @@ export function RuntimeAxent({
             <div className="axent-message">
               <span className="message-author">AXENT</span>
               <p className="axent-synthesis">{message.answer.summary}</p>
+              {message.answer.cognition && <div className="cg-lens">{message.answer.cognition.plan.items.map(item => <CognitiveComponent
+                key={item.component} id={item.component}
+                facts={runtimeFactsAt(projection, message.answer.cognition!.request.family, message.answer.cognition!.request.asOf)}
+                asOf={message.answer.cognition!.request.asOf} glance={item.layer === 1}
+              />)}</div>}
               {["changed", "why"].includes(message.answer.intent) &&
                 message.answer.passages.length > 0 && (
                   <section className="axent-answer-section">
@@ -206,7 +223,9 @@ export function RuntimeAxent({
               {message.answer.sourceRefs.length > 0 && (
                 <section className="axent-answer-section axent-provenance">
                   <strong>{t("Proveniencia", "Provenance")}</strong>
-                  {message.answer.sourceRefs.map((ref) => <p key={ref}>{ref}</p>)}
+                  {message.answer.sourceRefs.map((ref) => <p key={ref}>{safeSourceLink(ref)
+                    ? <a href={safeSourceLink(ref)!} target="_blank" rel="noopener noreferrer">{ref}</a>
+                    : ref}</p>)}
                   {message.answer.observedAt.map((value) => (
                     <p key={value}>{new Date(value).toLocaleString(locale)}</p>
                   ))}

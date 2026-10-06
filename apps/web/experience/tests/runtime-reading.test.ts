@@ -122,3 +122,16 @@ test("FIRST_MAP brief never fabricates a finding for an empty projection", () =>
   assert.deepEqual(brief.openQuestions, []);
   assert.equal(brief.sourceCount, 0);
 });
+
+test("an acquired source without a representable page remains visible without a finding", () => {
+  const brief = firstMapBrief({ nodes: [], temporalHistory: { disposition: "SINGLE_OBSERVATION", items: [{
+    observationId: "obs:limited", sourceRef: "https://axignal.com/", sourceType: "OFFICIAL_WEB",
+    observedAt: "2026-10-06T20:00:00Z", currentness: "CURRENT", normalizedStateChanged: null,
+  }] }, digitalRepresentation: { state: "NOT_MEASURED", reason: {
+    code: "REPRESENTATION_VISIBILITY_UNRESOLVED", explanation: "Rendered visibility remains unknown.",
+  } } });
+  assert.equal(brief.sourceCount, 1);
+  assert.equal(brief.observedCount, 0);
+  assert.equal(brief.primarySignal, null);
+  assert.deepEqual(brief.openQuestions, ["Rendered visibility remains unknown."]);
+});

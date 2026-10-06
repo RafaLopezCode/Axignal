@@ -2,12 +2,14 @@ import test, { afterEach } from "node:test";
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { subscriberCommandSchema, approvedPaymentUrl, monthlyCapacityCents } from "../lib/subscriber-contracts";
-import { subscriberAuthStart, subscriberAuthCallback, subscriberProxy, subscriberLogout, boundedSubscriberJson, subscriberBillingWebhook } from "../lib/subscriber-server";
-import { acceptsReadingPlan } from "../lib/subscriber-presentation";
+import { subscriberAuthStart, subscriberAuthCallback, subscriberProxy, subscriberLogout, boundedSubscriberJson, subscriberBillingWebhook, subscriberProjectionRevision } from "../lib/subscriber-server";
+import { acceptsReadingPlan, cognitiveReadingPlan } from "../lib/subscriber-presentation";
 import { POST as reading } from "../app/api/subscriber/reading/route";
+import { POST as subscriberAxent } from "../app/api/subscriber/axent/route";
 import { digitalRepresentationSchema } from "../lib/runtime-projection";
 import { readFileSync } from "node:fs";
 import { runInNewContext } from "node:vm";
+import { runtimeProjectionSchema } from "../lib/runtime-projection";
 
 const savedFetch = globalThis.fetch;
 const savedEnvironment = { runtime: process.env.AXIGNAL_RUNTIME_ORIGIN, origin: process.env.AXIGNAL_EXPERIENCE_ORIGIN };
@@ -186,4 +188,46 @@ test("subscriber reading reauthorizes fresh output and refuses stale or foreign 
   assert.equal((await reading(request({ focusId: "focus:one", revision: "f".repeat(64), intent: "summary", locale: "es" }))).status, 409);
   assert.equal(reads, 2);
   assert.equal(acceptsReadingPlan({ version: 1, revision, intent: "summary", refs: ["foreign:signal"], method: "DETERMINISTIC_EVIDENCE_PRESENTATION" }, projection, revision), false);
+});
+
+test("real cognitive reading survives clock refresh but evidence and currentness changes invalidate it", async () => {
+  setup();
+  const cut = "2026-10-06T10:00:00Z";
+  const governed = runtimeProjectionSchema.parse({ ...projection, cognition: {
+    asOf: cut, signals: [], opportunities: [], sources: [{
+      id: "observation:one", title: "Public document", sourceRef: "https://public.example/",
+      provenanceRef: "artifact:one", instrument: "controlled-instrument@1", limitation: "One document only",
+      observedAt: "2026-10-06T09:00:00Z", currentness: "CURRENT", currentnessEvaluatedAt: cut,
+    }],
+  } });
+  const revision = subscriberProjectionRevision(governed);
+  const refreshed = structuredClone(governed);
+  refreshed.cognition!.asOf = "2026-10-06T11:00:00Z";
+  refreshed.cognition!.sources[0].currentnessEvaluatedAt = refreshed.cognition!.asOf;
+  assert.equal(subscriberProjectionRevision(refreshed), revision);
+  const aged = structuredClone(refreshed); aged.cognition!.sources[0].currentness = "STALE";
+  assert.notEqual(subscriberProjectionRevision(aged), revision);
+  const changed = structuredClone(refreshed); changed.cognition!.sources[0].provenanceRef = "artifact:two";
+  assert.notEqual(subscriberProjectionRevision(changed), revision);
+  let reads = 0;
+  globalThis.fetch = async (url, init) => {
+    reads++; assert.ok(String(url).endsWith("/focus%3Aone/output"));
+    assert.equal(new Headers(init?.headers).get("authorization"), `Bearer ${token}`);
+    return Response.json({ state: "INSUFFICIENT_EVIDENCE", projection: refreshed });
+  };
+  const cognition = { family: "organization", asOf: cut, intent: "how_known", device: "desktop" } as const;
+  const result = await reading(request({ focusId: "focus:one", revision, intent: "evidence", locale: "es", cognition }));
+  assert.equal(result.status, 200);
+  assert.ok((await result.text()).includes("provenance-trail"));
+  const composed = cognitiveReadingPlan(governed, cognition);
+  assert.ok(composed);
+  assert.equal(acceptsReadingPlan({ version: 1, revision, intent: "evidence", refs: [], method: "DETERMINISTIC_EVIDENCE_PRESENTATION", cognition: { request: cognition, plan: { ...composed, family: "markets" } } }, governed, revision), false);
+  const answer = await subscriberAxent(request({ prompt: "Cómo lo sabes", contextId: "focus:one", revision, locale: "es", cognition }));
+  assert.equal(answer.status, 200);
+  const payload = await answer.json();
+  assert.equal(payload.contextId, "focus:one"); assert.equal(payload.revision, revision);
+  assert.equal(payload.cognition.plan.family, "organization");
+  assert.equal((await subscriberAxent(request({ prompt: "Cómo lo sabes", contextId: "focus:one", revision: "f".repeat(64), locale: "es" }))).status, 409);
+  assert.equal((await subscriberAxent(request({ prompt: "Cómo lo sabes", contextId: "focus:one", revision, locale: "es" }, "axignal-admin-session=" + token))).status, 401);
+  assert.equal(reads, 3);
 });
