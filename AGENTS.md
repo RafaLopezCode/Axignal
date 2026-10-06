@@ -154,3 +154,25 @@ Rules:
 - If graphify-out/wiki/index.md exists, use it for broad navigation instead of raw source browsing.
 - Read graphify-out/GRAPH_REPORT.md only for broad architecture review or when query/path/explain do not surface enough context.
 - After modifying code, run `graphify update .` to keep the graph current (AST-only, no API cost).
+
+## Context discipline
+
+AXIGNAL uses Context Mode for coding-agent sessions. Treat it as development
+infrastructure only; it is never an AXIGLAND truth store or a runtime dependency.
+
+- Prefer Context Mode sandbox/index/search tools for large logs, repository
+  exploration, web/API payloads, Playwright output, test output and multi-file
+  analysis. Keep only the reduced answer in model context.
+- Think in code: deterministically filter/count/compare large inputs before
+  asking a model to reason over them.
+- After compaction or resume, query Context Mode session memory before rereading
+  large portions of the repository or asking the user to repeat prior work.
+- Reading a file to edit it is normal; reading many files merely to analyze them
+  should be reduced through Context Mode or Graphify.
+- Never index `.env*`, credentials, SSH material, tokens, production secrets or
+  private customer data.
+- Context Mode memory is operational agent memory only. Canonical economic state
+  remains exclusively governed by AXIGLAND/EvidenceAdmission.
+- CI jobs that run AI agents should use `.github/actions/setup-context-mode` with
+  ephemeral storage and `CTX_FETCH_STRICT=1`. Deterministic CI gates must not
+  depend on Context Mode or any LLM.

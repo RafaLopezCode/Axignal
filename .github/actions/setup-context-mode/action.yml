@@ -1,0 +1,40 @@
+name: Setup Context Mode for agent jobs
+description: Install Context Mode with strict network policy and ephemeral storage for CI-hosted AI agents.
+
+inputs:
+  version:
+    description: Context Mode npm version
+    required: false
+    default: "1.0.169"
+  platform:
+    description: Agent platform identifier passed to Context Mode
+    required: false
+    default: "codex"
+
+runs:
+  using: composite
+  steps:
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: "24"
+
+    - name: Install Context Mode
+      shell: bash
+      run: npm install -g "context-mode@${{ inputs.version }}"
+
+    - name: Configure hardened ephemeral agent context
+      shell: bash
+      run: |
+        mkdir -p "$RUNNER_TEMP/context-mode"
+        {
+          echo "CONTEXT_MODE_DIR=$RUNNER_TEMP/context-mode"
+          echo "CONTEXT_MODE_PLATFORM=${{ inputs.platform }}"
+          echo "CTX_FETCH_STRICT=1"
+        } >> "$GITHUB_ENV"
+
+    - name: Verify Context Mode
+      shell: bash
+      run: |
+        npm list -g --depth=0 context-mode
+        test -x "$(command -v context-mode)"
