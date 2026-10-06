@@ -1,6 +1,6 @@
 # Subscriber E2E experience and HTTP composition
 
-**Status:** Reviewed implementation scope; external acceptance pending.
+**Status:** Implemented and locally proved; fresh rendered-browser and external acceptance pending.
 **Date:** 2026-10-06
 **Authority:** MASTER â†’ Constitution â†’ ADR-0084 and accepted contracts â†’ this feature.
 

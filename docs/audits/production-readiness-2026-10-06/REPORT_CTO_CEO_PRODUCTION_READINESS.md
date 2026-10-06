@@ -4,6 +4,8 @@
 **Candidate reviewed:** `main @ 016235736db002038f8063f3abd311ba5dca110c`
 **Decision:** **NOT READY for commercial subscriber production**. Some internal and deterministic contracts are implemented and tested; no complete subscriber E2E exists in the reviewed source, and the current production release state is unknown.
 
+> **Historical snapshot notice (2026-10-06):** this report evaluates `main @ 0162357`. Canonical `main` later advanced through `5618744 feat(subscriber): close commercial e2e composition`, which implements substantial subscriber identity, portfolio, billing, HTTP and read-model composition that this report explicitly found absent. Preserve the findings below as historical evidence; use Specs 047-051 and their current task/verification records for present implementation state. This notice does not claim deployment, live payment, rendered-browser acceptance or production E2E.
+
 ## 1. Executive Summary
 
 AXIGNAL is building the right class of product for the goal you described: outputs that explain an Organization in human language and let a person inspect evidence. The audit found real foundations: a narrow composed economic Brain vertical, temporal evidence/memory contracts, a bounded internal Customer Zero journey, payment-event authority contracts, and an AI SDK 7 generative UI plan with typed/allowlisted components.

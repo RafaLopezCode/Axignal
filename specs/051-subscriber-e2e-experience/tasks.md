@@ -2,13 +2,35 @@
 
 - [x] T001 Read authorities, run Graphify query, review existing routes and specify the subscriber/Customer Zero separation.
 - [x] T002 Record clarification and root architecture review, including explicit live-only human authority in ADR-0084.
-- [ ] T003 Implement Python subscriber HTTP composition through authoritative 049/047/050 services.
-- [ ] T004 Implement bounded Next proxy, auth callback/cookie/logout and strict subscriber payload/redirect validation.
-- [ ] T005 Extend the subscriber portfolio/purchase/output/evidence surface using accepted visual grammar.
-- [ ] T006 Test durable HTTP E2E 1/2/100, authorization negatives, purchase transitions and replay/continuity.
+- [x] T003 Implement Python subscriber HTTP composition through authoritative 049/047/050 services.
+- [x] T004 Implement bounded Next proxy, auth callback/cookie/logout and strict subscriber payload/redirect validation.
+- [x] T005 Extend the subscriber portfolio/purchase/output/evidence surface using accepted visual grammar.
+- [x] T006 Test durable HTTP E2E 1/2/100, authorization negatives, purchase transitions and replay/continuity.
 - [ ] T007 Run web gates and rendered desktop/narrow/keyboard/evidence/recovery verification.
-- [ ] T008 Record exact configuration/deployment/recovery and external-acceptance gaps; prepare reviewable launch artifacts.
-- [ ] T009 Run full deterministic gates and independent regression review; converge only evidenced in-scope work.
+- [x] T008 Record exact configuration/deployment/recovery and external-acceptance gaps; prepare reviewable launch artifacts.
+- [x] T009 Run full deterministic gates and independent regression review; converge only evidenced in-scope work.
 
-External registration, legal data, real payment lifecycle and human visual
-acceptance are not automatically completed by these implementation tasks.
+## Current evidence
+
+Reconciled on 2026-10-06 against canonical `main` after
+`5618744 feat(subscriber): close commercial e2e composition`.
+
+- Focused Python subscriber HTTP/composition/paid-journey suites: **14 passed**,
+  using an explicit external pytest basetemp because the default Windows pytest
+  temp root is permission-blocked on this workstation.
+- Web experience: **66 tests passed**, TypeScript typecheck passed, i18n inventory
+  passed with **1142 entries / 0 missing**, and Next.js production build compiled
+  successfully with **41 routes**.
+- The coordinated closure record already retains the full deterministic-gate
+  evidence and known environment limits. Configuration, deployment and recovery
+  boundaries are captured in the subscriber runbook and production deploy
+  artifacts.
+- T007 remains open deliberately: current evidence does not include a fresh
+  rendered-browser desktop/narrow/keyboard/evidence/recovery pass for this exact
+  candidate. Component tests and a successful Next build do not substitute for
+  browser or human visual acceptance.
+
+External registration, legal data, completed live payment lifecycle, exact
+production candidate, recovery drill, rendered-browser acceptance and human
+visual acceptance are not automatically completed by these implementation
+tasks.

@@ -68,14 +68,20 @@ Root completed integration, cross-review, final gates and bounded convergence.
 The final shared candidate passed 1,404 tests, all required deterministic gates
 and offline packaging. The earlier concurrency timeout and successful retries
 remain recorded in closure verification; no gate or timeout was weakened.
-TASK-07 is now **LOCALLY VERIFIED** by feature 046. TASK-01/02 and TASK-04
-remain **OPEN**, with verified offline foundations in features 048 and 047
-respectively. The remaining audit tasks retain the states above. No commercial
-launch, authentication connection, durable store or Stripe runtime closure is
-claimed. Root's read-only live Stripe query found zero active persisted
-recurring prices (`active=true`, `type=recurring`, `has_more=false`), excluding
-inline/inactive prices and other environments. Approved catalogue and sandbox
-evidence remain outstanding.
+TASK-07 was **LOCALLY VERIFIED** by feature 046 at this checkpoint. The table
+above remains the historical audit state at `0162357`; it is not the current
+canonical implementation ledger.
+
+A later root integration, `5618744 feat(subscriber): close commercial e2e
+composition`, added the subscriber identity/session runtime, durable private
+stores, 1/2/100 portfolio composition, checkout/reconciliation plumbing,
+subscriber HTTP routes, Brain/read-model projection and first-party web
+composition. Spec 051 is the current bounded composition ledger. On 2026-10-06
+its focused recheck passed 14 Python HTTP/composition/paid-journey tests, 66 web
+tests, TypeScript typecheck, i18n inventory (1142 entries, 0 missing) and the
+Next.js production build (41 routes). Fresh rendered-browser acceptance remains
+open, and none of this proves deployment, completed live payment, provider/legal
+acceptance, restore drill or production E2E.
 
 Feature
 scripts use per-process `SPECIFY_FEATURE_DIRECTORY` and
