@@ -9,5 +9,7 @@
 - [x] T7 Website and procurement acquirers over existing capabilities.
 - [x] T8 Subscriber-safe digest (POTENTIAL opportunities, UNKNOWN families with reasons).
 - [x] T9 Multi-day E2E, unit tests, before/after benchmark.
-- [ ] T10 Production trigger wired to FR-30 source rights and subscriber attention (not authorized here).
-- [ ] T11 Adopt sources for the families that remain UNKNOWN.
+- [x] T10 RecomputationPort over the canonical subscriber Brain entry, replaying real retrievals.
+- [x] T11 Production entrypoint, off by default, with server-owned attention and enrollment.
+- [ ] T12 Daily timer and deployment (deployment concern).
+- [ ] T13 Adopt sources for the families that remain UNKNOWN.

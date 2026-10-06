@@ -206,6 +206,9 @@ class ObservationRuntimeStore(Protocol):
 
     def learning(self) -> OperationalLearning: ...
 
+    def receipts(self, day: str) -> dict[str, Acquisition]:
+        """Acquisitions already made on this day, by acquisition key (survive a crash)."""
+
     def commit(
         self,
         claim: TickClaim,
@@ -217,6 +220,7 @@ class ObservationRuntimeStore(Protocol):
         usage: BudgetUsage,
         learning: OperationalLearning,
         recompute: tuple[PendingRecompute, ...],
+        receipts: tuple[tuple[str, Acquisition], ...] = (),
     ) -> None:
         """Persist one step atomically, only while the claim's lease is still owned."""
 

@@ -181,9 +181,10 @@ def test_interrupted_tick_is_fenced_then_resumed_without_repeating_work(tmp_path
     assert not done_before & {
         e.lead_id for e in resumed.executed if e.outcome is not LeadOutcome.BLOCKED
     }
-    # The in-memory share cache dies with the process: a lead of another family may
-    # fetch the same page once more after a crash. No lead is repeated.
-    assert w.web.requests[SITE] <= 2
+    # Today's acquisition receipts survive the crash: families that had not run yet reuse
+    # the fetch already made instead of repeating it.
+    assert w.web.requests[SITE] == 1
+    assert resumed.shared_acquisitions >= 2
     assert w.store().budget_usage("2026-10-06").actions > usage_before.actions
     assert _run(w).status is TickStatus.ALREADY_COMPLETED
 

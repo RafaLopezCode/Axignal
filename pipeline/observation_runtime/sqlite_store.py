@@ -20,10 +20,11 @@ from typing import Any
 
 from application.observation_intelligence.contracts import (
     OpportunityFamily,
+    QuerySpec,
     SourceCapability,
     TaxonomyCode,
 )
-from application.observation_intelligence.findings import ProcurementRecord
+from application.observation_intelligence.findings import ProcurementRecord, SourceFindings
 from application.observation_intelligence.learning import (
     OperationalLearning,
     SourceOperationalStats,
@@ -38,13 +39,17 @@ from application.observation_runtime.frontier import (
     ResearchLead,
 )
 from application.observation_runtime.ports import (
+    AcquiredEvidence,
+    Acquisition,
     EvidenceState,
+    LeadHint,
     LeaseLost,
     PendingRecompute,
     RecomputeTrigger,
     StoredCandidate,
     TickClaim,
 )
+from application.observation_runtime.replay import RecordedFindings
 from domain.evidence.epistemics import Currentness
 from domain.xignal import XignalEpistemicState
 
@@ -59,6 +64,11 @@ _SCHEMA = (
     "CREATE TABLE IF NOT EXISTS aor_candidates (candidate_id TEXT PRIMARY KEY, xeed_id TEXT NOT NULL, payload TEXT NOT NULL)",
     "CREATE TABLE IF NOT EXISTS aor_budget (day TEXT PRIMARY KEY, payload TEXT NOT NULL)",
     "CREATE TABLE IF NOT EXISTS aor_learning (source_id TEXT PRIMARY KEY, payload TEXT NOT NULL)",
+    """CREATE TABLE IF NOT EXISTS aor_findings (
+        source_id TEXT NOT NULL, query_key TEXT NOT NULL, retrieved_at TEXT NOT NULL,
+        payload TEXT NOT NULL, PRIMARY KEY (source_id, query_key))""",
+    """CREATE TABLE IF NOT EXISTS aor_receipts (
+        day TEXT NOT NULL, key TEXT NOT NULL, payload TEXT NOT NULL, PRIMARY KEY (day, key))""",
     """CREATE TABLE IF NOT EXISTS aor_recompute (
         xeed_id TEXT NOT NULL, family TEXT NOT NULL, payload TEXT NOT NULL,
         PRIMARY KEY (xeed_id, family))""",
@@ -192,6 +202,59 @@ def _decode_evidence(raw: dict[str, Any]) -> EvidenceState:
     )
 
 
+def _encode_record(r: ProcurementRecord) -> dict[str, object]:
+    return {
+        "record_id": r.record_id,
+        "source_id": r.source_id,
+        "kind": r.kind.value,
+        "title": r.title,
+        "buyer_name": r.buyer_name,
+        "places": _codes(r.places),
+        "demand_codes": _codes(r.demand_codes),
+        # Keep the published offset: dates are compared as the source publishes them.
+        "published_at": r.published_at.isoformat(),
+        "source_url": r.source_url,
+        "deadline": r.deadline,
+        "winners": list(r.winners),
+    }
+
+
+def _decode_record(r: dict[str, Any]) -> ProcurementRecord:
+    return ProcurementRecord(
+        record_id=str(r["record_id"]),
+        source_id=str(r["source_id"]),
+        kind=SourceCapability(r["kind"]),
+        title=str(r["title"]),
+        buyer_name=r["buyer_name"],
+        places=_from_codes(r["places"]),
+        demand_codes=_from_codes(r["demand_codes"]),
+        published_at=_required_time(r["published_at"]),
+        source_url=str(r["source_url"]),
+        deadline=r["deadline"],
+        winners=tuple(r["winners"]),
+    )
+
+
+def _encode_query(q: QuerySpec) -> dict[str, object]:
+    return {
+        "demand_codes": _codes(q.demand_codes),
+        "geographies": _codes(q.geographies),
+        "capabilities": sorted(c.value for c in q.capabilities),
+        "published_since": None if q.published_since is None else _utc(q.published_since),
+        "open_on": None if q.open_on is None else _utc(q.open_on),
+    }
+
+
+def _decode_query(raw: dict[str, Any]) -> QuerySpec:
+    return QuerySpec(
+        demand_codes=_from_codes(raw["demand_codes"]),
+        geographies=_from_codes(raw["geographies"]),
+        capabilities=frozenset(SourceCapability(c) for c in raw["capabilities"]),
+        published_since=_time(raw["published_since"]),
+        open_on=_time(raw["open_on"]),
+    )
+
+
 def _encode_candidate(item: StoredCandidate) -> dict[str, object]:
     c, r = item.candidate, item.candidate.record
     return {
@@ -199,19 +262,7 @@ def _encode_candidate(item: StoredCandidate) -> dict[str, object]:
         "first_seen_at": _utc(item.first_seen_at),
         "candidate_id": c.candidate_id,
         "xeed_id": c.xeed_id,
-        "record": {
-            "record_id": r.record_id,
-            "source_id": r.source_id,
-            "kind": r.kind.value,
-            "title": r.title,
-            "buyer_name": r.buyer_name,
-            "places": _codes(r.places),
-            "demand_codes": _codes(r.demand_codes),
-            "published_at": _utc(r.published_at),
-            "source_url": r.source_url,
-            "deadline": r.deadline,
-            "winners": list(r.winners),
-        },
+        "record": _encode_record(r),
         "market": _code(c.market),
         "capability_ids": list(c.capability_ids),
         "matched_codes": _codes(c.matched_codes),
@@ -232,19 +283,7 @@ def _decode_candidate(raw: dict[str, Any]) -> StoredCandidate:
     candidate = OpportunityCandidate(
         candidate_id=str(raw["candidate_id"]),
         xeed_id=str(raw["xeed_id"]),
-        record=ProcurementRecord(
-            record_id=str(r["record_id"]),
-            source_id=str(r["source_id"]),
-            kind=SourceCapability(r["kind"]),
-            title=str(r["title"]),
-            buyer_name=r["buyer_name"],
-            places=_from_codes(r["places"]),
-            demand_codes=_from_codes(r["demand_codes"]),
-            published_at=_required_time(r["published_at"]),
-            source_url=str(r["source_url"]),
-            deadline=r["deadline"],
-            winners=tuple(r["winners"]),
-        ),
+        record=_decode_record(r),
         market=market,
         capability_ids=tuple(raw["capability_ids"]),
         matched_codes=_from_codes(raw["matched_codes"]),
@@ -257,6 +296,62 @@ def _decode_candidate(raw: dict[str, Any]) -> StoredCandidate:
         epistemic_state=XignalEpistemicState(raw["epistemic_state"]),
     )
     return StoredCandidate(candidate, str(raw["lead_id"]), _required_time(raw["first_seen_at"]))
+
+
+def _encode_acquisition(item: Acquisition) -> dict[str, object]:
+    return {
+        "requests": item.requests,
+        "paid_cost_microunits": item.paid_cost_microunits,
+        "latency_ms": item.latency_ms,
+        "failure": item.failure,
+        "blocked": item.blocked,
+        "evidence": [
+            [e.key, e.fingerprint, _utc(e.observed_at), e.provenance_ref] for e in item.evidence
+        ],
+        # Candidates reuse the stored-candidate codec; lead and first-seen are not part of a fetch.
+        "candidates": [
+            _encode_candidate(StoredCandidate(c, "receipt", c.observed_at)) for c in item.candidates
+        ],
+        "hints": [
+            {
+                "kind": h.kind.value,
+                "target": h.target,
+                "geography": _code(h.geography),
+                "evidence_keys": list(h.evidence_keys),
+                "reason": h.reason,
+                "family": None if h.family is None else h.family.value,
+                "detail": list(h.detail),
+            }
+            for h in item.hints
+        ],
+    }
+
+
+def _decode_acquisition(raw: dict[str, Any]) -> Acquisition:
+    return Acquisition(
+        requests=int(raw["requests"]),
+        paid_cost_microunits=int(raw["paid_cost_microunits"]),
+        latency_ms=raw["latency_ms"],
+        failure=raw["failure"],
+        blocked=raw["blocked"],
+        evidence=tuple(
+            AcquiredEvidence(str(k), str(f), _required_time(t), str(p))
+            for k, f, t, p in raw["evidence"]
+        ),
+        candidates=tuple(_decode_candidate(c).candidate for c in raw["candidates"]),
+        hints=tuple(
+            LeadHint(
+                kind=LeadKind(h["kind"]),
+                target=str(h["target"]),
+                geography=_from_code(h["geography"]),
+                evidence_keys=tuple(h["evidence_keys"]),
+                reason=str(h["reason"]),
+                family=None if h["family"] is None else ObservationFamily(h["family"]),
+                detail=tuple(h["detail"]),
+            )
+            for h in raw["hints"]
+        ),
+    )
 
 
 def _dumps(payload: object) -> str:
@@ -294,6 +389,8 @@ class SqliteObservationRuntimeStore:
         token = uuid.uuid4().hex
         expires = _utc(now + timedelta(seconds=lease_seconds))
         with self._transaction() as db:
+            # Receipts only deduplicate within a day; older ones are never reused.
+            db.execute("DELETE FROM aor_receipts WHERE day<>?", (day,))
             row = db.execute("SELECT * FROM aor_ticks WHERE day=?", (day,)).fetchone()
             if row is None:
                 db.execute(
@@ -363,6 +460,62 @@ class SqliteObservationRuntimeStore:
             learning.stats[str(raw["source_id"])] = SourceOperationalStats(**raw)
         return learning
 
+    def record_findings(self, item: RecordedFindings) -> None:
+        """Keep the latest real retrieval per source and query (public records, not truth)."""
+
+        f = item.findings
+        payload = {
+            "query": _encode_query(item.query),
+            "retrieved_at": _utc(f.retrieved_at),
+            "requests": f.requests,
+            "amount_microunits": f.amount_microunits,
+            "latency_ms": f.latency_ms,
+            "total_available": f.total_available,
+            "failure": f.failure,
+            "records": [_encode_record(r) for r in f.records],
+        }
+        # Time floors move with every run; the query identity is codes x places x kinds.
+        key = _dumps(_encode_query(item.query) | {"published_since": None, "open_on": None})
+        with self._transaction() as db:
+            db.execute(
+                """INSERT INTO aor_findings VALUES (?, ?, ?, ?)
+                ON CONFLICT(source_id, query_key) DO UPDATE SET
+                retrieved_at=excluded.retrieved_at, payload=excluded.payload
+                WHERE excluded.retrieved_at >= aor_findings.retrieved_at""",
+                (item.source_id, key, _utc(f.retrieved_at), _dumps(payload)),
+            )
+
+    def recorded_findings(self, source_id: str) -> tuple[RecordedFindings, ...]:
+        rows = self._read(
+            "SELECT payload FROM aor_findings WHERE source_id=? ORDER BY query_key", (source_id,)
+        )
+        items = []
+        for row in rows:
+            raw = json.loads(str(row["payload"]))
+            items.append(
+                RecordedFindings(
+                    source_id,
+                    _decode_query(raw["query"]),
+                    SourceFindings(
+                        source_id=source_id,
+                        retrieved_at=_required_time(raw["retrieved_at"]),
+                        requests=int(raw["requests"]),
+                        amount_microunits=raw["amount_microunits"],
+                        latency_ms=raw["latency_ms"],
+                        records=tuple(_decode_record(r) for r in raw["records"]),
+                        total_available=raw["total_available"],
+                        failure=raw["failure"],
+                    ),
+                )
+            )
+        return tuple(items)
+
+    def receipts(self, day: str) -> dict[str, Acquisition]:
+        rows = self._read("SELECT key, payload FROM aor_receipts WHERE day=? ORDER BY key", (day,))
+        return {
+            str(row["key"]): _decode_acquisition(json.loads(str(row["payload"]))) for row in rows
+        }
+
     def pending_recompute(self) -> tuple[PendingRecompute, ...]:
         rows = self._read("SELECT payload FROM aor_recompute ORDER BY xeed_id, family")
         items = []
@@ -389,9 +542,14 @@ class SqliteObservationRuntimeStore:
         usage: BudgetUsage,
         learning: OperationalLearning,
         recompute: tuple[PendingRecompute, ...],
+        receipts: tuple[tuple[str, Acquisition], ...] = (),
     ) -> None:
         with self._transaction() as db:
             self._fence(db, claim)
+            db.executemany(
+                "INSERT OR IGNORE INTO aor_receipts VALUES (?, ?, ?)",
+                [(claim.day, key, _dumps(_encode_acquisition(item))) for key, item in receipts],
+            )
             db.executemany(
                 "INSERT OR REPLACE INTO aor_leads VALUES (?, ?, ?)",
                 [(lead.lead_id, lead.xeed_id, _dumps(encode_lead(lead))) for lead in leads],

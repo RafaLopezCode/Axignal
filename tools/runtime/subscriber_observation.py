@@ -8,6 +8,7 @@ or routable sources yields no plan rather than fabricated context.
 from __future__ import annotations
 
 import json
+from collections.abc import Callable, Mapping
 from dataclasses import dataclass
 from datetime import timedelta
 from pathlib import Path
@@ -17,7 +18,9 @@ from application.observation_intelligence import (
     MarketRole,
     MarketScope,
     ObservationBudget,
+    ObservationStrategy,
     OperationalLearning,
+    SourceObservationPort,
     SourceRegistry,
     StopPolicy,
     XeedObservationContext,
@@ -116,6 +119,12 @@ class ConfiguredSubscriberObservationPlanReader:
     economic: SubscriberEconomicRuntime
     clock: Clock
     attention: tuple[OrganizationObservationAttention, ...]
+    #: Source adapters for the strategy; None keeps the live adopted adapters. The
+    #: autonomous runtime passes a replay of its own real retrievals instead.
+    adapters_for: Callable[[ObservationStrategy], Mapping[str, SourceObservationPort]] | None = None
+    #: None keeps the acquisition stop policy (it saves requests). A replay costs no
+    #: request, so stopping early would only truncate the projection.
+    stop_policy: StopPolicy | None = None
 
     def observation_plan_for(
         self, context: TrustedSubscriberContext, focus_id: XeedId
@@ -188,10 +197,13 @@ class ConfiguredSubscriberObservationPlanReader:
             ),
             registry=registry,
             learning=learning,
-            stop_policy=StopPolicy(sufficient_candidates=3, max_no_gain_streak=2),
+            stop_policy=self.stop_policy
+            or StopPolicy(sufficient_candidates=3, max_no_gain_streak=2),
         )
-        adapters = {}
-        if any(action.source_id == "ted-search-v3" for action in strategy.actions):
+        adapters: dict[str, SourceObservationPort] = {}
+        if self.adapters_for is not None:
+            adapters = dict(self.adapters_for(strategy))
+        elif any(action.source_id == "ted-search-v3" for action in strategy.actions):
             adapters["ted-search-v3"] = TedSearchAdapter(
                 UrllibTedTransport(),
                 clock=self.clock.now,

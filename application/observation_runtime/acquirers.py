@@ -26,6 +26,7 @@ from application.observation_intelligence.contracts import (
     MarketRole,
     MarketScope,
     ObservationBudget,
+    QuerySpec,
     SourceCapability,
     SourceDescriptor,
     TaxonomyCode,
@@ -42,6 +43,7 @@ from application.observation_intelligence.loop import (
 )
 from application.observation_intelligence.registry import SourceRegistry
 from application.observation_intelligence.strategy import (
+    RECENCY_WINDOWS,
     ObservationAction,
     StopPolicy,
     build_strategy,
@@ -54,6 +56,7 @@ from application.observation_runtime.ports import (
     LeadHint,
     XeedAttention,
 )
+from application.observation_runtime.replay import FindingsLedger, RecordedFindings
 from application.source_acquisition.contracts import (
     DispatchDisposition,
     SourceDispatchPolicy,
@@ -177,10 +180,12 @@ _REVEALED = "REVEALED_CODES:"
 class _Capturing:
     port: SourceObservationPort
     findings: list[SourceFindings] = field(default_factory=list)
+    queries: list[QuerySpec] = field(default_factory=list)
 
     def observe(self, action: ObservationAction, source: SourceDescriptor) -> SourceFindings:
         result = self.port.observe(action, source)
         self.findings.append(result)
+        self.queries.append(action.query)
         return result
 
 
@@ -197,12 +202,18 @@ def _record_fingerprint(record: ProcurementRecord) -> str:
 
 
 def _revealed(lead_reasons: tuple[str, ...]) -> tuple[TaxonomyCode, ...]:
-    reason = next((r for r in lead_reasons if r.startswith(_REVEALED)), "")
+    """Every code revealed by any path that reached this lead (merged leads keep all)."""
     return tuple(
-        TaxonomyCode(scheme, code)
-        for item in reason.removeprefix(_REVEALED).split(",")
-        if ":" in item
-        for scheme, code in [item.split(":", 1)]
+        sorted(
+            {
+                TaxonomyCode(scheme, code)
+                for reason in lead_reasons
+                if reason.startswith(_REVEALED)
+                for item in reason.removeprefix(_REVEALED).split(",")
+                if ":" in item
+                for scheme, code in [item.split(":", 1)]
+            }
+        )
     )
 
 
@@ -216,6 +227,7 @@ class ProcurementAcquirer:
         contexts: Callable[[XeedAttention, datetime], XeedObservationContext | None],
         registry: SourceRegistry | None = None,
         max_requests_per_lead: int = 4,
+        ledger: FindingsLedger | None = None,
     ) -> None:
         if max_requests_per_lead < 1:
             raise ValueError("a procurement lead needs at least one request")
@@ -223,6 +235,7 @@ class ProcurementAcquirer:
         self._contexts = contexts
         self._registry = registry or SourceRegistry()
         self._max = max_requests_per_lead
+        self._ledger = ledger
         self._questions = {q.question_id: q for q in QUESTIONS}
 
     def acquisition_key(self, request: AcquisitionRequest) -> str:
@@ -276,13 +289,23 @@ class ProcurementAcquirer:
                 query=replace(
                     a.query, demand_codes=tuple(sorted({*a.query.demand_codes, *revealed}))
                 ),
-                reasons=(*a.reasons, next(r for r in lead.reasons if r.startswith(_REVEALED))),
+                reasons=(
+                    *a.reasons,
+                    _REVEALED + ",".join(f"{c.scheme}:{c.code}" for c in revealed),
+                ),
             )
             if revealed
             else a
             for a in strategy.actions
             if a.source_id == source.source_id
         )
+        if lead.kind is _K.REGIONAL_DEMAND:
+            # Same query as the EOIL award-concentration follow-up, which inherits the
+            # awards' recency window: the canonical loop can then replay this retrieval.
+            since = request.as_of - RECENCY_WINDOWS[SourceCapability.PUBLIC_PROCUREMENT_AWARDS]
+            actions = tuple(
+                replace(a, query=replace(a.query, published_since=since)) for a in actions
+            )
         if not actions:
             return Acquisition(0, 0, None, blocked="NO_CAPABILITY_CODES_IN_SOURCE_SCHEMES")
         capture = _Capturing(self._port)
@@ -294,6 +317,10 @@ class ProcurementAcquirer:
             learning=OperationalLearning(),
             registry=self._registry,
         )
+        if self._ledger is not None:
+            # Real retrievals are kept so downstream recomputation can replay, not refetch.
+            for query, findings in zip(capture.queries, capture.findings, strict=True):
+                self._ledger.record_findings(RecordedFindings(source.source_id, query, findings))
         latency = sum(f.latency_ms or 0 for f in capture.findings) or None
         failures = [f.failure for f in capture.findings if f.failure is not None]
         records = {r.record_id: r for f in capture.findings for r in f.records}
@@ -416,6 +443,7 @@ def procurement_acquirers(
     contexts: Callable[[XeedAttention, datetime], XeedObservationContext | None],
     registry: SourceRegistry | None = None,
     max_requests_per_lead: int = 4,
+    ledger: FindingsLedger | None = None,
 ) -> dict[str, ProcurementAcquirer]:
     """One acquirer per adopted procurement source adapter (TED, PLACSP, SAM.gov...)."""
 
@@ -425,6 +453,7 @@ def procurement_acquirers(
             contexts=contexts,
             registry=registry,
             max_requests_per_lead=max_requests_per_lead,
+            ledger=ledger,
         )
         for source_id, port in sorted(ports.items())
     }

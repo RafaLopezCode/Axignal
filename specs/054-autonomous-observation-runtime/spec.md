@@ -63,22 +63,50 @@ source capabilities: `PUBLIC_SEARCH_VISIBILITY`, `GENERATIVE_ANSWER_SURFACES`,
 `PUBLIC_REVIEWS_AND_MENTIONS`, `ECONOMIC_FILINGS`, `SECTOR_CONTEXT`. They have
 no adopted source yet, so those leads are blocked honestly.
 
+## Real Brain wiring
+
+`RecomputationPort` is implemented by `tools/runtime/observation_daily.py`
+(`SubscriberBrainRecomputation`) over the canonical subscriber reobservation
+entry: `ConfiguredSubscriberObservationPlanReader.observation_plan_for` →
+`SubscriberEconomicRuntime.execute_observation_loop` → governed opportunity
+projection → subscriber read. Membership and tenant are re-checked on every
+call; capabilities come only from evidence admitted for the Organization.
+
+- The canonical loop is fed by `RecordedFindingsPort`: a replay of the
+  runtime's own real retrievals that answers a query only when an untruncated
+  recorded query covers it, filtered with the new query's criteria and keeping
+  the original retrieval time. Anything else is NOT_OBSERVED → UNKNOWN. No
+  refetch, no second pipeline.
+- Selective: only Demand/Markets material changes republish the projection,
+  once per Xeed per tick; currentness alone is re-evaluated at read time;
+  website families have no other governed consumer than Observation Memory.
+- Replay uses no early sufficiency stop (it saves no request and would
+  truncate the projection the subscriber reads).
+- Daily acquisition receipts persist, so a crash never repeats a fetch.
+
+Production entrypoint `axignal-observation-daily` is off unless
+`AXIGNAL_OBSERVATION_RUNTIME_ENABLED=true` and the operator provides the
+existing market attention file plus an enrollment file (tenant, principal,
+focus). Only TED (adopted, rights documented) is wired; the website needs an
+operator FR-30 rights grant, so website leads stay blocked.
+
 ## Evidence
 
+- `tests/integration/test_autonomous_observation_brain.py`: real subscriber
+  signup, billing, focus and admitted capability evidence; daily ticks reach
+  the Brain, the subscriber reading gains the new POTENTIAL opportunity,
+  keeps earlier ones, adds zero source requests and survives restart.
 - `tests/observation_runtime/test_runtime_e2e.py`: 40 controlled days, every
   tick a fresh process on the same files.
 - `tests/observation_runtime/test_runtime_units.py`: budget scopes, crash and
-  resume, lease fencing, failure backoff and circuit, cyclic merge, model-free
-  imports, policy coverage.
+  resume without repeated fetch, lease fencing, failure backoff and circuit,
+  cyclic merge, model-free imports, policy coverage.
 - `benchmark.json`: naive daily observer vs this runtime on the same world.
 
 ## Out of scope / UNKNOWN
 
-- Production trigger (CLI + timer) wired to the FR-30 source-rights registry
-  and subscriber attention; no production deployment.
+- Scheduling the entrypoint daily (cron/timer) and deploying it.
 - Adopted sources for reputation, search/generative visibility, filings,
   registries, regulation and funding: their families stay UNKNOWN.
-- Real downstream Brain recompute behind `RecomputationPort` (the E2E uses a
-  counting downstream with the existing reuse cost model).
-- After a crash the in-memory share cache is lost: another family's lead may
-  fetch the same page once more (no lead is repeated).
+- Website acquisition in production (needs an operator FR-30 rights grant)
+  and an EB-04 economic output for website changes (no execution plan wired).

@@ -20,7 +20,7 @@
     ],
     "structured_evaluator_calls": 12,
     "ted_requests": 108,
-    "wall_seconds": 2.074,
+    "wall_seconds": 2.165,
     "web_requests": 17
   },
   "before_naive_daily": {
@@ -43,7 +43,7 @@
     ],
     "structured_evaluator_calls": 560,
     "ted_requests": 560,
-    "wall_seconds": 14.372,
+    "wall_seconds": 14.391,
     "web_requests": 200
   }
 }

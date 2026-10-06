@@ -420,6 +420,8 @@ def run_daily_tick(
                 scheduling_reason=f"EVIDENCE_{decision.current.value}:{row.key}",
             )
 
+    receipts: list[tuple[str, Acquisition]] = []
+
     def commit(candidates: tuple[StoredCandidate, ...] = ()) -> None:
         store.commit(
             claim,
@@ -430,9 +432,11 @@ def run_daily_tick(
             usage=state.usage,
             learning=state.learning,
             recompute=state.pending(),
+            receipts=tuple(receipts),
         )
         changed_leads.clear()
         changed_evidence.clear()
+        receipts.clear()
 
     commit()
 
@@ -450,7 +454,8 @@ def run_daily_tick(
     executed: list[ExecutedLead] = []
     deferred: list[tuple[str, str]] = []
     done: set[str] = set()
-    acquired: dict[str, Acquisition] = {}
+    # Today's acquisition receipts: after a crash, a fetch already made is reused, not repeated.
+    acquired: dict[str, Acquisition] = dict(store.receipts(day))
     stop: tuple[TickStopReason, str] | None = None
     shared_count = duplicates = rejected = new_candidates_total = 0
 
@@ -545,6 +550,7 @@ def run_daily_tick(
                 failed=acquisition.failure is not None,
             )
             acquired[acquisition_key] = acquisition
+            receipts.append((acquisition_key, acquisition))
             stats = state.learning.for_source(source.source_id)
             stats.attempts += 1
             stats.requests += acquisition.requests
