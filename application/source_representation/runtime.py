@@ -5,8 +5,10 @@ from __future__ import annotations
 import hashlib
 import json
 from dataclasses import asdict
+from typing import TYPE_CHECKING
 
-from application.economic_discovery import StateChange
+if TYPE_CHECKING:
+    from application.economic_discovery.brain_contracts import StateChange
 from application.source_representation.contracts import (
     DocumentRepresentation,
     RichStateDatum,
@@ -126,6 +128,8 @@ def rich_state_change(
     )
     if not changed:
         return None
+    from application.economic_discovery.brain_contracts import StateChange
+
     return StateChange(
         subject_id=current.subject_id,
         changed_fields=changed,

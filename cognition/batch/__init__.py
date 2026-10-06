@@ -7,5 +7,16 @@ expensive cognition over the cartesian product).
 from __future__ import annotations
 
 from cognition.batch.packager import Batch, BatchPackager
+from cognition.batch.semantic_extraction import (
+    BatchCognitiveProvider,
+    BatchSemanticExtractionAdapter,
+    SemanticExtractionWork,
+)
 
-__all__ = ["Batch", "BatchPackager"]
+__all__ = [
+    "Batch",
+    "BatchCognitiveProvider",
+    "BatchPackager",
+    "BatchSemanticExtractionAdapter",
+    "SemanticExtractionWork",
+]
