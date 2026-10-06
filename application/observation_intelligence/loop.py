@@ -234,7 +234,7 @@ DEMAND_INTERPRETERS: dict[type, DemandInterpreter] = {
 }
 
 
-def _regional_follow_ups(
+def regional_follow_ups(
     awards: list[ProcurementRecord],
     action: ObservationAction,
     context: XeedObservationContext,
@@ -407,7 +407,7 @@ def run_observation_loop(
         stats.candidates += added
         follow_ups = [
             f
-            for f in _regional_follow_ups(
+            for f in regional_follow_ups(
                 [r for r in new if r.kind is SourceCapability.PUBLIC_PROCUREMENT_AWARDS],
                 action,
                 context,
