@@ -39,6 +39,7 @@ axignal-governance = "tools.governance.__main__:main"
 axignal-runtime = "tools.runtime.__main__:main"
 axignal-runtime-probe = "tools.runtime.probe:main"
 axignal-live-research-canary = "tools.runtime.live_research:main"
+axignal-observation-daily = "tools.runtime.observation_daily:main"
 
 [tool.ruff]
 line-length = 100

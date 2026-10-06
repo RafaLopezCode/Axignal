@@ -1,0 +1,49 @@
+{
+  "after_autonomous_runtime": {
+    "candidates_total": 4,
+    "days": 40,
+    "downstream_recomputations": 10,
+    "duplicate_evidence_seen": 104,
+    "frontier_max_depth": 2,
+    "frontier_size_final": 12,
+    "http_requests": 125,
+    "idle_days": 6,
+    "lead_executions": 77,
+    "new_demand_found_on_day": 18,
+    "paid_cost_microunits": 0,
+    "scheduler_model_calls": 0,
+    "semantic_extraction_calls": 6,
+    "shared_acquisitions_reused": 6,
+    "stop_reasons": [
+      "DUE_WORK_DONE",
+      "NOTHING_DUE"
+    ],
+    "structured_evaluator_calls": 12,
+    "ted_requests": 108,
+    "wall_seconds": 2.165,
+    "web_requests": 17
+  },
+  "before_naive_daily": {
+    "candidates_total": 4,
+    "days": 40,
+    "downstream_recomputations": 280,
+    "duplicate_evidence_seen": 1015,
+    "frontier_max_depth": 2,
+    "frontier_size_final": 12,
+    "http_requests": 760,
+    "idle_days": 0,
+    "lead_executions": 480,
+    "new_demand_found_on_day": 17,
+    "paid_cost_microunits": 0,
+    "scheduler_model_calls": 0,
+    "semantic_extraction_calls": 280,
+    "shared_acquisitions_reused": 0,
+    "stop_reasons": [
+      "DUE_WORK_DONE"
+    ],
+    "structured_evaluator_calls": 560,
+    "ted_requests": 560,
+    "wall_seconds": 14.391,
+    "web_requests": 200
+  }
+}

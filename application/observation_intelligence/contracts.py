@@ -48,6 +48,13 @@ class SourceCapability(StrEnum):
     REGULATORY_CHANGE = "REGULATORY_CHANGE"
     HIRING_DEMAND = "HIRING_DEMAND"
     BUYER_INVESTMENT_SIGNALS = "BUYER_INVESTMENT_SIGNALS"
+    # How the Xeed is represented and discussed in public surfaces.
+    PUBLIC_SEARCH_VISIBILITY = "PUBLIC_SEARCH_VISIBILITY"
+    GENERATIVE_ANSWER_SURFACES = "GENERATIVE_ANSWER_SURFACES"
+    PUBLIC_REVIEWS_AND_MENTIONS = "PUBLIC_REVIEWS_AND_MENTIONS"
+    # Observable economic magnitudes and the context around them.
+    ECONOMIC_FILINGS = "ECONOMIC_FILINGS"
+    SECTOR_CONTEXT = "SECTOR_CONTEXT"
 
 
 class OpportunityFamily(StrEnum):
