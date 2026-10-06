@@ -19,6 +19,9 @@ from application.economic_discovery.observation_memory import (
 )
 from domain.evidence.epistemics import Currentness
 
+# Declared by dimensions whose meaning depends on how current their evidence is.
+SOURCE_CURRENTNESS_FIELD = "source.currentness"
+
 
 class ReobservationDisposition(StrEnum):
     NOT_REQUIRED = "NOT_REQUIRED"

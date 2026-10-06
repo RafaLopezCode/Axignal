@@ -8,7 +8,7 @@ from __future__ import annotations
 
 import hashlib
 import json
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from datetime import datetime, timedelta
 from enum import StrEnum
 from typing import Protocol
@@ -227,3 +227,44 @@ def schedule_prime_research(
     for intent in intents:
         memory.enqueue(intent, requester_ref)
     return intents
+
+
+def refresh_prime_research_authority(
+    memory: SharedObservationWorkMemory,
+    *,
+    subject_id: str,
+    prior_observation_ids: frozenset[str],
+    observation_watermark_at: datetime,
+    observation_watermark_id: str,
+    valid_until: datetime,
+    temporal_policy_id: str,
+    temporal_policy_version: str,
+) -> bool:
+    """Advance a temporal refresh into the existing authority without new work.
+
+    A refresh re-confirms identical content, so the already-authorized work stays
+    the same work: no new keys are minted and nothing is re-enqueued. Only the
+    observation watermark and expiry move forward, which keeps that work runnable
+    under revalidation. The authority must have been advanced from the very state
+    being refreshed (lineage via its watermark); any mismatch leaves it untouched.
+    """
+
+    current = memory.prime_authority(subject_id)
+    if (
+        current is None
+        or current.observation_watermark_id not in prior_observation_ids
+        or current.temporal_policy_id != temporal_policy_id
+        or current.temporal_policy_version != temporal_policy_version
+        or (observation_watermark_at, observation_watermark_id)
+        <= (current.observation_watermark_at, current.observation_watermark_id)
+    ):
+        return False
+    memory.replace_prime_authority(
+        replace(
+            current,
+            observation_watermark_at=observation_watermark_at,
+            observation_watermark_id=observation_watermark_id,
+            valid_until=valid_until,
+        )
+    )
+    return True

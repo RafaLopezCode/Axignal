@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import json
-from dataclasses import asdict
+from dataclasses import asdict, dataclass
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
@@ -118,6 +118,46 @@ def compile_rich_subject_state(
         data=selected,
         fingerprint=_state_fingerprint(subject_id, selected),
     )
+
+
+def observation_slot_prefix(observation_slot: str) -> str:
+    if not observation_slot.strip():
+        raise ValueError("observation slot is required")
+    return f"document.{observation_slot}."
+
+
+@dataclass(frozen=True, slots=True)
+class RichStateDelta:
+    """Field-level delta separating content change from evidence refresh.
+
+    ``semantic_fields`` changed what the state says (value or source, added or
+    removed). ``refreshed_fields`` say the same thing again from a newer
+    observation: provenance and time advance, content does not. Whether a refresh
+    is also a currentness transition is decided by temporal policy, not here.
+    """
+
+    semantic_fields: frozenset[str]
+    refreshed_fields: frozenset[str]
+
+
+def rich_state_delta(previous: RichSubjectState, current: RichSubjectState) -> RichStateDelta:
+    if previous.subject_id != current.subject_id:
+        raise ValueError("rich-state diff cannot mix subjects")
+    previous_by_name = {item.name: item for item in previous.data}
+    current_by_name = {item.name: item for item in current.data}
+    semantic: set[str] = set()
+    refreshed: set[str] = set()
+    for name in previous_by_name.keys() | current_by_name.keys():
+        before, after = previous_by_name.get(name), current_by_name.get(name)
+        if (
+            before is None
+            or after is None
+            or (before.value, before.source_ref) != (after.value, after.source_ref)
+        ):
+            semantic.add(name)
+        elif before != after:
+            refreshed.add(name)
+    return RichStateDelta(frozenset(semantic), frozenset(refreshed))
 
 
 def rich_state_change(

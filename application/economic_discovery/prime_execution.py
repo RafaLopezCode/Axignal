@@ -9,16 +9,18 @@ from __future__ import annotations
 import hashlib
 import json
 import time
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from datetime import datetime
 from typing import Protocol
 
 from application.economic_discovery.brain_contracts import (
     DimensionDisposition,
+    StateChange,
     TypingDimensionContract,
 )
 from application.economic_discovery.continuous_observation import (
     SharedObservationWorkMemory,
+    refresh_prime_research_authority,
     schedule_prime_research,
 )
 from application.economic_discovery.execution_budget import (
@@ -44,10 +46,12 @@ from application.economic_discovery.observation_memory import (
 )
 from application.economic_discovery.observation_reuse import (
     ObservationReuseContext,
+    ObservationReuseDecision,
     ObservationReusePolicy,
     ObservationReuseRejected,
     ReuseDisposition,
     ReusePurpose,
+    ReuseReason,
     ReuseTargetScope,
     select_reusable_observations,
 )
@@ -60,7 +64,11 @@ from application.economic_discovery.prime import (
     build_prime_control_plan,
 )
 from application.economic_discovery.research_value import ResearchValueDecision
-from application.economic_discovery.temporal_currentness import TemporalCurrentnessPolicy
+from application.economic_discovery.temporal_currentness import (
+    SOURCE_CURRENTNESS_FIELD,
+    TemporalCurrentnessPolicy,
+    evaluate_effective_currentness,
+)
 from application.semantic_extraction import (
     SemanticCandidateSet,
     SemanticExtractionContract,
@@ -74,12 +82,15 @@ from application.source_acquisition import (
 )
 from application.source_representation import (
     DocumentRepresentation,
+    RichStateDatum,
     RichSubjectState,
     compile_rich_subject_state,
+    observation_slot_prefix,
     representation_state_data,
-    rich_state_change,
+    rich_state_delta,
 )
 from application.xeed_access.organization_reader import AuthorizedXeedOrganization
+from domain.evidence.epistemics import Currentness
 
 
 def _fingerprint(payload: object) -> str:
@@ -179,6 +190,10 @@ class PrimeExecutionTrace:
     prime_plan: PrimeControlPlan | None
     budget_stop_reason: str | None
     learning_event_ids: tuple[str, ...]
+    # Why this execution did (not) re-plan: content change vs evidence refresh.
+    semantic_change_fields: frozenset[str] = frozenset()
+    refreshed_fields: frozenset[str] = frozenset()
+    currentness_transition: tuple[Currentness, Currentness] | None = None
 
     def __post_init__(self) -> None:
         required = (
@@ -264,6 +279,48 @@ def _answerable_dimensions(
     )
 
 
+def _research_watermark(
+    rich_state: RichSubjectState,
+    policy: TemporalCurrentnessPolicy,
+) -> tuple[datetime, str, datetime]:
+    latest = max(rich_state.data, key=lambda item: (item.observed_at, item.observation_id))
+    valid_until = min(item.observed_at + policy.stale_after for item in rich_state.data)
+    return latest.observed_at, latest.observation_id, valid_until
+
+
+def _refresh_currentness_transition(
+    *,
+    prior_rich_state: RichSubjectState,
+    refreshed_fields: frozenset[str],
+    prior_currentness: dict[str, Currentness],
+    observation_id: str,
+    observed_at: datetime,
+    ingested_currentness: Currentness,
+    as_of: datetime,
+    policy: TemporalCurrentnessPolicy | None,
+) -> tuple[Currentness, Currentness] | None:
+    """Return (before, after) only when refreshing identical content changes currentness."""
+
+    if policy is None or not refreshed_fields:
+        return None
+    after = evaluate_effective_currentness(
+        observation_id=observation_id,
+        observed_at=observed_at,
+        previous=ingested_currentness,
+        as_of=max(as_of, observed_at),
+        policy=policy,
+    ).current
+    befores = {
+        prior_currentness[datum.observation_id]
+        for datum in prior_rich_state.data
+        if datum.name in refreshed_fields
+    }
+    changed = sorted(before.value for before in befores if before is not after)
+    if not changed:
+        return None
+    return Currentness(changed[0]), after
+
+
 def _executor_for(
     route: PrimeRoute,
     ports: PrimeExecutionPorts,
@@ -313,6 +370,9 @@ def execute_prime_source_slice(
     if prior_rich_state.subject_id != subject_id:
         raise ValueError("Prime execution prior rich state does not match canonical subject")
 
+    superseded_prefix = observation_slot_prefix(request.observation_slot)
+    prior_currentness: dict[str, Currentness] = {}
+    pending_supersession: list[tuple[RichStateDatum, ObservationReuseDecision]] = []
     reused_ids = frozenset(item.observation_id for item in prior_rich_state.data)
     if reused_ids:
         if reuse_policy is None or temporal_currentness_policy is None:
@@ -335,23 +395,32 @@ def execute_prime_source_slice(
             temporal_policy=temporal_currentness_policy,
         )
         decision_by_id = {decision.observation_id: decision for decision in selection.decisions}
-        observation_by_id = {
-            reusable.record.observation_id: reusable for reusable in selection.observations
+        governed_by_id = {
+            item.record.observation_id: item for item in observation_memory.for_subject(subject_id)
         }
         for datum in prior_rich_state.data:
             decision = decision_by_id.get(datum.observation_id)
-            if decision is None:
+            governed = governed_by_id.get(datum.observation_id)
+            if decision is None or governed is None:
                 raise ValueError("Prime reused observation is absent from governed memory")
-            if decision.disposition is not ReuseDisposition.ALLOW:
+            # Data of the slot being re-observed is superseded by this execution's fetch:
+            # it is only the diff baseline, never current state, so aging is allowed there.
+            baseline_only = datum.name.startswith(superseded_prefix) and decision.reason in {
+                ReuseReason.STALE_FOR_CURRENT_USE,
+                ReuseReason.HISTORICAL_FOR_CURRENT_USE,
+            }
+            if decision.disposition is not ReuseDisposition.ALLOW and not baseline_only:
                 raise ObservationReuseRejected(decision)
-            reusable_observation = observation_by_id[datum.observation_id]
+            if decision.disposition is not ReuseDisposition.ALLOW:
+                pending_supersession.append((datum, decision))
             if (
-                reusable_observation.record.source_ref != datum.source_ref
-                or reusable_observation.record.observed_at != datum.observed_at
+                governed.record.source_ref != datum.source_ref
+                or governed.record.observed_at != datum.observed_at
             ):
                 raise ValueError(
                     "Prime prior rich-state provenance does not match reusable observation"
                 )
+            prior_currentness[datum.observation_id] = decision.effective_currentness
     if (
         request.policy_id != source_policy.policy_id
         or request.policy_version != source_policy.policy_version
@@ -611,11 +680,56 @@ def execute_prime_source_slice(
         representation,
         observation_slot=request.observation_slot,
     )
+    # Aged baseline data is admissible only if this execution truly superseded it.
+    for datum, decision in pending_supersession:
+        if representation.observed_at <= datum.observed_at:
+            raise ObservationReuseRejected(decision)
+    # The fresh representation fully replaces its slot: a field it no longer carries is
+    # removed, never kept from the superseded observation as if it were still current.
     rich_state = compile_rich_subject_state(
         subject_id=subject_id,
-        contributions=(*prior_rich_state.data, *contribution),
+        contributions=(
+            *(
+                item
+                for item in prior_rich_state.data
+                if not item.name.startswith(superseded_prefix)
+            ),
+            *contribution,
+        ),
     )
-    state_change = rich_state_change(prior_rich_state, rich_state)
+    delta = rich_state_delta(prior_rich_state, rich_state)
+    currentness_transition = _refresh_currentness_transition(
+        prior_rich_state=prior_rich_state,
+        refreshed_fields=delta.refreshed_fields,
+        prior_currentness=prior_currentness,
+        observation_id=representation.observation_id,
+        observed_at=representation.observed_at,
+        ingested_currentness=(
+            Currentness.UNKNOWN
+            if ingested_observation_reuse_authority is None
+            else ingested_observation_reuse_authority.currentness
+        ),
+        as_of=occurred_at,
+        policy=temporal_currentness_policy,
+    )
+    # Plan only real semantic change plus a real currentness transition. A refresh of
+    # identical content advances provenance and time without re-running dimensions;
+    # without a temporal policy a refresh cannot be judged and is treated as change.
+    planned_fields = set(delta.semantic_fields)
+    if delta.refreshed_fields and temporal_currentness_policy is None:
+        planned_fields |= delta.refreshed_fields
+    if currentness_transition is not None:
+        planned_fields.add(SOURCE_CURRENTNESS_FIELD)
+    state_change = (
+        StateChange(
+            subject_id=subject_id,
+            changed_fields=frozenset(planned_fields),
+            previous_fingerprint=prior_rich_state.fingerprint,
+            current_fingerprint=rich_state.fingerprint,
+        )
+        if planned_fields and prior_rich_state.fingerprint != rich_state.fingerprint
+        else None
+    )
     answerable_before = _answerable_dimensions(
         contracts=contracts,
         available_state_fields=prior_rich_state.available_fields,
@@ -643,7 +757,13 @@ def execute_prime_source_slice(
         mechanism=LearningMechanism.DETERMINISTIC,
         input_fingerprint=representation.source_observation_fingerprint,
         output_fingerprint=representation.fingerprint,
-        reason_code=("RICH_STATE_UNCHANGED" if state_change is None else "RICH_STATE_UPDATED"),
+        reason_code=(
+            "RICH_STATE_UPDATED"
+            if state_change is not None
+            else "RICH_STATE_REFRESHED"
+            if delta.refreshed_fields
+            else "RICH_STATE_UNCHANGED"
+        ),
         before_state_fingerprint=prior_rich_state.fingerprint,
         after_state_fingerprint=rich_state.fingerprint,
         cost=LearningCost(),
@@ -831,6 +951,27 @@ def execute_prime_source_slice(
         learning_ids.append(semantic_event_id)
 
     if state_change is None:
+        if (
+            research_work_memory is not None
+            and temporal_currentness_policy is not None
+            and delta.refreshed_fields
+            and rich_state.data
+        ):
+            watermark_at, watermark_id, valid_until = _research_watermark(
+                rich_state, temporal_currentness_policy
+            )
+            refresh_prime_research_authority(
+                research_work_memory,
+                subject_id=subject_id,
+                prior_observation_ids=frozenset(
+                    item.observation_id for item in prior_rich_state.data
+                ),
+                observation_watermark_at=watermark_at,
+                observation_watermark_id=watermark_id,
+                valid_until=valid_until,
+                temporal_policy_id=temporal_currentness_policy.policy_id,
+                temporal_policy_version=temporal_currentness_policy.version,
+            )
         return PrimeExecutionTrace(
             trace_id=f"prime-trace:{_fingerprint((execution_id, xeed_id, representation.fingerprint))[:32]}",
             subject_id=subject_id,
@@ -848,6 +989,9 @@ def execute_prime_source_slice(
             prime_plan=None,
             budget_stop_reason=None,
             learning_event_ids=tuple(learning_ids),
+            semantic_change_fields=delta.semantic_fields,
+            refreshed_fields=delta.refreshed_fields,
+            currentness_transition=currentness_transition,
         )
 
     prime_plan = build_prime_control_plan(
@@ -865,20 +1009,35 @@ def execute_prime_source_slice(
             )
         if not rich_state.data:
             raise ValueError("durable Prime research scheduling requires rich-state provenance")
-        watermark = max(
-            rich_state.data,
-            key=lambda item: (item.observed_at, item.observation_id),
+        watermark_at, watermark_id, valid_until = _research_watermark(
+            rich_state, temporal_currentness_policy
+        )
+        # The authority is replaced as a whole for the new state, so it must carry every
+        # open gap, not only the gaps this change impacted; execution stays impacted-only.
+        all_dependencies = frozenset(
+            dependency for contract in contracts for dependency in contract.dependencies
+        )
+        research_plan = (
+            prime_plan
+            if all_dependencies <= state_change.changed_fields
+            else build_prime_control_plan(
+                change=replace(
+                    state_change,
+                    changed_fields=state_change.changed_fields | all_dependencies,
+                ),
+                contracts=contracts,
+                available_state_fields=rich_state.available_fields,
+                routing_policies=routing_policies,
+                research_decisions=research_decisions,
+            )
         )
         schedule_prime_research(
             research_work_memory,
-            plan=prime_plan,
+            plan=research_plan,
             requester_ref=f"prime:{execution_id}",
-            observation_watermark_at=watermark.observed_at,
-            observation_watermark_id=watermark.observation_id,
-            valid_until=min(
-                item.observed_at + temporal_currentness_policy.stale_after
-                for item in rich_state.data
-            ),
+            observation_watermark_at=watermark_at,
+            observation_watermark_id=watermark_id,
+            valid_until=valid_until,
             temporal_policy_id=temporal_currentness_policy.policy_id,
             temporal_policy_version=temporal_currentness_policy.version,
         )
@@ -1140,4 +1299,7 @@ def execute_prime_source_slice(
         prime_plan=prime_plan,
         budget_stop_reason=stop_reason,
         learning_event_ids=tuple(learning_ids),
+        semantic_change_fields=delta.semantic_fields,
+        refreshed_fields=delta.refreshed_fields,
+        currentness_transition=currentness_transition,
     )
