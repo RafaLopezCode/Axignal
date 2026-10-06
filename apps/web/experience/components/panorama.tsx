@@ -41,6 +41,7 @@ import {
   type ProjectionContext,
 } from "@/lib/projection";
 import { useLocale } from "@/lib/locale";
+import { FamilyLens } from "./cognition/lenses";
 import {
   Brand,
   LocaleToggle,
@@ -483,6 +484,11 @@ export function Panorama() {
                         </button>
                       ))}
                     </div>
+                    <FamilyLens
+                      organizationId={organizationId}
+                      family={family.id}
+                      asOf={asOf}
+                    />
                     {familySignals.length > 0 ? (
                       <div className="family-signals">
                         {familySignals.map((s) => (

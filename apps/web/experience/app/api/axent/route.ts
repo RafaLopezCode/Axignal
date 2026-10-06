@@ -12,6 +12,9 @@ import type { AxentMessage } from "@/lib/axent-contract";
 import { customerZeroProxy, sameOrigin } from "@/lib/customer-zero-server";
 import { readCustomerZeroResponse } from "@/lib/runtime-projection";
 import { explainRuntime } from "@/lib/runtime-axent";
+import { factsAt } from "@/lib/cognition/facts";
+import { composeFamily } from "@/lib/cognition/compose";
+import type { Intent } from "@/lib/cognition/registry";
 
 const requestSchema = z
   .object({
@@ -185,6 +188,26 @@ export async function POST(request: Request) {
       ref: signal.evidenceIds[0],
       priority: "supporting",
     });
+  // The family decides how this knowledge is best explained; the composer picks
+  // allowlisted lenses for the question, and validatePlan re-checks every one.
+  const changeIntent = /cambi|change|evoluci|evolution|cuándo|when|wann|quand|quando/i.test(prompt);
+  const intent: Intent = sourceIntent
+    ? "how_known"
+    : reasonIntent
+      ? "why"
+      : changeIntent
+        ? "change"
+        : "overview";
+  if (supported) {
+    const lenses = composeFamily({
+      family: context.family,
+      intent,
+      facts: factsAt(context.organizationId, context.asOf),
+      device: "desktop",
+    }).items.filter((item) => item.layer <= 2 || intent === "how_known");
+    for (const lens of lenses.slice(0, Math.max(0, 3 - items.length)))
+      items.push({ component: "lens", ref: lens.component, priority: "supporting" });
+  }
   const plan = { version: 1 as const, revision: context.revision, items };
   const planResult = validatePlan(plan, context);
   if (!planResult.success)

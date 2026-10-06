@@ -22,6 +22,9 @@ import { validatePlan, type CompositionPlan } from "@/lib/governance";
 import type { AxentMessage } from "@/lib/axent-contract";
 import { Badge, Observer, AxentIdentity } from "./ui";
 import { AxentComposer } from "./axent-composer";
+import { CognitiveComponent } from "./cognition/lenses";
+import { factsAt } from "@/lib/cognition/facts";
+import type { CognitiveComponentId } from "@/lib/cognition/registry";
 
 export function Axent({
   chat,
@@ -271,6 +274,13 @@ function RegisteredComposition({
     );
   const p = project(context);
   const registry = {
+    lens: (ref: string) => (
+      <CognitiveComponent
+        id={ref as CognitiveComponentId}
+        facts={factsAt(context.organizationId, context.asOf)}
+        asOf={context.asOf}
+      />
+    ),
     signal: (ref: string) => {
       const s = p.signals.find((s) => s.id === ref)!;
       return (

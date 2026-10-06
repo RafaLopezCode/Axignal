@@ -7,6 +7,8 @@ import {
   snapshots,
   type ProjectionContext,
 } from "./projection";
+import { factsAt } from "./cognition/facts";
+import { validateCognitivePlan } from "./cognition/compose";
 const contextSchema = z
   .object({
     organizationId: z.string(),
@@ -40,7 +42,7 @@ const planSchema = z
       .array(
         z
           .object({
-            component: z.enum(["signal", "evidence", "context"]),
+            component: z.enum(["signal", "evidence", "context", "lens"]),
             ref: z.string().min(1),
             priority: z.enum(["primary", "supporting"]),
           })
@@ -51,6 +53,13 @@ const planSchema = z
   })
   .strict();
 export type CompositionPlan = z.infer<typeof planSchema>;
+/** A lens must be allowlisted, fit the family, have its data at this time and render its epistemic content. */
+function lensAuthorized(ref: string, context: ProjectionContext) {
+  return validateCognitivePlan(
+    { version: 2, family: context.family, intent: "overview", items: [{ component: ref, layer: 1 }] },
+    factsAt(context.organizationId, context.asOf),
+  ).success;
+}
 export function validatePlan(input: unknown, context: ProjectionContext) {
   const parsed = planSchema.safeParse(input);
   if (!parsed.success || !validateContext(context).success)
@@ -69,7 +78,9 @@ export function validatePlan(input: unknown, context: ProjectionContext) {
         ? p.signals.some((s) => s.id === item.ref)
         : item.component === "evidence"
           ? p.evidence.some((e) => e.id === item.ref)
-          : item.ref === context.organizationId;
+          : item.component === "lens"
+            ? lensAuthorized(item.ref, context)
+            : item.ref === context.organizationId;
     if (!authorized)
       return { success: false as const, error: "REFERENCE_OUTSIDE_SCOPE" };
   }

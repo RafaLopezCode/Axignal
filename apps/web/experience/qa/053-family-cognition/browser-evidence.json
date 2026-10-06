@@ -1,0 +1,22 @@
+{
+  "date": "2026-10-06",
+  "route": "/panorama?family=<family> (FIXTURE_ONLY, organization norte, asOf 2026-10-03)",
+  "method": "DOM proxies measured in the in-app browser; not a user study. Reading seconds = visible layer-1 words / 200 wpm, excluding screen-reader-only fallbacks and closed disclosures.",
+  "layer1ReadSeconds": {
+    "v1_full_components": { "presence": 20, "demand": 22, "relationships": 38, "markets": 17, "reputation": 18, "activity": 40, "organization": 38 },
+    "v2_glance_desktop_1024x768": { "presence": 9, "demand": 12, "relationships": 5, "markets": 5, "reputation": 13, "activity": 12, "organization": 11 },
+    "v2_glance_mobile_375x812": { "presence": 4, "demand": 12, "relationships": 5, "markets": 5, "reputation": 13, "activity": 12, "organization": 11 }
+  },
+  "allFamiliesBothViewports": {
+    "interactionsToProvenance": 1,
+    "unknownRenderedAsZero": 0,
+    "potentialWithObservedMark": 0,
+    "unlabeledSvg": 0,
+    "tablesWithoutHeaders": 0,
+    "smallDisclosureTargets": 0,
+    "horizontalOverflow": false
+  },
+  "knownIssues": [
+    "Mobile composition is applied after hydration (server renders desktop composition first): brief layout shift."
+  ]
+}
