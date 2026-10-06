@@ -19,6 +19,7 @@ from application.source_representation import (
     representation_state_data,
     rich_state_change,
 )
+from domain.representation import TextSurface
 from pipeline.source_acquisition import ContentAddressedArtifactStore
 from pipeline.source_representation import (
     DocumentRepresentationError,
@@ -101,6 +102,30 @@ def test_html_representation_extracts_only_deterministic_document_semantics(tmp_
     assert representation.structured_data == ('{"@type":"Organization","name":"ACME Pumps"}',)
     artifact = store.read(representation.artifact_ref)
     assert b'"visible_text":"Industrial pumps Serving Spain and France."' in artifact
+
+
+def test_external_stylesheet_preserves_extracted_text_without_claiming_visibility(
+    tmp_path: Path,
+) -> None:
+    html = b"""<!doctype html>
+<html>
+<head><link rel="stylesheet" href="/assets/site.css"></head>
+<body><main><h1>Industrial pumps</h1><p>Serving Spain.</p></main></body>
+</html>"""
+    store = ContentAddressedArtifactStore(tmp_path / "artifacts")
+    representation = represent_html_observation(
+        request=_request(),
+        observation=_observation(store, html, "text/html; charset=utf-8"),
+        artifacts=store,
+    )
+
+    assert representation.visibility_resolved is False
+    assert representation.document_text == "Industrial pumps Serving Spain."
+    assert representation.text_representation().surface is TextSurface.EXTRACTED_TEXT
+    state = representation_state_data(representation, observation_slot="website")
+    names = {item.name for item in state}
+    assert "document.website.extracted_text" in names
+    assert "document.website.visible_text" not in names
 
 
 def test_representation_is_deterministic_for_same_source_bytes(tmp_path: Path) -> None:

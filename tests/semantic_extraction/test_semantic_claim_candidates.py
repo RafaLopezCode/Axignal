@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from dataclasses import replace
 from datetime import UTC, datetime
 
 import pytest
@@ -122,6 +123,40 @@ def test_grounded_provider_result_becomes_noncanonical_candidates() -> None:
     assert first.source_type == "OFFICIAL_WEB"
     assert first.candidate_id.startswith("claim:")
     assert first.candidate_id != "provider-must-not-own-this"
+
+
+def test_extracted_text_grounding_is_explicit_when_visibility_is_unresolved() -> None:
+    base = _representation()
+    representation = replace(
+        base,
+        extracted_text=base.visible_text,
+        extracted_text_fingerprint=base.visible_text_fingerprint,
+        visibility_resolved=False,
+    )
+    contract = _contract()
+    job = build_semantic_extraction_job(representation, contract)
+    assert job.context["visible_text"] is None
+    assert job.context["extracted_text"] == representation.document_text
+    result = StructuredResult(
+        job_id=job.id,
+        provider="fixture-provider",
+        payload={
+            "provider_version": "fixture/1",
+            "candidates": [
+                {
+                    "semantic_target": "capability",
+                    "statement": "ACME manufactures industrial pumps.",
+                    "excerpt": "manufactures industrial pumps",
+                    "grounding_surface": "EXTRACTED_TEXT",
+                }
+            ],
+        },
+    )
+
+    candidate_set = normalize_semantic_extraction_result(
+        job=job, result=result, representation=representation, contract=contract
+    )
+    assert candidate_set.candidates[0].grounding_surface is GroundingSurface.EXTRACTED_TEXT
 
 
 def test_structured_data_grounding_is_accepted() -> None:

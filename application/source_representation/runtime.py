@@ -47,11 +47,18 @@ def representation_state_data(
         raise ValueError("observation slot is required")
     prefix = f"document.{observation_slot}"
     values: list[tuple[str, str]] = [
-        (f"{prefix}.visible_text", representation.visible_text),
-        (f"{prefix}.visible_text_fingerprint", representation.visible_text_fingerprint),
+        (f"{prefix}.extracted_text", representation.document_text),
+        (f"{prefix}.extracted_text_fingerprint", representation.document_text_fingerprint),
         (f"{prefix}.media_type", representation.media_type),
         (f"{prefix}.charset", representation.charset),
     ]
+    if representation.visibility_resolved:
+        values.extend(
+            (
+                (f"{prefix}.visible_text", representation.visible_text),
+                (f"{prefix}.visible_text_fingerprint", representation.visible_text_fingerprint),
+            )
+        )
     if representation.title:
         values.append((f"{prefix}.title", representation.title))
     if representation.language:
@@ -73,7 +80,11 @@ def representation_state_data(
             observed_at=representation.observed_at,
             supporting_span=(
                 representation.text_representation().span(0, len(value))
-                if name == f"{prefix}.visible_text"
+                if name
+                in {
+                    f"{prefix}.extracted_text",
+                    f"{prefix}.visible_text",
+                }
                 else None
             ),
         )

@@ -13,8 +13,8 @@ from application.source_representation import DocumentRepresentation
 from pipeline.normalization import normalize_whitespace
 from pipeline.source_acquisition import ContentAddressedArtifactStore
 
-_REPRESENTATION_VERSION = "html-document/0.2"
-_NORMALIZATION_VERSION = "visible-text/0.2"
+_REPRESENTATION_VERSION = "html-document/0.3"
+_NORMALIZATION_VERSION = "document-text/0.3"
 _HIDDEN = frozenset(
     {
         "script",
@@ -183,8 +183,6 @@ class _StylesheetCollector(HTMLParser):
             self.styles.append(data)
 
     def hidden_selectors(self) -> tuple[str, ...]:
-        if self.external:
-            raise DocumentRepresentationError("external stylesheet visibility is unresolved")
         css = re.sub(r"/\*.*?\*/", "", "".join(self.styles), flags=re.DOTALL)
         rules = re.findall(r"([^{}]+)\{([^{}]*)\}", css)
         if re.sub(r"[^{}]+\{[^{}]*\}", "", css).strip():
@@ -350,9 +348,11 @@ def represent_html_observation(
     collector = _HtmlCollector(styles.hidden_selectors())
     collector.feed(decoded)
     collector.close()
-    visible_text = normalize_whitespace("".join(collector.text))
-    if not visible_text:
-        raise DocumentRepresentationError("document has no visible text")
+    document_text = normalize_whitespace("".join(collector.text))
+    if not document_text:
+        raise DocumentRepresentationError("document has no representable text")
+    visibility_resolved = not styles.external
+    visible_text = document_text
 
     title = normalize_whitespace(" ".join(collector.title)) or None
     description = normalize_whitespace(collector.description) if collector.description else None
@@ -361,10 +361,10 @@ def represent_html_observation(
         urljoin(observation.final_uri, collector.canonical_uri) if collector.canonical_uri else None
     )
     structured_data = _canonical_jsonld(collector.jsonld)
-    text_fingerprint = f"sha256:{hashlib.sha256(visible_text.encode('utf-8')).hexdigest()}"
+    text_fingerprint = f"sha256:{hashlib.sha256(document_text.encode('utf-8')).hexdigest()}"
 
     envelope = {
-        "schema": "axignal.document-representation/0.2",
+        "schema": "axignal.document-representation/0.3",
         "observation_id": observation_id,
         "subject_id": observation.subject_id,
         "source_ref": observation.final_uri,
@@ -380,8 +380,11 @@ def represent_html_observation(
         "language": language,
         "description": description,
         "canonical_uri": canonical_uri,
-        "visible_text": visible_text,
-        "visible_text_fingerprint": text_fingerprint,
+        "visible_text": visible_text if visibility_resolved else None,
+        "visible_text_fingerprint": text_fingerprint if visibility_resolved else None,
+        "extracted_text": document_text,
+        "extracted_text_fingerprint": text_fingerprint,
+        "visibility_resolved": visibility_resolved,
         "structured_data": structured_data,
         "representation_version": _REPRESENTATION_VERSION,
         "normalization_version": _NORMALIZATION_VERSION,
@@ -410,6 +413,9 @@ def represent_html_observation(
         canonical_uri=canonical_uri,
         visible_text=visible_text,
         visible_text_fingerprint=text_fingerprint,
+        extracted_text=document_text,
+        extracted_text_fingerprint=text_fingerprint,
+        visibility_resolved=visibility_resolved,
         structured_data=structured_data,
         representation_version=_REPRESENTATION_VERSION,
         normalization_version=_NORMALIZATION_VERSION,

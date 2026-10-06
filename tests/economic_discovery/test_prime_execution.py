@@ -903,8 +903,8 @@ def test_one_execution_reconstructs_bootstrap_to_prime_learning_sequence(
     assert history[1].replay.require("source_policy_fingerprint") == source_policy.fingerprint
     assert history[2].replay.disposition is ReplayDisposition.REPLAYABLE
     assert history[3].replay.disposition is ReplayDisposition.REPLAYABLE
-    assert history[3].replay.require("representation_version") == "html-document/0.2"
-    assert history[3].replay.require("normalization_version") == "visible-text/0.2"
+    assert history[3].replay.require("representation_version") == "html-document/0.3"
+    assert history[3].replay.require("normalization_version") == "document-text/0.3"
     assert history[4].replay.disposition is ReplayDisposition.REPLAYABLE
     assert history[4].replay.require("routing_policy_version") == "routing-v1"
     with pytest.raises(ValueError, match="version/value mismatch"):

@@ -330,17 +330,33 @@ def test_metadata_and_structured_declarations_are_separate_from_visible_text(
     assert "hidden name" in document.structured_data[0]
 
 
+def test_external_stylesheet_preserves_extracted_text_and_visibility_unknown(
+    tmp_path: Path,
+) -> None:
+    document = _document(
+        tmp_path,
+        f'<html><head><link rel="stylesheet" href="/unknown.css"></head><body>{CLAIM}</body></html>',
+    )
+    assert document.visibility_resolved is False
+    assert document.document_text == CLAIM
+    assert document.text_representation().surface is TextSurface.EXTRACTED_TEXT
+    state_names = {
+        item.name for item in representation_state_data(document, observation_slot="website")
+    }
+    assert "document.website.extracted_text" in state_names
+    assert "document.website.visible_text" not in state_names
+
+
 @pytest.mark.parametrize(
     "style",
     [
-        '<link rel="stylesheet" href="/unknown.css">',
         "<style>div > p {display:none}</style>",
         "<style>@media screen {p {display:none}}</style>",
         "<style>p {color:white}</style>",
         "<style>p {transform:scale(0)}</style>",
     ],
 )
-def test_unresolved_stylesheet_visibility_fails_closed(tmp_path: Path, style: str) -> None:
+def test_unresolved_inline_stylesheet_visibility_fails_closed(tmp_path: Path, style: str) -> None:
     with pytest.raises(DocumentRepresentationError, match="visibility"):
         _document(tmp_path, f"<html><head>{style}</head><body>{CLAIM}</body></html>")
 
@@ -359,7 +375,7 @@ def test_exact_unicode_span_and_source_lineage_survive_representation(tmp_path: 
     assert (
         representation.source_observation_artifact_ref == document.source_observation_artifact_ref
     )
-    assert representation.representation_version == "html-document/0.2"
+    assert representation.representation_version == "html-document/0.3"
     datum = representation_state_data(document, observation_slot="website")[0]
     assert datum.supporting_span.extract(representation) == document.visible_text
 

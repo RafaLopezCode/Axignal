@@ -42,7 +42,8 @@ def build_semantic_extraction_request(
         "title": representation.title,
         "language": representation.language,
         "description": representation.description,
-        "visible_text": representation.visible_text,
+        "visible_text": representation.visible_text if representation.visibility_resolved else None,
+        "extracted_text": representation.document_text,
         "structured_data": representation.structured_data,
         "grounding_surfaces": tuple(
             {
@@ -105,12 +106,12 @@ def _grounded_excerpt(
     raw_span: object,
 ) -> tuple[TextRepresentation, RepresentationSpan]:
     surfaces = (
-        (representation.text_representation(),)
-        if surface is GroundingSurface.VISIBLE_TEXT
-        else tuple(
+        tuple(
             representation.text_representation(index)
             for index in range(len(representation.structured_data))
         )
+        if surface is GroundingSurface.STRUCTURED_DATA
+        else (representation.text_representation(),)
     )
     if raw_span is not None:
         if not isinstance(raw_span, Mapping):
@@ -133,8 +134,10 @@ def _grounded_excerpt(
             selected = representation.text_representation(index)
         else:
             if "structured_index" in raw_span:
-                raise ValueError("visible span cannot select structured data")
+                raise ValueError("document-text span cannot select structured data")
             selected = surfaces[0]
+            if selected.surface.value != surface.value:
+                raise ValueError("candidate grounding surface does not match representation")
         if span.extract(selected) != excerpt:
             raise ValueError("candidate excerpt does not match exact span")
         return selected, span
@@ -144,6 +147,8 @@ def _grounded_excerpt(
     if len(matches) != 1:
         raise ValueError("ambiguous excerpt requires explicit offsets")
     selected = matches[0]
+    if selected.surface.value != surface.value:
+        raise ValueError("candidate grounding surface does not match representation")
     return selected, selected.unique_span(excerpt)
 
 

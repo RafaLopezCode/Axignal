@@ -455,19 +455,19 @@ class FirstProofService:
 
         contract = TypingDimensionContract(
             dimension_id="public-web-representation",
-            version="fr30-v1",
+            version="fr30-v2",
             semantic_target="condition-bound public website representation",
             primitive=SemanticPrimitive.CHOICE,
             question="Is a public website representation observable at the authorized target?",
-            state_requirements=("document.website.visible_text",),
-            dependencies=("document.website.visible_text",),
+            state_requirements=("document.website.extracted_text",),
+            dependencies=("document.website.extracted_text",),
             mutually_exclusive=True,
             abstention_policy="preserve UNKNOWN outside the observed surface",
         )
         routing = (
             DimensionRoutingPolicy(
                 dimension_id=contract.dimension_id,
-                version="fr30-routing-v1",
+                version="fr30-routing-v2",
                 answerable_route=PrimeRoute.DETERMINISTIC,
             ),
         )
@@ -483,7 +483,7 @@ class FirstProofService:
                     observation_slot="website",
                     source_ref=public_source_reference(target_uri),
                     source_type="OFFICIAL_WEB",
-                    provides_fields=frozenset({"document.website.visible_text"}),
+                    provides_fields=frozenset({"document.website.extracted_text"}),
                     priority=1,
                 ),
             ),
@@ -611,7 +611,7 @@ class FirstProofService:
         representation = representation_adapter.represent(request=request, observation=observation)
         observation_id = source_observation_id(request, observation)
         excerpt = (
-            representation.title or representation.description or representation.visible_text[:240]
+            representation.title or representation.description or representation.document_text[:240]
         )
         uncertainty = (
             "This observation covers only the authorized public homepage at this observation time. "
@@ -644,7 +644,11 @@ class FirstProofService:
                     extraction_fingerprint=None,
                 ),
             ),
-            interpretation="The authorized public homepage was reachable and contained visible text when AXIGNAL observed it.",
+            interpretation=(
+                "The authorized public homepage was reachable and contained deterministic "
+                "document text when AXIGNAL observed it. Visual visibility remains UNKNOWN "
+                "when external stylesheet effects are unresolved."
+            ),
             uncertainty=uncertainty,
         )
         xignal_projection = project_explainable_xignal(

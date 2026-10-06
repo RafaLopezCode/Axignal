@@ -52,6 +52,9 @@ class DocumentRepresentation:
     artifact_ref: str
     source_artifact_ref: str
     source_observation_artifact_ref: str
+    extracted_text: str | None = None
+    extracted_text_fingerprint: str | None = None
+    visibility_resolved: bool = True
 
     def __post_init__(self) -> None:
         _required(
@@ -78,6 +81,12 @@ class DocumentRepresentation:
             raise ValueError("structured-data entries cannot be empty")
         if self.visible_text_fingerprint != text_fingerprint(self.visible_text):
             raise ValueError("visible text does not match its fingerprint")
+        extracted_text = self.extracted_text or self.visible_text
+        extracted_fingerprint = self.extracted_text_fingerprint or text_fingerprint(extracted_text)
+        if extracted_fingerprint != text_fingerprint(extracted_text):
+            raise ValueError("extracted text does not match its fingerprint")
+        if not self.visibility_resolved and self.extracted_text is None:
+            raise ValueError("unresolved visibility requires explicit extracted text")
 
     @property
     def fingerprint(self) -> str:
@@ -100,12 +109,25 @@ class DocumentRepresentation:
                 "language": self.language,
                 "description": self.description,
                 "canonical_uri": self.canonical_uri,
-                "visible_text_fingerprint": self.visible_text_fingerprint,
+                "visible_text_fingerprint": (
+                    self.visible_text_fingerprint if self.visibility_resolved else None
+                ),
+                "extracted_text_fingerprint": self.document_text_fingerprint,
+                "visibility_resolved": self.visibility_resolved,
                 "structured_data": self.structured_data,
                 "representation_version": self.representation_version,
                 "normalization_version": self.normalization_version,
             }
         )
+
+    @property
+    def document_text(self) -> str:
+        """Deterministically extracted document text, independent of visual certainty."""
+        return self.extracted_text or self.visible_text
+
+    @property
+    def document_text_fingerprint(self) -> str:
+        return self.extracted_text_fingerprint or text_fingerprint(self.document_text)
 
     def text_representation(self, structured_index: int | None = None) -> TextRepresentation:
         """Project one exact surface for verifiable support; never grant truth."""
@@ -118,8 +140,10 @@ class DocumentRepresentation:
             surface = TextSurface.STRUCTURED_DATA
             representation_id = f"{self.representation_id}#structured:{structured_index}"
         else:
-            text = self.visible_text
-            surface = TextSurface.VISIBLE_TEXT
+            text = self.document_text
+            surface = (
+                TextSurface.VISIBLE_TEXT if self.visibility_resolved else TextSurface.EXTRACTED_TEXT
+            )
             representation_id = self.representation_id
         return TextRepresentation(
             representation_id=representation_id,

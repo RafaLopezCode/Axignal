@@ -27,6 +27,7 @@ def fingerprint(value: object) -> str:
 
 class GroundingSurface(StrEnum):
     VISIBLE_TEXT = "VISIBLE_TEXT"
+    EXTRACTED_TEXT = "EXTRACTED_TEXT"
     STRUCTURED_DATA = "STRUCTURED_DATA"
 
 
