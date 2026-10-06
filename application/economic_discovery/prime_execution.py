@@ -768,11 +768,13 @@ def execute_prime_source_slice(
             0,
             (time.monotonic_ns() - semantic_started_ns) // 1_000_000,
         )
+        # A re-grounded reuse of identical content dispatched no provider request.
+        reused_from = candidate_set.reused_from_extraction_id
         execution_controller.reconcile(
             semantic_reservation_id,
             ExecutionBudgetDelta(
                 elapsed_ms=semantic_elapsed_ms,
-                requests=1,
+                requests=0 if reused_from is not None else 1,
                 loops=0,
                 made_progress=True,
             ),
@@ -793,7 +795,11 @@ def execute_prime_source_slice(
                 mechanism=LearningMechanism.STRUCTURED_EVALUATOR,
                 input_fingerprint=representation.fingerprint,
                 output_fingerprint=candidate_set.result_fingerprint,
-                reason_code="GROUNDED_CANDIDATES_NORMALIZED",
+                reason_code=(
+                    "GROUNDED_CANDIDATES_NORMALIZED"
+                    if reused_from is None
+                    else "GROUNDED_CANDIDATES_REUSED"
+                ),
                 before_state_fingerprint=None,
                 after_state_fingerprint=None,
                 cost=LearningCost(latency_ms=semantic_elapsed_ms),
@@ -815,6 +821,7 @@ def execute_prime_source_slice(
                     execution_id=execution_id,
                     reservation_id=semantic_reservation_id,
                     attempt_no="1",
+                    **({} if reused_from is None else {"reused_from_extraction_id": reused_from}),
                 ),
             )
         )

@@ -148,6 +148,9 @@ class SemanticCandidateSet:
     provider_version: str
     result_fingerprint: str
     candidates: tuple[EconomicClaimCandidate, ...]
+    # Set only when this set re-grounds an earlier provider extraction of identical
+    # content; provider attribution stays with the original extractor.
+    reused_from_extraction_id: str | None = None
 
     def __post_init__(self) -> None:
         _required(
@@ -159,6 +162,10 @@ class SemanticCandidateSet:
             self.provider_version,
             self.result_fingerprint,
         )
+        if self.reused_from_extraction_id is not None:
+            _required(self.reused_from_extraction_id)
+            if self.reused_from_extraction_id == self.extraction_id:
+                raise ValueError("reused semantic extraction must reference an earlier extraction")
         ids = [candidate.candidate_id for candidate in self.candidates]
         if len(ids) != len(set(ids)):
             raise ValueError("semantic candidate ids must be unique")
