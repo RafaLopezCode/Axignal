@@ -10,7 +10,10 @@
 - [x] T8 Subscriber HTTP route and experience route behind a flag.
 - [x] T9 Adversarial tests, two-tenant E2E, offline and live benchmark, cost model.
 - [x] T10 Observation runtime consumes research requests (attention only).
-- [ ] T11 Production enablement (model, key, flag) and deployment.
+- [x] T11 Production enablement (model, key, flag) and deployment artifacts.
 
 T10 uses the existing T12 tick and EB-07 shared-work authority; no AXENT
 requery or direct truth write. T11 canonical cutover remains exclusively CTO-owned.
+
+T11 implementation/live isolated preflight complete; canonical deployment and
+activation pending CTO. See [CTO handoff](cto-handoff-t10-t11.md).
