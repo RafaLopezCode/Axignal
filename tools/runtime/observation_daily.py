@@ -20,9 +20,11 @@ so website leads stay blocked.
 
 from __future__ import annotations
 
+import argparse
 import json
 import os
 import sys
+import time
 from collections.abc import Callable, Mapping
 from dataclasses import dataclass, field, replace
 from datetime import UTC, datetime, timedelta
@@ -48,7 +50,11 @@ from application.observation_runtime import (
     procurement_acquirers,
     run_daily_tick,
 )
-from application.observation_runtime.ports import AcquisitionPort, ObservationRuntimeStore
+from application.observation_runtime.ports import (
+    AcquisitionPort,
+    LeaseLost,
+    ObservationRuntimeStore,
+)
 from application.observation_runtime.replay import FindingsLedger, RecordedFindingsPort
 from application.subscriber_identity.runtime import Clock
 from application.subscriber_projection.subscriber_runtime import SubscriberEconomicRuntime
@@ -315,13 +321,91 @@ def build_economic_runtime(root: Path, *, code_sha: str) -> SubscriberEconomicRu
     )
 
 
+def run_scheduled_tick(
+    *,
+    root: Path,
+    clock: Clock,
+    code_sha: str,
+    attention_file: Path,
+    enrollment: tuple[ObservationEnrollment, ...],
+    source_ports: Mapping[str, SourceObservationPort],
+    economic: SubscriberEconomicRuntime | None = None,
+) -> dict[str, object]:
+    """One existing runtime entry with durable, redacted operator evidence. No retries."""
+
+    from pipeline.observation_runtime import SqliteObservationRuntimeStore
+
+    store = SqliteObservationRuntimeStore(root / "observation-runtime.sqlite3")
+    started_at = clock.now()
+    invocation_id = store.begin_invocation(started_at=started_at, code_sha=code_sha)
+    began = time.monotonic()
+    summary: dict[str, object]
+    try:
+        report, brain = run_once(
+            economic=economic or build_economic_runtime(root, code_sha=code_sha),
+            store=store,
+            clock=clock,
+            attention_file=attention_file,
+            enrollment=enrollment,
+            source_ports=source_ports,
+        )
+        summary = {
+            "state": report.status.value,
+            "day": report.day,
+            "stop": report.stop_reason.value,
+            "detail": report.stop_detail,
+            "resumed": report.resumed,
+            "items": len(report.executed),
+            "failed_items": sum(e.outcome.value == "FAILED" for e in report.executed),
+            "blocked_items": len(report.blocked),
+            "deferred_items": len(report.deferred),
+            "requests": report.requests,
+            "candidates_new": report.candidates_new,
+            "recomputations": len(brain.outcomes),
+            "next_due_at": report.next_due_at,
+            "lease_status": "HELD_BY_OTHER" if report.status.value == "LEASE_HELD" else "COMPLETED",
+        }
+    except LeaseLost:
+        summary = {"state": "LEASE_LOST", "lease_status": "LOST"}
+    except Exception as error:
+        # No exception message, traceback, raw evidence, tenant/focus id or credentials.
+        summary = {
+            "state": "ERROR",
+            "error_class": type(error).__name__,
+            "lease_status": "INSPECT_STORE",
+        }
+    summary["duration_seconds"] = round(time.monotonic() - began, 6)
+    summary["code_sha"] = code_sha
+    store.finish_invocation(invocation_id, finished_at=clock.now(), summary=summary)
+    return summary
+
+
 def main() -> None:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--status", action="store_true", help="Read redacted operational status only"
+    )
+    args = parser.parse_args()
+    if args.status:
+        from pipeline.observation_runtime import SqliteObservationRuntimeStore
+
+        data = os.getenv("AXIGNAL_DATA_DIR", "").strip()
+        if not data:
+            print(json.dumps({"state": "NOT_CONFIGURED"}))
+            sys.exit(2)
+        print(
+            json.dumps(
+                SqliteObservationRuntimeStore.inspect(
+                    Path(data) / "observation-runtime.sqlite3", now=datetime.now(UTC)
+                )
+            )
+        )
+        return
     if os.getenv("AXIGNAL_OBSERVATION_RUNTIME_ENABLED", "").strip().lower() != "true":
         print(json.dumps({"state": "DISABLED"}))
         return
     from application.subscriber_identity.runtime import SystemClock
     from pipeline.observation_intelligence import TedSearchAdapter, UrllibTedTransport
-    from pipeline.observation_runtime import SqliteObservationRuntimeStore
 
     data = os.getenv("AXIGNAL_DATA_DIR", "").strip()
     attention_file = os.getenv("AXIGNAL_SUBSCRIBER_OBSERVATION_PLAN_FILE", "").strip()
@@ -336,13 +420,10 @@ def main() -> None:
         print(json.dumps({"state": "INVALID_CONFIGURATION"}))
         sys.exit(2)
     root = Path(data).resolve()
-    economic = build_economic_runtime(
-        root, code_sha=os.getenv("AXIGNAL_CODE_SHA", "UNKNOWN").strip() or "UNKNOWN"
-    )
     clock = SystemClock()
-    report, brain = run_once(
-        economic=economic,
-        store=SqliteObservationRuntimeStore(root / "observation-runtime.sqlite3"),
+    summary = run_scheduled_tick(
+        root=root,
+        code_sha=os.getenv("AXIGNAL_CODE_SHA", "UNKNOWN").strip() or "UNKNOWN",
         clock=clock,
         attention_file=Path(attention_file).expanduser().resolve(),
         enrollment=enrollment,
@@ -350,19 +431,9 @@ def main() -> None:
             "ted-search-v3": TedSearchAdapter(UrllibTedTransport(), clock=lambda: datetime.now(UTC))
         },
     )
-    print(
-        json.dumps(
-            {
-                "state": report.status.value,
-                "stop": report.stop_reason.value,
-                "detail": report.stop_detail,
-                "requests": report.requests,
-                "candidates_new": report.candidates_new,
-                "recomputations": [list(o) for o in brain.outcomes],
-                "next_due_at": report.next_due_at,
-            }
-        )
-    )
+    print(json.dumps(summary))
+    if summary["state"] in {"ERROR", "LEASE_LOST"}:
+        sys.exit(1)
 
 
 if __name__ == "__main__":
