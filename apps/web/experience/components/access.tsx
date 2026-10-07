@@ -30,6 +30,12 @@ export function Access({ intent }: { intent: AuthStartRequest["intent"] }) {
   } | null>(null);
   useEffect(() => () => controller.current?.abort(), []);
   useEffect(() => {
+    const match = /^#pilot=([A-Za-z0-9_-]{20,256})$/.exec(window.location.hash);
+    if (!match) return;
+    window.sessionStorage.setItem("axignal_pilot_invite", match[1]);
+    window.history.replaceState(null, "", window.location.pathname + window.location.search);
+  }, []);
+  useEffect(() => {
     const current = new AbortController();
     void fetch("/api/auth/status", { cache: "no-store", signal: current.signal }).then(response => response.json()).then(data => {
       if (!current.signal.aborted && Array.isArray(data.providers)) {
