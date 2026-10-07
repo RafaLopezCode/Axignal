@@ -13,6 +13,7 @@ export const portfolioSchema = z.object({
   state: z.literal("success"),
   capacity: z.number().int().nonnegative().nullable(),
   capacityCurrentness: z.enum(["CURRENT", "STALE", "HISTORICAL", "UNKNOWN"]),
+  entitlementSource: z.enum(["BILLING", "DESIGN_PARTNER_PILOT", "UNKNOWN"]).default("UNKNOWN"),
   canPurchase: z.boolean().nullable(),
   contractingEnabled: z.boolean(),
   organizations: z.array(z.object({
@@ -21,6 +22,12 @@ export const portfolioSchema = z.object({
   })),
 });
 export type SubscriberPortfolio = z.infer<typeof portfolioSchema>;
+export const pilotRedemptionSchema = z.object({
+  state: z.enum(["PILOT_ACTIVE", "PILOT_INVITE_INVALID"]),
+  accepted: z.boolean(),
+  capacity: z.literal(1).optional(),
+  expiresAt: z.string().datetime({ offset: true }).optional(),
+});
 export const subscriberOutputSchema = z.object({
   state: z.enum(["success", "INSUFFICIENT_EVIDENCE"]),
   projection: runtimeProjectionSchema,

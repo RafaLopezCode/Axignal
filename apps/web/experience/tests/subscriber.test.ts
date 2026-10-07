@@ -2,7 +2,7 @@ import test, { afterEach } from "node:test";
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { subscriberCommandSchema, approvedPaymentUrl, monthlyCapacityCents } from "../lib/subscriber-contracts";
-import { subscriberAuthStart, subscriberAuthCallback, subscriberProxy, subscriberLogout, boundedSubscriberJson, subscriberBillingWebhook, subscriberProjectionRevision } from "../lib/subscriber-server";
+import { subscriberAuthStart, subscriberAuthCallback, subscriberProxy, subscriberLogout, boundedSubscriberJson, subscriberBillingWebhook, subscriberPilotRedeem, subscriberProjectionRevision } from "../lib/subscriber-server";
 import { acceptsReadingPlan, cognitiveReadingPlan } from "../lib/subscriber-presentation";
 import { POST as reading } from "../app/api/subscriber/reading/route";
 import { POST as subscriberAxent } from "../app/api/subscriber/axent/route";
@@ -230,4 +230,64 @@ test("real cognitive reading survives clock refresh but evidence and currentness
   assert.equal((await subscriberAxent(request({ prompt: "Cómo lo sabes", contextId: "focus:one", revision: "f".repeat(64), locale: "es" }))).status, 409);
   assert.equal((await subscriberAxent(request({ prompt: "Cómo lo sabes", contextId: "focus:one", revision, locale: "es" }, "axignal-admin-session=" + token))).status, 401);
   assert.equal(reads, 3);
+});
+
+test("pilot redemption is same-origin, session-bound and forwards only to the fixed pilot endpoint", async () => {
+  setup();
+  const invite = "p".repeat(48);
+  let calls = 0;
+  globalThis.fetch = async (url, init) => {
+    calls++;
+    assert.equal(String(url), "http://127.0.0.1:18181/subscriber/pilot/redeem");
+    const sent = new Headers(init?.headers);
+    assert.equal(sent.get("authorization"), `Bearer ${token}`);
+    assert.equal(sent.get("origin"), "https://axignal.com");
+    assert.deepEqual(JSON.parse(String(init?.body)), { inviteToken: invite });
+    return Response.json({
+      state: "PILOT_ACTIVE",
+      accepted: true,
+      capacity: 1,
+      expiresAt: "2026-12-06T12:00:00+00:00",
+      privateAudit: "must-not-escape",
+    });
+  };
+  const response = await subscriberPilotRedeem(request({ inviteToken: invite }));
+  assert.equal(response.status, 200);
+  assert.deepEqual(await response.json(), {
+    state: "PILOT_ACTIVE",
+    accepted: true,
+    capacity: 1,
+    expiresAt: "2026-12-06T12:00:00+00:00",
+  });
+  assert.equal(response.headers.get("referrer-policy"), "no-referrer");
+  assert.equal(calls, 1);
+});
+
+test("pilot redemption rejects missing session, cross-site writes and malformed tokens before runtime", async () => {
+  setup();
+  let calls = 0;
+  globalThis.fetch = async () => { calls++; throw new Error("not reached"); };
+  const invite = "p".repeat(48);
+  const noSession = new Request("https://axignal.com/api/subscriber/pilot/redeem", {
+    method: "POST",
+    headers: { host: "axignal.com", origin: "https://axignal.com", "content-type": "application/json" },
+    body: JSON.stringify({ inviteToken: invite }),
+  });
+  assert.equal((await subscriberPilotRedeem(noSession)).status, 401);
+  const crossSite = new Request("https://axignal.com/api/subscriber/pilot/redeem", {
+    method: "POST",
+    headers: { host: "axignal.com", origin: "https://evil.example", cookie: `__Host-axignal-subscriber=${token}`, "content-type": "application/json" },
+    body: JSON.stringify({ inviteToken: invite }),
+  });
+  assert.equal((await subscriberPilotRedeem(crossSite)).status, 403);
+  assert.equal((await subscriberPilotRedeem(request({ inviteToken: "short" }))).status, 400);
+  assert.equal(calls, 0);
+});
+
+test("access UI captures pilot invite only from a strict URL fragment and removes it from the address bar", () => {
+  const source = readFileSync(new URL("../components/access.tsx", import.meta.url), "utf8");
+  assert.ok(source.includes('/^#pilot=([A-Za-z0-9_-]{20,256})$/'));
+  assert.ok(source.includes('sessionStorage.setItem("axignal_pilot_invite"'));
+  assert.ok(source.includes('history.replaceState(null, "", window.location.pathname + window.location.search)'));
+  assert.ok(!source.includes("searchParams.get(\"pilot\")"));
 });
