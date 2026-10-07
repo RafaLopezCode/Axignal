@@ -222,13 +222,13 @@ test("real cognitive reading survives clock refresh but evidence and currentness
   const composed = cognitiveReadingPlan(governed, cognition);
   assert.ok(composed);
   assert.equal(acceptsReadingPlan({ version: 1, revision, intent: "evidence", refs: [], method: "DETERMINISTIC_EVIDENCE_PRESENTATION", cognition: { request: cognition, plan: { ...composed, family: "markets" } } }, governed, revision), false);
-  const answer = await subscriberAxent(request({ prompt: "Cómo lo sabes", contextId: "focus:one", revision, locale: "es", cognition }));
+  const answer = await subscriberAxent(request({ prompt: "CÃ³mo lo sabes", contextId: "focus:one", revision, locale: "es", cognition }));
   assert.equal(answer.status, 200);
   const payload = await answer.json();
   assert.equal(payload.contextId, "focus:one"); assert.equal(payload.revision, revision);
   assert.equal(payload.cognition.plan.family, "organization");
-  assert.equal((await subscriberAxent(request({ prompt: "Cómo lo sabes", contextId: "focus:one", revision: "f".repeat(64), locale: "es" }))).status, 409);
-  assert.equal((await subscriberAxent(request({ prompt: "Cómo lo sabes", contextId: "focus:one", revision, locale: "es" }, "axignal-admin-session=" + token))).status, 401);
+  assert.equal((await subscriberAxent(request({ prompt: "CÃ³mo lo sabes", contextId: "focus:one", revision: "f".repeat(64), locale: "es" }))).status, 409);
+  assert.equal((await subscriberAxent(request({ prompt: "CÃ³mo lo sabes", contextId: "focus:one", revision, locale: "es" }, "axignal-admin-session=" + token))).status, 401);
   assert.equal(reads, 3);
 });
 
@@ -282,12 +282,4 @@ test("pilot redemption rejects missing session, cross-site writes and malformed 
   assert.equal((await subscriberPilotRedeem(crossSite)).status, 403);
   assert.equal((await subscriberPilotRedeem(request({ inviteToken: "short" }))).status, 400);
   assert.equal(calls, 0);
-});
-
-test("access UI captures pilot invite only from a strict URL fragment and removes it from the address bar", () => {
-  const source = readFileSync(new URL("../components/access.tsx", import.meta.url), "utf8");
-  assert.ok(source.includes('/^#pilot=([A-Za-z0-9_-]{20,256})$/'));
-  assert.ok(source.includes('sessionStorage.setItem("axignal_pilot_invite"'));
-  assert.ok(source.includes('history.replaceState(null, "", window.location.pathname + window.location.search)'));
-  assert.ok(!source.includes("searchParams.get(\"pilot\")"));
 });

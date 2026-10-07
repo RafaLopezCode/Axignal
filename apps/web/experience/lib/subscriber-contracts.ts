@@ -22,12 +22,11 @@ export const portfolioSchema = z.object({
   })),
 });
 export type SubscriberPortfolio = z.infer<typeof portfolioSchema>;
-export const pilotRedemptionSchema = z.object({
-  state: z.enum(["PILOT_ACTIVE", "PILOT_INVITE_INVALID"]),
-  accepted: z.boolean(),
-  capacity: z.literal(1).optional(),
-  expiresAt: z.string().datetime({ offset: true }).optional(),
-});
+export const pilotRedemptionSchema = z.discriminatedUnion("state", [
+  z.object({ state: z.literal("PILOT_ACTIVE"), accepted: z.literal(true),
+    capacity: z.literal(1), expiresAt: z.string().datetime({ offset: true }) }),
+  z.object({ state: z.literal("PILOT_INVITE_INVALID"), accepted: z.literal(false) }),
+]);
 export const subscriberOutputSchema = z.object({
   state: z.enum(["success", "INSUFFICIENT_EVIDENCE"]),
   projection: runtimeProjectionSchema,

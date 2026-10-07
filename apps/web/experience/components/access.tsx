@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import { capturePilotInvite } from "@/lib/pilot-invite";
 import { useEffect, useRef, useState } from "react";
 import {
   ArrowRight,
@@ -30,10 +31,7 @@ export function Access({ intent }: { intent: AuthStartRequest["intent"] }) {
   } | null>(null);
   useEffect(() => () => controller.current?.abort(), []);
   useEffect(() => {
-    const match = /^#pilot=([A-Za-z0-9_-]{20,256})$/.exec(window.location.hash);
-    if (!match) return;
-    window.sessionStorage.setItem("axignal_pilot_invite", match[1]);
-    window.history.replaceState(null, "", window.location.pathname + window.location.search);
+    capturePilotInvite(window.location, window.history, () => window.sessionStorage);
   }, []);
   useEffect(() => {
     const current = new AbortController();
@@ -85,18 +83,18 @@ export function Access({ intent }: { intent: AuthStartRequest["intent"] }) {
         <section className="access-perspective">
           <span className="eyebrow">
             {t(
-              "AXIGNAL / Tu próxima mirada",
+              "AXIGNAL / Tu prÃ³xima mirada",
               "AXIGNAL / Your next perspective",
             )}
           </span>
           <h1>
             {t("El contexto espera.", "Context awaits.")}
             <br />
-            <em>{t("Acércate.", "Come closer.")}</em>
+            <em>{t("AcÃ©rcate.", "Come closer.")}</em>
           </h1>
           <p>
             {t(
-              "Una entrada sencilla a una forma más profunda de observar. Tu identidad abre el acceso; la evidencia sostiene lo que ves.",
+              "Una entrada sencilla a una forma mÃ¡s profunda de observar. Tu identidad abre el acceso; la evidencia sostiene lo que ves.",
               "A simple entrance to a deeper way of observing. Your identity opens access; evidence supports what you see.",
             )}
           </p>
@@ -110,10 +108,10 @@ export function Access({ intent }: { intent: AuthStartRequest["intent"] }) {
               <i />
             </div>
             <div className="access-slip slip-signal">
-              <span className="mono">{t("Señal", "Signal")}</span>
+              <span className="mono">{t("SeÃ±al", "Signal")}</span>
               <span>
                 {t(
-                  "Lo que merece tu atención.",
+                  "Lo que merece tu atenciÃ³n.",
                   "What deserves your attention.",
                 )}
               </span>
@@ -121,7 +119,7 @@ export function Access({ intent }: { intent: AuthStartRequest["intent"] }) {
             </div>
             <Observer scene="welcome" />
             <span className="hand-note">
-              {t("una mirada que continúa", "a perspective that continues")}
+              {t("una mirada que continÃºa", "a perspective that continues")}
             </span>
           </div>
         </section>
@@ -156,7 +154,7 @@ export function Access({ intent }: { intent: AuthStartRequest["intent"] }) {
                   "Choose the identity you want to continue with.",
                 )
               : t(
-                  "Elige cómo te gustaría entrar en AXIGNAL.",
+                  "Elige cÃ³mo te gustarÃ­a entrar en AXIGNAL.",
                   "Choose how you would like to enter AXIGNAL.",
                 )}
           </p>
@@ -164,7 +162,7 @@ export function Access({ intent }: { intent: AuthStartRequest["intent"] }) {
             <Info size={17} />
             <p>
               {available ? t("Elige una identidad conectada para continuar de forma segura.", "Choose a connected identity to continue securely.") : t(
-                "Acceso en preparación. Google y ChatGPT aún no están conectados; esta versión no crea cuentas ni sesiones.",
+                "Acceso en preparaciÃ³n. Google y ChatGPT aÃºn no estÃ¡n conectados; esta versiÃ³n no crea cuentas ni sesiones.",
                 "Access is being prepared. Google and ChatGPT are not connected yet; this version creates no accounts or sessions.",
               )}
             </p>
@@ -176,7 +174,7 @@ export function Access({ intent }: { intent: AuthStartRequest["intent"] }) {
                 key={provider.id}
                 onClick={() => void start(provider.id)}
                 disabled={!!busy || (provider.id === "openai" && !chatgptAvailable)}
-                aria-label={provider.id === "openai" && !chatgptAvailable ? t("ChatGPT · Próximamente", "ChatGPT · Coming soon") : undefined}
+                aria-label={provider.id === "openai" && !chatgptAvailable ? t("ChatGPT Â· PrÃ³ximamente", "ChatGPT Â· Coming soon") : undefined}
               >
                 <img
                   src={
@@ -191,7 +189,7 @@ export function Access({ intent }: { intent: AuthStartRequest["intent"] }) {
                 <span>
                   {provider.id === "google"
                     ? t("Continuar con Google", "Continue with Google")
-                    : chatgptAvailable ? t("Continuar con ChatGPT", "Continue with ChatGPT") : t("Próximamente", "Coming soon")}
+                    : chatgptAvailable ? t("Continuar con ChatGPT", "Continue with ChatGPT") : t("PrÃ³ximamente", "Coming soon")}
                 </span>
                 {busy === provider.id ? (
                   <LoaderCircle className="spin" size={18} />
@@ -203,7 +201,7 @@ export function Access({ intent }: { intent: AuthStartRequest["intent"] }) {
           </div>
           <span className="sr-only" role="status">
             {busy
-              ? t("Comprobando disponibilidad…", "Checking availability…")
+              ? t("Comprobando disponibilidadâ€¦", "Checking availabilityâ€¦")
               : ""}
           </span>
           {outcome && (
@@ -218,14 +216,14 @@ export function Access({ intent }: { intent: AuthStartRequest["intent"] }) {
                       "We could not check access.",
                     )
                   : t(
-                      "Esta conexión todavía no está activa.",
+                      "Esta conexiÃ³n todavÃ­a no estÃ¡ activa.",
                       "This connection is not active yet.",
                     )}
               </strong>
               <p>
                 {outcome.error
                   ? t(
-                      "La conexión no respondió como esperábamos. Esta versión no ha establecido una sesión. Puedes volver a comprobarlo.",
+                      "La conexiÃ³n no respondiÃ³ como esperÃ¡bamos. Esta versiÃ³n no ha establecido una sesiÃ³n. Puedes volver a comprobarlo.",
                       "The connection did not respond as expected. This version has established no session. You can check again.",
                     )
                   : outcome.provider === "openai"
@@ -252,7 +250,7 @@ export function Access({ intent }: { intent: AuthStartRequest["intent"] }) {
               </h3>
               <p>
                 {t(
-                  "La integración prevista solicita identificador, nombre y correo. No acceso a Gmail, Drive, conversaciones de ChatGPT ni uso de tu plan de IA.",
+                  "La integraciÃ³n prevista solicita identificador, nombre y correo. No acceso a Gmail, Drive, conversaciones de ChatGPT ni uso de tu plan de IA.",
                   "The planned integration requests an identifier, name and email. No Gmail, Drive, ChatGPT conversation access or use of your AI plan.",
                 )}
               </p>
@@ -260,18 +258,18 @@ export function Access({ intent }: { intent: AuthStartRequest["intent"] }) {
           </div>
           <p className="access-legal">
             {t(
-              "Los textos legales están pendientes de publicación.",
+              "Los textos legales estÃ¡n pendientes de publicaciÃ³n.",
               "Legal texts are pending publication.",
             )}{" "}
             <Link href="/policies/terms">
-              {t("Uso y límites", "Use and limitations")}
+              {t("Uso y lÃ­mites", "Use and limitations")}
             </Link>{" "}
-            · <Link href="/policies/privacy">{t("Privacidad", "Privacy")}</Link>
+            Â· <Link href="/policies/privacy">{t("Privacidad", "Privacy")}</Link>
           </p>
           <div className="demo-access">
             <span>
               {t(
-                "Mientras tanto, descubre cómo se siente.",
+                "Mientras tanto, descubre cÃ³mo se siente.",
                 "Meanwhile, discover how it feels.",
               )}
             </span>
