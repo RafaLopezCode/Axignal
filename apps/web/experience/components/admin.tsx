@@ -282,7 +282,7 @@ export function Admin({
                     {t("Read models ilustrativos", "Illustrative read models")}
                   </span>
                 </div>
-                {domainId === "command" && <PilotTestAccounts />}
+                {domainId === "customers" && <PilotTestAccounts />}
                 {domainId === "command" && (
                   <div className="admin-attention">
                     <div>
