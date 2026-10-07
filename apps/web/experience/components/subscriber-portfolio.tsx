@@ -4,8 +4,9 @@ import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ArrowRight, LogOut, Plus, RefreshCw } from "lucide-react";
 import { useLocale } from "@/lib/locale";
-import { approvedPaymentUrl, monthlyCapacityCents, portfolioSchema, subscriberOutputSchema, subscriberResultSchema, type SubscriberPortfolio } from "@/lib/subscriber-contracts";
+import { approvedPaymentUrl, monthlyCapacityCents, pilotRedemptionSchema, portfolioSchema, subscriberOutputSchema, subscriberResultSchema, type SubscriberPortfolio } from "@/lib/subscriber-contracts";
 import type { RuntimeProjection } from "@/lib/runtime-projection";
+import { pendingPilotInvite, clearPilotInvite } from "@/lib/pilot-invite";
 import { PublicShell } from "./public-shell";
 import { SubscriberReading } from "./subscriber-reading";
 import { SubscriberRepresentation } from "./subscriber-representation";
@@ -17,6 +18,9 @@ export function SubscriberPortfolioExperience() {
   const [access, setAccess] = useState<"loading" | "required" | "failure" | "ready">("loading");
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState("");
+  const pilotRedeemed = useRef(false);
+  const translate = useRef(t);
+  translate.current = t;
   const [locator, setLocator] = useState("");
   const [total, setTotal] = useState(1);
   const [paymentUrl, setPaymentUrl] = useState<string | null>(null);
@@ -51,6 +55,58 @@ export function SubscriberPortfolioExperience() {
     finally { requests.current.delete(controller); }
   }, []);
   useEffect(() => { void readPortfolio(); }, [readPortfolio]);
+  useEffect(() => {
+    if (access !== "ready" || pilotRedeemed.current) return;
+    const inviteToken = pendingPilotInvite(() => window.sessionStorage);
+    if (!inviteToken) return;
+    pilotRedeemed.current = true;
+    const epoch = sessionEpoch.current;
+    const controller = new AbortController();
+    requests.current.add(controller);
+    void (async () => {
+      try {
+        const response = await fetch("/api/subscriber/pilot/redeem", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ inviteToken }),
+          signal: controller.signal,
+        });
+        if (controller.signal.aborted || epoch !== sessionEpoch.current) return;
+        if (response.status === 401) {
+          pilotRedeemed.current = false;
+          setAccess("required");
+          return;
+        }
+        if (!response.ok) throw new Error("PILOT_UNAVAILABLE");
+        const result = pilotRedemptionSchema.parse(await response.json());
+        if (controller.signal.aborted || epoch !== sessionEpoch.current) return;
+        clearPilotInvite(() => window.sessionStorage);
+        if (!result.accepted) {
+          setMessage(translate.current(
+            "La invitación de Design Partner no es válida o ha caducado.",
+            "The Design Partner invitation is invalid or has expired.",
+          ));
+          return;
+        }
+        setMessage(translate.current(
+          "Acceso Design Partner activado: una organización, con la experiencia completa de AXIGNAL.",
+          "Design Partner access activated: one organization, with the full AXIGNAL experience.",
+        ));
+        await readPortfolio();
+      } catch {
+        if (!controller.signal.aborted && epoch === sessionEpoch.current) {
+          pilotRedeemed.current = false;
+          setMessage(translate.current(
+            "No pudimos activar todavía la invitación. Puedes volver a cargar la cuenta para reintentarlo.",
+            "We could not activate the invitation yet. Reload the account to retry.",
+          ));
+        }
+      } finally {
+        requests.current.delete(controller);
+      }
+    })();
+    return () => { controller.abort(); pilotRedeemed.current = false; };
+  }, [access, readPortfolio]);
   async function command(input: Record<string, unknown>) {
     if (busy) return;
     const signature = JSON.stringify(input);
@@ -119,6 +175,7 @@ export function SubscriberPortfolioExperience() {
       if (!response.ok) throw new Error("SIGN_OUT_FAILED");
       ++sessionEpoch.current; ++outputEpoch.current;
       for (const controller of requests.current) controller.abort();
+      clearPilotInvite(() => window.sessionStorage); pilotRedeemed.current = false;
       attempts.current.clear(); setSelected(null); setRevision(null); setPaymentUrl(null); setReading(false);
       setPortfolio(null); setProjection(null); setAccess("required");
     } catch { setMessage(t("No se pudo confirmar el cierre de sesión.", "Sign-out could not be confirmed.")); }
@@ -136,6 +193,7 @@ export function SubscriberPortfolioExperience() {
       {access === "ready" && portfolio && <>
         <div className="subscriber-grid"><section className="subscriber-organizations" aria-labelledby="portfolio-title"><div className="subscriber-section-heading"><h2 id="portfolio-title">{t("Tus organizaciones", "Your organizations")}</h2><button className="text-link" disabled={busy} onClick={() => void readPortfolio()}><RefreshCw size={16}/>{t("Actualizar", "Refresh")}</button></div>
           <p>{portfolio.capacity === null || portfolio.capacityCurrentness !== "CURRENT" ? t("Capacidad sin confirmar", "Unconfirmed capacity") : `${used} / ${portfolio.capacity}`} · {t("Las organizaciones pausadas conservan su espacio.", "Paused organizations retain their space.")}</p>
+          {portfolio.entitlementSource === "DESIGN_PARTNER_PILOT" && <p className="limit-note">{t("Design Partner · 1 organización · 0 € durante el piloto de validación.", "Design Partner · 1 organization · €0 during the validation pilot.")}</p>}
           {!portfolio.organizations.filter(item => !["REMOVED", "RESOLVED", "CANCELLED"].includes(item.state)).length && <div className="subscriber-empty"><h3>{t("Empieza por una organización.", "Start with an organization.")}</h3><p>{t("Puedes explorar tu cuenta. La germinación empieza al añadir una organización y resolver su identidad y el acceso a observarla.", "You can explore your account. Germination starts when you add an organization and its identity and observation access are resolved.")}</p><p>{t("Indica dónde observar. El nombre o la URL orientan la investigación; no establecen lo que es verdad.", "Direct observation. A name or URL guides research; it does not establish truth.")}</p></div>}
           <ul className="subscriber-list">{portfolio.organizations.filter(item => !["REMOVED", "RESOLVED", "CANCELLED"].includes(item.state)).map(item => <li key={item.focusId}><div><h3>{item.label}</h3><p>{item.state === "IDENTITY_PENDING" ? t("Identidad por resolver", "Identity unresolved") : item.state === "IDENTITY_REJECTED" ? t("Identidad no admitida", "Identity not admitted") : item.state === "CAPACITY_UNKNOWN" ? t("Capacidad sin confirmar", "Unconfirmed capacity") : item.state === "CAPACITY_PENDING" ? t("Pendiente de capacidad", "Capacity pending") : item.state === "PURCHASE_AUTHORITY_REQUIRED" ? t("Autoridad de compra pendiente", "Purchase authority pending") : item.state === "PAUSED" ? t("Pausada", "Paused") : t("Observación activa", "Active observation")}</p></div><div className="subscriber-row-actions">
             {item.organizationId && <button className="text-link" disabled={busy} onClick={() => void readOutput(item.focusId)} aria-pressed={selected === item.focusId}>{t("Abrir la lectura", "Open the reading")}<ArrowRight size={15}/></button>}

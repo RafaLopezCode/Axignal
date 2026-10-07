@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import { capturePilotInvite } from "@/lib/pilot-invite";
 import { useEffect, useRef, useState } from "react";
 import {
   ArrowRight,
@@ -29,6 +30,9 @@ export function Access({ intent }: { intent: AuthStartRequest["intent"] }) {
     error: boolean;
   } | null>(null);
   useEffect(() => () => controller.current?.abort(), []);
+  useEffect(() => {
+    capturePilotInvite(window.location, window.history, () => window.sessionStorage);
+  }, []);
   useEffect(() => {
     const current = new AbortController();
     void fetch("/api/auth/status", { cache: "no-store", signal: current.signal }).then(response => response.json()).then(data => {

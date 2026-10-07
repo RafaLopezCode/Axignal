@@ -282,6 +282,7 @@ export function Admin({
                     {t("Read models ilustrativos", "Illustrative read models")}
                   </span>
                 </div>
+                {domainId === "command" && <PilotTestAccounts />}
                 {domainId === "command" && (
                   <div className="admin-attention">
                     <div>
@@ -705,5 +706,30 @@ export function Admin({
         </Dialog>
       )}
     </div>
+  );
+}
+
+function PilotTestAccounts() {
+  const { t } = useLocale();
+  const [accounts, setAccounts] = useState({ a: "", b: "" });
+  return (
+    <section className="admin-attention admin-pilot-accounts" aria-labelledby="pilot-accounts-title">
+      <h2 id="pilot-accounts-title">{t("Cuentas para la prueba del piloto", "Pilot test accounts")}</h2>
+      <p>{t("AXIGNAL · https://axignal.com/ · 1 organización, sin pagos.", "AXIGNAL · https://axignal.com/ · 1 organization, no payments.")}</p>
+      <p>{t("Indica las cuentas Google que utilizarás. Este borrador se mantiene mientras esta vista está abierta; no concede acceso ni envía invitaciones. El acceso requiere Google verificado y una invitación de un solo uso.", "Enter the Google accounts you will use. This draft lasts while this view is open; it grants no access and sends no invitations. Access requires verified Google sign-in and a single-use invitation.")}</p>
+      <div className="admin-table-toolbar">
+        {(["a", "b"] as const).map((tenant) => (
+          <label className="search-field" key={tenant}>
+            <span>{t("Cuenta Google", "Google account")} {tenant.toUpperCase()}</span>
+            <input type="email" autoComplete="off" value={accounts[tenant]}
+              onChange={(event) => setAccounts((previous) => ({ ...previous, [tenant]: event.target.value }))}
+              aria-label={t("Cuenta Google", "Google account") + " " + tenant.toUpperCase()} />
+          </label>
+        ))}
+      </div>
+      <button type="button" className="button secondary" onClick={() => setAccounts({ a: "", b: "" })}>
+        {t("Vaciar cuentas", "Clear accounts")}
+      </button>
+    </section>
   );
 }

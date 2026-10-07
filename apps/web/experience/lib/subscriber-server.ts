@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { createHash } from "node:crypto";
 import { authStartSchema, preparedAuthStart, preparedProviders } from "./public-contracts";
-import { approvedPaymentUrl, portfolioSchema, subscriberCommandSchema, subscriberOutputSchema, subscriberResultSchema } from "./subscriber-contracts";
+import { approvedPaymentUrl, pilotRedemptionSchema, portfolioSchema, subscriberCommandSchema, subscriberOutputSchema, subscriberResultSchema } from "./subscriber-contracts";
 import type { RuntimeProjection } from "./runtime-projection";
 
 export const subscriberSessionCookie = "__Host-axignal-subscriber";
@@ -155,6 +155,35 @@ export async function subscriberAxent(request: Request, contextId: string, body:
     return typeof payload === "object" && payload !== null ? (payload as Record<string, unknown>) : null;
   } catch {
     return null;
+  }
+}
+
+export async function subscriberPilotRedeem(request: Request): Promise<Response> {
+  if (!subscriberSameOrigin(request)) return rejected("ORIGIN_REQUIRED", 403);
+  const token = cookie(request, subscriberSessionCookie);
+  if (!token) return rejected("AUTHENTICATION_REQUIRED", 401);
+  try {
+    const input = z.object({ inviteToken: z.string().min(20).max(256) }).strict().parse(
+      await boundedSubscriberJson(request, 512),
+    );
+    const response = await upstream("/subscriber/pilot/redeem", token, input);
+    if (!response.ok) {
+      return rejected(
+        response.status === 401
+          ? "AUTHENTICATION_REQUIRED"
+          : response.status === 404
+            ? "PILOT_NOT_ENABLED"
+            : "PILOT_REDEMPTION_UNAVAILABLE",
+        response.status,
+      );
+    }
+    return Response.json(pilotRedemptionSchema.parse(await checkedJson(response)), {
+      status: response.status,
+      headers,
+    });
+  } catch (error) {
+    if (error instanceof z.ZodError) return rejected("INVALID_REQUEST_OR_RESPONSE", 400);
+    return rejected("PILOT_REDEMPTION_UNAVAILABLE", 503);
   }
 }
 
