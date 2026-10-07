@@ -6667,7 +6667,7 @@ html[data-motion="reduced"] {
 .admin-operations-navigation { border-top: 1px solid var(--line); margin-top: 18px; padding-top: 8px; }
 .admin-operations-navigation > summary { cursor: pointer; min-height: 44px; display: flex; align-items: center; justify-content: space-between; }
 .admin-operations-navigation > summary::after { content: "+"; font-size: 16px; }
-.admin-operations-navigation[open] > summary::after { content: "−"; }
+.admin-operations-navigation[open] > summary::after { content: "âˆ’"; }
 .admin-product-host > .canonical-product { width: 100%; height: 100%; }
 .admin-product-host > .runtime-entry { width: 100%; min-height: 0; overflow-y: auto; }
 .admin-product-host .product-workspace { height: 100%; }
@@ -6836,3 +6836,10 @@ html[data-motion="reduced"] {
   .first-map-brief article { padding:14px; }
   .runtime-canvas.sparse { min-height:0; padding:0; }
 }
+
+.admin-pilot-accounts { display: block; }
+.admin-pilot-accounts h2 { margin-top: 0; font-size: var(--type-panel-title); }
+.admin-pilot-accounts p { font-size: var(--type-body); max-width: 70ch; }
+.admin-pilot-accounts .admin-table-toolbar { flex-wrap: wrap; }
+.admin-pilot-accounts .search-field { flex-direction: column; align-items: stretch; gap: var(--space-2); min-width: min(100%, 220px); max-width: 360px; color: var(--muted); }
+.admin-pilot-accounts .search-field input { min-height: 32px; font-size: var(--type-control); color: var(--ink); }

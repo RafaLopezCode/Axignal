@@ -222,13 +222,13 @@ test("real cognitive reading survives clock refresh but evidence and currentness
   const composed = cognitiveReadingPlan(governed, cognition);
   assert.ok(composed);
   assert.equal(acceptsReadingPlan({ version: 1, revision, intent: "evidence", refs: [], method: "DETERMINISTIC_EVIDENCE_PRESENTATION", cognition: { request: cognition, plan: { ...composed, family: "markets" } } }, governed, revision), false);
-  const answer = await subscriberAxent(request({ prompt: "CÃ³mo lo sabes", contextId: "focus:one", revision, locale: "es", cognition }));
+  const answer = await subscriberAxent(request({ prompt: "Cómo lo sabes", contextId: "focus:one", revision, locale: "es", cognition }));
   assert.equal(answer.status, 200);
   const payload = await answer.json();
   assert.equal(payload.contextId, "focus:one"); assert.equal(payload.revision, revision);
   assert.equal(payload.cognition.plan.family, "organization");
-  assert.equal((await subscriberAxent(request({ prompt: "CÃ³mo lo sabes", contextId: "focus:one", revision: "f".repeat(64), locale: "es" }))).status, 409);
-  assert.equal((await subscriberAxent(request({ prompt: "CÃ³mo lo sabes", contextId: "focus:one", revision, locale: "es" }, "axignal-admin-session=" + token))).status, 401);
+  assert.equal((await subscriberAxent(request({ prompt: "Cómo lo sabes", contextId: "focus:one", revision: "f".repeat(64), locale: "es" }))).status, 409);
+  assert.equal((await subscriberAxent(request({ prompt: "Cómo lo sabes", contextId: "focus:one", revision, locale: "es" }, "axignal-admin-session=" + token))).status, 401);
   assert.equal(reads, 3);
 });
 

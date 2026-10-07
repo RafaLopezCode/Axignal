@@ -713,7 +713,7 @@ function PilotTestAccounts() {
   const { t } = useLocale();
   const [accounts, setAccounts] = useState({ a: "", b: "" });
   return (
-    <section className="admin-attention" aria-labelledby="pilot-accounts-title">
+    <section className="admin-attention admin-pilot-accounts" aria-labelledby="pilot-accounts-title">
       <h2 id="pilot-accounts-title">{t("Cuentas para la prueba del piloto", "Pilot test accounts")}</h2>
       <p>{t("AXIGNAL · https://axignal.com/ · 1 organización, sin pagos.", "AXIGNAL · https://axignal.com/ · 1 organization, no payments.")}</p>
       <p>{t("Indica las cuentas Google que utilizarás. Este borrador se mantiene mientras esta vista está abierta; no concede acceso ni envía invitaciones. El acceso requiere Google verificado y una invitación de un solo uso.", "Enter the Google accounts you will use. This draft lasts while this view is open; it grants no access and sends no invitations. Access requires verified Google sign-in and a single-use invitation.")}</p>
