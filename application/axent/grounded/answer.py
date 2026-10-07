@@ -81,6 +81,8 @@ class ReasoningRequest:
     user: str
     schema: Mapping[str, object]
     max_output_tokens: int
+    tenant_ref: str = ""
+    focus_ref: str = ""
 
 
 @dataclass(frozen=True, slots=True)
@@ -90,6 +92,10 @@ class ReasoningResult:
     input_tokens: int | None
     output_tokens: int | None
     latency_ms: int
+    provider: str = ""
+    error_class: str | None = None
+    audit_ref: str | None = None
+    model_calls: int = 1
 
 
 class GroundedReasoner(Protocol):
@@ -134,6 +140,8 @@ class ResearchRequest:
     reason: str
     question_kind: str
     created_at: datetime
+    organization_id: str = ""
+    dependency_fingerprint: str = ""
 
     def to_wire(self) -> dict[str, object]:
         return {
@@ -230,6 +238,31 @@ def build_user_message(
         f"<tenant_context>\n{scope}\n</tenant_context>\n"
         f"<evidence>\n" + "\n".join(lines) + "\n</evidence>\n"
         f"<question>\n{safe_question}\n</question>"
+    )
+
+
+def valid_answer_payload(value: object) -> bool:
+    """Validate the untrusted container contract before evidence verification."""
+    if not isinstance(value, dict) or set(value) != {"claims", "unknowns", "insufficient_evidence"}:
+        return False
+    claims, unknowns = value["claims"], value["unknowns"]
+    return (
+        type(value["insufficient_evidence"]) is bool
+        and isinstance(claims, list)
+        and len(claims) <= 6
+        and all(
+            isinstance(c, dict)
+            and set(c) == {"text", "refs"}
+            and isinstance(c["text"], str)
+            and len(c["text"]) <= 400
+            and isinstance(c["refs"], list)
+            and 0 < len(c["refs"]) <= 6
+            and all(isinstance(r, str) for r in c["refs"])
+            for c in claims
+        )
+        and isinstance(unknowns, list)
+        and len(unknowns) <= 4
+        and all(isinstance(u, str) and len(u) <= 240 for u in unknowns)
     )
 
 

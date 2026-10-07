@@ -339,7 +339,9 @@ def build_runtime(config: RuntimeConfig) -> AxignalRuntime:
             code_sha=config.code_sha,
             stripe_settings=stripe_settings,
             offer_catalogue_reader=offer_catalogue_reader,
-            axent_reasoner=luna_reasoner_from_env(),
+            axent_reasoner=luna_reasoner_from_env(
+                config.subscriber_settings.values, data_dir=config.data_dir
+            ),
         )
     return AxignalRuntime(
         config=config,
