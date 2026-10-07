@@ -238,6 +238,7 @@ details.cg-layer > summary:focus-visible,
 
 /* Relationships: network language ----------------------------------------- */
 .cg-network { width: 100%; max-width: 520px; height: auto; }
+.cg-svg-label-halo { paint-order: stroke; stroke: #fff; stroke-width: 4px; stroke-linejoin: round; }
 .cg-edge-observed { stroke: var(--cg-observed); stroke-width: 2.5; }
 .cg-edge-potential { stroke: var(--cg-potential); stroke-width: 2; stroke-dasharray: 6 5; }
 .cg-edges li { display: grid; gap: 2px; }

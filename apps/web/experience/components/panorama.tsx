@@ -42,6 +42,8 @@ import {
 } from "@/lib/projection";
 import { useLocale } from "@/lib/locale";
 import { FamilyLens } from "./cognition/lenses";
+import { familiesForText, familyTerms } from "@/lib/family-vocabulary";
+import { funnelLayers, type FunnelLayer } from "@/lib/funnel";
 import {
   Brand,
   LocaleToggle,
@@ -118,6 +120,7 @@ export function Panorama() {
     [loadError, setLoadError] = useState(false),
     [reload, setReload] = useState(0);
   const [search, setSearch] = useState("");
+  const [familyQuery, setFamilyQuery] = useState("");
   const centreRef = useRef<HTMLElement>(null);
   const sidebarRef = useRef<HTMLElement>(null);
   useFocusTrap(mobileNav, sidebarRef, () => setMobileNav(false));
@@ -278,24 +281,52 @@ export function Panorama() {
           <span className="nav-group-label family-group-label">
             {t("FAMILIAS", "FAMILIES")}
           </span>
-          {families.map((f) => (
+          <label className="family-finder">
+            <Search size={14} aria-hidden="true" />
+            <input
+              type="search"
+              value={familyQuery}
+              onChange={(event) => setFamilyQuery(event.target.value)}
+              onKeyDown={(event) => {
+                const first = familyQuery.trim() ? familiesForText(familyQuery)[0] : undefined;
+                if (event.key === "Enter" && first) {
+                  setFamilyQuery("");
+                  navigate({ view: "panorama", family: first, signal: null, depth: null });
+                }
+              }}
+              placeholder={t("SEO, clientes…", "SEO, customers…")}
+              aria-label={t("Buscar un tema en las familias", "Find a topic in the families")}
+            />
+          </label>
+          {(familyQuery.trim()
+            ? familiesForText(familyQuery).map((id) => families.find((f) => f.id === id)!)
+            : families
+          ).map((f) => (
             <button
               className={"family-nav " + (familyId === f.id ? "active" : "")}
               key={f.id}
-              onClick={() =>
+              aria-label={copy(f.name) + ": " + familyTerms(f.id, locale).join(", ")}
+              title={familyTerms(f.id, locale).join(" · ")}
+              onClick={() => {
+                setFamilyQuery("");
                 navigate({
                   view: "panorama",
                   family: f.id,
                   signal: null,
                   depth: null,
-                })
-              }
+                });
+              }}
             >
               <span className={"family-dot " + f.color} />
               {copy(f.name)}
               <ChevronRight size={12} />
             </button>
           ))}
+          {familyQuery.trim() && !familiesForText(familyQuery).length && (
+            <p className="family-finder-empty" role="status">
+              {t("Sin resultados. Prueba otra palabra o pregunta a Axent.", "No results. Try another word or ask Axent.")}
+            </p>
+          )}
         </nav>
         <div className="sidebar-bottom">
           <button className="nav-item" onClick={() => setUtility("focus")}>
@@ -416,6 +447,9 @@ export function Panorama() {
                               "Your world, in context.",
                             )}
                     </h1>
+                    {family && (
+                      <p className="family-terms">{familyTerms(family.id, locale).join(" · ")}</p>
+                    )}
                     <p>
                       {family
                         ? copy(family.intro)
@@ -680,6 +714,7 @@ export function Panorama() {
                                 {String(i + 1).padStart(2, "0")}
                               </span>
                               <span className="tile-name">{copy(f.name)}</span>
+                              <span className="tile-terms">{familyTerms(f.id, locale).join(" · ")}</span>
                               <span className="tile-description">
                                 {signal ? copy(signal.title) : copy(f.intro)}
                               </span>
@@ -754,6 +789,7 @@ export function Panorama() {
                 if (s) focusSignal(s);
               }}
               onEvidence={setEvidenceId}
+              onFamily={(id) => navigate({ view: "panorama", family: id, signal: null, depth: null })}
             />
           </aside>
         </div>
@@ -833,6 +869,10 @@ export function Panorama() {
             onEvidence={(id) => {
               setMobileAxent(false);
               setEvidenceId(id);
+            }}
+            onFamily={(id) => {
+              setMobileAxent(false);
+              navigate({ view: "panorama", family: id, signal: null, depth: null });
             }}
           />
         </Dialog>
@@ -1052,12 +1092,9 @@ function SignalDetail({
 }) {
   const { t, copy, locale, reducedMotion, setReducedMotion } = useLocale();
   const family = families.find((f) => f.id === signal.family)!;
-  const tabs = [
-    ["glance", t("Síntesis", "Glance")],
-    ["understand", t("Comprender", "Understand")],
-    ["reason", t("Razonamiento", "Reasoning")],
-    ["prove", t("Evidencia", "Evidence")],
-  ];
+  const tabs = (["glance", "understand", "reason", "prove"] as const).map(
+    (id, i) => [id, copy(funnelLayers[(i + 1) as FunnelLayer].label), copy(funnelLayers[(i + 1) as FunnelLayer].question)] as const,
+  );
   const active = tabs.some(([id]) => id === depth) ? depth : "understand";
   return (
     <article className="signal-detail">
@@ -1086,10 +1123,11 @@ function SignalDetail({
         role="tablist"
         aria-label={t("Profundidad de comprensión", "Depth of understanding")}
       >
-        {tabs.map(([id, label], i) => (
+        {tabs.map(([id, label, question], i) => (
           <button
             id={"depth-" + id}
             key={id}
+            title={question}
             role="tab"
             aria-selected={active === id}
             aria-controls="depth-panel"

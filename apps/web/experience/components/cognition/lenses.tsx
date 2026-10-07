@@ -337,12 +337,19 @@ function RelationshipNetwork({ facts, glance }: Props) {
   const observed = network.edges.filter((e) => e.state === "OBSERVED");
   const potential = network.edges.filter((e) => e.state === "POTENTIAL");
   const subject = network.nodes[0];
-  const others = network.nodes.slice(1);
-  const pos = new Map(
-    others.map((n, i) => [n.id, { x: 50 + i * (220 / Math.max(1, others.length - 1)), y: 0 }]),
-  );
   const lane = (edge: (typeof network.edges)[number]) =>
     edge.from === subject.id ? edge.to : edge.from;
+  // Each row (observed above, potential below) spreads its own nodes, and crowded rows
+  // stagger vertically, so names never overlap.
+  const pos = new Map(
+    (["OBSERVED", "POTENTIAL"] as const).flatMap((state) => {
+      const row = network.edges.filter((edge) => edge.state === state).map(lane);
+      return row.map((id, i) => [
+        id,
+        { x: 40 + (i + 0.5) * (240 / row.length), y: (state === "OBSERVED" ? 28 : 78) + (row.length > 2 && i % 2 ? 14 : 0) },
+      ] as const);
+    }),
+  );
   const summary =
     `${observed.length} ${t("relaciones observadas", "observed relationships")} · ` +
     `${potential.length} ${t("potenciales por investigar", "potential to investigate")}`;
@@ -362,14 +369,17 @@ function RelationshipNetwork({ facts, glance }: Props) {
       <Headline>{summary}</Headline>
       <svg viewBox="0 0 320 150" className="cg-network" role="img" aria-label={summary}>
         <text x="160" y="142" textAnchor="middle" className="cg-svg-node">{subject.label}</text>
+        {/* Lines first, names last: a name is never crossed by another relationship's line. */}
         {network.edges.map((edge) => {
           const other = pos.get(lane(edge))!;
-          const y = edge.state === "OBSERVED" ? 28 : 78;
           return (
-            <g key={edge.from + edge.to} data-epistemic={edge.state}>
-              <line x1="160" y1="124" x2={other.x} y2={y + 8} className={edge.state === "OBSERVED" ? "cg-edge-observed" : "cg-edge-potential"} />
-              <text x={other.x} y={y} textAnchor="middle" className="cg-svg-node">{name.get(lane(edge))?.label}</text>
-            </g>
+            <line key={"l" + edge.from + edge.to} data-epistemic={edge.state} x1="160" y1="124" x2={other.x} y2={other.y + 8} className={edge.state === "OBSERVED" ? "cg-edge-observed" : "cg-edge-potential"} />
+          );
+        })}
+        {network.edges.map((edge) => {
+          const other = pos.get(lane(edge))!;
+          return (
+            <text key={"t" + edge.from + edge.to} x={other.x} y={other.y} textAnchor="middle" className="cg-svg-node cg-svg-label-halo">{name.get(lane(edge))?.label}</text>
           );
         })}
       </svg>

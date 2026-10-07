@@ -11,6 +11,7 @@ import type { Currentness, FactSource } from "@/lib/cognition/facts";
 import type { Layer } from "@/lib/cognition/registry";
 import { Badge } from "../ui";
 import { dateLabel } from "@/lib/projection";
+import { funnelLayers } from "@/lib/funnel";
 
 export function Mark({ state }: { state: Epistemic }) {
   return (
@@ -66,19 +67,14 @@ export function SourceRef({ source }: { source: FactSource | undefined }) {
 
 /** Layer 1 is always visible; deeper layers open on demand, labelled by their question. */
 export function LayerSection({ layer, children }: { layer: Layer; children: ReactNode }) {
-  const { t } = useLocale();
+  const { copy } = useLocale();
   if (layer === 1)
     return (
       <section className="cg-layer cg-layer-1" data-layer="1">
         {children}
       </section>
     );
-  const question =
-    layer === 2
-      ? t("¿Por qué importa?", "Why does it matter?")
-      : layer === 3
-        ? t("¿Cómo lo sabe AXIGNAL?", "How does AXIGNAL know?")
-        : t("Ver toda la evidencia", "Inspect all the evidence");
+  const question = copy(funnelLayers[layer].question);
   return (
     <details className={"cg-layer cg-layer-" + layer} data-layer={layer}>
       <summary>{question}</summary>

@@ -25,6 +25,9 @@ import { AxentComposer } from "./axent-composer";
 import { CognitiveComponent } from "./cognition/lenses";
 import { factsAt } from "@/lib/cognition/facts";
 import type { CognitiveComponentId } from "@/lib/cognition/registry";
+import { familyTerms } from "@/lib/family-vocabulary";
+import { funnelLayers } from "@/lib/funnel";
+import type { FamilyId } from "@/lib/projection";
 
 export function Axent({
   chat,
@@ -33,6 +36,7 @@ export function Axent({
   context,
   onSignal,
   onEvidence,
+  onFamily,
 }: {
   chat: Chat<AxentMessage>;
   draft: string;
@@ -40,6 +44,7 @@ export function Axent({
   context: ProjectionContext;
   onSignal: (id: string) => void;
   onEvidence: (id: string) => void;
+  onFamily?: (id: FamilyId) => void;
 }) {
   const { t, copy, locale } = useLocale();
   const input = draft;
@@ -68,8 +73,8 @@ export function Axent({
   const family = families.find((f) => f.id === context.family)!;
   const questions = signal
     ? [
-        t("¿Por qué merece atención?", "Why does it deserve attention?"),
-        t("¿Qué evidencia la sostiene?", "What evidence supports it?"),
+        copy(funnelLayers[2].question),
+        copy(funnelLayers[3].question),
       ]
     : [
         t("Explícame este contexto", "Explain this context"),
@@ -201,6 +206,7 @@ export function Axent({
                     context={context}
                     onSignal={onSignal}
                     onEvidence={onEvidence}
+                    onFamily={onFamily}
                   />
                 ) : part.type === "tool-compose" &&
                   part.state === "output-error" ? (
@@ -255,13 +261,15 @@ function RegisteredComposition({
   context,
   onSignal,
   onEvidence,
+  onFamily,
 }: {
   plan: CompositionPlan;
   context: ProjectionContext;
   onSignal: (id: string) => void;
   onEvidence: (id: string) => void;
+  onFamily?: (id: FamilyId) => void;
 }) {
-  const { t, copy } = useLocale();
+  const { t, copy, locale } = useLocale();
   const validated = validatePlan(plan, context);
   if (!validated.success)
     return (
@@ -306,6 +314,20 @@ function RegisteredComposition({
             <em>{copy(e.limitation)}</em>
           </span>
           <ArrowUpRight size={15} />
+        </button>
+      );
+    },
+    // The family where the person's words live: its name and the words they already use.
+    family: (ref: string) => {
+      const f = families.find((f) => f.id === ref)!;
+      return (
+        <button className="generated-signal" onClick={() => onFamily?.(f.id)}>
+          <strong>{copy(f.name)}</strong>
+          <small>{familyTerms(f.id, locale).join(" · ")}</small>
+          <span>
+            {t("Abrir esta familia", "Open this family")}
+            <ArrowUpRight size={15} />
+          </span>
         </button>
       );
     },

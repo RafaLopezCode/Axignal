@@ -27,6 +27,7 @@ body, .type-body { font-family: var(--font-ui); font-size: var(--type-body); fon
 .product-shell .text-link,
 .admin-shell > .product-sidebar :is(.nav-item, .admin-nav-item),
 .canonical-product .nav-item,
+.product-shell .family-finder input,
 :is(.axent-panel, .axent-modal) .axent-questions button,
 :is(.axent-panel, .axent-modal) .axent-compose textarea {
   font-family: var(--font-ui);
@@ -53,7 +54,8 @@ body, .type-body { font-family: var(--font-ui); font-size: var(--type-body); fon
 :is(.axent-panel, .axent-modal) .axent-scope small,
 .product-shell .runtime-date,
 .product-shell .staff-utility,
-.product-shell .runtime-meridian {
+.product-shell .runtime-meridian,
+.product-shell :is(.tile-terms, .family-terms, .family-finder-empty) {
   font-family: var(--font-ui); font-size: var(--type-meta); font-weight: var(--weight-reading); line-height: 1.5;
 }
 :is(.axent-panel, .axent-modal) .axent-welcome h2 {

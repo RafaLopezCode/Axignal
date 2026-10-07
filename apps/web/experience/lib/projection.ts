@@ -9,8 +9,8 @@ export const families = [
     name: c("Presencia", "Presence"),
     color: "blue",
     intro: c(
-      "Cómo se hace visible una organización.",
-      "How an organization becomes visible.",
+      "Cómo aparece la organización y si se la encuentra: buscadores, respuestas de IA y su web.",
+      "How the organization appears and whether it can be found: search engines, AI answers and its website.",
     ),
   },
   {
@@ -18,8 +18,8 @@ export const families = [
     name: c("Reputación", "Reputation"),
     color: "lavender",
     intro: c(
-      "Qué se expresa públicamente y con qué límites.",
-      "What is expressed publicly, and its limits.",
+      "Qué se dice públicamente de la organización, dónde y con qué evidencia.",
+      "What is said publicly about the organization, where, and with what evidence.",
     ),
   },
   {
@@ -27,8 +27,8 @@ export const families = [
     name: c("Valor", "Value"),
     color: "sage",
     intro: c(
-      "Qué capacidades pueden aportar valor y bajo qué condiciones.",
-      "What capabilities could add value, and under what conditions.",
+      "Qué sabe hacer y qué ofrece, según lo observado.",
+      "What it can do and what it offers, according to what has been observed.",
     ),
   },
   {
@@ -36,8 +36,8 @@ export const families = [
     name: c("Mercados", "Markets"),
     color: "sand",
     intro: c(
-      "Dónde cambia el contexto para las capacidades observadas.",
-      "Where context changes for observed capabilities.",
+      "Dónde tiene actividad observada y dónde solo hay potencial.",
+      "Where activity is observed and where there is only potential.",
     ),
   },
   {
@@ -45,8 +45,8 @@ export const families = [
     name: c("Relaciones", "Relationships"),
     color: "blue",
     intro: c(
-      "Vínculos sostenidos por evidencia; caminos que merecen investigación.",
-      "Evidence-backed relationships; paths worth investigating.",
+      "Clientes, partners y proveedores con evidencia, y vínculos que merece la pena investigar.",
+      "Customers, partners and suppliers backed by evidence, and links worth investigating.",
     ),
   },
   {
@@ -54,8 +54,8 @@ export const families = [
     name: c("Demanda", "Demand"),
     color: "sage",
     intro: c(
-      "Necesidades económicas, sin convertirlas en clientes.",
-      "Economic needs, without turning them into customers.",
+      "Dónde puede haber demanda para lo que hace. Una oportunidad es potencial, no un cliente.",
+      "Where there may be demand for what it does. An opportunity is potential, not a customer.",
     ),
   },
   {
@@ -63,8 +63,8 @@ export const families = [
     name: c("Actividad", "Activity"),
     color: "lavender",
     intro: c(
-      "Qué ocurre y cuándo podemos sostener que ocurrió.",
-      "What happens, and when we can support that it happened.",
+      "Qué ocurre y qué ha cambiado con el tiempo.",
+      "What happens and what has changed over time.",
     ),
   },
   {
@@ -72,8 +72,8 @@ export const families = [
     name: c("Economía", "Economics"),
     color: "sand",
     intro: c(
-      "Condiciones económicas y límites de lo que sabemos.",
-      "Economic conditions and the limits of our knowledge.",
+      "Qué cifras económicas se pueden observar y cuáles siguen siendo desconocidas.",
+      "Which economic figures can be observed and which remain unknown.",
     ),
   },
   {
@@ -81,8 +81,8 @@ export const families = [
     name: c("Organización", "Organization"),
     color: "blue",
     intro: c(
-      "El sujeto económico y sus capacidades observadas.",
-      "The economic subject and its observed capabilities.",
+      "Quién es: su identidad económica observable.",
+      "Who it is: its observable economic identity.",
     ),
   },
   {
@@ -90,8 +90,8 @@ export const families = [
     name: c("Contexto", "Context"),
     color: "sage",
     intro: c(
-      "Entender el entorno antes de interpretar una señal.",
-      "Understand the surroundings before interpreting a signal.",
+      "Regulación, tendencias y factores externos necesarios para interpretar las señales.",
+      "Regulation, trends and external factors needed to interpret signals.",
     ),
   },
 ] as const;

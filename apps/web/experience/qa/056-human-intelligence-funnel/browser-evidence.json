@@ -1,0 +1,34 @@
+{
+  "date": "2026-10-07",
+  "route": "/panorama (illustrative demo, organization norte)",
+  "method": "In-app browser. DOM audit per locale and width (terms rendered and visible, horizontal overflow, terms clipped by their tile, visible buttons without an accessible name, finder height) plus interactive checks.",
+  "fiveSecondTerms": {
+    "visibleOnEveryAtlasTile": true,
+    "es": ["SEO · GEO · Visibilidad digital", "Opiniones · Comentarios · Menciones", "Oferta · Servicios · Capacidades", "Geografías · Sectores · Expansión", "Clientes · Partners · Proveedores · Competidores", "Oportunidades · Compradores · Licitaciones", "Cambios · Proyectos · Novedades", "Facturación · Empleo · Cifras", "Quién es · Qué hace · Identidad", "Regulación · Tendencias · Factores externos"]
+  },
+  "audit": {
+    "widths": [1280, 768, 390, 320],
+    "locales": ["es", "en", "de", "pt", "fr", "it"],
+    "allCombinations": {
+      "termsVisible": "10/10",
+      "horizontalOverflow": false,
+      "termsClipped": 0,
+      "unnamedVisibleButtons": 0,
+      "finderHeightPx": "44 (1280, 768); inside the menu at 390 and 320"
+    }
+  },
+  "interactions": [
+    "Desktop: finder 'clientes' -> only Relaciones listed; Enter opens Relaciones with its terms under the title.",
+    "Mobile 320 (German): menu finder 'Bewertungen' -> Reputation; 'Ausschreibungen'/'licitaciones' + Enter -> Demand, menu closes, field clears.",
+    "No match shows: 'Sin resultados. Prueba otra palabra o pregunta a Axent.'",
+    "Axent in Relationships asked '¿Cómo está mi SEO?' -> 'Eso está en Presencia (SEO · GEO · Visibilidad digital)…' with an 'Abrir esta familia' card that opens Presence.",
+    "Signal detail tabs: Síntesis/Comprender/Razonamiento/Evidencia, each described by its funnel question; Axent suggests '¿Por qué importa?' and '¿Cómo lo sabe AXIGNAL?'.",
+    "Focus ring visible on the finder (3px corporate blue, as the global focus-visible rule)."
+  ],
+  "fixedWhileVerifying": [
+    "Finder placeholder truncated in the narrow sidebar -> shortened to 'SEO, clientes…' (purpose in its accessible name).",
+    "Mobile tile grid placed terms beside the name -> own row under the name.",
+    "Relationship network labels overlapped and were crossed by lines -> per-row layout, lines drawn first, labels with a background halo."
+  ],
+  "console": "no errors"
+}
