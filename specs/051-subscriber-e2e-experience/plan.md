@@ -43,6 +43,23 @@ state, uses incumbent brand tokens/components, and permits evidence inspection.
 AI SDK 7 remains a bounded typed-presentation layer; a missing model cannot
 invent knowledge or prevent deterministic evidence-backed reading.
 
+## Pilot preparation extension: plan and architecture review, 2026-10-07
+
+Direct human clarification: blank A/B, explicit Save, changeable authorization
+for testing only. Graphify and AO-01 session/proxy boundaries were inspected.
+Use an application snapshot/store contract and append-only SQLite adapter,
+separate from subscriber identity, PilotGrant, Billing and AXIGLAND. One bounded
+internal Admin endpoint checks CUSTOMERS_READ/WRITE and optimistic revision;
+one same-origin Next proxy uses the existing HttpOnly Admin session. No public
+Admin route is added. Preserve panel geometry; add Save and saved/draft/error
+receipt. General Admin mutation denials remain intact.
+
+Constitution/architecture review: PASS. Private operational preparation is
+neither economic truth, an email allowlist, paid capacity nor a messaging flow.
+No Brain geography/provider change. Validate durable save/replacement/clear,
+restart/conflict/authority negatives, bounded proxy, rendered desktop/mobile/
+keyboard and required deterministic gates.
+
 ## Paths
 
 - `tools/runtime/config.py`, `tools/runtime/service.py`,
@@ -64,3 +81,7 @@ Focused services/HTTP/web tests precede full frozen sync, Ruff, mypy, pytest,
 Architecture Guard, governance and build. Browser render compares adjacent
 accepted grammar on desktop and narrow view. Full pytest runs without parallel
 heavy jobs because the earlier concurrency timing failure is recorded.
+
+## CTO integration boundary (2026-10-07)
+
+Reconcile this extension against origin/main containing Product Web MCP (PR #156). Preserve /mcp, /oauth/*, /.well-known/*, /account/connect, OAuth/PKCE, tenant isolation, PilotGrant/Billing entitlement, read-only behavior and zero Luna calls for MCP reads. Implementation ends at tested PR, isolated candidate/preflight and CTO handoff. No merge, main push, current-link change or canonical production container replacement is authorized. Google test accounts remain blank until explicitly saved by the operator; no real Google/A/B E2E is claimed before that selection.

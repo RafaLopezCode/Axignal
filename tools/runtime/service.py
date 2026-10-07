@@ -61,6 +61,7 @@ from application.admin_integrations.service import (
     project_admin_integrations,
 )
 from application.admin_measurements import project_measurement_registry
+from application.admin_pilot_accounts import PilotAccountsConflict
 from application.admin_shell import (
     AdminShellProjection,
     AdminShellRouteDenied,
@@ -114,6 +115,7 @@ from tools.runtime.admin_access import (
     AdminHttpAccessGuard,
     build_validation_only_admin_access,
 )
+from tools.runtime.admin_pilot_accounts import pilot_accounts_request
 from tools.runtime.config import RuntimeConfig
 from tools.runtime.first_proof import (
     FirstProofInsufficientEvidence,
@@ -1534,6 +1536,7 @@ def make_handler(runtime: AxignalRuntime) -> type[BaseHTTPRequestHandler]:
             if (
                 is_subscriber_path(self.path)
                 or urlsplit(self.path).path == "/internal/webhooks/subscriber-stripe"
+                or urlsplit(self.path).path == "/internal/admin/pilot-test-accounts"
             ):
                 # The default request line includes query strings; redact callbacks.
                 super().log_message("subscriber request %s", self.command)
@@ -1578,6 +1581,51 @@ def make_handler(runtime: AxignalRuntime) -> type[BaseHTTPRequestHandler]:
                 return
             # Every other DELETE keeps the existing POST-path handling.
             self.do_POST()
+        def _pilot_accounts(self, *, write: bool = False) -> None:
+            if runtime.admin_access is None:
+                self._json({"reason": "ADMIN_NOT_COMPOSED"}, HTTPStatus.NOT_FOUND)
+                return
+            try:
+                guard = AdminHttpAccessGuard(runtime.admin_access)
+                guard.authorize_header(
+                    self.headers.get("Authorization"),
+                    required_scope=AdminScope.CUSTOMERS_WRITE
+                    if write
+                    else AdminScope.CUSTOMERS_READ,
+                    risk=AdminRiskClass.WRITE if write else AdminRiskClass.READ,
+                    now=datetime.now(UTC),
+                )
+                payload = None
+                if write:
+                    if self.headers.get("Content-Type", "").split(";")[0] != "application/json":
+                        self._json({"reason": "JSON_REQUIRED"}, HTTPStatus.UNSUPPORTED_MEDIA_TYPE)
+                        return
+                    length = int(self.headers.get("Content-Length", "0"))
+                    if length < 2 or length > 2048:
+                        self._json({"reason": "BODY_LIMIT"}, HTTPStatus.REQUEST_ENTITY_TOO_LARGE)
+                        return
+                    payload = json.loads(self.rfile.read(length).decode("utf-8"))
+                    if not isinstance(payload, dict):
+                        raise ValueError("invalid pilot preparation")
+                self._json(
+                    pilot_accounts_request(
+                        guard,
+                        authorization=self.headers.get("Authorization"),
+                        data_dir=runtime.config.data_dir,
+                        now=datetime.now(UTC),
+                        payload=payload,
+                    )
+                )
+            except AdminAuthenticationError:
+                self._json({"reason": "ADMIN_SESSION_REQUIRED"}, HTTPStatus.UNAUTHORIZED)
+            except AdminAuthorizationError:
+                self._json({"reason": "ADMIN_SCOPE_REQUIRED"}, HTTPStatus.FORBIDDEN)
+            except PilotAccountsConflict:
+                self._json({"reason": "REVISION_CONFLICT"}, HTTPStatus.CONFLICT)
+            except (ValueError, UnicodeError):
+                self._json({"reason": "INVALID_PILOT_ACCOUNTS"}, HTTPStatus.BAD_REQUEST)
+            except (OSError, sqlite3.Error):
+                self._json({"reason": "PILOT_ACCOUNTS_UNAVAILABLE"}, HTTPStatus.SERVICE_UNAVAILABLE)
 
         def _subscriber(self, method: str, path: str) -> None:
             if runtime.subscriber is None:
@@ -1945,6 +1993,9 @@ def make_handler(runtime: AxignalRuntime) -> type[BaseHTTPRequestHandler]:
                     }
                 )
                 return
+            if request_path == "/internal/admin/pilot-test-accounts":
+                self._pilot_accounts()
+                return
             if request_path == "/api/subscriber-context":
                 reading_grant = None
                 if runtime.admin_access is not None:
@@ -1992,6 +2043,9 @@ def make_handler(runtime: AxignalRuntime) -> type[BaseHTTPRequestHandler]:
             request_path = urlsplit(self.path).path
             if ProductMcpHttp.handles(request_path):
                 self._product_mcp("POST")
+                return
+            if request_path == "/internal/admin/pilot-test-accounts":
+                self._pilot_accounts(write=True)
                 return
             if request_path == "/internal/webhooks/subscriber-stripe":
                 self._subscriber_stripe_webhook()
