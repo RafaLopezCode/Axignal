@@ -1,0 +1,892 @@
+[
+  {
+    "id": "jtbd_seo_agency_change_evidence",
+    "fr": {
+      "slug": "agences-seo-documenter-changements-publics",
+      "title": "Agences SEO : documenter les changements publics sans promesse",
+      "description": "Une observation indépendante de la représentation publique d’une organisation, avec les preuves et conditions qui permettent de l’examiner.",
+      "lead": "Une agence peut mener une stratégie réfléchie tout en ayant besoin d’un regard indépendant sur ce que les sources extérieures montrent. AXIGNAL met des signaux publics en contexte sans transformer une variation en promesse de réussite.",
+      "answer": "AXIGNAL peut fournir des observations économiques et de représentation numérique lorsque des sources et instruments appropriés sont accessibles. L’agence choisit et exécute sa stratégie SEO ; AXIGNAL ne promet ni position, ni trafic, ni lien causal entre une action et un changement observé.",
+      "sections": [
+        {
+          "heading": "Séparer le travail réalisé des preuves observées",
+          "body": "Publier du contenu, améliorer une structure technique ou modifier l’architecture d’un site sont des activités de l’agence. Une surface de recherche peut refléter autre chose, plus tard ou de façon irrégulière. Consigner le travail séparément de l’observation évite de présenter l’effort comme une preuve d’impact. Lorsque les sources et capacités adéquates existent, AXIGNAL peut décrire une observation publique avec ses conditions identifiées."
+        },
+        {
+          "heading": "Comparer seulement si l’instrument le permet",
+          "body": "Une observation de recherche dépend de la requête, de la langue, de la géographie, de la surface, de la date et d’autres conditions. Une comparaison avant/après exige suffisamment d’informations sur ces variables, la méthode et l’échantillon. Si elles changent, les résultats peuvent ne plus former une série comparable. Une seule position ne résume pas non plus la présence d’une organisation dans tous les marchés et toutes les requêtes."
+        },
+        {
+          "heading": "Transformer un écart de représentation en question utile",
+          "body": "Des preuves publiques peuvent étayer une capacité alors que sa représentation reste limitée dans certaines requêtes observées. Cet écart mérite une enquête, mais n’en donne pas la cause : requête modifiée, source manquante, page non indexée ou instrument couvrant un petit échantillon sont des possibilités. L’agence peut prioriser une revue tandis qu’AXIGNAL conserve la séparation entre fait, dérivation et explication non vérifiée."
+        },
+        {
+          "heading": "Présenter au client un résultat inspectable",
+          "body": "Une revue utile décrit ce qui a été observé, sous quelles conditions, ce qui a varié et ce qui ne peut être conclu. Si l’échantillon est réduit ou les surfaces incomparables, la limite doit apparaître dans le résultat. La communication gagne en crédibilité lorsque les décisions sont attribuées à l’agence, les observations à leurs sources et les hypothèses à ceux qui les avancent, plutôt que de traiter une coïncidence temporelle comme une causalité."
+        }
+      ],
+      "example": "Une agence met à jour les pages d’un client. Quelques semaines après, une requête documentée renvoie un résultat différent. Avant de décrire cette évolution, l’équipe compare surface, langue, région, date et instrument. Le calendrier seul ne prouve ni que les modifications l’ont causée ni que le résultat durera.",
+      "limits": "AXIGNAL ne réalise pas le SEO, ne garantit pas de position et ne remplace pas les outils d’exécution d’une agence. L’observation dépend des sources publiques admises, de leur couverture et d’instruments identifiables. Mentions, citations et rangs ne prouvent seuls ni qualité, ni demande, ni résultat commercial ; un petit échantillon ne représente pas chaque requête ou personne.",
+      "cta": {
+        "label": "Découvrir AXIGNAL",
+        "href": "/knowledge"
+      },
+      "related": [
+        "jtbd_geo_aeo_observation",
+        "jtbd_strategy_competitive_intelligence",
+        "jtbd_multi_client_consultant"
+      ]
+    },
+    "de": {
+      "slug": "seo-agenturen-oeffentliche-aenderungen-belegen",
+      "title": "SEO-Agenturen: öffentliche Änderungen belegen, ohne Versprechen",
+      "description": "Ein unabhängiger Blick auf die öffentliche Darstellung einer Organisation samt Belegen und Bedingungen zur Prüfung.",
+      "lead": "Eine Agentur kann eine durchdachte Strategie umsetzen und trotzdem einen unabhängigen Blick darauf benötigen, was externe Quellen zeigen. AXIGNAL ordnet öffentliche Signale ein, ohne eine Ergebnisänderung als Erfolgsgarantie darzustellen.",
+      "answer": "AXIGNAL kann wirtschaftliche und digitale Repräsentationsbeobachtungen liefern, sofern geeignete Quellen und Instrumente verfügbar sind. Die Agentur wählt und realisiert ihre SEO-Strategie; AXIGNAL verspricht weder Rankings noch Traffic oder einen ursächlichen Zusammenhang zwischen Maßnahme und beobachteter Änderung.",
+      "sections": [
+        {
+          "heading": "Umgesetzte Arbeit von beobachteten Belegen trennen",
+          "body": "Inhalte veröffentlichen, technische Strukturen verbessern oder eine Website neu ordnen sind Tätigkeiten der Agentur. Eine Suchoberfläche kann etwas anderes, später oder uneinheitlich anzeigen. Wer Maßnahmen getrennt von Beobachtungen dokumentiert, stellt den Aufwand nicht als Wirkungsnachweis dar. Wenn passende Quellen und Fähigkeiten verfügbar sind, kann AXIGNAL öffentliche Beobachtungen unter benannten Bedingungen beschreiben."
+        },
+        {
+          "heading": "Nur vergleichen, wenn das Instrument es zulässt",
+          "body": "Eine Suchbeobachtung hängt von Anfrage, Sprache, Geografie, Oberfläche, Datum und weiteren Bedingungen ab. Ein Vorher-nachher-Vergleich benötigt genügend Angaben zu diesen Variablen, Methode und Stichprobe. Ändern sie sich, bilden die Ergebnisse möglicherweise keine vergleichbare Reihe. Eine einzelne Position fasst außerdem nicht die Präsenz einer Organisation in allen Märkten und für jede Frage zusammen."
+        },
+        {
+          "heading": "Aus einer Darstellungslücke eine bessere Frage machen",
+          "body": "Öffentliche Belege können eine Fähigkeit stützen, während ihre Darstellung bei bestimmten beobachteten Anfragen begrenzt bleibt. Das verdient Recherche, erklärt aber keine Ursache. Möglich sind eine geänderte Anfrage, fehlende Quellen, eine nicht indexierte Seite oder ein kleines Erfassungsfeld des Instruments. Die Agentur kann eine Prüfung priorisieren, während AXIGNAL Tatsache, Ableitung und ungeprüfte Erklärung auseinanderhält."
+        },
+        {
+          "heading": "Dem Kunden ein prüfbares Ergebnis geben",
+          "body": "Eine hilfreiche Auswertung beschreibt, was unter welchen Bedingungen beobachtet wurde, was variierte und was sich nicht folgern lässt. Bei kleiner Stichprobe oder nicht vergleichbaren Oberflächen gehört diese Grenze in das Ergebnis. Glaubwürdiger wird die Darstellung, wenn Entscheidungen der Agentur, Beobachtungen den Quellen und Hypothesen ihren Urhebern zugeordnet werden, statt zeitliches Zusammentreffen als Ursache zu behandeln."
+        }
+      ],
+      "example": "Eine Agentur aktualisiert Kundenseiten. Wochen später liefert eine dokumentierte Anfrage ein anderes Ergebnis. Vor einer Einordnung vergleicht das Team Oberfläche, Sprache, Geografie, Datum und Instrument. Der zeitliche Abstand allein beweist weder, dass die Änderungen ursächlich waren, noch dass das Ergebnis anhält.",
+      "limits": "AXIGNAL führt kein SEO aus, garantiert keine Position und ersetzt keine Umsetzungstools der Agentur. Beobachtung hängt von zugelassenen öffentlichen Quellen, deren Abdeckung und identifizierbaren Instrumenten ab. Erwähnungen, Zitate und Rankings beweisen weder Qualität noch Nachfrage oder Geschäftsergebnis; eine kleine Stichprobe repräsentiert nicht alle Anfragen oder Personen.",
+      "cta": {
+        "label": "AXIGNAL kennenlernen",
+        "href": "/knowledge"
+      },
+      "related": [
+        "jtbd_geo_aeo_observation",
+        "jtbd_strategy_competitive_intelligence",
+        "jtbd_multi_client_consultant"
+      ]
+    },
+    "it": {
+      "slug": "agenzie-seo-documentare-cambiamenti-pubblici",
+      "title": "Agenzie SEO: documentare cambiamenti pubblici senza promesse",
+      "description": "Una prospettiva indipendente sulla rappresentazione pubblica di un’organizzazione, con prove e condizioni verificabili.",
+      "lead": "Un’agenzia può attuare una strategia ponderata e aver comunque bisogno di uno sguardo indipendente su ciò che mostrano le fonti esterne. AXIGNAL contestualizza segnali pubblici senza trasformare un cambiamento in una promessa di successo.",
+      "answer": "AXIGNAL può fornire osservazioni economiche e di rappresentazione digitale quando sono disponibili fonti e strumenti adeguati. L’agenzia sceglie ed esegue la strategia SEO; AXIGNAL non promette posizioni, traffico né causalità tra un intervento e un cambiamento osservato.",
+      "sections": [
+        {
+          "heading": "Separare il lavoro svolto dalle prove osservate",
+          "body": "Pubblicare contenuti, migliorare la struttura tecnica o cambiare l’architettura di un sito sono attività dell’agenzia. Una superficie di ricerca può mostrare qualcosa di diverso, più tardi o in modo discontinuo. Registrare l’attività separatamente dall’osservazione evita di presentare l’impegno come prova d’impatto. Quando fonti e capacità pertinenti sono disponibili, AXIGNAL può descrivere osservazioni pubbliche con condizioni identificate."
+        },
+        {
+          "heading": "Confrontare solo se lo strumento lo consente",
+          "body": "Un’osservazione di ricerca dipende da query, lingua, geografia, superficie, data e altre condizioni. Un confronto prima/dopo richiede informazioni sufficienti sulle variabili, sul metodo e sul campione. Se cambiano, i risultati possono non formare una serie comparabile. Una singola posizione non riassume inoltre la presenza di un’organizzazione in tutti i mercati e per ogni domanda."
+        },
+        {
+          "heading": "Trasformare un divario di rappresentazione in una domanda migliore",
+          "body": "Le prove pubbliche possono sostenere una capacità mentre la sua rappresentazione resta limitata per alcune query osservate. La differenza merita indagine, ma non ne identifica la causa: la query può essere cambiata, le fonti possono mancare, una pagina non essere indicizzata o lo strumento coprire un campione ridotto. L’agenzia può dare priorità a una revisione mentre AXIGNAL separa fatto, derivazione e spiegazione non verificata."
+        },
+        {
+          "heading": "Fornire al cliente un resoconto ispezionabile",
+          "body": "Una revisione utile dice cosa è stato osservato, a quali condizioni, cosa è variato e quali conclusioni non sono sostenibili. Se il campione è piccolo o le superfici non sono confrontabili, il limite va dichiarato. La comunicazione è più credibile quando attribuisce le decisioni all’agenzia, le osservazioni alle fonti e le ipotesi a chi le propone, senza trattare la coincidenza temporale come causa."
+        }
+      ],
+      "example": "Un’agenzia aggiorna le pagine di un cliente. Settimane dopo, una query documentata restituisce un risultato diverso. Prima di descrivere il cambiamento, il gruppo confronta superficie, lingua, geografia, data e strumento. La sola sequenza temporale non prova che le modifiche lo abbiano causato né che duri.",
+      "limits": "AXIGNAL non esegue SEO, non garantisce una posizione e non sostituisce gli strumenti operativi dell’agenzia. L’osservazione dipende da fonti pubbliche ammesse, copertura e strumenti identificabili. Menzioni, citazioni e ranking non provano qualità, domanda o risultati commerciali; un campione limitato non rappresenta ogni query o persona.",
+      "cta": {
+        "label": "Scopri AXIGNAL",
+        "href": "/knowledge"
+      },
+      "related": [
+        "jtbd_geo_aeo_observation",
+        "jtbd_strategy_competitive_intelligence",
+        "jtbd_multi_client_consultant"
+      ]
+    },
+    "pt": {
+      "slug": "agencias-seo-documentar-mudancas-publicas",
+      "title": "Agências de SEO: documentar mudanças públicas sem promessas",
+      "description": "Uma visão independente da representação pública de uma organização, acompanhada de evidências e condições verificáveis.",
+      "lead": "Uma agência pode executar uma estratégia cuidadosa e ainda precisar de uma visão independente do que fontes externas mostram. A AXIGNAL contextualiza sinais públicos sem transformar uma mudança de resultado em promessa de sucesso.",
+      "answer": "A AXIGNAL pode fornecer observações econômicas e de representação digital quando fontes e instrumentos adequados estiverem disponíveis. A agência escolhe e executa sua estratégia de SEO; a AXIGNAL não promete posições, tráfego nem causalidade entre uma ação e uma mudança observada.",
+      "sections": [
+        {
+          "heading": "Separar o trabalho realizado das evidências observadas",
+          "body": "Publicar conteúdo, melhorar a estrutura técnica ou alterar a arquitetura do site são atividades da agência. Uma superfície de busca pode refletir algo diferente, depois ou de forma irregular. Registrar o trabalho separadamente da observação evita apresentar esforço como prova de impacto. Quando fontes e capacidades pertinentes estão disponíveis, a AXIGNAL pode descrever observações públicas sob condições identificadas."
+        },
+        {
+          "heading": "Comparar somente quando o instrumento permitir",
+          "body": "Uma observação de busca depende de consulta, idioma, geografia, superfície, data e outras condições. Uma comparação antes/depois precisa de informações suficientes sobre variáveis, método e amostra. Se elas mudarem, os resultados podem deixar de formar uma série comparável. Uma posição isolada também não resume a presença da organização em todos os mercados e para todas as perguntas."
+        },
+        {
+          "heading": "Transformar uma lacuna de representação em pergunta melhor",
+          "body": "Evidências públicas podem sustentar uma capacidade enquanto sua representação permanece limitada em certas consultas observadas. A diferença merece investigação, mas não revela sua causa: a consulta pode ter mudado, fontes podem faltar, uma página pode não estar indexada ou o instrumento cobrir uma amostra pequena. A agência pode priorizar uma revisão enquanto a AXIGNAL mantém separados fato, derivação e explicação não verificada."
+        },
+        {
+          "heading": "Entregar ao cliente um relato que possa ser inspecionado",
+          "body": "Uma revisão útil informa o que foi observado, sob quais condições, o que variou e o que não se pode concluir. Se a amostra for pequena ou as superfícies incompatíveis, esse limite deve constar do resultado. A comunicação ganha credibilidade quando atribui decisões à agência, observações às fontes e hipóteses a quem as propôs, sem tratar coincidência temporal como causa."
+        }
+      ],
+      "example": "Uma agência atualiza páginas de um cliente. Semanas depois, uma consulta documentada retorna resultado diferente. Antes de descrevê-lo, a equipe compara superfície, idioma, geografia, data e instrumento. A sequência temporal, sozinha, não prova que as edições causaram a mudança nem que o resultado persistirá.",
+      "limits": "A AXIGNAL não executa SEO, não garante posição e não substitui ferramentas de execução da agência. A observação depende de fontes públicas admitidas, cobertura e instrumentos identificáveis. Menções, citações e rankings não provam qualidade, demanda ou resultado comercial; uma amostra pequena não representa todas as consultas ou pessoas.",
+      "cta": {
+        "label": "Conheça a AXIGNAL",
+        "href": "/knowledge"
+      },
+      "related": [
+        "jtbd_geo_aeo_observation",
+        "jtbd_strategy_competitive_intelligence",
+        "jtbd_multi_client_consultant"
+      ]
+    }
+  },
+  {
+    "id": "jtbd_multi_client_consultant",
+    "fr": {
+      "slug": "consultants-multi-missions-conserver-contexte-clients",
+      "title": "Consultants multi-missions : garder le contexte de chaque client",
+      "description": "Conserver une perspective externe traçable sur les organisations utiles à plusieurs missions de conseil. avec des preuves et un contexte vérifiables",
+      "lead": "Passer d’une mission à une autre ne devrait pas obliger à reconstruire tout le contexte public de chaque organisation. AXIGNAL peut conserver une observation persistante, sa provenance et son actualité, pour préparer des questions mieux informées.",
+      "answer": "Un Focus d’observation dirige une attention persistante vers une organisation. Il peut aider à réutiliser des preuves admises et à suivre le contexte public dans le temps ; ce n’est ni une fiche privée modifiable ni un espace de gestion de clients ou de projets.",
+      "sections": [
+        {
+          "heading": "Distinguer le savoir de mission de la réalité observée",
+          "body": "Les notes d’une mission reflètent son périmètre, sa date et les questions du client. Elles ne remplacent pas les preuves indépendantes sur l’organisation. Cette frontière permet au consultant d’exercer son jugement sans transformer une déclaration client en fait canonique. L’observation AXIGNAL peut compléter le travail en montrant les sources qui l’étayent et ce qui reste une inférence."
+        },
+        {
+          "heading": "Réutiliser le contexte seulement s’il reste pertinent",
+          "body": "Des résultats antérieurs peuvent aider lors d’une autre mission s’ils demeurent pertinents, ont été admis et possèdent une provenance traçable. D’autres doivent être réévalués parce que source, sujet ou contexte a changé. Le réemploi réduit les recherches répétées uniquement si les conditions s’y prêtent ; il ne signifie pas copier des conclusions anciennes ni assimiler des organisations proches."
+        },
+        {
+          "heading": "Choisir les organisations qui méritent un suivi",
+          "body": "Un portefeuille de conseil peut inclure des dizaines d’organisations, mais toutes n’exigent pas la même attention. Le professionnel décide où le contexte économique ou les changements comptent le plus. Ce choix dirige l’observation ; il ne classe ni ne valorise les entreprises dans le monde canonique. La profondeur disponible dépend de la question et des sources publiques admises pour chaque organisation."
+        },
+        {
+          "heading": "Reprendre une conversation avec un meilleur contexte",
+          "body": "Avant une revue, le consultant peut examiner les nouvelles preuves, les contenus qui ne sont plus accessibles et les relations encore potentielles ou inconnues. Il peut alors préparer des questions plus précises. AXIGNAL ne conserve pas le plan de mission du consultant et ne décide pas des recommandations ; l’analyse professionnelle et la relation client restent hors de l’observation canonique."
+        }
+      ],
+      "example": "Une consultante travaille avec trois fabricants dans des missions distinctes. Avant une nouvelle séance, elle consulte la représentation observable de chaque organisation et retrouve des références réutilisables, des changements récents et des lacunes. Elle sépare ces observations des notes confidentielles et conclusions propres à chaque mission.",
+      "limits": "AXIGNAL n’est ni un CRM, ni un gestionnaire de tâches, ni un dépôt de notes confidentielles ou un système de relation client. L’abonné ne peut pas modifier les profils canoniques et la couverture n’est pas garantie identique pour chaque organisation. Les résultats partagés dépendent de l’admission, des droits, de la résolution d’identité et de l’actualité ; les informations privées d’une mission ne deviennent pas vérité économique publique.",
+      "cta": {
+        "label": "Commencer avec AXIGNAL",
+        "href": "/signup"
+      },
+      "related": [
+        "jtbd_seo_agency_change_evidence",
+        "jtbd_strategy_competitive_intelligence",
+        "jtbd_founder_time_constraint"
+      ]
+    },
+    "de": {
+      "slug": "berater-mehrere-projekte-kontext-je-mandant-bewahren",
+      "title": "Berater mit mehreren Mandaten: Kontext je Kunde bewahren",
+      "description": "Eine nachvollziehbare externe Sicht auf relevante Organisationen über mehrere Beratungsmandate hinweg erhalten.",
+      "lead": "Der Wechsel zwischen Mandaten sollte nicht verlangen, den gesamten öffentlichen Kontext jeder Organisation von Grund auf neu aufzubauen. AXIGNAL kann Beobachtungen mit Herkunft und Aktualität dauerhaft festhalten und so besser fundierte Fragen ermöglichen.",
+      "answer": "Ein Beobachtungsfokus lenkt dauerhafte Aufmerksamkeit auf eine Organisation. Er kann die Wiederverwendung zugelassener Belege und die Beobachtung des öffentlichen Kontexts über die Zeit unterstützen; er ist weder eine veränderbare private Akte noch ein Kunden- oder Projektmanagementbereich.",
+      "sections": [
+        {
+          "heading": "Mandatswissen von beobachteter Realität trennen",
+          "body": "Notizen aus einem Mandat spiegeln Umfang, Datum und Fragen des Kunden wider. Sie ersetzen keine unabhängigen Belege über eine Organisation. Die klare Grenze lässt Beratern professionelles Urteil, ohne eine Kundenaussage in kanonische Tatsache umzuwandeln. AXIGNAL-Beobachtung kann die Arbeit ergänzen und Quellen sowie verbleibende Schlussfolgerungen sichtbar machen."
+        },
+        {
+          "heading": "Kontext nur wiederverwenden, solange er relevant ist",
+          "body": "Frühere Erkenntnisse können in einem anderen Mandat helfen, wenn sie noch relevant, zugelassen und nachvollziehbar belegt sind. Andere müssen neu bewertet werden, weil sich Quelle, Gegenstand oder Kontext geändert haben. Wiederverwendung verringert Wiederholungsarbeit nur, wenn Bedingungen dies zulassen; sie bedeutet weder alte Schlussfolgerungen zu kopieren noch verwandte Organisationen gleichzusetzen."
+        },
+        {
+          "heading": "Beobachtungsfokus nach wichtigen Fragen wählen",
+          "body": "Ein Beratungsportfolio kann Dutzende Organisationen umfassen, doch nicht alle brauchen fortlaufende Aufmerksamkeit. Fachleute bestimmen, wo wirtschaftlicher Kontext oder Veränderung am wichtigsten ist. Diese Auswahl lenkt den Fokus; sie bewertet oder ordnet keine Unternehmen in der kanonischen Welt. Die verfügbare Tiefe richtet sich nach der Frage und zugelassenen öffentlichen Quellen je Organisation."
+        },
+        {
+          "heading": "Mit besserem Kontext in ein Gespräch zurückkehren",
+          "body": "Vor einer Besprechung kann ein Berater neue Belege, nicht mehr verfügbare Inhalte und weiterhin potenzielle oder unbekannte Beziehungen prüfen. Das ermöglicht präzisere Rückfragen. AXIGNAL speichert weder den Projektplan noch entscheidet es über Empfehlungen; fachliche Analyse und Kundenbeziehung bleiben außerhalb der kanonischen Beobachtung. So bleibt erkennbar, welche Erkenntnis geteilt werden darf und welche zum vertraulichen Mandat gehört."
+        }
+      ],
+      "example": "Eine Beraterin arbeitet in getrennten Mandaten mit drei Herstellern. Vor einem neuen Termin prüft sie die beobachtbare Darstellung jeder Organisation und findet wiederverwendbare Referenzen, aktuelle Änderungen und Lücken. Diese Beobachtungen hält sie von vertraulichen Notizen und mandatsbezogenen Schlussfolgerungen getrennt.",
+      "limits": "AXIGNAL ist weder CRM noch Aufgabenmanager, vertrauliches Notizarchiv oder Kundenbeziehungssystem. Abonnenten können kanonische Profile nicht bearbeiten; gleiche Abdeckung für jede Organisation ist nicht garantiert. Geteilte Erkenntnisse hängen von Zulassung, Rechten, Identitätsauflösung und Aktualität ab; private Mandatsinformationen werden nicht zu öffentlicher wirtschaftlicher Wahrheit.",
+      "cta": {
+        "label": "Mit AXIGNAL starten",
+        "href": "/signup"
+      },
+      "related": [
+        "jtbd_seo_agency_change_evidence",
+        "jtbd_strategy_competitive_intelligence",
+        "jtbd_founder_time_constraint"
+      ]
+    },
+    "it": {
+      "slug": "consulenti-multiprogetto-conservare-contesto-clienti",
+      "title": "Consulenti multiprogetto: conservare il contesto di ogni cliente",
+      "description": "Mantenere una prospettiva esterna tracciabile sulle organizzazioni rilevanti per incarichi di consulenza diversi.",
+      "lead": "Passare da un incarico all’altro non dovrebbe richiedere di ricostruire da zero tutto il contesto pubblico di ciascuna organizzazione. AXIGNAL può mantenere osservazioni persistenti con provenienza e attualità, preparando domande meglio fondate.",
+      "answer": "Un Focus di osservazione dirige attenzione persistente verso un’organizzazione. Può aiutare a riutilizzare prove ammesse e seguire il contesto pubblico nel tempo; non è una scheda privata modificabile né uno spazio di gestione clienti o progetti.",
+      "sections": [
+        {
+          "heading": "Tenere distinta la conoscenza dell’incarico dalla realtà osservata",
+          "body": "Le note di un incarico riflettono il suo ambito, la data e le domande del cliente. Non sostituiscono prove indipendenti sull’organizzazione. Mantenere chiaro il confine consente al consulente di applicare il proprio giudizio senza trasformare una dichiarazione del cliente in fatto canonico. L’osservazione AXIGNAL può integrare il lavoro, indicando fonti di supporto e ciò che resta un’inferenza."
+        },
+        {
+          "heading": "Riutilizzare il contesto solo finché resta pertinente",
+          "body": "Risultati precedenti possono aiutare in un altro incarico se restano pertinenti, sono stati ammessi e hanno provenienza tracciabile. Altri vanno rivalutati perché sono cambiati fonte, soggetto o contesto. Il riuso riduce attività ripetute solo quando le condizioni lo consentono; non significa copiare vecchie conclusioni o trattare organizzazioni simili come identiche."
+        },
+        {
+          "heading": "Scegliere i focus per le domande importanti",
+          "body": "Un portafoglio di consulenza può includere decine di organizzazioni, ma non tutte richiedono attenzione continua. Il professionista decide dove contano maggiormente contesto economico o cambiamento. La scelta dirige il focus, ma non ordina né valuta le imprese nel mondo canonico. La profondità disponibile dipende dalla domanda e dalle fonti pubbliche ammesse per ogni organizzazione."
+        },
+        {
+          "heading": "Riprendere una conversazione con più contesto",
+          "body": "Prima di una revisione, il consulente può esaminare nuove prove, contenuti non più disponibili e relazioni ancora potenziali o sconosciute. Questo supporta domande successive più precise. AXIGNAL non conserva il piano di progetto del consulente né decide cosa raccomandare; analisi professionale e relazione con il cliente restano fuori dall’osservazione canonica."
+        }
+      ],
+      "example": "Una consulente lavora con tre produttori in incarichi separati. Prima di un nuovo incontro, consulta il quadro osservabile di ogni organizzazione e ritrova riferimenti riutilizzabili, cambiamenti recenti e lacune. Tiene queste osservazioni separate dalle note riservate e dalle conclusioni proprie di ciascun incarico.",
+      "limits": "AXIGNAL non è CRM, task manager, archivio di note riservate o sistema di gestione clienti. Gli abbonati non possono modificare i profili canonici e la copertura non è uguale per tutte le organizzazioni. I risultati condivisi dipendono da ammissione, diritti, risoluzione d’identità e attualità; le informazioni private di progetto non diventano verità economica pubblica.",
+      "cta": {
+        "label": "Inizia con AXIGNAL",
+        "href": "/signup"
+      },
+      "related": [
+        "jtbd_seo_agency_change_evidence",
+        "jtbd_strategy_competitive_intelligence",
+        "jtbd_founder_time_constraint"
+      ]
+    },
+    "pt": {
+      "slug": "consultores-multiplos-projetos-preservar-contexto-clientes",
+      "title": "Consultores multiprojeto: preservar contexto entre clientes",
+      "description": "Manter uma visão externa rastreável das organizações relevantes em diferentes trabalhos de consultoria, com fontes disponíveis para revisão.",
+      "lead": "Mudar de um trabalho para outro não deveria exigir reconstruir do zero todo o contexto público de cada organização. A AXIGNAL pode manter observações persistentes com proveniência e atualidade, ajudando a retomar perguntas melhor fundamentadas.",
+      "answer": "Um Foco de Observação direciona atenção persistente a uma Organização. Pode ajudar a reutilizar evidências admitidas e acompanhar o contexto público no tempo; não é um perfil privado editável nem espaço de gestão de clientes e projetos.",
+      "sections": [
+        {
+          "heading": "Separar conhecimento do projeto da realidade observada",
+          "body": "As notas de um trabalho refletem escopo, data e perguntas do cliente. Não substituem evidências independentes sobre a Organização. Manter essa fronteira clara permite que o consultor exerça julgamento profissional sem transformar uma declaração do cliente em fato canônico. A observação da AXIGNAL pode complementar o trabalho mostrando suas fontes de apoio e o que ainda é inferência."
+        },
+        {
+          "heading": "Reutilizar contexto somente enquanto continuar pertinente",
+          "body": "Resultados anteriores podem ajudar em outro trabalho se continuarem relevantes, tiverem sido admitidos e possuírem proveniência rastreável. Outros precisam ser reavaliados porque fonte, objeto ou contexto mudou. Reutilização reduz trabalho repetido apenas quando as condições permitem; não significa copiar conclusões antigas nem tratar organizações relacionadas como iguais."
+        },
+        {
+          "heading": "Escolher focos para as perguntas importantes",
+          "body": "Uma carteira de consultoria pode incluir dezenas de organizações, mas nem todas precisam de atenção contínua. O profissional escolhe onde contexto econômico ou mudança mais importam. Essa escolha direciona o foco; não classifica nem atribui valor às empresas no mundo canônico. A profundidade disponível depende da pergunta e das fontes públicas admitidas para cada Organização."
+        },
+        {
+          "heading": "Retomar conversas com contexto melhor",
+          "body": "Antes de uma revisão, o consultor pode verificar novas evidências, conteúdos que deixaram de estar disponíveis e relações ainda potenciais ou desconhecidas. Isso ajuda a preparar perguntas de acompanhamento mais precisas. A AXIGNAL não guarda o plano do projeto nem decide recomendações; análise profissional e relação com o cliente permanecem fora da observação canônica."
+        }
+      ],
+      "example": "Uma consultora trabalha com três fabricantes em projetos separados. Antes de uma nova reunião, revisa o quadro observável de cada Organização e encontra referências reutilizáveis, mudanças recentes e lacunas. Mantém essas observações separadas de notas confidenciais e conclusões próprias de cada trabalho.",
+      "limits": "A AXIGNAL não é CRM, gerenciador de tarefas, repositório de notas confidenciais nem sistema de relacionamento com clientes. Assinantes não editam perfis canônicos e a cobertura não é igual para toda Organização. Descobertas compartilhadas dependem de admissão, direitos, resolução de identidade e atualidade; informações privadas do projeto não se tornam verdade econômica pública.",
+      "cta": {
+        "label": "Começar com a AXIGNAL",
+        "href": "/signup"
+      },
+      "related": [
+        "jtbd_seo_agency_change_evidence",
+        "jtbd_strategy_competitive_intelligence",
+        "jtbd_founder_time_constraint"
+      ]
+    }
+  },
+  {
+    "id": "jtbd_export_team_market_context",
+    "fr": {
+      "slug": "equipes-export-contexte-economique-marches",
+      "title": "Équipes export : préparer les décisions avec un contexte économique",
+      "description": "Mettre capacités et marchés en regard de preuves publiques avant d’explorer une possibilité d’exportation. avec des preuves et un contexte vérifiables",
+      "lead": "Explorer un nouveau pays demande plus qu’une liste d’entreprises : quelles capacités sont observables, quelle activité apparaît et où les preuves manquent-elles encore ? AXIGNAL peut structurer l’enquête sans transformer un signal en opportunité confirmée.",
+      "answer": "Un Focus d’observation sur une organisation peut lancer l’observation persistante de son environnement économique observable. La couverture dépend du focus, de la géographie des sources admises et des questions ; ce n’est ni une intelligence de marché complète ni une validation commerciale locale.",
+      "sections": [
+        {
+          "heading": "Regarder au-delà du pays d’origine",
+          "body": "Le siège enregistré d’une entreprise ne définit ni sa portée potentielle complète ni ses marchés actuels. Une recherche export a besoin de preuves sur capacités, langues, lieux, partenaires ou activités dans chaque marché. Si des sources locales sont inaccessibles, la situation peut rester inconnue ; cette lacune ne doit pas devenir une affirmation d’absence d’activité internationale."
+        },
+        {
+          "heading": "Séparer présence observée et adéquation commerciale",
+          "body": "Une mention dans un autre pays, une page traduite ou une présence à un salon ne prouve ni demande, ni aptitude à servir le marché, ni intention d’achat. Ce sont des signaux différents qui peuvent appeler des questions. AXIGNAL peut relier des preuves publiques et expliquer quelle relation est étayée et laquelle reste potentielle, sans réduire l’adéquation à un score universel."
+        },
+        {
+          "heading": "Raisonner sur la géographie par capacité",
+          "body": "La géographie informe le raisonnement, mais ne délimite pas l’activité de toute l’entreprise. Chaque capacité peut avoir une portée et des preuves différentes. Registres, langues et sources d’observation varient selon les juridictions ; la couverture des marchés n’est donc pas symétrique. Toute comparaison doit rendre ces écarts visibles plutôt que supposer un terrain égal."
+        },
+        {
+          "heading": "Transformer l’incertitude en vérification locale",
+          "body": "Une vue utile sépare ce qui est étayé, potentiel et inconnu et aide l’équipe à préparer des questions pour distributeurs, conseillers ou collaborateurs locaux. Les indications humaines peuvent orienter l’attention, mais ne changent pas automatiquement la vérité canonique. Une hypothèse commerciale doit être vérifiée par des interlocuteurs et des preuves adaptés au pays, au produit et au mode de livraison envisagé."
+        }
+      ],
+      "example": "Une équipe export étudie une entreprise qui publie des fiches techniques en plusieurs langues. Elle observe aussi des projets publics compatibles dans deux pays. Ces éléments justifient des questions sur portée et éligibilité, pas l’affirmation d’une demande confirmée ni d’un client probable.",
+      "limits": "AXIGNAL ne remplace pas la recherche locale, les vérifications réglementaires, la validation de distributeurs ni les conseils juridiques ou fiscaux. Les sources accessibles varient selon le pays et le secteur. Une activité ou capacité observée ne prouve ni l’intention d’acheter, ni la viabilité du service, ni une opportunité commerciale ; le résultat peut rester inconnu.",
+      "cta": {
+        "label": "Découvrir AXIGNAL",
+        "href": "/knowledge"
+      },
+      "related": [
+        "jtbd_strategy_competitive_intelligence",
+        "jtbd_founder_time_constraint",
+        "jtbd_multi_client_consultant"
+      ]
+    },
+    "de": {
+      "slug": "exportteams-wirtschaftskontext-fuer-marktentscheidungen",
+      "title": "Exportteams: Entscheidungen mit wirtschaftlichem Kontext vorbereiten",
+      "description": "Fähigkeiten und Märkte anhand öffentlicher Belege einordnen; die wirtschaftliche Passung erfordert zusätzlichen Kontext.",
+      "lead": "Die Erkundung eines neuen Landes beginnt nicht mit einer Unternehmensliste allein: Welche Fähigkeiten sind beobachtbar, welche Aktivitäten zeigen sich und wo fehlen noch Belege? AXIGNAL kann die Recherche strukturieren, ohne ein Signal als bestätigte Chance darzustellen. Die Abgrenzung bleibt vor der Bewertung sichtbar.",
+      "answer": "Ein Beobachtungsfokus auf eine Organisation kann dauerhafte Beobachtung ihres sichtbaren wirtschaftlichen Umfelds beginnen. Die Abdeckung hängt vom Fokus, der Geografie zugelassener Quellen und den Fragen ab. Sie ist weder vollständige Marktintelligenz noch ein Ersatz für lokale kaufmännische Validierung.",
+      "sections": [
+        {
+          "heading": "Über das Heimatland hinausblicken",
+          "body": "Der eingetragene Firmensitz bestimmt weder die gesamte mögliche Reichweite noch die aktuellen Märkte. Exportrecherche benötigt Belege zu Fähigkeiten, Sprachen, Orten, Partnern oder Aktivitäten in jedem Markt. Sind lokale Quellen nicht zugänglich, kann die Lage unbekannt bleiben; daraus darf nicht folgen, dass internationale Aktivität nicht existiert."
+        },
+        {
+          "heading": "Beobachtete Präsenz von Geschäftseignung trennen",
+          "body": "Eine Erwähnung im Ausland, eine übersetzte Seite oder ein Messeauftritt beweisen weder Nachfrage noch Lieferfähigkeit oder Kaufabsicht. Es sind unterschiedliche Signale, die weitere Fragen nahelegen können. AXIGNAL kann öffentliche Belege verbinden und erklären, welche Beziehung gestützt ist und welche potenziell bleibt, ohne Eignung auf einen universellen Wert zu reduzieren."
+        },
+        {
+          "heading": "Geografie und Reichweite je Fähigkeit beurteilen",
+          "body": "Geografie unterstützt die Einordnung; sie setzt nicht die Grenzen der gesamten Unternehmenstätigkeit. Fähigkeiten können unterschiedliche Reichweiten und Beleglagen haben. Register, Sprachen und Beobachtungsquellen variieren je Rechtsraum, deshalb ist Marktabdeckung nicht symmetrisch. Ein Vergleich sollte diese Unterschiede offenlegen, statt gleiche Bedingungen zu unterstellen."
+        },
+        {
+          "heading": "Unsicherheit in lokale Prüfung überführen",
+          "body": "Eine hilfreiche Sicht trennt Gestütztes, Potenzielles und Unbekanntes und bereitet Fragen für Vertriebspartner, Berater oder lokale Mitarbeitende vor. Menschliche Hinweise können Aufmerksamkeit lenken, ändern aber nicht automatisch kanonische Wahrheit. Eine Geschäftshypothese braucht passende lokale Belege und Gesprächspartner, abgestimmt auf Land, Produkt und geplante Lieferform. Unterschiede bei Registern, Sprachen und Veröffentlichungsfristen gehören ebenfalls in die Bewertung. Vor einer Priorisierung sollten lokale Fachleute außerdem Marktzugang, Normen und Lieferwege prüfen."
+        }
+      ],
+      "example": "Ein Exportteam prüft ein Unternehmen mit technischen Unterlagen in mehreren Sprachen und beobachtet passende öffentliche Projekte in zwei Ländern. Das kann Fragen zu Reichweite und Eignung auslösen, belegt aber weder bestätigte Nachfrage noch einen wahrscheinlichen Kunden.",
+      "limits": "AXIGNAL ersetzt weder lokale Recherche noch regulatorische Prüfungen, Vertriebspartner-Validierung oder Rechts- und Steuerberatung. Zugängliche Quellen unterscheiden sich nach Land und Branche. Beobachtete Aktivität oder Fähigkeit beweist weder Kaufabsicht noch Lieferfähigkeit oder Geschäftschance; ein Ergebnis kann unbekannt bleiben.",
+      "cta": {
+        "label": "AXIGNAL kennenlernen",
+        "href": "/knowledge"
+      },
+      "related": [
+        "jtbd_strategy_competitive_intelligence",
+        "jtbd_founder_time_constraint",
+        "jtbd_multi_client_consultant"
+      ]
+    },
+    "it": {
+      "slug": "team-export-contesto-economico-decisioni-mercato",
+      "title": "Team export: preparare decisioni con contesto economico",
+      "description": "Mettere capacità e mercati in relazione con prove pubbliche prima di esplorare un’opportunità di export. con evidenze e contesto verificabili",
+      "lead": "Esplorare un nuovo paese richiede più di un elenco di imprese: quali capacità sono osservabili, quale attività emerge e dove mancano ancora prove? AXIGNAL può inquadrare la ricerca senza trasformare un segnale in opportunità confermata.",
+      "answer": "Un Focus di osservazione su un’organizzazione può avviare l’osservazione persistente del suo ambiente economico osservabile. La copertura dipende dal Focus, dalla geografia delle fonti ammesse e dalle domande; non è intelligence di mercato completa né sostituisce la validazione commerciale locale.",
+      "sections": [
+        {
+          "heading": "Guardare oltre il paese d’origine",
+          "body": "La sede legale non definisce tutta la portata potenziale né i mercati attuali di un’impresa. La ricerca export richiede prove su capacità, lingue, sedi, partner o attività in ogni mercato. Se le fonti locali non sono accessibili, il quadro può restare sconosciuto; la lacuna non va trasformata in affermazione che l’attività internazionale non esista."
+        },
+        {
+          "heading": "Separare presenza osservata e compatibilità commerciale",
+          "body": "Una menzione in un altro paese, una pagina tradotta o una partecipazione fieristica non dimostrano domanda, capacità di servire il mercato o intenzione d’acquisto. Sono segnali distinti che possono giustificare altre domande. AXIGNAL può collegare prove pubbliche e spiegare quale relazione è sostenuta e quale resta potenziale, senza ridurre la compatibilità a un punteggio universale."
+        },
+        {
+          "heading": "Ragionare sulla geografia per capacità",
+          "body": "La geografia offre contesto, ma non definisce il confine di tutte le attività dell’impresa. Ogni capacità può avere portata e prove diverse. Registri, lingue e fonti di osservazione variano per giurisdizione, quindi la copertura dei mercati non è simmetrica. Un confronto dovrebbe rendere visibili tali differenze invece di presumere condizioni equivalenti."
+        },
+        {
+          "heading": "Trasformare l’incertezza in verifica locale",
+          "body": "Un quadro utile distingue ciò che è sostenuto, potenziale e sconosciuto e aiuta a preparare domande per distributori, consulenti o personale locale. Gli input umani dirigono l’attenzione, ma non cambiano automaticamente la verità canonica. Un’ipotesi commerciale va verificata con interlocutori e prove pertinenti al paese, al prodotto e alla modalità di consegna prevista."
+        }
+      ],
+      "example": "Un team export studia un’impresa che pubblica schede tecniche in più lingue e osserva progetti pubblici compatibili in due paesi. Questi elementi giustificano domande su portata e idoneità, non affermano una domanda confermata né un cliente probabile.",
+      "limits": "AXIGNAL non sostituisce ricerca locale, verifiche normative, valutazione di distributori né consulenza legale o fiscale. Le fonti accessibili variano per paese e settore. Attività o capacità osservate non provano intenzione d’acquisto, fattibilità del servizio o opportunità commerciale; l’esito può restare sconosciuto.",
+      "cta": {
+        "label": "Scopri AXIGNAL",
+        "href": "/knowledge"
+      },
+      "related": [
+        "jtbd_strategy_competitive_intelligence",
+        "jtbd_founder_time_constraint",
+        "jtbd_multi_client_consultant"
+      ]
+    },
+    "pt": {
+      "slug": "equipes-exportacao-contexto-economico-mercados",
+      "title": "Equipes de exportação: preparar decisões com contexto econômico",
+      "description": "Associe capacidades e mercados a evidências públicas antes de explorar uma possibilidade de exportação; a adequação comercial exige contexto adicional.",
+      "lead": "Explorar um novo país exige mais que uma lista de empresas: quais capacidades são observáveis, que atividade aparece e onde ainda faltam evidências? A AXIGNAL pode estruturar a investigação sem transformar um sinal em oportunidade confirmada.",
+      "answer": "Um Foco de Observação em uma Organização pode iniciar observação persistente de seu ambiente econômico observável. A cobertura depende do Foco, da geografia das fontes admitidas e das perguntas; não equivale a inteligência de mercado completa nem substitui validação comercial local.",
+      "sections": [
+        {
+          "heading": "Olhar além do país de origem",
+          "body": "A sede registrada não define todo o alcance potencial nem os mercados atuais de uma empresa. Pesquisa de exportação precisa de evidências sobre capacidades, idiomas, locais, parceiros ou atividade em cada mercado. Se fontes locais não estiverem acessíveis, o quadro pode permanecer desconhecido; essa lacuna não deve virar afirmação de que não existe atividade internacional."
+        },
+        {
+          "heading": "Separar presença observada de adequação comercial",
+          "body": "Uma menção em outro país, uma página traduzida ou participação em feira não prova demanda, capacidade de atender ao mercado ou intenção de compra. São sinais diferentes que podem motivar perguntas. A AXIGNAL pode conectar evidências públicas e explicar qual relação é respaldada e qual permanece potencial, sem reduzir adequação a uma pontuação universal."
+        },
+        {
+          "heading": "Raciocinar sobre geografia por capacidade",
+          "body": "Geografia oferece contexto para o raciocínio; não define a fronteira de todas as atividades da empresa. Cada capacidade pode ter alcance e evidências diferentes. Registros, idiomas e fontes observáveis variam por jurisdição, então a cobertura dos mercados não é simétrica. Toda comparação deve tornar essas diferenças visíveis em vez de presumir condições iguais."
+        },
+        {
+          "heading": "Transformar incerteza em verificação local",
+          "body": "Uma visão útil separa o que é respaldado, potencial e desconhecido e ajuda a preparar perguntas para distribuidores, assessores ou equipe local. Informações humanas direcionam atenção, mas não alteram automaticamente a verdade canônica. Uma hipótese comercial precisa de verificação por interlocutores e evidências adequados ao país, produto e forma de entrega planejada."
+        }
+      ],
+      "example": "Uma equipe de exportação analisa uma empresa que publica fichas técnicas em vários idiomas e observa projetos públicos compatíveis em dois países. Esses dados justificam perguntas sobre alcance e elegibilidade, mas não confirmam demanda nem um provável cliente.",
+      "limits": "A AXIGNAL não substitui pesquisa local, verificações regulatórias, validação de distribuidores nem aconselhamento jurídico ou tributário. Fontes acessíveis variam por país e setor. Atividade ou capacidade observada não prova intenção de compra, viabilidade de atendimento ou oportunidade comercial; o resultado pode continuar desconhecido.",
+      "cta": {
+        "label": "Conheça a AXIGNAL",
+        "href": "/knowledge"
+      },
+      "related": [
+        "jtbd_strategy_competitive_intelligence",
+        "jtbd_founder_time_constraint",
+        "jtbd_multi_client_consultant"
+      ]
+    }
+  },
+  {
+    "id": "jtbd_strategy_competitive_intelligence",
+    "fr": {
+      "slug": "strategie-et-intelligence-concurrentielle-avec-preuves",
+      "title": "Stratégie et intelligence concurrentielle appuyées par des preuves",
+      "description": "Explorer capacités, relations et changements économiques au-delà d’une liste de concurrents ou d’un score unique.",
+      "lead": "Les équipes de stratégie ont besoin d’une vision externe qui relie organisations, capacités, marchés et activité économique. AXIGNAL peut organiser le contexte public observable sans prétendre révéler les plans privés ni désigner le concurrent le plus fort.",
+      "answer": "Un Focus d’observation commence une observation persistante d’une organisation. Les connaissances économiques partagées peuvent fournir un contexte plus large lorsque des preuves admises le permettent ; l’activité, les relations et les opportunités dérivées gardent leurs états épistémiques distincts.",
+      "sections": [
+        {
+          "heading": "Délimiter le paysage selon la question stratégique",
+          "body": "Une vue utile dépend de ce que l’équipe veut comprendre : chaîne d’approvisionnement, capacités adjacentes, activité émergente ou relations visibles dans un marché. Le périmètre ne s’arrête pas nécessairement aux concurrents directs. Un Focus d’observation porte sur une organisation ; le contexte économique relié peut élargir l’analyse là où des preuves admises la soutiennent."
+        },
+        {
+          "heading": "Lire les relations sans exagérer la certitude",
+          "body": "Une relation peut être observée directement, dérivée de plusieurs signaux ou simplement potentielle. Partager un projet, apparaître dans un document ou décrire des capacités similaires ne fait pas automatiquement deux organisations des partenaires, fournisseurs ou rivaux. La classification doit respecter ses sources et son soutien ; l’incertitude fait partie de la vue stratégique."
+        },
+        {
+          "heading": "Comparer les capacités plutôt que produire un score total",
+          "body": "La stratégie demande souvent des dimensions séparées : marchés, portée géographique par capacité, activité observable et dépendances. Les condenser en un score cache compromis et lacunes. Une analyse utile permet de retracer les preuves de chaque dimension, d’indiquer les contradictions et de s’abstenir lorsque les sources ne peuvent répondre à la question."
+        },
+        {
+          "heading": "Maintenir une perspective dans le temps",
+          "body": "Une observation ponctuelle décrit un instant, tandis que l’activité et les relations peuvent évoluer. Une mémoire dont la date de départ est connue permet de demander quelles nouvelles preuves sont apparues et ce qui a changé. Elle ne reconstitue pas un passé manquant et ne prévoit pas l’avenir. Les décisions d’investissement, d’acquisition et de concurrence exigent toujours diligence et jugement professionnel."
+        }
+      ],
+      "example": "Une équipe stratégie demande si une capacité récemment décrite pourrait rejoindre des marchés déjà servis par une entreprise. Elle consulte les sources, les preuves d’activité et les relations potentielles avant d’en faire une hypothèse. Elle ne confond pas proximité et demande et ne présume pas qu’une organisation deviendra client ou concurrent.",
+      "limits": "AXIGNAL n’est ni une base exhaustive de concurrents, ni un classement universel, ni un substitut à la diligence stratégique, juridique ou financière. La couverture dépend du sujet, de la géographie et des sources. Activité publiée et similarité de capacités ne prouvent ni avantage concurrentiel, adéquation commerciale, intention ou résultat futur.",
+      "cta": {
+        "label": "Découvrir AXIGNAL",
+        "href": "/knowledge"
+      },
+      "related": [
+        "jtbd_export_team_market_context",
+        "jtbd_multi_client_consultant",
+        "jtbd_seo_agency_change_evidence"
+      ]
+    },
+    "de": {
+      "slug": "strategie-und-wettbewerbsintelligenz-mit-belegen",
+      "title": "Strategie und Wettbewerbsintelligenz mit nachvollziehbaren Belegen",
+      "description": "Fähigkeiten, Beziehungen und wirtschaftliche Veränderungen jenseits einer Wettbewerberliste oder Einzelkennzahl erkunden.",
+      "lead": "Strategieteams benötigen eine externe Sicht, die Organisationen, Fähigkeiten, Märkte und wirtschaftliche Aktivität verbindet. AXIGNAL kann den beobachtbaren öffentlichen Kontext ordnen, ohne private Pläne zu kennen oder den stärksten Wettbewerber zu bestimmen.",
+      "answer": "Ein Beobachtungsfokus beginnt dauerhafte Beobachtung einer Organisation. Geteiltes wirtschaftliches Wissen kann größeren Kontext liefern, soweit zugelassene Belege dies stützen; Aktivität, Beziehungen und abgeleitete Chancen behalten ihre eigenen Erkenntniszustände.",
+      "sections": [
+        {
+          "heading": "Das Umfeld an der strategischen Frage ausrichten",
+          "body": "Eine nützliche Sicht hängt davon ab, was das Team verstehen muss: Liefernetzwerk, angrenzende Fähigkeiten, neue Aktivität oder sichtbare Beziehungen in einem Markt. Die Grenze muss nicht bei direkten Wettbewerbern enden. Ein Beobachtungsfokus richtet Aufmerksamkeit auf eine Organisation; verbundenes wirtschaftliches Wissen kann den Blick erweitern, soweit zugelassene Belege vorliegen."
+        },
+        {
+          "heading": "Beziehungen lesen, ohne Sicherheit zu übertreiben",
+          "body": "Eine Beziehung kann direkt beobachtet, aus mehreren Signalen abgeleitet oder nur potenziell sein. Ein gemeinsames Projekt, ein Eintrag in einem Dokument oder ähnliche Fähigkeiten machen zwei Organisationen nicht automatisch zu Partnern, Lieferanten oder Rivalen. Die Einordnung muss Quelle und Beleglage respektieren; Unsicherheit gehört zur strategischen Sicht."
+        },
+        {
+          "heading": "Fähigkeiten vergleichen statt einen Gesamtwert bilden",
+          "body": "Strategie braucht oft getrennte Dimensionen: Märkte, geografische Reichweite je Fähigkeit, beobachtbare Aktivität und Abhängigkeiten. Ein Gesamtwert verbirgt Zielkonflikte und Lücken. Eine gute Analyse lässt Belege jeder Dimension zurückverfolgen, Widersprüche erkennen und enthält sich, wenn Quellen die Frage nicht beantworten können."
+        },
+        {
+          "heading": "Eine Sicht über die Zeit erhalten",
+          "body": "Eine punktuelle Beobachtung beschreibt einen Moment, Aktivität und Beziehungen können sich jedoch entwickeln. Ein Gedächtnis mit bekanntem Startdatum ermöglicht die Frage, welche neuen Belege aufgetaucht sind und was sich änderte. Es rekonstruiert keine nicht aufgezeichnete Vergangenheit und prognostiziert nicht die Zukunft. Investitions-, Übernahme- und Wettbewerbsentscheidungen benötigen weiterhin Due Diligence und professionelles Urteil. Fehlen wichtige Quellen oder widersprechen sie einander, muss die offene Lage sichtbar bleiben, statt in einen Rang übersetzt zu werden. Widersprüchliche Belege und nicht beobachtete Bereiche gehören ausdrücklich in die strategische Diskussion."
+        }
+      ],
+      "example": "Ein Strategieteam fragt, ob eine neu beschriebene Fähigkeit zu Märkten passen könnte, die ein Unternehmen bereits bedient. Es prüft Quellen, Aktivitätsbelege und potenzielle Beziehungen, bevor es die Idee als Hypothese behandelt. Nähe gilt weder als Nachfrage noch wird eine Organisation automatisch zum Kunden oder Rivalen erklärt.",
+      "limits": "AXIGNAL ist weder vollständige Wettbewerberdatenbank noch allgemeines Ranking oder Ersatz für strategische, rechtliche und finanzielle Due Diligence. Abdeckung variiert nach Thema, Geografie und Quelle. Veröffentlichte Aktivität und Fähigkeitsähnlichkeit belegen weder Wettbewerbsvorteil noch Geschäftseignung, Absicht oder künftige Ergebnisse.",
+      "cta": {
+        "label": "AXIGNAL kennenlernen",
+        "href": "/knowledge"
+      },
+      "related": [
+        "jtbd_export_team_market_context",
+        "jtbd_multi_client_consultant",
+        "jtbd_seo_agency_change_evidence"
+      ]
+    },
+    "it": {
+      "slug": "strategia-e-intelligence-competitiva-con-prove",
+      "title": "Strategia e intelligence competitiva basate su prove",
+      "description": "Esplorare capacità, relazioni e cambiamenti economici oltre un semplice elenco di concorrenti o un unico punteggio.",
+      "lead": "I team strategici hanno bisogno di una prospettiva esterna che colleghi organizzazioni, capacità, mercati e attività economica. AXIGNAL può organizzare il contesto pubblico osservabile senza sostenere di conoscere piani privati o individuare il concorrente più forte.",
+      "answer": "Un Focus di osservazione avvia l’osservazione persistente di un’organizzazione. La conoscenza economica condivisa può fornire contesto più ampio quando le prove ammesse lo supportano; attività, relazioni e opportunità derivate mantengono stati epistemici distinti.",
+      "sections": [
+        {
+          "heading": "Definire il perimetro intorno alla domanda strategica",
+          "body": "Un quadro utile dipende da ciò che il team deve comprendere: rete di fornitura, capacità adiacenti, attività emergenti o relazioni visibili in un mercato. Il perimetro non deve fermarsi ai concorrenti diretti. Un Focus di osservazione dirige attenzione a un’organizzazione; la conoscenza economica collegata può ampliare il contesto dove esistono prove ammesse."
+        },
+        {
+          "heading": "Leggere le relazioni senza esagerare la certezza",
+          "body": "Una relazione può essere osservata direttamente, derivata da più segnali o soltanto potenziale. Condividere un progetto, comparire in un documento o descrivere capacità simili non rende automaticamente due organizzazioni partner, fornitori o rivali. La classificazione deve rispettare fonti e sostegno; l’incertezza appartiene alla prospettiva strategica."
+        },
+        {
+          "heading": "Confrontare capacità invece di creare un punteggio totale",
+          "body": "La strategia richiede spesso dimensioni distinte: mercati, portata geografica per capacità, attività osservabile e dipendenze. Un unico punteggio nasconde compromessi e lacune. Un’analisi utile consente di risalire alle prove di ogni dimensione, riconoscere contraddizioni e astenersi quando le fonti non possono rispondere alla domanda."
+        },
+        {
+          "heading": "Mantenere una prospettiva nel tempo",
+          "body": "Un’osservazione puntuale descrive un momento, ma attività e relazioni possono evolvere. Una memoria con data iniziale nota permette di chiedere quali nuove prove siano emerse e cosa sia cambiato. Non ricostruisce il passato mancante né prevede il futuro. Le decisioni su investimenti, acquisizioni e concorrenza richiedono ancora due diligence e giudizio professionale."
+        }
+      ],
+      "example": "Un team strategico si chiede se una capacità descritta di recente possa collegarsi ai mercati già serviti da un’impresa. Esamina fonti, prove di attività e relazioni potenziali prima di trattare l’idea come ipotesi. Non scambia prossimità per domanda e non presume che un’organizzazione diventi cliente o rivale.",
+      "limits": "AXIGNAL non è un database completo di concorrenti, non produce classifiche universali e non sostituisce due diligence strategica, legale o finanziaria. La copertura varia per tema, geografia e fonte. Attività pubblicata e somiglianza di capacità non provano vantaggio competitivo, compatibilità commerciale, intenzione o risultati futuri.",
+      "cta": {
+        "label": "Scopri AXIGNAL",
+        "href": "/knowledge"
+      },
+      "related": [
+        "jtbd_export_team_market_context",
+        "jtbd_multi_client_consultant",
+        "jtbd_seo_agency_change_evidence"
+      ]
+    },
+    "pt": {
+      "slug": "estrategia-e-inteligencia-competitiva-com-evidencias",
+      "title": "Estratégia e inteligência competitiva respaldadas por evidências",
+      "description": "Analisar capacidades, relações e mudanças econômicas sem reduzir as organizações a uma lista de concorrentes ou pontuação única.",
+      "lead": "Equipes de estratégia precisam de uma visão externa que conecte organizações, capacidades, mercados e atividade econômica. A AXIGNAL pode organizar o contexto público observável sem alegar conhecer planos privados ou apontar o concorrente mais forte.",
+      "answer": "Um Foco de Observação inicia observação persistente de uma organização. O conhecimento econômico compartilhado pode ampliar o contexto quando evidências admitidas o sustentam; atividade, relações e oportunidades derivadas mantêm estados epistêmicos próprios.",
+      "sections": [
+        {
+          "heading": "Definir o cenário conforme a pergunta estratégica",
+          "body": "Uma visão útil depende do que a equipe precisa entender: rede de fornecimento, capacidades adjacentes, atividade emergente ou relações visíveis em um mercado. O limite não precisa parar nos concorrentes diretos. Um Foco de Observação dirige atenção a uma organização; o conhecimento econômico conectado pode ampliar o contexto quando houver evidências admitidas."
+        },
+        {
+          "heading": "Interpretar relações sem exagerar a certeza",
+          "body": "Uma relação pode ser observada diretamente, derivada de vários sinais ou apenas potencial. Compartilhar um projeto, aparecer em um documento ou descrever capacidades semelhantes não torna automaticamente duas organizações parceiras, fornecedoras ou rivais. A classificação precisa respeitar fonte e respaldo; a incerteza faz parte da visão estratégica."
+        },
+        {
+          "heading": "Comparar capacidades em vez de criar uma nota total",
+          "body": "A estratégia costuma exigir dimensões separadas: mercados, alcance geográfico por capacidade, atividade observável e dependências. Resumi-las numa nota esconde concessões e lacunas. Uma análise útil permite rastrear evidências de cada dimensão, reconhecer contradições e se abster quando as fontes não respondem à pergunta."
+        },
+        {
+          "heading": "Manter uma visão ao longo do tempo",
+          "body": "Uma observação pontual descreve um momento, enquanto atividade e relações podem evoluir. Uma memória com data inicial conhecida permite perguntar quais evidências surgiram depois e o que mudou. Ela não reconstrói um passado sem registro nem prevê o futuro. Decisões de investimento, aquisição e concorrência ainda exigem diligência e julgamento profissional."
+        }
+      ],
+      "example": "Uma equipe de estratégia pergunta se uma capacidade descrita recentemente poderia se conectar a mercados que a empresa já atende. Ela analisa fontes, evidências de atividade e relações potenciais antes de tratar a ideia como hipótese. Não confunde proximidade com demanda nem presume que outra organização virá a ser cliente ou rival.",
+      "limits": "A AXIGNAL não é um banco completo de concorrentes, não gera classificações universais e não substitui diligência estratégica, jurídica ou financeira. A cobertura varia por tema, geografia e fonte. Atividade publicada e semelhança de capacidades não provam vantagem competitiva, adequação comercial, intenção nem resultado futuro.",
+      "cta": {
+        "label": "Conheça a AXIGNAL",
+        "href": "/knowledge"
+      },
+      "related": [
+        "jtbd_export_team_market_context",
+        "jtbd_multi_client_consultant",
+        "jtbd_seo_agency_change_evidence"
+      ]
+    }
+  },
+  {
+    "id": "jtbd_founder_time_constraint",
+    "fr": {
+      "slug": "fondateurs-comprendre-contexte-externe-temps-limite",
+      "title": "Fondateurs : comprendre le contexte externe avec peu de temps",
+      "description": "Un point de vue fondé sur des preuves pour orienter l’attention, sans promettre des décisions automatiques. avec des preuves et un contexte vérifiables",
+      "lead": "Les fondateurs décident avec des informations incomplètes et peu de temps pour reconstruire le contexte extérieur. AXIGNAL peut organiser les preuves publiques autour d’une organisation et faire ressortir des questions utiles, tout en laissant les décisions à l’équipe.",
+      "answer": "AXIGNAL peut relier des preuves économiques observables et expliquer ce qui est connu, potentiel ou inconnu. Un Focus d’observation concentre l’attention sur une organisation ; il ne remplace pas la recherche directe et ne transforme pas les résultats en décisions automatiques.",
+      "sections": [
+        {
+          "heading": "Commencer par ce qui peut être vérifié de l’extérieur",
+          "body": "Les fondateurs connaissent leurs priorités internes, mais ne voient pas toujours comment les preuves publiques décrivent capacités, relations et activité. Un regard extérieur peut confronter cette compréhension aux éléments disponibles et identifier des questions ouvertes. La présence numérique est incomplète : ce qui n’apparaît pas dans les sources observées ne doit pas être traité comme absent de l’entreprise."
+        },
+        {
+          "heading": "Orienter l’attention sans céder son jugement",
+          "body": "Pour une petite équipe, la valeur peut consister à atteindre plus vite un contexte pertinent et à éviter des recherches répétées lorsque des informations actuelles et autorisées sont réutilisables. AXIGNAL peut expliquer pourquoi un signal apparaît et ce qui l’étaye. Le fondateur choisit toujours quoi examiner, comment interpréter le risque et quand demander un conseil spécialisé."
+        },
+        {
+          "heading": "Distinguer signaux et opportunités confirmées",
+          "body": "Un appel d’offres, un projet ou une capacité compatible peut ouvrir une piste d’enquête. Cela ne prouve ni que l’équipe remportera un contrat, ni qu’un acteur souhaite acheter, ni que l’adéquation commerciale est viable. Les opportunités dérivées restent potentielles jusqu’à ce que d’autres preuves étayent ces dimensions. S’abstenir ou répondre UNKNOWN peut être la bonne issue."
+        },
+        {
+          "heading": "Construire une perspective au fil du temps",
+          "body": "La première observation fournit un point de départ pour interpréter les preuves ultérieures. Quand l’environnement change, une nouvelle source ou relation peut mériter attention. La mémoire évite de dépendre uniquement de la dernière recherche, mais elle commence à une date connue et dépend de la couverture et des accès. Elle ne prédit pas les résultats et ne reconstitue pas une activité jamais enregistrée."
+        }
+      ],
+      "example": "Une fondatrice prépare l’extension d’une gamme de services. Elle examine les capacités soutenues publiquement, les activités de marché associées et les dimensions d’adéquation commerciale encore inconnues. Elle utilise cette vue pour préparer des échanges, sans supposer qu’un signal soit déjà un client.",
+      "limits": "AXIGNAL ne remplace pas un fondateur, ne rédige pas de plan d’affaires et ne gère ni tâches ni ventes. La couverture dépend de l’organisation choisie, des questions et des sources admises. L’intelligence observable n’inclut pas par défaut revenus, clients ou projets internes ; les signaux économiques ne garantissent ni demande ni résultat.",
+      "cta": {
+        "label": "Commencer avec AXIGNAL",
+        "href": "/signup"
+      },
+      "related": [
+        "jtbd_multi_client_consultant",
+        "jtbd_export_team_market_context",
+        "jtbd_strategy_competitive_intelligence"
+      ]
+    },
+    "de": {
+      "slug": "gruender-wenig-zeit-externer-kontext",
+      "title": "Gründer: den externen Kontext mit wenig Zeit verstehen",
+      "description": "Eine nachvollziehbare Sicht auf eine Organisation kann Aufmerksamkeit lenken; Entscheidungen bleiben menschliche Aufgabe.",
+      "lead": "Gründer treffen Entscheidungen mit unvollständigen Informationen und wenig Zeit, das externe Umfeld neu zusammenzustellen. AXIGNAL kann öffentliche Belege rund um eine Organisation ordnen und relevante Fragen zeigen; die Entscheidung bleibt beim Team.",
+      "answer": "AXIGNAL kann beobachtbare wirtschaftliche Belege verbinden und erklären, was bekannt, potenziell oder unbekannt ist. Ein Beobachtungsfokus bündelt Aufmerksamkeit für eine Organisation; er ersetzt weder direkte Recherche noch macht er Erkenntnisse zu automatischen Entscheidungen.",
+      "sections": [
+        {
+          "heading": "Mit extern überprüfbaren Informationen beginnen",
+          "body": "Gründer kennen ihre internen Prioritäten, sehen aber nicht immer, wie öffentliche Belege Fähigkeiten, Beziehungen und Aktivitäten darstellen. Eine Außenperspektive kann das interne Bild mit verfügbaren Belegen vergleichen und offene Fragen sichtbar machen. Digitale Präsenz ist unvollständig: Was in beobachteten Quellen nicht erscheint, darf nicht als im Unternehmen nicht vorhanden gelten."
+        },
+        {
+          "heading": "Aufmerksamkeit lenken, Urteil behalten",
+          "body": "Für ein kleines Team kann es wertvoll sein, relevanten Kontext früher zu erreichen und wiederholte Suche zu vermeiden, wenn aktuelle, zulässige Informationen wiederverwendet werden können. AXIGNAL kann erklären, warum ein Signal erscheint und wodurch es gestützt wird. Gründer entscheiden weiterhin, was sie untersuchen, wie sie Risiken einordnen und wann Fachberatung nötig ist."
+        },
+        {
+          "heading": "Signale von bestätigten Chancen unterscheiden",
+          "body": "Eine Ausschreibung, ein Projekt oder eine passende Fähigkeit kann eine Untersuchung anstoßen. Sie beweist weder einen künftigen Auftrag noch Kaufabsicht oder tragfähige Geschäftseignung. Abgeleitete Chancen bleiben potenziell, bis weitere Belege diese Dimensionen stützen. Enthaltung oder UNKNOWN kann die richtige Antwort sein."
+        },
+        {
+          "heading": "Über die Zeit eine Perspektive aufbauen",
+          "body": "Die erste Beobachtung bildet einen Bezugspunkt für spätere Belege. Wenn sich das Umfeld verändert, können neue Quellen oder Beziehungen Aufmerksamkeit verdienen. Gedächtnis verhindert, sich nur auf die letzte Suche zu verlassen, beginnt aber an einem bekannten Datum und hängt von Abdeckung und Zugang ab. Es sagt Ergebnisse nicht voraus und rekonstruiert keine nie aufgezeichnete Aktivität. Erfasste Zeiträume und unbeobachtete Lücken müssen auseinandergehalten werden. Bei wenig Zeit hilft die nächste offene Frage oft mehr als eine scheinbar vollständige Kennzahl."
+        }
+      ],
+      "example": "Ein Gründer erwägt, eine Service-Linie auszubauen. Er prüft öffentlich gestützte Fähigkeiten, passende Marktaktivität und noch unbekannte Aspekte der Geschäftseignung. Die Sicht bereitet Gespräche vor; ein Signal wird nicht als bestehender Kunde missverstanden.",
+      "limits": "AXIGNAL ersetzt weder Gründer noch Geschäftsplan und verwaltet keine Aufgaben oder Verkäufe. Abdeckung richtet sich nach Organisation, Fragen und zugelassenen Quellen. Beobachtbare Informationen umfassen standardmäßig keine privaten Umsätze, Kunden oder Pläne; Wirtschaftssignale garantieren weder Nachfrage noch Ergebnis.",
+      "cta": {
+        "label": "Mit AXIGNAL starten",
+        "href": "/signup"
+      },
+      "related": [
+        "jtbd_multi_client_consultant",
+        "jtbd_export_team_market_context",
+        "jtbd_strategy_competitive_intelligence"
+      ]
+    },
+    "it": {
+      "slug": "fondatori-poco-tempo-contesto-esterno",
+      "title": "Fondatori: capire il contesto esterno con poco tempo",
+      "description": "Una prospettiva basata su prove per orientare l’attenzione, senza promettere decisioni automatizzate. con evidenze e contesto verificabili",
+      "lead": "I fondatori decidono con informazioni incomplete e poco tempo per ricostruire il quadro esterno. AXIGNAL può organizzare prove pubbliche intorno a un’organizzazione e far emergere domande utili, lasciando le decisioni al team.",
+      "answer": "AXIGNAL può collegare prove economiche osservabili e spiegare cosa è noto, potenziale o sconosciuto. Un Focus di osservazione concentra l’attenzione su un’organizzazione; non sostituisce la ricerca diretta né trasforma i risultati in decisioni automatiche.",
+      "sections": [
+        {
+          "heading": "Partire da ciò che si può verificare dall’esterno",
+          "body": "I fondatori conoscono le priorità interne, ma non sempre vedono come le prove pubbliche rappresentano capacità, relazioni e attività. Una prospettiva esterna può confrontare quella comprensione con le prove disponibili e individuare domande aperte. La presenza digitale è incompleta: ciò che non appare nelle fonti osservate non va trattato come assente dall’impresa."
+        },
+        {
+          "heading": "Dirigere l’attenzione senza delegare il giudizio",
+          "body": "Per un piccolo team, il valore può consistere nel raggiungere prima il contesto pertinente ed evitare ricerche ripetute quando informazioni attuali e autorizzate sono riutilizzabili. AXIGNAL può spiegare perché emerge un segnale e cosa lo sostiene. Il fondatore decide ancora cosa indagare, come interpretare il rischio e quando serve una consulenza specializzata."
+        },
+        {
+          "heading": "Distinguere segnali da opportunità confermate",
+          "body": "Un bando, un progetto o una capacità compatibile può aprire una linea d’indagine. Non prova che il team otterrà un contratto, che qualcuno intenda acquistare o che la compatibilità commerciale sia valida. Le opportunità derivate restano potenziali finché ulteriori prove non sostengono queste dimensioni. Astenersi o restituire UNKNOWN può essere la risposta corretta."
+        },
+        {
+          "heading": "Costruire una prospettiva nel tempo",
+          "body": "La prima osservazione offre un riferimento per interpretare prove successive. Se l’ambiente cambia, una nuova fonte o relazione può meritare attenzione. La memoria evita di affidarsi solo all’ultima ricerca, ma inizia da una data nota e dipende da copertura e accesso. Non prevede gli esiti né ricostruisce attività mai registrate."
+        }
+      ],
+      "example": "Una fondatrice valuta di ampliare una linea di servizi. Esamina quali capacità hanno supporto pubblico, dove appare attività di mercato correlata e quali aspetti della compatibilità commerciale sono ancora ignoti. Usa il quadro per preparare conversazioni, senza presumere che un segnale sia già un cliente.",
+      "limits": "AXIGNAL non sostituisce il fondatore, non scrive un piano aziendale e non gestisce attività o vendite. La copertura dipende dall’organizzazione scelta, dalle domande e dalle fonti ammesse. Le osservazioni pubbliche non includono automaticamente ricavi, clienti o piani interni; segnali economici non garantiscono domanda o risultati.",
+      "cta": {
+        "label": "Inizia con AXIGNAL",
+        "href": "/signup"
+      },
+      "related": [
+        "jtbd_multi_client_consultant",
+        "jtbd_export_team_market_context",
+        "jtbd_strategy_competitive_intelligence"
+      ]
+    },
+    "pt": {
+      "slug": "fundadores-pouco-tempo-contexto-externo",
+      "title": "Fundadores: entender o contexto externo com pouco tempo",
+      "description": "Uma visão documentada da organização pode orientar a atenção; decisões e lacunas de contexto continuam sob avaliação humana.",
+      "lead": "Fundadores decidem com informação incompleta e pouco tempo para reconstruir a visão externa. A AXIGNAL pode organizar evidências públicas em torno de uma Organização e mostrar perguntas que merecem atenção, deixando as decisões com a equipe.",
+      "answer": "A AXIGNAL pode conectar evidências econômicas observáveis e explicar o que é conhecido, potencial ou desconhecido. Um Foco de Observação concentra atenção em uma Organização; não substitui pesquisa direta nem transforma descobertas em decisões automáticas.",
+      "sections": [
+        {
+          "heading": "Começar pelo que pode ser verificado externamente",
+          "body": "Fundadores conhecem prioridades internas, mas talvez não vejam como evidências públicas representam capacidades, relações e atividades. Uma visão externa pode comparar essa compreensão com evidências disponíveis e identificar perguntas abertas. A presença digital é incompleta: algo que não aparece nas fontes observadas não deve ser tratado como inexistente na empresa."
+        },
+        {
+          "heading": "Direcionar atenção sem abrir mão do julgamento",
+          "body": "Para uma equipe pequena, valor pode significar chegar antes ao contexto relevante e evitar pesquisas repetidas quando informações atuais e autorizadas puderem ser reutilizadas. A AXIGNAL pode explicar por que um sinal apareceu e o que o sustenta. O fundador continua decidindo o que investigar, como interpretar riscos e quando precisa de aconselhamento especializado."
+        },
+        {
+          "heading": "Separar sinais de oportunidades confirmadas",
+          "body": "Uma licitação, projeto ou capacidade compatível pode abrir uma linha de investigação. Isso não comprova que a equipe ganhará um contrato, que alguém pretende comprar ou que a adequação comercial seja viável. Oportunidades derivadas continuam potenciais até que novas evidências sustentem essas dimensões. Abster-se ou responder UNKNOWN pode ser a escolha correta."
+        },
+        {
+          "heading": "Construir perspectiva ao longo do tempo",
+          "body": "A primeira observação fornece referência para interpretar evidências posteriores. Quando o ambiente muda, uma nova fonte ou relação pode merecer atenção. A memória evita depender apenas da busca mais recente, mas começa numa data conhecida e depende de cobertura e acesso. Não prevê resultados nem reconstrói atividade que nunca foi registrada."
+        }
+      ],
+      "example": "Uma fundadora avalia expandir uma linha de serviços. Ela examina quais capacidades têm respaldo público, onde aparece atividade de mercado relacionada e quais aspectos de adequação comercial permanecem desconhecidos. Usa a visão para preparar conversas, sem presumir que um sinal já seja um cliente.",
+      "limits": "A AXIGNAL não substitui o fundador, não escreve plano de negócios e não gerencia tarefas nem vendas. A cobertura depende da Organização escolhida, das perguntas e das fontes admitidas. Inteligência observável não inclui por padrão receita privada, clientes ou planos internos; sinais econômicos não garantem demanda ou resultado.",
+      "cta": {
+        "label": "Começar com a AXIGNAL",
+        "href": "/signup"
+      },
+      "related": [
+        "jtbd_multi_client_consultant",
+        "jtbd_export_team_market_context",
+        "jtbd_strategy_competitive_intelligence"
+      ]
+    }
+  },
+  {
+    "id": "jtbd_geo_aeo_observation",
+    "fr": {
+      "slug": "agences-geo-aeo-observer-representation-sans-promesse",
+      "title": "Agences GEO et AEO : observer la représentation sans promesse",
+      "description": "Documenter comment des surfaces génératives décrivent une organisation sous des conditions claires, sans promettre de citation.",
+      "lead": "Les réponses génératives varient selon la surface, le contexte et l’exécution. Une agence GEO/AEO peut avoir besoin de preuves sur une requête précise, pas d’une promesse de citation partout.",
+      "answer": "AXIGNAL peut observer des résultats de surfaces de découverte si un instrument autorisé et suffisamment défini est disponible. Une observation décrit une exécution dans des conditions données ; elle ne réalise pas l’optimisation GEO/AEO et ne garantit ni inclusion, ni recommandation, ni citation future.",
+      "sections": [
+        {
+          "heading": "Identifier ce qui a réellement été observé",
+          "body": "Une réponse d’interface produit, une réponse d’API et un extrait indexé sont des surfaces différentes. Une observation doit conserver surface et version, prompt ou requête, langue, contexte, date et mode d’ancrage visible. Sans ces éléments, une comparaison peut mélanger des instruments différents et attribuer à l’entreprise une variation du système."
+        },
+        {
+          "heading": "Distinguer mention, citation et approbation",
+          "body": "Le nom d’une organisation dans une réponse ne signifie pas que son site a servi de source. Une citation attribue une information, sans constituer automatiquement recommandation ou approbation. Enregistrer ces classes séparément aide à décrire le résultat sans exagération. Une réponse générée prouve ce qu’une surface a affiché, pas la véracité des faits commerciaux qu’elle énonce."
+        },
+        {
+          "heading": "Mesurer les variations plutôt que choisir une capture favorable",
+          "body": "Les résultats peuvent changer d’une exécution à l’autre. Un examen utile précise requêtes ou méthode, répétitions, échantillon, conditions, période et incertitude. Un seul exemple n’établit ni stabilité ni couverture générale. Si version, ancrage ou méthode changent, les mesures avant/après peuvent être incomparables et la tendance doit rester indéterminée."
+        },
+        {
+          "heading": "Utiliser l’observation pour guider un travail distinct",
+          "body": "Après avoir constaté un écart récurrent et pertinent, une agence peut choisir de revoir structure, contenu ou distribution. AXIGNAL n’effectue pas cette optimisation et ne sait pas à l’avance quelle action fonctionnera. Une observation ultérieure peut documenter une différence avec le même instrument, sans prouver qu’une modification a causé une mention ni qu’un autre utilisateur verra le même résultat."
+        }
+      ],
+      "example": "Un cabinet consigne trois exécutions d’une question sur un fournisseur industriel dans une surface générative identifiée. Il note langue, prompt, date, citations et variations, puis observe que la même source n’apparaît pas toujours. Il décrit ce motif borné au lieu de prétendre à une absence universelle d’autorité ou de visibilité.",
+      "limits": "AXIGNAL ne réalise pas le GEO/AEO, ne manipule pas les réponses, ne garantit pas l’inclusion et ne remplace pas une campagne éditoriale. La comparaison exige instruments, versions, conditions, échantillons et droits d’observation identifiables. Les résultats générés peuvent être inexacts ou variables ; mention, citation et approbation restent distinctes et ne prouvent pas seules la vérité commerciale.",
+      "cta": {
+        "label": "Découvrir AXIGNAL",
+        "href": "/knowledge"
+      },
+      "related": [
+        "jtbd_seo_agency_change_evidence",
+        "jtbd_strategy_competitive_intelligence",
+        "jtbd_multi_client_consultant",
+        "knowledge-sparse-public-presence",
+        "knowledge-digital-representation-vs-business-reality"
+      ]
+    },
+    "de": {
+      "slug": "geo-aeo-agenturen-darstellung-ohne-versprechen-beobachten",
+      "title": "GEO- und AEO-Agenturen: Darstellung ohne Versprechen beobachten",
+      "description": "Dokumentieren, wie generative Oberflächen Organisationen unter klaren Bedingungen beschreiben, ohne Zitate zu versprechen.",
+      "lead": "Generative Antworten unterscheiden sich je nach Oberfläche, Kontext und Ausführung. Eine GEO/AEO-Agentur kann Belege dafür benötigen, wie eine Organisation bei einer definierten Anfrage erschien, nicht das Versprechen, überall zitiert zu werden.",
+      "answer": "AXIGNAL kann Ausgaben von Entdeckungsoberflächen beobachten, sofern ein zulässiges, hinreichend definiertes Instrument verfügbar ist. Eine Beobachtung beschreibt einen Durchlauf unter bestimmten Bedingungen; sie ist weder GEO/AEO-Optimierung noch eine Garantie für Aufnahme, Empfehlung oder spätere Zitate.",
+      "sections": [
+        {
+          "heading": "Bestimmen, was tatsächlich beobachtet wurde",
+          "body": "Eine Antwort in einer Produktoberfläche, eine API-Ausgabe und ein indexierter Ausschnitt sind unterschiedliche Oberflächen. Eine Beobachtung sollte Oberfläche und Version, Prompt oder Anfrage, Sprache, Kontext, Datum und sichtbare Belegart erhalten. Ohne diese Angaben kann ein Vergleich verschiedene Instrumente vermischen und eine Systemvariation fälschlich der Organisation zuschreiben."
+        },
+        {
+          "heading": "Erwähnung, Zitat und Empfehlung unterscheiden",
+          "body": "Der Name einer Organisation in einer Antwort bedeutet nicht, dass ihre Website als Quelle diente. Ein Zitat kennzeichnet eine Zuordnung, ist aber nicht automatisch Empfehlung oder Befürwortung. Werden diese Zustände getrennt erfasst, lässt sich die Ausgabe ohne Übertreibung beschreiben. Eine generierte Antwort belegt, was eine Oberfläche zeigte, nicht die darin genannten Geschäftstatsachen."
+        },
+        {
+          "heading": "Variation messen statt einen günstigen Screenshot wählen",
+          "body": "Ausgaben können sich zwischen Durchläufen unterscheiden. Ein aussagekräftiger Vergleich braucht festgelegte Prompts oder eine ausdrückliche Methode, Wiederholungen, Stichprobe, Bedingungen, Zeitraum und Unsicherheit. Ein Beispiel belegt weder Stabilität noch allgemeine Abdeckung. Ändern sich Produktversion, Beleggrundlage oder Methode, sind Vorher-nachher-Ergebnisse womöglich nicht vergleichbar und der Trend bleibt ungeklärt."
+        },
+        {
+          "heading": "Beobachtung für getrennte Arbeit nutzen",
+          "body": "Nach einer wiederholten relevanten Lücke kann eine Agentur Struktur, Inhalte oder Verteilung prüfen. AXIGNAL führt diese Optimierung nicht aus und weiß nicht im Voraus, welche Maßnahme wirkt. Eine spätere Beobachtung kann Unterschiede mit demselben Instrument dokumentieren, aber nicht beweisen, dass eine Änderung eine Erwähnung verursachte oder andere Nutzer dasselbe sehen. Wiederholung garantiert weder künftige Zitate noch eine stabile Darstellung."
+        }
+      ],
+      "example": "Eine Beratung dokumentiert drei Durchläufe einer Frage zu einem Industriezulieferer auf einer benannten generativen Oberfläche. Sie notiert Sprache, Prompt, Datum, Zitate und Variation und stellt fest, dass dieselbe Quelle nicht jedes Mal erscheint. Sie beschreibt dieses begrenzte Muster, statt eine allgemeine Unsichtbarkeit zu behaupten.",
+      "limits": "AXIGNAL führt kein GEO/AEO aus, manipuliert keine Antworten, garantiert keine Aufnahme und ersetzt keine Content-Kampagne. Vergleiche brauchen identifizierbare Instrumente, Versionen, Bedingungen, Stichproben und Beobachtungsrechte. Generierte Antworten können falsch oder variabel sein; Erwähnung, Zitat und Empfehlung sind verschieden und belegen allein keine Geschäftswahrheit.",
+      "cta": {
+        "label": "AXIGNAL kennenlernen",
+        "href": "/knowledge"
+      },
+      "related": [
+        "jtbd_seo_agency_change_evidence",
+        "jtbd_strategy_competitive_intelligence",
+        "jtbd_multi_client_consultant",
+        "knowledge-sparse-public-presence",
+        "knowledge-digital-representation-vs-business-reality"
+      ]
+    },
+    "it": {
+      "slug": "agenzie-geo-aeo-osservare-rappresentazione-senza-promesse",
+      "title": "Agenzie GEO e AEO: osservare la rappresentazione senza promesse",
+      "description": "Documentare come superfici generative descrivono le organizzazioni in condizioni chiare, senza promettere citazioni.",
+      "lead": "Le risposte generative variano in base a superficie, contesto ed esecuzione. Un’agenzia GEO/AEO può avere bisogno di prove su una query definita, non della promessa che sarà citata ovunque.",
+      "answer": "AXIGNAL può osservare risultati di superfici di scoperta se è disponibile uno strumento autorizzato e sufficientemente definito. L’osservazione descrive un’esecuzione in determinate condizioni; non esegue ottimizzazione GEO/AEO e non garantisce inclusione, raccomandazione o citazioni future.",
+      "sections": [
+        {
+          "heading": "Identificare cosa è stato osservato davvero",
+          "body": "Una risposta nell’interfaccia di un prodotto, un output API e uno snippet indicizzato sono superfici diverse. L’osservazione dovrebbe conservare superficie e versione, prompt o query, lingua, contesto, data e modalità di grounding visibile. Senza questa registrazione, il confronto può mescolare strumenti diversi e attribuire una variazione del sistema all’impresa."
+        },
+        {
+          "heading": "Separare menzione, citazione e endorsement",
+          "body": "Il nome di un’organizzazione in una risposta non significa che il suo sito sia stato usato come fonte. Una citazione attribuisce un’informazione, ma non è automaticamente raccomandazione o endorsement. Registrare queste classi separatamente permette di descrivere l’output senza esagerare. Una risposta generata prova ciò che una superficie ha mostrato, non la verità dei fatti aziendali che enuncia."
+        },
+        {
+          "heading": "Misurare la variazione senza scegliere uno screenshot comodo",
+          "body": "Gli output possono variare tra esecuzioni. Un confronto significativo richiede prompt definiti o un metodo esplicito, ripetizioni, campione, condizioni, periodo e incertezza. Un solo esempio non dimostra stabilità né copertura generale. Se cambiano versione del prodotto, grounding o metodologia, i risultati prima/dopo possono non essere confrontabili e la tendenza resta irrisolta."
+        },
+        {
+          "heading": "Usare l’osservazione per orientare un lavoro distinto",
+          "body": "Dopo aver rilevato una lacuna ripetuta e pertinente, un’agenzia può scegliere di rivedere struttura, contenuti o distribuzione. AXIGNAL non esegue tale ottimizzazione e non sa in anticipo quale intervento funzionerà. Una nuova osservazione può documentare differenze con lo stesso strumento, ma non provare che una modifica abbia causato una menzione o che altri utenti vedranno il medesimo risultato."
+        }
+      ],
+      "example": "Una consulenza registra tre esecuzioni di una domanda su un fornitore industriale in una superficie generativa identificata. Annota lingua, prompt, data, citazioni e variazioni, poi rileva che la stessa fonte non compare sempre. Descrive il pattern circoscritto invece di sostenere un’assenza universale di autorevolezza o visibilità.",
+      "limits": "AXIGNAL non svolge GEO/AEO, non manipola risposte, non garantisce inclusione e non sostituisce una campagna editoriale. Il confronto richiede strumenti, versioni, condizioni, campioni e diritti di osservazione identificabili. Gli output generati possono essere inesatti o variabili; menzione, citazione ed endorsement sono segnali distinti e nessuno prova da solo la verità commerciale.",
+      "cta": {
+        "label": "Scopri AXIGNAL",
+        "href": "/knowledge"
+      },
+      "related": [
+        "jtbd_seo_agency_change_evidence",
+        "jtbd_strategy_competitive_intelligence",
+        "jtbd_multi_client_consultant",
+        "knowledge-sparse-public-presence",
+        "knowledge-digital-representation-vs-business-reality"
+      ]
+    },
+    "pt": {
+      "slug": "agencias-geo-aeo-observar-representacao-sem-promessas",
+      "title": "Agências GEO e AEO: observar representação sem promessas",
+      "description": "Interpretar observações de superfícies generativas exige consulta, data, amostra e limites; uma menção não garante citação.",
+      "lead": "Respostas generativas variam conforme superfície, contexto e execução. Uma agência GEO/AEO pode precisar de evidências sobre como uma organização apareceu numa consulta definida, não de promessa de que será citada em todos os lugares.",
+      "answer": "A AXIGNAL pode observar saídas de superfícies de descoberta quando houver instrumento autorizado e suficientemente definido. A observação descreve uma execução sob condições específicas; não é otimização GEO/AEO e não garante inclusão, recomendação ou citação futura.",
+      "sections": [
+        {
+          "heading": "Identificar o que foi realmente observado",
+          "body": "Uma resposta na interface de produto, uma resposta de API e um trecho indexado são superfícies diferentes. A observação deve preservar superfície e versão, prompt ou consulta, idioma, contexto, data e modo de fundamentação visível. Sem esse registro, a comparação pode misturar instrumentos diferentes e atribuir uma variação do sistema à empresa."
+        },
+        {
+          "heading": "Separar menção, citação e endosso",
+          "body": "O nome de uma organização aparecer numa resposta não significa que seu site tenha sido usado como fonte. Uma citação atribui informação, mas não é automaticamente recomendação ou endosso. Registrar essas classes separadamente permite descrever a saída sem exagero. Uma resposta gerada evidencia o que a superfície mostrou, não confirma os fatos empresariais mencionados."
+        },
+        {
+          "heading": "Medir variação em vez de escolher uma captura conveniente",
+          "body": "As saídas podem variar entre execuções. Uma comparação significativa exige prompts definidos ou método explícito, repetições, amostra, condições, período e incerteza. Um exemplo isolado não demonstra estabilidade nem cobertura geral. Se versão, fundamentação ou metodologia mudarem, resultados antes/depois podem não ser comparáveis e a tendência deve permanecer sem resolução."
+        },
+        {
+          "heading": "Usar a observação para orientar trabalho realizado em outro lugar",
+          "body": "Ao encontrar uma lacuna repetida e relevante, uma agência pode decidir rever estrutura, conteúdo ou distribuição. A AXIGNAL não faz essa otimização nem sabe antecipadamente qual ação funcionará. Uma observação posterior pode documentar diferenças com o mesmo instrumento, mas não provar que uma edição causou uma menção ou que outra pessoa verá o mesmo resultado."
+        }
+      ],
+      "example": "Uma consultoria registra três execuções de uma pergunta sobre um fornecedor industrial numa superfície generativa identificada. Anota idioma, prompt, data, citações e variação e percebe que a mesma fonte nem sempre aparece. Relata esse padrão delimitado em vez de alegar falta universal de autoridade ou visibilidade.",
+      "limits": "A AXIGNAL não executa GEO/AEO, não manipula respostas, não garante inclusão nem substitui campanha de conteúdo. A comparação exige instrumentos, versões, condições, amostras e direitos de observação identificáveis. Saídas geradas podem ser inexatas ou variar; menção, citação e endosso são sinais distintos e nenhum prova sozinho a verdade comercial.",
+      "cta": {
+        "label": "Conheça a AXIGNAL",
+        "href": "/knowledge"
+      },
+      "related": [
+        "jtbd_seo_agency_change_evidence",
+        "jtbd_strategy_competitive_intelligence",
+        "jtbd_multi_client_consultant",
+        "knowledge-sparse-public-presence",
+        "knowledge-digital-representation-vs-business-reality"
+      ]
+    }
+  }
+]

@@ -1,0 +1,984 @@
+[
+  {
+    "id": "knowledge-answerability-before-ai-judgment",
+    "fr": {
+      "slug": "verifier-la-reponse-avant-le-jugement-de-lia",
+      "title": "Vérifier si la question est répondable avant le jugement de l’IA",
+      "description": "Une évaluation n’est utile que si le contexte disponible permet de distinguer les réponses possibles.",
+      "lead": "Une réponse bien formulée peut masquer une question mal préparée. Si l’identité, la période, le périmètre ou les preuves nécessaires manquent, un modèle peut choisir une option que l’état disponible ne justifie pas. AXIGNAL examine donc d’abord si la question peut être traitée à partir des informations réellement présentes.",
+      "answer": "Avant toute évaluation structurée, AXIGNAL définit les informations requises pour la question et vérifie leur disponibilité. Des identifiants sans contenu sémantique ne suffisent pas. Quand un élément important manque, la bonne suite est une recherche ciblée ou l’abstention, et non une classification qui paraît certaine sans être étayée.",
+      "sections": [
+        {
+          "heading": "Définir ce qu’il faut savoir pour répondre",
+          "body": "Une question sur une relation peut exiger l’identité des entités, le sens du lien, son type, son périmètre et sa période. Une question sur une capacité peut demander une source, une description et des conditions d’exploitation. Les exigences dépendent de la cible sémantique. Les préciser avant l’évaluation évite de proposer des choix que l’état disponible ne permet pas de départager."
+        },
+        {
+          "heading": "Distinguer une information absente d’une incompatibilité",
+          "body": "L’absence d’un lieu, d’une date ou d’un contrat ne prouve pas qu’une option est fausse. Un filtre déterministe peut écarter une option seulement lorsque des données connues démontrent une incompatibilité dans un périmètre défini. UNKNOWN, STALE et les données incomplètes conduisent à rechercher ou à s’abstenir; ils ne deviennent pas FALSE pour simplifier la décision."
+        },
+        {
+          "heading": "Utiliser des choix typés sans contraindre la réalité",
+          "body": "Un évaluateur compare l’état à un Choice Space déclaré, avec définitions, frontières, exclusivité et options UNKNOWN, OTHER ou UNRESOLVED lorsque nécessaire. Le choix retenu ne prouve pas que cet espace couvre la réalité. Garder la distribution et la version permet de revoir la question posée et les options qui étaient disponibles."
+        },
+        {
+          "heading": "Rechercher le contexte précis qui manque",
+          "body": "Une question non répondable peut révéler l’observation absente: une source indépendante, une identité résolue ou une date actuelle. Cette lacune oriente une recherche concrète au lieu d’un appel au modèle moins coûteux mais sans pertinence. Lorsque de nouvelles preuves arrivent, l’empreinte de l’état change et seules les dimensions qui en dépendent doivent être réévaluées."
+        },
+        {
+          "heading": "Repères complémentaires",
+          "body": "Une fiche de répondabilité peut préciser le sens de chaque champ et le niveau de qualité attendu. Une adresse peut identifier un siège sans renseigner sur la zone de service; un nom peut désigner plusieurs entités; une date peut être trop ancienne pour la décision actuelle. Ces distinctions empêchent de confondre présence de données et pertinence de données. Lorsque les exigences sont remplies, l’évaluation peut comparer des options réellement distinguables et exposer sa distribution. Lorsqu’elles ne le sont pas, le système peut demander une observation ciblée, consigner son besoin et reprendre le calcul après admission des preuves."
+        }
+      ],
+      "example": "Exemple hypothétique: peut-on servir une région? Le profil d’un fabricant indique son siège, mais aucune source ne décrit sa couverture de service. Cette adresse ne départage pas oui et non. AXIGNAL conserve UNKNOWN ou recherche une preuve précise au lieu de déduire la portée commerciale du siège enregistré.",
+      "limits": "Un contrôle de répondabilité ne garantit pas l’exactitude d’une évaluation ultérieure; il vérifie seulement si l’état satisfait les exigences définies pour cette question. Les exigences, le Choice Space et la politique doivent être versionnés et traçables. Une sortie de modèle ne crée pas le contexte absent et n’autorise pas la vérité canonique. La lacune doit être décrite précisément afin que l’observation suivante puisse la combler. Sinon, une nouvelle évaluation risque de répéter le même choix sans fondement tout en affichant davantage de confiance. Le contrat de la question, et non une réponse commode du modèle, détermine les preuves suffisantes. Une décision reste attachée à son contexte et à son moment. Si les sources changent, si une définition évolue ou si la période observée s’éloigne, le résultat doit pouvoir être revu plutôt que traité comme permanent. La présentation doit garder visibles les conditions et les éléments manquants qui limitent sa portée. Cette discipline permet à une personne de comprendre ce qui soutient une conclusion et ce qui demanderait une observation supplémentaire. Elle empêche aussi qu’une donnée utile dans un cas soit réutilisée ailleurs sans vérifier sa pertinence. Un examen utile distingue aussi les champs simplement présents des éléments capables de soutenir une réponse. La liste des exigences doit rester lisible pour que l’équipe puisse vérifier chaque écart et éviter qu’une donnée secondaire masque le contexte décisif.",
+      "cta": {
+        "label": "Découvrir le raisonnement d’AXIGNAL",
+        "href": "/knowledge"
+      },
+      "related": [
+        "evidence-unknown-not-false",
+        "knowledge-model-confidence-vs-evidence",
+        "knowledge-user-input-directs-attention-not-truth"
+      ]
+    },
+    "de": {
+      "slug": "beantwortbarkeit-vor-ki-urteil-pruefen",
+      "title": "Vor einem KI-Urteil prüfen, ob die Frage beantwortbar ist",
+      "description": "Eine Bewertung hilft nur, wenn der vorhandene Kontext die möglichen Antworten unterscheidbar macht.",
+      "lead": "Eine gut formulierte Antwort kann eine schlecht vorbereitete Frage verdecken. Fehlen Identität, Zeitraum, Umfang oder notwendige Belege, kann ein Modell eine Option auswählen, die der vorhandene Zustand nicht trägt. AXIGNAL prüft daher zuerst, ob sich die Frage anhand der tatsächlich verfügbaren Informationen beantworten lässt.",
+      "answer": "Vor einer strukturierten Bewertung legt AXIGNAL die nötigen Informationen für die Frage fest und prüft, ob sie vorliegen. Kennungen ohne semantischen Inhalt reichen nicht. Fehlt wesentlicher Kontext, folgt gezielte Recherche oder Enthaltung, keine Klassifizierung, die sicher wirkt, aber keine Grundlage hat.",
+      "sections": [
+        {
+          "heading": "Festlegen, was für eine Antwort bekannt sein muss",
+          "body": "Eine Beziehungsfrage kann Identität der Einheiten, Richtung, Art, Umfang und Zeitraum der Verbindung erfordern. Eine Frage zu Fähigkeiten braucht womöglich eine Quelle, Beschreibung und Betriebsbedingungen. Die Anforderungen hängen vom semantischen Ziel ab. Wer sie vor der Bewertung nennt, verhindert Auswahlmöglichkeiten, die der verfügbare Zustand gar nicht unterscheiden kann."
+        },
+        {
+          "heading": "Fehlende Information von Unvereinbarkeit trennen",
+          "body": "Ein fehlender Ort, ein fehlendes Datum oder ein nicht vorliegender Vertrag beweist nicht, dass eine Option falsch ist. Deterministische Filter dürfen nur ablehnen, wenn bekannte Eingaben eine Unvereinbarkeit innerhalb des definierten Umfangs belegen. UNKNOWN, STALE und unvollständige Daten führen zu Recherche oder Enthaltung; sie werden nicht für eine bequemere Entscheidung zu FALSE."
+        },
+        {
+          "heading": "Typisierte Auswahl nutzen, ohne die Wirklichkeit zu erzwingen",
+          "body": "Ein Evaluator vergleicht den Zustand mit einem festgelegten Choice Space, dessen Definitionen, Grenzen, Ausschließlichkeit und gegebenenfalls UNKNOWN, OTHER oder UNRESOLVED klar sind. Eine ausgewählte Option zeigt nicht, dass der Raum die Wirklichkeit vollständig abbildet. Verteilung und Version machen nachvollziehbar, welche Frage mit welchen Optionen gestellt wurde."
+        },
+        {
+          "heading": "Den fehlenden Kontext gezielt recherchieren",
+          "body": "Eine unbeantwortbare Frage kann die fehlende Beobachtung benennen: eine unabhängige Quelle, eine geklärte Identität oder ein aktuelles Datum. Diese Lücke lenkt konkrete Recherche, statt einen günstigeren, aber irrelevanten Modellaufruf auszulösen. Mit neuen Belegen ändert sich der Zustandsfingerabdruck; nur davon abhängige Dimensionen werden erneut bewertet."
+        },
+        {
+          "heading": "Zusätzliche Einordnung",
+          "body": "Ein Beantwortbarkeitsprofil kann die Bedeutung jedes Feldes und die erwartete Qualität festlegen. Eine Adresse kann den Sitz bestimmen, aber nichts über das Servicegebiet sagen; ein Name kann mehrere Einheiten bezeichnen; ein Datum kann für die aktuelle Entscheidung zu alt sein. Solche Unterschiede verhindern, dass vorhandene Daten mit relevanten Daten verwechselt werden. Sind die Anforderungen erfüllt, kann die Bewertung tatsächlich unterscheidbare Optionen vergleichen und ihre Verteilung zeigen. Andernfalls fordert das System gezielte Beobachtung an, hält den Bedarf fest und bewertet nach Zulassung der Belege erneut."
+        }
+      ],
+      "example": "Hypothetisch: Kann ein Hersteller eine Region bedienen? Im Profil steht ein Hauptsitz, doch keine Quelle beschreibt das Servicegebiet. Die Adresse unterscheidet nicht zwischen Ja und Nein. AXIGNAL bewahrt UNKNOWN oder sucht gezielt nach Belegen, statt aus dem eingetragenen Sitz eine Reichweite abzuleiten.",
+      "limits": "Ein Beantwortbarkeitstest garantiert nicht, dass eine spätere Bewertung korrekt ist; er prüft, ob der Zustand die festgelegten Anforderungen der Frage erfüllt. Anforderungen, Choice Space und Richtlinie brauchen Versionierung und Rückverfolgbarkeit. Eine Modellausgabe ergänzt keinen fehlenden Kontext und erlaubt keine kanonische Wahrheit. Die Lücke muss genau benannt werden, damit eine folgende Beobachtung sie schließen kann. Sonst wiederholt eine neue Bewertung möglicherweise dieselbe unbelegte Auswahl und klingt dabei sicherer. Der Fragenvertrag bestimmt, welche Belege genügen, nicht eine bequeme Modellantwort. Eine Entscheidung bleibt an ihren Kontext und Zeitpunkt gebunden. Ändern sich Quellen, Definitionen oder der beobachtete Zeitraum, muss sich das Ergebnis neu prüfen lassen, statt als dauerhaft zu gelten. Die Darstellung sollte Bedingungen und fehlende Elemente sichtbar halten, die ihre Reichweite begrenzen. So kann eine Person erkennen, was eine Schlussfolgerung stützt und welche zusätzliche Beobachtung nötig wäre. Zugleich verhindert diese Sorgfalt, dass nützliche Daten in einem Fall ohne Prüfung ihrer Relevanz in einem anderen wiederverwendet werden. Für eine belastbare Prüfung muss jede Anforderung zur Frage passen und darf nicht allein aus der Verfügbarkeit eines Feldes abgeleitet werden. Eine formal gefüllte Eingabe kann semantisch ungeeignet sein. Das Ergebnis sollte deshalb kenntlich machen, welche Kriterien erfüllt sind und welche nur teilweise oder gar nicht. Wenn sich der Umfang der Frage ändert, ist die Prüfung erneut vorzunehmen. So bleibt nachvollziehbar, warum ein Urteil möglich war oder warum AXIGNAL zunächst weitere Beobachtungen benötigt.",
+      "cta": {
+        "label": "AXIGNALs Schlussfolgerungen verstehen",
+        "href": "/knowledge"
+      },
+      "related": [
+        "evidence-unknown-not-false",
+        "knowledge-model-confidence-vs-evidence",
+        "knowledge-user-input-directs-attention-not-truth"
+      ]
+    },
+    "it": {
+      "slug": "verificare-la-rispondibilita-prima-del-giudizio-ia",
+      "title": "Verificare se la domanda è rispondibile prima del giudizio dell’IA",
+      "description": "Una valutazione è utile solo se il contesto disponibile distingue le possibili risposte.",
+      "lead": "Una risposta ben formulata può nascondere una domanda preparata male. Se mancano identità, periodo, ambito o prove necessarie, un modello può scegliere un’opzione che lo stato disponibile non sostiene. AXIGNAL verifica quindi per prima cosa se la domanda può essere affrontata con le informazioni effettivamente presenti.",
+      "answer": "Prima della valutazione strutturata, AXIGNAL definisce le informazioni richieste dalla domanda e ne verifica la presenza. Identificativi privi di contenuto semantico non bastano. Quando manca un contesto importante, il passo corretto è una ricerca mirata o l’astensione, non una classificazione che sembra certa senza esserlo.",
+      "sections": [
+        {
+          "heading": "Definire cosa occorre sapere per rispondere",
+          "body": "Una domanda su una relazione può richiedere identità delle entità, direzione, tipo di legame, ambito e periodo. Una domanda su una capacità può richiedere una fonte, una descrizione e condizioni operative. I requisiti cambiano con l’obiettivo semantico. Dichiararli prima della valutazione evita opzioni che lo stato disponibile non può distinguere."
+        },
+        {
+          "heading": "Distinguere informazione mancante e incompatibilità",
+          "body": "L’assenza di un luogo, una data o un contratto non dimostra che un’opzione sia falsa. Filtri deterministici possono escludere una possibilità solo quando dati noti dimostrano un’incompatibilità entro un ambito definito. UNKNOWN, STALE e dati incompleti portano alla ricerca o all’astensione; non diventano FALSE per semplificare la decisione."
+        },
+        {
+          "heading": "Usare scelte tipizzate senza costringere la realtà",
+          "body": "Un valutatore confronta lo stato con un Choice Space dichiarato, dotato di definizioni, confini, esclusività e opzioni come UNKNOWN, OTHER o UNRESOLVED quando servono. L’opzione selezionata non prova che quello spazio copra tutta la realtà. Conservare distribuzione e versione permette di rivedere la domanda e le scelte disponibili in quel momento."
+        },
+        {
+          "heading": "Cercare il contesto preciso che manca",
+          "body": "Una domanda non rispondibile può indicare l’osservazione assente: una fonte indipendente, un’identità risolta o una data aggiornata. La lacuna indirizza una ricerca concreta invece di una chiamata al modello più economica ma irrilevante. Quando arrivano nuove prove cambia l’impronta dello stato e vanno rivalutate soltanto le dimensioni che ne dipendono."
+        },
+        {
+          "heading": "Ulteriori criteri",
+          "body": "Una scheda di rispondibilità può specificare il significato di ogni campo e la qualità attesa. Un indirizzo può identificare una sede senza dire nulla sull’area di servizio; un nome può riferirsi a più entità; una data può essere troppo vecchia per la decisione attuale. Queste distinzioni evitano di confondere la presenza di dati con la loro pertinenza. Se i requisiti sono soddisfatti, la valutazione confronta opzioni davvero distinguibili e mostra la distribuzione. Altrimenti il sistema richiede un’osservazione mirata, registra ciò che manca e ripete l’analisi dopo l’ammissione delle prove."
+        }
+      ],
+      "example": "Esempio ipotetico: un produttore può servire una regione? Il profilo indica la sede, ma nessuna fonte descrive la copertura del servizio. L’indirizzo non distingue sì da no. AXIGNAL mantiene UNKNOWN oppure cerca prove specifiche, senza dedurre la portata commerciale dalla sede registrata.",
+      "limits": "Un controllo di rispondibilità non garantisce la correttezza della valutazione successiva; verifica soltanto che lo stato soddisfi i requisiti definiti per quella domanda. Requisiti, Choice Space e policy devono avere versioni e tracciabilità. L’output di un modello non colma il contesto assente e non autorizza la verità canonica. La lacuna va descritta con precisione affinché l’osservazione successiva possa affrontarla. Altrimenti una nuova valutazione può ripetere la stessa scelta senza supporto, mostrando però più sicurezza. È il contratto della domanda, non una risposta comoda del modello, a stabilire quali prove bastano. Una decisione resta legata al suo contesto e al momento in cui è stata presa. Se cambiano le fonti, una definizione o il periodo osservato, il risultato deve poter essere riesaminato invece di sembrare permanente. La presentazione mantiene visibili condizioni ed elementi mancanti che ne limitano la portata. Così una persona può capire cosa sostiene una conclusione e quale osservazione aggiuntiva servirebbe. Questa disciplina evita inoltre di riutilizzare altrove un dato utile in un caso senza verificarne la pertinenza. Ogni requisito deve essere pertinente alla domanda e non derivare soltanto dal fatto che un campo sia compilato. Un input formalmente presente può essere semanticamente inadatto. Il risultato dovrebbe indicare quali criteri sono soddisfatti e quali solo in parte o per nulla. Se cambia l’ambito della domanda, la verifica va ripetuta. Resta così chiaro perché un giudizio fosse possibile oppure perché AXIGNAL debba prima raccogliere altre osservazioni.",
+      "cta": {
+        "label": "Scopri come ragiona AXIGNAL",
+        "href": "/knowledge"
+      },
+      "related": [
+        "evidence-unknown-not-false",
+        "knowledge-model-confidence-vs-evidence",
+        "knowledge-user-input-directs-attention-not-truth"
+      ]
+    },
+    "pt": {
+      "slug": "verificar-se-a-pergunta-e-respondivel-antes-da-ia",
+      "title": "Verificar se a pergunta tem resposta antes do juízo da IA",
+      "description": "Uma avaliação só é útil quando o contexto disponível permite distinguir as respostas possíveis.",
+      "lead": "Uma resposta bem formulada pode esconder uma pergunta mal preparada. Se faltarem identidade, período, âmbito ou evidências necessárias, um modelo pode escolher uma opção que o estado disponível não sustenta. Por isso, a AXIGNAL verifica primeiro se a pergunta pode ser tratada com as informações que realmente existem.",
+      "answer": "Antes da avaliação estruturada, a AXIGNAL define as informações exigidas pela pergunta e confirma se estão disponíveis. Identificadores sem conteúdo semântico não bastam. Quando falta contexto importante, o passo seguinte é pesquisa direcionada ou abstenção, e não uma classificação que parece segura sem ter fundamento.",
+      "sections": [
+        {
+          "heading": "Definir o que é preciso saber para responder",
+          "body": "Uma pergunta sobre uma relação pode exigir identidade das entidades, direção, tipo, âmbito e período do vínculo. Uma pergunta sobre capacidade pode precisar de uma fonte, descrição e condições de operação. Os requisitos dependem do alvo semântico. Explicitá-los antes da avaliação evita opções que o estado disponível não consegue distinguir."
+        },
+        {
+          "heading": "Separar informação em falta de incompatibilidade",
+          "body": "A falta de local, data ou contrato não prova que uma opção seja falsa. Filtros determinísticos só podem rejeitar quando dados conhecidos demonstram incompatibilidade dentro do âmbito definido. UNKNOWN, STALE e dados incompletos conduzem a pesquisa ou abstenção; não se tornam FALSE apenas para simplificar a decisão."
+        },
+        {
+          "heading": "Usar escolhas tipadas sem forçar a realidade",
+          "body": "Um avaliador compara o estado com um Choice Space declarado, com definições, limites, exclusividade e opções como UNKNOWN, OTHER ou UNRESOLVED quando apropriado. A opção escolhida não demonstra que esse espaço cubra toda a realidade. Guardar distribuição e versão permite rever a pergunta feita e as opções então disponíveis."
+        },
+        {
+          "heading": "Pesquisar o contexto específico em falta",
+          "body": "Uma pergunta sem resposta possível pode apontar a observação em falta: uma fonte independente, uma identidade resolvida ou uma data atual. Essa lacuna orienta pesquisa concreta em vez de uma chamada ao modelo mais barata, mas irrelevante. Com novas evidências, a impressão digital do estado muda e só as dimensões dependentes precisam de nova avaliação."
+        },
+        {
+          "heading": "Critérios adicionais",
+          "body": "Um registo de respondibilidade pode esclarecer o significado de cada campo e a qualidade esperada. Uma morada pode identificar a sede sem informar a área de serviço; um nome pode indicar várias entidades; uma data pode ser demasiado antiga para a decisão atual. Estas distinções impedem confundir a existência de dados com a sua relevância. Quando os requisitos estão satisfeitos, a avaliação compara opções realmente distinguíveis e expõe a distribuição. Caso contrário, o sistema pede uma observação direcionada, regista o que falta e retoma a análise depois da admissão das evidências."
+        }
+      ],
+      "example": "Exemplo hipotético: um fabricante consegue servir uma região? O perfil indica a sede, mas não há fonte sobre a cobertura do serviço. O endereço não distingue sim de não. A AXIGNAL mantém UNKNOWN ou procura evidência específica, em vez de inferir alcance comercial a partir da sede registada.",
+      "limits": "Uma verificação de respondibilidade não garante que a avaliação posterior esteja correta; verifica se o estado cumpre os requisitos definidos para aquela pergunta. Requisitos, Choice Space e política precisam de versões e rastreabilidade. A saída de um modelo não preenche o contexto em falta nem autoriza verdade canónica. A lacuna deve ser nomeada com precisão para que a próxima observação a possa resolver. Caso contrário, uma nova avaliação pode repetir a mesma escolha sem apoio e aparentar maior confiança. O contrato da pergunta, e não uma resposta conveniente do modelo, determina que evidências são suficientes. Uma decisão continua ligada ao seu contexto e ao momento em que foi tomada. Se as fontes, uma definição ou o período observado mudarem, o resultado deve poder ser revisto em vez de parecer permanente. A apresentação mantém visíveis as condições e os elementos em falta que limitam o seu alcance. Assim, uma pessoa compreende o que sustenta uma conclusão e que observação adicional poderá ser necessária. Esta disciplina também evita reutilizar noutro caso um dado útil sem verificar a sua relevância. Uma análise útil também distingue campos preenchidos de elementos capazes de sustentar uma resposta. A lista de requisitos deve permanecer legível para que a equipa verifique cada lacuna e evite que um dado secundário esconda o contexto decisivo.",
+      "cta": {
+        "label": "Explorar o raciocínio da AXIGNAL",
+        "href": "/knowledge"
+      },
+      "related": [
+        "evidence-unknown-not-false",
+        "knowledge-model-confidence-vs-evidence",
+        "knowledge-user-input-directs-attention-not-truth"
+      ]
+    }
+  },
+  {
+    "id": "knowledge-no-universal-company-score",
+    "fr": {
+      "slug": "pourquoi-axignal-evite-un-score-universel-dentreprise",
+      "title": "Pourquoi AXIGNAL n’attribue pas de score universel aux entreprises",
+      "description": "Un chiffre unique masquerait les différences de périmètre, d’actualité et de preuves entre les dimensions économiques.",
+      "lead": "Un score unique facilite le classement des entreprises, mais peut effacer la question à laquelle il répond et les preuves qu’il laisse de côté. La réalité économique comporte plusieurs dimensions dont la fusion fait perdre du sens. AXIGNAL préfère montrer ce que les données étayent, ce qui est actuel et ce qui reste inconnu.",
+      "answer": "AXIGNAL n’utilise pas d’indice universel de qualité ou d’attractivité d’une entreprise. Il peut organiser des dimensions explicables et des jugements bornés pour une question précise; ces mesures ne deviennent pas automatiquement un classement public ni une conclusion commerciale générale.",
+      "sections": [
+        {
+          "heading": "Demander quelle décision le chiffre doit soutenir",
+          "body": "Un agrégat peut mélanger capacité, demande, portée, preuves, actualité et risque, alors que chaque dimension a son unité et sa base propres. Avant de résumer, il faut préciser la décision et le besoin de l’utilisateur. Sans cet objectif, le format semble objectif tout en reposant sur des pondérations et hypothèses invisibles."
+        },
+        {
+          "heading": "Garder les dimensions économiques distinctes",
+          "body": "Une entreprise peut documenter ses capacités sans que ses relations commerciales soient connues, opérer sur un marché mais pas un autre, ou avoir une présence publique observée de façon inégale. Un chiffre peut compenser les dimensions entre elles et cacher une lacune importante. Une vue inspectable garde chaque dimension, son état et sa source."
+        },
+        {
+          "heading": "Ne pas confondre ordre d’affichage et priorité économique",
+          "body": "L’ordre des résultats peut refléter la requête, la couverture ou une règle d’affichage. Il ne signifie pas automatiquement importance économique, probabilité de réussite ou recommandation. Si une recherche doit être priorisée, le critère doit être défini, versionné et lié à la décision; les alternatives et inconnues restent visibles."
+        },
+        {
+          "heading": "Utiliser des jugements bornés et expliquer leur base",
+          "body": "Un jugement borné répond à une question circonscrite et expose sa base, son incertitude et ses conditions. Une autre question peut donner une lecture différente sans contradiction. Cette composition permet de comparer les preuves pertinentes pour chaque cas et laisse la décision finale à la personne, sans prétendre évaluer toutes les entreprises en général."
+        },
+        {
+          "heading": "Repères complémentaires",
+          "body": "Une comparaison peut rester utile sans fabriquer un total. La personne peut consulter plusieurs dimensions côte à côte, comprendre leurs périodes et décider lesquelles répondent à son besoin. Si une règle de synthèse est créée pour une question opérationnelle, elle doit conserver les valeurs d’origine et rendre les pondérations vérifiables. Un changement de source ou de politique doit permettre de recalculer le résultat et d’expliquer la différence. Cette trace évite qu’une mesure conçue pour un usage précis soit détachée de son contexte puis présentée comme une caractéristique intrinsèque de l’entreprise."
+        }
+      ],
+      "example": "Exemple hypothétique: un acheteur étudie un fournisseur possible de composants. Il examine séparément les capacités publiées, les certifications dont l’actualité est connue, la couverture géographique et les relations inconnues, plutôt qu’un score global. Chaque dimension éclaire une vérification différente; aucune ne résume à elle seule la valeur totale du fournisseur.",
+      "limits": "AXIGNAL ne promet aucune mesure universelle de qualité, réputation, risque ou adéquation commerciale. Toute agrégation exige une politique définie et explicable, avec son objectif, ses entrées, sa période et son incertitude. Le volume de données, la position dans les résultats ou la confiance d’un évaluateur ne deviennent pas un score de vérité ou de réussite. Une dimension absente doit rester visible au lieu d’être compensée silencieusement par une autre. Un jugement pertinent pour une décision précise ne doit pas être réutilisé comme mesure générale sans nouvel examen du contexte et des preuves. Une décision reste attachée à son contexte et à son moment. Si les sources changent, si une définition évolue ou si la période observée s’éloigne, le résultat doit pouvoir être revu plutôt que traité comme permanent. La présentation doit garder visibles les conditions et les éléments manquants qui limitent sa portée. Cette discipline permet à une personne de comprendre ce qui soutient une conclusion et ce qui demanderait une observation supplémentaire. Elle empêche aussi qu’une donnée utile dans un cas soit réutilisée ailleurs sans vérifier sa pertinence. La présentation doit également montrer lorsque deux mesures portent sur des périodes ou des populations différentes. Sans cette précision, même des nombres exacts peuvent donner une impression de comparaison équitable alors que leurs bases ne sont pas comparables.",
+      "cta": {
+        "label": "Explorer l’intelligence économique explicable",
+        "href": "/knowledge"
+      },
+      "related": [
+        "evidence-currentness",
+        "knowledge-model-confidence-vs-evidence",
+        "knowledge-economic-roles-can-coexist"
+      ]
+    },
+    "de": {
+      "slug": "warum-axignal-keinen-universellen-unternehmensscore-verwendet",
+      "title": "Warum AXIGNAL Unternehmen keinen universellen Score zuweist",
+      "description": "Eine Zahl würde Unterschiede bei Umfang, Aktualität und Belegen über wirtschaftliche Dimensionen hinweg verdecken.",
+      "lead": "Ein einzelner Score erleichtert das Sortieren von Unternehmen, kann aber verbergen, welche Frage er beantwortet und welche Belege fehlen. Wirtschaftliche Realität hat mehrere Dimensionen, deren Zusammenfassung Bedeutung kostet. AXIGNAL zeigt lieber, was belegt, aktuell oder weiterhin unbekannt ist.",
+      "answer": "AXIGNAL verwendet keinen universellen Index für Qualität oder Attraktivität eines Unternehmens. Erklärbare Dimensionen und begrenzte Urteile zu einer konkreten Frage lassen sich darstellen; interne Messwerte werden dadurch weder zu einem öffentlichen Ranking noch zu einer allgemeinen geschäftlichen Schlussfolgerung.",
+      "sections": [
+        {
+          "heading": "Fragen, welche Entscheidung die Zahl unterstützen soll",
+          "body": "Ein Gesamtwert kann Fähigkeit, Nachfrage, Reichweite, Belege, Aktualität und Risiko mischen, obwohl jede Dimension eine andere Einheit und Grundlage hat. Vor einer Zusammenfassung sind Entscheidung und Bedarf der nutzenden Person zu definieren. Ohne diesen Zweck wirkt das Format objektiv, beruht aber auf verborgenen Gewichtungen und Annahmen."
+        },
+        {
+          "heading": "Wirtschaftliche Dimensionen getrennt halten",
+          "body": "Ein Unternehmen kann gut belegte Fähigkeiten und unbekannte Geschäftsbeziehungen haben, in einem Markt tätig sein, aber nicht in einem anderen, oder öffentlich nur lückenhaft sichtbar sein. Eine Zahl kann Dimensionen gegeneinander verrechnen und eine wichtige Lücke verbergen. Eine nachvollziehbare Ansicht zeigt Dimension, Status und Quelle einzeln."
+        },
+        {
+          "heading": "Sortierung nicht mit wirtschaftlicher Priorität verwechseln",
+          "body": "Die Ergebnisreihenfolge kann von Anfrage, Abdeckung oder einer Anzeigeregel abhängen. Sie bedeutet nicht automatisch wirtschaftliche Wichtigkeit, Erfolgsaussicht oder Empfehlung. Soll Recherche priorisiert werden, muss das Kriterium definiert, versioniert und an die Entscheidung gebunden sein; Alternativen und Unbekanntes bleiben sichtbar."
+        },
+        {
+          "heading": "Begrenzte Urteile mit Begründung verwenden",
+          "body": "Ein begrenztes Urteil beantwortet eine klar eingegrenzte Frage und legt Grundlage, Unsicherheit und Bedingungen offen. Eine andere Frage kann eine andere Einschätzung ergeben, ohne dass ein Widerspruch vorliegt. So lassen sich relevante Belege je Fall vergleichen, während die Entscheidung bei der Person bleibt und keine allgemeine Unternehmensbewertung versprochen wird."
+        },
+        {
+          "heading": "Zusätzliche Einordnung",
+          "body": "Ein Vergleich kann nützlich bleiben, ohne eine Gesamtsumme zu erfinden. Die Person kann mehrere Dimensionen nebeneinander betrachten, ihre Zeiträume verstehen und auswählen, was zum eigenen Bedarf passt. Wird für eine konkrete operative Frage eine Zusammenfassungsregel eingesetzt, sollte sie Ausgangswerte bewahren und Gewichtungen prüfbar machen. Ändern sich Quelle oder Richtlinie, muss sich das Ergebnis neu berechnen und der Unterschied erklären lassen. Diese Spur verhindert, dass ein für einen bestimmten Zweck entwickelter Messwert aus seinem Zusammenhang gelöst und als wesentliche Eigenschaft des Unternehmens dargestellt wird."
+        }
+      ],
+      "example": "Hypothetisch: Ein Einkäufer prüft einen möglichen Komponentenlieferanten. Statt einen Gesamtwert anzunehmen, betrachtet er veröffentlichte Fähigkeiten, bekannte Aktualität von Zertifizierungen, geografische Reichweite und unbekannte Beziehungen getrennt. Jede Dimension unterstützt eine andere Prüfung; keine fasst den Gesamtwert des Lieferanten allein zusammen.",
+      "limits": "AXIGNAL verspricht keine universelle Messung von Qualität, Ruf, Risiko oder geschäftlicher Passung. Jede Aggregation braucht eine definierte, erklärbare Richtlinie mit Zweck, Eingaben, Zeitraum und Unsicherheit. Datenmenge, Suchposition oder Sicherheit eines Evaluators werden nicht zu einem Wahrheits- oder Erfolgswert. Eine fehlende Dimension muss sichtbar bleiben, statt still durch eine andere ausgeglichen zu werden. Ein für eine konkrete Entscheidung passendes Urteil lässt sich nicht ohne erneute Prüfung von Kontext und Belegen als allgemeine Messung weiterverwenden. Eine Entscheidung bleibt an ihren Kontext und Zeitpunkt gebunden. Ändern sich Quellen, Definitionen oder der beobachtete Zeitraum, muss sich das Ergebnis neu prüfen lassen, statt als dauerhaft zu gelten. Die Darstellung sollte Bedingungen und fehlende Elemente sichtbar halten, die ihre Reichweite begrenzen. So kann eine Person erkennen, was eine Schlussfolgerung stützt und welche zusätzliche Beobachtung nötig wäre. Zugleich verhindert diese Sorgfalt, dass nützliche Daten in einem Fall ohne Prüfung ihrer Relevanz in einem anderen wiederverwendet werden. Eine lesbare Darstellung kann eine Entscheidung unterstützen, ohne sie vorwegzunehmen: Sie zeigt geprüfte Dimensionen, ihre Quellen und offene Fragen. Wer daraus eine betriebliche Kennzahl bildet, muss ihren Einsatzbereich selbst festlegen und prüfen, ob die Gewichtung für die konkrete Entscheidung vertretbar ist. Ändern sich Eingaben, braucht es eine nachvollziehbare Neuberechnung. Die Zahl bleibt dann ein Werkzeug für diesen Zweck und wird nicht zur allgemeinen Aussage über den Wert eines Unternehmens. Die Darstellung sollte auch zeigen, wenn zwei Messungen unterschiedliche Zeiträume oder Populationen betreffen. Ohne diesen Hinweis können selbst korrekte Zahlen einen fairen Vergleich vortäuschen, obwohl ihre Grundlagen nicht vergleichbar sind.",
+      "cta": {
+        "label": "Erklärbare Wirtschaftsintelligenz erkunden",
+        "href": "/knowledge"
+      },
+      "related": [
+        "evidence-currentness",
+        "knowledge-model-confidence-vs-evidence",
+        "knowledge-economic-roles-can-coexist"
+      ]
+    },
+    "it": {
+      "slug": "perche-axignal-non-usa-un-punteggio-aziendale-universale",
+      "title": "Perché AXIGNAL non assegna un punteggio universale alle aziende",
+      "description": "Un solo numero nasconderebbe differenze di ambito, attualità e prove tra le dimensioni economiche.",
+      "lead": "Un punteggio unico rende più semplice ordinare le aziende, ma può cancellare la domanda a cui risponde e le prove che esclude. La realtà economica ha dimensioni diverse che, se compresse, perdono significato. AXIGNAL preferisce mostrare cosa è sostenuto, cosa è attuale e cosa resta sconosciuto.",
+      "answer": "AXIGNAL non usa un indice universale di qualità o attrattività aziendale. Può organizzare dimensioni spiegabili e giudizi circoscritti per una domanda specifica, ma le misure interne non diventano automaticamente una classifica pubblica o una conclusione commerciale generale.",
+      "sections": [
+        {
+          "heading": "Chiedersi quale decisione dovrebbe sostenere il numero",
+          "body": "Un aggregato può mescolare capacità, domanda, portata, prove, attualità e rischio anche se ogni dimensione ha unità e base diverse. Prima di sintetizzare, occorre definire la decisione e l’esigenza dell’utente. Senza quello scopo, il formato sembra oggettivo ma dipende da pesi e ipotesi nascosti."
+        },
+        {
+          "heading": "Mantenere distinte le dimensioni economiche",
+          "body": "Un’azienda può avere capacità ben documentate ma relazioni commerciali sconosciute, operare in un mercato ma non in un altro, oppure mostrare attività pubblica con copertura discontinua. Un numero può compensare le dimensioni tra loro e nascondere una lacuna sostanziale. Una vista verificabile mantiene separate dimensioni, stato e fonte."
+        },
+        {
+          "heading": "Non confondere l’ordine dei risultati con la priorità economica",
+          "body": "L’ordine dei risultati può dipendere dalla query, dalla copertura o da una regola di visualizzazione. Non indica automaticamente importanza economica, probabilità di successo o raccomandazione. Se la ricerca richiede priorità, il criterio va definito, versionato e collegato alla decisione; alternative e incognite restano visibili."
+        },
+        {
+          "heading": "Usare giudizi circoscritti e spiegarne la base",
+          "body": "Un giudizio circoscritto risponde a una domanda definita ed espone base, incertezza e condizioni. Una domanda diversa può produrre una lettura diversa senza contraddizione. Questa composizione rende confrontabili le prove pertinenti a ciascun caso e lascia la decisione finale alla persona, senza promettere una valutazione generale di ogni azienda."
+        },
+        {
+          "heading": "Ulteriori criteri",
+          "body": "Un confronto può restare utile senza inventare un totale. La persona può consultare più dimensioni affiancate, comprenderne i periodi e decidere quali rispondono alla propria esigenza. Se per una domanda operativa si applica una regola di sintesi, deve conservare i valori originari e rendere verificabili i pesi. Il cambiamento di una fonte o di una policy deve consentire un nuovo calcolo e una spiegazione della differenza. Questa traccia evita che una misura progettata per uno scopo preciso venga separata dal contesto e presentata come proprietà intrinseca dell’azienda."
+        }
+      ],
+      "example": "Esempio ipotetico: un acquirente valuta un possibile fornitore di componenti. Invece di accettare un punteggio globale, esamina capacità pubblicate, attualità nota delle certificazioni, copertura geografica e relazioni che restano sconosciute. Ogni dimensione supporta una verifica diversa; nessuna riassume da sola il valore totale del fornitore.",
+      "limits": "AXIGNAL non promette una misura universale di qualità, reputazione, rischio o adeguatezza commerciale. Ogni aggregazione richiede una policy definita e spiegabile, con scopo, input, periodo e incertezza. Volume dei dati, posizione nei risultati o sicurezza del valutatore non diventano un punteggio di verità o successo. Una dimensione assente deve restare visibile invece di essere compensata silenziosamente da un’altra. Un giudizio utile per una decisione specifica non va riutilizzato come misura generale senza riesaminare contesto e prove. Una decisione resta legata al suo contesto e al momento in cui è stata presa. Se cambiano le fonti, una definizione o il periodo osservato, il risultato deve poter essere riesaminato invece di sembrare permanente. La presentazione mantiene visibili condizioni ed elementi mancanti che ne limitano la portata. Così una persona può capire cosa sostiene una conclusione e quale osservazione aggiuntiva servirebbe. Questa disciplina evita inoltre di riutilizzare altrove un dato utile in un caso senza verificarne la pertinenza. Una presentazione leggibile può supportare una decisione senza anticiparla: mostra dimensioni esaminate, fonti e questioni aperte. Chi ricava una metrica operativa deve definirne l’uso e verificare che i pesi siano adeguati alla decisione concreta. Se cambiano gli input, serve un nuovo calcolo tracciabile. Il numero resta così uno strumento per quello scopo e non diventa un’affermazione generale sul valore dell’impresa. La presentazione dovrebbe inoltre segnalare quando due misure riguardano periodi o popolazioni differenti. Senza questa precisazione, anche numeri esatti possono dare l’impressione di un confronto equo pur avendo basi non comparabili.",
+      "cta": {
+        "label": "Esplora l’intelligence economica spiegabile",
+        "href": "/knowledge"
+      },
+      "related": [
+        "evidence-currentness",
+        "knowledge-model-confidence-vs-evidence",
+        "knowledge-economic-roles-can-coexist"
+      ]
+    },
+    "pt": {
+      "slug": "porque-a-axignal-nao-usa-uma-pontuacao-universal-de-empresa",
+      "title": "Porque a AXIGNAL não atribui uma pontuação universal às empresas",
+      "description": "Um único número esconderia diferenças de âmbito, atualidade e evidência entre dimensões económicas.",
+      "lead": "Uma pontuação única facilita ordenar empresas, mas pode apagar a pergunta a que responde e as evidências que deixa de fora. A realidade económica tem várias dimensões cujo agrupamento perde significado. A AXIGNAL prefere mostrar o que está sustentado, o que é atual e o que continua desconhecido.",
+      "answer": "A AXIGNAL não usa um índice universal de qualidade ou atratividade empresarial. Pode organizar dimensões explicáveis e juízos delimitados para uma pergunta concreta, mas as medidas internas não se tornam automaticamente um ranking público nem uma conclusão comercial geral.",
+      "sections": [
+        {
+          "heading": "Perguntar que decisão o número deveria apoiar",
+          "body": "Um agregado pode misturar capacidade, procura, alcance, evidência, atualidade e risco, embora cada dimensão tenha unidade e fundamento próprios. Antes de resumir, é preciso definir a decisão e a necessidade de quem usa a informação. Sem esse propósito, o formato parece objetivo, mas depende de pesos e pressupostos ocultos."
+        },
+        {
+          "heading": "Manter separadas as dimensões económicas",
+          "body": "Uma empresa pode ter capacidades bem documentadas e relações comerciais desconhecidas, operar num mercado mas não noutro, ou apresentar atividade pública com cobertura irregular. Um número pode compensar dimensões entre si e esconder uma lacuna importante. Uma vista inspecionável conserva cada dimensão, o seu estado e a respetiva fonte."
+        },
+        {
+          "heading": "Não confundir ordenação com prioridade económica",
+          "body": "A ordem dos resultados pode refletir a consulta, a cobertura ou uma regra de apresentação. Não significa automaticamente importância económica, probabilidade de sucesso ou recomendação. Se a pesquisa precisar de prioridades, o critério deve ser definido, versionado e ligado à decisão; alternativas e incógnitas continuam visíveis."
+        },
+        {
+          "heading": "Usar juízos delimitados e explicar a sua base",
+          "body": "Um juízo delimitado responde a uma pergunta específica e expõe fundamento, incerteza e condições. Uma pergunta diferente pode produzir outra leitura sem contradição. Esta composição permite comparar evidências relevantes em cada caso e deixa a decisão final com a pessoa, sem prometer uma avaliação geral de todas as empresas."
+        },
+        {
+          "heading": "Critérios adicionais",
+          "body": "Uma comparação pode continuar útil sem criar um total artificial. A pessoa pode consultar várias dimensões lado a lado, compreender os seus períodos e decidir quais respondem à sua necessidade. Se uma regra de síntese for usada para uma pergunta operacional, deve preservar os valores originais e tornar as ponderações verificáveis. Uma mudança de fonte ou política deve permitir recalcular o resultado e explicar a diferença. Este registo evita que uma medida concebida para um uso específico seja retirada do seu contexto e apresentada como característica intrínseca da empresa."
+        }
+      ],
+      "example": "Exemplo hipotético: um comprador avalia um possível fornecedor de componentes. Em vez de aceitar uma pontuação global, analisa capacidades publicadas, atualidade conhecida das certificações, cobertura geográfica e relações ainda desconhecidas. Cada dimensão informa uma verificação distinta; nenhuma resume isoladamente o valor total do fornecedor.",
+      "limits": "A AXIGNAL não promete uma medida universal de qualidade, reputação, risco ou adequação comercial. Qualquer agregação exige uma política definida e explicável, com finalidade, entradas, período e incerteza. Volume de dados, posição na pesquisa ou confiança do avaliador não se tornam uma pontuação de verdade ou sucesso. Uma dimensão ausente deve continuar visível em vez de ser compensada silenciosamente por outra. Um juízo adequado a uma decisão concreta não deve ser reutilizado como medida geral sem novo exame do contexto e das evidências. Uma decisão continua ligada ao seu contexto e ao momento em que foi tomada. Se as fontes, uma definição ou o período observado mudarem, o resultado deve poder ser revisto em vez de parecer permanente. A apresentação mantém visíveis as condições e os elementos em falta que limitam o seu alcance. Assim, uma pessoa compreende o que sustenta uma conclusão e que observação adicional poderá ser necessária. Esta disciplina também evita reutilizar noutro caso um dado útil sem verificar a sua relevância. Uma apresentação clara pode apoiar uma decisão sem a antecipar: mostra dimensões analisadas, fontes e questões em aberto. Quem criar uma métrica operacional deve definir o seu uso e verificar se as ponderações fazem sentido para a decisão concreta. Se as entradas mudarem, é necessário um novo cálculo rastreável. O número continua a ser uma ferramenta para essa finalidade, sem se tornar uma afirmação geral sobre o valor da empresa.",
+      "cta": {
+        "label": "Explorar inteligência económica explicável",
+        "href": "/knowledge"
+      },
+      "related": [
+        "evidence-currentness",
+        "knowledge-model-confidence-vs-evidence",
+        "knowledge-economic-roles-can-coexist"
+      ]
+    }
+  },
+  {
+    "id": "knowledge-economic-roles-can-coexist",
+    "fr": {
+      "slug": "plusieurs-roles-economiques-peuvent-coexister",
+      "title": "Plusieurs rôles économiques peuvent coexister et évoluer",
+      "description": "Fournisseur, client, partenaire ou concurrent sont des relations circonscrites, orientées et temporaires.",
+      "lead": "Une organisation n’a pas nécessairement un seul rôle économique. Elle peut acheter un produit à une entreprise, lui en fournir un autre et la concurrencer sur un marché. Ces liens peuvent concerner des divisions, des produits, des régions ou des périodes différentes. Les réduire à une étiquette permanente ferait perdre leur contexte.",
+      "answer": "AXIGNAL traite les rôles comme des associations orientées, temporelles et dépendantes des preuves. Qualifier une entité de fournisseur n’empêche pas qu’elle soit aussi cliente ou concurrente dans un autre périmètre; chaque relation exige son propre contexte et ses propres éléments probants.",
+      "sections": [
+        {
+          "heading": "Décrire le rôle par le lien et son sens",
+          "body": "Fournisseur et client désignent les deux extrémités d’une relation économique. Il faut savoir qui fournit quoi à qui, pendant quelle période et pour quelle activité. Une mention générale de collaboration ne détermine pas toujours la direction. Si un élément manque, AXIGNAL ne choisit pas un rôle par défaut et conserve UNKNOWN ou une association potentielle."
+        },
+        {
+          "heading": "Autoriser plusieurs rôles sans imposer une catégorie unique",
+          "body": "Deux organisations peuvent entretenir des relations différentes selon les divisions, produits ou régions. Un Choice Space exclusif qui exige un seul rôle risque d’écarter des informations exactes. Des dimensions typées peuvent coexister si leurs contrats le permettent, chacune avec ses preuves et ses limites. Leur composition montre le contexte sans fusionner les relations."
+        },
+        {
+          "heading": "Respecter le temps et les changements de périmètre",
+          "body": "Une relation observée pendant un exercice ne prouve pas qu’elle existe encore aujourd’hui. Elle peut s’être terminée, concerner d’autres produits ou une filiale seulement. L’historique conserve les périodes et l’actualité plutôt que d’attribuer une étiquette permanente. De nouvelles preuves modifient la dimension concernée sans altérer les faits indépendants."
+        },
+        {
+          "heading": "Séparer chaque rôle d’une opportunité",
+          "body": "Être fournisseur ne fait pas d’une entreprise la candidate d’un autre marché; une relation client passée ne prouve aucune intention d’achat future. Une correspondance entre besoin et capacité peut produire une hypothèse POTENTIAL, pas une relation observée ni un lead. Le rôle décrit un lien étayé; l’opportunité est une dérivation distincte qui demande sa propre explication."
+        },
+        {
+          "heading": "Repères complémentaires",
+          "body": "Pour comprendre une relation, il faut conserver son objet concret: fourniture, achat, distribution, licence ou autre activité documentée. Une même paire d’organisations peut donc être reliée par plusieurs faits qui ne se contredisent pas. Le sens du lien importe autant que les noms des parties, et sa période évite d’en faire une étiquette actuelle sans preuve. Une vue détaillée peut présenter ces faits côte à côte tout en laissant chacun attaché à sa propre source. Les personnes peuvent alors examiner les changements sans transformer une relation particulière en identité commerciale générale."
+        }
+      ],
+      "example": "Exemple hypothétique: une entreprise technologique achète des composants à A pour un produit et vend à A un module logiciel dans le cadre d’un autre accord. Les deux relations peuvent coexister avec des sujets, des directions et des périodes distincts. AXIGNAL ne les réduit pas à une catégorie exclusive et n’en déduit pas un nouveau projet commercial.",
+      "limits": "Les rôles économiques ne se déduisent ni de la similarité, ni du secteur, ni de la proximité. La couverture des sources peut omettre une partie d’une relation et les changements dans le temps exigent un examen. Un rôle potentiel ou inconnu ne doit pas apparaître comme relation canonique, fournisseur ou client actuel confirmé, ni comme intention future sans preuves pertinentes. Une relation admise reste circonscrite au sujet, à l’activité et à la période documentés; elle ne définit pas toute l’entreprise. Une décision reste attachée à son contexte et à son moment. Si les sources changent, si une définition évolue ou si la période observée s’éloigne, le résultat doit pouvoir être revu plutôt que traité comme permanent. La présentation doit garder visibles les conditions et les éléments manquants qui limitent sa portée. Cette discipline permet à une personne de comprendre ce qui soutient une conclusion et ce qui demanderait une observation supplémentaire. Elle empêche aussi qu’une donnée utile dans un cas soit réutilisée ailleurs sans vérifier sa pertinence. Pour éviter les étiquettes trop larges, le système peut rattacher chaque rôle à une activité précise et à ses éléments justificatifs. Les changements sont alors lisibles: une relation peut finir, se renouveler ou évoluer sans effacer l’historique. Une autre relation entre les mêmes organisations peut continuer. Cette séparation aide à raisonner sur la réalité économique observée sans inventer une hiérarchie générale entre client, fournisseur et concurrent.",
+      "cta": {
+        "label": "Explorer les relations économiques",
+        "href": "/knowledge"
+      },
+      "related": [
+        "evidence-observed-vs-potential",
+        "knowledge-relationship-vs-pathx",
+        "knowledge-no-universal-company-score"
+      ]
+    },
+    "de": {
+      "slug": "wirtschaftliche-rollen-koennen-nebeneinander-bestehen",
+      "title": "Wirtschaftliche Rollen können gleichzeitig bestehen und sich ändern",
+      "description": "Lieferant, Kunde, Partner und Wettbewerber sind abgegrenzte, gerichtete Beziehungen auf Zeit.",
+      "lead": "Eine Organisation hat nicht zwingend nur eine wirtschaftliche Rolle. Sie kann ein Produkt von einem Unternehmen kaufen, ihm ein anderes liefern und in einem Markt mit ihm konkurrieren. Diese Beziehungen können verschiedene Bereiche, Produkte, Regionen oder Zeiträume betreffen. Sie auf ein dauerhaftes Etikett zu reduzieren, würde ihren Kontext verlieren lassen.",
+      "answer": "AXIGNAL behandelt Rollen als gerichtete, zeitliche und belegabhängige Zuordnungen. Die Einstufung als Lieferant schließt eine gleichzeitige Kunden- oder Wettbewerberrolle in anderem Umfang nicht aus; jede Dimension braucht ihren eigenen Kontext und ihre eigenen Belege.",
+      "sections": [
+        {
+          "heading": "Eine Rolle über Verbindung und Richtung bestimmen",
+          "body": "Lieferant und Kunde bezeichnen unterschiedliche Enden einer wirtschaftlichen Beziehung. Dafür muss bekannt sein, wer wem was für welche Aktivität und in welchem Zeitraum liefert. Eine allgemeine Erwähnung der Zusammenarbeit klärt die Richtung möglicherweise nicht. Fehlt ein Element, wählt AXIGNAL keine Standardrolle und bewahrt UNKNOWN oder eine potenzielle Zuordnung."
+        },
+        {
+          "heading": "Gleichzeitige Rollen zulassen, ohne eine Kategorie zu erzwingen",
+          "body": "Zwei Organisationen können je nach Bereich, Produkt oder Region unterschiedliche Beziehungen haben. Ein exklusiver Choice Space mit nur einer Rolle könnte zutreffende Informationen verwerfen. Typisierte Dimensionen dürfen nebeneinander bestehen, wenn ihre Verträge es erlauben; jede behält eigene Belege und Grenzen. Die Zusammensetzung zeigt Kontext, ohne Beziehungen zu vermischen."
+        },
+        {
+          "heading": "Zeit und Änderungen des Umfangs berücksichtigen",
+          "body": "Eine im Geschäftsjahr beobachtete Beziehung beweist nicht, dass sie heute fortbesteht. Sie kann enden, andere Produkte betreffen oder nur für eine Tochtergesellschaft gelten. Der Verlauf bewahrt Zeiträume und Aktualität, statt ein dauerhaftes Unternehmensetikett zu pflegen. Neue Belege verändern die abhängige Dimension und lassen unabhängige Fakten unberührt."
+        },
+        {
+          "heading": "Jede Rolle von einer Gelegenheit unterscheiden",
+          "body": "Lieferant zu sein macht ein Unternehmen nicht automatisch zum Kandidaten für einen anderen Auftrag; eine frühere Kundenbeziehung beweist keine künftige Kaufabsicht. Eine Passung von Bedarf und Fähigkeit kann eine POTENTIAL-Hypothese begründen, aber keine beobachtete Beziehung oder einen Lead. Eine Rolle beschreibt eine belegte Verbindung; eine Gelegenheit ist eine eigene, erklärungsbedürftige Ableitung."
+        },
+        {
+          "heading": "Zusätzliche Einordnung",
+          "body": "Zum Verständnis einer Beziehung gehört ihr konkreter Gegenstand: Lieferung, Einkauf, Vertrieb, Lizenz oder eine andere belegte Aktivität. Dasselbe Organisationspaar kann deshalb durch mehrere Fakten verbunden sein, die sich nicht widersprechen. Die Richtung ist ebenso wichtig wie die Namen der Parteien; der Zeitraum verhindert, dass daraus ohne Beleg ein heutiges Etikett wird. Eine detaillierte Ansicht kann die Fakten nebeneinander zeigen und jeden an seine Quelle binden. So lassen sich Änderungen prüfen, ohne eine einzelne Beziehung zur allgemeinen geschäftlichen Identität eines Unternehmens zu machen."
+        }
+      ],
+      "example": "Hypothetisch: Ein Technologieunternehmen kauft Komponenten von A für ein Produkt und verkauft A im Rahmen eines anderen Vertrags ein Softwaremodul. Beide Beziehungen können mit verschiedenen Gegenständen, Richtungen und Zeiträumen bestehen. AXIGNAL presst sie nicht in eine exklusive Kategorie und leitet daraus kein neues Verkaufsprojekt ab.",
+      "limits": "Wirtschaftliche Rollen lassen sich nicht aus Ähnlichkeit, Branche oder Nähe ableiten. Die Quellenabdeckung kann Teile einer Beziehung auslassen; zeitliche Veränderungen müssen geprüft werden. Eine potenzielle oder unbekannte Rolle darf ohne passende Belege weder als kanonische Beziehung noch als bestätigter aktueller Lieferant oder Kunde oder als künftige Absicht erscheinen. Eine zugelassene Beziehung bleibt auf den belegten Gegenstand, die Aktivität und den Zeitraum begrenzt; sie definiert nicht das gesamte Unternehmen. Eine Entscheidung bleibt an ihren Kontext und Zeitpunkt gebunden. Ändern sich Quellen, Definitionen oder der beobachtete Zeitraum, muss sich das Ergebnis neu prüfen lassen, statt als dauerhaft zu gelten. Die Darstellung sollte Bedingungen und fehlende Elemente sichtbar halten, die ihre Reichweite begrenzen. So kann eine Person erkennen, was eine Schlussfolgerung stützt und welche zusätzliche Beobachtung nötig wäre. Zugleich verhindert diese Sorgfalt, dass nützliche Daten in einem Fall ohne Prüfung ihrer Relevanz in einem anderen wiederverwendet werden. Um zu breite Etiketten zu vermeiden, ordnet das System jede Rolle einer bestimmten Aktivität und ihren Belegen zu. Veränderungen bleiben dadurch verständlich: Eine Beziehung kann enden, verlängert werden oder sich ändern, ohne den Verlauf zu löschen. Eine andere Beziehung zwischen denselben Organisationen kann fortbestehen. Diese Trennung unterstützt die Betrachtung beobachteter wirtschaftlicher Realität, ohne eine allgemeine Rangfolge von Kunde, Lieferant und Wettbewerber zu erfinden. Eine neue Beleglage sollte nur die Beziehung verändern, auf die sie sich bezieht. So bleibt erkennbar, ob eine Rolle endet, sich ihr Umfang ändert oder lediglich ein weiterer Zusammenhang hinzukommt.",
+      "cta": {
+        "label": "Wirtschaftliche Beziehungen erkunden",
+        "href": "/knowledge"
+      },
+      "related": [
+        "evidence-observed-vs-potential",
+        "knowledge-relationship-vs-pathx",
+        "knowledge-no-universal-company-score"
+      ]
+    },
+    "it": {
+      "slug": "i-ruoli-economici-possono-coesistere-e-cambiare",
+      "title": "I ruoli economici possono coesistere e cambiare",
+      "description": "Fornitore, cliente, partner e concorrente sono relazioni circoscritte, direzionali e temporanee.",
+      "lead": "Un’organizzazione non ha necessariamente un solo ruolo economico. Può acquistare un prodotto da un’impresa, fornirle un altro prodotto e competere con essa in un mercato. Queste relazioni possono riguardare divisioni, prodotti, aree o periodi diversi. Ridurle a un’etichetta permanente cancellerebbe il contesto che le rende comprensibili.",
+      "answer": "AXIGNAL tratta i ruoli come associazioni direzionali, temporali e dipendenti dalle prove. Classificare un’entità come fornitore non esclude che sia anche cliente o concorrente in un altro ambito; ogni dimensione richiede contesto e supporto propri.",
+      "sections": [
+        {
+          "heading": "Definire un ruolo attraverso il legame e la direzione",
+          "body": "Fornitore e cliente descrivono estremi diversi di una relazione economica. Occorre sapere chi fornisce cosa a chi, in quale periodo e per quale attività. Un riferimento generico alla collaborazione può non chiarirne la direzione. Se manca un elemento, AXIGNAL evita un ruolo predefinito e conserva UNKNOWN o un’associazione potenziale."
+        },
+        {
+          "heading": "Ammettere ruoli simultanei senza imporre una sola categoria",
+          "body": "Due organizzazioni possono avere rapporti diversi tra divisioni, prodotti o regioni. Un Choice Space esclusivo che richiede un solo ruolo rischia di scartare informazioni vere. Dimensioni tipizzate possono coesistere se i rispettivi contratti lo consentono, ciascuna con prove e confini propri. La composizione mostra il contesto senza fondere relazioni indipendenti."
+        },
+        {
+          "heading": "Rispettare il tempo e i cambiamenti di ambito",
+          "body": "Una relazione osservata in un esercizio finanziario non dimostra che esista ancora oggi. Può terminare, riguardare altri prodotti o valere solo per una controllata. Lo storico conserva periodi e attualità invece di fissare un’etichetta aziendale permanente. Nuove prove incidono sulla dimensione dipendente e lasciano intatti i fatti non collegati."
+        },
+        {
+          "heading": "Tenere ogni ruolo distinto da un’opportunità",
+          "body": "Essere fornitore non rende un’azienda candidata a un altro appalto; un rapporto passato con un cliente non dimostra un’intenzione futura di acquisto. La compatibilità tra bisogno e capacità può generare un’ipotesi POTENTIAL, non una relazione osservata o un lead. Il ruolo descrive un legame supportato; l’opportunità è una derivazione separata che richiede una spiegazione propria."
+        },
+        {
+          "heading": "Ulteriori criteri",
+          "body": "Per comprendere una relazione occorre conservarne l’oggetto concreto: fornitura, acquisto, distribuzione, licenza o altra attività documentata. La stessa coppia di organizzazioni può quindi essere collegata da più fatti non contraddittori. La direzione conta quanto i nomi delle parti, mentre il periodo impedisce di trasformare il rapporto in un’etichetta attuale priva di prove. Una vista dettagliata può mostrare i fatti insieme, mantenendo ciascuno collegato alla propria fonte. Le persone possono così esaminare i cambiamenti senza trasformare una relazione particolare nell’identità commerciale generale dell’impresa."
+        }
+      ],
+      "example": "Esempio ipotetico: un’azienda tecnologica acquista componenti da A per un prodotto e vende ad A un modulo software con un altro accordo. I due rapporti possono coesistere con soggetti, direzioni e periodi distinti. AXIGNAL non li comprime in una categoria esclusiva né deduce un nuovo progetto di vendita.",
+      "limits": "I ruoli economici non si deducono da somiglianza, settore o vicinanza. La copertura delle fonti può tralasciare una parte della relazione e i cambiamenti temporali richiedono revisione. Un ruolo potenziale o sconosciuto non va mostrato come relazione canonica, fornitore o cliente attuale confermato, né come intenzione futura senza prove pertinenti. Una relazione ammessa resta limitata a soggetto, attività e periodo documentati; non definisce l’intera azienda. Una decisione resta legata al suo contesto e al momento in cui è stata presa. Se cambiano le fonti, una definizione o il periodo osservato, il risultato deve poter essere riesaminato invece di sembrare permanente. La presentazione mantiene visibili condizioni ed elementi mancanti che ne limitano la portata. Così una persona può capire cosa sostiene una conclusione e quale osservazione aggiuntiva servirebbe. Questa disciplina evita inoltre di riutilizzare altrove un dato utile in un caso senza verificarne la pertinenza. Per evitare etichette troppo ampie, il sistema può collegare ogni ruolo a un’attività precisa e alle prove pertinenti. I cambiamenti restano leggibili: una relazione può terminare, rinnovarsi o trasformarsi senza cancellare lo storico. Un altro rapporto tra le stesse organizzazioni può continuare. Questa distinzione aiuta a ragionare sulla realtà economica osservata senza inventare una gerarchia generale tra cliente, fornitore e concorrente. Nuove prove dovrebbero modificare soltanto la relazione a cui si riferiscono. Così resta chiaro se un ruolo termina, cambia ambito oppure si aggiunge semplicemente un altro legame tra le organizzazioni.",
+      "cta": {
+        "label": "Esplora le relazioni economiche",
+        "href": "/knowledge"
+      },
+      "related": [
+        "evidence-observed-vs-potential",
+        "knowledge-relationship-vs-pathx",
+        "knowledge-no-universal-company-score"
+      ]
+    },
+    "pt": {
+      "slug": "papeis-economicos-podem-coexistir-e-mudar",
+      "title": "Os papéis económicos podem coexistir e mudar",
+      "description": "Fornecedor, cliente, parceiro e concorrente são relações delimitadas, direcionais e temporais.",
+      "lead": "Uma organização não tem necessariamente um único papel económico. Pode comprar um produto a uma empresa, fornecer-lhe outro e concorrer com ela num mercado. Estas relações podem envolver divisões, produtos, regiões ou períodos diferentes. Reduzi-las a um rótulo permanente apagaria o contexto necessário para as compreender.",
+      "answer": "A AXIGNAL trata os papéis como associações direcionais, temporais e dependentes de evidências. Classificar uma entidade como fornecedora não impede que também seja cliente ou concorrente noutro âmbito; cada dimensão exige contexto e suporte próprios.",
+      "sections": [
+        {
+          "heading": "Definir um papel pela ligação e pela sua direção",
+          "body": "Fornecedor e cliente descrevem extremos diferentes de uma relação económica. É preciso saber quem fornece o quê a quem, em que período e para que atividade. Uma referência geral a colaboração pode não esclarecer a direção. Quando falta um elemento, a AXIGNAL não escolhe um papel predefinido e mantém UNKNOWN ou uma associação potencial."
+        },
+        {
+          "heading": "Permitir papéis simultâneos sem impor uma categoria única",
+          "body": "Duas organizações podem ter relações diferentes entre divisões, produtos ou regiões. Um Choice Space exclusivo que exige um só papel pode descartar informação verdadeira. Dimensões tipadas podem coexistir quando os seus contratos o permitem, cada uma com evidências e limites próprios. A composição mostra o contexto sem fundir relações independentes."
+        },
+        {
+          "heading": "Respeitar o tempo e as mudanças de âmbito",
+          "body": "Uma relação observada num exercício financeiro não prova que continue hoje. Pode ter terminado, mudar de produto ou aplicar-se apenas a uma subsidiária. O histórico preserva períodos e atualidade em vez de manter um rótulo empresarial permanente. Novas evidências alteram a dimensão dependente e deixam intactos os factos sem relação."
+        },
+        {
+          "heading": "Distinguir cada papel de uma oportunidade",
+          "body": "Ser fornecedor não torna uma empresa candidata a outro contrato; uma relação passada com um cliente não comprova intenção futura de compra. A compatibilidade entre necessidade e capacidade pode formar uma hipótese POTENTIAL, não uma relação observada nem um lead. Um papel descreve uma ligação sustentada; uma oportunidade é uma derivação própria que requer explicação independente."
+        },
+        {
+          "heading": "Critérios adicionais",
+          "body": "Para compreender uma relação, é preciso conservar o seu objeto concreto: fornecimento, compra, distribuição, licença ou outra atividade documentada. O mesmo par de organizações pode, por isso, estar ligado por vários factos que não se contradizem. A direção é tão importante como os nomes das partes, e o período impede que a relação se torne um rótulo atual sem evidência. Uma vista detalhada pode apresentar os factos em conjunto, mantendo cada um ligado à sua fonte. Assim, as pessoas analisam mudanças sem transformar uma relação específica na identidade comercial geral da empresa."
+        }
+      ],
+      "example": "Exemplo hipotético: uma empresa tecnológica compra componentes à A para um produto e vende à A um módulo de software ao abrigo de outro acordo. As relações podem coexistir com objetos, direções e períodos distintos. A AXIGNAL não as reduz a uma categoria exclusiva nem infere um novo projeto comercial.",
+      "limits": "Os papéis económicos não se inferem de semelhança, setor ou proximidade. A cobertura das fontes pode omitir parte de uma relação e as mudanças temporais exigem revisão. Um papel potencial ou desconhecido não deve surgir como relação canónica, fornecedor ou cliente atual confirmado, nem como intenção futura sem evidência relevante. Uma relação admitida continua limitada ao objeto, atividade e período documentados; não define toda a empresa. Uma decisão continua ligada ao seu contexto e ao momento em que foi tomada. Se as fontes, uma definição ou o período observado mudarem, o resultado deve poder ser revisto em vez de parecer permanente. A apresentação mantém visíveis as condições e os elementos em falta que limitam o seu alcance. Assim, uma pessoa compreende o que sustenta uma conclusão e que observação adicional poderá ser necessária. Esta disciplina também evita reutilizar noutro caso um dado útil sem verificar a sua relevância. Para evitar rótulos demasiado amplos, o sistema pode ligar cada papel a uma atividade específica e às evidências que o sustentam. As mudanças tornam-se legíveis: uma relação pode terminar, renovar-se ou evoluir sem apagar o histórico. Outra relação entre as mesmas organizações pode continuar. Esta separação ajuda a analisar a realidade económica observada sem inventar uma hierarquia geral entre cliente, fornecedor e concorrente. Novas evidências devem alterar apenas a relação a que dizem respeito. Assim, fica claro se um papel terminou, mudou de âmbito ou se surgiu apenas uma ligação adicional entre as organizações.",
+      "cta": {
+        "label": "Explorar relações económicas",
+        "href": "/knowledge"
+      },
+      "related": [
+        "evidence-observed-vs-potential",
+        "knowledge-relationship-vs-pathx",
+        "knowledge-no-universal-company-score"
+      ]
+    }
+  },
+  {
+    "id": "knowledge-observation-focus-vs-world-crawl",
+    "fr": {
+      "slug": "un-focus-dobservation-nest-pas-un-crawl-mondial",
+      "title": "Un Observation Focus n’est pas un crawl de l’économie mondiale",
+      "description": "AXIGNAL oriente la recherche vers une organisation et une question sans promettre une couverture exhaustive.",
+      "lead": "On peut attendre d’un produit d’intelligence qu’il couvre automatiquement tous les marchés. AXIGNAL organise plutôt le travail autour d’un Observation Focus: une organisation et le contexte utile à son abonné. La carte économique se matérialise à mesure que la demande mène à l’observation; elle ne suppose pas que tout l’internet ait déjà été parcouru.",
+      "answer": "Un Focus guide l’observation, la récupération et la réévaluation selon des sources, droits et budgets définis. Il ne promet ni crawl mondial ni couverture complète. Ce périmètre dirigé permet de concentrer l’effort là où de nouvelles informations peuvent réellement changer la compréhension d’une personne.",
+      "sections": [
+        {
+          "heading": "Laisser la question déterminer où observer",
+          "body": "Une même organisation peut susciter des questions sur ses capacités, ses marchés, sa structure ou son activité dans le temps. Un Focus définit l’attention et les conditions autorisées; le système n’a pas à cartographier toutes les entités d’internet avant de répondre. Il recherche là où cela peut éclairer une décision et évite de présenter une couverture partielle comme une cartographie complète."
+        },
+        {
+          "heading": "Combiner capteurs déterministes et recherche dirigée",
+          "body": "Des sources stables peuvent être suivies par des capteurs gouvernés; une ambiguïté importante ou une lacune peut demander une recherche adaptative. Un LLM n’est pas l’observateur universel et un outil connecté ne gagne pas d’autorité par sa seule disponibilité. Le choix dépend de la stabilité, des droits, de la valeur d’information et du coût; chaque observation conserve instrument, date et provenance."
+        },
+        {
+          "heading": "Réutiliser le savoir public sans refaire le calcul",
+          "body": "Une découverte publique gouvernée peut aider d’autres Focus lorsque les droits, la vie privée et la filiation le permettent. Un nouveau Focus réutilise alors l’observation et recalcule son sens dans son propre contexte relationnel. Il n’est pas nécessaire de tout redécouvrir, mais on ne présume ni l’actualité, ni la pertinence, ni la corroboration pour chaque nouvelle question."
+        },
+        {
+          "heading": "Décrire la couverture réellement observée",
+          "body": "Une vue doit montrer les sources, lieux, langues et périodes contributrices, ainsi que les éléments encore inconnus. L’absence de résultat hors de cet ensemble ne prouve pas une absence économique. Si un segment de marché n’a pas été observé, le système indique cette limite et peut prévoir une recherche lorsqu’elle compte."
+        },
+        {
+          "heading": "Repères complémentaires",
+          "body": "Le Focus sert aussi à rendre le travail observable: il indique pourquoi une source a été choisie et quelles questions elle peut éclairer. Les informations stables peuvent être réutilisées lorsque leurs droits le permettent, mais leur date et leurs conditions accompagnent le résultat. Un abonné peut ainsi distinguer une observation récente d’un élément historique conservé pour le contexte. Quand la couverture ne répond pas à la question, le système peut préciser la lacune plutôt que suggérer une absence. Cette transparence rend la portée de la recherche compréhensible et permet de décider si un effort supplémentaire est pertinent."
+        }
+      ],
+      "example": "Exemple hypothétique: un abonné suit une entreprise d’équipements médicaux pour comprendre ses certifications et sa portée géographique. AXIGNAL concentre la recherche publique autorisée sur ces dimensions. Il ne cherche pas à recenser toutes les entreprises médicales et ne prétend pas que les marchés non étudiés n’ont aucun fournisseur.",
+      "limits": "Un Focus ne garantit aucune fréquence, profondeur ou exhaustivité fixe. La couverture dépend de la valeur de l’information, du coût, des droits et de la disponibilité des sources. AXIGNAL n’autorise ni collecte authentifiée, ni contournement anti-bot, ni accès à des données privées pour combler les lacunes. Un abonné peut attirer l’attention sur une organisation ou un contexte sans demander que toutes les entités liées soient recherchées. Ce périmètre orienté par la demande explique pourquoi deux Focus peuvent montrer des preuves différentes et pourquoi un marché non observé reste hors de la conclusion. Une décision reste attachée à son contexte et à son moment. Si les sources changent, si une définition évolue ou si la période observée s’éloigne, le résultat doit pouvoir être revu plutôt que traité comme permanent. La présentation doit garder visibles les conditions et les éléments manquants qui limitent sa portée. Cette discipline permet à une personne de comprendre ce qui soutient une conclusion et ce qui demanderait une observation supplémentaire. Elle empêche aussi qu’une donnée utile dans un cas soit réutilisée ailleurs sans vérifier sa pertinence. La portée est donc une propriété de l’observation réalisée, pas une promesse générale de découvrir tout ce qui existe. Indiquer cette limite aide à interpréter correctement les silences et à choisir la suite de recherche.",
+      "cta": {
+        "label": "Comprendre comment AXIGNAL observe",
+        "href": "/knowledge"
+      },
+      "related": [
+        "knowledge-research-reuse-conditions",
+        "knowledge-observation-memory-vs-canonical-truth",
+        "evidence-public-absence",
+        "knowledge-private-analytics-vs-public-observation"
+      ]
+    },
+    "de": {
+      "slug": "ein-beobachtungsfokus-ist-kein-weltweiter-crawl",
+      "title": "Ein Observation Focus ist kein weltweiter Crawl der Wirtschaft",
+      "description": "AXIGNAL richtet Recherche auf eine Organisation und eine Frage aus, ohne vollständige Abdeckung zu versprechen.",
+      "lead": "Man könnte von einem Intelligence-Produkt erwarten, dass es automatisch alle Märkte abdeckt. AXIGNAL organisiert Arbeit stattdessen über einen Observation Focus: eine Organisation und den für Abonnenten relevanten Kontext. Die Wirtschaftslandkarte entsteht, wenn Nachfrage zu Beobachtung führt; sie setzt keinen vollständigen Durchlauf des Internets voraus.",
+      "answer": "Ein Focus lenkt Beobachtung, Abruf und Neubewertung unter festgelegten Quellen, Rechten und Budgets. Er verspricht weder einen weltweiten Crawl noch vollständige Abdeckung. Dieser gesteuerte Umfang konzentriert Aufwand dort, wo neue Informationen das Verständnis einer Person verändern können.",
+      "sections": [
+        {
+          "heading": "Die Frage bestimmt, wo beobachtet wird",
+          "body": "Dieselbe Organisation kann Fragen zu Fähigkeiten, Märkten, Unternehmensstruktur oder zeitlicher Aktivität aufwerfen. Ein Focus legt Aufmerksamkeit und erlaubte Bedingungen fest; das System muss nicht erst jede Internetentität kartieren. Es recherchiert dort, wo es Verständnis verbessern kann, und stellt lückenhafte Abdeckung nicht als vollständige Kartografie dar."
+        },
+        {
+          "heading": "Deterministische Sensoren mit gezielter Recherche verbinden",
+          "body": "Stabile Quellen können durch geregelte Sensoren beobachtet werden; wichtige Mehrdeutigkeit oder Lücken können adaptive Recherche erfordern. Ein LLM ist kein universeller Beobachter, und ein verbundenes Werkzeug erhält durch seine Verfügbarkeit keine Autorität. Die Auswahl hängt von Quellenstabilität, Rechten, Informationswert und Kosten ab; jede Beobachtung bewahrt Instrument, Datum und Herkunft."
+        },
+        {
+          "heading": "Öffentliches Wissen wiederverwenden, ohne doppelt zu rechnen",
+          "body": "Ein geregelter öffentlicher Befund kann anderen Focuses helfen, wenn Rechte, Datenschutz und Herkunftslinie es erlauben. Ein neuer Focus verwendet die Beobachtung und berechnet ihre Bedeutung im eigenen Beziehungskontext neu. Eine Suche von Grund auf ist unnötig; Aktualität, Relevanz oder Bestätigung für jede andere Frage werden dadurch aber nicht angenommen."
+        },
+        {
+          "heading": "Die tatsächliche Abdeckung sichtbar machen",
+          "body": "Eine Ansicht sollte beitragende Quellen, Orte, Sprachen und Zeiträume sowie verbleibende Unbekannte zeigen. Ein fehlendes Ergebnis außerhalb dieses Bestands beweist keine wirtschaftliche Abwesenheit. Wurde ein Marktsegment nicht beobachtet, benennt das System die Grenze und kann weitere Recherche vorsehen, wenn sie wichtig wird."
+        },
+        {
+          "heading": "Zusätzliche Einordnung",
+          "body": "Der Focus macht auch die Recherche nachvollziehbar: Er zeigt, warum eine Quelle ausgewählt wurde und welche Fragen sie beleuchten kann. Stabile Informationen lassen sich bei passenden Rechten wiederverwenden, doch Datum und Bedingungen begleiten den Befund. So kann ein Abonnent eine aktuelle Beobachtung von einem historischen Kontext unterscheiden. Beantwortet die Abdeckung die Frage nicht, benennt das System die Lücke, statt Abwesenheit nahezulegen. Diese Transparenz erklärt die Reichweite der Recherche und hilft einzuschätzen, ob zusätzlicher Aufwand sinnvoll ist."
+        }
+      ],
+      "example": "Hypothetisch: Ein Abonnent beobachtet ein Medizintechnikunternehmen, um Zertifizierungen und geografische Reichweite zu verstehen. AXIGNAL konzentriert erlaubte öffentliche Recherche auf diese Dimensionen. Es zählt nicht alle Medizinunternehmen auf und behauptet nicht, dass in unerforschten Märkten keine Anbieter existieren.",
+      "limits": "Ein Focus garantiert keine feste Häufigkeit, Tiefe oder Vollständigkeit der Beobachtung. Abdeckung hängt von Informationswert, Kosten, Rechten und Quellenverfügbarkeit ab. AXIGNAL erlaubt weder authentifiziertes Scraping noch Umgehung von Anti-Bot-Maßnahmen oder Zugriff auf private Daten zum Schließen von Lücken. Ein Abonnent kann Aufmerksamkeit auf eine Organisation oder einen Kontext lenken, ohne damit eine Suche nach allen verbundenen Einheiten auszulösen. Dieser nachfragegesteuerte Umfang erklärt, warum zwei Focuses unterschiedliche Belege zeigen und ein unbeobachteter Markt außerhalb der Schlussfolgerung bleibt. Eine Entscheidung bleibt an ihren Kontext und Zeitpunkt gebunden. Ändern sich Quellen, Definitionen oder der beobachtete Zeitraum, muss sich das Ergebnis neu prüfen lassen, statt als dauerhaft zu gelten. Die Darstellung sollte Bedingungen und fehlende Elemente sichtbar halten, die ihre Reichweite begrenzen. So kann eine Person erkennen, was eine Schlussfolgerung stützt und welche zusätzliche Beobachtung nötig wäre. Zugleich verhindert diese Sorgfalt, dass nützliche Daten in einem Fall ohne Prüfung ihrer Relevanz in einem anderen wiederverwendet werden. Die Beobachtung bleibt an erlaubte Quellen und den konkreten Zweck gebunden. Ein Focus kann eine gezielte Frage priorisieren, aber keine vollständige Weltkarte versprechen. Wird eine Abdeckungslücke geschäftlich relevant, kann der Auftrag angepasst und die neue Recherche dokumentiert werden. Das Ergebnis sollte erkennen lassen, was aus bestehenden Beobachtungen stammt und was neu ermittelt wurde. So bleibt die Entwicklung des Wissens prüfbar, ohne aus einer einzelnen Stichprobe auf den gesamten Markt zu schließen. Der Umfang gehört somit zur tatsächlich durchgeführten Beobachtung und ist kein allgemeines Versprechen, alles Vorhandene zu entdecken. Diese Grenze hilft, fehlende Treffer richtig einzuordnen und weitere Recherche gezielt zu wählen.",
+      "cta": {
+        "label": "AXIGNALs Beobachtung verstehen",
+        "href": "/knowledge"
+      },
+      "related": [
+        "knowledge-research-reuse-conditions",
+        "knowledge-observation-memory-vs-canonical-truth",
+        "evidence-public-absence",
+        "knowledge-private-analytics-vs-public-observation"
+      ]
+    },
+    "it": {
+      "slug": "un-focus-di-osservazione-non-e-un-crawl-mondiale",
+      "title": "Un Observation Focus non è un crawl dell’economia mondiale",
+      "description": "AXIGNAL dirige la ricerca verso un’organizzazione e una domanda senza promettere copertura esaustiva.",
+      "lead": "Ci si potrebbe aspettare che un prodotto di intelligence copra automaticamente tutti i mercati. AXIGNAL organizza invece il lavoro attorno a un Observation Focus: un’organizzazione e il contesto utile al suo abbonato. La mappa economica si materializza quando la domanda conduce all’osservazione; non presuppone che internet sia già stato esplorato per intero.",
+      "answer": "Un Focus guida osservazione, recupero e rivalutazione secondo fonti, diritti e budget definiti. Non promette un crawl globale né una copertura completa. Questo ambito diretto concentra il lavoro dove nuove informazioni possono cambiare davvero la comprensione di una persona.",
+      "sections": [
+        {
+          "heading": "Lasciare che la domanda indichi dove osservare",
+          "body": "La stessa organizzazione può generare domande su capacità, mercati, struttura societaria o attività nel tempo. Un Focus definisce attenzione e condizioni autorizzate; il sistema non deve mappare ogni entità internet prima di rispondere. Cerca dove può migliorare la comprensione ed evita di presentare una copertura parziale come cartografia completa."
+        },
+        {
+          "heading": "Unire sensori deterministici e ricerca mirata",
+          "body": "Fonti stabili possono essere osservate con sensori governati; un’ambiguità importante o una lacuna può richiedere ricerca adattiva. Un LLM non è l’osservatore universale e uno strumento collegato non acquisisce autorità solo perché disponibile. La selezione dipende da stabilità della fonte, diritti, valore informativo e costo; ogni osservazione conserva strumento, data e provenienza."
+        },
+        {
+          "heading": "Riutilizzare conoscenza pubblica senza duplicare il calcolo",
+          "body": "Una scoperta pubblica governata può essere utile ad altri Focus se diritti, privacy e lineage lo consentono. Un nuovo Focus riutilizza l’osservazione e ne ricalcola il significato nel proprio contesto relazionale. Non serve ripartire da zero, ma non si presume che il dato sia attuale, pertinente o corroborato per ogni altra domanda."
+        },
+        {
+          "heading": "Comunicare la copertura effettiva",
+          "body": "Una vista dovrebbe mostrare fonti, luoghi, lingue e periodi che hanno contribuito, insieme a ciò che resta sconosciuto. L’assenza di risultati oltre quell’insieme non prova un’assenza economica. Se un segmento di mercato non è stato osservato, il sistema dichiara il limite e può pianificare altra ricerca quando conta."
+        },
+        {
+          "heading": "Ulteriori criteri",
+          "body": "Il Focus rende comprensibile anche il lavoro svolto: indica perché è stata scelta una fonte e quali domande può chiarire. Le informazioni stabili possono essere riutilizzate quando i diritti lo consentono, ma data e condizioni accompagnano il risultato. Un abbonato distingue così un’osservazione recente da un elemento storico conservato come contesto. Se la copertura non risponde alla domanda, il sistema può indicare la lacuna invece di suggerire un’assenza. Questa trasparenza chiarisce la portata della ricerca e aiuta a decidere se sia opportuno un ulteriore approfondimento."
+        }
+      ],
+      "example": "Esempio ipotetico: un abbonato osserva un’azienda di apparecchiature mediche per capire certificazioni e portata geografica. AXIGNAL concentra la ricerca pubblica autorizzata su queste dimensioni. Non prova a enumerare tutte le aziende mediche né sostiene che nei mercati non esaminati non esistano fornitori.",
+      "limits": "Un Focus non garantisce frequenza, profondità o completezza fisse. La copertura dipende da valore informativo, costo, diritti e disponibilità delle fonti. AXIGNAL non autorizza scraping autenticato, aggiramento delle misure anti-bot o accesso a dati privati per colmare lacune. Un abbonato può orientare l’attenzione verso un’organizzazione o un contesto senza implicare che ogni entità collegata sia stata cercata. Questo ambito guidato dalla domanda spiega perché due Focus possano mostrare prove diverse e perché un mercato non osservato resti fuori dalla conclusione. Una decisione resta legata al suo contesto e al momento in cui è stata presa. Se cambiano le fonti, una definizione o il periodo osservato, il risultato deve poter essere riesaminato invece di sembrare permanente. La presentazione mantiene visibili condizioni ed elementi mancanti che ne limitano la portata. Così una persona può capire cosa sostiene una conclusione e quale osservazione aggiuntiva servirebbe. Questa disciplina evita inoltre di riutilizzare altrove un dato utile in un caso senza verificarne la pertinenza. L’osservazione resta legata a fonti autorizzate e a uno scopo concreto. Un Focus può dare priorità a una domanda mirata, ma non promettere una mappa completa del mondo. Se una lacuna di copertura diventa rilevante, l’incarico può essere aggiornato e la nuova ricerca documentata. Il risultato dovrebbe mostrare cosa deriva da osservazioni già disponibili e cosa è stato appena rilevato. Così l’evoluzione della conoscenza è verificabile senza generalizzare un singolo campione a tutto il mercato.",
+      "cta": {
+        "label": "Scopri come osserva AXIGNAL",
+        "href": "/knowledge"
+      },
+      "related": [
+        "knowledge-research-reuse-conditions",
+        "knowledge-observation-memory-vs-canonical-truth",
+        "evidence-public-absence",
+        "knowledge-private-analytics-vs-public-observation"
+      ]
+    },
+    "pt": {
+      "slug": "um-observation-focus-nao-e-um-crawl-mundial",
+      "title": "Um Observation Focus não é um crawl da economia mundial",
+      "description": "A AXIGNAL dirige a pesquisa a uma organização e pergunta sem prometer cobertura exaustiva.",
+      "lead": "Pode esperar-se que um produto de inteligência cubra automaticamente todos os mercados. A AXIGNAL organiza o trabalho de outra forma, através de um Observation Focus: uma organização e o contexto relevante para o seu subscritor. O mapa económico materializa-se quando a procura conduz à observação; não pressupõe que toda a internet já tenha sido percorrida.",
+      "answer": "Um Focus orienta observação, recuperação e reavaliação com fontes, direitos e orçamentos definidos. Não promete um crawl global nem cobertura completa. Este âmbito dirigido concentra o trabalho onde novas informações podem realmente alterar a compreensão de uma pessoa.",
+      "sections": [
+        {
+          "heading": "Deixar a pergunta indicar onde observar",
+          "body": "A mesma organização pode suscitar perguntas sobre capacidades, mercados, estrutura empresarial ou atividade ao longo do tempo. Um Focus define atenção e condições autorizadas; o sistema não precisa de mapear todas as entidades da internet antes de responder. Pesquisa onde pode melhorar a compreensão e evita apresentar cobertura parcial como cartografia completa."
+        },
+        {
+          "heading": "Combinar sensores determinísticos com pesquisa dirigida",
+          "body": "Fontes estáveis podem ser observadas através de sensores governados; ambiguidades importantes ou lacunas podem exigir pesquisa adaptativa. Um LLM não é o observador universal e uma ferramenta ligada não ganha autoridade só por estar disponível. A seleção depende da estabilidade da fonte, direitos, valor informativo e custo; cada observação guarda instrumento, data e proveniência."
+        },
+        {
+          "heading": "Reutilizar conhecimento público sem duplicar o cálculo",
+          "body": "Uma descoberta pública governada pode beneficiar outros Focus quando direitos, privacidade e lineage o permitem. Um novo Focus reutiliza a observação e recalcula o seu significado no contexto relacional próprio. Não é preciso redescobrir tudo, mas também não se presume atualidade, relevância ou corroboração para cada pergunta diferente."
+        },
+        {
+          "heading": "Comunicar a cobertura realmente observada",
+          "body": "Uma vista deve mostrar as fontes, locais, idiomas e períodos que contribuíram, além do que continua desconhecido. A falta de resultados fora desse conjunto não prova ausência económica. Se um segmento de mercado não foi observado, o sistema declara essa limitação e pode planear nova pesquisa quando for relevante."
+        },
+        {
+          "heading": "Critérios adicionais",
+          "body": "O Focus também torna o trabalho compreensível: indica por que foi escolhida uma fonte e que perguntas pode esclarecer. Informações estáveis podem ser reutilizadas quando os direitos o permitem, mas a data e as condições acompanham o resultado. Assim, um subscritor distingue uma observação recente de um elemento histórico guardado como contexto. Se a cobertura não responder à pergunta, o sistema pode indicar a lacuna em vez de sugerir ausência. Esta transparência explica o alcance da pesquisa e ajuda a decidir se vale a pena fazer trabalho adicional."
+        }
+      ],
+      "example": "Exemplo hipotético: um subscritor observa uma empresa de equipamento médico para compreender certificações e alcance geográfico. A AXIGNAL concentra a pesquisa pública autorizada nessas dimensões. Não tenta enumerar todas as empresas médicas nem afirma que os mercados não pesquisados não têm fornecedores.",
+      "limits": "Um Focus não garante frequência, profundidade ou completude fixas. A cobertura depende do valor informativo, custo, direitos e disponibilidade das fontes. A AXIGNAL não autoriza scraping autenticado, contorno de medidas anti-bot ou acesso a dados privados para preencher lacunas. Um subscritor pode orientar a atenção para uma organização ou contexto sem implicar que todas as entidades relacionadas tenham sido pesquisadas. Este âmbito dirigido pela procura explica por que dois Focus podem revelar evidências diferentes e por que um mercado não observado fica fora da conclusão. Uma decisão continua ligada ao seu contexto e ao momento em que foi tomada. Se as fontes, uma definição ou o período observado mudarem, o resultado deve poder ser revisto em vez de parecer permanente. A apresentação mantém visíveis as condições e os elementos em falta que limitam o seu alcance. Assim, uma pessoa compreende o que sustenta uma conclusão e que observação adicional poderá ser necessária. Esta disciplina também evita reutilizar noutro caso um dado útil sem verificar a sua relevância. A observação continua ligada a fontes autorizadas e a uma finalidade concreta. Um Focus pode priorizar uma pergunta específica, mas não prometer um mapa completo do mundo. Se uma lacuna de cobertura se tornar relevante, o âmbito pode ser ajustado e a nova pesquisa documentada. O resultado deve indicar o que vem de observações existentes e o que foi apurado agora. Assim, a evolução do conhecimento pode ser revista sem extrapolar uma amostra para todo o mercado.",
+      "cta": {
+        "label": "Saber como a AXIGNAL observa",
+        "href": "/knowledge"
+      },
+      "related": [
+        "knowledge-research-reuse-conditions",
+        "knowledge-observation-memory-vs-canonical-truth",
+        "evidence-public-absence",
+        "knowledge-private-analytics-vs-public-observation"
+      ]
+    }
+  },
+  {
+    "id": "knowledge-user-input-directs-attention-not-truth",
+    "fr": {
+      "slug": "la-saisie-utilisateur-oriente-lattention-pas-la-verite",
+      "title": "La saisie utilisateur oriente l’attention, pas la vérité",
+      "description": "Une correction d’abonné peut déclencher une recherche, mais ne modifie pas directement les FAXT ni AXIGLAND.",
+      "lead": "Un abonné peut mieux connaître une entreprise qu’une source publique ou repérer une attribution erronée. Ce signal humain est utile pour orienter l’attention, mais ne doit pas devenir à lui seul une modification de connaissance partagée. AXIGNAL écoute la contribution et peut enquêter sans laisser une personne écrire directement la vérité canonique.",
+      "answer": "La saisie utilisateur dirige l’observation et la réévaluation; elle ne modifie pas directement AXIGLAND. Une contribution doit passer par une voie de preuve autorisée distincte avant d’affecter une affirmation canonique ou une relation admise.",
+      "sections": [
+        {
+          "heading": "Traiter une correction comme une question de recherche",
+          "body": "Une personne peut signaler qu’une filiale a une autre adresse, qu’un contrat a pris fin ou qu’une page confond deux organisations. Le système peut enregistrer la question et donner la priorité à une source capable d’y répondre. Tant qu’aucune preuve n’est admise, cette contribution reste une attention dirigée ou un contexte privé autorisé, pas une modification de la vérité publique."
+        },
+        {
+          "heading": "Séparer le contexte privé de l’observation publique",
+          "body": "Des notes de réunion, données clients et documents confidentiels n’ont ni les mêmes autorisations ni les mêmes destinataires que les sources publiques. Ils ne sont pas silencieusement intégrés à AXIGLAND ou réutilisés entre abonnés comme preuves ouvertes. Une information privée susceptible d’étayer une affirmation économique exige un contrat de traitement et une autorité explicites avant toute admission."
+        },
+        {
+          "heading": "Réévaluer avec une provenance claire",
+          "body": "Si une source publique adaptée confirme ou contredit la contribution, la réévaluation conserve qui a publié quoi, quand et au sujet de quelle entité. La conclusion peut changer, se restreindre ou rester non résolue. La provenance empêche qu’une modification paraisse provenir du système alors qu’elle a commencé par la suggestion d’une personne."
+        },
+        {
+          "heading": "Clarifier la responsabilité épistémique et humaine",
+          "body": "L’abonné conserve l’autorité sur le sens et l’action de son entreprise. AXIGNAL applique des règles de preuve à la vérité canonique. Une correction qui n’est pas admise comme fait n’a pas besoin d’être jetée; elle peut rester une question ouverte. Le système peut ainsi écouter sans qu’un client ou une agence écrive directement dans la vérité d’une autre organisation."
+        },
+        {
+          "heading": "Repères complémentaires",
+          "body": "Une correction peut améliorer la recherche même si elle ne confirme pas le fait avancé. Par exemple, le nom d’une filiale ou la date supposée d’un contrat peut aider à retrouver la bonne source sans être adopté comme vérité. Le système peut garder l’entrée comme question, puis enregistrer le résultat de l’examen avec les sources qui l’ont éclairé. Une confirmation, une réfutation et une absence de conclusion sont des issues possibles. Les rendre distinctes protège à la fois la contribution de la personne et l’intégrité du savoir commun."
+        }
+      ],
+      "example": "Exemple hypothétique: un abonné affirme qu’un fournisseur a cessé d’opérer dans une région. AXIGNAL peut donner priorité aux sources récentes sur les installations ou les services. En attendant des preuves suffisantes, il conserve l’état antérieur avec sa date ou le marque comme incertain; la note de l’abonné n’est pas publiée comme fait confirmé.",
+      "limits": "Le produit ne permet ni la modification de profil ni les changements manuels de FAXT par un abonné. L’attention privée doit respecter les limites de locataire, de finalité et de conservation. Une contribution humaine peut être erronée, incomplète ou confidentielle; son traitement doit être gouverné avant tout effet sur le savoir partagé. La possibilité de demander une enquête ne confère aucune autorité sur sa conclusion. Seules des preuves traitées par une voie admise peuvent faire évoluer la connaissance canonique, avec leur provenance et leur état visibles. Une décision reste attachée à son contexte et à son moment. Si les sources changent, si une définition évolue ou si la période observée s’éloigne, le résultat doit pouvoir être revu plutôt que traité comme permanent. La présentation doit garder visibles les conditions et les éléments manquants qui limitent sa portée. Cette discipline permet à une personne de comprendre ce qui soutient une conclusion et ce qui demanderait une observation supplémentaire. Elle empêche aussi qu’une donnée utile dans un cas soit réutilisée ailleurs sans vérifier sa pertinence. Le statut de la contribution devrait rester compréhensible pendant toute l’enquête. Une piste peut être en attente, examinée, confirmée par une source ou non résolue; ces étapes ne sont pas des validations équivalentes. L’historique indique ce qui a été observé et quand l’interprétation a changé. Cette traçabilité permet de remercier l’abonné pour son signal tout en protégeant les autres personnes contre une publication non étayée.",
+      "cta": {
+        "label": "Comprendre l’admission des preuves",
+        "href": "/knowledge"
+      },
+      "related": [
+        "evidence-provenance",
+        "evidence-observed-vs-potential",
+        "knowledge-observation-memory-vs-canonical-truth"
+      ]
+    },
+    "de": {
+      "slug": "nutzereingaben-lenken-aufmerksamkeit-nicht-wahrheit",
+      "title": "Nutzereingaben lenken Aufmerksamkeit, nicht Wahrheit",
+      "description": "Ein Abonnentenhinweis kann Recherche auslösen, ändert aber FAXTs oder AXIGLAND nicht direkt.",
+      "lead": "Ein Abonnent kennt ein Unternehmen womöglich besser als eine öffentliche Quelle oder erkennt eine falsche Zuordnung. Dieses menschliche Signal kann die Aufmerksamkeit sinnvoll lenken, darf aber allein kein geteiltes Wissen ändern. AXIGNAL kann den Hinweis aufnehmen und recherchieren, ohne einer Person das direkte Schreiben kanonischer Wahrheit zu erlauben.",
+      "answer": "Nutzereingaben steuern Beobachtung und Neubewertung, verändern AXIGLAND jedoch nicht direkt. Ein Beitrag braucht einen getrennten, autorisierten Belegpfad, bevor er eine kanonische Aussage oder eine zugelassene Beziehung beeinflussen kann.",
+      "sections": [
+        {
+          "heading": "Eine Korrektur als Recherchefrage behandeln",
+          "body": "Jemand kann darauf hinweisen, dass eine Tochtergesellschaft eine andere Adresse hat, ein Vertrag endete oder eine Seite zwei Organisationen verwechselt. Das System kann die Frage erfassen und einer klärenden Quelle Priorität geben. Solange keine Belege zugelassen sind, bleibt der Hinweis gelenkte Aufmerksamkeit oder autorisierter privater Kontext und wird nicht zur Änderung öffentlicher Wahrheit."
+        },
+        {
+          "heading": "Privaten Kontext von öffentlicher Beobachtung trennen",
+          "body": "Besprechungsnotizen, Kundendaten und vertrauliche Dokumente unterliegen anderen Berechtigungen und Zielgruppen als öffentliche Quellen. Sie werden weder still in AXIGLAND gemischt noch abonnentenübergreifend als offene Belege wiederverwendet. Könnten private Informationen eine wirtschaftliche Aussage stützen, braucht es vor jeder Zulassung einen ausdrücklichen Verarbeitungsvertrag und eine zuständige Autorität."
+        },
+        {
+          "heading": "Mit nachvollziehbarer Herkunft neu bewerten",
+          "body": "Bestätigt oder widerlegt eine geeignete öffentliche Quelle den Hinweis, hält die Neubewertung fest, wer wann was über welches Subjekt veröffentlicht hat. Die Schlussfolgerung kann sich ändern, enger gefasst werden oder offenbleiben. Herkunft verhindert, dass eine Änderung wie eine eigene Erkenntnis des Systems wirkt, obwohl sie mit einem persönlichen Vorschlag begann."
+        },
+        {
+          "heading": "Erkenntnis und menschliche Verantwortung klar halten",
+          "body": "Der Abonnent behält die Verantwortung für die geschäftliche Bedeutung und das Handeln. AXIGNAL wendet Belegregeln auf kanonische Wahrheit an. Eine nicht als Tatsache zugelassene Korrektur muss nicht verschwinden; sie kann als offene Frage bestehen bleiben. So kann das System zuhören, ohne dass Kunde oder Agentur direkt die Wahrheit über eine andere Organisation festschreiben."
+        },
+        {
+          "heading": "Zusätzliche Einordnung",
+          "body": "Ein Hinweis kann die Recherche verbessern, selbst wenn er die behauptete Tatsache nicht bestätigt. Der Name einer Tochtergesellschaft oder ein vermutetes Vertragsdatum kann etwa helfen, die richtige Quelle zu finden, ohne als Wahrheit übernommen zu werden. Das System kann die Eingabe als Frage bewahren und danach das Prüfergebnis samt herangezogenen Quellen festhalten. Bestätigung, Widerlegung und ein offener Ausgang sind möglich. Sie klar auseinanderzuhalten schützt sowohl den Beitrag der Person als auch die Integrität des gemeinsamen Wissens."
+        }
+      ],
+      "example": "Hypothetisch: Ein Abonnent sagt, ein Lieferant arbeite in einer Region nicht mehr. AXIGNAL kann aktuelle Quellen zu Standorten oder Diensten priorisieren. Bis ausreichende Belege vorliegen, bewahrt es den früheren Status samt Datum oder markiert ihn als unsicher; die Notiz des Abonnenten wird nicht als bestätigte Tatsache veröffentlicht.",
+      "limits": "Das Produkt bietet keine Profilbearbeitung und keine manuellen FAXT-Änderungen durch Abonnenten. Private Aufmerksamkeit muss Grenzen von Mandant, Zweck und Aufbewahrung beachten. Menschliche Eingaben können falsch, unvollständig oder vertraulich sein und brauchen geregelte Behandlung, bevor sie geteiltes Wissen beeinflussen. Die Möglichkeit, Recherche anzustoßen, verleiht keine Autorität über das Ergebnis. Nur über einen zugelassenen Pfad verarbeitete Belege können kanonisches Wissen verändern; Herkunft und Erkenntnisstand bleiben dabei sichtbar. Eine Entscheidung bleibt an ihren Kontext und Zeitpunkt gebunden. Ändern sich Quellen, Definitionen oder der beobachtete Zeitraum, muss sich das Ergebnis neu prüfen lassen, statt als dauerhaft zu gelten. Die Darstellung sollte Bedingungen und fehlende Elemente sichtbar halten, die ihre Reichweite begrenzen. So kann eine Person erkennen, was eine Schlussfolgerung stützt und welche zusätzliche Beobachtung nötig wäre. Zugleich verhindert diese Sorgfalt, dass nützliche Daten in einem Fall ohne Prüfung ihrer Relevanz in einem anderen wiederverwendet werden. Der Status eines Beitrags sollte während der gesamten Prüfung verständlich bleiben. Ein Hinweis kann offen, untersucht, durch eine Quelle bestätigt oder ungelöst sein; diese Schritte sind keine gleichwertigen Bestätigungen. Der Verlauf zeigt, was beobachtet wurde und wann sich die Interpretation änderte. So lässt sich ein Abonnentenhinweis würdigen und zugleich verhindern, dass andere eine unbelegte Veröffentlichung für Tatsache halten. Diese Grenze bleibt auch dann bestehen, wenn der Hinweis plausibel klingt. So bleibt klar, ob eine Angabe vom Abonnenten stammt oder durch unabhängige Belege bestätigt wurde. Diese Unterscheidung schützt die gemeinsame Wissensbasis und macht den Verlauf für spätere Prüfungen nachvollziehbar.",
+      "cta": {
+        "label": "Belegzulassung verstehen",
+        "href": "/knowledge"
+      },
+      "related": [
+        "evidence-provenance",
+        "evidence-observed-vs-potential",
+        "knowledge-observation-memory-vs-canonical-truth"
+      ]
+    },
+    "it": {
+      "slug": "linput-utente-orienta-lattenzione-non-la-verita",
+      "title": "L’input dell’utente orienta l’attenzione, non la verità",
+      "description": "Una correzione dell’abbonato può avviare una ricerca, ma non modifica direttamente FAXT o AXIGLAND.",
+      "lead": "Un abbonato può conoscere un’azienda meglio di una fonte pubblica o notare un’attribuzione sbagliata. Questo segnale umano è utile per orientare l’attenzione, ma da solo non dovrebbe modificare la conoscenza condivisa. AXIGNAL può recepirlo e indagare senza permettere a una persona di scrivere direttamente la verità canonica.",
+      "answer": "L’input dell’utente dirige osservazione e rivalutazione, ma non modifica direttamente AXIGLAND. Un contributo deve seguire un percorso di prova autorizzato e separato prima di incidere su un’affermazione canonica o una relazione ammessa.",
+      "sections": [
+        {
+          "heading": "Trattare una correzione come una domanda di ricerca",
+          "body": "Una persona può segnalare che una controllata ha un altro indirizzo, che un contratto è terminato o che una pagina confonde due organizzazioni. Il sistema può registrare la domanda e dare priorità a una fonte che la chiarisca. Finché non esistono prove ammesse, il contributo resta attenzione diretta o contesto privato autorizzato, non una modifica alla verità pubblica."
+        },
+        {
+          "heading": "Separare il contesto privato dall’osservazione pubblica",
+          "body": "Note di riunione, dati dei clienti e documenti riservati hanno permessi e destinatari diversi dalle fonti pubbliche. Non vengono mescolati in AXIGLAND né riutilizzati tra abbonati come prove aperte. Se informazioni private possono sostenere un’affermazione economica, servono un contratto di trattamento esplicito e un’autorità prima di qualsiasi ammissione."
+        },
+        {
+          "heading": "Rivalutare con provenienza tracciabile",
+          "body": "Se una fonte pubblica adeguata conferma o contesta il contributo, la rivalutazione conserva chi ha pubblicato cosa, quando e riguardo a quale soggetto. La conclusione può cambiare, restringersi o restare irrisolta. La provenienza impedisce che una modifica sembri originata dal sistema quando è iniziata come suggerimento di una persona."
+        },
+        {
+          "heading": "Chiarire responsabilità epistemica e umana",
+          "body": "L’abbonato mantiene l’autorità sul significato aziendale e sulle proprie azioni. AXIGNAL applica le regole probatorie alla verità canonica. Una correzione non ammessa come fatto non deve essere scartata: può restare una domanda aperta. Così il sistema ascolta senza lasciare che cliente o agenzia scrivano direttamente la verità su un’altra organizzazione."
+        },
+        {
+          "heading": "Ulteriori criteri",
+          "body": "Una correzione può migliorare la ricerca anche senza confermare il fatto proposto. Per esempio, il nome di una controllata o la data ipotizzata di un contratto può aiutare a trovare la fonte corretta senza essere adottata come verità. Il sistema può conservare l’input come domanda e registrare poi l’esito dell’esame insieme alle fonti consultate. Conferma, smentita e mancata risoluzione sono esiti possibili. Tenerli distinti tutela sia il contributo della persona sia l’integrità della conoscenza condivisa."
+        }
+      ],
+      "example": "Esempio ipotetico: un abbonato afferma che un fornitore non opera più in una regione. AXIGNAL può dare priorità a fonti recenti su sedi o servizi. Finché le prove non bastano, conserva lo stato precedente con la relativa data o lo contrassegna come incerto; la nota dell’abbonato non viene pubblicata come fatto confermato.",
+      "limits": "Il prodotto non offre modifica dei profili né cambi manuali dei FAXT da parte degli abbonati. L’attenzione privata deve rispettare limiti di tenant, finalità e conservazione. Un contributo umano può essere errato, incompleto o riservato e richiede una gestione governata prima di influire sulla conoscenza condivisa. La possibilità di chiedere un’indagine non conferisce autorità sulla conclusione. Solo prove trattate attraverso un percorso ammesso possono cambiare la conoscenza canonica, mantenendo visibili provenienza e stato epistemico. Una decisione resta legata al suo contesto e al momento in cui è stata presa. Se cambiano le fonti, una definizione o il periodo osservato, il risultato deve poter essere riesaminato invece di sembrare permanente. La presentazione mantiene visibili condizioni ed elementi mancanti che ne limitano la portata. Così una persona può capire cosa sostiene una conclusione e quale osservazione aggiuntiva servirebbe. Questa disciplina evita inoltre di riutilizzare altrove un dato utile in un caso senza verificarne la pertinenza. Lo stato del contributo dovrebbe restare comprensibile durante tutta l’indagine. Un’indicazione può essere in attesa, esaminata, confermata da una fonte oppure irrisolta; queste fasi non equivalgono a una convalida. La cronologia mostra cosa è stato osservato e quando è cambiata l’interpretazione. Questa tracciabilità riconosce il contributo dell’abbonato e protegge gli altri da una pubblicazione priva di supporto. Resta così chiaro se un’informazione proviene dall’abbonato o è stata confermata da prove indipendenti. La distinzione protegge la conoscenza condivisa e rende la cronologia verificabile in seguito.",
+      "cta": {
+        "label": "Comprendi l’ammissione delle prove",
+        "href": "/knowledge"
+      },
+      "related": [
+        "evidence-provenance",
+        "evidence-observed-vs-potential",
+        "knowledge-observation-memory-vs-canonical-truth"
+      ]
+    },
+    "pt": {
+      "slug": "o-input-do-utilizador-orienta-atencao-nao-a-verdade",
+      "title": "O input do utilizador orienta a atenção, não a verdade",
+      "description": "Uma correção do subscritor pode iniciar pesquisa, mas não altera diretamente FAXTs ou AXIGLAND.",
+      "lead": "Um subscritor pode conhecer uma empresa melhor do que uma fonte pública ou detetar uma atribuição incorreta. Esse sinal humano é útil para orientar a atenção, mas não deve, por si só, alterar conhecimento partilhado. A AXIGNAL pode receber a indicação e investigar sem permitir que alguém escreva diretamente a verdade canónica.",
+      "answer": "O input do utilizador orienta observação e reavaliação, mas não altera diretamente AXIGLAND. Uma contribuição precisa de seguir um percurso de evidência autorizado e separado antes de afetar uma afirmação canónica ou relação admitida.",
+      "sections": [
+        {
+          "heading": "Tratar uma correção como pergunta de pesquisa",
+          "body": "Uma pessoa pode indicar que uma subsidiária tem outra morada, que um contrato terminou ou que uma página confunde duas organizações. O sistema pode registar a pergunta e dar prioridade a uma fonte que a esclareça. Enquanto não houver evidência admitida, a contribuição permanece atenção dirigida ou contexto privado autorizado, e não uma alteração à verdade pública."
+        },
+        {
+          "heading": "Separar contexto privado de observação pública",
+          "body": "Notas de reuniões, dados de clientes e documentos confidenciais têm permissões e destinatários diferentes das fontes públicas. Não são misturados silenciosamente em AXIGLAND nem reutilizados entre subscritores como evidência aberta. Se informação privada puder sustentar uma afirmação económica, exige contrato de tratamento explícito e autoridade antes de qualquer admissão."
+        },
+        {
+          "heading": "Reavaliar com proveniência clara",
+          "body": "Se uma fonte pública adequada confirmar ou contestar a contribuição, a reavaliação preserva quem publicou o quê, quando e sobre que entidade. A conclusão pode mudar, ficar mais delimitada ou continuar por resolver. A proveniência impede que uma alteração pareça ter surgido do sistema quando começou como sugestão de uma pessoa."
+        },
+        {
+          "heading": "Manter claras as responsabilidades epistémica e humana",
+          "body": "O subscritor mantém autoridade sobre o significado empresarial e a ação. A AXIGNAL aplica regras de evidência à verdade canónica. Uma correção que não seja admitida como facto não precisa de ser descartada; pode permanecer uma questão em aberto. Assim, o sistema escuta sem deixar que cliente ou agência escreva diretamente a verdade de outra organização."
+        },
+        {
+          "heading": "Critérios adicionais",
+          "body": "Uma correção pode melhorar a pesquisa mesmo sem confirmar o facto indicado. Por exemplo, o nome de uma subsidiária ou a data presumida de um contrato pode ajudar a encontrar a fonte certa sem ser aceite como verdade. O sistema pode guardar a contribuição como pergunta e depois registar o resultado da análise com as fontes consultadas. Confirmação, refutação e falta de conclusão são resultados possíveis. Distingui-los protege tanto a contribuição da pessoa como a integridade do conhecimento partilhado."
+        }
+      ],
+      "example": "Exemplo hipotético: um subscritor afirma que um fornecedor deixou de operar numa região. A AXIGNAL pode dar prioridade a fontes recentes sobre instalações ou serviços. Até existirem evidências suficientes, conserva o estado anterior com a data ou marca-o como incerto; a nota do subscritor não é publicada como facto confirmado.",
+      "limits": "O produto não permite editar perfis nem alterar manualmente FAXTs por iniciativa do subscritor. A atenção privada deve respeitar limites de tenant, finalidade e retenção. O input humano pode estar errado, incompleto ou ser confidencial, pelo que requer tratamento governado antes de afetar conhecimento partilhado. Pedir uma investigação não dá autoridade sobre a conclusão. Só evidências tratadas por um percurso admitido podem alterar o conhecimento canónico, com proveniência e estado epistémico visíveis. Uma decisão continua ligada ao seu contexto e ao momento em que foi tomada. Se as fontes, uma definição ou o período observado mudarem, o resultado deve poder ser revisto em vez de parecer permanente. A apresentação mantém visíveis as condições e os elementos em falta que limitam o seu alcance. Assim, uma pessoa compreende o que sustenta uma conclusão e que observação adicional poderá ser necessária. Esta disciplina também evita reutilizar noutro caso um dado útil sem verificar a sua relevância. O estado da contribuição deve continuar compreensível durante a investigação. Uma indicação pode estar pendente, ser analisada, confirmada por uma fonte ou permanecer por resolver; estas etapas não equivalem a validação. O histórico mostra o que foi observado e quando a interpretação mudou. Esta rastreabilidade reconhece o sinal do subscritor e protege outras pessoas de uma publicação sem suporte.",
+      "cta": {
+        "label": "Compreender a admissão de evidências",
+        "href": "/knowledge"
+      },
+      "related": [
+        "evidence-provenance",
+        "evidence-observed-vs-potential",
+        "knowledge-observation-memory-vs-canonical-truth"
+      ]
+    }
+  },
+  {
+    "id": "knowledge-private-analytics-vs-public-observation",
+    "fr": {
+      "slug": "analytics-privees-et-observation-publique-sont-distinctes",
+      "title": "Les analytics privés ne remplacent pas l’observation publique",
+      "description": "Les données internes mesurent l’activité d’une organisation; AXIGNAL observe séparément ce que les sources publiques montrent.",
+      "lead": "Une entreprise peut connaître ses visites, conversions et clients grâce à ses outils internes. Ces données éclairent sa propre activité, mais ne décrivent pas automatiquement la façon dont des sources externes la représentent ou la découvrent. AXIGNAL distingue ces perspectives afin qu’une mesure privée ne soit pas présentée comme un fait public indépendant.",
+      "answer": "AXIGNAL sépare les analytics propriétaires de l’observation publique indépendante. Les données privées exigent autorisation, isolation et finalité explicite; elles ne sont ni ajoutées à la représentation publique canonique, ni considérées comme des preuves accessibles à tous.",
+      "sections": [
+        {
+          "heading": "Identifier la question à laquelle répond chaque jeu de données",
+          "body": "Les métriques internes peuvent compter visites, formulaires envoyés ou ventes enregistrées selon les instruments et définitions de l’entreprise. Une observation publique peut indiquer les résultats visibles pour une requête ou ce qu’affiche une surface externe précise. Ces perspectives décrivent des phénomènes différents; les comparer exige un périmètre explicite au lieu de transférer leurs conclusions."
+        },
+        {
+          "heading": "Protéger la frontière de confidentialité",
+          "body": "Les analytics web, données CRM et conversions peuvent inclure des informations sensibles ou régies par contrat sur des personnes et des clients. Elles ne deviennent pas du savoir public AXIGLAND parce qu’elles concernent une organisation. Une intégration future autorisée devrait définir accès, consentement, conservation et finalité, puis garder les données dans le périmètre du locataire."
+        },
+        {
+          "heading": "Ne pas laisser une métrique privée valider une affirmation externe",
+          "body": "Une hausse des visites ne prouve pas qu’une capacité soit devenue plus visible dans les résultats, et une conversion n’établit pas une relation observée publiquement par AXIGNAL. De même, une faible présence publique ne contredit pas les clients récurrents connus dans les systèmes privés de l’entreprise. Relier les perspectives demande une analyse, pas une équivalence automatique."
+        },
+        {
+          "heading": "Concevoir séparément des mesures comparables",
+          "body": "Les métriques propriétaires dépendent de leur configuration, des cookies, des définitions et des changements d’instrumentation. Les observations externes dépendent de la requête, de la surface, de la langue, du lieu, du moment et de l’échantillon. Une comparaison avant-après exige de la cohérence dans chaque instrument et des limites explicites; sans contrôle, la combinaison peut créer une fausse explication."
+        },
+        {
+          "heading": "Repères complémentaires",
+          "body": "Toute comparaison devrait nommer les instruments et leurs conditions, car les mesures ne représentent pas la même population ni le même comportement. Un tableau de bord interne peut compter des visiteurs connus selon une configuration propre à l’entreprise, tandis qu’une observation externe décrit une surface et un échantillon définis. La période seule ne rend pas les chiffres comparables. Si les définitions changent, cette évolution doit être annotée afin que les lecteurs ne l’attribuent pas à une transformation réelle de la représentation. Les deux séries peuvent éclairer une réflexion sans être fusionnées dans une affirmation unique."
+        }
+      ],
+      "example": "Exemple hypothétique: l’équipe commerciale voit davantage de formulaires envoyés pendant un trimestre tandis qu’AXIGNAL observe moins de mentions de marque sur une surface générative. Les deux mesures peuvent coexister. Aucune n’explique l’autre à elle seule, et les données privées des formulaires ne sont pas exposées dans la vue publique d’AXIGNAL.",
+      "limits": "AXIGNAL n’accède pas aux comptes d’analytics privés et ne promet pas d’intégrations CRM, publicité ou conversions. L’usage de données propriétaires requiert autorisation explicite, contrôles et finalité; il reste séparé de la vérité publique canonique. Une observation de représentation ne mesure pas les résultats commerciaux privés. Même lorsqu’une organisation autorise une mesure interne, son périmètre et sa conservation diffèrent des preuves publiques. Le droit d’inspecter des métriques internes ne les transforme pas en faits observés indépendamment sur la façon dont les publics extérieurs découvrent ou mentionnent l’organisation. Une décision reste attachée à son contexte et à son moment. Si les sources changent, si une définition évolue ou si la période observée s’éloigne, le résultat doit pouvoir être revu plutôt que traité comme permanent. La présentation doit garder visibles les conditions et les éléments manquants qui limitent sa portée. Cette discipline permet à une personne de comprendre ce qui soutient une conclusion et ce qui demanderait une observation supplémentaire. Elle empêche aussi qu’une donnée utile dans un cas soit réutilisée ailleurs sans vérifier sa pertinence. La séparation aide aussi à respecter les attentes des personnes concernées. Les données internes peuvent inclure des comportements détaillés ou des informations contractuelles qui n’ont pas leur place dans une observation publique. Les permissions d’un système ne se transfèrent pas automatiquement à un autre, et l’accès ponctuel n’autorise pas une conservation illimitée. Toute mesure privée doit rester dans son cadre annoncé, tandis que l’observation externe documente ses propres limites et conditions.",
+      "cta": {
+        "label": "Comprendre les limites de l’observation",
+        "href": "/knowledge"
+      },
+      "related": [
+        "knowledge-digital-representation-vs-business-reality",
+        "evidence-provenance",
+        "knowledge-observation-focus-vs-world-crawl"
+      ]
+    },
+    "de": {
+      "slug": "private-analytics-ersetzen-keine-oeffentliche-beobachtung",
+      "title": "Private Analytics ersetzen keine öffentliche Beobachtung",
+      "description": "Interne Daten messen eigene Aktivität; AXIGNAL beobachtet unabhängig, was öffentliche Quellen zeigen.",
+      "lead": "Ein Unternehmen kann Besuche, Conversions und Kunden mit eigenen Werkzeugen kennen. Diese Daten liefern einen wertvollen Blick auf die eigene Aktivität, beschreiben aber nicht automatisch, wie externe Quellen das Unternehmen darstellen oder entdecken. AXIGNAL trennt diese Perspektiven, damit private Messwerte nicht als unabhängig beobachtete öffentliche Tatsachen erscheinen.",
+      "answer": "AXIGNAL hält private First-Party-Analytics und unabhängige öffentliche Beobachtung getrennt. Private Daten brauchen Berechtigung, Isolation und einen ausdrücklichen Zweck; sie werden weder Teil der kanonischen öffentlichen Darstellung noch zu Belegen, die allen zugänglich sind.",
+      "sections": [
+        {
+          "heading": "Erkennen, welche Frage jeder Datensatz beantwortet",
+          "body": "Interne Metriken können Seitenbesuche, gesendete Formulare oder erfasste Verkäufe nach eigenen Instrumenten und Definitionen zeigen. Eine öffentliche Beobachtung kann zeigen, welche Ergebnisse zu einer Anfrage erscheinen oder was eine benannte externe Oberfläche anzeigt. Das sind verschiedene Phänomene; ihr Vergleich braucht klaren Umfang, statt die Schlussfolgerungen auszutauschen."
+        },
+        {
+          "heading": "Die Datenschutzgrenze schützen",
+          "body": "Webanalyse, CRM-Einträge und Conversions können sensible oder vertraglich geregelte Informationen über Personen und Kunden enthalten. Sie werden nicht allein deshalb öffentliches AXIGLAND-Wissen, weil sie ein Unternehmen beschreiben. Eine künftige erlaubte Integration müsste Zugriff, Einwilligung, Aufbewahrung und Zweck festlegen und Daten mandantenbezogen halten."
+        },
+        {
+          "heading": "Private Metriken keine externe Aussage bestätigen lassen",
+          "body": "Mehr Besuche beweisen nicht, dass eine Fähigkeit in der Suche sichtbarer geworden ist; eine Conversion belegt keine Beziehung, die AXIGNAL öffentlich beobachtet. Umgekehrt widerspricht geringe öffentliche Präsenz nicht den wiederkehrenden Kunden in privaten Firmensystemen. Die Perspektiven zu verbinden ist eine Analysefrage, keine automatische Gleichsetzung."
+        },
+        {
+          "heading": "Vergleichbare Messungen getrennt planen",
+          "body": "First-Party-Metriken hängen von Konfiguration, Cookies, Definitionen und Änderungen an der Instrumentierung ab. Externe Beobachtungen hängen von Anfrage, Oberfläche, Sprache, Ort, Zeit und Stichprobe ab. Vorher-Nachher-Vergleiche brauchen Konsistenz innerhalb jedes Instruments und klare Grenzen. Werden die Datensätze unkontrolliert verbunden, kann eine falsche Erklärung für eine scheinbare oder echte Veränderung entstehen."
+        },
+        {
+          "heading": "Zusätzliche Einordnung",
+          "body": "Jeder Vergleich sollte Instrumente und Bedingungen nennen, denn die Messungen beziehen sich weder auf dieselbe Population noch auf dasselbe Verhalten. Ein internes Dashboard zählt vielleicht bekannte Besucher nach einer unternehmenseigenen Konfiguration; eine externe Beobachtung beschreibt eine bestimmte Oberfläche und Stichprobe. Ein gleicher Zeitraum macht Werte noch nicht vergleichbar. Ändern sich Definitionen, sollte dies kenntlich sein, damit niemand den Unterschied einer echten Veränderung der Darstellung zuschreibt. Beide Reihen können eine Analyse unterstützen, ohne zu einer einzigen Aussage verschmolzen zu werden."
+        }
+      ],
+      "example": "Hypothetisch: Das Vertriebsteam eines Unternehmens sieht in einem Quartal mehr Formularübermittlungen, während AXIGNAL auf einer generativen Oberfläche weniger Markennennungen beobachtet. Beide Messungen können stimmen. Keine erklärt die andere allein, und private Formulardaten erscheinen nicht in der öffentlichen AXIGNAL-Ansicht.",
+      "limits": "AXIGNAL greift nicht auf private Analytics-Konten zu und verspricht keine CRM-, Werbe- oder Conversion-Integrationen. First-Party-Daten erfordern ausdrückliche Berechtigung, Kontrollen und Zweck und bleiben von kanonischer öffentlicher Wahrheit getrennt. Eine Repräsentationsbeobachtung misst keine privaten Geschäftsergebnisse. Auch eine erlaubte interne Messung hat einen anderen Umfang und eine andere Aufbewahrung als öffentliche Belege. Die Erlaubnis, interne Metriken einzusehen, macht sie nicht zu unabhängig beobachteten Tatsachen darüber, wie externe Zielgruppen ein Unternehmen entdecken oder über es sprechen. Eine Entscheidung bleibt an ihren Kontext und Zeitpunkt gebunden. Ändern sich Quellen, Definitionen oder der beobachtete Zeitraum, muss sich das Ergebnis neu prüfen lassen, statt als dauerhaft zu gelten. Die Darstellung sollte Bedingungen und fehlende Elemente sichtbar halten, die ihre Reichweite begrenzen. So kann eine Person erkennen, was eine Schlussfolgerung stützt und welche zusätzliche Beobachtung nötig wäre. Zugleich verhindert diese Sorgfalt, dass nützliche Daten in einem Fall ohne Prüfung ihrer Relevanz in einem anderen wiederverwendet werden. Die Trennung schützt auch die Erwartungen betroffener Personen. Interne Daten können detaillierte Verhaltensinformationen oder vertragliche Angaben enthalten, die nicht in eine öffentliche Beobachtung gehören. Berechtigungen eines Systems gelten nicht automatisch in einem anderen, und ein einmaliger Zugriff erlaubt keine unbegrenzte Speicherung. Jede private Messung bleibt an ihren erklärten Rahmen gebunden; externe Beobachtungen dokumentieren ihre eigenen Grenzen und Bedingungen. Eine getrennte Prüfung schützt diese Bedeutung. Ein solcher Vergleich kann Fragen für die nächste Analyse aufwerfen, liefert aber allein keine Erklärung. Dafür müssen Instrumente, Zeiträume und Definitionen gesondert geprüft und ihre Grenzen offen benannt werden.",
+      "cta": {
+        "label": "Grenzen der Beobachtung verstehen",
+        "href": "/knowledge"
+      },
+      "related": [
+        "knowledge-digital-representation-vs-business-reality",
+        "evidence-provenance",
+        "knowledge-observation-focus-vs-world-crawl"
+      ]
+    },
+    "it": {
+      "slug": "le-analytics-private-non-sostituiscono-losservazione-pubblica",
+      "title": "Le analytics private non sostituiscono l’osservazione pubblica",
+      "description": "I dati interni misurano l’attività propria; AXIGNAL osserva separatamente ciò che mostrano le fonti pubbliche.",
+      "lead": "Un’azienda può conoscere visite, conversioni e clienti attraverso i propri strumenti. Questi dati offrono una prospettiva preziosa sulla sua attività, ma non descrivono automaticamente come fonti esterne la rappresentano o la scoprono. AXIGNAL separa le prospettive affinché una misura privata non venga presentata come fatto pubblico osservato in modo indipendente.",
+      "answer": "AXIGNAL distingue le analytics proprietarie di prima parte dall’osservazione pubblica indipendente. I dati privati richiedono autorizzazione, isolamento e uno scopo esplicito; non entrano nella rappresentazione pubblica canonica né diventano prove disponibili a tutti.",
+      "sections": [
+        {
+          "heading": "Capire a quale domanda risponde ogni insieme di dati",
+          "body": "Le metriche interne possono mostrare visite, moduli inviati o vendite registrate secondo strumenti e definizioni dell’azienda. Un’osservazione pubblica può mostrare quali risultati appaiono per una query o cosa presenta una determinata superficie esterna. Sono fenomeni diversi; confrontarli richiede un ambito esplicito invece di scambiare le conclusioni."
+        },
+        {
+          "heading": "Proteggere il confine della privacy",
+          "body": "Analytics web, dati CRM e conversioni possono contenere informazioni sensibili o regolate da contratti su persone e clienti. Non diventano conoscenza pubblica AXIGLAND soltanto perché descrivono un’organizzazione. Una futura integrazione autorizzata dovrebbe definire accesso, consenso, conservazione e finalità, mantenendo i dati confinati al tenant."
+        },
+        {
+          "heading": "Non usare una metrica privata per convalidare un’affermazione esterna",
+          "body": "Più visite non dimostrano che una capacità sia diventata più visibile nella ricerca, e una conversione non stabilisce una relazione osservata pubblicamente da AXIGNAL. Allo stesso modo, una presenza pubblica limitata non contraddice i clienti ricorrenti nei sistemi privati aziendali. Collegare le prospettive è una questione analitica, non un’equivalenza automatica."
+        },
+        {
+          "heading": "Progettare separatamente misure confrontabili",
+          "body": "Le metriche proprietarie dipendono da configurazione, cookie, definizioni e cambiamenti della strumentazione. Le osservazioni esterne dipendono da query, superficie, lingua, luogo, tempo e campione. I confronti prima e dopo richiedono coerenza interna a ogni strumento e confini espliciti. Unire i dati senza controllare le condizioni può creare una falsa spiegazione di un cambiamento apparente o reale."
+        },
+        {
+          "heading": "Ulteriori criteri",
+          "body": "Ogni confronto dovrebbe indicare strumenti e condizioni, perché le misure non riguardano la stessa popolazione né lo stesso comportamento. Un pannello interno può contare visitatori noti secondo la configurazione dell’azienda, mentre un’osservazione esterna descrive una superficie e un campione definiti. Il solo periodo non rende i valori confrontabili. Se cambiano le definizioni, la modifica va annotata affinché chi legge non la attribuisca a una trasformazione reale della rappresentazione. Le due serie possono contribuire all’analisi senza essere fuse in un’unica affermazione."
+        }
+      ],
+      "example": "Esempio ipotetico: in un trimestre il team commerciale vede più moduli inviati mentre AXIGNAL osserva meno menzioni del marchio su una superficie generativa. Entrambe le misure possono coesistere. Nessuna spiega da sola l’altra e i dati privati dei moduli non sono esposti nella vista pubblica di AXIGNAL.",
+      "limits": "AXIGNAL non accede ad account di analytics privati e non promette integrazioni CRM, pubblicitarie o di conversione. L’uso di dati di prima parte richiede autorizzazione esplicita, controlli e finalità e resta separato dalla verità pubblica canonica. Un’osservazione della rappresentazione non misura risultati aziendali privati. Anche quando un’organizzazione autorizza una misura interna, ambito e conservazione restano diversi dalle prove pubbliche. Il permesso di ispezionare metriche interne non le trasforma in fatti osservati indipendentemente su come il pubblico esterno scopre o menziona l’organizzazione. Una decisione resta legata al suo contesto e al momento in cui è stata presa. Se cambiano le fonti, una definizione o il periodo osservato, il risultato deve poter essere riesaminato invece di sembrare permanente. La presentazione mantiene visibili condizioni ed elementi mancanti che ne limitano la portata. Così una persona può capire cosa sostiene una conclusione e quale osservazione aggiuntiva servirebbe. Questa disciplina evita inoltre di riutilizzare altrove un dato utile in un caso senza verificarne la pertinenza. La separazione tutela anche le aspettative delle persone coinvolte. I dati interni possono includere comportamenti dettagliati o informazioni contrattuali inadatte a un’osservazione pubblica. I permessi di un sistema non si trasferiscono automaticamente a un altro e un accesso occasionale non autorizza una conservazione senza limiti. Ogni misura privata resta nel proprio ambito dichiarato, mentre l’osservazione esterna documenta condizioni e limiti specifici.",
+      "cta": {
+        "label": "Comprendi i confini dell’osservazione",
+        "href": "/knowledge"
+      },
+      "related": [
+        "knowledge-digital-representation-vs-business-reality",
+        "evidence-provenance",
+        "knowledge-observation-focus-vs-world-crawl"
+      ]
+    },
+    "pt": {
+      "slug": "analytics-privadas-nao-substituem-observacao-publica",
+      "title": "A analytics privada não substitui a observação pública",
+      "description": "Os dados internos medem a atividade própria; a AXIGNAL observa separadamente o que mostram as fontes públicas.",
+      "lead": "Uma empresa pode conhecer visitas, conversões e clientes através das suas ferramentas internas. Esses dados dão uma perspetiva valiosa sobre a própria atividade, mas não descrevem automaticamente como fontes externas a representam ou descobrem. A AXIGNAL separa essas perspetivas para que uma medida privada não seja apresentada como facto público observado de forma independente.",
+      "answer": "A AXIGNAL separa analytics próprias de primeira parte da observação pública independente. Os dados privados exigem autorização, isolamento e finalidade explícita; não são acrescentados à representação pública canónica nem tratados como evidência disponível para todos.",
+      "sections": [
+        {
+          "heading": "Identificar que pergunta cada conjunto de dados responde",
+          "body": "As métricas internas podem mostrar visitas, formulários enviados ou vendas registadas segundo instrumentos e definições da empresa. Uma observação pública pode mostrar resultados de uma consulta ou o que uma superfície externa identificada apresenta. Estas perspetivas descrevem fenómenos diferentes; compará-las exige âmbito explícito, em vez de trocar as conclusões."
+        },
+        {
+          "heading": "Proteger a fronteira de privacidade",
+          "body": "Analytics web, registos de CRM e conversões podem conter informação sensível ou sujeita a contrato sobre pessoas e clientes. Não se tornam conhecimento público de AXIGLAND apenas por descreverem uma organização. Uma futura integração autorizada teria de definir acesso, consentimento, retenção e finalidade e manter os dados limitados ao tenant."
+        },
+        {
+          "heading": "Não deixar uma métrica privada validar uma afirmação externa",
+          "body": "Mais visitas não provam que uma capacidade se tenha tornado mais visível na pesquisa, e uma conversão não estabelece uma relação observada publicamente pela AXIGNAL. Da mesma forma, pouca presença pública não contradiz clientes recorrentes conhecidos nos sistemas privados da empresa. Ligar as perspetivas é uma questão analítica, não uma equivalência automática."
+        },
+        {
+          "heading": "Desenhar medidas comparáveis em separado",
+          "body": "As métricas próprias dependem da configuração, cookies, definições e alterações de instrumentação. As observações externas dependem da consulta, superfície, idioma, local, momento e amostra. Uma comparação antes e depois exige consistência dentro de cada instrumento e limites explícitos. Combinar dados sem controlar condições pode criar uma explicação falsa para uma mudança aparente ou real."
+        },
+        {
+          "heading": "Critérios adicionais",
+          "body": "Cada comparação deve identificar instrumentos e condições, porque as medidas não representam a mesma população nem o mesmo comportamento. Um painel interno pode contar visitantes conhecidos segundo uma configuração própria da empresa, enquanto uma observação externa descreve uma superfície e amostra definidas. O período, por si só, não torna os valores comparáveis. Se as definições mudarem, essa alteração deve ser assinalada para não ser atribuída a uma transformação real da representação. As duas séries podem apoiar uma análise sem serem fundidas numa afirmação única."
+        }
+      ],
+      "example": "Exemplo hipotético: num trimestre, a equipa comercial vê mais formulários submetidos enquanto a AXIGNAL observa menos menções à marca numa superfície generativa. As duas medidas podem coexistir. Nenhuma explica a outra por si só, e os dados privados dos formulários não são expostos na vista pública da AXIGNAL.",
+      "limits": "A AXIGNAL não acede a contas de analytics privadas e não promete integrações de CRM, publicidade ou conversão. A utilização de dados de primeira parte exige autorização explícita, controlos e finalidade, mantendo-se separada da verdade pública canónica. Uma observação de representação não mede resultados comerciais privados. Mesmo quando uma organização autoriza uma medição interna, o âmbito e a retenção diferem das evidências públicas. Permissão para consultar métricas internas não as transforma em factos observados de forma independente sobre como públicos externos descobrem ou mencionam a organização. Uma decisão continua ligada ao seu contexto e ao momento em que foi tomada. Se as fontes, uma definição ou o período observado mudarem, o resultado deve poder ser revisto em vez de parecer permanente. A apresentação mantém visíveis as condições e os elementos em falta que limitam o seu alcance. Assim, uma pessoa compreende o que sustenta uma conclusão e que observação adicional poderá ser necessária. Esta disciplina também evita reutilizar noutro caso um dado útil sem verificar a sua relevância. A separação também protege as expectativas das pessoas envolvidas. Os dados internos podem incluir comportamentos detalhados ou informações contratuais que não pertencem a uma observação pública. As permissões de um sistema não passam automaticamente para outro e um acesso pontual não autoriza retenção ilimitada. Cada medição privada permanece no âmbito anunciado, enquanto a observação externa documenta as suas próprias condições e limitações.",
+      "cta": {
+        "label": "Compreender os limites da observação",
+        "href": "/knowledge"
+      },
+      "related": [
+        "knowledge-digital-representation-vs-business-reality",
+        "evidence-provenance",
+        "knowledge-observation-focus-vs-world-crawl"
+      ]
+    }
+  }
+]

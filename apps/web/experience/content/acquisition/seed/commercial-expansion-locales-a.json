@@ -1,0 +1,1472 @@
+[
+  {
+    "id": "commercial_competitor_context",
+    "fr": {
+      "slug": "contexte-concurrentiel-fonde-sur-des-preuves-publiques",
+      "title": "Contexte concurrentiel fondé sur des preuves publiques",
+      "description": "Situez les organisations dans leur environnement économique observable sans classement ni supposition sur leur stratégie privée.",
+      "lead": "Comprendre un paysage concurrentiel demande davantage qu’une liste de noms. Il faut séparer les capacités étayées, l’activité publiée, les relations possibles et les zones encore dépourvues de preuves.",
+      "answer": "AXIGNAL peut relier des observations publiques sur des organisations et des marchés pour éclairer une question concurrentielle. Cette mise en contexte ne révèle pas les plans internes et ne confirme pas une relation commerciale sur la seule ressemblance de capacités.",
+      "sections": [
+        {
+          "heading": "Définir le périmètre par une question",
+          "body": "Une équipe peut chercher des produits de substitution, des capacités voisines, de nouveaux entrants ou des dépendances de fournisseurs. Ces questions ne désignent pas le même ensemble d’organisations. Une liste générique de concurrents risque d’omettre des acteurs pertinents ou d’inclure des entreprises qui n’interviennent pas dans le même contexte. Le Focus organise l’observation; il ne constitue pas une taxonomie complète du marché."
+        },
+        {
+          "heading": "Comparer des dimensions avec leurs propres sources",
+          "body": "Une activité publiée, une capacité déclarée, un marché desservi et une relation observée sont des dimensions distinctes. Chaque affirmation devrait renvoyer à la preuve qui la soutient et conserver son sujet et sa période. Deux fabricants proposant des équipements proches n’ont pas nécessairement la même échelle, les mêmes clients, les mêmes prix ou l’intention de répondre au même besoin."
+        },
+        {
+          "heading": "Ne pas lire une stratégie dans un signal isolé",
+          "body": "Une annonce de recrutement, une nouvelle page produit ou une présence à un salon peut mériter de l’attention, sans dévoiler la stratégie de l’organisation. Plusieurs explications restent possibles jusqu’à ce que des éléments appropriés les départagent. L’analyse peut donc formuler une question à vérifier, mais ne devrait pas attribuer une motivation privée à partir d’une trace publique unique."
+        },
+        {
+          "heading": "Garder la comparaison révisable",
+          "body": "Les sources et leur actualité évoluent. Une comparaison ne doit pas devenir une fiche permanente qui ferait oublier la date et les conditions de l’observation. Une vue temporelle aide à préciser ce qui était visible pendant chaque période et ce qui a changé dans la couverture. Des méthodes ou des langues différentes limitent la comparaison; cette discontinuité doit rester lisible au moment de décider."
+        }
+      ],
+      "example": "Exemple hypothétique : une entreprise examine trois fournisseurs de composants destinés au même secteur. Elle compare leurs capacités publiquement décrites et leur activité par marché, tout en laissant au statut potentiel les relations déduites. Le tableau ne représente ni une part de marché ni la preuve que ces sociétés se disputent les mêmes contrats.",
+      "limits": "AXIGNAL ne fournit pas de classement universel, de part de marché exhaustive ni d’accès aux stratégies privées. La couverture dépend de la question, du Focus et des sources admises. Des capacités semblables ou une activité concomitante ne prouvent ni rivalité, ni substitution, ni avantage, ni intention commerciale; l’inférence reste séparée de l’observation.",
+      "cta": {
+        "label": "Découvrir AXIGNAL",
+        "href": "/knowledge"
+      },
+      "related": [
+        "commercial_supplier_partner_observation",
+        "commercial_strategy_team_research",
+        "commercial_market_activity_relationship"
+      ]
+    },
+    "de": {
+      "slug": "wettbewerbskontext-mit-oeffentlichen-belegen",
+      "title": "Wettbewerbskontext mit öffentlichen Belegen verstehen",
+      "description": "Ordnen Sie Organisationen in ihren beobachtbaren wirtschaftlichen Kontext ein, ohne Rangliste oder Behauptung über private Strategien.",
+      "lead": "Ein Wettbewerbsumfeld zu verstehen bedeutet mehr, als Namen zu sammeln. Belastbar beschriebene Fähigkeiten, veröffentlichte Aktivitäten, mögliche Beziehungen und offene Beleglücken müssen getrennt betrachtet werden.",
+      "answer": "AXIGNAL kann öffentliche Beobachtungen zu Organisationen und Märkten verbinden, um Wettbewerbsfragen einzuordnen. Interne Pläne werden dadurch nicht sichtbar, und eine ähnliche Fähigkeit bestätigt für sich allein keine Geschäftsbeziehung.",
+      "sections": [
+        {
+          "heading": "Den Rahmen mit einer konkreten Frage setzen",
+          "body": "Ein Team kann nach Ersatzangeboten, angrenzenden Fähigkeiten, neuen Marktteilnehmern oder Abhängigkeiten von Lieferanten fragen. Jede Frage ergibt eine andere Gruppe. Eine allgemeine Wettbewerberliste kann wichtige Akteure auslassen und zugleich Unternehmen aufnehmen, die in diesem Zusammenhang gar nicht konkurrieren. Der Beobachtungsfokus strukturiert die Recherche, bildet aber keine vollständige Taxonomie des Marktes."
+        },
+        {
+          "heading": "Jede Vergleichsdimension an ihren Beleg binden",
+          "body": "Veröffentlichte Aktivität, erklärte Fähigkeit, bedienter Markt und beobachtete Beziehung sind verschiedene Dimensionen. Jede Aussage sollte auf ihre Quelle, ihr Subjekt und ihren Zeitraum zurückführbar bleiben. Zwei Hersteller mit ähnlichen Produkten haben nicht automatisch dieselbe Größenordnung, Kundschaft, Preisgestaltung oder Absicht, denselben Auftrag anzustreben."
+        },
+        {
+          "heading": "Aus einem sichtbaren Signal keine Strategie ableiten",
+          "body": "Eine Stellenausschreibung, eine neue Produktseite oder ein Messeauftritt kann relevant sein, verrät aber nicht allein die Strategie einer Organisation. Solange passende Belege fehlen, bleiben mehrere Erklärungen möglich. Eine Analyse kann deshalb eine prüfbare Frage benennen, sollte aus einer einzelnen öffentlichen Spur jedoch keine private Motivation zuschreiben."
+        },
+        {
+          "heading": "Den Vergleich für eine Neubewertung offenhalten",
+          "body": "Quellen und ihre Aktualität können sich ändern. Eine Wettbewerbsübersicht sollte nicht zu einem dauerhaften Profil werden, das Datum und Beobachtungsbedingungen vergessen lässt. Eine zeitliche Sicht hält fest, was in welchem Zeitraum sichtbar war und wie sich die Abdeckung verändert hat. Weichen Methoden oder Sprachen voneinander ab, begrenzt das die Vergleichbarkeit und muss für die Entscheidung erkennbar bleiben."
+        }
+      ],
+      "example": "Hypothetisches Beispiel: Ein Unternehmen betrachtet drei Anbieter von Komponenten für dieselbe Branche. Es vergleicht öffentlich beschriebene Fähigkeiten und Aktivitäten je Markt und lässt abgeleitete Beziehungen auf POTENTIAL. Die Übersicht ist weder ein Marktanteilsnachweis noch ein Beleg dafür, dass die Anbieter um dieselben Aufträge konkurrieren.",
+      "limits": "AXIGNAL bietet weder ein allgemeines Ranking noch vollständige Marktanteile oder Einblick in private Strategien. Die Abdeckung hängt von Frage, Beobachtungsfokus und zugelassenen Quellen ab. Ähnliche Fähigkeiten oder gleichzeitige Aktivitäten beweisen keine Konkurrenz, Ersetzbarkeit, Überlegenheit oder Absicht; Schlussfolgerungen bleiben von Beobachtungen unterscheidbar. Ein Vergleich sollte deshalb sichtbar machen, welche Aspekte tatsächlich untersucht wurden und welche außerhalb des gewählten Rahmens liegen. Wer eine geschäftliche Entscheidung vorbereitet, verbindet diesen öffentlichen Kontext mit eigenen, zuständigen Prüfungen und lässt fehlende Angaben offen, statt sie aus Branchenmustern zu ergänzen.",
+      "cta": {
+        "label": "AXIGNAL kennenlernen",
+        "href": "/knowledge"
+      },
+      "related": [
+        "commercial_supplier_partner_observation",
+        "commercial_strategy_team_research",
+        "commercial_market_activity_relationship"
+      ]
+    },
+    "it": {
+      "slug": "contesto-competitivo-da-evidenze-pubbliche",
+      "title": "Contesto competitivo basato su evidenze pubbliche",
+      "description": "Inquadra le organizzazioni nel contesto economico osservabile senza classifiche né ipotesi sulle strategie riservate.",
+      "lead": "Capire un panorama competitivo richiede più di una raccolta di nomi. Occorre distinguere capacità documentate, attività pubblicate, relazioni possibili e aspetti per cui ancora mancano evidenze.",
+      "answer": "AXIGNAL può collegare osservazioni pubbliche su organizzazioni e mercati per dare contesto alle domande competitive. Non rivela piani interni e la somiglianza tra capacità non basta a confermare un rapporto commerciale.",
+      "sections": [
+        {
+          "heading": "Definire l’insieme a partire dalla domanda",
+          "body": "Un team può voler capire quali offerte siano sostitutive, quali competenze siano adiacenti, quali operatori stiano entrando o da quali fornitori dipenda un’attività. Ogni domanda delimita un insieme diverso. Una lista generica di concorrenti può ignorare soggetti pertinenti o includere aziende che non competono nello stesso contesto. Il Foco organizza l’indagine, ma non diventa una tassonomia oggettiva dell’intero mercato."
+        },
+        {
+          "heading": "Confrontare dimensioni con prove autonome",
+          "body": "Attività pubblicata, capacità dichiarata, mercati serviti e relazioni osservate sono dimensioni differenti. Ogni affermazione deve restare collegata alla fonte, all’organizzazione e al periodo pertinenti. Due produttori con offerte simili non hanno necessariamente la stessa scala, gli stessi clienti o prezzi, né l’intenzione di partecipare alla medesima gara commerciale."
+        },
+        {
+          "heading": "Non trasformare un segnale in una strategia",
+          "body": "Una posizione aperta, una nuova pagina di prodotto o la presenza a una fiera possono meritare approfondimento, ma non rivelano da sole la strategia dell’organizzazione. Finché non esistono riscontri adatti, restano possibili spiegazioni diverse. L’analisi può indicare cosa verificare senza attribuire motivazioni private sulla base di una singola traccia pubblica."
+        },
+        {
+          "heading": "Conservare una lettura aggiornabile",
+          "body": "Le fonti e la loro attualità cambiano. Un confronto competitivo non dovrebbe diventare una scheda permanente che nasconde quando e in quali condizioni si è osservato qualcosa. La prospettiva temporale aiuta a indicare cosa risultava visibile in ciascun periodo e come variava la copertura. Metodi o lingue differenti limitano il confronto: anche questa discontinuità va resa evidente a chi decide."
+        }
+      ],
+      "example": "Esempio ipotetico: un’impresa esamina tre fornitori di componenti per lo stesso settore. Confronta capacità descritte pubblicamente e attività nei diversi mercati, lasciando potenziali i rapporti dedotti. La tabella non rappresenta quote di mercato e non dimostra che i tre siano rivali diretti.",
+      "limits": "AXIGNAL non fornisce una classifica universale, quote di mercato complete o accesso a strategie private. La copertura dipende dalla domanda, dal Foco e dalle fonti ammesse. Capacità simili o attività concomitanti non provano rivalità, sostituzione, vantaggio o intenzione; le inferenze devono restare distinte dalle osservazioni.",
+      "cta": {
+        "label": "Scopri AXIGNAL",
+        "href": "/knowledge"
+      },
+      "related": [
+        "commercial_supplier_partner_observation",
+        "commercial_strategy_team_research",
+        "commercial_market_activity_relationship"
+      ]
+    },
+    "pt": {
+      "slug": "contexto-concorrencial-com-evidencias-publicas",
+      "title": "Contexto concorrencial com base em evidências públicas",
+      "description": "Situe organizações no contexto económico observável sem criar classificações nem presumir estratégias privadas.",
+      "lead": "Compreender um ambiente concorrencial exige mais do que reunir nomes. É preciso separar capacidades sustentadas, atividade publicada, relações possíveis e questões para as quais ainda faltam evidências.",
+      "answer": "A AXIGNAL pode relacionar observações públicas sobre organizações e mercados para contextualizar perguntas concorrenciais. Não revela planos internos e a semelhança de capacidades, por si só, não confirma uma relação comercial.",
+      "sections": [
+        {
+          "heading": "Definir o conjunto a partir de uma pergunta",
+          "body": "Uma equipa pode querer compreender ofertas substitutas, capacidades próximas, novos participantes ou dependências de fornecedores. Cada pergunta conduz a um conjunto diferente. Uma lista genérica de concorrentes pode deixar de fora atores relevantes e incluir empresas que não concorrem naquele contexto. O Foco organiza a observação, mas não transforma a seleção numa taxonomia objetiva de todo o mercado."
+        },
+        {
+          "heading": "Comparar dimensões com as respetivas fontes",
+          "body": "Atividade publicada, capacidade declarada, mercado servido e relação observada são dimensões distintas. Cada afirmação deve continuar ligada à sua fonte, organização e período. Dois fabricantes com ofertas semelhantes não têm necessariamente a mesma escala, os mesmos clientes ou preços, nem a intenção de concorrer pelo mesmo contrato."
+        },
+        {
+          "heading": "Não deduzir estratégia de um sinal isolado",
+          "body": "Uma vaga de emprego, uma nova página de produto ou a presença numa feira pode merecer atenção, mas não revela por si só a estratégia da organização. Enquanto faltarem evidências adequadas, continuam possíveis várias explicações. A análise pode indicar o que investigar sem atribuir motivações privadas a partir de uma única pista pública."
+        },
+        {
+          "heading": "Manter a comparação aberta a revisão",
+          "body": "As fontes e a sua atualidade podem mudar. Uma comparação não deve tornar-se um perfil permanente que omita a data e as condições da observação. Uma perspetiva temporal ajuda a dizer o que estava visível em cada período e como variou a cobertura. Diferenças de método ou idioma limitam a comparação e devem permanecer claras para quem vai decidir."
+        }
+      ],
+      "example": "Exemplo hipotético: uma empresa analisa três fornecedores de componentes para o mesmo setor. Compara capacidades descritas publicamente e atividade por mercado, mantendo potenciais as relações inferidas. A tabela não representa quota de mercado nem prova que as empresas sejam concorrentes diretas.",
+      "limits": "A AXIGNAL não fornece uma classificação universal, quota de mercado completa ou acesso a estratégias privadas. A cobertura depende da pergunta, do Foco e das fontes admitidas. Capacidades semelhantes ou atividade simultânea não provam rivalidade, substituição, vantagem ou intenção; a inferência deve continuar separada da observação.",
+      "cta": {
+        "label": "Conhecer a AXIGNAL",
+        "href": "/knowledge"
+      },
+      "related": [
+        "commercial_supplier_partner_observation",
+        "commercial_strategy_team_research",
+        "commercial_market_activity_relationship"
+      ]
+    }
+  },
+  {
+    "id": "commercial_supplier_partner_observation",
+    "fr": {
+      "slug": "observer-les-preuves-sur-fournisseurs-et-partenaires",
+      "title": "Observer les preuves sur les fournisseurs et partenaires",
+      "description": "Examinez les relations fournisseurs étayées et celles qui restent des possibilités à vérifier dans leur contexte.",
+      "lead": "Les chaînes d’approvisionnement sont souvent décrites de façon partielle. Une entreprise peut citer des fournisseurs ou des coopérations, mais chaque affirmation doit être reliée à une source appropriée et à une période identifiable.",
+      "answer": "AXIGNAL peut contextualiser des relations économiques visibles dans des sources publiques. Une relation n’est observée que si des éléments adéquats l’étayent; la compatibilité entre capacités laisse le lien commercial potentiel ou inconnu.",
+      "sections": [
+        {
+          "heading": "Distinguer le fournisseur déclaré du fournisseur supposé",
+          "body": "Un rapport d’entreprise qui nomme un fournisseur permet de dire que l’organisation a déclaré cette relation dans un contexte précis. Une gamme de produits voisine ou une proximité sectorielle peut suggérer une compatibilité, sans confirmer un achat. La formulation doit préciser qui a publié l’information, la période concernée et la part qui bénéficie d’un appui indépendant."
+        },
+        {
+          "heading": "Situer la relation dans l’activité concernée",
+          "body": "Une relation se comprend mieux lorsque le produit, le service, le lieu ou le projet associé est identifié. Un fournisseur peut intervenir auprès d’une seule division sans approvisionner toute l’organisation. De même, l’annonce d’un partenariat ne renseigne pas automatiquement sur sa portée actuelle, son exclusivité, son volume ou sa continuité. Des sujets et des verbes précis évitent les généralisations."
+        },
+        {
+          "heading": "Poser la question des dépendances sans inventer une fragilité",
+          "body": "Plusieurs sources publiques qui mentionnent le même acteur peuvent soulever une question de dépendance, mais ne la démontrent pas. Il faudrait connaître la portée de la relation, son contexte, les solutions alternatives et les périodes pertinentes. Si ces éléments manquent, la dépendance doit rester inconnue et appeler une vérification adaptée plutôt qu’une conclusion alarmiste."
+        },
+        {
+          "heading": "Réévaluer à partir de preuves dont l’usage est permis",
+          "body": "Les contrats, pages web et annonces peuvent évoluer ou devenir inaccessibles. Un historique indique quand une affirmation a été vue et sur quelles preuves elle reposait alors; il ne garantit pas que la relation continue. Les droits et conditions des sources limitent leur conservation et leur réutilisation. Si plusieurs publications reprennent une même annonce initiale, leur répétition ne constitue pas nécessairement une corroboration indépendante."
+        }
+      ],
+      "example": "Exemple hypothétique : un rapport annuel cite une société logistique comme fournisseur d’une division pendant un exercice. AXIGNAL pourrait conserver cette déclaration attribuée et la période indiquée. Il ne faudrait pas l’étendre aux autres divisions ni affirmer que le fournisseur travaille encore avec l’entreprise plusieurs années après.",
+      "limits": "AXIGNAL n’est pas un registre exhaustif des fournisseurs et ne vérifie pas les contrats privés. La couverture dépend des sources publiques admises et de la question posée. Une compatibilité, une proximité ou une déclaration ancienne ne prouve ni contrat actuel, ni dépendance importante, ni qualité de service, ni intention future.",
+      "cta": {
+        "label": "Découvrir AXIGNAL",
+        "href": "/knowledge"
+      },
+      "related": [
+        "commercial_competitor_context",
+        "commercial_partner_ecosystem",
+        "commercial_market_activity_relationship"
+      ]
+    },
+    "de": {
+      "slug": "belege-zu-lieferanten-und-partnern-beobachten",
+      "title": "Belege zu Lieferanten und Partnern beobachten",
+      "description": "Prüfen Sie, welche Lieferantenbeziehungen belegt sind und welche Möglichkeiten im jeweiligen Kontext offenbleiben.",
+      "lead": "Lieferketten werden häufig nur teilweise beschrieben. Ein Unternehmen kann Lieferanten, Fähigkeiten oder Kooperationen nennen; jede Aussage braucht jedoch eine geeignete Quelle und einen erkennbaren Zeitraum.",
+      "answer": "AXIGNAL kann öffentlich beobachtbare wirtschaftliche Beziehungen einordnen. Als beobachtet gilt eine Beziehung nur bei geeigneten Belegen. Ähnliche Fähigkeiten lassen eine Geschäftsverbindung dagegen POTENTIAL oder UNKNOWN.",
+      "sections": [
+        {
+          "heading": "Genannte und abgeleitete Lieferanten unterscheiden",
+          "body": "Nennt ein Unternehmensbericht einen Lieferanten, belegt das zunächst, dass das Unternehmen diese Beziehung in diesem Zusammenhang angegeben hat. Eine ähnliche Produktbeschreibung oder Branchenzugehörigkeit kann auf Kompatibilität hindeuten, bestätigt aber keinen Einkauf. Die Aussage sollte offenlegen, wer sie veröffentlichte, welchen Zeitraum sie beschreibt und welche Teile unabhängig gestützt sind."
+        },
+        {
+          "heading": "Die Beziehung der konkreten Tätigkeit zuordnen",
+          "body": "Eine Verbindung lässt sich besser verstehen, wenn Produkt, Leistung, Ort oder Projekt bekannt sind. Ein Lieferant kann eine einzelne Produktlinie bedienen, ohne die gesamte Organisation zu versorgen. Auch eine angekündigte Partnerschaft belegt nicht automatisch ihren heutigen Umfang, Exklusivität, Umsatz oder Fortbestand. Präzise Akteure und Verben begrenzen solche Verallgemeinerungen."
+        },
+        {
+          "heading": "Nach Abhängigkeiten fragen, ohne Verwundbarkeit zu erfinden",
+          "body": "Wenn öffentliche Quellen wiederholt denselben Akteur nennen, kann das eine Abhängigkeitsfrage aufwerfen, beweist aber keine Abhängigkeit. Dafür wären Belege zu Umfang und Kontext sowie passende Alternativen und Zeiträume erforderlich. Fehlen diese Angaben, bleibt die Abhängigkeit UNKNOWN und sollte eine geeignete Prüfung auslösen, statt als Risiko behauptet zu werden."
+        },
+        {
+          "heading": "Mit zulässig nutzbaren Belegen neu bewerten",
+          "body": "Verträge, Webseiten und Mitteilungen können sich ändern oder verschwinden. Ein zeitlicher Eintrag hält fest, wann eine Aussage sichtbar war und worauf sie damals beruhte; die Beziehung wird dadurch nicht als fortbestehend bestätigt. Nutzungsrechte begrenzen Aufbewahrung und Wiederverwendung. Wenn mehrere Artikel dieselbe ursprüngliche Mitteilung übernehmen, sind das nicht automatisch unabhängige Bestätigungen."
+        }
+      ],
+      "example": "Hypothetisches Beispiel: Ein Geschäftsbericht nennt ein Logistikunternehmen für ein Geschäftsjahr als Lieferanten einer Sparte. AXIGNAL könnte diese zugeschriebene Erklärung samt Zeitraum festhalten. Sie sollte weder auf andere Sparten übertragen noch Jahre später als aktuelle Geschäftsbeziehung ausgegeben werden.",
+      "limits": "AXIGNAL führt kein vollständiges Lieferantenregister und prüft keine privaten Verträge. Die Abdeckung richtet sich nach zugelassenen öffentlichen Quellen und der Fragestellung. Kompatibilität, Nähe oder eine frühere Nennung beweisen weder einen aktuellen Vertrag noch wesentliche Abhängigkeit, Servicequalität oder künftige Absicht. Bei der weiteren Prüfung helfen Angaben dazu, welche Produktlinie oder Niederlassung die Erklärung betrifft und ob eine spätere Quelle sie bestätigt oder einschränkt. Eine solche Präzisierung schützt vor der Annahme, ein einzelner Lieferant versorge dauerhaft das ganze Unternehmen. Unbekannte Vertragsbedingungen bleiben ausdrücklich offen.",
+      "cta": {
+        "label": "AXIGNAL kennenlernen",
+        "href": "/knowledge"
+      },
+      "related": [
+        "commercial_competitor_context",
+        "commercial_partner_ecosystem",
+        "commercial_market_activity_relationship"
+      ]
+    },
+    "it": {
+      "slug": "osservare-prove-su-fornitori-e-partner",
+      "title": "Osservare le evidenze su fornitori e partner",
+      "description": "Esamina quali rapporti con fornitori sono documentati e quali restano possibilità da verificare nel contesto.",
+      "lead": "Le catene di fornitura sono spesso descritte in modo incompleto. Un’impresa può dichiarare fornitori, capacità o collaborazioni, ma ogni affermazione richiede una fonte adeguata e un periodo riconoscibile.",
+      "answer": "AXIGNAL può contestualizzare relazioni economiche osservabili pubblicamente. Un rapporto è osservato soltanto se sostenuto da evidenze adeguate; la compatibilità tra capacità lascia il legame commerciale potenziale o sconosciuto.",
+      "sections": [
+        {
+          "heading": "Separare il fornitore dichiarato da quello dedotto",
+          "body": "Un rapporto aziendale che nomina un fornitore sostiene che l’impresa abbia dichiarato quel rapporto in un contesto specifico. Prodotti simili o la vicinanza settoriale possono suggerire compatibilità, ma non confermano un acquisto. La formulazione dovrebbe indicare chi ha pubblicato l’affermazione, quale periodo riguarda e quali elementi hanno un riscontro indipendente."
+        },
+        {
+          "heading": "Collocare la relazione nell’attività pertinente",
+          "body": "Un rapporto si interpreta meglio sapendo a quale prodotto, servizio, sede o progetto si riferisce. Un fornitore potrebbe servire una sola divisione senza rifornire l’intera organizzazione. Anche una partnership annunciata non chiarisce automaticamente portata attuale, esclusività, volumi o continuità. Soggetti e verbi precisi aiutano a non estendere la dichiarazione oltre il suo ambito."
+        },
+        {
+          "heading": "Indagare le dipendenze senza inventare fragilità",
+          "body": "Fonti pubbliche che indicano più volte lo stesso attore possono far emergere una domanda sulla dipendenza, ma non la dimostrano. Servirebbero elementi su portata e contesto, oltre ad alternative e periodi rilevanti. Se queste informazioni mancano, la dipendenza resta sconosciuta e richiede una verifica mirata, non una conclusione allarmistica."
+        },
+        {
+          "heading": "Rivalutare con prove utilizzabili",
+          "body": "Contratti, pagine web e annunci possono cambiare o non essere più disponibili. Una registrazione temporale chiarisce quando è stata vista un’affermazione e su quali evidenze si basava allora; non garantisce che il rapporto prosegua. Diritti e condizioni delle fonti limitano conservazione e riuso. Più articoli che ripetono il medesimo comunicato iniziale non sono necessariamente conferme indipendenti."
+        }
+      ],
+      "example": "Esempio ipotetico: una relazione annuale indica un’azienda logistica come fornitore di una divisione durante un esercizio. AXIGNAL potrebbe conservare la dichiarazione attribuita e il periodo. Non dovrebbe estenderla alle altre divisioni né affermare, anni dopo, che la collaborazione è ancora attiva.",
+      "limits": "AXIGNAL non è un registro completo dei fornitori e non verifica contratti privati. La copertura dipende dalle fonti pubbliche ammesse e dalla domanda. Compatibilità, vicinanza o una dichiarazione passata non dimostrano un contratto attuale, una dipendenza sostanziale, la qualità del servizio o un’intenzione futura. Per la verifica successiva è utile chiarire quale linea di prodotto o sede sia coinvolta e se fonti posteriori confermino o limitino la dichiarazione. Questa precisione evita di presumere che un solo fornitore serva in modo continuativo tutta l’impresa. Le condizioni contrattuali non disponibili restano esplicitamente sconosciute.",
+      "cta": {
+        "label": "Scopri AXIGNAL",
+        "href": "/knowledge"
+      },
+      "related": [
+        "commercial_competitor_context",
+        "commercial_partner_ecosystem",
+        "commercial_market_activity_relationship"
+      ]
+    },
+    "pt": {
+      "slug": "observar-evidencias-sobre-fornecedores-e-parceiros",
+      "title": "Observar evidências sobre fornecedores e parceiros",
+      "description": "Analise quais relações com fornecedores estão sustentadas e quais continuam a ser possibilidades por verificar.",
+      "lead": "As cadeias de fornecimento são muitas vezes descritas de forma incompleta. Uma empresa pode declarar fornecedores, capacidades ou colaborações, mas cada afirmação precisa de uma fonte adequada e de um período identificável.",
+      "answer": "A AXIGNAL pode contextualizar relações económicas observáveis publicamente. Uma relação só é descrita como observada quando há evidência adequada; a compatibilidade entre capacidades mantém a ligação comercial como potencial ou desconhecida.",
+      "sections": [
+        {
+          "heading": "Distinguir o fornecedor declarado do inferido",
+          "body": "Um relatório empresarial que nomeia um fornecedor sustenta que a organização declarou essa relação naquele contexto. Produtos semelhantes ou proximidade setorial podem sugerir compatibilidade, mas não confirmam uma compra. A descrição deve indicar quem publicou a afirmação, que período abrange e que parte conta com apoio independente."
+        },
+        {
+          "heading": "Situar a relação na atividade a que diz respeito",
+          "body": "É mais fácil interpretar uma relação quando se conhece o produto, serviço, local ou projeto associado. Um fornecedor pode servir uma divisão sem abastecer toda a organização. Do mesmo modo, anunciar uma parceria não revela automaticamente o seu âmbito atual, exclusividade, volume ou continuidade. Identificar sujeitos e ações com precisão evita generalizações."
+        },
+        {
+          "heading": "Investigar dependências sem inventar fragilidade",
+          "body": "Fontes públicas que apontam repetidamente para o mesmo interveniente podem levantar uma questão de dependência, mas não a demonstram. Para sustentar a interpretação seriam necessários elementos sobre âmbito e contexto, além de alternativas e períodos relevantes. Se faltarem, a dependência permanece desconhecida e deve motivar uma verificação adequada, não uma conclusão de risco."
+        },
+        {
+          "heading": "Reavaliar com evidências de uso permitido",
+          "body": "Contratos, páginas e comunicados podem mudar ou deixar de estar acessíveis. Um registo temporal mostra quando uma afirmação foi observada e em que evidências assentava nessa altura; não garante que a relação continua. Direitos e condições das fontes limitam conservação e reutilização. Várias publicações que repetem um comunicado original não constituem necessariamente confirmações independentes."
+        }
+      ],
+      "example": "Exemplo hipotético: um relatório anual identifica uma empresa de logística como fornecedora de uma divisão durante um exercício. A AXIGNAL poderia conservar a declaração atribuída e o período. Não deve estendê-la a outras divisões nem afirmar anos depois que o fornecedor continua ativo.",
+      "limits": "A AXIGNAL não mantém um registo exaustivo de fornecedores nem verifica contratos privados. A cobertura depende das fontes públicas admitidas e do contexto da pergunta. Compatibilidade, proximidade ou uma declaração antiga não provam contrato atual, dependência material, qualidade de serviço ou intenção futura.",
+      "cta": {
+        "label": "Conhecer a AXIGNAL",
+        "href": "/knowledge"
+      },
+      "related": [
+        "commercial_competitor_context",
+        "commercial_partner_ecosystem",
+        "commercial_market_activity_relationship"
+      ]
+    }
+  },
+  {
+    "id": "commercial_change_history",
+    "fr": {
+      "slug": "historique-des-changements-organisationnels-observes",
+      "title": "Reconstituer un historique de changements observés",
+      "description": "Datez les changements publics sans confondre une nouvelle publication avec un changement confirmé de l’entreprise.",
+      "lead": "Une chronologie d’entreprise peut mêler annonces, événements, corrections et changements de disponibilité des sources. Pour comprendre ce qui s’est passé, chaque élément demande une date, un sujet, une provenance et un état explicite.",
+      "answer": "AXIGNAL peut conserver et relier des observations dans le temps lorsque les sources et les droits le permettent. L’historique décrit ce qui a été observé depuis le début de la couverture; il ne reconstitue pas automatiquement les périodes antérieures.",
+      "sections": [
+        {
+          "heading": "Séparer la date de publication de celle de l’événement",
+          "body": "Une information parue en mars peut raconter une décision de l’année précédente. La date à laquelle une page est consultée indique seulement quand elle a été vue. Pour ordonner les faits, il faut conserver les dates attribuées par la source et les distinguer du moment où AXIGNAL a pu l’observer. Si la date de l’événement n’est pas précisée, mieux vaut ne pas en inventer une par déduction."
+        },
+        {
+          "heading": "Garder les corrections, retraits et contradictions visibles",
+          "body": "Une page peut être modifiée ou supprimée et une publication ultérieure peut corriger la première version. L’historique doit rendre ces évolutions compréhensibles plutôt que choisir silencieusement une version. La disparition d’une page ne prouve ni que l’événement était faux ni que l’activité a cessé. L’état des connaissances peut évoluer sans produire une certitude rétrospective."
+        },
+        {
+          "heading": "Relier chaque point à sa provenance",
+          "body": "Pour évaluer une transition, le lecteur doit retrouver la source et le contexte de chaque point: l’organisation concernée, l’attribut décrit, la période et la preuve. Deux versions d’une page peuvent étayer un changement de communication publique sans démontrer un changement opérationnel. Cette distinction devient essentielle lorsque la chronologie éclaire une décision."
+        },
+        {
+          "heading": "Utiliser la chronologie comme contexte, pas comme prévision",
+          "body": "Une séquence peut aider à poser des questions sur les capacités, les marchés ou les relations. Elle ne prédit pas la suite et ne démontre pas de causalité entre des événements proches. L’observation commence à une date connue; en l’absence d’archives antérieures, la lacune doit être dite clairement au lieu d’être comblée par un récit rétrospectif plausible."
+        }
+      ],
+      "example": "Exemple hypothétique : une société annonce en avril l’ouverture d’un bureau, tandis que l’article précise que l’équipe y travaille depuis février. Le relevé peut conserver les deux dates, leur source et la différence entre l’annonce et le début déclaré de l’activité.",
+      "limits": "AXIGNAL ne garantit ni la reconstitution complète d’une histoire privée ni la détection de tous les événements. La chronologie dépend des sources, de leur couverture et de la précision des dates. La proximité temporelle ne prouve pas la causalité; une date de publication ou de consultation ne fixe pas le début réel d’une activité.",
+      "cta": {
+        "label": "Découvrir AXIGNAL",
+        "href": "/knowledge"
+      },
+      "related": [
+        "commercial_executive_chronology",
+        "commercial_reported_vs_observed_capability",
+        "commercial_evidence_traceability"
+      ]
+    },
+    "de": {
+      "slug": "historie-beobachteter-organisationsaenderungen",
+      "title": "Einen Verlauf beobachteter Änderungen rekonstruieren",
+      "description": "Datieren Sie öffentliche Änderungen, ohne eine neue Veröffentlichung mit einem bestätigten Unternehmenswandel gleichzusetzen.",
+      "lead": "Eine Unternehmenschronik kann Ankündigungen, Ereignisse, Korrekturen und Änderungen an der Verfügbarkeit von Quellen vermischen. Um zu verstehen, was geschah, braucht jeder Eintrag Datum, Subjekt, Quelle und einen klar benannten Erkenntnisstand.",
+      "answer": "AXIGNAL kann zeitliche Beobachtungen aufbewahren und verknüpfen, soweit Quellen und Rechte dies erlauben. Der Verlauf beschreibt Beobachtungen ab Beginn der Abdeckung; frühere Zeiträume werden nicht automatisch rekonstruiert.",
+      "sections": [
+        {
+          "heading": "Veröffentlichungsdatum und Ereignisdatum trennen",
+          "body": "Ein im März erschienener Bericht kann eine Entscheidung aus dem Vorjahr beschreiben. Das Abrufdatum einer Webseite sagt nur, wann sie konsultiert wurde. Für die zeitliche Ordnung bleiben die von der Quelle genannten Daten erhalten und werden von AXIGNALs Beobachtungszeitpunkt unterschieden. Nennt die Quelle kein Ereignisdatum, sollte keines aus Vermutungen ergänzt werden."
+        },
+        {
+          "heading": "Korrekturen, Löschungen und Widersprüche erhalten",
+          "body": "Eine Seite kann geändert oder entfernt werden; ein späterer Bericht kann die erste Darstellung korrigieren. Ein Verlauf sollte solche Änderungen erklären und keine Version stillschweigend bevorzugen. Eine entfernte Seite beweist weder, dass das Ereignis falsch war, noch dass eine Tätigkeit beendet wurde. Der Wissensstand kann sich ändern, ohne die Vergangenheit nachträglich sicher zu machen."
+        },
+        {
+          "heading": "Jeden Eintrag an seine Herkunft binden",
+          "body": "Um einen Übergang zu beurteilen, müssen Quelle und Kontext jedes Punkts sichtbar sein: betroffene Organisation, beschriebene Eigenschaft, Zeitraum und Beleg. Zwei Versionen einer Webseite können eine Änderung der öffentlichen Darstellung stützen, aber nicht zwingend eine operative Veränderung belegen. Bei einer Entscheidung ist dieser Unterschied wichtig."
+        },
+        {
+          "heading": "Chronologie als Kontext, nicht als Prognose verwenden",
+          "body": "Eine Ereignisfolge kann Fragen zu Fähigkeiten, Märkten oder Beziehungen anregen. Sie sagt nicht automatisch voraus, was folgt, und belegt keine Ursache zwischen zeitnahen Ereignissen. Beobachtung beginnt zu einem bekannten Zeitpunkt. Fehlt frühere Abdeckung, wird diese Lücke ausdrücklich genannt, statt sie mit einer plausibel klingenden Rückschau zu füllen."
+        }
+      ],
+      "example": "Hypothetisches Beispiel: Ein Unternehmen kündigt im April ein neues Büro an; der Artikel sagt, das Team arbeite dort bereits seit Februar. Der Eintrag kann beide Daten mit Quelle bewahren und zwischen Ankündigung und angegebenem Tätigkeitsbeginn unterscheiden.",
+      "limits": "AXIGNAL bietet keine vollständige Rekonstruktion privater Geschichte und erkennt nicht garantiert jedes Ereignis. Der Verlauf hängt von Abdeckung und Datengenauigkeit der Quellen ab. Zeitliche Nähe belegt keine Ursache; Veröffentlichungs- oder Abrufdatum belegt nicht den tatsächlichen Beginn einer Aktivität. Für spätere Vergleiche ist außerdem wichtig, ob ein Eintrag ein Ereignis, eine öffentliche Aussage oder nur die Verfügbarkeit eines Dokuments betrifft. Diese Kategorien haben unterschiedliche Aussagekraft. Wer sie getrennt hält, kann eine Veränderung der Kommunikation erkennen, ohne daraus vorschnell auf einen Wandel der tatsächlichen Geschäftstätigkeit zu schließen.",
+      "cta": {
+        "label": "AXIGNAL kennenlernen",
+        "href": "/knowledge"
+      },
+      "related": [
+        "commercial_executive_chronology",
+        "commercial_reported_vs_observed_capability",
+        "commercial_evidence_traceability"
+      ]
+    },
+    "it": {
+      "slug": "cronologia-dei-cambiamenti-organizzativi-osservati",
+      "title": "Ricostruire una cronologia dei cambiamenti osservati",
+      "description": "Data i cambiamenti pubblici senza confondere una nuova pubblicazione con una trasformazione aziendale confermata.",
+      "lead": "Una cronologia aziendale può mescolare annunci, eventi, correzioni e variazioni nella disponibilità delle fonti. Per capire cosa è accaduto, ogni elemento richiede una data, un soggetto, una provenienza e uno stato esplicito.",
+      "answer": "AXIGNAL può conservare e collegare osservazioni nel tempo quando fonti e diritti lo consentono. La cronologia descrive ciò che è stato osservato dall’inizio della copertura, senza ricostruire automaticamente periodi precedenti.",
+      "sections": [
+        {
+          "heading": "Separare data di pubblicazione e data dell’evento",
+          "body": "Una notizia pubblicata a marzo può raccontare una decisione dell’anno precedente. La data in cui si consulta una pagina indica soltanto quando è stata vista. Per ordinare gli eventi occorre conservare le date dichiarate dalla fonte e distinguerle dal momento in cui AXIGNAL ha potuto osservarla. Se la fonte non specifica quando è successo qualcosa, non è corretto assegnare una data precisa per intuizione."
+        },
+        {
+          "heading": "Conservare correzioni, rimozioni e contraddizioni",
+          "body": "Una pagina può essere aggiornata o scomparire e una fonte successiva può correggere la descrizione iniziale. La cronologia dovrebbe rendere leggibili questi cambiamenti, non scegliere in silenzio una versione. La rimozione di una pagina non prova che l’evento fosse falso né che l’attività sia terminata. Lo stato della conoscenza può evolvere senza trasformare il passato in certezza."
+        },
+        {
+          "heading": "Collegare ogni passaggio alla sua provenienza",
+          "body": "Per valutare una transizione, chi legge deve poter risalire alla fonte e al contesto di ogni elemento: organizzazione, attributo, periodo ed evidenza. Due versioni di una pagina possono sostenere un cambiamento nella comunicazione pubblica, non necessariamente nell’operatività. La distinzione è rilevante quando la cronologia contribuisce a preparare una decisione."
+        },
+        {
+          "heading": "Usare la sequenza come contesto, non come previsione",
+          "body": "Una successione di eventi può suggerire domande su capacità, mercati o relazioni. Non prevede da sola cosa accadrà e non dimostra un nesso causale tra avvenimenti vicini. L’osservazione parte da una data conosciuta; se mancano informazioni precedenti, la lacuna va dichiarata invece di colmarla con una narrazione retrospettiva plausibile."
+        }
+      ],
+      "example": "Esempio ipotetico: a aprile un’impresa annuncia l’apertura di un ufficio, ma l’articolo dice che il team ha iniziato a lavorarvi a febbraio. La registrazione può conservare entrambe le date con le rispettive fonti e distinguere annuncio e inizio dichiarato dell’attività.",
+      "limits": "AXIGNAL non garantisce la ricostruzione completa di una storia privata né il rilevamento di ogni evento. La cronologia dipende dalla copertura e dalla precisione temporale delle fonti. La vicinanza nel tempo non dimostra causalità; data di pubblicazione o consultazione non prova quando iniziò davvero un’attività.",
+      "cta": {
+        "label": "Scopri AXIGNAL",
+        "href": "/knowledge"
+      },
+      "related": [
+        "commercial_executive_chronology",
+        "commercial_reported_vs_observed_capability",
+        "commercial_evidence_traceability"
+      ]
+    },
+    "pt": {
+      "slug": "historico-de-mudancas-organizacionais-observadas",
+      "title": "Reconstruir um histórico de mudanças observadas",
+      "description": "Date mudanças públicas sem confundir uma publicação recente com uma alteração empresarial confirmada.",
+      "lead": "Uma cronologia empresarial pode misturar anúncios, acontecimentos, correções e mudanças na disponibilidade das fontes. Para perceber o que ocorreu, cada registo precisa de data, sujeito, origem e estado de conhecimento explícito.",
+      "answer": "A AXIGNAL pode conservar e relacionar observações ao longo do tempo quando as fontes e os direitos o permitem. O histórico descreve o observado desde o início da cobertura; não reconstrói automaticamente períodos anteriores.",
+      "sections": [
+        {
+          "heading": "Separar a data de publicação da data do acontecimento",
+          "body": "Uma notícia publicada em março pode relatar uma decisão do ano anterior. A data em que uma página é consultada indica apenas quando foi vista. Para ordenar acontecimentos, é preciso guardar as datas atribuídas pela fonte e distingui-las do momento em que a AXIGNAL as observou. Se a fonte não indicar quando algo ocorreu, não se deve inventar uma data precisa por intuição."
+        },
+        {
+          "heading": "Manter visíveis correções, remoções e contradições",
+          "body": "Uma página pode ser alterada ou desaparecer, e uma publicação posterior pode corrigir a descrição inicial. O histórico deve explicar essas mudanças em vez de escolher uma versão silenciosamente. A remoção de uma página não prova que o acontecimento era falso nem que a atividade terminou. O conhecimento pode evoluir sem transformar a cronologia numa certeza sobre o passado."
+        },
+        {
+          "heading": "Ligar cada ponto à sua origem",
+          "body": "Para avaliar uma transição, quem consulta precisa de conhecer a fonte e o contexto de cada ponto: organização, atributo, período e evidência. Duas versões de uma página podem sustentar uma mudança na comunicação pública, mas não necessariamente na operação. Essa diferença importa quando o histórico é utilizado para preparar uma decisão."
+        },
+        {
+          "heading": "Usar a sequência como contexto, não como previsão",
+          "body": "Uma sequência de acontecimentos pode ajudar a formular perguntas sobre capacidades, mercados ou relações. Não prevê por si só o que virá a seguir nem demonstra causalidade entre eventos próximos. A observação começa numa data conhecida; se não houver histórico anterior, a lacuna deve ser declarada em vez de preenchida por uma narrativa retrospetiva plausível."
+        }
+      ],
+      "example": "Exemplo hipotético: uma empresa anuncia em abril a abertura de um escritório, mas o artigo diz que a equipa começou a trabalhar no local em fevereiro. O registo pode conservar ambas as datas com as fontes e distinguir o anúncio do início declarado da atividade.",
+      "limits": "A AXIGNAL não garante a reconstrução completa de uma história privada nem a deteção de todos os acontecimentos. A cronologia depende da cobertura e da precisão das datas nas fontes. Proximidade temporal não prova causalidade; data de publicação ou consulta não estabelece quando uma atividade começou realmente.",
+      "cta": {
+        "label": "Conhecer a AXIGNAL",
+        "href": "/knowledge"
+      },
+      "related": [
+        "commercial_executive_chronology",
+        "commercial_reported_vs_observed_capability",
+        "commercial_evidence_traceability"
+      ]
+    }
+  },
+  {
+    "id": "commercial_export_market_research",
+    "fr": {
+      "slug": "etudier-les-marches-export-par-capacite",
+      "title": "Étudier les marchés d’exportation par capacité",
+      "description": "Reliez les capacités observables au contexte géographique et rendez visibles les questions de marché encore ouvertes.",
+      "lead": "Les capacités d’une organisation n’ont pas toutes la même portée géographique. Une recherche à l’export gagne en précision lorsqu’elle demande où l’activité est étayée et où les sources manquent, plutôt que de projeter le siège sur tous les marchés.",
+      "answer": "AXIGNAL peut relier des preuves publiques sur une Organisation à son contexte économique et géographique lorsque les sources le permettent. Cela ne constitue ni une recommandation d’entrée sur un marché ni la confirmation d’un accès, d’une demande ou d’une adéquation commerciale.",
+      "sections": [
+        {
+          "heading": "Commencer par une capacité précise",
+          "body": "Une société peut fournir des services localement tout en fabriquant des produits exportables, ou intervenir dans plusieurs régions selon ses lignes d’activité. Demander une portée unique masque ces différences. La recherche devrait préciser la capacité, les conditions de livraison et le marché en question, puis chercher des éléments adaptés à ce périmètre. Une description publique d’un produit ne prouve pas sa disponibilité partout."
+        },
+        {
+          "heading": "Traiter la géographie comme un contexte de preuve",
+          "body": "L’immatriculation dans un pays n’établit pas que toute l’activité y est limitée. Une page traduite peut relever d’un choix éditorial, pas de ventes locales. Les clients, distributeurs et projets dans une destination doivent être étayés par leurs propres éléments. En leur absence, la portée reste potentielle ou inconnue; le manque de références locales ne prouve pas l’absence d’activité."
+        },
+        {
+          "heading": "Rendre les écarts de couverture explicites",
+          "body": "Les registres, les langues et les sources accessibles diffèrent selon les juridictions. Une recherche plus riche dans un pays n’indique pas nécessairement une activité plus importante. Avant de comparer des destinations, il faut préciser quelles sources ont été consultées, dans quelles langues et sur quelle période. Ces conditions déterminent ce qu’une comparaison peut raisonnablement dire et si les périmètres sont comparables."
+        },
+        {
+          "heading": "Porter les questions ouvertes vers une validation locale",
+          "body": "Le contexte peut préparer des échanges avec des distributeurs, associations ou spécialistes locaux: quelle capacité confirmer, quelles règles examiner et quelle relation demeure hypothétique. Les réponses de ces interlocuteurs nécessitent leur propre traitement probatoire. AXIGNAL oriente l’attention, mais une conversation n’altère pas automatiquement la vérité canonique. Livraison, normes et partenaires peuvent varier entre marchés; ces écarts appellent une vérification adaptée."
+        }
+      ],
+      "example": "Exemple hypothétique : une société d’ingénierie fournit des services en Espagne et fabrique un équipement qui pourrait être expédié en France. L’équipe distingue l’activité locale documentée d’une compatibilité logistique potentielle et laisse les acheteurs français inconnus jusqu’à l’apparition de preuves adaptées.",
+      "limits": "AXIGNAL ne garantit pas une couverture uniforme par pays et ne fournit ni conseil au commerce extérieur ni validation réglementaire. La portée observable dépend des sources, des langues, de la géographie et de la question. Une capacité exportable ne prouve pas la demande, les autorisations, la distribution, les contrats ou la rentabilité.",
+      "cta": {
+        "label": "Découvrir AXIGNAL",
+        "href": "/knowledge"
+      },
+      "related": [
+        "commercial_geographic_capability_reach",
+        "commercial_procurement_context",
+        "commercial_strategy_team_research"
+      ]
+    },
+    "de": {
+      "slug": "exportmaerkte-nach-faehigkeit-untersuchen",
+      "title": "Exportmärkte nach einzelnen Fähigkeiten untersuchen",
+      "description": "Verbinden Sie beobachtbare Fähigkeiten mit geografischem Kontext und machen Sie offene Marktfragen sichtbar.",
+      "lead": "Die geografische Reichweite kann sich je nach Fähigkeit unterscheiden. Eine präzise Exportrecherche fragt, wo Aktivitäten belegt sind und wo Quellen fehlen, statt den Unternehmenssitz auf jeden Markt zu übertragen.",
+      "answer": "AXIGNAL kann öffentliche Belege zu einer Organisation mit geografischem Wirtschaftskontext verbinden, soweit Quellen dies ermöglichen. Das ist weder eine Empfehlung zum Markteintritt noch ein Nachweis für Zugang, Nachfrage oder geschäftliche Passung.",
+      "sections": [
+        {
+          "heading": "Mit einer konkreten Fähigkeit beginnen",
+          "body": "Ein Unternehmen kann lokal Dienstleistungen erbringen und zugleich exportierbare Produkte herstellen oder je Geschäftsfeld unterschiedliche Regionen bedienen. Eine einzige Angabe zur Reichweite würde diese Unterschiede verdecken. Die Recherche benennt Fähigkeit, Lieferbedingungen und Zielmarkt, bevor sie passende Belege sucht. Eine Produktbeschreibung im Netz beweist nicht, dass das Angebot überall verfügbar ist."
+        },
+        {
+          "heading": "Geografie als Belegkontext behandeln",
+          "body": "Eine Registrierung in einem Land zeigt nicht, dass sich die gesamte Tätigkeit auf dieses Gebiet beschränkt. Eine fremdsprachige Webseite kann redaktionelle Gründe haben und belegt keine lokalen Verkäufe. Kunden, Vertriebspartner und Projekte in einem Zielmarkt brauchen eigene Nachweise. Fehlen diese, bleibt die Reichweite POTENTIAL oder UNKNOWN; fehlende lokale Quellen beweisen keine fehlende Aktivität."
+        },
+        {
+          "heading": "Unterschiede der Quellenabdeckung offenlegen",
+          "body": "Register, Sprachen und zugängliche Quellen unterscheiden sich zwischen Rechtsräumen. Eine ausführlichere Suche in einem Land bedeutet nicht automatisch mehr Geschäftstätigkeit. Vor einem Ländervergleich sollten die konsultierten Quellen, Sprachen und Zeiträume dokumentiert werden. Diese Bedingungen begrenzen, welche Aussagen aus der Beobachtung zulässig sind und ob zwei Marktansichten vergleichbar sind."
+        },
+        {
+          "heading": "Offene Punkte lokal prüfen lassen",
+          "body": "Der Überblick kann Gespräche mit Vertriebspartnern, Verbänden oder lokalen Fachleuten vorbereiten: Welche Fähigkeit muss bestätigt werden, welche Anforderungen wurden noch nicht geprüft und welche Beziehung bleibt hypothetisch? Aussagen aus solchen Gesprächen brauchen eine eigene Belegbehandlung. AXIGNAL lenkt Aufmerksamkeit; die Unterhaltung wird dadurch nicht automatisch zu kanonischer Wahrheit. Liefermodell, Standards und Partner können je Zielmarkt abweichen."
+        }
+      ],
+      "example": "Hypothetisches Beispiel: Ein Ingenieurbüro arbeitet in Spanien und fertigt Anlagen, die nach Frankreich geliefert werden könnten. Das Team trennt die belegte lokale Tätigkeit von einer möglichen Logistikpassung und lässt französische Käufer UNKNOWN, bis geeignete Belege vorliegen.",
+      "limits": "AXIGNAL gewährleistet keine einheitliche Länderabdeckung und bietet weder Außenhandelsberatung noch Rechtsprüfung. Beobachtbare Reichweite hängt von Quellen, Sprachen, Geografie und Fragestellung ab. Eine exportierbare Fähigkeit belegt weder Nachfrage noch Genehmigung, Vertrieb, Verträge oder Rentabilität. Eine sinnvolle nächste Prüfung kann klären, ob lokale Partner, Lieferbedingungen oder Sprachkenntnisse öffentlich belegt sind. Solche Hinweise beantworten jeweils nur einen Teil der Exportfrage. Sie ersetzen keine Prüfung von Zertifizierung, Einfuhrregeln oder Nachfrage und sollten mit ihrem jeweiligen Zeitpunkt und Geltungsbereich gelesen werden.",
+      "cta": {
+        "label": "AXIGNAL kennenlernen",
+        "href": "/signup"
+      },
+      "related": [
+        "commercial_geographic_capability_reach",
+        "commercial_procurement_context",
+        "commercial_strategy_team_research"
+      ]
+    },
+    "it": {
+      "slug": "ricerca-dei-mercati-export-per-capacita",
+      "title": "Ricercare i mercati di esportazione per capacità",
+      "description": "Collega capacità osservabili al contesto geografico e rende esplicite le domande di mercato ancora aperte.",
+      "lead": "Le capacità di un’organizzazione possono avere portate geografiche diverse. La ricerca sull’export è più precisa quando chiede dove l’attività è documentata e dove mancano fonti, invece di proiettare la sede su ogni mercato.",
+      "answer": "AXIGNAL può collegare evidenze pubbliche su un’Organizzazione al contesto economico e geografico quando le fonti lo consentono. Non raccomanda l’ingresso in un mercato e non conferma accesso, domanda o compatibilità commerciale.",
+      "sections": [
+        {
+          "heading": "Partire da una capacità specifica",
+          "body": "Un’impresa può offrire servizi localmente e produrre beni esportabili, oppure servire aree diverse con linee differenti. Chiedere una sola portata nasconde queste distinzioni. La ricerca identifica capacità, condizioni di consegna e mercato di interesse, poi cerca evidenze coerenti con ciascun ambito. La descrizione pubblica di un prodotto non dimostra che sia disponibile ovunque."
+        },
+        {
+          "heading": "Leggere la geografia come contesto delle prove",
+          "body": "La registrazione in un paese non stabilisce che tutta l’attività sia limitata a quel territorio. Una pagina tradotta può rispondere a una scelta editoriale, non provare vendite locali. Clienti, distributori e progetti in una destinazione richiedono evidenze proprie. Se mancano, la portata resta potenziale o sconosciuta; l’assenza di fonti locali non prova l’assenza di attività."
+        },
+        {
+          "heading": "Esplicitare le differenze di copertura",
+          "body": "Registri, lingue e fonti accessibili variano tra giurisdizioni. Una ricerca più ricca in un paese non implica che l’impresa vi operi di più. Prima di confrontare destinazioni conviene indicare fonti consultate, lingue e periodo. Queste condizioni stabiliscono quali conclusioni siano sostenibili e se i due contesti siano davvero comparabili."
+        },
+        {
+          "heading": "Portare le questioni aperte alla verifica locale",
+          "body": "Il quadro può preparare confronti con distributori, associazioni o specialisti locali: quale capacità confermare, quali requisiti non sono stati studiati e quale rapporto resta ipotetico. Le risposte richiedono un proprio trattamento probatorio. AXIGNAL orienta l’attenzione, ma una conversazione non diventa automaticamente verità canonica. Modelli di consegna, norme e partner possono cambiare da un mercato all’altro."
+        }
+      ],
+      "example": "Esempio ipotetico: uno studio di ingegneria opera in Spagna e realizza apparecchiature che potrebbero essere spedite in Francia. Il team distingue l’attività locale documentata dalla possibile compatibilità logistica e lascia sconosciuti gli acquirenti francesi finché non emergono prove adeguate.",
+      "limits": "AXIGNAL non garantisce copertura uniforme per paese, non offre consulenza sul commercio estero né verifica normativa. La portata osservabile dipende da fonti, lingue, geografia e domanda. Una capacità esportabile non dimostra domanda, permessi, distribuzione, contratti o redditività nel mercato interessato.",
+      "cta": {
+        "label": "Scopri AXIGNAL",
+        "href": "/signup"
+      },
+      "related": [
+        "commercial_geographic_capability_reach",
+        "commercial_procurement_context",
+        "commercial_strategy_team_research"
+      ]
+    },
+    "pt": {
+      "slug": "pesquisar-mercados-de-exportacao-por-capacidade",
+      "title": "Pesquisar mercados de exportação por capacidade",
+      "description": "Relacione capacidades observáveis com o contexto geográfico e torne explícitas as questões de mercado por resolver.",
+      "lead": "As capacidades de uma organização podem ter alcances geográficos diferentes. A pesquisa de exportação é mais precisa quando pergunta onde há evidência de atividade e onde faltam fontes, em vez de projetar a sede sobre todos os mercados.",
+      "answer": "A AXIGNAL pode relacionar evidências públicas sobre uma Organização com o contexto económico e geográfico quando existam fontes adequadas. Não recomenda a entrada num mercado nem confirma acesso, procura ou adequação comercial.",
+      "sections": [
+        {
+          "heading": "Começar por uma capacidade concreta",
+          "body": "Uma empresa pode prestar serviços localmente e fabricar produtos exportáveis, ou servir regiões diferentes através de várias linhas de atividade. Perguntar pelo alcance como atributo único esconde essas diferenças. A pesquisa identifica capacidade, condições de entrega e mercado em causa e procura evidências adequadas a cada âmbito. Uma descrição pública de produto não prova disponibilidade em todo o lado."
+        },
+        {
+          "heading": "Tratar a geografia como contexto da evidência",
+          "body": "O registo da empresa num país não demonstra que toda a sua atividade se limite a esse território. Uma página traduzida pode refletir uma decisão editorial, não vendas locais. Clientes, distribuidores e projetos num destino precisam de evidência própria. Sem ela, o alcance permanece potencial ou desconhecido; a falta de fontes locais não prova que não haja atividade."
+        },
+        {
+          "heading": "Tornar explícitas as diferenças de cobertura",
+          "body": "Registos, idiomas e fontes acessíveis variam entre jurisdições. Uma pesquisa mais detalhada num país não significa que a empresa tenha mais atividade ali. Antes de comparar destinos, registe que fontes foram consultadas, em que idiomas e durante que período. Essas condições limitam as conclusões sustentáveis e a comparabilidade entre mercados."
+        },
+        {
+          "heading": "Levar as questões abertas à validação local",
+          "body": "O contexto pode preparar conversas com distribuidores, associações ou especialistas locais: que capacidade precisa de confirmação, que requisitos continuam por estudar e que relação é apenas hipotética. As respostas necessitam do seu próprio tratamento probatório. A AXIGNAL orienta a atenção, mas não transforma automaticamente uma conversa em verdade canónica. Entrega, normas e parceiros variam por destino."
+        }
+      ],
+      "example": "Exemplo hipotético: uma empresa de engenharia presta serviços em Espanha e fabrica equipamento que poderia ser enviado para França. A equipa separa a atividade local documentada da possível adequação logística e mantém desconhecidos os compradores franceses até encontrar evidências apropriadas.",
+      "limits": "A AXIGNAL não garante cobertura uniforme por país nem fornece aconselhamento de comércio externo ou validação regulamentar. O alcance observável depende das fontes, idiomas, geografia e pergunta. Uma capacidade exportável não demonstra procura, autorizações, distribuição, contratos ou rentabilidade num mercado específico.",
+      "cta": {
+        "label": "Explorar a AXIGNAL",
+        "href": "/signup"
+      },
+      "related": [
+        "commercial_geographic_capability_reach",
+        "commercial_procurement_context",
+        "commercial_strategy_team_research"
+      ]
+    }
+  },
+  {
+    "id": "commercial_procurement_context",
+    "fr": {
+      "slug": "contexte-des-marches-publics-sans-presumer-une-opportunite",
+      "title": "Marchés publics : établir le contexte sans présumer d’une opportunité",
+      "description": "Reliez activité publique et capacités sans présenter un marché comme prospect, client ou occasion confirmée.",
+      "lead": "Un appel d’offres ou un projet publié peut soulever une question économique utile. Il ne prouve pas qu’une entreprise donnée soit autorisée à répondre, souhaite le faire ou obtiendra un contrat.",
+      "answer": "AXIGNAL peut relier des signaux publics d’activité à des capacités observables, tout en gardant POTENTIAL toute opportunité dérivée. La couverture dépend des sources admises, du territoire, des dates et des éléments vérifiables.",
+      "sections": [
+        {
+          "heading": "Une publication apporte du contexte, pas une relation",
+          "body": "Un avis indique qu’un organisme a publié un besoin ou une procédure. Il ne crée pas de relation avec chaque fournisseur dont les capacités semblent proches. Une attribution ultérieure ne prouve pas non plus qu’un fournisseur potentiel disposait d’expérience ou d’accès, sauf si des éléments soutiennent cette relation. Les acteurs, l’objet et le statut doivent être décrits séparément."
+        },
+        {
+          "heading": "Examiner la compatibilité sans déclarer un ajustement commercial",
+          "body": "Des capacités déclarées peuvent être rapprochées des exigences publiées pour décider si une recherche supplémentaire se justifie. Mais des critères, permis, lieux d’exécution ou conditions financières peuvent manquer. Une proximité technique n’est qu’une dimension; elle ne prouve ni admissibilité, ni intention, ni aptitude à livrer, ni rentabilité. Le besoin public ne constitue pas à lui seul une demande adressée à une entreprise."
+        },
+        {
+          "heading": "Maintenir POTENTIAL et nommer les éléments manquants",
+          "body": "Une opportunité déduite reste POTENTIAL, avec les sources et le raisonnement visibles. Elle peut associer une capacité décrite, un projet ouvert et une géographie compatible, tandis que l’accès ou l’adéquation commerciale demeurent sans preuve. La prochaine question doit être concrète: quel élément indépendant réduirait l’incertitude? Une donnée fournie par un utilisateur peut orienter l’attention, mais ne devient pas automatiquement vérité canonique."
+        },
+        {
+          "heading": "Tenir compte de la couverture et du calendrier",
+          "body": "Les procédures et portails varient selon les territoires, les langues et les systèmes de publication. Une recherche non exhaustive ne prouve pas qu’aucun projet n’existe. Date de publication, date limite et date d’attribution sont différentes; il faut vérifier le statut et la période annoncés par la source avant de qualifier un signal d’actuel. La participation et l’éligibilité restent à évaluer par l’équipe concernée."
+        }
+      ],
+      "example": "Exemple hypothétique : une collectivité publie un projet de rénovation et une entreprise décrit une expérience comparable en maintenance. Le lien peut ouvrir une piste de recherche potentielle; il ne constitue ni un prospect, ni un client, ni un marché confirmé accessible à cette entreprise.",
+      "limits": "AXIGNAL n’est ni une base exhaustive d’appels d’offres, ni un service de mise en correspondance de fournisseurs, ni un générateur de prospects. Toute opportunité présentée est dérivée et POTENTIAL par défaut. Compatibilité ne signifie pas admissibilité, relation, attribution ou demande; l’absence de résultat parmi les sources examinées ne prouve pas l’absence de projets.",
+      "cta": {
+        "label": "Découvrir AXIGNAL",
+        "href": "/knowledge"
+      },
+      "related": [
+        "commercial_export_market_research",
+        "commercial_market_activity_relationship",
+        "commercial_supplier_partner_observation"
+      ]
+    },
+    "de": {
+      "slug": "vergabekontext-ohne-eine-chance-zu-unterstellen",
+      "title": "Vergabekontext einordnen, ohne eine Chance zu unterstellen",
+      "description": "Verbinden Sie öffentliche Aktivität mit Fähigkeiten, ohne eine Ausschreibung als Lead, Kunden oder bestätigte Chance darzustellen.",
+      "lead": "Eine veröffentlichte Ausschreibung oder ein Projekt kann eine wirtschaftliche Frage aufwerfen. Sie belegt nicht, dass ein bestimmtes Unternehmen teilnehmen darf, teilnehmen möchte oder einen Auftrag erhält.",
+      "answer": "AXIGNAL kann öffentliche Aktivitätssignale mit beobachtbaren Fähigkeiten verbinden und abgeleitete Chancen als POTENTIAL führen. Die Abdeckung hängt von zugelassenen Quellen, Gebiet, Zeitraum und überprüfbaren Angaben ab.",
+      "sections": [
+        {
+          "heading": "Eine Veröffentlichung liefert Kontext, keine Beziehung",
+          "body": "Eine Bekanntmachung zeigt, dass eine Stelle einen Bedarf oder ein Verfahren veröffentlicht hat. Sie begründet keine Beziehung zu jedem Anbieter mit ähnlich wirkenden Fähigkeiten. Auch ein späterer Zuschlag belegt keine Erfahrung oder Zugang eines möglichen Anbieters, solange dafür keine eigenen Belege vorliegen. Beteiligte, Gegenstand und Status sollten getrennt beschrieben werden."
+        },
+        {
+          "heading": "Passung prüfen, ohne geschäftliche Eignung zu behaupten",
+          "body": "Erklärte Fähigkeiten lassen sich mit veröffentlichten Anforderungen vergleichen, um weiteren Prüfbedarf zu erkennen. Dabei können Anforderungen, Genehmigungen, Einsatzorte oder wirtschaftliche Bedingungen fehlen. Technische Kompatibilität ist nur eine Dimension und belegt weder Zulässigkeit noch Absicht, Lieferfähigkeit oder Rentabilität. Ein öffentlicher Bedarf ist nicht automatisch Nachfrage bei einem bestimmten Unternehmen."
+        },
+        {
+          "heading": "POTENTIAL beibehalten und offene Punkte benennen",
+          "body": "Eine abgeleitete Chance bleibt POTENTIAL; Belege und Herleitung bleiben sichtbar. Sie kann eine beschriebene Fähigkeit, ein offenes Vorhaben und eine passende Geografie verbinden, während Zugang oder geschäftliche Passung unbelegt sind. Die nächste Frage lautet konkret: Welcher unabhängige Nachweis würde Unsicherheit verringern? Nutzereingaben können Aufmerksamkeit lenken, ändern aber nicht automatisch kanonische Wahrheit."
+        },
+        {
+          "heading": "Abdeckung und Zeitstatus berücksichtigen",
+          "body": "Verfahren und Portale unterscheiden sich nach Gebiet, Sprache und Veröffentlichungssystem. Eine nicht vollständige Suche beweist nicht, dass keine Projekte bestehen. Veröffentlichungs-, Angebots- und Zuschlagsdatum sind verschieden; vor der Einordnung als aktuell sind Status und Zeitraum der Quelle zu prüfen. Teilnahme und Zulässigkeit muss das zuständige Team selbst bewerten."
+        }
+      ],
+      "example": "Hypothetisches Beispiel: Eine Behörde veröffentlicht die Erneuerung einer Anlage; ein Unternehmen berichtet über ähnliche Wartungserfahrung. Das kann einen POTENTIAL-Recherchepfad eröffnen, ist aber weder Lead noch Kunde noch eine nachweislich zugängliche Ausschreibung für dieses Unternehmen.",
+      "limits": "AXIGNAL ist weder vollständige Ausschreibungsdatenbank noch Anbieter-Matching oder Lead-Generierung. Jede abgeleitete Chance ist standardmäßig POTENTIAL. Kompatibilität belegt weder Zulässigkeit, Beziehung, Zuschlag noch Nachfrage; fehlende Ergebnisse in geprüften Quellen beweisen keine fehlenden Projekte. Auch ein passender Projektzeitraum sagt nichts darüber aus, ob ein Anbieter die notwendigen Ressourcen oder Zulassungen besitzt. Eine vorsichtige Darstellung trennt daher den veröffentlichten Bedarf, die öffentlich beschriebene Fähigkeit und die noch ungeklärte Teilnahmebedingung. So bleibt erkennbar, welche Information von der Vergabestelle stammt und welche Prüfung noch aussteht.",
+      "cta": {
+        "label": "AXIGNAL kennenlernen",
+        "href": "/knowledge"
+      },
+      "related": [
+        "commercial_export_market_research",
+        "commercial_market_activity_relationship",
+        "commercial_supplier_partner_observation"
+      ]
+    },
+    "it": {
+      "slug": "contesto-degli-appalti-senza-presumere-unopportunita",
+      "title": "Inquadrare gli appalti senza presumere un’opportunità",
+      "description": "Collega attività pubbliche e capacità senza presentare una gara come contatto, cliente o opportunità confermata.",
+      "lead": "Un bando o un progetto pubblicato può sollevare una domanda economica utile. Non dimostra che una specifica impresa possa partecipare, voglia farlo o si aggiudicherà il contratto.",
+      "answer": "AXIGNAL può collegare segnali pubblici di attività a capacità osservabili, mantenendo POTENTIAL ogni opportunità derivata. La copertura dipende da fonti ammesse, geografia, date e informazioni verificabili.",
+      "sections": [
+        {
+          "heading": "Una pubblicazione dà contesto, non crea una relazione",
+          "body": "Un avviso mostra che un ente ha pubblicato un bisogno o una procedura. Non instaura una relazione con ogni fornitore che sembra avere capacità affini. Neppure un’aggiudicazione successiva prova esperienza o accesso di un possibile fornitore, se mancano evidenze specifiche. Soggetti, oggetto e stato della procedura vanno descritti separatamente."
+        },
+        {
+          "heading": "Esaminare la compatibilità senza dichiarare un fit commerciale",
+          "body": "Le capacità dichiarate possono essere confrontate con i requisiti pubblicati per capire se servono ulteriori verifiche. Potrebbero però mancare requisiti, permessi, luoghi di esecuzione o condizioni economiche. La compatibilità tecnica è una dimensione, non prova ammissibilità, intenzione, capacità di consegna o redditività. Un bisogno pubblico non equivale automaticamente a domanda rivolta a un’impresa."
+        },
+        {
+          "heading": "Mantenere POTENTIAL e indicare ciò che manca",
+          "body": "Un’opportunità derivata resta POTENTIAL, con fonti e ragionamento ispezionabili. Può collegare una capacità descritta, un progetto aperto e una geografia compatibile, mentre accesso e fit commerciale restano senza prova. La domanda successiva dovrebbe essere precisa: quale evidenza indipendente ridurrebbe l’incertezza? L’input dell’utente può guidare l’attenzione, ma non diventa automaticamente verità canonica."
+        },
+        {
+          "heading": "Considerare copertura e tempi",
+          "body": "Procedure e portali variano per territorio, lingua e sistema di pubblicazione. Una ricerca non esaustiva non dimostra che non esistano progetti. Date di pubblicazione, scadenza e aggiudicazione sono diverse: per considerare attuale un segnale occorre verificarne stato e periodo nella fonte. Ammissibilità e partecipazione restano valutazioni del team interessato."
+        }
+      ],
+      "example": "Esempio ipotetico: un ente pubblica il rinnovo di una struttura e un’impresa descrive esperienza simile nella manutenzione. Il collegamento può indicare un percorso di ricerca potenziale, non un lead, un cliente o una gara certamente accessibile all’impresa.",
+      "limits": "AXIGNAL non è un archivio completo di gare, un servizio di abbinamento fornitori o un generatore di lead. Ogni opportunità derivata è POTENTIAL per impostazione predefinita. Compatibilità non prova ammissibilità, relazione, aggiudicazione o domanda; l’assenza di risultati nelle fonti esaminate non prova che manchino progetti. Anche una coincidenza di date con il progetto non dimostra che l’impresa disponga delle risorse o autorizzazioni richieste. Una descrizione accurata separa quindi il bisogno pubblicato, la capacità descritta pubblicamente e le condizioni di partecipazione ancora da verificare. Così resta chiaro che cosa proviene dall’ente e che cosa richiede una valutazione ulteriore.",
+      "cta": {
+        "label": "Scopri AXIGNAL",
+        "href": "/knowledge"
+      },
+      "related": [
+        "commercial_export_market_research",
+        "commercial_market_activity_relationship",
+        "commercial_supplier_partner_observation"
+      ]
+    },
+    "pt": {
+      "slug": "contexto-de-contratacao-publica-sem-presumir-oportunidade",
+      "title": "Contextualizar contratação pública sem presumir uma oportunidade",
+      "description": "Relacione atividade pública e capacidades sem apresentar um concurso como contacto, cliente ou oportunidade confirmada.",
+      "lead": "Um concurso ou projeto publicado pode levantar uma questão económica relevante. Não demonstra que uma empresa específica possa concorrer, queira fazê-lo ou venha a obter o contrato.",
+      "answer": "A AXIGNAL pode relacionar sinais públicos de atividade com capacidades observáveis, mantendo POTENTIAL qualquer oportunidade derivada. A cobertura depende das fontes admitidas, geografia, datas e informação verificável.",
+      "sections": [
+        {
+          "heading": "Uma publicação oferece contexto, não uma relação",
+          "body": "Um aviso mostra que uma entidade publicou uma necessidade ou procedimento. Não cria uma relação com todos os fornecedores cujas capacidades parecem semelhantes. Uma adjudicação posterior também não comprova experiência ou acesso de um potencial fornecedor sem evidências próprias. As partes, o objeto e o estado do procedimento devem ser descritos separadamente."
+        },
+        {
+          "heading": "Avaliar compatibilidade sem declarar adequação comercial",
+          "body": "Capacidades declaradas podem ser comparadas com requisitos publicados para decidir se vale a pena pesquisar mais. Podem faltar requisitos, licenças, local de execução ou condições económicas. Compatibilidade técnica é apenas uma dimensão: não prova elegibilidade, intenção, capacidade de entrega ou rentabilidade. Uma necessidade pública não equivale automaticamente a procura dirigida a uma empresa."
+        },
+        {
+          "heading": "Manter POTENTIAL e explicar o que falta",
+          "body": "Uma oportunidade derivada permanece POTENTIAL, com fontes e raciocínio visíveis. Pode relacionar uma capacidade descrita, um projeto aberto e uma geografia compatível, enquanto o acesso ou a adequação comercial continuam sem prova. A próxima pergunta deve ser concreta: que evidência independente reduziria a incerteza? O contributo do utilizador orienta a atenção, mas não altera automaticamente a verdade canónica."
+        },
+        {
+          "heading": "Ter em conta cobertura e calendário",
+          "body": "Procedimentos e portais variam entre territórios, idiomas e sistemas de publicação. Uma pesquisa não exaustiva não prova que não existam projetos. Datas de publicação, entrega e adjudicação são diferentes; é necessário verificar o estado e período indicados pela fonte antes de tratar um sinal como atual. Cabe à equipa avaliar participação e elegibilidade."
+        }
+      ],
+      "example": "Exemplo hipotético: uma entidade pública publica a renovação de uma instalação e uma empresa descreve experiência semelhante em manutenção. A ligação pode abrir uma pista de pesquisa potencial, não um contacto, cliente ou concurso confirmado como acessível à empresa.",
+      "limits": "A AXIGNAL não é uma base completa de concursos, serviço de correspondência de fornecedores ou gerador de contactos comerciais. Toda oportunidade derivada é POTENTIAL por defeito. Compatibilidade não prova elegibilidade, relação, adjudicação ou procura; a ausência de resultados nas fontes consultadas não demonstra que não existam projetos.",
+      "cta": {
+        "label": "Conhecer a AXIGNAL",
+        "href": "/knowledge"
+      },
+      "related": [
+        "commercial_export_market_research",
+        "commercial_market_activity_relationship",
+        "commercial_supplier_partner_observation"
+      ]
+    }
+  },
+  {
+    "id": "commercial_strategy_team_research",
+    "fr": {
+      "slug": "recherche-economique-pour-equipes-strategie",
+      "title": "Recherche économique destinée aux équipes de stratégie",
+      "description": "Reliez les preuves sur les organisations et les marchés pour cadrer les choix stratégiques et leurs incertitudes.",
+      "lead": "Les équipes de stratégie combinent rapports, échanges et sources publiques. Une vue reliée peut expliquer la place d’une Organisation dans son environnement économique tout en préservant la différence entre fait et interprétation.",
+      "answer": "AXIGNAL peut apporter une intelligence économique publique, persistante et inspectable afin d’affiner les questions stratégiques. Elle ne remplace pas l’analyse interne et ne fournit pas une réponse complète à une décision d’investissement, d’acquisition ou d’entrée sur un marché.",
+      "sections": [
+        {
+          "heading": "Partir de la décision plutôt que du volume de données",
+          "body": "Une équipe peut étudier des capacités complémentaires, une évolution réglementaire observable, des relations dans une chaîne de valeur ou l’activité de marchés voisins. Chaque décision nécessite des preuves différentes. Formuler d’abord la question évite de prendre un graphe étendu ou une longue liste pour une connaissance suffisante à l’action. Le volume seul ne renseigne ni sur la pertinence ni sur la qualité des éléments."
+        },
+        {
+          "heading": "Relier les éléments sans effacer leur origine",
+          "body": "Le contexte peut relier organisations, capacités, marchés, projets et périodes. Ce rapprochement n’aide que si l’on peut examiner les sources et la façon dont chaque relation a été dérivée. Une activité publique n’équivaut pas à une demande; un lien potentiel ne devient pas un fait parce qu’il correspond à l’hypothèse de l’équipe. L’origine de chaque élément doit rester consultable."
+        },
+        {
+          "heading": "Montrer les dimensions et les lacunes",
+          "body": "Une lecture stratégique peut réunir portée géographique par capacité, éléments temporels, dépendances et relations sans tout réduire à une note unique. Les manques comptent autant: information privée, source récente ou contexte local peuvent faire défaut. Les rendre visibles aide à déterminer si la question est suffisamment étayée ou exige une recherche spécialisée hors d’AXIGNAL."
+        },
+        {
+          "heading": "Réévaluer quand les éléments évoluent",
+          "body": "Une décision ne devrait pas dépendre indéfiniment d’une conclusion ancienne. Si une source est modifiée ou contredite, les inférences qui s’appuyaient sur elle peuvent devoir être réexaminées. L’observation commence à un moment connu et demeure partielle. Toute mémoire de la conclusion doit garder cette limite, afin de ne pas suggérer une histoire complète ou une certitude supérieure aux preuves disponibles."
+        }
+      ],
+      "example": "Exemple hypothétique : une équipe demande si une capacité industrielle décrite publiquement pourrait compter dans un marché proche. Elle examine sources, activité et géographie, puis confie deux questions ouvertes à une recherche de terrain. Elle ne transforme pas la compatibilité en demande démontrée.",
+      "limits": "AXIGNAL ne donne pas de conseil stratégique, de score universel ou de couverture totale de l’économie. Les informations disponibles dépendent du Focus, des sources et de la date. Une relation explicable peut rester une inférence; investissement, acquisition, conformité et entrée sur un marché exigent diligence supplémentaire et jugement professionnel.",
+      "cta": {
+        "label": "Explorer AXIGNAL",
+        "href": "/knowledge"
+      },
+      "related": [
+        "commercial_competitor_context",
+        "commercial_board_decision_prep",
+        "commercial_research_for_organization_intelligence"
+      ]
+    },
+    "de": {
+      "slug": "wirtschaftsrecherche-fuer-strategieteams",
+      "title": "Wirtschaftsrecherche für Strategie- und Planungsteams",
+      "description": "Verbinden Sie Belege zu Organisationen und Märkten, um strategische Entscheidungen und Unsicherheiten einzuordnen.",
+      "lead": "Strategieteams verbinden Berichte, Gespräche und öffentliche Quellen. Eine verknüpfte Sicht kann zeigen, wie eine Organisation in ihrem wirtschaftlichen Umfeld steht, ohne Fakten und Auslegung gleichzusetzen.",
+      "answer": "AXIGNAL kann öffentliche, fortlaufend überprüfbare Wirtschaftsinformationen bereitstellen, um strategische Fragen zu schärfen. Sie ersetzt weder interne Analyse noch liefert sie eine vollständige Antwort auf Investitions-, Übernahme- oder Markteintrittsentscheidungen.",
+      "sections": [
+        {
+          "heading": "Bei der Entscheidung statt bei der Datenmenge anfangen",
+          "body": "Ein Team kann ergänzende Fähigkeiten, beobachtbare Regulierungsänderungen, Wertschöpfungsbeziehungen oder Aktivitäten in angrenzenden Märkten untersuchen. Jede Entscheidung braucht andere Belege. Wer zuerst die Frage klärt, verwechselt einen großen Graphen oder eine lange Liste weniger leicht mit ausreichendem Wissen zum Handeln. Mehr Daten allein zeigen weder Relevanz noch Belegqualität."
+        },
+        {
+          "heading": "Verknüpfungen herstellen und Herkunft bewahren",
+          "body": "Kontext verbindet Organisationen, Fähigkeiten, Märkte, Vorhaben und Zeitpunkte. Das hilft nur, wenn Quellen und Herleitung jeder Beziehung prüfbar bleiben. Öffentliche Aktivität ist keine Nachfrage; eine mögliche Verbindung wird nicht dadurch zum Fakt, dass sie zur Arbeitshypothese passt. Der Ursprung jeder Information muss sichtbar sein, damit ein Team seine Interpretation nachvollziehen und überprüfen kann."
+        },
+        {
+          "heading": "Dimensionen und Lücken gemeinsam zeigen",
+          "body": "Eine strategische Sicht kann geografische Reichweite je Fähigkeit, zeitliche Belege, Abhängigkeiten und Beziehungen betrachten, ohne alles zu einer Zahl zu verdichten. Auch fehlende private Angaben, aktuelle Quellen oder lokaler Kontext sind entscheidend. Offene Punkte machen erkennbar, ob eine Frage beantwortbar ist oder zusätzliche Fachrecherche außerhalb von AXIGNAL benötigt."
+        },
+        {
+          "heading": "Bei veränderter Beleglage neu bewerten",
+          "body": "Eine Entscheidung sollte nicht unbegrenzt auf einer alten Schlussfolgerung beruhen. Ändert sich eine Quelle oder erscheint ein Widerspruch, brauchen davon abhängige Ableitungen möglicherweise eine Prüfung. Beobachtung beginnt zu einem bekannten Zeitpunkt und bleibt unvollständig. Diese Begrenzung muss bei jeder späteren Nutzung erhalten bleiben, damit gespeicherter Kontext keine vollständige Historie oder größere Gewissheit vortäuscht."
+        }
+      ],
+      "example": "Hypothetisches Beispiel: Ein Team prüft, ob eine öffentlich beschriebene industrielle Fähigkeit für einen nahen Markt relevant sein könnte. Es betrachtet Quellen, Aktivität und Geografie und gibt zwei offene Fragen zur Feldrecherche weiter. Aus Kompatibilität wird keine belegte Nachfrage.",
+      "limits": "AXIGNAL gibt keine Strategieberatung, keinen universellen Kennwert und keine vollständige Abdeckung der Wirtschaft. Informationen hängen von Fokus, Quellen und Zeitpunkt ab. Eine nachvollziehbare Verknüpfung kann weiterhin eine Ableitung sein; Investition, Übernahme, Compliance und Markteintritt verlangen weitere Prüfung und professionelles Urteil. Ein Team kann deshalb eine prüfbare Frage und den Maßstab für eine Neubewertung festhalten, ohne einen gewünschten Ausgang vorzugeben. Ändert sich später ein Beleg, wird die Abhängigkeit sichtbar. Diese Arbeitsweise unterstützt eine nachvollziehbare Diskussion, lässt aber Prioritäten, Risikobereitschaft und die eigentliche Entscheidung bei den verantwortlichen Menschen.",
+      "cta": {
+        "label": "AXIGNAL kennenlernen",
+        "href": "/knowledge"
+      },
+      "related": [
+        "commercial_competitor_context",
+        "commercial_board_decision_prep",
+        "commercial_research_for_organization_intelligence"
+      ]
+    },
+    "it": {
+      "slug": "ricerca-economica-per-team-strategici",
+      "title": "Ricerca economica per i team di strategia",
+      "description": "Collega evidenze su organizzazioni e mercati per inquadrare scelte strategiche e relative incertezze.",
+      "lead": "I team strategici combinano rapporti, conversazioni e fonti pubbliche. Una prospettiva connessa può chiarire il contesto economico di un’Organizzazione mantenendo distinta l’evidenza dall’interpretazione.",
+      "answer": "AXIGNAL può fornire intelligence economica pubblica, persistente e ispezionabile per formulare domande strategiche più precise. Non sostituisce l’analisi interna e non risponde in modo completo a decisioni di investimento, acquisizione o ingresso in un mercato.",
+      "sections": [
+        {
+          "heading": "Partire dalla decisione, non dalla quantità di dati",
+          "body": "Un team può indagare capacità complementari, cambiamenti normativi osservabili, relazioni nella filiera o attività in mercati adiacenti. Ogni scelta richiede prove diverse. Iniziare dalla domanda evita che un grafo ampio o un elenco lungo sembrino conoscenza sufficiente per agire. La quantità non indica da sola pertinenza o affidabilità degli elementi raccolti."
+        },
+        {
+          "heading": "Collegare gli elementi senza cancellarne l’origine",
+          "body": "Il contesto può collegare organizzazioni, capacità, mercati, progetti e tempo. Il collegamento è utile soltanto se si possono ispezionare le fonti e il modo in cui ogni relazione è derivata. Attività pubblica non equivale a domanda; una relazione potenziale non diventa un fatto perché coincide con l’ipotesi del team. La provenienza deve rimanere accessibile a chi valuta."
+        },
+        {
+          "heading": "Mostrare dimensioni e lacune",
+          "body": "Una lettura strategica può considerare portata geografica per capacità, evidenze temporali, dipendenze e relazioni senza comprimere tutto in un punteggio. Anche le lacune contano: informazioni private, una fonte attuale o il contesto locale potrebbero mancare. Renderle esplicite aiuta a capire se la domanda è sostenibile oppure richiede ricerca specialistica esterna ad AXIGNAL."
+        },
+        {
+          "heading": "Rivalutare quando cambiano le evidenze",
+          "body": "Una decisione non dovrebbe basarsi per sempre su una conclusione datata. Se una fonte cambia o viene contraddetta, le inferenze che dipendono da essa potrebbero richiedere una revisione. L’osservazione inizia in un momento noto ed è parziale. Anche quando il contesto viene riutilizzato, questa condizione deve restare esplicita per non suggerire una storia completa o una certezza maggiore di quella documentata."
+        }
+      ],
+      "example": "Esempio ipotetico: un team chiede se una capacità industriale descritta pubblicamente possa essere rilevante in un mercato vicino. Esamina fonti, attività e geografia, poi porta due domande aperte nella ricerca sul campo. Non scambia la compatibilità per domanda dimostrata.",
+      "limits": "AXIGNAL non offre consulenza strategica, un punteggio universale o copertura completa del mondo economico. Le informazioni disponibili dipendono da Foco, fonti e data. Un collegamento spiegabile può restare un’inferenza; investimenti, acquisizioni, conformità e ingresso di mercato richiedono ulteriore analisi e giudizio professionale.",
+      "cta": {
+        "label": "Scopri AXIGNAL",
+        "href": "/knowledge"
+      },
+      "related": [
+        "commercial_competitor_context",
+        "commercial_board_decision_prep",
+        "commercial_research_for_organization_intelligence"
+      ]
+    },
+    "pt": {
+      "slug": "pesquisa-economica-para-equipas-de-estrategia",
+      "title": "Pesquisa económica para equipas de estratégia",
+      "description": "Relacione evidências sobre organizações e mercados para enquadrar decisões estratégicas e as suas incertezas.",
+      "lead": "As equipas de estratégia combinam relatórios, conversas e fontes públicas. Uma perspetiva ligada pode explicar o contexto económico de uma Organização sem confundir factos com interpretações.",
+      "answer": "A AXIGNAL pode fornecer inteligência económica pública, persistente e inspecionável para formular melhores perguntas estratégicas. Não substitui a análise interna nem oferece uma resposta completa para decisões de investimento, aquisição ou entrada num mercado.",
+      "sections": [
+        {
+          "heading": "Começar pela decisão, não pelo volume de dados",
+          "body": "Uma equipa pode estudar capacidades complementares, alterações regulamentares observáveis, relações numa cadeia de valor ou atividade em mercados próximos. Cada decisão exige evidências diferentes. Definir primeiro a pergunta ajuda a não confundir um grafo amplo ou uma lista extensa com conhecimento suficiente para agir. Mais dados, por si só, não demonstram pertinência nem qualidade."
+        },
+        {
+          "heading": "Relacionar elementos sem apagar a origem",
+          "body": "O contexto pode ligar organizações, capacidades, mercados, projetos e períodos. Essa ligação só é útil quando as fontes e a forma como cada relação foi derivada podem ser consultadas. Atividade pública não é procura; uma relação potencial não se torna facto apenas por coincidir com a hipótese da equipa. A origem deve continuar visível para quem analisa e decide."
+        },
+        {
+          "heading": "Mostrar dimensões e lacunas em conjunto",
+          "body": "Uma leitura estratégica pode reunir alcance geográfico por capacidade, evidência temporal, dependências e relações sem comprimir tudo numa pontuação. As lacunas também importam: informação privada, uma fonte atual ou contexto local podem faltar. Torná-las explícitas ajuda a perceber se a pergunta tem resposta sustentada ou se requer pesquisa especializada fora da AXIGNAL."
+        },
+        {
+          "heading": "Reavaliar quando as evidências mudam",
+          "body": "Uma decisão não deve depender indefinidamente de uma conclusão antiga. Se uma fonte mudar ou surgir evidência contraditória, inferências dependentes podem precisar de revisão. A observação começa num momento conhecido e é parcial. Essa condição deve acompanhar qualquer reutilização do contexto, para não sugerir uma história completa ou um grau de certeza superior ao que as fontes sustentam."
+        }
+      ],
+      "example": "Exemplo hipotético: uma equipa pergunta se uma capacidade industrial descrita publicamente poderá ser relevante num mercado próximo. Revê fontes, atividade e geografia e leva duas perguntas em aberto para pesquisa no terreno. Não transforma compatibilidade em procura demonstrada.",
+      "limits": "A AXIGNAL não oferece aconselhamento estratégico, pontuação universal ou cobertura completa da economia. A informação disponível depende do Foco, das fontes e da data. Uma ligação explicável pode continuar a ser inferência; investimento, aquisição, conformidade e entrada no mercado exigem diligência adicional e avaliação profissional.",
+      "cta": {
+        "label": "Conhecer a AXIGNAL",
+        "href": "/knowledge"
+      },
+      "related": [
+        "commercial_competitor_context",
+        "commercial_board_decision_prep",
+        "commercial_research_for_organization_intelligence"
+      ]
+    }
+  },
+  {
+    "id": "commercial_multi_organization_context",
+    "fr": {
+      "slug": "contexte-externe-pour-plusieurs-organisations-liees",
+      "title": "Contexte externe pour plusieurs organisations liées",
+      "description": "Comparez des organisations dans un même contexte sans transférer leurs conclusions ni supposer une réalité commune.",
+      "lead": "Certaines décisions portent sur un ensemble d’entreprises plutôt que sur une seule. La comparaison est utile si la question et les conditions sont explicites, et si chaque affirmation reste attachée à l’organisation et aux preuves qui la soutiennent.",
+      "answer": "AXIGNAL peut relier des éléments économiques publics autour de plusieurs organisations, sous réserve d’identité, de droits, de sources et de couverture. Cela ne signifie pas que le niveau de preuve est égal ni qu’une conclusion sur l’une s’applique aux autres.",
+      "sections": [
+        {
+          "heading": "Préciser pourquoi les organisations sont rapprochées",
+          "body": "Un portefeuille peut réunir filiales, fournisseurs, partenaires possibles ou entreprises d’un marché. Avant de comparer, définissez la question: dépendances, capacités, activité ou contexte public. Sans critère explicite, un tableau peut suggérer une équivalence fondée seulement sur des noms proches, un secteur commun ou une géographie partagée. Le périmètre doit servir un objectif précis."
+        },
+        {
+          "heading": "Laisser chaque preuve attachée à son sujet",
+          "body": "Une source portant sur une maison mère ne s’applique pas automatiquement à une filiale. Une capacité observée pour une entité juridique ne prouve pas qu’une autre société du groupe l’exerce. Chaque organisation, relation et période nécessite sa propre résolution. Une preuve réutilisée garde son attribution et ne doit pas être comptée deux fois comme confirmation indépendante."
+        },
+        {
+          "heading": "Interpréter les écarts de couverture avec prudence",
+          "body": "Une entreprise peut avoir davantage de documents publics en raison de sa taille, de sa juridiction, de sa langue ou de ses habitudes de publication. Cela ne signifie pas qu’elle soit plus active ou meilleure. La comparaison doit rendre visibles les lacunes au lieu de pénaliser l’organisation moins documentée ou de transformer le silence des sources en évaluation négative."
+        },
+        {
+          "heading": "Utiliser la vue de groupe pour poser des questions communes",
+          "body": "L’analyse transversale peut faire ressortir une dépendance à vérifier, une capacité pertinente ou une différence nécessitant une explication. Ces constats guident la recherche, sans créer de hiérarchie automatique ni de recommandation d’achat. Chaque conclusion reste reliée à son support et peut être réévaluée lorsque les sources ou le contexte changent."
+        }
+      ],
+      "example": "Exemple hypothétique : une équipe examine quatre distributeurs régionaux. Elle conserve séparément la couverture, les capacités déclarées et les relations étayées de chaque société, et laisse potentiel tout ajustement déduit. Une observation sur une société mère n’est pas automatiquement appliquée à ses filiales.",
+      "limits": "AXIGNAL ne consolide pas automatiquement les groupes et ne garantit pas une comparaison entre pays, secteurs ou sources. La résolution d’identité et la couverture varient. Un volume de preuves différent ne prouve pas une différence de capacité ou de performance; toute synthèse doit préserver attribution et incertitude.",
+      "cta": {
+        "label": "Découvrir AXIGNAL",
+        "href": "/knowledge"
+      },
+      "related": [
+        "commercial_strategy_team_research",
+        "commercial_cross_client_agency_research",
+        "commercial_consultant_business_intelligence"
+      ]
+    },
+    "de": {
+      "slug": "externer-kontext-fuer-mehrere-verbundene-organisationen",
+      "title": "Externer Kontext für mehrere verbundene Organisationen",
+      "description": "Vergleichen Sie Organisationen im gemeinsamen Kontext, ohne Schlussfolgerungen zu übertragen oder gleiche Umstände anzunehmen.",
+      "lead": "Manche Entscheidungen betreffen eine Gruppe von Unternehmen. Ein Vergleich hilft, wenn Frage und Bedingungen klar sind und jede Aussage an der Organisation und den Belegen bleibt, auf denen sie beruht.",
+      "answer": "AXIGNAL kann öffentliche wirtschaftliche Informationen zu mehreren Organisationen verbinden, abhängig von Identität, Rechten, Quellen und Abdeckung. Daraus folgt weder ein gleicher Belegstand noch, dass eine Schlussfolgerung für alle verbundenen Unternehmen gilt.",
+      "sections": [
+        {
+          "heading": "Den Grund für den Vergleich festlegen",
+          "body": "Ein Bestand kann Tochtergesellschaften, Lieferanten, mögliche Partner oder Unternehmen eines Marktes umfassen. Vor dem Vergleich sollte die Frage feststehen: Abhängigkeiten, Fähigkeiten, Aktivitäten oder öffentlicher Kontext. Ohne Kriterium kann eine Tabelle Gleichheit suggerieren, obwohl nur Namen, Branche oder Ort ähnlich sind. Der Umfang muss auf eine konkrete Entscheidung oder Recherchefrage zugeschnitten sein."
+        },
+        {
+          "heading": "Jeden Beleg seinem Gegenstand zuordnen",
+          "body": "Eine Quelle über die Muttergesellschaft gilt nicht automatisch für eine Tochter. Eine Fähigkeit bei einer juristischen Einheit beweist nicht, dass eine andere Konzerngesellschaft sie ausübt. Jede Organisation, Beziehung und Zeitspanne braucht eigene Zuordnung. Wiederverwendete Belege behalten ihre Herkunft und dürfen nicht mehrfach als unabhängige Bestätigung gezählt werden."
+        },
+        {
+          "heading": "Unterschiedliche Abdeckung vorsichtig lesen",
+          "body": "Zu einem Unternehmen gibt es vielleicht mehr öffentliche Dokumente wegen Größe, Rechtsraum, Sprache oder Veröffentlichungspraxis. Das bedeutet nicht automatisch mehr Aktivität oder bessere Leistung. Eine Gegenüberstellung zeigt deshalb auch Lücken, statt weniger sichtbare Unternehmen abzuwerten oder fehlende Dokumentation als negatives Ergebnis auszulegen."
+        },
+        {
+          "heading": "Die Gruppenansicht für gemeinsame Fragen nutzen",
+          "body": "Eine organisationsübergreifende Sicht kann eine gemeinsame Abhängigkeit, eine zu prüfende Fähigkeit oder einen erklärungsbedürftigen Unterschied sichtbar machen. Das sind Recherchehinweise, keine automatische Rangfolge oder Kaufempfehlung. Jede Schlussfolgerung bleibt auf ihren Beleg zurückführbar und kann neu bewertet werden, wenn Quellen oder Bedingungen wechseln."
+        }
+      ],
+      "example": "Hypothetisches Beispiel: Ein Team betrachtet vier regionale Händler. Abdeckung, erklärte Fähigkeiten und belegte Beziehungen jeder Firma bleiben getrennt; abgeleitete Passung bleibt POTENTIAL. Eine Aussage über eine Muttergesellschaft wird nicht automatisch ihren Tochterunternehmen zugeschrieben.",
+      "limits": "AXIGNAL konsolidiert keine Unternehmensgruppen automatisch und garantiert keine Vergleichbarkeit über Länder, Branchen oder Quellen hinweg. Identitätsauflösung und Abdeckung variieren. Mehr Belege beweisen keine höhere Fähigkeit oder Leistung; jede Zusammenfassung wahrt Zuordnung und Unsicherheit. Vor einer Zusammenfassung sollte das Team festlegen, welche Merkmale bei allen Einheiten tatsächlich gleich definiert sind. Unterschiedliche Berichtsjahre oder Rechtsformen können sonst eine scheinbare Gemeinsamkeit erzeugen. Fehlende Angaben werden nicht mit Werten einer verwandten Organisation gefüllt; sie bleiben als Lücke sichtbar und begrenzen die Aussage des Vergleichs.",
+      "cta": {
+        "label": "AXIGNAL kennenlernen",
+        "href": "/knowledge"
+      },
+      "related": [
+        "commercial_strategy_team_research",
+        "commercial_cross_client_agency_research",
+        "commercial_consultant_business_intelligence"
+      ]
+    },
+    "it": {
+      "slug": "contesto-esterno-per-piu-organizzazioni-collegate",
+      "title": "Contesto esterno per più organizzazioni collegate",
+      "description": "Confronta organizzazioni nello stesso contesto senza trasferire conclusioni né presumere che condividano la stessa realtà.",
+      "lead": "Alcune decisioni riguardano un insieme di imprese. Il confronto è utile se domanda e condizioni sono esplicite e ogni affermazione resta legata all’organizzazione e alle evidenze che la sostengono.",
+      "answer": "AXIGNAL può collegare informazioni economiche pubbliche su più organizzazioni, nel rispetto di identità, diritti, fonti e copertura. Ciò non implica pari livello di prova né autorizza a trasferire la conclusione di un’impresa alle altre.",
+      "sections": [
+        {
+          "heading": "Chiarire perché si confrontano le organizzazioni",
+          "body": "Un portafoglio può comprendere controllate, fornitori, possibili partner o imprese di uno stesso mercato. Prima di confrontarle occorre definire la domanda: dipendenze, capacità, attività o contesto pubblico. Senza un criterio, una tabella può suggerire equivalenza dove esistono solo nomi, settori o aree geografiche simili. L’ambito serve una domanda concreta, non una classificazione generale."
+        },
+        {
+          "heading": "Mantenere ogni evidenza legata al suo soggetto",
+          "body": "Una fonte sulla capogruppo non vale automaticamente per una controllata. Una capacità attribuita a una persona giuridica non prova che un’altra società del gruppo la eserciti. Ogni organizzazione, relazione e periodo richiede una risoluzione specifica. Le prove riutilizzate conservano attribuzione e non si contano due volte come conferme indipendenti."
+        },
+        {
+          "heading": "Leggere con cautela le differenze di copertura",
+          "body": "Un’impresa può avere più documenti pubblici per dimensione, giurisdizione, lingua o abitudini di pubblicazione. Questo non implica necessariamente più attività o risultati migliori. Il confronto rende visibili le lacune, senza penalizzare chi è meno documentato né trasformare il silenzio delle fonti in un giudizio negativo."
+        },
+        {
+          "heading": "Usare il gruppo per trovare domande comuni",
+          "body": "Un’analisi trasversale può evidenziare una dipendenza da verificare, una capacità rilevante o una differenza che richiede spiegazioni. Sono spunti di ricerca, non una gerarchia automatica né una raccomandazione d’acquisto. Ogni conclusione resta riconducibile al proprio supporto e rivedibile quando cambiano fonti o condizioni."
+        }
+      ],
+      "example": "Esempio ipotetico: un team esamina quattro distributori regionali. Mantiene separati copertura, capacità dichiarate e rapporti sostenuti di ciascuna impresa, lasciando potenziale l’adattamento dedotto. Un dato sulla capogruppo non viene esteso automaticamente alle controllate.",
+      "limits": "AXIGNAL non consolida automaticamente gruppi aziendali né garantisce comparabilità tra paesi, settori o fonti. Risoluzione d’identità e copertura variano. Un diverso volume di prove non dimostra capacità o prestazioni diverse; la sintesi deve mantenere attribuzione e incertezza. Prima di sintetizzare, il team definisce quali attributi abbiano lo stesso significato per tutte le entità. Esercizi contabili o forme giuridiche diverse possono creare una somiglianza apparente. I dati mancanti non si riempiono copiandoli da un’organizzazione collegata: restano lacune visibili che delimitano la portata del confronto.",
+      "cta": {
+        "label": "Scopri AXIGNAL",
+        "href": "/knowledge"
+      },
+      "related": [
+        "commercial_strategy_team_research",
+        "commercial_cross_client_agency_research",
+        "commercial_consultant_business_intelligence"
+      ]
+    },
+    "pt": {
+      "slug": "contexto-externo-para-varias-organizacoes-relacionadas",
+      "title": "Contexto externo para várias organizações relacionadas",
+      "description": "Compare organizações num contexto comum sem transferir conclusões nem presumir que partilham a mesma realidade.",
+      "lead": "Algumas decisões exigem olhar para um conjunto de empresas. A comparação ajuda quando a pergunta e as condições são claras e cada afirmação permanece ligada à organização e às evidências que a sustentam.",
+      "answer": "A AXIGNAL pode relacionar informação económica pública sobre várias organizações, sujeita a identidade, direitos, fontes e cobertura. Isso não significa que todas tenham o mesmo nível de evidência nem que uma conclusão se aplique às restantes.",
+      "sections": [
+        {
+          "heading": "Definir por que motivo são comparadas",
+          "body": "Uma carteira pode reunir subsidiárias, fornecedores, possíveis parceiros ou empresas de um mercado. Antes da comparação, defina a pergunta: dependências, capacidades, atividade ou contexto público. Sem um critério explícito, uma tabela pode sugerir equivalência onde só existem nomes, setores ou geografias semelhantes. O âmbito deve responder a uma questão concreta, não aparentar uma taxonomia geral."
+        },
+        {
+          "heading": "Manter cada evidência ligada ao seu sujeito",
+          "body": "Uma fonte sobre a empresa-mãe não se aplica automaticamente a uma subsidiária. Uma capacidade observada numa entidade jurídica não prova que outra empresa do grupo a execute. Cada organização, relação e período necessita de resolução própria. Evidências reutilizadas mantêm a atribuição e não devem ser contadas duas vezes como confirmação independente."
+        },
+        {
+          "heading": "Interpretar diferenças de cobertura com prudência",
+          "body": "Uma empresa pode ter mais documentação pública devido à dimensão, jurisdição, idioma ou prática editorial. Isso não significa necessariamente mais atividade ou qualidade. A comparação deve mostrar lacunas, em vez de penalizar organizações menos visíveis ou interpretar o silêncio das fontes como desempenho inferior."
+        },
+        {
+          "heading": "Usar a perspetiva de grupo para levantar perguntas",
+          "body": "A análise transversal pode revelar uma dependência por verificar, uma capacidade relevante ou uma diferença que precisa de explicação. São pistas para investigar, não uma hierarquia automática nem recomendação de compra. Cada conclusão deve continuar ligada ao respetivo suporte e aberta a revisão quando as fontes ou condições mudarem."
+        }
+      ],
+      "example": "Exemplo hipotético: uma equipa examina quatro distribuidores regionais. Mantém separados a cobertura, as capacidades declaradas e as relações sustentadas de cada empresa, deixando potencial qualquer adequação inferida. Uma observação sobre a empresa-mãe não é automaticamente aplicada às subsidiárias.",
+      "limits": "A AXIGNAL não consolida automaticamente grupos empresariais nem garante comparabilidade entre países, setores ou fontes. A resolução de identidade e a cobertura podem variar. Um volume diferente de evidências não prova capacidades ou desempenho distintos; qualquer síntese deve preservar atribuição e incerteza. Antes de sintetizar, a equipa define quais atributos têm realmente a mesma definição para todas as entidades. Períodos contabilísticos ou formas jurídicas diferentes podem criar semelhanças aparentes. Os dados em falta não são preenchidos com informação de uma organização relacionada; permanecem lacunas visíveis que limitam a conclusão do grupo.",
+      "cta": {
+        "label": "Conhecer a AXIGNAL",
+        "href": "/knowledge"
+      },
+      "related": [
+        "commercial_strategy_team_research",
+        "commercial_cross_client_agency_research",
+        "commercial_consultant_business_intelligence"
+      ]
+    }
+  },
+  {
+    "id": "commercial_consultant_business_intelligence",
+    "fr": {
+      "slug": "intelligence-economique-externe-pour-consultants",
+      "title": "Intelligence économique externe pour les consultants",
+      "description": "Préparez le conseil avec des preuves publiques traçables et un contexte économique révisable dans le temps.",
+      "lead": "Un consultant doit distinguer ce que son client lui communique de ce qui peut être observé indépendamment. Cette séparation donne un point de départ plus solide pour explorer capacités, risques et questions ouvertes.",
+      "answer": "AXIGNAL peut fournir un contexte d’intelligence économique publique et reliée pour un travail de conseil. L’outil ne produit pas de conclusions privées sur le client, ne remplace pas les entretiens et ne délivre pas un avis professionnel prêt à appliquer.",
+      "sections": [
+        {
+          "heading": "Formuler une hypothèse sans la tenir pour confirmée",
+          "body": "Une mission peut commencer par une question de positionnement, de capacité ou d’environnement. Les preuves publiques peuvent rendre l’hypothèse plus précise, mais la question posée par le client n’est pas la preuve de sa réponse. Une vue utile montre sources, dates et lacunes afin que le consultant sache ce qui est défendable et ce qui doit être vérifié par d’autres méthodes."
+        },
+        {
+          "heading": "Contextualiser sans mélanger les informations confidentielles",
+          "body": "Les notes d’entretien et documents privés relèvent de la relation professionnelle et peuvent avoir des règles d’accès différentes. Ils ne doivent pas être ajoutés silencieusement au monde économique public. L’intelligence indépendante s’appuie sur des preuves publiques admises et respecte les frontières de confidentialité; le consultant peut examiner séparément ces perspectives dans sa propre analyse."
+        },
+        {
+          "heading": "Adapter la profondeur à la personne qui décide",
+          "body": "Un dirigeant peut demander une explication concise de l’importance d’un constat; un analyste peut vouloir inspecter sa source et sa dérivation. Les deux niveaux doivent reposer sur la même preuve, sans changer son statut pour renforcer le récit. Le professionnel décide comment l’intégrer aux objectifs, contraintes et méthodes de la mission."
+        },
+        {
+          "heading": "Conserver les thèmes qui méritent un suivi ultérieur",
+          "body": "Si un sujet dépasse la mission actuelle, une observation persistante peut ajouter du contexte temporel selon les sources et la couverture disponibles. La continuité ne garantit ni nouveau constat ni fréquence particulière de révision. Quand la conclusion évolue, le consultant doit savoir quelle preuve a changé et si les conditions de comparaison restent valides."
+        }
+      ],
+      "example": "Exemple hypothétique : une consultante étudie l’expansion d’une entreprise et trouve des preuves publiques de nouvelles capacités, mais pas d’activité confirmée dans certains marchés. Elle utilise ces éléments pour structurer ses entretiens, sans les remplacer ni présenter l’image comme exhaustive.",
+      "limits": "AXIGNAL n’est ni plateforme de conseil, ni CRM, ni générateur de rapports personnalisés à partir de données confidentielles. Les preuves publiques ont une couverture partielle et un état temporel. Les recommandations, diagnostics et conclusions sur des informations privées nécessitent des recherches supplémentaires hors d’AXIGNAL.",
+      "cta": {
+        "label": "Explorer AXIGNAL",
+        "href": "/signup"
+      },
+      "related": [
+        "commercial_multi_organization_context",
+        "commercial_evidence_traceability",
+        "commercial_board_decision_prep"
+      ]
+    },
+    "de": {
+      "slug": "externe-wirtschaftsinformation-fuer-berater",
+      "title": "Externe Wirtschaftsinformation für Unternehmensberater",
+      "description": "Bereiten Sie Beratung mit nachvollziehbaren öffentlichen Belegen und zeitlich überprüfbarem Wirtschaftskontext vor.",
+      "lead": "Beratende müssen unterscheiden, was ein Kunde mitteilt und was unabhängig beobachtet werden kann. Diese Trennung schafft einen besseren Ausgangspunkt, um Fähigkeiten, Risiken und offene Fragen zu untersuchen.",
+      "answer": "AXIGNAL kann öffentliche, verknüpfte Wirtschaftsinformation als Kontext für Beratungsarbeit liefern. Es erzeugt keine privaten Kundenurteile, ersetzt keine Interviews und gibt keine fertige professionelle Empfehlung aus.",
+      "sections": [
+        {
+          "heading": "Eine Hypothese vorbereiten, ohne sie zu bestätigen",
+          "body": "Ein Auftrag kann mit einer Frage zu Positionierung, Fähigkeit oder Umfeld beginnen. Öffentliche Belege können eine Hypothese präzisieren, doch die Frage des Kunden ist kein Beleg für ihre Antwort. Eine hilfreiche Sicht zeigt Quellen, Zeitpunkte und Lücken, damit Beratende erkennen, was gestützt ist und was mit anderen Methoden geprüft werden muss."
+        },
+        {
+          "heading": "Kontext ergänzen und Vertrauliches getrennt halten",
+          "body": "Interviewnotizen und private Dokumente gehören zur beruflichen Beziehung und können anderen Zugriffsregeln unterliegen. Sie dürfen nicht stillschweigend in den öffentlichen Wirtschaftskontext übergehen. Unabhängige Information stützt sich auf zugelassene öffentliche Belege und wahrt Datenschutzgrenzen; beide Perspektiven kann der Berater in der eigenen Analyse getrennt berücksichtigen."
+        },
+        {
+          "heading": "Erklärungstiefe auf die Entscheidung abstimmen",
+          "body": "Eine Führungskraft braucht vielleicht eine kurze Erklärung, warum ein Befund wichtig ist; ein Analyst möchte Quelle und Herleitung prüfen. Beide Ebenen müssen von denselben Belegen getragen werden, ohne deren Status für eine überzeugendere Erzählung zu verändern. Der Fachmann entscheidet, wie die Information zu Zielen und Beschränkungen des Auftrags passt."
+        },
+        {
+          "heading": "Themen für eine spätere Prüfung behalten",
+          "body": "Bleibt ein Thema über den Auftrag hinaus wichtig, kann fortlaufende Beobachtung zeitlichen Kontext ergänzen, soweit Quellen und Abdeckung dies zulassen. Kontinuität garantiert weder einen neuen Befund noch einen festen Prüfrhythmus. Ändert sich eine Schlussfolgerung, muss erkennbar sein, welcher Beleg sich geändert hat und ob die Vergleichsbedingungen noch gelten."
+        }
+      ],
+      "example": "Hypothetisches Beispiel: Eine Beraterin prüft die Expansion eines Unternehmens und findet öffentliche Hinweise auf neue Fähigkeiten, aber keine bestätigte Aktivität in bestimmten Märkten. Sie nutzt das für strukturierte Interviews, ersetzt diese nicht und bezeichnet die Sicht nicht als vollständig.",
+      "limits": "AXIGNAL ist weder Beratungsplattform noch CRM oder Generator vertraulicher Kundenberichte. Öffentliche Belege sind lückenhaft und zeitgebunden. Professionelle Empfehlungen, Geschäftsdiagnosen und Schlüsse aus privaten Informationen erfordern zusätzliche Recherche außerhalb von AXIGNAL. Ein Auftraggeber kann eine Darstellung bestreiten oder ergänzen; diese Rückmeldung weist auf eine Frage hin, ersetzt aber keinen passenden Beleg. Der Berater sollte Herkunft und Vertraulichkeit getrennt behandeln und erläutern, ob eine Aussage öffentlich gestützt, vom Kunden mitgeteilt oder eine eigene fachliche Einschätzung ist.",
+      "cta": {
+        "label": "AXIGNAL kennenlernen",
+        "href": "/signup"
+      },
+      "related": [
+        "commercial_multi_organization_context",
+        "commercial_evidence_traceability",
+        "commercial_board_decision_prep"
+      ]
+    },
+    "it": {
+      "slug": "intelligence-economica-esterna-per-consulenti",
+      "title": "Intelligence economica esterna per consulenti",
+      "description": "Prepara il lavoro di consulenza con evidenze pubbliche tracciabili e contesto economico rivedibile nel tempo.",
+      "lead": "Un consulente deve distinguere ciò che comunica il cliente da quanto si può osservare in modo indipendente. Questa separazione offre una base migliore per esplorare capacità, rischi e domande ancora aperte.",
+      "answer": "AXIGNAL può fornire contesto di intelligence economica pubblica e connessa per un incarico di consulenza. Non produce conclusioni private sul cliente, non sostituisce le interviste e non consegna pareri professionali già pronti da applicare.",
+      "sections": [
+        {
+          "heading": "Preparare un’ipotesi senza considerarla confermata",
+          "body": "Un incarico può iniziare con una domanda su posizionamento, capacità o contesto. Le evidenze pubbliche possono rendere l’ipotesi più precisa, ma la domanda del cliente non costituisce prova della risposta. Una vista utile espone fonti, date e lacune: il consulente può distinguere ciò che è sostenibile da ciò che va verificato con altri metodi."
+        },
+        {
+          "heading": "Aggiungere contesto senza mescolare informazioni riservate",
+          "body": "Note di colloquio e documenti privati appartengono alla relazione professionale e possono avere regole di accesso diverse. Non vanno inseriti silenziosamente nel mondo economico pubblico. L’intelligence indipendente utilizza evidenze pubbliche ammesse e rispetta i confini di riservatezza; il consulente può considerare separatamente le due prospettive nella propria analisi."
+        },
+        {
+          "heading": "Adattare la profondità a chi decide",
+          "body": "Un dirigente può aver bisogno di una spiegazione breve della rilevanza; un analista potrebbe voler esaminare fonte e derivazione. Entrambi i livelli devono poggiare sulle stesse prove senza alterarne lo stato per rendere più convincente il racconto. Spetta al professionista integrare le informazioni con obiettivi e vincoli dell’incarico."
+        },
+        {
+          "heading": "Conservare temi che meritano un controllo successivo",
+          "body": "Se un tema resta importante oltre il progetto attuale, l’osservazione persistente può aggiungere contesto temporale nei limiti di fonti e copertura. La continuità non garantisce nuovi risultati né una frequenza prestabilita di revisione. Quando cambia una conclusione, il consulente deve sapere quali evidenze sono mutate e se le condizioni del confronto restano valide."
+        }
+      ],
+      "example": "Esempio ipotetico: una consulente esamina l’espansione di un’impresa e trova prove pubbliche di nuove capacità, ma non attività confermata in alcuni mercati. Usa i risultati per strutturare le interviste, senza sostituirle né presentare il quadro come esaustivo.",
+      "limits": "AXIGNAL non è una piattaforma di consulenza, un CRM o un generatore di rapporti personalizzati con dati riservati. Le evidenze pubbliche hanno copertura parziale e stato temporale. Raccomandazioni professionali, diagnosi aziendali e conclusioni su informazioni private richiedono altra ricerca al di fuori di AXIGNAL. Il cliente può contestare o integrare una descrizione; il riscontro indica una domanda da esaminare, ma non sostituisce una prova pertinente. Il consulente mantiene separate provenienza e riservatezza e chiarisce se un’affermazione è sostenuta pubblicamente, comunicata dal cliente o costituisce una propria valutazione professionale.",
+      "cta": {
+        "label": "Scopri AXIGNAL",
+        "href": "/signup"
+      },
+      "related": [
+        "commercial_multi_organization_context",
+        "commercial_evidence_traceability",
+        "commercial_board_decision_prep"
+      ]
+    },
+    "pt": {
+      "slug": "inteligencia-empresarial-externa-para-consultores",
+      "title": "Inteligência empresarial externa para consultores",
+      "description": "Prepare o aconselhamento com evidências públicas rastreáveis e contexto económico que pode ser revisto ao longo do tempo.",
+      "lead": "Um consultor precisa de distinguir o que o cliente comunica daquilo que pode ser observado de forma independente. Essa separação é um ponto de partida melhor para explorar capacidades, riscos e perguntas em aberto.",
+      "answer": "A AXIGNAL pode fornecer inteligência económica pública e relacionada como contexto para o trabalho de consultoria. Não produz conclusões privadas sobre o cliente, não substitui entrevistas nem entrega aconselhamento profissional pronto a aplicar.",
+      "sections": [
+        {
+          "heading": "Preparar uma hipótese sem a tratar como confirmada",
+          "body": "Um projeto pode começar com uma pergunta sobre posição, capacidade ou ambiente. Evidências públicas podem tornar a hipótese mais precisa, mas a pergunta do cliente não prova a resposta. Uma perspetiva útil mostra fontes, datas e lacunas para o consultor saber o que está sustentado e o que precisa de validação através de outros métodos."
+        },
+        {
+          "heading": "Acrescentar contexto sem misturar dados confidenciais",
+          "body": "Notas de entrevistas e documentos privados pertencem à relação profissional e podem ter regras de acesso diferentes. Não devem entrar silenciosamente no mundo económico público. A inteligência independente assenta em evidências públicas admitidas e preserva limites de privacidade; o consultor pode considerar separadamente ambas as perspetivas na sua análise."
+        },
+        {
+          "heading": "Ajustar a profundidade a quem decide",
+          "body": "Um dirigente pode precisar de uma explicação concisa da relevância de um achado; um analista talvez queira inspecionar a fonte e a derivação. Os dois níveis devem apoiar-se na mesma evidência sem alterar o seu estado para reforçar a narrativa. O profissional decide como a integra nos objetivos e restrições do trabalho."
+        },
+        {
+          "heading": "Guardar temas que merecem acompanhamento",
+          "body": "Se uma questão ultrapassa o projeto atual, a observação persistente pode acrescentar contexto temporal, conforme as fontes e a cobertura disponíveis. A continuidade não garante novos achados nem uma frequência de revisão. Quando uma conclusão muda, o consultor precisa de saber que evidência mudou e se as condições de comparação continuam válidas."
+        }
+      ],
+      "example": "Exemplo hipotético: uma consultora analisa a expansão de uma empresa e encontra evidências públicas de novas capacidades, mas não de atividade confirmada em certos mercados. Usa os elementos para estruturar entrevistas, sem as substituir nem apresentar o panorama como completo.",
+      "limits": "A AXIGNAL não é plataforma de consultoria, CRM ou gerador de relatórios personalizados com dados confidenciais. Evidências públicas têm cobertura parcial e estado temporal. Recomendações profissionais, diagnósticos empresariais e conclusões sobre informação privada exigem pesquisa adicional fora da AXIGNAL.",
+      "cta": {
+        "label": "Conhecer a AXIGNAL",
+        "href": "/signup"
+      },
+      "related": [
+        "commercial_multi_organization_context",
+        "commercial_evidence_traceability",
+        "commercial_board_decision_prep"
+      ]
+    }
+  },
+  {
+    "id": "commercial_customer_company_observation",
+    "fr": {
+      "slug": "observer-une-organisation-cliente-depuis-lexterieur",
+      "title": "Observer une organisation cliente depuis l’extérieur",
+      "description": "Comprenez le contexte public d’une entreprise cliente sans gérer la relation ni modifier ses données canoniques.",
+      "lead": "Travailler avec une entreprise ne signifie pas savoir tout ce qui se passe autour d’elle. Une perspective indépendante peut éclairer les changements et activités publics utiles à une conversation professionnelle.",
+      "answer": "AXIGNAL permet d’orienter l’observation vers des organisations, pas de gérer des comptes clients. Le Focus d’observation n’est pas une fiche CRM; l’information se limite à ce que des preuves admises peuvent soutenir.",
+      "sections": [
+        {
+          "heading": "Séparer le contexte public de la relation commerciale",
+          "body": "Une entreprise peut être cliente d’un cabinet dans des dossiers privés; AXIGNAL n’a pas besoin de cette relation et ne la transforme pas en fait public. L’utilisateur sélectionne une Organisation à observer, sans écrire de lien dans AXIGLAND. Toute relation observée nécessite ses propres preuves, tandis que les informations confidentielles restent dans les systèmes autorisés du professionnel."
+        },
+        {
+          "heading": "Comprendre les changements utiles à une conversation",
+          "body": "Une capacité nouvellement décrite, un changement juridique publié ou une activité de marché peut apporter du contexte avant une revue. Le signal ne devient pas automatiquement un risque, une opportunité ou une recommandation. Le consultant examine source, date, sujet et pertinence; si les preuves sont insuffisantes, la question reste ouverte et appelle une validation appropriée."
+        },
+        {
+          "heading": "Garder plusieurs vues sans créer un outil de portefeuille",
+          "body": "Un professionnel peut avoir besoin d’observer plusieurs Organisations. Chaque vue conserve identité, preuves et état propres; cela n’implique ni suivi de tâches, ni notes de compte, ni pipeline commercial. Une comparaison entre clients doit répondre à une question définie, éviter les données privées et ne jamais généraliser les preuves d’une entreprise à une autre."
+        },
+        {
+          "heading": "Respecter l’autonomie de l’organisation observée",
+          "body": "L’observation indépendante ne donne pas au consultant le pouvoir de corriger ou modifier la description canonique d’une entreprise. Une clarification du client peut guider la recherche, mais AXIGNAL doit réévaluer selon ses règles probatoires. Cette séparation maintient une perspective externe sans transformer le produit en système de gestion de profils; une contestation ouvre une enquête au lieu de réécrire l’état."
+        }
+      ],
+      "example": "Exemple hypothétique : un cabinet voit une annonce publique indiquant qu’un client industriel ouvre un site. Avant la réunion, il vérifie la source, la date et la capacité décrite. Il ne mélange pas de notes privées et ne conclut pas que le site fonctionne déjà sans preuve correspondante.",
+      "limits": "AXIGNAL n’est ni CRM, ni service client, ni gestion de comptes, ni éditeur de profils. L’observation peut être incomplète et dépend de sources publiques admises. Une relation client-fournisseur, des objectifs privés ou des résultats de projet ne se déduisent pas automatiquement d’une activité publique.",
+      "cta": {
+        "label": "Explorer AXIGNAL",
+        "href": "/knowledge"
+      },
+      "related": [
+        "commercial_consultant_business_intelligence",
+        "commercial_multi_organization_context",
+        "commercial_evidence_traceability"
+      ]
+    },
+    "de": {
+      "slug": "kundenorganisation-von-aussen-beobachten",
+      "title": "Eine Kundenorganisation von außen beobachten",
+      "description": "Verstehen Sie den öffentlichen Kontext eines Kundenunternehmens, ohne die Beziehung zu verwalten oder kanonische Angaben zu ändern.",
+      "lead": "Die Zusammenarbeit mit einem Unternehmen bedeutet nicht, alle Entwicklungen außerhalb des gemeinsamen Projekts zu kennen. Eine unabhängige Sicht kann öffentliche Veränderungen für ein Fachgespräch einordnen.",
+      "answer": "AXIGNAL richtet Beobachtung auf Organisationen, verwaltet aber keine Kundenkonten. Ein Beobachtungsfokus ist kein CRM-Datensatz; die Information reicht nur so weit, wie zugelassene Belege sie stützen.",
+      "sections": [
+        {
+          "heading": "Öffentlichen Kontext und Geschäftsbeziehung trennen",
+          "body": "Ein Unternehmen kann in privaten Unterlagen einer Beratung als Kunde geführt werden. AXIGNAL braucht diese Beziehung nicht und macht daraus keine öffentliche Tatsache. Die Auswahl einer Organisation zur Beobachtung schreibt keine Beziehung in AXIGLAND. Eine beobachtete Verbindung benötigt eigene Belege; vertrauliche Einzelheiten bleiben in den autorisierten Systemen des Beraters."
+        },
+        {
+          "heading": "Veränderungen für ein Gespräch einordnen",
+          "body": "Eine neu beschriebene Fähigkeit, eine veröffentlichte gesellschaftsrechtliche Änderung oder Marktaktivität kann vor einer Besprechung Kontext liefern. Ein Signal wird nicht automatisch zum Risiko, zur Chance oder Empfehlung. Beratende prüfen Quelle, Datum, Subjekt und Relevanz. Reicht die Beleglage nicht, bleibt die Frage offen und benötigt eine passende Prüfung."
+        },
+        {
+          "heading": "Mehrere Sichten ohne Kundenportfolio führen",
+          "body": "Fachleute können mehrere Organisationen beobachten müssen. Jede Sicht behält ihre eigene Identität, Belege und ihren Erkenntnisstand; daraus folgen keine Aufgabenverwaltung, Kontonotizen oder Vertriebspipeline. Ein Vergleich zwischen Kunden dient einer konkreten Frage, lässt private Informationen außen vor und überträgt niemals Belege eines Unternehmens auf ein anderes."
+        },
+        {
+          "heading": "Die Eigenständigkeit des beobachteten Unternehmens wahren",
+          "body": "Unabhängige Beobachtung gibt einem Abonnenten keine Befugnis, die kanonische Beschreibung einer Firma zu korrigieren oder zu bearbeiten. Eine Klarstellung kann die Recherche ausrichten, doch AXIGNAL bewertet nach seinen Belegregeln neu. So bleibt der Blick von außen erhalten. Ein Einwand eröffnet eine Prüfung; er schreibt den gespeicherten Zustand nicht direkt um."
+        }
+      ],
+      "example": "Hypothetisches Beispiel: Eine Beratung sieht eine öffentliche Mitteilung, dass ein Industriekunde einen neuen Standort eröffnet. Vor einem Termin prüft sie Quelle, Datum und beschriebene Fähigkeit. Private Notizen werden nicht eingemischt, und der operative Betrieb wird ohne Beleg nicht als Tatsache dargestellt.",
+      "limits": "AXIGNAL ist weder CRM noch Kundenservice, Kontenverwaltung oder Profilbearbeitung. Beobachtung kann unvollständig sein und hängt von zugelassenen öffentlichen Quellen ab. Eine Kundenbeziehung, private Ziele oder Projektergebnisse werden nicht automatisch aus öffentlicher Aktivität abgeleitet. Wenn eine öffentliche Quelle neue Fragen aufwirft, kann die nächste Besprechung diese gezielt prüfen. Die Auswahl des Unternehmens bleibt dabei ein Fokus für Beobachtung und keine Aussage über Kundenstatus. Auch mehrere Beobachtungen ergeben kein vollständiges Bild der Beziehung, da vertrauliche Ziele, Vereinbarungen und Projektdetails außerhalb dieser Evidenz liegen.",
+      "cta": {
+        "label": "AXIGNAL kennenlernen",
+        "href": "/knowledge"
+      },
+      "related": [
+        "commercial_consultant_business_intelligence",
+        "commercial_multi_organization_context",
+        "commercial_evidence_traceability"
+      ]
+    },
+    "it": {
+      "slug": "osservare-unorganizzazione-cliente-dallesterno",
+      "title": "Osservare dall’esterno un’organizzazione cliente",
+      "description": "Comprendi il contesto pubblico di un’impresa cliente senza gestire il rapporto o modificare dati canonici.",
+      "lead": "Lavorare con un’impresa non significa conoscere tutto ciò che accade al di fuori della relazione. Una prospettiva indipendente può contestualizzare cambiamenti e attività pubbliche utili a una conversazione professionale.",
+      "answer": "AXIGNAL permette di indirizzare l’osservazione verso organizzazioni, non di gestire account clienti. Il Foco di osservazione non è una scheda CRM e le informazioni restano limitate a ciò che le evidenze ammesse sostengono.",
+      "sections": [
+        {
+          "heading": "Separare contesto pubblico e rapporto commerciale",
+          "body": "Un’impresa può essere cliente di una società di consulenza nei registri privati; AXIGNAL non ha bisogno di questa relazione e non la trasforma in un fatto pubblico. Selezionare un’Organizzazione da osservare non scrive un legame in AXIGLAND. Ogni relazione osservata richiede prove proprie, mentre i dettagli riservati restano nei sistemi autorizzati del professionista."
+        },
+        {
+          "heading": "Comprendere i cambiamenti utili a un confronto",
+          "body": "Una nuova capacità descritta, una modifica societaria pubblicata o un’attività di mercato può offrire contesto per una riunione. Il segnale non diventa automaticamente rischio, opportunità o raccomandazione. Il consulente controlla fonte, data, soggetto e rilevanza; se le prove non bastano, la domanda resta aperta e richiede verifica."
+        },
+        {
+          "heading": "Mantenere più prospettive senza creare un portafoglio clienti",
+          "body": "Un professionista può dover osservare più Organizzazioni. Ciascuna conserva identità, evidenze e stato propri; ciò non implica gestione di attività, note cliente o pipeline. Il confronto tra clienti risponde a una domanda precisa, evita dati privati e non generalizza mai le evidenze di un’impresa alle altre."
+        },
+        {
+          "heading": "Rispettare l’autonomia dell’organizzazione osservata",
+          "body": "L’osservazione indipendente non autorizza chi consulta a correggere o modificare la descrizione canonica dell’impresa. Un chiarimento del cliente può orientare la ricerca, ma AXIGNAL rivaluta secondo le proprie regole probatorie. La prospettiva esterna resta così distinta dalla gestione del profilo: una contestazione avvia un esame, non riscrive direttamente lo stato registrato."
+        }
+      ],
+      "example": "Esempio ipotetico: una consulenza vede un annuncio pubblico sull’apertura di un nuovo stabilimento da parte di un cliente industriale. Prima dell’incontro verifica fonte, data e capacità descritta. Non aggiunge note private e non afferma che l’impianto sia già operativo senza prove adeguate.",
+      "limits": "AXIGNAL non è CRM, assistenza clienti, gestione account o editor di profili. L’osservazione può essere incompleta e dipende da fonti pubbliche ammesse. Rapporto cliente-fornitore, obiettivi privati e risultati di progetto non si deducono automaticamente dall’attività pubblica. Se una fonte pubblica apre nuove domande, il prossimo colloquio può affrontarle in modo mirato. La scelta dell’impresa resta un focus di osservazione, non una dichiarazione sul rapporto cliente. Anche più osservazioni non descrivono interamente la relazione: obiettivi riservati, accordi e dettagli di progetto restano fuori da queste evidenze.",
+      "cta": {
+        "label": "Scopri AXIGNAL",
+        "href": "/knowledge"
+      },
+      "related": [
+        "commercial_consultant_business_intelligence",
+        "commercial_multi_organization_context",
+        "commercial_evidence_traceability"
+      ]
+    },
+    "pt": {
+      "slug": "observar-organizacoes-cliente-a-partir-do-exterior",
+      "title": "Observar uma organização cliente a partir do exterior",
+      "description": "Compreenda o contexto público de uma empresa cliente sem gerir a relação nem editar os seus dados canónicos.",
+      "lead": "Trabalhar com uma empresa não significa conhecer tudo o que acontece à sua volta. Uma perspetiva independente pode contextualizar mudanças e atividade pública relevantes para uma conversa profissional.",
+      "answer": "A AXIGNAL permite dirigir a observação a organizações, mas não gerir contas de clientes. O Foco de observação não é um registo de CRM; a informação limita-se ao que as evidências admitidas conseguem sustentar.",
+      "sections": [
+        {
+          "heading": "Separar o contexto público da relação comercial",
+          "body": "Uma empresa pode ser cliente de uma consultora nos seus registos privados; a AXIGNAL não precisa dessa relação nem a transforma num facto público. Selecionar uma Organização para observação não grava uma ligação no AXIGLAND. Qualquer relação observada exige evidências próprias, e os detalhes confidenciais permanecem nos sistemas autorizados do profissional."
+        },
+        {
+          "heading": "Compreender mudanças relevantes para uma conversa",
+          "body": "Uma capacidade recém-descrita, uma alteração societária publicada ou atividade num mercado pode ajudar a preparar uma reunião. O sinal não se transforma automaticamente em risco, oportunidade ou recomendação. O consultor verifica fonte, data, sujeito e relevância; se as evidências forem insuficientes, a questão permanece aberta e requer validação adequada."
+        },
+        {
+          "heading": "Manter várias perspetivas sem criar uma carteira",
+          "body": "Um profissional pode precisar de observar várias Organizações. Cada perspetiva conserva identidade, evidências e estado próprios; isso não implica gestão de tarefas, notas de conta ou pipeline. A comparação entre clientes serve uma pergunta definida, exclui dados privados e nunca generaliza evidências de uma empresa para outra."
+        },
+        {
+          "heading": "Preservar a autonomia da organização observada",
+          "body": "A observação independente não dá ao subscritor autoridade para corrigir ou editar a descrição canónica da empresa. Um esclarecimento do cliente pode orientar o que investigar, mas a AXIGNAL reavalia segundo as regras probatórias. Assim, mantém-se uma perspetiva externa sem transformar o produto num sistema de gestão de perfis. Uma contestação inicia uma análise, não reescreve o estado diretamente."
+        }
+      ],
+      "example": "Exemplo hipotético: uma consultora vê um anúncio público de que um cliente industrial abriu uma instalação. Antes da reunião, verifica a fonte, a data e a capacidade descrita. Não mistura notas privadas nem conclui que a instalação já está operacional sem evidências que o sustentem.",
+      "limits": "A AXIGNAL não é CRM, apoio ao cliente, gestão de contas ou editor de perfis. A observação pode ser incompleta e depende de fontes públicas admitidas. A relação cliente-fornecedor, objetivos privados e resultados de projetos não são inferidos automaticamente da atividade pública.",
+      "cta": {
+        "label": "Conhecer a AXIGNAL",
+        "href": "/knowledge"
+      },
+      "related": [
+        "commercial_consultant_business_intelligence",
+        "commercial_multi_organization_context",
+        "commercial_evidence_traceability"
+      ]
+    }
+  },
+  {
+    "id": "commercial_geographic_capability_reach",
+    "fr": {
+      "slug": "portee-geographique-par-capacite-dentreprise",
+      "title": "Portée géographique selon chaque capacité d’entreprise",
+      "description": "Évaluez la portée par capacité à partir de sources localisées, sans faire du siège la limite de tous les marchés.",
+      "lead": "La portée d’une organisation peut varier entre produits, services et régions. Une lecture utile demande quelles preuves relient chaque capacité à un territoire et quelles parties de la carte restent potentielles ou inconnues.",
+      "answer": "AXIGNAL peut relier géographie et capacités dans le contexte économique observable lorsque des sources pertinentes existent. Le pays d’immatriculation ne définit pas à lui seul le marché total et ne confirme pas une aptitude à servir tout territoire.",
+      "sections": [
+        {
+          "heading": "Le siège ne constitue pas une frontière universelle",
+          "body": "Une personne morale peut être enregistrée dans un pays et exercer, vendre ou chercher ailleurs. Elle peut aussi offrir un service dans une région et distribuer un autre produit à l’international. L’inférence s’établit capacité par capacité, à partir de preuves, plutôt qu’en recopiant l’adresse de l’organisation dans chaque zone d’une cartographie."
+        },
+        {
+          "heading": "Chercher des preuves géographiques adaptées",
+          "body": "Déclarations de couverture, lieux d’activité, langues de service et projets publics apportent des informations différentes. Chacune a sa portée et sa date. Un site traduit ne prouve pas un service local; une adresse de bureau ne montre pas que toutes les capacités y sont délivrées. La provenance doit préciser le lien observé et celui qui reste dérivé."
+        },
+        {
+          "heading": "Distinguer portée et accès commercial",
+          "body": "Une capacité applicable à un secteur étranger ne démontre pas l’accès à des acheteurs, des autorisations ou des partenaires. Portée technique, activité observée et viabilité commerciale sont des dimensions séparées. Les marchés et relations insuffisamment étayés restent potentiels ou inconnus, même si l’adéquation paraît intuitive."
+        },
+        {
+          "heading": "Comparer les territoires sans masquer les écarts de couverture",
+          "body": "Registres, sources et vocabulaire varient selon les lieux et les langues. Une vue plus détaillée d’une région peut refléter une meilleure observabilité, pas une présence supérieure. La comparaison montre ces différences et évite de généraliser si la recherche n’a pas porté sur la même question partout. Le mode de livraison, les licences et les partenaires peuvent aussi différer par territoire."
+        }
+      ],
+      "example": "Exemple hypothétique : une société de maintenance intervient dans un département et déclare distribuer du matériel dans trois pays. AXIGNAL peut distinguer le service local documenté de la portée internationale déclarée et laisser inconnus les contrats conclus dans ces marchés.",
+      "limits": "AXIGNAL ne certifie ni licences territoriales, ni capacité logistique, ni disponibilité de service. La couverture dépend des sources, des langues, de la géographie et de la résolution de l’Organisation. Un marché potentiel n’est pas un marché servi; une capacité ne s’étend pas à une juridiction sans preuves pertinentes et suffisamment récentes.",
+      "cta": {
+        "label": "Découvrir AXIGNAL",
+        "href": "/knowledge"
+      },
+      "related": [
+        "commercial_export_market_research",
+        "commercial_market_activity_relationship",
+        "commercial_competitor_context"
+      ]
+    },
+    "de": {
+      "slug": "geografische-reichweite-je-unternehmensfaehigkeit",
+      "title": "Geografische Reichweite nach einzelnen Unternehmensfähigkeiten",
+      "description": "Bewerten Sie Reichweite je Fähigkeit anhand regionaler Belege, ohne den Sitz als Grenze aller Märkte anzunehmen.",
+      "lead": "Die Reichweite eines Unternehmens kann sich zwischen Produkten, Leistungen und Regionen unterscheiden. Eine hilfreiche Sicht fragt, welche Belege eine Fähigkeit mit einem Gebiet verbinden und welche Teile der Karte POTENTIAL oder UNKNOWN bleiben.",
+      "answer": "AXIGNAL kann Geografie und Fähigkeiten im beobachtbaren Wirtschaftskontext verbinden, wenn passende Quellen vorliegen. Das Sitzland bestimmt weder den Gesamtmarkt noch belegt es, dass eine Organisation jedes Gebiet bedienen kann.",
+      "sections": [
+        {
+          "heading": "Der Unternehmenssitz ist keine allgemeine Grenze",
+          "body": "Eine juristische Einheit kann in einem Land registriert sein und anderswo tätig sein, verkaufen oder recherchieren. Ebenso kann sie eine Leistung lokal und ein anderes Produkt international anbieten. Ableitungen erfolgen je Fähigkeit anhand eigener Belege, statt die Anschrift der Organisation in jedes Gebiet einer Karte zu übertragen."
+        },
+        {
+          "heading": "Geeignete geografische Belege suchen",
+          "body": "Angaben zur Abdeckung, Standorte, Service-Sprachen und öffentliche Projekte liefern verschiedene Hinweise. Jeder hat eigenen Umfang und Zeitpunkt. Eine übersetzte Webseite beweist keinen lokalen Service; eine Büroadresse zeigt nicht, dass dort jede Fähigkeit erbracht wird. Die Herkunft sollte erklären, welche geografische Verbindung beobachtet wurde und welche nur abgeleitet ist."
+        },
+        {
+          "heading": "Reichweite von geschäftlichem Zugang trennen",
+          "body": "Eine Fähigkeit, die zu einer Branche in einem anderen Land passen könnte, belegt weder Zugang zu Käufern noch Genehmigungen oder Partner. Technische Reichweite, beobachtete Aktivität und geschäftliche Tragfähigkeit sind getrennte Dimensionen. Nicht ausreichend belegte Märkte oder Beziehungen bleiben POTENTIAL oder UNKNOWN, selbst wenn die Passung naheliegend wirkt."
+        },
+        {
+          "heading": "Gebiete vergleichen und Abdeckungslücken zeigen",
+          "body": "Register, Quellen und Begriffe unterscheiden sich nach Land und Sprache. Eine detailliertere Sicht auf eine Region kann bessere Beobachtbarkeit statt größerer Präsenz widerspiegeln. Der Vergleich muss diese Unterschiede sichtbar machen und Verallgemeinerungen vermeiden, wenn die Recherche nicht überall dieselbe Frage abdeckt. Liefermodelle, Zulassungen und Partner können lokal ebenfalls variieren."
+        }
+      ],
+      "example": "Hypothetisches Beispiel: Ein Wartungsbetrieb arbeitet in einer Provinz und erklärt, Anlagen in drei Ländern zu vertreiben. AXIGNAL kann belegten lokalen Service von erklärter internationaler Abdeckung trennen und Verträge in diesen Ländern UNKNOWN lassen.",
+      "limits": "AXIGNAL zertifiziert keine Gebietslizenzen, Logistikkapazität oder Serviceverfügbarkeit. Abdeckung hängt von Quellen, Sprachen, Geografie und Organisationsauflösung ab. Ein potenzieller Markt ist kein bedienter Markt; eine Fähigkeit wird ohne relevante und zeitlich passende Belege nicht auf ein Gebiet übertragen. Ein möglicher Einsatzort sollte daher nicht mit einer belegten Lieferung verwechselt werden. Prüfen Sie, ob die Quelle eine Niederlassung, eine erklärte Abdeckung oder ein konkretes Projekt beschreibt und für welchen Zeitraum die Angabe gilt. Diese Unterscheidung verhindert, dass eine Karte weiter reicht als die dokumentierte Evidenz.",
+      "cta": {
+        "label": "AXIGNAL kennenlernen",
+        "href": "/knowledge"
+      },
+      "related": [
+        "commercial_export_market_research",
+        "commercial_market_activity_relationship",
+        "commercial_competitor_context"
+      ]
+    },
+    "it": {
+      "slug": "portata-geografica-per-capacita-aziendale",
+      "title": "Portata geografica secondo ogni capacità aziendale",
+      "description": "Valuta la portata per capacità con fonti localizzate, senza assumere che la sede definisca tutti i mercati.",
+      "lead": "La portata di un’organizzazione può variare tra prodotti, servizi e territori. Una prospettiva utile chiede quali evidenze colleghino ciascuna capacità a un luogo e quali parti della mappa restino potenziali o sconosciute.",
+      "answer": "AXIGNAL può collegare geografia e capacità nel contesto economico osservabile quando esistono fonti pertinenti. Il paese di registrazione non definisce da solo il mercato complessivo né conferma che un’organizzazione possa servire qualsiasi territorio.",
+      "sections": [
+        {
+          "heading": "La sede non è un confine universale",
+          "body": "Una persona giuridica può essere registrata in una giurisdizione e operare, vendere o fare ricerca altrove. Può anche offrire un servizio localmente e distribuire un altro prodotto a livello internazionale. L’inferenza va costruita per capacità e prove, non copiando l’indirizzo aziendale su ogni territorio della mappa."
+        },
+        {
+          "heading": "Cercare prove geografiche adeguate",
+          "body": "Dichiarazioni di copertura, sedi, lingue di servizio e progetti pubblici forniscono elementi diversi. Ognuno ha ambito e data propri. Un sito tradotto non dimostra assistenza locale; un indirizzo di ufficio non prova che ogni capacità sia erogata lì. La provenienza dovrebbe chiarire quale legame geografico è stato osservato e quale viene derivato."
+        },
+        {
+          "heading": "Non confondere portata e accesso commerciale",
+          "body": "Una capacità adatta a un settore in un altro paese non dimostra accesso a compratori, permessi o partner. Portata tecnica, attività osservata e fattibilità commerciale sono dimensioni separate. Mercati e relazioni senza evidenze sufficienti restano potenziali o sconosciuti, anche quando la compatibilità sembra intuitiva."
+        },
+        {
+          "heading": "Confrontare territori rendendo visibile la copertura",
+          "body": "Registri, fonti e termini variano per luogo e lingua. Una vista più dettagliata in una regione può riflettere maggiore osservabilità, non una presenza superiore. Il confronto deve rendere visibili le differenze ed evitare generalizzazioni quando la ricerca non copre la stessa domanda in ciascun territorio. Anche modelli di consegna, licenze e partner possono variare localmente."
+        }
+      ],
+      "example": "Esempio ipotetico: una società di manutenzione opera in una provincia e dichiara di distribuire apparecchiature in tre paesi. AXIGNAL può distinguere il servizio locale documentato dalla copertura internazionale dichiarata e lasciare sconosciuti i contratti in quei mercati.",
+      "limits": "AXIGNAL non certifica licenze territoriali, capacità logistica o disponibilità del servizio. La copertura dipende da fonti, lingue, geografia e risoluzione dell’Organizzazione. Un mercato potenziale non è un mercato servito; una capacità non si estende a una giurisdizione senza prove pertinenti e temporalmente adeguate. Un possibile luogo d’impiego non va confuso con una consegna documentata. Occorre capire se la fonte descrive una sede, un’area dichiarata o un progetto concreto e a quale periodo si riferisce. Questa distinzione evita che la cartografia mostri una portata più ampia di quella sostenuta dalle evidenze.",
+      "cta": {
+        "label": "Scopri AXIGNAL",
+        "href": "/knowledge"
+      },
+      "related": [
+        "commercial_export_market_research",
+        "commercial_market_activity_relationship",
+        "commercial_competitor_context"
+      ]
+    },
+    "pt": {
+      "slug": "alcance-geografico-por-capacidade-empresarial",
+      "title": "Alcance geográfico segundo cada capacidade empresarial",
+      "description": "Avalie o alcance por capacidade com fontes localizadas, sem presumir que a sede define todos os mercados.",
+      "lead": "O alcance de uma organização pode variar entre produtos, serviços e regiões. Uma leitura útil pergunta que evidências ligam cada capacidade a um território e que partes do mapa permanecem potenciais ou desconhecidas.",
+      "answer": "A AXIGNAL pode relacionar geografia e capacidades no contexto económico observável quando existam fontes pertinentes. O país de registo não define, por si só, o mercado total nem confirma que a organização possa servir qualquer território.",
+      "sections": [
+        {
+          "heading": "A sede não é uma fronteira universal",
+          "body": "Uma entidade legal pode estar registada numa jurisdição e operar, vender ou pesquisar noutras. Também pode prestar um serviço localmente e distribuir outro produto a nível internacional. A inferência deve ser construída por capacidade e evidência, sem copiar a morada da empresa para todos os mercados da cartografia."
+        },
+        {
+          "heading": "Procurar evidências geográficas adequadas",
+          "body": "Declarações de cobertura, localizações, idiomas de serviço e projetos públicos oferecem pistas diferentes. Cada uma tem âmbito e data próprios. Um site traduzido não prova apoio local; uma morada de escritório não demonstra que todas as capacidades sejam prestadas ali. A origem deve explicar que ligação geográfica foi observada e qual foi derivada."
+        },
+        {
+          "heading": "Distinguir alcance de acesso comercial",
+          "body": "Uma capacidade aplicável a um setor noutro país não demonstra acesso a compradores, licenças ou parceiros. Alcance técnico, atividade observada e viabilidade comercial são dimensões distintas. Mercados ou relações sem evidência suficiente permanecem potenciais ou desconhecidos, mesmo quando a compatibilidade parece intuitiva."
+        },
+        {
+          "heading": "Comparar territórios sem ocultar diferenças de cobertura",
+          "body": "Registos, fontes e vocabulário variam por local e idioma. Uma perspetiva mais detalhada numa região pode refletir melhor observabilidade, não maior presença. A comparação deve mostrar estas diferenças e evitar generalizações se a pesquisa não cobriu a mesma pergunta em todos os territórios. Modelos de entrega, licenças e parceiros também podem variar localmente."
+        }
+      ],
+      "example": "Exemplo hipotético: uma empresa de manutenção trabalha numa província e declara distribuir equipamento em três países. A AXIGNAL pode separar o serviço local documentado da cobertura internacional declarada e deixar desconhecidos os contratos nesses mercados.",
+      "limits": "A AXIGNAL não certifica licenças territoriais, capacidade logística ou disponibilidade de serviço. A cobertura depende das fontes, idiomas, geografia e resolução da Organização. Um mercado potencial não é um mercado servido; uma capacidade não se estende a uma jurisdição sem evidências pertinentes e temporalmente adequadas. Um possível local de utilização não deve ser confundido com uma entrega comprovada. Convém verificar se a fonte descreve uma sede, uma área declarada ou um projeto concreto e a que período se refere. Esta distinção evita que a cartografia sugira um alcance maior do que o sustentado pelas evidências.",
+      "cta": {
+        "label": "Conhecer a AXIGNAL",
+        "href": "/knowledge"
+      },
+      "related": [
+        "commercial_export_market_research",
+        "commercial_market_activity_relationship",
+        "commercial_competitor_context"
+      ]
+    }
+  }
+]

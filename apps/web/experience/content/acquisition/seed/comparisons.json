@@ -1,0 +1,398 @@
+[
+  {
+    "id": "point-in-time-research-vs-persistent-observation",
+    "cluster": "comparison-methods",
+    "intent": "compare",
+    "type": "comparison",
+    "locales": {
+      "es": {
+        "slug": "investigacion-puntual-vs-observacion-persistente",
+        "title": "Investigación puntual u observación persistente: cuándo elegir",
+        "description": "La investigación puntual responde una pregunta; la observación persistente conserva referencias y cambios para compararlos con el tiempo.",
+        "lead": "No todas las decisiones necesitan una serie temporal. Una búsqueda puntual puede ser suficiente para una pregunta inmediata; observar de forma persistente cobra sentido cuando la evolución, la procedencia o la continuidad de una organización importan para la decisión.",
+        "answer": "La investigación puntual es adecuada para resolver una cuestión delimitada con el contexto disponible. La observación persistente añade un registro de qué se observó, cuándo y bajo qué condiciones, de forma que pueda revisarse o compararse después. Ningún enfoque es universalmente mejor: depende de la pregunta, del coste de mantener actualidad y de la necesidad de explicar cambios.",
+        "sections": [
+          {
+            "heading": "Qué resuelve bien una búsqueda puntual",
+            "body": "Cuando alguien necesita localizar una fuente, verificar un dato concreto o preparar una conversación, una investigación puntual puede ser rápida y suficiente. Permite ajustar la consulta a la pregunta del momento y evita mantener registros que quizá no vuelvan a usarse. Su resultado debe conservar las fuentes y la fecha si se va a tomar una decisión con él. Sin ese registro, una respuesta guardada pierde contexto: puede ser difícil saber qué se buscó, qué quedó fuera o si la fuente cambió."
+          },
+          {
+            "heading": "Qué añade la observación persistente",
+            "body": "La observación persistente trata la continuidad como parte del trabajo. Registra objetos, fuentes, fechas, condiciones e incertidumbres y permite preguntar qué apareció, desapareció, se corroboró o quedó obsoleto. Comparar no significa asumir que la diferencia refleja un cambio real: primero hay que comprobar que sujeto, alcance, instrumento y ventana son suficientemente compatibles. Cuando no lo son, el sistema debe comunicar la limitación, no producir una tendencia artificial."
+          },
+          {
+            "heading": "Cómo elegir entre ambos",
+            "body": "Empieza por definir la decisión y su horizonte. Si basta una respuesta de hoy y el dato tiene poca dependencia temporal, una búsqueda puntual puede ser proporcional. Si se necesita reconstruir el estado anterior, comprobar cambios recurrentes o explicar por qué una señal merece atención, conviene un proceso que preserve historia y procedencia. Ese proceso requiere reglas de retención, revisión de actualidad y una forma de inspeccionar evidencia; guardar capturas sin método no garantiza una observación comparable."
+          },
+          {
+            "heading": "El papel de AXIGNAL",
+            "body": "AXIGNAL se plantea como un servicio de observación independiente y persistente de contextos económicos, con evidencia y estado temporal inspeccionables. La memoria económica gobernada de AXIGLAND debe distinguirse de una nota o respuesta puntual, y AXENT ayuda a explorar y explicar el contexto. Esto expresa el modelo de producto; no garantiza cobertura de cualquier organización o fuente ni implica que todo sensor o ciclo de observación esté disponible en cada caso."
+          }
+        ],
+        "example": "Ejemplo hipotético: una consultora necesita preparar mañana una reunión sobre una empresa. Una búsqueda puntual con fuentes recientes puede bastar. Si además quiere comparar qué información pública cambió durante seis meses, necesita conservar fechas, fuentes, consultas y condiciones de cada observación. La segunda pregunta no se responde fiablemente reconstruyendo de memoria la búsqueda inicial.",
+        "limits": "La observación persistente requiere cobertura, permisos y mantenimiento; puede seguir teniendo lagunas y no revela por sí sola la realidad privada de una empresa. Una diferencia temporal no demuestra causalidad ni efecto comercial. La investigación puntual tampoco es necesariamente superficial: puede ser rigurosa si su alcance, fuente y fecha quedan claros. El método apropiado depende del uso y de la evidencia disponible.",
+        "cta": { "label": "Explorar Knowledge", "href": "/knowledge" },
+        "related": ["alerts-vs-evidence-timeline", "source-summary-vs-provenance", "answers-vs-reviewable-economic-memory"]
+      },
+      "en": {
+        "slug": "point-in-time-research-vs-persistent-observation",
+        "title": "Point-in-time research or persistent observation: when to choose",
+        "description": "Point-in-time research answers a bounded question; persistent observation preserves references and changes for comparison over time, with explicit conditions.",
+        "lead": "Not every decision needs a time series. A one-off search may be enough for an immediate question; persistent observation becomes useful when an organization's evolution, provenance or continuity matters to the decision.",
+        "answer": "Point-in-time research is suited to a bounded question using the context available. Persistent observation adds a record of what was observed, when and under which conditions, so it can be reviewed or compared later. Neither approach is universally better: the choice depends on the question, the cost of maintaining freshness and the need to explain change.",
+        "sections": [
+          {
+            "heading": "What a one-off search does well",
+            "body": "When someone needs to locate a source, check a specific detail or prepare for a conversation, one-off research can be quick and sufficient. It lets the researcher tailor the query to the immediate question and avoids maintaining records that may never be used again. If a decision will rely on the result, the sources and date should be retained. Without that record, a saved answer loses context: it may be hard to know what was searched, what was excluded or whether a source has changed."
+          },
+          {
+            "heading": "What persistent observation adds",
+            "body": "Persistent observation treats continuity as part of the work. It records objects, sources, dates, conditions and uncertainty, making it possible to ask what appeared, disappeared, was corroborated or became stale. Comparison does not mean assuming a difference reflects real change: first check that subject, scope, instrument and window are sufficiently compatible. When they are not, the system should communicate the limitation rather than produce an artificial trend."
+          },
+          {
+            "heading": "How to choose between them",
+            "body": "Start by defining the decision and its horizon. If today's answer is enough and the fact has little temporal dependency, a one-off search may be proportionate. If you need to reconstruct an earlier state, check recurring changes or explain why a signal deserves attention, choose a process that preserves history and provenance. That process needs retention rules, freshness review and an inspectable evidence path; saving screenshots without a method does not guarantee comparable observations."
+          },
+          {
+            "heading": "AXIGNAL's role",
+            "body": "AXIGNAL is designed as an independent, persistent observer of economic contexts, with inspectable evidence and temporal state. AXIGLAND's governed economic memory is distinct from a one-off note or answer, and AXENT helps explore and explain context. This describes the product model; it does not guarantee coverage of every organization or source, or imply that every sensor or observation cycle is available in every case."
+          }
+        ],
+        "example": "Hypothetical example: a consultancy needs to prepare for a meeting about a company tomorrow. A one-off search with recent sources may be enough. If it also wants to compare what public information changed over six months, it needs to retain dates, sources, queries and conditions for each observation. The second question cannot reliably be answered by reconstructing the first search from memory.",
+        "limits": "Persistent observation requires coverage, permissions and maintenance; it can still have gaps and does not reveal a company's private reality by itself. A temporal difference proves neither causality nor commercial effect. One-off research is not necessarily superficial: it can be rigorous when its scope, source and date are clear. The appropriate method depends on the use and available evidence.",
+        "cta": { "label": "Explore Knowledge", "href": "/knowledge" },
+        "related": ["alerts-vs-evidence-timeline", "source-summary-vs-provenance", "answers-vs-reviewable-economic-memory"]
+      }
+    }
+  },
+  {
+    "id": "alerts-vs-evidence-timeline",
+    "cluster": "comparison-methods",
+    "intent": "compare",
+    "type": "comparison",
+    "locales": {
+      "es": {
+        "slug": "alertas-vs-cronologia-con-evidencia",
+        "title": "Alertas o cronología con evidencia: dos formas de seguir cambios",
+        "description": "Una alerta dirige atención a un evento; una cronología conserva observaciones y su contexto para revisar qué cambió y qué sigue incierto.",
+        "lead": "Una alerta responde «¿debo mirar esto ahora?». Una cronología responde «¿qué se observó antes y después, bajo qué condiciones y con qué respaldo?». Pueden complementarse, pero una notificación aislada no sustituye a una historia verificable.",
+        "answer": "Las alertas son útiles para señalar eventos que satisfacen una regla o merecen atención inmediata. Una cronología con evidencia organiza observaciones sucesivas con fuente, fecha, estado y condiciones. La alerta puede ser una entrada a la cronología; sin registro y procedencia, su texto no permite verificar el cambio ni interpretar su importancia después.",
+        "sections": [
+          {
+            "heading": "La ventaja de una alerta",
+            "body": "Una alerta puede reducir el tiempo entre un evento observado y la atención de una persona. Es apropiada cuando existe un criterio claro, una frecuencia razonable y un responsable de interpretar el aviso. Su valor depende de la calidad de detección: si la regla es ruidosa, la persona recibe interrupciones; si es demasiado estricta o la fuente falla, algunos eventos no se muestran. Una alerta debería explicar qué condición se activó, en vez de presentar una urgencia sin contexto."
+          },
+          {
+            "heading": "Lo que conserva una cronología",
+            "body": "Una cronología reúne los estados observados a través del tiempo y conserva referencias que permiten inspeccionar cada punto. Ayuda a distinguir una novedad de una repetición, una observación actual de otra antigua y un cambio de fuente de un posible cambio en la organización. Su lectura exige mostrar lagunas y condiciones de comparación. Una línea visual continua puede sugerir continuidad que la cobertura real no respalda, por lo que los periodos no observados deben ser visibles."
+          },
+          {
+            "heading": "Combinarlas sin confundir señal y prueba",
+            "body": "Un flujo disciplinado puede generar una alerta cuando una observación cumple una condición versionada y llevar a una página de cronología donde se vean la fuente, el periodo y los estados previos. La alerta dirige atención; no certifica relevancia económica, causa o impacto. Si la conclusión es potencial o desconocida, esa clase debe mantenerse al abrir el detalle. No se debe convertir un umbral de notificación en un veredicto sobre una empresa."
+          },
+          {
+            "heading": "Qué comparar antes de elegir",
+            "body": "Evalúa latencia, frecuencia, riesgo de falsos avisos, retención, trazabilidad y quién actuará con la información. Una operación que solo necesita responder a fallos críticos quizá priorice alertas; una revisión estratégica recurrente necesita historia contextual además del aviso. Ambas requieren fuentes permitidas y controles de actualidad. AXIGNAL se orienta a outputs explicables con evidencia y dimensión temporal; la implementación concreta y cobertura dependen del sensor y del contrato aplicable."
+          }
+        ],
+        "example": "Ejemplo hipotético: una alerta comunica que una fuente pública añadió una página sobre una capacidad. La cronología asociada muestra cuándo fue observada, la referencia, el texto disponible y las observaciones anteriores. El equipo puede decidir si investigar más. La alerta no demuestra que la capacidad exista ni que haya surgido ese día; solo que la fuente mostró esa página entonces.",
+        "limits": "Una alerta puede omitirse, retrasarse o activarse por cambios técnicos. Una cronología puede ser incompleta y no implica observación continua. La ausencia de evento no prueba que nada haya cambiado. La comparación requiere procedencia y condiciones compatibles, y la interpretación comercial exige evidencia adicional. La utilidad de cada interfaz debe evaluarse en la tarea real, no asumirse por su formato.",
+        "cta": { "label": "Explorar Knowledge", "href": "/knowledge" },
+        "related": ["point-in-time-research-vs-persistent-observation", "digital-indicator-vs-conditioned-observation", "source-summary-vs-provenance"]
+      },
+      "en": {
+        "slug": "alerts-vs-evidence-timeline",
+        "title": "Alerts or an evidence timeline: two different ways to follow change",
+        "description": "An alert directs attention to an event; a timeline preserves observations and their context so you can review what changed and what remains uncertain.",
+        "lead": "An alert answers, “Should I look at this now?” A timeline answers, “What was observed before and after, under which conditions and with what support?” They can complement each other, but a standalone notification is not a substitute for a verifiable history.",
+        "answer": "Alerts help flag events that meet a rule or deserve immediate attention. An evidence timeline organizes successive observations with source, date, state and conditions. An alert can lead into the timeline; without a record and provenance, its text cannot verify the change or explain its importance later.",
+        "sections": [
+          {
+            "heading": "The advantage of an alert",
+            "body": "An alert can shorten the time between an observed event and a person's attention. It suits cases with a clear criterion, reasonable frequency and someone responsible for interpreting the notice. Its value depends on detection quality: a noisy rule interrupts people, while an overly strict rule or failed source can hide events. An alert should explain which condition fired rather than imply urgency without context."
+          },
+          {
+            "heading": "What a timeline preserves",
+            "body": "A timeline brings together observed states over time and retains references that let people inspect each point. It helps distinguish a new item from a repeat, a current observation from an old one, and a source change from a possible organizational change. Reading it requires showing gaps and comparison conditions. A continuous visual line can imply continuity unsupported by actual coverage, so unobserved periods should remain visible."
+          },
+          {
+            "heading": "Combine them without confusing signal and proof",
+            "body": "A disciplined flow can issue an alert when an observation meets a versioned condition and link to a timeline page showing the source, period and earlier states. The alert directs attention; it does not certify economic relevance, cause or impact. If a conclusion is POTENTIAL or UNKNOWN, that state should remain visible when opening its detail. A notification threshold must not become a verdict about a company."
+          },
+          {
+            "heading": "What to compare before choosing",
+            "body": "Evaluate latency, frequency, false-alert risk, retention, traceability and who will act on the information. An operation that only needs to respond to critical failures may prioritize alerts; a recurring strategic review needs contextual history as well as notices. Both require permitted sources and freshness controls. AXIGNAL is oriented toward explainable outputs with evidence and temporal context; actual implementation and coverage depend on the applicable sensor and contract."
+          }
+        ],
+        "example": "Hypothetical example: an alert says a public source added a page about a capability. The linked timeline shows when it was observed, the reference, available text and earlier observations. The team can decide whether to investigate further. The alert does not prove the capability exists or began that day; it says only that the source showed that page then.",
+        "limits": "An alert can be missed, delayed or triggered by technical changes. A timeline can be incomplete and does not imply continuous observation. No event does not prove that nothing changed. Comparison requires provenance and compatible conditions, while commercial interpretation requires additional evidence. Each interface's usefulness should be evaluated in the real task rather than assumed from its format.",
+        "cta": { "label": "Explore Knowledge", "href": "/knowledge" },
+        "related": ["point-in-time-research-vs-persistent-observation", "digital-indicator-vs-conditioned-observation", "source-summary-vs-provenance"]
+      }
+    }
+  },
+  {
+    "id": "spreadsheet-vs-linked-temporal-context",
+    "cluster": "comparison-methods",
+    "intent": "compare",
+    "type": "comparison",
+    "locales": {
+      "es": {
+        "slug": "hoja-de-calculo-vs-contexto-temporal-enlazado",
+        "title": "Hoja de cálculo o contexto enlazado: organiza según la pregunta",
+        "description": "Las hojas de cálculo son flexibles para conjuntos tabulares y cálculos; el contexto enlazado añade relaciones, procedencia y tiempo cuando importan las dependencias.",
+        "lead": "Una hoja de cálculo puede ser la herramienta correcta para ordenar una lista, compartir cifras o hacer un cálculo definido. Cuando la pregunta atraviesa organizaciones, fuentes, evidencias y cambios temporales, una tabla plana puede dejar dependencias implícitas que alguien debe reconstruir.",
+        "answer": "Las hojas de cálculo funcionan bien para datos tabulares delimitados, colaboración conocida y cálculos que las personas pueden inspeccionar. Un sistema de contexto temporal enlazado representa relaciones entre objetos, conserva procedencia y estado temporal, y ayuda a rastrear qué conclusiones dependen de qué observaciones. El segundo enfoque no vuelve innecesaria una hoja: sirve a una clase distinta de problema y exige gobierno y modelado.",
+        "sections": [
+          {
+            "heading": "Dónde una hoja de cálculo es suficiente",
+            "body": "Para una lista de proveedores, un presupuesto o un inventario con columnas estables, una hoja ofrece familiaridad, edición directa y fórmulas visibles. Una persona puede filtrar, ordenar y revisar el conjunto sin desplegar una aplicación especializada. La fragilidad aparece cuando la misma entidad tiene varios nombres, una fila se copia entre pestañas o una cifra cambia sin dejar claro qué fuente y periodo representa. Con disciplina, enlaces a fuentes y convenciones de versión, una hoja puede mantener más contexto del que sugiere el formato básico."
+          },
+          {
+            "heading": "Qué significa enlazar contexto",
+            "body": "Un contexto enlazado hace explícito que una organización, una capacidad, una fuente y una observación son objetos distintos relacionados de cierta manera. Puede preservar la fecha de observación, la fuente original, el estado epistemológico y el periodo de validez. Si una fuente cambia, quien razona puede identificar qué proyecciones dependen de ella. El enlace no demuestra que la relación sea correcta: identidad, evidencia y reglas siguen necesitando revisión. Tampoco toda pregunta justifica un grafo o una estructura más compleja."
+          },
+          {
+            "heading": "Comparar el coste humano y de gobierno",
+            "body": "La elección no es simplemente entre formato antiguo y tecnología nueva. Considera cuántas veces se actualizan los datos, cuántas personas cruzan fuentes, si hay que reconstruir el estado anterior y cuánto cuesta mantener definiciones compartidas. Una estructura enlazada puede reducir joins mentales cuando se reutiliza de forma gobernada, pero puede aumentar el coste inicial de modelado y mantenimiento. La hipótesis debe evaluarse con tareas reales; no presupongas ahorro ni precisión superior."
+          },
+          {
+            "heading": "Una práctica híbrida puede ser la más clara",
+            "body": "Una hoja puede seguir siendo útil como exportación, espacio de cálculo local o interfaz para una revisión acotada. El sistema de observación puede aportar las relaciones, estados y referencias que permiten interpretar sus filas. Para no crear dos versiones de la verdad, identifica qué fuente gobierna cada campo y cuándo se actualiza. AXIGNAL se orienta a conocimiento económico persistente, no a reemplazar toda hoja de cálculo ni a servir de sistema transaccional general."
+          }
+        ],
+        "example": "Ejemplo hipotético: un equipo mantiene en una hoja nombres de empresas y fechas de revisión. Al consolidar fuentes, descubre que dos nombres corresponden quizá a una misma entidad y que una afirmación proviene de una página ya retirada. Una representación enlazada podría conservar la resolución como hipótesis revisable y relacionar cada afirmación con su fuente y fecha, mientras la hoja sigue sirviendo para el presupuesto del equipo.",
+        "limits": "Las hojas pueden ser auditables y suficientes; el contexto enlazado puede ser costoso o innecesario en problemas pequeños. Los enlaces no sustituyen la calidad de evidencia ni eliminan ambigüedad de identidad. Los datos privados requieren controles de acceso en cualquiera de los formatos. La forma adecuada depende del volumen, las relaciones, la frecuencia de cambio, los usuarios y las obligaciones de gobierno.",
+        "cta": { "label": "Explorar Knowledge", "href": "/knowledge" },
+        "related": ["source-summary-vs-provenance", "answers-vs-reviewable-economic-memory", "point-in-time-research-vs-persistent-observation"]
+      },
+      "en": {
+        "slug": "spreadsheet-vs-linked-temporal-context",
+        "title": "Spreadsheet or linked temporal context: organize around the question",
+        "description": "Spreadsheets are flexible for tabular sets and calculations; linked context adds relationships, provenance and time when dependencies matter.",
+        "lead": "A spreadsheet can be the right tool for sorting a list, sharing figures or doing a defined calculation. When a question spans organizations, sources, evidence and change over time, a flat table may leave dependencies implicit for someone to reconstruct.",
+        "answer": "Spreadsheets work well for bounded tabular data, familiar collaboration and calculations people can inspect. A linked temporal-context system represents relationships among objects, preserves provenance and temporal state, and helps trace which conclusions depend on which observations. The second approach does not make spreadsheets unnecessary: it serves a different problem class and requires governance and modeling.",
+        "sections": [
+          {
+            "heading": "Where a spreadsheet is enough",
+            "body": "For a supplier list, budget or inventory with stable columns, a spreadsheet offers familiarity, direct editing and visible formulas. A person can filter, sort and review the set without deploying a specialized application. Fragility appears when the same entity has multiple names, a row is copied between tabs or a value changes without showing which source and period it represents. With discipline, source links and version conventions, a spreadsheet can preserve more context than the basic format suggests."
+          },
+          {
+            "heading": "What it means to link context",
+            "body": "Linked context makes explicit that an organization, capability, source and observation are distinct objects related in particular ways. It can preserve observation date, original source, epistemic state and validity period. If a source changes, a reasoner can identify which projections depend on it. A link does not prove that the relationship is correct: identity, evidence and rules still need review. Nor does every question justify a graph or more complex structure."
+          },
+          {
+            "heading": "Compare human and governance costs",
+            "body": "The choice is not simply old format versus new technology. Consider how often data changes, how many people reconcile sources, whether an earlier state must be reconstructed and the cost of maintaining shared definitions. Linked structure may reduce mental joins when governed knowledge is reused, but it can raise initial modeling and maintenance costs. Test the hypothesis against real tasks; do not assume savings or higher accuracy."
+          },
+          {
+            "heading": "A hybrid practice may be clearest",
+            "body": "A spreadsheet can remain useful as an export, local calculation space or interface for a bounded review. An observation system can provide relationships, states and references that help interpret its rows. To avoid two versions of truth, identify which source governs each field and when it is updated. AXIGNAL is oriented toward persistent economic knowledge, not replacing every spreadsheet or acting as a general transaction system."
+          }
+        ],
+        "example": "Hypothetical example: a team keeps company names and review dates in a spreadsheet. While consolidating sources, it finds that two names may refer to the same entity and one claim came from a page that was removed. A linked representation could preserve the resolution as a revisable hypothesis and connect each claim to its source and date, while the spreadsheet remains useful for the team's budget.",
+        "limits": "Spreadsheets can be auditable and sufficient; linked context can be costly or unnecessary for small problems. Links do not replace evidence quality or remove identity ambiguity. Private data needs access controls in either format. The suitable form depends on volume, relationships, change frequency, users and governance obligations.",
+        "cta": { "label": "Explore Knowledge", "href": "/knowledge" },
+        "related": ["source-summary-vs-provenance", "answers-vs-reviewable-economic-memory", "point-in-time-research-vs-persistent-observation"]
+      }
+    }
+  },
+  {
+    "id": "source-summary-vs-provenance",
+    "cluster": "comparison-methods",
+    "intent": "compare",
+    "type": "comparison",
+    "locales": {
+      "es": {
+        "slug": "resumen-de-fuentes-vs-evidencia-y-procedencia",
+        "title": "Resumen de fuentes o evidencia trazable: qué puedes revisar",
+        "description": "Un resumen facilita la lectura; evidencia y procedencia permiten rastrear las afirmaciones, su fuente, alcance, fecha y grado de interpretación.",
+        "lead": "Un resumen reduce la cantidad de texto que hay que leer. Para una decisión importante, también hace falta saber de dónde procede cada afirmación, qué parte se observó directamente y qué parte se interpretó.",
+        "answer": "Un resumen ofrece una síntesis legible de material seleccionado. Un registro de evidencia con procedencia conecta afirmaciones con fuentes, fechas, sujetos, extractos permitidos, condiciones y transformaciones. El resumen puede ayudar a orientarse, pero no sustituye esa traza cuando se necesita auditar, actualizar o impugnar una conclusión.",
+        "sections": [
+          {
+            "heading": "La síntesis reduce carga, pero elimina detalle",
+            "body": "Un resumen bien hecho ayuda a comparar documentos y a encontrar temas que merecen atención. Es especialmente útil en una fase inicial o para lectores que todavía no necesitan revisar cada fuente. Sin embargo, la compresión puede ocultar contradicciones, excepciones, límites de cobertura y diferencias de fecha. La frase resultante puede sonar más segura que sus fuentes. Para reducir ese riesgo, el resumen debe señalar su alcance, enlazar las fuentes disponibles y distinguir citas, paráfrasis e inferencias."
+          },
+          {
+            "heading": "La procedencia mantiene abierta la revisión",
+            "body": "Una traza de procedencia explica qué fuente respalda una afirmación, cuándo se observó, a qué entidad y periodo se refiere, qué transformaciones ocurrieron y qué incertidumbre continúa. Puede incluir una referencia, una huella o un extracto permitido, según derechos y política de retención. Así, un lector puede volver a la evidencia, comparar fuentes contradictorias o comprobar si algo quedó obsoleto. Una URL guardada sin sujeto, fecha ni contexto también puede ser insuficiente."
+          },
+          {
+            "heading": "No confundas observación, inferencia y admisión",
+            "body": "Que una página diga algo es una observación sobre la página; no prueba automáticamente que la afirmación sea cierta sobre el mundo. Una interpretación puede derivarse de varias observaciones y debe etiquetarse como tal. La evidencia admitida en un estado canónico requiere un proceso de gobierno propio. La forma de presentar el resultado debe conservar esas distinciones, también cuando la explicación se resume en lenguaje sencillo."
+          },
+          {
+            "heading": "Usar ambos niveles con claridad",
+            "body": "Un buen producto puede mostrar primero una síntesis breve y ofrecer evidencia y traza bajo demanda, de forma que el lector avance desde comprender hasta probar. El resumen responde qué parece relevante; la procedencia permite inspeccionar por qué y bajo qué condiciones. Si la fuente no puede compartirse, el sistema debe decir qué referencia está disponible y qué no puede verificarse. No conviene inventar citas, reconstruir razonamientos ausentes ni presentar una explicación generada como traza histórica."
+          }
+        ],
+        "example": "Ejemplo hipotético: un resumen dice que una empresa anuncia capacidad de fabricación en una región. La vista de evidencia enlaza el anuncio original, su fecha y el fragmento que lo sustenta; además indica que es una declaración pública de la empresa y no una verificación independiente de instalaciones activas. El lector puede usar el resumen para orientarse y la traza para evaluar el alcance.",
+        "limits": "Las fuentes pueden ser incompletas, inaccesibles, contradictorias o estar sujetas a restricciones de retención. Una referencia no garantiza que el contenido siga disponible. Un resumen puede ser fiel y aun así omitir un matiz material. La procedencia ayuda a auditar; no decide automáticamente verdad, credibilidad ni significado económico. Esos juicios requieren reglas, contexto y evidencia adecuados.",
+        "cta": { "label": "Explorar Knowledge", "href": "/knowledge" },
+        "related": ["spreadsheet-vs-linked-temporal-context", "alerts-vs-evidence-timeline", "answers-vs-reviewable-economic-memory"]
+      },
+      "en": {
+        "slug": "source-summary-vs-evidence-and-provenance",
+        "title": "Source summary or evidence with provenance: what each lets you review",
+        "description": "A summary makes reading easier; evidence and provenance let you trace claims to source, scope, date and degree of interpretation.",
+        "lead": "A summary reduces how much text a person must read. For an important decision, you also need to know where each claim came from, what was directly observed and what was interpreted.",
+        "answer": "A summary provides a readable synthesis of selected material. An evidence record with provenance links claims to sources, dates, subjects, permitted excerpts, conditions and transformations. The summary can help orient a reader, but it does not replace that trace when a conclusion must be audited, updated or challenged.",
+        "sections": [
+          {
+            "heading": "Synthesis reduces load but removes detail",
+            "body": "A well-made summary helps compare documents and find themes that deserve attention. It is especially useful at an early stage or for readers who do not yet need to inspect every source. Compression can, however, hide contradictions, exceptions, coverage limits and date differences. The resulting sentence may sound more certain than its sources. To reduce that risk, a summary should state its scope, link available sources and distinguish quotations, paraphrases and inferences."
+          },
+          {
+            "heading": "Provenance keeps review possible",
+            "body": "A provenance trace explains which source supports a claim, when it was observed, which entity and period it concerns, what transformations occurred and what uncertainty remains. Depending on rights and retention policy, it may include a reference, fingerprint or permitted excerpt. A reader can then return to evidence, compare conflicting sources or check whether something became stale. A saved URL without subject, date or context may also be insufficient."
+          },
+          {
+            "heading": "Do not confuse observation, inference and admission",
+            "body": "A page saying something is an observation about that page; it does not automatically prove the statement true about the world. An interpretation may be derived from several observations and should be labeled as such. Evidence admitted into canonical state requires its own governance process. The presentation should preserve these distinctions, including when an explanation is summarized in plain language."
+          },
+          {
+            "heading": "Use both levels clearly",
+            "body": "A good product can show a brief synthesis first and offer evidence and trace on demand, letting readers move from understanding to proof. The summary answers what appears relevant; provenance lets them inspect why and under which conditions. If a source cannot be shared, the system should say which reference is available and what cannot be verified. It should not invent citations, reconstruct missing reasoning or present a generated explanation as a historical trace."
+          }
+        ],
+        "example": "Hypothetical example: a summary says a company announces manufacturing capability in a region. The evidence view links the original announcement, its date and the supporting passage; it also says this is the company's public statement, not independent verification of active facilities. A reader can use the summary to orient and the trace to assess scope.",
+        "limits": "Sources can be incomplete, inaccessible, contradictory or subject to retention restrictions. A reference does not guarantee that content remains available. A summary may be faithful and still omit a material nuance. Provenance helps audit; it does not automatically decide truth, credibility or economic meaning. Those judgments require suitable rules, context and evidence.",
+        "cta": { "label": "Explore Knowledge", "href": "/knowledge" },
+        "related": ["spreadsheet-vs-linked-temporal-context", "alerts-vs-evidence-timeline", "answers-vs-reviewable-economic-memory"]
+      }
+    }
+  },
+  {
+    "id": "digital-indicator-vs-conditioned-observation",
+    "cluster": "comparison-methods",
+    "intent": "compare",
+    "type": "comparison",
+    "locales": {
+      "es": {
+        "slug": "indicador-digital-vs-observacion-condicionada",
+        "title": "Indicador digital u observación condicionada: resultados distintos",
+        "description": "Un indicador comprime medidas definidas; una observación condicionada registra qué mostró una superficie bajo consulta, región, idioma, instrumento y fecha concretos.",
+        "lead": "Un porcentaje o posición puede hacer visible una dimensión, pero también esconder cómo se midió. Antes de comparar un indicador digital, separa la métrica agregada de la observación concreta y de lo que esa observación permite concluir.",
+        "answer": "Un indicador resume mediciones bajo una definición y un método, como volumen, posición o tasa. Una observación condicionada registra una salida concreta de una superficie digital junto a las condiciones de consulta, idioma, región, dispositivo, instrumento, versión y fecha. El indicador facilita seguimiento cuando el método es comparable; la observación ofrece contexto, pero tampoco representa por sí sola la realidad económica.",
+        "sections": [
+          {
+            "heading": "Un indicador necesita una definición reproducible",
+            "body": "Para interpretar un número, identifica unidad, denominador, periodo, instrumento y versión de cálculo. Un cambio de escala o de fuente puede mover el indicador aunque el fenómeno subyacente no haya cambiado. Si se combinan consultas o superficies, hay que documentar la población y la regla de agregación. Una cifra sin estos datos puede servir como pista interna, pero no debe presentarse como una medida universal de presencia o calidad."
+          },
+          {
+            "heading": "Una observación necesita condiciones explícitas",
+            "body": "La búsqueda y las superficies generativas dependen de consulta, idioma, geografía, dispositivo, personalización y momento. Registrar esos parámetros permite describir exactamente lo que se vio, no generalizar a todas las personas. Mención, cita y recomendación son fenómenos distintos; tampoco demuestran endorsement, capacidad ni demanda. Las condiciones son parte de la evidencia y deben acompañar la captura o referencia."
+          },
+          {
+            "heading": "Cuándo usar cada resultado",
+            "body": "Usa un indicador para una tendencia delimitada cuando el método, la población y la incertidumbre puedan explicarse y mantenerse comparables. Usa observaciones concretas para inspeccionar un caso, revisar un cambio o entender qué contenido mostró una superficie. A menudo hacen falta ambos: el indicador señala dónde mirar y las observaciones sustentan una explicación. Si no hay suficiente cobertura o las condiciones difieren, deja la medida como UNKNOWN, no como cero ni como deterioro confirmado."
+          },
+          {
+            "heading": "La frontera de AXIGNAL",
+            "body": "Digital Representation Intelligence en AXIGNAL es observación independiente de cómo las superficies digitales representan organizaciones y capacidades, conectada con conocimiento económico gobernado. No es ejecución SEO/GEO, gestión de reputación ni un índice digital universal. Una brecha entre representación y conocimiento observado es una derivación que requiere explicación, incertidumbre y posiblemente investigación. Esto define la semántica del producto; no afirma que una métrica o sensor específico esté implementado o disponible hoy."
+          }
+        ],
+        "example": "Ejemplo hipotético: un equipo registra que una superficie mostró una empresa para una consulta concreta en castellano, desde una región y un dispositivo determinados, en una fecha. Un panel puede resumir varias observaciones elegibles, pero debe mostrar muestra, cobertura, versión y condiciones. Si el instrumento cambia entre periodos, la cifra nueva no demuestra por sí sola que haya cambiado la representación de mercado.",
+        "limits": "Ningún indicador o captura prueba por sí sola ventas, calidad, demanda o verdad empresarial. Métricas comparables requieren instrumento y versión, condiciones, periodo, muestra y estimación de incertidumbre. Las superficies pueden cambiar o personalizar resultados. No se atribuyen mejoras SEO/GEO ni resultados comerciales sin medición apropiada y evidencia que respalde causalidad.",
+        "cta": { "label": "Explorar Knowledge", "href": "/knowledge" },
+        "related": ["alerts-vs-evidence-timeline", "point-in-time-research-vs-persistent-observation", "answers-vs-reviewable-economic-memory"]
+      },
+      "en": {
+        "slug": "digital-indicator-vs-conditioned-observation",
+        "title": "Digital indicator or conditioned observation: different results",
+        "description": "An indicator compresses defined measures; a conditioned observation records what a surface showed under a particular query, region, language, instrument and date.",
+        "lead": "A percentage or position can make one dimension visible, but it can also hide how it was measured. Before comparing a digital indicator, separate the aggregate metric from the specific observation and from what that observation supports.",
+        "answer": "An indicator summarizes measurements under a definition and method, such as volume, position or rate. A conditioned observation records one output from a digital surface alongside query, language, region, device, instrument, version and date. An indicator helps track change when the method is comparable; an observation gives context but still does not represent economic reality by itself.",
+        "sections": [
+          {
+            "heading": "An indicator needs a reproducible definition",
+            "body": "To interpret a number, identify its unit, denominator, period, instrument and calculation version. A change in scale or source can move the indicator even if the underlying phenomenon did not change. If queries or surfaces are combined, document the population and aggregation rule. A figure without these details may be an internal clue, but should not be presented as a universal measure of presence or quality."
+          },
+          {
+            "heading": "An observation needs explicit conditions",
+            "body": "Search and generative surfaces depend on query, language, geography, device, personalization and time. Recording those parameters lets you describe exactly what was seen without generalizing to everyone. Mention, citation and recommendation are distinct phenomena; none proves endorsement, capability or demand. Conditions are part of the evidence and should accompany a capture or reference."
+          },
+          {
+            "heading": "When to use each result",
+            "body": "Use an indicator for a bounded trend when method, population and uncertainty can be explained and kept comparable. Use specific observations to inspect a case, review a change or understand what content a surface showed. Often both are useful: an indicator points to where to look and observations support an explanation. If coverage is insufficient or conditions differ, keep the measure UNKNOWN rather than treating it as zero or confirmed decline."
+          },
+          {
+            "heading": "AXIGNAL's boundary",
+            "body": "Digital Representation Intelligence at AXIGNAL is independent observation of how digital surfaces represent organizations and capabilities, connected to governed economic knowledge. It is not SEO/GEO execution, reputation management or a universal digital index. A gap between representation and observed knowledge is a derivation requiring explanation, uncertainty and possibly research. This defines product semantics; it does not claim that a specific metric or sensor is implemented or available today."
+          }
+        ],
+        "example": "Hypothetical example: a team records that a surface showed a company for a specific Spanish query, from a particular region and device, on a given date. A dashboard may summarize several eligible observations but should disclose sample, coverage, version and conditions. If the instrument changed between periods, the new figure alone does not prove that market representation changed.",
+        "limits": "No indicator or capture alone proves sales, quality, demand or business truth. Comparable metrics require instrument and version, conditions, period, sample and uncertainty estimate. Surfaces can change or personalize results. No SEO/GEO improvement or commercial outcome is attributed without appropriate measurement and evidence supporting causality.",
+        "cta": { "label": "Explore Knowledge", "href": "/knowledge" },
+        "related": ["alerts-vs-evidence-timeline", "point-in-time-research-vs-persistent-observation", "answers-vs-reviewable-economic-memory"]
+      }
+    }
+  },
+  {
+    "id": "answers-vs-reviewable-economic-memory",
+    "cluster": "comparison-methods",
+    "intent": "compare",
+    "type": "comparison",
+    "locales": {
+      "es": {
+        "slug": "acumulacion-de-respuestas-vs-memoria-economica-revisable",
+        "title": "Acumular respuestas o mantener memoria económica revisable",
+        "description": "Guardar respuestas anteriores conserva texto; la memoria económica revisable conecta conocimiento con evidencia, tiempo, estado epistemológico y dependencias.",
+        "lead": "Un archivo de respuestas puede ayudar a encontrar trabajo previo. Para reutilizar conocimiento en una decisión nueva, también importa saber qué fuentes lo sostenían, qué cambió y qué conclusiones deben revisarse.",
+        "answer": "Acumular respuestas conserva artefactos generados, a menudo ligados a preguntas y contextos concretos. La memoria económica revisable mantiene objetos, evidencia, procedencia, estado temporal y relaciones entre conclusiones y sus dependencias. Las respuestas guardadas pueden ser una capa de lectura o una entrada para revisión, pero no se convierten automáticamente en conocimiento vigente.",
+        "sections": [
+          {
+            "heading": "Qué ofrece un archivo de respuestas",
+            "body": "Guardar respuestas facilita buscar una recomendación previa, reutilizar una explicación o evitar repetir una conversación reciente. Puede ser práctico cuando la respuesta es autosuficiente, de bajo riesgo y conserva el contexto necesario. El problema aparece al tratar el archivo como memoria fiable: una respuesta puede mezclar fuentes de fechas distintas, contener una interpretación no marcada o no indicar qué cambió después. Copiarla a otro caso también puede transferir supuestos sin advertencia."
+          },
+          {
+            "heading": "Qué hace revisable una memoria",
+            "body": "Una memoria revisable vincula cada afirmación o derivación con sus fuentes, identidad, condiciones, tiempo y estado. Registra de qué depende una conclusión y qué eventos pueden volverla obsoleta. Cuando una fuente cambia, se puede reevaluar la parte afectada sin borrar qué se creyó antes y por qué. Las etiquetas y trazas no resuelven todas las disputas, pero permiten inspeccionar procedencia, incertidumbre y límites en lugar de pedir confianza ciega."
+          },
+          {
+            "heading": "Reutilizar exige una comprobación de actualidad",
+            "body": "Antes de usar algo guardado, pregunta si se refiere al mismo sujeto, geografía, periodo y decisión. Comprueba si la fuente sigue disponible y si la evidencia respalda todavía la conclusión. Cuando no se puede verificar, conservar STALE o UNKNOWN es más seguro que convertir la antigüedad en certeza. Las observaciones privadas también deben mantenerse separadas de la verdad compartida, y los permisos deben seguir el contexto al que pertenecen."
+          },
+          {
+            "heading": "La memoria acumulativa sigue siendo una hipótesis de valor",
+            "body": "Una arquitectura de memoria gobernada puede reducir reconstrucción y hacer posible el razonamiento temporal; cuánto ayuda depende de las tareas, fuentes y calidad de revisión. No es una garantía de menor coste ni de mejor decisión. AXIGLAND representa la dirección de memoria económica gobernada de AXIGNAL; AXENT ayuda a explicar y navegar ese contexto. La evaluación de cualquier beneficio necesita métricas, periodos, muestras, versiones y comparadores explícitos."
+          }
+        ],
+        "example": "Ejemplo hipotético: un analista recupera una respuesta de hace un año que indicaba una expansión anunciada. Un archivo de respuestas puede mostrar el texto original. La memoria revisable enlaza el anuncio, su fecha, la empresa que lo publicó, el estado de la iniciativa y cualquier evidencia posterior; si no hay seguimiento, no declara la expansión completada. La escena ilustra un método, no un resultado de AXIGNAL.",
+        "limits": "El historial puede ser incompleto, algunas fuentes pueden desaparecer y las relaciones de dependencia pueden estar mal modeladas. Revisabilidad no significa verificación automática ni verdad definitiva. La reutilización puede amplificar errores si las comprobaciones fallan. Los beneficios de memoria acumulada son hipótesis hasta que se midan con condiciones y referencia adecuadas; no se afirma ahorro ni superioridad general.",
+        "cta": { "label": "Explorar Knowledge", "href": "/knowledge" },
+        "related": ["spreadsheet-vs-linked-temporal-context", "source-summary-vs-provenance", "point-in-time-research-vs-persistent-observation"]
+      },
+      "en": {
+        "slug": "accumulated-answers-vs-reviewable-economic-memory",
+        "title": "Accumulating answers or maintaining reviewable economic memory",
+        "description": "Saving previous answers preserves text; reviewable economic memory connects knowledge to evidence, time, epistemic state and dependencies.",
+        "lead": "An answer archive can help find previous work. To reuse knowledge for a new decision, it also matters which sources supported it, what changed and which conclusions need review.",
+        "answer": "Accumulating answers preserves generated artifacts, often tied to specific questions and contexts. Reviewable economic memory maintains objects, evidence, provenance, temporal state and relationships between conclusions and their dependencies. Saved answers can be a reading layer or an input for review, but they do not automatically become current knowledge.",
+        "sections": [
+          {
+            "heading": "What an answer archive provides",
+            "body": "Saving answers makes it easier to find an earlier recommendation, reuse an explanation or avoid repeating a recent conversation. It can be practical when an answer is self-contained, low-risk and retains the needed context. The problem begins when the archive is treated as reliable memory: an answer may combine sources from different dates, contain an unlabeled interpretation or fail to say what changed later. Copying it to another case can also transfer assumptions without warning."
+          },
+          {
+            "heading": "What makes memory reviewable",
+            "body": "Reviewable memory links each claim or derivation to its sources, identity, conditions, time and state. It records what a conclusion depends on and which events could make it stale. When a source changes, the affected part can be reevaluated without erasing what was previously believed and why. Labels and traces do not resolve every dispute, but they let people inspect provenance, uncertainty and limits rather than asking for blind trust."
+          },
+          {
+            "heading": "Reuse requires a freshness check",
+            "body": "Before using something saved, ask whether it concerns the same subject, geography, period and decision. Check whether the source remains available and whether the evidence still supports the conclusion. When it cannot be verified, retaining STALE or UNKNOWN is safer than turning age into certainty. Private observations should also remain separate from shared truth, and permissions should follow the context they belong to."
+          },
+          {
+            "heading": "Accumulated memory remains a value hypothesis",
+            "body": "A governed-memory architecture may reduce reconstruction and enable temporal reasoning; how much it helps depends on tasks, sources and review quality. It does not guarantee lower cost or better decisions. AXIGLAND represents AXIGNAL's direction for governed economic memory; AXENT helps explain and navigate that context. Evaluating any benefit needs explicit metrics, periods, samples, versions and comparators."
+          }
+        ],
+        "example": "Hypothetical example: an analyst retrieves a year-old answer that said an expansion had been announced. An answer archive can show the original text. Reviewable memory links the announcement, date, publishing company, initiative state and later evidence; without follow-up, it does not say the expansion was completed. This illustrates a method, not an AXIGNAL outcome.",
+        "limits": "History may be incomplete, sources may disappear and dependency relationships may be modeled incorrectly. Reviewability does not mean automatic verification or final truth. Reuse can amplify errors when checks fail. Accumulated-memory benefits remain hypotheses until measured against suitable conditions and references; no savings or general superiority are claimed.",
+        "cta": { "label": "Explore Knowledge", "href": "/knowledge" },
+        "related": ["spreadsheet-vs-linked-temporal-context", "source-summary-vs-provenance", "point-in-time-research-vs-persistent-observation"]
+      }
+    }
+  }
+]

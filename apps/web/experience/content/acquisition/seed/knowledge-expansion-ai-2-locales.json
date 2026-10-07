@@ -1,0 +1,443 @@
+[
+  {
+    "id": "knowledge-observation-memory-vs-canonical-truth",
+    "fr": {
+      "slug": "memoire-dobservation-et-verite-canonique",
+      "title": "Mémoire d’observation et vérité canonique",
+      "description": "Conserver une observation aide la recherche; seule une admission gouvernée peut inscrire des preuves suffisantes dans la vérité canonique.",
+      "lead": "Un système économique doit garder des signaux et des éléments qui ne justifient pas encore une affirmation définitive. Si toute information stockée devenait vérité, la mémoire mélangerait des pistes utiles et des faits effectivement admis.",
+      "answer": "AXIGNAL sépare Observation Memory d’AXIGLAND. La mémoire préserve des observations normalisées avec provenance et temps; AXIGLAND contient la connaissance canonique admise. La persistance n’est pas une admission, et une observation non admissible aujourd’hui peut éclairer une question future.",
+      "sections": [
+        {
+          "heading": "Préserver avant de décider ce qui est admis",
+          "body": "Une source peut être pertinente même si sa portée, l’identité résolue ou la corroboration ne suffisent pas pour un FAXT. Conserver référence et conditions permet de l’examiner plus tard sans forcer une conclusion prématurée. Cette méthode évite de perdre de l’information pendant la recherche tout en rendant explicite que les preuves n’ont pas franchi la frontière d’admission."
+        },
+        {
+          "heading": "Maintenir une frontière indépendante pour la vérité",
+          "body": "Un FAXT requiert sujet, prédicat, valeur, preuves, provenance, temporalité et état épistémique. EvidenceAdmission décide selon des règles gouvernées si l’affirmation peut entrer dans la connaissance canonique. Résumé, évaluation probabiliste ou répétition ne remplacent pas ce processus. AXIGNAL peut ainsi enquêter largement et canoniser avec prudence."
+        },
+        {
+          "heading": "Réévaluer les dérivations lorsque l’état change",
+          "body": "Un INXIGHT ou un parcours économique peut dépendre de plusieurs observations et FAXTs. Si une source change, une identité se résout ou une contradiction apparaît, seules les dimensions concernées doivent être réévaluées selon la politique. La mémoire conserve l’historique et les fingerprints pour expliquer l’évolution; elle ne réécrit pas le passé et ne présume pas qu’une interprétation reste actuelle."
+        },
+        {
+          "heading": "Rendre le type de connaissance visible",
+          "body": "Une interface lisible distingue ce qui a été observé, admis ou dérivé et ce qui reste potentiel ou inconnu. La personne peut choisir quoi explorer sans recevoir une affirmation exagérée. La mémoire assure la continuité de la recherche; AXIGLAND protège la cohérence de la vérité canonique et les références aux preuves qui l’étayent."
+        }
+      ],
+      "example": "Exemple hypothétique : une source publique dit qu’une société évalue une technologie sans montrer qu’elle l’a installée. AXIGNAL peut garder cette déclaration datée et attribuée, puis s’en servir pour orienter une question ultérieure. L’installation n’est pas inscrite comme FAXT avant que des preuves appropriées soutiennent cette affirmation distincte.",
+      "limits": "La mémoire d’observation n’est ni une base parallèle de vérité ni une autorisation de contourner l’admission. Conservation et réutilisation dépendent des droits, de la vie privée et de la provenance. Une information ancienne ou ambiguë peut persister avec un état limité; sa persistance ne la rend ni actuelle, ni vraie, ni canonique.",
+      "cta": {
+        "label": "Comprendre les frontières de preuve",
+        "href": "/knowledge"
+      },
+      "related": [
+        "knowledge-source-lineage-not-corroboration",
+        "knowledge-research-reuse-conditions",
+        "knowledge-user-input-directs-attention-not-truth"
+      ]
+    },
+    "de": {
+      "slug": "beobachtungsgedaechtnis-und-kanonische-wahrheit",
+      "title": "Beobachtungsgedächtnis und kanonische Wahrheit",
+      "description": "Eine Beobachtung zu bewahren unterstützt Recherche; nur geregelte Zulassung kann ausreichende Belege zur kanonischen Wahrheit machen.",
+      "lead": "Ein Wirtschaftssystem muss Hinweise und Material behalten, die noch keine definitive Aussage rechtfertigen. Würde alles Gespeicherte als Wahrheit gelten, vermischte das Gedächtnis nützliche Spuren mit tatsächlich zugelassenen Fakten.",
+      "answer": "AXIGNAL trennt Observation Memory von AXIGLAND. Das Gedächtnis bewahrt normalisierte Beobachtungen mit Herkunft und Zeit; AXIGLAND enthält zugelassenes kanonisches Wissen. Speicherung ist keine Zulassung, und heute nicht zulässige Beobachtungen können spätere Fragen dennoch unterstützen.",
+      "sections": [
+        {
+          "heading": "Erhalten, bevor über Zulassung entschieden wird",
+          "body": "Eine Quelle kann relevant sein, auch wenn Umfang, Identitätsauflösung oder Bestätigung nicht für ein FAXT reichen. Referenz und Bedingungen aufzubewahren ermöglicht spätere Prüfung, ohne früh eine Schlussfolgerung zu erzwingen. So geht während der Recherche keine Information verloren und bleibt zugleich klar, dass der Beleg die Zulassungsgrenze noch nicht überschritten hat."
+        },
+        {
+          "heading": "Eine unabhängige Grenze für Wahrheit bewahren",
+          "body": "Ein FAXT erfordert Subjekt, Prädikat, Wert, Belege, Herkunft, Zeitbezug und Erkenntnisstand. EvidenceAdmission entscheidet nach geregelten Vorgaben, ob eine Aussage kanonisch werden darf. Zusammenfassung, probabilistische Bewertung oder Wiederholung ersetzen diesen Prozess nicht. Dadurch kann AXIGNAL breit recherchieren und vorsichtig kanonisieren."
+        },
+        {
+          "heading": "Ableitungen bei Zustandsänderung neu bewerten",
+          "body": "Ein INXIGHT oder Wirtschaftspfad kann von mehreren Beobachtungen und FAXTs abhängen. Ändert sich eine Quelle, wird Identität geklärt oder erscheint ein Widerspruch, müssen Richtlinien entsprechend nur betroffene Dimensionen neu bewerten. Das Gedächtnis bewahrt Verlauf und Fingerprints zur Erklärung; es schreibt die Vergangenheit nicht um und nimmt Aktualität einer Deutung nicht an."
+        },
+        {
+          "heading": "Die Wissensart sichtbar machen",
+          "body": "Eine verständliche Oberfläche trennt Beobachtetes, Zugelassenes und Abgeleitetes von POTENTIAL oder UNKNOWN. So kann eine Person entscheiden, was sie weiter erkunden möchte, ohne übertriebene Behauptungen zu erhalten. Gedächtnis hält Recherche kontinuierlich; AXIGLAND schützt die Konsistenz kanonischer Wahrheit und ihre Belegverweise."
+        }
+      ],
+      "example": "Hypothetisch: Eine öffentliche Quelle sagt, ein Unternehmen prüfe eine Technologie, belegt aber keine Installation. AXIGNAL kann die datierte, zugeschriebene Aussage bewahren und eine spätere Frage daran ausrichten. Eine Installation wird nicht als FAXT erfasst, bevor passende Belege genau diese Aussage stützen.",
+      "limits": "Beobachtungsgedächtnis ist weder paralleler Wahrheitsspeicher noch Erlaubnis, Zulassung zu umgehen. Aufbewahrung und Wiederverwendung hängen von Rechten, Datenschutz und Herkunft ab. Alte oder mehrdeutige Information kann mit begrenztem Status bestehen bleiben; dadurch wird sie weder aktuell noch wahr oder kanonisch. Eine spätere Nutzung sollte außerdem den ursprünglichen Erfassungszeitpunkt, den damaligen Wortlaut und den Grund für die Wiederaufnahme zeigen. So lässt sich unterscheiden, ob eine aktuelle Entscheidung auf einer neuen Quelle oder auf einer alten Beobachtung beruht. Wenn die ursprüngliche Seite nicht mehr erreichbar ist, muss diese Einschränkung sichtbar bleiben; ein gespeicherter Auszug ersetzt keine erneute Prüfung.",
+      "cta": {
+        "label": "Beleggrenzen verstehen",
+        "href": "/knowledge"
+      },
+      "related": [
+        "knowledge-source-lineage-not-corroboration",
+        "knowledge-research-reuse-conditions",
+        "knowledge-user-input-directs-attention-not-truth"
+      ]
+    },
+    "it": {
+      "slug": "memoria-dellosservazione-e-verita-canonica",
+      "title": "Memoria delle osservazioni e verità canonica",
+      "description": "Conservare un’osservazione aiuta la ricerca; solo un’ammissione governata può aggiungere prove sufficienti alla verità canonica.",
+      "lead": "Un sistema economico deve mantenere segnali e materiali che non giustificano ancora un’affermazione definitiva. Se ogni informazione salvata diventasse verità, la memoria mescolerebbe indizi utili e fatti effettivamente ammessi.",
+      "answer": "AXIGNAL separa Observation Memory da AXIGLAND. La memoria conserva osservazioni normalizzate con provenienza e tempo; AXIGLAND contiene conoscenza canonica ammessa. La persistenza non è ammissione, e un’osservazione non ammissibile oggi può comunque aiutare domande future.",
+      "sections": [
+        {
+          "heading": "Conservare prima di decidere cosa ammettere",
+          "body": "Una fonte può essere pertinente anche se ambito, identità risolta o corroborazione non bastano per un FAXT. Mantenere riferimento e condizioni permette di riesaminarla in seguito senza forzare una conclusione prematura. Così la ricerca non perde informazioni e resta esplicito che le prove non hanno superato il confine di ammissione."
+        },
+        {
+          "heading": "Mantenere un confine indipendente per la verità",
+          "body": "Un FAXT richiede soggetto, predicato, valore, prove, provenienza, temporalità e stato epistemico. EvidenceAdmission decide secondo regole governate se l’affermazione può entrare nella conoscenza canonica. Sintesi, valutazione probabilistica o ripetizione non sostituiscono questo processo. Il confine consente ad AXIGNAL di indagare ampiamente e canonizzare con prudenza."
+        },
+        {
+          "heading": "Rivalutare ciò che è derivato quando cambia lo stato",
+          "body": "Un INXIGHT o percorso economico può dipendere da più osservazioni e FAXT. Se una fonte cambia, un’identità viene risolta o emerge una contraddizione, la policy rivaluta le sole dimensioni interessate. La memoria conserva cronologia e fingerprint per spiegare il cambiamento; non riscrive il passato né presume che un’interpretazione resti attuale."
+        },
+        {
+          "heading": "Rendere visibile il tipo di conoscenza",
+          "body": "Un’interfaccia comprensibile distingue ciò che è stato osservato, ammesso o derivato da ciò che resta potenziale o sconosciuto. Una persona può decidere cosa esplorare senza ricevere affermazioni esagerate. La memoria dà continuità alla ricerca; AXIGLAND protegge coerenza e riferimenti probatori della verità canonica."
+        }
+      ],
+      "example": "Esempio ipotetico: una fonte pubblica dice che un’impresa sta valutando una tecnologia, ma non dimostra che l’abbia installata. AXIGNAL può conservare la dichiarazione con data e attribuzione e usarla per orientare una domanda successiva. Non registra l’installazione come FAXT finché prove adatte non sostengono proprio quell’affermazione.",
+      "limits": "La memoria delle osservazioni non è un archivio parallelo di verità né un’autorizzazione a saltare l’ammissione. Conservazione e riuso dipendono da diritti, privacy e provenienza. Informazioni vecchie o ambigue possono persistere con stato limitato; la persistenza non le rende attuali, vere o canoniche. Un riutilizzo successivo dovrebbe mostrare anche la data della prima raccolta, il testo allora disponibile e il motivo per cui l'informazione viene ripresa. In questo modo si distingue una decisione basata su una nuova fonte da una fondata su un'osservazione precedente. Se la pagina originaria non è più accessibile, il limite deve restare visibile: un estratto conservato non equivale a una nuova verifica.",
+      "cta": {
+        "label": "Comprendi i confini delle prove",
+        "href": "/knowledge"
+      },
+      "related": [
+        "knowledge-source-lineage-not-corroboration",
+        "knowledge-research-reuse-conditions",
+        "knowledge-user-input-directs-attention-not-truth"
+      ]
+    },
+    "pt": {
+      "slug": "memoria-de-observacao-e-verdade-canonica",
+      "title": "Memória de observação e verdade canónica",
+      "description": "Preservar uma observação apoia a pesquisa; só a admissão governada pode tornar evidências suficientes parte da verdade canónica.",
+      "lead": "Um sistema económico precisa de conservar sinais e materiais que ainda não justificam uma afirmação definitiva. Se tudo o que é guardado fosse tratado como verdade, a memória misturaria pistas úteis com factos efetivamente admitidos.",
+      "answer": "A AXIGNAL separa Observation Memory de AXIGLAND. A memória preserva observações normalizadas com proveniência e tempo; AXIGLAND contém conhecimento canónico admitido. Persistir não é admitir, e uma observação não admissível hoje pode continuar útil para perguntas futuras.",
+      "sections": [
+        {
+          "heading": "Preservar antes de decidir o que é admitido",
+          "body": "Uma fonte pode ser relevante mesmo que âmbito, identidade resolvida ou corroboração não bastem para um FAXT. Guardar referência e condições permite analisá-la mais tarde sem forçar uma conclusão prematura. Assim, a pesquisa não perde informação e permanece explícito que a evidência ainda não atravessou a fronteira de admissão."
+        },
+        {
+          "heading": "Manter uma fronteira independente para a verdade",
+          "body": "Um FAXT exige sujeito, predicado, valor, evidência, proveniência, temporalidade e estado epistémico. EvidenceAdmission decide, segundo regras governadas, se a afirmação pode entrar no conhecimento canónico. Resumo, avaliação probabilística ou repetição não substituem esse processo. A fronteira permite à AXIGNAL investigar amplamente e canonizar com prudência."
+        },
+        {
+          "heading": "Reavaliar derivações quando o estado muda",
+          "body": "Um INXIGHT ou percurso económico pode depender de várias observações e FAXTs. Se uma fonte mudar, uma identidade for resolvida ou surgir uma contradição, a política reavalia apenas as dimensões afetadas. A memória conserva histórico e fingerprints para explicar a mudança; não reescreve o passado nem presume que uma interpretação continua atual."
+        },
+        {
+          "heading": "Tornar visível o tipo de conhecimento",
+          "body": "Uma interface clara distingue o que foi observado, admitido ou derivado daquilo que permanece potencial ou desconhecido. A pessoa escolhe o que explorar sem receber uma afirmação exagerada. A memória dá continuidade à investigação, enquanto AXIGLAND protege a consistência da verdade canónica e as referências às evidências que a sustentam."
+        }
+      ],
+      "example": "Exemplo hipotético: uma fonte pública diz que uma empresa está a avaliar uma tecnologia, mas não demonstra que a instalou. A AXIGNAL pode preservar a declaração com data e origem e orientar uma pergunta futura. Não regista a instalação como FAXT até que evidência adequada sustente essa afirmação distinta.",
+      "limits": "A memória de observação não é um repositório paralelo da verdade nem autorização para contornar a admissão. Conservação e reutilização dependem de direitos, privacidade e proveniência. Informação antiga ou ambígua pode persistir com estado limitado; persistir não a torna atual, verdadeira ou canónica.",
+      "cta": {
+        "label": "Compreender fronteiras de evidência",
+        "href": "/knowledge"
+      },
+      "related": [
+        "knowledge-source-lineage-not-corroboration",
+        "knowledge-research-reuse-conditions",
+        "knowledge-user-input-directs-attention-not-truth"
+      ]
+    }
+  },
+  {
+    "id": "knowledge-source-lineage-not-corroboration",
+    "fr": {
+      "slug": "plusieurs-publications-ne-sont-pas-une-corroboration-independante",
+      "title": "Plusieurs publications ne corroborent pas toujours une affirmation",
+      "description": "Le lineage des sources distingue une corroboration indépendante des copies qui reprennent la même annonce d’origine.",
+      "lead": "Une affirmation peut paraître sur de nombreuses pages tout en dépendant d’une seule source. Compter chaque republication comme confirmation indépendante donne une impression de soutien plus forte que celle permise par les preuves disponibles.",
+      "answer": "AXIGNAL conserve le lineage entre une observation et les matériaux qui l’ont diffusée. Plusieurs URL ne constituent pas plusieurs sources indépendantes si elles reprennent le même communiqué, base de données ou document. La corroboration dépend de l’indépendance et de la pertinence, pas du nombre brut de liens.",
+      "sections": [
+        {
+          "heading": "Suivre l’affirmation jusqu’à son origine",
+          "body": "Un article, un agrégateur et une page partenaire peuvent tous reprendre un communiqué initial de l’entreprise. Sans identifier cette relation de copie, une vue d’évidence peut multiplier visuellement une seule origine. Références et fingerprints aident à repérer un contenu, une date ou une signature communs, puis à préserver le lien vers la source primaire lorsque l’usage est permis."
+        },
+        {
+          "heading": "Distinguer répétition et confirmation",
+          "body": "Une source secondaire peut ajouter du contexte ou une vérification indépendante; la simple répétition d’une phrase n’apporte pas de corroboration. Une preuve indépendante a sa propre origine et base, pertinentes pour le même sujet, prédicat et période. Un document qui ne confirme qu’une partie d’une affirmation ne doit pas être présenté comme soutien de son ensemble."
+        },
+        {
+          "heading": "Préserver désaccords et limites",
+          "body": "Les sources peuvent différer sur la portée, la date, le sujet ou l’état d’une activité. Un système fiable ne choisit pas silencieusement la version la plus répétée et n’efface pas une contradiction importante. L’explication conserve ce que chaque source dit, son lineage et les éléments non résolus. Une enquête supplémentaire ou UNKNOWN peut convenir."
+        },
+        {
+          "heading": "Expliquer le soutien sans gonfler les comptes",
+          "body": "Une présentation utile montre combien d’origines distinctes soutiennent une lecture et quelles dépendances existent entre publications. Elle ne transforme pas cette structure en score universel de vérité. Pour juger avec discernement, une personne doit comprendre d’où vient le soutien, quelle part relève de la répétition et quelle affirmation précise est étayée."
+        }
+      ],
+      "example": "Exemple hypothétique : six articles mentionnent le même contrat car chacun cite un communiqué d’entreprise unique. AXIGNAL peut les regrouper sous cette origine commune et les distinguer d’un registre indépendant de marchés publics. Six URL ne valent pas automatiquement six confirmations du contrat et ne prouvent pas les conditions non publiées.",
+      "limits": "Le lineage disponible peut être incomplet et l’origine d’une publication n’est pas toujours connaissable. Une dépendance invisible ne prouve pas l’indépendance. AXIGNAL décrit les preuves et leurs liens; elle ne certifie pas la vérité d’une source par sa réputation ou le nombre de pages qui la reprennent.",
+      "cta": {
+        "label": "Explorer provenance et preuves",
+        "href": "/knowledge"
+      },
+      "related": [
+        "knowledge-observation-memory-vs-canonical-truth",
+        "knowledge-explainable-economic-attribution",
+        "evidence-observed-vs-potential"
+      ]
+    },
+    "de": {
+      "slug": "mehrere-veroeffentlichungen-sind-keine-unabhaengige-bestaetigung",
+      "title": "Mehrere Veröffentlichungen bestätigen eine Aussage nicht immer",
+      "description": "Quellenherkunft unterscheidet unabhängige Bestätigung von Kopien, die dieselbe ursprüngliche Mitteilung wiederholen.",
+      "lead": "Eine Aussage kann auf vielen Webseiten erscheinen und dennoch nur auf einer Quelle beruhen. Jede Weiterveröffentlichung als unabhängige Bestätigung zu zählen, vermittelt mehr Unterstützung, als die vorhandenen Belege tatsächlich bieten.",
+      "answer": "AXIGNAL bewahrt die Herkunftslinie zwischen einer Beobachtung und ihren Quellenmaterialien. Mehrere URLs sind keine unabhängigen Quellen, wenn sie dieselbe Mitteilung, Datenbank oder dasselbe Dokument übernehmen. Bestätigung hängt von Unabhängigkeit und Relevanz ab, nicht von der bloßen Linkzahl.",
+      "sections": [
+        {
+          "heading": "Die Aussage bis zu ihrem Ursprung zurückverfolgen",
+          "body": "Ein Nachrichtenartikel, Aggregator und Partnerseite können dieselbe ursprüngliche Unternehmensmitteilung wiedergeben. Wird diese Kopierbeziehung nicht erkannt, vervielfacht eine Evidenzansicht optisch einen einzigen Ursprung. Referenzen und Fingerprints helfen, gemeinsames Material, Datum oder Urheberschaft zu erkennen und den Link zur Primärquelle zu bewahren, soweit deren Nutzung erlaubt ist."
+        },
+        {
+          "heading": "Wiederholung von Bestätigung unterscheiden",
+          "body": "Eine Sekundärquelle kann Kontext oder eigene Prüfung hinzufügen; bloßes Wiederholen eines Satzes stärkt die Bestätigung nicht. Unabhängige Belege haben einen eigenen Ursprung und eigene Grundlage, relevant für dasselbe Subjekt, Prädikat und denselben Zeitraum. Ein Dokument, das nur einen Teil bestätigt, darf nicht als Beleg für die ganze Aussage erscheinen."
+        },
+        {
+          "heading": "Widersprüche und Grenzen erhalten",
+          "body": "Quellen können sich bei Umfang, Datum, Subjekt oder Tätigkeitsstatus unterscheiden. Ein zuverlässiges System wählt nicht stillschweigend die meistwiederholte Version und entfernt keinen wesentlichen Widerspruch. Die Erklärung bewahrt Aussagen, Herkunftsbeziehungen und offene Punkte. Weitere Recherche oder UNKNOWN kann angemessen sein."
+        },
+        {
+          "heading": "Unterstützung erklären, ohne Zählungen aufzublähen",
+          "body": "Eine nützliche Darstellung zeigt, wie viele verschiedene Ursprünge eine Lesart stützen und welche Abhängigkeiten zwischen Veröffentlichungen bestehen. Sie macht daraus keinen allgemeinen Wahrheitswert. Menschen müssen erkennen können, woher die Unterstützung kommt, was Wiederholung ist und welche konkrete Aussage abgedeckt wird."
+        }
+      ],
+      "example": "Hypothetisch: Sechs Artikel nennen denselben Vertrag, weil alle eine Unternehmensmitteilung zitieren. AXIGNAL kann sie unter dem gemeinsamen Ursprung gruppieren und von einem unabhängigen Vergaberegister unterscheiden. Sechs URLs bedeuten nicht automatisch sechs Bestätigungen und belegen keine unveröffentlichten Vertragsbedingungen.",
+      "limits": "Die verfügbare Herkunftslinie kann lückenhaft sein; der Ursprung einer Veröffentlichung ist nicht immer bekannt. Eine unsichtbare Abhängigkeit beweist keine Unabhängigkeit. AXIGNAL beschreibt Belege und Verbindungen, zertifiziert eine Quelle aber nicht allein wegen ihres Rufs oder der Anzahl von Webseiten, die sie übernehmen. Eine belastbare Prüfung zeichnet daher nicht nur Links auf, sondern auch Herausgeber, zitierte Primärquelle, Zeitbezug und den konkreten Aussageumfang. Zwei Artikel können dieselbe Pressemitteilung paraphrasieren und bleiben dann eine gemeinsame Herkunftskette. Erst eine unabhängige Grundlage kann zusätzliche Perspektive liefern; auch sie muss jedoch genau zu der geprüften Aussage passen.",
+      "cta": {
+        "label": "Herkunft und Belege erkunden",
+        "href": "/knowledge"
+      },
+      "related": [
+        "knowledge-observation-memory-vs-canonical-truth",
+        "knowledge-explainable-economic-attribution",
+        "evidence-observed-vs-potential"
+      ]
+    },
+    "it": {
+      "slug": "piu-pubblicazioni-non-significano-corroborazione-indipendente",
+      "title": "Più pubblicazioni non corroborano sempre un’affermazione",
+      "description": "La lineage delle fonti distingue conferme indipendenti da copie che riprendono lo stesso annuncio originale.",
+      "lead": "Un’affermazione può apparire su molte pagine e dipendere comunque da una sola fonte. Contare ogni ripubblicazione come conferma indipendente crea un’impressione di supporto più forte delle prove disponibili.",
+      "answer": "AXIGNAL conserva la lineage tra un’osservazione e i materiali da cui deriva. Più URL non significano più fonti indipendenti se riprendono lo stesso comunicato, database o documento. La corroborazione dipende da indipendenza e pertinenza, non dal numero grezzo di link.",
+      "sections": [
+        {
+          "heading": "Seguire l’affermazione fino all’origine",
+          "body": "Un articolo, un aggregatore e una pagina partner possono ripetere tutti un comunicato aziendale iniziale. Se questo rapporto di copia non viene identificato, la vista delle prove può moltiplicare visivamente una sola origine. Riferimenti e fingerprint aiutano a riconoscere materiale, data o paternità condivisi e a mantenere il legame con la fonte primaria quando l’uso è consentito."
+        },
+        {
+          "heading": "Distinguere ripetizione e conferma",
+          "body": "Una fonte secondaria può aggiungere contesto o una verifica propria; ripetere una frase non aggiunge corroborazione da solo. Per essere indipendente, la prova necessita di origine e base proprie, pertinenti allo stesso soggetto, predicato e periodo. Un documento che conferma solo parte dell’affermazione non dovrebbe sembrare sostenerla integralmente."
+        },
+        {
+          "heading": "Conservare disaccordi e limiti",
+          "body": "Le fonti possono divergere su ambito, data, soggetto o stato di un’attività. Un sistema affidabile non sceglie in silenzio la versione più ripetuta né rimuove una contraddizione materiale. La spiegazione mantiene ciò che afferma ogni fonte, il rapporto di lineage e gli aspetti irrisolti. Può servire altra ricerca o uno stato UNKNOWN."
+        },
+        {
+          "heading": "Spiegare il supporto senza gonfiare i conteggi",
+          "body": "Una presentazione utile mostra quanti origini distinti sostengono una lettura e quali dipendenze esistono tra pubblicazioni. Non trasforma tale struttura in un punteggio universale di verità. Per valutare con cura, la persona deve capire da dove arriva il supporto, cosa è ripetizione e quale affermazione precisa è coperta."
+        }
+      ],
+      "example": "Esempio ipotetico: sei articoli citano lo stesso contratto perché riprendono un unico comunicato aziendale. AXIGNAL può raggrupparli sotto l’origine comune e distinguerli da un registro indipendente degli appalti. Sei URL non equivalgono automaticamente a sei conferme né dimostrano condizioni non pubblicate.",
+      "limits": "La lineage disponibile può essere incompleta e non sempre si conosce l’origine di una pubblicazione. Una dipendenza non visibile non dimostra indipendenza. AXIGNAL descrive prove e collegamenti; non certifica che una fonte sia vera soltanto per reputazione o per quante pagine la riprendono. Una verifica accurata registra quindi non soltanto i collegamenti, ma anche l'editore, la fonte primaria citata, il riferimento temporale e l'ambito preciso dell'affermazione. Due articoli possono parafrasare lo stesso comunicato e restare parte della medesima catena di provenienza. Una base indipendente può aggiungere una prospettiva, ma deve comunque sostenere proprio la proposizione esaminata.",
+      "cta": {
+        "label": "Esplora provenienza e prove",
+        "href": "/knowledge"
+      },
+      "related": [
+        "knowledge-observation-memory-vs-canonical-truth",
+        "knowledge-explainable-economic-attribution",
+        "evidence-observed-vs-potential"
+      ]
+    },
+    "pt": {
+      "slug": "varias-publicacoes-nao-sao-corroboracao-independente",
+      "title": "Várias publicações nem sempre corroboram uma afirmação",
+      "description": "A linhagem da fonte distingue corroboração independente de cópias que repetem o mesmo anúncio original.",
+      "lead": "Uma afirmação pode surgir em muitas páginas e continuar dependente de uma única fonte. Contar cada republicação como confirmação independente cria uma impressão de apoio superior ao que as evidências disponíveis permitem.",
+      "answer": "A AXIGNAL conserva a linhagem entre uma observação e os materiais que a divulgaram. Vários URLs não significam fontes independentes quando reproduzem o mesmo comunicado, base de dados ou documento. A corroboração depende de independência e pertinência, não da contagem bruta de ligações.",
+      "sections": [
+        {
+          "heading": "Seguir a afirmação até à sua origem",
+          "body": "Uma notícia, agregador e página de parceiro podem repetir um comunicado empresarial inicial. Sem identificar essa relação de cópia, uma vista de evidências pode multiplicar visualmente uma única origem. Referências e fingerprints ajudam a reconhecer material, data ou autoria comuns e a preservar a ligação à fonte primária quando a utilização é permitida."
+        },
+        {
+          "heading": "Distinguir repetição de confirmação",
+          "body": "Uma fonte secundária pode acrescentar contexto ou verificação própria; a simples repetição de uma frase não acrescenta corroboração. Para ser independente, a evidência precisa de origem e base próprias, relevantes para o mesmo sujeito, predicado e período. Um documento que confirma apenas parte da afirmação não deve ser apresentado como apoio ao conjunto."
+        },
+        {
+          "heading": "Preservar desacordos e limites",
+          "body": "As fontes podem divergir sobre âmbito, data, sujeito ou estado de uma atividade. Um sistema fiável não escolhe silenciosamente a versão mais repetida nem elimina uma contradição material. A explicação mantém o que cada fonte afirma, a sua linhagem e o que permanece por resolver. Pode ser adequada investigação adicional ou UNKNOWN."
+        },
+        {
+          "heading": "Explicar o apoio sem inflacionar contagens",
+          "body": "Uma apresentação útil mostra quantas origens distintas sustentam uma leitura e que dependências existem entre publicações. Não transforma essa estrutura numa pontuação universal de verdade. A pessoa precisa de entender de onde vem o apoio, o que é repetição e qual afirmação concreta está coberta para avaliar com cuidado."
+        }
+      ],
+      "example": "Exemplo hipotético: seis artigos referem o mesmo contrato porque todos citam um comunicado empresarial. A AXIGNAL pode agrupá-los sob a origem comum e distingui-los de um registo independente de contratação pública. Seis URLs não equivalem automaticamente a seis confirmações nem comprovam termos não publicados.",
+      "limits": "A linhagem disponível pode ser incompleta e nem sempre é possível conhecer a origem de uma publicação. Uma dependência não visível não prova independência. A AXIGNAL descreve evidências e ligações; não certifica a verdade de uma fonte apenas pela reputação ou pelo número de páginas que a reproduzem.",
+      "cta": {
+        "label": "Explorar proveniência e evidências",
+        "href": "/knowledge"
+      },
+      "related": [
+        "knowledge-observation-memory-vs-canonical-truth",
+        "knowledge-explainable-economic-attribution",
+        "evidence-observed-vs-potential"
+      ]
+    }
+  },
+  {
+    "id": "knowledge-model-confidence-vs-evidence",
+    "fr": {
+      "slug": "la-confiance-du-modele-ne-mesure-pas-les-preuves",
+      "title": "La confiance du modèle ne mesure pas la qualité des preuves",
+      "description": "La probabilité d’un évaluateur décrit sa sortie structurée, pas la vérité, la qualité ou la confiance épistémique d’une affirmation.",
+      "lead": "Un modèle peut produire une étiquette et un score de confiance qui semblent précis. Cette sortie décrit la façon dont le fournisseur a évalué la question, pas le soutien réel d’une affirmation sur une organisation.",
+      "answer": "AXIGNAL traite la confiance du fournisseur comme une métadonnée d’évaluation remplaçable. La qualité des preuves exige d’examiner sources, provenance, actualité, contradictions, couverture et état. Une probabilité du modèle ne devient ni pourcentage de vérité, ni probabilité de vente, ni indicateur épistémique universel.",
+      "sections": [
+        {
+          "heading": "Demander ce que représente la probabilité",
+          "body": "Une probabilité peut indiquer laquelle de plusieurs options typées correspond le mieux à l’état soumis à l’évaluateur. Elle ne représente pas nécessairement une fréquence observée, une précision calibrée ou la probabilité d’un résultat commercial. Sans contrat et validation adaptés, interpréter ce nombre comme une certitude générale lui ajoute un sens que le fournisseur n’a pas promis."
+        },
+        {
+          "heading": "Évaluer les preuves séparément",
+          "body": "Le soutien d’une affirmation dépend des matériaux et de leurs conditions: qui les a publiés, quel sujet ils décrivent, quelle période ils couvrent et si des sources indépendantes les confirment. Contradictions et éléments manquants comptent aussi. Cette analyse est multidimensionnelle et peut mener à une nouvelle observation, une enquête, POTENTIAL, UNKNOWN ou une admission selon le contrat applicable."
+        },
+        {
+          "heading": "Garder le résultat pour le replay sans lui donner autorité",
+          "body": "Une évaluation structurée peut conserver fournisseur, modèle, version, contrat, options, fingerprints, distribution et conditions observables. Cela permet de comparer des exécutions ou de réévaluer selon une autre politique. L’enregistrement rend le résultat inspectable, mais n’en fait pas une source de vérité. L’évaluateur demeure remplaçable et non autoritaire."
+        },
+        {
+          "heading": "Expliquer l’incertitude dans un langage utile",
+          "body": "L’interface précise ce qui est étayé, ce qui est interprété et ce qui manque. Un chiffre précis peut suggérer qu’AXIGNAL connaît une probabilité objective alors que les sources sont incomplètes ou le modèle non calibré pour la tâche. Si la question n’est pas répondable, le système enquête ou s’abstient au lieu d’utiliser un score élevé pour masquer la lacune."
+        }
+      ],
+      "example": "Exemple hypothétique : un évaluateur attribue 0,86 à « capacité pertinente » parmi plusieurs catégories. AXIGNAL conserve cette distribution et sa version, tout en indiquant que la seule source est une description ancienne et que la disponibilité actuelle n’est pas étayée. Le score ne signifie pas 86 % de chances que l’entreprise remplisse un contrat.",
+      "limits": "Les scores des fournisseurs ne sont pas interchangeables entre modèles, contrats ou versions et ne s’affichent pas sans contexte. Aucun seuil universel ne transforme la confiance du modèle en vérité admise. La politique d’interprétation doit être versionnée, explicable et séparée d’EvidenceAdmission et des résultats commerciaux.",
+      "cta": {
+        "label": "Comprendre les évaluations d’IA",
+        "href": "/knowledge"
+      },
+      "related": [
+        "knowledge-answerability-before-ai-judgment",
+        "knowledge-explainable-economic-attribution",
+        "evidence-signal-faxt-inxight"
+      ]
+    },
+    "de": {
+      "slug": "modellvertrauen-misst-nicht-die-belegqualitaet",
+      "title": "Modellvertrauen misst nicht die Qualität der Belege",
+      "description": "Die Wahrscheinlichkeit eines Evaluators beschreibt seine strukturierte Ausgabe, nicht Wahrheit, Qualität oder epistemisches Vertrauen einer Aussage.",
+      "lead": "Modelle können ein Label und einen Vertrauenswert liefern, die präzise wirken. Diese Ausgabe beschreibt, wie der Anbieter die Frage bewertet hat, nicht wie stark eine Aussage über eine Organisation durch reale Belege gestützt wird.",
+      "answer": "AXIGNAL behandelt Anbieter-Vertrauen als Metadatum einer austauschbaren Bewertung. Belegqualität erfordert Prüfung von Quellen, Herkunft, Aktualität, Widersprüchen, Abdeckung und Status. Eine Modellwahrscheinlichkeit wird weder Wahrheitsprozent noch Verkaufswahrscheinlichkeit oder universeller epistemischer Wert.",
+      "sections": [
+        {
+          "heading": "Fragen, was die Wahrscheinlichkeit ausdrückt",
+          "body": "Eine Wahrscheinlichkeit kann beschreiben, welche von mehreren typisierten Optionen am besten zum Zustand für den Evaluator passt. Sie steht nicht zwingend für beobachtete Häufigkeit, kalibrierte Genauigkeit oder die Chance eines Geschäftsergebnisses. Ohne passenden Vertrag und Validierung erhält die Zahl als allgemeine Gewissheit eine Bedeutung, die der Anbieter nicht zugesagt hat."
+        },
+        {
+          "heading": "Belege unabhängig bewerten",
+          "body": "Die Unterstützung einer Aussage hängt von Material und Bedingungen ab: Wer veröffentlichte es, welches Subjekt wird beschrieben, welchen Zeitraum deckt es ab und bestätigen unabhängige Quellen es? Auch Widersprüche und fehlende Angaben zählen. Die Prüfung ist mehrdimensional und kann je nach Vertrag zu neuer Beobachtung, Recherche, POTENTIAL, UNKNOWN oder Zulassung führen."
+        },
+        {
+          "heading": "Ergebnisse für Replay aufbewahren, ohne ihnen Autorität zu geben",
+          "body": "Eine strukturierte Bewertung kann Anbieter, Modell, Version, Vertrag, Optionen, Fingerprints, Verteilung und beobachtbare Bedingungen bewahren. So lassen sich Ausführungen vergleichen oder mit anderer Richtlinie neu bewerten. Das Protokoll macht das Ergebnis prüfbar, aber nicht zur Wahrheitsquelle. Der Evaluator bleibt austauschbar und nicht autoritativ."
+        },
+        {
+          "heading": "Unsicherheit verständlich erklären",
+          "body": "Die Oberfläche sollte zeigen, was gestützt, interpretiert oder nicht vorhanden ist. Eine präzise Zahl kann objektive Wahrscheinlichkeit suggerieren, obwohl Quellen lückenhaft sind oder das Modell für die Aufgabe nicht kalibriert wurde. Ist die Frage nicht beantwortbar, recherchiert das System oder enthält sich, statt mit einem hohen Wert die Lücke zu verdecken."
+        }
+      ],
+      "example": "Hypothetisch: Ein Evaluator vergibt 0,86 für „relevante Fähigkeit“ unter mehreren Kategorien. AXIGNAL bewahrt Verteilung und Version, weist aber darauf hin, dass die einzige Quelle eine alte Beschreibung ist und aktuelle Verfügbarkeit nicht belegt ist. Der Wert bedeutet keine 86-prozentige Chance, dass das Unternehmen einen Auftrag erfüllen kann.",
+      "limits": "Anbieterwerte sind zwischen Modellen, Verträgen und Versionen nicht austauschbar und benötigen Kontext. Es gibt keinen allgemeinen Grenzwert, der Modellvertrauen zu zugelassener Wahrheit macht. Interpretationsregeln müssen versioniert, erklärbar und von EvidenceAdmission sowie Geschäftsergebnissen getrennt sein. Die Anzeige sollte deshalb erklären, welche Eingaben das Urteil beeinflusst haben und welche Informationen fehlten. Ein hoher Wert bei einer engen Klassifikationsaufgabe darf nicht auf eine andere Frage übertragen werden. Bei widersprüchlichen oder veralteten Quellen kann ein plausibler Modelloutput neben erheblicher Unsicherheit bestehen. Die verantwortliche Schnittstelle zeigt diese Grenze, statt eine Zahl als Beweis auszugeben.",
+      "cta": {
+        "label": "KI-Bewertungen verstehen",
+        "href": "/knowledge"
+      },
+      "related": [
+        "knowledge-answerability-before-ai-judgment",
+        "knowledge-explainable-economic-attribution",
+        "evidence-signal-faxt-inxight"
+      ]
+    },
+    "it": {
+      "slug": "fiducia-del-modello-e-qualita-delle-prove-sono-diverse",
+      "title": "La fiducia del modello non misura la qualità delle prove",
+      "description": "La probabilità di un valutatore descrive l’output strutturato, non verità, qualità o fiducia epistemica di un’affermazione.",
+      "lead": "I modelli possono restituire un’etichetta e un punteggio di fiducia dall’aspetto preciso. L’output descrive come il provider ha valutato la domanda, non quanto sia sostenuta nel mondo reale un’affermazione su un’organizzazione.",
+      "answer": "AXIGNAL tratta la fiducia del provider come metadato di una valutazione sostituibile. La qualità delle prove richiede esame di fonti, provenienza, attualità, contraddizioni, copertura e stato. La probabilità del modello non diventa percentuale di verità, probabilità di vendita o misura epistemica universale.",
+      "sections": [
+        {
+          "heading": "Chiedersi che cosa rappresenta la probabilità",
+          "body": "Una probabilità può indicare quale tra più opzioni tipizzate si adatta meglio allo stato fornito al valutatore. Non rappresenta necessariamente frequenza osservata, accuratezza calibrata o probabilità di un risultato commerciale. Senza contratto e validazione adeguati, interpretare il numero come certezza generale gli attribuisce un significato non promesso dal provider."
+        },
+        {
+          "heading": "Valutare separatamente le evidenze",
+          "body": "Il supporto di un’affermazione dipende dai materiali e dalle condizioni: chi li ha pubblicati, quale soggetto descrivono, quale periodo coprono e se fonti indipendenti confermano. Contano anche contraddizioni e informazioni mancanti. L’esame è multidimensionale e può portare a nuova osservazione, ricerca, POTENTIAL, UNKNOWN o ammissione secondo il contratto pertinente."
+        },
+        {
+          "heading": "Conservare l’esito per replay senza dargli autorità",
+          "body": "Una valutazione strutturata può conservare provider, modello, versione, contratto, opzioni, fingerprint, distribuzione e condizioni osservabili. Ciò consente confronto o nuova valutazione con un’altra policy. Registrare l’output lo rende ispezionabile, non fonte di verità. Il valutatore resta sostituibile e non autoritativo."
+        },
+        {
+          "heading": "Spiegare l’incertezza in modo utile",
+          "body": "L’interfaccia chiarisce che cosa è sostenuto, interpretato o mancante. Una cifra precisa può far pensare a una probabilità oggettiva benché le fonti siano incomplete o il modello non sia calibrato per il compito. Se la domanda non è rispondibile, il sistema ricerca o si astiene, anziché usare un punteggio elevato per nascondere la lacuna."
+        }
+      ],
+      "example": "Esempio ipotetico: un valutatore assegna 0,86 all’opzione «capacità pertinente» tra più categorie. AXIGNAL conserva distribuzione e versione, segnalando che l’unica fonte è una descrizione datata e non sostiene la disponibilità attuale. Il punteggio non significa l’86% di probabilità che l’impresa possa eseguire un contratto.",
+      "limits": "I punteggi dei provider non sono intercambiabili tra modelli, contratti o versioni e non vanno mostrati senza contesto. Nessuna soglia universale trasforma fiducia del modello in verità ammessa. La policy interpretativa deve essere versionata, spiegabile e separata da EvidenceAdmission e risultati commerciali. L'interfaccia dovrebbe quindi chiarire quali elementi hanno influenzato il giudizio e quali informazioni mancavano. Un valore elevato in un compito di classificazione circoscritto non va trasferito a una domanda diversa. In presenza di fonti discordanti o datate, un risultato plausibile del modello può convivere con una notevole incertezza. La presentazione responsabile rende visibile il limite, senza trasformare un numero in prova.",
+      "cta": {
+        "label": "Comprendi le valutazioni dell’IA",
+        "href": "/knowledge"
+      },
+      "related": [
+        "knowledge-answerability-before-ai-judgment",
+        "knowledge-explainable-economic-attribution",
+        "evidence-signal-faxt-inxight"
+      ]
+    },
+    "pt": {
+      "slug": "confianca-do-modelo-nao-mede-qualidade-da-evidencia",
+      "title": "A confiança do modelo não mede a qualidade da evidência",
+      "description": "A probabilidade de um avaliador descreve a sua saída estruturada, não verdade, qualidade ou confiança epistémica de uma afirmação.",
+      "lead": "Os modelos podem devolver um rótulo e uma pontuação de confiança que parecem precisos. Essa saída descreve como o fornecedor avaliou a pergunta, não o apoio real a uma afirmação sobre uma organização.",
+      "answer": "A AXIGNAL trata a confiança do fornecedor como metadado de uma avaliação substituível. A qualidade da evidência exige analisar fontes, proveniência, atualidade, contradições, cobertura e estado. Uma probabilidade do modelo não se torna percentagem de verdade, probabilidade de venda ou medida epistémica universal.",
+      "sections": [
+        {
+          "heading": "Perguntar o que representa a probabilidade",
+          "body": "Uma probabilidade pode indicar qual de várias opções tipadas se ajusta melhor ao estado apresentado ao avaliador. Não representa necessariamente frequência observada, precisão calibrada ou possibilidade de um resultado comercial. Sem contrato e validação adequados, ler o número como certeza geral acrescenta um significado que o fornecedor não prometeu."
+        },
+        {
+          "heading": "Avaliar a evidência separadamente",
+          "body": "O apoio a uma afirmação depende dos materiais e das condições: quem os publicou, que sujeito descrevem, que período abrangem e se fontes independentes confirmam. Contradições e elementos em falta também contam. A análise é multidimensional e pode resultar em nova observação, pesquisa, POTENTIAL, UNKNOWN ou admissão segundo o contrato aplicável."
+        },
+        {
+          "heading": "Preservar a avaliação para replay sem lhe dar autoridade",
+          "body": "Uma avaliação estruturada pode guardar fornecedor, modelo, versão, contrato, opções, fingerprints, distribuição e condições observáveis. Isso permite comparar execuções ou reavaliar sob outra política. O registo torna o resultado inspecionável, mas não o transforma em fonte de verdade. O avaliador continua substituível e sem autoridade canónica."
+        },
+        {
+          "heading": "Explicar incerteza em linguagem útil",
+          "body": "A interface deve mostrar o que está sustentado, interpretado e em falta. Uma cifra precisa pode sugerir uma probabilidade objetiva mesmo quando as fontes são incompletas ou o modelo não foi calibrado para a tarefa. Se não houver resposta possível, o sistema investiga ou abstém-se, em vez de usar uma pontuação alta para ocultar a lacuna."
+        }
+      ],
+      "example": "Exemplo hipotético: um avaliador atribui 0,86 à opção «capacidade relevante» entre categorias. A AXIGNAL conserva a distribuição e versão, mas mostra que a única fonte é uma descrição antiga e não prova disponibilidade atual. A pontuação não significa 86% de hipótese de a empresa cumprir um contrato.",
+      "limits": "Pontuações de fornecedores não são intercambiáveis entre modelos, contratos ou versões e não devem aparecer sem contexto. Não há limiar universal que transforme confiança do modelo em verdade admitida. A política de interpretação deve ser versionada, explicável e separada de EvidenceAdmission e dos resultados comerciais.",
+      "cta": {
+        "label": "Compreender avaliações de IA",
+        "href": "/knowledge"
+      },
+      "related": [
+        "knowledge-answerability-before-ai-judgment",
+        "knowledge-explainable-economic-attribution",
+        "evidence-signal-faxt-inxight"
+      ]
+    }
+  }
+]

@@ -1,0 +1,596 @@
+[
+  {
+    "id": "knowledge-web-presence-vs-economic-activity",
+    "cluster": "evidence-and-trust",
+    "intent": "Explain why a public web presence is not evidence of current economic activity by itself",
+    "type": "knowledge",
+    "locales": {
+      "es": {
+        "slug": "presencia-web-y-actividad-economica-son-evidencias-distintas",
+        "title": "Presencia web y actividad económica son evidencias distintas",
+        "description": "Una página pública muestra cómo se representa una organización; por sí sola no demuestra qué actividad económica mantiene hoy.",
+        "lead": "Una web puede describir productos, servicios, instalaciones o mercados, pero lo que publica una organización y lo que hace en un periodo concreto son preguntas diferentes. La presencia digital aporta contexto sobre una representación observable. Para hablar de actividad económica hacen falta afirmaciones delimitadas, evidencia adecuada y una lectura temporal que no confunda una página disponible con una operación vigente.",
+        "answer": "AXIGNAL trata la representación digital como observación de una superficie y la actividad económica como una cuestión que requiere evidencia propia. Una web puede orientar la investigación o explicar cómo una entidad se presenta; no confirma por sí sola ventas, producción, capacidad operativa, relaciones comerciales ni continuidad actual. La conclusión debe conservar el sujeto, el alcance y el tiempo que realmente respalda cada fuente.",
+        "sections": [
+          {
+            "heading": "Una página acredita una representación observada",
+            "body": "Si una página pública describe un servicio, la observación respalda que ese mensaje aparecía en una superficie concreta bajo unas condiciones y en un momento determinado. Puede ayudar a comprender el lenguaje elegido, la oferta que se comunica o los mercados que la organización dice atender. No convierte automáticamente cada frase en una actividad observada ni verifica que el servicio esté disponible, se entregue o genere transacciones."
+          },
+          {
+            "heading": "La actividad exige una afirmación más precisa",
+            "body": "Decir que una organización mantiene producción, presta un servicio o participa en una relación económica requiere formular el predicado con cuidado. Una descripción comercial puede ser aspiracional, histórica, general o referida a un tercero. La evidencia pertinente debe corresponder al sujeto, a la actividad y al periodo de interés. Si solo se conoce la representación, la respuesta debe quedarse en ese nivel y señalar qué queda sin establecer."
+          },
+          {
+            "heading": "Conectar ambas lecturas sin fundirlas",
+            "body": "La representación puede compararse con otras observaciones económicas para plantear una pregunta útil: por ejemplo, si una capacidad comunicada encuentra respaldo en materiales que describen operaciones. Esa comparación es una interpretación derivada, no una corrección del perfil de la empresa ni una prueba de que lo comunicado sea falso. Diferencias de alcance, idioma, fecha o sujeto pueden explicar una aparente brecha y deben seguir visibles."
+          },
+          {
+            "heading": "Separar ausencia de página y ausencia de actividad",
+            "body": "Una página que no aparece en una búsqueda puede deberse a la consulta, al idioma, a la superficie, a la cobertura o a las condiciones de acceso. Tampoco demuestra que la organización haya dejado de operar. La evidencia digital limitada describe el límite de observación alcanzado, no una conclusión universal sobre la economía. Para sostener una afirmación negativa haría falta un contrato de evidencia apropiado y un alcance explícito."
+          }
+        ],
+        "example": "Ejemplo hipotético: una web dice que una empresa ofrece mantenimiento industrial. La frase permite describir cómo la empresa representa públicamente ese servicio en la página observada. Sin evidencia adicional sobre contratos, operaciones o entregas en el periodo preguntado, no confirma que haya realizado mantenimiento para un cliente concreto ni que hoy tenga capacidad disponible.",
+        "limits": "La presencia web puede ser incompleta, promocional, antigua o gestionada por un tercero. Una lectura pública no revela por defecto contratos privados, ventas, capacidad real ni continuidad operativa. AXIGNAL no debe presentar una observación de representación como una auditoría del negocio. La relación con actividad económica debe explicarse como pregunta, evidencia o derivación delimitada, según lo que realmente se haya observado.",
+        "cta": { "label": "Explorar la base de conocimiento", "href": "/knowledge" },
+        "related": ["knowledge-digital-representation-vs-business-reality", "evidence-public-absence", "knowledge-no-evidence-vs-no-search", "knowledge-source-coverage-vs-market-coverage"]
+      },
+      "en": {
+        "slug": "web-presence-and-economic-activity-are-different-evidence",
+        "title": "Web presence and economic activity are different evidence",
+        "description": "A public page shows how an organization is represented; by itself, it does not prove what economic activity it has today.",
+        "lead": "A website may describe products, services, facilities or markets, but what an organization publishes and what it does during a particular period are different questions. Digital presence provides context about an observable representation. Claims about economic activity need bounded statements, suitable evidence and a temporal reading that does not confuse an available page with an operation that is currently active.",
+        "answer": "AXIGNAL treats digital representation as an observation of a surface and economic activity as a question that needs its own evidence. A website may guide research or explain how an entity presents itself; by itself it does not confirm sales, production, operating capacity, commercial relationships or continuity today. A conclusion should preserve the subject, scope and time that each source actually supports.",
+        "sections": [
+          {
+            "heading": "A page supports an observed representation",
+            "body": "If a public page describes a service, the observation supports that the message appeared on a particular surface under particular conditions at a given time. It may help explain the language chosen, the offer being communicated or the markets the organization says it serves. It does not automatically turn each sentence into observed activity, or verify that the service is available, delivered or generating transactions."
+          },
+          {
+            "heading": "Activity requires a more precise claim",
+            "body": "Saying that an organization maintains production, provides a service or participates in an economic relationship requires a carefully bounded predicate. A commercial description may be aspirational, historical, general or about a third party. Relevant evidence must match the subject, activity and period of interest. If only the representation is known, the answer should remain at that level and identify what has not been established."
+          },
+          {
+            "heading": "Connect the readings without merging them",
+            "body": "Representation can be compared with other economic observations to raise a useful question: for example, whether a communicated capability has support in material describing operations. That comparison is a derived interpretation, not a profile correction or proof that the public statement is false. Differences in scope, language, date or subject may explain an apparent gap and should remain visible."
+          },
+          {
+            "heading": "Separate a missing page from missing activity",
+            "body": "A page that does not appear in a search may reflect the query, language, surface, coverage or access conditions. It does not show that the organization has stopped operating. Limited digital evidence describes the observation boundary reached, not a universal conclusion about the economy. Supporting a negative claim would require an appropriate evidence contract and an explicit scope."
+          }
+        ],
+        "example": "Hypothetical: a website says that a company offers industrial maintenance. The statement supports describing how the company publicly represents that service on the observed page. Without additional evidence about contracts, operations or deliveries during the period in question, it does not confirm that the company maintained a particular customer's equipment or has capacity available today.",
+        "limits": "Web presence can be incomplete, promotional, old or managed by a third party. A public reading does not reveal private contracts, sales, actual capacity or operating continuity by default. AXIGNAL should not present a representation observation as a business audit. Its connection to economic activity should be explained as a question, evidence item or bounded derivation, according to what was actually observed.",
+        "cta": { "label": "Explore the Knowledge library", "href": "/knowledge" },
+        "related": ["knowledge-digital-representation-vs-business-reality", "evidence-public-absence", "knowledge-no-evidence-vs-no-search", "knowledge-source-coverage-vs-market-coverage"]
+      }
+    }
+  },
+  {
+    "id": "knowledge-no-evidence-vs-no-search",
+    "cluster": "evidence-and-trust",
+    "intent": "Distinguish an executed bounded search with no result from a search that was not performed",
+    "type": "knowledge",
+    "locales": {
+      "es": {
+        "slug": "no-encontrar-evidencia-no-es-lo-mismo-que-no-buscar",
+        "title": "No encontrar evidencia no es lo mismo que no buscar",
+        "description": "Una búsqueda sin resultados describe un alcance ejecutado; una búsqueda no realizada deja la pregunta sin comprobar.",
+        "lead": "Cuando una respuesta dice que no se encontró evidencia, conviene saber si hubo una búsqueda real y qué límites tuvo. La frase puede resumir un resultado acotado, pero también puede ocultar una consulta que nunca se ejecutó. Distinguir ambos casos ayuda a conservar UNKNOWN, explicar el alcance investigado y evitar que una laguna de información se convierta en una afirmación negativa.",
+        "answer": "Una búsqueda ejecutada sin resultados permite afirmar que no se localizó evidencia dentro de sus condiciones documentadas. Si la búsqueda no se ejecutó, hubo un error o faltan registros de su alcance, la respuesta no puede atribuir un resultado a esa búsqueda. En ambos casos puede faltar conocimiento, pero solo el primero describe un resultado de observación concreto y limitado.",
+        "sections": [
+          {
+            "heading": "Registrar qué pregunta se intentó responder",
+            "body": "Una búsqueda evaluable parte de una pregunta y un sujeto definidos: qué predicado se quería comprobar, sobre qué organización o relación y durante qué periodo. También importa si se buscó una fuente específica, una superficie, un idioma o un conjunto de documentos. Sin esos límites, la expresión no se encontró suena más amplia que la actividad realmente realizada y puede inducir una conclusión que el trabajo no respalda."
+          },
+          {
+            "heading": "Describir un resultado negativo dentro de su alcance",
+            "body": "Si una consulta terminó y no devolvió material pertinente, la formulación debe conservar la superficie, los términos, el intervalo y las restricciones relevantes. El resultado puede orientar la siguiente investigación o indicar que no hay evidencia disponible en ese conjunto examinado. No demuestra que la afirmación sea falsa, que ninguna otra fuente la contenga ni que el hecho no ocurriera fuera del alcance revisado."
+          },
+          {
+            "heading": "Mantener separado el trabajo no ejecutado",
+            "body": "Una fuente inaccesible, un presupuesto agotado, una herramienta no utilizada o una tarea pendiente no producen un resultado de búsqueda. En ese caso la evidencia no fue examinada; el estado permanece desconocido respecto de esa ruta. Decir no encontramos puede atribuir trabajo que no ocurrió. Una descripción honesta señala que no se comprobó esa fuente y deja claro qué pregunta sigue abierta."
+          },
+          {
+            "heading": "Convertir la diferencia en una siguiente pregunta útil",
+            "body": "La distinción puede guiar una investigación proporcionada. Si hubo una búsqueda acotada, quizá convenga ampliar idioma, periodo o fuente cuando el valor esperado lo justifique. Si no se buscó, primero se decide si esa ruta es pertinente y está autorizada. La ausencia de resultados y la falta de ejecución generan necesidades distintas, por lo que no deben recibir la misma explicación ni la misma confianza."
+          }
+        ],
+        "example": "Ejemplo hipotético: una lectura termina revisando un informe público concreto y no encuentra una fecha de inicio de producción. Puede describir ese resultado en ese informe. Si el informe no se abrió porque la ruta falló, la fecha no fue comprobada allí. Ninguno de los casos permite concluir que la empresa nunca produjo o que no existe otra fuente pertinente.",
+        "limits": "La frase no se encontró evidencia siempre necesita un alcance que el lector pueda entender. Una búsqueda puede ser incompleta, usar términos inadecuados o cubrir solo fuentes autorizadas y disponibles. No equivale a una prueba de inexistencia. Una búsqueda no realizada, una adquisición fallida y un resultado informativo sin coincidencias son estados distintos y deben mantenerse diferenciados en la explicación.",
+        "cta": { "label": "Explorar la base de conocimiento", "href": "/knowledge" },
+        "related": ["evidence-public-absence", "evidence-unknown-not-false", "knowledge-useful-abstention", "knowledge-answerability-is-question-specific"]
+      },
+      "en": {
+        "slug": "finding-no-evidence-is-not-the-same-as-not-searching",
+        "title": "Finding no evidence is not the same as not searching",
+        "description": "A search with no results describes work performed within a scope; an unrun search leaves the question unchecked.",
+        "lead": "When an answer says that no evidence was found, it helps to know whether a real search took place and what limits it had. The phrase may summarize a bounded result, but it can also hide a query that was never run. Distinguishing the cases preserves UNKNOWN, explains the scope examined and prevents an information gap from becoming a negative claim.",
+        "answer": "A search that ran and returned no result supports saying that evidence was not located under its documented conditions. If the search did not run, failed or has no record of its scope, the answer cannot attribute a result to it. Knowledge may be missing in both cases, but only the first describes a concrete, limited observation result.",
+        "sections": [
+          {
+            "heading": "Record the question the search was meant to answer",
+            "body": "An assessable search begins with a defined question and subject: which predicate was being checked, about which organization or relationship and for what period. It also matters whether the search covered a particular source, surface, language or document set. Without those limits, saying not found sounds broader than the work actually performed and may invite a conclusion the search cannot support."
+          },
+          {
+            "heading": "Describe a negative result within its scope",
+            "body": "If a query finished without returning relevant material, the account should preserve the surface, terms, time range and material restrictions. The result may guide further research or indicate that evidence was unavailable in the examined set. It does not prove that the statement is false, that no other source contains it or that the event did not happen outside the reviewed scope."
+          },
+          {
+            "heading": "Keep work that was not run separate",
+            "body": "An inaccessible source, exhausted budget, unused tool or pending task does not produce a search result. In that case, the evidence was not examined and the state remains unknown for that route. Saying we found nothing can imply work that never happened. An honest account says that the source was not checked and makes clear which question remains open."
+          },
+          {
+            "heading": "Use the distinction to choose a useful next question",
+            "body": "The distinction can guide proportionate research. If a bounded search ran, expanding the language, period or source may be worthwhile when expected value supports it. If no search ran, first decide whether the route is relevant and authorized. No results and no execution create different needs, so they should not receive the same explanation or confidence."
+          }
+        ],
+        "example": "Hypothetical: a reading examines a particular public report and finds no production start date. It can describe that result for that report. If the report was not opened because the route failed, the date was not checked there. Neither case supports concluding that the company never produced anything or that no other relevant source exists.",
+        "limits": "The phrase no evidence found always needs a scope that a reader can understand. A search may be incomplete, use unsuitable terms or cover only authorized and available sources. It is not proof of nonexistence. An unrun search, failed acquisition and informative result with no matches are different states and should remain distinct in the explanation.",
+        "cta": { "label": "Explore the Knowledge library", "href": "/knowledge" },
+        "related": ["evidence-public-absence", "evidence-unknown-not-false", "knowledge-useful-abstention", "knowledge-answerability-is-question-specific"]
+      }
+    }
+  },
+  {
+    "id": "knowledge-currentness-is-as-of",
+    "cluster": "evidence-and-trust",
+    "intent": "Explain why evidence currentness is an as-of judgment tied to time and policy",
+    "type": "knowledge",
+    "locales": {
+      "es": {
+        "slug": "la-vigencia-de-una-evidencia-se-lee-a-una-fecha",
+        "title": "La vigencia de una evidencia se lee a una fecha",
+        "description": "Una evidencia puede describir el pasado con precisión y seguir sin demostrar el estado actual de una organización.",
+        "lead": "Una evidencia no se vuelve falsa solo porque envejece, y tampoco conserva automáticamente vigencia para siempre. Para interpretar una respuesta temporal hay que saber cuándo se observó el material, qué periodo cubría y a qué fecha se pregunta. La currentness es una lectura gobernada respecto de un momento y una política explícitos, no una propiedad eterna que pueda deducirse de una fecha aislada.",
+        "answer": "La pregunta útil es qué podía sostener esta evidencia a la fecha de referencia y bajo qué política de vigencia. Una observación histórica puede seguir siendo una referencia válida sobre el pasado mientras deja de servir como apoyo suficiente para el estado actual. El paso del tiempo no aporta evidencia nueva, no borra el registro anterior y no convierte por sí mismo un hecho en falso.",
+        "sections": [
+          {
+            "heading": "Separar cuándo ocurrió, se publicó y se observó",
+            "body": "Una fuente puede describir un evento anterior, publicarlo después y ser observada aún más tarde. Esas fechas contestan preguntas distintas. Confundirlas puede adelantar o retrasar artificialmente una cronología y crear una impresión de actualidad que la fuente nunca afirmó. Una lectura temporal conserva las fechas disponibles con su significado y deja desconocidas las que el material no proporciona, en vez de completarlas por intuición."
+          },
+          {
+            "heading": "Evaluar vigencia respecto de un momento definido",
+            "body": "Currentness requiere un instante de referencia y una política con criterios explícitos. Bajo una política versionada, una observación puede pasar de CURRENT a STALE y después a HISTORICAL conforme transcurre el tiempo. Esas transiciones informan sobre su utilidad para preguntas actuales; no cambian el contenido original ni establecen que la afirmación haya dejado de ser cierta. UNKNOWN permanece desconocido hasta que nueva evidencia gobernada cambie lo que se sabe."
+          },
+          {
+            "heading": "Reobservar añade evidencia y conserva la historia",
+            "body": "Para recuperar apoyo sobre el presente puede ser necesario observar de nuevo la misma afirmación o una distinta. Una reobservación tiene su propio momento y procedencia y se añade al historial; no reemplaza silenciosamente el registro anterior. Comparar ambas observaciones exige comprobar que se refieren al mismo sujeto y alcance, y explicar cualquier cambio de fuente, método o condiciones que afecte la interpretación."
+          },
+          {
+            "heading": "No convertir antigüedad en un veredicto",
+            "body": "Una evidencia antigua puede ser decisiva para comprender una secuencia histórica, aunque no sirva para describir la situación presente. Del mismo modo, una fuente reciente no resuelve automáticamente identidad, cobertura, autoridad o contradicciones. La vigencia se combina con fuerza evidencial, procedencia y alcance; no debe resumirse como una certeza total ni confundirse con permiso para reutilizar datos bajo cualquier contexto."
+          }
+        ],
+        "example": "Ejemplo hipotético: un catálogo observado años atrás enumera una línea de producto. Puede sostener que esa representación existía cuando se capturó el catálogo. Para afirmar que la línea sigue disponible en la fecha consultada haría falta evidencia adecuada para ese momento. El catálogo antiguo no se vuelve falso; su capacidad de respaldar una afirmación presente es distinta.",
+        "limits": "Los umbrales de antigüedad dependen de una política explícita y de la naturaleza de la afirmación; no hay una duración universal para toda evidencia. Currentness no demuestra verdad, y temporalidad no equivale a permiso de reutilización. Las fechas ausentes siguen UNKNOWN. AXIGNAL no debe inventar un evento final ni presentar una observación histórica como estado actual sin apoyo adicional.",
+        "cta": { "label": "Explorar la base de conocimiento", "href": "/knowledge" },
+        "related": ["evidence-currentness", "knowledge-timeline-dates-and-observation", "knowledge-research-reuse-conditions", "knowledge-reproducible-observation-reading"]
+      },
+      "en": {
+        "slug": "evidence-currentness-is-read-as-of-a-date",
+        "title": "Evidence currentness is read as of a date",
+        "description": "Evidence can describe the past accurately while still failing to establish an organization's current state.",
+        "lead": "Evidence does not become false simply because it ages, and it does not stay current forever by default. A temporal answer needs to say when the material was observed, which period it covered and the date the question concerns. Currentness is a governed reading against an explicit time and policy, not an eternal property inferred from one timestamp.",
+        "answer": "The useful question is what this evidence could support as of the reference date and under which currentness policy. A historical observation may remain a valid reference about the past while no longer providing sufficient support for the present state. Time passing adds no new evidence, does not erase the earlier record and does not by itself make a fact false.",
+        "sections": [
+          {
+            "heading": "Separate when something happened, was published and was observed",
+            "body": "A source may describe an earlier event, publish it later and be observed later still. Those dates answer different questions. Confusing them can shift a timeline and create an impression of recency that the source never claimed. A temporal reading preserves available dates with their meanings and leaves dates unknown when the material does not supply them, rather than filling gaps by intuition."
+          },
+          {
+            "heading": "Evaluate currentness against a defined moment",
+            "body": "Currentness needs a reference instant and a policy with explicit criteria. Under a versioned policy, an observation may move from CURRENT to STALE and then HISTORICAL as time passes. These transitions describe its usefulness for present questions; they do not change the original content or establish that the claim stopped being true. UNKNOWN remains unknown until new governed evidence changes what is known."
+          },
+          {
+            "heading": "Reobservation adds evidence and preserves history",
+            "body": "Recovering support for the present may require observing the same claim again or asking a different question. A reobservation has its own time and provenance and is appended to the history; it does not silently replace the earlier record. Comparing the observations requires checking that they concern the same subject and scope, and explaining any source, method or condition change that affects interpretation."
+          },
+          {
+            "heading": "Do not turn age into a verdict",
+            "body": "Old evidence may be decisive for understanding a historical sequence even when it cannot describe the present situation. A recent source also does not automatically resolve identity, coverage, authority or contradictions. Currentness combines with evidential strength, provenance and scope; it should not be compressed into total certainty or confused with permission to reuse data in every context."
+          }
+        ],
+        "example": "Hypothetical: a catalog observed years ago lists a product line. It may support that the representation existed when the catalog was captured. Establishing that the line remains available on the date of the question needs suitable evidence for that time. The old catalog does not become false; its ability to support a present claim is different.",
+        "limits": "Age thresholds depend on an explicit policy and the kind of claim; there is no universal duration for all evidence. Currentness does not prove truth, and temporality does not grant reuse permission. Missing dates remain UNKNOWN. AXIGNAL should not invent an end event or present a historical observation as current state without additional support.",
+        "cta": { "label": "Explore the Knowledge library", "href": "/knowledge" },
+        "related": ["evidence-currentness", "knowledge-timeline-dates-and-observation", "knowledge-research-reuse-conditions", "knowledge-reproducible-observation-reading"]
+      }
+    }
+  },
+  {
+    "id": "knowledge-independent-corroboration-vs-repetition",
+    "cluster": "evidence-and-trust",
+    "intent": "Distinguish independent supporting evidence from repeated copies of one source claim",
+    "type": "knowledge",
+    "locales": {
+      "es": {
+        "slug": "corroboracion-independiente-y-repeticion-no-son-iguales",
+        "title": "Corroboración independiente y repetición no son iguales",
+        "description": "Varias páginas pueden repetir una sola afirmación; contar publicaciones no demuestra apoyo independiente.",
+        "lead": "Encontrar la misma frase en varios lugares puede parecer una corroboración amplia, pero las páginas quizá dependan de un único comunicado, distribuidor o texto sindicado. El número de copias no revela cuántas observaciones independientes existen. Para evaluar apoyo hay que seguir el linaje de cada publicación, comparar su relación con la fuente original y verificar que las afirmaciones coincidan en sujeto, alcance y periodo.",
+        "answer": "La corroboración independiente requiere material de apoyo cuya procedencia no se reduzca a repetir la misma fuente, y cuya pertinencia para la afirmación esté justificada. La repetición aporta evidencia de difusión o reproducción del mensaje, no necesariamente de que el hecho descrito ocurriera. AXIGNAL debe conservar lineage y evitar contar varias redistribuciones de un mismo contenido como varias observaciones autónomas.",
+        "sections": [
+          {
+            "heading": "Seguir las relaciones entre publicaciones",
+            "body": "Dos páginas pueden copiar un comunicado, citar al mismo portavoz o reproducir una nota de agencia. Aunque las URLs y fechas sean distintas, el contenido puede tener una única raíz informativa. Reconstruir esas conexiones ayuda a distinguir una fuente original, una cita secundaria y una copia. Si el linaje no puede determinarse, la independencia debe quedar sin resolver en lugar de suponerse por la apariencia de diversidad."
+          },
+          {
+            "heading": "Comprobar que el apoyo se refiere a la misma afirmación",
+            "body": "Fuentes distintas pueden hablar de asuntos parecidos y aun así no respaldar el mismo predicado. Una puede describir un plan y otra una entrega; una puede referirse a una filial y otra a la matriz; una puede cubrir un país y otra un mercado distinto. Corroborar exige alinear sujeto, actividad, alcance y tiempo, además de revisar la autoridad y las limitaciones de cada evidencia."
+          },
+          {
+            "heading": "No multiplicar la evidencia por sindicación",
+            "body": "Una observación redistribuida puede enriquecer la comprensión de cómo circula una declaración pública. Sin embargo, la reutilización del mismo material no crea automáticamente nuevos hechos ni eleva la independencia. La deduplicación y los vínculos de procedencia evitan que una única afirmación amplificada gane peso solo por aparecer en varios sitios. Cada elemento debe conservar la relación con aquello que realmente lo originó."
+          },
+          {
+            "heading": "Explicar el grado de apoyo con límites visibles",
+            "body": "Cuando hay independencia razonable, alcance compatible y fuentes pertinentes, puede describirse un apoyo más amplio sin prometer certeza absoluta. Si los materiales comparten raíz o discrepan, esas condiciones deben aparecer en la interpretación. La calidad de evidencia sigue siendo multidimensional e incluye actualidad, autoridad, cobertura, contradicción e incertidumbre; un contador de enlaces no sustituye esa lectura."
+          }
+        ],
+        "example": "Ejemplo hipotético: tres páginas publican que una compañía abrirá una planta, pero las tres reproducen la misma nota corporativa. Eso demuestra que la afirmación se difundió en tres páginas y permite seguir su linaje hasta la nota. No son tres confirmaciones independientes de que la apertura ocurriera. Una evidencia separada sobre la operación efectiva respondería a otra pregunta.",
+        "limits": "La independencia puede ser difícil de establecer cuando las fuentes no revelan sus referencias o comparten información indirectamente. Una fuente independiente también puede equivocarse o tener alcance limitado. La corroboración no transforma por sí sola una declaración en verdad canónica ni elimina contradicciones. La procedencia, la admisión, la temporalidad y el predicado específico siguen siendo necesarios para describir qué está respaldado.",
+        "cta": { "label": "Explorar la base de conocimiento", "href": "/knowledge" },
+        "related": ["knowledge-source-lineage-not-corroboration", "knowledge-transformation-provenance", "knowledge-observation-memory-vs-canonical-truth", "knowledge-answerability-is-question-specific"]
+      },
+      "en": {
+        "slug": "independent-corroboration-and-repetition-are-not-the-same",
+        "title": "Independent corroboration and repetition are not the same",
+        "description": "Several pages may repeat one claim; counting publications does not demonstrate independent support.",
+        "lead": "Finding the same sentence in several places can look like broad corroboration, but the pages may depend on one announcement, distributor or syndicated text. The number of copies does not show how many independent observations exist. Assessing support means tracing each publication's lineage, comparing its connection to the original source and checking whether the claims match in subject, scope and period.",
+        "answer": "Independent corroboration requires relevant supporting material whose provenance does not reduce to repeating the same source, with a justified connection to the claim. Repetition is evidence that a message circulated or was reproduced, not necessarily that the described event occurred. AXIGNAL should preserve lineage and avoid counting several redistributions of one item as separate autonomous observations.",
+        "sections": [
+          {
+            "heading": "Trace the relationships between publications",
+            "body": "Two pages may copy an announcement, quote the same spokesperson or reproduce a wire story. Even when their URLs and dates differ, their content may have one information root. Reconstructing those links helps distinguish an original source, a secondary citation and a copy. If lineage cannot be established, independence should remain unresolved rather than being assumed from apparent variety."
+          },
+          {
+            "heading": "Check that the support concerns the same claim",
+            "body": "Different sources may discuss related matters without supporting the same predicate. One may describe a plan and another a delivery; one may refer to a subsidiary and another to its parent; one may cover a country while another covers a different market. Corroboration requires aligning subject, activity, scope and time, and reviewing each item's authority and limitations."
+          },
+          {
+            "heading": "Do not multiply evidence through syndication",
+            "body": "A redistributed observation may help explain how a public statement travelled. Reuse of the same material, however, does not automatically create new facts or increase independence. Deduplication and provenance links prevent one amplified claim from gaining weight just because it appears on several sites. Each item should retain its relationship to what actually originated it."
+          },
+          {
+            "heading": "Explain support with visible limits",
+            "body": "When independence is reasonably established, scope aligns and sources are relevant, broader support can be described without promising absolute certainty. If materials share a root or disagree, those conditions belong in the interpretation. Evidence quality remains multidimensional and includes currentness, authority, coverage, contradiction and uncertainty; a link count cannot replace that reading."
+          }
+        ],
+        "example": "Hypothetical: three pages report that a company will open a plant, but all three reproduce the same corporate announcement. This shows that the claim appeared on three pages and lets a reader trace its lineage to the announcement. It is not three independent confirmations that the opening happened. Separate evidence about actual operations would answer a different question.",
+        "limits": "Independence can be difficult to establish when sources do not disclose their references or share information indirectly. An independent source can also be wrong or have limited scope. Corroboration alone does not turn a statement into canonical truth or remove contradictions. Provenance, admission, temporality and the specific predicate are still needed to describe what is supported.",
+        "cta": { "label": "Explore the Knowledge library", "href": "/knowledge" },
+        "related": ["knowledge-source-lineage-not-corroboration", "knowledge-transformation-provenance", "knowledge-observation-memory-vs-canonical-truth", "knowledge-answerability-is-question-specific"]
+      }
+    }
+  },
+  {
+    "id": "knowledge-answerability-is-question-specific",
+    "cluster": "evidence-and-trust",
+    "intent": "Explain why answerability is evaluated for a specific question and dimension",
+    "type": "knowledge",
+    "locales": {
+      "es": {
+        "slug": "la-answerability-depende-de-la-pregunta-concreta",
+        "title": "La answerability depende de la pregunta concreta",
+        "description": "Tener datos sobre una organización no significa que exista contexto suficiente para responder cualquier pregunta.",
+        "lead": "Una colección de datos puede servir para describir una fecha y seguir siendo insuficiente para evaluar una relación, una capacidad o un cambio. Answerability pregunta si el estado disponible contiene información pertinente para una cuestión concreta, bajo un contrato que define qué hace falta. No es una nota global sobre la organización ni una licencia para que un modelo complete detalles ausentes.",
+        "answer": "La respuesta debe evaluarse por pregunta y por dimensión. Se puede contestar una parte, marcar otra como UNKNOWN y abstenerse de un juicio que carece de requisitos. Esta comprobación precede a la evaluación probabilística: determina si hay estado aplicable, suficiente y trazable para plantear el juicio. La cobertura en un ámbito no resuelve automáticamente preguntas sobre otros ámbitos, periodos o sujetos.",
+        "sections": [
+          {
+            "heading": "Descomponer la pregunta en requisitos observables",
+            "body": "Una pregunta como si una empresa puede atender un mercado contiene varias dimensiones: qué capacidad se requiere, qué alcance geográfico importa, en qué periodo y qué evidencia puede sostener la conclusión. Hacer explícitos esos requisitos permite separar datos presentes de condiciones faltantes. El contrato evita que una pregunta ambigua se transforme silenciosamente en una opción simplificada que el estado disponible no puede justificar."
+          },
+          {
+            "heading": "La suficiencia cambia con la dimensión",
+            "body": "La misma evidencia puede ser pertinente para confirmar que una organización publicó una certificación y no bastar para afirmar que la certificación cubre una instalación concreta hoy. La respuesta depende del predicado, el sujeto y el alcance temporal. Por eso no conviene etiquetar todo el conocimiento como suficiente o insuficiente en bloque; cada dimensión mantiene su propio estado, requisitos y explicación."
+          },
+          {
+            "heading": "Comprobar antes de pedir un juicio al modelo",
+            "body": "Un evaluador puede comparar alternativas cuando el contexto ya contiene la información que esas alternativas requieren. Si falta un dato crítico, una respuesta fluida no resuelve la falta. La AnswerabilityGate conserva el motivo de la insuficiencia y evita tratar probabilidad o confianza del modelo como sustitutos de evidencia. Cuando el contrato sí es contestable, la salida sigue siendo una evaluación estructurada y reemplazable, no verdad canónica."
+          },
+          {
+            "heading": "Responder lo que se sabe y delimitar el resto",
+            "body": "Answerability no obliga a elegir entre una respuesta total y el silencio completo. Puede permitir un resultado parcial: contestar la parte sustentada, explicitar UNKNOWN para otra y enumerar la evidencia que falta para continuar. Esa separación hace la respuesta útil sin extenderla a un hecho más amplio. También preserva la posibilidad de reevaluar cuando cambie la información, el contrato o el periodo."
+          }
+        ],
+        "example": "Ejemplo hipotético: una fuente confirma que una organización publicó un certificado, pero no indica qué sede cubre ni si sigue vigente. Puede responderse que la publicación se observó. La pregunta sobre la certificación actual de una planta específica permanece sin answerability suficiente hasta disponer de alcance y tiempo adecuados; el modelo no debe inferirlos por el nombre del documento.",
+        "limits": "Answerability no es una puntuación de calidad empresarial, certeza total ni garantía de que las fuentes sean correctas. Depende de un contrato explícito, del estado disponible y de la pregunta exacta. Una respuesta contestable todavía puede contener incertidumbre, contradicciones o límites de fuente. Si los requisitos no se cumplen, UNKNOWN o abstención son estados válidos y no equivalen a FALSE.",
+        "cta": { "label": "Explorar la base de conocimiento", "href": "/knowledge" },
+        "related": ["knowledge-answerability-before-ai-judgment", "knowledge-useful-abstention", "knowledge-no-evidence-vs-no-search", "evidence-unknown-not-false"]
+      },
+      "en": {
+        "slug": "answerability-depends-on-the-specific-question",
+        "title": "Answerability depends on the specific question",
+        "description": "Having data about an organization does not mean there is enough context to answer every question.",
+        "lead": "A collection of data may support a date and still be insufficient to assess a relationship, capability or change. Answerability asks whether the available state contains information relevant to a particular question under a contract that defines what is required. It is not a global grade for an organization or permission for a model to fill in missing details.",
+        "answer": "Answerability should be assessed by question and dimension. One part may be answerable, another may remain UNKNOWN, and a judgment without required context may be withheld. This check comes before probabilistic evaluation: it asks whether applicable, sufficient and traceable state exists for the judgment. Coverage in one area does not automatically resolve questions about another area, period or subject.",
+        "sections": [
+          {
+            "heading": "Break the question into observable requirements",
+            "body": "A question such as whether a company can serve a market contains dimensions: which capability is needed, what geographic scope matters, for which period and what evidence could support the conclusion. Making these requirements explicit separates available data from missing conditions. A contract prevents an ambiguous question from silently becoming a simplified choice that the current state cannot justify."
+          },
+          {
+            "heading": "Sufficiency changes by dimension",
+            "body": "The same evidence may be relevant to confirm that an organization published a certificate and insufficient to claim that the certificate covers a particular facility today. The answer depends on the predicate, subject and temporal scope. Knowledge should not be labelled sufficient or insufficient as one block; each dimension keeps its own state, requirements and explanation."
+          },
+          {
+            "heading": "Check before asking a model to make a judgment",
+            "body": "An evaluator can compare options when the context contains the information those options require. If a critical fact is missing, a fluent answer does not resolve the gap. The AnswerabilityGate preserves why the state is insufficient and prevents model probability or confidence from substituting for evidence. When a contract is answerable, the result remains a replaceable structured evaluation, not canonical truth."
+          },
+          {
+            "heading": "Answer what is known and bound the rest",
+            "body": "Answerability does not force a choice between a complete answer and total silence. It may allow a partial result: answer the supported part, mark another as UNKNOWN and identify evidence needed to continue. This makes the response useful without extending it to a broader fact. It also allows reassessment when information, contract or period changes."
+          }
+        ],
+        "example": "Hypothetical: a source confirms that an organization published a certificate but does not say which site it covers or whether it remains current. The observation of the publication can be answered. A question about the present certification of a specific plant lacks sufficient answerability until suitable scope and time are available; a model should not infer them from the document title.",
+        "limits": "Answerability is not a business quality score, total certainty or guarantee that sources are correct. It depends on an explicit contract, available state and exact question. An answerable question may still contain uncertainty, contradictions or source limits. If requirements are unmet, UNKNOWN or abstention is valid and does not mean FALSE.",
+        "cta": { "label": "Explore the Knowledge library", "href": "/knowledge" },
+        "related": ["knowledge-answerability-before-ai-judgment", "knowledge-useful-abstention", "knowledge-no-evidence-vs-no-search", "evidence-unknown-not-false"]
+      }
+    }
+  },
+  {
+    "id": "knowledge-useful-abstention",
+    "cluster": "evidence-and-trust",
+    "intent": "Explain how withholding an unsupported judgment can still guide the next investigation",
+    "type": "knowledge",
+    "locales": {
+      "es": {
+        "slug": "una-abstencion-util-explica-que-falta",
+        "title": "Una abstención útil explica qué falta",
+        "description": "No emitir un juicio sin base suficiente puede orientar mejor la investigación que completar una respuesta por intuición.",
+        "lead": "Abstenerse no significa que toda la información sea inútil ni que una pregunta deba quedar abandonada. Significa que una conclusión específica no está suficientemente respaldada bajo sus requisitos actuales. Una abstención útil delimita qué parte se conoce, por qué otra parte no puede responderse y qué evidencia podría cambiar ese estado, sin ocultar la incertidumbre bajo una frase segura.",
+        "answer": "Cuando falta contexto crítico, AXIGNAL debe poder preservar UNKNOWN y explicar la razón de la abstención. Puede ofrecer una respuesta parcial si existe una parte sustentada y señalar la evidencia necesaria para seguir investigando. La abstención protege la frontera entre observación, inferencia y verdad admitida; no convierte una falta de evidencia en un resultado falso ni en un juicio negativo sobre la organización.",
+        "sections": [
+          {
+            "heading": "Identificar el límite concreto de la respuesta",
+            "body": "Una buena explicación nombra el predicado que no se pudo establecer, el estado o dimensión afectada y el requisito que falta. Decir no se sabe nada puede borrar evidencia útil; decirlo todo con certeza puede inventar contexto. La respuesta debe mostrar el límite con precisión: por ejemplo, hay una declaración pública, pero no se ha verificado si describe una operación actual o un sujeto concreto."
+          },
+          {
+            "heading": "Separar desconocimiento de evidencia contraria",
+            "body": "La ausencia de un dato no es una observación que contradiga la afirmación. Una fuente que no menciona una instalación no prueba que la instalación no exista, especialmente si el documento tenía otro propósito o cobertura parcial. Abstenerse mantiene abierta esa posibilidad y evita convertir UNKNOWN en FALSE. Si aparece evidencia contraria, debe registrarse con su propio alcance y evaluarse junto a los materiales previos."
+          },
+          {
+            "heading": "Ofrecer un camino de investigación acotado",
+            "body": "La siguiente acción puede ser precisar el periodo, aclarar el sujeto, consultar una fuente autorizada o definir qué observación resolvería la duda. No toda pregunta merece una investigación adicional: su utilidad, derechos y coste importan. Una sugerencia debe describir una ruta posible, no afirmar que AXIGNAL ya la ejecutó ni prometer que producirá una conclusión determinada."
+          },
+          {
+            "heading": "Mantener utilidad sin fabricar certeza",
+            "body": "Una respuesta puede ser práctica aun cuando se abstenga de un juicio final. Puede conservar hechos observados, separar una interpretación potencial y explicar sus límites para que una persona decida qué hacer después. Esta forma de respuesta no requiere una puntuación universal ni una confianza aparente. Su utilidad proviene de hacer visible la frontera del conocimiento y la razón por la que importa para la pregunta."
+          }
+        ],
+        "example": "Ejemplo hipotético: alguien pregunta si un proveedor puede entregar un volumen concreto el próximo trimestre. Una página pública describe sus productos, pero no aporta capacidad ni disponibilidad. La respuesta puede resumir la representación pública y abstenerse de confirmar el volumen, indicando que haría falta evidencia temporal y específica de capacidad para contestar esa dimensión.",
+        "limits": "Abstenerse no es una prueba de que una respuesta sea imposible para siempre, ni sustituye la explicación del alcance revisado. La ruta de investigación sugerida puede no ser autorizada, disponible o suficiente. AXIGNAL no debe prometer disponibilidad futura de fuentes o resultados. El usuario puede dirigir atención, pero su expectativa no cambia la evidencia ni convierte un juicio sin base en verdad.",
+        "cta": { "label": "Explorar la base de conocimiento", "href": "/knowledge" },
+        "related": ["knowledge-answerability-is-question-specific", "knowledge-no-evidence-vs-no-search", "evidence-unknown-not-false", "knowledge-user-input-directs-attention-not-truth"]
+      },
+      "en": {
+        "slug": "useful-abstention-explains-what-is-missing",
+        "title": "Useful abstention explains what is missing",
+        "description": "Withholding an unsupported judgment can guide research better than completing an answer by intuition.",
+        "lead": "Abstaining does not mean that all available information is useless or that a question must be abandoned. It means a specific conclusion is not sufficiently supported under its current requirements. A useful abstention bounds what is known, explains why another part cannot be answered and identifies evidence that might change the state, without hiding uncertainty behind a confident sentence.",
+        "answer": "When critical context is missing, AXIGNAL should be able to preserve UNKNOWN and explain why it is abstaining. It may give a partial answer when one part is supported and identify evidence needed for further research. Abstention protects the boundary between observation, inference and admitted truth; it does not turn missing evidence into a false result or a negative judgment about an organization.",
+        "sections": [
+          {
+            "heading": "Identify the specific boundary of the answer",
+            "body": "A useful explanation names the predicate that could not be established, the affected state or dimension and the requirement that is missing. Saying nothing is known can erase useful evidence; saying everything with certainty can invent context. The answer should show the boundary precisely: for example, a public statement exists, but it has not been verified as a current operation or as referring to a particular subject."
+          },
+          {
+            "heading": "Separate lack of knowledge from contrary evidence",
+            "body": "A missing data point is not an observation contradicting the claim. A source that does not mention a facility does not prove that it does not exist, especially when the document had another purpose or partial coverage. Abstention keeps that possibility open and prevents UNKNOWN from becoming FALSE. If contrary evidence appears, it should be recorded with its own scope and assessed alongside earlier material."
+          },
+          {
+            "heading": "Offer a bounded research path",
+            "body": "A next step might be to clarify the period or subject, consult an authorized source or define which observation could resolve the question. Not every question merits further research; utility, rights and cost matter. A suggestion should describe a possible route, not claim that AXIGNAL already took it or promise that it will produce a particular conclusion."
+          },
+          {
+            "heading": "Stay useful without manufacturing certainty",
+            "body": "A response can be practical even when it withholds a final judgment. It can preserve observed facts, separate a potential interpretation and explain limits so a person can decide what to do next. This does not require a universal score or apparent confidence. Its value comes from making the knowledge boundary visible and explaining why it matters to the question."
+          }
+        ],
+        "example": "Hypothetical: someone asks whether a supplier can deliver a particular volume next quarter. A public page describes its products but says nothing about capacity or availability. The answer can summarize the public representation and abstain from confirming the volume, noting that time-specific capacity evidence would be needed to answer that dimension.",
+        "limits": "Abstention does not prove that an answer will always be impossible, and it does not replace an account of the scope reviewed. A suggested research route may be unauthorized, unavailable or insufficient. AXIGNAL should not promise that sources or results will be available later. A user's expectation may direct attention but cannot change evidence or turn an unsupported judgment into truth.",
+        "cta": { "label": "Explore the Knowledge library", "href": "/knowledge" },
+        "related": ["knowledge-answerability-is-question-specific", "knowledge-no-evidence-vs-no-search", "evidence-unknown-not-false", "knowledge-user-input-directs-attention-not-truth"]
+      }
+    }
+  },
+  {
+    "id": "knowledge-reproducible-observation-reading",
+    "cluster": "evidence-and-trust",
+    "intent": "Explain which conditions are needed to reproduce or compare an observation reading",
+    "type": "knowledge",
+    "locales": {
+      "es": {
+        "slug": "reproducir-una-lectura-requiere-conservar-sus-condiciones",
+        "title": "Reproducir una lectura exige conservar sus condiciones",
+        "description": "Una observación solo puede compararse con claridad si se conocen el instrumento, la consulta y el momento.",
+        "lead": "Una captura o resultado aislado no explica por sí solo cómo se produjo. Para repetir una observación o comparar dos lecturas hacen falta las condiciones que definen el instrumento, la superficie, la consulta, el contexto y el tiempo. Sin ellas, una diferencia puede reflejar el método o la muestra en vez de un cambio económico en la organización observada.",
+        "answer": "La reproducibilidad requiere preservar suficiente información para reconstruir qué se preguntó, dónde, cuándo, con qué versión de instrumento, bajo qué condiciones y con qué muestra o incertidumbre. Repetir la misma secuencia puede ayudar a examinar variación; comparar series exige compatibilidad metodológica o un puente validado. Un cambio de condiciones puede iniciar una serie nueva en lugar de una comparación directa.",
+        "sections": [
+          {
+            "heading": "Registrar condiciones que dan significado al resultado",
+            "body": "En una observación de superficie digital pueden importar consulta o prompt, idioma, geografía, dispositivo, producto o superficie, momento, instrumento y versión. En otros tipos de investigación cambian los campos relevantes, pero la regla es la misma: documentar lo necesario para interpretar el resultado y reconocer límites. Registrar esos elementos no demuestra que una lectura sea correcta; permite entender bajo qué condiciones fue obtenida."
+          },
+          {
+            "heading": "Distinguir repetición de comparabilidad",
+            "body": "Ejecutar una lectura dos veces bajo condiciones descritas puede mostrar estabilidad o variación dentro de esas condiciones. Comparar resultados de instrumentos distintos exige más cuidado. Si cambian consultas, superficie, versión o criterios de detección, la diferencia puede provenir de la medición. Una comparación válida necesita compatibilidad demostrada; no basta con que ambas lecturas se refieran a la misma organización o compartan una fecha cercana."
+          },
+          {
+            "heading": "Preservar muestra e incertidumbre",
+            "body": "Un resultado puede depender de cuántas réplicas se hicieron, qué elementos entraron en la muestra, qué se consideró informativo y qué variación se observó. Si esa información falta, la estabilidad no puede suponerse. Una muestra pequeña o no representativa limita el alcance de lo que se puede decir. El informe debe mantener los denominadores y la incertidumbre que sean relevantes para la conclusión."
+          },
+          {
+            "heading": "Explicar discontinuidades en lugar de disimularlas",
+            "body": "Una nueva versión del instrumento, cambios de acceso o una superficie distinta pueden romper la continuidad de una serie. Si no hay un puente validado, conviene etiquetar las lecturas como series diferentes y explicar qué cambió. Esa decisión mantiene visible la medición como una observación condicionada y evita atribuir automáticamente a la empresa una variación que quizá provenga del sistema de medición."
+          }
+        ],
+        "example": "Ejemplo hipotético: dos personas buscan una organización con consultas distintas, idiomas diferentes y semanas de separación. Que una vea un resultado y la otra no permite describir esas dos lecturas, pero no prueba una mejora o caída estable de visibilidad. Para comparar harían falta condiciones acordadas, instrumento identificado, tiempo y una forma explícita de tratar la variación.",
+        "limits": "Conservar condiciones mejora la interpretación, pero no garantiza que una plataforma repita la misma salida ni que una muestra represente todo un mercado. Algunas condiciones pueden no ser observables o estar fuera del control del observador. AXIGNAL no debe atribuir una diferencia económica cuando la evidencia solo demuestra variación de superficie o instrumento.",
+        "cta": { "label": "Explorar la base de conocimiento", "href": "/knowledge" },
+        "related": ["knowledge-currentness-is-as-of", "evidence-currentness", "knowledge-transformation-provenance", "knowledge-source-coverage-vs-market-coverage"]
+      },
+      "en": {
+        "slug": "reproducing-a-reading-requires-preserving-its-conditions",
+        "title": "Reproducing a reading requires preserving its conditions",
+        "description": "An observation can be compared clearly only when its instrument, query and time are known.",
+        "lead": "A capture or isolated result does not explain by itself how it was produced. Repeating an observation or comparing two readings requires the conditions that define the instrument, surface, query, context and time. Without them, a difference may reflect method or sample rather than an economic change in the observed organization.",
+        "answer": "Reproducibility requires preserving enough information to reconstruct what was asked, where and when, which instrument version was used, under what conditions and with what sample or uncertainty. Repeating a sequence may help examine variation; comparing series requires methodological compatibility or a validated bridge. A change in conditions may start a new series instead of supporting direct comparison.",
+        "sections": [
+          {
+            "heading": "Record the conditions that give the result meaning",
+            "body": "For a digital surface observation, relevant conditions may include query or prompt, language, geography, device, product or surface, time, instrument and version. Other forms of research have different fields, but the rule is the same: record what is needed to interpret the result and recognize its limits. Recording those elements does not prove a reading is correct; it makes clear how it was obtained."
+          },
+          {
+            "heading": "Distinguish repetition from comparability",
+            "body": "Running a reading twice under described conditions may reveal stability or variation within those conditions. Comparing results from different instruments requires more care. If queries, surface, version or detection criteria change, the difference may come from measurement. A valid comparison needs demonstrated compatibility; it is not enough for both readings to concern the same organization or nearby dates."
+          },
+          {
+            "heading": "Preserve sample and uncertainty",
+            "body": "A result may depend on the number of repetitions, which items entered the sample, what counted as informative and what variation was observed. If that information is missing, stability cannot be assumed. A small or unrepresentative sample limits what can be said. The account should preserve denominators and uncertainty that matter to the conclusion."
+          },
+          {
+            "heading": "Explain discontinuities instead of hiding them",
+            "body": "A new instrument version, access change or different surface may break a series' continuity. Without a validated bridge, readings should be labelled as separate series and the change explained. This keeps measurement visible as a conditioned observation and avoids automatically attributing variation to the organization when it may come from the measurement system."
+          }
+        ],
+        "example": "Hypothetical: two people search for an organization using different queries, languages and weeks. One seeing a result and the other not can describe those two readings, but it does not prove a stable increase or fall in visibility. Comparison would need agreed conditions, an identified instrument, time and an explicit way to handle variation.",
+        "limits": "Preserving conditions improves interpretation but cannot guarantee that a platform will repeat the same output or that a sample represents an entire market. Some conditions may be unobservable or outside the observer's control. AXIGNAL should not attribute an economic difference when the evidence only shows variation in surface or instrument.",
+        "cta": { "label": "Explore the Knowledge library", "href": "/knowledge" },
+        "related": ["knowledge-currentness-is-as-of", "evidence-currentness", "knowledge-transformation-provenance", "knowledge-source-coverage-vs-market-coverage"]
+      }
+    }
+  },
+  {
+    "id": "knowledge-transformation-provenance",
+    "cluster": "evidence-and-trust",
+    "intent": "Explain how provenance should remain visible through normalization and interpretation",
+    "type": "knowledge",
+    "locales": {
+      "es": {
+        "slug": "la-procedencia-debe-seguir-visible-tras-transformar-datos",
+        "title": "La procedencia debe seguir visible tras transformar datos",
+        "description": "Normalizar o resumir material puede ayudar a leerlo, siempre que se conserve de dónde procede y qué cambió.",
+        "lead": "Una afirmación rara vez llega a una lectura económica sin transformaciones. El material puede extraerse, normalizarse, traducirse, deduplicarse o resumirse antes de relacionarlo con una pregunta. Cada paso puede facilitar su uso y también cambiar cómo se interpreta. Una cadena de procedencia permite distinguir el contenido observado de las decisiones aplicadas después y reconstruir qué sostiene una conclusión.",
+        "answer": "La procedencia debe acompañar el material desde la referencia original hasta la derivación que lo utiliza, incluyendo transformaciones, versiones y límites relevantes. Una traducción no es una fuente independiente, una normalización no confirma el hecho y un resumen no sustituye la evidencia original. Si no se puede reconstruir una transformación material, la interpretación resultante debe conservar esa limitación y no presentarse como observación directa.",
+        "sections": [
+          {
+            "heading": "Separar la observación original de su representación",
+            "body": "Una fuente puede aportar una página, archivo, declaración o resultado bajo unas condiciones. La extracción posterior selecciona o estructura partes de ese material. Mantener la referencia, el momento y el fragmento permitido cuando corresponda ayuda a que otra persona entienda qué se observó realmente. El texto normalizado es una representación útil, pero no debe confundirse con el material de origen ni ampliar su alcance."
+          },
+          {
+            "heading": "Describir transformaciones con precisión suficiente",
+            "body": "Traducción, corrección de formato, extracción de entidades, clasificación o resumen son pasos distintos. Registrar cuál se aplicó, con qué versión y sobre qué entrada permite revisar un error o reproducir la lectura. Una transformación puede alterar matices, unidades, nombres o contexto. Si un paso es incierto o automatizado, esa incertidumbre forma parte del historial de interpretación y no debe desaparecer en una frase pulida."
+          },
+          {
+            "heading": "Evitar que varias salidas parezcan varias fuentes",
+            "body": "Un mismo texto puede producir una traducción, un resumen y una extracción de campos. Son derivados del material original y comparten su lineage. Contarlos como observaciones separadas inflaría el apoyo y ocultaría la dependencia común. La deduplicación debe preservar las distintas representaciones necesarias para el análisis, a la vez que impide que una sola declaración gane corroboración aparente por haber pasado por varios formatos."
+          },
+          {
+            "heading": "Mantener una ruta desde la conclusión hasta el origen",
+            "body": "Una explicación defendible conecta la interpretación con las observaciones que influyeron materialmente en ella, las reglas aplicadas y las transformaciones relevantes. También deja visibles contradicciones y límites en vez de escoger solo material favorable. Esa ruta no garantiza que la fuente sea correcta ni que la inferencia sea canónica; permite inspeccionar la base, reevaluarla cuando cambie y entender por qué la respuesta tiene su alcance actual."
+          }
+        ],
+        "example": "Ejemplo hipotético: una página publica una capacidad en francés, un proceso produce una traducción al español y una lectura posterior clasifica el texto como una descripción de fabricación. La explicación debe enlazar la clasificación con el texto original, indicar la transformación lingüística y preservar la incertidumbre. La traducción y la clasificación no son dos confirmaciones independientes de la capacidad.",
+        "limits": "La procedencia puede ser parcial cuando la fuente solo permite conservar una referencia o fingerprint. No todos los cambios son reversibles y un resumen puede omitir matices relevantes. Mantener lineage no autoriza retención ni reutilización: los derechos, la privacidad, el tiempo y el alcance siguen gobernando cada uso. Una ruta completa mejora la inspección, pero no sustituye la admisión de evidencia.",
+        "cta": { "label": "Explorar la base de conocimiento", "href": "/knowledge" },
+        "related": ["evidence-provenance", "knowledge-source-lineage-not-corroboration", "knowledge-independent-corroboration-vs-repetition", "knowledge-reproducible-observation-reading"]
+      },
+      "en": {
+        "slug": "provenance-should-remain-visible-after-data-transforms",
+        "title": "Provenance should remain visible after data transforms",
+        "description": "Normalizing or summarizing material can help readers, provided its source and changes remain traceable.",
+        "lead": "A claim rarely reaches an economic reading without transformations. Material may be extracted, normalized, translated, deduplicated or summarized before being connected to a question. Each step can make it easier to use and can also change its interpretation. A provenance chain distinguishes observed content from later decisions and makes it possible to reconstruct what supports a conclusion.",
+        "answer": "Provenance should travel with material from its original reference to the derivation that uses it, including relevant transformations, versions and limits. A translation is not an independent source, normalization does not confirm a fact and a summary does not replace original evidence. If a material transformation cannot be reconstructed, the resulting interpretation should preserve that limit and should not be presented as a direct observation.",
+        "sections": [
+          {
+            "heading": "Separate the original observation from its representation",
+            "body": "A source may provide a page, file, statement or result under particular conditions. Later extraction selects or structures parts of that material. Keeping the reference, time and permitted excerpt where relevant helps another person understand what was actually observed. Normalized text is a useful representation, but it should not be confused with its source material or given broader scope."
+          },
+          {
+            "heading": "Describe transformations precisely enough",
+            "body": "Translation, format correction, entity extraction, classification and summarization are different steps. Recording which was applied, with which version and to what input makes errors reviewable and readings reproducible. A transformation can alter nuance, units, names or context. If a step is uncertain or automated, that uncertainty belongs in the interpretation history and should not disappear in polished wording."
+          },
+          {
+            "heading": "Prevent several outputs from looking like several sources",
+            "body": "One text may produce a translation, summary and field extraction. These are derivatives of the original material and share its lineage. Counting them as separate observations would inflate support and hide their common dependency. Deduplication should preserve the different representations needed for analysis while preventing one statement from gaining apparent corroboration just because it passed through several formats."
+          },
+          {
+            "heading": "Keep a path from conclusion back to source",
+            "body": "A defensible explanation connects an interpretation to observations that materially influenced it, the rules applied and relevant transformations. It also keeps contradictions and limits visible instead of selecting only favorable material. That path does not guarantee the source is correct or the inference is canonical; it makes the basis inspectable, reassessable when it changes and understandable at its current scope."
+          }
+        ],
+        "example": "Hypothetical: a page states a capability in French, a process produces a Spanish translation and a later reading classifies the text as a manufacturing description. The explanation should link the classification to the original text, identify the language transformation and preserve uncertainty. Translation and classification are not two independent confirmations of the capability.",
+        "limits": "Provenance may be partial when a source permits retention of only a reference or fingerprint. Not every change is reversible, and a summary can omit relevant nuance. Lineage does not grant retention or reuse rights; rights, privacy, time and scope still govern each use. A complete path improves inspection but does not replace evidence admission.",
+        "cta": { "label": "Explore the Knowledge library", "href": "/knowledge" },
+        "related": ["evidence-provenance", "knowledge-source-lineage-not-corroboration", "knowledge-independent-corroboration-vs-repetition", "knowledge-reproducible-observation-reading"]
+      }
+    }
+  },
+  {
+    "id": "knowledge-source-coverage-vs-market-coverage",
+    "cluster": "evidence-and-trust",
+    "intent": "Explain why coverage of selected sources does not establish coverage of an entire market",
+    "type": "knowledge",
+    "locales": {
+      "es": {
+        "slug": "cobertura-de-fuentes-no-es-cobertura-de-mercado",
+        "title": "Cobertura de fuentes no es cobertura de mercado",
+        "description": "Revisar un conjunto de fuentes describe ese conjunto, no todo el mercado ni todas las capacidades disponibles.",
+        "lead": "Una investigación puede abarcar varias fuentes y aun así dejar grandes partes del mercado fuera de observación. El conjunto consultado refleja decisiones de alcance, idioma, geografía, acceso, periodo y pertinencia. Sin un marco que defina el mercado y una cobertura justificada, no se puede convertir la cantidad o variedad de fuentes revisadas en una afirmación de exhaustividad sobre organizaciones, capacidades u oportunidades.",
+        "answer": "La cobertura de fuentes describe qué materiales entraron en una investigación bajo unas condiciones. La cobertura de mercado pregunta qué porción del universo relevante está representada y requiere una definición independiente del mercado, sujetos elegibles, canales y límites de observación. AXIGNAL no debe tratar una fuente amplia ni una lista visible como el mercado completo; la falta de una organización en el conjunto revisado permanece desconocida.",
+        "sections": [
+          {
+            "heading": "Definir qué significa mercado para la pregunta",
+            "body": "Un mercado puede delimitase por necesidad, producto, comprador, geografía, periodo o condiciones de entrega, y distintas preguntas producen universos distintos. La ubicación de una organización no define automáticamente todo su alcance; la reach debe razonarse por capacidad y contexto. Antes de afirmar cobertura, hay que explicar quién podría estar dentro, qué quedó fuera y por qué esa definición corresponde a la decisión investigada."
+          },
+          {
+            "heading": "Describir la muestra de fuentes y sus sesgos posibles",
+            "body": "Las fuentes elegidas pueden favorecer organizaciones grandes, sectores regulados, idiomas dominantes o entidades con mayor presencia digital. Otras pueden no publicar datos, usar canales diferentes o quedar fuera por derechos y acceso. Enumerar qué se revisó ayuda a medir el alcance del trabajo, pero no elimina sesgos de selección. Una muestra útil para una pregunta acotada no es automáticamente representativa de todo el mercado."
+          },
+          {
+            "heading": "Mantener la ausencia y el desconocimiento visibles",
+            "body": "Si una empresa no aparece en un conjunto de fuentes, lo único establecido puede ser que no fue encontrada allí bajo las condiciones descritas. No demuestra que no opere, que no tenga una capacidad o que no exista demanda. Esa ausencia puede ser una brecha de observación que merece otra pregunta, o puede no ser relevante. La interpretación no debe asignar una puntuación negativa por falta de cobertura."
+          },
+          {
+            "heading": "Comunicar cobertura con denominadores y límites",
+            "body": "Cuando una medición de cobertura está justificada, debe conservar el universo definido, el periodo, las fuentes elegibles, los elementos observados y la incertidumbre. Un total sin denominador no explica qué representa. Una fuente que cubre muchos registros todavía puede omitir tipos de actores o geografías clave. Separar cobertura de observación y tamaño de mercado permite describir lo conocido sin reclamar una vista total que el método no demuestra."
+          }
+        ],
+        "example": "Ejemplo hipotético: un análisis revisa directorios públicos de un país para localizar fabricantes de una pieza. El resultado puede describir a las organizaciones encontradas en esos directorios y las condiciones de búsqueda. Sin un universo de fabricantes validado y fuentes compatibles para el periodo, no demuestra que el listado incluya todos los proveedores ni mide la demanda completa de la pieza.",
+        "limits": "La cobertura completa suele ser difícil de definir y demostrar en economías abiertas. Las fuentes cambian, tienen derechos distintos y reflejan poblaciones diferentes. Una proporción solo es interpretable si el denominador y los criterios de inclusión son defendibles. La ausencia de datos, la falta de búsqueda y la inexistencia económica son afirmaciones diferentes; ninguna debe sustituir a otra sin evidencia específica.",
+        "cta": { "label": "Explorar la base de conocimiento", "href": "/knowledge" },
+        "related": ["knowledge-observation-focus-vs-world-crawl", "knowledge-sparse-public-presence", "evidence-unknown-not-false", "knowledge-reproducible-observation-reading", "knowledge-web-presence-vs-economic-activity"]
+      },
+      "en": {
+        "slug": "source-coverage-is-not-market-coverage",
+        "title": "Source coverage is not market coverage",
+        "description": "Reviewing a set of sources describes that set, not the whole market or every capability available.",
+        "lead": "Research may cover several sources and still leave large parts of a market unobserved. The material consulted reflects choices about scope, language, geography, access, period and relevance. Without a framework that defines the market and justifies coverage, the number or variety of sources reviewed cannot become a claim of completeness about organizations, capabilities or opportunities.",
+        "answer": "Source coverage describes which materials entered research under particular conditions. Market coverage asks which portion of a relevant universe is represented and needs its own definition of the market, eligible subjects, channels and observation limits. AXIGNAL should not treat a broad source or visible list as the whole market; an organization missing from the reviewed set remains unknown.",
+        "sections": [
+          {
+            "heading": "Define what market means for the question",
+            "body": "A market may be bounded by need, product, buyer, geography, period or delivery conditions, and different questions create different universes. An organization's location does not automatically define its full reach; reach should be reasoned about by capability and context. Before claiming coverage, explain who may be included, what remains outside and why the definition fits the decision being researched."
+          },
+          {
+            "heading": "Describe the source sample and possible bias",
+            "body": "Selected sources may favor large organizations, regulated sectors, dominant languages or entities with greater digital presence. Others may publish no data, use different channels or be excluded by rights and access. Listing what was reviewed helps define the research scope but does not remove selection bias. A sample useful for a bounded question is not automatically representative of an entire market."
+          },
+          {
+            "heading": "Keep absence and unknown visible",
+            "body": "If a company does not appear in a source set, the only established point may be that it was not found there under described conditions. This does not show that it does not operate, lacks a capability or has no demand. The absence may be an observation gap worth another question, or it may not matter. Interpretation should not assign a negative score for missing coverage."
+          },
+          {
+            "heading": "Communicate coverage with denominators and limits",
+            "body": "When a coverage measure is justified, preserve the defined universe, period, eligible sources, observed items and uncertainty. A total without a denominator does not explain what it represents. A source with many records may still omit important actor types or geographies. Separating observation coverage from market size describes what is known without claiming a complete view the method does not establish."
+          }
+        ],
+        "example": "Hypothetical: an analysis reviews public directories in one country to find manufacturers of a part. Its result can describe organizations found in those directories under the search conditions. Without a validated universe of manufacturers and compatible sources for the period, it does not show that the list contains every supplier or measure total demand for the part.",
+        "limits": "Complete coverage is often difficult to define and demonstrate in open economies. Sources change, have different rights and represent different populations. A proportion is interpretable only when its denominator and inclusion criteria are defensible. Missing data, a search not performed and economic nonexistence are different claims; none should replace another without specific evidence.",
+        "cta": { "label": "Explore the Knowledge library", "href": "/knowledge" },
+        "related": ["knowledge-observation-focus-vs-world-crawl", "knowledge-sparse-public-presence", "evidence-unknown-not-false", "knowledge-reproducible-observation-reading", "knowledge-web-presence-vs-economic-activity"]
+      }
+    }
+  }
+]
