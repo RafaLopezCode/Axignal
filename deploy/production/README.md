@@ -96,3 +96,20 @@ Operational invariants:
 - repeated synchronization of the same settled window is replay-safe;
 - OAuth failure or revocation fails closed and produces no synthetic measurement;
 - only the domain property feeds canonical own-site measurement; URL-prefix properties may be used for diagnostics but must not be added to the same totals.
+
+## Direct SEO Production Truth
+
+AXIGNAL does not require GSC Wizard in production. The direct SEO truth runtime reuses the AO-13 server-owned Search Console OAuth credential to inspect the canonical sitemap and URL indexing state through Google's official Search Console APIs. An optional Chrome UX Report API key adds origin-level field performance without blocking indexing truth when CrUX is unavailable.
+
+`axignal-seo-truth-sync.timer` runs `run-seo-truth-sync.sh` once per UTC day. The runner mounts `/etc/axignal/secrets/gsc_oauth.json` read-only and, when present, `/etc/axignal/secrets/crux_api_key` read-only. Both files must remain outside Git and image layers. The CrUX key should be restricted in Google Cloud to the Chrome UX Report API only.
+
+Private URL Inspection and sitemap snapshots persist in `admin-seo-truth.sqlite3`. CrUX p75 measurements are admitted only into the governed AO-24 Measurement Registry; absence of a CrUX record is `INSUFFICIENT_DATA`, never zero performance. Search Console coverage labels remain Google observations and are not promoted into AXIGLAND truth.
+
+Operational invariants:
+
+- `URL_UNKNOWN_TO_GOOGLE != TECHNICAL_SEO_FAILURE`;
+- `DISCOVERED_NOT_INDEXED != REJECTED`;
+- `CRUX_NO_DATA != ZERO_LATENCY`;
+- replay within the same inspection day is idempotent;
+- sitemap URLs outside the canonical `https://axignal.com` origin fail closed;
+- GSC Wizard may be used as an operator aid, but is not a production dependency.

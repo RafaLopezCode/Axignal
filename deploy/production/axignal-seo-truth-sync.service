@@ -1,0 +1,21 @@
+[Unit]
+Description=AXIGNAL direct Google SEO Production Truth sync
+Requires=docker.service
+After=docker.service network-online.target
+Wants=network-online.target
+ConditionPathExists=/srv/axignal/docker/current/deploy/production/run-seo-truth-sync.sh
+ConditionPathExists=/etc/axignal/secrets/gsc_oauth.json
+
+[Service]
+Type=oneshot
+User=root
+Group=root
+ExecStart=/srv/axignal/docker/current/deploy/production/run-seo-truth-sync.sh
+TimeoutStartSec=30min
+Nice=10
+IOSchedulingClass=idle
+IOSchedulingPriority=7
+NoNewPrivileges=true
+ProtectHome=true
+ProtectSystem=strict
+ReadWritePaths=/var/lib/axignal/runtime /run /var/run

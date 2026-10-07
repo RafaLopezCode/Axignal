@@ -52,6 +52,7 @@ class GoogleSearchConsoleClient:
     ) -> None:
         self._credentials = credentials
         self._timeout = timeout_seconds
+        self._cached_access_token: str | None = None
 
     def _json_request(
         self,
@@ -71,6 +72,8 @@ class GoogleSearchConsoleClient:
         return payload
 
     def access_token(self) -> str:
+        if self._cached_access_token is not None:
+            return self._cached_access_token
         body = urlencode(
             {
                 "client_id": self._credentials.client_id,
@@ -91,6 +94,7 @@ class GoogleSearchConsoleClient:
         token = str(payload.get("access_token", "")).strip()
         if not token:
             raise RuntimeError("GSC_OAUTH_FAILED: ACCESS_TOKEN_MISSING")
+        self._cached_access_token = token
         return token
 
     def query(
@@ -143,6 +147,61 @@ class GoogleSearchConsoleClient:
             if start_row >= 100000:
                 raise RuntimeError("GSC_QUERY_FAILED: SAFETY_ROW_LIMIT")
         return tuple(rows)
+
+    def list_sitemaps(self, *, property_ref: str) -> tuple[dict[str, Any], ...]:
+        if not property_ref.startswith(("sc-domain:", "https://", "http://")):
+            raise ValueError("invalid Search Console property reference")
+        token = self.access_token()
+        endpoint = f"{self.api_base}/sites/{quote(property_ref, safe='')}/sitemaps"
+        payload = self._json_request(
+            Request(
+                endpoint,
+                headers={"Authorization": f"Bearer {token}"},
+                method="GET",
+            ),
+            failure_prefix="GSC_SITEMAPS_FAILED",
+        )
+        rows = payload.get("sitemap", [])
+        if not isinstance(rows, list):
+            raise RuntimeError("GSC_SITEMAPS_FAILED: INVALID_RESPONSE")
+        return tuple(item for item in rows if isinstance(item, dict))
+
+    def inspect_url(
+        self,
+        *,
+        property_ref: str,
+        inspection_url: str,
+        language_code: str = "en-US",
+    ) -> dict[str, Any]:
+        if not property_ref.startswith(("sc-domain:", "https://", "http://")):
+            raise ValueError("invalid Search Console property reference")
+        if not inspection_url.startswith("https://"):
+            raise ValueError("URL Inspection requires an HTTPS URL")
+        token = self.access_token()
+        body = json.dumps(
+            {
+                "inspectionUrl": inspection_url,
+                "siteUrl": property_ref,
+                "languageCode": language_code,
+            },
+            separators=(",", ":"),
+        ).encode()
+        payload = self._json_request(
+            Request(
+                "https://searchconsole.googleapis.com/v1/urlInspection/index:inspect",
+                data=body,
+                headers={
+                    "Authorization": f"Bearer {token}",
+                    "Content-Type": "application/json",
+                },
+                method="POST",
+            ),
+            failure_prefix="GSC_URL_INSPECTION_FAILED",
+        )
+        result = payload.get("inspectionResult")
+        if not isinstance(result, dict):
+            raise RuntimeError("GSC_URL_INSPECTION_FAILED: INVALID_RESPONSE")
+        return result
 
 
 def _source_ref(
