@@ -1,0 +1,12 @@
+[Unit]
+Description=Sync AXIGNAL direct Google SEO Production Truth once per UTC day
+
+[Timer]
+OnCalendar=*-*-* 07:17:00 UTC
+Persistent=true
+RandomizedDelaySec=20m
+AccuracySec=1m
+Unit=axignal-seo-truth-sync.service
+
+[Install]
+WantedBy=timers.target
