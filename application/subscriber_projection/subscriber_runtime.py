@@ -187,6 +187,12 @@ class SubscriberOpportunityProjectionStore(Protocol):
         """Read only the latest projection in this exact authorized context."""
 
 
+class ContinuityRecorder(Protocol):
+    def record(
+        self, authorized_context: TrustedRequestContext, xeed_id: XeedId, *, as_of: datetime
+    ) -> object: ...
+
+
 @dataclass(frozen=True, slots=True)
 class SubscriberRuntimeRead:
     status: SubscriberRuntimeStatus
@@ -718,10 +724,26 @@ class SubscriberEconomicRuntime:
     reuse_policy: ObservationReusePolicy
     temporal_policy: TemporalCurrentnessPolicy
     code_sha: str
+    #: Private continuity recorder (TASK-050 T023); checkpoints follow each new snapshot.
+    continuity: ContinuityRecorder | None = None
 
     def __post_init__(self) -> None:
         if not self.code_sha.strip():
             raise ValueError("subscriber runtime code identity is required")
+
+    def authorize(
+        self,
+        authorized_context: TrustedRequestContext,
+        xeed_id: XeedId,
+    ) -> AuthorizedXeedOrganization:
+        """Membership, Focus and canonical Organization recheck (no data is read)."""
+        return self._read_context(authorized_context, xeed_id)
+
+    def _checkpoint(
+        self, authorized_context: TrustedRequestContext, xeed_id: XeedId, as_of: datetime
+    ) -> None:
+        if self.continuity is not None:
+            self.continuity.record(authorized_context, xeed_id, as_of=as_of)
 
     def _read_context(
         self,
@@ -780,7 +802,7 @@ class SubscriberEconomicRuntime:
         signal = economic_output_runtime_signal(output)
         if execution_trace is not None:
             signal["executionTrace"] = deepcopy(execution_trace)
-        return self.output_store.append(
+        appended = self.output_store.append(
             StoredEconomicOutput(
                 tenant_id=organization_context.authorized_xeed.xeed.tenant_id,
                 xeed_id=organization_context.authorized_xeed.xeed.id,
@@ -791,6 +813,9 @@ class SubscriberEconomicRuntime:
                 runtime_signal=signal,
             )
         )
+        if appended:
+            self._checkpoint(authorized_context, xeed_id, output_as_of)
+        return appended
 
     def publish_observation_loop(
         self,
@@ -832,7 +857,10 @@ class SubscriberEconomicRuntime:
         )
         if projection is None:
             return False
-        return self.opportunity_store.append(projection)
+        appended = self.opportunity_store.append(projection)
+        if appended:
+            self._checkpoint(authorized_context, xeed_id, projection.as_of)
+        return appended
 
     def execute_observation_loop(
         self,

@@ -56,6 +56,7 @@ from application.observation_runtime.ports import (
     ObservationRuntimeStore,
 )
 from application.observation_runtime.replay import FindingsLedger, RecordedFindingsPort
+from application.subscriber_continuity.service import ContinuityService
 from application.subscriber_identity.runtime import Clock
 from application.subscriber_projection.subscriber_runtime import SubscriberEconomicRuntime
 from application.xeed_access.organization_reader import OrganizationReadError
@@ -74,6 +75,11 @@ OPPORTUNITY_PROJECTION_FAMILIES = frozenset({ObservationFamily.DEMAND, Observati
 
 class RuntimeStore(ObservationRuntimeStore, FindingsLedger, Protocol):
     """Operational state plus the ledger of real retrievals (one SQLite file)."""
+
+    def owe_recompute(
+        self, *, xeed_id: str, family: str, evidence_keys: tuple[str, ...], now: datetime
+    ) -> bool:
+        """Brain-continuity debt, fenced against a live tick (TASK-050 T022)."""
 
 
 class ObservationRuntimeConfigurationError(ValueError):
@@ -278,6 +284,17 @@ def run_once(
             ledger=store,
         )
     )
+    # Declared-dependency invalidation (TASK-050 T022): owe material recomputation for
+    # enrolled Foci whose Brain checkpoint lost its support. The tick below drains it
+    # through the same RecomputationPort; this adds no scheduler and no second queue.
+    continuity = economic.continuity
+    if isinstance(continuity, ContinuityService):
+        for enrolled in enrollment:
+            try:
+                xeed = economic.authorize(enrolled.context, enrolled.focus_id).authorized_xeed.xeed
+            except (XeedReadError, OrganizationReadError):
+                continue
+            continuity.reconcile(xeed.tenant_id, xeed.id, now=now, owe=store)
     brain = SubscriberBrainRecomputation(economic=economic, plans=plans, contexts=contexts)
     report = run_daily_tick(
         store=store,

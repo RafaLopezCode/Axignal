@@ -697,6 +697,49 @@ class SqliteObservationRuntimeStore:
                 ],
             )
 
+    def owe_recompute(
+        self, *, xeed_id: str, family: str, evidence_keys: tuple[str, ...], now: datetime
+    ) -> bool:
+        """Owe material recomputation declared by Brain continuity (TASK-050 T022).
+
+        Fenced like ``claim_tick``: while a live tick holds the lease nothing is written
+        (the tick would overwrite or clear it), and the caller retries on its next
+        reconciliation. Existing debt is merged; a MATERIAL_CHANGE is never weakened.
+        """
+        owed_family = ObservationFamily(family)
+        with self._transaction() as db:
+            if (
+                db.execute(
+                    "SELECT 1 FROM aor_ticks WHERE completed_at IS NULL AND lease_expires_at>?",
+                    (_utc(now),),
+                ).fetchone()
+                is not None
+            ):
+                return False
+            row = db.execute(
+                "SELECT payload FROM aor_recompute WHERE xeed_id=? AND family=?",
+                (xeed_id, owed_family.value),
+            ).fetchone()
+            keys = set(evidence_keys)
+            if row is not None:
+                keys.update(json.loads(str(row["payload"]))["evidence_keys"])
+            db.execute(
+                "INSERT OR REPLACE INTO aor_recompute VALUES (?, ?, ?)",
+                (
+                    xeed_id,
+                    owed_family.value,
+                    _dumps(
+                        {
+                            "xeed_id": xeed_id,
+                            "family": owed_family.value,
+                            "trigger": RecomputeTrigger.MATERIAL_CHANGE.value,
+                            "evidence_keys": sorted(keys),
+                        }
+                    ),
+                ),
+            )
+            return True
+
     def clear_recompute(
         self, claim: TickClaim, *, now: datetime, xeed_id: str, family: ObservationFamily
     ) -> None:

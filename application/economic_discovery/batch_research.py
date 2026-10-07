@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from collections.abc import Callable
 from dataclasses import dataclass
 from datetime import datetime, timedelta
 
@@ -59,8 +60,14 @@ def complete_research_batch(
     *,
     claimed: tuple[ClaimedResearchWork, ...],
     completed_at: datetime,
+    on_subject_changed: Callable[[str, datetime], object] | None = None,
 ) -> tuple[str, ...]:
-    """Complete only work whose lease is still owned by this batch."""
+    """Complete only work whose lease is still owned by this batch.
+
+    ``on_subject_changed`` runs once per subject whose work this batch really completed
+    (TASK-050 T022): dependents re-evaluate their declared dependencies. A fenced-out
+    completion (stale lease, late or duplicate result) never triggers it.
+    """
 
     if completed_at.tzinfo is None:
         raise ValueError("research batch completion time must be timezone-aware")
@@ -72,6 +79,12 @@ def complete_research_batch(
             completed_at=completed_at,
         ):
             completed.append(item.lease.work_key)
+    if on_subject_changed is not None:
+        subjects = {
+            item.work.intent.subject_id for item in claimed if item.lease.work_key in completed
+        }
+        for subject_id in sorted(subjects):
+            on_subject_changed(subject_id, completed_at)
     return tuple(completed)
 
 

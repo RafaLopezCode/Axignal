@@ -14,6 +14,7 @@ from application.economic_discovery.continuous_observation import (
     PrimeResearchAuthority,
     SharedObservationIntent,
     SharedObservationWork,
+    require_shareable_requester_ref,
 )
 from application.economic_discovery.research_scheduler import (
     ResearchScheduleOutcome,
@@ -232,8 +233,7 @@ class SqliteSharedObservationWorkMemory:
         )
 
     def enqueue(self, intent: SharedObservationIntent, requester_ref: str) -> bool:
-        if not requester_ref.strip():
-            raise ValueError("shared observation requester ref is required")
+        require_shareable_requester_ref(requester_ref)
         key = intent.work_key
         inserted = False
         with self._connect() as db:
