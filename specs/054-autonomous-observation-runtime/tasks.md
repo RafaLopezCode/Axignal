@@ -11,5 +11,5 @@
 - [x] T9 Multi-day E2E, unit tests, before/after benchmark.
 - [x] T10 RecomputationPort over the canonical subscriber Brain entry, replaying real retrievals.
 - [x] T11 Production entrypoint, off by default, with server-owned attention and enrollment.
-- [ ] T12 Daily timer and deployment (deployment concern).
+- [x] T12 Existing daily timer/runner production seam implemented and tested, including isolated Linux candidate preflight. Integration in main and canonical deployment remain pending CTO; see `t12-handoff.md` and PR validation.
 - [ ] T13 Adopt sources for the families that remain UNKNOWN.

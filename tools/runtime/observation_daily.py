@@ -380,12 +380,12 @@ def run_scheduled_tick(
     return summary
 
 
-def main() -> None:
+def main(argv: list[str] | None = None) -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--status", action="store_true", help="Read redacted operational status only"
     )
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
     if args.status:
         from pipeline.observation_runtime import SqliteObservationRuntimeStore
 
