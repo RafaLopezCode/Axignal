@@ -48,6 +48,7 @@ from application.axent.grounded.intent import (
     ResolvedQuestion,
     resolve,
 )
+from application.axent.grounded.model_budget import ModelAudit
 from application.axent.grounded.retrieval import (
     ContextBudget,
     Retrieval,
@@ -161,6 +162,7 @@ class AxentService:
     budget: ContextBudget = field(default_factory=ContextBudget)
     cache: AnswerCache = field(default_factory=AnswerCache)
     max_output_tokens: int = 500
+    model_audit: ModelAudit | None = None
 
     def ask(
         self,
@@ -264,17 +266,25 @@ class AxentService:
                         user=user,
                         schema=ANSWER_SCHEMA,
                         max_output_tokens=self.max_output_tokens,
+                        tenant_ref=request_id("tenant", corpus.tenant_id),
+                        focus_ref=request_id("focus", corpus.tenant_id, corpus.xeed_id),
                     )
                 )
-                model_calls, model_name = 1, result.model
+                model_calls, model_name = result.model_calls, result.model
                 measured = result.input_tokens is not None
                 input_tokens = result.input_tokens or estimate_tokens(SYSTEM_PROMPT + user)
                 output_tokens = result.output_tokens or 0
-                claims, model_unknowns, insufficient, dropped = verify(result.payload, refs)
+                claims, model_unknowns, insufficient, dropped = verify(
+                    {} if result.error_class else result.payload, refs
+                )
                 unknowns = tuple(dict.fromkeys((*model_unknowns, *unknowns)))
                 if claims:
                     route = AnswerRoute.MODEL
                     summary = " ".join(c.text for c in claims)
+                    if insufficient:
+                        research = self._research(
+                            corpus, resolved, retrieval, now, "MODEL_FOUND_EVIDENCE_INSUFFICIENT"
+                        )
                 elif insufficient:
                     route = AnswerRoute.ABSTAINED
                     summary = text("abstain", locale, org=corpus.organization_name)
@@ -283,6 +293,8 @@ class AxentService:
                     )
                 else:
                     route, summary = AnswerRoute.EXTRACTIVE, text("extractive", locale)
+                if self.model_audit is not None and result.audit_ref is not None:
+                    self.model_audit.verified(result.audit_ref, route=route.value, dropped=dropped)
             if route is AnswerRoute.MODEL and not cache_hit:
                 self.cache.put(
                     key,
@@ -435,23 +447,26 @@ class AxentService:
         now: datetime,
         reason: str,
     ) -> ResearchRequest:
-        gap = next((i.text for i in retrieval.selected if i.kind is EvidenceKind.GAP), None)
         family = question.families[0] if question.families else None
         item = ResearchRequest(
             request_id=request_id(
                 corpus.tenant_id,
                 corpus.xeed_id,
+                corpus.organization_id,
                 family.value if family else "-",
                 ",".join(question.geographies),
-                now.date().isoformat(),
+                question.kind.value,
+                corpus.dependency_fingerprint,
             ),
             tenant_id=corpus.tenant_id,
             xeed_id=corpus.xeed_id,
             family=family,
             geographies=question.geographies,
-            reason=reason if gap is None else f"{reason}: {gap}",
+            reason=reason,
             question_kind=question.kind.value,
             created_at=now,
+            organization_id=corpus.organization_id,
+            dependency_fingerprint=corpus.dependency_fingerprint,
         )
         if self.research is not None:
             self.research.request(item)

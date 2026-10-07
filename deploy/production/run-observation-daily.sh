@@ -22,6 +22,7 @@ network="${AXIGNAL_OBSERVATION_NETWORK:-axignal_prod_internal}"
 docker="${AXIGNAL_OBSERVATION_DOCKER:-/usr/bin/docker}"
 attention="$config_dir/attention.json"
 enrollment="$config_dir/enrollment.json"
+subscriber_config="${AXIGNAL_SUBSCRIBER_CONFIGURATION_FILE:-/etc/axignal/subscriber-runtime.conf}"
 
 [ -r "$attention" ] && [ -r "$enrollment" ] || {
   echo '{"state":"NOT_CONFIGURED"}'
@@ -31,6 +32,13 @@ enrollment="$config_dir/enrollment.json"
   echo '{"state":"NO_DATA_DIRECTORY"}' >&2
   exit 2
 }
+
+# Research rechecks the existing PilotGrant/Billing entitlement, without payment secrets.
+set --
+if [ -r "$subscriber_config" ]; then
+  set -- --env AXIGNAL_SUBSCRIBER_CONFIGURATION_FILE=/run/axignal-subscriber.conf \
+    --mount "type=bind,src=$subscriber_config,dst=/run/axignal-subscriber.conf,readonly"
+fi
 
 # Host serialization complements, never replaces, the runtime's SQLite fencing.
 # The stable container name also prevents overlap if its Docker CLI is killed.
@@ -58,4 +66,5 @@ exec "$docker" run --rm --init \
   --mount "type=bind,src=$data_dir,dst=/var/lib/axignal/runtime" \
   --mount "type=bind,src=$attention,dst=/run/axignal-attention.json,readonly" \
   --mount "type=bind,src=$enrollment,dst=/run/axignal-enrollment.json,readonly" \
+  "$@" \
   --entrypoint python "$image" -m tools.runtime.observation_daily

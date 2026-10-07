@@ -57,8 +57,10 @@ question → subscriber read (principal, membership, tenant, Xeed re-checked)
 
 ## Configuration
 
-- Runtime: `AXIGNAL_AXENT_LUNA_MODEL` (e.g. `gpt-6-luna`) plus `OPENAI_API_KEY`
-  in the process enable Luna; without them AXENT stays deterministic/extractive.
+- Runtime: explicit `AXIGNAL_AXENT_GROUNDED=true`, configured
+  `AXIGNAL_AXENT_LUNA_MODEL`, readable `AXIGNAL_AXENT_API_KEY_FILE`, known
+  positive input/output rates and per-call ceiling enable the budgeted provider.
+  Missing configuration leaves deterministic/extractive AXENT available.
 - Experience: `AXIGNAL_AXENT_GROUNDED=true` routes `/api/subscriber/axent`
   through the grounded endpoint; otherwise the previous explanation is kept.
 - Prices are arguments of the cost model (`CostRates`), never constants.
@@ -79,6 +81,32 @@ question → subscriber read (principal, membership, tenant, Xeed re-checked)
 
 - Luna list prices: the cost model needs configured rates; with the measured
   tokens, cost per turn = (2,611 × in + 554 × out) / 10 / 1e6.
-- The observation runtime does not yet consume the research-request ledger
-  (requests are recorded per tenant and Xeed; attention only).
-- Production enablement and deployment.
+- Canonical AXENT activation, scheduler activation and deployment cutover are
+  pending separate CTO integration/production authority.
+
+## T10 / T11 closure contract
+
+Research identity includes private tenant/Focus, authorized canonical Organization,
+family, geography, normalized intent and current evidence dependency fingerprint.
+It excludes read day and operational coverage gaps: unchanged evidence cannot
+produce an infinite sequence of new requests. No raw private prompt is persisted.
+Before consumption the configured PilotGrant/Billing entitlement, membership,
+active Focus and Organization binding are checked again; changed dependencies
+make the request obsolete without assuming the old question is answered.
+
+Consumption runs inside the existing T12 fenced tick, links only server-planned
+family/geography work, and preserves rights, cadence, budgets and source routing.
+Eligible EB-07 work can be reused only under its existing Prime authority, with
+opaque requester references. Private request payloads never enter shared work.
+Every state transition is appended under the same runtime fence transaction.
+Observation completion denotes evidence acquisition, never a truth conclusion.
+The existing evidence/recomputation/Brain path performs continuity; a subsequent
+independent AXENT read sees new state. There is no automatic model requery.
+
+Limits: 40 selected requests/tick; one per Focus, four per tenant and four per
+Organization/family; seven-day request lifetime, three attempts and one-day
+cooldown. No-new-evidence is terminal UNRESOLVED. Unknown source cost executes
+zero child work. Model synthesis permits one attempt/turn, no retries, 15-second
+timeout, 8,000 prompt bytes, 16,000 input-token ceiling and 500 output tokens.
+Durable daily reservations cap model attempts at 50/tenant and 500 globally;
+crashes do not refund a reservation. All provider output remains untrusted.

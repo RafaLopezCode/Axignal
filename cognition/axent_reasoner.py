@@ -4,7 +4,11 @@ from __future__ import annotations
 
 import time
 
-from application.axent.grounded.answer import ReasoningRequest, ReasoningResult
+from application.axent.grounded.answer import (
+    ReasoningRequest,
+    ReasoningResult,
+    valid_answer_payload,
+)
 from cognition.jobs.model import CognitiveJob, JobKind
 from cognition.router.router import ModelRouter
 
@@ -37,17 +41,23 @@ class CognitiveGroundedReasoner:
         )
         try:
             result = self._router.route(job, self._provider_name)
-        except Exception:
+        except Exception as error:
             # A provider failure is not an answer: AXENT falls back to showing evidence.
             return ReasoningResult(
-                {}, self._model, None, None, int((time.monotonic() - started) * 1000)
+                {},
+                self._model,
+                None,
+                None,
+                int((time.monotonic() - started) * 1000),
+                self._provider_name or "",
+                type(error).__name__,
             )
         payload = result.payload
         answer = payload.get("answer")
 
         def count(name: str) -> int | None:
             value = payload.get(name)
-            return value if isinstance(value, int) else None
+            return value if type(value) is int and value >= 0 else None
 
         latency = payload.get("latency_ms")
         return ReasoningResult(
@@ -58,4 +68,6 @@ class CognitiveGroundedReasoner:
             latency_ms=latency
             if isinstance(latency, int)
             else int((time.monotonic() - started) * 1000),
+            provider=result.provider,
+            error_class=None if valid_answer_payload(answer) else "MALFORMED_OUTPUT",
         )
