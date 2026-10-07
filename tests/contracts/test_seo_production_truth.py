@@ -265,9 +265,9 @@ def test_production_seo_truth_runner_is_hardened_and_secret_files_are_read_only(
     assert "AXIGNAL_CRUX_API_KEY_FILE=/run/secrets/crux_api_key" in runner
     assert "dst=/run/secrets/gsc_oauth.json,readonly" in runner
     assert "dst=/run/secrets/crux_api_key,readonly" in runner
-    assert "AXIGNAL_SEO_INSPECTION_LIMIT=750" in runner
+    assert "AXIGNAL_SEO_INSPECTION_LIMIT=60" in runner
     assert "--read-only" in runner
     assert "--cap-drop ALL" in runner
     assert "ConditionPathExists=/etc/axignal/secrets/gsc_oauth.json" in service
-    assert "OnCalendar=*-*-* 07:17:00 UTC" in timer
+    assert "OnCalendar=*-*-* 00,02,04,06,08,10,12,14,16,18,20,22:17:00 UTC" in timer
     assert "fixture-key" not in runner
