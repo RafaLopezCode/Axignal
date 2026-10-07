@@ -12,6 +12,10 @@ Names/URLs submitted by a subscriber are attention; unknown ones remain pending.
 Business profile, capabilities, commercial relations, registry acquisition and
 provider authority are outside this materialization contract.
 
+T006 extends only registry acquisition/composition with a governed GLEIF exact-LEI
+provider; it does not alter the admission/materialization contract. Coverage,
+rights, limits, provenance, failure and activation rules: `registry-provider.md`.
+
 Resolution and admission: ADR-0087 (locator → canonical index → registry source →
 EvidenceAdmission → store). Acceptance: registration/restart/replay; no direct or evidence-only admission;
 non-registry rejection; ambiguity and topology revalidation; integrity loss;

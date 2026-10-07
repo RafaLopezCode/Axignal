@@ -19,4 +19,7 @@ legal names resolved, so every real subscriber locator stayed pending.
 - [x] T005 Integrate root composition and converge with repository gates.
       The portfolio resolves through the admission service over the same store; the
       registry source is injected (production default: unavailable → pending).
-- [ ] T006 Select and authorize a governed production registry source (CTO decision).
+- [x] T006 Governed GLEIF exact-LEI production adapter, explicit configuration/rights,
+      retained provenance, bounded network/rate/reuse and fail-closed admission E2E.
+      Coverage is LEI holders only; see `registry-provider.md`. Selection is ready
+      for CTO review; integration/activation/canonical deployment remain CTO actions.

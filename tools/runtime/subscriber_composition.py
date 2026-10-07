@@ -25,7 +25,6 @@ from application.economic_discovery.temporal_currentness import TemporalCurrentn
 from application.organization_admission.service import (
     OrganizationAdmissionService,
     RegistryIdentitySource,
-    UnavailableRegistrySource,
 )
 from application.subscriber_access.pilot import PilotAccessService
 from application.subscriber_identity.runtime import (
@@ -791,8 +790,13 @@ def build_subscriber_facade(
     # Spec 052: a locator is attention. Identity is resolved against the one canonical
     # store, and only an independent registry source can admit a new identity. Without
     # a configured source, unknown identities stay pending (UNKNOWN), never invented.
+    from tools.runtime.organization_registry import build_registry_source
+
     organization_admission = OrganizationAdmissionService(
-        organizations, identity_source or UnavailableRegistrySource()
+        organizations,
+        identity_source
+        if identity_source is not None
+        else build_registry_source(settings.values, root),
     )
     observation_trigger = _ObservationTrigger(
         plans=execution_plan_reader,
