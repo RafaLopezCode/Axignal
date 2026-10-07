@@ -6665,9 +6665,8 @@ html[data-motion="reduced"] {
 .admin-product-navigation .nav-group-label { margin-top: 14px; }
 .admin-product-axent { border-top: 1px solid var(--line); margin-top: 12px; padding-top: 8px; }
 .admin-operations-navigation { border-top: 1px solid var(--line); margin-top: 18px; padding-top: 8px; }
-.admin-operations-navigation > summary { cursor: pointer; min-height: 44px; display: flex; align-items: center; justify-content: space-between; }
-.admin-operations-navigation > summary::after { content: "+"; font-size: 16px; }
-.admin-operations-navigation[open] > summary::after { content: "âˆ’"; }
+.admin-operations-navigation > summary { cursor: pointer; min-height: 44px; display: list-item; list-style: disclosure-closed; list-style-position: inside; padding: 12px 0; }
+.admin-operations-navigation[open] > summary { list-style-type: disclosure-open; }
 .admin-product-host > .canonical-product { width: 100%; height: 100%; }
 .admin-product-host > .runtime-entry { width: 100%; min-height: 0; overflow-y: auto; }
 .admin-product-host .product-workspace { height: 100%; }
