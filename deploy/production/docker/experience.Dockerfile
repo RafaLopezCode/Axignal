@@ -12,6 +12,7 @@ COPY apps/web/experience/lib ./lib
 COPY apps/web/experience/public ./public
 COPY apps/web/experience/content ./content
 COPY apps/web/experience/tests ./tests
+COPY apps/web/experience/tools ./tools
 COPY apps/web/experience/next.config.ts ./
 COPY apps/web/experience/tsconfig.json ./
 

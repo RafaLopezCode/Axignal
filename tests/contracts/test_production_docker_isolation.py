@@ -158,3 +158,10 @@ def test_runbook_records_completed_production_docker_cutover() -> None:
     assert "systemd runtime/landing: `inactive/disabled`" in RUNBOOK
     assert "Persistence before and after cutover was identical" in RUNBOOK
     assert "rollback automatically" in RUNBOOK
+
+
+def test_experience_image_contains_all_deterministic_build_inputs() -> None:
+    assert "COPY apps/web/experience/content ./content" in EXPERIENCE_DOCKERFILE
+    assert "COPY apps/web/experience/tests ./tests" in EXPERIENCE_DOCKERFILE
+    assert "COPY apps/web/experience/tools ./tools" in EXPERIENCE_DOCKERFILE
+    assert "RUN npm run build && npm prune --omit=dev" in EXPERIENCE_DOCKERFILE
