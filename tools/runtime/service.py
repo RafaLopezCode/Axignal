@@ -55,6 +55,7 @@ from application.admin_fiscal_compliance import (
     project_fiscal_compliance,
 )
 from application.admin_governance import project_admin_governance
+from application.admin_gsc import project_private_gsc
 from application.admin_integrations.service import (
     AdminIntegrationProjection,
     project_admin_integrations,
@@ -83,6 +84,7 @@ from domain.admin_api_operations import ApiOperationObservation
 from domain.admin_brain_observatory import BrainProviderObservatory
 from domain.admin_command_center import AdminCommandCenterProjection
 from domain.admin_governance import AdminGovernanceProjection
+from domain.admin_gsc import GscPrivateAnalyticsProjection
 from domain.admin_integrations import IntegrationEnvironment
 from domain.admin_measurements import MeasurementRegistryProjection
 from domain.admin_observability import AdminProjectionId, AdminProjectionSnapshot
@@ -98,6 +100,7 @@ from pipeline.admin_customer_accounts import SqliteAdminCustomerAccountStore
 from pipeline.admin_financial_documents import SqliteFinancialDocumentStore
 from pipeline.admin_fiscal_compliance import SqliteFiscalComplianceStore
 from pipeline.admin_governance import SqliteAdminGovernanceAuditStore
+from pipeline.admin_gsc import SqliteAdminGscStore
 from pipeline.admin_integrations import SqliteAdminIntegrationStore
 from pipeline.admin_measurements import SqliteMeasurementRegistryStore
 from pipeline.admin_observability import SqliteAdminObservabilityStore
@@ -138,6 +141,7 @@ class AxignalRuntime:
     governance_policy_store: SqliteActivePolicyStore
     governance_audit_store: SqliteAdminGovernanceAuditStore
     admin_acquisition_store: SqliteAdminAcquisitionStore
+    admin_gsc_store: SqliteAdminGscStore
     admin_accounting_store: SqliteAccountingReconciliationStore
     admin_api_operations_store: SqliteApiOperationsStore
     admin_commercial_store: SqliteAdminCommercialStore
@@ -228,6 +232,7 @@ def build_runtime(config: RuntimeConfig) -> AxignalRuntime:
     admin_acquisition_store = SqliteAdminAcquisitionStore(
         config.data_dir / "admin-acquisition.sqlite3"
     )
+    admin_gsc_store = SqliteAdminGscStore(config.data_dir / "admin-gsc.sqlite3")
     admin_accounting_store = SqliteAccountingReconciliationStore(
         config.data_dir / "admin-accounting-reconciliation.sqlite3"
     )
@@ -341,6 +346,7 @@ def build_runtime(config: RuntimeConfig) -> AxignalRuntime:
         governance_policy_store=governance_policy_store,
         governance_audit_store=governance_audit_store,
         admin_acquisition_store=admin_acquisition_store,
+        admin_gsc_store=admin_gsc_store,
         admin_accounting_store=admin_accounting_store,
         admin_api_operations_store=admin_api_operations_store,
         admin_commercial_store=admin_commercial_store,
@@ -811,6 +817,34 @@ def _acquisition_payload(projection: AdminAcquisitionProjection) -> dict[str, ob
             }
             for item in projection.requests
         ],
+    }
+
+
+def _gsc_projection(runtime: AxignalRuntime, *, now: datetime) -> GscPrivateAnalyticsProjection:
+    return project_private_gsc(store=runtime.admin_gsc_store, generated_at=now)
+
+
+def _gsc_payload(projection: GscPrivateAnalyticsProjection) -> dict[str, object]:
+    return {
+        "privacyClass": projection.privacy_class,
+        "generatedAt": projection.generated_at.isoformat(),
+        "propertyRef": projection.property_ref,
+        "latestWindowStart": (
+            None
+            if projection.latest_window_start is None
+            else projection.latest_window_start.isoformat()
+        ),
+        "latestWindowEnd": (
+            None
+            if projection.latest_window_end is None
+            else projection.latest_window_end.isoformat()
+        ),
+        "latestSyncAt": (
+            None if projection.latest_sync_at is None else projection.latest_sync_at.isoformat()
+        ),
+        "latestRowCount": projection.latest_row_count,
+        "breakdownCounts": [list(value) for value in projection.breakdown_counts],
+        "coverageNotes": list(projection.coverage_notes),
     }
 
 
@@ -1344,6 +1378,7 @@ def _admin_projection_payload(
     brain_observatory: BrainProviderObservatory | None = None,
     governance: AdminGovernanceProjection | None = None,
     acquisition: AdminAcquisitionProjection | None = None,
+    gsc: GscPrivateAnalyticsProjection | None = None,
     commercial: AdminCommercialProjection | None = None,
     customer_operations: CustomerOperationsProjection | None = None,
     integrations: AdminIntegrationProjection | None = None,
@@ -1380,6 +1415,8 @@ def _admin_projection_payload(
         payload["governance"] = _governance_payload(governance)
     if acquisition is not None:
         payload["acquisition"] = _acquisition_payload(acquisition)
+    if gsc is not None:
+        payload["gsc"] = _gsc_payload(gsc)
     if commercial is not None:
         payload["commercial"] = _commercial_payload(commercial)
     if customer_operations is not None:
@@ -1412,6 +1449,7 @@ def _render_admin_shell(
     brain_observatory: BrainProviderObservatory | None = None,
     governance: AdminGovernanceProjection | None = None,
     acquisition: AdminAcquisitionProjection | None = None,
+    gsc: GscPrivateAnalyticsProjection | None = None,
     commercial: AdminCommercialProjection | None = None,
     customer_operations: CustomerOperationsProjection | None = None,
     integrations: AdminIntegrationProjection | None = None,
@@ -1432,6 +1470,7 @@ def _render_admin_shell(
                 brain_observatory=brain_observatory,
                 governance=governance,
                 acquisition=acquisition,
+                gsc=gsc,
                 commercial=commercial,
                 customer_operations=customer_operations,
                 integrations=integrations,
@@ -1753,6 +1792,11 @@ def make_handler(runtime: AxignalRuntime) -> type[BaseHTTPRequestHandler]:
                         if admin_projection.current_slug == "acquisition"
                         else None
                     )
+                    gsc = (
+                        _gsc_projection(runtime, now=now)
+                        if admin_projection.current_slug == "acquisition"
+                        else None
+                    )
                     commercial = (
                         _commercial_projection(runtime, grant=grant, now=now)
                         if admin_projection.current_slug == "customers-crm"
@@ -1806,6 +1850,7 @@ def make_handler(runtime: AxignalRuntime) -> type[BaseHTTPRequestHandler]:
                         brain_observatory=brain_observatory,
                         governance=governance,
                         acquisition=acquisition,
+                        gsc=gsc,
                         commercial=commercial,
                         customer_operations=customer_operations,
                         integrations=integrations,

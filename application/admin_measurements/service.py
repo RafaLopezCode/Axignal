@@ -16,6 +16,7 @@ from domain.admin_measurements import (
     MeasurementComparisonState,
     MeasurementDefinition,
     MeasurementFreshness,
+    MeasurementInstrumentAuthority,
     MeasurementObservation,
     MeasurementReadout,
     MeasurementRegistryProjection,
@@ -150,6 +151,90 @@ class MeasurementRegistryService:
                 action="measurement.observation.recorded",
                 reason=reason,
                 required_scope=AdminScope.ADVISORY_WRITE.value,
+                outcome=AdminGovernanceCommandOutcome.COMPLETED,
+                result_code=f"MEASUREMENT_{observation.state.value}",
+                after_ref=observation.observation_id,
+            )
+        )
+        return inserted
+
+    def register_instrument_definition(
+        self,
+        *,
+        authority: MeasurementInstrumentAuthority,
+        operation_id: str,
+        reason: str,
+        definition: MeasurementDefinition,
+        now: datetime,
+    ) -> bool:
+        if definition.source_family != authority.source_family:
+            raise PermissionError("instrument authority source family mismatch")
+        if definition.instrument_id != authority.instrument_id:
+            raise PermissionError("instrument authority instrument mismatch")
+        existing = next(
+            (
+                item
+                for item in self._store.definitions()
+                if item.measure_id == definition.measure_id and item.version == definition.version
+            ),
+            None,
+        )
+        if existing is not None:
+            if existing != definition:
+                raise ValueError(
+                    "instrument definition version already exists with different content"
+                )
+            return False
+        inserted = self._store.append_definition(definition)
+        self._audit.append(
+            AdminGovernanceAuditRecord(
+                audit_id=f"measurement-audit:{operation_id}",
+                command_id=operation_id,
+                occurred_at=now,
+                actor_principal_id=f"integration:{authority.integration_id}",
+                actor_session_id=f"service:{authority.integration_id}",
+                target=AdminGovernanceCommandTarget.INTEGRATION,
+                action="measurement.definition.instrument_registered",
+                reason=reason,
+                required_scope=f"instrument:{authority.instrument_id}",
+                outcome=AdminGovernanceCommandOutcome.COMPLETED,
+                result_code="MEASUREMENT_DEFINITION_RECORDED",
+                after_ref=f"{definition.measure_id}:v{definition.version}",
+            )
+        )
+        return inserted
+
+    def record_instrument_observation(
+        self,
+        *,
+        authority: MeasurementInstrumentAuthority,
+        operation_id: str,
+        reason: str,
+        observation: MeasurementObservation,
+        now: datetime,
+    ) -> bool:
+        definition = _definition(
+            self._store,
+            observation.measure_id,
+            observation.definition_version,
+        )
+        if definition.source_family != authority.source_family:
+            raise PermissionError("instrument authority source family mismatch")
+        if observation.instrument_id != authority.instrument_id:
+            raise PermissionError("instrument authority instrument mismatch")
+        _validate_observation_against_definition(definition, observation)
+        inserted = self._store.append_observation(observation)
+        self._audit.append(
+            AdminGovernanceAuditRecord(
+                audit_id=f"measurement-audit:{operation_id}",
+                command_id=operation_id,
+                occurred_at=now,
+                actor_principal_id=f"integration:{authority.integration_id}",
+                actor_session_id=f"service:{authority.integration_id}",
+                target=AdminGovernanceCommandTarget.INTEGRATION,
+                action="measurement.observation.instrument_recorded",
+                reason=reason,
+                required_scope=f"instrument:{authority.instrument_id}",
                 outcome=AdminGovernanceCommandOutcome.COMPLETED,
                 result_code=f"MEASUREMENT_{observation.state.value}",
                 after_ref=observation.observation_id,
