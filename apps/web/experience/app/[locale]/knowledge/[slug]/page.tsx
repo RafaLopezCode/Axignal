@@ -22,7 +22,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   const url = absolutePublicUrl(localizedPagePath(match.page, rawLocale));
   const region: Record<Locale, string> = { es: "ES", en: "US", fr: "FR", de: "DE", it: "IT", pt: "PT" };
   return {
-    title: match.content.title,
+    title: { absolute: match.content.title },
     description: match.content.description,
     alternates: { canonical: url, languages: languageAlternates },
     openGraph: { type: "article", locale: `${rawLocale}_${region[rawLocale]}`, url, title: match.content.title, description: match.content.description, siteName: "AXIGNAL", images: ["/brand/og-image-1200x630.png"] },

@@ -5,7 +5,7 @@ import robots from "../app/robots";
 import { generateMetadata as articleMetadata } from "../app/[locale]/knowledge/[slug]/page";
 import { generateMetadata as hubMetadata } from "../app/[locale]/knowledge/page";
 import { acquisitionPages, localizedPagePath, pageByLocalizedSlug, validateAcquisitionPages } from "../lib/acquisition";
-import { articleStructuredData, hreflangMap } from "../lib/acquisition-seo";
+import { articleStructuredData, hreflangMap, hubStructuredData } from "../lib/acquisition-seo";
 import { locales } from "../lib/languages";
 
 test("acquisition corpus is substantial and every published page passes editorial gates", () => {
@@ -74,11 +74,26 @@ test("article and breadcrumb structured data matches the visible localized docum
     assert.equal(article.headline, content.title);
     assert.equal(article.description, content.description);
     assert.equal(article.inLanguage, locale.id);
+    assert.equal(article.datePublished, "2026-10-07");
+    assert.equal(article.dateModified, "2026-10-07");
+    assert.equal(article.image.url, "https://axignal.com/brand/og-image-1200x630.png");
+    assert.equal(article.author.logo.url, "https://axignal.com/brand/organization-logo-512.png");
+    assert.equal(article.publisher.logo.url, "https://axignal.com/brand/organization-logo-512.png");
     assert.equal(breadcrumb["@type"], "BreadcrumbList");
     const items = breadcrumb.itemListElement;
     assert.ok(items);
     assert.equal(items.length, 3);
     assert.ok(items.every((item) => item.item.startsWith("https://axignal.com/")));
+  }
+});
+
+test("hub structured data identifies the localized Knowledge collection", () => {
+  for (const { id: locale } of locales) {
+    const schema = hubStructuredData(locale);
+    assert.equal(schema["@type"], "CollectionPage");
+    assert.equal(schema.inLanguage, locale);
+    assert.equal(schema.url, `https://axignal.com/${locale}/knowledge`);
+    assert.equal(schema.isPartOf.url, "https://axignal.com/");
   }
 });
 
@@ -88,7 +103,7 @@ test("route metadata localizes canonical, hreflang, OpenGraph and Twitter for ev
       const content = page.locales[locale]!;
       const metadata = await articleMetadata({ params: Promise.resolve({ locale, slug: content.slug }) });
       const canonical = `https://axignal.com/${locale}/knowledge/${content.slug}`;
-      assert.equal(metadata.title, content.title);
+      assert.deepEqual(metadata.title, { absolute: content.title });
       assert.equal(metadata.description, content.description);
       assert.equal(metadata.alternates?.canonical, canonical);
       assert.equal(metadata.openGraph?.url, canonical);
@@ -103,6 +118,7 @@ test("route metadata localizes canonical, hreflang, OpenGraph and Twitter for ev
   for (const { id: locale } of locales) {
     const metadata = await hubMetadata({ params: Promise.resolve({ locale }) });
     assert.equal(metadata.alternates?.canonical, `https://axignal.com/${locale}/knowledge`);
+    assert.ok(typeof metadata.title === "object" && metadata.title !== null && "absolute" in metadata.title);
     assert.ok(metadata.alternates?.languages);
     assert.deepEqual(metadata.openGraph?.images, ["/brand/og-image-1200x630.png"]);
     assert.deepEqual(metadata.twitter?.images, ["/brand/og-image-1200x630.png"]);

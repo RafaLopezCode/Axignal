@@ -8,7 +8,7 @@ import {
   type AcquisitionPage,
   type LocalizedAcquisitionPage,
 } from "@/lib/acquisition";
-import { articleStructuredData } from "@/lib/acquisition-seo";
+import { articleStructuredData, hubStructuredData } from "@/lib/acquisition-seo";
 import { PublicShell } from "./public-shell";
 
 const labels: Record<Locale, { back: string; cluster: string; answer: string; limits: string; example: string; related: string; home: string; explore: string }> = {
@@ -33,8 +33,10 @@ export function AcquisitionHub({ locale }: { locale: Locale }) {
   const copy = labels[locale];
   const pages = acquisitionPages.filter((page) => page.locales[locale]);
   const groups = [...new Set(pages.map((page) => page.cluster))];
+  const schema = JSON.stringify(hubStructuredData(locale)).replace(/</g, "\\u003c");
   return (
     <PublicShell className="acquisition-page" localeRoutes={locales.map((item) => ({ locale: item.id, href: `/${item.id}/knowledge` }))}>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: schema }} />
       <div lang={locale}>
         <header className="article-intro acquisition-intro">
           <span className="eyebrow">AXIGNAL · {copy.home}</span>
