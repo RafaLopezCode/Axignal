@@ -42,7 +42,7 @@ const planSchema = z
       .array(
         z
           .object({
-            component: z.enum(["signal", "evidence", "context", "lens"]),
+            component: z.enum(["signal", "evidence", "context", "lens", "family"]),
             ref: z.string().min(1),
             priority: z.enum(["primary", "supporting"]),
           })
@@ -80,7 +80,9 @@ export function validatePlan(input: unknown, context: ProjectionContext) {
           ? p.evidence.some((e) => e.id === item.ref)
           : item.component === "lens"
             ? lensAuthorized(item.ref, context)
-            : item.ref === context.organizationId;
+            : item.component === "family"
+              ? families.some((f) => f.id === item.ref)
+              : item.ref === context.organizationId;
     if (!authorized)
       return { success: false as const, error: "REFERENCE_OUTSIDE_SCOPE" };
   }

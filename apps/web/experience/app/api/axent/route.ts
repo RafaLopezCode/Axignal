@@ -15,6 +15,10 @@ import { explainRuntime } from "@/lib/runtime-axent";
 import { factsAt } from "@/lib/cognition/facts";
 import { composeFamily } from "@/lib/cognition/compose";
 import type { Intent } from "@/lib/cognition/registry";
+import { familiesForText, familyTerms, fold } from "@/lib/family-vocabulary";
+import { families } from "@/lib/projection";
+import { funnelLayers } from "@/lib/funnel";
+import { locales } from "@/lib/languages";
 
 const requestSchema = z
   .object({
@@ -158,9 +162,11 @@ export async function POST(request: Request) {
   const signal =
     p.signals.find((s) => s.id === context.signalId) ??
     p.signals.find((s) => s.family === context.family);
+  const howKnown = funnelLayers[3].question;
   const sourceIntent =
-      /evidenc|fuente|source|basis|base|sostiene|beleg|quelle|fonte|preuve/i.test(
-        prompt,
+      /evidenc|fuente|source|basis|base|sostiene|beleg|quelle|fonte|preuve/i.test(prompt) ||
+      locales.some(({ id }) =>
+        fold(prompt).includes(fold(translate(howKnown.es, howKnown.en, id)).replace(/[¿?]/g, "").trim()),
       ),
     reasonIntent =
       /por qué|why|razon|reason|encaj|fit|limit|abierto|open|warum|porquê|pourquoi|perché|grenze/i.test(
@@ -208,6 +214,12 @@ export async function POST(request: Request) {
     for (const lens of lenses.slice(0, Math.max(0, 3 - items.length)))
       items.push({ component: "lens", ref: lens.component, priority: "supporting" });
   }
+  // Everyday words ("SEO", "reseñas", "clientes") point to their canonical family. When
+  // that is not the family in view, Axent shows where the answer lives instead of guessing.
+  // "What changed?" asks about the family in view; it is not a request to open Activity.
+  const asked = familiesForText(prompt).find((id) => !(id === "activity" && changeIntent));
+  const elsewhere = asked && asked !== context.family ? families.find((f) => f.id === asked) : undefined;
+  if (elsewhere) items.splice(0, items.length, { component: "family", ref: elsewhere.id, priority: "primary" });
   const plan = { version: 1 as const, revision: context.revision, items };
   const planResult = validatePlan(plan, context);
   if (!planResult.success)
@@ -217,7 +229,10 @@ export async function POST(request: Request) {
     "This is an illustrative explanation, without live research. ",
   );
   const stillUnknown = t("Todavía no sabemos: ", "Still unknown: ");
-  const answer = !supported
+  const answer = elsewhere
+    ? t("Eso está en", "That is in") + " " + copy(elsewhere.name) + " (" + familyTerms(elsewhere.id, locale).join(" · ") + "). " +
+      t("Ábrela para ver lo observado y lo que aún no se sabe.", "Open it to see what has been observed and what is still unknown.")
+    : !supported
     ? t(
         "En esta demo puedo explicar el contexto seleccionado, sus límites y su evidencia. Para una investigación nueva haría falta un proveedor y herramientas autorizados.",
         "In this demo I can explain the selected context, its limits and evidence. New research would require an authorized provider and tools.",
