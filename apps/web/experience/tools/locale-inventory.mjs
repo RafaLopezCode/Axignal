@@ -39,6 +39,7 @@ export function collectCopy() {
             const es = prop("es"),
               en = prop("en");
             if (
+              n.properties.length === 2 &&
               es &&
               en &&
               ts.isStringLiteral(es.initializer) &&

@@ -2,12 +2,13 @@ import type { Metadata } from "next";
 import "./globals.css";
 import "./public.css";
 import "./typography.css";
+import "./acquisition.css";
 import "../components/cognition/cognition.css";
 import { LocaleProvider } from "@/lib/locale";
 import { PrivacyNotice } from "@/components/privacy-notice";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("http://127.0.0.1:3810"),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "https://axignal.com"),
   title: {
     default: "AXIGNAL — Una mirada que conecta",
     template: "%s · AXIGNAL",

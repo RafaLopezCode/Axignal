@@ -1,0 +1,398 @@
+[
+  {
+    "id": "repeat-research-conversational-ai",
+    "cluster": "ai-memory-context",
+    "intent": "understand",
+    "type": "knowledge",
+    "locales": {
+      "es": {
+        "slug": "por-que-repetir-investigacion-con-chatgpt",
+        "title": "Por qué una conversación con IA no sustituye la investigación",
+        "description": "Una respuesta útil puede resolver una pregunta hoy; la investigación persistente conserva evidencia, procedencia, contexto y cambios para poder revisarlos mañana.",
+        "lead": "Volver a explicar una empresa a un asistente conversacional puede sentirse como empezar de cero. El problema no es que la conversación carezca de valor: es que una respuesta puntual y un sistema de observación con memoria resuelven trabajos distintos.",
+        "answer": "Una conversación suele producir una respuesta a partir del contexto disponible en ese momento. La investigación persistente necesita además conservar qué se observó, dónde, cuándo, con qué límites y qué ha cambiado. Una respuesta plausible no equivale por sí sola a evidencia admitida ni a una historia verificable.",
+        "sections": [
+          {
+            "heading": "La respuesta pertenece a una pregunta concreta",
+            "body": "Un asistente conversacional puede resumir documentos, proponer hipótesis, señalar información que falta o ayudar a formular una búsqueda. Ese intercambio es valioso para explorar. Pero si meses después necesitas saber si una afirmación sigue vigente, tienes que reconstruir el contexto, localizar las fuentes y comparar las condiciones. La conversación puede conservar parte del historial, según el producto y la configuración; eso no garantiza una memoria económica estructurada, con procedencia y dependencias de actualidad."
+          },
+          {
+            "heading": "La memoria exige más que guardar texto",
+            "body": "Un archivo de respuestas anteriores no basta para reutilizar conocimiento con seguridad. Hace falta distinguir la observación de la interpretación, identificar la fuente y el momento, registrar el sujeto al que se refiere y preservar qué conclusión depende de qué información. Cuando una fuente cambia o una referencia queda desactualizada, el sistema debe poder marcarlo y reevaluar las conclusiones afectadas. Si falta un dato, debe seguir siendo desconocido; no conviene rellenar el hueco con una frase convincente."
+          },
+          {
+            "heading": "La diferencia es auditable, no una competición de modelos",
+            "body": "No es necesario afirmar que un chatbot acierta menos o que AXIGNAL conoce la verdad. La distinción útil es arquitectónica: respuesta generada frente a estado persistente y gobernado; plausibilidad frente a evidencia inspeccionable; pregunta actual frente a comparación temporal. En AXIGNAL, AXIGLAND representa la memoria económica gobernada y AXENT actúa como interfaz cognitiva contextual. Los modelos pueden ayudar a investigar y estructurar información, pero no son la autoridad canónica."
+          },
+          {
+            "heading": "Cuándo conviene volver a investigar",
+            "body": "Si una decisión depende de un dato que puede cambiar, volver a la fuente importa más que repetir literalmente la pregunta. Una práctica sólida conserva el origen y el momento de la observación, comprueba si la fuente sigue disponible y señala qué parte del contexto requiere actualización. La respuesta anterior puede orientar la búsqueda, pero no debe tratarse como una medición actual ni como sustituto de revisar evidencia nueva."
+          }
+        ],
+        "example": "Ejemplo hipotético: una directora pregunta hoy qué capacidades públicas atribuyen varias fuentes a una empresa. Una respuesta puntual puede resumir las páginas disponibles. Una investigación que pretenda comparar el resultado el próximo trimestre necesita guardar referencias, fecha, alcance de búsqueda y condiciones; después debe comprobar qué sigue vigente antes de presentar un cambio. Este ejemplo no describe un resultado medido de AXIGNAL.",
+        "limits": "La memoria puede estar incompleta, contener observaciones antiguas o no cubrir fuentes privadas. Guardar una respuesta no valida sus afirmaciones. La persistencia tampoco garantiza que una conclusión sea correcta: su procedencia, estado temporal, incertidumbre y proceso de admisión siguen importando. AXIGNAL no es un chatbot de propósito general ni se presenta como una herramienta que haga infalible a otro modelo.",
+        "cta": { "label": "Explorar Knowledge", "href": "/knowledge" },
+        "related": ["business-memory-for-ai", "persistent-context-for-agents", "one-off-answer-vs-temporal-observation"]
+      },
+      "en": {
+        "slug": "why-repeat-research-with-chatgpt",
+        "title": "Why an AI conversation does not replace persistent research",
+        "description": "A useful answer can address a question today; persistent research preserves evidence, provenance, context and change so it can be examined tomorrow.",
+        "lead": "Re-explaining a company to a conversational assistant can feel like starting over. The issue is not that a conversation has no value: a one-time answer and a persistent observation system solve different jobs.",
+        "answer": "A conversation usually produces an answer from the context available at that moment. Persistent research must also preserve what was observed, where and when it was observed, under which limits, and what has changed. A plausible answer is not, by itself, admitted evidence or a verifiable history.",
+        "sections": [
+          {
+            "heading": "An answer belongs to a particular question",
+            "body": "A conversational assistant can summarize documents, propose hypotheses, point out missing information or help shape a search. That exchange is useful for exploration. But if you need to know months later whether a statement still holds, you must reconstruct the context, locate the sources and compare the conditions. A conversation may retain some history, depending on the product and its settings; that does not guarantee structured economic memory with provenance and freshness dependencies."
+          },
+          {
+            "heading": "Memory takes more than saving text",
+            "body": "A folder of previous answers is not enough to reuse knowledge safely. The system needs to distinguish observation from interpretation, identify the source and time, record the subject involved and preserve which conclusions depend on which information. When a source changes or a reference becomes stale, the system should be able to flag it and reevaluate affected conclusions. Missing information should remain unknown rather than being filled with a convincing sentence."
+          },
+          {
+            "heading": "The difference is auditable, not a model contest",
+            "body": "There is no need to claim that a chatbot is less accurate or that AXIGNAL knows the truth. The useful distinction is architectural: generated answer versus persistent governed state; plausibility versus inspectable evidence; current question versus temporal comparison. In AXIGNAL, AXIGLAND represents governed economic memory and AXENT acts as a contextual cognitive interface. Models can assist with research and structuring information, but they are not the canonical authority."
+          },
+          {
+            "heading": "When it is worth researching again",
+            "body": "If a decision depends on information that may change, returning to the source matters more than repeating the exact wording of a question. A sound practice preserves the origin and observation time, checks whether the source remains available and identifies which context needs updating. An earlier answer can guide the search, but it should not be treated as a current measurement or as a substitute for reviewing new evidence."
+          }
+        ],
+        "example": "Hypothetical example: a director asks today what capabilities several public sources attribute to a company. A one-off answer may summarize the available pages. Research intended for comparison next quarter must preserve references, date, search scope and conditions; it must then check what is still current before presenting a change. This example does not describe a measured AXIGNAL outcome.",
+        "limits": "Memory can be incomplete, include old observations or lack coverage of private sources. Saving an answer does not validate its claims. Persistence also does not guarantee a conclusion is correct: provenance, temporal state, uncertainty and the admission process still matter. AXIGNAL is not a general-purpose chatbot and is not presented as a tool that makes another model infallible.",
+        "cta": { "label": "Explore Knowledge", "href": "/knowledge" },
+        "related": ["business-memory-for-ai", "persistent-context-for-agents", "one-off-answer-vs-temporal-observation"]
+      }
+    }
+  },
+  {
+    "id": "business-memory-for-ai",
+    "cluster": "ai-memory-context",
+    "intent": "learn",
+    "type": "knowledge",
+    "locales": {
+      "es": {
+        "slug": "memoria-empresarial-para-inteligencia-artificial",
+        "title": "Qué necesita la memoria empresarial para la IA",
+        "description": "Una memoria empresarial fiable debe organizar evidencia y contexto con procedencia, alcance y actualidad; acumular texto sin gobierno puede acumular errores.",
+        "lead": "Conectar una IA a más documentos no resuelve automáticamente el problema de recordar una organización. La pregunta práctica es qué conocimiento puede reutilizarse, bajo qué permisos y con qué señales para reconocer que necesita revisión.",
+        "answer": "Una memoria empresarial útil para la IA necesita objetos y fuentes identificables, fechas y alcance, distinción entre hecho observado e interpretación, reglas de acceso y dependencias de actualidad. El texto recuperado o generado ayuda a razonar, pero no se convierte por eso en verdad canónica.",
+        "sections": [
+          {
+            "heading": "Organizar conocimiento por su significado y estado",
+            "body": "Una base de documentos puede contener políticas vigentes, notas internas, material público y borradores contradictorios. Recuperar un fragmento parecido a la pregunta solo demuestra que se encontró un candidato, no que sea pertinente, actual o autorizado para ese usuario. La memoria debe conservar qué representa cada elemento, quién puede acceder, de qué fuente procede y si hay límites de tiempo o alcance. Una clasificación de sistema como OBSERVED, POTENTIAL, HISTORICAL, STALE o UNKNOWN puede ayudar a no mezclar categorías distintas."
+          },
+          {
+            "heading": "Reutilizar sin congelar el conocimiento",
+            "body": "La reutilización reduce reconstrucción solo cuando el conocimiento sigue siendo válido para la pregunta actual. Una página eliminada, un contrato vencido o un cambio de entidad pueden afectar a conclusiones derivadas. Por eso se necesitan dependencias y currentness: un cambio aguas arriba debe permitir reevaluar lo que depende de él sin borrar la historia previa. Si la validez no se puede determinar, el estado debe conservar la incertidumbre o solicitar nueva investigación."
+          },
+          {
+            "heading": "La autoridad no se delega al modelo",
+            "body": "Los modelos pueden localizar, resumir, extraer posibles afirmaciones y sugerir hipótesis. La normalización, resolución de identidad, fechas, deduplicación, reglas y admisión de evidencia requieren controles explícitos. El sistema que utiliza la IA debe poder explicar qué fuente respalda una afirmación, qué parte se derivó y qué sigue sin saberse. Una respuesta estructurada del modelo continúa siendo una salida de un evaluador, no una escritura automática de verdad empresarial."
+          },
+          {
+            "heading": "Definir quién puede reutilizar cada contexto",
+            "body": "Una memoria también debe conservar el ámbito de autorización. Un documento de un cliente, una nota privada o una observación pública no comparten necesariamente audiencia ni reglas de retención. Antes de recuperar información, un sistema debe resolver la identidad y el contexto de trabajo; la similitud entre documentos no autoriza a cruzar clientes. Si el permiso o la fuente no pueden confirmarse, la reutilización debe detenerse o quedar explícitamente limitada."
+          }
+        ],
+        "example": "Ejemplo hipotético: una organización guarda una ficha pública que declara una certificación con fecha de caducidad. Un agente puede recuperar esa ficha para preparar una pregunta, pero la memoria útil conserva la fuente, la fecha observada y la caducidad declarada. Pasado el plazo, no presenta la certificación como vigente sin una comprobación nueva. El ejemplo es ilustrativo, no una descripción de una integración de AXIGNAL.",
+        "limits": "La memoria no crea acceso a fuentes privadas, no elimina sesgos de cobertura y no vuelve fiable un documento de origen dudoso. La similitud semántica no demuestra relevancia. Tampoco hay una métrica universal de calidad de memoria: cualquier evaluación necesita una tarea, datos de referencia, periodo y método definidos. El diseño de AXIGLAND no implica que todas estas capacidades estén desplegadas en cada producto o integración.",
+        "cta": { "label": "Explorar Knowledge", "href": "/knowledge" },
+        "related": ["repeat-research-conversational-ai", "persistent-context-for-agents", "better-ai-with-accumulated-memory"]
+      },
+      "en": {
+        "slug": "business-memory-for-artificial-intelligence",
+        "title": "What business memory for AI needs",
+        "description": "Reliable business memory should organize evidence and context with provenance, scope and freshness; accumulating text without governance can accumulate errors.",
+        "lead": "Connecting an AI system to more documents does not automatically solve the problem of remembering an organization. The practical question is what knowledge can be reused, under which permissions, and with what signals that tell you it needs review.",
+        "answer": "Useful business memory for AI needs identifiable objects and sources, dates and scope, a distinction between observed fact and interpretation, access rules and freshness dependencies. Retrieved or generated text can support reasoning, but that does not make it canonical truth.",
+        "sections": [
+          {
+            "heading": "Organize knowledge by meaning and state",
+            "body": "A document repository may contain current policies, internal notes, public material and contradictory drafts. Retrieving a fragment that resembles the question shows only that a candidate was found, not that it is relevant, current or authorized for that user. Memory should preserve what each item represents, who may access it, where it came from and whether it has time or scope limits. System labels such as OBSERVED, POTENTIAL, HISTORICAL, STALE or UNKNOWN can help keep distinct categories separate."
+          },
+          {
+            "heading": "Reuse without freezing knowledge",
+            "body": "Reuse reduces reconstruction only when knowledge remains valid for the current question. A removed page, expired contract or entity change can affect derived conclusions. That is why dependencies and currentness matter: an upstream change should make it possible to reevaluate what depends on it without erasing prior history. If validity cannot be determined, the state should preserve uncertainty or prompt new research."
+          },
+          {
+            "heading": "Authority does not transfer to the model",
+            "body": "Models can locate, summarize, extract possible claims and suggest hypotheses. Normalization, identity resolution, dates, deduplication, rules and evidence admission require explicit controls. The system using AI should be able to explain which source supports a statement, what was derived and what remains unknown. A structured model response is still an evaluator output, not an automatic write to business truth."
+          },
+          {
+            "heading": "Define who may reuse each context",
+            "body": "Memory must also preserve authorization scope. A client document, private note and public observation do not necessarily share an audience or retention rule. Before retrieval, a system should resolve identity and work context; similarity between documents does not authorize crossing client boundaries. If permission or source cannot be confirmed, reuse should stop or remain explicitly limited."
+          }
+        ],
+        "example": "Hypothetical example: an organization stores a public record that declares a certification with an expiration date. An agent may retrieve that record to prepare a question, while useful memory preserves the source, observation date and declared expiry. After the date passes, it does not present the certification as current without a new check. This example is illustrative, not a description of an AXIGNAL integration.",
+        "limits": "Memory does not create access to private sources, remove coverage bias or make a doubtful source reliable. Semantic similarity does not prove relevance. There is no universal memory-quality metric either: evaluation needs a defined task, reference data, period and method. The AXIGLAND design does not imply that every capability is deployed in every product or integration.",
+        "cta": { "label": "Explore Knowledge", "href": "/knowledge" },
+        "related": ["repeat-research-conversational-ai", "persistent-context-for-agents", "better-ai-with-accumulated-memory"]
+      }
+    }
+  },
+  {
+    "id": "persistent-context-for-agents",
+    "cluster": "ai-memory-context",
+    "intent": "learn",
+    "type": "knowledge",
+    "locales": {
+      "es": {
+        "slug": "contexto-persistente-para-agentes-de-ia",
+        "title": "Contexto persistente para agentes: memoria y permisos",
+        "description": "Los agentes necesitan recuperar el contexto adecuado sin cruzar clientes, confundir atención privada con conocimiento compartido o convertir una inferencia en un hecho.",
+        "lead": "Un agente puede mantener una tarea durante varios pasos, pero la continuidad no consiste en cargar todo el historial en cada llamada. Consiste en restaurar el contexto pertinente y autorizado, hacer visibles sus límites y conservar el camino hacia la evidencia.",
+        "answer": "El contexto persistente de un agente debe incluir solo información pertinente y autorizada, su relación con la investigación actual, su estado temporal y su procedencia. La memoria privada de una persona o cliente puede orientar la atención, pero no muta la verdad compartida ni debe filtrarse a otros ámbitos.",
+        "sections": [
+          {
+            "heading": "Recuperar el hilo sin reconstruir una biografía",
+            "body": "La continuidad cognitiva ayuda a retomar una investigación, sus preguntas abiertas y los cambios desde el último punto significativo. No exige perfilar psicológicamente a la persona ni inferir rasgos sensibles. El contexto debe ser explícito: organización, cliente, foco de observación, tarea y permisos aplicables. Si no se puede resolver con seguridad el ámbito, el agente debe pedir aclaración o abstenerse de recuperar información. La similitud entre dos investigaciones no concede autorización para cambiar de cliente."
+          },
+          {
+            "heading": "Separar atención privada de memoria compartida",
+            "body": "Las notas de trabajo y preferencias de lectura pueden ser contexto de atención; la evidencia económica compartida requiere su propio gobierno. La distinción reduce dos errores: tratar una indicación de usuario como un hecho sobre una empresa, o hacer que una observación privada altere la representación canónica. En AXIGNAL, AXIGLAND es la memoria económica gobernada; AXENT es el navegador cognitivo contextual. Esta separación es doctrina de producto, no una afirmación de que cada forma de persistencia ya esté disponible en producción."
+          },
+          {
+            "heading": "Hacer reversible la recuperación y auditable la explicación",
+            "body": "Una salida debería indicar qué contexto se utilizó, de qué fuente procede, qué está vigente y qué falta. Cambiar un estado upstream puede requerir reevaluar solo las conclusiones dependientes, dejando visible la historia. La explicación no debe inventar a posteriori por qué el agente mostró algo. Cuando faltan origen o procedencia, se conserva UNKNOWN en lugar de reconstruir una justificación plausible."
+          },
+          {
+            "heading": "Mantener permisos ligados a cada ámbito",
+            "body": "Un contexto retomado en otra sesión no debe ampliar automáticamente el acceso. La identidad, la organización y los permisos deben estar resueltos antes de recuperar notas o evidencia. La atención privada de una persona puede dirigir una investigación, pero no cambia la verdad compartida de AXIGLAND ni se convierte en perfil psicológico. Cuando el ámbito no está claro, pedir precisión o abstenerse protege tanto al cliente como la explicación posterior."
+          }
+        ],
+        "example": "Ejemplo hipotético: una consultora retoma una investigación sobre un cliente desde otra sesión. Antes de recuperar notas, el sistema confirma el cliente y el permiso de esa sesión; muestra las preguntas pendientes y separa apuntes privados de evidencia pública ya admitida. Si no puede determinar qué cliente corresponde, no mezcla los espacios. No es una descripción de una función productiva de AXIGNAL.",
+        "limits": "El historial largo no garantiza continuidad ni exactitud. La recuperación depende de identidad, permisos, retención, calidad de fuentes y estado temporal. Un agente no debe tener acceso irrestricto a una base de datos ni SQL arbitrario, y una explicación generada no sustituye una traza real. Los contratos y capacidades concretas varían por sistema y deben verificarse antes de atribuirlas a AXIGNAL.",
+        "cta": { "label": "Explorar Knowledge", "href": "/knowledge" },
+        "related": ["business-memory-for-ai", "mcp-and-persistent-context", "one-off-answer-vs-temporal-observation"]
+      },
+      "en": {
+        "slug": "persistent-context-for-ai-agents",
+        "title": "Persistent agent context: memory and permissions",
+        "description": "Agents need to retrieve the right context without crossing clients, confusing private attention with shared knowledge, or turning inference into fact.",
+        "lead": "An agent can carry a task across several steps, but continuity does not mean loading the entire history into every call. It means restoring relevant, authorized context, making its limits visible and preserving a path to evidence.",
+        "answer": "An agent's persistent context should include only relevant, authorized information, its relationship to the current investigation, its temporal state and provenance. A person's or client's private memory may direct attention, but it does not change shared truth and should not leak into other scopes.",
+        "sections": [
+          {
+            "heading": "Restore the thread without reconstructing a biography",
+            "body": "Cognitive continuity helps resume an investigation, its open questions and changes since the last meaningful checkpoint. It does not require psychological profiling or inferring sensitive traits. Context should be explicit: organization, client, observation focus, task and applicable permissions. If scope cannot be resolved safely, the agent should ask or abstain from retrieval. Similarity between two investigations does not authorize switching clients."
+          },
+          {
+            "heading": "Separate private attention from shared memory",
+            "body": "Working notes and reading preferences can be attention context; shared economic evidence needs its own governance. The distinction helps prevent two errors: treating a user instruction as a fact about a company, or allowing a private observation to alter canonical representation. In AXIGNAL, AXIGLAND is governed economic memory; AXENT is the contextual cognitive navigator. This separation is product doctrine, not a claim that every form of persistence is already available in production."
+          },
+          {
+            "heading": "Make retrieval reversible and explanations auditable",
+            "body": "An output should indicate which context it used, where it came from, what is current and what is missing. An upstream state change may require reevaluating only dependent conclusions while keeping history visible. An explanation must not invent after the fact why the agent surfaced something. When origin or provenance is missing, preserve UNKNOWN instead of reconstructing a plausible rationale."
+          },
+          {
+            "heading": "Keep permissions tied to each scope",
+            "body": "Context resumed in another session should not automatically expand access. Identity, organization and permissions must be resolved before retrieving notes or evidence. A person's private attention may direct research, but it does not change AXIGLAND's shared truth or become a psychological profile. When scope is unclear, asking for precision or abstaining protects both the client and the later explanation."
+          }
+        ],
+        "example": "Hypothetical example: a consultant resumes an investigation about a client in another session. Before retrieving notes, the system confirms the client and that session's permission; it shows open questions and separates private notes from public evidence already admitted. If it cannot determine which client applies, it does not mix the spaces. This is not a description of a production AXIGNAL feature.",
+        "limits": "A long history does not guarantee continuity or accuracy. Retrieval depends on identity, permissions, retention, source quality and temporal state. An agent should not have unrestricted database access or arbitrary SQL authority, and a generated explanation is not a substitute for a real trace. Specific contracts and capabilities vary by system and should be verified before attributing them to AXIGNAL.",
+        "cta": { "label": "Explore Knowledge", "href": "/knowledge" },
+        "related": ["business-memory-for-ai", "mcp-and-persistent-context", "one-off-answer-vs-temporal-observation"]
+      }
+    }
+  },
+  {
+    "id": "mcp-and-persistent-context",
+    "cluster": "ai-memory-context",
+    "intent": "understand",
+    "type": "knowledge",
+    "locales": {
+      "es": {
+        "slug": "mcp-y-contexto-persistente",
+        "title": "MCP y contexto: conectar herramientas no crea memoria fiable",
+        "description": "MCP puede estandarizar cómo una aplicación expone contexto o herramientas a un cliente; la conexión no resuelve permisos, actualidad ni autoridad de los datos.",
+        "lead": "Conectar una aplicación a un asistente mediante un protocolo puede facilitar que ambos intercambien contexto o soliciten acciones. Aun así, una herramienta conectada no se convierte automáticamente en una memoria gobernada ni en una fuente de verdad.",
+        "answer": "MCP es un protocolo para que aplicaciones cliente y servidores intercambien contexto y capacidades de herramientas dentro de un contrato. Usarlo no garantiza que los datos sean completos, actuales, autorizados o verdaderos. No afirmamos aquí que AXIGNAL ofrezca un servidor MCP productivo ni una integración concreta.",
+        "sections": [
+          {
+            "heading": "Protocolo y conocimiento son capas distintas",
+            "body": "Un protocolo puede describir cómo descubrir recursos, leer contexto o invocar herramientas. Eso ayuda a la interoperabilidad, pero no define por sí solo la semántica de un dato, quién puede consultarlo, con qué identidad, cómo caduca o qué autoridad tiene. Una respuesta de herramienta sigue necesitando procedencia, alcance y límites para ser interpretable. La memoria requiere además conservación temporal, control de dependencias y políticas para revalidar información."
+          },
+          {
+            "heading": "Cada invocación necesita un límite de autoridad",
+            "body": "Antes de exponer información o ejecutar una acción, la aplicación debe comprobar identidad, tenant, cliente, foco de observación y permisos. Una descripción en lenguaje natural puede ayudar a escoger una herramienta, pero no debería crear permisos ni modificar hechos canónicos. Conviene separar operaciones de solo lectura de acciones con efectos y mostrar a la persona qué se consultó o solicitó. Un fallo de autorización debe cerrar la operación, no degradarse a una búsqueda más amplia."
+          },
+          {
+            "heading": "La integración debe demostrar sus garantías",
+            "body": "Para evaluar un servidor o cliente MCP concreto, revisa qué recursos expone, el esquema de cada herramienta, el tratamiento de errores, la autenticación, el aislamiento de ámbitos, el registro de llamadas, la frescura y la política de retención. El protocolo no demuestra por sí solo el cumplimiento de estos controles. En AXIGNAL, las fronteras entre observación, representación, juicio e ingreso de evidencia continúan siendo necesarias aunque una futura superficie use interoperabilidad con herramientas."
+          },
+          {
+            "heading": "Comprobar qué sucede cuando faltan datos",
+            "body": "La integración también debe definir cómo representa fuentes no disponibles, respuestas parciales, contenido obsoleto y errores de autorización. Si una llamada devuelve menos información, el cliente no debería completar silenciosamente los huecos ni ampliar el alcance. Un registro de versión y de la invocación facilita revisar el comportamiento. Estas son preguntas de evaluación para cualquier conexión MCP, no garantías atribuidas a una integración de AXIGNAL."
+          }
+        ],
+        "example": "Ejemplo hipotético: un cliente de IA solicita por una herramienta una ficha pública de organización y su fecha de observación. Un servidor bien delimitado devolvería solo lo autorizado y mantendría la fuente y el momento; el cliente no debería reinterpretar esa fecha como prueba de actualidad hoy. No se afirma que AXIGNAL exponga esta herramienta.",
+        "limits": "MCP no certifica la calidad de la fuente, no concede acceso a datos, no administra automáticamente permisos entre clientes y no convierte la salida de un modelo en evidencia admitida. Los detalles de seguridad y compatibilidad dependen de las versiones y configuraciones del cliente y servidor. Cualquier afirmación sobre soporte real de AXIGNAL requiere una implementación y una prueba verificables.",
+        "cta": { "label": "Explorar Knowledge", "href": "/knowledge" },
+        "related": ["persistent-context-for-agents", "business-memory-for-ai", "repeat-research-conversational-ai"]
+      },
+      "en": {
+        "slug": "mcp-and-persistent-context",
+        "title": "MCP and context: connecting tools does not create reliable memory",
+        "description": "MCP can standardize how an application exposes context or tools to an AI client; the connection alone does not solve permissions, freshness or data authority.",
+        "lead": "Connecting an application to an assistant through a protocol can make it easier for both to exchange context or request actions. Even so, a connected tool does not automatically become governed memory or a source of truth.",
+        "answer": "MCP is a protocol for client applications and servers to exchange context and tool capabilities under a contract. Using it does not guarantee that data is complete, current, authorized or true. This page does not claim that AXIGNAL offers a production MCP server or a specific integration.",
+        "sections": [
+          {
+            "heading": "Protocol and knowledge are different layers",
+            "body": "A protocol can describe how to discover resources, read context or invoke tools. That helps interoperability, but it does not by itself define a datum's semantics, who may access it, under which identity, when it expires or what authority it has. A tool response still needs provenance, scope and limits to be interpretable. Memory also requires temporal preservation, dependency control and policies for revalidating information."
+          },
+          {
+            "heading": "Every invocation needs an authority boundary",
+            "body": "Before exposing information or performing an action, an application should check identity, tenant, client, observation focus and permissions. A natural-language description may help select a tool, but should not create permission or modify canonical facts. It helps to separate read-only operations from actions with effects and show the person what was queried or requested. An authorization failure should close the operation rather than fall back to a broader search."
+          },
+          {
+            "heading": "An integration must demonstrate its guarantees",
+            "body": "To evaluate a specific MCP server or client, inspect the resources it exposes, each tool's schema, error handling, authentication, scope isolation, call logging, freshness and retention policy. The protocol alone does not demonstrate these controls. In AXIGNAL, boundaries between observation, representation, judgment and evidence admission remain necessary even if a future surface uses tool interoperability."
+          },
+          {
+            "heading": "Check how missing data is handled",
+            "body": "An integration should also define its behavior for unavailable sources, partial responses, stale content and authorization failures. If a call returns less information, the client should not silently fill gaps or broaden scope. Recording versions and invocations helps review what happened. These are evaluation questions for any MCP connection, not guarantees attributed to an AXIGNAL integration."
+          }
+        ],
+        "example": "Hypothetical example: an AI client requests a public organization record and its observation date through a tool. A well-scoped server returns only what is authorized and preserves the source and time; the client should not reinterpret that date as proof that the record is current today. This does not claim that AXIGNAL exposes this tool.",
+        "limits": "MCP does not certify source quality, grant data access, automatically manage permissions across clients or turn a model output into admitted evidence. Security and compatibility details depend on client and server versions and configuration. Any claim about actual AXIGNAL support requires a verifiable implementation and test.",
+        "cta": { "label": "Explore Knowledge", "href": "/knowledge" },
+        "related": ["persistent-context-for-agents", "business-memory-for-ai", "repeat-research-conversational-ai"]
+      }
+    }
+  },
+  {
+    "id": "better-ai-with-accumulated-memory",
+    "cluster": "ai-memory-context",
+    "intent": "evaluate",
+    "type": "knowledge",
+    "locales": {
+      "es": {
+        "slug": "ia-mejor-con-memoria-acumulada",
+        "title": "¿Puede mejorar la IA con memoria acumulada?",
+        "description": "La memoria puede reducir reconstrucción si conserva procedencia, vigencia y errores; la mejora no es una ley ni un resultado medido de AXIGNAL.",
+        "lead": "Más memoria no siempre significa más inteligencia. El valor potencial aparece cuando una organización puede reutilizar observaciones válidas y conectarlas con preguntas nuevas sin ocultar lo que cambió o sigue siendo incierto.",
+        "answer": "La hipótesis razonable es que una IA puede trabajar mejor en tareas repetidas cuando dispone de conocimiento previo pertinente, actual y gobernado. No es una ley universal ni una afirmación de rendimiento medido de AXIGNAL. La memoria también puede propagar errores, sesgos o datos obsoletos si no se verifica.",
+        "sections": [
+          {
+            "heading": "Qué podría mejorar y por qué",
+            "body": "Si una investigación recurrente ya tiene resoluciones de identidad, fuentes, definiciones y observaciones reutilizables, quizá no haga falta reconstruir cada elemento desde cero. Un modelo reemplazable podría recibir un estado más rico y centrarse en la diferencia relevante. La ventaja no procede de guardar más tokens por sí solos, sino de combinar estado canónico, evidencia, tiempo, reutilización, relaciones económicas, algoritmos y una experiencia que permita inspeccionar el resultado."
+          },
+          {
+            "heading": "Qué puede salir mal al acumular",
+            "body": "Un error de resolución de entidad puede contaminar varias conclusiones; una fuente antigua puede parecer vigente; una representación cercana puede confundirse con conocimiento; una observación repetida puede contarse dos veces. Por eso una memoria fiable registra procedencia, estado epistémico, dependencias y periodo de validez. Los cambios upstream deben activar reevaluación de lo que depende de ellos. Reutilizar no equivale a confiar para siempre."
+          },
+          {
+            "heading": "Cómo formular una prueba honesta",
+            "body": "Para afirmar una mejora habría que fijar una tarea, construir un conjunto de referencia independiente, registrar las condiciones, medir calidad y cobertura antes y después, controlar el modelo y la política utilizados, y reportar incertidumbre y casos de fallo. También conviene medir cuánto conocimiento se revalidó, no solo cuántas respuestas se produjeron. Sin esa evidencia, amortización cognitiva y mejora por memoria siguen siendo hipótesis de producto."
+          },
+          {
+            "heading": "Incluir los fallos en la evaluación",
+            "body": "La prueba debería buscar también errores heredados, fuentes retiradas, duplicados y conclusiones que ya no puedan sostenerse. Un conjunto de evaluación separado y una metodología versionada ayudan a distinguir una mejora real de un cambio en el modelo, los datos o la pregunta. Los resultados deben informar su alcance y límites; una media agregada puede ocultar dimensiones en las que la memoria empeoró la respuesta."
+          }
+        ],
+        "example": "Ejemplo hipotético: un equipo estudia periódicamente cambios públicos en un sector. Una memoria con fuentes, fechas y temas previos puede ayudar a comparar la nueva observación con la anterior; si cambió el instrumento de búsqueda, la diferencia podría deberse al método y no al sector. La comparación solo es defendible si esas condiciones se registran. No hay ahorro cuantificado en este ejemplo.",
+        "limits": "La acumulación no asegura respuestas mejores, menos trabajo ni ventaja competitiva. La calidad depende de la tarea, la cobertura, el gobierno de datos, la actualidad, el método de evaluación y la capacidad de detectar errores. Los resultados de un modelo no son autoridad canónica y no sustituyen admisión de evidencia. Ninguna mejora de AXIGNAL se afirma sin medición específica.",
+        "cta": { "label": "Explorar Knowledge", "href": "/knowledge" },
+        "related": ["business-memory-for-ai", "repeat-research-conversational-ai", "one-off-answer-vs-temporal-observation"]
+      },
+      "en": {
+        "slug": "can-ai-improve-with-accumulated-memory",
+        "title": "Can AI improve with accumulated memory? A hypothesis to test",
+        "description": "Memory may reduce reconstruction if it preserves provenance, freshness and errors; improvement is neither a law nor a measured AXIGNAL result.",
+        "lead": "More memory does not always mean more intelligence. Potential value appears when an organization can reuse valid observations and connect them to new questions without hiding what changed or remains uncertain.",
+        "answer": "A reasonable hypothesis is that AI can perform better on recurring tasks when it has relevant, current and governed prior knowledge. This is not a universal law or a measured AXIGNAL performance claim. Memory can also propagate errors, bias or stale data if it is not checked.",
+        "sections": [
+          {
+            "heading": "What might improve, and why",
+            "body": "If recurring research already has entity resolutions, sources, definitions and reusable observations, it may not need to reconstruct every item from scratch. A replaceable model could receive richer state and focus on the relevant delta. The advantage does not come from storing more tokens by itself, but from combining canonical state, evidence, time, reuse, economic relationships, algorithms and an experience that lets people inspect the result."
+          },
+          {
+            "heading": "What can go wrong as memory accumulates",
+            "body": "An entity-resolution error can contaminate several conclusions; an old source can look current; a nearby representation can be mistaken for knowledge; a repeated observation can be counted twice. Reliable memory therefore records provenance, epistemic state, dependencies and validity periods. Upstream changes should trigger reevaluation of what depends on them. Reuse is not trust forever."
+          },
+          {
+            "heading": "How to formulate an honest test",
+            "body": "A performance claim would require fixing a task, building an independent reference set, recording conditions, measuring quality and coverage before and after, controlling the model and policy in use, and reporting uncertainty and failure cases. It also helps to measure how much knowledge was revalidated, not just how many answers were produced. Without that evidence, cognitive amortization and improvement through memory remain product hypotheses."
+          },
+          {
+            "heading": "Include failures in the evaluation",
+            "body": "A test should also look for inherited errors, removed sources, duplicates and conclusions that can no longer be supported. A separate evaluation set and versioned method help distinguish a real improvement from a change in model, data or question. Results should state their scope and limits; an aggregate average may hide dimensions where memory made the answer worse."
+          }
+        ],
+        "example": "Hypothetical example: a team periodically studies public changes in a sector. Memory containing earlier sources, dates and topics may help compare a new observation with the previous one; if the search instrument changed, the difference may come from the method rather than the sector. The comparison is defensible only if those conditions are recorded. This example contains no quantified savings.",
+        "limits": "Accumulation does not guarantee better answers, less work or a competitive advantage. Quality depends on the task, coverage, data governance, freshness, evaluation method and ability to detect errors. Model outputs are not canonical authority and do not replace evidence admission. No AXIGNAL improvement is claimed without specific measurement.",
+        "cta": { "label": "Explore Knowledge", "href": "/knowledge" },
+        "related": ["business-memory-for-ai", "repeat-research-conversational-ai", "one-off-answer-vs-temporal-observation"]
+      }
+    }
+  },
+  {
+    "id": "one-off-answer-vs-temporal-observation",
+    "cluster": "ai-memory-context",
+    "intent": "understand",
+    "type": "knowledge",
+    "locales": {
+      "es": {
+        "slug": "respuesta-puntual-u-observacion-temporal",
+        "title": "Respuesta u observación temporal: qué cambia al mirar dos veces",
+        "description": "Comparar una organización exige preservar fuente, fecha y condiciones; dos respuestas distintas no demuestran por sí solas un cambio real.",
+        "lead": "Una consulta responde desde la información y las condiciones disponibles ahora. Una observación temporal intenta conservar una referencia comparable para entender qué apareció, desapareció o permanece sin resolver después.",
+        "answer": "Una respuesta puntual puede ser útil para orientarse, pero no establece una línea de base. Una comparación temporal requiere registrar qué superficie o fuente se observó, con qué consulta, idioma, región, dispositivo, instrumento y versión, en qué fecha y con qué cobertura. Si esas condiciones no son compatibles, la diferencia puede ser metodológica.",
+        "sections": [
+          {
+            "heading": "Primero define qué se observó",
+            "body": "Una observación digital describe lo que una fuente mostró bajo condiciones concretas; no describe por sí sola la realidad económica de una empresa. Para interpretar una aparición en búsqueda o una respuesta generativa, anota la superficie, pregunta, idioma, geografía, dispositivo, fecha e instrumento. Mención, cita y respaldo son estados distintos. La presencia de una frase no demuestra que la empresa ofrezca la capacidad mencionada ni que el usuario la haya elegido."
+          },
+          {
+            "heading": "Después comprueba si las dos medidas son comparables",
+            "body": "Dos capturas con el mismo nombre de empresa pueden variar porque cambió el idioma, la pregunta, la fuente, la versión del sistema, la cobertura o el momento. Antes de llamar a eso un cambio, revisa sujetos, metodología, ventanas y datos faltantes. Si las condiciones difieren, registra esa incompatibilidad o limita la conclusión. Cuando no se puede decidir, el estado correcto puede ser UNKNOWN, no una ausencia o un descenso confirmado."
+          },
+          {
+            "heading": "La historia ayuda a preguntar mejor, no a inventar causalidad",
+            "body": "Una serie temporal puede mostrar que dos eventos coincidieron o que una representación cambió entre observaciones. No explica automáticamente por qué ocurrió ni qué efecto comercial tuvo. La interpretación debe conservar incertidumbre y posibles explicaciones, y puede requerir investigación adicional. El papel de AXIGNAL es observar y explicar contextos económicos con evidencia gobernada; no ejecutar SEO/GEO ni atribuir ventas a una variación de visibilidad sin instrumentación y evidencia causal apropiadas."
+          },
+          {
+            "heading": "Establecer una referencia antes de comparar",
+            "body": "Una línea de base útil empieza con alcance explícito y una fecha conocida, no con una reconstrucción retrospectiva. Repite las condiciones cuando sea posible y registra cada desviación, periodo sin cobertura y cambio de instrumento. Si la evidencia nueva contradice la anterior, conserva ambos estados y explica qué necesita revisión. El objetivo es sostener una pregunta temporal responsable, no producir una curva continua a cualquier precio."
+          }
+        ],
+        "example": "Ejemplo hipotético: una organización consulta en español una superficie de descubrimiento en mayo y repite la consulta en septiembre con la misma frase, pero la segunda vez cambia de región y dispositivo. El resultado distinto no demuestra por sí mismo una evolución de la empresa; primero hay que separar el efecto potencial de las condiciones. Este ejemplo no presenta datos reales ni una medición de AXIGNAL.",
+        "limits": "Las superficies cambian, personalizan resultados y pueden no revelar toda su metodología. Una observación pública es evidencia de una representación concreta, no de la verdad empresarial, calidad, demanda o conversión. Una métrica exige instrumento y versión, condiciones, periodo, muestra, cobertura e incertidumbre. No se pueden prometer comparaciones válidas si esos elementos faltan.",
+        "cta": { "label": "Explorar Knowledge", "href": "/knowledge" },
+        "related": ["repeat-research-conversational-ai", "better-ai-with-accumulated-memory", "mcp-and-persistent-context"]
+      },
+      "en": {
+        "slug": "one-off-answer-or-temporal-observation",
+        "title": "One-off answer or temporal observation: what changes on a second look",
+        "description": "Comparing an organization over time requires preserving source, date, conditions and coverage; two different answers do not by themselves prove reality changed.",
+        "lead": "A query answers from the information and conditions available now. A temporal observation aims to preserve a comparable reference so you can later understand what appeared, disappeared or remains unresolved.",
+        "answer": "A one-off answer can help orient you, but it does not establish a baseline. Temporal comparison requires recording which surface or source was observed, with which query, language, region, device, instrument and version, on what date and with what coverage. If those conditions are incompatible, the difference may be methodological.",
+        "sections": [
+          {
+            "heading": "Start by defining what was observed",
+            "body": "A digital observation describes what a source showed under particular conditions; it does not by itself describe a company's economic reality. To interpret a search appearance or generative response, record the surface, question, language, geography, device, date and instrument. Mention, citation and endorsement are distinct states. A phrase appearing does not prove that the company offers the capability mentioned or that a user chose it."
+          },
+          {
+            "heading": "Then check whether the two measures are comparable",
+            "body": "Two captures with the same company name can differ because the language, question, source, system version, coverage or moment changed. Before calling it a change, review subjects, methodology, windows and missing data. If conditions differ, record that incompatibility or limit the conclusion. When the evidence cannot resolve it, the right state may be UNKNOWN rather than confirmed absence or decline."
+          },
+          {
+            "heading": "History helps ask better questions, not invent causality",
+            "body": "A time series may show that two events coincided or that a representation differed between observations. It does not automatically explain why or what commercial effect followed. Interpretation should preserve uncertainty and possible explanations, and may require more research. AXIGNAL's role is to observe and explain economic contexts with governed evidence; it does not execute SEO/GEO or attribute sales to a visibility change without appropriate instrumentation and causal evidence."
+          },
+          {
+            "heading": "Set a baseline before comparing",
+            "body": "A useful baseline starts with an explicit scope and known date, not a retrospective reconstruction. Repeat conditions where possible and record each deviation, coverage gap and instrument change. If new evidence conflicts with earlier evidence, preserve both states and explain what needs review. The goal is a responsible temporal question, not a continuous-looking chart at any cost."
+          }
+        ],
+        "example": "Hypothetical example: an organization queries a discovery surface in Spanish in May and repeats the query in September using the same phrase, but the second time the region and device differ. The different result does not by itself prove the company changed; first separate the possible effect of the conditions. This example presents no real data or AXIGNAL measurement.",
+        "limits": "Surfaces change, personalize results and may not disclose their full methodology. A public observation is evidence of one representation, not of business truth, quality, demand or conversion. A metric requires instrument and version, conditions, period, sample, coverage and uncertainty. Valid comparisons cannot be promised when those elements are missing.",
+        "cta": { "label": "Explore Knowledge", "href": "/knowledge" },
+        "related": ["repeat-research-conversational-ai", "better-ai-with-accumulated-memory", "mcp-and-persistent-context"]
+      }
+    }
+  }
+]

@@ -1,0 +1,1472 @@
+[
+  {
+    "id": "knowledge-economic-memory-vs-cache",
+    "fr": {
+      "slug": "memoire-economique-au-dela-dun-cache-de-rapports",
+      "title": "La mémoire économique dépasse une simple cache de rapports",
+      "description": "Une mémoire utile conserve sujets, preuves, provenance et temps au lieu de stocker les réponses comme une vérité durable.",
+      "lead": "Enregistrer une réponse ou un document peut éviter une recherche immédiate, mais ne suffit pas à rendre une connaissance d’entreprise réutilisable. Une mémoire économique garde ce qui a été observé, à propos de qui, quand et à partir de quelles preuves.",
+      "answer": "Chez AXIGNAL, une mémoire n’est pas un cache réputé actuel simplement parce qu’il est stocké. Des observations peuvent survivre sans admission comme FAXT, tandis que les interprétations doivent être réévaluées si des sources, sujets ou conditions importantes évoluent.",
+      "sections": [
+        {
+          "heading": "Distinguer un document conservé d’une connaissance réutilisable",
+          "body": "Un PDF, une note ou une réponse de conversation conserve un contenu, mais pas nécessairement le lien entre sujet, affirmation, source et période. Sans cette structure, une enquête ultérieure risque de reprendre une conclusion hors contexte. La mémoire économique maintient des références et des états épistémiques afin qu’une personne ou un système puisse retrouver ce qui soutient une lecture et la question qui la rendait pertinente."
+        },
+        {
+          "heading": "Préserver des observations sans les promouvoir automatiquement",
+          "body": "Une information peut être utile à une question future sans devenir une vérité canonique. Une observation peut garder son origine, sa date et ses conditions même si les preuves ne suffisent pas encore à admettre un FAXT. Cette survie de l’information facilite une révision ultérieure tout en séparant ce qui a été vu, interprété et admis."
+        },
+        {
+          "heading": "Faire dépendre l’actualité de la source",
+          "body": "Une déclaration sur une capacité, une adresse ou une relation peut ne plus décrire la situation présente. La mémoire devrait garder le moment d’observation et les dates indiquées par la source au lieu de considérer le dernier enregistrement stocké comme universellement actuel. Si une source change ou disparaît, les conclusions qui en dépendent peuvent nécessiter une réévaluation ciblée."
+        },
+        {
+          "heading": "Réutiliser avec autorisation, provenance et portée",
+          "body": "Une observation publique peut éclairer plusieurs Focos de observación lorsque les droits, la vie privée et les règles le permettent. Cette réutilisation n’autorise pas à partager le contexte privé d’un abonné ni à compter deux fois la même source comme corroboration indépendante. Le nouveau Focus reçoit la preuve avec sa provenance; les interprétations sont recalculées pour sa propre question et son contexte."
+        }
+      ],
+      "example": "Exemple hypothétique : AXIGNAL conserve une déclaration publique indiquant qu’une entreprise a installé une ligne de production, avec la source et la date d’observation. Quelques mois plus tard, une équipe interroge une capacité liée. Elle peut réutiliser l’observation, vérifier son actualité et laisser le fonctionnement présent inconnu sans nouvelle preuve.",
+      "limits": "La mémoire économique ne garantit pas que l’information soit complète, actuelle ou vraie simplement parce qu’elle persiste. La réutilisation dépend des droits, de la provenance, du sujet et des conditions. AXIGNAL ne présente pas d’anciennes réponses comme des faits actuels et ne convertit pas chaque observation en FAXT ou relation canonique.",
+      "cta": {
+        "label": "Découvrir la mémoire AXIGNAL",
+        "href": "/knowledge"
+      },
+      "related": [
+        "evidence-provenance",
+        "evidence-currentness",
+        "knowledge-research-reuse-conditions"
+      ]
+    },
+    "de": {
+      "slug": "wirtschaftsgedaechtnis-ist-mehr-als-ein-berichts-cache",
+      "title": "Wirtschaftliches Gedächtnis ist mehr als ein Berichtscache",
+      "description": "Ein nützliches Gedächtnis bewahrt Subjekte, Belege, Herkunft und Zeit, statt Antworten als dauerhafte Wahrheit abzulegen.",
+      "lead": "Eine Antwort oder ein Dokument zu speichern kann eine sofortige Suche ersparen, macht Unternehmenswissen aber nicht automatisch wiederverwendbar. Wirtschaftliches Gedächtnis hält fest, was über wen, wann und auf welcher Beleggrundlage beobachtet wurde.",
+      "answer": "Bei AXIGNAL ist Gedächtnis kein Cache, der allein durch Speicherung als aktuell gilt. Beobachtungen können ohne FAXT-Zulassung erhalten bleiben; Interpretationen sind neu zu prüfen, wenn wichtige Quellen, Subjekte oder Bedingungen sich ändern.",
+      "sections": [
+        {
+          "heading": "Ein gespeichertes Artefakt von wiederverwendbarem Wissen trennen",
+          "body": "Ein PDF, eine Notiz oder eine Gesprächsantwort bewahrt Inhalte, aber nicht zwingend die Verbindung von Subjekt, Aussage, Quelle und Zeitraum. Ohne diese Struktur kann eine spätere Recherche eine Schlussfolgerung aus ihrem Kontext lösen. Wirtschaftliches Gedächtnis hält Referenzen und Erkenntnisstände bereit, damit Mensch oder System nachvollziehen kann, was eine Sicht stützt und welche Frage sie relevant machte."
+        },
+        {
+          "heading": "Beobachtungen erhalten, ohne sie automatisch aufzuwerten",
+          "body": "Information kann für eine spätere Frage nützlich sein, ohne kanonische Wahrheit zu werden. Eine Beobachtung kann Herkunft, Datum und Bedingungen behalten, auch wenn die Belege noch nicht für die Zulassung eines FAXT reichen. So bleibt sie für eine spätere Prüfung erhalten und die Unterschiede zwischen gesehen, interpretiert und zugelassen bleiben klar."
+        },
+        {
+          "heading": "Aktualität von der Quelle abhängig machen",
+          "body": "Eine Aussage zu Fähigkeit, Anschrift oder Beziehung kann die Gegenwart nicht mehr beschreiben. Das Gedächtnis sollte Beobachtungszeitpunkt und von der Quelle genannte Daten bewahren, statt den neuesten gespeicherten Eintrag generell als aktuell zu behandeln. Ändert sich eine Quelle oder verschwindet sie, können davon abhängige Schlussfolgerungen eine gezielte Neubewertung benötigen."
+        },
+        {
+          "heading": "Mit Erlaubnis, Herkunft und Geltungsbereich wiederverwenden",
+          "body": "Eine öffentliche Beobachtung kann mehreren Beobachtungs-Foki dienen, wenn Rechte, Datenschutz und Richtlinien es erlauben. Das berechtigt weder zum Teilen privater Abonnentenkontexte noch dazu, dieselbe Quelle doppelt als unabhängige Bestätigung zu zählen. Der neue Fokus erhält den Beleg mit Herkunft; wirtschaftliche Deutungen werden für seine eigene Frage und seinen Kontext neu berechnet."
+        }
+      ],
+      "example": "Hypothetisch: AXIGNAL speichert die öffentliche Aussage, ein Unternehmen habe eine Produktionslinie installiert, samt Quelle und Beobachtungsdatum. Monate später fragt ein Team nach einer verwandten Fähigkeit. Es kann die Beobachtung erneut nutzen, ihre Aktualität prüfen und den heutigen Betrieb ohne neue Belege UNKNOWN lassen.",
+      "limits": "Wirtschaftliches Gedächtnis garantiert nicht, dass Information vollständig, aktuell oder wahr ist, nur weil sie fortbesteht. Wiederverwendung hängt von Rechten, Herkunft, Subjekt und Bedingungen ab. AXIGNAL stellt alte Antworten nicht als heutige Fakten dar und macht nicht jede gespeicherte Beobachtung automatisch zum FAXT oder zur kanonischen Beziehung.",
+      "cta": {
+        "label": "AXIGNAL-Gedächtnis kennenlernen",
+        "href": "/knowledge"
+      },
+      "related": [
+        "evidence-provenance",
+        "evidence-currentness",
+        "knowledge-research-reuse-conditions"
+      ]
+    },
+    "it": {
+      "slug": "memoria-economica-oltre-la-cache-di-rapporti",
+      "title": "La memoria economica è più di una cache di rapporti",
+      "description": "Una memoria utile conserva soggetti, prove, provenienza e tempo, invece di archiviare risposte come verità permanenti.",
+      "lead": "Salvare una risposta o un documento può evitare una ricerca immediata, ma non basta a rendere riutilizzabile la conoscenza aziendale. La memoria economica conserva che cosa è stato osservato, su chi, quando e sulla base di quali evidenze.",
+      "answer": "In AXIGNAL la memoria non è una cache considerata attuale solo perché è stata archiviata. Le osservazioni possono sopravvivere senza ammissione come FAXT, mentre le interpretazioni vanno rivalutate se cambiano fonti, soggetti o condizioni rilevanti.",
+      "sections": [
+        {
+          "heading": "Distinguere un artefatto salvato dalla conoscenza riutilizzabile",
+          "body": "Un PDF, una nota o una risposta conversazionale conserva contenuti, ma non necessariamente il legame tra soggetto, affermazione, fonte e periodo. Senza questa struttura, una ricerca successiva può copiare una conclusione fuori contesto. La memoria economica mantiene riferimenti e stati epistemici affinché una persona o un sistema possa ricostruire cosa sostiene una lettura e quale domanda la rendeva pertinente."
+        },
+        {
+          "heading": "Conservare osservazioni senza promuoverle automaticamente",
+          "body": "Un’informazione può essere utile a una domanda futura senza diventare verità canonica. Un’osservazione può mantenere origine, data e condizioni anche quando le prove non bastano ancora ad ammettere un FAXT. Questa sopravvivenza informativa consente verifiche successive e mantiene distinta la differenza tra ciò che è stato osservato, interpretato e ammesso."
+        },
+        {
+          "heading": "Far dipendere l’attualità dalla fonte",
+          "body": "Una dichiarazione su capacità, indirizzo o relazione potrebbe non descrivere più il presente. La memoria dovrebbe mantenere il momento dell’osservazione e le date indicate dalla fonte, anziché considerare sempre attuale l’ultimo record archiviato. Se una fonte cambia o scompare, le conclusioni che dipendono da essa possono richiedere una rivalutazione mirata."
+        },
+        {
+          "heading": "Riutilizzare con permessi, provenienza e ambito",
+          "body": "Un’osservazione pubblica può essere utile a più Foci di osservazione quando diritti, privacy e policy lo consentono. Il riuso non autorizza a condividere contesto privato di un abbonato né a contare due volte la stessa fonte come corroborazione indipendente. Il nuovo Foco riceve la prova con la sua provenienza; le interpretazioni economiche si ricalcolano per la sua domanda e il suo contesto."
+        }
+      ],
+      "example": "Esempio ipotetico: AXIGNAL conserva la dichiarazione pubblica secondo cui un’impresa ha installato una linea produttiva, con fonte e data di osservazione. Mesi dopo un team chiede informazioni su una capacità collegata. Può riutilizzare l’osservazione, verificarne l’attualità e lasciare sconosciuto lo stato operativo corrente senza nuove prove.",
+      "limits": "La memoria economica non garantisce che l’informazione sia completa, attuale o vera solo perché persiste. Il riuso dipende da diritti, provenienza, soggetto e condizioni. AXIGNAL non presenta vecchie risposte come fatti correnti né converte automaticamente ogni osservazione archiviata in FAXT o relazione canonica.",
+      "cta": {
+        "label": "Scopri la memoria di AXIGNAL",
+        "href": "/knowledge"
+      },
+      "related": [
+        "evidence-provenance",
+        "evidence-currentness",
+        "knowledge-research-reuse-conditions"
+      ]
+    },
+    "pt": {
+      "slug": "memoria-economica-e-mais-do-que-cache-de-relatorios",
+      "title": "Memória económica é mais do que uma cache de relatórios",
+      "description": "Uma memória útil preserva sujeitos, evidências, proveniência e tempo, em vez de guardar respostas como verdade duradoura.",
+      "lead": "Guardar uma resposta ou documento pode evitar uma pesquisa imediata, mas não torna por si só o conhecimento empresarial reutilizável. A memória económica conserva o que foi observado, sobre quem, quando e com base em que evidências.",
+      "answer": "Na AXIGNAL, memória não é uma cache considerada atual apenas por estar armazenada. Observações podem sobreviver sem admissão como FAXT, enquanto interpretações devem ser reavaliadas se fontes, sujeitos ou condições importantes mudarem.",
+      "sections": [
+        {
+          "heading": "Separar um artefacto guardado de conhecimento reutilizável",
+          "body": "Um PDF, uma nota ou uma resposta de conversa preserva conteúdo, mas não necessariamente a ligação entre sujeito, afirmação, fonte e período. Sem essa estrutura, uma investigação posterior pode copiar uma conclusão fora do contexto. A memória económica mantém referências e estados epistémicos para que uma pessoa ou sistema reconstrua o que sustenta uma leitura e que pergunta a tornou relevante."
+        },
+        {
+          "heading": "Preservar observações sem as promover automaticamente",
+          "body": "Uma informação pode ser útil para uma pergunta futura sem se tornar verdade canónica. Uma observação pode manter origem, data e condições mesmo quando a evidência ainda não permite admitir um FAXT. Esta sobrevivência da informação facilita uma revisão posterior e preserva a diferença entre aquilo que foi visto, interpretado e admitido."
+        },
+        {
+          "heading": "Fazer a atualidade depender da fonte",
+          "body": "Uma declaração sobre capacidade, endereço ou relação pode deixar de descrever o presente. A memória deve conservar o momento da observação e as datas indicadas pela fonte, em vez de tratar o registo mais recente como universalmente atual. Se uma fonte mudar ou desaparecer, as conclusões dependentes podem precisar de reavaliação direcionada."
+        },
+        {
+          "heading": "Reutilizar com autorização, proveniência e âmbito",
+          "body": "Uma observação pública pode servir vários Focos de observação quando direitos, privacidade e política o permitem. Reutilizar não autoriza partilhar contexto privado de um subscritor nem contar duas vezes a mesma fonte como confirmação independente. O novo Foco recebe a evidência com proveniência; as interpretações económicas são recalculadas para a sua pergunta e contexto."
+        }
+      ],
+      "example": "Exemplo hipotético: a AXIGNAL conserva uma declaração pública de que uma empresa instalou uma linha de produção, com a fonte e a data de observação. Meses depois, uma equipa pergunta por uma capacidade relacionada. Pode reutilizar a observação, verificar a atualidade e deixar desconhecido o estado operacional presente sem novas evidências.",
+      "limits": "A memória económica não garante que a informação seja completa, atual ou verdadeira só por persistir. A reutilização depende de direitos, proveniência, sujeito e condições. A AXIGNAL não apresenta respostas antigas como factos atuais nem converte automaticamente toda a observação armazenada em FAXT ou relação canónica.",
+      "cta": {
+        "label": "Conhecer a memória da AXIGNAL",
+        "href": "/knowledge"
+      },
+      "related": [
+        "evidence-provenance",
+        "evidence-currentness",
+        "knowledge-research-reuse-conditions"
+      ]
+    }
+  },
+  {
+    "id": "knowledge-timeline-dates-and-observation",
+    "fr": {
+      "slug": "chronologie-date-de-levenement-publication-observation",
+      "title": "Chronologie : date de l’événement, publication et observation",
+      "description": "Lire une chronologie suppose de distinguer quand un fait s’est produit, a été publié et a pu être observé.",
+      "lead": "Une chronologie semble précise parce qu’elle ordonne des dates, mais chaque date peut désigner un moment différent. Mélanger publication, événement et capture peut faire croire à une histoire que les preuves n’établissent pas.",
+      "answer": "AXIGNAL conserve le contexte temporel pour indiquer quand une source a été observée et quelle date d’événement elle rapporte, le cas échéant. Une chronologie ne comble pas les dates manquantes et ne transforme pas la proximité temporelle en causalité.",
+      "sections": [
+        {
+          "heading": "Identifier ce que désigne chaque date",
+          "body": "La date de publication indique quand un article ou rapport a paru. La date de l’événement déclarée par la source peut être antérieure ou couvrir un intervalle. La date d’observation indique quand la source a été accessible ou capturée dans certaines conditions. Séparer ces valeurs évite d’attribuer un changement opérationnel à la date où quelqu’un l’a raconté."
+        },
+        {
+          "heading": "Garder l’incertitude si la source manque de précision",
+          "body": "Une publication peut indiquer qu’une entreprise a récemment ouvert un bureau sans préciser le jour. La chronologie peut conserver la formulation et la plage soutenues par les preuves, sans inventer une date pour compléter un graphique. Si seule l’année ou le trimestre est connu, la présentation doit garder le même niveau de précision plutôt que créer une fausse exactitude."
+        },
+        {
+          "heading": "Traiter les mises à jour comme des changements de connaissance",
+          "body": "Une page corrigée ou une déclaration ultérieure peut modifier ce qu’AXIGNAL sait sans prouver que les opérations de l’entreprise ont changé. L’historique conserve la référence précédente, identifie la modification de source et réévalue les conclusions qui en dépendaient. Le silence ultérieur ou la disparition d’une page ne démontre pas qu’un événement a été annulé."
+        },
+        {
+          "heading": "Ne pas transformer une séquence en explication causale",
+          "body": "Deux événements rapprochés dans le temps ne prouvent pas que l’un a causé l’autre. Une expansion, un recrutement et un appel d’offres peuvent partager un contexte sans former une relation démontrée. La chronologie aide à formuler des questions et orienter la recherche; un lien causal nécessite d’autres preuves et demeure une interprétation s’il n’est pas établi."
+        }
+      ],
+      "example": "Exemple hypothétique : une entreprise publie le 12 juin qu’elle a ouvert un site en mai, et AXIGNAL observe la page le 18 juin. La chronologie conserve les deux dates déclarées et la date d’observation; elle n’invente pas le jour d’ouverture et ne suppose pas que tous les services fonctionnent déjà sur place.",
+      "limits": "L’observation temporelle dépend de la couverture et des dates fournies par les sources. Une chronologie n’est pas un historique complet d’une organisation et ses lacunes ne prouvent pas l’absence de changements. Les dates de capture, de publication ou de mise à jour ne remplacent pas une date d’événement que la source ne confirme pas.",
+      "cta": {
+        "label": "Explorer les preuves et le temps",
+        "href": "/knowledge"
+      },
+      "related": [
+        "evidence-currentness",
+        "commercial_change_history",
+        "one-off-answer-vs-temporal-observation"
+      ]
+    },
+    "de": {
+      "slug": "zeitlinien-ereignis-veroeffentlichungs-und-beobachtungsdatum",
+      "title": "Zeitlinien: Ereignis, Veröffentlichung und Beobachtung",
+      "description": "Eine Unternehmenschronik zu lesen heißt zu unterscheiden, wann etwas geschah, veröffentlicht und beobachtet wurde.",
+      "lead": "Eine Zeitlinie wirkt präzise, weil sie Daten ordnet, doch jedes Datum kann einen anderen Zeitpunkt meinen. Werden Veröffentlichung, Ereignis und Abruf vermischt, kann eine lesbare Folge eine Geschichte nahelegen, die Belege nicht zeigen.",
+      "answer": "AXIGNAL bewahrt zeitlichen Kontext, um anzugeben, wann eine Quelle beobachtet wurde und welches Ereignisdatum sie gegebenenfalls nennt. Eine Zeitlinie ergänzt keine fehlenden Daten und macht zeitliche Nähe nicht zur Ursache.",
+      "sections": [
+        {
+          "heading": "Erkennen, wofür jedes Datum steht",
+          "body": "Das Veröffentlichungsdatum sagt, wann ein Bericht oder eine Mitteilung erschien. Das angegebene Ereignisdatum kann früher liegen oder einen Zeitraum beschreiben. Das Beobachtungsdatum hält fest, wann eine Quelle unter bestimmten Bedingungen erreichbar oder erfasst war. Diese Werte getrennt zu halten verhindert, dass eine operative Veränderung auf den Tag datiert wird, an dem jemand darüber schrieb."
+        },
+        {
+          "heading": "Unsicherheit bei ungenauen Quellen erhalten",
+          "body": "Eine Meldung kann sagen, dass ein Unternehmen vor Kurzem ein Büro eröffnet hat, ohne den Tag zu nennen. Die Zeitlinie kann den Wortlaut und den durch Belege gestützten Zeitraum bewahren, statt für ein Diagramm ein Datum zu erfinden. Ist nur Jahr oder Quartal bekannt, sollte die Darstellung diese Genauigkeit beibehalten und keine falsche Präzision erzeugen."
+        },
+        {
+          "heading": "Aktualisierungen als Wissensänderung behandeln",
+          "body": "Eine korrigierte Seite oder spätere Aussage kann AXIGNALs Kenntnis verändern, ohne eine operative Änderung des Unternehmens zu beweisen. Der Verlauf sollte den früheren Stand oder Verweis behalten, die Quellenänderung benennen und abhängige Schlussfolgerungen neu bewerten. Späteres Schweigen oder eine verschwundene Webseite zeigt nicht, dass ein Ereignis rückgängig gemacht wurde."
+        },
+        {
+          "heading": "Aus einer Folge keine Ursache ableiten",
+          "body": "Zwei zeitlich nahe Ereignisse beweisen nicht, dass eines das andere verursacht hat. Expansion, Einstellung und Ausschreibung können denselben Kontext teilen, ohne eine belegte Beziehung zu bilden. Eine Zeitlinie hilft bei Fragen und weiterer Recherche; ein kausaler Zusammenhang braucht zusätzliche Belege und bleibt Interpretation, solange er nicht gestützt ist."
+        }
+      ],
+      "example": "Hypothetisch: Ein Unternehmen veröffentlicht am 12. Juni, es habe im Mai einen Standort eröffnet; AXIGNAL beobachtet die Seite am 18. Juni. Die Zeitlinie bewahrt beide genannten Daten und den Beobachtungszeitpunkt. Sie erfindet keinen Eröffnungstag und nimmt nicht an, dass alle Leistungen bereits laufen.",
+      "limits": "Zeitliche Beobachtung hängt von Abdeckung und den Datumsangaben der Quellen ab. Eine Zeitlinie ist keine vollständige Unternehmensgeschichte, und Lücken belegen keine ausgebliebenen Änderungen. Abruf-, Veröffentlichungs- oder Aktualisierungsdaten ersetzen kein Ereignisdatum, das die Quelle nicht bestätigt. Wer mehrere Zeitpunkte nebeneinanderstellt, sollte außerdem erklären, welche Angaben aus welcher Quelle stammen und ob diese rückblickend berichtet. So bleibt der Ablauf prüfbar, ohne Genauigkeit vorzutäuschen. Bei einem Quellenwechsel kann die Chronologie zeigen, dass sich der Kenntnisstand änderte, auch wenn der tatsächliche Beginn der Tätigkeit unbekannt bleibt.",
+      "cta": {
+        "label": "Belege und Zeit erkunden",
+        "href": "/knowledge"
+      },
+      "related": [
+        "evidence-currentness",
+        "commercial_change_history",
+        "one-off-answer-vs-temporal-observation"
+      ]
+    },
+    "it": {
+      "slug": "cronologie-data-evento-pubblicazione-e-osservazione",
+      "title": "Cronologie: data dell’evento, pubblicazione e osservazione",
+      "description": "Leggere una cronologia significa distinguere quando un fatto è avvenuto, pubblicato e osservato.",
+      "lead": "Una linea temporale sembra precisa perché ordina le date, ma ogni data può indicare un momento diverso. Mescolare pubblicazione, evento e acquisizione può suggerire una storia che le evidenze non dimostrano.",
+      "answer": "AXIGNAL conserva il contesto temporale per indicare quando è stata osservata una fonte e quale data dell’evento dichiara, se disponibile. Una cronologia non colma date mancanti e non trasforma la vicinanza temporale in causalità.",
+      "sections": [
+        {
+          "heading": "Capire a che cosa si riferisce ogni data",
+          "body": "La data di pubblicazione indica quando è uscito un articolo o rapporto. La data dichiarata dell’evento può essere precedente o riferirsi a un intervallo. La data di osservazione registra quando la fonte era accessibile o è stata acquisita in determinate condizioni. Tenerle separate evita di attribuire un cambiamento operativo alla data in cui qualcuno ne ha scritto."
+        },
+        {
+          "heading": "Mantenere l’incertezza se la fonte è imprecisa",
+          "body": "Una notizia può dire che un’impresa ha aperto da poco una sede senza indicare il giorno esatto. La cronologia può conservare la formulazione e l’intervallo sostenuti dalle prove, senza inventare una data per completare un grafico. Se si conosce soltanto l’anno o il trimestre, la presentazione mantiene quel livello di precisione e non crea un’esattezza fittizia."
+        },
+        {
+          "heading": "Trattare gli aggiornamenti come cambiamenti di conoscenza",
+          "body": "Una pagina corretta o una dichiarazione successiva può modificare ciò che AXIGNAL sa, senza provare che siano cambiate le operazioni dell’impresa. La storia conserva il riferimento precedente, identifica la modifica della fonte e rivaluta le conclusioni che ne dipendevano. Il silenzio successivo o una pagina scomparsa non dimostrano che l’evento sia stato revocato."
+        },
+        {
+          "heading": "Non trasformare una sequenza in una causa",
+          "body": "Due eventi vicini nel tempo non dimostrano che uno abbia causato l’altro. Un’espansione, un’assunzione e una gara possono condividere un contesto senza costituire un rapporto provato. La cronologia aiuta a formulare domande e indirizzare la ricerca; un nesso causale richiede altre evidenze e resta un’interpretazione finché non è sostenuto."
+        }
+      ],
+      "example": "Esempio ipotetico: un’impresa pubblica il 12 giugno di aver aperto una sede a maggio e AXIGNAL osserva la pagina il 18 giugno. La cronologia conserva entrambe le date dichiarate e quella di osservazione; non inventa il giorno dell’apertura né presume che tutti i servizi siano già operativi.",
+      "limits": "L’osservazione temporale dipende dalla copertura e dalle date fornite dalle fonti. Una cronologia non è la storia completa di un’organizzazione e le lacune non dimostrano che non vi siano stati cambiamenti. Data di acquisizione, pubblicazione o aggiornamento non sostituisce una data dell’evento non confermata dalla fonte.",
+      "cta": {
+        "label": "Esplora evidenze e tempo",
+        "href": "/knowledge"
+      },
+      "related": [
+        "evidence-currentness",
+        "commercial_change_history",
+        "one-off-answer-vs-temporal-observation"
+      ]
+    },
+    "pt": {
+      "slug": "cronologias-data-do-evento-publicacao-e-observacao",
+      "title": "Cronologias: data do acontecimento, publicação e observação",
+      "description": "Ler uma cronologia empresarial exige distinguir quando algo ocorreu, foi publicado e pôde ser observado.",
+      "lead": "Uma linha temporal parece precisa por ordenar datas, mas cada data pode descrever um momento diferente. Misturar publicação, acontecimento e captura pode sugerir uma história que as evidências não demonstram.",
+      "answer": "A AXIGNAL conserva contexto temporal para mostrar quando uma fonte foi observada e que data de acontecimento indica, se existir. Uma cronologia não preenche datas em falta nem transforma proximidade temporal em causalidade.",
+      "sections": [
+        {
+          "heading": "Identificar o que cada data descreve",
+          "body": "A data de publicação indica quando surgiu uma notícia ou relatório. A data declarada do acontecimento pode ser anterior ou referir-se a um intervalo. A data de observação regista quando uma fonte estava acessível ou foi capturada sob determinadas condições. Separar estes valores evita atribuir uma mudança operacional à data em que alguém escreveu sobre ela."
+        },
+        {
+          "heading": "Preservar a incerteza quando a fonte é imprecisa",
+          "body": "Uma publicação pode dizer que uma empresa abriu recentemente um escritório sem indicar o dia. A cronologia pode conservar a formulação e o intervalo sustentado pelas evidências, sem inventar uma data para preencher um gráfico. Se só se conhece o ano ou trimestre, a apresentação deve manter esse grau de precisão em vez de criar uma falsa exatidão."
+        },
+        {
+          "heading": "Tratar atualizações como mudanças de conhecimento",
+          "body": "Uma página corrigida ou declaração posterior pode alterar aquilo que a AXIGNAL sabe, sem provar uma mudança na operação da empresa. O histórico conserva a referência anterior, identifica a alteração da fonte e reavalia conclusões dependentes. O silêncio posterior ou o desaparecimento de uma página não demonstra que o acontecimento tenha sido revertido."
+        },
+        {
+          "heading": "Não transformar uma sequência numa explicação causal",
+          "body": "Dois acontecimentos próximos no tempo não provam que um causou o outro. Expansão, contratação e concurso podem partilhar contexto sem formar uma relação demonstrada. A cronologia ajuda a formular perguntas e orientar a pesquisa; uma explicação causal exige outras evidências e continua a ser interpretação quando não está sustentada."
+        }
+      ],
+      "example": "Exemplo hipotético: uma empresa publica a 12 de junho que abriu uma instalação em maio e a AXIGNAL observa a página a 18 de junho. A cronologia conserva as datas declaradas e a data de observação; não inventa o dia de abertura nem presume que todos os serviços já funcionam no local.",
+      "limits": "A observação temporal depende da cobertura e das datas fornecidas pelas fontes. Uma cronologia não é um registo completo da vida de uma organização, e as lacunas não provam que não ocorreram mudanças. Datas de captura, publicação ou atualização não substituem uma data do acontecimento que a fonte não confirma.",
+      "cta": {
+        "label": "Explorar evidências e tempo",
+        "href": "/knowledge"
+      },
+      "related": [
+        "evidence-currentness",
+        "commercial_change_history",
+        "one-off-answer-vs-temporal-observation"
+      ]
+    }
+  },
+  {
+    "id": "knowledge-signal-vs-fact",
+    "fr": {
+      "slug": "signal-economique-ni-fait-ni-vente",
+      "title": "Un signal économique n’est ni un fait ni une vente",
+      "description": "Un Signal justifie l’attention humaine; il ne confirme pas à lui seul une relation, une occasion réelle ou un résultat commercial.",
+      "lead": "Un signal peut être utile avant que la réponse soit tranchée. Il indique que l’état économique observé mérite attention ou enquête, sans déclarer qu’une conclusion commerciale s’est déjà produite.",
+      "answer": "Chez AXIGNAL, un Signal n’est ni un FAXT, ni un INXIGHT, ni une relation canonique, ni une vente ou probabilité de conclure. Chaque transition requiert sa propre base; les personnes gardent l’autorité sur les décisions et actions d’affaires.",
+      "sections": [
+        {
+          "heading": "Comprendre ce qu’un Signal communique",
+          "body": "Un Signal indique qu’un ensemble de preuves et de contexte soulève une question digne d’examen. Il peut attirer l’attention sur une capacité, un changement ou une association potentielle. Ce n’est pas un score de réussite et il n’affirme pas qu’une organisation veut acheter, recruter ou collaborer. Il peut rester utile même si personne n’agit ou si l’hypothèse commerciale ne se réalise pas."
+        },
+        {
+          "heading": "Séparer observation, dérivation et vérité admise",
+          "body": "Une source publique peut documenter une déclaration; plusieurs éléments peuvent soutenir un INXIGHT explicable; une relation canonique requiert le processus EvidenceAdmission. Ces objets ne sont pas interchangeables. Une inférence doit relier les éléments qui la motivent et exprimer son incertitude. Une réponse de modèle ou une similarité textuelle ne remplace ni les preuves ni leur admission."
+        },
+        {
+          "heading": "Montrer pourquoi une enquête peut être justifiée",
+          "body": "L’explication doit renvoyer aux sources, au moment, au sujet et à la dimension sémantique précise présentée. Elle conserve aussi contradictions et inconnues au lieu de n’afficher que les éléments favorables à une lecture séduisante. Si la base ne peut pas être reconstruite, l’attribution visible n’est pas intelligible et ne devrait pas apparaître comme une certitude acquise."
+        },
+        {
+          "heading": "Garder les résultats commerciaux séparés",
+          "body": "Le fait qu’une entreprise ne réponde pas, ne soumissionne pas ou ne conclue pas d’accord ne rend pas faux un Signal correctement étayé. Résultat commercial et validité épistémique sont deux questions différentes. La personne décide d’enquêter ou d’agir; le système ne réécrit pas les preuves après coup parce qu’une occasion potentielle n’a pas abouti à une vente."
+        }
+      ],
+      "example": "Exemple hypothétique : AXIGNAL relie une capacité publiée à une activité de marché et présente un Signal POTENTIAL pour étudier l’adéquation. L’entreprise peut vérifier les exigences ou ne rien faire. Le Signal ne signifie pas qu’il existe une demande, que l’organisation est cliente ou qu’une transaction aura lieu.",
+      "limits": "Un Signal n’est ni conseil commercial ni garantie d’occasion. Couverture, actualité, provenance, contradictions et état des preuves conditionnent son explication. Probabilité d’évaluateur, mention, résultat de vente ou score opaque ne devient pas vérité canonique ni confiance épistémique.",
+      "cta": {
+        "label": "Comprendre les preuves AXIGNAL",
+        "href": "/knowledge"
+      },
+      "related": [
+        "evidence-signal-faxt-inxight",
+        "knowledge-opportunity-vs-lead",
+        "knowledge-explainable-economic-attribution"
+      ]
+    },
+    "de": {
+      "slug": "wirtschaftliches-signal-ist-weder-fakt-noch-verkauf",
+      "title": "Ein wirtschaftliches Signal ist weder Fakt noch Verkauf",
+      "description": "Ein Signal begründet menschliche Aufmerksamkeit, bestätigt aber allein weder Beziehung noch Geschäftschance oder Ergebnis.",
+      "lead": "Ein Signal kann nützlich sein, bevor eine Antwort feststeht. Es zeigt, dass der beobachtete wirtschaftliche Zustand Aufmerksamkeit oder Recherche verdient, und erklärt nicht, dass bereits ein geschäftliches Ergebnis eingetreten ist.",
+      "answer": "Bei AXIGNAL ist ein Signal weder FAXT, INXIGHT, kanonische Beziehung, Verkauf noch Abschlusswahrscheinlichkeit. Jeder Übergang braucht eine eigene Grundlage; Menschen behalten die Verantwortung für geschäftliche Entscheidungen und Handlungen.",
+      "sections": [
+        {
+          "heading": "Verstehen, was ein Signal aussagt",
+          "body": "Ein Signal zeigt, dass Belege und Kontext zusammen eine prüfenswerte Frage aufwerfen. Es kann auf eine Fähigkeit, Veränderung oder mögliche Verbindung aufmerksam machen. Es ist kein Erfolgswert und bedeutet nicht, dass eine Organisation kaufen, einstellen oder kooperieren will. Das Signal kann nützlich bleiben, wenn niemand handelt oder sich eine spätere Geschäftshypothese nicht bestätigt."
+        },
+        {
+          "heading": "Beobachtung, Ableitung und zugelassene Wahrheit trennen",
+          "body": "Eine öffentliche Quelle kann eine Aussage dokumentieren; mehrere Elemente können ein erklärbares INXIGHT stützen; eine kanonische Beziehung erfordert EvidenceAdmission. Diese Objekte sind nicht austauschbar. Eine Ableitung verweist auf ihre maßgeblichen Elemente und wahrt Unsicherheit. Eine Modellausgabe oder Textähnlichkeit ersetzt weder Belege noch deren Zulassung."
+        },
+        {
+          "heading": "Zeigen, warum weitere Prüfung sinnvoll sein kann",
+          "body": "Eine Erklärung führt zu Quellen, Zeitpunkt, Subjekt und der konkreten dargestellten semantischen Dimension zurück. Sie bewahrt auch Widersprüche und UNKNOWN, statt nur stützende Elemente für eine überzeugende Lesart zu zeigen. Lässt sich die Grundlage nicht rekonstruieren, ist die sichtbare Zuschreibung nicht verständlich und sollte nicht als feststehende Gewissheit erscheinen."
+        },
+        {
+          "heading": "Geschäftsergebnisse getrennt halten",
+          "body": "Wenn ein Unternehmen nicht antwortet, bietet oder einen Vertrag abschließt, wird ein korrekt begründetes Signal dadurch nicht falsch. Geschäftsergebnis und epistemische Gültigkeit sind unterschiedliche Fragen. Menschen entscheiden über Recherche und Handlung; das System schreibt Belege nicht nachträglich um, weil aus einer möglichen Chance kein Verkauf wurde."
+        }
+      ],
+      "example": "Hypothetisch: AXIGNAL verbindet eine veröffentlichte Fähigkeit mit Marktaktivität und zeigt ein POTENTIAL Signal zur Prüfung der Passung. Das Unternehmen kann Anforderungen untersuchen oder nichts unternehmen. Das Signal bedeutet weder vorhandene Nachfrage noch Kundenstatus oder eine bevorstehende Transaktion.",
+      "limits": "Ein Signal ist weder Geschäftsberatung noch Chancengarantie. Abdeckung, Aktualität, Herkunft, Widersprüche und Belegstatus prägen die Erklärung. Evaluator-Wahrscheinlichkeiten, Erwähnungen, Verkaufsergebnisse oder undurchsichtige Kennzahlen werden nicht zu kanonischer Wahrheit oder epistemischem Vertrauen. Die Aufmerksamkeit, die ein Signal auslöst, ist deshalb kein Versprechen eines wirtschaftlichen Ergebnisses. Ein Team kann eine andere Deutung wählen oder die Frage vertagen, solange die Belege erhalten bleiben. Diese Trennung ermöglicht es, Unsicherheit offen zu bearbeiten, statt aus dem kommerziellen Interesse eine stärkere Tatsachenbehauptung abzuleiten.",
+      "cta": {
+        "label": "AXIGNAL-Belege verstehen",
+        "href": "/knowledge"
+      },
+      "related": [
+        "evidence-signal-faxt-inxight",
+        "knowledge-opportunity-vs-lead",
+        "knowledge-explainable-economic-attribution"
+      ]
+    },
+    "it": {
+      "slug": "segnale-economico-non-e-fatto-ne-vendita",
+      "title": "Un segnale economico non è un fatto né una vendita",
+      "description": "Un Segnale merita attenzione umana, ma da solo non conferma una relazione, un’opportunità reale o un esito commerciale.",
+      "lead": "Un segnale può essere utile prima che la risposta sia definita. Indica che lo stato economico osservato merita attenzione o indagine, non dichiara che si sia già verificata una conclusione commerciale.",
+      "answer": "In AXIGNAL un Segnale non è un FAXT, INXIGHT, relazione canonica, vendita o probabilità di chiusura. Ogni passaggio richiede una propria base; le persone mantengono autorità sulle decisioni e azioni aziendali.",
+      "sections": [
+        {
+          "heading": "Capire che cosa comunica un Segnale",
+          "body": "Un Segnale indica che evidenze e contesto insieme sollevano una domanda da esaminare. Può indirizzare l’attenzione verso una capacità, un cambiamento o un’associazione potenziale. Non è un punteggio di successo e non afferma che un’organizzazione voglia acquistare, assumere o collaborare. Rimane utile anche se una persona non agisce o una successiva ipotesi commerciale non si realizza."
+        },
+        {
+          "heading": "Separare osservazione, derivazione e verità ammessa",
+          "body": "Una fonte pubblica può documentare una dichiarazione; più elementi possono sostenere un INXIGHT spiegabile; una relazione canonica richiede il processo EvidenceAdmission. Questi oggetti non sono intercambiabili. Un’inferenza deve collegarsi agli elementi che la motivano e dichiarare l’incertezza. Una risposta di modello o una somiglianza testuale non sostituisce prove né ammissione."
+        },
+        {
+          "heading": "Mostrare perché può servire un’indagine",
+          "body": "La spiegazione deve riportare a fonti, tempo, soggetto e precisa dimensione semantica presentata. Deve conservare contraddizioni e aspetti sconosciuti, non mostrare soltanto elementi favorevoli a una lettura attraente. Se la base non è ricostruibile, l’attribuzione visibile non è comprensibile e non dovrebbe essere presentata all’abbonato come certezza acquisita."
+        },
+        {
+          "heading": "Tenere separati gli esiti commerciali",
+          "body": "Il fatto che un’impresa non risponda, non partecipi o non concluda un accordo non rende falso un Segnale correttamente sostenuto. Esito commerciale e validità epistemica sono domande diverse. La persona decide se indagare o agire; il sistema non riscrive retroattivamente le prove perché un’opportunità potenziale non è diventata una vendita."
+        }
+      ],
+      "example": "Esempio ipotetico: AXIGNAL collega una capacità pubblicata con attività di mercato e mostra un Segnale POTENTIAL da esaminare. L’impresa può verificare i requisiti o non fare nulla. Il Segnale non significa che esista domanda, che l’organizzazione sia cliente o che avverrà una transazione.",
+      "limits": "Un Segnale non è consulenza commerciale né garanzia di opportunità. Copertura, attualità, provenienza, contraddizioni e stato probatorio ne condizionano la spiegazione. Probabilità del valutatore, menzioni, risultati di vendita o punteggi opachi non diventano verità canonica o fiducia epistemica. L’attenzione giustificata da un Segnale non promette quindi un esito economico. Un team può scegliere un’altra interpretazione o rimandare la verifica, mantenendo le evidenze disponibili. Questa separazione consente di lavorare apertamente sull’incertezza, senza trasformare l’interesse commerciale in un’affermazione fattuale più forte.",
+      "cta": {
+        "label": "Comprendi le evidenze AXIGNAL",
+        "href": "/knowledge"
+      },
+      "related": [
+        "evidence-signal-faxt-inxight",
+        "knowledge-opportunity-vs-lead",
+        "knowledge-explainable-economic-attribution"
+      ]
+    },
+    "pt": {
+      "slug": "sinal-economico-nao-e-facto-nem-venda",
+      "title": "Um sinal económico não é um facto nem uma venda",
+      "description": "Um Sinal justifica atenção humana, mas não confirma por si só uma relação, oportunidade real ou resultado comercial.",
+      "lead": "Um sinal pode ser útil antes de existir uma resposta definida. Indica que o estado económico observado merece atenção ou investigação, não que já ocorreu uma conclusão comercial.",
+      "answer": "Na AXIGNAL, um Sinal não é FAXT, INXIGHT, relação canónica, venda ou probabilidade de fecho. Cada transição precisa da sua própria base; as pessoas mantêm autoridade sobre decisões e ações empresariais.",
+      "sections": [
+        {
+          "heading": "Perceber o que um Sinal comunica",
+          "body": "Um Sinal indica que evidências e contexto levantam uma pergunta que merece análise. Pode dirigir a atenção para uma capacidade, mudança ou associação potencial. Não é uma pontuação de sucesso nem afirma que uma organização pretende comprar, contratar ou colaborar. Continua a ser útil mesmo que ninguém aja ou uma hipótese comercial posterior não se concretize."
+        },
+        {
+          "heading": "Separar observação, derivação e verdade admitida",
+          "body": "Uma fonte pública pode documentar uma declaração; vários elementos podem sustentar um INXIGHT explicável; uma relação canónica exige o processo EvidenceAdmission. Estes objetos não são intercambiáveis. Uma inferência deve ligar-se aos elementos que a motivam e indicar a incerteza. Uma resposta de modelo ou semelhança textual não substitui evidência nem admissão."
+        },
+        {
+          "heading": "Mostrar por que razão pode justificar-se investigar",
+          "body": "A explicação deve permitir voltar às fontes, ao momento, ao sujeito e à dimensão semântica apresentada. Deve preservar contradições e elementos desconhecidos, em vez de mostrar apenas o que apoia uma leitura apelativa. Se não for possível reconstruir a base, a atribuição visível não é inteligível e não deve surgir ao subscritor como certeza estabelecida."
+        },
+        {
+          "heading": "Manter os resultados comerciais separados",
+          "body": "Uma empresa não responder, não concorrer ou não fechar um acordo não torna falso um Sinal devidamente sustentado. Resultado comercial e validade epistémica são perguntas diferentes. A pessoa decide se investiga ou age; o sistema não reescreve evidências retroativamente porque uma oportunidade potencial não resultou numa venda."
+        }
+      ],
+      "example": "Exemplo hipotético: a AXIGNAL relaciona uma capacidade publicada com atividade de mercado e apresenta um Sinal POTENTIAL para analisar a adequação. A empresa pode investigar requisitos ou não agir. O Sinal não significa que haja procura, que a organização seja cliente ou que venha a ocorrer uma transação.",
+      "limits": "Um Sinal não é aconselhamento comercial nem garantia de oportunidade. Cobertura, atualidade, proveniência, contradições e estado da evidência condicionam a explicação. Probabilidades do avaliador, menções, resultados de vendas ou pontuações opacas não se tornam verdade canónica ou confiança epistémica.",
+      "cta": {
+        "label": "Compreender evidências da AXIGNAL",
+        "href": "/knowledge"
+      },
+      "related": [
+        "evidence-signal-faxt-inxight",
+        "knowledge-opportunity-vs-lead",
+        "knowledge-explainable-economic-attribution"
+      ]
+    }
+  },
+  {
+    "id": "knowledge-relationship-vs-pathx",
+    "fr": {
+      "slug": "relation-et-pathx-expriment-des-liens-differents",
+      "title": "Relation et PATHX décrivent deux liens économiques différents",
+      "description": "Une relation relie des sujets; PATHX préserve un parcours explicable sans rendre ses extrémités directement liées.",
+      "lead": "Dans une économie connectée, un parcours peut relier plusieurs organisations et capacités. Le représenter dans son ensemble est utile, mais ne permet pas de raccourcir la chaîne et d’attribuer à ses extrémités une relation qui n’a pas été observée.",
+      "answer": "Une RELATIONSHIP et un PATHX sont des objets sémantiques différents. PATHX représente un parcours économique explicable, potentiel ou historique entre entités; il ne transforme pas une succession de relations constitutives en lien direct entre les extrémités.",
+      "sections": [
+        {
+          "heading": "Décrire chaque lien avec ses propres sujets",
+          "body": "Une relation relie des sujets précis par un prédicat et une portée, avec preuves et temporalité. Si une société mère possède une filiale et que cette filiale fournit une autre entreprise, il s’agit de deux liens distincts. Les preuves du premier ne se transfèrent pas automatiquement au second et ne permettent pas d’effacer l’entité intermédiaire."
+        },
+        {
+          "heading": "Utiliser PATHX pour expliquer le parcours",
+          "body": "PATHX exprime un parcours composé d’organisations, capacités, marchés et relations. Son rôle est d’expliquer comment une activité économique pourrait être connectée et quelles preuves soutiennent chaque segment. Un parcours peut être direct, indirect, corporate, économique, potentiel ou historique. Sa composition reste visible afin de ne pas suggérer un état probatoire uniforme pour toute la route."
+        },
+        {
+          "heading": "Ne pas supposer la transitivité sans preuve",
+          "body": "Si A est relié à B et B à C, cela ne signifie pas automatiquement que A est directement relié à C. La conclusion peut dépendre de la direction, du type de lien, du temps, de la capacité et de l’interprétation. Un parcours dérivé conserve ses étapes, ses limites et ses UNKNOWN; il ne devient pas un fait direct pour simplifier une visualisation."
+        },
+        {
+          "heading": "Séparer explication et admission canonique",
+          "body": "Un parcours POTENTIAL peut mériter l’attention et être visible avec une base explicable sans être une relation canonique admise. L’interface permet d’inspecter les preuves de chaque segment et la partie dérivée. EvidenceAdmission demeure la frontière de la vérité canonique. Un modèle, un graphe ou un parcours ne promeut pas à lui seul une relation au rang de FAXT."
+        }
+      ],
+      "example": "Exemple hypothétique : A possède la filiale B et une source indépendante indique que B fournit des composants à C. PATHX peut montrer A → propriété → B → fourniture → C. Il ne devrait pas être résumé par « A fournit C » sans preuve de ce lien direct.",
+      "limits": "Un parcours ne prouve pas à lui seul une relation observée, une occasion, une causalité ou une intention commerciale. Chaque segment exige sujet, prédicat, portée, temps et provenance. Si un lien manque ou si sa direction est ambiguë, le parcours reste potentiel, incomplet ou UNKNOWN.",
+      "cta": {
+        "label": "Explorer relations et preuves",
+        "href": "/knowledge"
+      },
+      "related": [
+        "commercial_market_activity_relationship",
+        "evidence-signal-faxt-inxight",
+        "knowledge-opportunity-vs-lead"
+      ]
+    },
+    "de": {
+      "slug": "relationship-und-pathx-sind-unterschiedliche-wirtschaftsaussagen",
+      "title": "Relationship und PATHX beschreiben verschiedene Wirtschaftsbeziehungen",
+      "description": "Eine Relationship verbindet Subjekte; PATHX bewahrt einen erklärbaren Weg, ohne seine Endpunkte direkt zu verbinden.",
+      "lead": "In einer vernetzten Wirtschaft kann ein Pfad mehrere Organisationen und Fähigkeiten verbinden. Den ganzen Weg zu zeigen ist nützlich, rechtfertigt aber nicht, die Kette zu verkürzen und ihren Endpunkten eine unbeobachtete direkte Beziehung zuzuschreiben.",
+      "answer": "Eine RELATIONSHIP und ein PATHX sind unterschiedliche semantische Objekte. PATHX bildet einen erklärbaren, potenziellen oder historischen Wirtschaftsweg zwischen Entitäten ab; eine Folge von Teilbeziehungen wird dadurch nicht zur direkten Verbindung der Endpunkte.",
+      "sections": [
+        {
+          "heading": "Jede Kante mit ihren eigenen Subjekten beschreiben",
+          "body": "Eine Relationship verbindet bestimmte Subjekte über ein Prädikat und einen Geltungsbereich mit Beleg und Zeit. Besitzt eine Muttergesellschaft eine Tochter und beliefert diese Tochter ein weiteres Unternehmen, sind das zwei getrennte Verbindungen. Belege für die erste übertragen sich nicht automatisch auf die zweite und lassen das Zwischenunternehmen nicht verschwinden."
+        },
+        {
+          "heading": "PATHX zum Erklären der Abfolge nutzen",
+          "body": "PATHX kann einen Pfad aus Organisationen, Fähigkeiten, Märkten und Beziehungen ausdrücken. Er erklärt, wie wirtschaftliche Aktivität verbunden sein könnte und welche Belege jeden Abschnitt tragen. Ein Weg kann direkt, indirekt, gesellschaftsbezogen, wirtschaftlich, potenziell oder historisch sein. Die Zusammensetzung bleibt sichtbar, statt für die ganze Route einen einheitlichen Belegstand anzudeuten."
+        },
+        {
+          "heading": "Transitivität nicht ohne Beleg annehmen",
+          "body": "Wenn A mit B und B mit C verbunden ist, folgt daraus nicht automatisch eine direkte Beziehung zwischen A und C. Richtung, Beziehungstyp, Zeit, Fähigkeit und Interpretation können entscheidend sein. Ein abgeleiteter Pfad bewahrt seine Schritte, Grenzen und UNKNOWN-Zustände; für eine einfachere Darstellung wird er nicht zum direkten Fakt."
+        },
+        {
+          "heading": "Erklärung und kanonische Zulassung getrennt halten",
+          "body": "Ein POTENTIAL-Pfad kann mit erklärbarer Grundlage sichtbar und untersuchenswert sein, ohne als kanonische Beziehung zugelassen zu sein. Die Oberfläche sollte Belege pro Abschnitt und abgeleitete Teile prüfbar machen. EvidenceAdmission bleibt die Grenze kanonischer Wahrheit. Modell, Graph oder Pfad allein heben eine Relationship nicht zu einem FAXT an."
+        }
+      ],
+      "example": "Hypothetisch: A besitzt Tochter B, und eine unabhängige Quelle beschreibt B als Lieferanten von Komponenten an C. PATHX kann A → Eigentum → B → Lieferung → C zeigen. Ohne Beleg der direkten Verbindung sollte dies nicht als „A beliefert C“ zusammengefasst werden.",
+      "limits": "Ein Pfad beweist allein weder beobachtete Beziehung noch Chance, Ursache oder geschäftliche Absicht. Jeder Abschnitt benötigt Subjekt, Prädikat, Umfang, Zeit und Herkunft. Fehlt eine Verbindung oder bleibt ihre Richtung unklar, kann der Pfad POTENTIAL, unvollständig oder UNKNOWN bleiben. Die Darstellung sollte daher erkennen lassen, welche Abschnitte beobachtet und welche abgeleitet sind. Ein Betrachter kann so prüfen, ob eine angenommene Zwischenstufe überhaupt belegt ist und welche weitere Recherche nötig wäre. Eine verständliche Route bewahrt die wirtschaftliche Frage, ohne mehr Direktheit oder Sicherheit zu behaupten, als die einzelnen Belege hergeben.",
+      "cta": {
+        "label": "Beziehungen und Belege erkunden",
+        "href": "/knowledge"
+      },
+      "related": [
+        "commercial_market_activity_relationship",
+        "evidence-signal-faxt-inxight",
+        "knowledge-opportunity-vs-lead"
+      ]
+    },
+    "it": {
+      "slug": "relazione-e-pathx-esprimono-connessioni-economiche-diverse",
+      "title": "Relazione e PATHX descrivono connessioni economiche diverse",
+      "description": "Una relazione collega soggetti; PATHX conserva un percorso spiegabile senza rendere gli estremi direttamente collegati.",
+      "lead": "In un’economia connessa, un percorso può unire più organizzazioni e capacità. Mostrarlo per intero è utile, ma non autorizza ad accorciare la catena e attribuire agli estremi una relazione mai osservata.",
+      "answer": "RELATIONSHIP e PATHX sono oggetti semantici distinti. PATHX rappresenta un percorso economico spiegabile, potenziale o storico tra entità; non trasforma una sequenza di relazioni costitutive in un collegamento diretto fra origine e destinazione.",
+      "sections": [
+        {
+          "heading": "Descrivere ogni arco con i suoi soggetti",
+          "body": "Una relazione connette soggetti precisi tramite un predicato e un ambito, con evidenze e temporalità. Se una capogruppo possiede una controllata e questa fornisce un’altra azienda, esistono due collegamenti distinti. Le prove del primo non si trasferiscono automaticamente al secondo e non consentono di eliminare l’entità intermedia."
+        },
+        {
+          "heading": "Usare PATHX per spiegare la sequenza",
+          "body": "PATHX esprime un percorso composto da organizzazioni, capacità, mercati e relazioni. Serve a spiegare come potrebbe connettersi un’attività economica e quali prove sostengano ogni tratto. Il percorso può essere diretto, indiretto, societario, economico, potenziale o storico. La composizione resta visibile e non suggerisce uno stato probatorio uniforme per tutta la sequenza."
+        },
+        {
+          "heading": "Non presumere transitività senza fondamento",
+          "body": "Se A è collegata a B e B a C, non ne segue automaticamente un rapporto diretto tra A e C. La conclusione può dipendere da direzione, tipo di relazione, tempo, capacità e interpretazione. Un percorso derivato mantiene passaggi, limiti e stati UNKNOWN; non diventa un fatto diretto per semplificare la visualizzazione."
+        },
+        {
+          "heading": "Separare spiegazione e ammissione canonica",
+          "body": "Un percorso POTENTIAL può meritare attenzione ed essere visibile con una base spiegabile senza essere una relazione canonica ammessa. L’interfaccia dovrebbe permettere di ispezionare le prove di ciascun tratto e le parti derivate. EvidenceAdmission resta il confine della verità canonica. Un modello, un grafo o un percorso da solo non promuove una relazione a FAXT."
+        }
+      ],
+      "example": "Esempio ipotetico: A possiede la controllata B e una fonte indipendente descrive B come fornitore di componenti a C. PATHX può mostrare A → proprietà → B → fornitura → C. Non va sintetizzato come «A fornisce C» senza prove di quel rapporto diretto.",
+      "limits": "Un percorso da solo non dimostra una relazione osservata, opportunità, causalità o intenzione commerciale. Ogni tratto richiede soggetto, predicato, ambito, tempo e provenienza. Se manca un collegamento o la direzione è ambigua, il percorso può restare potenziale, incompleto o UNKNOWN.",
+      "cta": {
+        "label": "Esplora relazioni ed evidenze",
+        "href": "/knowledge"
+      },
+      "related": [
+        "commercial_market_activity_relationship",
+        "evidence-signal-faxt-inxight",
+        "knowledge-opportunity-vs-lead"
+      ]
+    },
+    "pt": {
+      "slug": "relacao-e-pathx-descrevem-ligacoes-economicas-distintas",
+      "title": "Relação e PATHX descrevem ligações económicas diferentes",
+      "description": "Uma relação liga sujeitos; PATHX preserva um percurso explicável sem tornar os extremos diretamente relacionados.",
+      "lead": "Numa economia ligada, um percurso pode unir várias organizações e capacidades. Mostrar o caminho completo é útil, mas não permite encurtar a cadeia e atribuir aos extremos uma relação que nunca foi observada.",
+      "answer": "Uma RELATIONSHIP e um PATHX são objetos semânticos distintos. PATHX representa um percurso económico explicável, potencial ou histórico entre entidades; não transforma uma sequência de relações constituintes numa ligação direta entre os extremos.",
+      "sections": [
+        {
+          "heading": "Descrever cada ligação com os seus sujeitos",
+          "body": "Uma relação liga sujeitos específicos através de um predicado e âmbito, com evidência e tempo. Se uma empresa-mãe detém uma subsidiária e esta fornece outra empresa, existem duas ligações separadas. A evidência da primeira não se transfere automaticamente para a segunda nem permite apagar a entidade intermédia."
+        },
+        {
+          "heading": "Usar PATHX para explicar a sequência",
+          "body": "PATHX pode representar um percurso composto por organizações, capacidades, mercados e relações. A sua finalidade é explicar como uma atividade económica poderá estar ligada e que evidência sustenta cada segmento. O percurso pode ser direto, indireto, societário, económico, potencial ou histórico. A composição permanece visível, sem sugerir que toda a rota tem o mesmo estado probatório."
+        },
+        {
+          "heading": "Não presumir transitividade sem sustentação",
+          "body": "Se A se relaciona com B e B com C, não decorre automaticamente que A se relacione diretamente com C. A conclusão pode depender da direção, tipo de ligação, tempo, capacidade e interpretação. Um percurso derivado preserva etapas, limites e estados UNKNOWN; não se torna facto direto por conveniência da visualização."
+        },
+        {
+          "heading": "Separar explicação de admissão canónica",
+          "body": "Um percurso POTENTIAL pode justificar atenção e ser visível com uma base explicável, mesmo sem ser uma relação canónica admitida. A interface deve permitir consultar as evidências de cada segmento e as partes derivadas. EvidenceAdmission continua a ser a fronteira da verdade canónica. Um modelo, grafo ou percurso, por si só, não promove uma relação a FAXT."
+        }
+      ],
+      "example": "Exemplo hipotético: A detém a subsidiária B e uma fonte independente descreve B como fornecedora de componentes a C. PATHX pode mostrar A → propriedade → B → fornecimento → C. Não deve resumir-se como «A fornece C» sem evidência dessa relação direta.",
+      "limits": "Um percurso, por si só, não prova relação observada, oportunidade, causalidade ou intenção comercial. Cada segmento necessita de sujeito, predicado, âmbito, tempo e proveniência. Se faltar uma ligação ou a direção for ambígua, o percurso pode continuar potencial, incompleto ou UNKNOWN.",
+      "cta": {
+        "label": "Explorar relações e evidências",
+        "href": "/knowledge"
+      },
+      "related": [
+        "commercial_market_activity_relationship",
+        "evidence-signal-faxt-inxight",
+        "knowledge-opportunity-vs-lead"
+      ]
+    }
+  },
+  {
+    "id": "knowledge-opportunity-vs-lead",
+    "fr": {
+      "slug": "une-opportunite-potential-nest-pas-un-lead",
+      "title": "Une opportunité POTENTIAL n’est ni un lead ni un client",
+      "description": "AXIGNAL peut signaler un parcours économique à examiner, sans créer de prospect, de relation commerciale ou d’intention d’achat.",
+      "lead": "Le mot opportunité peut évoquer une vente qu’il suffit de suivre. Chez AXIGNAL, une opportunité dérivée est une hypothèse économique dont la base justifie une enquête, pas un résultat commercial ni une fiche CRM.",
+      "answer": "Les opportunités dérivées restent POTENTIAL par défaut. Une capacité compatible, une activité de marché ou un projet publié ne prouve pas à elle seule la demande, l’éligibilité, le budget, la relation commerciale, l’intention d’achat ou la probabilité de conclure.",
+      "sections": [
+        {
+          "heading": "Séparer l’hypothèse économique du prospect opérationnel",
+          "body": "Un lead représente généralement un contact ou une entité qu’un processus commercial peut qualifier et gérer. AXIGNAL ne remplit pas cette fonction. Le produit peut relier des preuves sur capacités, marchés, projets ou besoins pour faire apparaître un parcours potentiel, mais cela ne signifie pas qu’une personne a manifesté de l’intérêt ou qu’il existe autorisation, accès ou volonté d’achat."
+        },
+        {
+          "heading": "Montrer les éléments de soutien et les inconnues",
+          "body": "Une opportunité explicable relie les observations et relations qui la motivent, avec portée, temps et provenance. Elle expose aussi les conditions non résolues: exigences techniques, lieu, demande ou identité de l’acheteur. Les preuves portant sur un projet ne répondent pas automatiquement à ces questions. Une lacune importante peut appeler une recherche ou l’abstention plutôt qu’une réponse forcée."
+        },
+        {
+          "heading": "Ne pas convertir une compatibilité en résultat",
+          "body": "La compatibilité entre une capacité et un projet peut orienter une question, mais ne prouve pas l’adéquation commerciale. L’entreprise peut ne pas participer, ne pas être éligible ou manquer de ressources. Elle peut n’avoir aucune relation avec l’organisme qui publie le projet. Un Signal garde sa base, même si aucun contact, appel d’offres, accord ou vente ne suit."
+        },
+        {
+          "heading": "Laisser la décision à la personne",
+          "body": "L’abonné décide si l’hypothèse mérite une enquête et quelle action entreprendre. AXIGNAL fournit contexte et preuves; il n’attribue pas de tâches commerciales, ne contacte pas de tiers et ne recommande pas d’achat. Toute conclusion de viabilité demande une diligence ciblée et un jugement humain, sans modifier rétrospectivement l’état épistémique des preuves."
+        }
+      ],
+      "example": "Exemple hypothétique : un appel d’offres public demande des services de maintenance et AXIGNAL observe des capacités déclarées connexes. Il peut montrer une opportunité POTENTIAL avec sources et questions ouvertes. Il ne crée pas de lead, ne confirme pas l’éligibilité et ne prédit ni attribution ni embauche.",
+      "limits": "AXIGNAL n’est ni CRM, ni générateur de leads, ni outil de prospection commerciale. POTENTIAL ne signifie pas vente probable ou client probable. Scores, résultats d’appels d’offres et décisions d’abonnés ne remplacent ni preuves, ni admission canonique, ni explication de l’incertitude.",
+      "cta": {
+        "label": "Découvrir l’intelligence économique",
+        "href": "/knowledge"
+      },
+      "related": [
+        "commercial_procurement_context",
+        "evidence-observed-vs-potential",
+        "knowledge-relationship-vs-pathx"
+      ]
+    },
+    "de": {
+      "slug": "potential-chance-ist-weder-lead-noch-kunde",
+      "title": "Eine POTENTIAL-Chance ist weder Lead noch Kunde",
+      "description": "AXIGNAL kann einen prüfenswerten Wirtschaftsweg zeigen, erzeugt aber weder Lead noch Geschäftsbeziehung oder Kaufabsicht.",
+      "lead": "Der Begriff Chance klingt nach einem konkreten Verkaufsfall für die Nachverfolgung. Bei AXIGNAL ist eine abgeleitete Chance eine wirtschaftliche Hypothese mit ausreichender Grundlage für Recherche, kein Verkaufsergebnis und kein CRM-Datensatz.",
+      "answer": "Abgeleitete Chancen bleiben standardmäßig POTENTIAL. Fähigkeitsübereinstimmung, Marktaktivität oder ein veröffentlichtes Projekt belegen weder Nachfrage noch Zulässigkeit, Budget, Geschäftsbeziehung, Kaufabsicht oder Abschlusswahrscheinlichkeit.",
+      "sections": [
+        {
+          "heading": "Wirtschaftliche Hypothese und operativen Lead trennen",
+          "body": "Ein Lead bezeichnet gewöhnlich einen Kontakt oder eine Entität, die ein Vertriebsprozess qualifizieren und verwalten kann. Diese Aufgabe übernimmt AXIGNAL nicht. Das Produkt kann Belege zu Fähigkeiten, Märkten, Projekten oder Bedarf verbinden und einen möglichen Pfad zeigen. Daraus folgt weder bekundetes Interesse noch eine bestehende Erlaubnis, Zugang oder Kaufbereitschaft."
+        },
+        {
+          "heading": "Stützende Belege und offene Bedingungen zeigen",
+          "body": "Eine erklärbare Chance verweist auf die Beobachtungen und Beziehungen, die sie motivieren, samt Umfang, Zeit und Herkunft. Sie benennt auch offene Punkte wie technische Anforderungen, Ort, Nachfrage oder Käuferidentität. Belege zu einem Projekt beantworten diese Fragen nicht automatisch. Eine wesentliche Lücke kann gezielte Recherche oder Enthaltung erfordern, nicht eine erzwungene Antwort."
+        },
+        {
+          "heading": "Passung nicht zum Ergebnis erklären",
+          "body": "Kompatibilität zwischen Fähigkeit und Projekt kann eine Frage leiten, belegt aber keine geschäftliche Passung. Ein Unternehmen nimmt vielleicht nicht teil, ist nicht zugelassen oder hat keine Kapazität. Möglicherweise besteht keine Beziehung zur ausschreibenden Stelle. Ein Signal behält seine Grundlage, auch wenn später kein Kontakt, Angebot, Vertrag oder Verkauf zustande kommt."
+        },
+        {
+          "heading": "Die Entscheidung beim Menschen lassen",
+          "body": "Der Abonnent entscheidet, ob eine Hypothese weitere Prüfung und eine Handlung verdient. AXIGNAL bietet Kontext und Belege, weist aber keine Vertriebsaufgaben zu, kontaktiert Dritte nicht und spricht keine Kaufempfehlung aus. Aussagen zur Umsetzbarkeit brauchen gezielte Prüfung und menschliches Urteil; der Erkenntnisstand der Belege wird nicht nachträglich umgeschrieben."
+        }
+      ],
+      "example": "Hypothetisch: Eine öffentliche Ausschreibung verlangt Wartung, und AXIGNAL beobachtet dazu erklärte Fähigkeiten. Es kann eine POTENTIAL-Chance mit Quellen und offenen Fragen zeigen. Daraus entsteht weder ein Lead noch bestätigte Zulässigkeit oder eine Vorhersage, dass das Unternehmen den Auftrag erhält.",
+      "limits": "AXIGNAL ist weder CRM noch Lead-Generator oder Vertriebsprospektionssystem. POTENTIAL bedeutet nicht wahrscheinlicher Verkauf oder Kunde. Kennzahlen, Ausschreibungsausgänge und Entscheidungen der Abonnenten ersetzen weder Belege noch kanonische Zulassung oder eine Erklärung der Unsicherheit. Ein solcher Pfad kann helfen, Aufmerksamkeit zu priorisieren, ohne die Entscheidung vorwegzunehmen. Selbst eine sachlich gut begründete Hypothese bleibt von Marktbedingungen abhängig und kann sich bei neuen Belegen verändern. Deshalb sollte die Oberfläche nicht den Eindruck erwecken, ein Vertriebsfall sei bereits qualifiziert oder an eine verantwortliche Person übergeben worden.",
+      "cta": {
+        "label": "Wirtschaftsinformation kennenlernen",
+        "href": "/knowledge"
+      },
+      "related": [
+        "commercial_procurement_context",
+        "evidence-observed-vs-potential",
+        "knowledge-relationship-vs-pathx"
+      ]
+    },
+    "it": {
+      "slug": "unopportunita-potential-non-e-un-lead-ne-un-cliente",
+      "title": "Un’opportunità POTENTIAL non è un lead né un cliente",
+      "description": "AXIGNAL può mostrare un percorso economico da esaminare, senza creare un lead, una relazione commerciale o intenzione d’acquisto.",
+      "lead": "La parola opportunità può suggerire una vendita pronta per essere seguita. In AXIGNAL un’opportunità derivata è un’ipotesi economica con basi sufficienti per un’indagine, non un risultato commerciale né una scheda CRM.",
+      "answer": "Le opportunità derivate restano POTENTIAL per impostazione predefinita. Compatibilità di capacità, attività di mercato o progetto pubblicato non provano da sole domanda, ammissibilità, budget, rapporto commerciale, intenzione d’acquisto o probabilità di chiusura.",
+      "sections": [
+        {
+          "heading": "Separare l’ipotesi economica dal lead operativo",
+          "body": "Un lead rappresenta di solito un contatto o un’entità che un processo commerciale può qualificare e gestire. AXIGNAL non svolge questo compito. Può collegare prove su capacità, mercati, progetti o necessità per mostrare un percorso potenziale, ma ciò non significa che qualcuno abbia espresso interesse o che esistano autorizzazione, accesso o volontà d’acquisto."
+        },
+        {
+          "heading": "Mostrare ciò che sostiene il percorso e ciò che manca",
+          "body": "Un’opportunità spiegabile collega le osservazioni e relazioni che la motivano, con ambito, tempo e provenienza. Espone anche condizioni irrisolte come requisiti tecnici, luogo, domanda o identità dell’acquirente. Le prove su un progetto non rispondono automaticamente a questi aspetti. Una lacuna materiale può richiedere ricerca o astensione anziché una risposta forzata."
+        },
+        {
+          "heading": "Non trasformare compatibilità in risultato",
+          "body": "La compatibilità tra una capacità e un progetto può orientare una domanda, ma non dimostra fit commerciale. L’impresa potrebbe non partecipare, non essere ammissibile o non avere risorse. Potrebbe anche non avere rapporti con l’ente che pubblica il progetto. Il Segnale mantiene la sua base anche se non seguono contatto, gara, negoziazione o vendita."
+        },
+        {
+          "heading": "Lasciare la decisione alla persona",
+          "body": "L’abbonato decide se l’ipotesi merita indagine e quale azione intraprendere. AXIGNAL fornisce contesto ed evidenze; non assegna attività di vendita, non contatta terzi e non raccomanda acquisti. Ogni conclusione sulla fattibilità richiede analisi specifica e giudizio umano, senza modificare retroattivamente lo stato epistemico delle prove."
+        }
+      ],
+      "example": "Esempio ipotetico: un bando pubblico richiede manutenzione e AXIGNAL osserva capacità dichiarate pertinenti. Può mostrare un’opportunità POTENTIAL con fonti e domande aperte. Non crea un lead, non conferma l’ammissibilità e non prevede che l’impresa vinca o venga incaricata.",
+      "limits": "AXIGNAL non è CRM, generatore di lead o sistema di prospezione commerciale. POTENTIAL non significa vendita probabile o cliente probabile. Punteggi, esiti di gare e decisioni dell’abbonato non sostituiscono prove, ammissione canonica o spiegazione dell’incertezza. Un percorso del genere può aiutare a orientare l’attenzione senza anticipare la decisione. Anche un’ipotesi ben motivata dipende dalle condizioni di mercato e può cambiare con nuove prove. L’interfaccia non dovrebbe suggerire che il caso sia già qualificato da un processo commerciale o assegnato a una persona responsabile.",
+      "cta": {
+        "label": "Scopri l’intelligence economica",
+        "href": "/knowledge"
+      },
+      "related": [
+        "commercial_procurement_context",
+        "evidence-observed-vs-potential",
+        "knowledge-relationship-vs-pathx"
+      ]
+    },
+    "pt": {
+      "slug": "oportunidade-potential-nao-e-contacto-nem-cliente",
+      "title": "Uma oportunidade POTENTIAL não é contacto nem cliente",
+      "description": "A AXIGNAL pode sinalizar um percurso económico a analisar, mas não cria contactos, relações comerciais ou intenção de compra.",
+      "lead": "A palavra oportunidade pode sugerir uma venda pronta para acompanhamento. Na AXIGNAL, uma oportunidade derivada é uma hipótese económica com base suficiente para investigar, não um resultado de vendas nem um registo de CRM.",
+      "answer": "As oportunidades derivadas permanecem POTENTIAL por defeito. Compatibilidade de capacidades, atividade de mercado ou projeto publicado não comprovam procura, elegibilidade, orçamento, relação comercial, intenção de compra ou probabilidade de fecho.",
+      "sections": [
+        {
+          "heading": "Separar a hipótese económica de um contacto comercial",
+          "body": "Um lead costuma representar um contacto ou entidade que um processo comercial pode qualificar e gerir. A AXIGNAL não desempenha essa função. Pode relacionar evidências sobre capacidades, mercados, projetos ou necessidades para mostrar um percurso potencial, mas isso não significa que alguém tenha manifestado interesse ou que exista autorização, acesso ou vontade de comprar."
+        },
+        {
+          "heading": "Mostrar o que sustenta o percurso e o que falta",
+          "body": "Uma oportunidade explicável relaciona as observações e relações que a motivam, com âmbito, tempo e proveniência. Expõe também condições por resolver, como requisitos técnicos, localização, procura ou identidade do comprador. Evidência sobre um projeto não responde automaticamente a essas dimensões. Uma lacuna relevante pode exigir pesquisa ou abstenção, em vez de uma resposta forçada."
+        },
+        {
+          "heading": "Não transformar adequação em resultado",
+          "body": "A compatibilidade entre uma capacidade e um projeto pode orientar uma pergunta, mas não prova adequação comercial. A empresa pode não participar, não ser elegível ou não ter recursos. Pode também não manter relação com a entidade que publicou o projeto. O Sinal conserva a sua base mesmo que não surjam contacto, concurso, negociação ou venda."
+        },
+        {
+          "heading": "Manter a pessoa como autoridade",
+          "body": "O subscritor decide se a hipótese merece investigação e que ação tomar. A AXIGNAL fornece contexto e evidências; não atribui tarefas de vendas, contacta terceiros nem recomenda compras. Qualquer conclusão sobre viabilidade requer análise específica e avaliação humana, sem alterar retroativamente o estado epistémico das evidências."
+        }
+      ],
+      "example": "Exemplo hipotético: um concurso público procura serviços de manutenção e a AXIGNAL observa capacidades declaradas relacionadas. Pode apresentar uma oportunidade POTENTIAL com fontes e perguntas abertas. Não cria um contacto comercial, não confirma elegibilidade nem prevê que a empresa ganhe ou seja contratada.",
+      "limits": "A AXIGNAL não é CRM, gerador de contactos ou sistema de prospeção comercial. POTENTIAL não significa venda provável nem cliente provável. Pontuações, resultados de concursos e decisões do subscritor não substituem evidência, admissão canónica ou explicação da incerteza.",
+      "cta": {
+        "label": "Conhecer a inteligência económica",
+        "href": "/knowledge"
+      },
+      "related": [
+        "commercial_procurement_context",
+        "evidence-observed-vs-potential",
+        "knowledge-relationship-vs-pathx"
+      ]
+    }
+  },
+  {
+    "id": "knowledge-research-reuse-conditions",
+    "fr": {
+      "slug": "reutiliser-la-recherche-avec-provenance-et-actualite",
+      "title": "Réutiliser une recherche sans lui faire confiance pour toujours",
+      "description": "Une recherche publique sert de nouvelles questions si droits, sujet, provenance, actualité et conditions de comparaison restent clairs.",
+      "lead": "Retrouver une source connue n’ajoute pas toujours de valeur. Réutiliser une observation peut éviter un travail répétitif et apporter du contexte, à condition de savoir ce qui a été observé et si cela répond à la nouvelle question.",
+      "answer": "AXIGNAL peut réutiliser des observations publiques gouvernées entre Focos de observación lorsque les droits, la vie privée et les règles l’autorisent. Le nouveau contexte est évalué à nouveau: la réutilisation n’est ni confiance permanente ni copie d’une ancienne conclusion.",
+      "sections": [
+        {
+          "heading": "Réutiliser l’observation sans supposer la même interprétation",
+          "body": "Une source décrivant un site, une certification ou une activité peut servir à plusieurs enquêtes. Sa pertinence varie toutefois selon l’organisation, la capacité, la géographie et la période visées par la nouvelle question. On peut réutiliser l’observation avec sa référence et son état, puis recalculer son sens dans le contexte actuel. Le résultat ne devient pas une réponse prête à l’emploi."
+        },
+        {
+          "heading": "Vérifier provenance, droits et doublons",
+          "body": "Avant toute réutilisation, il faut connaître l’origine de l’information, les conditions de son acquisition et les autorisations de conservation ou de partage. Le même communiqué d’entreprise repris par plusieurs sites n’est pas une corroboration indépendante. Déduplication et lineage préservent la valeur informative sans gonfler le nombre de sources ni faire circuler le contexte privé d’un abonné."
+        },
+        {
+          "heading": "Revoir les dépendances temporelles",
+          "body": "L’actualité dépend de la nature de l’affirmation et de sa source. Une certification peut avoir une validité déclarée, une référence à un projet décrit un moment, et une page web peut changer. Si la source, le sujet ou une condition importante évolue, les interprétations qui en dépendent doivent être identifiées et réévaluées plutôt que rafraîchies indistinctement."
+        },
+        {
+          "heading": "Maintenir une frontière claire pour chaque conclusion",
+          "body": "Une observation réutilisée peut rester utile même si elle n’atteint pas le seuil d’admission canonique. La recherche continue tout en distinguant l’information conservée avec provenance, un FAXT admis et un INXIGHT dérivé. Si les conditions d’utilisation interdisent la réutilisation ou si l’état ne répond plus à la question, une nouvelle observation ou l’abstention s’impose."
+        }
+      ],
+      "example": "Exemple hypothétique : une observation publique d’une certification sert d’abord au Focus d’une entreprise industrielle. Un autre Focus lié demande ensuite des éléments sur une capacité d’approvisionnement. AXIGNAL peut réutiliser la source si les droits le permettent, vérifier la date et l’entité et calculer une interprétation distincte; la certification ne prouve pas une relation avec l’acheteur.",
+      "limits": "La réutilisation ne garantit ni actualité, ni couverture, ni indépendance des sources. Un résultat antérieur n’acquiert pas d’autorité parce qu’il a servi ailleurs. Attribution, période, autorisations et conditions doivent rester visibles; une lacune importante peut laisser la réponse UNKNOWN ou nécessiter une nouvelle observation.",
+      "cta": {
+        "label": "Découvrir la mémoire AXIGNAL",
+        "href": "/knowledge"
+      },
+      "related": [
+        "knowledge-economic-memory-vs-cache",
+        "evidence-provenance",
+        "evidence-currentness"
+      ]
+    },
+    "de": {
+      "slug": "oeffentliche-recherche-mit-herkunft-und-aktualitaet-wiederverwenden",
+      "title": "Recherche wiederverwenden, ohne ihr dauerhaft zu vertrauen",
+      "description": "Öffentliche Recherche hilft neuen Fragen, wenn Rechte, Subjekt, Herkunft, Aktualität und Vergleichsbedingungen klar bleiben.",
+      "lead": "Eine bekannte Quelle erneut zu finden, schafft nicht immer Mehrwert. Die Wiederverwendung einer Beobachtung kann Arbeit vermeiden und Kontext liefern, wenn klar bleibt, was beobachtet wurde und ob es die neue Frage beantwortet.",
+      "answer": "AXIGNAL kann zugelassene öffentliche Beobachtungen zwischen Beobachtungs-Foki wiederverwenden, soweit Rechte, Datenschutz und Richtlinien es erlauben. Der neue Kontext wird erneut bewertet; Wiederverwendung bedeutet weder dauerhaftes Vertrauen noch Übernahme einer früheren Schlussfolgerung.",
+      "sections": [
+        {
+          "heading": "Die Beobachtung nutzen, ohne dieselbe Deutung anzunehmen",
+          "body": "Eine Quelle über einen Standort, eine Zertifizierung oder Aktivität kann mehrere Recherchen unterstützen. Ihre Relevanz hängt dennoch von Organisation, Fähigkeit, Geografie und Zeitraum der neuen Frage ab. Die Beobachtung kann mit Referenz und Status erneut verwendet werden, während ihre Bedeutung für den aktuellen Kontext neu berechnet wird. Das Ergebnis wird nicht als fertige Antwort übertragen."
+        },
+        {
+          "heading": "Herkunft, Rechte und Duplikate prüfen",
+          "body": "Vor der Wiederverwendung sollte geklärt sein, woher die Information stammt, unter welchen Bedingungen sie erhoben wurde und ob ihre Aufbewahrung oder Weitergabe erlaubt ist. Dieselbe Unternehmensmitteilung auf mehreren Seiten ist nicht automatisch unabhängige Bestätigung. Deduplizierung und Herkunftslinie bewahren Informationswert, ohne Quellenzahl aufzublähen oder privaten Abonnentenkontext weiterzugeben."
+        },
+        {
+          "heading": "Zeitliche Abhängigkeiten erneut betrachten",
+          "body": "Aktualität hängt von Aussage und Quelle ab. Eine Zertifizierung kann eine angegebene Gültigkeit haben, ein Projektverweis beschreibt einen Zeitpunkt und eine Webseite kann sich ändern. Ändern sich Quelle, Subjekt oder eine wesentliche Bedingung, müssen davon abhängige Interpretationen erkannt und neu bewertet werden, statt pauschal alle Daten aufzufrischen."
+        },
+        {
+          "heading": "Für jede Schlussfolgerung klare Grenzen erhalten",
+          "body": "Eine wiederverwendete Beobachtung kann wertvoll bleiben, auch wenn sie nicht zur kanonischen Zulassung reicht. Recherche ist möglich, während Information mit Herkunft, ein zugelassenes FAXT und ein abgeleitetes INXIGHT unterscheidbar bleiben. Verbieten Nutzungsbedingungen die Wiederverwendung oder beantwortet der Status die Frage nicht mehr, braucht es eine neue Beobachtung oder Enthaltung."
+        }
+      ],
+      "example": "Hypothetisch: Eine öffentliche Zertifizierungsbeobachtung dient zunächst dem Fokus eines Industriebetriebs. Ein verbundener Fokus fragt später nach Lieferfähigkeit. AXIGNAL kann die Quelle bei erlaubter Nutzung wiederverwenden, Datum und Entität prüfen und eine neue Deutung getrennt ableiten; die Zertifizierung beweist keine Beziehung zum Käufer.",
+      "limits": "Wiederverwendung garantiert weder Aktualität noch Abdeckung oder unabhängige Quellen. Ein früheres Ergebnis erhält keine Autorität, weil es in einer anderen Recherche nützlich war. Herkunft, Zeitraum, Rechte und Bedingungen bleiben sichtbar; eine wesentliche Lücke kann UNKNOWN oder neue Beobachtung erfordern. Die erneute Nutzung sollte deshalb die alte und neue Frage auseinanderhalten. Ein früherer Fund kann dieselbe Organisation betreffen und dennoch für einen anderen Zeitraum, Markt oder Entscheidungspunkt ungeeignet sein. Ein klarer Bezug macht sichtbar, was übernommen wurde und was die aktuelle Untersuchung noch selbst beantworten muss.",
+      "cta": {
+        "label": "AXIGNAL-Gedächtnis kennenlernen",
+        "href": "/knowledge"
+      },
+      "related": [
+        "knowledge-economic-memory-vs-cache",
+        "evidence-provenance",
+        "evidence-currentness"
+      ]
+    },
+    "it": {
+      "slug": "riutilizzare-ricerche-con-provenienza-e-attualita",
+      "title": "Riutilizzare la ricerca senza fidarsi per sempre",
+      "description": "La ricerca pubblica può servire nuove domande se diritti, soggetto, provenienza, attualità e condizioni di confronto restano chiari.",
+      "lead": "Ritrovare una fonte conosciuta non aggiunge sempre valore. Riutilizzare un’osservazione può evitare lavoro ripetuto e offrire contesto, purché sia chiaro che cosa si è osservato e se risponde alla nuova domanda.",
+      "answer": "AXIGNAL può riutilizzare osservazioni pubbliche governate tra Foci di osservazione quando diritti, privacy e policy lo consentono. Il nuovo contesto viene valutato di nuovo: il riuso non significa fiducia permanente né copia di una conclusione precedente.",
+      "sections": [
+        {
+          "heading": "Riutilizzare l’osservazione senza presumere la stessa interpretazione",
+          "body": "Una fonte su uno stabilimento, una certificazione o un’attività può servire a più indagini. La sua rilevanza cambia però in base a organizzazione, capacità, geografia e periodo della nuova domanda. Si può riutilizzare l’osservazione con riferimento e stato, ricalcolandone il significato nel contesto attuale. Il risultato non diventa una risposta pronta da trasferire."
+        },
+        {
+          "heading": "Controllare provenienza, diritti e duplicati",
+          "body": "Prima del riuso occorre capire da dove proviene l’informazione, a quali condizioni è stata acquisita e se i permessi ne consentono conservazione e condivisione. Lo stesso comunicato aziendale ripreso da più siti non è automaticamente una corroborazione indipendente. Deduplicazione e lineage preservano il valore informativo senza gonfiare il conteggio delle fonti né trasferire contesto privato tra abbonati."
+        },
+        {
+          "heading": "Rivedere le dipendenze temporali",
+          "body": "L’attualità dipende dal tipo di affermazione e dalla fonte. Una certificazione può avere una validità dichiarata, un progetto descrive un momento e una pagina web può cambiare. Se mutano fonte, soggetto o condizione materiale, le interpretazioni dipendenti vanno individuate e rivalutate, anziché aggiornare tutto indiscriminatamente."
+        },
+        {
+          "heading": "Mantenere un confine chiaro per ogni conclusione",
+          "body": "Un’osservazione riutilizzata può essere utile anche senza raggiungere la soglia di ammissione canonica. La ricerca continua distinguendo informazione conservata con provenienza, FAXT ammesso e INXIGHT derivato. Se i termini vietano il riuso o lo stato non risponde più alla domanda, servono una nuova osservazione o l’astensione."
+        }
+      ],
+      "example": "Esempio ipotetico: un’osservazione pubblica di una certificazione serve inizialmente al Foco di un’impresa industriale. Un altro Foco collegato chiede di capacità di fornitura. AXIGNAL può riutilizzare la fonte se i diritti lo consentono, verificarne data ed entità e derivare separatamente la nuova interpretazione; la certificazione non prova un rapporto con l’acquirente.",
+      "limits": "Il riuso non garantisce attualità, copertura o indipendenza delle fonti. Un risultato precedente non acquista autorità perché è stato utile altrove. Attribuzione, periodo, permessi e condizioni restano visibili; una lacuna materiale può lasciare la risposta UNKNOWN o richiedere una nuova osservazione.",
+      "cta": {
+        "label": "Scopri la memoria di AXIGNAL",
+        "href": "/knowledge"
+      },
+      "related": [
+        "knowledge-economic-memory-vs-cache",
+        "evidence-provenance",
+        "evidence-currentness"
+      ]
+    },
+    "pt": {
+      "slug": "reutilizar-pesquisa-com-proveniencia-e-atualidade",
+      "title": "Reutilizar pesquisa sem confiar nela para sempre",
+      "description": "A pesquisa pública pode servir novas perguntas se direitos, sujeito, proveniência, atualidade e condições de comparação forem claros.",
+      "lead": "Encontrar novamente uma fonte conhecida nem sempre acrescenta valor. Reutilizar uma observação pode evitar trabalho repetido e dar contexto, desde que se saiba o que foi observado e se responde à nova pergunta.",
+      "answer": "A AXIGNAL pode reutilizar observações públicas governadas entre Focos de observação quando direitos, privacidade e política o permitem. O novo contexto é avaliado novamente; reutilização não significa confiança permanente nem cópia de uma conclusão anterior.",
+      "sections": [
+        {
+          "heading": "Reutilizar a observação sem presumir a mesma interpretação",
+          "body": "Uma fonte sobre uma instalação, certificação ou atividade pode apoiar várias pesquisas. Ainda assim, a relevância depende da organização, capacidade, geografia e período da nova pergunta. A observação pode ser reutilizada com a sua referência e estado, enquanto o significado é recalculado para o contexto atual. O resultado não é transferido como resposta pronta."
+        },
+        {
+          "heading": "Verificar proveniência, direitos e duplicados",
+          "body": "Antes de reutilizar, é preciso saber de onde veio a informação, em que condições foi obtida e se as permissões permitem conservá-la ou partilhá-la. O mesmo comunicado empresarial republicado por vários sites não é automaticamente confirmação independente. Deduplicação e linhagem preservam valor informativo sem inflacionar o número de fontes ou cruzar contexto privado de subscritores."
+        },
+        {
+          "heading": "Rever dependências temporais",
+          "body": "A atualidade depende da natureza da afirmação e da fonte. Uma certificação pode ter validade declarada, uma referência a projeto descreve um momento e uma página pode mudar. Se mudarem fonte, sujeito ou condição material, é necessário identificar as interpretações dependentes e reavaliá-las, em vez de atualizar tudo sem distinção."
+        },
+        {
+          "heading": "Manter limites claros para cada conclusão",
+          "body": "Uma observação reutilizada pode continuar útil sem cumprir o limiar de admissão canónica. A pesquisa prossegue distinguindo informação preservada com proveniência, FAXT admitido e INXIGHT derivado. Se os termos não permitirem a reutilização ou o estado já não responder à pergunta, é necessária uma nova observação ou abstenção."
+        }
+      ],
+      "example": "Exemplo hipotético: uma observação pública de certificação é usada primeiro no Foco de uma empresa industrial. Outro Foco relacionado pergunta pela capacidade de fornecimento. A AXIGNAL pode reutilizar a fonte se os direitos permitirem, verificar data e entidade e derivar separadamente a interpretação; a certificação não prova uma relação com o comprador.",
+      "limits": "A reutilização não garante atualidade, cobertura ou independência das fontes. Um resultado anterior não ganha autoridade por ter sido útil noutra pesquisa. Atribuição, período, permissões e condições permanecem visíveis; uma lacuna relevante pode deixar a resposta UNKNOWN ou exigir nova observação.",
+      "cta": {
+        "label": "Conhecer a memória da AXIGNAL",
+        "href": "/knowledge"
+      },
+      "related": [
+        "knowledge-economic-memory-vs-cache",
+        "evidence-provenance",
+        "evidence-currentness"
+      ]
+    }
+  },
+  {
+    "id": "knowledge-sparse-public-presence",
+    "fr": {
+      "slug": "faible-presence-publique-et-lacune-dobservation",
+      "title": "Une faible présence publique signale une lacune d’observation",
+      "description": "Le peu d’informations publiques décrit ce qui n’a pas été trouvé, mais ne juge ni l’activité ni la qualité d’une entreprise.",
+      "lead": "Une organisation nouvelle pour AXIGNAL peut apparaître très peu dans les sources accessibles examinées. Cette absence observée compte parce qu’elle limite ce qu’on peut étayer; elle n’explique pas à elle seule pourquoi l’information manque.",
+      "answer": "Une faible observabilité décrit les preuves disponibles selon certaines sources, requêtes, langues, zones et dates. Elle ne signifie pas que l’entreprise est inactive, de mauvaise réputation ou moins capable.",
+      "sections": [
+        {
+          "heading": "Décrire le périmètre de la recherche",
+          "body": "Dire qu’une présence est faible suppose un cadre: quelles surfaces ont été observées, pour quelle identité, dans quelles langues et sur quelle période? Une recherche limitée ne représente ni tout Internet ni les registres privés. Avant d’en tirer un constat sur la représentation publique, AXIGNAL doit pouvoir expliquer l’ensemble observé et les limites de la méthode."
+        },
+        {
+          "heading": "Séparer l’absence observée de ses causes possibles",
+          "body": "Plusieurs causes sont envisageables: petite taille, marque différente de la raison sociale, activité locale, site mal indexé ou sources qui couvrent peu le secteur. Sans preuve spécifique, ce sont des hypothèses. Le système peut indiquer que les résultats sont rares et proposer du contexte à vérifier sans choisir une explication comme s’il s’agissait d’un fait."
+        },
+        {
+          "heading": "Montrer l’inconnu au lieu de le pénaliser",
+          "body": "Une couverture limitée réduit ce qu’on peut dire d’une organisation, d’un marché ou de ses relations. Elle ne devrait pas devenir une note négative universelle ou un jugement sur la qualité commerciale. Des volumes différents peuvent s’expliquer par la langue, la juridiction, la taille ou les pratiques de publication. UNKNOWN garde la limite visible sans affirmer FALSE."
+        },
+        {
+          "heading": "Conditionner les pistes au contexte de l’entreprise",
+          "body": "Une lacune peut justifier de rechercher l’identité, les sources, le site officiel, l’activité ou la représentation, si ces questions conviennent à l’organisation. Toutes n’ont pas besoin de davantage de SEO, GEO ou marketing; une piste doit indiquer ses conditions et la lacune qui la motive. AXIGNAL observe indépendamment et n’exécute ni ne garantit une amélioration de visibilité."
+        }
+      ],
+      "example": "Exemple hypothétique : une coopérative locale figure dans un registre municipal, mais pas sur plusieurs surfaces de recherche consultées. AXIGNAL peut décrire ce périmètre, laisser inconnue l’activité hors région et proposer des questions conditionnelles sur l’identité et les sources. Il ne conclut ni à l’inactivité de la coopérative ni au besoin d’une campagne marketing.",
+      "limits": "Le constat dépend de l’instrument, de la requête, de la langue, du territoire, du temps et de la couverture autorisée. Une absence indique seulement qu’un élément n’a pas été observé dans ces conditions. Elle ne prouve pas qu’information, activité, demande ou capacité n’existent pas ailleurs.",
+      "cta": {
+        "label": "Comprendre l’observabilité publique",
+        "href": "/knowledge"
+      },
+      "related": [
+        "evidence-public-absence",
+        "evidence-unknown-not-false",
+        "knowledge-entity-evidence-boundaries"
+      ]
+    },
+    "de": {
+      "slug": "geringe-oeffentliche-praesenz-ist-eine-beobachtungsluecke",
+      "title": "Geringe öffentliche Präsenz zeigt eine Beobachtungslücke",
+      "description": "Wenige öffentliche Informationen zeigen, was nicht gefunden wurde, bewerten aber weder Tätigkeit noch Qualität eines Unternehmens.",
+      "lead": "Eine für AXIGNAL neue Organisation kann in den geprüften zugänglichen Quellen kaum erscheinen. Diese beobachtete Abwesenheit ist relevant, weil sie stützbare Aussagen begrenzt; sie erklärt nicht von selbst, warum Informationen fehlen.",
+      "answer": "Geringe Beobachtbarkeit beschreibt verfügbare Belege unter bestimmten Quellen, Abfragen, Sprachen, Gebieten und Zeitpunkten. Sie behauptet weder Inaktivität noch schlechten Ruf oder geringere Fähigkeit des Unternehmens.",
+      "sections": [
+        {
+          "heading": "Den Umfang der Suche beschreiben",
+          "body": "Eine Aussage wie „geringe Präsenz“ braucht einen Rahmen: Welche Oberflächen wurden für welche Identität, in welchen Sprachen und über welchen Zeitraum beobachtet? Eine begrenzte Suche bildet weder das ganze Internet noch private Register ab. Vor einer Aussage zur öffentlichen Darstellung muss AXIGNAL die geprüfte Menge und methodische Grenzen erklären können."
+        },
+        {
+          "heading": "Beobachtete Abwesenheit von möglichen Ursachen trennen",
+          "body": "Mögliche Ursachen sind vielfältig: geringe Größe, ein Markenname abweichend von der Firma, lokale Tätigkeit, schlechte Indexierung oder Quellen ohne Branchenabdeckung. Ohne spezifische Belege bleiben das Hypothesen. Das System kann wenige Fundstellen beschreiben und Fragen für weitere Prüfung anbieten, ohne eine Ursache als Tatsache auszuwählen."
+        },
+        {
+          "heading": "UNKNOWN zeigen, statt es negativ zu bewerten",
+          "body": "Geringe Abdeckung beschränkt Aussagen über Organisation, Markt und Beziehungen. Sie sollte weder zu einem universellen Negativwert noch zu einem Qualitätsurteil über das Unternehmen werden. Unterschiede in Belegmengen können auf Sprache, Rechtsraum, Größe oder Veröffentlichungspraxis beruhen. UNKNOWN hält die Grenze sichtbar, ohne FALSE zu behaupten."
+        },
+        {
+          "heading": "Hinweise an den Kontext des Unternehmens binden",
+          "body": "Eine Lücke kann Recherche zu Identität, Quellen, offizieller Webseite, Aktivität oder Darstellung rechtfertigen, wenn diese Fragen zum Unternehmen passen. Nicht jedes Unternehmen braucht mehr SEO, GEO oder Marketing. Ein Hinweis nennt seine Bedingungen und die zugrunde liegende Lücke. AXIGNAL beobachtet unabhängig und setzt keine Sichtbarkeitsmaßnahmen um oder garantiert deren Erfolg."
+        }
+      ],
+      "example": "Hypothetisch: Eine lokale Genossenschaft steht in einem kommunalen Register, erscheint aber nicht auf mehreren geprüften Suchoberflächen. AXIGNAL kann diesen Umfang dokumentieren, Aktivitäten außerhalb der Region UNKNOWN lassen und bedingte Fragen zu Identität und Quellen anbieten. Es behauptet weder Inaktivität noch einen Bedarf an einer Marketingkampagne.",
+      "limits": "Der Befund hängt von Instrument, Abfrage, Sprache, Geografie, Zeit und erlaubter Abdeckung ab. Abwesenheit heißt nur, dass etwas unter diesen Bedingungen nicht beobachtet wurde. Sie beweist nicht, dass Information, Aktivität, Nachfrage oder Fähigkeit in anderen Quellen oder Kanälen fehlen. Eine sachliche Beobachtungslücke kann jedoch ein nützlicher Ausgangspunkt sein: Sie zeigt, welche Nachweise für eine belastbarere Außenansicht fehlen. Verantwortliche können danach entscheiden, ob sie ihre öffentliche Darstellung prüfen oder zusätzliche Quellen einbeziehen möchten. Diese Entscheidung bleibt beim Unternehmen; AXIGNAL beschreibt den Befund und seine Grenzen.",
+      "cta": {
+        "label": "Öffentliche Beobachtbarkeit verstehen",
+        "href": "/knowledge"
+      },
+      "related": [
+        "evidence-public-absence",
+        "evidence-unknown-not-false",
+        "knowledge-entity-evidence-boundaries"
+      ]
+    },
+    "it": {
+      "slug": "scarsa-presenza-pubblica-e-lacuna-di-osservazione",
+      "title": "Una scarsa presenza pubblica indica una lacuna di osservazione",
+      "description": "Poche informazioni pubbliche descrivono ciò che non è emerso, ma non giudicano attività o qualità dell’impresa.",
+      "lead": "Un’organizzazione nuova per AXIGNAL può comparire poco nelle fonti accessibili esaminate. L’assenza osservata conta perché limita ciò che si può sostenere, ma non spiega da sola perché le informazioni siano scarse.",
+      "answer": "La bassa osservabilità descrive le prove disponibili sotto certe fonti, query, lingue, aree geografiche e date. Non afferma che l’impresa sia inattiva, abbia cattiva reputazione o capacità inferiori.",
+      "sections": [
+        {
+          "heading": "Descrivere il perimetro della ricerca",
+          "body": "Dire che la presenza è scarsa richiede un perimetro: quali superfici sono state osservate, per quale identità, in quali lingue e periodo? Una ricerca limitata non rappresenta tutto Internet né i registri privati. Prima di riferirsi alla rappresentazione pubblica, AXIGNAL deve poter spiegare l’insieme esaminato e i limiti del metodo."
+        },
+        {
+          "heading": "Separare assenza osservata e possibili cause",
+          "body": "Le cause possibili sono molte: piccole dimensioni, marchio diverso dalla ragione sociale, attività locale, sito poco indicizzato o fonti che non coprono il settore. Senza evidenze specifiche restano ipotesi. Il sistema può descrivere risultati limitati e proporre cosa verificare senza scegliere una causa e presentarla come fatto."
+        },
+        {
+          "heading": "Mostrare ciò che è ignoto anziché penalizzarlo",
+          "body": "Una copertura ridotta limita ciò che si può dire su organizzazione, mercato o relazioni. Non dovrebbe diventare un punteggio negativo universale né un giudizio sulla qualità aziendale. Differenze nel volume delle prove possono dipendere da lingua, giurisdizione, dimensione o pratiche editoriali. UNKNOWN rende visibile il limite senza dichiarare FALSE."
+        },
+        {
+          "heading": "Condizionare le piste al contesto dell’impresa",
+          "body": "Una lacuna può motivare ricerca su identità, fonti, sito ufficiale, attività o rappresentazione, se la domanda è adatta all’impresa. Non tutte hanno bisogno di più SEO, GEO o marketing. Un’indicazione deve dichiarare condizioni e lacuna da cui nasce. AXIGNAL osserva in modo indipendente e non esegue interventi di visibilità né ne garantisce il risultato."
+        }
+      ],
+      "example": "Esempio ipotetico: una cooperativa locale compare in un registro comunale ma non in varie superfici di ricerca consultate. AXIGNAL può documentare il perimetro, lasciare sconosciuta l’attività fuori regione e suggerire domande condizionate su identità e fonti. Non conclude che la cooperativa sia inattiva o abbia bisogno di una campagna di marketing.",
+      "limits": "La conclusione dipende da strumento, query, lingua, geografia, tempo e copertura autorizzata. L’assenza indica soltanto che qualcosa non è stato osservato in quelle condizioni. Non prova che informazione, attività, domanda o capacità manchino da altre fonti o canali. Una lacuna descritta con precisione può comunque essere un punto di partenza utile: indica quali elementi mancano per una lettura esterna più solida. I responsabili possono decidere se rivedere la rappresentazione pubblica o consultare altre fonti. La scelta resta all’impresa; AXIGNAL spiega l’osservazione e i suoi limiti.",
+      "cta": {
+        "label": "Capire l’osservabilità pubblica",
+        "href": "/knowledge"
+      },
+      "related": [
+        "evidence-public-absence",
+        "evidence-unknown-not-false",
+        "knowledge-entity-evidence-boundaries"
+      ]
+    },
+    "pt": {
+      "slug": "presenca-publica-reduzida-e-uma-lacuna-de-observacao",
+      "title": "Pouca presença pública indica uma lacuna de observação",
+      "description": "A escassez de informação pública descreve o que não foi encontrado, mas não avalia atividade ou qualidade da empresa.",
+      "lead": "Uma organização nova na AXIGNAL pode ter pouca representação nas fontes acessíveis consultadas. Essa ausência observada importa porque limita o que se pode sustentar; não explica, por si só, por que faltam informações.",
+      "answer": "Baixa observabilidade descreve as evidências disponíveis em determinadas fontes, pesquisas, idiomas, geografias e datas. Não afirma que a empresa esteja inativa, tenha má reputação ou seja menos capaz.",
+      "sections": [
+        {
+          "heading": "Descrever o âmbito do que foi pesquisado",
+          "body": "Dizer que há pouca presença exige um enquadramento: que superfícies foram observadas, para que identidade, em que idiomas e durante que período? Uma pesquisa limitada não representa toda a Internet nem registos privados. Antes de usar a ausência como afirmação sobre representação pública, a AXIGNAL deve conseguir explicar o conjunto observado e os limites do método."
+        },
+        {
+          "heading": "Separar ausência observada de causas possíveis",
+          "body": "Há várias causas possíveis: pequena dimensão, marca diferente da razão social, atividade local, site mal indexado ou fontes que não cobrem o setor. Sem evidência específica, são hipóteses. O sistema pode indicar resultados escassos e sugerir contexto a verificar sem escolher uma causa como se fosse um facto."
+        },
+        {
+          "heading": "Mostrar o desconhecido em vez de penalizar",
+          "body": "Cobertura limitada reduz o que se pode afirmar sobre organização, mercado ou relações. Não deve transformar-se numa pontuação negativa universal nem num juízo de qualidade empresarial. Diferenças no volume de evidências podem refletir idioma, jurisdição, dimensão ou práticas de publicação. UNKNOWN mantém o limite visível sem afirmar FALSE."
+        },
+        {
+          "heading": "Condicionar recomendações ao contexto da empresa",
+          "body": "Uma lacuna pode justificar pesquisa sobre identidade, fontes, site oficial, atividade ou representação quando essas perguntas fizerem sentido. Nem toda a organização precisa de mais SEO, GEO ou marketing; uma sugestão deve explicar as condições e a lacuna que a motiva. A AXIGNAL observa de forma independente e não executa nem garante melhorias de visibilidade."
+        }
+      ],
+      "example": "Exemplo hipotético: uma cooperativa local aparece num registo municipal, mas não em várias superfícies de pesquisa consultadas. A AXIGNAL pode documentar esse âmbito, manter desconhecida a atividade fora da região e sugerir perguntas condicionais sobre identidade e fontes. Não deve concluir que a cooperativa está inativa ou precisa de uma campanha de marketing.",
+      "limits": "A conclusão depende do instrumento, pesquisa, idioma, geografia, tempo e cobertura autorizada. Ausência significa apenas que algo não foi observado nessas condições. Não prova que informação, atividade, procura ou capacidade estejam ausentes noutras fontes ou canais.",
+      "cta": {
+        "label": "Compreender a observabilidade pública",
+        "href": "/knowledge"
+      },
+      "related": [
+        "evidence-public-absence",
+        "evidence-unknown-not-false",
+        "knowledge-entity-evidence-boundaries"
+      ]
+    }
+  },
+  {
+    "id": "knowledge-entity-evidence-boundaries",
+    "fr": {
+      "slug": "limites-des-preuves-entre-entreprises-liees",
+      "title": "Les preuves ne se transfèrent pas entre entreprises liées",
+      "description": "Une maison mère, filiale, marque ou division partage parfois un contexte, mais ses capacités et relations exigent une attribution propre.",
+      "lead": "Des organisations peuvent partager noms, structures ou ressources sans être interchangeables comme sujets d’une affirmation. Une information attribuée à une maison mère peut être un indice utile, mais n’est pas automatiquement une preuve sur chacune de ses filiales.",
+      "answer": "AXIGNAL conserve identité et attribution par organisation. Les liens capitalistiques apportent un contexte de raisonnement, mais une capacité, un contrat ou une activité demande des preuves concernant le sujet et la portée présentés.",
+      "sections": [
+        {
+          "heading": "Résoudre le sujet avant de réutiliser une affirmation",
+          "body": "Un document peut parler d’une marque, d’une personne morale, d’un groupe ou d’une unité commerciale. Avant de transférer l’affirmation, il faut établir lequel de ces sujets la source décrit et si sa portée est claire. Des noms similaires ne suffisent pas à résoudre l’identité; en cas d’ambiguïté, l’attribution demeure limitée ou UNKNOWN."
+        },
+        {
+          "heading": "Utiliser les liens corporate comme contexte, pas comme substitut",
+          "body": "Une relation de propriété explique comment des entités sont reliées, mais ne prouve pas qu’elles partagent personnel, certifications, produits ou contrats. Une filiale peut fonctionner différemment et une marque couvrir des produits de plusieurs sociétés. Chaque relation et capacité reste attachée à son propre sujet, avec le lien capitalistique visible et étayé séparément."
+        },
+        {
+          "heading": "Éviter de compter une source plusieurs fois",
+          "body": "La même communication de groupe peut apparaître sur les pages de la maison mère et de ses filiales. Répéter une affirmation ne crée pas de corroboration indépendante. Références et lineage aident à identifier l’origine commune, éviter les doublons et distinguer de vraies sources séparées. Cette précaution compte pour comparer des organisations ou évaluer le soutien d’une conclusion dérivée."
+        },
+        {
+          "heading": "Laisser le nouveau contexte changer la question, pas le sujet",
+          "body": "Un lien corporate découvert peut rendre une autre entité intéressante à étudier, mais ne réécrit pas le sujet des preuves existantes. Un nouveau Focus peut diriger l’attention vers une filiale ou une marque; ses résultats nécessitent une résolution d’identité, un temps et des sources propres. La vue reste connectée sans copier d’attributs ni assimiler affiliation et identité complète."
+        }
+      ],
+      "example": "Exemple hypothétique : un rapport de groupe décrit une usine certifiée, tandis qu’une filiale propose de la maintenance. AXIGNAL garde la certification sur le sujet identifié par le rapport et peut représenter le lien de propriété. Elle ne l’attribue pas à la filiale sans preuve qui la relie à cette certification.",
+      "limits": "La résolution d’identité peut rester incomplète, notamment pour marques, noms commerciaux, filiales et changements de société. Un lien corporate ne prouve pas une capacité opérationnelle ou commerciale. Si la source ne précise pas le sujet ou la portée, la conclusion reste limitée et peut nécessiter une enquête complémentaire.",
+      "cta": {
+        "label": "Explorer preuves et organisations",
+        "href": "/knowledge"
+      },
+      "related": [
+        "commercial_multi_organization_context",
+        "evidence-provenance",
+        "knowledge-relationship-vs-pathx"
+      ]
+    },
+    "de": {
+      "slug": "belege-werden-nicht-zwischen-verbundenen-unternehmen-uebertragen",
+      "title": "Belege übertragen sich nicht zwischen verbundenen Unternehmen",
+      "description": "Mutter, Tochter, Marke oder Sparte teilen Kontext, doch Fähigkeiten und Beziehungen benötigen eine eigene Zuordnung.",
+      "lead": "Organisationen können Namen, Strukturen und Ressourcen teilen, ohne austauschbare Subjekte einer Aussage zu sein. Eine der Mutter zugeschriebene Information kann ein nützlicher Hinweis sein, ist aber nicht automatisch ein Beleg für jede Tochtergesellschaft.",
+      "answer": "AXIGNAL bewahrt Identität und Zuordnung je Organisation. Konzernbeziehungen liefern Kontext für Überlegungen; Fähigkeit, Vertrag oder Aktivität brauchen Belege für das dargestellte Subjekt und den konkreten Umfang.",
+      "sections": [
+        {
+          "heading": "Das Subjekt vor Wiederverwendung einer Aussage auflösen",
+          "body": "Ein Dokument kann eine Marke, juristische Einheit, Unternehmensgruppe oder Geschäftseinheit nennen. Vor einer Übertragung ist zu klären, welches Subjekt die Quelle beschreibt und ob der Umfang definiert ist. Ähnliche Namen lösen Identität nicht auf; bleibt sie unklar, muss die Zuschreibung begrenzt oder UNKNOWN bleiben."
+        },
+        {
+          "heading": "Konzernverbindungen als Kontext, nicht als Ersatz nutzen",
+          "body": "Eigentum kann erklären, wie Entitäten verbunden sind, belegt aber keine gemeinsamen Mitarbeitenden, Zertifizierungen, Produkte oder Verträge. Eine Tochter kann anders arbeiten; eine Marke kann Produkte mehrerer Firmen umfassen. Jede Relationship und Fähigkeit bleibt ihrem Subjekt zugeordnet, die Konzernverbindung sichtbar und gesondert belegt."
+        },
+        {
+          "heading": "Eine Quelle nicht mehrfach zählen",
+          "body": "Dieselbe Konzernmitteilung kann auf Webseiten von Mutter und Tochter erscheinen. Wiederholung erzeugt keine unabhängige Bestätigung. Referenzen und Herkunftslinie machen den gemeinsamen Ursprung erkennbar, helfen Duplikate zu vermeiden und tatsächlich unabhängige Quellen zu unterscheiden. Das ist wichtig beim Vergleich von Organisationen und bei der Bewertung abgeleiteter Schlussfolgerungen."
+        },
+        {
+          "heading": "Neuen Kontext die Frage, nicht das Subjekt ändern lassen",
+          "body": "Eine entdeckte Konzernverbindung kann eine weitere Entität recherchierenswert machen, ändert aber nicht, auf wen sich bestehende Belege bezogen. Ein neuer Fokus kann Aufmerksamkeit auf Tochter oder Marke lenken; deren Ergebnisse benötigen eigene Identitätsauflösung, Zeit und Quellen. So entsteht eine verbundene Sicht, ohne Attribute zu kopieren oder Konzernzugehörigkeit als vollständige Gleichheit zu behandeln."
+        }
+      ],
+      "example": "Hypothetisch: Ein Konzernbericht beschreibt ein zertifiziertes Werk, während eine Tochter Wartung anbietet. AXIGNAL ordnet die Zertifizierung dem im Bericht genannten Subjekt zu und kann die Eigentumsbeziehung zeigen. Ohne verbindende Belege schreibt es die Zertifizierung nicht der Tochter zu.",
+      "limits": "Identitätsauflösung kann unvollständig bleiben, besonders bei Marken, Handelsnamen, Tochterfirmen und Strukturänderungen. Eine Konzernbeziehung beweist keine operative oder kommerzielle Fähigkeit. Nennt die Quelle Subjekt oder Umfang nicht eindeutig, bleibt die Schlussfolgerung begrenzt und kann weitere Recherche benötigen. Das gilt auch bei gemeinsamem Markenauftritt oder zentraler Kommunikation: Die Veröffentlichung muss nicht dieselbe juristische Einheit beschreiben, deren Fähigkeit gerade untersucht wird. Eine saubere Zuordnung macht Unterschiede im Konzern sichtbar und verhindert, dass eine plausible Verbindung unbemerkt zu einer falschen Behauptung über das konkrete Unternehmen wird.",
+      "cta": {
+        "label": "Belege und Organisationen erkunden",
+        "href": "/knowledge"
+      },
+      "related": [
+        "commercial_multi_organization_context",
+        "evidence-provenance",
+        "knowledge-relationship-vs-pathx"
+      ]
+    },
+    "it": {
+      "slug": "le-evidenze-non-si-trasferiscono-tra-imprese-collegate",
+      "title": "Le evidenze non si trasferiscono tra imprese collegate",
+      "description": "Capogruppo, controllata, marchio o divisione possono condividere contesto, ma capacità e relazioni richiedono attribuzione propria.",
+      "lead": "Le organizzazioni possono condividere nomi, strutture e risorse senza essere soggetti intercambiabili per un’affermazione. Un’informazione attribuita alla capogruppo può essere un indizio utile, ma non è automaticamente prova su ogni controllata.",
+      "answer": "AXIGNAL conserva identità e attribuzione per organizzazione. I legami societari forniscono contesto, ma capacità, contratto o attività richiedono prove relative al soggetto e all’ambito presentati.",
+      "sections": [
+        {
+          "heading": "Risolvere il soggetto prima di riutilizzare un’affermazione",
+          "body": "Un documento può riferirsi a un marchio, una persona giuridica, un gruppo o una business unit. Prima di trasferire l’affermazione occorre capire quale soggetto descrive la fonte e se l’ambito è chiaro. Nomi simili non bastano a risolvere l’identità; se resta ambiguità, l’attribuzione rimane limitata o UNKNOWN."
+        },
+        {
+          "heading": "Usare i legami societari come contesto, non come sostituti",
+          "body": "Un rapporto di proprietà spiega come sono collegate le entità, ma non dimostra che condividano personale, certificazioni, prodotti o contratti. Una controllata può operare in modo diverso e un marchio può rappresentare prodotti di più società. Ogni relazione e capacità resta legata al proprio soggetto, con il legame societario visibile e sostenuto da prove proprie."
+        },
+        {
+          "heading": "Evitare di contare più volte la stessa fonte",
+          "body": "La stessa comunicazione di gruppo può apparire sui siti di capogruppo e controllate. Ripetere un’affermazione non crea corroborazione indipendente. Riferimenti e lineage permettono di riconoscere l’origine comune, evitare duplicati e distinguere fonti realmente autonome. Questo controllo conta quando si confrontano organizzazioni o si valuta il supporto di una conclusione derivata."
+        },
+        {
+          "heading": "Lasciare che il nuovo contesto cambi la domanda, non il soggetto",
+          "body": "Un legame societario scoperto può rendere interessante indagare un’altra entità, ma non cambia il soggetto delle prove esistenti. Un nuovo Foco può dirigere l’attenzione verso una controllata o un marchio; i risultati richiedono identità, tempi e fonti propri. La vista resta connessa senza copiare attributi né trattare l’appartenenza societaria come equivalenza completa."
+        }
+      ],
+      "example": "Esempio ipotetico: un rapporto di gruppo descrive uno stabilimento certificato, mentre una controllata offre manutenzione. AXIGNAL attribuisce la certificazione al soggetto indicato dal rapporto e può rappresentare il legame di proprietà. Non la attribuisce alla controllata senza prove che la colleghino a quella certificazione.",
+      "limits": "La risoluzione d’identità può restare incompleta, specialmente per marchi, nomi commerciali, controllate e cambi societari. Un legame societario non prova capacità operative o commerciali. Se la fonte non identifica soggetto o ambito, la conclusione resta limitata e può richiedere ulteriori indagini. Anche un marchio condiviso o una comunicazione centralizzata può riferirsi a un soggetto diverso dall’entità di cui si vuole valutare una capacità. Attribuire con precisione rende visibili le differenze nel gruppo e impedisce che una relazione plausibile diventi senza accorgersene un’affermazione errata sulla singola impresa.",
+      "cta": {
+        "label": "Esplora prove e organizzazioni",
+        "href": "/knowledge"
+      },
+      "related": [
+        "commercial_multi_organization_context",
+        "evidence-provenance",
+        "knowledge-relationship-vs-pathx"
+      ]
+    },
+    "pt": {
+      "slug": "evidencias-nao-se-transferem-entre-empresas-relacionadas",
+      "title": "Evidências não se transferem entre empresas relacionadas",
+      "description": "Empresa-mãe, subsidiária, marca ou divisão partilham contexto, mas capacidades e relações exigem atribuição própria.",
+      "lead": "Organizações podem partilhar nomes, estruturas e recursos sem serem sujeitos intercambiáveis de uma afirmação. Uma informação atribuída à empresa-mãe pode ser uma pista útil, mas não é automaticamente evidência sobre cada subsidiária.",
+      "answer": "A AXIGNAL conserva identidade e atribuição por organização. Relações societárias fornecem contexto de raciocínio, mas capacidade, contrato ou atividade precisam de evidência sobre o sujeito e âmbito apresentados.",
+      "sections": [
+        {
+          "heading": "Resolver o sujeito antes de reutilizar uma afirmação",
+          "body": "Um documento pode mencionar uma marca, entidade jurídica, grupo ou unidade de negócio. Antes de transferir uma afirmação, é necessário saber que sujeito a fonte descreve e se o âmbito está definido. Nomes semelhantes não resolvem a identidade; se houver ambiguidade, a atribuição permanece limitada ou UNKNOWN."
+        },
+        {
+          "heading": "Usar ligações societárias como contexto, não como substituto",
+          "body": "Uma relação de propriedade explica como entidades se ligam, mas não demonstra que partilhem trabalhadores, certificações, produtos ou contratos. Uma subsidiária pode operar de forma diferente e uma marca pode representar produtos de várias empresas. Cada relação e capacidade permanece ligada ao seu próprio sujeito, com o vínculo societário visível e sustentado separadamente."
+        },
+        {
+          "heading": "Evitar contar a mesma fonte várias vezes",
+          "body": "O mesmo comunicado do grupo pode surgir nos sites da empresa-mãe e das subsidiárias. A repetição não cria confirmação independente. Referências e linhagem ajudam a reconhecer a origem comum, remover duplicados e distinguir fontes realmente independentes. Isto importa ao comparar organizações ou avaliar o apoio efetivo de uma conclusão derivada."
+        },
+        {
+          "heading": "Deixar o novo contexto mudar a pergunta, não o sujeito",
+          "body": "Uma ligação societária descoberta pode tornar outra entidade relevante para pesquisar, mas não altera o sujeito a que a evidência existente se referia. Um novo Foco pode direcionar atenção para uma subsidiária ou marca; os resultados exigem resolução de identidade, tempo e fontes próprios. Assim se cria uma visão ligada sem copiar atributos ou tratar pertença societária como equivalência completa."
+        }
+      ],
+      "example": "Exemplo hipotético: um relatório de grupo descreve uma fábrica certificada, enquanto uma subsidiária oferece manutenção. A AXIGNAL mantém a certificação no sujeito identificado pelo relatório e pode representar a propriedade. Não a atribui à subsidiária sem evidência que a ligue à certificação.",
+      "limits": "A resolução de identidade pode ficar incompleta, em particular para marcas, nomes comerciais, subsidiárias e alterações societárias. Uma relação societária não prova capacidade operacional ou comercial. Se a fonte não identificar sujeito ou âmbito, a conclusão deve permanecer limitada e poderá exigir investigação adicional.",
+      "cta": {
+        "label": "Explorar evidências e organizações",
+        "href": "/knowledge"
+      },
+      "related": [
+        "commercial_multi_organization_context",
+        "evidence-provenance",
+        "knowledge-relationship-vs-pathx"
+      ]
+    }
+  },
+  {
+    "id": "knowledge-explainable-economic-attribution",
+    "fr": {
+      "slug": "rendre-une-attribution-economique-explicable",
+      "title": "Ce qui rend une attribution économique explicable",
+      "description": "Une attribution visible expose les sources, le temps, la sémantique et l’incertitude qui expliquent pourquoi elle mérite l’attention.",
+      "lead": "Une phrase persuasive n’explique rien si le lecteur ne peut pas retrouver son origine. Lorsqu’AXIGNAL affiche une capacité, une relation ou un Signal pour une organisation, l’abonné doit pouvoir accéder à sa base précise.",
+      "answer": "L’Explainable Basis relie une attribution à des observations gouvernées, à leur provenance, au temps, aux contrats sémantiques, à l’interprétation et à l’incertitude. Expliquer une lecture ne la rend pas canonique et ne remplace pas EvidenceAdmission.",
+      "sections": [
+        {
+          "heading": "Remonter aux preuves qui comptent",
+          "body": "L’explication identifie les observations qui soutiennent réellement la dimension affichée: sujet, prédicat, source, date et référence récupérable. Une liste de liens sans relation avec l’attribution ne suffit pas, pas plus qu’un récit plausible généré après coup. Une personne doit pouvoir inspecter les éléments qui ont rendu une capacité ou relation digne d’attention."
+        },
+        {
+          "heading": "Conserver la façon dont l’interprétation a été obtenue",
+          "body": "Une conclusion dérivée dépend de questions, de contrats d’état et de politiques versionnées. L’explication doit indiquer quelle dimension a été évaluée, quelles informations ont été prises en compte et ce qui est déterministe ou inféré. La sortie structurée d’un modèle n’est ni explication ni autorité. Si le parcours ne peut être reconstruit, l’attribution ne devrait pas paraître intelligible."
+        },
+        {
+          "heading": "Exposer limites et contradictions pertinentes",
+          "body": "Une explication équilibrée conserve les preuves qui contestent la lecture, les sources périmées, la couverture partielle et les valeurs UNKNOWN. Ne choisir que les éléments favorables peut transformer une dérivation incertaine en récit apparemment sûr. L’incertitude doit refléter les sources et conditions, pas une confiance opaque du modèle ni le résultat commercial espéré."
+        },
+        {
+          "heading": "Séparer explication et admission canonique",
+          "body": "Une association POTENTIAL peut avoir une base suffisante pour apparaître comme une question à enquêter sans être FAXT ou relation admise. L’utilisateur garde l’autorité pour accepter, refuser ou réinterpréter son sens commercial. EvidenceAdmission reste séparé: une base explicable permet l’inspection mais n’autorise pas automatiquement l’écriture d’une vérité dans AXIGLAND."
+        }
+      ],
+      "example": "Exemple hypothétique : un Signal propose d’étudier si une capacité observée pourrait correspondre à un projet public. L’explication ouvre les sources de la capacité et du projet, affiche leurs dates et précise que l’éligibilité et la relation ne sont pas établies. La personne voit pourquoi le Signal apparaît et ce qui reste à résoudre.",
+      "limits": "Une explication ne répare pas une source inadéquate et ne prouve pas qu’un jugement dérivé est correct. Elle conserve attribution, temps et contradictions importantes. Si AXIGNAL ne peut pas reconstruire une base suffisante pour une attribution visible, celle-ci reste UNKNOWN/UNRESOLVED ou déclenche une recherche, plutôt qu’un récit a posteriori.",
+      "cta": {
+        "label": "Explorer les limites de connaissance",
+        "href": "/knowledge"
+      },
+      "related": [
+        "evidence-provenance",
+        "evidence-signal-faxt-inxight",
+        "knowledge-signal-vs-fact"
+      ]
+    },
+    "de": {
+      "slug": "was-eine-wirtschaftliche-zuschreibung-erklaerbar-macht",
+      "title": "Was eine wirtschaftliche Zuschreibung erklärbar macht",
+      "description": "Eine sichtbare Zuschreibung zeigt Quellen, Zeit, Semantik und Unsicherheit, die erklären, warum sie Aufmerksamkeit verdient.",
+      "lead": "Ein überzeugender Satz ist keine Erklärung, wenn sich seine Herkunft nicht nachvollziehen lässt. Zeigt AXIGNAL eine Fähigkeit, Beziehung oder ein Signal für eine Organisation, braucht der Abonnent einen Weg zur konkreten Grundlage.",
+      "answer": "Eine Explainable Basis verbindet eine Zuschreibung mit zugelassenen Beobachtungen, Herkunft, Zeit, semantischen Verträgen, Interpretation und Unsicherheit. Eine Sicht zu erklären macht sie weder kanonisch noch ersetzt es EvidenceAdmission.",
+      "sections": [
+        {
+          "heading": "Zu den maßgeblichen Belegen zurückführen",
+          "body": "Die Erklärung nennt die Beobachtungen, die die dargestellte Dimension tatsächlich stützen: Subjekt, Prädikat, Quelle, Datum und abrufbare Referenz. Eine Linkliste ohne Verbindung zur Zuschreibung reicht nicht, ebenso wenig eine nachträglich plausible Erzählung. Menschen sollten das Material prüfen können, durch das eine Fähigkeit oder Beziehung Aufmerksamkeit verdient."
+        },
+        {
+          "heading": "Erhalten, wie die Interpretation zustande kam",
+          "body": "Eine abgeleitete Schlussfolgerung hängt von Fragen, Zustandsverträgen und versionierten Richtlinien ab. Die Erklärung sollte zeigen, welche Dimension bewertet wurde, welche Angaben berücksichtigt wurden und welcher Teil deterministisch oder abgeleitet ist. Strukturierte Modellausgabe ist weder Erklärung noch Autorität. Ist der Weg nicht rekonstruierbar, sollte die Zuschreibung nicht als verständliche Rolle erscheinen."
+        },
+        {
+          "heading": "Relevante Grenzen und Widersprüche offenlegen",
+          "body": "Eine ausgewogene Erklärung bewahrt Belege gegen die Lesart, veraltete Quellen, Teilausschnitte und UNKNOWN-Werte. Nur unterstützende Elemente auszuwählen kann eine unsichere Ableitung als sichere Geschichte erscheinen lassen. Unsicherheit spiegelt Quellen und Bedingungen wider, nicht undurchsichtige Modellzuversicht oder ein erhofftes Geschäftsergebnis."
+        },
+        {
+          "heading": "Erklärung von kanonischer Zulassung trennen",
+          "body": "Eine POTENTIAL-Verbindung kann mit ausreichender Basis als prüfenswerte Frage sichtbar sein, ohne ein FAXT oder zugelassene Relationship zu sein. Nutzer entscheiden über Annahme, Ablehnung oder geschäftliche Deutung. EvidenceAdmission bleibt getrennt: Eine erklärbare Grundlage ermöglicht Einsicht, autorisiert aber nicht automatisch einen Wahrheitseintrag in AXIGLAND."
+        }
+      ],
+      "example": "Hypothetisch: Ein Signal schlägt vor zu prüfen, ob eine beobachtete Fähigkeit zu einem öffentlichen Projekt passen könnte. Die Erklärung öffnet Quellen zu Fähigkeit und Projekt, zeigt deren Daten und hält fest, dass Zulässigkeit und Beziehung nicht belegt sind. So wird sichtbar, warum das Signal erschien und was offenbleibt.",
+      "limits": "Eine Erklärung heilt keine ungeeignete Quelle und beweist keine Richtigkeit der Ableitung. Attribution, Zeit und wesentliche Widersprüche bleiben erhalten. Kann AXIGNAL eine ausreichende Grundlage nicht rekonstruieren, bleibt die sichtbare Zuschreibung UNKNOWN/UNRESOLVED oder löst Recherche aus, statt nachträglich erzählt zu werden. Eine gute Erklärung ist damit kein Werbetext und kein nachträglicher Kommentar. Sie ist eine prüfbare Verbindung zwischen sichtbarer Aussage und ihrem Entstehungsweg. Leser können die Belege beurteilen, offene Punkte benennen und die wirtschaftliche Bedeutung selbst einordnen, ohne dass AXIGNAL ihre Entscheidung übernimmt.",
+      "cta": {
+        "label": "Wissensgrenzen erkunden",
+        "href": "/knowledge"
+      },
+      "related": [
+        "evidence-provenance",
+        "evidence-signal-faxt-inxight",
+        "knowledge-signal-vs-fact"
+      ]
+    },
+    "it": {
+      "slug": "cosa-rende-spiegabile-unattribuzione-economica",
+      "title": "Che cosa rende spiegabile un’attribuzione economica",
+      "description": "Un’attribuzione visibile espone fonti, tempo, semantica e incertezza che spiegano perché merita attenzione.",
+      "lead": "Una frase persuasiva non è una spiegazione se chi legge non può ricostruirne l’origine. Quando AXIGNAL mostra una capacità, relazione o un Segnale per un’organizzazione, l’abbonato deve poter raggiungere la base specifica.",
+      "answer": "L’Explainable Basis collega un’attribuzione a osservazioni governate, provenienza, tempo, contratti semantici, interpretazione e incertezza. Spiegare una lettura non la rende verità canonica e non sostituisce EvidenceAdmission.",
+      "sections": [
+        {
+          "heading": "Risali alle prove che contano",
+          "body": "La spiegazione identifica le osservazioni che sostengono davvero la dimensione visualizzata: soggetto, predicato, fonte, data e riferimento recuperabile. Un elenco di link senza connessione all’attribuzione non basta, né basta una narrazione plausibile generata a posteriori. Una persona deve poter ispezionare gli elementi che hanno reso una capacità o relazione degna di attenzione."
+        },
+        {
+          "heading": "Conservare come si è arrivati all’interpretazione",
+          "body": "Una conclusione derivata dipende da domande, contratti di stato e policy versionate. La spiegazione dovrebbe chiarire quale dimensione è stata valutata, quali informazioni considerate e quale parte è deterministica o inferita. Un output strutturato del modello non è né spiegazione né autorità. Se il percorso non si ricostruisce, l’attribuzione non dovrebbe apparire come ruolo intelligibile."
+        },
+        {
+          "heading": "Esporre limiti e contraddizioni rilevanti",
+          "body": "Una spiegazione equilibrata conserva prove che contestano la lettura, fonti stale, copertura parziale e valori UNKNOWN. Selezionare solo elementi favorevoli può far sembrare certa una derivazione incerta. L’incertezza deve riflettere fonti e condizioni, non una fiducia opaca del modello né l’esito commerciale sperato da qualcuno."
+        },
+        {
+          "heading": "Separare spiegazione e ammissione canonica",
+          "body": "Un’associazione POTENTIAL può avere basi sufficienti per apparire come questione da indagare senza essere un FAXT o una relazione ammessa. L’utente mantiene autorità per accettare, rifiutare o reinterpretare il significato aziendale. EvidenceAdmission resta separata: la base spiegabile consente ispezione, ma non autorizza automaticamente a scrivere verità in AXIGLAND."
+        }
+      ],
+      "example": "Esempio ipotetico: un Segnale propone di verificare se una capacità osservata possa corrispondere a un progetto pubblico. La spiegazione apre le fonti della capacità e del progetto, ne mostra le date e indica che ammissibilità e relazione non sono dimostrate. La persona vede perché il Segnale è apparso e che cosa resta aperto.",
+      "limits": "La spiegazione non ripara una fonte inadeguata né prova che un giudizio derivato sia corretto. Deve conservare attribuzione, tempo e contraddizioni materiali. Se AXIGNAL non ricostruisce una base adeguata, l’attribuzione visibile resta UNKNOWN/UNRESOLVED o attiva ricerca, anziché ricevere una narrazione costruita dopo.",
+      "cta": {
+        "label": "Esplora i limiti della conoscenza",
+        "href": "/knowledge"
+      },
+      "related": [
+        "evidence-provenance",
+        "evidence-signal-faxt-inxight",
+        "knowledge-signal-vs-fact"
+      ]
+    },
+    "pt": {
+      "slug": "o-que-torna-explicavel-uma-atribuicao-economica",
+      "title": "O que torna explicável uma atribuição económica",
+      "description": "Uma atribuição visível mostra fontes, tempo, semântica e incerteza que explicam por que merece atenção.",
+      "lead": "Uma frase convincente não é explicação se quem lê não consegue reconstruir a sua origem. Quando a AXIGNAL apresenta capacidade, relação ou Sinal para uma organização, o subscritor precisa de aceder à base concreta.",
+      "answer": "A Explainable Basis liga uma atribuição a observações governadas, proveniência, tempo, contratos semânticos, interpretação e incerteza. Explicar uma leitura não a torna verdade canónica nem substitui EvidenceAdmission.",
+      "sections": [
+        {
+          "heading": "Regressar às evidências materiais",
+          "body": "A explicação identifica que observações sustentam realmente a dimensão apresentada: sujeito, predicado, fonte, data e referência recuperável. Uma lista de ligações sem conexão à atribuição não basta, tal como não basta uma narrativa plausível gerada depois. A pessoa deve poder inspecionar os elementos que fizeram uma capacidade ou relação merecer atenção."
+        },
+        {
+          "heading": "Preservar como se chegou à interpretação",
+          "body": "Uma conclusão derivada depende de perguntas, contratos de estado e políticas versionadas. A explicação deve indicar que dimensão foi avaliada, que informação foi considerada e que parte é determinística ou inferida. A saída estruturada de um modelo não é explicação nem autoridade. Se não for possível reconstruir o percurso, a atribuição não deve surgir como papel inteligível."
+        },
+        {
+          "heading": "Expor limites e contradições relevantes",
+          "body": "Uma explicação equilibrada preserva evidências contrárias à leitura, fontes desatualizadas, cobertura parcial e valores UNKNOWN. Escolher apenas elementos favoráveis pode transformar uma derivação incerta numa narrativa aparentemente segura. A incerteza deve refletir fontes e condições, não confiança opaca do modelo ou o resultado comercial desejado."
+        },
+        {
+          "heading": "Separar explicação de admissão canónica",
+          "body": "Uma associação POTENTIAL pode ter base suficiente para surgir como questão investigável sem ser FAXT ou relação admitida. O utilizador mantém autoridade para aceitar, rejeitar ou reinterpretar o seu significado empresarial. EvidenceAdmission continua separada: uma base explicável permite inspeção, mas não autoriza automaticamente escrever verdade em AXIGLAND."
+        }
+      ],
+      "example": "Exemplo hipotético: um Sinal propõe investigar se uma capacidade observada poderá adequar-se a um projeto público. A explicação abre fontes da capacidade e do projeto, mostra as datas e assinala que elegibilidade e relação não estão comprovadas. A pessoa vê por que o Sinal surgiu e o que continua em aberto.",
+      "limits": "Uma explicação não corrige uma fonte inadequada nem prova que um juízo derivado está correto. Deve preservar atribuição, tempo e contradições materiais. Se a AXIGNAL não conseguir reconstruir uma base suficiente para uma atribuição visível, esta permanece UNKNOWN/UNRESOLVED ou desencadeia pesquisa, em vez de uma narrativa posterior.",
+      "cta": {
+        "label": "Explorar limites do conhecimento",
+        "href": "/knowledge"
+      },
+      "related": [
+        "evidence-provenance",
+        "evidence-signal-faxt-inxight",
+        "knowledge-signal-vs-fact"
+      ]
+    }
+  },
+  {
+    "id": "knowledge-digital-representation-vs-business-reality",
+    "fr": {
+      "slug": "representation-numerique-et-realite-economique-sont-distinctes",
+      "title": "La représentation numérique n’est pas la réalité économique",
+      "description": "Une surface montre comment elle représente une organisation sous certaines conditions; elle ne confirme ni capacité, ni demande, ni qualité.",
+      "lead": "Un résultat de recherche, une réponse générative ou un avis public décrit ce qu’une surface a montré. Il peut contextualiser découverte et expérience rapportée, mais ne remplace pas les preuves économiques concernant l’organisation.",
+      "answer": "Digital Representation Intelligence observe la représentation d’une organisation sur des surfaces identifiées au fil du temps. Il s’agit d’une observation conditionnée, pas d’une exécution SEO/GEO, d’une gestion de réputation ou d’une source de vérité d’entreprise.",
+      "sections": [
+        {
+          "heading": "Définir la surface et ses conditions",
+          "body": "Une observation de recherche dépend de la requête, langue, géographie, appareil, heure et ensemble de résultats. Une observation générative dépend de la surface, du prompt, du contexte, de la version, de l’exécution et de la variation. L’interface d’un produit et son API peuvent être des instruments distincts. Sans conditions et instrument identifiés, le résultat n’est pas une mesure comparable ni une position universelle."
+        },
+        {
+          "heading": "Distinguer mention, citation et recommandation",
+          "body": "La mention d’une organisation n’est pas une citation d’une source à son sujet, et une citation ne vaut ni soutien ni recommandation. La sortie observée appartient à la surface et au moment mesurés. Elle ne confirme pas qu’une capacité décrite existe ni que la source citée étaye correctement l’affirmation; cela demande un examen des preuves d’entreprise."
+        },
+        {
+          "heading": "Garder les retours publics dans leur périmètre",
+          "body": "Un avis ou une conversation publique prouve qu’une déclaration a été observée dans certaines conditions, pas que chaque expérience décrite s’est déroulée exactement ainsi. Une note conserve l’échelle de sa source; elle n’est pas automatiquement transformée en jugement AXIGNAL. Thèmes, volume et sentiment sont des dérivations qui ne valent ni demande, ni qualité universelle, ni vérité canonique."
+        },
+        {
+          "heading": "Observer les changements sans exécuter de marketing",
+          "body": "AXIGNAL peut documenter des écarts de représentation et expliquer quelles questions méritent attention. Il ne modifie pas les sites, ne lance pas de campagnes SEO/GEO et ne garantit pas un changement de surface. Une comparaison avant/après exige instruments et conditions compatibles, période, échantillon et incertitude; un écart peut provenir de la variabilité de la surface."
+        }
+      ],
+      "example": "Exemple hypothétique : une réponse générative associe une société d’ingénierie à un service absent de son site public. AXIGNAL peut conserver l’observation avec prompt, surface et date, puis signaler une question de représentation. Cela ne confirme pas la capacité et ne recommande pas de recruter cette société.",
+      "limits": "Les observations dépendent de surfaces publiques autorisées, d’instruments, de versions et de conditions explicites. Visibilité ne prouve pas capacité; mentions ne prouvent pas demande; avis seuls n’établissent ni qualité ni authenticité. AXIGNAL observe indépendamment et ne fournit pas d’exécution marketing, de scraping authentifié ou de contournement anti-bot.",
+      "cta": {
+        "label": "Découvrir l’intelligence de représentation",
+        "href": "/knowledge"
+      },
+      "related": [
+        "evidence-signal-faxt-inxight",
+        "evidence-provenance",
+        "knowledge-explainable-economic-attribution"
+      ]
+    },
+    "de": {
+      "slug": "digitale-darstellung-ist-nicht-wirtschaftliche-realitaet",
+      "title": "Digitale Darstellung ist nicht wirtschaftliche Realität",
+      "description": "Eine Oberfläche zeigt die Darstellung einer Organisation unter Bedingungen, bestätigt aber weder Fähigkeit noch Nachfrage oder Qualität.",
+      "lead": "Ein Suchergebnis, eine generative Antwort oder öffentliche Bewertung beschreibt, was eine Oberfläche gezeigt hat. Sie kann Kontext zu Auffindbarkeit und berichteter Erfahrung liefern, ersetzt aber keine wirtschaftlichen Belege zur Organisation.",
+      "answer": "Digital Representation Intelligence beobachtet die Darstellung einer Organisation auf benannten Oberflächen im Zeitverlauf. Das ist eine bedingte Beobachtung, keine SEO/GEO-Ausführung durch AXIGNAL, Reputationsverwaltung oder Quelle für Geschäftswahrheit.",
+      "sections": [
+        {
+          "heading": "Oberfläche und Bedingungen festlegen",
+          "body": "Eine Suchbeobachtung hängt von Abfrage, Sprache, Geografie, Gerät, Zeitpunkt und Ergebnismenge ab. Eine generative Beobachtung hängt von Oberfläche, Prompt, Kontext, Version, Ausführung und Variation ab. Produktoberfläche und API können unterschiedliche Instrumente sein. Ohne festgelegte Bedingungen und Instrument ist das Ergebnis weder vergleichbare Messung noch universelle Position."
+        },
+        {
+          "heading": "Erwähnung, Zitat und Empfehlung unterscheiden",
+          "body": "Dass eine Organisation erwähnt wird, ist nicht dasselbe wie eine Quellenangabe über sie; eine Zitation ist keine Unterstützung oder Empfehlung. Die beobachtete Ausgabe gehört zur gemessenen Oberfläche und zum Zeitpunkt. Sie bestätigt weder eine beschriebene Fähigkeit noch die sachliche Stützung durch eine zitierte Quelle; dafür ist eine Prüfung der Unternehmensbelege nötig."
+        },
+        {
+          "heading": "Öffentliches Feedback auf seinen Umfang begrenzen",
+          "body": "Eine Bewertung oder öffentliche Unterhaltung belegt, dass eine Aussage unter bestimmten Bedingungen beobachtet wurde, nicht dass jede geschilderte Erfahrung genau so stattfand. Eine Bewertung behält ihre Quellenskala und wird nicht automatisch zum AXIGNAL-Urteil. Themen, Volumen und Stimmung sind Ableitungen, keine Nachfrage, universelle Qualität oder kanonische Wahrheit."
+        },
+        {
+          "heading": "Veränderungen beobachten, ohne Marketing auszuführen",
+          "body": "AXIGNAL kann Darstellungsunterschiede dokumentieren und erklären, welche Fragen Aufmerksamkeit verdienen. Es bearbeitet keine Webseiten, führt keine SEO/GEO-Kampagnen aus und garantiert keine Änderung einer Oberfläche. Ein Vorher-Nachher-Vergleich braucht kompatible Instrumente und Bedingungen, Zeitraum, Stichprobe und Unsicherheit; ein Unterschied kann durch Oberflächenvariation entstehen."
+        }
+      ],
+      "example": "Hypothetisch: Eine generative Antwort nennt einen Ingenieurbetrieb für eine Leistung, die auf seiner öffentlichen Webseite nicht beschrieben ist. AXIGNAL kann die Beobachtung samt Prompt, Oberfläche und Datum bewahren und eine Darstellungsfrage markieren. Es bestätigt weder die Fähigkeit noch empfiehlt es eine Beauftragung.",
+      "limits": "Beobachtungen hängen von erlaubten öffentlichen Oberflächen, Instrumenten, Versionen und expliziten Bedingungen ab. Sichtbarkeit belegt keine Fähigkeit; Erwähnungen belegen keine Nachfrage; Bewertungen belegen allein weder Qualität noch Echtheit. AXIGNAL beobachtet unabhängig und bietet keine Marketingausführung, authentifizierte Scrapes oder Anti-Bot-Umgehung. Wer eine Veränderung bewertet, sollte deshalb zuerst prüfen, ob Frage, Instrument, Sprache und Zeitpunkt vergleichbar waren. Erst dann lässt sich beschreiben, worin die beobachtete Differenz besteht. Selbst bei vergleichbaren Messbedingungen bleibt die Aussage auf die Darstellung beschränkt und bestätigt keine zugrunde liegende Geschäftsleistung.",
+      "cta": {
+        "label": "Darstellungsintelligenz kennenlernen",
+        "href": "/knowledge"
+      },
+      "related": [
+        "evidence-signal-faxt-inxight",
+        "evidence-provenance",
+        "knowledge-explainable-economic-attribution"
+      ]
+    },
+    "it": {
+      "slug": "rappresentazione-digitale-e-realta-economica-non-coincidono",
+      "title": "La rappresentazione digitale non è la realtà economica",
+      "description": "Una superficie mostra come rappresenta un’organizzazione in certe condizioni; non ne conferma capacità, domanda o qualità.",
+      "lead": "Un risultato di ricerca, una risposta generativa o una recensione pubblica descrive ciò che una superficie ha mostrato. Può offrire contesto su reperibilità ed esperienza dichiarata, ma non sostituisce le prove economiche sull’organizzazione.",
+      "answer": "Digital Representation Intelligence osserva come un’organizzazione viene rappresentata su superfici identificate nel tempo. È un’osservazione condizionata, non esecuzione SEO/GEO di AXIGNAL, gestione della reputazione o fonte di verità aziendale.",
+      "sections": [
+        {
+          "heading": "Definire superficie e condizioni",
+          "body": "Un’osservazione di ricerca dipende da query, lingua, geografia, dispositivo, momento e insieme di risultati. Un’osservazione generativa dipende da superficie, prompt, contesto, versione, esecuzione e variazione. L’interfaccia di un prodotto e la sua API possono essere strumenti diversi. Senza condizioni e strumento identificati, il risultato non è una misura confrontabile né una posizione universale."
+        },
+        {
+          "heading": "Distinguere menzione, citazione e approvazione",
+          "body": "La menzione di un’organizzazione non equivale a una risposta che cita una fonte su di essa; una citazione non è un endorsement o una raccomandazione. L’output osservato appartiene alla superficie e al momento misurato. Non conferma che la capacità descritta esista o che la fonte sostenga correttamente l’affermazione: serve un esame delle evidenze aziendali."
+        },
+        {
+          "heading": "Mantenere il feedback pubblico nel suo ambito",
+          "body": "Una recensione o conversazione pubblica prova che una dichiarazione è stata osservata in certe condizioni, non che ogni esperienza narrata sia avvenuta esattamente così. Il rating conserva la scala della fonte e non diventa automaticamente un giudizio AXIGNAL. Temi, volume e sentiment sono derivazioni e non equivalgono a domanda, qualità universale o verità canonica."
+        },
+        {
+          "heading": "Osservare i cambiamenti senza fare marketing",
+          "body": "AXIGNAL può documentare differenze di rappresentazione e spiegare quali domande meritino attenzione. Non modifica siti, non esegue campagne SEO/GEO e non garantisce cambiamenti di una superficie. Il confronto prima/dopo richiede strumenti e condizioni compatibili, periodo, campione e incertezza; una differenza può dipendere dalla variabilità della superficie."
+        }
+      ],
+      "example": "Esempio ipotetico: una risposta generativa associa un’impresa di ingegneria a un servizio non descritto sul suo sito pubblico. AXIGNAL può conservare osservazione, prompt, superficie e data, segnalando una questione di rappresentazione. Non conferma la capacità né raccomanda di incaricare l’impresa.",
+      "limits": "Le osservazioni dipendono da superfici pubbliche autorizzate, strumenti, versioni e condizioni esplicite. Visibilità non prova capacità; menzioni non provano domanda; recensioni da sole non stabiliscono qualità o autenticità. AXIGNAL osserva in modo indipendente e non offre esecuzione di marketing, scraping autenticato o aggiramento anti-bot.",
+      "cta": {
+        "label": "Scopri la representation intelligence",
+        "href": "/knowledge"
+      },
+      "related": [
+        "evidence-signal-faxt-inxight",
+        "evidence-provenance",
+        "knowledge-explainable-economic-attribution"
+      ]
+    },
+    "pt": {
+      "slug": "representacao-digital-nao-e-realidade-economica",
+      "title": "Representação digital não é realidade económica",
+      "description": "Uma superfície mostra como representa uma organização sob certas condições, mas não confirma capacidade, procura ou qualidade.",
+      "lead": "Um resultado de pesquisa, resposta generativa ou avaliação pública descreve o que uma superfície mostrou. Pode acrescentar contexto sobre descoberta e experiência relatada, mas não substitui evidências económicas sobre a organização.",
+      "answer": "Digital Representation Intelligence observa como uma organização é representada em superfícies identificadas ao longo do tempo. É uma observação condicionada, não execução de SEO/GEO pela AXIGNAL, gestão de reputação ou fonte de verdade empresarial.",
+      "sections": [
+        {
+          "heading": "Definir a superfície e as condições",
+          "body": "Uma observação de pesquisa depende de consulta, idioma, geografia, dispositivo, momento e conjunto de resultados. Uma observação generativa depende de superfície, prompt, contexto, versão, execução e variação. A interface de um produto e a sua API podem ser instrumentos diferentes. Sem condições e instrumento identificados, o resultado não é uma medição comparável nem uma posição universal."
+        },
+        {
+          "heading": "Distinguir menção, citação e recomendação",
+          "body": "Uma organização ser mencionada não equivale a uma resposta citar uma fonte sobre ela, e uma citação não representa apoio ou recomendação. A saída observada pertence à superfície e ao momento medidos. Não confirma que a capacidade descrita exista nem que a fonte citada sustente corretamente a afirmação; isso requer análise de evidências empresariais."
+        },
+        {
+          "heading": "Manter opiniões públicas dentro do seu âmbito",
+          "body": "Uma avaliação ou conversa pública demonstra que uma declaração foi observada sob certas condições, não que toda a experiência relatada ocorreu exatamente como descrita. A classificação conserva a escala da fonte e não se transforma automaticamente num juízo da AXIGNAL. Temas, volume e sentimento são derivados, não equivalem a procura, qualidade universal ou verdade canónica."
+        },
+        {
+          "heading": "Observar mudanças sem executar marketing",
+          "body": "A AXIGNAL pode documentar diferenças de representação e explicar que perguntas merecem atenção. Não altera sites, executa campanhas SEO/GEO nem garante que uma superfície mude. Uma comparação antes/depois exige instrumentos e condições compatíveis, período, amostra e incerteza; uma diferença pode resultar da variação da própria superfície."
+        }
+      ],
+      "example": "Exemplo hipotético: uma resposta generativa menciona uma empresa de engenharia para um serviço não descrito no seu site público. A AXIGNAL pode guardar a observação com prompt, superfície e data e assinalar uma questão de representação. Não confirma a capacidade nem recomenda contratar a empresa.",
+      "limits": "As observações dependem de superfícies públicas autorizadas, instrumentos, versões e condições explícitas. Visibilidade não prova capacidade; menções não provam procura; avaliações não estabelecem, por si só, qualidade ou autenticidade. A AXIGNAL observa de forma independente e não oferece execução de marketing, scraping autenticado ou contorno de mecanismos anti-bot.",
+      "cta": {
+        "label": "Conhecer a inteligência de representação",
+        "href": "/knowledge"
+      },
+      "related": [
+        "evidence-signal-faxt-inxight",
+        "evidence-provenance",
+        "knowledge-explainable-economic-attribution"
+      ]
+    }
+  }
+]

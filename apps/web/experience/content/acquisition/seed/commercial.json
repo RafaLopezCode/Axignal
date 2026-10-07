@@ -1,0 +1,482 @@
+[
+  {
+    "id": "commercial_external_observation",
+    "cluster": "commercial-use",
+    "intent": "evaluate_external_observation",
+    "type": "commercial",
+    "locales": {
+      "es": {
+        "slug": "observar-una-organizacion-desde-fuera",
+        "title": "Observar una organización desde fuera, con contexto",
+        "description": "Comprende qué puede mostrar la evidencia económica públicamente observable sobre una organización y qué permanece desconocido.",
+        "lead": "Conocer una empresa desde dentro no equivale a saber cómo aparece en el mundo económico público. AXIGNAL parte de evidencia observable y la conecta con contexto, tiempo y relaciones para construir una perspectiva externa que se pueda examinar.",
+        "answer": "AXIGNAL ofrece inteligencia económica independiente y persistente. Un Foco de observación dirige atención a una Organización; no crea un perfil editable ni garantiza que todas sus capacidades, relaciones o mercados puedan observarse.",
+        "sections": [
+          {
+            "heading": "De una URL a una pregunta económica",
+            "body": "Una página corporativa es una fuente posible, no una descripción completa de la Organización. La observación puede relacionar lo que la propia empresa publica con otras fuentes públicas admitidas, y preguntar qué capacidades, actividad, relaciones o contextos aparecen sustentados. Cada afirmación debe conservar su procedencia y su estado: observado, derivado o todavía desconocido."
+          },
+          {
+            "heading": "El panorama depende de lo que puede observarse",
+            "body": "Una Organización puede tener actividad valiosa con poca huella pública. También puede aparecer mucho en internet sin que eso demuestre demanda o calidad. AXIGNAL describe la evidencia encontrada y sus límites; la ausencia de una señal accesible no prueba que la actividad no exista. La disponibilidad y profundidad dependen del Foco y de las fuentes admitidas para cada pregunta."
+          },
+          {
+            "heading": "Contexto conectado, conclusiones inspeccionables",
+            "body": "El valor no está en acumular menciones, sino en situar evidencias dentro de un entorno económico: capacidades, mercados, actividad relacionada y cambios que merecen revisión. Las relaciones potenciales permanecen potenciales hasta contar con evidencia adicional. La persona puede seguir el razonamiento hasta lo que lo sostiene y distinguirlo de una hipótesis que aún requiere investigación."
+          },
+          {
+            "heading": "Una perspectiva que puede evolucionar",
+            "body": "La primera observación establece un punto de partida, no una historia retrospectiva. Con el tiempo, evidencia nueva, retirada o contradictoria puede cambiar lo que se sabe y lo que sigue vigente. La comparación sólo tiene sentido cuando fuentes, alcance y condiciones son compatibles; AXIGNAL debe hacer visible la incertidumbre cuando no lo sean."
+          }
+        ],
+        "example": "Una consultora quiere preparar una conversación con una empresa industrial. Puede investigar qué capacidades aparecen públicamente, qué fuentes las respaldan y qué partes del panorama no tienen suficiente evidencia. Esto ayuda a formular preguntas informadas; no confirma ingresos, clientes ni intención de compra.",
+        "limits": "AXIGNAL no conoce hechos privados por defecto, no garantiza cobertura exhaustiva y no convierte una ausencia de resultados en prueba de ausencia. La cobertura depende del foco de observación, las condiciones de acceso y las fuentes públicas admitidas. Una inferencia nunca equivale por sí sola a una observación ni a una relación comercial confirmada.",
+        "cta": {
+          "label": "Empezar con AXIGNAL",
+          "href": "/signup"
+        },
+        "related": [
+          "commercial_persistent_vs_snapshot",
+          "commercial_reusable_research",
+          "commercial_company_changes"
+        ]
+      },
+      "en": {
+        "slug": "observe-an-organization-from-the-outside",
+        "title": "Observe an organization from the outside, with context",
+        "description": "See what publicly observable economic evidence can tell you about an organization—and what remains unknown.",
+        "lead": "Knowing a company from the inside does not tell you exactly how it appears in the public economic world. AXIGNAL starts with observable evidence and connects it to context, time and relationships so an outside perspective can be inspected.",
+        "answer": "AXIGNAL is an independent, persistent economic intelligence system. An Observation Focus directs attention to an Organization; it does not create an editable profile or guarantee that every capability, relationship or market can be observed.",
+        "sections": [
+          {
+            "heading": "From a URL to an economic question",
+            "body": "A corporate website is one possible source, not a complete account of an Organization. Observation can relate what the company publishes to other admitted public sources and ask which capabilities, activity, relationships or contexts have supporting evidence. Each claim should retain its provenance and epistemic state: observed, derived or still unknown."
+          },
+          {
+            "heading": "The picture depends on what can be observed",
+            "body": "An Organization may do valuable work with little public footprint. It may also appear frequently online without that proving demand or quality. AXIGNAL describes the evidence found and its limits; an inaccessible signal does not prove that the underlying activity is absent. Availability and depth depend on the Observation Focus and the sources admitted for each question."
+          },
+          {
+            "heading": "Connected context, inspectable conclusions",
+            "body": "The value is not a pile of mentions. It is placing evidence in an economic setting: capabilities, markets, related activity and changes that merit attention. Potential relationships remain potential until further evidence supports them. A person can follow the reasoning back to its support and distinguish it from a hypothesis that still needs research."
+          },
+          {
+            "heading": "A perspective that can evolve",
+            "body": "The first observation establishes a starting point; it cannot reconstruct an unobserved past. Over time, new, withdrawn or conflicting evidence may change what is known and what remains current. Comparison is meaningful only when sources, scope and conditions are compatible; AXIGNAL should expose uncertainty when they are not."
+          }
+        ],
+        "example": "A consultant preparing for a conversation with an industrial company can investigate which capabilities appear publicly, what sources support them and which parts of the picture lack enough evidence. That can inform better questions; it does not establish revenue, customers or intent to buy.",
+        "limits": "AXIGNAL does not know private facts by default, does not guarantee exhaustive coverage and does not treat missing results as proof of absence. Coverage depends on the Observation Focus, access conditions and admitted public sources. An inference alone is never an observation or a confirmed commercial relationship.",
+        "cta": {
+          "label": "Get started with AXIGNAL",
+          "href": "/signup"
+        },
+        "related": [
+          "commercial_persistent_vs_snapshot",
+          "commercial_reusable_research",
+          "commercial_company_changes"
+        ]
+      }
+    }
+  },
+  {
+    "id": "commercial_persistent_vs_snapshot",
+    "cluster": "commercial-use",
+    "intent": "compare_persistent_and_one_off_research",
+    "type": "commercial",
+    "locales": {
+      "es": {
+        "slug": "observacion-persistente-o-busqueda-puntual",
+        "title": "Observación persistente o búsqueda puntual: qué cambia",
+        "description": "Compara una investigación de un solo momento con mantener un Foco de observación que pueda acumular evidencia temporal.",
+        "lead": "Una búsqueda puntual responde con lo que encuentra hoy. La observación persistente añade una dimensión distinta: conservar un punto de partida y reevaluar qué cambia cuando aparece evidencia nueva.",
+        "answer": "La diferencia no es que una opción sea siempre más exacta. Es temporal: una búsqueda puntual produce una respuesta para un momento; un Foco de observación permite que el conocimiento se acumule y vuelva a evaluarse, condicionado por fuentes y cobertura disponibles.",
+        "sections": [
+          {
+            "heading": "La foto puntual tiene un uso concreto",
+            "body": "Para una pregunta acotada —por ejemplo, identificar lo que una empresa declara sobre un producto— una búsqueda puntual puede ser suficiente. Su límite es que la respuesta no conserva necesariamente un estado económico gobernado, ni vuelve por sí sola cuando el contexto cambia. El trabajo y el criterio para comparar resultados futuros quedan en manos de quien investiga."
+          },
+          {
+            "heading": "Persistencia significa memoria con revisión",
+            "body": "Un Foco de observación asigna atención continuada a una Organización. La intención es conectar evidencia que siga vigente, registrar variaciones observables y permitir reevaluación. Persistencia no significa actualización instantánea ni cobertura total: cada cambio depende de una fuente accesible, de condiciones comparables y de que la evidencia supere las reglas correspondientes."
+          },
+          {
+            "heading": "El tiempo permite preguntas que una foto no responde",
+            "body": "¿Qué apareció después de la primera observación? ¿Qué desapareció de una fuente? ¿Qué relación se volvió más o menos sustentable? Son preguntas temporales. La fecha de inicio también importa: una observación iniciada ahora no puede reconstruir con certeza todo lo que ocurrió antes. Mantener ese límite visible evita convertir una cronología incompleta en una historia inventada."
+          },
+          {
+            "heading": "Cuándo tiene sentido cada enfoque",
+            "body": "Una consulta puntual encaja con una decisión inmediata y estrecha. La observación persistente puede ser pertinente si la Organización importa a través del tiempo y si existe evidencia pública útil que pueda observarse de forma gobernada. No es necesario mantener un foco sobre cada empresa: la elección expresa dónde merece la pena dedicar atención, no quién debe ser considerado verdadero o importante por AXIGNAL."
+          }
+        ],
+        "example": "Un analista puede revisar hoy una empresa para preparar una reunión y cerrar esa investigación. Si además necesita entender cómo evoluciona su contexto público durante los próximos meses, podría iniciar un Foco de observación y comparar cambios que AXIGNAL consiga observar con condiciones identificables.",
+        "limits": "La persistencia no garantiza alertas en tiempo real, una frecuencia concreta, ni que toda variación empresarial deje evidencia pública. La disponibilidad depende del foco y las fuentes admitidas; una comparación puede quedar sin respuesta si cambiaron el instrumento o las condiciones. La observación iniciada hoy no recupera el pasado no observado.",
+        "cta": {
+          "label": "Conocer AXIGNAL",
+          "href": "/es/knowledge"
+        },
+        "related": [
+          "commercial_external_observation",
+          "commercial_company_changes",
+          "commercial_reusable_research"
+        ]
+      },
+      "en": {
+        "slug": "persistent-observation-or-a-one-off-search",
+        "title": "Persistent observation or a one-off search: what changes",
+        "description": "Compare a single research session with keeping an Observation Focus that can accumulate evidence over time.",
+        "lead": "A one-off search answers with what it finds today. Persistent observation adds a different dimension: keeping a starting point and reevaluating what changes as new evidence appears.",
+        "answer": "The distinction is not that one approach is always more accurate. It is temporal: a one-off search gives an answer for one moment; an Observation Focus lets knowledge accumulate and be reevaluated, subject to available sources and coverage.",
+        "sections": [
+          {
+            "heading": "A single snapshot serves a specific purpose",
+            "body": "For a narrow question—such as identifying what a company says about one product—a one-off search may be enough. Its limit is that it does not necessarily preserve governed economic state or return on its own when the context changes. The work and judgment needed to compare future findings remain with the researcher."
+          },
+          {
+            "heading": "Persistence means memory with reassessment",
+            "body": "An Observation Focus assigns continuing attention to an Organization. The intent is to connect evidence that remains current, record observable variation and enable reassessment. Persistence does not mean instant updates or complete coverage: each change depends on an accessible source, comparable conditions and evidence meeting the relevant rules."
+          },
+          {
+            "heading": "Time makes questions possible that a snapshot cannot answer",
+            "body": "What appeared after the first observation? What disappeared from a source? Did the support for a relationship change? These are temporal questions. The start date matters too: observation begun now cannot reliably reconstruct everything that happened earlier. Keeping that limit visible prevents an incomplete chronology from becoming an invented history."
+          },
+          {
+            "heading": "When each approach makes sense",
+            "body": "A one-off query fits an immediate, bounded decision. Persistent observation may fit when an Organization matters over time and useful public evidence can be observed under governed conditions. There is no need to keep a focus on every company: the choice directs attention; it does not determine who AXIGNAL considers true or important."
+          }
+        ],
+        "example": "An analyst can review a company today to prepare for a meeting and stop there. If they also need to understand how its public context evolves over the coming months, they could start an Observation Focus and compare changes AXIGNAL is able to observe under identifiable conditions.",
+        "limits": "Persistence does not guarantee real-time alerts, a specific refresh rate or public evidence for every business change. Availability depends on the focus and admitted sources; comparison may be inconclusive if the instrument or conditions changed. Observation started today cannot recover an unobserved past.",
+        "cta": {
+          "label": "Learn about AXIGNAL",
+          "href": "/en/knowledge"
+        },
+        "related": [
+          "commercial_external_observation",
+          "commercial_company_changes",
+          "commercial_reusable_research"
+        ]
+      }
+    }
+  },
+  {
+    "id": "commercial_company_changes",
+    "cluster": "commercial-use",
+    "intent": "understand_publicly_observable_company_changes",
+    "type": "commercial",
+    "locales": {
+      "es": {
+        "slug": "seguir-cambios-observables-de-una-empresa",
+        "title": "Entender los cambios observables de una empresa",
+        "description": "Distingue una señal pública nueva de un cambio confirmado en la actividad económica de una empresa.",
+        "lead": "Un cambio en una web, un registro o un anuncio puede merecer atención. Por sí solo, no explica qué cambió en la empresa ni por qué. El contexto, la fecha, la fuente y la comparación determinan qué puede concluirse.",
+        "answer": "AXIGNAL busca dar contexto temporal a evidencia económica observable. Puede ayudar a identificar cambios que merecen revisión cuando las fuentes y condiciones disponibles lo permiten; no promete detección de cada cambio ni alertas garantizadas.",
+        "sections": [
+          {
+            "heading": "Señal nueva no siempre significa cambio de negocio",
+            "body": "Una página publicada recientemente puede describir una iniciativa anterior; un documento puede corregir datos; una noticia puede repetir una fuente. Antes de llamar cambio a una diferencia, hay que establecer qué documento se observó, cuándo estuvo disponible, a qué sujeto se refiere y si la diferencia es sustantiva o editorial."
+          },
+          {
+            "heading": "La comparación necesita condiciones legibles",
+            "body": "Una comparación temporal sólida identifica la fuente y el periodo, conserva el material permitido y explica si el método cambió. Si una página dejó de estar accesible, eso no prueba que la actividad terminara. Si dos observaciones vienen de superficies distintas, pueden aportar contexto, pero no forman automáticamente un antes/después equivalente."
+          },
+          {
+            "heading": "Conectar cambio y entorno económico",
+            "body": "El significado posible de una señal depende del resto del panorama: capacidades, mercados, dependencias y otras actividades relacionadas. Una nueva ubicación no confirma que exista capacidad operativa allí; una adjudicación publicada no demuestra por sí sola una relación comercial directa. Mantener hechos, derivaciones e hipótesis separados ayuda a enfocar la investigación posterior."
+          },
+          {
+            "heading": "El historial comienza cuando empieza la observación",
+            "body": "AXIGNAL puede desarrollar memoria temporal sobre lo que observa en adelante, sujeto a fuentes y retención gobernadas. No puede saber automáticamente cómo era una Organización antes del primer registro. Esta distinción es útil al evaluar tendencias: falta de historia previa es una limitación de conocimiento, no evidencia de estabilidad."
+          }
+        ],
+        "example": "Una agencia ve que un cliente incorporó una sección sobre mantenimiento industrial. Puede tratarla como una señal pública, investigar cuándo apareció y qué evidencia describe la capacidad. No debería asumir que el servicio es nuevo, que ya tiene clientes o que esa publicación generará demanda.",
+        "limits": "No se garantiza tiempo real, detección exhaustiva ni una alerta por cada cambio. La observabilidad depende de la fuente, su accesibilidad y el Foco de observación; las comparaciones requieren condiciones compatibles. Los cambios publicitarios o declarativos no establecen automáticamente cambios operativos, comerciales o de desempeño.",
+        "cta": {
+          "label": "Empezar con AXIGNAL",
+          "href": "/signup"
+        },
+        "related": [
+          "commercial_persistent_vs_snapshot",
+          "commercial_reusable_research",
+          "commercial_external_observation"
+        ]
+      },
+      "en": {
+        "slug": "understand-observable-company-changes",
+        "title": "Understand a company's observable changes",
+        "description": "Separate a new public signal from a confirmed change in a company's economic activity.",
+        "lead": "A change on a website, in a record or in an announcement may deserve attention. By itself, it does not explain what changed in the company or why. Context, date, source and comparison determine what can be concluded.",
+        "answer": "AXIGNAL aims to give observable economic evidence temporal context. It may help identify changes worth reviewing when available sources and conditions allow; it does not promise to detect every change or deliver guaranteed alerts.",
+        "sections": [
+          {
+            "heading": "A new signal does not always mean a business change",
+            "body": "A recently published page may describe an older initiative; a filing may correct data; a news item may repeat another source. Before calling a difference a change, establish which document was observed, when it became available, which subject it refers to and whether the difference is substantive or editorial."
+          },
+          {
+            "heading": "A comparison needs clear conditions",
+            "body": "A sound temporal comparison identifies the source and period, retains material where permitted and explains whether the method changed. If a page is no longer accessible, that does not prove the activity ended. If two observations come from different surfaces, they may provide context but do not automatically form an equivalent before-and-after measurement."
+          },
+          {
+            "heading": "Connect a change to its economic setting",
+            "body": "The possible meaning of a signal depends on the rest of the picture: capabilities, markets, dependencies and related activity. A new location does not confirm operating capacity there; a published award alone does not prove a direct commercial relationship. Keeping facts, derivations and hypotheses separate helps focus follow-up research."
+          },
+          {
+            "heading": "History starts when observation starts",
+            "body": "AXIGNAL can build temporal memory about what it observes going forward, subject to governed sources and retention. It cannot automatically know what an Organization looked like before the first record. This distinction matters when assessing trends: a lack of earlier history is a knowledge limit, not evidence of stability."
+          }
+        ],
+        "example": "An agency notices that a client added a page about industrial maintenance. It can treat this as a public signal, investigate when it appeared and what evidence describes the capability. It should not assume the service is new, already has customers or that the publication will generate demand.",
+        "limits": "Real-time coverage, exhaustive detection and an alert for every change are not guaranteed. Observability depends on the source, its accessibility and the Observation Focus; comparisons need compatible conditions. Promotional or declarative changes do not automatically establish operational, commercial or performance changes.",
+        "cta": {
+          "label": "Get started with AXIGNAL",
+          "href": "/signup"
+        },
+        "related": [
+          "commercial_persistent_vs_snapshot",
+          "commercial_reusable_research",
+          "commercial_external_observation"
+        ]
+      }
+    }
+  },
+  {
+    "id": "commercial_agency_consulting",
+    "cluster": "commercial-use",
+    "intent": "evaluate_independent_client_context_for_professionals",
+    "type": "commercial",
+    "locales": {
+      "es": {
+        "slug": "inteligencia-economica-persistente-para-consultoras",
+        "title": "Inteligencia económica persistente para agencias y consultoras",
+        "description": "Añade una perspectiva externa y verificable al trabajo profesional con organizaciones, sin convertir AXIGNAL en una agencia o CRM.",
+        "lead": "Quien asesora a una empresa suele conocer sus objetivos internos. La perspectiva externa responde otra pregunta: qué parte de su contexto económico puede reconstruirse con evidencia pública y qué sigue sin estar claro.",
+        "answer": "AXIGNAL puede aportar contexto económico independiente y memoria temporal a profesionales que trabajan con organizaciones. No ejecuta campañas, no gestiona clientes y no sustituye el juicio ni el trabajo de una agencia o consultora.",
+        "sections": [
+          {
+            "heading": "Una lectura independiente complementa el conocimiento del cliente",
+            "body": "Los materiales que entrega una empresa son útiles, pero representan una perspectiva. Una observación externa puede ayudar a contrastar esa narrativa con capacidades, actividad y relaciones que aparecen en fuentes públicas admitidas. Las discrepancias abren preguntas; no demuestran que una de las partes mienta ni que el modelo disponga de toda la información."
+          },
+          {
+            "heading": "De una cartera de organizaciones a focos deliberados",
+            "body": "Una agencia puede decidir a qué organizaciones dedicar observación persistente según sus necesidades profesionales. Cada Foco orienta atención; no convierte a la agencia en propietaria de un perfil ni permite editar la realidad canónica. La utilidad de cada foco depende de la pregunta, de la evidencia pública disponible y de las condiciones de acceso."
+          },
+          {
+            "heading": "Seguir lo que cambia sin atribuir causalidad",
+            "body": "Un equipo puede comparar evidencia pública a lo largo del tiempo y preguntar si una intervención coincide con una representación diferente. Esa coincidencia no prueba que el trabajo causó el cambio. Una comparación defendible identifica superficie, consulta, idioma, geografía, instrumento, versión, periodo y muestra cuando esos elementos son relevantes y están disponibles."
+          },
+          {
+            "heading": "Un espacio para mejores conversaciones de asesoría",
+            "body": "El resultado útil no siempre es una recomendación inmediata. Puede ser una pregunta más precisa: ¿qué fuente sostiene esta capacidad?, ¿por qué la demanda aún es incierta?, ¿qué mercado no está cubierto por la evidencia? AXIGNAL contextualiza lo que se conoce y lo que no; la agencia decide su asesoramiento y su ejecución fuera de AXIGNAL."
+          }
+        ],
+        "example": "Una consultora de estrategia prepara una revisión trimestral. Usa el contexto observable de una Organización para identificar capacidades respaldadas, cambios públicos desde la última revisión y asuntos que requieren confirmación directa. La presentación distingue esos hallazgos de las hipótesis y recomendaciones de la consultora.",
+        "limits": "AXIGNAL no es CRM, herramienta de gestión de campañas, software de generación de leads ni servicio SEO/GEO. No atribuye resultados a una intervención sin evidencia causal adecuada. La disponibilidad por Organización y tema depende del Foco, de la cobertura observable y de las fuentes admitidas.",
+        "cta": {
+          "label": "Empezar con AXIGNAL",
+          "href": "/signup"
+        },
+        "related": [
+          "commercial_external_observation",
+          "commercial_digital_representation",
+          "commercial_persistent_vs_snapshot"
+        ]
+      },
+      "en": {
+        "slug": "persistent-economic-intelligence-for-consultancies",
+        "title": "Persistent economic intelligence for agencies and consultancies",
+        "description": "Add an external, inspectable perspective to professional work with organizations without turning AXIGNAL into an agency or CRM.",
+        "lead": "Advisers often understand a company's internal goals. An outside perspective asks a different question: what part of its economic context can public evidence support, and what remains unclear?",
+        "answer": "AXIGNAL can provide independent economic context and temporal memory for professionals working with organizations. It does not run campaigns, manage clients or replace an agency's or consultant's judgment and work.",
+        "sections": [
+          {
+            "heading": "An independent view complements client knowledge",
+            "body": "Materials a company shares are useful, but they represent one perspective. External observation can help compare that account with capabilities, activity and relationships appearing in admitted public sources. Discrepancies raise questions; they do not prove that either party is lying or that the system has all the information."
+          },
+          {
+            "heading": "Choose deliberate Observation Focuses across a portfolio",
+            "body": "An agency can decide which organizations merit persistent observation for its professional needs. Each Focus directs attention; it does not make the agency owner of a profile or let it edit canonical reality. A Focus's usefulness depends on the question, available public evidence and access conditions."
+          },
+          {
+            "heading": "Track what changes without claiming causality",
+            "body": "A team can compare public evidence over time and ask whether an intervention coincides with a different representation. Coincidence does not prove that the work caused the change. A defensible comparison identifies the surface, query, language, geography, instrument, version, period and sample when those elements are relevant and available."
+          },
+          {
+            "heading": "Make advisory conversations more precise",
+            "body": "The useful output is not always an immediate recommendation. It may be a sharper question: which source supports this capability? Why is demand still uncertain? Which market lacks evidence? AXIGNAL contextualizes what is and is not known; the agency decides its advice and execution outside AXIGNAL. A shared view can also help an adviser explain what AXIGNAL observed separately from the agency’s own work. Any later change in public representation still needs comparable conditions, and a client’s internal information remains outside the public evidence base."
+          }
+        ],
+        "example": "A strategy consultancy is preparing a quarterly review. It uses an Organization's observable context to identify supported capabilities, public changes since the last review and points that need direct confirmation. Its presentation distinguishes those findings from the consultancy's hypotheses and recommendations.",
+        "limits": "AXIGNAL is not a CRM, campaign-management tool, lead-generation platform or SEO/GEO service. It does not attribute outcomes to an intervention without appropriate causal evidence. Availability for each Organization and topic depends on the Focus, observable coverage and admitted sources.",
+        "cta": {
+          "label": "Get started with AXIGNAL",
+          "href": "/signup"
+        },
+        "related": [
+          "commercial_external_observation",
+          "commercial_digital_representation",
+          "commercial_persistent_vs_snapshot"
+        ]
+      }
+    }
+  },
+  {
+    "id": "commercial_reusable_research",
+    "cluster": "commercial-use",
+    "intent": "understand_reusable_governed_research",
+    "type": "commercial",
+    "locales": {
+      "es": {
+        "slug": "investigacion-economica-reutilizable-con-evidencia",
+        "title": "Investigación económica reutilizable, con evidencia y vigencia",
+        "description": "Entiende cómo AXIGNAL puede conservar contexto económico compartido y reevaluar la evidencia antes de reutilizarla.",
+        "lead": "Repetir una investigación desde cero desperdicia trabajo; reutilizar una respuesta antigua sin comprobarla introduce riesgo. AXIGNAL busca conservar conocimiento económico con procedencia, estado epistémico y señales de vigencia.",
+        "answer": "El conocimiento que supera sus reglas de admisión puede incorporarse al estado canónico compartido y apoyar investigaciones futuras. Reutilizar no significa confiar para siempre: un cambio aguas arriba puede exigir reevaluación y una conclusión puede seguir siendo desconocida.",
+        "sections": [
+          {
+            "heading": "Una respuesta útil debe conservar cómo se obtuvo",
+            "body": "El contexto económico no es sólo texto final. Importan la evidencia de apoyo, el sujeto al que se refiere, su origen, el momento de observación y si la afirmación es observada o derivada. Sin esas conexiones resulta difícil valorar si una respuesta sigue aplicando a una nueva pregunta o si depende de una fuente que ya cambió."
+          },
+          {
+            "heading": "Compartido no significa propiedad del suscriptor",
+            "body": "AXIGNAL mantiene un mundo económico canónico. Que un suscriptor haya iniciado una observación no le concede propiedad sobre los hechos ni autoridad para alterarlos. La información se reutiliza cuando ha superado la admisión correspondiente y su uso es legítimo; las fuentes y estados deben seguir visibles para explicar por qué aparece."
+          },
+          {
+            "heading": "La vigencia forma parte de la respuesta",
+            "body": "Una afirmación puede ser actual, antigua, contradicha, inaccesible o de vigencia desconocida. Si la fuente cambia, la conclusión relacionada debe poder reevaluarse. La política de reutilización evita tratar datos como verdad permanente: conserva su historia donde está permitido, pero actualiza qué se considera vigente sin borrar la incertidumbre."
+          },
+          {
+            "heading": "Investigar menos veces puede liberar atención",
+            "body": "Cuando evidencia autorizada sirve legítimamente para varias preguntas, reutilizarla puede reducir duplicación y dejar más capacidad para resolver lo que falta. Esto no implica que cualquier fuente se replique sin límite ni que todas las Organizaciones tengan la misma cobertura. Derechos, resolución del sujeto, currentness y adecuación a la nueva pregunta condicionan la reutilización."
+          }
+        ],
+        "example": "Un equipo consulta si una capacidad aparece en el panorama de dos organizaciones relacionadas. Si AXIGNAL ya conserva evidencia pública admitida y vigente, podría reutilizar la observación relevante sin contarla como dos fuentes distintas. Si la identidad o la vigencia no está clara, debe pedir más investigación o abstenerse.",
+        "limits": "La reutilización depende de derechos, procedencia, resolución de identidad, estado actual y pertinencia. No asegura ahorro medido, respuesta automática ni cobertura uniforme. La misma observación no debe contarse varias veces como evidencia independiente, y la información privada permanece separada del conocimiento público canónico.",
+        "cta": {
+          "label": "Conocer el modelo de AXIGNAL",
+          "href": "/es/knowledge"
+        },
+        "related": [
+          "commercial_external_observation",
+          "commercial_company_changes",
+          "commercial_agency_consulting"
+        ]
+      },
+      "en": {
+        "slug": "reusable-economic-research-with-evidence",
+        "title": "Reusable economic research, with evidence and currentness",
+        "description": "Learn how AXIGNAL can retain shared economic context and reevaluate evidence before reusing it.",
+        "lead": "Repeating research from scratch wastes effort; reusing an old answer without checking it creates risk. AXIGNAL aims to retain economic knowledge with provenance, epistemic state and currentness signals.",
+        "answer": "Knowledge that passes its admission rules may enter shared canonical state and support later research. Reuse does not mean trusting forever: an upstream change can require reassessment, and a conclusion may remain unknown.",
+        "sections": [
+          {
+            "heading": "A useful answer preserves how it was reached",
+            "body": "Economic context is more than final text. The supporting evidence, the subject it refers to, its origin, observation time and whether a claim is observed or derived all matter. Without those connections, it is difficult to judge whether an answer still applies to a new question or depends on a source that has changed."
+          },
+          {
+            "heading": "Shared knowledge does not belong to the subscriber",
+            "body": "AXIGNAL maintains one canonical economic world. A subscriber starting an observation does not own the facts or gain authority to alter them. Information is reused when it has passed the relevant admission rules and its use is legitimate; sources and states should remain visible so the system can explain why a finding appears."
+          },
+          {
+            "heading": "Currentness is part of the answer",
+            "body": "A claim may be current, old, contradicted, inaccessible or of unknown currentness. If a source changes, the related conclusion must be eligible for reassessment. Reuse should not turn data into permanent truth: history may be retained where allowed, while the current view changes without erasing uncertainty."
+          },
+          {
+            "heading": "Fewer repeated searches can free attention",
+            "body": "When authorized evidence legitimately supports several questions, reuse can reduce duplication and leave more capacity for what is missing. This does not mean every source can be copied without limit or every Organization has equal coverage. Rights, subject resolution, currentness and fit to the new question all constrain reuse."
+          }
+        ],
+        "example": "A team asks whether a capability appears in the picture of two related organizations. If AXIGNAL already retains admitted, current public evidence, it could reuse the relevant observation without counting it as two independent sources. If identity or currentness is unclear, it should research further or abstain.",
+        "limits": "Reuse depends on rights, provenance, identity resolution, current state and relevance. It does not guarantee measured savings, an automatic answer or uniform coverage. One observation must not be counted several times as independent evidence, and private information remains separate from canonical public knowledge.",
+        "cta": {
+          "label": "Learn about AXIGNAL's model",
+          "href": "/en/knowledge"
+        },
+        "related": [
+          "commercial_external_observation",
+          "commercial_company_changes",
+          "commercial_agency_consulting"
+        ]
+      }
+    }
+  },
+  {
+    "id": "commercial_digital_representation",
+    "cluster": "commercial-use",
+    "intent": "understand_public_representation_and_evidence_gaps",
+    "type": "commercial",
+    "locales": {
+      "es": {
+        "slug": "representacion-digital-publica-y-brechas-de-evidencia",
+        "title": "Representación digital pública y brechas de evidencia",
+        "description": "Comprende qué observaciones de búsqueda y superficies generativas pueden decir —y qué no— sobre una organización.",
+        "lead": "Que una Organización aparezca poco en una superficie pública puede ser una brecha de representación documentable. No revela por sí sola su causa, su calidad ni su desempeño comercial.",
+        "answer": "AXIGNAL puede observar cómo superficies digitales representan a organizaciones y relacionar esa representación con evidencia económica cuando la instrumentación y las fuentes lo permiten. No ofrece ejecución SEO/GEO ni promete mejorar posiciones, menciones o resultados.",
+        "sections": [
+          {
+            "heading": "Representación observada, no verdad del negocio",
+            "body": "Un resultado de búsqueda o una respuesta generativa describe lo que mostró una superficie bajo ciertas condiciones. No certifica las capacidades reales de una empresa. Mención, cita y recomendación son fenómenos distintos; para interpretar cualquiera hacen falta superficie, consulta o instrumento, idioma, geografía, fecha y condiciones disponibles."
+          },
+          {
+            "heading": "Una brecha describe una diferencia que merece explicación",
+            "body": "Puede existir evidencia pública de una capacidad y poca representación de ella en algunas superficies observadas. La brecha es un hallazgo derivado para investigar, no una diagnosis causal. Podrían intervenir cobertura editorial, idioma, indexación, selección de consultas, cambios de producto o límites del instrumento; sin evidencia suficiente, la causa permanece desconocida."
+          },
+          {
+            "heading": "Las comparaciones requieren un método estable",
+            "body": "Para comparar dos momentos, deben conocerse instrumento y versión, superficie, consultas o prompts, contexto, periodo, muestra y variación cuando aplique. La interfaz de un producto y una API del modelo son instrumentos distintos. Si las condiciones cambian o la muestra es pequeña, AXIGNAL debe exponer la discontinuidad o abstenerse de afirmar tendencia."
+          },
+          {
+            "heading": "La evidencia puede orientar trabajo externo",
+            "body": "Una agencia puede decidir revisar contenido, comunicación o distribución a partir de una brecha que considere relevante. AXIGNAL no ejecuta ese trabajo y una mejora posterior no prueba que una intervención concreta la causara. Tras una nueva observación sólo puede describirse lo que cambió bajo condiciones comparables, junto con la incertidumbre y el alcance de la muestra."
+          }
+        ],
+        "example": "Una empresa de componentes anuncia una capacidad especializada en su web, pero no aparece en una consulta pública seleccionada y documentada. AXIGNAL podría registrar esa diferencia como una brecha por investigar. Antes de atribuirla a SEO, debe comprobar la consulta, el idioma, la superficie, la fecha y otras explicaciones posibles.",
+        "limits": "AXIGNAL no ejecuta SEO, GEO, marketing, gestión de reputación ni reparación de posicionamiento. No promete ranking, citación o crecimiento. Toda medición depende de instrumento/versiones, condiciones, periodo, muestra, cobertura y derechos de observación; opiniones y representación pública no prueban verdad comercial.",
+        "cta": {
+          "label": "Conocer AXIGNAL",
+          "href": "/es/knowledge"
+        },
+        "related": [
+          "commercial_agency_consulting",
+          "commercial_external_observation",
+          "commercial_company_changes"
+        ]
+      },
+      "en": {
+        "slug": "public-digital-representation-and-evidence-gaps",
+        "title": "Public digital representation and evidence gaps",
+        "description": "Understand what search and generative surfaces can—and cannot—show about an organization.",
+        "lead": "An Organization appearing rarely on a public surface can be a documentable representation gap. It does not, by itself, reveal the cause, business quality or commercial performance.",
+        "answer": "AXIGNAL can observe how digital surfaces represent organizations and relate that representation to economic evidence when instrumentation and sources allow. It does not provide SEO/GEO execution or promise better rankings, mentions or outcomes.",
+        "sections": [
+          {
+            "heading": "Observed representation is not business truth",
+            "body": "A search result or generated answer describes what a surface showed under particular conditions. It does not certify a company's actual capabilities. A mention, citation and recommendation are different phenomena; interpreting any of them requires the surface, query or instrument, language, geography, date and available conditions."
+          },
+          {
+            "heading": "A gap describes a difference worth explaining",
+            "body": "Public evidence of a capability may exist while some observed surfaces represent it weakly or not at all. The gap is a derived finding for investigation, not a causal diagnosis. Editorial coverage, language, indexing, query selection, product changes or instrument limits could play a part; without enough evidence, the cause remains unknown."
+          },
+          {
+            "heading": "Comparison needs a stable method",
+            "body": "To compare two moments, identify the instrument and version, surface, queries or prompts, context, period, sample and variation where relevant. A product interface and a model API are different instruments. If conditions change or the sample is small, AXIGNAL should expose the discontinuity or abstain from claiming a trend."
+          },
+          {
+            "heading": "Evidence can inform work done elsewhere",
+            "body": "An agency may decide to review content, communication or distribution in response to a gap it considers relevant. AXIGNAL does not do that work, and a later improvement does not prove a specific intervention caused it. A subsequent observation can describe only what changed under comparable conditions, with the uncertainty and sample scope made clear. When representation is sparse, the next step depends on the organization’s audience and business context. A documented gap can prompt a question for the team, but it does not identify a cause or establish that more visibility would improve commercial outcomes."
+          }
+        ],
+        "example": "A component maker describes a specialist capability on its website, yet it does not appear in a selected, documented public query. AXIGNAL could record the difference as a gap to investigate. Before attributing it to SEO, check the query, language, surface, date and other possible explanations.",
+        "limits": "AXIGNAL does not execute SEO, GEO, marketing, reputation management or ranking repair. It does not promise ranking, citations or growth. Any measurement depends on instrument/version, conditions, period, sample, coverage and observation rights; public opinion and representation do not establish commercial truth.",
+        "cta": {
+          "label": "Learn about AXIGNAL",
+          "href": "/en/knowledge"
+        },
+        "related": [
+          "commercial_agency_consulting",
+          "commercial_external_observation",
+          "commercial_company_changes"
+        ]
+      }
+    }
+  }
+]

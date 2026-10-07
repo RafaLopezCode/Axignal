@@ -1,0 +1,590 @@
+[
+  {
+    "id": "directory-listing-vs-evidence-context",
+    "fr": {
+      "slug": "annuaire-entreprises-ou-contexte-economique-avec-preuves",
+      "title": "Annuaire d’entreprises ou contexte économique étayé",
+      "description": "Un annuaire aide à trouver des organisations ; le contexte relie observations, dates et limites pour examiner une question.",
+      "lead": "Un annuaire et un contexte économique répondent à des besoins distincts. Le premier aide à trouver et décrire des organisations à partir de champs définis. Le second organise des observations liées à une question : quelle activité publique apparaît, quand a-t-elle été observée et quelles conclusions les sources permettent-elles de soutenir ? Les comparer comme si l’un remplaçait toujours l’autre masque leurs périmètres et dépendances.",
+      "answer": "Pour repérer des entités et consulter des données descriptives, un annuaire peut convenir. Pour comprendre pourquoi un signal mérite attention et quelles preuves l’étayent, il faut un contexte avec provenance, temporalité et état explicites. AXIGNAL observe et explique l’économie visible ; il ne transforme pas une fiche déclarative en vérité canonique et ne remplace pas tous les annuaires.",
+      "sections": [
+        {
+          "heading": "Ce qu’organise un annuaire",
+          "body": "Un annuaire présente souvent des fiches d’organisations avec des attributs utiles à la découverte, au filtrage ou à la prise de contact, selon son modèle et ses sources. Il peut suffire pour constituer une première liste d’acteurs à examiner. Ses champs et sa couverture doivent être compris selon la méthode du fournisseur : une catégorie, une adresse ou une description ne démontre pas seule une activité actuelle, une capacité disponible ou une relation commerciale."
+        },
+        {
+          "heading": "Ce qu’ajoute le contexte économique",
+          "body": "Le contexte relie une observation à sa source, à la portée de l’affirmation, à sa date et aux incertitudes connues. Il aide à distinguer une capacité décrite d’une capacité étayée dans une région, ainsi qu’une activité potentielle d’une relation observée. Chaque lien doit pouvoir être parcouru jusqu’à sa base ; une synthèse agréable sans provenance n’offre pas le même contrôle. Des questions peuvent rester ouvertes lorsque les sources ne suffisent pas."
+        },
+        {
+          "heading": "Choisir selon la décision",
+          "body": "Commencez par préciser l’usage de l’information. Pour repérer des entités selon des critères généraux, une liste peut réduire l’effort initial. Pour évaluer un signal, reconstruire des changements ou expliquer pourquoi deux organisations semblent liées, recherchez les sources et le contexte temporel. Les deux ressources peuvent se compléter : l’annuaire sert de point d’entrée, puis la recherche contextuelle examine les affirmations importantes sans donner autorité automatique aux données importées."
+        },
+        {
+          "heading": "La limite d’AXIGNAL",
+          "body": "AXIGNAL modélise l’économie observable sous forme de connaissances avec preuves, dérivations et états distincts. Il n’est ni registre complet d’entreprises, ni plateforme de contact, ni outil de correction de profils à la demande. Les indications d’un abonné peuvent orienter l’attention, mais ne modifient pas les faits canoniques. Une compatibilité économique possible reste POTENTIAL tant que les preuves adaptées manquent ; ce n’est ni un client, ni un lead, ni une relation observée."
+        }
+      ],
+      "example": "Exemple hypothétique : un annuaire répertorie des fabricants d’équipements thermiques dans une région. Une acheteuse utilise la liste pour commencer. Elle doit ensuite établir quelle source publique décrit une fabrication propre, laquelle mentionne seulement la distribution et la date de chaque donnée. L’annuaire fait découvrir des noms ; le contexte permet de préciser ce qui est connu et ce qui reste à vérifier.",
+      "limits": "Les annuaires diffèrent par couverture, actualisation, droits et critères d’inclusion. Un contexte étayé dépend aussi de sources accessibles et peut conserver des lacunes. Aucun des deux ne révèle automatiquement des capacités privées, une disponibilité commerciale ou la qualité d’une relation. Une catégorie partagée ne prouve pas l’équivalence entre organisations ; une mention ne constitue ni recommandation ni approbation. Le choix dépend de la question, de l’usage autorisé et de la traçabilité nécessaire.",
+      "cta": {
+        "label": "Explorer les méthodes avec preuves",
+        "href": "/fr/knowledge"
+      },
+      "related": [
+        "source-summary-vs-provenance",
+        "digital-indicator-vs-conditioned-observation",
+        "static-report-vs-reusable-evidence-memory"
+      ]
+    },
+    "de": {
+      "slug": "unternehmensverzeichnis-oder-beleggestuetzter-kontext",
+      "title": "Unternehmensverzeichnis oder beleggestützter Kontext",
+      "description": "Ein Verzeichnis hilft beim Finden von Organisationen; Kontext verknüpft Beobachtungen, Zeitpunkte und Grenzen.",
+      "lead": "Ein Verzeichnis und wirtschaftlicher Kontext erfüllen unterschiedliche Aufgaben. Ein Verzeichnis hilft, Organisationen anhand bestimmter Felder zu finden und zu beschreiben. Kontext ordnet Beobachtungen zu einer Frage: Welche öffentliche Aktivität ist sichtbar, wann wurde sie beobachtet und welche Aussage erlauben die Quellen? Ein Vergleich, bei dem das eine das andere immer ersetzen soll, blendet Umfang und Abhängigkeiten aus.",
+      "answer": "Wer mögliche Organisationen finden und beschreibende Daten nachschlagen will, kann ein Verzeichnis nutzen. Wer verstehen möchte, warum ein Signal relevant ist und welche Belege es tragen, braucht Herkunft, zeitlichen Bezug und Status. AXIGNAL beobachtet und erklärt die sichtbare Wirtschaft; ein erklärtes Profil wird dadurch weder kanonische Wahrheit noch ersetzt AXIGNAL jedes Verzeichnis.",
+      "sections": [
+        {
+          "heading": "Was ein Verzeichnis ordnet",
+          "body": "Ein Verzeichnis zeigt Organisationseinträge mit Merkmalen, die je nach Aufbau und Quellen der Suche, Filterung oder Kontaktaufnahme dienen. Für eine erste Liste möglicher Akteure kann das genügen. Felder und Abdeckung müssen anhand der Methode des Anbieters gelesen werden: Kategorie, Adresse oder Beschreibung belegen für sich weder aktuelle Aktivität noch verfügbare Fähigkeit oder Geschäftsbeziehung."
+        },
+        {
+          "heading": "Was wirtschaftlicher Kontext ergänzt",
+          "body": "Kontext verbindet eine Beobachtung mit ihrer Quelle, dem Geltungsbereich der Aussage, dem Datum und bekannten Unsicherheiten. So lässt sich eine beschriebene Fähigkeit von einer belegten Fähigkeit in einer Region und potenzielle Aktivität von einer beobachteten Beziehung unterscheiden. Verknüpfungen sollten bis zu ihrer Grundlage prüfbar bleiben. Eine gut lesbare Zusammenfassung ohne Herkunft bietet nicht dieselbe Kontrolle; bei unzureichenden Quellen bleiben Fragen offen."
+        },
+        {
+          "heading": "Die Wahl an der Entscheidung ausrichten",
+          "body": "Klären Sie zuerst, wofür die Information gebraucht wird. Für die Suche nach Organisationen mit allgemeinen Merkmalen kann eine Verzeichnisliste den Einstieg erleichtern. Für die Prüfung eines Signals, die Rekonstruktion von Veränderungen oder die Erklärung einer Verbindung braucht es Quellen und zeitlichen Kontext. Beide Mittel können sich ergänzen: Das Verzeichnis liefert Namen, die Kontextrecherche prüft wichtige Aussagen, ohne importierte Daten automatisch zu autorisieren."
+        },
+        {
+          "heading": "Die Grenze von AXIGNAL",
+          "body": "AXIGNAL bildet beobachtbare Wirtschaft als Wissen mit Belegen, Ableitungen und getrennten Zuständen ab. Es ist weder ein vollständiges Unternehmensregister noch Kontaktplattform oder Werkzeug zur Profilkorrektur auf Zuruf. Hinweise von Abonnenten lenken Aufmerksamkeit, ändern jedoch keine kanonischen Fakten. Eine mögliche wirtschaftliche Passung bleibt POTENTIAL, bis geeignete Belege vorliegen; sie ist weder Kunde noch Lead oder beobachtete Geschäftsbeziehung."
+        }
+      ],
+      "example": "Hypothetisches Beispiel: Ein Verzeichnis listet Hersteller von Wärmetechnik in einer Region. Eine Einkäuferin nutzt es als Startpunkt. Danach prüft sie, welche öffentliche Quelle eigene Fertigung beschreibt, welche nur Vertrieb nennt und von wann die jeweiligen Angaben stammen. Das Verzeichnis erleichtert die Entdeckung von Namen; Kontext zeigt, was bekannt ist und was ungeprüft bleibt.",
+      "limits": "Verzeichnisse unterscheiden sich bei Abdeckung, Aktualität, Nutzungsrechten und Aufnahmekriterien. Beleggestützter Kontext hängt ebenfalls von erreichbaren Quellen ab und kann Lücken behalten. Keines der Mittel macht private Fähigkeiten, kommerzielle Verfügbarkeit oder Beziehungsqualität automatisch sichtbar. Eine gemeinsame Kategorie belegt keine Gleichwertigkeit; eine Erwähnung ist weder Empfehlung noch Bestätigung. Entscheidend sind Frage, zulässige Nutzung und erforderliche Nachvollziehbarkeit.",
+      "cta": {
+        "label": "Beleggestützte Methoden erkunden",
+        "href": "/de/knowledge"
+      },
+      "related": [
+        "source-summary-vs-provenance",
+        "digital-indicator-vs-conditioned-observation",
+        "static-report-vs-reusable-evidence-memory"
+      ]
+    },
+    "it": {
+      "slug": "elenco-aziendale-o-contesto-economico-con-prove",
+      "title": "Elenco aziendale o contesto economico con prove",
+      "description": "Un elenco aiuta a trovare organizzazioni; il contesto collega osservazioni, date e limiti per esaminare una domanda.",
+      "lead": "Un elenco e un contesto economico rispondono a esigenze diverse. Il primo aiuta a trovare e descrivere organizzazioni tramite campi definiti. Il secondo organizza osservazioni attorno a una domanda: quale attività pubblica emerge, quando è stata osservata e quali conclusioni le fonti permettono di sostenere? Confrontarli come se uno sostituisse sempre l’altro nasconde portata e dipendenze.",
+      "answer": "Se devi individuare soggetti e consultare dati descrittivi, un elenco può essere adatto. Se devi capire perché un segnale merita attenzione e quali prove lo sostengono, serve contesto con provenienza, temporalità e stato espliciti. AXIGNAL osserva e spiega l’economia visibile; non trasforma una scheda dichiarata in verità canonica e non sostituisce ogni elenco.",
+      "sections": [
+        {
+          "heading": "Che cosa organizza un elenco",
+          "body": "Un elenco presenta spesso registrazioni di organizzazioni con attributi utili per scoperta, filtri o contatto, secondo struttura e fonti del fornitore. Può bastare per creare una prima lista di soggetti da esaminare. Campi e copertura vanno letti secondo la metodologia adottata: categoria, indirizzo o descrizione non dimostrano da soli attività attuale, capacità disponibile o relazione commerciale."
+        },
+        {
+          "heading": "Che cosa aggiunge il contesto economico",
+          "body": "Il contesto collega un’osservazione alla fonte, all’ambito dell’affermazione, alla data e alle incertezze conosciute. Aiuta a distinguere una capacità descritta da una sostenuta per una regione e un’attività potenziale da una relazione osservata. Ogni collegamento dovrebbe poter risalire alla propria base; una sintesi gradevole senza provenienza non offre lo stesso controllo. Se le fonti non bastano, alcune domande devono restare aperte."
+        },
+        {
+          "heading": "Scegliere in base alla decisione",
+          "body": "Inizia definendo che cosa devi fare con l’informazione. Per trovare soggetti secondo criteri generali, un elenco può ridurre lo sforzo iniziale. Per valutare un segnale, ricostruire cambiamenti o spiegare perché due organizzazioni risultano collegate, cerca fonti e contesto temporale. I due strumenti possono integrarsi: l’elenco fa da ingresso, la ricerca contestuale verifica le affermazioni rilevanti senza attribuire autorità automatica ai dati importati."
+        },
+        {
+          "heading": "Il limite di AXIGNAL",
+          "body": "AXIGNAL modella l’economia osservabile come conoscenza con prove, derivazioni e stati distinti. Non è un registro completo di imprese, una piattaforma di contatto o uno strumento per modificare profili su richiesta. Le indicazioni di un abbonato possono orientare l’attenzione, ma non cambiano i fatti canonici. Una possibile compatibilità economica resta POTENTIAL finché non ci sono prove adeguate; non equivale a cliente, lead o relazione osservata."
+        }
+      ],
+      "example": "Esempio ipotetico: un elenco presenta produttori di apparecchiature termiche in una regione. Un’acquirente usa i nominativi per iniziare, poi deve verificare quale fonte pubblica descriva produzione propria, quale menzioni solo distribuzione e a quale data risalga ciascun dato. L’elenco aiuta a scoprire nomi; il contesto chiarisce cosa si sa e cosa resta da verificare.",
+      "limits": "Gli elenchi variano per copertura, aggiornamento, diritti e criteri d’inclusione. Anche il contesto con prove dipende da fonti accessibili e può conservare lacune. Nessuno dei due rivela automaticamente capacità private, disponibilità commerciale o qualità di una relazione. Una categoria condivisa non prova equivalenza tra organizzazioni e una menzione non è raccomandazione né approvazione. La scelta dipende dalla domanda, dall’uso autorizzato e dalla tracciabilità necessaria.",
+      "cta": {
+        "label": "Esplora metodi con prove",
+        "href": "/it/knowledge"
+      },
+      "related": [
+        "source-summary-vs-provenance",
+        "digital-indicator-vs-conditioned-observation",
+        "static-report-vs-reusable-evidence-memory"
+      ]
+    },
+    "pt": {
+      "slug": "diretorio-de-empresas-ou-contexto-economico-com-evidencias",
+      "title": "Diretório de empresas ou contexto econômico com evidências",
+      "description": "Um diretório ajuda a encontrar organizações; o contexto conecta observações, datas e limites para examinar uma questão.",
+      "lead": "Um diretório e um contexto econômico atendem a necessidades diferentes. O primeiro ajuda a localizar e descrever organizações por campos definidos. O segundo organiza observações ligadas a uma pergunta: que atividade pública aparece, quando foi observada e que conclusão as fontes permitem sustentar? Compará-los como se um sempre substituísse o outro esconde seus escopos e dependências.",
+      "answer": "Se você precisa identificar entidades e consultar dados descritivos, um diretório pode ser adequado. Se precisa entender por que um sinal merece atenção e que evidências o sustentam, precisa de contexto com proveniência, temporalidade e estado explícitos. A AXIGNAL observa e explica a economia visível; não transforma um perfil declarado em verdade canônica nem substitui todos os diretórios.",
+      "sections": [
+        {
+          "heading": "O que um diretório organiza",
+          "body": "Um diretório costuma apresentar registros de organizações com atributos úteis para descoberta, filtros ou contato, conforme seu desenho e suas fontes. Pode bastar para compor uma lista inicial de atores a investigar. Seus campos e cobertura precisam ser interpretados conforme a metodologia do fornecedor: categoria, endereço ou descrição não comprovam, por si sós, atividade atual, capacidade disponível ou relação comercial."
+        },
+        {
+          "heading": "O que o contexto econômico acrescenta",
+          "body": "O contexto conecta uma observação à fonte que a sustenta, ao escopo da afirmação, à data e às incertezas conhecidas. Ajuda a distinguir uma capacidade descrita de outra sustentada em uma região e uma atividade potencial de uma relação observada. Cada conexão deve permitir voltar à sua base; uma síntese atraente sem proveniência não oferece o mesmo controle. Quando as fontes não bastam, algumas perguntas permanecem abertas."
+        },
+        {
+          "heading": "Escolher conforme a decisão",
+          "body": "Comece definindo o que precisa fazer com a informação. Para localizar entidades com critérios gerais, uma lista pode reduzir o esforço inicial. Para avaliar um sinal, reconstruir mudanças ou explicar por que duas organizações aparecem conectadas, procure fontes e contexto temporal. Os recursos podem se complementar: o diretório serve como ponto de partida e a pesquisa contextual verifica as afirmações importantes sem atribuir autoridade automática aos dados importados."
+        },
+        {
+          "heading": "O limite da AXIGNAL",
+          "body": "A AXIGNAL modela a economia observável como conhecimento com evidências, derivações e estados distintos. Não é um registro completo de empresas, uma plataforma de contato ou ferramenta para corrigir perfis a pedido. Indicações de assinantes podem orientar onde olhar, mas não alteram fatos canônicos. Uma possível compatibilidade econômica continua POTENTIAL até haver evidência adequada; não equivale a cliente, lead ou relação comercial observada."
+        }
+      ],
+      "example": "Exemplo hipotético: um diretório lista fabricantes de equipamentos térmicos em uma região. Uma compradora usa a lista para começar. Depois precisa verificar qual fonte pública descreve fabricação própria, qual apenas menciona distribuição e de quando é cada dado. O diretório ajuda a descobrir nomes; o contexto com evidências permite esclarecer o que se sabe e o que permanece sem verificação.",
+      "limits": "Diretórios variam em cobertura, atualização, permissões e critérios de inclusão. O contexto com evidências também depende de fontes acessíveis e pode manter lacunas. Nenhum dos dois revela automaticamente capacidades privadas, disponibilidade comercial ou qualidade de uma relação. Uma categoria compartilhada não prova equivalência entre organizações, e uma menção não é recomendação nem endosso. A escolha depende da pergunta, do uso autorizado e do nível de rastreabilidade necessário.",
+      "cta": {
+        "label": "Explorar métodos com evidências",
+        "href": "/pt/knowledge"
+      },
+      "related": [
+        "source-summary-vs-provenance",
+        "digital-indicator-vs-conditioned-observation",
+        "static-report-vs-reusable-evidence-memory"
+      ]
+    }
+  },
+  {
+    "id": "market-taxonomy-vs-capability-specific-reach",
+    "fr": {
+      "slug": "taxonomie-de-marche-ou-portee-par-capacite",
+      "title": "Taxonomie de marché ou portée économique par capacité",
+      "description": "Une taxonomie classe les secteurs ; la portée par capacité relie activité, zone, contexte et preuves précises.",
+      "lead": "Les catégories sectorielles et la portée économique peuvent aider à organiser une recherche, mais ne décrivent pas la même chose. Une taxonomie fournit des étiquettes communes pour classer entités ou activités. La portée par capacité demande où une capacité précise pourrait s’exercer et quelles activités ou preuves soutiennent cette lecture. Une catégorie générale oriente sans fixer une frontière de marché ni prouver la disponibilité.",
+      "answer": "Utilisez une taxonomie pour disposer d’un vocabulaire stable de navigation ou de regroupement. Pour évaluer présence ou possibilité économique, reliez la capacité à la géographie, à la période, aux exigences et aux sources observables. Le siège d’une organisation ne définit pas seul son marché total ; une étiquette sectorielle ne prouve pas qu’elle peut répondre à chaque demande de cette catégorie. AXIGNAL traite la géographie comme contexte et la portée comme propre à chaque capacité.",
+      "sections": [
+        {
+          "heading": "Ce qu’apporte une taxonomie",
+          "body": "Une classification partagée facilite le regroupement d’organisations et la comparaison d’enregistrements selon une structure connue. Elle sert aux filtres, aux rapports et à la navigation, surtout lorsque les sources emploient des termes différents. Ses limites dépendent toutefois de la version et de l’objectif de la taxonomie. Une entreprise peut exercer plusieurs activités ; une étiquette peut refléter sa déclaration ou le schéma de l’éditeur, et non une capacité vérifiée pour un besoin précis."
+        },
+        {
+          "heading": "La question de la portée par capacité",
+          "body": "La portée s’évalue pour une capacité, un service ou une activité déterminée. Elle peut tenir compte des lieux où l’activité est étayée, des exigences techniques ou réglementaires, de la demande visible et de la période. Une entreprise peut servir des marchés hors de son pays de siège ; une autre, classée dans le bon secteur, peut manquer de capacité, d’autorisation ou de disponibilité. Les états observé, potentiel et inconnu doivent rester distincts et reliés à leurs bases."
+        },
+        {
+          "heading": "La géographie ne crée pas de frontières automatiques",
+          "body": "La géographie donne du contexte pour comparer exigences, itinéraires, politiques et activité, mais une frontière administrative ne décide pas à elle seule où une organisation opère. La distance ne prouve pas non plus l’impossibilité lorsqu’un service à distance, la distribution ou des alliances sont possibles ; chaque voie exige des preuves adaptées. Les sources couvrent les régions de façon inégale. Faute de données, l’état est inconnu ou insuffisamment étayé, pas négatif par déduction cartographique."
+        },
+        {
+          "heading": "Choisir la représentation adaptée",
+          "body": "Gardez la taxonomie comme couche de classement et utilisez la portée par capacité pour la question économique. Les deux peuvent coexister si leur rôle et leur provenance sont expliqués. Dans AXIGNAL, une compatibilité possible avec une activité de marché est une dérivation POTENTIAL qui requiert des raisons inspectables ; elle n’implique ni client, ni lead, ni relation observée. L’explication doit montrer la capacité, le lieu, la période et les sources, ainsi que ce qui reste à examiner."
+        }
+      ],
+      "example": "Exemple hypothétique : un fabricant est classé dans les machines industrielles et son siège se trouve au Portugal. Ces informations aident à le trouver, mais n’établissent pas qu’il peut installer une ligne précise en France ce trimestre. Il faut examiner capacité, autorisations, service, activité de demande et dates des sources. Sans ces données, la portée pour ce cas reste inconnue.",
+      "limits": "Une taxonomie peut être ancienne ou mal représenter les activités hybrides. Une analyse de portée dépend des preuves disponibles et ne révèle pas les capacités privées ni ne garantit une vente. La demande observée ne prouve pas un rôle de fournisseur, client ou participant. Une coïncidence géographique ou sectorielle invite à explorer ; elle n’est pas une mesure universelle d’opportunité. Toute conclusion conserve sa temporalité, son incertitude et sa provenance.",
+      "cta": {
+        "label": "Comprendre la portée économique",
+        "href": "/fr/knowledge"
+      },
+      "related": [
+        "digital-indicator-vs-conditioned-observation",
+        "point-in-time-research-vs-persistent-observation",
+        "project-coordination-vs-economic-context"
+      ]
+    },
+    "de": {
+      "slug": "markttaxonomie-oder-faehigkeitsspezifische-reichweite",
+      "title": "Markttaxonomie oder wirtschaftliche Reichweite je Fähigkeit",
+      "description": "Taxonomien ordnen Branchen; Reichweite je Fähigkeit verbindet Aktivität, Geografie, Kontext und konkrete Belege.",
+      "lead": "Branchenkategorien und wirtschaftliche Reichweite können Recherche strukturieren, beschreiben aber nicht dasselbe. Eine feste Taxonomie stellt gemeinsame Begriffe zur Einordnung von Organisationen und Aktivitäten bereit. Die Reichweite je Fähigkeit fragt, wo eine bestimmte Fähigkeit eingesetzt werden könnte und welche Aktivität oder Belege diese Lesart stützen. Eine breite Kategorie kann Orientierung geben, ohne Marktgrenzen oder Verfügbarkeit zu beweisen.",
+      "answer": "Nutzen Sie eine Taxonomie, wenn ein stabiles Vokabular zur Navigation oder Gruppierung gebraucht wird. Für wirtschaftliche Präsenz oder Möglichkeit verbinden Sie Fähigkeit mit Geografie, Zeitraum, Anforderungen und beobachtbaren Quellen. Der Sitz bestimmt nicht allein den Gesamtmarkt einer Organisation; eine Branchenbezeichnung belegt nicht, dass sie jede Nachfrage darin bedienen kann. AXIGNAL nutzt Geografie als Denkrahmen und bestimmt Reichweite für jede Fähigkeit gesondert.",
+      "sections": [
+        {
+          "heading": "Der Beitrag einer Taxonomie",
+          "body": "Eine gemeinsame Klassifikation erleichtert das Gruppieren von Organisationen und den Vergleich von Einträgen anhand einer bekannten Struktur. Sie unterstützt Filter, Berichte und Navigation, besonders wenn Quellen verschiedene Begriffe verwenden. Die Grenzen hängen jedoch von Version und Zweck der Taxonomie ab. Unternehmen können mehrere Tätigkeiten haben; eine zugewiesene Kategorie kann die Selbstaussage oder das Schema des Herausgebers wiedergeben, nicht eine für einen bestimmten Bedarf belegte Fähigkeit."
+        },
+        {
+          "heading": "Die Frage der Reichweite je Fähigkeit",
+          "body": "Reichweite wird für eine definierte Fähigkeit, Leistung oder Tätigkeit betrachtet. Dazu können Orte mit belegtem Betrieb, technische oder regulatorische Anforderungen, sichtbare Nachfrageaktivität und Zeitraum gehören. Ein Unternehmen mit Sitz in einem Land kann andere Märkte bedienen; ein passend kategorisiertes Unternehmen kann für einen konkreten Fall dennoch Fähigkeit, Genehmigung oder Verfügbarkeit vermissen lassen. Beobachtet, potenziell und unbekannt bleiben getrennte, begründete Zustände."
+        },
+        {
+          "heading": "Geografie zieht keine automatischen Grenzen",
+          "body": "Geografie liefert Kontext zum Vergleich von Anforderungen, Wegen, Richtlinien und Aktivität, aber Verwaltungsgrenzen legen nicht allein fest, wo eine Organisation tätig ist. Auch Entfernung beweist keine Unmöglichkeit, wenn Fernleistung, Vertrieb oder Partnerschaften infrage kommen; jeder Weg benötigt passende Belege. Quellen decken Regionen unterschiedlich ab. Fehlen Daten, bleibt der Zustand unbekannt oder unzureichend belegt, statt aus Karte oder Firmensitz ein negatives Urteil abzuleiten."
+        },
+        {
+          "heading": "Die passende Darstellung wählen",
+          "body": "Bewahren Sie Taxonomien als nützliche Klassifikation und nutzen Sie Reichweite je Fähigkeit für die wirtschaftliche Frage. Beides kann nebeneinanderstehen, wenn Funktion und Herkunft erklärt werden. Eine mögliche Passung zu Marktaktivität bleibt bei AXIGNAL eine begründete POTENTIAL-Ableitung, keine Kunden-, Lead- oder beobachtete Beziehung. Die Erklärung zeigt Fähigkeit, Ort, Zeitraum und Quellen sowie offene Prüfungen."
+        }
+      ],
+      "example": "Hypothetisches Beispiel: Ein Hersteller ist als Industriemaschinenunternehmen klassifiziert und hat seinen Sitz in Portugal. Das hilft beim Auffinden, belegt aber nicht, dass er dieses Quartal eine konkrete Anlage in Frankreich installieren kann. Dafür wären Fähigkeit, Genehmigungen, Serviceabdeckung, Nachfragesignale und Quelldaten zu prüfen. Fehlen sie, bleibt die Reichweite für diesen Fall unbekannt.",
+      "limits": "Eine Taxonomie kann veraltet sein oder hybride Tätigkeiten schlecht abbilden. Eine Reichweitenanalyse hängt von verfügbaren Belegen ab, legt keine privaten Fähigkeiten offen und garantiert keine Aufträge. Beobachtete Nachfrage beweist weder Lieferanten- noch Kundenrolle. Eine geografische oder sektorale Überschneidung ist ein Untersuchungsansatz, kein universeller Chancenwert. Jede Schlussfolgerung bewahrt Zeitbezug, Unsicherheit und Herkunft.",
+      "cta": {
+        "label": "Wirtschaftliche Reichweite verstehen",
+        "href": "/de/knowledge"
+      },
+      "related": [
+        "digital-indicator-vs-conditioned-observation",
+        "point-in-time-research-vs-persistent-observation",
+        "project-coordination-vs-economic-context"
+      ]
+    },
+    "it": {
+      "slug": "tassonomia-di-mercato-o-portata-per-capacita",
+      "title": "Tassonomia di mercato o portata economica per capacità",
+      "description": "Una tassonomia classifica i settori; la portata per capacità collega attività, geografia, contesto e prove specifiche.",
+      "lead": "Categorie settoriali e portata economica possono aiutare a ordinare una ricerca, ma non descrivono la stessa cosa. Una tassonomia fissa offre etichette condivise per classificare entità o attività. La portata per capacità domanda dove potrebbe operare una capacità specifica e quali attività o prove sostengono la valutazione. Una categoria ampia orienta senza definire i confini di un mercato né provare disponibilità.",
+      "answer": "Usa una tassonomia quando serve un vocabolario stabile per navigare o raggruppare entità. Per valutare presenza o possibilità economica, collega la capacità a geografia, periodo, requisiti e fonti osservabili. La sede non definisce da sola il mercato totale di un’organizzazione; un’etichetta settoriale non prova che possa soddisfare ogni domanda della categoria. AXIGNAL tratta la geografia come contesto e definisce la portata per ciascuna capacità.",
+      "sections": [
+        {
+          "heading": "Che cosa offre una tassonomia",
+          "body": "Una classificazione condivisa facilita il raggruppamento delle organizzazioni e il confronto dei registri tramite una struttura nota. Supporta filtri, report e navigazione, soprattutto quando le fonti usano termini diversi. I limiti dipendono però dalla versione e dallo scopo della tassonomia. Un’impresa può svolgere più attività e un’etichetta assegnata può riflettere l’autodichiarazione o lo schema dell’editore, non una capacità verificata per un’esigenza concreta."
+        },
+        {
+          "heading": "Che cosa domanda la portata per capacità",
+          "body": "La portata si ragiona per una capacità, un servizio o un’attività definiti. Può considerare dove è supportata l’operatività, quali requisiti tecnici o normativi contano, che attività di domanda emerge e in quale periodo. Un’impresa con sede in un paese può servire altri mercati; un’altra con categoria pertinente può non avere capacità, permessi o disponibilità per il caso specifico. Gli stati osservato, potenziale e sconosciuto restano distinti e legati alle prove."
+        },
+        {
+          "heading": "La geografia non crea confini automatici",
+          "body": "La geografia offre contesto per confrontare requisiti, percorsi, politiche e attività, ma una frontiera amministrativa non decide da sola dove opera un’organizzazione. Nemmeno la distanza prova impossibilità se sono possibili servizi remoti, distribuzione o alleanze; ogni percorso richiede prove adeguate. Le fonti coprono le regioni in modo diseguale. Se mancano dati, lo stato corretto è sconosciuto o non supportato a sufficienza, non una conclusione negativa dedotta dalla mappa o dalla sede."
+        },
+        {
+          "heading": "Scegliere la rappresentazione adeguata",
+          "body": "Mantieni le tassonomie come livello utile di classificazione e usa la portata per capacità per la domanda economica. Possono coesistere se funzioni e provenienza sono spiegate. In AXIGNAL, una compatibilità possibile con attività di mercato è una derivazione POTENTIAL con motivazioni ispezionabili; non implica cliente, lead o relazione osservata. La spiegazione mostra capacità, luogo, periodo e fonti, chiarendo ciò che resta da esaminare."
+        }
+      ],
+      "example": "Esempio ipotetico: un produttore è classificato nella meccanica industriale e ha sede in Portogallo. Questi dati aiutano a trovarlo, ma non stabiliscono che possa installare una linea specifica in Francia questo trimestre. Occorre esaminare capacità, permessi, servizio, segnali di domanda e date delle fonti. Se i dati non sono disponibili, la portata per quel caso resta sconosciuta.",
+      "limits": "Una tassonomia può essere obsoleta o non rappresentare attività ibride. L’analisi della portata dipende dalle prove disponibili e non rivela capacità private né garantisce un contratto. La domanda osservata non dimostra un ruolo di fornitore, cliente o partecipante. Una coincidenza geografica o settoriale invita a esplorare, non costituisce una misura universale di opportunità. Ogni conclusione conserva temporalità, incertezza e provenienza.",
+      "cta": {
+        "label": "Capire la portata economica",
+        "href": "/it/knowledge"
+      },
+      "related": [
+        "digital-indicator-vs-conditioned-observation",
+        "point-in-time-research-vs-persistent-observation",
+        "project-coordination-vs-economic-context"
+      ]
+    },
+    "pt": {
+      "slug": "taxonomia-de-mercado-ou-alcance-por-capacidade",
+      "title": "Taxonomia de mercado ou alcance econômico por capacidade",
+      "description": "Uma taxonomia classifica setores; o alcance por capacidade conecta atividade, geografia, contexto e evidências específicas.",
+      "lead": "Categorias setoriais e alcance econômico podem ajudar a organizar uma investigação, mas não descrevem a mesma coisa. Uma taxonomia fixa oferece rótulos compartilhados para classificar entidades ou atividades. O alcance por capacidade pergunta onde uma capacidade específica poderia operar e quais atividades ou evidências sustentam essa leitura. Uma categoria ampla pode orientar sem definir fronteiras de mercado nem provar disponibilidade.",
+      "answer": "Use uma taxonomia quando precisar de vocabulário estável para navegar ou agrupar entidades. Para avaliar presença ou possibilidade econômica, relacione capacidade com geografia, período, requisitos e fontes observáveis. A sede não define sozinha o mercado total da organização; um rótulo setorial não prova que ela possa atender toda demanda da categoria. A AXIGNAL trata geografia como contexto de raciocínio e o alcance como específico a cada capacidade.",
+      "sections": [
+        {
+          "heading": "O que uma taxonomia oferece",
+          "body": "Uma classificação compartilhada facilita agrupar organizações e comparar registros sob uma estrutura conhecida. Ajuda em filtros, relatórios e navegação, sobretudo quando fontes usam termos diferentes. Seus limites dependem da versão e da finalidade da taxonomia. Uma empresa pode atuar em várias atividades; um rótulo atribuído pode refletir sua autodeclaração ou o esquema do editor, e não uma capacidade comprovada para uma necessidade específica."
+        },
+        {
+          "heading": "A pergunta do alcance por capacidade",
+          "body": "O alcance é analisado para uma capacidade, serviço ou atividade definida. Pode considerar onde há evidência de operação, quais requisitos técnicos ou regulatórios importam, que atividade de demanda aparece e em que período. Uma empresa sediada em um país pode atender outros mercados; outra com categoria pertinente pode não ter capacidade, licença ou disponibilidade para um caso concreto. Observado, potencial e desconhecido permanecem estados distintos, ligados às evidências."
+        },
+        {
+          "heading": "A geografia não cria fronteiras automáticas",
+          "body": "A geografia oferece contexto para comparar requisitos, rotas, políticas e atividades, mas uma fronteira administrativa não decide sozinha onde uma organização opera. A distância também não prova inviabilidade se há serviço remoto, distribuição ou alianças possíveis; cada caminho requer evidências adequadas. As fontes cobrem regiões de forma desigual. Quando faltam dados, o estado correto é desconhecido ou insuficientemente apoiado, não uma conclusão negativa baseada apenas no mapa ou na sede."
+        },
+        {
+          "heading": "Escolher a representação apropriada",
+          "body": "Mantenha taxonomias como camada útil de classificação e use alcance por capacidade para a questão econômica. Os dois podem coexistir se função e proveniência forem explicadas. Na AXIGNAL, uma compatibilidade possível com atividade de mercado é uma derivação POTENTIAL com razões inspecionáveis; não implica cliente, lead ou relação observada. A explicação mostra capacidade, lugar, período e fontes, além do que ainda precisa ser investigado."
+        }
+      ],
+      "example": "Exemplo hipotético: um fabricante aparece classificado em máquinas industriais e tem sede em Portugal. Isso ajuda a encontrá-lo, mas não comprova que possa instalar uma linha específica na França neste trimestre. Seria preciso revisar capacidade, licenças, cobertura de serviço, sinais de demanda e datas das fontes. Se esses dados não estiverem disponíveis, o alcance para o caso permanece desconhecido.",
+      "limits": "Uma taxonomia pode estar desatualizada ou não representar atividades híbridas. A análise de alcance depende das evidências disponíveis e não revela capacidades privadas nem garante contratação. Demanda observada não comprova que uma empresa seja fornecedora, cliente ou participante. Uma coincidência geográfica ou setorial é um indício para explorar, não uma medida universal de oportunidade. Toda conclusão preserva temporalidade, incerteza e proveniência.",
+      "cta": {
+        "label": "Entender o alcance econômico",
+        "href": "/pt/knowledge"
+      },
+      "related": [
+        "digital-indicator-vs-conditioned-observation",
+        "point-in-time-research-vs-persistent-observation",
+        "project-coordination-vs-economic-context"
+      ]
+    }
+  },
+  {
+    "id": "project-coordination-vs-economic-context",
+    "fr": {
+      "slug": "coordination-de-projet-ou-contexte-economique",
+      "title": "Coordination de projet ou contexte économique inspectable",
+      "description": "La coordination organise le travail interne ; le contexte économique explique les observations externes sans devenir un CRM.",
+      "lead": "Les outils de coordination et l’intelligence économique apparaissent parfois dans la même discussion, mais répondent à des questions différentes. Un outil de projet aide une équipe à organiser les responsabilités et les actions convenues. Le contexte économique examine les preuves publiques concernant organisations, activités, capacités et changements. Les confondre peut transformer une perspective externe en liste de tâches, ou une hypothèse en instruction opérationnelle.",
+      "answer": "Utilisez la coordination de projet pour attribuer du travail et suivre des engagements internes. Utilisez le contexte économique inspectable pour comprendre ce qui est observé, sa provenance et l’incertitude associée. AXIGNAL ne remplace ni un CRM, ni la gestion de projet, ni la coordination commerciale. Il peut expliquer un signal ou une opportunité POTENTIAL ; les équipes décident d’agir selon leurs processus et contrôles.",
+      "sections": [
+        {
+          "heading": "L’objet d’un outil de coordination",
+          "body": "Un gestionnaire de projet organise souvent tâches, responsables, échéances, états et dépendances définis par une équipe. Son autorité vient des décisions de cette équipe et de ses participants. Ces informations peuvent être privées et adaptées à l’avancement du travail, mais ne prouvent pas à elles seules des faits sur un marché. Une tâche de recherche sur un fournisseur exprime une intention, pas sa capacité, sa disponibilité ou une relation observée."
+        },
+        {
+          "heading": "L’objet du contexte économique",
+          "body": "Un contexte économique inspectable relie les affirmations aux observations, sources, dates, portée et états épistémiques. Il peut éclairer des changements ou une compatibilité possible, tout en séparant preuve et action. Une activité publiée ne prouve pas un contrat avec une organisation précise ; la similarité des capacités ne crée pas de relation commerciale. Si les preuves ne répondent pas, le contexte doit montrer l’incertitude au lieu d’inventer une tâche ou une conclusion."
+        },
+        {
+          "heading": "Une frontière produit nécessaire",
+          "body": "Réunir observation et flux opérationnels peut sembler pratique, mais ajoute des responsabilités différentes : affectation, notifications, collaboration, accès à des données privées et gestion commerciale. AXIGNAL s’arrête à la connaissance économique explicable et à des primitives d’intégration légères. Il n’est pas le registre de référence pour négocier, conclure, facturer ou gérer un pipeline. Cette frontière évite de présenter une carte économique comme propriété d’un gestionnaire de compte ou résultat d’une action enregistrée."
+        },
+        {
+          "heading": "Faire passer un signal vers une action",
+          "body": "Une personne peut examiner un signal et ses sources puis décider s’il mérite un travail complémentaire. Une opportunité dérivée reste POTENTIAL et doit exposer raisons et limites. Transférer un lien ou un résumé vers un outil de coordination peut être utile si cela est autorisé, mais l’action externe ne revient pas automatiquement dans AXIGLAND comme vérité. Les règles d’autorisation, d’affectation, de contact et de suivi restent celles des équipes."
+        }
+      ],
+      "example": "Exemple hypothétique : une entreprise trouve une preuve publique d’une nouvelle installation industrielle et une capacité compatible chez un fabricant. AXIGNAL aide à examiner source, période et compatibilité potentielle. L’équipe peut créer une tâche d’évaluation dans son outil habituel. Cette tâche ne prouve ni que le fabricant est fournisseur, ni qu’une offre existe, ni qu’une négociation a commencé.",
+      "limits": "Le contexte économique n’attribue pas de responsables et ne garantit pas qu’une équipe agira. Un gestionnaire de projet ne remplace pas une recherche indépendante et peut contenir des données privées hors du périmètre d’AXIGNAL. Les intégrations, si elles existent, restent légères et autorisées. Tâches, mentions, contrats de projet et décisions internes ne suffisent pas à déduire un résultat, un lead ou une relation admise.",
+      "cta": {
+        "label": "Explorer le contexte économique",
+        "href": "/fr/knowledge"
+      },
+      "related": [
+        "spreadsheet-vs-linked-temporal-context",
+        "answers-vs-reviewable-economic-memory",
+        "market-taxonomy-vs-capability-specific-reach"
+      ]
+    },
+    "de": {
+      "slug": "projektkoordination-oder-wirtschaftlicher-kontext",
+      "title": "Projektkoordination oder prüfbarer Wirtschaftskontext",
+      "description": "Koordination ordnet interne Aufgaben; Wirtschaftskontext erklärt externe Beobachtungen, ohne zum CRM zu werden.",
+      "lead": "Koordinationstools und Wirtschaftsintelligenz können im selben Geschäftsgespräch auftauchen, beantworten aber verschiedene Fragen. Ein Projektwerkzeug hilft einem Team, Verantwortlichkeiten und vereinbarte Schritte zu ordnen. Wirtschaftlicher Kontext untersucht öffentliche Belege zu Organisationen, Aktivitäten, Fähigkeiten und Veränderungen. Werden beide verwechselt, wird eine externe Perspektive zur Aufgabenliste oder eine Hypothese zur Arbeitsanweisung.",
+      "answer": "Nutzen Sie Projektkoordination, um interne Arbeit zuzuteilen und Zusagen nachzuverfolgen. Nutzen Sie prüfbaren Wirtschaftskontext, um zu verstehen, was mit welcher Herkunft und Unsicherheit beobachtet wird. AXIGNAL ersetzt weder CRM noch Projektmanagement oder Vertriebskoordination. Es kann ein Signal oder eine POTENTIAL-Gelegenheit erklären; Menschen und ihre Systeme entscheiden nach eigenen Prozessen und Kontrollen über Maßnahmen.",
+      "sections": [
+        {
+          "heading": "Der Gegenstand eines Koordinationstools",
+          "body": "Projektwerkzeuge ordnen typischerweise Aufgaben, Verantwortliche, Zieldaten, Status und vom Team festgelegte Abhängigkeiten. Ihre Autorität stammt aus Entscheidungen des Teams und seiner Beteiligten. Diese Angaben können privat und zur Arbeitssteuerung geeignet sein, belegen aber nicht automatisch Marktverhältnisse. Ein Rechercheauftrag zu einem Lieferanten beschreibt eine Absicht, nicht dessen Fähigkeit, Verfügbarkeit oder beobachtete Beziehung zum Unternehmen."
+        },
+        {
+          "heading": "Der Gegenstand wirtschaftlichen Kontexts",
+          "body": "Prüfbarer Wirtschaftskontext verbindet Aussagen mit Beobachtungen, Quellen, Daten, Geltungsbereich und Erkenntnisstatus. Er kann Veränderungen oder eine mögliche Passung erläutern und hält Beleg und Handlung auseinander. Eine veröffentlichte Aktivität beweist keinen Auftrag mit einer bestimmten Organisation; ähnliche Fähigkeiten schaffen keine Geschäftsbeziehung. Reichen Belege nicht aus, muss Unsicherheit sichtbar bleiben, statt eine Aufgabe oder Schlussfolgerung zu erfinden."
+        },
+        {
+          "heading": "Eine notwendige Produktgrenze",
+          "body": "Beobachtung mit operativen Abläufen zu verbinden mag bequem wirken, bringt jedoch andere Pflichten mit sich: Zuweisung, Benachrichtigungen, Zusammenarbeit, Zugriff auf private Daten und Verwaltung des Vertriebsprozesses. AXIGNAL endet bei erklärbarem Wirtschaftswissen und schlanken Integrationsbausteinen. Es ist kein führendes System zum Verhandeln, Abschließen, Abrechnen oder Verwalten einer Pipeline. So wird eine Wirtschaftskarte nicht zum Eigentum der Kundenbetreuung oder Ergebnis einer protokollierten Handlung."
+        },
+        {
+          "heading": "Ein Signal in eine Handlung überführen",
+          "body": "Eine Person kann ein Signal und seine Quellen prüfen und entscheiden, ob weitere Arbeit nötig ist. Eine abgeleitete Gelegenheit bleibt POTENTIAL und zeigt Gründe sowie Grenzen. Ein Link oder eine Zusammenfassung kann mit Berechtigung in ein Koordinationstool übertragen werden; die externe Handlung wird dadurch nicht automatisch kanonische Wahrheit in AXIGLAND. Autorisierung, Zuweisung, Kontakt und Nachverfolgung folgen weiterhin den Regeln des Teams."
+        }
+      ],
+      "example": "Hypothetisches Beispiel: Ein Unternehmen findet einen öffentlichen Beleg für einen neuen Industriestandort und eine passende Fähigkeit eines Herstellers. AXIGNAL hilft, Quelle, Zeitraum und mögliche Passung zu prüfen. Das Team kann in seinem üblichen Werkzeug eine Bewertungsaufgabe anlegen. Sie beweist weder, dass der Hersteller Lieferant ist, noch dass ein Angebot oder eine Verhandlung besteht.",
+      "limits": "Wirtschaftlicher Kontext weist keine Verantwortlichen zu und garantiert keine Handlung. Projektmanagement ersetzt keine unabhängige Recherche und kann private Daten außerhalb des AXIGNAL-Umfangs enthalten. Integrationen bleiben, sofern vorhanden, schlank und autorisiert. Aufgaben, Erwähnungen, Projektverträge und interne Entscheidungen belegen weder Ergebnis noch Lead oder zugelassene Beziehung.",
+      "cta": {
+        "label": "Wirtschaftlichen Kontext erkunden",
+        "href": "/de/knowledge"
+      },
+      "related": [
+        "spreadsheet-vs-linked-temporal-context",
+        "answers-vs-reviewable-economic-memory",
+        "market-taxonomy-vs-capability-specific-reach"
+      ]
+    },
+    "it": {
+      "slug": "coordinamento-progetti-o-contesto-economico-ispezionabile",
+      "title": "Coordinare progetti o esaminare il contesto economico",
+      "description": "Il coordinamento organizza attività interne; il contesto economico spiega osservazioni esterne senza diventare un CRM.",
+      "lead": "Gli strumenti di coordinamento e l’intelligence economica possono emergere nella stessa conversazione aziendale, ma rispondono a domande diverse. Uno strumento di progetto aiuta a organizzare responsabilità e azioni concordate. Il contesto economico esamina prove pubbliche su organizzazioni, attività, capacità e cambiamenti. Confonderli può trasformare una prospettiva esterna in una lista di attività o un’ipotesi in un’istruzione operativa.",
+      "answer": "Usa il coordinamento di progetto per assegnare lavoro e seguire impegni interni. Usa un contesto economico ispezionabile per capire cosa è osservato, con quale provenienza e in presenza di quale incertezza. AXIGNAL non intende sostituire CRM, gestione progetti o coordinamento commerciale. Può chiarire un segnale o un’opportunità POTENTIAL; persone e sistemi di lavoro decidono se agire secondo processi e controlli propri.",
+      "sections": [
+        {
+          "heading": "L’oggetto di uno strumento di coordinamento",
+          "body": "Un gestore di progetti organizza spesso attività, responsabili, scadenze, stati e dipendenze definite dal team. La sua autorità deriva dalle decisioni del team e dei partecipanti. Queste informazioni possono essere private e adatte a far avanzare il lavoro, ma non provano da sole fatti sul mercato. Un incarico per ricercare un fornitore indica un’intenzione di lavoro, non capacità, disponibilità o relazione osservata di quel fornitore."
+        },
+        {
+          "heading": "L’oggetto del contesto economico",
+          "body": "Un contesto economico ispezionabile collega affermazioni a osservazioni, fonti, date, ambito e stati epistemici. Può sostenere una lettura dei cambiamenti o di una compatibilità possibile, mantenendo separati prove e azione. Un’attività pubblicata non dimostra un incarico con una specifica organizzazione; capacità simili non creano una relazione commerciale. Se le prove non rispondono, il contesto mostra l’incertezza invece di inventare un’attività o una conclusione."
+        },
+        {
+          "heading": "Un confine di prodotto necessario",
+          "body": "Unire osservazione e flussi operativi può sembrare comodo, ma introduce responsabilità diverse: assegnazioni, notifiche, collaborazione, accesso a dati privati e gestione del processo commerciale. AXIGNAL si ferma alla conoscenza economica spiegabile e a primitive d’integrazione leggere. Non è il sistema canonico per negoziare, concludere, fatturare o amministrare una pipeline. Mantenere il limite evita che una mappa economica diventi proprietà di chi gestisce un account o conseguenza di un’azione registrata."
+        },
+        {
+          "heading": "Portare un segnale verso un’azione",
+          "body": "Una persona può esaminare un segnale e le fonti e decidere se servano ulteriori attività. Un’opportunità derivata resta POTENTIAL e deve mostrare motivi e limiti. Trasferire un collegamento o riepilogo a uno strumento di coordinamento può essere utile se autorizzato, ma l’azione esterna non ritorna automaticamente in AXIGLAND come verità. Autorizzazione, assegnazione, contatto e follow-up restano disciplinati dai processi del team."
+        }
+      ],
+      "example": "Esempio ipotetico: un’impresa trova una prova pubblica di un nuovo impianto industriale e una capacità compatibile di un produttore. AXIGNAL aiuta a esaminare fonte, periodo e compatibilità potenziale. Il team può creare un’attività di valutazione nel proprio strumento abituale. Ciò non prova che il produttore sia fornitore, che esista un’offerta o che sia iniziata una trattativa.",
+      "limits": "Il contesto economico non assegna responsabili e non garantisce che un team agisca. Un gestore di progetti non sostituisce la ricerca indipendente e può contenere dati privati fuori dall’ambito AXIGNAL. Le integrazioni, se presenti, devono restare leggere e autorizzate. Attività, menzioni, contratti di progetto e decisioni interne non dimostrano risultati, lead o relazioni ammesse.",
+      "cta": {
+        "label": "Esplora il contesto economico",
+        "href": "/it/knowledge"
+      },
+      "related": [
+        "spreadsheet-vs-linked-temporal-context",
+        "answers-vs-reviewable-economic-memory",
+        "market-taxonomy-vs-capability-specific-reach"
+      ]
+    },
+    "pt": {
+      "slug": "coordenacao-de-projetos-ou-contexto-economico-inspecionavel",
+      "title": "Coordenar projetos ou examinar contexto econômico",
+      "description": "A coordenação organiza tarefas internas; o contexto econômico explica observações externas sem virar CRM.",
+      "lead": "Ferramentas de coordenação e inteligência econômica podem aparecer na mesma conversa de negócios, mas respondem a perguntas diferentes. Uma ferramenta de projetos ajuda a organizar responsabilidades e ações acordadas. O contexto econômico examina evidências públicas sobre organizações, atividades, capacidades e mudanças. Confundi-los pode transformar uma perspectiva externa em lista de tarefas ou uma hipótese em instrução operacional.",
+      "answer": "Use coordenação de projetos para atribuir trabalho e acompanhar compromissos internos. Use contexto econômico inspecionável para entender o que foi observado, sua proveniência e a incerteza envolvida. A AXIGNAL não pretende substituir CRM, gestão de projetos ou coordenação comercial. Pode esclarecer um sinal ou uma oportunidade POTENTIAL; as pessoas e seus sistemas decidem se agem conforme processos e controles próprios.",
+      "sections": [
+        {
+          "heading": "O objeto de uma ferramenta de coordenação",
+          "body": "Um gestor de projetos costuma organizar tarefas, responsáveis, datas-alvo, estados e dependências definidas pela equipe. Sua autoridade vem das decisões da equipe e de seus participantes. Essas informações podem ser privadas e adequadas para movimentar o trabalho, mas não comprovam por si sós fatos de mercado. Uma tarefa para pesquisar um fornecedor descreve intenção de trabalho, não capacidade, disponibilidade ou relação observada com a empresa."
+        },
+        {
+          "heading": "O objeto do contexto econômico",
+          "body": "Um contexto econômico inspecionável relaciona afirmações a observações, fontes, datas, escopo e estados epistêmicos. Pode apoiar uma leitura de mudanças ou compatibilidade possível, mantendo evidência e ação separadas. Atividade publicada não comprova um contrato com organização específica; capacidades semelhantes não criam relação comercial. Se as evidências não respondem, o contexto mostra a incerteza em vez de inventar tarefa ou conclusão."
+        },
+        {
+          "heading": "Um limite de produto necessário",
+          "body": "Combinar observação e fluxos operacionais pode parecer conveniente, mas traz responsabilidades diferentes: atribuição, notificações, colaboração, acesso a dados privados e gestão do processo comercial. A AXIGNAL se limita a conhecimento econômico explicável e primitivas leves de integração. Não é o sistema canônico para negociar, fechar, faturar ou administrar pipeline. Esse limite impede que o mapa econômico pareça propriedade de quem gerencia uma conta ou consequência de uma ação registrada."
+        },
+        {
+          "heading": "Levar um sinal até uma ação",
+          "body": "Uma pessoa pode examinar um sinal e suas fontes e decidir se merece trabalho adicional. Uma oportunidade derivada continua POTENTIAL e deve mostrar razões e limites. Transferir um link ou resumo para um sistema de coordenação pode ser útil se autorizado, mas essa ação externa não retorna automaticamente ao AXIGLAND como verdade. Regras de autorização, atribuição, contato e acompanhamento continuam sob os processos da equipe."
+        }
+      ],
+      "example": "Exemplo hipotético: uma empresa encontra evidência pública de uma nova instalação industrial e uma capacidade compatível de um fabricante. A AXIGNAL ajuda a examinar fonte, período e compatibilidade potencial. A equipe pode criar uma tarefa de avaliação em seu gestor habitual. A tarefa não prova que o fabricante seja fornecedor, que exista proposta ou que uma negociação tenha começado.",
+      "limits": "O contexto econômico não atribui responsáveis nem garante que a equipe agirá. Um gestor de projetos não substitui pesquisa independente e pode conter dados privados fora do escopo da AXIGNAL. Integrações, quando existirem, devem ser leves e autorizadas. Tarefas, menções, contratos de projeto e decisões internas não bastam para inferir resultados, leads ou relações admitidas.",
+      "cta": {
+        "label": "Explorar contexto econômico",
+        "href": "/pt/knowledge"
+      },
+      "related": [
+        "spreadsheet-vs-linked-temporal-context",
+        "answers-vs-reviewable-economic-memory",
+        "market-taxonomy-vs-capability-specific-reach"
+      ]
+    }
+  },
+  {
+    "id": "static-report-vs-reusable-evidence-memory",
+    "fr": {
+      "slug": "rapport-ponctuel-ou-memoire-de-preuves-reutilisable",
+      "title": "Rapport ponctuel ou mémoire de preuves réutilisable",
+      "description": "Un rapport fixe une livraison datée ; une mémoire gouvernée conserve les sources et l’état à réévaluer.",
+      "lead": "Un rapport et une mémoire de preuves peuvent contenir des conclusions similaires, mais leurs cycles de vie diffèrent. Le rapport est généralement une livraison lisible, close pour un public ou une décision. Une mémoire réutilisable conserve observations, provenance, temporalité et dépendances afin qu’une question future soit réévaluée sans traiter la réponse précédente comme éternelle.",
+      "answer": "Choisissez un rapport ponctuel pour communiquer une synthèse à portée et date définies. Choisissez une mémoire réutilisable lorsque plusieurs questions dépendent de preuves partagées susceptibles d’évoluer ou de devoir être revues. La réutilisation n’est pas une confiance permanente : état, source, droits et actualité gouvernent toujours son usage. Une mémoire peut alimenter un nouveau rapport sans remplacer l’explication propre à chaque lecteur.",
+      "sections": [
+        {
+          "heading": "La valeur d’une livraison close",
+          "body": "Un rapport peut réunir arguments, tableaux, décisions et références sous une forme facile à diffuser. Sa clôture fixe ce qui a été communiqué à une date et à un public donnés. Elle permet aussi une revue éditoriale avant circulation. Le risque apparaît lorsqu’une copie est séparée de ses sources, réutilisée plus tard ou comprise comme une mise à jour automatique. Un document archivé prouve qu’une livraison a eu lieu, pas que chaque affirmation reste actuelle."
+        },
+        {
+          "heading": "Ce que conserve une mémoire réutilisable",
+          "body": "Une mémoire de preuves doit garder plus que les phrases finales : elle identifie observation, origine, date, portée, état épistémique et dérivations qui en dépendent. On peut alors demander ce qu’il faut vérifier de nouveau lorsqu’une source change ou qu’une affirmation perd son actualité. Un résumé facilite la lecture, mais ne remplace pas les enregistrements qui expliquent pourquoi une conclusion était permise. Les droits et politiques de conservation comptent autant que les capacités techniques."
+        },
+        {
+          "heading": "Éviter une confiance héritée",
+          "body": "Avant de réutiliser un élément, vérifiez qu’il concerne le même sujet, la même proposition, la même zone et la même période. Une source valable pour une capacité générale ne soutient pas toujours sa disponibilité actuelle dans un autre marché. Lorsqu’une entrée devient obsolète ou est contredite, les conclusions qui en dépendent doivent être réévaluées. L’historique explique le changement sans servir de preuve actuelle ; les dépendances aident à examiner la partie pertinente."
+        },
+        {
+          "heading": "Les formats peuvent se compléter",
+          "body": "Une mémoire gouvernée peut alimenter plusieurs explications, rapports ou vues si chaque sortie conserve sa portée et son chemin vers les preuves. Le rapport communique une interprétation destinée à une situation ; la mémoire permet de revenir aux éléments et d’intégrer de nouvelles informations. AXIGNAL vise une mémoire économique explicable, pas la promesse que toute recherche future sera déjà résolue. Si les preuves ne répondent pas, l’incertitude doit rester visible."
+        }
+      ],
+      "example": "Exemple hypothétique : une équipe publie un rapport annuel sur des fournisseurs potentiels. Six mois plus tard, une source change et une certification nouvelle apparaît. Le PDF garde la trace de ce qui était dit alors ; une mémoire avec dates et dépendances aide à repérer les affirmations à réexaminer avant une nouvelle livraison. La certification ne met pas à jour automatiquement toutes les conclusions précédentes.",
+      "limits": "Une mémoire ne garantit ni actualité, ni couverture complète, ni réutilisation autorisée de tout contenu. Un rapport ponctuel peut être plus clair et suffisant si la décision ne demande pas de suivi. Le versionnement et la revue ajoutent du travail. Se souvenir d’une observation ne revient pas à admettre une vérité canonique : la persistance conserve le contexte et l’admission garde sa frontière. Aucun format ne prouve causalité ou résultat commercial.",
+      "cta": {
+        "label": "Comprendre la mémoire de preuves",
+        "href": "/fr/knowledge"
+      },
+      "related": [
+        "answers-vs-reviewable-economic-memory",
+        "spreadsheet-vs-linked-temporal-context",
+        "directory-listing-vs-evidence-context"
+      ]
+    },
+    "de": {
+      "slug": "statischer-bericht-oder-wiederverwendbares-beleggedaechtnis",
+      "title": "Statischer Bericht oder wiederverwendbares Beleggedächtnis",
+      "description": "Ein Bericht hält eine Lieferung zu einem Zeitpunkt fest; ein gesteuertes Gedächtnis bewahrt Quellen und Status.",
+      "lead": "Ein Bericht und ein Beleggedächtnis können ähnliche Schlussfolgerungen enthalten, haben aber unterschiedliche Lebenszyklen. Der Bericht ist meist eine lesbare, abgeschlossene Lieferung für eine Zielgruppe oder Entscheidung. Ein wiederverwendbares Gedächtnis speichert Beobachtung, Herkunft, Zeitbezug und Abhängigkeiten, damit eine spätere Frage neu bewertet wird, statt die frühere Antwort als dauerhaft zu behandeln.",
+      "answer": "Nutzen Sie einen statischen Bericht, wenn eine Zusammenfassung mit festem Umfang und Datum mitgeteilt werden soll. Nutzen Sie ein wiederverwendbares Gedächtnis, wenn mehrere Fragen von gemeinsamen Belegen abhängen, die sich ändern oder geprüft werden müssen. Wiederverwendung bedeutet kein ewiges Vertrauen: Status, Quelle, Rechte und Aktualität regeln weiterhin die Eignung. Das Gedächtnis kann einen neuen Bericht unterstützen, ersetzt aber nicht dessen konkrete Erklärung.",
+      "sections": [
+        {
+          "heading": "Der Wert einer abgeschlossenen Lieferung",
+          "body": "Ein Bericht bündelt Argumente, Tabellen, Entscheidungen und Verweise in einer leicht teilbaren Form. Sein Abschluss hält fest, was zu einem bestimmten Zeitpunkt für eine bestimmte Zielgruppe kommuniziert wurde. Vor der Verteilung ist eine redaktionelle Prüfung möglich. Das Risiko entsteht, wenn eine Kopie von Quellen getrennt, später erneut genutzt oder als automatisch aktuell verstanden wird. Ein archiviertes Dokument belegt die damalige Lieferung, nicht die heutige Gültigkeit jeder Aussage."
+        },
+        {
+          "heading": "Was ein wiederverwendbares Gedächtnis bewahrt",
+          "body": "Ein Beleggedächtnis speichert mehr als fertige Sätze: Es identifiziert Beobachtung, Ursprung, Datum, Umfang, Erkenntnisstatus und abhängige Ableitungen. Ändert sich eine Quelle oder verliert eine Aussage an Aktualität, lässt sich gezielt prüfen, was neu zu belegen ist. Eine erzeugte Zusammenfassung kann das Lesen erleichtern, ersetzt aber nicht die Aufzeichnungen, die eine Schlussfolgerung nachvollziehbar machen. Auch Rechte und Aufbewahrungsregeln begrenzen die Wiederverwendung."
+        },
+        {
+          "heading": "Übernommenes Vertrauen vermeiden",
+          "body": "Vor der Wiederverwendung ist zu prüfen, ob sich der Eintrag auf dasselbe Subjekt, dieselbe Aussage, Region und Zeitspanne bezieht. Eine Quelle zu einer allgemeinen Fähigkeit belegt nicht zwingend ihre heutige Verfügbarkeit in einem anderen Markt. Wird ein Eintrag veraltet oder widersprochen, müssen abhängige Schlussfolgerungen neu bewertet werden. Der Verlauf kann die Änderung erklären, gilt aber nicht als aktueller Beleg; Abhängigkeiten begrenzen die Prüfung auf relevante Teile."
+        },
+        {
+          "heading": "Beide Formate können sich ergänzen",
+          "body": "Ein gesteuertes Gedächtnis kann mehrere Erklärungen, Berichte oder Ansichten speisen, wenn jede Ausgabe ihren Umfang und Belegpfad behält. Der Bericht vermittelt eine situationsbezogene Interpretation; das Gedächtnis führt zu den Bestandteilen zurück und berücksichtigt neue Angaben. AXIGNAL zielt auf nachvollziehbares wirtschaftliches Gedächtnis, nicht auf die Zusage, jede künftige Recherche sei bereits erledigt. Reichen Belege nicht aus, muss Unsicherheit sichtbar bleiben."
+        }
+      ],
+      "example": "Hypothetisches Beispiel: Ein Team veröffentlicht einen Jahresbericht zu potenziellen Lieferanten. Sechs Monate später ändert sich eine Quelle und eine neue Zertifizierung erscheint. Das PDF hält fest, was damals mitgeteilt wurde; ein Gedächtnis mit Daten und Abhängigkeiten zeigt, welche Aussagen vor der nächsten Ausgabe zu prüfen sind. Die Zertifizierung aktualisiert nicht automatisch alle früheren Schlussfolgerungen.",
+      "limits": "Ein Gedächtnis garantiert weder Aktualität noch vollständige Abdeckung oder zulässige Wiederverwendung jedes Inhalts. Ein statischer Bericht kann klarer und ausreichend sein, wenn keine Nachverfolgung nötig ist. Versionierung und Prüfung kosten Aufwand. Eine Beobachtung zu speichern bedeutet nicht, kanonische Wahrheit zuzulassen: Persistenz bewahrt Kontext, Admission setzt eine eigene Grenze. Keines der Formate beweist Ursache oder Geschäftsergebnis.",
+      "cta": {
+        "label": "Beleggedächtnis verstehen",
+        "href": "/de/knowledge"
+      },
+      "related": [
+        "answers-vs-reviewable-economic-memory",
+        "spreadsheet-vs-linked-temporal-context",
+        "directory-listing-vs-evidence-context"
+      ]
+    },
+    "it": {
+      "slug": "report-statico-o-memoria-di-prove-riutilizzabile",
+      "title": "Report statico o memoria di prove riutilizzabile",
+      "description": "Un report fissa una consegna datata; una memoria governata conserva fonti e stati da rivalutare.",
+      "lead": "Un report e una memoria di prove possono contenere conclusioni simili, ma hanno cicli di vita diversi. Il report è di solito una consegna leggibile e chiusa per un pubblico o una decisione. Una memoria riutilizzabile conserva osservazioni, provenienza, temporalità e dipendenze, così una domanda futura può essere rivalutata senza trattare la risposta precedente come eterna.",
+      "answer": "Scegli un report statico quando devi comunicare una sintesi con ambito e data definiti. Scegli una memoria riutilizzabile quando più domande dipendono da prove condivise che possono cambiare o richiedere una revisione. Riutilizzare non significa fidarsi per sempre: stato, fonte, diritti e attualità continuano a governarne l’uso. La memoria può alimentare un nuovo report, ma non sostituisce la spiegazione specifica per ogni lettore.",
+      "sections": [
+        {
+          "heading": "Il valore di una consegna chiusa",
+          "body": "Un report può riunire argomenti, tabelle, decisioni e riferimenti in una forma facile da condividere. La chiusura fissa cosa è stato comunicato in una data e per un pubblico specifici. Prima della distribuzione è possibile una revisione editoriale. Il rischio nasce quando una copia si separa dalle fonti, viene riutilizzata in un altro periodo o è interpretata come aggiornamento automatico. Un documento archiviato prova che quella consegna è avvenuta, non che ogni affermazione sia ancora attuale."
+        },
+        {
+          "heading": "Che cosa conserva una memoria riutilizzabile",
+          "body": "Una memoria di prove deve conservare più delle frasi finali: identifica osservazione, origine, data, ambito, stato epistemico e derivazioni dipendenti. Così si può chiedere cosa verificare di nuovo quando una fonte cambia o un’affermazione perde attualità. Un riepilogo generato può facilitare la lettura, ma non sostituisce le registrazioni che spiegano perché una conclusione era consentita. Contano anche diritti e politiche di conservazione, non solo le capacità tecniche."
+        },
+        {
+          "heading": "Evitare la fiducia ereditata",
+          "body": "Prima di riutilizzare un elemento, verifica che riguardi lo stesso soggetto, proposizione, area geografica e periodo. Una fonte valida per una capacità generale potrebbe non sostenerne la disponibilità corrente in un altro mercato. Quando una voce diventa obsoleta o contraddetta, le conclusioni dipendenti richiedono una nuova valutazione. La storia può spiegare il cambiamento senza essere prova attuale; le dipendenze aiutano a riesaminare soltanto la parte pertinente."
+        },
+        {
+          "heading": "I formati possono completarsi",
+          "body": "Una memoria governata può alimentare più spiegazioni, report o viste se ogni uscita conserva ambito e percorso verso le prove. Il report comunica un’interpretazione per una situazione; la memoria permette di tornare ai suoi elementi e considerare nuove informazioni. AXIGNAL mira a una memoria economica spiegabile, non promette che ogni ricerca futura sia già risolta. Quando le prove non rispondono, l’incertezza deve restare visibile e guidare una revisione appropriata."
+        }
+      ],
+      "example": "Esempio ipotetico: un team pubblica un report annuale su fornitori potenziali. Sei mesi dopo una fonte cambia e appare una nuova certificazione. Il PDF conserva ciò che fu detto allora; una memoria con date e dipendenze aiuta a trovare le affermazioni da rivedere prima di una nuova consegna. La certificazione non aggiorna da sola tutte le conclusioni precedenti.",
+      "limits": "Una memoria non garantisce attualità, copertura completa o riutilizzo autorizzato di ogni materiale. Un report statico può essere più chiaro e sufficiente se la decisione non richiede continuità. Versionamento e revisione aggiungono lavoro operativo. Ricordare un’osservazione non equivale ad ammettere una verità canonica: la persistenza conserva contesto e l’ammissione mantiene una frontiera indipendente. Nessuno dei formati prova causalità o risultati commerciali.",
+      "cta": {
+        "label": "Capire la memoria di prove",
+        "href": "/it/knowledge"
+      },
+      "related": [
+        "answers-vs-reviewable-economic-memory",
+        "spreadsheet-vs-linked-temporal-context",
+        "directory-listing-vs-evidence-context"
+      ]
+    },
+    "pt": {
+      "slug": "relatorio-estatico-ou-memoria-reutilizavel-de-evidencias",
+      "title": "Relatório estático ou memória reutilizável de evidências",
+      "description": "Um relatório fixa uma entrega datada; uma memória governada preserva fontes e estados para reavaliação.",
+      "lead": "Um relatório e uma memória de evidências podem conter conclusões semelhantes, mas têm ciclos de vida diferentes. O relatório costuma ser uma entrega legível e fechada para um público ou decisão. Uma memória reutilizável preserva observações, proveniência, temporalidade e dependências para que uma pergunta futura seja reavaliada sem tratar a resposta anterior como eterna.",
+      "answer": "Escolha um relatório estático quando precisar comunicar uma síntese com escopo e data definidos. Escolha uma memória reutilizável quando várias perguntas dependerem de evidências compartilhadas que podem mudar ou exigir revisão. Reutilizar não significa confiar para sempre: estado, fonte, direitos e atualidade continuam regendo a elegibilidade. A memória pode alimentar nova entrega, mas não substitui a explicação específica de que cada leitor precisa.",
+      "sections": [
+        {
+          "heading": "O valor de uma entrega fechada",
+          "body": "Um relatório pode reunir argumentos, tabelas, decisões e referências em um formato fácil de compartilhar. Seu fechamento registra o que foi comunicado em uma data e para determinado público. Também permite revisão editorial antes da distribuição. O risco aparece quando uma cópia se separa das fontes, é reutilizada em outro período ou parece receber atualização automática. Um documento arquivado prova que aquela entrega existiu, não que todas as afirmações continuem atuais."
+        },
+        {
+          "heading": "O que uma memória reutilizável preserva",
+          "body": "Uma memória de evidências guarda mais do que frases finais: identifica observação, origem, data, escopo, estado epistêmico e derivações que dependem dela. Assim é possível perguntar o que precisa ser verificado novamente quando uma fonte muda ou uma afirmação perde atualidade. Um resumo gerado pode facilitar a leitura, mas não substitui registros que expliquem por que uma conclusão era permitida. Direitos e políticas de retenção também limitam a reutilização."
+        },
+        {
+          "heading": "Evitar a confiança herdada",
+          "body": "Antes de reutilizar um elemento, verifique se ele se refere ao mesmo sujeito, proposição, geografia e período. Uma fonte adequada para uma capacidade geral talvez não sustente sua disponibilidade atual em outro mercado. Quando um registro fica obsoleto ou é contradito, conclusões dependentes exigem reavaliação. O histórico pode explicar a mudança sem servir como prova atual; as dependências ajudam a revisar somente a parte pertinente."
+        },
+        {
+          "heading": "Os formatos podem se complementar",
+          "body": "Uma memória governada pode alimentar várias explicações, relatórios ou visualizações se cada saída preservar seu escopo e caminho até as evidências. O relatório comunica uma interpretação para uma situação; a memória permite voltar aos elementos e considerar novas informações. A AXIGNAL busca manter memória econômica explicável, sem prometer que toda investigação futura já esteja resolvida. Se as evidências não respondem, a incerteza deve permanecer visível."
+        }
+      ],
+      "example": "Exemplo hipotético: uma equipe publica um relatório anual sobre fornecedores potenciais. Seis meses depois, uma fonte muda e surge uma certificação nova. O PDF preserva o que foi dito naquele momento; uma memória com datas e dependências ajuda a localizar afirmações para revisar antes de outra entrega. A certificação não atualiza automaticamente todas as conclusões anteriores.",
+      "limits": "Uma memória não garante atualidade, cobertura completa nem reutilização autorizada de qualquer material. Um relatório estático pode ser mais claro e suficiente quando a decisão não exige acompanhamento. Versionamento e revisão acrescentam trabalho operacional. Lembrar uma observação não equivale a admitir uma verdade canônica: persistência preserva contexto, enquanto admissão mantém sua própria fronteira. Nenhum formato prova causalidade ou resultado comercial.",
+      "cta": {
+        "label": "Entender a memória de evidências",
+        "href": "/pt/knowledge"
+      },
+      "related": [
+        "answers-vs-reviewable-economic-memory",
+        "spreadsheet-vs-linked-temporal-context",
+        "directory-listing-vs-evidence-context"
+      ]
+    }
+  }
+]

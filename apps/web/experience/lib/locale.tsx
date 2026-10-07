@@ -1,5 +1,6 @@
 "use client";
 import { createContext, useContext, useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 import { isLocale, type Locale, type Copy } from "./languages";
 import { translate } from "./copy-catalog";
 export type { Locale, Copy } from "./languages";
@@ -12,16 +13,22 @@ const LocaleContext = createContext({
   copy: (c: Copy) => c.es,
 });
 export function LocaleProvider({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname();
   const [locale, setLocale] = useState<Locale>("es");
   const [ready, setReady] = useState(false);
   const [reducedMotion, setReducedMotion] = useState(false);
   useEffect(() => {
     try {
-      const saved = localStorage.getItem("axignal.locale.v1");
-      if (isLocale(saved)) setLocale(saved);
+      const routeLocale = pathname.split("/")[1];
+      if (isLocale(routeLocale)) {
+        setLocale(routeLocale);
+      } else {
+        const saved = localStorage.getItem("axignal.locale.v1");
+        if (isLocale(saved)) setLocale(saved);
+      }
     } catch {}
     setReady(true);
-  }, []);
+  }, [pathname]);
   useEffect(() => {
     document.documentElement.lang = locale;
     if (ready) {

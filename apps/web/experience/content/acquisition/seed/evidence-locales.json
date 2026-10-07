@@ -1,0 +1,892 @@
+[
+  {
+    "id": "evidence-observed-vs-potential",
+    "fr": {
+      "slug": "relations-observees-et-potentielles",
+      "title": "Relations observées ou potentielles : ce que prouvent les éléments",
+      "description": "Distinguez une relation économique étayée par des preuves d’une possibilité qui demande encore des recherches.",
+      "lead": "Deux organisations peuvent sembler compatibles sans entretenir de relation commerciale. Cette différence détermine ce qu’il est raisonnable de conclure et les questions qui restent à vérifier.",
+      "answer": "Une relation observée s’appuie sur des preuves pertinentes et traçables. Une relation potentielle indique qu’un contexte compatible pourrait justifier une enquête ; elle reste une hypothèse, pas une relation existante.",
+      "sections": [
+        {
+          "heading": "La compatibilité ne prouve pas une relation",
+          "body": "Un fabricant peut déclarer une capacité correspondant aux besoins d’une autre organisation. Cette compatibilité peut justifier d’examiner un possible lien de fourniture, mais ne démontre ni contrat, ni vente, ni même conversations entre les deux. AXIGNAL doit conserver le statut potentiel dans ses mots et sa présentation. L’intérêt d’une hypothèse est d’orienter la recherche, pas de remplir les blancs par une histoire probable."
+        },
+        {
+          "heading": "Ce qui permet de décrire une relation observée",
+          "body": "Il faut des preuves adaptées au prédicat précis : quelle relation est affirmée, entre quels sujets, à partir de quelle source et pour quelle période ? Une page d’entreprise qui nomme un distributeur peut étayer une relation déclarée par cette source. Une liste de capacités ne prouve pas que l’entreprise est cliente d’une contrepartie possible. L’autorité d’une source dépend de l’affirmation examinée."
+        },
+        {
+          "heading": "Garder la source et le statut visibles",
+          "body": "La formulation devrait indiquer ce que la source permet d’établir et qui est à l’origine de la déclaration. Une annonce publique peut prouver qu’une entreprise a annoncé un partenariat ; une confirmation indépendante pourrait étayer davantage la relation, selon la question. Les deux cas ne doivent pas être fusionnés. La provenance permet au lecteur de contrôler l’interprétation et de comprendre ce qui demeure incertain."
+        },
+        {
+          "heading": "Une hypothèse peut rester utile sans devenir un fait",
+          "body": "Un encaje potentiel peut suggérer une question de marché ou de recherche à explorer. Il n’autorise pas une prospection automatisée ni une affirmation sur la volonté d’achat d’une organisation. La suite dépend d’éléments supplémentaires : activité, besoin, disponibilité, période et contexte commercial. Si ces éléments manquent, le statut potentiel ou inconnu est la réponse rigoureuse."
+        }
+      ],
+      "example": "Exemple hypothétique : un fabricant annonce produire des boîtiers en aluminium. Une entreprise qui recherche cette pièce pourrait être une contrepartie potentielle si le contexte le justifie. Sans preuve d’une relation réelle, la formulation correcte est « compatibilité possible à examiner », pas « client du fabricant ».",
+      "limits": "Le statut « potentiel » ne prédit pas la conclusion d’un accord et ne confirme ni adéquation commerciale, ni intention d’achat, ni disponibilité ou qualité. L’absence de relation observée ne prouve pas non plus qu’aucune relation n’existe ; elle signifie que les preuves accessibles ou admises ne permettent pas de l’affirmer.",
+      "cta": {
+        "label": "Explorer Knowledge",
+        "href": "/fr/knowledge"
+      },
+      "related": [
+        "evidence-unknown-not-false",
+        "evidence-provenance",
+        "evidence-public-absence"
+      ]
+    },
+    "de": {
+      "slug": "beobachtete-und-moegliche-beziehungen",
+      "title": "Beobachtete und mögliche Beziehungen: Was belegen Quellen?",
+      "description": "Unterscheiden Sie eine belegte wirtschaftliche Beziehung von einer Möglichkeit, die weitere Recherche verlangt.",
+      "lead": "Zwei Organisationen können gut zueinander passen, ohne eine Geschäftsbeziehung zu haben. Diese Unterscheidung beeinflusst, welche Schlüsse tragfähig sind und welche Fragen offenbleiben.",
+      "answer": "Eine beobachtete Beziehung wird durch passende, nachvollziehbare Belege gestützt. Eine mögliche Beziehung zeigt einen Kontext, der eine Prüfung rechtfertigen kann; sie bleibt eine Hypothese und ist keine bestehende Geschäftsbeziehung.",
+      "sections": [
+        {
+          "heading": "Kompatibilität ist noch keine Beziehung",
+          "body": "Ein Hersteller kann eine Fähigkeit angeben, die zum Bedarf einer anderen Organisation passen könnte. Das kann eine Untersuchung einer möglichen Lieferbeziehung begründen, belegt aber weder Vertrag noch Verkauf oder auch nur Gespräche zwischen beiden. AXIGNAL muss den potenziellen Status in Sprache und Darstellung erhalten. Der Zweck einer Hypothese ist, Recherche zu lenken, nicht eine plausible Geschichte als Tatsache einzusetzen. Diese Trennung hilft besonders dann, wenn eine Möglichkeit später in einer Entscheidungsvorlage auftaucht."
+        },
+        {
+          "heading": "Was eine beobachtete Beziehung trägt",
+          "body": "Erforderlich sind Belege für das konkrete Prädikat: Welche Beziehung wird zwischen welchen Subjekten, aus welcher Quelle und für welchen Zeitraum behauptet? Eine Unternehmensseite, die einen Vertriebspartner nennt, kann eine von dieser Quelle erklärte Beziehung stützen. Eine Fähigkeitsliste beweist nicht, dass das Unternehmen Kunde eines möglichen Partners ist. Die Aussagekraft einer Quelle hängt von der konkreten Behauptung ab."
+        },
+        {
+          "heading": "Quelle und Erkenntnisstatus sichtbar halten",
+          "body": "Die Formulierung sollte erklären, was die Quelle belegt und wer die Aussage gemacht hat. Eine öffentliche Mitteilung kann belegen, dass ein Unternehmen eine Partnerschaft bekannt gegeben hat; eine unabhängige Bestätigung kann je nach Frage zusätzliche Unterstützung liefern. Beides darf nicht verschmolzen werden. Provenienz hilft Lesenden, die Einordnung zu prüfen und offene Unsicherheit zu erkennen."
+        },
+        {
+          "heading": "Eine Hypothese kann nützlich bleiben, ohne Tatsache zu werden",
+          "body": "Eine mögliche Passung kann auf eine Markt- oder Recherchefrage hinweisen. Sie berechtigt weder zu automatisierter Akquise noch zu Aussagen über eine Kaufabsicht. Weitere Belege zu Aktivität, Bedarf, Verfügbarkeit, Zeitraum und Geschäftskontext sind entscheidend. Fehlen sie, ist die potenzielle oder unbekannte Einstufung die sachgerechte Antwort."
+        }
+      ],
+      "example": "Hypothetisch: Ein Hersteller veröffentlicht, dass er Aluminiumgehäuse fertigt. Ein Unternehmen, das dieses Teil sucht, könnte bei ausreichendem Kontext als möglicher Partner gelten. Ohne Beleg für eine bestehende Beziehung lautet die korrekte Beschreibung „mögliche Passung zu prüfen“, nicht „Kunde des Herstellers“.",
+      "limits": "„Möglich“ sagt einen Vertragsabschluss nicht voraus und bestätigt weder Geschäftspassung noch Kaufabsicht, Verfügbarkeit oder Qualität. Eine nicht beobachtete Beziehung beweist ebenfalls nicht, dass keine Beziehung besteht; sie zeigt, dass verfügbare oder zugelassene Belege keine entsprechende Aussage tragen. Die Prüfung bezieht sich stets auf die belegte Art der Beziehung und den genannten Zeitraum.",
+      "cta": {
+        "label": "Knowledge erkunden",
+        "href": "/de/knowledge"
+      },
+      "related": [
+        "evidence-unknown-not-false",
+        "evidence-provenance",
+        "evidence-public-absence"
+      ]
+    },
+    "it": {
+      "slug": "relazioni-osservate-e-potenziali",
+      "title": "Relazioni osservate e potenziali: cosa dimostrano le evidenze",
+      "description": "Distingui una relazione economica sostenuta da evidenze da una possibilità che richiede ancora ricerca.",
+      "lead": "Due organizzazioni possono sembrare compatibili senza avere una relazione commerciale. La distinzione cambia ciò che è ragionevole concludere e quali domande restano da verificare.",
+      "answer": "Una relazione osservata è sostenuta da evidenze pertinenti e tracciabili. Una relazione potenziale segnala un contesto compatibile che può giustificare un’indagine; resta un’ipotesi, non una relazione esistente.",
+      "sections": [
+        {
+          "heading": "Compatibilità non significa relazione",
+          "body": "Un produttore può dichiarare una capacità che sembra adatta alle esigenze di un’altra organizzazione. La compatibilità può giustificare una ricerca su un possibile rapporto di fornitura, ma non dimostra un contratto, una vendita o persino conversazioni fra le due parti. AXIGNAL deve mantenere lo stato potenziale nel linguaggio e nella presentazione. Un’ipotesi serve a indirizzare la ricerca, non a colmare i vuoti con una storia plausibile."
+        },
+        {
+          "heading": "Che cosa sostiene una relazione osservata",
+          "body": "Servono evidenze adatte al predicato specifico: quale relazione si afferma, tra quali soggetti, da quale fonte e in quale periodo? Una pagina aziendale che nomina un distributore può sostenere una relazione dichiarata da quella fonte. Un elenco di capacità non prova che l’impresa sia cliente di una possibile controparte. L’autorevolezza della fonte dipende dall’affermazione concreta."
+        },
+        {
+          "heading": "Mantenere visibili fonte e stato epistemico",
+          "body": "La formulazione dovrebbe chiarire cosa consente di stabilire la fonte e chi ha espresso l’affermazione. Un comunicato pubblico può provare che un’impresa ha annunciato una partnership; una conferma indipendente può offrire un sostegno ulteriore, secondo la domanda. Le due cose non vanno confuse. La provenienza consente a chi legge di esaminare l’interpretazione e l’incertezza residua."
+        },
+        {
+          "heading": "Un’ipotesi può essere utile senza diventare un fatto",
+          "body": "Una possibile compatibilità può suggerire una domanda di mercato o di ricerca da esplorare. Non autorizza contatti commerciali automatizzati né affermazioni sull’intenzione di acquisto. Contano ulteriori evidenze su attività, bisogno, disponibilità, periodo e contesto commerciale. Se mancano, mantenere lo stato potenziale o sconosciuto è la risposta rigorosa."
+        }
+      ],
+      "example": "Esempio ipotetico: un produttore dichiara di realizzare involucri in alluminio. Un’impresa alla ricerca di quel componente potrebbe essere una controparte potenziale se il contesto lo sostiene. Senza evidenze di una relazione reale, la descrizione corretta è «possibile compatibilità da approfondire», non «cliente del produttore».",
+      "limits": "Lo stato «potenziale» non prevede che un accordo avverrà e non conferma adeguatezza commerciale, intenzione di acquisto, disponibilità o qualità. La mancanza di una relazione osservata non prova che la relazione non esista: indica che le evidenze disponibili o ammesse non consentono di affermarla.",
+      "cta": {
+        "label": "Esplora Knowledge",
+        "href": "/it/knowledge"
+      },
+      "related": [
+        "evidence-unknown-not-false",
+        "evidence-provenance",
+        "evidence-public-absence"
+      ]
+    },
+    "pt": {
+      "slug": "relacoes-observadas-e-potenciais",
+      "title": "Relações observadas e potenciais: o que as evidências demonstram",
+      "description": "Diferencie uma relação econômica sustentada por evidências de uma possibilidade que ainda exige pesquisa.",
+      "lead": "Duas organizações podem parecer compatíveis sem manter uma relação comercial. Essa diferença muda o que é razoável concluir e quais perguntas ainda precisam ser verificadas.",
+      "answer": "Uma relação observada é sustentada por evidências pertinentes e rastreáveis. Uma relação potencial indica um contexto compatível que pode justificar investigação; continua sendo hipótese, não uma relação existente.",
+      "sections": [
+        {
+          "heading": "Compatibilidade não comprova uma relação",
+          "body": "Um fabricante pode declarar uma capacidade que parece adequada às necessidades de outra organização. Essa compatibilidade pode justificar pesquisar uma possível relação de fornecimento, mas não demonstra contrato, venda ou sequer conversas entre as partes. A AXIGNAL deve preservar o estado potencial na linguagem e na apresentação. A função da hipótese é orientar a pesquisa, não preencher lacunas com uma narrativa plausível."
+        },
+        {
+          "heading": "O que sustenta uma relação observada",
+          "body": "São necessárias evidências adequadas ao predicado específico: qual relação é afirmada, entre quais sujeitos, com base em qual fonte e em que período? Uma página corporativa que cita um distribuidor pode sustentar uma relação declarada por aquela fonte. Uma lista de capacidades, sozinha, não prova que a empresa seja cliente de uma possível contraparte. A autoridade da fonte depende da afirmação concreta."
+        },
+        {
+          "heading": "Deixar fonte e estado visíveis",
+          "body": "A formulação deve explicar o que a fonte permite estabelecer e quem fez a declaração. Um anúncio público pode comprovar que uma empresa anunciou uma parceria; uma confirmação independente pode acrescentar sustentação, conforme a pergunta. Os dois casos não devem ser confundidos. A proveniência permite que outra pessoa examine a interpretação e entenda o que continua incerto."
+        },
+        {
+          "heading": "Uma hipótese pode ajudar sem virar fato",
+          "body": "Uma compatibilidade potencial pode sugerir uma questão de mercado ou pesquisa a explorar. Isso não autoriza prospecção automatizada nem afirmação sobre intenção de compra. Evidências adicionais sobre atividade, necessidade, disponibilidade, período e contexto comercial são relevantes. Se faltarem, manter o estado potencial ou desconhecido é a resposta rigorosa."
+        }
+      ],
+      "example": "Exemplo hipotético: um fabricante publica que produz carcaças de alumínio. Uma empresa que procura esse componente poderia ser uma contraparte potencial se houver contexto suficiente. Até surgir evidência de uma relação real, a descrição correta é «possível compatibilidade a investigar», não «cliente do fabricante».",
+      "limits": "O rótulo «potencial» não prevê que um acordo acontecerá nem confirma adequação comercial, intenção de compra, disponibilidade ou qualidade. A falta de uma relação observada também não prova que ela não exista: significa que as evidências disponíveis ou admitidas não permitem afirmá-la.",
+      "cta": {
+        "label": "Explorar Knowledge",
+        "href": "/pt/knowledge"
+      },
+      "related": [
+        "evidence-unknown-not-false",
+        "evidence-provenance",
+        "evidence-public-absence"
+      ]
+    }
+  },
+  {
+    "id": "evidence-unknown-not-false",
+    "fr": {
+      "slug": "inconnu-ne-signifie-pas-faux",
+      "title": "Inconnu ne signifie pas faux : interpréter les informations manquantes",
+      "description": "Comprenez pourquoi une information sans preuves suffisantes doit rester inconnue, et non devenir une négation.",
+      "lead": "Ne pas trouver de soutien à une affirmation n’équivaut pas toujours à trouver des preuves qu’elle est fausse. La nuance protège les organisations contre des conclusions négatives que la recherche ne permet pas d’établir.",
+      "answer": "UNKNOWN signifie que les preuves et le contexte disponibles ne permettent pas de trancher. FALSE nécessite des preuves qui étayent la négation précise. Garder ces états distincts empêche de présenter un manque d’information comme une conclusion sur l’organisation.",
+      "sections": [
+        {
+          "heading": "Le silence des sources a plusieurs explications",
+          "body": "Une source peut ne pas couvrir le sujet, employer d’autres termes, être ancienne ou ne pas être accessible dans le cadre d’une observation autorisée. Aucune de ces situations ne démontre à elle seule l’état contraire. Si une recherche autorisée ne trouve pas de certification, elle délimite ce qui a été observé dans cette recherche ; elle ne prouve pas automatiquement que l’organisation n’en possède pas."
+        },
+        {
+          "heading": "Décrire ce qui reste sans réponse",
+          "body": "Une explication utile précise ce que l’on voulait savoir, les preuves consultées et ce qui demeure inconnu. Les éléments contradictoires doivent également être conservés au lieu de forcer une réponse binaire. « Les sources examinées n’ont pas permis de confirmer » décrit un état de connaissance ; « cela n’existe pas » formule une autre affirmation, qui exige ses propres preuves."
+        },
+        {
+          "heading": "Une recherche limitée borne seulement son propre résultat",
+          "body": "Le nombre et le type de sources, la langue, les requêtes, la date et l’accès influencent ce qui peut être trouvé. Une recherche dans quelques annuaires ne couvre pas nécessairement les registres, les sites d’entreprise ou les documents d’un secteur. Il faut rapporter le périmètre observé avec précision plutôt que généraliser une absence locale à toute l’économie."
+        },
+        {
+          "heading": "L’inconnu reste une réponse utile",
+          "body": "Conserver un état inconnu permet de voir où une vérification pourrait changer une décision. Il n’empêche pas de décrire les preuves positives ou contradictoires qui existent. L’objectif n’est pas de multiplier les réserves sans fin, mais d’indiquer le niveau de soutien et de ne pas combler une lacune avec une supposition présentée comme certaine."
+        }
+      ],
+      "example": "Exemple hypothétique : une certification d’entreprise n’apparaît pas dans deux annuaires publics consultés. On peut dire que ces annuaires ne l’affichent pas dans les conditions de recherche utilisées. Sans source adaptée confirmant l’absence ou le statut officiel, la certification reste inconnue.",
+      "limits": "UNKNOWN ne signifie pas que tous les scénarios sont également probables et n’interdit pas de décrire des preuves positives ou contradictoires. FALSE ne doit pas être déduit d’une page vide, d’un résultat de recherche absent ou d’une source qui ne couvre pas l’attribut concerné.",
+      "cta": {
+        "label": "Explorer Knowledge",
+        "href": "/fr/knowledge"
+      },
+      "related": [
+        "evidence-observed-vs-potential",
+        "evidence-provenance",
+        "evidence-public-absence"
+      ]
+    },
+    "de": {
+      "slug": "unbekannt-bedeutet-nicht-falsch",
+      "title": "Unbekannt heißt nicht falsch: fehlende Informationen einordnen",
+      "description": "Warum Angaben ohne ausreichende Belege unbekannt bleiben müssen, statt in eine Verneinung umgedeutet zu werden.",
+      "lead": "Keine Belege für eine Aussage zu finden ist nicht immer dasselbe wie Belege dafür zu finden, dass sie falsch ist. Diese Unterscheidung verhindert negative Schlussfolgerungen, die eine Recherche nicht trägt.",
+      "answer": "UNKNOWN bedeutet, dass die verfügbare Evidenz und der Kontext keine Entscheidung erlauben. FALSE verlangt Belege für genau die betreffende Verneinung. Die Zustände getrennt zu halten verhindert, dass eine Informationslücke als Schluss über eine Organisation erscheint.",
+      "sections": [
+        {
+          "heading": "Schweigende Quellen können viele Gründe haben",
+          "body": "Eine Quelle deckt ein Thema vielleicht nicht ab, verwendet andere Begriffe, ist veraltet oder unter den erlaubten Beobachtungsbedingungen nicht zugänglich. Keine dieser Situationen belegt für sich den gegenteiligen Sachverhalt. Findet eine zulässige Recherche kein Zertifikat, beschreibt das nur den Befund dieser Suche; es beweist nicht automatisch, dass die Organisation keines besitzt."
+        },
+        {
+          "heading": "Eine offene Frage präzise kommunizieren",
+          "body": "Eine hilfreiche Erklärung nennt die Frage, die geprüften Belege und das, was weiterhin unbekannt ist. Widersprüchliche Belege bleiben ebenfalls sichtbar, statt in eine erzwungene Ja-Nein-Antwort zu münden. „Mit den geprüften Quellen ließ sich dies nicht bestätigen“ beschreibt einen Wissensstand. „Es existiert nicht“ ist eine andere Behauptung und braucht eigene Unterstützung."
+        },
+        {
+          "heading": "Eine begrenzte Suche begrenzt auch ihre Aussage",
+          "body": "Anzahl und Art der Quellen, Sprache, Suchbegriffe, Zeitpunkt und Zugriff beeinflussen den Befund. Eine Suche in wenigen Verzeichnissen deckt nicht zwingend Register, Unternehmensseiten oder branchenspezifische Unterlagen ab. Der beobachtete Umfang sollte genau benannt werden, anstatt eine lokale Lücke auf die gesamte wirtschaftliche Realität zu übertragen. Das gilt auch dann, wenn die Suchoberfläche selbst keinerlei Treffer anzeigt."
+        },
+        {
+          "heading": "Unbekannt kann die nützlichste Antwort sein",
+          "body": "Ein unbekannter Status zeigt, wo eine Prüfung eine Entscheidung noch verändern könnte. Er hindert nicht daran, vorhandene positive oder widersprüchliche Belege zu beschreiben. Es geht nicht darum, jede Aussage mit Vorbehalten zu überladen, sondern die Beleglage offenzulegen und eine Lücke nicht durch eine Vermutung mit sicherem Ton zu füllen."
+        }
+      ],
+      "example": "Hypothetisch: Ein Unternehmenszertifikat erscheint nicht in zwei geprüften öffentlichen Verzeichnissen. Man kann mitteilen, dass diese Verzeichnisse es unter den verwendeten Suchbedingungen nicht aufführen. Ohne eine geeignete Quelle zur Bestätigung des Fehlens oder des offiziellen Status bleibt die Zertifizierung unbekannt.",
+      "limits": "UNKNOWN bedeutet weder, dass alle Möglichkeiten gleich wahrscheinlich sind, noch verbietet es die Beschreibung positiver oder widersprüchlicher Belege. FALSE darf nicht aus einer leeren Seite, einem ausbleibenden Suchtreffer oder einer Quelle abgeleitet werden, die das Merkmal nicht abdeckt. Auch eine sorgfältige Suche bleibt auf ihren festgelegten Umfang beschränkt.",
+      "cta": {
+        "label": "Knowledge erkunden",
+        "href": "/de/knowledge"
+      },
+      "related": [
+        "evidence-observed-vs-potential",
+        "evidence-provenance",
+        "evidence-public-absence"
+      ]
+    },
+    "it": {
+      "slug": "sconosciuto-non-significa-falso",
+      "title": "Sconosciuto non significa falso: leggere le informazioni mancanti",
+      "description": "Perché un’informazione priva di evidenze sufficienti deve restare sconosciuta, invece di diventare una negazione.",
+      "lead": "Non trovare supporto per un’affermazione non equivale sempre a trovare prove che sia falsa. La distinzione evita conclusioni negative che la ricerca svolta non può sostenere.",
+      "answer": "UNKNOWN indica che le evidenze e il contesto disponibili non permettono di risolvere una questione. FALSE richiede evidenze a sostegno della negazione specifica. Mantenere distinti i due stati impedisce di presentare una lacuna informativa come conclusione sull’organizzazione.",
+      "sections": [
+        {
+          "heading": "Il silenzio delle fonti può avere molte cause",
+          "body": "Una fonte potrebbe non trattare l’argomento, usare termini diversi, essere datata o non accessibile nelle condizioni di osservazione consentite. Nessuna di queste situazioni dimostra da sola lo stato opposto. Se una ricerca autorizzata non trova una certificazione, il risultato delimita ciò che è emerso da quella ricerca; non prova automaticamente che l’organizzazione ne sia priva."
+        },
+        {
+          "heading": "Comunicare ciò che non è stato risolto",
+          "body": "Una spiegazione utile specifica che cosa si voleva sapere, quali evidenze sono state consultate e che cosa resta ignoto. Anche le evidenze contraddittorie vanno mantenute, senza forzare una risposta binaria. «Le fonti esaminate non hanno permesso di confermarlo» descrive uno stato di conoscenza; «non esiste» è un’affermazione diversa e richiede un supporto proprio."
+        },
+        {
+          "heading": "Una ricerca circoscritta limita ciò che si può concludere",
+          "body": "Numero e tipo di fonti, lingua, query, data e accesso influenzano i risultati. Una ricerca in alcuni elenchi non copre necessariamente registri, siti aziendali o documenti di settore. È meglio descrivere con precisione il perimetro osservato che generalizzare un’assenza locale all’intera realtà economica dell’organizzazione."
+        },
+        {
+          "heading": "Sconosciuto può essere la risposta più utile",
+          "body": "Conservare lo stato sconosciuto mostra dove una verifica potrebbe ancora cambiare una decisione. Non impedisce di descrivere evidenze positive o contraddittorie già disponibili. Lo scopo non è aggiungere cautele a ogni frase, ma indicare il livello di supporto e non colmare una lacuna con un’ipotesi espressa come certezza."
+        }
+      ],
+      "example": "Esempio ipotetico: la certificazione di un’impresa non compare in due elenchi pubblici consultati. Si può dire che quegli elenchi non la mostrano nelle condizioni di ricerca adottate. Senza una fonte adatta che confermi l’assenza o lo stato ufficiale, la certificazione resta sconosciuta.",
+      "limits": "UNKNOWN non significa che tutti gli scenari siano ugualmente probabili e non impedisce di descrivere evidenze positive o contraddittorie. FALSE non va dedotto da una pagina vuota, da un risultato assente o da una fonte che non copre l’attributo in questione. La conclusione deve quindi restare proporzionata alle fonti effettivamente consultate.",
+      "cta": {
+        "label": "Esplora Knowledge",
+        "href": "/it/knowledge"
+      },
+      "related": [
+        "evidence-observed-vs-potential",
+        "evidence-provenance",
+        "evidence-public-absence"
+      ]
+    },
+    "pt": {
+      "slug": "desconhecido-nao-significa-falso",
+      "title": "Desconhecido não é falso: como interpretar o que está ausente",
+      "description": "Entenda por que uma informação sem evidências suficientes deve continuar desconhecida, sem virar uma negação.",
+      "lead": "Não encontrar apoio para uma afirmação nem sempre equivale a encontrar evidência de que ela seja falsa. A distinção evita conclusões negativas que a pesquisa realizada não sustenta.",
+      "answer": "UNKNOWN indica que as evidências e o contexto disponíveis não resolvem a questão. FALSE exige evidências que sustentem a negação específica. Manter essa diferença impede que uma lacuna de informação seja apresentada como conclusão sobre a organização.",
+      "sections": [
+        {
+          "heading": "O silêncio das fontes pode ter várias explicações",
+          "body": "Uma fonte pode não abordar o tema, usar outros termos, estar desatualizada ou não ser acessível nas condições permitidas de observação. Nenhuma dessas situações, por si só, demonstra o estado contrário. Se uma busca autorizada não encontra uma certificação, o resultado delimita o que foi observado naquela busca; não prova automaticamente que a organização não a possui."
+        },
+        {
+          "heading": "Comunicar uma pergunta ainda sem resposta",
+          "body": "Uma explicação útil identifica o que se tentou saber, quais evidências foram consultadas e o que continua desconhecido. Evidências conflitantes também devem ser preservadas, sem forçar uma resposta binária. «As fontes revisadas não permitiram confirmar» descreve um estado de conhecimento; «não existe» afirma algo diferente e exige sustentação própria."
+        },
+        {
+          "heading": "Uma busca limitada também limita a conclusão",
+          "body": "Quantidade e tipo de fontes, idioma, consultas, data e acesso influenciam o que pode ser encontrado. Uma pesquisa em alguns diretórios não cobre necessariamente registros, sites corporativos ou documentos de um setor. O correto é descrever o escopo observado com precisão, em vez de generalizar uma ausência localizada para toda a realidade econômica."
+        },
+        {
+          "heading": "Desconhecido pode ser uma resposta útil",
+          "body": "Manter o estado desconhecido mostra onde uma verificação ainda poderia mudar uma decisão. Isso não impede descrever evidências positivas ou contraditórias disponíveis. O objetivo não é encher tudo de ressalvas, mas mostrar o nível de sustentação e evitar substituir uma lacuna por uma suposição apresentada como certa."
+        }
+      ],
+      "example": "Exemplo hipotético: a certificação de uma empresa não aparece em dois diretórios públicos consultados. É possível dizer que esses diretórios não a exibiram sob as condições da busca. Sem uma fonte adequada que confirme a ausência ou o status oficial, a certificação permanece desconhecida.",
+      "limits": "UNKNOWN não significa que todos os cenários sejam igualmente prováveis nem impede descrever evidências positivas ou conflitantes. FALSE não deve ser inferido de uma página vazia, de um resultado de busca ausente ou de uma fonte que não cobre aquele atributo.",
+      "cta": {
+        "label": "Explorar Knowledge",
+        "href": "/pt/knowledge"
+      },
+      "related": [
+        "evidence-observed-vs-potential",
+        "evidence-provenance",
+        "evidence-public-absence"
+      ]
+    }
+  },
+  {
+    "id": "evidence-provenance",
+    "fr": {
+      "slug": "provenance-des-preuves",
+      "title": "Provenance des preuves : d’où vient une affirmation ?",
+      "description": "Découvrez ce que la provenance permet d’expliquer et pourquoi l’autorité d’une source dépend de la donnée recherchée.",
+      "lead": "Une affirmation est plus facile à évaluer lorsque l’on peut remonter de son énoncé aux éléments qui la soutiennent. La provenance donne ce chemin de contrôle.",
+      "answer": "La provenance décrit l’origine et le contexte d’une preuve : source, référence, moment d’observation, méthode et lien avec l’affirmation. Elle aide à savoir ce qui a été observé, qui l’a déclaré et quelles limites s’appliquent ; elle ne rend pas automatiquement la source vraie.",
+      "sections": [
+        {
+          "heading": "La bonne source dépend de la question",
+          "body": "Aucune source n’est la meilleure pour tous les attributs. Un site d’entreprise peut étayer les produits qu’elle déclare proposer ; un registre public peut être plus pertinent pour son identité juridique ; un organisme certificateur pour le statut d’une certification. La provenance distingue aussi une déclaration de l’organisation, une constatation indépendante et une inférence tirée d’autres éléments."
+        },
+        {
+          "heading": "Une référence doit garder assez de contexte",
+          "body": "Pour examiner une affirmation, il importe de savoir où elle a été trouvée, quand elle a été observée et quelle partie de la source la soutient. Une URL seule ne dit pas toujours si la page a changé, concerne une filiale ou décrit une période passée. La chaîne de provenance permet de contester l’interprétation sans confondre source, preuve et conclusion."
+        },
+        {
+          "heading": "Attribuer une déclaration sans la transformer en vérification",
+          "body": "Une source peut prouver qu’une information a été communiquée, tout en restant insuffisante pour établir l’événement lui-même. Une annonce d’entreprise étaye ce que l’entreprise a annoncé ; une source indépendante peut être nécessaire pour vérifier la réalisation effective. Cette distinction n’écarte pas la déclaration : elle en précise l’auteur, la portée et l’autorité pour la question posée."
+        },
+        {
+          "heading": "La provenance permet une réévaluation ultérieure",
+          "body": "Si une page change, une entité est résolue différemment ou la question évolue, les liens de provenance aident à réexaminer la conclusion dépendante. Une référence conserve le contexte nécessaire selon les droits applicables ; elle ne justifie pas toujours de garder ou de redistribuer le texte complet. Une bonne trace facilite le contrôle sans effacer l’incertitude."
+        }
+      ],
+      "example": "Exemple hypothétique : un communiqué hébergé sur le site d’une entreprise annonce l’ouverture d’une usine en mai. La provenance peut consigner la page et la date d’observation. L’affirmation est attribuée à l’entreprise ; le communiqué ne vérifie pas à lui seul le début effectif de l’exploitation.",
+      "limits": "Une source peut être partielle, erronée, modifiée ou peu autorisée pour le prédicat examiné. Posséder une URL n’équivaut pas à valider une affirmation. L’interprétation dépend du contexte, de la date et de la pertinence de la preuve par rapport au sujet et à la relation décrits.",
+      "cta": {
+        "label": "Explorer Knowledge",
+        "href": "/fr/knowledge"
+      },
+      "related": [
+        "evidence-currentness",
+        "evidence-signal-faxt-inxight",
+        "evidence-unknown-not-false"
+      ]
+    },
+    "de": {
+      "slug": "provenienz-von-belegen",
+      "title": "Belegprovenienz: Woher stammt eine Aussage?",
+      "description": "Was die Herkunft eines Belegs erklären sollte und warum die Aussagekraft einer Quelle vom Merkmal abhängt.",
+      "lead": "Eine Aussage lässt sich besser beurteilen, wenn ihr Weg von der Behauptung zurück zu den stützenden Belegen nachvollziehbar ist. Provenienz schafft diese Prüfmöglichkeit.",
+      "answer": "Provenienz erfasst Herkunft und Kontext eines Belegs: Quelle, Referenz, Beobachtungszeitpunkt, Methode und Bezug zur Aussage. Sie erklärt, was beobachtet und von wem mitgeteilt wurde und welche Grenzen gelten; sie macht die Quelle nicht automatisch wahr.",
+      "sections": [
+        {
+          "heading": "Die passende Quelle richtet sich nach der Frage",
+          "body": "Es gibt keine Quelle, die für alle Merkmale überlegen ist. Eine Unternehmenswebsite kann die dort angegebenen Produkte stützen; ein öffentliches Register ist möglicherweise aussagekräftiger für die rechtliche Identität; eine Zertifizierungsstelle für den Status eines Zertifikats. Provenienz hilft außerdem, eine Eigenaussage von einer unabhängigen Feststellung oder einer abgeleiteten Schlussfolgerung zu unterscheiden. Die Quelle muss zum konkreten Sachverhalt passen, nicht nur allgemein seriös wirken."
+        },
+        {
+          "heading": "Eine Referenz braucht ausreichend Kontext",
+          "body": "Für die Prüfung einer Aussage ist wichtig, wo sie gefunden, wann sie beobachtet und welcher Teil der Quelle herangezogen wurde. Eine einzelne URL zeigt nicht zwingend, ob die Seite geändert wurde, eine Tochtergesellschaft betrifft oder eine frühere Periode beschreibt. Die Provenienzkette lässt die Einordnung hinterfragen, ohne Quelle, Beleg und Schlussfolgerung gleichzusetzen."
+        },
+        {
+          "heading": "Aussagen zuordnen, ohne sie als Verifikation auszugeben",
+          "body": "Eine Quelle kann belegen, dass eine Information mitgeteilt wurde, ohne das Ereignis selbst ausreichend nachzuweisen. Eine Unternehmensmeldung stützt, was das Unternehmen angekündigt hat; für die tatsächliche Aufnahme des Betriebs kann eine unabhängige Quelle nötig sein. Das entwertet die Mitteilung nicht, sondern benennt Urheber, Umfang und Aussagekraft für die konkrete Frage."
+        },
+        {
+          "heading": "Provenienz ermöglicht spätere Neubewertung",
+          "body": "Ändert sich eine Seite, wird eine Organisation anders aufgelöst oder verändert sich die Frage, helfen Herkunftsverknüpfungen bei der erneuten Prüfung abhängiger Aussagen. Eine Referenz bewahrt im Rahmen geltender Rechte den nötigen Kontext; sie rechtfertigt nicht immer, den vollständigen Text zu speichern oder weiterzugeben. Eine gute Spur ermöglicht Prüfung und lässt Unsicherheit bestehen."
+        }
+      ],
+      "example": "Hypothetisch: Eine Pressemitteilung auf der Website eines Unternehmens kündigt für Mai die Eröffnung eines Werks an. Die Provenienz kann Seite und Beobachtungsdatum festhalten. Die Aussage bleibt dem Unternehmen zugeschrieben; die Mitteilung allein bestätigt nicht, dass der Betrieb tatsächlich begonnen hat.",
+      "limits": "Eine Quelle kann unvollständig, falsch, verändert oder für das betreffende Merkmal nur eingeschränkt aussagekräftig sein. Eine URL ist keine Validierung. Die Einordnung hängt von Kontext, Zeitpunkt und davon ab, ob der Beleg zum beschriebenen Subjekt und zur Beziehung passt. Das erleichtert eine spätere Prüfung, wenn sich die zugrunde liegende Information verändert.",
+      "cta": {
+        "label": "Knowledge erkunden",
+        "href": "/de/knowledge"
+      },
+      "related": [
+        "evidence-currentness",
+        "evidence-signal-faxt-inxight",
+        "evidence-unknown-not-false"
+      ]
+    },
+    "it": {
+      "slug": "provenienza-delle-evidenze",
+      "title": "Provenienza delle evidenze: da dove nasce un’affermazione",
+      "description": "Che cosa dovrebbe spiegare la provenienza e perché l’autorevolezza di una fonte dipende dal dato considerato.",
+      "lead": "Un’affermazione è più facile da valutare quando si può risalire da ciò che dichiara alle evidenze che la sostengono. La provenienza rende possibile questo controllo.",
+      "answer": "La provenienza descrive origine e contesto di un’evidenza: fonte, riferimento, momento dell’osservazione, metodo e legame con l’affermazione. Aiuta a capire cosa è stato osservato, chi lo ha dichiarato e quali limiti esistono; non rende automaticamente vera la fonte.",
+      "sections": [
+        {
+          "heading": "La fonte adatta dipende dalla domanda",
+          "body": "Non esiste una fonte migliore per ogni attributo. Il sito aziendale può sostenere quali prodotti l’impresa dichiara di offrire; un registro pubblico può essere più pertinente per l’identità giuridica; un ente certificatore per lo stato di una certificazione. La provenienza distingue inoltre una dichiarazione dell’organizzazione da un riscontro indipendente o da un’inferenza derivata."
+        },
+        {
+          "heading": "Un riferimento deve conservare contesto sufficiente",
+          "body": "Per esaminare un’affermazione conta sapere dove è stata trovata, quando è stata osservata e quale parte della fonte la sostiene. Un URL isolato non chiarisce sempre se la pagina è cambiata, riguarda una controllata o descrive un periodo passato. La catena di provenienza permette di contestare l’interpretazione senza confondere fonte, evidenza e conclusione."
+        },
+        {
+          "heading": "Attribuire una dichiarazione non equivale a verificarla",
+          "body": "Una fonte può provare che un’informazione è stata comunicata, senza essere sufficiente a stabilire l’evento stesso. Un comunicato aziendale sostiene ciò che l’impresa ha annunciato; una fonte indipendente può servire per verificare l’effettivo avvio dell’attività. La distinzione non cancella la dichiarazione: ne precisa autore, portata e autorità rispetto alla domanda."
+        },
+        {
+          "heading": "La provenienza aiuta a rivalutare in seguito",
+          "body": "Se una pagina cambia, l’identità del soggetto viene risolta diversamente o la domanda evolve, i collegamenti di provenienza consentono di riesaminare le conclusioni dipendenti. Un riferimento conserva il contesto necessario nei limiti dei diritti applicabili; non giustifica sempre conservare o ridistribuire il testo integrale. Una traccia chiara facilita il controllo senza cancellare l’incertezza."
+        }
+      ],
+      "example": "Esempio ipotetico: un comunicato pubblicato sul sito di un’impresa annuncia l’apertura di uno stabilimento a maggio. La provenienza può registrare la pagina e la data di osservazione. L’affermazione resta attribuita all’impresa; il comunicato, da solo, non verifica l’effettivo inizio delle attività.",
+      "limits": "Una fonte può essere parziale, errata, modificata o poco autorevole per il predicato in esame. Avere un URL non equivale a convalidare un’affermazione. L’interpretazione dipende da contesto, data e pertinenza dell’evidenza rispetto al soggetto e alla relazione descritti.",
+      "cta": {
+        "label": "Esplora Knowledge",
+        "href": "/it/knowledge"
+      },
+      "related": [
+        "evidence-currentness",
+        "evidence-signal-faxt-inxight",
+        "evidence-unknown-not-false"
+      ]
+    },
+    "pt": {
+      "slug": "proveniencia-das-evidencias",
+      "title": "Proveniência das evidências: de onde vem uma afirmação",
+      "description": "O que a proveniência deve explicar e por que a autoridade de uma fonte depende do atributo em questão.",
+      "lead": "Uma afirmação é mais fácil de avaliar quando seu caminho pode ser seguido até as evidências que a sustentam. A proveniência permite esse exame.",
+      "answer": "A proveniência reúne origem e contexto de uma evidência: fonte, referência, momento da observação, método e relação com a afirmação. Ajuda a entender o que foi observado, quem declarou e quais limites existem; não torna a fonte automaticamente verdadeira.",
+      "sections": [
+        {
+          "heading": "A fonte adequada depende da pergunta",
+          "body": "Não existe uma fonte superior para todos os atributos. O site corporativo pode sustentar quais produtos uma empresa declara oferecer; um registro público pode ser mais pertinente para sua identidade jurídica; uma certificadora, para o status de uma certificação. A proveniência também distingue uma declaração da organização de uma verificação independente ou de uma inferência derivada."
+        },
+        {
+          "heading": "Uma referência precisa preservar contexto suficiente",
+          "body": "Para revisar uma afirmação, importa saber onde foi encontrada, quando foi observada e qual parte da fonte a sustenta. Um URL isolado nem sempre explica se a página mudou, se se refere a uma subsidiária ou se descreve um período passado. A cadeia de proveniência permite questionar a interpretação sem apagar a diferença entre fonte, evidência e conclusão."
+        },
+        {
+          "heading": "Atribuir uma declaração não é verificá-la",
+          "body": "Uma fonte pode comprovar que certa informação foi comunicada sem ser suficiente para estabelecer o evento em si. Um comunicado da empresa sustenta o que ela anunciou; uma fonte independente pode ser necessária para verificar o início efetivo da operação. A distinção não descarta o comunicado: esclarece quem o produziu, seu alcance e sua autoridade para a pergunta."
+        },
+        {
+          "heading": "A proveniência permite reavaliar depois",
+          "body": "Se uma página mudar, a identidade da entidade for resolvida de outra forma ou a pergunta evoluir, os vínculos de proveniência ajudam a rever conclusões dependentes. Uma referência preserva o contexto necessário conforme os direitos aplicáveis; nem sempre justifica guardar ou redistribuir o texto completo. Um registro claro facilita a revisão sem esconder a incerteza."
+        }
+      ],
+      "example": "Exemplo hipotético: um comunicado no domínio de uma empresa anuncia a abertura de uma fábrica em maio. A proveniência pode registrar a página e a data em que foi observada. A afirmação continua atribuída à empresa; o comunicado, sozinho, não verifica o início efetivo da operação.",
+      "limits": "Uma fonte pode ser parcial, estar errada, ter mudado ou possuir autoridade limitada para o predicado. Ter um URL não valida uma afirmação. A interpretação depende do contexto, da data e da pertinência da evidência ao sujeito e à relação descritos.",
+      "cta": {
+        "label": "Explorar Knowledge",
+        "href": "/pt/knowledge"
+      },
+      "related": [
+        "evidence-currentness",
+        "evidence-signal-faxt-inxight",
+        "evidence-unknown-not-false"
+      ]
+    }
+  },
+  {
+    "id": "evidence-currentness",
+    "fr": {
+      "slug": "actualite-et-temps-des-preuves",
+      "title": "Actualité et temps : quand une preuve reste-t-elle utile ?",
+      "description": "Distinguez la date d’observation d’une source de l’actualité présente de l’information qu’elle décrit.",
+      "lead": "Consulter une page aujourd’hui ne signifie pas que tout son contenu soit actuel ni qu’il décrive la situation présente. La date de consultation et la période de validité sont deux informations distinctes.",
+      "answer": "Une preuve possède un contexte temporel. La date à laquelle une source a été observée diffère de la période où le fait était valide et de la question de savoir s’il l’est encore. L’actualité ne se déduit pas uniquement d’une capture récente.",
+      "sections": [
+        {
+          "heading": "Trois dates peuvent raconter des choses différentes",
+          "body": "Une page peut être publiée à une date, décrire une activité commencée auparavant et rester accessible pendant des années. Le moment d’observation indique quand la source a été vue. La période de validité, si elle est connue, indique quand le fait s’applique. Si la source ne précise pas de fin, il ne faut pas inventer une date pour clore l’historique."
+        },
+        {
+          "heading": "Le temps peut réduire la portée d’une conclusion",
+          "body": "Les capacités, installations, responsables et relations économiques évoluent. Une preuve ancienne peut conserver une valeur historique sans suffire à affirmer qu’un état existe encore aujourd’hui. Comparer deux moments suppose aussi que sujets, conditions d’observation et méthodes soient compatibles. Sinon, une différence apparente peut venir de la manière de mesurer, pas d’un changement réel."
+        },
+        {
+          "heading": "Conserver l’historique sans l’exprimer au présent",
+          "body": "L’information passée peut rester pertinente pour comprendre comment une activité ou une relation a évolué. Il faut alors préciser la période soutenue et éviter de présenter le fait historique comme actuel. Si de nouveaux éléments contredisent une source ancienne, les deux observations peuvent être conservées avec leurs dates et états au lieu d’effacer la contradiction."
+        },
+        {
+          "heading": "Une actualité inconnue est un résultat valide",
+          "body": "Si les sources ne permettent pas de savoir si une capacité demeure active, « actualité inconnue » décrit correctement l’état de connaissance. Ce n’est ni une preuve d’arrêt ni une confirmation de continuité. Une source récente peut montrer qu’une page est accessible ; elle ne date pas nécessairement le fait décrit ni ne vérifie son état opérationnel."
+        }
+      ],
+      "example": "Exemple hypothétique : un catalogue de 2022 décrit une ligne de fabrication. Si la même page est consultée en 2026, la nouvelle consultation confirme que la page reste accessible, pas que la ligne fonctionne encore. Sans élément temporel supplémentaire, la capacité actuelle ne doit pas être présentée comme confirmée.",
+      "limits": "Une date récente ne garantit pas l’exactitude et une date ancienne ne rend pas automatiquement fausse une affirmation historique. « Actualité inconnue » est valable quand la continuité n’est pas établie. Un changement de source, de langue ou d’instrument peut empêcher une comparaison directe.",
+      "cta": {
+        "label": "Explorer Knowledge",
+        "href": "/fr/knowledge"
+      },
+      "related": [
+        "evidence-provenance",
+        "evidence-observed-vs-potential",
+        "evidence-signal-faxt-inxight"
+      ]
+    },
+    "de": {
+      "slug": "aktualitaet-und-zeit-von-belegen",
+      "title": "Aktualität und Zeit: Wann bleibt ein Beleg aussagekräftig?",
+      "description": "Unterscheiden Sie den Zeitpunkt einer Beobachtung davon, ob die beschriebene Information noch gilt.",
+      "lead": "Wird eine Seite heute abgerufen, ist deshalb nicht automatisch ihr gesamter Inhalt aktuell oder eine Beschreibung der Gegenwart. Abrufdatum und Gültigkeitszeitraum sind verschiedene Angaben.",
+      "answer": "Ein Beleg hat zeitlichen Kontext. Der Zeitpunkt, zu dem eine Quelle beobachtet wurde, unterscheidet sich davon, wann der beschriebene Sachverhalt galt und ob er weiterhin gilt. Aktualität folgt nicht allein aus einem neuen Abruf.",
+      "sections": [
+        {
+          "heading": "Drei Daten können unterschiedliche Geschichten erzählen",
+          "body": "Eine Seite kann an einem Tag veröffentlicht werden, eine früher begonnene Aktivität beschreiben und noch Jahre später abrufbar sein. Das Beobachtungsdatum sagt, wann die Quelle gesehen wurde. Der Gültigkeitszeitraum benennt – soweit bekannt – wann die Aussage zutraf. Ist kein Ende belegt, sollte keines erfunden werden, um die Geschichte künstlich abzuschließen."
+        },
+        {
+          "heading": "Zeit kann die Tragweite einer Schlussfolgerung verringern",
+          "body": "Fähigkeiten, Standorte, Verantwortliche und Geschäftsbeziehungen können sich ändern. Ein alter Beleg kann historisch relevant bleiben und dennoch nicht genügen, um den heutigen Zustand zu bestätigen. Für den Vergleich zweier Zeitpunkte müssen außerdem Subjekte, Beobachtungsbedingungen und Methode zusammenpassen. Andernfalls kann ein scheinbarer Unterschied durch die Messweise statt durch eine reale Veränderung entstehen."
+        },
+        {
+          "heading": "Geschichte bewahren, ohne sie als Gegenwart auszugeben",
+          "body": "Vergangene Informationen können helfen, die Entwicklung einer Aktivität oder Beziehung zu verstehen. Dann sollte der belegte Zeitraum ausdrücklich genannt werden. Widersprechen neue Erkenntnisse einer älteren Quelle, können beide Beobachtungen mit Datum und Status erhalten bleiben, statt den Widerspruch zu verbergen oder die frühere Quelle stillschweigend als aktuellen Zustand zu verwenden."
+        },
+        {
+          "heading": "Unbekannte Aktualität ist ein gültiger Befund",
+          "body": "Reichen die Quellen nicht aus, um festzustellen, ob eine Fähigkeit noch besteht, beschreibt „Aktualität unbekannt“ den Wissensstand. Das beweist weder das Ende noch die Fortdauer. Eine aktuelle Quelle kann zeigen, dass eine Seite erreichbar ist; sie datiert nicht zwingend den beschriebenen Sachverhalt und bestätigt nicht dessen betrieblichen Status."
+        }
+      ],
+      "example": "Hypothetisch: Ein Katalog aus dem Jahr 2022 beschreibt eine Fertigungslinie. Wird dieselbe Seite 2026 erneut aufgerufen, bestätigt das den Zugriff auf die Seite, nicht den fortlaufenden Betrieb der Linie. Ohne zusätzliche zeitliche Belege sollte die heutige Fähigkeit nicht als bestätigt gelten.",
+      "limits": "Ein neues Datum garantiert keine Richtigkeit, und ein altes Datum macht eine historische Aussage nicht automatisch falsch. „Aktualität unbekannt“ ist angemessen, wenn die Fortdauer nicht belegt ist. Geänderte Quelle, Sprache oder Messinstrument können einen direkten Vergleich ausschließen. Diese Unterscheidung gilt auch dann, wenn die Seite selbst unverändert aussieht. Zeitangaben sollten nicht mehr Genauigkeit vortäuschen, als die Quelle hergibt.",
+      "cta": {
+        "label": "Knowledge erkunden",
+        "href": "/de/knowledge"
+      },
+      "related": [
+        "evidence-provenance",
+        "evidence-observed-vs-potential",
+        "evidence-signal-faxt-inxight"
+      ]
+    },
+    "it": {
+      "slug": "attualita-e-tempo-delle-evidenze",
+      "title": "Attualità e tempo: quando un’evidenza resta utile",
+      "description": "Distingui la data di osservazione di una fonte dall’attualità dell’informazione che descrive.",
+      "lead": "Consultare una pagina oggi non significa che tutto ciò che contiene sia attuale o descriva il presente. La data della consultazione e il periodo di validità sono informazioni distinte.",
+      "answer": "Un’evidenza ha un contesto temporale. Quando è stata osservata una fonte è diverso da quando il fatto era valido e dal sapere se lo sia ancora. L’attualità non si deduce soltanto da una cattura recente.",
+      "sections": [
+        {
+          "heading": "Tre date possono raccontare cose diverse",
+          "body": "Una pagina può essere pubblicata in una data, descrivere un’attività iniziata prima e restare accessibile per anni. Il momento dell’osservazione indica quando è stata vista la fonte. Il periodo di validità, se noto, indica quando vale il fatto. Se la fonte non stabilisce una fine, non si deve inventare una data per chiudere la cronologia."
+        },
+        {
+          "heading": "Il tempo può ridurre la forza di una conclusione",
+          "body": "Capacità, impianti, responsabili e relazioni economiche possono cambiare. Un’evidenza datata può restare utile come storia senza bastare a dichiarare che qualcosa esista ancora. Per confrontare due momenti servono anche soggetti, condizioni di osservazione e metodi compatibili; altrimenti una differenza apparente può dipendere dalla misurazione."
+        },
+        {
+          "heading": "Conservare il passato senza presentarlo al presente",
+          "body": "Le informazioni storiche possono aiutare a capire come si è evoluta un’attività o una relazione. Occorre indicare il periodo sostenuto ed evitare di descrivere il fatto passato come corrente. Se nuovi elementi contraddicono una fonte precedente, entrambe le osservazioni possono restare con date e stati distinti, invece di cancellare la contraddizione."
+        },
+        {
+          "heading": "Attualità sconosciuta è un risultato valido",
+          "body": "Se le fonti non consentono di sapere se una capacità sia ancora attiva, «attualità sconosciuta» rappresenta correttamente la conoscenza disponibile. Non prova né che l’attività sia cessata né che continui. Una pagina recente può risultare accessibile oggi senza datare il fatto descritto o verificarne lo stato operativo."
+        }
+      ],
+      "example": "Esempio ipotetico: un catalogo del 2022 descrive una linea produttiva. Se la stessa pagina viene consultata nel 2026, la nuova consultazione conferma che la pagina è accessibile, non che la linea sia ancora operativa. Senza ulteriori evidenze temporali, la capacità attuale non va presentata come confermata.",
+      "limits": "Una data recente non garantisce accuratezza e una data passata non rende automaticamente falsa un’affermazione storica. «Attualità sconosciuta» è valido quando la continuità non è stabilita. Cambiamenti di fonte, lingua o strumento possono impedire un confronto diretto. Queste distinzioni chiariscono il grado di fiducia possibile nel dato.",
+      "cta": {
+        "label": "Esplora Knowledge",
+        "href": "/it/knowledge"
+      },
+      "related": [
+        "evidence-provenance",
+        "evidence-observed-vs-potential",
+        "evidence-signal-faxt-inxight"
+      ]
+    },
+    "pt": {
+      "slug": "atualidade-e-tempo-das-evidencias",
+      "title": "Atualidade e tempo: quando uma evidência continua útil",
+      "description": "Separe a data em que uma fonte foi observada da atualidade do que ela descreve.",
+      "lead": "Acessar uma página hoje não significa que tudo o que ela diz seja atual nem que descreva o presente. A data da observação e o período de validade são informações diferentes.",
+      "answer": "A evidência tem contexto temporal. O momento em que uma fonte foi observada é distinto do período em que o fato era válido e de saber se ainda continua válido. Atualidade não se deduz apenas de uma captura recente.",
+      "sections": [
+        {
+          "heading": "Três datas podem contar histórias diferentes",
+          "body": "Uma página pode ser publicada numa data, descrever uma atividade iniciada antes e continuar acessível por anos. O momento da observação informa quando a fonte foi consultada. O período de validade, quando conhecido, indica quando o fato se aplica. Se a fonte não estabelece um fim, não se deve inventar uma data para encerrar a história."
+        },
+        {
+          "heading": "O tempo pode reduzir a força de uma conclusão",
+          "body": "Capacidades, instalações, responsáveis e relações econômicas podem mudar. Uma evidência antiga pode continuar relevante como histórico, mas não bastar para afirmar que algo ainda existe hoje. Comparar dois momentos também exige compatibilidade entre sujeitos, condições e método; caso contrário, uma diferença aparente pode decorrer da forma de medir."
+        },
+        {
+          "heading": "Preservar o histórico sem apresentá-lo como presente",
+          "body": "Informações passadas podem ajudar a entender a evolução de uma atividade ou relação. Nesse caso, é preciso indicar o período sustentado e evitar apresentar o fato histórico como atual. Se novos elementos contradisserem uma fonte antiga, as duas observações podem ser mantidas com suas datas e estados, em vez de apagar a contradição."
+        },
+        {
+          "heading": "Atualidade desconhecida é uma resposta válida",
+          "body": "Se as fontes não permitem saber se uma capacidade continua ativa, «atualidade desconhecida» descreve corretamente o estado do conhecimento. Isso não prova interrupção nem continuidade. Uma fonte recente pode mostrar que uma página está acessível; não necessariamente data o fato descrito nem verifica se a operação continua."
+        }
+      ],
+      "example": "Exemplo hipotético: um catálogo de 2022 descreve uma linha de fabricação. Se a mesma página é consultada em 2026, a consulta confirma que ela continua acessível, não que a linha ainda opere. Sem evidência temporal adicional, a capacidade atual não deve ser apresentada como confirmada.",
+      "limits": "Uma data recente não garante precisão, e uma data antiga não torna falsa automaticamente uma afirmação histórica. «Atualidade desconhecida» é válida quando não se sabe se o estado continua. Mudanças na fonte, idioma ou instrumento podem impedir uma comparação direta.",
+      "cta": {
+        "label": "Explorar Knowledge",
+        "href": "/pt/knowledge"
+      },
+      "related": [
+        "evidence-provenance",
+        "evidence-observed-vs-potential",
+        "evidence-signal-faxt-inxight"
+      ]
+    }
+  },
+  {
+    "id": "evidence-signal-faxt-inxight",
+    "fr": {
+      "slug": "signal-faxt-inxight-trois-niveaux",
+      "title": "Signal, FAXT et INXIGHT : trois niveaux à distinguer",
+      "description": "Distinguez le signal qui oriente l’attention, le fait étayé par des preuves et la connaissance dérivée.",
+      "lead": "Un signal peut indiquer un sujet à examiner sans constituer, à lui seul, un fait confirmé sur une organisation. Les niveaux suivants demandent des preuves et des règles différentes.",
+      "answer": "Une Señal est une observation émergente qui oriente l’attention. Un FAXT est une unité canonique étayée par des preuves, une provenance, une temporalité et un état épistémique. Un INXIGHT est une connaissance dérivée et explicable ; il ne doit jamais être présenté comme un FAXT.",
+      "sections": [
+        {
+          "heading": "Le signal ouvre une question",
+          "body": "Une Señal peut suggérer une opportunité, une évolution ou un lien à examiner. Ce n’est pas une unité facturable ni une autorisation d’inscrire une conclusion dans le monde économique canonique. Elle sert à orienter l’enquête. Les preuves admises et les règles du domaine déterminent ensuite ce qui peut être affirmé ; le signal seul ne franchit pas cette étape."
+        },
+        {
+          "heading": "Fait et interprétation gardent des traces distinctes",
+          "body": "Un FAXT conserve le sujet, le prédicat et la valeur étayés, avec leurs références, leur autorité, leur provenance et leur contexte temporel. Un INXIGHT rassemble ou interprète des éléments canoniques et doit indiquer de quoi il dépend, quelle incertitude demeure et comment il peut évoluer si ses fondements deviennent anciens. L’interprétation ne remplace pas discrètement ses bases."
+        },
+        {
+          "heading": "Une dérivation reste inspectable et révisable",
+          "body": "Le lecteur devrait pouvoir comprendre quelles preuves et quelles relations contribuent à un INXIGHT, et quelles étapes relèvent d’une dérivation. Si un fondement change ou est contredit, l’interprétation doit pouvoir être réexaminée. Un raisonnement plausible ne devient pas un fait parce qu’il est cohérent ; son statut et ses limites doivent rester visibles à chaque présentation."
+        },
+        {
+          "heading": "Ces niveaux guident des décisions de recherche",
+          "body": "Une Señal attire l’attention, un FAXT conserve un fait soutenu, et un INXIGHT explique une relation ou une perspective dérivée. Chacun peut orienter une question différente. Le vocabulaire ne signifie pas que tous les capteurs ou écrans prévus sont disponibles aujourd’hui ; il décrit la séparation épistémique que le produit doit préserver."
+        }
+      ],
+      "example": "Exemple hypothétique : une note publique sur l’ouverture d’un site déclenche une Señal. Après examen de la source, du sujet et de la date, un FAXT peut décrire que l’entreprise a annoncé cette ouverture. Un INXIGHT peut ensuite relier cette capacité déclarée à un marché ; cela reste une dérivation, pas une preuve de ventes sur ce marché.",
+      "limits": "Ce vocabulaire décrit le modèle produit et ne certifie pas que tous les capteurs, processus ou écrans sont implémentés. Une actualité ne confirme pas automatiquement ce qu’elle annonce. Une inférence, même raisonnable, ne devient pas un fait parce qu’elle est formulée avec assurance.",
+      "cta": {
+        "label": "Explorer Knowledge",
+        "href": "/fr/knowledge"
+      },
+      "related": [
+        "evidence-provenance",
+        "evidence-currentness",
+        "evidence-observed-vs-potential"
+      ]
+    },
+    "de": {
+      "slug": "signal-faxt-inxight-drei-ebenen",
+      "title": "Signal, FAXT und INXIGHT: drei Ebenen auseinanderhalten",
+      "description": "Unterscheiden Sie ein aufmerksamkeitweisendes Signal, einen belegten Fakt und daraus abgeleitetes Wissen.",
+      "lead": "Ein Signal kann auf etwas hinweisen, das Aufmerksamkeit verdient, ohne selbst eine bestätigte Tatsache über eine Organisation zu sein. Die folgenden Ebenen brauchen jeweils eigene Belege und Regeln.",
+      "answer": "Eine Señal ist eine entstehende Beobachtung, die Aufmerksamkeit lenkt. Ein FAXT ist eine kanonische Einheit mit Belegen, Provenienz, zeitlichem Kontext und Erkenntnisstatus. Ein INXIGHT ist abgeleitetes, erklärbares Wissen und darf niemals als FAXT ausgegeben werden.",
+      "sections": [
+        {
+          "heading": "Das Signal öffnet eine Frage",
+          "body": "Eine Señal kann auf eine mögliche Chance, Veränderung oder Verbindung hinweisen, die geprüft werden sollte. Sie ist weder eine abrechenbare Einheit noch die Erlaubnis, eine Schlussfolgerung in die kanonische Wirtschaftswelt einzutragen. Ihr Zweck ist, Recherche auszurichten. Erst zugelassene Belege und die fachlichen Regeln bestimmen, was anschließend behauptet werden darf."
+        },
+        {
+          "heading": "Fakt und Interpretation haben getrennte Spuren",
+          "body": "Ein FAXT bewahrt das gestützte Subjekt, Prädikat und den Wert samt Referenzen, Aussagekraft, Provenienz und Zeitkontext. Ein INXIGHT verbindet oder interpretiert solche kanonischen Elemente und muss seine Grundlagen, verbleibende Unsicherheit und mögliche Änderungen bei veralteter Basis erklären. Die Interpretation ersetzt ihre Fundamente nicht unbemerkt."
+        },
+        {
+          "heading": "Ableitungen bleiben prüfbar und revidierbar",
+          "body": "Lesende sollten erkennen können, welche Belege und Beziehungen zu einem INXIGHT beitragen und welche Schritte Ableitungen sind. Ändert sich eine Grundlage oder wird sie widerlegt, muss sich die Interpretation erneut bewerten lassen. Ein plausibler Gedankengang wird nicht allein durch seine Schlüssigkeit zum Fakt; Status und Grenzen müssen sichtbar bleiben."
+        },
+        {
+          "heading": "Die Ebenen unterstützen unterschiedliche Recherchefragen",
+          "body": "Eine Señal lenkt Aufmerksamkeit, ein FAXT bewahrt einen belegten Fakt, und ein INXIGHT erklärt einen abgeleiteten Zusammenhang. Jede Ebene kann zu einer anderen Frage führen. Die Begriffe besagen nicht, dass alle vorgesehenen Sensoren oder Oberflächen schon verfügbar sind; sie beschreiben die epistemische Trennung, die das Produkt wahren muss."
+        }
+      ],
+      "example": "Hypothetisch: Eine öffentliche Meldung über einen neuen Standort erzeugt eine Señal. Nach Prüfung von Quelle, Subjekt und Datum kann ein FAXT festhalten, dass das Unternehmen die Eröffnung angekündigt hat. Ein INXIGHT kann diese erklärte Fähigkeit anschließend mit einem Markt verknüpfen; das belegt keine Verkäufe in diesem Markt.",
+      "limits": "Diese Begriffe beschreiben das Produktmodell und bestätigen nicht, dass alle Sensoren, Prozesse oder Ansichten implementiert sind. Eine Nachricht bestätigt nicht automatisch das angekündigte Ereignis. Auch eine vernünftige Schlussfolgerung wird nicht dadurch zum Fakt, dass sie sicher formuliert ist. So bleiben die einzelnen Schritte für eine erneute Prüfung voneinander unterscheidbar und können bei neuen Belegen erneut bewertet werden.",
+      "cta": {
+        "label": "Knowledge erkunden",
+        "href": "/de/knowledge"
+      },
+      "related": [
+        "evidence-provenance",
+        "evidence-currentness",
+        "evidence-observed-vs-potential"
+      ]
+    },
+    "it": {
+      "slug": "signal-faxt-inxight-tre-livelli-distinti",
+      "title": "Signal, FAXT e INXIGHT: tre livelli da non confondere",
+      "description": "Distingui il segnale che orienta l’attenzione, il fatto sostenuto da evidenze e la conoscenza derivata.",
+      "lead": "Un segnale può indicare qualcosa che merita attenzione senza essere, da solo, un fatto confermato su un’organizzazione. I livelli successivi richiedono evidenze e regole differenti.",
+      "answer": "Una Señal è un’osservazione emergente che orienta l’attenzione. Un FAXT è un’unità canonica sostenuta da evidenze, provenienza, temporalità e stato epistemico. Un INXIGHT è conoscenza derivata e spiegabile; non deve mai essere presentato come un FAXT.",
+      "sections": [
+        {
+          "heading": "Il segnale apre una domanda",
+          "body": "Una Señal può suggerire un’opportunità, un cambiamento o un collegamento da esaminare. Non è un’unità fatturabile né un’autorizzazione a inserire una conclusione nel mondo economico canonico. Serve a indirizzare la ricerca. Saranno le evidenze ammesse e le regole del dominio a stabilire cosa si può affermare; il segnale, da solo, non compie quel passaggio."
+        },
+        {
+          "heading": "Fatto e interpretazione conservano tracce diverse",
+          "body": "Un FAXT preserva soggetto, predicato e valore sostenuti, insieme a riferimenti, autorità, provenienza e contesto temporale. Un INXIGHT collega o interpreta elementi canonici e deve spiegare da quali dipende, quale incertezza resta e come potrebbe cambiare se le basi diventassero obsolete. L’interpretazione non sostituisce di nascosto i propri fondamenti."
+        },
+        {
+          "heading": "Una derivazione resta verificabile e rivedibile",
+          "body": "Chi legge dovrebbe poter vedere quali evidenze e relazioni contribuiscono a un INXIGHT e quali passaggi sono derivazioni. Se una base cambia o viene contraddetta, anche l’interpretazione deve poter essere riesaminata. Un ragionamento plausibile non diventa un fatto solo perché è coerente; stato e limiti devono restare visibili in ogni presentazione."
+        },
+        {
+          "heading": "I livelli aiutano a porre domande di ricerca diverse",
+          "body": "Una Señal dirige l’attenzione, un FAXT conserva un fatto supportato e un INXIGHT spiega una prospettiva derivata. Ognuno può orientare un’indagine diversa. Questo vocabolario non garantisce che tutti i sensori o le interfacce previsti siano già disponibili; descrive la separazione epistemica che il prodotto deve preservare."
+        }
+      ],
+      "example": "Esempio ipotetico: una notizia pubblica sull’apertura di uno stabilimento genera una Señal. Dopo aver valutato fonte, soggetto e data, un FAXT può descrivere che l’impresa ha annunciato l’apertura. Un INXIGHT può collegare quella capacità dichiarata a un mercato; non prova vendite in quel mercato.",
+      "limits": "Questi termini descrivono il modello di prodotto, non certificano che sensori, processi o schermate siano tutti implementati. Una notizia non conferma automaticamente ciò che annuncia. Un’inferenza ragionevole non diventa un fatto solo perché viene espressa con sicurezza. Questa distinzione consente di riesaminare il percorso senza perdere i fondamenti.",
+      "cta": {
+        "label": "Esplora Knowledge",
+        "href": "/it/knowledge"
+      },
+      "related": [
+        "evidence-provenance",
+        "evidence-currentness",
+        "evidence-observed-vs-potential"
+      ]
+    },
+    "pt": {
+      "slug": "signal-faxt-inxight-tres-niveis",
+      "title": "Signal, FAXT e INXIGHT: três níveis que devem permanecer distintos",
+      "description": "Entenda a diferença entre um sinal que direciona atenção, um fato sustentado e conhecimento derivado.",
+      "lead": "Um sinal pode apontar algo que merece atenção sem ser, por si só, um fato confirmado sobre uma organização. Os níveis seguintes exigem evidências e regras próprias.",
+      "answer": "Uma Señal é uma observação emergente que direciona atenção. Um FAXT é uma unidade canônica apoiada por evidências, proveniência, temporalidade e estado epistêmico. Um INXIGHT é conhecimento derivado e explicável; nunca deve ser apresentado como um FAXT.",
+      "sections": [
+        {
+          "heading": "O sinal abre uma pergunta",
+          "body": "Uma Señal pode sugerir uma oportunidade, mudança ou conexão que merece análise. Não é uma unidade faturável nem autorização para gravar uma conclusão no mundo econômico canônico. Sua função é direcionar pesquisa. As evidências admitidas e as regras do domínio determinam o que poderá ser afirmado depois; o sinal sozinho não completa essa etapa."
+        },
+        {
+          "heading": "Fato e interpretação mantêm rastros diferentes",
+          "body": "Um FAXT preserva sujeito, predicado e valor sustentados, junto com referências, autoridade, proveniência e contexto temporal. Um INXIGHT reúne ou interpreta elementos canônicos e deve explicar de quais depende, qual incerteza permanece e como pode mudar se as bases ficarem desatualizadas. A interpretação não substitui silenciosamente seus fundamentos."
+        },
+        {
+          "heading": "Uma derivação continua examinável e revisável",
+          "body": "Quem lê deve conseguir entender quais evidências e relações contribuem para um INXIGHT e quais etapas são derivações. Se uma base mudar ou for contradita, a interpretação precisa poder ser reavaliada. Um raciocínio plausível não vira fato apenas por parecer coerente; estado e limites precisam continuar visíveis em qualquer apresentação."
+        },
+        {
+          "heading": "Os níveis orientam perguntas diferentes",
+          "body": "Uma Señal chama atenção, um FAXT preserva um fato sustentado e um INXIGHT explica uma relação ou perspectiva derivada. Cada nível pode direcionar uma investigação diferente. Os termos não significam que todos os sensores ou telas planejados estejam implementados; descrevem a separação epistêmica que o produto deve preservar."
+        }
+      ],
+      "example": "Exemplo hipotético: uma notícia pública sobre a abertura de uma fábrica gera uma Señal. Depois de avaliar fonte, sujeito e data, um FAXT pode registrar que a empresa anunciou a abertura. Um INXIGHT pode relacionar a capacidade declarada a um mercado; isso continua sendo derivação, não prova de vendas naquele mercado.",
+      "limits": "Este vocabulário descreve o modelo do produto e não certifica que todos os sensores, processos ou telas estejam implementados. Uma notícia não confirma automaticamente o que anuncia. Uma inferência razoável não se transforma em fato só por ser expressa com segurança.",
+      "cta": {
+        "label": "Explorar Knowledge",
+        "href": "/pt/knowledge"
+      },
+      "related": [
+        "evidence-provenance",
+        "evidence-currentness",
+        "evidence-observed-vs-potential"
+      ]
+    }
+  },
+  {
+    "id": "evidence-public-absence",
+    "fr": {
+      "slug": "faible-presence-publique-ne-prouve-pas-inactivite",
+      "title": "Une faible présence publique ne prouve pas l’inactivité",
+      "description": "Ce qu’une recherche publique limitée peut révéler, et pourquoi le silence numérique ne prouve pas l’absence d’activité.",
+      "lead": "Une faible empreinte publique décrit ce qui a pu être observé ; elle ne mesure pas automatiquement l’activité réelle d’une organisation.",
+      "answer": "Si une recherche publique autorisée trouve peu d’informations, le constat initial porte sur la représentation limitée dans les sources et conditions examinées. Cela ne prouve ni que l’organisation n’exerce pas, ni qu’elle ne vend pas, ni qu’elle manque de capacités. Un écart de représentation peut justifier des questions et des recommandations conditionnées au contexte, jamais une cause inventée.",
+      "sections": [
+        {
+          "heading": "Ce que signifie une recherche avec peu de résultats",
+          "body": "Le résultat dépend des sources, langues, requêtes, surfaces, lieux et dates observés. Une entreprise peut travailler par des relations privées, utiliser une autre marque, publier dans des canaux non consultés ou avoir des informations difficiles à indexer. Le constat décrit donc le périmètre et les résultats de l’observation, pas toute l’activité de l’organisation ni sa qualité."
+        },
+        {
+          "heading": "Documenter l’écart avant d’en chercher la cause",
+          "body": "Une formulation prudente précise quelles sources ont été examinées, dans quelles conditions et ce qui n’a pas été trouvé. Une présence peu visible peut venir de nombreux facteurs, mais la recherche seule ne permet pas de choisir entre eux. Tant qu’aucun élément ne soutient une explication, la cause demeure inconnue ; l’écart ne doit pas devenir une accusation ou un diagnostic d’entreprise."
+        },
+        {
+          "heading": "Une recommandation doit dépendre du contexte",
+          "body": "Un écart documenté peut indiquer quelle information publique manque et pourquoi il serait utile de l’éclaircir, si le modèle de l’entreprise le justifie. Si elle vise des acheteurs qui s’appuient sur des catalogues publics, vérifier la description de ses capacités peut être pertinent. Si son activité ne dépend pas de cette visibilité, la recommandation peut ne pas s’appliquer."
+        },
+        {
+          "heading": "Décrire la recherche, pas une absence universelle",
+          "body": "Une recherche limitée dans quelques sources ou langues ne peut établir le silence de l’ensemble d’internet, encore moins l’absence d’activité économique. Préciser requêtes, surfaces, géographie, période et couverture délimite le constat. Si les conditions ou l’instrument changent, un résultat ultérieur n’est pas forcément comparable et ne prouve pas à lui seul une évolution de l’entreprise."
+        }
+      ],
+      "example": "Exemple hypothétique : une recherche en deux langues dans trois sources publiques ne trouve pas de page de capacités pour une petite entreprise industrielle. On peut consigner ce périmètre et proposer de vérifier avec l’entreprise si ses capacités doivent être plus faciles à trouver. On ne peut pas en conclure qu’elle n’a ni clients, ni production, ni revenus.",
+      "limits": "La représentation numérique n’est pas la réalité économique ni une évaluation de réputation. Une comparaison exige une méthode et des conditions identifiables ; toute affirmation de position ou d’amélioration doit préciser instrument, version, requêtes, géographie, langue, période, échantillon et incertitude. La cause de l’écart et le bénéfice d’une action restent conditionnés au contexte.",
+      "cta": {
+        "label": "Explorer Knowledge",
+        "href": "/fr/knowledge"
+      },
+      "related": [
+        "evidence-unknown-not-false",
+        "evidence-provenance",
+        "evidence-currentness",
+        "knowledge-sparse-public-presence",
+        "knowledge-digital-representation-vs-business-reality"
+      ]
+    },
+    "de": {
+      "slug": "geringe-oeffentliche-praesenz-beweist-keine-inaktivitaet",
+      "title": "Geringe öffentliche Präsenz beweist keine Inaktivität",
+      "description": "Was eine begrenzte öffentliche Suche zeigen kann und warum digitales Schweigen fehlende Geschäftstätigkeit nicht beweist.",
+      "lead": "Eine geringe öffentliche Präsenz ist ein Befund darüber, was beobachtet werden konnte. Sie ist kein automatisches Maß für die tatsächliche wirtschaftliche Aktivität einer Organisation.",
+      "answer": "Findet eine zulässige öffentliche Suche nur wenige Informationen, belegt das zunächst eine geringe Darstellung in den geprüften Quellen und Bedingungen. Es beweist nicht, dass die Organisation nicht tätig ist, nichts verkauft oder keine Fähigkeiten besitzt. Eine Darstellungslücke kann kontextabhängige Fragen und Empfehlungen begründen, aber keine erfundene Ursache.",
+      "sections": [
+        {
+          "heading": "Was eine Suche mit wenigen Treffern tatsächlich aussagt",
+          "body": "Das Ergebnis hängt von Quellen, Sprachen, Suchanfragen, Oberflächen, Orten und Zeitpunkten ab. Ein Unternehmen kann über private Beziehungen arbeiten, eine andere Marke nutzen, auf nicht geprüften Kanälen veröffentlichen oder schwer indexierbare Informationen haben. Der Befund beschreibt daher Umfang und Ergebnis der Beobachtung, nicht die gesamte Tätigkeit oder Qualität der Organisation."
+        },
+        {
+          "heading": "Die Lücke festhalten, bevor eine Ursache vermutet wird",
+          "body": "Eine vorsichtige Beschreibung nennt geprüfte Quellen, Bedingungen und die nicht gefundenen Informationen. Geringe Sichtbarkeit kann viele Gründe haben; die Suche allein kann nicht zwischen ihnen entscheiden. Solange keine Belege eine Erklärung stützen, bleibt die Ursache unbekannt. Eine Lücke darf nicht zu einem Vorwurf oder einer Diagnose über das Unternehmen werden."
+        },
+        {
+          "heading": "Empfehlungen müssen zum Geschäftsmodell passen",
+          "body": "Ein dokumentierter Unterschied kann zeigen, welche öffentliche Information fehlt und warum eine Klärung nützlich sein könnte, sofern das Geschäftsmodell es rechtfertigt. Zielt ein Unternehmen auf Käufer, die öffentliche Kataloge nutzen, kann eine Prüfung der dortigen Fähigkeitsbeschreibung sinnvoll sein. Ist das Geschäft nicht auf diese Sichtbarkeit angewiesen, muss die Empfehlung nicht passen."
+        },
+        {
+          "heading": "Eine Recherche beschreiben, nicht ein universelles Fehlen",
+          "body": "Eine begrenzte Suche über einige Quellen oder Sprachen kann weder das gesamte Internet noch fehlende wirtschaftliche Aktivität belegen. Suchanfragen, Oberflächen, Geografie, Zeitraum und Abdeckung grenzen den Befund ein. Ändern sich Bedingungen oder Instrument, ist ein späteres Ergebnis nicht zwingend vergleichbar und beweist allein keine Unternehmensveränderung."
+        }
+      ],
+      "example": "Hypothetisch: Eine Suche in zwei Sprachen über drei öffentliche Quellen findet keine Fähigkeitsseite eines kleinen Industriebetriebs. Man kann den Umfang dokumentieren und mit dem Unternehmen prüfen, ob seine Fähigkeiten leichter auffindbar sein sollten. Daraus folgt nicht, dass es keine Kunden, Produktion oder Umsätze hat.",
+      "limits": "Digitale Darstellung ist weder wirtschaftliche Realität noch Reputationsbewertung. Vergleiche brauchen identifizierbare Methoden und Bedingungen; Aussagen über Platzierung oder Verbesserung müssen Instrument, Version, Suchanfragen, Region, Sprache, Zeitraum, Stichprobe und Unsicherheit nennen. Ursache der Lücke und Nutzen möglicher Maßnahmen hängen vom Kontext ab.",
+      "cta": {
+        "label": "Knowledge erkunden",
+        "href": "/de/knowledge"
+      },
+      "related": [
+        "evidence-unknown-not-false",
+        "evidence-provenance",
+        "evidence-currentness",
+        "knowledge-sparse-public-presence",
+        "knowledge-digital-representation-vs-business-reality"
+      ]
+    },
+    "it": {
+      "slug": "poca-presenza-pubblica-non-prova-inattivita",
+      "title": "Una presenza pubblica ridotta non dimostra inattività",
+      "description": "Che cosa può mostrare una ricerca pubblica limitata e perché il silenzio digitale non prova l’assenza di attività.",
+      "lead": "Una ridotta presenza pubblica descrive ciò che è stato possibile osservare; non misura automaticamente l’attività economica reale di un’organizzazione.",
+      "answer": "Se una ricerca pubblica autorizzata trova poche informazioni, il riscontro iniziale è una rappresentazione limitata nelle fonti e nelle condizioni esaminate. Non dimostra che l’organizzazione non operi, non venda o sia priva di capacità. Una lacuna di rappresentazione può motivare domande e raccomandazioni condizionate al contesto, mai una causa inventata.",
+      "sections": [
+        {
+          "heading": "Che cosa dice davvero una ricerca con pochi risultati",
+          "body": "Il risultato dipende da fonti, lingue, query, superfici, luoghi e date osservate. Un’impresa può lavorare tramite relazioni private, usare un altro marchio, pubblicare su canali non consultati o avere informazioni difficili da indicizzare. Il riscontro descrive quindi perimetro ed esito dell’osservazione, non tutta l’attività dell’organizzazione né la sua qualità."
+        },
+        {
+          "heading": "Documentare la lacuna prima di ipotizzarne la causa",
+          "body": "Una descrizione prudente indica quali fonti sono state esaminate, in quali condizioni e che cosa non è stato trovato. Una visibilità ridotta può dipendere da diversi fattori, ma la ricerca da sola non permette di scegliere fra essi. Finché non ci sono evidenze a sostegno, la causa resta sconosciuta; la lacuna non va trasformata in accusa o diagnosi aziendale."
+        },
+        {
+          "heading": "Una raccomandazione deve dipendere dal contesto",
+          "body": "Una lacuna documentata può mostrare quale informazione pubblica manca e perché sarebbe utile chiarirla, se il modello aziendale lo giustifica. Se l’impresa si rivolge a compratori che consultano cataloghi pubblici, può essere utile verificare come sono descritte le sue capacità. Se l’attività non dipende da quella visibilità, la raccomandazione potrebbe non essere pertinente."
+        },
+        {
+          "heading": "Descrivere la ricerca, non un’assenza universale",
+          "body": "Una ricerca limitata a poche fonti o lingue non dimostra il silenzio di tutto Internet, tanto meno l’assenza di attività economica. Query, superfici, geografia, periodo e copertura delimitano il risultato. Se cambiano condizioni o strumento, un risultato successivo potrebbe non essere comparabile e non prova da solo un cambiamento dell’impresa."
+        }
+      ],
+      "example": "Esempio ipotetico: una ricerca in due lingue su tre fonti pubbliche non trova una pagina sulle capacità di una piccola impresa industriale. Si può registrare il perimetro e verificare con l’impresa se sia utile rendere quelle capacità più facili da trovare. Non si può concludere che manchino clienti, produzione o ricavi.",
+      "limits": "La rappresentazione digitale non è la realtà economica né una valutazione reputazionale. Il confronto richiede metodo e condizioni identificabili; affermazioni su posizioni o miglioramenti devono specificare strumento, versione, query, geografia, lingua, periodo, campione e incertezza. La causa della lacuna e il beneficio di qualsiasi intervento restano condizionati al contesto.",
+      "cta": {
+        "label": "Esplora Knowledge",
+        "href": "/it/knowledge"
+      },
+      "related": [
+        "evidence-unknown-not-false",
+        "evidence-provenance",
+        "evidence-currentness",
+        "knowledge-sparse-public-presence",
+        "knowledge-digital-representation-vs-business-reality"
+      ]
+    },
+    "pt": {
+      "slug": "pouca-presenca-publica-nao-prova-inatividade",
+      "title": "Pouca presença pública não comprova inatividade",
+      "description": "O que uma busca pública limitada pode revelar e por que o silêncio digital não prova falta de atividade econômica.",
+      "lead": "Uma presença pública pequena descreve o que foi possível observar; não mede automaticamente a atividade econômica real de uma organização.",
+      "answer": "Se uma busca pública autorizada encontra pouca informação, o achado inicial é uma representação limitada nas fontes e condições examinadas. Isso não demonstra que a organização não opere, não venda ou não tenha capacidades. Uma lacuna de representação pode justificar perguntas e recomendações condicionadas ao contexto, nunca uma causa inventada.",
+      "sections": [
+        {
+          "heading": "O que uma busca com poucos resultados realmente diz",
+          "body": "O resultado depende das fontes, idiomas, consultas, superfícies, locais e datas observadas. Uma empresa pode atuar por relações privadas, usar outra marca, publicar em canais que não foram consultados ou ter informações difíceis de indexar. Portanto, o achado descreve o escopo e o resultado da observação, não toda a atividade da organização nem sua qualidade."
+        },
+        {
+          "heading": "Documentar a lacuna antes de buscar uma causa",
+          "body": "Uma descrição cuidadosa informa quais fontes foram examinadas, em que condições e o que não apareceu. A visibilidade reduzida pode ter várias explicações, mas a busca, sozinha, não permite escolher entre elas. Sem evidências que sustentem uma explicação, a causa continua desconhecida; a lacuna não deve virar acusação nem diagnóstico da empresa."
+        },
+        {
+          "heading": "Uma recomendação precisa considerar o contexto",
+          "body": "Uma lacuna documentada pode indicar qual informação pública não foi encontrada e por que talvez seja útil esclarecê-la, se o modelo de negócio justificar. Se a empresa atende compradores que dependem de catálogos públicos, pode fazer sentido verificar como suas capacidades são descritas. Se o negócio não depende dessa visibilidade, a recomendação pode não se aplicar."
+        },
+        {
+          "heading": "Descrever a busca, não uma ausência universal",
+          "body": "Uma busca limitada a poucas fontes ou idiomas não prova silêncio em toda a internet, muito menos ausência de atividade econômica. Consultas, superfícies, geografia, período e cobertura delimitam o achado. Se as condições ou o instrumento mudarem, um resultado posterior pode não ser comparável nem provar, por si só, que a empresa mudou."
+        }
+      ],
+      "example": "Exemplo hipotético: uma busca em dois idiomas e três fontes públicas não encontra uma página de capacidades de uma pequena empresa industrial. É possível registrar o escopo e verificar com a empresa se faz sentido facilitar a descoberta dessas capacidades. Não se pode concluir que ela não tenha clientes, produção ou receita.",
+      "limits": "Representação digital não é realidade econômica nem avaliação de reputação. Comparações exigem método e condições identificáveis; afirmações sobre posição ou melhora devem informar instrumento, versão, consultas, geografia, idioma, período, amostra e incerteza. A causa da lacuna e o benefício de qualquer ação dependem do contexto.",
+      "cta": {
+        "label": "Explorar Knowledge",
+        "href": "/pt/knowledge"
+      },
+      "related": [
+        "evidence-unknown-not-false",
+        "evidence-provenance",
+        "evidence-currentness",
+        "knowledge-sparse-public-presence",
+        "knowledge-digital-representation-vs-business-reality"
+      ]
+    }
+  }
+]

@@ -4,10 +4,13 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { ArrowUpRight, Menu, ArrowRight } from "lucide-react";
 import { useLocale } from "@/lib/locale";
+import { locales, type Locale } from "@/lib/languages";
+import { useRouter } from "next/navigation";
 import { Brand, LocaleToggle, Dialog, MiniFooter } from "./ui";
 
-export function PublicHeader({ landing = false }: { landing?: boolean }) {
-  const { t } = useLocale();
+type LocaleRoute = { locale: Locale; href: string };
+export function PublicHeader({ landing = false, localeRoutes }: { landing?: boolean; localeRoutes?: LocaleRoute[] }) {
+  const { t, locale } = useLocale();
   const path = usePathname();
   const [menu, setMenu] = useState(false);
   const [hash, setHash] = useState("");
@@ -40,7 +43,7 @@ export function PublicHeader({ landing = false }: { landing?: boolean }) {
       name: t("Cómo funciona", "How it works"),
     },
     { href: landing ? "#subscription" : "/#subscription", name: "Pricing" },
-    { href: "/knowledge", name: "Knowledge" },
+    { href: localeRoutes?.find((route) => route.locale === locale)?.href ?? "/knowledge", name: "Knowledge" },
     { href: "/contact", name: t("Contacto", "Contact") },
     { href: "/policies", name: t("Confianza", "Trust") },
   ];
@@ -61,7 +64,7 @@ export function PublicHeader({ landing = false }: { landing?: boolean }) {
           ))}
         </nav>
         <div className="header-actions">
-          <LocaleToggle />
+          {localeRoutes ? <LocaleRouteSelector routes={localeRoutes} locale={locale} /> : <LocaleToggle />}
           <Link className="public-access-link" href="/login">
             {t("Acceder", "Sign in")}
             <ArrowUpRight size={15} />
@@ -117,17 +120,34 @@ export function PublicHeader({ landing = false }: { landing?: boolean }) {
 export function PublicShell({
   children,
   className = "",
+  localeRoutes,
 }: {
   children: React.ReactNode;
   className?: string;
+  localeRoutes?: LocaleRoute[];
 }) {
   return (
     <div className={"public-page " + className}>
-      <PublicHeader />
+      <PublicHeader localeRoutes={localeRoutes} />
       <main id="main" tabIndex={-1}>{children}</main>
       <MiniFooter />
     </div>
   );
+}
+function LocaleRouteSelector({ routes, locale }: { routes: LocaleRoute[]; locale: Locale }) {
+  const router = useRouter();
+  const { t } = useLocale();
+  const current = routes.find((route) => route.locale === locale) ?? routes[0];
+  if (!current) return null;
+  return <label className="locale-selector locale-route-selector">
+    <span className="sr-only">{t("Idioma", "Language")}</span>
+    <select aria-label={t("Cambiar idioma de esta lectura", "Change this reading's language")} value={current.locale} onChange={(event) => {
+      const route = routes.find((option) => option.locale === event.target.value);
+      if (route) router.push(route.href);
+    }}>
+      {routes.map((route) => <option key={route.locale} value={route.locale} lang={route.locale}>{locales.find((item) => item.id === route.locale)?.name ?? route.locale}</option>)}
+    </select>
+  </label>;
 }
 export function PublicationNote({
   editorial = false,

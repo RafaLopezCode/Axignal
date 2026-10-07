@@ -1,0 +1,912 @@
+[
+  {
+    "id": "jtbd-company-timeline",
+    "locales": {
+      "fr": {
+        "slug": "reconstituer-une-chronologie-dentreprise-avec-des-preuves",
+        "title": "Reconstituer une chronologie d’entreprise étayée par des preuves",
+        "description": "Organisez jalons, sources et dates pour comprendre un parcours sans présenter les annonces comme des faits confirmés.",
+        "lead": "Lorsqu’une organisation semble avoir changé de cap, le défi ne consiste pas seulement à rassembler des dates. Il faut savoir quelle source étaye chaque jalon et quelle période elle décrit.",
+        "answer": "Pour bâtir une chronologie utile, définissez d’abord la question temporelle. Consignez chaque événement avec sa source, sa date de publication, la date de l’événement si elle est connue et le sujet concerné. Distinguez ensuite déclarations, observations et interprétations. Préservez les inconnues et les changements de source. Cette séquence permet de réexaminer le raisonnement sans prétendre que les preuves établissent davantage.",
+        "sections": [
+          {
+            "heading": "Commencez par une question précise",
+            "body": "Déterminez si vous cherchez à comprendre une expansion, une évolution de capacité, une réorganisation ou l’apparition d’une relation possible. Une chronologie guidée par une question évite de mélanger des événements d’entreprise sans rapport simplement parce qu’ils sont proches dans le calendrier. Identifiez séparément l’organisation, ses filiales et ses marques : un événement concernant une entité ne s’applique pas automatiquement aux autres."
+          },
+          {
+            "heading": "Consignez le contexte temporel de chaque événement",
+            "body": "Pour chaque entrée, gardez la référence de la source, sa date de publication ou d’observation, la date à laquelle l’événement aurait eu lieu et la période de validité si elle est établie. Ces dates peuvent différer. Une annonce consultée aujourd’hui peut décrire un projet de l’année passée. Si la source ne précise pas la fin d’une activité, n’inventez pas de date de clôture."
+          },
+          {
+            "heading": "Séparez déclaration, observation et interprétation",
+            "body": "Une entreprise peut annoncer une nouvelle usine, une autorité publier une autorisation, puis un analyste en déduire une hausse de capacité. Ce sont des affirmations de nature différente. Décrivez-les comme telles. Si les sources se contredisent ou si l’entité reste ambiguë, conservez l’écart et l’incertitude au lieu de choisir discrètement la version qui rend le récit le plus cohérent."
+          },
+          {
+            "heading": "Relisez la chronologie comme une hypothèse révisable",
+            "body": "Une chronologie organise des éléments de preuve ; elle n’explique pas à elle seule les causes et ne prouve pas que chaque changement annoncé s’est réalisé. Avant de l’utiliser pour décider, demandez quels événements sont vérifiables, lesquels relèvent du passé et quels états peuvent avoir changé. Une nouvelle source peut corriger ou compléter la lecture sans effacer ce qui était connu auparavant."
+          }
+        ],
+        "example": "Exemple hypothétique : en mars, une société annonce l’ouverture d’une usine en septembre ; quelques mois plus tard, un registre municipal mentionne une autorisation ; l’année suivante, le site de l’entreprise affiche cette adresse. La chronologie peut présenter séparément l’annonce, l’autorisation et la mention ultérieure. Sans observation adaptée du démarrage, elle ne peut pas conclure que l’usine produisait depuis septembre.",
+        "limits": "Une chronologie dépend de la couverture des sources et de la qualité des dates ; elle peut omettre des activités privées ou des événements jamais publiés. La proximité dans le temps ne prouve pas un lien de causalité. Une page encore accessible ne démontre pas que son contenu est actuel. Une interprétation du parcours reste une connaissance dérivée, explicable à partir de ses éléments de preuve et accompagnée de son incertitude.",
+        "cta": {
+          "label": "Explorer Knowledge",
+          "href": "/knowledge"
+        },
+        "related": [
+          "jtbd-change-since-last-read",
+          "jtbd-public-data-crosscheck",
+          "jtbd-export-decision-context",
+          "knowledge-timeline-dates-and-observation"
+        ]
+      },
+      "de": {
+        "slug": "eine-beleggestuetzte-unternehmenschronologie-rekonstruieren",
+        "title": "Eine beleggestützte Unternehmenschronologie rekonstruieren",
+        "description": "Ordnen Sie Meilensteine, Quellen und Daten für jede Unternehmensphase, ohne Ankündigungen als bestätigte Ereignisse darzustellen.",
+        "lead": "Wenn ein Unternehmen seinen Kurs geändert zu haben scheint, reicht es nicht, Daten zu sammeln. Entscheidend ist, welche Quelle welchen Meilenstein stützt und welchen Zeitraum sie beschreibt.",
+        "answer": "Legen Sie zuerst die zeitliche Fragestellung fest. Erfassen Sie jedes Ereignis mit Quelle, Veröffentlichungsdatum, bekanntem Ereignisdatum und betroffenem Subjekt. Trennen Sie danach Erklärungen des Unternehmens, Beobachtungen und Interpretationen. Bewahren Sie Unbekanntes und Quellenwechsel auf. So lässt sich nachvollziehen, wie die Einordnung entstand, ohne mehr zu behaupten, als die Belege tragen.",
+        "sections": [
+          {
+            "heading": "Mit einer konkreten Frage beginnen",
+            "body": "Klären Sie, ob Sie eine Expansion, eine veränderte Fähigkeit, eine Umstrukturierung oder eine mögliche Beziehung verstehen möchten. Eine fragegeleitete Chronologie verhindert, dass unverbundene Unternehmensereignisse nur wegen ähnlicher Daten vermischt werden. Erfassen Sie Unternehmen, Tochtergesellschaften und Marken getrennt: Ein Ereignis zu einer Einheit gilt nicht automatisch für die anderen."
+          },
+          {
+            "heading": "Den Zeitkontext jedes Ereignisses festhalten",
+            "body": "Bewahren Sie pro Eintrag die Quellenreferenz, das Veröffentlichungs- oder Beobachtungsdatum, den berichteten Ereigniszeitpunkt und, falls belegt, den Gültigkeitszeitraum auf. Diese Zeitpunkte können auseinanderliegen. Eine heute aufgerufene Mitteilung kann ein Projekt aus dem Vorjahr beschreiben. Wenn das Ende einer Tätigkeit unbekannt ist, erfinden Sie kein Abschlussdatum."
+          },
+          {
+            "heading": "Erklärung, Beobachtung und Deutung trennen",
+            "body": "Ein Unternehmen kann eine neue Anlage ankündigen, eine Behörde eine Genehmigung veröffentlichen und eine Analystin daraus auf mehr Produktionskapazität schließen. Das sind unterschiedliche Aussagen. Kennzeichnen Sie sie entsprechend. Widersprechen sich Quellen oder bleibt die Einheit unklar, dokumentieren Sie den Konflikt und die Unsicherheit, statt stillschweigend die passendste Version auszuwählen."
+          },
+          {
+            "heading": "Die Folge als überprüfbare Hypothese lesen",
+            "body": "Eine Chronologie ordnet Belege; sie erklärt weder automatisch Ursachen noch beweist sie, dass jede angekündigte Änderung umgesetzt wurde. Fragen Sie vor einer Entscheidung, welche Ereignisse verifizierbar und welche historisch sind und welche Zustände sich verändert haben könnten. Neue Quellen können die Einordnung korrigieren oder ergänzen, ohne den früheren Kenntnisstand zu löschen."
+          }
+        ],
+        "example": "Hypothetisches Beispiel: Im März kündigt ein Unternehmen die Eröffnung eines Werks im September an; Monate später führt ein kommunales Register eine Genehmigung auf; im Folgejahr nennt die Unternehmenswebsite den Standort. Die Chronologie kann Ankündigung, Genehmigung und spätere Erwähnung getrennt zeigen. Ohne geeignete Beobachtung des Betriebsbeginns lässt sich nicht schließen, dass das Werk seit September produziert.",
+        "limits": "Eine Chronologie hängt von Quellenabdeckung und Datumsqualität ab; private Aktivitäten oder unveröffentlichte Ereignisse können fehlen. Zeitliche Nähe beweist keine Ursache. Eine heute erreichbare Seite belegt nicht, dass ihr Inhalt aktuell ist. Eine Deutung des Unternehmensverlaufs bleibt abgeleitetes Wissen und muss auf ihre Belege zurückführbar sein und Unsicherheit bewahren.",
+        "cta": {
+          "label": "Knowledge entdecken",
+          "href": "/knowledge"
+        },
+        "related": [
+          "jtbd-change-since-last-read",
+          "jtbd-public-data-crosscheck",
+          "jtbd-export-decision-context",
+          "knowledge-timeline-dates-and-observation"
+        ]
+      },
+      "it": {
+        "slug": "ricostruire-una-cronologia-aziendale-basata-sulle-evidenze",
+        "title": "Ricostruire una cronologia aziendale basata su evidenze",
+        "description": "Organizza tappe, fonti e date per capire il percorso di un’impresa senza trattare gli annunci come fatti confermati.",
+        "lead": "Quando un’organizzazione sembra aver cambiato direzione, la sfida non è soltanto raccogliere date: occorre sapere quale fonte sostiene ogni tappa e a quale periodo si riferisce.",
+        "answer": "Per costruire una cronologia utile, definisci prima la domanda temporale. Registra ogni evento con la fonte, la data di pubblicazione, la data dell’evento se nota e il soggetto interessato. Poi distingui dichiarazioni, osservazioni e interpretazioni. Conserva le incognite e i cambiamenti delle fonti. La sequenza così ottenuta permette di riesaminare il ragionamento senza attribuire alle evidenze più di quanto supportino.",
+        "sections": [
+          {
+            "heading": "Parti da una domanda precisa",
+            "body": "Chiarisci se vuoi capire un’espansione, una variazione di capacità, una riorganizzazione o la comparsa di una possibile relazione. Una cronologia guidata da una domanda evita di mescolare eventi aziendali distinti solo perché vicini nel calendario. Identifica separatamente organizzazione, controllate e marchi: un evento relativo a un’entità non vale automaticamente per le altre."
+          },
+          {
+            "heading": "Registra il contesto temporale di ogni evento",
+            "body": "Per ogni voce conserva il riferimento della fonte, quando è stata pubblicata o osservata, quando l’evento sarebbe avvenuto e il periodo di validità, se stabilito. Queste date possono essere diverse. Un comunicato consultato oggi può descrivere un progetto dell’anno scorso. Se non si conosce la fine di un’attività, non inventare una data di chiusura."
+          },
+          {
+            "heading": "Distingui dichiarazioni, osservazioni e interpretazioni",
+            "body": "Un’impresa può annunciare un nuovo stabilimento, un’autorità pubblicare un’autorizzazione e un’analista dedurre un aumento di capacità produttiva. Sono affermazioni di tipo diverso e vanno descritte come tali. Se le fonti sono in conflitto o l’entità non è chiara, conserva la discrepanza e l’incertezza invece di scegliere in silenzio la versione più conveniente."
+          },
+          {
+            "heading": "Rileggi la sequenza come ipotesi rivedibile",
+            "body": "Una cronologia organizza evidenze, ma non spiega da sola le cause e non prova che ogni cambiamento annunciato sia avvenuto. Prima di usarla per decidere, chiediti quali eventi sono verificabili, quali sono storici e quali stati possono essere mutati. Una nuova fonte può correggere o ampliare la lettura senza cancellare ciò che si sapeva in precedenza."
+          }
+        ],
+        "example": "Esempio ipotetico: a marzo un’impresa annuncia l’apertura di uno stabilimento a settembre; mesi dopo un registro comunale riporta un’autorizzazione; l’anno seguente il sito aziendale indica quell’indirizzo. La cronologia può mostrare annuncio, autorizzazione e menzione successiva come eventi distinti. Senza un’osservazione adeguata dell’avvio, non può concludere che lo stabilimento producesse da settembre.",
+        "limits": "La cronologia dipende dalla copertura delle fonti e dalla qualità delle date; può non includere attività private o eventi mai pubblicati. La vicinanza temporale non dimostra causalità. Una pagina accessibile oggi non prova che il contenuto sia attuale. Un’interpretazione del percorso è conoscenza derivata: deve restare spiegabile fino alle evidenze e conservarne l’incertezza.",
+        "cta": {
+          "label": "Esplora Knowledge",
+          "href": "/knowledge"
+        },
+        "related": [
+          "jtbd-change-since-last-read",
+          "jtbd-public-data-crosscheck",
+          "jtbd-export-decision-context",
+          "knowledge-timeline-dates-and-observation"
+        ]
+      },
+      "pt": {
+        "slug": "reconstruir-uma-cronologia-empresarial-com-evidencias",
+        "title": "Reconstruir uma cronologia empresarial baseada em evidências",
+        "description": "Organize marcos, fontes e datas para compreender a trajetória sem tratar anúncios como acontecimentos confirmados.",
+        "lead": "Quando uma organização parece ter mudado de rumo, o desafio não é apenas reunir datas. É saber que fonte sustenta cada marco e a que período se refere.",
+        "answer": "Para criar uma cronologia útil, defina primeiro a pergunta temporal. Registe cada acontecimento com a respetiva fonte, data de publicação, data do evento se for conhecida e entidade a que diz respeito. Depois, distinga declarações, observações e interpretações. Preserve o que é desconhecido e as mudanças de fonte. Assim, é possível rever o raciocínio sem afirmar mais do que as evidências permitem.",
+        "sections": [
+          {
+            "heading": "Comece por uma pergunta concreta",
+            "body": "Esclareça se pretende compreender uma expansão, uma mudança de capacidade, uma reorganização ou o aparecimento de uma possível relação. Uma cronologia orientada por uma pergunta evita misturar eventos empresariais distintos apenas por terem ocorrido em datas próximas. Identifique separadamente a organização, as subsidiárias e as marcas: um acontecimento relativo a uma entidade não se aplica automaticamente às restantes."
+          },
+          {
+            "heading": "Registe o contexto temporal de cada acontecimento",
+            "body": "Para cada entrada, guarde a referência da fonte, quando foi publicada ou observada, quando o evento terá ocorrido e o período de validade, se estiver estabelecido. Essas datas podem ser diferentes. Um comunicado consultado hoje pode descrever um projeto do ano anterior. Se não se conhece o fim de uma atividade, não invente uma data de encerramento."
+          },
+          {
+            "heading": "Separe declaração, observação e interpretação",
+            "body": "Uma empresa pode anunciar uma nova unidade, uma autoridade publicar uma licença e uma analista inferir um aumento da capacidade produtiva. São afirmações de natureza diferente e devem ser descritas como tal. Se as fontes forem contraditórias ou a entidade não estiver identificada, mantenha a divergência e a incerteza em vez de escolher silenciosamente a versão mais conveniente."
+          },
+          {
+            "heading": "Leia a sequência como uma hipótese revisável",
+            "body": "Uma cronologia organiza evidências; não explica, por si só, as causas nem prova que cada mudança anunciada se concretizou. Antes de a usar numa decisão, pergunte quais eventos são verificáveis, quais são históricos e que estados podem ter mudado. Uma nova fonte pode corrigir ou completar a leitura sem apagar aquilo que era conhecido anteriormente."
+          }
+        ],
+        "example": "Exemplo hipotético: em março, uma empresa anuncia a abertura de uma fábrica em setembro; meses depois, um registo municipal indica uma licença; no ano seguinte, o site da empresa apresenta essa localização. A cronologia pode mostrar o anúncio, a licença e a referência posterior como eventos distintos. Sem observação adequada do início da atividade, não deve concluir que a fábrica produzia desde setembro.",
+        "limits": "A cronologia depende da cobertura das fontes e da qualidade das datas; pode omitir atividade privada ou acontecimentos não publicados. A proximidade no tempo não prova causalidade. Uma página ainda acessível não demonstra que o conteúdo se mantém atual. Uma interpretação da trajetória é conhecimento derivado, deve poder ser explicada pelas evidências e tem de preservar a incerteza.",
+        "cta": {
+          "label": "Explorar Knowledge",
+          "href": "/knowledge"
+        },
+        "related": [
+          "jtbd-change-since-last-read",
+          "jtbd-public-data-crosscheck",
+          "jtbd-export-decision-context",
+          "knowledge-timeline-dates-and-observation"
+        ]
+      }
+    }
+  },
+  {
+    "id": "jtbd-potential-opportunity-freshness",
+    "locales": {
+      "fr": {
+        "slug": "verifier-si-une-opportunite-potentielle-est-toujours-actuelle",
+        "title": "Vérifier si une opportunité potentielle est encore actuelle",
+        "description": "Examinez signaux, dates et contexte avant de considérer une opportunité potentielle comme pertinente aujourd’hui.",
+        "lead": "Une opportunité potentielle peut perdre son contexte avec le temps. Le fait qu’elle figure encore dans une liste ne signifie pas que la demande est toujours active.",
+        "answer": "Vérifier son actualité consiste à retrouver les preuves à l’origine de l’hypothèse, la période couverte, les conditions qui ont changé et les inconnues concernant besoin, capacité et accès. L’opportunité reste POTENTIAL tant qu’une demande commerciale ou une relation n’est pas étayée par des observations suffisantes. L’examen peut la juger plausible, demander davantage de contexte ou conclure qu’elle n’est pas encore traitable.",
+        "sections": [
+          {
+            "heading": "Retrouvez l’origine de l’hypothèse",
+            "body": "Notez les signaux qui l’ont motivée, comme une capacité déclarée, un programme public ou un besoin sectoriel. Vérifiez leur provenance, leur date et le sujet concerné. Séparez chaque élément : une capacité peut étayer ce qu’une organisation dit produire, tandis qu’un appel public décrit une activité prévue par une autre entité. Aucun des deux ne prouve un achat entre elles."
+          },
+          {
+            "heading": "Vérifiez le calendrier et les conditions",
+            "body": "Déterminez si l’échéance de l’initiative est passée, si la source demeure actuelle et si le contexte géographique, réglementaire, technique ou de capacité a changé. Une page toujours accessible ne confirme pas qu’un besoin reste ouvert. Si les éléments sont anciens, conservez-les comme contexte historique et cherchez une confirmation adaptée avant de décrire la situation présente."
+          },
+          {
+            "heading": "Établissez ce qui manque pour répondre",
+            "body": "Une opportunité commerciale suppose davantage qu’une compatibilité de produits. Il peut manquer des preuves de besoin, de budget, de critères d’achat, de capacité d’approvisionnement, d’éligibilité ou d’accès aux interlocuteurs. Transformez ces lacunes en questions et identifiez celles qui peuvent être vérifiées par des sources autorisées. Si la base est insuffisante, n’imposez ni score unique ni conclusion de faible demande."
+          },
+          {
+            "heading": "Choisissez une suite sans changer le statut",
+            "body": "L’examen peut justifier une nouvelle recherche publique, une question interne ou l’abstention de prioriser tant que le contexte est insuffisant. Cette étape ne transforme pas l’hypothèse en relation observée. Si de nouveaux éléments confirment seulement un projet annoncé, limitez la description à cette annonce et laissez inconnus les détails commerciaux que la source n’établit pas."
+          }
+        ],
+        "example": "Exemple hypothétique : un appel à projets d’efficacité énergétique de l’année précédente semblait correspondre aux capacités d’une entreprise d’installation. L’appel est encore visible, mais son délai est passé. Il peut rester un contexte historique et motiver la recherche d’une initiative actuelle ; il ne doit pas être présenté comme une demande ouverte ni comme une commande destinée à cette entreprise.",
+        "limits": "Une date récente ne suffit pas à établir l’actualité, et la compatibilité ne prouve pas l’adéquation commerciale. Les sources publiques peuvent ignorer les décisions, budgets et échanges privés. N’appelez pas une possibilité un prospect, un client ou une relation observée. Les critères et les éléments doivent rester examinables, multidimensionnels et proportionnés à la question.",
+        "cta": {
+          "label": "Explorer Knowledge",
+          "href": "/knowledge"
+        },
+        "related": [
+          "jtbd-change-since-last-read",
+          "jtbd-public-data-crosscheck",
+          "jtbd-next-question-evidence-gap",
+          "knowledge-timeline-dates-and-observation"
+        ]
+      },
+      "de": {
+        "slug": "aktualitaet-einer-potentiellen-chance-pruefen",
+        "title": "Prüfen, ob eine potenzielle Chance noch aktuell ist",
+        "description": "Prüfen Sie Signale, Daten und Kontext, bevor Sie eine potenzielle Chance für eine heutige Entscheidung heranziehen.",
+        "lead": "Eine potenzielle Chance kann mit der Zeit ihren Kontext verlieren. Dass sie weiterhin in einer Liste steht, beweist keine aktive Nachfrage.",
+        "answer": "Zur Aktualitätsprüfung gehört, die Belege hinter der Hypothese, ihren Zeitraum, veränderte Bedingungen und offene Fragen zu Bedarf, Fähigkeit und Zugang zu prüfen. Solange Nachfrage oder Geschäftsbeziehung nicht ausreichend beobachtet sind, bleibt die Chance POTENTIAL. Eine Prüfung kann sie als plausibel einstufen, mehr Kontext verlangen oder feststellen, dass sie noch nicht beantwortbar ist.",
+        "sections": [
+          {
+            "heading": "Den Ursprung der Hypothese nachvollziehen",
+            "body": "Halten Sie fest, welche Signale sie ausgelöst haben, etwa eine erklärte Fähigkeit, ein öffentliches Programm oder ein Branchenbedarf. Prüfen Sie Herkunft, Datum und Subjekt. Trennen Sie die Elemente: Eine Fähigkeit kann belegen, was ein Unternehmen herzustellen angibt; eine Ausschreibung kann geplante Aktivitäten einer anderen Stelle beschreiben. Keines davon belegt automatisch einen Kauf zwischen beiden."
+          },
+          {
+            "heading": "Zeit und aktuelle Bedingungen prüfen",
+            "body": "Prüfen Sie, ob eine Frist abgelaufen ist, die Quelle noch gilt und sich geografische, regulatorische, technische oder kapazitätsbezogene Umstände geändert haben. Eine weiterhin erreichbare Webseite beweist keinen offenen Bedarf. Ältere Belege bleiben als Geschichte erhalten; bevor Sie den heutigen Zustand beschreiben, suchen Sie nach einer geeigneten Bestätigung."
+          },
+          {
+            "heading": "Fehlende Voraussetzungen benennen",
+            "body": "Eine Geschäftschance erfordert mehr als Produktkompatibilität. Es können Belege zu Bedarf, Budget, Beschaffungskriterien, Lieferfähigkeit, Teilnahmeberechtigung oder Zugang zu Ansprechpartnern fehlen. Formulieren Sie diese Lücken als Fragen und prüfen Sie, was sich mit zulässigen Quellen klären lässt. Bei unzureichender Grundlage erzwingen Sie weder eine Gesamtbewertung noch den Schluss auf geringe Nachfrage."
+          },
+          {
+            "heading": "Nächste Schritte wählen, ohne den Status aufzuwerten",
+            "body": "Die Prüfung kann eine weitere öffentliche Recherche, eine interne Rückfrage oder den Verzicht auf Priorisierung begründen, bis mehr Kontext vorliegt. Dadurch wird die Hypothese nicht zur beobachteten Beziehung. Bestätigen neue Belege nur ein angekündigtes Projekt, beschreiben Sie auch nur diese Ankündigung; unbelegte kommerzielle Einzelheiten bleiben unbekannt."
+          }
+        ],
+        "example": "Hypothetisches Beispiel: Eine Ausschreibung zur Energieeffizienz aus dem Vorjahr schien zu den Fähigkeiten eines Installationsunternehmens zu passen. Sie ist noch online, aber die Frist ist abgelaufen. Sie kann als historischer Kontext dienen und die Suche nach einer aktuellen Initiative anregen; sie darf nicht als offene Nachfrage oder Auftrag für dieses Unternehmen erscheinen.",
+        "limits": "Ein aktuelles Datum allein belegt keine Aktualität, und Kompatibilität beweist keine geschäftliche Eignung. Öffentliche Quellen zeigen möglicherweise keine privaten Entscheidungen, Budgets oder Gespräche. Bezeichnen Sie eine Möglichkeit nicht als Lead, Kunden oder beobachtete Beziehung. Kriterien und Belege müssen nachvollziehbar, mehrdimensional und auf die konkrete Frage zugeschnitten bleiben.",
+        "cta": {
+          "label": "Knowledge entdecken",
+          "href": "/knowledge"
+        },
+        "related": [
+          "jtbd-change-since-last-read",
+          "jtbd-public-data-crosscheck",
+          "jtbd-next-question-evidence-gap",
+          "knowledge-timeline-dates-and-observation"
+        ]
+      },
+      "it": {
+        "slug": "verificare-se-unopportunita-potenziale-e-ancora-attuale",
+        "title": "Verificare se un’opportunità potenziale è ancora attuale",
+        "description": "Esamina segnali, date e contesto prima di considerare un’opportunità potenziale rilevante per una decisione di oggi.",
+        "lead": "Un’opportunità potenziale può perdere contesto nel tempo. Il fatto che resti in un elenco non dimostra che la domanda sia ancora attiva.",
+        "answer": "Verificarne l’attualità significa recuperare le evidenze che hanno originato l’ipotesi, il periodo coperto, le condizioni mutate e ciò che resta ignoto su bisogno, capacità e accesso. L’opportunità resta POTENTIAL finché domanda commerciale o relazione non sono sostenute da osservazioni sufficienti. La revisione può giudicarla plausibile, richiedere altro contesto oppure non ancora risolvibile.",
+        "sections": [
+          {
+            "heading": "Ricostruisci perché è nata l’ipotesi",
+            "body": "Registra quali segnali l’hanno motivata, per esempio una capacità dichiarata, un programma pubblico o un bisogno settoriale. Controllane provenienza, data e soggetto. Tieni separati gli elementi: una capacità può sostenere ciò che un’organizzazione dichiara di produrre, mentre un bando descrive l’attività prevista da un altro ente. Nessuno dei due prova automaticamente un acquisto tra le parti."
+          },
+          {
+            "heading": "Controlla tempi e condizioni attuali",
+            "body": "Verifica se la scadenza dell’iniziativa è passata, se la fonte è ancora attuale e se sono cambiate condizioni geografiche, normative, tecniche o di capacità. Una pagina ancora disponibile non conferma che il bisogno sia aperto. Conserva le prove datate come contesto storico e cerca una conferma adeguata prima di descrivere lo stato presente."
+          },
+          {
+            "heading": "Valuta che cosa manca per rispondere",
+            "body": "Un’opportunità commerciale richiede più della compatibilità tra prodotti. Potrebbero mancare evidenze su bisogno, budget, criteri di acquisto, capacità di fornitura, requisiti di ammissione o interlocutori. Formula queste lacune come domande e individua quelle verificabili con fonti autorizzate. Se la base è insufficiente, non imporre un punteggio unico né dedurre che la domanda sia bassa."
+          },
+          {
+            "heading": "Scegli il passo successivo senza cambiare lo stato",
+            "body": "La revisione può motivare una nuova ricerca pubblica, una domanda interna oppure la scelta di non dare priorità finché manca contesto. Il passo non trasforma l’ipotesi in relazione osservata. Se nuove prove confermano solo un progetto annunciato, limita la descrizione all’annuncio e lascia ignoti i dettagli commerciali che la fonte non stabilisce."
+          }
+        ],
+        "example": "Esempio ipotetico: un bando per l’efficienza energetica dell’anno precedente sembrava compatibile con le capacità di un’impresa installatrice. Il bando è ancora visibile, ma il termine è scaduto. Può restare un contesto storico e suggerire di cercare iniziative attuali; non va presentato come domanda aperta né come incarico per quell’impresa.",
+        "limits": "Una data recente da sola non stabilisce l’attualità e la compatibilità non dimostra adeguatezza commerciale. Le fonti pubbliche possono non mostrare decisioni, budget o conversazioni private. Non chiamare una possibilità lead, cliente o relazione osservata. Criteri ed evidenze devono restare verificabili, multidimensionali e proporzionati alla domanda.",
+        "cta": {
+          "label": "Esplora Knowledge",
+          "href": "/knowledge"
+        },
+        "related": [
+          "jtbd-change-since-last-read",
+          "jtbd-public-data-crosscheck",
+          "jtbd-next-question-evidence-gap",
+          "knowledge-timeline-dates-and-observation"
+        ]
+      },
+      "pt": {
+        "slug": "verificar-se-uma-oportunidade-potencial-continua-atual",
+        "title": "Verificar se uma oportunidade potencial continua atual",
+        "description": "Analise sinais, datas e contexto antes de considerar uma oportunidade potencial relevante para uma decisão atual.",
+        "lead": "Uma oportunidade potencial pode perder o seu contexto com o tempo. Continuar numa lista não prova que a procura ainda esteja ativa.",
+        "answer": "Verificar a atualidade implica recuperar as evidências que deram origem à hipótese, o período abrangido, as condições que mudaram e o que falta saber sobre necessidade, capacidade e acesso. A oportunidade permanece POTENTIAL enquanto a procura comercial ou uma relação não tiverem suporte observacional suficiente. A análise pode considerá-la plausível, exigir mais contexto ou concluir que ainda não é possível responder.",
+        "sections": [
+          {
+            "heading": "Recupere a origem da hipótese",
+            "body": "Registe que sinais a motivaram, como uma capacidade declarada, um programa público ou uma necessidade setorial. Reveja proveniência, data e entidade. Separe cada elemento: uma capacidade pode sustentar o que uma organização declara produzir; um aviso pode descrever a atividade prevista por outra entidade. Nenhum deles demonstra automaticamente uma compra entre as partes."
+          },
+          {
+            "heading": "Confirme o calendário e as condições atuais",
+            "body": "Verifique se o prazo da iniciativa terminou, se a fonte continua atual e se mudaram condições geográficas, regulamentares, técnicas ou de capacidade. Uma página ainda acessível não confirma que a necessidade permanece aberta. Preserve evidências antigas como contexto histórico e procure confirmação adequada antes de descrever a situação presente."
+          },
+          {
+            "heading": "Identifique o que falta para responder",
+            "body": "Uma oportunidade comercial exige mais do que compatibilidade entre produtos. Podem faltar evidências de necessidade, orçamento, critérios de compra, capacidade de fornecimento, elegibilidade ou acesso a interlocutores. Transforme as lacunas em perguntas e identifique o que pode ser confirmado com fontes autorizadas. Se a base for insuficiente, não force uma pontuação única nem conclua que a procura é baixa."
+          },
+          {
+            "heading": "Escolha o próximo passo sem alterar o estado",
+            "body": "A revisão pode justificar outra pesquisa pública, uma pergunta interna ou a decisão de não priorizar até existir contexto suficiente. Esse passo não converte a hipótese numa relação observada. Se novas evidências confirmarem apenas um projeto anunciado, limite a descrição ao anúncio e mantenha desconhecidos os detalhes comerciais que a fonte não estabelece."
+          }
+        ],
+        "example": "Exemplo hipotético: um concurso de eficiência energética do ano anterior parecia compatível com as capacidades de uma empresa instaladora. Continua disponível, mas o prazo terminou. Pode servir como contexto histórico e motivar a procura de uma iniciativa atual; não deve ser apresentado como procura aberta nem como adjudicação para essa empresa.",
+        "limits": "Uma data recente não basta para provar atualidade, e compatibilidade não demonstra adequação comercial. Fontes públicas podem não revelar decisões, orçamentos ou conversas privadas. Não chame lead, cliente ou relação observada a uma possibilidade. Critérios e evidências devem permanecer verificáveis, multidimensionais e proporcionais à pergunta.",
+        "cta": {
+          "label": "Explorar Knowledge",
+          "href": "/knowledge"
+        },
+        "related": [
+          "jtbd-change-since-last-read",
+          "jtbd-public-data-crosscheck",
+          "jtbd-next-question-evidence-gap",
+          "knowledge-timeline-dates-and-observation"
+        ]
+      }
+    }
+  },
+  {
+    "id": "jtbd-change-since-last-read",
+    "locales": {
+      "fr": {
+        "slug": "examiner-ce-qui-a-change-depuis-la-derniere-observation",
+        "title": "Examiner ce qui a changé depuis la dernière observation",
+        "description": "Comparez les observations dans le temps et distinguez les changements de l’organisation de ceux des sources ou méthodes.",
+        "lead": "Lorsqu’on réexamine une organisation, une page nouvellement trouvée ne dit pas si l’entreprise, la source ou la méthode d’observation a changé.",
+        "answer": "Un examen temporel rigoureux compare des états et des preuves à deux moments, avec des sujets, prédicats et conditions suffisamment compatibles. Notez ce qui est nouveau, ce qui a disparu de la vue, ce qui a changé dans les sources et ce qui reste inconnu. Un écart entre deux captures peut signaler une représentation différente sans prouver que la réalité économique a changé.",
+        "sections": [
+          {
+            "heading": "Définissez la dernière observation",
+            "body": "Fixez la date de référence et le périmètre antérieur : quelle organisation, quelles capacités ou relations, quelles sources, quelle langue, quelle requête et quelle méthode. Sans cette base, « c’est nouveau » peut simplement vouloir dire que l’information vient d’être trouvée. L’historique n’a peut-être jamais été observé avec une couverture équivalente."
+          },
+          {
+            "heading": "Comparez les conditions avant les résultats",
+            "body": "Vérifiez que les deux observations portent sur le même sujet et le même attribut. Demandez si sources, requêtes, géographie, langue et instrument de mesure sont comparables. Un changement de moteur, de catalogue ou de version méthodologique peut modifier ce qui apparaît sans changement de l’organisation. Si la comparaison est partielle, indiquez la rupture et réduisez la portée de la conclusion."
+          },
+          {
+            "heading": "Classez l’écart constaté",
+            "body": "Il peut s’agir d’une preuve nouvelle, d’une déclaration modifiée, d’une mention qui n’apparaît plus, d’une contradiction ou d’une couverture différente. « Cette source ne le montre plus » ne signifie pas « cela n’existe plus ». Une affirmation historique peut rester vraie pour sa période alors que l’état actuel est inconnu. Distinguez l’événement, l’observation et l’évaluation de l’actualité."
+          },
+          {
+            "heading": "Reliez l’examen à une décision précise",
+            "body": "Résumez le constat, les preuves, leur actualité et la question ouverte. Ne transformez pas automatiquement un écart frappant en urgence. Si l’information est déterminante, choisissez une vérification proportionnée : consulter une source appropriée, étendre la période ou attendre d’autres éléments. Conclure qu’il n’existe pas assez de preuves pour affirmer un changement constitue aussi un résultat utile."
+          }
+        ],
+        "example": "Exemple hypothétique : en janvier, un catalogue de distributeurs présente le modèle A d’un fabricant ; en avril, une recherche équivalente ne le trouve plus. Le catalogue, la disponibilité de la page ou la méthode de recherche ont peut-être changé. Sans autre preuve sur le produit ou l’entreprise, indiquez seulement qu’il n’apparaît plus dans cette requête, et non que le fabricant a cessé de le produire.",
+        "limits": "Une comparaison exige des conditions et un historique observés ; une recherche actuelle ne reconstitue pas ce qui s’est passé entre deux observations. Une absence ultérieure n’efface pas un fait historique. N’attribuez ni cause, ni intention, ni arrêt d’activité à une différence de sources. Si l’instrument ou la couverture a changé, signalez-le et abstenez-vous de comparer les éléments devenus non équivalents.",
+        "cta": {
+          "label": "Explorer Knowledge",
+          "href": "/knowledge"
+        },
+        "related": [
+          "jtbd-company-timeline",
+          "jtbd-public-data-crosscheck",
+          "jtbd-potential-opportunity-freshness",
+          "knowledge-timeline-dates-and-observation"
+        ]
+      },
+      "de": {
+        "slug": "veraenderungen-seit-der-letzten-beobachtung-pruefen",
+        "title": "Änderungen seit der letzten Beobachtung prüfen",
+        "description": "Vergleichen Sie Beobachtungen und trennen Sie Veränderungen des Unternehmens von Änderungen an Quellen oder Methoden.",
+        "lead": "Bei einer erneuten Prüfung sagt eine neu gefundene Seite noch nicht, ob sich das Unternehmen, die Quelle oder die Beobachtungsmethode geändert hat.",
+        "answer": "Ein verantwortlicher zeitlicher Vergleich stellt Zustände und Belege aus zwei Zeitpunkten gegenüber, deren Subjekte, Prädikate und Bedingungen ausreichend kompatibel sind. Halten Sie fest, was neu ist, nicht mehr erscheint, aus einer anderen Quelle stammt und unbekannt bleibt. Ein Unterschied zwischen Abrufen kann eine veränderte Darstellung zeigen, ohne bereits eine Veränderung der wirtschaftlichen Realität zu belegen.",
+        "sections": [
+          {
+            "heading": "Festlegen, was als letzte Beobachtung gilt",
+            "body": "Bestimmen Sie Referenzdatum und Umfang der früheren Prüfung: welches Unternehmen, welche Fähigkeiten oder Beziehungen, welche Quellen sowie Sprache, Suchanfrage und Methode. Ohne diesen Ausgangspunkt kann „das ist neu“ lediglich heißen, dass es jetzt erstmals gefunden wurde. Die frühere Entwicklung wurde vielleicht nie mit vergleichbarer Abdeckung beobachtet."
+          },
+          {
+            "heading": "Erst Bedingungen, dann Ergebnisse vergleichen",
+            "body": "Prüfen Sie, ob sich beide Zeitpunkte auf dasselbe Subjekt und Merkmal beziehen. Klären Sie, ob Quellen, Anfragen, Region, Sprache und Messinstrument vergleichbar sind. Ein anderer Suchdienst, Katalog oder eine neue Methodenversion kann die Sichtbarkeit ändern, ohne dass sich das Unternehmen geändert hat. Ist der Vergleich nur teilweise möglich, benennen Sie den Bruch und begrenzen Sie die Aussage."
+          },
+          {
+            "heading": "Den beobachteten Unterschied einordnen",
+            "body": "Möglich sind neue Belege, eine geänderte Erklärung, eine nicht mehr sichtbare Erwähnung, ein Widerspruch oder schlicht andere Abdeckung. „Diese Quelle zeigt es nicht mehr“ bedeutet nicht „es existiert nicht mehr“. Eine historische Aussage kann für ihren Zeitraum gelten, obwohl der heutige Zustand unbekannt ist. Halten Sie Ereignis, Beobachtung und Aktualitätsbewertung getrennt."
+          },
+          {
+            "heading": "Erklären, welche Entscheidung der Vergleich stützt",
+            "body": "Fassen Sie den Befund, die Belege, deren Aktualität und die offene Frage zusammen. Machen Sie aus einem auffälligen Unterschied nicht automatisch einen dringenden Handlungsbedarf. Ist die Information entscheidungsrelevant, wählen Sie eine passende Prüfung: eine geeignete Quelle abgleichen, den Beobachtungszeitraum erweitern oder weitere Belege abwarten. Auch „keine ausreichende Grundlage für eine Veränderung“ ist ein nützliches Ergebnis."
+          }
+        ],
+        "example": "Hypothetisches Beispiel: Im Januar führt ein Händlerkatalog das Modell A eines Herstellers; im April findet eine gleichartige Suche es nicht mehr. Ursache könnten Änderungen im Katalog, die Erreichbarkeit der Seite oder die Suchmethode sein. Ohne weitere Belege zum Produkt oder Unternehmen sollte nur festgehalten werden, dass es in dieser Anfrage nicht mehr erschien – nicht, dass der Hersteller die Produktion eingestellt hat.",
+        "limits": "Ein gültiger Vergleich braucht beobachtete Bedingungen und Verlauf; eine heutige Suche rekonstruiert nicht automatisch die Zeit zwischen zwei Beobachtungen. Spätere Abwesenheit löscht keinen historischen Sachverhalt. Leiten Sie aus Quellenunterschieden weder Ursache noch Absicht oder Tätigkeitsende ab. Änderten sich Messinstrument oder Abdeckung, legen Sie dies offen und vergleichen Sie nicht, was nicht mehr gleichartig ist.",
+        "cta": {
+          "label": "Knowledge entdecken",
+          "href": "/knowledge"
+        },
+        "related": [
+          "jtbd-company-timeline",
+          "jtbd-public-data-crosscheck",
+          "jtbd-potential-opportunity-freshness",
+          "knowledge-timeline-dates-and-observation"
+        ]
+      },
+      "it": {
+        "slug": "verificare-cosa-e-cambiato-dallultima-osservazione",
+        "title": "Verificare cosa è cambiato dall’ultima osservazione",
+        "description": "Confronta osservazioni aziendali nel tempo e distingui i cambiamenti reali da quelli nelle fonti, nella copertura o nei metodi.",
+        "lead": "Quando si riesamina un’organizzazione, trovare una nuova pagina non basta a capire se è cambiata l’impresa, la fonte o il metodo di osservazione.",
+        "answer": "Una revisione temporale responsabile confronta stati ed evidenze di due momenti con soggetti, predicati e condizioni sufficientemente compatibili. Registra ciò che è nuovo, ciò che non appare più, i cambi di fonte e ciò che resta ignoto. Una differenza tra acquisizioni può indicare un cambiamento nella rappresentazione senza provare che sia cambiata la realtà economica.",
+        "sections": [
+          {
+            "heading": "Definisci cosa significa ultima osservazione",
+            "body": "Fissa la data di riferimento e l’ambito della rilevazione precedente: quale organizzazione, quali capacità o relazioni, quali fonti e con quale lingua, query o metodo. Senza questo punto di partenza, “è nuovo” può voler dire soltanto che è stato trovato ora. La storia precedente potrebbe non essere stata osservata con la stessa copertura."
+          },
+          {
+            "heading": "Confronta le condizioni prima dei risultati",
+            "body": "Verifica che i due momenti riguardino lo stesso soggetto e attributo. Controlla se fonti, query, geografia, lingua e strumento di misura sono comparabili. Un motore, catalogo o metodo diverso può modificare ciò che è visibile senza alcun cambiamento dell’organizzazione. Se il confronto è parziale, descrivi la discontinuità e limita la conclusione."
+          },
+          {
+            "heading": "Classifica la differenza osservata",
+            "body": "Può trattarsi di nuove prove, una dichiarazione cambiata, una menzione che non appare più, una contraddizione o una copertura diversa. “Questa fonte non lo mostra più” non equivale a “non esiste più”. Un’affermazione storica può restare valida per il suo periodo mentre lo stato attuale è ignoto. Tieni distinti evento, osservazione e valutazione di attualità."
+          },
+          {
+            "heading": "Spiega quale decisione può sostenere il confronto",
+            "body": "Riassumi il rilievo, le evidenze, la loro attualità e la domanda aperta. Non trasformare automaticamente una differenza vistosa in urgenza. Se l’informazione è importante per la decisione, scegli una verifica proporzionata: consultare una fonte adeguata, estendere il periodo o attendere altri elementi. Anche non avere prove sufficienti per affermare un cambiamento è un esito utile."
+          }
+        ],
+        "example": "Esempio ipotetico: a gennaio un catalogo di distributori elenca il modello A di un produttore; ad aprile una ricerca equivalente non lo trova. Potrebbero essere cambiati il catalogo, la disponibilità della pagina o il metodo di ricerca. Senza ulteriori evidenze sul prodotto o sull’impresa, riferisci che non compare più in quella query, non che il produttore abbia smesso di realizzarlo.",
+        "limits": "Un confronto valido richiede condizioni e storia osservate; una query di oggi non ricostruisce automaticamente ciò che è avvenuto tra le osservazioni. L’assenza successiva non cancella un fatto storico. Non attribuire cause, intenzioni o cessazione dell’attività a una differenza tra fonti. Se cambia lo strumento o la copertura, dichiaralo e non confrontare ciò che non è più equivalente.",
+        "cta": {
+          "label": "Esplora Knowledge",
+          "href": "/knowledge"
+        },
+        "related": [
+          "jtbd-company-timeline",
+          "jtbd-public-data-crosscheck",
+          "jtbd-potential-opportunity-freshness",
+          "knowledge-timeline-dates-and-observation"
+        ]
+      },
+      "pt": {
+        "slug": "analisar-o-que-mudou-desde-a-ultima-observacao",
+        "title": "Analisar o que mudou desde a última observação",
+        "description": "Compare observações ao longo do tempo e separe mudanças da organização de alterações nas fontes, cobertura ou métodos de observação.",
+        "lead": "Ao voltar a analisar uma organização, encontrar uma página nova não revela se mudou a empresa, a fonte ou o método de observação.",
+        "answer": "Uma revisão temporal responsável compara estados e evidências de dois momentos com sujeitos, predicados e condições suficientemente compatíveis. Registe o que é novo, o que deixou de aparecer, as mudanças de fonte e o que continua desconhecido. Uma diferença entre consultas pode indicar uma mudança na representação, sem provar que a realidade económica também mudou.",
+        "sections": [
+          {
+            "heading": "Defina o que significa última observação",
+            "body": "Fixe a data de referência e o âmbito da observação anterior: qual organização, que capacidades ou relações, que fontes e com que idioma, consulta ou método. Sem essa referência, “isto é novo” pode significar apenas que foi encontrado agora. A história anterior talvez nunca tenha sido observada com cobertura comparável."
+          },
+          {
+            "heading": "Compare as condições antes dos resultados",
+            "body": "Confirme se os dois momentos dizem respeito ao mesmo sujeito e atributo. Verifique se fontes, consultas, geografia, idioma e instrumento de medição são comparáveis. Uma mudança de motor de pesquisa, catálogo ou versão metodológica pode alterar o que aparece sem mudança na organização. Se a comparação for parcial, identifique a descontinuidade e limite a conclusão."
+          },
+          {
+            "heading": "Classifique a diferença observada",
+            "body": "Pode haver nova evidência, uma declaração alterada, uma menção que deixou de aparecer, uma contradição ou simplesmente outra cobertura. “Esta fonte já não apresenta isto” não significa “isto deixou de existir”. Uma afirmação histórica pode continuar válida para o seu período, mesmo que o estado atual seja desconhecido. Mantenha distintos o evento, a observação e a avaliação de atualidade."
+          },
+          {
+            "heading": "Explique que decisão a revisão pode apoiar",
+            "body": "Resuma a constatação, as evidências, a atualidade e a questão por esclarecer. Não transforme automaticamente uma diferença marcante em urgência. Se a informação for relevante para uma decisão, escolha uma verificação proporcional: consultar uma fonte apropriada, ampliar o período ou aguardar mais evidências. Concluir que não há base suficiente para afirmar uma mudança também é um resultado útil."
+          }
+        ],
+        "example": "Exemplo hipotético: em janeiro, um catálogo de distribuidores apresenta o modelo A de um fabricante; em abril, uma pesquisa equivalente já não o encontra. O catálogo, a disponibilidade da página ou o método de pesquisa podem ter mudado. Até obter outras evidências sobre o produto ou a empresa, indique apenas que deixou de aparecer naquela consulta, não que o fabricante deixou de o produzir.",
+        "limits": "Uma comparação válida requer condições e histórico observados; uma pesquisa atual não reconstrói automaticamente o intervalo entre observações. A ausência posterior não apaga um facto histórico. Não atribua causa, intenção ou cessação de atividade a uma diferença entre fontes. Se o instrumento ou a cobertura mudou, declare-o e evite comparar elementos que já não são equivalentes.",
+        "cta": {
+          "label": "Explorar Knowledge",
+          "href": "/knowledge"
+        },
+        "related": [
+          "jtbd-company-timeline",
+          "jtbd-public-data-crosscheck",
+          "jtbd-potential-opportunity-freshness",
+          "knowledge-timeline-dates-and-observation"
+        ]
+      }
+    }
+  },
+  {
+    "id": "jtbd-public-data-crosscheck",
+    "locales": {
+      "fr": {
+        "slug": "croiser-des-donnees-publiques-sans-inferer-de-relation",
+        "title": "Croiser des données publiques sans inventer de relation",
+        "description": "Comparez les sources publiques par sujet et attribut sans transformer une compatibilité en relation économique observée.",
+        "lead": "Deux registres compatibles peuvent ouvrir une piste de recherche, mais leur concordance ne prouve pas que les organisations sont liées.",
+        "answer": "Pour croiser des données publiques, déterminez quel attribut chaque source apporte, vérifiez si elles parlent du même sujet et conservez la provenance de chaque observation. Utilisez les recoupements pour formuler une question vérifiable. N’affirmez une relation économique que si des preuves pertinentes l’étayent ; une catégorie, une région ou une activité compatible ne suffit pas à établir un client, un fournisseur ou un partenaire.",
+        "sections": [
+          {
+            "heading": "Alignez entités et attributs avant de les rapprocher",
+            "body": "Un nom commercial peut désigner une marque, une filiale ou une autre personne morale. Vérifiez les identifiants, adresses, alias et dates, et notez les ambiguïtés. Demandez ensuite ce que chaque attribut signifie : une adresse commune peut être un bureau partagé, une adresse d’immatriculation ou une donnée obsolète. Gardez les dossiers séparés si les éléments ne permettent pas de les résoudre."
+          },
+          {
+            "heading": "Évaluez la pertinence de chaque source",
+            "body": "La source utile dépend de l’information recherchée. Le site d’une entreprise peut étayer des capacités déclarées ; un registre peut documenter une inscription ; un certificateur peut confirmer un certificat dans son périmètre. Une même source peut convenir à un prédicat et être faible pour un autre. Notez quand elle a été observée et quelle partie soutient l’extraction."
+          },
+          {
+            "heading": "Ne transformez pas une coïncidence en lien",
+            "body": "Deux organisations du même secteur, de la même région ou d’une chaîne d’approvisionnement possible ne sont pas nécessairement en relation commerciale. Une liste de participants à un événement ne prouve pas un partenariat. Une relation observée demande des preuves spécifiques et suffisantes. Une compatibilité peut motiver une hypothèse potentielle, à condition de la nommer comme telle et de ne pas la présenter comme un lien établi."
+          },
+          {
+            "heading": "Rendez visibles les désaccords et les lacunes",
+            "body": "Si les sources emploient des noms ou des dates incompatibles, conservez le désaccord et indiquez ce qui permettrait de le résoudre. Ne choisissez pas les données qui rendent le récit le plus harmonieux. Le résultat devrait montrer ce qui vient de chaque référence, ce qui a été rapproché, ce qui reste séparé et les questions sans réponse, afin qu’une autre personne puisse examiner le raisonnement."
+          }
+        ],
+        "example": "Exemple hypothétique : un annuaire public indique qu’un atelier fabrique des composants et un avis de marché qu’une entité a acheté une catégorie de pièces. Si ni le fabricant retenu ni un lien entre ces sujets ne sont identifiés, le recoupement autorise seulement à demander s’il existe un lien. Il ne justifie pas de présenter l’atelier comme fournisseur de cette entité.",
+        "limits": "Les données publiques peuvent être incomplètes, dupliquées, obsolètes ou soumises à des droits de réutilisation différents. Leur publication n’autorise pas automatiquement une collecte automatisée et ne garantit pas leur exactitude. Des attributs agrégés ne remplacent pas les preuves d’une relation précise. Si l’identité ou le lien reste incertain, indiquez UNKNOWN ou abstenez-vous de l’affirmer.",
+        "cta": {
+          "label": "Explorer Knowledge",
+          "href": "/knowledge"
+        },
+        "related": [
+          "jtbd-company-timeline",
+          "jtbd-potential-opportunity-freshness",
+          "jtbd-next-question-evidence-gap"
+        ]
+      },
+      "de": {
+        "slug": "oeffentliche-daten-abgleichen-ohne-beziehungen-abzuleiten",
+        "title": "Öffentliche Daten abgleichen, ohne Beziehungen zu erfinden",
+        "description": "Vergleichen Sie öffentliche Quellen nach Subjekt und Merkmal, ohne Kompatibilität als beobachtete Geschäftsbeziehung auszugeben.",
+        "lead": "Zwei passende Datensätze können eine Recherche anstoßen. Ihre Übereinstimmung beweist jedoch keine Verbindung zwischen den Organisationen.",
+        "answer": "Beim Abgleich öffentlicher Daten ist zu klären, welches Merkmal jede Quelle beisteuert, ob beide dasselbe Subjekt meinen und woher jede Beobachtung stammt. Überschneidungen können eine überprüfbare Frage begründen. Eine Geschäftsbeziehung darf nur behauptet werden, wenn passende Belege genau diese Beziehung stützen. Gemeinsame Regionen, Branchen oder kompatible Tätigkeiten belegen keinen Kunden, Lieferanten oder Partner.",
+        "sections": [
+          {
+            "heading": "Einheiten und Merkmale vor dem Zusammenführen abgleichen",
+            "body": "Ein Handelsname kann eine Marke, Tochtergesellschaft oder andere juristische Person bezeichnen. Prüfen Sie Kennungen, Adressen, Aliasnamen und Daten; halten Sie Mehrdeutigkeiten fest. Fragen Sie außerdem, was ein Merkmal aussagt: Dieselbe Adresse kann ein Gemeinschaftsbüro, ein Registerdomizil oder eine veraltete Angabe sein. Lassen sich Einträge nicht ausreichend zuordnen, bleiben sie getrennt."
+          },
+          {
+            "heading": "Zweck und Aussagekraft jeder Quelle prüfen",
+            "body": "Welche Quelle geeignet ist, hängt von der Frage ab. Eine Unternehmenswebsite kann deklarierte Fähigkeiten belegen, ein Register eine Eintragung dokumentieren und eine Zertifizierungsstelle einen Status innerhalb ihres Geltungsbereichs bestätigen. Dieselbe Quelle kann für ein Prädikat geeignet und für ein anderes schwach sein. Notieren Sie den Beobachtungszeitpunkt und die konkrete Fundstelle."
+          },
+          {
+            "heading": "Überschneidungen nicht in Beziehungen umdeuten",
+            "body": "Zwei Unternehmen derselben Branche, Region oder möglichen Lieferkette verkaufen nicht automatisch miteinander. Eine Teilnehmendenliste belegt keine Geschäftspartnerschaft. Eine beobachtete Beziehung benötigt spezifische, ausreichende Belege. Kompatibilität kann eine potenzielle Hypothese begründen, die ausdrücklich so bezeichnet werden muss und keine bestehende Verbindung darstellen darf."
+          },
+          {
+            "heading": "Widersprüche und Lücken sichtbar lassen",
+            "body": "Verwenden Quellen unterschiedliche Namen oder unvereinbare Daten, dokumentieren Sie den Widerspruch und die zur Klärung nötigen Informationen. Wählen Sie nicht stillschweigend die Angaben, die eine stimmigere Geschichte ergeben. Ein nachvollziehbarer Abgleich zeigt, was aus welcher Referenz stammt, was kombiniert wurde, was getrennt bleibt und welche Fragen offen sind."
+          }
+        ],
+        "example": "Hypothetisches Beispiel: Ein öffentliches Verzeichnis nennt eine Werkstatt als Komponentenhersteller; eine Vergabebekanntmachung zeigt, dass eine Stelle eine Teilekategorie gekauft hat. Sind weder der ausgewählte Hersteller noch eine Verbindung zwischen den Subjekten identifiziert, begründet die Überschneidung nur die Frage, ob ein Zusammenhang besteht. Sie rechtfertigt nicht, die Werkstatt als Lieferanten dieser Stelle zu bezeichnen.",
+        "limits": "Öffentliche Daten können lückenhaft, doppelt, veraltet oder unterschiedlichen Wiederverwendungsrechten unterworfen sein. Veröffentlichung allein erlaubt keine automatisierte Erhebung und garantiert keine Richtigkeit. Zusammengeführte Merkmale ersetzen keinen Beleg für eine konkrete Beziehung. Bleiben Identität oder Verbindung ungeklärt, halten Sie UNKNOWN fest oder verzichten Sie auf die Behauptung.",
+        "cta": {
+          "label": "Knowledge entdecken",
+          "href": "/knowledge"
+        },
+        "related": [
+          "jtbd-company-timeline",
+          "jtbd-potential-opportunity-freshness",
+          "jtbd-next-question-evidence-gap"
+        ]
+      },
+      "it": {
+        "slug": "incrociare-dati-pubblici-senza-inferire-una-relazione",
+        "title": "Incrociare dati pubblici senza inventare relazioni",
+        "description": "Confronta le fonti pubbliche per soggetto e attributo senza trasformare compatibilità e coincidenze in relazioni osservate.",
+        "lead": "Due registrazioni compatibili possono suggerire una ricerca, ma la loro coincidenza non dimostra che le organizzazioni siano collegate.",
+        "answer": "Per incrociare dati pubblici, identifica quale attributo fornisce ogni fonte, verifica se riguarda lo stesso soggetto e conserva la provenienza di ciascuna osservazione. Usa le coincidenze per formulare una domanda verificabile. Afferma una relazione economica solo quando prove pertinenti la sostengono: settore, area geografica o attività compatibile non bastano a dimostrare un cliente, fornitore o partner.",
+        "sections": [
+          {
+            "heading": "Allinea entità e attributi prima di combinarli",
+            "body": "Un nome commerciale può indicare un marchio, una controllata o un soggetto giuridico diverso. Controlla identificativi, indirizzi, alias e date, documentando le ambiguità. Poi chiarisci cosa significa ciascun attributo: un indirizzo condiviso potrebbe essere un ufficio comune, una sede legale o un dato non aggiornato. Se gli elementi non bastano a risolvere l’identità, mantieni separati i record."
+          },
+          {
+            "heading": "Valuta pertinenza e autorità di ogni fonte",
+            "body": "La fonte più utile dipende dall’informazione da verificare. Il sito aziendale può sostenere capacità dichiarate, un registro documentare un’iscrizione e un ente certificatore confermare una certificazione nel proprio ambito. La stessa fonte può essere adatta a un predicato ma debole per un altro. Registra quando è stata osservata e quale riferimento sostiene l’estrazione."
+          },
+          {
+            "heading": "Non trasformare una coincidenza in un legame",
+            "body": "Due organizzazioni dello stesso settore, territorio o possibile catena di fornitura non sono per questo partner commerciali. Un elenco di partecipanti a un evento non dimostra una collaborazione. Una relazione osservata richiede prove specifiche e sufficienti. La compatibilità può motivare un’ipotesi potenziale, da etichettare chiaramente e da non presentare come legame esistente."
+          },
+          {
+            "heading": "Mostra conflitti e lacune senza forzare una sintesi",
+            "body": "Se le fonti riportano nomi o date incompatibili, conserva il conflitto e indica cosa potrebbe risolverlo. Non scegliere i dati che rendono il racconto più lineare. Il risultato dovrebbe mostrare cosa proviene da ciascun riferimento, cosa è stato combinato, cosa resta distinto e quali domande rimangono aperte, così un’altra persona può verificare il ragionamento."
+          }
+        ],
+        "example": "Esempio ipotetico: un elenco pubblico indica che un’officina produce componenti e un avviso di appalto mostra che un ente ha acquistato una categoria di pezzi. Se non sono identificati né il produttore selezionato né un rapporto tra i soggetti, la coincidenza permette solo di chiedere se esista un collegamento. Non autorizza a descrivere l’officina come fornitore dell’ente.",
+        "limits": "I dati pubblici possono essere incompleti, duplicati, obsoleti o soggetti a diritti di riutilizzo diversi. La pubblicazione non autorizza automaticamente la raccolta automatizzata e non garantisce accuratezza. Gli attributi aggregati non sostituiscono le prove di una relazione specifica. Se identità o collegamento restano irrisolti, indica UNKNOWN oppure astieniti dall’affermarli.",
+        "cta": {
+          "label": "Esplora Knowledge",
+          "href": "/knowledge"
+        },
+        "related": [
+          "jtbd-company-timeline",
+          "jtbd-potential-opportunity-freshness",
+          "jtbd-next-question-evidence-gap"
+        ]
+      },
+      "pt": {
+        "slug": "cruzar-dados-publicos-sem-inferir-uma-relacao",
+        "title": "Cruzar dados públicos sem inventar uma relação comercial",
+        "description": "Compare fontes públicas por entidade e atributo sem transformar compatibilidade numa relação económica observada.",
+        "lead": "Dois registos compatíveis podem abrir uma linha de investigação, mas a coincidência não prova que as organizações tenham uma relação.",
+        "answer": "Para cruzar dados públicos, identifique o atributo fornecido por cada fonte, confirme se ambas dizem respeito à mesma entidade e preserve a proveniência de cada observação. Use coincidências para formular uma pergunta verificável. Só afirme uma relação económica quando existirem evidências pertinentes dessa relação; partilhar região, setor ou atividade compatível não demonstra que haja cliente, fornecedor ou parceiro.",
+        "sections": [
+          {
+            "heading": "Alinhe entidades e atributos antes de combinar",
+            "body": "Um nome comercial pode referir-se a uma marca, subsidiária ou pessoa coletiva diferente. Verifique identificadores, moradas, aliases e datas, registando ambiguidades. Pergunte também o que significa cada atributo: uma morada comum pode ser um espaço partilhado, uma sede registada ou um dado desatualizado. Se não houver base suficiente para resolver a identidade, mantenha os registos separados."
+          },
+          {
+            "heading": "Avalie a finalidade e a autoridade de cada fonte",
+            "body": "A fonte adequada depende do que pretende verificar. O site de uma empresa pode sustentar capacidades declaradas; um registo pode documentar uma inscrição; uma entidade certificadora pode confirmar um certificado dentro do seu âmbito. A mesma fonte pode servir para um predicado e ser fraca para outro. Registe quando foi observada e que referência específica sustenta a extração."
+          },
+          {
+            "heading": "Não transforme uma coincidência numa ligação",
+            "body": "Duas organizações no mesmo setor, região ou possível cadeia de fornecimento não são necessariamente parceiras comerciais. Uma lista de participantes num evento não prova uma parceria. Uma relação observada exige evidências específicas e suficientes. A compatibilidade pode sustentar uma hipótese potencial, desde que seja identificada como tal e não apresentada como vínculo existente."
+          },
+          {
+            "heading": "Mostre divergências e lacunas sem forçar uma síntese",
+            "body": "Se as fontes indicarem nomes ou datas incompatíveis, preserve a divergência e explique o que seria necessário para a resolver. Não escolha silenciosamente os dados que tornam a história mais coerente. Um cruzamento verificável mostra o que veio de cada referência, o que foi combinado, o que ficou separado e quais perguntas continuam sem resposta."
+          }
+        ],
+        "example": "Exemplo hipotético: um diretório público indica que uma oficina fabrica componentes e um anúncio de contratação mostra que uma entidade comprou uma categoria de peças. Se não forem identificados o fabricante selecionado nem uma relação entre essas entidades, a coincidência permite apenas perguntar se existe uma ligação. Não permite descrever a oficina como fornecedora daquela entidade.",
+        "limits": "Os dados públicos podem estar incompletos, duplicados, desatualizados ou sujeitos a direitos de reutilização diferentes. A publicação, por si só, não autoriza recolha automatizada nem garante exatidão. Atributos agregados não substituem evidências de uma relação concreta. Se a identidade ou o vínculo não estiverem resolvidos, indique UNKNOWN ou não faça essa afirmação.",
+        "cta": {
+          "label": "Explorar Knowledge",
+          "href": "/knowledge"
+        },
+        "related": [
+          "jtbd-company-timeline",
+          "jtbd-potential-opportunity-freshness",
+          "jtbd-next-question-evidence-gap"
+        ]
+      }
+    }
+  },
+  {
+    "id": "jtbd-next-question-evidence-gap",
+    "locales": {
+      "fr": {
+        "slug": "quelle-question-poser-face-a-une-lacune-de-preuve",
+        "title": "Quelle question poser ensuite quand une preuve manque",
+        "description": "Transformez une lacune observée en question de recherche ciblée, sans remplir les inconnues par des suppositions.",
+        "lead": "Une lacune utile n’invite pas à deviner. Elle précise quelle preuve manque pour résoudre une décision donnée.",
+        "answer": "Énoncez d’abord la décision et l’attribut que vous ne pouvez pas établir. Examinez les éléments déjà disponibles, leur pertinence et leur actualité, puis séparez les causes possibles des faits observés. Choisissez ensuite la question la plus restreinte susceptible de modifier la décision ou de réduire une incertitude importante. Si aucune source adaptée n’existe, consignez que la réponse demeure inconnue.",
+        "sections": [
+          {
+            "heading": "Décrivez précisément ce qui manque",
+            "body": "« Il manque des informations sur l’entreprise » reste trop vague. Précisez si vous ne pouvez pas confirmer une certification, un marché desservi, l’actualité d’un site ou l’identité d’une contrepartie. Mentionnez les sources examinées et le périmètre de l’observation. Cela évite de relancer des recherches générales qui rapportent beaucoup d’éléments périphériques sans répondre à la question nécessaire."
+          },
+          {
+            "heading": "Priorisez selon la décision concernée",
+            "body": "Demandez quelle information pourrait modifier la décision, quelles incertitudes auraient des conséquences importantes et quelle vérification serait proportionnée. Par exemple : « Quelle source officielle indique le statut actuel de cette certification ? » ou « Le besoin reste-t-il ouvert après la date limite publiée ? » La priorité organise l’enquête ; elle ne rend pas la réponse vraie par elle-même."
+          },
+          {
+            "heading": "Gardez les causes possibles distinctes",
+            "body": "Si une capacité n’apparaît pas, cela peut venir d’une absence de publication, d’un vocabulaire différent, d’une couverture insuffisante ou de l’absence de cette capacité. Ne choisissez pas une explication sans preuve. La question suivante devrait départager les possibilités pertinentes au moyen d’une source autorisée et adaptée, ou les laisser comme alternatives non résolues."
+          },
+          {
+            "heading": "Terminez par une réponse calibrée",
+            "body": "Après l’enquête, indiquez ce qui a été observé, déclaré ou déduit, ainsi que les inconnues persistantes. Si les preuves sont insuffisantes, ne masquez pas cette limite derrière un pourcentage ou un ton catégorique. Une démarche peut se terminer par une question ouverte clairement formulée ; chacun peut alors décider s’il faut poursuivre la recherche ou agir sans cette information."
+          }
+        ],
+        "example": "Exemple hypothétique : une entreprise exportatrice n’apparaît pas dans une source publique de certifications et l’on ignore si une certification est exigée sur un marché. Au lieu d’en conclure qu’elle ne l’a pas, la question suivante peut porter sur l’application de l’exigence au produit et sur l’organisme qui publie le statut en vigueur. Cette démarche cible une vérification sans présumer de son résultat.",
+        "limits": "Une lacune décrit les limites des connaissances et de l’observation ; elle ne prouve pas une défaillance de l’entreprise. Les sources publiques ne résolvent pas toutes les inconnues, et certaines réponses requièrent une autorisation ou des données privées qui ne doivent pas entrer dans un contexte public. Coût, urgence et impact peuvent guider les priorités, mais ne remplacent pas les preuves et n’en modifient pas le statut épistémique.",
+        "cta": {
+          "label": "Explorer Knowledge",
+          "href": "/knowledge"
+        },
+        "related": [
+          "jtbd-public-data-crosscheck",
+          "jtbd-potential-opportunity-freshness",
+          "jtbd-export-decision-context",
+          "knowledge-sparse-public-presence"
+        ]
+      },
+      "de": {
+        "slug": "naechste-frage-bei-fehlenden-belegen-formulieren",
+        "title": "Welche Frage als Nächstes stellen, wenn Belege fehlen",
+        "description": "Formulieren Sie aus einer beobachteten Lücke eine gezielte Recherchefrage, ohne Unbekanntes mit Annahmen zu füllen.",
+        "lead": "Eine nützliche Lücke ist keine Einladung zum Raten. Sie zeigt, welcher Beleg für eine konkrete Entscheidung fehlt.",
+        "answer": "Benennen Sie zunächst die Entscheidung und das Merkmal, das sich nicht klären lässt. Prüfen Sie vorhandene Belege auf Relevanz und Aktualität und trennen Sie mögliche Ursachen von Beobachtungen. Wählen Sie dann die engste Frage, die eine Entscheidung ändern oder eine wesentliche Unsicherheit verringern könnte. Gibt es keine geeignete Quelle, halten Sie fest, dass die Antwort unbekannt bleibt.",
+        "sections": [
+          {
+            "heading": "Die Informationslücke genau benennen",
+            "body": "„Über das Unternehmen fehlen Informationen“ ist zu unbestimmt. Geben Sie an, ob eine Zertifizierung, ein bedienter Markt, der aktuelle Status einer Anlage oder die Identität eines Gegenübers unklar ist. Nennen Sie geprüfte Quellen und Beobachtungsumfang. So vermeiden Sie allgemeine Wiederholungssuchen, die viele nebensächliche Angaben liefern, aber die entscheidende Frage offenlassen."
+          },
+          {
+            "heading": "Nach Bedeutung für die Entscheidung priorisieren",
+            "body": "Fragen Sie, welche Information die Entscheidung verändern könnte, welche Unsicherheit erhebliche Folgen hätte und welche Prüfung verhältnismäßig wäre. Beispiele: „Welche offizielle Quelle nennt den aktuellen Zertifizierungsstatus?“ oder „Ist der Bedarf nach dem veröffentlichten Stichtag noch offen?“ Priorisierung ordnet die Recherche; sie macht eine Antwort nicht automatisch wahr."
+          },
+          {
+            "heading": "Mögliche Erklärungen getrennt halten",
+            "body": "Wenn eine Fähigkeit nicht auffindbar ist, kann sie unveröffentlicht sein, anders bezeichnet werden, außerhalb der geprüften Quellen liegen oder tatsächlich fehlen. Wählen Sie ohne Beleg keine Ursache aus. Die nächste Frage sollte relevante Möglichkeiten mithilfe einer zulässigen, für das Prädikat passenden Quelle unterscheiden oder sie als ungeklärte Alternativen bestehen lassen."
+          },
+          {
+            "heading": "Mit einer abgestuften Antwort abschließen",
+            "body": "Teilen Sie nach der Recherche mit, was beobachtet, erklärt oder abgeleitet wurde und was unbekannt bleibt. Verbergen Sie unzureichende Belege nicht hinter einer Prozentzahl oder einem endgültigen Ton. Eine Recherche kann mit einer klar beschriebenen offenen Frage enden. So lässt sich entscheiden, ob weitere Nachforschungen sinnvoll sind oder ohne diese Information gehandelt wird."
+          }
+        ],
+        "example": "Hypothetisches Beispiel: Ein exportierendes Unternehmen wird in einer öffentlichen Zertifizierungsquelle nicht gefunden; zugleich ist unklar, ob ein Zielmarkt das Zertifikat verlangt. Statt auf ein Fehlen zu schließen, kann die nächste Frage klären, ob die Vorgabe für das Produkt gilt und welche Stelle den aktuellen Status veröffentlicht. So entsteht eine begrenzte Prüfung ohne vorweggenommenes Ergebnis.",
+        "limits": "Eine Lücke beschreibt Grenzen von Wissen und Beobachtung; sie beweist keinen Unternehmensmangel. Nicht jede Frage lässt sich aus öffentlichen Quellen beantworten. Manche Antworten setzen eine Berechtigung oder private Daten voraus, die nicht in einen öffentlichen Kontext gehören. Aufwand, Dringlichkeit und Folgen können Prioritäten lenken, ersetzen aber keine Belege und ändern deren epistemischen Status nicht.",
+        "cta": {
+          "label": "Knowledge entdecken",
+          "href": "/knowledge"
+        },
+        "related": [
+          "jtbd-public-data-crosscheck",
+          "jtbd-potential-opportunity-freshness",
+          "jtbd-export-decision-context",
+          "knowledge-sparse-public-presence"
+        ]
+      },
+      "it": {
+        "slug": "quale-domanda-porre-quando-mancano-evidenze",
+        "title": "Quale domanda porre quando mancano evidenze",
+        "description": "Trasforma una lacuna osservata in una domanda di ricerca mirata senza colmare le incognite con supposizioni o cause inventate.",
+        "lead": "Una lacuna utile non invita a indovinare: chiarisce quali evidenze mancano per risolvere una decisione concreta.",
+        "answer": "Inizia indicando la decisione e l’attributo che non puoi stabilire. Verifica quali evidenze esistono già, se sono pertinenti e attuali, e separa le possibili cause dai fatti osservati. Scegli quindi la domanda più circoscritta che potrebbe cambiare la decisione o ridurre un’incertezza significativa. Se non c’è una fonte adeguata, registra che la risposta resta ignota.",
+        "sections": [
+          {
+            "heading": "Definisci con precisione ciò che manca",
+            "body": "“Mancano informazioni sull’azienda” è troppo generico. Specifica se non puoi confermare una certificazione, un mercato servito, l’attualità di un impianto o l’identità di una controparte. Indica le fonti consultate e l’ambito dell’osservazione. Eviterai di ripetere ricerche generali che aggiungono molti dettagli periferici ma non rispondono alla domanda necessaria."
+          },
+          {
+            "heading": "Dai priorità in base alla decisione",
+            "body": "Chiediti quale informazione potrebbe cambiare la decisione, quale incertezza avrebbe conseguenze materiali e quale verifica sarebbe proporzionata. Per esempio: “Quale fonte ufficiale indica lo stato attuale di questa certificazione?” oppure “La necessità è ancora aperta dopo la scadenza pubblicata?”. La priorità ordina la ricerca, ma non rende vera la risposta."
+          },
+          {
+            "heading": "Mantieni distinte le possibili cause",
+            "body": "Se una capacità non compare, potrebbe non essere pubblicata, essere descritta con termini diversi, non rientrare nelle fonti consultate oppure non esistere. Non scegliere una spiegazione senza prove. La domanda successiva dovrebbe distinguere le possibilità rilevanti usando una fonte autorizzata e adatta al predicato, oppure lasciarle come alternative irrisolte."
+          },
+          {
+            "heading": "Concludi con una risposta calibrata",
+            "body": "Dopo la ricerca, comunica cosa è stato osservato, dichiarato o inferito e cosa resta ignoto. Se le prove non bastano, non nascondere il limite dietro una percentuale o un tono definitivo. Un ciclo può terminare con una domanda aperta formulata chiaramente. Così chi decide può valutare se approfondire ancora o agire senza quell’informazione."
+          }
+        ],
+        "example": "Esempio ipotetico: un’impresa esportatrice non compare in una fonte pubblica sulle certificazioni e non si sa se un mercato richieda quel certificato. Invece di concludere che ne sia priva, la domanda successiva può riguardare l’applicabilità del requisito al prodotto e l’ente che pubblica lo stato vigente. La verifica resta circoscritta e non anticipa il risultato.",
+        "limits": "Una lacuna descrive i limiti della conoscenza e dell’osservazione, non dimostra una carenza aziendale. Non tutte le incognite si risolvono con fonti pubbliche; alcune risposte richiedono autorizzazione o dati privati da non inserire in un contesto pubblico. Costo, urgenza e impatto possono orientare le priorità, ma non sostituiscono le evidenze né ne modificano lo stato epistemico.",
+        "cta": {
+          "label": "Esplora Knowledge",
+          "href": "/knowledge"
+        },
+        "related": [
+          "jtbd-public-data-crosscheck",
+          "jtbd-potential-opportunity-freshness",
+          "jtbd-export-decision-context",
+          "knowledge-sparse-public-presence"
+        ]
+      },
+      "pt": {
+        "slug": "qual-a-proxima-pergunta-quando-faltam-evidencias",
+        "title": "Que pergunta fazer a seguir quando faltam evidências",
+        "description": "Transforme uma lacuna observada numa pergunta de investigação específica sem preencher o desconhecido com suposições.",
+        "lead": "Uma lacuna útil não é um convite a adivinhar: ajuda a identificar que evidência falta para uma decisão concreta.",
+        "answer": "Comece por definir a decisão e o atributo que não consegue esclarecer. Verifique as evidências existentes, a sua pertinência e atualidade, e separe causas possíveis dos factos observados. Escolha depois a pergunta mais limitada que possa alterar a decisão ou reduzir uma incerteza relevante. Se não existir uma fonte adequada, registe que a resposta continua desconhecida.",
+        "sections": [
+          {
+            "heading": "Descreva com precisão o que falta",
+            "body": "“Faltam informações sobre a empresa” é demasiado amplo. Indique se não consegue confirmar uma certificação, um mercado servido, a atualidade de uma instalação ou a identidade de uma contraparte. Registe as fontes consultadas e o âmbito da observação. Assim, evita repetir pesquisas genéricas que acrescentam detalhes periféricos sem responder à questão necessária."
+          },
+          {
+            "heading": "Dê prioridade à relevância para a decisão",
+            "body": "Pergunte que informação poderia mudar a decisão, que incerteza teria consequências materiais e que verificação seria proporcional. Por exemplo: “Que fonte oficial indica o estado atual desta certificação?” ou “A necessidade continua aberta depois do prazo publicado?”. A prioridade organiza a investigação, mas não torna a resposta verdadeira."
+          },
+          {
+            "heading": "Mantenha separadas as causas possíveis",
+            "body": "Se uma capacidade não aparece, pode não ter sido publicada, estar descrita com outros termos, ficar fora das fontes consultadas ou não existir. Não escolha uma causa sem evidência. A pergunta seguinte deve tentar distinguir possibilidades relevantes com uma fonte autorizada e adequada ao predicado, ou mantê-las como alternativas por resolver."
+          },
+          {
+            "heading": "Termine com uma resposta calibrada",
+            "body": "Depois da investigação, comunique o que foi observado, declarado ou inferido e o que continua desconhecido. Se as evidências forem insuficientes, não esconda a limitação atrás de uma percentagem ou de um tom definitivo. Uma ronda pode terminar com uma pergunta pendente bem descrita. Isso permite decidir se vale a pena investigar mais ou agir sem essa informação."
+          }
+        ],
+        "example": "Exemplo hipotético: uma empresa exportadora não aparece numa fonte pública de certificações e não se sabe se determinado mercado exige esse certificado. Em vez de concluir que a empresa não o possui, a pergunta seguinte pode verificar se o requisito se aplica ao produto e que entidade publica o estado vigente. A verificação fica delimitada e não antecipa a resposta.",
+        "limits": "Uma lacuna descreve limites do conhecimento e da observação; não prova uma deficiência empresarial. Nem todas as incógnitas se resolvem com fontes públicas, e algumas respostas exigem autorização ou informação privada que não deve entrar num contexto público. Custo, urgência e impacto podem orientar prioridades, mas não substituem evidências nem alteram o seu estado epistémico.",
+        "cta": {
+          "label": "Explorar Knowledge",
+          "href": "/knowledge"
+        },
+        "related": [
+          "jtbd-public-data-crosscheck",
+          "jtbd-potential-opportunity-freshness",
+          "jtbd-export-decision-context",
+          "knowledge-sparse-public-presence"
+        ]
+      }
+    }
+  },
+  {
+    "id": "jtbd-export-decision-context",
+    "locales": {
+      "fr": {
+        "slug": "preparer-une-decision-dexportation-avec-un-contexte-verifiable",
+        "title": "Préparer une décision d’exportation avec un contexte vérifiable",
+        "description": "Rassemblez des éléments sur capacités et marchés sans supposer la couverture commerciale ni l’éligibilité à l’export.",
+        "lead": "Avant d’évaluer une expansion internationale, distinguez ce qui est connu sur l’organisation de ce qui reste à vérifier dans chaque marché.",
+        "answer": "Préparez la décision en organisant les preuves concernant capacités, produits, expérience déclarée, exigences du marché et voies d’accès possibles. Pour chaque élément, consignez la source, la date, la portée géographique et le statut épistémique. Ne déduisez ni présence commerciale, ni éligibilité, ni clientèle, ni couverture à partir d’un siège social, de la langue du site ou d’une capacité compatible. Formulez les inconnues par marché et produit avant de comparer les options.",
+        "sections": [
+          {
+            "heading": "Décrivez d’abord l’offre et la capacité observée",
+            "body": "Précisez le produit, service ou savoir-faire concerné et les éléments qui l’étayent. Une page produit peut documenter une offre déclarée ; une certification peut viser un produit, un site ou une juridiction précise. Conservez explicitement cette portée. Ne transformez pas une aptitude technique en disponibilité à l’export lorsque volume, logistique, assistance, restrictions ou conditions commerciales sont inconnus."
+          },
+          {
+            "heading": "Traitez chaque marché comme une question distincte",
+            "body": "Exigences, canaux, distances, normes et besoins varient selon la destination et la catégorie. La présence d’une entreprise dans un pays ne définit pas tout son marché potentiel, et son siège ne délimite pas nécessairement la portée de chaque capacité. Rassemblez des preuves propres au marché et signalez ce qui demande une confirmation locale, réglementaire, technique ou commerciale avant de considérer une voie comme viable."
+          },
+          {
+            "heading": "Séparez opportunité et relation",
+            "body": "Un signal de demande ou un projet annoncé peut révéler un contexte à examiner. Il ne prouve pas qu’un acheteur recherche cette entreprise, qu’elle est éligible ou qu’une relation existe. Décrivez tout ajustement possible comme potentiel, exposez ses fondements et séparez les observations des hypothèses d’accès, de livraison et de décision d’achat."
+          },
+          {
+            "heading": "Transformez l’analyse en questions pour la décision humaine",
+            "body": "Une synthèse utile présente éléments favorables, contraintes, incertitudes et vérifications nécessaires avant d’engager des ressources. Elle peut soulever des questions sur normes, distributeurs possibles, transport, service après-vente ou demande, sans recommander automatiquement une entrée sur le marché. La personne responsable apporte ses objectifs, son appétence au risque et son savoir privé ; les observations éclairent son jugement sans le remplacer."
+          }
+        ],
+        "example": "Exemple hypothétique : une entreprise déclare fabriquer des pompes industrielles et une source publique mentionne un programme d’infrastructure dans un autre pays. Cela peut justifier une recherche sur les exigences techniques et les circuits locaux. Cela ne prouve pas que le programme ait besoin de ces pompes, que l’entreprise puisse les certifier pour cette destination ou qu’elle y dispose d’une couverture commerciale.",
+        "limits": "Ne déclarez pas qu’une organisation « opère sur » un marché parce qu’elle a participé à un salon, traduit son site ou possède une filiale. Portée géographique des capacités, demande et éligibilité sont des questions distinctes. Les sources publiques peuvent ignorer plans privés, marges ou contraintes logistiques. Si le contexte manque, précisez ce qui reste à vérifier au lieu d’inventer une couverture ou une recommandation universelle.",
+        "cta": {
+          "label": "Explorer Knowledge",
+          "href": "/knowledge"
+        },
+        "related": [
+          "jtbd-next-question-evidence-gap",
+          "jtbd-company-timeline",
+          "jtbd-potential-opportunity-freshness"
+        ]
+      },
+      "de": {
+        "slug": "exportentscheidung-mit-nachpruefbarem-kontext-vorbereiten",
+        "title": "Eine Exportentscheidung mit belegbarem Kontext vorbereiten",
+        "description": "Sammeln Sie Belege zu Fähigkeiten und Zielmärkten, ohne Exportabdeckung, Nachfrage oder Eignung vorauszusetzen.",
+        "lead": "Vor einer Bewertung internationaler Expansion sollte klar sein, was über das Unternehmen bekannt ist und was je Zielmarkt noch geprüft werden muss.",
+        "answer": "Ordnen Sie für die Entscheidung Belege zu Fähigkeiten, Produkten, erklärter Erfahrung, Marktanforderungen und möglichen Zugangswegen. Halten Sie pro Angabe Quelle, Datum, geografischen Umfang und epistemischen Status fest. Leiten Sie weder Marktpräsenz noch Zulassung, Kundschaft oder Abdeckung aus einem Hauptsitz, einer Website-Sprache oder einer passenden Fähigkeit ab. Formulieren Sie offene Fragen für jedes Produkt und jeden Markt, bevor Sie Optionen vergleichen.",
+        "sections": [
+          {
+            "heading": "Angebot und beobachtete Fähigkeit beschreiben",
+            "body": "Klären Sie, welches Produkt, welche Dienstleistung oder Fähigkeit gemeint ist und welche Belege sie stützen. Eine Produktseite kann ein erklärtes Angebot dokumentieren; eine Zertifizierung kann für ein bestimmtes Produkt, Werk oder Land gelten. Halten Sie diesen Umfang sichtbar. Machen Sie aus technischer Fähigkeit keine Exportverfügbarkeit, wenn Menge, Logistik, Support, Einschränkungen oder Konditionen unbekannt sind."
+          },
+          {
+            "heading": "Jeden Markt als eigene Fragestellung behandeln",
+            "body": "Anforderungen, Vertriebskanäle, Entfernungen, Normen und Bedarf unterscheiden sich nach Ziel und Kategorie. Die Präsenz in einem Land bestimmt weder den gesamten möglichen Markt noch begrenzt der Hauptsitz automatisch die Reichweite jeder Fähigkeit. Sammeln Sie marktspezifische Belege und markieren Sie lokale, regulatorische, technische oder kommerzielle Punkte, die vor einer Bewertung als tragfähiger Weg bestätigt werden müssen."
+          },
+          {
+            "heading": "Mögliche Chance und bestehende Beziehung trennen",
+            "body": "Ein Nachfragesignal oder ein angekündigtes Projekt kann einen Kontext für weitere Recherche liefern. Es belegt weder, dass ein Käufer dieses Unternehmen sucht, noch dessen Teilnahmeberechtigung oder eine bestehende Beziehung. Beschreiben Sie eine mögliche Passung als POTENTIAL, legen Sie die Grundlage offen und trennen Sie Beobachtungen von Annahmen zu Zugang, Lieferfähigkeit und Kaufentscheidung."
+          },
+          {
+            "heading": "Aus Analyse Fragen für eine menschliche Entscheidung machen",
+            "body": "Eine hilfreiche Zusammenfassung zeigt stützende Belege, Beschränkungen, Unsicherheit und nötige Prüfungen vor einem Ressourceneinsatz. Sie kann Fragen zu Standards, möglichen Vertriebspartnern, Transport, Kundendienst oder Nachfrage aufwerfen, ohne automatisch einen Markteintritt zu empfehlen. Verantwortliche bringen Ziele, Risikobereitschaft und privates Wissen ein; beobachteter Kontext unterstützt das Urteil, ersetzt es aber nicht."
+          }
+        ],
+        "example": "Hypothetisches Beispiel: Ein Unternehmen erklärt, Industriepumpen herzustellen, und eine öffentliche Quelle führt ein Infrastrukturprogramm in einem anderen Land auf. Das kann eine Prüfung technischer Anforderungen und lokaler Vertriebskanäle begründen. Es beweist weder einen Bedarf an diesen Pumpen noch eine Zertifizierung für das Zielland oder eine kommerzielle Abdeckung dort.",
+        "limits": "Behaupten Sie keine Tätigkeit in einem Markt, nur weil ein Unternehmen eine Messe besucht, seine Website übersetzt oder eine Tochtergesellschaft hat. Geografische Reichweite einer Fähigkeit, Nachfrage und Teilnahmeberechtigung sind getrennte Fragen. Öffentliche Quellen zeigen womöglich keine privaten Pläne, Margen oder Logistikbeschränkungen. Fehlt Kontext, benennen Sie die offenen Prüfungen, statt Marktabdeckung oder eine allgemeingültige Empfehlung zu erfinden.",
+        "cta": {
+          "label": "Knowledge entdecken",
+          "href": "/knowledge"
+        },
+        "related": [
+          "jtbd-next-question-evidence-gap",
+          "jtbd-company-timeline",
+          "jtbd-potential-opportunity-freshness"
+        ]
+      },
+      "it": {
+        "slug": "preparare-una-decisione-di-export-con-contesto-verificabile",
+        "title": "Preparare una decisione di export con contesto verificabile",
+        "description": "Raccogli contesto su capacità e mercati senza presumere copertura commerciale, domanda o idoneità all’esportazione.",
+        "lead": "Prima di valutare un’espansione internazionale, separa ciò che si conosce dell’organizzazione da ciò che va verificato in ciascun mercato.",
+        "answer": "Prepara la decisione organizzando evidenze su capacità, prodotti, esperienza dichiarata, requisiti di mercato e possibili canali di accesso. Per ogni elemento registra fonte, data, ambito geografico e stato epistemico. Non dedurre presenza commerciale, idoneità, clienti o copertura dalla sede, dalla lingua del sito o da una capacità compatibile. Formula le incognite per prodotto e mercato prima di confrontare le opzioni.",
+        "sections": [
+          {
+            "heading": "Descrivi prima l’offerta e la capacità osservata",
+            "body": "Chiarisci quale prodotto, servizio o capacità viene considerato e quali evidenze lo sostengono. Una pagina di prodotto può documentare un’offerta dichiarata; una certificazione può riguardare uno specifico prodotto, impianto o territorio. Mantieni esplicito questo ambito. Non trasformare capacità tecnica in disponibilità all’export se volumi, logistica, assistenza, restrizioni o condizioni commerciali sono ignoti."
+          },
+          {
+            "heading": "Considera ogni mercato come una domanda distinta",
+            "body": "Requisiti, canali, distanze, norme e bisogni variano per destinazione e categoria. La presenza in un paese non definisce tutto il mercato potenziale dell’impresa, e la sede non limita necessariamente la portata di ogni capacità. Raccogli evidenze specifiche per il mercato e segnala ciò che richiede conferma locale, normativa, tecnica o commerciale prima di considerare praticabile un percorso."
+          },
+          {
+            "heading": "Separa opportunità e relazione",
+            "body": "Un segnale di domanda o un progetto annunciato può individuare un contesto da approfondire. Non dimostra che un acquirente stia cercando proprio quell’impresa, che essa sia idonea o che esista una relazione. Descrivi ogni possibile compatibilità come POTENTIAL, mostra i fondamenti e distingui le osservazioni dalle ipotesi su accesso, capacità di consegna e decisione di acquisto."
+          },
+          {
+            "heading": "Trasforma l’analisi in domande per la decisione umana",
+            "body": "Una sintesi utile mostra evidenze favorevoli, vincoli, incertezze e verifiche necessarie prima di impegnare risorse. Può porre domande su standard, distributori possibili, trasporto, assistenza post-vendita o domanda, senza raccomandare automaticamente l’ingresso nel mercato. La persona responsabile apporta obiettivi, tolleranza al rischio e conoscenze private; le osservazioni forniscono contesto, non sostituiscono il giudizio."
+          }
+        ],
+        "example": "Esempio ipotetico: un’impresa dichiara di produrre pompe industriali e una fonte pubblica elenca un programma infrastrutturale in un altro paese. Ciò può giustificare una ricerca su requisiti tecnici e canali locali. Non prova che il programma abbia bisogno di quelle pompe, che l’impresa possa certificarle per quella destinazione o che disponga lì di copertura commerciale.",
+        "limits": "Non dichiarare che un’organizzazione opera in un mercato solo perché ha partecipato a una fiera, tradotto il sito o possiede una controllata. Copertura geografica delle capacità, domanda e idoneità sono questioni diverse. Le fonti pubbliche possono non includere piani privati, margini o vincoli logistici. Se manca contesto, specifica cosa resta da verificare invece di inventare copertura o una raccomandazione universale.",
+        "cta": {
+          "label": "Esplora Knowledge",
+          "href": "/knowledge"
+        },
+        "related": [
+          "jtbd-next-question-evidence-gap",
+          "jtbd-company-timeline",
+          "jtbd-potential-opportunity-freshness"
+        ]
+      },
+      "pt": {
+        "slug": "preparar-uma-decisao-de-exportacao-com-contexto-verificavel",
+        "title": "Preparar uma decisão de exportação com contexto verificável",
+        "description": "Reúna contexto sobre capacidades e mercados sem presumir cobertura comercial, procura ou elegibilidade para exportar.",
+        "lead": "Antes de avaliar uma expansão internacional, separe o que se sabe sobre a organização daquilo que ainda precisa de ser verificado em cada mercado.",
+        "answer": "Prepare a decisão organizando evidências sobre capacidades, produtos, experiência declarada, requisitos do mercado e possíveis vias de acesso. Para cada elemento, registe a fonte, a data, o âmbito geográfico e o estado epistémico. Não infira presença comercial, elegibilidade, clientes ou cobertura a partir da sede, do idioma do site ou de uma capacidade compatível. Formule as incógnitas por produto e mercado antes de comparar opções.",
+        "sections": [
+          {
+            "heading": "Descreva primeiro a oferta e a capacidade observada",
+            "body": "Esclareça que produto, serviço ou capacidade está em causa e que evidência a sustenta. Uma página de produto pode documentar uma oferta declarada; uma certificação pode aplicar-se a um produto, fábrica ou jurisdição específicos. Mantenha explícito esse âmbito. Não transforme capacidade técnica em disponibilidade para exportar se volume, logística, assistência, restrições ou condições comerciais forem desconhecidos."
+          },
+          {
+            "heading": "Trate cada mercado como uma pergunta diferente",
+            "body": "Requisitos, canais, distâncias, normas e necessidades variam por destino e categoria. A presença de uma empresa num país não define todo o seu mercado potencial, e a sede não limita automaticamente o alcance de cada capacidade. Reúna evidências específicas de cada mercado e indique o que requer confirmação local, regulamentar, técnica ou comercial antes de considerar viável uma via de entrada."
+          },
+          {
+            "heading": "Mantenha distintas a oportunidade e a relação",
+            "body": "Um sinal de procura ou um projeto anunciado pode identificar um contexto que merece investigação. Não demonstra que um comprador procura aquela empresa, que ela é elegível ou que existe uma relação. Descreva cada possível adequação como POTENTIAL, apresente os fundamentos e separe observações de pressupostos sobre acesso, capacidade de entrega e decisão de compra."
+          },
+          {
+            "heading": "Transforme a análise em perguntas para uma decisão humana",
+            "body": "Uma síntese útil mostra evidências favoráveis, restrições, incertezas e o que precisa de ser confirmado antes de comprometer recursos. Pode levantar questões sobre normas, possíveis distribuidores, transporte, assistência pós-venda ou procura, sem recomendar automaticamente a entrada no mercado. A pessoa responsável traz objetivos, tolerância ao risco e conhecimento privado; as observações dão contexto, mas não substituem esse juízo."
+          }
+        ],
+        "example": "Exemplo hipotético: uma empresa declara fabricar bombas industriais e uma fonte pública apresenta um programa de infraestruturas noutro país. Isso pode justificar pesquisa sobre requisitos técnicos e canais locais. Não prova que o programa necessite dessas bombas, que a empresa possa certificá-las para esse destino ou que tenha cobertura comercial nesse mercado.",
+        "limits": "Não afirme que uma organização opera num mercado apenas porque participou numa feira, traduziu o site ou tem uma subsidiária. Alcance geográfico das capacidades, procura e elegibilidade são questões distintas. Fontes públicas podem não revelar planos privados, margens ou limitações logísticas. Se faltar contexto, indique exatamente o que continua por verificar em vez de inventar cobertura ou uma recomendação universal.",
+        "cta": {
+          "label": "Explorar Knowledge",
+          "href": "/knowledge"
+        },
+        "related": [
+          "jtbd-next-question-evidence-gap",
+          "jtbd-company-timeline",
+          "jtbd-potential-opportunity-freshness"
+        ]
+      }
+    }
+  }
+]
