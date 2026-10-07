@@ -388,6 +388,10 @@ def select_reusable_observations(
     decisions: list[ObservationReuseDecision] = []
     allowed: list[GovernedObservation] = []
     for observation in memory.for_subject(context.subject_id):
+        if context.as_of is not None and observation.record.observed_at > context.as_of:
+            # Not part of history at this cut (EB-06 as-of semantics). Evaluating its
+            # currentness "before it was observed" used to raise and break historical reads.
+            continue
         decision = evaluate_observation_reuse(
             observation, context=context, policy=policy, temporal_policy=temporal_policy
         )

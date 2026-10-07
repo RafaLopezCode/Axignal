@@ -67,6 +67,30 @@ class SharedObservationIntent:
         return "observe-work:" + hashlib.sha256(encoded.encode()).hexdigest()
 
 
+_PRIVATE_REF = ("focus_", "tenant:", "principal:", "pending_", "mcpgrant_", "membership:")
+
+
+def opaque_requester_ref(scope: str, *private_parts: str) -> str:
+    """Requester provenance for shared work without exposing private identifiers.
+
+    Shared work is global; who asked for it is private. The ref lets a requester find
+    its own row again (same inputs, same ref) while revealing no Tenant or Focus id.
+    """
+    if not scope.strip() or not private_parts or any(not part.strip() for part in private_parts):
+        raise ValueError("opaque requester ref requires a scope and private parts")
+    digest = hashlib.sha256("|".join(private_parts).encode("utf-8")).hexdigest()[:32]
+    return f"{scope}:{digest}"
+
+
+def require_shareable_requester_ref(requester_ref: str) -> str:
+    """Refuse raw subscriber identifiers in the shared-work requester ledger."""
+    if not requester_ref.strip():
+        raise ValueError("shared observation requester ref is required")
+    if requester_ref.lower().startswith(_PRIVATE_REF):
+        raise ValueError("shared work requester ref must not carry a private identifier")
+    return requester_ref
+
+
 @dataclass(frozen=True, slots=True)
 class PrimeResearchAuthority:
     subject_id: str
