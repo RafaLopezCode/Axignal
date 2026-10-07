@@ -37,6 +37,26 @@ Customer Zero remains an internal entry, not subscriber identity or onboarding.
    legal publication, not invented defaults. Local readiness and external
    verification remain distinguishable. Existing runtime routes stay compatible.
 
+## Private pilot account preparation — clarification, 2026-10-07
+
+Both A/B fields in Admin → Cuentas y suscripciones MUST start empty. Explicit
+Save persists the pair as replaceable operator authorization for testing the
+private AXIGNAL pilot (https://axignal.com/, one observed Organization, no
+payments). Two distinct non-empty addresses authorize the test pair; clearing
+either leaves test authorization incomplete. The pair can be replaced or
+cleared with another explicit Save.
+
+Email MUST NOT grant access, link OIDC actors, identify a Tenant, redeem a
+PilotGrant, schedule observation, send invitations or mutate AXIGLAND. Real
+OIDC and one-use invitation admission remain mandatory. Replacing preparation
+does not silently revoke subscriber identity, entitlement or observations.
+
+Read/Save require current CUSTOMERS_READ/CUSTOMERS_WRITE authority. Save records
+operator, time and revision. Reload/runtime restart restore saved values;
+unsaved edits stay drafts. Concurrent writes fail with a conflict. Invalid or
+duplicate addresses, missing/revoked authority and network failures never
+claim success. No identity is seeded. Google/A/B E2E awaits operator selection.
+
 ## Scope
 
 Root owns `tools/runtime/config.py`, `tools/runtime/service.py`, new
@@ -57,3 +77,7 @@ evidence navigation and actual rendered desktop/narrow views are required.
 External OAuth client approval, completed live payment, exact production
 candidate, recovery drill and representative-user/human visual acceptance are
 separate evidence. No implementation checkbox may substitute for them.
+
+## CTO integration boundary (2026-10-07)
+
+Reconcile this extension against origin/main containing Product Web MCP (PR #156). Preserve /mcp, /oauth/*, /.well-known/*, /account/connect, OAuth/PKCE, tenant isolation, PilotGrant/Billing entitlement, read-only behavior and zero Luna calls for MCP reads. Implementation ends at tested PR, isolated candidate/preflight and CTO handoff. No merge, main push, current-link change or canonical production container replacement is authorized. Google test accounts remain blank until explicitly saved by the operator; no real Google/A/B E2E is claimed before that selection.

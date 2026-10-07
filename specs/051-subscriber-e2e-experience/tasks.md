@@ -10,6 +10,14 @@
 - [x] T008 Record exact configuration/deployment/recovery and external-acceptance gaps; prepare reviewable launch artifacts.
 - [x] T009 Run full deterministic gates and independent regression review; converge only evidenced in-scope work.
 
+## Pilot preparation extension (2026-10-07)
+
+- [x] T010 Specify/clarify blank defaults, explicit Save and replaceable test-only authorization; review architecture.
+- [x] T011 Implement bounded Admin-authorized persistence and optimistic read/save proxy.
+- [x] T012 Add Save, durable receipt and draft/error recovery in the accepted panel.
+- [x] T013 Verify durability/conflict/authorization, browser desktop/mobile/keyboard and required gates.
+- [x] T014 Reconcile with Product MCP in main, prepare PR and isolated preflight, and hand off to CTO without merge or cutover.
+
 ## Current evidence
 
 Reconciled on 2026-10-06 against canonical `main` after
@@ -34,3 +42,5 @@ External registration, legal data, completed live payment lifecycle, exact
 production candidate, recovery drill, rendered-browser acceptance and human
 visual acceptance are not automatically completed by these implementation
 tasks.
+
+2026-10-07 pilot preparation evidence: see [CTO handoff](pilot-preparation-handoff.md) and the PR validation/preflight record. T013/T014 close the preparation slice; real Google/A-B E2E, CTO integration/cutover and T007 are not implied by their completion.

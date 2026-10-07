@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { useState, useRef, useEffect } from "react";
 import { CustomerZero } from "./customer-zero";
+import { PilotTestAccounts } from "./pilot-test-accounts";
 import {
   ArrowUpRight,
   ArrowRight,
@@ -500,7 +501,10 @@ export function Admin({
                       )}
                     </strong>
                     <p>
-                      {t(
+                      {domainId === "customers" ? t(
+                        "La configuración de cuentas del piloto se guarda en Admin. Los demás registros son ilustrativos.",
+                        "Pilot account configuration is saved in Admin. Other records are illustrative.",
+                      ) : t(
                         "Esta aplicación local no tiene sesión privilegiada ni realiza operaciones reales. El servicio propietario conserva la autoridad.",
                         "This local app has no privileged session and performs no real operations. The owning service retains authority.",
                       )}
@@ -706,30 +710,5 @@ export function Admin({
         </Dialog>
       )}
     </div>
-  );
-}
-
-function PilotTestAccounts() {
-  const { t } = useLocale();
-  const [accounts, setAccounts] = useState({ a: "", b: "" });
-  return (
-    <section className="admin-attention admin-pilot-accounts" aria-labelledby="pilot-accounts-title">
-      <h2 id="pilot-accounts-title">{t("Cuentas para la prueba del piloto", "Pilot test accounts")}</h2>
-      <p>{t("AXIGNAL · https://axignal.com/ · 1 organización, sin pagos.", "AXIGNAL · https://axignal.com/ · 1 organization, no payments.")}</p>
-      <p>{t("Indica las cuentas Google que utilizarás. Este borrador se mantiene mientras esta vista está abierta; no concede acceso ni envía invitaciones. El acceso requiere Google verificado y una invitación de un solo uso.", "Enter the Google accounts you will use. This draft lasts while this view is open; it grants no access and sends no invitations. Access requires verified Google sign-in and a single-use invitation.")}</p>
-      <div className="admin-table-toolbar">
-        {(["a", "b"] as const).map((tenant) => (
-          <label className="search-field" key={tenant}>
-            <span>{t("Cuenta Google", "Google account")} {tenant.toUpperCase()}</span>
-            <input type="email" autoComplete="off" value={accounts[tenant]}
-              onChange={(event) => setAccounts((previous) => ({ ...previous, [tenant]: event.target.value }))}
-              aria-label={t("Cuenta Google", "Google account") + " " + tenant.toUpperCase()} />
-          </label>
-        ))}
-      </div>
-      <button type="button" className="button secondary" onClick={() => setAccounts({ a: "", b: "" })}>
-        {t("Vaciar cuentas", "Clear accounts")}
-      </button>
-    </section>
   );
 }

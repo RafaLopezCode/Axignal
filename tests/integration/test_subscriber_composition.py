@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from dataclasses import replace
+from dataclasses import dataclass, replace
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import cast
@@ -31,6 +31,7 @@ from application.economic_discovery.observation_reuse import ObservationReusePol
 from application.economic_discovery.temporal_currentness import TemporalCurrentnessPolicy
 from application.subscriber_access.pilot import PilotAccessService
 from application.subscriber_identity.runtime import (
+    Clock,
     OidcProviderConfig,
     OidcProviderId,
     OidcTransaction,
@@ -70,6 +71,14 @@ from tools.runtime.subscriber_composition import (
 from tools.runtime.subscriber_configuration import SubscriberSettings, load_subscriber_settings
 from tools.runtime.subscriber_http import SubscriberHttpFacade
 from tools.runtime.subscriber_provisioning import ConfiguredOfferCatalogueReader
+
+
+@dataclass(frozen=True)
+class _FixedClock:
+    instant: datetime
+
+    def now(self) -> datetime:
+        return self.instant
 
 
 class _ControlledOidc:
@@ -130,6 +139,7 @@ def _build(
     checkout_configured: bool = False,
     observation_plan_reader=None,
     observation_plan_path: Path | None = None,
+    clock: Clock | None = None,
 ) -> SubscriberHttpFacade:
     settings = _settings(
         tmp_path,
@@ -173,7 +183,7 @@ def _build(
         ),
         offer_catalogue_reader=offer_catalogue_reader,
         observation_plan_reader=observation_plan_reader,
-        clock=SystemClock(),
+        clock=clock if clock is not None else SystemClock(),
     )
     facade.identity.auth._provider = _ControlledOidc()
     return facade
@@ -504,10 +514,11 @@ def test_reobserve_executes_authorized_opportunity_plan_and_persists_reading(
 def test_billing_snapshot_freshness_fails_closed_for_old_future_or_mismatched_evidence(
     tmp_path: Path,
 ) -> None:
-    facade = _build(tmp_path)
+    # SQLite and wall-clock scheduling must not consume the one-second future case.
+    now = datetime(2026, 10, 7, 12, tzinfo=UTC)
+    facade = _build(tmp_path, clock=_FixedClock(now))
     token, tenant_id = _signup(facade, "subject:freshness")
     store = SqliteSubscriberBillingStore(tmp_path / "subscriber-billing.sqlite3")
-    now = datetime.now(UTC)
     _commit_verified_projection(
         store,
         tenant_id,

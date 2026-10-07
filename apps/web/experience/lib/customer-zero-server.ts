@@ -1,4 +1,5 @@
 import { cookies } from "next/headers";
+import { adminOriginAllowed } from "./admin-origin";
 import { attentionCommandSchema, organizationInventorySchema } from "./organization-attention";
 import {
   customerZeroCommand,
@@ -8,15 +9,7 @@ import {
 export const customerZeroCookie = "axignal-admin-session";
 const noStore = { "Cache-Control": "no-store" };
 export function sameOrigin(request: Request): boolean {
-  const origin = request.headers.get("origin");
-  const allowed = process.env.AXIGNAL_EXPERIENCE_ORIGIN
-    ? [process.env.AXIGNAL_EXPERIENCE_ORIGIN]
-    : ["http://127.0.0.1:3810", "http://localhost:3810"];
-  return (
-    !!origin &&
-    allowed.includes(origin) &&
-    new URL(origin).host === request.headers.get("host")
-  );
+  return adminOriginAllowed(request, process.env.AXIGNAL_EXPERIENCE_ORIGIN);
 }
 export function resolveRuntimeOrigin(
   configured: string,
