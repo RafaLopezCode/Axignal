@@ -10,6 +10,14 @@ from pathlib import Path
 from typing import Protocol
 
 from application.identity_resolution.governance import IdentitySubjectState
+from application.organization_admission.locator import LocatorError, public_domain
+from application.organization_admission.service import (
+    AdmittedProposition,
+    IdentityConflictError,
+    organization_id_for,
+    parse_registration,
+    registration_value,
+)
 from application.subscriber_portfolio.models import (
     OrganizationIdentityPending,
     OrganizationResolution,
@@ -22,7 +30,7 @@ from domain.evidence.admission import (
 )
 from domain.evidence.epistemics import Currentness, EpistemicState
 from domain.faxt.model import FAXT
-from domain.identity import FaxtId, OrganizationId
+from domain.identity import FaxtId, OrganizationId, identity_name_key
 from domain.organizations.model import Organization
 from pipeline.entity_resolution.resolver import (
     ExactNameResolver,
@@ -61,6 +69,19 @@ class SqliteCanonicalOrganizationStore:
                 proposition_digest TEXT NOT NULL, policy_id TEXT NOT NULL,
                 observed_at TEXT NOT NULL, artifact_refs TEXT NOT NULL,
                 receipt_fingerprint TEXT NOT NULL)""")
+            # Verified registry identifiers and registry-recorded websites. Primary keys
+            # make "one key, two Organizations" impossible, also under concurrency.
+            connection.execute("""CREATE TABLE IF NOT EXISTS canonical_identifiers (
+                scheme TEXT NOT NULL, authority TEXT NOT NULL, value TEXT NOT NULL,
+                organization_id TEXT NOT NULL, evidence_ref TEXT NOT NULL,
+                evidence_digest TEXT NOT NULL, proposition_digest TEXT NOT NULL,
+                policy_id TEXT NOT NULL, observed_at TEXT NOT NULL,
+                PRIMARY KEY (scheme, authority, value))""")
+            connection.execute("""CREATE TABLE IF NOT EXISTS canonical_websites (
+                domain TEXT PRIMARY KEY, organization_id TEXT NOT NULL,
+                evidence_ref TEXT NOT NULL, evidence_digest TEXT NOT NULL,
+                proposition_digest TEXT NOT NULL, policy_id TEXT NOT NULL,
+                observed_at TEXT NOT NULL)""")
 
     def _connect(self) -> sqlite3.Connection:
         connection = sqlite3.connect(self.path, timeout=10)
@@ -133,6 +154,201 @@ class SqliteCanonicalOrganizationStore:
                 inserted = True
         self._governance.seed_subject(OrganizationId(faxt.subject_id))
         return inserted
+
+    def _verified(self, proposition: AdmittedProposition, predicate: str) -> None:
+        request, decision = proposition.request, proposition.decision
+        if (
+            request.predicate != predicate
+            or request.evidence.authority is not SourceAuthority.REGISTRY
+        ):
+            raise OrganizationMaterializationError("registry admission required")
+        EvidenceAdmission.require_claim(decision, request)
+        representation = request.evidence.representation
+        if representation is None:
+            raise OrganizationMaterializationError("representation required")
+        references = {
+            representation.source_artifact_ref,
+            representation.source_observation_artifact_ref,
+            representation.artifact_ref,
+        }
+        if any(self._integrity.verify(reference) is not True for reference in references):
+            raise OrganizationMaterializationError("identity artifact integrity unconfirmed")
+
+    def admit(
+        self,
+        legal_name: AdmittedProposition,
+        registrations: tuple[AdmittedProposition, ...],
+        official_websites: tuple[AdmittedProposition, ...],
+    ) -> tuple[OrganizationId, bool]:
+        """Admit one registry-attested identity with its keys, atomically.
+
+        Called by the organization admission service with EvidenceAdmission decisions.
+        An identity already admitted is reused, never rewritten; a key held by another
+        Organization, or a different admitted legal name, is a conflict.
+        """
+
+        subject = OrganizationId(legal_name.request.subject_id)
+        propositions = (legal_name, *registrations, *official_websites)
+        if any(item.request.subject_id != subject for item in propositions):
+            raise OrganizationMaterializationError("one subject per admission")
+        if not registrations:
+            raise OrganizationMaterializationError("a verified registry identifier is required")
+        try:
+            identifiers = [
+                (parse_registration(item.request.object_or_value), item) for item in registrations
+            ]
+            websites = [
+                (public_domain(item.request.object_or_value), item) for item in official_websites
+            ]
+        except (ValueError, LocatorError) as exc:
+            raise OrganizationMaterializationError("invalid identity key") from exc
+        if subject != organization_id_for(*min(key for key, _ in identifiers)):
+            raise OrganizationMaterializationError("subject is not derived from its identifier")
+        if len({key for key, _ in identifiers}) != len(identifiers) or len(
+            {key for key, _ in websites}
+        ) != len(websites):
+            raise OrganizationMaterializationError("duplicate identity key")
+        self._verified(legal_name, "legal_identity")
+        for item in registrations:
+            self._verified(item, "registration")
+        for item in official_websites:
+            self._verified(item, "official_website")
+        FAXT.create(
+            faxt_id=FaxtId(
+                "faxt:identity:"
+                + hashlib.sha256(legal_name.request.evidence.id.encode()).hexdigest()
+            ),
+            subject_id=subject,
+            predicate=legal_name.request.predicate,
+            object_or_value=legal_name.request.object_or_value,
+            evidence=legal_name.request.evidence,
+            decision=legal_name.decision,
+            claim_proposition=legal_name.request.claim_proposition,
+            epistemic_state=EpistemicState.OBSERVED,
+            currentness=Currentness.UNKNOWN,
+        )
+
+        with self._connect() as connection:
+            connection.execute("BEGIN IMMEDIATE")
+            for (scheme, authority, value), _ in identifiers:
+                row = connection.execute(
+                    """SELECT organization_id FROM canonical_identifiers
+                       WHERE scheme = ? AND authority = ? AND value = ?""",
+                    (scheme, authority, value),
+                ).fetchone()
+                if row is not None and row[0] != subject:
+                    raise IdentityConflictError("IDENTIFIER_HELD_BY_ANOTHER_ORGANIZATION")
+            for domain, _ in websites:
+                row = connection.execute(
+                    "SELECT organization_id FROM canonical_websites WHERE domain = ?", (domain,)
+                ).fetchone()
+                if row is not None and row[0] != subject:
+                    raise IdentityConflictError("WEBSITE_HELD_BY_ANOTHER_ORGANIZATION")
+            existing = connection.execute(
+                "SELECT canonical_name FROM canonical_legal_identities WHERE organization_id = ?",
+                (subject,),
+            ).fetchone()
+            created = existing is None
+            if existing is not None and identity_name_key(str(existing[0])) != identity_name_key(
+                legal_name.request.object_or_value
+            ):
+                # Never silently replace an admitted identity: reevaluation is governed.
+                raise IdentityConflictError("ADMITTED_LEGAL_NAME_DIFFERS")
+            if created:
+                connection.execute(
+                    "INSERT INTO canonical_legal_identities VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                    self._legal_receipt(legal_name),
+                )
+            for (scheme, authority, value), item in identifiers:
+                connection.execute(
+                    "INSERT OR IGNORE INTO canonical_identifiers VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                    (scheme, authority, value, *self._key_provenance(subject, item)),
+                )
+            for domain, item in websites:
+                connection.execute(
+                    "INSERT OR IGNORE INTO canonical_websites VALUES (?, ?, ?, ?, ?, ?, ?)",
+                    (domain, *self._key_provenance(subject, item)),
+                )
+        # Seeding is idempotent; a crash before it is healed by the next replay.
+        self._governance.seed_subject(subject)
+        return subject, created
+
+    @staticmethod
+    def _key_provenance(
+        subject: OrganizationId, item: AdmittedProposition
+    ) -> tuple[str, str, str, str, str, str]:
+        decision = item.decision
+        return (
+            str(subject),
+            item.request.evidence.id,
+            str(decision.evidence_digest),
+            str(decision.proposition_digest),
+            str(decision.policy_id),
+            item.request.evidence.observed_at.isoformat(),
+        )
+
+    @staticmethod
+    def _legal_receipt(legal_name: AdmittedProposition) -> tuple[str, ...]:
+        request, decision = legal_name.request, legal_name.decision
+        representation = request.evidence.representation
+        if representation is None:
+            raise OrganizationMaterializationError("representation required")
+        references = tuple(
+            dict.fromkeys(
+                (
+                    representation.source_artifact_ref,
+                    representation.source_observation_artifact_ref,
+                    representation.artifact_ref,
+                )
+            )
+        )
+        receipt = {
+            "organization_id": request.subject_id,
+            "canonical_name": request.object_or_value,
+            "evidence_ref": request.evidence.id,
+            "evidence_digest": decision.evidence_digest,
+            "proposition_digest": decision.proposition_digest,
+            "policy_id": decision.policy_id,
+            "observed_at": request.evidence.observed_at.isoformat(),
+            "artifact_refs": json.dumps(references),
+        }
+        fingerprint = hashlib.sha256(json.dumps(receipt, sort_keys=True).encode()).hexdigest()
+        return (*(str(value) for value in receipt.values()), fingerprint)
+
+    def organization_by_identifier(
+        self, scheme: str, authority: str, value: str
+    ) -> OrganizationId | None:
+        key = parse_registration(registration_value(scheme, authority, value))
+        with self._connect() as connection:
+            row = connection.execute(
+                """SELECT organization_id FROM canonical_identifiers
+                   WHERE scheme = ? AND authority = ? AND value = ?""",
+                key,
+            ).fetchone()
+        return None if row is None else OrganizationId(str(row[0]))
+
+    def organization_by_domain(self, domain: str) -> OrganizationId | None:
+        with self._connect() as connection:
+            row = connection.execute(
+                "SELECT organization_id FROM canonical_websites WHERE domain = ?", (domain,)
+            ).fetchone()
+        return None if row is None else OrganizationId(str(row[0]))
+
+    def organizations_by_name(self, name: str) -> tuple[OrganizationId, ...]:
+        """Every live identity whose exact admitted legal name equals ``name``."""
+        key = identity_name_key(name)
+        with self._connect() as connection:
+            rows = connection.execute(
+                "SELECT organization_id, canonical_name FROM canonical_legal_identities"
+            ).fetchall()
+        return tuple(
+            sorted(
+                OrganizationId(str(row[0]))
+                for row in rows
+                if identity_name_key(str(row[1])) == key
+                and self.get_organization(OrganizationId(str(row[0]))) is not None
+            )
+        )
 
     def get_organization(self, organization_id: OrganizationId) -> Organization | None:
         pointer = self._governance.current(organization_id)

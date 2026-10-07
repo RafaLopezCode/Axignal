@@ -96,7 +96,9 @@ _PREDICATE_AUTHORITY_POLICY: Final[
         "predicate-capability:v1",
     ),
     (
-        frozenset({"identity", "legal_identity", "registration"}),
+        # official_website: the website a registry records for the legal entity (e.g. a
+        # registered corporate website). A website declaring itself is never this.
+        frozenset({"identity", "legal_identity", "registration", "official_website"}),
         frozenset({SourceAuthority.REGISTRY}),
         "predicate-legal-identity:v1",
     ),

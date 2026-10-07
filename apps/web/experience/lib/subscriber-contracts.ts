@@ -19,6 +19,8 @@ export const portfolioSchema = z.object({
   organizations: z.array(z.object({
     focusId: ref, organizationId: ref.nullable(), label: z.string().max(2048),
     state: z.enum(["ACTIVE", "PAUSED", "REMOVED", "IDENTITY_PENDING", "IDENTITY_REJECTED", "CAPACITY_UNKNOWN", "CAPACITY_PENDING", "PURCHASE_AUTHORITY_REQUIRED", "RESOLVED", "CANCELLED"]),
+    // Why identity is unresolved (spec 052); a stable code, never the typed text.
+    reason: z.string().max(160).nullable().optional(),
   })),
 });
 export type SubscriberPortfolio = z.infer<typeof portfolioSchema>;
