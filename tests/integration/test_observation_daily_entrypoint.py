@@ -13,7 +13,7 @@ def test_entrypoint_is_off_by_default(
     monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
 ) -> None:
     monkeypatch.delenv("AXIGNAL_OBSERVATION_RUNTIME_ENABLED", raising=False)
-    observation_daily.main()
+    observation_daily.main([])
     assert json.loads(capsys.readouterr().out) == {"state": "DISABLED"}
 
 
@@ -25,7 +25,7 @@ def test_enabled_without_server_owned_inputs_fails_closed(
     monkeypatch.delenv("AXIGNAL_SUBSCRIBER_OBSERVATION_PLAN_FILE", raising=False)
     monkeypatch.delenv("AXIGNAL_OBSERVATION_RUNTIME_ENROLLMENT_FILE", raising=False)
     with pytest.raises(SystemExit):
-        observation_daily.main()
+        observation_daily.main([])
     assert json.loads(capsys.readouterr().out) == {"state": "NOT_CONFIGURED"}
 
 

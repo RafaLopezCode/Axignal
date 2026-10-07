@@ -82,7 +82,9 @@ call; capabilities come only from evidence admitted for the Organization.
   website families have no other governed consumer than Observation Memory.
 - Replay uses no early sufficiency stop (it saves no request and would
   truncate the projection the subscriber reads).
-- Daily acquisition receipts persist, so a crash never repeats a fetch.
+- Committed daily acquisition receipts persist and are reused after a crash.
+  A crash between public retrieval and receipt persistence can repeat that read;
+  the scheduler does not claim exactly-once external side effects.
 
 Production entrypoint `axignal-observation-daily` is off unless
 `AXIGNAL_OBSERVATION_RUNTIME_ENABLED=true` and the operator provides the
@@ -105,7 +107,10 @@ operator FR-30 rights grant, so website leads stay blocked.
 
 ## Out of scope / UNKNOWN
 
-- Scheduling the entrypoint daily (cron/timer) and deploying it.
+- T12 supplies the existing systemd timer's production runner, opt-in config,
+  bounded child lifetime, operational audit/status and installation runbook.
+  Isolated candidate validation closes implementation/testing; integration
+  and canonical deployment remain separate CTO actions.
 - Adopted sources for reputation, search/generative visibility, filings,
   registries, regulation and funding: their families stay UNKNOWN.
 - Website acquisition in production (needs an operator FR-30 rights grant)

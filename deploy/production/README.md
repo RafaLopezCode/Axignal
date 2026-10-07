@@ -45,11 +45,13 @@ not the future general Admin browser identity provider. See ADR-0083.
 
 ## Autonomous observation daily timer
 
-The autonomous observation entrypoint is deployed as a bounded one-shot container,
-scheduled by `axignal-observation-daily.timer` once per UTC day. The timer may be
-enabled before subscriber enrollment exists: the service has systemd
-`ConditionPathExists` guards and therefore skips cleanly until both server-owned
-files exist:
+The existing `axignal-observation-daily.timer` wakes the existing runtime once
+per UTC day (03:17 UTC + up to 15 minutes jitter, persistent catch-up). It does
+not decide business cadence; the runtime selects due work. The one-shot runner
+is **off by default** through the existing `AXIGNAL_OBSERVATION_RUNTIME_ENABLED`
+flag in `/etc/axignal/observation-runtime/scheduler.env`. Missing/false returns
+`DISABLED` before Docker/data access. Enabled but missing server-owned files
+returns `NOT_CONFIGURED`, with zero child work:
 
 - `/etc/axignal/observation-runtime/attention.json`
 - `/etc/axignal/observation-runtime/enrollment.json`
@@ -57,26 +59,60 @@ files exist:
 Do not create placeholder tenant, principal, focus, market, or source-rights
 values. Enrollment must refer to real authorized subscriber state. The runner
 resolves `/srv/axignal/docker/current` on every invocation, uses that exact
-runtime image, mounts canonical persistence, publishes no port, runs as UID 33,
-and does not receive model credentials.
+runtime image, mounts canonical persistence and individual read-only config files,
+publishes no port, runs as UID 33 and receives no provider/model credentials.
+The shell lock and stable container name prevent overlapping scheduler entries.
+SQLite still fences the daily work, including UTC-day overlap and expired tokens.
+The 30-minute service limit is below the one-hour lease; service termination
+stops only `axignal-prod-observation-daily`. A completed same-day replay is a no-op.
 
 Install/update the scheduler from the deployed immutable release:
 
-    install -o root -g root -m 0755 \
-      deploy/production/run-observation-daily.sh \
-      /srv/axignal/docker/current/deploy/production/run-observation-daily.sh
-    install -o root -g root -m 0644 \
-      deploy/production/axignal-observation-daily.service \
-      /etc/systemd/system/axignal-observation-daily.service
-    install -o root -g root -m 0644 \
-      deploy/production/axignal-observation-daily.timer \
-      /etc/systemd/system/axignal-observation-daily.timer
-    systemctl daemon-reload
-    systemctl enable --now axignal-observation-daily.timer
+    /bin/sh deploy/production/install-observation-scheduler.sh --check
+    /bin/sh deploy/production/install-observation-scheduler.sh --install
 
-A skipped service because enrollment/configuration is absent is not evidence of
-an autonomous observation E2E. Verify the first configured tick manually before
-claiming production E2E.
+The installer validates syntax, installs only units, creates the disabled example
+only when no scheduler config exists, preserves existing config, reloads systemd
+and enables the existing timer. Repeating it is idempotent. It never changes the
+immutable release or `current`. Run `--install` only after the CTO's canonical
+integration/cutover; a candidate preflight uses `--check` only.
+
+After authorized server-owned enrollment and attention exist with root:www-data
+ownership and `0640` files, the CTO may set the flag to `true`, then run one tick:
+
+    systemctl start axignal-observation-daily.service
+    journalctl -u axignal-observation-daily.service --no-pager -n 20
+
+Redacted results include day, duration, item/failed/blocked/deferred counts,
+request count, STOP reason, next due and lease state. Full tick state plus
+started/finished invocation metadata persist in `observation-runtime.sqlite3`.
+For read-only status (no runtime/database creation, no tenant/focus ids or tokens):
+
+    docker exec axignal-prod-runtime python -m tools.runtime.observation_daily --status
+
+An interrupted invocation remains inspectable. A fresh process can resume after
+the lease expires; already committed steps/receipts and daily spend survive.
+Unknown source cost remains unroutable; UNKNOWN families are legitimate (T13).
+No retries are added to systemd or the runner.
+
+Rollback/kill switch, performed by the CTO: set the flag to `false`, then:
+
+    systemctl disable --now axignal-observation-daily.timer
+    systemctl stop axignal-observation-daily.service
+
+This retains all operational/economic databases and enrollment. Do not delete
+the store to retry a day. `ExecStopPost` stops the worker if it is still running.
+
+Isolated preflight may override `AXIGNAL_OBSERVATION_RELEASE`,
+`AXIGNAL_OBSERVATION_CONFIG_DIR`, `AXIGNAL_DATA_DIR`,
+`AXIGNAL_OBSERVATION_CONTAINER_NAME` and `AXIGNAL_OBSERVATION_NETWORK`.
+Use a candidate SHA directory, isolated empty arrays, a fresh data directory,
+an own worker name and `network=none`; never mount mutable production data.
+`AXIGNAL_OBSERVATION_DOCKER` exists for executable adapter testing only.
+
+A disabled/unconfigured/no-work outcome is not evidence of actual production
+observation. Controlled E2E proves configured due work through the real Brain;
+the first real authorized production tick remains part of the CTO cutover.
 
 
 ## Private Google Search Console sync (AO-13)
