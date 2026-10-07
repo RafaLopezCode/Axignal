@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev --hostname 127.0.0.1 --port 3810",
-    "build": "npm run check:seo && next build",
+    "build": "npm run check:seo && next build && node tools/localize-static-html-lang.mjs",
     "start": "next start --hostname 127.0.0.1 --port 3810",
     "typecheck": "tsc --noEmit",
     "test": "tsx --test tests/*.test.ts",
