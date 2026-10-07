@@ -173,6 +173,18 @@ class SqlitePilotAccessStore:
             ).fetchone()
         return None if row is None else self._grant(row)
 
+    def active_grants(self, *, now: datetime) -> tuple[PilotGrant, ...]:
+        """Operator listing of live grants (references and tenants only)."""
+        if now.tzinfo is None:
+            raise ValueError("pilot grant read time must be timezone-aware")
+        with self._connect() as connection:
+            rows = connection.execute(
+                """SELECT * FROM subscriber_pilot_grants
+                   WHERE revoked_at IS NULL AND expires_at > ? ORDER BY granted_at""",
+                (now.isoformat(),),
+            ).fetchall()
+        return tuple(self._grant(row) for row in rows)
+
     def revoke_grant(self, grant_ref: str, *, revoked_at: datetime) -> bool:
         if revoked_at.tzinfo is None:
             raise ValueError("pilot revocation time must be timezone-aware")
