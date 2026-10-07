@@ -29,6 +29,7 @@ from application.economic_discovery.observation_memory import (
 )
 from application.economic_discovery.observation_reuse import ObservationReusePolicy
 from application.economic_discovery.temporal_currentness import TemporalCurrentnessPolicy
+from application.subscriber_access.pilot import PilotAccessService
 from application.subscriber_identity.runtime import (
     OidcProviderConfig,
     OidcProviderId,
@@ -56,6 +57,7 @@ from pipeline.source_acquisition import (
     ContentAddressedArtifactIntegrityAdapter,
     ContentAddressedArtifactStore,
 )
+from pipeline.subscriber_access.sqlite_store import SqlitePilotAccessStore
 from tests.contracts.test_admitted_organization_store import admitted_identity
 from tests.observation_intelligence.scenarios import AS_OF, HOMEPAGES
 from tests.observation_intelligence.ted_fixture import FixtureTedTransport
@@ -93,6 +95,7 @@ def _settings(
     tmp_path: Path,
     *,
     contracting: bool = False,
+    pilot: bool = False,
     observation_plan_path: Path | None = None,
 ) -> SubscriberSettings:
     secret_path = tmp_path / "controlled-oidc-client-secret"
@@ -105,6 +108,7 @@ def _settings(
         "AXIGNAL_GOOGLE_REDIRECT_URI": "https://axignal.com/api/auth/callback/google",
         "AXIGNAL_GOOGLE_REGISTERED": "true",
         "AXIGNAL_SUBSCRIBER_CONTRACTING_ENABLED": "true" if contracting else "false",
+        "AXIGNAL_SUBSCRIBER_PILOT_ENABLED": "true" if pilot else "false",
         "AXIGNAL_LEGAL_OPERATOR_NAME": "Axignal SLU",
         "AXIGNAL_LEGAL_TAX_ID": "test-tax-id",
         "AXIGNAL_LEGAL_ADDRESS": "Test address",
@@ -122,6 +126,7 @@ def _build(
     environment_ref: str | None = "test",
     offer_catalogue_reader: ConfiguredOfferCatalogueReader | None = None,
     contracting: bool = False,
+    pilot: bool = False,
     checkout_configured: bool = False,
     observation_plan_reader=None,
     observation_plan_path: Path | None = None,
@@ -129,6 +134,7 @@ def _build(
     settings = _settings(
         tmp_path,
         contracting=contracting,
+        pilot=pilot,
         observation_plan_path=observation_plan_path,
     )
     facade = build_subscriber_facade(
@@ -617,3 +623,82 @@ def test_tax_ready_accepts_only_exact_approved_offer_and_current_tax_contract(
     )
     wrong_interval = workflow(tmp_path / "wrong-interval", wrong_interval_reader)
     assert wrong_interval._tax_ready() is False
+
+
+def test_private_pilot_redeem_grants_one_full_xeed_without_billing_and_survives_restart(
+    tmp_path: Path,
+) -> None:
+    _register_canonical_organization(tmp_path)
+    facade = _build(tmp_path, environment_ref=None, pilot=True)
+    access = PilotAccessService(SqlitePilotAccessStore(tmp_path / "subscriber-pilot.sqlite3"))
+    invite = access.issue_invite(
+        issued_by="founder",
+        reason="buyer-persona design partner",
+        now=datetime.now(UTC),
+    )
+    token, _ = _signup(facade, "subject:pilot-one")
+
+    before = facade.handle(
+        "GET",
+        "/subscriber/portfolio",
+        {"Authorization": f"Bearer {token}"},
+    )
+    assert before.status == 200
+    assert before.body["capacity"] is None
+    assert before.body["entitlementSource"] == "UNKNOWN"
+    assert before.body["contractingEnabled"] is False
+
+    redeemed = facade.handle(
+        "POST",
+        "/subscriber/pilot/redeem",
+        {"Origin": "https://axignal.com", "Authorization": f"Bearer {token}"},
+        {"inviteToken": invite.invite_token},
+    )
+    assert redeemed.status == 200
+    assert redeemed.body["state"] == "PILOT_ACTIVE"
+    assert redeemed.body["capacity"] == 1
+
+    after = facade.handle(
+        "GET",
+        "/subscriber/portfolio",
+        {"Authorization": f"Bearer {token}"},
+    )
+    assert after.status == 200
+    assert after.body["capacity"] == 1
+    assert after.body["capacityCurrentness"] == "CURRENT"
+    assert after.body["entitlementSource"] == "DESIGN_PARTNER_PILOT"
+    assert after.body["contractingEnabled"] is False
+
+    added = facade.handle(
+        "POST",
+        "/subscriber/portfolio",
+        {"Origin": "https://axignal.com", "Authorization": f"Bearer {token}"},
+        {
+            "action": "add",
+            "requestRef": "pilot:add:one",
+            "locator": "Shared Registry Example SLU",
+        },
+    )
+    assert added.status == 200
+    assert added.body["state"] == "CREATED"
+
+    restarted = _build(tmp_path, environment_ref=None, pilot=True)
+    portfolio = restarted.handle(
+        "GET",
+        "/subscriber/portfolio",
+        {"Authorization": f"Bearer {token}"},
+    )
+    assert portfolio.status == 200
+    assert portfolio.body["capacity"] == 1
+    assert portfolio.body["entitlementSource"] == "DESIGN_PARTNER_PILOT"
+    assert len(portfolio.body["organizations"]) == 1
+
+    token_two, _ = _signup(restarted, "subject:pilot-two")
+    stolen = restarted.handle(
+        "POST",
+        "/subscriber/pilot/redeem",
+        {"Origin": "https://axignal.com", "Authorization": f"Bearer {token_two}"},
+        {"inviteToken": invite.invite_token},
+    )
+    assert stolen.status == 200
+    assert stolen.body == {"state": "PILOT_INVITE_INVALID", "accepted": False}

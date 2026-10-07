@@ -34,6 +34,10 @@ class SubscriberWorkflowPort(Protocol):
     ) -> dict[str, object]: ...
 
 
+class SubscriberPilotPort(Protocol):
+    def redeem(self, context: TrustedSubscriberContext, invite_token: str) -> dict[str, object]: ...
+
+
 class SubscriberOutputPort(Protocol):
     def output(
         self, context: TrustedSubscriberContext, focus_id: XeedId, as_of: datetime
@@ -111,6 +115,7 @@ class SubscriberHttpFacade:
         billing_webhook: SubscriberBillingWebhook | None = None,
         available_providers: frozenset[str] | None = None,
         axent: SubscriberAxentPort | None = None,
+        pilot: SubscriberPilotPort | None = None,
     ) -> None:
         self.settings = settings
         self.identity = identity
@@ -119,6 +124,7 @@ class SubscriberHttpFacade:
         self.billing_webhook = billing_webhook
         self.available_providers = available_providers
         self.axent = axent
+        self.pilot = pilot
 
     def handle_webhook(self, raw_body: bytes, signature: str) -> SubscriberHttpResponse:
         if not self.settings.enabled or self.billing_webhook is None:
@@ -207,6 +213,15 @@ class SubscriberHttpFacade:
             if scheme != "Bearer" or separator != " " or not token or len(token) > 256:
                 return self._denied("AUTHENTICATION_REQUIRED", 401)
             context = self.identity.authenticate(token)
+            if method == "POST" and path == "/subscriber/pilot/redeem":
+                if not self.settings.pilot_enabled or self.pilot is None:
+                    return self._denied("PILOT_NOT_ENABLED", 404)
+                body = payload or {}
+                if set(body) != {"inviteToken"}:
+                    raise SubscriberRequestError("invalid pilot redemption")
+                return SubscriberHttpResponse(
+                    200, self.pilot.redeem(context, _text(body, "inviteToken", 256))
+                )
             if method == "POST" and path == "/subscriber/auth/logout":
                 if payload != {}:
                     raise SubscriberRequestError("logout body must be empty")
@@ -272,5 +287,5 @@ class SubscriberHttpFacade:
 def is_subscriber_path(path: str) -> bool:
     resource = urlsplit(path).path
     return resource == "/subscriber/portfolio" or resource.startswith(
-        ("/subscriber/auth/", "/subscriber/organizations/")
+        ("/subscriber/auth/", "/subscriber/organizations/", "/subscriber/pilot/")
     )
