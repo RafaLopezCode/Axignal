@@ -1,0 +1,43 @@
+# Public SEO surface for AXIGNAL's Next.js experience.
+# Host Traefik loads this file alongside axignal-landing.yml.
+# Landing remains the default public surface; only explicitly public SEO routes are delegated.
+http:
+  routers:
+    axignal-public-seo-https:
+      rule: >-
+        (Host(`axignal.com`) || Host(`www.axignal.com`)) &&
+        (Path(`/sitemap.xml`) ||
+         Path(`/robots.txt`) ||
+         PathPrefix(`/knowledge`) ||
+         PathPrefix(`/es/knowledge`) ||
+         PathPrefix(`/en/knowledge`) ||
+         PathPrefix(`/fr/knowledge`) ||
+         PathPrefix(`/de/knowledge`) ||
+         PathPrefix(`/it/knowledge`) ||
+         PathPrefix(`/pt/knowledge`) ||
+         Path(`/contact`) ||
+         Path(`/gdpr`) ||
+         Path(`/policies`) ||
+         PathPrefix(`/policies/`) ||
+         PathPrefix(`/_next/`) ||
+         PathPrefix(`/brand/`) ||
+         PathPrefix(`/fonts/`) ||
+         PathPrefix(`/observer/`) ||
+         PathPrefix(`/providers/`) ||
+         Path(`/assets-provenance.json`))
+      entryPoints:
+        - websecure
+      priority: 200
+      middlewares:
+        - axignal-landing-canonical
+        - axignal-landing-security
+      service: axignal-public-seo
+      tls:
+        certResolver: letsencrypt
+
+  services:
+    axignal-public-seo:
+      loadBalancer:
+        passHostHeader: true
+        servers:
+          - url: "http://127.0.0.1:18182"
