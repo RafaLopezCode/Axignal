@@ -1,12 +1,13 @@
-# Public SEO surface for AXIGNAL's Next.js experience.
+# Public allowlist for AXIGNAL's Next.js experience.
 # Host Traefik loads this file alongside axignal-landing.yml.
-# Landing remains the default public surface; only explicitly public SEO routes are delegated.
+# The modern homepage and explicitly public routes are delegated; Admin/Customer Zero remain private.
 http:
   routers:
     axignal-public-seo-https:
       rule: >-
         (Host(`axignal.com`) || Host(`www.axignal.com`)) &&
-        (Path(`/sitemap.xml`) ||
+        (Path(`/`) ||
+         Path(`/sitemap.xml`) ||
          Path(`/robots.txt`) ||
          PathPrefix(`/knowledge`) ||
          PathPrefix(`/es/knowledge`) ||

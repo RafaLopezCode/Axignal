@@ -23,3 +23,14 @@ test("production experience is loopback-only and shares the isolated AXIGNAL Com
   assert.match(compose, /AXIGNAL_EXPERIENCE_ORIGIN: http:\/\/127\.0\.0\.1:18182/);
   assert.doesNotMatch(compose, /0\.0\.0\.0:18182:3810/);
 });
+
+test("public Traefik allowlist serves the modern homepage without exposing Admin", () => {
+  const publicRoutes = readFileSync(
+    resolve(process.cwd(), "../../../deploy/production/traefik/axignal-public-seo.yml"),
+    "utf8",
+  );
+  assert.match(publicRoutes, /Path\(\x60\/\x60\)/);
+  assert.match(publicRoutes, /127\.0\.0\.1:18182/);
+  assert.doesNotMatch(publicRoutes, /Path(?:Prefix)?\(\x60\/admin/);
+  assert.doesNotMatch(publicRoutes, /Path(?:Prefix)?\(\x60\/admin\/customer-zero/);
+});
