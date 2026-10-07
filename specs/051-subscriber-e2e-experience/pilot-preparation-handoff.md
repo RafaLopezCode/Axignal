@@ -4,7 +4,7 @@ This extension completes explicit, durable Save in **Admin → Cuentas y suscrip
 
 ## Review and integration boundary
 
-Base: `83f3000ae1650685e803a801b2eaa3173c455155` (Product MCP, PR #156). Branch: `codex/pilot-test-accounts-save`. The PR body supplies the final head, image identities, isolated preflight evidence and completed validation results. CTO owns merge, main integration and canonical cutover.
+Final base: `282530cd9cdc1cf0c6f98462e0600ab3401eca31` (SEO batching hotfix #157), containing Product MCP at `83f3000ae1650685e803a801b2eaa3173c455155` (PR #156). Branch: `codex/pilot-test-accounts-save`. The PR body supplies the final head, image identities, isolated preflight evidence and completed validation results. CTO owns merge, main integration and canonical cutover.
 
 Rebase conflicts were limited to `tools/runtime/service.py` (adjacent methods/POST dispatch) and `apps/web/experience/lib/translations.json` (appended keys). Both additions were retained. MCP modules, OAuth/PKCE, edge configuration, `/account/connect`, PilotGrant/Billing entitlement, tenant isolation and read-only behavior are unchanged from main. The integration regression includes the MCP audit/model-call assertions (`model_calls = 0`) and AST prohibition on model dependencies.
 
@@ -40,9 +40,9 @@ npm run check:i18n
 npm run build
 ```
 
-Focal Python: **62 passed**. Experience: **123 passed**; typecheck/build passed; i18n **1409 entries, 0 missing**. Build includes `/account/connect` and the new Admin API. Ruff, mypy (404 sources) and Architecture Guard passed. Final full-suite/governance/preflight outcomes are recorded in the PR body.
+Focal Python: **62 passed**. Experience: **123 passed**; typecheck/build passed; i18n **1409 entries, 0 missing**. Build includes `/account/connect` and the new Admin API. Ruff, mypy (404 sources) and Architecture Guard passed. The full suite passed (1690 tests) and governance passed. Exact candidate/preflight identities and final focused results are recorded in the PR body.
 
-The first post-rebase full run reported **1689 passed, 1 failed** in 386.56 s. The sole failure used wall-clock time for a billing evidence timestamp only one second in the future; SQLite/scheduling could consume that second. The isolated test passed. Its fixture now injects a fixed Clock through the existing composition port; stale/future/mismatched-evidence assertions, the one-second case and production entitlement logic are unchanged. A full rerun is required before handoff. No gate or runtime time tolerance was weakened.
+The first post-rebase full run reported **1689 passed, 1 failed** in 386.56 s. The sole failure used wall-clock time for a billing evidence timestamp only one second in the future; SQLite/scheduling could consume that second. The isolated test passed. Its fixture now injects a fixed Clock through the existing composition port; stale/future/mismatched-evidence assertions, the one-second case and production entitlement logic are unchanged. The fixed-clock full rerun passed: **1690 tests in 388.46 s** on `c3f3822aa56b3da46182a562066c3460629c4ba0`. No gate or runtime time tolerance was weakened.
 
 Graphify was refreshed offline after the rebase (AST extraction, no LLM dependency). The final validation process retains its logs under the task-owned external evidence directory; no real accounts, sessions or secrets enter Git or CI.
 
@@ -92,3 +92,7 @@ Real initial/autonomous observation also awaits authorized server-owned attentio
 ## Unit economics limit retained from the existing pilot closure
 
 FR-26 projects LearningEvents by Xeed with explicit shared/private allocation and preserves missing cost as UNKNOWN. Adaptive subscriber research can append events for its authorized Xeed; autonomous runtime retains requests/outcomes. Luna reports measured token/latency usage, but subscriber AXENT does not durably attribute that usage to FR-26. Observation-loop/JEV/acquisition/storage paths do not yet form a complete per-Tenant monthly ledger. This is a broader accounting boundary, not a missing pilot entitlement adapter; it was not redesigned here. Real accumulated/monthly Xeed cost and margins remain unmeasured, with no invented zeros or estimates.
+
+## Final base reconciliation
+
+Before PR creation, main advanced with #157. Its only changes are the SEO sync timer, its runner, deployment README and their existing contract test. Rebase was conflict-free; there are no subscriber, MCP, Admin, runtime or frontend implementation changes from that hotfix. The final affected SEO contract and pilot/MCP tests are rerun, and the exact final head is built and preflighted independently. The original full-suite result is retained with its SHA instead of misattributed to the rebased commit.
