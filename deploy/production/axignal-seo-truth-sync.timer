@@ -1,8 +1,8 @@
 [Unit]
-Description=Sync AXIGNAL direct Google SEO Production Truth once per UTC day
+Description=Sync AXIGNAL direct Google SEO Production Truth incrementally every two hours
 
 [Timer]
-OnCalendar=*-*-* 07:17:00 UTC
+OnCalendar=*-*-* 00,02,04,06,08,10,12,14,16,18,20,22:17:00 UTC
 Persistent=true
 RandomizedDelaySec=20m
 AccuracySec=1m
