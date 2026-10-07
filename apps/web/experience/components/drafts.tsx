@@ -17,6 +17,7 @@ import {
 } from "@/lib/public-contracts";
 import { Dialog, Observer } from "./ui";
 import { PublicShell } from "./public-shell";
+import { legalIdentity, publicContactHref } from "@/lib/legal";
 
 export function DraftForm({
   subject,
@@ -100,8 +101,8 @@ export function DraftForm({
         <p className="draft-boundary" id="draft-boundary">
           <Info size={16} />
           {t(
-            "El canal de envío está pendiente de publicación. Puedes revisar y descargar tu texto; no se envía ni se registra una solicitud.",
-            "The sending channel is pending publication. You can review and download your text; nothing is sent or lodged as a request.",
+            `Este formulario prepara un borrador local y no lo envía. Para contactar realmente con AXIGNAL, envíalo a ${legalIdentity.publicEmail}.`,
+            `This form prepares a local draft and does not send it. To actually contact AXIGNAL, send it to ${legalIdentity.publicEmail}.`,
           )}
         </p>
         <div className="form-fields">
@@ -308,10 +309,8 @@ export function Contact() {
             </span>
           </div>
           <p className="contact-publication">
-            {t(
-              "Responsable, país y correo público: pendientes de publicación.",
-              "Controller, country and public email: pending publication.",
-            )}
+            {legalIdentity.controller} · {legalIdentity.country} ·{" "}
+            <a href={publicContactHref}>{legalIdentity.publicEmail}</a>
           </p>
         </section>
         <DraftForm subject={options[topic]} />

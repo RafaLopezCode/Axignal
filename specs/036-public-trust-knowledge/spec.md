@@ -6,7 +6,7 @@ User authorizes pages in the existing creative identity; OAuth preparation only 
 
 ## Clarifications
 - User explicitly requests Policies, Contact, Knowledge/Blog, Login/Signup with Google and OpenAI, GDPR.
-- Legal controller, jurisdiction and public mailbox remain pending publication (human reply).
+- Legal controller, jurisdiction and public mailbox resolved by explicit human reply on 2026-10-07: `Axignal SL` · `España` · `contacto@axignal.com`.
 - No OAuth clients exist; leave integrations prepared (human reply).
 - OpenAI identity-only website sign-in is a limited partner trial; label Continue with ChatGPT.
 - Existing identity proposal has no production AuthenticationPort/provider/session runtime.

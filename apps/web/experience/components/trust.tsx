@@ -17,6 +17,7 @@ import { useLocale } from "@/lib/locale";
 import { Observer } from "./ui";
 import { PublicShell, PublicationNote } from "./public-shell";
 import { DraftForm } from "./drafts";
+import { legalIdentity, publicContactHref } from "@/lib/legal";
 
 type Copy = { es: string; en: string };
 const c = (es: string, en: string): Copy => ({ es, en });
@@ -25,16 +26,16 @@ export const policyDocuments = [
     slug: "privacy",
     title: c("Privacidad", "Privacy"),
     deck: c(
-      "Qué datos hay en esta experiencia, para qué se usan y qué falta antes de publicarla.",
-      "Which data this experience uses, why, and what remains before publication.",
+      "Qué datos usa esta superficie pública y cómo se protege cada frontera.",
+      "Which data this public surface uses and how each boundary is protected.",
     ),
     Icon: Fingerprint,
     sections: [
       {
         title: c("Responsable y alcance", "Controller and scope"),
         text: c(
-          "La identidad del responsable, su país y el correo de contacto están pendientes de publicación. Este documento es un borrador para la experiencia local; no sustituye una política aprobada del servicio de producción. Antes de recoger datos reales habrá que completar la información aplicable y validar el tratamiento correspondiente.",
-          "The controller's identity, country and contact email are pending publication. This document is a draft for the local experience, not an approved production-service policy. Before collecting real data, applicable disclosures and processing need to be completed and validated.",
+          `El responsable de esta superficie es ${legalIdentity.controller}, en ${legalIdentity.country}. El canal público de contacto y ejercicio de derechos es ${legalIdentity.publicEmail}. Esta información describe el comportamiento verificable de AXIGNAL y no constituye una certificación de cumplimiento.`,
+          `The controller for this surface is ${legalIdentity.controller}, in ${legalIdentity.country}. The public contact and rights channel is ${legalIdentity.publicEmail}. This information describes AXIGNAL's verifiable behaviour and is not a compliance certification.`,
         ),
       },
       {
@@ -70,8 +71,8 @@ export const policyDocuments = [
       {
         title: c("Derechos y solicitudes", "Rights and requests"),
         text: c(
-          "El centro GDPR explica los derechos y permite preparar un borrador. El canal del responsable sigue pendiente. Una descarga no acredita recepción. Una solicitud real debe evaluarse conforme a la normativa aplicable, también cuando la información proceda de fuentes públicas. La arquitectura de memoria compartida no sustituye esa evaluación.",
-          "The GDPR centre explains rights and lets you prepare a draft. The controller's channel remains pending. A download does not prove receipt. A real request must be assessed under applicable law, including information originating in public sources. Shared-memory architecture does not replace that assessment.",
+          `El centro GDPR explica los derechos y permite preparar un borrador. El canal público del responsable es ${legalIdentity.publicEmail}. Una descarga local no acredita recepción; para registrar una solicitud real debe enviarse al canal publicado. La solicitud debe evaluarse conforme a la normativa aplicable, también cuando la información proceda de fuentes públicas.`,
+          `The GDPR centre explains rights and lets you prepare a draft. The controller's public channel is ${legalIdentity.publicEmail}. A local download does not prove receipt; a real request must be sent to the published channel. The request must be assessed under applicable law, including information originating in public sources.`,
         ),
       },
     ],
@@ -88,8 +89,8 @@ export const policyDocuments = [
       {
         title: c("Una experiencia de revisión", "An experience for review"),
         text: c(
-          "Estas condiciones son un borrador informativo de la experiencia local. El titular, país, condiciones contractuales, oferta y procedimiento de contratación están pendientes. Acceder a la demo o descargar un borrador no crea una cuenta, una suscripción ni la aceptación de un contrato de pago.",
-          "These terms are an informational draft for the local experience. The operator, country, contractual terms, offer and contracting procedure remain pending. Opening the demo or downloading a draft creates neither an account nor a subscription or acceptance of a paid contract.",
+          `Esta información de uso corresponde a la superficie pública operada por ${legalIdentity.controller} en ${legalIdentity.country}. Acceder a la demo o descargar un borrador no crea por sí mismo una cuenta, una suscripción ni la aceptación de un contrato de pago.`,
+          `This use information applies to the public surface operated by ${legalIdentity.controller} in ${legalIdentity.country}. Opening the demo or downloading a draft does not by itself create an account, a subscription or acceptance of a paid contract.`,
         ),
       },
       {
@@ -133,8 +134,8 @@ export const policyDocuments = [
       {
         title: c("Alcance de este inventario", "Scope of this inventory"),
         text: c(
-          "Este inventario describe el código de la experiencia local. No acredita las prácticas de una futura infraestructura, proxy o proveedor. Esta aplicación no implementa cookies analíticas o publicitarias, ni integra píxeles de terceros. Las fuentes se alojan localmente.",
-          "This inventory describes the local experience's code. It does not establish the practices of future infrastructure, a proxy or a provider. This application implements no analytics or advertising cookies and integrates no third-party pixels. Fonts are hosted locally.",
+          "Este inventario describe la superficie pública actual. No implementa cookies analíticas o publicitarias ni integra píxeles de terceros. Las fuentes y activos de marca se sirven desde la propia aplicación. Los servicios privados pueden usar almacenamiento estrictamente necesario cuando su flujo lo requiera y así se indique.",
+          "This inventory describes the current public surface. It implements no analytics or advertising cookies and integrates no third-party pixels. Fonts and brand assets are served by the application itself. Private services may use strictly necessary storage when their flow requires it and discloses it.",
         ),
       },
       {
@@ -213,11 +214,11 @@ export function Policies() {
       <div className="publication-banner">
         <Info size={20} />
         <div>
-          <strong>{t("Antes de publicar", "Before publication")}</strong>
+          <strong>{t("Responsable y contacto", "Controller and contact")}</strong>
           <p>
             {t(
-              "Responsable, país y correo público pendientes. Estos textos son borradores de revisión y no una certificación de cumplimiento.",
-              "Controller, country and public email are pending. These texts are review drafts and not a compliance certification.",
+              `${legalIdentity.controller} · ${legalIdentity.country} · ${legalIdentity.publicEmail}. Esta información pública describe el estado verificable del producto; no es una certificación de cumplimiento.`,
+              `${legalIdentity.controller} · ${legalIdentity.country} · ${legalIdentity.publicEmail}. This public information describes the product's verifiable state; it is not a compliance certification.`,
             )}
           </p>
         </div>
@@ -234,7 +235,7 @@ export function Policies() {
               <p>{copy(doc.deck)}</p>
             </div>
             <span className="policy-link-end">
-              {t("Leer borrador", "Read draft")}
+              {t("Leer documento", "Read document")}
               <ArrowUpRight size={20} />
             </span>
           </Link>
@@ -323,15 +324,15 @@ export function PolicyDocument({ slug }: { slug: string }) {
           ))}
           <aside className="article-basis">
             <Info size={20} />
-            <h3>{t("Información pendiente", "Pending information")}</h3>
+            <h3>{t("Responsable y canal público", "Controller and public channel")}</h3>
             <p>
               {t(
-                "Responsable, país, correo de contacto y validación jurídica del servicio: pendientes de publicación.",
-                "Controller, country, contact email and legal review of the service: pending publication.",
+                `${legalIdentity.controller} · ${legalIdentity.country}. Contacto y ejercicio de derechos: ${legalIdentity.publicEmail}. El documento describe el comportamiento verificable de esta superficie y no sustituye asesoramiento jurídico.`,
+                `${legalIdentity.controller} · ${legalIdentity.country}. Contact and rights requests: ${legalIdentity.publicEmail}. This document describes the verifiable behaviour of this surface and does not replace legal advice.`,
               )}
             </p>
             <Link href="/contact" className="text-link">
-              {t("Preparar una consulta", "Prepare an enquiry")}
+              {t("Contacto", "Contact")}
               <ArrowRight size={16} />
             </Link>
           </aside>
@@ -511,16 +512,20 @@ export function GDPR() {
             <Info size={21} />
             <strong>
               {t(
-                "Canal pendiente de publicación",
-                "Channel pending publication",
+                "Canal público para ejercer derechos",
+                "Public channel for rights requests",
               )}
             </strong>
             <p>
               {t(
-                "El responsable y su correo aún no están definidos. Este borrador no inicia plazos ni acredita recepción. Una solicitud real debe llegar al canal habilitado del responsable.",
-                "The controller and email are not yet defined. This draft neither starts response deadlines nor proves receipt. A real request must reach the controller's designated channel.",
+                `El responsable es ${legalIdentity.controller}. Este borrador local no inicia plazos ni acredita recepción. Para presentar una solicitud real, envíala a ${legalIdentity.publicEmail}.`,
+                `The controller is ${legalIdentity.controller}. This local draft neither starts response deadlines nor proves receipt. To lodge a real request, send it to ${legalIdentity.publicEmail}.`,
               )}
             </p>
+            <a className="text-link" href={publicContactHref}>
+              {legalIdentity.publicEmail}
+              <ArrowUpRight size={16} />
+            </a>
           </div>
           <p>
             {t(
@@ -539,7 +544,7 @@ export function GDPR() {
             <span className="sr-only">{t("Nueva pestaña", "New tab")}</span>
           </a>
           <Link href="/policies/privacy" className="text-link">
-            {t("Leer el borrador de privacidad", "Read the privacy draft")}
+            {t("Leer la política de privacidad", "Read the privacy policy")}
             <ArrowRight size={16} />
           </Link>
         </div>

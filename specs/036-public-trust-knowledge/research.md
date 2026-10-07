@@ -3,6 +3,6 @@
 - OpenAI website Sign in with ChatGPT uses OIDC authorization code with PKCE; limited commercial partner trial and registered client required: https://developers.openai.com/siwc/website (opened). Human confirms no clients; prepare contract without an OAuth runtime. Identity is separate from ChatGPT plan usage.
 - EDPB recommends clear layered information and rights access: https://www.edpb.europa.eu/sme/be-compliant/respect-individuals-rights_en (opened).
 - AEPD rights reference: https://www.aepd.es/preguntas-frecuentes/1-tus-derechos/2-tus-derechos-de-proteccion-de-datos/FAQ-0105-que-derechos-reconoce-el-rgpd-a-los-afectados (opened).
-- Legal controller, country and mailbox remain pending publication by explicit human answer. Do not claim a specific legal basis, retention period, transfer instrument, DPO, jurisdiction or certification.
-- Existing presentation app has no analytics/ad cookies or durable locale persistence. Describe this local build only, not unknown future production/logging behavior.
+- Legal controller, country and mailbox were resolved by explicit human answer on 2026-10-07 as `Axignal SL`, `España`, `contacto@axignal.com`. Do not infer any additional legal basis, retention period, transfer instrument, DPO, registered address or certification.
+- The current public surface has no analytics/ad cookies. Describe only behaviour verified in the deployed experience; do not infer unknown provider, retention or logging practices.
 - Six newly authored ES/EN product explanations derive from MASTER/HFX, not external news or economic evidence; label editorial drafts.

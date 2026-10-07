@@ -258,8 +258,8 @@ export function Access({ intent }: { intent: AuthStartRequest["intent"] }) {
           </div>
           <p className="access-legal">
             {t(
-              "Los textos legales están pendientes de publicación.",
-              "Legal texts are pending publication.",
+              "Consulta la información legal y de privacidad publicada.",
+              "Review the published legal and privacy information.",
             )}{" "}
             <Link href="/policies/terms">
               {t("Uso y límites", "Use and limitations")}

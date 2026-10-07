@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { ShieldCheck, Info } from "lucide-react";
 import { useLocale } from "@/lib/locale";
 import { Dialog } from "./ui";
+import { legalIdentity } from "@/lib/legal";
 const key = "axignal.privacy-notice.v1";
 const maximumAge = 180 * 24 * 60 * 60 * 1000;
 export function PrivacyNotice() {
@@ -47,8 +48,8 @@ export function PrivacyNotice() {
         <aside
           className="privacy-notice"
           aria-label={t(
-            "Privacidad en esta versión",
-            "Privacy in this version",
+            "Privacidad en AXIGNAL",
+            "Privacy at AXIGNAL",
           )}
         >
           <div className="privacy-notice-heading">
@@ -57,8 +58,8 @@ export function PrivacyNotice() {
           </div>
           <p>
             {t(
-              "La navegación pública no activa analítica, publicidad ni cookies de acceso. Recuerda tu idioma y este aviso. Customer Zero utiliza una cookie necesaria cuando el personal conecta una sesión Admin. Los datos del responsable siguen pendientes de publicación.",
-              "Public navigation activates no analytics, advertising or sign-in cookies. It remembers your language and this notice. Customer Zero uses a necessary cookie when staff connect an Admin session. Controller details remain pending publication.",
+              `La navegación pública no activa analítica, publicidad ni cookies de acceso. Recuerda tu idioma y este aviso. Customer Zero utiliza una cookie necesaria cuando el personal conecta una sesión Admin. Responsable: ${legalIdentity.controller} (${legalIdentity.country}). Contacto: ${legalIdentity.publicEmail}.`,
+              `Public navigation activates no analytics, advertising or sign-in cookies. It remembers your language and this notice. Customer Zero uses a necessary cookie when staff connect an Admin session. Controller: ${legalIdentity.controller} (${legalIdentity.country}). Contact: ${legalIdentity.publicEmail}.`,
             )}
           </p>
           <div>
@@ -86,8 +87,8 @@ export function PrivacyNotice() {
           <span className="publication-note">
             <Info size={14} />
             {t(
-              "Información de esta versión local",
-              "Information about this local version",
+              "Información de esta superficie pública",
+              "Information about this public surface",
             )}
           </span>
           <h3>
@@ -113,8 +114,8 @@ export function PrivacyNotice() {
           </p>
           <p>
             {t(
-              "Los formularios mantienen los borradores en la página y no los envían. El aviso describe esta compilación; no certifica el cumplimiento de un futuro servicio desplegado.",
-              "Forms keep drafts in the page and do not send them. This notice describes this build; it does not certify compliance of a future deployed service.",
+              "Los formularios mantienen los borradores en la página y no los envían. El canal público de contacto es contacto@axignal.com. Este aviso describe el comportamiento verificable de esta superficie; no constituye una certificación de cumplimiento.",
+              "Forms keep drafts in the page and do not send them. The public contact channel is contacto@axignal.com. This notice describes the verifiable behaviour of this surface; it is not a compliance certification.",
             )}
           </p>
           <div className="privacy-document-links">

@@ -312,8 +312,8 @@ export function TrustProof() {
         "Trust begins with clarity.",
       ),
       body: t(
-        "Conoce el alcance de esta versión y los datos que siguen pendientes de publicación.",
-        "Understand this version's scope and which information is still pending publication.",
+        "Conoce el alcance de AXIGNAL, sus límites y la información pública del responsable.",
+        "Understand AXIGNAL's scope, its limits and the controller's public information.",
       ),
       href: "/policies",
       cta: t("Leer nuestros límites", "Read our limits"),
@@ -384,8 +384,8 @@ export function NewsletterInvitation() {
         </button>
         <small>
           {t(
-            "Canal de envío pendiente de publicación. Puedes preparar un borrador local.",
-            "Sending channel pending publication. You can prepare a local draft.",
+            "La solicitud automática aún no está habilitada. Puedes preparar un borrador local y contactar con AXIGNAL desde el canal público.",
+            "Automatic submission is not enabled yet. You can prepare a local draft and contact AXIGNAL through the public channel.",
           )}
         </small>
       </div>

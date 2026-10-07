@@ -61,7 +61,7 @@ Spec Kit prerequisites resolved feature 036 with spec/plan/tasks and all support
 
 ## Explicit dependencies and limits
 
-Legal responsible entity, jurisdiction and public contact mailbox remain pending publication, as requested. Policies are publication drafts. OAuth clients/service adapters, actual account/session creation, contact/rights delivery and public-brief dispatch are not connected; no simulated success. Authorized customer proof was not supplied. Canonical backend and production services were untouched. The local generative surface composes registered governed fixture components; this work does not claim live AI research, production admission or complete OAuth end-to-end verification.
+Legal responsible entity, jurisdiction and public contact mailbox were resolved by explicit human answer on 2026-10-07 as `Axignal SL`, `España`, `contacto@axignal.com`; mailbox delivery remains an operational production gate until DNS/mail reception is verified. Policies may now publish the resolved controller/country/mailbox, while remaining explicit that they are not compliance certification. OAuth clients/service adapters, actual account/session creation, form-based contact/rights delivery and public-brief dispatch are not connected; no simulated success. Authorized customer proof was not supplied. Canonical backend and production services were untouched. The local generative surface composes registered governed fixture components; this work does not claim live AI research, production admission or complete OAuth end-to-end verification.
 
 ## Evidence
 

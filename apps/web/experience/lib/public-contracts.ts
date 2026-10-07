@@ -1,6 +1,7 @@
 import { translate } from "./copy-catalog";
 import type { Locale } from "./languages";
 import { z } from "zod";
+import { legalIdentity } from "./legal";
 
 export const authStartSchema = z
   .object({
@@ -65,10 +66,7 @@ export function draftText(draft: LocalDraft, locale: Locale) {
       "AXIGNAL · LOCAL DRAFT · NOT SENT",
     ),
     "",
-    t(
-      "Destinatario: pendiente de publicación",
-      "Recipient: pending publication",
-    ),
+    t("Destinatario: ", "Recipient: ") + legalIdentity.publicEmail,
     t("Asunto: ", "Subject: ") + parsed.subject,
     t("Nombre: ", "Name: ") + parsed.name,
     "Email: " + parsed.email,

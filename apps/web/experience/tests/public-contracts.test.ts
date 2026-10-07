@@ -10,6 +10,7 @@ import {
 } from "../lib/public-contracts";
 import { POST } from "../app/api/auth/start/route";
 import { GET } from "../app/api/auth/status/route";
+import { legalIdentity, publicContactHref } from "../lib/legal";
 
 const request = (
   body: string,
@@ -107,6 +108,15 @@ test("status discloses identity-only scopes and unavailable connections", async 
   assert.equal(result.sessionCreated, false);
   assert.equal(response.headers.get("cache-control"), "no-store");
 });
+test("public legal identity is explicit and contactable", () => {
+  assert.deepEqual(legalIdentity, {
+    controller: "Axignal SL",
+    country: "España",
+    publicEmail: "contacto@axignal.com",
+  });
+  assert.equal(publicContactHref, "mailto:contacto@axignal.com");
+});
+
 test("draft preview/download retains multiline content and never claims receipt", () => {
   const local = {
     subject: "Acceso",
@@ -118,7 +128,7 @@ test("draft preview/download retains multiline content and never claims receipt"
   const text = draftText(local, "es");
   assert.ok(text.includes(local.message));
   assert.ok(text.includes("NO ENVIADO"));
-  assert.ok(text.includes("Destinatario: pendiente de publicación"));
+  assert.ok(text.includes("Destinatario: contacto@axignal.com"));
   assert.ok(
     text.endsWith(
       "Este borrador no registra una solicitud ni acredita recepción.",
