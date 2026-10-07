@@ -140,6 +140,7 @@ def _build(
     observation_plan_reader=None,
     observation_plan_path: Path | None = None,
     clock: Clock | None = None,
+    identity_source=None,
 ) -> SubscriberHttpFacade:
     settings = _settings(
         tmp_path,
@@ -184,6 +185,7 @@ def _build(
         offer_catalogue_reader=offer_catalogue_reader,
         observation_plan_reader=observation_plan_reader,
         clock=clock if clock is not None else SystemClock(),
+        identity_source=identity_source,
     )
     facade.identity.auth._provider = _ControlledOidc()
     return facade

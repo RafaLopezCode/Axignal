@@ -61,22 +61,17 @@ class SqliteIdentityGovernanceStore:
         if not organization_id.strip():
             raise ValueError("organization id is required")
         with self._connect() as connection:
-            existing = connection.execute(
-                "SELECT organization_id FROM identity_subjects WHERE organization_id = ?",
-                (str(organization_id),),
-            ).fetchone()
-            if existing is not None:
-                return False
-            connection.execute(
+            # INSERT OR IGNORE: concurrent admissions of one identity seed it exactly once.
+            inserted = connection.execute(
                 """
-                INSERT INTO identity_subjects (
+                INSERT OR IGNORE INTO identity_subjects (
                     organization_id, state, redirect_to, last_decision_id,
                     requires_revalidation
                 ) VALUES (?, ?, NULL, NULL, 0)
                 """,
                 (str(organization_id), IdentitySubjectState.ACTIVE.value),
             )
-            return True
+            return inserted.rowcount == 1
 
     def current(self, organization_id: OrganizationId) -> IdentitySubjectPointer | None:
         with self._connect() as connection:

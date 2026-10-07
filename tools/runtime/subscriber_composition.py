@@ -22,6 +22,11 @@ from application.axent.grounded import GroundedReasoner
 from application.economic_discovery.observation_memory import ObservationMemory
 from application.economic_discovery.observation_reuse import ObservationReusePolicy
 from application.economic_discovery.temporal_currentness import TemporalCurrentnessPolicy
+from application.organization_admission.service import (
+    OrganizationAdmissionService,
+    RegistryIdentitySource,
+    UnavailableRegistrySource,
+)
 from application.subscriber_access.pilot import PilotAccessService
 from application.subscriber_identity.runtime import (
     Clock,
@@ -470,6 +475,7 @@ class _SubscriberWorkflow(SubscriberWorkflowPort):
                 "organizationId": None,
                 "label": item.display_label or item.locator,
                 "state": item.status.value,
+                "reason": item.identity_reason,
             }
             for item in pending
         )
@@ -709,6 +715,7 @@ def build_subscriber_facade(
     observation_plan_reader: SubscriberObservationExecutionPlanReader | None = None,
     clock: Clock | None = None,
     axent_reasoner: GroundedReasoner | None = None,
+    identity_source: RegistryIdentitySource | None = None,
 ) -> SubscriberHttpFacade:
     """Compose real durable subscriber services from root-authorized inputs.
 
@@ -781,6 +788,12 @@ def build_subscriber_facade(
         integrity=ContentAddressedArtifactIntegrityAdapter(artifacts),
         governance=governance,
     )
+    # Spec 052: a locator is attention. Identity is resolved against the one canonical
+    # store, and only an independent registry source can admit a new identity. Without
+    # a configured source, unknown identities stay pending (UNKNOWN), never invented.
+    organization_admission = OrganizationAdmissionService(
+        organizations, identity_source or UnavailableRegistrySource()
+    )
     observation_trigger = _ObservationTrigger(
         plans=execution_plan_reader,
         observation_plans=observation_plan_reader,
@@ -801,7 +814,7 @@ def build_subscriber_facade(
             if checkout is not None
             else _UnavailableCheckout()
         ),
-        organizations,
+        organization_admission,
         observation_trigger,
         effective_clock,
     )

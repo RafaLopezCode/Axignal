@@ -159,6 +159,8 @@ class PendingAttentionEntry:
     display_label: str | None = None
     status: PendingStatus = PendingStatus.IDENTITY_PENDING
     organization_id: None = None
+    #: Why identity is still unresolved (UNKNOWN, AMBIGUOUS, CONFLICT…); never input text.
+    identity_reason: str | None = None
 
     @property
     def focus_id(self) -> str:

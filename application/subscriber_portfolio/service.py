@@ -82,6 +82,7 @@ class SubscriberPortfolioStore(Protocol):
         context: TrustedSubscriberContext,
         request: AddOrganizationRequest,
         now: datetime,
+        reason: str | None = None,
     ) -> None: ...
 
     def list_pending_authorized(
@@ -236,7 +237,7 @@ class SubscriberPortfolioService:
 
         resolved = self._organizations.resolve(request.locator)
         if isinstance(resolved, OrganizationIdentityPending):
-            self._portfolio.record_pending(context, request, now)
+            self._portfolio.record_pending(context, request, now, resolved.reason_code)
             return AddResult(AddStatus.IDENTITY_PENDING, identity_reason=resolved.reason_code)
         if isinstance(resolved, OrganizationIdentityRejected):
             return AddResult(AddStatus.IDENTITY_REJECTED, identity_reason=resolved.reason_code)

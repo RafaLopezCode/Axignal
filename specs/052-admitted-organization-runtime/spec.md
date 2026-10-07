@@ -12,6 +12,7 @@ Names/URLs submitted by a subscriber are attention; unknown ones remain pending.
 Business profile, capabilities, commercial relations, registry acquisition and
 provider authority are outside this materialization contract.
 
-Acceptance: registration/restart/replay; no direct or evidence-only admission;
+Resolution and admission: ADR-0087 (locator → canonical index → registry source →
+EvidenceAdmission → store). Acceptance: registration/restart/replay; no direct or evidence-only admission;
 non-registry rejection; ambiguity and topology revalidation; integrity loss;
 independent Tenant portfolios referring to the same Organization identity.

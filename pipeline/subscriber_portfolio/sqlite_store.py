@@ -89,6 +89,15 @@ class SqliteSubscriberPortfolioStore:
                 PRAGMA user_version = 1;
                 """
             )
+            columns = {
+                str(row[1])
+                for row in connection.execute("PRAGMA table_info(subscriber_portfolio_pending)")
+            }
+            if "identity_reason" not in columns:
+                # Additive migration (spec 052): existing pending rows keep reason NULL.
+                connection.execute(
+                    "ALTER TABLE subscriber_portfolio_pending ADD COLUMN identity_reason TEXT"
+                )
 
     @staticmethod
     def _entry(row: sqlite3.Row) -> PortfolioEntry:
@@ -113,6 +122,9 @@ class SqliteSubscriberPortfolioStore:
             updated_at=datetime.fromisoformat(str(row["updated_at"])),
             display_label=None if row["display_label"] is None else str(row["display_label"]),
             status=PendingStatus(str(row["status"])),
+            identity_reason=(
+                None if row["identity_reason"] is None else str(row["identity_reason"])
+            ),
         )
 
     @staticmethod
@@ -276,8 +288,10 @@ class SqliteSubscriberPortfolioStore:
         context: TrustedSubscriberContext,
         request: AddOrganizationRequest,
         now: datetime,
+        reason: str | None = None,
     ) -> None:
         fingerprint = self._fingerprint(["PENDING", request.locator, request.display_label])
+        reason = None if reason is None else reason[:160]
         with self._connect() as connection:
             connection.execute("BEGIN IMMEDIATE")
             self._require_membership(connection, context)
@@ -291,17 +305,18 @@ class SqliteSubscriberPortfolioStore:
             if existing is not None:
                 connection.execute(
                     """UPDATE subscriber_portfolio_pending
-                       SET status = 'IDENTITY_PENDING', updated_at = ?
+                       SET status = 'IDENTITY_PENDING', identity_reason = ?, updated_at = ?
                        WHERE tenant_id = ? AND idempotency_key = ?
                          AND status NOT IN ('RESOLVED','CANCELLED')""",
-                    (now.isoformat(), context.tenant_id, request.idempotency_key),
+                    (reason, now.isoformat(), context.tenant_id, request.idempotency_key),
                 )
                 return
             connection.execute(
                 """INSERT INTO subscriber_portfolio_pending(
                        pending_id, tenant_id, idempotency_key, request_fingerprint,
-                       locator, display_label, status, created_at, updated_at
-                   ) VALUES (?, ?, ?, ?, ?, ?, 'IDENTITY_PENDING', ?, ?)""",
+                       locator, display_label, status, created_at, updated_at,
+                       identity_reason
+                   ) VALUES (?, ?, ?, ?, ?, ?, 'IDENTITY_PENDING', ?, ?, ?)""",
                 (
                     f"pending_{uuid.uuid4().hex}",
                     context.tenant_id,
@@ -311,6 +326,7 @@ class SqliteSubscriberPortfolioStore:
                     request.display_label,
                     now.isoformat(),
                     now.isoformat(),
+                    reason,
                 ),
             )
             self._record_command(
