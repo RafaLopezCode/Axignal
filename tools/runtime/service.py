@@ -1581,6 +1581,7 @@ def make_handler(runtime: AxignalRuntime) -> type[BaseHTTPRequestHandler]:
                 return
             # Every other DELETE keeps the existing POST-path handling.
             self.do_POST()
+
         def _pilot_accounts(self, *, write: bool = False) -> None:
             if runtime.admin_access is None:
                 self._json({"reason": "ADMIN_NOT_COMPOSED"}, HTTPStatus.NOT_FOUND)
