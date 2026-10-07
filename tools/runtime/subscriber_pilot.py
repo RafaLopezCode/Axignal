@@ -18,6 +18,11 @@ def _parser() -> argparse.ArgumentParser:
     issue.add_argument("--issued-by", required=True)
     issue.add_argument("--reason", required=True)
     issue.add_argument("--invite-hours", type=int, default=168)
+    grants = sub.add_parser("grants", help="List live pilot grants (no personal data)")
+    grants.add_argument("--data-dir", required=True)
+    revoke = sub.add_parser("revoke", help="Revoke one pilot grant; observed memory is kept")
+    revoke.add_argument("--data-dir", required=True)
+    revoke.add_argument("--grant-ref", required=True)
     return parser
 
 
@@ -39,6 +44,19 @@ def main() -> int:
         print(f"invite_token={invite.invite_token}")
         print("The invite token is shown once. Send it only to the intended design partner.")
         return 0
+    store = SqlitePilotAccessStore(root / "subscriber-pilot.sqlite3")
+    if args.command == "grants":
+        for grant in store.active_grants(now=datetime.now(UTC)):
+            print(
+                f"grant_ref={grant.grant_ref} tenant_id={grant.tenant_id} "
+                f"expires_at={grant.expires_at.isoformat()}"
+            )
+        return 0
+    if args.command == "revoke":
+        # Revocation stops capacity-dependent access (web, MCP); AXIGLAND and history stay.
+        revoked = store.revoke_grant(args.grant_ref, revoked_at=datetime.now(UTC))
+        print("revoked=true" if revoked else "revoked=false")
+        return 0 if revoked else 1
     raise SystemExit("unsupported command")
 
 

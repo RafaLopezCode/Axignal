@@ -121,6 +121,8 @@ from tools.runtime.first_proof import (
     FirstProofStore,
 )
 from tools.runtime.organization_attention import OrganizationAttention, load_observation_catalog
+from tools.runtime.product_mcp import MAX_BODY as PRODUCT_MCP_MAX_BODY
+from tools.runtime.product_mcp import ProductMcpHttp
 from tools.runtime.stripe_billing import StripeWebhookRuntime
 from tools.runtime.subscriber_axent import luna_reasoner_from_env
 from tools.runtime.subscriber_composition import build_subscriber_facade
@@ -1525,6 +1527,10 @@ def make_handler(runtime: AxignalRuntime) -> type[BaseHTTPRequestHandler]:
 
         def log_message(self, fmt: str, *args: object) -> None:
             # Keep default stderr access logging but never log headers/bodies/secrets.
+            if ProductMcpHttp.handles(urlsplit(self.path).path):
+                # OAuth queries carry state/challenges; log the path only.
+                super().log_message("product-mcp %s %s", self.command, urlsplit(self.path).path)
+                return
             if (
                 is_subscriber_path(self.path)
                 or urlsplit(self.path).path == "/internal/webhooks/subscriber-stripe"
@@ -1533,6 +1539,45 @@ def make_handler(runtime: AxignalRuntime) -> type[BaseHTTPRequestHandler]:
                 super().log_message("subscriber request %s", self.command)
             else:
                 super().log_message(fmt, *args)
+
+        def _product_mcp(self, method: str) -> None:
+            edge = getattr(runtime.subscriber, "mcp_http", None)
+            if not isinstance(edge, ProductMcpHttp):
+                self._json({"error": "not_found"}, HTTPStatus.NOT_FOUND)
+                return
+            body = b""
+            if method == "POST":
+                if self.headers.get("Transfer-Encoding") is not None:
+                    self._json({"error": "invalid_request"}, HTTPStatus.BAD_REQUEST)
+                    return
+                try:
+                    length = int(self.headers.get("Content-Length", "0"))
+                except ValueError:
+                    length = -1
+                if not 0 <= length <= PRODUCT_MCP_MAX_BODY:
+                    self._json({"error": "invalid_request"}, HTTPStatus.REQUEST_ENTITY_TOO_LARGE)
+                    return
+                body = self.rfile.read(length)
+            if len(self.headers.get_all("Authorization") or []) > 1:
+                # Ambiguous credentials are never resolved by picking one.
+                self._json({"error": "invalid_request"}, HTTPStatus.BAD_REQUEST)
+                return
+            headers = {name.lower(): value for name, value in self.headers.items()}
+            result = edge.handle(method, self.path, headers, body)
+            self.send_response(result.status)
+            for name, value in result.headers:
+                self.send_header(name, value)
+            self.send_header("Content-Length", str(len(result.body)))
+            self.end_headers()
+            if method != "HEAD":
+                self.wfile.write(result.body)
+
+        def do_DELETE(self) -> None:
+            if ProductMcpHttp.handles(urlsplit(self.path).path):
+                self._product_mcp("DELETE")
+                return
+            # Every other DELETE keeps the existing POST-path handling.
+            self.do_POST()
 
         def _subscriber(self, method: str, path: str) -> None:
             if runtime.subscriber is None:
@@ -1727,6 +1772,9 @@ def make_handler(runtime: AxignalRuntime) -> type[BaseHTTPRequestHandler]:
         def do_GET(self) -> None:
             self._request_started_ns = time.perf_counter_ns()
             request_path = urlsplit(self.path).path
+            if ProductMcpHttp.handles(request_path):
+                self._product_mcp("GET")
+                return
             if is_subscriber_path(request_path):
                 self._subscriber("GET", request_path)
                 return
@@ -1942,6 +1990,9 @@ def make_handler(runtime: AxignalRuntime) -> type[BaseHTTPRequestHandler]:
         def do_POST(self) -> None:
             self._request_started_ns = time.perf_counter_ns()
             request_path = urlsplit(self.path).path
+            if ProductMcpHttp.handles(request_path):
+                self._product_mcp("POST")
+                return
             if request_path == "/internal/webhooks/subscriber-stripe":
                 self._subscriber_stripe_webhook()
                 return
@@ -2557,7 +2608,6 @@ def make_handler(runtime: AxignalRuntime) -> type[BaseHTTPRequestHandler]:
 
         do_PUT = do_POST
         do_PATCH = do_POST
-        do_DELETE = do_POST
 
     return Handler
 

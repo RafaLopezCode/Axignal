@@ -10,6 +10,7 @@ from typing import Protocol
 from urllib.parse import unquote, urlsplit
 
 from application.admin_billing.subscriber_checkout import SubscriberCheckoutError
+from application.product_mcp.oauth import OAuthError
 from application.subscriber_identity.runtime import (
     AuthIntent,
     OidcProviderId,
@@ -42,6 +43,17 @@ class SubscriberOutputPort(Protocol):
     def output(
         self, context: TrustedSubscriberContext, focus_id: XeedId, as_of: datetime
     ) -> dict[str, object]: ...
+
+
+class SubscriberMcpConsentPort(Protocol):
+    """Consent and connection management for the Product MCP (ADR-0086)."""
+
+    def describe(self, context: TrustedSubscriberContext, request_id: str) -> dict[str, object]: ...
+    def decide(
+        self, context: TrustedSubscriberContext, request_id: str, approve: bool
+    ) -> dict[str, object]: ...
+    def connections(self, context: TrustedSubscriberContext) -> dict[str, object]: ...
+    def revoke(self, context: TrustedSubscriberContext, grant_id: str) -> dict[str, object]: ...
 
 
 class SubscriberAxentPort(Protocol):
@@ -116,6 +128,8 @@ class SubscriberHttpFacade:
         available_providers: frozenset[str] | None = None,
         axent: SubscriberAxentPort | None = None,
         pilot: SubscriberPilotPort | None = None,
+        mcp: SubscriberMcpConsentPort | None = None,
+        mcp_http: object | None = None,
     ) -> None:
         self.settings = settings
         self.identity = identity
@@ -125,6 +139,9 @@ class SubscriberHttpFacade:
         self.available_providers = available_providers
         self.axent = axent
         self.pilot = pilot
+        self.mcp = mcp
+        # The public Product MCP edge (OAuth + /mcp); served by the runtime HTTP server.
+        self.mcp_http = mcp_http
 
     def handle_webhook(self, raw_body: bytes, signature: str) -> SubscriberHttpResponse:
         if not self.settings.enabled or self.billing_webhook is None:
@@ -267,7 +284,32 @@ class SubscriberHttpFacade:
                 return SubscriberHttpResponse(
                     200, self.axent.ask(context, XeedId(focus_id), payload or {})
                 )
+            if path.startswith("/subscriber/mcp/"):
+                if self.mcp is None:
+                    return self._denied("MCP_NOT_CONFIGURED", 503)
+                body = payload or {}
+                if path == "/subscriber/mcp/connections":
+                    if method == "GET":
+                        return SubscriberHttpResponse(200, self.mcp.connections(context))
+                    if set(body) != {"action", "grantId"} or body.get("action") != "revoke":
+                        raise SubscriberRequestError("invalid connection command")
+                    grant_id = _text(body, "grantId", 64)
+                    return SubscriberHttpResponse(200, self.mcp.revoke(context, grant_id))
+                request_id = path.removeprefix("/subscriber/mcp/requests/")
+                if path.startswith("/subscriber/mcp/requests/") and _REFERENCE.fullmatch(
+                    request_id
+                ):
+                    if method == "GET":
+                        return SubscriberHttpResponse(200, self.mcp.describe(context, request_id))
+                    decision = body.get("decision")
+                    if set(body) != {"decision"} or decision not in {"approve", "deny"}:
+                        raise SubscriberRequestError("invalid consent decision")
+                    return SubscriberHttpResponse(
+                        200, self.mcp.decide(context, request_id, decision == "approve")
+                    )
             return self._denied("NOT_FOUND", 404)
+        except OAuthError as exc:
+            return SubscriberHttpResponse(400, {"state": "rejected", "code": exc.code})
         except SubscriberIdentityError as exc:
             return self._denied(
                 exc.failure.value, 503 if exc.failure.value == "AUTH_PROVIDER_UNAVAILABLE" else 401
@@ -287,5 +329,10 @@ class SubscriberHttpFacade:
 def is_subscriber_path(path: str) -> bool:
     resource = urlsplit(path).path
     return resource == "/subscriber/portfolio" or resource.startswith(
-        ("/subscriber/auth/", "/subscriber/organizations/", "/subscriber/pilot/")
+        (
+            "/subscriber/auth/",
+            "/subscriber/organizations/",
+            "/subscriber/pilot/",
+            "/subscriber/mcp/",
+        )
     )

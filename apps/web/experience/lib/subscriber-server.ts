@@ -3,6 +3,7 @@ import { createHash } from "node:crypto";
 import { authStartSchema, preparedAuthStart, preparedProviders } from "./public-contracts";
 import { approvedPaymentUrl, pilotRedemptionSchema, portfolioSchema, subscriberCommandSchema, subscriberOutputSchema, subscriberResultSchema } from "./subscriber-contracts";
 import type { RuntimeProjection } from "./runtime-projection";
+import { approvedMcpRedirect, mcpConnectionsSchema, mcpConsentSchema, mcpDecisionSchema, mcpGrantId, mcpRequestId, mcpRevokeSchema } from "./mcp-connect";
 
 export const subscriberSessionCookie = "__Host-axignal-subscriber";
 const transactionCookie = "__Host-axignal-oidc";
@@ -230,4 +231,40 @@ export function subscriberProjectionRevision(projection: RuntimeProjection): str
     Object.assign(measurement, { currentnessEvaluation: evaluation });
   }
   return createHash("sha256").update(JSON.stringify(canonical)).digest("hex");
+}
+
+/** Product MCP consent and connections (ADR-0086). Identity comes from the session cookie only. */
+export async function subscriberMcpRequest(request: Request, requestId: string, decide: boolean): Promise<Response> {
+  if (decide && !subscriberSameOrigin(request)) return rejected("ORIGIN_REQUIRED", 403);
+  if (!mcpRequestId.test(requestId)) return rejected("INVALID_REFERENCE", 400);
+  const token = cookie(request, subscriberSessionCookie);
+  if (!token) return rejected("AUTHENTICATION_REQUIRED", 401);
+  try {
+    const command = decide ? z.object({ decision: z.enum(["approve", "deny"]) }).strict().parse(await boundedSubscriberJson(request, 256)) : undefined;
+    const response = await upstream(`/subscriber/mcp/requests/${encodeURIComponent(requestId)}`, token, command);
+    if (!response.ok) return rejected(response.status === 401 ? "AUTHENTICATION_REQUIRED" : response.status === 400 ? "REQUEST_EXPIRED" : "REQUEST_UNAVAILABLE", response.status === 400 ? 410 : response.status);
+    const payload = await checkedJson(response);
+    if (!decide) return Response.json(mcpConsentSchema.parse(payload), { headers });
+    const redirect = approvedMcpRedirect(mcpDecisionSchema.parse(payload).redirect);
+    if (!redirect) throw new Error("REDIRECT_REJECTED");
+    return Response.json({ redirect }, { headers });
+  } catch (error) {
+    if (error instanceof z.ZodError) return rejected("INVALID_REQUEST_OR_RESPONSE", 400);
+    return rejected("RUNTIME_UNAVAILABLE", 503);
+  }
+}
+export async function subscriberMcpConnections(request: Request, revoke: boolean): Promise<Response> {
+  if (revoke && !subscriberSameOrigin(request)) return rejected("ORIGIN_REQUIRED", 403);
+  const token = cookie(request, subscriberSessionCookie);
+  if (!token) return rejected("AUTHENTICATION_REQUIRED", 401);
+  try {
+    const command = revoke ? z.object({ action: z.literal("revoke"), grantId: z.string().regex(mcpGrantId) }).strict().parse(await boundedSubscriberJson(request, 256)) : undefined;
+    const response = await upstream("/subscriber/mcp/connections", token, command);
+    if (!response.ok) return rejected(response.status === 401 ? "AUTHENTICATION_REQUIRED" : "REQUEST_UNAVAILABLE", response.status);
+    const payload = await checkedJson(response);
+    return Response.json(revoke ? mcpRevokeSchema.parse(payload) : mcpConnectionsSchema.parse(payload), { headers });
+  } catch (error) {
+    if (error instanceof z.ZodError) return rejected("INVALID_REQUEST_OR_RESPONSE", 400);
+    return rejected("RUNTIME_UNAVAILABLE", 503);
+  }
 }

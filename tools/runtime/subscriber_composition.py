@@ -851,6 +851,23 @@ def build_subscriber_facade(
             stripe_settings.environment_ref if stripe_settings is not None else "UNCONFIGURED"
         ),
     )
+    # Product MCP (ADR-0086): the same authorized read, effective entitlement (paid plan
+    # or pilot grant) and portfolio ownership as the web product; read-only; no model.
+    from application.product_mcp.oauth import OAuthService
+    from application.product_mcp.server import ProductMcpServer
+    from pipeline.product_mcp.sqlite_store import SqliteProductMcpStore
+    from tools.runtime.product_mcp import ProductMcpHttp, SubscriberMcpConsent, SubscriberMemory
+
+    mcp_store = SqliteProductMcpStore(root / "product-mcp.sqlite3")
+    mcp_oauth = OAuthService(mcp_store, resource=settings.origin.rstrip("/") + "/mcp")
+    mcp_memory = SubscriberMemory(portfolio=portfolio, entitlements=entitlements, economic=economic)
+    mcp_http = ProductMcpHttp(
+        origin=settings.origin,
+        oauth=mcp_oauth,
+        server=ProductMcpServer(mcp_memory, clock=effective_clock.now, audit=mcp_store),
+        clock=effective_clock.now,
+    )
+    mcp_consent = SubscriberMcpConsent(mcp_oauth, mcp_memory, effective_clock.now)
     return SubscriberHttpFacade(
         settings=settings,
         identity=identity,
@@ -858,6 +875,8 @@ def build_subscriber_facade(
         outputs=_SubscriberOutputs(workflow, economic),
         billing_webhook=None if checkout is None else _BillingWebhookAdapter(checkout),
         pilot=None if pilot_access is None else _PilotHttpAdapter(pilot_access, effective_clock),
+        mcp=mcp_consent,
+        mcp_http=mcp_http,
         # AXENT answers through the same authorized read; without a reasoner it stays
         # deterministic or extractive and never calls a model.
         axent=build_subscriber_axent(
