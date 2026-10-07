@@ -37,6 +37,18 @@ class MeasurementComparisonState(StrEnum):
     INSUFFICIENT = "INSUFFICIENT"
 
 
+@dataclass(frozen=True, slots=True)
+class MeasurementInstrumentAuthority:
+    integration_id: str
+    source_family: str
+    instrument_id: str
+
+    def __post_init__(self) -> None:
+        _identifier(self.integration_id, "integration_id")
+        _text(self.source_family, "source_family")
+        _identifier(self.instrument_id, "instrument_id")
+
+
 def _identifier(value: str, name: str) -> None:
     if not isinstance(value, str) or not _ID.fullmatch(value):
         raise ValueError(f"{name} must be a bounded opaque identifier")

@@ -77,3 +77,22 @@ Install/update the scheduler from the deployed immutable release:
 A skipped service because enrollment/configuration is absent is not evidence of
 an autonomous observation E2E. Verify the first configured tick manually before
 claiming production E2E.
+
+
+## Private Google Search Console sync (AO-13)
+
+AO-13 imports AXIGNAL's own Search Console performance as private first-party operating evidence. It does not write AXIGLAND and it does not turn Google Search Console metrics into public Digital Representation truth.
+
+Production uses `axignal-gsc-sync.timer` to run `run-gsc-sync.sh` once per UTC day. The runner is fail-closed: without `/etc/axignal/secrets/gsc_oauth.json` the systemd unit is skipped, and the shell runner itself returns `{"state":"NOT_CONFIGURED"}`.
+
+The server-owned OAuth secret file is JSON with `client_id`, `client_secret`, and `refresh_token`. It must be readable only by the production secret boundary and must never be committed, logged, embedded in image layers, or copied into runtime databases.
+
+The canonical property is `sc-domain:axignal.com`. The sync reads one 28-day property summary plus query, page, country, device, and search-appearance breakdowns. Raw private rows persist in `admin-gsc.sqlite3`; governed summary outcomes are recorded in the AO-24 measurement registry with property, period, instrument version, uncertainty, and source references.
+
+Operational invariants:
+
+- `GSC_PRIVATE_METRIC != PUBLIC_OBSERVATION`.
+- missing Search Console rows are not converted to global zero-demand claims;
+- repeated synchronization of the same settled window is replay-safe;
+- OAuth failure or revocation fails closed and produces no synthetic measurement;
+- only the domain property feeds canonical own-site measurement; URL-prefix properties may be used for diagnostics but must not be added to the same totals.
