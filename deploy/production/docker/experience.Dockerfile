@@ -10,6 +10,7 @@ COPY apps/web/experience/app ./app
 COPY apps/web/experience/components ./components
 COPY apps/web/experience/lib ./lib
 COPY apps/web/experience/public ./public
+COPY apps/web/experience/tests ./tests
 COPY apps/web/experience/next.config.ts ./
 COPY apps/web/experience/tsconfig.json ./
 
