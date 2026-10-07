@@ -11,7 +11,9 @@ from __future__ import annotations
 
 from datetime import datetime, timedelta
 from pathlib import Path
-from typing import cast
+from typing import Any, cast
+
+import pytest
 
 from application.observation_runtime import TickReport
 from application.xeed_access.reader import TrustedRequestContext
@@ -33,6 +35,7 @@ from tools.runtime.observation_daily import (
     SubscriberBrainRecomputation,
     build_economic_runtime,
     run_once,
+    run_scheduled_tick,
 )
 
 Opportunities = list[dict[str, object]]
@@ -51,8 +54,11 @@ def _opportunities(wire: dict[str, object]) -> Opportunities:
     return cast(Opportunities, cognition["opportunities"])
 
 
+@pytest.mark.parametrize("scheduled", [False, True])
 def test_daily_tick_reaches_the_real_subscriber_brain_and_changes_the_reading(
     tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    scheduled: bool,
 ) -> None:
     _register_canonical_organization(tmp_path)
     attention_file = tmp_path / "subscriber-observation-plan.json"
@@ -95,6 +101,30 @@ def test_daily_tick_reaches_the_real_subscriber_brain_and_changes_the_reading(
 
     def tick(day: int) -> tuple[TickReport, SubscriberBrainRecomputation]:
         clock.current = AS_OF + timedelta(days=day - 1)
+        if scheduled:
+            from tools.runtime import observation_daily
+
+            results: list[tuple[TickReport, SubscriberBrainRecomputation]] = []
+
+            def capture(**kwargs: Any) -> tuple[TickReport, SubscriberBrainRecomputation]:
+                result = run_once(**kwargs)
+                results.append(result)
+                return result
+
+            monkeypatch.setattr(observation_daily, "run_once", capture)
+            summary = run_scheduled_tick(
+                root=tmp_path,
+                clock=clock,
+                code_sha="test-code-sha",
+                economic=economic,
+                attention_file=attention_file,
+                enrollment=(enrolled, intruder),
+                source_ports={"ted-search-v3": TedSearchAdapter(ted, clock=clock.now)},
+            )
+            assert summary["state"] == "COMPLETED"
+            status = SqliteObservationRuntimeStore.inspect(store_path, now=clock.now())
+            assert status["last_invocation"] is not None and status["lease_status"] == "COMPLETED"
+            return results[0]
         return run_once(
             economic=economic,
             store=SqliteObservationRuntimeStore(store_path),

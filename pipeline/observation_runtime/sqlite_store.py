@@ -72,6 +72,9 @@ _SCHEMA = (
     """CREATE TABLE IF NOT EXISTS aor_recompute (
         xeed_id TEXT NOT NULL, family TEXT NOT NULL, payload TEXT NOT NULL,
         PRIMARY KEY (xeed_id, family))""",
+    """CREATE TABLE IF NOT EXISTS aor_invocations (
+        invocation_id TEXT PRIMARY KEY, started_at TEXT NOT NULL, code_sha TEXT NOT NULL,
+        finished_at TEXT, summary TEXT)""",
 )
 
 
@@ -389,9 +392,20 @@ class SqliteObservationRuntimeStore:
         token = uuid.uuid4().hex
         expires = _utc(now + timedelta(seconds=lease_seconds))
         with self._transaction() as db:
-            # Receipts only deduplicate within a day; older ones are never reused.
-            db.execute("DELETE FROM aor_receipts WHERE day<>?", (day,))
+            # A tick crossing UTC midnight must not race the new day's worker.
+            if (
+                db.execute(
+                    "SELECT 1 FROM aor_ticks WHERE completed_at IS NULL AND lease_expires_at>?",
+                    (_utc(now),),
+                ).fetchone()
+                is not None
+            ):
+                return None
             row = db.execute("SELECT * FROM aor_ticks WHERE day=?", (day,)).fetchone()
+            if row is not None and row["completed_at"] is not None:
+                return None
+            # Only the new owner may discard receipts from earlier days.
+            db.execute("DELETE FROM aor_receipts WHERE day<>?", (day,))
             if row is None:
                 db.execute(
                     "INSERT INTO aor_ticks VALUES (?, ?, ?, ?, NULL, NULL)",
@@ -406,12 +420,92 @@ class SqliteObservationRuntimeStore:
             )
             return TickClaim(day, token, resumed=True)
 
-    def _fence(self, db: sqlite3.Connection, claim: TickClaim) -> None:
+    def _fence(self, db: sqlite3.Connection, claim: TickClaim, *, now: datetime) -> None:
         row = db.execute(
-            "SELECT token, completed_at FROM aor_ticks WHERE day=?", (claim.day,)
+            "SELECT token, completed_at, lease_expires_at FROM aor_ticks WHERE day=?", (claim.day,)
         ).fetchone()
-        if row is None or row["token"] != claim.token or row["completed_at"] is not None:
+        if (
+            row is None
+            or row["token"] != claim.token
+            or row["completed_at"] is not None
+            or _required_time(row["lease_expires_at"]) <= now
+        ):
             raise LeaseLost(f"tick {claim.day} is no longer owned by this worker")
+
+    def assert_claim(self, claim: TickClaim, *, now: datetime) -> None:
+        with self._transaction() as db:
+            self._fence(db, claim, now=now)
+
+    def begin_invocation(self, *, started_at: datetime, code_sha: str) -> str:
+        invocation_id = uuid.uuid4().hex
+        with self._transaction() as db:
+            db.execute(
+                "INSERT INTO aor_invocations VALUES (?, ?, ?, NULL, NULL)",
+                (invocation_id, _utc(started_at), code_sha),
+            )
+        return invocation_id
+
+    def finish_invocation(
+        self, invocation_id: str, *, finished_at: datetime, summary: dict[str, object]
+    ) -> None:
+        with self._transaction() as db:
+            db.execute(
+                "UPDATE aor_invocations SET finished_at=?, summary=? "
+                "WHERE invocation_id=? AND finished_at IS NULL",
+                (_utc(finished_at), _dumps(summary), invocation_id),
+            )
+
+    @staticmethod
+    def inspect(database_path: Path, *, now: datetime) -> dict[str, object]:
+        """Read operator metadata without creating a DB or disclosing private scopes/tokens."""
+
+        if not database_path.is_file():
+            return {"state": "NOT_RUN", "lease_status": "NO_TICK"}
+        with closing(
+            sqlite3.connect(database_path.resolve().as_uri() + "?mode=ro", uri=True)
+        ) as db:
+            db.row_factory = sqlite3.Row
+            tables = {r[0] for r in db.execute("SELECT name FROM sqlite_master WHERE type='table'")}
+            invocation = (
+                db.execute(
+                    "SELECT started_at, finished_at, code_sha, summary FROM aor_invocations "
+                    "ORDER BY started_at DESC, rowid DESC LIMIT 1"
+                ).fetchone()
+                if "aor_invocations" in tables
+                else None
+            )
+            tick = db.execute(
+                "SELECT day, started_at, completed_at, lease_expires_at FROM aor_ticks "
+                "ORDER BY day DESC LIMIT 1"
+            ).fetchone()
+        lease_status = (
+            "NO_TICK"
+            if tick is None
+            else "COMPLETED"
+            if tick["completed_at"] is not None
+            else "ACTIVE"
+            if _required_time(tick["lease_expires_at"]) > now
+            else "EXPIRED"
+        )
+        return {
+            "state": "NOT_RUN"
+            if invocation is None
+            else "FINISHED"
+            if invocation["finished_at"]
+            else "INTERRUPTED_OR_RUNNING",
+            "last_invocation": None
+            if invocation is None
+            else {
+                "started_at": invocation["started_at"],
+                "finished_at": invocation["finished_at"],
+                "code_sha": invocation["code_sha"],
+                "summary": None
+                if invocation["summary"] is None
+                else json.loads(invocation["summary"]),
+            },
+            "tick": None if tick is None else dict(tick),
+            "lease_status": lease_status,
+        }
 
     def tick_report(self, day: str) -> dict[str, object] | None:
         rows = self._read(
@@ -427,7 +521,7 @@ class SqliteObservationRuntimeStore:
         self, claim: TickClaim, *, completed_at: datetime, report: dict[str, object]
     ) -> None:
         with self._transaction() as db:
-            self._fence(db, claim)
+            self._fence(db, claim, now=completed_at)
             db.execute(
                 "UPDATE aor_ticks SET completed_at=?, report=? WHERE day=?",
                 (_utc(completed_at), _dumps(report), claim.day),
@@ -545,7 +639,7 @@ class SqliteObservationRuntimeStore:
         receipts: tuple[tuple[str, Acquisition], ...] = (),
     ) -> None:
         with self._transaction() as db:
-            self._fence(db, claim)
+            self._fence(db, claim, now=now)
             db.executemany(
                 "INSERT OR IGNORE INTO aor_receipts VALUES (?, ?, ?)",
                 [(claim.day, key, _dumps(_encode_acquisition(item))) for key, item in receipts],
@@ -603,9 +697,11 @@ class SqliteObservationRuntimeStore:
                 ],
             )
 
-    def clear_recompute(self, claim: TickClaim, *, xeed_id: str, family: ObservationFamily) -> None:
+    def clear_recompute(
+        self, claim: TickClaim, *, now: datetime, xeed_id: str, family: ObservationFamily
+    ) -> None:
         with self._transaction() as db:
-            self._fence(db, claim)
+            self._fence(db, claim, now=now)
             db.execute(
                 "DELETE FROM aor_recompute WHERE xeed_id=? AND family=?", (xeed_id, family.value)
             )

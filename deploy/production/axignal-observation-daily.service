@@ -4,15 +4,16 @@ Requires=docker.service
 After=docker.service network-online.target
 Wants=network-online.target
 ConditionPathExists=/srv/axignal/docker/current/deploy/production/run-observation-daily.sh
-ConditionPathExists=/etc/axignal/observation-runtime/attention.json
-ConditionPathExists=/etc/axignal/observation-runtime/enrollment.json
 
 [Service]
 Type=oneshot
 User=root
 Group=root
-ExecStart=/srv/axignal/docker/current/deploy/production/run-observation-daily.sh
+EnvironmentFile=-/etc/axignal/observation-runtime/scheduler.env
+ExecStart=/bin/sh /srv/axignal/docker/current/deploy/production/run-observation-daily.sh
+# The hard lifetime is below the runtime's one-hour fenced lease.
 TimeoutStartSec=30min
+ExecStopPost=-/usr/bin/docker stop --time 15 axignal-prod-observation-daily
 Nice=10
 IOSchedulingClass=idle
 IOSchedulingPriority=7

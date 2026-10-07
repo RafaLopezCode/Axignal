@@ -12,7 +12,7 @@ from __future__ import annotations
 import time
 from collections.abc import Callable, Mapping
 from dataclasses import dataclass, replace
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
 from enum import StrEnum
 
 from application.economic_discovery.temporal_currentness import evaluate_effective_currentness
@@ -362,6 +362,10 @@ def run_daily_tick(
         reason = TickStopReason.ALREADY_COMPLETED if finished else TickStopReason.LEASE_HELD
         return TickReport(day, status, reason, "idempotent: this day's tick is not ours to run")
 
+    def lease_now() -> datetime:
+        # Evidence retains the tick's as-of; lease authority follows elapsed time.
+        return now + timedelta(seconds=max(monotonic() - started, 0.0))
+
     xeeds = {item.xeed_id: item for item in attention}
     state = _Tick(
         leads={lead.lead_id: lead for lead in store.leads()},
@@ -425,7 +429,7 @@ def run_daily_tick(
     def commit(candidates: tuple[StoredCandidate, ...] = ()) -> None:
         store.commit(
             claim,
-            now=now,
+            now=lease_now(),
             leads=tuple(changed_leads.values()),
             evidence=tuple(changed_evidence.values()),
             candidates=candidates,
@@ -460,6 +464,7 @@ def run_daily_tick(
     shared_count = duplicates = rejected = new_candidates_total = 0
 
     while queue:
+        store.assert_claim(claim, now=lease_now())
         lead = queue.pop(0)
         if lead.lead_id in done:
             continue
@@ -487,7 +492,10 @@ def run_daily_tick(
             commit()
             continue
 
-        cost = source.cost_per_request_microunits or 0
+        cost = source.cost_per_request_microunits
+        if cost is None:
+            stop = (TickStopReason.BUDGET_EXHAUSTED, "COST_UNKNOWN")
+            break
         allowance = min(
             budget.max_http_requests - state.usage.requests,
             policy.max_requests_per_tick - state.usage.family_requests.get(lead.family.value, 0),
@@ -536,6 +544,7 @@ def run_daily_tick(
                 deferred.append((lead.lead_id, str(denial)))
                 continue
             began = monotonic()
+            store.assert_claim(claim, now=lease_now())
             acquisition = acquirer.acquire(request)
             if acquisition.requests > request.max_requests:
                 raise RuntimeError(f"{source.source_id} exceeded its request allowance")
@@ -727,15 +736,18 @@ def run_daily_tick(
             for key in keys
         ):
             del state.dirty[(xeed_id, family)]
-            store.clear_recompute(claim, xeed_id=xeed_id, family=ObservationFamily(family))
+            store.clear_recompute(
+                claim, now=lease_now(), xeed_id=xeed_id, family=ObservationFamily(family)
+            )
     # Owed work survives a crash: it is persisted with every step and cleared only after it ran.
     commit()
     recomputations: list[tuple[str, str, str]] = []
     for owed in state.pending():
+        store.assert_claim(claim, now=lease_now())
         recompute.recompute(
             RecomputationRequest(owed.xeed_id, owed.family, owed.trigger, owed.evidence_keys, now)
         )
-        store.clear_recompute(claim, xeed_id=owed.xeed_id, family=owed.family)
+        store.clear_recompute(claim, now=lease_now(), xeed_id=owed.xeed_id, family=owed.family)
         recomputations.append((owed.xeed_id, owed.family.value, owed.trigger.value))
     avoided = len(xeeds) * len(policies) - len(recomputations)
 
@@ -781,7 +793,7 @@ def run_daily_tick(
         next_due_at=None if upcoming is None else upcoming.isoformat(),
         wall_seconds=round(monotonic() - started, 6),
     )
-    store.complete_tick(claim, completed_at=now, report=report.to_payload())
+    store.complete_tick(claim, completed_at=lease_now(), report=report.to_payload())
     return report
 
 

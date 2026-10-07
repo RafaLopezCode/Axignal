@@ -192,6 +192,9 @@ class ObservationRuntimeStore(Protocol):
 
     def tick_report(self, day: str) -> dict[str, object] | None: ...
 
+    def assert_claim(self, claim: TickClaim, *, now: datetime) -> None:
+        """Fail before child work when the token or its deadline is no longer valid."""
+
     def complete_tick(
         self, claim: TickClaim, *, completed_at: datetime, report: dict[str, object]
     ) -> None: ...
@@ -226,5 +229,7 @@ class ObservationRuntimeStore(Protocol):
 
     def pending_recompute(self) -> tuple[PendingRecompute, ...]: ...
 
-    def clear_recompute(self, claim: TickClaim, *, xeed_id: str, family: ObservationFamily) -> None:
+    def clear_recompute(
+        self, claim: TickClaim, *, now: datetime, xeed_id: str, family: ObservationFamily
+    ) -> None:
         """Forget owed downstream work once it ran (fenced like commit)."""
