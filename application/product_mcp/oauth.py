@@ -309,7 +309,8 @@ class OAuthService:
             if found is None or found[1] <= now:
                 raise OAuthError("invalid_grant", "refresh token is invalid or expired")
             grant = self._live_grant(found[0])
-            if form.get("client_id") and form.get("client_id") != grant.client_id:
+            # Public clients must identify themselves on refresh (OAuth 2.1 §4.3.1).
+            if form.get("client_id") != grant.client_id:
                 raise OAuthError("invalid_grant", "refresh token belongs to another client")
             if not self._store.mark_used(token_digest):
                 # A rotated refresh token was replayed: treat the grant as compromised.

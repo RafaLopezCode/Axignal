@@ -1558,6 +1558,10 @@ def make_handler(runtime: AxignalRuntime) -> type[BaseHTTPRequestHandler]:
                     self._json({"error": "invalid_request"}, HTTPStatus.REQUEST_ENTITY_TOO_LARGE)
                     return
                 body = self.rfile.read(length)
+            if len(self.headers.get_all("Authorization") or []) > 1:
+                # Ambiguous credentials are never resolved by picking one.
+                self._json({"error": "invalid_request"}, HTTPStatus.BAD_REQUEST)
+                return
             headers = {name.lower(): value for name, value in self.headers.items()}
             result = edge.handle(method, self.path, headers, body)
             self.send_response(result.status)

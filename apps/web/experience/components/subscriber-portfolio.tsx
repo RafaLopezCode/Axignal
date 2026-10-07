@@ -7,6 +7,8 @@ import { useLocale } from "@/lib/locale";
 import { approvedPaymentUrl, monthlyCapacityCents, pilotRedemptionSchema, portfolioSchema, subscriberOutputSchema, subscriberResultSchema, type SubscriberPortfolio } from "@/lib/subscriber-contracts";
 import type { RuntimeProjection } from "@/lib/runtime-projection";
 import { pendingPilotInvite, clearPilotInvite } from "@/lib/pilot-invite";
+import { pendingMcpConnect, clearMcpConnect } from "@/lib/mcp-connect";
+import { SubscriberMcpConnections } from "./subscriber-mcp-connections";
 import { PublicShell } from "./public-shell";
 import { SubscriberReading } from "./subscriber-reading";
 import { SubscriberRepresentation } from "./subscriber-representation";
@@ -55,6 +57,12 @@ export function SubscriberPortfolioExperience() {
     finally { requests.current.delete(controller); }
   }, []);
   useEffect(() => { void readPortfolio(); }, [readPortfolio]);
+  useEffect(() => {
+    // Sign-in started from an assistant connection returns to its consent, unless a pilot invite is pending.
+    if (access !== "ready" || pendingPilotInvite(() => window.sessionStorage)) return;
+    const request = pendingMcpConnect(() => window.sessionStorage);
+    if (request) window.location.replace(`/account/connect?request=${encodeURIComponent(request)}`);
+  }, [access]);
   useEffect(() => {
     if (access !== "ready" || pilotRedeemed.current) return;
     const inviteToken = pendingPilotInvite(() => window.sessionStorage);
@@ -175,7 +183,7 @@ export function SubscriberPortfolioExperience() {
       if (!response.ok) throw new Error("SIGN_OUT_FAILED");
       ++sessionEpoch.current; ++outputEpoch.current;
       for (const controller of requests.current) controller.abort();
-      clearPilotInvite(() => window.sessionStorage); pilotRedeemed.current = false;
+      clearPilotInvite(() => window.sessionStorage); clearMcpConnect(() => window.sessionStorage); pilotRedeemed.current = false;
       attempts.current.clear(); setSelected(null); setRevision(null); setPaymentUrl(null); setReading(false);
       setPortfolio(null); setProjection(null); setAccess("required");
     } catch { setMessage(t("No se pudo confirmar el cierre de sesión.", "Sign-out could not be confirmed.")); }
@@ -210,6 +218,7 @@ export function SubscriberPortfolioExperience() {
           <button className="text-link" disabled={busy} onClick={() => void command({ action: "refresh_purchase" })}><RefreshCw size={16}/>{t("Comprobar pago y capacidad", "Check payment and capacity")}</button>
           {portfolio.canPurchase !== true && <p>{t("La autoridad de compra no está confirmada para este contexto.", "Purchase authority is not confirmed for this context.")}</p>}
         </aside></div>
+        <SubscriberMcpConnections/>
         <section className="subscriber-operation" aria-live="polite">{message && <p>{message}</p>}{paymentUrl && <a className="button primary" href={paymentUrl}>{t("Continuar al pago", "Continue to payment")}<ArrowRight size={16}/></a>}</section>
         {reading && <p role="status">{t("Leyendo las evidencias…", "Reading the evidence…")}</p>}
         {projection && <section className="subscriber-reading" aria-labelledby="reading-title"><span className="eyebrow">{t("Tu lectura", "Your reading")}</span><h2 id="reading-title">{projection.organization.name}</h2>{projection.digitalRepresentation && <SubscriberRepresentation measurement={projection.digitalRepresentation}/>}{canReadProjection && revision ? <SubscriberReading key={revision} projection={projection} revision={revision}/> : <p>{t("Todavía no hay evidencia suficiente para una conclusión. Una ausencia en esta lectura no demuestra ausencia en el mundo.", "Evidence is not yet sufficient for a conclusion. Absence in this reading does not prove absence in the world.")}</p>}</section>}

@@ -420,6 +420,7 @@ def test_product_mcp_never_reaches_a_model() -> None:
     root = Path(__file__).resolve().parents[2]
     files = [
         *sorted((root / "application" / "product_mcp").glob("*.py")),
+        *sorted((root / "pipeline" / "product_mcp").glob("*.py")),
         root / "tools" / "runtime" / "product_mcp.py",
     ]
     for path in files:
@@ -433,7 +434,17 @@ def test_product_mcp_never_reaches_a_model() -> None:
                 else []
             )
             for module in modules:
-                assert not module.startswith(("cognition", "application.axent", "openai")), (
-                    path.name,
-                    module,
-                )
+                # No model or provider path, and no second cost ledger: FR-26 over Learning
+                # Memory stays the only unit-economics authority, and MCP reads add no
+                # costed LearningEvent to it.
+                assert not module.startswith(
+                    (
+                        "cognition",
+                        "application.axent",
+                        "openai",
+                        "anthropic",
+                        "application.economic_discovery.learning_memory",
+                        "application.economic_discovery.unit_economics",
+                        "pipeline.learning_memory",
+                    )
+                ), (path.name, module)

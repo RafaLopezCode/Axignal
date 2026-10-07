@@ -9,3 +9,4 @@
   padding: var(--space-2, 8px) var(--space-3, 12px);
 }
 @media(max-width:800px){.subscriber-content{padding:32px 20px 64px}.subscriber-heading{flex-direction:column;gap:16px;margin-bottom:32px}.subscriber-grid{grid-template-columns:minmax(0,1fr);gap:24px}.subscriber-organizations,.subscriber-capacity,.subscriber-notice{padding:24px}.subscriber-section-heading{align-items:flex-start}.subscriber-row-actions{gap:16px}.subscriber-content h2{font-size:26px}}
+.mcp-connections{margin-top:32px;max-width:860px}.mcp-endpoint{display:inline-block;max-width:100%;overflow-wrap:anywhere;padding:8px 12px;border-radius:8px;background:#f0f3f9;border:1px solid #d5deef;font-size:14px;color:#3c3c3c}.mcp-consent h3{font-size:16px;font-weight:500;margin:24px 0 8px}.mcp-consent ul{margin:0 0 16px;padding-left:20px;line-height:1.7;color:#3c3c3c}.mcp-consent .mcp-consent-host{margin-bottom:8px;overflow-wrap:anywhere}.mcp-consent .subscriber-row-actions{margin-top:24px}
