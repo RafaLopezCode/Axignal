@@ -12,6 +12,7 @@ _KEYS = frozenset(
         "AXIGNAL_EXPERIENCE_ORIGIN",
         "AXIGNAL_SUBSCRIBER_ENABLED",
         "AXIGNAL_SUBSCRIBER_CONTRACTING_ENABLED",
+        "AXIGNAL_SUBSCRIBER_PILOT_ENABLED",
         "AXIGNAL_LEGAL_OPERATOR_NAME",
         "AXIGNAL_LEGAL_OPERATOR_KIND",
         "AXIGNAL_LEGAL_TAX_ID",
@@ -109,6 +110,10 @@ class SubscriberSettings:
     @property
     def contracting_enabled(self) -> bool:
         return self.enabled and self.contracting_requested and self.legal_ready
+
+    @property
+    def pilot_enabled(self) -> bool:
+        return self.enabled and _flag(self.values.get("AXIGNAL_SUBSCRIBER_PILOT_ENABLED", "false"))
 
     def provider_ready(self, provider: str) -> bool:
         prefix = {"google": "GOOGLE", "openai": "CHATGPT"}.get(provider)

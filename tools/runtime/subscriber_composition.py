@@ -22,6 +22,7 @@ from application.axent.grounded import GroundedReasoner
 from application.economic_discovery.observation_memory import ObservationMemory
 from application.economic_discovery.observation_reuse import ObservationReusePolicy
 from application.economic_discovery.temporal_currentness import TemporalCurrentnessPolicy
+from application.subscriber_access.pilot import PilotAccessService
 from application.subscriber_identity.runtime import (
     Clock,
     OidcProviderConfig,
@@ -57,6 +58,7 @@ from pipeline.source_acquisition import (
     ContentAddressedArtifactIntegrityAdapter,
     ContentAddressedArtifactStore,
 )
+from pipeline.subscriber_access.sqlite_store import SqlitePilotAccessStore
 from tools.runtime.subscriber_axent import build_subscriber_axent
 from tools.runtime.subscriber_checkout import (
     StripeSubscriberRuntimeSettings,
@@ -69,6 +71,7 @@ from tools.runtime.subscriber_economic import build_subscriber_economic_runtime
 from tools.runtime.subscriber_http import (
     SubscriberHttpFacade,
     SubscriberOutputPort,
+    SubscriberPilotPort,
     SubscriberWorkflowPort,
 )
 from tools.runtime.subscriber_identity import (
@@ -130,8 +133,9 @@ class _ProjectionEntitlements(EntitlementPort):
     billing_store: SqliteSubscriberBillingStore
     clock: Clock
     environment_ref: str | None
+    pilot_access: PilotAccessService | None = None
 
-    policy_version = "subscriber-billing-snapshot-v1"
+    policy_version = "subscriber-entitlement-snapshot-v2"
     maximum_age = timedelta(minutes=5)
 
     def _read(self, tenant_id: TenantId) -> tuple[BillingProjection | None, Currentness]:
@@ -182,10 +186,29 @@ class _ProjectionEntitlements(EntitlementPort):
 
     def snapshot(self, tenant_id: TenantId) -> EntitlementSnapshot:
         projection, currentness = self._read(tenant_id)
+        if projection is not None and currentness is Currentness.CURRENT:
+            return EntitlementSnapshot(
+                projection.effective_capacity,
+                Currentness.CURRENT,
+                projection.provider_state_at,
+            )
+        if self.pilot_access is not None:
+            grant = self.pilot_access.active_grant(tenant_id, now=self.clock.now())
+            if grant is not None:
+                return EntitlementSnapshot(grant.capacity, Currentness.CURRENT, grant.granted_at)
         if projection is None:
             return EntitlementSnapshot(None, Currentness.UNKNOWN, None)
-        capacity = projection.effective_capacity if currentness is Currentness.CURRENT else None
-        return EntitlementSnapshot(capacity, currentness, projection.provider_state_at)
+        return EntitlementSnapshot(None, currentness, projection.provider_state_at)
+
+    def source(self, tenant_id: TenantId) -> str:
+        projection, currentness = self._read(tenant_id)
+        if projection is not None and currentness is Currentness.CURRENT:
+            return "BILLING"
+        if self.pilot_access is not None:
+            grant = self.pilot_access.active_grant(tenant_id, now=self.clock.now())
+            if grant is not None:
+                return "DESIGN_PARTNER_PILOT"
+        return "UNKNOWN"
 
     def billing_snapshot(self, tenant_id: TenantId) -> BillingEntitlementSnapshot | None:
         projection, currentness = self._read(tenant_id)
@@ -273,6 +296,20 @@ class _UnavailableCheckout(CapacityCheckoutPort):
     def request_checkout(self, request: CapacityCheckoutRequest) -> CheckoutRequestResult:
         del request
         return CheckoutRequestResult(None, False, "NOT_CONFIGURED")
+
+
+@dataclass(slots=True)
+class _PilotHttpAdapter(SubscriberPilotPort):
+    access: PilotAccessService
+    clock: Clock
+
+    def redeem(self, context: TrustedSubscriberContext, invite_token: str) -> dict[str, object]:
+        result = self.access.redeem(context, invite_token, now=self.clock.now())
+        body: dict[str, object] = {"state": result.state, "accepted": result.accepted}
+        if result.grant is not None:
+            body["capacity"] = result.grant.capacity
+            body["expiresAt"] = result.grant.expires_at.isoformat()
+        return body
 
 
 class _BillingWebhookAdapter:
@@ -440,6 +477,7 @@ class _SubscriberWorkflow(SubscriberWorkflowPort):
             "state": "success",
             "capacity": snapshot.capacity,
             "capacityCurrentness": snapshot.currentness.value,
+            "entitlementSource": self._entitlements.source(context.tenant_id),
             "canPurchase": None if authority is None else self._tax_ready(),
             "contractingEnabled": self._settings.contracting_enabled and self._tax_ready(),
             "organizations": organizations,
@@ -693,10 +731,16 @@ def build_subscriber_facade(
     purchase_reader = CurrentPurchaseAuthorityReader(identity.store, billing_store)
     purchase_adapter = _BillingAuthorityAdapter(identity.store, purchase_reader)
     environment_ref = stripe_settings.environment_ref if stripe_settings is not None else None
+    pilot_access = (
+        PilotAccessService(SqlitePilotAccessStore(root / "subscriber-pilot.sqlite3"))
+        if settings.pilot_enabled
+        else None
+    )
     entitlements = _ProjectionEntitlements(
         billing_store,
         effective_clock,
         environment_ref,
+        pilot_access,
     )
     checkout: SubscriberCheckoutRuntime | None = None
     checkout_available = False
@@ -813,6 +857,7 @@ def build_subscriber_facade(
         workflow=workflow,
         outputs=_SubscriberOutputs(workflow, economic),
         billing_webhook=None if checkout is None else _BillingWebhookAdapter(checkout),
+        pilot=None if pilot_access is None else _PilotHttpAdapter(pilot_access, effective_clock),
         # AXENT answers through the same authorized read; without a reasoner it stays
         # deterministic or extractive and never calls a model.
         axent=build_subscriber_axent(
