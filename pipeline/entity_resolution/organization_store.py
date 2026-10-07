@@ -57,10 +57,14 @@ class SqliteCanonicalOrganizationStore:
         *,
         integrity: IdentityArtifactIntegrity,
         governance: SqliteIdentityGovernanceStore,
+        read_only: bool = False,
     ) -> None:
         self.path = path
         self._integrity = integrity
         self._governance = governance
+        self._read_only = read_only
+        if read_only:
+            return
         path.parent.mkdir(parents=True, exist_ok=True)
         with self._connect() as connection:
             connection.execute("""CREATE TABLE IF NOT EXISTS canonical_legal_identities (
@@ -84,7 +88,11 @@ class SqliteCanonicalOrganizationStore:
                 observed_at TEXT NOT NULL)""")
 
     def _connect(self) -> sqlite3.Connection:
-        connection = sqlite3.connect(self.path, timeout=10)
+        connection = sqlite3.connect(
+            f"{self.path.resolve().as_uri()}?mode=ro" if self._read_only else self.path,
+            uri=self._read_only,
+            timeout=10,
+        )
         connection.row_factory = sqlite3.Row
         return connection
 

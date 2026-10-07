@@ -29,13 +29,20 @@ from domain.xeed.model import Xeed
 class SqliteSubscriberPortfolioStore:
     """Durable private Xeed lifecycle store sharing subscriber identity SQLite."""
 
-    def __init__(self, database_path: str | Path) -> None:
+    def __init__(self, database_path: str | Path, *, read_only: bool = False) -> None:
         self.path = Path(database_path)
+        self._read_only = read_only
+        if read_only:
+            return
         self.path.parent.mkdir(parents=True, exist_ok=True)
         self._initialize()
 
     def _connect(self) -> sqlite3.Connection:
-        connection = sqlite3.connect(self.path, timeout=10)
+        connection = sqlite3.connect(
+            f"{self.path.resolve().as_uri()}?mode=ro" if self._read_only else self.path,
+            uri=self._read_only,
+            timeout=10,
+        )
         connection.row_factory = sqlite3.Row
         connection.execute("PRAGMA foreign_keys = ON")
         connection.execute("PRAGMA busy_timeout = 10000")
