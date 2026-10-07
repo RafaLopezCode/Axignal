@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import subprocess
 from datetime import UTC, datetime
 from pathlib import Path
 
@@ -254,6 +255,12 @@ def test_production_seo_truth_runner_is_hardened_and_secret_files_are_read_only(
         encoding="utf-8"
     )
 
+    runner_mode = subprocess.check_output(
+        ["git", "ls-files", "--stage", "--", "deploy/production/run-seo-truth-sync.sh"],
+        cwd=root,
+        text=True,
+    ).split(maxsplit=1)[0]
+    assert runner_mode == "100755"
     assert "AXIGNAL_GSC_OAUTH_SECRET_FILE=/run/secrets/gsc_oauth.json" in runner
     assert "AXIGNAL_CRUX_API_KEY_FILE=/run/secrets/crux_api_key" in runner
     assert "dst=/run/secrets/gsc_oauth.json,readonly" in runner
