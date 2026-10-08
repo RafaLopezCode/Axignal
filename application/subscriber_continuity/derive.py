@@ -124,6 +124,12 @@ def derive_continuity_state(
         capability_key = observation_key(capability.get("sourceId"))
         if capability_key is not None:
             keys.append(capability_key)
+        # Spec 059: the evidence of the garden that admitted this event is a dependency;
+        # when a reach statement goes stale or changes, the relevance is re-evaluated.
+        for reach_source in _list(opportunity.get("reachSourceIds")):
+            reach_key = observation_key(reach_source)
+            if reach_key is not None and reach_key not in keys:
+                keys.append(reach_key)
         demand_source = sources.get(str(demand.get("sourceId")))
         if demand_source is not None and _str(demand_source.get("observedAt")):
             demand_key = f"demand:{demand.get('sourceId')}"
@@ -159,6 +165,13 @@ def derive_continuity_state(
                         "capability": capability.get("label"),
                         "demandCode": demand.get("code"),
                         "matchBasis": sorted(str(x) for x in _list(opportunity.get("matchBasis"))),
+                        "relevance": _dict(opportunity.get("relevance")).get("scope"),
+                        "relevantThrough": sorted(
+                            str(x)
+                            for x in _list(
+                                _dict(opportunity.get("relevance")).get("relevantThrough")
+                            )
+                        ),
                     }
                 ),
                 dependency_keys=tuple(sorted(keys)),

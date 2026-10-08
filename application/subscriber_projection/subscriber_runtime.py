@@ -72,6 +72,7 @@ from application.economic_discovery.temporal_currentness import (
     TemporalCurrentnessPolicy,
     evaluate_effective_currentness,
 )
+from application.economic_reach.exposure import DriverEvent
 from application.observation_intelligence.contracts import MarketRole, XeedObservationContext
 from application.observation_intelligence.coverage import EvidenceCoverageMap
 from application.observation_intelligence.learning import OperationalLearning
@@ -597,6 +598,12 @@ def _merge_opportunity_cognition(
         opportunities,
         key=lambda item: (str(item.get("observedAt", "")), str(item.get("id", ""))),
     )
+    # Spec 059: the garden the snapshot was judged against, what it kept out, and the
+    # exposure it found travel with the snapshot (its reach evidence is a declared
+    # continuity dependency, so a stale garden is re-evaluated, not shown as current).
+    for key in ("economicGarden", "relevanceFiltered", "exposure"):
+        if key in stored_cognition:
+            cognition[key] = deepcopy(stored_cognition[key])
     return cognition
 
 
@@ -827,6 +834,7 @@ class SubscriberEconomicRuntime:
         result: LoopResult,
         coverage: EvidenceCoverageMap,
         registry: SourceRegistry | None = None,
+        drivers: tuple[DriverEvent, ...] = (),
     ) -> bool:
         """Persist a real opportunity-loop result after exact-scope authorization."""
         authorized = self._read_context(authorized_context, xeed_id)
@@ -854,6 +862,7 @@ class SubscriberEconomicRuntime:
             coverage=coverage,
             observations=observations,
             registry=registry,
+            drivers=drivers,
         )
         if projection is None:
             return False
@@ -873,6 +882,7 @@ class SubscriberEconomicRuntime:
         coverage: EvidenceCoverageMap,
         learning: OperationalLearning,
         registry: SourceRegistry | None = None,
+        drivers: tuple[DriverEvent, ...] = (),
     ) -> LoopResult:
         """Authorize and validate the observation seed before dispatching adapters."""
         authorized = self._read_context(authorized_context, xeed_id)
@@ -965,6 +975,7 @@ class SubscriberEconomicRuntime:
             result=result,
             coverage=coverage,
             registry=resolved_registry,
+            drivers=drivers,
         )
         return result
 
