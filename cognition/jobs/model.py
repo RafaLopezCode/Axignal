@@ -25,6 +25,8 @@ class JobKind(StrEnum):
     GAP_ENRICHMENT = "GAP_ENRICHMENT"
     DOCUMENT_SEMANTIC_EXTRACTION = "DOCUMENT_SEMANTIC_EXTRACTION"
     GROUNDED_ANSWER = "GROUNDED_ANSWER"
+    #: A bounded typed decision escalated from a fast semantic judge (spec 062).
+    SEMANTIC_DECISION = "SEMANTIC_DECISION"
 
 
 @dataclass(frozen=True)

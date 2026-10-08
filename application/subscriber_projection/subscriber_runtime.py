@@ -82,6 +82,7 @@ from application.observation_intelligence.loop import (
     run_observation_loop,
 )
 from application.observation_intelligence.registry import SourceRegistry
+from application.observation_intelligence.semantic_screen import DemandScreenPort
 from application.observation_intelligence.strategy import ObservationStrategy
 from application.observation_intelligence.subscriber_projection import (
     SubscriberOpportunityProjection,
@@ -601,7 +602,7 @@ def _merge_opportunity_cognition(
     # Spec 059: the garden the snapshot was judged against, what it kept out, and the
     # exposure it found travel with the snapshot (its reach evidence is a declared
     # continuity dependency, so a stale garden is re-evaluated, not shown as current).
-    for key in ("economicGarden", "relevanceFiltered", "exposure"):
+    for key in ("economicGarden", "relevanceFiltered", "exposure", "semanticLayer"):
         if key in stored_cognition:
             cognition[key] = deepcopy(stored_cognition[key])
     return cognition
@@ -733,6 +734,8 @@ class SubscriberEconomicRuntime:
     code_sha: str
     #: Private continuity recorder (TASK-050 T023); checkpoints follow each new snapshot.
     continuity: ContinuityRecorder | None = None
+    #: Optional semantic demand screen (Spec 062); absent, projection is deterministic only.
+    semantic_screen: DemandScreenPort | None = None
 
     def __post_init__(self) -> None:
         if not self.code_sha.strip():
@@ -863,6 +866,7 @@ class SubscriberEconomicRuntime:
             observations=observations,
             registry=registry,
             drivers=drivers,
+            semantic_screen=self.semantic_screen,
         )
         if projection is None:
             return False

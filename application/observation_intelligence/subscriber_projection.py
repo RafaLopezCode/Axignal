@@ -46,6 +46,11 @@ from application.observation_intelligence.human import (
 )
 from application.observation_intelligence.loop import LoopResult, LoopStep, OpportunityCandidate
 from application.observation_intelligence.registry import SourceRegistry
+from application.observation_intelligence.semantic_screen import (
+    SCREEN_VERSION,
+    DemandScreenPort,
+    screen_summary,
+)
 from application.observation_intelligence.strategy import ObservationStrategy
 from application.xeed_access.organization_reader import AuthorizedXeedOrganization
 from domain.evidence.epistemics import Currentness
@@ -247,6 +252,7 @@ def project_observation_opportunities(
     registry: SourceRegistry | None = None,
     drivers: tuple[DriverEvent, ...] = (),
     temporal_policy: TemporalCurrentnessPolicy = GARDEN_TEMPORAL_POLICY,
+    semantic_screen: DemandScreenPort | None = None,
 ) -> SubscriberOpportunityProjection | None:
     """Build cognition opportunities only from this focus and admitted provenance.
 
@@ -254,7 +260,9 @@ def project_observation_opportunities(
     derived from the same authorized evidence: only events inside a delivery channel's
     reach (or the Organization's own expansion signals) reach the subscriber; the rest
     stay in global memory and are only counted. Drivers become exposure, never
-    opportunities.
+    opportunities. An optional semantic screen (Spec 062) may filter confidently
+    unrelated demand (counted, not deleted), state the delivery mode the gate needs,
+    and order surfaced demand by judged fit; it never creates or upgrades anything.
     """
     if not isinstance(authorized_context, AuthorizedXeedOrganization):
         raise SubscriberOpportunityProjectionError("authorized Observation Focus context required")
@@ -302,6 +310,12 @@ def project_observation_opportunities(
         as_of=output_as_of,
         policy=temporal_policy,
     )
+    screen_run = (
+        semantic_screen.screen(result.candidates, now=output_as_of)
+        if semantic_screen is not None
+        else None
+    )
+    screens = screen_run.screens if screen_run is not None else {}
     filtered: dict[str, int] = {}
     unresolved_shown = 0
     source_rows: list[dict[str, object]] = []
@@ -331,6 +345,11 @@ def project_observation_opportunities(
         ):
             # Unsupported provenance means no subscriber-visible opportunity.
             continue
+        screen = screens.get(candidate.candidate_id)
+        if screen is not None and screen.unrelated:
+            # Codes matched, meaning did not: real demand, not this capability's work.
+            filtered["SEMANTIC_UNRELATED"] = filtered.get("SEMANTIC_UNRELATED", 0) + 1
+            continue
         decision = assess_demand(
             garden,
             DemandEvent(
@@ -338,6 +357,7 @@ def project_observation_opportunities(
                 places=candidate.record.places,
                 capability_ids=candidate.capability_ids,
                 deadline=candidate.record.deadline,
+                required_modes=screen.required_modes if screen is not None else frozenset(),
             ),
             as_of=output_as_of,
         )
@@ -454,6 +474,7 @@ def project_observation_opportunities(
                 "matchBasis": list(candidate.match_basis),
                 "relevance": decision.explanation(),
                 "reachSourceIds": list(garden.evidence_ids),
+                **({"semanticScreen": screen.explanation()} if screen is not None else {}),
             }
         )
         signals.append({"id": candidate.candidate_id, "familyId": "demand"})
@@ -462,6 +483,11 @@ def project_observation_opportunities(
         return None
     source_rows.sort(key=lambda item: str(item["id"]))
     opportunities.sort(key=lambda item: (str(item["observedAt"]), str(item["id"])))
+    if screens:
+        # Presentation order only (stable): judged CORE fit first, then PARTIAL, ADJACENT.
+        opportunities.sort(
+            key=lambda item: screens[str(item["id"])].rank if str(item["id"]) in screens else 9
+        )
     signals.sort(key=lambda item: item["id"])
     payload: dict[str, object] = {
         "asOf": output_as_of.isoformat(),
@@ -470,6 +496,17 @@ def project_observation_opportunities(
         "opportunities": opportunities,
         "economicGarden": garden_summary(garden),
         "relevanceFiltered": dict(sorted(filtered.items())),
+        **(
+            {
+                "semanticLayer": {
+                    "version": SCREEN_VERSION,
+                    "judgments": screen_summary(screens),
+                    "usage": dict(screen_run.usage),
+                }
+            }
+            if screen_run is not None
+            else {}
+        ),
         "exposure": [
             {"eventId": driver.event_id, **exposed.explanation()}
             for driver in drivers
