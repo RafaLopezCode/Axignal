@@ -66,6 +66,7 @@ from application.subscriber_portfolio.models import (
     PortfolioError,
 )
 from application.subscriber_projection.subscriber_runtime import SubscriberEconomicRuntime
+from application.world_demand.index import DemandIndexPort, SliceFeedPort, WorldDemandIngestor
 from application.xeed_access.reader import TrustedRequestContext
 from domain.evidence.epistemics import Currentness
 from domain.identity import OrganizationId, PrincipalId, TenantId, XeedId
@@ -96,6 +97,7 @@ class FirstObservationOverrides:
     fetcher: SiteFetchPort | None = None
     source_ports: Mapping[str, SourceObservationPort] | None = None
     cascade_factory: Callable[[], SemanticCascade | None] | None = None
+    feeds: Mapping[str, SliceFeedPort] | None = None
 
 
 class FocusSeed:
@@ -201,6 +203,8 @@ class RuntimeDemandResearch:
                     if self._ledger is None
                     else SharedFindingsPort(port, self._ledger, clock=self._clock)
                 )
+        indexes = [p for p in self._ports.values() if isinstance(p, DemandIndexPort)]
+        index_before = sum(p.index_hits for p in indexes)
         if target.kind is TargetKind.FOCUS:
             result = self._economic.execute_observation_loop(
                 TrustedRequestContext(PrincipalId(target.principal_id), TenantId(target.tenant_id)),
@@ -231,6 +235,7 @@ class RuntimeDemandResearch:
                 if c.candidate_id not in run.screens or not run.screens[c.candidate_id].unrelated
             ]
         hits = sum(p.hits for p in shared.values() if isinstance(p, SharedFindingsPort))
+        hits += sum(p.index_hits for p in indexes) - index_before
         live = sum(p.live_requests for p in shared.values() if isinstance(p, SharedFindingsPort))
         return DemandOutcome(
             executed=True,
@@ -304,7 +309,9 @@ class FirstObservationRuntime:
         clock: Clock,
         worker: str = "thread",
         daily_jobs: int = 500,
+        ingestor: WorldDemandIngestor | None = None,
     ) -> None:
+        self.ingestor = ingestor
         self.store = store
         self.service = service
         self._portfolio = portfolio
@@ -465,6 +472,13 @@ class FirstObservationRuntime:
                 done += 1
         return done
 
+    def ingest_demanded(self, *, max_slices: int = 10) -> int:
+        """Ingest world demand slices some Focus asked for (off the First Proof path)."""
+        if self.ingestor is None:
+            return 0
+        with self._lock:
+            return len(self.ingestor.run(max_slices=max_slices))
+
     def enqueue_due(self) -> int:
         now = self._clock.now()
         created = 0
@@ -485,6 +499,7 @@ class FirstObservationRuntime:
             try:
                 self.enqueue_due()
                 self.drain()
+                self.ingest_demanded()
             except Exception:  # the next wake retries; jobs keep their leases and attempts
                 continue
 
@@ -541,6 +556,7 @@ def build_first_observation(
     from pipeline.source_acquisition.http_sensor import HttpSourceSensor
     from pipeline.source_acquisition.http_transport import PinnedHttpTransport
     from pipeline.source_acquisition.policy import PublicSourcePolicyGate
+    from pipeline.world_demand.sqlite_store import SqliteWorldDemandIndex
     from tools.runtime.semantic_layer import semantic_cascade_factory_from_env
 
     policy = FirstObservationPolicy()
@@ -557,9 +573,19 @@ def build_first_observation(
             ),
             artifacts=artifacts,
         )
-    ports = overrides.source_ports
-    if ports is None:
-        ports = {"ted-search-v3": TedSearchAdapter(UrllibTedTransport(), clock=clock.now)}
+    live_ted = TedSearchAdapter(UrllibTedTransport(), clock=clock.now)
+    live = overrides.source_ports or {"ted-search-v3": live_ted}
+    feeds = dict(overrides.feeds) if overrides.feeds is not None else {"ted-search-v3": live_ted}
+    index = SqliteWorldDemandIndex(root / "world-demand-index.sqlite3")
+    # Index first (world slices ingested once), the live adapter only for what no
+    # fresh complete slice covers; the uncovered slice is demanded for ingestion.
+    ports: dict[str, SourceObservationPort] = {
+        source_id: DemandIndexPort(index, port, clock=clock.now) if source_id in feeds else port
+        for source_id, port in live.items()
+    }
+    ingestor = WorldDemandIngestor(
+        feeds={k: v for k, v in feeds.items() if k in ports}, store=index, clock=clock.now
+    )
     factory = overrides.cascade_factory or semantic_cascade_factory_from_env(
         values, data_dir=root, token_budget=policy.semantic_tokens
     )
@@ -590,6 +616,7 @@ def build_first_observation(
         clock=clock,
         worker=overrides.worker or values.get(WORKER_KEY, "thread").strip() or "thread",
         daily_jobs=max(0, daily_jobs),
+        ingestor=ingestor,
     )
     runtime.start()
     return runtime

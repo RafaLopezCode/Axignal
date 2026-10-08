@@ -65,10 +65,12 @@ from application.observation_runtime.replay import FindingsLedger, RecordedFindi
 from application.subscriber_continuity.service import ContinuityService
 from application.subscriber_identity.runtime import Clock
 from application.subscriber_projection.subscriber_runtime import SubscriberEconomicRuntime
+from application.world_demand.index import DemandIndexPort, WorldDemandIngestor
 from application.xeed_access.organization_reader import OrganizationReadError
 from application.xeed_access.reader import TrustedRequestContext, XeedReadError
 from domain.identity import PrincipalId, TenantId, XeedId
 from domain.xignal import XignalEpistemicState
+from pipeline.world_demand.sqlite_store import SqliteWorldDemandIndex
 from tools.runtime.first_observation import DerivedReader, first_observation_reader
 from tools.runtime.subscriber_observation import (
     ConfiguredSubscriberObservationPlanReader,
@@ -593,16 +595,25 @@ def main(argv: list[str] | None = None) -> None:
         if stale:
             print(json.dumps({"state": "STALE_MATERIALIZATION", "requests": 0}))
             return
+    live_ted = TedSearchAdapter(UrllibTedTransport(), clock=lambda: datetime.now(UTC))
+    # Spec 063: the world demand index answers covered queries without a request; an
+    # uncovered slice is demanded and ingested once after the tick for every Focus.
+    index = SqliteWorldDemandIndex(root / "world-demand-index.sqlite3")
     summary = run_scheduled_tick(
         root=root,
         code_sha=os.getenv("AXIGNAL_CODE_SHA", "UNKNOWN").strip() or "UNKNOWN",
         clock=clock,
         attention_file=Path(attention_file).expanduser().resolve(),
         enrollment=enrollment,
-        source_ports={
-            "ted-search-v3": TedSearchAdapter(UrllibTedTransport(), clock=lambda: datetime.now(UTC))
-        },
+        source_ports={"ted-search-v3": DemandIndexPort(index, live_ted, clock=clock.now)},
     )
+    if summary["state"] not in {"ERROR", "LEASE_LOST"}:
+        ingested = WorldDemandIngestor(
+            feeds={"ted-search-v3": live_ted}, store=index, clock=clock.now
+        ).run()
+        summary["worldDemandSlices"] = [
+            {"slice": r.slice_key, "pages": r.pages, "complete": r.complete} for r in ingested
+        ]
     print(json.dumps(summary))
     if summary["state"] in {"ERROR", "LEASE_LOST"}:
         sys.exit(1)

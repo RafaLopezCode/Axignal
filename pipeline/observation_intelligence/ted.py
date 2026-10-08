@@ -232,11 +232,18 @@ class TedSearchAdapter:
     def observe(self, action: ObservationAction, source: SourceDescriptor) -> SourceFindings:
         if source.source_id != TED_SOURCE_ID or action.source_id != TED_SOURCE_ID:
             raise ValueError("TED adapter only serves the TED source capability")
+        return self.search(action.query, page=1)
+
+    def search(self, query: QuerySpec, *, page: int, limit: int | None = None) -> SourceFindings:
+        """One page of one expert query (world-slice ingestion pages through it)."""
+        size = self._limit if limit is None else limit
+        if page < 1 or not 1 <= size <= 100:
+            raise ValueError("TED page must be >= 1 and limit between 1 and 100")
         body = {
-            "query": expert_query(action.query),
+            "query": expert_query(query),
             "fields": list(_FIELDS),
-            "page": 1,
-            "limit": self._limit,
+            "page": page,
+            "limit": size,
         }
         started = time.monotonic()
         try:

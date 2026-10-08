@@ -19,6 +19,7 @@ from application.economic_discovery.observation_reuse import ObservationReusePol
 from application.economic_discovery.temporal_currentness import TemporalCurrentnessPolicy
 from application.first_observation.service import FetchedResource
 from application.observation_intelligence.contracts import (
+    QuerySpec,
     SourceCapability,
     SourceDescriptor,
     TaxonomyCode,
@@ -183,12 +184,31 @@ TENDERS = (
 class TedWorld:
     """Stand-in for the TED adapter: the source's own exact criteria, counted."""
 
-    def __init__(self) -> None:
+    def __init__(self, extra: tuple[ProcurementRecord, ...] = ()) -> None:
         self.queries: list[str] = []
+        self.pages: list[tuple[str, int]] = []
+        self.records = TENDERS + extra
+
+    def search(self, query: QuerySpec, *, page: int, limit: int | None = None) -> SourceFindings:
+        """World-slice paging: every notice of the place/kind/window, no codes."""
+        size = limit or 20
+        self.pages.append((query.geographies[0].code, page))
+        found = tuple(r for r in self.records if matches(r, query))
+        chunk = found[(page - 1) * size : page * size]
+        return SourceFindings(
+            source_id="ted-search-v3",
+            retrieved_at=NOW,
+            requests=1,
+            amount_microunits=0,
+            latency_ms=40,
+            records=chunk,
+            total_available=len(found),
+            failure=None,
+        )
 
     def observe(self, action: ObservationAction, source: SourceDescriptor) -> SourceFindings:
         self.queries.append(action.action_id)
-        records = tuple(r for r in TENDERS if matches(r, action.query))
+        records = tuple(r for r in self.records if matches(r, action.query))
         return SourceFindings(
             source_id=source.source_id,
             retrieved_at=NOW,
@@ -263,6 +283,7 @@ def build(
             worker="manual",
             fetcher=world.sites,
             source_ports={"ted-search-v3": world.ted},
+            feeds={"ted-search-v3": world.ted},
             cascade_factory=world.cascade if semantic else (lambda: None),
         ),
     )
