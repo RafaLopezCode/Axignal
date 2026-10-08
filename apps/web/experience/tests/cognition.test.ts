@@ -109,10 +109,10 @@ const html = (id: string, asOf = "2026-10-03") =>
 test("grammar: UNKNOWN is named and never drawn as zero", () => {
   const trend = html("trend-chart");
   assert.match(trend, /data-epistemic="UNKNOWN"/);
-  assert.match(trend, /<td>Desconocido<\/td>/);
+  assert.match(trend, /<td>Unknown<\/td>/);
   assert.doesNotMatch(trend, /<td>0%<\/td>/);
   const topics = html("topic-deltas");
-  assert.match(topics, /class="cg-unknown"[^>]*>Sin medición/);
+  assert.match(topics, /class="cg-unknown"[^>]*>Not measured/);
   const territory = html("territory-matrix");
   assert.equal((territory.match(/data-epistemic="UNKNOWN"/g) ?? []).length >= 2, true);
 });
@@ -120,10 +120,10 @@ test("grammar: UNKNOWN is named and never drawn as zero", () => {
 test("grammar: POTENTIAL stays visually and structurally separate from OBSERVED", () => {
   const network = html("relationship-network");
   const observedList = network.split("cg-edges-potential")[0];
-  assert.doesNotMatch(observedList.split("Potenciales")[1] ?? "", /data-epistemic="POTENTIAL"/);
+  assert.doesNotMatch(observedList.split("Potential:")[1] ?? "", /data-epistemic="POTENTIAL"/);
   assert.match(network, /class="cg-edge-potential"/);
   assert.match(network, /class="cg-edges cg-edges-potential"/);
-  assert.match(network, /Sin fuente: es una hipótesis/);
+  assert.match(network, /No source: this is a hypothesis/);
   const opportunities = html("opportunity-brief");
   assert.doesNotMatch(opportunities, /badge-observed/);
   assert.equal((opportunities.match(/badge-potential/g) ?? []).length, 2);

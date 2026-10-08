@@ -188,7 +188,7 @@ test("requirement matrix keeps potential opportunity context without promoting k
   const html = render(realProjection(), revision, { intent: "how_known" });
   assert.match(html, /data-cognitive-component="requirement-matrix"/);
   assert.match(html, /class="cg-requirements" data-epistemic="POTENTIAL"/);
-  assert.match(html, /La relevancia potencial no confirma una relación comercial/);
+  assert.match(html, /Potential relevance does not confirm a commercial relationship/);
   assert.match(html, /Project stage: Announced/);
   assert.match(html, /Available capacity/);
   assert.doesNotMatch(html, /data-epistemic="OBSERVED"/);
