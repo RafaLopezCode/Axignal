@@ -250,7 +250,7 @@ def project_observation_opportunities(
 ) -> SubscriberOpportunityProjection | None:
     """Build cognition opportunities only from this focus and admitted provenance.
 
-    Every candidate crosses the Economic Relevance Gate (spec 058) against the garden
+    Every candidate crosses the Economic Relevance Gate (Spec 059) against the garden
     derived from the same authorized evidence: only events inside a delivery channel's
     reach (or the Organization's own expansion signals) reach the subscriber; the rest
     stay in global memory and are only counted. Drivers become exposure, never

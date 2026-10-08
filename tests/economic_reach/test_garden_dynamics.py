@@ -1,4 +1,4 @@
-"""The garden over time, against noise, and as a research budget (spec 058)."""
+"""The garden over time, against noise, and as a research budget (Spec 059)."""
 
 from __future__ import annotations
 

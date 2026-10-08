@@ -205,7 +205,7 @@ class ConfiguredSubscriberObservationPlanReader:
             stop_policy=self.stop_policy
             or StopPolicy(sufficient_candidates=3, max_no_gain_streak=2),
         )
-        # Spec 058: no research spend outside the garden of location-bound channels.
+        # Spec 059: no research spend outside the garden of location-bound channels.
         garden = derive_operating_model(
             organization_id=organization_id,
             capabilities=capabilities,

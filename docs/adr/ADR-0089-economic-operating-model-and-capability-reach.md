@@ -2,7 +2,7 @@
 
 - **Status:** Accepted for review (CTO)
 - **Date:** 2026-10-08
-- **Authority:** MASTER §15.1, §15.3, §15.4, §53.6 (reach depends on the capability), §53.7 (typed families, deterministic first, ExplanationTrace); Constitution; ADR-0049, ADR-0072, ADR-0088; spec 058.
+- **Authority:** MASTER §15.1, §15.3, §15.4, §53.6 (reach depends on the capability), §53.7 (typed families, deterministic first, ExplanationTrace); Constitution; ADR-0049, ADR-0072, ADR-0088; Spec 059.
 - **Scope:** the cognitive frontier between "what happens in the world" and "what belongs to this Xeed's economy", before an Opportunity reaches a subscriber.
 
 ## Context

@@ -232,7 +232,7 @@ def corpus_from_reading(
             parts.append(_str(raw.get("whyPotential")))
         relevance = _dict(raw.get("relevance"))
         if relevance.get("scope"):
-            # Spec 058 ExplanationTrace: why this event belongs to this business's garden.
+            # Spec 059 ExplanationTrace: why this event belongs to this business's garden.
             reasons = sorted(
                 {
                     f"{_str(channel.get('capabilityId'))}/{_str(channel.get('mode')) or 'any'}: "

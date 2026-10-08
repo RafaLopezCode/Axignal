@@ -1,4 +1,4 @@
-"""Falsify the garden against business archetypes (spec 058).
+"""Falsify the garden against business archetypes (Spec 059).
 
 Each test is one sentence of the mandate: reach is per delivery channel, operating ≠
 expansion ≠ exposure, UNKNOWN is never FALSE, and the world stays global.

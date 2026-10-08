@@ -1,4 +1,4 @@
-"""Spec 058 end to end through the real subscriber composition.
+"""Spec 059 end to end through the real subscriber composition.
 
 Organization → observed capability and delivery → capability-specific reach → world
 demand (TED) → Economic Relevance Gate → only in-garden demand reaches the subscriber as

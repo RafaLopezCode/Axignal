@@ -1,1 +1,1 @@
-"""Economic Operating Model and capability-specific economic reach (spec 058)."""
+"""Economic Operating Model and capability-specific economic reach (Spec 059)."""

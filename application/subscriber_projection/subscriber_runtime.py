@@ -598,7 +598,7 @@ def _merge_opportunity_cognition(
         opportunities,
         key=lambda item: (str(item.get("observedAt", "")), str(item.get("id", ""))),
     )
-    # Spec 058: the garden the snapshot was judged against, what it kept out, and the
+    # Spec 059: the garden the snapshot was judged against, what it kept out, and the
     # exposure it found travel with the snapshot (its reach evidence is a declared
     # continuity dependency, so a stale garden is re-evaluated, not shown as current).
     for key in ("economicGarden", "relevanceFiltered", "exposure"):

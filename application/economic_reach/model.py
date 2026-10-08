@@ -1,4 +1,4 @@
-"""Economic Operating Model: the evidence-derived "garden" of one Organization (spec 058).
+"""Economic Operating Model: the evidence-derived "garden" of one Organization (Spec 059).
 
 The garden is not an Organization property and not a profile anyone edits. It is a
 temporal projection of public evidence about how each capability is delivered:
