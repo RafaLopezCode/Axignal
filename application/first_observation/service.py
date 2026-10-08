@@ -44,11 +44,13 @@ from application.first_observation.geography import area_jurisdiction
 from application.first_observation.policy import FirstObservationPolicy, next_due
 from application.first_observation.research import ResearchPlan, plan_research
 from application.first_observation.site import (
+    READER_VERSION,
     PageReading,
     RobotsReading,
     rank_information_links,
     read_page,
 )
+from application.first_observation.vocabularies import SCHEMA_TYPE_SECTIONS
 from application.observation_intelligence.contracts import (
     CapabilityHypothesis,
     MarketRole,
@@ -374,6 +376,7 @@ class FirstObservationService:
         capabilities = to_capabilities(findings, observation_ids, pages)
         discoveries: list[Discovery] = [*self._site_discoveries(reading, semantic)]
         discoveries += [self._activity(f) for f in findings]
+        discoveries += self._web_representation(reading, findings)
         discoveries += identity
         demand = self._demand(
             target, subject, capabilities, scopes, pages, observation_ids, now, ledger,
@@ -538,6 +541,89 @@ class FirstObservationService:
                         {"method": "SEMANTIC_JUDGMENT", "basis": "TEXT_MENTION"},
                     )
                 )
+        return out
+
+    @staticmethod
+    def _web_representation(
+        reading: SiteReading, findings: Sequence[ActivityFinding]
+    ) -> list[Discovery]:
+        """Public web representation as measured by this instrument: checks, not a score.
+
+        Observed with zero extra requests from robots.txt and the pages already read.
+        A gap is a POTENTIAL derived pattern (evidence of activity + an absent machine-
+        readable declaration), never a claim about rankings or about cause.
+        """
+
+        home = reading.pages[0]
+        types = {t for page in reading.pages for t in page.schema_types}
+        organization_declared = bool(
+            types & {"Organization", "LocalBusiness", "Corporation"}
+            or types & set(SCHEMA_TYPE_SECTIONS)
+            or any(page.names or page.legal_names for page in reading.pages)
+        )
+        offer_declared = bool(
+            types & {"Service", "Product", "Offer", "SoftwareApplication"}
+            or any(page.services for page in reading.pages)
+        )
+        robots = reading.robots
+        noindex = "noindex" in (home.meta_robots or "").lower()
+        checks: dict[str, object] = {
+            "robotsTxtPublished": robots is not None and robots.text is not None,
+            "sitemapsDeclared": 0 if robots is None else len(robots.sitemaps()),
+            "canonical": home.canonical,
+            "homepageNoindex": noindex,
+            "titlePresent": bool(home.title),
+            "descriptionPresent": bool(home.description),
+            "schemaTypes": sorted(types)[:24],
+            "organizationDeclared": organization_declared,
+            "offerDeclared": offer_declared,
+            "alternateLanguages": len(home.alternate_languages),
+        }
+        out = [
+            Discovery(
+                DiscoveryKind.WEB_REPRESENTATION,
+                "PUBLIC_WEB_REPRESENTATION_MEASURED",
+                "Public web representation checks",
+                XignalEpistemicState.OBSERVED.value,
+                home.url,
+                None,
+                home.observed_at,
+                {
+                    "instrument": READER_VERSION,
+                    "conditions": "robots.txt plus pages read by this First Observation",
+                    "checks": checks,
+                    "limitation": "Own website only; not search results, rankings or "
+                    "generative answers.",
+                },
+            )
+        ]
+
+        def gap(code: str, statement: str, why: str) -> Discovery:
+            return Discovery(
+                DiscoveryKind.REPRESENTATION_GAP, code, statement,
+                XignalEpistemicState.POTENTIAL.value, home.url, None, home.observed_at,
+                {"whyItMatters": why, "basis": ["ACTIVITY", "WEB_REPRESENTATION"],
+                 "notCausal": True},
+            )  # fmt: skip
+
+        if noindex:
+            out.append(
+                gap(
+                    "HOMEPAGE_NOINDEX",
+                    "The homepage asks search engines not to index it.",
+                    "Search surfaces may not represent this site at all while it stays so.",
+                )
+            )
+        if findings and not offer_declared:
+            out.append(
+                gap(
+                    "OFFER_NOT_MACHINE_READABLE",
+                    "Its activity is evidenced in prose, but no service or product is "
+                    "declared as structured data.",
+                    "Search and generative surfaces that rely on structured data may not "
+                    "connect this organization to what it offers. Not a measured ranking.",
+                )
+            )
         return out
 
     @staticmethod

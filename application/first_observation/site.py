@@ -97,6 +97,8 @@ class PageReading:
     services: tuple[str, ...]
     text: str
     links: tuple[tuple[str, str], ...]
+    canonical: str | None = None
+    meta_robots: str | None = None
 
     def readable(self) -> str:
         """Citable content: title, description, JSON-LD declarations, then page text.
@@ -137,6 +139,8 @@ class PageReading:
             "services": list(self.services),
             "text": self.text,
             "links": [list(link) for link in self.links],
+            "canonical": self.canonical,
+            "metaRobots": self.meta_robots,
         }
 
     @staticmethod
@@ -160,6 +164,8 @@ class PageReading:
             services=tuple(str(x) for x in raw["services"]),
             text=str(raw["text"]),
             links=tuple((str(u), str(t)) for u, t in raw["links"]),
+            canonical=None if raw.get("canonical") is None else str(raw["canonical"]),
+            meta_robots=None if raw.get("metaRobots") is None else str(raw["metaRobots"]),
         )
 
 
@@ -176,6 +182,7 @@ class _PageParser(HTMLParser):
         self.meta: dict[str, str] = {}
         self.language: str | None = None
         self.alternates: list[str] = []
+        self.canonical: str | None = None
         self.jsonld: list[str] = []
         self.jsonld_chunks: list[str] | None = None
         self.anchor: tuple[str, list[str]] | None = None
@@ -201,6 +208,8 @@ class _PageParser(HTMLParser):
             and values.get("hreflang")
         ):
             self.alternates.append(values["hreflang"].strip()[:16])
+        if tag == "link" and values.get("rel", "").lower() == "canonical" and values.get("href"):
+            self.canonical = self.canonical or values["href"].strip()[:500]
         if tag == "script" and values.get("type", "").lower() == "application/ld+json":
             self.jsonld_chunks = []
         if tag == "title":
@@ -409,6 +418,8 @@ def read_page(
         services=_unique(data["services"]),
         text=text,
         links=_unique(links, MAX_LINKS),
+        canonical=None if parser.canonical is None else urljoin(url, parser.canonical),
+        meta_robots=parser.meta.get("robots"),
     )
 
 

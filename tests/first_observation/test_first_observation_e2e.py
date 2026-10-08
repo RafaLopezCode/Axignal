@@ -323,3 +323,23 @@ def test_focus_first_observation_hands_over_to_reobservation_without_an_operator
         "solar-pv-installation"
     }
     assert any(a.source_id == "ted-search-v3" for a in plan.strategy.actions)
+
+
+def test_public_web_representation_is_measured_without_extra_requests(tmp_path: Path) -> None:
+    world = World()
+    facade = build(tmp_path, world)
+    solar, _ = _attend(facade, tmp_path, "subject:web-solar", SOLAR_ES)
+    saas, _ = _attend(facade, tmp_path, "subject:web-saas", SAAS_IE)
+    runtime(facade).drain()
+    solar_view = _view(facade, solar, _pending_id(facade, solar))
+    saas_view = _view(facade, saas, _pending_id(facade, saas))
+    (measured,) = discoveries(solar_view, "WEB_REPRESENTATION")
+    checks = measured["detail"]["checks"]
+    assert measured["detail"]["instrument"] == "site-reading.v1"
+    assert (checks["organizationDeclared"], checks["offerDeclared"]) == (True, False)
+    assert "score" not in str(measured).lower()
+    (gap,) = discoveries(solar_view, "REPRESENTATION_GAP")
+    assert gap["code"] == "OFFER_NOT_MACHINE_READABLE" and gap["epistemicState"] == "POTENTIAL"
+    assert gap["detail"]["notCausal"] is True
+    assert discoveries(saas_view, "REPRESENTATION_GAP") == []  # SoftwareApplication declared
+    assert _ledger(solar_view, "httpRequests") == 2  # robots + homepage, nothing added
