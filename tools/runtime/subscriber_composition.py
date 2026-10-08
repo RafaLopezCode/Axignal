@@ -36,10 +36,12 @@ from application.subscriber_identity.runtime import (
 )
 from application.subscriber_portfolio.models import (
     AddOrganizationRequest,
+    AddStatus,
     CapacityCheckoutRequest,
     CheckoutRequestResult,
     EntitlementSnapshot,
     PortfolioError,
+    PortfolioFailure,
     PurchaseScopeAuthorization,
 )
 from application.subscriber_portfolio.service import (
@@ -63,6 +65,11 @@ from pipeline.source_acquisition import (
     ContentAddressedArtifactStore,
 )
 from pipeline.subscriber_access.sqlite_store import SqlitePilotAccessStore
+from tools.runtime.first_observation import (
+    FirstObservationOverrides,
+    FirstObservationRuntime,
+    build_first_observation,
+)
 from tools.runtime.semantic_layer import semantic_screen_from_env
 from tools.runtime.subscriber_axent import build_subscriber_axent
 from tools.runtime.subscriber_checkout import (
@@ -344,6 +351,7 @@ class _ObservationTrigger:
         self._economic: SubscriberEconomicRuntime | None = None
         self._plans = plans
         self._observation_plans = observation_plans
+        self.first_observation: FirstObservationRuntime | None = None
         self.last_state_by_focus: dict[str, str] = {}
 
     def bind(
@@ -363,6 +371,11 @@ class _ObservationTrigger:
         focus_id: XeedId,
         idempotency_key: str,
     ) -> str:
+        if self.first_observation is not None:
+            # Spec 063: the request only enqueues; the bounded job runs off the request.
+            state = self.first_observation.attend_focus(context, focus_id, idempotency_key)
+            self.last_state_by_focus[str(focus_id)] = state
+            return state
         del idempotency_key
         # Reauthorize before retrieving the private plan or canonical Organization.
         if self._portfolio is None or self._economic is None:
@@ -479,6 +492,12 @@ class _SubscriberWorkflow(SubscriberWorkflowPort):
             }
             for item in pending
         )
+        observing = self._trigger.first_observation
+        if observing is not None:
+            for item in organizations:
+                summary = observing.summary(context, str(item["focusId"]))
+                if summary is not None:
+                    item["observation"] = summary
         return {
             "state": "success",
             "capacity": snapshot.capacity,
@@ -497,11 +516,22 @@ class _SubscriberWorkflow(SubscriberWorkflowPort):
         focus_id = XeedId(str(command["focusId"])) if "focusId" in command else None
         try:
             if action == "add":
-                add_result = self._portfolio.add(
-                    context,
-                    AddOrganizationRequest(request_ref, str(command["locator"])),
-                )
+                observing = self._trigger.first_observation
+                if observing is not None:
+                    observing.remember_locator(str(command["locator"]))
+                try:
+                    add_result = self._portfolio.add(
+                        context,
+                        AddOrganizationRequest(request_ref, str(command["locator"])),
+                    )
+                finally:
+                    if observing is not None:
+                        observing.remember_locator(None)
                 response: dict[str, object] = {"state": add_result.status.value}
+                if observing is not None and add_result.status is AddStatus.IDENTITY_PENDING:
+                    response["observationState"] = observing.attend_pending(
+                        context, request_ref=request_ref
+                    )
                 if add_result.entry is not None:
                     response["focusId"] = str(add_result.entry.focus_id)
                     response["organizationId"] = str(add_result.entry.xeed.organization_id)
@@ -518,6 +548,11 @@ class _SubscriberWorkflow(SubscriberWorkflowPort):
                 if action == "retry_pending":
                     retry_result = self._portfolio.retry_pending(context, str(focus_id))
                     body: dict[str, object] = {"state": retry_result.status.value}
+                    observing = self._trigger.first_observation
+                    if observing is not None and retry_result.status is AddStatus.IDENTITY_PENDING:
+                        body["observationState"] = observing.attend_pending_id(
+                            context, str(focus_id)
+                        )
                     if retry_result.entry is not None:
                         body["focusId"] = str(retry_result.entry.focus_id)
                         body["organizationId"] = str(retry_result.entry.xeed.organization_id)
@@ -536,12 +571,19 @@ class _SubscriberWorkflow(SubscriberWorkflowPort):
                 }
             if action == "replace":
                 assert focus_id is not None
-                replace_result = self._portfolio.replace(
-                    context,
-                    focus_id,
-                    AddOrganizationRequest(request_ref, str(command["locator"])),
-                    request_ref,
-                )
+                observing = self._trigger.first_observation
+                if observing is not None:
+                    observing.remember_locator(str(command["locator"]))
+                try:
+                    replace_result = self._portfolio.replace(
+                        context,
+                        focus_id,
+                        AddOrganizationRequest(request_ref, str(command["locator"])),
+                        request_ref,
+                    )
+                finally:
+                    if observing is not None:
+                        observing.remember_locator(None)
                 return {
                     "state": replace_result.entry.status.value,
                     "focusId": str(replace_result.entry.focus_id),
@@ -631,14 +673,36 @@ class _SubscriberWorkflow(SubscriberWorkflowPort):
 
 
 class _SubscriberOutputs(SubscriberOutputPort):
-    def __init__(self, workflow: _SubscriberWorkflow, economic: SubscriberEconomicRuntime):
+    def __init__(
+        self,
+        workflow: _SubscriberWorkflow,
+        economic: SubscriberEconomicRuntime,
+        portfolio: SubscriberPortfolioRuntime,
+        first_observation: FirstObservationRuntime | None = None,
+    ):
         self._workflow = workflow
         self._economic = economic
+        self._portfolio = portfolio
+        self._first_observation = first_observation
 
     def output(
         self, context: TrustedSubscriberContext, focus_id: XeedId, as_of: datetime
     ) -> dict[str, object]:
-        return self._economic.read(context, focus_id, as_of).to_wire()
+        observing = self._first_observation
+        if observing is not None and str(focus_id).startswith("pending_"):
+            # Private pending attention, re-authorized through the portfolio service.
+            pending = {p.pending_id for p in self._portfolio.list_pending(context)}
+            if str(focus_id) not in pending:
+                raise PortfolioError(PortfolioFailure.FOCUS_NOT_FOUND)
+            return {
+                "state": "success",
+                "kind": "PENDING_ATTENTION",
+                "firstObservation": observing.view(context, str(focus_id)),
+            }
+        wire = self._economic.read(context, focus_id, as_of).to_wire()
+        if observing is not None:
+            wire["firstObservation"] = observing.view(context, str(focus_id))
+        return wire
 
 
 def _oidc_provider_configs(
@@ -716,6 +780,7 @@ def build_subscriber_facade(
     clock: Clock | None = None,
     axent_reasoner: GroundedReasoner | None = None,
     identity_source: RegistryIdentitySource | None = None,
+    first_observation_overrides: FirstObservationOverrides | None = None,
 ) -> SubscriberHttpFacade:
     """Compose real durable subscriber services from root-authorized inputs.
 
@@ -855,6 +920,19 @@ def build_subscriber_facade(
             )
     observation_trigger.bind(portfolio, economic)
     observation_trigger.bind_observation_plans(resolved_observation_plans)
+    # Spec 063 / ADR-0091: off unless enabled; attention then starts a durable job.
+    first_observation = build_first_observation(
+        settings.values,
+        root,
+        economic=economic,
+        portfolio=portfolio,
+        entitlements=entitlements,
+        websites=organizations,
+        observation_memory=observation_memory,
+        clock=effective_clock,
+        overrides=first_observation_overrides,
+    )
+    observation_trigger.first_observation = first_observation
     workflow = _SubscriberWorkflow(
         settings=settings,
         clock=effective_clock,
@@ -892,7 +970,7 @@ def build_subscriber_facade(
         settings=settings,
         identity=identity,
         workflow=workflow,
-        outputs=_SubscriberOutputs(workflow, economic),
+        outputs=_SubscriberOutputs(workflow, economic, portfolio, first_observation),
         billing_webhook=None if checkout is None else _BillingWebhookAdapter(checkout),
         pilot=None if pilot_access is None else _PilotHttpAdapter(pilot_access, effective_clock),
         mcp=mcp_consent,
