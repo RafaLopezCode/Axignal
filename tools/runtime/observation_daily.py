@@ -69,6 +69,7 @@ from application.xeed_access.organization_reader import OrganizationReadError
 from application.xeed_access.reader import TrustedRequestContext, XeedReadError
 from domain.identity import PrincipalId, TenantId, XeedId
 from domain.xignal import XignalEpistemicState
+from tools.runtime.first_observation import DerivedReader, first_observation_reader
 from tools.runtime.subscriber_observation import (
     ConfiguredSubscriberObservationPlanReader,
     SubscriberObservationPlanConfigurationError,
@@ -171,6 +172,7 @@ def replay_plans(
     clock: Clock,
     attention_file: Path,
     ledger: FindingsLedger,
+    derived_for: DerivedReader | None = None,
 ) -> ConfiguredSubscriberObservationPlanReader:
     """The canonical plan reader, answering its strategy from the runtime's real retrievals."""
 
@@ -180,6 +182,7 @@ def replay_plans(
         clock=clock,
         attention=load_observation_attention(attention_file),
         adapters_for=lambda strategy: {a.source_id: port for a in strategy.actions},
+        derived_for=derived_for,
         # Replay is free: every recorded answer is projected, none cut by a budget stop.
         stop_policy=StopPolicy(sufficient_candidates=10**6, max_no_gain_streak=10**6),
     )
@@ -308,10 +311,11 @@ def run_once(
     research_ledger: ResearchLedger | None = None,
     research_access: Callable[[TrustedRequestContext, XeedId, datetime], bool] | None = None,
     research_shared: SharedObservationWorkMemory | None = None,
+    derived_for: DerivedReader | None = None,
 ) -> tuple[TickReport, SubscriberBrainRecomputation]:
     """One daily tick wired to the real subscriber Brain."""
 
-    plans = replay_plans(economic, clock, attention_file, store)
+    plans = replay_plans(economic, clock, attention_file, store, derived_for)
     now = clock.now()
     if research_access is not None:
         enrollment = tuple(e for e in enrollment if research_access(e.context, e.focus_id, now))
@@ -459,6 +463,7 @@ def run_scheduled_tick(
             attention_file=attention_file,
             enrollment=enrollment,
             source_ports=source_ports,
+            derived_for=first_observation_reader(root),
             research_ledger=SqliteResearchRequestLedger(
                 root / "axent-research.sqlite3", runtime_path=root / "observation-runtime.sqlite3"
             ),

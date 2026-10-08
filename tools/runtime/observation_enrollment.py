@@ -47,6 +47,7 @@ from pipeline.source_acquisition import (
 from pipeline.subscriber_access.sqlite_store import SqlitePilotAccessStore
 from pipeline.subscriber_identity.sqlite_store import SqliteSubscriberIdentityStore
 from pipeline.subscriber_portfolio.sqlite_store import SqliteSubscriberPortfolioStore
+from tools.runtime.first_observation import first_observation_reader
 from tools.runtime.observation_daily import (
     SUBSCRIBER_REUSE_POLICY,
     SUBSCRIBER_TEMPORAL_POLICY,
@@ -173,6 +174,13 @@ class SubscriberObservationAuthority:
             temporal_policy=SUBSCRIBER_TEMPORAL_POLICY,
         )
         return str(authorized.organization.id), history
+
+    def first_observation(
+        self, context: TrustedRequestContext, focus: XeedId
+    ) -> Mapping[str, object] | None:
+        """The Focus's stored First Proof (spec 063), read-only; None without a store."""
+        reader = first_observation_reader(self.root)
+        return None if reader is None else reader(context, focus)
 
     def allows(self, context: TrustedRequestContext, focus: XeedId, now: datetime) -> bool:
         """Fresh authorization and same deterministic capacity selection; no session."""

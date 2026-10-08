@@ -13,6 +13,7 @@ from html.parser import HTMLParser
 from typing import Protocol
 
 from application.economic_discovery.observation_memory import GovernedObservation
+from application.first_observation.derived import derived_capabilities, derived_scopes
 from application.observation_intelligence import (
     EvidenceCoverageMap,
     MarketRole,
@@ -226,6 +227,12 @@ def derive_observation(
                     observed_at=source.record.observed_at,
                 )
                 candidate_scopes = explicit_public_scopes(source)
+                # Spec 063: a Focus's First Observation supplies open capabilities and
+                # POTENTIAL attention scopes when the narrow explicit bootstrap has none.
+                reader = getattr(authority, "first_observation", None)
+                derived = None if reader is None else reader(context, focus.focus_id)
+                capabilities = capabilities or derived_capabilities(derived)
+                candidate_scopes = candidate_scopes or derived_scopes(derived)
                 if not capabilities:
                     reasons["CAPABILITY_UNKNOWN"] += 1
                 elif not candidate_scopes:

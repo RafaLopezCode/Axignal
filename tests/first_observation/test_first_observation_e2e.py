@@ -289,3 +289,37 @@ def test_disabled_first_observation_keeps_todays_behaviour(tmp_path: Path) -> No
     assert runtime(facade) is None and world.sites.requests == []
     assert not (tmp_path / "first-observation.sqlite3").exists()
     assert "observation" not in _portfolio(facade, token)[0]
+
+
+def test_focus_first_observation_hands_over_to_reobservation_without_an_operator_file(
+    tmp_path: Path,
+) -> None:
+    from application.xeed_access.reader import TrustedRequestContext
+    from domain.identity import XeedId
+    from tools.runtime.first_observation import first_observation_reader
+    from tools.runtime.subscriber_observation import ConfiguredSubscriberObservationPlanReader
+
+    artifacts = ContentAddressedArtifactStore(tmp_path / "artifacts")
+    registry = ControlledRegistry(
+        [entity(artifacts, legal_name="Solartec Energía SL", lei_value=SOLARTEC, websites=(KNOWN,))]
+    )
+    world = World()
+    facade = build(tmp_path, world, identity_source=registry)
+    token, added = _attend(facade, tmp_path, "subject:handover", KNOWN)
+    runtime(facade).drain()
+    context = facade.identity.authenticate(token)
+    reader = ConfiguredSubscriberObservationPlanReader(
+        economic=facade.outputs._economic,
+        clock=facade.workflow._clock,
+        attention=(),  # no operator file entry at all
+        derived_for=first_observation_reader(tmp_path),
+    )
+    plan = reader.observation_plan_for(
+        TrustedRequestContext(context.principal_id, context.tenant_id), XeedId(added["focusId"])
+    )
+    assert plan is not None
+    assert [m.geography.code for m in plan.observation_context.markets] == ["EU/ES"]
+    assert {c.capability_id for c in plan.observation_context.capabilities} == {
+        "solar-pv-installation"
+    }
+    assert any(a.source_id == "ted-search-v3" for a in plan.strategy.actions)

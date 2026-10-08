@@ -609,3 +609,15 @@ def main(argv: list[str] | None = None) -> None:
 
 if __name__ == "__main__":
     main()
+
+
+DerivedReader = Callable[[TrustedRequestContext, XeedId], Mapping[str, Any] | None]
+
+
+def first_observation_reader(root: Path) -> DerivedReader | None:
+    """A Focus's stored First Proof for the autonomous runtime, or None without a store."""
+    database = root / "first-observation.sqlite3"
+    if not database.is_file():
+        return None
+    store = SqliteFirstObservationStore(database)
+    return lambda context, focus: store.proof(str(context.tenant_id), str(focus))
