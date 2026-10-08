@@ -390,6 +390,7 @@ def run_daily_tick(
         dirty={
             (item.xeed_id, item.family.value): (item.trigger, set(item.evidence_keys))
             for item in store.pending_recompute()
+            if item.xeed_id in xeeds
         },
     )
     changed_leads: dict[str, ResearchLead] = {}

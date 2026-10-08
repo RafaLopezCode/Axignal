@@ -13,11 +13,16 @@ _PREFIX = "cas:sha256:"
 
 
 class ContentAddressedArtifactStore:
-    def __init__(self, root: str | Path) -> None:
+    def __init__(self, root: str | Path, *, read_only: bool = False) -> None:
         self._root = Path(root)
+        self._read_only = read_only
+        if read_only:
+            return
         self._root.mkdir(parents=True, exist_ok=True)
 
     def put_bytes(self, payload: bytes) -> str:
+        if self._read_only:
+            raise PermissionError("read-only artifact store")
         digest = hashlib.sha256(payload).hexdigest()
         target = self._root / digest[:2] / digest
         target.parent.mkdir(parents=True, exist_ok=True)

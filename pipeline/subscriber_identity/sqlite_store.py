@@ -23,13 +23,20 @@ from domain.tenancy.model import Principal
 class SqliteSubscriberIdentityStore:
     """Single-host durable identity store; never persists raw bearer cookies."""
 
-    def __init__(self, database_path: str | Path) -> None:
+    def __init__(self, database_path: str | Path, *, read_only: bool = False) -> None:
         self.path = Path(database_path)
+        self._read_only = read_only
+        if read_only:
+            return
         self.path.parent.mkdir(parents=True, exist_ok=True)
         self._initialize()
 
     def _connect(self) -> sqlite3.Connection:
-        connection = sqlite3.connect(self.path, timeout=10)
+        connection = sqlite3.connect(
+            f"{self.path.resolve().as_uri()}?mode=ro" if self._read_only else self.path,
+            uri=self._read_only,
+            timeout=10,
+        )
         connection.row_factory = sqlite3.Row
         connection.execute("PRAGMA foreign_keys = ON")
         connection.execute("PRAGMA busy_timeout = 10000")
@@ -175,6 +182,20 @@ class SqliteSubscriberIdentityStore:
                 (principal_id,),
             ).fetchone()
         return None if row is None else Principal(PrincipalId(str(row["principal_id"])))
+
+    def observation_contexts(self) -> tuple[RegisteredSubscriber, ...]:
+        """Identity-backed current members; never session/token/external identity data."""
+        with self._connect() as connection:
+            rows = connection.execute(
+                """SELECT DISTINCT b.principal_id, b.tenant_id FROM subscriber_identity_bindings b
+                JOIN subscriber_principals p USING(principal_id)
+                JOIN subscriber_tenants t USING(tenant_id)
+                JOIN subscriber_memberships m USING(principal_id, tenant_id)
+                WHERE m.revoked_at IS NULL ORDER BY b.tenant_id, b.principal_id LIMIT 1001"""
+            ).fetchall()
+        if len(rows) > 1000:
+            raise ValueError("observation authority bound exceeded")
+        return tuple(self._subscriber(row) for row in rows)
 
     def has_membership(self, principal_id: PrincipalId, tenant_id: TenantId) -> bool:
         with self._connect() as connection:
