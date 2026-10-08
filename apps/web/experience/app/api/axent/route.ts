@@ -234,8 +234,8 @@ export async function POST(request: Request) {
       t("Ábrela para ver lo observado y lo que aún no se sabe.", "Open it to see what has been observed and what is still unknown.")
     : !supported
     ? t(
-        "En esta demo puedo explicar el contexto seleccionado, sus límites y su evidencia. Para una investigación nueva haría falta un proveedor y herramientas autorizados.",
-        "In this demo I can explain the selected context, its limits and evidence. New research would require an authorized provider and tools.",
+        "En este ejemplo puedo explicar el contexto seleccionado, sus límites y su evidencia, pero no investigar algo nuevo.",
+        "In this example I can explain the selected context, its limits and evidence, but not research something new.",
       )
     : signal
       ? sourceIntent

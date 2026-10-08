@@ -2,7 +2,8 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { ArrowUpRight, Menu, ArrowRight } from "lucide-react";
+import { Menu, ArrowRight } from "lucide-react";
+import { funnelCta, track } from "@/lib/funnel-events";
 import { useLocale } from "@/lib/locale";
 import { locales, type Locale } from "@/lib/languages";
 import { useRouter } from "next/navigation";
@@ -37,16 +38,21 @@ export function PublicHeader({ landing = false, localeRoutes }: { landing?: bool
   const selectLink = (href: string) => {
     if (href.includes("#")) setHash(href.slice(href.indexOf("#")));
   };
+  // The header follows the visitor's questions, not the architecture:
+  // what is it → show me → what does it cost → learn more. Contact, trust and data
+  // rights live in the footer and the menu, where people look for them.
   const links = [
-    {
-      href: landing ? "#start" : "/#start",
-      name: t("Cómo funciona", "How it works"),
-    },
-    { href: landing ? "#subscription" : "/#subscription", name: "Pricing" },
+    { href: landing ? "#how" : "/#how", name: t("Cómo funciona", "How it works") },
+    { href: "/panorama", name: t("Ejemplo", "Example") },
+    { href: landing ? "#pricing" : "/#pricing", name: t("Precio", "Pricing") },
     { href: localeRoutes?.find((route) => route.locale === locale)?.href ?? "/knowledge", name: "Knowledge" },
-    { href: "/contact", name: t("Contacto", "Contact") },
-    { href: "/policies", name: t("Confianza", "Trust") },
   ];
+  const secondary = [
+    { href: "/contact", name: t("Contacto", "Contact") },
+    { href: "/policies", name: t("Confianza y políticas", "Trust and policies") },
+    { href: "/gdpr", name: t("Tus datos y derechos", "Your data and rights") },
+  ];
+  const languages = localeRoutes ? <LocaleRouteSelector routes={localeRoutes} locale={locale} /> : <LocaleToggle />;
   return (
     <>
       <header className="landing-header public-header">
@@ -64,10 +70,21 @@ export function PublicHeader({ landing = false, localeRoutes }: { landing?: bool
           ))}
         </nav>
         <div className="header-actions">
-          {localeRoutes ? <LocaleRouteSelector routes={localeRoutes} locale={locale} /> : <LocaleToggle />}
-          <Link className="public-access-link" href="/login">
+          <span className="header-languages">{languages}</span>
+          <Link
+            className="public-login-link"
+            href="/login"
+            onClick={() => track({ kind: "CTA_ACTIVATED", surface: "landing", cta: funnelCta.headerLogin })}
+          >
             {t("Acceder", "Sign in")}
-            <ArrowUpRight size={15} />
+          </Link>
+          <Link
+            className="public-access-link"
+            href="/signup"
+            onClick={() => track({ kind: "CTA_ACTIVATED", surface: "landing", cta: funnelCta.headerStart })}
+          >
+            {t("Empezar", "Get started")}
+            <ArrowRight size={15} />
           </Link>
           <button
             className="icon-button public-menu-button"
@@ -85,7 +102,7 @@ export function PublicHeader({ landing = false, localeRoutes }: { landing?: bool
           className="public-menu"
         >
           <nav aria-label={t("Navegación móvil", "Mobile navigation")}>
-            {links.map((link) => (
+            {[...links, ...secondary].map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
@@ -99,19 +116,12 @@ export function PublicHeader({ landing = false, localeRoutes }: { landing?: bool
                 <ArrowRight size={18} />
               </Link>
             ))}
-            <Link
-              href="/gdpr"
-              aria-current={path === "/gdpr" ? "page" : undefined}
-              onClick={() => setMenu(false)}
-            >
-              {t("Tus datos y derechos", "Your data and rights")}
-              <ArrowRight size={18} />
-            </Link>
-            <Link href="/panorama" onClick={() => setMenu(false)}>
-              {t("Explorar la demo", "Explore the demo")}
+            <Link href="/login" onClick={() => setMenu(false)}>
+              {t("Acceder", "Sign in")}
               <ArrowRight size={18} />
             </Link>
           </nav>
+          <div className="public-menu-languages">{languages}</div>
         </Dialog>
       )}
     </>

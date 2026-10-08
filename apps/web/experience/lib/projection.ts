@@ -101,8 +101,12 @@ export const organizations = [
     id: "norte",
     name: "Norte Renovable",
     sector: c(
-      "Rehabilitación energética · ejemplo ficticio",
-      "Energy renovation · fictional example",
+      "Eficiencia energética de edificios · ejemplo ficticio",
+      "Building energy efficiency · fictional example",
+    ),
+    does: c(
+      "Reforma edificios para que gasten menos energía: aislamiento, ventanas y climatización. Trabaja en España.",
+      "Retrofits buildings so they use less energy: insulation, windows and heating. It works in Spain.",
     ),
     focusId: "focus-norte",
     focusSince: "2026-07-01",
@@ -114,6 +118,10 @@ export const organizations = [
       "Materiales recuperados · ejemplo ficticio",
       "Recovered materials · fictional example",
     ),
+    does: c(
+      "Recupera materiales de construcción y los devuelve al mercado.",
+      "Recovers construction materials and returns them to the market.",
+    ),
     focusId: "focus-atlas",
     focusSince: "2026-09-01",
   },
@@ -121,6 +129,7 @@ export const organizations = [
     id: "empty",
     name: "Nueva observación",
     sector: c("Sin organización seleccionada", "No organization selected"),
+    does: c("Sin organización seleccionada.", "No organization selected."),
     focusId: null,
     focusSince: null,
   },
@@ -162,8 +171,8 @@ export const evidence: Evidence[] = [
   {
     id: "capabilities",
     title: c(
-      "Una capacidad declarada y documentada",
-      "A declared, documented capability",
+      "Ficha técnica de Norte Renovable",
+      "Norte Renovable's technical sheet",
     ),
     source: c(
       "Ficha técnica pública · fuente ilustrativa",
@@ -172,8 +181,8 @@ export const evidence: Evidence[] = [
     publishedAt: "2026-06-24",
     observedAt: "2026-07-01",
     body: c(
-      "La ficha de ejemplo describe rehabilitación térmica y coordinación técnica de edificios. No acredita contratos, solvencia ni capacidad disponible.",
-      "The example sheet describes thermal renovation and technical building coordination. It does not establish contracts, solvency or available capacity.",
+      "La ficha de ejemplo describe aislamiento térmico y reformas energéticas de edificios. No acredita contratos, solvencia ni capacidad disponible.",
+      "The example sheet describes thermal insulation and energy retrofits of buildings. It does not establish contracts, solvency or available capacity.",
     ),
     basis: c(
       "Declaración explícita del documento; alcance limitado a la capacidad descrita.",
@@ -187,8 +196,8 @@ export const evidence: Evidence[] = [
   {
     id: "program",
     title: c(
-      "Un programa abre un contexto de demanda",
-      "A programme opens a demand context",
+      "Programa público de ayudas para que los edificios gasten menos energía",
+      "Public grant programme to cut energy use in buildings",
     ),
     source: c(
       "Anuncio de programa · fuente ilustrativa",
@@ -197,8 +206,8 @@ export const evidence: Evidence[] = [
     publishedAt: "2026-08-28",
     observedAt: "2026-09-01",
     body: c(
-      "El anuncio ficticio contempla actuaciones de rehabilitación energética en edificios. Su calendario y requisitos crean un contexto de investigación; no una relación comercial.",
-      "The fictional announcement concerns energy renovation of buildings. Its schedule and requirements create research context, not a commercial relationship.",
+      "El anuncio (ficticio) financia obras para mejorar el aislamiento y la eficiencia energética de edificios. Es una posible demanda para Norte Renovable, no un encargo ni un contrato.",
+      "The (fictional) announcement funds works that improve the insulation and energy efficiency of buildings. It is possible demand for Norte Renovable, not an order or a contract.",
     ),
     basis: c(
       "Ámbito publicado en el anuncio y fecha del programa.",
@@ -237,8 +246,8 @@ export const evidence: Evidence[] = [
   {
     id: "surface",
     title: c(
-      "Una mención cambia en una muestra pública",
-      "A mention changes in a public sample",
+      "Dos respuestas de asistentes de IA que la nombran",
+      "Two AI assistant answers that name it",
     ),
     source: c(
       "Muestra de respuesta generativa · ilustrativa",
@@ -270,12 +279,12 @@ export const signals: Signal[] = [
     organizationId: "norte",
     family: "markets",
     title: c(
-      "La rehabilitación abre una nueva conversación.",
-      "Renovation opens a new conversation.",
+      "Un programa público de ayudas encaja con lo que hace.",
+      "A public grant programme fits what it does.",
     ),
     summary: c(
-      "Una capacidad conocida encuentra un contexto de demanda. Hay una posibilidad que investigar; el encaje comercial sigue abierto.",
-      "A known capability meets a demand context. There is a possibility to investigate; commercial fit remains open.",
+      "España ha publicado un programa que paga obras para que los edificios gasten menos energía. Encaja con lo que la empresa dice hacer; la elegibilidad y el encaje comercial siguen abiertos.",
+      "Spain has published a programme that pays for works that cut buildings' energy use. It fits what the company says it does; eligibility and commercial fit remain open.",
     ),
     epistemic: "POTENTIAL",
     eventAt: "2026-08-28",
@@ -283,25 +292,25 @@ export const signals: Signal[] = [
     availableFrom: "2026-09-01",
     evidenceIds: ["capabilities", "program"],
     why: c(
-      "El programa contempla actuaciones relacionadas con la capacidad descrita por Norte Renovable. La coincidencia es una razón para mirar más de cerca.",
-      "The programme covers work related to Norte Renovable's described capability. That overlap is a reason to look closer.",
+      "El programa paga el tipo de obra que Norte Renovable dice hacer, en el país donde trabaja. Por eso merece una mirada más atenta.",
+      "The programme pays for the kind of work Norte Renovable says it does, in the country where it works. That is why it deserves a closer look.",
     ),
     derivation: c(
-      "Capacidad declarada + ámbito del programa + contexto temporal → posibilidad derivada. No se ha observado adjudicación, cliente ni contrato.",
-      "Declared capability + programme scope + temporal context → derived possibility. No award, customer or contract has been observed.",
+      "Lo que la empresa dice hacer + lo que el programa financia + dónde y cuándo → una posibilidad. No se ha visto adjudicación, cliente ni contrato.",
+      "What the company says it does + what the programme funds + where and when → a possibility. No award, customer or contract has been seen.",
     ),
     limitation: c(
-      "Elegibilidad, alcance geográfico por capacidad, recursos disponibles y condiciones económicas pendientes.",
-      "Eligibility, geographic reach per capability, available resources and economic conditions remain unresolved.",
+      "Falta saber si cumple los requisitos, si tiene capacidad libre y cuánto dinero hay por obra.",
+      "Still unknown: whether it meets the requirements, whether it has free capacity and how much money there is per project.",
     ),
     next: c(
-      "Investigar requisitos y alcance antes de evaluar el encaje.",
-      "Investigate requirements and reach before assessing fit.",
+      "Leer los requisitos del programa antes de decidir si merece la pena presentarse.",
+      "Read the programme's requirements before deciding whether it is worth applying.",
     ),
     dimensions: [
       {
         label: c("Capacidad", "Capability"),
-        value: c("Coincidencia temática", "Thematic overlap"),
+        value: c("Encaja con lo que hace", "Fits what it does"),
       },
       { label: c("Alcance", "Reach"), value: c("Por verificar", "To verify") },
       {
@@ -315,12 +324,12 @@ export const signals: Signal[] = [
     organizationId: "norte",
     family: "presence",
     title: c(
-      "Una mención aparece. Su significado tiene límites.",
-      "A mention appears. Its meaning has limits.",
+      "Aparece mencionada en respuestas de asistentes de IA.",
+      "It is mentioned in AI assistant answers.",
     ),
     summary: c(
-      "La organización aparece en una muestra generativa. Observamos la superficie, sin confundirla con una recomendación o con el negocio.",
-      "The organization appears in a generative sample. We observe the surface without equating it with endorsement or business reality.",
+      "En dos de las respuestas revisadas, un asistente de IA nombra a la empresa. Que la nombre no significa que la recomiende.",
+      "In two of the answers reviewed, an AI assistant names the company. Naming it does not mean recommending it.",
     ),
     epistemic: "OBSERVED",
     eventAt: "2026-09-30",
@@ -328,8 +337,8 @@ export const signals: Signal[] = [
     availableFrom: "2026-10-03",
     evidenceIds: ["surface"],
     why: c(
-      "Conviene entender cómo se representa públicamente la organización y qué información acompaña a la mención.",
-      "It is useful to understand how the organization is publicly represented and what information accompanies the mention.",
+      "Cada vez más clientes preguntan a asistentes de IA. Saber si la nombran, y cómo, importa.",
+      "More and more customers ask AI assistants. Knowing whether they name it, and how, matters.",
     ),
     derivation: c(
       "Observación de una respuesta bajo condiciones documentadas. Alcance exclusivo de esa muestra.",
@@ -359,12 +368,12 @@ export const signals: Signal[] = [
     organizationId: "norte",
     family: "organization",
     title: c(
-      "Una capacidad ayuda a situar el panorama.",
-      "A capability helps frame the panorama.",
+      "Su ficha pública dice que aísla edificios para que gasten menos energía.",
+      "Its public sheet says it insulates buildings so they use less energy.",
     ),
     summary: c(
-      "Una ficha pública describe rehabilitación térmica. Es contexto documentado, con un alcance concreto.",
-      "A public sheet describes thermal renovation. It is documented context with a specific scope.",
+      "Su ficha técnica dice que mejora el aislamiento térmico de edificios. Es lo que la empresa declara de sí misma.",
+      "Its technical sheet says it improves the thermal insulation of buildings. It is what the company declares about itself.",
     ),
     epistemic: "OBSERVED",
     eventAt: "2026-06-24",
@@ -372,8 +381,8 @@ export const signals: Signal[] = [
     availableFrom: "2026-07-01",
     evidenceIds: ["capabilities"],
     why: c(
-      "Entender la capacidad descrita permite orientar atención sin inventar un perfil comercial.",
-      "Understanding the described capability helps direct attention without inventing a commercial profile.",
+      "Saber qué hace permite reconocer qué demanda le encaja, sin inventarle un perfil.",
+      "Knowing what it does makes it possible to recognise which demand fits it, without inventing a profile.",
     ),
     derivation: c(
       "Declaración explícita en una ficha de ejemplo; observación limitada a esa declaración.",
@@ -394,12 +403,12 @@ export const signals: Signal[] = [
     organizationId: "norte",
     family: "reputation",
     title: c(
-      "Aún no podemos sostener una lectura de reputación.",
-      "We cannot yet support a reputation reading.",
+      "Todavía no se puede valorar su reputación.",
+      "Its reputation cannot be assessed yet.",
     ),
     summary: c(
-      "Falta una muestra suficiente y contextualizada. La ausencia de conocimiento no es una valoración negativa.",
-      "A sufficient, contextualized sample is missing. Absence of knowledge is not a negative assessment.",
+      "Hay muy pocas opiniones públicas para sacar una conclusión. No saber no es una mala valoración.",
+      "There are too few public opinions to draw a conclusion. Not knowing is not a bad rating.",
     ),
     epistemic: "UNKNOWN",
     eventAt: null,
@@ -411,14 +420,14 @@ export const signals: Signal[] = [
       "A conclusion would be premature.",
     ),
     derivation: c(
-      "Comprobación de suficiencia: no existe una base adecuada en esta demostración.",
-      "Sufficiency check: no adequate basis exists in this demonstration.",
+      "Comprobación de suficiencia: no existe una base adecuada en este ejemplo.",
+      "Sufficiency check: no adequate basis exists in this example.",
     ),
     limitation: c(
       "Sin base suficiente para comparar o valorar.",
       "Insufficient basis to compare or assess.",
     ),
-    next: c("Definir una investigación acotada.", "Define bounded research."),
+    next: c("Buscar más opiniones en fuentes públicas antes de valorar.", "Look for more opinions in public sources before assessing."),
     dimensions: [],
   },
   {
@@ -426,8 +435,8 @@ export const signals: Signal[] = [
     organizationId: "atlas",
     family: "activity",
     title: c(
-      "Un piloto pone el contexto en movimiento.",
-      "A pilot puts context in motion.",
+      "Publica un proyecto piloto con materiales recuperados.",
+      "It publishes a pilot project with recovered materials.",
     ),
     summary: c(
       "Se publica una experiencia de materiales recuperados. El anuncio amplía el contexto, sin establecer vínculos comerciales.",

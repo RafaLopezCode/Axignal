@@ -99,7 +99,7 @@ test("nothing observed later leaks into an earlier time cut", () => {
   assert.equal(july.opportunities?.length, 0);
   assert.deepEqual(july.trend?.points.map((p) => p.date), ["2026-07-01"]);
   assert.equal(july.network?.edges.some((e) => e.sourceId === "src-programme"), false);
-  assert.equal(july.territory?.markets.find((m) => m.code === "ES-PV")?.state, "UNKNOWN");
+  assert.equal(july.territory?.markets.find((m) => m.code === "PT")?.state, "UNKNOWN");
   assert.deepEqual(epistemicContent(july, "markets"), new Set(["OBSERVED", "UNKNOWN"]));
 });
 

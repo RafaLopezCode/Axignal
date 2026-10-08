@@ -7,6 +7,7 @@
  */
 import type { Copy } from "../locale";
 import type { Epistemic, FamilyId } from "../projection";
+import type { Garden, GardenExposure, GardenPlace } from "../garden";
 
 const c = (es: string, en: string): Copy => ({ es, en });
 
@@ -170,7 +171,7 @@ const SOURCES: FactSource[] = [
   },
   {
     id: "src-programme",
-    title: c("Programa autonómico de rehabilitación", "Regional renovation programme"),
+    title: c("Programa nacional de eficiencia en edificios", "National building efficiency programme"),
     observedAt: "2026-09-01",
     instrument: c("Boletín oficial, lectura determinista", "Official gazette, deterministic reading"),
     limitation: c("No establece presupuesto por actuación.", "Does not set a budget per action."),
@@ -188,6 +189,16 @@ const SOURCES: FactSource[] = [
     observedAt: "2026-07-01",
     instrument: c("Documento público, lectura determinista", "Public document, deterministic reading"),
     limitation: c("Autodeclarado; sin confirmación del cliente.", "Self-declared; not confirmed by the client."),
+  },
+  {
+    id: "src-hiring",
+    title: c("Oferta de empleo publicada por la empresa", "Job posting published by the company"),
+    observedAt: "2026-09-20",
+    instrument: c("Portal de empleo público, lectura determinista", "Public job board, deterministic reading"),
+    limitation: c(
+      "Una oferta indica preparación, no actividad ya iniciada.",
+      "A posting signals preparation, not activity already under way.",
+    ),
   },
   {
     id: "src-reviews",
@@ -212,13 +223,13 @@ const NORTE: FamilyFacts = {
       { date: "2026-10-02", value: 31 },
     ],
     topics: [
-      { label: c("rehabilitación energética", "energy renovation"), delta: 12 },
+      { label: c("eficiencia energética de edificios", "building energy efficiency"), delta: 12 },
       { label: c("aislamiento térmico", "thermal insulation"), delta: 3 },
-      { label: c("ayudas a la rehabilitación", "renovation grants"), delta: -4 },
+      { label: c("ayudas a la eficiencia energética", "energy efficiency grants"), delta: -4 },
       { label: c("aerotermia", "heat pumps"), delta: null },
     ],
     pages: [
-      { path: "/servicios/rehabilitacion", change: "GAINED" },
+      { path: "/servicios/eficiencia-energetica", change: "GAINED" },
       { path: "/proyectos", change: "STABLE" },
       { path: "/blog/ayudas-2025", change: "LOST" },
       { path: "/contacto", change: "UNKNOWN" },
@@ -232,7 +243,7 @@ const NORTE: FamilyFacts = {
     ],
     questions: [
       {
-        text: c("¿Quién rehabilita edificios en Navarra?", "Who renovates buildings in Navarre?"),
+        text: c("¿Quién aísla edificios en España?", "Who insulates buildings in Spain?"),
         cells: { "assistant-a": "MENTIONED", "assistant-b": "NOT_OBSERVED" },
       },
       {
@@ -240,14 +251,14 @@ const NORTE: FamilyFacts = {
         cells: { "assistant-a": "ABSENT", "assistant-b": "NOT_OBSERVED" },
       },
       {
-        text: c("¿Cómo mejorar la certificación energética de un bloque?", "How to improve a block's energy rating?"),
+        text: c("¿Cómo reducir el consumo energético de un edificio?", "How to cut a building's energy use?"),
         cells: { "assistant-a": "CITED", "assistant-b": "NOT_OBSERVED" },
       },
     ],
     claims: [
-      { text: c("Rehabilita edificios residenciales", "Renovates residential buildings"), support: "SUPPORTED", sourceId: "src-capabilities" },
+      { text: c("Reforma edificios residenciales", "Retrofits residential buildings"), support: "SUPPORTED", sourceId: "src-capabilities" },
       { text: c("Instala aerotermia", "Installs heat pumps"), support: "UNSUPPORTED" },
-      { text: c("Trabaja en el País Vasco", "Works in the Basque Country"), support: "UNKNOWN" },
+      { text: c("Trabaja en Portugal", "Works in Portugal"), support: "UNKNOWN" },
     ],
     coOccurring: [
       { name: "Rehabita Norte", questions: 2 },
@@ -258,17 +269,17 @@ const NORTE: FamilyFacts = {
   opportunities: [
     {
       id: "opp-programme",
-      title: c("Rehabilitación energética de vivienda social", "Energy renovation of social housing"),
-      buyer: c("Agencia autonómica de vivienda", "Regional housing agency"),
-      market: c("Navarra, España", "Navarre, Spain"),
+      title: c("Mejora energética de vivienda social", "Energy upgrade of social housing"),
+      buyer: c("Agencia pública de vivienda", "Public housing agency"),
+      market: c("España", "Spain"),
       form: c("Programa público", "Public programme"),
       deadline: null,
       epistemic: "POTENTIAL",
       capability: {
-        label: c("Rehabilitación térmica de edificios", "Thermal building renovation"),
+        label: c("Aislamiento térmico de edificios", "Thermal insulation of buildings"),
         excerpt: c(
-          "«rehabilitación térmica y coordinación técnica de edificios»",
-          "“thermal renovation and technical building coordination”",
+          "«aislamiento térmico y reformas energéticas de edificios»",
+          "“thermal insulation and energy retrofits of buildings”",
         ),
         sourceId: "src-capabilities",
       },
@@ -296,15 +307,15 @@ const NORTE: FamilyFacts = {
       id: "opp-tender",
       title: c("Aislamiento de cubiertas en colegios públicos", "Roof insulation in public schools"),
       buyer: c("Ayuntamiento de Pamplona", "Pamplona City Council"),
-      market: c("Navarra, España", "Navarre, Spain"),
+      market: c("España", "Spain"),
       form: c("Licitación abierta", "Open tender"),
       deadline: "2026-10-28",
       epistemic: "POTENTIAL",
       capability: {
-        label: c("Rehabilitación térmica de edificios", "Thermal building renovation"),
+        label: c("Aislamiento térmico de edificios", "Thermal insulation of buildings"),
         excerpt: c(
-          "«rehabilitación térmica y coordinación técnica de edificios»",
-          "“thermal renovation and technical building coordination”",
+          "«aislamiento térmico y reformas energéticas de edificios»",
+          "“thermal insulation and energy retrofits of buildings”",
         ),
         sourceId: "src-capabilities",
       },
@@ -379,32 +390,34 @@ const NORTE: FamilyFacts = {
   territory: {
     markets: [
       {
-        code: "ES-NA",
-        label: c("Navarra", "Navarre"),
+        code: "ES",
+        label: c("España", "Spain"),
         state: "OBSERVED",
         currentness: "CURRENT",
-        signal: c("Obras propias publicadas y demanda pública abierta", "Own published works and open public demand"),
+        signal: c("Obras propias publicadas en el país", "Own works published in the country"),
         sourceId: "src-project-case",
       },
       {
-        code: "ES-PV",
-        label: c("País Vasco", "Basque Country"),
+        code: "PT",
+        label: c("Portugal", "Portugal"),
         state: "POTENTIAL",
         currentness: "CURRENT",
-        signal: c("Programa regional compatible", "Compatible regional programme"),
-        sourceId: "src-programme",
+        // Expansion needs the organization's own preparatory act (ADR-0089); demand
+        // somewhere (the national programme) is never expansion evidence.
+        signal: c("Busca jefe de obra en Lisboa", "Hiring a site manager in Lisbon"),
+        sourceId: "src-hiring",
       },
       {
-        code: "ES-RI",
-        label: c("La Rioja", "La Rioja"),
+        code: "FR",
+        label: c("Francia", "France"),
         state: "UNKNOWN",
         currentness: "UNKNOWN",
         signal: null,
         sourceId: null,
       },
       {
-        code: "FR-NAQ",
-        label: c("Nueva Aquitania", "Nouvelle-Aquitaine"),
+        code: "DE",
+        label: c("Alemania", "Germany"),
         state: "UNKNOWN",
         currentness: "UNKNOWN",
         signal: null,
@@ -440,7 +453,7 @@ const NORTE: FamilyFacts = {
   change: {
     events: [
       { date: "2026-07-01", kind: "EVIDENCE_ARRIVED", label: c("Ficha técnica observada", "Technical sheet observed"), sourceId: "src-capabilities" },
-      { date: "2026-09-01", kind: "EVIDENCE_ARRIVED", label: c("Programa regional publicado", "Regional programme published"), sourceId: "src-programme" },
+      { date: "2026-09-01", kind: "EVIDENCE_ARRIVED", label: c("Programa nacional publicado", "National programme published"), sourceId: "src-programme" },
       { date: "2026-09-01", kind: "HYPOTHESIS_UPDATED", label: c("Oportunidad potencial en vivienda social", "Potential opportunity in social housing"), sourceId: "src-programme" },
       { date: "2026-10-01", kind: "MATERIAL_CHANGE", label: c("Nueva licitación compatible", "New compatible tender"), sourceId: "src-tender" },
       { date: "2026-10-03", kind: "BECAME_STALE", label: c("La ficha técnica supera los 90 días", "The technical sheet passes 90 days"), sourceId: "src-capabilities" },
@@ -483,5 +496,49 @@ export function factsAt(organizationId: string, asOf: string): FamilyFacts {
       absences: all.discourse.absences,
     },
     change: all.change && { events: all.change.events.filter((e) => seen(e.date)) },
+  };
+}
+
+const EXPOSURE: Record<string, GardenExposure[]> = {
+  // Derived from how the example delivers its work (at the customer's site), the same
+  // rule spec 059 applies: the channel is known, the shock that travels it is not.
+  norte: [
+    {
+      id: "fuel-and-travel",
+      channel: c("Combustible y desplazamientos", "Fuel and travel"),
+      path: c(
+        "Trabaja en casa del cliente: una subida del combustible le llega aunque ocurra lejos.",
+        "It works at the customer's site: a fuel price rise reaches it even when it starts far away.",
+      ),
+    },
+    {
+      id: "local-regulation",
+      channel: c("Normativa donde trabaja", "Rules where it works"),
+      path: c(
+        "Un cambio normativo en España le afecta; uno en otro país, no.",
+        "A rule change in Spain affects it; one in another country does not.",
+      ),
+    },
+  ],
+};
+
+/** The example's garden at ``asOf``: the territory lens read as reach, never widened. */
+export function gardenAt(organizationId: string, asOf: string): Garden | null {
+  const facts = factsAt(organizationId, asOf);
+  if (!facts.territory) return null;
+  const sources = new Map(facts.sources.map((source) => [source.id, source]));
+  const places: GardenPlace[] = facts.territory.markets.map((market) => ({
+    code: market.code,
+    label: market.label,
+    state: market.state,
+    currentness: market.currentness,
+    basis: market.signal,
+    source: market.sourceId ? sources.get(market.sourceId) : undefined,
+  }));
+  return {
+    operating: places.filter((place) => place.state === "OBSERVED"),
+    expansion: places.filter((place) => place.state === "POTENTIAL"),
+    unknown: places.filter((place) => place.state === "UNKNOWN"),
+    exposure: EXPOSURE[organizationId] ?? [],
   };
 }

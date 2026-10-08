@@ -113,12 +113,40 @@ const cognitionOpportunitySchema = z.object({
   currentness,
   currentnessEvaluatedAt: text,
 });
+// Spec 059 economic garden as persisted in the snapshot. Read-only presentation input:
+// unknown fields are stripped and a missing garden simply renders nothing.
+const gardenPlaceSchema = z.object({
+  geography: text,
+  label: z.string().min(1).nullable().optional(),
+  mode: z.string().nullable(),
+  stated: z.boolean(),
+  current: z.boolean(),
+  evidence: text,
+  source: text.optional(),
+  excerpt: text.optional(),
+  observedAt: text.optional(),
+});
+const economicGardenSchema = z.object({
+  operatingModelFingerprint: text,
+  capabilities: z.array(z.object({
+    capabilityId: text,
+    label: text,
+    deliveryModes: z.array(text),
+    operating: z.array(gardenPlaceSchema),
+    expansion: z.array(gardenPlaceSchema),
+    excluded: z.array(gardenPlaceSchema),
+    unknown: z.array(text),
+  })).max(40),
+  exposureChannels: z.array(text),
+});
 export const runtimeCognitionSchema = z.object({
   asOf: text,
   sources: z.array(cognitionSourceSchema),
   signals: z.array(cognitionSignalSchema),
   opportunities: z.array(cognitionOpportunitySchema),
+  economicGarden: economicGardenSchema.optional().catch(undefined),
 });
+export type RuntimeEconomicGarden = z.infer<typeof economicGardenSchema>;
 export const runtimeSignalSchema = z.object({
   id: text,
   nodeKind: z.literal("XIGNAL"),

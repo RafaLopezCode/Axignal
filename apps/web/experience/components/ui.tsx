@@ -98,7 +98,7 @@ export function DemoLabel({ privateMode = false }: { privateMode?: boolean }) {
             "Vista privada · datos ilustrativos",
             "Private view · illustrative data",
           )
-        : t("Demo · datos ilustrativos", "Demo · illustrative data")}
+        : t("Ejemplo · organización ficticia", "Example · fictional organization")}
     </span>
   );
 }
@@ -293,14 +293,24 @@ export function AxentIdentity() {
 }
 export function MiniFooter() {
   const { t } = useLocale();
+  // Public footer: visitor destinations only. Staff surfaces (Admin, the design
+  // system) are not part of the public journey and are not linked from it.
   return (
     <footer className="mini-footer">
       <Brand />
       <span>
-        {t("Una mirada que conecta.", "A perspective that connects.")}
+        {t(
+          "Observación económica con memoria y evidencia.",
+          "Economic observation with memory and evidence.",
+        )}
       </span>
       <nav aria-label={t("Más sobre AXIGNAL", "More about AXIGNAL")}>
+        <Link href="/panorama">{t("Ejemplo", "Example")}</Link>
+        <Link href="/#pricing">{t("Precio", "Pricing")}</Link>
         <Link href="/knowledge">Knowledge</Link>
+        <Link href="/contact">{t("Contacto", "Contact")}</Link>
+        <Link href="/policies">{t("Políticas", "Policies")}</Link>
+        <Link href="/gdpr">GDPR</Link>
         <a
           href="https://www.linkedin.com/company/axignal/"
           target="_blank"
@@ -308,14 +318,9 @@ export function MiniFooter() {
         >
           LinkedIn
         </a>
-        <Link href="/contact">{t("Contacto", "Contact")}</Link>
-        <Link href="/policies">{t("Políticas", "Policies")}</Link>
-        <Link href="/gdpr">GDPR</Link>
         <Link href="/login">{t("Acceder", "Sign in")}</Link>
         <Link href="/signup">{t("Crear cuenta", "Sign up")}</Link>
-        <Link href="/design">{t("Sistema visual", "Visual system")}</Link>
       </nav>
-      <Link href="/admin">Admin</Link>
     </footer>
   );
 }

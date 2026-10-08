@@ -14,6 +14,7 @@ from application.economic_reach.model import (
     Polarity,
     ReachBasis,
 )
+from application.economic_reach.places import place_label
 from application.observation_intelligence.catalog import CAPABILITY_LEXICON
 from domain.evidence.epistemics import Currentness
 
@@ -41,10 +42,14 @@ def _places(
         (
             {
                 "geography": claim.geography.code,
+                "label": place_label(claim.geography.code),
                 "mode": None if claim.mode is None else claim.mode.value,
                 "stated": claim.binding is ClaimBinding.CAPABILITY,
                 "current": claim.currentness is Currentness.CURRENT,
                 "evidence": claim.evidence.observation_id,
+                "source": claim.evidence.source_ref,
+                "excerpt": claim.evidence.excerpt[:280],
+                "observedAt": claim.evidence.observed_at.isoformat(),
             }
             for claim in reach.claims
             if claim.basis in basis and (claim.polarity is Polarity.INCLUDED) is include
