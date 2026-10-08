@@ -2,7 +2,7 @@
 
 Base: 72f19d2103554dd1d841a0ffbbd0a9b549ef295c (Product MCP and 055 included).
 Implementation candidate: 5dbff8ddbf3356f49e2aa9bc752a3d1ecc672df2.
-The final documentation commit is rebuilt and checked as an exact candidate;
+The final review head is rebuilt and checked as an exact candidate;
 its SHA/image/container evidence and final CI are recorded in the PR description.
 
 ## Reviewable result
@@ -67,6 +67,12 @@ imports use /app from the exact runtime image, fixtures/source inspection /src.
 All executing containers have network=none, no published ports or mounted secrets.
 Fixture data is separate from production. The only production-data mount is
 kernel-enforced read-only for the new check command; config/settings are also RO.
+
+Linux CI identified Windows-only msvcrt attributes absent from Linux type stubs.
+Both platform-specific lock modules now load through import_module, preserving
+the same OS APIs and locking behavior without type suppressions or gate changes.
+The corrected Windows lock/MCP/runner regression is 24 passed, 5 POSIX skips;
+Linux CI and the exact corrected candidate validate that final head.
 
 Linux candidate: **29 passed**, including all four POSIX runner tests and the
 root:www-data permission check. Initial test tmpfs was noexec; the validation

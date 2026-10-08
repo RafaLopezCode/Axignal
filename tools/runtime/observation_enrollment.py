@@ -263,7 +263,7 @@ def materialization_lock(root: Path, *, write: bool) -> Iterator[None]:
 
                     fcntl.flock(handle, fcntl.LOCK_NB | (fcntl.LOCK_EX if write else fcntl.LOCK_SH))
                 else:
-                    import msvcrt
+                    msvcrt = import_module("msvcrt")
 
                     handle.seek(0)
                     msvcrt.locking(
@@ -282,7 +282,7 @@ def materialization_lock(root: Path, *, write: bool) -> Iterator[None]:
 
                 fcntl.flock(handle, fcntl.LOCK_UN)
             else:
-                import msvcrt
+                msvcrt = import_module("msvcrt")
 
                 handle.seek(0)
                 msvcrt.locking(handle.fileno(), msvcrt.LK_UNLCK, 1)
