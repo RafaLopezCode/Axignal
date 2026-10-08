@@ -5,8 +5,6 @@ import {
   preparedAuthStart,
   preparedProviders,
   acceptsPublicAuthOrigin,
-  localDraftSchema,
-  draftText,
 } from "../lib/public-contracts";
 import { POST } from "../app/api/auth/start/route";
 import { GET } from "../app/api/auth/status/route";
@@ -106,42 +104,4 @@ test("status discloses identity-only scopes and unavailable connections", async 
   assert.deepEqual(result.identityScopes, ["openid", "profile", "email"]);
   assert.equal(result.sessionCreated, false);
   assert.equal(response.headers.get("cache-control"), "no-store");
-});
-test("draft preview/download retains multiline content and never claims receipt", () => {
-  const local = {
-    subject: "Acceso",
-    name: "Persona de prueba",
-    email: "test@example.invalid",
-    message:
-      "Quisiera comprender el alcance.\nSegunda línea literal <script> no se interpreta.",
-  };
-  const text = draftText(local, "es");
-  assert.ok(text.includes(local.message));
-  assert.ok(text.includes("NO ENVIADO"));
-  assert.ok(text.includes("Destinatario: pendiente de publicación"));
-  assert.ok(
-    text.endsWith(
-      "Este borrador no registra una solicitud ni acredita recepción.",
-    ),
-  );
-  assert.ok(draftText(local, "en").includes("NOT SENT"));
-});
-test("draft validation refuses missing identity, bad address, excessive text and hidden fields", () => {
-  const valid = {
-    subject: "Question",
-    name: "Test",
-    email: "test@example.invalid",
-    message: "A specific question with context.",
-  };
-  for (const changed of [
-    { name: "" },
-    { email: "bad" },
-    { message: "" },
-    { message: "x".repeat(3001) },
-    { consent: true },
-  ])
-    assert.equal(
-      localDraftSchema.safeParse({ ...valid, ...changed }).success,
-      false,
-    );
 });

@@ -1,0 +1,36 @@
+.request-receipt {
+  margin-top: 20px;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  color: #4b625b;
+  font-size: 12px;
+  overflow-wrap: anywhere;
+}
+.request-receipt p {
+  margin-top: 8px;
+}
+.weekly-brief-form fieldset {
+  min-width: 0;
+  border: 0;
+  padding: 0;
+  margin: 0;
+}
+.weekly-brief-form legend {
+  margin-bottom: 20px;
+}
+.weekly-brief-form .brief-consent {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-top: 16px;
+  line-height: 1.6;
+}
+.weekly-brief-form .brief-consent input {
+  flex: 0 0 18px;
+  width: 18px;
+  height: 18px;
+  padding: 0;
+  margin: 2px 0 0;
+  accent-color: var(--blue);
+}

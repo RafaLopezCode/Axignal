@@ -10,4 +10,12 @@
 - [x] Exact nginx edge routes
 - [x] No canonical/tenant/newsletter writes
 - [ ] Provider configuration/authorization in production
-- [ ] Claude-owned UI wiring after provider/public channel decision
+- [x] Canonical status-first Contact/GDPR UI wiring after CTO reconciliation
+- [x] Versioned notices, durable receipt, idempotent retry and double-submit guard
+- [x] Seven canonical GDPR categories and human rejection messages
+- [x] Separate governed SMTP credential locator from its private file
+- [x] Existing AO-15/AO-16 brief request with independently optional newsletter consent
+- [x] Reconcile productive trust/privacy text in six locales without changing the funnel
+- [x] Disable each unavailable auth provider independently; preserve unknown/loading state
+- [x] Browser enabled/disabled request flows and mobile receipt verification
+- [ ] Final exact-SHA isolated candidate/preflight and CTO PR review

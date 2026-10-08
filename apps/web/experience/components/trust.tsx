@@ -16,7 +16,7 @@ import {
 import { useLocale } from "@/lib/locale";
 import { Observer } from "./ui";
 import { PublicShell, PublicationNote } from "./public-shell";
-import { DraftForm } from "./drafts";
+import { PublicRequestChannel } from "./public-request-channel";
 
 type Copy = { es: string; en: string };
 const c = (es: string, en: string): Copy => ({ es, en });
@@ -24,55 +24,37 @@ export const policyDocuments = [
   {
     slug: "privacy",
     title: c("Privacidad", "Privacy"),
-    deck: c(
-      "Qué datos hay en esta experiencia, para qué se usan y qué falta antes de publicarla.",
-      "Which data this experience uses, why, and what remains before publication.",
-    ),
+    deck: c("Qué datos utiliza AXIGNAL y cómo ejercer tus derechos.", "Which details AXIGNAL uses and how to exercise your rights."),
     Icon: Fingerprint,
     sections: [
       {
         title: c("Responsable y alcance", "Controller and scope"),
-        text: c(
-          "La identidad del responsable, su país y el correo de contacto están pendientes de publicación. Este documento es un borrador para la experiencia local; no sustituye una política aprobada del servicio de producción. Antes de recoger datos reales habrá que completar la información aplicable y validar el tratamiento correspondiente.",
-          "The controller's identity, country and contact email are pending publication. This document is a draft for the local experience, not an approved production-service policy. Before collecting real data, applicable disclosures and processing need to be completed and validated.",
-        ),
+        text: c("Responsable: AXIGNAL. País: España. El canal de contacto muestra un correo público sólo cuando el servicio lo publica. No se ha publicado un NIF.", "Controller: AXIGNAL. Country: Spain. The contact channel shows a public email only when the service publishes one. No tax identifier has been published."),
       },
       {
         title: c(
           "Lo que ocurre en esta versión",
           "What happens in this version",
         ),
-        text: c(
-          "Los formularios de Contacto y GDPR preparan texto en la memoria de esta página. No lo envían al servidor ni registran solicitudes. Las búsquedas de Knowledge y la preferencia de idioma son estados de interfaz. Los contenidos de Panorama son ilustrativos. Los recursos tipográficos y de marca se sirven desde la propia aplicación.",
-          "Contact and GDPR forms prepare text in this page's memory. They do not send it to the server or lodge requests. Knowledge searches and language preferences are interface state. Panorama content is illustrative. Typography and brand assets are served by the application itself.",
-        ),
+        text: c("Contacto y GDPR consultan la disponibilidad del canal. Cuando está habilitado, el envío registra una solicitud privada con su aviso y referencia; no modifica la verdad económica. Panorama es un ejemplo ficticio identificado.", "Contact and GDPR check channel availability. When enabled, submission registers a private request with its notice and reference; it does not change economic truth. Panorama is a labelled fictional example."),
       },
       {
         title: c(
-          "Finalidades y bases pendientes",
-          "Pending purposes and legal bases",
+          "Finalidades del tratamiento",
+          "Processing purposes",
         ),
-        text: c(
-          "La futura gestión de acceso, consultas, suscripciones y derechos necesita definir sus finalidades, base jurídica y categorías de datos antes de activarse. No asumimos que todo tratamiento se base en consentimiento. Esta versión no activa comunicaciones comerciales, registro de cuentas ni medición publicitaria.",
-          "Future access, enquiries, subscriptions and rights handling require defined purposes, legal bases and data categories before activation. We do not assume that every processing activity relies on consent. This version activates no commercial communications, account registration or advertising measurement.",
-        ),
+        text: c("Los datos de contacto se utilizan para gestionar tu solicitud. El acceso solicita identidad básica al proveedor disponible. Las comunicaciones opcionales requieren una decisión separada; una consulta no te suscribe.", "Contact details are used to handle your request. Access asks the available provider for basic identity. Optional communications require a separate decision; an enquiry does not subscribe you."),
       },
       {
         title: c(
           "Destinatarios, transferencias y conservación",
           "Recipients, transfers and retention",
         ),
-        text: c(
-          "No se han establecido aquí los proveedores, destinatarios, ubicaciones, garantías de transferencia, plazos de conservación ni las prácticas de registros del despliegue de producción. Deben documentarse por tratamiento. No prometemos una ubicación, un plazo o una ausencia de registros que esta interfaz no puede verificar.",
-          "Production providers, recipients, locations, transfer safeguards, retention periods and deployment logging practices have not been established here. They must be documented per processing activity. We do not promise a location, period or absence of logs this interface cannot verify.",
-        ),
+        text: c("Las solicitudes de Contacto y GDPR se conservan 90 días. La entrega depende de un canal autorizado por AXIGNAL y puede fallar después del registro. El recibo no garantiza entrega ni resolución.", "Contact and GDPR requests are retained for 90 days. Delivery depends on an AXIGNAL-authorized channel and may fail after registration. The receipt does not guarantee delivery or resolution."),
       },
       {
         title: c("Derechos y solicitudes", "Rights and requests"),
-        text: c(
-          "El centro GDPR explica los derechos y permite preparar un borrador. El canal del responsable sigue pendiente. Una descarga no acredita recepción. Una solicitud real debe evaluarse conforme a la normativa aplicable, también cuando la información proceda de fuentes públicas. La arquitectura de memoria compartida no sustituye esa evaluación.",
-          "The GDPR centre explains rights and lets you prepare a draft. The controller's channel remains pending. A download does not prove receipt. A real request must be assessed under applicable law, including information originating in public sources. Shared-memory architecture does not replace that assessment.",
-        ),
+        text: c("GDPR permite solicitar acceso, rectificación, supresión, limitación, oposición, portabilidad u otros derechos cuando el canal está habilitado. El recibo acredita registro, no aceptación legal. Cada solicitud necesita valoración humana.", "GDPR supports access, rectification, erasure, restriction, objection, portability or other rights requests when the channel is enabled. The receipt confirms registration, not legal acceptance. Each request needs human assessment."),
       },
     ],
   },
@@ -86,11 +68,8 @@ export const policyDocuments = [
     Icon: FileText,
     sections: [
       {
-        title: c("Una experiencia de revisión", "An experience for review"),
-        text: c(
-          "Estas condiciones son un borrador informativo de la experiencia local. El titular, país, condiciones contractuales, oferta y procedimiento de contratación están pendientes. Acceder a la demo o descargar un borrador no crea una cuenta, una suscripción ni la aceptación de un contrato de pago.",
-          "These terms are an informational draft for the local experience. The operator, country, contractual terms, offer and contracting procedure remain pending. Opening the demo or downloading a draft creates neither an account nor a subscription or acceptance of a paid contract.",
-        ),
+        title: c("Uso del servicio", "Using the service"),
+        text: c("AXIGNAL opera desde España. Abrir el ejemplo o enviar una consulta no crea una suscripción ni acepta un contrato de pago. La contratación depende de su disponibilidad y autorización propias.", "AXIGNAL operates from Spain. Opening the example or sending an enquiry does not create a subscription or accept a paid contract. Contracting depends on its own availability and authorization."),
       },
       {
         title: c("Observación y posibilidad", "Observation and possibility"),
@@ -104,58 +83,40 @@ export const policyDocuments = [
           "Tu atención y el mundo compartido",
           "Your attention and the shared world",
         ),
-        text: c(
-          "Seleccionar una organización dirige un foco de observación; no permite editar su verdad económica. Panorama presenta una proyección humana del mundo canónico. AXENT ayuda a investigar y explicar sin autoridad para admitir hechos. Los permisos privados, la identidad y la suscripción requieren sus servicios propietarios.",
-          "Selecting an organization directs an observation focus; it does not authorize editing its economic truth. Panorama presents a human projection of the canonical world. AXENT helps research and explain without authority to admit facts. Private permissions, identity and subscriptions require their owning services.",
-        ),
+        text: c("Seleccionar una organización dirige atención; no permite editar su verdad económica. El ejemplo público utiliza datos ficticios. La identidad, los permisos y las suscripciones pertenecen a sus servicios privados.", "Selecting an organization directs attention; it does not authorize editing economic truth. The public example uses fictional data. Identity, permissions and subscriptions belong to their private services."),
       },
       {
         title: c(
           "Disponibilidad e integraciones",
           "Availability and integrations",
         ),
-        text: c(
-          "La demo identifica sus datos ilustrativos. El acceso Google y ChatGPT está preparado, pero no conectado. Contacto y GDPR generan borradores locales. Ninguna de estas superficies garantiza investigación ejecutada, autenticación o recepción de solicitudes. Las condiciones finales deberán describir el servicio realmente operativo.",
-          "The demo labels its illustrative data. Google and ChatGPT access is prepared but not connected. Contact and GDPR generate local drafts. None of these surfaces guarantees completed research, authentication or receipt of requests. Final terms must describe the actually operational service.",
-        ),
+        text: c("El ejemplo es ficticio. Acceder y crear cuenta consultan el estado real de cada proveedor. Contacto y GDPR sólo permiten enviar cuando el canal está habilitado. Un recibo confirma registro, sin garantizar entrega o resolución.", "The example is fictional. Sign-in and signup check each provider’s actual status. Contact and GDPR allow submission only when their channel is enabled. A receipt confirms registration without guaranteeing delivery or resolution."),
       },
     ],
   },
   {
     slug: "cookies",
     title: c("Cookies y almacenamiento", "Cookies and storage"),
-    deck: c(
-      "Una vista concreta de lo que esta aplicación guarda y lo que aún no está conectado.",
-      "A concrete view of what this application stores and what is not yet connected.",
-    ),
+    deck: c("Qué guarda esta aplicación y cómo se utiliza.", "What this application stores and how it is used."),
     Icon: Cookie,
     sections: [
       {
         title: c("Alcance de este inventario", "Scope of this inventory"),
-        text: c(
-          "Este inventario describe el código de la experiencia local. No acredita las prácticas de una futura infraestructura, proxy o proveedor. Esta aplicación no implementa cookies analíticas o publicitarias, ni integra píxeles de terceros. Las fuentes se alojan localmente.",
-          "This inventory describes the local experience's code. It does not establish the practices of future infrastructure, a proxy or a provider. This application implements no analytics or advertising cookies and integrates no third-party pixels. Fonts are hosted locally.",
-        ),
+        text: c("La aplicación utiliza almacenamiento necesario y preferencias de interfaz. Las fuentes se sirven localmente. No activa cookies publicitarias ni píxeles de terceros.", "The application uses necessary storage and interface preferences. Fonts are served locally. It does not activate advertising cookies or third-party pixels."),
       },
       {
         title: c(
           "Qué se guarda y qué permanece en la página",
           "What is stored and what stays in the page",
         ),
-        text: c(
-          "El idioma se guarda localmente como preferencia hasta que lo cambies o borres los datos del sitio. El cierre del aviso de privacidad se recuerda hasta 180 días. La búsqueda editorial y los borradores permanecen solo como estado de la página. Los borradores no se guardan en localStorage, cookies o base de datos por esta aplicación. Cambiar de página o cerrar la pestaña descarta el borrador. El navegador puede aplicar sus propias funciones de autocompletado, independientes del almacenamiento de AXIGNAL.",
-          "Your language is stored locally as a preference until you change it or clear site data. Privacy notice dismissal is remembered for up to 180 days. Editorial search and drafts remain only as page state. This application does not save drafts in localStorage, cookies or a database. Leaving the page or closing the tab discards the draft. A browser may apply its own autofill features, independently of AXIGNAL storage.",
-        ),
+        text: c("El idioma se guarda como preferencia local. El cierre del aviso se recuerda hasta 180 días. El texto de una solicitud permanece en la página hasta enviarlo; después, el registro se conserva en el servidor durante 90 días. El navegador puede utilizar autocompletado.", "Language is stored as a local preference. Notice dismissal is remembered for up to 180 days. Request text stays on the page until submitted; the server then retains the record for 90 days. Your browser may use autofill."),
       },
       {
         title: c(
-          "Acceso y preferencias futuras",
-          "Future access and preferences",
+          "Acceso y preferencias",
+          "Access and preferences",
         ),
-        text: c(
-          "No hay sesión autenticada conectada ni cookie de acceso emitida por estos flujos preparados. Cuando se active el servicio, habrá que inventariar almacenamiento necesario, duración y proveedor. Si se incorporan tecnologías opcionales, las decisiones de la persona deberán ser claras, revocables y efectivamente respetadas antes de activarlas.",
-          "These prepared flows connect no authenticated session and issue no sign-in cookie. Activating the service requires an inventory of necessary storage, duration and provider. If optional technologies are introduced, people's choices must be clear, revocable and actually respected before activation.",
-        ),
+        text: c("La autenticación utiliza cookies necesarias HttpOnly, Secure y SameSite Lax para la transacción y la sesión. La sesión depende de su vigencia y de la validación del runtime; el navegador no concede permisos.", "Authentication uses necessary HttpOnly, Secure and SameSite Lax cookies for the transaction and session. The session depends on its validity and runtime validation; the browser does not grant permissions."),
       },
       {
         title: c("Sesión privada de Admin", "Private Admin session"),
@@ -213,12 +174,9 @@ export function Policies() {
       <div className="publication-banner">
         <Info size={20} />
         <div>
-          <strong>{t("Antes de publicar", "Before publication")}</strong>
+          <strong>{t("Información del servicio", "Service information")}</strong>
           <p>
-            {t(
-              "Responsable, país y correo público pendientes. Estos textos son borradores de revisión y no una certificación de cumplimiento.",
-              "Controller, country and public email are pending. These texts are review drafts and not a compliance certification.",
-            )}
+            {t("Responsable: AXIGNAL · España. Estos textos describen funciones y límites; no certifican cumplimiento jurídico.", "Controller: AXIGNAL · Spain. These texts describe functions and limits; they do not certify legal compliance.")}
           </p>
         </div>
       </div>
@@ -234,7 +192,7 @@ export function Policies() {
               <p>{copy(doc.deck)}</p>
             </div>
             <span className="policy-link-end">
-              {t("Leer borrador", "Read draft")}
+              {t("Leer documento", "Read document")}
               <ArrowUpRight size={20} />
             </span>
           </Link>
@@ -323,15 +281,12 @@ export function PolicyDocument({ slug }: { slug: string }) {
           ))}
           <aside className="article-basis">
             <Info size={20} />
-            <h3>{t("Información pendiente", "Pending information")}</h3>
+            <h3>{t("Responsable y límites", "Controller and limits")}</h3>
             <p>
-              {t(
-                "Responsable, país, correo de contacto y validación jurídica del servicio: pendientes de publicación.",
-                "Controller, country, contact email and legal review of the service: pending publication.",
-              )}
+              {t("Responsable: AXIGNAL · España. El correo depende del estado del canal; no se publica un NIF ni se garantiza una resolución legal automática.", "Controller: AXIGNAL · Spain. Email depends on channel status; no tax identifier is published and no automatic legal resolution is guaranteed.")}
             </p>
             <Link href="/contact" className="text-link">
-              {t("Preparar una consulta", "Prepare an enquiry")}
+              {t("Consultar el canal", "Check the channel")}
               <ArrowRight size={16} />
             </Link>
           </aside>
@@ -390,8 +345,8 @@ const rights = [
     ),
   },
   {
-    id: "automated",
-    title: c("Decisiones automatizadas", "Automated decisions"),
+    id: "other",
+    title: c("Otros derechos", "Other rights"),
     text: c(
       "Conocer las garantías frente a decisiones exclusivamente automatizadas con efectos jurídicos o de importancia similar.",
       "Understand safeguards concerning solely automated decisions with legal or similarly significant effects.",
@@ -414,10 +369,7 @@ export function GDPR() {
             <em>{t("sobre tus datos.", "on your data.")}</em>
           </h1>
           <p>
-            {t(
-              "Conoce tus derechos, entiende los límites de esta versión y prepara una solicitud con tus propias palabras.",
-              "Know your rights, understand this version's limits and prepare a request in your own words.",
-            )}
+            {t("Conoce tus derechos y comprueba el canal para presentar tu solicitud.", "Know your rights and check the channel to submit your request.")}
           </p>
           <PublicationNote />
         </div>
@@ -494,7 +446,7 @@ export function GDPR() {
       <section className="rights-request">
         <div className="rights-request-copy">
           <span className="eyebrow">
-            {t("Del derecho al borrador", "From a right to a draft")}
+            {t("Del derecho a la solicitud", "From a right to a request")}
           </span>
           <h2>
             {t("Dale forma", "Put your request")}
@@ -511,15 +463,12 @@ export function GDPR() {
             <Info size={21} />
             <strong>
               {t(
-                "Canal pendiente de publicación",
-                "Channel pending publication",
+                "Disponibilidad del canal",
+                "Channel availability",
               )}
             </strong>
             <p>
-              {t(
-                "El responsable y su correo aún no están definidos. Este borrador no inicia plazos ni acredita recepción. Una solicitud real debe llegar al canal habilitado del responsable.",
-                "The controller and email are not yet defined. This draft neither starts response deadlines nor proves receipt. A real request must reach the controller's designated channel.",
-              )}
+              {t("Responsable: AXIGNAL · España. El formulario comprueba el estado del canal. Recibir una solicitud no supone aceptarla ni resolverla; la evaluación es humana.", "Controller: AXIGNAL · Spain. The form checks channel status. Receiving a request does not mean accepting or resolving it; assessment is human.")}
             </p>
           </div>
           <p>
@@ -539,15 +488,16 @@ export function GDPR() {
             <span className="sr-only">{t("Nueva pestaña", "New tab")}</span>
           </a>
           <Link href="/policies/privacy" className="text-link">
-            {t("Leer el borrador de privacidad", "Read the privacy draft")}
+            {t("Leer la información de privacidad", "Read the privacy information")}
             <ArrowRight size={16} />
           </Link>
         </div>
-        <DraftForm
+        <PublicRequestChannel
           subject={
             t("Solicitud de ", "Request for ") + copy(rights[selected].title)
           }
-          rights
+          key={rights[selected].id}
+          category={rights[selected].id as "access" | "rectification" | "erasure" | "restriction" | "portability" | "objection" | "other"}
         />
       </section>
     </PublicShell>

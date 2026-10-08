@@ -23,11 +23,12 @@ from pipeline.public_requests.sqlite_store import SqlitePublicRequestStore
 
 
 class _CredentialFile:
-    def __init__(self, path: Path):
+    def __init__(self, path: Path, reference: str):
         self.path = path
+        self.reference = reference
 
     def is_resolvable(self, *, reference: str, environment: IntegrationEnvironment) -> bool:
-        return reference == str(self.path) and self.path.is_file()
+        return reference == self.reference and self.path.is_file()
 
 
 def _smtp_values(env: Mapping[str, str]) -> dict[str, str]:
@@ -38,6 +39,7 @@ def _smtp_values(env: Mapping[str, str]) -> dict[str, str]:
         "PRIVACY_RECIPIENT",
         "USERNAME",
         "PASSWORD_FILE",
+        "CREDENTIAL_REFERENCE",
         "INTEGRATION_ID",
     )
     return {name: env.get("AXIGNAL_CONTACT_SMTP_" + name, "").strip() for name in names}
@@ -53,7 +55,7 @@ def _integration_service(data_dir: Path) -> AdminIntegrationService:
 def _require_delivery_authority(
     *, data_dir: Path, environment: str, values: Mapping[str, str]
 ) -> _CredentialFile:
-    credential = _CredentialFile(Path(values["PASSWORD_FILE"]))
+    credential = _CredentialFile(Path(values["PASSWORD_FILE"]), values["CREDENTIAL_REFERENCE"])
     _integration_service(data_dir).require_connection(
         integration_id=values["INTEGRATION_ID"],
         environment=IntegrationEnvironment(environment.upper()),
