@@ -130,3 +130,4 @@ these human labels, never on Jev outputs (MCA §2.3(b)).
 Production configuration (`AXIGNAL_SEMANTIC_LAYER_ENABLED=false`), the deterministic
 gate's authority, AXENT, the decision lab (its TypeSafe adapter still sends one question
 per call; the production adapter batches), the MASTER, prices, and any canonical writer.
+Validation: [validation.md](validation.md).
