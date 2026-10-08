@@ -36,6 +36,7 @@ from application.observation_intelligence.contracts import (
     MarketRole,
     OpportunityFamily,
     RightsStatus,
+    SourceDescriptor,
     XeedObservationContext,
 )
 from application.observation_intelligence.coverage import CoverageState, EvidenceCoverageMap
@@ -46,6 +47,11 @@ from application.observation_intelligence.human import (
 )
 from application.observation_intelligence.loop import LoopResult, LoopStep, OpportunityCandidate
 from application.observation_intelligence.registry import SourceRegistry
+from application.observation_intelligence.semantic_screen import (
+    SCREEN_VERSION,
+    DemandScreenPort,
+    screen_summary,
+)
 from application.observation_intelligence.strategy import ObservationStrategy
 from application.xeed_access.organization_reader import AuthorizedXeedOrganization
 from domain.evidence.epistemics import Currentness
@@ -236,6 +242,35 @@ def _coverage_currentness(
     }[state]
 
 
+def _eligible_source(
+    candidate: OpportunityCandidate, registry: SourceRegistry, context: XeedObservationContext
+) -> SourceDescriptor | None:
+    """The candidate's source if it may be shown (and therefore judged), else None."""
+    try:
+        source = registry.get(candidate.record.source_id)
+    except KeyError:
+        return None
+    if (
+        candidate.record.kind not in source.capabilities
+        or not source.covers(candidate.market)
+        or not any(
+            candidate.market.within(market.geography) and MarketRole.PUBLIC_BUYERS in market.roles
+            for market in context.markets
+        )
+        or not any(place.within(candidate.market) for place in candidate.record.places)
+    ):
+        return None
+    if (
+        not source.routable
+        or source.adoption is not AdoptionStatus.ADOPTED
+        or source.rights is not RightsStatus.REUSE_DOCUMENTED
+        or not _safe_public_url(candidate.record.source_url)
+    ):
+        # Unsupported provenance means no subscriber-visible opportunity.
+        return None
+    return source
+
+
 def project_observation_opportunities(
     *,
     authorized_context: AuthorizedXeedOrganization,
@@ -247,6 +282,7 @@ def project_observation_opportunities(
     registry: SourceRegistry | None = None,
     drivers: tuple[DriverEvent, ...] = (),
     temporal_policy: TemporalCurrentnessPolicy = GARDEN_TEMPORAL_POLICY,
+    semantic_screen: DemandScreenPort | None = None,
 ) -> SubscriberOpportunityProjection | None:
     """Build cognition opportunities only from this focus and admitted provenance.
 
@@ -254,7 +290,9 @@ def project_observation_opportunities(
     derived from the same authorized evidence: only events inside a delivery channel's
     reach (or the Organization's own expansion signals) reach the subscriber; the rest
     stay in global memory and are only counted. Drivers become exposure, never
-    opportunities.
+    opportunities. An optional semantic screen (Spec 062) may filter confidently
+    unrelated demand (counted, not deleted), state the delivery mode the gate needs,
+    and order surfaced demand by judged fit; it never creates or upgrades anything.
     """
     if not isinstance(authorized_context, AuthorizedXeedOrganization):
         raise SubscriberOpportunityProjectionError("authorized Observation Focus context required")
@@ -302,34 +340,29 @@ def project_observation_opportunities(
         as_of=output_as_of,
         policy=temporal_policy,
     )
+    # Only demand whose source, scope and reuse rights already qualify it for display
+    # may be sent to a semantic provider (MCA §5: Input rights stay a separate gate).
+    eligible = tuple(
+        (candidate, source)
+        for candidate in result.candidates
+        if (source := _eligible_source(candidate, registry, context)) is not None
+    )
+    screen_run = (
+        semantic_screen.screen(tuple(candidate for candidate, _ in eligible), now=output_as_of)
+        if semantic_screen is not None
+        else None
+    )
+    screens = screen_run.screens if screen_run is not None else {}
     filtered: dict[str, int] = {}
     unresolved_shown = 0
     source_rows: list[dict[str, object]] = []
     opportunities: list[dict[str, object]] = []
     signals: list[dict[str, str]] = []
-    for candidate in result.candidates:
-        try:
-            source = registry.get(candidate.record.source_id)
-        except KeyError:
-            continue
-        if (
-            candidate.record.kind not in source.capabilities
-            or not source.covers(candidate.market)
-            or not any(
-                candidate.market.within(market.geography)
-                and MarketRole.PUBLIC_BUYERS in market.roles
-                for market in context.markets
-            )
-            or not any(place.within(candidate.market) for place in candidate.record.places)
-        ):
-            continue
-        if (
-            not source.routable
-            or source.adoption is not AdoptionStatus.ADOPTED
-            or source.rights is not RightsStatus.REUSE_DOCUMENTED
-            or not _safe_public_url(candidate.record.source_url)
-        ):
-            # Unsupported provenance means no subscriber-visible opportunity.
+    for candidate, source in eligible:
+        screen = screens.get(candidate.candidate_id)
+        if screen is not None and screen.unrelated:
+            # Codes matched, meaning did not: real demand, not this capability's work.
+            filtered["SEMANTIC_UNRELATED"] = filtered.get("SEMANTIC_UNRELATED", 0) + 1
             continue
         decision = assess_demand(
             garden,
@@ -338,6 +371,7 @@ def project_observation_opportunities(
                 places=candidate.record.places,
                 capability_ids=candidate.capability_ids,
                 deadline=candidate.record.deadline,
+                required_modes=screen.required_modes if screen is not None else frozenset(),
             ),
             as_of=output_as_of,
         )
@@ -454,6 +488,7 @@ def project_observation_opportunities(
                 "matchBasis": list(candidate.match_basis),
                 "relevance": decision.explanation(),
                 "reachSourceIds": list(garden.evidence_ids),
+                **({"semanticScreen": screen.explanation()} if screen is not None else {}),
             }
         )
         signals.append({"id": candidate.candidate_id, "familyId": "demand"})
@@ -462,6 +497,11 @@ def project_observation_opportunities(
         return None
     source_rows.sort(key=lambda item: str(item["id"]))
     opportunities.sort(key=lambda item: (str(item["observedAt"]), str(item["id"])))
+    if screens:
+        # Presentation order only (stable): judged CORE fit first, then PARTIAL, ADJACENT.
+        opportunities.sort(
+            key=lambda item: screens[str(item["id"])].rank if str(item["id"]) in screens else 9
+        )
     signals.sort(key=lambda item: item["id"])
     payload: dict[str, object] = {
         "asOf": output_as_of.isoformat(),
@@ -470,6 +510,17 @@ def project_observation_opportunities(
         "opportunities": opportunities,
         "economicGarden": garden_summary(garden),
         "relevanceFiltered": dict(sorted(filtered.items())),
+        **(
+            {
+                "semanticLayer": {
+                    "version": SCREEN_VERSION,
+                    "judgments": screen_summary(screens),
+                    "usage": dict(screen_run.usage),
+                }
+            }
+            if screen_run is not None
+            else {}
+        ),
         "exposure": [
             {"eventId": driver.event_id, **exposed.explanation()}
             for driver in drivers

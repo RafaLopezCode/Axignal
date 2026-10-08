@@ -63,6 +63,7 @@ from pipeline.source_acquisition import (
     ContentAddressedArtifactStore,
 )
 from pipeline.subscriber_access.sqlite_store import SqlitePilotAccessStore
+from tools.runtime.semantic_layer import semantic_screen_from_env
 from tools.runtime.subscriber_axent import build_subscriber_axent
 from tools.runtime.subscriber_checkout import (
     StripeSubscriberRuntimeSettings,
@@ -832,6 +833,8 @@ def build_subscriber_facade(
         temporal_policy=temporal_policy,
         code_sha=code_sha,
     )
+    # Spec 062: off unless explicitly configured; projection stays deterministic otherwise.
+    economic.semantic_screen = semantic_screen_from_env(settings.values, data_dir=root)
     resolved_observation_plans = observation_plan_reader
     if resolved_observation_plans is None:
         configured_plan_path = settings.values.get(

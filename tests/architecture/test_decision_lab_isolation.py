@@ -50,9 +50,15 @@ def test_production_core_cannot_import_lab() -> None:
     assert any(item.rule == "PRODUCTION_LAB_IMPORT" for item in violations)
 
 
-def test_typesafe_dependency_is_optional_and_lab_only() -> None:
+def test_typesafe_dependency_is_optional_and_pinned_once() -> None:
+    # ADR-0090 (Accepted) moved the pin from lab-only to the opt-in semantic layer group;
+    # the SDK stays out of project and dev dependencies, with one exact pin.
     root = Path(__file__).resolve().parents[2]
     project = tomllib.loads((root / "pyproject.toml").read_text(encoding="utf-8"))
+    groups = project["dependency-groups"]
     assert "typesafe-sdk" not in project["project"]["dependencies"]
-    assert all("typesafe-sdk" not in item for item in project["dependency-groups"]["dev"])
-    assert project["dependency-groups"]["decision-lab-live"] == ["typesafe-sdk==0.7.1"]
+    assert all("typesafe-sdk" not in str(item) for item in groups["dev"])
+    assert groups["semantic-layer-live"] == ["typesafe-sdk==0.7.1"]
+    assert groups["decision-lab-live"] == [{"include-group": "semantic-layer-live"}]
+    pins = [g for g, items in groups.items() if any("typesafe-sdk" in str(i) for i in items)]
+    assert pins == ["semantic-layer-live"]

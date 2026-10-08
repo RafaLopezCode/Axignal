@@ -114,6 +114,9 @@ dev = [
 research-canary-live = [
     { name = "openai" },
 ]
+semantic-layer-live = [
+    { name = "typesafe-sdk" },
+]
 semantic-retrieval = [
     { name = "numpy" },
     { name = "turboquant" },
@@ -135,6 +138,7 @@ dev = [
     { name = "turboquant", git = "https://github.com/Firmamento-Technologies/TurboQuant.git?rev=2b6596093017419632abb03ae76e19bdcfb9a1e1" },
 ]
 research-canary-live = [{ name = "openai", specifier = ">=3.24.0" }]
+semantic-layer-live = [{ name = "typesafe-sdk", specifier = "==0.7.1" }]
 semantic-retrieval = [
     { name = "numpy", specifier = ">=1.26,<2.3" },
     { name = "turboquant", git = "https://github.com/Firmamento-Technologies/TurboQuant.git?rev=2b6596093017419632abb03ae76e19bdcfb9a1e1" },

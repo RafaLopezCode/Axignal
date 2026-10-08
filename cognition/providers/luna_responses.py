@@ -18,6 +18,11 @@ from cognition.jobs.model import CognitiveJob, JobKind, StructuredResult
 
 DEFAULT_LUNA_MODEL = "gpt-6-luna"
 
+_SCHEMA_NAMES = {
+    JobKind.GROUNDED_ANSWER: "axent_grounded_answer",
+    JobKind.SEMANTIC_DECISION: "axignal_semantic_decision",
+}
+
 
 class _ResponsesSdk(Protocol):
     responses: Any
@@ -46,7 +51,8 @@ def _default_sdk(key_file: Path | None = None) -> _ResponsesSdk:
 
 
 class LunaResponsesProvider:
-    """CognitiveProvider for GROUNDED_ANSWER jobs on an explicitly authorized model."""
+    """CognitiveProvider for GROUNDED_ANSWER and SEMANTIC_DECISION jobs on an explicitly
+    authorized model."""
 
     name = "luna-responses"
 
@@ -66,8 +72,8 @@ class LunaResponsesProvider:
         self._key_file = key_file
 
     def complete(self, job: CognitiveJob) -> StructuredResult:
-        if job.kind is not JobKind.GROUNDED_ANSWER:
-            raise ValueError("the Luna responses binding only serves grounded answers")
+        if job.kind not in _SCHEMA_NAMES:
+            raise ValueError("the Luna responses binding serves grounded answers and decisions")
         context = job.context
         schema, user = context.get("schema"), context.get("user")
         limit = context.get("max_output_tokens")
@@ -86,7 +92,7 @@ class LunaResponsesProvider:
             text={
                 "format": {
                     "type": "json_schema",
-                    "name": "axent_grounded_answer",
+                    "name": _SCHEMA_NAMES[job.kind],
                     "schema": schema,
                     "strict": True,
                 }

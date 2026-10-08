@@ -1,5 +1,7 @@
-# Locked subscriber authentication and optional AXENT SDK. Providers stay lazy;
-# without the explicit flag, key file and known rates there are zero model calls.
+# Locked subscriber authentication and the optional AXENT and semantic-layer SDKs.
+# Providers stay lazy: without the explicit flags, key files, budgets and known
+# rates there are zero model calls and no SDK is imported. Nothing contacts a
+# provider at build time and no credential enters an image layer.
 FROM ghcr.io/astral-sh/uv:0.12.15 AS uv
 
 FROM python:3.12-slim
@@ -21,7 +23,7 @@ WORKDIR /app
 COPY --from=uv /uv /uvx /bin/
 COPY pyproject.toml uv.lock README.md ./
 
-RUN uv sync --frozen --no-install-project --no-default-groups --group subscriber-auth --group research-canary-live
+RUN uv sync --frozen --no-install-project --no-default-groups --group subscriber-auth --group research-canary-live --group semantic-layer-live
 
 COPY application /app/application
 COPY domain /app/domain
