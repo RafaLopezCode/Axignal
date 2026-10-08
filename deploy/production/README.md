@@ -115,6 +115,121 @@ observation. Controlled E2E proves configured due work through the real Brain;
 the first real authorized production tick remains part of the CTO cutover.
 
 
+## Subscriber Focus to First Proof (058, CTO operation)
+
+This seam derives enrollment from existing authority. It never accepts Principal,
+Tenant, Focus, Organization or market IDs as CLI arguments. The Principal is the
+current PilotGrant redeemer with verified identity/membership, or the unique
+verified current member for Billing. Ambiguous membership fails closed. Capacity
+uses the subscriber portfolio's existing `(created_at, focus_id)` ordering.
+Browser session expiry is irrelevant; membership, entitlement/currentness,
+capacity, active Focus and canonical Organization are checked on every tick and
+again before acquisition/recomputation. Revocation cannot be bypassed with old
+JSON or outstanding recomputation debt.
+
+Attention requires current reusable public website capability evidence and an
+explicit Service areaServed NUTS identifier/audience. This narrow bootstrap is
+POTENTIAL attention through existing MarketScope contracts, not a new reach
+model. HQ/address/domain do not establish reach. Missing/unknown scope, capability,
+source adoption, rights or cost yields `ATTENTION_NOT_READY`; an eligible Focus
+can enroll with empty attention. Only the currently wired adopted TED port is
+routable here. A later integrated capability-specific reach contract can replace
+the adapter. No production public evidence or market is fabricated.
+
+The commands below are for the CTO **after review, merge and an authorized
+deployment of this candidate**. The closure task executes none of the activation
+steps. Use the deployed SHA image; never move `current` with these commands.
+
+1. A human signs in through the real identity flow, redeems an authorized Pilot
+   or obtains a current Billing entitlement, and adds a real organization locator
+   in the product. Existing independent admission creates the canonical
+   Organization and private Focus. Customer Zero alone is not this Focus.
+2. Set shell variables to the existing deployed image and paths (no identity or
+   market values):
+
+   ```sh
+   image="axignal-runtime:$(cat /srv/axignal/docker/DEPLOYED_SHA)"
+   data=/var/lib/axignal/runtime
+   config=/etc/axignal/observation-runtime
+   settings=/etc/axignal/subscriber-runtime.conf
+   ```
+
+3. Reconcile as the root operator. It reads subscriber/canonical stores in
+   SQLite `mode=ro`, runs no provider, and only writes the operational config
+   directory. Files are bounded, deterministic, `root:www-data 0640`; staged
+   fsync/replacement and a commit-last manifest detect interrupted generations.
+   A local lock serializes concurrent reconciles. Repeated reconcile is a no-op;
+   revocation removes derived entries, preserving economic history. A pristine
+   installation with no eligible Focus creates no config files or directories.
+
+   ```sh
+   docker run --rm --network none --user 0:33 --read-only --tmpfs /tmp:mode=1777 \
+     --cap-drop ALL --cap-add CHOWN --security-opt no-new-privileges:true \
+     -e AXIGNAL_ENV=production \
+     --mount "type=bind,src=$data,dst=/data,readonly" \
+     --mount "type=bind,src=$config,dst=/config" \
+     --mount "type=bind,src=$settings,dst=/run/subscriber.conf,readonly" \
+     --entrypoint python "$image" -m tools.runtime.observation_enrollment reconcile \
+     --data-dir /data --config-dir /config --configuration-file /run/subscriber.conf
+   ```
+
+   The existing config parent must already exist for Docker's bind mount. Do not
+   create enrollment/attention by hand. `materialization.json` only verifies the
+   disposable snapshot; it grants no authority.
+4. Check without writes, schema initialization, provider calls or activation:
+
+   ```sh
+   docker run --rm --network none --user 33:33 --read-only --tmpfs /tmp:mode=1777 \
+     --cap-drop ALL --security-opt no-new-privileges:true -e AXIGNAL_ENV=production \
+     --mount "type=bind,src=$data,dst=/data,readonly" \
+     --mount "type=bind,src=$config,dst=/config,readonly" \
+     --mount "type=bind,src=$settings,dst=/run/subscriber.conf,readonly" \
+     --entrypoint python "$image" -m tools.runtime.observation_enrollment check \
+     --data-dir /data --config-dir /config --configuration-file /run/subscriber.conf
+   ```
+
+   `NO_ELIGIBLE_FOCUS` is the correct no-work result. `ATTENTION_NOT_READY` requires
+   admitted current public evidence/explicit scope, not invented markets.
+   `INVALID_MATERIALIZATION` requires reconcile, never a bypass. AXENT availability
+   is reported separately; provider readiness is not checked by dispatching a model.
+5. Only with `READY_FOR_MANUAL_TICK`, run **one** First Proof. It calls existing
+   T12, retains daily lease/fencing/idempotency/cadence and zero paid cost, with the
+   existing 60-request ceiling. It does not change flags or enable recurrence.
+
+   ```sh
+   docker run --rm --network axignal_prod_internal --user 33:33 --read-only \
+     --tmpfs /tmp:mode=1777 --cap-drop ALL --security-opt no-new-privileges:true \
+     --memory 512m --cpus 1 -e AXIGNAL_ENV=production -e "AXIGNAL_CODE_SHA=${image#axignal-runtime:}" \
+     --mount "type=bind,src=$data,dst=/data" \
+     --mount "type=bind,src=$config,dst=/config,readonly" \
+     --mount "type=bind,src=$settings,dst=/run/subscriber.conf,readonly" \
+     --entrypoint python "$image" -m tools.runtime.observation_enrollment first-proof \
+     --data-dir /data --config-dir /config --configuration-file /run/subscriber.conf
+   ```
+
+   No model/payment/OIDC secret is mounted. Inspect the redacted tick summary,
+   `observation_daily --status` and the authorized subscriber Brain/continuity
+   view. Technical execution and economic findings are separate: no new evidence
+   or UNKNOWN can be a correct result. Do not erase the daily ledger to retry.
+6. The CTO can then explicitly configure/enable the existing AXENT overlay and
+   approved provider boundary. The human makes an independent authorized AXENT
+   read. Inspect any tenant-private research request: it directs attention only.
+   If needed, reconcile/check and execute the next cadence-eligible manual tick;
+   inspect consumed work/evidence/continuity, then request another AXENT read.
+   Completion never auto-requeries AXENT and MCP reads remain model-zero.
+7. Only after inspecting this proof may the CTO explicitly enable the existing
+   observation flag/timer. The existing T12 runner remains the sole scheduler;
+   the service validates the materialization manifest/current desired snapshot.
+   Reconcile after authority/evidence changes. Stale files fail closed and cannot
+   extend entitlement or capacity.
+
+Rollback/kill switch: CTO sets existing observation and AXENT flags to false and
+stops/disables the existing observation unit/timer as documented above. Preserve
+all canonical/operational history, receipts and continuity. Reconcile can safely
+repair corrupted derived files from current authority. Development closure and
+isolated controlled First Proof do not claim a real production First Proof when
+production has zero legitimate subscriber Foci.
+
 ## Private Google Search Console sync (AO-13)
 
 AO-13 imports AXIGNAL's own Search Console performance as private first-party operating evidence. It does not write AXIGLAND and it does not turn Google Search Console metrics into public Digital Representation truth.

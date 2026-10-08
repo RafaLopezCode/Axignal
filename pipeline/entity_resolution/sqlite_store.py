@@ -21,13 +21,20 @@ from domain.identity import OrganizationId
 
 
 class SqliteIdentityGovernanceStore:
-    def __init__(self, path: str | Path) -> None:
+    def __init__(self, path: str | Path, *, read_only: bool = False) -> None:
         self._path = Path(path)
+        self._read_only = read_only
+        if read_only:
+            return
         self._path.parent.mkdir(parents=True, exist_ok=True)
         self._initialize()
 
     def _connect(self) -> sqlite3.Connection:
-        connection = sqlite3.connect(self._path)
+        connection = sqlite3.connect(
+            f"{self._path.resolve().as_uri()}?mode=ro" if self._read_only else self._path,
+            uri=self._read_only,
+            timeout=10,
+        )
         connection.row_factory = sqlite3.Row
         return connection
 

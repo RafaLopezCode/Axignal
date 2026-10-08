@@ -55,7 +55,9 @@ from application.observation_runtime import (
     run_daily_tick,
 )
 from application.observation_runtime.ports import (
+    Acquisition,
     AcquisitionPort,
+    AcquisitionRequest,
     LeaseLost,
     ObservationRuntimeStore,
 )
@@ -141,7 +143,11 @@ def attention_for(
     configured = next((a for a in plans.attention if a.organization_id == organization_id), None)
     if configured is None:
         return None
-    current = [o for o, c in history if c.value == "CURRENT" and o.raw_content]
+    current = [
+        o
+        for o, c in history
+        if c.value == "CURRENT" and o.raw_content and o.record.source_type == "PUBLIC_WEBSITE"
+    ]
     website = (
         max(
             current, key=lambda o: (o.record.observed_at, o.record.observation_id)
@@ -210,6 +216,7 @@ class SubscriberBrainRecomputation:
     economic: SubscriberEconomicRuntime
     plans: ConfiguredSubscriberObservationPlanReader
     contexts: Mapping[str, TrustedRequestContext]
+    scope_authorized: Callable[[TrustedRequestContext, XeedId, datetime], bool] | None = None
     outcomes: list[tuple[str, str, str, str]] = field(default_factory=list)
     _published: set[tuple[str, str]] = field(default_factory=set)
 
@@ -231,6 +238,10 @@ class SubscriberBrainRecomputation:
         if context is None:
             return self._note(request, "NOT_ENROLLED")
         focus = XeedId(request.xeed_id)
+        if self.scope_authorized is not None and not self.scope_authorized(
+            context, focus, request.as_of
+        ):
+            return self._note(request, "NOT_AUTHORIZED")
         try:
             plan = self.plans.observation_plan_for(context, focus)
             if plan is None:
@@ -261,6 +272,30 @@ SUBSCRIBER_TEMPORAL_POLICY = TemporalCurrentnessPolicy(
 )
 
 
+@dataclass
+class AuthorizedAcquisition:
+    """Recheck current subscriber authority before the existing source boundary."""
+
+    inner: AcquisitionPort
+    contexts: Mapping[str, TrustedRequestContext]
+    clock: Clock
+    allowed: Callable[[TrustedRequestContext, XeedId, datetime], bool]
+
+    def acquisition_key(self, request: AcquisitionRequest) -> str:
+        return self.inner.acquisition_key(request)
+
+    def worst_case_requests(self, request: AcquisitionRequest) -> int:
+        return self.inner.worst_case_requests(request)
+
+    def acquire(self, request: AcquisitionRequest) -> Acquisition:
+        context = self.contexts.get(request.lead.xeed_id)
+        if context is None or not self.allowed(
+            context, XeedId(request.lead.xeed_id), self.clock.now()
+        ):
+            return Acquisition(0, 0, 0, blocked="AUTHORIZATION_REVOKED")
+        return self.inner.acquire(request)
+
+
 def run_once(
     *,
     economic: SubscriberEconomicRuntime,
@@ -277,8 +312,10 @@ def run_once(
     """One daily tick wired to the real subscriber Brain."""
 
     plans = replay_plans(economic, clock, attention_file, store)
-    contexts = {str(e.focus_id): e.context for e in enrollment}
     now = clock.now()
+    if research_access is not None:
+        enrollment = tuple(e for e in enrollment if research_access(e.context, e.focus_id, now))
+    contexts = {str(e.focus_id): e.context for e in enrollment}
     attention = tuple(
         item
         for e in enrollment
@@ -291,6 +328,11 @@ def run_once(
             ledger=store,
         )
     )
+    if research_access is not None:
+        acquirers = {
+            key: AuthorizedAcquisition(port, contexts, clock, research_access)
+            for key, port in acquirers.items()
+        }
     # Declared-dependency invalidation (TASK-050 T022): owe material recomputation for
     # enrolled Foci whose Brain checkpoint lost its support. The tick below drains it
     # through the same RecomputationPort; this adds no scheduler and no second queue.
@@ -302,7 +344,9 @@ def run_once(
             except (XeedReadError, OrganizationReadError):
                 continue
             continuity.reconcile(xeed.tenant_id, xeed.id, now=now, owe=store)
-    brain = SubscriberBrainRecomputation(economic=economic, plans=plans, contexts=contexts)
+    brain = SubscriberBrainRecomputation(
+        economic=economic, plans=plans, contexts=contexts, scope_authorized=research_access
+    )
 
     def research_corpus(item: ResearchRequest, as_of: datetime) -> AuthorizedCorpus | None:
         context = contexts.get(item.xeed_id)
@@ -400,7 +444,7 @@ def run_scheduled_tick(
     from pipeline.axent import SqliteResearchRequestLedger
     from pipeline.continuous_observation import SqliteSharedObservationWorkMemory
     from pipeline.observation_runtime import SqliteObservationRuntimeStore
-    from tools.runtime.observation_research import configured_research_access
+    from tools.runtime.observation_enrollment import SubscriberObservationAuthority
 
     store = SqliteObservationRuntimeStore(root / "observation-runtime.sqlite3")
     started_at = clock.now()
@@ -418,7 +462,14 @@ def run_scheduled_tick(
             research_ledger=SqliteResearchRequestLedger(
                 root / "axent-research.sqlite3", runtime_path=root / "observation-runtime.sqlite3"
             ),
-            research_access=research_access or configured_research_access(root, clock),
+            research_access=research_access
+            or SubscriberObservationAuthority(
+                root,
+                clock,
+                Path(os.environ["AXIGNAL_SUBSCRIBER_CONFIGURATION_FILE"])
+                if os.getenv("AXIGNAL_SUBSCRIBER_CONFIGURATION_FILE")
+                else None,
+            ).allows,
             research_shared=SqliteSharedObservationWorkMemory(root / "research-work.sqlite3"),
         )
         summary = {
@@ -433,7 +484,11 @@ def run_scheduled_tick(
             "deferred_items": len(report.deferred),
             "requests": report.requests,
             "candidates_new": report.candidates_new,
+            "evidence_new": sum(e.new_evidence for e in report.executed),
             "recomputations": len(brain.outcomes),
+            "brain_recomputed": sum(
+                outcome[3].startswith("PROJECTION_RECOMPUTED") for outcome in brain.outcomes
+            ),
             "next_due_at": report.next_due_at,
             "lease_status": "HELD_BY_OTHER" if report.status.value == "LEASE_HELD" else "COMPLETED",
         }
@@ -493,6 +548,46 @@ def main(argv: list[str] | None = None) -> None:
         sys.exit(2)
     root = Path(data).resolve()
     clock = SystemClock()
+    manifest = os.getenv("AXIGNAL_OBSERVATION_MATERIALIZATION_FILE", "").strip()
+    if manifest:
+        from tools.runtime.observation_enrollment import validate_manifest
+
+        if not validate_manifest(Path(manifest), Path(enrollment_file), Path(attention_file)):
+            print(json.dumps({"state": "INVALID_CONFIGURATION"}))
+            sys.exit(2)
+        from application.observation_runtime.materialization import derive_observation
+        from tools.runtime.observation_enrollment import (
+            SubscriberObservationAuthority,
+            snapshot_bytes,
+        )
+
+        try:
+            authority = SubscriberObservationAuthority(
+                root,
+                clock,
+                Path(os.environ["AXIGNAL_SUBSCRIBER_CONFIGURATION_FILE"])
+                if os.getenv("AXIGNAL_SUBSCRIBER_CONFIGURATION_FILE")
+                else None,
+            )
+            desired = snapshot_bytes(derive_observation(authority, now=clock.now()))
+            stale = (
+                Path(enrollment_file).read_bytes() != desired["enrollment.json"]
+                or Path(attention_file).read_bytes() != desired["attention.json"]
+            )
+        except Exception as error:
+            print(
+                json.dumps(
+                    {
+                        "state": "AUTHORITY_UNAVAILABLE",
+                        "requests": 0,
+                        "error_class": type(error).__name__,
+                    }
+                )
+            )
+            sys.exit(2)
+        if stale:
+            print(json.dumps({"state": "STALE_MATERIALIZATION", "requests": 0}))
+            return
     summary = run_scheduled_tick(
         root=root,
         code_sha=os.getenv("AXIGNAL_CODE_SHA", "UNKNOWN").strip() or "UNKNOWN",

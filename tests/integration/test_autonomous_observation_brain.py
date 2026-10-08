@@ -21,12 +21,12 @@ from domain.identity import PrincipalId, XeedId
 from pipeline.admin_billing.subscriber_store import SqliteSubscriberBillingStore
 from pipeline.observation_intelligence import TedSearchAdapter
 from pipeline.observation_runtime import SqliteObservationRuntimeStore
+from tests.integration.test_organization_admission_e2e import _pilot
 from tests.integration.test_subscriber_composition import (
     _append_opportunity_capability_source,
     _build,
     _commit_verified_projection,
     _register_canonical_organization,
-    _signup,
 )
 from tests.observation_intelligence.scenarios import AS_OF
 from tests.observation_runtime.harness import NEW_CALL, CountingTed
@@ -67,8 +67,12 @@ def test_daily_tick_reaches_the_real_subscriber_brain_and_changes_the_reading(
         '[{"jurisdiction":"EU/ES","roles":["PUBLIC_BUYERS"]}]}]',
         encoding="utf-8",
     )
-    facade = _build(tmp_path)
-    token, tenant_id = _signup(facade, "subject:autonomous")
+    # The production scheduler now requires persistent entitlement, not just a
+    # manually supplied membership context. Use the real pilot redemption flow.
+    monkeypatch.setenv("AXIGNAL_SUBSCRIBER_ENABLED", "true")
+    monkeypatch.setenv("AXIGNAL_SUBSCRIBER_PILOT_ENABLED", "true")
+    facade = _build(tmp_path, pilot=True)
+    token, tenant_id = _pilot(facade, tmp_path, "subject:autonomous")
     billing = SqliteSubscriberBillingStore(tmp_path / "subscriber-billing.sqlite3")
     _commit_verified_projection(billing, tenant_id, now=datetime.now(AS_OF.tzinfo))
     added = facade.handle(

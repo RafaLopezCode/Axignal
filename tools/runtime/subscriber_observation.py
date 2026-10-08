@@ -144,7 +144,9 @@ class ConfiguredSubscriberObservationPlanReader:
         usable = tuple(
             observation
             for observation, currentness in history
-            if currentness.value == "CURRENT" and observation.raw_content
+            if currentness.value == "CURRENT"
+            and observation.raw_content
+            and observation.record.source_type == "PUBLIC_WEBSITE"
         )
         if not usable:
             return None

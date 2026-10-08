@@ -39,6 +39,10 @@ if [ -r "$subscriber_config" ]; then
   set -- --env AXIGNAL_SUBSCRIBER_CONFIGURATION_FILE=/run/axignal-subscriber.conf \
     --mount "type=bind,src=$subscriber_config,dst=/run/axignal-subscriber.conf,readonly"
 fi
+if [ -r "$config_dir/materialization.json" ]; then
+  set -- "$@" --env AXIGNAL_OBSERVATION_MATERIALIZATION_FILE=/run/axignal-materialization.json \
+    --mount "type=bind,src=$config_dir/materialization.json,dst=/run/axignal-materialization.json,readonly"
+fi
 
 # Host serialization complements, never replaces, the runtime's SQLite fencing.
 # The stable container name also prevents overlap if its Docker CLI is killed.
