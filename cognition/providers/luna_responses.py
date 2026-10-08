@@ -11,6 +11,7 @@ from __future__ import annotations
 import json
 import time
 from importlib import import_module
+from pathlib import Path
 from typing import Any, Protocol, cast
 
 from cognition.jobs.model import CognitiveJob, JobKind, StructuredResult
@@ -22,7 +23,7 @@ class _ResponsesSdk(Protocol):
     responses: Any
 
 
-def _default_sdk() -> _ResponsesSdk:
+def _default_sdk(key_file: Path | None = None) -> _ResponsesSdk:
     try:
         module = import_module("openai")
     except ModuleNotFoundError as exc:
@@ -32,7 +33,16 @@ def _default_sdk() -> _ResponsesSdk:
     factory = vars(module).get("OpenAI")
     if factory is None:
         raise RuntimeError("installed OpenAI package does not expose OpenAI")
-    return cast(_ResponsesSdk, factory())
+    options: dict[str, object] = {
+        "timeout": 15.0,
+        "max_retries": 0,
+        "base_url": "https://api.openai.com/v1",
+    }
+    if key_file is not None:
+        if not key_file.is_absolute() or not 0 < key_file.stat().st_size <= 8192:
+            raise RuntimeError("Luna credential unavailable")
+        options["api_key"] = key_file.read_text(encoding="utf-8").strip()
+    return cast(_ResponsesSdk, factory(**options))
 
 
 class LunaResponsesProvider:
@@ -46,12 +56,14 @@ class LunaResponsesProvider:
         authorized_model: str = DEFAULT_LUNA_MODEL,
         client: _ResponsesSdk | None = None,
         reasoning_effort: str = "low",
+        key_file: Path | None = None,
     ) -> None:
         if not authorized_model.strip():
             raise ValueError("authorized Luna model binding is required")
         self.model = authorized_model
         self._client = client
         self._effort = reasoning_effort
+        self._key_file = key_file
 
     def complete(self, job: CognitiveJob) -> StructuredResult:
         if job.kind is not JobKind.GROUNDED_ANSWER:
@@ -61,7 +73,7 @@ class LunaResponsesProvider:
         limit = context.get("max_output_tokens")
         if not isinstance(schema, dict) or not isinstance(user, str) or not isinstance(limit, int):
             raise ValueError("grounded answer job context is malformed")
-        client = self._client or _default_sdk()
+        client = self._client or _default_sdk(self._key_file)
         self._client = client
         started = time.monotonic()
         response = client.responses.create(

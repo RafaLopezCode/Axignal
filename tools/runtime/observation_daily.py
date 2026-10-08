@@ -31,6 +31,10 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Protocol
 
+from application.axent.grounded.answer import ResearchRequest
+from application.axent.grounded.corpus import AuthorizedCorpus, corpus_from_reading
+from application.axent.research import ResearchConsumer, ResearchLedger
+from application.economic_discovery.continuous_observation import SharedObservationWorkMemory
 from application.economic_discovery.observation_reuse import ObservationReusePolicy
 from application.economic_discovery.temporal_currentness import TemporalCurrentnessPolicy
 from application.observation_intelligence import (
@@ -266,6 +270,9 @@ def run_once(
     enrollment: tuple[ObservationEnrollment, ...],
     source_ports: Mapping[str, SourceObservationPort],
     budget: DailyObservationBudget | None = None,
+    research_ledger: ResearchLedger | None = None,
+    research_access: Callable[[TrustedRequestContext, XeedId, datetime], bool] | None = None,
+    research_shared: SharedObservationWorkMemory | None = None,
 ) -> tuple[TickReport, SubscriberBrainRecomputation]:
     """One daily tick wired to the real subscriber Brain."""
 
@@ -296,6 +303,44 @@ def run_once(
                 continue
             continuity.reconcile(xeed.tenant_id, xeed.id, now=now, owe=store)
     brain = SubscriberBrainRecomputation(economic=economic, plans=plans, contexts=contexts)
+
+    def research_corpus(item: ResearchRequest, as_of: datetime) -> AuthorizedCorpus | None:
+        context = contexts.get(item.xeed_id)
+        if (
+            context is None
+            or str(context.tenant_id) != item.tenant_id
+            or research_access is None
+            or not research_access(context, XeedId(item.xeed_id), as_of)
+        ):
+            return None
+        try:
+            authorized = economic.authorize(context, XeedId(item.xeed_id))
+            if str(authorized.organization.id) != item.organization_id:
+                return None
+            reading = economic.read(context, XeedId(item.xeed_id), as_of)
+        except (XeedReadError, OrganizationReadError):
+            return None
+        return corpus_from_reading(
+            tenant_id=item.tenant_id, projection=reading.projection, as_of=as_of
+        )
+
+    from tools.runtime.observation_research import compatible_shared_key
+
+    consumer = (
+        None
+        if research_ledger is None
+        else ResearchConsumer(
+            research_ledger,
+            research_corpus,
+            evidence_for=lambda ids: tuple(
+                sorted(f"{e.key}@{e.fingerprint}" for e in store.evidence() if e.lead_id in ids)
+            ),
+            shared=research_shared,
+            shared_key_for=lambda item: (
+                None if research_shared is None else compatible_shared_key(research_shared, item)
+            ),
+        )
+    )
     report = run_daily_tick(
         store=store,
         now=now,
@@ -303,6 +348,7 @@ def run_once(
         acquirers=acquirers,
         recompute=brain,
         budget=budget,
+        research=consumer,
     )
     return report, brain
 
@@ -347,10 +393,14 @@ def run_scheduled_tick(
     enrollment: tuple[ObservationEnrollment, ...],
     source_ports: Mapping[str, SourceObservationPort],
     economic: SubscriberEconomicRuntime | None = None,
+    research_access: Callable[[TrustedRequestContext, XeedId, datetime], bool] | None = None,
 ) -> dict[str, object]:
     """One existing runtime entry with durable, redacted operator evidence. No retries."""
 
+    from pipeline.axent import SqliteResearchRequestLedger
+    from pipeline.continuous_observation import SqliteSharedObservationWorkMemory
     from pipeline.observation_runtime import SqliteObservationRuntimeStore
+    from tools.runtime.observation_research import configured_research_access
 
     store = SqliteObservationRuntimeStore(root / "observation-runtime.sqlite3")
     started_at = clock.now()
@@ -365,6 +415,11 @@ def run_scheduled_tick(
             attention_file=attention_file,
             enrollment=enrollment,
             source_ports=source_ports,
+            research_ledger=SqliteResearchRequestLedger(
+                root / "axent-research.sqlite3", runtime_path=root / "observation-runtime.sqlite3"
+            ),
+            research_access=research_access or configured_research_access(root, clock),
+            research_shared=SqliteSharedObservationWorkMemory(root / "research-work.sqlite3"),
         )
         summary = {
             "state": report.status.value,

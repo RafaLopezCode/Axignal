@@ -14,6 +14,7 @@ from collections.abc import Callable, Mapping
 from dataclasses import dataclass, replace
 from datetime import UTC, datetime, timedelta
 from enum import StrEnum
+from typing import Protocol
 
 from application.economic_discovery.temporal_currentness import evaluate_effective_currentness
 from application.observation_intelligence.contracts import SourceDescriptor, TaxonomyCode
@@ -54,6 +55,7 @@ from application.observation_runtime.ports import (
     RecomputationRequest,
     RecomputeTrigger,
     StoredCandidate,
+    TickClaim,
     XeedAttention,
 )
 from domain.evidence.epistemics import Currentness
@@ -170,6 +172,14 @@ class TickReport:
             "wall_seconds": self.wall_seconds,
             "scheduler_model_calls": self.scheduler_model_calls,
         }
+
+
+class AttentionLifecycle(Protocol):
+    def prepare(
+        self, claim: TickClaim, now: datetime, leads: tuple[ResearchLead, ...]
+    ) -> frozenset[tuple[str, str]]: ...
+
+    def finish(self, claim: TickClaim, now: datetime, report: TickReport) -> None: ...
 
 
 def _entry_leads(
@@ -348,6 +358,7 @@ def run_daily_tick(
     policies: Mapping[ObservationFamily, FamilyObservationPolicy] = FAMILY_POLICIES,
     lease_seconds: int = 3600,
     monotonic: Callable[[], float] = time.monotonic,
+    research: AttentionLifecycle | None = None,
 ) -> TickReport:
     if now.tzinfo is None:
         raise ValueError("the daily tick needs a timezone-aware time")
@@ -444,12 +455,19 @@ def run_daily_tick(
 
     commit()
 
+    waiting_shared = (
+        frozenset()
+        if research is None
+        else research.prepare(claim, lease_now(), tuple(state.leads.values()))
+    )
+
     # 3. Due work in deterministic tier order; blocked leads are re-routed when due.
     queue = sorted(
         (
             lead
             for lead in state.leads.values()
             if lead.xeed_id in xeeds
+            and (lead.xeed_id, lead.family.value) not in waiting_shared
             and lead.due(now)
             and lead.depth <= policies[lead.family].max_depth
         ),
@@ -466,6 +484,8 @@ def run_daily_tick(
     while queue:
         store.assert_claim(claim, now=lease_now())
         lead = queue.pop(0)
+        if (lead.xeed_id, lead.family.value) in waiting_shared:
+            continue
         if lead.lead_id in done:
             continue
         done.add(lead.lead_id)
@@ -793,6 +813,8 @@ def run_daily_tick(
         next_due_at=None if upcoming is None else upcoming.isoformat(),
         wall_seconds=round(monotonic() - started, 6),
     )
+    if research is not None:
+        research.finish(claim, lease_now(), report)
     store.complete_tick(claim, completed_at=lease_now(), report=report.to_payload())
     return report
 

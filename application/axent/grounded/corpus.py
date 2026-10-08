@@ -123,6 +123,15 @@ class AuthorizedCorpus:
     items: tuple[EvidenceItem, ...]
 
     @property
+    def dependency_fingerprint(self) -> str:
+        """Meaning/currentness, without the changing read cut or private scope."""
+        payload = [
+            self.organization_id,
+            [i.fingerprint_payload() for i in self.items if i.kind is not EvidenceKind.GAP],
+        ]
+        return hashlib.sha256(json.dumps(payload, default=str, sort_keys=True).encode()).hexdigest()
+
+    @property
     def fingerprint(self) -> str:
         """Changes whenever evidence, its currentness or the day of the cut changes."""
         # Item currentness carries the temporal state; the cut counts only to the day.

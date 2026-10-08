@@ -4,7 +4,8 @@ from __future__ import annotations
 
 import os
 from collections.abc import Callable, Mapping
-from datetime import datetime
+from datetime import UTC, datetime
+from decimal import Decimal, InvalidOperation
 from pathlib import Path
 
 from application.axent.grounded import (
@@ -13,6 +14,8 @@ from application.axent.grounded import (
     RuntimeFamilyCoverage,
     runtime_answer_wire,
 )
+from application.axent.grounded.cost import CostRates
+from application.axent.grounded.model_budget import BudgetedReasoner
 from application.axent.grounded.service import AuthorizedReadingPort
 from application.xeed_access.reader import TrustedRequestContext
 from domain.identity import XeedId
@@ -65,21 +68,52 @@ def build_subscriber_axent(
                 else None
             ),
             research=SqliteResearchRequestLedger(data_dir / "axent-research.sqlite3"),
+            model_audit=reasoner.audit if isinstance(reasoner, BudgetedReasoner) else None,
         )
     )
 
 
-def luna_reasoner_from_env() -> GroundedReasoner | None:
-    """Off unless AXIGNAL_AXENT_LUNA_MODEL is set and an OpenAI key is in the process."""
+def luna_reasoner_from_env(
+    values: Mapping[str, str] | None = None, *, data_dir: Path | None = None
+) -> GroundedReasoner | None:
+    """Opt-in only: configured model, readable secret file and known positive rates."""
 
-    model = os.getenv("AXIGNAL_AXENT_LUNA_MODEL", "").strip()
-    if not model or not os.getenv("OPENAI_API_KEY"):
+    values = os.environ if values is None else values
+    model = values.get("AXIGNAL_AXENT_LUNA_MODEL", "").strip()
+    filename = values.get("AXIGNAL_AXENT_API_KEY_FILE", "").strip()
+    if (
+        values.get("AXIGNAL_AXENT_GROUNDED", "false").lower() != "true"
+        or not model
+        or not filename
+        or data_dir is None
+    ):
+        return None
+    key_file = Path(filename)
+    if not key_file.is_absolute() or not key_file.is_file() or not os.access(key_file, os.R_OK):
+        return None
+    try:
+        input_rate = Decimal(values.get("AXIGNAL_AXENT_INPUT_PER_MILLION", ""))
+        output_rate = Decimal(values.get("AXIGNAL_AXENT_OUTPUT_PER_MILLION", ""))
+        maximum = Decimal(values.get("AXIGNAL_AXENT_MAX_CALL_COST", ""))
+        if not all(v.is_finite() and v > 0 for v in (input_rate, output_rate, maximum)):
+            return None
+        rates = CostRates(input_rate, output_rate, "USD")
+    except (InvalidOperation, ValueError):
         return None
     from cognition.axent_reasoner import CognitiveGroundedReasoner
     from cognition.providers.luna_responses import LunaResponsesProvider
     from cognition.router.router import ModelRouter
+    from pipeline.axent.model_audit import SqliteModelAudit
 
-    provider = LunaResponsesProvider(authorized_model=model)
-    return CognitiveGroundedReasoner(
+    provider = LunaResponsesProvider(authorized_model=model, key_file=key_file)
+    inner = CognitiveGroundedReasoner(
         ModelRouter([provider]), model=model, provider_name=provider.name
+    )
+    return BudgetedReasoner(
+        inner,
+        SqliteModelAudit(data_dir / "axent-model-audit.sqlite3"),
+        lambda: datetime.now(UTC),
+        rates,
+        maximum,
+        provider.name,
     )

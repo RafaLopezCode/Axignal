@@ -1,0 +1,12 @@
+# Optional T11 composition. Does not activate AXENT unless the CTO sets the shared flag.
+services:
+  runtime:
+    group_add:
+      - "${AXIGNAL_RESEARCH_SECRET_GID:-1991}"
+    environment:
+      AXIGNAL_AXENT_GROUNDED: ${AXIGNAL_AXENT_GROUNDED:-false}
+    secrets:
+      - openai_api_key
+  experience:
+    environment:
+      AXIGNAL_AXENT_GROUNDED: ${AXIGNAL_AXENT_GROUNDED:-false}
