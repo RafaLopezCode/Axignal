@@ -4,7 +4,8 @@ import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ArrowRight, LogOut, Plus, RefreshCw } from "lucide-react";
 import { useLocale } from "@/lib/locale";
-import { approvedPaymentUrl, monthlyCapacityCents, pilotRedemptionSchema, portfolioSchema, subscriberOutputSchema, subscriberResultSchema, type SubscriberPortfolio } from "@/lib/subscriber-contracts";
+import { approvedPaymentUrl, monthlyCapacityCents, pendingOutputSchema, pilotRedemptionSchema, portfolioSchema, subscriberOutputSchema, subscriberResultSchema, type FirstObservation, type SubscriberPortfolio } from "@/lib/subscriber-contracts";
+import { FirstObservationView, activityLabel, observationStateCopy } from "./first-observation";
 import type { RuntimeProjection } from "@/lib/runtime-projection";
 import { pendingPilotInvite, clearPilotInvite } from "@/lib/pilot-invite";
 import { pendingMcpConnect, clearMcpConnect } from "@/lib/mcp-connect";
@@ -13,6 +14,10 @@ import { PublicShell } from "./public-shell";
 import { SubscriberReading } from "./subscriber-reading";
 import { SubscriberRepresentation } from "./subscriber-representation";
 import "./subscriber-portfolio.css";
+
+type PortfolioItem = SubscriberPortfolio["organizations"][number];
+/** A canonical Focus reading, or a pending attention whose First Observation exists. */
+const readable = (item: PortfolioItem) => Boolean(item.organizationId || item.observation);
 
 export function SubscriberPortfolioExperience() {
   const { t, locale } = useLocale();
@@ -27,6 +32,7 @@ export function SubscriberPortfolioExperience() {
   const [total, setTotal] = useState(1);
   const [paymentUrl, setPaymentUrl] = useState<string | null>(null);
   const [projection, setProjection] = useState<RuntimeProjection | null>(null);
+  const [firstObservation, setFirstObservation] = useState<FirstObservation | null>(null);
   const [revision, setRevision] = useState<string | null>(null);
   const canReadProjection = Boolean(projection && (
     projection.nodes.length > 0 ||
@@ -134,6 +140,8 @@ export function SubscriberPortfolioExperience() {
       setPaymentUrl(link);
       setMessage(input.action === "refresh_purchase" ? result.state === "REFRESHED" ? t("La comprobación ha terminado. La cartera muestra la capacidad verificada.", "The check is complete. The portfolio shows verified capacity.") : t("El pago o la capacidad todavía no se han podido confirmar. No se ha concedido capacidad nueva.", "Payment or capacity could not be confirmed yet. No new capacity has been granted.")
         : link ? t("La compra espera tu confirmación. La capacidad solo cambia tras verificar el pago.", "The purchase awaits your confirmation. Capacity changes only after payment is verified.")
+        : result.observationState === "QUEUED" ? t("Recibido. La primera observación empieza en segundo plano y verás su estado aquí. La identidad legal se verifica aparte.", "Received. The first observation starts in the background and you will see its state here. Legal identity is verified separately.")
+        : result.observationState === "CAPACITY_REQUIRED" ? t("Tu solicitud está guardada, pero tu capacidad actual ya está en uso. Amplíala para observarla.", "Your request is saved, but your current capacity is already in use. Expand it to observe it.")
         : result.observationState === "NOT_READY" ? t("Tu atención está guardada. La observación necesita un plan autorizado; aún no se ha ejecutado.", "Your attention is saved. Observation requires an authorized plan; it has not run yet.")
         : result.observationState?.startsWith("BLOCKED") ? t("La observación se ha detenido por sus límites de ejecución. No hay una conclusión nueva.", "Observation stopped at its execution limits. There is no new conclusion.")
         : result.observationState === "PARTIAL" ? t("La observación es parcial. Lee las evidencias y sus límites antes de interpretar el resultado.", "Observation is partial. Read the evidence and its limits before interpreting the result.")
@@ -154,13 +162,18 @@ export function SubscriberPortfolioExperience() {
     const controller = new AbortController(); outputRequest.current = controller; requests.current.add(controller);
     const epoch = ++outputEpoch.current, session = sessionEpoch.current;
     if (pushHistory) { const url = new URL(window.location.href); url.searchParams.set("organization", focusId); window.history.pushState(null, "", url); }
-    setReading(true); setSelected(focusId); setProjection(null);
+    setReading(true); setSelected(focusId); setProjection(null); setFirstObservation(null);
     try {
       const response = await fetch(`/api/subscriber/organizations/${encodeURIComponent(focusId)}/output`, { cache: "no-store", signal: controller.signal });
       if (!response.ok) throw new Error("READ_FAILED");
-      const result = subscriberOutputSchema.parse(await response.json());
+      const payload: unknown = await response.json();
       if (controller.signal.aborted || epoch !== outputEpoch.current || session !== sessionEpoch.current) return;
-      setProjection(result.projection); setRevision(result.revision ?? null);
+      if (typeof payload === "object" && payload !== null && (payload as { kind?: unknown }).kind === "PENDING_ATTENTION") {
+        setFirstObservation(pendingOutputSchema.parse(payload).firstObservation); setRevision(null);
+        return;
+      }
+      const result = subscriberOutputSchema.parse(payload);
+      setProjection(result.projection); setRevision(result.revision ?? null); setFirstObservation(result.firstObservation ?? null);
     } catch { if (!controller.signal.aborted) setMessage(t("La lectura autorizada no está disponible. Vuelve a comprobar el estado.", "The authorized reading is unavailable. Check the state again.")); }
     finally { requests.current.delete(controller); if (epoch === outputEpoch.current) setReading(false); }
   }, [t]);
@@ -168,16 +181,28 @@ export function SubscriberPortfolioExperience() {
     if (access !== "ready" || !portfolio) return;
     const navigate = () => {
       const focus = new URL(window.location.href).searchParams.get("organization");
-      const entry = portfolio.organizations.find(item => item.focusId === focus && item.organizationId && !["REMOVED", "RESOLVED", "CANCELLED"].includes(item.state));
+      const entry = portfolio.organizations.find(item => item.focusId === focus && readable(item) && !["REMOVED", "RESOLVED", "CANCELLED"].includes(item.state));
       if (entry) void readOutput(entry.focusId, false);
-      else { outputRequest.current?.abort(); ++outputEpoch.current; setSelected(null); setProjection(null); setRevision(null); setReading(false); }
+      else { outputRequest.current?.abort(); ++outputEpoch.current; setSelected(null); setProjection(null); setFirstObservation(null); setRevision(null); setReading(false); }
     };
     const focus = new URL(window.location.href).searchParams.get("organization");
-    if ((focus && focus !== selected) || (selected && !portfolio.organizations.some(item => item.focusId === selected && item.organizationId && !["REMOVED", "RESOLVED", "CANCELLED"].includes(item.state)))) navigate();
+    if ((focus && focus !== selected) || (selected && !portfolio.organizations.some(item => item.focusId === selected && readable(item) && !["REMOVED", "RESOLVED", "CANCELLED"].includes(item.state)))) navigate();
     window.addEventListener("popstate", navigate);
     return () => window.removeEventListener("popstate", navigate);
   }, [access, portfolio, readOutput, selected]);
   useEffect(() => { setTotal(value => Math.max(value, (portfolio?.capacity ?? 0) + 1)); }, [portfolio?.capacity]);
+  // Real progress, never fake loading: re-read while a First Observation is still running.
+  const running = portfolio?.organizations.filter(item => item.observation && ["QUEUED", "OBSERVING_PUBLIC_PRESENCE"].includes(item.observation.state)).map(item => item.focusId).join(",") ?? "";
+  const previousRunning = useRef("");
+  useEffect(() => {
+    if (access !== "ready") return;
+    const finished = previousRunning.current.split(",").filter(id => id && !running.split(",").includes(id));
+    previousRunning.current = running;
+    if (selected && finished.includes(selected)) void readOutput(selected, false);
+    if (!running) return;
+    const timer = window.setTimeout(() => void readPortfolio(), 4000);
+    return () => window.clearTimeout(timer);
+  }, [access, running, selected, readOutput, readPortfolio]);
   async function logout() {
     if (busy) return;
     setBusy(true);
@@ -206,8 +231,8 @@ export function SubscriberPortfolioExperience() {
           <p>{portfolio.capacity === null || portfolio.capacityCurrentness !== "CURRENT" ? t("Capacidad sin confirmar", "Unconfirmed capacity") : `${used} / ${portfolio.capacity}`} · {t("Las organizaciones pausadas conservan su espacio.", "Paused organizations retain their space.")}</p>
           {portfolio.entitlementSource === "DESIGN_PARTNER_PILOT" && <p className="limit-note">{t("Design Partner · 1 organización · 0 € durante el piloto de validación.", "Design Partner · 1 organization · €0 during the validation pilot.")}</p>}
           {!portfolio.organizations.filter(item => !["REMOVED", "RESOLVED", "CANCELLED"].includes(item.state)).length && <div className="subscriber-empty"><h3>{t("Empieza por una organización.", "Start with an organization.")}</h3><p>{t("Puedes explorar tu cuenta. La germinación empieza al añadir una organización y resolver su identidad y el acceso a observarla.", "You can explore your account. Germination starts when you add an organization and its identity and observation access are resolved.")}</p><p>{t("Indica dónde observar. El nombre o la URL orientan la investigación; no establecen lo que es verdad.", "Direct observation. A name or URL guides research; it does not establish truth.")}</p></div>}
-          <ul className="subscriber-list">{portfolio.organizations.filter(item => !["REMOVED", "RESOLVED", "CANCELLED"].includes(item.state)).map(item => <li key={item.focusId}><div><h3>{item.label}</h3><p>{item.state === "IDENTITY_PENDING" && item.reason?.startsWith("AMBIGUOUS") ? t("Varias organizaciones coinciden", "Several organizations match") : item.state === "IDENTITY_PENDING" && item.reason?.startsWith("CONFLICT") ? t("Datos en conflicto", "Conflicting details") : item.state === "IDENTITY_PENDING" ? t("Identidad por resolver", "Identity unresolved") : item.state === "IDENTITY_REJECTED" ? t("Identidad no admitida", "Identity not admitted") : item.state === "CAPACITY_UNKNOWN" ? t("Capacidad sin confirmar", "Unconfirmed capacity") : item.state === "CAPACITY_PENDING" ? t("Pendiente de capacidad", "Capacity pending") : item.state === "PURCHASE_AUTHORITY_REQUIRED" ? t("Autoridad de compra pendiente", "Purchase authority pending") : item.state === "PAUSED" ? t("Pausada", "Paused") : t("Observación activa", "Active observation")}</p></div><div className="subscriber-row-actions">
-            {item.organizationId && <button className="text-link" disabled={busy} onClick={() => void readOutput(item.focusId)} aria-pressed={selected === item.focusId}>{t("Abrir la lectura", "Open the reading")}<ArrowRight size={15}/></button>}
+          <ul className="subscriber-list">{portfolio.organizations.filter(item => !["REMOVED", "RESOLVED", "CANCELLED"].includes(item.state)).map(item => <li key={item.focusId}><div><h3>{item.label}</h3><p>{item.state === "IDENTITY_PENDING" && item.reason?.startsWith("AMBIGUOUS") ? t("Varias organizaciones coinciden", "Several organizations match") : item.state === "IDENTITY_PENDING" && item.reason?.startsWith("CONFLICT") ? t("Datos en conflicto", "Conflicting details") : item.state === "IDENTITY_PENDING" ? t("Identidad por resolver", "Identity unresolved") : item.state === "IDENTITY_REJECTED" ? t("Identidad no admitida", "Identity not admitted") : item.state === "CAPACITY_UNKNOWN" ? t("Capacidad sin confirmar", "Unconfirmed capacity") : item.state === "CAPACITY_PENDING" ? t("Pendiente de capacidad", "Capacity pending") : item.state === "PURCHASE_AUTHORITY_REQUIRED" ? t("Autoridad de compra pendiente", "Purchase authority pending") : item.state === "PAUSED" ? t("Pausada", "Paused") : t("Observación activa", "Active observation")}</p>{item.observation && <p className="fo-line" role="status">{observationStateCopy(item.observation.state, t)}{item.observation.headline ? ` · ${activityLabel(item.observation.headlineCode ?? "", item.observation.headline, t)}` : ""}</p>}</div><div className="subscriber-row-actions">
+            {readable(item) && <button className="text-link" disabled={busy} onClick={() => void readOutput(item.focusId)} aria-pressed={selected === item.focusId}>{item.organizationId ? t("Abrir la lectura", "Open the reading") : t("Ver la primera observación", "See the first observation")}<ArrowRight size={15}/></button>}
             {item.organizationId && <button className="text-link" disabled={busy} onClick={() => void command({ action: item.state === "PAUSED" ? "resume" : "pause", focusId: item.focusId })}>{item.state === "PAUSED" ? t("Reanudar", "Resume") : t("Pausar", "Pause")}</button>}
             {item.state === "ACTIVE" && <button className="text-link" disabled={busy} onClick={() => void command({ action: "reobserve", focusId: item.focusId })}>{t("Volver a observar", "Observe again")}</button>}
             {!item.organizationId && <button className="text-link" disabled={busy} onClick={() => void command({ action: "retry_pending", focusId: item.focusId })}>{t("Volver a comprobar", "Check again")}</button>}
@@ -224,7 +249,8 @@ export function SubscriberPortfolioExperience() {
         <SubscriberMcpConnections/>
         <section className="subscriber-operation" aria-live="polite">{message && <p>{message}</p>}{paymentUrl && <a className="button primary" href={paymentUrl}>{t("Continuar al pago", "Continue to payment")}<ArrowRight size={16}/></a>}</section>
         {reading && <p role="status">{t("Leyendo las evidencias…", "Reading the evidence…")}</p>}
-        {projection && <section className="subscriber-reading" aria-labelledby="reading-title"><span className="eyebrow">{t("Tu lectura", "Your reading")}</span><h2 id="reading-title">{projection.organization.name}</h2>{projection.digitalRepresentation && <SubscriberRepresentation measurement={projection.digitalRepresentation}/>}{canReadProjection && revision ? <SubscriberReading key={revision} projection={projection} revision={revision}/> : <p>{t("Todavía no hay evidencia suficiente para una conclusión. Una ausencia en esta lectura no demuestra ausencia en el mundo.", "Evidence is not yet sufficient for a conclusion. Absence in this reading does not prove absence in the world.")}</p>}</section>}
+        {firstObservation && !projection && selected && <section className="subscriber-reading"><FirstObservationView observation={firstObservation}/></section>}
+        {projection && <section className="subscriber-reading" aria-labelledby="reading-title"><span className="eyebrow">{t("Tu lectura", "Your reading")}</span><h2 id="reading-title">{projection.organization.name}</h2>{projection.digitalRepresentation && <SubscriberRepresentation measurement={projection.digitalRepresentation}/>}{canReadProjection && revision ? <SubscriberReading key={revision} projection={projection} revision={revision}/> : <p>{t("Todavía no hay evidencia suficiente para una conclusión. Una ausencia en esta lectura no demuestra ausencia en el mundo.", "Evidence is not yet sufficient for a conclusion. Absence in this reading does not prove absence in the world.")}</p>}{firstObservation && <FirstObservationView observation={firstObservation}/>}</section>}
       </>}
     </div>
   </PublicShell>;

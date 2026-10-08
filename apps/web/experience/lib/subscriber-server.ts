@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { createHash } from "node:crypto";
 import { authStartSchema, preparedAuthStart, preparedProviders } from "./public-contracts";
-import { approvedPaymentUrl, pilotRedemptionSchema, portfolioSchema, subscriberCommandSchema, subscriberOutputSchema, subscriberResultSchema } from "./subscriber-contracts";
+import { approvedPaymentUrl, pendingOutputSchema, pilotRedemptionSchema, portfolioSchema, subscriberCommandSchema, subscriberOutputSchema, subscriberResultSchema } from "./subscriber-contracts";
 import type { RuntimeProjection } from "./runtime-projection";
 import { approvedMcpRedirect, mcpConnectionsSchema, mcpConsentSchema, mcpDecisionSchema, mcpGrantId, mcpRequestId, mcpRevokeSchema } from "./mcp-connect";
 
@@ -197,6 +197,9 @@ export async function subscriberProxy(request: Request, path: string, write = fa
     const response = await upstream(path, token, command);
     if (!response.ok) return rejected(response.status === 401 ? "AUTHENTICATION_REQUIRED" : response.status === 403 || response.status === 404 ? "ACCESS_DENIED" : "REQUEST_UNAVAILABLE", response.status);
     const payload = await checkedJson(response);
+    if (!write && path.endsWith("/output") && typeof payload === "object" && payload !== null && (payload as { kind?: unknown }).kind === "PENDING_ATTENTION") {
+      return Response.json(pendingOutputSchema.parse(payload), { status: response.status, headers });
+    }
     const schema = write ? subscriberResultSchema : path.endsWith("/output") ? subscriberOutputSchema : portfolioSchema;
     const result = schema.parse(payload);
     if (write) {

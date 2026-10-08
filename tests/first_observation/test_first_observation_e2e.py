@@ -111,11 +111,14 @@ def test_language_school_in_arkansas_is_understood_and_gets_a_grounded_source_ga
     assert (activity["code"], activity["detail"]["method"]) == ("isic-P", "SEMANTIC_JUDGMENT")
     assert activity["detail"]["model"] == "jev-1.13.0" and activity["detail"]["confidence"] > 0.6
     assert "NAICS:61" in activity["detail"]["routingCodes"]
-    (place,) = [d for d in discoveries(view, "DECLARED_LOCATION") if d["code"] == "LOCATION_STATED_IN_TEXT"]
+    (place,) = [
+        d for d in discoveries(view, "DECLARED_LOCATION") if d["code"] == "LOCATION_STATED_IN_TEXT"
+    ]
     assert place["statement"] == "US/US-AR" and place["epistemicState"] == "POTENTIAL"
     assert "Arkansas" in place["excerpt"]
     # Not TED (EU only) and no invented US source: an explicit, non-negative gap.
-    assert "NO_GOVERNED_DEMAND_SOURCE:US/US-AR" in codes(view)
+    gaps = [d["code"] for d in view["discoveries"] if d["code"].startswith("NO_GOVERNED")]
+    assert gaps == ["NO_GOVERNED_DEMAND_SOURCE:US/US-AR"]  # one per market, not per question
     assert world.ted.queries == []
     # Extra pages were read only because activity and location were UNKNOWN.
     assert SCHOOL_AR + "courses" in world.sites.requests
@@ -135,7 +138,9 @@ def test_semantic_layer_off_keeps_a_deterministic_honest_first_observation(tmp_p
     view = _view(facade, token, _pending_id(facade, token))
     assert view["state"] == "NOT_ENOUGH_CAPABILITY_EVIDENCE"
     assert view["firstProofReady"] is False
-    assert {"PUBLIC_WEBSITE_OBSERVED", "LANGUAGES_PUBLISHED", "ACTIVITY_NOT_ESTABLISHED"} <= codes(view)
+    assert {"PUBLIC_WEBSITE_OBSERVED", "LANGUAGES_PUBLISHED", "ACTIVITY_NOT_ESTABLISHED"} <= codes(
+        view
+    )
     assert "SKIPPED:SEMANTIC:LAYER_DISABLED" in view["ledger"]["decisions"]
     assert world.judge.calls == [] and world.ted.queries == []
 

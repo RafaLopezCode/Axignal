@@ -699,15 +699,18 @@ class FirstObservationService:
         if plan is None:
             ledger.decide("SKIPPED:DEMAND:NO_ROUTING_CODE")
             return [unknown("DEMAND_NOT_ROUTABLE", "Its activity has no classification a governed demand source uses yet.")]  # fmt: skip
-        out = [
+        reasons: dict[str, set[str]] = {}
+        for market, reason in plan.gaps:
+            if reason in {"NO_ADOPTED_SOURCE", "NO_KNOWN_SOURCE"}:
+                reasons.setdefault(market, set()).add(reason)
+        out = [  # one grounded gap per market, whatever the number of questions behind it
             unknown(
                 f"NO_GOVERNED_DEMAND_SOURCE:{market}",
                 f"No governed demand source is adopted for {market} yet. That is not an "
                 "absence of demand.",
-                {"jurisdiction": market, "reason": reason},
+                {"jurisdiction": market, "reasons": sorted(found)},
             )
-            for market, reason in plan.gaps
-            if reason in {"NO_ADOPTED_SOURCE", "NO_KNOWN_SOURCE"}
+            for market, found in sorted(reasons.items())
         ]
         if not plan.strategy.actions:
             ledger.decide("SKIPPED:DEMAND:NO_ROUTABLE_SOURCE")

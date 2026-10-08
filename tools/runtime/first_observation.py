@@ -287,14 +287,15 @@ def public_view(proof: Mapping[str, Any] | None, state: str | None) -> dict[str,
     return view
 
 
-def _headline(proof: Mapping[str, Any] | None) -> str | None:
+def _headline(proof: Mapping[str, Any] | None) -> tuple[str | None, str | None]:
+    """(statement, stable code) of the most informative discovery, for the portfolio."""
     if proof is None:
-        return None
+        return None, None
     for kind in ("ACTIVITY", "PUBLIC_PRESENCE"):
         for discovery in proof.get("discoveries", ()):
             if discovery.get("kind") == kind:
-                return str(discovery.get("statement"))
-    return None
+                return str(discovery.get("statement")), str(discovery.get("code"))
+    return None, None
 
 
 class FirstObservationRuntime:
@@ -515,10 +516,12 @@ class FirstObservationRuntime:
         if state is None:
             return None
         proof = self.store.proof(tenant, target_ref)
+        headline, headline_code = _headline(proof)
         return {
             "state": state,
             "firstProofReady": bool(proof and proof.get("firstProofReady")),
-            "headline": _headline(proof),
+            "headline": headline,
+            "headlineCode": headline_code,
             "observedAt": None if proof is None else proof.get("observedAt"),
         }
 
