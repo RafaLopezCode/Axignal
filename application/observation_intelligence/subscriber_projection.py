@@ -19,6 +19,16 @@ from application.economic_discovery.observation_memory import (
     ObservationRightsStatus,
 )
 from application.economic_discovery.observation_reuse import ReusePurpose
+from application.economic_discovery.temporal_currentness import TemporalCurrentnessPolicy
+from application.economic_reach.derive import derive_operating_model
+from application.economic_reach.exposure import DriverEvent, ExposureScope, assess_exposure
+from application.economic_reach.relevance import DemandEvent, RelevanceScope, assess_demand
+from application.economic_reach.summary import (
+    EXPLORATION_LIMIT,
+    GARDEN_TEMPORAL_POLICY,
+    LEXICON_TERMS,
+    garden_summary,
+)
 from application.observation_intelligence.contracts import (
     AdoptionStatus,
     CapabilityHypothesis,
@@ -121,9 +131,22 @@ def _finding_pairs(*, brief: HumanObservationBrief, result: LoopResult) -> dict[
 
 
 def _capability_for(
-    candidate: OpportunityCandidate, context: XeedObservationContext
+    candidate: OpportunityCandidate,
+    context: XeedObservationContext,
+    relevant: tuple[str, ...] = (),
 ) -> CapabilityHypothesis | None:
     by_id = {item.capability_id: item for item in context.capabilities}
+    if relevant:
+        # Show the capability through which the event is in this Xeed's garden.
+        preferred = next(
+            (
+                reason.split(":", 1)[1]
+                for reason in candidate.why_looked
+                if reason.startswith("XEED_CAPABILITY:")
+            ),
+            None,
+        )
+        return by_id.get(preferred if preferred in relevant else relevant[0])
     searched_for = next(
         (
             reason.split(":", 1)[1]
@@ -144,8 +167,9 @@ def _authorized_basis(
     context: XeedObservationContext,
     organization_id: str,
     observations: tuple[tuple[GovernedObservation, Currentness], ...],
+    relevant: tuple[str, ...] = (),
 ) -> tuple[EvidenceRef, Currentness] | None:
-    capability = _capability_for(candidate, context)
+    capability = _capability_for(candidate, context, relevant)
     if capability is None or not capability.basis:
         return None
     datum = capability.basis[0]
@@ -221,8 +245,17 @@ def project_observation_opportunities(
     coverage: EvidenceCoverageMap,
     observations: tuple[tuple[GovernedObservation, Currentness], ...],
     registry: SourceRegistry | None = None,
+    drivers: tuple[DriverEvent, ...] = (),
+    temporal_policy: TemporalCurrentnessPolicy = GARDEN_TEMPORAL_POLICY,
 ) -> SubscriberOpportunityProjection | None:
-    """Build cognition opportunities only from this focus and admitted provenance."""
+    """Build cognition opportunities only from this focus and admitted provenance.
+
+    Every candidate crosses the Economic Relevance Gate (spec 058) against the garden
+    derived from the same authorized evidence: only events inside a delivery channel's
+    reach (or the Organization's own expansion signals) reach the subscriber; the rest
+    stay in global memory and are only counted. Drivers become exposure, never
+    opportunities.
+    """
     if not isinstance(authorized_context, AuthorizedXeedOrganization):
         raise SubscriberOpportunityProjectionError("authorized Observation Focus context required")
     xeed = authorized_context.authorized_xeed.xeed
@@ -257,6 +290,20 @@ def project_observation_opportunities(
     )
     findings = _finding_pairs(brief=brief, result=result)
     output_as_of = max((context.as_of, *(item.observed_at for item in result.candidates)))
+    garden = derive_operating_model(
+        organization_id=str(organization.id),
+        capabilities=context.capabilities,
+        capability_terms=LEXICON_TERMS,
+        observations=tuple(
+            observation
+            for observation, _currentness in observations
+            if observation.record.subject_id == organization.id
+        ),
+        as_of=output_as_of,
+        policy=temporal_policy,
+    )
+    filtered: dict[str, int] = {}
+    unresolved_shown = 0
     source_rows: list[dict[str, object]] = []
     opportunities: list[dict[str, object]] = []
     signals: list[dict[str, str]] = []
@@ -284,16 +331,36 @@ def project_observation_opportunities(
         ):
             # Unsupported provenance means no subscriber-visible opportunity.
             continue
+        decision = assess_demand(
+            garden,
+            DemandEvent(
+                event_id=candidate.candidate_id,
+                places=candidate.record.places,
+                capability_ids=candidate.capability_ids,
+                deadline=candidate.record.deadline,
+            ),
+            as_of=output_as_of,
+        )
+        if not decision.surfaced:
+            # True in the world, outside this garden: kept globally, only counted here.
+            filtered[decision.scope.value] = filtered.get(decision.scope.value, 0) + 1
+            continue
+        if decision.scope is RelevanceScope.UNRESOLVED_REACH and garden.has_reach_evidence:
+            if unresolved_shown >= EXPLORATION_LIMIT:
+                filtered["EXPLORATION_LIMIT"] = filtered.get("EXPLORATION_LIMIT", 0) + 1
+                continue
+            unresolved_shown += 1
         basis = _authorized_basis(
             candidate=candidate,
             context=context,
             organization_id=organization.id,
             observations=observations,
+            relevant=decision.capability_ids,
         )
         if basis is None:
             continue
         capability_datum, capability_currentness = basis
-        capability = _capability_for(candidate, context)
+        capability = _capability_for(candidate, context, decision.capability_ids)
         if capability is None:
             continue
         finding = findings[candidate.candidate_id]
@@ -385,6 +452,8 @@ def project_observation_opportunities(
                 "currentness": currentness.value,
                 "currentnessEvaluatedAt": output_as_of.isoformat(),
                 "matchBasis": list(candidate.match_basis),
+                "relevance": decision.explanation(),
+                "reachSourceIds": list(garden.evidence_ids),
             }
         )
         signals.append({"id": candidate.candidate_id, "familyId": "demand"})
@@ -399,6 +468,13 @@ def project_observation_opportunities(
         "sources": source_rows,
         "signals": signals,
         "opportunities": opportunities,
+        "economicGarden": garden_summary(garden),
+        "relevanceFiltered": dict(sorted(filtered.items())),
+        "exposure": [
+            {"eventId": driver.event_id, **exposed.explanation()}
+            for driver in drivers
+            if (exposed := assess_exposure(garden, driver)).scope is ExposureScope.EXPOSURE
+        ],
     }
     encoded = json.dumps(payload, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
     projection_id = "opportunity-projection:" + hashlib.sha256(encoded.encode("utf-8")).hexdigest()

@@ -221,6 +221,20 @@ def corpus_from_reading(
             parts.append(f"deadline: {_str(raw.get('deadline'))[:10]}")
         if raw.get("whyPotential"):
             parts.append(_str(raw.get("whyPotential")))
+        relevance = _dict(raw.get("relevance"))
+        if relevance.get("scope"):
+            # Spec 058 ExplanationTrace: why this event belongs to this business's garden.
+            reasons = sorted(
+                {
+                    f"{_str(channel.get('capabilityId'))}/{_str(channel.get('mode')) or 'any'}: "
+                    f"{_str(judgment.get('reason'))}"
+                    for channel in map(_dict, _list(relevance.get("channels")))
+                    if channel.get("scope") == relevance.get("scope")
+                    for judgment in map(_dict, _list(channel.get("judgments")))
+                    if judgment.get("family") == "GEOGRAPHIC_ECONOMIC_REACH"
+                }
+            )
+            parts.append(f"relevance: {_str(relevance.get('scope'))} ({'; '.join(reasons)})")
         items.append(
             _item(
                 _str(raw.get("id")),
@@ -256,6 +270,78 @@ def corpus_from_reading(
                     ),
                 )
             )
+
+    garden = _dict(cognition.get("economicGarden"))
+    for capability in map(_dict, _list(garden.get("capabilities"))):
+        label = _str(capability.get("label"))
+        operating = sorted(
+            {_str(_dict(x).get("geography")) for x in _list(capability.get("operating"))}
+        )
+        expansion = sorted(
+            {_str(_dict(x).get("geography")) for x in _list(capability.get("expansion"))}
+        )
+        modes = [_str(x) for x in _list(capability.get("deliveryModes"))]
+        text = (
+            f"{label}: delivered {', '.join(modes) or 'by an unknown mode'}; "
+            f"observed reach {', '.join(operating) or 'unknown'}; "
+            f"plausible expansion {', '.join(expansion) or 'none observed'}"
+        )
+        items.append(
+            _item(
+                f"garden:{_str(capability.get('capabilityId'))}",
+                EvidenceKind.CAPABILITY,
+                (_F.MARKETS, _F.VALUE),
+                text,
+                epistemic="DECLARED",
+                currentness="CURRENT"
+                if all(_dict(x).get("current") for x in _list(capability.get("operating")))
+                else "STALE",
+                observed_at=None,
+                source_ref=None,
+                source_label="AXIGNAL economic garden (derived from the organization's public pages)",
+                geographies=tuple(operating),
+                limits=(
+                    "A stated service area is a public claim, not demonstrated logistics or capacity.",
+                    *(f"{_str(item)} is unknown." for item in _list(capability.get("unknown"))),
+                ),
+            )
+        )
+    filtered = _dict(cognition.get("relevanceFiltered"))
+    if filtered:
+        items.append(
+            _item(
+                "garden:filtered",
+                EvidenceKind.SIGNAL,
+                (_F.MARKETS, _F.DEMAND),
+                "Observed events kept as world knowledge but not shown as opportunities: "
+                + ", ".join(f"{key} {value}" for key, value in sorted(filtered.items())),
+                epistemic="OBSERVED",
+                currentness="CURRENT",
+                observed_at=None,
+                source_ref=None,
+                source_label="AXIGNAL economic relevance gate",
+                limits=("Outside this business's observed reach is not false and not deleted.",),
+            )
+        )
+    for exposure in map(_dict, _list(cognition.get("exposure"))):
+        paths = [_dict(x) for x in _list(exposure.get("transmission"))]
+        items.append(
+            _item(
+                f"exposure:{_str(exposure.get('eventId'))}",
+                EvidenceKind.SIGNAL,
+                (_F.ECONOMICS, _F.CONTEXT),
+                "External driver reaching the business through "
+                + ", ".join(sorted({_str(x.get("channel")) for x in paths})),
+                epistemic=_str(exposure.get("state")),
+                currentness="CURRENT",
+                observed_at=None,
+                source_ref=None,
+                source_label="AXIGNAL economic exposure",
+                limits=(
+                    "A plausible transmission path, not an observed impact; not an opportunity.",
+                ),
+            )
+        )
 
     for source_id, raw in sources.items():
         if source_id.startswith("opportunity-evidence:"):

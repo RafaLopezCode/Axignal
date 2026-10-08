@@ -13,6 +13,9 @@ from dataclasses import dataclass
 from datetime import timedelta
 from pathlib import Path
 
+from application.economic_reach.derive import derive_operating_model
+from application.economic_reach.research import prune_research
+from application.economic_reach.summary import GARDEN_TEMPORAL_POLICY, LEXICON_TERMS
 from application.observation_intelligence import (
     EvidenceCoverageMap,
     MarketRole,
@@ -200,6 +203,18 @@ class ConfiguredSubscriberObservationPlanReader:
             stop_policy=self.stop_policy
             or StopPolicy(sufficient_candidates=3, max_no_gain_streak=2),
         )
+        # Spec 058: no research spend outside the garden of location-bound channels.
+        garden = derive_operating_model(
+            organization_id=organization_id,
+            capabilities=capabilities,
+            capability_terms=LEXICON_TERMS,
+            observations=tuple(observation for observation, _currentness in history),
+            as_of=as_of,
+            policy=GARDEN_TEMPORAL_POLICY,
+        )
+        strategy, _pruned = prune_research(strategy, garden)
+        if not strategy.actions:
+            return None
         adapters: dict[str, SourceObservationPort] = {}
         if self.adapters_for is not None:
             adapters = dict(self.adapters_for(strategy))
