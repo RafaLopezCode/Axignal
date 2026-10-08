@@ -107,6 +107,7 @@ class TypeSafeSystemOneJudge:
         key_file: Path | None = None,
         client: Any | None = None,
         sdk: Any | None = None,
+        transport: Any | None = None,
         timeout: float = 30.0,
         max_retries: int = 2,
     ) -> None:
@@ -116,6 +117,8 @@ class TypeSafeSystemOneJudge:
         self._key_file = key_file
         self._client = client
         self._sdk = sdk
+        # An injected HTTP transport (isolated preflight) replaces only the network.
+        self._transport = transport
         self._timeout = timeout
         self._max_retries = max_retries
 
@@ -127,6 +130,7 @@ class TypeSafeSystemOneJudge:
                 api_key=_read_key(self._key_file),
                 timeout=self._timeout,
                 retry=sdk.RetryPolicy(max_retries=self._max_retries),
+                **({"transport": self._transport} if self._transport is not None else {}),
             )
         return self._client
 

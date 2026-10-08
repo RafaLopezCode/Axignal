@@ -14,6 +14,7 @@ from collections.abc import Mapping
 from dataclasses import replace
 from decimal import Decimal, InvalidOperation
 from pathlib import Path
+from typing import Any
 
 from application.observation_intelligence.semantic_screen import (
     DELIVERY,
@@ -63,8 +64,12 @@ def _luna_price(values: Mapping[str, str], model: str) -> PricePolicy:
 
 
 def semantic_screen_from_env(
-    values: Mapping[str, str] | None = None, *, data_dir: Path | None = None
+    values: Mapping[str, str] | None = None,
+    *,
+    data_dir: Path | None = None,
+    transport: Any | None = None,
 ) -> SemanticDemandScreen | None:
+    """Build the screen from settings; ``transport`` replaces only the network (preflight)."""
     values = os.environ if values is None else values
     if values.get("AXIGNAL_SEMANTIC_LAYER_ENABLED", "false").lower() != "true" or data_dir is None:
         return None
@@ -78,7 +83,7 @@ def semantic_screen_from_env(
     from cognition.providers.typesafe_system_one import TypeSafeSystemOneJudge
     from pipeline.semantic_layer.sqlite_memory import SqliteJudgmentMemory
 
-    judge = TypeSafeSystemOneJudge(model=model, key_file=key_file)
+    judge = TypeSafeSystemOneJudge(model=model, key_file=key_file, transport=transport)
     memory = SqliteJudgmentMemory(data_dir / "semantic-judgments.sqlite3")
     escalation = None
     # The published price belongs to one model version; another version is UNKNOWN.

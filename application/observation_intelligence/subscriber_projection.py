@@ -36,6 +36,7 @@ from application.observation_intelligence.contracts import (
     MarketRole,
     OpportunityFamily,
     RightsStatus,
+    SourceDescriptor,
     XeedObservationContext,
 )
 from application.observation_intelligence.coverage import CoverageState, EvidenceCoverageMap
@@ -241,6 +242,35 @@ def _coverage_currentness(
     }[state]
 
 
+def _eligible_source(
+    candidate: OpportunityCandidate, registry: SourceRegistry, context: XeedObservationContext
+) -> SourceDescriptor | None:
+    """The candidate's source if it may be shown (and therefore judged), else None."""
+    try:
+        source = registry.get(candidate.record.source_id)
+    except KeyError:
+        return None
+    if (
+        candidate.record.kind not in source.capabilities
+        or not source.covers(candidate.market)
+        or not any(
+            candidate.market.within(market.geography) and MarketRole.PUBLIC_BUYERS in market.roles
+            for market in context.markets
+        )
+        or not any(place.within(candidate.market) for place in candidate.record.places)
+    ):
+        return None
+    if (
+        not source.routable
+        or source.adoption is not AdoptionStatus.ADOPTED
+        or source.rights is not RightsStatus.REUSE_DOCUMENTED
+        or not _safe_public_url(candidate.record.source_url)
+    ):
+        # Unsupported provenance means no subscriber-visible opportunity.
+        return None
+    return source
+
+
 def project_observation_opportunities(
     *,
     authorized_context: AuthorizedXeedOrganization,
@@ -310,8 +340,15 @@ def project_observation_opportunities(
         as_of=output_as_of,
         policy=temporal_policy,
     )
+    # Only demand whose source, scope and reuse rights already qualify it for display
+    # may be sent to a semantic provider (MCA §5: Input rights stay a separate gate).
+    eligible = tuple(
+        (candidate, source)
+        for candidate in result.candidates
+        if (source := _eligible_source(candidate, registry, context)) is not None
+    )
     screen_run = (
-        semantic_screen.screen(result.candidates, now=output_as_of)
+        semantic_screen.screen(tuple(candidate for candidate, _ in eligible), now=output_as_of)
         if semantic_screen is not None
         else None
     )
@@ -321,30 +358,7 @@ def project_observation_opportunities(
     source_rows: list[dict[str, object]] = []
     opportunities: list[dict[str, object]] = []
     signals: list[dict[str, str]] = []
-    for candidate in result.candidates:
-        try:
-            source = registry.get(candidate.record.source_id)
-        except KeyError:
-            continue
-        if (
-            candidate.record.kind not in source.capabilities
-            or not source.covers(candidate.market)
-            or not any(
-                candidate.market.within(market.geography)
-                and MarketRole.PUBLIC_BUYERS in market.roles
-                for market in context.markets
-            )
-            or not any(place.within(candidate.market) for place in candidate.record.places)
-        ):
-            continue
-        if (
-            not source.routable
-            or source.adoption is not AdoptionStatus.ADOPTED
-            or source.rights is not RightsStatus.REUSE_DOCUMENTED
-            or not _safe_public_url(candidate.record.source_url)
-        ):
-            # Unsupported provenance means no subscriber-visible opportunity.
-            continue
+    for candidate, source in eligible:
         screen = screens.get(candidate.candidate_id)
         if screen is not None and screen.unrelated:
             # Codes matched, meaning did not: real demand, not this capability's work.

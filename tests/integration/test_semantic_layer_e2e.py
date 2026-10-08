@@ -191,3 +191,25 @@ def test_composition_is_off_unless_fully_configured(tmp_path: Path) -> None:
         )
         is None
     )
+
+
+def test_only_demand_that_passed_provenance_and_rights_is_sent_to_jev(
+    tmp_path: Path,
+    world,  # noqa: F811
+    monkeypatch,
+) -> None:
+    # MCA §5: provider eligibility never widens Input rights. A notice whose provenance
+    # fails the display gate (here: its URL is not a safe public link) is never judged.
+    import application.observation_intelligence.subscriber_projection as projection
+
+    original = projection._safe_public_url
+    monkeypatch.setattr(
+        projection, "_safe_public_url", lambda url: "700102" not in url and original(url)
+    )
+    facade, plan = world
+    judge = FakeSystemOne(_core_onsite)
+    cognition = _observe(tmp_path, facade, plan, "rights", _screen(judge))
+    sent = " ".join(_title(batch) for batch in judge.calls)
+    assert "depuradoras" not in sent and "getafe" not in sent  # buyer is not in the title
+    assert any("autoconsumo" in _title(batch) for batch in judge.calls)
+    assert any("Getafe" in str(o["buyer"]) for o in cognition["opportunities"])

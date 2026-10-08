@@ -8,6 +8,8 @@ from __future__ import annotations
 
 import json
 import sqlite3
+from collections.abc import Iterator
+from contextlib import contextmanager
 from datetime import datetime
 from pathlib import Path
 
@@ -30,8 +32,15 @@ class SqliteJudgmentMemory:
                 """
             )
 
-    def _connect(self) -> sqlite3.Connection:
-        return sqlite3.connect(self._path, timeout=10)
+    @contextmanager
+    def _connect(self) -> Iterator[sqlite3.Connection]:
+        """Commit on success and always close: no connection outlives a call."""
+        connection = sqlite3.connect(self._path, timeout=10)
+        try:
+            with connection:
+                yield connection
+        finally:
+            connection.close()
 
     def get(self, key: str) -> SemanticAnswer | None:
         with self._connect() as connection:

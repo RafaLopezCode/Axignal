@@ -1,0 +1,17 @@
+# Optional spec 062 composition (ADR-0090). Mounts the TypeSafe key for the runtime
+# only; it does not enable the semantic layer. Activation stays in the subscriber
+# configuration (AXIGNAL_SEMANTIC_LAYER_ENABLED=true plus a positive budget) and is a
+# separate CTO step. Apply together with compose.subscriber.override.yml.
+#
+# Host file: root-owned, mode 0440, group AXIGNAL_TYPESAFE_SECRET_GID, never committed,
+# never in environment variables, health output or image layers.
+services:
+  runtime:
+    group_add:
+      - "${AXIGNAL_TYPESAFE_SECRET_GID:-1991}"
+    secrets:
+      - typesafe_api_key
+
+secrets:
+  typesafe_api_key:
+    file: ${AXIGNAL_TYPESAFE_API_KEY_HOST_FILE:-/etc/axignal/secrets/typesafe_api_key}

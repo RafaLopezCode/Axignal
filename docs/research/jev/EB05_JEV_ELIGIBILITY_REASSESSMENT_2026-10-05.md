@@ -134,3 +134,34 @@ represent that action as complete before documentary evidence is admitted.
 - [ADR-0011](../../adr/ADR-0011-jev-structured-decision-reconciliation.md),
   [ADR-0047](../../adr/ADR-0047-provider-neutral-structured-evaluator-contract.md),
   [ADR-0048](../../adr/ADR-0048-evaluator-decision-lab-bakeoff-governance.md).
+
+## Reconciliation — 2026-10-08: SUPERSEDED BY ADR-0090
+
+**Scope of the supersession:** production eligibility of Jev as an internal semantic
+provider in AXIGNAL. Everything above remains the record of the decision taken on
+2026-10-05 and is not rewritten.
+
+**What was stricter than necessary.** EB-05 treated the purpose of the work, developing
+and selecting components for AXIGNAL, as possibly falling within MCA §2.3(b) and required
+an additional written authorization from TypeSafe before any input transmission or
+product use. EB-05 adopted a stricter internal fail-closed interpretation than the CTO now
+considers necessary under the current MCA.
+
+**The joint reading that replaces it.** §2.1 licenses using the Services and integrating
+the API with Customer Applications; §2.2 defines a Customer Application as software the
+Customer develops and operates for its End Users, which AXIGNAL is; §2.3(b) prohibits
+distillation, training a model to imitate the output, and developing a similar or
+competing product or service. Integrating Jev as a replaceable component of AXIGNAL is the
+licensed use, not a competitor to TypeSafe. This is an internal CTO interpretation, not a
+claim that TypeSafe granted any amendment or bespoke authorization; a Separate Agreement
+or Order with other terms would control.
+
+**Still forbidden:** using Jev outputs to train, fine-tune, distil or imitate any model;
+using them as training or calibration data for an AXIGNAL replacement evaluator; exposing
+or reselling Jev as a standalone service. Replacement evaluators may use only human,
+AXIGNAL-owned or independently generated labels.
+
+**Still required:** Input rights under MCA §5 (source provenance, reuse rights, privacy,
+person-free state where applicable, DPA), non-authoritative outputs, Python policy
+authority, budgets and the separate CTO activation step. The benchmark corpus questions
+recorded above (rights, yield, human adjudication) still govern any evaluation corpus.
