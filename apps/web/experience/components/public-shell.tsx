@@ -171,8 +171,8 @@ export function PublicationNote({
       {editorial
         ? t("Cuaderno editorial · borrador", "Editorial notebook · draft")
         : t(
-            "Borrador · pendiente de publicación",
-            "Draft · pending publication",
+            "AXIGNAL · España",
+            "AXIGNAL · Spain",
           )}
     </span>
   );

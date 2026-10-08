@@ -258,10 +258,11 @@ export function Landing() {
             </span>
             <h1>
               {t(
-                "Sabe qué cambia alrededor de tu empresa.",
+                "¿Qué está cambiando alrededor de tu empresa?",
                 "Know what changes around your business.",
-              )}{" "}
-              <em>{t("Y por qué te importa.", "And why it matters to you.")}</em>
+              )}
+              <br />
+              <em>{t("¿Y por qué importa?", "And why it matters to you.")}</em>
             </h1>
             <p className="hero-lead">
               {t(

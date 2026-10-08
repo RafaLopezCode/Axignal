@@ -1,5 +1,3 @@
-import { translate } from "./copy-catalog";
-import type { Locale } from "./languages";
 import { z } from "zod";
 
 export const authStartSchema = z
@@ -45,39 +43,4 @@ export function acceptsPublicAuthOrigin(
     : ["http://127.0.0.1:3810", "http://localhost:3810"];
   try { return allowed.includes(origin) && new URL(origin).host === host; }
   catch { return false; }
-}
-export const localDraftSchema = z
-  .object({
-    subject: z.string().trim().min(1).max(120),
-    name: z.string().trim().min(1).max(100),
-    email: z.email().max(254),
-    message: z.string().trim().min(15).max(3000),
-  })
-  .strict();
-export type LocalDraft = z.infer<typeof localDraftSchema>;
-/** No transmission or persistence: this text is exactly the visible preview/download. */
-export function draftText(draft: LocalDraft, locale: Locale) {
-  const parsed = localDraftSchema.parse(draft);
-  const t = (es: string, en: string) => translate(es, en, locale);
-  return [
-    t(
-      "AXIGNAL · BORRADOR LOCAL · NO ENVIADO",
-      "AXIGNAL · LOCAL DRAFT · NOT SENT",
-    ),
-    "",
-    t(
-      "Destinatario: pendiente de publicación",
-      "Recipient: pending publication",
-    ),
-    t("Asunto: ", "Subject: ") + parsed.subject,
-    t("Nombre: ", "Name: ") + parsed.name,
-    "Email: " + parsed.email,
-    "",
-    parsed.message,
-    "",
-    t(
-      "Este borrador no registra una solicitud ni acredita recepción.",
-      "This draft does not lodge a request or prove receipt.",
-    ),
-  ].join("\n");
 }

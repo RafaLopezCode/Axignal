@@ -57,8 +57,8 @@ export function PrivacyNotice() {
           </div>
           <p>
             {t(
-              "La navegación pública no activa analítica, publicidad ni cookies de acceso. Recuerda tu idioma y este aviso. Customer Zero utiliza una cookie necesaria cuando el personal conecta una sesión Admin. Los datos del responsable siguen pendientes de publicación.",
-              "Public navigation activates no analytics, advertising or sign-in cookies. It remembers your language and this notice. Customer Zero uses a necessary cookie when staff connect an Admin session. Controller details remain pending publication.",
+              "Responsable: AXIGNAL · España. La página recuerda tu idioma y este aviso. El acceso utiliza cookies necesarias cuando te autenticas con un proveedor disponible; Admin tiene su sesión separada. Contacto y GDPR sólo registran datos cuando envías una solicitud por un canal habilitado.",
+              "Controller: AXIGNAL · Spain. The page remembers your language and this notice. Access uses necessary cookies when you authenticate with an available provider; Admin has a separate session. Contact and GDPR register details only when you submit a request through an enabled channel.",
             )}
           </p>
           <div>
@@ -86,8 +86,8 @@ export function PrivacyNotice() {
           <span className="publication-note">
             <Info size={14} />
             {t(
-              "Información de esta versión local",
-              "Information about this local version",
+              "Información del servicio",
+              "Service information",
             )}
           </span>
           <h3>
@@ -113,8 +113,8 @@ export function PrivacyNotice() {
           </p>
           <p>
             {t(
-              "Los formularios mantienen los borradores en la página y no los envían. El aviso describe esta compilación; no certifica el cumplimiento de un futuro servicio desplegado.",
-              "Forms keep drafts in the page and do not send them. This notice describes this build; it does not certify compliance of a future deployed service.",
+              "Las solicitudes de Contacto y GDPR se conservan 90 días. La entrega depende de un canal autorizado por AXIGNAL y puede fallar después del registro. El recibo no garantiza entrega ni resolución.",
+              "Contact and GDPR requests are retained for 90 days. Delivery depends on an AXIGNAL-authorized channel and may fail after registration. The receipt does not guarantee delivery or resolution.",
             )}
           </p>
           <div className="privacy-document-links">

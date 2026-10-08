@@ -141,6 +141,74 @@ def test_unavailable_channel_fails_closed_without_persisting(
     assert not (tmp_path / "public-requests.sqlite3").exists()
 
 
+def test_governed_channel_resolves_locator_separately_from_private_file(tmp_path: Path) -> None:
+    from domain.admin_integrations import (
+        CredentialLifecycle,
+        CredentialState,
+        IntegrationDefinition,
+        IntegrationDirection,
+        IntegrationEnvironment,
+        IntegrationHealth,
+        IntegrationHealthState,
+    )
+    from pipeline.admin_integrations import SqliteAdminIntegrationStore
+    from tools.runtime.public_requests import delivery_enabled
+
+    credential = tmp_path / "synthetic-credential"
+    credential.write_text("fixture-only", encoding="utf-8")
+    now = datetime.now(UTC)
+    store = SqliteAdminIntegrationStore(tmp_path / "admin-integrations.sqlite3")
+    store.append_definition(
+        operation_id="public-request-e2e-definition",
+        occurred_at=now,
+        definition=IntegrationDefinition(
+            integration_id="public-request-e2e",
+            provider="Controlled test transport",
+            purpose="Synthetic public-request test only",
+            owner="Test fixture",
+            environment=IntegrationEnvironment.DEVELOPMENT,
+            enabled=True,
+            credential=CredentialLifecycle(
+                "secret://public-request/e2e", CredentialState.CONFIGURED
+            ),
+            scopes=("email:send",),
+            direction=IntegrationDirection.OUTBOUND,
+            authority_boundary="Private service requests; no economic authority",
+            webhook_capable=False,
+            webhook_endpoint=None,
+            rate_limit_posture="No external transport in tests",
+            health_freshness_seconds=300,
+        ),
+    )
+    store.append_health(
+        operation_id="public-request-e2e-health",
+        occurred_at=now,
+        observation=IntegrationHealth("public-request-e2e", IntegrationHealthState.HEALTHY, now),
+    )
+    env = {
+        "AXIGNAL_CONTACT_SMTP_" + key: value
+        for key, value in {
+            "HOST": "mail.example.invalid",
+            "SENDER": "sender@example.invalid",
+            "CONTACT_RECIPIENT": "contact@example.invalid",
+            "PRIVACY_RECIPIENT": "privacy@example.invalid",
+            "USERNAME": "fixture",
+            "PASSWORD_FILE": str(credential),
+            "CREDENTIAL_REFERENCE": "secret://public-request/e2e",
+            "INTEGRATION_ID": "public-request-e2e",
+        }.items()
+    }
+    assert delivery_enabled(data_dir=tmp_path, environment="development", env=env)
+    assert not delivery_enabled(data_dir=tmp_path, environment="production", env=env)
+    assert not delivery_enabled(
+        data_dir=tmp_path,
+        environment="development",
+        env={**env, "AXIGNAL_CONTACT_SMTP_CREDENTIAL_REFERENCE": "secret://another/channel"},
+    )
+    credential.unlink()
+    assert not delivery_enabled(data_dir=tmp_path, environment="development", env=env)
+
+
 def test_smtp_requires_authority_before_connecting(monkeypatch: pytest.MonkeyPatch) -> None:
     from application.public_requests.service import RequestReceipt
     from pipeline.public_requests.smtp_delivery import SmtpContactDelivery

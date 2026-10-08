@@ -1,0 +1,64 @@
+[
+  {
+    "requestId": "brief:1bf29575e6dec4b09d221c6a",
+    "kind": "REQUEST_SUBMITTED",
+    "payload": [
+      [
+        "company_domain",
+        "company.example.invalid"
+      ],
+      [
+        "company_name",
+        "Synthetic Company"
+      ],
+      [
+        "professional_email",
+        "brief-browser@example.invalid"
+      ],
+      [
+        "purpose",
+        "Synthetic brief request without newsletter consent, for browser testing."
+      ],
+      [
+        "request_notice_version",
+        "weekly-brief-request-v1"
+      ]
+    ]
+  },
+  {
+    "requestId": "brief:632cf63e58857635003d0c65",
+    "kind": "REQUEST_SUBMITTED",
+    "payload": [
+      [
+        "company_domain",
+        "consenting.example.invalid"
+      ],
+      [
+        "company_name",
+        "Synthetic Consenting Company"
+      ],
+      [
+        "professional_email",
+        "brief-consenting@example.invalid"
+      ],
+      [
+        "purpose",
+        "Synthetic brief request with separately optional newsletter consent."
+      ],
+      [
+        "request_notice_version",
+        "weekly-brief-request-v1"
+      ]
+    ]
+  },
+  {
+    "requestId": "brief:632cf63e58857635003d0c65",
+    "kind": "CONSENT_GRANTED",
+    "payload": [
+      [
+        "newsletter_notice_version",
+        "weekly-newsletter-consent-v1"
+      ]
+    ]
+  }
+]
