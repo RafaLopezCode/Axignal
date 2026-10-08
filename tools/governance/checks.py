@@ -25,6 +25,8 @@ ARCHITECTURAL_GAP_LEDGER_REL = "docs/architecture/AXIGNAL_ARCHITECTURAL_GAP_LEDG
 REQUIRED_PATHS: tuple[str, ...] = (
     "README.md",
     "AGENTS.md",
+    "CLAUDE.md",
+    "docs/governance/AGENT_AUTONOMY_AND_DELEGATION_CONTRACT.md",
     "pyproject.toml",
     ".gitignore",
     ".gitattributes",
@@ -257,6 +259,28 @@ def check_spec_consistency(root: Path) -> list[Problem]:
         options = _read(init_options)
         if '"integration": "opencode"' not in options:
             problems.append(".specify/init-options.json integration is not opencode")
+
+    contract_rel = "docs/governance/AGENT_AUTONOMY_AND_DELEGATION_CONTRACT.md"
+    contract = root / contract_rel
+    if contract.exists():
+        contract_text = _read(contract)
+        for needle in (
+            "FRONTIER_AGENT",
+            "GUIDED_AGENT",
+            "Authority ceiling",
+            "VERIFIED E2E",
+        ):
+            if needle not in contract_text:
+                problems.append(f"agent autonomy contract missing {needle!r}")
+        for entry in (
+            "AGENTS.md",
+            "CLAUDE.md",
+            ".specify/memory/constitution.md",
+            "docs/governance/README.md",
+        ):
+            path = root / entry
+            if path.exists() and contract.name not in _read(path):
+                problems.append(f"{entry} does not reference agent autonomy contract")
 
     problems.extend(_check_master_hash(root))
     return problems

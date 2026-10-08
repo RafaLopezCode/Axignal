@@ -5,7 +5,7 @@
 > PRODUCT MODEL. This document only translates that doctrine into enforceable
 > engineering constraints.
 
-**Version**: 1.1.0 | **Ratified**: 2026-09-24 | **Last Amended**: 2026-10-03
+**Version**: 1.3.0 | **Ratified**: 2026-09-24 | **Last Amended**: 2026-10-08
 
 ## Upstream Authority (READ FIRST)
 
@@ -301,4 +301,21 @@ as OBSERVED. Material outputs retain a navigable provenance/evidence path.
 Visual state MUST NOT rely on color alone. Exact visual encodings and cognitive
 effectiveness require human validation. (MASTER §§15, 16, 25, 55)
 
-**Version**: 1.2.0 | **Ratified**: 2026-09-24 | **Last Amended**: 2026-09-26
+### XXIII. Governed Autonomy for Development Agents
+
+Development-agent intelligence and development-agent authority are separate.
+The CTO specifies the objective, doctrinal boundaries and acceptance evidence;
+a validated frontier-capable agent may choose and execute the technical path
+without step-by-step micromanagement, while a guided agent requires a bounded,
+explicit assignment with escalation for material decisions.
+
+These are **engineering execution roles**, not sources of product truth or
+permissions to bypass the MASTER, EvidenceAdmission, tenant isolation, security,
+deterministic gates, integration review or production authorization. Autonomy
+expands the set of reversible technical means an agent may choose, not its
+authority to redefine invariants. The binding operational contract is
+`docs/governance/AGENT_AUTONOMY_AND_DELEGATION_CONTRACT.md`.
+Agent capability must be assessed by configuration and demonstrated results,
+not by model name alone. Uncertain classification defaults to guided.
+
+**Version**: 1.3.0 | **Ratified**: 2026-09-24 | **Last Amended**: 2026-10-08
