@@ -11,6 +11,12 @@ authority in the repository.
 | `AXIGNAL_MASTER_PRODUCT_MODEL_2026-09-24_V2.md.sha256` | Pinned content hash. Verified in CI. Changing the MASTER requires an explicit, reviewed change to this hash. |
 | [`AXIGNAL_DIGITAL_REPRESENTATION_INTELLIGENCE_PRODUCT_SPEC.md`](AXIGNAL_DIGITAL_REPRESENTATION_INTELLIGENCE_PRODUCT_SPEC.md) | Proposed, pre-implementation product specification for the four DRI observation families; subordinate to MASTER §54. |
 
+## Prepared execution goals (non-canonical, not yet authorized)
+
+| Document | Role |
+| --- | --- |
+| [`AXIGNAL_BIDIRECTIONAL_INTELLIGENCE_EXECUTION_GOAL_2026-10-09.md`](AXIGNAL_BIDIRECTIONAL_INTELLIGENCE_EXECUTION_GOAL_2026-10-09.md) | CTO goal: bidirectional economic intelligence, JEV as bounded perception instrument, and evidence-backed constructive criticism. Execution only after spec 063 closure and explicit CTO instruction; never overrides MASTER, Constitution or ADRs. |
+
 ## Rules
 
 - There is exactly one MASTER. Do not create competing MASTER documents.
