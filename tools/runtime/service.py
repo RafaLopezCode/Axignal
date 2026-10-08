@@ -1,7 +1,7 @@
 """AXIGNAL HTTP runtime composition root.
 
-The public HTTP surface is deliberately read-only. Canonical/business writes stay
-behind governed application services and are not exposed by this host.
+Canonical economic writes remain behind governed application services. Public
+Contact/privacy intake writes only to private service operations, never AXIGLAND.
 """
 
 from __future__ import annotations
@@ -10,6 +10,7 @@ import contextlib
 import html
 import json
 import mimetypes
+import os
 import secrets
 import sqlite3
 import time
@@ -125,6 +126,7 @@ from tools.runtime.first_proof import (
 from tools.runtime.organization_attention import OrganizationAttention, load_observation_catalog
 from tools.runtime.product_mcp import MAX_BODY as PRODUCT_MCP_MAX_BODY
 from tools.runtime.product_mcp import ProductMcpHttp
+from tools.runtime.public_requests import public_request_status, submit_public_request
 from tools.runtime.stripe_billing import StripeWebhookRuntime
 from tools.runtime.subscriber_axent import luna_reasoner_from_env
 from tools.runtime.subscriber_composition import build_subscriber_facade
@@ -1843,6 +1845,8 @@ def make_handler(runtime: AxignalRuntime) -> type[BaseHTTPRequestHandler]:
                     "learning_memory": "sqlite-append-only",
                     "first_xeed_runtime": "application-contract-loaded",
                     "public_write_api": False,
+                    "canonical_economic_write_api": False,
+                    "public_service_request_api": True,
                     "loopback_first_proof_api": runtime.first_proof is not None,
                 }
                 self._json(payload)
@@ -1974,6 +1978,18 @@ def make_handler(runtime: AxignalRuntime) -> type[BaseHTTPRequestHandler]:
                     return
                 self._html(rendered)
                 return
+            if request_path in {"/api/contact/status", "/api/gdpr/status"}:
+                self._json(
+                    public_request_status(
+                        data_dir=runtime.config.data_dir,
+                        environment=runtime.config.environment,
+                        env=os.environ,
+                        kind="CONTACT"
+                        if request_path == "/api/contact/status"
+                        else "PRIVACY_RIGHTS",
+                    )
+                )
+                return
             if request_path == "/api/weekly-brief/status":
                 self._json({"enabled": runtime.config.weekly_brief_requests_enabled})
                 return
@@ -2044,6 +2060,39 @@ def make_handler(runtime: AxignalRuntime) -> type[BaseHTTPRequestHandler]:
         def do_POST(self) -> None:
             self._request_started_ns = time.perf_counter_ns()
             request_path = urlsplit(self.path).path
+            if request_path in {"/api/contact", "/api/privacy/request"}:
+                expected_origin = os.getenv("AXIGNAL_EXPERIENCE_ORIGIN") or (
+                    "https://axignal.com"
+                    if runtime.config.environment == "production"
+                    else "http://127.0.0.1:3810"
+                )
+                if self.headers.get("Origin") != expected_origin:
+                    self.close_connection = True
+                    self._json(
+                        {"status": "rejected", "reason": "ORIGIN_REJECTED"}, HTTPStatus.FORBIDDEN
+                    )
+                    return
+                try:
+                    length = int(self.headers.get("Content-Length", "0"))
+                    if not 2 <= length <= 16384:
+                        raise ValueError("size")
+                    if self.headers.get("Content-Type", "").split(";")[0] != "application/json":
+                        raise ValueError("type")
+                    payload = json.loads(self.rfile.read(length).decode("utf-8"))
+                except (ValueError, UnicodeDecodeError):
+                    self.close_connection = True
+                    self._json(
+                        {"status": "rejected", "reason": "INVALID_REQUEST"}, HTTPStatus.BAD_REQUEST
+                    )
+                    return
+                status, receipt = submit_public_request(
+                    data_dir=runtime.config.data_dir,
+                    environment=runtime.config.environment,
+                    payload=payload,
+                    kind="CONTACT" if request_path == "/api/contact" else "PRIVACY_RIGHTS",
+                )
+                self._json(receipt, HTTPStatus(status))
+                return
             if ProductMcpHttp.handles(request_path):
                 self._product_mcp("POST")
                 return
@@ -2671,5 +2720,21 @@ def make_handler(runtime: AxignalRuntime) -> type[BaseHTTPRequestHandler]:
 
 def serve(runtime: AxignalRuntime) -> None:
     handler = make_handler(runtime)
-    with ThreadingHTTPServer((runtime.config.bind_host, runtime.config.port), handler) as server:
+    from pipeline.public_requests.sqlite_store import SqlitePublicRequestStore
+
+    store = SqlitePublicRequestStore(runtime.config.data_dir / "public-requests.sqlite3")
+
+    class PublicRequestRetentionServer(ThreadingHTTPServer):
+        last_purge = 0.0
+
+        def service_actions(self) -> None:
+            if time.monotonic() - self.last_purge >= 3600:
+                self.last_purge = time.monotonic()
+                # A private queue storage outage must not stop the HTTP runtime.
+                with contextlib.suppress(sqlite3.Error):
+                    store.purge(now=datetime.now(UTC))
+
+    with PublicRequestRetentionServer(
+        (runtime.config.bind_host, runtime.config.port), handler
+    ) as server:
         server.serve_forever()
