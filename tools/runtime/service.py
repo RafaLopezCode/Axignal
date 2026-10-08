@@ -126,7 +126,7 @@ from tools.runtime.first_proof import (
 from tools.runtime.organization_attention import OrganizationAttention, load_observation_catalog
 from tools.runtime.product_mcp import MAX_BODY as PRODUCT_MCP_MAX_BODY
 from tools.runtime.product_mcp import ProductMcpHttp
-from tools.runtime.public_requests import submit_public_request
+from tools.runtime.public_requests import public_request_status, submit_public_request
 from tools.runtime.stripe_billing import StripeWebhookRuntime
 from tools.runtime.subscriber_axent import luna_reasoner_from_env
 from tools.runtime.subscriber_composition import build_subscriber_facade
@@ -1978,6 +1978,18 @@ def make_handler(runtime: AxignalRuntime) -> type[BaseHTTPRequestHandler]:
                     return
                 self._html(rendered)
                 return
+            if request_path in {"/api/contact/status", "/api/gdpr/status"}:
+                self._json(
+                    public_request_status(
+                        data_dir=runtime.config.data_dir,
+                        environment=runtime.config.environment,
+                        env=os.environ,
+                        kind="CONTACT"
+                        if request_path == "/api/contact/status"
+                        else "PRIVACY_RIGHTS",
+                    )
+                )
+                return
             if request_path == "/api/weekly-brief/status":
                 self._json({"enabled": runtime.config.weekly_brief_requests_enabled})
                 return
@@ -2049,13 +2061,6 @@ def make_handler(runtime: AxignalRuntime) -> type[BaseHTTPRequestHandler]:
             self._request_started_ns = time.perf_counter_ns()
             request_path = urlsplit(self.path).path
             if request_path in {"/api/contact", "/api/privacy/request"}:
-                if self.command != "POST":
-                    self.close_connection = True
-                    self._json(
-                        {"stored": False, "code": "METHOD_NOT_ALLOWED"},
-                        HTTPStatus.METHOD_NOT_ALLOWED,
-                    )
-                    return
                 expected_origin = os.getenv("AXIGNAL_EXPERIENCE_ORIGIN") or (
                     "https://axignal.com"
                     if runtime.config.environment == "production"
@@ -2063,7 +2068,9 @@ def make_handler(runtime: AxignalRuntime) -> type[BaseHTTPRequestHandler]:
                 )
                 if self.headers.get("Origin") != expected_origin:
                     self.close_connection = True
-                    self._json({"stored": False, "code": "ORIGIN_REJECTED"}, HTTPStatus.FORBIDDEN)
+                    self._json(
+                        {"status": "rejected", "reason": "ORIGIN_REJECTED"}, HTTPStatus.FORBIDDEN
+                    )
                     return
                 try:
                     length = int(self.headers.get("Content-Length", "0"))
@@ -2074,7 +2081,9 @@ def make_handler(runtime: AxignalRuntime) -> type[BaseHTTPRequestHandler]:
                     payload = json.loads(self.rfile.read(length).decode("utf-8"))
                 except (ValueError, UnicodeDecodeError):
                     self.close_connection = True
-                    self._json({"stored": False, "code": "INVALID_REQUEST"}, HTTPStatus.BAD_REQUEST)
+                    self._json(
+                        {"status": "rejected", "reason": "INVALID_REQUEST"}, HTTPStatus.BAD_REQUEST
+                    )
                     return
                 status, receipt = submit_public_request(
                     data_dir=runtime.config.data_dir,

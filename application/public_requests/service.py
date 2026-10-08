@@ -26,6 +26,7 @@ class PublicRequest:
     subject: str
     message: str
     locale: str
+    notice_version: str
 
     @property
     def fingerprint(self) -> str:
@@ -41,6 +42,7 @@ def validate_request(payload: object, *, kind: RequestKind) -> PublicRequest:
         "subject",
         "message",
         "locale",
+        "noticeVersion",
     }:
         raise ValueError("INVALID_REQUEST")
     limits = {
@@ -51,6 +53,7 @@ def validate_request(payload: object, *, kind: RequestKind) -> PublicRequest:
         "subject": 120,
         "message": 3000,
         "locale": 2,
+        "noticeVersion": 64,
     }
     values: dict[str, str] = {}
     for field, limit in limits.items():
@@ -81,6 +84,7 @@ def validate_request(payload: object, *, kind: RequestKind) -> PublicRequest:
         values["subject"],
         values["message"],
         values["locale"],
+        values["noticeVersion"],
     )
 
 
@@ -92,15 +96,9 @@ class RequestReceipt:
     delivery_status: DeliveryStatus
 
     def public(self) -> dict[str, object]:
-        prefix = "CONTACT" if self.kind == "CONTACT" else "PRIVACY"
-        return {
-            "requestId": self.request_id,
-            "createdAt": self.created_at,
-            "stored": True,
-            "status": "RECEIVED",
-            "deliveryStatus": self.delivery_status,
-            "code": prefix + "_DELIVERY_" + self.delivery_status,
-        }
+        # Public contract intentionally reveals only that AXIGNAL received the
+        # request durably. Provider delivery state remains private operations data.
+        return {"status": "received", "requestId": self.request_id}
 
 
 class PublicRequestStore(Protocol):

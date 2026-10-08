@@ -25,6 +25,7 @@ def payload(**changes: object) -> dict[str, object]:
         "subject": "Product question",
         "message": "Please explain the availability of this service.",
         "locale": "en",
+        "noticeVersion": "privacy-2026-10-08",
         **changes,
     }
 
@@ -34,7 +35,8 @@ def test_persist_before_unavailable_delivery(tmp_path: Path, kind: str, category
     store = SqlitePublicRequestStore(tmp_path / "requests.sqlite3")
     request = validate_request(payload(category=category), kind=kind)  # type: ignore[arg-type]
     receipt = PublicRequestService(store).submit(request, now=NOW)
-    assert receipt.public()["stored"] is True
+    assert receipt.public()["status"] == "received"
+    assert receipt.public()["requestId"] == receipt.request_id
     assert receipt.delivery_status == "UNAVAILABLE"
     assert "email" not in receipt.public() and "message" not in receipt.public()
     with sqlite3.connect(store.path) as db:
@@ -125,21 +127,18 @@ def test_all_privacy_categories(category: str) -> None:
     assert validate_request(payload(category=category), kind="PRIVACY_RIGHTS").category == category
 
 
-def test_invalid_delivery_configuration_keeps_valid_request(
+def test_unavailable_channel_fails_closed_without_persisting(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     from tools.runtime.public_requests import submit_public_request
 
-    def invalid_configuration(**kwargs: object) -> None:
-        raise ValueError("invalid SMTP port")
-
-    monkeypatch.setattr("tools.runtime.public_requests.configured_delivery", invalid_configuration)
+    monkeypatch.setattr("tools.runtime.public_requests.delivery_enabled", lambda **kwargs: False)
     status, receipt = submit_public_request(
         data_dir=tmp_path, environment="development", payload=payload(), kind="CONTACT"
     )
-    assert status == 202 and receipt["code"] == "CONTACT_DELIVERY_UNAVAILABLE"
-    with sqlite3.connect(tmp_path / "public-requests.sqlite3") as connection:
-        assert connection.execute("SELECT count(*) FROM public_requests").fetchone()[0] == 1
+    assert status == 503
+    assert receipt == {"status": "rejected", "reason": "CHANNEL_UNAVAILABLE"}
+    assert not (tmp_path / "public-requests.sqlite3").exists()
 
 
 def test_smtp_requires_authority_before_connecting(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -219,7 +218,7 @@ def test_configured_transport_uses_tls_plain_text_server_owned_recipient(
     assert "<script>" in messages[0].get_content()
 
 
-def test_http_intake_origin_size_validation_receipts_and_rate_limit(
+def test_http_intake_status_origin_validation_receipts_and_rate_limit(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     from tools.runtime.config import RuntimeConfig
@@ -227,7 +226,18 @@ def test_http_intake_origin_size_validation_receipts_and_rate_limit(
 
     origin = "http://127.0.0.1:3810"
     monkeypatch.setenv("AXIGNAL_EXPERIENCE_ORIGIN", origin)
-    monkeypatch.delenv("AXIGNAL_CONTACT_SMTP_HOST", raising=False)
+    monkeypatch.delenv("AXIGNAL_PUBLIC_CONTACT_EMAIL", raising=False)
+
+    class ControlledDelivery:
+        def send(self, request, *, receipt):  # type: ignore[no-untyped-def]
+            return None
+
+    monkeypatch.setattr("tools.runtime.public_requests.delivery_enabled", lambda **kwargs: True)
+    monkeypatch.setattr(
+        "tools.runtime.public_requests.configured_delivery",
+        lambda **kwargs: ControlledDelivery(),
+    )
+
     runtime = build_runtime(
         RuntimeConfig(
             "development",
@@ -243,37 +253,61 @@ def test_http_intake_origin_size_validation_receipts_and_rate_limit(
     thread.start()
 
     def send(
-        path: str, body: object, *, request_origin: str = origin, method: str = "POST"
+        path: str,
+        body: object | None = None,
+        *,
+        request_origin: str = origin,
+        method: str = "POST",
     ) -> tuple[int, dict]:  # type: ignore[type-arg]
         connection = HTTPConnection("127.0.0.1", server.server_port, timeout=3)
         try:
-            connection.request(
-                method,
-                path,
-                json.dumps(body),
-                {"Content-Type": "application/json", "Origin": request_origin},
-            )
+            headers = {"Origin": request_origin}
+            encoded = None
+            if body is not None:
+                encoded = json.dumps(body)
+                headers["Content-Type"] = "application/json"
+            connection.request(method, path, encoded, headers)
             response = connection.getresponse()
             return response.status, json.loads(response.read())
         finally:
             connection.close()
 
     try:
-        assert send("/api/contact", payload(), method="PUT")[0] == 405
-        assert send("/api/privacy/request", payload(category="access"), method="PATCH")[0] == 405
+        status_code, contact_status = send("/api/contact/status", method="GET")
+        assert status_code == 200
+        assert contact_status == {
+            "enabled": True,
+            "controller": "AXIGNAL",
+            "country": "Spain",
+            "publicEmail": None,
+        }
+        status_code, gdpr_status = send("/api/gdpr/status", method="GET")
+        assert status_code == 200
+        assert gdpr_status["enabled"] is True
+
         assert send("/api/contact", payload(), request_origin="https://attacker.invalid")[0] == 403
         assert send("/api/contact", payload(message="x" * 17000))[0] == 400
-        assert send("/api/contact", payload(email="bad"))[0] == 400
+        invalid_status, invalid = send("/api/contact", payload(email="bad"))
+        assert invalid_status == 400
+        assert invalid == {"status": "rejected", "reason": "INVALID_EMAIL"}
+
         status, contact = send("/api/contact", payload())
-        assert status == 202 and contact["code"] == "CONTACT_DELIVERY_UNAVAILABLE"
+        assert status == 202
+        assert contact["status"] == "received"
+        assert isinstance(contact["requestId"], str)
         assert send("/api/contact", payload())[1] == contact
+
         status, privacy = send(
-            "/api/privacy/request", payload(category="access", requestRef="isolated-privacy-0001")
+            "/api/privacy/request",
+            payload(category="access", requestRef="isolated-privacy-0001"),
         )
-        assert status == 202 and privacy["code"] == "PRIVACY_DELIVERY_UNAVAILABLE"
+        assert status == 202 and privacy["status"] == "received"
         assert "email" not in privacy and "message" not in privacy
+
         assert send("/api/contact", payload(requestRef="isolated-contact-0002"))[0] == 202
-        assert send("/api/contact", payload(requestRef="isolated-contact-0003"))[0] == 429
+        limited_status, limited = send("/api/contact", payload(requestRef="isolated-contact-0003"))
+        assert limited_status == 429
+        assert limited == {"status": "rejected", "reason": "REQUEST_RATE_LIMITED"}
         assert (
             runtime.health_payload(detailed=True)["persistence"]["observation_memory"]["rows"] == 0
         )
@@ -281,3 +315,16 @@ def test_http_intake_origin_size_validation_receipts_and_rate_limit(
         server.shutdown()
         server.server_close()
         thread.join(timeout=3)
+
+
+def test_public_edge_exposes_only_governed_request_contract() -> None:
+    text = Path("deploy/production/subscriber-edge-nginx.conf").read_text(encoding="utf-8")
+    for route in (
+        "/api/contact/status",
+        "/api/gdpr/status",
+        "/api/contact",
+        "/api/privacy/request",
+    ):
+        assert f"location = {route}" in text
+    assert "proxy_pass http://axignal_runtime/api/contact;" in text
+    assert "proxy_pass http://axignal_runtime/api/privacy/request;" in text
