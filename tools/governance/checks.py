@@ -272,6 +272,19 @@ def check_spec_consistency(root: Path) -> list[Problem]:
         ):
             if needle not in contract_text:
                 problems.append(f"agent autonomy contract missing {needle!r}")
+        frontier_rows = [
+            line for line in contract_text.splitlines() if line.startswith("| **FRONTIER_AGENT** |")
+        ]
+        guided_rows = [
+            line for line in contract_text.splitlines() if line.startswith("| **GUIDED_AGENT** |")
+        ]
+        for role, agents, rows in (
+            ("FRONTIER_AGENT", ("GPT-6.1 Sol", "Claude Opus 5.5"), frontier_rows),
+            ("GUIDED_AGENT", ("GPT-6 Luna", "Claude Haiku 5.5"), guided_rows),
+        ):
+            for agent in agents:
+                if not any(agent in row for row in rows):
+                    problems.append(f"agent autonomy hierarchy: {agent} must be {role}")
         for entry in (
             "AGENTS.md",
             "CLAUDE.md",

@@ -14,8 +14,8 @@ explicitly overrides them, and even then respect doctrine (below).
 
 Read `docs/governance/AGENT_AUTONOMY_AND_DELEGATION_CONTRACT.md` before taking a delegated engineering task.
 
-- **FRONTIER_AGENT** (e.g. GPT-6 Luna high reasoning, Claude Opus 5.5 when CTO-designated): outcome-driven autonomy. Provide goal, doctrine, boundaries and acceptance evidence; **do not prescribe every implementation step**. Permit independent architecture investigation, reversible technical decisions, implementation, focused testing and necessary repairs.
-- **GUIDED_AGENT** (e.g. GPT-6.1 Sol, Claude Haiku; Claude Sonnet by default unless elevated): task-driven execution with explicit scope, permission limits, checkpoints and acceptance criteria. Escalate architecture, product-policy or cross-boundary decisions.
+- **FRONTIER_AGENT** (GPT-6.1 Sol in the ChatGPT family; Claude Opus 5.5 in the Claude family): outcome-driven autonomy. Provide goal, doctrine, boundaries and acceptance evidence; **do not prescribe every implementation step**. Permit independent architecture investigation, reversible technical decisions, implementation, focused testing and necessary repairs.
+- **GUIDED_AGENT** (GPT-6 Luna under GPT-6.1 Sol; Claude Haiku 5.5 under Claude Opus 5.5; Claude Sonnet unless separately elevated): task-driven execution with explicit scope, permission limits, checkpoints and acceptance criteria. Escalate architecture, product-policy or cross-boundary decisions.
 - Tier is based on verified capability, configuration, risk and CTO assignment; uncertain cases default to guided. **Both classes have the same doctrine, truth, security, merge and production authority ceiling.**
 - A frontier agent owns the end-to-end result and verification of delegated subagents. No class may self-grant privileged authority.
 

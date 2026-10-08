@@ -8,6 +8,11 @@ from pathlib import Path
 from tools.governance.checks import check_spec_consistency
 
 CONTRACT = "AGENT_AUTONOMY_AND_DELEGATION_CONTRACT.md"
+HIERARCHY = (
+    "FRONTIER_AGENT GUIDED_AGENT Authority ceiling VERIFIED E2E\n"
+    "| **FRONTIER_AGENT** | GPT-6.1 Sol; Claude Opus 5.5 |\n"
+    "| **GUIDED_AGENT** | GPT-6 Luna; Claude Haiku 5.5 |"
+)
 
 
 def test_agent_autonomy_contract_is_binding_in_governance(tmp_path: Path) -> None:
@@ -28,10 +33,7 @@ def test_agent_autonomy_contract_is_binding_in_governance(tmp_path: Path) -> Non
     )
     contract = tmp_path / "docs/governance" / CONTRACT
     contract.parent.mkdir(parents=True)
-    contract.write_text(
-        "FRONTIER_AGENT GUIDED_AGENT Authority ceiling VERIFIED E2E",
-        encoding="utf-8",
-    )
+    contract.write_text(HIERARCHY, encoding="utf-8")
     for rel in ("AGENTS.md", "CLAUDE.md", "docs/governance/README.md"):
         entry = tmp_path / rel
         entry.parent.mkdir(parents=True, exist_ok=True)
@@ -43,8 +45,13 @@ def test_agent_autonomy_contract_is_binding_in_governance(tmp_path: Path) -> Non
     assert any("GUIDED_AGENT" in item for item in check_spec_consistency(tmp_path))
 
     contract.write_text(
-        "FRONTIER_AGENT GUIDED_AGENT Authority ceiling VERIFIED E2E",
+        HIERARCHY.replace("GPT-6.1 Sol; Claude Opus 5.5", "GPT-6 Luna; Claude Opus 5.5"),
         encoding="utf-8",
     )
+    assert any(
+        "GPT-6.1 Sol must be FRONTIER_AGENT" in item for item in check_spec_consistency(tmp_path)
+    )
+
+    contract.write_text(HIERARCHY, encoding="utf-8")
     (tmp_path / "CLAUDE.md").write_text("no contract here", encoding="utf-8")
     assert any("CLAUDE.md" in item for item in check_spec_consistency(tmp_path))

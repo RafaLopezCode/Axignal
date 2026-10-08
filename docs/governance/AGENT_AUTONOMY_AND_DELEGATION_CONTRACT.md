@@ -19,12 +19,12 @@ Greater cognitive autonomy never means greater authority over product doctrine, 
 
 | Class | Default examples | Operational contract |
 | --- | --- | --- |
-| **FRONTIER_AGENT** | GPT-6 Luna at high reasoning; Claude Opus 5.5 when designated by the CTO | Outcome-driven delegation. Free to investigate, design, implement, test and correct across the necessary technical scope, with evidence and constraints. |
-| **GUIDED_AGENT** | GPT-6.1 Sol; Claude Haiku; Claude Sonnet unless explicitly elevated by demonstrated performance; any unvalidated agent | Task-driven delegation. Explicit scope, files/interfaces where possible, stepwise acceptance tests, constrained permissions and checkpoints. No unsupervised architectural or cross-boundary decisions. |
+| **FRONTIER_AGENT** | **GPT-6.1 Sol** (ChatGPT family); **Claude Opus 5.5** (Claude family) | Outcome-driven delegation. Free to investigate, design, implement, test and correct across the necessary technical scope, with evidence and constraints. |
+| **GUIDED_AGENT** | **GPT-6 Luna**, delegated by GPT-6.1 Sol; **Claude Haiku 5.5**, delegated by Claude Opus 5.5; Claude Sonnet unless explicitly elevated; any unvalidated agent | Task-driven delegation. Explicit scope, files/interfaces where possible, stepwise acceptance tests, constrained permissions and checkpoints. No unsupervised architectural or cross-boundary decisions. |
 
-Names are routing defaults, not immutable proof of capability. Tier follows observed performance, reasoning configuration, tools, task risk and CTO designation. A model upgrade or brand label alone does not confer frontier autonomy. Uncertain classification defaults to GUIDED_AGENT.
+**CTO-designated hierarchy for AXIGNAL:** GPT-6.1 Sol → GPT-6 Luna (ChatGPT); Claude Opus 5.5 → Claude Haiku 5.5 (Claude). The first in each pair owns frontier-level outcomes; the second executes bounded delegated work. Different names, configurations or model upgrades do not automatically change these assignments; the CTO must explicitly approve an exception. Unclassified agents default to GUIDED_AGENT.
 
-Sonnet is not automatically exempt from controls because it is stronger than Haiku. Luna does not get unlimited authority because it is a frontier model.
+Even frontier-level reasoning never grants unrestricted authority. Neither Sol nor Opus may bypass doctrine or approval gates; neither Luna nor Haiku may silently expand delegated scope.
 
 ## FRONTIER_AGENT contract
 
