@@ -25,6 +25,9 @@ export function Access({ intent }: { intent: AuthStartRequest["intent"] }) {
   const controller = useRef<AbortController | null>(null);
   const [busy, setBusy] = useState<string | null>(null);
   const [available, setAvailable] = useState<boolean | null>(null);
+  const [googleAvailable, setGoogleAvailable] = useState(false);
+  const [statusFailed, setStatusFailed] = useState(false);
+  const [statusAttempt, setStatusAttempt] = useState(0);
   const [chatgptAvailable, setChatgptAvailable] = useState(false);
   const [outcome, setOutcome] = useState<{
     provider: string;
@@ -36,18 +39,25 @@ export function Access({ intent }: { intent: AuthStartRequest["intent"] }) {
   }, []);
   useEffect(() => {
     const current = new AbortController();
-    void fetch("/api/auth/status", { cache: "no-store", signal: current.signal }).then(response => response.json()).then(data => {
+    setAvailable(null); setGoogleAvailable(false); setChatgptAvailable(false); setStatusFailed(false);
+    const timeout = setTimeout(() => { setStatusFailed(true); current.abort(); }, 15000);
+    void fetch("/api/auth/status", { cache: "no-store", signal: current.signal }).then(response => {
+      if (!response.ok) throw new Error("STATUS_UNAVAILABLE");
+      return response.json();
+    }).then(data => {
+      if (!Array.isArray(data.providers) || data.providers.length !== 2 || new Set(data.providers.map((item: { id?: string }) => item.id)).size !== 2 || data.providers.some((item: { id?: string; status?: string }) => !["google", "openai"].includes(item.id ?? "") || !["AVAILABLE", "UNAVAILABLE"].includes(item.status ?? ""))) throw new Error("STATUS_INVALID");
       if (!current.signal.aborted && Array.isArray(data.providers)) {
         setAvailable(data.providers.some((item: { status?: string }) => item.status === "AVAILABLE"));
+        setGoogleAvailable(data.providers.some((item: { id?: string; status?: string }) => item.id === "google" && item.status === "AVAILABLE"));
         setChatgptAvailable(data.providers.some((item: { id?: string; status?: string }) => item.id === "openai" && item.status === "AVAILABLE"));
       }
     }).catch(() => {
-      if (!current.signal.aborted) setAvailable(false);
-    });
-    return () => current.abort();
-  }, []);
+      if (!current.signal.aborted) setStatusFailed(true);
+    }).finally(() => clearTimeout(timeout));
+    return () => { clearTimeout(timeout); current.abort(); };
+  }, [statusAttempt]);
   async function start(provider: AuthStartRequest["provider"]) {
-    if (busy || (provider === "openai" && !chatgptAvailable)) return;
+    if (controller.current || busy || (provider === "google" ? !googleAvailable : !chatgptAvailable)) return;
     track({
       kind: "CTA_ACTIVATED",
       surface: "access",
@@ -55,7 +65,6 @@ export function Access({ intent }: { intent: AuthStartRequest["intent"] }) {
     });
     setOutcome(null);
     setBusy(provider);
-    controller.current?.abort();
     const current = new AbortController();
     controller.current = current;
     try {
@@ -83,6 +92,7 @@ export function Access({ intent }: { intent: AuthStartRequest["intent"] }) {
       if (!current.signal.aborted) setOutcome({ provider, error: true });
     } finally {
       if (!current.signal.aborted) setBusy(null);
+      if (controller.current === current) controller.current = null;
     }
   }
   return (
@@ -189,7 +199,9 @@ export function Access({ intent }: { intent: AuthStartRequest["intent"] }) {
           <div className="access-availability">
             <Info size={17} />
             <p>
-              {available === null
+              {statusFailed
+                ? t("No pudimos comprobar el acceso.", "We could not check access.")
+                : available === null
                 ? t("Comprobando el acceso…", "Checking access…")
                 : available
                   ? t("Elige una identidad conectada para continuar de forma segura.", "Choose a connected identity to continue securely.")
@@ -199,13 +211,14 @@ export function Access({ intent }: { intent: AuthStartRequest["intent"] }) {
                     )}
             </p>
           </div>
+          {statusFailed && <button className="text-link" onClick={() => setStatusAttempt(n => n + 1)}>{t("Volver a comprobar", "Check again")}</button>}
           <div className="provider-options" aria-busy={!!busy}>
             {preparedProviders.filter((provider) => provider.id !== "openai" || chatgptAvailable).map((provider) => (
               <button
                 className={"provider-button provider-" + provider.id}
                 key={provider.id}
                 onClick={() => void start(provider.id)}
-                disabled={!!busy || (provider.id === "openai" && !chatgptAvailable)}
+                disabled={!!busy || (provider.id === "google" ? !googleAvailable : !chatgptAvailable)}
                 aria-label={provider.id === "openai" && !chatgptAvailable ? t("ChatGPT · Próximamente", "ChatGPT · Coming soon") : undefined}
               >
                 <img
@@ -282,16 +295,16 @@ export function Access({ intent }: { intent: AuthStartRequest["intent"] }) {
               </h3>
               <p>
                 {t(
-                  "La integración prevista solicita identificador, nombre y correo. No acceso a Gmail, Drive, conversaciones de ChatGPT ni uso de tu plan de IA.",
-                  "The planned integration requests an identifier, name and email. No Gmail, Drive, ChatGPT conversation access or use of your AI plan.",
+                  "La conexión solicita identificador, nombre y correo. No acceso a Gmail, Drive, conversaciones de ChatGPT ni uso de tu plan de IA.",
+                  "The connection requests an identifier, name and email. No Gmail, Drive, ChatGPT conversation access or use of your AI plan.",
                 )}
               </p>
             </div>
           </div>
           <p className="access-legal">
             {t(
-              "Los textos legales están pendientes de publicación.",
-              "Legal texts are pending publication.",
+              "Consulta el uso, los límites y la información de privacidad.",
+              "Read the use, limitations and privacy information.",
             )}{" "}
             <Link href="/policies/terms">
               {t("Uso y límites", "Use and limitations")}

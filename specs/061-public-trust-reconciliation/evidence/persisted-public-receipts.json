@@ -1,0 +1,90 @@
+[
+  {
+    "id": "4818691f5fbe41a28ea859f514e75f8e",
+    "reference": "b42d99304f2f4c888b877c16d582777f",
+    "kind": "CONTACT",
+    "category": "contact",
+    "retryProbe": false,
+    "delivery": "DELIVERED"
+  },
+  {
+    "id": "72a4002dd22342c599fe4a4eaaea53e2",
+    "reference": "82f898e5040e41e0852d0d0cac4214fa",
+    "kind": "CONTACT",
+    "category": "contact",
+    "retryProbe": false,
+    "delivery": "DELIVERED"
+  },
+  {
+    "id": "d4304994ffc348a184d8c53e6adff140",
+    "reference": "2340a34c7b624af4bcaf322942aa2e4b",
+    "kind": "CONTACT",
+    "category": "contact",
+    "retryProbe": false,
+    "delivery": "DELIVERED"
+  },
+  {
+    "id": "f4e70cd522364aa49ea04e204913cb52",
+    "reference": "5c23d2bc61744b95a547868ee56570f7",
+    "kind": "PRIVACY_RIGHTS",
+    "category": "access",
+    "retryProbe": false,
+    "delivery": "DELIVERED"
+  },
+  {
+    "id": "9a4199b535d54905a233661794752b41",
+    "reference": "a21f67daf6eb46dfbeb20df444954e1e",
+    "kind": "PRIVACY_RIGHTS",
+    "category": "rectification",
+    "retryProbe": false,
+    "delivery": "DELIVERED"
+  },
+  {
+    "id": "9def535709e64befae441cb4a0cd2234",
+    "reference": "f3781dfbf88e4a34aa8aec1b0129c6e1",
+    "kind": "PRIVACY_RIGHTS",
+    "category": "erasure",
+    "retryProbe": false,
+    "delivery": "DELIVERED"
+  },
+  {
+    "id": "662e208abd424320871e8710ba794577",
+    "reference": "84e27587abda47dda4dfe7af3fec65a0",
+    "kind": "PRIVACY_RIGHTS",
+    "category": "restriction",
+    "retryProbe": false,
+    "delivery": "DELIVERED"
+  },
+  {
+    "id": "87d96e63999d45ed85749dfc076fcb8e",
+    "reference": "014f66b97ffd45e4994ea449c0ae7c5d",
+    "kind": "PRIVACY_RIGHTS",
+    "category": "portability",
+    "retryProbe": false,
+    "delivery": "DELIVERED"
+  },
+  {
+    "id": "6740ad510ec44f8080dcd4a9ac88d237",
+    "reference": "afed524eeba242798ffdc73939c03c42",
+    "kind": "PRIVACY_RIGHTS",
+    "category": "objection",
+    "retryProbe": false,
+    "delivery": "DELIVERED"
+  },
+  {
+    "id": "9f0f1a0520f0425da50beda3b1a3c8d5",
+    "reference": "4e733fd74fc74250974a845d860e1918",
+    "kind": "PRIVACY_RIGHTS",
+    "category": "other",
+    "retryProbe": false,
+    "delivery": "DELIVERED"
+  },
+  {
+    "id": "869a83de8ec9458c96d0af6cc245e93e",
+    "reference": "f5730e6714284a30bc4cd9aa2c3b1f9d",
+    "kind": "CONTACT",
+    "category": "contact",
+    "retryProbe": true,
+    "delivery": "DELIVERED"
+  }
+]
