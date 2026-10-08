@@ -81,3 +81,46 @@ def find_places(text: str) -> tuple[tuple[int, TaxonomyCode], ...]:
     return tuple(
         (match.start(), _PLACES[match.group(1)]) for match in _PATTERN.finditer(normalize(text))
     )
+
+
+# Display names for the jurisdictions above, for people (accents and official forms).
+# Presentation data only: it never decides reach and covers exactly the gazetteer.
+_DISPLAY: dict[str, str] = {
+    "EU": "Unión Europea",
+    "EU/ES": "España",
+    "EU/PT": "Portugal",
+    "EU/FR": "Francia",
+    "EU/DE": "Alemania",
+    "EU/IT": "Italia",
+    **{
+        eu_nuts(code).code: name
+        for code, name in (
+            ("ES30", "Comunidad de Madrid"),
+            ("ES42", "Castilla-La Mancha"),
+            ("ES425", "Toledo"),
+            ("ES424", "Guadalajara"),
+            ("ES52", "Comunitat Valenciana"),
+            ("ES523", "Valencia"),
+            ("ES521", "Alicante"),
+            ("ES522", "Castellón"),
+            ("ES51", "Cataluña"),
+            ("ES511", "Barcelona"),
+            ("ES61", "Andalucía"),
+            ("ES618", "Sevilla"),
+            ("ES617", "Málaga"),
+            ("ES243", "Zaragoza"),
+            ("ES213", "Bizkaia"),
+            ("ES62", "Región de Murcia"),
+            ("ES70", "Canarias"),
+            ("DE600", "Hamburgo"),
+            ("DE300", "Berlín"),
+            ("PT170", "Lisboa"),
+            ("FR101", "París"),
+        )
+    },
+}
+
+
+def place_label(path: str) -> str | None:
+    """Human name of a gazetteer jurisdiction; None (unknown), never a guessed name."""
+    return _DISPLAY.get(path)

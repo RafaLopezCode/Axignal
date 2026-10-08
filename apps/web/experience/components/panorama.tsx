@@ -14,7 +14,6 @@ import {
   Building2,
   Layers3,
   Settings2,
-  CreditCard,
   ChevronDown,
   ChevronRight,
   BookOpen,
@@ -25,7 +24,6 @@ import {
   X,
   CalendarDays,
   Info,
-  ScanEye,
   Search,
   RotateCcw,
 } from "lucide-react";
@@ -60,6 +58,10 @@ import { EvidenceDialog, EvidenceList } from "./evidence";
 import { Axent } from "./axent";
 import { ObservationAtelier } from "./observation-atelier";
 import { ProductNavigation } from "./product-navigation";
+import { EconomicGarden } from "./economic-garden";
+import { ExampleChanges, ExampleOpenQuestions } from "./example-story";
+import { gardenAt } from "@/lib/cognition/facts";
+import { exampleDepth, funnelCta, track } from "@/lib/funnel-events";
 
 export function Panorama() {
   const { t, copy, locale, reducedMotion, setReducedMotion } = useLocale();
@@ -108,13 +110,27 @@ export function Panorama() {
     };
   }, [chat]);
   const organization = projection.organization;
+  const garden = gardenAt(organizationId, asOf);
+  useEffect(() => {
+    const chapter =
+      params.get("depth") === "prove"
+        ? exampleDepth.evidence
+        : params.get("signal")
+          ? exampleDepth.signal
+          : params.get("family")
+            ? exampleDepth.family
+            : params.get("asOf") && params.get("asOf") !== "2026-10-03"
+              ? exampleDepth.history
+              : exampleDepth.opened;
+    track({ kind: "CHAPTER_VIEWED", surface: "example", chapter });
+  }, [params]);
   const depth = params.get("depth") ?? "understand";
   const layout = params.get("layout") === "reading" ? "reading" : "spatial";
   const [mobileNav, setMobileNav] = useState(false),
     [mobileAxent, setMobileAxent] = useState(false);
   const [evidenceId, setEvidenceId] = useState<string | null>(null);
   const [utility, setUtility] = useState<
-    "organizations" | "focus" | "subscription" | "settings" | null
+    "organizations" | "focus" | "settings" | null
   >(null);
   const [loading, setLoading] = useState(true),
     [loadError, setLoadError] = useState(false),
@@ -329,25 +345,22 @@ export function Panorama() {
           )}
         </nav>
         <div className="sidebar-bottom">
-          <button className="nav-item" onClick={() => setUtility("focus")}>
-            <ScanEye size={17} />
-            {t("Mi observación", "My observation")}
-          </button>
-          <button
-            className="nav-item"
-            onClick={() => setUtility("subscription")}
-          >
-            <CreditCard size={17} />
-            {t("Suscripción", "Subscription")}
-          </button>
           <button className="nav-item" onClick={() => setUtility("settings")}>
             <Settings2 size={17} />
             {t("Preferencias", "Preferences")}
           </button>
-          <Link href="/design" className="sidebar-system">
-            {t("Sistema AXIGNAL", "AXIGNAL system")}
-            <ArrowUpRight size={12} />
-          </Link>
+          <div className="example-exit">
+            <Link
+              href="/signup"
+              className="button primary"
+              onClick={() => track({ kind: "CTA_ACTIVATED", surface: "example", cta: funnelCta.exampleStart })}
+            >
+              {t("Empieza con tu organización", "Start with your organization")}
+            </Link>
+            <Link href="/" className="text-link">
+              {t("Volver a AXIGNAL", "Back to AXIGNAL")}
+            </Link>
+          </div>
         </div>
       </aside>
       <div className="product-workspace">
@@ -403,16 +416,19 @@ export function Panorama() {
             >
               <MessageCircle size={20} />
             </IconButton>
-            <span
-              className="user-avatar"
-              aria-label={t("Sesión de demostración", "Demonstration session")}
+            <Link
+              href="/signup"
+              className="public-access-link example-start"
+              onClick={() => track({ kind: "CTA_ACTIVATED", surface: "example", cta: funnelCta.exampleStart })}
             >
-              NR
-            </span>
+              {t("Empezar", "Get started")}
+              <ArrowRight size={15} />
+            </Link>
           </div>
         </header>
         <div className="workspace-content">
           <main id="main" className="panorama-main" ref={centreRef}>
+            <ExampleBanner organization={organization} />
             {state ? (
               <StatePanel state={state} onRetry={resetView} />
             ) : selected ? (
@@ -442,10 +458,7 @@ export function Panorama() {
                               "Lo que merece tu atención.",
                               "What deserves your attention.",
                             )
-                          : t(
-                              "Tu mundo, en contexto.",
-                              "Your world, in context.",
-                            )}
+                          : t("Lo que AXIGNAL ve alrededor de {org}.", "What AXIGNAL sees around {org}.").replace("{org}", organization.name)}
                     </h1>
                     {family && (
                       <p className="family-terms">{familyTerms(family.id, locale).join(" · ")}</p>
@@ -459,8 +472,8 @@ export function Panorama() {
                               "A brief reading of the signals available at this point in time.",
                             )
                           : t(
-                              "Acerca una familia. Sigue una señal. Entiende lo que la sostiene.",
-                              "Bring a family closer. Follow a signal. Understand what supports it.",
+                              "Dónde trabaja, qué ha cambiado, por qué importa y qué falta por saber. Abre cualquier señal para ver su evidencia.",
+                              "Where it works, what changed, why it matters and what is still unknown. Open any signal to see its evidence.",
                             )}
                     </p>
                   </div>
@@ -491,18 +504,18 @@ export function Panorama() {
                   <>
                     <div className="family-lenses">
                       <span className="mono">
-                        {t("LENTES DE ATENCIÓN", "ATTENTION LENSES")}
+                        {t("IR DIRECTO A", "JUMP TO")}
                       </span>
                       {(family.id === "markets"
                         ? [
-                            t("Rehabilitación", "Renovation"),
-                            t("Energía", "Energy"),
-                            t("Alcance", "Reach"),
+                            t("El programa de ayudas", "The grant programme"),
+                            t("Por qué encaja", "Why it fits"),
+                            t("Qué falta saber", "What is still unknown"),
                           ]
                         : [
-                            t("Señales", "Signals"),
-                            t("Contexto", "Context"),
-                            t("Límites", "Limits"),
+                            t("La señal", "The signal"),
+                            t("Por qué importa", "Why it matters"),
+                            t("Qué falta saber", "What is still unknown"),
                           ]
                       ).map((label, i) => (
                         <button
@@ -523,6 +536,9 @@ export function Panorama() {
                         </button>
                       ))}
                     </div>
+                    {family.id === "markets" && garden && (
+                      <EconomicGarden organization={organization.name} garden={garden} />
+                    )}
                     <FamilyLens
                       organizationId={organizationId}
                       family={family.id}
@@ -621,6 +637,10 @@ export function Panorama() {
                   </div>
                 ) : (
                   <>
+                    {garden && (
+                      <EconomicGarden organization={organization.name} garden={garden} />
+                    )}
+                    <ExampleChanges organizationId={organizationId} asOf={asOf} />
                     {heroSignal && (
                       <div className="attention-feature">
                         <div className="attention-text">
@@ -660,6 +680,10 @@ export function Panorama() {
                         </div>
                       </div>
                     )}
+                    <ExampleOpenQuestions
+                      signals={projection.signals.filter((s) => s.id !== heroSignal?.id)}
+                      onOpen={focusSignal}
+                    />
                     <section className="constellation-section">
                       <div className="constellation-heading">
                         <span className="eyebrow">
@@ -752,18 +776,19 @@ export function Panorama() {
                         </h3>
                         <p>
                           {t(
-                            "El foco persiste. Cada nueva evidencia puede cambiar la lectura y sus límites.",
-                            "The focus persists. Each new piece of evidence can change the reading and its limits.",
+                            "En tu cuenta la observación continúa: cada evidencia nueva puede cambiar la lectura y sus límites.",
+                            "In your account observation continues: each new piece of evidence can change the reading and its limits.",
                           )}
                         </p>
                       </div>
-                      <button
+                      <Link
                         className="text-link"
-                        onClick={() => setUtility("focus")}
+                        href="/signup"
+                        onClick={() => track({ kind: "CTA_ACTIVATED", surface: "example", cta: funnelCta.exampleStart })}
                       >
-                        {t("Ver mi foco", "View my focus")}
+                        {t("Observar mi propia organización", "Observe my own organization")}
                         <ArrowRight size={15} />
-                      </button>
+                      </Link>
                     </section>
                   </>
                 )}
@@ -772,8 +797,8 @@ export function Panorama() {
             <div className="projection-footnote">
               <Info size={12} />
               {t(
-                "Proyección humana de AXIGLAND · datos ficticios para revisión.",
-                "Human projection of AXIGLAND · fictional data for review.",
+                "Ejemplo guiado: la organización, sus fuentes y sus fechas son ficticias. El método es el mismo que en tu cuenta.",
+                "Guided example: the organization, its sources and dates are fictional. The method is the same as in your account.",
               )}
             </div>
           </main>
@@ -806,8 +831,8 @@ export function Panorama() {
               <span>
                 {asOf === "2026-10-03"
                   ? t(
-                      "Corte actual de demostración",
-                      "Current demonstration snapshot",
+                      "Lo que se sabe hoy",
+                      "What is known today",
                     )
                   : t(
                       "Vista histórica · sin conocimiento futuro",
@@ -881,15 +906,13 @@ export function Panorama() {
         <Dialog
           title={
             utility === "organizations"
-              ? t("Dónde ponemos atención", "Where we direct attention")
+              ? t("Organizaciones del ejemplo", "Organizations in the example")
               : utility === "focus"
                 ? t(
                     "Un foco persistente de observación",
                     "A persistent observation focus",
                   )
-                : utility === "subscription"
-                  ? t("Tu alcance de observación", "Your observation scope")
-                  : t("Preferencias de lectura", "Reading preferences")
+                : t("Preferencias de lectura", "Reading preferences")
           }
           onClose={() => setUtility(null)}
         >
@@ -941,7 +964,7 @@ export function Panorama() {
               </p>
               <div className="fact-row">
                 <span>
-                  {t("Estado del foco ilustrativo", "Illustrative focus state")}
+                  {t("Observación", "Observation")}
                 </span>
                 <strong>
                   {organization.focusId
@@ -954,32 +977,6 @@ export function Panorama() {
                 <strong>{dateLabel(organization.focusSince, locale)}</strong>
               </div>
               <DemoLabel />
-            </>
-          ) : utility === "subscription" ? (
-            <>
-              <p>
-                {t(
-                  "La suscripción asigna atención, no propiedad sobre la verdad económica. Las señales no son unidades de facturación.",
-                  "A subscription allocates attention, not ownership of economic truth. Signals are not billing units.",
-                )}
-              </p>
-              <div className="fact-row">
-                <span>{t("Vista de alcance", "Scope view")}</span>
-                <strong>{t("Demostración", "Demonstration")}</strong>
-              </div>
-              <div className="limit-note">
-                <CreditCard size={18} />
-                <p>
-                  {t(
-                    "Planes, cuotas y pagos requieren la oferta y sesión autorizadas del servicio de suscripciones. Esta demo no procesa pagos.",
-                    "Plans, allowances and payments require the subscription service’s authorized offer and session. This demo does not process payments.",
-                  )}
-                </p>
-              </div>
-              <Link href="/#subscription" className="button secondary">
-                {t("Entender la suscripción", "Understand subscription")}
-                <ArrowUpRight size={16} />
-              </Link>
             </>
           ) : (
             <>
@@ -1015,10 +1012,6 @@ export function Panorama() {
                 </button>
                 <LocaleToggle />
               </div>
-              <Link href="/design" className="text-link">
-                {t("Accesibilidad y estados", "Accessibility and states")}
-                <ArrowUpRight size={16} />
-              </Link>
             </>
           )}
         </Dialog>
@@ -1269,5 +1262,35 @@ function SignalDetail({
         {t("Corte temporal", "As-of snapshot")}: {dateLabel(asOf, locale)}
       </div>
     </article>
+  );
+}
+
+/** Public example != your private AXIGNAL, said once, plainly, at the top. */
+function ExampleBanner({ organization }: { organization: { name: string; does: { es: string; en: string } } }) {
+  const { t, copy } = useLocale();
+  return (
+    <aside className="example-banner" aria-label={t("Sobre este ejemplo", "About this example")}>
+      <p>
+        <strong>{t("Ejemplo guiado con una organización ficticia.", "Guided example with a fictional organization.")}</strong>{" "}
+        {organization.name}: {copy(organization.does)}{" "}
+        {t(
+          "En tu cuenta, AXIGNAL observa las organizaciones reales que tú eliges, con sus fuentes reales.",
+          "In your account, AXIGNAL observes the real organizations you choose, with their real sources.",
+        )}
+      </p>
+      <span className="example-banner-actions">
+      <Link
+        href="/signup"
+        className="text-link"
+        onClick={() => track({ kind: "CTA_ACTIVATED", surface: "example", cta: funnelCta.exampleStart })}
+      >
+        {t("Empieza con tu organización", "Start with your organization")}
+        <ArrowRight size={15} />
+      </Link>
+      <Link href="/" className="text-link example-banner-back">
+        {t("Volver a AXIGNAL", "Back to AXIGNAL")}
+      </Link>
+      </span>
+    </aside>
   );
 }

@@ -17,13 +17,14 @@ import {
   type AuthStartRequest,
 } from "@/lib/public-contracts";
 import { Observer } from "./ui";
+import { funnelCta, track } from "@/lib/funnel-events";
 import { PublicShell } from "./public-shell";
 
 export function Access({ intent }: { intent: AuthStartRequest["intent"] }) {
   const { t } = useLocale();
   const controller = useRef<AbortController | null>(null);
   const [busy, setBusy] = useState<string | null>(null);
-  const [available, setAvailable] = useState(false);
+  const [available, setAvailable] = useState<boolean | null>(null);
   const [chatgptAvailable, setChatgptAvailable] = useState(false);
   const [outcome, setOutcome] = useState<{
     provider: string;
@@ -40,11 +41,18 @@ export function Access({ intent }: { intent: AuthStartRequest["intent"] }) {
         setAvailable(data.providers.some((item: { status?: string }) => item.status === "AVAILABLE"));
         setChatgptAvailable(data.providers.some((item: { id?: string; status?: string }) => item.id === "openai" && item.status === "AVAILABLE"));
       }
-    }).catch(() => {});
+    }).catch(() => {
+      if (!current.signal.aborted) setAvailable(false);
+    });
     return () => current.abort();
   }, []);
   async function start(provider: AuthStartRequest["provider"]) {
     if (busy || (provider === "openai" && !chatgptAvailable)) return;
+    track({
+      kind: "CTA_ACTIVATED",
+      surface: "access",
+      cta: intent === "signup" ? funnelCta.signupGoogle : funnelCta.loginGoogle,
+    });
     setOutcome(null);
     setBusy(provider);
     controller.current?.abort();
@@ -82,22 +90,42 @@ export function Access({ intent }: { intent: AuthStartRequest["intent"] }) {
       <div className="access-spread">
         <section className="access-perspective">
           <span className="eyebrow">
-            {t(
-              "AXIGNAL / Tu próxima mirada",
-              "AXIGNAL / Your next perspective",
-            )}
+            {intent === "login" ? t("Acceder", "Sign in") : t("Crear cuenta", "Sign up")}
           </span>
-          <h1>
-            {t("El contexto espera.", "Context awaits.")}
-            <br />
-            <em>{t("Acércate.", "Come closer.")}</em>
-          </h1>
-          <p>
-            {t(
-              "Una entrada sencilla a una forma más profunda de observar. Tu identidad abre el acceso; la evidencia sostiene lo que ves.",
-              "A simple entrance to a deeper way of observing. Your identity opens access; evidence supports what you see.",
-            )}
-          </p>
+          {intent === "login" ? (
+            <>
+              <h1>
+                {t("Vuelve a tus organizaciones.", "Back to your organizations.")}
+              </h1>
+              <p>
+                {t(
+                  "Lo que AXIGNAL ha seguido observando desde tu última visita te espera, con su historia y sus fuentes.",
+                  "What AXIGNAL kept observing since your last visit is waiting for you, with its history and sources.",
+                )}
+              </p>
+            </>
+          ) : (
+            <>
+              <h1>
+                {t("Empieza con tu organización.", "Start with your organization.")}
+              </h1>
+              <ol className="access-steps">
+                <li>{t("Entra con tu cuenta de Google.", "Sign in with your Google account.")}</li>
+                <li>
+                  {t(
+                    "Añade una organización: basta con su nombre o su web.",
+                    "Add an organization: its name or website is enough.",
+                  )}
+                </li>
+                <li>
+                  {t(
+                    "AXIGNAL la observa y te muestra qué cambia y por qué importa.",
+                    "AXIGNAL observes it and shows you what changes and why it matters.",
+                  )}
+                </li>
+              </ol>
+            </>
+          )}
           <div className="access-world" aria-hidden="true">
             <div className="access-ring" />
             <div className="access-ring ring-inner" />
@@ -144,8 +172,8 @@ export function Access({ intent }: { intent: AuthStartRequest["intent"] }) {
           <KeyRound size={26} className="access-key" />
           <h2 id="access-title">
             {intent === "login"
-              ? t("Vuelve a tu mirada.", "Return to your perspective.")
-              : t("Tu primera mirada.", "Your first perspective.")}
+              ? t("Accede a tu cuenta.", "Sign in to your account.")
+              : t("Crea tu cuenta.", "Create your account.")}
           </h2>
           <p className="access-deck">
             {intent === "login"
@@ -161,14 +189,18 @@ export function Access({ intent }: { intent: AuthStartRequest["intent"] }) {
           <div className="access-availability">
             <Info size={17} />
             <p>
-              {available ? t("Elige una identidad conectada para continuar de forma segura.", "Choose a connected identity to continue securely.") : t(
-                "Acceso en preparación. Google y ChatGPT aún no están conectados; esta versión no crea cuentas ni sesiones.",
-                "Access is being prepared. Google and ChatGPT are not connected yet; this version creates no accounts or sessions.",
-              )}
+              {available === null
+                ? t("Comprobando el acceso…", "Checking access…")
+                : available
+                  ? t("Elige una identidad conectada para continuar de forma segura.", "Choose a connected identity to continue securely.")
+                  : t(
+                      "El acceso no está disponible en este momento. Vuelve a intentarlo en unos minutos.",
+                      "Access is not available right now. Please try again in a few minutes.",
+                    )}
             </p>
           </div>
           <div className="provider-options" aria-busy={!!busy}>
-            {preparedProviders.map((provider) => (
+            {preparedProviders.filter((provider) => provider.id !== "openai" || chatgptAvailable).map((provider) => (
               <button
                 className={"provider-button provider-" + provider.id}
                 key={provider.id}
@@ -269,15 +301,12 @@ export function Access({ intent }: { intent: AuthStartRequest["intent"] }) {
           <div className="demo-access">
             <span>
               {t(
-                "Mientras tanto, descubre cómo se siente.",
-                "Meanwhile, discover how it feels.",
+                "¿Todavía no lo tienes claro?",
+                "Not sure yet?",
               )}
             </span>
             <Link className="text-link" href="/panorama">
-              {t(
-                "Explorar la demo ilustrativa",
-                "Explore the illustrative demo",
-              )}
+              {t("Ver un ejemplo guiado", "See a guided example")}
               <ArrowUpRight size={17} />
             </Link>
           </div>

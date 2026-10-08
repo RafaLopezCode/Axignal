@@ -3,6 +3,7 @@ import "./globals.css";
 import "./public.css";
 import "./typography.css";
 import "./acquisition.css";
+import "./funnel.css";
 import "../components/cognition/cognition.css";
 import { LocaleProvider } from "@/lib/locale";
 import { PrivacyNotice } from "@/components/privacy-notice";
@@ -10,15 +11,15 @@ import { PrivacyNotice } from "@/components/privacy-notice";
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "https://axignal.com"),
   title: {
-    default: "AXIGNAL — Una mirada que conecta",
+    default: "AXIGNAL — Qué cambia alrededor de tu empresa, y por qué importa",
     template: "%s · AXIGNAL",
   },
   description:
-    "Observa el mundo económico. Entiende qué cambia, por qué importa y qué lo sostiene.",
+    "AXIGNAL observa de forma continua las organizaciones que eliges en fuentes públicas, recuerda lo que encuentra y te muestra qué cambia y por qué importa, con su fuente y su fecha.",
   icons: { icon: "/brand/favicon.svg", apple: "/brand/apple-touch-icon.png" },
   openGraph: {
-    title: "AXIGNAL — Una mirada que conecta",
-    description: "El contexto se acumula. La comprensión también.",
+    title: "AXIGNAL — Qué cambia alrededor de tu empresa, y por qué importa",
+    description: "Observación económica continua, con memoria y evidencia.",
     images: ["/brand/og-image-1200x630.png"],
   },
 };

@@ -1,41 +1,29 @@
 "use client";
-import { FramedObserver } from "./observer-frame";
 import Link from "next/link";
-import { PublicHeader } from "./public-shell";
-import {
-  UseCaseLens,
-  ReferencePricing,
-  LandingNotebook,
-  TrustProof,
-  NewsletterInvitation,
-  ChapterNavigation,
-} from "./landing-extras";
 import { useEffect, useRef, useState } from "react";
 import {
   ArrowRight,
-  ArrowDown,
   ArrowUpRight,
-  Check,
-  ScanEye,
-  Layers3,
-  Clock3,
-  MoveRight,
-  Building2,
   BookOpen,
-  Network,
-  ChevronRight,
+  CircleHelp,
+  Clock3,
+  MapPinned,
 } from "lucide-react";
+import { PublicHeader } from "./public-shell";
+import { ReferencePricing } from "./landing-extras";
+import { FramedObserver } from "./observer-frame";
 import { useLocale } from "@/lib/locale";
+import { dateLabel, makeContext, project } from "@/lib/projection";
 import {
-  Brand,
-  AxentIdentity,
-  LocaleToggle,
-  Observer,
-  Badge,
-  DemoLabel,
-  Dialog,
-  MiniFooter,
-} from "./ui";
+  funnelCta,
+  landingChapters,
+  track,
+  type FunnelCta,
+} from "@/lib/funnel-events";
+import { Badge, MiniFooter, Observer } from "./ui";
+
+/** The one public example. Every "show me" on the site lands here. */
+export const EXAMPLE_HREF = "/panorama";
 
 function Reveal({
   children,
@@ -68,561 +56,402 @@ function Reveal({
     </div>
   );
 }
-export function LensScene({ compact = false }: { compact?: boolean }) {
-  const { t } = useLocale();
-  const [mode, setMode] = useState(0);
+
+function CtaLink({
+  href,
+  cta,
+  className,
+  children,
+}: {
+  href: string;
+  cta: FunnelCta;
+  className: string;
+  children: React.ReactNode;
+}) {
   return (
-    <div
-      className={
-        "lens-scene " + (compact ? "compact-scene" : "") + " scene-mode-" + mode
-      }
+    <Link
+      href={href}
+      className={className}
+      onClick={() => track({ kind: "CTA_ACTIVATED", surface: "landing", cta })}
     >
-      <div className="scene-topline">
-        <span className="eyebrow">
-          {t("Un mundo. Más contexto.", "One world. More context.")}
-        </span>
-        <span className="mono">{String(mode + 1).padStart(2, "0")} / 03</span>
-      </div>
-      <div className="scene-field">
-        <div className="orbit orbit-one" />
-        <div className="orbit orbit-two" />
-        <svg
-          className="scene-connections"
-          viewBox="0 0 600 500"
-          aria-hidden="true"
-        >
-          <path
-            d="M115 135 C230 135 198 270 310 263 S412 125 510 180 M310 263 C335 390 470 373 490 415 M115 135 C90 310 206 425 310 263"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.2"
-            strokeDasharray={mode === 0 ? "4 7" : "0"}
-          />
-        </svg>
-        <div className="scene-card capability">
-          <span className="card-index">01</span>
-          <span className="mono">{t("Organización", "Organization")}</span>
-          <h3>Norte Renovable</h3>
-          <p>{t("Una capacidad conocida.", "A known capability.")}</p>
-          <span className="scene-card-icon">
-            <Building2 size={20} strokeWidth={1.5} />
-          </span>
-        </div>
-        <div className="scene-card context">
-          <span className="card-index">02</span>
-          <span className="mono">{t("Contexto", "Context")}</span>
-          <h3>{t("Rehabilitación", "Renovation")}</h3>
-          <p>{t("Una necesidad emergente.", "An emerging need.")}</p>
-          <span className="scene-card-icon">
-            <Layers3 size={20} strokeWidth={1.5} />
-          </span>
-        </div>
-        <button
-          className="lens-core"
-          onClick={() => setMode((mode + 1) % 3)}
-          aria-label={t(
-            "Cambiar la capa de observación",
-            "Change observation layer",
-          )}
-        >
-          <img src="/brand/isotope.svg" alt="" width="128" height="138" />
+      {children}
+    </Link>
+  );
+}
+
+/**
+ * A glance at what a subscriber reads, composed from the same fictional example the
+ * public example renders (never a second fixture). It shows the three epistemic
+ * states side by side because that difference is the product.
+ */
+function HeroReading() {
+  const { t, copy, locale } = useLocale();
+  const now = project(makeContext("norte", "markets", "2026-10-03"));
+  const order = ["renovation", "representation", "reputation-gap"];
+  const shown = order
+    .map((id) => now.signals.find((signal) => signal.id === id))
+    .filter((signal) => signal !== undefined);
+  return (
+    <div className="hero-reading">
+      <div className="hero-reading-head">
+        <span className="hero-reading-org">
+          <span className="org-monogram" aria-hidden="true">N</span>
           <span>
-            {
-              [
-                t("Observa", "Observe"),
-                t("Conecta", "Connect"),
-                t("Comprende", "Understand"),
-              ][mode]
-            }
+            <strong>{now.organization.name}</strong>
+            <small>{t("Organización ficticia · ejemplo guiado", "Fictional organization · guided example")}</small>
           </span>
-        </button>
-        <div className="scene-card possibility">
-          <Badge state="POTENTIAL" />
-          <h3>{t("Algo merece atención.", "Something deserves attention.")}</h3>
-          <p>
-            {mode === 2
-              ? t(
-                  "Una posibilidad. Con evidencia y límites.",
-                  "A possibility. With evidence and limits.",
-                )
-              : t(
-                  "Las conexiones cambian lo que ves.",
-                  "Connections change what you see.",
-                )}
-          </p>
-          <ArrowUpRight size={18} />
-        </div>
-        <span className="hand-note scene-note">
-          {t("mira un poco más cerca", "look a little closer")}
         </span>
-        <Observer className="scene-observer" scene={(["discover", "connect", "reason"] as const)[mode]} />
+        <span className="mono">{dateLabel("2026-10-03", locale)}</span>
       </div>
-      <div className="scene-bottom">
-        <div
-          className="scene-steps"
-          role="group"
-          aria-label={t("Capas de observación", "Observation layers")}
-        >
-          {[
-            t("Observar", "Observe"),
-            t("Conectar", "Connect"),
-            t("Comprender", "Understand"),
-          ].map((label, i) => (
-            <button
-              key={i}
-              aria-pressed={mode === i}
-              onClick={() => setMode(i)}
-            >
-              <span>0{i + 1}</span>
-              {label}
-            </button>
-          ))}
-        </div>
-        <span className="scene-example">
-          {t("Ejemplo ilustrativo", "Illustrative example")}
-        </span>
-      </div>
+      <p className="hero-reading-does">{copy(now.organization.does)}</p>
+      <h2 className="hero-reading-title">
+        {t("Lo que AXIGNAL ve hoy", "What AXIGNAL sees today")}
+      </h2>
+      <ul>
+        {shown.map((signal) => (
+          <li key={signal.id}>
+            <Badge state={signal.epistemic} />
+            <span className="hero-reading-text">{copy(signal.title)}</span>
+            <span className="hero-reading-basis">
+              {signal.epistemic === "UNKNOWN"
+                ? t("Sin evidencia suficiente todavía", "Not enough evidence yet")
+                : signal.evidenceIds.length +
+                  " " +
+                  (signal.evidenceIds.length === 1
+                    ? t("fuente", "source")
+                    : t("fuentes", "sources")) +
+                  " · " +
+                  t("observado el", "observed on") +
+                  " " +
+                  dateLabel(signal.detectedAt, locale)}
+            </span>
+          </li>
+        ))}
+      </ul>
+      <CtaLink href={EXAMPLE_HREF} cta={funnelCta.heroExample} className="hero-reading-open">
+        {t("Abrir el ejemplo completo", "Open the full example")}
+        <ArrowRight size={16} />
+      </CtaLink>
     </div>
   );
 }
+
+function useChapterViews() {
+  useEffect(() => {
+    track({ kind: "LANDING_VIEWED", surface: "landing" });
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          const chapter = landingChapters[entry.target.id as keyof typeof landingChapters];
+          if (entry.isIntersecting && chapter)
+            track({ kind: "CHAPTER_VIEWED", surface: "landing", chapter });
+        }
+      },
+      { threshold: 0.35 },
+    );
+    document
+      .querySelectorAll("main > section[id]")
+      .forEach((node) => observer.observe(node));
+    return () => observer.disconnect();
+  }, []);
+}
+
 export function Landing() {
-  const { t } = useLocale();
+  const { t, locale } = useLocale();
   const [time, setTime] = useState(2);
-  const [useCase, setUseCase] = useState(0);
+  const [audience, setAudience] = useState(0);
   const [focuses, setFocuses] = useState(1);
-  const [about, setAbout] = useState(false);
-  const chapters = [
-    t("Qué es", "What it is"),
-    t("Cómo empezar", "How to start"),
-    t("Qué acumula", "What grows"),
-    t("El tiempo", "Time"),
-    t("Para quién", "For whom"),
-    t("Explora", "Explore"),
-    t("Suscripción", "Subscription"),
-  ];
-  const cases = [
+  useChapterViews();
+  const audiences = [
     {
-      name: t("Dirección estratégica", "Strategic leadership"),
-      title: t("Ver antes de decidir.", "See before deciding."),
-      text: t(
-        "Entender un cambio, sus conexiones y los límites de lo que sabemos. El contexto económico precede a la decisión.",
-        "Understand a change, its connections and the limits of what we know. Economic context comes before a decision.",
-      ),
-      tag: t("Contexto → Comprensión", "Context → Understanding"),
-    },
-    {
-      name: t("Desarrollo de negocio", "Business development"),
-      title: t("Investigar una posibilidad.", "Investigate a possibility."),
-      text: t(
-        "Reconocer necesidades relacionadas con capacidades, sin convertir una coincidencia en un cliente ni una posibilidad en una promesa.",
-        "Recognize needs related to capabilities, without turning an overlap into a customer or a possibility into a promise.",
-      ),
-      tag: t("Capacidad → Posibilidad", "Capability → Possibility"),
-    },
-    {
-      name: t("Ecosistemas y análisis", "Ecosystems & analysis"),
-      title: t("Conectar sin simplificar.", "Connect without oversimplifying."),
-      text: t(
-        "Explorar actores, relaciones y contexto temporal. Cada camino conserva su significado y su evidencia.",
-        "Explore actors, relationships and temporal context. Each path retains its meaning and evidence.",
-      ),
-      tag: t("Relaciones → Perspectiva", "Relationships → Perspective"),
-    },
-    {
-      name: t("SEO y presencia digital", "SEO & digital presence"),
-      title: t("Entender cómo te encuentran.", "Understand how you are found."),
-      text: t(
-        "Observar cómo buscadores y sistemas generativos representan una organización. Una mención, una cita y una recomendación no son lo mismo; el contexto de medida importa.",
-        "Observe how search and generative systems represent an organization. A mention, a citation and an endorsement differ; measurement context matters.",
-      ),
-      tag: t("Representación → Contexto", "Representation → Context"),
-    },
-    {
-      name: t("Marketing", "Marketing"),
+      name: t("Diriges una empresa", "You run a business"),
       title: t(
-        "Leer el contexto antes del mensaje.",
-        "Read the context before the message.",
+        "Lo que pasa a tu alrededor, sin buscarlo cada semana.",
+        "What happens around you, without searching every week.",
       ),
       text: t(
-        "Comprender necesidades, capacidades y cambios para hacer mejores preguntas. AXIGNAL observa; no ejecuta campañas ni promete resultados.",
-        "Understand needs, capabilities and changes to ask better questions. AXIGNAL observes; it does not execute campaigns or promise outcomes.",
+        "Cambios en clientes, competencia y mercado, y demanda pública que encaja con lo que haces y con dónde trabajas. Una posibilidad sigue siendo una posibilidad hasta que la evidencia diga más.",
+        "Changes in customers, competitors and markets, and public demand that fits what you do and where you work. A possibility stays a possibility until the evidence says more.",
       ),
-      tag: t("Cambio → Pregunta", "Change → Question"),
+      family: "demand",
+      scene: "strategy" as const,
     },
     {
-      name: t("Comunicación", "Communications"),
+      name: t("Ventas y desarrollo de negocio", "Sales and business development"),
       title: t(
-        "Separar percepción y evidencia.",
-        "Separate perception and evidence.",
+        "Qué cuentas conviene mirar, y por qué.",
+        "Which accounts deserve a look, and why.",
       ),
       text: t(
-        "Explorar la representación pública y reconocer lo que sostiene una lectura. La visibilidad de una organización no equivale a la verdad de su negocio.",
-        "Explore public representation and recognize what supports a reading. An organization's visibility is not its business truth.",
+        "Sigue a tus clientes y a tus cuentas objetivo. AXIGNAL muestra qué ha cambiado y qué capacidad conecta con qué necesidad, sin convertir una coincidencia en un cliente.",
+        "Follow your customers and target accounts. AXIGNAL shows what changed and which capability meets which need, without turning an overlap into a customer.",
       ),
-      tag: t("Representación → Evidencia", "Representation → Evidence"),
+      family: "relationships",
+      scene: "business" as const,
     },
     {
-      name: t("Investigación", "Research"),
+      name: t("Consultoras y agencias", "Consultancies and agencies"),
       title: t(
-        "Abrir una pregunta con método.",
-        "Open a question with method.",
+        "Una organización por cliente. El contexto, ya preparado.",
+        "One organization per client. The context, already prepared.",
       ),
       text: t(
-        "Relacionar actores, fuentes y momentos conservando procedencia, contradicciones y preguntas abiertas. Axent ayuda a investigar sin admitir verdad por su cuenta.",
-        "Relate actors, sources and moments while preserving provenance, contradictions and open questions. Axent helps research without admitting truth on its own.",
+        "Observa a cada cliente con continuidad y llega a cada reunión sabiendo qué ha cambiado desde la anterior. Cada organización adicional cuesta 4,95 € al mes.",
+        "Observe each client continuously and arrive at every meeting knowing what changed since the last one. Each additional organization costs €4.95 a month.",
       ),
-      tag: t("Pregunta → Fundamento", "Question → Basis"),
+      family: "activity",
+      scene: "research" as const,
     },
     {
-      name: t("Periodismo", "Journalism"),
+      name: t("SEO y presencia digital", "SEO and digital presence"),
       title: t(
-        "Seguir el hilo hasta la fuente.",
-        "Follow the thread to its source.",
+        "Cómo te representan los buscadores y la IA.",
+        "How search engines and AI represent you.",
       ),
       text: t(
-        "Comprender el contexto económico y volver a la evidencia que lo sostiene. Una explicación es un punto de partida para contrastar, no una fuente periodística fabricada.",
-        "Understand economic context and return to its supporting evidence. An explanation starts verification; it is not a fabricated journalistic source.",
+        "Observa cómo aparece una organización en buscadores y respuestas generativas, con fecha, condiciones y muestra. Una mención no es una cita, y una cita no es una recomendación.",
+        "Observe how an organization appears in search and generative answers, with date, conditions and sample. A mention is not a citation, and a citation is not an endorsement.",
       ),
-      tag: t("Contexto → Verificación", "Context → Verification"),
+      family: "presence",
+      scene: "representation" as const,
     },
   ];
+  const moments = [
+    {
+      date: "2026-07-01",
+      title: t("Sabe qué hace.", "It knows what the company does."),
+      text: t(
+        "Su ficha pública describe lo que hace: aislar edificios para que gasten menos energía. Es lo único observado: lo que llegará después no entra en esta vista.",
+        "Its public sheet describes what it does: insulating buildings so they use less energy. That is all that has been observed: what comes later does not enter this view.",
+      ),
+    },
+    {
+      date: "2026-09-01",
+      title: t("Aparece algo nuevo.", "Something new appears."),
+      text: t(
+        "Se publica un programa público de ayudas para edificios más eficientes. AXIGNAL lo conecta con lo que la empresa hace: una posibilidad, no un contrato.",
+        "A public grant programme for more efficient buildings is published. AXIGNAL connects it with what the company does: a possibility, not a contract.",
+      ),
+    },
+    {
+      date: "2026-10-03",
+      title: t("Lo que sigue vigente.", "What is still current."),
+      text: t(
+        "Cada observación nueva actualiza la lectura. Lo que envejece deja de contar como actual; nada se borra.",
+        "Each new observation updates the reading. What ages stops counting as current; nothing is erased.",
+      ),
+    },
+  ];
+  const selectedAudience = audiences[audience];
   return (
-    <div className="landing">
+    <div className="landing funnel-landing">
       <PublicHeader landing />
       <main id="main">
-        <section className="hero" id="what">
+        <section className="hero funnel-hero" id="what">
           <div className="hero-copy">
             <span className="eyebrow hero-eyebrow">
               <span className="quiet-dot" />
               {t(
-                "Inteligencia económica que observa",
-                "Economic intelligence that observes",
+                "Observación económica continua",
+                "Continuous economic observation",
               )}
             </span>
             <h1>
-              {t("El mundo cambia.", "The world changes.")}
-              <br />
-              <em>{t("Tu mirada también.", "So does your perspective.")}</em>
+              {t(
+                "Sabe qué cambia alrededor de tu empresa.",
+                "Know what changes around your business.",
+              )}{" "}
+              <em>{t("Y por qué te importa.", "And why it matters to you.")}</em>
             </h1>
             <p className="hero-lead">
               {t(
-                "Encuentra sentido en lo que ocurre. Conecta señales, entiende su contexto y descubre qué merece tu atención.",
-                "Find meaning in what happens. Connect signals, understand their context and discover what deserves your attention.",
+                "AXIGNAL observa de forma continua las organizaciones que eliges —la tuya, tus clientes, tu competencia— en fuentes públicas. Recuerda lo que encuentra, detecta lo que cambia y separa lo que importa a ese negocio del ruido. Siempre con la fuente y la fecha.",
+                "AXIGNAL continuously observes the organizations you choose — yours, your customers, your competitors — in public sources. It remembers what it finds, notices what changes and separates what matters to that business from the noise. Always with the source and the date.",
               )}
             </p>
             <div className="hero-actions">
-              <Link href="/panorama" className="button primary">
-                {t("Descubrir mi Panorama", "Discover my Panorama")}
+              <CtaLink href={EXAMPLE_HREF} cta={funnelCta.heroExample} className="button primary">
+                {t("Ver un ejemplo", "See an example")}
                 <ArrowRight size={18} />
-              </Link>
-              <a href="#start" className="text-link">
-                {t("Acércate un poco", "Look a little closer")}
-                <ArrowDown size={16} />
-              </a>
+              </CtaLink>
+              <CtaLink href="/signup" cta={funnelCta.heroStart} className="button secondary">
+                {t("Empieza con tu organización", "Start with your organization")}
+              </CtaLink>
             </div>
             <span className="hero-caption">
               {t(
-                "Observación continua. Comprensión que se acumula.",
-                "Continuous observation. Understanding that compounds.",
+                "Para quien dirige o hace crecer una empresa, y para las consultoras y agencias que acompañan a varias. 9,95 € al mes por organización.",
+                "For people who run or grow a business, and for the consultancies and agencies that support several. €9.95 a month per organization.",
               )}
             </span>
           </div>
-          <LensScene />
-          <div className="hero-bottom">
-            <span className="mono">
-              AXIGNAL / {t("EL OBSERVADOR ECONÓMICO", "THE ECONOMIC OBSERVER")}
-            </span>
-            <a
-              href="#start"
-              aria-label={t("Seguir descubriendo", "Keep discovering")}
-            >
-              <span>
-                {t(
-                  "Hay más debajo de la superficie",
-                  "There is more beneath the surface",
-                )}
-              </span>
-              <ArrowDown size={17} />
-            </a>
-          </div>
+          <HeroReading />
         </section>
-        <section className="chapter start-section" id="start">
+
+        <section className="chapter funnel-how" id="how">
           <Reveal className="chapter-heading">
-            <span className="eyebrow">02 / {chapters[1]}</span>
+            <span className="eyebrow">{t("Cómo funciona", "How it works")}</span>
             <h2>
-              {t(
-                "Empieza por una organización.",
-                "Start with an organization.",
-              )}
-              <br />
-              <em>
-                {t(
-                  "Abre la mirada a su mundo.",
-                  "Open your view to its world.",
-                )}
-              </em>
+              {t("Eliges qué observar.", "You choose what to observe.")}{" "}
+              <em>{t("AXIGNAL no deja de mirar.", "AXIGNAL keeps looking.")}</em>
             </h2>
           </Reveal>
-          <div className="start-grid">
-            <Reveal className="start-illustration">
-              <div className="focus-orbit">
-                <span className="orbit-label one">
-                  {t("Entorno", "Environment")}
-                </span>
-                <span className="orbit-label two">
-                  {t("Capacidades", "Capabilities")}
-                </span>
-                <span className="orbit-label three">
-                  {t("Relaciones", "Relationships")}
-                </span>
-                <div className="focus-subject">
-                  <Building2 size={24} strokeWidth={1.5} />
-                  <strong>{t("Tu organización", "Your organization")}</strong>
-                  <span>
-                    {t("El punto de atención", "The point of attention")}
-                  </span>
-                </div>
+          <Reveal className="funnel-steps">
+            {[
+              {
+                title: t("Eliges una organización.", "You choose an organization."),
+                text: t(
+                  "La tuya, un cliente, un competidor o cualquier empresa que te importe. Un nombre o su web bastan para empezar.",
+                  "Yours, a customer, a competitor or any company you care about. A name or its website is enough to start.",
+                ),
+              },
+              {
+                title: t("AXIGNAL observa y recuerda.", "AXIGNAL observes and remembers."),
+                text: t(
+                  "Lee fuentes públicas —su web, registros oficiales, licitaciones— y guarda cada hallazgo con su fuente y su fecha. No tienes que reconstruir cada semana qué ha cambiado.",
+                  "It reads public sources — its website, official registers, public tenders — and keeps each finding with its source and date. You no longer rebuild what changed every week.",
+                ),
+              },
+              {
+                title: t("Ves lo que importa y por qué.", "You see what matters and why."),
+                text: t(
+                  "Oportunidades, riesgos y cambios, filtrados por lo que ese negocio hace y por dónde trabaja. Cada uno explica por qué aparece y qué falta por saber.",
+                  "Opportunities, risks and changes, filtered by what that business does and where it works. Each one explains why it appears and what is still unknown.",
+                ),
+              },
+            ].map((step, i) => (
+              <div className="funnel-step" key={step.title}>
+                <span className="story-number">0{i + 1}</span>
+                <h3>{step.title}</h3>
+                <p>{step.text}</p>
               </div>
-              <span className="hand-note">
-                {t(
-                  "el foco es tuyo; el mundo es compartido",
-                  "the focus is yours; the world is shared",
-                )}
-              </span>
-            </Reveal>
-            <Reveal className="numbered-story">
-              {[
-                [
-                  t("Selecciona qué observar.", "Choose what to observe."),
-                  t(
-                    "Una organización orienta un foco persistente de atención. No crea un mundo aislado.",
-                    "An organization directs a persistent focus of attention. It does not create an isolated world.",
-                  ),
-                ],
-                [
-                  t("Deja que el contexto se conecte.", "Let context connect."),
-                  t(
-                    "AXIGNAL investiga el entorno y conserva memoria económica, evidencia y temporalidad.",
-                    "AXIGNAL investigates the surroundings and preserves economic memory, evidence and time.",
-                  ),
-                ],
-                [
-                  t("Comprende lo que emerge.", "Understand what emerges."),
-                  t(
-                    "Tu Panorama acerca lo relevante. AXENT te ayuda a investigarlo y explicarlo.",
-                    "Your Panorama brings what matters closer. AXENT helps you investigate and explain it.",
-                  ),
-                ],
-              ].map(([title, text], i) => (
-                <div className="story-line" key={title}>
-                  <span className="story-number">0{i + 1}</span>
-                  <div>
-                    <h3>{title}</h3>
-                    <p>{text}</p>
-                  </div>
-                </div>
-              ))}
-            </Reveal>
-          </div>
-        </section>
-        <section className="chapter growth-section" id="growth">
-          <Reveal className="growth-copy">
-            <span className="eyebrow">03 / {chapters[2]}</span>
-            <h2>
-              {t(
-                "Cada observación deja contexto.",
-                "Every observation leaves context.",
-              )}
-              <br />
-              <em>
-                {t(
-                  "El contexto deja comprensión.",
-                  "Context leaves understanding.",
-                )}
-              </em>
-            </h2>
+            ))}
+          </Reveal>
+          <Reveal className="funnel-axent">
             <p>
+              <strong>AXENT</strong>{" "}
               {t(
-                "AXIGNAL recuerda, contrasta y vuelve a mirar. Lo conocido puede reevaluarse cuando cambian sus fuentes o sus condiciones. La inteligencia crece sin dar por eterna una conclusión.",
-                "AXIGNAL remembers, compares and looks again. What is known can be reassessed when its sources or conditions change. Intelligence grows without treating a conclusion as eternal.",
+                "te deja preguntar sobre todo ese contexto acumulado. Responde con sus fuentes y te dice cuándo no lo sabe. AXIGNAL observa y recuerda; AXENT te ayuda a entenderlo.",
+                "lets you ask about all that accumulated context. It answers with its sources and tells you when it does not know. AXIGNAL observes and remembers; AXENT helps you understand it.",
               )}
             </p>
-            <div className="growth-key">
-              <Layers3 size={20} />
-              <span>
-                {t(
-                  "Una memoria económica compartida. Una perspectiva para ti.",
-                  "A shared economic memory. A perspective for you.",
-                )}
-              </span>
-            </div>
           </Reveal>
-          <Reveal className="memory-stack">
-            <div className="memory-page back">
-              <span className="mono">{t("LO CONOCIDO", "WHAT IS KNOWN")}</span>
-              <h3>{t("Una capacidad.", "A capability.")}</h3>
-              <div className="memory-rule" />
-              <div className="memory-rule short" />
-            </div>
-            <div className="memory-page middle">
-              <span className="mono">{t("LO QUE CAMBIA", "WHAT CHANGES")}</span>
-              <h3>{t("Un nuevo contexto.", "A new context.")}</h3>
-              <div className="memory-rule" />
-              <div className="memory-rule short" />
-            </div>
-            <div className="memory-page front">
-              <span className="mono">{t("LO QUE EMERGE", "WHAT EMERGES")}</span>
-              <Badge state="POTENTIAL" />
-              <h3>
-                {t(
-                  "Una posibilidad con fundamento.",
-                  "A grounded possibility.",
-                )}
-              </h3>
+        </section>
+
+        <section className="chapter funnel-proof" id="proof">
+          <Reveal className="chapter-heading">
+            <span className="eyebrow">{t("Por qué es distinto", "Why it is different")}</span>
+            <h2>
+              {t("No es otro chat que empieza de cero.", "Not another chat that starts from scratch.")}{" "}
+              <em>{t("Es memoria con evidencia.", "It is memory with evidence.")}</em>
+            </h2>
+          </Reveal>
+          <div className="proof-grid">
+            <Reveal className="proof-card proof-reach">
+              <MapPinned size={22} aria-hidden="true" />
+              <h3>{t("Sabe dónde juega cada negocio.", "It knows where each business plays.")}</h3>
               <p>
                 {t(
-                  "Y preguntas que aún merecen respuesta.",
-                  "And questions that still deserve answers.",
+                  "Distingue dónde trabaja, hacia dónde podría crecer y qué le afecta desde fuera. Lo que ocurre lejos de su mercado no se convierte en una oportunidad.",
+                  "It tells apart where a business works, where it could grow and what affects it from outside. What happens far from its market does not become an opportunity.",
                 )}
               </p>
-              <div className="memory-evidence">
-                <BookOpen size={15} />
-                {t("Conserva su evidencia", "Retains its evidence")}
+              <CtaLink href={EXAMPLE_HREF + "?family=markets"} cta={funnelCta.proofExample} className="text-link">
+                {t("Ver su alcance en el ejemplo", "See its reach in the example")}
                 <ArrowUpRight size={16} />
-              </div>
-            </div>
-            <span className="hand-note stack-note">
-              {t("la comprensión se acumula", "understanding compounds")}
-            </span>
-          </Reveal>
-        </section>
-        <section className="chapter time-section" id="time">
-          <Reveal className="chapter-heading">
-            <span className="eyebrow">04 / {chapters[3]}</span>
-            <h2>
-              {t("Una señal tiene un antes.", "A signal has a before.")}
-              <br />
-              <em>
-                {t(
-                  "Y una razón para importar ahora.",
-                  "And a reason to matter now.",
-                )}
-              </em>
-            </h2>
-            <p>
-              {t(
-                "Recorre el tiempo para distinguir lo que ocurrió, lo que conocimos después y lo que todavía no podemos sostener.",
-                "Move through time to distinguish what happened, what we learned later and what we cannot yet support.",
-              )}
-            </p>
-          </Reveal>
-          <Reveal className="time-demo">
-            <div className="time-quote" aria-live="polite">
-              <span className="mono">
-                {
-                  [
-                    t(
-                      "01 JUL 2026 · CONTEXTO INICIAL",
-                      "01 JUL 2026 · INITIAL CONTEXT",
-                    ),
-                    t(
-                      "01 SEP 2026 · NUEVO CONTEXTO",
-                      "01 SEP 2026 · NEW CONTEXT",
-                    ),
-                    t(
-                      "03 OCT 2026 · PERSPECTIVA ACTUAL",
-                      "03 OCT 2026 · CURRENT VIEW",
-                    ),
-                  ][time]
-                }
-              </span>
-              <h3>
-                {
-                  [
-                    t(
-                      "Sabemos qué capacidad declara.",
-                      "We know the capability it declares.",
-                    ),
-                    t(
-                      "Aparece una necesidad relacionada.",
-                      "A related need appears.",
-                    ),
-                    t(
-                      "Entendemos qué investigar y qué sigue abierto.",
-                      "We understand what to investigate and what remains open.",
-                    ),
-                  ][time]
-                }
-              </h3>
+              </CtaLink>
+            </Reveal>
+            <Reveal className="proof-card proof-evidence">
+              <BookOpen size={22} aria-hidden="true" />
+              <h3>{t("Enseña de dónde sale cada conclusión.", "It shows where each conclusion comes from.")}</h3>
               <p>
-                {
-                  [
-                    t(
-                      "No conocemos aún el programa. El futuro no entra en esta vista.",
-                      "We do not yet know the programme. The future does not enter this view.",
-                    ),
-                    t(
-                      "Una coincidencia temática abre una posibilidad; no demuestra un contrato.",
-                      "A thematic overlap opens a possibility; it does not establish a contract.",
-                    ),
-                    t(
-                      "Cada nueva observación vuelve a situar la señal sin borrar sus límites.",
-                      "Each new observation reframes the signal without erasing its limits.",
-                    ),
-                  ][time]
-                }
+                {t(
+                  "Fuente, fecha de observación y vigencia, a un clic. Sin consolas técnicas ni cajas negras.",
+                  "Source, observation date and currentness, one click away. No technical consoles, no black boxes.",
+                )}
               </p>
+              <CtaLink href={EXAMPLE_HREF + "?signal=renovation&depth=prove"} cta={funnelCta.proofExample} className="text-link">
+                {t("Abrir una evidencia", "Open a piece of evidence")}
+                <ArrowUpRight size={16} />
+              </CtaLink>
+            </Reveal>
+            <Reveal className="proof-card proof-unknown">
+              <CircleHelp size={22} aria-hidden="true" />
+              <h3>{t("Dice lo que todavía no sabe.", "It says what it does not know yet.")}</h3>
+              <p>
+                {t(
+                  "Si la evidencia no basta, lo marca como desconocido en vez de adivinar. Desconocido no es falso: es una pregunta abierta.",
+                  "When evidence is not enough, it marks it as unknown instead of guessing. Unknown is not false: it is an open question.",
+                )}
+              </p>
+              <CtaLink href={EXAMPLE_HREF + "?signal=reputation-gap"} cta={funnelCta.proofExample} className="text-link">
+                {t("Ver una pregunta abierta", "See an open question")}
+                <ArrowUpRight size={16} />
+              </CtaLink>
+            </Reveal>
+          </div>
+          <Reveal className="time-demo funnel-time">
+            <div className="funnel-time-copy">
+              <Clock3 size={22} aria-hidden="true" />
+              <h3>{t("Recuerda cuándo supo cada cosa.", "It remembers when it learned each thing.")}</h3>
+              <p>
+                {t(
+                  "Separa lo que ocurrió, cuándo se supo y lo que ya no está vigente. Puedes volver a cualquier fecha y ver solo lo que se sabía entonces.",
+                  "It separates what happened, when it became known and what is no longer current. You can go back to any date and see only what was known then.",
+                )}
+              </p>
+            </div>
+            <div className="time-quote" aria-live="polite">
+              <span className="mono">{dateLabel(moments[time].date, locale)}</span>
+              <h3>{moments[time].title}</h3>
+              <p>{moments[time].text}</p>
             </div>
             <div
               className="teaching-timeline"
               role="group"
-              aria-label={t("Explorar el tiempo", "Explore time")}
+              aria-label={t("Recorrer el tiempo del ejemplo", "Move through the example's time")}
             >
-              {[
-                t("Una capacidad", "A capability"),
-                t("Un cambio", "A change"),
-                t("Una nueva lectura", "A new reading"),
-              ].map((label, i) => (
+              {moments.map((moment, i) => (
                 <button
-                  key={i}
+                  key={moment.date}
                   className={time === i ? "selected" : ""}
                   aria-pressed={time === i}
                   onClick={() => setTime(i)}
                 >
                   <span className="timeline-node" />
-                  <span className="mono">{["JUL", "SEP", "OCT"][i]} 2026</span>
-                  <strong>{label}</strong>
+                  <span className="mono">{dateLabel(moment.date, locale)}</span>
+                  <strong>{moment.title}</strong>
                 </button>
               ))}
             </div>
+            <CtaLink href={EXAMPLE_HREF + "?asOf=2026-07-01"} cta={funnelCta.proofExample} className="text-link">
+              {t("Volver a julio en el ejemplo", "Go back to July in the example")}
+              <ArrowUpRight size={16} />
+            </CtaLink>
           </Reveal>
         </section>
-        <section className="chapter use-section" id="use">
+
+        <section className="chapter use-section funnel-audience" id="audience">
           <Reveal className="use-heading">
-            <span className="eyebrow">05 / {chapters[4]}</span>
+            <span className="eyebrow">{t("Para quién", "Who it is for")}</span>
             <h2>
-              {t("Más perspectiva.", "More perspective.")}
-              <br />
-              <em>{t("Para preguntas mejores.", "For better questions.")}</em>
+              {t("Pensado para quien necesita contexto", "Built for people who need context")}{" "}
+              <em>{t("antes de decidir.", "before deciding.")}</em>
             </h2>
           </Reveal>
-          <UseCaseLens
-            names={cases.map((item) => item.name)}
-            selected={useCase}
-          />
           <div
             className="use-tabs"
             role="tablist"
-            aria-label={t("Formas de usar AXIGNAL", "Ways to use AXIGNAL")}
+            aria-label={t("Situaciones en las que AXIGNAL ayuda", "Situations where AXIGNAL helps")}
           >
-            {cases.map((item, i) => (
+            {audiences.map((item, i) => (
               <button
-                key={i}
+                key={item.family}
                 role="tab"
-                id={"case-tab-" + i}
-                aria-selected={useCase === i}
-                aria-controls="case-panel"
-                tabIndex={useCase === i ? 0 : -1}
+                id={"audience-tab-" + i}
+                aria-selected={audience === i}
+                aria-controls="audience-panel"
+                tabIndex={audience === i ? 0 : -1}
                 onKeyDown={(e) => {
                   const step =
                     e.key === "ArrowRight" || e.key === "ArrowDown"
@@ -636,191 +465,111 @@ export function Landing() {
                       e.key === "Home"
                         ? 0
                         : e.key === "End"
-                          ? cases.length - 1
-                          : (i + step + cases.length) % cases.length;
-                    setUseCase(next);
-                    document.getElementById("case-tab-" + next)?.focus();
+                          ? audiences.length - 1
+                          : (i + step + audiences.length) % audiences.length;
+                    setAudience(next);
+                    document.getElementById("audience-tab-" + next)?.focus();
                   }
                 }}
-                onClick={() => setUseCase(i)}
+                onClick={() => setAudience(i)}
               >
                 {item.name}
-                <ArrowUpRight size={16} />
               </button>
             ))}
           </div>
           <div
             className="use-panel"
             role="tabpanel"
-            id="case-panel"
-            aria-labelledby={"case-tab-" + useCase}
+            id="audience-panel"
+            aria-labelledby={"audience-tab-" + audience}
           >
             <div className="use-panel-content">
-            <span className="mono">{cases[useCase].tag}</span>
-            <h3>{cases[useCase].title}</h3>
-            <p>{cases[useCase].text}</p>
-            <Link href="/panorama" className="text-link">
-              {t("Ver un ejemplo", "See an example")}
-              <ArrowRight size={16} />
-            </Link>
+              <h3>{selectedAudience.title}</h3>
+              <p>{selectedAudience.text}</p>
+              <CtaLink
+                href={EXAMPLE_HREF + "?family=" + selectedAudience.family}
+                cta={funnelCta.audienceExample}
+                className="text-link"
+              >
+                {t("Verlo en el ejemplo", "See it in the example")}
+                <ArrowRight size={16} />
+              </CtaLink>
             </div>
-            <FramedObserver className="use-observer"
-              scene={([
-                "strategy", "business", "ecosystems", "representation",
-                "marketing", "communication", "research", "journalism",
-              ] as const)[useCase]}
-            />
+            <FramedObserver className="use-observer" scene={selectedAudience.scene} />
           </div>
         </section>
-        <section className="chapter explore-section" id="explore">
+
+        <section className="chapter funnel-trust" id="trust">
           <Reveal className="chapter-heading">
-            <span className="eyebrow">06 / {chapters[5]}</span>
+            <span className="eyebrow">{t("Confianza", "Trust")}</span>
             <h2>
-              {t("La comprensión se siente", "Understanding feels")}
-              <br />
-              <em>
-                {t(
-                  "cuando puedes explorar.",
-                  "different when you can explore.",
-                )}
-              </em>
+              {t("Lo que AXIGNAL no hará.", "What AXIGNAL will not do.")}
             </h2>
-            <p>
-              {t(
-                "Acerca una familia, abre una señal, vuelve a su evidencia. No necesitas empezar una conversación para entender lo esencial.",
-                "Bring a family closer, open a signal, return to its evidence. You do not need to start a conversation to understand what matters.",
-              )}
-            </p>
           </Reveal>
-          <Reveal className="landing-product-preview">
-            <div className="preview-chrome">
-              <Brand />
-              <DemoLabel />
-              <Link href="/panorama">
-                {t("Abrir experiencia", "Open experience")}
-                <ArrowUpRight size={16} />
-              </Link>
-            </div>
-            <div className="preview-content">
-              <div className="preview-families">
-                <span className="mono">
-                  {t("TU MIRADA", "YOUR PERSPECTIVE")}
-                </span>
-                {[
-                  t("Panorama", "Panorama"),
-                  t("Mercados", "Markets"),
-                  t("Presencia", "Presence"),
-                  t("Relaciones", "Relationships"),
-                ].map((name, i) => (
-                  <Link
-                    className={i === 1 ? "selected" : ""}
-                    key={name}
-                    href={
-                      "/panorama?family=" +
-                      ["overview", "markets", "presence", "relationships"][i]
-                    }
-                  >
-                    {name}
-                    <ChevronRight size={14} />
-                  </Link>
-                ))}
+          <Reveal className="trust-commitments">
+            {[
+              {
+                title: t("Inventar conclusiones.", "Make up conclusions."),
+                text: t(
+                  "Lo observado se marca como observado; lo posible, como posible; lo desconocido, como desconocido.",
+                  "What was observed is marked as observed; what is possible, as possible; what is unknown, as unknown.",
+                ),
+              },
+              {
+                title: t("Vender lo que dice.", "Sell what it says."),
+                text: t(
+                  "Nadie puede pagar para cambiar lo que AXIGNAL dice de una organización, tampoco quien la observa.",
+                  "Nobody can pay to change what AXIGNAL says about an organization, including whoever observes it.",
+                ),
+              },
+              {
+                title: t("Mezclar tu cuenta con el mundo.", "Mix your account with the world."),
+                text: t(
+                  "Lo que observas y lo que preguntas es privado. Lo que AXIGNAL sabe del mundo procede de fuentes públicas.",
+                  "What you observe and what you ask stays private. What AXIGNAL knows about the world comes from public sources.",
+                ),
+              },
+            ].map((item) => (
+              <div key={item.title}>
+                <h3>{item.title}</h3>
+                <p>{item.text}</p>
               </div>
-              <div className="preview-signal">
-                <span className="eyebrow">
-                  {t("Norte Renovable / Mercados", "Norte Renovable / Markets")}
-                </span>
-                <Badge state="POTENTIAL" />
-                <h3>
-                  {t(
-                    "La rehabilitación abre una nueva conversación.",
-                    "Renovation opens a new conversation.",
-                  )}
-                </h3>
-                <p>
-                  {t(
-                    "Una capacidad conocida encuentra un contexto de demanda. Su encaje comercial sigue abierto.",
-                    "A known capability meets a demand context. Its commercial fit remains open.",
-                  )}
-                </p>
-                <Link
-                  className="button secondary"
-                  href="/panorama?signal=renovation"
-                >
-                  {t("Entender esta señal", "Understand this signal")}
-                  <ArrowRight size={17} />
-                </Link>
-                <div className="preview-evidence">
-                  <BookOpen size={15} />
-                  {t(
-                    "2 fuentes ilustrativas · límites visibles",
-                    "2 illustrative sources · visible limits",
-                  )}
-                </div>
-              </div>
-              <div className="preview-axent">
-                <AxentIdentity />
-                <p>
-                  {t(
-                    "¿Qué cambia si miramos un poco más cerca?",
-                    "What changes if we look a little closer?",
-                  )}
-                </p>
-                <span>
-                  {t(
-                    "Investiga. Explica. Acompaña.",
-                    "Investigates. Explains. Guides.",
-                  )}
-                </span>
-              </div>
-            </div>
+            ))}
           </Reveal>
+          <div className="trust-links">
+            <Link className="text-link" href="/policies">
+              {t("Cómo tratamos los datos", "How we handle data")}
+              <ArrowUpRight size={16} />
+            </Link>
+            <Link className="text-link" href="/knowledge/basis/product-model">
+              {t("El método, explicado", "The method, explained")}
+              <ArrowUpRight size={16} />
+            </Link>
+          </div>
         </section>
-        <TrustProof />
+
         <ReferencePricing focuses={focuses} onChange={setFocuses} />
-        <LandingNotebook />
-        <NewsletterInvitation />
-        <section className="closing-scene">
+
+        <section className="closing-scene funnel-closing">
           <span className="eyebrow">AXIGNAL</span>
           <h2>
-            {t("El mundo tiene más que decir.", "The world has more to say.")}
-            <br />
-            <em>{t("Aprendamos a mirarlo.", "Let’s learn to observe it.")}</em>
+            {t("Empieza por una organización.", "Start with one organization.")}{" "}
+            <em>{t("AXIGNAL seguirá mirando.", "AXIGNAL will keep looking.")}</em>
           </h2>
-          <Link href="/panorama" className="button primary">
-            {t("Entrar en el Panorama", "Enter Panorama")}
-            <ArrowRight size={18} />
-          </Link>
+          <div className="hero-actions">
+            <CtaLink href="/signup" cta={funnelCta.closingStart} className="button primary">
+              {t("Empieza con tu organización", "Start with your organization")}
+              <ArrowRight size={18} />
+            </CtaLink>
+            <CtaLink href={EXAMPLE_HREF} cta={funnelCta.closingExample} className="button secondary">
+              {t("Ver un ejemplo", "See an example")}
+            </CtaLink>
+          </div>
           <Observer className="closing-observer" scene="journey" />
         </section>
       </main>
       <MiniFooter />
-      <ChapterNavigation />
-      <div className="landing-legal">
-        <span>© 2026 AXIGNAL</span>
-        <button className="text-link" onClick={() => setAbout(true)}>
-          {t("Sobre esta experiencia", "About this experience")}
-        </button>
-      </div>
-      {about && (
-        <Dialog
-          title={t("Una experiencia para explorar", "An experience to explore")}
-          onClose={() => setAbout(false)}
-        >
-          <p>
-            {t(
-              "Esta versión local presenta el nuevo lenguaje de AXIGNAL con organizaciones, fuentes y operaciones ficticias. No conecta un modelo de IA ni realiza pagos. Las fuentes de marca son oficiales; la experiencia espera revisión visual humana.",
-              "This local version presents AXIGNAL’s new language with fictional organizations, sources and operations. It does not connect an AI model or process payments. Brand assets are official; the experience awaits human visual review.",
-            )}
-          </p>
-          <Link className="button secondary" href="/design">
-            {t(
-              "Ver el sistema y sus estados",
-              "View the system and its states",
-            )}
-            <ArrowRight size={16} />
-          </Link>
-        </Dialog>
-      )}
     </div>
   );
 }
+

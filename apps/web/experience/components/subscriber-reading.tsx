@@ -8,6 +8,8 @@ import type { RuntimeProjection } from "@/lib/runtime-projection";
 import { RuntimeEvidenceJourney, RuntimeSignalReading } from "./runtime-product";
 import { RuntimeAxent, useRuntimeAxent } from "./runtime-axent";
 import { RuntimeLens, type RuntimeCognitionSelection } from "./cognition/runtime-lens";
+import { EconomicGarden } from "./economic-garden";
+import { gardenFromRuntime } from "@/lib/runtime-garden";
 export function SubscriberReading({ projection, revision }: { projection: RuntimeProjection; revision: string }) {
   const { t, locale } = useLocale();
   const [plan, setPlan] = useState<ReadingPlan | null>(null);
@@ -49,8 +51,12 @@ export function SubscriberReading({ projection, revision }: { projection: Runtim
   function focusEvidence() {
     focusSignal(focusedSignalId ?? projection.nodes[0]?.id ?? null);
   }
+  const garden = useMemo(
+    () => gardenFromRuntime(projection.cognition?.economicGarden, projection.cognition?.asOf ?? ""),
+    [projection.cognition],
+  );
   const readingNodes = plan ? projection.nodes.filter(item => plan.refs.includes(item.id)) : projection.nodes;
-  return <div><RuntimeLens projection={projection} revision={revision} responsePlan={plan} onIntentChange={rememberCognition}/><div className="subscriber-row-actions" aria-label={t("Tu lectura", "Your reading")}>
+  return <div>{garden && <EconomicGarden organization={projection.organization.name} garden={garden}/>}<RuntimeLens projection={projection} revision={revision} responsePlan={plan} onIntentChange={rememberCognition}/><div className="subscriber-row-actions" aria-label={t("Tu lectura", "Your reading")}>
     <button className="text-link" onClick={() => void ask("summary")} disabled={chat.status === "submitted" || chat.status === "streaming"}>{t("Comprender", "Understand")}</button>
     <button className="text-link" onClick={() => void ask("evidence")} disabled={chat.status === "submitted" || chat.status === "streaming"}>{t("Cómo lo sabe AXIGNAL", "How AXIGNAL knows")}</button>
     <button className="text-link" onClick={() => void ask("limits")} disabled={chat.status === "submitted" || chat.status === "streaming"}>{t("Lo que sigue abierto", "What remains open")}</button>

@@ -4,6 +4,8 @@ import { locales } from "@/lib/languages";
 import { absolutePublicUrl, hreflangMap } from "@/lib/acquisition-seo";
 
 export default function sitemap(): MetadataRoute.Sitemap {
+  // The home page is the front door of the funnel and its only canonical landing URL.
+  const home: MetadataRoute.Sitemap = [{ url: absolutePublicUrl("/") }];
   const hubs: MetadataRoute.Sitemap = acquisitionHubs.map((hub) => ({
     url: absolutePublicUrl(hub.path),
     alternates: { languages: hreflangMap(Object.fromEntries(acquisitionHubs.map((item) => [item.locale, item.path]))) },
@@ -16,5 +18,5 @@ export default function sitemap(): MetadataRoute.Sitemap {
       alternates: { languages: hreflangMap(paths) },
     }];
   }));
-  return [...hubs, ...articles];
+  return [...home, ...hubs, ...articles];
 }

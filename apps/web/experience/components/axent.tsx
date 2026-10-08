@@ -151,8 +151,8 @@ export function Axent({
             </p>
             <span className="axent-example">
               {t(
-                "Demo de explicación contextual · sin modelo en vivo",
-                "Contextual explanation demo · no live model",
+                "En este ejemplo, AXENT responde con explicaciones preparadas",
+                "In this example, AXENT answers with prepared explanations",
               )}
             </span>
             <div className="axent-questions">
