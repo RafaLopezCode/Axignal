@@ -11,15 +11,15 @@ import { PrivacyNotice } from "@/components/privacy-notice";
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "https://axignal.com"),
   title: {
-    default: "AXIGNAL — Qué cambia alrededor de tu empresa, y por qué importa",
+    default: "AXIGNAL — What is changing around your company, and why does it matter?",
     template: "%s · AXIGNAL",
   },
   description:
-    "AXIGNAL observa de forma continua las organizaciones que eliges en fuentes públicas, recuerda lo que encuentra y te muestra qué cambia y por qué importa, con su fuente y su fecha.",
+    "AXIGNAL continuously observes the organizations you choose in public sources, remembers what it finds, and shows you what changes and why it matters — with source and date.",
   icons: { icon: "/brand/favicon.svg", apple: "/brand/apple-touch-icon.png" },
   openGraph: {
-    title: "AXIGNAL — Qué cambia alrededor de tu empresa, y por qué importa",
-    description: "Observación económica continua, con memoria y evidencia.",
+    title: "AXIGNAL — What is changing around your company, and why does it matter?",
+    description: "Continuous economic observation, with memory and evidence.",
     images: ["/brand/og-image-1200x630.png"],
   },
 };
@@ -27,7 +27,7 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="es" data-scroll-behavior="smooth">
+    <html lang="en" data-scroll-behavior="smooth">
       <body>
         <LocaleProvider>
           <a className="skip-link" href="#main">

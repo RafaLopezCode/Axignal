@@ -235,7 +235,7 @@ test("subscriber and Customer Zero render the same economic shell; Staff adds on
   assert.ok(plain.includes("product-shell canonical-product"));
   assert.ok(plain.includes("Contract subject"));
   assert.ok(plain.includes("Observed surface"));
-  assert.ok(plain.includes("Navegación del producto"));
+  assert.ok(plain.includes("Product navigation"));
   assert.doesNotMatch(plain,/Norte|Atlas|Demo|privateRevenue|privateAccounts/);
   const embedded=renderToStaticMarkup(createElement(RuntimeProductProjection,{projection:result.projection,mainId:"customer-zero-main"}));
   assert.equal(embedded.replace('id="customer-zero-main"','id="main"'),plain);
@@ -243,7 +243,7 @@ test("subscriber and Customer Zero render the same economic shell; Staff adds on
 
 test("Admin hosts the real product with retained administrative navigation and one skip target",()=>{
   const html=renderToStaticMarkup(createElement(Admin,{initialDomain:"customer-zero"}));
-  assert.ok(html.includes('aria-label="Navegación Admin"'));
+  assert.ok(html.includes('aria-label="Admin navigation"'));
   assert.ok(html.includes('class="admin-product-host"'));
   assert.ok(html.includes('data-runtime-state="loading"'));
   assert.ok(html.includes('id="customer-zero-main"'));
@@ -310,16 +310,16 @@ test("organization availability separates internal no-payment use from unknown s
   const props = {name:"Authorized subject",onReturn:()=>{}};
   const internal = renderToStaticMarkup(createElement(RuntimeOrganizations,{...props,internal:true}));
   const subscriber = renderToStaticMarkup(createElement(RuntimeOrganizations,{...props,internal:false}));
-  assert.match(internal,/sin checkout ni pago/);
-  assert.match(internal,/autorización interna del servicio/);
-  assert.doesNotMatch(subscriber,/sin checkout ni pago/);
-  assert.match(subscriber,/no informa del plan/);
+  assert.match(internal,/without checkout or payment/);
+  assert.match(internal,/internal service authorization/);
+  assert.doesNotMatch(subscriber,/without checkout or payment/);
+  assert.match(subscriber,/does not report your plan/);
   for (const html of [internal, subscriber]) {
     assert.match(html,/Authorized subject/);
     assert.match(html,/disabled="" aria-describedby="organization-availability"/);
     assert.match(html,/<form/);
-    assert.match(html,/Web pública/);
-    assert.match(html,/verificará la identidad/);
+    assert.match(html,/Public website/);
+    assert.match(html,/verify identity/);
     assert.doesNotMatch(html,/\/checkout|Norte|Atlas/);
   }
   const admin = renderToStaticMarkup(createElement(Admin,{initialDomain:"command"}));
