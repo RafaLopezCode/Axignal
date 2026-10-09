@@ -11,9 +11,25 @@ Diseña y construye una experiencia AXIGNAL tan inteligible, intuitiva, fluida y
 
 El usuario debe percibir, explorar y aprovechar **qué observa AXIGNAL; qué merece atención; qué ha cambiado; qué no consigue comprender; qué se comunica bien; qué podría mejorarse; por qué; y qué fuentes lo sustentan**. La crítica constructiva y la incertidumbre explicada son valor de producto, no notas al pie.
 
-No busco un dashboard, un dossier, un grafo, un chatbot, un timeline, un tablero de cards ni cualquier otro formato prefijado. **Elige o inventa la mejor gramática de interfaz para AXIGNAL**. Puedes combinar paradigmas, diseñar algo nuevo y cuestionar decisiones visuales anteriores. No quiero limitar tu creación a embellecer pantallas.
+**Sí quiero el mejor dashboard o workspace del suscriptor que podamos imaginar:** un lugar donde apetezca entrar, orientarse, investigar y descubrir. No impongo el dashboard convencional de cuadrículas, un dossier, un grafo, un chatbot ni ningún otro formato concreto. **Elige o inventa la mejor gramática de interfaz para AXIGNAL**. Puedes combinar paradigmas, crear interacciones originales y cuestionar decisiones visuales anteriores. No quiero limitar tu creación a embellecer pantallas.
 
 La complejidad del motor debe transformarse en inteligencia humana accionable sin carga cognitiva, ni pérdida de rigor.
+
+## Ambición estética y emocional: profesional, sorprendente y divertida
+
+**La belleza, el disfrute y el factor WOW son requisitos de producto, no extras decorativos.** AXIGNAL debe emocionar por su elegancia visual y dar ganas de explorarlo. Buscamos un dashboard vivo, profesional, distintivo y memorable; una herramienta de trabajo que provoque curiosidad, placer y descubrimiento. No basta con que sea clara, correcta y usable si resulta fría, plana, gris, estática o aburrida.
+
+Tienes libertad creativa para emplear a fondo el potencial de la marca: **colores de la paleta AXIGNAL, tipografías, luces y contrastes, composición editorial, mapas y grafos cuando procedan, profundidad, capas, iconografía, microinteracciones, movimiento, transiciones y animaciones cinematográficas sutiles o expresivas**, siempre que su combinación mejore el carácter y la experiencia. No presupongas que menos movimiento, menos color o más austeridad constituyen mejor UX.
+
+Explora y ejecuta, según tu criterio, cambios de vista con continuidad espacial, reordenación animada de cards, aparición de hallazgos, revelación gradual de evidencia, relaciones que se despliegan, timelines vivos, feedback al seleccionar organizaciones, estados de investigación, transiciones de enfoque y microinteracciones que recompensen una exploración. **Puedes inventar interacciones nuevas** si resultan naturales y atractivas. Estos son ejemplos inspiradores, no una checklist ni una solución prescrita.
+
+**El movimiento puede informar y también deleitar.** El color puede codificar significado y también aportar emoción, ritmo y personalidad. Una interacción bella no necesita defenderse únicamente por reducción de clics: la satisfacción de uso, la calidad percibida y la curiosidad sostenida también cuentan. Evita solo el espectáculo que oscurezca significado, falsee estados, ralentice tareas o dificulte el uso continuado.
+
+Aplica Impeccable para explorar direcciones visuales e interactivas realmente diferentes. Busca una dirección artística reconocible de AXIGNAL: **WOW de alta gama, no efectos de plantilla SaaS, ni infantilización, ni decoración arbitraria**. Cuida ritmos, easing, timing, escalas tipográficas, jerarquía del color, coherencia de transición y acabado fino hasta el nivel de detalle.
+
+Garantiza que el movimiento sea opcional para quien solicita reducción de animaciones; conserva contraste, accesibilidad, rendimiento, legibilidad, control del usuario y respeto por batería/dispositivos. El mismo producto debe ser disfrutable con y sin animaciones. Ajusta el despliegue visual a las capacidades de cada dispositivo, sin crear otra UX distinta.
+
+**La aceptación visual incluirá una pregunta explícita: «¿Es un dashboard en el que apetece estar, explorar y volver mañana, además de comprender mejor el negocio?»**. Demuestra esa cualidad con navegación real, transiciones funcionando y capturas o vídeo, no con descripciones de intenciones.
 
 ## Punto de partida constatado, NO un mandato de preservación
 
@@ -41,7 +57,7 @@ Tienes plena autoridad para redefinir, si mejora sustancialmente el resultado:
 - Un lenguaje de cards de alta semántica, incluyendo patrones distintos para familias que tengan necesidades distintas, sin perder coherencia.
 - Qué merece aparecer, qué se oculta progresivamente, cómo se accede y qué debe recordarse al cambiar de foco, tema o fecha.
 
-Puedes realizar exploraciones radicales en un worktree, comparar enfoques y descartar los peores. No expliques una mejora por gustos: demuestra que produce menos ambigüedad, menos pasos, menos lectura inútil y más acceso al valor.
+Puedes realizar exploraciones radicales en un worktree, comparar enfoques y descartar los peores. No te conformes con justificar la mejora solo por reducción de clics: demuestra claridad y acceso al valor, y defiende además la dirección artística, el placer de exploración, la personalidad AXIGNAL y el carácter memorable de la interacción.
 
 **No estás obligado a conservar Today/Explore/Evolution/Evidence como etiquetas, tabs ni menús.** Esas capacidades cognitivas deben seguir existiendo y ser encontrables; la mejor forma de organizarlas queda a tu criterio.
 
@@ -102,4 +118,4 @@ Tests frontend, i18n es/en/fr/de/it/pt, tipos, build, accesibilidad, navegación
 
 Declara IMPLEMENTADO, PROBADO, INTEGRADO, DESPLEGADO y VERIFICADO E2E por separado.
 
-**Reto:** sorprendernos inventando una experiencia de inteligencia económica que haga innecesario aprender a utilizar AXIGNAL para extraer su valor. No preservar un dashboard por nostalgia ni crear un dossier por inercia. Crea la mejor interfaz para este producto.
+**Reto:** sorprendernos inventando un dashboard/workspace de inteligencia económica que sea simultáneamente extraordinariamente fácil de comprender y extraordinariamente bello, vivo y divertido de navegar. Que apetezca explorar sus hallazgos y volver mañana. No preservar un dashboard por nostalgia ni crear un dossier por inercia. Crea la mejor interfaz posible para este producto.
