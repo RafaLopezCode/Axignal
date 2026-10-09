@@ -214,6 +214,15 @@ const translatedRows = [
   "Incomplete acquisition or representation.",
   "Previous reading",
   "No other retained reading is available to compare yet.",
+  "Permission to keep or show these quotations is no longer in place, so they were removed. A new reading needs current rights and a new observation.",
+  "Review the proposals below. If you apply any, reobserve with the same instrument.",
+  "Review the quotations before deciding: this reading is not enough to conclude.",
+  "Nothing to clarify in this sample. Reobserve when you change these pages.",
+  "In short",
+  "Understood well",
+  "Worth clarifying",
+  "No conclusion yet",
+  "Next step",
 ];
 
 test("all new report copy resolves in the six supported locales", () => {
@@ -264,4 +273,41 @@ test("AXENT report references remain private and require the authorized citation
   assert.equal(understandingReportReference(ref), null);
   const previous = report({reportId:"b".repeat(64),currentness:"HISTORICAL"});
   assert.equal(understandingReportReference(`public-understanding:${previous.reportId}:offer:q1`, report({history:[previous]})), previous.reportId);
+});
+
+
+const count = (markup: string, text: string) => markup.split(text).length - 1;
+
+test("a quick synthesis comes first and each explanation or quotation appears once", () => {
+  const markup = render(report());
+  const synthesis = markup.indexOf("Understood well");
+  assert.ok(synthesis > 0 && synthesis < markup.indexOf("pu-dimension"), "synthesis precedes the detail");
+  assert.match(markup, /Worth clarifying<\/dt><dd>For whom/);
+  assert.match(markup, /No conclusion yet<\/dt><dd>What outcome it communicates/);
+  assert.match(markup, /Next step<\/dt><dd>Review the proposals below/);
+  // The strength keeps its specific quotation inline; the full set is listed once.
+  assert.equal(count(markup, "We repair shoes for households."), 2);
+  assert.equal(count(markup, "Repairs are available in our workshop."), 1);
+  assert.equal(count(markup, "There may also be deliberately limited disclosure"), 1);
+  assert.equal(count(markup, "After human review, reobserve the same pages"), 1);
+  assert.match(markup, /Inspect quotations and basis \(<!-- -->2<!-- -->\)|Inspect quotations and basis \(2\)/);
+});
+
+test("a single selected quotation is still shown on its strength", () => {
+  const single = report({
+    citations: [report().citations[0]],
+    dimensions: [{ ...report().dimensions[0], citationIds: ["q1"] }],
+  });
+  const markup = render(single);
+  assert.match(markup, /Next step<\/dt><dd>Nothing to clarify in this sample/);
+  assert.equal(count(markup, "We repair shoes for households."), 2);
+});
+
+test("withdrawn content rights show why quotations disappeared, without a critique", () => {
+  const markup = render(report({
+    status: "NOT_MEASURED", cause: "CONTENT_RIGHTS_WITHDRAWN", currentness: "EXPIRED",
+    citations: [], dimensions: [],
+  }));
+  assert.match(markup, /Permission to keep or show these quotations is no longer in place/);
+  assert.doesNotMatch(markup, /We repair shoes|Opportunity to clarify|Understood well/);
 });

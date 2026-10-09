@@ -17,3 +17,16 @@ Additional checks: Spanish/English browser transitions; prior persisted reading 
 The mobile details test initially found overflow in long rights references. The report-scoped `overflow-wrap:anywhere` correction was rebuilt and verified with details expanded (375px scroll width at 390px viewport). Viewport override was reset after testing.
 
 Automation provides evidence; human visual acceptance remains pending CTO review under the project Design Director skill. See [handoff](../handoff.md) for actual engineering results, source-rights and quality limitations.
+
+## Frontier review captures — SYNTHETIC (2026-10-09)
+
+Captured in the Claude in-app browser against this branch's Next frontend. A QA-only mock runtime served subscriber outputs that the real Python composition produced (`ReloadingContentRights` file, SYNTHETIC sources and judge). They are not real JEV perception and not real authorized sources.
+
+| Capture | Verified behavior |
+| --- | --- |
+| [Desktop synthesis (es)](review-desktop-synthesis-es.jpg) | The reading opens with *understood well / worth clarifying / next step* before any detail. |
+| [Desktop dimensions (es)](review-desktop-dimensions-es.jpg) | Only the strength shows its specific quotation. Each explanation and the alternative-cause caveat appear once. All four quotations sit behind one disclosure. |
+| [Desktop rights withdrawn (es)](review-desktop-rights-withdrawn-es.jpg) | After the operator removed the site's entry (no restart), the reading shows why its quotations disappeared. It shows no quotes and no critique. |
+| [Mobile 390 synthesis (en)](review-mobile-390-synthesis-en.jpg) · [dimensions](review-mobile-390-dimensions-en.jpg) · [reobserved](review-mobile-390-reobserved-en.jpg) | 390×844 viewport. Root scroll width is 390 with every disclosure open. |
+
+Console errors were limited to 404s for endpoints the QA mock does not implement (`/api/acquisition/status`, `/api/subscriber/mcp/connections`). Human visual acceptance remains with the CTO.

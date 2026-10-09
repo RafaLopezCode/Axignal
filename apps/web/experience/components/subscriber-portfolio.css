@@ -28,3 +28,6 @@
 .pu-citation{border-bottom:1px solid #d5deef;padding:8px 0}.pu-comparison,.pu-history{margin:24px 0}
 .pu-view summary:focus-visible{outline:3px solid #354f98;outline-offset:4px}.pu-history summary{min-height:44px;cursor:pointer;line-height:1.7}
 .pu-view .fo-meta{overflow-wrap:anywhere}
+.pu-dimension .pu-citation:last-child{border-bottom:0;padding-bottom:0}
+.pu-synthesis{margin:16px 0 20px;padding:16px 20px;border-radius:12px;background:#f4f7fd}.pu-synthesis dl{margin:0;display:grid;gap:8px}.pu-synthesis dl>div{display:grid;grid-template-columns:minmax(140px,200px) minmax(0,1fr);gap:12px;font-size:15px;line-height:1.6}.pu-synthesis dt{color:#616978}.pu-synthesis dd{margin:0;color:#1f2533}
+@media(max-width:600px){.pu-synthesis{padding:14px 16px}.pu-synthesis dl>div{grid-template-columns:minmax(0,1fr);gap:0}}
