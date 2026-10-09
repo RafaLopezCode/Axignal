@@ -118,6 +118,15 @@ REQUIRED_IGNORE_PATTERNS: tuple[str, ...] = (
     "/.tmp_*.sh",
     "/.pb*_pytest_*.log",
     "/.claude/settings.local.json",
+    "/.agents/skills/impeccable/",
+    "/.claude/skills/impeccable/",
+    "/.github/skills/impeccable/",
+    "/.opencode/skills/impeccable/",
+    "/.claude/agents/impeccable-*.md",
+    "/.github/agents/impeccable-*.agent.md",
+    "/.github/hooks/impeccable.json",
+    "/.opencode/commands/impeccable.md",
+    "/.claude/launch.json",
 )
 
 _SOURCE_LAYERS: tuple[str, ...] = ("domain", "pipeline", "cognition")
@@ -384,6 +393,15 @@ def check_no_generated_data(root: Path) -> list[Problem]:
         ".tmp_*.sh",
         ".pb*_pytest_*.log",
         ".claude/settings.local.json",
+        ".agents/skills/impeccable",
+        ".claude/skills/impeccable",
+        ".github/skills/impeccable",
+        ".opencode/skills/impeccable",
+        ".claude/agents/impeccable-*.md",
+        ".github/agents/impeccable-*.agent.md",
+        ".github/hooks/impeccable.json",
+        ".opencode/commands/impeccable.md",
+        ".claude/launch.json",
     ):
         tracked = _tracked(root, local_only_path)
         if tracked:

@@ -41,6 +41,15 @@ def test_repo_local_only_paths_are_ignored_without_deleting_files() -> None:
         ".tmp_replay.sh",
         ".pb11_pytest_out.log",
         ".claude/settings.local.json",
+        ".agents/skills/impeccable/SKILL.md",
+        ".claude/skills/impeccable/SKILL.md",
+        ".github/skills/impeccable/SKILL.md",
+        ".opencode/skills/impeccable/SKILL.md",
+        ".claude/agents/impeccable-finish-reviewer.md",
+        ".github/agents/impeccable-finish-reviewer.agent.md",
+        ".github/hooks/impeccable.json",
+        ".opencode/commands/impeccable.md",
+        ".claude/launch.json",
     ):
         result = subprocess.run(
             ["git", "-C", str(root), "check-ignore", "-q", "--", relative],
@@ -61,6 +70,15 @@ def test_governance_rejects_forcibly_tracked_private_scratch(tmp_path: Path) -> 
         ".tmp_replay.sh",
         ".pb11_pytest_out.log",
         ".claude/settings.local.json",
+        ".agents/skills/impeccable/SKILL.md",
+        ".claude/skills/impeccable/SKILL.md",
+        ".github/skills/impeccable/SKILL.md",
+        ".opencode/skills/impeccable/SKILL.md",
+        ".claude/agents/impeccable-finish-reviewer.md",
+        ".github/agents/impeccable-finish-reviewer.agent.md",
+        ".github/hooks/impeccable.json",
+        ".opencode/commands/impeccable.md",
+        ".claude/launch.json",
     )
     for relative in local_paths:
         candidate = tmp_path / relative

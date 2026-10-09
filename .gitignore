@@ -64,3 +64,14 @@ apps/web/landing/assets/images/source/
 /.tmp_*.sh
 /.pb*_pytest_*.log
 /.claude/settings.local.json
+
+# Locally installed optional agent tooling; do not commit vendor binaries.
+/.agents/skills/impeccable/
+/.claude/skills/impeccable/
+/.github/skills/impeccable/
+/.opencode/skills/impeccable/
+/.claude/agents/impeccable-*.md
+/.github/agents/impeccable-*.agent.md
+/.github/hooks/impeccable.json
+/.opencode/commands/impeccable.md
+/.claude/launch.json
