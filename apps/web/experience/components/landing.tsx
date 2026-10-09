@@ -309,8 +309,8 @@ export function Landing() {
             </div>
             <span className="hero-caption">
               {t(
-                "Para quien dirige o hace crecer una empresa, y para las consultoras y agencias que acompañan a varias. 9,95 € al mes por organización.",
-                "For people who run or grow a business, and for the consultancies and agencies that support several. €9.95 a month per organization.",
+                "Para quien dirige o hace crecer una empresa, y para las consultoras y agencias que acompañan a varias. 9,95 € al mes con una organización incluida y 4,95 € por cada organización adicional.",
+                "For people who run or grow a business, and for the consultancies and agencies that support several. €9.95 a month with one organization included, and €4.95 for each additional organization.",
               )}
             </span>
           </div>
