@@ -6,9 +6,9 @@ The canonical dirty checkout was left untouched; tests ran in the issue176 workt
 | Check | Observed result |
 | --- | --- |
 | Baseline economic revocation regression | FAIL on the verified base: subscriber retained the persisted capability excerpt and whyPotential copy after rights removal. |
-| Final targeted E2E and existing rights/minimization tests | 28 passed; the new issue176 module contains 15 cases including actual HTTP socket and OAuth/MCP. |
-| Joint First Observation/economic/continuity/MCP regression | 139 passed. |
-| Final full deterministic Python suite | 2038 passed, 6 skipped (5 POSIX-only on Windows; optional typesafe_sdk import). |
+| Final targeted E2E and existing rights/minimization tests | 46 passed; the new issue176 module contains 18 cases including actual HTTP socket and OAuth/MCP. |
+| Joint First Observation/economic/continuity/MCP regression before review hardening | 139 passed; included again in the final full suite. |
+| Final full deterministic Python suite | 2041 passed, 6 skipped (5 POSIX-only on Windows; optional typesafe_sdk import). |
 | Frontend typecheck | PASS; no frontend source changes. |
 | Frontend tests | 162 passed. |
 | i18n | 1539 entries, no missing locale entries. |
@@ -29,7 +29,9 @@ On this Windows host pytest used its isolated `--basetemp` under
 
 Final hardening covers canonical-name/content separation, internal POU read
 withdrawal, original-bound legacy refusal and physical raw retirement under a
-wider grant. The final SHA and remote CI status/run links belong to the PR
+wider grant. Review hardening additionally covers source-only legacy lineage,
+atomic text-field retirement (including competing quotes) and old/new continuity
+checkpoints through the same delivery boundary. The final SHA and remote CI status/run links belong to the PR
 metadata and CTO delivery; no self-referential commit SHA is recorded here.
 
 All new observation sources and evaluator inputs are explicitly synthetic. Real

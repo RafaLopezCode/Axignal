@@ -9,6 +9,7 @@ from __future__ import annotations
 from collections.abc import Callable
 from copy import deepcopy
 from dataclasses import dataclass
+from datetime import UTC, datetime
 from enum import StrEnum
 from typing import Any, Protocol
 
@@ -18,6 +19,7 @@ from application.economic_discovery.observation_memory import (
     ObservationAccessStatus,
     ObservationReuseScope,
     ObservationRightsStatus,
+    is_source_text_field,
 )
 from domain.evidence.epistemics import Currentness
 
@@ -92,6 +94,9 @@ _TEXT_KEYS = frozenset(
         "quotation",
         "raw_content",
         "content",
+        "raw_text",
+        "text",
+        "body",
         "label",
         "title",
         "statement",
@@ -129,6 +134,7 @@ def deliver_evidence_content(
     *,
     metadata_for: Callable[[str], ObservationAccessMetadata | None],
     rights: CurrentContentRights,
+    metadata_for_source: Callable[[str], tuple[ObservationAccessMetadata, ...]] | None = None,
 ) -> dict[str, object]:
     """Deliver old and new snapshots through one source-bound content decision.
 
@@ -143,14 +149,21 @@ def deliver_evidence_content(
     source_ids: dict[str, set[str]] = {}
     quotes: set[str] = set()
 
+    def time_key(value: str) -> str:
+        try:
+            stamp = datetime.fromisoformat(value)
+            return stamp.astimezone(UTC).isoformat() if stamp.tzinfo is not None else value
+        except ValueError:
+            return value  # Invalid dates cannot borrow a different observation's permission.
+
     def decide(identifier: str) -> ContentAccess:
         if identifier not in decisions:
             metadata = metadata_for(identifier)
             if metadata is not None:
                 decisions[identifier] = rights.decision(metadata)
-                refs[(metadata.record.source_ref, metadata.record.observed_at.isoformat())] = (
-                    identifier
-                )
+                refs[
+                    (metadata.record.source_ref, time_key(metadata.record.observed_at.isoformat()))
+                ] = identifier
                 source_ids.setdefault(metadata.record.source_ref, set()).add(identifier)
             else:
                 # Source-derived demand rows are authorized by the existing registry
@@ -176,7 +189,7 @@ def deliver_evidence_content(
                 if isinstance(source, str):
                     observed = value.get("observed_at") or value.get("observedAt")
                     if isinstance(observed, str):
-                        refs[(source, observed)] = identifier
+                        refs[(source, time_key(observed))] = identifier
                     source_ids.setdefault(source, set()).add(identifier)
             for child in value.values():
                 identities(child)
@@ -185,6 +198,37 @@ def deliver_evidence_content(
                 identities(child)
 
     identities(result)
+
+    def source_only(value: Any) -> None:
+        if isinstance(value, dict):
+            source = value.get("source_ref") or value.get("sourceRef")
+            observed = value.get("observed_at") or value.get("observedAt")
+            direct = (
+                value.get("observation_ref") or value.get("observationId") or value.get("sourceId")
+            )
+            if not direct and isinstance(source, str):
+                identified = bool(source_ids.get(source))
+                candidates = () if metadata_for_source is None else metadata_for_source(source)
+                for metadata in candidates:
+                    if metadata.record.source_ref == source:
+                        decide(metadata.record.observation_id)
+                if isinstance(observed, str):
+                    stamp = time_key(observed)
+                    if (source, stamp) not in refs:
+                        identifier = f"unresolved-source:{source}:{stamp}"
+                        decisions[identifier] = ContentAccess.UNKNOWN
+                        refs[(source, stamp)] = identifier
+                elif not identified:
+                    identifier = f"unresolved-source:{source}"
+                    decisions[identifier] = ContentAccess.UNKNOWN
+                    source_ids.setdefault(source, set()).add(identifier)
+            for child in value.values():
+                source_only(child)
+        elif isinstance(value, (list, tuple)):
+            for child in value:
+                source_only(child)
+
+    source_only(result)
 
     def source_id(value: dict[str, Any]) -> str | None:
         for key in ("observation_ref", "observationId", "sourceId", "id"):
@@ -196,7 +240,7 @@ def deliver_evidence_content(
             return None
         observed = value.get("observed_at") or value.get("observedAt")
         if isinstance(observed, str):
-            exact = refs.get((source, observed))
+            exact = refs.get((source, time_key(observed)))
             if exact is not None:
                 return exact
         candidates = source_ids.get(source, set())
@@ -209,22 +253,12 @@ def deliver_evidence_content(
             identifier = source_id(value) or inherited
             denied = identifier is not None and decide(identifier) is not ContentAccess.PERMITTED
             field_name = value.get("name") or value.get("field_name") or value.get("field")
-            if (
-                denied
-                and isinstance(field_name, str)
-                and field_name.rsplit(".", 1)[-1] == "excerpt"
-            ):
+            if denied and isinstance(field_name, str) and is_source_text_field(field_name):
                 text = value.get("value")
                 if isinstance(text, str) and text:
                     quotes.add(text)
             for key, child in value.items():
-                if (
-                    denied
-                    and key.rsplit(".", 1)[-1]
-                    in {"excerpt", "excerpt_or_summary", "quote", "quotation"}
-                    and isinstance(child, str)
-                    and child
-                ):
+                if denied and is_source_text_field(key) and isinstance(child, str) and child:
                     quotes.add(child)
                 collect(child, identifier)
         elif isinstance(value, (list, tuple)):
@@ -257,7 +291,7 @@ def deliver_evidence_content(
             if denied and access is not None:
                 # Excerpts are content, not normalized economic values or provenance.
                 field_name = value.get("name") or value.get("field_name") or value.get("field")
-                if isinstance(field_name, str) and field_name.rsplit(".", 1)[-1] == "excerpt":
+                if isinstance(field_name, str) and is_source_text_field(field_name):
                     cleaned["value"] = None
                 for k in value:
                     kind = k.rsplit(".", 1)[-1]

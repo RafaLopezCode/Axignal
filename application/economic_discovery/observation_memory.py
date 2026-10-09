@@ -48,6 +48,21 @@ class ObservedField:
             raise ValueError("only CONFLICTING fields can carry competing values")
 
 
+def is_source_text_field(name: str) -> bool:
+    """Explicit material fields, distinct from normalized economic contributions."""
+    return name.rsplit(".", 1)[-1] in {
+        "excerpt",
+        "excerpt_or_summary",
+        "quote",
+        "quotation",
+        "raw_content",
+        "raw_text",
+        "content",
+        "text",
+        "body",
+    }
+
+
 class ObservationRightsStatus(StrEnum):
     PERMITTED = "PERMITTED"
     PROHIBITED = "PROHIBITED"

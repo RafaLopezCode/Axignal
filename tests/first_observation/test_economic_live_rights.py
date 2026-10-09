@@ -536,3 +536,151 @@ def test_raw_purge_preserves_history_and_never_uses_a_wider_live_retention(
     context = facade.identity.authenticate(token)
     _, reusable = economic.observation_seed(context, XeedId(focus), as_of=datetime.now(UTC))
     assert not any(item.record.observation_id == source_id for item, _ in reusable)
+
+
+def test_source_only_legacy_descriptors_resolve_authorized_metadata(
+    tmp_path: Path, monkeypatch: Any
+) -> None:
+    facade, rights, token, focus = _measured(tmp_path, monkeypatch)
+    economic = facade.outputs._economic
+    context = facade.identity.authenticate(token)
+    initial = _read(facade, token, focus)
+    identifier = initial["cognition"]["opportunities"][0]["capability"]["sourceId"]
+    metadata = economic.observation_memory.access_metadata(
+        initial["organization"]["id"], identifier
+    )
+    legacy = {
+        "evidence": [
+            {
+                "source_ref": metadata.record.source_ref,
+                "observed_at": metadata.record.observed_at.isoformat(),
+                "excerpt": QUOTE,
+            }
+        ],
+        "trace": {"priorCopy": f"Previously {QUOTE}"},
+    }
+    assert QUOTE in json.dumps(economic.deliver_content(context, XeedId(focus), legacy))
+    undated = {"evidence": [{"source_ref": metadata.record.source_ref, "excerpt": QUOTE}]}
+    assert QUOTE not in json.dumps(economic.deliver_content(context, XeedId(focus), undated))
+    legacy["evidence"][0]["observed_at"] = metadata.record.observed_at.isoformat().replace(
+        "+00:00", "Z"
+    )
+    assert QUOTE in json.dumps(economic.deliver_content(context, XeedId(focus), legacy))
+    rights.write(hosts=tuple(h for h in EXAMPLE_HOSTS if h != "solartec.example.com"))
+    delivered = economic.deliver_content(context, XeedId(focus), legacy)
+    assert QUOTE not in json.dumps(delivered)
+    assert delivered["evidence"][0]["contentAccess"] == "UNKNOWN"
+    assert delivered["evidence"][0]["source_ref"] == metadata.record.source_ref
+    assert QUOTE in json.dumps(legacy)
+    # An unrelated or mismatched observation cannot authorize a source-only copy.
+    rights.write(hosts=EXAMPLE_HOSTS)
+    legacy["evidence"][0]["observed_at"] = (
+        metadata.record.observed_at - timedelta(days=1)
+    ).isoformat()
+    assert QUOTE not in json.dumps(economic.deliver_content(context, XeedId(focus), legacy))
+    legacy["evidence"][0]["source_ref"] = "https://missing.example.com/"
+    assert QUOTE not in json.dumps(economic.deliver_content(context, XeedId(focus), legacy))
+
+
+def test_purge_removes_content_fields_and_preserves_normalized_economic_facts(
+    tmp_path: Path, monkeypatch: Any
+) -> None:
+    import sqlite3
+
+    facade, rights, token, focus = _measured(tmp_path, monkeypatch)
+    economic = facade.outputs._economic
+    initial = _read(facade, token, focus)
+    identifier = initial["cognition"]["opportunities"][0]["capability"]["sourceId"]
+    memory = economic.observation_memory
+    original = memory.get_observation(initial["organization"]["id"], identifier)
+    from application.economic_discovery.observation_memory import (
+        ObservationFieldState,
+        ObservedField,
+    )
+
+    # Explicit synthetic legacy field capture: normalized fact + verbatim/conflicting text.
+    original = replace(
+        original,
+        record=replace(original.record, observation_id="fo:legacy-field-capture"),
+        fields=(
+            ObservedField("capability.id", "solar-pv-installation"),
+            ObservedField("capability.excerpt", QUOTE),
+            ObservedField(
+                "capture.quotation",
+                QUOTE,
+                ObservationFieldState.CONFLICTING,
+                (QUOTE, "Another original source quotation"),
+            ),
+        ),
+    )
+    memory.append(original)
+    identifier = original.record.observation_id
+    assert any(
+        field.name == "capability.excerpt" and field.value == QUOTE for field in original.fields
+    )
+    facts = tuple(field for field in original.fields if field.name == "capability.id")
+    rights.write(hosts=tuple(h for h in EXAMPLE_HOSTS if h != "solartec.example.com"))
+    runtime(facade).purge()
+    retired = memory.get_observation(initial["organization"]["id"], identifier)
+    assert retired.fields == facts
+    assert QUOTE not in repr(retired)
+    assert retired.record == original.record
+    assert retired.reuse_authority.rights_status == original.reuse_authority.rights_status
+    with sqlite3.connect(memory._path) as connection:
+        rows = connection.execute(
+            "SELECT field_value, competing_values_json FROM observation_fields WHERE observation_id=?",
+            (identifier,),
+        ).fetchall()
+    assert QUOTE not in repr(rows)
+
+
+def test_continuity_retains_facts_without_reusing_withdrawn_text(
+    tmp_path: Path, monkeypatch: Any
+) -> None:
+    from application.subscriber_continuity.model import OpenQuestion, QuestionKind
+
+    facade, rights, token, focus = _measured(tmp_path, monkeypatch)
+    economic = facade.outputs._economic
+    context = facade.identity.authenticate(token)
+    now = datetime.now(UTC)
+    continuity = economic.continuity
+    checkpoint, _ = continuity.record(context, XeedId(focus), as_of=now)
+    # Simulate an already materialized checkpoint from the pre-policy runtime.
+    dependency = next(d for d in checkpoint.state.dependencies if d.key.startswith("obs:fo:"))
+    legacy_dependency = replace(
+        dependency,
+        fields=(
+            *(f for f in dependency.fields if f[0] != "capability.excerpt"),
+            ("capability.excerpt", QUOTE, "VALUE"),
+        ),
+    )
+    legacy_state = replace(
+        checkpoint.state,
+        dependencies=tuple(
+            legacy_dependency if d.key == dependency.key else d
+            for d in checkpoint.state.dependencies
+        ),
+        questions=(
+            *checkpoint.state.questions,
+            OpenQuestion(
+                "q:legacy-copy",
+                QuestionKind.MISSING_CONTEXT,
+                "offer",
+                f"Previously {QUOTE}",
+                (dependency.key,),
+            ),
+        ),
+    )
+    legacy, _ = continuity.store.append(str(context.tenant_id), focus, legacy_state)
+    assert QUOTE in json.dumps(continuity.read(context, XeedId(focus), as_of=now))
+    rights.write(hosts=tuple(h for h in EXAMPLE_HOSTS if h != "solartec.example.com"))
+    assert QUOTE not in json.dumps(continuity.read(context, XeedId(focus), as_of=now))
+    assert continuity.store.get(str(context.tenant_id), focus, legacy.checkpoint_id) == legacy
+    current, _ = continuity.record(context, XeedId(focus), as_of=now)
+    assert QUOTE not in repr(current.state.dependencies)
+    preserved = next(d for d in current.state.dependencies if d.key == dependency.key)
+    assert preserved.source_ref == dependency.source_ref
+    assert preserved.content_fingerprint == dependency.content_fingerprint
+    assert tuple(f for f in preserved.fields if f[0] != "capability.excerpt") == tuple(
+        f for f in dependency.fields if f[0] != "capability.excerpt"
+    )

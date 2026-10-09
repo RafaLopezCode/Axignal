@@ -105,6 +105,13 @@ class BrainRuntime(Protocol):
         self, authorized_context: TrustedRequestContext, xeed_id: XeedId, as_of: datetime
     ) -> Any: ...
 
+    def deliver_content(
+        self,
+        authorized_context: TrustedRequestContext,
+        xeed_id: XeedId,
+        projection: dict[str, object],
+    ) -> dict[str, object]: ...
+
 
 @dataclass(frozen=True, slots=True)
 class ReconcileReport:
@@ -259,7 +266,7 @@ class ContinuityService:
             temporal_policy=self.runtime.temporal_policy,
         )
         pending = invalidation_delta(latest.state, evaluations)
-        return {
+        view: dict[str, object] = {
             "state": "CHECKPOINTED",
             "xeedId": xeed.id,
             "checkpoint": latest.summary(),
@@ -280,3 +287,29 @@ class ContinuityService:
             ),
             "recompute": list(self.store.recompute_ledger(xeed.tenant_id, xeed.id)),
         }
+
+        # Old checkpoints can contain source copies in dependency fields/questions.
+        # Feed lineage to the same authorized runtime boundary; never expose the
+        # historical dependency material or mutate the immutable checkpoint.
+        delivered = self.runtime.deliver_content(
+            authorized_context,
+            xeed_id,
+            {
+                "continuity": view,
+                "evidenceDependencies": [
+                    {
+                        "observationId": dependency.key.removeprefix("obs:"),
+                        "source_ref": dependency.source_ref,
+                        "observed_at": dependency.observed_at.isoformat(),
+                        "fields": [
+                            {"name": name, "value": value} for name, value, _ in dependency.fields
+                        ],
+                    }
+                    for dependency in latest.state.dependencies
+                    if dependency.key.startswith("obs:")
+                ],
+            },
+        )
+        continuity = delivered["continuity"]
+        assert isinstance(continuity, dict)
+        return continuity

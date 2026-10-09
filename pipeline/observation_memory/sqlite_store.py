@@ -18,6 +18,7 @@ from application.economic_discovery.observation_memory import (
     ObservationMemoryConflict,
     ObservationReuseAuthority,
     ObservedField,
+    is_source_text_field,
     observation_reuse_authority_from_payload,
     observation_reuse_authority_payload,
 )
@@ -317,6 +318,20 @@ class SqliteObservationMemory:
                     separators=(",", ":"),
                     ensure_ascii=False,
                 )
+                # Retire verbatim fields (including conflicting copies) in the
+                # same transaction, retaining normalized facts and the source envelope.
+                field_names = connection.execute(
+                    "SELECT field_name FROM observation_fields WHERE observation_id=?",
+                    (identifier,),
+                ).fetchall()
+                connection.executemany(
+                    "DELETE FROM observation_fields WHERE observation_id=? AND field_name=?",
+                    (
+                        (identifier, name)
+                        for (name,) in field_names
+                        if is_source_text_field(str(name))
+                    ),
+                )
                 connection.execute(
                     """UPDATE observations SET raw_content='', raw_artifact_ref=NULL,
                     reuse_json=? WHERE observation_id=?""",
@@ -338,8 +353,25 @@ class SqliteObservationMemory:
                 "FROM observations WHERE subject_id = ? AND observation_id = ?",
                 (subject_id, observation_id),
             ).fetchone()
-        if row is None:
-            return None
+        return None if row is None else self._metadata(row)
+
+    def access_metadata_for_source(
+        self, subject_id: str, source_ref: str
+    ) -> tuple[ObservationAccessMetadata, ...]:
+        """Metadata-only lineage lookup, scoped to an already authorized subject."""
+        if not subject_id.strip() or not source_ref.strip():
+            raise ValueError("observation source identity is required")
+        with self._connect() as connection:
+            rows = connection.execute(
+                "SELECT observation_id, subject_id, source_ref, source_type, observed_at, "
+                "content_fingerprint, mode, reuse_json FROM observations "
+                "WHERE subject_id=? AND source_ref=? ORDER BY observed_at, observation_id",
+                (subject_id, source_ref),
+            ).fetchall()
+        return tuple(self._metadata(row) for row in rows)
+
+    @staticmethod
+    def _metadata(row: tuple[object, ...]) -> ObservationAccessMetadata:
         return ObservationAccessMetadata(
             record=ObservationRecord(
                 observation_id=str(row[0]),

@@ -828,9 +828,23 @@ class SubscriberEconomicRuntime:
                         )
             return None
 
+        def metadata_for_source(source: str) -> tuple[ObservationAccessMetadata, ...]:
+            lookup = getattr(self.observation_memory, "access_metadata_for_source", None)
+            if callable(lookup):
+                return tuple(
+                    metadata for subject in subjects for metadata in lookup(subject, source)
+                )
+            return tuple(
+                ObservationAccessMetadata(item.record, item.reuse_authority)
+                for subject in subjects
+                for item in self.observation_memory.for_subject(subject)
+                if item.record.source_ref == source
+            )
+
         return deliver_evidence_content(
             projection,
             metadata_for=metadata_for,
+            metadata_for_source=metadata_for_source,
             rights=self.content_rights,
         )
 

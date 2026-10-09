@@ -16,7 +16,8 @@ content permission. Raw-memory purge alone did not retire the materialized copy.
 `CurrentContentRights` is an application-owned port. The runtime adapter consults
 the existing reloading website-rights policy at the live clock, independent of
 the requested historical cut. The shared economic delivery boundary joins exact
-observation/source/time lineage and withdraws source text in a copy of every
+observation/source/time lineage (including source-only legacy descriptors via
+scoped metadata-only lookup) and withdraws source text in a copy of every
 read, including legacy ledgers, economic evidence/narratives and copied
 explanations. Authorized independent sources and canonical identity are preserved.
 Subscriber, AXENT and Product MCP receive that same read; no screen patch exists.
@@ -25,6 +26,9 @@ The same decision governs raw observation reuse by plan construction, publicatio
 and readonly enrollment. The internal First Proof reader now applies live rights
 to both First Proof and POU. HTTP responses remain `no-store`; AXENT's corpus and
 dependency fingerprints change, invalidating its existing answer-cache key.
+Continuity retains normalized dependency fields instead of verbatim material.
+Historical checkpoint questions use the same delivery boundary, joined to their
+historical dependency lineage; checkpoints themselves remain immutable.
 
 Recorded content retention days are now part of ObservationReuseAuthority's
 optional, backwards-readable payload. Delivery and raw purge use the minimum of
@@ -39,8 +43,9 @@ references, original admission/provenance, timestamps, fingerprints and immutabl
 output snapshots remain. Physical raw-memory retirement preserves historical
 admission/provenance and records inaccessible material; its explicit
 `content_removed` envelope cannot carry raw text/artifacts or become reusable
-evidence. This also fixes the old post-purge read failure from invalid empty raw
-content. There is no canonical fact deletion or new truth authority.
+evidence. Text-bearing observation field rows, including conflicting quotation
+copies, are removed in that same purge transaction; normalized fields remain.
+This also fixes the old post-purge read failure from invalid empty raw content. There is no canonical fact deletion or new truth authority.
 
 Non-live source families retain their existing registry/admission paths; this
 slice binds the current managed website grants implicated in issue 176. No
@@ -77,11 +82,22 @@ unchanged immutable snapshots, legacy materialized economic wire/narratives/ledg
 missing metadata, identical words from an independent permitted source, live-clock
 expiry under historical cuts, malformed/deleted/zero/shortened/widened grants,
 provider-only withdrawal, changed-basis reobservation and physical raw purge.
+Additional regressions cover source-only dated/mismatched/missing/undated
+lineage, equivalent timezone formats, raw-field/competing-quote retirement and
+old/new continuity checkpoints. The pre-fix purge reproduced retained field
+quotations against the previous implementation; normalized fields survive the fix.
 One regression sends web, AXENT and MCP requests over a real localhost HTTP socket
 on an ephemeral port and stops it afterwards. No canonical production was touched.
 
 Validation results are recorded in `validation.md`; final SHA/CI and run links
 are attached to the independent PR and CTO delivery.
+
+Compatibility: the database already used the empty raw-content retirement
+representation before this PR. Older unpatched readers already reject that
+representation and lack the current-rights delivery boundary. This PR makes the
+patched reader load an explicitly inaccessible historic envelope; it does not
+fabricate retained content/artifacts to support older unsafe readers. CTO
+integration must use the patched runtime for this boundary.
 
 ## Integration / deployment state
 
