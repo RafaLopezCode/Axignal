@@ -28,6 +28,7 @@ from application.first_observation.contracts import (
     ObservationJob,
     SiteReading,
 )
+from application.first_observation.visibility import withdraw_first_proof
 
 #: Failed attempts wait 2, 4, 8... minutes before a retry (transient faults clear).
 _BACKOFF_MINUTES = 2
@@ -325,6 +326,7 @@ class SqliteFirstObservationStore:
         *,
         now: datetime,
         deadline: Callable[[Mapping[str, Any]], datetime | None] | None = None,
+        proof_deadline: Callable[[Mapping[str, Any]], datetime | None] | None = None,
     ) -> dict[str, int]:
         """Enforce retention: shared site text and private citations past their time.
 
@@ -356,8 +358,17 @@ class SqliteFirstObservationStore:
             ).fetchall():
                 proof = json.loads(row["proof"])
                 proof_expired = row["retain_until"] is not None and str(row["retain_until"]) <= at
+                governed_limit = None if proof_deadline is None else proof_deadline(proof)
+                proof_withdrawn = (
+                    governed_limit is not None
+                    and _iso(governed_limit) <= at
+                    and not proof.get("contentExpiredAt")
+                )
+                proof_expired = proof_expired or proof_withdrawn
                 understanding = proof.get("publicUnderstanding")
-                understanding_expired = proof_expired
+                # First Proof and perceptual reports have separate retention grants.
+                # Revoking an old proof must not mislabel the report as date-expired.
+                understanding_expired = proof_expired and not proof_withdrawn
                 understanding_withdrawn = False
                 if isinstance(understanding, dict) and not understanding_expired:
                     understanding_withdrawn = understanding_expired = withdrawn(understanding)
@@ -372,7 +383,11 @@ class SqliteFirstObservationStore:
                             understanding_expired = True
                 if not proof_expired and not understanding_expired:
                     continue
-                if proof_expired:
+                if proof_withdrawn:
+                    # The old grant was explicitly withdrawn. Its derived statements
+                    # are no longer served or kept as a live private proof.
+                    proof = withdraw_first_proof(proof, at=now)
+                elif proof_expired:
                     for discovery in proof.get("discoveries", ()):
                         discovery["excerpt"] = None
                     for capability in proof.get("capabilities", ()):

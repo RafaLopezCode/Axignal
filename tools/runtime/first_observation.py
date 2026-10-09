@@ -55,6 +55,7 @@ from application.first_observation.service import (
 )
 from application.first_observation.shared_findings import SharedFindingsPort
 from application.first_observation.site import PageReading
+from application.first_observation.visibility import first_proof_live_deadline, withdraw_first_proof
 from application.observation_intelligence import (
     OperationalLearning,
     SourceObservationPort,
@@ -547,6 +548,9 @@ class FirstObservationRuntime:
             deadline=lambda report: rights_deadline(
                 report, lambda url: self.service.content_rights(url, now=now)
             ),
+            proof_deadline=lambda proof: first_proof_live_deadline(
+                proof, lambda url: self.service.content_rights(url, now=now)
+            ),
         )
         if self._purge_canonical_raw is not None:
             result["canonicalRaw"] = self._purge_canonical_raw(now)
@@ -609,6 +613,14 @@ class FirstObservationRuntime:
         if state is None:
             return None
         proof = self._proof(tenant, target_ref, organization_id)
+        if proof is not None:
+            at = self._clock.now()
+            live = first_proof_live_deadline(
+                proof, lambda url: self.service.content_rights(url, now=at)
+            )
+            if live is not None and at >= live:
+                proof = withdraw_first_proof(proof, at=at)
+                state = "SOURCE_UNAVAILABLE"
         headline, headline_code = _headline(proof)
         return {
             "state": state,
@@ -633,6 +645,14 @@ class FirstObservationRuntime:
             and state not in {"QUEUED", "OBSERVING_PUBLIC_PRESENCE", "OBSERVATION_FAILED"}
         ):
             state = None  # a proof of a replaced Organization is not this Focus's state
+        if proof is not None:
+            at = self._clock.now()
+            live = first_proof_live_deadline(
+                proof, lambda url: self.service.content_rights(url, now=at)
+            )
+            if live is not None and at >= live:
+                proof = withdraw_first_proof(proof, at=at)
+                state = "SOURCE_UNAVAILABLE"
         view = public_view(proof, state)
         if view is not None and proof is not None and proof.get("publicUnderstanding"):
             from application.first_observation.understanding import compare, public_report
