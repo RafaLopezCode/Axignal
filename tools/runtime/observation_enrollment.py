@@ -14,7 +14,9 @@ from importlib import import_module
 from pathlib import Path
 from tempfile import NamedTemporaryFile
 
-from application.economic_discovery.observation_memory import GovernedObservation
+from application.economic_discovery.observation_memory import (
+    GovernedObservation,
+)
 from application.observation_intelligence.loop import SourceObservationPort
 from application.observation_runtime.materialization import (
     DesiredObservation,
@@ -24,6 +26,7 @@ from application.observation_runtime.materialization import (
 from application.subscriber_access.pilot import PilotAccessService
 from application.subscriber_identity.runtime import Clock, SystemClock
 from application.subscriber_portfolio.models import EntitlementSnapshot, PortfolioEntry
+from application.subscriber_projection.evidence_delivery import content_reusable_history
 from application.subscriber_projection.subscriber_runtime import _authorized_public_history
 from application.xeed_access.organization_reader import (
     AuthorizedXeedOrganizationReader,
@@ -47,7 +50,8 @@ from pipeline.source_acquisition import (
 from pipeline.subscriber_access.sqlite_store import SqlitePilotAccessStore
 from pipeline.subscriber_identity.sqlite_store import SqliteSubscriberIdentityStore
 from pipeline.subscriber_portfolio.sqlite_store import SqliteSubscriberPortfolioStore
-from tools.runtime.first_observation import first_observation_reader
+from tools.runtime.evidence_content import LiveEvidenceContentRights
+from tools.runtime.first_observation import first_observation_reader, load_content_rights
 from tools.runtime.observation_daily import (
     SUBSCRIBER_REUSE_POLICY,
     SUBSCRIBER_TEMPORAL_POLICY,
@@ -87,6 +91,8 @@ class SubscriberObservationAuthority:
             else None
         )
         values = settings.values
+        self.website_rights = load_content_rights(values)
+        self.content_rights = LiveEvidenceContentRights(self.website_rights, clock.now)
         environment = (
             _ENVIRONMENT_REF
             if (
@@ -173,13 +179,16 @@ class SubscriberObservationAuthority:
             reuse_policy=SUBSCRIBER_REUSE_POLICY,
             temporal_policy=SUBSCRIBER_TEMPORAL_POLICY,
         )
+        history = content_reusable_history(history, self.content_rights)
         return str(authorized.organization.id), history
 
     def first_observation(
         self, context: TrustedRequestContext, focus: XeedId
     ) -> Mapping[str, object] | None:
         """The Focus's stored First Proof (spec 063), read-only; None without a store."""
-        reader = first_observation_reader(self.root)
+        reader = first_observation_reader(
+            self.root, rights=self.website_rights, clock=self.clock.now
+        )
         return None if reader is None else reader(context, focus)
 
     def allows(self, context: TrustedRequestContext, focus: XeedId, now: datetime) -> bool:

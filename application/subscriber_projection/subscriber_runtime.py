@@ -10,7 +10,7 @@ from __future__ import annotations
 
 from collections.abc import Mapping
 from copy import deepcopy
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import datetime
 from enum import StrEnum
 from typing import Protocol
@@ -50,6 +50,7 @@ from application.economic_discovery.market_planning import (
 )
 from application.economic_discovery.observation_memory import (
     GovernedObservation,
+    ObservationAccessMetadata,
     ObservationAccessStatus,
     ObservationMemory,
     ObservationReuseScope,
@@ -97,6 +98,12 @@ from application.subscriber_projection.dri_measurement import (
     measure_public_page_representation,
 )
 from application.subscriber_projection.economic_runtime import economic_output_runtime_signal
+from application.subscriber_projection.evidence_delivery import (
+    CurrentContentRights,
+    RecordedContentRights,
+    content_reusable_history,
+    deliver_evidence_content,
+)
 from application.xeed_access.organization_reader import (
     AuthorizedXeedOrganization,
     AuthorizedXeedOrganizationReader,
@@ -732,6 +739,7 @@ class SubscriberEconomicRuntime:
     reuse_policy: ObservationReusePolicy
     temporal_policy: TemporalCurrentnessPolicy
     code_sha: str
+    content_rights: CurrentContentRights = field(default_factory=RecordedContentRights)
     #: Private continuity recorder (TASK-050 T023); checkpoints follow each new snapshot.
     continuity: ContinuityRecorder | None = None
     #: Optional semantic demand screen (Spec 062); absent, projection is deterministic only.
@@ -783,7 +791,48 @@ class SubscriberEconomicRuntime:
             reuse_policy=self.reuse_policy,
             temporal_policy=self.temporal_policy,
         )
-        return authorized, history
+        return authorized, self._content_reusable_history(history)
+
+    def _content_reusable_history(
+        self, history: tuple[tuple[GovernedObservation, Currentness], ...]
+    ) -> tuple[tuple[GovernedObservation, Currentness], ...]:
+        return content_reusable_history(history, self.content_rights)
+
+    def deliver_content(
+        self,
+        authorized_context: TrustedRequestContext,
+        xeed_id: XeedId,
+        projection: dict[str, object],
+    ) -> dict[str, object]:
+        authorized = self._read_context(authorized_context, xeed_id)
+        organization_id = authorized.organization.id
+        economic = projection.get("economicOutput")
+        subjects = [organization_id]
+        if isinstance(economic, dict) and isinstance(economic.get("activity_subject_ref"), str):
+            subjects.append(economic["activity_subject_ref"])
+
+        def metadata_for(identifier: str) -> ObservationAccessMetadata | None:
+            # Lookup metadata only after membership; rejected raw content is never loaded.
+            lookup = getattr(self.observation_memory, "access_metadata", None)
+            if callable(lookup):
+                for subject in subjects:
+                    metadata = lookup(subject, identifier)
+                    if isinstance(metadata, ObservationAccessMetadata):
+                        return metadata
+                return None
+            for subject in subjects:
+                for observation in self.observation_memory.for_subject(subject):
+                    if observation.record.observation_id == identifier:
+                        return ObservationAccessMetadata(
+                            observation.record, observation.reuse_authority
+                        )
+            return None
+
+        return deliver_evidence_content(
+            projection,
+            metadata_for=metadata_for,
+            rights=self.content_rights,
+        )
 
     def publish(
         self,
@@ -863,7 +912,7 @@ class SubscriberEconomicRuntime:
             strategy=strategy,
             result=result,
             coverage=coverage,
-            observations=observations,
+            observations=self._content_reusable_history(observations),
             registry=registry,
             drivers=drivers,
             semantic_screen=self.semantic_screen,
@@ -911,6 +960,7 @@ class SubscriberEconomicRuntime:
             reuse_policy=self.reuse_policy,
             temporal_policy=self.temporal_policy,
         )
+        seed_history = self._content_reusable_history(seed_history)
         admitted_evidence = {
             (item.record.observation_id, item.record.source_ref, item.record.observed_at): item
             for item, _currentness in seed_history
@@ -1291,10 +1341,13 @@ class SubscriberEconomicRuntime:
             cognition = projection.get("cognition")
             opportunities = cognition.get("opportunities") if isinstance(cognition, dict) else None
             if isinstance(opportunities, list) and opportunities:
-                return SubscriberRuntimeRead(SubscriberRuntimeStatus.SUCCESS, projection)
+                return SubscriberRuntimeRead(
+                    SubscriberRuntimeStatus.SUCCESS,
+                    self.deliver_content(authorized_context, xeed_id, projection),
+                )
             return SubscriberRuntimeRead(
                 SubscriberRuntimeStatus.INSUFFICIENT_EVIDENCE,
-                projection,
+                self.deliver_content(authorized_context, xeed_id, projection),
                 "No persisted evidence-backed economic output is available for this Organization and time.",
             )
 
@@ -1402,4 +1455,8 @@ class SubscriberEconomicRuntime:
             if is_current
             else "Stored economic output is retained, but its supporting evidence is not current enough for a positive interpretation."
         )
-        return SubscriberRuntimeRead(SubscriberRuntimeStatus.SUCCESS, projection, reason)
+        return SubscriberRuntimeRead(
+            SubscriberRuntimeStatus.SUCCESS,
+            self.deliver_content(authorized_context, xeed_id, projection),
+            reason,
+        )

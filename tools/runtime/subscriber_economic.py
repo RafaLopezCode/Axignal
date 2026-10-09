@@ -14,6 +14,10 @@ from application.economic_discovery.observation_memory import ObservationMemory
 from application.economic_discovery.observation_reuse import ObservationReusePolicy
 from application.economic_discovery.temporal_currentness import TemporalCurrentnessPolicy
 from application.subscriber_continuity.service import ContinuityService
+from application.subscriber_projection.evidence_delivery import (
+    CurrentContentRights,
+    RecordedContentRights,
+)
 from application.subscriber_projection.subscriber_runtime import SubscriberEconomicRuntime
 from application.xeed_access.organization_reader import (
     AuthorizedXeedOrganizationReader,
@@ -46,6 +50,7 @@ def build_subscriber_economic_runtime(
     reuse_policy: ObservationReusePolicy,
     temporal_policy: TemporalCurrentnessPolicy,
     code_sha: str,
+    content_rights: CurrentContentRights | None = None,
 ) -> SubscriberEconomicRuntime:
     """Build a runtime whose every read rechecks membership and canonical identity."""
 
@@ -58,6 +63,7 @@ def build_subscriber_economic_runtime(
         reuse_policy=reuse_policy,
         temporal_policy=temporal_policy,
         code_sha=code_sha,
+        content_rights=content_rights or RecordedContentRights(),
     )
     # Private continuity lives next to the immutable snapshots it references (T023).
     runtime.continuity = ContinuityService(runtime, SqliteSubscriberContinuityStore(database_path))

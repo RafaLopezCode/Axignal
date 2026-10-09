@@ -18,7 +18,7 @@ import json
 import threading
 from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass
-from datetime import datetime, timedelta
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any, Protocol
 from urllib.parse import urlsplit
@@ -172,6 +172,7 @@ class FocusSeed:
                             "robots.txt under a bounded GET policy."
                         ),
                         retention_policy_ref=entry.retention_policy.ref,
+                        content_retention_days=entry.retention_policy.raw_retention_days,
                         robots_policy_ref=entry.robots_policy_ref,
                     ),
                 )
@@ -847,6 +848,9 @@ def build_first_observation(
     ingestor = WorldDemandIngestor(
         feeds={k: v for k, v in feeds.items() if k in ports}, store=index, clock=clock.now
     )
+    from application.subscriber_projection.evidence_delivery import ContentAccess
+    from tools.runtime.evidence_content import LiveEvidenceContentRights
+
     rights_policy = overrides.rights or load_content_rights(values)
     factory = overrides.cascade_factory or semantic_cascade_factory_from_env(
         values, data_dir=root, token_budget=policy.semantic_tokens
@@ -883,6 +887,10 @@ def build_first_observation(
         purge_canonical_raw=(
             lambda at: observation_memory.purge_first_observation_content(
                 now=at,
+                content_allowed=lambda metadata: (
+                    LiveEvidenceContentRights(service._rights, lambda: at).decision(metadata)
+                    is ContentAccess.PERMITTED
+                ),
                 retain_until=lambda url, observed: (
                     observed + timedelta(days=grant.raw_retention_days)
                     if (grant := service._rights.rights_for(url, now=at)).reuse_permitted
@@ -917,10 +925,39 @@ if __name__ == "__main__":
 DerivedReader = Callable[[TrustedRequestContext, XeedId], Mapping[str, Any] | None]
 
 
-def first_observation_reader(root: Path) -> DerivedReader | None:
+def first_observation_reader(
+    root: Path,
+    *,
+    rights: ContentRightsPolicy | None = None,
+    clock: Callable[[], datetime] | None = None,
+) -> DerivedReader | None:
     """A Focus's stored First Proof for the autonomous runtime, or None without a store."""
     database = root / "first-observation.sqlite3"
     if not database.is_file():
         return None
     store = SqliteFirstObservationStore(database)
-    return lambda context, focus: store.proof(str(context.tenant_id), str(focus))
+    from application.first_observation.understanding import public_report
+
+    policy = rights or NoContentRights()
+    now = clock or (lambda: datetime.now(UTC))
+
+    def read(context: TrustedRequestContext, focus: XeedId) -> Mapping[str, Any] | None:
+        proof = store.proof(str(context.tenant_id), str(focus))
+        if proof is None:
+            return None
+        at = now()
+        deadlines = [first_proof_live_deadline(proof, lambda u: policy.rights_for(u, now=at))]
+        stored = proof.get("contentExpiresAt")
+        if isinstance(stored, str):
+            deadlines.append(datetime.fromisoformat(stored))
+        if any(deadline is not None and at >= deadline for deadline in deadlines):
+            proof = withdraw_first_proof(proof, at=at)
+        report = proof.get("publicUnderstanding")
+        if isinstance(report, dict):
+            proof = dict(proof)
+            proof["publicUnderstanding"] = public_report(
+                report, now=at, rights_for=lambda url: policy.rights_for(url, now=at)
+            )
+        return proof
+
+    return read

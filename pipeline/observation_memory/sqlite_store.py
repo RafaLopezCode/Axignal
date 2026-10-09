@@ -5,7 +5,8 @@ from __future__ import annotations
 import json
 import sqlite3
 from collections.abc import Callable
-from datetime import UTC, datetime
+from dataclasses import replace
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
 from application.economic_discovery.brain_contracts import ObservationMode, ObservationRecord
@@ -153,7 +154,8 @@ class SqliteObservationMemory:
                 content_fingerprint=str(row[5]),
                 mode=ObservationMode(str(row[6])),
             ),
-            raw_content=None if row[7] is None else str(row[7]),
+            content_removed=row[7] == "" and row[8] is None,
+            raw_content=None if row[7] in (None, "") else str(row[7]),
             raw_artifact_ref=None if row[8] is None else str(row[8]),
             fields=fields,
             reuse_authority=observation_reuse_authority_from_payload(json.loads(str(row[9]))),
@@ -250,35 +252,71 @@ class SqliteObservationMemory:
         *,
         now: datetime,
         retain_until: Callable[[str, datetime], datetime | None],
+        content_allowed: Callable[[ObservationAccessMetadata], bool] | None = None,
     ) -> int:
         """Withdraw raw FO material when rights lapse; keep the historical envelope.
 
         Raw text becomes an empty non-evidentiary value so readers that require
-        evidence ignore it. The reuse authority is withdrawn atomically.
+        evidence ignore it. Its material availability is withdrawn atomically,
+        retaining recorded admission, bounds and provenance as historical metadata.
         Does not mutate any observation outside the fo: namespace.
         """
-        restricted = json.dumps(
-            observation_reuse_authority_payload(
-                ObservationReuseAuthority(
-                    access_status=ObservationAccessStatus.INACCESSIBLE,
-                )
-            ),
-            sort_keys=True,
-            separators=(",", ":"),
-            ensure_ascii=False,
-        )
         purged = 0
         with self._connect() as connection:
             connection.execute("BEGIN IMMEDIATE")
             rows = connection.execute(
-                """SELECT observation_id, source_ref, observed_at FROM observations
+                """SELECT observation_id, source_ref, observed_at, reuse_json, subject_id,
+                       source_type, content_fingerprint, mode FROM observations
                 WHERE observation_id LIKE 'fo:%' AND source_type='PUBLIC_WEBSITE'
                 AND (raw_content != '' OR raw_artifact_ref IS NOT NULL)"""
             ).fetchall()
-            for identifier, source_ref, observed_at in rows:
-                expiry = retain_until(str(source_ref), datetime.fromisoformat(str(observed_at)))
-                if expiry is not None and expiry > now:
+            for (
+                identifier,
+                source_ref,
+                observed_at,
+                reuse_json,
+                subject_id,
+                source_type,
+                content_fingerprint,
+                mode,
+            ) in rows:
+                observed = datetime.fromisoformat(str(observed_at))
+                original = observation_reuse_authority_from_payload(json.loads(str(reuse_json)))
+                expiry = retain_until(str(source_ref), observed)
+                original_expiry = (
+                    None
+                    if original.content_retention_days is None
+                    else observed + timedelta(days=original.content_retention_days)
+                )
+                if expiry is not None and original_expiry is not None:
+                    expiry = min(expiry, original_expiry)
+                else:
+                    expiry = None  # Unknown original retention is not widened implicitly.
+                metadata = ObservationAccessMetadata(
+                    ObservationRecord(
+                        observation_id=str(identifier),
+                        subject_id=str(subject_id),
+                        source_ref=str(source_ref),
+                        source_type=str(source_type),
+                        observed_at=observed,
+                        content_fingerprint=str(content_fingerprint),
+                        mode=ObservationMode(str(mode)),
+                    ),
+                    original,
+                )
+                allowed = content_allowed is None or content_allowed(metadata)
+                if allowed and expiry is not None and expiry > now:
                     continue
+                # Keep recorded admission and provenance; only the availability of
+                # retained material changes. No fabricated artifact replaces the text.
+                restricted = json.dumps(
+                    observation_reuse_authority_payload(
+                        replace(original, access_status=ObservationAccessStatus.INACCESSIBLE)
+                    ),
+                    sort_keys=True,
+                    separators=(",", ":"),
+                    ensure_ascii=False,
+                )
                 connection.execute(
                     """UPDATE observations SET raw_content='', raw_artifact_ref=NULL,
                     reuse_json=? WHERE observation_id=?""",
