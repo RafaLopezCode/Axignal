@@ -1,6 +1,6 @@
 # ADR-0091: Attention starts public observation; identity still only through a registry
 
-- **Status:** Proposed (CTO review)
+- **Status:** Accepted (CTO, 2026-10-09)
 - **Date:** 2026-10-08
 - **Amends:** ADR-0087 §7 ("no Focus, observation or canonical write happens until identity resolves") — only the word *observation*, narrowly, as below. ADR-0087 §§1–6 and §8 are unchanged.
 - **Refines:** spec 058 ("no HQ/address/domain/country inference or default market").
@@ -26,8 +26,8 @@ unresolved identity.
    attention entry whose locator contains a public website, AXIGNAL may observe that
    website: robots honoured, governed HTTP policy limited to that host, bounded budget,
    rights recorded. The observation may include deterministic extraction, one bounded
-   semantic typing over person-free page text (no contact or legal pages, e-mail and phone
-   patterns redacted; ADR-0090 input rights) and a lookup of adopted public demand sources;
+   semantic routing judgment over a controlled economic vocabulary (no free page text or
+   source URLs to the evaluator; ADR-0090 input rights) and a lookup of adopted public demand sources;
    nothing else. This creates **no Organization, no Focus, no FAXT, no identity
    binding**. Identity still resolves only through a registry record that attests the
    subscriber's signal (ADR-0087 §4). A website declaring an identifier or a legal name is
@@ -64,8 +64,8 @@ unresolved identity.
    not the organization's economic reality. Judgments are non-authoritative (ADR-0090): a
    judged classification may choose *where to look* in a tenant-private First Proof (its
    demand stays POTENTIAL and carries its routing method), but it never founds a capability
-   on the canonical projection path, is never handed to T12, and its cited text is shown as
-   "text judged", not as a quote proving the classification.
+   on the canonical projection path, is never handed to T12, and the separate source excerpt is shown as
+   "source excerpt", not as proof that the evaluator saw the original free text.
 6. **First Observation is asynchronous and durable.** The HTTP request only validates and
    enqueues. A leased, idempotent, attempt-bounded job runs the cheapest-first cascade
    (spec 063 §4) under a deterministic, versioned value policy that records why each
