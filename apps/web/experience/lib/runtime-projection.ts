@@ -109,6 +109,13 @@ const cognitionOpportunitySchema = z.object({
   matchBasis: z.array(text).optional(),
   whyPotential: text,
   whyLooked: z.array(text),
+  // Economic relevance judgments the runtime already returns; read-only, dropped if malformed.
+  relevance: z.object({
+    relevantThrough: z.array(text).max(40),
+    channels: z.array(z.object({
+      judgments: z.array(z.object({ family: text, outcome: text, state: text })).max(40),
+    })).max(40),
+  }).partial().optional().catch(undefined),
   observedAt: text,
   currentness,
   currentnessEvaluatedAt: text,
