@@ -1,113 +1,105 @@
-# AXIGNAL — FRONTIER UX CHALLENGE · Impeccable × Claude Opus 5.5
+# AXIGNAL — HUMAN FIRST EXPERIENCE · OPEN DESIGN CHALLENGE
 
-> **Estado**: encargo preparado, aún NO ejecutado. Solo comienza con orden de CTO, desde un worktree limpio y una base main integrada.
->
-> **Responsable**: Claude Opus 5.5 — FRONTIER_AGENT, dirección de producto, UX, ingeniería web, evaluación adversarial y validación visual.
->
-> **Meta**: conseguir que el suscriptor extraiga el máximo valor económico de AXIGNAL sin cargar con la complejidad del motor.
+**Responsable:** Claude Opus 5.5 — Frontier Product Design / UX Engineering
+**Herramienta especializada:** Impeccable `C:\Users\usuario\.claude\skills\impeccable\SKILL.md`
+**Estado:** objetivo preparado para ejecutar, no implementado.
+**Base:** PR #175 integrado en main (`987ca91`). Worktree exclusivo de esta rama.
 
-## Propósito no negociable
+## La ambición
 
-AXIGNAL no es un dashboard de datos. Es un observing economic brain bidireccional: descubre el mundo económico de una organización y muestra cómo su representación pública permite que el mundo la comprenda. Un hallazgo negativo, una contradicción, una incertidumbre o una oportunidad de mejora basada en evidencia puede ser tanto o más valioso que uno positivo. **No maquillar la autocrítica ni inventar crítica.**
+Diseña y construye una experiencia AXIGNAL tan inteligible, intuitiva, fluida y distintiva que el suscriptor descubra la inteligencia económica sin tener que comprender la complejidad del motor.
 
-El suscriptor debe poder responder inmediatamente, sin necesitar escribir un prompt: «¿Qué está pasando? ¿Qué importa? ¿Qué ha cambiado? ¿Qué estoy comunicando bien y qué debería aclarar? ¿Qué puedo hacer? ¿Cómo lo sabe AXIGNAL? ¿Dónde sigo investigando?». Quiero una navegación que desaparezca detrás de la tarea, jerarquía editorial impecable, baja curva de aprendizaje, experiencia elegante y asombrosa por su claridad.
+El usuario debe percibir, explorar y aprovechar **qué observa AXIGNAL; qué merece atención; qué ha cambiado; qué no consigue comprender; qué se comunica bien; qué podría mejorarse; por qué; y qué fuentes lo sustentan**. La crítica constructiva y la incertidumbre explicada son valor de producto, no notas al pie.
 
-Evitar los dos extremos: un panel corporativo genérico o una demo espectacular que esconda evidencia y genere carga cognitiva.
+No busco un dashboard, un dossier, un grafo, un chatbot, un timeline, un tablero de cards ni cualquier otro formato prefijado. **Elige o inventa la mejor gramática de interfaz para AXIGNAL**. Puedes combinar paradigmas, diseñar algo nuevo y cuestionar decisiones visuales anteriores. No quiero limitar tu creación a embellecer pantallas.
 
-## Autoridad
+La complejidad del motor debe transformarse en inteligencia humana accionable sin carga cognitiva, ni pérdida de rigor.
 
-Antes de cambiar, leer y respetar en orden:
-1. `docs/product/AXIGNAL_MASTER_PRODUCT_MODEL_2026-09-24_V2.md`.
-2. `.specify/memory/constitution.md`, ADRs aceptados y contratos de AXIGLAND.
-3. `docs/product/HFX_HUMAN_FIRST_COGNITIVE_UX_DOCTRINE.md`.
-4. `docs/product/AXIGNAL_SUBSCRIBER_EXPERIENCE_ASK_AXENT_PRODUCT_SPEC.md`.
-5. `docs/product/AXIGNAL_BIDIRECTIONAL_INTELLIGENCE_EXECUTION_GOAL_2026-10-09.md`.
-6. Spec 063 First Observation, spec 064 Public Offer Understanding y código de experiencia actual.
-7. Skill específica AXIGNAL Design Director y Golden Master visual existente; no reemplazarlo sin aceptación visual CTO.
+## Punto de partida constatado, NO un mandato de preservación
 
-MASTER manda, siempre. UX no puede cambiar verdad, derechos, identidad, EvidenceAdmission, tenant isolation, `UNKNOWN ≠ FALSE`, `OBSERVED ≠ POTENTIAL`, `CLAIM ≠ WRITE`.
+Hoy conviven experiencias distintas:
 
-## Herramienta: Impeccable
+- `/panorama`: ejemplo de producto con sidebar de organizaciones/familias, Today/Panorama, navegación contextual, evidencia y AXENT. Su composición es rica, pero utiliza datos de ejemplo y no demuestra el flujo real del suscriptor.
+- `/account`: suscriptor autenticado en `PublicShell`, cartera y lectura extensa bajo un header público. Primera Observación y spec 064 llegan ahí como paneles/dossier; AXENT aparece como un `details` contextual y no hay un workspace unificado equivalente al ejemplo.
+- `customer-zero.tsx`: RuntimeExperience operativo con composición y posible shell embebido.
+- `subscriber-reading.tsx`, `runtime-lens.tsx`, `public-understanding.tsx`: capacidades reales de investigación, evidence y presentación semántica que conviene aprovechar.
 
-Skill global instalada: `C:\Users\usuario\.claude\skills\impeccable\SKILL.md`. Lee la skill y el material de referencia original antes de diseñar. Emplea operaciones de clase **OPERATE**, no estética de marketing PERSUADE para el producto suscriptor.
+**Esa divergencia es un problema real a resolver**. No presupongas que el paradigma de `/panorama` es el correcto ni que el dossier de `/account` debe continuar. Tú decides qué conservar, transformar o reemplazar mediante evidencia y juicio creativo.
 
-Orquesta con criterio las técnicas realmente disponibles de Impeccable: critique, audit, shape, distill, clarify, layout, typeset, onboard, adapt, harden, optimize, polish y revisiones de navegador. No dispares 24 comandos mecánicamente, no conviertas las reglas deterministas en criterio de producto y no modifiques hooks/configuración global sin verificar impacto. Puedes invocar subagentes independientes de diseño, contenido, accesibilidad y arquitectura cuando aporten diversidad real de evaluación.
+No elimines funcionalidades válidas bajo la apariencia de simplificación; si una experiencia se rediseña, el usuario debe seguir pudiendo profundizar en la misma evidencia y navegar por sus capacidades.
 
-No crear un PRODUCT.md que sustituya la doctrina canónica. Usa descubrimiento visual y prototipos controlados para evaluar alternativas, no como sustituto de software.
+## Libertad creativa: la máxima compatible con un producto responsable
 
-## Aceptación de producto: ocho sistemas de experiencia
+Tienes plena autoridad para redefinir, si mejora sustancialmente el resultado:
 
-### 1. Arquitectura de información y orientación
+- La arquitectura de información, estructura y orientación del producto.
+- El concepto visual del workspace, dashboard, canvas, dossier, cards, galerías, mapas, timelines y demás patrones.
+- La navegación global/local/contextual, selección de organizaciones y rutas de exploración.
+- El papel de AXENT: presencia, emplazamiento, activación contextual y relación con la evidencia; evita obligar a escribir prompts para entender un resultado.
+- Los niveles de abstracción: lectura inmediata, comparación, investigación causal, evidencia e historia; no es obligatorio representarlos como cuatro pantallas.
+- Densidad, tipografía, motion, interacción, recorridos de primer uso y retorno, composición responsive, microcopy y agrupación de hallazgos.
+- Un lenguaje de cards de alta semántica, incluyendo patrones distintos para familias que tengan necesidades distintas, sin perder coherencia.
+- Qué merece aparecer, qué se oculta progresivamente, cómo se accede y qué debe recordarse al cambiar de foco, tema o fecha.
 
-Audita la navegación transversal: Today, Explore, Evolution, Evidence y Ask AXENT; inventario de organizaciones/Foci, agencias multicliente y Customer Zero. Reordena de forma razonada lo confuso, pero preserva navegación canónica salvo decisión justificada y validada.
+Puedes realizar exploraciones radicales en un worktree, comparar enfoques y descartar los peores. No expliques una mejora por gustos: demuestra que produce menos ambigüedad, menos pasos, menos lectura inútil y más acceso al valor.
 
-Toda superficie debe responder «dónde estoy», «qué entidad y período observo», «por qué veo esto», «cómo profundizo», «cómo retorno sin perder selección», «qué evidencia puedo inspeccionar». Historial atrás/adelante, URL deep-link y cambios de contexto deben ser coherentes; mobile no puede ocultar acciones clave.
+**No estás obligado a conservar Today/Explore/Evolution/Evidence como etiquetas, tabs ni menús.** Esas capacidades cognitivas deben seguir existiendo y ser encontrables; la mejor forma de organizarlas queda a tu criterio.
 
-### 2. Cards como unidades de significado
+## Lo que SÍ es innegociable
 
-Jerarquía HFX: **GLANCE → UNDERSTAND → REASON → PROVE**, con disclosure progresivo sin 4 clicks obligatorios. Cada card debe comunicar hallazgo principal, importancia, temporalidad, epistemic state, causa y límites, siguiente investigación/acción condicionada y un camino directo a pruebas. Evita acumulación de badges, etiquetas técnicas y diseños repetitivos que traten todas las familias como una misma tabla de datos.
+La autoridad precede a la estética:
+`docs/product/AXIGNAL_MASTER_PRODUCT_MODEL_2026-09-24_V2.md` →
+`.specify/memory/constitution.md` → ADRs aceptados →
+`docs/product/HFX_HUMAN_FIRST_COGNITIVE_UX_DOCTRINE.md` y especificaciones.
 
-En oportunidades, mercados, relaciones, reputación, SEO/GEO y representación pública, adapta el patrón a la semántica de la familia sin crear una colección caótica de estilos. Evidencia accesible sin salir de contexto.
+Lee también:
+`docs/product/AXIGNAL_SUBSCRIBER_EXPERIENCE_ASK_AXENT_PRODUCT_SPEC.md`,
+`docs/product/AXIGNAL_BIDIRECTIONAL_INTELLIGENCE_EXECUTION_GOAL_2026-10-09.md`,
+specs 063 y 064,
+`.agents/skills/axignal-design-director/SKILL.md` si está disponible, y el sistema visual vigente.
 
-### 3. La autocrítica constructiva visible
+Invariantes: AXIGLAND canónico único; EvidenceAdmission; `CLAIM ≠ WRITE`; `FAXT ≠ INXIGHT`; `OBSERVED ≠ POTENTIAL`; `UNKNOWN ≠ FALSE`; JEV no es autoridad de verdad; AXENT investiga, no escribe canónico; provenance, derechos, currentness, incertidumbre e identidad de entidad conservados; tenant/client_context/Xeed aislados.
 
-Lo que comunica bien / lo que el instrumento no comprende / lo contradictorio / causas alternativas / qué podría mejorar / cómo reobservar. La crítica es output de primera clase, pero no equivale automáticamente a un fallo empresarial. No convertir score/confianza JEV en precisión falsa, ni atribuir comportamiento a buscadores o poblaciones humanas sin instrumento real.
+No inventes resultados, fuentes, scores de verdad o señales. No conviertas AXIGNAL en un CRM, suite de tareas ni un chatbot como única interfaz. Privacidad, seguridad, accesibilidad y eficiencia son obligaciones, no preferencias visuales.
 
-La intervención recomendada debe ser concreta, proporcionada y condicionada por evidencia. La interfaz jamás inventa mejora comercial demostrada donde solo hay diferencia de percepción.
+Respetar la identidad AXIGNAL —no SaaS genérico— y el Golden Master aceptado como baseline; puedes **proponer un cambio material de diseño** si lo justificas y lo demuestras, pero requiere aceptación CTO antes de sustituir el diseño aprobado.
 
-### 4. Primer uso y primer WOW
+## Impeccable como capacidad de exploración, no receta
 
-Diseña un recorrido primer login → elegir/asignar Foco → observar → resultados iniciales → explorar evidencia → decidir siguiente atención. El primer valor debe entenderse sin un manual, onboarding interminable ni obligar a dialogar con AXENT. FIRST_MAP_WOW debe ser descubrimiento significativo. Estados vacíos y fallos de adquisición también comunican límites y siguientes pasos útiles.
+Inspecciona sus reglas y materiales originales; el área de trabajo es de tipo **Operate**. Utiliza lo relevante de critique, shape, distill, onboard, clarify, layout, typeset, audit, adapt, harden, optimize y polish, así como revisión en navegador y subagentes independientes cuando aporten.
 
-### 5. Regreso y continuidad temporal
+No ejecutes rituales ni todos los comandos por obligación. No permitas que un score automático decida la UX; un problema puede estar fuera del alcance de sus reglas. No instales nuevas dependencias o hooks sin necesidad.
 
-Usuario vuelve después de una semana: encuentra cambios materiales, por qué importan, qué sigue incierto y cómo ver el antes/después compatible. Evitar que los timestamps, modelos y provenance se conviertan en ruido. AXIGLAND es memoria histórica permanente y gobernada, no una lista de eventos.
+## Cómo crear una gran solución
 
-### 6. Agencia vs suscriptor vs Staff
+1. **Observa el producto real**, código y navegador. Contrasta explícitamente el ejemplo de `/panorama` con la experiencia autenticada `/account`. Revisa Customer Zero, onboarding, familias económicas, AXENT, cards, historial, evidencias, estados parciales y móvil. Identifica dónde se pierde comprensión o continuidad.
+2. **Explora con libertad** direcciones de producto realmente distintas (no simples variaciones cromáticas). Elige la más convincente por valor humano y coherencia, no por familiaridad con el dashboard existente. Si tienes una idea mejor que cualquier brief, ejecútala en una superficie aislada y demuéstrala.
+3. **Construye software real**: un recorrido subscriber E2E de gran calidad, unificando donde corresponda la experiencia y conservando funcionalidades. Itera con Impeccable y navegador; no gastes toda tu ventana en un informe previo.
+4. **Generaliza con criterio** sobre la gramática de UI, sin refactors oportunistas ni un gran framework especulativo. La especialización por familia puede ser necesaria; sigue las fronteras de arquitectura.
+5. **Entrega evidencia de producto**, no declaraciones de estilo. Antes/después verificable, demos operables de escritorio, tablet y 390/320px, y límites claros.
 
-El mismo producto para agencia con clientes múltiples, profesional individual y Customer Zero con controles Staff aislados. Nunca una suite CRM ni un workflow de tareas. Conservar `tenant → client_context → Xeed` estricto y navegación consistente durante el cambio de organización.
+## Lo que el usuario debe poder hacer sin esfuerzo
 
-### 7. Estética AXIGNAL
+- Primera visita: comprender el propósito, escoger/asignar la primera organización y recibir valor sin cursillo ni prompt.
+- Regreso: encontrar qué cambió y recuperar el hilo.
+- Hallazgo económico: entender qué significa, qué podría hacer y qué sigue siendo hipótesis.
+- Autocrítica: reconocer fortalezas, gaps de comunicación, causas alternativas, evidencia y posible mejora, sin atribuciones falsas.
+- Inspección: llegar de una conclusión a su fuente, instrumento y fecha y volver sin perder el contexto.
+- Cartera: cambiar entre organizaciones/cliente sin mezclar permisos ni desorientarse.
+- Investigación: explorar familias, relaciones, evolución y oportunidades sin memorizar la arquitectura interna.
+- Estados difíciles: UNKNOWN, sin evidencia, fallo de instrumento, fuente revocada, demasiadas señales, idiomas largos, mobile y conectividad lenta.
+- Accesibilidad: teclado, lector de pantalla, foco, contraste, reflow, reduced motion y seis idiomas.
 
-Preservar lenguaje corporativo del monóculo, Fraunces/Manrope/IBM Plex Mono y paleta/colores vigentes, legibilidad superior, sobriedad y personalidad memorable. No usar efectos por demostrar capacidad. Motion comunica transición cognitiva, jerarquía, progreso, causalidad/relación; respetar reduced-motion. Landing y producto tienen prioridades diferentes: **el producto es una herramienta de trabajo**.
+Son pruebas de resultado; **no fijan el diseño**. Define métricas de éxito y fricción. No simules haber observado usuarios humanos; distingue E2E con fixtures de estudio de usabilidad real.
 
-### 8. Accesibilidad, responsive, rendimiento y resiliencia
+## Entrega y fronteras de ejecución
 
-WCAG 2.2 AA como meta verificable: teclado, focus, screen reader, touch, contraste, zoom/reflow, 320/390/768/1440 px, idiomas es/en/fr/de/it/pt, datos extremos, largas tablas/tarjetas, loading/error/unknown/stale/inaccessible/revoked/partial, red lenta y performance. Probar en navegador con estados reales o fixtures fieles; no solo screenshots bonitos.
+Tu unidad de éxito es **un producto real comprensible, navegable y agradable, no un mockup brillante**.
 
-## Cómo trabajar
+Trabaja solo en el worktree exclusivo `human-first-impeccable-claude`, desde main ya integrado, sin sobrescribir worktrees ajenos ni la carpeta canónica local con cambios pendientes. Puedes crear subramas/experimentos para tus alternativas.
 
-- Verifica primero Git y CI. No edites `D:\AXIGNAL\Axignal` (árbol local con cambios pendientes) ni worktrees de Sol/otras sesiones. Rama y worktree propios desde main vigente.
-- Inspecciona frontend real y UX navegable, prioriza problemas que cambian comprensión y esfuerzo.
-- Propón dirección de diseño autónoma y reversible basada en evidencia; no acumules ciclos de auditoría sin código.
-- Implementa un **recorrido de producto E2E** pequeño pero inequívocamente mejor; compón progresivamente áreas relacionadas hasta coherencia estructural.
-- Usa Impeccable para explorar, criticar, iterar, verificar y pulir; exige decisiones razonadas y evidencia visual. No crear nuevas capas o abstracciones especulativas.
-- Acepta críticamente el trabajo previo de Sol y la corrección de Claude: ni rehacer por ego ni dar por buena una UI solo porque CI pasa.
-- Prioriza mejoras de comprensión, navegación, estructura de datos, cards, disclosure y texto humano; motion solo cuando comunica.
-- Si una decisión doctrina/producto/branding es material, solicita autorización CTO y presenta comparativa concreta. Las decisiones de CSS/orden/jerarquía reversibles son tuyas.
+Tests frontend, i18n es/en/fr/de/it/pt, tipos, build, accesibilidad, navegación, datos reales o equivalentes fieles, Architecture Guard y governance según cambios. Abre PR con capturas/videos y QA en navegador. No merge ni producción sin aceptación CTO.
 
-## Pruebas de aceptación funcional y humana
+Declara IMPLEMENTADO, PROBADO, INTEGRADO, DESPLEGADO y VERIFICADO E2E por separado.
 
-Demuestra flujos reales de navegador, NO solo mock landing, para:
-1. Primera visita y primera comprensión del valor.
-2. Regreso tras tiempo y lectura de lo que cambió.
-3. Hallazgo económico con incertidumbre y evidencia consultable.
-4. Autocrítica de comunicación sustentada, sin falsas atribuciones.
-5. Llegar desde la card a fuente/URL permitida y volver.
-6. Agencia cambiando entre clientes manteniendo contexto y aislamiento.
-7. Móvil 390px y 320px con navegación completa.
-8. Datos densos, pocos datos, ninguna evidencia, estados adversos y revocación.
-9. Teclado/foco y accesibilidad esencial.
-10. Diferentes idiomas y texto largo.
-
-Usa métricas de tasa de éxito de tarea, tiempo hasta hallazgo significativo, clics/context-switches, confusión/errores de orientación y esfuerzo percibido **como hipótesis que luego validaremos con humanos**; no inventes resultados de tests de usuarios reales.
-
-## Entrega y criterio de calidad
-
-Objetivo: una experiencia de AXIGNAL singular, humana, cognitivamente ligera, altamente utilizable y que permite entender evidencias profundas sin un curso. Una persona debe saber inmediatamente «qué veo, qué significa, por qué importa, qué mejorar y cómo lo sabemos».
-
-Demuestra en navegador, con pantallas actuales y propuestas en un recorrido, resultados visibles, responsive, accesibilidad y mejor estructura semántica. Incluye capturas y verificación de navegación desde una sesión de suscriptor real o equivalente fiel; las demos sintéticas se etiquetan como tales. Tests frontend, tipos, i18n, build, validaciones arquitectónicas/gobernanza si se tocan, GitHub CI antes de merge.
-
-Entregar matriz breve ANTES vs DESPUÉS: problemas demostrados, decisión UX, cambio funcional, evidencia navegador y limitaciones. Distinguir IMPLEMENTADO, PROBADO, INTEGRADO, DESPLEGADO y VERIFICADO E2E. Un PR o rama lista para CTO; **NO MERGE A MAIN ni producción sin autorización CTO**.
-
-**Libertad creativa absoluta dentro de límites doctrinales y de seguridad. Que el modelo encuentre una solución mejor que la nuestra es una victoria. Tu unidad de éxito es el valor real y la claridad que experimenta el suscriptor.**
+**Reto:** sorprendernos inventando una experiencia de inteligencia económica que haga innecesario aprender a utilizar AXIGNAL para extraer su valor. No preservar un dashboard por nostalgia ni crear un dossier por inercia. Crea la mejor interfaz para este producto.
