@@ -65,10 +65,13 @@ from application.observation_runtime.replay import FindingsLedger, RecordedFindi
 from application.subscriber_continuity.service import ContinuityService
 from application.subscriber_identity.runtime import Clock
 from application.subscriber_projection.subscriber_runtime import SubscriberEconomicRuntime
+from application.world_demand.index import DemandIndexPort, WorldDemandIngestor
 from application.xeed_access.organization_reader import OrganizationReadError
 from application.xeed_access.reader import TrustedRequestContext, XeedReadError
 from domain.identity import PrincipalId, TenantId, XeedId
 from domain.xignal import XignalEpistemicState
+from pipeline.world_demand.sqlite_store import SqliteWorldDemandIndex
+from tools.runtime.first_observation import DerivedReader, first_observation_reader
 from tools.runtime.subscriber_observation import (
     ConfiguredSubscriberObservationPlanReader,
     SubscriberObservationPlanConfigurationError,
@@ -171,6 +174,7 @@ def replay_plans(
     clock: Clock,
     attention_file: Path,
     ledger: FindingsLedger,
+    derived_for: DerivedReader | None = None,
 ) -> ConfiguredSubscriberObservationPlanReader:
     """The canonical plan reader, answering its strategy from the runtime's real retrievals."""
 
@@ -180,6 +184,7 @@ def replay_plans(
         clock=clock,
         attention=load_observation_attention(attention_file),
         adapters_for=lambda strategy: {a.source_id: port for a in strategy.actions},
+        derived_for=derived_for,
         # Replay is free: every recorded answer is projected, none cut by a budget stop.
         stop_policy=StopPolicy(sufficient_candidates=10**6, max_no_gain_streak=10**6),
     )
@@ -308,10 +313,11 @@ def run_once(
     research_ledger: ResearchLedger | None = None,
     research_access: Callable[[TrustedRequestContext, XeedId, datetime], bool] | None = None,
     research_shared: SharedObservationWorkMemory | None = None,
+    derived_for: DerivedReader | None = None,
 ) -> tuple[TickReport, SubscriberBrainRecomputation]:
     """One daily tick wired to the real subscriber Brain."""
 
-    plans = replay_plans(economic, clock, attention_file, store)
+    plans = replay_plans(economic, clock, attention_file, store, derived_for)
     now = clock.now()
     if research_access is not None:
         enrollment = tuple(e for e in enrollment if research_access(e.context, e.focus_id, now))
@@ -459,6 +465,7 @@ def run_scheduled_tick(
             attention_file=attention_file,
             enrollment=enrollment,
             source_ports=source_ports,
+            derived_for=first_observation_reader(root),
             research_ledger=SqliteResearchRequestLedger(
                 root / "axent-research.sqlite3", runtime_path=root / "observation-runtime.sqlite3"
             ),
@@ -588,16 +595,25 @@ def main(argv: list[str] | None = None) -> None:
         if stale:
             print(json.dumps({"state": "STALE_MATERIALIZATION", "requests": 0}))
             return
+    live_ted = TedSearchAdapter(UrllibTedTransport(), clock=lambda: datetime.now(UTC))
+    # Spec 063: the world demand index answers covered queries without a request; an
+    # uncovered slice is demanded and ingested once after the tick for every Focus.
+    index = SqliteWorldDemandIndex(root / "world-demand-index.sqlite3")
     summary = run_scheduled_tick(
         root=root,
         code_sha=os.getenv("AXIGNAL_CODE_SHA", "UNKNOWN").strip() or "UNKNOWN",
         clock=clock,
         attention_file=Path(attention_file).expanduser().resolve(),
         enrollment=enrollment,
-        source_ports={
-            "ted-search-v3": TedSearchAdapter(UrllibTedTransport(), clock=lambda: datetime.now(UTC))
-        },
+        source_ports={"ted-search-v3": DemandIndexPort(index, live_ted, clock=clock.now)},
     )
+    if summary["state"] not in {"ERROR", "LEASE_LOST"}:
+        ingested = WorldDemandIngestor(
+            feeds={"ted-search-v3": live_ted}, store=index, clock=clock.now
+        ).run()
+        summary["worldDemandSlices"] = [
+            {"slice": r.slice_key, "pages": r.pages, "complete": r.complete} for r in ingested
+        ]
     print(json.dumps(summary))
     if summary["state"] in {"ERROR", "LEASE_LOST"}:
         sys.exit(1)

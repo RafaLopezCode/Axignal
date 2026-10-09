@@ -10,8 +10,8 @@ positive ``AXIGNAL_SEMANTIC_REASONING_CALLS``. Any missing or invalid value retu
 from __future__ import annotations
 
 import os
-from collections.abc import Mapping
-from dataclasses import replace
+from collections.abc import Callable, Mapping
+from dataclasses import dataclass, replace
 from decimal import Decimal, InvalidOperation
 from pathlib import Path
 from typing import Any
@@ -63,14 +63,19 @@ def _luna_price(values: Mapping[str, str], model: str) -> PricePolicy:
     )
 
 
-def semantic_screen_from_env(
-    values: Mapping[str, str] | None = None,
-    *,
-    data_dir: Path | None = None,
-    transport: Any | None = None,
-) -> SemanticDemandScreen | None:
-    """Build the screen from settings; ``transport`` replaces only the network (preflight)."""
-    values = os.environ if values is None else values
+@dataclass(frozen=True, slots=True)
+class _Composed:
+    judge: Any
+    memory: Any
+    escalation: Any
+    prices: tuple[PricePolicy, ...]
+    tokens: int
+    reasoning_calls: int
+
+
+def _compose(
+    values: Mapping[str, str], data_dir: Path | None, transport: Any | None
+) -> _Composed | None:
     if values.get("AXIGNAL_SEMANTIC_LAYER_ENABLED", "false").lower() != "true" or data_dir is None:
         return None
     key_file = _readable(values.get("AXIGNAL_TYPESAFE_API_KEY_FILE", ""))
@@ -109,20 +114,65 @@ def semantic_screen_from_env(
             model=luna_model,
         )
         prices = (*prices, _luna_price(values, luna_model))
+    return _Composed(judge, memory, escalation, prices, tokens, reasoning_calls)
+
+
+def semantic_screen_from_env(
+    values: Mapping[str, str] | None = None,
+    *,
+    data_dir: Path | None = None,
+    transport: Any | None = None,
+) -> SemanticDemandScreen | None:
+    """Build the screen from settings; ``transport`` replaces only the network (preflight)."""
+    composed = _compose(os.environ if values is None else values, data_dir, transport)
+    if composed is None:
+        return None
     budget = SemanticBudget(
-        max_system_one_input_tokens=tokens,
-        max_reasoning_calls=reasoning_calls if escalation is not None else 0,
+        max_system_one_input_tokens=composed.tokens,
+        max_reasoning_calls=composed.reasoning_calls if composed.escalation is not None else 0,
     )
     policy = CascadePolicy(escalable=frozenset({FIT.question_id, DELIVERY.question_id}))
 
     def cascade() -> SemanticCascade:
         return SemanticCascade(
-            judge=judge,
-            ledger=CostLedger(prices=prices),
+            judge=composed.judge,
+            ledger=CostLedger(prices=composed.prices),
             budget=budget,
             policy=policy,
-            memory=memory,
-            escalation=escalation,
+            memory=composed.memory,
+            escalation=composed.escalation,
         )
 
     return SemanticDemandScreen(cascade)
+
+
+def semantic_cascade_factory_from_env(
+    values: Mapping[str, str] | None = None,
+    *,
+    data_dir: Path | None = None,
+    transport: Any | None = None,
+    token_budget: int,
+) -> Callable[[], SemanticCascade] | None:
+    """System One only (no escalable question, zero reasoning calls): First Observation.
+
+    Same judge, judgment memory and prices as the demand screen, so a judgment over the
+    same public state is paid once for every Focus and tenant (spec 062 memory).
+    """
+    composed = _compose(os.environ if values is None else values, data_dir, transport)
+    if composed is None:
+        return None
+    budget = SemanticBudget(
+        max_system_one_input_tokens=min(token_budget, composed.tokens), max_reasoning_calls=0
+    )
+
+    def cascade() -> SemanticCascade:
+        return SemanticCascade(
+            judge=composed.judge,
+            ledger=CostLedger(prices=composed.prices),
+            budget=budget,
+            policy=CascadePolicy(),
+            memory=composed.memory,
+            escalation=None,
+        )
+
+    return cascade

@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import sqlite3
+from collections.abc import Callable
 from datetime import UTC, datetime
 from pathlib import Path
 
@@ -11,6 +12,7 @@ from application.economic_discovery.brain_contracts import ObservationMode, Obse
 from application.economic_discovery.observation_memory import (
     GovernedObservation,
     ObservationAccessMetadata,
+    ObservationAccessStatus,
     ObservationFieldState,
     ObservationMemoryConflict,
     ObservationReuseAuthority,
@@ -242,6 +244,48 @@ class SqliteObservationMemory:
                 ),
             )
         return True
+
+    def purge_first_observation_content(
+        self,
+        *,
+        now: datetime,
+        retain_until: Callable[[str, datetime], datetime | None],
+    ) -> int:
+        """Withdraw raw FO material when rights lapse; keep the historical envelope.
+
+        Raw text becomes an empty non-evidentiary value so readers that require
+        evidence ignore it. The reuse authority is withdrawn atomically.
+        Does not mutate any observation outside the fo: namespace.
+        """
+        restricted = json.dumps(
+            observation_reuse_authority_payload(
+                ObservationReuseAuthority(
+                    access_status=ObservationAccessStatus.INACCESSIBLE,
+                )
+            ),
+            sort_keys=True,
+            separators=(",", ":"),
+            ensure_ascii=False,
+        )
+        purged = 0
+        with self._connect() as connection:
+            connection.execute("BEGIN IMMEDIATE")
+            rows = connection.execute(
+                """SELECT observation_id, source_ref, observed_at FROM observations
+                WHERE observation_id LIKE 'fo:%' AND source_type='PUBLIC_WEBSITE'
+                AND (raw_content != '' OR raw_artifact_ref IS NOT NULL)"""
+            ).fetchall()
+            for identifier, source_ref, observed_at in rows:
+                expiry = retain_until(str(source_ref), datetime.fromisoformat(str(observed_at)))
+                if expiry is not None and expiry > now:
+                    continue
+                connection.execute(
+                    """UPDATE observations SET raw_content='', raw_artifact_ref=NULL,
+                    reuse_json=? WHERE observation_id=?""",
+                    (restricted, identifier),
+                )
+                purged += 1
+        return purged
 
     def access_metadata(
         self,

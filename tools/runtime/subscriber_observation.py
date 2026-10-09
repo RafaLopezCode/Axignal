@@ -12,10 +12,12 @@ from collections.abc import Callable, Mapping
 from dataclasses import dataclass
 from datetime import timedelta
 from pathlib import Path
+from typing import Any
 
 from application.economic_reach.derive import derive_operating_model
 from application.economic_reach.research import prune_research
 from application.economic_reach.summary import GARDEN_TEMPORAL_POLICY, LEXICON_TERMS
+from application.first_observation.derived import derived_capabilities, derived_scopes
 from application.observation_intelligence import (
     EvidenceCoverageMap,
     MarketRole,
@@ -128,6 +130,11 @@ class ConfiguredSubscriberObservationPlanReader:
     #: None keeps the acquisition stop policy (it saves requests). A replay costs no
     #: request, so stopping early would only truncate the projection.
     stop_policy: StopPolicy | None = None
+    #: Spec 063: a Focus's First Observation (POTENTIAL attention scopes and capability
+    #: hypotheses) replaces the operator file when it has no entry for the Organization.
+    derived_for: Callable[[TrustedSubscriberContext, XeedId], Mapping[str, Any] | None] | None = (
+        None
+    )
 
     def observation_plan_for(
         self, context: TrustedSubscriberContext, focus_id: XeedId
@@ -138,7 +145,9 @@ class ConfiguredSubscriberObservationPlanReader:
         configured = next(
             (item for item in self.attention if item.organization_id == organization_id), None
         )
-        if configured is None:
+        derived = None if self.derived_for is None else self.derived_for(context, focus_id)
+        derived_markets = derived_scopes(derived, organization_id)
+        if configured is None and not derived_markets:
             return None
 
         usable = tuple(
@@ -162,15 +171,23 @@ class ConfiguredSubscriberObservationPlanReader:
             observed_at=source.record.observed_at,
         )
         if not capabilities:
+            # Open discovery: hypotheses whose basis cites this Organization's own
+            # observations; the projection re-validates each excerpt before use.
+            capabilities = derived_capabilities(derived, organization_id)
+        if not capabilities:
             return None
 
-        markets = tuple(
-            MarketScope(
-                geo(item.jurisdiction),
-                item.roles,
-                XignalEpistemicState.POTENTIAL,
+        markets = (
+            derived_markets
+            if configured is None
+            else tuple(
+                MarketScope(
+                    geo(item.jurisdiction),
+                    item.roles,
+                    XignalEpistemicState.POTENTIAL,
+                )
+                for item in configured.markets
             )
-            for item in configured.markets
         )
         observation_context = XeedObservationContext(
             xeed_id=str(focus_id),

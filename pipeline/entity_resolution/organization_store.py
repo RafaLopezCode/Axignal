@@ -342,6 +342,15 @@ class SqliteCanonicalOrganizationStore:
             ).fetchone()
         return None if row is None else OrganizationId(str(row[0]))
 
+    def websites_for(self, organization_id: OrganizationId) -> tuple[str, ...]:
+        """Registry-recorded websites of one Organization (official_website keys)."""
+        with self._connect() as connection:
+            rows = connection.execute(
+                "SELECT domain FROM canonical_websites WHERE organization_id = ? ORDER BY domain",
+                (str(organization_id),),
+            ).fetchall()
+        return tuple(str(row[0]) for row in rows)
+
     def organizations_by_name(self, name: str) -> tuple[OrganizationId, ...]:
         """Every live identity whose exact admitted legal name equals ``name``."""
         key = identity_name_key(name)
