@@ -424,6 +424,58 @@ def corpus_from_reading(
                 )
             )
 
+    # Conditioned interpretation is private derived basis, never business truth.
+    understanding = _dict(projection.get("publicUnderstanding"))
+    measured_at = _time(understanding.get("measuredAt"))
+    if measured_at is None or measured_at > as_of:
+        understanding = {}  # Older source text does not backdate a newer interpretation.
+    if understanding and understanding.get("status") != "MEASURED":
+        items.append(
+            _item(
+                "gap:public-offer-understanding",
+                EvidenceKind.GAP,
+                (_F.PRESENCE, _F.VALUE),
+                "Public offer interpretation unavailable: " + _str(understanding.get("cause")),
+                epistemic="UNKNOWN",
+                currentness=_str(understanding.get("currentness")),
+                observed_at=_time(understanding.get("measuredAt")),
+                source_ref=None,
+                source_label="Conditioned public-offer instrument",
+                limits=(
+                    "Instrument failure or acquisition insufficiency is not a business defect.",
+                ),
+            )
+        )
+    elif understanding:
+        citations = {
+            _str(q.get("id")): q for q in map(_dict, _list(understanding.get("citations")))
+        }
+        instrument = _dict(understanding.get("instrument"))
+        for dimension in map(_dict, _list(understanding.get("dimensions"))):
+            for citation_id in map(_str, _list(dimension.get("citationIds"))):
+                quote = citations.get(citation_id)
+                if quote is None:
+                    continue
+                items.append(
+                    _item(
+                        f"public-understanding:{_str(understanding.get('reportId'))}:{_str(dimension.get('dimension'))}:{citation_id}",
+                        EvidenceKind.SIGNAL,
+                        (_F.PRESENCE, _F.VALUE),
+                        f"Public offer {_str(dimension.get('dimension'))}: {_str(dimension.get('state'))}; "
+                        f"{_str(dimension.get('cause'))}. Source quotation: {_str(quote.get('quote'))}",
+                        epistemic="POTENTIAL",
+                        currentness=_str(understanding.get("currentness")),
+                        observed_at=_time(quote.get("observedAt")),
+                        source_ref=_str(quote.get("url")),
+                        source_label=f"{_str(instrument.get('id'))}@{_str(instrument.get('version'))}",
+                        limits=(
+                            "A single conditioned instrument, not population or business truth.",
+                            "Alternative explanations: limited disclosure, sample scope or evaluator error.",
+                            "Proposal (human review only): " + _str(dimension.get("proposal")),
+                        ),
+                    )
+                )
+
     representation = _dict(projection.get("digitalRepresentation"))
     if representation.get("state") == "NOT_MEASURED":
         reason = _dict(representation.get("reason")).get("explanation") or representation.get(

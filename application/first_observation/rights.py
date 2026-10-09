@@ -38,6 +38,8 @@ class ContentRights:
     entry: SourceRegistryEntry | None = None
     provider_input: bool = False
     decided_at: datetime | None = None
+    #: Explicit permission for reviewed offering excerpts, distinct from routing vocabulary.
+    public_offer_input: bool = False
 
     @property
     def reuse_permitted(self) -> bool:
@@ -83,6 +85,7 @@ class ContentRights:
             "reusePermitted": self.reuse_permitted,
             "rawRetentionDays": self.raw_retention_days,
             "providerInput": self.provider_input,
+            "publicOfferInput": self.public_offer_input,
         }
 
 
@@ -114,9 +117,11 @@ class RegisteredContentRights:
         entries: tuple[SourceRegistryEntry, ...],
         *,
         provider_input: frozenset[str] = frozenset(),
+        public_offer_input: frozenset[str] = frozenset(),
     ) -> None:
         self._entries = tuple(e for e in entries if e.source_type == "PUBLIC_WEBSITE")
         self._provider_input = provider_input
+        self._public_offer_input = public_offer_input
 
     def rights_for(self, website: str, *, now: datetime) -> ContentRights:
         parts = urlsplit(website if "://" in website else "https://" + website)
@@ -144,5 +149,7 @@ class RegisteredContentRights:
         return ContentRights(
             entry=entry,
             provider_input=rights.reuse_permitted and entry.source_id in self._provider_input,
+            public_offer_input=rights.reuse_permitted
+            and entry.source_id in self._public_offer_input,
             decided_at=now,
         )

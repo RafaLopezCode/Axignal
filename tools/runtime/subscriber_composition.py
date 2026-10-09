@@ -53,7 +53,9 @@ from application.subscriber_projection.subscriber_runtime import (
     SubscriberEconomicExecutionPlan,
     SubscriberEconomicRuntime,
     SubscriberObservationLoopExecutionPlan,
+    SubscriberRuntimeRead,
 )
+from application.xeed_access.reader import TrustedRequestContext
 from domain.admin_billing.checkout_binding import ApprovedOfferCatalogue
 from domain.evidence.epistemics import Currentness
 from domain.identity import TenantId, XeedId
@@ -677,6 +679,52 @@ class _SubscriberWorkflow(SubscriberWorkflowPort):
         return {"state": "rejected", "code": "NOT_READY"}
 
 
+class _SubscriberUnderstandingReading:
+    """Add tenant-private conditioned basis only after the economic read authorizes."""
+
+    def __init__(
+        self,
+        economic: SubscriberEconomicRuntime,
+        portfolio: SubscriberPortfolioRuntime,
+        observing: FirstObservationRuntime | None,
+    ):
+        self._economic = economic
+        self._portfolio = portfolio
+        self._observing = observing
+
+    def read(
+        self, context: TrustedRequestContext, focus_id: XeedId, as_of: datetime
+    ) -> SubscriberRuntimeRead:
+        reading = self._economic.read(context, focus_id, as_of)
+        if self._observing is None:
+            return reading
+        entry = self._portfolio.store.get_authorized(context, focus_id)
+        if entry is None:
+            raise PortfolioError(PortfolioFailure.FOCUS_NOT_FOUND)
+        view = self._observing.view(context, str(focus_id), str(entry.xeed.organization_id))
+        report = None if view is None else view.get("publicUnderstanding")
+        if not isinstance(report, dict):
+            return reading
+        # Interpretation has its own knowledge time, later than source acquisition.
+        # An earlier cut must not reveal a future judgment over an older quotation.
+        eligible = [
+            r
+            for r in [report, *report.get("history", [])]
+            if datetime.fromisoformat(str(r["measuredAt"])) <= as_of
+        ]
+        if not eligible:
+            return reading
+        from application.first_observation.understanding import compare
+
+        selected, *history = eligible
+        selected = {k: v for k, v in selected.items() if k not in {"history", "comparison"}}
+        selected["history"] = history
+        selected["comparison"] = compare(selected, history[0]) if history else None
+        return SubscriberRuntimeRead(
+            reading.status, {**reading.projection, "publicUnderstanding": selected}, reading.reason
+        )
+
+
 class _SubscriberOutputs(SubscriberOutputPort):
     def __init__(
         self,
@@ -988,7 +1036,10 @@ def build_subscriber_facade(
         # AXENT answers through the same authorized read; without a reasoner it stays
         # deterministic or extractive and never calls a model.
         axent=build_subscriber_axent(
-            reader=economic, clock=effective_clock.now, data_dir=root, reasoner=axent_reasoner
+            reader=_SubscriberUnderstandingReading(economic, portfolio, first_observation),
+            clock=effective_clock.now,
+            data_dir=root,
+            reasoner=axent_reasoner,
         ),
         available_providers=frozenset(
             provider.value.casefold()

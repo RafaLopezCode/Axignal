@@ -48,6 +48,17 @@ export function SubscriberReading({ projection, revision }: { projection: Runtim
     setAxentOpen(true);
     window.requestAnimationFrame(() => document.getElementById(id)?.focus());
   }
+  function focusPublicUnderstanding(reportId: string) {
+    const target = document.getElementById(`pu-${reportId}`);
+    if (!target) return;
+    let disclosure = target.closest("details");
+    while (disclosure) {
+      disclosure.open = true;
+      disclosure = disclosure.parentElement?.closest("details") ?? null;
+    }
+    target.focus();
+    target.scrollIntoView({ block: "center" });
+  }
   function focusEvidence() {
     focusSignal(focusedSignalId ?? projection.nodes[0]?.id ?? null);
   }
@@ -66,7 +77,7 @@ export function SubscriberReading({ projection, revision }: { projection: Runtim
   </div>{readingNodes.map(node => plan?.intent === "evidence" ? <div key={node.id}><RuntimeEvidenceJourney signal={node} organizationName={projection.organization.name}/><button type="button" className="text-link" onClick={() => focusSignal(node.id)}>{t("Enfocar esta señal en AXENT", "Focus this signal in AXENT")}</button></div> : <RuntimeSignalReading key={node.id} signal={node} organizationName={projection.organization.name} onFocusSignal={() => focusSignal(node.id)}/>)}
   <details className="subscriber-axent" open={axentOpen} onToggle={event => setAxentOpen(event.currentTarget.open)}>
     <summary className="text-link">{t("Preguntar a AXENT en este contexto", "Ask AXENT in this context")}</summary>
-    <RuntimeAxent projection={projection} signalId={focusedSignalId} onEvidence={focusEvidence} onSignal={focusSignal} conversation={axent} focusLabel={t("Lectura de suscripción", "Subscriber reading")}/>
+    <RuntimeAxent projection={projection} signalId={focusedSignalId} onEvidence={focusEvidence} onSignal={focusSignal} onPublicUnderstanding={focusPublicUnderstanding} conversation={axent} focusLabel={t("Lectura de suscripción", "Subscriber reading")}/>
   </details>
   </div>;
 }

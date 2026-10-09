@@ -105,6 +105,7 @@ class SiteReading:
     #: World-level content may be kept and reused until then (governed rights only);
     #: None means the reading holds no content, only fingerprints for change detection.
     shared_until: datetime | None = None
+    perception_coverage: str = "NOT_REQUESTED"
 
     @property
     def content_retained(self) -> bool:
@@ -115,7 +116,7 @@ class SiteReading:
         return SiteReading(
             self.origin, self.observed_at, self.robots,
             tuple(page.metadata_only() for page in self.pages), self.failure,
-            self.unchanged_streak, None,
+            self.unchanged_streak, None, self.perception_coverage,
         )  # fmt: skip
 
     @property
@@ -132,6 +133,7 @@ class SiteReading:
             "pages": [page.to_wire() for page in self.pages],
             "failure": self.failure,
             "unchangedStreak": self.unchanged_streak,
+            "perceptionCoverage": self.perception_coverage,
             "sharedUntil": None if self.shared_until is None else self.shared_until.isoformat(),
         }
 
@@ -150,6 +152,7 @@ class SiteReading:
             pages=tuple(PageReading.from_wire(p) for p in raw["pages"]),
             failure=None if raw.get("failure") is None else str(raw["failure"]),
             unchanged_streak=int(raw.get("unchangedStreak", 0)),
+            perception_coverage=str(raw.get("perceptionCoverage", "NOT_REQUESTED")),
             shared_until=None
             if raw.get("sharedUntil") is None
             else datetime.fromisoformat(str(raw["sharedUntil"])),
@@ -289,6 +292,7 @@ class FirstProof:
     #: Citations (excerpts) in this private proof are removed after this time.
     retain_until: datetime | None = None
     rights: Mapping[str, object] = field(default_factory=dict)
+    understanding: Mapping[str, object] | None = None
 
     def to_wire(self) -> dict[str, object]:
         return {
@@ -307,6 +311,7 @@ class FirstProof:
             "observedAt": self.observed_at.isoformat(),
             "nextDueAt": None if self.next_due_at is None else self.next_due_at.isoformat(),
             "retainUntil": None if self.retain_until is None else self.retain_until.isoformat(),
+            "publicUnderstanding": None if self.understanding is None else dict(self.understanding),
             "rights": dict(self.rights),
             "authority": "OPERATIONAL_NOT_CANONICAL",
         }

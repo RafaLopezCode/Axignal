@@ -39,6 +39,7 @@ class FirstObservationPolicy:
     research_budget: ObservationBudget = _RESEARCH_BUDGET
     research_stop: StopPolicy = _RESEARCH_STOP
     #: Semantic tokens one First Observation may spend (System One input, estimated).
+    public_understanding: bool = False
     semantic_tokens: int = 12_000
     max_attempts: int = 3
     lease_seconds: int = 300

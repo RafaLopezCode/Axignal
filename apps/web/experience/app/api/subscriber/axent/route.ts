@@ -3,6 +3,7 @@ import { boundedSubscriberJson, subscriberAxent, subscriberProxy, subscriberSame
 import { subscriberOutputSchema } from "@/lib/subscriber-contracts";
 import { cognitiveReadingPlan, cognitiveReadingRequestSchema } from "@/lib/subscriber-presentation";
 import { explainRuntime } from "@/lib/runtime-axent";
+import { understandingReportReference } from "@/lib/public-understanding-contracts";
 import { runtimeFactsAt } from "@/lib/cognition/runtime-facts";
 
 export const runtime = "nodejs";
@@ -43,6 +44,14 @@ export async function POST(request: Request) {
         })
       : null;
     const answer = grounded ? (grounded as unknown as ReturnType<typeof explainRuntime>) : explainRuntime(projection, input.prompt, input.signalId, input.locale);
+    if (grounded && output.firstObservation?.publicUnderstanding) {
+      const report = output.firstObservation.publicUnderstanding;
+      const references = answer.signalIds.map(ref => understandingReportReference(ref, report));
+      const reportId = references.find(ref => ref !== null);
+      // Derived report citations have their own destination; canonical plan refs stay closed.
+      answer.signalIds = answer.signalIds.filter((_ref, i) => references[i] === null);
+      if (reportId) answer.publicUnderstandingReportId = reportId;
+    }
     const plan = input.cognition ? cognitiveReadingPlan(output.projection, input.cognition) : null;
     if (input.cognition) {
       const facts = runtimeFactsAt(output.projection, input.cognition.family, input.cognition.asOf);

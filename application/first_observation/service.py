@@ -217,6 +217,8 @@ class FirstObservationService:
         now: datetime,
         ledger: RunLedger,
         rights: ContentRights | None = None,
+        *,
+        force_refresh: bool = False,
     ) -> SiteReading:
         """The website's pages for this run; what is *kept* depends on governed rights.
 
@@ -237,10 +239,12 @@ class FirstObservationService:
                 known = known.without_content()
                 self._sites.save_site(known)
         if (
-            known is not None
+            not force_refresh
+            and known is not None
             and known.failure is None
             and known.content_retained
             and now - known.observed_at <= policy.site_reuse_for
+            and (not policy.public_understanding or known.perception_coverage != "NOT_REQUESTED")
         ):
             ledger.site_reuse_hits += 1
             ledger.requests_avoided += 1 + len(known.pages)  # ESTIMATED counterfactual
@@ -276,10 +280,12 @@ class FirstObservationService:
             return self._failed(key, now, robots, "HOMEPAGE_UNAVAILABLE", ledger, known)
         pages = [home]
         streak = 0
+        coverage = "BOUNDED_COMPLETE" if policy.public_understanding else "NOT_REQUESTED"
         if (
             known is not None
             and known.content_retained
             and known.pages
+            and not policy.public_understanding
             and known.pages[0].content_fingerprint == (home.content_fingerprint)
         ):
             pages += list(known.pages[1:])
@@ -291,17 +297,25 @@ class FirstObservationService:
                 activity_known=bool(deterministic_activity([home])),
                 location_known=bool(declared_scopes([home]) or home.areas_served),
             )
+            if policy.public_understanding:
+                needs = tuple(dict.fromkeys(("ACTIVITY", "ABOUT", *needs)))
             if not needs:
                 ledger.decide("SKIPPED:EXTRA_PAGES:ACTIVITY_AND_LOCATION_EVIDENCED")
             links = rank_information_links(home, needs, limit=policy.max_extra_pages)
             if needs and not links:
                 ledger.decide("SKIPPED:EXTRA_PAGES:NO_INFORMATION_LINK")
+            if policy.public_understanding and len(
+                rank_information_links(home, needs, limit=3)
+            ) > len(links):
+                coverage = "INCOMPLETE"
             for url, need in links:
                 # Reserve the worst case (redirects included) before spending.
                 if ledger.http_requests + policy.requests_per_fetch > policy.max_site_requests:
+                    coverage = "INCOMPLETE"
                     ledger.decide("STOPPED:SITE_REQUEST_BUDGET")
                     break
                 if not robots.allows(url):
+                    coverage = "INCOMPLETE"
                     ledger.decide(f"SKIPPED:ROBOTS:{need}")
                     continue
                 page = self._page(
@@ -310,8 +324,11 @@ class FirstObservationService:
                 if page is not None:
                     pages.append(page)
                     ledger.decide(f"FETCHED:{need}")
+                else:
+                    coverage = "INCOMPLETE"
+                    ledger.decide(f"FAILED:ACQUISITION:{need}")
         reading = SiteReading(
-            key, now, robots, tuple(pages), None, streak, rights.shared_until(now)
+            key, now, robots, tuple(pages), None, streak, rights.shared_until(now), coverage
         )
         # Without governed rights only fingerprints and robots are kept (ADR-0015).
         self._sites.save_site(reading if reading.content_retained else reading.without_content())
@@ -384,7 +401,7 @@ class FirstObservationService:
         return interpret_activity(plan, outcome, pages, model=cascade.judge.model)
 
     # ---- the whole First Observation ---------------------------------------------------
-    def observe(self, target: AttentionTarget) -> FirstProof:
+    def observe(self, target: AttentionTarget, *, force_refresh: bool = False) -> FirstProof:
         started = time.monotonic()
         now = self._clock()
         ledger = RunLedger()
@@ -421,7 +438,7 @@ class FirstObservationService:
                 started, now, site=None, activity_known=False,
             )  # fmt: skip
         rights = self._rights.rights_for(target.website, now=now)
-        reading = self.read_site(target.website, now, ledger, rights)
+        reading = self.read_site(target.website, now, ledger, rights, force_refresh=force_refresh)
         if reading.failure is not None or not reading.pages:
             unknown = Discovery(
                 DiscoveryKind.SIGNIFICANT_UNKNOWN,
@@ -437,6 +454,9 @@ class FirstObservationService:
                 target, ObservationState.SOURCE_UNAVAILABLE, (unknown, *identity), ledger,
                 started, now, site=reading, activity_known=False, unavailable=True,
             )  # fmt: skip
+        # Evidence acquired during this run must precede its evaluation as-of.
+        # Using the job start would exclude freshly admitted pages as future evidence.
+        now = self._clock()
         pages = reading.pages
         deterministic = deterministic_activity(pages)
         premises = declared_scopes(pages)
@@ -892,6 +912,20 @@ class FirstObservationService:
         methods: Mapping[str, ActivityFinding] | None = None,
         rights: ContentRights | None = None,
     ) -> FirstProof:
+        understanding = None
+        if self.policy.public_understanding:
+            from application.first_observation.understanding import measure
+
+            grant = rights or NO_RIGHTS
+            understanding = measure(
+                site,
+                now=now,
+                rights=grant,
+                rights_for=lambda url: self._rights.rights_for(url, now=now),
+                cascade_factory=self._cascade_factory,
+                ledger=ledger,
+                token_budget=max(0, self.policy.semantic_tokens - ledger.jev_input_tokens),
+            )
         ledger.elapsed_ms = int((time.monotonic() - started) * 1000)
         return FirstProof(
             target=target,
@@ -916,6 +950,7 @@ class FirstObservationService:
             ),
             retain_until=(rights or NO_RIGHTS).private_until(now),
             rights=(rights or NO_RIGHTS).to_wire(),
+            understanding=understanding,
         )
 
 
