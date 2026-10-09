@@ -12,7 +12,6 @@ time, retain no raw body, share no content across tenants, send nothing to a pro
 
 from __future__ import annotations
 
-from collections.abc import Mapping
 from dataclasses import dataclass
 from datetime import datetime, timedelta
 from typing import Protocol
@@ -23,7 +22,9 @@ from application.economic_discovery.observation_memory import (
     ObservationReuseScope,
     ObservationRightsStatus,
 )
+from application.economic_discovery.observation_reuse import ReusePurpose
 from application.economic_discovery.source_registry import SourceRegistryEntry
+from domain.evidence.epistemics import Currentness
 
 RIGHTS_POLICY_VERSION = "first-observation-content-rights.v1"
 #: Tenant-private citations kept in a First Proof when no rights decision exists.
@@ -46,6 +47,8 @@ class ContentRights:
             and entry.rights_status is ObservationRightsStatus.PERMITTED
             and entry.access_status is ObservationAccessStatus.ACCESSIBLE
             and entry.reuse_scope is ObservationReuseScope.GLOBAL_PUBLIC
+            and entry.currentness is Currentness.CURRENT
+            and ReusePurpose.CURRENT_STATE in entry.allowed_purposes
         )
 
     @property
@@ -112,21 +115,34 @@ class RegisteredContentRights:
         *,
         provider_input: frozenset[str] = frozenset(),
     ) -> None:
-        self._by_host: Mapping[str, SourceRegistryEntry] = {
-            target.host.lower().removeprefix("www."): entry
-            for entry in entries
-            if entry.source_type == "PUBLIC_WEBSITE"
-            for target in entry.targets
-        }
+        self._entries = tuple(e for e in entries if e.source_type == "PUBLIC_WEBSITE")
         self._provider_input = provider_input
 
     def rights_for(self, website: str, *, now: datetime) -> ContentRights:
-        host = _host(website).removeprefix("www.")
-        entry = self._by_host.get(host)
+        parts = urlsplit(website if "://" in website else "https://" + website)
+        host = (parts.hostname or "").lower()
+        path = parts.path or "/"
+        scheme = parts.scheme or "https"
+        matches = (
+            entry
+            for entry in self._entries
+            if any(
+                host == target.host.rstrip(".").lower()
+                and scheme in target.schemes
+                and (
+                    target.path_prefix == "/"
+                    or path == target.path_prefix.rstrip("/")
+                    or path.startswith(target.path_prefix.rstrip("/") + "/")
+                )
+                for target in entry.targets
+            )
+        )
+        entry = next(matches, None)
         if entry is None:
             return ContentRights(decided_at=now)
+        rights = ContentRights(entry=entry, decided_at=now)
         return ContentRights(
             entry=entry,
-            provider_input=entry.source_id in self._provider_input,
+            provider_input=rights.reuse_permitted and entry.source_id in self._provider_input,
             decided_at=now,
         )

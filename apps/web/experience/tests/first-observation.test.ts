@@ -78,5 +78,5 @@ test("a provider's confidence is never shown as a percentage or a probability of
   const text = rows.map(([label, value]) => `${label} ${value}`).join(" | ");
   assert.ok(!/%|0\.91|91/.test(text), text);
   assert.match(text, /non-authoritative judgment, not a probability of truth/);
-  assert.match(text, /Text judged/);  // the cited text is what was judged, not a proof quote
+  assert.match(text, /Source excerpt/);  // the original source excerpt is distinct from the controlled tokens judged by JEV
 });

@@ -80,7 +80,8 @@ Reading it:
   2–4 HTTP requests; the other two end in grounded UNKNOWNs (`ACTIVITY_NOT_ESTABLISHED`,
   robots refusal) instead of silence.
 * Optimized, semantic layer on: the Arkansas school becomes First Proof with one System One
-  call (1,188 estimated input tokens ≈ USD 0.00005 at the published price) and an explicit
+  call (1,113 estimated input tokens ≈ USD 0.0000467 at the published price, after input
+  minimization to controlled routing vocabulary) and an explicit
   `NO_GOVERNED_DEMAND_SOURCE` for Arkansas; the placeholder site costs one call and is
   identified as not an operating business. Luna: 0 everywhere.
 * Production default, no content rights registered: the private observation still reaches

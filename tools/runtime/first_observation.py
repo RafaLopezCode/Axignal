@@ -18,7 +18,7 @@ import json
 import threading
 from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass
-from datetime import datetime
+from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Any, Protocol
 from urllib.parse import urlsplit
@@ -78,6 +78,7 @@ from application.xeed_access.reader import TrustedRequestContext
 from domain.evidence.epistemics import Currentness
 from domain.identity import OrganizationId, PrincipalId, TenantId, XeedId
 from pipeline.first_observation.sqlite_store import SqliteFirstObservationStore
+from pipeline.observation_memory.sqlite_store import SqliteObservationMemory
 from tools.runtime.subscriber_portfolio import SubscriberPortfolioRuntime
 
 ENABLED_KEY = "AXIGNAL_FIRST_OBSERVATION_ENABLED"
@@ -337,7 +338,9 @@ class FirstObservationRuntime:
         daily_jobs: int = 500,
         tenant_daily_jobs: int = 20,
         ingestor: WorldDemandIngestor | None = None,
+        purge_canonical_raw: Callable[[datetime], int] | None = None,
     ) -> None:
+        self._purge_canonical_raw = purge_canonical_raw
         self.ingestor = ingestor
         self.store = store
         self.service = service
@@ -524,7 +527,11 @@ class FirstObservationRuntime:
 
     def purge(self) -> dict[str, int]:
         """Retention enforcement for First Observation's own stores."""
-        return self.store.purge(now=self._clock.now())
+        now = self._clock.now()
+        result = self.store.purge(now=now)
+        if self._purge_canonical_raw is not None:
+            result["canonicalRaw"] = self._purge_canonical_raw(now)
+        return result
 
     def enqueue_due(self) -> int:
         now = self._clock.now()
@@ -613,32 +620,56 @@ class FirstObservationRuntime:
 RIGHTS_FILE_KEY = "AXIGNAL_FIRST_OBSERVATION_CONTENT_RIGHTS_FILE"
 
 
-def load_content_rights(values: Mapping[str, str]) -> ContentRightsPolicy:
-    """Operator-registered website content rights (governed registry entries); none by default.
+class ReloadingContentRights:
+    """Operator rights can be revoked without restarting the observation worker."""
 
-    Each entry names one website host, the rights basis the operator holds, its raw and
-    metadata retention, and whether page text may be sent to a semantic provider. Any
-    invalid file fails closed to no rights.
-    """
+    def __init__(self, path: Path) -> None:
+        self._path = path
+        self._lock = threading.Lock()
+        self._signature: tuple[int, int] | None = None
+        self._policy: ContentRightsPolicy = NoContentRights()
+
+    def rights_for(self, website: str, *, now: datetime) -> ContentRights:
+        with self._lock:
+            try:
+                stat = self._path.stat()
+                signature = (stat.st_mtime_ns, stat.st_size)
+            except OSError:
+                self._signature = None
+                self._policy = NoContentRights()
+                return self._policy.rights_for(website, now=now)
+            if self._signature != signature:
+                # A partially written or invalid file fails closed until repaired.
+                policy: ContentRightsPolicy = NoContentRights()
+                try:
+                    raw = json.loads(self._path.read_text(encoding="utf-8"))
+                    if not isinstance(raw, list):
+                        raise ValueError("rights file must be a list")
+                    entries, provider = [], set()
+                    for item in raw:
+                        entry = website_rights_entry(
+                            host=str(item["host"]),
+                            basis=str(item["rightsBasis"]),
+                            raw_retention_days=int(item["rawRetentionDays"]),
+                            metadata_retention_days=int(item["metadataRetentionDays"]),
+                        )
+                        entries.append(entry)
+                        if item.get("providerInput") is True:
+                            provider.add(entry.source_id)
+                    policy = RegisteredContentRights(
+                        tuple(entries), provider_input=frozenset(provider)
+                    )
+                except (OSError, ValueError, KeyError, TypeError):
+                    pass
+                self._signature = signature
+                self._policy = policy
+            return self._policy.rights_for(website, now=now)
+
+
+def load_content_rights(values: Mapping[str, str]) -> ContentRightsPolicy:
+    """Live operator registry, fail-closed on deletion or invalid configuration."""
     path = values.get(RIGHTS_FILE_KEY, "").strip()
-    if not path:
-        return NoContentRights()
-    try:
-        raw = json.loads(Path(path).read_text(encoding="utf-8"))
-        entries, provider = [], set()
-        for item in raw:
-            entry = website_rights_entry(
-                host=str(item["host"]),
-                basis=str(item["rightsBasis"]),
-                raw_retention_days=int(item["rawRetentionDays"]),
-                metadata_retention_days=int(item["metadataRetentionDays"]),
-            )
-            entries.append(entry)
-            if item.get("providerInput") is True:
-                provider.add(entry.source_id)
-        return RegisteredContentRights(tuple(entries), provider_input=frozenset(provider))
-    except (OSError, ValueError, KeyError, TypeError):
-        return NoContentRights()
+    return ReloadingContentRights(Path(path)) if path else NoContentRights()
 
 
 def website_rights_entry(
@@ -742,6 +773,7 @@ def build_first_observation(
     ingestor = WorldDemandIngestor(
         feeds={k: v for k, v in feeds.items() if k in ports}, store=index, clock=clock.now
     )
+    rights_policy = overrides.rights or load_content_rights(values)
     factory = overrides.cascade_factory or semantic_cascade_factory_from_env(
         values, data_dir=root, token_budget=policy.semantic_tokens
     )
@@ -758,7 +790,7 @@ def build_first_observation(
         cascade_factory=factory or (lambda: None),
         clock=clock.now,
         policy=policy,
-        rights=overrides.rights or load_content_rights(values),
+        rights=rights_policy,
     )
     try:
         daily_jobs = int(values.get(DAILY_JOBS_KEY, "500"))
@@ -774,6 +806,19 @@ def build_first_observation(
         worker=overrides.worker or values.get(WORKER_KEY, "thread").strip() or "thread",
         daily_jobs=max(0, daily_jobs),
         ingestor=ingestor,
+        purge_canonical_raw=(
+            lambda at: observation_memory.purge_first_observation_content(
+                now=at,
+                retain_until=lambda url, observed: (
+                    observed + timedelta(days=grant.raw_retention_days)
+                    if (grant := service._rights.rights_for(url, now=at)).reuse_permitted
+                    and grant.raw_retention_days > 0
+                    else None
+                ),
+            )
+        )
+        if isinstance(observation_memory, SqliteObservationMemory)
+        else None,
     )
     runtime.start()
     return runtime

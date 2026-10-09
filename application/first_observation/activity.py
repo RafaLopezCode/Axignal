@@ -12,10 +12,9 @@ from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
 from datetime import datetime
 from enum import StrEnum
-from urllib.parse import urlsplit
 
 from application.economic_discovery.brain_contracts import SemanticPrimitive
-from application.first_observation.geography import jurisdiction, mentioned_places
+from application.first_observation.geography import jurisdiction, mentioned_places, place_words
 from application.first_observation.site import PageReading
 from application.first_observation.vocabularies import (
     CPV_DIVISIONS,
@@ -242,83 +241,75 @@ class ActivityBatchPlan:
     place_candidates: tuple[tuple[TaxonomyCode, str, str, str], ...]  # place, name, url, line
 
 
-_EMAIL = re.compile(r"[\w.+-]+@[\w-]+\.[\w.-]+")
-_PHONE = re.compile(r"\+?\d[\d ().-]{6,}\d")
-#: Pages about people or legal persons' particulars never reach an evaluator.
-_PEOPLE_PATH = re.compile(
-    r"contact|kontakt|contatt|contato|impressum|aviso-legal|legal|privacy|privacidad"
-    r"|team|equipo|staff|people|personas|our-people|nuestro-equipo|mitarbeiter|careers|empleo",
-    re.I,
+# Evaluator input is a bounded **routing signal projection**, not an excerpt.
+# A free-text regex cannot guarantee that single-token or lowercase personal names
+# are absent. Every emitted term comes from this developer-controlled vocabulary.
+# The actual source text remains only in the tenant's governed observation context.
+_ROUTING_TERMS = (
+    frozenset(
+        """
+    language languages school schools classes courses course education educational
+    teaching teachers training lessons learn studio students adults kids children
+    software cloud invoicing bookkeeping accounting banking payments finance
+    solar photovoltaic panels electricity electrical renewable energy construction
+    maintenance heating ventilation cooling hvac industrial manufacturing
+    retail wholesale repair repairs products services service installation
+    installations installing logistics transport agriculture farming food
+    marketing advertising communication consulting consultancy agency design
+    digital online remote premises location located operates operating located
+    consumer consumers clients customer customers business businesses public
+    government government procurement supplies supplies sale selling delivery
+    shipped offers provides provision for at in from to and or with
+    small medium large local national international website
+    coming soon under construction placeholder
+    little rock
+    """.split()  # noqa: SIM905
+    )
+    | place_words()
+    | frozenset(
+        token
+        for labels in (ISIC_SECTIONS, CPV_DIVISIONS, NAICS_SECTORS)
+        for label in labels.values()
+        for token in re.findall(r"[a-z]{3,}", label.casefold())
+    )
 )
-_UPPER = r"[A-ZÀ-ÖØ-ÞĀ-Ž]"
-_APOSTROPHES = "'\u2019"  # straight and typographic apostrophes (O'Brien)
-_WORD = rf"{_UPPER}[\w{_APOSTROPHES}-]+"
-_HONORIFIC = re.compile(
-    rf"\b(?:Mr|Mrs|Ms|Mx|Dr|Dra|Prof|Sr|Sra|Srta|Dña|Don|Doña|Herr|Frau|Mme|Mlle|Sig|Sig\.ra)"
-    rf"\.?\s+{_WORD}(?:\s+{_WORD})*"
-)
-_ROLE = re.compile(
-    # Only the role words are case-insensitive: the name that follows must be capitalized.
-    rf"\b(?i:by|por|con|with|founder|founded by|fundad[oa] por|fundador[a]?|owner|"
-    rf"propietari[oa]|director[a]?|ceo|gerente|manager|chef|teacher|profesor[a]?)\s+"
-    rf"{_WORD}(?:\s+{_WORD})*",
-)
-_CAPITALIZED_RUN = re.compile(rf"{_WORD}(?:\s+{_WORD})+")
-
-
-def _allowed_words(pages: Sequence[PageReading]) -> frozenset[str]:
-    """Words that may stay capitalized: the organization's own declared names (title,
-    JSON-LD names, schema types) and listed place names. Everything else that looks like
-    a proper name is replaced before transmission."""
-    from application.first_observation.geography import place_words
-
-    words: set[str] = set(place_words())
-    for page in pages:
-        for text in (page.title, *page.names, *page.legal_names, *page.schema_types):
-            words.update(w.casefold() for w in re.findall(rf"[\w{_APOSTROPHES}-]+", text))
-    return frozenset(words)
+_SAFE_WORD = re.compile(r"[^\W\d_]+", re.UNICODE)
 
 
 def minimize(text: str, allowed: frozenset[str] = frozenset()) -> str:
-    """Data minimization for evaluator state (ADR-0090 §5).
+    """Emit only fixed non-identifying economic vocabulary; never forward source text.
 
-    Removes e-mail addresses, phone numbers, honorific + name, role + name, and runs of
-    capitalized words that are neither the organization's own name nor a listed place.
-    It errs towards removing: a lost word costs a little recall, a leaked name costs rights.
+    A person's name, e-mail, phone, URL, username or unexpected token is incapable
+    of leaving this boundary. The output is not a complete rendering of the page.
     """
-
-    text = _PHONE.sub("[phone]", _EMAIL.sub("[email]", text))
-    text = _HONORIFIC.sub("[person]", text)
-    text = _ROLE.sub(lambda m: m.group(0).split()[0] + " [person]", text)
-
-    def proper(match: re.Match[str]) -> str:
-        words = match.group(0).split()
-        if all(w.casefold().strip(_APOSTROPHES + "-") in allowed for w in words):
-            return match.group(0)
-        return "[name]"
-
-    return _CAPITALIZED_RUN.sub(proper, text)
+    del allowed
+    tokens = [
+        token
+        for match in _SAFE_WORD.finditer(text.casefold())
+        if (token := match.group()) in _ROUTING_TERMS
+    ]
+    return " ".join(tokens)[:STATE_CHARS_PER_PAGE]
 
 
-def person_free(text: str) -> str:  # kept for callers; the full boundary is ``minimize``
+def person_free(text: str) -> str:
     return minimize(text)
 
 
 def _state(origin: str, pages: Sequence[PageReading]) -> dict[str, object]:
-    readable = [p for p in pages if not _PEOPLE_PATH.search(urlsplit(p.url).path)] or pages[:1]
-    allowed = _allowed_words(readable)
+    del origin
     return {
-        "site": origin,
+        "representation": "controlled economic terms, not complete page text",
+        "site": "[site]",
         "pages": [
             {
-                "url": page.url,
-                "title": minimize(page.title, allowed),
-                "description": minimize(page.description, allowed),
-                "headings": [minimize(h, allowed) for h in page.headings[:8]],
-                "services": [minimize(x, allowed) for x in page.services[:12]],
-                "text": minimize(page.text[:STATE_CHARS_PER_PAGE], allowed),
+                "url": f"[page-{index}]",
+                "title": minimize(page.title),
+                "description": minimize(page.description),
+                "headings": [minimize(h) for h in page.headings[:8]],
+                "services": [minimize(x) for x in page.services[:12]],
+                "text": minimize(page.text[:STATE_CHARS_PER_PAGE]),
             }
-            for page in readable
+            for index, page in enumerate(pages, 1)
         ],
     }
 

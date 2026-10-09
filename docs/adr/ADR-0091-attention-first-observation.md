@@ -100,10 +100,11 @@ unresolved identity.
      reuse. Seeds carry the entry's rights, scope, provenance and retention references.
    * Private First Proof citations are kept for at most the entry's raw retention or 30 days
      without one, then removed (`contentExpiredAt`).
-   * Evaluator input needs an explicit input-rights decision (ADR-0090 §5) and is minimized:
-     pages about people, contact or legal particulars are excluded; e-mails, phone numbers,
-     honorific or role + name, and capitalized name runs that are neither the organization's
-     declared names nor listed places are replaced before transmission.
+   * Evaluator input needs an explicit input-rights decision (ADR-0090 §5). In this
+     routing-only slice it receives a bounded projection of developer-controlled economic
+     terms and listed places, never original free text, URLs, page titles or names.
+     Such a projection is not a complete measure of public comprehension and may omit
+     useful context; the future perceptual product must evaluate that limitation separately.
    * Provider confidence is kept in the authorized trace and never shown to subscribers as a
      number (ADR-0047: not a probability of truth).
 

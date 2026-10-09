@@ -130,7 +130,7 @@ function sourceName(url: string): string {
 export function basisRows(d: Discovery, t: Translate, locale: string): Array<[string, string]> {
   const rows: Array<[string, string]> = [];
   const detail = d.detail;
-  if (d.excerpt) rows.push([detail.method === "SEMANTIC_JUDGMENT" ? t("Texto evaluado", "Text judged") : t("Cita exacta", "Exact quote"), `“${d.excerpt}”`]);
+  if (d.excerpt) rows.push([detail.method === "SEMANTIC_JUDGMENT" ? t("Extracto de la fuente", "Source excerpt") : t("Cita exacta", "Exact quote"), `“${d.excerpt}”`]);
   if (typeof detail.method === "string") rows.push([t("Método", "Method"), detail.method]);
   if (typeof detail.instrument === "string") rows.push([t("Instrumento", "Instrument"), detail.instrument]);
   if (typeof detail.model === "string") rows.push([t("Evaluador", "Evaluator"), `${detail.model} · ${t("juicio no autoritativo, no es una probabilidad de verdad", "non-authoritative judgment, not a probability of truth")}`]);

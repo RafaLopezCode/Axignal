@@ -266,7 +266,9 @@ class FirstObservationService:
         target = website if "://" in website else "https://" + website
         if not robots.allows(target):
             return self._failed(key, now, robots, "ROBOTS_DISALLOWED", ledger, None)
-        retain = rights.raw_retention_days > 0
+        # Parsed content has its own governed store; a second retained HTTP body
+        # cannot be expired or revoked with that store. Do not persist raw blobs.
+        retain = False
         home = self._page(
             self._fetch(target, "website", ledger, retain_body=retain), robots, ledger
         )

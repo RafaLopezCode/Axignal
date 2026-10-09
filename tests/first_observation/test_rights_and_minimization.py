@@ -116,6 +116,8 @@ def test_retention_expires_shared_text_and_private_citations(tmp_path: Path) -> 
     facade = build(tmp_path, world)
     token, _ = _attend(facade, tmp_path, "subject:expiry", SOLAR_ES)
     runtime(facade).drain()
+    # Even with reuse rights, the service never persists duplicate raw HTTP bodies.
+    assert world.sites.retained and not any(world.sites.retained)
     pending = _pending_id(facade, token)
     assert any(d["excerpt"] for d in _view(facade, token, pending)["discoveries"])
     purged = runtime(facade).store.purge(now=datetime.now(UTC) + timedelta(days=400))
@@ -180,7 +182,9 @@ def test_evaluator_state_is_minimized_and_excludes_pages_about_people(
     state = json.dumps(batch.state, ensure_ascii=False)
     for personal in ("John Smith", "García", "john.smith@", "555 0100"):
         assert personal not in state, personal
-    assert "[person]" in state and "Arkansas" in state and "Little Rock" in state
+    assert "arkansas" in state.casefold() and "little rock" in state.casefold()
+    assert "Alicia" not in state and "Beatriz" not in state
+    assert SCHOOL_AR not in state  # no URL/host passed to the evaluator
 
 
 def test_provider_confidence_never_reaches_the_subscriber(tmp_path: Path) -> None:
@@ -196,3 +200,164 @@ def test_provider_confidence_never_reaches_the_subscriber(tmp_path: Path) -> Non
     stored = runtime(facade).store.proof(tenant, _pending_id(facade, token))
     (traced,) = [d for d in stored["discoveries"] if d["kind"] == "ACTIVITY"]
     assert traced["detail"]["confidence"] > 0.6
+
+
+def test_single_word_names_and_url_usernames_are_never_sent_to_evaluator(
+    tmp_path: Path, monkeypatch
+) -> None:
+    from application.first_observation.activity import _state, minimize
+    from application.first_observation.site import read_page
+
+    assert "Alicia" not in minimize("Nuestro equipo incluye a Alicia para asistencia.")
+    assert "Beatriz" not in minimize("Our consultant Beatriz handles support.")
+    assert "alice" not in minimize("Please write to alice@example.com")
+    page = read_page(
+        url="https://personal.example.com/users/alicia?email=alice@example.com",
+        html=(
+            "<html><head><title>Beatriz Ruiz's classes</title></head>"
+            "<body><p>Classes offered by Alicia. "
+            "Call 555 0100, write to alice@example.com.</p></body></html>"
+        ),
+        observed_at=datetime.now(UTC),
+        content_fingerprint="test",
+        artifact_ref=None,
+    )
+    raw = json.dumps(_state(page.url, [page]), ensure_ascii=False).casefold()
+    for forbidden in ("alicia", "beatriz", "ruiz", "personal.example", "alice@", "555 0100"):
+        assert forbidden not in raw, forbidden
+    assert "classes" in raw
+
+
+def test_registry_rights_respect_path_and_currentness() -> None:
+    from dataclasses import replace
+
+    from application.economic_discovery.observation_reuse import ReusePurpose
+    from application.first_observation.rights import RegisteredContentRights
+    from application.source_acquisition import SourceTargetRule
+    from domain.evidence.epistemics import Currentness
+    from tests.first_observation.harness import registered_rights
+
+    policy = registered_rights()
+    grant = policy.rights_for(SOLAR_ES, now=datetime.now(UTC)).entry
+    assert grant is not None
+    narrowed = replace(
+        grant,
+        targets=(SourceTargetRule("solaria-norte.example.com", "/permitted/", ("https",)),),
+    )
+    restricted = RegisteredContentRights((narrowed,), provider_input=frozenset({grant.source_id}))
+    now = datetime.now(UTC)
+    assert restricted.rights_for(
+        "https://solaria-norte.example.com/permitted/a", now=now
+    ).reuse_permitted
+    assert not restricted.rights_for(
+        "https://solaria-norte.example.com/unrelated", now=now
+    ).reuse_permitted
+    assert not restricted.rights_for(
+        "https://solaria-norte.example.com/permittedness", now=now
+    ).reuse_permitted
+    assert (
+        not RegisteredContentRights((replace(narrowed, currentness=Currentness.UNKNOWN),))
+        .rights_for("https://solaria-norte.example.com/permitted/a", now=now)
+        .reuse_permitted
+    )
+    assert (
+        not RegisteredContentRights(
+            (replace(narrowed, allowed_purposes=(ReusePurpose.HISTORICAL_REFERENCE,)),)
+        )
+        .rights_for("https://solaria-norte.example.com/permitted/a", now=now)
+        .reuse_permitted
+    )
+
+
+def test_memory_raw_content_is_retired_but_history_envelope_remains(tmp_path: Path) -> None:
+    from pipeline.observation_memory.sqlite_store import SqliteObservationMemory
+    from tests.first_observation.harness import KNOWN
+    from tests.first_observation.test_first_observation_e2e import SOLARTEC
+    from tests.organization_admission.registry_fixture import ControlledRegistry, entity
+
+    artifacts = ContentAddressedArtifactStore(tmp_path / "artifacts")
+    registry = ControlledRegistry(
+        [entity(artifacts, legal_name="Solartec Energía SL", lei_value=SOLARTEC, websites=(KNOWN,))]
+    )
+    facade = build(tmp_path, World(), identity_source=registry)
+    _attend(facade, tmp_path, "subject:memory-ttl", KNOWN)
+    runtime(facade).drain()
+    memory = SqliteObservationMemory(tmp_path / "observation-memory.sqlite3")
+    with sqlite3.connect(tmp_path / "observation-memory.sqlite3") as db:
+        before = db.execute(
+            "SELECT observation_id, raw_content FROM observations WHERE observation_id LIKE 'fo:%'"
+        ).fetchall()
+    assert before and any(content for _, content in before)
+    result = memory.purge_first_observation_content(
+        now=datetime.now(UTC) + timedelta(days=400),
+        retain_until=lambda source, observed: observed + timedelta(days=30),
+    )
+    assert result == len(before)
+    with sqlite3.connect(tmp_path / "observation-memory.sqlite3") as db:
+        after = db.execute(
+            "SELECT observation_id, raw_content, raw_artifact_ref FROM observations WHERE observation_id LIKE 'fo:%'"
+        ).fetchall()
+    assert [row[0] for row in after] == [row[0] for row in before]
+    assert all(content == "" and ref is None for _, content, ref in after)
+
+
+def test_runtime_purge_withdraws_canonical_raw_after_rights_revocation(tmp_path: Path) -> None:
+    from tests.first_observation.harness import KNOWN
+    from tests.first_observation.test_first_observation_e2e import SOLARTEC
+    from tests.organization_admission.registry_fixture import ControlledRegistry, entity
+
+    artifacts = ContentAddressedArtifactStore(tmp_path / "artifacts")
+    registry = ControlledRegistry(
+        [entity(artifacts, legal_name="Solartec Energía SL", lei_value=SOLARTEC, websites=(KNOWN,))]
+    )
+    facade = build(tmp_path, World(), identity_source=registry)
+    _attend(facade, tmp_path, "subject:revoke", KNOWN)
+    observing = runtime(facade)
+    observing.drain()
+    with sqlite3.connect(tmp_path / "observation-memory.sqlite3") as db:
+        assert (
+            db.execute(
+                "SELECT count(*) FROM observations WHERE observation_id LIKE 'fo:%' AND raw_content != ''"
+            ).fetchone()[0]
+            > 0
+        )
+    observing.service._rights = NoContentRights()
+    count = observing.purge()
+    assert count["canonicalRaw"] > 0
+    with sqlite3.connect(tmp_path / "observation-memory.sqlite3") as db:
+        assert (
+            db.execute(
+                "SELECT count(*) FROM observations WHERE observation_id LIKE 'fo:%' AND raw_content != ''"
+            ).fetchone()[0]
+            == 0
+        )
+
+
+def test_operator_rights_revocation_is_live_and_fails_closed(tmp_path: Path) -> None:
+    from tools.runtime.first_observation import RIGHTS_FILE_KEY, load_content_rights
+
+    file = tmp_path / "website-rights.json"
+    file.write_text(
+        json.dumps(
+            [
+                {
+                    "host": "solaria-norte.example.com",
+                    "rightsBasis": "controlled fixture approval",
+                    "rawRetentionDays": 30,
+                    "metadataRetentionDays": 60,
+                    "providerInput": True,
+                }
+            ]
+        ),
+        encoding="utf-8",
+    )
+    policy = load_content_rights({RIGHTS_FILE_KEY: str(file)})
+    now = datetime.now(UTC)
+    assert policy.rights_for(SOLAR_ES, now=now).reuse_permitted
+    assert policy.rights_for(SOLAR_ES, now=now).provider_input
+    file.write_text("[]", encoding="utf-8")
+    assert not policy.rights_for(SOLAR_ES, now=now).reuse_permitted
+    file.write_text("{broken", encoding="utf-8")
+    assert not policy.rights_for(SOLAR_ES, now=now).reuse_permitted
+    file.unlink()
+    assert not policy.rights_for(SOLAR_ES, now=now).reuse_permitted

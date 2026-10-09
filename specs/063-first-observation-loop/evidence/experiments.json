@@ -15,7 +15,7 @@
    "jevUsdVendorPublishedPrice": null,
    "lunaCalls": 0,
    "jobsRun": 0,
-   "requestLatencyMs": 18.0,
+   "requestLatencyMs": 15.6,
    "jobLatencyMs": 0.0,
    "decisions": []
   },
@@ -34,7 +34,7 @@
    "jevUsdVendorPublishedPrice": null,
    "lunaCalls": 0,
    "jobsRun": 0,
-   "requestLatencyMs": 13.3,
+   "requestLatencyMs": 12.2,
    "jobLatencyMs": 0.0,
    "decisions": []
   },
@@ -53,7 +53,7 @@
    "jevUsdVendorPublishedPrice": null,
    "lunaCalls": 0,
    "jobsRun": 0,
-   "requestLatencyMs": 13.4,
+   "requestLatencyMs": 12.4,
    "jobLatencyMs": 0.0,
    "decisions": []
   },
@@ -72,7 +72,7 @@
    "jevUsdVendorPublishedPrice": null,
    "lunaCalls": 0,
    "jobsRun": 0,
-   "requestLatencyMs": 12.4,
+   "requestLatencyMs": 11.9,
    "jobLatencyMs": 0.0,
    "decisions": []
   },
@@ -91,7 +91,7 @@
    "jevUsdVendorPublishedPrice": null,
    "lunaCalls": 0,
    "jobsRun": 0,
-   "requestLatencyMs": 15.8,
+   "requestLatencyMs": 19.0,
    "jobLatencyMs": 0.0,
    "decisions": []
   },
@@ -110,7 +110,7 @@
    "jevUsdVendorPublishedPrice": null,
    "lunaCalls": 0,
    "jobsRun": 0,
-   "requestLatencyMs": 38.0,
+   "requestLatencyMs": 48.5,
    "jobLatencyMs": 0.0,
    "decisions": []
   },
@@ -129,7 +129,7 @@
    "jevUsdVendorPublishedPrice": null,
    "lunaCalls": 0,
    "jobsRun": 0,
-   "requestLatencyMs": 13.5,
+   "requestLatencyMs": 12.5,
    "jobLatencyMs": 0.0,
    "decisions": []
   }
@@ -160,8 +160,8 @@
    "jevUsdVendorPublishedPrice": null,
    "lunaCalls": 0,
    "jobsRun": 1,
-   "requestLatencyMs": 31.8,
-   "jobLatencyMs": 54.1,
+   "requestLatencyMs": 30.7,
+   "jobLatencyMs": 53.9,
    "decisions": [
     "SKIPPED:EXTRA_PAGES:ACTIVITY_AND_LOCATION_EVIDENCED",
     "SKIPPED:SEMANTIC:DETERMINISTIC_SUFFICIENT",
@@ -188,8 +188,8 @@
    "jevUsdVendorPublishedPrice": null,
    "lunaCalls": 0,
    "jobsRun": 1,
-   "requestLatencyMs": 31.8,
-   "jobLatencyMs": 30.1,
+   "requestLatencyMs": 28.9,
+   "jobLatencyMs": 27.6,
    "decisions": [
     "FETCHED:ACTIVITY",
     "FETCHED:ABOUT",
@@ -219,8 +219,8 @@
    "jevUsdVendorPublishedPrice": null,
    "lunaCalls": 0,
    "jobsRun": 1,
-   "requestLatencyMs": 33.1,
-   "jobLatencyMs": 51.2,
+   "requestLatencyMs": 27.5,
+   "jobLatencyMs": 54.9,
    "decisions": [
     "SKIPPED:EXTRA_PAGES:ACTIVITY_AND_LOCATION_EVIDENCED",
     "SKIPPED:SEMANTIC:DETERMINISTIC_SUFFICIENT",
@@ -250,8 +250,8 @@
    "jevUsdVendorPublishedPrice": null,
    "lunaCalls": 0,
    "jobsRun": 1,
-   "requestLatencyMs": 28.2,
-   "jobLatencyMs": 59.3,
+   "requestLatencyMs": 26.9,
+   "jobLatencyMs": 52.6,
    "decisions": [
     "SKIPPED:EXTRA_PAGES:ACTIVITY_AND_LOCATION_EVIDENCED",
     "SKIPPED:SEMANTIC:DETERMINISTIC_SUFFICIENT",
@@ -277,8 +277,8 @@
    "jevUsdVendorPublishedPrice": null,
    "lunaCalls": 0,
    "jobsRun": 1,
-   "requestLatencyMs": 28.0,
-   "jobLatencyMs": 25.8,
+   "requestLatencyMs": 27.0,
+   "jobLatencyMs": 24.4,
    "decisions": [
     "SKIPPED:EXTRA_PAGES:NO_INFORMATION_LINK",
     "SKIPPED:SEMANTIC:LAYER_DISABLED",
@@ -310,8 +310,8 @@
    "jevUsdVendorPublishedPrice": null,
    "lunaCalls": 0,
    "jobsRun": 1,
-   "requestLatencyMs": 43.9,
-   "jobLatencyMs": 92.6,
+   "requestLatencyMs": 42.6,
+   "jobLatencyMs": 89.9,
    "decisions": [
     "SKIPPED:EXTRA_PAGES:ACTIVITY_AND_LOCATION_EVIDENCED",
     "SKIPPED:SEMANTIC:DETERMINISTIC_SUFFICIENT",
@@ -335,8 +335,8 @@
    "jevUsdVendorPublishedPrice": null,
    "lunaCalls": 0,
    "jobsRun": 1,
-   "requestLatencyMs": 31.8,
-   "jobLatencyMs": 24.6,
+   "requestLatencyMs": 30.1,
+   "jobLatencyMs": 23.9,
    "decisions": [
     "STOPPED:ROBOTS_DISALLOWED"
    ]
@@ -369,7 +369,7 @@
    "lunaCalls": 0,
    "jobsRun": 1,
    "requestLatencyMs": 27.8,
-   "jobLatencyMs": 71.9,
+   "jobLatencyMs": 53.6,
    "decisions": [
     "SKIPPED:EXTRA_PAGES:ACTIVITY_AND_LOCATION_EVIDENCED",
     "SKIPPED:SEMANTIC:DETERMINISTIC_SUFFICIENT",
@@ -395,12 +395,12 @@
    "httpRequests": 4,
    "tedRequests": 0,
    "jevCalls": 1,
-   "jevInputTokensEstimated": 1188,
-   "jevUsdVendorPublishedPrice": "0.000049896",
+   "jevInputTokensEstimated": 1113,
+   "jevUsdVendorPublishedPrice": "0.000046746",
    "lunaCalls": 0,
    "jobsRun": 1,
-   "requestLatencyMs": 28.8,
-   "jobLatencyMs": 33.2,
+   "requestLatencyMs": 26.8,
+   "jobLatencyMs": 32.5,
    "decisions": [
     "FETCHED:ACTIVITY",
     "FETCHED:ABOUT",
@@ -430,8 +430,8 @@
    "jevUsdVendorPublishedPrice": null,
    "lunaCalls": 0,
    "jobsRun": 1,
-   "requestLatencyMs": 29.4,
-   "jobLatencyMs": 55.9,
+   "requestLatencyMs": 26.9,
+   "jobLatencyMs": 55.8,
    "decisions": [
     "SKIPPED:EXTRA_PAGES:ACTIVITY_AND_LOCATION_EVIDENCED",
     "SKIPPED:SEMANTIC:DETERMINISTIC_SUFFICIENT",
@@ -461,8 +461,8 @@
    "jevUsdVendorPublishedPrice": null,
    "lunaCalls": 0,
    "jobsRun": 1,
-   "requestLatencyMs": 28.1,
-   "jobLatencyMs": 53.3,
+   "requestLatencyMs": 27.0,
+   "jobLatencyMs": 106.6,
    "decisions": [
     "SKIPPED:EXTRA_PAGES:ACTIVITY_AND_LOCATION_EVIDENCED",
     "SKIPPED:SEMANTIC:DETERMINISTIC_SUFFICIENT",
@@ -484,12 +484,12 @@
    "httpRequests": 2,
    "tedRequests": 0,
    "jevCalls": 1,
-   "jevInputTokensEstimated": 540,
-   "jevUsdVendorPublishedPrice": "0.00002268",
+   "jevInputTokensEstimated": 551,
+   "jevUsdVendorPublishedPrice": "0.000023142",
    "lunaCalls": 0,
    "jobsRun": 1,
-   "requestLatencyMs": 29.4,
-   "jobLatencyMs": 26.0,
+   "requestLatencyMs": 27.3,
+   "jobLatencyMs": 24.8,
    "decisions": [
     "SKIPPED:EXTRA_PAGES:NO_INFORMATION_LINK",
     "RAN:SEMANTIC:fo_operating_business,fo_isic_section",
@@ -521,8 +521,8 @@
    "jevUsdVendorPublishedPrice": null,
    "lunaCalls": 0,
    "jobsRun": 1,
-   "requestLatencyMs": 43.3,
-   "jobLatencyMs": 91.2,
+   "requestLatencyMs": 44.2,
+   "jobLatencyMs": 91.0,
    "decisions": [
     "SKIPPED:EXTRA_PAGES:ACTIVITY_AND_LOCATION_EVIDENCED",
     "SKIPPED:SEMANTIC:DETERMINISTIC_SUFFICIENT",
@@ -546,8 +546,8 @@
    "jevUsdVendorPublishedPrice": null,
    "lunaCalls": 0,
    "jobsRun": 1,
-   "requestLatencyMs": 31.0,
-   "jobLatencyMs": 24.4,
+   "requestLatencyMs": 29.6,
+   "jobLatencyMs": 24.0,
    "decisions": [
     "STOPPED:ROBOTS_DISALLOWED"
    ]
@@ -579,8 +579,8 @@
    "jevUsdVendorPublishedPrice": null,
    "lunaCalls": 0,
    "jobsRun": 1,
-   "requestLatencyMs": 28.3,
-   "jobLatencyMs": 54.5,
+   "requestLatencyMs": 27.1,
+   "jobLatencyMs": 55.0,
    "decisions": [
     "SKIPPED:EXTRA_PAGES:ACTIVITY_AND_LOCATION_EVIDENCED",
     "NOT_SHARED:CONTENT_RIGHTS_UNKNOWN",
@@ -608,8 +608,8 @@
    "jevUsdVendorPublishedPrice": null,
    "lunaCalls": 0,
    "jobsRun": 1,
-   "requestLatencyMs": 28.6,
-   "jobLatencyMs": 27.3,
+   "requestLatencyMs": 27.5,
+   "jobLatencyMs": 28.6,
    "decisions": [
     "FETCHED:ACTIVITY",
     "FETCHED:ABOUT",
@@ -640,8 +640,8 @@
    "jevUsdVendorPublishedPrice": null,
    "lunaCalls": 0,
    "jobsRun": 1,
-   "requestLatencyMs": 30.6,
-   "jobLatencyMs": 50.6,
+   "requestLatencyMs": 27.9,
+   "jobLatencyMs": 51.6,
    "decisions": [
     "SKIPPED:EXTRA_PAGES:ACTIVITY_AND_LOCATION_EVIDENCED",
     "NOT_SHARED:CONTENT_RIGHTS_UNKNOWN",
@@ -672,8 +672,8 @@
    "jevUsdVendorPublishedPrice": null,
    "lunaCalls": 0,
    "jobsRun": 1,
-   "requestLatencyMs": 31.1,
-   "jobLatencyMs": 50.9,
+   "requestLatencyMs": 33.2,
+   "jobLatencyMs": 49.9,
    "decisions": [
     "SKIPPED:EXTRA_PAGES:ACTIVITY_AND_LOCATION_EVIDENCED",
     "NOT_SHARED:CONTENT_RIGHTS_UNKNOWN",
@@ -700,8 +700,8 @@
    "jevUsdVendorPublishedPrice": null,
    "lunaCalls": 0,
    "jobsRun": 1,
-   "requestLatencyMs": 28.1,
-   "jobLatencyMs": 27.6,
+   "requestLatencyMs": 36.2,
+   "jobLatencyMs": 33.1,
    "decisions": [
     "SKIPPED:EXTRA_PAGES:NO_INFORMATION_LINK",
     "NOT_SHARED:CONTENT_RIGHTS_UNKNOWN",
@@ -734,8 +734,8 @@
    "jevUsdVendorPublishedPrice": null,
    "lunaCalls": 0,
    "jobsRun": 1,
-   "requestLatencyMs": 43.4,
-   "jobLatencyMs": 53.6,
+   "requestLatencyMs": 46.1,
+   "jobLatencyMs": 52.3,
    "decisions": [
     "SKIPPED:EXTRA_PAGES:ACTIVITY_AND_LOCATION_EVIDENCED",
     "NOT_SHARED:CONTENT_RIGHTS_UNKNOWN",
@@ -761,8 +761,8 @@
    "jevUsdVendorPublishedPrice": null,
    "lunaCalls": 0,
    "jobsRun": 1,
-   "requestLatencyMs": 30.6,
-   "jobLatencyMs": 24.6,
+   "requestLatencyMs": 28.1,
+   "jobLatencyMs": 24.7,
    "decisions": [
     "STOPPED:ROBOTS_DISALLOWED"
    ]
