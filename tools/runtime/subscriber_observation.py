@@ -146,7 +146,7 @@ class ConfiguredSubscriberObservationPlanReader:
             (item for item in self.attention if item.organization_id == organization_id), None
         )
         derived = None if self.derived_for is None else self.derived_for(context, focus_id)
-        derived_markets = derived_scopes(derived)
+        derived_markets = derived_scopes(derived, organization_id)
         if configured is None and not derived_markets:
             return None
 
@@ -173,7 +173,7 @@ class ConfiguredSubscriberObservationPlanReader:
         if not capabilities:
             # Open discovery: hypotheses whose basis cites this Organization's own
             # observations; the projection re-validates each excerpt before use.
-            capabilities = derived_capabilities(derived)
+            capabilities = derived_capabilities(derived, organization_id)
         if not capabilities:
             return None
 

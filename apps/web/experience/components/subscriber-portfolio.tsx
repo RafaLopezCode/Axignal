@@ -202,7 +202,7 @@ export function SubscriberPortfolioExperience() {
     if (!running) return;
     const timer = window.setTimeout(() => void readPortfolio(), 4000);
     return () => window.clearTimeout(timer);
-  }, [access, running, selected, readOutput, readPortfolio]);
+  }, [access, portfolio, running, selected, readOutput, readPortfolio]);  // each read re-arms the poll
   async function logout() {
     if (busy) return;
     setBusy(true);

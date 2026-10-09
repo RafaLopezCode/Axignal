@@ -23,14 +23,25 @@ from application.observation_intelligence.contracts import (
 from domain.xignal import XignalEpistemicState
 
 
-def _focus_proof(proof: Mapping[str, Any] | None) -> Mapping[str, Any] | None:
-    if proof is None or proof.get("target", {}).get("kind") != "FOCUS":
+def _focus_proof(
+    proof: Mapping[str, Any] | None, organization_id: str | None
+) -> Mapping[str, Any] | None:
+    """Only a registry-verified Focus proof of *this* Organization hands over (ADR-0091 §3)."""
+    target = {} if proof is None else proof.get("target", {})
+    if (
+        proof is None
+        or target.get("kind") != "FOCUS"
+        or target.get("identityLink") != "REGISTRY_VERIFIED"
+        or (organization_id is not None and target.get("organizationId") != organization_id)
+    ):
         return None
     return proof
 
 
-def derived_scopes(proof: Mapping[str, Any] | None) -> tuple[MarketScope, ...]:
-    focus = _focus_proof(proof)
+def derived_scopes(
+    proof: Mapping[str, Any] | None, organization_id: str | None = None
+) -> tuple[MarketScope, ...]:
+    focus = _focus_proof(proof, organization_id)
     if focus is None:
         return ()
     scopes: list[MarketScope] = []
@@ -46,12 +57,16 @@ def derived_scopes(proof: Mapping[str, Any] | None) -> tuple[MarketScope, ...]:
     return tuple(scopes)
 
 
-def derived_capabilities(proof: Mapping[str, Any] | None) -> tuple[CapabilityHypothesis, ...]:
-    focus = _focus_proof(proof)
+def derived_capabilities(
+    proof: Mapping[str, Any] | None, organization_id: str | None = None
+) -> tuple[CapabilityHypothesis, ...]:
+    focus = _focus_proof(proof, organization_id)
     if focus is None:
         return ()
     out: list[CapabilityHypothesis] = []
     for item in focus.get("capabilities", ()):
+        if item.get("method") not in {"LEXICON", "SCHEMA_ORG_TYPE"}:
+            continue  # a judgment chooses where to look, it never founds a capability
         try:
             basis = item["basis"]
             out.append(

@@ -48,6 +48,9 @@ class SliceState:
     requests: int
     records: int
     demanded_at: datetime | None
+    #: Resumable traversal: next page and the publication floor it pages through.
+    cursor_page: int = 1
+    traversal_since: datetime | None = None
 
 
 class DemandIndexStore(Protocol):
@@ -68,6 +71,8 @@ class DemandIndexStore(Protocol):
         complete: bool,
         requests: int,
         records: int,
+        cursor_page: int = 1,
+        traversal_since: datetime | None = None,
     ) -> None: ...
 
     def records(self, demand_slice: DemandSlice) -> tuple[ProcurementRecord, ...]: ...
@@ -174,6 +179,8 @@ class DemandIndexPort:
         slices = self.covered(source.source_id, action.query)
         if slices is not None:
             self.index_hits += 1
+            for item in slices:  # still in use: keep the slice demanded (and refreshed)
+                self._store.demand(item, now=now)
             found: dict[str, ProcurementRecord] = {}
             ingested = min(
                 state.ingested_at
@@ -236,6 +243,7 @@ class WorldDemandIngestor:
         max_pages: int = 20,
         page_size: int = 100,
         refresh_after: timedelta = timedelta(hours=20),
+        demand_ttl: timedelta = timedelta(days=30),
     ) -> None:
         self._feeds = feeds
         self._store = store
@@ -243,14 +251,33 @@ class WorldDemandIngestor:
         self._max_pages = max_pages
         self._page_size = page_size
         self._refresh_after = refresh_after
+        self._demand_ttl = demand_ttl
 
     def due(self) -> tuple[SliceState, ...]:
+        """Never-ingested and unfinished slices first, then the stalest; unused ones expire."""
         now = self._clock()
-        return tuple(
+        due = [
             s
             for s in self._store.demanded()
             if s.slice.source_id in self._feeds
-            and (s.ingested_at is None or now - s.ingested_at >= self._refresh_after)
+            and s.demanded_at is not None
+            and now - s.demanded_at <= self._demand_ttl
+            and (
+                s.ingested_at is None
+                or not s.complete
+                or now - s.ingested_at >= self._refresh_after
+            )
+        ]
+        return tuple(
+            sorted(
+                due,
+                key=lambda s: (
+                    s.ingested_at is not None,
+                    s.complete,
+                    s.ingested_at or now,
+                    s.slice.key,
+                ),
+            )
         )
 
     def ingest(self, demand_slice: DemandSlice) -> IngestionReport:
@@ -259,12 +286,16 @@ class WorldDemandIngestor:
         window = RECENCY_WINDOWS.get(demand_slice.kind, timedelta(days=60))
         previous = self._store.state(demand_slice)
         window_start = now - window
-        # Delta after a complete ingestion: one day of overlap, never a gap.
-        since = (
-            max(window_start, previous.ingested_at - timedelta(days=1))
-            if previous is not None and previous.complete and previous.ingested_at is not None
-            else window_start
-        )
+        start_page = 1
+        if previous is not None and not previous.complete and previous.traversal_since:
+            # Resume an unfinished traversal where it stopped (large slices span runs).
+            since = max(window_start, previous.traversal_since)
+            start_page = previous.cursor_page
+        elif previous is not None and previous.complete and previous.ingested_at is not None:
+            # Delta after a complete ingestion: one day of overlap, never a gap.
+            since = max(window_start, previous.ingested_at - timedelta(days=1))
+        else:
+            since = window_start
         query = QuerySpec(
             demand_codes=(),
             geographies=(TaxonomyCode("GEO", demand_slice.jurisdiction),),
@@ -274,7 +305,8 @@ class WorldDemandIngestor:
         pages = records = 0
         complete = False
         failure = None
-        for page in range(1, self._max_pages + 1):
+        page = start_page
+        for page in range(start_page, start_page + self._max_pages):
             findings = feed.search(query, page=page, limit=self._page_size)
             pages += 1
             if findings.failure is not None:
@@ -284,14 +316,15 @@ class WorldDemandIngestor:
             if len(findings.records) < self._page_size:
                 complete = True
                 break
+        # Covered history starts where the oldest finished traversal started.
         kept_start = (
             previous.window_start
-            if complete
-            and previous is not None
-            and previous.complete
+            if previous is not None
             and previous.window_start is not None
-            else window_start
+            and previous.window_start <= since
+            else since
         )
+        resume_at = page if failure is not None else page + 1
         self._store.mark_ingested(
             demand_slice,
             at=now,
@@ -299,6 +332,8 @@ class WorldDemandIngestor:
             complete=complete,
             requests=pages + (0 if previous is None else previous.requests),
             records=records,
+            cursor_page=1 if complete else resume_at,
+            traversal_since=None if complete else since,
         )
         return IngestionReport(demand_slice.key, pages, records, complete, failure)
 

@@ -111,8 +111,9 @@ class FocusSeed:
     ) -> Mapping[str, str]:
         del now
         organization = target.organization_id
-        if organization is None:
-            raise ValueError("only a Focus target is seeded under an Organization")
+        if organization is None or target.identity_link is not IdentityLink.REGISTRY_VERIFIED:
+            # ADR-0091 §3: only a registry-recorded website speaks for the Organization.
+            raise ValueError("only a registry-verified Focus website is seeded")
         ids: dict[str, str] = {}
         for page in pages:
             content = page.readable()
@@ -147,9 +148,10 @@ class FocusSeed:
                         authority_id="first-observation-public-website",
                         authority_version="1",
                         reuse_reason=(
-                            "Public website page observed after robots.txt under a bounded "
-                            f"GET policy; website link {target.identity_link.value}."
+                            "Registry-recorded official website page, observed after "
+                            "robots.txt under a bounded GET policy."
                         ),
+                        retention_policy_ref="first-observation-seed:raw-90d",
                         robots_policy_ref="robots.txt observed before fetch",
                     ),
                 )
@@ -205,7 +207,10 @@ class RuntimeDemandResearch:
                 )
         indexes = [p for p in self._ports.values() if isinstance(p, DemandIndexPort)]
         index_before = sum(p.index_hits for p in indexes)
-        if target.kind is TargetKind.FOCUS:
+        if (
+            target.kind is TargetKind.FOCUS
+            and target.identity_link is IdentityLink.REGISTRY_VERIFIED
+        ):
             result = self._economic.execute_observation_loop(
                 TrustedRequestContext(PrincipalId(target.principal_id), TenantId(target.tenant_id)),
                 XeedId(target.target_ref),
@@ -225,15 +230,9 @@ class RuntimeDemandResearch:
                 learning=OperationalLearning(),
                 registry=SourceRegistry(),
             )
+        # No semantic screen here: it may escalate to Luna and would delete demand the
+        # sources returned. Candidates stay POTENTIAL with their routing basis.
         candidates = list(result.candidates)
-        screen = self._economic.semantic_screen
-        if target.kind is TargetKind.PENDING and screen is not None and candidates:
-            run = screen.screen(candidates, now=now)
-            candidates = [
-                c
-                for c in candidates
-                if c.candidate_id not in run.screens or not run.screens[c.candidate_id].unrelated
-            ]
         hits = sum(p.hits for p in shared.values() if isinstance(p, SharedFindingsPort))
         hits += sum(p.index_hits for p in indexes) - index_before
         live = sum(p.live_requests for p in shared.values() if isinstance(p, SharedFindingsPort))
@@ -275,7 +274,13 @@ def public_view(proof: Mapping[str, Any] | None, state: str | None) -> dict[str,
         return None
     if proof is None:
         return {"state": state, "firstProofReady": False, "discoveries": []}
-    view = dict(proof)
+    # Operational internals (cost ledger, decisions, raw judgments) stay with operators:
+    # they would also reveal whether another tenant recently observed the same site.
+    view = {
+        k: v
+        for k, v in proof.items()
+        if k not in {"ledger", "judged", "capabilities", "siteFingerprint"}
+    }
     target = dict(view.pop("target"))
     view["target"] = {
         "kind": target["kind"],
@@ -310,6 +315,7 @@ class FirstObservationRuntime:
         clock: Clock,
         worker: str = "thread",
         daily_jobs: int = 500,
+        tenant_daily_jobs: int = 20,
         ingestor: WorldDemandIngestor | None = None,
     ) -> None:
         self.ingestor = ingestor
@@ -325,6 +331,8 @@ class FirstObservationRuntime:
         self._wake = threading.Event()
         self._thread: threading.Thread | None = None
         self._lock = threading.Lock()
+        self._start_lock = threading.Lock()
+        self._tenant_daily_jobs = tenant_daily_jobs
 
     # ---- attention (synchronous, cheap) ---------------------------------------------
     def remember_locator(self, locator: str | None) -> None:
@@ -347,10 +355,12 @@ class FirstObservationRuntime:
         domain = (
             None if website is None else (urlsplit(website).hostname or "").removeprefix("www.")
         )
-        verified = (
-            domain is not None
-            and str(self._websites.organization_by_domain(domain)) == organization
-        )
+        owner = None if domain is None else self._websites.organization_by_domain(domain)
+        verified = owner is not None and str(owner) == organization
+        if owner is not None and not verified:
+            link = IdentityLink.WEBSITE_OF_ANOTHER_ORGANIZATION
+        else:
+            link = IdentityLink.REGISTRY_VERIFIED if verified else IdentityLink.SUBSCRIBER_DIRECTED
         target = AttentionTarget(
             tenant_id=str(context.tenant_id),
             principal_id=str(context.principal_id),
@@ -359,11 +369,9 @@ class FirstObservationRuntime:
             website=website,
             name=name or entry.xeed.label,
             organization_id=organization,
-            identity_link=IdentityLink.REGISTRY_VERIFIED if verified else IdentityLink.SUBSCRIBER_DIRECTED,
+            identity_link=link,
         )  # fmt: skip
-        self.store.enqueue(target, key=f"focus:{key}", now=self._clock.now())
-        self._kick()
-        return "QUEUED"
+        return self._enqueue(target, key=f"focus:{key}")
 
     def attend_pending(self, context: TrustedRequestContext, *, request_ref: str) -> str:
         pending = next(
@@ -392,7 +400,18 @@ class FirstObservationRuntime:
             organization_id=None,
             identity_link=IdentityLink.IDENTITY_PENDING,
         )
-        self.store.enqueue(target, key=f"pending:{pending.idempotency_key}", now=self._clock.now())
+        return self._enqueue(target, key=f"pending:{pending.idempotency_key}")
+
+    def _enqueue(self, target: AttentionTarget, *, key: str) -> str:
+        """One open job per target; a finished target gets a fresh job; per-tenant cap."""
+        states = self.store.jobs_for(target.tenant_id, target.target_ref)
+        if any(state in {"QUEUED", "RUNNING"} for state in states):
+            self._kick()
+            return "QUEUED"
+        now = self._clock.now()
+        if self.store.jobs_created_today(target.tenant_id, now) >= self._tenant_daily_jobs:
+            return "BUDGET_EXHAUSTED"
+        self.store.enqueue(target, key=f"{key}:{len(states)}", now=now)
         self._kick()
         return "QUEUED"
 
@@ -432,6 +451,9 @@ class FirstObservationRuntime:
                     and str(e.xeed.organization_id) == target.organization_id
                     for e in self._portfolio.list(context)
                 )
+            snapshot = self._entitlements.snapshot(context.tenant_id)
+            if snapshot is None or snapshot.currentness is not Currentness.CURRENT:
+                return False  # pending attention observes only under current capacity
             return any(
                 p.pending_id == target.target_ref and p.status is PendingStatus.IDENTITY_PENDING
                 for p in self._portfolio.list_pending(context)
@@ -484,25 +506,28 @@ class FirstObservationRuntime:
         now = self._clock.now()
         created = 0
         for target in self.store.due(now=now):
-            created += self.store.enqueue(target, key=f"due:{now.date().isoformat()}", now=now)[1]
+            created += self._enqueue(target, key=f"due:{now.date().isoformat()}") == "QUEUED"
         return created
 
     def start(self) -> None:
-        if self._worker != "thread" or self._thread is not None:
-            return
-        self._thread = threading.Thread(target=self._loop, name="first-observation", daemon=True)
-        self._thread.start()
+        with self._start_lock:
+            if self._worker != "thread" or self._thread is not None:
+                return
+            self._thread = threading.Thread(
+                target=self._loop, name="first-observation", daemon=True
+            )
+            self._thread.start()
 
     def _loop(self) -> None:
         while True:
             self._wake.wait(timeout=60)
             self._wake.clear()
-            try:
-                self.enqueue_due()
-                self.drain()
-                self.ingest_demanded()
-            except Exception:  # the next wake retries; jobs keep their leases and attempts
-                continue
+            # Each stage fails alone: one bad row never stalls the other stages.
+            for stage in (self.enqueue_due, self.drain, self.ingest_demanded):
+                try:
+                    stage()
+                except Exception:  # the next wake retries; jobs keep leases and attempts
+                    continue
 
     def _kick(self) -> None:
         if self._worker == "thread":
@@ -510,12 +535,30 @@ class FirstObservationRuntime:
             self._wake.set()
 
     # ---- subscriber reads -----------------------------------------------------------
-    def summary(self, context: TrustedRequestContext, target_ref: str) -> dict[str, object] | None:
+    def _proof(
+        self, tenant: str, target_ref: str, organization_id: str | None
+    ) -> dict[str, Any] | None:
+        """The stored proof, unless it describes another Organization (a replaced Focus)."""
+        proof = self.store.proof(tenant, target_ref)
+        if (
+            proof is not None
+            and organization_id is not None
+            and proof.get("target", {}).get("organizationId") != organization_id
+        ):
+            return None
+        return proof
+
+    def summary(
+        self,
+        context: TrustedRequestContext,
+        target_ref: str,
+        organization_id: str | None = None,
+    ) -> dict[str, object] | None:
         tenant = str(context.tenant_id)
         state = self.store.status(tenant, target_ref)
         if state is None:
             return None
-        proof = self.store.proof(tenant, target_ref)
+        proof = self._proof(tenant, target_ref, organization_id)
         headline, headline_code = _headline(proof)
         return {
             "state": state,
@@ -525,11 +568,22 @@ class FirstObservationRuntime:
             "observedAt": None if proof is None else proof.get("observedAt"),
         }
 
-    def view(self, context: TrustedRequestContext, target_ref: str) -> dict[str, object] | None:
+    def view(
+        self,
+        context: TrustedRequestContext,
+        target_ref: str,
+        organization_id: str | None = None,
+    ) -> dict[str, object] | None:
         tenant = str(context.tenant_id)
-        return public_view(
-            self.store.proof(tenant, target_ref), self.store.status(tenant, target_ref)
-        )
+        proof = self._proof(tenant, target_ref, organization_id)
+        state = self.store.status(tenant, target_ref)
+        if (
+            proof is None
+            and state is not None
+            and state not in {"QUEUED", "OBSERVING_PUBLIC_PRESENCE", "OBSERVATION_FAILED"}
+        ):
+            state = None  # a proof of a replaced Organization is not this Focus's state
+        return public_view(proof, state)
 
 
 def build_first_observation(

@@ -7,10 +7,12 @@ organization's economic reality and never evidence of fit.
 
 from __future__ import annotations
 
+import re
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
 from datetime import datetime
 from enum import StrEnum
+from urllib.parse import urlsplit
 
 from application.economic_discovery.brain_contracts import SemanticPrimitive
 from application.first_observation.geography import jurisdiction, mentioned_places
@@ -240,19 +242,32 @@ class ActivityBatchPlan:
     place_candidates: tuple[tuple[TaxonomyCode, str, str, str], ...]  # place, name, url, line
 
 
+_EMAIL = re.compile(r"[\w.+-]+@[\w-]+\.[\w.-]+")
+_PHONE = re.compile(r"\+?\d[\d ().-]{6,}\d")
+_CONTACT_PATH = re.compile(r"contact|kontakt|contatt|contato|impressum|aviso-legal|legal", re.I)
+
+
+def person_free(text: str) -> str:
+    """World-level state for an evaluator: no e-mail addresses or phone numbers."""
+    return _PHONE.sub("[phone]", _EMAIL.sub("[email]", text))
+
+
 def _state(origin: str, pages: Sequence[PageReading]) -> dict[str, object]:
+    # Contact and legal pages carry people's details and add nothing an activity
+    # question needs: they never reach the evaluator (ADR-0090 input rights).
+    readable = [p for p in pages if not _CONTACT_PATH.search(urlsplit(p.url).path)] or pages[:1]
     return {
         "site": origin,
         "pages": [
             {
                 "url": page.url,
-                "title": page.title,
-                "description": page.description,
-                "headings": list(page.headings[:8]),
-                "services": list(page.services[:12]),
-                "text": page.text[:STATE_CHARS_PER_PAGE],
+                "title": person_free(page.title),
+                "description": person_free(page.description),
+                "headings": [person_free(h) for h in page.headings[:8]],
+                "services": [person_free(x) for x in page.services[:12]],
+                "text": person_free(page.text[:STATE_CHARS_PER_PAGE]),
             }
-            for page in pages
+            for page in readable
         ],
     }
 
@@ -276,8 +291,13 @@ def plan_activity_batch(
     candidates: list[tuple[TaxonomyCode, str, str, str]] = []
     if not known_scopes:
         for page in pages:
+            english = (page.language or "").lower().startswith("en")
             for line in page.lines():
-                for place, name in mentioned_places(line):
+                mentions = mentioned_places(line)
+                us_named = any(place.code == "US" for place, _ in mentions)
+                for place, name in mentions:
+                    if place.code.startswith("US/") and not (english or us_named):
+                        continue  # "Colorado", "Nevada" are also Spanish words
                     if all(place.code != c[0].code for c in candidates):
                         candidates.append((place, name, page.url, line))
         candidates = candidates[:10]
@@ -292,8 +312,6 @@ def plan_activity_batch(
         questions.append(CPV_DIVISION)
     if us and not routed:
         questions.append(NAICS_SECTOR)
-    if questions:
-        questions += [CUSTOMERS, DELIVERY]
     if candidates:
         questions.append(_location_question([(p, n) for p, n, _u, _l in candidates]))
     if not questions:
@@ -305,6 +323,7 @@ def plan_activity_batch(
 @dataclass(frozen=True, slots=True)
 class SemanticReading:
     findings: tuple[ActivityFinding, ...]
+    codes: tuple[TaxonomyCode, ...]
     roles: frozenset[MarketRole] | None
     delivery: str | None
     operating: bool | None
@@ -387,6 +406,7 @@ def interpret_activity(
             judged[key] = value[0]
     return SemanticReading(
         findings=tuple(findings),
+        codes=tuple(codes),
         roles=roles,
         delivery=None if delivery is None or delivery[0] == "UNCLEAR" else delivery[0],
         operating=None if operating is None else operating[0] == "true",

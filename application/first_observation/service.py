@@ -12,7 +12,7 @@ from __future__ import annotations
 import re
 import time
 from collections.abc import Callable, Mapping, Sequence
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from datetime import datetime
 from typing import Protocol
 from urllib.parse import urlsplit
@@ -21,6 +21,7 @@ from application.economic_discovery.brain_contracts import ObservationMode, Obse
 from application.economic_discovery.observation_memory import GovernedObservation
 from application.first_observation.activity import (
     ActivityFinding,
+    ActivityMethod,
     SemanticReading,
     declared_scopes,
     deterministic_activity,
@@ -119,11 +120,20 @@ def origin_of(website: str) -> str:
     return f"{parts.scheme or 'https'}://{(parts.hostname or '').lower()}"
 
 
+def site_key(website: str) -> str:
+    """World-level key of one website: origin plus the path the attention named.
+
+    ``https://host/acme`` and ``https://host/bolt`` (hosted profiles) are different sites.
+    """
+    parts = urlsplit(website if "://" in website else "https://" + website)
+    return origin_of(website) + (parts.path.rstrip("/") or "") + "/"
+
+
 def _decode(resource: FetchedResource) -> str:
     body = resource.body or b""
     charset = None
     if resource.content_type and "charset=" in resource.content_type.lower():
-        charset = resource.content_type.lower().split("charset=", 1)[1].split(";")[0].strip()
+        charset = resource.content_type.lower().split("charset=", 1)[1].split(";")[0].strip(" \"'")
     if charset is None and (match := _CHARSET.search(body[:2048])) is not None:
         charset = match.group(1).decode("ascii", "ignore")
     try:
@@ -160,12 +170,17 @@ class FirstObservationService:
     # ---- L0-L2: the website, world level ----------------------------------------
     def _fetch(self, url: str, slot: str, ledger: RunLedger) -> FetchedResource:
         resource = self._fetcher.fetch(url, slot=slot)
-        ledger.http_requests += max(1, resource.requests)
+        ledger.http_requests += resource.requests  # requests actually sent
         ledger.http_bytes += len(resource.body or b"")
         return resource
 
-    def _page(self, resource: FetchedResource) -> PageReading | None:
+    def _page(
+        self, resource: FetchedResource, robots: RobotsReading, ledger: RunLedger
+    ) -> PageReading | None:
         if resource.failure is not None or resource.status != 200 or resource.body is None:
+            return None
+        if not robots.allows(resource.final_url):  # a redirect may land on a disallowed path
+            ledger.decide("DISCARDED:ROBOTS_AFTER_REDIRECT")
             return None
         text = _decode(resource)
         if not _is_html(resource, text):
@@ -181,7 +196,8 @@ class FirstObservationService:
     def read_site(self, website: str, now: datetime, ledger: RunLedger) -> SiteReading:
         policy = self.policy
         origin = origin_of(website)
-        known = self._sites.site(origin)
+        key = site_key(website)
+        known = self._sites.site(key)
         if (
             known is not None
             and known.failure is None
@@ -189,7 +205,7 @@ class FirstObservationService:
             and now - known.observed_at <= policy.site_reuse_for
         ):
             ledger.site_reuse_hits += 1
-            ledger.requests_avoided += 1 + len(known.pages)
+            ledger.requests_avoided += 1 + len(known.pages)  # ESTIMATED counterfactual
             ledger.decide("REUSED:SITE_READING_CURRENT")
             return known
         robots = None
@@ -204,17 +220,17 @@ class FirstObservationService:
         else:
             fetched = self._fetch(origin + "/robots.txt", "robots", ledger)
             if fetched.failure is None and fetched.status == 200 and fetched.body is not None:
-                robots = RobotsReading(_decode(fetched)[:65536], fetched.observed_at)
+                robots = RobotsReading(_decode(fetched)[:512_000], fetched.observed_at)
             elif fetched.status is not None and 400 <= fetched.status < 500:
                 robots = RobotsReading(None, fetched.observed_at)  # none published (RFC 9309)
             else:
-                return self._failed(origin, now, None, "ROBOTS_UNAVAILABLE", ledger)
+                return self._failed(key, now, None, "ROBOTS_UNAVAILABLE", ledger, known)
         target = website if "://" in website else "https://" + website
         if not robots.allows(target):
-            return self._failed(origin, now, robots, "ROBOTS_DISALLOWED", ledger)
-        home = self._page(self._fetch(target, "website", ledger))
+            return self._failed(key, now, robots, "ROBOTS_DISALLOWED", ledger, None)
+        home = self._page(self._fetch(target, "website", ledger), robots, ledger)
         if home is None:
-            return self._failed(origin, now, robots, "HOMEPAGE_UNAVAILABLE", ledger)
+            return self._failed(key, now, robots, "HOMEPAGE_UNAVAILABLE", ledger, known)
         pages = [home]
         streak = 0
         if (
@@ -237,31 +253,35 @@ class FirstObservationService:
             if needs and not links:
                 ledger.decide("SKIPPED:EXTRA_PAGES:NO_INFORMATION_LINK")
             for url, need in links:
-                if ledger.http_requests >= policy.max_site_requests:
+                # Reserve the worst case (redirects included) before spending.
+                if ledger.http_requests + policy.requests_per_fetch > policy.max_site_requests:
                     ledger.decide("STOPPED:SITE_REQUEST_BUDGET")
                     break
                 if not robots.allows(url):
                     ledger.decide(f"SKIPPED:ROBOTS:{need}")
                     continue
-                page = self._page(self._fetch(url, "site-page", ledger))
+                page = self._page(self._fetch(url, "site-page", ledger), robots, ledger)
                 if page is not None:
                     pages.append(page)
                     ledger.decide(f"FETCHED:{need}")
-        reading = SiteReading(origin, now, robots, tuple(pages), None, streak)
+        reading = SiteReading(key, now, robots, tuple(pages), None, streak)
         self._sites.save_site(reading)
         return reading
 
     def _failed(
         self,
-        origin: str,
+        key: str,
         now: datetime,
         robots: RobotsReading | None,
         failure: str,
         ledger: RunLedger,
+        known: SiteReading | None,
     ) -> SiteReading:
         ledger.decide(f"STOPPED:{failure}")
-        reading = SiteReading(origin, now, robots, (), failure)
-        self._sites.save_site(reading)
+        reading = SiteReading(key, now, robots, (), failure)
+        # A transient fault never erases a good shared reading; a robots refusal does.
+        if failure == "ROBOTS_DISALLOWED" or known is None or known.failure is not None:
+            self._sites.save_site(reading)
         return reading
 
     # ---- L3: one semantic batch, only when it can change the outcome -----------------
@@ -278,11 +298,15 @@ class FirstObservationService:
         if plan is None:
             ledger.decide("SKIPPED:SEMANTIC:DETERMINISTIC_SUFFICIENT")
             return None
-        cascade = self._cascade_factory()
-        if cascade is None:
-            ledger.decide("SKIPPED:SEMANTIC:LAYER_DISABLED")
+        try:
+            cascade = self._cascade_factory()
+            if cascade is None:
+                ledger.decide("SKIPPED:SEMANTIC:LAYER_DISABLED")
+                return None
+            outcome = cascade.run([plan.batch], now=now)[plan.batch.batch_id]
+        except Exception as error:  # a missing provider never costs the deterministic proof
+            ledger.decide(f"SKIPPED:SEMANTIC:FAILED:{type(error).__name__}")
             return None
-        outcome = cascade.run([plan.batch], now=now)[plan.batch.batch_id]
         wire = cascade.ledger.to_wire()
         lines = wire["lines"]
         assert isinstance(lines, list)
@@ -309,6 +333,22 @@ class FirstObservationService:
         now = self._clock()
         ledger = RunLedger()
         identity = self._identity_discoveries(target)
+        if target.identity_link is IdentityLink.WEBSITE_OF_ANOTHER_ORGANIZATION:
+            ledger.decide("STOPPED:WEBSITE_OF_ANOTHER_ORGANIZATION")
+            unknown = Discovery(
+                DiscoveryKind.SIGNIFICANT_UNKNOWN,
+                "WEBSITE_OF_ANOTHER_ORGANIZATION",
+                "A registry records this website for a different organization; it is not "
+                "observed as this one.",
+                XignalEpistemicState.UNKNOWN.value,
+                target.website,
+                None,
+                None,
+            )
+            return self._proof(
+                target, ObservationState.NO_PUBLIC_WEBSITE, (unknown,), ledger, started, now,
+                site=None, activity_known=False,
+            )  # fmt: skip
         if target.website is None:
             ledger.decide("STOPPED:NO_PUBLIC_WEBSITE")
             unknown = Discovery(
@@ -353,6 +393,11 @@ class FirstObservationService:
             reading.origin, pages, [*premises, *(c for _p, _a, c in areas)], deterministic,
             now, ledger,
         )  # fmt: skip
+        if semantic is not None and semantic.codes and not semantic.findings:
+            deterministic = tuple(
+                f if f.demand_codes else replace(f, demand_codes=semantic.codes)
+                for f in deterministic
+            )
         findings = (*deterministic, *(() if semantic is None else semantic.findings))
         # Attention widens, never narrows on a judgment: a false rejection loses demand.
         roles = _DEFAULT_ROLES | (
@@ -367,13 +412,22 @@ class FirstObservationService:
             for code in scope_codes.values()
         )
         subject = target.organization_id or f"attention:{target.target_ref}"
-        if target.kind is TargetKind.FOCUS:
+        verified = (
+            target.kind is TargetKind.FOCUS
+            and target.identity_link is IdentityLink.REGISTRY_VERIFIED
+        )
+        if verified:
             observation_ids = dict(self._seeds.seed(target, pages, now=now))
         else:
             observation_ids = {
                 page.url: f"site:{reading.origin}:{page.content_fingerprint[:24]}" for page in pages
             }
-        capabilities = to_capabilities(findings, observation_ids, pages)
+        # A judgment chooses where to look (routing), never what is true: on the canonical
+        # projection path only deterministic hypotheses may route demand (ADR-0090/0091).
+        routed = [
+            f for f in findings if not verified or f.method is not ActivityMethod.SEMANTIC_JUDGMENT
+        ]
+        capabilities = to_capabilities(routed, observation_ids, pages)
         discoveries: list[Discovery] = [*self._site_discoveries(reading, semantic)]
         discoveries += [self._activity(f) for f in findings]
         discoveries += self._web_representation(reading, findings)
@@ -400,7 +454,6 @@ class FirstObservationService:
             DiscoveryKind.DECLARED_LOCATION,
             DiscoveryKind.DECLARED_SERVICE_AREA,
             DiscoveryKind.DEMAND,
-            DiscoveryKind.IDENTITY_HINT,
         }
         ready = any(d.kind in useful for d in discoveries)
         state = (
@@ -412,6 +465,7 @@ class FirstObservationService:
             target, state, tuple(discoveries), ledger, started, now, site=reading,
             activity_known=bool(findings), scopes=scopes, capabilities=capabilities,
             judged={} if semantic is None else semantic.judged, ready=ready,
+            methods={f.activity_id: f for f in findings},
         )  # fmt: skip
 
     # ---- discoveries --------------------------------------------------------------------
@@ -475,7 +529,7 @@ class FirstObservationService:
                 )
             )
         for page in reading.pages:
-            for address in page.addresses:
+            for address in page.addresses[:5]:
                 out.append(
                     Discovery(
                         DiscoveryKind.DECLARED_LOCATION,
@@ -488,7 +542,7 @@ class FirstObservationService:
                         {"basis": "PREMISES"},
                     )
                 )
-            for area in page.areas_served:
+            for area in page.areas_served[:10]:
                 out.append(
                     Discovery(
                         DiscoveryKind.DECLARED_SERVICE_AREA,
@@ -501,7 +555,7 @@ class FirstObservationService:
                         {"basis": "STATED_SERVICE_AREA"},
                     )
                 )
-            for identifier in page.identifiers:
+            for identifier in page.identifiers[:5]:
                 out.append(
                     Discovery(
                         DiscoveryKind.IDENTITY_HINT,
@@ -514,7 +568,7 @@ class FirstObservationService:
                         {"admitted": False, "reason": "A website declaring itself never admits identity."},
                     )
                 )  # fmt: skip
-            for name in page.legal_names:
+            for name in page.legal_names[:3]:
                 out.append(
                     Discovery(
                         DiscoveryKind.IDENTITY_HINT,
@@ -618,8 +672,8 @@ class FirstObservationService:
             out.append(
                 gap(
                     "OFFER_NOT_MACHINE_READABLE",
-                    "Its activity is evidenced in prose, but no service or product is "
-                    "declared as structured data.",
+                    "On the pages read, its activity is evidenced in prose but no service "
+                    "or product is declared as structured data.",
                     "Search and generative surfaces that rely on structured data may not "
                     "connect this organization to what it offers. Not a measured ranking.",
                 )
@@ -768,6 +822,7 @@ class FirstObservationService:
         capabilities: Sequence[CapabilityHypothesis] = (),
         judged: Mapping[str, str] | None = None,
         ready: bool = False,
+        methods: Mapping[str, ActivityFinding] | None = None,
     ) -> FirstProof:
         ledger.elapsed_ms = int((time.monotonic() - started) * 1000)
         return FirstProof(
@@ -778,7 +833,9 @@ class FirstObservationService:
             attention_scopes=tuple(
                 (s.geography.code, tuple(sorted(r.value for r in s.roles))) for s in scopes
             ),
-            capabilities=tuple(_capability_wire(c) for c in capabilities),
+            capabilities=tuple(
+                _capability_wire(c, (methods or {}).get(c.capability_id)) for c in capabilities
+            ),
             site_fingerprint=None if site is None else site.fingerprint,
             ledger=ledger.to_wire(),
             judged=dict(judged or {}),
@@ -792,9 +849,13 @@ class FirstObservationService:
         )
 
 
-def _capability_wire(capability: CapabilityHypothesis) -> dict[str, object]:
+def _capability_wire(
+    capability: CapabilityHypothesis, finding: ActivityFinding | None
+) -> dict[str, object]:
     basis = capability.basis[0]
     return {
+        "method": None if finding is None else finding.method.value,
+        "model": None if finding is None else finding.model,
         "capabilityId": capability.capability_id,
         "label": capability.label,
         "state": capability.state.value,

@@ -17,6 +17,7 @@ export function observationStateCopy(state: string, t: Translate): string {
     case "SOURCE_UNAVAILABLE": return t("Su web no se pudo observar con sus reglas de acceso. No concluimos nada de ello.", "Its website could not be observed under its access rules. We conclude nothing from that.");
     case "BUDGET_EXHAUSTED": return t("La observación se detuvo en sus límites. Seguirá en el próximo ciclo.", "Observation stopped at its limits. It will continue in the next cycle.");
     case "CAPACITY_REQUIRED": return t("Tu capacidad actual ya está en uso. Amplíala para observar esta organización.", "Your current capacity is already in use. Expand it to observe this organization.");
+    case "OBSERVATION_FAILED": return t("No pudimos completar la observación. Pide que se vuelva a comprobar; no concluimos nada de ello.", "We could not complete the observation. Ask to check again; we conclude nothing from that.");
     default: return t("Observación no disponible todavía.", "Observation not available yet.");
   }
 }
@@ -80,7 +81,7 @@ export function discoveryCopy(d: Discovery, t: Translate, locale = "en"): { find
   if (d.kind === "WEB_REPRESENTATION") return { finding: t("Representación web medida", "Web representation measured"), why: t("Comprobaciones de su propia web, con instrumento y condiciones. No es una posición en buscadores.", "Checks of its own website, with instrument and conditions. It is not a search ranking.") };
   if (d.kind === "REPRESENTATION_GAP") return d.code === "HOMEPAGE_NOINDEX"
     ? { finding: t("Su página principal pide no aparecer en buscadores.", "Its homepage asks search engines not to index it."), why: t("Los buscadores podrían no representar la web mientras siga así. No mide posiciones.", "Search engines may not represent the site while it stays so. It does not measure rankings.") }
-    : { finding: t("Su oferta aparece en el texto, pero no en datos estructurados.", "Its offer appears in the text, but not as structured data."), why: t("Las superficies que leen datos estructurados podrían no relacionarla con lo que ofrece. Es una brecha posible, no una causa medida.", "Surfaces that read structured data may not connect it with what it offers. It is a possible gap, not a measured cause.") };
+    : { finding: t("En las páginas leídas, su oferta aparece en el texto pero no en datos estructurados.", "On the pages read, its offer appears in the text but not as structured data."), why: t("Las superficies que leen datos estructurados podrían no relacionarla con lo que ofrece. Es una brecha posible, no una causa medida.", "Surfaces that read structured data may not connect it with what it offers. It is a possible gap, not a measured cause.") };
   if (d.code.startsWith("NO_GOVERNED_DEMAND_SOURCE:")) return { finding: `${t("Aún no hay una fuente de demanda gobernada para", "No governed demand source yet for")} ${placeLabel(String(d.detail.jurisdiction ?? ""), locale)}`, why: t("Falta de fuente no es falta de mercado ni de demanda.", "No source is not no market and not no demand.") };
   switch (d.code) {
     case "IDENTITY_NOT_VERIFIED": return { finding: t("Identidad legal todavía no verificada.", "Legal identity not verified yet."), why: t("Lo que ves describe la web pública, no una organización verificada por un registro.", "What you see describes the public website, not an organization verified by a registry.") };
@@ -91,6 +92,7 @@ export function discoveryCopy(d: Discovery, t: Translate, locale = "en"): { find
     case "NO_RELEVANT_DEMAND_FOUND": return { finding: t("Las fuentes consultadas no tienen ahora demanda que coincida.", "The sources searched have no matching demand right now."), why: t("Sin resultado no es sin oportunidad; volveremos a observar.", "No result is not no opportunity; we will observe again.") };
     case "NOT_AN_OPERATING_BUSINESS_SITE": return { finding: t("La página no parece la web de una actividad en marcha.", "The page does not read as an operating business website."), why: t("Es un juicio no autoritativo sobre la página, no sobre la organización.", "It is a non-authoritative judgment about the page, not about the organization.") };
     case "NO_PUBLIC_WEBSITE": return { finding: t("No hay una web pública que observar.", "There is no public website to observe."), why: t("Añade su web para empezar la observación.", "Add its website to start observing.") };
+    case "WEBSITE_OF_ANOTHER_ORGANIZATION": return { finding: t("Un registro asocia esta web a otra organización.", "A registry links this website to another organization."), why: t("No la observamos como si fuera de esta organización.", "We do not observe it as if it belonged to this organization.") };
     default: return { finding: t("La web no se pudo observar con sus reglas de acceso.", "The website could not be observed under its access rules."), why: t("Respetamos robots.txt y nuestros límites; no concluimos nada de ello.", "We respect robots.txt and our limits; we conclude nothing from that.") };
   }
 }
@@ -126,7 +128,7 @@ function Basis({ d }: { d: Discovery }) {
   const { t, locale } = useLocale();
   const rows: Array<[string, string]> = [];
   const detail = d.detail;
-  if (d.excerpt) rows.push([t("Cita exacta", "Exact quote"), `“${d.excerpt}”`]);
+  if (d.excerpt) rows.push([detail.method === "SEMANTIC_JUDGMENT" ? t("Texto evaluado", "Text judged") : t("Cita exacta", "Exact quote"), `“${d.excerpt}”`]);
   if (typeof detail.method === "string") rows.push([t("Método", "Method"), detail.method]);
   if (typeof detail.instrument === "string") rows.push([t("Instrumento", "Instrument"), detail.instrument]);
   if (typeof detail.model === "string") rows.push([t("Evaluador", "Evaluator"), `${detail.model}${typeof detail.confidence === "number" ? ` · ${Math.round(detail.confidence * 100)}%` : ""}`]);
@@ -169,7 +171,7 @@ export function FirstObservationView({ observation }: { observation: FirstObserv
     <span className="eyebrow">{t("Primera observación", "First observation")}</span>
     <h3 id="first-observation-title">{observationStateCopy(observation.state, t)}</h3>
     <p className="fo-authority">{t("Lectura operativa con sus fuentes. No es verdad canónica: lo potencial sigue siendo potencial.", "Operational reading with its sources. It is not canonical truth: what is potential stays potential.")}</p>
-    {findings.length > 0 && <div className="fo-group"><h4 className="fo-group-title">{t("Lo que AXIGNAL ha observado", "What AXIGNAL observed")}</h4>{findings.map((d, i) => <Finding key={`${d.code}-${i}`} d={d}/>)}</div>}
+    {findings.length > 0 && <div className="fo-group"><h4 className="fo-group-title">{t("Lo que AXIGNAL ha encontrado", "What AXIGNAL found")}</h4>{findings.map((d, i) => <Finding key={`${d.code}-${i}`} d={d}/>)}</div>}
     {gaps.length > 0 && <div className="fo-group"><h4 className="fo-group-title">{t("Brechas posibles", "Possible gaps")}</h4>{gaps.map((d, i) => <Finding key={`${d.code}-${i}`} d={d}/>)}</div>}
     {unknowns.length > 0 && <div className="fo-group"><h4 className="fo-group-title">{t("Lo que todavía no sabemos", "What we do not know yet")}</h4>{unknowns.map((d, i) => <Finding key={`${d.code}-${i}`} d={d}/>)}</div>}
   </section>;

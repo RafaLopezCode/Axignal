@@ -495,7 +495,12 @@ class _SubscriberWorkflow(SubscriberWorkflowPort):
         observing = self._trigger.first_observation
         if observing is not None:
             for item in organizations:
-                summary = observing.summary(context, str(item["focusId"]))
+                organization = item["organizationId"]
+                summary = observing.summary(
+                    context,
+                    str(item["focusId"]),
+                    None if organization is None else str(organization),
+                )
                 if summary is not None:
                     item["observation"] = summary
         return {
@@ -701,7 +706,12 @@ class _SubscriberOutputs(SubscriberOutputPort):
             }
         wire = self._economic.read(context, focus_id, as_of).to_wire()
         if observing is not None:
-            wire["firstObservation"] = observing.view(context, str(focus_id))
+            entry = self._portfolio.store.get_authorized(context, focus_id)
+            wire["firstObservation"] = observing.view(
+                context,
+                str(focus_id),
+                None if entry is None else str(entry.xeed.organization_id),
+            )
         return wire
 
 

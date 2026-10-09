@@ -66,7 +66,7 @@ registry admits identity (ADR-0087 unchanged); nothing in this spec writes FAXT.
 | L1 Deterministic | locator normalization, robots.txt (cached per origin), HTML/JSON-LD parse, lexicon, schema.org types, addresses, languages, identifiers | 1 request per origin per robots TTL | no CURRENT reading |
 | L2 Cheap public fetch | homepage; then at most 2 high-information pages (about / services / contact / locations) | ≤ 3 page requests | homepage always; extra pages only while activity or location is UNKNOWN |
 | L3 Jev | one batch, one state, the routing-relevant questions only | System One tokens | semantic layer enabled and deterministic activity insufficient |
-| L4 Demand research | existing strategy + routing + garden pruning → adopted sources | source requests (bounded 4) | capability codes × market have a routable adopted source |
+| L4 Demand research | existing strategy + routing + garden pruning → world demand index first, live adopted source only for uncovered slices | 0 when the slice is indexed; else source requests (bounded 4) | capability codes × market have a routable adopted source |
 | L5 Luna | none in First Observation (escalation budget 0 for its questions) | — | never here; AXENT keeps its own budget |
 | L6 AXENT deep research | user-directed only (existing) | — | unchanged |
 
@@ -129,9 +129,10 @@ UNKNOWN ≠ failure; no result ≠ no opportunity; no source ≠ no market.
 
 | Work | Level | Mechanism |
 |---|---|---|
-| robots decision, page fetch, site reading | world (origin) | site reading store, TTL from the temporal policy |
+| robots decision, page fetch, site reading | world (website: origin + path) | site reading store, TTL from the temporal policy |
 | semantic judgment over public reading | world (state fingerprint) | existing judgment memory (spec 062) |
-| identical source query on the same UTC day | world (source, query key, day) | world query cache |
+| identical source query on the same UTC day | world (source, query key, day) | shared findings ledger (the one T12 replays) |
+| authority event stream (procurement notices) | world (source × country × notice kind) | world demand index: demanded slice ingested once, matched for every Focus (ADR-0091 §9) |
 | Focus seed observation | Organization subject | appended once per reading fingerprint; Focus readers unchanged |
 | First Proof, ranking, demand fit | tenant | private result store |
 
@@ -167,7 +168,9 @@ the semantic layer, or the T12 timer in production is a separate CTO step.
 
 ## 13. Out of scope (next tasks, defined in validation.md)
 
-World-source TED ingestion (one feed, many Foci), USAspending/SAM.gov adapters, HTTP
-conditional requests (ETag/Last-Modified) in the governed transport, persisted
-operational learning across runs, user-directed market widening, Luna synthesis of the
-First Proof narrative.
+USAspending/SAM.gov adapters (the slice contract is ready: an adapter only needs a paged
+world-slice search), HTTP conditional requests (ETag/Last-Modified) in the governed
+transport, sitemap reading, persisted operational learning across First Observation runs,
+user-directed market widening, search/generative/reputation instruments (rights first,
+ADR-0015), Luna synthesis of the First Proof narrative. Family architecture, acquisition
+modes and the full family matrix: `family-architecture.md`.

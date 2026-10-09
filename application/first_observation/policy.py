@@ -31,8 +31,10 @@ class FirstObservationPolicy:
     robots_reuse_for: timedelta = timedelta(days=7)
     #: Extra pages read after the homepage, only while activity or location is UNKNOWN.
     max_extra_pages: int = 2
-    #: Hard ceiling of HTTP requests for the whole site stage (redirects included).
-    max_site_requests: int = 8
+    #: Hard ceiling of HTTP requests for the whole site stage (redirects included);
+    #: every optional fetch reserves its worst case (1 + max redirects) before running.
+    max_site_requests: int = 16
+    requests_per_fetch: int = 4
     #: Demand research at first observation: small; T12 continues if it is justified.
     research_budget: ObservationBudget = _RESEARCH_BUDGET
     research_stop: StopPolicy = _RESEARCH_STOP

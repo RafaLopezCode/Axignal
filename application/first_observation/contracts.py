@@ -24,6 +24,8 @@ class IdentityLink(StrEnum):
     REGISTRY_VERIFIED = "REGISTRY_VERIFIED"
     SUBSCRIBER_DIRECTED = "SUBSCRIBER_DIRECTED"
     IDENTITY_PENDING = "IDENTITY_PENDING"
+    #: A registry records this website for a different Organization: never observed as it.
+    WEBSITE_OF_ANOTHER_ORGANIZATION = "WEBSITE_OF_ANOTHER_ORGANIZATION"
 
 
 @dataclass(frozen=True, slots=True)
@@ -178,7 +180,7 @@ class RunLedger:
             "sourceRequests": {"value": self.source_requests, "basis": "MEASURED"},
             "sourceCacheHits": {"value": self.source_cache_hits, "basis": "MEASURED"},
             "siteReuseHits": {"value": self.site_reuse_hits, "basis": "MEASURED"},
-            "requestsAvoided": {"value": self.requests_avoided, "basis": "MEASURED"},
+            "requestsAvoided": {"value": self.requests_avoided, "basis": "ESTIMATED"},
             "jevCalls": {"value": self.jev_calls, "basis": "MEASURED"},
             "jevInputTokens": {
                 "value": self.jev_input_tokens,
@@ -210,6 +212,7 @@ class ObservationState(StrEnum):
     SOURCE_UNAVAILABLE = "SOURCE_UNAVAILABLE"
     BUDGET_EXHAUSTED = "BUDGET_EXHAUSTED"
     CAPACITY_REQUIRED = "CAPACITY_REQUIRED"
+    OBSERVATION_FAILED = "OBSERVATION_FAILED"
 
 
 class DiscoveryKind(StrEnum):

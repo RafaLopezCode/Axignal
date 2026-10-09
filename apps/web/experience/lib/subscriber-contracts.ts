@@ -10,7 +10,7 @@ export const subscriberCommandSchema = z.discriminatedUnion("action", [
   z.object({ action: z.literal("refresh_purchase"), requestRef: ref }).strict(),
 ]);
 // Spec 063: First Observation. Operational, not canonical; every finding keeps its basis.
-export const observationStates = ["QUEUED", "OBSERVING_PUBLIC_PRESENCE", "FIRST_PROOF_READY", "NOT_ENOUGH_CAPABILITY_EVIDENCE", "NO_PUBLIC_WEBSITE", "SOURCE_UNAVAILABLE", "BUDGET_EXHAUSTED", "CAPACITY_REQUIRED", "OBSERVATION_DISABLED"] as const;
+export const observationStates = ["QUEUED", "OBSERVING_PUBLIC_PRESENCE", "FIRST_PROOF_READY", "NOT_ENOUGH_CAPABILITY_EVIDENCE", "NO_PUBLIC_WEBSITE", "SOURCE_UNAVAILABLE", "BUDGET_EXHAUSTED", "CAPACITY_REQUIRED", "OBSERVATION_DISABLED", "OBSERVATION_FAILED"] as const;
 export const discoverySchema = z.object({
   kind: z.enum(["PUBLIC_PRESENCE", "ACTIVITY", "DECLARED_LOCATION", "DECLARED_SERVICE_AREA", "LANGUAGES", "WEB_REPRESENTATION", "REPRESENTATION_GAP", "IDENTITY_HINT", "DEMAND", "SIGNIFICANT_UNKNOWN"]),
   code: z.string().min(1).max(160),
@@ -25,12 +25,12 @@ export type Discovery = z.infer<typeof discoverySchema>;
 export const firstObservationSchema = z.object({
   state: z.enum(observationStates),
   firstProofReady: z.boolean(),
-  discoveries: z.array(discoverySchema).max(200),
+  discoveries: z.array(discoverySchema).max(500),
   target: z.object({
     kind: z.enum(["FOCUS", "PENDING"]),
     website: z.string().max(2048).nullable(),
     name: z.string().max(2048).nullable(),
-    identityLink: z.enum(["REGISTRY_VERIFIED", "SUBSCRIBER_DIRECTED", "IDENTITY_PENDING"]),
+    identityLink: z.enum(["REGISTRY_VERIFIED", "SUBSCRIBER_DIRECTED", "IDENTITY_PENDING", "WEBSITE_OF_ANOTHER_ORGANIZATION"]),
   }).optional(),
   observedAt: z.string().max(64).optional(),
   authority: z.literal("OPERATIONAL_NOT_CANONICAL").optional(),
@@ -91,7 +91,7 @@ export const subscriberResultSchema = z.object({
   desiredCapacity: z.number().int().positive().optional(),
   checkoutUrl: z.url().nullable().optional(), paymentUrl: z.url().nullable().optional(),
   reason: z.string().max(160).nullable().optional(),
-  observationState: z.enum(["NOT_READY", "BLOCKED_COST_UNKNOWN", "BLOCKED_BUDGET", "PARTIAL", "COMPLETED", "BLOCKED", "ACCEPTED", "INSUFFICIENT_EVIDENCE", "QUEUED", "CAPACITY_REQUIRED"]).optional(),
+  observationState: z.enum(["NOT_READY", "BLOCKED_COST_UNKNOWN", "BLOCKED_BUDGET", "PARTIAL", "COMPLETED", "BLOCKED", "ACCEPTED", "INSUFFICIENT_EVIDENCE", "QUEUED", "CAPACITY_REQUIRED", "BUDGET_EXHAUSTED"]).optional(),
   runId: ref.optional(),
 });
 export function approvedPaymentUrl(value: string | null | undefined): string | null {

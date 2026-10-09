@@ -42,7 +42,12 @@ def _attend(facade: Any, tmp_path: Path, subject: str, locator: str) -> tuple[st
 def _view(facade: Any, token: str, target: str) -> dict[str, Any]:
     read = facade.handle("GET", f"/subscriber/organizations/{target}/output", _headers(token))
     assert read.status == 200, read.body
-    return dict(read.body["firstObservation"])
+    view = dict(read.body["firstObservation"])
+    # The cost ledger is operator state: never in the subscriber's view.
+    assert "ledger" not in view and "judged" not in view
+    tenant = str(facade.identity.authenticate(token).tenant_id)
+    internal = runtime(facade).store.proof(tenant, target)
+    return view | {"_ledger": None if internal is None else internal["ledger"]}
 
 
 def _pending_id(facade: Any, token: str) -> str:
@@ -51,7 +56,7 @@ def _pending_id(facade: Any, token: str) -> str:
 
 
 def _ledger(view: dict[str, Any], key: str) -> Any:
-    return view["ledger"][key]["value"]
+    return view["_ledger"][key]["value"]
 
 
 def test_solar_installer_in_spain_reaches_routed_public_demand(tmp_path: Path) -> None:
@@ -86,7 +91,7 @@ def test_solar_installer_in_spain_reaches_routed_public_demand(tmp_path: Path) -
     assert world.sites.requests == [SOLAR_ES.rstrip("/") + "/robots.txt", SOLAR_ES]
     assert world.judge.calls == []
     assert _ledger(view, "httpRequests") == 2 and _ledger(view, "lunaCalls") == 0
-    assert "SKIPPED:SEMANTIC:DETERMINISTIC_SUFFICIENT" in view["ledger"]["decisions"]
+    assert "SKIPPED:SEMANTIC:DETERMINISTIC_SUFFICIENT" in view["_ledger"]["decisions"]
     assert view["target"] == {
         "kind": "PENDING",
         "website": SOLAR_ES,
@@ -123,11 +128,13 @@ def test_language_school_in_arkansas_is_understood_and_gets_a_grounded_source_ga
     # Extra pages were read only because activity and location were UNKNOWN.
     assert SCHOOL_AR + "courses" in world.sites.requests
     assert SCHOOL_AR + "blog/2024/tips" not in world.sites.requests
-    assert any(d.startswith("FETCHED:ACTIVITY") for d in view["ledger"]["decisions"])
+    assert any(d.startswith("FETCHED:ACTIVITY") for d in view["_ledger"]["decisions"])
     # One Jev batch, many questions; never Luna.
-    assert len(world.judge.calls) == 1 and len(world.judge.calls[0].questions) >= 5
+    assert (
+        len(world.judge.calls) == 1 and len(world.judge.calls[0].questions) == 4
+    )  # sector, NAICS, operating, location
     assert _ledger(view, "jevCalls") == 1 and _ledger(view, "lunaCalls") == 0
-    assert view["ledger"]["jevUsd"]["basis"] == "VENDOR_PUBLISHED"
+    assert view["_ledger"]["jevUsd"]["basis"] == "VENDOR_PUBLISHED"
 
 
 def test_semantic_layer_off_keeps_a_deterministic_honest_first_observation(tmp_path: Path) -> None:
@@ -141,7 +148,7 @@ def test_semantic_layer_off_keeps_a_deterministic_honest_first_observation(tmp_p
     assert {"PUBLIC_WEBSITE_OBSERVED", "LANGUAGES_PUBLISHED", "ACTIVITY_NOT_ESTABLISHED"} <= codes(
         view
     )
-    assert "SKIPPED:SEMANTIC:LAYER_DISABLED" in view["ledger"]["decisions"]
+    assert "SKIPPED:SEMANTIC:LAYER_DISABLED" in view["_ledger"]["decisions"]
     assert world.judge.calls == [] and world.ted.queries == []
 
 
@@ -241,7 +248,7 @@ def test_semantic_judgments_are_reused_across_tenants(tmp_path: Path) -> None:
     runtime(facade).drain()
     view = _view(facade, token, _pending_id(facade, token))
     assert len(world.judge.calls) == 1  # the second tenant paid no provider call
-    assert _ledger(view, "jevCalls") == 0 and _ledger(view, "jevMemoryHits") >= 5
+    assert _ledger(view, "jevCalls") == 0 and _ledger(view, "jevMemoryHits") == 4
     assert discoveries(view, "ACTIVITY")[0]["code"] == "isic-P"
 
 
@@ -250,7 +257,14 @@ def test_transport_failure_is_retried_and_succeeds(tmp_path: Path) -> None:
     world.sites.fail_next.add(SOLAR_ES.rstrip("/") + "/robots.txt")
     facade = build(tmp_path, world)
     token, _ = _attend(facade, tmp_path, "subject:retry", SOLAR_ES)
-    assert runtime(facade).drain() == 2  # first attempt failed, second completed
+    assert runtime(facade).drain() == 1  # first attempt failed; the retry waits its backoff
+    with sqlite3.connect(tmp_path / "first-observation.sqlite3") as db:
+        (state, attempts, not_before) = db.execute(
+            "SELECT state, attempts, not_before FROM fo_jobs"
+        ).fetchone()
+        assert (state, attempts) == ("QUEUED", 1) and not_before is not None
+        db.execute("UPDATE fo_jobs SET not_before=NULL")  # the backoff elapses
+    assert runtime(facade).drain() == 1
     view = _view(facade, token, _pending_id(facade, token))
     assert view["state"] == "FIRST_PROOF_READY"
     with sqlite3.connect(tmp_path / "first-observation.sqlite3") as db:

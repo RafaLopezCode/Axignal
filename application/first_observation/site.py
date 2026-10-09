@@ -177,6 +177,7 @@ class _PageParser(HTMLParser):
         self.current: list[str] = []
         self.title: list[str] = []
         self.in_title = False
+        self.svg_depth = 0
         self.heading: list[str] | None = None
         self.headings: list[str] = []
         self.meta: dict[str, str] = {}
@@ -212,10 +213,13 @@ class _PageParser(HTMLParser):
             self.canonical = self.canonical or values["href"].strip()[:500]
         if tag == "script" and values.get("type", "").lower() == "application/ld+json":
             self.jsonld_chunks = []
-        if tag == "title":
-            self.in_title = True
-        if tag == "body":  # an unclosed <head> must not swallow the page
+        if tag == "svg":
+            self.svg_depth += 1
+        if tag == "title" and not self.svg_depth and not self.title:
+            self.in_title = True  # the document title only, never an <svg><title> icon
+        if tag == "body":  # an unclosed <head> or <title> must not swallow the page
             self.skip_depth = 0
+            self.in_title = False
         if tag in _SKIP_CONTENT:
             self.skip_depth += 1
             return
@@ -233,6 +237,8 @@ class _PageParser(HTMLParser):
             self.jsonld_chunks = None
         if tag == "title":
             self.in_title = False
+        if tag == "svg":
+            self.svg_depth = max(0, self.svg_depth - 1)
         if tag in _SKIP_CONTENT:
             self.skip_depth = max(0, self.skip_depth - 1)
             return

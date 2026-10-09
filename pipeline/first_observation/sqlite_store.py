@@ -2,9 +2,11 @@
 
 Three kinds of rows, none of them AXIGLAND truth:
 
-* ``fo_sites``  — world-level site readings, one per website origin (public data);
+* ``fo_sites``  — world-level site readings, one per website (origin and path; public data);
 * ``fo_jobs``   — durable, leased, idempotent First Observation work items;
 * ``fo_proofs`` — tenant-private First Proof per attention target.
+
+Every stored time is UTC, so lease, due and daily comparisons are exact.
 """
 
 from __future__ import annotations
@@ -15,7 +17,7 @@ import secrets
 import sqlite3
 from collections.abc import Iterator
 from contextlib import contextmanager
-from datetime import datetime, timedelta
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
@@ -27,11 +29,14 @@ from application.first_observation.contracts import (
     SiteReading,
 )
 
+#: Failed attempts wait 2, 4, 8... minutes before a retry (transient faults clear).
+_BACKOFF_MINUTES = 2
+
 
 def _iso(value: datetime) -> str:
     if value.tzinfo is None:
         raise ValueError("first observation times must be timezone-aware")
-    return value.isoformat()
+    return value.astimezone(UTC).isoformat()
 
 
 class SqliteFirstObservationStore:
@@ -56,6 +61,8 @@ class SqliteFirstObservationStore:
                     attempts INTEGER NOT NULL DEFAULT 0,
                     lease_token TEXT,
                     lease_expires_at TEXT,
+                    not_before TEXT,
+                    claimed_at TEXT,
                     last_error TEXT,
                     created_at TEXT NOT NULL,
                     updated_at TEXT NOT NULL
@@ -97,9 +104,9 @@ class SqliteFirstObservationStore:
             db.execute("COMMIT")
 
     # ---- world-level site readings --------------------------------------------------
-    def site(self, origin: str) -> SiteReading | None:
+    def site(self, key: str) -> SiteReading | None:
         with self._connect() as db:
-            row = db.execute("SELECT reading FROM fo_sites WHERE origin=?", (origin,)).fetchone()
+            row = db.execute("SELECT reading FROM fo_sites WHERE origin=?", (key,)).fetchone()
         return None if row is None else SiteReading.from_wire(json.loads(row["reading"]))
 
     def save_site(self, reading: SiteReading) -> None:
@@ -136,28 +143,42 @@ class SqliteFirstObservationStore:
             )
         return job_id, cursor.rowcount == 1
 
+    def jobs_for(self, tenant_id: str, target_ref: str) -> tuple[str, ...]:
+        """States of every job of one target, oldest first."""
+        with self._connect() as db:
+            rows = db.execute(
+                """SELECT state FROM fo_jobs WHERE tenant_id=? AND target_ref=?
+                ORDER BY created_at, job_id""",
+                (tenant_id, target_ref),
+            ).fetchall()
+        return tuple(str(row["state"]) for row in rows)
+
     def claim(
         self, *, now: datetime, lease_seconds: int, max_attempts: int
     ) -> ObservationJob | None:
         token = secrets.token_hex(16)
+        at = _iso(now)
         with self._transaction() as db:
+            # A worker that died on the last attempt must not leave the job RUNNING forever.
+            db.execute(
+                """UPDATE fo_jobs SET state='FAILED', lease_token=NULL, lease_expires_at=NULL,
+                last_error='LEASE_EXPIRED_ON_LAST_ATTEMPT', updated_at=?
+                WHERE state='RUNNING' AND lease_expires_at < ? AND attempts >= ?""",
+                (at, at, max_attempts),
+            )
             row = db.execute(
-                """SELECT * FROM fo_jobs WHERE attempts < ? AND (state='QUEUED'
+                """SELECT * FROM fo_jobs WHERE attempts < ? AND (
+                (state='QUEUED' AND (not_before IS NULL OR not_before <= ?))
                 OR (state='RUNNING' AND lease_expires_at < ?))
                 ORDER BY created_at, job_id LIMIT 1""",
-                (max_attempts, _iso(now)),
+                (max_attempts, at, at),
             ).fetchone()
             if row is None:
                 return None
             db.execute(
                 """UPDATE fo_jobs SET state='RUNNING', attempts=attempts+1, lease_token=?,
-                lease_expires_at=?, updated_at=? WHERE job_id=?""",
-                (
-                    token,
-                    _iso(now + timedelta(seconds=lease_seconds)),
-                    _iso(now),
-                    row["job_id"],
-                ),
+                lease_expires_at=?, claimed_at=?, updated_at=? WHERE job_id=?""",
+                (token, _iso(now + timedelta(seconds=lease_seconds)), at, at, row["job_id"]),
             )
         return ObservationJob(
             job_id=str(row["job_id"]),
@@ -168,12 +189,21 @@ class SqliteFirstObservationStore:
             lease_token=token,
         )
 
-    def jobs_started_on(self, day: str) -> int:
-        """Jobs that began work on one UTC day (``YYYY-MM-DD``): the daily ceiling."""
+    def jobs_created_today(self, tenant_id: str, now: datetime) -> int:
+        """Jobs one tenant created on the current UTC day (per-tenant fairness cap)."""
+        day = _iso(now)[:10]
         with self._connect() as db:
             row = db.execute(
-                "SELECT COUNT(*) FROM fo_jobs WHERE attempts > 0 AND substr(updated_at,1,10)=?",
-                (day,),
+                "SELECT COUNT(*) FROM fo_jobs WHERE tenant_id=? AND substr(created_at,1,10)=?",
+                (tenant_id, day),
+            ).fetchone()
+        return int(row[0])
+
+    def jobs_started_on(self, day: str) -> int:
+        """Jobs claimed on one UTC day (``YYYY-MM-DD``): the daily ceiling."""
+        with self._connect() as db:
+            row = db.execute(
+                "SELECT COUNT(*) FROM fo_jobs WHERE substr(claimed_at,1,10)=?", (day,)
             ).fetchone()
         return int(row[0])
 
@@ -212,18 +242,30 @@ class SqliteFirstObservationStore:
         return True
 
     def fail(self, job: ObservationJob, *, error: str, now: datetime, retry: bool) -> None:
+        """Retry later with backoff, or fail for good and stop scheduling re-checks."""
+        not_before = (
+            _iso(now + timedelta(minutes=_BACKOFF_MINUTES ** max(1, job.attempts)))
+            if retry
+            else None
+        )
         with self._transaction() as db:
             db.execute(
                 """UPDATE fo_jobs SET state=?, lease_token=NULL, lease_expires_at=NULL,
-                last_error=?, updated_at=? WHERE job_id=? AND lease_token=?""",
+                not_before=?, last_error=?, updated_at=? WHERE job_id=? AND lease_token=?""",
                 (
                     "QUEUED" if retry else "FAILED",
+                    not_before,
                     error[:200],
                     _iso(now),
                     job.job_id,
                     job.lease_token,
                 ),
             )
+            if not retry:
+                db.execute(
+                    "UPDATE fo_proofs SET next_due_at=NULL WHERE tenant_id=? AND target_ref=?",
+                    (job.target.tenant_id, job.target.target_ref),
+                )
 
     # ---- tenant-private reads ---------------------------------------------------------
     def proof(self, tenant_id: str, target_ref: str) -> dict[str, Any] | None:
@@ -235,19 +277,27 @@ class SqliteFirstObservationStore:
         return None if row is None else dict(json.loads(row["proof"]))
 
     def status(self, tenant_id: str, target_ref: str) -> str | None:
-        """QUEUED / OBSERVING_PUBLIC_PRESENCE while work is open, else the proof state."""
+        """Open work, else a failure newer than the proof, else the proof state."""
         with self._connect() as db:
             job = db.execute(
-                """SELECT state FROM fo_jobs WHERE tenant_id=? AND target_ref=?
-                AND state IN ('QUEUED','RUNNING') ORDER BY created_at DESC LIMIT 1""",
+                """SELECT state, updated_at FROM fo_jobs WHERE tenant_id=? AND target_ref=?
+                ORDER BY created_at DESC, updated_at DESC LIMIT 1""",
                 (tenant_id, target_ref),
             ).fetchone()
             proof = db.execute(
-                "SELECT state FROM fo_proofs WHERE tenant_id=? AND target_ref=?",
+                "SELECT state, observed_at FROM fo_proofs WHERE tenant_id=? AND target_ref=?",
                 (tenant_id, target_ref),
             ).fetchone()
-        if job is not None:
-            return "QUEUED" if job["state"] == "QUEUED" else "OBSERVING_PUBLIC_PRESENCE"
+        if job is not None and job["state"] == "QUEUED":
+            return "QUEUED"
+        if job is not None and job["state"] == "RUNNING":
+            return "OBSERVING_PUBLIC_PRESENCE"
+        if (
+            job is not None
+            and job["state"] == "FAILED"
+            and (proof is None or str(job["updated_at"]) > str(proof["observed_at"]))
+        ):
+            return "OBSERVATION_FAILED"
         return None if proof is None else str(proof["state"])
 
     def observed_targets(self, tenant_id: str) -> frozenset[str]:

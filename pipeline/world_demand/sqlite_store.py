@@ -93,7 +93,9 @@ class SqliteWorldDemandIndex:
                     window_start TEXT,
                     complete INTEGER NOT NULL DEFAULT 0,
                     requests INTEGER NOT NULL DEFAULT 0,
-                    records INTEGER NOT NULL DEFAULT 0
+                    records INTEGER NOT NULL DEFAULT 0,
+                    cursor_page INTEGER NOT NULL DEFAULT 1,
+                    traversal_since TEXT
                 );
                 """
             )
@@ -120,6 +122,8 @@ class SqliteWorldDemandIndex:
             requests=int(row["requests"]),
             records=int(row["records"]),
             demanded_at=_time(row["demanded_at"]),
+            cursor_page=int(row["cursor_page"]),
+            traversal_since=_time(row["traversal_since"]),
         )
 
     def state(self, demand_slice: DemandSlice) -> SliceState | None:
@@ -156,7 +160,8 @@ class SqliteWorldDemandIndex:
             for record in records:
                 db.execute(
                     """INSERT INTO wd_records VALUES (?,?,?,?,?)
-                    ON CONFLICT(source_id, record_id) DO UPDATE SET payload=excluded.payload""",
+                    ON CONFLICT(source_id, record_id) DO UPDATE SET payload=excluded.payload,
+                    kind=excluded.kind, published_at=excluded.published_at""",
                     (
                         record.source_id,
                         record.record_id,
@@ -181,14 +186,18 @@ class SqliteWorldDemandIndex:
         complete: bool,
         requests: int,
         records: int,
+        cursor_page: int = 1,
+        traversal_since: datetime | None = None,
     ) -> None:
         with self._connect() as db:
             db.execute(
                 """INSERT INTO wd_slices (slice_key, source_id, jurisdiction, kind, ingested_at,
-                window_start, complete, requests, records) VALUES (?,?,?,?,?,?,?,?,?)
+                window_start, complete, requests, records, cursor_page, traversal_since)
+                VALUES (?,?,?,?,?,?,?,?,?,?,?)
                 ON CONFLICT(slice_key) DO UPDATE SET ingested_at=excluded.ingested_at,
                 window_start=excluded.window_start, complete=excluded.complete,
-                requests=excluded.requests, records=excluded.records""",
+                requests=excluded.requests, records=excluded.records,
+                cursor_page=excluded.cursor_page, traversal_since=excluded.traversal_since""",
                 (
                     demand_slice.key,
                     demand_slice.source_id,
@@ -199,6 +208,8 @@ class SqliteWorldDemandIndex:
                     int(complete),
                     requests,
                     records,
+                    cursor_page,
+                    None if traversal_since is None else traversal_since.isoformat(),
                 ),
             )
 

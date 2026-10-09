@@ -63,6 +63,8 @@ class SharedFindingsPort:
             )
         findings = self._live.observe(action, source)
         self.live_requests += findings.requests
-        if findings.failure is None:
+        # Only real retrievals are recorded: an index answer (0 requests) is not a source
+        # response with the source's own matching semantics.
+        if findings.failure is None and findings.requests > 0:
             self._ledger.record_findings(RecordedFindings(source.source_id, action.query, findings))
         return findings

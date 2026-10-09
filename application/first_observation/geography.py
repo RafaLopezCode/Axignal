@@ -101,7 +101,7 @@ def country_code(value: str | None) -> str | None:
         return None
     raw = value.strip()
     if len(raw) == 2 and raw.isalpha():
-        return raw.upper()
+        return {"UK": "GB", "EL": "GR"}.get(raw.upper(), raw.upper())
     if len(raw) == 3 and raw.upper() in {"USA", "ESP", "FRA", "DEU", "ITA", "PRT", "GBR"}:
         return {"USA": "US", "ESP": "ES", "FRA": "FR", "DEU": "DE", "ITA": "IT",
                 "PRT": "PT", "GBR": "GB"}[raw.upper()]  # fmt: skip

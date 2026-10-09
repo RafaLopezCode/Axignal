@@ -231,8 +231,8 @@ def derive_observation(
                 # POTENTIAL attention scopes when the narrow explicit bootstrap has none.
                 reader = getattr(authority, "first_observation", None)
                 derived = None if reader is None else reader(context, focus.focus_id)
-                capabilities = capabilities or derived_capabilities(derived)
-                candidate_scopes = candidate_scopes or derived_scopes(derived)
+                capabilities = capabilities or derived_capabilities(derived, organization_id)
+                candidate_scopes = candidate_scopes or derived_scopes(derived, organization_id)
                 if not capabilities:
                     reasons["CAPABILITY_UNKNOWN"] += 1
                 elif not candidate_scopes:
