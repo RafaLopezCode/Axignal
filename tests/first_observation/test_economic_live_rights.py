@@ -582,6 +582,87 @@ def test_source_only_legacy_descriptors_resolve_authorized_metadata(
     assert QUOTE not in json.dumps(economic.deliver_content(context, XeedId(focus), legacy))
 
 
+def test_undated_legacy_row_cannot_borrow_same_source_dated_permission(
+    tmp_path: Path, monkeypatch: Any
+) -> None:
+    facade, _rights, token, focus = _measured(tmp_path, monkeypatch)
+    economic = facade.outputs._economic
+    context = facade.identity.authenticate(token)
+    initial = _read(facade, token, focus)
+    identifier = initial["cognition"]["opportunities"][0]["capability"]["sourceId"]
+    metadata = economic.observation_memory.access_metadata(
+        initial["organization"]["id"], identifier
+    )
+    source = metadata.record.source_ref
+    original = {
+        "evidence": [
+            {
+                "source_ref": source,
+                "observed_at": metadata.record.observed_at.isoformat(),
+                "excerpt": "Authorized dated citation",
+            },
+            {
+                "source_ref": source,
+                "excerpt": "Undated untraceable legacy citation",
+                "fields": {"capability.id": "normalized-capability"},
+            },
+        ]
+    }
+    delivered = economic.deliver_content(context, XeedId(focus), original)
+    assert delivered["evidence"][0]["excerpt"] == "Authorized dated citation"
+    assert delivered["evidence"][1]["excerpt"] == WITHHELD_TEXT
+    assert delivered["evidence"][1]["contentAccess"] == "UNKNOWN"
+    assert delivered["evidence"][1]["fields"]["capability.id"] == "normalized-capability"
+    assert original["evidence"][1]["excerpt"] == "Undated untraceable legacy citation"
+    # Same as with an earlier registered grant: time can be represented equivalently.
+    original["evidence"][0]["observed_at"] = metadata.record.observed_at.isoformat().replace(
+        "+00:00", "Z"
+    )
+    assert (
+        economic.deliver_content(context, XeedId(focus), original)["evidence"][0]["excerpt"]
+        == "Authorized dated citation"
+    )
+
+
+def test_explicit_observation_identity_must_match_source_and_time(
+    tmp_path: Path, monkeypatch: Any
+) -> None:
+    facade, _rights, token, focus = _measured(tmp_path, monkeypatch)
+    economic = facade.outputs._economic
+    context = facade.identity.authenticate(token)
+    initial = _read(facade, token, focus)
+    identifier = initial["cognition"]["opportunities"][0]["capability"]["sourceId"]
+    metadata = economic.observation_memory.access_metadata(
+        initial["organization"]["id"], identifier
+    )
+    valid = {
+        "observationId": identifier,
+        "source_ref": metadata.record.source_ref,
+        "observed_at": metadata.record.observed_at.isoformat(),
+        "excerpt": "Authorized matching citation",
+    }
+    wrong_source = {
+        **valid,
+        "source_ref": "https://completely-different.example.com/",
+        "excerpt": "Unauthenticated unrelated quote",
+        "fields": {"capability.id": "economic-fact"},
+    }
+    wrong_time = {
+        **valid,
+        "observed_at": (metadata.record.observed_at - timedelta(days=1)).isoformat(),
+        "excerpt": "Unauthenticated wrong-time quote",
+    }
+    original = {"evidence": [valid, wrong_source, wrong_time]}
+    delivered = economic.deliver_content(context, XeedId(focus), original)
+    assert delivered["evidence"][0]["excerpt"] == "Authorized matching citation"
+    assert delivered["evidence"][1]["excerpt"] == WITHHELD_TEXT
+    assert delivered["evidence"][1]["contentAccess"] == "UNKNOWN"
+    assert delivered["evidence"][1]["fields"]["capability.id"] == "economic-fact"
+    assert delivered["evidence"][2]["excerpt"] == WITHHELD_TEXT
+    assert delivered["evidence"][2]["contentAccess"] == "UNKNOWN"
+    assert original["evidence"][1]["excerpt"] == "Unauthenticated unrelated quote"
+
+
 def test_purge_removes_content_fields_and_preserves_normalized_economic_facts(
     tmp_path: Path, monkeypatch: Any
 ) -> None:

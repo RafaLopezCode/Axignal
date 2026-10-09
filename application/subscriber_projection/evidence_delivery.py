@@ -146,7 +146,7 @@ def deliver_evidence_content(
     result = deepcopy(projection)
     decisions: dict[str, ContentAccess] = {}
     refs: dict[tuple[str, str], str] = {}
-    source_ids: dict[str, set[str]] = {}
+    metadata_by_id: dict[str, ObservationAccessMetadata] = {}
     quotes: set[str] = set()
 
     def time_key(value: str) -> str:
@@ -161,10 +161,10 @@ def deliver_evidence_content(
             metadata = metadata_for(identifier)
             if metadata is not None:
                 decisions[identifier] = rights.decision(metadata)
+                metadata_by_id[identifier] = metadata
                 refs[
                     (metadata.record.source_ref, time_key(metadata.record.observed_at.isoformat()))
                 ] = identifier
-                source_ids.setdefault(metadata.record.source_ref, set()).add(identifier)
             else:
                 # Source-derived demand rows are authorized by the existing registry
                 # projector, not stored as ObservationMemory records. Their existing
@@ -185,12 +185,6 @@ def deliver_evidence_content(
                 identifier = value.get("id")
             if isinstance(identifier, str) and identifier:
                 decide(identifier)
-                source = value.get("source_ref") or value.get("sourceRef")
-                if isinstance(source, str):
-                    observed = value.get("observed_at") or value.get("observedAt")
-                    if isinstance(observed, str):
-                        refs[(source, time_key(observed))] = identifier
-                    source_ids.setdefault(source, set()).add(identifier)
             for child in value.values():
                 identities(child)
         elif isinstance(value, (list, tuple)):
@@ -202,26 +196,14 @@ def deliver_evidence_content(
     def source_only(value: Any) -> None:
         if isinstance(value, dict):
             source = value.get("source_ref") or value.get("sourceRef")
-            observed = value.get("observed_at") or value.get("observedAt")
             direct = (
                 value.get("observation_ref") or value.get("observationId") or value.get("sourceId")
             )
             if not direct and isinstance(source, str):
-                identified = bool(source_ids.get(source))
                 candidates = () if metadata_for_source is None else metadata_for_source(source)
                 for metadata in candidates:
                     if metadata.record.source_ref == source:
                         decide(metadata.record.observation_id)
-                if isinstance(observed, str):
-                    stamp = time_key(observed)
-                    if (source, stamp) not in refs:
-                        identifier = f"unresolved-source:{source}:{stamp}"
-                        decisions[identifier] = ContentAccess.UNKNOWN
-                        refs[(source, stamp)] = identifier
-                elif not identified:
-                    identifier = f"unresolved-source:{source}"
-                    decisions[identifier] = ContentAccess.UNKNOWN
-                    source_ids.setdefault(source, set()).add(identifier)
             for child in value.values():
                 source_only(child)
         elif isinstance(value, (list, tuple)):
@@ -230,23 +212,40 @@ def deliver_evidence_content(
 
     source_only(result)
 
+    def unresolved(identity: str) -> str:
+        # An explicit lineage conflict must not change the grant for a valid
+        # descriptor elsewhere in the same snapshot.
+        key = f"unresolved-lineage:{identity}"
+        decisions[key] = ContentAccess.UNKNOWN
+        return key
+
     def source_id(value: dict[str, Any]) -> str | None:
+        source = value.get("source_ref") or value.get("sourceRef")
+        observed = value.get("observed_at") or value.get("observedAt")
         for key in ("observation_ref", "observationId", "sourceId", "id"):
             identifier = value.get(key)
             if isinstance(identifier, str) and identifier in decisions:
+                metadata = metadata_by_id.get(identifier)
+                if metadata is not None:
+                    # The submitted ID alone cannot authorize content attributed
+                    # to an unrelated URL or observation time.
+                    if source is not None and source != metadata.record.source_ref:
+                        return unresolved(identifier)
+                    if observed is not None and (
+                        not isinstance(observed, str)
+                        or time_key(observed) != time_key(metadata.record.observed_at.isoformat())
+                    ):
+                        return unresolved(identifier)
                 return identifier
-        source = value.get("source_ref") or value.get("sourceRef")
         if not isinstance(source, str):
             return None
-        observed = value.get("observed_at") or value.get("observedAt")
         if isinstance(observed, str):
             exact = refs.get((source, time_key(observed)))
             if exact is not None:
                 return exact
-        candidates = source_ids.get(source, set())
-        # An undated legacy copy never borrows a later observation's permission.
-        denied = [i for i in sorted(candidates) if decide(i) is not ContentAccess.PERMITTED]
-        return denied[0] if denied else next(iter(candidates), None)
+        # No observation ID + exact date means no provable original grant.
+        # Never borrow permissions from another dated row of this source.
+        return unresolved(source)
 
     def collect(value: Any, inherited: str | None = None) -> None:
         if isinstance(value, dict):
