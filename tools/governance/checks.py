@@ -113,7 +113,10 @@ REQUIRED_IGNORE_PATTERNS: tuple[str, ...] = (
     "__pycache__/",
     ".env",
     "/.secrets/",
+    "/.tmp-*/",
     "/.tmp_*.py",
+    "/.tmp_*.sh",
+    "/.pb*_pytest_*.log",
     "/.claude/settings.local.json",
 )
 
@@ -374,7 +377,14 @@ def check_no_generated_data(root: Path) -> list[Problem]:
             problems.append(f"generated/raw data must not be tracked: {tracked[0]}")
     if _tracked(root, ".env"):
         problems.append("secret file .env must not be tracked")
-    for local_only_path in (".secrets", ".claude/settings.local.json", ".tmp_*.py"):
+    for local_only_path in (
+        ".secrets",
+        ".tmp-*",
+        ".tmp_*.py",
+        ".tmp_*.sh",
+        ".pb*_pytest_*.log",
+        ".claude/settings.local.json",
+    ):
         tracked = _tracked(root, local_only_path)
         if tracked:
             problems.append(f"local-only file must not be tracked: {tracked[0]}")

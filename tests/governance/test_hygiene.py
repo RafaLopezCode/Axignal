@@ -36,7 +36,10 @@ def test_repo_local_only_paths_are_ignored_without_deleting_files() -> None:
     root = Path(__file__).resolve().parents[2]
     for relative in (
         ".secrets/example.json",
+        ".tmp-example/artifact.txt",
         ".tmp_probe.py",
+        ".tmp_replay.sh",
+        ".pb11_pytest_out.log",
         ".claude/settings.local.json",
     ):
         result = subprocess.run(
@@ -53,7 +56,10 @@ def test_governance_rejects_forcibly_tracked_private_scratch(tmp_path: Path) -> 
     )
     local_paths = (
         ".secrets/example.json",
+        ".tmp-example/artifact.txt",
         ".tmp_probe.py",
+        ".tmp_replay.sh",
+        ".pb11_pytest_out.log",
         ".claude/settings.local.json",
     )
     for relative in local_paths:

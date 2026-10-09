@@ -59,5 +59,8 @@ apps/web/landing/assets/images/source/
 
 # --- Private local tooling / scratch (not repository source) ---
 /.secrets/
+/.tmp-*/
 /.tmp_*.py
+/.tmp_*.sh
+/.pb*_pytest_*.log
 /.claude/settings.local.json
