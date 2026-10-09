@@ -308,6 +308,7 @@ class StaticSourceRegistry:
             authority_version=entry.version,
             reuse_reason=entry.reuse_reason,
             retention_policy_ref=entry.retention_policy.ref,
+            content_retention_days=entry.retention_policy.raw_retention_days,
             robots_policy_ref=entry.robots_policy_ref,
             rate_policy_ref=entry.rate_policy.ref,
         )

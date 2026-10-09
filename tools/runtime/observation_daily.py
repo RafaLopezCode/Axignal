@@ -406,6 +406,7 @@ def run_once(
 def build_economic_runtime(root: Path, *, code_sha: str) -> SubscriberEconomicRuntime:
     """The same membership-checked subscriber runtime the HTTP service composes."""
 
+    from application.subscriber_identity.runtime import SystemClock
     from pipeline.entity_resolution.organization_store import SqliteCanonicalOrganizationStore
     from pipeline.entity_resolution.sqlite_store import SqliteIdentityGovernanceStore
     from pipeline.observation_memory.sqlite_store import SqliteObservationMemory
@@ -415,8 +416,16 @@ def build_economic_runtime(root: Path, *, code_sha: str) -> SubscriberEconomicRu
     )
     from pipeline.subscriber_identity.sqlite_store import SqliteSubscriberIdentityStore
     from pipeline.subscriber_portfolio.sqlite_store import SqliteSubscriberPortfolioStore
+    from tools.runtime.evidence_content import LiveEvidenceContentRights
+    from tools.runtime.first_observation import load_content_rights
+    from tools.runtime.subscriber_configuration import load_subscriber_settings
     from tools.runtime.subscriber_economic import build_subscriber_economic_runtime
 
+    configuration = os.getenv("AXIGNAL_SUBSCRIBER_CONFIGURATION_FILE")
+    settings = load_subscriber_settings(
+        os.environ,
+        configuration_file=Path(configuration) if configuration else None,
+    )
     artifacts = ContentAddressedArtifactStore(root / "artifacts")
     return build_subscriber_economic_runtime(
         database_path=root / "subscriber-economic-output.sqlite3",
@@ -431,6 +440,9 @@ def build_economic_runtime(root: Path, *, code_sha: str) -> SubscriberEconomicRu
         reuse_policy=SUBSCRIBER_REUSE_POLICY,
         temporal_policy=SUBSCRIBER_TEMPORAL_POLICY,
         code_sha=code_sha,
+        content_rights=LiveEvidenceContentRights(
+            load_content_rights(settings.values), SystemClock().now
+        ),
     )
 
 
@@ -465,7 +477,17 @@ def run_scheduled_tick(
             attention_file=attention_file,
             enrollment=enrollment,
             source_ports=source_ports,
-            derived_for=first_observation_reader(root),
+            derived_for=first_observation_reader(
+                root,
+                rights=SubscriberObservationAuthority(
+                    root,
+                    clock,
+                    Path(os.environ["AXIGNAL_SUBSCRIBER_CONFIGURATION_FILE"])
+                    if os.getenv("AXIGNAL_SUBSCRIBER_CONFIGURATION_FILE")
+                    else None,
+                ).website_rights,
+                clock=clock.now,
+            ),
             research_ledger=SqliteResearchRequestLedger(
                 root / "axent-research.sqlite3", runtime_path=root / "observation-runtime.sqlite3"
             ),

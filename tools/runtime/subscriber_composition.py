@@ -956,6 +956,16 @@ def build_subscriber_facade(
         temporal_policy=temporal_policy,
         code_sha=code_sha,
     )
+    # Current source-content rights govern every economic read/reuse, even when
+    # First Observation itself is disabled and old snapshots remain persisted.
+    from tools.runtime.evidence_content import LiveEvidenceContentRights
+    from tools.runtime.first_observation import load_content_rights
+
+    economic.content_rights = LiveEvidenceContentRights(
+        (first_observation_overrides.rights if first_observation_overrides else None)
+        or load_content_rights(settings.values),
+        effective_clock.now,
+    )
     # Spec 062: off unless explicitly configured; projection stays deterministic otherwise.
     economic.semantic_screen = semantic_screen_from_env(settings.values, data_dir=root)
     resolved_observation_plans = observation_plan_reader

@@ -14,6 +14,7 @@ from datetime import datetime
 from application.economic_discovery.observation_memory import (
     GovernedObservation,
     ObservationMemory,
+    is_source_text_field,
 )
 from application.subscriber_continuity.model import (
     ContinuityItem,
@@ -48,7 +49,11 @@ def _observation_dependency(observation: GovernedObservation) -> DeclaredDepende
         subject_id=record.subject_id,
         content_fingerprint=record.content_fingerprint,
         fields=tuple(
-            sorted((field.name, field.value, field.state.value) for field in observation.fields)
+            sorted(
+                (field.name, field.value, field.state.value)
+                for field in observation.fields
+                if not is_source_text_field(field.name)
+            )
         ),
     )
 

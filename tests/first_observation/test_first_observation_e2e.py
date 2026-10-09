@@ -331,7 +331,7 @@ def test_focus_first_observation_hands_over_to_reobservation_without_an_operator
         economic=facade.outputs._economic,
         clock=facade.workflow._clock,
         attention=(),  # no operator file entry at all
-        derived_for=first_observation_reader(tmp_path),
+        derived_for=first_observation_reader(tmp_path, rights=runtime(facade).service._rights),
     )
     plan = reader.observation_plan_for(
         TrustedRequestContext(context.principal_id, context.tenant_id), XeedId(added["focusId"])

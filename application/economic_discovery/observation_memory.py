@@ -48,6 +48,21 @@ class ObservedField:
             raise ValueError("only CONFLICTING fields can carry competing values")
 
 
+def is_source_text_field(name: str) -> bool:
+    """Explicit material fields, distinct from normalized economic contributions."""
+    return name.rsplit(".", 1)[-1] in {
+        "excerpt",
+        "excerpt_or_summary",
+        "quote",
+        "quotation",
+        "raw_content",
+        "raw_text",
+        "content",
+        "text",
+        "body",
+    }
+
+
 class ObservationRightsStatus(StrEnum):
     PERMITTED = "PERMITTED"
     PROHIBITED = "PROHIBITED"
@@ -81,6 +96,7 @@ class ObservationReuseAuthority:
     retention_policy_ref: str | None = None
     robots_policy_ref: str | None = None
     rate_policy_ref: str | None = None
+    content_retention_days: int | None = None
 
     def __post_init__(self) -> None:
         if self.scope is ObservationReuseScope.TENANT_PRIVATE:
@@ -102,6 +118,10 @@ class ObservationReuseAuthority:
         ):
             if value is not None and not value.strip():
                 raise ValueError("observation reuse authority metadata cannot be empty")
+        if self.content_retention_days is not None and (
+            type(self.content_retention_days) is not int or self.content_retention_days < 0
+        ):
+            raise ValueError("content retention must be a recorded nonnegative day count")
         if any(not value.strip() for value in self.applicable_subject_ids):
             raise ValueError("observation applicability subjects must be non-empty")
         if any(not value.strip() for value in self.applicable_purposes):
@@ -125,9 +145,15 @@ class GovernedObservation:
     raw_artifact_ref: str | None = None
     fields: tuple[ObservedField, ...] = ()
     reuse_authority: ObservationReuseAuthority = ObservationReuseAuthority()
+    content_removed: bool = False
 
     def __post_init__(self) -> None:
-        if self.raw_content is None and self.raw_artifact_ref is None:
+        if self.content_removed:
+            if self.raw_content is not None or self.raw_artifact_ref is not None:
+                raise ValueError("removed content cannot retain raw text/artifacts")
+            if self.reuse_authority.access_status is not ObservationAccessStatus.INACCESSIBLE:
+                raise ValueError("removed content requires explicitly inaccessible material")
+        elif self.raw_content is None and self.raw_artifact_ref is None:
             raise ValueError(
                 "observation memory requires raw content or an immutable artifact reference"
             )
@@ -185,7 +211,7 @@ class ObservationState:
 def observation_reuse_authority_payload(
     authority: ObservationReuseAuthority,
 ) -> dict[str, object]:
-    return {
+    payload: dict[str, object] = {
         "rights_status": authority.rights_status.value,
         "access_status": authority.access_status.value,
         "scope": authority.scope.value,
@@ -202,15 +228,23 @@ def observation_reuse_authority_payload(
         "rate_policy_ref": authority.rate_policy_ref,
     }
 
+    if authority.content_retention_days is not None:
+        payload["content_retention_days"] = authority.content_retention_days
+    return payload
+
 
 def observation_reuse_authority_from_payload(
     payload: dict[str, object],
 ) -> ObservationReuseAuthority:
+    days = payload.get("content_retention_days")
+    if days is not None and (not isinstance(days, int) or isinstance(days, bool)):
+        raise ValueError("content retention payload must be an integer or absent")
     subjects = payload.get("applicable_subject_ids", [])
     purposes = payload.get("applicable_purposes", [])
     if not isinstance(subjects, list) or not isinstance(purposes, list):
         raise ValueError("observation reuse applicability payload must be arrays")
     return ObservationReuseAuthority(
+        content_retention_days=days,
         rights_status=ObservationRightsStatus(str(payload["rights_status"])),
         access_status=ObservationAccessStatus(str(payload["access_status"])),
         scope=ObservationReuseScope(str(payload["scope"])),
