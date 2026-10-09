@@ -80,11 +80,19 @@ No inventes resultados, fuentes, scores de verdad o señales. No conviertas AXIG
 
 Respetar la identidad AXIGNAL —no SaaS genérico— y el Golden Master aceptado como baseline; puedes **proponer un cambio material de diseño** si lo justificas y lo demuestras, pero requiere aceptación CTO antes de sustituir el diseño aprobado.
 
-## Impeccable como capacidad de exploración, no receta
+## Impeccable — ACTIVACIÓN OBLIGATORIA, no solo inspiración
 
-Inspecciona sus reglas y materiales originales; el área de trabajo es de tipo **Operate**. Utiliza lo relevante de critique, shape, distill, onboard, clarify, layout, typeset, audit, adapt, harden, optimize y polish, así como revisión en navegador y subagentes independientes cuando aporten.
+**Carga y aplica realmente la skill instalada de pbakaus/impeccable v4.5.2 en tu sesión de Claude Code**, no basta con mencionar su nombre en un informe. La ruta es `C:\Users\usuario\.claude\skills\impeccable\SKILL.md`. Lee `SKILL.md` entero y sigue su protocolo, los playbooks y los límites de iteración.
 
-No ejecutes rituales ni todos los comandos por obligación. No permitas que un score automático decida la UX; un problema puede estar fuera del alcance de sus reglas. No instales nuevas dependencias o hooks sin necesidad.
+1. Abre una sesión desde el worktree exclusivo. **Ejecuta una vez `C:\Users\usuario\.claude\skills\impeccable\scripts\impeccable.cmd context`** con el directorio del proyecto como cwd; en entornos no Windows utiliza el launcher que describe la skill. Lee las directivas. Si falla el launcher, sigue expresamente el fallback indicado por `SKILL.md`; no inventes contextos ni afirmes que se cargó.
+2. Antes de decidir la dirección artística, inspecciona `reference/new-work.md` y `reference/operate.md`; antes de editar UI, lee `reference/craft-floor.md`. Reconcilia cualquier PRODUCT.md/DESIGN.md con MASTER, HFX y Golden Master. No sustituyas su autoridad. Si la skill exige `init` para una superficie nueva, ejecútalo solo de manera subordinada a la doctrina, sin introducir una segunda visión canónica del producto.
+3. **Utiliza de forma explícita las herramientas creativas de Impeccable**, seleccionadas por necesidad y con evidencia: `/impeccable shape` para arquitectura/experiencia; `/impeccable critique` y `/impeccable audit` para evaluación; **`/impeccable overdrive`, `/impeccable bolder`, `/impeccable colorize`, `/impeccable animate` y `/impeccable delight`** para explorar un lenguaje visual vivo, excepcional y memorable; `/impeccable layout`, `/impeccable typeset`, `/impeccable clarify`, `/impeccable distill`, `/impeccable onboard`, `/impeccable adapt`, `/impeccable harden`, `/impeccable optimize` y `/impeccable polish` donde corresponda. `/impeccable live` y `/impeccable generate` sirven para explorar variantes visuales si el entorno y la herramienta las soportan.
+4. Respeta la **verificación acotada que exige Impeccable**: implementación completa, una ronda agrupada de inspección desktop + móvil, una tanda focalizada de reparaciones, como máximo otra comprobación para confirmar. No gastes la sesión en una sucesión infinita de prompts/pulidos.
+5. **Muéstranos qué parte del resultado surgió de Impeccable**: decisiones visuales concretas, patrones de interacción, transiciones funcionando, uso expresivo y semántico de paleta, motion, estética WOW, reducción real de fricción y evidencia en navegador.
+
+**Modo Operate**, por tratarse del dashboard del suscriptor, pero Operate no significa gris, plano ni rígido. Puede ser hermoso, alegre, divertido, sofisticado y profesional al mismo tiempo. El movimiento puede informar **y deleitar**; aprovecha efectos, transiciones y colores a fondo con criterio. Protege `prefers-reduced-motion`, dispositivos modestos, rendimiento y accesibilidad. La skill es una herramienta poderosa al servicio del producto, nunca autoridad sobre MASTER.
+
+No dispares comandos indiscriminadamente, no permitas que un score automático decida la UX y no actives hooks ni instales dependencias sin necesidad.
 
 ## Cómo crear una gran solución
 
