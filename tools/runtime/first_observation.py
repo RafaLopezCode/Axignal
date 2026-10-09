@@ -55,6 +55,7 @@ from application.first_observation.service import (
 )
 from application.first_observation.shared_findings import SharedFindingsPort
 from application.first_observation.site import PageReading
+from application.first_observation.visibility import first_proof_live_deadline, withdraw_first_proof
 from application.observation_intelligence import (
     OperationalLearning,
     SourceObservationPort,
@@ -105,6 +106,7 @@ class FirstObservationOverrides:
     fetcher: SiteFetchPort | None = None
     source_ports: Mapping[str, SourceObservationPort] | None = None
     cascade_factory: Callable[[], SemanticCascade | None] | None = None
+    public_understanding: bool | None = None
     feeds: Mapping[str, SliceFeedPort] | None = None
     rights: ContentRightsPolicy | None = None
 
@@ -302,6 +304,10 @@ def public_view(proof: Mapping[str, Any] | None, state: str | None) -> dict[str,
         {**d, "detail": {k: v for k, v in d.get("detail", {}).items() if k != "confidence"}}
         for d in view.get("discoveries", ())
     ]
+    if isinstance(view.get("publicUnderstanding"), Mapping):
+        view["publicUnderstanding"] = {
+            k: v for k, v in view["publicUnderstanding"].items() if k != "trace"
+        }
     target = dict(view.pop("target"))
     view["target"] = {
         "kind": target["kind"],
@@ -499,7 +505,13 @@ class FirstObservationRuntime:
             self.store.fail(job, error="TARGET_NO_LONGER_AUTHORIZED", now=now, retry=False)
             return True
         try:
-            proof = self.service.observe(job.target)
+            proof = self.service.observe(
+                job.target,
+                force_refresh=(
+                    policy.public_understanding
+                    and self.store.proof(job.target.tenant_id, job.target.target_ref) is not None
+                ),
+            )
         except Exception as error:  # a failed job is retried, never a crash of the runtime
             self.store.fail(
                 job,
@@ -528,7 +540,18 @@ class FirstObservationRuntime:
     def purge(self) -> dict[str, int]:
         """Retention enforcement for First Observation's own stores."""
         now = self._clock.now()
-        result = self.store.purge(now=now)
+        from application.first_observation.understanding import rights_deadline
+
+        # Revoked or shortened rights purge stored quotations too, not only elapsed dates.
+        result = self.store.purge(
+            now=now,
+            deadline=lambda report: rights_deadline(
+                report, lambda url: self.service.content_rights(url, now=now)
+            ),
+            proof_deadline=lambda proof: first_proof_live_deadline(
+                proof, lambda url: self.service.content_rights(url, now=now)
+            ),
+        )
         if self._purge_canonical_raw is not None:
             result["canonicalRaw"] = self._purge_canonical_raw(now)
         return result
@@ -590,6 +613,14 @@ class FirstObservationRuntime:
         if state is None:
             return None
         proof = self._proof(tenant, target_ref, organization_id)
+        if proof is not None:
+            at = self._clock.now()
+            live = first_proof_live_deadline(
+                proof, lambda url: self.service.content_rights(url, now=at)
+            )
+            if live is not None and at >= live:
+                proof = withdraw_first_proof(proof, at=at)
+                state = "SOURCE_UNAVAILABLE"
         headline, headline_code = _headline(proof)
         return {
             "state": state,
@@ -614,7 +645,40 @@ class FirstObservationRuntime:
             and state not in {"QUEUED", "OBSERVING_PUBLIC_PRESENCE", "OBSERVATION_FAILED"}
         ):
             state = None  # a proof of a replaced Organization is not this Focus's state
-        return public_view(proof, state)
+        if proof is not None:
+            at = self._clock.now()
+            live = first_proof_live_deadline(
+                proof, lambda url: self.service.content_rights(url, now=at)
+            )
+            if live is not None and at >= live:
+                proof = withdraw_first_proof(proof, at=at)
+                state = "SOURCE_UNAVAILABLE"
+        view = public_view(proof, state)
+        if view is not None and proof is not None and proof.get("publicUnderstanding"):
+            from application.first_observation.understanding import compare, public_report
+
+            now = self._clock.now()
+
+            def rights_for(url: str) -> ContentRights:
+                return self.service.content_rights(url, now=now)
+
+            # Rights are re-decided at read: a revocation hides quotations immediately,
+            # here and in AXENT (which reads this view), before any purge runs.
+            current = public_report(proof["publicUnderstanding"], now=now, rights_for=rights_for)
+            history = [
+                public_report(r, now=now, rights_for=rights_for)
+                for r in self.store.history(
+                    tenant, target_ref, proof.get("target", {}).get("organizationId")
+                )
+                if r["reportId"] != current["reportId"]
+            ]
+            for previous in history:
+                if previous.get("currentness") != "EXPIRED":
+                    previous["currentness"] = "HISTORICAL"
+            current["history"] = history
+            current["comparison"] = compare(current, history[0]) if history else None
+            view["publicUnderstanding"] = current
+        return view
 
 
 RIGHTS_FILE_KEY = "AXIGNAL_FIRST_OBSERVATION_CONTENT_RIGHTS_FILE"
@@ -645,7 +709,7 @@ class ReloadingContentRights:
                     raw = json.loads(self._path.read_text(encoding="utf-8"))
                     if not isinstance(raw, list):
                         raise ValueError("rights file must be a list")
-                    entries, provider = [], set()
+                    entries, provider, public_offer = [], set(), set()
                     for item in raw:
                         entry = website_rights_entry(
                             host=str(item["host"]),
@@ -656,8 +720,12 @@ class ReloadingContentRights:
                         entries.append(entry)
                         if item.get("providerInput") is True:
                             provider.add(entry.source_id)
+                        if item.get("publicOfferInput") is True:
+                            public_offer.add(entry.source_id)
                     policy = RegisteredContentRights(
-                        tuple(entries), provider_input=frozenset(provider)
+                        tuple(entries),
+                        provider_input=frozenset(provider),
+                        public_offer_input=frozenset(public_offer),
                     )
                 except (OSError, ValueError, KeyError, TypeError):
                     pass
@@ -745,7 +813,13 @@ def build_first_observation(
     from pipeline.world_demand.sqlite_store import SqliteWorldDemandIndex
     from tools.runtime.semantic_layer import semantic_cascade_factory_from_env
 
-    policy = FirstObservationPolicy()
+    policy = FirstObservationPolicy(
+        public_understanding=(
+            overrides.public_understanding
+            if overrides.public_understanding is not None
+            else values.get("AXIGNAL_PUBLIC_UNDERSTANDING_ENABLED", "false").lower() == "true"
+        )
+    )
     store = SqliteFirstObservationStore(root / "first-observation.sqlite3")
     fetcher = overrides.fetcher
     if fetcher is None:

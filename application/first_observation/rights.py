@@ -38,6 +38,8 @@ class ContentRights:
     entry: SourceRegistryEntry | None = None
     provider_input: bool = False
     decided_at: datetime | None = None
+    #: Explicit permission for reviewed offering excerpts, distinct from routing vocabulary.
+    public_offer_input: bool = False
 
     @property
     def reuse_permitted(self) -> bool:
@@ -72,9 +74,29 @@ class ContentRights:
         days = self.raw_retention_days
         return None if days <= 0 else now + timedelta(days=days)
 
+    @property
+    def private_citation_days(self) -> int:
+        """ADR-0091 §11: at most the entry's raw retention, or 30 days without an entry.
+
+        A governed entry is the decision for this content: its retention is a ceiling and is
+        never widened to the no-decision default. A prohibition or lost access keeps nothing.
+        """
+        entry = self.entry
+        if entry is None:
+            return PRIVATE_CITATION_DAYS
+        if (
+            entry.rights_status is ObservationRightsStatus.PROHIBITED
+            or entry.access_status is ObservationAccessStatus.INACCESSIBLE
+        ):
+            return 0
+        days = max(0, entry.retention_policy.raw_retention_days)
+        if entry.rights_status is not ObservationRightsStatus.PERMITTED:
+            days = min(days, PRIVATE_CITATION_DAYS)
+        return days
+
     def private_until(self, now: datetime) -> datetime:
         """Until when a tenant-private First Proof may keep its citations."""
-        return now + timedelta(days=max(self.raw_retention_days, PRIVATE_CITATION_DAYS))
+        return now + timedelta(days=self.private_citation_days)
 
     def to_wire(self) -> dict[str, object]:
         return {
@@ -83,6 +105,7 @@ class ContentRights:
             "reusePermitted": self.reuse_permitted,
             "rawRetentionDays": self.raw_retention_days,
             "providerInput": self.provider_input,
+            "publicOfferInput": self.public_offer_input,
         }
 
 
@@ -114,9 +137,11 @@ class RegisteredContentRights:
         entries: tuple[SourceRegistryEntry, ...],
         *,
         provider_input: frozenset[str] = frozenset(),
+        public_offer_input: frozenset[str] = frozenset(),
     ) -> None:
         self._entries = tuple(e for e in entries if e.source_type == "PUBLIC_WEBSITE")
         self._provider_input = provider_input
+        self._public_offer_input = public_offer_input
 
     def rights_for(self, website: str, *, now: datetime) -> ContentRights:
         parts = urlsplit(website if "://" in website else "https://" + website)
@@ -144,5 +169,7 @@ class RegisteredContentRights:
         return ContentRights(
             entry=entry,
             provider_input=rights.reuse_permitted and entry.source_id in self._provider_input,
+            public_offer_input=rights.reuse_permitted
+            and entry.source_id in self._public_offer_input,
             decided_at=now,
         )

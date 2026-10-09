@@ -104,6 +104,7 @@ export function RuntimeAxent({
   signalId,
   onEvidence,
   onSignal,
+  onPublicUnderstanding,
   conversation,
   focusLabel,
 }: {
@@ -111,6 +112,7 @@ export function RuntimeAxent({
   signalId: string | null;
   onEvidence: () => void;
   onSignal: (id: string) => void;
+  onPublicUnderstanding?: (reportId: string) => void;
   conversation: ReturnType<typeof useRuntimeAxent>;
   focusLabel?: string;
 }) {
@@ -240,7 +242,10 @@ export function RuntimeAxent({
                   ))}
                 </section>
               )}
-              <button
+              {(message.answer.publicUnderstandingReportId && onPublicUnderstanding) ? <button className="text-link"
+                onClick={() => onPublicUnderstanding(message.answer.publicUnderstandingReportId!)}>
+                {t("Ver citas y fundamento", "Inspect quotations and basis")}
+              </button> : (message.answer.signalIds.length > 0 || message.answer.action === "evidence") && <button
                 className="text-link"
                 onClick={
                   message.answer.action === "evidence"
@@ -252,7 +257,7 @@ export function RuntimeAxent({
                 }
               >
                 {t("Ver señal y evidencia", "Read signal and evidence")}
-              </button>
+              </button>}
             </div>
           </div>
         ))}

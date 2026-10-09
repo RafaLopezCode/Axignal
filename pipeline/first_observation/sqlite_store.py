@@ -15,7 +15,7 @@ import hashlib
 import json
 import secrets
 import sqlite3
-from collections.abc import Iterator
+from collections.abc import Callable, Iterator, Mapping
 from contextlib import contextmanager
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
@@ -28,6 +28,7 @@ from application.first_observation.contracts import (
     ObservationJob,
     SiteReading,
 )
+from application.first_observation.visibility import withdraw_first_proof
 
 #: Failed attempts wait 2, 4, 8... minutes before a retry (transient faults clear).
 _BACKOFF_MINUTES = 2
@@ -81,6 +82,18 @@ class SqliteFirstObservationStore:
                     retain_until TEXT,
                     PRIMARY KEY (tenant_id, target_ref)
                 );
+                CREATE TABLE IF NOT EXISTS fo_understanding_history (
+                    tenant_id TEXT NOT NULL,
+                    target_ref TEXT NOT NULL,
+                    organization_id TEXT,
+                    report_id TEXT NOT NULL,
+                    observed_at TEXT NOT NULL,
+                    retain_until TEXT,
+                    report TEXT NOT NULL,
+                    PRIMARY KEY (tenant_id, target_ref, report_id)
+                );
+                CREATE INDEX IF NOT EXISTS idx_fo_understanding_history_scope
+                    ON fo_understanding_history(tenant_id, target_ref, organization_id, observed_at);
                 """
             )
 
@@ -211,6 +224,45 @@ class SqliteFirstObservationStore:
     def complete(self, job: ObservationJob, proof: FirstProof, *, now: datetime) -> bool:
         """Persist the proof only while this worker still owns the job's lease."""
         target = proof.target
+        proof_wire = proof.to_wire()
+        understanding = proof_wire.get("publicUnderstanding")
+        report_payload: dict[str, Any] | None = None
+        report_id: str | None = None
+        report_at: str | None = None
+        if understanding is not None:
+            if not isinstance(understanding, Mapping):
+                raise ValueError("public understanding must be a mapping")
+            raw_report_id = understanding.get("reportId")
+            raw_measured_at = understanding.get("measuredAt")
+            if not isinstance(raw_report_id, str) or not raw_report_id.strip():
+                raise ValueError("public understanding reportId is required")
+            if not isinstance(raw_measured_at, str) or not raw_measured_at.strip():
+                raise ValueError("public understanding measuredAt is required")
+            try:
+                parsed_report_at = datetime.fromisoformat(raw_measured_at)
+            except ValueError as error:
+                raise ValueError("public understanding measuredAt must be ISO-8601") from error
+            report_id = raw_report_id
+            report_at = _iso(parsed_report_at)
+            report_payload = dict(understanding)
+            source_expiry = report_payload.get("contentExpiresAt")
+            if source_expiry is not None:
+                if not isinstance(source_expiry, str):
+                    raise ValueError("public understanding contentExpiresAt must be ISO-8601")
+                try:
+                    source_expiry_at = datetime.fromisoformat(source_expiry)
+                except ValueError as error:
+                    raise ValueError(
+                        "public understanding contentExpiresAt must be ISO-8601"
+                    ) from error
+                _iso(source_expiry_at)
+            else:
+                source_expiry_at = None
+            expiries = [
+                value for value in (proof.retain_until, source_expiry_at) if value is not None
+            ]
+            report_payload["contentExpiresAt"] = None if not expiries else _iso(min(expiries))
+            proof_wire["publicUnderstanding"] = report_payload
         with self._transaction() as db:
             owned = db.execute(
                 "SELECT 1 FROM fo_jobs WHERE job_id=? AND state='RUNNING' AND lease_token=?",
@@ -235,17 +287,58 @@ class SqliteFirstObservationStore:
                     target.organization_id,
                     proof.state.value,
                     int(proof.ready),
-                    json.dumps(proof.to_wire(), ensure_ascii=False, sort_keys=True),
+                    json.dumps(proof_wire, ensure_ascii=False, sort_keys=True),
                     _iso(proof.observed_at),
                     None if proof.next_due_at is None else _iso(proof.next_due_at),
                     None if proof.retain_until is None else _iso(proof.retain_until),
                 ),
             )
+            if report_payload is not None and report_id is not None and report_at is not None:
+                db.execute(
+                    """INSERT OR IGNORE INTO fo_understanding_history
+                    (tenant_id, target_ref, organization_id, report_id, observed_at,
+                     retain_until, report) VALUES (?,?,?,?,?,?,?)""",
+                    (
+                        target.tenant_id,
+                        target.target_ref,
+                        target.organization_id,
+                        report_id,
+                        report_at,
+                        report_payload["contentExpiresAt"],
+                        json.dumps(report_payload, ensure_ascii=False, sort_keys=True),
+                    ),
+                )
+                old_rows = db.execute(
+                    """SELECT report_id FROM fo_understanding_history
+                    WHERE tenant_id=? AND target_ref=? AND organization_id IS ?
+                    ORDER BY observed_at DESC, report_id DESC LIMIT -1 OFFSET 8""",
+                    (target.tenant_id, target.target_ref, target.organization_id),
+                ).fetchall()
+                db.executemany(
+                    """DELETE FROM fo_understanding_history WHERE tenant_id=? AND target_ref=?
+                    AND report_id=?""",
+                    [(target.tenant_id, target.target_ref, row["report_id"]) for row in old_rows],
+                )
         return True
 
-    def purge(self, *, now: datetime) -> dict[str, int]:
-        """Enforce retention: shared site text and private citations past their time."""
+    def purge(
+        self,
+        *,
+        now: datetime,
+        deadline: Callable[[Mapping[str, Any]], datetime | None] | None = None,
+        proof_deadline: Callable[[Mapping[str, Any]], datetime | None] | None = None,
+    ) -> dict[str, int]:
+        """Enforce retention: shared site text and private citations past their time.
+
+        ``deadline`` re-decides a stored understanding report under current rights, so a
+        revoked or shortened grant purges its quotations before the stored date.
+        """
         at = _iso(now)
+
+        def withdrawn(report: Mapping[str, Any]) -> bool:
+            live = None if deadline is None else deadline(report)
+            return live is not None and _iso(live) <= at
+
         sites = proofs = 0
         with self._transaction() as db:
             for row in db.execute("SELECT origin, reading FROM fo_sites").fetchall():
@@ -261,23 +354,100 @@ class SqliteFirstObservationStore:
                     )
                     sites += 1
             for row in db.execute(
-                """SELECT tenant_id, target_ref, proof FROM fo_proofs
-                WHERE retain_until IS NOT NULL AND retain_until <= ?""",
-                (at,),
+                """SELECT tenant_id, target_ref, proof, retain_until FROM fo_proofs"""
             ).fetchall():
                 proof = json.loads(row["proof"])
-                for discovery in proof.get("discoveries", ()):
-                    discovery["excerpt"] = None
-                for capability in proof.get("capabilities", ()):
-                    capability.get("basis", {})["excerpt"] = None
-                proof["contentExpiredAt"] = at
+                proof_expired = row["retain_until"] is not None and str(row["retain_until"]) <= at
+                governed_limit = None if proof_deadline is None else proof_deadline(proof)
+                proof_withdrawn = (
+                    governed_limit is not None
+                    and _iso(governed_limit) <= at
+                    and not proof.get("contentExpiredAt")
+                )
+                proof_expired = proof_expired or proof_withdrawn
+                understanding = proof.get("publicUnderstanding")
+                # First Proof and perceptual reports have separate retention grants.
+                # Revoking an old proof must not mislabel the report as date-expired.
+                understanding_expired = proof_expired and not proof_withdrawn
+                understanding_withdrawn = False
+                if isinstance(understanding, dict) and not understanding_expired:
+                    understanding_withdrawn = understanding_expired = withdrawn(understanding)
+                if isinstance(understanding, dict) and not understanding_expired:
+                    content_expiry = understanding.get("contentExpiresAt")
+                    if isinstance(content_expiry, str):
+                        try:
+                            understanding_expired = (
+                                _iso(datetime.fromisoformat(content_expiry)) <= at
+                            )
+                        except ValueError:
+                            understanding_expired = True
+                if not proof_expired and not understanding_expired:
+                    continue
+                if proof_withdrawn:
+                    # The old grant was explicitly withdrawn. Its derived statements
+                    # are no longer served or kept as a live private proof.
+                    proof = withdraw_first_proof(proof, at=now)
+                elif proof_expired:
+                    for discovery in proof.get("discoveries", ()):
+                        discovery["excerpt"] = None
+                    for capability in proof.get("capabilities", ()):
+                        capability.get("basis", {})["excerpt"] = None
+                if isinstance(understanding, dict) and understanding_expired:
+                    proof["publicUnderstanding"] = {
+                        key: understanding[key]
+                        for key in (
+                            "reportId",
+                            "measuredAt",
+                            "validUntil",
+                            "contentExpiresAt",
+                            "instrument",
+                            "conditions",
+                            "authority",
+                            "execution",
+                            "coverage",
+                        )
+                        if key in understanding
+                    } | {
+                        "status": "NOT_MEASURED",
+                        "cause": "CONTENT_RIGHTS_WITHDRAWN"
+                        if understanding_withdrawn
+                        else "CONTENT_EXPIRED",
+                        "currentness": "EXPIRED",
+                        "citations": [],
+                        "dimensions": [],
+                    }
+                if proof_expired:
+                    proof["contentExpiredAt"] = at
                 db.execute(
-                    """UPDATE fo_proofs SET proof=?, retain_until=NULL
+                    """UPDATE fo_proofs SET proof=?, retain_until=?
                     WHERE tenant_id=? AND target_ref=?""",
-                    (json.dumps(proof, ensure_ascii=False, sort_keys=True), row["tenant_id"],
-                     row["target_ref"]),
+                    (
+                        json.dumps(proof, ensure_ascii=False, sort_keys=True),
+                        None if proof_expired else row["retain_until"],
+                        row["tenant_id"],
+                        row["target_ref"],
+                    ),
                 )  # fmt: skip
                 proofs += 1
+            db.execute(
+                """DELETE FROM fo_understanding_history
+                WHERE retain_until IS NOT NULL AND retain_until <= ?""",
+                (at,),
+            )
+            if deadline is not None:
+                revoked = [
+                    (row["tenant_id"], row["target_ref"], row["report_id"])
+                    for row in db.execute(
+                        """SELECT tenant_id, target_ref, report_id, report
+                        FROM fo_understanding_history"""
+                    ).fetchall()
+                    if withdrawn(json.loads(row["report"]))
+                ]
+                db.executemany(
+                    """DELETE FROM fo_understanding_history WHERE tenant_id=? AND target_ref=?
+                    AND report_id=?""",
+                    revoked,
+                )
         return {"siteReadings": sites, "proofs": proofs}
 
     def fail(self, job: ObservationJob, *, error: str, now: datetime, retry: bool) -> None:
@@ -314,6 +484,25 @@ class SqliteFirstObservationStore:
                 (tenant_id, target_ref),
             ).fetchone()
         return None if row is None else dict(json.loads(row["proof"]))
+
+    def history(
+        self,
+        tenant_id: str,
+        target_ref: str,
+        organization_id: str | None = None,
+        limit: int = 8,
+    ) -> list[dict[str, Any]]:
+        """Latest bounded reports for exactly one tenant, target, and Organization."""
+        if not 1 <= limit <= 8:
+            raise ValueError("understanding history limit must be between 1 and 8")
+        with self._connect() as db:
+            rows = db.execute(
+                """SELECT report FROM fo_understanding_history
+                WHERE tenant_id=? AND target_ref=? AND organization_id IS ?
+                ORDER BY observed_at DESC, report_id DESC LIMIT ?""",
+                (tenant_id, target_ref, organization_id, limit),
+            ).fetchall()
+        return [dict(json.loads(row["report"])) for row in rows]
 
     def status(self, tenant_id: str, target_ref: str) -> str | None:
         """Open work, else a failure newer than the proof, else the proof state."""

@@ -208,7 +208,7 @@ export async function subscriberProxy(request: Request, path: string, write = fa
     }
     const safeResult = !write && path.endsWith("/output") ? {
       ...subscriberOutputSchema.parse(result),
-      revision: subscriberProjectionRevision(subscriberOutputSchema.parse(result).projection),
+      revision: subscriberOutputRevision(subscriberOutputSchema.parse(result)),
     } : result;
     return Response.json(safeResult, { status: response.status, headers });
   } catch (error) {
@@ -270,4 +270,11 @@ export async function subscriberMcpConnections(request: Request, revoke: boolean
     if (error instanceof z.ZodError) return rejected("INVALID_REQUEST_OR_RESPONSE", 400);
     return rejected("RUNTIME_UNAVAILABLE", 503);
   }
+}
+
+/** Bind the subscriber reading to its private conditioned report without changing canonical projection identity. */
+export function subscriberOutputRevision(output: z.infer<typeof subscriberOutputSchema>): string {
+  const revision = subscriberProjectionRevision(output.projection);
+  const report = output.firstObservation?.publicUnderstanding;
+  return report ? createHash("sha256").update(JSON.stringify([revision, report.reportId, report.currentness])).digest("hex") : revision;
 }

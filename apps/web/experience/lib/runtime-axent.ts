@@ -10,6 +10,7 @@ export type RuntimeAnswer = {
   organizationId: string;
   contextId: string;
   signalIds: string[];
+  publicUnderstandingReportId?: string;
   intent: "known" | "changed" | "why" | "unknown" | "evidence" | "research";
   summary: string;
   known: string[];

@@ -269,6 +269,7 @@ def build(
     semantic: bool = True,
     identity_source: Any = None,
     rights: Any = "registered",
+    public_understanding: bool = False,
 ) -> Any:
     facade = build_subscriber_facade(
         _settings(tmp_path, pilot=True),
@@ -283,11 +284,14 @@ def build(
         identity_source=identity_source,
         first_observation_overrides=FirstObservationOverrides(
             enabled=enabled,
+            public_understanding=public_understanding,
             worker="manual",
             fetcher=world.sites,
             source_ports={"ted-search-v3": world.ted},
             feeds={"ted-search-v3": world.ted},
-            rights=registered_rights() if rights == "registered" else rights,
+            rights=registered_rights(public_offer_input=public_understanding)
+            if rights == "registered"
+            else rights,
             cascade_factory=world.cascade if semantic else (lambda: None),
         ),
     )
@@ -304,7 +308,10 @@ EXAMPLE_HOSTS = (
 
 
 def registered_rights(
-    hosts: tuple[str, ...] = EXAMPLE_HOSTS, *, provider_input: bool = True
+    hosts: tuple[str, ...] = EXAMPLE_HOSTS,
+    *,
+    provider_input: bool = True,
+    public_offer_input: bool = False,
 ) -> Any:
     """Governed rights the operator registered for the fictitious example sites."""
     from application.first_observation.rights import RegisteredContentRights
@@ -320,6 +327,9 @@ def registered_rights(
     return RegisteredContentRights(
         entries,
         provider_input=frozenset(e.source_id for e in entries) if provider_input else frozenset(),
+        public_offer_input=frozenset(e.source_id for e in entries)
+        if public_offer_input
+        else frozenset(),
     )
 
 

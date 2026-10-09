@@ -1,5 +1,7 @@
 import { z } from "zod";
 import { runtimeProjectionSchema } from "./runtime-projection";
+import { publicUnderstandingSchema } from "./public-understanding-contracts";
+export type { PublicUnderstanding, UnderstandingDimension } from "./public-understanding-contracts";
 
 const ref = z.string().min(1).max(160).regex(/^[A-Za-z0-9:_-]+$/);
 export const subscriberCommandSchema = z.discriminatedUnion("action", [
@@ -26,6 +28,7 @@ export const firstObservationSchema = z.object({
   state: z.enum(observationStates),
   firstProofReady: z.boolean(),
   discoveries: z.array(discoverySchema).max(500),
+  publicUnderstanding: publicUnderstandingSchema.nullable().optional(),
   target: z.object({
     kind: z.enum(["FOCUS", "PENDING"]),
     website: z.string().max(2048).nullable(),

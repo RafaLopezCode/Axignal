@@ -1,6 +1,7 @@
 "use client";
 
 import { ExternalLink } from "lucide-react";
+import { PublicUnderstandingView } from "./public-understanding";
 import { useLocale } from "@/lib/locale";
 import { evidenceUrl, type Discovery, type FirstObservation } from "@/lib/subscriber-contracts";
 
@@ -87,7 +88,7 @@ export function discoveryCopy(d: Discovery, t: Translate, locale = "en"): { find
     case "IDENTITY_NOT_VERIFIED": return { finding: t("Identidad legal todavía no verificada.", "Legal identity not verified yet."), why: t("Lo que ves describe la web pública, no una organización verificada por un registro.", "What you see describes the public website, not an organization verified by a registry.") };
     case "WEBSITE_LINK_NOT_REGISTRY_VERIFIED": return { finding: t("Ningún registro vincula esta web a la organización.", "No registry links this website to the organization."), why: t("La web la indicaste tú; la tratamos como atención, no como hecho.", "You indicated this website; we treat it as attention, not as fact.") };
     case "ACTIVITY_NOT_ESTABLISHED": return { finding: t("Qué ofrece no está establecido todavía.", "What it offers is not established yet."), why: t("No buscamos demanda sobre una suposición.", "We do not search for demand on an assumption.") };
-    case "LOCATION_NOT_DECLARED": return { finding: t("Su web no declara dónde está ni a quién sirve.", "Its website does not declare where it is or whom it serves."), why: t("No elegimos un mercado por defecto.", "We do not pick a default market.") };
+    case "LOCATION_NOT_DECLARED": return { finding: t("No hemos establecido su ubicación ni su ámbito geográfico de servicio.", "Its location and geographic service scope have not been established."), why: t("No elegimos un mercado por defecto.", "We do not pick a default market.") };
     case "DEMAND_NOT_ROUTABLE": case "NO_ROUTABLE_DEMAND_QUESTION": return { finding: t("Ninguna fuente de demanda gobernada aplica todavía a esta actividad y lugar.", "No governed demand source applies yet to this activity and place."), why: t("No es una ausencia de oportunidades.", "It is not an absence of opportunities.") };
     case "NO_RELEVANT_DEMAND_FOUND": return { finding: t("Las fuentes consultadas no tienen ahora demanda que coincida.", "The sources searched have no matching demand right now."), why: t("Sin resultado no es sin oportunidad; volveremos a observar.", "No result is not no opportunity; we will observe again.") };
     case "NOT_AN_OPERATING_BUSINESS_SITE": return { finding: t("La página no parece la web de una actividad en marcha.", "The page does not read as an operating business website."), why: t("Es un juicio no autoritativo sobre la página, no sobre la organización.", "It is a non-authoritative judgment about the page, not about the organization.") };
@@ -179,6 +180,7 @@ export function FirstObservationView({ observation }: { observation: FirstObserv
     <span className="eyebrow">{t("Primera observación", "First observation")}</span>
     <h3 id="first-observation-title">{observationStateCopy(observation.state, t)}</h3>
     <p className="fo-authority">{t("Lectura operativa con sus fuentes. No es verdad canónica: lo potencial sigue siendo potencial.", "Operational reading with its sources. It is not canonical truth: what is potential stays potential.")}</p>
+    {observation.publicUnderstanding && <PublicUnderstandingView report={observation.publicUnderstanding}/>}
     {findings.length > 0 && <div className="fo-group"><h4 className="fo-group-title">{t("Lo que AXIGNAL ha encontrado", "What AXIGNAL found")}</h4>{findings.map((d, i) => <Finding key={`${d.code}-${i}`} d={d}/>)}</div>}
     {gaps.length > 0 && <div className="fo-group"><h4 className="fo-group-title">{t("Brechas posibles", "Possible gaps")}</h4>{gaps.map((d, i) => <Finding key={`${d.code}-${i}`} d={d}/>)}</div>}
     {unknowns.length > 0 && <div className="fo-group"><h4 className="fo-group-title">{t("Lo que todavía no sabemos", "What we do not know yet")}</h4>{unknowns.map((d, i) => <Finding key={`${d.code}-${i}`} d={d}/>)}</div>}

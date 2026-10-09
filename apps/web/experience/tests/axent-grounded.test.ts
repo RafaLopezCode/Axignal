@@ -1,6 +1,9 @@
 import test, { afterEach } from "node:test";
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
+import { subscriberOutputSchema } from "../lib/subscriber-contracts";
+import { subscriberOutputRevision } from "../lib/subscriber-server";
+import { acceptsReadingPlan } from "../lib/subscriber-presentation";
 import { POST as subscriberAxent } from "../app/api/subscriber/axent/route";
 
 const saved = {
@@ -88,4 +91,42 @@ test("without the flag or when the runtime cannot answer, the deterministic expl
   response = await subscriberAxent(ask({ prompt: "Qué sabes", contextId: "focus:one", revision, locale: "es" }));
   assert.equal(response.status, 200);
   assert.notEqual((await response.json()).summary, grounded.summary);
+});
+
+
+test("private report citations get their own destination and cannot open canonical plan refs", async () => {
+  process.env.AXIGNAL_RUNTIME_ORIGIN = "http://127.0.0.1:18181";
+  process.env.AXIGNAL_EXPERIENCE_ORIGIN = "https://axignal.com";
+  process.env.AXIGNAL_AXENT_GROUNDED = "true";
+  const reportId = "b".repeat(64), observedAt = "2026-10-09T10:00:00+00:00";
+  const report = {
+    reportId, measuredAt: observedAt, instrument:{id:"axignal.public-offer-understanding",version:"1.0.0"},
+    status:"MEASURED",cause:"CONDITIONED_INTERPRETATION",currentness:"CURRENT",execution:"EVALUATED",
+    coverage:"BOUNDED_COMPLETE",authority:"DERIVED_CONDITIONED_NOT_CANONICAL",
+    citations:[{id:"q1",url:"https://example.test/",quote:"We repair shoes.",observedAt,contentFingerprint:"sha256:synthetic"}],
+    dimensions:[{dimension:"offer",state:"STRENGTH",cause:"EXPLICIT_STATEMENT_SELECTED",citationIds:["q1"],
+      proposal:null,alternatives:[],recheck:"SAME_INSTRUMENT_AND_SOURCE_SCOPE_AFTER_HUMAN_REVIEW"}],
+  };
+  const output = subscriberOutputSchema.parse({state:"INSUFFICIENT_EVIDENCE",projection,
+    firstObservation:{state:"FIRST_PROOF_READY",firstProofReady:true,discoveries:[],publicUnderstanding:report}});
+  const privateRevision = subscriberOutputRevision(output);
+  assert.notEqual(privateRevision, revision);
+  globalThis.fetch = async (url) => new URL(String(url)).pathname.endsWith("/output")
+    ? Response.json(output) : Response.json({...grounded,signalIds:[`public-understanding:${reportId}:offer:q1`]});
+  const response = await subscriberAxent(ask({prompt:"public offer",contextId:"focus:one",revision:privateRevision,locale:"en"}));
+  assert.equal(response.status,200);
+  const answer = await response.json();
+  assert.deepEqual(answer.signalIds,[]);
+  assert.equal(answer.publicUnderstandingReportId,reportId);
+  assert.equal(acceptsReadingPlan({version:1,revision:privateRevision,intent:"summary",refs:answer.signalIds,
+    method:"DETERMINISTIC_EVIDENCE_PRESENTATION"}, output.projection, privateRevision),true);
+  assert.equal(acceptsReadingPlan({version:1,revision:privateRevision,intent:"summary",refs:[`public-understanding:${reportId}:offer:q1`],
+    method:"DETERMINISTIC_EVIDENCE_PRESENTATION"}, output.projection, privateRevision),false);
+  const changed = subscriberOutputSchema.parse({...output,firstObservation:{...output.firstObservation,
+    publicUnderstanding:{...report,reportId:"c".repeat(64)}}});
+  assert.notEqual(subscriberOutputRevision(changed),privateRevision);
+  globalThis.fetch = async () => Response.json(changed);
+  const stale = await subscriberAxent(ask({prompt:"public offer",contextId:"focus:one",revision:privateRevision,locale:"en"}));
+  assert.equal(stale.status,409);
+  assert.equal((await stale.json()).error,"READING_CHANGED");
 });
