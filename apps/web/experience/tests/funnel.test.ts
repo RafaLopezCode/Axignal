@@ -15,6 +15,7 @@ const read = (file: string) => fs.readFileSync(path.join(root, file), "utf8");
 const PUBLIC_SURFACES = [
   "components/landing.tsx",
   "components/landing-extras.tsx",
+  "components/landing-observatory.tsx",
   "components/public-shell.tsx",
   "components/ui.tsx",
   "components/access.tsx",
@@ -151,4 +152,26 @@ test("the subscriber reading shows the real garden with the example's grammar, n
   const broken = runtimeCognitionSchema.parse({ asOf: "2026-10-08", sources: [], signals: [], opportunities: [], economicGarden: { nope: true } });
   assert.equal(broken.economicGarden, undefined);
   assert.equal(gardenFromRuntime(undefined, "2026-10-08"), null);
+});
+
+test("the landing's living window is the one public example, honestly labelled and time-faithful", async () => {
+  const { exampleInsights, exampleNewSince, EXAMPLE_ORGANIZATION } = await import("../lib/landing-observatory");
+  const copy = (value: { en: string }) => value.en;
+  assert.equal(EXAMPLE_ORGANIZATION, "norte");
+  // Only what was available at each moment is shown; nothing from later leaks backwards.
+  const july = exampleInsights("2026-07-01", copy).map((i) => i.id);
+  const october = exampleInsights("2026-10-03", copy).map((i) => i.id);
+  assert.ok(!july.includes("renovation") && !july.includes("representation"));
+  assert.ok(october.includes("renovation") && october.includes("representation"));
+  // Epistemic state passes through unchanged: potential stays potential, unknown stays unknown.
+  const now = exampleInsights("2026-10-03", copy);
+  assert.equal(now.find((i) => i.id === "renovation")?.nature, "POTENTIAL");
+  assert.equal(now.find((i) => i.id === "reputation-gap")?.nature, "UNKNOWN");
+  // The lamps light exactly what appeared since the previous moment.
+  assert.deepEqual([...exampleNewSince("2026-09-01")], ["renovation"]);
+  assert.deepEqual([...exampleNewSince("2026-10-03")], ["representation"]);
+  assert.equal(exampleNewSince("2026-07-01").size, 0);
+  const window = read("components/landing-observatory.tsx");
+  assert.match(window, /Organización ficticia/);
+  assert.match(window, /InsightCard|InsightBody/);
 });

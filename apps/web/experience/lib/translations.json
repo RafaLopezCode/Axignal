@@ -2032,5 +2032,19 @@
   "Matters": ["Wichtig", "Importa", "Compte", "Conta"],
   "Understood": ["Verstanden", "Compreendido", "Compris", "Compreso"],
   "To learn": ["Offen", "Por saber", "À découvrir", "Da scoprire"],
-  "The whole organization": ["Die gesamte Organisation", "Toda a organização", "Toute l'organisation", "L'intera organizzazione"]
+  "The whole organization": ["Die gesamte Organisation", "Toda a organização", "Toute l'organisation", "L'intera organizzazione"],
+  "possible, not a contract": ["möglich, kein Vertrag","possível, não um contrato","possible, pas un contrat","possibile, non un contratto"],
+  "unknown is not false": ["unbekannt ist nicht falsch","desconhecido não é falso","inconnu n'est pas faux","sconosciuto non è falso"],
+  "with its source and date": ["mit Quelle und Datum","com a sua fonte e data","avec sa source et sa date","con la sua fonte e la sua data"],
+  "new: lit until you see it": ["neu: leuchtet, bis du es siehst","novo: aceso até o veres","nouveau : allumé jusqu'à ce que vous le voyiez","nuovo: acceso finché non lo vedi"],
+  "Nothing yet at this moment.": ["Zu diesem Zeitpunkt noch nichts.","Ainda nada neste momento.","Rien encore à ce moment.","Ancora nulla in questo momento."],
+  "The real AXIGNAL interface, with the example's fictional organization": ["Die echte AXIGNAL-Oberfläche mit der fiktiven Organisation des Beispiels","A interface real da AXIGNAL, com a organização fictícia do exemplo","L'interface réelle d'AXIGNAL, avec l'organisation fictive de l'exemple","L'interfaccia reale di AXIGNAL, con l'organizzazione fittizia dell'esempio"],
+  "Fictional organization": ["Fiktive Organisation","Organização fictícia","Organisation fictive","Organizzazione fittizia"],
+  "a name or its website is enough": ["ein Name oder die Website genügt","basta um nome ou o site","un nom ou son site suffit","basta un nome o il suo sito"],
+  "Identity looked up in a registry": ["Identität in einem Register gesucht","Identidade procurada num registo","Identité recherchée dans un registre","Identità cercata in un registro"],
+  "the real state, no fake loading bars": ["der echte Zustand, keine vorgetäuschten Ladebalken","o estado real, sem barras de carregamento fingidas","l'état réel, sans fausses barres de chargement","lo stato reale, senza finte barre di caricamento"],
+  "Move the example through time": ["Das Beispiel durch die Zeit bewegen","Mover o exemplo no tempo","Faire avancer l'exemple dans le temps","Muovi l'esempio nel tempo"],
+  "the proof, one click from the conclusion": ["der Beleg, einen Klick von der Schlussfolgerung entfernt","a prova, a um clique da conclusão","la preuve, à un clic de la conclusion","la prova, a un clic dalla conclusione"],
+  "It separates what happened, when it became known and what is no longer current. Move the example from July to October: what is new stays lit until you see it.": ["Es trennt, was geschah, wann es bekannt wurde und was nicht mehr aktuell ist. Bewege das Beispiel von Juli bis Oktober: Neues leuchtet, bis du es siehst.","Separa o que aconteceu, quando se soube e o que já não está em vigor. Move o exemplo de julho a outubro: o que é novo fica aceso até o veres.","Il sépare ce qui s'est passé, quand on l'a su et ce qui n'est plus actuel. Faites avancer l'exemple de juillet à octobre : ce qui est nouveau reste allumé jusqu'à ce que vous le voyiez.","Separa ciò che è accaduto, quando lo si è saputo e ciò che non è più attuale. Muovi l'esempio da luglio a ottobre: ciò che è nuovo resta acceso finché non lo vedi."],
+  "Four proofs in the example": ["Vier Belege im Beispiel","Quatro provas no exemplo","Quatre preuves dans l'exemple","Quattro prove nell'esempio"]
 }
