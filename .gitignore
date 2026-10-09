@@ -56,3 +56,8 @@ specs/*/checklists/*.tmp
 
 # --- AXIGNAL landing source masters (local only; production derivatives are tracked) ---
 apps/web/landing/assets/images/source/
+
+# --- Private local tooling / scratch (not repository source) ---
+/.secrets/
+/.tmp_*.py
+/.claude/settings.local.json
