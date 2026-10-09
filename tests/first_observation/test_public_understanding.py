@@ -394,7 +394,8 @@ def test_report_expiry_uses_the_earliest_page_specific_rights_deadline() -> None
     expected_expiry = min(home_rights.private_until(NOW), linked_rights.private_until(NOW))
     assert report["status"] == "MEASURED"
     assert datetime.fromisoformat(report["contentExpiresAt"]) == expected_expiry
-    assert expected_expiry == NOW + timedelta(days=30)
+    # The 7-day linked page bounds the whole report; 30 days is only the no-entry default.
+    assert expected_expiry == NOW + timedelta(days=7)
 
 
 def test_rights_denied_skips_judge_and_unsafe_contact_quotes_are_not_sent() -> None:

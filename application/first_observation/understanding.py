@@ -317,15 +317,51 @@ def measure(
     return finish("MEASURED", "CONDITIONED_INTERPRETATION")
 
 
-def public_report(report: Mapping[str, Any], *, now: datetime) -> dict[str, Any]:
-    """Human meaning and exact evidence, without provider probability as truth precision."""
+def rights_deadline(
+    report: Mapping[str, Any], rights_for: Callable[[str], ContentRights]
+) -> datetime | None:
+    """Keep-and-show deadline of a stored report under the rights decided *now*.
+
+    Retention and presentation follow the governed entry of every source page: a removed,
+    prohibited or shortened entry moves the deadline earlier, never later. Evaluator
+    transmission grants (``providerInput``/``publicOfferInput``) are deliberately not
+    consulted: they authorize sending text to a provider, not keeping an admitted report,
+    so a provider-only revocation stops new measurements without withdrawing this one.
+    """
+    observed = report.get("sourceObservedAt")
+    if not observed:
+        return None
+    observed_at = datetime.fromisoformat(str(observed))
+    deadlines = []
+    for source in report.get("sourceRights", ()):
+        live = rights_for(str(source["url"]))
+        if source.get("basisRef") is not None and live.entry is None:
+            deadlines.append(observed_at)  # the governed basis it was measured under is gone
+        else:
+            deadlines.append(live.private_until(observed_at))
+    return min(deadlines, default=None)
+
+
+def public_report(
+    report: Mapping[str, Any],
+    *,
+    now: datetime,
+    rights_for: Callable[[str], ContentRights] | None = None,
+) -> dict[str, Any]:
+    """Human meaning and exact evidence, without provider probability as truth precision.
+
+    With ``rights_for`` the stored deadline is re-decided against current rights, so a
+    revocation takes effect on the next read, before any purge has run.
+    """
     result = {k: v for k, v in report.items() if k != "trace"}
     expires = datetime.fromisoformat(str(report["contentExpiresAt"]))
-    if now >= expires:
+    live = None if rights_for is None else rights_deadline(report, rights_for)
+    withdrawn = live is not None and live < expires and now >= live
+    if withdrawn or now >= expires:
         return {
             **result,
             "status": "NOT_MEASURED",
-            "cause": "CONTENT_EXPIRED",
+            "cause": "CONTENT_RIGHTS_WITHDRAWN" if withdrawn else "CONTENT_EXPIRED",
             "currentness": "EXPIRED",
             "sourceRights": [],
             "citations": [],

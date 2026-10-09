@@ -183,6 +183,10 @@ class FirstObservationService:
         self._clock = clock
         self.policy = policy or FirstObservationPolicy()
 
+    def content_rights(self, website: str, *, now: datetime) -> ContentRights:
+        """The rights decided now; stored content is re-decided at every read and purge."""
+        return self._rights.rights_for(website, now=now)
+
     # ---- L0-L2: the website, world level ----------------------------------------
     def _fetch(
         self, url: str, slot: str, ledger: RunLedger, *, retain_body: bool = False

@@ -539,7 +539,15 @@ class FirstObservationRuntime:
     def purge(self) -> dict[str, int]:
         """Retention enforcement for First Observation's own stores."""
         now = self._clock.now()
-        result = self.store.purge(now=now)
+        from application.first_observation.understanding import rights_deadline
+
+        # Revoked or shortened rights purge stored quotations too, not only elapsed dates.
+        result = self.store.purge(
+            now=now,
+            deadline=lambda report: rights_deadline(
+                report, lambda url: self.service.content_rights(url, now=now)
+            ),
+        )
         if self._purge_canonical_raw is not None:
             result["canonicalRaw"] = self._purge_canonical_raw(now)
         return result
@@ -630,9 +638,15 @@ class FirstObservationRuntime:
             from application.first_observation.understanding import compare, public_report
 
             now = self._clock.now()
-            current = public_report(proof["publicUnderstanding"], now=now)
+
+            def rights_for(url: str) -> ContentRights:
+                return self.service.content_rights(url, now=now)
+
+            # Rights are re-decided at read: a revocation hides quotations immediately,
+            # here and in AXENT (which reads this view), before any purge runs.
+            current = public_report(proof["publicUnderstanding"], now=now, rights_for=rights_for)
             history = [
-                public_report(r, now=now)
+                public_report(r, now=now, rights_for=rights_for)
                 for r in self.store.history(
                     tenant, target_ref, proof.get("target", {}).get("organizationId")
                 )

@@ -15,7 +15,7 @@ import hashlib
 import json
 import secrets
 import sqlite3
-from collections.abc import Iterator, Mapping
+from collections.abc import Callable, Iterator, Mapping
 from contextlib import contextmanager
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
@@ -320,9 +320,23 @@ class SqliteFirstObservationStore:
                 )
         return True
 
-    def purge(self, *, now: datetime) -> dict[str, int]:
-        """Enforce retention: shared site text and private citations past their time."""
+    def purge(
+        self,
+        *,
+        now: datetime,
+        deadline: Callable[[Mapping[str, Any]], datetime | None] | None = None,
+    ) -> dict[str, int]:
+        """Enforce retention: shared site text and private citations past their time.
+
+        ``deadline`` re-decides a stored understanding report under current rights, so a
+        revoked or shortened grant purges its quotations before the stored date.
+        """
         at = _iso(now)
+
+        def withdrawn(report: Mapping[str, Any]) -> bool:
+            live = None if deadline is None else deadline(report)
+            return live is not None and _iso(live) <= at
+
         sites = proofs = 0
         with self._transaction() as db:
             for row in db.execute("SELECT origin, reading FROM fo_sites").fetchall():
@@ -344,6 +358,9 @@ class SqliteFirstObservationStore:
                 proof_expired = row["retain_until"] is not None and str(row["retain_until"]) <= at
                 understanding = proof.get("publicUnderstanding")
                 understanding_expired = proof_expired
+                understanding_withdrawn = False
+                if isinstance(understanding, dict) and not understanding_expired:
+                    understanding_withdrawn = understanding_expired = withdrawn(understanding)
                 if isinstance(understanding, dict) and not understanding_expired:
                     content_expiry = understanding.get("contentExpiresAt")
                     if isinstance(content_expiry, str):
@@ -377,7 +394,9 @@ class SqliteFirstObservationStore:
                         if key in understanding
                     } | {
                         "status": "NOT_MEASURED",
-                        "cause": "CONTENT_EXPIRED",
+                        "cause": "CONTENT_RIGHTS_WITHDRAWN"
+                        if understanding_withdrawn
+                        else "CONTENT_EXPIRED",
                         "currentness": "EXPIRED",
                         "citations": [],
                         "dimensions": [],
@@ -400,6 +419,20 @@ class SqliteFirstObservationStore:
                 WHERE retain_until IS NOT NULL AND retain_until <= ?""",
                 (at,),
             )
+            if deadline is not None:
+                revoked = [
+                    (row["tenant_id"], row["target_ref"], row["report_id"])
+                    for row in db.execute(
+                        """SELECT tenant_id, target_ref, report_id, report
+                        FROM fo_understanding_history"""
+                    ).fetchall()
+                    if withdrawn(json.loads(row["report"]))
+                ]
+                db.executemany(
+                    """DELETE FROM fo_understanding_history WHERE tenant_id=? AND target_ref=?
+                    AND report_id=?""",
+                    revoked,
+                )
         return {"siteReadings": sites, "proofs": proofs}
 
     def fail(self, job: ObservationJob, *, error: str, now: datetime, retry: bool) -> None:

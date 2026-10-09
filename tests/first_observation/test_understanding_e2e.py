@@ -8,7 +8,7 @@ from __future__ import annotations
 import json
 import sqlite3
 from dataclasses import replace
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
@@ -57,7 +57,9 @@ class SyntheticSites(harness.SiteWorld):
         )
 
 
-def controlled_facade(root: Path, monkeypatch: Any) -> tuple[Any, World]:
+def controlled_facade(
+    root: Path, monkeypatch: Any, rights: Any = "registered"
+) -> tuple[Any, World]:
     monkeypatch.setitem(harness.PAGES, KNOWN, HOME)
     monkeypatch.setitem(harness.PAGES, SERVICES, BEFORE)
     world = World(sites=SyntheticSites(), judge=FakeSystemOne(synthetic_rule))
@@ -71,7 +73,7 @@ def controlled_facade(root: Path, monkeypatch: Any) -> tuple[Any, World]:
             )
         ]
     )
-    facade = build(root, world, identity_source=registry, public_understanding=True)
+    facade = build(root, world, identity_source=registry, public_understanding=True, rights=rights)
     return facade, world
 
 
@@ -130,7 +132,11 @@ def test_runtime_bidirectional_reobservation_is_private_durable_and_fresh(
     assert reply.body["grounding"]["modelCalls"] == 0
     assert any("CONSTRUCTIVE_GAP" in str(e["label"]) for e in reply.body["grounding"]["evidence"])
 
-    source_cut = datetime.fromisoformat(report["sourceObservedAt"])
+    # A cut before the judgment (the source may share its instant on coarse clocks).
+    source_cut = min(
+        datetime.fromisoformat(report["sourceObservedAt"]),
+        datetime.fromisoformat(report["measuredAt"]) - timedelta(microseconds=1),
+    )
     earlier = facade.axent.service.reader.read(context, XeedId(focus), source_cut)
     assert "publicUnderstanding" not in earlier.projection
     earlier_corpus = corpus_from_reading(
