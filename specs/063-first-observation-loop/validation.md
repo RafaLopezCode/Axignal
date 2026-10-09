@@ -28,38 +28,49 @@ Counts are measured on the controlled network. Jev tokens are the stand-in's est
 
 | Profile | State | First Proof | Evidence-backed | Grounded unknowns | HTTP | TED | Jev calls | Jev tokens (est.) | Luna | Request ms | Job ms |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| A solar installer, Spain | IDENTITY_PENDING | no | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 15.9 | 0.0 |
-| B language school, Arkansas | IDENTITY_PENDING | no | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 13.0 | 0.0 |
-| C SaaS serving globally | IDENTITY_PENDING | no | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 16.2 | 0.0 |
-| D local bakery, France | IDENTITY_PENDING | no | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 12.2 | 0.0 |
-| E site without evidence | IDENTITY_PENDING | no | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 13.8 | 0.0 |
-| F known canonical organization | CREATED | no | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 38.1 | 0.0 |
-| robots.txt forbids | IDENTITY_PENDING | no | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 12.5 | 0.0 |
+| A solar installer, Spain | IDENTITY_PENDING | no | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 18.0 | 0.0 |
+| B language school, Arkansas | IDENTITY_PENDING | no | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 13.3 | 0.0 |
+| C SaaS serving globally | IDENTITY_PENDING | no | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 13.4 | 0.0 |
+| D local bakery, France | IDENTITY_PENDING | no | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 12.4 | 0.0 |
+| E site without evidence | IDENTITY_PENDING | no | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 15.8 | 0.0 |
+| F known canonical organization | CREATED | no | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 38.0 | 0.0 |
+| robots.txt forbids | IDENTITY_PENDING | no | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 13.5 | 0.0 |
 
-**OPTIMIZED, semantic layer off**
-
-| Profile | State | First Proof | Evidence-backed | Grounded unknowns | HTTP | TED | Jev calls | Jev tokens (est.) | Luna | Request ms | Job ms |
-|---|---|---|---|---|---|---|---|---|---|---|---|
-| A solar installer, Spain | FIRST_PROOF_READY | yes | 8 | 2 | 2 | 2 | 0 | 0 | 0 | 29.9 | 52.9 |
-| B language school, Arkansas | NOT_ENOUGH_CAPABILITY_EVIDENCE | no | 3 | 2 | 4 | 0 | 0 | 0 | 0 | 31.3 | 26.9 |
-| C SaaS serving globally | FIRST_PROOF_READY | yes | 5 | 3 | 2 | 2 | 0 | 0 | 0 | 27.8 | 55.0 |
-| D local bakery, France | FIRST_PROOF_READY | yes | 6 | 3 | 2 | 2 | 0 | 0 | 0 | 29.7 | 52.8 |
-| E site without evidence | NOT_ENOUGH_CAPABILITY_EVIDENCE | no | 2 | 2 | 2 | 0 | 0 | 0 | 0 | 30.7 | 24.8 |
-| F known canonical organization | FIRST_PROOF_READY | yes | 8 | 1 | 2 | 2 | 0 | 0 | 0 | 46.6 | 94.2 |
-| robots.txt forbids | SOURCE_UNAVAILABLE | no | 0 | 2 | 1 | 0 | 0 | 0 | 0 | 28.0 | 24.5 |
-
-**OPTIMIZED, semantic layer on (stand-in System One)**
+**OPTIMIZED, content rights registered, semantic layer off**
 
 | Profile | State | First Proof | Evidence-backed | Grounded unknowns | HTTP | TED | Jev calls | Jev tokens (est.) | Luna | Request ms | Job ms |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| A solar installer, Spain | FIRST_PROOF_READY | yes | 8 | 2 | 2 | 2 | 0 | 0 | 0 | 32.9 | 49.8 |
-| B language school, Arkansas | FIRST_PROOF_READY | yes | 6 | 2 | 4 | 0 | 1 | 1190 | 0 | 30.6 | 28.7 |
-| C SaaS serving globally | FIRST_PROOF_READY | yes | 5 | 3 | 2 | 2 | 0 | 0 | 0 | 27.4 | 55.4 |
-| D local bakery, France | FIRST_PROOF_READY | yes | 6 | 3 | 2 | 2 | 0 | 0 | 0 | 28.5 | 50.9 |
-| E site without evidence | NOT_ENOUGH_CAPABILITY_EVIDENCE | no | 2 | 3 | 2 | 0 | 1 | 540 | 0 | 33.1 | 27.4 |
-| F known canonical organization | FIRST_PROOF_READY | yes | 8 | 1 | 2 | 2 | 0 | 0 | 0 | 47.7 | 94.4 |
-| robots.txt forbids | SOURCE_UNAVAILABLE | no | 0 | 2 | 1 | 0 | 0 | 0 | 0 | 28.4 | 24.3 |
+| A solar installer, Spain | FIRST_PROOF_READY | yes | 8 | 2 | 2 | 2 | 0 | 0 | 0 | 31.8 | 54.1 |
+| B language school, Arkansas | NOT_ENOUGH_CAPABILITY_EVIDENCE | no | 3 | 2 | 4 | 0 | 0 | 0 | 0 | 31.8 | 30.1 |
+| C SaaS serving globally | FIRST_PROOF_READY | yes | 5 | 3 | 2 | 2 | 0 | 0 | 0 | 33.1 | 51.2 |
+| D local bakery, France | FIRST_PROOF_READY | yes | 6 | 3 | 2 | 2 | 0 | 0 | 0 | 28.2 | 59.3 |
+| E site without evidence | NOT_ENOUGH_CAPABILITY_EVIDENCE | no | 2 | 2 | 2 | 0 | 0 | 0 | 0 | 28.0 | 25.8 |
+| F known canonical organization | FIRST_PROOF_READY | yes | 8 | 1 | 2 | 2 | 0 | 0 | 0 | 43.9 | 92.6 |
+| robots.txt forbids | SOURCE_UNAVAILABLE | no | 0 | 2 | 1 | 0 | 0 | 0 | 0 | 31.8 | 24.6 |
 
+**OPTIMIZED, content and input rights registered, semantic layer on (stand-in System One)**
+
+| Profile | State | First Proof | Evidence-backed | Grounded unknowns | HTTP | TED | Jev calls | Jev tokens (est.) | Luna | Request ms | Job ms |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| A solar installer, Spain | FIRST_PROOF_READY | yes | 8 | 2 | 2 | 2 | 0 | 0 | 0 | 27.8 | 71.9 |
+| B language school, Arkansas | FIRST_PROOF_READY | yes | 6 | 2 | 4 | 0 | 1 | 1188 | 0 | 28.8 | 33.2 |
+| C SaaS serving globally | FIRST_PROOF_READY | yes | 5 | 3 | 2 | 2 | 0 | 0 | 0 | 29.4 | 55.9 |
+| D local bakery, France | FIRST_PROOF_READY | yes | 6 | 3 | 2 | 2 | 0 | 0 | 0 | 28.1 | 53.3 |
+| E site without evidence | NOT_ENOUGH_CAPABILITY_EVIDENCE | no | 2 | 3 | 2 | 0 | 1 | 540 | 0 | 29.4 | 26.0 |
+| F known canonical organization | FIRST_PROOF_READY | yes | 8 | 1 | 2 | 2 | 0 | 0 | 0 | 43.3 | 91.2 |
+| robots.txt forbids | SOURCE_UNAVAILABLE | no | 0 | 2 | 1 | 0 | 0 | 0 | 0 | 31.0 | 24.4 |
+
+**OPTIMIZED, no content rights registered (production default), semantic layer configured**
+
+| Profile | State | First Proof | Evidence-backed | Grounded unknowns | HTTP | TED | Jev calls | Jev tokens (est.) | Luna | Request ms | Job ms |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| A solar installer, Spain | FIRST_PROOF_READY | yes | 8 | 2 | 2 | 2 | 0 | 0 | 0 | 28.3 | 54.5 |
+| B language school, Arkansas | NOT_ENOUGH_CAPABILITY_EVIDENCE | no | 3 | 2 | 4 | 0 | 0 | 0 | 0 | 28.6 | 27.3 |
+| C SaaS serving globally | FIRST_PROOF_READY | yes | 5 | 3 | 2 | 2 | 0 | 0 | 0 | 30.6 | 50.6 |
+| D local bakery, France | FIRST_PROOF_READY | yes | 6 | 3 | 2 | 2 | 0 | 0 | 0 | 31.1 | 50.9 |
+| E site without evidence | NOT_ENOUGH_CAPABILITY_EVIDENCE | no | 2 | 2 | 2 | 0 | 0 | 0 | 0 | 28.1 | 27.6 |
+| F known canonical organization | FIRST_PROOF_READY | yes | 8 | 1 | 2 | 2 | 0 | 0 | 0 | 43.4 | 53.6 |
+| robots.txt forbids | SOURCE_UNAVAILABLE | no | 0 | 2 | 1 | 0 | 0 | 0 | 0 | 30.6 | 24.6 |
 
 Reading it:
 
@@ -69,9 +80,13 @@ Reading it:
   2–4 HTTP requests; the other two end in grounded UNKNOWNs (`ACTIVITY_NOT_ESTABLISHED`,
   robots refusal) instead of silence.
 * Optimized, semantic layer on: the Arkansas school becomes First Proof with one System One
-  call (1,190 estimated input tokens ≈ USD 0.00005 at the published price) and an explicit
+  call (1,188 estimated input tokens ≈ USD 0.00005 at the published price) and an explicit
   `NO_GOVERNED_DEMAND_SOURCE` for Arkansas; the placeholder site costs one call and is
   identified as not an operating business. Luna: 0 everywhere.
+* Production default, no content rights registered: the private observation still reaches
+  First Proof for 4 of 6 profiles with the same requests; no content is shared, retained or
+  sent to a provider (Jev 0), so the Arkansas school stays at grounded UNKNOWN until the
+  operator registers rights for its website.
 * Request latency grows by ~10–15 ms (enqueue + capacity check); the observation itself
   runs off the request (job ms column).
 
@@ -121,6 +136,32 @@ All confirmed findings were fixed and have regression tests
   80/443, same-site redirects, size/time bounds); no TED special-casing in domain semantics;
   world-level stores hold no tenant identifiers.
 
+## CTO review of `3dbf144` and resolution
+
+1. **Linux CI red (`test_parser_and_place_edge_cases`).** Root cause: CPython security
+   releases (3.12.15 on CI, 3.13.x, 3.14) parse `<title>`/`<textarea>` as RCDATA, older ones
+   do not; an unclosed `<title>` swallowed the whole page on CI only. Fix: `split_rcdata`
+   removes both elements before the standard parser runs (an unclosed one ends at the next
+   tag), so parsing is identical on every runtime. The regression test is unchanged and
+   passes on 3.12.11 and 3.14.7 locally and on CI.
+2. **Rights and retention.** Robots and public visibility no longer authorize reuse,
+   retention or seeding (ADR-0015). Authority is a governed `SourceRegistryEntry` per website
+   (`AXIGNAL_FIRST_OBSERVATION_CONTENT_RIGHTS_FILE`, none by default). Without it: raw bodies
+   discarded from a dedicated artifact store, world record keeps fingerprints and robots only,
+   no cross-tenant content reuse, no seeds, private citations expire after 30 days. With it:
+   seeds carry the entry's rights/scope/provenance/retention; rights are re-decided at every
+   use; lost rights or expiry purge shared content before reuse; `purge()` enforces retention
+   (worker stage). Tests: unknown rights, lost rights, expiry, body discard, verified website
+   without rights (`tests/first_observation/test_rights_and_minimization.py`).
+3. **Jev confidence in UI.** Removed from the subscriber view and UI; the basis shows the
+   evaluator and "non-authoritative judgment, not a probability of truth"; the original value
+   stays in the stored (authorized) trace. Tests: Python public view and frontend `basisRows`.
+4. **Evaluator input minimization.** No page text reaches a provider without an explicit
+   input-rights decision. With it, state excludes people/contact/legal/team pages and replaces
+   e-mails, phones, honorific + name, role + name and capitalized name runs that are neither
+   the organization's declared names nor listed places. Test with names, e-mail and phone on an
+   about page: none reach the batch; places and the organization's name survive.
+
 ## Browser verification
 
 Real Next.js app (`apps/web/experience`) against a QA-only runtime stand-in serving First
@@ -136,13 +177,13 @@ contexto" → recovery after "Volver a comprobar". All 8 external evidence links
 | Gate | Result |
 |---|---|
 | `uv sync --frozen` | OK |
-| `uv run ruff format --check .` | 1328 files formatted |
+| `uv run ruff format --check .` | 1331 files formatted |
 | `uv run ruff check .` | all checks passed |
-| `uv run mypy` | no issues, 470 source files |
-| `uv run pytest` | 1964 passed, 6 skipped (5 POSIX-only, 1 real-SDK test without the optional group) |
+| `uv run mypy` | no issues, 471 source files |
+| `uv run pytest` | 1972 passed, 6 skipped (5 POSIX-only, 1 real-SDK test without the optional group); First Observation suite also on CPython 3.14.7: 35 passed |
 | `uv run architecture-guard --root .` | OK, no violations |
 | `uv run axignal-governance` | 8/8 PASS (after `graphify update .`) |
-| frontend `npm test` / `tsc --noEmit` / `check:i18n` | 146 pass / clean / 0 missing (1481 entries) |
+| frontend `npm test` / `tsc --noEmit` / `check:i18n` | 147 pass / clean / 0 missing (1482 entries) |
 
 ## Not verified / known limits
 

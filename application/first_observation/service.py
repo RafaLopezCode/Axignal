@@ -44,6 +44,12 @@ from application.first_observation.contracts import (
 from application.first_observation.geography import area_jurisdiction
 from application.first_observation.policy import FirstObservationPolicy, next_due
 from application.first_observation.research import ResearchPlan, plan_research
+from application.first_observation.rights import (
+    NO_RIGHTS,
+    ContentRights,
+    ContentRightsPolicy,
+    NoContentRights,
+)
 from application.first_observation.site import (
     READER_VERSION,
     PageReading,
@@ -84,7 +90,8 @@ class FetchedResource:
 
 
 class SiteFetchPort(Protocol):
-    def fetch(self, url: str, *, slot: str) -> FetchedResource: ...
+    def fetch(self, url: str, *, slot: str, retain_body: bool = False) -> FetchedResource:
+        """One governed GET; the raw body is kept only when ``retain_body`` (rights)."""
 
 
 class SiteReadingStore(Protocol):
@@ -104,13 +111,20 @@ class DemandOutcome:
 
 class DemandResearchPort(Protocol):
     def research(
-        self, target: AttentionTarget, plan: ResearchPlan, *, now: datetime
-    ) -> DemandOutcome: ...
+        self, target: AttentionTarget, plan: ResearchPlan, *, now: datetime, canonical: bool
+    ) -> DemandOutcome:
+        """``canonical``: publish through the Focus projection (registry-verified website
+        with governed content rights); otherwise a tenant-private loop."""
 
 
 class FocusSeedPort(Protocol):
     def seed(
-        self, target: AttentionTarget, pages: Sequence[PageReading], *, now: datetime
+        self,
+        target: AttentionTarget,
+        pages: Sequence[PageReading],
+        *,
+        now: datetime,
+        rights: ContentRights,
     ) -> Mapping[str, str]:
         """Append readable pages under the Organization subject; page url → observation id."""
 
@@ -158,7 +172,9 @@ class FirstObservationService:
         cascade_factory: Callable[[], SemanticCascade | None],
         clock: Callable[[], datetime],
         policy: FirstObservationPolicy | None = None,
+        rights: ContentRightsPolicy | None = None,
     ) -> None:
+        self._rights: ContentRightsPolicy = rights or NoContentRights()
         self._fetcher = fetcher
         self._sites = sites
         self._research = research
@@ -168,8 +184,10 @@ class FirstObservationService:
         self.policy = policy or FirstObservationPolicy()
 
     # ---- L0-L2: the website, world level ----------------------------------------
-    def _fetch(self, url: str, slot: str, ledger: RunLedger) -> FetchedResource:
-        resource = self._fetcher.fetch(url, slot=slot)
+    def _fetch(
+        self, url: str, slot: str, ledger: RunLedger, *, retain_body: bool = False
+    ) -> FetchedResource:
+        resource = self._fetcher.fetch(url, slot=slot, retain_body=retain_body)
         ledger.http_requests += resource.requests  # requests actually sent
         ledger.http_bytes += len(resource.body or b"")
         return resource
@@ -193,15 +211,35 @@ class FirstObservationService:
             artifact_ref=resource.artifact_ref,
         )
 
-    def read_site(self, website: str, now: datetime, ledger: RunLedger) -> SiteReading:
+    def read_site(
+        self,
+        website: str,
+        now: datetime,
+        ledger: RunLedger,
+        rights: ContentRights | None = None,
+    ) -> SiteReading:
+        """The website's pages for this run; what is *kept* depends on governed rights.
+
+        Shared content is reused only while its rights still permit it (re-decided now) and
+        its retention has not expired; otherwise the stored content is purged first.
+        """
         policy = self.policy
+        rights = rights or NoContentRights().rights_for(website, now=now)
         origin = origin_of(website)
         key = site_key(website)
         known = self._sites.site(key)
+        if known is not None and known.content_retained:
+            expired = known.shared_until is not None and known.shared_until <= now
+            if expired or not rights.reuse_permitted:
+                ledger.decide(
+                    "PURGED:SHARED_CONTENT:" + ("EXPIRED" if expired else "RIGHTS_NOT_PERMITTED")
+                )
+                known = known.without_content()
+                self._sites.save_site(known)
         if (
             known is not None
             and known.failure is None
-            and known.pages
+            and known.content_retained
             and now - known.observed_at <= policy.site_reuse_for
         ):
             ledger.site_reuse_hits += 1
@@ -228,13 +266,17 @@ class FirstObservationService:
         target = website if "://" in website else "https://" + website
         if not robots.allows(target):
             return self._failed(key, now, robots, "ROBOTS_DISALLOWED", ledger, None)
-        home = self._page(self._fetch(target, "website", ledger), robots, ledger)
+        retain = rights.raw_retention_days > 0
+        home = self._page(
+            self._fetch(target, "website", ledger, retain_body=retain), robots, ledger
+        )
         if home is None:
             return self._failed(key, now, robots, "HOMEPAGE_UNAVAILABLE", ledger, known)
         pages = [home]
         streak = 0
         if (
             known is not None
+            and known.content_retained
             and known.pages
             and known.pages[0].content_fingerprint == (home.content_fingerprint)
         ):
@@ -260,12 +302,19 @@ class FirstObservationService:
                 if not robots.allows(url):
                     ledger.decide(f"SKIPPED:ROBOTS:{need}")
                     continue
-                page = self._page(self._fetch(url, "site-page", ledger), robots, ledger)
+                page = self._page(
+                    self._fetch(url, "site-page", ledger, retain_body=retain), robots, ledger
+                )
                 if page is not None:
                     pages.append(page)
                     ledger.decide(f"FETCHED:{need}")
-        reading = SiteReading(key, now, robots, tuple(pages), None, streak)
-        self._sites.save_site(reading)
+        reading = SiteReading(
+            key, now, robots, tuple(pages), None, streak, rights.shared_until(now)
+        )
+        # Without governed rights only fingerprints and robots are kept (ADR-0015).
+        self._sites.save_site(reading if reading.content_retained else reading.without_content())
+        if not reading.content_retained:
+            ledger.decide("NOT_SHARED:CONTENT_RIGHTS_UNKNOWN")
         return reading
 
     def _failed(
@@ -293,10 +342,15 @@ class FirstObservationService:
         deterministic: Sequence[ActivityFinding],
         now: datetime,
         ledger: RunLedger,
+        provider_input: bool = False,
     ) -> SemanticReading | None:
         plan = plan_activity_batch(origin, pages, known_scopes=scopes, deterministic=deterministic)
         if plan is None:
             ledger.decide("SKIPPED:SEMANTIC:DETERMINISTIC_SUFFICIENT")
+            return None
+        if not provider_input:
+            # ADR-0090 §5: the Customer must hold rights to the Input it sends.
+            ledger.decide("SKIPPED:SEMANTIC:PROVIDER_INPUT_RIGHTS_UNKNOWN")
             return None
         try:
             cascade = self._cascade_factory()
@@ -364,7 +418,8 @@ class FirstObservationService:
                 target, ObservationState.NO_PUBLIC_WEBSITE, (unknown, *identity), ledger,
                 started, now, site=None, activity_known=False,
             )  # fmt: skip
-        reading = self.read_site(target.website, now, ledger)
+        rights = self._rights.rights_for(target.website, now=now)
+        reading = self.read_site(target.website, now, ledger, rights)
         if reading.failure is not None or not reading.pages:
             unknown = Discovery(
                 DiscoveryKind.SIGNIFICANT_UNKNOWN,
@@ -391,7 +446,7 @@ class FirstObservationService:
         ]
         semantic = self._semantic(
             reading.origin, pages, [*premises, *(c for _p, _a, c in areas)], deterministic,
-            now, ledger,
+            now, ledger, rights.provider_input,
         )  # fmt: skip
         if semantic is not None and semantic.codes and not semantic.findings:
             deterministic = tuple(
@@ -412,12 +467,21 @@ class FirstObservationService:
             for code in scope_codes.values()
         )
         subject = target.organization_id or f"attention:{target.target_ref}"
+        # Canonical path: the registry says it is the official website AND a governed rights
+        # decision permits reusing and retaining its content (ADR-0015, ADR-0091 §3).
         verified = (
             target.kind is TargetKind.FOCUS
             and target.identity_link is IdentityLink.REGISTRY_VERIFIED
+            and rights.raw_retention_days > 0
         )
+        if (
+            target.kind is TargetKind.FOCUS
+            and target.identity_link is IdentityLink.REGISTRY_VERIFIED
+            and not verified
+        ):
+            ledger.decide("PRIVATE_PATH:CONTENT_RIGHTS_UNKNOWN")
         if verified:
-            observation_ids = dict(self._seeds.seed(target, pages, now=now))
+            observation_ids = dict(self._seeds.seed(target, pages, now=now, rights=rights))
         else:
             observation_ids = {
                 page.url: f"site:{reading.origin}:{page.content_fingerprint[:24]}" for page in pages
@@ -434,7 +498,7 @@ class FirstObservationService:
         discoveries += identity
         demand = self._demand(
             target, subject, capabilities, scopes, pages, observation_ids, now, ledger,
-            has_activity=bool(findings),
+            has_activity=bool(findings), canonical=verified,
         )  # fmt: skip
         discoveries += demand
         if semantic is not None and semantic.operating is False:
@@ -465,7 +529,7 @@ class FirstObservationService:
             target, state, tuple(discoveries), ledger, started, now, site=reading,
             activity_known=bool(findings), scopes=scopes, capabilities=capabilities,
             judged={} if semantic is None else semantic.judged, ready=ready,
-            methods={f.activity_id: f for f in findings},
+            methods={f.activity_id: f for f in findings}, rights=rights,
         )  # fmt: skip
 
     # ---- discoveries --------------------------------------------------------------------
@@ -710,6 +774,7 @@ class FirstObservationService:
         ledger: RunLedger,
         *,
         has_activity: bool,
+        canonical: bool = False,
     ) -> list[Discovery]:
         def unknown(
             code: str, statement: str, detail: Mapping[str, object] | None = None
@@ -776,7 +841,7 @@ class FirstObservationService:
                     )
                 )
             return out
-        outcome = self._research.research(target, plan, now=now)
+        outcome = self._research.research(target, plan, now=now, canonical=canonical)
         ledger.source_requests += outcome.requests
         ledger.source_cache_hits += outcome.cache_hits
         ledger.requests_avoided += outcome.cache_hits
@@ -823,6 +888,7 @@ class FirstObservationService:
         judged: Mapping[str, str] | None = None,
         ready: bool = False,
         methods: Mapping[str, ActivityFinding] | None = None,
+        rights: ContentRights | None = None,
     ) -> FirstProof:
         ledger.elapsed_ms = int((time.monotonic() - started) * 1000)
         return FirstProof(
@@ -846,6 +912,8 @@ class FirstObservationService:
                 activity_known=activity_known,
                 source_unavailable=unavailable,
             ),
+            retain_until=(rights or NO_RIGHTS).private_until(now),
+            rights=(rights or NO_RIGHTS).to_wire(),
         )
 
 

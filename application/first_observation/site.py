@@ -14,6 +14,7 @@ from collections.abc import Iterator, Mapping
 from contextlib import suppress
 from dataclasses import dataclass
 from datetime import datetime
+from html import unescape
 from html.parser import HTMLParser
 from typing import Any
 from urllib.parse import urljoin, urlsplit, urlunsplit
@@ -99,6 +100,16 @@ class PageReading:
     links: tuple[tuple[str, str], ...]
     canonical: str | None = None
     meta_robots: str | None = None
+
+    def metadata_only(self) -> PageReading:
+        """The page without its content: URL, time and fingerprint (change detection)."""
+        return PageReading(
+            url=self.url, observed_at=self.observed_at,
+            content_fingerprint=self.content_fingerprint, artifact_ref=self.artifact_ref,
+            title="", description="", language=None, alternate_languages=(), headings=(),
+            schema_types=(), names=(), legal_names=(), identifiers=(), addresses=(),
+            areas_served=(), services=(), text="", links=(),
+        )  # fmt: skip
 
     def readable(self) -> str:
         """Citable content: title, description, JSON-LD declarations, then page text.
@@ -375,6 +386,46 @@ def same_site(url: str, origin_host: str) -> bool:
     return host in {bare, "www." + bare}
 
 
+_RCDATA_OPEN = re.compile(r"<(title|textarea)(?=[\s/>])[^>]*>", re.I)
+
+
+def split_rcdata(html: str) -> tuple[str, str]:
+    """(markup without RCDATA elements, the document title).
+
+    ``<title>`` and ``<textarea>`` are RCDATA: newer CPython releases (security fixes in
+    3.12.x/3.13.x and 3.14) treat everything up to the closing tag as text, older ones do
+    not. An unclosed ``<title>`` would then swallow the whole page on one runtime and not on
+    another. Both elements are removed here, before the standard parser runs, so the
+    result never depends on the Python version. An unclosed element ends at the next tag.
+    The document title is the first ``<title>`` before any ``<svg>`` or ``<body>``.
+    """
+
+    out: list[str] = []
+    title = ""
+    position = 0
+    lowered = html.lower()
+    while (match := _RCDATA_OPEN.search(html, position)) is not None:
+        tag = match.group(1).lower()
+        close = lowered.find(f"</{tag}", match.end())
+        next_tag = html.find("<", match.end())
+        end = close if close >= 0 else (next_tag if next_tag >= 0 else len(html))
+        if close >= 0 and next_tag >= 0 and next_tag < close and tag == "title":
+            # "<title>Broken<body>..." with a later "</title>": the title still ends at the
+            # first tag, as browsers recover, so the body is never swallowed.
+            end = next_tag
+        content = html[match.end() : end]
+        before = lowered[: match.start()]
+        if tag == "title" and not title and "<svg" not in before and "<body" not in before:
+            title = content
+        out.append(html[position : match.start()])
+        position = end
+        if close >= 0 and end == close:
+            closing_end = lowered.find(">", close)
+            position = len(html) if closing_end < 0 else closing_end + 1
+    out.append(html[position:])
+    return "".join(out), title
+
+
 def read_page(
     *,
     url: str,
@@ -385,9 +436,10 @@ def read_page(
 ) -> PageReading:
     """Parse one fetched HTML page into bounded, citable public statements."""
 
+    markup, document_title = split_rcdata(html)
     parser = _PageParser()
     with suppress(AssertionError):  # malformed markup degrades, never raises
-        parser.feed(html)
+        parser.feed(markup)
     parser.close()
     data = _jsonld(parser.jsonld)
     host = (urlsplit(url).hostname or "").lower()
@@ -410,7 +462,7 @@ def read_page(
         observed_at=observed_at,
         content_fingerprint=content_fingerprint,
         artifact_ref=artifact_ref,
-        title=_clean("".join(parser.title), 200),
+        title=_clean(unescape(document_title), 200),
         description=description,
         language=parser.language,
         alternate_languages=_unique(parser.alternates),

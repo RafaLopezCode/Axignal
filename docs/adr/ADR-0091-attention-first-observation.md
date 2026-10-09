@@ -34,11 +34,14 @@ unresolved identity.
    an `IDENTITY_HINT`, shown as such, never admitted.
 2. **Two levels of state.** The *site reading* (robots decision, pages, fingerprints,
    deterministic extraction) is world-level public observation keyed by website (origin and
-   path: two sites hosted on one host never share a reading) and reused by every tenant. The *First Proof* (discoveries, demand fit, states, cost) is
+   path: two sites hosted on one host never share a reading); its *content* is kept and
+   reused across tenants only under governed content rights (§11), otherwise only its
+   fingerprints and robots decision are. The *First Proof* (discoveries, demand fit, states, cost) is
    tenant-private operational state keyed by the attention target. Neither is AXIGLAND truth.
 3. **Only a registry-recorded website speaks for the Organization.** For a Focus whose
    website a registry records for that Organization (`REGISTRY_VERIFIED`, MASTER §15.3
-   "official website"), the reading is appended once per content fingerprint to Observation
+   "official website") and whose content a governed rights decision lets AXIGNAL retain
+   (§11), the reading is appended once per content fingerprint to Observation
    Memory under the canonical Organization id; existing readers, the projection evidence
    check and EB-06 currentness apply unchanged, and the result may hand over to T12. A
    website the subscriber merely directed (`SUBSCRIBER_DIRECTED`) is observed privately:
@@ -83,6 +86,26 @@ unresolved identity.
    sources, entry points, stop and refresh rules, check lists, vocabularies) is governed data
    and small ports over the existing routing, budget, lease and currentness engine — not a
    per-family pipeline and not a monolithic researcher (spec 063 `family-architecture.md`).
+11. **Content rights, retention and evaluator input are governed, never inferred.** Public
+   visibility and robots.txt allow *observing* (fetch under robots, bounded GETs) but are not
+   authority to reuse, retain or transmit content (ADR-0015). The authority is a governed
+   `SourceRegistryEntry` for the website (rights basis, reuse scope, raw and metadata
+   retention), registered by the operator; none exists by default.
+   * Without it: the requesting tenant's private observation still runs; raw bodies are
+     discarded after the run (a dedicated artifact store), the world-level site record keeps
+     only fingerprints and robots, other tenants re-observe instead of reusing content,
+     nothing is seeded under the Organization, and nothing is sent to a semantic provider.
+   * With it: shared content and seeds follow the entry's retention; the decision is taken
+     again at every use, so lost rights or expired retention purge shared content before any
+     reuse. Seeds carry the entry's rights, scope, provenance and retention references.
+   * Private First Proof citations are kept for at most the entry's raw retention or 30 days
+     without one, then removed (`contentExpiredAt`).
+   * Evaluator input needs an explicit input-rights decision (ADR-0090 §5) and is minimized:
+     pages about people, contact or legal particulars are excluded; e-mails, phone numbers,
+     honorific or role + name, and capitalized name runs that are neither the organization's
+     declared names nor listed places are replaced before transmission.
+   * Provider confidence is kept in the authorized trace and never shown to subscribers as a
+     number (ADR-0047: not a probability of truth).
 
 ## Consequences
 

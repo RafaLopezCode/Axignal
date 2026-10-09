@@ -33,6 +33,7 @@ from application.economic_discovery.observation_memory import (
     ObservationRightsStatus,
 )
 from application.economic_discovery.observation_reuse import ReusePurpose
+from application.economic_discovery.source_registry import SourceRegistryEntry
 from application.first_observation.contracts import (
     AttentionTarget,
     IdentityLink,
@@ -41,6 +42,12 @@ from application.first_observation.contracts import (
 from application.first_observation.metrics import runtime_metrics
 from application.first_observation.policy import FirstObservationPolicy
 from application.first_observation.research import ResearchPlan
+from application.first_observation.rights import (
+    ContentRights,
+    ContentRightsPolicy,
+    NoContentRights,
+    RegisteredContentRights,
+)
 from application.first_observation.service import (
     DemandOutcome,
     FirstObservationService,
@@ -98,6 +105,7 @@ class FirstObservationOverrides:
     source_ports: Mapping[str, SourceObservationPort] | None = None
     cascade_factory: Callable[[], SemanticCascade | None] | None = None
     feeds: Mapping[str, SliceFeedPort] | None = None
+    rights: ContentRightsPolicy | None = None
 
 
 class FocusSeed:
@@ -107,9 +115,17 @@ class FocusSeed:
         self._memory = memory
 
     def seed(
-        self, target: AttentionTarget, pages: Sequence[PageReading], *, now: datetime
+        self,
+        target: AttentionTarget,
+        pages: Sequence[PageReading],
+        *,
+        now: datetime,
+        rights: ContentRights,
     ) -> Mapping[str, str]:
         del now
+        entry = rights.entry
+        if entry is None or rights.raw_retention_days <= 0 or not rights.reuse_permitted:
+            raise ValueError("seeding requires a governed rights decision with retention")
         organization = target.organization_id
         if organization is None or target.identity_link is not IdentityLink.REGISTRY_VERIFIED:
             # ADR-0091 §3: only a registry-recorded website speaks for the Organization.
@@ -135,10 +151,11 @@ class FocusSeed:
                     raw_content=content,
                     raw_artifact_ref=page.artifact_ref,
                     reuse_authority=ObservationReuseAuthority(
-                        rights_status=ObservationRightsStatus.PERMITTED,
-                        access_status=ObservationAccessStatus.ACCESSIBLE,
-                        scope=ObservationReuseScope.GLOBAL_PUBLIC,
-                        provenance_ref=page.artifact_ref or f"first-observation:{page.url}",
+                        # Authority comes from the governed registry entry, never assumed.
+                        rights_status=entry.rights_status,
+                        access_status=entry.access_status,
+                        scope=entry.reuse_scope,
+                        provenance_ref=rights.basis_ref,
                         currentness=Currentness.CURRENT,
                         applicable_subject_ids=(organization,),
                         applicable_purposes=(
@@ -151,8 +168,8 @@ class FocusSeed:
                             "Registry-recorded official website page, observed after "
                             "robots.txt under a bounded GET policy."
                         ),
-                        retention_policy_ref="first-observation-seed:raw-90d",
-                        robots_policy_ref="robots.txt observed before fetch",
+                        retention_policy_ref=entry.retention_policy.ref,
+                        robots_policy_ref=entry.robots_policy_ref,
                     ),
                 )
             )
@@ -194,7 +211,7 @@ class RuntimeDemandResearch:
         self._clock = clock
 
     def research(
-        self, target: AttentionTarget, plan: ResearchPlan, *, now: datetime
+        self, target: AttentionTarget, plan: ResearchPlan, *, now: datetime, canonical: bool
     ) -> DemandOutcome:
         needed = {action.source_id for action in plan.strategy.actions}
         shared: dict[str, SourceObservationPort] = {}
@@ -207,10 +224,7 @@ class RuntimeDemandResearch:
                 )
         indexes = [p for p in self._ports.values() if isinstance(p, DemandIndexPort)]
         index_before = sum(p.index_hits for p in indexes)
-        if (
-            target.kind is TargetKind.FOCUS
-            and target.identity_link is IdentityLink.REGISTRY_VERIFIED
-        ):
+        if canonical:  # decided once, by the service (identity link AND content rights)
             result = self._economic.execute_observation_loop(
                 TrustedRequestContext(PrincipalId(target.principal_id), TenantId(target.tenant_id)),
                 XeedId(target.target_ref),
@@ -279,8 +293,14 @@ def public_view(proof: Mapping[str, Any] | None, state: str | None) -> dict[str,
     view = {
         k: v
         for k, v in proof.items()
-        if k not in {"ledger", "judged", "capabilities", "siteFingerprint"}
+        if k not in {"ledger", "judged", "capabilities", "siteFingerprint", "rights"}
     }
+    # A provider's confidence stays in the authorized trace (the stored proof): shown to a
+    # subscriber it reads as a probability of truth, which it is not (ADR-0047).
+    view["discoveries"] = [
+        {**d, "detail": {k: v for k, v in d.get("detail", {}).items() if k != "confidence"}}
+        for d in view.get("discoveries", ())
+    ]
     target = dict(view.pop("target"))
     view["target"] = {
         "kind": target["kind"],
@@ -502,6 +522,10 @@ class FirstObservationRuntime:
         with self._lock:
             return len(self.ingestor.run(max_slices=max_slices))
 
+    def purge(self) -> dict[str, int]:
+        """Retention enforcement for First Observation's own stores."""
+        return self.store.purge(now=self._clock.now())
+
     def enqueue_due(self) -> int:
         now = self._clock.now()
         created = 0
@@ -523,7 +547,7 @@ class FirstObservationRuntime:
             self._wake.wait(timeout=60)
             self._wake.clear()
             # Each stage fails alone: one bad row never stalls the other stages.
-            for stage in (self.enqueue_due, self.drain, self.ingest_demanded):
+            for stage in (self.enqueue_due, self.drain, self.ingest_demanded, self.purge):
                 try:
                     stage()
                 except Exception:  # the next wake retries; jobs keep leases and attempts
@@ -586,6 +610,80 @@ class FirstObservationRuntime:
         return public_view(proof, state)
 
 
+RIGHTS_FILE_KEY = "AXIGNAL_FIRST_OBSERVATION_CONTENT_RIGHTS_FILE"
+
+
+def load_content_rights(values: Mapping[str, str]) -> ContentRightsPolicy:
+    """Operator-registered website content rights (governed registry entries); none by default.
+
+    Each entry names one website host, the rights basis the operator holds, its raw and
+    metadata retention, and whether page text may be sent to a semantic provider. Any
+    invalid file fails closed to no rights.
+    """
+    path = values.get(RIGHTS_FILE_KEY, "").strip()
+    if not path:
+        return NoContentRights()
+    try:
+        raw = json.loads(Path(path).read_text(encoding="utf-8"))
+        entries, provider = [], set()
+        for item in raw:
+            entry = website_rights_entry(
+                host=str(item["host"]),
+                basis=str(item["rightsBasis"]),
+                raw_retention_days=int(item["rawRetentionDays"]),
+                metadata_retention_days=int(item["metadataRetentionDays"]),
+            )
+            entries.append(entry)
+            if item.get("providerInput") is True:
+                provider.add(entry.source_id)
+        return RegisteredContentRights(tuple(entries), provider_input=frozenset(provider))
+    except (OSError, ValueError, KeyError, TypeError):
+        return NoContentRights()
+
+
+def website_rights_entry(
+    *, host: str, basis: str, raw_retention_days: int, metadata_retention_days: int
+) -> SourceRegistryEntry:
+    """A governed PUBLIC_WEBSITE registry entry for one host (rights PERMITTED by basis)."""
+    from datetime import timedelta
+
+    from application.economic_discovery.source_registry import (
+        RobotsDecision,
+        RobotsRequirement,
+        SourceRatePolicy,
+        SourceRetentionPolicy,
+    )
+    from application.economic_discovery.temporal_currentness import TemporalCurrentnessPolicy
+    from application.source_acquisition import SourceTargetRule
+
+    bare = host.strip().lower().removeprefix("www.")
+    if not bare or not basis.strip():
+        raise ValueError("website rights need a host and a rights basis")
+    return SourceRegistryEntry(
+        source_id=f"website:{bare}",
+        version="1",
+        source_type="PUBLIC_WEBSITE",
+        instrument_ref="stdlib-pinned-http/0.2",
+        decision_basis=basis,
+        targets=(SourceTargetRule(bare, "/", ("https",)), SourceTargetRule("www." + bare, "/", ("https",))),
+        allowed_purposes=(ReusePurpose.CURRENT_STATE, ReusePurpose.HISTORICAL_REFERENCE),
+        rights_status=ObservationRightsStatus.PERMITTED,
+        access_status=ObservationAccessStatus.ACCESSIBLE,
+        reuse_scope=ObservationReuseScope.GLOBAL_PUBLIC,
+        reuse_reason=f"Operator-registered rights basis: {basis}",
+        temporal_policy=TemporalCurrentnessPolicy(
+            "first-observation-website", "1", timedelta(days=30), timedelta(days=90)
+        ),
+        retention_policy=SourceRetentionPolicy(
+            f"website-retention:{bare}", "1", raw_retention_days, metadata_retention_days
+        ),
+        rate_policy=SourceRatePolicy("first-observation-site", "1", 16, 86_400),
+        robots_requirement=RobotsRequirement.REQUIRED,
+        robots_decision=RobotsDecision.PERMITTED,
+        robots_policy_ref="robots.txt evaluated before every First Observation fetch",
+    )  # fmt: skip
+
+
 def build_first_observation(
     values: Mapping[str, str],
     root: Path,
@@ -620,7 +718,8 @@ def build_first_observation(
     store = SqliteFirstObservationStore(root / "first-observation.sqlite3")
     fetcher = overrides.fetcher
     if fetcher is None:
-        artifacts = ContentAddressedArtifactStore(root / "artifacts")
+        # A dedicated store: bodies without retention rights are discarded after the run.
+        artifacts = ContentAddressedArtifactStore(root / "first-observation-artifacts")
         fetcher = GovernedSiteFetcher(
             sensor=HttpSourceSensor(
                 policy_gate=PublicSourcePolicyGate(),
@@ -659,6 +758,7 @@ def build_first_observation(
         cascade_factory=factory or (lambda: None),
         clock=clock.now,
         policy=policy,
+        rights=overrides.rights or load_content_rights(values),
     )
     try:
         daily_jobs = int(values.get(DAILY_JOBS_KEY, "500"))

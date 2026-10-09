@@ -16,6 +16,7 @@ from collections import Counter
 from pathlib import Path
 from typing import Any
 
+from application.first_observation.rights import NoContentRights
 from application.world_demand.index import per_focus_requests, world_slice_requests
 from pipeline.source_acquisition import ContentAddressedArtifactStore
 from tests.first_observation import harness
@@ -59,13 +60,20 @@ def _registry(root: Path) -> ControlledRegistry:
     )
 
 
-def _run(root: Path, *, enabled: bool, semantic: bool) -> list[dict[str, Any]]:
+def _run(
+    root: Path, *, enabled: bool, semantic: bool, rights: Any = "registered"
+) -> list[dict[str, Any]]:
     rows = []
     for label, url in PROFILES:
         world = World()
         base = Path(tempfile.mkdtemp(dir=root))
         facade = build(
-            base, world, enabled=enabled, semantic=semantic, identity_source=_registry(base)
+            base,
+            world,
+            enabled=enabled,
+            semantic=semantic,
+            identity_source=_registry(base),
+            rights=rights,
         )
         token, _ = _pilot(facade, base, f"subject:{label}")
         started = time.perf_counter()
@@ -176,11 +184,20 @@ def main(out: str) -> None:
         "baseline": _run(root, enabled=False, semantic=False),
         "optimizedSemanticOff": _run(root, enabled=True, semantic=False),
         "optimizedSemanticOn": _run(root, enabled=True, semantic=True),
+        # Production default: no governed content rights registered for any website.
+        "optimizedNoContentRights": _run(
+            root, enabled=True, semantic=True, rights=NoContentRights()
+        ),
         "reuse": _reuse(root),
         "scale": _scale(),
     }
     Path(out).write_text(json.dumps(result, indent=1, ensure_ascii=False), encoding="utf-8")
-    for key in ("baseline", "optimizedSemanticOff", "optimizedSemanticOn"):
+    for key in (
+        "baseline",
+        "optimizedSemanticOff",
+        "optimizedSemanticOn",
+        "optimizedNoContentRights",
+    ):
         print(key)
         for row in result[key]:
             print(

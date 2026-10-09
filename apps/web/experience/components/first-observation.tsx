@@ -124,14 +124,16 @@ function sourceName(url: string): string {
   try { return new URL(url).hostname.replace(/^www\./, ""); } catch { return url; }
 }
 
-function Basis({ d }: { d: Discovery }) {
-  const { t, locale } = useLocale();
+/** The persisted basis of one discovery, as rows. Never a regenerated narrative. A
+ * provider's confidence is not shown: it is not a probability of truth (ADR-0047) and a
+ * percentage would be false precision (MASTER); it stays in authorized traces. */
+export function basisRows(d: Discovery, t: Translate, locale: string): Array<[string, string]> {
   const rows: Array<[string, string]> = [];
   const detail = d.detail;
   if (d.excerpt) rows.push([detail.method === "SEMANTIC_JUDGMENT" ? t("Texto evaluado", "Text judged") : t("Cita exacta", "Exact quote"), `“${d.excerpt}”`]);
   if (typeof detail.method === "string") rows.push([t("Método", "Method"), detail.method]);
   if (typeof detail.instrument === "string") rows.push([t("Instrumento", "Instrument"), detail.instrument]);
-  if (typeof detail.model === "string") rows.push([t("Evaluador", "Evaluator"), `${detail.model}${typeof detail.confidence === "number" ? ` · ${Math.round(detail.confidence * 100)}%` : ""}`]);
+  if (typeof detail.model === "string") rows.push([t("Evaluador", "Evaluator"), `${detail.model} · ${t("juicio no autoritativo, no es una probabilidad de verdad", "non-authoritative judgment, not a probability of truth")}`]);
   if (Array.isArray(detail.routingCodes) && detail.routingCodes.length) rows.push([t("Códigos de búsqueda", "Search codes"), detail.routingCodes.join(", ")]);
   if (Array.isArray(detail.codes) && detail.codes.length) rows.push([t("Códigos que coinciden", "Matching codes"), detail.codes.join(", ")]);
   if (typeof detail.market === "string") rows.push([t("Lugar buscado", "Place searched"), placeLabel(detail.market, locale)]);
@@ -141,6 +143,12 @@ function Basis({ d }: { d: Discovery }) {
   if (detail.checks && typeof detail.checks === "object") for (const [key, value] of Object.entries(detail.checks as Record<string, unknown>)) rows.push([checkLabel(key, t), Array.isArray(value) ? value.join(", ") || "—" : value === true ? t("Sí", "Yes") : value === false ? t("No", "No") : String(value ?? "—")]);
   if (typeof detail.limitation === "string") rows.push([t("Límite", "Limitation"), detail.limitation]);
   if (d.observedAt) rows.push([t("Observado el", "Observed on"), d.observedAt.slice(0, 10)]);
+  return rows;
+}
+
+function Basis({ d }: { d: Discovery }) {
+  const { t, locale } = useLocale();
+  const rows = basisRows(d, t, locale);
   return <details className="fo-basis"><summary>{t("Cómo lo sabe AXIGNAL", "Show me how AXIGNAL knows")}</summary>
     {rows.length ? <dl>{rows.map(([label, value]) => <div key={label + value}><dt>{label}</dt><dd>{value}</dd></div>)}</dl> : <p>{t("Esta afirmación no tiene más base que su estado.", "This statement has no basis beyond its state.")}</p>}
   </details>;

@@ -60,7 +60,7 @@ class GovernedSiteFetcher:
             max_redirects=self._max_redirects,
         )
 
-    def fetch(self, url: str, *, slot: str) -> FetchedResource:
+    def fetch(self, url: str, *, slot: str, retain_body: bool = False) -> FetchedResource:
         host = urlsplit(url).hostname or ""
         policy = self.policy_for(host)
         request = SourceRequest(
@@ -84,6 +84,10 @@ class GovernedSiteFetcher:
             if observed.body_artifact_ref is None
             else self._artifacts.read(observed.body_artifact_ref)
         )
+        if observed.body_artifact_ref is not None and not retain_body:
+            # ADR-0015: raw text retention is not automatic. The envelope (URLs, status,
+            # fingerprints) stays as metadata; the body exists only for this run.
+            self._artifacts.discard(observed.body_artifact_ref)
         return FetchedResource(
             requested_url=url,
             final_url=observed.final_uri,
@@ -93,7 +97,7 @@ class GovernedSiteFetcher:
             body=body,
             content_fingerprint=observed.body_fingerprint,
             artifact_ref=observed.raw_observation_ref,
-            requests=max(1, len(observed.redirect_chain)),
+            requests=len(observed.peer_ips),  # one per request actually sent
             failure=observed.failure_state,
         )
 

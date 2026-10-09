@@ -244,28 +244,79 @@ class ActivityBatchPlan:
 
 _EMAIL = re.compile(r"[\w.+-]+@[\w-]+\.[\w.-]+")
 _PHONE = re.compile(r"\+?\d[\d ().-]{6,}\d")
-_CONTACT_PATH = re.compile(r"contact|kontakt|contatt|contato|impressum|aviso-legal|legal", re.I)
+#: Pages about people or legal persons' particulars never reach an evaluator.
+_PEOPLE_PATH = re.compile(
+    r"contact|kontakt|contatt|contato|impressum|aviso-legal|legal|privacy|privacidad"
+    r"|team|equipo|staff|people|personas|our-people|nuestro-equipo|mitarbeiter|careers|empleo",
+    re.I,
+)
+_UPPER = r"[A-ZÀ-ÖØ-ÞĀ-Ž]"
+_APOSTROPHES = "'\u2019"  # straight and typographic apostrophes (O'Brien)
+_WORD = rf"{_UPPER}[\w{_APOSTROPHES}-]+"
+_HONORIFIC = re.compile(
+    rf"\b(?:Mr|Mrs|Ms|Mx|Dr|Dra|Prof|Sr|Sra|Srta|Dña|Don|Doña|Herr|Frau|Mme|Mlle|Sig|Sig\.ra)"
+    rf"\.?\s+{_WORD}(?:\s+{_WORD})*"
+)
+_ROLE = re.compile(
+    # Only the role words are case-insensitive: the name that follows must be capitalized.
+    rf"\b(?i:by|por|con|with|founder|founded by|fundad[oa] por|fundador[a]?|owner|"
+    rf"propietari[oa]|director[a]?|ceo|gerente|manager|chef|teacher|profesor[a]?)\s+"
+    rf"{_WORD}(?:\s+{_WORD})*",
+)
+_CAPITALIZED_RUN = re.compile(rf"{_WORD}(?:\s+{_WORD})+")
 
 
-def person_free(text: str) -> str:
-    """World-level state for an evaluator: no e-mail addresses or phone numbers."""
-    return _PHONE.sub("[phone]", _EMAIL.sub("[email]", text))
+def _allowed_words(pages: Sequence[PageReading]) -> frozenset[str]:
+    """Words that may stay capitalized: the organization's own declared names (title,
+    JSON-LD names, schema types) and listed place names. Everything else that looks like
+    a proper name is replaced before transmission."""
+    from application.first_observation.geography import place_words
+
+    words: set[str] = set(place_words())
+    for page in pages:
+        for text in (page.title, *page.names, *page.legal_names, *page.schema_types):
+            words.update(w.casefold() for w in re.findall(rf"[\w{_APOSTROPHES}-]+", text))
+    return frozenset(words)
+
+
+def minimize(text: str, allowed: frozenset[str] = frozenset()) -> str:
+    """Data minimization for evaluator state (ADR-0090 §5).
+
+    Removes e-mail addresses, phone numbers, honorific + name, role + name, and runs of
+    capitalized words that are neither the organization's own name nor a listed place.
+    It errs towards removing: a lost word costs a little recall, a leaked name costs rights.
+    """
+
+    text = _PHONE.sub("[phone]", _EMAIL.sub("[email]", text))
+    text = _HONORIFIC.sub("[person]", text)
+    text = _ROLE.sub(lambda m: m.group(0).split()[0] + " [person]", text)
+
+    def proper(match: re.Match[str]) -> str:
+        words = match.group(0).split()
+        if all(w.casefold().strip(_APOSTROPHES + "-") in allowed for w in words):
+            return match.group(0)
+        return "[name]"
+
+    return _CAPITALIZED_RUN.sub(proper, text)
+
+
+def person_free(text: str) -> str:  # kept for callers; the full boundary is ``minimize``
+    return minimize(text)
 
 
 def _state(origin: str, pages: Sequence[PageReading]) -> dict[str, object]:
-    # Contact and legal pages carry people's details and add nothing an activity
-    # question needs: they never reach the evaluator (ADR-0090 input rights).
-    readable = [p for p in pages if not _CONTACT_PATH.search(urlsplit(p.url).path)] or pages[:1]
+    readable = [p for p in pages if not _PEOPLE_PATH.search(urlsplit(p.url).path)] or pages[:1]
+    allowed = _allowed_words(readable)
     return {
         "site": origin,
         "pages": [
             {
                 "url": page.url,
-                "title": person_free(page.title),
-                "description": person_free(page.description),
-                "headings": [person_free(h) for h in page.headings[:8]],
-                "services": [person_free(x) for x in page.services[:12]],
-                "text": person_free(page.text[:STATE_CHARS_PER_PAGE]),
+                "title": minimize(page.title, allowed),
+                "description": minimize(page.description, allowed),
+                "headings": [minimize(h, allowed) for h in page.headings[:8]],
+                "services": [minimize(x, allowed) for x in page.services[:12]],
+                "text": minimize(page.text[:STATE_CHARS_PER_PAGE], allowed),
             }
             for page in readable
         ],

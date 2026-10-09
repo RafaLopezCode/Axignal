@@ -139,14 +139,14 @@ def test_a_redirect_onto_a_robots_disallowed_path_is_discarded(tmp_path: Path) -
     try:
         real = world.sites.fetch
 
-        def fetch(url: str, *, slot: str) -> FetchedResource:
+        def fetch(url: str, *, slot: str, retain_body: bool = False) -> FetchedResource:
             if url == origin + "/":
                 body = b"<html><body><p>Instalaciones fotovoltaicas.</p></body></html>"
                 return replace(
                     world.sites._resource(url, 200, "text/html", body.decode()),
                     final_url=origin + "/private/home",
                 )
-            return real(url, slot=slot)
+            return real(url, slot=slot, retain_body=retain_body)
 
         service._fetcher.fetch = fetch  # type: ignore[method-assign]
         proof = service.observe(replace(_focus_target(origin + "/", IdentityLink.IDENTITY_PENDING),

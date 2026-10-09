@@ -169,3 +169,11 @@ def area_jurisdiction(name: str | None, nuts: str | None) -> TaxonomyCode | None
         return code
     state = us_state(name)
     return geo(f"US/US-{state}") if state else None
+
+
+def place_words() -> frozenset[str]:
+    """Casefolded words of every listed country and US-state name (minimization allowlist)."""
+    words: set[str] = set()
+    for name in (*_COUNTRY_NAMES, *_US_STATE_NAMES):
+        words.update(name.split())
+    return frozenset(words)

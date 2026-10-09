@@ -134,10 +134,12 @@ class SiteWorld:
 
     def __init__(self) -> None:
         self.requests: list[str] = []
+        self.retained: list[bool] = []
         self.fail_next: set[str] = set()
 
-    def fetch(self, url: str, *, slot: str) -> FetchedResource:
+    def fetch(self, url: str, *, slot: str, retain_body: bool = False) -> FetchedResource:
         self.requests.append(url)
+        self.retained.append(retain_body)
         if url in self.fail_next:
             self.fail_next.discard(url)
             raise OSError("controlled transport failure")
@@ -266,6 +268,7 @@ def build(
     enabled: bool = True,
     semantic: bool = True,
     identity_source: Any = None,
+    rights: Any = "registered",
 ) -> Any:
     facade = build_subscriber_facade(
         _settings(tmp_path, pilot=True),
@@ -284,11 +287,40 @@ def build(
             fetcher=world.sites,
             source_ports={"ted-search-v3": world.ted},
             feeds={"ted-search-v3": world.ted},
+            rights=registered_rights() if rights == "registered" else rights,
             cascade_factory=world.cascade if semantic else (lambda: None),
         ),
     )
     facade.identity.auth._provider = _ControlledOidc()
     return facade
+
+
+EXAMPLE_HOSTS = (
+    "solaria-norte.example.com", "littlerock-languages.example.com", "ledgerly.example.com",
+    "boulangerie-lune.example.com", "soon.example.com", "solartec.example.com",
+    "private-robots.example.com", "sol-levante.example.com", "sites.example.com",
+    "redirects.example.com",
+)  # fmt: skip
+
+
+def registered_rights(
+    hosts: tuple[str, ...] = EXAMPLE_HOSTS, *, provider_input: bool = True
+) -> Any:
+    """Governed rights the operator registered for the fictitious example sites."""
+    from application.first_observation.rights import RegisteredContentRights
+    from tools.runtime.first_observation import website_rights_entry
+
+    entries = tuple(
+        website_rights_entry(
+            host=host, basis="test fixture: fictitious RFC 2606 site",
+            raw_retention_days=90, metadata_retention_days=365,
+        )
+        for host in hosts
+    )  # fmt: skip
+    return RegisteredContentRights(
+        entries,
+        provider_input=frozenset(e.source_id for e in entries) if provider_input else frozenset(),
+    )
 
 
 def runtime(facade: Any) -> Any:

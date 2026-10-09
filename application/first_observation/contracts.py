@@ -102,6 +102,21 @@ class SiteReading:
     pages: tuple[PageReading, ...]
     failure: str | None = None
     unchanged_streak: int = 0
+    #: World-level content may be kept and reused until then (governed rights only);
+    #: None means the reading holds no content, only fingerprints for change detection.
+    shared_until: datetime | None = None
+
+    @property
+    def content_retained(self) -> bool:
+        return self.shared_until is not None and any(p.readable() for p in self.pages)
+
+    def without_content(self) -> SiteReading:
+        """Fingerprints and robots only: what may be kept without a rights decision."""
+        return SiteReading(
+            self.origin, self.observed_at, self.robots,
+            tuple(page.metadata_only() for page in self.pages), self.failure,
+            self.unchanged_streak, None,
+        )  # fmt: skip
 
     @property
     def fingerprint(self) -> str:
@@ -117,6 +132,7 @@ class SiteReading:
             "pages": [page.to_wire() for page in self.pages],
             "failure": self.failure,
             "unchangedStreak": self.unchanged_streak,
+            "sharedUntil": None if self.shared_until is None else self.shared_until.isoformat(),
         }
 
     @staticmethod
@@ -134,6 +150,9 @@ class SiteReading:
             pages=tuple(PageReading.from_wire(p) for p in raw["pages"]),
             failure=None if raw.get("failure") is None else str(raw["failure"]),
             unchanged_streak=int(raw.get("unchangedStreak", 0)),
+            shared_until=None
+            if raw.get("sharedUntil") is None
+            else datetime.fromisoformat(str(raw["sharedUntil"])),
         )
 
 
@@ -267,6 +286,9 @@ class FirstProof:
     judged: Mapping[str, str]
     observed_at: datetime
     next_due_at: datetime | None
+    #: Citations (excerpts) in this private proof are removed after this time.
+    retain_until: datetime | None = None
+    rights: Mapping[str, object] = field(default_factory=dict)
 
     def to_wire(self) -> dict[str, object]:
         return {
@@ -284,6 +306,8 @@ class FirstProof:
             "judged": dict(self.judged),
             "observedAt": self.observed_at.isoformat(),
             "nextDueAt": None if self.next_due_at is None else self.next_due_at.isoformat(),
+            "retainUntil": None if self.retain_until is None else self.retain_until.isoformat(),
+            "rights": dict(self.rights),
             "authority": "OPERATIONAL_NOT_CANONICAL",
         }
 

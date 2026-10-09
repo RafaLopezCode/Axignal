@@ -1,6 +1,6 @@
 import test, { afterEach } from "node:test";
 import assert from "node:assert/strict";
-import { discoveryCopy, observationStateCopy } from "../components/first-observation";
+import { basisRows, discoveryCopy, observationStateCopy } from "../components/first-observation";
 import { evidenceUrl, firstObservationSchema, observationStates, pendingOutputSchema, portfolioSchema, subscriberResultSchema, type Discovery } from "../lib/subscriber-contracts";
 import { subscriberProxy } from "../lib/subscriber-server";
 
@@ -70,4 +70,13 @@ test("pending attention output passes the proxy and drops the private ledger", a
   assert.equal(pendingOutputSchema.safeParse(body).success, true);
   assert.equal(body.firstObservation.discoveries[0].excerpt, "Spanish classes.");
   assert.ok(!JSON.stringify(body).includes("httpRequests"));
+});
+
+test("a provider's confidence is never shown as a percentage or a probability of truth", () => {
+  const judged = discovery("ACTIVITY", "isic-P", { excerpt: "Spanish classes for adults.", detail: { method: "SEMANTIC_JUDGMENT", model: "jev-1.13.0", confidence: 0.91 } });
+  const rows = basisRows(judged, en, "en");
+  const text = rows.map(([label, value]) => `${label} ${value}`).join(" | ");
+  assert.ok(!/%|0\.91|91/.test(text), text);
+  assert.match(text, /non-authoritative judgment, not a probability of truth/);
+  assert.match(text, /Text judged/);  // the cited text is what was judged, not a proof quote
 });

@@ -78,6 +78,7 @@ class SqliteFirstObservationStore:
                     proof TEXT NOT NULL,
                     observed_at TEXT NOT NULL,
                     next_due_at TEXT,
+                    retain_until TEXT,
                     PRIMARY KEY (tenant_id, target_ref)
                 );
                 """
@@ -223,11 +224,11 @@ class SqliteFirstObservationStore:
                 (_iso(now), job.job_id),
             )
             db.execute(
-                """INSERT INTO fo_proofs VALUES (?,?,?,?,?,?,?,?)
+                """INSERT INTO fo_proofs VALUES (?,?,?,?,?,?,?,?,?)
                 ON CONFLICT(tenant_id, target_ref) DO UPDATE SET
                 organization_id=excluded.organization_id, state=excluded.state,
                 ready=excluded.ready, proof=excluded.proof, observed_at=excluded.observed_at,
-                next_due_at=excluded.next_due_at""",
+                next_due_at=excluded.next_due_at, retain_until=excluded.retain_until""",
                 (
                     target.tenant_id,
                     target.target_ref,
@@ -237,9 +238,47 @@ class SqliteFirstObservationStore:
                     json.dumps(proof.to_wire(), ensure_ascii=False, sort_keys=True),
                     _iso(proof.observed_at),
                     None if proof.next_due_at is None else _iso(proof.next_due_at),
+                    None if proof.retain_until is None else _iso(proof.retain_until),
                 ),
             )
         return True
+
+    def purge(self, *, now: datetime) -> dict[str, int]:
+        """Enforce retention: shared site text and private citations past their time."""
+        at = _iso(now)
+        sites = proofs = 0
+        with self._transaction() as db:
+            for row in db.execute("SELECT origin, reading FROM fo_sites").fetchall():
+                reading = SiteReading.from_wire(json.loads(row["reading"]))
+                if reading.shared_until is not None and _iso(reading.shared_until) <= at:
+                    stripped = reading.without_content()
+                    db.execute(
+                        "UPDATE fo_sites SET reading=? WHERE origin=?",
+                        (
+                            json.dumps(stripped.to_wire(), ensure_ascii=False, sort_keys=True),
+                            row["origin"],
+                        ),
+                    )
+                    sites += 1
+            for row in db.execute(
+                """SELECT tenant_id, target_ref, proof FROM fo_proofs
+                WHERE retain_until IS NOT NULL AND retain_until <= ?""",
+                (at,),
+            ).fetchall():
+                proof = json.loads(row["proof"])
+                for discovery in proof.get("discoveries", ()):
+                    discovery["excerpt"] = None
+                for capability in proof.get("capabilities", ()):
+                    capability.get("basis", {})["excerpt"] = None
+                proof["contentExpiredAt"] = at
+                db.execute(
+                    """UPDATE fo_proofs SET proof=?, retain_until=NULL
+                    WHERE tenant_id=? AND target_ref=?""",
+                    (json.dumps(proof, ensure_ascii=False, sort_keys=True), row["tenant_id"],
+                     row["target_ref"]),
+                )  # fmt: skip
+                proofs += 1
+        return {"siteReadings": sites, "proofs": proofs}
 
     def fail(self, job: ObservationJob, *, error: str, now: datetime, retry: bool) -> None:
         """Retry later with backoff, or fail for good and stop scheduling re-checks."""

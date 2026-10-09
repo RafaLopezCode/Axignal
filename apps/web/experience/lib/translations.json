@@ -1825,5 +1825,6 @@
   "On the pages read, its offer appears in the text but not as structured data.": ["Auf den gelesenen Seiten erscheint ihr Angebot im Text, aber nicht als strukturierte Daten.", "Nas páginas lidas, a sua oferta aparece no texto mas não como dados estruturados.", "Sur les pages lues, son offre apparaît dans le texte mais pas en données structurées.", "Nelle pagine lette, la sua offerta appare nel testo ma non come dati strutturati."],
   "A registry links this website to another organization.": ["Ein Register ordnet diese Website einer anderen Organisation zu.", "Um registo associa este site a outra organização.", "Un registre associe ce site à une autre organisation.", "Un registro collega questo sito a un'altra organizzazione."],
   "We do not observe it as if it belonged to this organization.": ["Wir beobachten sie nicht, als gehöre sie zu dieser Organisation.", "Não o observamos como se pertencesse a esta organização.", "Nous ne l'observons pas comme s'il appartenait à cette organisation.", "Non lo osserviamo come se appartenesse a questa organizzazione."],
-  "Text judged": ["Bewerteter Text", "Texto avaliado", "Texte évalué", "Testo valutato"]
+  "Text judged": ["Bewerteter Text", "Texto avaliado", "Texte évalué", "Testo valutato"],
+  "non-authoritative judgment, not a probability of truth": ["nicht maßgebliches Urteil, keine Wahrscheinlichkeit für Wahrheit", "juízo não autoritativo, não é uma probabilidade de verdade", "jugement non autoritatif, pas une probabilité de vérité", "giudizio non autorevole, non una probabilità di verità"]
 }

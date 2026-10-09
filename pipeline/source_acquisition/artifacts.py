@@ -62,6 +62,16 @@ class ContentAddressedArtifactStore:
             raise RuntimeError("content-addressed artifact corruption detected")
         return payload
 
+    def discard(self, reference: str) -> None:
+        """Remove one artifact (retention without rights). Use only on a dedicated store:
+        content addressing would otherwise remove bytes another flow may rely on."""
+        if self._read_only:
+            raise PermissionError("read-only artifact store")
+        digest = self.digest(reference)
+        if len(digest) != 64 or any(char not in "0123456789abcdef" for char in digest):
+            raise ValueError("invalid sha256 artifact reference")
+        (self._root / digest[:2] / digest).unlink(missing_ok=True)
+
     @staticmethod
     def digest(reference: str) -> str:
         if not reference.startswith(_PREFIX):

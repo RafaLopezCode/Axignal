@@ -114,7 +114,7 @@ def test_language_school_in_arkansas_is_understood_and_gets_a_grounded_source_ga
     assert view["state"] == "FIRST_PROOF_READY"
     (activity,) = discoveries(view, "ACTIVITY")
     assert (activity["code"], activity["detail"]["method"]) == ("isic-P", "SEMANTIC_JUDGMENT")
-    assert activity["detail"]["model"] == "jev-1.13.0" and activity["detail"]["confidence"] > 0.6
+    assert activity["detail"]["model"] == "jev-1.13.0" and "confidence" not in activity["detail"]
     assert "NAICS:61" in activity["detail"]["routingCodes"]
     (place,) = [
         d for d in discoveries(view, "DECLARED_LOCATION") if d["code"] == "LOCATION_STATED_IN_TEXT"

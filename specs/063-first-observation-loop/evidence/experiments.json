@@ -15,7 +15,7 @@
    "jevUsdVendorPublishedPrice": null,
    "lunaCalls": 0,
    "jobsRun": 0,
-   "requestLatencyMs": 15.9,
+   "requestLatencyMs": 18.0,
    "jobLatencyMs": 0.0,
    "decisions": []
   },
@@ -34,7 +34,7 @@
    "jevUsdVendorPublishedPrice": null,
    "lunaCalls": 0,
    "jobsRun": 0,
-   "requestLatencyMs": 13.0,
+   "requestLatencyMs": 13.3,
    "jobLatencyMs": 0.0,
    "decisions": []
   },
@@ -53,7 +53,7 @@
    "jevUsdVendorPublishedPrice": null,
    "lunaCalls": 0,
    "jobsRun": 0,
-   "requestLatencyMs": 16.2,
+   "requestLatencyMs": 13.4,
    "jobLatencyMs": 0.0,
    "decisions": []
   },
@@ -72,7 +72,7 @@
    "jevUsdVendorPublishedPrice": null,
    "lunaCalls": 0,
    "jobsRun": 0,
-   "requestLatencyMs": 12.2,
+   "requestLatencyMs": 12.4,
    "jobLatencyMs": 0.0,
    "decisions": []
   },
@@ -91,7 +91,7 @@
    "jevUsdVendorPublishedPrice": null,
    "lunaCalls": 0,
    "jobsRun": 0,
-   "requestLatencyMs": 13.8,
+   "requestLatencyMs": 15.8,
    "jobLatencyMs": 0.0,
    "decisions": []
   },
@@ -110,7 +110,7 @@
    "jevUsdVendorPublishedPrice": null,
    "lunaCalls": 0,
    "jobsRun": 0,
-   "requestLatencyMs": 38.1,
+   "requestLatencyMs": 38.0,
    "jobLatencyMs": 0.0,
    "decisions": []
   },
@@ -129,7 +129,7 @@
    "jevUsdVendorPublishedPrice": null,
    "lunaCalls": 0,
    "jobsRun": 0,
-   "requestLatencyMs": 12.5,
+   "requestLatencyMs": 13.5,
    "jobLatencyMs": 0.0,
    "decisions": []
   }
@@ -160,8 +160,8 @@
    "jevUsdVendorPublishedPrice": null,
    "lunaCalls": 0,
    "jobsRun": 1,
-   "requestLatencyMs": 29.9,
-   "jobLatencyMs": 52.9,
+   "requestLatencyMs": 31.8,
+   "jobLatencyMs": 54.1,
    "decisions": [
     "SKIPPED:EXTRA_PAGES:ACTIVITY_AND_LOCATION_EVIDENCED",
     "SKIPPED:SEMANTIC:DETERMINISTIC_SUFFICIENT",
@@ -188,8 +188,8 @@
    "jevUsdVendorPublishedPrice": null,
    "lunaCalls": 0,
    "jobsRun": 1,
-   "requestLatencyMs": 31.3,
-   "jobLatencyMs": 26.9,
+   "requestLatencyMs": 31.8,
+   "jobLatencyMs": 30.1,
    "decisions": [
     "FETCHED:ACTIVITY",
     "FETCHED:ABOUT",
@@ -219,8 +219,8 @@
    "jevUsdVendorPublishedPrice": null,
    "lunaCalls": 0,
    "jobsRun": 1,
-   "requestLatencyMs": 27.8,
-   "jobLatencyMs": 55.0,
+   "requestLatencyMs": 33.1,
+   "jobLatencyMs": 51.2,
    "decisions": [
     "SKIPPED:EXTRA_PAGES:ACTIVITY_AND_LOCATION_EVIDENCED",
     "SKIPPED:SEMANTIC:DETERMINISTIC_SUFFICIENT",
@@ -250,8 +250,8 @@
    "jevUsdVendorPublishedPrice": null,
    "lunaCalls": 0,
    "jobsRun": 1,
-   "requestLatencyMs": 29.7,
-   "jobLatencyMs": 52.8,
+   "requestLatencyMs": 28.2,
+   "jobLatencyMs": 59.3,
    "decisions": [
     "SKIPPED:EXTRA_PAGES:ACTIVITY_AND_LOCATION_EVIDENCED",
     "SKIPPED:SEMANTIC:DETERMINISTIC_SUFFICIENT",
@@ -277,8 +277,8 @@
    "jevUsdVendorPublishedPrice": null,
    "lunaCalls": 0,
    "jobsRun": 1,
-   "requestLatencyMs": 30.7,
-   "jobLatencyMs": 24.8,
+   "requestLatencyMs": 28.0,
+   "jobLatencyMs": 25.8,
    "decisions": [
     "SKIPPED:EXTRA_PAGES:NO_INFORMATION_LINK",
     "SKIPPED:SEMANTIC:LAYER_DISABLED",
@@ -310,8 +310,8 @@
    "jevUsdVendorPublishedPrice": null,
    "lunaCalls": 0,
    "jobsRun": 1,
-   "requestLatencyMs": 46.6,
-   "jobLatencyMs": 94.2,
+   "requestLatencyMs": 43.9,
+   "jobLatencyMs": 92.6,
    "decisions": [
     "SKIPPED:EXTRA_PAGES:ACTIVITY_AND_LOCATION_EVIDENCED",
     "SKIPPED:SEMANTIC:DETERMINISTIC_SUFFICIENT",
@@ -335,8 +335,8 @@
    "jevUsdVendorPublishedPrice": null,
    "lunaCalls": 0,
    "jobsRun": 1,
-   "requestLatencyMs": 28.0,
-   "jobLatencyMs": 24.5,
+   "requestLatencyMs": 31.8,
+   "jobLatencyMs": 24.6,
    "decisions": [
     "STOPPED:ROBOTS_DISALLOWED"
    ]
@@ -368,8 +368,8 @@
    "jevUsdVendorPublishedPrice": null,
    "lunaCalls": 0,
    "jobsRun": 1,
-   "requestLatencyMs": 32.9,
-   "jobLatencyMs": 49.8,
+   "requestLatencyMs": 27.8,
+   "jobLatencyMs": 71.9,
    "decisions": [
     "SKIPPED:EXTRA_PAGES:ACTIVITY_AND_LOCATION_EVIDENCED",
     "SKIPPED:SEMANTIC:DETERMINISTIC_SUFFICIENT",
@@ -395,12 +395,12 @@
    "httpRequests": 4,
    "tedRequests": 0,
    "jevCalls": 1,
-   "jevInputTokensEstimated": 1190,
-   "jevUsdVendorPublishedPrice": "0.00004998",
+   "jevInputTokensEstimated": 1188,
+   "jevUsdVendorPublishedPrice": "0.000049896",
    "lunaCalls": 0,
    "jobsRun": 1,
-   "requestLatencyMs": 30.6,
-   "jobLatencyMs": 28.7,
+   "requestLatencyMs": 28.8,
+   "jobLatencyMs": 33.2,
    "decisions": [
     "FETCHED:ACTIVITY",
     "FETCHED:ABOUT",
@@ -430,8 +430,8 @@
    "jevUsdVendorPublishedPrice": null,
    "lunaCalls": 0,
    "jobsRun": 1,
-   "requestLatencyMs": 27.4,
-   "jobLatencyMs": 55.4,
+   "requestLatencyMs": 29.4,
+   "jobLatencyMs": 55.9,
    "decisions": [
     "SKIPPED:EXTRA_PAGES:ACTIVITY_AND_LOCATION_EVIDENCED",
     "SKIPPED:SEMANTIC:DETERMINISTIC_SUFFICIENT",
@@ -461,8 +461,8 @@
    "jevUsdVendorPublishedPrice": null,
    "lunaCalls": 0,
    "jobsRun": 1,
-   "requestLatencyMs": 28.5,
-   "jobLatencyMs": 50.9,
+   "requestLatencyMs": 28.1,
+   "jobLatencyMs": 53.3,
    "decisions": [
     "SKIPPED:EXTRA_PAGES:ACTIVITY_AND_LOCATION_EVIDENCED",
     "SKIPPED:SEMANTIC:DETERMINISTIC_SUFFICIENT",
@@ -488,8 +488,8 @@
    "jevUsdVendorPublishedPrice": "0.00002268",
    "lunaCalls": 0,
    "jobsRun": 1,
-   "requestLatencyMs": 33.1,
-   "jobLatencyMs": 27.4,
+   "requestLatencyMs": 29.4,
+   "jobLatencyMs": 26.0,
    "decisions": [
     "SKIPPED:EXTRA_PAGES:NO_INFORMATION_LINK",
     "RAN:SEMANTIC:fo_operating_business,fo_isic_section",
@@ -521,8 +521,8 @@
    "jevUsdVendorPublishedPrice": null,
    "lunaCalls": 0,
    "jobsRun": 1,
-   "requestLatencyMs": 47.7,
-   "jobLatencyMs": 94.4,
+   "requestLatencyMs": 43.3,
+   "jobLatencyMs": 91.2,
    "decisions": [
     "SKIPPED:EXTRA_PAGES:ACTIVITY_AND_LOCATION_EVIDENCED",
     "SKIPPED:SEMANTIC:DETERMINISTIC_SUFFICIENT",
@@ -546,8 +546,223 @@
    "jevUsdVendorPublishedPrice": null,
    "lunaCalls": 0,
    "jobsRun": 1,
-   "requestLatencyMs": 28.4,
-   "jobLatencyMs": 24.3,
+   "requestLatencyMs": 31.0,
+   "jobLatencyMs": 24.4,
+   "decisions": [
+    "STOPPED:ROBOTS_DISALLOWED"
+   ]
+  }
+ ],
+ "optimizedNoContentRights": [
+  {
+   "profile": "A solar installer, Spain",
+   "addState": "IDENTITY_PENDING",
+   "observationState": "FIRST_PROOF_READY",
+   "firstProofReady": true,
+   "discoveries": {
+    "PUBLIC_PRESENCE": 1,
+    "LANGUAGES": 1,
+    "DECLARED_LOCATION": 1,
+    "IDENTITY_HINT": 1,
+    "ACTIVITY": 1,
+    "WEB_REPRESENTATION": 1,
+    "REPRESENTATION_GAP": 1,
+    "SIGNIFICANT_UNKNOWN": 2,
+    "DEMAND": 1
+   },
+   "evidenceBackedDiscoveries": 8,
+   "groundedUnknowns": 2,
+   "httpRequests": 2,
+   "tedRequests": 2,
+   "jevCalls": 0,
+   "jevInputTokensEstimated": 0,
+   "jevUsdVendorPublishedPrice": null,
+   "lunaCalls": 0,
+   "jobsRun": 1,
+   "requestLatencyMs": 28.3,
+   "jobLatencyMs": 54.5,
+   "decisions": [
+    "SKIPPED:EXTRA_PAGES:ACTIVITY_AND_LOCATION_EVIDENCED",
+    "NOT_SHARED:CONTENT_RIGHTS_UNKNOWN",
+    "SKIPPED:SEMANTIC:DETERMINISTIC_SUFFICIENT",
+    "RAN:DEMAND:2_ACTIONS:IRREDUCIBLE_WITH_ADOPTED_SOURCES"
+   ]
+  },
+  {
+   "profile": "B language school, Arkansas",
+   "addState": "IDENTITY_PENDING",
+   "observationState": "NOT_ENOUGH_CAPABILITY_EVIDENCE",
+   "firstProofReady": false,
+   "discoveries": {
+    "PUBLIC_PRESENCE": 1,
+    "LANGUAGES": 1,
+    "WEB_REPRESENTATION": 1,
+    "SIGNIFICANT_UNKNOWN": 2
+   },
+   "evidenceBackedDiscoveries": 3,
+   "groundedUnknowns": 2,
+   "httpRequests": 4,
+   "tedRequests": 0,
+   "jevCalls": 0,
+   "jevInputTokensEstimated": 0,
+   "jevUsdVendorPublishedPrice": null,
+   "lunaCalls": 0,
+   "jobsRun": 1,
+   "requestLatencyMs": 28.6,
+   "jobLatencyMs": 27.3,
+   "decisions": [
+    "FETCHED:ACTIVITY",
+    "FETCHED:ABOUT",
+    "NOT_SHARED:CONTENT_RIGHTS_UNKNOWN",
+    "SKIPPED:SEMANTIC:PROVIDER_INPUT_RIGHTS_UNKNOWN",
+    "SKIPPED:DEMAND:ACTIVITY_UNKNOWN"
+   ]
+  },
+  {
+   "profile": "C SaaS serving globally",
+   "addState": "IDENTITY_PENDING",
+   "observationState": "FIRST_PROOF_READY",
+   "firstProofReady": true,
+   "discoveries": {
+    "PUBLIC_PRESENCE": 1,
+    "LANGUAGES": 1,
+    "DECLARED_LOCATION": 1,
+    "ACTIVITY": 1,
+    "WEB_REPRESENTATION": 1,
+    "SIGNIFICANT_UNKNOWN": 3
+   },
+   "evidenceBackedDiscoveries": 5,
+   "groundedUnknowns": 3,
+   "httpRequests": 2,
+   "tedRequests": 2,
+   "jevCalls": 0,
+   "jevInputTokensEstimated": 0,
+   "jevUsdVendorPublishedPrice": null,
+   "lunaCalls": 0,
+   "jobsRun": 1,
+   "requestLatencyMs": 30.6,
+   "jobLatencyMs": 50.6,
+   "decisions": [
+    "SKIPPED:EXTRA_PAGES:ACTIVITY_AND_LOCATION_EVIDENCED",
+    "NOT_SHARED:CONTENT_RIGHTS_UNKNOWN",
+    "SKIPPED:SEMANTIC:DETERMINISTIC_SUFFICIENT",
+    "RAN:DEMAND:2_ACTIONS:IRREDUCIBLE_WITH_ADOPTED_SOURCES"
+   ]
+  },
+  {
+   "profile": "D local bakery, France",
+   "addState": "IDENTITY_PENDING",
+   "observationState": "FIRST_PROOF_READY",
+   "firstProofReady": true,
+   "discoveries": {
+    "PUBLIC_PRESENCE": 1,
+    "LANGUAGES": 1,
+    "DECLARED_LOCATION": 1,
+    "ACTIVITY": 1,
+    "WEB_REPRESENTATION": 1,
+    "REPRESENTATION_GAP": 1,
+    "SIGNIFICANT_UNKNOWN": 3
+   },
+   "evidenceBackedDiscoveries": 6,
+   "groundedUnknowns": 3,
+   "httpRequests": 2,
+   "tedRequests": 2,
+   "jevCalls": 0,
+   "jevInputTokensEstimated": 0,
+   "jevUsdVendorPublishedPrice": null,
+   "lunaCalls": 0,
+   "jobsRun": 1,
+   "requestLatencyMs": 31.1,
+   "jobLatencyMs": 50.9,
+   "decisions": [
+    "SKIPPED:EXTRA_PAGES:ACTIVITY_AND_LOCATION_EVIDENCED",
+    "NOT_SHARED:CONTENT_RIGHTS_UNKNOWN",
+    "SKIPPED:SEMANTIC:DETERMINISTIC_SUFFICIENT",
+    "RAN:DEMAND:2_ACTIONS:IRREDUCIBLE_WITH_ADOPTED_SOURCES"
+   ]
+  },
+  {
+   "profile": "E site without evidence",
+   "addState": "IDENTITY_PENDING",
+   "observationState": "NOT_ENOUGH_CAPABILITY_EVIDENCE",
+   "firstProofReady": false,
+   "discoveries": {
+    "PUBLIC_PRESENCE": 1,
+    "WEB_REPRESENTATION": 1,
+    "SIGNIFICANT_UNKNOWN": 2
+   },
+   "evidenceBackedDiscoveries": 2,
+   "groundedUnknowns": 2,
+   "httpRequests": 2,
+   "tedRequests": 0,
+   "jevCalls": 0,
+   "jevInputTokensEstimated": 0,
+   "jevUsdVendorPublishedPrice": null,
+   "lunaCalls": 0,
+   "jobsRun": 1,
+   "requestLatencyMs": 28.1,
+   "jobLatencyMs": 27.6,
+   "decisions": [
+    "SKIPPED:EXTRA_PAGES:NO_INFORMATION_LINK",
+    "NOT_SHARED:CONTENT_RIGHTS_UNKNOWN",
+    "SKIPPED:SEMANTIC:PROVIDER_INPUT_RIGHTS_UNKNOWN",
+    "SKIPPED:DEMAND:ACTIVITY_UNKNOWN"
+   ]
+  },
+  {
+   "profile": "F known canonical organization",
+   "addState": "CREATED",
+   "observationState": "FIRST_PROOF_READY",
+   "firstProofReady": true,
+   "discoveries": {
+    "PUBLIC_PRESENCE": 1,
+    "LANGUAGES": 1,
+    "DECLARED_LOCATION": 1,
+    "IDENTITY_HINT": 1,
+    "ACTIVITY": 1,
+    "WEB_REPRESENTATION": 1,
+    "REPRESENTATION_GAP": 1,
+    "SIGNIFICANT_UNKNOWN": 1,
+    "DEMAND": 1
+   },
+   "evidenceBackedDiscoveries": 8,
+   "groundedUnknowns": 1,
+   "httpRequests": 2,
+   "tedRequests": 2,
+   "jevCalls": 0,
+   "jevInputTokensEstimated": 0,
+   "jevUsdVendorPublishedPrice": null,
+   "lunaCalls": 0,
+   "jobsRun": 1,
+   "requestLatencyMs": 43.4,
+   "jobLatencyMs": 53.6,
+   "decisions": [
+    "SKIPPED:EXTRA_PAGES:ACTIVITY_AND_LOCATION_EVIDENCED",
+    "NOT_SHARED:CONTENT_RIGHTS_UNKNOWN",
+    "SKIPPED:SEMANTIC:DETERMINISTIC_SUFFICIENT",
+    "PRIVATE_PATH:CONTENT_RIGHTS_UNKNOWN",
+    "RAN:DEMAND:2_ACTIONS:IRREDUCIBLE_WITH_ADOPTED_SOURCES"
+   ]
+  },
+  {
+   "profile": "robots.txt forbids",
+   "addState": "IDENTITY_PENDING",
+   "observationState": "SOURCE_UNAVAILABLE",
+   "firstProofReady": false,
+   "discoveries": {
+    "SIGNIFICANT_UNKNOWN": 2
+   },
+   "evidenceBackedDiscoveries": 0,
+   "groundedUnknowns": 2,
+   "httpRequests": 1,
+   "tedRequests": 0,
+   "jevCalls": 0,
+   "jevInputTokensEstimated": 0,
+   "jevUsdVendorPublishedPrice": null,
+   "lunaCalls": 0,
+   "jobsRun": 1,
+   "requestLatencyMs": 30.6,
+   "jobLatencyMs": 24.6,
    "decisions": [
     "STOPPED:ROBOTS_DISALLOWED"
    ]
