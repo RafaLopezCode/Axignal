@@ -287,7 +287,7 @@ export function Knowledge() {
             )}
           </p>
         </div>
-        <Link className="button secondary" href="/panorama">
+        <Link className="button secondary" href="/demo">
           {t("Abrir Panorama", "Open Panorama")}
           <ArrowUpRight size={16} />
         </Link>

@@ -318,7 +318,7 @@ export function Access({ intent }: { intent: AuthStartRequest["intent"] }) {
                 "Not sure yet?",
               )}
             </span>
-            <Link className="text-link" href="/panorama">
+            <Link className="text-link" href="/demo">
               {t("Ver un ejemplo guiado", "See a guided example")}
               <ArrowUpRight size={17} />
             </Link>

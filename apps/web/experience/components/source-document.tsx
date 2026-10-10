@@ -38,7 +38,7 @@ export function SourceDocument({ item }: { item: Evidence }) {
             "This page is a fictional source for reviewing the experience. It does not correspond to a real document or establish an economic fact.",
           )}
         </p>
-        <Link className="button secondary" href="/panorama">
+        <Link className="button secondary" href="/demo">
           {t("Volver al Panorama", "Return to Panorama")}
         </Link>
       </main>

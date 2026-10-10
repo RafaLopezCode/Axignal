@@ -14,7 +14,7 @@ npm run start
 
 Open http://127.0.0.1:3810. `npm run dev` uses the same loopback address and port. Build output lives under `node_modules/.cache/axignal-next`; source never depends on generated output being committed.
 
-Routes: `/` narrative landing, `/panorama` subscriber product, `/admin` private operations demonstration, `/design` design system and state gallery, `/sources/[id]` fictitious source documents.
+Routes: `/` narrative landing, `/demo` public Observatory example, `/account` subscriber product, `/admin` private Customer Zero and operations, `/design` design system and state gallery, `/sources/[id]` fictitious source documents.
 
 ## What works
 

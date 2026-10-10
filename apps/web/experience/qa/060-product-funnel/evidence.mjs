@@ -7,8 +7,8 @@ const [origin, label, out] = process.argv.slice(2);
 const shots = [
   ["landing", "/", 1440], ["landing", "/", 390],
   ["pricing", "/#pricing", 1440], ["pricing", "/#pricing", 390],
-  ["example", "/panorama", 1440], ["example", "/panorama", 390],
-  ["example-evidence", "/panorama?signal=renovation&depth=prove", 1440],
+  ["example", "/demo", 1440], ["example", "/demo", 390],
+  ["example-evidence", "/demo?signal=renovation&depth=prove", 1440],
   ["signup", "/signup", 1440], ["signup", "/signup", 390],
 ];
 const page = await launch(9245);

@@ -36,7 +36,7 @@ import {
 } from "./ui";
 
 export function Admin({
-  initialDomain = "command",
+  initialDomain = "customer-zero",
 }: {
   initialDomain?: "command" | "customer-zero";
 }) {
@@ -75,9 +75,7 @@ export function Admin({
         return;
       const next = id === "customer-zero" || adminDomains.some((d) => d.id === id)
         ? id
-        : window.location.pathname === "/admin/customer-zero"
-          ? "customer-zero"
-          : "command";
+        : "customer-zero";
       if (next === "customer-zero") setProductStarted(true);
       setDomainId(next);
       setMobile(false);
@@ -202,11 +200,11 @@ export function Admin({
         </nav>
         <div className="sidebar-bottom">
           <Link
-            href="/admin/customer-zero"
+            href="/admin#command"
             className="nav-item"
           >
             <Eye size={17} />
-            {t("Abrir producto por separado", "Open product separately")}
+            {t("Centro de atención", "Attention centre")}
           </Link>
           <Link href="/design" className="sidebar-system">
             {t("Sistema AXIGNAL", "AXIGNAL system")}

@@ -12,7 +12,8 @@ expect() {
   echo "PASS $1 ($2)"
 }
 expect / 200
-expect /panorama 200
+expect /demo 200
+expect /panorama 308
 expect /account 200
 expect /login 200
 expect /signup 200
@@ -27,7 +28,7 @@ expect /api/subscriber/portfolio 401
 expect /admin 404
 expect /admin/customer-zero 404
 expect /api/admin/session 404
-curl --silent --show-error --max-time 12 "$origin/panorama" | grep -q 'data-product-surface="living-observatory"' ||
+curl --silent --show-error --max-time 12 "$origin/demo" | grep -q 'data-product-surface="living-observatory"' ||
   { echo 'FAIL: public example is not the current subscriber Observatory' >&2; exit 1; }
 echo 'PASS: actual Observatory example is served'
 

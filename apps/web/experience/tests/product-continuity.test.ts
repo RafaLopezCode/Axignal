@@ -6,8 +6,8 @@ import { exampleInsights, EXAMPLE_MOMENTS } from "../lib/landing-observatory";
 
 const src = (path: string) => readFileSync(resolve(process.cwd(), path), "utf8");
 
-test("public /panorama renders the actual Observatory reading surface, not retired Panorama", () => {
-  const page = src("app/panorama/page.tsx");
+test("public /demo renders the actual Observatory reading surface, not retired Panorama", () => {
+  const page = src("app/demo/page.tsx");
   const demo = src("components/example-observatory.tsx");
   const subscriber = src("components/subscriber-portfolio.tsx");
   const live = src("components/observatory.tsx");
@@ -44,7 +44,8 @@ test("production release entrypoint cannot silently drop configured subscriber p
   assert.match(script, /--no-build runtime experience landing/);
   assert.match(script, /verify-product-surface\.sh/);
   const smoke = src("../../../deploy/production/verify-product-surface.sh");
-  assert.match(smoke, /expect \/panorama 200/);
+  assert.match(smoke, /expect \/demo 200/);
+  assert.match(smoke, /expect \/panorama 308/);
   assert.match(smoke, /expect \/account 200/);
   assert.match(smoke, /Google sign-in available/);
   assert.match(smoke, /expect \/api\/subscriber\/portfolio 401/);

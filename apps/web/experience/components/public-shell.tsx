@@ -43,7 +43,7 @@ export function PublicHeader({ landing = false, localeRoutes }: { landing?: bool
   // rights live in the footer and the menu, where people look for them.
   const links = [
     { href: landing ? "#how" : "/#how", name: t("Cómo funciona", "How it works") },
-    { href: "/panorama", name: t("Ejemplo", "Example") },
+    { href: "/demo", name: t("Ejemplo", "Example") },
     { href: landing ? "#pricing" : "/#pricing", name: t("Precio", "Pricing") },
     { href: localeRoutes?.find((route) => route.locale === locale)?.href ?? "/knowledge", name: "Knowledge" },
   ];

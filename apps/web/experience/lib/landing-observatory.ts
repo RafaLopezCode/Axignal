@@ -1,6 +1,6 @@
 /**
  * The landing shows the real subscriber interface working on the one public example
- * (the fictional organization of /panorama, lib/projection). It is the same example,
+ * (the fictional organization of /demo, lib/projection). It is the same example,
  * never a second fixture: this module only presents it through the observatory's
  * Insight shape, so the visitor sees the actual product grammar, not a picture of it.
  */
