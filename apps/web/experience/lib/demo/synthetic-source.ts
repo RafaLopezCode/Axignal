@@ -35,10 +35,14 @@ const capitalize = (word: string) => word.charAt(0).toUpperCase() + word.slice(1
 /** Every demo domain, demo panel name and measurement phrase, rewritten into the reader's locale wherever it appears. */
 function localize<T>(value: T, locale: Locale): T {
   // The snapshot's words are Spanish (names, domains) and English (measurement phrases).
-  const pairs = locale === "es" ? [] : SITES.flatMap(({ es, words }) => [
-    [`demo-${es}.com`, `demo-${words[locale]}.com`],
-    [`Demo ${capitalize(es)}`, `Demo ${capitalize(words[locale])}`],
-  ]);
+  const pairs = locale === "es" ? [] : SITES.flatMap(({ es, words }) => {
+    // An unexpected locale reads the Spanish word rather than breaking the whole demo.
+    const word = words[locale] ?? es;
+    return [
+      [`demo-${es}.com`, `demo-${word}.com`],
+      [`Demo ${capitalize(es)}`, `Demo ${capitalize(word)}`],
+    ];
+  });
   const replace = (text: string) => pairs.reduce((out, [from, to]) => out.split(from).join(to), text);
   const walk = (node: unknown): unknown => {
     if (typeof node === "string") return (locale !== "en" && SYNTHETIC_PHRASES[node]?.[locale]) || replace(node);

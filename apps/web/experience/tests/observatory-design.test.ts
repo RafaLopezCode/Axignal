@@ -60,3 +60,11 @@ test("the facet bar cannot widen the page: its grid column is constrained", () =
 test("the portfolio list keeps a stable gutter between its rows and its scrollbar", () => {
   assert.match(observatory, /\.obs-orgs \{ padding-inline-end: 10px; scrollbar-gutter: stable;/);
 });
+
+test("the actions menu stays on screen: it opens from its start on narrow screens", () => {
+  assert.match(observatory, /@media \(max-width: 599px\) \{ \.obs-menu-list \{ inset-inline-start: 0; inset-inline-end: auto; max-inline-size: calc\(100vw - 32px\); \} \}/);
+});
+
+test("disabled menu actions keep their contrast through colour", () => {
+  assert.match(observatory, /\.obs-menu-list button:disabled \{ opacity: 1; color: var\(--obs-muted\);/);
+});

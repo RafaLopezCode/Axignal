@@ -490,3 +490,6 @@ body:has(.obs-rail-desktop) .privacy-preferences-button { inset-inline-end: auto
 .obs-orgs { padding-inline-end: 10px; scrollbar-gutter: stable; scrollbar-width: thin; scrollbar-color: var(--obs-rail-line) transparent; }
 .obs-orgs::-webkit-scrollbar { inline-size: 6px; }
 .obs-orgs::-webkit-scrollbar-thumb { background: var(--obs-rail-line); border-radius: var(--obs-r-badge); }
+/* On a narrow screen the actions sit under the title, on the left: the menu opens from its start so it stays on screen. */
+@media (max-width: 599px) { .obs-menu-list { inset-inline-start: 0; inset-inline-end: auto; max-inline-size: calc(100vw - 32px); } }
+.obs-menu-list button:disabled { opacity: 1; color: var(--obs-muted); background: none; cursor: not-allowed; }
