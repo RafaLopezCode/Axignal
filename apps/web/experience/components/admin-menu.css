@@ -25,10 +25,11 @@
 /* Sections. */
 .admin-shell .product-sidebar nav { display: grid; gap: 20px; padding-block: 18px 12px; }
 .admin-shell .admin-nav-group { display: grid; gap: var(--menu-gap); align-content: start; }
-.admin-shell .nav-group-label { padding: 0 12px 8px; font-family: var(--font-ui); font-size: 12px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--menu-title); }
+/* Titles lead the hierarchy: larger, heavier and darker than the functions under them. (typography.css gives both roles to the same system; the menu states its own, with the specificity to hold it.) */
+.admin-shell > .product-sidebar .nav-group-label { padding: 0 12px 8px; font-family: var(--font-ui); font-size: 14px; font-weight: 800; line-height: 1.3; letter-spacing: .06em; text-transform: uppercase; color: var(--menu-title); }
 
 /* Entries: the same height, type and states, wherever they come from. */
-.admin-shell .admin-nav-item { display: flex; align-items: center; justify-content: space-between; gap: 10px; inline-size: 100%; min-block-size: 40px; padding: 8px 12px; border: 0; border-radius: var(--menu-radius); background: transparent; color: var(--menu-text); font-size: 14px; font-weight: 500; line-height: 1.3; text-align: start; cursor: pointer; }
+.admin-shell .admin-nav-item { display: flex; align-items: center; justify-content: space-between; gap: 10px; inline-size: 100%; min-block-size: 40px; padding: 8px 12px; border: 0; border-radius: var(--menu-radius); background: transparent; color: var(--menu-text); line-height: 1.3; text-align: start; cursor: pointer; }
 .admin-shell .admin-nav-item > svg { margin: 0; opacity: .45; flex: none; }
 .admin-shell .admin-nav-item:hover { background: var(--menu-hover); color: var(--menu-text); }
 .admin-shell .admin-nav-item.active { background: var(--menu-active-bg); color: var(--menu-active); }
@@ -43,9 +44,11 @@
 .admin-shell .obs-in-shell .obs-scope, .admin-shell .obs-in-shell .obs-rail-action { border-radius: var(--menu-radius); }
 .admin-shell .obs-in-shell .obs-org { border-radius: var(--menu-radius); }
 .admin-shell .obs-in-shell .obs-rail-head { padding: 12px 8px 2px; }
-.admin-shell .obs-in-shell .obs-rail-head h2 { font-family: var(--font-ui); font-size: 12px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--menu-title); }
-.admin-shell .obs-in-shell .obs-scope, .admin-shell .obs-in-shell .obs-org-name, .admin-shell .obs-in-shell .obs-rail-action { font-weight: 500; }
-.admin-shell .admin-nav-item.active, .admin-shell .obs-in-shell .obs-scope[aria-current], .admin-shell .obs-in-shell .obs-org[aria-current] .obs-org-name { font-weight: 700; }
+.admin-shell .obs-in-shell .obs-rail-head h2 { font-family: var(--font-ui); font-size: 14px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: var(--menu-title); }
+/* The functions share one size and weight, whether they come from the shell or from the portfolio. */
+.admin-shell > .product-sidebar .admin-nav-group > .admin-nav-item { font-family: var(--font-ui); font-size: var(--type-control); font-weight: var(--weight-control); }
+.admin-shell .obs-in-shell .obs-scope, .admin-shell .obs-in-shell .obs-org-name, .admin-shell .obs-in-shell .obs-rail-action { font-size: var(--type-control); font-weight: var(--weight-control); }
+.admin-shell > .product-sidebar .admin-nav-group > .admin-nav-item.active, .admin-shell .obs-in-shell .obs-scope[aria-current], .admin-shell .obs-in-shell .obs-org[aria-current] .obs-org-name { font-weight: 700; }
 .admin-shell .obs-in-shell .obs-scope[aria-current], .admin-shell .obs-in-shell .obs-org[aria-current] { background: var(--menu-active-bg); box-shadow: none; color: var(--menu-active); }
 .admin-shell .obs-in-shell .obs-scope:hover, .admin-shell .obs-in-shell .obs-org:hover:not(:disabled) { background: var(--menu-hover); }
 
