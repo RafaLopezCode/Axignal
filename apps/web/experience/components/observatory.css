@@ -511,3 +511,5 @@ body:has(.obs-rail-desktop) .privacy-preferences-button { inset-inline-end: auto
 .obs-org-actions:has(.obs-axent-cta) { padding-block-end: calc(var(--axent-gap) + var(--axent-size) * 1.6); }
 /* Stacked header: AXENT leads the row, the secondary tools follow it, and the cue points up at its button. */
 @media (max-width: 880px) { .obs-org-actions .obs-axent-cta { order: -1; } }
+/* Stacked header: AXENT anchors the start of the row, the secondary tools sit together at the far end. */
+@media (max-width: 880px) { .obs-org-actions { inline-size: 100%; } .obs-org-actions > .obs-button:first-of-type { margin-inline-start: auto; } }
