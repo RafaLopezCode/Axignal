@@ -1,8 +1,10 @@
-/** MASTER §27 reference economics. This function never bills or grants access. */
+/** MASTER §27 reference economics. Never bills, converts or grants access. */
+import { EUR_REFERENCE, formatFixedMoney, monthlyFixedPriceMinor } from "./commercial-prices";
+
 export function monthlyReferenceCents(focuses: number): number {
-  if (!Number.isSafeInteger(focuses) || focuses < 1 || focuses > 100)
-    throw new RangeError(
-      "Reference focus count must be an integer from 1 to 100.",
-    );
-  return 995 + 495 * (focuses - 1);
+  return monthlyFixedPriceMinor(EUR_REFERENCE, focuses);
+}
+
+export function formatReferenceMoney(locale: string, cents: number): string {
+  return formatFixedMoney(locale, EUR_REFERENCE, cents);
 }

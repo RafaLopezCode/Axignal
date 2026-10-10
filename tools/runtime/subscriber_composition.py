@@ -58,6 +58,11 @@ from application.subscriber_projection.subscriber_runtime import (
 )
 from application.xeed_access.reader import TrustedRequestContext
 from domain.admin_billing.checkout_binding import ApprovedOfferCatalogue
+from domain.admin_billing.commercial_prices import (
+    DEFAULT_CURRENCY,
+    EUR_MONTHLY_ADDITIONAL_MINOR,
+    EUR_MONTHLY_BASE_MINOR,
+)
 from domain.evidence.epistemics import Currentness
 from domain.identity import TenantId, XeedId
 from pipeline.admin_billing.subscriber_store import SqliteSubscriberBillingStore
@@ -479,13 +484,14 @@ class _SubscriberWorkflow(SubscriberWorkflowPort):
             and self._checkout_mutations_enabled
             and catalogue.base_offer.terms.interval_unit == "month"
             and catalogue.base_offer.terms.interval_count == 1
-            and catalogue.base_offer.terms.currency == "EUR"
-            and catalogue.base_offer.terms.unit_amount_minor == 995
+            and catalogue.base_offer.terms.currency == DEFAULT_CURRENCY
+            and catalogue.base_offer.terms.unit_amount_minor == EUR_MONTHLY_BASE_MINOR
             and catalogue.base_offer.terms.tax_behavior == "exclusive"
             and catalogue.additional_xeed_offer.terms.interval_unit == "month"
             and catalogue.additional_xeed_offer.terms.interval_count == 1
-            and catalogue.additional_xeed_offer.terms.currency == "EUR"
-            and catalogue.additional_xeed_offer.terms.unit_amount_minor == 495
+            and catalogue.additional_xeed_offer.terms.currency == DEFAULT_CURRENCY
+            and catalogue.additional_xeed_offer.terms.unit_amount_minor
+            == EUR_MONTHLY_ADDITIONAL_MINOR
             and catalogue.additional_xeed_offer.terms.tax_behavior == "exclusive"
         )
 
