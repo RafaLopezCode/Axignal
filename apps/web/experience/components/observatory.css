@@ -560,6 +560,8 @@ body:has(.obs-rail-desktop) .privacy-preferences-button { inset-inline-end: auto
 .obs-activation-price strong { font-family: Fraunces, Georgia, serif; font-size: 32px; font-weight: 600; color: var(--obs-ink); }
 .obs-activation-price span { color: var(--obs-muted); }
 .obs-activation-terms { color: var(--obs-muted) !important; font-size: 13px !important; }
+.obs-activation-total { color: var(--obs-ink) !important; font-weight: 600; }
+.obs-activation-actions { display: flex; flex-wrap: wrap; gap: 8px; }
 .obs-activation-way > .obs-button { justify-self: start; }
 .obs-activation-invite { display: grid; gap: 6px; }
 .obs-activation-invite label { font-weight: 600; font-size: 14px; }

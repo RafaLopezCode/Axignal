@@ -168,7 +168,7 @@ export function SubscriberPortfolioExperience({ source = accountSource, notice, 
       if (input.action === "replace" && ["CREATED", "ACTIVE"].includes(result.state)) { setReplacing(null); setReplacementLocator(""); }
       await readPortfolio();
       return result;
-    } catch { if (!controller.signal.aborted && epoch === sessionEpoch.current) setMessage(t("No pudimos confirmar la operación. Lee el estado antes de repetirla; tu contexto no se ha sustituido.", "The operation could not be confirmed. Read its state before repeating it; your context has not been replaced.")); return null; }
+    } catch { if (!quiet && !controller.signal.aborted && epoch === sessionEpoch.current) setMessage(t("No pudimos confirmar la operación. Lee el estado antes de repetirla; tu contexto no se ha sustituido.", "The operation could not be confirmed. Read its state before repeating it; your context has not been replaced.")); return null; }
     finally { requests.current.delete(controller); if (epoch === sessionEpoch.current) setBusy(false); }
   }
   // Long-lived callbacks (the payment confirmation loop) call the current `run`, with the current language.
@@ -225,11 +225,28 @@ export function SubscriberPortfolioExperience({ source = accountSource, notice, 
     if (outcome === "cancelled") setActivation("payment_cancelled");
     else void confirmPayment();
   }, [access, canAct, confirmPayment]);
+  /**
+   * A return that never arrived (session expired at the provider, tab closed, link lost): before offering to pay
+   * again, ask the billing service once to reconcile any purchase still open. It reads the provider; it grants
+   * nothing that payment has not verified, and with no open purchase it changes nothing.
+   */
+  const reconciledOnLoad = useRef(false);
+  useEffect(() => {
+    if (!canAct || access !== "ready" || busy || !portfolio || reconciledOnLoad.current || billingHandled.current) return;
+    if (!portfolio.contractingEnabled || portfolio.canPurchase !== true) return;
+    const room = capacityRoom(portfolio);
+    if ((room !== null && room > 0) || !waitingItems(portfolio).length) return;
+    reconciledOnLoad.current = true;
+    void runRef.current({ action: "refresh_purchase" }, true);
+  }, [portfolio, access, busy, canAct]);
 
-  /** Open the provider's secure checkout for a first subscription; capacity changes only once payment is verified. */
+  /** Open the provider's secure checkout or invoice; capacity changes only once payment is verified. */
   async function startCheckout(totalOrganizations: number) {
     setActivation("checkout");
-    const result = await run({ action: "purchase", desiredOrganizationTotal: totalOrganizations }, true);
+    // A first subscription is a purchase; growing a current one is an expansion (same rule as the account screen).
+    const current = portfolioRef.current;
+    const action = current && current.capacityCurrentness === "CURRENT" && current.capacity !== null && current.capacity > 0 ? "expand" : "purchase";
+    const result = await run({ action, desiredOrganizationTotal: totalOrganizations }, true);
     const link = result ? approvedPaymentUrl(result.checkoutUrl) ?? approvedPaymentUrl(result.paymentUrl) : null;
     if (link) { window.location.assign(link); return; }
     setActivation("checkout_failed");
