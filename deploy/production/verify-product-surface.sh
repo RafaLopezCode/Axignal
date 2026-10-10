@@ -17,6 +17,12 @@ expect /account 200
 expect /login 200
 expect /signup 200
 expect /api/auth/status 200
+# A 200 status alone is insufficient: base-only runtime can report all providers
+# UNAVAILABLE while the marketing site appears healthy.
+curl --silent --show-error --max-time 12 "$origin/api/auth/status" |
+  python3 -c 'import json,sys; d=json.load(sys.stdin); assert any(p.get("id")=="google" and p.get("status")=="AVAILABLE" for p in d.get("providers",[])), "Google OIDC is not available"' ||
+  { echo 'FAIL: Google sign-in unavailable' >&2; exit 1; }
+echo 'PASS: Google sign-in available'
 expect /api/subscriber/portfolio 401
 expect /admin 404
 expect /admin/customer-zero 404

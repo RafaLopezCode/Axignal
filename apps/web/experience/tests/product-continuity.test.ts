@@ -45,6 +45,7 @@ test("production release entrypoint cannot silently drop configured subscriber p
   const smoke = src("../../../deploy/production/verify-product-surface.sh");
   assert.match(smoke, /expect \/panorama 200/);
   assert.match(smoke, /expect \/account 200/);
+  assert.match(smoke, /Google sign-in available/);
   assert.match(smoke, /expect \/api\/subscriber\/portfolio 401/);
   assert.match(smoke, /expect \/admin\/customer-zero 404/);
   const overlay = src("../../../deploy/production/compose.subscriber.override.yml");
