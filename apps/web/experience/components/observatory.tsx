@@ -25,7 +25,7 @@ import { SubscriberMcpConnections } from "./subscriber-mcp-connections";
 import { RuntimeAxent, useRuntimeAxent } from "./runtime-axent";
 import type { ObservatoryCapabilities } from "@/lib/observatory-source";
 import { channelLabel, FamilyNav, scopeCopy, type FacetScope } from "./family-nav";
-import { countByFacet, facetOfSourceType, facetParams, litByChannel, litByFamily, matchesFacet, parseFacet, type Facet } from "@/lib/observation-families";
+import { countByFacet, facetOfSourceType, facetParams, keysReadOnFirstLook, litByChannel, litOrFirstLook, litByFamily, matchesFacet, parseFacet, type Facet } from "@/lib/observation-families";
 
 type Item = SubscriberPortfolio["organizations"][number];
 export type View = "summary" | "explore" | "evolution" | "evidence";
@@ -66,8 +66,12 @@ export type ObservatoryProps = {
    * its portfolio navigation is then drawn in the shell's own sidebar instead of a second one beside the reading.
    */
   shell?: ObservatoryShell;
-  /** The organization to open on when there are several; otherwise the desk. */
-  landing?: string;
+  /** Where to open when there are several organizations: one of them, optionally on a family; otherwise the desk. */
+  landing?: { focusId: string; family?: string };
+  /** Families still unread on a first look. */
+  firstLookUnread?: readonly string[];
+  /** Whether what has been read is kept on this device between visits. */
+  rememberReading?: boolean;
   /** What the context offers around the reading; the demo declares all of it, an Admin has no account to manage. */
   capabilities: ObservatoryCapabilities;
   /** Organizations the context already authorizes, offered while adding one. */
@@ -135,12 +139,12 @@ function useUrlState() {
   return [state, go] as const;
 }
 
-function useSeen() {
+function useSeen(remember: boolean) {
   const [store, setStore] = useState<SeenStore>({});
-  useEffect(() => { setStore(readSeen(() => window.localStorage)); }, []);
+  useEffect(() => { if (remember) setStore(readSeen(() => window.localStorage)); }, [remember]);
   const update = useCallback((change: (store: SeenStore) => SeenStore) => {
-    setStore(previous => { const next = change(previous); if (next !== previous) writeSeen(() => window.localStorage, next); return next; });
-  }, []);
+    setStore(previous => { const next = change(previous); if (next !== previous && remember) writeSeen(() => window.localStorage, next); return next; });
+  }, [remember]);
   return [store, update] as const;
 }
 
@@ -241,7 +245,7 @@ export function Observatory(props: ObservatoryProps) {
   const { t, locale } = useLocale();
   const { access, portfolio, selected } = props;
   const [url, go] = useUrlState();
-  const [seen, updateSeen] = useSeen();
+  const [seen, updateSeen] = useSeen(props.rememberReading !== false);
   const [railOpen, setRailOpen] = useState(false);
   // Lit findings per organization, as the views compute them, so rail, desk and briefing agree.
   const [litCounts, setLitCounts] = useState<Record<string, number>>({});
@@ -263,7 +267,10 @@ export function Observatory(props: ObservatoryProps) {
     if (new URL(window.location.href).searchParams.get("organization")) return;
     autoOpened.current = true;
     if (readableItems.length === 1 && items.length === 1) void props.readOutput(readableItems[0].focusId, false);
-    else if (props.landing && readableItems.some(entry => entry.focusId === props.landing)) void props.readOutput(props.landing, false);
+    else if (props.landing && readableItems.some(entry => entry.focusId === props.landing?.focusId)) {
+      void props.readOutput(props.landing.focusId, false);
+      if (props.landing.family) go({ family: props.landing.family, channel: null }, true);
+    }
   }, [access, items.length, props, readableItems, selected, url.screen]);
 
   const openOrganization = (focusId: string, item: string | null = null) => {
@@ -297,7 +304,7 @@ export function Observatory(props: ObservatoryProps) {
     <main id="obs-main" className="obs-main" tabIndex={-1}>
       {props.notice}
       {(props.message || props.paymentUrl) && <div className="obs-toast" role="status" aria-live="polite">{props.message && <p>{props.message}</p>}{props.paymentUrl && <a className="obs-button obs-primary" href={props.paymentUrl}>{t("Continuar al pago", "Continue to payment")}<ArrowRight size={16} aria-hidden="true"/></a>}</div>}
-      {screen === "desk" && <DeskView items={items} readings={deskReadings} seen={seen} nameOf={nameOf} onOpen={openOrganization} onAdd={() => openScreen("add")} reportLit={reportLit}/>}
+      {screen === "desk" && <DeskView firstLookUnread={props.firstLookUnread} items={items} readings={deskReadings} seen={seen} nameOf={nameOf} onOpen={openOrganization} onAdd={() => openScreen("add")} reportLit={reportLit}/>}
       {screen === "add" && <AddView {...props} first={!items.length} onDone={() => openScreen("desk")}/>}
       {screen === "account" && <AccountView {...props}/>}
       {screen === "organization" && current && <OrganizationView key={current.focusId} item={current} name={nameOf(current)} {...props} view={url.view} itemId={url.item} family={url.family} channel={url.channel} go={go} seen={seen} updateSeen={updateSeen} axentOpen={axentOpen} setAxentOpen={setAxentOpen} locale={locale} reportLit={reportLit}/>}
@@ -377,15 +384,15 @@ function RailSheet({ children, onClose }: { children: React.ReactNode; onClose: 
 
 // ---- desk: the whole portfolio at a glance ------------------------------------------------
 
-function DeskView({ items, readings, seen, nameOf, onOpen, onAdd, reportLit }: {
-  items: Item[]; readings: Record<string, Reading | "failed">; seen: SeenStore; nameOf: (item: Item) => string;
+function DeskView({ items, readings, seen, nameOf, onOpen, onAdd, reportLit, firstLookUnread }: {
+  firstLookUnread?: readonly string[]; items: Item[]; readings: Record<string, Reading | "failed">; seen: SeenStore; nameOf: (item: Item) => string;
   onOpen: (focusId: string, item?: string | null) => void; onAdd: () => void; reportLit: (focusId: string, count: number) => void;
 }) {
   const { t, locale } = useLocale();
   const rows = items.map(item => {
     const reading = readings[item.focusId];
     const insights = reading && reading !== "failed" ? insightsFor(reading, t, locale) : [];
-    const lit = reading && reading !== "failed" ? litKeys(seen, item.focusId, insights.map(i => i.changeKey)) : new Set<string>();
+    const lit = reading && reading !== "failed" ? litOrFirstLook(seen[item.focusId]?.keys, insights, firstLookUnread) : new Set<string>();
     return { item, reading, insights, lit };
   });
   const attention = rows.filter(r => lensState(r.item) === "low" || r.item.state === "IDENTITY_PENDING" && !r.item.observation || r.reading === "failed");
@@ -486,7 +493,7 @@ function OrganizationView(props: OrgProps) {
   const reading: Reading = useMemo(() => ({ projection, firstObservation }), [projection, firstObservation]);
   const insights = useMemo(() => ready ? insightsFor(reading, t, locale) : [], [ready, reading, t, locale]);
   const keys = useMemo(() => insights.map(i => i.changeKey), [insights]);
-  const lit = useMemo(() => litKeys(seen, item.focusId, keys), [seen, item.focusId, keys]);
+  const lit = useMemo(() => litOrFirstLook(seen[item.focusId]?.keys, insights, props.firstLookUnread), [seen, item.focusId, insights, props.firstLookUnread]);
   const facet = useMemo(() => parseFacet(props.family, props.channel), [props.family, props.channel]);
   const shown = useMemo(() => facet.family ? insights.filter(i => matchesFacet(i, facet)) : insights, [insights, facet]);
   const shownKeys = useMemo(() => shown.map(i => i.changeKey), [shown]);
@@ -501,8 +508,8 @@ function OrganizationView(props: OrgProps) {
   useEffect(() => {
     if (!ready) return;
     const now = new Date().toISOString();
-    updateSeen(store => store[item.focusId] ? touch(store, item.focusId, now) : baseline(store, item.focusId, keys, now));
-  }, [ready, item.focusId, keys, updateSeen]);
+    updateSeen(store => store[item.focusId] ? touch(store, item.focusId, now) : baseline(store, item.focusId, keysReadOnFirstLook(insights, props.firstLookUnread), now));
+  }, [ready, item.focusId, insights, props.firstLookUnread, updateSeen]);
   // A finding that has been in view, in a visible tab, for a moment has been seen: it stops being lit without a click.
   useEffect(() => {
     if (!ready || view !== "summary" || litShown.size === 0 || typeof IntersectionObserver === "undefined") return;

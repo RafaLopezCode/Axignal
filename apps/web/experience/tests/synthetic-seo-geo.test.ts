@@ -68,8 +68,13 @@ test("every active demo reading carries a revision, so AXENT's entry exists in t
 
 test("the demonstration opens on the organization that shows SEO and GEO, so the families are in view at once", async () => {
   const { demoSource } = await import("../lib/demo/synthetic-source");
-  assert.equal(demoSource.landing, snapshot.portfolio[1].focusId);
-  assert.ok(measurements(outputs[demoSource.landing!]).length > 0);
+  assert.equal(demoSource.landing?.focusId, snapshot.portfolio[1].focusId);
+  assert.ok(measurements(outputs[demoSource.landing!.focusId]).length > 0);
+  // It lands on a family already read, so the notices on the other chips are in view; reading them takes them away.
+  assert.equal(demoSource.landing?.family, "demand");
+  assert.deepEqual(demoSource.firstLookUnread, ["presence", "demand"]);
+  // What is read is not kept: every visit to the demonstration starts with its notices.
+  assert.equal(demoSource.remembersReading, false);
   // The account has no landing: its desk is the home of a portfolio, and a single organization opens by itself.
   const { accountSource } = await import("../lib/observatory-source");
   assert.equal(accountSource.landing, undefined);

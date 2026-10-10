@@ -232,7 +232,7 @@ export function SubscriberPortfolioExperience({ source = accountSource, notice, 
     outputRequest.current?.abort(); ++outputEpoch.current;
     setSelected(null); setProjection(null); setFirstObservation(null); setRevision(null); setReading(false);
   }, []);
-  return <Observatory notice={notice} shell={shell} canAct={canAct} capabilities={source.capabilities} landing={source.landing} suggestions={suggestions} loadReading={loadOutput} menuName={source.menuName} access={access} portfolio={portfolio} busy={busy} message={message} paymentUrl={paymentUrl}
+  return <Observatory notice={notice} shell={shell} canAct={canAct} capabilities={source.capabilities} landing={source.landing} firstLookUnread={source.firstLookUnread} rememberReading={source.remembersReading !== false} suggestions={suggestions} loadReading={loadOutput} menuName={source.menuName} access={access} portfolio={portfolio} busy={busy} message={message} paymentUrl={paymentUrl}
     selected={selected} reading={reading} projection={projection} firstObservation={firstObservation} revision={revision}
     readOutput={readOutput} clearSelection={clearSelection} command={command} refresh={() => void readPortfolio()} logout={() => void logout()}
     locator={locator} setLocator={setLocator} total={total} setTotal={setTotal}

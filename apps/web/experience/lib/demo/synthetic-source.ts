@@ -75,8 +75,11 @@ export const demoSource: ObservatorySource = {
   mode: "demo",
   canAct: false,
   localized: true,
-  // The demonstration opens on the organization whose history shows SEO and GEO, so the families are in view at once.
-  landing: snapshot.portfolio[1].focusId,
+  // It opens on the organization whose history shows SEO and GEO, on a family already read, with Presence still unread:
+  // the chips give notice at once, and reading Presence takes the notice away.
+  landing: { focusId: snapshot.portfolio[1].focusId, family: "demand" },
+  firstLookUnread: ["presence", "demand"],
+  remembersReading: false,
   // The demo shows every control, disabled, so the reader sees the whole product.
   capabilities: { account: true, manage: true, recheck: true, axent: "subscriber" },
   async readPortfolio(_signal, locale) { return syntheticPortfolio(locale); },

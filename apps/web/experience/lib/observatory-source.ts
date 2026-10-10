@@ -30,8 +30,12 @@ export type ObservatorySource = {
   /** The reads depend on the reader's language, so they are repeated when it changes. */
   readonly localized: boolean;
   readonly capabilities: ObservatoryCapabilities;
-  /** The organization the context opens on when it has several; without one, a portfolio of several opens on the desk. */
-  readonly landing?: string;
+  /** Where the context opens when it has several organizations: one of them, optionally on a family. Without it, the desk. */
+  readonly landing?: { readonly focusId: string; readonly family?: string };
+  /** Families whose findings are still unread on a first look: the demonstration shows the panel giving notice. */
+  readonly firstLookUnread?: readonly string[];
+  /** False where what has been read is not kept between visits (the demonstration starts every time with its notices). */
+  readonly remembersReading?: boolean;
   readPortfolio(signal: AbortSignal, locale: Locale): Promise<SubscriberPortfolio | "SESSION_REQUIRED">;
   readOutput(focusId: string, signal: AbortSignal, locale: Locale): Promise<unknown>;
   /** Organizations the context already authorizes, offered while adding one. */

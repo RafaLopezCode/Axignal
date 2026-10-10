@@ -105,3 +105,18 @@ test("the chips count what is unread: the number goes when it has been read, and
   assert.match(nav, /obs-facet-empty/);
   assert.doesNotMatch(nav, /obs-facet-lamp|counts\.families\[id\]\}<\/span>/);
 });
+
+test("what is lit follows one rule for the chips, the rail and the desk: unread since the visit, or the declared families on a first look", async () => {
+  const { litOrFirstLook, keysReadOnFirstLook } = await import("../lib/observation-families");
+  const items = [
+    { family: "presence" as const, channel: "SEO" as const, changeKey: "a" },
+    { family: "demand" as const, channel: null, changeKey: "b" },
+    { family: "value" as const, channel: null, changeKey: "c" },
+  ];
+  // A first look reads everything, except the families the source declares as still to read.
+  assert.deepEqual([...litOrFirstLook(undefined, items, ["presence", "demand"])].sort(), ["a", "b"]);
+  assert.deepEqual([...litOrFirstLook(undefined, items)].sort(), []);
+  assert.deepEqual(keysReadOnFirstLook(items, ["presence"]), ["b", "c"]);
+  // After a visit it is simply what the record has not seen; the declaration no longer matters.
+  assert.deepEqual([...litOrFirstLook(["a", "b"], items, ["presence"])], ["c"]);
+});

@@ -97,6 +97,27 @@ export function litByFamily(items: Array<Facet & { changeKey: string }>, lit: Re
   return out;
 }
 
+/**
+ * What counts as already read on a first look. A first look reads everything, except the families a source
+ * declares as still to read: that is how the demonstration shows the panel giving notice.
+ */
+export function keysReadOnFirstLook(items: Array<Facet & { changeKey: string }>, unreadFamilies: readonly string[] = []): string[] {
+  return items.filter(item => !(item.family && unreadFamilies.includes(item.family))).map(item => item.changeKey);
+}
+
+/**
+ * What is lit for an organization: what the device has not read since its last visit or, on a first look, the
+ * families a source declares as still to read. One rule for the chips, the rail and the desk.
+ */
+export function litOrFirstLook(
+  record: ReadonlyArray<string> | undefined,
+  items: Array<Facet & { changeKey: string }>,
+  unreadFamilies: readonly string[] = [],
+): Set<string> {
+  if (record) { const seen = new Set(record); return new Set(items.map(item => item.changeKey).filter(key => !seen.has(key))); }
+  return new Set(items.filter(item => item.family && unreadFamilies.includes(item.family)).map(item => item.changeKey));
+}
+
 /** Unread findings per Presence channel, from the same lit keys as the families. */
 export function litByChannel(items: Array<Facet & { changeKey: string }>, lit: ReadonlySet<string>): Record<Channel, number> {
   const out: Record<Channel, number> = { SEO: 0, GEO: 0, WEB: 0 };
