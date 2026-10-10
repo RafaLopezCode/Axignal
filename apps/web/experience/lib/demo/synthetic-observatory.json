@@ -13,7 +13,7 @@
   {
    "focusId": "focus_ae5bbf52b76149b4af22a67a9fbafeb6",
    "organizationId": "org:id:2685bc852d5ff31e64a4f0ecbb399b66",
-   "label": "Demo Seo.com",
+   "label": "Demo Seo",
    "state": "ACTIVE",
    "observation": {
     "state": "FIRST_PROOF_READY",
@@ -26,7 +26,7 @@
   {
    "focusId": "pending_2ede23d46215446c857f5f2bdccd3c0e",
    "organizationId": null,
-   "label": "Demo Geo.com",
+   "label": "Demo Geo",
    "state": "IDENTITY_PENDING",
    "reason": "IDENTITY_SOURCE_UNAVAILABLE",
    "observation": {
@@ -40,7 +40,7 @@
   {
    "focusId": "pending_115c8d1ab897476dab5eeb7ffcd7f5e5",
    "organizationId": null,
-   "label": "Demo Consultor.com",
+   "label": "Demo Consultor",
    "state": "IDENTITY_PENDING",
    "reason": "IDENTITY_SOURCE_UNAVAILABLE",
    "observation": {
@@ -54,7 +54,7 @@
   {
    "focusId": "pending_73ba1b9973c04e6c8828f9e7e80a154d",
    "organizationId": null,
-   "label": "Demo Constructor.com",
+   "label": "Demo Constructor",
    "state": "IDENTITY_PENDING",
    "reason": "IDENTITY_SOURCE_UNAVAILABLE",
    "observation": {
@@ -68,7 +68,7 @@
   {
    "focusId": "pending_1a743f603eb84c08a21ddda89f3d741c",
    "organizationId": null,
-   "label": "Demo Marketing.com",
+   "label": "Demo Marketing",
    "state": "IDENTITY_PENDING",
    "reason": "IDENTITY_SOURCE_UNAVAILABLE",
    "observation": {
@@ -82,7 +82,7 @@
   {
    "focusId": "pending_8635a3d89af64c7689983612686041d5",
    "organizationId": null,
-   "label": "Demo Fabrica.com",
+   "label": "Demo Fabrica",
    "state": "IDENTITY_PENDING",
    "reason": "IDENTITY_SOURCE_UNAVAILABLE",
    "observation": {
@@ -96,7 +96,7 @@
   {
    "focusId": "pending_cf98f1069fbb4ea7b3f6248fda4b76f4",
    "organizationId": null,
-   "label": "Demo Distribuidor.com",
+   "label": "Demo Distribuidor",
    "state": "IDENTITY_PENDING",
    "reason": "IDENTITY_SOURCE_UNAVAILABLE",
    "observation": {
@@ -117,11 +117,11 @@
     "lifecycleStatus": "LIVE",
     "context": {
      "id": "focus_ae5bbf52b76149b4af22a67a9fbafeb6",
-     "label": "Demo Seo.com"
+     "label": "Demo Seo"
     },
     "organization": {
      "id": "org:id:2685bc852d5ff31e64a4f0ecbb399b66",
-     "name": "Demo Seo.com"
+     "name": "Demo Seo"
     },
     "nodes": [],
     "temporalHistory": {
@@ -240,7 +240,7 @@
       {
        "buyer": "Ayuntamiento Ejemplo",
        "capability": {
-        "excerpt": "Demo Seo.com | photovoltaic installation",
+        "excerpt": "Demo Seo | photovoltaic installation",
         "label": "Solar photovoltaic installation",
         "sourceId": "fo:47ad8af5f78e8c1fd50bb5077cec7f8c"
        },
@@ -336,7 +336,7 @@
        "whyLooked": [
         "«Which open public tenders ask for its observed capabilities?» necesita PUBLIC_PROCUREMENT_OPPORTUNITIES; Tenders Electronic Daily — Search API v3 lo publica para ES y permite buscar por CPV."
        ],
-       "whyPotential": "AXIGNAL observó que la empresa declara «Demo Seo.com | photovoltaic installation» y este comprador pide 09332000 (Solar photovoltaic installation)."
+       "whyPotential": "AXIGNAL observó que la empresa declara «Demo Seo | photovoltaic installation» y este comprador pide 09332000 (Solar photovoltaic installation)."
       }
      ],
      "economicGarden": {
@@ -388,11 +388,11 @@
        "pagesRead": 2
       },
       "epistemicState": "OBSERVED",
-      "excerpt": "Demo Seo.com | photovoltaic installation",
+      "excerpt": "Demo Seo | photovoltaic installation",
       "kind": "PUBLIC_PRESENCE",
       "observedAt": "2026-10-09T20:02:57.038873+00:00",
       "sourceUrl": "https://www.demo-seo.com/",
-      "statement": "Demo Seo.com | photovoltaic installation"
+      "statement": "Demo Seo | photovoltaic installation"
      },
      {
       "code": "LANGUAGES_PUBLISHED",
@@ -434,7 +434,7 @@
        ]
       },
       "epistemicState": "POTENTIAL",
-      "excerpt": "Demo Seo.com | photovoltaic installation",
+      "excerpt": "Demo Seo | photovoltaic installation",
       "kind": "ACTIVITY",
       "observedAt": "2026-10-09T20:02:57.038873+00:00",
       "sourceUrl": "https://www.demo-seo.com/",
@@ -540,7 +540,7 @@
        "contentFingerprint": "sha256:8e309d27c17806b3e59f9a4fc69385acb6f330269c535a94a79dada29ef32614",
        "id": "q1",
        "observedAt": "2026-10-09T20:02:57.038873+00:00",
-       "quote": "Demo Seo.com | photovoltaic installation",
+       "quote": "Demo Seo | photovoltaic installation",
        "url": "https://www.demo-seo.com/"
       },
       {
@@ -686,7 +686,7 @@
          "contentFingerprint": "sha256:8e309d27c17806b3e59f9a4fc69385acb6f330269c535a94a79dada29ef32614",
          "id": "q1",
          "observedAt": "2026-10-09T20:02:56.894179+00:00",
-         "quote": "Demo Seo.com | photovoltaic installation",
+         "quote": "Demo Seo | photovoltaic installation",
          "url": "https://www.demo-seo.com/"
         },
         {
@@ -837,7 +837,7 @@
         "kind": "STATE_CHANGED",
         "beforeQuotations": [
          "Services",
-         "Demo Seo.com | photovoltaic installation",
+         "Demo Seo | photovoltaic installation",
          "We install photovoltaic panels.",
          "We install photovoltaic panels."
         ],
@@ -852,7 +852,7 @@
         "kind": "STATE_CHANGED",
         "beforeQuotations": [
          "Services",
-         "Demo Seo.com | photovoltaic installation",
+         "Demo Seo | photovoltaic installation",
          "We install photovoltaic panels.",
          "We install photovoltaic panels."
         ],
@@ -882,11 +882,11 @@
     "lifecycleStatus": "LIVE",
     "context": {
      "id": "focus_ae5bbf52b76149b4af22a67a9fbafeb6",
-     "label": "Demo Seo.com"
+     "label": "Demo Seo"
     },
     "organization": {
      "id": "org:id:2685bc852d5ff31e64a4f0ecbb399b66",
-     "name": "Demo Seo.com"
+     "name": "Demo Seo"
     },
     "nodes": [],
     "temporalHistory": {
@@ -967,7 +967,7 @@
       {
        "buyer": "Ayuntamiento Ejemplo",
        "capability": {
-        "excerpt": "Demo Seo.com | photovoltaic installation",
+        "excerpt": "Demo Seo | photovoltaic installation",
         "label": "Solar photovoltaic installation",
         "sourceId": "fo:24cde4e93eaefc28fe5237288a2365d3"
        },
@@ -1063,7 +1063,7 @@
        "whyLooked": [
         "«Which open public tenders ask for its observed capabilities?» necesita PUBLIC_PROCUREMENT_OPPORTUNITIES; Tenders Electronic Daily — Search API v3 lo publica para ES y permite buscar por CPV."
        ],
-       "whyPotential": "AXIGNAL observó que la empresa declara «Demo Seo.com | photovoltaic installation» y este comprador pide 09332000 (Solar photovoltaic installation)."
+       "whyPotential": "AXIGNAL observó que la empresa declara «Demo Seo | photovoltaic installation» y este comprador pide 09332000 (Solar photovoltaic installation)."
       }
      ],
      "economicGarden": {
@@ -1115,11 +1115,11 @@
        "pagesRead": 2
       },
       "epistemicState": "OBSERVED",
-      "excerpt": "Demo Seo.com | photovoltaic installation",
+      "excerpt": "Demo Seo | photovoltaic installation",
       "kind": "PUBLIC_PRESENCE",
       "observedAt": "2026-10-09T20:02:56.894179+00:00",
       "sourceUrl": "https://www.demo-seo.com/",
-      "statement": "Demo Seo.com | photovoltaic installation"
+      "statement": "Demo Seo | photovoltaic installation"
      },
      {
       "code": "LANGUAGES_PUBLISHED",
@@ -1161,7 +1161,7 @@
        ]
       },
       "epistemicState": "POTENTIAL",
-      "excerpt": "Demo Seo.com | photovoltaic installation",
+      "excerpt": "Demo Seo | photovoltaic installation",
       "kind": "ACTIVITY",
       "observedAt": "2026-10-09T20:02:56.894179+00:00",
       "sourceUrl": "https://www.demo-seo.com/",
@@ -1267,7 +1267,7 @@
        "contentFingerprint": "sha256:8e309d27c17806b3e59f9a4fc69385acb6f330269c535a94a79dada29ef32614",
        "id": "q1",
        "observedAt": "2026-10-09T20:02:56.894179+00:00",
-       "quote": "Demo Seo.com | photovoltaic installation",
+       "quote": "Demo Seo | photovoltaic installation",
        "url": "https://www.demo-seo.com/"
       },
       {
@@ -1442,7 +1442,7 @@
       "kind": "PUBLIC_PRESENCE",
       "observedAt": "2026-10-09T20:02:56.279404+00:00",
       "sourceUrl": "https://demo-geo.com/",
-      "statement": "Demo Geo.com | Instalaciones fotovoltaicas"
+      "statement": "Demo Geo | Instalaciones fotovoltaicas"
      },
      {
       "code": "LANGUAGES_PUBLISHED",
@@ -1480,7 +1480,7 @@
       "kind": "IDENTITY_HINT",
       "observedAt": "2026-10-09T20:02:56.279404+00:00",
       "sourceUrl": "https://demo-geo.com/",
-      "statement": "Demo Geo.com SL"
+      "statement": "Demo Geo SL"
      },
      {
       "code": "solar-pv-installation",
@@ -1496,7 +1496,7 @@
        ]
       },
       "epistemicState": "POTENTIAL",
-      "excerpt": "Demo Geo.com | Instalaciones fotovoltaicas",
+      "excerpt": "Demo Geo | Instalaciones fotovoltaicas",
       "kind": "ACTIVITY",
       "observedAt": "2026-10-09T20:02:56.279404+00:00",
       "sourceUrl": "https://demo-geo.com/",
@@ -1641,7 +1641,7 @@
       "kind": "PUBLIC_PRESENCE",
       "observedAt": "2026-10-09T20:02:56.279404+00:00",
       "sourceUrl": "https://demo-consultor.com/",
-      "statement": "Demo Consultor.com"
+      "statement": "Demo Consultor"
      },
      {
       "code": "LANGUAGES_PUBLISHED",
@@ -1796,7 +1796,7 @@
       "kind": "PUBLIC_PRESENCE",
       "observedAt": "2026-10-09T20:02:56.279404+00:00",
       "sourceUrl": "https://demo-constructor.com/",
-      "statement": "Demo Constructor.com — invoicing software"
+      "statement": "Demo Constructor — invoicing software"
      },
      {
       "code": "LANGUAGES_PUBLISHED",
@@ -1946,11 +1946,11 @@
        "pagesRead": 1
       },
       "epistemicState": "OBSERVED",
-      "excerpt": "Demo Marketing.com",
+      "excerpt": "Demo Marketing",
       "kind": "PUBLIC_PRESENCE",
       "observedAt": "2026-10-09T20:02:56.279404+00:00",
       "sourceUrl": "https://demo-marketing.com/",
-      "statement": "Demo Marketing.com"
+      "statement": "Demo Marketing"
      },
      {
       "code": "LANGUAGES_PUBLISHED",

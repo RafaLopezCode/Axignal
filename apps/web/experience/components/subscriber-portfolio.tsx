@@ -232,7 +232,7 @@ export function SubscriberPortfolioExperience({ source = "live", notice }: { sou
     outputRequest.current?.abort(); ++outputEpoch.current;
     setSelected(null); setProjection(null); setFirstObservation(null); setRevision(null); setReading(false);
   }, []);
-  return <>{notice}<Observatory canAct={live} loadReading={loadOutput} menuName={live ? undefined : item => "www." + item.label.toLowerCase().replace(" ", "-")} access={access} portfolio={portfolio} busy={busy} message={message} paymentUrl={paymentUrl}
+  return <>{notice}<Observatory canAct={live} loadReading={loadOutput} menuName={live ? undefined : item => "www." + item.label.toLowerCase().replace(" ", "-") + ".com"} access={access} portfolio={portfolio} busy={busy} message={message} paymentUrl={paymentUrl}
     selected={selected} reading={reading} projection={projection} firstObservation={firstObservation} revision={revision}
     readOutput={readOutput} clearSelection={clearSelection} command={command} refresh={() => void readPortfolio()} logout={() => void logout()}
     locator={locator} setLocator={setLocator} total={total} setTotal={setTotal}

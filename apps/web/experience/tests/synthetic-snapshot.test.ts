@@ -27,9 +27,9 @@ test("demo domains and names follow the reader's locale, with valid ASCII domain
   const { syntheticPortfolio } = await import("../lib/demo/synthetic-source");
   for (const locale of ["es", "en", "de", "pt", "fr", "it"] as const) {
     for (const org of syntheticPortfolio(locale).organizations) {
-      if (org.label.startsWith("Demo ")) assert.match(org.label, /^Demo [A-Za-zÀ-ÿ]+\.com$/, `${locale}: ${org.label}`);
+      if (org.label.startsWith("Demo ")) assert.match(org.label, /^Demo [A-Za-zÀ-ÿ]+$/, `${locale}: ${org.label}`);
     }
   }
-  assert.equal(syntheticPortfolio("fr").organizations[6]?.label, "Demo Distributeur.com");
-  assert.equal(syntheticPortfolio("es").organizations[6]?.label, "Demo Distribuidor.com");
+  assert.equal(syntheticPortfolio("fr").organizations[6]?.label, "Demo Distributeur");
+  assert.equal(syntheticPortfolio("es").organizations[6]?.label, "Demo Distribuidor");
 });

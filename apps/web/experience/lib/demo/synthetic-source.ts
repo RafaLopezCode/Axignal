@@ -35,8 +35,7 @@ function localize<T>(value: T, locale: Locale): T {
   if (locale === "es") return value;
   const pairs = SITES.flatMap(({ es, words }) => [
     [`demo-${es}.com`, `demo-${words[locale]}.com`],
-    [`Demo ${capitalize(es)}.com`, `Demo ${capitalize(words[locale])}.com`],
-    [`demo ${es}.com`, `demo ${words[locale]}.com`],
+    [`Demo ${capitalize(es)}`, `Demo ${capitalize(words[locale])}`],
   ]);
   const replace = (text: string) => pairs.reduce((out, [from, to]) => out.split(from).join(to), text);
   const walk = (node: unknown): unknown => {
