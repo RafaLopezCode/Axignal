@@ -439,3 +439,6 @@ body:has(.obs-rail-desktop) .privacy-preferences-button { inset-inline-end: auto
 /* Secondary rail actions carry a stroke, so they read as buttons even when they are waiting for an account. */
 .obs-rail-foot .obs-rail-action:not(.obs-rail-cta) { border: 1px solid var(--obs-rail-line); border-radius: 12px; min-block-size: 42px; padding-inline: 12px; background: transparent; }
 .obs-rail-foot .obs-rail-action:not(.obs-rail-cta):hover:not(:disabled) { background: var(--obs-blue-soft); }
+/* The language selector in the rail matches the rail's other controls: same stroke, centred label. */
+.obs-rail-locale .locale-selector { display: flex; align-items: center; justify-content: center; gap: 8px; min-block-size: 42px; border: 1px solid var(--obs-rail-line); border-radius: 12px; padding-inline: 12px; }
+.obs-rail-locale .locale-selector select { text-align: center; text-align-last: center; }
