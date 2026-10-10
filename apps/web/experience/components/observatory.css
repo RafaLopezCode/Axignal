@@ -501,7 +501,11 @@ body:has(.obs-rail-desktop) .privacy-preferences-button { inset-inline-end: auto
 .obs-button.obs-axent-button:not(.obs-active) { background: var(--obs-blue); border-color: var(--obs-blue); color: #fff; box-shadow: 0 8px 18px -10px rgba(53, 79, 152, .65); }
 .obs-button.obs-axent-button:not(.obs-active):hover:not(:disabled) { background: #2c4485; border-color: #2c4485; }
 .obs-button.obs-axent-button.obs-active { background: var(--obs-blue-soft); border-color: #b9c8ec; color: var(--obs-blue); }
-.obs-axent-note { position: absolute; inset-block-start: calc(100% + clamp(16px, 1vw + 10px, 28px)); inset-inline-start: 0; white-space: nowrap; display: inline-flex; align-items: flex-start; gap: 6px; padding-inline-start: 22px; font-family: "Bic Notes", "Segoe Print", cursive; font-size: clamp(15px, 0.35vw + 12.5px, 20px); line-height: 1.1; font-weight: 600; color: #2747a8; transform: rotate(-2deg); transform-origin: left center; }
+.obs-axent-note { position: absolute; inset-block-start: calc(100% + var(--axent-gap)); inset-inline-start: 0; white-space: nowrap; display: inline-flex; align-items: flex-start; gap: 6px; padding-inline-start: 22px; font-family: "Bic Notes", "Segoe Print", cursive; font-size: var(--axent-size); line-height: 1.1; font-weight: 600; color: #2747a8; transform: rotate(-2deg); transform-origin: left center; }
 .obs-axent-note svg { flex: none; inline-size: 1.15em; block-size: 1.15em; margin-block-start: -0.7em; }
 /* Beside the header's right edge the cue hangs from the button's end, so its arrow lands under the button. */
 @media (min-width: 600px) { .obs-axent-note { inset-inline-start: auto; inset-inline-end: 0; flex-direction: row-reverse; padding-inline-start: 0; padding-inline-end: 18px; transform-origin: right center; } }
+
+/* The cue hangs below the button, so the action row reserves its room instead of letting the tabs cover it. */
+.obs-org-actions { --axent-gap: clamp(12px, 1vw + 7px, 24px); --axent-size: clamp(15px, 0.35vw + 12.5px, 20px); }
+.obs-org-actions:has(.obs-axent-cta) { padding-block-end: calc(var(--axent-gap) + var(--axent-size) * 1.6); }
