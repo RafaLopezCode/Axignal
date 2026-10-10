@@ -29,6 +29,8 @@ from application.semantic_layer.ledger import (
     SemanticBudget,
 )
 
+MAX_SEMANTIC_RUN_TOKENS = 50_000  # 50k input tokens: $0.0021 at the published JEV-1.13 price.
+
 
 def _readable(filename: str) -> Path | None:
     path = Path(filename.strip()) if filename.strip() else None
@@ -80,9 +82,17 @@ def _compose(
         return None
     key_file = _readable(values.get("AXIGNAL_TYPESAFE_API_KEY_FILE", ""))
     model = values.get("AXIGNAL_TYPESAFE_MODEL", JEV_1_13_PRICE.model).strip()
-    tokens = _positive_int(values.get("AXIGNAL_SEMANTIC_RUN_TOKEN_BUDGET", ""), 2_000_000)
+    tokens = _positive_int(
+        values.get("AXIGNAL_SEMANTIC_RUN_TOKEN_BUDGET", ""), MAX_SEMANTIC_RUN_TOKENS
+    )
     reasoning_calls = _positive_int(values.get("AXIGNAL_SEMANTIC_REASONING_CALLS", ""), 0)
-    if key_file is None or not model or not tokens or reasoning_calls is None:
+    if (
+        key_file is None
+        or not model
+        or not tokens
+        or tokens > MAX_SEMANTIC_RUN_TOKENS
+        or reasoning_calls is None
+    ):
         return None
 
     from cognition.providers.typesafe_system_one import TypeSafeSystemOneJudge
