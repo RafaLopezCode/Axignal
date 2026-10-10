@@ -8,7 +8,7 @@
  * sidebar, and the shell's top bar carries the breadcrumb and the language. Staff controls and the complete
  * technical reading stay available beneath the reading.
  */
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { useLocale } from "@/lib/locale";
 import { adminSource } from "@/lib/admin-source";
@@ -31,16 +31,21 @@ export function CustomerZeroObservatory({
 }) {
   const { t } = useLocale();
   const [detailsOpen, setDetailsOpen] = useState(false);
+  const [technicalProjection, setTechnicalProjection] = useState<RuntimeProjection | null>(projection);
+  useEffect(() => { setTechnicalProjection(projection); }, [projection]);
+  // A failed or insufficient reading must never expose the previous organization as the selected one.
+  const onOutputStart = () => { setTechnicalProjection(null); setDetailsOpen(false); };
+  const onOutputRead = (next: RuntimeProjection) => { setTechnicalProjection(next); onProjection(next); };
   return <div className={`obs-customer-zero${embedded ? " obs-embedded" : ""}`} data-customer-zero="true">
     {embedded && toolbarHost && createPortal(<>
       <div className="navigation-controls"><span className="breadcrumb-root">Admin</span></div>
       <div className="topbar-right"><LocaleToggle/></div>
     </>, toolbarHost)}
-    <SubscriberPortfolioExperience source={adminSource} onOutputProjection={onProjection} shell={embedded ? { host: navigationHost ?? null, active, onNavigate } : undefined}
+    <SubscriberPortfolioExperience source={adminSource} onOutputStart={onOutputStart} onOutputProjection={onOutputRead} shell={embedded ? { host: navigationHost ?? null, active, onNavigate } : undefined}
       notice={staffControls ? <div className="obs-cz-staff">{staffControls}</div> : undefined}/>
-    {projection && <details className="obs-cz-detail" open={detailsOpen} onToggle={event => setDetailsOpen(event.currentTarget.open)}>
+    {technicalProjection && <details className="obs-cz-detail" open={detailsOpen} onToggle={event => setDetailsOpen(event.currentTarget.open)}>
       <summary>{t("Abrir la lectura técnica completa", "Open the complete technical reading")}</summary>
-      {detailsOpen && <RuntimeProductProjection key={projection.context.id} projection={projection}
+      {detailsOpen && <RuntimeProductProjection key={technicalProjection.context.id} projection={technicalProjection}
         onProjection={onProjection} embedded={embedded}/>}
     </details>}
   </div>;

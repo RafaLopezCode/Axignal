@@ -17,7 +17,7 @@ const readable = (item: PortfolioItem) => Boolean(item.organizationId || item.ob
  * The subscriber Observatory. One experience, two contexts: the account's source, or the demonstration's.
  * Only the source differs (where data comes from and which operations exist); nothing below branches on it.
  */
-export function SubscriberPortfolioExperience({ source = accountSource, notice, shell, onOutputProjection }: { source?: ObservatorySource; notice?: ReactNode; shell?: ObservatoryShell; onOutputProjection?: (projection: RuntimeProjection) => void } = {}) {
+export function SubscriberPortfolioExperience({ source = accountSource, notice, shell, onOutputProjection, onOutputStart }: { source?: ObservatorySource; notice?: ReactNode; shell?: ObservatoryShell; onOutputProjection?: (projection: RuntimeProjection) => void; onOutputStart?: (focusId: string) => void } = {}) {
   const { t, locale } = useLocale();
   const canAct = source.canAct;
   // A source whose reads follow the reader's language is read again when the language changes.
@@ -173,6 +173,7 @@ export function SubscriberPortfolioExperience({ source = accountSource, notice, 
     const controller = new AbortController(); outputRequest.current = controller; requests.current.add(controller);
     const epoch = ++outputEpoch.current, session = sessionEpoch.current;
     if (pushHistory) { const url = new URL(window.location.href); url.searchParams.set("organization", focusId); window.history.pushState(null, "", url); }
+    onOutputStart?.(focusId);
     setReading(true); setSelected(focusId); setProjection(null); setFirstObservation(null);
     try {
       const payload = await loadOutput(focusId, controller.signal);
@@ -187,7 +188,7 @@ export function SubscriberPortfolioExperience({ source = accountSource, notice, 
       onOutputProjection?.(result.projection);
     } catch { if (!controller.signal.aborted) setMessage(t("La lectura autorizada no está disponible. Vuelve a comprobar el estado.", "The authorized reading is unavailable. Check the state again.")); }
     finally { requests.current.delete(controller); if (epoch === outputEpoch.current) setReading(false); }
-  }, [t, loadOutput, onOutputProjection]);
+  }, [t, loadOutput, onOutputProjection, onOutputStart]);
   useEffect(() => {
     if (access !== "ready" || !portfolio) return;
     const navigate = () => {

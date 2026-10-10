@@ -84,10 +84,14 @@ export function RuntimeExperience({
   }
   async function reobserveSelected() {
     try {
-      const before = result.state === "success" ? result.projection : null;
       const response = await fetch("/api/organizations", {cache:"no-store"});
       const inventory = organizationInventorySchema.parse(await response.json());
       if (!response.ok || !inventory.canObserve || !inventory.selectedId) throw new Error("FOCUS_NOT_AVAILABLE");
+      // The shared portfolio may have selected a different organization after the outer Admin
+      // projection was read. Compare with the runtime's *current selection*, never a stale prop.
+      const previous = await fetch("/api/subscriber-context", {cache:"no-store"});
+      const baseline = readCustomerZeroResponse(await previous.json(), previous.status);
+      const before = baseline.state === "success" ? baseline.projection : null;
       const after = await load(true, {action:"reobserve", id:inventory.selectedId});
       if (before && after?.state === "success") {
         const latest = latestObservationStatus(after.projection);

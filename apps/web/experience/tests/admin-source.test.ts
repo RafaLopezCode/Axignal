@@ -225,7 +225,11 @@ test("Admin portfolio stays navigable with no selected focus or insufficient evi
   assert.match(customerZero, /projection=\{result\.state === "success" \? result\.projection : null\}/);
   assert.doesNotMatch(customerZero, /<CustomerZeroObservatory\s+key=\{result\.projection\.context\.id\}/);
   assert.match(bridge, /projection: RuntimeProjection \| null/);
-  assert.match(bridge, /\{projection && <details/);
-  assert.match(bridge, /onOutputProjection=\{onProjection\}/);
+  assert.match(bridge, /\{technicalProjection && <details/);
+  assert.match(bridge, /onOutputProjection=\{onOutputRead\}/);
+  assert.match(bridge, /onOutputStart=\{onOutputStart\}/);
+  assert.match(bridge, /setTechnicalProjection\(null\)/);
+  assert.match(portfolio, /onOutputStart\?\.\(focusId\)/);
   assert.match(portfolio, /onOutputProjection\?\.\(result\.projection\)/);
+  assert.match(customerZero, /const baseline = readCustomerZeroResponse\(await previous\.json\(\), previous\.status\)/);
 });
