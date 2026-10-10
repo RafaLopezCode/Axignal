@@ -1,6 +1,11 @@
 import { Suspense } from "react";
-import { Panorama } from "@/components/panorama";
-export const metadata = { title: "Ejemplo guiado", robots: { index: false, follow: false } };
+import { ExampleObservatory } from "@/components/example-observatory";
+
+export const metadata = {
+  title: "Observatorio · Ejemplo guiado",
+  robots: { index: false, follow: false },
+};
+
 export default function Page() {
-  return <Suspense><Panorama /></Suspense>;
+  return <Suspense><ExampleObservatory /></Suspense>;
 }

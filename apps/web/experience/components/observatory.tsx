@@ -253,7 +253,7 @@ export function Observatory(props: ObservatoryProps) {
 
   const current = items.find(i => i.focusId === selected) ?? null;
   const rail = <Rail items={items} selected={selected} screen={screen} seen={seen} litCounts={litCounts} nameOf={nameOf} onOrganization={openOrganization} onScreen={openScreen} portfolio={portfolio} busy={props.busy} refresh={props.refresh}/>;
-  return <div className="obs" aria-busy={props.busy}>
+  return <div className="obs" data-product-surface="living-observatory" aria-busy={props.busy}>
     <a className="obs-skip" href="#obs-main">{t("Ir al contenido", "Skip to content")}</a>
     <div className="obs-rail-desktop">{rail}</div>
     <MobileBar title={screen === "organization" && current ? nameOf(current) : screen === "desk" ? t("Tu cartera", "Your portfolio") : screen === "account" ? t("Cuenta", "Account") : t("Añadir organización", "Add organization")} onMenu={() => setRailOpen(true)}/>
@@ -269,7 +269,7 @@ export function Observatory(props: ObservatoryProps) {
 }
 
 function ObservatoryFrame({ children }: { children: React.ReactNode }) {
-  return <div className="obs obs-frame"><div className="obs-frame-brand"><Link href="/" aria-label="AXIGNAL"><img src="/brand/logo-light.svg" alt="AXIGNAL" width={147} height={43}/></Link></div>{children}</div>;
+  return <div className="obs obs-frame" data-product-surface="living-observatory"><div className="obs-frame-brand"><Link href="/" aria-label="AXIGNAL"><img src="/brand/logo-light.svg" alt="AXIGNAL" width={147} height={43}/></Link></div>{children}</div>;
 }
 
 // ---- rail: where am I, which organization, what changed -----------------------------------
@@ -557,12 +557,15 @@ function ObservingState({ state }: { state: string }) {
   </section>;
 }
 
-function SummaryView({ reading, name, insights, lit, openId, onOpen, onSeenAll, item }: {
+export function SummaryView({ reading, name, insights, lit, openId, onOpen, onSeenAll, item, exampleLead }: {
   reading: Reading; name: string; insights: Insight[]; lit: Set<string>; openId: string | null;
-  onOpen: (insight: Insight) => void; onSeenAll: () => void; item: Item;
+  onOpen: (insight: Insight) => void; onSeenAll: () => void; item: Pick<Item, "observation">;
+  /** Only the explicitly fictional public example supplies a fixture lead. */
+  exampleLead?: string;
 }) {
   const { t, locale } = useLocale();
   const brief = briefing(reading, name, insights, t, locale);
+  if (exampleLead) brief.lead = exampleLead;
   const lanes = byLane(insights);
   const low = item.observation && LOW_OBSERVABILITY.has(item.observation.state);
   return <div className="obs-summary">

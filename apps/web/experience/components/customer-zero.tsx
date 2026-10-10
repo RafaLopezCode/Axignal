@@ -9,7 +9,7 @@ import {
   readCustomerZeroResponse,
   type CustomerZeroState,
 } from "@/lib/runtime-projection";
-import { RuntimeProductProjection } from "./runtime-product";
+import { CustomerZeroObservatory } from "./customer-zero-observatory";
 import { Brand, LocaleToggle } from "./ui";
 import { organizationInventorySchema, type AttentionCommand } from "@/lib/organization-attention";
 import {
@@ -212,16 +212,12 @@ export function RuntimeExperience({
   ) : undefined;
   if (result.state === "success")
     return (
-      <RuntimeProductProjection
+      <CustomerZeroObservatory
         key={result.projection.context.id}
         projection={result.projection}
         onProjection={projection => {requestRevision.current++; setReobserveFeedback(null); setResult({state:"success",projection});}}
         staffControls={controls}
-        mainId={embedded ? "customer-zero-main" : "main"}
         embedded={embedded}
-        navigationHost={navigationHost}
-        toolbarHost={toolbarHost}
-        onNavigate={onNavigate}
       />
     );
   const headings = {
