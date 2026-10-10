@@ -2,12 +2,12 @@
 
 import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 import { useLocale } from "@/lib/locale";
-import { approvedPaymentUrl, pendingOutputSchema, pilotRedemptionSchema, portfolioSchema, subscriberOutputSchema, subscriberResultSchema, type FirstObservation, type SubscriberPortfolio } from "@/lib/subscriber-contracts";
+import { approvedPaymentUrl, pendingOutputSchema, pilotRedemptionSchema, subscriberOutputSchema, subscriberResultSchema, type FirstObservation, type SubscriberPortfolio } from "@/lib/subscriber-contracts";
 import type { RuntimeProjection } from "@/lib/runtime-projection";
 import { pendingPilotInvite, clearPilotInvite } from "@/lib/pilot-invite";
 import { pendingMcpConnect, clearMcpConnect } from "@/lib/mcp-connect";
 import { Observatory } from "./observatory";
-import { syntheticOutput, syntheticPortfolio } from "@/lib/demo/synthetic-source";
+import { accountSource, type ObservatorySource } from "@/lib/observatory-source";
 import "./subscriber-portfolio.css";
 import "./observatory.css";
 
@@ -16,14 +16,14 @@ type PortfolioItem = SubscriberPortfolio["organizations"][number];
 const readable = (item: PortfolioItem) => Boolean(item.organizationId || item.observation);
 
 /**
- * The subscriber observatory, in two modes over the same components. `live` is the account's authorized read;
- * `synthetic` is the public demo: a fictional snapshot, with the account-only capabilities disabled.
+ * The subscriber Observatory. One experience, two contexts: the account's source, or the demonstration's.
+ * Only the source differs (where data comes from and which operations exist); nothing below branches on it.
  */
-export function SubscriberPortfolioExperience({ source = "live", notice }: { source?: "live" | "synthetic"; notice?: ReactNode } = {}) {
+export function SubscriberPortfolioExperience({ source = accountSource, notice }: { source?: ObservatorySource; notice?: ReactNode } = {}) {
   const { t, locale } = useLocale();
-  const live = source === "live";
-  // The demo's snapshot follows the reader's language; the account never re-reads on a language change.
-  const demoLocale = live ? null : locale;
+  const canAct = source.canAct;
+  // A source whose reads follow the reader's language is read again when the language changes.
+  const readerLocale = source.localized ? locale : null;
   // The Observatory keeps the callbacks it was first given, so the reader takes the current language from a ref.
   const localeRef = useRef(locale);
   localeRef.current = locale;
@@ -55,29 +55,25 @@ export function SubscriberPortfolioExperience({ source = "live", notice }: { sou
   const requests = useRef(new Set<AbortController>());
   useEffect(() => () => { for (const controller of requests.current) controller.abort(); }, []);
   const readPortfolio = useCallback(async () => {
-    if (!live) { setPortfolio(syntheticPortfolio(demoLocale ?? "es")); setAccess("ready"); return; }
     const controller = new AbortController(); requests.current.add(controller);
     const epoch = sessionEpoch.current;
     try {
-      const response = await fetch("/api/subscriber/portfolio", { cache: "no-store", signal: controller.signal });
+      const result = await source.readPortfolio(controller.signal, localeRef.current);
       if (controller.signal.aborted || epoch !== sessionEpoch.current) return;
-      if (response.status === 401) { setAccess("required"); setPortfolio(null); return; }
-      if (!response.ok) throw new Error("READ_FAILED");
-      const result = portfolioSchema.parse(await response.json());
-      if (controller.signal.aborted || epoch !== sessionEpoch.current) return;
+      if (result === "SESSION_REQUIRED") { setAccess("required"); setPortfolio(null); return; }
       setPortfolio(result); setAccess("ready");
     } catch { if (!controller.signal.aborted && epoch === sessionEpoch.current) setAccess("failure"); }
     finally { requests.current.delete(controller); }
-  }, [live, demoLocale]);
+  }, [source, readerLocale]);
   useEffect(() => { void readPortfolio(); }, [readPortfolio]);
   useEffect(() => {
     // Sign-in started from an assistant connection returns to its consent, unless a pilot invite is pending.
-    if (!live || access !== "ready" || pendingPilotInvite(() => window.sessionStorage)) return;
+    if (!canAct || access !== "ready" || pendingPilotInvite(() => window.sessionStorage)) return;
     const request = pendingMcpConnect(() => window.sessionStorage);
     if (request) window.location.replace(`/account/connect?request=${encodeURIComponent(request)}`);
   }, [access]);
   useEffect(() => {
-    if (!live || access !== "ready" || pilotRedeemed.current) return;
+    if (!canAct || access !== "ready" || pilotRedeemed.current) return;
     const inviteToken = pendingPilotInvite(() => window.sessionStorage);
     if (!inviteToken) return;
     pilotRedeemed.current = true;
@@ -127,9 +123,9 @@ export function SubscriberPortfolioExperience({ source = "live", notice }: { sou
       }
     })();
     return () => { controller.abort(); pilotRedeemed.current = false; };
-  }, [access, readPortfolio, live]);
+  }, [access, readPortfolio, canAct]);
   async function command(input: Record<string, unknown>) {
-    if (!live || busy) return;
+    if (!canAct || busy) return;
     const signature = JSON.stringify(input);
     let requestRef = attempts.current.get(signature);
     if (!requestRef) { requestRef = crypto.randomUUID(); attempts.current.set(signature, requestRef); }
@@ -165,12 +161,7 @@ export function SubscriberPortfolioExperience({ source = "live", notice }: { sou
     finally { requests.current.delete(controller); if (epoch === sessionEpoch.current) setBusy(false); }
   }
   /** The same reading in both modes: the account's authorized read, or the demo snapshot. */
-  const loadOutput = useCallback(async (focusId: string, signal: AbortSignal): Promise<unknown> => {
-    if (!live) return syntheticOutput(focusId, localeRef.current);
-    const response = await fetch(`/api/subscriber/organizations/${encodeURIComponent(focusId)}/output`, { cache: "no-store", signal });
-    if (!response.ok) throw new Error("READ_FAILED");
-    return response.json();
-  }, [live]);
+  const loadOutput = useCallback((focusId: string, signal: AbortSignal): Promise<unknown> => source.readOutput(focusId, signal, localeRef.current), [source]);
   const readOutput = useCallback(async (focusId: string, pushHistory = true) => {
     outputRequest.current?.abort();
     const controller = new AbortController(); outputRequest.current = controller; requests.current.add(controller);
@@ -203,7 +194,7 @@ export function SubscriberPortfolioExperience({ source = "live", notice }: { sou
     return () => window.removeEventListener("popstate", navigate);
   }, [access, portfolio, readOutput, selected]);
   // A language change in the demo re-reads the open organization in the new locale.
-  useEffect(() => { if (!live && selected) void readOutput(selected, false); }, [demoLocale]);
+  useEffect(() => { if (readerLocale && selected) void readOutput(selected, false); }, [readerLocale]);
   useEffect(() => { setTotal(value => Math.max(value, (portfolio?.capacity ?? 0) + 1)); }, [portfolio?.capacity]);
   // Real progress, never fake loading: re-read while a First Observation is still running.
   const running = portfolio?.organizations.filter(item => item.observation && ["QUEUED", "OBSERVING_PUBLIC_PRESENCE"].includes(item.observation.state)).map(item => item.focusId).join(",") ?? "";
@@ -213,7 +204,7 @@ export function SubscriberPortfolioExperience({ source = "live", notice }: { sou
     const finished = previousRunning.current.split(",").filter(id => id && !running.split(",").includes(id));
     previousRunning.current = running;
     if (selected && finished.includes(selected)) void readOutput(selected, false);
-    if (!running || !live) return;
+    if (!running || !canAct) return;
     const timer = window.setTimeout(() => void readPortfolio(), 4000);
     return () => window.clearTimeout(timer);
   }, [access, portfolio, running, selected, readOutput, readPortfolio]);  // each read re-arms the poll
@@ -235,7 +226,7 @@ export function SubscriberPortfolioExperience({ source = "live", notice }: { sou
     outputRequest.current?.abort(); ++outputEpoch.current;
     setSelected(null); setProjection(null); setFirstObservation(null); setRevision(null); setReading(false);
   }, []);
-  return <Observatory notice={notice} canAct={live} loadReading={loadOutput} menuName={live ? undefined : item => "www." + item.label.toLowerCase().replace(" ", "-") + ".com"} access={access} portfolio={portfolio} busy={busy} message={message} paymentUrl={paymentUrl}
+  return <Observatory notice={notice} canAct={canAct} loadReading={loadOutput} menuName={source.menuName} access={access} portfolio={portfolio} busy={busy} message={message} paymentUrl={paymentUrl}
     selected={selected} reading={reading} projection={projection} firstObservation={firstObservation} revision={revision}
     readOutput={readOutput} clearSelection={clearSelection} command={command} refresh={() => void readPortfolio()} logout={() => void logout()}
     locator={locator} setLocator={setLocator} total={total} setTotal={setTotal}

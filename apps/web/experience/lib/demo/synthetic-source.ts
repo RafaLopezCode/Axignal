@@ -1,6 +1,7 @@
 import snapshot from "./synthetic-observatory.json";
 import { portfolioSchema, type SubscriberPortfolio } from "@/lib/subscriber-contracts";
 import type { Locale } from "@/lib/languages";
+import type { ObservatorySource } from "@/lib/observatory-source";
 
 /**
  * The public demo reads a fixed, fictional snapshot instead of the account's API.
@@ -63,3 +64,14 @@ export function syntheticOutput(focusId: string, locale: Locale): unknown {
   if (!Object.prototype.hasOwnProperty.call(outputs, focusId)) throw new Error("READ_FAILED");
   return localize(outputs[focusId], locale);
 }
+
+/** The demonstration context of the Observatory: this snapshot, read only, with no account and no operations. */
+export const demoSource: ObservatorySource = {
+  mode: "demo",
+  canAct: false,
+  localized: true,
+  async readPortfolio(_signal, locale) { return syntheticPortfolio(locale); },
+  async readOutput(focusId, _signal, locale) { return syntheticOutput(focusId, locale); },
+  // The rail names an organization by its demo domain, derived from the panel name it already carries.
+  menuName: item => "www." + item.label.toLowerCase().replace(" ", "-") + ".com",
+};

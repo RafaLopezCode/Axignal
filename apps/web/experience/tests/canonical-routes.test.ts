@@ -11,7 +11,7 @@ test("public demo has one canonical route; old deep links redirect permanently",
   assert.ok(redirects);
   assert.ok(redirects.some(rule =>
     rule.source === "/panorama" && rule.destination === "/demo" && rule.permanent === true));
-  assert.match(source("app/demo/page.tsx"), /<SubscriberPortfolioExperience source="synthetic"/);
+  assert.match(source("app/demo/page.tsx"), /<DemoObservatory\s*\/>/);
   assert.match(source("components/landing.tsx"), /EXAMPLE_HREF = "\/demo"/);
   assert.match(source("../../../deploy/production/subscriber-edge-nginx.conf"), /location = \/demo \{/);
   assert.match(source("../../../deploy/production/verify-product-surface.sh"), /expect \/panorama 308/);

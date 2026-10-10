@@ -1,13 +1,12 @@
 import { Suspense } from "react";
-import { SubscriberPortfolioExperience } from "@/components/subscriber-portfolio";
-import { DemoNotice } from "@/components/demo-notice";
+import { DemoObservatory } from "@/components/demo-observatory";
 
 export const metadata = {
   title: "Observatorio · Ejemplo guiado",
   robots: { index: false, follow: false },
 };
 
-/** The subscriber Observatory over a fictional snapshot: the same reading surface, no account, no private data. */
+/** The subscriber Observatory in its demonstration context. The page adds nothing of its own. */
 export default function Page() {
-  return <Suspense><SubscriberPortfolioExperience source="synthetic" notice={<DemoNotice/>}/></Suspense>;
+  return <Suspense><DemoObservatory/></Suspense>;
 }

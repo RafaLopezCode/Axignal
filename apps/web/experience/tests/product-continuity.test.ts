@@ -6,21 +6,22 @@ import { exampleInsights, EXAMPLE_MOMENTS } from "../lib/landing-observatory";
 
 const src = (path: string) => readFileSync(resolve(process.cwd(), path), "utf8");
 
-test("public /demo is the subscriber Observatory over a fictional snapshot, with no account surface", () => {
+test("public /demo is the subscriber Observatory in its demonstration context, with no account surface", () => {
   const page = src("app/demo/page.tsx");
+  const demo = src("components/demo-observatory.tsx");
   const subscriber = src("components/subscriber-portfolio.tsx");
   const live = src("components/observatory.tsx");
   const snapshot = src("lib/demo/synthetic-source.ts");
-  assert.match(page, /<SubscriberPortfolioExperience source="synthetic"/);
-  assert.doesNotMatch(page, /<Panorama\b/);
-  assert.doesNotMatch(page, /example-observatory/);
-  assert.match(subscriber, /source = "live"/);
+  assert.match(page, /<DemoObservatory\s*\/>/);
+  assert.doesNotMatch(page, /<Panorama\b|example-observatory/);
+  assert.match(demo, /source=\{demoSource\}/);
+  assert.match(subscriber, /source = accountSource/);
   assert.match(subscriber, /import \{ Observatory \} from "\.\/observatory"/);
   assert.match(live, /data-product-surface="living-observatory"/);
   assert.match(live, /canAct: boolean/);
   // The demo reads only the snapshot: no request, storage or private surface in its source.
   assert.doesNotMatch(snapshot, /fetch\(|\/api\/|localStorage|sessionStorage|\/admin/);
-  assert.match(subscriber, /if \(!live\) return syntheticOutput\(focusId, localeRef\.current\);/);
+  assert.match(subscriber, /source\.readOutput\(focusId, signal, localeRef\.current\)/);
 });
 
 test("fictional example is temporal, epistemically labeled and has no invented external evidence URLs", () => {
