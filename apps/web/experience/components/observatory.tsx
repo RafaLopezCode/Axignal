@@ -27,6 +27,8 @@ import { SubscriberRepresentation } from "./subscriber-representation";
 import { SubscriberMcpConnections } from "./subscriber-mcp-connections";
 import { RuntimeAxent, useRuntimeAxent } from "./runtime-axent";
 import type { ObservatoryCapabilities } from "@/lib/observatory-source";
+import { waitingItems, type ActivationPhase } from "@/lib/activation";
+import { ActivationView } from "./activation";
 import { channelLabel, FamilyNav, scopeCopy, type FacetScope } from "./family-nav";
 import { countByFacet, facetOfSourceType, facetParams, keysReadOnFirstLook, litByChannel, litOrFirstLook, litByFamily, matchesFacet, parseFacet, type Facet } from "@/lib/observation-families";
 
@@ -75,6 +77,12 @@ export type ObservatoryProps = {
   firstLookUnread?: readonly string[];
   /** Whether what has been read is kept on this device between visits. */
   rememberReading?: boolean;
+  /** Activation of a first organization: the phase and the ways in (invitation, payment). Absent where nothing can be activated. */
+  activation?: ActivationPhase;
+  onRedeemInvite?: (token: string) => Promise<boolean>;
+  onCheckout?: (totalOrganizations: number) => void;
+  onConfirmPayment?: () => void;
+  onActivationReset?: () => void;
   /** What the context offers around the reading; the demo declares all of it, an Admin has no account to manage. */
   capabilities: ObservatoryCapabilities;
   /** Organizations the context already authorizes, offered while adding one. */
@@ -237,8 +245,8 @@ function itemStatus(item: Item, t: Translate): string {
   if (item.observation) return observationStateCopy(item.observation.state, t);
   if (item.state === "IDENTITY_PENDING") return item.reason?.startsWith("AMBIGUOUS") ? t("Varias organizaciones coinciden", "Several organizations match") : item.reason?.startsWith("CONFLICT") ? t("Datos en conflicto", "Conflicting details") : t("Identidad por resolver", "Identity unresolved");
   if (item.state === "IDENTITY_REJECTED") return t("Identidad no admitida", "Identity not admitted");
-  if (item.state === "CAPACITY_PENDING" || item.state === "CAPACITY_UNKNOWN") return t("Pendiente de capacidad", "Capacity pending");
-  if (item.state === "PURCHASE_AUTHORITY_REQUIRED") return t("Autoridad de compra pendiente", "Purchase authority pending");
+  // Kept while access is not active: the person reads what happens next, never an internal billing state.
+  if (item.state === "CAPACITY_PENDING" || item.state === "CAPACITY_UNKNOWN" || item.state === "PURCHASE_AUTHORITY_REQUIRED") return t("Esperando activación", "Waiting for activation");
   return t("Observación activa", "Active observation");
 }
 
@@ -257,6 +265,13 @@ export function Observatory(props: ObservatoryProps) {
   const items = useMemo(() => portfolio?.organizations.filter(visible) ?? [], [portfolio]);
   const readableItems = items.filter(readable);
   const screen: Screen = url.screen ?? (selected ? "organization" : readableItems.length || items.length ? "desk" : "add");
+  // An organization kept while access is not active: the activation screen says what is missing and how to go on.
+  const waiting = waitingItems(portfolio);
+  const activationPhase = props.activation ?? "idle";
+  const activating = props.canAct && Boolean(props.onRedeemInvite) && waiting.length > 0
+    && (readableItems.length === 0 || activationPhase !== "idle") && screen !== "organization" && screen !== "account";
+  // Before the first reading exists the product is one focused screen: no rail, no menus, one action.
+  const focused = props.canAct && !props.shell && readableItems.length === 0 && (screen === "add" || activating);
   const deskReadings = useDeskReadings(items, access === "ready" && screen === "desk", props.loadReading);
   const names = useRef(new Map<string, string>());
   if (props.projection && selected) names.current.set(selected, props.projection.organization.name);
@@ -301,6 +316,24 @@ export function Observatory(props: ObservatoryProps) {
   if (access === "required") return <ObservatoryFrame><section className="obs-gate"><h1>{t("Tu identidad abre el acceso.", "Your identity opens access.")}</h1><p>{t("Accede para leer tu cartera privada y sus evidencias.", "Sign in to read your private portfolio and its evidence.")}</p><Link className="obs-button obs-primary" href="/login">{t("Acceder", "Sign in")}<ArrowRight size={16} aria-hidden="true"/></Link></section></ObservatoryFrame>;
   if (access === "failure" || !portfolio) return <ObservatoryFrame><section className="obs-gate" role="alert"><h1>{t("No pudimos leer tu contexto.", "We could not read your context.")}</h1><p>{t("Tu cartera sigue a salvo. Vuelve a comprobarlo en un momento.", "Your portfolio is safe. Check again in a moment.")}</p><button className="obs-button" onClick={props.refresh}><RefreshCw size={16} aria-hidden="true"/>{t("Volver a comprobar", "Check again")}</button></section></ObservatoryFrame>;
 
+  const toast = (props.message || props.paymentUrl) && <div className="obs-toast" role="status" aria-live="polite">{props.message && <p>{props.message}</p>}{props.paymentUrl && <a className="obs-button obs-primary" href={props.paymentUrl}>{t("Continuar al pago", "Continue to payment")}</a>}</div>;
+  const activationView = activating && <ActivationView portfolio={portfolio} waiting={waiting} phase={activationPhase} busy={props.busy}
+    onRedeemInvite={props.onRedeemInvite!} onCheckout={total => props.onCheckout?.(total)} onConfirmPayment={() => props.onConfirmPayment?.()}
+    onChangeOrganization={() => void (async () => {
+      for (const item of waiting) await props.command({ action: "cancel_pending", focusId: item.focusId });
+      props.onActivationReset?.();
+    })()}/>;
+  if (focused) return <div className="obs obs-focused" data-product-surface="living-observatory" aria-busy={props.busy}>
+    <header className="obs-focused-bar">
+      <Link href="/" aria-label={t("AXIGNAL · Inicio", "AXIGNAL · Home")}><img src="/brand/logo-light.svg" alt="AXIGNAL" width={124} height={36}/></Link>
+      <div className="obs-focused-tools"><LocaleToggle/><button className="obs-link" onClick={props.logout} disabled={props.busy}>{t("Salir", "Sign out")}</button></div>
+    </header>
+    <main id="obs-main" className="obs-focused-main" tabIndex={-1}>
+      {toast}
+      {activationView || <AddView {...props} first onDone={() => openScreen("desk")}/>}
+    </main>
+  </div>;
+
   const current = items.find(i => i.focusId === selected) ?? null;
   const rail = <Rail items={items} selected={props.shell && !props.shell.active ? null : selected} screen={props.shell && !props.shell.active ? null : screen} seen={seen} litCounts={litCounts} nameOf={props.menuName ?? nameOf} onOrganization={openOrganization} onScreen={openScreen} portfolio={portfolio} busy={props.busy} refresh={props.refresh} canAct={props.canAct} account={props.capabilities.account}/>;
   return <div className={`obs${props.shell ? " obs-shelled" : ""}`} data-product-surface="living-observatory" aria-busy={props.busy}>
@@ -310,9 +343,10 @@ export function Observatory(props: ObservatoryProps) {
     {!props.shell && railOpen && <RailSheet onClose={() => setRailOpen(false)}>{rail}</RailSheet>}
     <main id="obs-main" className="obs-main" tabIndex={-1}>
       {props.notice}
-      {(props.message || props.paymentUrl) && <div className="obs-toast" role="status" aria-live="polite">{props.message && <p>{props.message}</p>}{props.paymentUrl && <a className="obs-button obs-primary" href={props.paymentUrl}>{t("Continuar al pago", "Continue to payment")}<ArrowRight size={16} aria-hidden="true"/></a>}</div>}
-      {screen === "desk" && <DeskView firstLookUnread={props.firstLookUnread} items={items} readings={deskReadings} seen={seen} nameOf={nameOf} onOpen={openOrganization} onAdd={() => openScreen("add")} reportLit={reportLit}/>}
-      {screen === "add" && <AddView {...props} first={!items.length} onDone={() => openScreen("desk")}/>}
+      {toast}
+      {activationView}
+      {!activationView && screen === "desk" && <DeskView firstLookUnread={props.firstLookUnread} items={items} readings={deskReadings} seen={seen} nameOf={nameOf} onOpen={openOrganization} onAdd={() => openScreen("add")} reportLit={reportLit}/>}
+      {!activationView && screen === "add" && <AddView {...props} first={!items.length} onDone={() => openScreen("desk")}/>}
       {screen === "account" && <AccountView {...props}/>}
       {screen === "organization" && current && <OrganizationView key={current.focusId} item={current} name={nameOf(current)} {...props} view={url.view} itemId={url.item} family={url.family} channel={url.channel} go={go} seen={seen} updateSeen={updateSeen} axentOpen={axentOpen} setAxentOpen={setAxentOpen} locale={locale} reportLit={reportLit}/>}
     </main>
