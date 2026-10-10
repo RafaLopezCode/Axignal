@@ -129,7 +129,8 @@ export function SubscriberPortfolioExperience({ source = accountSource, notice, 
   async function command(input: Record<string, unknown>): Promise<void> {
     await run(input);
   }
-  async function run(input: Record<string, unknown>): Promise<ReturnType<typeof subscriberResultSchema.parse> | null> {
+  /** `quiet`: the activation screen explains this step itself, so no notice is added on top of it. */
+  async function run(input: Record<string, unknown>, quiet = false): Promise<ReturnType<typeof subscriberResultSchema.parse> | null> {
     if (!canAct || busy || !source.command) return null;
     const signature = JSON.stringify(input);
     let requestRef = attempts.current.get(signature);
@@ -149,7 +150,7 @@ export function SubscriberPortfolioExperience({ source = accountSource, notice, 
       const waitsForAccess = (input.action === "add" || input.action === "retry_pending")
         && ["CAPACITY_UNKNOWN", "CHECKOUT_REQUIRED", "ACCESS_DENIED"].includes(result.state);
       if (waitsForAccess) setActivation(previous => previous === "starting" || previous === "idle" ? "needs_access" : previous);
-      setMessage(waitsForAccess ? "" : input.action === "refresh_purchase" ? result.state === "REFRESHED" ? t("La comprobación ha terminado. La cartera muestra la capacidad verificada.", "The check is complete. The portfolio shows verified capacity.") : t("El pago o la capacidad todavía no se han podido confirmar. No se ha concedido capacidad nueva.", "Payment or capacity could not be confirmed yet. No new capacity has been granted.")
+      setMessage(waitsForAccess || quiet ? "" : input.action === "refresh_purchase" ? result.state === "REFRESHED" ? t("La comprobación ha terminado. La cartera muestra la capacidad verificada.", "The check is complete. The portfolio shows verified capacity.") : t("El pago o la capacidad todavía no se han podido confirmar. No se ha concedido capacidad nueva.", "Payment or capacity could not be confirmed yet. No new capacity has been granted.")
         : link ? t("La compra espera tu confirmación. La capacidad solo cambia tras verificar el pago.", "The purchase awaits your confirmation. Capacity changes only after payment is verified.")
         : result.observationState === "QUEUED" ? t("Recibido. La primera observación empieza en segundo plano y verás su estado aquí. La identidad legal se verifica aparte.", "Received. The first observation starts in the background and you will see its state here. Legal identity is verified separately.")
         : result.observationState === "CAPACITY_REQUIRED" ? t("Tu solicitud está guardada, pero tu capacidad actual ya está en uso. Amplíala para observarla.", "Your request is saved, but your current capacity is already in use. Expand it to observe it.")
@@ -170,6 +171,9 @@ export function SubscriberPortfolioExperience({ source = accountSource, notice, 
     } catch { if (!controller.signal.aborted && epoch === sessionEpoch.current) setMessage(t("No pudimos confirmar la operación. Lee el estado antes de repetirla; tu contexto no se ha sustituido.", "The operation could not be confirmed. Read its state before repeating it; your context has not been replaced.")); return null; }
     finally { requests.current.delete(controller); if (epoch === sessionEpoch.current) setBusy(false); }
   }
+  // Long-lived callbacks (the payment confirmation loop) call the current `run`, with the current language.
+  const runRef = useRef(run);
+  runRef.current = run;
 
   /**
    * Start what was waiting for access, once the owning service has confirmed a place: one organization at a time,
@@ -200,7 +204,7 @@ export function SubscriberPortfolioExperience({ source = accountSource, notice, 
   const confirmPayment = useCallback(async () => {
     setActivation("confirming_payment");
     for (let attempt = 0; attempt < 8; attempt++) {
-      await run({ action: "refresh_purchase" });
+      await runRef.current({ action: "refresh_purchase" }, true);
       const latest = portfolioRef.current;
       if (latest && latest.capacityCurrentness === "CURRENT" && latest.capacity !== null && latest.capacity > 0) {
         setActivation(waitingItems(latest).length ? "starting" : "idle");
@@ -225,7 +229,7 @@ export function SubscriberPortfolioExperience({ source = accountSource, notice, 
   /** Open the provider's secure checkout for a first subscription; capacity changes only once payment is verified. */
   async function startCheckout(totalOrganizations: number) {
     setActivation("checkout");
-    const result = await run({ action: "purchase", desiredOrganizationTotal: totalOrganizations });
+    const result = await run({ action: "purchase", desiredOrganizationTotal: totalOrganizations }, true);
     const link = result ? approvedPaymentUrl(result.checkoutUrl) ?? approvedPaymentUrl(result.paymentUrl) : null;
     if (link) { window.location.assign(link); return; }
     setActivation("checkout_failed");
