@@ -17,7 +17,7 @@ const readable = (item: PortfolioItem) => Boolean(item.organizationId || item.ob
  * The subscriber Observatory. One experience, two contexts: the account's source, or the demonstration's.
  * Only the source differs (where data comes from and which operations exist); nothing below branches on it.
  */
-export function SubscriberPortfolioExperience({ source = accountSource, notice, shell }: { source?: ObservatorySource; notice?: ReactNode; shell?: ObservatoryShell } = {}) {
+export function SubscriberPortfolioExperience({ source = accountSource, notice, shell, onOutputProjection }: { source?: ObservatorySource; notice?: ReactNode; shell?: ObservatoryShell; onOutputProjection?: (projection: RuntimeProjection) => void } = {}) {
   const { t, locale } = useLocale();
   const canAct = source.canAct;
   // A source whose reads follow the reader's language is read again when the language changes.
@@ -183,9 +183,11 @@ export function SubscriberPortfolioExperience({ source = accountSource, notice, 
       }
       const result = subscriberOutputSchema.parse(payload);
       setProjection(result.projection); setRevision(result.revision ?? null); setFirstObservation(result.firstObservation ?? null);
+      // Admin technical details must follow the selected organization, not the initial one.
+      onOutputProjection?.(result.projection);
     } catch { if (!controller.signal.aborted) setMessage(t("La lectura autorizada no está disponible. Vuelve a comprobar el estado.", "The authorized reading is unavailable. Check the state again.")); }
     finally { requests.current.delete(controller); if (epoch === outputEpoch.current) setReading(false); }
-  }, [t, loadOutput]);
+  }, [t, loadOutput, onOutputProjection]);
   useEffect(() => {
     if (access !== "ready" || !portfolio) return;
     const navigate = () => {

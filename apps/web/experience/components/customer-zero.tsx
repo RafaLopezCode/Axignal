@@ -213,11 +213,12 @@ export function RuntimeExperience({
       </details>
     </>
   ) : undefined;
-  if (result.state === "success")
+  // An authorized Admin can still navigate its attention inventory when no focus is selected
+  // or a focus has insufficient evidence. Neither state is an empty Admin portfolio.
+  if (result.state === "success" || result.state === "NO_XEED" || result.state === "INSUFFICIENT_EVIDENCE")
     return (
       <CustomerZeroObservatory
-        key={result.projection.context.id}
-        projection={result.projection}
+        projection={result.state === "success" ? result.projection : null}
         onProjection={projection => {requestRevision.current++; setReobserveFeedback(null); setResult({state:"success",projection});}}
         staffControls={controls}
         embedded={embedded}
@@ -302,22 +303,9 @@ export function RuntimeExperience({
               </button>
             </form>
           )}
-          {result.state === "NO_XEED" && (
-            <button className="button" onClick={() => load(true)}>
-              {t("Observar AXIGNAL", "Observe AXIGNAL")}
-              <ArrowRight size={16} />
-            </button>
-          )}
-          {["failure", "rejected", "INSUFFICIENT_EVIDENCE"].includes(
-            result.state,
-          ) && (
+          {["failure", "rejected"].includes(result.state) && (
             <button className="button secondary" onClick={() => load()}>
               {t("Volver a leer el estado", "Read state again")}
-            </button>
-          )}
-          {result.state === "INSUFFICIENT_EVIDENCE" && (
-            <button className="text-link" onClick={() => void reobserveSelected()}>
-              {t("Volver a observar la fuente", "Observe the source again")}
             </button>
           )}
         </section>

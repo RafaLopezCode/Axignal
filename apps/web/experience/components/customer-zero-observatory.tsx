@@ -20,7 +20,7 @@ import { LocaleToggle } from "./ui";
 export function CustomerZeroObservatory({
   projection, onProjection, staffControls, embedded, navigationHost, toolbarHost, active = true, onNavigate,
 }: {
-  projection: RuntimeProjection;
+  projection: RuntimeProjection | null;
   onProjection: (value: RuntimeProjection) => void;
   staffControls: React.ReactNode;
   embedded: boolean;
@@ -36,12 +36,12 @@ export function CustomerZeroObservatory({
       <div className="navigation-controls"><span className="breadcrumb-root">Admin</span></div>
       <div className="topbar-right"><LocaleToggle/></div>
     </>, toolbarHost)}
-    <SubscriberPortfolioExperience source={adminSource} shell={embedded ? { host: navigationHost ?? null, active, onNavigate } : undefined}
+    <SubscriberPortfolioExperience source={adminSource} onOutputProjection={onProjection} shell={embedded ? { host: navigationHost ?? null, active, onNavigate } : undefined}
       notice={staffControls ? <div className="obs-cz-staff">{staffControls}</div> : undefined}/>
-    <details className="obs-cz-detail" open={detailsOpen} onToggle={event => setDetailsOpen(event.currentTarget.open)}>
+    {projection && <details className="obs-cz-detail" open={detailsOpen} onToggle={event => setDetailsOpen(event.currentTarget.open)}>
       <summary>{t("Abrir la lectura técnica completa", "Open the complete technical reading")}</summary>
       {detailsOpen && <RuntimeProductProjection key={projection.context.id} projection={projection}
         onProjection={onProjection} embedded={embedded}/>}
-    </details>
+    </details>}
   </div>;
 }

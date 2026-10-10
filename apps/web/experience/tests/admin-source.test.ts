@@ -214,3 +214,18 @@ test("the phone drawer is modal: a real scrim closes it, the page behind does no
   assert.match(css, /\.product-sidebar\.mobile-open::after \{ display: none; \}/);
   assert.match(css, /\.icon-button, \.admin-shell \.product-sidebar \.obs-icon \{ min-inline-size: 44px; min-block-size: 44px; \}/);
 });
+
+
+test("Admin portfolio stays navigable with no selected focus or insufficient evidence, and technical details follow the chosen organization", () => {
+  const customerZero = read("components/customer-zero.tsx");
+  const bridge = read("components/customer-zero-observatory.tsx");
+  const portfolio = read("components/subscriber-portfolio.tsx");
+  assert.match(customerZero, /result\.state === "NO_XEED"/);
+  assert.match(customerZero, /result\.state === "INSUFFICIENT_EVIDENCE"/);
+  assert.match(customerZero, /projection=\{result\.state === "success" \? result\.projection : null\}/);
+  assert.doesNotMatch(customerZero, /<CustomerZeroObservatory\s+key=\{result\.projection\.context\.id\}/);
+  assert.match(bridge, /projection: RuntimeProjection \| null/);
+  assert.match(bridge, /\{projection && <details/);
+  assert.match(bridge, /onOutputProjection=\{onProjection\}/);
+  assert.match(portfolio, /onOutputProjection\?\.\(result\.projection\)/);
+});
