@@ -30,7 +30,7 @@ const SITES: { es: string; words: Words }[] = [
   { es: "distribuidor", words: { es: "distribuidor", en: "distributor", de: "distributor", pt: "distribuidor", fr: "distributeur", it: "distributore" } },
 ];
 
-const capitalize = (word: string) => word.charAt(0).toUpperCase() + word.slice(1);
+const capitalize = (word: string) => word.split("-").map(part => part.charAt(0).toUpperCase() + part.slice(1)).join("-");
 
 /** Every demo domain, demo panel name and measurement phrase, rewritten into the reader's locale wherever it appears. */
 function localize<T>(value: T, locale: Locale): T {

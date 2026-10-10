@@ -33,3 +33,12 @@ test("demo domains and names follow the reader's locale, with valid ASCII domain
   assert.equal(syntheticPortfolio("fr").organizations[6]?.label, "Demo Distributeur");
   assert.equal(syntheticPortfolio("es").organizations[6]?.label, "Demo Distribuidor");
 });
+
+test("the SEO and GEO demonstration organization is named Demo Seo-Geo in every language", async () => {
+  const { syntheticPortfolio } = await import("../lib/demo/synthetic-source");
+  for (const locale of ["es", "en", "de", "pt", "fr", "it"] as const) {
+    const labels = syntheticPortfolio(locale).organizations.map(item => item.label);
+    assert.ok(labels.includes("Demo Seo-Geo"), `${locale}: ${labels.join(", ")}`);
+    assert.ok(!labels.some(label => /Seo-geo/.test(label)), locale);
+  }
+});

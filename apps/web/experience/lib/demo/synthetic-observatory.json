@@ -26,7 +26,7 @@
   {
    "focusId": "focus_dc8789f4ad3eb9cb614da15c7b43b0ec",
    "organizationId": "org:id:67b5cc7538d9d19c014a4e413016b411",
-   "label": "Demo Seo-geo",
+   "label": "Demo Seo-Geo",
    "state": "ACTIVE",
    "observation": {
     "state": "FIRST_PROOF_READY",
@@ -2034,11 +2034,11 @@
     "lifecycleStatus": "LIVE",
     "context": {
      "id": "focus_dc8789f4ad3eb9cb614da15c7b43b0ec",
-     "label": "Demo Seo-geo"
+     "label": "Demo Seo-Geo"
     },
     "organization": {
      "id": "org:id:67b5cc7538d9d19c014a4e413016b411",
-     "name": "Demo Seo-geo"
+     "name": "Demo Seo-Geo"
     },
     "nodes": [],
     "temporalHistory": {
@@ -2160,7 +2160,7 @@
      {
       "kind": "PUBLIC_PRESENCE",
       "code": "PUBLIC_WEBSITE_OBSERVED",
-      "statement": "Demo Seo-geo | Search and AI visibility",
+      "statement": "Demo Seo-Geo | Search and AI visibility",
       "excerpt": "We help brands get found in search engines and in AI assistant answers.",
       "sourceUrl": "https://www.demo-seo-geo.com/",
       "observedAt": "2026-10-09T08:00:00+00:00",
