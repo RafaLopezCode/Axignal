@@ -3,7 +3,18 @@ import { customerZeroCookie, resolveRuntimeOrigin, sameOrigin } from "@/lib/cust
 import { staffActions, staffCommands, staffReason, staffResults, staffState, tenantId, type StaffAction } from "@/lib/staff-capacity";
 
 const noStore = { "Cache-Control": "no-store" };
+export const staffStepUpCookie = "axignal-admin-stepup";
 const route = "/internal/admin/staff-capacity";
+
+export async function validateStaffStepUp(primary: string, elevated: string): Promise<boolean> {
+  const origin = process.env.AXIGNAL_RUNTIME_ORIGIN;
+  if (!origin) return false;
+  const response = await fetch(new URL("/internal/admin/step-up/verify", resolveRuntimeOrigin(origin)), {
+    method: "GET", cache: "no-store", redirect: "error", signal: AbortSignal.timeout(15_000),
+    headers: { Authorization: `Bearer ${primary}`, "X-Axignal-Step-Up": `Bearer ${elevated}` },
+  });
+  return response.ok;
+}
 const reply = (body: unknown, status = 200) => Response.json(body, { status, headers: noStore });
 
 async function readJson(request: Request): Promise<unknown | Response> {
@@ -26,9 +37,16 @@ async function readJson(request: Request): Promise<unknown | Response> {
 /** Admin-only proxy: the httpOnly Admin cookie becomes the bearer; nothing is cached or logged. */
 export async function staffCapacityProxy(request: Request, action: StaffAction | null): Promise<Response> {
   if (action !== null && !sameOrigin(request)) return reply({ reason: "ORIGIN_REQUIRED" }, 403);
-  const token = (await cookies()).get(customerZeroCookie)?.value;
-  if (!token) return reply({ reason: "ADMIN_SESSION_REQUIRED" }, 401);
+  const jar = await cookies();
+  const primary = jar.get(customerZeroCookie)?.value;
+  if (!primary) return reply({ reason: "ADMIN_SESSION_REQUIRED" }, 401);
+  const elevated = action === null ? null : jar.get(staffStepUpCookie)?.value;
+  if (action !== null && !elevated) return reply({ reason: "STEP_UP_REQUIRED" }, 403);
+  const token = elevated ?? primary;
   try {
+    // Each sensitive write binds the independent proof to the live PRIMARY actor.
+    if (elevated && !(await validateStaffStepUp(primary, elevated)))
+      return reply({ reason: "STEP_UP_REQUIRED" }, 403);
     let path = route;
     let body: string | undefined;
     if (action === null) {

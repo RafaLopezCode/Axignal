@@ -1,6 +1,6 @@
 # ADR-0092: Staff-provisioned capacity — Admin adds organizations without checkout
 
-- **Status:** Proposed (awaiting CTO acceptance)
+- **Status:** Accepted (CTO 2026-10-10; productive activation separately gated)
 - **Date:** 2026-10-10
 - **Issue:** #177 (Phase 3, Admin Executive)
 - **Authority:** MASTER (no CRM/workflow/sponsored functionality; user, agency or subscriber
@@ -70,10 +70,12 @@ the subscriber experience. Privileged controls stay in Admin.
 
 ## Known limits (explicit, not hidden)
 
-- **No production step-up issuer yet.** The SSH operator channel issues `PRIMARY` sessions,
-  so in production every staff write returns `403 STEP_UP_REQUIRED` until a step-up issuer
-  exists. This ADR does not lower the risk class to make it usable; the CTO decides the
-  issuer (e.g. a short-lived SSH-issued `STEP_UP` session ≤ 15 minutes) separately.
+- **Separate privileged authentication.** The root-only SSH operator adapter can
+  issue a distinct ten-minute STEP_UP session only after validating an existing live
+  scoped PRIMARY Admin session and an independent TOTP factor. The HTTP runtime
+  never reads the factor. The web Admin preserves the PRIMARY cookie while checking
+  the same principal for the temporary Staff-only STEP_UP cookie on every write.
+  Operator factor enrollment and activation in production remain separate gates.
 - **Observation latency.** Staff never acts as the client, so the immediate post-add
   observation trigger (which runs in the subscriber's request context) is skipped. The
   scheduled enrollment cycle, which iterates the tenant's real members, picks the Focus up.
@@ -97,3 +99,17 @@ conflict, isolation, expiry, revocation, append-only audit, wire provenance) and
 sees it, the other tenant does not; billing rows unchanged, no pilot, no checkout; 401/403/404;
 revocation; full portfolio ⇒ `CAPACITY_REQUIRED`; staff capacity is additive to verified
 billing without editing it). Web: `apps/web/experience/tests/staff-capacity.test.ts`.
+
+
+## Amendment: Issue #184 — real independent step-up
+
+- OTP enrollment uses two root-only exclusive 0600 files, one factor and one temporary
+  provisioning URI, kept outside the repository. Production enrollment is manual.
+- CLI consumes OTP interactively and never through argv, environment variables or HTTP.
+  A persistent transactional counter blocks reuse and five failures cause five-minute lock.
+- The Admin session is a separate SHA256-digest-backed token with ten-minute absolute expiry.
+- The runtime verification binds PRIMARY and STEP_UP to the same live Admin principal.
+  The browser keeps both sessions separate and restricts STEP_UP cookie to Staff API.
+- A new operator-issued proof does not close or overwrite the PRIMARY session.
+- No public authentication route, SSH/PAM changes or customer impersonation is authorized.
+- AXIGNAL_STAFF_CAPACITY_ENABLED remains false until verified production rollout.

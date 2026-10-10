@@ -140,12 +140,18 @@ def world(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Iterator[dict[str,
     thread.start()
 
     def admin(
-        method: str, path: str, body: dict[str, object] | None = None, token: str | None = step_up
+        method: str,
+        path: str,
+        body: dict[str, object] | None = None,
+        token: str | None = step_up,
+        step_up_token: str | None = None,
     ) -> tuple[int, dict[str, Any]]:
         conn = HTTPConnection(*server.server_address)
         headers = {"Content-Type": "application/json"}
         if token:
             headers["Authorization"] = "Bearer " + token
+        if step_up_token:
+            headers["X-Axignal-Step-Up"] = "Bearer " + step_up_token
         conn.request(method, path, None if body is None else json.dumps(body), headers)
         response = conn.getresponse()
         status, result = response.status, json.loads(response.read())
@@ -158,6 +164,7 @@ def world(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Iterator[dict[str,
             "facade": runtime.subscriber,
             "admin": admin,
             "primary": primary,
+            "step_up": step_up,
         }
     finally:
         server.shutdown()
@@ -343,3 +350,43 @@ def test_staff_capacity_adds_to_verified_billing_without_editing_it(
     )
     assert facade.staff.entitlement_source(tenant) == "BILLING+STAFF_GRANT"
     assert billing.get_billing_projection(tenant) == before  # paid capacity untouched
+
+
+def test_private_step_up_proof_requires_live_primary_same_actor_and_fresh_step_up(
+    world: dict[str, Any],
+) -> None:
+    root = world["root"]
+    admin = world["admin"]
+    primary = world["primary"]
+    step_up = world["step_up"]
+    path = "/internal/admin/step-up/verify"
+
+    good_status, good_body = admin("GET", path, token=primary, step_up_token=step_up)
+    assert (good_status, good_body) == (200, {"authorized": True})
+    assert admin("GET", path, token=primary)[0] == 401
+    assert admin("GET", path, token=primary, step_up_token=primary)[0] == 403
+    assert admin("GET", path, token=step_up, step_up_token=step_up)[0] == 403
+    assert admin("GET", path, token="not-a-token", step_up_token=step_up)[0] == 401
+
+    store = SqliteAdminAccessStore(root / "admin-access.sqlite3")
+    now = datetime.now(UTC)
+    other = AdminPrincipalId("another-operator")
+    founder = AdminAccessService(
+        store,
+        _Authenticator(
+            {"unused": VerifiedAdminIdentity(other, now, AdminAssurance.STEP_UP, "test")}
+        ),
+    )
+    from domain.admin_access import PrivilegeChangeKind
+
+    founder.change_role(
+        step_up,
+        target_principal_id=other,
+        role=AdminRole.SUPPORT,
+        kind=PrivilegeChangeKind.GRANT_ROLE,
+        occurred_at=now,
+        reason="Additional operator for protected test",
+    )
+    issued_for_other = founder.issue_session("unused", authenticated_at=now).token
+    assert admin("GET", path, token=primary, step_up_token=issued_for_other)[0] == 403
+    assert admin("GET", path, token=primary, step_up_token=step_up)[0] == 200

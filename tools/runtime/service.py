@@ -1636,6 +1636,44 @@ def make_handler(runtime: AxignalRuntime) -> type[BaseHTTPRequestHandler]:
             except (OSError, sqlite3.Error):
                 self._json({"reason": "PILOT_ACCOUNTS_UNAVAILABLE"}, HTTPStatus.SERVICE_UNAVAILABLE)
 
+        def _admin_step_up_verify(self) -> None:
+            """Validate a separate elevated bearer against the live PRIMARY Admin identity.
+
+            This private validation-only edge never issues credentials or reads OTPs.
+            """
+            if runtime.admin_access is None:
+                self._json({"reason": "ADMIN_NOT_COMPOSED"}, HTTPStatus.NOT_FOUND)
+                return
+            try:
+                now = datetime.now(UTC)
+                primary_header = self.headers.get("Authorization")
+                elevated_header = self.headers.get("X-Axignal-Step-Up")
+                if not primary_header or not elevated_header:
+                    raise AdminAuthenticationError("missing Admin credentials")
+                primary = AdminHttpAccessGuard(runtime.admin_access).authorize_header(
+                    primary_header,
+                    required_scope=AdminScope.CUSTOMERS_READ,
+                    risk=AdminRiskClass.READ,
+                    now=now,
+                )
+                elevated = AdminHttpAccessGuard(runtime.admin_access).authorize_header(
+                    elevated_header,
+                    required_scope=AdminScope.CUSTOMERS_WRITE,
+                    risk=AdminRiskClass.SENSITIVE,
+                    now=now,
+                )
+                if (
+                    primary.assurance is not AdminAssurance.PRIMARY
+                    or primary.principal_id != elevated.principal_id
+                    or primary.session_id == elevated.session_id
+                ):
+                    raise AdminAuthorizationError("Admin step-up principal mismatch")
+                self._json({"authorized": True})
+            except AdminAuthenticationError:
+                self._json({"reason": "ADMIN_SESSION_REQUIRED"}, HTTPStatus.UNAUTHORIZED)
+            except AdminAuthorizationError:
+                self._json({"reason": "STEP_UP_REQUIRED"}, HTTPStatus.FORBIDDEN)
+
         def _staff_capacity(self, action: str | None) -> None:
             """Staff-provisioned capacity (issue #177); every write needs step-up."""
             staff = (
@@ -2070,6 +2108,9 @@ def make_handler(runtime: AxignalRuntime) -> type[BaseHTTPRequestHandler]:
                         "canObserve": AdminScope.RESEARCH_OPERATE in customer_zero_grant.scopes,
                     }
                 )
+                return
+            if request_path == "/internal/admin/step-up/verify":
+                self._admin_step_up_verify()
                 return
             if request_path == "/internal/admin/pilot-test-accounts":
                 self._pilot_accounts()

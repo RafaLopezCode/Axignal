@@ -23,6 +23,23 @@ async function call<A extends StaffAction>(action: A, body: object): Promise<z.i
 /** Staff-provisioned capacity: add organizations for clients or for AXIGNAL itself, never via checkout. */
 export function StaffCapacity() {
   const { t, locale } = useLocale();
+  const [stepUpToken, setStepUpToken] = useState("");
+  const [stepUpReady, setStepUpReady] = useState(false);
+  const [stepUpBusy, setStepUpBusy] = useState(false);
+  const [stepUpError, setStepUpError] = useState(false);
+  async function activateStepUp(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setStepUpBusy(true); setStepUpError(false);
+    try {
+      const result = await fetch("/api/admin/step-up", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token: stepUpToken.trim() }),
+      });
+      if (!result.ok) { setStepUpReady(false); setStepUpError(true); return; }
+      setStepUpReady(true); setStepUpToken("");
+    } catch { setStepUpReady(false); setStepUpError(true); }
+    finally { setStepUpToken(""); setStepUpBusy(false); }
+  }
   const [tenant, setTenant] = useState("");
   const [state, setState] = useState<StaffState | null>(null);
   const [destination, setDestination] = useState<Destination>("CUSTOMER_ACCOUNT");
@@ -119,6 +136,19 @@ export function StaffCapacity() {
         {t("Concede capacidad Staff a la cuenta de un cliente, o a la cuenta interna de AXIGNAL para usarla como Cliente Cero, y añade organizaciones en su nombre. Nunca crea pagos, suscripciones ni checkout. Cada acción queda auditada y puede caducar o retirarse.",
           "Grant staff capacity to a client account, or to AXIGNAL's internal account to use it as Customer Zero, and add organizations on its behalf. It never creates payments, subscriptions or checkout. Every action is audited and can expire or be revoked.")}
       </p>
+      <form className="admin-table-toolbar" onSubmit={event => { void activateStepUp(event); }}>
+        <label className="search-field">
+          <span>{t("Credencial temporal de verificación reforzada (SSH + autenticador)", "Temporary step-up credential (SSH + authenticator)")}</span>
+          <input type="password" value={stepUpToken} autoComplete="off" spellCheck={false}
+            onChange={event => setStepUpToken(event.target.value)} disabled={stepUpBusy}
+            placeholder={t("Emitida por el operador · 10 minutos", "Issued by operator · 10 minutes")} />
+        </label>
+        <button type="submit" className="button secondary" disabled={stepUpBusy || stepUpToken.trim().length < 48}>
+          {t("Activar 10 minutos", "Activate for 10 minutes")}
+        </button>
+      </form>
+      {stepUpReady && <p role="status">{t("Verificación reforzada activada. La sesión Admin normal sigue abierta.", "Step-up active. Your normal Admin session remains open.")}</p>}
+      {stepUpError && <p role="alert">{t("Credencial rechazada, caducada o de otro operador.", "Credential rejected, expired or issued for another operator.")}</p>}
       <form className="admin-table-toolbar" onSubmit={event => { event.preventDefault(); void load(); }} aria-describedby="staff-capacity-help">
         <label className="search-field">
           <span>{t("Referencia de cuenta", "Account reference")}</span>
