@@ -305,7 +305,7 @@ export function MiniFooter() {
         )}
       </span>
       <nav aria-label={t("Más sobre AXIGNAL", "More about AXIGNAL")}>
-        <Link href="/panorama">{t("Ejemplo", "Example")}</Link>
+        <Link href="/demo">{t("Ejemplo", "Example")}</Link>
         <Link href="/#pricing">{t("Precio", "Pricing")}</Link>
         <Link href="/knowledge">Knowledge</Link>
         <Link href="/contact">{t("Contacto", "Contact")}</Link>

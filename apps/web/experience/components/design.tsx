@@ -30,7 +30,7 @@ export function Design() {
         <Brand />
         <nav>
           <Link href="/">{t("Landing", "Landing")}</Link>
-          <Link href="/panorama">{t("Producto", "Product")}</Link>
+          <Link href="/demo">{t("Producto", "Product")}</Link>
           <Link href="/admin">Admin</Link>
         </nav>
         <LocaleToggle />
@@ -216,7 +216,7 @@ export function Design() {
             ))}
           </div>
           <StatePanel state={state} onRetry={() => setState("unknown")} />
-          <Link className="text-link" href={"/panorama?state=" + state}>
+          <Link className="text-link" href={"/demo?state=" + state}>
             {t(
               "Probar este estado en el producto",
               "Test this state in the product",
@@ -306,7 +306,7 @@ export function Design() {
             )}
           </p>
           <div className="design-links">
-            <Link href="/panorama" className="button primary">
+            <Link href="/demo" className="button primary">
               {t("Explorar la experiencia", "Explore the experience")}
               <ArrowRight size={17} />
             </Link>

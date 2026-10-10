@@ -24,7 +24,7 @@ import {
 import { MiniFooter, Observer } from "./ui";
 
 /** The one public example. Every "show me" on the site lands here. */
-export const EXAMPLE_HREF = "/panorama";
+export const EXAMPLE_HREF = "/demo";
 
 function Reveal({
   children,

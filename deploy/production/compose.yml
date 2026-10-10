@@ -139,7 +139,7 @@ services:
         - CMD
         - node
         - -e
-        - "fetch('http://127.0.0.1:3810/admin/customer-zero').then(r=>{if(r.status>=500)process.exit(1)}).catch(()=>process.exit(1))"
+        - "fetch('http://127.0.0.1:3810/admin').then(r=>{if(r.status>=500)process.exit(1)}).catch(()=>process.exit(1))"
       interval: 10s
       timeout: 5s
       retries: 6

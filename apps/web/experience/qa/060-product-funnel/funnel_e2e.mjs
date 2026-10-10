@@ -48,7 +48,7 @@ try {
   });
 
   await click("a", "^Ver un ejemplo");
-  await page.waitFor("location.pathname === '/panorama' && document.body.innerText.includes('Ejemplo guiado con una organización ficticia')");
+  await page.waitFor("location.pathname === '/demo' && document.body.innerText.includes('Ejemplo guiado con una organización ficticia')");
   await new Promise((r) => setTimeout(r, 1200));
   await step("example is clearly an example, not your account", async () => {
     const body = await text();

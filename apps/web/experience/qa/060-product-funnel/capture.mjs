@@ -9,9 +9,9 @@ const [origin = "http://127.0.0.1:3830", out = "qa-shots"] = process.argv.slice(
 const widths = [1440, 1024, 768, 390];
 const pages = [
   ["landing", "/"],
-  ["example", "/panorama"],
-  ["example-reach", "/panorama?family=markets"],
-  ["example-evidence", "/panorama?signal=renovation&depth=prove"],
+  ["example", "/demo"],
+  ["example-reach", "/demo?family=markets"],
+  ["example-evidence", "/demo?signal=renovation&depth=prove"],
   ["signup", "/signup"],
   ["login", "/login"],
   ["policies", "/policies"],

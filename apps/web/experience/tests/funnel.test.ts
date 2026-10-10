@@ -25,7 +25,7 @@ const PUBLIC_SURFACES = [
   "app/api/axent/route.ts",
 ];
 const PUBLIC_ROUTES = new Set([
-  "/", "/panorama", "/signup", "/login", "/knowledge", "/contact", "/policies", "/gdpr",
+  "/", "/demo", "/signup", "/login", "/knowledge", "/contact", "/policies", "/gdpr",
   "/policies/terms", "/policies/privacy", "/policies/cookies", "/knowledge/basis/product-model",
 ]);
 const literalHrefs = (source: string) =>
@@ -41,13 +41,13 @@ test("public surfaces link only to public destinations, never to staff tools", (
 
 test("there is one public example and every 'show me' converges on it", () => {
   const landing = read("components/landing.tsx");
-  assert.match(landing, /export const EXAMPLE_HREF = "\/panorama";/);
+  assert.match(landing, /export const EXAMPLE_HREF = "\/demo";/);
   for (const file of PUBLIC_SURFACES) {
     const source = read(file);
-    assert.doesNotMatch(source, /["'`]\/(demo|examples?|dashboard|tour)\b/, `${file} opens a second demo route`);
+    assert.doesNotMatch(source, /["'`]\/(examples?|dashboard|tour)\b/, `${file} opens a second demo route`);
   }
   // Landing example links are built from the one constant, never retyped.
-  assert.doesNotMatch(landing, /href="\/panorama/);
+  assert.doesNotMatch(landing, /href="\/demo/);
 });
 
 test("no public copy makes the product feel like a prototype", () => {
