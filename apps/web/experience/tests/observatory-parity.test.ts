@@ -39,7 +39,7 @@ test("pages are thin: no route carries Observatory interface of its own", () => 
 test("there is one subscriber Observatory implementation", () => {
   const observatories = readdirSync(resolve(process.cwd(), "components")).filter(file => /observatory\.tsx$/.test(file)).sort();
   // demo-observatory is only the demonstration entry: it mounts the container with the demo source and adds no interface.
-  // landing-observatory is the marketing window and customer-zero-observatory the Admin entry; neither is the subscriber reading.
+  // landing-observatory is the marketing window and customer-zero-observatory the Admin entry; neither is the subscriber reading. customer-zero-observatory mounts the container over the Admin source.
   assert.deepEqual(observatories, ["customer-zero-observatory.tsx", "demo-observatory.tsx", "landing-observatory.tsx", "observatory.tsx"]);
   assert.doesNotMatch(read("components/demo-observatory.tsx"), /className=|<(main|section|nav|aside|button|header)\b/);
 });

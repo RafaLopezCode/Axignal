@@ -8,8 +8,6 @@ import { pendingPilotInvite, clearPilotInvite } from "@/lib/pilot-invite";
 import { pendingMcpConnect, clearMcpConnect } from "@/lib/mcp-connect";
 import { Observatory } from "./observatory";
 import { accountSource, type ObservatorySource } from "@/lib/observatory-source";
-import "./subscriber-portfolio.css";
-import "./observatory.css";
 
 type PortfolioItem = SubscriberPortfolio["organizations"][number];
 /** A canonical Focus reading, or a pending attention whose First Observation exists. */
@@ -125,7 +123,7 @@ export function SubscriberPortfolioExperience({ source = accountSource, notice }
     return () => { controller.abort(); pilotRedeemed.current = false; };
   }, [access, readPortfolio, canAct]);
   async function command(input: Record<string, unknown>) {
-    if (!canAct || busy) return;
+    if (!canAct || busy || !source.command) return;
     const signature = JSON.stringify(input);
     let requestRef = attempts.current.get(signature);
     if (!requestRef) { requestRef = crypto.randomUUID(); attempts.current.set(signature, requestRef); }
@@ -133,11 +131,10 @@ export function SubscriberPortfolioExperience({ source = accountSource, notice }
     const controller = new AbortController(); requests.current.add(controller);
     const epoch = sessionEpoch.current;
     try {
-      const response = await fetch("/api/subscriber/portfolio", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ ...input, requestRef }), signal: controller.signal });
+      const outcome = await source.command!(input, requestRef, controller.signal);
       if (controller.signal.aborted || epoch !== sessionEpoch.current) return;
-      if (response.status === 401) { setAccess("required"); setPortfolio(null); setProjection(null); return; }
-      if (!response.ok) throw new Error("COMMAND_FAILED");
-      const result = subscriberResultSchema.parse(await response.json());
+      if (outcome === "SESSION_REQUIRED") { setAccess("required"); setPortfolio(null); setProjection(null); return; }
+      const result = subscriberResultSchema.parse(outcome);
       if (controller.signal.aborted || epoch !== sessionEpoch.current) return;
       const link = approvedPaymentUrl(result.checkoutUrl) ?? approvedPaymentUrl(result.paymentUrl);
       setPaymentUrl(link);
@@ -150,6 +147,7 @@ export function SubscriberPortfolioExperience({ source = accountSource, notice }
         : result.observationState === "PARTIAL" ? t("La observación es parcial. Lee las evidencias y sus límites antes de interpretar el resultado.", "Observation is partial. Read the evidence and its limits before interpreting the result.")
         : result.state === "IDENTITY_PENDING" && result.reason?.startsWith("AMBIGUOUS") ? t("Varias organizaciones coinciden. Añade su web o su código LEI para distinguirla; no elegimos por ti.", "Several organizations match. Add its website or LEI code to tell them apart; we do not choose for you.")
         : result.state === "IDENTITY_PENDING" && result.reason?.startsWith("CONFLICT") ? t("El nombre, la web o el identificador apuntan a organizaciones distintas. No se ha creado nada; revisa los datos.", "The name, website or identifier point to different organizations. Nothing was created; check the details.")
+        : result.state === "WEBSITE_REQUIRED" ? t("Indica la dirección web pública de la organización, por ejemplo empresa.com. Una atención interna necesita un sitio que observar.", "Enter the organization's public website address, for example company.com. An internal attention needs a site to observe.")
         : result.state === "IDENTITY_REJECTED" ? t("Introduce un nombre, una web pública o un código LEI. Los identificadores internos y los emails no sirven.", "Enter a name, a public website or an LEI code. Internal identifiers and emails are not accepted.")
         : result.state === "IDENTITY_PENDING" || result.state === "IDENTITY_UNRESOLVED" ? t("Identidad por resolver. Tu solicitud está guardada; todavía no hay una organización ni una conclusión.", "Identity unresolved. Your request is saved; there is no organization or conclusion yet.")
         : result.state === "CAPACITY_UNKNOWN" ? t("La capacidad aún no está confirmada. Comprueba el estado antes de repetir la operación.", "Capacity is not confirmed yet. Check its state before repeating the operation.")
@@ -226,7 +224,7 @@ export function SubscriberPortfolioExperience({ source = accountSource, notice }
     outputRequest.current?.abort(); ++outputEpoch.current;
     setSelected(null); setProjection(null); setFirstObservation(null); setRevision(null); setReading(false);
   }, []);
-  return <Observatory notice={notice} canAct={canAct} loadReading={loadOutput} menuName={source.menuName} access={access} portfolio={portfolio} busy={busy} message={message} paymentUrl={paymentUrl}
+  return <Observatory notice={notice} canAct={canAct} capabilities={source.capabilities} loadReading={loadOutput} menuName={source.menuName} access={access} portfolio={portfolio} busy={busy} message={message} paymentUrl={paymentUrl}
     selected={selected} reading={reading} projection={projection} firstObservation={firstObservation} revision={revision}
     readOutput={readOutput} clearSelection={clearSelection} command={command} refresh={() => void readPortfolio()} logout={() => void logout()}
     locator={locator} setLocator={setLocator} total={total} setTotal={setTotal}

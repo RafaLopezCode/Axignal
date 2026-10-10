@@ -23,6 +23,7 @@ import { causeCopy, dimensionCopy, stateCopy } from "./public-understanding";
 import { SubscriberRepresentation } from "./subscriber-representation";
 import { SubscriberMcpConnections } from "./subscriber-mcp-connections";
 import { RuntimeAxent, useRuntimeAxent } from "./runtime-axent";
+import type { ObservatoryCapabilities } from "@/lib/observatory-source";
 import { channelLabel, FamilyNav, scopeCopy, type FacetScope } from "./family-nav";
 import { countByFacet, facetOfSourceType, facetParams, litByFamily, matchesFacet, parseFacet, type Facet } from "@/lib/observation-families";
 
@@ -52,6 +53,8 @@ export type ObservatoryProps = {
   replacementLocator: string; setReplacementLocator: (value: string) => void;
   /** Account-only capabilities. False in the public demo: same components, synthetic data. */
   canAct: boolean;
+  /** What the context offers around the reading; the demo declares all of it, an Admin has no account to manage. */
+  capabilities: ObservatoryCapabilities;
   /** A statement above the reading, inside the main column (the demo's fictional-data notice). */
   notice?: React.ReactNode;
   /** The menu's name for an organization, when the mode names it differently (the demo shows its domain). */
@@ -264,7 +267,7 @@ export function Observatory(props: ObservatoryProps) {
   if (access === "failure" || !portfolio) return <ObservatoryFrame><section className="obs-gate" role="alert"><h1>{t("No pudimos leer tu contexto.", "We could not read your context.")}</h1><p>{t("Tu cartera sigue a salvo. Vuelve a comprobarlo en un momento.", "Your portfolio is safe. Check again in a moment.")}</p><button className="obs-button" onClick={props.refresh}><RefreshCw size={16} aria-hidden="true"/>{t("Volver a comprobar", "Check again")}</button></section></ObservatoryFrame>;
 
   const current = items.find(i => i.focusId === selected) ?? null;
-  const rail = <Rail items={items} selected={selected} screen={screen} seen={seen} litCounts={litCounts} nameOf={props.menuName ?? nameOf} onOrganization={openOrganization} onScreen={openScreen} portfolio={portfolio} busy={props.busy} refresh={props.refresh} canAct={props.canAct}/>;
+  const rail = <Rail items={items} selected={selected} screen={screen} seen={seen} litCounts={litCounts} nameOf={props.menuName ?? nameOf} onOrganization={openOrganization} onScreen={openScreen} portfolio={portfolio} busy={props.busy} refresh={props.refresh} canAct={props.canAct} account={props.capabilities.account}/>;
   return <div className="obs" data-product-surface="living-observatory" aria-busy={props.busy}>
     <a className="obs-skip" href="#obs-main">{t("Ir al contenido", "Skip to content")}</a>
     <div className="obs-rail-desktop">{rail}</div>
@@ -287,10 +290,10 @@ function ObservatoryFrame({ children }: { children: React.ReactNode }) {
 
 // ---- rail: where am I, which organization, what changed -----------------------------------
 
-function Rail({ items, selected, screen, seen, litCounts, nameOf, onOrganization, onScreen, portfolio, busy, refresh, canAct }: {
+function Rail({ items, selected, screen, seen, litCounts, nameOf, onOrganization, onScreen, portfolio, busy, refresh, canAct, account }: {
   items: Item[]; selected: string | null; screen: Screen; seen: SeenStore; litCounts: Record<string, number>; nameOf: (item: Item) => string;
   onOrganization: (id: string) => void; onScreen: (screen: "desk" | "account" | "add") => void;
-  portfolio: SubscriberPortfolio; busy: boolean; refresh: () => void; canAct: boolean;
+  portfolio: SubscriberPortfolio; busy: boolean; refresh: () => void; canAct: boolean; account: boolean;
 }) {
   const { t } = useLocale();
   const [filter, setFilter] = useState("");
@@ -323,7 +326,7 @@ function Rail({ items, selected, screen, seen, litCounts, nameOf, onOrganization
     </ul>
     <div className="obs-rail-foot">
       <button className="obs-rail-action obs-rail-cta" aria-current={screen === "add" ? "page" : undefined} disabled={!canAct} onClick={() => onScreen("add")}><Plus size={16} aria-hidden="true"/>{t("Añadir organización", "Add organization")}</button>
-      <button className="obs-rail-action" aria-current={screen === "account" ? "page" : undefined} disabled={!canAct} onClick={() => onScreen("account")}><Settings2 size={16} aria-hidden="true"/>{t("Cuenta y conexiones", "Account and connections")}</button>
+      {account && <button className="obs-rail-action" aria-current={screen === "account" ? "page" : undefined} disabled={!canAct} onClick={() => onScreen("account")}><Settings2 size={16} aria-hidden="true"/>{t("Cuenta y conexiones", "Account and connections")}</button>}
       {!canAct && <p className="obs-rail-note">{t("Acciones de cuenta disponibles al crear tu cuenta.", "Account actions are available once you create your account.")}</p>}
       <div className="obs-rail-locale"><LocaleToggle/></div>
     </div>
@@ -512,16 +515,16 @@ function OrganizationView(props: OrgProps) {
         </div>
         <div className="obs-org-actions">
           {item.state === "ACTIVE" && <button className="obs-button" disabled={props.busy || !props.canAct} onClick={() => void props.command({ action: "reobserve", focusId: item.focusId })}><RefreshCw size={16} aria-hidden="true"/><span className="obs-collapse">{t("Volver a observar", "Observe again")}</span></button>}
-          {!identified && <button className="obs-button" disabled={props.busy || !props.canAct} onClick={() => void props.command({ action: "retry_pending", focusId: item.focusId })}><RefreshCw size={16} aria-hidden="true"/><span className="obs-collapse">{t("Volver a comprobar", "Check again")}</span></button>}
+          {!identified && props.capabilities.manage && <button className="obs-button" disabled={props.busy || !props.canAct} onClick={() => void props.command({ action: "retry_pending", focusId: item.focusId })}><RefreshCw size={16} aria-hidden="true"/><span className="obs-collapse">{t("Volver a comprobar", "Check again")}</span></button>}
           {projection && revision && <span className="obs-axent-cta"><button className={`obs-button obs-axent-button${props.axentOpen && !open ? " obs-active" : ""}`} onClick={() => { transition(() => { go({ item: null }); props.setAxentOpen(true); }); }}><MessageCircleQuestion size={16} aria-hidden="true"/>{t("Preguntar a AXENT", "Ask AXENT")}</button><span className="obs-axent-note"><CornerRightUp size="1.15em" aria-hidden="true"/>{t("¿Dudas? Pregúntale a AXENT", "Any doubts? Ask AXENT")}</span></span>}
-          <div className="obs-menu">
+          {props.capabilities.manage && <div className="obs-menu">
             <button className="obs-icon" aria-expanded={menu} aria-haspopup="true" aria-label={t("Más acciones", "More actions")} onClick={() => setMenu(!menu)}><ChevronDown size={18} aria-hidden="true"/></button>
             {menu && <ul className="obs-menu-list" onKeyDown={e => { if (e.key === "Escape") setMenu(false); }}>
               {identified && <li><button disabled={props.busy || !props.canAct} onClick={() => { setMenu(false); void props.command({ action: item.state === "PAUSED" ? "resume" : "pause", focusId: item.focusId }); }}>{item.state === "PAUSED" ? t("Reanudar", "Resume") : t("Pausar", "Pause")}</button></li>}
               {identified && <li><button disabled={props.busy || !props.canAct} onClick={() => { setMenu(false); props.setReplacing(item.focusId); props.setReplacementLocator(""); }}>{t("Sustituir organización", "Replace organization")}</button></li>}
               <li><button disabled={props.busy || !props.canAct} onClick={() => { setMenu(false); void props.command({ action: identified ? "remove" : "cancel_pending", focusId: item.focusId }); }}>{t("Retirar de mi cartera", "Remove from my portfolio")}</button></li>
             </ul>}
-          </div>
+          </div>}
         </div>
       </header>
       {props.replacing === item.focusId && <form className="obs-inline-form" onSubmit={e => { e.preventDefault(); void props.command({ action: "replace", focusId: item.focusId, locator: props.replacementLocator }); }}>
@@ -550,7 +553,7 @@ function OrganizationView(props: OrgProps) {
         {!props.reading && !observing && view === "evidence" && <EvidenceView reading={reading} facet={facet} scope={scope} insights={shown}/>}
       </div>
     </div>
-    {depthOpen && <DepthPanel insight={open} projection={projection} revision={revision} axentOnly={!open} canAct={props.canAct} onClose={closeDepth}
+    {depthOpen && <DepthPanel insight={open} projection={projection} revision={revision} axentOnly={!open} canAct={props.canAct} axent={props.capabilities.axent} onClose={closeDepth}
       onEvidence={() => transition(() => go({ view: "evidence", item: null }))} onExplore={() => transition(() => go({ view: "explore", item: null }))}/>}
   </div>;
 }
@@ -662,8 +665,8 @@ export function InsightBody({ insight, onEvidence }: { insight: Insight; onEvide
   </article>;
 }
 
-function DepthPanel({ insight, projection, revision, axentOnly, canAct, onClose, onEvidence, onExplore }: {
-  insight: Insight | null; projection: RuntimeProjection | null; revision: string | null; axentOnly: boolean; canAct: boolean;
+function DepthPanel({ insight, projection, revision, axentOnly, canAct, axent, onClose, onEvidence, onExplore }: {
+  insight: Insight | null; projection: RuntimeProjection | null; revision: string | null; axentOnly: boolean; canAct: boolean; axent: "subscriber" | "admin";
   onClose: () => void; onEvidence: () => void; onExplore: () => void;
 }) {
   const { t, locale } = useLocale();
@@ -683,16 +686,17 @@ function DepthPanel({ insight, projection, revision, axentOnly, canAct, onClose,
       {insight && <span>{laneCopy(insight.lane, t).title}</span>}
     </div>
     {insight && <InsightBody insight={insight} onEvidence={onEvidence}/>}
-    {projection && revision ? <DepthAxent projection={projection} revision={revision} insight={insight} canAct={canAct} onEvidence={onEvidence} onExplore={onExplore} autoFocus={axentOnly}/>
+    {projection && revision ? <DepthAxent projection={projection} revision={revision} axent={axent} insight={insight} canAct={canAct} onEvidence={onEvidence} onExplore={onExplore} autoFocus={axentOnly}/>
       : <section className="obs-depth-axent obs-quiet"><h3>AXENT</h3><p>{t("AXENT podrá investigar con esta organización cuando su identidad esté verificada por un registro. Esta lectura ya muestra su evidencia.", "AXENT can investigate this organization once its identity is verified by a registry. This reading already shows its evidence.")}</p></section>}
   </aside>;
 }
 
-function DepthAxent({ projection, revision, insight, canAct, onEvidence, onExplore, autoFocus }: {
-  projection: RuntimeProjection; revision: string; insight: Insight | null; canAct: boolean; onEvidence: () => void; onExplore: () => void; autoFocus: boolean;
+function DepthAxent({ projection, revision, axent, insight, canAct, onEvidence, onExplore, autoFocus }: {
+  projection: RuntimeProjection; revision: string; axent: "subscriber" | "admin"; insight: Insight | null; canAct: boolean; onEvidence: () => void; onExplore: () => void; autoFocus: boolean;
 }) {
   const { t } = useLocale();
-  const scope = useMemo(() => ({ revision }), [revision]);
+  // The subscriber's questions are scoped to its reading; an Admin session asks through its own endpoint.
+  const scope = useMemo(() => axent === "subscriber" ? { revision } : undefined, [axent, revision]);
   const conversation = useRuntimeAxent(projection, null, scope);
   const asked = useRef<string | null>(null);
   const question = insight ? fill(t("{finding}: ¿por qué importa y qué sigue abierto?", "{finding}: why does it matter and what remains open?"), { finding: insight.headline }) : null;

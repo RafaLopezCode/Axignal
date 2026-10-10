@@ -75,6 +75,8 @@ export const demoSource: ObservatorySource = {
   mode: "demo",
   canAct: false,
   localized: true,
+  // The demo shows every control, disabled, so the reader sees the whole product.
+  capabilities: { account: true, manage: true, axent: "subscriber" },
   async readPortfolio(_signal, locale) { return syntheticPortfolio(locale); },
   async readOutput(focusId, _signal, locale) { return syntheticOutput(focusId, locale); },
   // The rail names an organization by its demo domain, derived from the panel name it already carries.

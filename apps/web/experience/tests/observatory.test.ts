@@ -11,6 +11,7 @@ import { pendingOutputSchema, portfolioSchema, subscriberOutputSchema } from "..
 import { LocaleProvider } from "../lib/locale";
 import { translate } from "../lib/copy-catalog";
 import { Observatory, type ObservatoryProps } from "../components/observatory";
+import { accountSource } from "../lib/observatory-source";
 
 // SYNTHETIC: real composition output over the controlled test world (see "provenance").
 const fixture = JSON.parse(fs.readFileSync(path.join(__dirname, "fixtures", "observatory-synthetic.json"), "utf8"));
@@ -113,7 +114,7 @@ function props(overrides: Partial<ObservatoryProps> = {}): ObservatoryProps {
     access: "ready", portfolio: portfolioSchema.parse({ state: "success", capacity: 10, capacityCurrentness: "CURRENT", canPurchase: null, contractingEnabled: false, organizations: fixture.portfolio }),
     busy: false, message: "", paymentUrl: null, selected: null, reading: false, projection: null, firstObservation: null, revision: null,
     readOutput: noop, clearSelection: noop, command: async () => {}, refresh: noop, logout: noop,
-    locator: "", setLocator: noop, total: 11, setTotal: noop, replacing: null, setReplacing: noop, replacementLocator: "", setReplacementLocator: noop, canAct: true, loadReading: async () => ({}),
+    locator: "", setLocator: noop, total: 11, setTotal: noop, replacing: null, setReplacing: noop, replacementLocator: "", setReplacementLocator: noop, canAct: true, capabilities: accountSource.capabilities, loadReading: async () => ({}),
     ...overrides,
   };
 }

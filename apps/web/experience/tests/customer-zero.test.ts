@@ -160,8 +160,8 @@ test("Customer Zero only sends canonical attention, and consumes the real read e
   assert.ok(subscriber.includes("<RuntimeExperience"));
   assert.ok(client.includes("<CustomerZeroObservatory"));
   const currentRenderer = readFileSync("components/customer-zero-observatory.tsx", "utf8");
-  assert.ok(currentRenderer.includes("<SummaryView"));
-  assert.ok(currentRenderer.includes("<InsightBody"));
+  // Customer Zero mounts the one Observatory container over the Admin source; it carries no reading interface of its own.
+  assert.ok(currentRenderer.includes("<SubscriberPortfolioExperience source={adminSource}"));
   assert.ok(currentRenderer.includes("<RuntimeProductProjection")); // Complete legacy details remain accessible.
   assert.ok(currentRenderer.includes("staffControls"));
   assert.ok(renderer.includes('t("señal observada", "observed signal")'));

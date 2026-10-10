@@ -1,4 +1,6 @@
 import { Suspense } from "react";
+import "@/components/subscriber-portfolio.css";
+import "@/components/observatory.css";
 import { DemoObservatory } from "@/components/demo-observatory";
 
 export const metadata = {
