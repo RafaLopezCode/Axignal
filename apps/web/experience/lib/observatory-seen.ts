@@ -8,6 +8,10 @@ const STORAGE_NAME = "axignal.observatory.seen.v1";
 const MAX_ORGANIZATIONS = 60;
 const MAX_KEYS = 240;
 
+/** A finding counts as seen once at least this share of it has been in view, in a visible tab, for this long. */
+export const SEEN_VISIBLE_RATIO = 0.6;
+export const SEEN_DWELL_MS = 1500;
+
 export type SeenRecord = { visitedAt: string; keys: string[] };
 export type SeenStore = Record<string, SeenRecord>;
 type Storage = Pick<globalThis.Storage, "getItem" | "setItem">;

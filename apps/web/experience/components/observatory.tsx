@@ -16,7 +16,7 @@ import { LocaleToggle, useFocusTrap } from "./ui";
 import { evidenceUrl, monthlyCapacityCents, pendingOutputSchema, subscriberOutputSchema, type FirstObservation, type SubscriberPortfolio } from "@/lib/subscriber-contracts";
 import type { RuntimeProjection } from "@/lib/runtime-projection";
 import { briefing, byLane, currentnessLabel, fill, insightsFor, laneCopy, natureLabel, type Insight, type Lane, type Nature, type Reading, type Translate } from "@/lib/observatory";
-import { baseline, litKeys, markSeen, observedSinceVisit, readSeen, touch, writeSeen, type SeenStore } from "@/lib/observatory-seen";
+import { baseline, litKeys, markSeen, observedSinceVisit, readSeen, SEEN_DWELL_MS, SEEN_VISIBLE_RATIO, touch, writeSeen, type SeenStore } from "@/lib/observatory-seen";
 import { activityLabel, FirstObservationView, observationStateCopy } from "./first-observation";
 import { SubscriberReading } from "./subscriber-reading";
 import { causeCopy, dimensionCopy, stateCopy } from "./public-understanding";
@@ -489,6 +489,27 @@ function OrganizationView(props: OrgProps) {
     const now = new Date().toISOString();
     updateSeen(store => store[item.focusId] ? touch(store, item.focusId, now) : baseline(store, item.focusId, keys, now));
   }, [ready, item.focusId, keys, updateSeen]);
+  // A finding that has been in view, in a visible tab, for a moment has been seen: it stops being lit without a click.
+  useEffect(() => {
+    if (!ready || view !== "summary" || litShown.size === 0 || typeof IntersectionObserver === "undefined") return;
+    const keyOf = new Map(shown.map(insight => [insight.id, insight.changeKey]));
+    const timers = new Map<Element, number>();
+    const observer = new IntersectionObserver(entries => {
+      for (const entry of entries) {
+        const key = keyOf.get((entry.target as HTMLElement).dataset.insight ?? "");
+        if (!key || !litShown.has(key)) continue;
+        const running = timers.get(entry.target);
+        if (entry.isIntersecting && entry.intersectionRatio >= SEEN_VISIBLE_RATIO && document.visibilityState === "visible") {
+          if (running === undefined) timers.set(entry.target, window.setTimeout(() => {
+            timers.delete(entry.target);
+            updateSeen(store => markSeen(store, item.focusId, [key], new Date().toISOString()));
+          }, SEEN_DWELL_MS));
+        } else if (running !== undefined) { window.clearTimeout(running); timers.delete(entry.target); }
+      }
+    }, { threshold: [0, SEEN_VISIBLE_RATIO] });
+    document.querySelectorAll<HTMLElement>("[data-insight]").forEach(card => observer.observe(card));
+    return () => { observer.disconnect(); timers.forEach(id => window.clearTimeout(id)); };
+  }, [ready, view, shown, litShown, item.focusId, updateSeen]);
   const open = insights.find(i => i.id === itemId) ?? null;
   const [menu, setMenu] = useState(false);
   const opener = useRef<string | null>(null);

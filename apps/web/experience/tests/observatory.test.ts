@@ -224,3 +224,15 @@ test("the runtime's English sentences are shown in Spanish where the reader read
   assert.equal(runtimeText("Some sentence nobody has translated.", "es"), "Some sentence nobody has translated.");
   assert.equal(runtimeText("AXIGNAL's public homepage is observable from the outside", "en"), "AXIGNAL's public homepage is observable from the outside");
 });
+
+test("a finding that has been in view for a moment is marked seen without a click", () => {
+  const source = fs.readFileSync(path.resolve(process.cwd(), "components/observatory.tsx"), "utf8");
+  assert.match(source, /new IntersectionObserver\(/);
+  // Only a visible tab counts, and only while enough of the finding is in view for long enough.
+  assert.match(source, /document\.visibilityState === "visible"/);
+  assert.match(source, /entry\.intersectionRatio >= SEEN_VISIBLE_RATIO/);
+  assert.match(source, /SEEN_DWELL_MS\)/);
+  // It marks through the same seen store as opening a finding, and a timer is cancelled when the finding leaves view.
+  assert.match(source, /markSeen\(store, item\.focusId, \[key\]/);
+  assert.match(source, /window\.clearTimeout\(running\)/);
+});
