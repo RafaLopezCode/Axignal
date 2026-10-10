@@ -57,6 +57,7 @@ from application.subscriber_projection.subscriber_runtime import (
     SubscriberRuntimeRead,
 )
 from application.xeed_access.reader import TrustedRequestContext
+from domain.admin_access import AdminAuthorizationGrant, AdminScope
 from domain.admin_billing.checkout_binding import ApprovedOfferCatalogue
 from domain.admin_billing.commercial_prices import (
     DEFAULT_CURRENCY,
@@ -1077,9 +1078,47 @@ def build_subscriber_facade(
         clock=effective_clock.now,
     )
     mcp_consent = SubscriberMcpConsent(mcp_oauth, mcp_memory, effective_clock.now)
+
+    def customer_read(grant: AdminAuthorizationGrant) -> dict[str, object]:
+        if AdminScope.CUSTOMERS_READ not in grant.scopes:
+            raise PermissionError("customers read required")
+        customers: list[dict[str, object]] = []
+        for principal_id, tenant_id in identity.store.active_customer_contexts():
+            context = TrustedSubscriberContext(principal_id, tenant_id)
+            view = workflow.portfolio(context)
+            billing = billing_store.get_billing_projection(tenant_id)
+            billing_view: dict[str, object] | None = None
+            if AdminScope.BILLING_READ in grant.scopes and billing is not None:
+                billing_view = {
+                    "subscriptionRef": billing.subscription_ref,
+                    "status": billing.lifecycle.value,
+                    "paymentState": billing.payment_state.value,
+                    "contractedCapacity": billing.effective_capacity,
+                    "verifiedAt": None
+                    if billing.provider_state_at is None
+                    else billing.provider_state_at.isoformat(),
+                    "paidThrough": None
+                    if billing.paid_through is None
+                    else billing.paid_through.isoformat(),
+                }
+            customers.append(
+                {
+                    "tenantId": str(tenant_id),
+                    "principalId": str(principal_id),
+                    "membership": "ACTIVE",
+                    **view,
+                    "billing": billing_view,
+                    "billingReadable": AdminScope.BILLING_READ in grant.scopes,
+                    "firstObservationEnabled": first_observation is not None,
+                }
+            )
+        return {"customers": customers, "limit": 500, "asOf": effective_clock.now().isoformat()}
+
     return SubscriberHttpFacade(
         settings=settings,
         identity=identity,
+        pilot_admin=pilot_access,
+        customer_read=customer_read,
         workflow=workflow,
         outputs=_SubscriberOutputs(workflow, economic, portfolio, first_observation),
         billing_webhook=None if checkout is None else _BillingWebhookAdapter(checkout),

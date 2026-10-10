@@ -80,6 +80,7 @@ from application.admin_weekly_brief import (
 from application.admin_xeed_observatory import project_xeed_axigland_observatory
 from application.economic_discovery.observation_reuse import ObservationReusePolicy
 from application.economic_discovery.temporal_currentness import TemporalCurrentnessPolicy
+from application.subscriber_access.pilot import PilotOperationError
 from application.subscriber_access.staff_capacity import StaffCapacityError, StaffCapacityFailure
 from application.subscriber_portfolio.models import PortfolioError
 from domain.admin_access import AdminAssurance, AdminAuthorizationGrant, AdminRiskClass, AdminScope
@@ -1545,6 +1546,7 @@ def make_handler(runtime: AxignalRuntime) -> type[BaseHTTPRequestHandler]:
                 is_subscriber_path(self.path)
                 or urlsplit(self.path).path == "/internal/webhooks/subscriber-stripe"
                 or urlsplit(self.path).path == "/internal/admin/pilot-test-accounts"
+                or urlsplit(self.path).path.startswith("/internal/admin/customer-access")
             ):
                 # The default request line includes query strings; redact callbacks.
                 super().log_message("subscriber request %s", self.command)
@@ -1673,6 +1675,112 @@ def make_handler(runtime: AxignalRuntime) -> type[BaseHTTPRequestHandler]:
                 self._json({"reason": "ADMIN_SESSION_REQUIRED"}, HTTPStatus.UNAUTHORIZED)
             except AdminAuthorizationError:
                 self._json({"reason": "STEP_UP_REQUIRED"}, HTTPStatus.FORBIDDEN)
+
+        def _customer_access(self, action: str | None) -> None:
+            facade = runtime.subscriber
+            if runtime.admin_access is None or facade is None:
+                self._json(
+                    {"reason": "CUSTOMER_ACCESS_UNAVAILABLE"}, HTTPStatus.SERVICE_UNAVAILABLE
+                )
+                return
+            try:
+                now = datetime.now(UTC)
+                guard = AdminHttpAccessGuard(runtime.admin_access)
+                # Authorize before parsing input or accessing tenant data.
+                grant = guard.authorize_header(
+                    self.headers.get("Authorization"),
+                    required_scope=AdminScope.CUSTOMERS_READ
+                    if action is None
+                    else AdminScope.CUSTOMERS_WRITE,
+                    risk=AdminRiskClass.READ if action is None else AdminRiskClass.SENSITIVE,
+                    now=now,
+                )
+                if len(self.headers.get_all("Authorization") or []) != 1:
+                    raise ValueError("ambiguous authorization")
+                if action is None:
+                    if facade.customer_read is None:
+                        raise PilotOperationError("CUSTOMER_ACCESS_UNAVAILABLE")
+                    clients = facade.customer_read(grant)
+                    clients["accountOperations"] = _customer_operations_payload(
+                        _customer_operations_projection(runtime, grant=grant, now=now)
+                    )
+                    clients["pilotEnabled"] = facade.pilot_admin is not None
+                    clients["pilot"] = (
+                        None
+                        if facade.pilot_admin is None
+                        else facade.pilot_admin.inventory(grant, now=now)
+                    )
+                    self._json(clients)
+                    return
+                if facade.pilot_admin is None:
+                    raise PilotOperationError("PILOT_DISABLED")
+                if self.headers.get("Transfer-Encoding") is not None:
+                    raise ValueError("transfer encoding unsupported")
+                if self.headers.get("Content-Type", "").split(";")[0] != "application/json":
+                    self._json({"reason": "JSON_REQUIRED"}, HTTPStatus.UNSUPPORTED_MEDIA_TYPE)
+                    return
+                length = int(self.headers.get("Content-Length", "0"))
+                if not 2 <= length <= 4096:
+                    self._json({"reason": "BODY_LIMIT"}, HTTPStatus.REQUEST_ENTITY_TOO_LARGE)
+                    return
+                body = json.loads(self.rfile.read(length).decode("utf-8"))
+                if not isinstance(body, dict):
+                    raise ValueError("object required")
+                if action == "issue":
+                    if set(body) != {"reason", "inviteHours", "idempotencyKey"}:
+                        raise ValueError("invalid fields")
+                    invite = facade.pilot_admin.issue_admin(
+                        grant,
+                        reason=body["reason"],
+                        invite_hours=body["inviteHours"],
+                        idempotency_key=body["idempotencyKey"],
+                        now=now,
+                    )
+                    self._json(
+                        {
+                            "inviteRef": invite.invite_ref,
+                            "inviteToken": invite.invite_token,
+                            "expiresAt": invite.expires_at.isoformat(),
+                            "capacity": 1,
+                        }
+                    )
+                elif action in {"revoke-invite", "revoke-grant"}:
+                    if set(body) != {"reference", "reason", "idempotencyKey"}:
+                        raise ValueError("invalid fields")
+                    facade.pilot_admin.revoke_admin(
+                        grant,
+                        kind="invite" if action == "revoke-invite" else "grant",
+                        reference=body["reference"],
+                        reason=body["reason"],
+                        idempotency_key=body["idempotencyKey"],
+                        now=now,
+                    )
+                    self._json({"revoked": True})
+                else:
+                    raise ValueError("unknown action")
+            except AdminAuthenticationError:
+                self._json({"reason": "ADMIN_SESSION_REQUIRED"}, HTTPStatus.UNAUTHORIZED)
+            except AdminAuthorizationError:
+                self._json({"reason": "STEP_UP_OR_SCOPE_REQUIRED"}, HTTPStatus.FORBIDDEN)
+            except StaffCapacityError:
+                self._json({"reason": "STEP_UP_OR_SCOPE_REQUIRED"}, HTTPStatus.FORBIDDEN)
+            except PilotOperationError as error:
+                status = {
+                    "RATE_LIMITED": HTTPStatus.TOO_MANY_REQUESTS,
+                    "INVITE_ALREADY_ISSUED": HTTPStatus.CONFLICT,
+                    "IDEMPOTENCY_CONFLICT": HTTPStatus.CONFLICT,
+                    "STATE_CONFLICT": HTTPStatus.CONFLICT,
+                    "REFERENCE_NOT_FOUND": HTTPStatus.NOT_FOUND,
+                    "PILOT_DISABLED": HTTPStatus.SERVICE_UNAVAILABLE,
+                    "CUSTOMER_ACCESS_UNAVAILABLE": HTTPStatus.SERVICE_UNAVAILABLE,
+                }.get(error.code, HTTPStatus.BAD_REQUEST)
+                self._json({"reason": error.code, "reference": error.reference}, status)
+            except (ValueError, TypeError, UnicodeError):
+                self._json({"reason": "INVALID_REQUEST"}, HTTPStatus.BAD_REQUEST)
+            except (OSError, sqlite3.Error):
+                self._json(
+                    {"reason": "CUSTOMER_ACCESS_UNAVAILABLE"}, HTTPStatus.SERVICE_UNAVAILABLE
+                )
 
         def _staff_capacity(self, action: str | None) -> None:
             """Staff-provisioned capacity (issue #177); every write needs step-up."""
@@ -2115,6 +2223,9 @@ def make_handler(runtime: AxignalRuntime) -> type[BaseHTTPRequestHandler]:
             if request_path == "/internal/admin/pilot-test-accounts":
                 self._pilot_accounts()
                 return
+            if request_path == "/internal/admin/customer-access":
+                self._customer_access(None)
+                return
             if request_path == STAFF_CAPACITY_ROUTE:
                 self._staff_capacity(None)
                 return
@@ -2201,6 +2312,12 @@ def make_handler(runtime: AxignalRuntime) -> type[BaseHTTPRequestHandler]:
                 return
             if request_path == "/internal/admin/pilot-test-accounts":
                 self._pilot_accounts(write=True)
+                return
+            if (
+                request_path.startswith("/internal/admin/customer-access/")
+                and request_path.count("/") == 4
+            ):
+                self._customer_access(request_path.rsplit("/", 1)[1])
                 return
             if request_path.startswith(STAFF_CAPACITY_ROUTE + "/") and request_path.count("/") == 4:
                 self._staff_capacity(request_path.rsplit("/", 1)[1])

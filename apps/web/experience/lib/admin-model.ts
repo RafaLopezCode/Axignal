@@ -19,12 +19,12 @@ export const adminDomains = [
   },
   {
     id: "customers",
-    name: c("Cuentas y suscripciones", "Accounts & subscriptions"),
+    name: c("Clientes y accesos", "Clients and access"),
     group: "operate",
-    service: "SubscriberAccountService",
+    service: "PilotAccessService / CustomerOperations",
     question: c(
-      "¿La atención asignada coincide con la suscripción?",
-      "Does allocated attention match the subscription?",
+      "¿Quién tiene acceso y qué necesita para empezar?",
+      "Who has access and what do they need to begin?",
     ),
   },
   {

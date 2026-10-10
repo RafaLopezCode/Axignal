@@ -2,12 +2,14 @@
 
 from __future__ import annotations
 
+import hashlib
+import json
 import sqlite3
 import uuid
-from datetime import datetime
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
-from application.subscriber_access.pilot import PilotGrant
+from application.subscriber_access.pilot import PilotGrant, PilotOperationError
 from domain.identity import PrincipalId, TenantId
 
 
@@ -64,6 +66,71 @@ class SqlitePilotAccessStore:
                 """
             )
 
+            columns = {
+                row["name"]
+                for row in connection.execute("PRAGMA table_info(subscriber_pilot_invites)")
+            }
+            if "revoked_at" not in columns:
+                connection.execute(
+                    "ALTER TABLE subscriber_pilot_invites ADD COLUMN revoked_at TEXT"
+                )
+            connection.executescript("""
+                CREATE TABLE IF NOT EXISTS subscriber_pilot_commands (
+                    actor TEXT NOT NULL, command_key TEXT NOT NULL,
+                    fingerprint TEXT NOT NULL, reference TEXT NOT NULL,
+                    PRIMARY KEY (actor, command_key)
+                );
+                CREATE TABLE IF NOT EXISTS subscriber_pilot_audit (
+                    sequence INTEGER PRIMARY KEY AUTOINCREMENT,
+                    action TEXT NOT NULL, actor TEXT NOT NULL,
+                    reference TEXT NOT NULL, occurred_at TEXT NOT NULL,
+                    reason TEXT NOT NULL,
+                    tenant_id TEXT, principal_id TEXT
+                );
+            """)
+
+    @staticmethod
+    def _audit(
+        connection: sqlite3.Connection,
+        *,
+        action: str,
+        actor: str,
+        reference: str,
+        now: datetime,
+        reason: str,
+        tenant: str | None = None,
+        principal: str | None = None,
+    ) -> None:
+        connection.execute(
+            """INSERT INTO subscriber_pilot_audit
+            (action, actor, reference, occurred_at, reason, tenant_id, principal_id)
+            VALUES (?, ?, ?, ?, ?, ?, ?)""",
+            (action, actor, reference, now.astimezone(UTC).isoformat(), reason, tenant, principal),
+        )
+
+    @staticmethod
+    def _receipt(
+        connection: sqlite3.Connection, actor: str, key: str, fingerprint: str
+    ) -> str | None:
+        row = connection.execute(
+            "SELECT fingerprint, reference FROM subscriber_pilot_commands WHERE actor=? AND command_key=?",
+            (actor, key),
+        ).fetchone()
+        if row is None:
+            return None
+        if row["fingerprint"] != fingerprint:
+            raise PilotOperationError("IDEMPOTENCY_CONFLICT")
+        return str(row["reference"])
+
+    @staticmethod
+    def _remember(
+        connection: sqlite3.Connection, actor: str, key: str, fingerprint: str, reference: str
+    ) -> None:
+        connection.execute(
+            "INSERT INTO subscriber_pilot_commands VALUES (?, ?, ?, ?)",
+            (actor, key, fingerprint, reference),
+        )
+
     @staticmethod
     def _grant(row: sqlite3.Row) -> PilotGrant:
         return PilotGrant(
@@ -84,10 +151,26 @@ class SqlitePilotAccessStore:
         reason: str,
         created_at: datetime,
         expires_at: datetime,
+        idempotency_key: str | None = None,
+        fingerprint: str | None = None,
     ) -> None:
         if created_at.tzinfo is None or expires_at.tzinfo is None or expires_at <= created_at:
             raise ValueError("invalid pilot invite interval")
         with self._connect() as connection:
+            connection.execute("BEGIN IMMEDIATE")
+            if idempotency_key is not None:
+                if fingerprint is None:
+                    raise ValueError("fingerprint required")
+                prior = self._receipt(connection, issued_by, idempotency_key, fingerprint)
+                if prior is not None:
+                    raise PilotOperationError("INVITE_ALREADY_ISSUED", prior)
+                count = connection.execute(
+                    """SELECT COUNT(*) FROM subscriber_pilot_audit
+                    WHERE action='ISSUED' AND actor=? AND occurred_at>?""",
+                    (issued_by, (created_at.astimezone(UTC) - timedelta(hours=1)).isoformat()),
+                ).fetchone()[0]
+                if count >= 20:
+                    raise PilotOperationError("RATE_LIMITED")
             connection.execute(
                 """INSERT INTO subscriber_pilot_invites(invite_ref, token_digest, issued_by, reason, created_at, expires_at)
                    VALUES (?, ?, ?, ?, ?, ?)""",
@@ -100,6 +183,17 @@ class SqlitePilotAccessStore:
                     expires_at.isoformat(),
                 ),
             )
+
+            self._audit(
+                connection,
+                action="ISSUED",
+                actor=issued_by,
+                reference=invite_ref,
+                now=created_at,
+                reason=reason,
+            )
+            if idempotency_key is not None and fingerprint is not None:
+                self._remember(connection, issued_by, idempotency_key, fingerprint, invite_ref)
 
     def redeem_invite(
         self,
@@ -118,26 +212,17 @@ class SqlitePilotAccessStore:
             connection.execute("BEGIN IMMEDIATE")
             invite = connection.execute(
                 """SELECT * FROM subscriber_pilot_invites
-                   WHERE token_digest = ? AND expires_at > ?""",
+                   WHERE token_digest = ? AND expires_at > ? AND revoked_at IS NULL""",
                 (token_digest, redeemed_at.isoformat()),
             ).fetchone()
             if invite is None:
                 return None
             if invite["redeemed_at"] is not None:
-                if str(invite["redeemed_principal_id"]) != str(principal_id) or str(
-                    invite["redeemed_tenant_id"]
-                ) != str(tenant_id):
-                    return None
-                existing = connection.execute(
-                    """SELECT * FROM subscriber_pilot_grants
-                       WHERE invite_ref = ? AND revoked_at IS NULL AND expires_at > ?""",
-                    (str(invite["invite_ref"]), redeemed_at.isoformat()),
-                ).fetchone()
-                return None if existing is None else self._grant(existing)
+                return None
             existing = connection.execute(
                 """SELECT 1 FROM subscriber_pilot_grants
-                   WHERE principal_id = ? AND tenant_id = ? AND revoked_at IS NULL AND expires_at > ?""",
-                (principal_id, tenant_id, redeemed_at.isoformat()),
+                   WHERE principal_id = ? AND tenant_id = ?""",
+                (principal_id, tenant_id),
             ).fetchone()
             if existing is not None:
                 return None
@@ -166,6 +251,16 @@ class SqlitePilotAccessStore:
                 "SELECT * FROM subscriber_pilot_grants WHERE grant_ref = ?", (grant_ref,)
             ).fetchone()
             assert row is not None
+            self._audit(
+                connection,
+                action="REDEEMED",
+                actor=str(principal_id),
+                reference=str(invite["invite_ref"]),
+                now=redeemed_at,
+                reason="Authenticated one-use redemption",
+                tenant=str(tenant_id),
+                principal=str(principal_id),
+            )
             return self._grant(row)
 
     def active_grant(self, tenant_id: TenantId, *, now: datetime) -> PilotGrant | None:
@@ -201,4 +296,99 @@ class SqlitePilotAccessStore:
                    WHERE grant_ref = ? AND revoked_at IS NULL""",
                 (revoked_at.isoformat(), grant_ref),
             ).rowcount
+            if changed == 1:
+                self._audit(
+                    connection,
+                    action="GRANT_REVOKED",
+                    actor="operator-cli",
+                    reference=grant_ref,
+                    now=revoked_at,
+                    reason="Contingency revocation",
+                )
         return changed == 1
+
+    def inventory(self, *, now: datetime) -> dict[str, object]:
+        if now.tzinfo is None:
+            raise ValueError("aware time required")
+        with self._connect() as connection:
+            invites = connection.execute("""
+                SELECT invite_ref, issued_by, reason, created_at, expires_at,
+                    redeemed_at, redeemed_principal_id, redeemed_tenant_id, revoked_at
+                FROM subscriber_pilot_invites ORDER BY created_at DESC LIMIT 500
+            """).fetchall()
+            grants = connection.execute("""
+                SELECT grant_ref, invite_ref, principal_id, tenant_id, capacity,
+                    granted_at, expires_at, revoked_at
+                FROM subscriber_pilot_grants ORDER BY granted_at DESC LIMIT 500
+            """).fetchall()
+            audit = connection.execute("""
+                SELECT sequence, action, actor, reference, occurred_at, reason,
+                    tenant_id, principal_id FROM subscriber_pilot_audit
+                ORDER BY sequence DESC LIMIT 100
+            """).fetchall()
+
+        def state(row: sqlite3.Row, redeemed: bool = False) -> str:
+            if redeemed and row["redeemed_at"] is not None:
+                return "REDEEMED"
+            if row["revoked_at"] is not None:
+                return "REVOKED"
+            if datetime.fromisoformat(row["expires_at"]) <= now:
+                return "EXPIRED"
+            return "PENDING" if redeemed else "ACTIVE"
+
+        return {
+            "asOf": now.isoformat(),
+            "invites": [{**dict(row), "state": state(row, True), "capacity": 1} for row in invites],
+            "grants": [{**dict(row), "state": state(row)} for row in grants],
+            "audit": [dict(row) for row in audit],
+            "limit": 500,
+        }
+
+    def revoke_admin(
+        self,
+        *,
+        kind: str,
+        reference: str,
+        actor: str,
+        reason: str,
+        idempotency_key: str,
+        now: datetime,
+    ) -> None:
+        if now.tzinfo is None:
+            raise ValueError("aware time required")
+        fingerprint = hashlib.sha256(json.dumps([kind, reference, reason]).encode()).hexdigest()
+        table, column = (
+            ("subscriber_pilot_invites", "invite_ref")
+            if kind == "invite"
+            else ("subscriber_pilot_grants", "grant_ref")
+        )
+        with self._connect() as connection:
+            connection.execute("BEGIN IMMEDIATE")
+            if self._receipt(connection, actor, idempotency_key, fingerprint) is not None:
+                return
+            row = connection.execute(
+                f"SELECT * FROM {table} WHERE {column}=?", (reference,)
+            ).fetchone()
+            if row is None:
+                raise PilotOperationError("REFERENCE_NOT_FOUND")
+            if row["revoked_at"] is not None or (
+                kind == "invite" and row["redeemed_at"] is not None
+            ):
+                raise PilotOperationError("STATE_CONFLICT")
+            if datetime.fromisoformat(row["expires_at"]) <= now:
+                raise PilotOperationError("STATE_CONFLICT")
+            connection.execute(
+                f"UPDATE {table} SET revoked_at=? WHERE {column}=?",
+                (now.astimezone(UTC).isoformat(), reference),
+            )
+            self._audit(
+                connection,
+                action="INVITE_REVOKED" if kind == "invite" else "GRANT_REVOKED",
+                actor=actor,
+                reference=reference,
+                now=now,
+                reason=reason,
+                tenant=None if kind == "invite" else row["tenant_id"],
+                principal=None if kind == "invite" else row["principal_id"],
+            )
+            self._remember(connection, actor, idempotency_key, fingerprint, reference)
