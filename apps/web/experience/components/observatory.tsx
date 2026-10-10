@@ -50,6 +50,8 @@ export type ObservatoryProps = {
   replacementLocator: string; setReplacementLocator: (value: string) => void;
   /** Account-only capabilities. False in the public demo: same components, synthetic data. */
   canAct: boolean;
+  /** A statement above the reading, inside the main column (the demo's fictional-data notice). */
+  notice?: React.ReactNode;
   /** The menu's name for an organization, when the mode names it differently (the demo shows its domain). */
   menuName?: (item: SubscriberPortfolio["organizations"][number]) => string;
   /** One reading source for the desk and the organization view: the account's read, or the demo snapshot. */
@@ -263,6 +265,7 @@ export function Observatory(props: ObservatoryProps) {
     <MobileBar title={screen === "organization" && current ? nameOf(current) : screen === "desk" ? t("Tu cartera", "Your portfolio") : screen === "account" ? t("Cuenta", "Account") : t("Añadir organización", "Add organization")} onMenu={() => setRailOpen(true)}/>
     {railOpen && <RailSheet onClose={() => setRailOpen(false)}>{rail}</RailSheet>}
     <main id="obs-main" className="obs-main" tabIndex={-1}>
+      {props.notice}
       {(props.message || props.paymentUrl) && <div className="obs-toast" role="status" aria-live="polite">{props.message && <p>{props.message}</p>}{props.paymentUrl && <a className="obs-button obs-primary" href={props.paymentUrl}>{t("Continuar al pago", "Continue to payment")}<ArrowRight size={16} aria-hidden="true"/></a>}</div>}
       {screen === "desk" && <DeskView items={items} readings={deskReadings} seen={seen} nameOf={nameOf} onOpen={openOrganization} onAdd={() => openScreen("add")} reportLit={reportLit}/>}
       {screen === "add" && <AddView {...props} first={!items.length} onDone={() => openScreen("desk")}/>}
