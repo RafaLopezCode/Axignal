@@ -56,4 +56,3 @@ disposable pilot, preserving its history.
 Record timestamps, status codes and references only. Never save invitation/session
 secrets in tickets, screenshots or logs. Do not perform real payments. A provider or
 runtime double is local validation, not real production E2E.
-

@@ -7,7 +7,7 @@
 - [x] T006 Admin UI, secure proxy, i18n.
 - [x] T007 Store/security/HTTP and #200 regression coverage.
 - [x] T008 Browser desktop/mobile, gates and Graphify update.
-- [ ] T009 Converge, PR and rollout handoff.
+- [x] T009 Converge, PR and rollout handoff.
 - [ ] T010 Authorized production deployment and real Google/pilot E2E.
 
 ## Phase 2: Convergence

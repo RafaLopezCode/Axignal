@@ -11,4 +11,3 @@ All data is isolated local QA. These are not production screenshots.
 
 No secret is present. The copied invitation field was closed before Admin screenshots.
 Human visual acceptance is pending under .agents/skills/axignal-design-director/SKILL.md.
-
