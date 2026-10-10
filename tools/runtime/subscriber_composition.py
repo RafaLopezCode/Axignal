@@ -27,6 +27,7 @@ from application.organization_admission.service import (
     RegistryIdentitySource,
 )
 from application.subscriber_access.pilot import PilotAccessService
+from application.subscriber_access.staff_capacity import StaffCapacityReader, StaffCapacityTotal
 from application.subscriber_identity.runtime import (
     Clock,
     OidcProviderConfig,
@@ -67,12 +68,14 @@ from pipeline.source_acquisition import (
     ContentAddressedArtifactStore,
 )
 from pipeline.subscriber_access.sqlite_store import SqlitePilotAccessStore
+from tools.runtime.admin_staff_capacity import StaffOperations
 from tools.runtime.first_observation import (
     FirstObservationOverrides,
     FirstObservationRuntime,
     build_first_observation,
 )
 from tools.runtime.semantic_layer import semantic_screen_from_env
+from tools.runtime.staff_capacity import build_staff_capacity
 from tools.runtime.subscriber_axent import build_subscriber_axent
 from tools.runtime.subscriber_checkout import (
     StripeSubscriberRuntimeSettings,
@@ -148,8 +151,17 @@ class _ProjectionEntitlements(EntitlementPort):
     clock: Clock
     environment_ref: str | None
     pilot_access: PilotAccessService | None = None
+    # Staff-provisioned capacity (issue #177): separately governed, never a payment.
+    staff_capacity: StaffCapacityReader | None = None
 
-    policy_version = "subscriber-entitlement-snapshot-v2"
+    policy_version = "subscriber-entitlement-snapshot-v3"
+
+    def _staff(self, tenant_id: TenantId) -> StaffCapacityTotal | None:
+        if self.staff_capacity is None:
+            return None
+        total = self.staff_capacity.active_total(tenant_id, now=self.clock.now())
+        return total if total.capacity > 0 else None
+
     maximum_age = timedelta(minutes=5)
 
     def _read(self, tenant_id: TenantId) -> tuple[BillingProjection | None, Currentness]:
@@ -200,12 +212,16 @@ class _ProjectionEntitlements(EntitlementPort):
 
     def snapshot(self, tenant_id: TenantId) -> EntitlementSnapshot:
         projection, currentness = self._read(tenant_id)
+        staff = self._staff(tenant_id)
         if projection is not None and currentness is Currentness.CURRENT:
+            # Verified paid capacity plus any staff-funded capacity; each keeps its provenance.
             return EntitlementSnapshot(
-                projection.effective_capacity,
+                (projection.effective_capacity or 0) + (0 if staff is None else staff.capacity),
                 Currentness.CURRENT,
                 projection.provider_state_at,
             )
+        if staff is not None:
+            return EntitlementSnapshot(staff.capacity, Currentness.CURRENT, staff.confirmed_at)
         if self.pilot_access is not None:
             grant = self.pilot_access.active_grant(tenant_id, now=self.clock.now())
             if grant is not None:
@@ -216,8 +232,11 @@ class _ProjectionEntitlements(EntitlementPort):
 
     def source(self, tenant_id: TenantId) -> str:
         projection, currentness = self._read(tenant_id)
+        staff = self._staff(tenant_id)
         if projection is not None and currentness is Currentness.CURRENT:
-            return "BILLING"
+            return "BILLING+STAFF_GRANT" if staff is not None else "BILLING"
+        if staff is not None:
+            return "STAFF_GRANT"
         if self.pilot_access is not None:
             grant = self.pilot_access.active_grant(tenant_id, now=self.clock.now())
             if grant is not None:
@@ -878,11 +897,17 @@ def build_subscriber_facade(
         if settings.pilot_enabled
         else None
     )
+    staff_capacity = build_staff_capacity(
+        root,
+        enabled=settings.staff_capacity_enabled,
+        internal_tenant=settings.staff_internal_tenant,
+    )
     entitlements = _ProjectionEntitlements(
         billing_store,
         effective_clock,
         environment_ref,
         pilot_access,
+        staff_capacity,
     )
     checkout: SubscriberCheckoutRuntime | None = None
     checkout_available = False
@@ -1055,6 +1080,15 @@ def build_subscriber_facade(
         pilot=None if pilot_access is None else _PilotHttpAdapter(pilot_access, effective_clock),
         mcp=mcp_consent,
         mcp_http=mcp_http,
+        staff=None
+        if staff_capacity is None
+        else StaffOperations(
+            capacity=staff_capacity,
+            add_for_tenant=portfolio.add_for_tenant_by_staff,
+            entitlement_source=entitlements.source,
+            audit=staff_capacity.audit,
+            record_audit=staff_capacity.record_audit,
+        ),
         # AXENT answers through the same authorized read; without a reasoner it stays
         # deterministic or extractive and never calls a model.
         axent=build_subscriber_axent(

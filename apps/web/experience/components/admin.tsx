@@ -3,6 +3,7 @@ import Link from "next/link";
 import { useState, useRef, useEffect } from "react";
 import { CustomerZero } from "./customer-zero";
 import { PilotTestAccounts } from "./pilot-test-accounts";
+import { StaffCapacity } from "./staff-capacity";
 import {
   ArrowUpRight,
   ArrowRight,
@@ -283,6 +284,7 @@ export function Admin({
                     {t("Read models ilustrativos", "Illustrative read models")}
                   </span>
                 </div>
+                {domainId === "customers" && <StaffCapacity />}
                 {domainId === "customers" && <PilotTestAccounts />}
                 {domainId === "command" && (
                   <div className="admin-attention">

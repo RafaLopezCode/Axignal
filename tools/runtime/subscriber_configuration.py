@@ -36,6 +36,8 @@ _KEYS = frozenset(
         "AXIGNAL_STRIPE_ADDITIONAL_XEED_PRICE_REF",
         "AXIGNAL_SUBSCRIBER_OBSERVATION_PLAN_FILE",
         "AXIGNAL_PUBLIC_UNDERSTANDING_ENABLED",
+        "AXIGNAL_STAFF_CAPACITY_ENABLED",
+        "AXIGNAL_STAFF_INTERNAL_TENANT_ID",
         "AXIGNAL_FIRST_OBSERVATION_ENABLED",
         "AXIGNAL_FIRST_OBSERVATION_WORKER",
         "AXIGNAL_FIRST_OBSERVATION_DAILY_JOBS",
@@ -128,6 +130,16 @@ class SubscriberSettings:
     @property
     def contracting_enabled(self) -> bool:
         return self.enabled and self.contracting_requested and self.legal_ready
+
+    @property
+    def staff_capacity_enabled(self) -> bool:
+        """Staff-provisioned capacity (issue #177) is off unless the operator enables it."""
+        return self.enabled and _flag(self.values.get("AXIGNAL_STAFF_CAPACITY_ENABLED", "false"))
+
+    @property
+    def staff_internal_tenant(self) -> str | None:
+        value = self.values.get("AXIGNAL_STAFF_INTERNAL_TENANT_ID", "").strip()
+        return value or None
 
     @property
     def pilot_enabled(self) -> bool:

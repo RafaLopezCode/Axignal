@@ -19,7 +19,7 @@ from datetime import UTC, datetime, timedelta
 from http import HTTPStatus
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
-from urllib.parse import unquote, urlsplit
+from urllib.parse import parse_qs, unquote, urlsplit
 
 from application.admin_access import (
     AdminAccessService,
@@ -80,6 +80,8 @@ from application.admin_weekly_brief import (
 from application.admin_xeed_observatory import project_xeed_axigland_observatory
 from application.economic_discovery.observation_reuse import ObservationReusePolicy
 from application.economic_discovery.temporal_currentness import TemporalCurrentnessPolicy
+from application.subscriber_access.staff_capacity import StaffCapacityError, StaffCapacityFailure
+from application.subscriber_portfolio.models import PortfolioError
 from domain.admin_access import AdminAssurance, AdminAuthorizationGrant, AdminRiskClass, AdminScope
 from domain.admin_acquisition import MarketingEventKind
 from domain.admin_api_operations import ApiOperationObservation
@@ -117,6 +119,8 @@ from tools.runtime.admin_access import (
     build_validation_only_admin_access,
 )
 from tools.runtime.admin_pilot_accounts import pilot_accounts_request
+from tools.runtime.admin_staff_capacity import ROUTE as STAFF_CAPACITY_ROUTE
+from tools.runtime.admin_staff_capacity import staff_capacity_request
 from tools.runtime.config import RuntimeConfig
 from tools.runtime.first_proof import (
     FirstProofInsufficientEvidence,
@@ -1632,6 +1636,61 @@ def make_handler(runtime: AxignalRuntime) -> type[BaseHTTPRequestHandler]:
             except (OSError, sqlite3.Error):
                 self._json({"reason": "PILOT_ACCOUNTS_UNAVAILABLE"}, HTTPStatus.SERVICE_UNAVAILABLE)
 
+        def _staff_capacity(self, action: str | None) -> None:
+            """Staff-provisioned capacity (issue #177); every write needs step-up."""
+            staff = (
+                None if runtime.subscriber is None else getattr(runtime.subscriber, "staff", None)
+            )
+            if runtime.admin_access is None or staff is None:
+                self._json({"reason": "STAFF_CAPACITY_DISABLED"}, HTTPStatus.SERVICE_UNAVAILABLE)
+                return
+            try:
+                payload: dict[str, object] | None = None
+                if action is not None:
+                    if self.headers.get("Content-Type", "").split(";")[0] != "application/json":
+                        self._json({"reason": "JSON_REQUIRED"}, HTTPStatus.UNSUPPORTED_MEDIA_TYPE)
+                        return
+                    length = int(self.headers.get("Content-Length", "0"))
+                    if length < 2 or length > 4096:
+                        self._json({"reason": "BODY_LIMIT"}, HTTPStatus.REQUEST_ENTITY_TOO_LARGE)
+                        return
+                    raw = json.loads(self.rfile.read(length).decode("utf-8"))
+                    if not isinstance(raw, dict):
+                        raise ValueError("staff capacity request must be an object")
+                    payload = raw
+                query = {k: v[0] for k, v in parse_qs(urlsplit(self.path).query).items() if v}
+                self._json(
+                    staff_capacity_request(
+                        AdminHttpAccessGuard(runtime.admin_access),
+                        staff,
+                        authorization=self.headers.get("Authorization"),
+                        action=action or "read",
+                        query=query,
+                        payload=payload,
+                        now=datetime.now(UTC),
+                    )
+                )
+            except AdminAuthenticationError:
+                self._json({"reason": "ADMIN_SESSION_REQUIRED"}, HTTPStatus.UNAUTHORIZED)
+            except AdminAuthorizationError as error:
+                reason = "STEP_UP_REQUIRED" if "step-up" in str(error) else "ADMIN_SCOPE_REQUIRED"
+                self._json({"reason": reason}, HTTPStatus.FORBIDDEN)
+            except StaffCapacityError as error:
+                status = {
+                    StaffCapacityFailure.SCOPE_REQUIRED: HTTPStatus.FORBIDDEN,
+                    StaffCapacityFailure.STEP_UP_REQUIRED: HTTPStatus.FORBIDDEN,
+                    StaffCapacityFailure.GRANT_NOT_FOUND: HTTPStatus.NOT_FOUND,
+                    StaffCapacityFailure.TENANT_UNKNOWN: HTTPStatus.NOT_FOUND,
+                    StaffCapacityFailure.IDEMPOTENCY_CONFLICT: HTTPStatus.CONFLICT,
+                }.get(error.failure, HTTPStatus.BAD_REQUEST)
+                self._json({"reason": error.failure.value, "detail": str(error)}, status)
+            except PortfolioError as error:
+                self._json({"reason": error.failure.value}, HTTPStatus.CONFLICT)
+            except (ValueError, UnicodeError):
+                self._json({"reason": "INVALID_STAFF_CAPACITY_REQUEST"}, HTTPStatus.BAD_REQUEST)
+            except (OSError, sqlite3.Error):
+                self._json({"reason": "STAFF_CAPACITY_UNAVAILABLE"}, HTTPStatus.SERVICE_UNAVAILABLE)
+
         def _subscriber(self, method: str, path: str) -> None:
             if runtime.subscriber is None:
                 self._json(
@@ -2015,6 +2074,9 @@ def make_handler(runtime: AxignalRuntime) -> type[BaseHTTPRequestHandler]:
             if request_path == "/internal/admin/pilot-test-accounts":
                 self._pilot_accounts()
                 return
+            if request_path == STAFF_CAPACITY_ROUTE:
+                self._staff_capacity(None)
+                return
             if request_path == "/api/subscriber-context":
                 reading_grant = None
                 if runtime.admin_access is not None:
@@ -2098,6 +2160,9 @@ def make_handler(runtime: AxignalRuntime) -> type[BaseHTTPRequestHandler]:
                 return
             if request_path == "/internal/admin/pilot-test-accounts":
                 self._pilot_accounts(write=True)
+                return
+            if request_path.startswith(STAFF_CAPACITY_ROUTE + "/") and request_path.count("/") == 4:
+                self._staff_capacity(request_path.rsplit("/", 1)[1])
                 return
             if request_path == "/internal/webhooks/subscriber-stripe":
                 self._subscriber_stripe_webhook()

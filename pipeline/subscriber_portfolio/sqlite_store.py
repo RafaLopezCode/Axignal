@@ -570,6 +570,106 @@ class SqliteSubscriberPortfolioStore:
             raise RuntimeError("new Focus was not persisted")
         return self._entry(row), True
 
+    def staff_add_if_capacity(
+        self,
+        tenant_id: TenantId,
+        actor: str,
+        organization: Organization,
+        capacity: int,
+        request: AddOrganizationRequest,
+        now: datetime,
+    ) -> tuple[PortfolioEntry | None, bool]:
+        """Staff adds a Focus for a tenant it does not belong to (issue #177).
+
+        No subscriber membership is borrowed or created: the caller is an authorized
+        Admin operator, recorded as a distinct STAFF_ADD operation whose fingerprint
+        carries the actor. The tenant must exist with an active member, capacity is the
+        tenant's own entitlement and a full portfolio returns no entry, never a checkout.
+        """
+        if (
+            not isinstance(organization, Organization)
+            or capacity < 0
+            or not actor.startswith("admin:")
+        ):
+            raise PortfolioError(PortfolioFailure.ORGANIZATION_INVALID)
+        fingerprint = self._fingerprint(
+            ["STAFF_ADD", actor, request.locator, request.display_label, organization.id]
+        )
+        with self._connect() as connection:
+            connection.execute("BEGIN IMMEDIATE")
+            member = connection.execute(
+                """SELECT 1 FROM subscriber_memberships
+                   WHERE tenant_id = ? AND revoked_at IS NULL LIMIT 1""",
+                (tenant_id,),
+            ).fetchone()
+            if member is None:
+                raise PortfolioError(PortfolioFailure.ACCESS_DENIED)
+            prior = self._existing_command(
+                connection, tenant_id, request.idempotency_key, "STAFF_ADD", fingerprint
+            )
+            if prior is not None:
+                if prior["focus_id"] is None:
+                    return None, False
+                row = self._get_entry(connection, tenant_id, XeedId(str(prior["focus_id"])))
+                return (None, False) if row is None else (self._entry(row), False)
+            existing = connection.execute(
+                """SELECT * FROM subscriber_focuses WHERE tenant_id = ?
+                   AND organization_id = ? AND status IN ('ACTIVE','PAUSED')""",
+                (tenant_id, organization.id),
+            ).fetchone()
+            if existing is not None:
+                entry = self._entry(existing)
+                self._record_command(
+                    connection,
+                    tenant_id,
+                    request.idempotency_key,
+                    "STAFF_ADD",
+                    fingerprint,
+                    entry.focus_id,
+                    None,
+                    AddStatus.ALREADY_PRESENT.value,
+                    now,
+                )
+                return entry, False
+            used = int(
+                connection.execute(
+                    """SELECT COUNT(*) FROM subscriber_focuses
+                       WHERE tenant_id = ? AND status IN ('ACTIVE','PAUSED')""",
+                    (tenant_id,),
+                ).fetchone()[0]
+            )
+            if used >= capacity:
+                return None, False
+            focus_id = XeedId(f"focus_{uuid.uuid4().hex}")
+            connection.execute(
+                """INSERT INTO subscriber_focuses(
+                       focus_id, tenant_id, organization_id, label, status, created_at, updated_at
+                   ) VALUES (?, ?, ?, ?, 'ACTIVE', ?, ?)""",
+                (
+                    focus_id,
+                    tenant_id,
+                    organization.id,
+                    request.display_label,
+                    now.isoformat(),
+                    now.isoformat(),
+                ),
+            )
+            self._record_command(
+                connection,
+                tenant_id,
+                request.idempotency_key,
+                "STAFF_ADD",
+                fingerprint,
+                focus_id,
+                None,
+                AddStatus.CREATED.value,
+                now,
+            )
+            row = self._get_entry(connection, tenant_id, focus_id)
+            if row is None:
+                raise RuntimeError("new Focus was not persisted")
+            return self._entry(row), True
+
     @staticmethod
     def _complete_pending_add(
         connection: sqlite3.Connection,

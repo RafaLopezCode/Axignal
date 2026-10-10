@@ -121,6 +121,16 @@ class SubscriberPortfolioStore(Protocol):
         now: datetime,
     ) -> tuple[PortfolioEntry | None, bool]: ...
 
+    def staff_add_if_capacity(
+        self,
+        tenant_id: TenantId,
+        actor: str,
+        organization: Organization,
+        capacity: int,
+        request: AddOrganizationRequest,
+        now: datetime,
+    ) -> tuple[PortfolioEntry | None, bool]: ...
+
     def transition(
         self,
         context: TrustedSubscriberContext,
@@ -268,6 +278,44 @@ class SubscriberPortfolioService:
             self._observation.trigger(context, entry.focus_id, request.idempotency_key)
             return AddResult(AddStatus.CREATED, entry)
         return AddResult(AddStatus.ALREADY_PRESENT, entry)
+
+    def add_for_tenant_by_staff(
+        self,
+        tenant_id: TenantId,
+        actor: str,
+        request: AddOrganizationRequest,
+    ) -> AddResult:
+        """Staff-operated add into a customer or internal tenant, without checkout.
+
+        Authorization (Admin scope, step-up) is enforced by the Admin boundary and the
+        staff capacity service; here the tenant's own entitlement still decides capacity.
+        Identity is resolved exactly as for a subscriber: a pending or rejected locator
+        returns its status and creates nothing.
+        """
+        now = self._clock.now()
+        snapshot = self._entitlement.snapshot(tenant_id)
+        if (
+            snapshot is None
+            or snapshot.capacity is None
+            or snapshot.currentness is not Currentness.CURRENT
+            or snapshot.confirmed_at is None
+            or snapshot.confirmed_at > now
+        ):
+            return AddResult(AddStatus.CAPACITY_UNKNOWN)
+        resolved = self._organizations.resolve(request.locator)
+        if isinstance(resolved, OrganizationIdentityPending):
+            return AddResult(AddStatus.IDENTITY_PENDING, identity_reason=resolved.reason_code)
+        if isinstance(resolved, OrganizationIdentityRejected):
+            return AddResult(AddStatus.IDENTITY_REJECTED, identity_reason=resolved.reason_code)
+        if not isinstance(resolved, Organization):
+            raise PortfolioError(PortfolioFailure.ORGANIZATION_INVALID)
+        entry, created = self._portfolio.staff_add_if_capacity(
+            tenant_id, actor, resolved, snapshot.capacity, request, now
+        )
+        if entry is None:
+            # Never a checkout from a staff action: capacity is granted, not sold, here.
+            return AddResult(AddStatus.CAPACITY_REQUIRED)
+        return AddResult(AddStatus.CREATED if created else AddStatus.ALREADY_PRESENT, entry)
 
     def _request_capacity(
         self,
