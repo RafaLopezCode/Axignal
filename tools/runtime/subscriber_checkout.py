@@ -170,6 +170,10 @@ class SubscriberCheckoutRuntime:
         self._require_enabled()
         return self._service.reconcile_pending(principal=principal, tenant_id=tenant_id, now=now)
 
+    def reverify_current_projection(self, *, tenant_id: TenantId, now: datetime) -> str:
+        self._require_enabled()
+        return self._service.reverify_current_projection(tenant_id=tenant_id, now=now)
+
     def handle_signed_webhook(
         self, *, raw_body: bytes, stripe_signature: str, received_at: datetime
     ) -> WebhookAcceptanceResult:
