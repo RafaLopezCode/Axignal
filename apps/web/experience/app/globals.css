@@ -6867,3 +6867,22 @@ html[data-motion="reduced"] {
 .staff-capacity-list li { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 16px; padding: 10px 0; border-top: 1px solid var(--line); }
 .staff-capacity-list li > :first-child { min-width: 0; }
 .staff-capacity-revoke { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 8px; width: 100%; }
+
+/* Clients and access inherits private Admin grammar. */
+.customer-access-tabs { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:20px; }
+.customer-access-tabs [aria-pressed="true"] { border-color:var(--blue); font-weight:600; }
+.customer-access-records { list-style:none; padding:0; }
+.customer-access-records li { display:flex; flex-direction:column; align-items:flex-start; gap:8px; padding:16px 0; border-bottom:1px solid var(--line); }
+.customer-access code { overflow-wrap:anywhere; white-space:normal; font-size:12px; }
+.customer-access-secret { display:flex; flex-wrap:wrap; gap:12px; align-items:center; }
+.customer-access-secret label { flex:1 1 260px; }
+.customer-access input, .customer-access select { max-width:100%; }
+.customer-access .admin-table-toolbar > label { display:flex; flex-direction:column; gap:8px; }
+.customer-access input:not([type="number"]), .customer-access-secret input { width:100%; }
+@media(max-width:600px) { .customer-access .admin-table-toolbar { flex-direction:column; align-items:stretch; } .customer-access-tabs .button { flex:1 1 auto; } }
+
+.customer-access input[type="number"], .customer-access select, .customer-access-secret input, .customer-access [aria-label] > label input {
+  min-height:44px; padding:8px 12px; border:1px solid var(--line); border-radius:var(--radius); background:#fff; color:var(--ink); font:inherit;
+}
+.customer-access-records li p { margin:0; }
+.customer-access > [role="alert"] { border-left:3px solid var(--blue); padding-left:12px; }
