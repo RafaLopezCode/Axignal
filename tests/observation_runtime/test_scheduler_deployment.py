@@ -32,8 +32,9 @@ class SchedulerUnitContract(unittest.TestCase):
         )
         self.assertEqual(
             service["Service"]["ExecStopPost"],
-            "-/usr/bin/docker stop --time 15 axignal-prod-observation-daily",
+            "-/bin/sh -c 'if /usr/bin/docker container inspect axignal-prod-observation-daily >/dev/null 2>&1; then /usr/bin/docker stop --time 15 axignal-prod-observation-daily >/dev/null; fi'",
         )
+        self.assertIn("$$AXIGNAL_OBSERVATION_RUNTIME_ENABLED", service["Service"]["ExecCondition"])
         self.assertIn(
             "AXIGNAL_OBSERVATION_RUNTIME_ENABLED=false",
             (DEPLOY / "observation-scheduler.env.example").read_text(),
@@ -131,7 +132,8 @@ sys.exit(subprocess.run([sys.executable,'-m','tools.runtime.observation_daily'],
         self.assertEqual(json.loads(result.stdout)["state"], "DISABLED")
         (self.config / "enrollment.json").unlink()
         result = self.run_script()
-        self.assertEqual(json.loads(result.stdout)["state"], "NOT_CONFIGURED")
+        self.assertEqual(result.returncode, 2)
+        self.assertEqual(json.loads(result.stderr)["state"], "NOT_CONFIGURED")
         self.assertFalse(self.calls())
         self.assertFalse((self.data / "observation-runtime.sqlite3").exists())
 
