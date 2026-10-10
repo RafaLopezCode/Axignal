@@ -244,9 +244,9 @@ test("re-observing the same public homepage is not news: the finding's change ke
     evidenceAccess: "AVAILABLE", sourceRefs: ["https://example.test/"], observationSupportRefs: ["s"], unknowns: [],
     evidenceNarrative: { xignalId: "x", focusStepId: "s", steps: [] },
   };
-  const reading = (id: string, observedAt: string, currentness: "CURRENT" | "STALE" = "CURRENT", interpretation = "The homepage was reachable.", sourceRefs = ["https://example.test/"]) => ({
+  const reading = (id: string, observedAt: string, currentness: "CURRENT" | "STALE" = "CURRENT", interpretation = "The homepage was reachable.", sourceRefs = ["https://example.test/"], epistemicState: "OBSERVED" | "UNKNOWN" = "OBSERVED") => ({
     projection: { realityLevel: "LIVE", runtimeCodeSha: "sha", lifecycleStatus: "LIVE", context: { id: "c", label: "c" },
-      organization: { id: "o", name: "Example" }, nodes: [{ ...base, id, observedAt, currentness, interpretation, sourceRefs }],
+      organization: { id: "o", name: "Example" }, nodes: [{ ...base, id, observedAt, currentness, interpretation, sourceRefs, epistemicState }],
       cognition: { asOf: observedAt, sources: [], signals: [{ id, familyId: "presence" }], opportunities: [] },
       temporalHistory: { disposition: "EMPTY", items: [] }, today: { disposition: "READY", items: [] }, reloadContinuity: "PERSISTED_RUNTIME_READ_MODEL" } as unknown as Reading["projection"],
     firstObservation: null,
@@ -263,4 +263,6 @@ test("re-observing the same public homepage is not news: the finding's change ke
   const sameSourcesReordered = insightsFor(reading("xignal:fff", "2026-10-23T00:00:00+00:00", "CURRENT", undefined, ["https://b.example.test/", "https://a.example.test/"]), en, "en")[0].changeKey;
   const originalSources = insightsFor(reading("xignal:ggg", "2026-10-24T00:00:00+00:00", "CURRENT", undefined, ["https://a.example.test/", "https://b.example.test/"]), en, "en")[0].changeKey;
   assert.equal(sameSourcesReordered, originalSources, "reordered source links alone are not a change");
+  const statusChanged = insightsFor(reading("xignal:hhh", "2026-10-25T00:00:00+00:00", "CURRENT", undefined, ["https://example.test/"], "UNKNOWN"), en, "en")[0].changeKey;
+  assert.notEqual(statusChanged, first, "OBSERVED to UNKNOWN is a material epistemic change");
 });
