@@ -202,6 +202,10 @@ class BillingProjection:
     provider_state_at: datetime | None
     paid_through: datetime | None
     verified_invoice_ref: str | None = None
+    # When AXIGNAL last retrieved and verified this provider state. Distinct from
+    # provider_state_at (when the subscription last changed at the provider): an
+    # unchanged subscription stays valid; operational freshness follows verification.
+    verified_at: datetime | None = None
 
     def __post_init__(self) -> None:
         if not all(
@@ -218,9 +222,13 @@ class BillingProjection:
             type(self.effective_capacity) is not int or self.effective_capacity < 1
         ):
             raise ValueError("effective capacity must be a positive integer or UNKNOWN")
-        for value in (self.provider_state_at, self.paid_through):
+        for value in (self.provider_state_at, self.paid_through, self.verified_at):
             if value is not None and (value.tzinfo is None or value.utcoffset() is None):
                 raise ValueError("billing projection times must be timezone-aware")
+        if self.verified_at is not None and (
+            self.provider_state_at is None or self.verified_at < self.provider_state_at
+        ):
+            raise ValueError("a verification cannot precede the provider state it verified")
 
 
 @dataclass(frozen=True, slots=True)
@@ -519,6 +527,21 @@ class SubscriberCheckoutService:
                 self._store.mark_projection_unknown(tenant_id)  # type: ignore[attr-defined]
                 outcomes.append("UNKNOWN")
         return tuple(outcomes)
+
+    def reverify_current_projection(self, *, tenant_id: TenantId, now: datetime) -> str:
+        """Re-read the provider for a Tenant's existing subscription.
+
+        Read-only at the provider: it buys, changes and grants nothing. Only a
+        fully re-validated provider state (items, payment, lifecycle, paid-through)
+        can refresh the projection; anything else leaves it without capacity. A
+        provider failure keeps the projection as it is (already not current).
+        """
+        if self._reconciler is None or self._store.get_billing_projection(tenant_id) is None:
+            return "UNAVAILABLE"
+        try:
+            return str(self._reconciler.refresh_current_projection(tenant_id, now=now).value)
+        except Exception:
+            return "UNKNOWN"
 
     def get_purchase_status(
         self,

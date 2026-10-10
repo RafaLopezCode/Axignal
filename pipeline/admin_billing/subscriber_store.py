@@ -7,6 +7,7 @@ import json
 import sqlite3
 from dataclasses import asdict
 from datetime import UTC, datetime
+from enum import StrEnum
 from pathlib import Path
 
 from application.admin_billing.subscriber_billing import (
@@ -27,6 +28,33 @@ from domain.identity import PrincipalId, TenantId
 
 class SubscriberStoreConflict(ValueError):
     """An idempotent request conflicts with previously durable state."""
+
+
+class _Reverification(StrEnum):
+    NEWER = "NEWER"
+    NOT_NEWER = "NOT_NEWER"
+
+
+def _reverification(prior_json: str, candidate_json: str) -> _Reverification | None:
+    """Classify a write that only re-verifies the same provider state.
+
+    It is a re-verification when every projected fact is identical and only the
+    verification time differs. A newer verification refreshes currentness; an
+    older or equal one is ignored. Any other difference (capacity, payment,
+    paid-through, invoice, binding) is not a re-verification and keeps the
+    existing equal-state-time rules: contradictory evidence never refreshes.
+    """
+    prior = json.loads(prior_json)
+    candidate = json.loads(candidate_json)
+    prior_verified = prior.pop("verified_at", None)
+    candidate_verified = candidate.pop("verified_at", None)
+    if prior != candidate or candidate_verified is None:
+        return None
+    if prior_verified is not None and datetime.fromisoformat(
+        candidate_verified
+    ) <= datetime.fromisoformat(prior_verified):
+        return _Reverification.NOT_NEWER
+    return _Reverification.NEWER
 
 
 class SqliteSubscriberBillingStore:
@@ -548,8 +576,9 @@ class SqliteSubscriberBillingStore:
         payload["tenant_id"] = TenantId(payload["tenant_id"])
         payload["payment_state"] = PaymentState(payload["payment_state"])
         payload["lifecycle"] = SubscriptionLifecycle(payload["lifecycle"])
-        for name in ("provider_state_at", "paid_through"):
-            if payload[name] is not None:
+        for name in ("provider_state_at", "paid_through", "verified_at"):
+            # Projections written before verification time existed have no verified_at.
+            if payload.get(name) is not None:
                 payload[name] = datetime.fromisoformat(payload[name])
         return BillingProjection(binding=binding, **payload)
 
@@ -569,6 +598,12 @@ class SqliteSubscriberBillingStore:
                     )
                 if projection.provider_state_at == prior_at:
                     if str(prior["payload_json"]) == serialized:
+                        return
+                    reverification = _reverification(str(prior["payload_json"]), serialized)
+                    if reverification is _Reverification.NOT_NEWER:
+                        return
+                    if reverification is _Reverification.NEWER:
+                        self._write_projection(connection, projection, serialized)
                         return
                     prior_payload = json.loads(str(prior["payload_json"]))
                     prior_binding = prior_payload.get("binding")
@@ -616,20 +651,26 @@ class SqliteSubscriberBillingStore:
                         raise SubscriberStoreConflict(
                             "equal provider state time cannot raise billing capacity"
                         )
-            connection.execute(
-                """INSERT INTO subscriber_billing_projection(tenant_id, provider_state_at, payload_json)
-                   VALUES (?, ?, ?)
-                   ON CONFLICT(tenant_id) DO UPDATE SET
-                     provider_state_at=excluded.provider_state_at,
-                     payload_json=excluded.payload_json""",
-                (
-                    str(projection.tenant_id),
-                    None
-                    if projection.provider_state_at is None
-                    else projection.provider_state_at.isoformat(),
-                    serialized,
-                ),
-            )
+            self._write_projection(connection, projection, serialized)
+
+    @staticmethod
+    def _write_projection(
+        connection: sqlite3.Connection, projection: BillingProjection, serialized: str
+    ) -> None:
+        connection.execute(
+            """INSERT INTO subscriber_billing_projection(tenant_id, provider_state_at, payload_json)
+               VALUES (?, ?, ?)
+               ON CONFLICT(tenant_id) DO UPDATE SET
+                 provider_state_at=excluded.provider_state_at,
+                 payload_json=excluded.payload_json""",
+            (
+                str(projection.tenant_id),
+                None
+                if projection.provider_state_at is None
+                else projection.provider_state_at.isoformat(),
+                serialized,
+            ),
+        )
 
     def mark_projection_unknown(self, tenant_id: TenantId) -> None:
         projection = self.get_billing_projection(tenant_id)
@@ -659,7 +700,7 @@ class SqliteSubscriberBillingStore:
         payload["tenant_id"] = str(projection.tenant_id)
         payload["payment_state"] = projection.payment_state.value
         payload["lifecycle"] = projection.lifecycle.value
-        for name in ("provider_state_at", "paid_through"):
+        for name in ("provider_state_at", "paid_through", "verified_at"):
             value = getattr(projection, name)
             payload[name] = None if value is None else value.isoformat()
         if projection.binding is not None:

@@ -130,6 +130,7 @@ class _ControlledBillingProvider:
     def __init__(self, clock: _Clock) -> None:
         self.clock = clock
         self.paid = False
+        self.paid_through: datetime | None = None
         self.current_capacity: int | None = None
         self.pending_capacity: int | None = None
         self.invoice_ref = "invoice:initial"
@@ -211,7 +212,7 @@ class _ControlledBillingProvider:
             current_snapshot=current_snapshot,
             payment_state=PaymentState.VERIFIED if self.paid else PaymentState.UNKNOWN,
             lifecycle=SubscriptionLifecycle.ELIGIBLE,
-            paid_through=self.clock.now() + timedelta(days=30) if self.paid else None,
+            paid_through=self.paid_through if self.paid else None,
             invoice_ref=self.invoice_ref,
         )
 
@@ -246,7 +247,7 @@ class _ControlledBillingProvider:
             snapshot=snapshot,
             payment_state=payment_state,
             lifecycle=SubscriptionLifecycle.ELIGIBLE,
-            paid_through=self.clock.now() + timedelta(days=30) if self.paid else None,
+            paid_through=self.paid_through if self.paid else None,
             additional_item_ref=None if visible_capacity == 1 else "subscription-item:addon",
             invoice_ref=self.invoice_ref,
         )
@@ -296,6 +297,8 @@ class _ControlledBillingProvider:
             self.pending_capacity = None
         self.paid = True
         self.state_at = self.clock.advance()
+        # Like a provider's current period end: fixed when paid, not moving with each read.
+        self.paid_through = self.state_at + timedelta(days=30)
 
 
 def _items(capacity: int) -> tuple[NormalizedRecurringItem, ...]:

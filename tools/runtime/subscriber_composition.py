@@ -167,6 +167,9 @@ class _ProjectionEntitlements(EntitlementPort):
         total = self.staff_capacity.active_total(tenant_id, now=self.clock.now())
         return total if total.capacity > 0 else None
 
+    # Operational freshness of AXIGNAL's last verification with the provider. It is
+    # not measured from the provider's last change: an unchanged subscription stays
+    # valid, but only while a recent verification confirms it.
     maximum_age = timedelta(minutes=5)
 
     def _read(self, tenant_id: TenantId) -> tuple[BillingProjection | None, Currentness]:
@@ -182,7 +185,12 @@ class _ProjectionEntitlements(EntitlementPort):
             return projection, Currentness.UNKNOWN
         if projection.provider_state_at > now:
             return projection, Currentness.UNKNOWN
-        if now - projection.provider_state_at > self.maximum_age:
+        # Projections written before verification time existed fall back to the
+        # provider state time: the previous, stricter rule.
+        verified_at = projection.verified_at or projection.provider_state_at
+        if verified_at > now:
+            return projection, Currentness.UNKNOWN
+        if now - verified_at > self.maximum_age:
             return projection, Currentness.STALE
         binding = projection.binding
         if binding is not None and binding.reason.value == "STALE_EVIDENCE":
@@ -234,6 +242,11 @@ class _ProjectionEntitlements(EntitlementPort):
         if projection is None:
             return EntitlementSnapshot(None, Currentness.UNKNOWN, None)
         return EntitlementSnapshot(None, currentness, projection.provider_state_at)
+
+    def billing_stale(self, tenant_id: TenantId) -> bool:
+        """A subscription exists but its last verification is not current."""
+        projection, currentness = self._read(tenant_id)
+        return projection is not None and currentness is Currentness.STALE
 
     def source(self, tenant_id: TenantId) -> str:
         projection, currentness = self._read(tenant_id)
@@ -470,6 +483,30 @@ class _SubscriberWorkflow(SubscriberWorkflowPort):
         self._catalogue_reader = catalogue_reader
         self._environment_ref = environment_ref
         self._checkout_mutations_enabled = checkout_available and checkout_mutations_enabled
+        self._reverified_at: dict[str, datetime] = {}
+
+    # At most one provider re-verification per Tenant in this window.
+    reverify_interval = timedelta(seconds=60)
+
+    def _reverify_if_stale(self, context: TrustedSubscriberContext) -> None:
+        """Re-verify a stale subscription with the provider when capacity is needed.
+
+        An unchanged, paid subscription must not lose capacity because time passed;
+        it is confirmed again by reading the provider, never by extending a TTL.
+        Bounded per Tenant; any failure leaves capacity unconfirmed.
+        """
+        if self._checkout is None or not self._entitlements.billing_stale(context.tenant_id):
+            return
+        now = self._clock.now()
+        key = str(context.tenant_id)
+        last = self._reverified_at.get(key)
+        if last is not None and timedelta(0) <= now - last < self.reverify_interval:
+            return
+        self._reverified_at[key] = now
+        try:
+            self._checkout.reverify_current_projection(tenant_id=context.tenant_id, now=now)
+        except Exception:
+            return
 
     def _tax_ready(self) -> bool:
         if self._catalogue_reader is None or not self._checkout_available:
@@ -496,6 +533,7 @@ class _SubscriberWorkflow(SubscriberWorkflowPort):
         )
 
     def portfolio(self, context: TrustedSubscriberContext) -> dict[str, object]:
+        self._reverify_if_stale(context)
         entries = self._portfolio.list(context)
         pending = self._portfolio.list_pending(context)
         snapshot = self._entitlements.snapshot(context.tenant_id)
@@ -546,6 +584,8 @@ class _SubscriberWorkflow(SubscriberWorkflowPort):
         action = str(command["action"])
         request_ref = str(command["requestRef"])
         focus_id = XeedId(str(command["focusId"])) if "focusId" in command else None
+        if action in {"add", "retry_pending", "resume", "replace", "expand"}:
+            self._reverify_if_stale(context)
         try:
             if action == "add":
                 observing = self._trigger.first_observation
