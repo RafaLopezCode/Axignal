@@ -56,3 +56,12 @@ test("the rail's language select fills its label, so no language name is clipped
   const css = readFileSync(resolve(process.cwd(), "components/observatory.css"), "utf8");
   assert.match(css, /\.obs-rail-locale \.locale-selector select \{ flex: 1 1 auto; min-inline-size: 0; inline-size: 100%;/);
 });
+
+test("every active demo reading carries a revision, so AXENT's entry exists in the demo as in the account", () => {
+  const active = Object.values(outputs).filter(output => "projection" in output);
+  assert.ok(active.length >= 2);
+  for (const output of active) assert.match(String((output as unknown as { revision?: string }).revision), /^[a-f0-9]{64}$/);
+  // The entry exists, but the demo never asks: its panel is the account notice, not a conversation.
+  const observatory = readFileSync(resolve(process.cwd(), "components/observatory.tsx"), "utf8");
+  assert.match(observatory, /if \(!canAct\) return <section className="obs-depth-axent"/);
+});

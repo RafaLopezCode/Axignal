@@ -871,7 +871,8 @@
      "name": null,
      "identityLink": "REGISTRY_VERIFIED"
     }
-   }
+   },
+   "revision": "2a62226d7621a1f394826f44e4004ab6a084844fa7573d443df0ae9d3ea0ea5f"
   },
   "focus_ae5bbf52b76149b4af22a67a9fbafeb6__first": {
    "state": "success",
@@ -1413,7 +1414,8 @@
      "name": null,
      "identityLink": "REGISTRY_VERIFIED"
     }
-   }
+   },
+   "revision": "b8c97fa3e4b47d48488492ca45f30acb47c19899eb82edc255cc33a5c2fc91f8"
   },
   "pending_115c8d1ab897476dab5eeb7ffcd7f5e5": {
    "state": "success",
@@ -2241,7 +2243,8 @@
      "name": null,
      "identityLink": "REGISTRY_VERIFIED"
     }
-   }
+   },
+   "revision": "3ca9c4448cea7ed5dc8013df067b291294c6cd1991bfb871ab6290168d2135c0"
   }
  }
 }
