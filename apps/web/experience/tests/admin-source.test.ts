@@ -86,8 +86,16 @@ test("Customer Zero reads through the one Observatory: no reading interface of i
   assert.doesNotMatch(read("components/observatory.tsx"), /source\.mode|adminSource|mode ===/);
 });
 
-test("inside the Admin shell the rail does not repeat the brand the shell already carries", () => {
-  assert.match(read("components/customer-zero-observatory.css"), /\.obs-customer-zero \.obs-rail-brand \{ display: none; \}/);
+test("inside the Admin shell there is one sidebar: the portfolio navigation is drawn in the shell's own", () => {
+  const css = read("components/observatory.css");
+  assert.match(css, /\.obs-in-shell \.obs-rail-brand, \.obs-in-shell \.obs-rail-locale \{ display: none; \}/);
+  const observatory = read("components/observatory.tsx");
+  assert.match(observatory, /props\.shell \? \(props\.shell\.host \? createPortal\(/);
+  assert.match(observatory, /\{!props\.shell && <MobileBar/);
+  const entry = read("components/customer-zero-observatory.tsx");
+  assert.match(entry, /shell=\{embedded \? \{ host: navigationHost \?\? null \} : undefined\}/);
+  // The language lives in the shell's top bar, once.
+  assert.match(entry, /createPortal\(<>[\s\S]*<LocaleToggle\/>[\s\S]*<\/>, toolbarHost\)/);
 });
 
 function withService(routes: (url: string, body: unknown) => Response | undefined, run: (calls: Array<{ url: string; body: unknown }>) => Promise<void>) {

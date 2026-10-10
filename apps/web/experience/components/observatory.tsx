@@ -8,7 +8,7 @@
  * own, worded by fixed copy (lib/observatory.ts); nothing here creates or upgrades truth.
  */
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { flushSync } from "react-dom";
+import { createPortal, flushSync } from "react-dom";
 import Link from "next/link";
 import { ArrowLeft, ArrowRight, ChevronDown, CornerRightUp, ExternalLink, LayoutGrid, LogOut, Menu, MessageCircleQuestion, Plus, RefreshCw, Settings2, X } from "lucide-react";
 import { useLocale } from "@/lib/locale";
@@ -53,6 +53,11 @@ export type ObservatoryProps = {
   replacementLocator: string; setReplacementLocator: (value: string) => void;
   /** Account-only capabilities. False in the public demo: same components, synthetic data. */
   canAct: boolean;
+  /**
+   * Set when the Observatory lives inside a shell that already owns the page's navigation (the Admin's sidebar):
+   * its portfolio navigation is then drawn in the shell's own sidebar instead of a second one beside the reading.
+   */
+  shell?: { host: HTMLElement | null };
   /** What the context offers around the reading; the demo declares all of it, an Admin has no account to manage. */
   capabilities: ObservatoryCapabilities;
   /** Organizations the context already authorizes, offered while adding one. */
@@ -271,11 +276,11 @@ export function Observatory(props: ObservatoryProps) {
 
   const current = items.find(i => i.focusId === selected) ?? null;
   const rail = <Rail items={items} selected={selected} screen={screen} seen={seen} litCounts={litCounts} nameOf={props.menuName ?? nameOf} onOrganization={openOrganization} onScreen={openScreen} portfolio={portfolio} busy={props.busy} refresh={props.refresh} canAct={props.canAct} account={props.capabilities.account}/>;
-  return <div className="obs" data-product-surface="living-observatory" aria-busy={props.busy}>
+  return <div className={`obs${props.shell ? " obs-shelled" : ""}`} data-product-surface="living-observatory" aria-busy={props.busy}>
     <a className="obs-skip" href="#obs-main">{t("Ir al contenido", "Skip to content")}</a>
-    <div className="obs-rail-desktop">{rail}</div>
-    <MobileBar title={screen === "organization" && current ? nameOf(current) : screen === "desk" ? t("Tu cartera", "Your portfolio") : screen === "account" ? t("Cuenta", "Account") : t("Añadir organización", "Add organization")} onMenu={() => setRailOpen(true)}/>
-    {railOpen && <RailSheet onClose={() => setRailOpen(false)}>{rail}</RailSheet>}
+    {props.shell ? (props.shell.host ? createPortal(<div className="obs obs-in-shell">{rail}</div>, props.shell.host) : null) : <div className="obs-rail-desktop">{rail}</div>}
+    {!props.shell && <MobileBar title={screen === "organization" && current ? nameOf(current) : screen === "desk" ? t("Tu cartera", "Your portfolio") : screen === "account" ? t("Cuenta", "Account") : t("Añadir organización", "Add organization")} onMenu={() => setRailOpen(true)}/>}
+    {!props.shell && railOpen && <RailSheet onClose={() => setRailOpen(false)}>{rail}</RailSheet>}
     <main id="obs-main" className="obs-main" tabIndex={-1}>
       {props.notice}
       {(props.message || props.paymentUrl) && <div className="obs-toast" role="status" aria-live="polite">{props.message && <p>{props.message}</p>}{props.paymentUrl && <a className="obs-button obs-primary" href={props.paymentUrl}>{t("Continuar al pago", "Continue to payment")}<ArrowRight size={16} aria-hidden="true"/></a>}</div>}

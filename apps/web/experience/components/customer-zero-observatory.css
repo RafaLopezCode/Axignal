@@ -7,5 +7,3 @@
 .obs-customer-zero .obs-cz-detail { margin: 1rem 1.5rem 2rem; padding: 1rem; border: 1px solid #d8deea; border-radius: 10px; }
 .obs-customer-zero .obs-cz-detail > summary { cursor: pointer; font-weight: 600; color: #354f98; }
 .obs-customer-zero .obs-cz-detail[open] > summary { margin-bottom: 1rem; }
-/* The Admin shell already carries the brand: the Observatory's rail inside it does not repeat it. */
-.obs-customer-zero .obs-rail-brand { display: none; }

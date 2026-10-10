@@ -218,6 +218,8 @@ export function RuntimeExperience({
         onProjection={projection => {requestRevision.current++; setReobserveFeedback(null); setResult({state:"success",projection});}}
         staffControls={controls}
         embedded={embedded}
+        navigationHost={navigationHost}
+        toolbarHost={toolbarHost}
       />
     );
   const headings = {

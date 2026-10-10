@@ -515,3 +515,10 @@ body:has(.obs-rail-desktop) .privacy-preferences-button { inset-inline-end: auto
 @media (max-width: 880px) { .obs-org-actions { inline-size: 100%; } .obs-org-actions > .obs-button:first-of-type { margin-inline-start: auto; } }
 /* On touch-sized screens the cue needs more air than the pointer layouts: it hangs well clear of its button. */
 @media (max-width: 880px) { .obs-org-actions { --axent-gap: clamp(24px, 2vw + 14px, 32px); } }
+/* Inside a shell that owns the navigation (the Admin) there is one sidebar: the Observatory's portfolio navigation is drawn in it. */
+.obs.obs-shelled { display: block; min-block-size: 0; }
+.obs.obs-in-shell { display: block; min-block-size: 0; background: transparent; }
+.obs-in-shell .obs-rail { block-size: auto; background: transparent; border: 0; padding: 0; overflow: visible; }
+.obs-in-shell .obs-rail-brand, .obs-in-shell .obs-rail-locale { display: none; }
+.obs-in-shell .obs-orgs { max-block-size: 38vh; flex: none; }
+.obs-in-shell .obs-rail-foot { padding-block-end: 0; }
