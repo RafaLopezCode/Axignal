@@ -97,3 +97,18 @@ and bounded real browser interactions. INTEGRADO: local candidate only, CTO PR r
 DESPLEGADO: no production deployment. VERIFICADO E2E: local public landing, locale selection,
 proof/time/audience/capacity interactions and navigation to the labelled canonical example;
 no real subscriber authentication, live research or model-quality certification by this slice.
+
+## User follow-up: advisory pricing presence
+
+The user requested that the 995 EUR human advisory offer have presence comparable to the
+subscription card above it. Landing-only CSS now gives the existing aside a white bordered
+card, generous padding, a larger title and price, and a full-width blue contact action.
+Its original text, amount, VAT statement, service scope and /contact destination are unchanged.
+No React, catalog, calculator or product-contract changes.
+
+Actual browser checks: desktop 1280×720 and mobile 390×844; the full card and its 50px+
+contact button fit without horizontal overflow. The amount remains 995.00 EUR/month.
+185 frontend tests, typecheck, i18n (1762 entries / missing 0), production build passed;
+Impeccable detector returned no findings.
+[Desktop pricing](observer-landing-2026-10-10/advisory-pricing-desktop.jpg) ·
+[Mobile pricing](observer-landing-2026-10-10/advisory-pricing-mobile.jpg).
