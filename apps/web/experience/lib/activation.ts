@@ -5,7 +5,8 @@
  * only ever confirmed by the services that own it: a redeemed Design Partner invitation, a verified payment or a
  * staff grant. These helpers read that state; none of them decides it.
  */
-import { monthlyCapacityCents, type SubscriberPortfolio } from "./subscriber-contracts";
+import { EUR_REFERENCE } from "./commercial-prices";
+import type { SubscriberPortfolio } from "./subscriber-contracts";
 
 type Item = SubscriberPortfolio["organizations"][number];
 
@@ -47,9 +48,10 @@ export function billingReturn(params: URLSearchParams): "complete" | "cancelled"
   return value === "complete" || value === "cancelled" ? value : null;
 }
 
-/** The published monthly prices, from the same function that prices any total. */
-export const FIRST_ORGANIZATION_CENTS = monthlyCapacityCents(1);
-export const ADDITIONAL_ORGANIZATION_CENTS = monthlyCapacityCents(2) - monthlyCapacityCents(1);
+/** The published monthly offer: the governed EUR reference of the price book (MASTER §27, ADR-0093). */
+export const PUBLISHED_OFFER = EUR_REFERENCE;
+export const FIRST_ORGANIZATION_CENTS = EUR_REFERENCE.baseMinor;
+export const ADDITIONAL_ORGANIZATION_CENTS = EUR_REFERENCE.additionalMinor;
 
 /** What the activation screen is doing right now; each phase is a real step, never a fake progress. */
 export type ActivationPhase =

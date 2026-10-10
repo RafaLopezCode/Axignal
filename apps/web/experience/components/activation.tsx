@@ -9,7 +9,8 @@ import { useState } from "react";
 import Link from "next/link";
 import { ArrowRight, CreditCard, KeyRound, Mail } from "lucide-react";
 import { useLocale } from "@/lib/locale";
-import { ADDITIONAL_ORGANIZATION_CENTS, FIRST_ORGANIZATION_CENTS, firstPurchaseTotal, inviteTokenFrom, type ActivationPhase } from "@/lib/activation";
+import { ADDITIONAL_ORGANIZATION_CENTS, FIRST_ORGANIZATION_CENTS, PUBLISHED_OFFER, firstPurchaseTotal, inviteTokenFrom, type ActivationPhase } from "@/lib/activation";
+import { formatFixedMoney } from "@/lib/commercial-prices";
 import type { SubscriberPortfolio } from "@/lib/subscriber-contracts";
 import { fill } from "@/lib/observatory";
 
@@ -28,7 +29,7 @@ export function ActivationView({ portfolio, waiting, phase, busy, onRedeemInvite
   const { t, locale } = useLocale();
   const [invite, setInvite] = useState("");
   const [inviteError, setInviteError] = useState(false);
-  const euros = (cents: number) => new Intl.NumberFormat(locale, { style: "currency", currency: "EUR" }).format(cents / 100);
+  const euros = (cents: number) => formatFixedMoney(locale, PUBLISHED_OFFER, cents);
   const canSubscribe = portfolio.contractingEnabled && portfolio.canPurchase === true;
   const working = busy || phase === "redeeming" || phase === "checkout" || phase === "confirming_payment" || phase === "starting";
   const first = waiting[0];
