@@ -13,6 +13,7 @@ import Link from "next/link";
 import { ArrowLeft, ArrowRight, ChevronDown, CornerRightUp, ExternalLink, LayoutGrid, LogOut, Menu, MessageCircleQuestion, Plus, RefreshCw, Settings2, X } from "lucide-react";
 import { useLocale } from "@/lib/locale";
 import { LocaleToggle, useFocusTrap } from "./ui";
+import { formatReferenceMoney } from "@/lib/presentation";
 import { evidenceUrl, monthlyCapacityCents, pendingOutputSchema, subscriberOutputSchema, type FirstObservation, type SubscriberPortfolio } from "@/lib/subscriber-contracts";
 import type { RuntimeProjection } from "@/lib/runtime-projection";
 import { briefing, byLane, currentnessLabel, fill, insightsFor, laneCopy, natureLabel, type Insight, type Lane, type Nature, type Reading, type Translate } from "@/lib/observatory";
@@ -861,7 +862,7 @@ function AccountView(props: ObservatoryProps) {
         <form onSubmit={e => { e.preventDefault(); void props.command({ action: portfolio.capacity === null || portfolio.capacity === 0 ? "purchase" : "expand", desiredOrganizationTotal: props.total }); }}>
           <label htmlFor="organization-total">{t("Total de organizaciones", "Total organizations")}</label>
           <input id="organization-total" type="number" min={portfolio.capacity ? portfolio.capacity + 1 : 1} max={100000} step={1} required value={props.total} onChange={e => props.setTotal(Number(e.target.value))} disabled={props.busy || !props.canAct}/>
-          <p className="obs-price">{Number.isSafeInteger(props.total) && props.total >= 1 && props.total <= 100000 ? new Intl.NumberFormat(locale, { style: "currency", currency: "EUR" }).format(monthlyCapacityCents(props.total) / 100) : "—"}<small>{t("Total mensual sin IVA; el pago confirma los impuestos aplicables.", "Monthly total excluding VAT; checkout confirms applicable taxes.")}</small></p>
+          <p className="obs-price">{Number.isSafeInteger(props.total) && props.total >= 1 && props.total <= 100000 ? formatReferenceMoney(locale, monthlyCapacityCents(props.total)) : "—"}<small>{t("Total mensual sin IVA; el pago confirma los impuestos aplicables.", "Monthly total excluding VAT; checkout confirms applicable taxes.")}</small></p>
           <button className="obs-button" disabled={props.busy || portfolio.canPurchase !== true || !portfolio.contractingEnabled}>{t("Revisar la compra", "Review the purchase")}<ArrowRight size={16} aria-hidden="true"/></button>
         </form>
         {!portfolio.contractingEnabled && <p className="obs-note">{t("La contratación todavía no está activa.", "Contracting is not active yet.")}</p>}

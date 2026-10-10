@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { ArrowRight, ArrowUpRight, Check } from "lucide-react";
 import { useLocale } from "@/lib/locale";
-import { monthlyReferenceCents } from "@/lib/presentation";
+import { formatReferenceMoney, monthlyReferenceCents } from "@/lib/presentation";
 import { funnelCta, track } from "@/lib/funnel-events";
 import { Observer } from "./ui";
 
@@ -19,11 +19,7 @@ export function ReferencePricing({
   onChange: (n: number) => void;
 }) {
   const { t, locale } = useLocale();
-  const money = (cents: number) =>
-    new Intl.NumberFormat(locale, {
-      style: "currency",
-      currency: "EUR",
-    }).format(cents / 100);
+  const money = (cents: number) => formatReferenceMoney(locale, cents);
   return (
     <section className="chapter reference-pricing" id="pricing">
       <div className="pricing-perspective">

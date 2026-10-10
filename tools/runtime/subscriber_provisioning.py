@@ -19,6 +19,11 @@ from domain.admin_billing.checkout_binding import (
     ApprovedTaxConfiguration,
     RecurringTerms,
 )
+from domain.admin_billing.commercial_prices import (
+    DEFAULT_CURRENCY,
+    EUR_MONTHLY_ADDITIONAL_MINOR,
+    EUR_MONTHLY_BASE_MINOR,
+)
 from tools.runtime.subscriber_checkout import StripeSubscriberRuntimeSettings
 from tools.runtime.subscriber_configuration import SubscriberSettings
 
@@ -121,11 +126,15 @@ def build_subscriber_billing_inputs(
         version=_CATALOGUE_VERSION,
         base_offer=ApprovedRecurringOffer(
             _BASE_OFFER_REF,
-            RecurringTerms("month", 1, "EUR", 995, tax_behavior="exclusive"),
+            RecurringTerms(
+                "month", 1, DEFAULT_CURRENCY, EUR_MONTHLY_BASE_MINOR, tax_behavior="exclusive"
+            ),
         ),
         additional_xeed_offer=ApprovedRecurringOffer(
             _ADDITIONAL_OFFER_REF,
-            RecurringTerms("month", 1, "EUR", 495, tax_behavior="exclusive"),
+            RecurringTerms(
+                "month", 1, DEFAULT_CURRENCY, EUR_MONTHLY_ADDITIONAL_MINOR, tax_behavior="exclusive"
+            ),
         ),
         tax_configuration=approved_tax_configuration,
     )
