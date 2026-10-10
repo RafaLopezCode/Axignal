@@ -50,8 +50,9 @@ this repair; it adds no feature family, new spec, queue or provider authority.
   Authentication/invitation are controlled synthetic authorities; the live probe
   does not certify a real Google login. GLEIF does not attest an official website,
   capability or market reach. TED notices are independent demand, not relationships
-  or a fit assertion for this organization. The original successful artifact labels
-  the canonical base SHA; a final committed-code probe replaces it before handoff.
+  or a fit assertion for this organization. The committed-code probe was executed
+  on `f323496ed5028414604d38d0ee74058d1fc68d63`; later evidence-only commits do not
+  change the tested implementation.
 - [Production inspection](evidence/production-read-only.json): real Hostinger SSH,
   container metadata, whitelisted flags, read-only SQLite aggregate counts,
   scheduler status and external HTTP. Deployed SHA is
@@ -109,7 +110,8 @@ Graphify is refreshed, without LLM/API cost. No suppressions or CI changes.
 - Existing autonomous/scheduler/research/continuity selection: 42 passed,
   4 POSIX-only skips on Windows.
 - Timeline/projection/MCP plus composed journey selection: 40 passed.
-- Final journey with contract snapshots: 1 passed.
+- Final journey with contract snapshots: 1 passed; final MCP/normalized-comparison
+  and journey selection: 3 passed.
 - Initial full suite: 2050 passed, 6 skipped, one obsolete temporal expectation
   failed. Its scenario is strengthened as described above; the final full run
   result is recorded before handoff.
