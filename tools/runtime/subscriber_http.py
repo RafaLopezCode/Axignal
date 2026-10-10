@@ -130,6 +130,7 @@ class SubscriberHttpFacade:
         pilot: SubscriberPilotPort | None = None,
         mcp: SubscriberMcpConsentPort | None = None,
         mcp_http: object | None = None,
+        staff: object | None = None,
     ) -> None:
         self.settings = settings
         self.identity = identity
@@ -142,6 +143,8 @@ class SubscriberHttpFacade:
         self.mcp = mcp
         # The public Product MCP edge (OAuth + /mcp); served by the runtime HTTP server.
         self.mcp_http = mcp_http
+        # Staff-provisioned capacity operations, exposed only through the Admin boundary.
+        self.staff = staff
 
     def handle_webhook(self, raw_body: bytes, signature: str) -> SubscriberHttpResponse:
         if not self.settings.enabled or self.billing_webhook is None:

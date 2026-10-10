@@ -58,6 +58,7 @@ from tools.runtime.observation_daily import (
     load_enrollment,
     run_scheduled_tick,
 )
+from tools.runtime.staff_capacity import build_staff_capacity
 from tools.runtime.subscriber_composition import _ProjectionEntitlements
 from tools.runtime.subscriber_configuration import load_subscriber_settings
 from tools.runtime.subscriber_observation import load_observation_attention
@@ -101,11 +102,18 @@ class SubscriberObservationAuthority:
             )
             else None
         )
+        self.staff_capacity = build_staff_capacity(
+            root,
+            enabled=settings.staff_capacity_enabled,
+            internal_tenant=settings.staff_internal_tenant,
+            read_only=True,
+        )
         self.entitlements = _ProjectionEntitlements(
             SqliteSubscriberBillingStore(root / "subscriber-billing.sqlite3", read_only=True),
             clock,
             environment,
             self.pilot,
+            self.staff_capacity,
         )
         self.organizations = SqliteCanonicalOrganizationStore(
             root / "canonical-organizations.sqlite3",
@@ -132,6 +140,13 @@ class SubscriberObservationAuthority:
     def entitlement(self, context: TrustedRequestContext) -> EntitlementSnapshot:
         # An absent Billing database cannot turn pilot-only readiness into a write.
         if not self.entitlements.billing_store.path.is_file():
+            staff = (
+                None
+                if self.staff_capacity is None
+                else self.staff_capacity.active_total(context.tenant_id, now=self.clock.now())
+            )
+            if staff is not None and staff.capacity > 0:
+                return EntitlementSnapshot(staff.capacity, Currentness.CURRENT, staff.confirmed_at)
             grant = (
                 None
                 if self.pilot is None

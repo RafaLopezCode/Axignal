@@ -21,6 +21,7 @@ from domain.identity import XeedId
 from pipeline.admin_billing.subscriber_store import SqliteSubscriberBillingStore
 from pipeline.subscriber_access.sqlite_store import SqlitePilotAccessStore
 from pipeline.subscriber_portfolio.sqlite_store import SqliteSubscriberPortfolioStore
+from tools.runtime.staff_capacity import build_staff_capacity
 from tools.runtime.subscriber_composition import _ProjectionEntitlements
 from tools.runtime.subscriber_configuration import load_subscriber_settings
 from tools.runtime.subscriber_provisioning import _ACCOUNT_REF, _ENVIRONMENT_REF
@@ -48,6 +49,12 @@ def configured_research_access(
         PilotAccessService(SqlitePilotAccessStore(root / "subscriber-pilot.sqlite3"))
         if settings.pilot_enabled
         else None,
+        build_staff_capacity(
+            root,
+            enabled=settings.staff_capacity_enabled,
+            internal_tenant=settings.staff_internal_tenant,
+            read_only=True,
+        ),
     )
     portfolio = SqliteSubscriberPortfolioStore(root / "subscriber-runtime.sqlite3")
 

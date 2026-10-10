@@ -27,6 +27,8 @@ class AddStatus(StrEnum):
     CHECKOUT_REQUIRED = "CHECKOUT_REQUIRED"
     CAPACITY_UNKNOWN = "CAPACITY_UNKNOWN"
     ACCESS_DENIED = "ACCESS_DENIED"
+    # Staff-operated add only: the tenant's capacity is full; staff grants capacity, never sells it.
+    CAPACITY_REQUIRED = "CAPACITY_REQUIRED"
 
 
 class PendingStatus(StrEnum):

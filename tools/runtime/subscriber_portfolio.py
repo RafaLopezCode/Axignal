@@ -24,7 +24,7 @@ from application.subscriber_portfolio.service import (
     SubscriberPortfolioStore,
 )
 from application.xeed_access.reader import TrustedRequestContext
-from domain.identity import XeedId
+from domain.identity import TenantId, XeedId
 from pipeline.subscriber_portfolio.sqlite_store import SqliteSubscriberPortfolioStore
 
 
@@ -54,6 +54,11 @@ class SubscriberPortfolioRuntime:
 
     def add(self, context: TrustedRequestContext, request: AddOrganizationRequest) -> AddResult:
         return self._service.add(context, request)
+
+    def add_for_tenant_by_staff(
+        self, tenant_id: TenantId, actor: str, request: AddOrganizationRequest
+    ) -> AddResult:
+        return self._service.add_for_tenant_by_staff(tenant_id, actor, request)
 
     def pause(
         self, context: TrustedRequestContext, focus_id: XeedId, idempotency_key: str
