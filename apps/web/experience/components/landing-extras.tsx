@@ -4,7 +4,7 @@ import { ArrowRight, ArrowUpRight, Check } from "lucide-react";
 import { useLocale } from "@/lib/locale";
 import { monthlyReferenceCents } from "@/lib/presentation";
 import { funnelCta, track } from "@/lib/funnel-events";
-import { Observer } from "./ui";
+import { LandingGuide } from "./landing-guide";
 
 /**
  * Pricing answers four questions in one screen: what do I pay, what do I get,
@@ -39,7 +39,7 @@ export function ReferencePricing({
             "An organization is a company AXIGNAL observes for you: yours, a customer or a competitor. Everything that appears around it — changes, opportunities, risks — is included.",
           )}
         </p>
-        <Observer scene={focuses > 1 ? "connect" : "focus"} />
+        <LandingGuide className="observer-pricing-guide" scene={focuses > 1 ? "connect" : "focus"} note={t("No por cada hallazgo.", "Not per finding.")} />
       </div>
       <div className="pricing-paper">
         <span className="eyebrow">AXIGNAL</span>

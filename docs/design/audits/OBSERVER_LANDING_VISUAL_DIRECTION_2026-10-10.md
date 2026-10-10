@@ -112,3 +112,21 @@ contact button fit without horizontal overflow. The amount remains 995.00 EUR/mo
 Impeccable detector returned no findings.
 [Desktop pricing](observer-landing-2026-10-10/advisory-pricing-desktop.jpg) ·
 [Mobile pricing](observer-landing-2026-10-10/advisory-pricing-mobile.jpg).
+
+## User follow-up: narrator scale, Bic notes, shell width and proof entry
+
+The user's comments authorize a landing-only refinement. Header and footer share the
+1600px stage and responsive gutter. Each narrator now carries a Bic Notes annotation
+reusing existing localized copy, decorative and aria-hidden alongside its figure.
+The proof starts at `proof-tab-0` ("Sabe dónde juega cada negocio."), including its matching
+panel, narrator, note and /demo?family=markets destination; keyboard navigation remains intact.
+
+The initial follow-up desktop captures are retained as interim evidence. The user's later
+request expanded the scope to a complete spatial audit. Its final spatial system, rendered
+mobile/tablet evidence and validation supersede the intermediate 320px figure settings and
+spacing recorded during that pass. The IAB viewport limitation was resolved for responsive QA
+through the supported Chrome viewport capability; no desktop image is labelled as mobile.
+
+See [complete spatial audit](LANDING_SPATIAL_AUDIT_2026-10-10.md) for final measurements,
+before/after evidence, all seven section outcomes and bounded verification limitations.
+Human visual acceptance remains pending CTO review. No merge or production deployment.

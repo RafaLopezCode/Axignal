@@ -1,0 +1,146 @@
+[
+  {
+    "client": 303,
+    "height": 800,
+    "overflows": [],
+    "rails": [
+      {
+        "class": "landing-header public-header",
+        "left": 20,
+        "right": 283
+      },
+      {
+        "class": "hero funnel-hero",
+        "left": 20,
+        "right": 283
+      },
+      {
+        "class": "mini-footer",
+        "left": 20,
+        "right": 283
+      }
+    ],
+    "scroll": 303,
+    "width": 320
+  },
+  {
+    "client": 373,
+    "height": 844,
+    "overflows": [],
+    "rails": [
+      {
+        "class": "landing-header public-header",
+        "left": 20,
+        "right": 353
+      },
+      {
+        "class": "hero funnel-hero",
+        "left": 20,
+        "right": 353
+      },
+      {
+        "class": "mini-footer",
+        "left": 20,
+        "right": 353
+      }
+    ],
+    "scroll": 373,
+    "width": 390
+  },
+  {
+    "client": 751,
+    "height": 1024,
+    "overflows": [],
+    "rails": [
+      {
+        "class": "landing-header public-header",
+        "left": 27,
+        "right": 724
+      },
+      {
+        "class": "hero funnel-hero",
+        "left": 27,
+        "right": 724
+      },
+      {
+        "class": "mini-footer",
+        "left": 27,
+        "right": 724
+      }
+    ],
+    "scroll": 751,
+    "width": 767
+  },
+  {
+    "client": 1007,
+    "height": 767,
+    "overflows": [],
+    "rails": [
+      {
+        "class": "landing-header public-header",
+        "left": 36,
+        "right": 972
+      },
+      {
+        "class": "hero funnel-hero",
+        "left": 36,
+        "right": 972
+      },
+      {
+        "class": "mini-footer",
+        "left": 36,
+        "right": 972
+      }
+    ],
+    "scroll": 1007,
+    "width": 1024
+  },
+  {
+    "client": 1263,
+    "height": 720,
+    "overflows": [],
+    "rails": [
+      {
+        "class": "landing-header public-header",
+        "left": 45,
+        "right": 1219
+      },
+      {
+        "class": "hero funnel-hero",
+        "left": 45,
+        "right": 1219
+      },
+      {
+        "class": "mini-footer",
+        "left": 45,
+        "right": 1219
+      }
+    ],
+    "scroll": 1263,
+    "width": 1280
+  },
+  {
+    "client": 1726,
+    "height": 1244,
+    "overflows": [],
+    "rails": [
+      {
+        "class": "landing-header public-header",
+        "left": 124,
+        "right": 1602
+      },
+      {
+        "class": "hero funnel-hero",
+        "left": 124,
+        "right": 1602
+      },
+      {
+        "class": "mini-footer",
+        "left": 124,
+        "right": 1602
+      }
+    ],
+    "scroll": 1726,
+    "width": 1743
+  }
+]
