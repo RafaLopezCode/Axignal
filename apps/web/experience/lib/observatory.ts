@@ -300,7 +300,7 @@ function nodeInsight(node: RuntimeNode, familyId: FamilyId | null, t: Translate,
     previous: null,
     // Each re-observation mints a new signal id and time; only a change in what is stated, its currentness or its
     // sources is news. Keyed on content, the same homepage observed again is not shown as new.
-    changeKey: keyOf(`node:${node.title}`, node.interpretation, node.currentness, node.sourceRefs.join(",")),
+    changeKey: keyOf(`node:${node.title}`, node.interpretation, node.currentness, [...node.sourceRefs].sort().join(",")),
     family: familyId,
     channel: familyId === "presence" && officialWeb ? "WEB" : null,
   };

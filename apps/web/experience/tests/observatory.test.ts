@@ -244,9 +244,9 @@ test("re-observing the same public homepage is not news: the finding's change ke
     evidenceAccess: "AVAILABLE", sourceRefs: ["https://example.test/"], observationSupportRefs: ["s"], unknowns: [],
     evidenceNarrative: { xignalId: "x", focusStepId: "s", steps: [] },
   };
-  const reading = (id: string, observedAt: string, currentness: "CURRENT" | "STALE" = "CURRENT") => ({
+  const reading = (id: string, observedAt: string, currentness: "CURRENT" | "STALE" = "CURRENT", interpretation = "The homepage was reachable.", sourceRefs = ["https://example.test/"]) => ({
     projection: { realityLevel: "LIVE", runtimeCodeSha: "sha", lifecycleStatus: "LIVE", context: { id: "c", label: "c" },
-      organization: { id: "o", name: "Example" }, nodes: [{ ...base, id, observedAt, currentness }],
+      organization: { id: "o", name: "Example" }, nodes: [{ ...base, id, observedAt, currentness, interpretation, sourceRefs }],
       cognition: { asOf: observedAt, sources: [], signals: [{ id, familyId: "presence" }], opportunities: [] },
       temporalHistory: { disposition: "EMPTY", items: [] }, today: { disposition: "READY", items: [] }, reloadContinuity: "PERSISTED_RUNTIME_READ_MODEL" } as unknown as Reading["projection"],
     firstObservation: null,
@@ -256,4 +256,11 @@ test("re-observing the same public homepage is not news: the finding's change ke
   assert.equal(again, first, "a new run id and time alone are not a change");
   const aged = insightsFor(reading("xignal:ccc", "2026-10-20T00:00:00+00:00", "STALE"), en, "en")[0].changeKey;
   assert.notEqual(aged, first, "a change of currentness is a change");
+  const changedText = insightsFor(reading("xignal:ddd", "2026-10-21T00:00:00+00:00", "CURRENT", "The homepage has materially changed."), en, "en")[0].changeKey;
+  assert.notEqual(changedText, first, "a changed observation must still be new");
+  const changedSource = insightsFor(reading("xignal:eee", "2026-10-22T00:00:00+00:00", "CURRENT", undefined, ["https://different.example.test/"]), en, "en")[0].changeKey;
+  assert.notEqual(changedSource, first, "a changed provenance must still be new");
+  const sameSourcesReordered = insightsFor(reading("xignal:fff", "2026-10-23T00:00:00+00:00", "CURRENT", undefined, ["https://b.example.test/", "https://a.example.test/"]), en, "en")[0].changeKey;
+  const originalSources = insightsFor(reading("xignal:ggg", "2026-10-24T00:00:00+00:00", "CURRENT", undefined, ["https://a.example.test/", "https://b.example.test/"]), en, "en")[0].changeKey;
+  assert.equal(sameSourcesReordered, originalSources, "reordered source links alone are not a change");
 });
