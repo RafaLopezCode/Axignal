@@ -57,11 +57,17 @@ provider authority, spec, queue or schema migration.
   change the tested implementation.
 - [Production inspection](evidence/production-read-only.json): real Hostinger SSH,
   container metadata, whitelisted flags, read-only SQLite aggregate counts,
-  scheduler status and external HTTP. Deployed SHA is
+  scheduler status and external HTTP, dated 2026-10-09T23:20:28Z. Deployed SHA at that snapshot was
   `f0c54a6240f7dcd3f10d49acfc28b9608a9b0188`, an ancestor of the canonical base,
   predating integrated specs 063/064/065. Healthy services are not evidence of an
-  active observing product. Observation is disabled and no active focus/grant is
-  present. No source/private customer rows, secrets, or credentials were read.
+  active observing product. Observation was disabled and no active focus/grant was
+  present at that dated inspection. No source/private customer rows, secrets, or credentials were read.
+
+- [Current deployment recheck](evidence/production-current-status.json): at
+  2026-10-10T13:35:11Z the three AXIGNAL containers run canonical `b51a545`.
+  The integrated security/observation code is therefore deployed by external
+  authority. The scheduler reports NOT_RUN / NO_TICK. This bounded metadata
+  check does not recertify current grants, flags or live observation.
 
 An initial opt-in probe failed because its case-sensitive environment whitelist
 removed Windows OS/TLS settings. The harness now preserves required OS/TLS paths
@@ -87,8 +93,11 @@ Source authority verified against official documentation:
 
 ## Remaining activation boundaries
 
-1. CTO-approved deployment of integrated security/observation code and this repair:
-   current production still runs the older SHA above.
+1. Deployment availability is no longer the identified code gap: the current
+   metadata recheck shows canonical `b51a545` running, including PR #181.
+   Activation still requires independent CTO authorization and verification
+   of current source rights, grants and observation configuration. NOT_RUN
+   does not establish a productive observation cycle.
 2. Verified subscriber access/grant and active attention, then separately authorized
    source rights/website binding and operator activation of bounded observation.
    Timer availability alone does not authorize an enabled acquisition cycle.
@@ -117,8 +126,9 @@ Graphify is refreshed, without LLM/API cost. No suppressions or CI changes.
 - Initial full suite: 2050 passed, 6 skipped, one obsolete temporal expectation
   failed. Canonical PR #181 already strengthened normalized temporal comparison.
   One follow-up run was invalidated by concurrent rebase/child imports; it is
-  not used as a runtime certificate. The final stable canonical run is recorded
-  before handoff.
+  not used as a runtime certificate. Final stable canonical suite: **2090 passed,
+  7 skipped**, 653.81 seconds; six POSIX/environment cases and the optional
+  TypeSafe SDK case are explicitly skipped.
 - Frontend: 162 tests passed; typecheck passed; i18n inventory 1539, missing 0;
   production build passed. No frontend source changes.
 - Actual frontend schema parse: pending, initial, restarted, changed, final and
@@ -140,6 +150,8 @@ Its JSON keeps fixtures and live facts separate; do not run against production d
 IMPLEMENTED: three existing runtime seams repaired. PROBADO: deterministic gates,
 TCP composition, real licensed source acquisition and production read-only checks.
 INTEGRADO: runtime repairs in canonical main through PR #181; this PR contains
-only updated certification evidence and explanation. DESPLEGADO: no. VERIFICADO E2E: complete local chain with synthetic
+only updated certification evidence and explanation. DESPLEGADO: canonical
+`b51a545` observed running by read-only metadata; no deployment performed by
+this agent and no productive observation activation certified. VERIFICADO E2E: complete local chain with synthetic
 external ports, partial live-source identity/uncertainty chain; no active production
 product or external-model quality certification. Final SHA/CI belong to the PR.
