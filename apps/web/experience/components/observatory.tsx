@@ -498,6 +498,12 @@ function OrganizationView(props: OrgProps) {
   const shown = useMemo(() => facet.family ? insights.filter(i => matchesFacet(i, facet)) : insights, [insights, facet]);
   const shownKeys = useMemo(() => shown.map(i => i.changeKey), [shown]);
   const litShown = useMemo(() => new Set(shownKeys.filter(k => lit.has(k))), [shownKeys, lit]);
+  // The notice of the visit says what arrived since the last visit. It is fixed when the reading first appears and stays
+  // until it is dismissed: reading the findings clears the chips and the badges, not the statement of the visit.
+  const arrived = useRef<Set<string> | null>(null);
+  if (ready && arrived.current === null) arrived.current = new Set(lit);
+  const [dismissed, setDismissed] = useState(false);
+  const arrivedShown = dismissed ? 0 : shownKeys.filter(key => arrived.current?.has(key)).length;
   const counts = useMemo(() => countByFacet(insights), [insights]);
   const litFamilies = useMemo(() => litByFamily(insights, lit), [insights, lit]);
   const litChannels = useMemo(() => litByChannel(insights, lit), [insights, lit]);
@@ -597,7 +603,7 @@ function OrganizationView(props: OrgProps) {
         {props.reading && <ReadingSkeleton/>}
         {!props.reading && observing && <ObservingState state={item.observation!.state}/>}
         {!props.reading && !observing && view === "summary" && <SummaryView reading={reading} name={name} insights={shown} lit={litShown} openId={open?.id ?? null} onOpen={openInsight} scope={scope}
-          onSeenAll={() => updateSeen(store => markSeen(store, item.focusId, shownKeys, new Date().toISOString()))} item={item}/>}
+          since={arrivedShown} remembered={props.rememberReading !== false} onSeenAll={() => { setDismissed(true); updateSeen(store => markSeen(store, item.focusId, shownKeys, new Date().toISOString())); }} item={item}/>}
         {!props.reading && !observing && view === "explore" && <ExploreView projection={projection} revision={revision} firstObservation={firstObservation} onSummary={() => go({ view: "summary" })}/>}
         {!props.reading && !observing && view === "evolution" && <EvolutionView reading={reading} facet={facet} scope={scope}/>}
         {!props.reading && !observing && view === "evidence" && <EvidenceView reading={reading} facet={facet} scope={scope} insights={shown}/>}
@@ -633,7 +639,11 @@ function ObservingState({ state }: { state: string }) {
   </section>;
 }
 
-export function SummaryView({ reading, name, insights, lit, openId, onOpen, onSeenAll, item, exampleLead, scope }: {
+export function SummaryView({ reading, name, insights, lit, since, remembered = true, openId, onOpen, onSeenAll, item, exampleLead, scope }: {
+  /** What arrived since the last visit, when the visit's notice is kept apart from what is still unread. */
+  since?: number;
+  /** Whether what is read is kept on this device: the notice says so only when it is true. */
+  remembered?: boolean;
   reading: Reading; name: string; insights: Insight[]; lit: Set<string>; openId: string | null;
   /** A selected family or channel: its header and empty state. Absent for the whole reading. */
   scope?: FacetScope | null;
@@ -653,9 +663,9 @@ export function SummaryView({ reading, name, insights, lit, openId, onOpen, onSe
       {scope ? <ul className="obs-tally"><li>{fill(insights.length === 1 ? t("{n} hallazgo", "{n} finding") : t("{n} hallazgos", "{n} findings"), { n: insights.length })}</li></ul>
         : brief.tally.length > 0 && <ul className="obs-tally">{brief.tally.map(x => <li key={x}>{x}</li>)}</ul>}
       {low && <p className="obs-brief-note">{observationStateCopy(item.observation!.state, t)}. {t("Lo que no se pudo observar aparece en «Lo que aún no sabemos», con su razón.", "What could not be observed appears under “What we do not know yet”, with its reason.")}</p>}
-      {lit.size > 0 && <div className="obs-since" role="status">
+      {(since ?? lit.size) > 0 && <div className="obs-since" role="status">
         <span className="obs-since-lamp" aria-hidden="true"/>
-        <span>{fill(lit.size === 1 ? t("{n} hallazgo nuevo o cambiado desde tu última visita.", "{n} finding new or changed since your last visit.") : t("{n} hallazgos nuevos o cambiados desde tu última visita.", "{n} findings new or changed since your last visit."), { n: lit.size })} <small>{t("Se recuerda en este dispositivo.", "Remembered on this device.")}</small></span>
+        <span>{fill((since ?? lit.size) === 1 ? t("{n} hallazgo nuevo o cambiado desde tu última visita.", "{n} finding new or changed since your last visit.") : t("{n} hallazgos nuevos o cambiados desde tu última visita.", "{n} findings new or changed since your last visit."), { n: since ?? lit.size })}{remembered && <> <small>{t("Se recuerda en este dispositivo.", "Remembered on this device.")}</small></>}</span>
         <button className="obs-link" onClick={onSeenAll}>{t("Marcar como visto", "Mark as seen")}</button>
       </div>}
     </section>

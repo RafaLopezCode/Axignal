@@ -236,3 +236,14 @@ test("a finding that has been in view for a moment is marked seen without a clic
   assert.match(source, /markSeen\(store, item\.focusId, \[key\]/);
   assert.match(source, /window\.clearTimeout\(running\)/);
 });
+
+test("the notice of the visit stays until it is dismissed: reading clears the chips and badges, not the statement", () => {
+  const source = fs.readFileSync(path.resolve(process.cwd(), "components/observatory.tsx"), "utf8");
+  // Fixed when the reading first appears, counted over what the selection shows, and cleared only by dismissing it.
+  assert.match(source, /arrived\.current = new Set\(lit\)/);
+  assert.match(source, /const arrivedShown = dismissed \? 0 : shownKeys\.filter\(key => arrived\.current\?\.has\(key\)\)\.length/);
+  assert.match(source, /setDismissed\(true\); updateSeen\(/);
+  assert.match(source, /\(since \?\? lit\.size\) > 0 && <div className="obs-since"/);
+  // Where nothing is kept between visits, the notice does not claim it is.
+  assert.match(source, /\{remembered && <> <small>/);
+});
