@@ -455,13 +455,13 @@ body:has(.obs-rail-desktop) .privacy-preferences-button { inset-inline-end: auto
 .obs-facet-nav ul, .obs-channel-nav ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
 .obs-facet { display: inline-flex; align-items: center; gap: 8px; min-block-size: 38px; padding: 0 12px; border: 1px solid var(--obs-line); border-radius: var(--obs-r-badge); background: var(--obs-card); color: var(--obs-text); font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; white-space: nowrap; transition: background-color .18s var(--obs-ease), border-color .18s var(--obs-ease); }
 .obs-facet:hover { border-color: #b9c8ec; background: var(--obs-blue-soft); }
-.obs-facet[aria-pressed="true"] { background: var(--obs-blue); border-color: var(--obs-blue); color: #fff; }
+.obs-facet[aria-pressed="true"] { background: var(--obs-blue-soft); border-color: var(--obs-blue); box-shadow: inset 0 0 0 1px var(--obs-blue); color: var(--obs-ink); }
 .obs-facet-count { display: inline-grid; place-items: center; min-inline-size: 22px; block-size: 22px; padding: 0 6px; border-radius: var(--obs-r-badge); background: var(--obs-blue-soft); color: var(--obs-blue); font-size: 12px; font-weight: 700; }
-.obs-facet[aria-pressed="true"] .obs-facet-count { background: #fff; color: var(--obs-blue); }
+.obs-facet[aria-pressed="true"] .obs-facet-count { background: var(--obs-blue); color: #fff; }
 .obs-facet-lamp { inline-size: 8px; block-size: 8px; border-radius: 50%; background: var(--obs-brass); }
 .obs-channel-nav { inline-size: fit-content; max-inline-size: 100%; padding: 6px; border-radius: var(--obs-r-card); background: var(--obs-blue-soft); }
 .obs-facet-channel { min-block-size: 36px; font-size: 13px; background: var(--obs-card); }
-.obs-facet-channel[aria-pressed="true"] { background: var(--obs-blue); }
+.obs-facet-channel[aria-pressed="true"] { background: var(--obs-blue-soft); }
 .obs-scope-title { margin: 0; font-family: Fraunces, Georgia, serif; font-size: clamp(24px, 2.2vw, 30px); font-weight: 600; line-height: 1.2; color: var(--obs-ink); }
 .obs-brief-scoped .obs-brief-lead { margin-top: 8px; font-family: var(--font-ui); font-size: 16px; line-height: 1.55; color: var(--obs-muted); max-inline-size: 64ch; }
 .obs-event-tag { margin-inline-start: 8px; padding: 2px 8px; border-radius: var(--obs-r-badge); background: var(--obs-blue-soft); color: var(--obs-blue); font-size: 12px; font-weight: 700; }
