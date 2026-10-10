@@ -1,5 +1,7 @@
 # AXIGNAL Production Deployment
 
+**Mandatory subscriber deployment profile:** AXIGNAL has both a base Compose topology and a subscriber overlay. A base-only `docker compose up` can look healthy while returning 404 for all subscriber routes and disabling Google. For production use `AXIGNAL_CODE_SHA=<approved-main-sha> sh deploy/production/deploy-axignal.sh check`, then `build` and `up` from the immutable release root. Verify with `sh deploy/production/verify-product-surface.sh`. Never silently omit `compose.subscriber.override.yml`; use base-only Compose solely for an explicit documented rollback. This guard preserves private Admin, subscriber session checks and disabled contracting/Stripe flags.
+
 **Canonical production authority:** `deploy/production/compose.yml` under ADR-0059.
 
 AXIGNAL production runs as the isolated Compose project `axignal-prod`:

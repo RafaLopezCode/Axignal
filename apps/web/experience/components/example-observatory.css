@@ -1,0 +1,14 @@
+/* Public example shares the subscriber Observatory structure; only the factual banner is added. */
+.obs-example .obs-example-notice { display: flex; align-items: start; flex-wrap: wrap; gap: .7rem 1rem; padding: 1rem 1.5rem; background: var(--obs-paper, #f8f9fb); border-bottom: 1px solid var(--obs-line, #dde2eb); font-size: .85rem; line-height: 1.45; }
+.obs-example .obs-example-notice strong { color: #354f98; }
+.obs-example .obs-example-notice span { flex: 1; min-width: 18rem; }
+.obs-example .obs-example-notice a { display: inline-flex; gap: .4rem; align-items: center; font-weight: 650; color: #354f98; }
+.obs-example .obs-example-history, .obs-example .obs-example-evidence { max-width: 50rem; padding: 1.5rem 0; }
+.obs-example .obs-example-moments { display: flex; flex-wrap: wrap; gap: .6rem; margin: 1.5rem 0; }
+.obs-example .obs-example-moments button { padding: .75rem 1rem; border: 1px solid #bfc7d9; border-radius: 8px; background: transparent; cursor: pointer; }
+.obs-example .obs-example-moments button[aria-pressed=true] { background: #354f98; color: #fff; }
+.obs-example .obs-example-evidence li { margin-block: .6rem; }
+.obs-example .obs-example-footer { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 1rem; padding: 2rem 1.5rem; }
+.obs-example .obs-example-footer a { display: inline-flex; align-items: center; gap: .4rem; color: #354f98; text-decoration: underline; }
+.obs-example .obs-example-depth-note { padding: 1rem 1.5rem; font-size: .8rem; color: #495267; }
+@media(max-width: 600px) { .obs-example .obs-example-notice span { min-width: 100%; } .obs-example .obs-example-notice { padding: .85rem 1rem; } }

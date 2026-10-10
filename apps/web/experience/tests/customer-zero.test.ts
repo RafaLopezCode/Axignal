@@ -158,7 +158,12 @@ test("Customer Zero only sends canonical attention, and consumes the real read e
   assert.ok(renderer.includes("signal.uncertainty"));
   assert.ok(renderer.includes("signal.currentness"));
   assert.ok(subscriber.includes("<RuntimeExperience"));
-  assert.ok(client.includes("<RuntimeProductProjection"));
+  assert.ok(client.includes("<CustomerZeroObservatory"));
+  const currentRenderer = readFileSync("components/customer-zero-observatory.tsx", "utf8");
+  assert.ok(currentRenderer.includes("<SummaryView"));
+  assert.ok(currentRenderer.includes("<InsightBody"));
+  assert.ok(currentRenderer.includes("<RuntimeProductProjection")); // Complete legacy details remain accessible.
+  assert.ok(currentRenderer.includes("staffControls"));
   assert.ok(renderer.includes('t("señal observada", "observed signal")'));
   assert.ok(renderer.includes('t("fuente pública", "public source")'));
   assert.ok(renderer.includes('t("observación gobernada", "governed observation")'));

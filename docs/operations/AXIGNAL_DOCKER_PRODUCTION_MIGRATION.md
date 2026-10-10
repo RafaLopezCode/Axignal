@@ -4,6 +4,8 @@
 **Date:** 2026-10-02
 **Authority:** ADR-0059 + ADR-0082
 
+**Production UX release invariant (2026-10-10):** When subscriber configuration exists, never use base-only `docker compose up`. That silently disabled Google auth and made `/account` return 404 while all containers reported healthy. The supported deploy path is `AXIGNAL_CODE_SHA=<approved-main-sha> sh deploy/production/deploy-axignal.sh check`, then `build`, then `up`, all from the immutable release directory. This script always includes the subscriber Compose overlay and fails closed if it is unavailable. After cutover run `sh deploy/production/verify-product-surface.sh`; require the public Observatory demo, login, account, authorized status codes, Admin isolation and matching image SHA. The base-only Compose instructions below document the legacy migration/rollback topology, **not the complete subscriber product**. Do not enable contracting/Stripe or relax the Staff boundary to fix a route.
+
 ## Canonical topology
 
 ```text
