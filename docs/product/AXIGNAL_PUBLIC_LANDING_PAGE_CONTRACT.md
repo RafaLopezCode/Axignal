@@ -5,6 +5,8 @@
 **Scope:** public AXIGNAL acquisition/marketing experience only.  
 **Non-scope:** AXIGLAND application UX, canonical economic truth, domain ontology, evidence admission, cognition/runtime behavior.
 
+**Presentation reconciliation (2026-10-10):** The approved public experience follows the later, human-first **spec 060 product funnel** (5 seconds / 30 seconds / 2 minutes), extended by the living-product landing. The fifteen numbered sections below remain a **coverage and truth checklist**, not an instruction to restore paginated chapters, the question rail, scroll-jacking or legacy copy. The presentation-only requirements for chapters, transitions, rail, copy deck and storyboard in §§4–6 and 10–15 are superseded where they conflict with spec 060. All evidence, uncertainty, public claim, provenance, pricing, privacy and accessibility constraints remain normative. This resolves the conflicting implementation directions without weakening economic truth.
+
 ## 1. Contract purpose
 
 The public landing MUST convert AXIGNAL's canonical product truth into a human-first acquisition narrative without strengthening, weakening or inventing product claims.

@@ -9,18 +9,19 @@ import {
   Clock3,
   MapPinned,
 } from "lucide-react";
+import { LandingObservatory, type DemoMode } from "./landing-observatory";
+import type { ExampleMoment } from "@/lib/landing-observatory";
 import { PublicHeader } from "./public-shell";
 import { ReferencePricing } from "./landing-extras";
 import { FramedObserver } from "./observer-frame";
 import { useLocale } from "@/lib/locale";
-import { dateLabel, makeContext, project } from "@/lib/projection";
 import {
   funnelCta,
   landingChapters,
   track,
   type FunnelCta,
 } from "@/lib/funnel-events";
-import { Badge, MiniFooter, Observer } from "./ui";
+import { MiniFooter, Observer } from "./ui";
 
 /** The one public example. Every "show me" on the site lands here. */
 export const EXAMPLE_HREF = "/panorama";
@@ -80,60 +81,39 @@ function CtaLink({
 }
 
 /**
- * A glance at what a subscriber reads, composed from the same fictional example the
- * public example renders (never a second fixture). It shows the three epistemic
- * states side by side because that difference is the product.
+ * The first viewport shows the product working, not a picture of it: the real subscriber
+ * interface on the one public example (fictional, and labelled so), annotated by El Observador.
  */
 function HeroReading() {
-  const { t, copy, locale } = useLocale();
-  const now = project(makeContext("norte", "markets", "2026-10-03"));
-  const order = ["renovation", "representation", "reputation-gap"];
-  const shown = order
-    .map((id) => now.signals.find((signal) => signal.id === id))
-    .filter((signal) => signal !== undefined);
-  return (
-    <div className="hero-reading">
-      <div className="hero-reading-head">
-        <span className="hero-reading-org">
-          <span className="org-monogram" aria-hidden="true">N</span>
-          <span>
-            <strong>{now.organization.name}</strong>
-            <small>{t("Organización ficticia · ejemplo guiado", "Fictional organization · guided example")}</small>
-          </span>
-        </span>
-        <span className="mono">{dateLabel("2026-10-03", locale)}</span>
-      </div>
-      <p className="hero-reading-does">{copy(now.organization.does)}</p>
-      <h2 className="hero-reading-title">
-        {t("Lo que AXIGNAL ve hoy", "What AXIGNAL sees today")}
-      </h2>
-      <ul>
-        {shown.map((signal) => (
-          <li key={signal.id}>
-            <Badge state={signal.epistemic} />
-            <span className="hero-reading-text">{copy(signal.title)}</span>
-            <span className="hero-reading-basis">
-              {signal.epistemic === "UNKNOWN"
-                ? t("Sin evidencia suficiente todavía", "Not enough evidence yet")
-                : signal.evidenceIds.length +
-                  " " +
-                  (signal.evidenceIds.length === 1
-                    ? t("fuente", "source")
-                    : t("fuentes", "sources")) +
-                  " · " +
-                  t("observado el", "observed on") +
-                  " " +
-                  dateLabel(signal.detectedAt, locale)}
-            </span>
-          </li>
-        ))}
-      </ul>
-      <CtaLink href={EXAMPLE_HREF} cta={funnelCta.heroExample} className="hero-reading-open">
-        {t("Abrir el ejemplo completo", "Open the full example")}
-        <ArrowRight size={16} />
-      </CtaLink>
-    </div>
-  );
+  const { t } = useLocale();
+  return <LandingObservatory mode="glance" className="lx-hero-window" footer={
+    <CtaLink href={EXAMPLE_HREF} cta={funnelCta.heroExample} className="lx-open">
+      {t("Abrir el ejemplo completo", "Open the full example")}
+      <ArrowRight size={16} />
+    </CtaLink>
+  }/>;
+}
+
+/** Scroll position chooses the window's state; it never moves the page for the visitor. */
+function useActiveStep() {
+  const [active, setActive] = useState(0);
+  useEffect(() => {
+    let frame = 0;
+    const measure = () => {
+      frame = 0;
+      const middle = window.innerHeight / 2;
+      document.querySelectorAll<HTMLElement>(".lx-step[data-step]").forEach((node) => {
+        const box = node.getBoundingClientRect();
+        if (box.top <= middle && box.bottom > middle) setActive(Number(node.dataset.step));
+      });
+    };
+    const schedule = () => { if (!frame) frame = window.requestAnimationFrame(measure); };
+    measure();
+    window.addEventListener("scroll", schedule, { passive: true });
+    window.addEventListener("resize", schedule);
+    return () => { window.removeEventListener("scroll", schedule); window.removeEventListener("resize", schedule); if (frame) window.cancelAnimationFrame(frame); };
+  }, []);
+  return active;
 }
 
 function useChapterViews() {
@@ -158,7 +138,9 @@ function useChapterViews() {
 
 export function Landing() {
   const { t, locale } = useLocale();
-  const [time, setTime] = useState(2);
+  const [time, setTime] = useState(0);
+  const [proof, setProof] = useState(1);
+  const activeStep = useActiveStep();
   const [audience, setAudience] = useState(0);
   const [focuses, setFocuses] = useState(1);
   useChapterViews();
@@ -216,32 +198,78 @@ export function Landing() {
       scene: "representation" as const,
     },
   ];
-  const moments = [
+  const moments: ExampleMoment[] = ["2026-07-01", "2026-09-01", "2026-10-03"];
+  const proofs = [
     {
-      date: "2026-07-01",
-      title: t("Sabe qué hace.", "It knows what the company does."),
+      id: "reach",
+      icon: <MapPinned size={20} aria-hidden="true" />,
+      title: t("Sabe dónde juega cada negocio.", "It knows where each business plays."),
       text: t(
-        "Su ficha pública describe lo que hace: aislar edificios para que gasten menos energía. Es lo único observado: lo que llegará después no entra en esta vista.",
-        "Its public sheet describes what it does: insulating buildings so they use less energy. That is all that has been observed: what comes later does not enter this view.",
+        "Distingue dónde trabaja, hacia dónde podría crecer y qué le afecta desde fuera. Lo que ocurre lejos de su mercado no se convierte en una oportunidad.",
+        "It tells apart where a business works, where it could grow and what affects it from outside. What happens far from its market does not become an opportunity.",
+      ),
+      cta: t("Ver su alcance en el ejemplo", "See its reach in the example"),
+      example: "?family=markets",
+    },
+    {
+      id: "evidence",
+      icon: <BookOpen size={20} aria-hidden="true" />,
+      title: t("Enseña de dónde sale cada conclusión.", "It shows where each conclusion comes from."),
+      text: t(
+        "Fuente, fecha de observación y vigencia, a un clic. Sin consolas técnicas ni cajas negras.",
+        "Source, observation date and currentness, one click away. No technical consoles, no black boxes.",
+      ),
+      cta: t("Abrir una evidencia", "Open a piece of evidence"),
+      example: "?signal=renovation&depth=prove",
+    },
+    {
+      id: "unknown",
+      icon: <CircleHelp size={20} aria-hidden="true" />,
+      title: t("Dice lo que todavía no sabe.", "It says what it does not know yet."),
+      text: t(
+        "Si la evidencia no basta, lo marca como desconocido en vez de adivinar. Desconocido no es falso: es una pregunta abierta.",
+        "When evidence is not enough, it marks it as unknown instead of guessing. Unknown is not false: it is an open question.",
+      ),
+      cta: t("Ver una pregunta abierta", "See an open question"),
+      example: "?signal=reputation-gap",
+    },
+    {
+      id: "time",
+      icon: <Clock3 size={20} aria-hidden="true" />,
+      title: t("Recuerda cuándo supo cada cosa.", "It remembers when it learned each thing."),
+      text: t(
+        "Separa lo que ocurrió, cuándo se supo y lo que ya no está vigente. Mueve el ejemplo de julio a octubre: lo nuevo se enciende hasta que lo ves.",
+        "It separates what happened, when it became known and what is no longer current. Move the example from July to October: what is new stays lit until you see it.",
+      ),
+      cta: t("Volver a julio en el ejemplo", "Go back to July in the example"),
+      example: "?asOf=2026-07-01",
+    },
+  ];
+  const steps = [
+    {
+      title: t("Eliges una organización.", "You choose an organization."),
+      text: t(
+        "La tuya, un cliente, un competidor o cualquier empresa que te importe. Un nombre o su web bastan para empezar.",
+        "Yours, a customer, a competitor or any company you care about. A name or its website is enough to start.",
       ),
     },
     {
-      date: "2026-09-01",
-      title: t("Aparece algo nuevo.", "Something new appears."),
+      title: t("AXIGNAL observa y recuerda.", "AXIGNAL observes and remembers."),
       text: t(
-        "Se publica un programa público de ayudas para edificios más eficientes. AXIGNAL lo conecta con lo que la empresa hace: una posibilidad, no un contrato.",
-        "A public grant programme for more efficient buildings is published. AXIGNAL connects it with what the company does: a possibility, not a contract.",
+        "Lee fuentes públicas —su web, registros oficiales, licitaciones— y guarda cada hallazgo con su fuente y su fecha. No tienes que reconstruir cada semana qué ha cambiado.",
+        "It reads public sources — its website, official registers, public tenders — and keeps each finding with its source and date. You no longer rebuild what changed every week.",
       ),
     },
     {
-      date: "2026-10-03",
-      title: t("Lo que sigue vigente.", "What is still current."),
+      title: t("Ves lo que importa y por qué.", "You see what matters and why."),
       text: t(
-        "Cada observación nueva actualiza la lectura. Lo que envejece deja de contar como actual; nada se borra.",
-        "Each new observation updates the reading. What ages stops counting as current; nothing is erased.",
+        "Oportunidades, riesgos y cambios, filtrados por lo que ese negocio hace y por dónde trabaja. Cada uno explica por qué aparece y qué falta por saber.",
+        "Opportunities, risks and changes, filtered by what that business does and where it works. Each one explains why it appears and what is still unknown.",
       ),
     },
   ];
+  const stepModes: DemoMode[] = ["add", "observing", "briefing"];
+  const proofModes: DemoMode[] = ["briefing", "evidence", "unknown", "time"];
   const selectedAudience = audiences[audience];
   return (
     <div className="landing funnel-landing">
@@ -281,8 +309,8 @@ export function Landing() {
             </div>
             <span className="hero-caption">
               {t(
-                "Para quien dirige o hace crecer una empresa, y para las consultoras y agencias que acompañan a varias. 9,95 € al mes por organización.",
-                "For people who run or grow a business, and for the consultancies and agencies that support several. €9.95 a month per organization.",
+                "Para quien dirige o hace crecer una empresa, y para las consultoras y agencias que acompañan a varias. 9,95 € al mes con una organización incluida y 4,95 € por cada organización adicional.",
+                "For people who run or grow a business, and for the consultancies and agencies that support several. €9.95 a month with one organization included, and €4.95 for each additional organization.",
               )}
             </span>
           </div>
@@ -297,37 +325,21 @@ export function Landing() {
               <em>{t("AXIGNAL no deja de mirar.", "AXIGNAL keeps looking.")}</em>
             </h2>
           </Reveal>
-          <Reveal className="funnel-steps">
-            {[
-              {
-                title: t("Eliges una organización.", "You choose an organization."),
-                text: t(
-                  "La tuya, un cliente, un competidor o cualquier empresa que te importe. Un nombre o su web bastan para empezar.",
-                  "Yours, a customer, a competitor or any company you care about. A name or its website is enough to start.",
-                ),
-              },
-              {
-                title: t("AXIGNAL observa y recuerda.", "AXIGNAL observes and remembers."),
-                text: t(
-                  "Lee fuentes públicas —su web, registros oficiales, licitaciones— y guarda cada hallazgo con su fuente y su fecha. No tienes que reconstruir cada semana qué ha cambiado.",
-                  "It reads public sources — its website, official registers, public tenders — and keeps each finding with its source and date. You no longer rebuild what changed every week.",
-                ),
-              },
-              {
-                title: t("Ves lo que importa y por qué.", "You see what matters and why."),
-                text: t(
-                  "Oportunidades, riesgos y cambios, filtrados por lo que ese negocio hace y por dónde trabaja. Cada uno explica por qué aparece y qué falta por saber.",
-                  "Opportunities, risks and changes, filtered by what that business does and where it works. Each one explains why it appears and what is still unknown.",
-                ),
-              },
-            ].map((step, i) => (
-              <div className="funnel-step" key={step.title}>
-                <span className="story-number">0{i + 1}</span>
-                <h3>{step.title}</h3>
-                <p>{step.text}</p>
-              </div>
-            ))}
-          </Reveal>
+          <div className="lx-scrolly">
+            <ol className="lx-steps">
+              {steps.map((step, i) => (
+                <li className={"lx-step" + (activeStep === i ? " is-active" : "")} key={step.title} data-step={i}>
+                  <span className="lx-step-mark" aria-hidden="true">{i + 1}</span>
+                  <h3>{step.title}</h3>
+                  <p>{step.text}</p>
+                  <LandingObservatory mode={stepModes[i]} className="lx-step-window" />
+                </li>
+              ))}
+            </ol>
+            <div className="lx-sticky" aria-hidden="true">
+              <LandingObservatory mode={stepModes[activeStep]} />
+            </div>
+          </div>
           <Reveal className="funnel-axent">
             <p>
               <strong>AXENT</strong>{" "}
@@ -347,89 +359,47 @@ export function Landing() {
               <em>{t("Es memoria con evidencia.", "It is memory with evidence.")}</em>
             </h2>
           </Reveal>
-          <div className="proof-grid">
-            <Reveal className="proof-card proof-reach">
-              <MapPinned size={22} aria-hidden="true" />
-              <h3>{t("Sabe dónde juega cada negocio.", "It knows where each business plays.")}</h3>
-              <p>
-                {t(
-                  "Distingue dónde trabaja, hacia dónde podría crecer y qué le afecta desde fuera. Lo que ocurre lejos de su mercado no se convierte en una oportunidad.",
-                  "It tells apart where a business works, where it could grow and what affects it from outside. What happens far from its market does not become an opportunity.",
-                )}
-              </p>
-              <CtaLink href={EXAMPLE_HREF + "?family=markets"} cta={funnelCta.proofExample} className="text-link">
-                {t("Ver su alcance en el ejemplo", "See its reach in the example")}
-                <ArrowUpRight size={16} />
-              </CtaLink>
-            </Reveal>
-            <Reveal className="proof-card proof-evidence">
-              <BookOpen size={22} aria-hidden="true" />
-              <h3>{t("Enseña de dónde sale cada conclusión.", "It shows where each conclusion comes from.")}</h3>
-              <p>
-                {t(
-                  "Fuente, fecha de observación y vigencia, a un clic. Sin consolas técnicas ni cajas negras.",
-                  "Source, observation date and currentness, one click away. No technical consoles, no black boxes.",
-                )}
-              </p>
-              <CtaLink href={EXAMPLE_HREF + "?signal=renovation&depth=prove"} cta={funnelCta.proofExample} className="text-link">
-                {t("Abrir una evidencia", "Open a piece of evidence")}
-                <ArrowUpRight size={16} />
-              </CtaLink>
-            </Reveal>
-            <Reveal className="proof-card proof-unknown">
-              <CircleHelp size={22} aria-hidden="true" />
-              <h3>{t("Dice lo que todavía no sabe.", "It says what it does not know yet.")}</h3>
-              <p>
-                {t(
-                  "Si la evidencia no basta, lo marca como desconocido en vez de adivinar. Desconocido no es falso: es una pregunta abierta.",
-                  "When evidence is not enough, it marks it as unknown instead of guessing. Unknown is not false: it is an open question.",
-                )}
-              </p>
-              <CtaLink href={EXAMPLE_HREF + "?signal=reputation-gap"} cta={funnelCta.proofExample} className="text-link">
-                {t("Ver una pregunta abierta", "See an open question")}
-                <ArrowUpRight size={16} />
-              </CtaLink>
-            </Reveal>
-          </div>
-          <Reveal className="time-demo funnel-time">
-            <div className="funnel-time-copy">
-              <Clock3 size={22} aria-hidden="true" />
-              <h3>{t("Recuerda cuándo supo cada cosa.", "It remembers when it learned each thing.")}</h3>
-              <p>
-                {t(
-                  "Separa lo que ocurrió, cuándo se supo y lo que ya no está vigente. Puedes volver a cualquier fecha y ver solo lo que se sabía entonces.",
-                  "It separates what happened, when it became known and what is no longer current. You can go back to any date and see only what was known then.",
-                )}
-              </p>
-            </div>
-            <div className="time-quote" aria-live="polite">
-              <span className="mono">{dateLabel(moments[time].date, locale)}</span>
-              <h3>{moments[time].title}</h3>
-              <p>{moments[time].text}</p>
-            </div>
-            <div
-              className="teaching-timeline"
-              role="group"
-              aria-label={t("Recorrer el tiempo del ejemplo", "Move through the example's time")}
-            >
-              {moments.map((moment, i) => (
+          <div className="lx-proof">
+            <div className="lx-proof-tabs" role="tablist" aria-label={t("Cuatro pruebas en el ejemplo", "Four proofs in the example")}>
+              {proofs.map((item, i) => (
                 <button
-                  key={moment.date}
-                  className={time === i ? "selected" : ""}
-                  aria-pressed={time === i}
-                  onClick={() => setTime(i)}
+                  key={item.id}
+                  role="tab"
+                  id={"proof-tab-" + i}
+                  aria-selected={proof === i}
+                  aria-controls="proof-panel"
+                  tabIndex={proof === i ? 0 : -1}
+                  className="lx-proof-tab"
+                  onClick={() => setProof(i)}
+                  onKeyDown={(e) => {
+                    const step = e.key === "ArrowDown" || e.key === "ArrowRight" ? 1 : e.key === "ArrowUp" || e.key === "ArrowLeft" ? -1 : 0;
+                    if (step) {
+                      e.preventDefault();
+                      const next = (i + step + proofs.length) % proofs.length;
+                      setProof(next);
+                      document.getElementById("proof-tab-" + next)?.focus();
+                    }
+                  }}
                 >
-                  <span className="timeline-node" />
-                  <span className="mono">{dateLabel(moment.date, locale)}</span>
-                  <strong>{moment.title}</strong>
+                  {item.icon}
+                  <span><strong>{item.title}</strong><small>{item.text}</small></span>
                 </button>
               ))}
             </div>
-            <CtaLink href={EXAMPLE_HREF + "?asOf=2026-07-01"} cta={funnelCta.proofExample} className="text-link">
-              {t("Volver a julio en el ejemplo", "Go back to July in the example")}
-              <ArrowUpRight size={16} />
-            </CtaLink>
-          </Reveal>
+            <div className="lx-proof-stage" role="tabpanel" id="proof-panel" aria-labelledby={"proof-tab-" + proof}>
+              <LandingObservatory
+                mode={proofModes[proof]}
+                asOf={proofModes[proof] === "time" ? moments[time] : "2026-10-03"}
+                onAsOf={(moment) => setTime(moments.indexOf(moment))}
+                footer={
+                  <CtaLink href={EXAMPLE_HREF + proofs[proof].example} cta={funnelCta.proofExample} className="lx-open">
+                    {proofs[proof].cta}
+                    <ArrowUpRight size={16} />
+                  </CtaLink>
+                }
+              />
+            </div>
+          </div>
         </section>
 
         <section className="chapter use-section funnel-audience" id="audience">
