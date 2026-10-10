@@ -503,3 +503,5 @@ body:has(.obs-rail-desktop) .privacy-preferences-button { inset-inline-end: auto
 .obs-button.obs-axent-button.obs-active { background: var(--obs-blue-soft); border-color: #b9c8ec; color: var(--obs-blue); }
 .obs-axent-note { display: inline-flex; align-items: flex-start; gap: 6px; padding-inline-start: 22px; font-family: "Bic Notes", "Segoe Print", cursive; font-size: clamp(20px, 0.8vw + 14px, 30px); line-height: 1.1; font-weight: 600; color: #2747a8; transform: rotate(-2deg); transform-origin: left center; }
 .obs-axent-note svg { flex: none; inline-size: 1.15em; block-size: 1.15em; margin-block-start: -0.7em; }
+/* Beside the header's right edge the cue hangs from the button's end, so its arrow lands under the button. */
+@media (min-width: 600px) { .obs-axent-cta { justify-items: end; } .obs-axent-note { flex-direction: row-reverse; padding-inline-start: 0; padding-inline-end: 18px; transform-origin: right center; } }
