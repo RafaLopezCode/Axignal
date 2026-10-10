@@ -1,4 +1,6 @@
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
 import test from "node:test";
 import sitemap from "../app/sitemap";
 import robots from "../app/robots";
@@ -151,7 +153,13 @@ test("GSC sitemap contains only canonical public indexable pages, not redirects,
     const values = rule.disallow;
     return values ? Array.isArray(values) ? values : [values] : [];
   });
-  for (const path of ["/demo", "/panorama", "/account", "/admin", "/api/"]) {
+  for (const path of ["/account", "/admin", "/api/", "/login", "/signup"]) {
     assert.ok(disallow.includes(path), `${path} must be excluded from crawlers`);
   }
+  // Google must be able to crawl the redirect and read the demo noindex directive.
+  for (const path of ["/panorama", "/demo"]) {
+    assert.ok(!disallow.includes(path), `${path} needs to remain crawlable for redirect/noindex`);
+  }
+  const demoSource = readFileSync(resolve(import.meta.dirname, "../app/demo/page.tsx"), "utf8");
+  assert.match(demoSource, /robots:\s*\{\s*index:\s*false,\s*follow:\s*false/);
 });
