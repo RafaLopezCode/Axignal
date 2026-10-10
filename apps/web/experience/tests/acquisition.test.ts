@@ -1,4 +1,6 @@
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
 import test from "node:test";
 import sitemap from "../app/sitemap";
 import robots from "../app/robots";
@@ -134,4 +136,30 @@ test("hreflang uses the Spanish x-default and robots expose the XML sitemap", ()
   assert.equal(languages.fr, "https://axignal.com/fr/knowledge");
   assert.equal(languages["x-default"], languages.es);
   assert.equal(robots().sitemap, "https://axignal.com/sitemap.xml");
+});
+
+test("GSC sitemap contains only canonical public indexable pages, not redirects, demo or private sessions", () => {
+  const entries = sitemap();
+  const forbidden = ["/demo", "/panorama", "/account", "/admin", "/login", "/signup", "/api/"];
+  assert.ok(entries.length > 0);
+  for (const entry of entries) {
+    const { origin, pathname } = new URL(entry.url);
+    assert.equal(origin, "https://axignal.com", `noncanonical origin: ${entry.url}`);
+    assert.ok(!forbidden.some(path => pathname === path || pathname.startsWith(path + "/")), `nonindexable URL in sitemap: ${entry.url}`);
+  }
+  const policy = robots().rules;
+  const rules = Array.isArray(policy) ? policy : [policy];
+  const disallow = rules.flatMap((rule) => {
+    const values = rule.disallow;
+    return values ? Array.isArray(values) ? values : [values] : [];
+  });
+  for (const path of ["/account", "/admin", "/api/", "/login", "/signup"]) {
+    assert.ok(disallow.includes(path), `${path} must be excluded from crawlers`);
+  }
+  // Google must be able to crawl the redirect and read the demo noindex directive.
+  for (const path of ["/panorama", "/demo"]) {
+    assert.ok(!disallow.includes(path), `${path} needs to remain crawlable for redirect/noindex`);
+  }
+  const demoSource = readFileSync(resolve(import.meta.dirname, "../app/demo/page.tsx"), "utf8");
+  assert.match(demoSource, /robots:\s*\{\s*index:\s*false,\s*follow:\s*false/);
 });
