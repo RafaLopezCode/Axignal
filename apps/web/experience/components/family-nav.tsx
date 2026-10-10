@@ -54,8 +54,12 @@ export function scopeCopy(facet: Facet, t: Translate, copy: (value: { es: string
 
 type Counts = { families: Record<FamilyId, number>; channels: Record<Channel, number> };
 
-export function FamilyNav({ facet, counts, lit, onSelect }: {
-  facet: Facet; counts: Counts; lit: Record<FamilyId, number>; onSelect: (facet: Facet) => void;
+/**
+ * The chips carry what is still unread, never a running total: a number means "there is something here you have
+ * not read yet", and it goes away once it has been read. A family or channel with no findings at all reads quieter.
+ */
+export function FamilyNav({ facet, counts, lit, litChannels, onSelect }: {
+  facet: Facet; counts: Counts; lit: Record<FamilyId, number>; litChannels: Record<Channel, number>; onSelect: (facet: Facet) => void;
 }) {
   const { t, copy } = useLocale();
   const root = useRef<HTMLDivElement>(null);
@@ -64,16 +68,16 @@ export function FamilyNav({ facet, counts, lit, onSelect }: {
     const selected = root.current?.querySelector<HTMLElement>("[aria-pressed='true']");
     selected?.scrollIntoView?.({ inline: "center", block: "nearest" });
   }, [facet.family, facet.channel]);
-  const litLabel = (n: number) => n === 1 ? t("1 nuevo", "1 new") : fill(t("{n} nuevos", "{n} new"), { n });
+  const unreadLabel = (n: number) => n === 1 ? t("1 sin leer", "1 unread") : fill(t("{n} sin leer", "{n} unread"), { n });
+  const unread = (n: number) => n > 0 && <span className="obs-facet-count" role="img" aria-label={unreadLabel(n)}>{n}</span>;
   return <div className="obs-facets" ref={root}>
     <nav className="obs-facet-nav" aria-label={t("Familias de observación", "Observation families")}>
       <ul>
         <li><button className="obs-facet" aria-pressed={!facet.family} onClick={() => onSelect(NO_FACET)}>{t("Todas", "All")}</button></li>
         {FAMILY_ORDER.map(id => <li key={id}>
-          <button className="obs-facet" aria-pressed={facet.family === id} onClick={() => onSelect({ family: id, channel: null })}>
+          <button className={`obs-facet${counts.families[id] === 0 ? " obs-facet-empty" : ""}`} aria-pressed={facet.family === id} onClick={() => onSelect({ family: id, channel: null })}>
             {copy(familyOf(id).name)}
-            {counts.families[id] > 0 && <span className="obs-facet-count">{counts.families[id]}</span>}
-            {lit[id] > 0 && <span className="obs-facet-lamp" role="img" aria-label={litLabel(lit[id])}/>}
+            {unread(lit[id])}
           </button>
         </li>)}
       </ul>
@@ -82,9 +86,9 @@ export function FamilyNav({ facet, counts, lit, onSelect }: {
       <ul>
         <li><button className="obs-facet obs-facet-channel" aria-pressed={!facet.channel} onClick={() => onSelect({ family: "presence", channel: null })}>{t("Todo", "All")}</button></li>
         {CHANNEL_ORDER.map(channel => <li key={channel}>
-          <button className="obs-facet obs-facet-channel" aria-pressed={facet.channel === channel} onClick={() => onSelect({ family: "presence", channel })}>
+          <button className={`obs-facet obs-facet-channel${counts.channels[channel] === 0 ? " obs-facet-empty" : ""}`} aria-pressed={facet.channel === channel} onClick={() => onSelect({ family: "presence", channel })}>
             {channelLabel(channel, t)}
-            {counts.channels[channel] > 0 && <span className="obs-facet-count">{counts.channels[channel]}</span>}
+            {unread(litChannels[channel])}
           </button>
         </li>)}
       </ul>

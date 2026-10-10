@@ -120,6 +120,8 @@
   "Not connected to this interface yet": ["Noch nicht mit dieser Oberfläche verbunden","Ainda não ligado a esta interface","Pas encore connecté à cette interface","Non ancora collegato a questa interfaccia"],
   "This surface will read the service": ["Diese Fläche liest künftig den Dienst","Esta superfície lerá o serviço","Cette surface lira le service","Questa superficie leggerà il servizio"],
   "Until then no record is shown: sample data does not stand in for a real reading.": ["Bis dahin wird kein Datensatz angezeigt: Beispieldaten ersetzen keine echte Lesung.","Até lá não se mostra nenhum registo: um dado de exemplo não substitui uma leitura real.","D’ici là, aucun enregistrement n’est affiché : une donnée d’exemple ne remplace pas une vraie lecture.","Fino ad allora non viene mostrato alcun record: un dato d’esempio non sostituisce una lettura reale."],
+  "1 unread": ["1 ungelesen","1 por ler","1 non lu","1 da leggere"],
+  "{n} unread": ["{n} ungelesen","{n} por ler","{n} non lus","{n} da leggere"],
   "Source excerpt": ["Quellenauszug", "Excerto da fonte", "Extrait de la source", "Estratto della fonte"],
   "What is happening?": ["Was passiert gerade?", "O que está a acontecer?", "Que se passe-t-il ?", "Cosa sta succedendo?"],
   "Open this family": ["Diese Familie öffnen", "Abrir esta família", "Ouvrir cette famille", "Apri questa famiglia"],

@@ -97,6 +97,13 @@ export function litByFamily(items: Array<Facet & { changeKey: string }>, lit: Re
   return out;
 }
 
+/** Unread findings per Presence channel, from the same lit keys as the families. */
+export function litByChannel(items: Array<Facet & { changeKey: string }>, lit: ReadonlySet<string>): Record<Channel, number> {
+  const out: Record<Channel, number> = { SEO: 0, GEO: 0, WEB: 0 };
+  for (const item of items) if (item.family === "presence" && item.channel && lit.has(item.changeKey)) out[item.channel] += 1;
+  return out;
+}
+
 const FAMILY_SET = new Set<string>(FAMILY_ORDER);
 const CHANNEL_SET = new Set<string>(CHANNEL_ORDER);
 

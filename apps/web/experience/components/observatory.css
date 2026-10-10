@@ -456,9 +456,11 @@ body:has(.obs-rail-desktop) .privacy-preferences-button { inset-inline-end: auto
 .obs-facet { display: inline-flex; align-items: center; gap: 8px; min-block-size: 38px; padding: 0 12px; border: 1px solid var(--obs-line); border-radius: var(--obs-r-badge); background: var(--obs-card); color: var(--obs-text); font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; white-space: nowrap; transition: background-color .18s var(--obs-ease), border-color .18s var(--obs-ease); }
 .obs-facet:hover { border-color: #b9c8ec; background: var(--obs-blue-soft); }
 .obs-facet[aria-pressed="true"] { background: var(--obs-blue-soft); border-color: var(--obs-blue); color: var(--obs-ink); }
-.obs-facet-count { display: inline-grid; place-items: center; min-inline-size: 22px; block-size: 22px; padding: 0 6px; border-radius: var(--obs-r-badge); background: var(--obs-blue-soft); color: var(--obs-blue); font-size: 12px; font-weight: 700; }
+.obs-facet-count { display: inline-grid; place-items: center; min-inline-size: 22px; block-size: 22px; padding: 0 6px; border-radius: var(--obs-r-badge); background: var(--obs-blue); color: #fff; font-size: 12px; font-weight: 700; }
 .obs-facet[aria-pressed="true"] .obs-facet-count { background: var(--obs-blue); color: #fff; }
-.obs-facet-lamp { inline-size: 8px; block-size: 8px; border-radius: 50%; background: var(--obs-brass); }
+/* A family with no findings at all reads quieter than one that has something to read. */
+.obs-facet-empty { color: var(--obs-muted); font-weight: 500; }
+.obs-facet-empty[aria-pressed="true"] { color: var(--obs-ink); font-weight: 600; }
 .obs-channel-nav { inline-size: fit-content; max-inline-size: 100%; padding: 6px; border-radius: var(--obs-r-card); background: var(--obs-blue-soft); }
 .obs-facet-channel { min-block-size: 36px; font-size: 13px; background: var(--obs-card); }
 .obs-facet-channel[aria-pressed="true"] { background: var(--obs-blue-soft); }

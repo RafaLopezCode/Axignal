@@ -25,7 +25,7 @@ import { SubscriberMcpConnections } from "./subscriber-mcp-connections";
 import { RuntimeAxent, useRuntimeAxent } from "./runtime-axent";
 import type { ObservatoryCapabilities } from "@/lib/observatory-source";
 import { channelLabel, FamilyNav, scopeCopy, type FacetScope } from "./family-nav";
-import { countByFacet, facetOfSourceType, facetParams, litByFamily, matchesFacet, parseFacet, type Facet } from "@/lib/observation-families";
+import { countByFacet, facetOfSourceType, facetParams, litByChannel, litByFamily, matchesFacet, parseFacet, type Facet } from "@/lib/observation-families";
 
 type Item = SubscriberPortfolio["organizations"][number];
 export type View = "summary" | "explore" | "evolution" | "evidence";
@@ -480,6 +480,7 @@ function OrganizationView(props: OrgProps) {
   const litShown = useMemo(() => new Set(shownKeys.filter(k => lit.has(k))), [shownKeys, lit]);
   const counts = useMemo(() => countByFacet(insights), [insights]);
   const litFamilies = useMemo(() => litByFamily(insights, lit), [insights, lit]);
+  const litChannels = useMemo(() => litByChannel(insights, lit), [insights, lit]);
   const scope = useMemo(() => scopeCopy(facet, t, copy), [facet, t, copy]);
   const selectFacet = (next: Facet) => transition(() => props.go({ ...facetParams(next), item: null }));
   const { reportLit } = props;
@@ -571,7 +572,7 @@ function OrganizationView(props: OrgProps) {
             if (next) { e.preventDefault(); go({ view: next[0], item: null }); window.requestAnimationFrame(() => document.getElementById(`tab-${next[0]}`)?.focus()); }
           }}>{label}</button>)}
       </div>
-      {ready && !observing && view !== "explore" && <FamilyNav facet={facet} counts={counts} lit={litFamilies} onSelect={selectFacet}/>}
+      {ready && !observing && view !== "explore" && <FamilyNav facet={facet} counts={counts} lit={litFamilies} litChannels={litChannels} onSelect={selectFacet}/>}
       <div className="obs-panel" role="tabpanel" id={`panel-${view}`} aria-labelledby={`tab-${view}`}>
         {props.reading && <ReadingSkeleton/>}
         {!props.reading && observing && <ObservingState state={item.observation!.state}/>}

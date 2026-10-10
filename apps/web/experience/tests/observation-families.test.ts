@@ -1,8 +1,10 @@
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
 import test from "node:test";
 import assert from "node:assert/strict";
 import {
   FAMILY_ORDER, NO_FACET, countByFacet, facetOfDiscovery, facetOfOpportunity, facetOfSourceType,
-  facetParams, litByFamily, matchesFacet, parseFacet,
+  facetParams, litByChannel, litByFamily, matchesFacet, parseFacet,
 } from "../lib/observation-families";
 import { insightsFor } from "../lib/observatory";
 import { subscriberOutputSchema } from "../lib/subscriber-contracts";
@@ -84,4 +86,22 @@ test("real readings carry a typed family on every finding the contract can place
     // SEO and GEO are never inferred: with no search or generative measurement in the reading, no finding is in them.
     assert.ok(insight.channel === null || insight.channel === "WEB" || insight.id.startsWith("SEARCH_VISIBILITY") || insight.id.startsWith("GENERATIVE_VISIBILITY"), insight.id);
   }
+});
+
+test("the chips count what is unread: the number goes when it has been read, and a family with nothing reads quieter", () => {
+  const items = [
+    { family: "presence" as const, channel: "SEO" as const, changeKey: "a" },
+    { family: "presence" as const, channel: "WEB" as const, changeKey: "b" },
+    { family: "demand" as const, channel: null, changeKey: "c" },
+  ];
+  assert.deepEqual(litByChannel(items, new Set(["a"])), { SEO: 1, GEO: 0, WEB: 0 });
+  assert.equal(litByFamily(items, new Set(["a", "b"])).presence, 2);
+  // Once everything is read there is no number anywhere.
+  assert.deepEqual(litByChannel(items, new Set()), { SEO: 0, GEO: 0, WEB: 0 });
+  assert.ok(Object.values(litByFamily(items, new Set())).every(n => n === 0));
+  const nav = readFileSync(resolve(process.cwd(), "components/family-nav.tsx"), "utf8");
+  assert.match(nav, /unread\(lit\[id\]\)/);
+  assert.match(nav, /unread\(litChannels\[channel\]\)/);
+  assert.match(nav, /obs-facet-empty/);
+  assert.doesNotMatch(nav, /obs-facet-lamp|counts\.families\[id\]\}<\/span>/);
 });
