@@ -513,3 +513,5 @@ body:has(.obs-rail-desktop) .privacy-preferences-button { inset-inline-end: auto
 @media (max-width: 880px) { .obs-org-actions .obs-axent-cta { order: -1; } }
 /* Stacked header: AXENT anchors the start of the row, the secondary tools sit together at the far end. */
 @media (max-width: 880px) { .obs-org-actions { inline-size: 100%; } .obs-org-actions > .obs-button:first-of-type { margin-inline-start: auto; } }
+/* On touch-sized screens the cue needs more air than the pointer layouts: it hangs well clear of its button. */
+@media (max-width: 880px) { .obs-org-actions { --axent-gap: clamp(24px, 2vw + 14px, 32px); } }
