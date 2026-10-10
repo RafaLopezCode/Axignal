@@ -24,6 +24,9 @@ export function SubscriberPortfolioExperience({ source = "live", notice }: { sou
   const live = source === "live";
   // The demo's snapshot follows the reader's language; the account never re-reads on a language change.
   const demoLocale = live ? null : locale;
+  // The Observatory keeps the callbacks it was first given, so the reader takes the current language from a ref.
+  const localeRef = useRef(locale);
+  localeRef.current = locale;
   const [portfolio, setPortfolio] = useState<SubscriberPortfolio | null>(null);
   const [access, setAccess] = useState<"loading" | "required" | "failure" | "ready">("loading");
   const [busy, setBusy] = useState(false);
@@ -163,11 +166,11 @@ export function SubscriberPortfolioExperience({ source = "live", notice }: { sou
   }
   /** The same reading in both modes: the account's authorized read, or the demo snapshot. */
   const loadOutput = useCallback(async (focusId: string, signal: AbortSignal): Promise<unknown> => {
-    if (!live) return syntheticOutput(focusId, demoLocale ?? "es");
+    if (!live) return syntheticOutput(focusId, localeRef.current);
     const response = await fetch(`/api/subscriber/organizations/${encodeURIComponent(focusId)}/output`, { cache: "no-store", signal });
     if (!response.ok) throw new Error("READ_FAILED");
     return response.json();
-  }, [live, demoLocale]);
+  }, [live]);
   const readOutput = useCallback(async (focusId: string, pushHistory = true) => {
     outputRequest.current?.abort();
     const controller = new AbortController(); outputRequest.current = controller; requests.current.add(controller);

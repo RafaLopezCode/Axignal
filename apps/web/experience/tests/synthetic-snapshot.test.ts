@@ -7,7 +7,7 @@ test("the demo snapshot is labelled synthetic and points only at reserved exampl
   const text = JSON.stringify(snapshot);
   const hosts = new Set([...text.matchAll(/https?:\/\/([^/"\\ ]+)/g)].map(m => m[1].replace(/^www\./, "")));
   assert.ok(hosts.size > 0);
-  for (const host of hosts) assert.match(host, /\.(example|test|invalid)$|^example\.(com|org|net)$|\.example\.com$|^demo-[a-z]+\.com$/, host);
+  for (const host of hosts) assert.match(host, /\.(example|test|invalid)$|^example\.(com|org|net)$|\.example\.com$|^demo-[a-z-]+\.com$/, host);
   // Names and hosts that could match a real company, public body or procurement platform.
   assert.doesNotMatch(text, /Solartec|Solaria Norte|Ledgerly|Boulangerie de la Lune|Little Rock Language|Getafe|ted\.europa|\bTED\b/);
 });
@@ -27,7 +27,7 @@ test("demo domains and names follow the reader's locale, with valid ASCII domain
   const { syntheticPortfolio } = await import("../lib/demo/synthetic-source");
   for (const locale of ["es", "en", "de", "pt", "fr", "it"] as const) {
     for (const org of syntheticPortfolio(locale).organizations) {
-      if (org.label.startsWith("Demo ")) assert.match(org.label, /^Demo [A-Za-zÀ-ÿ]+$/, `${locale}: ${org.label}`);
+      if (org.label.startsWith("Demo ")) assert.match(org.label, /^Demo [A-Za-zÀ-ÿ-]+$/, `${locale}: ${org.label}`);
     }
   }
   assert.equal(syntheticPortfolio("fr").organizations[6]?.label, "Demo Distributeur");

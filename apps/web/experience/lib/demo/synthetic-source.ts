@@ -19,8 +19,8 @@ const same = (word: string): Words => ({ es: word, en: word, de: word, pt: word,
  * `es` is the snapshot's own word; the other locales translate it, so the domain stays valid ASCII.
  */
 const SITES: { es: string; words: Words }[] = [
-  { es: "seo", words: same("seo") },
-  { es: "geo", words: same("geo") },
+  { es: "energia", words: { es: "energia", en: "energy", de: "energie", pt: "energia", fr: "energie", it: "energia" } },
+  { es: "seo-geo", words: same("seo-geo") },
   { es: "consultor", words: { es: "consultor", en: "consultant", de: "berater", pt: "consultor", fr: "consultant", it: "consulente" } },
   { es: "constructor", words: { es: "constructor", en: "builder", de: "bauunternehmer", pt: "construtor", fr: "constructeur", it: "costruttore" } },
   { es: "marketing", words: same("marketing") },

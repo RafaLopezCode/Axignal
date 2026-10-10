@@ -1,8 +1,8 @@
 {
  "provenance": "SYNTHETIC: fictional organizations on demo domains and example.* hosts. Produced by the subscriber composition over a controlled test world. No real organization, source or person.",
  "demoSites": [
-  "seo",
-  "geo",
+  "energia",
+  "seo-geo",
   "consultor",
   "constructor",
   "marketing",
@@ -13,7 +13,7 @@
   {
    "focusId": "focus_ae5bbf52b76149b4af22a67a9fbafeb6",
    "organizationId": "org:id:2685bc852d5ff31e64a4f0ecbb399b66",
-   "label": "Demo Seo",
+   "label": "Demo Energia",
    "state": "ACTIVE",
    "observation": {
     "state": "FIRST_PROOF_READY",
@@ -26,14 +26,14 @@
   {
    "focusId": "pending_2ede23d46215446c857f5f2bdccd3c0e",
    "organizationId": null,
-   "label": "Demo Geo",
+   "label": "Demo Seo-geo",
    "state": "IDENTITY_PENDING",
    "reason": "IDENTITY_SOURCE_UNAVAILABLE",
    "observation": {
     "state": "FIRST_PROOF_READY",
     "firstProofReady": true,
-    "headline": "Solar photovoltaic installation",
-    "headlineCode": "solar-pv-installation",
+    "headline": "Search and AI visibility",
+    "headlineCode": "digital-visibility",
     "observedAt": "2026-10-09T20:02:57.594406+00:00"
    }
   },
@@ -46,8 +46,8 @@
    "observation": {
     "state": "FIRST_PROOF_READY",
     "firstProofReady": true,
-    "headline": "Education",
-    "headlineCode": "isic-P",
+    "headline": "Management consulting",
+    "headlineCode": "isic-M",
     "observedAt": "2026-10-09T20:02:58.079301+00:00"
    }
   },
@@ -60,8 +60,8 @@
    "observation": {
     "state": "FIRST_PROOF_READY",
     "firstProofReady": true,
-    "headline": "Information and communication",
-    "headlineCode": "isic-J",
+    "headline": "Construction",
+    "headlineCode": "isic-F",
     "observedAt": "2026-10-09T20:02:58.550028+00:00"
    }
   },
@@ -74,8 +74,8 @@
    "observation": {
     "state": "FIRST_PROOF_READY",
     "firstProofReady": true,
-    "headline": "Accommodation and food service activities",
-    "headlineCode": "isic-I",
+    "headline": "Advertising and market research",
+    "headlineCode": "isic-M-73",
     "observedAt": "2026-10-09T20:02:59.032064+00:00"
    }
   },
@@ -88,8 +88,8 @@
    "observation": {
     "state": "NOT_ENOUGH_CAPABILITY_EVIDENCE",
     "firstProofReady": false,
-    "headline": "Coming soon",
-    "headlineCode": "PUBLIC_WEBSITE_OBSERVED",
+    "headline": "Manufacturing",
+    "headlineCode": "isic-C",
     "observedAt": "2026-10-09T20:02:59.499848+00:00"
    }
   },
@@ -117,11 +117,11 @@
     "lifecycleStatus": "LIVE",
     "context": {
      "id": "focus_ae5bbf52b76149b4af22a67a9fbafeb6",
-     "label": "Demo Seo"
+     "label": "Demo Energia"
     },
     "organization": {
      "id": "org:id:2685bc852d5ff31e64a4f0ecbb399b66",
-     "name": "Demo Seo"
+     "name": "Demo Energia"
     },
     "nodes": [],
     "temporalHistory": {
@@ -129,7 +129,7 @@
      "items": [
       {
        "observationId": "fo:24cde4e93eaefc28fe5237288a2365d3",
-       "sourceRef": "https://www.demo-seo.com/",
+       "sourceRef": "https://www.demo-energia.com/",
        "sourceType": "PUBLIC_WEBSITE",
        "observedAt": "2026-10-09T20:02:56.894179+00:00",
        "currentness": "CURRENT",
@@ -137,7 +137,7 @@
       },
       {
        "observationId": "fo:95e24de6eb7273bf3d61e19c454a1cfa",
-       "sourceRef": "https://www.demo-seo.com/services",
+       "sourceRef": "https://www.demo-energia.com/services",
        "sourceType": "PUBLIC_WEBSITE",
        "observedAt": "2026-10-09T20:02:56.894179+00:00",
        "currentness": "CURRENT",
@@ -145,7 +145,7 @@
       },
       {
        "observationId": "fo:47ad8af5f78e8c1fd50bb5077cec7f8c",
-       "sourceRef": "https://www.demo-seo.com/",
+       "sourceRef": "https://www.demo-energia.com/",
        "sourceType": "PUBLIC_WEBSITE",
        "observedAt": "2026-10-09T20:02:57.038873+00:00",
        "currentness": "CURRENT",
@@ -153,7 +153,7 @@
       },
       {
        "observationId": "fo:51ce03b9efe4bcf3ca9b8f620808c99e",
-       "sourceRef": "https://www.demo-seo.com/services",
+       "sourceRef": "https://www.demo-energia.com/services",
        "sourceType": "PUBLIC_WEBSITE",
        "observedAt": "2026-10-09T20:02:57.038873+00:00",
        "currentness": "CURRENT",
@@ -176,46 +176,46 @@
      "sources": [
       {
        "id": "fo:24cde4e93eaefc28fe5237288a2365d3",
-       "title": "https://www.demo-seo.com/",
+       "title": "https://www.demo-energia.com/",
        "observedAt": "2026-10-09T20:02:56.894179+00:00",
        "currentness": "CURRENT",
        "currentnessEvaluatedAt": "2026-10-09T20:02:57.099647+00:00",
        "instrument": "UNKNOWN — acquisition instrument is not recorded in this read contract",
        "limitation": "One authorized source observation; coverage beyond this document remains unknown.",
-       "sourceRef": "https://www.demo-seo.com/",
+       "sourceRef": "https://www.demo-energia.com/",
        "provenanceRef": "artifact:8e309d27c17806b3"
       },
       {
        "id": "fo:47ad8af5f78e8c1fd50bb5077cec7f8c",
-       "title": "https://www.demo-seo.com/",
+       "title": "https://www.demo-energia.com/",
        "observedAt": "2026-10-09T20:02:57.038873+00:00",
        "currentness": "CURRENT",
        "currentnessEvaluatedAt": "2026-10-09T20:02:57.099647+00:00",
        "instrument": "UNKNOWN — acquisition instrument is not recorded in this read contract",
        "limitation": "One authorized source observation; coverage beyond this document remains unknown.",
-       "sourceRef": "https://www.demo-seo.com/",
+       "sourceRef": "https://www.demo-energia.com/",
        "provenanceRef": "artifact:8e309d27c17806b3"
       },
       {
        "id": "fo:51ce03b9efe4bcf3ca9b8f620808c99e",
-       "title": "https://www.demo-seo.com/services",
+       "title": "https://www.demo-energia.com/services",
        "observedAt": "2026-10-09T20:02:57.038873+00:00",
        "currentness": "CURRENT",
        "currentnessEvaluatedAt": "2026-10-09T20:02:57.099647+00:00",
        "instrument": "UNKNOWN — acquisition instrument is not recorded in this read contract",
        "limitation": "One authorized source observation; coverage beyond this document remains unknown.",
-       "sourceRef": "https://www.demo-seo.com/services",
+       "sourceRef": "https://www.demo-energia.com/services",
        "provenanceRef": "artifact:7d611e93ca58fc87"
       },
       {
        "id": "fo:95e24de6eb7273bf3d61e19c454a1cfa",
-       "title": "https://www.demo-seo.com/services",
+       "title": "https://www.demo-energia.com/services",
        "observedAt": "2026-10-09T20:02:56.894179+00:00",
        "currentness": "CURRENT",
        "currentnessEvaluatedAt": "2026-10-09T20:02:57.099647+00:00",
        "instrument": "UNKNOWN — acquisition instrument is not recorded in this read contract",
        "limitation": "One authorized source observation; coverage beyond this document remains unknown.",
-       "sourceRef": "https://www.demo-seo.com/services",
+       "sourceRef": "https://www.demo-energia.com/services",
        "provenanceRef": "artifact:8cbf3ccbdb8e7be1"
       },
       {
@@ -240,7 +240,7 @@
       {
        "buyer": "Ayuntamiento Ejemplo",
        "capability": {
-        "excerpt": "Demo Seo | photovoltaic installation",
+        "excerpt": "Demo Energia | photovoltaic installation",
         "label": "Solar photovoltaic installation",
         "sourceId": "fo:47ad8af5f78e8c1fd50bb5077cec7f8c"
        },
@@ -336,7 +336,7 @@
        "whyLooked": [
         "«Which open public tenders ask for its observed capabilities?» necesita PUBLIC_PROCUREMENT_OPPORTUNITIES; Tenders Electronic Daily — Search API v3 lo publica para ES y permite buscar por CPV."
        ],
-       "whyPotential": "AXIGNAL observó que la empresa declara «Demo Seo | photovoltaic installation» y este comprador pide 09332000 (Solar photovoltaic installation)."
+       "whyPotential": "AXIGNAL observó que la empresa declara «Demo Energia | photovoltaic installation» y este comprador pide 09332000 (Solar photovoltaic installation)."
       }
      ],
      "economicGarden": {
@@ -388,11 +388,11 @@
        "pagesRead": 2
       },
       "epistemicState": "OBSERVED",
-      "excerpt": "Demo Seo | photovoltaic installation",
+      "excerpt": "Demo Energia | photovoltaic installation",
       "kind": "PUBLIC_PRESENCE",
       "observedAt": "2026-10-09T20:02:57.038873+00:00",
-      "sourceUrl": "https://www.demo-seo.com/",
-      "statement": "Demo Seo | photovoltaic installation"
+      "sourceUrl": "https://www.demo-energia.com/",
+      "statement": "Demo Energia | photovoltaic installation"
      },
      {
       "code": "LANGUAGES_PUBLISHED",
@@ -405,7 +405,7 @@
       "excerpt": null,
       "kind": "LANGUAGES",
       "observedAt": "2026-10-09T20:02:57.038873+00:00",
-      "sourceUrl": "https://www.demo-seo.com/",
+      "sourceUrl": "https://www.demo-energia.com/",
       "statement": "en"
      },
      {
@@ -417,7 +417,7 @@
       "excerpt": "schema.org address: ES",
       "kind": "DECLARED_LOCATION",
       "observedAt": "2026-10-09T20:02:57.038873+00:00",
-      "sourceUrl": "https://www.demo-seo.com/",
+      "sourceUrl": "https://www.demo-energia.com/",
       "statement": "ES"
      },
      {
@@ -434,10 +434,10 @@
        ]
       },
       "epistemicState": "POTENTIAL",
-      "excerpt": "Demo Seo | photovoltaic installation",
+      "excerpt": "Demo Energia | photovoltaic installation",
       "kind": "ACTIVITY",
       "observedAt": "2026-10-09T20:02:57.038873+00:00",
-      "sourceUrl": "https://www.demo-seo.com/",
+      "sourceUrl": "https://www.demo-energia.com/",
       "statement": "Solar photovoltaic installation"
      },
      {
@@ -466,7 +466,7 @@
       "excerpt": null,
       "kind": "WEB_REPRESENTATION",
       "observedAt": "2026-10-09T20:02:57.038873+00:00",
-      "sourceUrl": "https://www.demo-seo.com/",
+      "sourceUrl": "https://www.demo-energia.com/",
       "statement": "Public web representation checks"
      },
      {
@@ -483,7 +483,7 @@
       "excerpt": null,
       "kind": "REPRESENTATION_GAP",
       "observedAt": "2026-10-09T20:02:57.038873+00:00",
-      "sourceUrl": "https://www.demo-seo.com/",
+      "sourceUrl": "https://www.demo-energia.com/",
       "statement": "On the pages read, its activity is evidenced in prose but no service or product is declared as structured data."
      },
      {
@@ -540,36 +540,36 @@
        "contentFingerprint": "sha256:8e309d27c17806b3e59f9a4fc69385acb6f330269c535a94a79dada29ef32614",
        "id": "q1",
        "observedAt": "2026-10-09T20:02:57.038873+00:00",
-       "quote": "Demo Seo | photovoltaic installation",
-       "url": "https://www.demo-seo.com/"
+       "quote": "Demo Energia | photovoltaic installation",
+       "url": "https://www.demo-energia.com/"
       },
       {
        "contentFingerprint": "sha256:8e309d27c17806b3e59f9a4fc69385acb6f330269c535a94a79dada29ef32614",
        "id": "q2",
        "observedAt": "2026-10-09T20:02:57.038873+00:00",
        "quote": "We install photovoltaic panels.",
-       "url": "https://www.demo-seo.com/"
+       "url": "https://www.demo-energia.com/"
       },
       {
        "contentFingerprint": "sha256:8e309d27c17806b3e59f9a4fc69385acb6f330269c535a94a79dada29ef32614",
        "id": "q3",
        "observedAt": "2026-10-09T20:02:57.038873+00:00",
        "quote": "Services",
-       "url": "https://www.demo-seo.com/"
+       "url": "https://www.demo-energia.com/"
       },
       {
        "contentFingerprint": "sha256:7d611e93ca58fc872816c155d6a76ac16944dcdc79b2e43d57c318912d83803c",
        "id": "q4",
        "observedAt": "2026-10-09T20:02:57.038873+00:00",
        "quote": "We install photovoltaic panels for households.",
-       "url": "https://www.demo-seo.com/services"
+       "url": "https://www.demo-energia.com/services"
       },
       {
        "contentFingerprint": "sha256:7d611e93ca58fc872816c155d6a76ac16944dcdc79b2e43d57c318912d83803c",
        "id": "q5",
        "observedAt": "2026-10-09T20:02:57.038873+00:00",
        "quote": "Our systems reduce purchased electricity under suitable site conditions.",
-       "url": "https://www.demo-seo.com/services"
+       "url": "https://www.demo-energia.com/services"
       }
      ],
      "compatibilityKey": "77a085b76dabcfcaf5aa77ed6e33f63c5e6699a6816e741ba20a7de86e00c05d",
@@ -582,8 +582,8 @@
       "replicaPolicy": "ONE_EXECUTION_OR_EXACT_JUDGMENT_REUSE",
       "sampleSize": 1,
       "sourceSet": [
-       "https://www.demo-seo.com/",
-       "https://www.demo-seo.com/services"
+       "https://www.demo-energia.com/",
+       "https://www.demo-energia.com/services"
       ],
       "surface": "OWN_PUBLIC_WEBSITE_API_INTERPRETATION"
      },
@@ -656,22 +656,22 @@
      "sourceObservedAt": "2026-10-09T20:02:57.038873+00:00",
      "sourceRights": [
       {
-       "basisRef": "source-registry:website:demo-seo.com@1:c82ae7b330d67a9d587070262ac3b17defa7164d3bf78638abbea11c75cf7892",
+       "basisRef": "source-registry:website:demo-energia.com@1:c82ae7b330d67a9d587070262ac3b17defa7164d3bf78638abbea11c75cf7892",
        "policyVersion": "first-observation-content-rights.v1",
        "providerInput": true,
        "publicOfferInput": true,
        "rawRetentionDays": 90,
        "reusePermitted": true,
-       "url": "https://www.demo-seo.com/"
+       "url": "https://www.demo-energia.com/"
       },
       {
-       "basisRef": "source-registry:website:demo-seo.com@1:c82ae7b330d67a9d587070262ac3b17defa7164d3bf78638abbea11c75cf7892",
+       "basisRef": "source-registry:website:demo-energia.com@1:c82ae7b330d67a9d587070262ac3b17defa7164d3bf78638abbea11c75cf7892",
        "policyVersion": "first-observation-content-rights.v1",
        "providerInput": true,
        "publicOfferInput": true,
        "rawRetentionDays": 90,
        "reusePermitted": true,
-       "url": "https://www.demo-seo.com/services"
+       "url": "https://www.demo-energia.com/services"
       }
      ],
      "stateFingerprint": "a76d47ea8bf8e0b90c1e36ff073d78fe09b6c15744d8bd4a78e164b061b52f88",
@@ -686,29 +686,29 @@
          "contentFingerprint": "sha256:8e309d27c17806b3e59f9a4fc69385acb6f330269c535a94a79dada29ef32614",
          "id": "q1",
          "observedAt": "2026-10-09T20:02:56.894179+00:00",
-         "quote": "Demo Seo | photovoltaic installation",
-         "url": "https://www.demo-seo.com/"
+         "quote": "Demo Energia | photovoltaic installation",
+         "url": "https://www.demo-energia.com/"
         },
         {
          "contentFingerprint": "sha256:8e309d27c17806b3e59f9a4fc69385acb6f330269c535a94a79dada29ef32614",
          "id": "q2",
          "observedAt": "2026-10-09T20:02:56.894179+00:00",
          "quote": "We install photovoltaic panels.",
-         "url": "https://www.demo-seo.com/"
+         "url": "https://www.demo-energia.com/"
         },
         {
          "contentFingerprint": "sha256:8e309d27c17806b3e59f9a4fc69385acb6f330269c535a94a79dada29ef32614",
          "id": "q3",
          "observedAt": "2026-10-09T20:02:56.894179+00:00",
          "quote": "Services",
-         "url": "https://www.demo-seo.com/"
+         "url": "https://www.demo-energia.com/"
         },
         {
          "contentFingerprint": "sha256:8cbf3ccbdb8e7be18e0006fc579912ccbcfcab437e3c9c94a835d7e191efdd71",
          "id": "q4",
          "observedAt": "2026-10-09T20:02:56.894179+00:00",
          "quote": "We install photovoltaic panels.",
-         "url": "https://www.demo-seo.com/services"
+         "url": "https://www.demo-energia.com/services"
         }
        ],
        "compatibilityKey": "77a085b76dabcfcaf5aa77ed6e33f63c5e6699a6816e741ba20a7de86e00c05d",
@@ -721,8 +721,8 @@
         "replicaPolicy": "ONE_EXECUTION_OR_EXACT_JUDGMENT_REUSE",
         "sampleSize": 1,
         "sourceSet": [
-         "https://www.demo-seo.com/",
-         "https://www.demo-seo.com/services"
+         "https://www.demo-energia.com/",
+         "https://www.demo-energia.com/services"
         ],
         "surface": "OWN_PUBLIC_WEBSITE_API_INTERPRETATION"
        },
@@ -801,22 +801,22 @@
        "sourceObservedAt": "2026-10-09T20:02:56.894179+00:00",
        "sourceRights": [
         {
-         "basisRef": "source-registry:website:demo-seo.com@1:c82ae7b330d67a9d587070262ac3b17defa7164d3bf78638abbea11c75cf7892",
+         "basisRef": "source-registry:website:demo-energia.com@1:c82ae7b330d67a9d587070262ac3b17defa7164d3bf78638abbea11c75cf7892",
          "policyVersion": "first-observation-content-rights.v1",
          "providerInput": true,
          "publicOfferInput": true,
          "rawRetentionDays": 90,
          "reusePermitted": true,
-         "url": "https://www.demo-seo.com/"
+         "url": "https://www.demo-energia.com/"
         },
         {
-         "basisRef": "source-registry:website:demo-seo.com@1:c82ae7b330d67a9d587070262ac3b17defa7164d3bf78638abbea11c75cf7892",
+         "basisRef": "source-registry:website:demo-energia.com@1:c82ae7b330d67a9d587070262ac3b17defa7164d3bf78638abbea11c75cf7892",
          "policyVersion": "first-observation-content-rights.v1",
          "providerInput": true,
          "publicOfferInput": true,
          "rawRetentionDays": 90,
          "reusePermitted": true,
-         "url": "https://www.demo-seo.com/services"
+         "url": "https://www.demo-energia.com/services"
         }
        ],
        "stateFingerprint": "afb412096b77cf5777afab8e0f1a48f2a940eefab0f4e4da4ebfc0f5a2c375a8",
@@ -837,7 +837,7 @@
         "kind": "STATE_CHANGED",
         "beforeQuotations": [
          "Services",
-         "Demo Seo | photovoltaic installation",
+         "Demo Energia | photovoltaic installation",
          "We install photovoltaic panels.",
          "We install photovoltaic panels."
         ],
@@ -852,7 +852,7 @@
         "kind": "STATE_CHANGED",
         "beforeQuotations": [
          "Services",
-         "Demo Seo | photovoltaic installation",
+         "Demo Energia | photovoltaic installation",
          "We install photovoltaic panels.",
          "We install photovoltaic panels."
         ],
@@ -868,7 +868,7 @@
     "state": "FIRST_PROOF_READY",
     "target": {
      "kind": "FOCUS",
-     "website": "https://www.demo-seo.com/",
+     "website": "https://www.demo-energia.com/",
      "name": null,
      "identityLink": "REGISTRY_VERIFIED"
     }
@@ -882,11 +882,11 @@
     "lifecycleStatus": "LIVE",
     "context": {
      "id": "focus_ae5bbf52b76149b4af22a67a9fbafeb6",
-     "label": "Demo Seo"
+     "label": "Demo Energia"
     },
     "organization": {
      "id": "org:id:2685bc852d5ff31e64a4f0ecbb399b66",
-     "name": "Demo Seo"
+     "name": "Demo Energia"
     },
     "nodes": [],
     "temporalHistory": {
@@ -894,7 +894,7 @@
      "items": [
       {
        "observationId": "fo:24cde4e93eaefc28fe5237288a2365d3",
-       "sourceRef": "https://www.demo-seo.com/",
+       "sourceRef": "https://www.demo-energia.com/",
        "sourceType": "PUBLIC_WEBSITE",
        "observedAt": "2026-10-09T20:02:56.894179+00:00",
        "currentness": "CURRENT",
@@ -902,7 +902,7 @@
       },
       {
        "observationId": "fo:95e24de6eb7273bf3d61e19c454a1cfa",
-       "sourceRef": "https://www.demo-seo.com/services",
+       "sourceRef": "https://www.demo-energia.com/services",
        "sourceType": "PUBLIC_WEBSITE",
        "observedAt": "2026-10-09T20:02:56.894179+00:00",
        "currentness": "CURRENT",
@@ -925,24 +925,24 @@
      "sources": [
       {
        "id": "fo:24cde4e93eaefc28fe5237288a2365d3",
-       "title": "https://www.demo-seo.com/",
+       "title": "https://www.demo-energia.com/",
        "observedAt": "2026-10-09T20:02:56.894179+00:00",
        "currentness": "CURRENT",
        "currentnessEvaluatedAt": "2026-10-09T20:02:56.999256+00:00",
        "instrument": "UNKNOWN — acquisition instrument is not recorded in this read contract",
        "limitation": "One authorized source observation; coverage beyond this document remains unknown.",
-       "sourceRef": "https://www.demo-seo.com/",
+       "sourceRef": "https://www.demo-energia.com/",
        "provenanceRef": "artifact:8e309d27c17806b3"
       },
       {
        "id": "fo:95e24de6eb7273bf3d61e19c454a1cfa",
-       "title": "https://www.demo-seo.com/services",
+       "title": "https://www.demo-energia.com/services",
        "observedAt": "2026-10-09T20:02:56.894179+00:00",
        "currentness": "CURRENT",
        "currentnessEvaluatedAt": "2026-10-09T20:02:56.999256+00:00",
        "instrument": "UNKNOWN — acquisition instrument is not recorded in this read contract",
        "limitation": "One authorized source observation; coverage beyond this document remains unknown.",
-       "sourceRef": "https://www.demo-seo.com/services",
+       "sourceRef": "https://www.demo-energia.com/services",
        "provenanceRef": "artifact:8cbf3ccbdb8e7be1"
       },
       {
@@ -967,7 +967,7 @@
       {
        "buyer": "Ayuntamiento Ejemplo",
        "capability": {
-        "excerpt": "Demo Seo | photovoltaic installation",
+        "excerpt": "Demo Energia | photovoltaic installation",
         "label": "Solar photovoltaic installation",
         "sourceId": "fo:24cde4e93eaefc28fe5237288a2365d3"
        },
@@ -1063,7 +1063,7 @@
        "whyLooked": [
         "«Which open public tenders ask for its observed capabilities?» necesita PUBLIC_PROCUREMENT_OPPORTUNITIES; Tenders Electronic Daily — Search API v3 lo publica para ES y permite buscar por CPV."
        ],
-       "whyPotential": "AXIGNAL observó que la empresa declara «Demo Seo | photovoltaic installation» y este comprador pide 09332000 (Solar photovoltaic installation)."
+       "whyPotential": "AXIGNAL observó que la empresa declara «Demo Energia | photovoltaic installation» y este comprador pide 09332000 (Solar photovoltaic installation)."
       }
      ],
      "economicGarden": {
@@ -1115,11 +1115,11 @@
        "pagesRead": 2
       },
       "epistemicState": "OBSERVED",
-      "excerpt": "Demo Seo | photovoltaic installation",
+      "excerpt": "Demo Energia | photovoltaic installation",
       "kind": "PUBLIC_PRESENCE",
       "observedAt": "2026-10-09T20:02:56.894179+00:00",
-      "sourceUrl": "https://www.demo-seo.com/",
-      "statement": "Demo Seo | photovoltaic installation"
+      "sourceUrl": "https://www.demo-energia.com/",
+      "statement": "Demo Energia | photovoltaic installation"
      },
      {
       "code": "LANGUAGES_PUBLISHED",
@@ -1132,7 +1132,7 @@
       "excerpt": null,
       "kind": "LANGUAGES",
       "observedAt": "2026-10-09T20:02:56.894179+00:00",
-      "sourceUrl": "https://www.demo-seo.com/",
+      "sourceUrl": "https://www.demo-energia.com/",
       "statement": "en"
      },
      {
@@ -1144,7 +1144,7 @@
       "excerpt": "schema.org address: ES",
       "kind": "DECLARED_LOCATION",
       "observedAt": "2026-10-09T20:02:56.894179+00:00",
-      "sourceUrl": "https://www.demo-seo.com/",
+      "sourceUrl": "https://www.demo-energia.com/",
       "statement": "ES"
      },
      {
@@ -1161,10 +1161,10 @@
        ]
       },
       "epistemicState": "POTENTIAL",
-      "excerpt": "Demo Seo | photovoltaic installation",
+      "excerpt": "Demo Energia | photovoltaic installation",
       "kind": "ACTIVITY",
       "observedAt": "2026-10-09T20:02:56.894179+00:00",
-      "sourceUrl": "https://www.demo-seo.com/",
+      "sourceUrl": "https://www.demo-energia.com/",
       "statement": "Solar photovoltaic installation"
      },
      {
@@ -1193,7 +1193,7 @@
       "excerpt": null,
       "kind": "WEB_REPRESENTATION",
       "observedAt": "2026-10-09T20:02:56.894179+00:00",
-      "sourceUrl": "https://www.demo-seo.com/",
+      "sourceUrl": "https://www.demo-energia.com/",
       "statement": "Public web representation checks"
      },
      {
@@ -1210,7 +1210,7 @@
       "excerpt": null,
       "kind": "REPRESENTATION_GAP",
       "observedAt": "2026-10-09T20:02:56.894179+00:00",
-      "sourceUrl": "https://www.demo-seo.com/",
+      "sourceUrl": "https://www.demo-energia.com/",
       "statement": "On the pages read, its activity is evidenced in prose but no service or product is declared as structured data."
      },
      {
@@ -1267,29 +1267,29 @@
        "contentFingerprint": "sha256:8e309d27c17806b3e59f9a4fc69385acb6f330269c535a94a79dada29ef32614",
        "id": "q1",
        "observedAt": "2026-10-09T20:02:56.894179+00:00",
-       "quote": "Demo Seo | photovoltaic installation",
-       "url": "https://www.demo-seo.com/"
+       "quote": "Demo Energia | photovoltaic installation",
+       "url": "https://www.demo-energia.com/"
       },
       {
        "contentFingerprint": "sha256:8e309d27c17806b3e59f9a4fc69385acb6f330269c535a94a79dada29ef32614",
        "id": "q2",
        "observedAt": "2026-10-09T20:02:56.894179+00:00",
        "quote": "We install photovoltaic panels.",
-       "url": "https://www.demo-seo.com/"
+       "url": "https://www.demo-energia.com/"
       },
       {
        "contentFingerprint": "sha256:8e309d27c17806b3e59f9a4fc69385acb6f330269c535a94a79dada29ef32614",
        "id": "q3",
        "observedAt": "2026-10-09T20:02:56.894179+00:00",
        "quote": "Services",
-       "url": "https://www.demo-seo.com/"
+       "url": "https://www.demo-energia.com/"
       },
       {
        "contentFingerprint": "sha256:8cbf3ccbdb8e7be18e0006fc579912ccbcfcab437e3c9c94a835d7e191efdd71",
        "id": "q4",
        "observedAt": "2026-10-09T20:02:56.894179+00:00",
        "quote": "We install photovoltaic panels.",
-       "url": "https://www.demo-seo.com/services"
+       "url": "https://www.demo-energia.com/services"
       }
      ],
      "compatibilityKey": "77a085b76dabcfcaf5aa77ed6e33f63c5e6699a6816e741ba20a7de86e00c05d",
@@ -1302,8 +1302,8 @@
       "replicaPolicy": "ONE_EXECUTION_OR_EXACT_JUDGMENT_REUSE",
       "sampleSize": 1,
       "sourceSet": [
-       "https://www.demo-seo.com/",
-       "https://www.demo-seo.com/services"
+       "https://www.demo-energia.com/",
+       "https://www.demo-energia.com/services"
       ],
       "surface": "OWN_PUBLIC_WEBSITE_API_INTERPRETATION"
      },
@@ -1382,22 +1382,22 @@
      "sourceObservedAt": "2026-10-09T20:02:56.894179+00:00",
      "sourceRights": [
       {
-       "basisRef": "source-registry:website:demo-seo.com@1:c82ae7b330d67a9d587070262ac3b17defa7164d3bf78638abbea11c75cf7892",
+       "basisRef": "source-registry:website:demo-energia.com@1:c82ae7b330d67a9d587070262ac3b17defa7164d3bf78638abbea11c75cf7892",
        "policyVersion": "first-observation-content-rights.v1",
        "providerInput": true,
        "publicOfferInput": true,
        "rawRetentionDays": 90,
        "reusePermitted": true,
-       "url": "https://www.demo-seo.com/"
+       "url": "https://www.demo-energia.com/"
       },
       {
-       "basisRef": "source-registry:website:demo-seo.com@1:c82ae7b330d67a9d587070262ac3b17defa7164d3bf78638abbea11c75cf7892",
+       "basisRef": "source-registry:website:demo-energia.com@1:c82ae7b330d67a9d587070262ac3b17defa7164d3bf78638abbea11c75cf7892",
        "policyVersion": "first-observation-content-rights.v1",
        "providerInput": true,
        "publicOfferInput": true,
        "rawRetentionDays": 90,
        "reusePermitted": true,
-       "url": "https://www.demo-seo.com/services"
+       "url": "https://www.demo-energia.com/services"
       }
      ],
      "stateFingerprint": "afb412096b77cf5777afab8e0f1a48f2a940eefab0f4e4da4ebfc0f5a2c375a8",
@@ -1410,7 +1410,7 @@
     "state": "FIRST_PROOF_READY",
     "target": {
      "kind": "FOCUS",
-     "website": "https://www.demo-seo.com/",
+     "website": "https://www.demo-energia.com/",
      "name": null,
      "identityLink": "REGISTRY_VERIFIED"
     }
@@ -1438,11 +1438,11 @@
        "pagesRead": 1
       },
       "epistemicState": "OBSERVED",
-      "excerpt": "Diseñamos e instalamos sistemas de autoconsumo fotovoltaico para empresas y ayuntamientos.",
+      "excerpt": "We help brands get found in search engines and in AI assistant answers.",
       "kind": "PUBLIC_PRESENCE",
       "observedAt": "2026-10-09T20:02:56.279404+00:00",
-      "sourceUrl": "https://demo-geo.com/",
-      "statement": "Demo Geo | Instalaciones fotovoltaicas"
+      "sourceUrl": "https://demo-seo-geo.com/",
+      "statement": "We help brands get found in search engines and in AI assistant answers."
      },
      {
       "code": "LANGUAGES_PUBLISHED",
@@ -1455,7 +1455,7 @@
       "excerpt": null,
       "kind": "LANGUAGES",
       "observedAt": "2026-10-09T20:02:56.279404+00:00",
-      "sourceUrl": "https://demo-geo.com/",
+      "sourceUrl": "https://demo-seo-geo.com/",
       "statement": "es"
      },
      {
@@ -1467,7 +1467,7 @@
       "excerpt": "schema.org address: Madrid, ES",
       "kind": "DECLARED_LOCATION",
       "observedAt": "2026-10-09T20:02:56.279404+00:00",
-      "sourceUrl": "https://demo-geo.com/",
+      "sourceUrl": "https://demo-seo-geo.com/",
       "statement": "Madrid, ES"
      },
      {
@@ -1479,8 +1479,8 @@
       "excerpt": null,
       "kind": "IDENTITY_HINT",
       "observedAt": "2026-10-09T20:02:56.279404+00:00",
-      "sourceUrl": "https://demo-geo.com/",
-      "statement": "Demo Geo SL"
+      "sourceUrl": "https://demo-seo-geo.com/",
+      "statement": "Demo Seo-geo SL"
      },
      {
       "code": "solar-pv-installation",
@@ -1496,10 +1496,10 @@
        ]
       },
       "epistemicState": "POTENTIAL",
-      "excerpt": "Demo Geo | Instalaciones fotovoltaicas",
+      "excerpt": "Demo Seo-geo | Instalaciones fotovoltaicas",
       "kind": "ACTIVITY",
       "observedAt": "2026-10-09T20:02:56.279404+00:00",
-      "sourceUrl": "https://demo-geo.com/",
+      "sourceUrl": "https://demo-seo-geo.com/",
       "statement": "Solar photovoltaic installation"
      },
      {
@@ -1528,7 +1528,7 @@
       "excerpt": null,
       "kind": "WEB_REPRESENTATION",
       "observedAt": "2026-10-09T20:02:56.279404+00:00",
-      "sourceUrl": "https://demo-geo.com/",
+      "sourceUrl": "https://demo-seo-geo.com/",
       "statement": "Public web representation checks"
      },
      {
@@ -1545,7 +1545,7 @@
       "excerpt": null,
       "kind": "REPRESENTATION_GAP",
       "observedAt": "2026-10-09T20:02:56.279404+00:00",
-      "sourceUrl": "https://demo-geo.com/",
+      "sourceUrl": "https://demo-seo-geo.com/",
       "statement": "On the pages read, its activity is evidenced in prose but no service or product is declared as structured data."
      },
      {
@@ -1609,7 +1609,7 @@
     "state": "FIRST_PROOF_READY",
     "target": {
      "kind": "PENDING",
-     "website": "https://demo-geo.com/",
+     "website": "https://demo-seo-geo.com/",
      "name": null,
      "identityLink": "IDENTITY_PENDING"
     }
@@ -1622,7 +1622,7 @@
     "attentionScopes": [
      {
       "epistemicState": "POTENTIAL",
-      "jurisdiction": "US/US-AR",
+      "jurisdiction": "EU/ES",
       "roles": [
        "PRIVATE_BUSINESSES",
        "PUBLIC_BUYERS"
@@ -1637,11 +1637,11 @@
        "pagesRead": 3
       },
       "epistemicState": "OBSERVED",
-      "excerpt": "Spanish and French classes for adults and kids.",
+      "excerpt": "Strategy and process consulting for industrial companies.",
       "kind": "PUBLIC_PRESENCE",
       "observedAt": "2026-10-09T20:02:56.279404+00:00",
       "sourceUrl": "https://demo-consultor.com/",
-      "statement": "Demo Consultor"
+      "statement": "Strategy and process consulting for industrial companies."
      },
      {
       "code": "LANGUAGES_PUBLISHED",
@@ -1777,7 +1777,7 @@
     "attentionScopes": [
      {
       "epistemicState": "POTENTIAL",
-      "jurisdiction": "EU/IE",
+      "jurisdiction": "EU/ES",
       "roles": [
        "PRIVATE_BUSINESSES",
        "PUBLIC_BUYERS"
@@ -1792,11 +1792,11 @@
        "pagesRead": 1
       },
       "epistemicState": "OBSERVED",
-      "excerpt": "Cloud invoicing and bookkeeping software for small businesses worldwide.",
+      "excerpt": "Building and refurbishment of industrial warehouses and office buildings.",
       "kind": "PUBLIC_PRESENCE",
       "observedAt": "2026-10-09T20:02:56.279404+00:00",
       "sourceUrl": "https://demo-constructor.com/",
-      "statement": "Demo Constructor — invoicing software"
+      "statement": "Building and refurbishment of industrial warehouses and office buildings."
      },
      {
       "code": "LANGUAGES_PUBLISHED",
@@ -1931,7 +1931,7 @@
     "attentionScopes": [
      {
       "epistemicState": "POTENTIAL",
-      "jurisdiction": "EU/FR",
+      "jurisdiction": "EU/ES",
       "roles": [
        "PRIVATE_BUSINESSES",
        "PUBLIC_BUYERS"
@@ -1946,11 +1946,11 @@
        "pagesRead": 1
       },
       "epistemicState": "OBSERVED",
-      "excerpt": "Demo Marketing",
+      "excerpt": "Marketing campaigns and market studies for consumer brands.",
       "kind": "PUBLIC_PRESENCE",
       "observedAt": "2026-10-09T20:02:56.279404+00:00",
       "sourceUrl": "https://demo-marketing.com/",
-      "statement": "Demo Marketing"
+      "statement": "Marketing campaigns and market studies for consumer brands."
      },
      {
       "code": "LANGUAGES_PUBLISHED",
@@ -2105,11 +2105,11 @@
        "pagesRead": 1
       },
       "epistemicState": "OBSERVED",
-      "excerpt": "Coming soon",
+      "excerpt": "Made-to-order metal components for industrial customers.",
       "kind": "PUBLIC_PRESENCE",
       "observedAt": "2026-10-09T20:02:56.279404+00:00",
       "sourceUrl": "https://demo-fabrica.com/",
-      "statement": "Coming soon"
+      "statement": "Made-to-order metal components for industrial customers."
      },
      {
       "code": "PUBLIC_WEB_REPRESENTATION_MEASURED",

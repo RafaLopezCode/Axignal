@@ -20,7 +20,7 @@ test("public /demo is the subscriber Observatory over a fictional snapshot, with
   assert.match(live, /canAct: boolean/);
   // The demo reads only the snapshot: no request, storage or private surface in its source.
   assert.doesNotMatch(snapshot, /fetch\(|\/api\/|localStorage|sessionStorage|\/admin/);
-  assert.match(subscriber, /if \(!live\) return syntheticOutput\(focusId, demoLocale \?\? "es"\);/);
+  assert.match(subscriber, /if \(!live\) return syntheticOutput\(focusId, localeRef\.current\);/);
 });
 
 test("fictional example is temporal, epistemically labeled and has no invented external evidence URLs", () => {
