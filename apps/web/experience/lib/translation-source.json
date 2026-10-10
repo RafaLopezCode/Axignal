@@ -5687,8 +5687,8 @@
     ]
   },
   {
-    "en": "First available observation; there is no predecessor against which to compare normalized state.",
-    "es": "Primera observación disponible; no existe una predecesora con la que comparar estado normalizado.",
+    "en": "Comparable economic fields are missing or this is the first observation; whether economic state changed remains unknown.",
+    "es": "Faltan campos económicos comparables o es la primera observación; sigue siendo desconocido si el estado económico cambió.",
     "files": [
       "components/runtime-product.tsx"
     ]

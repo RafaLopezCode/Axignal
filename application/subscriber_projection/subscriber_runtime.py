@@ -56,6 +56,7 @@ from application.economic_discovery.observation_memory import (
     ObservationReuseScope,
     ObservationRightsStatus,
     ObservedField,
+    normalized_field_change,
 )
 from application.economic_discovery.observation_reuse import (
     ObservationReuseContext,
@@ -458,6 +459,8 @@ def _temporal_history(
     for observation, currentness in observations:
         record = observation.record
         fields = tuple(sorted((item.name, item.value) for item in observation.fields))
+        # Raw-only observations have no normalized economic comparison basis.
+        # Empty tuples being equal does not establish that economic state is unchanged.
         items.append(
             {
                 "observationId": record.observation_id,
@@ -465,7 +468,7 @@ def _temporal_history(
                 "sourceType": record.source_type,
                 "observedAt": _iso(record.observed_at),
                 "currentness": currentness.value,
-                "normalizedStateChanged": None if prior_fields is None else fields != prior_fields,
+                "normalizedStateChanged": normalized_field_change(prior_fields, fields),
             }
         )
         prior_fields = fields

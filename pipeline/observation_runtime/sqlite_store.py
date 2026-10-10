@@ -478,6 +478,12 @@ class SqliteObservationRuntimeStore:
                 "SELECT day, started_at, completed_at, lease_expires_at FROM aor_ticks "
                 "ORDER BY day DESC LIMIT 1"
             ).fetchone()
+            usage_row = (
+                db.execute("SELECT payload FROM aor_budget WHERE day=?", (tick["day"],)).fetchone()
+                if tick is not None and "aor_budget" in tables
+                else None
+            )
+        usage = None if usage_row is None else BudgetUsage.from_payload(json.loads(usage_row[0]))
         lease_status = (
             "NO_TICK"
             if tick is None
@@ -505,6 +511,17 @@ class SqliteObservationRuntimeStore:
             },
             "tick": None if tick is None else dict(tick),
             "lease_status": lease_status,
+            "budget": None
+            if usage is None
+            else {
+                "requestsIncludingReservations": usage.requests,
+                "paidCostIncludingReservationsMicrounits": usage.paid_cost_microunits,
+                "unsettledAcquisitions": len(usage.pending_acquisitions),
+                "reservedRequests": sum(r["requests"] for r in usage.pending_acquisitions.values()),
+                "reservedCostMicrounits": sum(
+                    r["paid_cost_microunits"] for r in usage.pending_acquisitions.values()
+                ),
+            },
         }
 
     def tick_report(self, day: str) -> dict[str, object] | None:

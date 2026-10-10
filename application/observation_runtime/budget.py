@@ -1,9 +1,10 @@
 """Persistent daily observation budget: checked before every acquisition.
 
 Global limits stop the tick. Scoped limits (one Xeed, one family, one source,
-depth) only skip the lead that would exceed them. Usage is charged with what
-an acquisition actually consumed and persisted with every step, so a restart
-in the same day continues from the same spend.
+depth) only skip the lead that would exceed them. A conservative reservation is persisted before dispatch. A received acquisition
+settles it to actual consumption; an interrupted one remains UNKNOWN and cannot
+be dispatched again that day. Counters include unsettled reservations, not a
+claim that their worst-case cost was actually spent.
 """
 
 from __future__ import annotations
@@ -13,7 +14,7 @@ from enum import StrEnum
 
 from application.observation_runtime.families import FamilyObservationPolicy, ObservationFamily
 
-BUDGET_POLICY_VERSION = "aor-daily-budget-2026-10-07.1"
+BUDGET_POLICY_VERSION = "aor-daily-budget-2026-10-10.2"
 
 
 class BudgetScope(StrEnum):
@@ -79,6 +80,7 @@ class BudgetUsage:
     family_requests: dict[str, int] = field(default_factory=dict)
     source_requests: dict[str, int] = field(default_factory=dict)
     source_failures: dict[str, int] = field(default_factory=dict)
+    pending_acquisitions: dict[str, dict[str, int]] = field(default_factory=dict)
 
     def to_payload(self) -> dict[str, object]:
         return {
@@ -92,6 +94,9 @@ class BudgetUsage:
             "family_requests": dict(sorted(self.family_requests.items())),
             "source_requests": dict(sorted(self.source_requests.items())),
             "source_failures": dict(sorted(self.source_failures.items())),
+            "pending_acquisitions": {
+                key: dict(value) for key, value in sorted(self.pending_acquisitions.items())
+            },
         }
 
     @classmethod
@@ -102,6 +107,18 @@ class BudgetUsage:
                 raise ValueError(f"budget usage {key} must be a mapping")
             return {str(k): int(v) for k, v in raw.items()}
 
+        raw_pending = payload.get("pending_acquisitions", {})
+        if not isinstance(raw_pending, dict):
+            raise ValueError("pending acquisitions must be a mapping")
+        pending: dict[str, dict[str, int]] = {}
+        for key, value in raw_pending.items():
+            if (
+                not isinstance(value, dict)
+                or set(value) != {"requests", "paid_cost_microunits"}
+                or any(type(v) is not int or v < 0 for v in value.values())
+            ):
+                raise ValueError("pending acquisition bounds must be non-negative integers")
+            pending[str(key)] = dict(value)
         requests, cost, actions = (
             payload[k] for k in ("requests", "paid_cost_microunits", "actions")
         )
@@ -122,6 +139,7 @@ class BudgetUsage:
             family_requests=counts("family_requests"),
             source_requests=counts("source_requests"),
             source_failures=counts("source_failures"),
+            pending_acquisitions=pending,
         )
 
 
@@ -205,3 +223,29 @@ def charge(
     usage.source_requests[source_id] = usage.source_requests.get(source_id, 0) + requests
     if failed:
         usage.source_failures[source_id] = usage.source_failures.get(source_id, 0) + 1
+
+
+def settle_acquisition(
+    usage: BudgetUsage,
+    *,
+    acquisition_key: str,
+    family: ObservationFamily,
+    source_id: str,
+    requests: int,
+    paid_cost_microunits: int,
+    failed: bool,
+) -> None:
+    """Settle a reservation only after a bounded result has actually arrived."""
+    reserved = usage.pending_acquisitions[acquisition_key]
+    if not 0 <= requests <= reserved["requests"]:
+        raise RuntimeError(f"{source_id} exceeded its request allowance")
+    if not 0 <= paid_cost_microunits <= reserved["paid_cost_microunits"]:
+        raise RuntimeError(f"{source_id} exceeded its registered cost bound")
+    unused = reserved["requests"] - requests
+    usage.requests -= unused
+    usage.paid_cost_microunits -= reserved["paid_cost_microunits"] - paid_cost_microunits
+    usage.family_requests[family.value] -= unused
+    usage.source_requests[source_id] -= unused
+    if failed:
+        usage.source_failures[source_id] = usage.source_failures.get(source_id, 0) + 1
+    del usage.pending_acquisitions[acquisition_key]

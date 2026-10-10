@@ -168,7 +168,9 @@ def test_interrupted_tick_is_fenced_then_resumed_without_repeating_work(tmp_path
         _run(w, acquirers=crashing)
     done_before = {lead.lead_id for lead in w.store().leads() if lead.attempts}
     usage_before = w.store().budget_usage("2026-10-06")
-    assert len(done_before) >= 2 and usage_before.actions == 2
+    assert len(done_before) >= 2 and usage_before.actions == 3
+    # Two settled actions plus the durable reservation for the interrupted third.
+    assert len(usage_before.pending_acquisitions) == 1
 
     # A second worker while the lease is live does nothing.
     held = _run(w)

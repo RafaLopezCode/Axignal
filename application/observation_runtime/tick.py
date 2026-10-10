@@ -26,6 +26,7 @@ from application.observation_runtime.budget import (
     charge,
     global_denial,
     reserve,
+    settle_acquisition,
 )
 from application.observation_runtime.families import (
     FAMILY_POLICIES,
@@ -545,6 +546,10 @@ def run_daily_tick(
         if shared:
             acquisition = acquired[acquisition_key]
             shared_count += 1
+        elif acquisition_key in state.usage.pending_acquisitions:
+            # No receipt survived: the call may have executed. Never infer zero spend
+            # or fabricate an observation, and never redispatch this key today.
+            acquisition = Acquisition(0, 0, 0, blocked="ACQUISITION_OUTCOME_UNKNOWN")
         else:
             denial = reserve(
                 budget,
@@ -564,15 +569,29 @@ def run_daily_tick(
                 # A scoped limit skips this lead; it stays due for the next tick.
                 deferred.append((lead.lead_id, str(denial)))
                 continue
-            began = monotonic()
-            store.assert_claim(claim, now=lease_now())
-            acquisition = acquirer.acquire(request)
-            if acquisition.requests > request.max_requests:
-                raise RuntimeError(f"{source.source_id} exceeded its request allowance")
-            state.usage.runtime_seconds += monotonic() - began
+            # Durable upper bound BEFORE child work: a hard kill between dispatch
+            # and receipt must not reset the daily budget on the next lease.
             charge(
                 state.usage,
                 xeed_id=lead.xeed_id,
+                family=lead.family,
+                source_id=source.source_id,
+                requests=request.max_requests,
+                paid_cost_microunits=request.max_requests * cost,
+                failed=False,
+            )
+            state.usage.pending_acquisitions[acquisition_key] = {
+                "requests": request.max_requests,
+                "paid_cost_microunits": request.max_requests * cost,
+            }
+            commit()
+            began = monotonic()
+            store.assert_claim(claim, now=lease_now())
+            acquisition = acquirer.acquire(request)
+            state.usage.runtime_seconds += monotonic() - began
+            settle_acquisition(
+                state.usage,
+                acquisition_key=acquisition_key,
                 family=lead.family,
                 source_id=source.source_id,
                 requests=acquisition.requests,
