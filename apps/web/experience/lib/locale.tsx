@@ -8,6 +8,7 @@ import {
   type Copy,
 } from "./languages";
 import { translate } from "./copy-catalog";
+import { HOME_METADATA } from "./public-home-metadata";
 
 export type { Locale, Copy } from "./languages";
 
@@ -58,6 +59,27 @@ export function LocaleProvider({ children }: { children: React.ReactNode }) {
       } catch {}
     }
   }, [locale, ready]);
+
+  useEffect(() => {
+    if (pathname !== "/") return;
+    const home = HOME_METADATA[locale];
+    const sync = () => {
+      // Next may insert static server metadata after client hydration. Keep the
+      // visible title aligned with the reader's language without fighting other routes.
+      if (document.title !== home.title) document.title = home.title;
+      const ensure = (selector: string, value: string) => {
+        const meta = document.querySelector(selector);
+        if (meta?.getAttribute("content") !== value) meta?.setAttribute("content", value);
+      };
+      ensure('meta[name="description"]', home.description);
+      ensure('meta[property="og:title"]', home.title);
+      ensure('meta[property="og:description"]', home.description);
+    };
+    sync();
+    const observer = new MutationObserver(sync);
+    observer.observe(document.head, { childList: true, subtree: true, characterData: true });
+    return () => observer.disconnect();
+  }, [locale, pathname]);
 
   useEffect(() => {
     document.documentElement.dataset.motion = reducedMotion

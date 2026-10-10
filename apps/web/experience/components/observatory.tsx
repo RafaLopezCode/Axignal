@@ -14,12 +14,14 @@ import { ArrowLeft, ArrowRight, ChevronDown, CornerRightUp, ExternalLink, Layout
 import { useLocale } from "@/lib/locale";
 import { LocaleToggle, useFocusTrap } from "./ui";
 import { formatReferenceMoney } from "@/lib/presentation";
-import { evidenceUrl, monthlyCapacityCents, pendingOutputSchema, subscriberOutputSchema, type FirstObservation, type SubscriberPortfolio } from "@/lib/subscriber-contracts";
+import { shouldApplyLandingFacet } from "@/lib/observatory-url";
+import { monthlyCapacityCents, pendingOutputSchema, subscriberOutputSchema, type FirstObservation, type SubscriberPortfolio } from "@/lib/subscriber-contracts";
 import type { RuntimeProjection } from "@/lib/runtime-projection";
 import { briefing, byLane, currentnessLabel, fill, insightsFor, laneCopy, natureLabel, type Insight, type Lane, type Nature, type Reading, type Translate } from "@/lib/observatory";
 import { baseline, litKeys, markSeen, observedSinceVisit, readSeen, touch, writeSeen, type SeenStore } from "@/lib/observatory-seen";
 import { activityLabel, FirstObservationView, observationStateCopy } from "./first-observation";
 import { SubscriberReading } from "./subscriber-reading";
+import { useEvidenceLink } from "./evidence-link-context";
 import { causeCopy, dimensionCopy, stateCopy } from "./public-understanding";
 import { SubscriberRepresentation } from "./subscriber-representation";
 import { SubscriberMcpConnections } from "./subscriber-mcp-connections";
@@ -270,7 +272,11 @@ export function Observatory(props: ObservatoryProps) {
     if (readableItems.length === 1 && items.length === 1) void props.readOutput(readableItems[0].focusId, false);
     else if (props.landing && readableItems.some(entry => entry.focusId === props.landing?.focusId)) {
       void props.readOutput(props.landing.focusId, false);
-      if (props.landing.family) go({ family: props.landing.family, channel: null }, true);
+      // The demo's initial narrative is a default, never an override of a shared/deep link.
+      // The URL is user attention authority: preserve explicit family/channel across reloads.
+      const query = new URL(window.location.href).searchParams;
+      if (props.landing.family && shouldApplyLandingFacet(query))
+        go({ family: props.landing.family, channel: null }, true);
     }
   }, [access, items.length, props, readableItems, selected, url.screen]);
 
@@ -675,6 +681,7 @@ export function InsightCard({ insight, lit, active, onOpen }: { insight: Insight
 /** GLANCE → UNDERSTAND → REASON → PROVE for one finding; the same body wherever it is shown. */
 export function InsightBody({ insight, onEvidence }: { insight: Insight; onEvidence?: () => void }) {
   const { t, locale } = useLocale();
+  const evidenceLink = useEvidenceLink();
   return <article className="obs-depth-body">
       <NatureMark nature={insight.nature} label={natureLabel(insight.nature, t)}/>
       <h2 tabIndex={-1}>{insight.headline}</h2>
@@ -687,9 +694,9 @@ export function InsightBody({ insight, onEvidence }: { insight: Insight; onEvide
       {insight.reasoning.length > 0 && <section><h3>{t("Por qué lo dice AXIGNAL", "Why AXIGNAL says so")}</h3>{insight.reasoning.map(x => <p key={x}>{x}</p>)}</section>}
       {insight.proposal && <section className="obs-proposal"><h3>{t("Propuesta condicionada", "Conditional proposal")}</h3><p>{insight.proposal}</p><p className="obs-quiet">{t("Una mejora sugerida no es una causa demostrada. Vuelve a observar después para comprobar si cambia la interpretación.", "A suggested improvement is not a demonstrated cause. Observe again afterwards to check whether the interpretation changes.")}</p></section>}
       {(insight.sources.length > 0 || insight.proof.length > 0) && <section><h3>{t("Pruebas", "Evidence")}</h3>
-        {insight.sources.map((s, i) => { const link = evidenceUrl(s.url); return <figure key={i} className="obs-source">
+        {insight.sources.map((s, i) => { const link = evidenceLink.href(s.url); return <figure key={i} className="obs-source">
           {s.quote && <blockquote>“{s.quote}”</blockquote>}
-          <figcaption>{link ? <a href={link} target="_blank" rel="noopener noreferrer">{s.label}<ExternalLink size={13} aria-hidden="true"/><span className="sr-only">{t("(se abre en otra pestaña)", "(opens in a new tab)")}</span></a> : <span>{s.label}</span>}{s.observedAt && <time dateTime={s.observedAt}>{formatDate(s.observedAt, locale)}</time>}</figcaption>
+          <figcaption>{link ? <a href={link} target="_blank" rel="noopener noreferrer">{s.label}<ExternalLink size={13} aria-hidden="true"/><span className="sr-only">{t("(se abre en otra pestaña)", "(opens in a new tab)")}</span></a> : <span>{s.label}</span>}{evidenceLink.synthetic && <small>{t("Fuente ficticia, ejemplo no navegable", "Fictional source, non-navigable example")}</small>}{s.observedAt && <time dateTime={s.observedAt}>{formatDate(s.observedAt, locale)}</time>}</figcaption>
         </figure>; })}
         {insight.proof.length > 0 && <dl className="obs-proof">{insight.proof.map(p => <div key={p.label + p.value}><dt>{p.label}</dt><dd>{p.value}</dd></div>)}</dl>}
         {onEvidence && <button className="obs-link" onClick={onEvidence}>{t("Ver todas las evidencias de esta organización", "See all evidence for this organization")}<ArrowRight size={14} aria-hidden="true"/></button>}
@@ -793,6 +800,7 @@ function EvolutionView({ reading, facet, scope }: { reading: Reading; facet: Fac
 
 function EvidenceView({ reading, facet, scope, insights }: { reading: Reading; facet: Facet; scope: FacetScope | null; insights: Insight[] }) {
   const { t, locale } = useLocale();
+  const evidenceLink = useEvidenceLink();
   const sources = reading.projection?.cognition?.sources ?? [];
   if (facet.family) {
     // A selection shows the evidence behind exactly the findings it contains, and the web measurement where it is the web.
@@ -806,7 +814,7 @@ function EvidenceView({ reading, facet, scope, insights }: { reading: Reading; f
     if (!rows.length && !measurement) return <section className="obs-empty-state"><h2>{scope?.emptyTitle}</h2><p>{scope?.emptyBody}</p></section>;
     return <div className="obs-evidence">
       {rows.length > 0 && <section className="obs-sources" aria-labelledby="obs-sources-title"><h2 id="obs-sources-title">{t("Evidencia de esta selección", "Evidence for this selection")}</h2>
-        <ul>{rows.map(({ insight, source }, index) => { const link = source.url ? evidenceUrl(source.url) : null; return <li key={index}>
+        <ul>{rows.map(({ insight, source }, index) => { const link = evidenceLink.href(source.url); return <li key={index}>
           {link ? <a href={link} target="_blank" rel="noopener noreferrer">{source.label}<ExternalLink size={13} aria-hidden="true"/><span className="sr-only">{t("(se abre en otra pestaña)", "(opens in a new tab)")}</span></a> : <span>{source.label}</span>}
           <span>{source.observedAt ? formatDate(source.observedAt, locale, true) : t("sin fecha", "undated")} · {natureLabel(insight.nature, t)}</span>
           <span className="obs-evidence-finding">{insight.headline}</span>
@@ -816,7 +824,7 @@ function EvidenceView({ reading, facet, scope, insights }: { reading: Reading; f
   }
   return <div className="obs-evidence">
     {sources.length > 0 && <section className="obs-sources" aria-labelledby="obs-sources-title"><h2 id="obs-sources-title">{t("Fuentes autorizadas de esta lectura", "Authorized sources of this reading")}</h2>
-      <ul>{sources.map(s => { const link = evidenceUrl(s.sourceRef); return <li key={s.id}>
+      <ul>{sources.map(s => { const link = evidenceLink.href(s.sourceRef); return <li key={s.id}>
         {link ? <a href={link} target="_blank" rel="noopener noreferrer">{host(s.sourceRef)}<ExternalLink size={13} aria-hidden="true"/><span className="sr-only">{t("(se abre en otra pestaña)", "(opens in a new tab)")}</span></a> : <span>{s.title}</span>}
         <span>{formatDate(s.observedAt, locale, true)} · {currentnessLabel(s.currentness, t)}</span>
       </li>; })}</ul></section>}
