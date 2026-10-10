@@ -4,12 +4,16 @@ import fs from "node:fs";
 import path from "node:path";
 import { EUR_REFERENCE, PUBLISHED_PRICES, approvedPriceBook, formatFixedMoney, monthlyFixedPriceMinor, suggestedCurrency } from "../lib/commercial-prices";
 import { monthlyReferenceCents } from "../lib/presentation";
+import { monthlyCapacityCents } from "../lib/subscriber-contracts";
 
 test("MASTER EUR price is the only published price and does not localize into USD/GBP", () => {
   assert.deepEqual([...PUBLISHED_PRICES.keys()], ["EUR"]);
   assert.equal(monthlyReferenceCents(1), 995);
   assert.equal(monthlyReferenceCents(2), 1490);
   assert.equal(monthlyReferenceCents(100), 50000);
+  assert.equal(monthlyCapacityCents(1), 995);
+  assert.equal(monthlyCapacityCents(101), 50495); // Account allows more than landing preview.
+  assert.equal(monthlyCapacityCents(100000), 995 + 99999 * 495);
   assert.equal(suggestedCurrency("US"), "EUR");
   assert.equal(suggestedCurrency("GB"), "EUR");
   assert.equal(suggestedCurrency("DE"), "EUR");

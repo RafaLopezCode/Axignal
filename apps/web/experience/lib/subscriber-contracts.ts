@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { EUR_REFERENCE } from "./commercial-prices";
 import { runtimeProjectionSchema } from "./runtime-projection";
 import { publicUnderstandingSchema } from "./public-understanding-contracts";
 export type { PublicUnderstanding, UnderstandingDimension } from "./public-understanding-contracts";
@@ -109,5 +110,5 @@ export function approvedPaymentUrl(value: string | null | undefined): string | n
 }
 export function monthlyCapacityCents(total: number): number {
   if (!Number.isSafeInteger(total) || total < 1 || total > 100000) throw new Error("INVALID_CAPACITY");
-  return 995 + (total - 1) * 495;
+  return EUR_REFERENCE.baseMinor + (total - 1) * EUR_REFERENCE.additionalMinor;
 }
