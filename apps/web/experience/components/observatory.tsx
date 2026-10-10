@@ -589,7 +589,7 @@ function SummaryView({ reading, name, insights, lit, openId, onOpen, onSeenAll, 
   </div>;
 }
 
-function InsightCard({ insight, lit, active, onOpen }: { insight: Insight; lit: boolean; active: boolean; onOpen: () => void }) {
+export function InsightCard({ insight, lit, active, onOpen }: { insight: Insight; lit: boolean; active: boolean; onOpen: () => void }) {
   const { t, locale } = useLocale();
   const source = insight.sources[0];
   return <button className={`obs-card${lit ? " obs-lit" : ""}${active ? " obs-active" : ""}`} data-insight={insight.id} aria-expanded={active} aria-controls="obs-depth" onClick={onOpen}>
@@ -606,6 +606,31 @@ function InsightCard({ insight, lit, active, onOpen }: { insight: Insight; lit: 
 }
 
 // ---- depth: meaning → reasoning → proof → AXENT, beside the finding ----------------------------
+
+/** GLANCE → UNDERSTAND → REASON → PROVE for one finding; the same body wherever it is shown. */
+export function InsightBody({ insight, onEvidence }: { insight: Insight; onEvidence?: () => void }) {
+  const { t, locale } = useLocale();
+  return <article className="obs-depth-body">
+      <NatureMark nature={insight.nature} label={natureLabel(insight.nature, t)}/>
+      <h2 tabIndex={-1}>{insight.headline}</h2>
+      {insight.why && <p className="obs-depth-why">{insight.why}</p>}
+      {insight.previous && <p className="obs-card-before">{t("En la lectura anterior comparable", "In the previous comparable reading")}: {insight.previous}. {t("Un cambio de interpretación no demuestra por sí solo una mejora comercial.", "An interpretation change alone does not prove a business improvement.")}</p>}
+      <section><h3>{t("Qué significa", "What it means")}</h3>{insight.meaning.map(x => <p key={x}>{x}</p>)}</section>
+      {insight.dimensions.length > 0 && <section><h3>{t("Lo que se ha comprobado", "What has been checked")}</h3>
+        <ul className="obs-dimensions">{insight.dimensions.map(d => <li key={d.label} className={`obs-dim-${d.state.toLowerCase()}`}><NatureMark nature={d.state === "UNKNOWN" ? "UNKNOWN" : "OBSERVED"} label={d.label}/><span>{d.outcome}</span></li>)}</ul>
+        <p className="obs-quiet">{t("Sin puntuación: cada dimensión se muestra con su estado.", "No score: each dimension is shown with its state.")}</p></section>}
+      {insight.reasoning.length > 0 && <section><h3>{t("Por qué lo dice AXIGNAL", "Why AXIGNAL says so")}</h3>{insight.reasoning.map(x => <p key={x}>{x}</p>)}</section>}
+      {insight.proposal && <section className="obs-proposal"><h3>{t("Propuesta condicionada", "Conditional proposal")}</h3><p>{insight.proposal}</p><p className="obs-quiet">{t("Una mejora sugerida no es una causa demostrada. Vuelve a observar después para comprobar si cambia la interpretación.", "A suggested improvement is not a demonstrated cause. Observe again afterwards to check whether the interpretation changes.")}</p></section>}
+      {(insight.sources.length > 0 || insight.proof.length > 0) && <section><h3>{t("Pruebas", "Evidence")}</h3>
+        {insight.sources.map((s, i) => { const link = evidenceUrl(s.url); return <figure key={i} className="obs-source">
+          {s.quote && <blockquote>“{s.quote}”</blockquote>}
+          <figcaption>{link ? <a href={link} target="_blank" rel="noopener noreferrer">{s.label}<ExternalLink size={13} aria-hidden="true"/><span className="sr-only">{t("(se abre en otra pestaña)", "(opens in a new tab)")}</span></a> : <span>{s.label}</span>}{s.observedAt && <time dateTime={s.observedAt}>{formatDate(s.observedAt, locale)}</time>}</figcaption>
+        </figure>; })}
+        {insight.proof.length > 0 && <dl className="obs-proof">{insight.proof.map(p => <div key={p.label + p.value}><dt>{p.label}</dt><dd>{p.value}</dd></div>)}</dl>}
+        {onEvidence && <button className="obs-link" onClick={onEvidence}>{t("Ver todas las evidencias de esta organización", "See all evidence for this organization")}<ArrowRight size={14} aria-hidden="true"/></button>}
+      </section>}
+  </article>;
+}
 
 function DepthPanel({ insight, projection, revision, axentOnly, onClose, onEvidence, onExplore }: {
   insight: Insight | null; projection: RuntimeProjection | null; revision: string | null; axentOnly: boolean;
@@ -627,26 +652,7 @@ function DepthPanel({ insight, projection, revision, axentOnly, onClose, onEvide
       <button className="obs-icon" onClick={onClose} aria-label={t("Volver", "Back")}>{mobile ? <ArrowLeft size={18} aria-hidden="true"/> : <X size={18} aria-hidden="true"/>}</button>
       {insight && <span>{laneCopy(insight.lane, t).title}</span>}
     </div>
-    {insight && <article className="obs-depth-body">
-      <NatureMark nature={insight.nature} label={natureLabel(insight.nature, t)}/>
-      <h2 tabIndex={-1}>{insight.headline}</h2>
-      {insight.why && <p className="obs-depth-why">{insight.why}</p>}
-      {insight.previous && <p className="obs-card-before">{t("En la lectura anterior comparable", "In the previous comparable reading")}: {insight.previous}. {t("Un cambio de interpretación no demuestra por sí solo una mejora comercial.", "An interpretation change alone does not prove a business improvement.")}</p>}
-      <section><h3>{t("Qué significa", "What it means")}</h3>{insight.meaning.map(x => <p key={x}>{x}</p>)}</section>
-      {insight.dimensions.length > 0 && <section><h3>{t("Lo que se ha comprobado", "What has been checked")}</h3>
-        <ul className="obs-dimensions">{insight.dimensions.map(d => <li key={d.label} className={`obs-dim-${d.state.toLowerCase()}`}><NatureMark nature={d.state === "UNKNOWN" ? "UNKNOWN" : "OBSERVED"} label={d.label}/><span>{d.outcome}</span></li>)}</ul>
-        <p className="obs-quiet">{t("Sin puntuación: cada dimensión se muestra con su estado.", "No score: each dimension is shown with its state.")}</p></section>}
-      {insight.reasoning.length > 0 && <section><h3>{t("Por qué lo dice AXIGNAL", "Why AXIGNAL says so")}</h3>{insight.reasoning.map(x => <p key={x}>{x}</p>)}</section>}
-      {insight.proposal && <section className="obs-proposal"><h3>{t("Propuesta condicionada", "Conditional proposal")}</h3><p>{insight.proposal}</p><p className="obs-quiet">{t("Una mejora sugerida no es una causa demostrada. Vuelve a observar después para comprobar si cambia la interpretación.", "A suggested improvement is not a demonstrated cause. Observe again afterwards to check whether the interpretation changes.")}</p></section>}
-      {(insight.sources.length > 0 || insight.proof.length > 0) && <section><h3>{t("Pruebas", "Evidence")}</h3>
-        {insight.sources.map((s, i) => { const link = evidenceUrl(s.url); return <figure key={i} className="obs-source">
-          {s.quote && <blockquote>“{s.quote}”</blockquote>}
-          <figcaption>{link ? <a href={link} target="_blank" rel="noopener noreferrer">{s.label}<ExternalLink size={13} aria-hidden="true"/><span className="sr-only">{t("(se abre en otra pestaña)", "(opens in a new tab)")}</span></a> : <span>{s.label}</span>}{s.observedAt && <time dateTime={s.observedAt}>{formatDate(s.observedAt, locale)}</time>}</figcaption>
-        </figure>; })}
-        {insight.proof.length > 0 && <dl className="obs-proof">{insight.proof.map(p => <div key={p.label + p.value}><dt>{p.label}</dt><dd>{p.value}</dd></div>)}</dl>}
-        <button className="obs-link" onClick={onEvidence}>{t("Ver todas las evidencias de esta organización", "See all evidence for this organization")}<ArrowRight size={14} aria-hidden="true"/></button>
-      </section>}
-    </article>}
+    {insight && <InsightBody insight={insight} onEvidence={onEvidence}/>}
     {projection && revision ? <DepthAxent projection={projection} revision={revision} insight={insight} onEvidence={onEvidence} onExplore={onExplore} autoFocus={axentOnly}/>
       : <section className="obs-depth-axent obs-quiet"><h3>AXENT</h3><p>{t("AXENT podrá investigar con esta organización cuando su identidad esté verificada por un registro. Esta lectura ya muestra su evidencia.", "AXENT can investigate this organization once its identity is verified by a registry. This reading already shows its evidence.")}</p></section>}
   </aside>;

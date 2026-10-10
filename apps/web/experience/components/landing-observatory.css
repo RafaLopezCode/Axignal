@@ -1,0 +1,152 @@
+/* Landing: the real subscriber interface, annotated by El Observador.
+   World inherited from AXIGNAL: paper, Fraunces/Manrope, AXIGNAL blue, lane tints, brass lamp.
+   Signature: Bic-blue handwritten notes (Bic Notes) that draw themselves onto the product. */
+.lx-window {
+  --lx-bic: #2747a8;
+  --obs-ink: #141c3a;
+  --obs-paper: #f6f7fa;
+  --obs-card: #ffffff;
+  --obs-text: #1d2333;
+  --obs-muted: #566173;
+  --obs-line: #e0e5ee;
+  --obs-blue: #354f98;
+  --obs-blue-soft: #e8eefa;
+  --obs-sage: #2f6a46;
+  --obs-sage-soft: #e3eee5;
+  --obs-violet: #5a4c8c;
+  --obs-violet-soft: #ece8f4;
+  --obs-brass: #c48a22;
+  --obs-brass-ink: #6f4b0c;
+  --obs-brass-soft: #fbf0d9;
+  --obs-ease: cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  margin: 0;
+  border-radius: 20px;
+  background: var(--obs-paper);
+  border: 1px solid #dbe2ee;
+  box-shadow: 0 30px 70px -40px rgba(20, 28, 58, .55), 0 2px 0 rgba(255, 255, 255, .8) inset;
+  color: var(--obs-text);
+  font-family: var(--font-ui);
+  text-align: start;
+  isolation: isolate;
+}
+.lx-chrome { display: flex; align-items: center; gap: 10px; padding: 11px 16px; border-bottom: 1px solid var(--obs-line); background: #e9eef9; border-radius: 20px 20px 0 0; font-size: 12.5px; color: #3b4562; }
+.lx-crumb { flex: 1; min-inline-size: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.lx-crumb strong { color: var(--obs-ink); }
+.lx-fiction { flex: none; padding: 2px 9px; border-radius: 999px; background: #fff; border: 1px dashed #9aa8cc; color: #3b4562; font-size: 11.5px; font-weight: 700; }
+.lx-screen { position: relative; padding: 16px; min-block-size: 360px; }
+.lx-org h3 { margin: 0; font-family: Fraunces, Georgia, serif; font-weight: 400; font-size: 22px; color: var(--obs-ink); }
+.lx-org p { margin: 2px 0 0; font-size: 12px; color: var(--obs-muted); }
+.lx-brief { margin: 10px 0 12px; font-family: Fraunces, Georgia, serif; font-size: 16px; line-height: 1.45; color: var(--obs-ink); max-inline-size: 52ch; }
+.lx-lanes { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; align-items: start; }
+.lx-lane { --lane: var(--obs-blue); --lane-soft: var(--obs-blue-soft); border-top: 3px solid var(--lane); padding-top: 8px; transition: opacity .35s var(--obs-ease), filter .35s var(--obs-ease); }
+.lx-lane.obs-lane-understood { --lane: var(--obs-sage); --lane-soft: var(--obs-sage-soft); }
+.lx-lane.obs-lane-unknown { --lane: var(--obs-violet); --lane-soft: var(--obs-violet-soft); }
+.lx-lane h4 { display: flex; align-items: center; gap: 6px; margin: 0 0 8px; font-size: 12px; font-weight: 800; color: var(--lane); }
+.lx-lane h4 span { margin-inline-start: auto; min-inline-size: 20px; padding: 0 6px; border-radius: 999px; background: var(--lane-soft); text-align: center; font-size: 11px; line-height: 18px; }
+.lx-dim { opacity: .35; filter: saturate(.4); }
+.lx-empty { font-size: 12px; color: var(--obs-muted); margin: 4px 0; }
+.lx-anchor { position: relative; margin-bottom: 14px; }
+.lx-window .obs-card { font-size: 13px; padding: 10px 11px 9px; gap: 5px; border-radius: 11px; background: color-mix(in srgb, var(--lane-soft) 22%, #fff); }
+.lx-window .obs-card-headline { font-size: 13px; line-height: 1.38; }
+.lx-window .obs-card-why { font-size: 12px; -webkit-line-clamp: 2; }
+.lx-window .obs-card-foot { font-size: 11px; }
+.lx-window .obs-mark { font-size: 11px; }
+.lx-footer { display: flex; justify-content: flex-end; padding: 10px 16px 14px; border-top: 1px solid var(--obs-line); }
+.lx-open { display: inline-flex; align-items: center; gap: 6px; font-weight: 700; font-size: 14px; color: var(--obs-blue); text-decoration: none; }
+.lx-open:hover { text-decoration: underline; text-underline-offset: 3px; }
+
+/* the signature: El Observador's handwritten notes, drawn onto the real interface */
+.lx-note { display: flex; align-items: flex-start; gap: 6px; margin: 10px 0 6px 14px; pointer-events: none; color: var(--lx-bic); font-family: "Bic Notes", "Segoe Print", cursive; font-size: 18px; line-height: 1.08; overflow-wrap: anywhere; }
+/* In the document flow: the note wraps under what it explains and never overlaps, whatever the language. */
+.lx-note-brass { color: #8a5a0f; }
+.lx-note-text { min-inline-size: 0; transform: rotate(-2deg); transform-origin: left center; animation: lx-ink .5s .55s ease-out both; }
+.lx-note-arrow { inline-size: 26px; block-size: 20px; flex: none; margin-top: -4px; fill: none; stroke: currentColor; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; transform: rotate(-115deg) scaleX(-1); }
+.lx-note-arrow path { stroke-dasharray: 120; stroke-dashoffset: 120; animation: lx-draw .7s .2s cubic-bezier(.65, 0, .35, 1) forwards; }
+
+/* add-organization and observing states */
+.lx-add { position: relative; display: grid; gap: 14px; padding: 40px 18px 40px; }
+.lx-add-q { margin: 0; font-family: Fraunces, Georgia, serif; font-size: 24px; line-height: 1.2; color: var(--obs-ink); }
+.lx-add-row { display: flex; gap: 8px; flex-wrap: wrap; }
+.lx-input { flex: 1 1 200px; display: flex; align-items: center; min-block-size: 44px; padding: 0 12px; border-radius: 11px; border: 1px solid #c9d3e6; background: #fff; box-shadow: 0 0 0 3px rgba(53, 79, 152, .12); }
+.lx-typed { display: inline-block; overflow: hidden; white-space: nowrap; border-inline-end: 2px solid var(--obs-blue); inline-size: 15ch; animation: lx-type 1.6s .3s steps(15, end) both, lx-caret .9s step-end infinite; font-size: 15px; }
+.lx-go { display: inline-flex; align-items: center; gap: 6px; min-block-size: 44px; padding: 0 14px; border-radius: 11px; background: var(--obs-blue); color: #fff; font-weight: 700; font-size: 13.5px; }
+.lx-observing { position: relative; display: grid; justify-items: center; gap: 14px; padding: 26px 12px 40px; }
+.lx-scan { position: relative; inline-size: 104px; block-size: 104px; display: grid; place-items: center; }
+.lx-scan svg { position: absolute; inset: 0; }
+.lx-scan-ring { fill: none; stroke: #d8e0f3; stroke-width: 2; }
+.lx-scan-sweep { fill: none; stroke: var(--obs-blue); stroke-width: 3; stroke-linecap: round; stroke-dasharray: 60 220; transform-origin: 60px 60px; animation: lx-spin 2.2s linear infinite; }
+.lx-observing ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; font-size: 13.5px; color: var(--obs-muted); }
+.lx-observing li { display: flex; gap: 10px; align-items: center; }
+.lx-observing li::before { content: ""; inline-size: 11px; block-size: 11px; border-radius: 50%; border: 2px solid #c6cfe1; flex: none; }
+.lx-observing li.done { color: var(--obs-text); }
+.lx-observing li.done::before { background: var(--obs-sage); border-color: var(--obs-sage); }
+.lx-observing li.current { color: var(--obs-ink); font-weight: 700; }
+.lx-observing li.current::before { border-color: var(--obs-blue); box-shadow: 0 0 0 4px rgba(53, 79, 152, .15); }
+
+/* depth sheet inside the window */
+.lx-sheet { position: absolute; inset-block: 12px; inset-inline-end: 12px; inline-size: min(78%, 380px); overflow-y: auto; border-radius: 16px; background: #fff; border: 1px solid var(--obs-line);
+  box-shadow: 0 24px 50px -24px rgba(20, 28, 58, .55); z-index: 5; animation: lx-slide .4s var(--obs-ease) both; scrollbar-width: thin; }
+.lx-sheet .obs-depth-body { padding: 14px 16px 10px; }
+.lx-sheet .obs-depth-body h2 { font-size: 17px; }
+.lx-sheet .obs-depth-body p { font-size: 13px; }
+.lx-sheet-close { position: absolute; inset-block-start: 8px; inset-inline-end: 8px; z-index: 2; inline-size: 32px; block-size: 32px; border-radius: 8px; border: 1px solid var(--obs-line); background: #fff; display: grid; place-items: center; cursor: pointer; }
+.lx-sheet .lx-note { margin: 0 16px 12px; }
+
+/* time scrubber */
+.lx-time { display: flex; gap: 6px; margin: 0 0 12px; flex-wrap: wrap; }
+.lx-time button { display: inline-flex; align-items: center; gap: 6px; min-block-size: 36px; padding: 0 12px; border-radius: 999px; border: 1px solid #cfd8ea; background: #fff; font: inherit; font-size: 12.5px; font-weight: 700; color: #36405a; cursor: pointer; }
+.lx-time button[aria-pressed="true"] { background: var(--obs-ink); border-color: var(--obs-ink); color: #fff; }
+.lx-time-dot { inline-size: 8px; block-size: 8px; border-radius: 50%; background: currentColor; opacity: .6; }
+
+/* ---- landing composition ------------------------------------------------------------- */
+.lx-hero-window { inline-size: 100%; max-inline-size: 620px; justify-self: end; }
+.lx-scrolly { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); gap: 56px; margin-top: 40px; }
+.lx-steps { list-style: none; margin: 0; padding: 0; }
+.lx-step { min-block-size: 62vh; display: flex; flex-direction: column; justify-content: center; padding-inline-start: 56px; position: relative; opacity: .38; transition: opacity .4s var(--obs-ease); }
+.lx-step.is-active { opacity: 1; }
+.lx-step h3 { font-family: Fraunces, Georgia, serif; font-weight: 400; font-size: clamp(26px, 2.4vw, 36px); line-height: 1.15; margin: 0 0 10px; color: #141c3a; }
+.lx-step p { font-size: 16.5px; line-height: 1.7; color: #4e5866; max-inline-size: 46ch; margin: 0; }
+.lx-step-mark { position: absolute; inset-inline-start: 0; inline-size: 38px; block-size: 38px; border-radius: 50%; display: grid; place-items: center; border: 2px solid #354f98; color: #354f98; font-weight: 800; font-family: Fraunces, Georgia, serif; font-size: 18px; background: #fff; }
+.lx-step.is-active .lx-step-mark { background: #354f98; color: #fff; }
+.lx-step-window { display: none; }
+.lx-sticky { position: sticky; top: 14vh; align-self: start; }
+.lx-proof { display: grid; grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr); gap: 40px; margin-top: 36px; align-items: start; }
+.lx-proof-tabs { display: grid; gap: 10px; }
+.lx-proof-tab { display: flex; gap: 14px; align-items: flex-start; text-align: start; padding: 16px 18px; border-radius: 16px; border: 1px solid #dfe5ee; background: #fff; cursor: pointer; font: inherit; color: #4e5866; transition: border-color .2s, box-shadow .25s cubic-bezier(0.16, 1, 0.3, 1), transform .2s; }
+.lx-proof-tab svg { flex: none; color: #354f98; margin-top: 2px; }
+.lx-proof-tab strong { display: block; font-size: 16px; color: #141c3a; margin-bottom: 4px; }
+.lx-proof-tab small { display: block; font-size: 14px; line-height: 1.55; }
+.lx-proof-tab:hover { transform: translateY(-1px); box-shadow: 0 14px 30px -22px rgba(20, 28, 58, .45); }
+.lx-proof-tab[aria-selected="true"] { border-color: #354f98; box-shadow: 0 0 0 1px #354f98, 0 16px 34px -24px rgba(53, 79, 152, .6); }
+.lx-proof-stage { position: sticky; top: 90px; }
+.lx-proof-stage .lx-screen { min-block-size: 440px; }
+
+@media (max-width: 1100px) {
+  .lx-hero-window { justify-self: stretch; max-inline-size: none; }
+  .lx-scrolly, .lx-proof { grid-template-columns: minmax(0, 1fr); gap: 24px; }
+  .lx-sticky { display: none; }
+  .lx-step { min-block-size: auto; opacity: 1; padding: 0 0 36px 52px; }
+  .lx-step-window { display: block; margin-top: 18px; margin-inline-start: -52px; }
+  .lx-proof-stage { position: static; }
+}
+@media (max-width: 640px) {
+  .lx-lanes { grid-template-columns: minmax(0, 1fr); }
+  .lx-screen { padding: 12px; min-block-size: 0; }
+  .lx-note { font-size: 17px; }
+  .lx-sheet { position: relative; inset: auto; inline-size: auto; margin-top: 10px; }
+  .lx-fiction { font-size: 10.5px; }
+  .lx-proof-stage .lx-screen { min-block-size: 0; }
+}
+
+@keyframes lx-draw { to { stroke-dashoffset: 0; } }
+@keyframes lx-ink { from { opacity: 0; transform: rotate(-3deg) translateY(4px); } to { opacity: 1; transform: rotate(-3deg); } }
+@keyframes lx-type { from { inline-size: 0; } }
+@keyframes lx-caret { 50% { border-color: transparent; } }
+@keyframes lx-spin { to { transform: rotate(360deg); } }
+@keyframes lx-slide { from { opacity: 0; transform: translateX(22px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) {
+  .lx-window *, .lx-step { animation: none !important; transition: none !important; }
+  .lx-note-arrow path { stroke-dashoffset: 0; }
+  .lx-typed { inline-size: auto; border: 0; }
+}
