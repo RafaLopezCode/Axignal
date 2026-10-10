@@ -12,6 +12,7 @@ import { dateLabel, demoOrganizationName } from "@/lib/projection";
 import { laneCopy, type Insight, type Lane } from "@/lib/observatory";
 import { EXAMPLE_MOMENTS, exampleInsights, exampleNewSince, exampleOrganization, type ExampleMoment } from "@/lib/landing-observatory";
 import { InsightBody, InsightCard } from "./observatory";
+import { SyntheticEvidenceProvider } from "./evidence-link-context";
 
 export type DemoMode = "glance" | "add" | "observing" | "briefing" | "evidence" | "unknown" | "time";
 
@@ -94,7 +95,7 @@ export function LandingObservatory({ mode, asOf = "2026-10-03", onAsOf, classNam
         <Lanes insights={insights} lit={lit} focus={mode === "unknown" ? "unknown" : null} open={shown?.id ?? null} onOpen={insight => setOpen(insight.id)} notes={notes}/>
         {shown && <div ref={sheet} className={`lx-sheet obs-lane-${shown.lane}`} role="region" aria-label={t("Por qué lo dice AXIGNAL", "Why AXIGNAL says so")}>
           {open && <button className="lx-sheet-close" onClick={() => setOpen(null)} aria-label={t("Cerrar", "Close")}><X size={16} aria-hidden="true"/></button>}
-          <InsightBody insight={shown}/>
+          <SyntheticEvidenceProvider><InsightBody insight={shown}/></SyntheticEvidenceProvider>
           {mode === "evidence" && <Note side="left">{t("la prueba, a un clic de la conclusión", "the proof, one click from the conclusion")}</Note>}
         </div>}
       </>}

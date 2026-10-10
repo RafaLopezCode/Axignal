@@ -3,7 +3,8 @@
 import { ExternalLink } from "lucide-react";
 import { PublicUnderstandingView } from "./public-understanding";
 import { useLocale } from "@/lib/locale";
-import { evidenceUrl, type Discovery, type FirstObservation } from "@/lib/subscriber-contracts";
+import { useEvidenceLink } from "./evidence-link-context";
+import { type Discovery, type FirstObservation } from "@/lib/subscriber-contracts";
 
 type Translate = (es: string, en: string) => string;
 
@@ -160,7 +161,7 @@ function Basis({ d }: { d: Discovery }) {
 function Finding({ d }: { d: Discovery }) {
   const { t, locale } = useLocale();
   const copy = discoveryCopy(d, t, locale);
-  const link = evidenceUrl(d.sourceUrl);
+  const link = useEvidenceLink().href(d.sourceUrl);
   return <article className={`fo-finding fo-${d.epistemicState.toLowerCase()}`}>
     <h4>{copy.finding}</h4>
     <p className="fo-why">{copy.why}</p>

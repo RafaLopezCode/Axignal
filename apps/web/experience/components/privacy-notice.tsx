@@ -55,10 +55,16 @@ export function PrivacyNotice() {
             <ShieldCheck size={21} />
             <h2>{t("Una visita, con claridad.", "A visit, with clarity.")}</h2>
           </div>
-          <p>
+          <p className="privacy-notice-full">
             {t(
               "Responsable: AXIGNAL · España. La página recuerda tu idioma y este aviso. El acceso utiliza cookies necesarias cuando te autenticas con un proveedor disponible; Admin tiene su sesión separada. Contacto y GDPR sólo registran datos cuando envías una solicitud por un canal habilitado.",
               "Controller: AXIGNAL · Spain. The page remembers your language and this notice. Access uses necessary cookies when you authenticate with an available provider; Admin has a separate session. Contact and GDPR register details only when you submit a request through an enabled channel.",
+            )}
+          </p>
+          <p className="privacy-notice-mobile">
+            {t(
+              "AXIGNAL · España. Utilizamos solo almacenamiento necesario para el idioma, este aviso y el acceso. Puedes consultar todos los detalles y tus derechos.",
+              "AXIGNAL · Spain. We only use necessary storage for language, this notice and sign-in. Full details and your rights remain available.",
             )}
           </p>
           <div>

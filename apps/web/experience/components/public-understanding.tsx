@@ -1,7 +1,8 @@
 "use client";
 
 import { useLocale } from "@/lib/locale";
-import { evidenceUrl, type PublicUnderstanding, type UnderstandingDimension } from "@/lib/subscriber-contracts";
+import { useEvidenceLink } from "./evidence-link-context";
+import { type PublicUnderstanding, type UnderstandingDimension } from "@/lib/subscriber-contracts";
 
 type T = (es: string, en: string) => string;
 export function dimensionCopy(dimension: string, t: T): string {
@@ -38,7 +39,7 @@ export function proposalCopy(dimension: string, conflict: boolean, t: T): string
 
 function Source({ q }: { q: PublicUnderstanding["citations"][number] }) {
   const { t } = useLocale();
-  const href = evidenceUrl(q.url);
+  const href = useEvidenceLink().href(q.url);
   return <p className="fo-meta">
     {href ? <a href={href} target="_blank" rel="noopener noreferrer">{q.url}<span className="sr-only">{t("(se abre en otra pestaña)", "(opens in a new tab)")}</span></a> : <span>{q.url}</span>}
     <time dateTime={q.observedAt}>{q.observedAt.slice(0, 10)}</time></p>;
