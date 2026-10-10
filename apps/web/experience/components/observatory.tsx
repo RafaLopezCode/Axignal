@@ -66,6 +66,8 @@ export type ObservatoryProps = {
    * its portfolio navigation is then drawn in the shell's own sidebar instead of a second one beside the reading.
    */
   shell?: ObservatoryShell;
+  /** The organization to open on when there are several; otherwise the desk. */
+  landing?: string;
   /** What the context offers around the reading; the demo declares all of it, an Admin has no account to manage. */
   capabilities: ObservatoryCapabilities;
   /** Organizations the context already authorizes, offered while adding one. */
@@ -261,6 +263,7 @@ export function Observatory(props: ObservatoryProps) {
     if (new URL(window.location.href).searchParams.get("organization")) return;
     autoOpened.current = true;
     if (readableItems.length === 1 && items.length === 1) void props.readOutput(readableItems[0].focusId, false);
+    else if (props.landing && readableItems.some(entry => entry.focusId === props.landing)) void props.readOutput(props.landing, false);
   }, [access, items.length, props, readableItems, selected, url.screen]);
 
   const openOrganization = (focusId: string, item: string | null = null) => {

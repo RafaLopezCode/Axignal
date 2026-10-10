@@ -75,6 +75,8 @@ export const demoSource: ObservatorySource = {
   mode: "demo",
   canAct: false,
   localized: true,
+  // The demonstration opens on the organization whose history shows SEO and GEO, so the families are in view at once.
+  landing: snapshot.portfolio[1].focusId,
   // The demo shows every control, disabled, so the reader sees the whole product.
   capabilities: { account: true, manage: true, recheck: true, axent: "subscriber" },
   async readPortfolio(_signal, locale) { return syntheticPortfolio(locale); },

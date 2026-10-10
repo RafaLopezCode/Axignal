@@ -65,3 +65,12 @@ test("every active demo reading carries a revision, so AXENT's entry exists in t
   const observatory = readFileSync(resolve(process.cwd(), "components/observatory.tsx"), "utf8");
   assert.match(observatory, /if \(!canAct\) return <section className="obs-depth-axent"/);
 });
+
+test("the demonstration opens on the organization that shows SEO and GEO, so the families are in view at once", async () => {
+  const { demoSource } = await import("../lib/demo/synthetic-source");
+  assert.equal(demoSource.landing, snapshot.portfolio[1].focusId);
+  assert.ok(measurements(outputs[demoSource.landing!]).length > 0);
+  // The account has no landing: its desk is the home of a portfolio, and a single organization opens by itself.
+  const { accountSource } = await import("../lib/observatory-source");
+  assert.equal(accountSource.landing, undefined);
+});

@@ -30,6 +30,8 @@ export type ObservatorySource = {
   /** The reads depend on the reader's language, so they are repeated when it changes. */
   readonly localized: boolean;
   readonly capabilities: ObservatoryCapabilities;
+  /** The organization the context opens on when it has several; without one, a portfolio of several opens on the desk. */
+  readonly landing?: string;
   readPortfolio(signal: AbortSignal, locale: Locale): Promise<SubscriberPortfolio | "SESSION_REQUIRED">;
   readOutput(focusId: string, signal: AbortSignal, locale: Locale): Promise<unknown>;
   /** Organizations the context already authorizes, offered while adding one. */
