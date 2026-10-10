@@ -61,8 +61,8 @@ test("the portfolio list keeps a stable gutter between its rows and its scrollba
   assert.match(observatory, /\.obs-orgs \{ padding-inline-end: 10px; scrollbar-gutter: stable;/);
 });
 
-test("the actions menu stays on screen: it opens from its start on narrow screens", () => {
-  assert.match(observatory, /@media \(max-width: 599px\) \{ \.obs-menu-list \{ inset-inline-start: 0; inset-inline-end: auto; max-inline-size: calc\(100vw - 32px\); \} \}/);
+test("the actions menu stays on screen: it hangs from its button and never exceeds the viewport", () => {
+  assert.match(observatory, /@media \(max-width: 880px\) \{ \.obs-menu-list \{ max-inline-size: calc\(100vw - 32px\); \} \}/);
 });
 
 test("disabled menu actions keep their contrast through colour", () => {
