@@ -298,7 +298,14 @@ function nodeInsight(node: RuntimeNode, familyId: FamilyId | null, t: Translate,
     ],
     dimensions: [],
     previous: null,
-    changeKey: keyOf(node.id, node.title, node.observedAt, node.currentness),
+    // Each re-observation mints a new signal id and time; only a change in what is stated, its currentness or its
+    // sources is news. Keyed on content, the same homepage observed again is not shown as new.
+    changeKey: keyOf(
+      `node:${node.nodeKind}:${node.title}`,
+      node.epistemicState, node.whyAttention, node.interpretation, node.uncertainty,
+      node.evidenceAccess, node.currentness,
+      [...node.unknowns].sort().join(","), [...node.sourceRefs].sort().join(","),
+    ),
     family: familyId,
     channel: familyId === "presence" && officialWeb ? "WEB" : null,
   };
