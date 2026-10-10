@@ -74,3 +74,10 @@ test("the rail's controls centre their label alike", () => {
   assert.match(observatory, /\.obs-rail-foot \.obs-rail-action:not\(\.obs-rail-cta\) \{ justify-content: center; \}/);
   assert.match(observatory, /\.obs-rail-locale \.locale-selector \{[^}]*justify-content: center/);
 });
+
+test("AXENT's entry is the header's primary action, flagged by a handwritten Bic note", () => {
+  assert.match(observatory, /\.obs-button\.obs-axent-button:not\(\.obs-active\) \{ background: var\(--obs-blue\);[^}]*color: #fff;/);
+  assert.match(observatory, /\.obs-axent-note \{[^}]*font-family: "Bic Notes"[^}]*color: #2747a8;/);
+  assert.match(global, /font-family:\s*"Bic Notes"/);
+  assert.match(read("components/observatory.tsx"), /className="obs-axent-note"/);
+});

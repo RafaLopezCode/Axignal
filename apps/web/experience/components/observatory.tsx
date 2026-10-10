@@ -10,7 +10,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { flushSync } from "react-dom";
 import Link from "next/link";
-import { ArrowLeft, ArrowRight, ChevronDown, ExternalLink, LayoutGrid, LogOut, Menu, MessageCircleQuestion, Plus, RefreshCw, Settings2, X } from "lucide-react";
+import { ArrowLeft, ArrowRight, ChevronDown, CornerRightUp, ExternalLink, LayoutGrid, LogOut, Menu, MessageCircleQuestion, Plus, RefreshCw, Settings2, X } from "lucide-react";
 import { useLocale } from "@/lib/locale";
 import { LocaleToggle, useFocusTrap } from "./ui";
 import { evidenceUrl, monthlyCapacityCents, pendingOutputSchema, subscriberOutputSchema, type FirstObservation, type SubscriberPortfolio } from "@/lib/subscriber-contracts";
@@ -513,7 +513,7 @@ function OrganizationView(props: OrgProps) {
         <div className="obs-org-actions">
           {item.state === "ACTIVE" && <button className="obs-button" disabled={props.busy || !props.canAct} onClick={() => void props.command({ action: "reobserve", focusId: item.focusId })}><RefreshCw size={16} aria-hidden="true"/><span className="obs-collapse">{t("Volver a observar", "Observe again")}</span></button>}
           {!identified && <button className="obs-button" disabled={props.busy || !props.canAct} onClick={() => void props.command({ action: "retry_pending", focusId: item.focusId })}><RefreshCw size={16} aria-hidden="true"/><span className="obs-collapse">{t("Volver a comprobar", "Check again")}</span></button>}
-          {projection && revision && <button className={`obs-button obs-axent-button${props.axentOpen && !open ? " obs-active" : ""}`} onClick={() => { transition(() => { go({ item: null }); props.setAxentOpen(true); }); }}><MessageCircleQuestion size={16} aria-hidden="true"/>{t("Preguntar a AXENT", "Ask AXENT")}</button>}
+          {projection && revision && <span className="obs-axent-cta"><button className={`obs-button obs-axent-button${props.axentOpen && !open ? " obs-active" : ""}`} onClick={() => { transition(() => { go({ item: null }); props.setAxentOpen(true); }); }}><MessageCircleQuestion size={16} aria-hidden="true"/>{t("Preguntar a AXENT", "Ask AXENT")}</button><span className="obs-axent-note"><CornerRightUp size="1.15em" aria-hidden="true"/>{t("¿Dudas? Pregúntale a AXENT", "Any doubts? Ask AXENT")}</span></span>}
           <div className="obs-menu">
             <button className="obs-icon" aria-expanded={menu} aria-haspopup="true" aria-label={t("Más acciones", "More actions")} onClick={() => setMenu(!menu)}><ChevronDown size={18} aria-hidden="true"/></button>
             {menu && <ul className="obs-menu-list" onKeyDown={e => { if (e.key === "Escape") setMenu(false); }}>
