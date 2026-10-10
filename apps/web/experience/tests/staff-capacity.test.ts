@@ -1,3 +1,4 @@
+import { readFileSync } from "node:fs";
 import test from "node:test";
 import assert from "node:assert/strict";
 import { staffCommands, staffReason, staffResults, staffState } from "../lib/staff-capacity";
@@ -32,4 +33,18 @@ test("unknown runtime reasons collapse to a generic failure", () => {
   assert.equal(staffReason("STEP_UP_REQUIRED"), "STEP_UP_REQUIRED");
   assert.equal(staffReason("<script>"), "FAILED");
   assert.equal(staffReason(undefined), "FAILED");
+});
+
+
+test("operator step-up keeps an isolated short-lived cookie, primary pairing and bounded input", () => {
+  const route = readFileSync(new URL("../app/api/admin/step-up/route.ts", import.meta.url), "utf8");
+  const proxy = readFileSync(new URL("../lib/staff-capacity-server.ts", import.meta.url), "utf8");
+  assert.match(route, /sameOrigin\(request\)/);
+  assert.match(route, /maxAge: 600/);
+  assert.match(route, /path: "\/api\/admin\/staff-capacity"/);
+  assert.match(route, /httpOnly: true/);
+  assert.match(route, /size > 1024/);
+  assert.match(proxy, /validateStaffStepUp\(primary, elevated\)/);
+  assert.match(proxy, /token = elevated \?\? primary/);
+  assert.match(proxy, /return reply\(\{ reason: "STEP_UP_REQUIRED" \}, 403\)/);
 });

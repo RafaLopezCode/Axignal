@@ -1949,5 +1949,10 @@
   "Capacity granted": ["Kapazität gewährt", "Capacidade concedida", "Capacité accordée", "Capacità concessa"],
   "Capacity revoked": ["Kapazität entzogen", "Capacidade retirada", "Capacité retirée", "Capacità revocata"],
   "Organization added by staff": ["Organisation von Staff hinzugefügt", "Organização adicionada pelo Staff", "Organisation ajoutée par le Staff", "Organizzazione aggiunta dallo Staff"],
-  "Working…": ["Wird bearbeitet…", "A processar…", "Traitement…", "Elaborazione…"]
+  "Working…": ["Wird bearbeitet…", "A processar…", "Traitement…", "Elaborazione…"],
+  "Temporary step-up credential (SSH + authenticator)": ["Temporärer Bestätigungsnachweis (SSH + Authenticator)", "Credencial temporária de verificação reforçada (SSH + autenticador)", "Justificatif temporaire de vérification renforcée (SSH + authentificateur)", "Credenziale temporanea di verifica rafforzata (SSH + autenticatore)"],
+  "Issued by operator · 10 minutes": ["Vom Operator ausgestellt · 10 Minuten", "Emitida pelo operador · 10 minutos", "Émise par l’opérateur · 10 minutes", "Emessa dall’operatore · 10 minuti"],
+  "Activate for 10 minutes": ["Für 10 Minuten aktivieren", "Ativar por 10 minutos", "Activer pendant 10 minutes", "Attiva per 10 minuti"],
+  "Step-up active. Your normal Admin session remains open.": ["Zusätzliche Prüfung aktiv. Die normale Admin-Sitzung bleibt geöffnet.", "Verificação reforçada ativa. A sessão Admin normal permanece aberta.", "Vérification renforcée active. La session Admin normale reste ouverte.", "Verifica rafforzata attiva. La sessione Admin normale rimane aperta."],
+  "Credential rejected, expired or issued for another operator.": ["Nachweis abgelehnt, abgelaufen oder für einen anderen Operator ausgestellt.", "Credencial rejeitada, expirada ou emitida para outro operador.", "Justificatif refusé, expiré ou émis pour un autre opérateur.", "Credenziale rifiutata, scaduta o emessa per un altro operatore."]
 }

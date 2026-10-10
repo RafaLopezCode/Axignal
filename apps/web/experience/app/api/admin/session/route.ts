@@ -74,5 +74,9 @@ export async function DELETE(request: Request) {
   if (!sameOrigin(request))
     return Response.json({ reason: "ORIGIN_REQUIRED" }, { status: 403 });
   (await cookies()).delete(customerZeroCookie);
+  (await cookies()).set("axignal-admin-stepup", "", {
+    path: "/api/admin/staff-capacity", httpOnly: true, sameSite: "strict",
+    secure: request.headers.get("origin")?.startsWith("https:") === true, maxAge: 0,
+  });
   return Response.json({ authorized: false });
 }
