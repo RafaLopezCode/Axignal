@@ -203,3 +203,14 @@ test("every Admin function stays in the menu; a domain not yet connected says so
   assert.match(admin, /!connectedDomains\.has\(domain\.id\)/);
   assert.doesNotMatch(admin, /adminRecords/);
 });
+
+test("the phone drawer is modal: a real scrim closes it, the page behind does not scroll, targets fit a thumb", () => {
+  const admin = read("components/admin.tsx");
+  assert.match(admin, /\{mobile && <div className="admin-scrim" aria-hidden="true" onClick=\{\(\) => setMobile\(false\)\} \/>\}/);
+  assert.match(admin, /document\.body\.style\.overflow = "hidden"/);
+  const css = read("components/admin-menu.css");
+  assert.match(css, /\.admin-scrim \{ position: fixed; inset: 0; z-index: 29;/);
+  // The drawer sits above its scrim; the scrim covers the page, which the old in-drawer pseudo-element never did.
+  assert.match(css, /\.product-sidebar\.mobile-open::after \{ display: none; \}/);
+  assert.match(css, /\.icon-button, \.admin-shell \.product-sidebar \.obs-icon \{ min-inline-size: 44px; min-block-size: 44px; \}/);
+});

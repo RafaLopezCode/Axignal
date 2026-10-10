@@ -30,6 +30,13 @@ export function Admin({ initialDomain = CUSTOMER_ZERO }: { initialDomain?: strin
   const [productNavigationHost, setProductNavigationHost] = useState<HTMLDivElement | null>(null);
   const [productToolbarHost, setProductToolbarHost] = useState<HTMLDivElement | null>(null);
   useFocusTrap(mobile, sidebarRef, () => setMobile(false));
+  // An open drawer is modal: the page behind it does not scroll.
+  useEffect(() => {
+    if (!mobile) return;
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => { document.body.style.overflow = previous; };
+  }, [mobile]);
   const inProduct = domainId === CUSTOMER_ZERO;
   const domain = adminDomains.find(d => d.id === domainId);
 
@@ -59,6 +66,7 @@ export function Admin({ initialDomain = CUSTOMER_ZERO }: { initialDomain?: strin
 
   return (
     <div className={"product-shell admin-shell " + (inProduct ? "admin-using-product" : "")}>
+      {mobile && <div className="admin-scrim" aria-hidden="true" onClick={() => setMobile(false)} />}
       <aside
         ref={sidebarRef}
         role={mobile ? "dialog" : "complementary"}
