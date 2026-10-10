@@ -13,7 +13,7 @@ import {
   EXAMPLE_MOMENTS, exampleInsights, exampleOrganization, type ExampleMoment,
 } from "@/lib/landing-observatory";
 import { laneCopy } from "@/lib/observatory";
-import { signals } from "@/lib/projection";
+import { demoOrganizationName, signals } from "@/lib/projection";
 import { InsightBody, SummaryView } from "./observatory";
 import { LocaleToggle, useFocusTrap } from "./ui";
 import "./observatory.css";
@@ -32,7 +32,7 @@ export function ExampleObservatory() {
   const sheetRef = useRef<HTMLDivElement>(null);
   useFocusTrap(mobileRail, sheetRef, () => setMobileRail(false));
   const organization = exampleOrganization();
-  const name = organization.name;
+  const name = copy(demoOrganizationName);
   const insights = useMemo(() => exampleInsights(moment, copy), [moment, copy]);
   const selected = insights.find(insight => insight.id === openId) ?? null;
 

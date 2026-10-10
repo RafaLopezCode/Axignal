@@ -1,5 +1,5 @@
 /* Public example shares the subscriber Observatory structure; only the factual banner is added. */
-.obs-example .obs-example-notice { display: flex; align-items: start; flex-wrap: wrap; gap: .7rem 1rem; padding: 1rem 1.5rem; background: var(--obs-paper, #f8f9fb); border-bottom: 1px solid var(--obs-line, #dde2eb); font-size: .85rem; line-height: 1.45; }
+.obs-example .obs-example-notice { display: flex; align-items: start; flex-wrap: wrap; gap: .7rem 1rem; padding: 1rem 1.5rem; background: var(--obs-paper, #f8f9fb); border-bottom: 1px solid var(--obs-line, #dde2eb); font-size: .85rem; line-height: 1.45; margin-bottom: 1.5rem; }
 .obs-example .obs-example-notice strong { color: #354f98; }
 .obs-example .obs-example-notice span { flex: 1; min-width: 18rem; }
 .obs-example .obs-example-notice a { display: inline-flex; gap: .4rem; align-items: center; font-weight: 650; color: #354f98; }

@@ -169,7 +169,8 @@ test("the landing's living window is the one public example, honestly labelled a
   assert.equal(now.find((i) => i.id === "reputation-gap")?.nature, "UNKNOWN");
   // The lamps light exactly what appeared since the previous moment.
   assert.deepEqual([...exampleNewSince("2026-09-01")], ["renovation"]);
-  assert.deepEqual([...exampleNewSince("2026-10-03")], ["representation"]);
+  // Since September: the school tender (15 Sep) and, on 3 Oct, the works and the presence finding.
+  assert.deepEqual([...exampleNewSince("2026-10-03")].sort(), ["representation", "school-tender", "works-activity"]);
   assert.equal(exampleNewSince("2026-07-01").size, 0);
   const window = read("components/landing-observatory.tsx");
   assert.match(window, /Organización ficticia/);
