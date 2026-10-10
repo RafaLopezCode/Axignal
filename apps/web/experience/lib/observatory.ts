@@ -10,6 +10,7 @@ import { causeCopy, dimensionCopy, proposalCopy, stateCopy } from "@/components/
 import type { Discovery, FirstObservation, PublicUnderstanding } from "./subscriber-contracts";
 import type { RuntimeProjection } from "./runtime-projection";
 import { facetOfDiscovery, facetOfOpportunity, type Channel } from "./observation-families";
+import { runtimeText } from "./runtime-text";
 import type { FamilyId } from "./projection";
 
 export type Translate = (es: string, en: string) => string;
@@ -278,21 +279,22 @@ type RuntimeNode = RuntimeProjection["nodes"][number];
  * what the signal does not cover is listed as not verified.
  */
 function nodeInsight(node: RuntimeNode, familyId: FamilyId | null, t: Translate, locale: string): Insight {
+  const say = (text: string) => runtimeText(text, locale);
   const officialWeb = node.evidenceNarrative.steps.some(step => step.kind === "SOURCE" && step.label === "OFFICIAL_WEB");
   const host = (url: string) => { try { return new URL(url).hostname; } catch { return url; } };
   return {
     id: node.id, lane: node.epistemicState === "OBSERVED" ? "understood" : "unknown",
     nature: node.epistemicState === "OBSERVED" ? "OBSERVED" : node.epistemicState === "POTENTIAL" ? "POTENTIAL" : "UNKNOWN",
-    headline: node.title,
-    why: node.whyAttention,
+    headline: say(node.title),
+    why: say(node.whyAttention),
     observedAt: node.observedAt,
-    meaning: [node.interpretation],
-    reasoning: [node.uncertainty],
+    meaning: [say(node.interpretation)],
+    reasoning: [say(node.uncertainty)],
     proposal: null,
     sources: node.sourceRefs.map(url => ({ url, label: host(url), observedAt: node.observedAt, quote: null })),
     proof: [
       { label: t("Vigencia", "Currentness"), value: currentnessLabel(node.currentness, t) },
-      ...(node.unknowns.length ? [{ label: t("Sin verificar", "Not verified"), value: node.unknowns.join(" · ") }] : []),
+      ...(node.unknowns.length ? [{ label: t("Sin verificar", "Not verified"), value: node.unknowns.map(say).join(" · ") }] : []),
     ],
     dimensions: [],
     previous: null,

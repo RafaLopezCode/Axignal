@@ -214,3 +214,13 @@ test("a reading with no first observation is read from the projection's own sign
   const withFirst = { projection: reading.projection, firstObservation: { discoveries: [], publicUnderstanding: null } as unknown as Reading["firstObservation"] };
   assert.equal(insightsFor(withFirst, en, "en").length, 0);
 });
+
+test("the runtime's English sentences are shown in Spanish where the reader reads Spanish, and nothing else is guessed", async () => {
+  const { runtimeText } = await import("../lib/runtime-text");
+  assert.equal(runtimeText("AXIGNAL's public homepage is observable from the outside", "es"), "La web pública de AXIGNAL es observable desde fuera");
+  assert.match(runtimeText("The authorized public homepage was reachable and contained visible text when AXIGNAL observed it.", "es"), /^La web pública autorizada era accesible/);
+  assert.match(runtimeText("This observation covers only the authorized public homepage at this observation time. Search, generative, social, reputation and other public surfaces remain UNKNOWN.", "es"), /DESCONOCIDAS\.$/);
+  // A sentence the runtime may emit that is not listed is shown exactly as written; other locales read the runtime's wording.
+  assert.equal(runtimeText("Some sentence nobody has translated.", "es"), "Some sentence nobody has translated.");
+  assert.equal(runtimeText("AXIGNAL's public homepage is observable from the outside", "en"), "AXIGNAL's public homepage is observable from the outside");
+});

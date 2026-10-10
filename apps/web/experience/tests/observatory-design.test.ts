@@ -44,8 +44,9 @@ test("disabled controls keep their contrast through colour, never through opacit
   }
 });
 
-test("the selected chip is a soft tint with a blue edge, and its count is a solid pill that keeps its contrast", () => {
-  assert.match(observatory, /\.obs-facet\[aria-pressed="true"\] \{ background: var\(--obs-blue-soft\); border-color: var\(--obs-blue\); box-shadow: inset 0 0 0 1px var\(--obs-blue\); color: var\(--obs-ink\); \}/);
+test("the selected chip is a soft tint with a one-pixel blue edge, and its count is a solid pill that keeps its contrast", () => {
+  assert.match(observatory, /\.obs-facet\[aria-pressed="true"\] \{ background: var\(--obs-blue-soft\); border-color: var\(--obs-blue\); color: var\(--obs-ink\); \}/);
+  assert.doesNotMatch(observatory, /\.obs-facet\[aria-pressed="true"\] \{[^}]*box-shadow/);
   assert.match(observatory, /\.obs-facet\[aria-pressed="true"\] \.obs-facet-count \{ background: var\(--obs-blue\); color: #fff; \}/);
   assert.doesNotMatch(observatory, /obs-facet-count \{[^}]*rgba\(255, 255, 255/);
 });
