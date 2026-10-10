@@ -182,3 +182,35 @@ test("new observatory copy resolves in all six locales, including whole-sentence
   }
   assert.equal(es("Lo que importa"), "Lo que importa");
 });
+
+test("a reading with no first observation is read from the projection's own signals, in the runtime's wording and state", () => {
+  const node = {
+    id: "xignal:abc", nodeKind: "XIGNAL" as const, title: "Its public homepage is observable from the outside",
+    whyAttention: "The public homepage was retrieved through the governed source sensor.",
+    interpretation: "The authorized public homepage was reachable when observed.",
+    uncertainty: "Only the public homepage is covered; other surfaces remain UNKNOWN.",
+    epistemicState: "OBSERVED" as const, currentness: "CURRENT" as const, observedAt: "2026-10-04T21:39:27+00:00",
+    evidenceAccess: "AVAILABLE", sourceRefs: ["https://example.test/"], observationSupportRefs: ["source:one"],
+    unknowns: ["Search, generative and social surfaces remain UNKNOWN."],
+    evidenceNarrative: { xignalId: "xignal:abc", focusStepId: "s1", steps: [{ id: "s1", kind: "SOURCE", label: "OFFICIAL_WEB", sourceRef: "https://example.test/", observedAt: "2026-10-04T21:39:27+00:00", currentness: "CURRENT", artifactVerified: true }] },
+  };
+  const projection = { realityLevel: "LIVE", runtimeCodeSha: "sha", lifecycleStatus: "LIVE", context: { id: "ctx", label: "Observation" },
+    organization: { id: "org:x", name: "Example Co" }, nodes: [node],
+    cognition: { asOf: "2026-10-10T00:00:00+00:00", sources: [], signals: [{ id: "xignal:abc", familyId: "presence" }], opportunities: [] },
+    temporalHistory: { disposition: "EMPTY", items: [] }, today: { disposition: "READY", items: [] }, reloadContinuity: "PERSISTED_RUNTIME_READ_MODEL" };
+  const reading = { projection: projection as unknown as Reading["projection"], firstObservation: null };
+  const insights = insightsFor(reading, en, "en");
+  assert.equal(insights.length, 1);
+  const [insight] = insights;
+  // The runtime's state is kept, never raised; the family comes from the typed signal and the channel from the typed source.
+  assert.equal(insight.nature, "OBSERVED");
+  assert.equal(insight.lane, "understood");
+  assert.equal(insight.headline, node.title);
+  assert.equal(insight.family, "presence");
+  assert.equal(insight.channel, "WEB");
+  assert.deepEqual(insight.proof.map(row => row.label), ["Currentness", "Not verified"]);
+  assert.equal(insight.sources[0].url, "https://example.test/");
+  // With a first observation the signals are not read twice.
+  const withFirst = { projection: reading.projection, firstObservation: { discoveries: [], publicUnderstanding: null } as unknown as Reading["firstObservation"] };
+  assert.equal(insightsFor(withFirst, en, "en").length, 0);
+});

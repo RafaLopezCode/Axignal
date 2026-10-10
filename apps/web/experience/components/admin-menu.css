@@ -11,7 +11,7 @@
   --menu-active: #354f98;
   --menu-radius: 9px;
   --menu-gap: 4px;
-  inline-size: 252px;
+  inline-size: 272px;
   padding: 0 16px;
 }
 .admin-shell .sidebar-brand { padding: 24px 8px 18px; }
@@ -35,7 +35,7 @@
 .admin-shell .admin-nav-item:focus-visible { outline: 2px solid var(--menu-active); outline-offset: 2px; }
 
 /* The Observatory's navigation hangs from Customer Zero, as its children. */
-.admin-shell .admin-product-navigation { margin: 2px 0 0 18px; padding-inline-start: 8px; border-inline-start: 1px solid var(--menu-line); }
+.admin-shell .admin-product-navigation { margin: 2px 0 0 10px; padding-inline-start: 6px; border-inline-start: 1px solid var(--menu-line); }
 .admin-shell .admin-product-navigation[hidden] { display: none; }
 .admin-shell .obs-in-shell { --obs-rail-text: var(--menu-text); --obs-rail-muted: var(--menu-muted); --obs-rail-line: var(--menu-line); --obs-rail-2: var(--menu-hover); margin-block: 4px 8px; }
 .admin-shell .obs-in-shell .obs-rail { gap: var(--menu-gap); }
@@ -55,3 +55,7 @@
 .admin-panel-head { margin-block-end: 24px; }
 .admin-panel-head h1 { margin: 0 0 6px; }
 .admin-panel-head p { margin: 0; color: #566173; }
+.admin-notice { max-inline-size: 640px; padding: 20px 24px; border: 1px solid var(--line, #e0e5ee); border-radius: var(--radius, 14px); background: #fff; }
+.admin-notice h2 { margin: 0 0 8px; font-size: 18px; }
+.admin-notice p { margin: 0; line-height: 1.6; color: #3b4456; }
+.admin-notice code { padding: 1px 6px; border-radius: 5px; background: #eef2fa; font-size: 13px; }

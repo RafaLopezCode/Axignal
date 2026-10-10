@@ -270,12 +270,47 @@ const CONTEXT_ONLY = new Set<Discovery["kind"]>(["PUBLIC_PRESENCE", "WEB_REPRESE
 
 export type Reading = { projection: RuntimeProjection | null; firstObservation: FirstObservation | null };
 
+type RuntimeNode = RuntimeProjection["nodes"][number];
+
+/**
+ * A reading with no first observation is read from the governed projection's own signals. Each keeps the
+ * runtime's wording, state and limits as they came: the epistemic state is the runtime's, never raised, and
+ * what the signal does not cover is listed as not verified.
+ */
+function nodeInsight(node: RuntimeNode, familyId: FamilyId | null, t: Translate, locale: string): Insight {
+  const officialWeb = node.evidenceNarrative.steps.some(step => step.kind === "SOURCE" && step.label === "OFFICIAL_WEB");
+  const host = (url: string) => { try { return new URL(url).hostname; } catch { return url; } };
+  return {
+    id: node.id, lane: node.epistemicState === "OBSERVED" ? "understood" : "unknown",
+    nature: node.epistemicState === "OBSERVED" ? "OBSERVED" : node.epistemicState === "POTENTIAL" ? "POTENTIAL" : "UNKNOWN",
+    headline: node.title,
+    why: node.whyAttention,
+    observedAt: node.observedAt,
+    meaning: [node.interpretation],
+    reasoning: [node.uncertainty],
+    proposal: null,
+    sources: node.sourceRefs.map(url => ({ url, label: host(url), observedAt: node.observedAt, quote: null })),
+    proof: [
+      { label: t("Vigencia", "Currentness"), value: currentnessLabel(node.currentness, t) },
+      ...(node.unknowns.length ? [{ label: t("Sin verificar", "Not verified"), value: node.unknowns.join(" · ") }] : []),
+    ],
+    dimensions: [],
+    previous: null,
+    changeKey: keyOf(node.id, node.title, node.observedAt, node.currentness),
+    family: familyId,
+    channel: familyId === "presence" && officialWeb ? "WEB" : null,
+  };
+}
+
 export function insightsFor(reading: Reading, t: Translate, locale: string): Insight[] {
   const opportunities = reading.projection?.cognition?.opportunities ?? [];
   const titles = new Set(opportunities.map(o => o.title));
   const discoveries = reading.firstObservation?.discoveries ?? [];
   const report = reading.firstObservation?.publicUnderstanding ?? null;
+  const families = new Map((reading.projection?.cognition?.signals ?? []).map(signal => [signal.id, signal.familyId as FamilyId]));
+  const nodes = reading.firstObservation ? [] : (reading.projection?.nodes ?? []);
   const out: Insight[] = [
+    ...nodes.map(node => nodeInsight(node, families.get(node.id) ?? null, t, locale)),
     ...opportunities.map(o => opportunityInsight(o, t, locale)),
     ...discoveries.flatMap((d, i) => CONTEXT_ONLY.has(d.kind) || (d.kind === "DEMAND" && titles.has(String(d.detail.title ?? d.statement)))
       ? [] : [discoveryInsight(d, i, t, locale)]),

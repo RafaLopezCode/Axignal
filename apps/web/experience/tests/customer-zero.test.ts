@@ -328,7 +328,7 @@ test("organization availability separates internal no-payment use from unknown s
     assert.doesNotMatch(html,/\/checkout|Norte|Atlas/);
   }
   const admin = renderToStaticMarkup(createElement(Admin,{initialDomain:"customers"}));
-  assert.match(admin,/Accounts &amp; capacity|Cuentas y capacidad/);
+  assert.match(admin,/Accounts &amp; subscriptions|Cuentas y suscripciones/);
   // A functional panel carries no sample records and no demonstration label.
   assert.doesNotMatch(admin,/ilustrativ|illustrative|demo-label/i);
   assert.doesNotMatch(admin,/href="\/panorama"/);

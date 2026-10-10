@@ -179,9 +179,23 @@ test("the Admin menu is one system: shell entries and the portfolio navigation s
   assert.equal(read("components/observatory.css").match(/--obs-r-control:\s*([^;]+);/)?.[1].trim(), "9px");
 });
 
-test("the Admin offers only functional panels: no sample records, no demonstration label, no retired domains", () => {
+test("the Admin carries no sample records and no demonstration label", () => {
   const admin = read("components/admin.tsx");
   assert.doesNotMatch(admin, /adminRecords|DemoLabel|ilustrativ|illustrative|\/api\/admin\/action/i);
   const model = read("lib/admin-model.ts");
-  assert.doesNotMatch(model, /ilustrativ|illustrative|demo|example|ejemplo/i);
+  assert.doesNotMatch(model, /ilustrativ|illustrative|\bdemo\b|\bexample\b|\bejemplo\b|AdminRecord/i);
+});
+
+test("every Admin function stays in the menu; a domain not yet connected says so and shows nothing", () => {
+  const admin = read("components/admin.tsx");
+  const model = read("lib/admin-model.ts");
+  const ids = [...model.matchAll(/id: "([a-z]+)"/g)].map(match => match[1]);
+  assert.deepEqual(ids, ["command", "customers", "acquisition", "revenue", "focus", "quality", "brain", "governance", "integrations", "finance", "advisor", "system"]);
+  // The menu is grouped the way the operator works: observe, operate, govern; the attention centre stays one click away.
+  assert.match(admin, /GROUPS\.map\(group =>/);
+  assert.match(admin, /href="\/admin#command"/);
+  // Only a connected domain draws content; the others state that nothing is connected and render no record.
+  assert.match(model, /connectedDomains: ReadonlySet<string> = new Set\(\["customers"\]\)/);
+  assert.match(admin, /!connectedDomains\.has\(domain\.id\)/);
+  assert.doesNotMatch(admin, /adminRecords/);
 });

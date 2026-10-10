@@ -1,15 +1,20 @@
 "use client";
 import Link from "next/link";
 import { useState, useRef, useEffect } from "react";
-import { ArrowUpRight, ChevronRight, LockKeyhole, Menu, X } from "lucide-react";
+import { ArrowUpRight, ChevronRight, Eye, LockKeyhole, Menu, X } from "lucide-react";
 import { CustomerZero } from "./customer-zero";
 import { PilotTestAccounts } from "./pilot-test-accounts";
 import { StaffCapacity } from "./staff-capacity";
-import { adminDomains } from "@/lib/admin-model";
+import { adminDomains, connectedDomains } from "@/lib/admin-model";
 import { useLocale } from "@/lib/locale";
 import { Brand, IconButton, LocaleToggle, useFocusTrap } from "./ui";
 
 const CUSTOMER_ZERO = "customer-zero";
+const GROUPS = [
+  { id: "observe", es: "OBSERVAR", en: "OBSERVE" },
+  { id: "operate", es: "OPERAR", en: "OPERATE" },
+  { id: "govern", es: "GOBERNAR", en: "GOVERN" },
+] as const;
 
 /**
  * The Admin shell: one sidebar and one top bar. Customer Zero is the Admin's own AXIGNAL, mounted as the
@@ -94,22 +99,28 @@ export function Admin({ initialDomain = CUSTOMER_ZERO }: { initialDomain?: strin
             </button>
             <div ref={setProductNavigationHost} className="admin-product-navigation" hidden={!inProduct} />
           </div>
-          <div className="admin-nav-group">
-            <span className="nav-group-label">{t("OPERAR AXIGNAL", "OPERATE AXIGNAL")}</span>
-            {adminDomains.map(d => (
-              <button
-                key={d.id}
-                className={"admin-nav-item " + (domainId === d.id ? "active" : "")}
-                aria-current={domainId === d.id ? "page" : undefined}
-                onClick={() => choose(d.id)}
-              >
-                {copy(d.name)}
-                <ChevronRight size={14} aria-hidden="true" />
-              </button>
-            ))}
-          </div>
+          {GROUPS.map(group => (
+            <div className="admin-nav-group" key={group.id}>
+              <span className="nav-group-label">{t(group.es, group.en)}</span>
+              {adminDomains.filter(d => d.group === group.id).map(d => (
+                <button
+                  key={d.id}
+                  className={"admin-nav-item " + (domainId === d.id ? "active" : "")}
+                  aria-current={domainId === d.id ? "page" : undefined}
+                  onClick={() => choose(d.id)}
+                >
+                  {copy(d.name)}
+                  <ChevronRight size={14} aria-hidden="true" />
+                </button>
+              ))}
+            </div>
+          ))}
         </nav>
         <div className="sidebar-bottom">
+          <Link href="/admin#command" className="nav-item">
+            <Eye size={17} aria-hidden="true" />
+            {t("Centro de atención", "Attention centre")}
+          </Link>
           <Link href="/design" className="sidebar-system">
             {t("Sistema AXIGNAL", "AXIGNAL system")}
             <ArrowUpRight size={12} aria-hidden="true" />
@@ -158,6 +169,12 @@ export function Admin({ initialDomain = CUSTOMER_ZERO }: { initialDomain?: strin
               </header>
               {domain.id === "customers" && <StaffCapacity />}
               {domain.id === "customers" && <PilotTestAccounts />}
+              {!connectedDomains.has(domain.id) && (
+                <section className="admin-notice" aria-labelledby="admin-notice-title">
+                  <h2 id="admin-notice-title">{t("Todavía no conectado a esta interfaz", "Not connected to this interface yet")}</h2>
+                  <p>{t("Esta superficie leerá el servicio", "This surface will read the service")} <code>{domain.service}</code>. {t("Hasta entonces no se muestra ningún registro: un dato de ejemplo no sustituye a una lectura real.", "Until then no record is shown: sample data does not stand in for a real reading.")}</p>
+                </section>
+              )}
             </main>
           )}
         </div>
