@@ -113,7 +113,7 @@ function props(overrides: Partial<ObservatoryProps> = {}): ObservatoryProps {
     access: "ready", portfolio: portfolioSchema.parse({ state: "success", capacity: 10, capacityCurrentness: "CURRENT", canPurchase: null, contractingEnabled: false, organizations: fixture.portfolio }),
     busy: false, message: "", paymentUrl: null, selected: null, reading: false, projection: null, firstObservation: null, revision: null,
     readOutput: noop, clearSelection: noop, command: async () => {}, refresh: noop, logout: noop,
-    locator: "", setLocator: noop, total: 11, setTotal: noop, replacing: null, setReplacing: noop, replacementLocator: "", setReplacementLocator: noop,
+    locator: "", setLocator: noop, total: 11, setTotal: noop, replacing: null, setReplacing: noop, replacementLocator: "", setReplacementLocator: noop, canAct: true, loadReading: async () => ({}),
     ...overrides,
   };
 }

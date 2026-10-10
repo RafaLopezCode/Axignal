@@ -1,12 +1,13 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 import { useLocale } from "@/lib/locale";
 import { approvedPaymentUrl, pendingOutputSchema, pilotRedemptionSchema, portfolioSchema, subscriberOutputSchema, subscriberResultSchema, type FirstObservation, type SubscriberPortfolio } from "@/lib/subscriber-contracts";
 import type { RuntimeProjection } from "@/lib/runtime-projection";
 import { pendingPilotInvite, clearPilotInvite } from "@/lib/pilot-invite";
 import { pendingMcpConnect, clearMcpConnect } from "@/lib/mcp-connect";
 import { Observatory } from "./observatory";
+import { syntheticOutput, syntheticPortfolio } from "@/lib/demo/synthetic-source";
 import "./subscriber-portfolio.css";
 import "./observatory.css";
 
@@ -14,8 +15,13 @@ type PortfolioItem = SubscriberPortfolio["organizations"][number];
 /** A canonical Focus reading, or a pending attention whose First Observation exists. */
 const readable = (item: PortfolioItem) => Boolean(item.organizationId || item.observation);
 
-export function SubscriberPortfolioExperience() {
+/**
+ * The subscriber observatory, in two modes over the same components. `live` is the account's authorized read;
+ * `synthetic` is the public demo: a fictional snapshot, with the account-only capabilities disabled.
+ */
+export function SubscriberPortfolioExperience({ source = "live", notice }: { source?: "live" | "synthetic"; notice?: ReactNode } = {}) {
   const { t, locale } = useLocale();
+  const live = source === "live";
   const [portfolio, setPortfolio] = useState<SubscriberPortfolio | null>(null);
   const [access, setAccess] = useState<"loading" | "required" | "failure" | "ready">("loading");
   const [busy, setBusy] = useState(false);
@@ -44,6 +50,7 @@ export function SubscriberPortfolioExperience() {
   const requests = useRef(new Set<AbortController>());
   useEffect(() => () => { for (const controller of requests.current) controller.abort(); }, []);
   const readPortfolio = useCallback(async () => {
+    if (!live) { setPortfolio(syntheticPortfolio()); setAccess("ready"); return; }
     const controller = new AbortController(); requests.current.add(controller);
     const epoch = sessionEpoch.current;
     try {
@@ -56,16 +63,16 @@ export function SubscriberPortfolioExperience() {
       setPortfolio(result); setAccess("ready");
     } catch { if (!controller.signal.aborted && epoch === sessionEpoch.current) setAccess("failure"); }
     finally { requests.current.delete(controller); }
-  }, []);
+  }, [live]);
   useEffect(() => { void readPortfolio(); }, [readPortfolio]);
   useEffect(() => {
     // Sign-in started from an assistant connection returns to its consent, unless a pilot invite is pending.
-    if (access !== "ready" || pendingPilotInvite(() => window.sessionStorage)) return;
+    if (!live || access !== "ready" || pendingPilotInvite(() => window.sessionStorage)) return;
     const request = pendingMcpConnect(() => window.sessionStorage);
     if (request) window.location.replace(`/account/connect?request=${encodeURIComponent(request)}`);
   }, [access]);
   useEffect(() => {
-    if (access !== "ready" || pilotRedeemed.current) return;
+    if (!live || access !== "ready" || pilotRedeemed.current) return;
     const inviteToken = pendingPilotInvite(() => window.sessionStorage);
     if (!inviteToken) return;
     pilotRedeemed.current = true;
@@ -115,9 +122,9 @@ export function SubscriberPortfolioExperience() {
       }
     })();
     return () => { controller.abort(); pilotRedeemed.current = false; };
-  }, [access, readPortfolio]);
+  }, [access, readPortfolio, live]);
   async function command(input: Record<string, unknown>) {
-    if (busy) return;
+    if (!live || busy) return;
     const signature = JSON.stringify(input);
     let requestRef = attempts.current.get(signature);
     if (!requestRef) { requestRef = crypto.randomUUID(); attempts.current.set(signature, requestRef); }
@@ -152,6 +159,13 @@ export function SubscriberPortfolioExperience() {
     } catch { if (!controller.signal.aborted && epoch === sessionEpoch.current) setMessage(t("No pudimos confirmar la operación. Lee el estado antes de repetirla; tu contexto no se ha sustituido.", "The operation could not be confirmed. Read its state before repeating it; your context has not been replaced.")); }
     finally { requests.current.delete(controller); if (epoch === sessionEpoch.current) setBusy(false); }
   }
+  /** The same reading in both modes: the account's authorized read, or the demo snapshot. */
+  const loadOutput = useCallback(async (focusId: string, signal: AbortSignal): Promise<unknown> => {
+    if (!live) return syntheticOutput(focusId);
+    const response = await fetch(`/api/subscriber/organizations/${encodeURIComponent(focusId)}/output`, { cache: "no-store", signal });
+    if (!response.ok) throw new Error("READ_FAILED");
+    return response.json();
+  }, [live]);
   const readOutput = useCallback(async (focusId: string, pushHistory = true) => {
     outputRequest.current?.abort();
     const controller = new AbortController(); outputRequest.current = controller; requests.current.add(controller);
@@ -159,9 +173,7 @@ export function SubscriberPortfolioExperience() {
     if (pushHistory) { const url = new URL(window.location.href); url.searchParams.set("organization", focusId); window.history.pushState(null, "", url); }
     setReading(true); setSelected(focusId); setProjection(null); setFirstObservation(null);
     try {
-      const response = await fetch(`/api/subscriber/organizations/${encodeURIComponent(focusId)}/output`, { cache: "no-store", signal: controller.signal });
-      if (!response.ok) throw new Error("READ_FAILED");
-      const payload: unknown = await response.json();
+      const payload = await loadOutput(focusId, controller.signal);
       if (controller.signal.aborted || epoch !== outputEpoch.current || session !== sessionEpoch.current) return;
       if (typeof payload === "object" && payload !== null && (payload as { kind?: unknown }).kind === "PENDING_ATTENTION") {
         setFirstObservation(pendingOutputSchema.parse(payload).firstObservation); setRevision(null);
@@ -171,7 +183,7 @@ export function SubscriberPortfolioExperience() {
       setProjection(result.projection); setRevision(result.revision ?? null); setFirstObservation(result.firstObservation ?? null);
     } catch { if (!controller.signal.aborted) setMessage(t("La lectura autorizada no está disponible. Vuelve a comprobar el estado.", "The authorized reading is unavailable. Check the state again.")); }
     finally { requests.current.delete(controller); if (epoch === outputEpoch.current) setReading(false); }
-  }, [t]);
+  }, [t, loadOutput]);
   useEffect(() => {
     if (access !== "ready" || !portfolio) return;
     const navigate = () => {
@@ -194,7 +206,7 @@ export function SubscriberPortfolioExperience() {
     const finished = previousRunning.current.split(",").filter(id => id && !running.split(",").includes(id));
     previousRunning.current = running;
     if (selected && finished.includes(selected)) void readOutput(selected, false);
-    if (!running) return;
+    if (!running || !live) return;
     const timer = window.setTimeout(() => void readPortfolio(), 4000);
     return () => window.clearTimeout(timer);
   }, [access, portfolio, running, selected, readOutput, readPortfolio]);  // each read re-arms the poll
@@ -216,9 +228,9 @@ export function SubscriberPortfolioExperience() {
     outputRequest.current?.abort(); ++outputEpoch.current;
     setSelected(null); setProjection(null); setFirstObservation(null); setRevision(null); setReading(false);
   }, []);
-  return <Observatory access={access} portfolio={portfolio} busy={busy} message={message} paymentUrl={paymentUrl}
+  return <>{notice}<Observatory canAct={live} loadReading={loadOutput} access={access} portfolio={portfolio} busy={busy} message={message} paymentUrl={paymentUrl}
     selected={selected} reading={reading} projection={projection} firstObservation={firstObservation} revision={revision}
     readOutput={readOutput} clearSelection={clearSelection} command={command} refresh={() => void readPortfolio()} logout={() => void logout()}
     locator={locator} setLocator={setLocator} total={total} setTotal={setTotal}
-    replacing={replacing} setReplacing={setReplacing} replacementLocator={replacementLocator} setReplacementLocator={setReplacementLocator}/>;
+    replacing={replacing} setReplacing={setReplacing} replacementLocator={replacementLocator} setReplacementLocator={setReplacementLocator}/></>;
 }

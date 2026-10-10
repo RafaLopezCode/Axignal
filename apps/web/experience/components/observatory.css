@@ -84,6 +84,7 @@
 .obs-org[aria-current] .obs-org-name { color: var(--obs-blue); }
 .obs-org-sub-lit { color: var(--obs-brass-ink); font-weight: 700; }
 .obs-org-empty { padding: 10px; font-size: 13px; color: var(--obs-rail-muted); }
+.obs-rail-note { font-size: 12px; line-height: 1.4; color: var(--obs-muted); margin: 6px 0 0; }
 .obs-rail-foot { display: grid; gap: 2px; border-top: 1px solid var(--obs-rail-line); padding-top: 10px; }
 .obs-rail-action { display: flex; align-items: center; gap: 10px; min-height: 42px; padding: 0 10px; border: 0; border-radius: 10px; background: transparent; cursor: pointer; font-size: 14px; font-weight: 600; text-align: start; }
 .obs-rail-locale { padding: 4px 10px; }
