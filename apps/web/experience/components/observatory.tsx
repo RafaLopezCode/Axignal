@@ -316,7 +316,7 @@ function Rail({ items, selected, screen, seen, litCounts, nameOf, onOrganization
       {filter && !shown.length && <li className="obs-org-empty">{t("Ninguna organización coincide.", "No organization matches.")}</li>}
     </ul>
     <div className="obs-rail-foot">
-      <button className="obs-rail-action" aria-current={screen === "add" ? "page" : undefined} disabled={!canAct} onClick={() => onScreen("add")}><Plus size={16} aria-hidden="true"/>{t("Añadir organización", "Add organization")}</button>
+      <button className="obs-rail-action obs-rail-cta" aria-current={screen === "add" ? "page" : undefined} disabled={!canAct} onClick={() => onScreen("add")}><Plus size={16} aria-hidden="true"/>{t("Añadir organización", "Add organization")}</button>
       <button className="obs-rail-action" aria-current={screen === "account" ? "page" : undefined} disabled={!canAct} onClick={() => onScreen("account")}><Settings2 size={16} aria-hidden="true"/>{t("Cuenta y conexiones", "Account and connections")}</button>
       {!canAct && <p className="obs-rail-note">{t("Acciones de cuenta disponibles al crear tu cuenta.", "Account actions are available once you create your account.")}</p>}
       <div className="obs-rail-locale"><LocaleToggle/></div>

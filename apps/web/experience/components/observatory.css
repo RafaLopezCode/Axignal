@@ -431,3 +431,8 @@ body:has(.obs-rail-desktop) .privacy-preferences-button { inset-inline-end: auto
   .obs-depth-bar-bare { inset-inline-end: auto; inset-inline-start: 10px; }
   .obs-depth-axent-only .axent-header { padding-inline-end: 0; padding-inline-start: 40px; }
 }
+
+/* The primary action of the rail: adding an organization is what the panel is for. */
+.obs-rail-cta { justify-content: center; min-block-size: 46px; margin-block-end: 6px; background: var(--obs-blue); color: #fff !important; border-radius: 12px; font-size: 15px; box-shadow: 0 8px 18px rgba(53, 79, 152, .24); }
+.obs-rail-cta:hover:not(:disabled) { background: #2c4485; }
+.obs-rail-cta:disabled { opacity: .72; cursor: not-allowed; box-shadow: none; }
