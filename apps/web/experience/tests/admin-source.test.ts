@@ -159,3 +159,13 @@ test("Customer Zero is functional, never synthetic: it reads the service and not
   const endpoints = [...read("lib/admin-source.ts").matchAll(/"(\/api\/[a-z-]+)"/g)].map(match => match[1]);
   assert.deepEqual([...new Set(endpoints)].sort(), ["/api/organizations", "/api/subscriber-context", "/api/xeeds"]);
 });
+
+test("inside the shell the reading and the sidebar keep one rhythm: no stray indentation, no flush blocks", () => {
+  const shell = read("components/observatory.css");
+  assert.match(shell, /\.obs\.obs-in-shell \{ margin-block: 8px 12px; \}/);
+  assert.match(shell, /\.obs-in-shell \.obs-rail-head \{ padding-inline: 12px; \}/);
+  const canvas = read("components/customer-zero-observatory.css");
+  // The staff controls and the technical reading align with the reading's own gutters.
+  assert.match(canvas, /\.obs-customer-zero \.obs-cz-staff \{ padding: 0; margin-block-end: 14px; \}/);
+  assert.match(canvas, /\.obs-cz-detail \{ margin: 8px clamp\(20px, 3vw, 44px\) 40px;/);
+});

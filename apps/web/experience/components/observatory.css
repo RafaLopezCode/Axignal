@@ -522,3 +522,9 @@ body:has(.obs-rail-desktop) .privacy-preferences-button { inset-inline-end: auto
 .obs-in-shell .obs-rail-brand, .obs-in-shell .obs-rail-locale { display: none; }
 .obs-in-shell .obs-orgs { max-block-size: 38vh; flex: none; }
 .obs-in-shell .obs-rail-foot { padding-block-end: 0; }
+/* The portfolio navigation sits in the shell's sidebar with the same rhythm as its own entries. */
+.obs.obs-in-shell { margin-block: 8px 12px; }
+.obs-in-shell .obs-rail { gap: 4px; }
+.obs-in-shell .obs-rail-head { padding-inline: 12px; }
+.obs-in-shell .obs-rail-foot { margin-block-start: 8px; border-top: 0; padding-block-start: 0; }
+.obs-in-shell .obs-orgs { padding-inline-end: 4px; }

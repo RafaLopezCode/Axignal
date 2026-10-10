@@ -3,7 +3,8 @@
 .obs-customer-zero.obs-embedded { display: block; min-height: 0; background: transparent; }
 .obs-customer-zero .obs-main { min-width: 0; width: 100%; }
 .obs-customer-zero.obs-embedded .obs-main { margin: 0; }
-.obs-customer-zero .obs-cz-staff { padding: 0 1.5rem; }
-.obs-customer-zero .obs-cz-detail { margin: 1rem 1.5rem 2rem; padding: 1rem; border: 1px solid #d8deea; border-radius: 10px; }
+.obs-customer-zero .obs-cz-staff { padding: 0; margin-block-end: 14px; }
+.obs-customer-zero .obs-cz-staff .staff-utility { padding: 10px 0; background: transparent; border-top: 0; border-bottom: 1px solid var(--obs-line, #e0e5ee); max-height: none; }
+.obs-customer-zero .obs-cz-detail { margin: 8px clamp(20px, 3vw, 44px) 40px; padding: 1rem; border: 1px solid #d8deea; border-radius: 10px; }
 .obs-customer-zero .obs-cz-detail > summary { cursor: pointer; font-weight: 600; color: #354f98; }
 .obs-customer-zero .obs-cz-detail[open] > summary { margin-bottom: 1rem; }
