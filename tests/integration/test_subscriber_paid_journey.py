@@ -669,3 +669,77 @@ def test_registered_subscriber_paid_capacity_focus_output_and_expansion_journey(
     )
     assert cross_tenant.status == 403
     assert tenant_b != tenant_a
+
+
+def test_first_organization_typed_before_payment_is_kept_and_starts_once_capacity_is_verified(
+    paid_journey,
+):
+    """Activation never loses what the subscriber asked for, and never grants capacity it has not verified."""
+    _data_dir, _clock, provider, _catalogue, build_facade, _stores = paid_journey
+    facade = build_facade()
+    token, _tenant = _signup(facade, "subject:first-run")
+    headers = {"Origin": "https://axignal.com", "Authorization": f"Bearer {token}"}
+    read = {"Authorization": headers["Authorization"]}
+
+    waiting = facade.handle(
+        "POST",
+        "/subscriber/portfolio",
+        headers,
+        {"action": "add", "requestRef": "add:first", "locator": "Journey Example SLU"},
+    )
+    assert waiting.status == 200 and waiting.body["state"] == "CAPACITY_UNKNOWN"
+    # Kept as attention waiting for capacity: visible, not observed, no Focus, no capacity assumed.
+    portfolio = facade.handle("GET", "/subscriber/portfolio", read).body
+    assert portfolio["capacity"] is None and portfolio["capacityCurrentness"] == "UNKNOWN"
+    (item,) = portfolio["organizations"]
+    assert item["state"] == "CAPACITY_UNKNOWN" and item["organizationId"] is None
+    assert "observation" not in item
+    assert facade.workflow._portfolio.list(facade.identity.authenticate(token)) == ()
+
+    # Retrying before payment changes nothing.
+    early = facade.handle(
+        "POST",
+        "/subscriber/portfolio",
+        headers,
+        {"action": "retry_pending", "requestRef": "retry:early", "focusId": item["focusId"]},
+    )
+    assert early.body["state"] == "CAPACITY_UNKNOWN"
+
+    facade.handle(
+        "POST",
+        "/subscriber/portfolio",
+        headers,
+        {"action": "purchase", "requestRef": "purchase:first", "desiredOrganizationTotal": 1},
+    )
+    provider.mark_paid()
+    confirmed = facade.handle(
+        "POST",
+        "/subscriber/portfolio",
+        headers,
+        {"action": "refresh_purchase", "requestRef": "refresh:first"},
+    )
+    assert confirmed.body["capacity"] == 1 and confirmed.body["capacityCurrentness"] == "CURRENT"
+
+    started = facade.handle(
+        "POST",
+        "/subscriber/portfolio",
+        headers,
+        {"action": "retry_pending", "requestRef": "retry:paid", "focusId": item["focusId"]},
+    )
+    assert started.status == 200 and started.body["state"] == "CREATED"
+    after = facade.handle("GET", "/subscriber/portfolio", read).body
+    # One organization, active: the waiting attention became it, not a duplicate beside it.
+    assert [entry["state"] for entry in after["organizations"]] == ["ACTIVE"]
+
+    # Adding it again by a new request after payment does not leave a stale waiting entry either.
+    again = facade.handle(
+        "POST",
+        "/subscriber/portfolio",
+        headers,
+        {"action": "add", "requestRef": "add:again", "locator": "Journey Example SLU"},
+    )
+    assert again.body["state"] == "ALREADY_PRESENT"
+    assert [
+        entry["state"]
+        for entry in facade.handle("GET", "/subscriber/portfolio", read).body["organizations"]
+    ] == ["ACTIVE"]

@@ -83,7 +83,16 @@ class SubscriberPortfolioStore(Protocol):
         request: AddOrganizationRequest,
         now: datetime,
         reason: str | None = None,
+        status: PendingStatus = PendingStatus.IDENTITY_PENDING,
     ) -> None: ...
+
+    def resolve_waiting_for_capacity(
+        self,
+        context: TrustedSubscriberContext,
+        locator: str,
+        focus_id: XeedId,
+        now: datetime,
+    ) -> int: ...
 
     def list_pending_authorized(
         self,
@@ -243,6 +252,11 @@ class SubscriberPortfolioService:
             or snapshot.confirmed_at is None
             or snapshot.confirmed_at > now
         ):
+            # The attention is kept, so it can start the moment capacity is confirmed (an invitation
+            # redeemed, a payment verified). Nothing is observed and no capacity is assumed until then.
+            self._portfolio.record_pending(
+                context, request, now, None, PendingStatus.CAPACITY_UNKNOWN
+            )
             return AddResult(AddStatus.CAPACITY_UNKNOWN)
 
         resolved = self._organizations.resolve(request.locator)
@@ -274,6 +288,8 @@ class SubscriberPortfolioService:
                 max(1, current_used + 1 - snapshot.capacity),
                 snapshot.capacity,
             )
+        # The same organization asked for while capacity was unconfirmed is now this entry, not a second one.
+        self._portfolio.resolve_waiting_for_capacity(context, request.locator, entry.focus_id, now)
         if created:
             self._observation.trigger(context, entry.focus_id, request.idempotency_key)
             return AddResult(AddStatus.CREATED, entry)

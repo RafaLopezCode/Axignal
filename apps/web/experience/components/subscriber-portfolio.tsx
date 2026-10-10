@@ -8,6 +8,7 @@ import { pendingPilotInvite, clearPilotInvite } from "@/lib/pilot-invite";
 import { pendingMcpConnect, clearMcpConnect } from "@/lib/mcp-connect";
 import { Observatory, type ObservatoryShell } from "./observatory";
 import { accountSource, type ObservatorySource } from "@/lib/observatory-source";
+import { billingReturn, capacityRoom, waitingItems, type ActivationPhase } from "@/lib/activation";
 
 type PortfolioItem = SubscriberPortfolio["organizations"][number];
 /** A canonical Focus reading, or a pending attention whose First Observation exists. */
@@ -26,10 +27,14 @@ export function SubscriberPortfolioExperience({ source = accountSource, notice, 
   const localeRef = useRef(locale);
   localeRef.current = locale;
   const [portfolio, setPortfolio] = useState<SubscriberPortfolio | null>(null);
+  const portfolioRef = useRef<SubscriberPortfolio | null>(null);
+  portfolioRef.current = portfolio;
   const [access, setAccess] = useState<"loading" | "required" | "failure" | "ready">("loading");
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState("");
   const pilotRedeemed = useRef(false);
+  // Activation is a sequence of real steps (an invitation redeemed, a payment confirmed, an observation started).
+  const [activation, setActivation] = useState<ActivationPhase>("idle");
   const translate = useRef(t);
   translate.current = t;
   const [locator, setLocator] = useState("");
@@ -53,15 +58,17 @@ export function SubscriberPortfolioExperience({ source = accountSource, notice, 
   const attempts = useRef(new Map<string, string>());
   const requests = useRef(new Set<AbortController>());
   useEffect(() => () => { for (const controller of requests.current) controller.abort(); }, []);
-  const readPortfolio = useCallback(async () => {
+  const readPortfolio = useCallback(async (): Promise<SubscriberPortfolio | null> => {
     const controller = new AbortController(); requests.current.add(controller);
     const epoch = sessionEpoch.current;
     try {
       const result = await source.readPortfolio(controller.signal, localeRef.current);
-      if (controller.signal.aborted || epoch !== sessionEpoch.current) return;
-      if (result === "SESSION_REQUIRED") { setAccess("required"); setPortfolio(null); return; }
+      if (controller.signal.aborted || epoch !== sessionEpoch.current) return null;
+      if (result === "SESSION_REQUIRED") { setAccess("required"); setPortfolio(null); return null; }
+      portfolioRef.current = result;
       setPortfolio(result); setAccess("ready");
-    } catch { if (!controller.signal.aborted && epoch === sessionEpoch.current) setAccess("failure"); }
+      return result;
+    } catch { if (!controller.signal.aborted && epoch === sessionEpoch.current) setAccess("failure"); return null; }
     finally { requests.current.delete(controller); }
   }, [source, readerLocale]);
   useEffect(() => { void readPortfolio(); }, [readPortfolio]);
@@ -78,60 +85,53 @@ export function SubscriberPortfolioExperience({ source = accountSource, notice, 
     const request = pendingMcpConnect(() => window.sessionStorage);
     if (request) window.location.replace(`/account/connect?request=${encodeURIComponent(request)}`);
   }, [access]);
+  /**
+   * Redeem a Design Partner invitation: the one carried through sign-in, or one pasted on the activation screen.
+   * Only the pilot service decides; an invitation that is not accepted grants nothing and says why.
+   */
+  const redeemInvite = useCallback(async (inviteToken: string): Promise<boolean> => {
+    const epoch = sessionEpoch.current;
+    const controller = new AbortController();
+    requests.current.add(controller);
+    setActivation("redeeming");
+    try {
+      const response = await fetch("/api/subscriber/pilot/redeem", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ inviteToken }),
+        signal: controller.signal,
+      });
+      if (controller.signal.aborted || epoch !== sessionEpoch.current) return false;
+      if (response.status === 401) { setAccess("required"); setActivation("idle"); return false; }
+      if (!response.ok) throw new Error("PILOT_UNAVAILABLE");
+      const result = pilotRedemptionSchema.parse(await response.json());
+      if (controller.signal.aborted || epoch !== sessionEpoch.current) return false;
+      clearPilotInvite(() => window.sessionStorage);
+      if (!result.accepted) { setActivation("invite_rejected"); return false; }
+      // Accepted: the waiting organization starts as soon as the portfolio shows the confirmed place.
+      setActivation("starting");
+      await readPortfolio();
+      return true;
+    } catch {
+      if (!controller.signal.aborted && epoch === sessionEpoch.current) setActivation("invite_failed");
+      return false;
+    } finally {
+      requests.current.delete(controller);
+    }
+  }, [readPortfolio]);
   useEffect(() => {
     if (!canAct || access !== "ready" || pilotRedeemed.current) return;
     const inviteToken = pendingPilotInvite(() => window.sessionStorage);
     if (!inviteToken) return;
     pilotRedeemed.current = true;
-    const epoch = sessionEpoch.current;
-    const controller = new AbortController();
-    requests.current.add(controller);
-    void (async () => {
-      try {
-        const response = await fetch("/api/subscriber/pilot/redeem", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ inviteToken }),
-          signal: controller.signal,
-        });
-        if (controller.signal.aborted || epoch !== sessionEpoch.current) return;
-        if (response.status === 401) {
-          pilotRedeemed.current = false;
-          setAccess("required");
-          return;
-        }
-        if (!response.ok) throw new Error("PILOT_UNAVAILABLE");
-        const result = pilotRedemptionSchema.parse(await response.json());
-        if (controller.signal.aborted || epoch !== sessionEpoch.current) return;
-        clearPilotInvite(() => window.sessionStorage);
-        if (!result.accepted) {
-          setMessage(translate.current(
-            "La invitación de Design Partner no es válida o ha caducado.",
-            "The Design Partner invitation is invalid or has expired.",
-          ));
-          return;
-        }
-        setMessage(translate.current(
-          "Acceso Design Partner activado: una organización, con la experiencia completa de AXIGNAL.",
-          "Design Partner access activated: one organization, with the full AXIGNAL experience.",
-        ));
-        await readPortfolio();
-      } catch {
-        if (!controller.signal.aborted && epoch === sessionEpoch.current) {
-          pilotRedeemed.current = false;
-          setMessage(translate.current(
-            "No pudimos activar todavía la invitación. Puedes volver a cargar la cuenta para reintentarlo.",
-            "We could not activate the invitation yet. Reload the account to retry.",
-          ));
-        }
-      } finally {
-        requests.current.delete(controller);
-      }
-    })();
-    return () => { controller.abort(); pilotRedeemed.current = false; };
-  }, [access, readPortfolio, canAct]);
-  async function command(input: Record<string, unknown>) {
-    if (!canAct || busy || !source.command) return;
+    void redeemInvite(inviteToken);
+  }, [access, redeemInvite, canAct]);
+  async function command(input: Record<string, unknown>): Promise<void> {
+    await run(input);
+  }
+  /** `quiet`: the activation screen explains this step itself, so no notice is added on top of it. */
+  async function run(input: Record<string, unknown>, quiet = false): Promise<ReturnType<typeof subscriberResultSchema.parse> | null> {
+    if (!canAct || busy || !source.command) return null;
     const signature = JSON.stringify(input);
     let requestRef = attempts.current.get(signature);
     if (!requestRef) { requestRef = crypto.randomUUID(); attempts.current.set(signature, requestRef); }
@@ -140,13 +140,17 @@ export function SubscriberPortfolioExperience({ source = accountSource, notice, 
     const epoch = sessionEpoch.current;
     try {
       const outcome = await source.command!(input, requestRef, controller.signal);
-      if (controller.signal.aborted || epoch !== sessionEpoch.current) return;
-      if (outcome === "SESSION_REQUIRED") { setAccess("required"); setPortfolio(null); setProjection(null); return; }
+      if (controller.signal.aborted || epoch !== sessionEpoch.current) return null;
+      if (outcome === "SESSION_REQUIRED") { setAccess("required"); setPortfolio(null); setProjection(null); return null; }
       const result = subscriberResultSchema.parse(outcome);
-      if (controller.signal.aborted || epoch !== sessionEpoch.current) return;
+      if (controller.signal.aborted || epoch !== sessionEpoch.current) return null;
       const link = approvedPaymentUrl(result.checkoutUrl) ?? approvedPaymentUrl(result.paymentUrl);
       setPaymentUrl(link);
-      setMessage(input.action === "refresh_purchase" ? result.state === "REFRESHED" ? t("La comprobación ha terminado. La cartera muestra la capacidad verificada.", "The check is complete. The portfolio shows verified capacity.") : t("El pago o la capacidad todavía no se han podido confirmar. No se ha concedido capacidad nueva.", "Payment or capacity could not be confirmed yet. No new capacity has been granted.")
+      // An organization kept while access is not active is explained by the activation screen, not by a notice.
+      const waitsForAccess = (input.action === "add" || input.action === "retry_pending")
+        && ["CAPACITY_UNKNOWN", "CHECKOUT_REQUIRED", "ACCESS_DENIED"].includes(result.state);
+      if (waitsForAccess) setActivation(previous => previous === "starting" || previous === "idle" ? "needs_access" : previous);
+      setMessage(waitsForAccess || quiet ? "" : input.action === "refresh_purchase" ? result.state === "REFRESHED" ? t("La comprobación ha terminado. La cartera muestra la capacidad verificada.", "The check is complete. The portfolio shows verified capacity.") : t("El pago o la capacidad todavía no se han podido confirmar. No se ha concedido capacidad nueva.", "Payment or capacity could not be confirmed yet. No new capacity has been granted.")
         : link ? t("La compra espera tu confirmación. La capacidad solo cambia tras verificar el pago.", "The purchase awaits your confirmation. Capacity changes only after payment is verified.")
         : result.observationState === "QUEUED" ? t("Recibido. La primera observación empieza en segundo plano y verás su estado aquí. La identidad legal se verifica aparte.", "Received. The first observation starts in the background and you will see its state here. Legal identity is verified separately.")
         : result.observationState === "CAPACITY_REQUIRED" ? t("Tu solicitud está guardada, pero tu capacidad actual ya está en uso. Amplíala para observarla.", "Your request is saved, but your current capacity is already in use. Expand it to observe it.")
@@ -163,8 +167,89 @@ export function SubscriberPortfolioExperience({ source = accountSource, notice, 
       if (!link && ["ACCEPTED", "CREATED", "ALREADY_PRESENT", "ACTIVE", "PAUSED", "REMOVED", "CANCELLED", "REFRESHED", "success"].includes(result.state)) attempts.current.delete(signature);
       if (input.action === "replace" && ["CREATED", "ACTIVE"].includes(result.state)) { setReplacing(null); setReplacementLocator(""); }
       await readPortfolio();
-    } catch { if (!controller.signal.aborted && epoch === sessionEpoch.current) setMessage(t("No pudimos confirmar la operación. Lee el estado antes de repetirla; tu contexto no se ha sustituido.", "The operation could not be confirmed. Read its state before repeating it; your context has not been replaced.")); }
+      return result;
+    } catch { if (!quiet && !controller.signal.aborted && epoch === sessionEpoch.current) setMessage(t("No pudimos confirmar la operación. Lee el estado antes de repetirla; tu contexto no se ha sustituido.", "The operation could not be confirmed. Read its state before repeating it; your context has not been replaced.")); return null; }
     finally { requests.current.delete(controller); if (epoch === sessionEpoch.current) setBusy(false); }
+  }
+  // Long-lived callbacks (the payment confirmation loop) call the current `run`, with the current language.
+  const runRef = useRef(run);
+  runRef.current = run;
+
+  /**
+   * Start what was waiting for access, once the owning service has confirmed a place: one organization at a time,
+   * only into confirmed free places, each attempted once. It never starts anything on unconfirmed capacity.
+   */
+  const startedWaiting = useRef(new Set<string>());
+  useEffect(() => {
+    if (!canAct || access !== "ready" || busy || !portfolio) return;
+    const room = capacityRoom(portfolio);
+    if (room === null || room <= 0) return;
+    const next = waitingItems(portfolio).find(item => !startedWaiting.current.has(item.focusId));
+    if (!next) return;
+    startedWaiting.current.add(next.focusId);
+    setActivation("starting");
+    void run({ action: "retry_pending", focusId: next.focusId }).then(result => {
+      if (result?.focusId && (result.state === "CREATED" || result.state === "ALREADY_PRESENT")) {
+        setActivation("idle");
+        void readOutput(result.focusId);
+      } else if (result && (result.state === "IDENTITY_PENDING" || result.state === "IDENTITY_UNRESOLVED")) {
+        // Admitted as attention: its first observation runs on the website while identity is resolved.
+        setActivation("idle");
+      }
+    });
+  }, [portfolio, access, busy, canAct]);
+
+  /** The payment provider's return: confirm with the provider, never assume. */
+  const billingHandled = useRef(false);
+  const confirmPayment = useCallback(async () => {
+    setActivation("confirming_payment");
+    for (let attempt = 0; attempt < 8; attempt++) {
+      await runRef.current({ action: "refresh_purchase" }, true);
+      const latest = portfolioRef.current;
+      if (latest && latest.capacityCurrentness === "CURRENT" && latest.capacity !== null && latest.capacity > 0) {
+        setActivation(waitingItems(latest).length ? "starting" : "idle");
+        return;
+      }
+      await new Promise(resolve => window.setTimeout(resolve, 3000));
+    }
+    setActivation("payment_unconfirmed");
+  }, []);
+  useEffect(() => {
+    if (!canAct || access !== "ready" || billingHandled.current) return;
+    const url = new URL(window.location.href);
+    const outcome = billingReturn(url.searchParams);
+    if (!outcome) return;
+    billingHandled.current = true;
+    url.searchParams.delete("billing"); url.searchParams.delete("purchase");
+    window.history.replaceState(null, "", url);
+    if (outcome === "cancelled") setActivation("payment_cancelled");
+    else void confirmPayment();
+  }, [access, canAct, confirmPayment]);
+  /**
+   * A return that never arrived (session expired at the provider, tab closed, link lost): before offering to pay
+   * again, ask the billing service once to reconcile any purchase still open. It reads the provider; it grants
+   * nothing that payment has not verified, and with no open purchase it changes nothing.
+   */
+  const reconciledOnLoad = useRef(false);
+  useEffect(() => {
+    if (!canAct || access !== "ready" || busy || !portfolio || reconciledOnLoad.current || billingHandled.current) return;
+    if (!portfolio.contractingEnabled || portfolio.canPurchase !== true) return;
+    const room = capacityRoom(portfolio);
+    if ((room !== null && room > 0) || !waitingItems(portfolio).length) return;
+    reconciledOnLoad.current = true;
+    void runRef.current({ action: "refresh_purchase" }, true);
+  }, [portfolio, access, busy, canAct]);
+
+  /** Open the provider's secure checkout or invoice; capacity changes only once payment is verified. */
+  async function startCheckout(totalOrganizations: number) {
+    setActivation("checkout");
+    // A first subscription is a purchase; growing a current one is an expansion (same rule as the account screen).
+    const current = portfolioRef.current;
+    const action = current && current.capacityCurrentness === "CURRENT" && current.capacity !== null && current.capacity > 0 ? "expand" : "purchase";
+    const result = await run({ action, desiredOrganizationTotal: totalOrganizations }, true);
+    const link = result ? approvedPaymentUrl(result.checkoutUrl) ?? approvedPaymentUrl(result.paymentUrl) : null;
+    if (link) { window.location.assign(link); return; }
+    setActivation("checkout_failed");
   }
   /** The same reading in both modes: the account's authorized read, or the demo snapshot. */
   const loadOutput = useCallback((focusId: string, signal: AbortSignal): Promise<unknown> => source.readOutput(focusId, signal, localeRef.current), [source]);
@@ -235,7 +320,7 @@ export function SubscriberPortfolioExperience({ source = accountSource, notice, 
     outputRequest.current?.abort(); ++outputEpoch.current;
     setSelected(null); setProjection(null); setFirstObservation(null); setRevision(null); setReading(false);
   }, []);
-  return <Observatory notice={notice} shell={shell} canAct={canAct} capabilities={source.capabilities} landing={source.landing} firstLookUnread={source.firstLookUnread} rememberReading={source.remembersReading !== false} suggestions={suggestions} loadReading={loadOutput} menuName={source.menuName} access={access} portfolio={portfolio} busy={busy} message={message} paymentUrl={paymentUrl}
+  return <Observatory activation={activation} onRedeemInvite={redeemInvite} onCheckout={startCheckout} onConfirmPayment={() => void confirmPayment()} onActivationReset={() => setActivation("idle")} notice={notice} shell={shell} canAct={canAct} capabilities={source.capabilities} landing={source.landing} firstLookUnread={source.firstLookUnread} rememberReading={source.remembersReading !== false} suggestions={suggestions} loadReading={loadOutput} menuName={source.menuName} access={access} portfolio={portfolio} busy={busy} message={message} paymentUrl={paymentUrl}
     selected={selected} reading={reading} projection={projection} firstObservation={firstObservation} revision={revision}
     readOutput={readOutput} clearSelection={clearSelection} command={command} refresh={() => void readPortfolio()} logout={() => void logout()}
     locator={locator} setLocator={setLocator} total={total} setTotal={setTotal}
