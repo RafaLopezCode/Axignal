@@ -135,3 +135,23 @@ test("hreflang uses the Spanish x-default and robots expose the XML sitemap", ()
   assert.equal(languages["x-default"], languages.es);
   assert.equal(robots().sitemap, "https://axignal.com/sitemap.xml");
 });
+
+test("GSC sitemap contains only canonical public indexable pages, not redirects, demo or private sessions", () => {
+  const entries = sitemap();
+  const forbidden = ["/demo", "/panorama", "/account", "/admin", "/login", "/signup", "/api/"];
+  assert.ok(entries.length > 0);
+  for (const entry of entries) {
+    const { origin, pathname } = new URL(entry.url);
+    assert.equal(origin, "https://axignal.com", `noncanonical origin: ${entry.url}`);
+    assert.ok(!forbidden.some(path => pathname === path || pathname.startsWith(path + "/")), `nonindexable URL in sitemap: ${entry.url}`);
+  }
+  const policy = robots().rules;
+  const rules = Array.isArray(policy) ? policy : [policy];
+  const disallow = rules.flatMap((rule) => {
+    const values = rule.disallow;
+    return values ? Array.isArray(values) ? values : [values] : [];
+  });
+  for (const path of ["/demo", "/panorama", "/account", "/admin", "/api/"]) {
+    assert.ok(disallow.includes(path), `${path} must be excluded from crawlers`);
+  }
+});
