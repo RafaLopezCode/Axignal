@@ -47,6 +47,7 @@ from application.economic_discovery.observation_memory import (
     ObservationAccessStatus,
     ObservationReuseScope,
     ObservationRightsStatus,
+    normalized_field_change,
 )
 from application.economic_discovery.observation_reuse import (
     ObservationReuseContext,
@@ -358,8 +359,8 @@ class FirstProofService:
                     "sourceType": observation.record.source_type,
                     "observedAt": observation.record.observed_at.astimezone(UTC).isoformat(),
                     "currentness": effective_currentness.value,
-                    "normalizedStateChanged": (
-                        None if previous_fields is None else normalized_fields != previous_fields
+                    "normalizedStateChanged": normalized_field_change(
+                        previous_fields, normalized_fields
                     ),
                 }
             )

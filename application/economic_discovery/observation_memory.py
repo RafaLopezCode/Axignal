@@ -48,6 +48,20 @@ class ObservedField:
             raise ValueError("only CONFLICTING fields can carry competing values")
 
 
+def normalized_field_change(
+    previous: tuple[tuple[str, str], ...] | None,
+    current: tuple[tuple[str, str], ...],
+) -> bool | None:
+    """Compare economic fields only when both observations have a measured basis.
+
+    Empty field collections prove neither change nor stability. Public-perception
+    judgments have an independent, condition-bound temporal comparison.
+    """
+    if not previous or not current:
+        return None
+    return previous != current
+
+
 def is_source_text_field(name: str) -> bool:
     """Explicit material fields, distinct from normalized economic contributions."""
     return name.rsplit(".", 1)[-1] in {

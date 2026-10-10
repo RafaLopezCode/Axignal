@@ -1,0 +1,81 @@
+{
+  "scope": "LOCAL_SYNTHETIC_PORTS_REAL_COMPOSITION",
+  "paidProviderCalls": 0,
+  "productionVerification": "NOT_PERFORMED",
+  "transport": "TCP_LOOPBACK_PRODUCTION_HANDLER",
+  "syntheticPorts": [
+    "OIDC",
+    "REGISTRY",
+    "RFC2606_WEBSITES",
+    "PUBLIC_DEMAND",
+    "SYSTEM_ONE",
+    "AXENT_REASONER"
+  ],
+  "realServices": [
+    "HTTP",
+    "IDENTITY",
+    "EVIDENCE_ADMISSION",
+    "PORTFOLIO",
+    "ENTITLEMENTS",
+    "FIRST_OBSERVATION_JOBS",
+    "OBSERVATION_MEMORY",
+    "ECONOMIC_PROJECTION",
+    "AXENT_GROUNDING",
+    "OAUTH_PKCE",
+    "PRODUCT_MCP"
+  ],
+  "events": [
+    {
+      "phase": "PENDING_PUBLIC_OBSERVATION",
+      "canonicalOrganizations": 0,
+      "focuses": 0
+    },
+    {
+      "phase": "ADMITTED_FOCUS_TO_MEMORY_AND_OPPORTUNITY",
+      "canonicalOrganizations": 1,
+      "websiteSources": [
+        "https://www.solartec.example.com/",
+        "https://www.solartec.example.com/services"
+      ],
+      "opportunities": 1,
+      "epistemic": "POTENTIAL"
+    },
+    {
+      "phase": "AXENT_MCP_AND_TENANT_ISOLATION",
+      "axentScriptedCalls": 1,
+      "mcpSources": 3
+    },
+    {
+      "phase": "RESTART_AND_UNCHANGED_REOBSERVATION",
+      "conditionedChanges": 0,
+      "history": 1
+    },
+    {
+      "phase": "CHANGED_SOURCE_WITH_CONDITIONED_HISTORY",
+      "conditionedChanges": [
+        "audience",
+        "outcome"
+      ],
+      "history": 2,
+      "conditionedComparison": "COMPARABLE",
+      "normalizedEconomicChange": "UNKNOWN_NO_NORMALIZED_FIELDS",
+      "normalizedChangeComparisons": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "normalizedEconomicMaterialChanges": 0
+    },
+    {
+      "phase": "HISTORY_SURVIVES_FINAL_RESTART",
+      "history": 2
+    }
+  ],
+  "limitations": [
+    "FirstObservation website seeds carry no normalized economic fields; economic change remains UNKNOWN, while audience/outcome changes are measured by a comparable conditioned interpretation."
+  ],
+  "recordedAt": "2026-10-09T23:40:16.767147+00:00"
+}

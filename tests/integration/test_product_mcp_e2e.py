@@ -12,6 +12,7 @@ import ast
 import base64
 import hashlib
 import json
+from dataclasses import replace
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any, cast
@@ -171,34 +172,54 @@ def _add(facade: Any, token: str, ref: str) -> str:
 def _changed_homepage(tmp_path: Path) -> None:
     """A later reobservation of the same page with different content (same acquisition path)."""
     memory = SqliteObservationMemory(tmp_path / "observation-memory.sqlite3")
-    memory.append(
-        GovernedObservation(
-            record=ObservationRecord(
-                observation_id="obs:xeed:solartec:homepage:2",
-                subject_id="org:registry:shared",
-                source_ref="https://solartec.example/",
-                source_type="PUBLIC_WEBSITE",
-                observed_at=AS_OF + timedelta(hours=2),
-                content_fingerprint="homepage-fingerprint-2",
-                mode=ObservationMode.DETERMINISTIC_SENSOR,
-            ),
-            raw_content=HOMEPAGES["xeed:solartec"] + " Nueva línea: almacenamiento con baterías.",
-            raw_artifact_ref="artifact:homepage:solar:2",
-            # A material change is a change of normalized state, not just of raw bytes.
-            fields=(ObservedField(name="offering.storage", value="battery storage"),),
-            reuse_authority=ObservationReuseAuthority(
-                rights_status=ObservationRightsStatus.PERMITTED,
-                access_status=ObservationAccessStatus.ACCESSIBLE,
-                scope=ObservationReuseScope.GLOBAL_PUBLIC,
-                provenance_ref="provenance:homepage:solar:2",
-                currentness=Currentness.CURRENT,
-                applicable_subject_ids=("org:registry:shared",),
-                applicable_purposes=("HISTORICAL_REFERENCE",),
-                authority_id="public-homepage-rights",
-                authority_version="1",
-            ),
-        )
+    changed = GovernedObservation(
+        record=ObservationRecord(
+            observation_id="obs:xeed:solartec:homepage:2",
+            subject_id="org:registry:shared",
+            source_ref="https://solartec.example/",
+            source_type="PUBLIC_WEBSITE",
+            observed_at=AS_OF + timedelta(hours=2),
+            content_fingerprint="homepage-fingerprint-2",
+            mode=ObservationMode.DETERMINISTIC_SENSOR,
+        ),
+        raw_content=HOMEPAGES["xeed:solartec"] + " Nueva línea: almacenamiento con baterías.",
+        raw_artifact_ref="artifact:homepage:solar:2",
+        # A material change is a change of normalized state, not just of raw bytes.
+        fields=(
+            ObservedField(name="offering.description", value="solar panels and battery storage"),
+        ),
+        reuse_authority=ObservationReuseAuthority(
+            rights_status=ObservationRightsStatus.PERMITTED,
+            access_status=ObservationAccessStatus.ACCESSIBLE,
+            scope=ObservationReuseScope.GLOBAL_PUBLIC,
+            provenance_ref="provenance:homepage:solar:2",
+            currentness=Currentness.CURRENT,
+            applicable_subject_ids=("org:registry:shared",),
+            applicable_purposes=("HISTORICAL_REFERENCE",),
+            authority_id="public-homepage-rights",
+            authority_version="1",
+        ),
     )
+    # This source first has a *measured* economic offering, then a measured
+    # modification. An older raw-only observation cannot establish "no change".
+    baseline = replace(
+        changed,
+        record=replace(
+            changed.record,
+            observation_id="obs:xeed:solartec:homepage:baseline",
+            observed_at=AS_OF + timedelta(hours=1),
+            content_fingerprint="homepage-fingerprint-baseline",
+        ),
+        raw_content=HOMEPAGES["xeed:solartec"] + " Oferta: instalación de paneles solares.",
+        raw_artifact_ref="artifact:homepage:solar:baseline",
+        fields=(ObservedField(name="offering.description", value="solar panels"),),
+        reuse_authority=replace(
+            changed.reuse_authority,
+            provenance_ref="provenance:homepage:solar:baseline",
+        ),
+    )
+    memory.append(baseline)
+    memory.append(changed)
 
 
 def test_product_mcp_pilot_and_paid_tenants_isolated_read_only_and_revocable(

@@ -186,7 +186,7 @@ def timeline(xeed_id: str, wire: Mapping[str, Any]) -> dict[str, object]:
             "source": _s(_d(i).get("sourceRef")),
             "observed_at": _s(_d(i).get("observedAt")),
             "currentness": _s(_d(i).get("currentness")) or "UNKNOWN",
-            # None for the first observation: there is nothing earlier to compare with.
+            # None when an earlier normalized comparison basis is unavailable.
             "changed_from_previous": _d(i).get("normalizedStateChanged"),
         }
         for i in _l(_d(projection.get("temporalHistory")).get("items"))
@@ -200,6 +200,7 @@ def timeline(xeed_id: str, wire: Mapping[str, Any]) -> dict[str, object]:
         "history": ordered[-MAX_ITEMS:],
         "note": (
             "History lists earlier observations; only 'current' describes the latest state. "
-            "changed_from_previous=null means there was no earlier observation to compare."
+            "changed_from_previous=null means normalized comparison is unavailable "
+            "(first observation or insufficient normalized fields)."
         ),
     }

@@ -553,9 +553,21 @@ class _SubscriberWorkflow(SubscriberWorkflowPort):
             if action in {"retry_pending", "cancel_pending"}:
                 assert focus_id is not None
                 if action == "retry_pending":
-                    retry_result = self._portfolio.retry_pending(context, str(focus_id))
-                    body: dict[str, object] = {"state": retry_result.status.value}
                     observing = self._trigger.first_observation
+                    if observing is not None:
+                        # Reuse this Tenant's recorded attention, preserving the URL
+                        # across independent identity admission. A normalized registry
+                        # domain is not the original website's host/path.
+                        pending = self._portfolio.store.get_pending_authorized(
+                            context, str(focus_id)
+                        )
+                        observing.remember_locator(None if pending is None else pending.locator)
+                    try:
+                        retry_result = self._portfolio.retry_pending(context, str(focus_id))
+                    finally:
+                        if observing is not None:
+                            observing.remember_locator(None)
+                    body: dict[str, object] = {"state": retry_result.status.value}
                     if observing is not None and retry_result.status is AddStatus.IDENTITY_PENDING:
                         body["observationState"] = observing.attend_pending_id(
                             context, str(focus_id)

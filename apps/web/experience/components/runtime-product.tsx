@@ -940,8 +940,8 @@ function RuntimeTemporal({
               <p>
                 {selected.normalizedStateChanged === null
                   ? t(
-                      "Primera observación disponible; no existe una predecesora con la que comparar estado normalizado.",
-                      "First available observation; there is no predecessor against which to compare normalized state.",
+                      "Faltan campos económicos comparables o es la primera observación; sigue siendo desconocido si el estado económico cambió.",
+                      "Comparable economic fields are missing or this is the first observation; whether economic state changed remains unknown.",
                     )
                   : selected.normalizedStateChanged
                     ? t(

@@ -1,0 +1,74 @@
+{
+  "observedAtUTC": "2026-10-09T23:20:28Z",
+  "mode": "READ_ONLY_NO_PRODUCTION_MODIFICATION",
+  "deployedSHA": "f0c54a6240f7dcd3f10d49acfc28b9608a9b0188",
+  "canonicalBaseSHA": "cbd04b75526c6db1d43e88e42fd9871798e70a9e",
+  "releaseIsAncestorOfCanonical": true,
+  "containers": {
+    "axignal-prod-runtime": {
+      "healthy": true,
+      "publishedPorts": [],
+      "readOnlyRootFS": true
+    },
+    "axignal-prod-landing": {
+      "healthy": true,
+      "publishedPorts": [
+        "127.0.0.1:18180"
+      ],
+      "readOnlyRootFS": true
+    },
+    "axignal-prod-experience": {
+      "healthy": true,
+      "publishedPorts": [
+        "127.0.0.1:18182"
+      ],
+      "readOnlyRootFS": true
+    }
+  },
+  "network": "axignal_prod_internal",
+  "capDrop": [
+    "ALL"
+  ],
+  "security": [
+    "no-new-privileges:true"
+  ],
+  "dataMount": {
+    "host": "/var/lib/axignal/runtime",
+    "readWrite": true
+  },
+  "scheduler": {
+    "timer": "active",
+    "flag": false,
+    "state": "NOT_RUN",
+    "lease": "NO_TICK"
+  },
+  "subscriberFlags": {
+    "enabled": true,
+    "pilotEnabled": true
+  },
+  "counts": {
+    "canonicalLegalIdentities": 0,
+    "focuses": 0,
+    "verifiedMemberships": 0,
+    "pilotGrants": 0,
+    "economicOutputs": 0,
+    "opportunityProjections": 0,
+    "axentResearchRequests": 0,
+    "mcpGrants": 0
+  },
+  "runtimeLogSample": {
+    "lines": 250,
+    "errorTracebackExceptionLines": 0
+  },
+  "externalHTTP": {
+    "landing": 200,
+    "health": 200,
+    "oauthDiscovery": 200
+  },
+  "internalUnauthenticatedSubscriberHTTP": 401,
+  "limits": [
+    "No runtime activation, paid/model calls, production migration/restart/deployment",
+    "Zero logged error sample is not an exhaustive uptime/security certification",
+    "Other observed isolated preflight containers are not canonical production authority"
+  ]
+}
