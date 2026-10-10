@@ -235,3 +235,25 @@ test("the chips, the badges and the notice are one thing: they clear only when t
   // Opening a finding is an explicit act on it: it is marked, and the chips follow.
   assert.match(source, /if \(lit\.has\(insight\.changeKey\)\) window\.setTimeout\(\(\) => updateSeen\(store => markSeen\(store, item\.focusId, \[insight\.changeKey\]/);
 });
+
+test("re-observing the same public homepage is not news: the finding's change key follows its content, not the run", () => {
+  const base = {
+    nodeKind: "XIGNAL" as const, title: "Its public homepage is observable from the outside",
+    whyAttention: "Retrieved through the governed source sensor.", interpretation: "The homepage was reachable.",
+    uncertainty: "Only the homepage is covered.", epistemicState: "OBSERVED" as const, currentness: "CURRENT" as const,
+    evidenceAccess: "AVAILABLE", sourceRefs: ["https://example.test/"], observationSupportRefs: ["s"], unknowns: [],
+    evidenceNarrative: { xignalId: "x", focusStepId: "s", steps: [] },
+  };
+  const reading = (id: string, observedAt: string, currentness: "CURRENT" | "STALE" = "CURRENT") => ({
+    projection: { realityLevel: "LIVE", runtimeCodeSha: "sha", lifecycleStatus: "LIVE", context: { id: "c", label: "c" },
+      organization: { id: "o", name: "Example" }, nodes: [{ ...base, id, observedAt, currentness }],
+      cognition: { asOf: observedAt, sources: [], signals: [{ id, familyId: "presence" }], opportunities: [] },
+      temporalHistory: { disposition: "EMPTY", items: [] }, today: { disposition: "READY", items: [] }, reloadContinuity: "PERSISTED_RUNTIME_READ_MODEL" } as unknown as Reading["projection"],
+    firstObservation: null,
+  });
+  const first = insightsFor(reading("xignal:aaa", "2026-10-04T00:00:00+00:00"), en, "en")[0].changeKey;
+  const again = insightsFor(reading("xignal:bbb", "2026-10-10T00:00:00+00:00"), en, "en")[0].changeKey;
+  assert.equal(again, first, "a new run id and time alone are not a change");
+  const aged = insightsFor(reading("xignal:ccc", "2026-10-20T00:00:00+00:00", "STALE"), en, "en")[0].changeKey;
+  assert.notEqual(aged, first, "a change of currentness is a change");
+});
