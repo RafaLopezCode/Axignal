@@ -184,6 +184,14 @@ function discoveryInsight(d: Discovery, index: number, t: Translate, locale: str
   if (typeof detail.source === "string") proof.push({ label: t("Fuente", "Source"), value: String(detail.source) });
   if (typeof detail.buyer === "string") proof.push({ label: t("Comprador", "Buyer"), value: String(detail.buyer) });
   if (typeof detail.deadline === "string") proof.push({ label: t("Plazo", "Deadline"), value: String(detail.deadline) });
+  if (typeof detail.instrument === "string") proof.push({ label: t("Instrumento y versión", "Instrument and version"), value: String(detail.instrument) });
+  if (typeof detail.conditions === "string") proof.push({ label: t("Condiciones de observación", "Observation conditions"), value: String(detail.conditions) });
+  if (typeof detail.sample === "string") proof.push({ label: t("Muestra", "Sample"), value: String(detail.sample) });
+  if (typeof detail.coverage === "string") proof.push({ label: t("Cobertura", "Coverage"), value: String(detail.coverage) });
+  // A change is only stated against a comparable earlier observation; otherwise the proof says why not.
+  const comparable = detail.comparison === "COMPARABLE" && typeof detail.previous === "string";
+  if (detail.comparison === "FIRST_OBSERVATION") proof.push({ label: t("Comparación", "Comparison"), value: t("Primera observación: todavía no hay una anterior con la que compararla.", "First observation: there is no earlier one to compare it with.") });
+  if (detail.comparison === "NOT_COMPARABLE") proof.push({ label: t("Comparación", "Comparison"), value: t("Condiciones distintas a las de la observación anterior: no se declara ningún cambio.", "Conditions differ from the earlier observation: no change is declared.") });
   if (typeof detail.limitation === "string") proof.push({ label: t("Límite", "Limitation"), value: String(detail.limitation) });
   return {
     id: `${d.kind}:${d.code}:${index}`, lane, nature,
@@ -200,7 +208,7 @@ function discoveryInsight(d: Discovery, index: number, t: Translate, locale: str
       : null,
     sources: d.sourceUrl || d.excerpt ? [{ url: d.sourceUrl, label: d.sourceUrl ? hostOf(d.sourceUrl) : t("Fuente", "Source"), observedAt: d.observedAt, quote: d.excerpt }] : [],
     proof, dimensions: [],
-    previous: null,
+    previous: comparable ? String(detail.previous) : null,
     changeKey: keyOf(`${d.kind}:${d.code}`, d.statement, d.excerpt, d.epistemicState),
     ...facetOfDiscovery(d),
   };

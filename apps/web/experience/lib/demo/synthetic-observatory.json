@@ -24,17 +24,16 @@
    }
   },
   {
-   "focusId": "pending_2ede23d46215446c857f5f2bdccd3c0e",
-   "organizationId": null,
+   "focusId": "focus_dc8789f4ad3eb9cb614da15c7b43b0ec",
+   "organizationId": "org:id:67b5cc7538d9d19c014a4e413016b411",
    "label": "Demo Seo-geo",
-   "state": "IDENTITY_PENDING",
-   "reason": "IDENTITY_SOURCE_UNAVAILABLE",
+   "state": "ACTIVE",
    "observation": {
     "state": "FIRST_PROOF_READY",
     "firstProofReady": true,
     "headline": "Search and AI visibility",
     "headlineCode": "digital-visibility",
-    "observedAt": "2026-10-09T20:02:57.594406+00:00"
+    "observedAt": "2026-10-09T08:00:00+00:00"
    }
   },
   {
@@ -1416,205 +1415,6 @@
     }
    }
   },
-  "pending_2ede23d46215446c857f5f2bdccd3c0e": {
-   "state": "success",
-   "kind": "PENDING_ATTENTION",
-   "firstObservation": {
-    "attentionScopes": [
-     {
-      "epistemicState": "POTENTIAL",
-      "jurisdiction": "EU/ES",
-      "roles": [
-       "PRIVATE_BUSINESSES",
-       "PUBLIC_BUYERS"
-      ]
-     }
-    ],
-    "authority": "OPERATIONAL_NOT_CANONICAL",
-    "discoveries": [
-     {
-      "code": "PUBLIC_WEBSITE_OBSERVED",
-      "detail": {
-       "pagesRead": 1
-      },
-      "epistemicState": "OBSERVED",
-      "excerpt": "We help brands get found in search engines and in AI assistant answers.",
-      "kind": "PUBLIC_PRESENCE",
-      "observedAt": "2026-10-09T20:02:56.279404+00:00",
-      "sourceUrl": "https://demo-seo-geo.com/",
-      "statement": "We help brands get found in search engines and in AI assistant answers."
-     },
-     {
-      "code": "LANGUAGES_PUBLISHED",
-      "detail": {
-       "languages": [
-        "es"
-       ]
-      },
-      "epistemicState": "OBSERVED",
-      "excerpt": null,
-      "kind": "LANGUAGES",
-      "observedAt": "2026-10-09T20:02:56.279404+00:00",
-      "sourceUrl": "https://demo-seo-geo.com/",
-      "statement": "es"
-     },
-     {
-      "code": "ADDRESS_DECLARED",
-      "detail": {
-       "basis": "PREMISES"
-      },
-      "epistemicState": "DECLARED",
-      "excerpt": "schema.org address: Madrid, ES",
-      "kind": "DECLARED_LOCATION",
-      "observedAt": "2026-10-09T20:02:56.279404+00:00",
-      "sourceUrl": "https://demo-seo-geo.com/",
-      "statement": "Madrid, ES"
-     },
-     {
-      "code": "LEGAL_NAME_DECLARED",
-      "detail": {
-       "admitted": false
-      },
-      "epistemicState": "DECLARED",
-      "excerpt": null,
-      "kind": "IDENTITY_HINT",
-      "observedAt": "2026-10-09T20:02:56.279404+00:00",
-      "sourceUrl": "https://demo-seo-geo.com/",
-      "statement": "Demo Seo-geo SL"
-     },
-     {
-      "code": "solar-pv-installation",
-      "detail": {
-       "method": "LEXICON",
-       "model": null,
-       "routingCodes": [
-        "CPV:09331200",
-        "CPV:09332000",
-        "CPV:45261215",
-        "NAICS:221114",
-        "NAICS:238210"
-       ]
-      },
-      "epistemicState": "POTENTIAL",
-      "excerpt": "Demo Seo-geo | Instalaciones fotovoltaicas",
-      "kind": "ACTIVITY",
-      "observedAt": "2026-10-09T20:02:56.279404+00:00",
-      "sourceUrl": "https://demo-seo-geo.com/",
-      "statement": "Solar photovoltaic installation"
-     },
-     {
-      "code": "PUBLIC_WEB_REPRESENTATION_MEASURED",
-      "detail": {
-       "checks": {
-        "alternateLanguages": 0,
-        "canonical": null,
-        "descriptionPresent": true,
-        "homepageNoindex": false,
-        "offerDeclared": false,
-        "organizationDeclared": true,
-        "robotsTxtPublished": false,
-        "schemaTypes": [
-         "Organization",
-         "PostalAddress"
-        ],
-        "sitemapsDeclared": 0,
-        "titlePresent": true
-       },
-       "conditions": "robots.txt plus pages read by this First Observation",
-       "instrument": "site-reading.v1",
-       "limitation": "Own website only; not search results, rankings or generative answers."
-      },
-      "epistemicState": "OBSERVED",
-      "excerpt": null,
-      "kind": "WEB_REPRESENTATION",
-      "observedAt": "2026-10-09T20:02:56.279404+00:00",
-      "sourceUrl": "https://demo-seo-geo.com/",
-      "statement": "Public web representation checks"
-     },
-     {
-      "code": "OFFER_NOT_MACHINE_READABLE",
-      "detail": {
-       "basis": [
-        "ACTIVITY",
-        "WEB_REPRESENTATION"
-       ],
-       "notCausal": true,
-       "whyItMatters": "Search and generative surfaces that rely on structured data may not connect this organization to what it offers. Not a measured ranking."
-      },
-      "epistemicState": "POTENTIAL",
-      "excerpt": null,
-      "kind": "REPRESENTATION_GAP",
-      "observedAt": "2026-10-09T20:02:56.279404+00:00",
-      "sourceUrl": "https://demo-seo-geo.com/",
-      "statement": "On the pages read, its activity is evidenced in prose but no service or product is declared as structured data."
-     },
-     {
-      "code": "IDENTITY_NOT_VERIFIED",
-      "detail": {},
-      "epistemicState": "UNKNOWN",
-      "excerpt": null,
-      "kind": "SIGNIFICANT_UNKNOWN",
-      "observedAt": null,
-      "sourceUrl": null,
-      "statement": "No registry has attested which legal entity this is yet. What follows describes the public website, not a verified organization."
-     },
-     {
-      "code": "NO_GOVERNED_DEMAND_SOURCE:EU/ES",
-      "detail": {
-       "jurisdiction": "EU/ES",
-       "reasons": [
-        "NO_ADOPTED_SOURCE",
-        "NO_KNOWN_SOURCE"
-       ]
-      },
-      "epistemicState": "UNKNOWN",
-      "excerpt": null,
-      "kind": "SIGNIFICANT_UNKNOWN",
-      "observedAt": null,
-      "sourceUrl": null,
-      "statement": "No governed demand source is adopted for EU/ES yet. That is not an absence of demand."
-     },
-     {
-      "code": "POTENTIAL_DEMAND",
-      "detail": {
-       "buyer": "Ayuntamiento Ejemplo",
-       "capabilityIds": [
-        "solar-pv-installation"
-       ],
-       "codes": [
-        "CPV:09332000"
-       ],
-       "deadline": "2026-11-03",
-       "demandForm": "OPEN_CALL_FOR_TENDER",
-       "epistemicState": "POTENTIAL",
-       "market": "EU/ES",
-       "publishedAt": "2026-10-05T20:02:56.279404+00:00",
-       "source": "fuente-licitaciones-demo",
-       "title": "Instalación fotovoltaica de autoconsumo en edificios municipales",
-       "url": "https://licitaciones.example.com/en/notice/-/detail/801234-2026"
-      },
-      "epistemicState": "POTENTIAL",
-      "excerpt": null,
-      "kind": "DEMAND",
-      "observedAt": "2026-10-09T20:02:57.594406+00:00",
-      "sourceUrl": "https://licitaciones.example.com/en/notice/-/detail/801234-2026",
-      "statement": "Instalación fotovoltaica de autoconsumo en edificios municipales"
-     }
-    ],
-    "firstProofReady": true,
-    "nextDueAt": "2026-10-16T20:02:57.594406+00:00",
-    "observedAt": "2026-10-09T20:02:57.594406+00:00",
-    "publicUnderstanding": null,
-    "retainUntil": "2027-01-07T20:02:57.594406+00:00",
-    "state": "FIRST_PROOF_READY",
-    "target": {
-     "kind": "PENDING",
-     "website": "https://demo-seo-geo.com/",
-     "name": null,
-     "identityLink": "IDENTITY_PENDING"
-    }
-   }
-  },
   "pending_115c8d1ab897476dab5eeb7ffcd7f5e5": {
    "state": "success",
    "kind": "PENDING_ATTENTION",
@@ -2221,6 +2021,225 @@
      "website": "https://demo-distribuidor.com/",
      "name": null,
      "identityLink": "IDENTITY_PENDING"
+    }
+   }
+  },
+  "focus_dc8789f4ad3eb9cb614da15c7b43b0ec": {
+   "state": "success",
+   "projection": {
+    "realityLevel": "SUBSCRIBER_RUNTIME_READ_MODEL",
+    "runtimeCodeSha": "test-code-sha",
+    "lifecycleStatus": "LIVE",
+    "context": {
+     "id": "focus_dc8789f4ad3eb9cb614da15c7b43b0ec",
+     "label": "Demo Seo-geo"
+    },
+    "organization": {
+     "id": "org:id:67b5cc7538d9d19c014a4e413016b411",
+     "name": "Demo Seo-geo"
+    },
+    "nodes": [],
+    "temporalHistory": {
+     "disposition": "MULTIPLE_OBSERVATIONS",
+     "items": [
+      {
+       "observationId": "fo:c4719afa76fa448b5eca99e673688584",
+       "sourceRef": "https://www.demo-seo-geo.com/",
+       "sourceType": "PUBLIC_WEBSITE",
+       "observedAt": "2026-09-11T08:00:00+00:00",
+       "currentness": "CURRENT",
+       "normalizedStateChanged": null
+      },
+      {
+       "observationId": "fo:612f7a0edd33d5c1a7f59b38db605f5f",
+       "sourceRef": "https://www.demo-seo-geo.com/",
+       "sourceType": "PUBLIC_WEBSITE",
+       "observedAt": "2026-09-25T08:00:00+00:00",
+       "currentness": "CURRENT",
+       "normalizedStateChanged": false
+      },
+      {
+       "observationId": "fo:9f11eb4e46c514454c7c520ce8cd6bca",
+       "sourceRef": "https://www.demo-seo-geo.com/",
+       "sourceType": "PUBLIC_WEBSITE",
+       "observedAt": "2026-10-09T08:00:00+00:00",
+       "currentness": "CURRENT",
+       "normalizedStateChanged": false
+      },
+      {
+       "observationId": "fo:aa712b0c4b069f7214b9db9336953173",
+       "sourceRef": "https://search-visibility.example.com/demo-seo-geo/queries",
+       "sourceType": "PUBLIC_SEARCH_VISIBILITY",
+       "observedAt": "2026-09-25T08:00:00+00:00",
+       "currentness": "CURRENT",
+       "normalizedStateChanged": null
+      },
+      {
+       "observationId": "fo:372a4935ed2c1bdf92ebe9b85e24a233",
+       "sourceRef": "https://search-visibility.example.com/demo-seo-geo/queries",
+       "sourceType": "PUBLIC_SEARCH_VISIBILITY",
+       "observedAt": "2026-10-09T08:00:00+00:00",
+       "currentness": "CURRENT",
+       "normalizedStateChanged": true
+      },
+      {
+       "observationId": "fo:f2e0b62a0155903aae2b59fb155e99ae",
+       "sourceRef": "https://ai-answers.example.com/demo-seo-geo/questions",
+       "sourceType": "GENERATIVE_ANSWER_SURFACES",
+       "observedAt": "2026-09-25T08:00:00+00:00",
+       "currentness": "CURRENT",
+       "normalizedStateChanged": null
+      },
+      {
+       "observationId": "fo:64c024c32dfb77c22cb24222b65d633c",
+       "sourceRef": "https://ai-answers.example.com/demo-seo-geo/questions",
+       "sourceType": "GENERATIVE_ANSWER_SURFACES",
+       "observedAt": "2026-10-09T08:00:00+00:00",
+       "currentness": "CURRENT",
+       "normalizedStateChanged": true
+      }
+     ]
+    },
+    "digitalRepresentation": {
+     "state": "NOT_MEASURED",
+     "reason": "No condition-bound public page measurement is available for this read."
+    },
+    "memberships": [],
+    "today": {
+     "disposition": "EMPTY",
+     "items": []
+    },
+    "reloadContinuity": "PERSISTED_RUNTIME_READ_MODEL",
+    "cognition": {
+     "asOf": "2026-10-09T08:00:00+00:00",
+     "sources": [
+      {
+       "id": "fo:9f11eb4e46c514454c7c520ce8cd6bca",
+       "title": "https://www.demo-seo-geo.com/",
+       "observedAt": "2026-10-09T08:00:00+00:00",
+       "currentness": "CURRENT",
+       "currentnessEvaluatedAt": "2026-10-09T08:00:00+00:00",
+       "instrument": "public-website-reader@1",
+       "limitation": "A sample under stated conditions; coverage beyond it remains unknown.",
+       "sourceRef": "https://www.demo-seo-geo.com/",
+       "provenanceRef": "artifact:7d2892ae9c8a98173eb3b78b7a860ee2"
+      },
+      {
+       "id": "fo:372a4935ed2c1bdf92ebe9b85e24a233",
+       "title": "https://search-visibility.example.com/demo-seo-geo/queries",
+       "observedAt": "2026-10-09T08:00:00+00:00",
+       "currentness": "CURRENT",
+       "currentnessEvaluatedAt": "2026-10-09T08:00:00+00:00",
+       "instrument": "search-visibility-sampler@1",
+       "limitation": "A sample under stated conditions; coverage beyond it remains unknown.",
+       "sourceRef": "https://search-visibility.example.com/demo-seo-geo/queries",
+       "provenanceRef": "artifact:5a52a96ee26ad9898073d6d2c5d17da3"
+      },
+      {
+       "id": "fo:64c024c32dfb77c22cb24222b65d633c",
+       "title": "https://ai-answers.example.com/demo-seo-geo/questions",
+       "observedAt": "2026-10-09T08:00:00+00:00",
+       "currentness": "CURRENT",
+       "currentnessEvaluatedAt": "2026-10-09T08:00:00+00:00",
+       "instrument": "ai-answer-sampler@1",
+       "limitation": "A sample under stated conditions; coverage beyond it remains unknown.",
+       "sourceRef": "https://ai-answers.example.com/demo-seo-geo/questions",
+       "provenanceRef": "artifact:c247957eadee71d9449807f003db5f17"
+      }
+     ],
+     "signals": [],
+     "opportunities": []
+    }
+   },
+   "firstObservation": {
+    "state": "FIRST_PROOF_READY",
+    "firstProofReady": true,
+    "discoveries": [
+     {
+      "kind": "PUBLIC_PRESENCE",
+      "code": "PUBLIC_WEBSITE_OBSERVED",
+      "statement": "Demo Seo-geo | Search and AI visibility",
+      "excerpt": "We help brands get found in search engines and in AI assistant answers.",
+      "sourceUrl": "https://www.demo-seo-geo.com/",
+      "observedAt": "2026-10-09T08:00:00+00:00",
+      "epistemicState": "OBSERVED",
+      "detail": {
+       "pagesRead": 2
+      }
+     },
+     {
+      "kind": "SEARCH_VISIBILITY",
+      "code": "SEARCH_VISIBILITY_MEASURED",
+      "statement": "It appears on the first results page for 2 of 3 branded queries.",
+      "excerpt": null,
+      "sourceUrl": "https://search-visibility.example.com/demo-seo-geo/queries",
+      "observedAt": "2026-10-09T08:00:00+00:00",
+      "epistemicState": "OBSERVED",
+      "detail": {
+       "instrument": "search-visibility-sampler@1",
+       "conditions": "3 branded queries · Spain · Spanish · desktop",
+       "sample": "3 queries · 1 market · 1 device",
+       "coverage": "First results page only; paid results excluded.",
+       "comparison": "COMPARABLE",
+       "previous": "It appeared for 1 of 3 branded queries on 25 Sep 2026.",
+       "limitation": "A sample of queries, not its whole search visibility."
+      }
+     },
+     {
+      "kind": "SEARCH_VISIBILITY",
+      "code": "SEARCH_VISIBILITY_MEASURED",
+      "statement": "It does not appear on the first results page for the category query.",
+      "excerpt": null,
+      "sourceUrl": "https://search-visibility.example.com/demo-seo-geo/queries",
+      "observedAt": "2026-10-09T08:00:00+00:00",
+      "epistemicState": "OBSERVED",
+      "detail": {
+       "instrument": "search-visibility-sampler@1",
+       "conditions": "1 category query · Spain · Spanish · desktop",
+       "sample": "1 query · 1 market · 1 device",
+       "coverage": "First results page only; paid results excluded.",
+       "comparison": "FIRST_OBSERVATION",
+       "limitation": "A single query: absence on one page is not absence from search."
+      }
+     },
+     {
+      "kind": "GENERATIVE_VISIBILITY",
+      "code": "GENERATIVE_VISIBILITY_MEASURED",
+      "statement": "It is mentioned in 1 of 4 sampled AI answers and cited in none.",
+      "excerpt": null,
+      "sourceUrl": "https://ai-answers.example.com/demo-seo-geo/questions",
+      "observedAt": "2026-10-09T08:00:00+00:00",
+      "epistemicState": "OBSERVED",
+      "detail": {
+       "instrument": "ai-answer-sampler@1",
+       "conditions": "4 questions · Spanish · 1 assistant, no sign-in",
+       "sample": "4 questions · 1 run each",
+       "coverage": "One assistant; answers vary between runs.",
+       "comparison": "COMPARABLE",
+       "previous": "It was mentioned in 0 of 4 sampled AI answers on 25 Sep 2026.",
+       "limitation": "A mention is not a citation, and a citation is not an endorsement."
+      }
+     },
+     {
+      "kind": "SIGNIFICANT_UNKNOWN",
+      "code": "NO_GOVERNED_DEMAND_SOURCE:EU/ES",
+      "statement": "No governed demand source applies yet.",
+      "excerpt": null,
+      "sourceUrl": null,
+      "observedAt": "2026-10-09T08:00:00+00:00",
+      "epistemicState": "UNKNOWN",
+      "detail": {
+       "jurisdiction": "EU/ES"
+      }
+     }
+    ],
+    "observedAt": "2026-10-09T08:00:00+00:00",
+    "authority": "OPERATIONAL_NOT_CANONICAL",
+    "target": {
+     "kind": "FOCUS",
+     "website": "https://www.demo-seo-geo.com/",
+     "name": null,
+     "identityLink": "REGISTRY_VERIFIED"
     }
    }
   }

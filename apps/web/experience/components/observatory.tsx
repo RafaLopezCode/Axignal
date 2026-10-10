@@ -594,7 +594,7 @@ export function SummaryView({ reading, name, insights, lit, openId, onOpen, onSe
   const lanes = byLane(insights);
   const low = item.observation && LOW_OBSERVABILITY.has(item.observation.state);
   return <div className="obs-summary">
-    <section className={`obs-brief${scope ? " obs-scope" : ""}`} aria-label={scope ? scope.title : t("En resumen", "In short")}>
+    <section className={`obs-brief${scope ? " obs-brief-scoped" : ""}`} aria-label={scope ? scope.title : t("En resumen", "In short")}>
       {scope && <h2 className="obs-scope-title">{scope.title}</h2>}
       <p className="obs-brief-lead">{scope ? scope.intro : brief.lead}</p>
       {scope ? <ul className="obs-tally"><li>{fill(insights.length === 1 ? t("{n} hallazgo", "{n} finding") : t("{n} hallazgos", "{n} findings"), { n: insights.length })}</li></ul>
@@ -761,8 +761,9 @@ function EvidenceView({ reading, facet, scope, insights }: { reading: Reading; f
   if (facet.family) {
     // A selection shows the evidence behind exactly the findings it contains, and the web measurement where it is the web.
     const seen = new Set<string>();
-    const rows = insights.flatMap(insight => insight.sources.map(source => ({ insight, source }))).filter(({ source }) => {
-      const key = [source.url, source.label, source.observedAt].join("|");
+    // Each finding keeps its own evidence row; only a source repeated inside one finding is shown once.
+    const rows = insights.flatMap(insight => insight.sources.map(source => ({ insight, source }))).filter(({ insight, source }) => {
+      const key = [insight.id, source.url, source.label, source.observedAt].join("|");
       return seen.has(key) ? false : (seen.add(key), true);
     });
     const measurement = facet.family === "presence" && (!facet.channel || facet.channel === "WEB") ? reading.projection?.digitalRepresentation : undefined;

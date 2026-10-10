@@ -2,6 +2,7 @@ import snapshot from "./synthetic-observatory.json";
 import { portfolioSchema, type SubscriberPortfolio } from "@/lib/subscriber-contracts";
 import type { Locale } from "@/lib/languages";
 import type { ObservatorySource } from "@/lib/observatory-source";
+import { SYNTHETIC_PHRASES } from "./synthetic-phrases";
 
 /**
  * The public demo reads a fixed, fictional snapshot instead of the account's API.
@@ -31,16 +32,16 @@ const SITES: { es: string; words: Words }[] = [
 
 const capitalize = (word: string) => word.charAt(0).toUpperCase() + word.slice(1);
 
-/** Every demo domain and demo panel name, rewritten into the reader's locale wherever it appears. */
+/** Every demo domain, demo panel name and measurement phrase, rewritten into the reader's locale wherever it appears. */
 function localize<T>(value: T, locale: Locale): T {
-  if (locale === "es") return value;
-  const pairs = SITES.flatMap(({ es, words }) => [
+  // The snapshot's words are Spanish (names, domains) and English (measurement phrases).
+  const pairs = locale === "es" ? [] : SITES.flatMap(({ es, words }) => [
     [`demo-${es}.com`, `demo-${words[locale]}.com`],
     [`Demo ${capitalize(es)}`, `Demo ${capitalize(words[locale])}`],
   ]);
   const replace = (text: string) => pairs.reduce((out, [from, to]) => out.split(from).join(to), text);
   const walk = (node: unknown): unknown => {
-    if (typeof node === "string") return replace(node);
+    if (typeof node === "string") return (locale !== "en" && SYNTHETIC_PHRASES[node]?.[locale]) || replace(node);
     if (Array.isArray(node)) return node.map(walk);
     if (node && typeof node === "object") return Object.fromEntries(Object.entries(node).map(([key, child]) => [key, walk(child)]));
     return node;
