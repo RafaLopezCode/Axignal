@@ -1,0 +1,298 @@
+/* Landing-only spatial system; copy, product evidence and atlas remain governed. */
+.observer-story {
+  --story-width: 1600px;
+  --story-gutter: clamp(24px, 3.5vw, 64px);
+  --guide-size: 280px;
+  --section-space: clamp(64px, 6vw, 96px);
+  --group-space: clamp(32px, 3vw, 48px);
+}
+.observer-story .landing-header, .observer-story .mini-footer,
+.observer-story .hero, .observer-story .chapter, .observer-story .closing-scene {
+  max-width: var(--story-width);
+  padding-inline: var(--story-gutter);
+  margin-inline: auto;
+}
+.observer-story .chapter { padding-block: var(--section-space); }
+.observer-story .chapter-heading { max-width: 920px; }
+.observer-story .funnel-hero {
+  grid-template-columns: minmax(0, .88fr) minmax(0, 1.12fr);
+  gap: var(--group-space);
+  padding-top: 48px;
+  align-items: start;
+}
+.observer-story .hero-copy { padding-top: 16px; }
+.observer-story .hero h1 { font-size: clamp(40px, 3.9vw, 66px); }
+.observer-story .hero-lead { max-width: 54ch; }
+.observer-story .hero-caption { max-width: 58ch; }
+.observer-story .observer-hero-stage { min-width: 0; width: 100%; }
+.observer-story .lx-hero-window { max-inline-size: none; }
+.observer-story .hero-actions { justify-content: flex-start; gap: 14px; }
+.observer-story .observer-hero-signature {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 16px 24px;
+  margin-top: 24px;
+}
+.observer-story .observer-hero-signature .hero-caption {
+  flex: 1 1 240px;
+  margin: 0;
+  order: 0;
+}
+.observer-story .observer-hero-guide { flex: 0 1 var(--guide-size); margin: 0; }
+/* Common footprint, with optical corrections for poses without large props. */
+.observer-story .landing-guide {
+  display: grid;
+  width: var(--guide-size);
+  max-width: 100%;
+  justify-items: center;
+  align-items: center;
+  gap: 8px;
+}
+.observer-story .landing-guide > .observer {
+  display: block;
+  width: 100%;
+  height: auto;
+  justify-self: center;
+}
+.observer-story .landing-guide > .observer[data-narrative="journey"],
+.observer-story .landing-guide > .observer[data-narrative="unknown"] { width: 78%; }
+.observer-story .landing-guide > .observer[data-narrative="discover"],
+.observer-story .landing-guide > .observer[data-narrative="representation"] { width: 90%; }
+.observer-story .observer-guide-note {
+  font-size: clamp(23px, 1.7vw, 28px);
+  line-height: 1.25;
+  max-width: 24ch;
+  color: #2747a8;
+  text-align: center;
+  margin: 0 8px 8px;
+  transform: rotate(-4deg);
+  overflow-wrap: anywhere;
+}
+.observer-story .lx-scrolly {
+  gap: var(--group-space);
+  margin-top: var(--group-space);
+  padding-bottom: 24px;
+}
+.observer-story .lx-step {
+  display: grid;
+  grid-template-columns: 38px minmax(0, 1fr);
+  column-gap: 18px;
+  align-content: center;
+  min-block-size: clamp(420px, 56vh, 600px);
+  padding-inline-start: 0;
+  opacity: 1;
+}
+.observer-story .lx-step-mark { position: static; grid-column: 1; grid-row: 1; }
+.observer-story .lx-step > h3, .observer-story .lx-step > p,
+.observer-story .observer-step-guide { grid-column: 2; }
+.observer-story .observer-step-guide { margin-top: 24px; }
+.observer-story .lx-step-window { grid-column: 1 / -1; margin-inline-start: 0; }
+.observer-story .lx-sticky { top: 100px; }
+/* Keep the released sticky example clear of the next, independently grouped scene. */
+.observer-story .funnel-axent {
+  display: grid;
+  grid-template-columns: var(--guide-size) minmax(0, 65ch);
+  justify-content: center;
+  gap: var(--group-space);
+  align-items: center;
+  max-width: none;
+  margin-top: 64px;
+  padding: 24px 32px;
+  border: 0;
+  border-radius: 16px;
+}
+.observer-story .funnel-axent p { max-width: 65ch; font-size: 16px; }
+.observer-story .funnel-proof {
+  max-width: none;
+  padding-inline: max(var(--story-gutter), calc((100vw - var(--story-width)) / 2 + var(--story-gutter)));
+}
+.observer-story .lx-proof {
+  grid-template-columns: minmax(0, .78fr) minmax(0, 1.22fr);
+  gap: var(--group-space);
+  margin-top: var(--group-space);
+  align-items: start;
+}
+.observer-story .observer-proof-copy { min-width: 0; }
+.observer-story .lx-proof-tabs { max-width: 560px; }
+.observer-story .observer-proof-guide { margin: 24px auto 0; }
+.observer-story .lx-proof-stage { position: static; }
+.observer-story .lx-proof-stage .lx-screen { min-block-size: 360px; }
+.observer-story .use-panel, .observer-story .funnel-trust {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) var(--guide-size);
+  align-items: center;
+  gap: var(--group-space);
+}
+.observer-story .use-panel {
+  padding: 32px 0 0;
+  min-height: 0;
+}
+.observer-story .use-panel-content { max-width: 65ch; }
+.observer-story .use-panel .use-observer {
+  position: static;
+  display: grid;
+  width: var(--guide-size);
+  height: auto;
+  margin: 0;
+}
+.observer-story .trust-commitments, .observer-story .trust-links { grid-column: 1 / -1; }
+.observer-story .trust-commitments { margin-top: 0; }
+.observer-story .trust-links { margin-top: 0; }
+.observer-story .observer-pricing-guide { margin: 24px 0 0; }
+.observer-story .closing-scene {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) var(--guide-size);
+  column-gap: var(--group-space);
+  row-gap: 24px;
+  text-align: left;
+  align-items: center;
+  padding-block: var(--section-space);
+  margin-block: 0 32px;
+}
+.observer-story .closing-scene > .eyebrow, .observer-story .closing-scene > h2,
+.observer-story .closing-scene > .hero-actions { grid-column: 1; margin: 0; }
+.observer-story .closing-scene h2 { max-width: 22ch; }
+.observer-story .closing-scene .button { margin-top: 0; }
+.observer-story .closing-observer {
+  position: static;
+  grid-column: 2;
+  grid-row: 1 / 4;
+  height: auto;
+  aspect-ratio: auto;
+}
+.observer-story .lx-open, .observer-story .lx-time button { min-height: 44px; }
+/* Static one-column examples keep the whole sequence usable on touch and short screens. */
+@media (max-width: 1100px) {
+  .observer-story .funnel-hero { grid-template-columns: minmax(0, 1fr); gap: 32px; }
+  .observer-story .hero-copy { padding-bottom: 0; }
+  .observer-story .hero h1 { max-width: 760px; font-size: clamp(38px, 5.5vw, 60px); }
+  .observer-story .observer-hero-signature { max-width: 800px; }
+  .observer-story .lx-proof { grid-template-columns: minmax(0, 1fr); gap: 32px; }
+  .observer-story .lx-proof-tabs { max-width: none; }
+  .observer-story .observer-proof-copy { display: grid; grid-template-columns: minmax(0, 1fr) var(--guide-size); gap: 24px; align-items: center; }
+  .observer-story .observer-proof-guide { margin: 0; }
+  .observer-story .lx-step { min-block-size: auto; padding-bottom: 48px; }
+  .observer-story .lx-step:last-child { padding-bottom: 0; }
+  .observer-story .lx-step-window { margin-top: 24px; }
+  .observer-story .lx-step-window .lx-screen { min-block-size: 240px; }
+}
+@media (max-width: 900px) {
+  .observer-story { --guide-size: 240px; --section-space: 64px; }
+  .observer-story .use-panel { gap: 24px; }
+  .observer-story .use-panel .use-observer { justify-self: end; }
+  .observer-story .funnel-trust { grid-template-columns: minmax(0, 1fr) var(--guide-size); gap: 32px; }
+  .observer-story .closing-scene { grid-template-columns: minmax(0, 1fr) var(--guide-size); gap: 24px; }
+  .observer-story .funnel-axent { gap: 24px; padding: 24px; }
+  .observer-story .reference-pricing { grid-template-columns: minmax(0, 1fr); gap: 32px; }
+  .observer-story .pricing-perspective { display: grid; grid-template-columns: minmax(0, 1fr) var(--guide-size); column-gap: 24px; align-items: center; }
+  .observer-story .pricing-perspective > .eyebrow, .observer-story .pricing-perspective > h2, .observer-story .pricing-perspective > p { grid-column: 1; }
+  .observer-story .observer-pricing-guide { grid-column: 2; grid-row: 1 / 4; margin: 0; }
+}
+@media (max-width: 700px) {
+  .observer-story { --story-gutter: 20px; --guide-size: 180px; --section-space: 52px; --group-space: 32px; }
+  .observer-story .funnel-hero { padding-top: 20px; }
+  .observer-story .hero h1 { font-size: clamp(34px, 9vw, 44px); }
+  .observer-story .observer-hero-signature { order: 5; margin-top: 20px; gap: 20px; }
+  .observer-story .landing-guide {
+    width: 100%;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 16px;
+  }
+  .observer-story .observer-hero-guide { flex-basis: 100%; }
+  .observer-story .observer-guide-note { text-align: left; margin: 0; font-size: 23px; }
+  .observer-story .funnel-axent { grid-template-columns: minmax(0, 1fr); gap: 24px; padding: 24px; margin-top: 40px; }
+  .observer-story .lx-scrolly { padding-bottom: 0; }
+  .observer-story .observer-proof-copy { grid-template-columns: minmax(0, 1fr); gap: 24px; }
+  .observer-story .observer-proof-guide { margin: 0; }
+  .observer-story .lx-proof-stage .lx-screen { min-block-size: 0; }
+  .observer-story .observer-step-guide { grid-column: 1 / -1; }
+  .observer-story .use-panel { grid-template-columns: minmax(0, 1fr); }
+  .observer-story .use-panel .use-observer { width: 100%; }
+  .observer-story .pricing-perspective { grid-template-columns: minmax(0, 1fr); }
+  .observer-story .observer-pricing-guide { grid-column: 1; grid-row: auto; margin-top: 24px; }
+  .observer-story .funnel-trust, .observer-story .closing-scene { grid-template-columns: minmax(0, 1fr); gap: 24px; }
+  .observer-story .closing-observer { grid-column: 1; grid-row: auto; }
+  .observer-story .closing-scene { padding-block: 48px; }
+  .observer-story .closing-scene > .hero-actions { flex-wrap: wrap; }
+}
+
+/* Human advisory is a separate offer, with the same visual presence as subscription pricing. */
+.observer-story .human-advisory {
+  grid-template-columns: minmax(0, 1.15fr) minmax(270px, .85fr);
+  align-items: center;
+  gap: 40px;
+  min-height: 300px;
+  padding: clamp(24px, 3.5vw, 48px);
+  background: #fff;
+  border: 1px solid #dce3ed;
+  border-radius: 14px;
+  box-shadow: 0 12px 35px -29px #8792ac;
+}
+.observer-story .human-advisory h3 {
+  font-size: clamp(28px, 2.8vw, 42px);
+  line-height: 1.18;
+  max-width: 24ch;
+  margin: 16px 0;
+}
+.observer-story .human-advisory p {
+  font-size: 16px;
+  line-height: 1.7;
+  max-width: 58ch;
+}
+.observer-story .human-advisory > div:last-child {
+  width: 100%;
+  max-width: 420px;
+  justify-self: end;
+}
+.observer-story .human-advisory strong {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-size: clamp(42px, 5vw, 68px);
+  line-height: 1.1;
+  letter-spacing: -.03em;
+  margin: 0 0 14px;
+}
+.observer-story .human-advisory strong span {
+  letter-spacing: normal;
+  font-size: 14px;
+  color: #667487;
+}
+.observer-story .human-advisory small {
+  margin-bottom: 28px;
+}
+.observer-story .human-advisory .text-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 50px;
+  padding: 14px 20px;
+  border-radius: 10px;
+  background: var(--blue);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 650;
+  text-decoration: none;
+}
+.observer-story .human-advisory .text-link:hover {
+  background: #2c4384;
+}
+.observer-story .human-advisory .text-link:focus-visible {
+  outline: 2px solid var(--blue);
+  outline-offset: 4px;
+}
+@media (max-width: 800px) {
+  .observer-story .human-advisory {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 28px;
+    min-height: auto;
+  }
+  .observer-story .human-advisory > div:last-child {
+    max-width: none;
+  }
+}

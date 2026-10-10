@@ -13,7 +13,9 @@ import { LandingObservatory, type DemoMode } from "./landing-observatory";
 import type { ExampleMoment } from "@/lib/landing-observatory";
 import { PublicHeader } from "./public-shell";
 import { ReferencePricing } from "./landing-extras";
-import { FramedObserver } from "./observer-frame";
+import type { NarratorScene } from "./observer-frame";
+import { LandingGuide } from "./landing-guide";
+import "./observer-landing.css";
 import { useLocale } from "@/lib/locale";
 import {
   funnelCta,
@@ -21,7 +23,7 @@ import {
   track,
   type FunnelCta,
 } from "@/lib/funnel-events";
-import { MiniFooter, Observer } from "./ui";
+import { MiniFooter } from "./ui";
 
 /** The one public example. Every "show me" on the site lands here. */
 export const EXAMPLE_HREF = "/demo";
@@ -139,7 +141,7 @@ function useChapterViews() {
 export function Landing() {
   const { t, locale } = useLocale();
   const [time, setTime] = useState(0);
-  const [proof, setProof] = useState(1);
+  const [proof, setProof] = useState(0);
   const activeStep = useActiveStep();
   const [audience, setAudience] = useState(0);
   const [focuses, setFocuses] = useState(1);
@@ -270,9 +272,22 @@ export function Landing() {
   ];
   const stepModes: DemoMode[] = ["add", "observing", "briefing"];
   const proofModes: DemoMode[] = ["briefing", "evidence", "unknown", "time"];
+  const stepScenes: NarratorScene[] = ["focus", "memory", "explain"];
+  const stepNotes = [
+    t("un nombre o su web bastan", "a name or its website is enough"),
+    t("AXIGNAL observa y recuerda.", "AXIGNAL observes and remembers."),
+    t("con su fuente y su fecha", "with its source and date"),
+  ];
+  const proofNotes = [
+    proofs[0].title,
+    t("la prueba, a un clic de la conclusión", "the proof, one click from the conclusion"),
+    t("desconocido no es falso", "unknown is not false"),
+    proofs[3].title,
+  ];
+  const proofScenes: NarratorScene[] = ["strategy", "research", "unknown", "time"];
   const selectedAudience = audiences[audience];
   return (
-    <div className="landing funnel-landing">
+    <div className="landing funnel-landing observer-story">
       <PublicHeader landing />
       <main id="main">
         <section className="hero funnel-hero" id="what">
@@ -307,14 +322,19 @@ export function Landing() {
                 {t("Empieza con tu organización", "Start with your organization")}
               </CtaLink>
             </div>
-            <span className="hero-caption">
-              {t(
-                "Para quien dirige o hace crecer una empresa, y para las consultoras y agencias que acompañan a varias. 9,95 € al mes con una organización incluida y 4,95 € por cada organización adicional.",
-                "For people who run or grow a business, and for the consultancies and agencies that support several. €9.95 a month with one organization included, and €4.95 for each additional organization.",
-              )}
-            </span>
+            <div className="observer-hero-signature">
+              <span className="hero-caption">
+                {t(
+                  "Para quien dirige o hace crecer una empresa, y para las consultoras y agencias que acompañan a varias. 9,95 € al mes con una organización incluida y 4,95 € por cada organización adicional.",
+                  "For people who run or grow a business, and for the consultancies and agencies that support several. €9.95 a month with one organization included, and €4.95 for each additional organization.",
+                )}
+              </span>
+              <LandingGuide scene="discover" className="observer-hero-guide" note={t("con su fuente y su fecha", "with its source and date")} />
+            </div>
           </div>
-          <HeroReading />
+          <div className="observer-hero-stage">
+            <HeroReading />
+          </div>
         </section>
 
         <section className="chapter funnel-how" id="how">
@@ -332,15 +352,17 @@ export function Landing() {
                   <span className="lx-step-mark" aria-hidden="true">{i + 1}</span>
                   <h3>{step.title}</h3>
                   <p>{step.text}</p>
+                  <LandingGuide scene={stepScenes[i]} className="observer-step-guide" note={stepNotes[i]} />
                   <LandingObservatory mode={stepModes[i]} className="lx-step-window" />
                 </li>
               ))}
             </ol>
-            <div className="lx-sticky" aria-hidden="true">
+            <div className="lx-sticky" aria-hidden="true" inert>
               <LandingObservatory mode={stepModes[activeStep]} />
             </div>
           </div>
           <Reveal className="funnel-axent">
+            <LandingGuide scene="conversation" note={t("Dice lo que todavía no sabe.", "It says what it does not know yet.")} />
             <p>
               <strong>AXENT</strong>{" "}
               {t(
@@ -360,31 +382,34 @@ export function Landing() {
             </h2>
           </Reveal>
           <div className="lx-proof">
-            <div className="lx-proof-tabs" role="tablist" aria-label={t("Cuatro pruebas en el ejemplo", "Four proofs in the example")}>
-              {proofs.map((item, i) => (
-                <button
-                  key={item.id}
-                  role="tab"
-                  id={"proof-tab-" + i}
-                  aria-selected={proof === i}
-                  aria-controls="proof-panel"
-                  tabIndex={proof === i ? 0 : -1}
-                  className="lx-proof-tab"
-                  onClick={() => setProof(i)}
-                  onKeyDown={(e) => {
-                    const step = e.key === "ArrowDown" || e.key === "ArrowRight" ? 1 : e.key === "ArrowUp" || e.key === "ArrowLeft" ? -1 : 0;
-                    if (step) {
-                      e.preventDefault();
-                      const next = (i + step + proofs.length) % proofs.length;
-                      setProof(next);
-                      document.getElementById("proof-tab-" + next)?.focus();
-                    }
-                  }}
-                >
-                  {item.icon}
-                  <span><strong>{item.title}</strong><small>{item.text}</small></span>
-                </button>
-              ))}
+            <div className="observer-proof-copy">
+              <div className="lx-proof-tabs" role="tablist" aria-label={t("Cuatro pruebas en el ejemplo", "Four proofs in the example")}>
+                {proofs.map((item, i) => (
+                  <button
+                    key={item.id}
+                    role="tab"
+                    id={"proof-tab-" + i}
+                    aria-selected={proof === i}
+                    aria-controls="proof-panel"
+                    tabIndex={proof === i ? 0 : -1}
+                    className="lx-proof-tab"
+                    onClick={() => setProof(i)}
+                    onKeyDown={(e) => {
+                      const step = e.key === "ArrowDown" || e.key === "ArrowRight" ? 1 : e.key === "ArrowUp" || e.key === "ArrowLeft" ? -1 : 0;
+                      if (step) {
+                        e.preventDefault();
+                        const next = (i + step + proofs.length) % proofs.length;
+                        setProof(next);
+                        document.getElementById("proof-tab-" + next)?.focus();
+                      }
+                    }}
+                  >
+                    {item.icon}
+                    <span><strong>{item.title}</strong><small>{item.text}</small></span>
+                  </button>
+                ))}
+              </div>
+              <LandingGuide scene={proofScenes[proof]} className="observer-proof-guide" note={proofNotes[proof]} />
             </div>
             <div className="lx-proof-stage" role="tabpanel" id="proof-panel" aria-labelledby={"proof-tab-" + proof}>
               <LandingObservatory
@@ -466,7 +491,7 @@ export function Landing() {
                 <ArrowRight size={16} />
               </CtaLink>
             </div>
-            <FramedObserver className="use-observer" scene={selectedAudience.scene} />
+            <LandingGuide className="use-observer" scene={selectedAudience.scene} note={selectedAudience.name} />
           </div>
         </section>
 
@@ -477,6 +502,7 @@ export function Landing() {
               {t("Lo que AXIGNAL no hará.", "What AXIGNAL will not do.")}
             </h2>
           </Reveal>
+          <LandingGuide scene="boundaries" className="observer-trust-guide" note={t("desconocido no es falso", "unknown is not false")} />
           <Reveal className="trust-commitments">
             {[
               {
@@ -536,7 +562,7 @@ export function Landing() {
               {t("Ver un ejemplo", "See an example")}
             </CtaLink>
           </div>
-          <Observer className="closing-observer" scene="journey" />
+          <LandingGuide className="closing-observer" scene="journey" note={t("AXIGNAL seguirá mirando.", "AXIGNAL will keep looking.")} />
         </section>
       </main>
       <MiniFooter />
