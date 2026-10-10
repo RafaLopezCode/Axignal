@@ -170,13 +170,13 @@ test("Customer Zero only sends canonical attention, and consumes the real read e
   assert.ok(renderer.includes('t("vigente ahora", "current now")'));
   assert.ok(
     client.includes(
-      't("Cliente cero · Controles internos", "Customer Zero · Staff controls")',
+      't("Admin · Controles internos", "Admin · Staff controls")',
     ),
   );
-  // The portfolio opens the sidebar; Customer Zero is named once, in the top bar.
+  // The portfolio opens the sidebar; the Admin is named once, in the top bar.
   assert.ok(
     readFileSync("components/customer-zero-observatory.tsx", "utf8").includes(
-      '<span className="breadcrumb-root">AXIGNAL / Customer Zero</span>',
+      '<span className="breadcrumb-root">Admin</span>',
     ),
   );
   assert.doesNotMatch(readFileSync("components/admin.tsx", "utf8"), /USAR AXIGNAL|USE AXIGNAL/);

@@ -59,7 +59,8 @@ export function Admin({ initialDomain = CUSTOMER_ZERO }: { initialDomain?: strin
   }, []);
 
   function choose(id: string) {
-    window.history.pushState(null, "", "/admin#" + id);
+    // The home is the address itself, /admin; the other domains hang from it as /admin#domain.
+    window.history.pushState(null, "", id === CUSTOMER_ZERO ? "/admin" : "/admin#" + id);
     setDomainId(id);
     setMobile(false);
   }

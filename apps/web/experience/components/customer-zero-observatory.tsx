@@ -33,7 +33,7 @@ export function CustomerZeroObservatory({
   const [detailsOpen, setDetailsOpen] = useState(false);
   return <div className={`obs-customer-zero${embedded ? " obs-embedded" : ""}`} data-customer-zero="true">
     {embedded && toolbarHost && createPortal(<>
-      <div className="navigation-controls"><span className="breadcrumb-root">AXIGNAL / Customer Zero</span></div>
+      <div className="navigation-controls"><span className="breadcrumb-root">Admin</span></div>
       <div className="topbar-right"><LocaleToggle/></div>
     </>, toolbarHost)}
     <SubscriberPortfolioExperience source={adminSource} shell={embedded ? { host: navigationHost ?? null, active, onNavigate } : undefined}

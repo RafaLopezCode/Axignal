@@ -24,7 +24,8 @@ test("Admin home opens Customer Zero without exposing its operator API", async (
   const admin = source("components/admin.tsx");
   assert.match(admin, /initialDomain = CUSTOMER_ZERO/);
   assert.match(admin, /const CUSTOMER_ZERO = "customer-zero"/);
-  assert.match(admin, /window\.history\.pushState\(null, "", "\/admin#" \+ id\)/);
+  // The home is the address /admin itself; the other domains hang from it as /admin#domain. No address names "customer-zero".
+  assert.match(admin, /window\.history\.pushState\(null, "", id === CUSTOMER_ZERO \? "\/admin" : "\/admin#" \+ id\)/);
   const edge = source("../../../deploy/production/subscriber-edge-nginx.conf");
   assert.doesNotMatch(edge, /location\s+(?:=|\^~)\s*\/admin\b/);
   const publicEdge = source("../../../deploy/production/traefik/axignal-public-seo.yml");

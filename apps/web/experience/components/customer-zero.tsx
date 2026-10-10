@@ -189,7 +189,7 @@ export function RuntimeExperience({
       )}
       <details className="staff-utility">
       <summary>
-        {t("Cliente cero · Controles internos", "Customer Zero · Staff controls")}
+        {t("Admin · Controles internos", "Admin · Staff controls")}
       </summary>
       <div>
         {!embedded && <Link className="text-link" href="/admin">
@@ -251,7 +251,7 @@ export function RuntimeExperience({
   return (
     <div className="runtime-entry" data-runtime-state={result.state}>
       {embedded && toolbarHost && createPortal(<>
-        <div className="navigation-controls"><span className="breadcrumb-root">AXIGNAL / Customer Zero</span></div>
+        <div className="navigation-controls"><span className="breadcrumb-root">Admin</span></div>
         <div className="topbar-right"><LocaleToggle /></div>
       </>, toolbarHost)}
       {!embedded && <header className="product-topbar">
@@ -265,7 +265,7 @@ export function RuntimeExperience({
           </Link>
         )}
         <span className="eyebrow">
-          {staff ? "Customer Zero" : t("Panorama", "Panorama")}
+          {staff ? "Admin" : t("Panorama", "Panorama")}
         </span>
         <section
           className={`customer-zero-state state-${result.state}`}

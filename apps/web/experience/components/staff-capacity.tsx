@@ -133,8 +133,8 @@ export function StaffCapacity() {
     <section className="admin-attention staff-capacity" aria-labelledby="staff-capacity-title">
       <h2 id="staff-capacity-title">{t("Añadir organizaciones sin checkout", "Add organizations without checkout")}</h2>
       <p id="staff-capacity-help">
-        {t("Concede capacidad Staff a la cuenta de un cliente, o a la cuenta interna de AXIGNAL para usarla como Cliente Cero, y añade organizaciones en su nombre. Nunca crea pagos, suscripciones ni checkout. Cada acción queda auditada y puede caducar o retirarse.",
-          "Grant staff capacity to a client account, or to AXIGNAL's internal account to use it as Customer Zero, and add organizations on its behalf. It never creates payments, subscriptions or checkout. Every action is audited and can expire or be revoked.")}
+        {t("Concede capacidad Staff a la cuenta de un cliente, o a la cuenta interna de AXIGNAL para usarla desde Admin, y añade organizaciones en su nombre. Nunca crea pagos, suscripciones ni checkout. Cada acción queda auditada y puede caducar o retirarse.",
+          "Grant staff capacity to a client account, or to AXIGNAL's internal account to use it from Admin, and add organizations on its behalf. It never creates payments, subscriptions or checkout. Every action is audited and can expire or be revoked.")}
       </p>
       <form className="admin-table-toolbar" onSubmit={event => { void activateStepUp(event); }}>
         <label className="search-field">
@@ -176,7 +176,7 @@ export function StaffCapacity() {
                   onChange={() => { setDestination(value); setPreview(null); }} />
                 {value === "CUSTOMER_ACCOUNT"
                   ? t("Cuenta de cliente", "Client account")
-                  : t("AXIGNAL interno · Cliente Cero", "AXIGNAL internal · Customer Zero")}
+                  : t("AXIGNAL interno · Admin", "AXIGNAL internal · Admin")}
               </label>
             ))}
           </div>
