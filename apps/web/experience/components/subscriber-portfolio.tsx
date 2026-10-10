@@ -6,7 +6,7 @@ import { approvedPaymentUrl, pendingOutputSchema, pilotRedemptionSchema, subscri
 import type { RuntimeProjection } from "@/lib/runtime-projection";
 import { pendingPilotInvite, clearPilotInvite } from "@/lib/pilot-invite";
 import { pendingMcpConnect, clearMcpConnect } from "@/lib/mcp-connect";
-import { Observatory } from "./observatory";
+import { Observatory, type ObservatoryShell } from "./observatory";
 import { accountSource, type ObservatorySource } from "@/lib/observatory-source";
 
 type PortfolioItem = SubscriberPortfolio["organizations"][number];
@@ -17,7 +17,7 @@ const readable = (item: PortfolioItem) => Boolean(item.organizationId || item.ob
  * The subscriber Observatory. One experience, two contexts: the account's source, or the demonstration's.
  * Only the source differs (where data comes from and which operations exist); nothing below branches on it.
  */
-export function SubscriberPortfolioExperience({ source = accountSource, notice, shell }: { source?: ObservatorySource; notice?: ReactNode; shell?: { host: HTMLElement | null } } = {}) {
+export function SubscriberPortfolioExperience({ source = accountSource, notice, shell }: { source?: ObservatorySource; notice?: ReactNode; shell?: ObservatoryShell } = {}) {
   const { t, locale } = useLocale();
   const canAct = source.canAct;
   // A source whose reads follow the reader's language is read again when the language changes.

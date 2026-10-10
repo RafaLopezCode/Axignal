@@ -23,6 +23,8 @@ export type RuntimeHost = {
   navigationHost?: HTMLElement | null;
   toolbarHost?: HTMLElement | null;
   onNavigate?: () => void;
+  /** False while the Admin shows another domain; the portfolio navigation then stays offered but unmarked. */
+  active?: boolean;
 };
 export function CustomerZero(props: RuntimeHost) {
   return <RuntimeExperience staff {...props} />;
@@ -33,6 +35,7 @@ export function RuntimeExperience({
   navigationHost,
   toolbarHost,
   onNavigate,
+  active = true,
 }: { staff?: boolean } & RuntimeHost) {
   const { t, locale } = useLocale();
   const [result, setResult] = useState<CustomerZeroState>({ state: "loading" });
@@ -220,6 +223,8 @@ export function RuntimeExperience({
         embedded={embedded}
         navigationHost={navigationHost}
         toolbarHost={toolbarHost}
+        active={active}
+        onNavigate={onNavigate}
       />
     );
   const headings = {

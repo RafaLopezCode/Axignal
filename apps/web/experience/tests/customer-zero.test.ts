@@ -173,11 +173,13 @@ test("Customer Zero only sends canonical attention, and consumes the real read e
       't("Cliente cero · Controles internos", "Customer Zero · Staff controls")',
     ),
   );
+  // The portfolio opens the sidebar; Customer Zero is named once, in the top bar.
   assert.ok(
-    readFileSync("components/admin.tsx", "utf8").includes(
-      't("AXIGNAL / Cliente cero", "AXIGNAL / Customer Zero")',
+    readFileSync("components/customer-zero-observatory.tsx", "utf8").includes(
+      '<span className="breadcrumb-root">AXIGNAL / Customer Zero</span>',
     ),
   );
+  assert.doesNotMatch(readFileSync("components/admin.tsx", "utf8"), /USAR AXIGNAL|USE AXIGNAL/);
   assert.doesNotMatch(
     readFileSync("app/globals.css", "utf8"),
     /content:\s*["']AXIGNAL \/ Customer Zero["']/,
@@ -256,7 +258,7 @@ test("Admin hosts the real product with retained administrative navigation and o
   assert.ok(!html.includes('class="panorama-main admin-main"'));
   const admin=readFileSync("components/admin.tsx","utf8");
   assert.doesNotMatch(admin,/window\.location\.(assign|replace)/);
-  assert.ok(admin.includes('<CustomerZero embedded navigationHost={productNavigationHost}'));
+  assert.ok(admin.includes('<CustomerZero embedded active={inProduct} navigationHost={productNavigationHost}'));
   assert.ok(admin.includes("hidden={!inProduct}"));
 });
 

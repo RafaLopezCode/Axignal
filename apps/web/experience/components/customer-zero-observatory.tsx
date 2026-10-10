@@ -18,7 +18,7 @@ import { SubscriberPortfolioExperience } from "./subscriber-portfolio";
 import { LocaleToggle } from "./ui";
 
 export function CustomerZeroObservatory({
-  projection, onProjection, staffControls, embedded, navigationHost, toolbarHost,
+  projection, onProjection, staffControls, embedded, navigationHost, toolbarHost, active = true, onNavigate,
 }: {
   projection: RuntimeProjection;
   onProjection: (value: RuntimeProjection) => void;
@@ -26,6 +26,8 @@ export function CustomerZeroObservatory({
   embedded: boolean;
   navigationHost?: HTMLElement | null;
   toolbarHost?: HTMLElement | null;
+  active?: boolean;
+  onNavigate?: () => void;
 }) {
   const { t } = useLocale();
   const [detailsOpen, setDetailsOpen] = useState(false);
@@ -34,7 +36,7 @@ export function CustomerZeroObservatory({
       <div className="navigation-controls"><span className="breadcrumb-root">AXIGNAL / Customer Zero</span></div>
       <div className="topbar-right"><LocaleToggle/></div>
     </>, toolbarHost)}
-    <SubscriberPortfolioExperience source={adminSource} shell={embedded ? { host: navigationHost ?? null } : undefined}
+    <SubscriberPortfolioExperience source={adminSource} shell={embedded ? { host: navigationHost ?? null, active, onNavigate } : undefined}
       notice={staffControls ? <div className="obs-cz-staff">{staffControls}</div> : undefined}/>
     <details className="obs-cz-detail" open={detailsOpen} onToggle={event => setDetailsOpen(event.currentTarget.open)}>
       <summary>{t("Abrir la lectura técnica completa", "Open the complete technical reading")}</summary>

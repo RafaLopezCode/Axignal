@@ -29,6 +29,14 @@ import { countByFacet, facetOfSourceType, facetParams, litByChannel, litByFamily
 
 type Item = SubscriberPortfolio["organizations"][number];
 export type View = "summary" | "explore" | "evolution" | "evidence";
+/** The page that hosts the Observatory's portfolio navigation, when it owns the sidebar. */
+export type ObservatoryShell = {
+  host: HTMLElement | null;
+  /** False while the shell shows something else: the navigation is then offered, never marked as the current place. */
+  active: boolean;
+  /** Called when the navigation is used, so the shell can bring the reading back. */
+  onNavigate?: () => void;
+};
 export type Screen = "desk" | "organization" | "account" | "add";
 
 export type ObservatoryProps = {
@@ -57,7 +65,7 @@ export type ObservatoryProps = {
    * Set when the Observatory lives inside a shell that already owns the page's navigation (the Admin's sidebar):
    * its portfolio navigation is then drawn in the shell's own sidebar instead of a second one beside the reading.
    */
-  shell?: { host: HTMLElement | null };
+  shell?: ObservatoryShell;
   /** What the context offers around the reading; the demo declares all of it, an Admin has no account to manage. */
   capabilities: ObservatoryCapabilities;
   /** Organizations the context already authorizes, offered while adding one. */
@@ -256,6 +264,7 @@ export function Observatory(props: ObservatoryProps) {
   }, [access, items.length, props, readableItems, selected, url.screen]);
 
   const openOrganization = (focusId: string, item: string | null = null) => {
+    props.shell?.onNavigate?.();
     setRailOpen(false); setAxentOpen(false);
     transition(() => {
       go({ screen: null, view: "summary", item }, true);
@@ -263,6 +272,7 @@ export function Observatory(props: ObservatoryProps) {
     });
   };
   const openScreen = (next: "desk" | "account" | "add") => {
+    props.shell?.onNavigate?.();
     setRailOpen(false); setAxentOpen(false);
     transition(() => {
       if (next === "desk") { props.clearSelection(); go({ screen: null, item: null, view: "summary", organization: null }); }
@@ -275,7 +285,7 @@ export function Observatory(props: ObservatoryProps) {
   if (access === "failure" || !portfolio) return <ObservatoryFrame><section className="obs-gate" role="alert"><h1>{t("No pudimos leer tu contexto.", "We could not read your context.")}</h1><p>{t("Tu cartera sigue a salvo. Vuelve a comprobarlo en un momento.", "Your portfolio is safe. Check again in a moment.")}</p><button className="obs-button" onClick={props.refresh}><RefreshCw size={16} aria-hidden="true"/>{t("Volver a comprobar", "Check again")}</button></section></ObservatoryFrame>;
 
   const current = items.find(i => i.focusId === selected) ?? null;
-  const rail = <Rail items={items} selected={selected} screen={screen} seen={seen} litCounts={litCounts} nameOf={props.menuName ?? nameOf} onOrganization={openOrganization} onScreen={openScreen} portfolio={portfolio} busy={props.busy} refresh={props.refresh} canAct={props.canAct} account={props.capabilities.account}/>;
+  const rail = <Rail items={items} selected={props.shell && !props.shell.active ? null : selected} screen={props.shell && !props.shell.active ? null : screen} seen={seen} litCounts={litCounts} nameOf={props.menuName ?? nameOf} onOrganization={openOrganization} onScreen={openScreen} portfolio={portfolio} busy={props.busy} refresh={props.refresh} canAct={props.canAct} account={props.capabilities.account}/>;
   return <div className={`obs${props.shell ? " obs-shelled" : ""}`} data-product-surface="living-observatory" aria-busy={props.busy}>
     <a className="obs-skip" href="#obs-main">{t("Ir al contenido", "Skip to content")}</a>
     {props.shell ? (props.shell.host ? createPortal(<div className="obs obs-in-shell">{rail}</div>, props.shell.host) : null) : <div className="obs-rail-desktop">{rail}</div>}
@@ -299,7 +309,7 @@ function ObservatoryFrame({ children }: { children: React.ReactNode }) {
 // ---- rail: where am I, which organization, what changed -----------------------------------
 
 function Rail({ items, selected, screen, seen, litCounts, nameOf, onOrganization, onScreen, portfolio, busy, refresh, canAct, account }: {
-  items: Item[]; selected: string | null; screen: Screen; seen: SeenStore; litCounts: Record<string, number>; nameOf: (item: Item) => string;
+  items: Item[]; selected: string | null; screen: Screen | null; seen: SeenStore; litCounts: Record<string, number>; nameOf: (item: Item) => string;
   onOrganization: (id: string) => void; onScreen: (screen: "desk" | "account" | "add") => void;
   portfolio: SubscriberPortfolio; busy: boolean; refresh: () => void; canAct: boolean; account: boolean;
 }) {

@@ -16,7 +16,7 @@ test("public /demo is the subscriber Observatory in its demonstration context, w
   assert.doesNotMatch(page, /<Panorama\b|example-observatory/);
   assert.match(demo, /source=\{demoSource\}/);
   assert.match(subscriber, /source = accountSource/);
-  assert.match(subscriber, /import \{ Observatory \} from "\.\/observatory"/);
+  assert.match(subscriber, /import \{ Observatory(, type ObservatoryShell)? \} from "\.\/observatory"/);
   assert.match(live, /data-product-surface="living-observatory"/);
   assert.match(live, /canAct: boolean/);
   // The demo reads only the snapshot: no request, storage or private surface in its source.

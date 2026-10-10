@@ -29,7 +29,6 @@ export function Admin({ initialDomain = CUSTOMER_ZERO }: { initialDomain?: strin
   const sidebarRef = useRef<HTMLElement>(null);
   const [productNavigationHost, setProductNavigationHost] = useState<HTMLDivElement | null>(null);
   const [productToolbarHost, setProductToolbarHost] = useState<HTMLDivElement | null>(null);
-  const [productStarted, setProductStarted] = useState(known(initialDomain) && initialDomain === CUSTOMER_ZERO);
   useFocusTrap(mobile, sidebarRef, () => setMobile(false));
   const inProduct = domainId === CUSTOMER_ZERO;
   const domain = adminDomains.find(d => d.id === domainId);
@@ -40,7 +39,6 @@ export function Admin({ initialDomain = CUSTOMER_ZERO }: { initialDomain?: strin
       // Content anchors (for example the skip link) do not change Admin domains; a retired id opens Customer Zero.
       if (id && !known(id) && id !== "main") return;
       const next = known(id) ? id : CUSTOMER_ZERO;
-      if (next === CUSTOMER_ZERO) setProductStarted(true);
       setDomainId(next);
       setMobile(false);
     };
@@ -54,7 +52,6 @@ export function Admin({ initialDomain = CUSTOMER_ZERO }: { initialDomain?: strin
   }, []);
 
   function choose(id: string) {
-    if (id === CUSTOMER_ZERO) setProductStarted(true);
     window.history.pushState(null, "", "/admin#" + id);
     setDomainId(id);
     setMobile(false);
@@ -87,18 +84,7 @@ export function Admin({ initialDomain = CUSTOMER_ZERO }: { initialDomain?: strin
           </div>
         </div>
         <nav aria-label={t("Secciones de Admin", "Admin sections")}>
-          <div className="admin-nav-group">
-            <span className="nav-group-label">{t("USAR AXIGNAL", "USE AXIGNAL")}</span>
-            <button
-              className={"admin-nav-item " + (inProduct ? "active" : "")}
-              aria-current={inProduct ? "page" : undefined}
-              onClick={() => choose(CUSTOMER_ZERO)}
-            >
-              {t("AXIGNAL / Cliente cero", "AXIGNAL / Customer Zero")}
-              <ChevronRight size={14} aria-hidden="true" />
-            </button>
-            <div ref={setProductNavigationHost} className="admin-product-navigation" hidden={!inProduct} />
-          </div>
+          <div ref={setProductNavigationHost} className="admin-product-navigation" />
           {GROUPS.map(group => (
             <div className="admin-nav-group" key={group.id}>
               <span className="nav-group-label">{t(group.es, group.en)}</span>
@@ -151,14 +137,14 @@ export function Admin({ initialDomain = CUSTOMER_ZERO }: { initialDomain?: strin
           )}
         </header>
         <div className="workspace-content">
-          {productStarted && (
+          {(
             <div
               id={inProduct ? "main" : "customer-zero-region"}
               className="admin-product-host"
               hidden={!inProduct}
               tabIndex={-1}
             >
-              <CustomerZero embedded navigationHost={productNavigationHost} toolbarHost={productToolbarHost} onNavigate={() => setMobile(false)} />
+              <CustomerZero embedded active={inProduct} navigationHost={productNavigationHost} toolbarHost={productToolbarHost} onNavigate={() => { if (!inProduct) choose(CUSTOMER_ZERO); setMobile(false); }} />
             </div>
           )}
           {domain && (

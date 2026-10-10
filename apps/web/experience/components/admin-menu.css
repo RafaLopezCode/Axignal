@@ -37,8 +37,8 @@
 .admin-shell .admin-nav-item:focus-visible { outline: 2px solid var(--menu-active); outline-offset: 2px; }
 
 /* The Observatory's navigation hangs from Customer Zero, as its children. */
-.admin-shell .admin-product-navigation { margin: 2px 0 0 10px; padding-inline-start: 6px; border-inline-start: 1px solid var(--menu-line); }
-.admin-shell .admin-product-navigation[hidden] { display: none; }
+/* The portfolio is where everything starts: it opens the sidebar, with no tree under a parent entry. */
+.admin-shell .admin-product-navigation { margin: 0; padding: 0; }
 .admin-shell .obs-in-shell { --obs-rail-text: var(--menu-text); --obs-rail-muted: var(--menu-muted); --obs-rail-line: var(--menu-line); --obs-rail-2: var(--menu-hover); margin-block: 4px 8px; }
 .admin-shell .obs-in-shell .obs-rail { gap: var(--menu-gap); }
 .admin-shell .obs-in-shell .obs-scope, .admin-shell .obs-in-shell .obs-rail-action { border-radius: var(--menu-radius); }

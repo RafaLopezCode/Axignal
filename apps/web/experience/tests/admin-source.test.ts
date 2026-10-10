@@ -93,7 +93,7 @@ test("inside the Admin shell there is one sidebar: the portfolio navigation is d
   assert.match(observatory, /props\.shell \? \(props\.shell\.host \? createPortal\(/);
   assert.match(observatory, /\{!props\.shell && <MobileBar/);
   const entry = read("components/customer-zero-observatory.tsx");
-  assert.match(entry, /shell=\{embedded \? \{ host: navigationHost \?\? null \} : undefined\}/);
+  assert.match(entry, /shell=\{embedded \? \{ host: navigationHost \?\? null, active, onNavigate \} : undefined\}/);
   // The language lives in the shell's top bar, once.
   assert.match(entry, /createPortal\(<>[\s\S]*<LocaleToggle\/>[\s\S]*<\/>, toolbarHost\)/);
 });

@@ -24,7 +24,7 @@ test("/account and /demo mount the same Observatory container; only the source d
   assert.match(read("components/demo-observatory.tsx"), /<SubscriberPortfolioExperience source=\{demoSource\}/);
   const container = read("components/subscriber-portfolio.tsx");
   assert.match(container, /source = accountSource/);
-  assert.match(container, /import \{ Observatory \} from "\.\/observatory"/);
+  assert.match(container, /import \{ Observatory(, type ObservatoryShell)? \} from "\.\/observatory"/);
 });
 
 test("pages are thin: no route carries Observatory interface of its own", () => {
