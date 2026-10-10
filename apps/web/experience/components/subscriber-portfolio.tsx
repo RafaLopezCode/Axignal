@@ -1,19 +1,14 @@
 "use client";
 
-import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { ArrowRight, LogOut, Plus, RefreshCw } from "lucide-react";
 import { useLocale } from "@/lib/locale";
-import { approvedPaymentUrl, monthlyCapacityCents, pendingOutputSchema, pilotRedemptionSchema, portfolioSchema, subscriberOutputSchema, subscriberResultSchema, type FirstObservation, type SubscriberPortfolio } from "@/lib/subscriber-contracts";
-import { FirstObservationView, activityLabel, observationStateCopy } from "./first-observation";
+import { approvedPaymentUrl, pendingOutputSchema, pilotRedemptionSchema, portfolioSchema, subscriberOutputSchema, subscriberResultSchema, type FirstObservation, type SubscriberPortfolio } from "@/lib/subscriber-contracts";
 import type { RuntimeProjection } from "@/lib/runtime-projection";
 import { pendingPilotInvite, clearPilotInvite } from "@/lib/pilot-invite";
 import { pendingMcpConnect, clearMcpConnect } from "@/lib/mcp-connect";
-import { SubscriberMcpConnections } from "./subscriber-mcp-connections";
-import { PublicShell } from "./public-shell";
-import { SubscriberReading } from "./subscriber-reading";
-import { SubscriberRepresentation } from "./subscriber-representation";
+import { Observatory } from "./observatory";
 import "./subscriber-portfolio.css";
+import "./observatory.css";
 
 type PortfolioItem = SubscriberPortfolio["organizations"][number];
 /** A canonical Focus reading, or a pending attention whose First Observation exists. */
@@ -217,41 +212,13 @@ export function SubscriberPortfolioExperience() {
     } catch { setMessage(t("No se pudo confirmar el cierre de sesión.", "Sign-out could not be confirmed.")); }
     finally { setBusy(false); }
   }
-  const used = portfolio?.organizations.filter(item => item.state === "ACTIVE" || item.state === "PAUSED").length ?? 0;
-  return <PublicShell className="subscriber-page">
-    <div className="subscriber-content" aria-busy={busy}>
-      <header className="subscriber-heading"><div><span className="eyebrow">AXIGNAL</span><h1>{t("Tu mirada continúa.", "Your perspective continues.")}</h1><p>{t("Organizaciones, contexto y evidencias para comprender lo que merece tu atención.", "Organizations, context and evidence to understand what deserves your attention.")}</p></div>
-        {access === "ready" && <button className="text-link" disabled={busy} onClick={() => void logout()}><LogOut size={16} />{t("Cerrar sesión", "Sign out")}</button>}
-      </header>
-      {access === "loading" && <p role="status">{t("Leyendo tu contexto…", "Reading your context…")}</p>}
-      {access === "required" && <section className="subscriber-notice"><h2>{t("Tu identidad abre el acceso.", "Your identity opens access.")}</h2><p>{t("Accede para leer tu cartera privada y sus evidencias.", "Sign in to read your private portfolio and its evidence.")}</p><Link className="button primary" href="/login">{t("Acceder", "Sign in")}<ArrowRight size={16} /></Link></section>}
-      {access === "failure" && <section className="subscriber-notice" role="alert"><h2>{t("No pudimos leer tu contexto.", "We could not read your context.")}</h2><button className="button secondary" onClick={() => void readPortfolio()}><RefreshCw size={16}/>{t("Volver a comprobar", "Check again")}</button></section>}
-      {access === "ready" && portfolio && <>
-        <div className="subscriber-grid"><section className="subscriber-organizations" aria-labelledby="portfolio-title"><div className="subscriber-section-heading"><h2 id="portfolio-title">{t("Tus organizaciones", "Your organizations")}</h2><button className="text-link" disabled={busy} onClick={() => void readPortfolio()}><RefreshCw size={16}/>{t("Actualizar", "Refresh")}</button></div>
-          <p>{portfolio.capacity === null || portfolio.capacityCurrentness !== "CURRENT" ? t("Capacidad sin confirmar", "Unconfirmed capacity") : `${used} / ${portfolio.capacity}`} · {t("Las organizaciones pausadas conservan su espacio.", "Paused organizations retain their space.")}</p>
-          {portfolio.entitlementSource === "DESIGN_PARTNER_PILOT" && <p className="limit-note">{t("Design Partner · 1 organización · 0 € durante el piloto de validación.", "Design Partner · 1 organization · €0 during the validation pilot.")}</p>}
-          {!portfolio.organizations.filter(item => !["REMOVED", "RESOLVED", "CANCELLED"].includes(item.state)).length && <div className="subscriber-empty"><h3>{t("Empieza por una organización.", "Start with an organization.")}</h3><p>{t("Puedes explorar tu cuenta. La germinación empieza al añadir una organización y resolver su identidad y el acceso a observarla.", "You can explore your account. Germination starts when you add an organization and its identity and observation access are resolved.")}</p><p>{t("Indica dónde observar. El nombre o la URL orientan la investigación; no establecen lo que es verdad.", "Direct observation. A name or URL guides research; it does not establish truth.")}</p></div>}
-          <ul className="subscriber-list">{portfolio.organizations.filter(item => !["REMOVED", "RESOLVED", "CANCELLED"].includes(item.state)).map(item => <li key={item.focusId}><div><h3>{item.label}</h3><p>{item.state === "IDENTITY_PENDING" && item.reason?.startsWith("AMBIGUOUS") ? t("Varias organizaciones coinciden", "Several organizations match") : item.state === "IDENTITY_PENDING" && item.reason?.startsWith("CONFLICT") ? t("Datos en conflicto", "Conflicting details") : item.state === "IDENTITY_PENDING" ? t("Identidad por resolver", "Identity unresolved") : item.state === "IDENTITY_REJECTED" ? t("Identidad no admitida", "Identity not admitted") : item.state === "CAPACITY_UNKNOWN" ? t("Capacidad sin confirmar", "Unconfirmed capacity") : item.state === "CAPACITY_PENDING" ? t("Pendiente de capacidad", "Capacity pending") : item.state === "PURCHASE_AUTHORITY_REQUIRED" ? t("Autoridad de compra pendiente", "Purchase authority pending") : item.state === "PAUSED" ? t("Pausada", "Paused") : t("Observación activa", "Active observation")}</p>{item.observation && <p className="fo-line" role="status">{observationStateCopy(item.observation.state, t)}{item.observation.headline ? ` · ${activityLabel(item.observation.headlineCode ?? "", item.observation.headline, t)}` : ""}</p>}</div><div className="subscriber-row-actions">
-            {readable(item) && <button className="text-link" disabled={busy} onClick={() => void readOutput(item.focusId)} aria-pressed={selected === item.focusId}>{item.organizationId ? t("Abrir la lectura", "Open the reading") : t("Ver la primera observación", "See the first observation")}<ArrowRight size={15}/></button>}
-            {item.organizationId && <button className="text-link" disabled={busy} onClick={() => void command({ action: item.state === "PAUSED" ? "resume" : "pause", focusId: item.focusId })}>{item.state === "PAUSED" ? t("Reanudar", "Resume") : t("Pausar", "Pause")}</button>}
-            {item.state === "ACTIVE" && <button className="text-link" disabled={busy} onClick={() => void command({ action: "reobserve", focusId: item.focusId })}>{t("Volver a observar", "Observe again")}</button>}
-            {!item.organizationId && <button className="text-link" disabled={busy} onClick={() => void command({ action: "retry_pending", focusId: item.focusId })}>{t("Volver a comprobar", "Check again")}</button>}
-            {item.organizationId && <button className="text-link" disabled={busy} onClick={() => { setReplacing(item.focusId); setReplacementLocator(""); }}>{t("Sustituir organización", "Replace organization")}</button>}
-            <button className="text-link" disabled={busy} onClick={() => void command({ action: item.organizationId ? "remove" : "cancel_pending", focusId: item.focusId })}>{t("Retirar de mi cartera", "Remove from my portfolio")}</button>
-          </div>{replacing === item.focusId && <form className="subscriber-add" onSubmit={event => { event.preventDefault(); void command({ action: "replace", focusId: item.focusId, locator: replacementLocator }); }}><label htmlFor={`replacement-${item.focusId}`}>{t("Nombre o sitio público", "Name or public website")}</label><input id={`replacement-${item.focusId}`} required maxLength={2048} value={replacementLocator} onChange={event => setReplacementLocator(event.target.value)} disabled={busy}/><p>{t("La sustitución conserva el historial privado. La organización actual permanece hasta resolver la nueva identidad.", "Replacement preserves private history. The current organization remains until the new identity is resolved.")}</p><button className="button secondary" disabled={busy || !replacementLocator.trim()}>{t("Sustituir organización", "Replace organization")}</button><button type="button" className="text-link" onClick={() => setReplacing(null)}>{t("Cancelar", "Cancel")}</button></form>}</li>)}</ul>
-          <form className="subscriber-add" onSubmit={event => { event.preventDefault(); void command({ action: "add", locator }); }}><label htmlFor="organization-locator">{t("Nombre o sitio público", "Name or public website")}</label><input id="organization-locator" required maxLength={2048} value={locator} onChange={event => setLocator(event.target.value)} disabled={busy}/><button className="button primary" disabled={busy || !locator.trim()}><Plus size={16}/>{t("Añadir organización", "Add organization")}</button></form>
-        </section>
-        <aside className="subscriber-capacity" aria-labelledby="capacity-title"><span className="eyebrow">{t("Espacio para observar", "Room to observe")}</span><h2 id="capacity-title">{t("Amplía tu mirada.", "Expand your perspective.")}</h2><p>{t("Elige el total de organizaciones que quieres observar. Las señales no se facturan por separado.", "Choose the total number of organizations to observe. Signals are not billed separately.")}</p><form onSubmit={event => { event.preventDefault(); void command({ action: portfolio.capacity === null || portfolio.capacity === 0 ? "purchase" : "expand", desiredOrganizationTotal: total }); }}><label htmlFor="organization-total">{t("Total de organizaciones", "Total organizations")}</label><input id="organization-total" type="number" min={portfolio.capacity ? portfolio.capacity + 1 : 1} max={100000} step={1} required value={total} onChange={event => setTotal(Number(event.target.value))} disabled={busy}/><p className="subscriber-price">{Number.isSafeInteger(total) && total >= 1 && total <= 100000 ? new Intl.NumberFormat(locale, { style: "currency", currency: "EUR" }).format(monthlyCapacityCents(total) / 100) : "—"}<small>{t("Total mensual sin IVA; el pago confirma los impuestos aplicables.", "Monthly total excluding VAT; checkout confirms applicable taxes.")}</small></p><button className="button secondary" disabled={busy || portfolio.canPurchase !== true || !portfolio.contractingEnabled}>{t("Revisar la compra", "Review the purchase")}<ArrowRight size={16}/></button></form>
-          {!portfolio.contractingEnabled && <p className="limit-note">{t("La contratación todavía no está activa.", "Contracting is not active yet.")}</p>}
-          <button className="text-link" disabled={busy} onClick={() => void command({ action: "refresh_purchase" })}><RefreshCw size={16}/>{t("Comprobar pago y capacidad", "Check payment and capacity")}</button>
-          {portfolio.canPurchase !== true && <p>{t("La autoridad de compra no está confirmada para este contexto.", "Purchase authority is not confirmed for this context.")}</p>}
-        </aside></div>
-        <SubscriberMcpConnections/>
-        <section className="subscriber-operation" aria-live="polite">{message && <p>{message}</p>}{paymentUrl && <a className="button primary" href={paymentUrl}>{t("Continuar al pago", "Continue to payment")}<ArrowRight size={16}/></a>}</section>
-        {reading && <p role="status">{t("Leyendo las evidencias…", "Reading the evidence…")}</p>}
-        {firstObservation && !projection && selected && <section className="subscriber-reading"><FirstObservationView observation={firstObservation}/></section>}
-        {projection && <section className="subscriber-reading" aria-labelledby="reading-title"><span className="eyebrow">{t("Tu lectura", "Your reading")}</span><h2 id="reading-title">{projection.organization.name}</h2>{projection.digitalRepresentation && <SubscriberRepresentation measurement={projection.digitalRepresentation}/>}{canReadProjection && revision ? <SubscriberReading key={revision} projection={projection} revision={revision}/> : <p>{t("Todavía no hay evidencia suficiente para una conclusión. Una ausencia en esta lectura no demuestra ausencia en el mundo.", "Evidence is not yet sufficient for a conclusion. Absence in this reading does not prove absence in the world.")}</p>}{firstObservation && <FirstObservationView observation={firstObservation}/>}</section>}
-      </>}
-    </div>
-  </PublicShell>;
+  const clearSelection = useCallback(() => {
+    outputRequest.current?.abort(); ++outputEpoch.current;
+    setSelected(null); setProjection(null); setFirstObservation(null); setRevision(null); setReading(false);
+  }, []);
+  return <Observatory access={access} portfolio={portfolio} busy={busy} message={message} paymentUrl={paymentUrl}
+    selected={selected} reading={reading} projection={projection} firstObservation={firstObservation} revision={revision}
+    readOutput={readOutput} clearSelection={clearSelection} command={command} refresh={() => void readPortfolio()} logout={() => void logout()}
+    locator={locator} setLocator={setLocator} total={total} setTotal={setTotal}
+    replacing={replacing} setReplacing={setReplacing} replacementLocator={replacementLocator} setReplacementLocator={setReplacementLocator}/>;
 }
