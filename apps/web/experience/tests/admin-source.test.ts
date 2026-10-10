@@ -169,3 +169,19 @@ test("inside the shell the reading and the sidebar keep one rhythm: no stray ind
   assert.match(canvas, /\.obs-customer-zero \.obs-cz-staff \{ padding: 0; margin-block-end: 14px; \}/);
   assert.match(canvas, /\.obs-cz-detail \{ margin: 8px clamp\(20px, 3vw, 44px\) 40px;/);
 });
+
+test("the Admin menu is one system: shell entries and the portfolio navigation share type, radius and states", () => {
+  const css = read("components/admin-menu.css");
+  assert.match(css, /--menu-radius: 9px;/);
+  assert.match(css, /\.admin-shell \.admin-nav-item \{[^}]*font-size: 14px; font-weight: 600;/);
+  assert.match(css, /\.admin-shell \.obs-in-shell \.obs-org \{ border-radius: var\(--menu-radius\); \}/);
+  // The radius is the global scale's control radius, so the menu cannot drift from it.
+  assert.equal(read("components/observatory.css").match(/--obs-r-control:\s*([^;]+);/)?.[1].trim(), "9px");
+});
+
+test("the Admin offers only functional panels: no sample records, no demonstration label, no retired domains", () => {
+  const admin = read("components/admin.tsx");
+  assert.doesNotMatch(admin, /adminRecords|DemoLabel|ilustrativ|illustrative|\/api\/admin\/action/i);
+  const model = read("lib/admin-model.ts");
+  assert.doesNotMatch(model, /ilustrativ|illustrative|demo|example|ejemplo/i);
+});

@@ -257,7 +257,7 @@ test("Admin hosts the real product with retained administrative navigation and o
   const admin=readFileSync("components/admin.tsx","utf8");
   assert.doesNotMatch(admin,/window\.location\.(assign|replace)/);
   assert.ok(admin.includes('<CustomerZero embedded navigationHost={productNavigationHost}'));
-  assert.ok(admin.includes('hidden={domainId !== "customer-zero"}'));
+  assert.ok(admin.includes("hidden={!inProduct}"));
 });
 
 test("host navigation removes the duplicate product frame while preserving the actual reading",()=>{
@@ -327,8 +327,10 @@ test("organization availability separates internal no-payment use from unknown s
     assert.match(html,/verify identity/);
     assert.doesNotMatch(html,/\/checkout|Norte|Atlas/);
   }
-  const admin = renderToStaticMarkup(createElement(Admin,{initialDomain:"command"}));
-  assert.match(admin,/href="\/admin#command"/);
+  const admin = renderToStaticMarkup(createElement(Admin,{initialDomain:"customers"}));
+  assert.match(admin,/Accounts &amp; capacity|Cuentas y capacidad/);
+  // A functional panel carries no sample records and no demonstration label.
+  assert.doesNotMatch(admin,/ilustrativ|illustrative|demo-label/i);
   assert.doesNotMatch(admin,/href="\/panorama"/);
 });
 import { attentionCommandSchema, organizationInventorySchema } from "../lib/organization-attention";

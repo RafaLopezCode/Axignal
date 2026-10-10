@@ -1,0 +1,57 @@
+/*
+ * The Admin menu, one system. The shell's entries and the Observatory's portfolio navigation (drawn inside the
+ * same sidebar) share type, rhythm, radius and states, so the sidebar reads as one menu and not as two stacked.
+ */
+.admin-shell .product-sidebar {
+  --menu-text: #2c3446;
+  --menu-muted: #566173;
+  --menu-line: #e0e5ee;
+  --menu-hover: #eef2fa;
+  --menu-active-bg: #e8eefa;
+  --menu-active: #354f98;
+  --menu-radius: 9px;
+  --menu-gap: 4px;
+  inline-size: 252px;
+  padding: 0 16px;
+}
+.admin-shell .sidebar-brand { padding: 24px 8px 18px; }
+
+/* Who is acting. */
+.admin-shell .admin-plane { display: flex; align-items: center; gap: 10px; padding: 12px; border-radius: var(--menu-radius); background: var(--menu-active-bg); color: var(--menu-active); }
+.admin-shell .admin-plane strong { display: block; font-size: 14px; font-weight: 700; color: var(--menu-text); }
+.admin-shell .admin-plane span { display: block; margin-top: 2px; font-size: 12px; color: var(--menu-muted); }
+
+/* Sections. */
+.admin-shell .product-sidebar nav { display: grid; gap: 20px; padding-block: 18px 12px; }
+.admin-shell .admin-nav-group { display: grid; gap: var(--menu-gap); align-content: start; }
+.admin-shell .nav-group-label { padding: 0 12px 6px; font-size: 11px; letter-spacing: .08em; color: var(--menu-muted); }
+
+/* Entries: the same height, type and states, wherever they come from. */
+.admin-shell .admin-nav-item { display: flex; align-items: center; justify-content: space-between; gap: 10px; inline-size: 100%; min-block-size: 40px; padding: 8px 12px; border: 0; border-radius: var(--menu-radius); background: transparent; color: var(--menu-text); font-size: 14px; font-weight: 600; line-height: 1.3; text-align: start; cursor: pointer; }
+.admin-shell .admin-nav-item > svg { margin: 0; opacity: .45; flex: none; }
+.admin-shell .admin-nav-item:hover { background: var(--menu-hover); color: var(--menu-text); }
+.admin-shell .admin-nav-item.active { background: var(--menu-active-bg); color: var(--menu-active); }
+.admin-shell .admin-nav-item.active > svg { opacity: 1; }
+.admin-shell .admin-nav-item:focus-visible { outline: 2px solid var(--menu-active); outline-offset: 2px; }
+
+/* The Observatory's navigation hangs from Customer Zero, as its children. */
+.admin-shell .admin-product-navigation { margin: 2px 0 0 18px; padding-inline-start: 8px; border-inline-start: 1px solid var(--menu-line); }
+.admin-shell .admin-product-navigation[hidden] { display: none; }
+.admin-shell .obs-in-shell { --obs-rail-text: var(--menu-text); --obs-rail-muted: var(--menu-muted); --obs-rail-line: var(--menu-line); --obs-rail-2: var(--menu-hover); margin-block: 4px 8px; }
+.admin-shell .obs-in-shell .obs-rail { gap: var(--menu-gap); }
+.admin-shell .obs-in-shell .obs-scope, .admin-shell .obs-in-shell .obs-rail-action { border-radius: var(--menu-radius); }
+.admin-shell .obs-in-shell .obs-org { border-radius: var(--menu-radius); }
+.admin-shell .obs-in-shell .obs-rail-head { padding: 12px 8px 2px; }
+.admin-shell .obs-in-shell .obs-rail-head h2 { font-family: "IBM Plex Mono", monospace; font-size: 11px; font-weight: 400; letter-spacing: .08em; text-transform: uppercase; }
+.admin-shell .obs-in-shell .obs-scope[aria-current], .admin-shell .obs-in-shell .obs-org[aria-current] { background: var(--menu-active-bg); box-shadow: none; color: var(--menu-active); }
+.admin-shell .obs-in-shell .obs-scope:hover, .admin-shell .obs-in-shell .obs-org:hover:not(:disabled) { background: var(--menu-hover); }
+
+/* Footer. */
+.admin-shell .sidebar-bottom { padding-block: 12px 16px; }
+.admin-shell .sidebar-system { font-size: 12px; color: var(--menu-muted); }
+
+/* The domain panels share the reading's gutters. */
+.admin-panel { padding: 28px clamp(20px, 3vw, 44px) 64px; outline: none; }
+.admin-panel-head { margin-block-end: 24px; }
+.admin-panel-head h1 { margin: 0 0 6px; }
+.admin-panel-head p { margin: 0; color: #566173; }

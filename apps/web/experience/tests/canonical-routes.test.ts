@@ -22,8 +22,8 @@ test("Admin home opens Customer Zero without exposing its operator API", async (
   assert.ok(redirects?.some(rule =>
     rule.source === "/admin/customer-zero" && rule.destination === "/admin" && rule.permanent === true));
   const admin = source("components/admin.tsx");
-  assert.match(admin, /initialDomain = "customer-zero"/);
-  assert.match(admin, /href="\/admin#command"/);
+  assert.match(admin, /initialDomain = CUSTOMER_ZERO/);
+  assert.match(admin, /const CUSTOMER_ZERO = "customer-zero"/);
   assert.match(admin, /window\.history\.pushState\(null, "", "\/admin#" \+ id\)/);
   const edge = source("../../../deploy/production/subscriber-edge-nginx.conf");
   assert.doesNotMatch(edge, /location\s+(?:=|\^~)\s*\/admin\b/);
