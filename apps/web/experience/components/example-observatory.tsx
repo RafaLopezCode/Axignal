@@ -7,13 +7,13 @@
  */
 import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
 import { ArrowLeft, ArrowRight, Menu, X } from "lucide-react";
 import { useLocale } from "@/lib/locale";
 import {
   EXAMPLE_MOMENTS, exampleInsights, exampleOrganization, type ExampleMoment,
 } from "@/lib/landing-observatory";
 import { laneCopy } from "@/lib/observatory";
+import { signals } from "@/lib/projection";
 import { InsightBody, SummaryView } from "./observatory";
 import { LocaleToggle, useFocusTrap } from "./ui";
 import "./observatory.css";
@@ -24,10 +24,8 @@ const latest: ExampleMoment = "2026-10-03";
 
 export function ExampleObservatory() {
   const { t, copy, locale } = useLocale();
-  const params = useSearchParams();
-  const [moment, setMoment] = useState<ExampleMoment>(
-    EXAMPLE_MOMENTS.find(value => value === params.get("asOf")) ?? latest,
-  );
+  // Render useful static HTML before hydration. URL depth is applied afterward.
+  const [moment, setMoment] = useState<ExampleMoment>(latest);
   const [view, setView] = useState<DemoView>("summary");
   const [openId, setOpenId] = useState<string | null>(null);
   const [mobileRail, setMobileRail] = useState(false);
@@ -39,10 +37,15 @@ export function ExampleObservatory() {
   const selected = insights.find(insight => insight.id === openId) ?? null;
 
   useEffect(() => {
-    const initial = params.get("signal");
-    if (initial && exampleInsights(moment, copy).some(i => i.id === initial))
-      setOpenId(initial);
-  }, [params, moment, copy]);
+    const params = new URL(window.location.href).searchParams;
+    const asOf = EXAMPLE_MOMENTS.find(value => value === params.get("asOf")) ?? latest;
+    setMoment(asOf);
+    const family = params.get("family");
+    const deepLinked = params.get("signal") ?? (family
+      ? signals.find(signal => signal.organizationId === "norte" && signal.family === family && signal.availableFrom <= asOf)?.id
+      : null);
+    if (deepLinked && exampleInsights(asOf, copy).some(insight => insight.id === deepLinked)) setOpenId(deepLinked);
+  }, [copy]);
 
   useEffect(() => {
     const escape = (event: KeyboardEvent) => {

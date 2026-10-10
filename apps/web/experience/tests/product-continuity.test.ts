@@ -13,6 +13,7 @@ test("public /panorama renders the actual Observatory reading surface, not retir
   const live = src("components/observatory.tsx");
   assert.match(page, /<ExampleObservatory\s*\/>/);
   assert.doesNotMatch(page, /<Panorama\b/);
+  assert.doesNotMatch(demo, /useSearchParams/); // Static HTML must contain the example before hydration.
   assert.match(subscriber, /import \{ Observatory \} from "\.\/observatory"/);
   assert.match(live, /data-product-surface="living-observatory"/);
   assert.match(demo, /import \{ InsightBody, SummaryView \} from "\.\/observatory"/);
