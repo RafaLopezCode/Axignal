@@ -173,7 +173,9 @@ test("inside the shell the reading and the sidebar keep one rhythm: no stray ind
 test("the Admin menu is one system: shell entries and the portfolio navigation share type, radius and states", () => {
   const css = read("components/admin-menu.css");
   assert.match(css, /--menu-radius: 9px;/);
-  assert.match(css, /\.admin-shell \.admin-nav-item \{[^}]*font-size: 14px; font-weight: 600;/);
+  assert.match(css, /\.admin-shell \.admin-nav-item \{[^}]*font-size: 14px; font-weight: 500;/);
+  // The hierarchy runs titles over functions: a group title is heavier and darker than the entries under it.
+  assert.match(css, /\.admin-shell \.nav-group-label \{[^}]*font-family: var\(--font-ui\); font-size: 12px; font-weight: 800;[^}]*color: var\(--menu-title\);/);
   assert.match(css, /\.admin-shell \.obs-in-shell \.obs-org \{ border-radius: var\(--menu-radius\); \}/);
   // The radius is the global scale's control radius, so the menu cannot drift from it.
   assert.equal(read("components/observatory.css").match(/--obs-r-control:\s*([^;]+);/)?.[1].trim(), "9px");

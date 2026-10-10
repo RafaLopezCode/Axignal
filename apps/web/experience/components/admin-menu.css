@@ -3,7 +3,8 @@
  * same sidebar) share type, rhythm, radius and states, so the sidebar reads as one menu and not as two stacked.
  */
 .admin-shell .product-sidebar {
-  --menu-text: #2c3446;
+  --menu-title: #141c3a;
+  --menu-text: #3b4456;
   --menu-muted: #566173;
   --menu-line: #e0e5ee;
   --menu-hover: #eef2fa;
@@ -24,10 +25,10 @@
 /* Sections. */
 .admin-shell .product-sidebar nav { display: grid; gap: 20px; padding-block: 18px 12px; }
 .admin-shell .admin-nav-group { display: grid; gap: var(--menu-gap); align-content: start; }
-.admin-shell .nav-group-label { padding: 0 12px 6px; font-size: 11px; letter-spacing: .08em; color: var(--menu-muted); }
+.admin-shell .nav-group-label { padding: 0 12px 8px; font-family: var(--font-ui); font-size: 12px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--menu-title); }
 
 /* Entries: the same height, type and states, wherever they come from. */
-.admin-shell .admin-nav-item { display: flex; align-items: center; justify-content: space-between; gap: 10px; inline-size: 100%; min-block-size: 40px; padding: 8px 12px; border: 0; border-radius: var(--menu-radius); background: transparent; color: var(--menu-text); font-size: 14px; font-weight: 600; line-height: 1.3; text-align: start; cursor: pointer; }
+.admin-shell .admin-nav-item { display: flex; align-items: center; justify-content: space-between; gap: 10px; inline-size: 100%; min-block-size: 40px; padding: 8px 12px; border: 0; border-radius: var(--menu-radius); background: transparent; color: var(--menu-text); font-size: 14px; font-weight: 500; line-height: 1.3; text-align: start; cursor: pointer; }
 .admin-shell .admin-nav-item > svg { margin: 0; opacity: .45; flex: none; }
 .admin-shell .admin-nav-item:hover { background: var(--menu-hover); color: var(--menu-text); }
 .admin-shell .admin-nav-item.active { background: var(--menu-active-bg); color: var(--menu-active); }
@@ -42,7 +43,9 @@
 .admin-shell .obs-in-shell .obs-scope, .admin-shell .obs-in-shell .obs-rail-action { border-radius: var(--menu-radius); }
 .admin-shell .obs-in-shell .obs-org { border-radius: var(--menu-radius); }
 .admin-shell .obs-in-shell .obs-rail-head { padding: 12px 8px 2px; }
-.admin-shell .obs-in-shell .obs-rail-head h2 { font-family: "IBM Plex Mono", monospace; font-size: 11px; font-weight: 400; letter-spacing: .08em; text-transform: uppercase; }
+.admin-shell .obs-in-shell .obs-rail-head h2 { font-family: var(--font-ui); font-size: 12px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--menu-title); }
+.admin-shell .obs-in-shell .obs-scope, .admin-shell .obs-in-shell .obs-org-name, .admin-shell .obs-in-shell .obs-rail-action { font-weight: 500; }
+.admin-shell .admin-nav-item.active, .admin-shell .obs-in-shell .obs-scope[aria-current], .admin-shell .obs-in-shell .obs-org[aria-current] .obs-org-name { font-weight: 700; }
 .admin-shell .obs-in-shell .obs-scope[aria-current], .admin-shell .obs-in-shell .obs-org[aria-current] { background: var(--menu-active-bg); box-shadow: none; color: var(--menu-active); }
 .admin-shell .obs-in-shell .obs-scope:hover, .admin-shell .obs-in-shell .obs-org:hover:not(:disabled) { background: var(--menu-hover); }
 
