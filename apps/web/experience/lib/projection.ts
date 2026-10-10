@@ -96,10 +96,11 @@ export const families = [
   },
 ] as const;
 export type FamilyId = (typeof families)[number]["id"];
+export const demoOrganizationName = c("Organización Demo", "Demo Organization");
 export const organizations = [
   {
     id: "norte",
-    name: "Norte Renovable",
+    name: "Organización Demo",
     sector: c(
       "Eficiencia energética de edificios · ejemplo ficticio",
       "Building energy efficiency · fictional example",
@@ -171,8 +172,8 @@ export const evidence: Evidence[] = [
   {
     id: "capabilities",
     title: c(
-      "Ficha técnica de Norte Renovable",
-      "Norte Renovable's technical sheet",
+      "Ficha técnica de Organización Demo",
+      "Demo Organization's technical sheet",
     ),
     source: c(
       "Ficha técnica pública · fuente ilustrativa",
@@ -206,8 +207,8 @@ export const evidence: Evidence[] = [
     publishedAt: "2026-08-28",
     observedAt: "2026-09-01",
     body: c(
-      "El anuncio (ficticio) financia obras para mejorar el aislamiento y la eficiencia energética de edificios. Es una posible demanda para Norte Renovable, no un encargo ni un contrato.",
-      "The (fictional) announcement funds works that improve the insulation and energy efficiency of buildings. It is possible demand for Norte Renovable, not an order or a contract.",
+      "El anuncio (ficticio) financia obras para mejorar el aislamiento y la eficiencia energética de edificios. Es una posible demanda para Organización Demo, no un encargo ni un contrato.",
+      "The (fictional) announcement funds works that improve the insulation and energy efficiency of buildings. It is possible demand for Demo Organization, not an order or a contract.",
     ),
     basis: c(
       "Ámbito publicado en el anuncio y fecha del programa.",
@@ -272,6 +273,131 @@ export const evidence: Evidence[] = [
       "Small sample; uncertainty not quantified. Does not represent stability or performance.",
     ),
   },
+  {
+    id: "customer-case",
+    title: c(
+      "Caso de cliente publicado en la web de Organización Demo",
+      "Customer case published on Demo Organization's website",
+    ),
+    source: c(
+      "Página de casos · fuente ilustrativa",
+      "Case study page · illustrative source",
+    ),
+    publishedAt: "2026-06-30",
+    observedAt: "2026-07-01",
+    body: c(
+      "La página de casos menciona a Cooperativa Ribera como cliente de una rehabilitación. Es una declaración de la propia empresa.",
+      "The case page names Cooperativa Ribera as a client of a renovation. It is the company's own statement.",
+    ),
+    basis: c(
+      "Declaración pública del propio proveedor; no hay contrato ni factura visible.",
+      "Public statement by the provider itself; no contract or invoice is visible.",
+    ),
+    limitation: c(
+      "No confirma el contrato, su importe ni si la obra se completó.",
+      "It does not confirm the contract, its value or whether the work was completed.",
+    ),
+  },
+  {
+    id: "tender",
+    title: c(
+      "Licitación municipal de rehabilitación de colegios",
+      "Municipal tender for school building renovation",
+    ),
+    source: c(
+      "Plataforma de contratación · fuente ilustrativa",
+      "Procurement platform · illustrative source",
+    ),
+    publishedAt: "2026-09-14",
+    observedAt: "2026-09-15",
+    body: c(
+      "Un ayuntamiento publica una licitación para mejorar el aislamiento y la eficiencia energética de varios colegios.",
+      "A town council publishes a tender to improve insulation and energy efficiency in several schools.",
+    ),
+    basis: c(
+      "Anuncio oficial de licitación; el alcance está en el pliego publicado.",
+      "Official tender notice; the scope is in the published specification.",
+    ),
+    limitation: c(
+      "Una licitación no es una adjudicación ni un cliente: falta conocer requisitos, plazos y solvencia exigida.",
+      "A tender is not an award or a customer: requirements, deadlines and required solvency are still unknown.",
+    ),
+  },
+  {
+    id: "energy-rule",
+    title: c(
+      "Nueva exigencia de eficiencia energética para edificios existentes",
+      "New energy-efficiency requirement for existing buildings",
+    ),
+    source: c(
+      "Boletín oficial · fuente ilustrativa",
+      "Official bulletin · illustrative source",
+    ),
+    publishedAt: "2026-06-20",
+    observedAt: "2026-07-01",
+    body: c(
+      "Una norma publicada fija objetivos de mejora para edificios antiguos en un plazo de años.",
+      "A published rule sets improvement targets for older buildings within a number of years.",
+    ),
+    basis: c(
+      "Texto normativo publicado; el efecto práctico depende de cada edificio.",
+      "Published regulatory text; the practical effect depends on each building.",
+    ),
+    limitation: c(
+      "La norma no crea demanda concreta por sí sola ni indica quién la comprará.",
+      "The rule does not create concrete demand by itself, nor say who will buy.",
+    ),
+  },
+  {
+    id: "public-works",
+    title: c(
+      "Obras publicadas en la web de la empresa este trimestre",
+      "Works published on the company's website this quarter",
+    ),
+    source: c(
+      "Noticias de la empresa · fuente ilustrativa",
+      "Company news · illustrative source",
+    ),
+    publishedAt: "2026-09-28",
+    observedAt: "2026-10-03",
+    body: c(
+      "La web publica tres actuaciones recientes con fotografías y descripción de la obra.",
+      "The website publishes three recent works with photographs and a description of each.",
+    ),
+    basis: c(
+      "Publicaciones propias de la empresa, con fechas visibles.",
+      "The company's own posts, with visible dates.",
+    ),
+    limitation: c(
+      "Son anuncios de la propia empresa: no muestran el volumen de negocio ni los resultados.",
+      "They are the company's own announcements: they do not show business volume or results.",
+    ),
+  },
+  {
+    id: "audit-offer",
+    title: c(
+      "Oferta de auditoría energética previa a la obra",
+      "Pre-works energy audit offer",
+    ),
+    source: c(
+      "Página de servicios · fuente ilustrativa",
+      "Services page · illustrative source",
+    ),
+    publishedAt: "2026-06-24",
+    observedAt: "2026-07-01",
+    body: c(
+      "La página de servicios describe una auditoría energética antes de cada reforma.",
+      "The services page describes an energy audit before each renovation.",
+    ),
+    basis: c(
+      "Descripción de servicio publicada por la empresa.",
+      "Service description published by the company.",
+    ),
+    limitation: c(
+      "Describe la oferta; no demuestra su precio, su calidad ni que se ofrezca hoy.",
+      "It describes the offer; it does not establish its price, quality or current availability.",
+    ),
+  },
 ];
 export const signals: Signal[] = [
   {
@@ -292,8 +418,8 @@ export const signals: Signal[] = [
     availableFrom: "2026-09-01",
     evidenceIds: ["capabilities", "program"],
     why: c(
-      "El programa paga el tipo de obra que Norte Renovable dice hacer, en el país donde trabaja. Por eso merece una mirada más atenta.",
-      "The programme pays for the kind of work Norte Renovable says it does, in the country where it works. That is why it deserves a closer look.",
+      "El programa paga el tipo de obra que Organización Demo dice hacer, en el país donde trabaja. Por eso merece una mirada más atenta.",
+      "The programme pays for the kind of work Demo Organization says it does, in the country where it works. That is why it deserves a closer look.",
     ),
     derivation: c(
       "Lo que la empresa dice hacer + lo que el programa financia + dónde y cuándo → una posibilidad. No se ha visto adjudicación, cliente ni contrato.",
@@ -464,6 +590,234 @@ export const signals: Signal[] = [
       "Examine published results when evidence exists.",
     ),
     dimensions: [],
+  },
+  {
+    id: "audit-service",
+    organizationId: "norte",
+    family: "value",
+    title: c(
+      "Ofrece una auditoría energética antes de cada obra.",
+      "It offers an energy audit before each works project.",
+    ),
+    summary: c(
+      "Su web describe una auditoría previa a la reforma. Es una oferta declarada, no un resultado medido.",
+      "Its website describes an audit before each renovation. It is a declared offer, not a measured result.",
+    ),
+    epistemic: "OBSERVED",
+    eventAt: null,
+    detectedAt: "2026-07-01",
+    availableFrom: "2026-07-01",
+    evidenceIds: ["audit-offer"],
+    why: c(
+      "Explica qué ofrece antes de vender una obra, lo que ayuda a entender su forma de trabajar.",
+      "It shows what the company offers before a works contract, which helps understand how it works.",
+    ),
+    derivation: c(
+      "Descripción publicada del servicio → oferta declarada. No se ha visto precio ni volumen.",
+      "Published service description → declared offer. No price or volume has been seen.",
+    ),
+    limitation: c(
+      "No se sabe si la auditoría se cobra, cuánto tarda ni qué resultados produce.",
+      "It is unknown whether the audit is charged, how long it takes or what results it produces.",
+    ),
+    next: c(
+      "Comparar con otras empresas que ofrezcan auditorías similares.",
+      "Compare with other companies that offer similar audits.",
+    ),
+    dimensions: [
+      { label: c("Tipo", "Type"), value: c("Servicio declarado", "Declared service") },
+      { label: c("Precio", "Price"), value: c("Desconocido", "Unknown") },
+    ],
+  },
+  {
+    id: "client-reference",
+    organizationId: "norte",
+    family: "relationships",
+    title: c(
+      "Su web menciona a Cooperativa Ribera como cliente.",
+      "Its website names Cooperativa Ribera as a client.",
+    ),
+    summary: c(
+      "Hay una declaración pública de la empresa sobre un caso con esa cooperativa. Es lo que dice la empresa, no un contrato verificado.",
+      "There is a public statement by the company about a case with that cooperative. It is what the company says, not a verified contract.",
+    ),
+    epistemic: "OBSERVED",
+    eventAt: "2026-06-30",
+    detectedAt: "2026-07-01",
+    availableFrom: "2026-07-01",
+    evidenceIds: ["customer-case"],
+    why: c(
+      "Una relación declarada con un cliente conocido es una pista útil para entender su mercado.",
+      "A declared relationship with a known client is a useful lead for understanding its market.",
+    ),
+    derivation: c(
+      "Caso publicado por la empresa → relación declarada. No se ha verificado con la cooperativa.",
+      "Case published by the company → declared relationship. It has not been verified with the cooperative.",
+    ),
+    limitation: c(
+      "No se sabe si el contrato sigue vigente, su importe ni si la obra se completó.",
+      "It is unknown whether the contract is still active, its value or whether the work was completed.",
+    ),
+    next: c(
+      "Confirmar la relación solo si hay una fuente independiente.",
+      "Confirm the relationship only with an independent source.",
+    ),
+    dimensions: [
+      { label: c("Origen", "Origin"), value: c("Declaración de la empresa", "Company statement") },
+      { label: c("Verificado", "Verified"), value: c("No", "No") },
+    ],
+  },
+  {
+    id: "school-tender",
+    organizationId: "norte",
+    family: "demand",
+    title: c(
+      "Hay una licitación de colegios que encaja con lo que hace.",
+      "A school tender fits what it does.",
+    ),
+    summary: c(
+      "Un ayuntamiento busca mejorar el aislamiento de varios colegios. La demanda es plausible; no es un cliente.",
+      "A town council wants to improve insulation in several schools. The demand is plausible; it is not a customer.",
+    ),
+    epistemic: "POTENTIAL",
+    eventAt: "2026-09-14",
+    detectedAt: "2026-09-15",
+    availableFrom: "2026-09-15",
+    evidenceIds: ["tender"],
+    why: c(
+      "Es demanda pública y visible para un trabajo que la empresa describe. Merece una lectura de requisitos.",
+      "It is visible public demand for work the company describes. It deserves a reading of the requirements.",
+    ),
+    derivation: c(
+      "Licitación publicada + lo que la empresa dice hacer → una posibilidad. No hay adjudicación.",
+      "Published tender + what the company says it does → a possibility. There is no award.",
+    ),
+    limitation: c(
+      "Faltan requisitos, plazos, solvencia exigida y si la empresa concurre.",
+      "Requirements, deadlines, required solvency and whether the company bids are still unknown.",
+    ),
+    next: c(
+      "Leer el pliego antes de decidir si presentarse.",
+      "Read the specification before deciding whether to bid.",
+    ),
+    dimensions: [
+      { label: c("Tipo", "Type"), value: c("Licitación pública", "Public tender") },
+      { label: c("Encaje", "Fit"), value: c("Plausible, por verificar", "Plausible, to verify") },
+    ],
+  },
+  {
+    id: "rule-context",
+    organizationId: "norte",
+    family: "context",
+    title: c(
+      "Una nueva norma sube las exigencias a edificios antiguos.",
+      "A new rule raises the requirements for older buildings.",
+    ),
+    summary: c(
+      "La norma publicada fija objetivos de mejora. Explica el entorno, no crea por sí sola una oportunidad.",
+      "The published rule sets improvement targets. It explains the environment; on its own it creates no opportunity.",
+    ),
+    epistemic: "OBSERVED",
+    eventAt: "2026-06-20",
+    detectedAt: "2026-07-01",
+    availableFrom: "2026-07-01",
+    evidenceIds: ["energy-rule"],
+    why: c(
+      "Cambia lo que los propietarios tendrán que hacer, y eso da contexto a cualquier oferta de reforma.",
+      "It changes what owners will have to do, which gives context to any renovation offer.",
+    ),
+    derivation: c(
+      "Texto normativo publicado → contexto regulatorio. No implica demanda concreta.",
+      "Published regulatory text → regulatory context. It does not imply concrete demand.",
+    ),
+    limitation: c(
+      "No se sabe cuántos edificios afectará en la práctica ni en qué plazo.",
+      "It is unknown how many buildings it will affect in practice or on what timetable.",
+    ),
+    next: c(
+      "Vigilar los reglamentos de aplicación.",
+      "Watch the implementing regulations.",
+    ),
+    dimensions: [
+      { label: c("Tipo", "Type"), value: c("Norma publicada", "Published rule") },
+      { label: c("Alcance", "Reach"), value: c("Por verificar", "To verify") },
+    ],
+  },
+  {
+    id: "works-activity",
+    organizationId: "norte",
+    family: "activity",
+    title: c(
+      "Ha publicado tres obras recientes en su web.",
+      "It has published three recent works on its website.",
+    ),
+    summary: c(
+      "Son anuncios propios con fecha. Muestran actividad visible, no volumen de negocio.",
+      "They are dated company announcements. They show visible activity, not business volume.",
+    ),
+    epistemic: "OBSERVED",
+    eventAt: "2026-09-28",
+    detectedAt: "2026-10-03",
+    availableFrom: "2026-10-03",
+    evidenceIds: ["public-works"],
+    why: c(
+      "Un ritmo de obras visible sugiere que la empresa está activa en este trimestre.",
+      "A visible pace of works suggests the company is active this quarter.",
+    ),
+    derivation: c(
+      "Publicaciones fechadas de la empresa → actividad declarada. No se ha visto facturación.",
+      "Dated company posts → declared activity. No invoicing has been seen.",
+    ),
+    limitation: c(
+      "No dice cuánto ingresa, cuántas obras acaba ni si las obras son típicas de su oferta.",
+      "It does not say how much it earns, how many works it completes or whether they are typical of its offer.",
+    ),
+    next: c(
+      "Seguir la publicación de obras los próximos meses.",
+      "Follow published works over the coming months.",
+    ),
+    dimensions: [
+      { label: c("Obras visibles", "Visible works"), value: c("3 en el trimestre", "3 this quarter") },
+      { label: c("Facturación", "Revenue"), value: c("Desconocida", "Unknown") },
+    ],
+  },
+  {
+    id: "economics-unknown",
+    organizationId: "norte",
+    family: "economics",
+    title: c(
+      "Su tamaño y facturación no están publicados.",
+      "Its size and revenue are not published.",
+    ),
+    summary: c(
+      "No hay cuentas públicas visibles para esta organización de ejemplo. Lo que no se sabe se declara como desconocido.",
+      "No public accounts are visible for this example organization. What is not known is declared as unknown.",
+    ),
+    epistemic: "UNKNOWN",
+    eventAt: null,
+    detectedAt: "2026-07-01",
+    availableFrom: "2026-07-01",
+    evidenceIds: ["capabilities"],
+    why: c(
+      "Sin datos económicos no se puede saber si la empresa puede asumir una licitación grande.",
+      "Without economic data it is not possible to know whether the company can take on a large tender.",
+    ),
+    derivation: c(
+      "No se ha encontrado un registro público de cuentas para esta organización de ejemplo.",
+      "No public accounts record has been found for this example organization.",
+    ),
+    limitation: c(
+      "Desconocido no significa negativo: solo significa que no se ha observado.",
+      "Unknown does not mean negative: it only means it has not been observed.",
+    ),
+    next: c(
+      "Buscar cuentas depositadas o pedirlas en una conversación real.",
+      "Look for filed accounts or ask for them in a real conversation.",
+    ),
+    dimensions: [
+      { label: c("Facturación", "Revenue"), value: c("Desconocida", "Unknown") },
+      { label: c("Plantilla", "Staff"), value: c("Desconocida", "Unknown") },
+    ],
   },
 ];
 export type ProjectionContext = {

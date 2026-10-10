@@ -14,7 +14,7 @@ export const subscriberCommandSchema = z.discriminatedUnion("action", [
 // Spec 063: First Observation. Operational, not canonical; every finding keeps its basis.
 export const observationStates = ["QUEUED", "OBSERVING_PUBLIC_PRESENCE", "FIRST_PROOF_READY", "NOT_ENOUGH_CAPABILITY_EVIDENCE", "NO_PUBLIC_WEBSITE", "SOURCE_UNAVAILABLE", "BUDGET_EXHAUSTED", "CAPACITY_REQUIRED", "OBSERVATION_DISABLED", "OBSERVATION_FAILED"] as const;
 export const discoverySchema = z.object({
-  kind: z.enum(["PUBLIC_PRESENCE", "ACTIVITY", "DECLARED_LOCATION", "DECLARED_SERVICE_AREA", "LANGUAGES", "WEB_REPRESENTATION", "REPRESENTATION_GAP", "IDENTITY_HINT", "DEMAND", "SIGNIFICANT_UNKNOWN"]),
+  kind: z.enum(["PUBLIC_PRESENCE", "ACTIVITY", "DECLARED_LOCATION", "DECLARED_SERVICE_AREA", "LANGUAGES", "WEB_REPRESENTATION", "REPRESENTATION_GAP", "IDENTITY_HINT", "DEMAND", "SEARCH_VISIBILITY", "GENERATIVE_VISIBILITY", "SIGNIFICANT_UNKNOWN"]),
   code: z.string().min(1).max(160),
   statement: z.string().max(2000),
   epistemicState: z.enum(["OBSERVED", "DECLARED", "POTENTIAL", "UNKNOWN"]),

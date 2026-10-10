@@ -68,7 +68,7 @@ export function RuntimeOrganizations({ name, internal, onReturn, onProjection }:
         <button className="button secondary" disabled={busy || loading || !inventory?.canObserve} aria-describedby="organization-availability">{busy ? t("Verificando identidad y evidencia", "Verifying identity and evidence") : t("Añadir organización", "Add organization")}</button>
       </form>
       <p>{internal
-        ? t("Customer Zero es uso interno del Admin, sin checkout ni pago. Añadir otros focos requiere autorización interna del servicio, con las mismas reglas de evidencia.", "Customer Zero is internal Admin use, without checkout or payment. Adding other focuses requires internal service authorization, with the same evidence rules.")
+        ? t("Admin es de uso interno, sin checkout ni pago. Añadir otros focos requiere autorización interna del servicio, con las mismas reglas de evidencia.", "Admin is for internal use, without checkout or payment. Adding other focuses requires internal service authorization, with the same evidence rules.")
         : t("Este contexto no informa del plan ni de su capacidad disponible. No se puede deducir tu límite a partir de la organización visible.", "This context does not report your plan or its available capacity. Your limit cannot be inferred from the visible organization.")}</p>
     </section>
   </div>;

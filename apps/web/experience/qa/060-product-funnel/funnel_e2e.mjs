@@ -52,7 +52,7 @@ try {
   await new Promise((r) => setTimeout(r, 1200));
   await step("example is clearly an example, not your account", async () => {
     const body = await text();
-    return body.includes("Norte Renovable: Reforma edificios para que gasten menos energía") && body.includes("En tu cuenta, AXIGNAL observa las organizaciones reales");
+    return body.includes("Organización Demo: Reforma edificios para que gasten menos energía") && body.includes("En tu cuenta, AXIGNAL observa las organizaciones reales");
   });
   await step("first view shows its economic world", async () => {
     const body = await text();
@@ -62,7 +62,7 @@ try {
   await click("button", "Entender por qué importa");
   await page.waitFor("!!document.querySelector('article.signal-detail')");
   await step("a change: what happened", async () => (await text()).includes("Un programa público de ayudas encaja con lo que hace."));
-  await step("why it matters", async () => /El programa paga el tipo de obra que Norte Renovable dice hacer/.test(await text()));
+  await step("why it matters", async () => /El programa paga el tipo de obra que Organización Demo dice hacer/.test(await text()));
 
   await click("[role=tab]", "Evidencia");
   await page.waitFor("location.search.includes('depth=prove')");

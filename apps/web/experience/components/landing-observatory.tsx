@@ -8,7 +8,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { ArrowRight, Plus, X } from "lucide-react";
 import { useLocale } from "@/lib/locale";
-import { dateLabel } from "@/lib/projection";
+import { dateLabel, demoOrganizationName } from "@/lib/projection";
 import { laneCopy, type Insight, type Lane } from "@/lib/observatory";
 import { EXAMPLE_MOMENTS, exampleInsights, exampleNewSince, exampleOrganization, type ExampleMoment } from "@/lib/landing-observatory";
 import { InsightBody, InsightCard } from "./observatory";
@@ -63,13 +63,13 @@ export function LandingObservatory({ mode, asOf = "2026-10-03", onAsOf, classNam
   return <figure className={`lx-window lx-mode-${mode} ${className}`} aria-label={t("La interfaz real de AXIGNAL, con la organización ficticia del ejemplo", "The real AXIGNAL interface, with the example's fictional organization")}>
     <div className="lx-chrome">
       <img src="/brand/isotope.svg" alt="" width={18} height={18}/>
-      <span className="lx-crumb">{t("Tu cartera", "Your portfolio")} <span aria-hidden="true">›</span> <strong>{mode === "add" ? t("Añadir organización", "Add organization") : organization.name}</strong></span>
+      <span className="lx-crumb">{t("Tu cartera", "Your portfolio")} <span aria-hidden="true">›</span> <strong>{mode === "add" ? t("Añadir organización", "Add organization") : copy(demoOrganizationName)}</strong></span>
       <span className="lx-fiction">{t("Organización ficticia", "Fictional organization")}</span>
     </div>
     <div className="lx-screen">
       {mode === "add" && <div className="lx-add">
         <p className="lx-add-q">{t("¿Qué organización quieres comprender?", "Which organization do you want to understand?")}</p>
-        <div className="lx-add-row"><span className="lx-input"><span className="lx-typed">{organization.name}</span></span><span className="lx-go"><Plus size={14} aria-hidden="true"/>{t("Empezar a observar", "Start observing")}</span></div>
+        <div className="lx-add-row"><span className="lx-input"><span className="lx-typed">{copy(demoOrganizationName)}</span></span><span className="lx-go"><Plus size={14} aria-hidden="true"/>{t("Empezar a observar", "Start observing")}</span></div>
         <Note side="bottom">{t("un nombre o su web bastan", "a name or its website is enough")}</Note>
       </div>}
       {mode === "observing" && <div className="lx-observing">
@@ -83,7 +83,7 @@ export function LandingObservatory({ mode, asOf = "2026-10-03", onAsOf, classNam
       </div>}
       {mode !== "add" && mode !== "observing" && <>
         <header className="lx-org">
-          <h3>{organization.name}</h3>
+          <h3>{copy(demoOrganizationName)}</h3>
           <p>{t("Observada", "Observed")} {dateLabel(asOf, locale)} · {copy(organization.sector)}</p>
         </header>
         <p className="lx-brief">{copy(organization.does)}</p>

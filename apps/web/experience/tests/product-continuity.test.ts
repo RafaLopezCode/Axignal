@@ -6,21 +6,22 @@ import { exampleInsights, EXAMPLE_MOMENTS } from "../lib/landing-observatory";
 
 const src = (path: string) => readFileSync(resolve(process.cwd(), path), "utf8");
 
-test("public /demo renders the actual Observatory reading surface, not retired Panorama", () => {
+test("public /demo is the subscriber Observatory in its demonstration context, with no account surface", () => {
   const page = src("app/demo/page.tsx");
-  const demo = src("components/example-observatory.tsx");
+  const demo = src("components/demo-observatory.tsx");
   const subscriber = src("components/subscriber-portfolio.tsx");
   const live = src("components/observatory.tsx");
-  assert.match(page, /<ExampleObservatory\s*\/>/);
-  assert.doesNotMatch(page, /<Panorama\b/);
-  assert.doesNotMatch(demo, /useSearchParams/); // Static HTML must contain the example before hydration.
-  assert.match(subscriber, /import \{ Observatory \} from "\.\/observatory"/);
+  const snapshot = src("lib/demo/synthetic-source.ts");
+  assert.match(page, /<DemoObservatory\s*\/>/);
+  assert.doesNotMatch(page, /<Panorama\b|example-observatory/);
+  assert.match(demo, /source=\{demoSource\}/);
+  assert.match(subscriber, /source = accountSource/);
+  assert.match(subscriber, /import \{ Observatory(, type ObservatoryShell)? \} from "\.\/observatory"/);
   assert.match(live, /data-product-surface="living-observatory"/);
-  assert.match(demo, /import \{ InsightBody, SummaryView \} from "\.\/observatory"/);
-  assert.match(demo, /data-product-surface="living-observatory"/);
-  assert.match(demo, /data-example="fictional"/);
-  assert.doesNotMatch(demo, /fetch\(|\/api\/admin|\/api\/subscriber|localStorage|sessionStorage/);
-  assert.match(demo, /href="\/signup"/);
+  assert.match(live, /canAct: boolean/);
+  // The demo reads only the snapshot: no request, storage or private surface in its source.
+  assert.doesNotMatch(snapshot, /fetch\(|\/api\/|localStorage|sessionStorage|\/admin/);
+  assert.match(subscriber, /source\.readOutput\(focusId, signal, localeRef\.current\)/);
 });
 
 test("fictional example is temporal, epistemically labeled and has no invented external evidence URLs", () => {

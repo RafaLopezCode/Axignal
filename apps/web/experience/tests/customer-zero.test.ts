@@ -160,8 +160,8 @@ test("Customer Zero only sends canonical attention, and consumes the real read e
   assert.ok(subscriber.includes("<RuntimeExperience"));
   assert.ok(client.includes("<CustomerZeroObservatory"));
   const currentRenderer = readFileSync("components/customer-zero-observatory.tsx", "utf8");
-  assert.ok(currentRenderer.includes("<SummaryView"));
-  assert.ok(currentRenderer.includes("<InsightBody"));
+  // Customer Zero mounts the one Observatory container over the Admin source; it carries no reading interface of its own.
+  assert.ok(currentRenderer.includes("<SubscriberPortfolioExperience source={adminSource}"));
   assert.ok(currentRenderer.includes("<RuntimeProductProjection")); // Complete legacy details remain accessible.
   assert.ok(currentRenderer.includes("staffControls"));
   assert.ok(renderer.includes('t("señal observada", "observed signal")'));
@@ -170,14 +170,16 @@ test("Customer Zero only sends canonical attention, and consumes the real read e
   assert.ok(renderer.includes('t("vigente ahora", "current now")'));
   assert.ok(
     client.includes(
-      't("Cliente cero · Controles internos", "Customer Zero · Staff controls")',
+      't("Admin · Controles internos", "Admin · Staff controls")',
     ),
   );
+  // The portfolio opens the sidebar; the Admin is named once, in the top bar.
   assert.ok(
-    readFileSync("components/admin.tsx", "utf8").includes(
-      't("AXIGNAL / Cliente cero", "AXIGNAL / Customer Zero")',
+    readFileSync("components/customer-zero-observatory.tsx", "utf8").includes(
+      '<span className="breadcrumb-root">Admin</span>',
     ),
   );
+  assert.doesNotMatch(readFileSync("components/admin.tsx", "utf8"), /USAR AXIGNAL|USE AXIGNAL/);
   assert.doesNotMatch(
     readFileSync("app/globals.css", "utf8"),
     /content:\s*["']AXIGNAL \/ Customer Zero["']/,
@@ -256,8 +258,8 @@ test("Admin hosts the real product with retained administrative navigation and o
   assert.ok(!html.includes('class="panorama-main admin-main"'));
   const admin=readFileSync("components/admin.tsx","utf8");
   assert.doesNotMatch(admin,/window\.location\.(assign|replace)/);
-  assert.ok(admin.includes('<CustomerZero embedded navigationHost={productNavigationHost}'));
-  assert.ok(admin.includes('hidden={domainId !== "customer-zero"}'));
+  assert.ok(admin.includes('<CustomerZero embedded active={inProduct} navigationHost={productNavigationHost}'));
+  assert.ok(admin.includes("hidden={!inProduct}"));
 });
 
 test("host navigation removes the duplicate product frame while preserving the actual reading",()=>{
@@ -327,8 +329,10 @@ test("organization availability separates internal no-payment use from unknown s
     assert.match(html,/verify identity/);
     assert.doesNotMatch(html,/\/checkout|Norte|Atlas/);
   }
-  const admin = renderToStaticMarkup(createElement(Admin,{initialDomain:"command"}));
-  assert.match(admin,/href="\/admin#command"/);
+  const admin = renderToStaticMarkup(createElement(Admin,{initialDomain:"customers"}));
+  assert.match(admin,/Accounts &amp; subscriptions|Cuentas y suscripciones/);
+  // A functional panel carries no sample records and no demonstration label.
+  assert.doesNotMatch(admin,/ilustrativ|illustrative|demo-label/i);
   assert.doesNotMatch(admin,/href="\/panorama"/);
 });
 import { attentionCommandSchema, organizationInventorySchema } from "../lib/organization-attention";

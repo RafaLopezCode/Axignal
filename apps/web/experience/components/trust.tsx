@@ -121,8 +121,8 @@ export const policyDocuments = [
       {
         title: c("Sesión privada de Admin", "Private Admin session"),
         text: c(
-          "Customer Zero transporta una sesión Admin existente en una cookie HttpOnly y SameSite Strict, hasta ocho horas. El runtime comprueba de nuevo su vigencia y alcance en cada solicitud; la cookie no concede autoridad económica.",
-          "Customer Zero transports an existing Admin session in an HttpOnly, SameSite Strict cookie for up to eight hours. The runtime checks its validity and scope on every request; the cookie grants no economic authority.",
+          "El panel Admin transporta una sesión Admin existente en una cookie HttpOnly y SameSite Strict, hasta ocho horas. El runtime comprueba de nuevo su vigencia y alcance en cada solicitud; la cookie no concede autoridad económica.",
+          "The Admin panel transports an existing Admin session in an HttpOnly, SameSite Strict cookie for up to eight hours. The runtime checks its validity and scope on every request; the cookie grants no economic authority.",
         ),
       },
     ],

@@ -41,6 +41,8 @@ function insightOf(signal: Signal, copy: CopyOf): Insight {
     dimensions: [],
     previous: null,
     changeKey: `${signal.id}#${signal.detectedAt}`,
+    family: signal.family,
+    channel: null,
   };
 }
 

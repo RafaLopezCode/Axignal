@@ -1,0 +1,2250 @@
+{
+ "provenance": "SYNTHETIC: fictional organizations on demo domains and example.* hosts. Produced by the subscriber composition over a controlled test world. No real organization, source or person.",
+ "demoSites": [
+  "energia",
+  "seo-geo",
+  "consultor",
+  "constructor",
+  "marketing",
+  "fabrica",
+  "distribuidor"
+ ],
+ "portfolio": [
+  {
+   "focusId": "focus_ae5bbf52b76149b4af22a67a9fbafeb6",
+   "organizationId": "org:id:2685bc852d5ff31e64a4f0ecbb399b66",
+   "label": "Demo Energia",
+   "state": "ACTIVE",
+   "observation": {
+    "state": "FIRST_PROOF_READY",
+    "firstProofReady": true,
+    "headline": "Solar photovoltaic installation",
+    "headlineCode": "solar-pv-installation",
+    "observedAt": "2026-10-09T20:02:57.042884+00:00"
+   }
+  },
+  {
+   "focusId": "focus_dc8789f4ad3eb9cb614da15c7b43b0ec",
+   "organizationId": "org:id:67b5cc7538d9d19c014a4e413016b411",
+   "label": "Demo Seo-Geo",
+   "state": "ACTIVE",
+   "observation": {
+    "state": "FIRST_PROOF_READY",
+    "firstProofReady": true,
+    "headline": "Search and AI visibility",
+    "headlineCode": "digital-visibility",
+    "observedAt": "2026-10-09T08:00:00+00:00"
+   }
+  },
+  {
+   "focusId": "pending_115c8d1ab897476dab5eeb7ffcd7f5e5",
+   "organizationId": null,
+   "label": "Demo Consultor",
+   "state": "IDENTITY_PENDING",
+   "reason": "IDENTITY_SOURCE_UNAVAILABLE",
+   "observation": {
+    "state": "FIRST_PROOF_READY",
+    "firstProofReady": true,
+    "headline": "Management consulting",
+    "headlineCode": "isic-M",
+    "observedAt": "2026-10-09T20:02:58.079301+00:00"
+   }
+  },
+  {
+   "focusId": "pending_73ba1b9973c04e6c8828f9e7e80a154d",
+   "organizationId": null,
+   "label": "Demo Constructor",
+   "state": "IDENTITY_PENDING",
+   "reason": "IDENTITY_SOURCE_UNAVAILABLE",
+   "observation": {
+    "state": "FIRST_PROOF_READY",
+    "firstProofReady": true,
+    "headline": "Construction",
+    "headlineCode": "isic-F",
+    "observedAt": "2026-10-09T20:02:58.550028+00:00"
+   }
+  },
+  {
+   "focusId": "pending_1a743f603eb84c08a21ddda89f3d741c",
+   "organizationId": null,
+   "label": "Demo Marketing",
+   "state": "IDENTITY_PENDING",
+   "reason": "IDENTITY_SOURCE_UNAVAILABLE",
+   "observation": {
+    "state": "FIRST_PROOF_READY",
+    "firstProofReady": true,
+    "headline": "Advertising and market research",
+    "headlineCode": "isic-M-73",
+    "observedAt": "2026-10-09T20:02:59.032064+00:00"
+   }
+  },
+  {
+   "focusId": "pending_8635a3d89af64c7689983612686041d5",
+   "organizationId": null,
+   "label": "Demo Fabrica",
+   "state": "IDENTITY_PENDING",
+   "reason": "IDENTITY_SOURCE_UNAVAILABLE",
+   "observation": {
+    "state": "NOT_ENOUGH_CAPABILITY_EVIDENCE",
+    "firstProofReady": false,
+    "headline": "Manufacturing",
+    "headlineCode": "isic-C",
+    "observedAt": "2026-10-09T20:02:59.499848+00:00"
+   }
+  },
+  {
+   "focusId": "pending_cf98f1069fbb4ea7b3f6248fda4b76f4",
+   "organizationId": null,
+   "label": "Demo Distribuidor",
+   "state": "IDENTITY_PENDING",
+   "reason": "IDENTITY_SOURCE_UNAVAILABLE",
+   "observation": {
+    "state": "SOURCE_UNAVAILABLE",
+    "firstProofReady": false,
+    "headline": null,
+    "headlineCode": null,
+    "observedAt": "2026-10-09T20:02:59.950495+00:00"
+   }
+  }
+ ],
+ "outputs": {
+  "focus_ae5bbf52b76149b4af22a67a9fbafeb6": {
+   "state": "success",
+   "projection": {
+    "realityLevel": "SUBSCRIBER_RUNTIME_READ_MODEL",
+    "runtimeCodeSha": "test-code-sha",
+    "lifecycleStatus": "LIVE",
+    "context": {
+     "id": "focus_ae5bbf52b76149b4af22a67a9fbafeb6",
+     "label": "Demo Energia"
+    },
+    "organization": {
+     "id": "org:id:2685bc852d5ff31e64a4f0ecbb399b66",
+     "name": "Demo Energia"
+    },
+    "nodes": [],
+    "temporalHistory": {
+     "disposition": "MULTIPLE_OBSERVATIONS",
+     "items": [
+      {
+       "observationId": "fo:24cde4e93eaefc28fe5237288a2365d3",
+       "sourceRef": "https://www.demo-energia.com/",
+       "sourceType": "PUBLIC_WEBSITE",
+       "observedAt": "2026-10-09T20:02:56.894179+00:00",
+       "currentness": "CURRENT",
+       "normalizedStateChanged": null
+      },
+      {
+       "observationId": "fo:95e24de6eb7273bf3d61e19c454a1cfa",
+       "sourceRef": "https://www.demo-energia.com/services",
+       "sourceType": "PUBLIC_WEBSITE",
+       "observedAt": "2026-10-09T20:02:56.894179+00:00",
+       "currentness": "CURRENT",
+       "normalizedStateChanged": false
+      },
+      {
+       "observationId": "fo:47ad8af5f78e8c1fd50bb5077cec7f8c",
+       "sourceRef": "https://www.demo-energia.com/",
+       "sourceType": "PUBLIC_WEBSITE",
+       "observedAt": "2026-10-09T20:02:57.038873+00:00",
+       "currentness": "CURRENT",
+       "normalizedStateChanged": false
+      },
+      {
+       "observationId": "fo:51ce03b9efe4bcf3ca9b8f620808c99e",
+       "sourceRef": "https://www.demo-energia.com/services",
+       "sourceType": "PUBLIC_WEBSITE",
+       "observedAt": "2026-10-09T20:02:57.038873+00:00",
+       "currentness": "CURRENT",
+       "normalizedStateChanged": false
+      }
+     ]
+    },
+    "digitalRepresentation": {
+     "state": "NOT_MEASURED",
+     "reason": "No condition-bound public page measurement is available for this read."
+    },
+    "memberships": [],
+    "today": {
+     "disposition": "EMPTY",
+     "items": []
+    },
+    "reloadContinuity": "PERSISTED_RUNTIME_READ_MODEL",
+    "cognition": {
+     "asOf": "2026-10-09T20:02:57.099647+00:00",
+     "sources": [
+      {
+       "id": "fo:24cde4e93eaefc28fe5237288a2365d3",
+       "title": "https://www.demo-energia.com/",
+       "observedAt": "2026-10-09T20:02:56.894179+00:00",
+       "currentness": "CURRENT",
+       "currentnessEvaluatedAt": "2026-10-09T20:02:57.099647+00:00",
+       "instrument": "UNKNOWN — acquisition instrument is not recorded in this read contract",
+       "limitation": "One authorized source observation; coverage beyond this document remains unknown.",
+       "sourceRef": "https://www.demo-energia.com/",
+       "provenanceRef": "artifact:8e309d27c17806b3"
+      },
+      {
+       "id": "fo:47ad8af5f78e8c1fd50bb5077cec7f8c",
+       "title": "https://www.demo-energia.com/",
+       "observedAt": "2026-10-09T20:02:57.038873+00:00",
+       "currentness": "CURRENT",
+       "currentnessEvaluatedAt": "2026-10-09T20:02:57.099647+00:00",
+       "instrument": "UNKNOWN — acquisition instrument is not recorded in this read contract",
+       "limitation": "One authorized source observation; coverage beyond this document remains unknown.",
+       "sourceRef": "https://www.demo-energia.com/",
+       "provenanceRef": "artifact:8e309d27c17806b3"
+      },
+      {
+       "id": "fo:51ce03b9efe4bcf3ca9b8f620808c99e",
+       "title": "https://www.demo-energia.com/services",
+       "observedAt": "2026-10-09T20:02:57.038873+00:00",
+       "currentness": "CURRENT",
+       "currentnessEvaluatedAt": "2026-10-09T20:02:57.099647+00:00",
+       "instrument": "UNKNOWN — acquisition instrument is not recorded in this read contract",
+       "limitation": "One authorized source observation; coverage beyond this document remains unknown.",
+       "sourceRef": "https://www.demo-energia.com/services",
+       "provenanceRef": "artifact:7d611e93ca58fc87"
+      },
+      {
+       "id": "fo:95e24de6eb7273bf3d61e19c454a1cfa",
+       "title": "https://www.demo-energia.com/services",
+       "observedAt": "2026-10-09T20:02:56.894179+00:00",
+       "currentness": "CURRENT",
+       "currentnessEvaluatedAt": "2026-10-09T20:02:57.099647+00:00",
+       "instrument": "UNKNOWN — acquisition instrument is not recorded in this read contract",
+       "limitation": "One authorized source observation; coverage beyond this document remains unknown.",
+       "sourceRef": "https://www.demo-energia.com/services",
+       "provenanceRef": "artifact:8cbf3ccbdb8e7be1"
+      },
+      {
+       "currentness": "CURRENT",
+       "currentnessEvaluatedAt": "2026-10-09T20:02:57.099647+00:00",
+       "id": "opportunity-evidence:801234-2026",
+       "instrument": "fuente-licitaciones-demo@1",
+       "limitation": "Notices published by the demo procurement source; national and regional below-threshold tenders are outside its scope.; A published demand record or buyer name does not establish a relationship, customer or commercial fit.",
+       "observedAt": "2026-10-09T20:02:56.279404+00:00",
+       "provenanceRef": "801234-2026",
+       "sourceRef": "https://licitaciones.example.com/en/notice/-/detail/801234-2026",
+       "title": "Instalación fotovoltaica de autoconsumo en edificios municipales"
+      }
+     ],
+     "signals": [
+      {
+       "id": "opportunity-candidate:653fe3c81b0f481024bc9490",
+       "familyId": "demand"
+      }
+     ],
+     "opportunities": [
+      {
+       "buyer": "Ayuntamiento Ejemplo",
+       "capability": {
+        "excerpt": "Demo Energia | photovoltaic installation",
+        "label": "Solar photovoltaic installation",
+        "sourceId": "fo:47ad8af5f78e8c1fd50bb5077cec7f8c"
+       },
+       "currentness": "CURRENT",
+       "currentnessEvaluatedAt": "2026-10-09T20:02:57.099647+00:00",
+       "deadline": "2026-11-03",
+       "demand": {
+        "code": "09332000",
+        "label": "Instalación fotovoltaica de autoconsumo en edificios municipales",
+        "sourceId": "opportunity-evidence:801234-2026"
+       },
+       "epistemic": "POTENTIAL",
+       "familyId": "demand",
+       "form": "OPEN_CALL_FOR_TENDER",
+       "id": "opportunity-candidate:653fe3c81b0f481024bc9490",
+       "known": [
+        {
+         "label": "Published demand title",
+         "value": "Instalación fotovoltaica de autoconsumo en edificios municipales"
+        },
+        {
+         "label": "Matched demand code",
+         "value": "09332000"
+        }
+       ],
+       "market": "EU/ES",
+       "matchBasis": [
+        "DIRECT_CAPABILITY_CODE"
+       ],
+       "observedAt": "2026-10-09T20:02:56.279404+00:00",
+       "opportunityFamily": "PUBLIC_PROCUREMENT",
+       "reachSourceIds": [
+        "fo:47ad8af5f78e8c1fd50bb5077cec7f8c",
+        "fo:51ce03b9efe4bcf3ca9b8f620808c99e"
+       ],
+       "relevance": {
+        "channels": [
+         {
+          "capabilityId": "solar-pv-installation",
+          "judgments": [
+           {
+            "evidence": [],
+            "family": "GEOGRAPHIC_ECONOMIC_REACH",
+            "outcome": "UNRESOLVED",
+            "reason": "NO_REACH_EVIDENCE",
+            "state": "UNKNOWN"
+           },
+           {
+            "evidence": [],
+            "family": "LOGISTICS_FEASIBILITY",
+            "outcome": "UNRESOLVED",
+            "reason": "LOGISTICS_UNOBSERVED",
+            "state": "UNKNOWN"
+           },
+           {
+            "evidence": [],
+            "family": "REGULATORY_ELIGIBILITY",
+            "outcome": "NOT_APPLICABLE",
+            "reason": "NO_STATED_REQUIREMENT",
+            "state": "OBSERVED"
+           },
+           {
+            "evidence": [],
+            "family": "TEMPORAL_ACTIONABILITY",
+            "outcome": "COMPATIBLE",
+            "reason": "WINDOW_OPEN",
+            "state": "OBSERVED"
+           }
+          ],
+          "mode": "CUSTOMER_SITE",
+          "scope": "UNRESOLVED_REACH"
+         }
+        ],
+        "gate": "economic-relevance:1",
+        "operatingModelFingerprint": "107352ea4a6269a185e5065a70d1e46e5c66667c7f4a773d3d5f048fa12baa3e",
+        "relevantThrough": [
+         "solar-pv-installation"
+        ],
+        "scope": "UNRESOLVED_REACH",
+        "unknown": [
+         "GEOGRAPHIC_ECONOMIC_REACH:solar-pv-installation",
+         "LOGISTICS_FEASIBILITY:solar-pv-installation"
+        ]
+       },
+       "title": "Instalación fotovoltaica de autoconsumo en edificios municipales",
+       "unknown": [
+        "technical requirements",
+        "eligibility and solvency",
+        "available capacity",
+        "price competitiveness",
+        "incumbent supplier"
+       ],
+       "whyLooked": [
+        "«Which open public tenders ask for its observed capabilities?» necesita PUBLIC_PROCUREMENT_OPPORTUNITIES; Tenders Electronic Daily — Search API v3 lo publica para ES y permite buscar por CPV."
+       ],
+       "whyPotential": "AXIGNAL observó que la empresa declara «Demo Energia | photovoltaic installation» y este comprador pide 09332000 (Solar photovoltaic installation)."
+      }
+     ],
+     "economicGarden": {
+      "capabilities": [
+       {
+        "capabilityId": "solar-pv-installation",
+        "deliveryModes": [
+         "CUSTOMER_SITE"
+        ],
+        "excluded": [],
+        "expansion": [],
+        "label": "Solar photovoltaic installation",
+        "operating": [],
+        "unknown": [
+         "OPERATING_REACH"
+        ]
+       }
+      ],
+      "evidence": [
+       "fo:47ad8af5f78e8c1fd50bb5077cec7f8c",
+       "fo:51ce03b9efe4bcf3ca9b8f620808c99e"
+      ],
+      "exposureChannels": [
+       "FUEL_AND_TRAVEL",
+       "LOCAL_REGULATION"
+      ],
+      "operatingModelFingerprint": "107352ea4a6269a185e5065a70d1e46e5c66667c7f4a773d3d5f048fa12baa3e"
+     },
+     "relevanceFiltered": {},
+     "exposure": []
+    }
+   },
+   "firstObservation": {
+    "attentionScopes": [
+     {
+      "epistemicState": "POTENTIAL",
+      "jurisdiction": "EU/ES",
+      "roles": [
+       "PRIVATE_BUSINESSES",
+       "PUBLIC_BUYERS"
+      ]
+     }
+    ],
+    "authority": "OPERATIONAL_NOT_CANONICAL",
+    "discoveries": [
+     {
+      "code": "PUBLIC_WEBSITE_OBSERVED",
+      "detail": {
+       "pagesRead": 2
+      },
+      "epistemicState": "OBSERVED",
+      "excerpt": "Demo Energia | photovoltaic installation",
+      "kind": "PUBLIC_PRESENCE",
+      "observedAt": "2026-10-09T20:02:57.038873+00:00",
+      "sourceUrl": "https://www.demo-energia.com/",
+      "statement": "Demo Energia | photovoltaic installation"
+     },
+     {
+      "code": "LANGUAGES_PUBLISHED",
+      "detail": {
+       "languages": [
+        "en"
+       ]
+      },
+      "epistemicState": "OBSERVED",
+      "excerpt": null,
+      "kind": "LANGUAGES",
+      "observedAt": "2026-10-09T20:02:57.038873+00:00",
+      "sourceUrl": "https://www.demo-energia.com/",
+      "statement": "en"
+     },
+     {
+      "code": "ADDRESS_DECLARED",
+      "detail": {
+       "basis": "PREMISES"
+      },
+      "epistemicState": "DECLARED",
+      "excerpt": "schema.org address: ES",
+      "kind": "DECLARED_LOCATION",
+      "observedAt": "2026-10-09T20:02:57.038873+00:00",
+      "sourceUrl": "https://www.demo-energia.com/",
+      "statement": "ES"
+     },
+     {
+      "code": "solar-pv-installation",
+      "detail": {
+       "method": "LEXICON",
+       "model": null,
+       "routingCodes": [
+        "CPV:09331200",
+        "CPV:09332000",
+        "CPV:45261215",
+        "NAICS:221114",
+        "NAICS:238210"
+       ]
+      },
+      "epistemicState": "POTENTIAL",
+      "excerpt": "Demo Energia | photovoltaic installation",
+      "kind": "ACTIVITY",
+      "observedAt": "2026-10-09T20:02:57.038873+00:00",
+      "sourceUrl": "https://www.demo-energia.com/",
+      "statement": "Solar photovoltaic installation"
+     },
+     {
+      "code": "PUBLIC_WEB_REPRESENTATION_MEASURED",
+      "detail": {
+       "checks": {
+        "alternateLanguages": 0,
+        "canonical": null,
+        "descriptionPresent": false,
+        "homepageNoindex": false,
+        "offerDeclared": false,
+        "organizationDeclared": true,
+        "robotsTxtPublished": false,
+        "schemaTypes": [
+         "Organization",
+         "PostalAddress"
+        ],
+        "sitemapsDeclared": 0,
+        "titlePresent": true
+       },
+       "conditions": "robots.txt plus pages read by this First Observation",
+       "instrument": "site-reading.v1",
+       "limitation": "Own website only; not search results, rankings or generative answers."
+      },
+      "epistemicState": "OBSERVED",
+      "excerpt": null,
+      "kind": "WEB_REPRESENTATION",
+      "observedAt": "2026-10-09T20:02:57.038873+00:00",
+      "sourceUrl": "https://www.demo-energia.com/",
+      "statement": "Public web representation checks"
+     },
+     {
+      "code": "OFFER_NOT_MACHINE_READABLE",
+      "detail": {
+       "basis": [
+        "ACTIVITY",
+        "WEB_REPRESENTATION"
+       ],
+       "notCausal": true,
+       "whyItMatters": "Search and generative surfaces that rely on structured data may not connect this organization to what it offers. Not a measured ranking."
+      },
+      "epistemicState": "POTENTIAL",
+      "excerpt": null,
+      "kind": "REPRESENTATION_GAP",
+      "observedAt": "2026-10-09T20:02:57.038873+00:00",
+      "sourceUrl": "https://www.demo-energia.com/",
+      "statement": "On the pages read, its activity is evidenced in prose but no service or product is declared as structured data."
+     },
+     {
+      "code": "NO_GOVERNED_DEMAND_SOURCE:EU/ES",
+      "detail": {
+       "jurisdiction": "EU/ES",
+       "reasons": [
+        "NO_ADOPTED_SOURCE",
+        "NO_KNOWN_SOURCE"
+       ]
+      },
+      "epistemicState": "UNKNOWN",
+      "excerpt": null,
+      "kind": "SIGNIFICANT_UNKNOWN",
+      "observedAt": null,
+      "sourceUrl": null,
+      "statement": "No governed demand source is adopted for EU/ES yet. That is not an absence of demand."
+     },
+     {
+      "code": "POTENTIAL_DEMAND",
+      "detail": {
+       "buyer": "Ayuntamiento Ejemplo",
+       "capabilityIds": [
+        "solar-pv-installation"
+       ],
+       "codes": [
+        "CPV:09332000"
+       ],
+       "deadline": "2026-11-03",
+       "demandForm": "OPEN_CALL_FOR_TENDER",
+       "epistemicState": "POTENTIAL",
+       "market": "EU/ES",
+       "publishedAt": "2026-10-05T20:02:56.279404+00:00",
+       "source": "fuente-licitaciones-demo",
+       "title": "Instalación fotovoltaica de autoconsumo en edificios municipales",
+       "url": "https://licitaciones.example.com/en/notice/-/detail/801234-2026"
+      },
+      "epistemicState": "POTENTIAL",
+      "excerpt": null,
+      "kind": "DEMAND",
+      "observedAt": "2026-10-09T20:02:57.042884+00:00",
+      "sourceUrl": "https://licitaciones.example.com/en/notice/-/detail/801234-2026",
+      "statement": "Instalación fotovoltaica de autoconsumo en edificios municipales"
+     }
+    ],
+    "firstProofReady": true,
+    "nextDueAt": "2026-10-16T20:02:57.042884+00:00",
+    "observedAt": "2026-10-09T20:02:57.042884+00:00",
+    "publicUnderstanding": {
+     "authority": "DERIVED_CONDITIONED_NOT_CANONICAL",
+     "cause": "CONDITIONED_INTERPRETATION",
+     "citations": [
+      {
+       "contentFingerprint": "sha256:8e309d27c17806b3e59f9a4fc69385acb6f330269c535a94a79dada29ef32614",
+       "id": "q1",
+       "observedAt": "2026-10-09T20:02:57.038873+00:00",
+       "quote": "Demo Energia | photovoltaic installation",
+       "url": "https://www.demo-energia.com/"
+      },
+      {
+       "contentFingerprint": "sha256:8e309d27c17806b3e59f9a4fc69385acb6f330269c535a94a79dada29ef32614",
+       "id": "q2",
+       "observedAt": "2026-10-09T20:02:57.038873+00:00",
+       "quote": "We install photovoltaic panels.",
+       "url": "https://www.demo-energia.com/"
+      },
+      {
+       "contentFingerprint": "sha256:8e309d27c17806b3e59f9a4fc69385acb6f330269c535a94a79dada29ef32614",
+       "id": "q3",
+       "observedAt": "2026-10-09T20:02:57.038873+00:00",
+       "quote": "Services",
+       "url": "https://www.demo-energia.com/"
+      },
+      {
+       "contentFingerprint": "sha256:7d611e93ca58fc872816c155d6a76ac16944dcdc79b2e43d57c318912d83803c",
+       "id": "q4",
+       "observedAt": "2026-10-09T20:02:57.038873+00:00",
+       "quote": "We install photovoltaic panels for households.",
+       "url": "https://www.demo-energia.com/services"
+      },
+      {
+       "contentFingerprint": "sha256:7d611e93ca58fc872816c155d6a76ac16944dcdc79b2e43d57c318912d83803c",
+       "id": "q5",
+       "observedAt": "2026-10-09T20:02:57.038873+00:00",
+       "quote": "Our systems reduce purchased electricity under suitable site conditions.",
+       "url": "https://www.demo-energia.com/services"
+      }
+     ],
+     "compatibilityKey": "77a085b76dabcfcaf5aa77ed6e33f63c5e6699a6816e741ba20a7de86e00c05d",
+     "conditions": {
+      "languages": [
+       "en"
+      ],
+      "market": "UNKNOWN",
+      "persona": "UNCONTEXTUALIZED_EXTERNAL_READER",
+      "replicaPolicy": "ONE_EXECUTION_OR_EXACT_JUDGMENT_REUSE",
+      "sampleSize": 1,
+      "sourceSet": [
+       "https://www.demo-energia.com/",
+       "https://www.demo-energia.com/services"
+      ],
+      "surface": "OWN_PUBLIC_WEBSITE_API_INTERPRETATION"
+     },
+     "contentExpiresAt": "2027-01-07T20:02:57.038873+00:00",
+     "coverage": "BOUNDED_COMPLETE",
+     "currentness": "CURRENT",
+     "dimensions": [
+      {
+       "alternatives": [
+        "DELIBERATE_LIMITED_DISCLOSURE",
+        "SAMPLE_SCOPE",
+        "EVALUATOR_ERROR"
+       ],
+       "cause": "EXPLICIT_STATEMENT_SELECTED",
+       "citationIds": [
+        "q2"
+       ],
+       "dimension": "offer",
+       "proposal": null,
+       "recheck": "SAME_INSTRUMENT_AND_SOURCE_SCOPE_AFTER_HUMAN_REVIEW",
+       "state": "STRENGTH"
+      },
+      {
+       "alternatives": [
+        "DELIBERATE_LIMITED_DISCLOSURE",
+        "SAMPLE_SCOPE",
+        "EVALUATOR_ERROR"
+       ],
+       "cause": "EXPLICIT_STATEMENT_SELECTED",
+       "citationIds": [
+        "q4"
+       ],
+       "dimension": "audience",
+       "proposal": null,
+       "recheck": "SAME_INSTRUMENT_AND_SOURCE_SCOPE_AFTER_HUMAN_REVIEW",
+       "state": "STRENGTH"
+      },
+      {
+       "alternatives": [
+        "DELIBERATE_LIMITED_DISCLOSURE",
+        "SAMPLE_SCOPE",
+        "EVALUATOR_ERROR"
+       ],
+       "cause": "EXPLICIT_STATEMENT_SELECTED",
+       "citationIds": [
+        "q5"
+       ],
+       "dimension": "outcome",
+       "proposal": null,
+       "recheck": "SAME_INSTRUMENT_AND_SOURCE_SCOPE_AFTER_HUMAN_REVIEW",
+       "state": "STRENGTH"
+      }
+     ],
+     "execution": "EVALUATED",
+     "instrument": {
+      "evaluator": "typesafe-system-one",
+      "id": "axignal.public-offer-understanding",
+      "interpretationVersion": "conditional-offer.v1",
+      "model": "jev-1.13.0",
+      "representationVersion": "public-citations.v1",
+      "version": "1.0.0"
+     },
+     "limitations": [
+      "SINGLE_CONDITIONED_INSTRUMENT_NOT_POPULATION",
+      "NO_BUSINESS_TRUTH"
+     ],
+     "measuredAt": "2026-10-09T20:02:57.042884+00:00",
+     "questionFingerprint": "96064636c7bb9dcc320b4c8eb28dac8c85290a7e81e24c8c02e46124550ca197",
+     "reportId": "3037ff17c6c40afec0fbec0b3675b68c7c1441795163bb2b4eca81d37ec370d0",
+     "sourceObservedAt": "2026-10-09T20:02:57.038873+00:00",
+     "sourceRights": [
+      {
+       "basisRef": "source-registry:website:demo-energia.com@1:c82ae7b330d67a9d587070262ac3b17defa7164d3bf78638abbea11c75cf7892",
+       "policyVersion": "first-observation-content-rights.v1",
+       "providerInput": true,
+       "publicOfferInput": true,
+       "rawRetentionDays": 90,
+       "reusePermitted": true,
+       "url": "https://www.demo-energia.com/"
+      },
+      {
+       "basisRef": "source-registry:website:demo-energia.com@1:c82ae7b330d67a9d587070262ac3b17defa7164d3bf78638abbea11c75cf7892",
+       "policyVersion": "first-observation-content-rights.v1",
+       "providerInput": true,
+       "publicOfferInput": true,
+       "rawRetentionDays": 90,
+       "reusePermitted": true,
+       "url": "https://www.demo-energia.com/services"
+      }
+     ],
+     "stateFingerprint": "a76d47ea8bf8e0b90c1e36ff073d78fe09b6c15744d8bd4a78e164b061b52f88",
+     "status": "MEASURED",
+     "validUntil": "2026-10-16T20:02:57.038873+00:00",
+     "history": [
+      {
+       "authority": "DERIVED_CONDITIONED_NOT_CANONICAL",
+       "cause": "CONDITIONED_INTERPRETATION",
+       "citations": [
+        {
+         "contentFingerprint": "sha256:8e309d27c17806b3e59f9a4fc69385acb6f330269c535a94a79dada29ef32614",
+         "id": "q1",
+         "observedAt": "2026-10-09T20:02:56.894179+00:00",
+         "quote": "Demo Energia | photovoltaic installation",
+         "url": "https://www.demo-energia.com/"
+        },
+        {
+         "contentFingerprint": "sha256:8e309d27c17806b3e59f9a4fc69385acb6f330269c535a94a79dada29ef32614",
+         "id": "q2",
+         "observedAt": "2026-10-09T20:02:56.894179+00:00",
+         "quote": "We install photovoltaic panels.",
+         "url": "https://www.demo-energia.com/"
+        },
+        {
+         "contentFingerprint": "sha256:8e309d27c17806b3e59f9a4fc69385acb6f330269c535a94a79dada29ef32614",
+         "id": "q3",
+         "observedAt": "2026-10-09T20:02:56.894179+00:00",
+         "quote": "Services",
+         "url": "https://www.demo-energia.com/"
+        },
+        {
+         "contentFingerprint": "sha256:8cbf3ccbdb8e7be18e0006fc579912ccbcfcab437e3c9c94a835d7e191efdd71",
+         "id": "q4",
+         "observedAt": "2026-10-09T20:02:56.894179+00:00",
+         "quote": "We install photovoltaic panels.",
+         "url": "https://www.demo-energia.com/services"
+        }
+       ],
+       "compatibilityKey": "77a085b76dabcfcaf5aa77ed6e33f63c5e6699a6816e741ba20a7de86e00c05d",
+       "conditions": {
+        "languages": [
+         "en"
+        ],
+        "market": "UNKNOWN",
+        "persona": "UNCONTEXTUALIZED_EXTERNAL_READER",
+        "replicaPolicy": "ONE_EXECUTION_OR_EXACT_JUDGMENT_REUSE",
+        "sampleSize": 1,
+        "sourceSet": [
+         "https://www.demo-energia.com/",
+         "https://www.demo-energia.com/services"
+        ],
+        "surface": "OWN_PUBLIC_WEBSITE_API_INTERPRETATION"
+       },
+       "contentExpiresAt": "2027-01-07T20:02:56.894179+00:00",
+       "coverage": "BOUNDED_COMPLETE",
+       "currentness": "HISTORICAL",
+       "dimensions": [
+        {
+         "alternatives": [
+          "DELIBERATE_LIMITED_DISCLOSURE",
+          "SAMPLE_SCOPE",
+          "EVALUATOR_ERROR"
+         ],
+         "cause": "EXPLICIT_STATEMENT_SELECTED",
+         "citationIds": [
+          "q2"
+         ],
+         "dimension": "offer",
+         "proposal": null,
+         "recheck": "SAME_INSTRUMENT_AND_SOURCE_SCOPE_AFTER_HUMAN_REVIEW",
+         "state": "STRENGTH"
+        },
+        {
+         "alternatives": [
+          "DELIBERATE_LIMITED_DISCLOSURE",
+          "SAMPLE_SCOPE",
+          "EVALUATOR_ERROR"
+         ],
+         "cause": "REPRESENTATION_LIMITATION_POSSIBLE",
+         "citationIds": [
+          "q1",
+          "q2",
+          "q3",
+          "q4"
+         ],
+         "dimension": "audience",
+         "proposal": "MAKE_AUDIENCE_EXPLICIT_IF_INTENDED",
+         "recheck": "SAME_INSTRUMENT_AND_SOURCE_SCOPE_AFTER_HUMAN_REVIEW",
+         "state": "CONSTRUCTIVE_GAP"
+        },
+        {
+         "alternatives": [
+          "DELIBERATE_LIMITED_DISCLOSURE",
+          "SAMPLE_SCOPE",
+          "EVALUATOR_ERROR"
+         ],
+         "cause": "REPRESENTATION_LIMITATION_POSSIBLE",
+         "citationIds": [
+          "q1",
+          "q2",
+          "q3",
+          "q4"
+         ],
+         "dimension": "outcome",
+         "proposal": "MAKE_OUTCOME_EXPLICIT_IF_INTENDED",
+         "recheck": "SAME_INSTRUMENT_AND_SOURCE_SCOPE_AFTER_HUMAN_REVIEW",
+         "state": "CONSTRUCTIVE_GAP"
+        }
+       ],
+       "execution": "EVALUATED",
+       "instrument": {
+        "evaluator": "typesafe-system-one",
+        "id": "axignal.public-offer-understanding",
+        "interpretationVersion": "conditional-offer.v1",
+        "model": "jev-1.13.0",
+        "representationVersion": "public-citations.v1",
+        "version": "1.0.0"
+       },
+       "limitations": [
+        "SINGLE_CONDITIONED_INSTRUMENT_NOT_POPULATION",
+        "NO_BUSINESS_TRUTH"
+       ],
+       "measuredAt": "2026-10-09T20:02:56.910081+00:00",
+       "questionFingerprint": "019af0d6b5cce3cdd19567f9c6e473ded9b2820fadd0d322714f3f93fede89f5",
+       "reportId": "92ada42b7c64b3037d9036a88faae8f3183188fc9a26b3ccb2884184308ccb4d",
+       "sourceObservedAt": "2026-10-09T20:02:56.894179+00:00",
+       "sourceRights": [
+        {
+         "basisRef": "source-registry:website:demo-energia.com@1:c82ae7b330d67a9d587070262ac3b17defa7164d3bf78638abbea11c75cf7892",
+         "policyVersion": "first-observation-content-rights.v1",
+         "providerInput": true,
+         "publicOfferInput": true,
+         "rawRetentionDays": 90,
+         "reusePermitted": true,
+         "url": "https://www.demo-energia.com/"
+        },
+        {
+         "basisRef": "source-registry:website:demo-energia.com@1:c82ae7b330d67a9d587070262ac3b17defa7164d3bf78638abbea11c75cf7892",
+         "policyVersion": "first-observation-content-rights.v1",
+         "providerInput": true,
+         "publicOfferInput": true,
+         "rawRetentionDays": 90,
+         "reusePermitted": true,
+         "url": "https://www.demo-energia.com/services"
+        }
+       ],
+       "stateFingerprint": "afb412096b77cf5777afab8e0f1a48f2a940eefab0f4e4da4ebfc0f5a2c375a8",
+       "status": "MEASURED",
+       "validUntil": "2026-10-16T20:02:56.894179+00:00"
+      }
+     ],
+     "comparison": {
+      "previousReportId": "92ada42b7c64b3037d9036a88faae8f3183188fc9a26b3ccb2884184308ccb4d",
+      "previousMeasuredAt": "2026-10-09T20:02:56.910081+00:00",
+      "state": "COMPARABLE",
+      "reason": "SAME_CONDITIONED_INSTRUMENT",
+      "changes": [
+       {
+        "dimension": "audience",
+        "before": "CONSTRUCTIVE_GAP",
+        "after": "STRENGTH",
+        "kind": "STATE_CHANGED",
+        "beforeQuotations": [
+         "Services",
+         "Demo Energia | photovoltaic installation",
+         "We install photovoltaic panels.",
+         "We install photovoltaic panels."
+        ],
+        "afterQuotations": [
+         "We install photovoltaic panels for households."
+        ]
+       },
+       {
+        "dimension": "outcome",
+        "before": "CONSTRUCTIVE_GAP",
+        "after": "STRENGTH",
+        "kind": "STATE_CHANGED",
+        "beforeQuotations": [
+         "Services",
+         "Demo Energia | photovoltaic installation",
+         "We install photovoltaic panels.",
+         "We install photovoltaic panels."
+        ],
+        "afterQuotations": [
+         "Our systems reduce purchased electricity under suitable site conditions."
+        ]
+       }
+      ],
+      "meaning": "INTERPRETATION_CHANGE_NOT_PROVEN_BUSINESS_IMPROVEMENT"
+     }
+    },
+    "retainUntil": "2027-01-07T20:02:57.042884+00:00",
+    "state": "FIRST_PROOF_READY",
+    "target": {
+     "kind": "FOCUS",
+     "website": "https://www.demo-energia.com/",
+     "name": null,
+     "identityLink": "REGISTRY_VERIFIED"
+    }
+   },
+   "revision": "2a62226d7621a1f394826f44e4004ab6a084844fa7573d443df0ae9d3ea0ea5f"
+  },
+  "focus_ae5bbf52b76149b4af22a67a9fbafeb6__first": {
+   "state": "success",
+   "projection": {
+    "realityLevel": "SUBSCRIBER_RUNTIME_READ_MODEL",
+    "runtimeCodeSha": "test-code-sha",
+    "lifecycleStatus": "LIVE",
+    "context": {
+     "id": "focus_ae5bbf52b76149b4af22a67a9fbafeb6",
+     "label": "Demo Energia"
+    },
+    "organization": {
+     "id": "org:id:2685bc852d5ff31e64a4f0ecbb399b66",
+     "name": "Demo Energia"
+    },
+    "nodes": [],
+    "temporalHistory": {
+     "disposition": "MULTIPLE_OBSERVATIONS",
+     "items": [
+      {
+       "observationId": "fo:24cde4e93eaefc28fe5237288a2365d3",
+       "sourceRef": "https://www.demo-energia.com/",
+       "sourceType": "PUBLIC_WEBSITE",
+       "observedAt": "2026-10-09T20:02:56.894179+00:00",
+       "currentness": "CURRENT",
+       "normalizedStateChanged": null
+      },
+      {
+       "observationId": "fo:95e24de6eb7273bf3d61e19c454a1cfa",
+       "sourceRef": "https://www.demo-energia.com/services",
+       "sourceType": "PUBLIC_WEBSITE",
+       "observedAt": "2026-10-09T20:02:56.894179+00:00",
+       "currentness": "CURRENT",
+       "normalizedStateChanged": false
+      }
+     ]
+    },
+    "digitalRepresentation": {
+     "state": "NOT_MEASURED",
+     "reason": "No condition-bound public page measurement is available for this read."
+    },
+    "memberships": [],
+    "today": {
+     "disposition": "EMPTY",
+     "items": []
+    },
+    "reloadContinuity": "PERSISTED_RUNTIME_READ_MODEL",
+    "cognition": {
+     "asOf": "2026-10-09T20:02:56.999256+00:00",
+     "sources": [
+      {
+       "id": "fo:24cde4e93eaefc28fe5237288a2365d3",
+       "title": "https://www.demo-energia.com/",
+       "observedAt": "2026-10-09T20:02:56.894179+00:00",
+       "currentness": "CURRENT",
+       "currentnessEvaluatedAt": "2026-10-09T20:02:56.999256+00:00",
+       "instrument": "UNKNOWN — acquisition instrument is not recorded in this read contract",
+       "limitation": "One authorized source observation; coverage beyond this document remains unknown.",
+       "sourceRef": "https://www.demo-energia.com/",
+       "provenanceRef": "artifact:8e309d27c17806b3"
+      },
+      {
+       "id": "fo:95e24de6eb7273bf3d61e19c454a1cfa",
+       "title": "https://www.demo-energia.com/services",
+       "observedAt": "2026-10-09T20:02:56.894179+00:00",
+       "currentness": "CURRENT",
+       "currentnessEvaluatedAt": "2026-10-09T20:02:56.999256+00:00",
+       "instrument": "UNKNOWN — acquisition instrument is not recorded in this read contract",
+       "limitation": "One authorized source observation; coverage beyond this document remains unknown.",
+       "sourceRef": "https://www.demo-energia.com/services",
+       "provenanceRef": "artifact:8cbf3ccbdb8e7be1"
+      },
+      {
+       "currentness": "CURRENT",
+       "currentnessEvaluatedAt": "2026-10-09T20:02:56.999256+00:00",
+       "id": "opportunity-evidence:801234-2026",
+       "instrument": "fuente-licitaciones-demo@1",
+       "limitation": "Notices published by the demo procurement source; national and regional below-threshold tenders are outside its scope.; A published demand record or buyer name does not establish a relationship, customer or commercial fit.",
+       "observedAt": "2026-10-09T20:02:56.279404+00:00",
+       "provenanceRef": "801234-2026",
+       "sourceRef": "https://licitaciones.example.com/en/notice/-/detail/801234-2026",
+       "title": "Instalación fotovoltaica de autoconsumo en edificios municipales"
+      }
+     ],
+     "signals": [
+      {
+       "id": "opportunity-candidate:653fe3c81b0f481024bc9490",
+       "familyId": "demand"
+      }
+     ],
+     "opportunities": [
+      {
+       "buyer": "Ayuntamiento Ejemplo",
+       "capability": {
+        "excerpt": "Demo Energia | photovoltaic installation",
+        "label": "Solar photovoltaic installation",
+        "sourceId": "fo:24cde4e93eaefc28fe5237288a2365d3"
+       },
+       "currentness": "CURRENT",
+       "currentnessEvaluatedAt": "2026-10-09T20:02:56.999256+00:00",
+       "deadline": "2026-11-03",
+       "demand": {
+        "code": "09332000",
+        "label": "Instalación fotovoltaica de autoconsumo en edificios municipales",
+        "sourceId": "opportunity-evidence:801234-2026"
+       },
+       "epistemic": "POTENTIAL",
+       "familyId": "demand",
+       "form": "OPEN_CALL_FOR_TENDER",
+       "id": "opportunity-candidate:653fe3c81b0f481024bc9490",
+       "known": [
+        {
+         "label": "Published demand title",
+         "value": "Instalación fotovoltaica de autoconsumo en edificios municipales"
+        },
+        {
+         "label": "Matched demand code",
+         "value": "09332000"
+        }
+       ],
+       "market": "EU/ES",
+       "matchBasis": [
+        "DIRECT_CAPABILITY_CODE"
+       ],
+       "observedAt": "2026-10-09T20:02:56.279404+00:00",
+       "opportunityFamily": "PUBLIC_PROCUREMENT",
+       "reachSourceIds": [
+        "fo:24cde4e93eaefc28fe5237288a2365d3",
+        "fo:95e24de6eb7273bf3d61e19c454a1cfa"
+       ],
+       "relevance": {
+        "channels": [
+         {
+          "capabilityId": "solar-pv-installation",
+          "judgments": [
+           {
+            "evidence": [],
+            "family": "GEOGRAPHIC_ECONOMIC_REACH",
+            "outcome": "UNRESOLVED",
+            "reason": "NO_REACH_EVIDENCE",
+            "state": "UNKNOWN"
+           },
+           {
+            "evidence": [],
+            "family": "LOGISTICS_FEASIBILITY",
+            "outcome": "UNRESOLVED",
+            "reason": "LOGISTICS_UNOBSERVED",
+            "state": "UNKNOWN"
+           },
+           {
+            "evidence": [],
+            "family": "REGULATORY_ELIGIBILITY",
+            "outcome": "NOT_APPLICABLE",
+            "reason": "NO_STATED_REQUIREMENT",
+            "state": "OBSERVED"
+           },
+           {
+            "evidence": [],
+            "family": "TEMPORAL_ACTIONABILITY",
+            "outcome": "COMPATIBLE",
+            "reason": "WINDOW_OPEN",
+            "state": "OBSERVED"
+           }
+          ],
+          "mode": "CUSTOMER_SITE",
+          "scope": "UNRESOLVED_REACH"
+         }
+        ],
+        "gate": "economic-relevance:1",
+        "operatingModelFingerprint": "203bb7f0e43a1e0b2b126d94b57ceb277d842f89a4c160dd51eb6e53d1717b09",
+        "relevantThrough": [
+         "solar-pv-installation"
+        ],
+        "scope": "UNRESOLVED_REACH",
+        "unknown": [
+         "GEOGRAPHIC_ECONOMIC_REACH:solar-pv-installation",
+         "LOGISTICS_FEASIBILITY:solar-pv-installation"
+        ]
+       },
+       "title": "Instalación fotovoltaica de autoconsumo en edificios municipales",
+       "unknown": [
+        "technical requirements",
+        "eligibility and solvency",
+        "available capacity",
+        "price competitiveness",
+        "incumbent supplier"
+       ],
+       "whyLooked": [
+        "«Which open public tenders ask for its observed capabilities?» necesita PUBLIC_PROCUREMENT_OPPORTUNITIES; Tenders Electronic Daily — Search API v3 lo publica para ES y permite buscar por CPV."
+       ],
+       "whyPotential": "AXIGNAL observó que la empresa declara «Demo Energia | photovoltaic installation» y este comprador pide 09332000 (Solar photovoltaic installation)."
+      }
+     ],
+     "economicGarden": {
+      "capabilities": [
+       {
+        "capabilityId": "solar-pv-installation",
+        "deliveryModes": [
+         "CUSTOMER_SITE"
+        ],
+        "excluded": [],
+        "expansion": [],
+        "label": "Solar photovoltaic installation",
+        "operating": [],
+        "unknown": [
+         "OPERATING_REACH"
+        ]
+       }
+      ],
+      "evidence": [
+       "fo:24cde4e93eaefc28fe5237288a2365d3",
+       "fo:95e24de6eb7273bf3d61e19c454a1cfa"
+      ],
+      "exposureChannels": [
+       "FUEL_AND_TRAVEL",
+       "LOCAL_REGULATION"
+      ],
+      "operatingModelFingerprint": "203bb7f0e43a1e0b2b126d94b57ceb277d842f89a4c160dd51eb6e53d1717b09"
+     },
+     "relevanceFiltered": {},
+     "exposure": []
+    }
+   },
+   "firstObservation": {
+    "attentionScopes": [
+     {
+      "epistemicState": "POTENTIAL",
+      "jurisdiction": "EU/ES",
+      "roles": [
+       "PRIVATE_BUSINESSES",
+       "PUBLIC_BUYERS"
+      ]
+     }
+    ],
+    "authority": "OPERATIONAL_NOT_CANONICAL",
+    "discoveries": [
+     {
+      "code": "PUBLIC_WEBSITE_OBSERVED",
+      "detail": {
+       "pagesRead": 2
+      },
+      "epistemicState": "OBSERVED",
+      "excerpt": "Demo Energia | photovoltaic installation",
+      "kind": "PUBLIC_PRESENCE",
+      "observedAt": "2026-10-09T20:02:56.894179+00:00",
+      "sourceUrl": "https://www.demo-energia.com/",
+      "statement": "Demo Energia | photovoltaic installation"
+     },
+     {
+      "code": "LANGUAGES_PUBLISHED",
+      "detail": {
+       "languages": [
+        "en"
+       ]
+      },
+      "epistemicState": "OBSERVED",
+      "excerpt": null,
+      "kind": "LANGUAGES",
+      "observedAt": "2026-10-09T20:02:56.894179+00:00",
+      "sourceUrl": "https://www.demo-energia.com/",
+      "statement": "en"
+     },
+     {
+      "code": "ADDRESS_DECLARED",
+      "detail": {
+       "basis": "PREMISES"
+      },
+      "epistemicState": "DECLARED",
+      "excerpt": "schema.org address: ES",
+      "kind": "DECLARED_LOCATION",
+      "observedAt": "2026-10-09T20:02:56.894179+00:00",
+      "sourceUrl": "https://www.demo-energia.com/",
+      "statement": "ES"
+     },
+     {
+      "code": "solar-pv-installation",
+      "detail": {
+       "method": "LEXICON",
+       "model": null,
+       "routingCodes": [
+        "CPV:09331200",
+        "CPV:09332000",
+        "CPV:45261215",
+        "NAICS:221114",
+        "NAICS:238210"
+       ]
+      },
+      "epistemicState": "POTENTIAL",
+      "excerpt": "Demo Energia | photovoltaic installation",
+      "kind": "ACTIVITY",
+      "observedAt": "2026-10-09T20:02:56.894179+00:00",
+      "sourceUrl": "https://www.demo-energia.com/",
+      "statement": "Solar photovoltaic installation"
+     },
+     {
+      "code": "PUBLIC_WEB_REPRESENTATION_MEASURED",
+      "detail": {
+       "checks": {
+        "alternateLanguages": 0,
+        "canonical": null,
+        "descriptionPresent": false,
+        "homepageNoindex": false,
+        "offerDeclared": false,
+        "organizationDeclared": true,
+        "robotsTxtPublished": false,
+        "schemaTypes": [
+         "Organization",
+         "PostalAddress"
+        ],
+        "sitemapsDeclared": 0,
+        "titlePresent": true
+       },
+       "conditions": "robots.txt plus pages read by this First Observation",
+       "instrument": "site-reading.v1",
+       "limitation": "Own website only; not search results, rankings or generative answers."
+      },
+      "epistemicState": "OBSERVED",
+      "excerpt": null,
+      "kind": "WEB_REPRESENTATION",
+      "observedAt": "2026-10-09T20:02:56.894179+00:00",
+      "sourceUrl": "https://www.demo-energia.com/",
+      "statement": "Public web representation checks"
+     },
+     {
+      "code": "OFFER_NOT_MACHINE_READABLE",
+      "detail": {
+       "basis": [
+        "ACTIVITY",
+        "WEB_REPRESENTATION"
+       ],
+       "notCausal": true,
+       "whyItMatters": "Search and generative surfaces that rely on structured data may not connect this organization to what it offers. Not a measured ranking."
+      },
+      "epistemicState": "POTENTIAL",
+      "excerpt": null,
+      "kind": "REPRESENTATION_GAP",
+      "observedAt": "2026-10-09T20:02:56.894179+00:00",
+      "sourceUrl": "https://www.demo-energia.com/",
+      "statement": "On the pages read, its activity is evidenced in prose but no service or product is declared as structured data."
+     },
+     {
+      "code": "NO_GOVERNED_DEMAND_SOURCE:EU/ES",
+      "detail": {
+       "jurisdiction": "EU/ES",
+       "reasons": [
+        "NO_ADOPTED_SOURCE",
+        "NO_KNOWN_SOURCE"
+       ]
+      },
+      "epistemicState": "UNKNOWN",
+      "excerpt": null,
+      "kind": "SIGNIFICANT_UNKNOWN",
+      "observedAt": null,
+      "sourceUrl": null,
+      "statement": "No governed demand source is adopted for EU/ES yet. That is not an absence of demand."
+     },
+     {
+      "code": "POTENTIAL_DEMAND",
+      "detail": {
+       "buyer": "Ayuntamiento Ejemplo",
+       "capabilityIds": [
+        "solar-pv-installation"
+       ],
+       "codes": [
+        "CPV:09332000"
+       ],
+       "deadline": "2026-11-03",
+       "demandForm": "OPEN_CALL_FOR_TENDER",
+       "epistemicState": "POTENTIAL",
+       "market": "EU/ES",
+       "publishedAt": "2026-10-05T20:02:56.279404+00:00",
+       "source": "fuente-licitaciones-demo",
+       "title": "Instalación fotovoltaica de autoconsumo en edificios municipales",
+       "url": "https://licitaciones.example.com/en/notice/-/detail/801234-2026"
+      },
+      "epistemicState": "POTENTIAL",
+      "excerpt": null,
+      "kind": "DEMAND",
+      "observedAt": "2026-10-09T20:02:56.910081+00:00",
+      "sourceUrl": "https://licitaciones.example.com/en/notice/-/detail/801234-2026",
+      "statement": "Instalación fotovoltaica de autoconsumo en edificios municipales"
+     }
+    ],
+    "firstProofReady": true,
+    "nextDueAt": "2026-10-16T20:02:56.910081+00:00",
+    "observedAt": "2026-10-09T20:02:56.910081+00:00",
+    "publicUnderstanding": {
+     "authority": "DERIVED_CONDITIONED_NOT_CANONICAL",
+     "cause": "CONDITIONED_INTERPRETATION",
+     "citations": [
+      {
+       "contentFingerprint": "sha256:8e309d27c17806b3e59f9a4fc69385acb6f330269c535a94a79dada29ef32614",
+       "id": "q1",
+       "observedAt": "2026-10-09T20:02:56.894179+00:00",
+       "quote": "Demo Energia | photovoltaic installation",
+       "url": "https://www.demo-energia.com/"
+      },
+      {
+       "contentFingerprint": "sha256:8e309d27c17806b3e59f9a4fc69385acb6f330269c535a94a79dada29ef32614",
+       "id": "q2",
+       "observedAt": "2026-10-09T20:02:56.894179+00:00",
+       "quote": "We install photovoltaic panels.",
+       "url": "https://www.demo-energia.com/"
+      },
+      {
+       "contentFingerprint": "sha256:8e309d27c17806b3e59f9a4fc69385acb6f330269c535a94a79dada29ef32614",
+       "id": "q3",
+       "observedAt": "2026-10-09T20:02:56.894179+00:00",
+       "quote": "Services",
+       "url": "https://www.demo-energia.com/"
+      },
+      {
+       "contentFingerprint": "sha256:8cbf3ccbdb8e7be18e0006fc579912ccbcfcab437e3c9c94a835d7e191efdd71",
+       "id": "q4",
+       "observedAt": "2026-10-09T20:02:56.894179+00:00",
+       "quote": "We install photovoltaic panels.",
+       "url": "https://www.demo-energia.com/services"
+      }
+     ],
+     "compatibilityKey": "77a085b76dabcfcaf5aa77ed6e33f63c5e6699a6816e741ba20a7de86e00c05d",
+     "conditions": {
+      "languages": [
+       "en"
+      ],
+      "market": "UNKNOWN",
+      "persona": "UNCONTEXTUALIZED_EXTERNAL_READER",
+      "replicaPolicy": "ONE_EXECUTION_OR_EXACT_JUDGMENT_REUSE",
+      "sampleSize": 1,
+      "sourceSet": [
+       "https://www.demo-energia.com/",
+       "https://www.demo-energia.com/services"
+      ],
+      "surface": "OWN_PUBLIC_WEBSITE_API_INTERPRETATION"
+     },
+     "contentExpiresAt": "2027-01-07T20:02:56.894179+00:00",
+     "coverage": "BOUNDED_COMPLETE",
+     "currentness": "CURRENT",
+     "dimensions": [
+      {
+       "alternatives": [
+        "DELIBERATE_LIMITED_DISCLOSURE",
+        "SAMPLE_SCOPE",
+        "EVALUATOR_ERROR"
+       ],
+       "cause": "EXPLICIT_STATEMENT_SELECTED",
+       "citationIds": [
+        "q2"
+       ],
+       "dimension": "offer",
+       "proposal": null,
+       "recheck": "SAME_INSTRUMENT_AND_SOURCE_SCOPE_AFTER_HUMAN_REVIEW",
+       "state": "STRENGTH"
+      },
+      {
+       "alternatives": [
+        "DELIBERATE_LIMITED_DISCLOSURE",
+        "SAMPLE_SCOPE",
+        "EVALUATOR_ERROR"
+       ],
+       "cause": "REPRESENTATION_LIMITATION_POSSIBLE",
+       "citationIds": [
+        "q1",
+        "q2",
+        "q3",
+        "q4"
+       ],
+       "dimension": "audience",
+       "proposal": "MAKE_AUDIENCE_EXPLICIT_IF_INTENDED",
+       "recheck": "SAME_INSTRUMENT_AND_SOURCE_SCOPE_AFTER_HUMAN_REVIEW",
+       "state": "CONSTRUCTIVE_GAP"
+      },
+      {
+       "alternatives": [
+        "DELIBERATE_LIMITED_DISCLOSURE",
+        "SAMPLE_SCOPE",
+        "EVALUATOR_ERROR"
+       ],
+       "cause": "REPRESENTATION_LIMITATION_POSSIBLE",
+       "citationIds": [
+        "q1",
+        "q2",
+        "q3",
+        "q4"
+       ],
+       "dimension": "outcome",
+       "proposal": "MAKE_OUTCOME_EXPLICIT_IF_INTENDED",
+       "recheck": "SAME_INSTRUMENT_AND_SOURCE_SCOPE_AFTER_HUMAN_REVIEW",
+       "state": "CONSTRUCTIVE_GAP"
+      }
+     ],
+     "execution": "EVALUATED",
+     "instrument": {
+      "evaluator": "typesafe-system-one",
+      "id": "axignal.public-offer-understanding",
+      "interpretationVersion": "conditional-offer.v1",
+      "model": "jev-1.13.0",
+      "representationVersion": "public-citations.v1",
+      "version": "1.0.0"
+     },
+     "limitations": [
+      "SINGLE_CONDITIONED_INSTRUMENT_NOT_POPULATION",
+      "NO_BUSINESS_TRUTH"
+     ],
+     "measuredAt": "2026-10-09T20:02:56.910081+00:00",
+     "questionFingerprint": "019af0d6b5cce3cdd19567f9c6e473ded9b2820fadd0d322714f3f93fede89f5",
+     "reportId": "92ada42b7c64b3037d9036a88faae8f3183188fc9a26b3ccb2884184308ccb4d",
+     "sourceObservedAt": "2026-10-09T20:02:56.894179+00:00",
+     "sourceRights": [
+      {
+       "basisRef": "source-registry:website:demo-energia.com@1:c82ae7b330d67a9d587070262ac3b17defa7164d3bf78638abbea11c75cf7892",
+       "policyVersion": "first-observation-content-rights.v1",
+       "providerInput": true,
+       "publicOfferInput": true,
+       "rawRetentionDays": 90,
+       "reusePermitted": true,
+       "url": "https://www.demo-energia.com/"
+      },
+      {
+       "basisRef": "source-registry:website:demo-energia.com@1:c82ae7b330d67a9d587070262ac3b17defa7164d3bf78638abbea11c75cf7892",
+       "policyVersion": "first-observation-content-rights.v1",
+       "providerInput": true,
+       "publicOfferInput": true,
+       "rawRetentionDays": 90,
+       "reusePermitted": true,
+       "url": "https://www.demo-energia.com/services"
+      }
+     ],
+     "stateFingerprint": "afb412096b77cf5777afab8e0f1a48f2a940eefab0f4e4da4ebfc0f5a2c375a8",
+     "status": "MEASURED",
+     "validUntil": "2026-10-16T20:02:56.894179+00:00",
+     "history": [],
+     "comparison": null
+    },
+    "retainUntil": "2027-01-07T20:02:56.910081+00:00",
+    "state": "FIRST_PROOF_READY",
+    "target": {
+     "kind": "FOCUS",
+     "website": "https://www.demo-energia.com/",
+     "name": null,
+     "identityLink": "REGISTRY_VERIFIED"
+    }
+   },
+   "revision": "b8c97fa3e4b47d48488492ca45f30acb47c19899eb82edc255cc33a5c2fc91f8"
+  },
+  "pending_115c8d1ab897476dab5eeb7ffcd7f5e5": {
+   "state": "success",
+   "kind": "PENDING_ATTENTION",
+   "firstObservation": {
+    "attentionScopes": [
+     {
+      "epistemicState": "POTENTIAL",
+      "jurisdiction": "EU/ES",
+      "roles": [
+       "PRIVATE_BUSINESSES",
+       "PUBLIC_BUYERS"
+      ]
+     }
+    ],
+    "authority": "OPERATIONAL_NOT_CANONICAL",
+    "discoveries": [
+     {
+      "code": "PUBLIC_WEBSITE_OBSERVED",
+      "detail": {
+       "pagesRead": 3
+      },
+      "epistemicState": "OBSERVED",
+      "excerpt": "Strategy and process consulting for industrial companies.",
+      "kind": "PUBLIC_PRESENCE",
+      "observedAt": "2026-10-09T20:02:56.279404+00:00",
+      "sourceUrl": "https://demo-consultor.com/",
+      "statement": "Strategy and process consulting for industrial companies."
+     },
+     {
+      "code": "LANGUAGES_PUBLISHED",
+      "detail": {
+       "languages": [
+        "en"
+       ]
+      },
+      "epistemicState": "OBSERVED",
+      "excerpt": null,
+      "kind": "LANGUAGES",
+      "observedAt": "2026-10-09T20:02:56.279404+00:00",
+      "sourceUrl": "https://demo-consultor.com/",
+      "statement": "en"
+     },
+     {
+      "code": "LOCATION_STATED_IN_TEXT",
+      "detail": {
+       "basis": "TEXT_MENTION",
+       "method": "SEMANTIC_JUDGMENT"
+      },
+      "epistemicState": "POTENTIAL",
+      "excerpt": "Visit us in Little Rock, Arkansas.",
+      "kind": "DECLARED_LOCATION",
+      "observedAt": "2026-10-09T20:02:56.279404+00:00",
+      "sourceUrl": "https://demo-consultor.com/",
+      "statement": "US/US-AR"
+     },
+     {
+      "code": "isic-P",
+      "detail": {
+       "method": "SEMANTIC_JUDGMENT",
+       "model": "jev-1.13.0",
+       "routingCodes": [
+        "NAICS:61"
+       ]
+      },
+      "epistemicState": "POTENTIAL",
+      "excerpt": "Spanish and French classes for adults and kids.",
+      "kind": "ACTIVITY",
+      "observedAt": "2026-10-09T20:02:56.279404+00:00",
+      "sourceUrl": "https://demo-consultor.com/",
+      "statement": "Education"
+     },
+     {
+      "code": "PUBLIC_WEB_REPRESENTATION_MEASURED",
+      "detail": {
+       "checks": {
+        "alternateLanguages": 0,
+        "canonical": null,
+        "descriptionPresent": true,
+        "homepageNoindex": false,
+        "offerDeclared": false,
+        "organizationDeclared": false,
+        "robotsTxtPublished": false,
+        "schemaTypes": [],
+        "sitemapsDeclared": 0,
+        "titlePresent": true
+       },
+       "conditions": "robots.txt plus pages read by this First Observation",
+       "instrument": "site-reading.v1",
+       "limitation": "Own website only; not search results, rankings or generative answers."
+      },
+      "epistemicState": "OBSERVED",
+      "excerpt": null,
+      "kind": "WEB_REPRESENTATION",
+      "observedAt": "2026-10-09T20:02:56.279404+00:00",
+      "sourceUrl": "https://demo-consultor.com/",
+      "statement": "Public web representation checks"
+     },
+     {
+      "code": "OFFER_NOT_MACHINE_READABLE",
+      "detail": {
+       "basis": [
+        "ACTIVITY",
+        "WEB_REPRESENTATION"
+       ],
+       "notCausal": true,
+       "whyItMatters": "Search and generative surfaces that rely on structured data may not connect this organization to what it offers. Not a measured ranking."
+      },
+      "epistemicState": "POTENTIAL",
+      "excerpt": null,
+      "kind": "REPRESENTATION_GAP",
+      "observedAt": "2026-10-09T20:02:56.279404+00:00",
+      "sourceUrl": "https://demo-consultor.com/",
+      "statement": "On the pages read, its activity is evidenced in prose but no service or product is declared as structured data."
+     },
+     {
+      "code": "IDENTITY_NOT_VERIFIED",
+      "detail": {},
+      "epistemicState": "UNKNOWN",
+      "excerpt": null,
+      "kind": "SIGNIFICANT_UNKNOWN",
+      "observedAt": null,
+      "sourceUrl": null,
+      "statement": "No registry has attested which legal entity this is yet. What follows describes the public website, not a verified organization."
+     },
+     {
+      "code": "NO_GOVERNED_DEMAND_SOURCE:US/US-AR",
+      "detail": {
+       "jurisdiction": "US/US-AR",
+       "reasons": [
+        "NO_ADOPTED_SOURCE",
+        "NO_KNOWN_SOURCE"
+       ]
+      },
+      "epistemicState": "UNKNOWN",
+      "excerpt": null,
+      "kind": "SIGNIFICANT_UNKNOWN",
+      "observedAt": null,
+      "sourceUrl": null,
+      "statement": "No governed demand source is adopted for US/US-AR yet. That is not an absence of demand."
+     }
+    ],
+    "firstProofReady": true,
+    "nextDueAt": "2026-10-16T20:02:58.079301+00:00",
+    "observedAt": "2026-10-09T20:02:58.079301+00:00",
+    "publicUnderstanding": null,
+    "retainUntil": "2027-01-07T20:02:58.079301+00:00",
+    "state": "FIRST_PROOF_READY",
+    "target": {
+     "kind": "PENDING",
+     "website": "https://demo-consultor.com/",
+     "name": null,
+     "identityLink": "IDENTITY_PENDING"
+    }
+   }
+  },
+  "pending_73ba1b9973c04e6c8828f9e7e80a154d": {
+   "state": "success",
+   "kind": "PENDING_ATTENTION",
+   "firstObservation": {
+    "attentionScopes": [
+     {
+      "epistemicState": "POTENTIAL",
+      "jurisdiction": "EU/ES",
+      "roles": [
+       "PRIVATE_BUSINESSES",
+       "PUBLIC_BUYERS"
+      ]
+     }
+    ],
+    "authority": "OPERATIONAL_NOT_CANONICAL",
+    "discoveries": [
+     {
+      "code": "PUBLIC_WEBSITE_OBSERVED",
+      "detail": {
+       "pagesRead": 1
+      },
+      "epistemicState": "OBSERVED",
+      "excerpt": "Building and refurbishment of industrial warehouses and office buildings.",
+      "kind": "PUBLIC_PRESENCE",
+      "observedAt": "2026-10-09T20:02:56.279404+00:00",
+      "sourceUrl": "https://demo-constructor.com/",
+      "statement": "Building and refurbishment of industrial warehouses and office buildings."
+     },
+     {
+      "code": "LANGUAGES_PUBLISHED",
+      "detail": {
+       "languages": [
+        "de",
+        "en",
+        "fr"
+       ]
+      },
+      "epistemicState": "OBSERVED",
+      "excerpt": null,
+      "kind": "LANGUAGES",
+      "observedAt": "2026-10-09T20:02:56.279404+00:00",
+      "sourceUrl": "https://demo-constructor.com/",
+      "statement": "de, en, fr"
+     },
+     {
+      "code": "ADDRESS_DECLARED",
+      "detail": {
+       "basis": "PREMISES"
+      },
+      "epistemicState": "DECLARED",
+      "excerpt": "schema.org address: Dublin, IE",
+      "kind": "DECLARED_LOCATION",
+      "observedAt": "2026-10-09T20:02:56.279404+00:00",
+      "sourceUrl": "https://demo-constructor.com/",
+      "statement": "Dublin, IE"
+     },
+     {
+      "code": "isic-J",
+      "detail": {
+       "method": "SCHEMA_ORG_TYPE",
+       "model": null,
+       "routingCodes": [
+        "CPV:72000000",
+        "NAICS:51"
+       ]
+      },
+      "epistemicState": "POTENTIAL",
+      "excerpt": "schema.org @type: SoftwareApplication, Organization, PostalAddress",
+      "kind": "ACTIVITY",
+      "observedAt": "2026-10-09T20:02:56.279404+00:00",
+      "sourceUrl": "https://demo-constructor.com/",
+      "statement": "Information and communication"
+     },
+     {
+      "code": "PUBLIC_WEB_REPRESENTATION_MEASURED",
+      "detail": {
+       "checks": {
+        "alternateLanguages": 2,
+        "canonical": null,
+        "descriptionPresent": true,
+        "homepageNoindex": false,
+        "offerDeclared": true,
+        "organizationDeclared": true,
+        "robotsTxtPublished": false,
+        "schemaTypes": [
+         "Organization",
+         "PostalAddress",
+         "SoftwareApplication"
+        ],
+        "sitemapsDeclared": 0,
+        "titlePresent": true
+       },
+       "conditions": "robots.txt plus pages read by this First Observation",
+       "instrument": "site-reading.v1",
+       "limitation": "Own website only; not search results, rankings or generative answers."
+      },
+      "epistemicState": "OBSERVED",
+      "excerpt": null,
+      "kind": "WEB_REPRESENTATION",
+      "observedAt": "2026-10-09T20:02:56.279404+00:00",
+      "sourceUrl": "https://demo-constructor.com/",
+      "statement": "Public web representation checks"
+     },
+     {
+      "code": "IDENTITY_NOT_VERIFIED",
+      "detail": {},
+      "epistemicState": "UNKNOWN",
+      "excerpt": null,
+      "kind": "SIGNIFICANT_UNKNOWN",
+      "observedAt": null,
+      "sourceUrl": null,
+      "statement": "No registry has attested which legal entity this is yet. What follows describes the public website, not a verified organization."
+     },
+     {
+      "code": "NO_GOVERNED_DEMAND_SOURCE:EU/IE",
+      "detail": {
+       "jurisdiction": "EU/IE",
+       "reasons": [
+        "NO_ADOPTED_SOURCE",
+        "NO_KNOWN_SOURCE"
+       ]
+      },
+      "epistemicState": "UNKNOWN",
+      "excerpt": null,
+      "kind": "SIGNIFICANT_UNKNOWN",
+      "observedAt": null,
+      "sourceUrl": null,
+      "statement": "No governed demand source is adopted for EU/IE yet. That is not an absence of demand."
+     },
+     {
+      "code": "NO_RELEVANT_DEMAND_FOUND",
+      "detail": {},
+      "epistemicState": "UNKNOWN",
+      "excerpt": null,
+      "kind": "SIGNIFICANT_UNKNOWN",
+      "observedAt": null,
+      "sourceUrl": null,
+      "statement": "The governed sources searched returned no current matching demand. No result is not no opportunity."
+     }
+    ],
+    "firstProofReady": true,
+    "nextDueAt": "2026-10-16T20:02:58.550028+00:00",
+    "observedAt": "2026-10-09T20:02:58.550028+00:00",
+    "publicUnderstanding": null,
+    "retainUntil": "2027-01-07T20:02:58.550028+00:00",
+    "state": "FIRST_PROOF_READY",
+    "target": {
+     "kind": "PENDING",
+     "website": "https://demo-constructor.com/",
+     "name": null,
+     "identityLink": "IDENTITY_PENDING"
+    }
+   }
+  },
+  "pending_1a743f603eb84c08a21ddda89f3d741c": {
+   "state": "success",
+   "kind": "PENDING_ATTENTION",
+   "firstObservation": {
+    "attentionScopes": [
+     {
+      "epistemicState": "POTENTIAL",
+      "jurisdiction": "EU/ES",
+      "roles": [
+       "PRIVATE_BUSINESSES",
+       "PUBLIC_BUYERS"
+      ]
+     }
+    ],
+    "authority": "OPERATIONAL_NOT_CANONICAL",
+    "discoveries": [
+     {
+      "code": "PUBLIC_WEBSITE_OBSERVED",
+      "detail": {
+       "pagesRead": 1
+      },
+      "epistemicState": "OBSERVED",
+      "excerpt": "Marketing campaigns and market studies for consumer brands.",
+      "kind": "PUBLIC_PRESENCE",
+      "observedAt": "2026-10-09T20:02:56.279404+00:00",
+      "sourceUrl": "https://demo-marketing.com/",
+      "statement": "Marketing campaigns and market studies for consumer brands."
+     },
+     {
+      "code": "LANGUAGES_PUBLISHED",
+      "detail": {
+       "languages": [
+        "fr"
+       ]
+      },
+      "epistemicState": "OBSERVED",
+      "excerpt": null,
+      "kind": "LANGUAGES",
+      "observedAt": "2026-10-09T20:02:56.279404+00:00",
+      "sourceUrl": "https://demo-marketing.com/",
+      "statement": "fr"
+     },
+     {
+      "code": "ADDRESS_DECLARED",
+      "detail": {
+       "basis": "PREMISES"
+      },
+      "epistemicState": "DECLARED",
+      "excerpt": "schema.org address: Lyon, FR",
+      "kind": "DECLARED_LOCATION",
+      "observedAt": "2026-10-09T20:02:56.279404+00:00",
+      "sourceUrl": "https://demo-marketing.com/",
+      "statement": "Lyon, FR"
+     },
+     {
+      "code": "isic-I",
+      "detail": {
+       "method": "SCHEMA_ORG_TYPE",
+       "model": null,
+       "routingCodes": [
+        "CPV:55000000",
+        "NAICS:72"
+       ]
+      },
+      "epistemicState": "POTENTIAL",
+      "excerpt": "schema.org @type: Bakery, PostalAddress",
+      "kind": "ACTIVITY",
+      "observedAt": "2026-10-09T20:02:56.279404+00:00",
+      "sourceUrl": "https://demo-marketing.com/",
+      "statement": "Accommodation and food service activities"
+     },
+     {
+      "code": "PUBLIC_WEB_REPRESENTATION_MEASURED",
+      "detail": {
+       "checks": {
+        "alternateLanguages": 0,
+        "canonical": null,
+        "descriptionPresent": false,
+        "homepageNoindex": false,
+        "offerDeclared": false,
+        "organizationDeclared": true,
+        "robotsTxtPublished": false,
+        "schemaTypes": [
+         "Bakery",
+         "PostalAddress"
+        ],
+        "sitemapsDeclared": 0,
+        "titlePresent": true
+       },
+       "conditions": "robots.txt plus pages read by this First Observation",
+       "instrument": "site-reading.v1",
+       "limitation": "Own website only; not search results, rankings or generative answers."
+      },
+      "epistemicState": "OBSERVED",
+      "excerpt": null,
+      "kind": "WEB_REPRESENTATION",
+      "observedAt": "2026-10-09T20:02:56.279404+00:00",
+      "sourceUrl": "https://demo-marketing.com/",
+      "statement": "Public web representation checks"
+     },
+     {
+      "code": "OFFER_NOT_MACHINE_READABLE",
+      "detail": {
+       "basis": [
+        "ACTIVITY",
+        "WEB_REPRESENTATION"
+       ],
+       "notCausal": true,
+       "whyItMatters": "Search and generative surfaces that rely on structured data may not connect this organization to what it offers. Not a measured ranking."
+      },
+      "epistemicState": "POTENTIAL",
+      "excerpt": null,
+      "kind": "REPRESENTATION_GAP",
+      "observedAt": "2026-10-09T20:02:56.279404+00:00",
+      "sourceUrl": "https://demo-marketing.com/",
+      "statement": "On the pages read, its activity is evidenced in prose but no service or product is declared as structured data."
+     },
+     {
+      "code": "IDENTITY_NOT_VERIFIED",
+      "detail": {},
+      "epistemicState": "UNKNOWN",
+      "excerpt": null,
+      "kind": "SIGNIFICANT_UNKNOWN",
+      "observedAt": null,
+      "sourceUrl": null,
+      "statement": "No registry has attested which legal entity this is yet. What follows describes the public website, not a verified organization."
+     },
+     {
+      "code": "NO_GOVERNED_DEMAND_SOURCE:EU/FR",
+      "detail": {
+       "jurisdiction": "EU/FR",
+       "reasons": [
+        "NO_ADOPTED_SOURCE",
+        "NO_KNOWN_SOURCE"
+       ]
+      },
+      "epistemicState": "UNKNOWN",
+      "excerpt": null,
+      "kind": "SIGNIFICANT_UNKNOWN",
+      "observedAt": null,
+      "sourceUrl": null,
+      "statement": "No governed demand source is adopted for EU/FR yet. That is not an absence of demand."
+     },
+     {
+      "code": "NO_RELEVANT_DEMAND_FOUND",
+      "detail": {},
+      "epistemicState": "UNKNOWN",
+      "excerpt": null,
+      "kind": "SIGNIFICANT_UNKNOWN",
+      "observedAt": null,
+      "sourceUrl": null,
+      "statement": "The governed sources searched returned no current matching demand. No result is not no opportunity."
+     }
+    ],
+    "firstProofReady": true,
+    "nextDueAt": "2026-10-16T20:02:59.032064+00:00",
+    "observedAt": "2026-10-09T20:02:59.032064+00:00",
+    "publicUnderstanding": null,
+    "retainUntil": "2027-01-07T20:02:59.032064+00:00",
+    "state": "FIRST_PROOF_READY",
+    "target": {
+     "kind": "PENDING",
+     "website": "https://demo-marketing.com/",
+     "name": null,
+     "identityLink": "IDENTITY_PENDING"
+    }
+   }
+  },
+  "pending_8635a3d89af64c7689983612686041d5": {
+   "state": "success",
+   "kind": "PENDING_ATTENTION",
+   "firstObservation": {
+    "attentionScopes": [],
+    "authority": "OPERATIONAL_NOT_CANONICAL",
+    "discoveries": [
+     {
+      "code": "PUBLIC_WEBSITE_OBSERVED",
+      "detail": {
+       "pagesRead": 1
+      },
+      "epistemicState": "OBSERVED",
+      "excerpt": "Made-to-order metal components for industrial customers.",
+      "kind": "PUBLIC_PRESENCE",
+      "observedAt": "2026-10-09T20:02:56.279404+00:00",
+      "sourceUrl": "https://demo-fabrica.com/",
+      "statement": "Made-to-order metal components for industrial customers."
+     },
+     {
+      "code": "PUBLIC_WEB_REPRESENTATION_MEASURED",
+      "detail": {
+       "checks": {
+        "alternateLanguages": 0,
+        "canonical": null,
+        "descriptionPresent": false,
+        "homepageNoindex": false,
+        "offerDeclared": false,
+        "organizationDeclared": false,
+        "robotsTxtPublished": false,
+        "schemaTypes": [],
+        "sitemapsDeclared": 0,
+        "titlePresent": true
+       },
+       "conditions": "robots.txt plus pages read by this First Observation",
+       "instrument": "site-reading.v1",
+       "limitation": "Own website only; not search results, rankings or generative answers."
+      },
+      "epistemicState": "OBSERVED",
+      "excerpt": null,
+      "kind": "WEB_REPRESENTATION",
+      "observedAt": "2026-10-09T20:02:56.279404+00:00",
+      "sourceUrl": "https://demo-fabrica.com/",
+      "statement": "Public web representation checks"
+     },
+     {
+      "code": "IDENTITY_NOT_VERIFIED",
+      "detail": {},
+      "epistemicState": "UNKNOWN",
+      "excerpt": null,
+      "kind": "SIGNIFICANT_UNKNOWN",
+      "observedAt": null,
+      "sourceUrl": null,
+      "statement": "No registry has attested which legal entity this is yet. What follows describes the public website, not a verified organization."
+     },
+     {
+      "code": "ACTIVITY_NOT_ESTABLISHED",
+      "detail": {},
+      "epistemicState": "UNKNOWN",
+      "excerpt": null,
+      "kind": "SIGNIFICANT_UNKNOWN",
+      "observedAt": null,
+      "sourceUrl": null,
+      "statement": "What it offers is not established yet from its public website."
+     },
+     {
+      "code": "NOT_AN_OPERATING_BUSINESS_SITE",
+      "detail": {},
+      "epistemicState": "POTENTIAL",
+      "excerpt": "Coming soon",
+      "kind": "SIGNIFICANT_UNKNOWN",
+      "observedAt": "2026-10-09T20:02:56.279404+00:00",
+      "sourceUrl": "https://demo-fabrica.com/",
+      "statement": "The page does not read as an operating organization's website."
+     }
+    ],
+    "firstProofReady": false,
+    "nextDueAt": "2026-10-16T20:02:59.499848+00:00",
+    "observedAt": "2026-10-09T20:02:59.499848+00:00",
+    "publicUnderstanding": null,
+    "retainUntil": "2027-01-07T20:02:59.499848+00:00",
+    "state": "NOT_ENOUGH_CAPABILITY_EVIDENCE",
+    "target": {
+     "kind": "PENDING",
+     "website": "https://demo-fabrica.com/",
+     "name": null,
+     "identityLink": "IDENTITY_PENDING"
+    }
+   }
+  },
+  "pending_cf98f1069fbb4ea7b3f6248fda4b76f4": {
+   "state": "success",
+   "kind": "PENDING_ATTENTION",
+   "firstObservation": {
+    "attentionScopes": [],
+    "authority": "OPERATIONAL_NOT_CANONICAL",
+    "discoveries": [
+     {
+      "code": "ROBOTS_DISALLOWED",
+      "detail": {},
+      "epistemicState": "UNKNOWN",
+      "excerpt": null,
+      "kind": "SIGNIFICANT_UNKNOWN",
+      "observedAt": "2026-10-09T20:02:59.950495+00:00",
+      "sourceUrl": "https://demo-distribuidor.com/",
+      "statement": "The public website could not be observed under its robots rules and our bounded request policy. Nothing is concluded from that."
+     },
+     {
+      "code": "IDENTITY_NOT_VERIFIED",
+      "detail": {},
+      "epistemicState": "UNKNOWN",
+      "excerpt": null,
+      "kind": "SIGNIFICANT_UNKNOWN",
+      "observedAt": null,
+      "sourceUrl": null,
+      "statement": "No registry has attested which legal entity this is yet. What follows describes the public website, not a verified organization."
+     }
+    ],
+    "firstProofReady": false,
+    "nextDueAt": "2026-10-11T20:02:59.950495+00:00",
+    "observedAt": "2026-10-09T20:02:59.950495+00:00",
+    "publicUnderstanding": null,
+    "retainUntil": "2026-11-08T20:02:59.950495+00:00",
+    "state": "SOURCE_UNAVAILABLE",
+    "target": {
+     "kind": "PENDING",
+     "website": "https://demo-distribuidor.com/",
+     "name": null,
+     "identityLink": "IDENTITY_PENDING"
+    }
+   }
+  },
+  "focus_dc8789f4ad3eb9cb614da15c7b43b0ec": {
+   "state": "success",
+   "projection": {
+    "realityLevel": "SUBSCRIBER_RUNTIME_READ_MODEL",
+    "runtimeCodeSha": "test-code-sha",
+    "lifecycleStatus": "LIVE",
+    "context": {
+     "id": "focus_dc8789f4ad3eb9cb614da15c7b43b0ec",
+     "label": "Demo Seo-Geo"
+    },
+    "organization": {
+     "id": "org:id:67b5cc7538d9d19c014a4e413016b411",
+     "name": "Demo Seo-Geo"
+    },
+    "nodes": [],
+    "temporalHistory": {
+     "disposition": "MULTIPLE_OBSERVATIONS",
+     "items": [
+      {
+       "observationId": "fo:c4719afa76fa448b5eca99e673688584",
+       "sourceRef": "https://www.demo-seo-geo.com/",
+       "sourceType": "PUBLIC_WEBSITE",
+       "observedAt": "2026-09-11T08:00:00+00:00",
+       "currentness": "CURRENT",
+       "normalizedStateChanged": null
+      },
+      {
+       "observationId": "fo:612f7a0edd33d5c1a7f59b38db605f5f",
+       "sourceRef": "https://www.demo-seo-geo.com/",
+       "sourceType": "PUBLIC_WEBSITE",
+       "observedAt": "2026-09-25T08:00:00+00:00",
+       "currentness": "CURRENT",
+       "normalizedStateChanged": false
+      },
+      {
+       "observationId": "fo:9f11eb4e46c514454c7c520ce8cd6bca",
+       "sourceRef": "https://www.demo-seo-geo.com/",
+       "sourceType": "PUBLIC_WEBSITE",
+       "observedAt": "2026-10-09T08:00:00+00:00",
+       "currentness": "CURRENT",
+       "normalizedStateChanged": false
+      },
+      {
+       "observationId": "fo:aa712b0c4b069f7214b9db9336953173",
+       "sourceRef": "https://search-visibility.example.com/demo-seo-geo/queries",
+       "sourceType": "PUBLIC_SEARCH_VISIBILITY",
+       "observedAt": "2026-09-25T08:00:00+00:00",
+       "currentness": "CURRENT",
+       "normalizedStateChanged": null
+      },
+      {
+       "observationId": "fo:372a4935ed2c1bdf92ebe9b85e24a233",
+       "sourceRef": "https://search-visibility.example.com/demo-seo-geo/queries",
+       "sourceType": "PUBLIC_SEARCH_VISIBILITY",
+       "observedAt": "2026-10-09T08:00:00+00:00",
+       "currentness": "CURRENT",
+       "normalizedStateChanged": true
+      },
+      {
+       "observationId": "fo:f2e0b62a0155903aae2b59fb155e99ae",
+       "sourceRef": "https://ai-answers.example.com/demo-seo-geo/questions",
+       "sourceType": "GENERATIVE_ANSWER_SURFACES",
+       "observedAt": "2026-09-25T08:00:00+00:00",
+       "currentness": "CURRENT",
+       "normalizedStateChanged": null
+      },
+      {
+       "observationId": "fo:64c024c32dfb77c22cb24222b65d633c",
+       "sourceRef": "https://ai-answers.example.com/demo-seo-geo/questions",
+       "sourceType": "GENERATIVE_ANSWER_SURFACES",
+       "observedAt": "2026-10-09T08:00:00+00:00",
+       "currentness": "CURRENT",
+       "normalizedStateChanged": true
+      }
+     ]
+    },
+    "digitalRepresentation": {
+     "state": "NOT_MEASURED",
+     "reason": "No condition-bound public page measurement is available for this read."
+    },
+    "memberships": [],
+    "today": {
+     "disposition": "EMPTY",
+     "items": []
+    },
+    "reloadContinuity": "PERSISTED_RUNTIME_READ_MODEL",
+    "cognition": {
+     "asOf": "2026-10-09T08:00:00+00:00",
+     "sources": [
+      {
+       "id": "fo:9f11eb4e46c514454c7c520ce8cd6bca",
+       "title": "https://www.demo-seo-geo.com/",
+       "observedAt": "2026-10-09T08:00:00+00:00",
+       "currentness": "CURRENT",
+       "currentnessEvaluatedAt": "2026-10-09T08:00:00+00:00",
+       "instrument": "public-website-reader@1",
+       "limitation": "A sample under stated conditions; coverage beyond it remains unknown.",
+       "sourceRef": "https://www.demo-seo-geo.com/",
+       "provenanceRef": "artifact:7d2892ae9c8a98173eb3b78b7a860ee2"
+      },
+      {
+       "id": "fo:372a4935ed2c1bdf92ebe9b85e24a233",
+       "title": "https://search-visibility.example.com/demo-seo-geo/queries",
+       "observedAt": "2026-10-09T08:00:00+00:00",
+       "currentness": "CURRENT",
+       "currentnessEvaluatedAt": "2026-10-09T08:00:00+00:00",
+       "instrument": "search-visibility-sampler@1",
+       "limitation": "A sample under stated conditions; coverage beyond it remains unknown.",
+       "sourceRef": "https://search-visibility.example.com/demo-seo-geo/queries",
+       "provenanceRef": "artifact:5a52a96ee26ad9898073d6d2c5d17da3"
+      },
+      {
+       "id": "fo:64c024c32dfb77c22cb24222b65d633c",
+       "title": "https://ai-answers.example.com/demo-seo-geo/questions",
+       "observedAt": "2026-10-09T08:00:00+00:00",
+       "currentness": "CURRENT",
+       "currentnessEvaluatedAt": "2026-10-09T08:00:00+00:00",
+       "instrument": "ai-answer-sampler@1",
+       "limitation": "A sample under stated conditions; coverage beyond it remains unknown.",
+       "sourceRef": "https://ai-answers.example.com/demo-seo-geo/questions",
+       "provenanceRef": "artifact:c247957eadee71d9449807f003db5f17"
+      }
+     ],
+     "signals": [],
+     "opportunities": []
+    }
+   },
+   "firstObservation": {
+    "state": "FIRST_PROOF_READY",
+    "firstProofReady": true,
+    "discoveries": [
+     {
+      "kind": "PUBLIC_PRESENCE",
+      "code": "PUBLIC_WEBSITE_OBSERVED",
+      "statement": "Demo Seo-Geo | Search and AI visibility",
+      "excerpt": "We help brands get found in search engines and in AI assistant answers.",
+      "sourceUrl": "https://www.demo-seo-geo.com/",
+      "observedAt": "2026-10-09T08:00:00+00:00",
+      "epistemicState": "OBSERVED",
+      "detail": {
+       "pagesRead": 2
+      }
+     },
+     {
+      "kind": "SEARCH_VISIBILITY",
+      "code": "SEARCH_VISIBILITY_MEASURED",
+      "statement": "It appears on the first results page for 2 of 3 branded queries.",
+      "excerpt": null,
+      "sourceUrl": "https://search-visibility.example.com/demo-seo-geo/queries",
+      "observedAt": "2026-10-09T08:00:00+00:00",
+      "epistemicState": "OBSERVED",
+      "detail": {
+       "instrument": "search-visibility-sampler@1",
+       "conditions": "3 branded queries · Spain · Spanish · desktop",
+       "sample": "3 queries · 1 market · 1 device",
+       "coverage": "First results page only; paid results excluded.",
+       "comparison": "COMPARABLE",
+       "previous": "It appeared for 1 of 3 branded queries on 25 Sep 2026.",
+       "limitation": "A sample of queries, not its whole search visibility."
+      }
+     },
+     {
+      "kind": "SEARCH_VISIBILITY",
+      "code": "SEARCH_VISIBILITY_MEASURED",
+      "statement": "It does not appear on the first results page for the category query.",
+      "excerpt": null,
+      "sourceUrl": "https://search-visibility.example.com/demo-seo-geo/queries",
+      "observedAt": "2026-10-09T08:00:00+00:00",
+      "epistemicState": "OBSERVED",
+      "detail": {
+       "instrument": "search-visibility-sampler@1",
+       "conditions": "1 category query · Spain · Spanish · desktop",
+       "sample": "1 query · 1 market · 1 device",
+       "coverage": "First results page only; paid results excluded.",
+       "comparison": "FIRST_OBSERVATION",
+       "limitation": "A single query: absence on one page is not absence from search."
+      }
+     },
+     {
+      "kind": "GENERATIVE_VISIBILITY",
+      "code": "GENERATIVE_VISIBILITY_MEASURED",
+      "statement": "It is mentioned in 1 of 4 sampled AI answers and cited in none.",
+      "excerpt": null,
+      "sourceUrl": "https://ai-answers.example.com/demo-seo-geo/questions",
+      "observedAt": "2026-10-09T08:00:00+00:00",
+      "epistemicState": "OBSERVED",
+      "detail": {
+       "instrument": "ai-answer-sampler@1",
+       "conditions": "4 questions · Spanish · 1 assistant, no sign-in",
+       "sample": "4 questions · 1 run each",
+       "coverage": "One assistant; answers vary between runs.",
+       "comparison": "COMPARABLE",
+       "previous": "It was mentioned in 0 of 4 sampled AI answers on 25 Sep 2026.",
+       "limitation": "A mention is not a citation, and a citation is not an endorsement."
+      }
+     },
+     {
+      "kind": "SIGNIFICANT_UNKNOWN",
+      "code": "NO_GOVERNED_DEMAND_SOURCE:EU/ES",
+      "statement": "No governed demand source applies yet.",
+      "excerpt": null,
+      "sourceUrl": null,
+      "observedAt": "2026-10-09T08:00:00+00:00",
+      "epistemicState": "UNKNOWN",
+      "detail": {
+       "jurisdiction": "EU/ES"
+      }
+     }
+    ],
+    "observedAt": "2026-10-09T08:00:00+00:00",
+    "authority": "OPERATIONAL_NOT_CANONICAL",
+    "target": {
+     "kind": "FOCUS",
+     "website": "https://www.demo-seo-geo.com/",
+     "name": null,
+     "identityLink": "REGISTRY_VERIFIED"
+    }
+   },
+   "revision": "3ca9c4448cea7ed5dc8013df067b291294c6cd1991bfb871ab6290168d2135c0"
+  }
+ }
+}

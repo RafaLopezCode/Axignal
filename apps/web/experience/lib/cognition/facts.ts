@@ -342,7 +342,7 @@ const NORTE: FamilyFacts = {
   ],
   network: {
     nodes: [
-      { id: "norte", label: "Norte Renovable", role: c("Empresa observada", "Observed company") },
+      { id: "norte", label: "Organización Demo", role: c("Empresa observada", "Observed company") },
       { id: "ribera", label: "Cooperativa Ribera", role: c("Cliente", "Client") },
       { id: "aislantes", label: "Aislantes del Ebro", role: c("Proveedor", "Supplier") },
       { id: "agencia", label: "Agencia de vivienda", role: c("Comprador público", "Public buyer") },

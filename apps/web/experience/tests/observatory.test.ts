@@ -11,6 +11,7 @@ import { pendingOutputSchema, portfolioSchema, subscriberOutputSchema } from "..
 import { LocaleProvider } from "../lib/locale";
 import { translate } from "../lib/copy-catalog";
 import { Observatory, type ObservatoryProps } from "../components/observatory";
+import { accountSource } from "../lib/observatory-source";
 
 // SYNTHETIC: real composition output over the controlled test world (see "provenance").
 const fixture = JSON.parse(fs.readFileSync(path.join(__dirname, "fixtures", "observatory-synthetic.json"), "utf8"));
@@ -113,7 +114,7 @@ function props(overrides: Partial<ObservatoryProps> = {}): ObservatoryProps {
     access: "ready", portfolio: portfolioSchema.parse({ state: "success", capacity: 10, capacityCurrentness: "CURRENT", canPurchase: null, contractingEnabled: false, organizations: fixture.portfolio }),
     busy: false, message: "", paymentUrl: null, selected: null, reading: false, projection: null, firstObservation: null, revision: null,
     readOutput: noop, clearSelection: noop, command: async () => {}, refresh: noop, logout: noop,
-    locator: "", setLocator: noop, total: 11, setTotal: noop, replacing: null, setReplacing: noop, replacementLocator: "", setReplacementLocator: noop,
+    locator: "", setLocator: noop, total: 11, setTotal: noop, replacing: null, setReplacing: noop, replacementLocator: "", setReplacementLocator: noop, canAct: true, capabilities: accountSource.capabilities, loadReading: async () => ({}),
     ...overrides,
   };
 }
@@ -180,4 +181,57 @@ test("new observatory copy resolves in all six locales, including whole-sentence
     }
   }
   assert.equal(es("Lo que importa"), "Lo que importa");
+});
+
+test("a reading with no first observation is read from the projection's own signals, in the runtime's wording and state", () => {
+  const node = {
+    id: "xignal:abc", nodeKind: "XIGNAL" as const, title: "Its public homepage is observable from the outside",
+    whyAttention: "The public homepage was retrieved through the governed source sensor.",
+    interpretation: "The authorized public homepage was reachable when observed.",
+    uncertainty: "Only the public homepage is covered; other surfaces remain UNKNOWN.",
+    epistemicState: "OBSERVED" as const, currentness: "CURRENT" as const, observedAt: "2026-10-04T21:39:27+00:00",
+    evidenceAccess: "AVAILABLE", sourceRefs: ["https://example.test/"], observationSupportRefs: ["source:one"],
+    unknowns: ["Search, generative and social surfaces remain UNKNOWN."],
+    evidenceNarrative: { xignalId: "xignal:abc", focusStepId: "s1", steps: [{ id: "s1", kind: "SOURCE", label: "OFFICIAL_WEB", sourceRef: "https://example.test/", observedAt: "2026-10-04T21:39:27+00:00", currentness: "CURRENT", artifactVerified: true }] },
+  };
+  const projection = { realityLevel: "LIVE", runtimeCodeSha: "sha", lifecycleStatus: "LIVE", context: { id: "ctx", label: "Observation" },
+    organization: { id: "org:x", name: "Example Co" }, nodes: [node],
+    cognition: { asOf: "2026-10-10T00:00:00+00:00", sources: [], signals: [{ id: "xignal:abc", familyId: "presence" }], opportunities: [] },
+    temporalHistory: { disposition: "EMPTY", items: [] }, today: { disposition: "READY", items: [] }, reloadContinuity: "PERSISTED_RUNTIME_READ_MODEL" };
+  const reading = { projection: projection as unknown as Reading["projection"], firstObservation: null };
+  const insights = insightsFor(reading, en, "en");
+  assert.equal(insights.length, 1);
+  const [insight] = insights;
+  // The runtime's state is kept, never raised; the family comes from the typed signal and the channel from the typed source.
+  assert.equal(insight.nature, "OBSERVED");
+  assert.equal(insight.lane, "understood");
+  assert.equal(insight.headline, node.title);
+  assert.equal(insight.family, "presence");
+  assert.equal(insight.channel, "WEB");
+  assert.deepEqual(insight.proof.map(row => row.label), ["Currentness", "Not verified"]);
+  assert.equal(insight.sources[0].url, "https://example.test/");
+  // With a first observation the signals are not read twice.
+  const withFirst = { projection: reading.projection, firstObservation: { discoveries: [], publicUnderstanding: null } as unknown as Reading["firstObservation"] };
+  assert.equal(insightsFor(withFirst, en, "en").length, 0);
+});
+
+test("the runtime's English sentences are shown in Spanish where the reader reads Spanish, and nothing else is guessed", async () => {
+  const { runtimeText } = await import("../lib/runtime-text");
+  assert.equal(runtimeText("AXIGNAL's public homepage is observable from the outside", "es"), "La web pública de AXIGNAL es observable desde fuera");
+  assert.match(runtimeText("The authorized public homepage was reachable and contained visible text when AXIGNAL observed it.", "es"), /^La web pública autorizada era accesible/);
+  assert.match(runtimeText("This observation covers only the authorized public homepage at this observation time. Search, generative, social, reputation and other public surfaces remain UNKNOWN.", "es"), /DESCONOCIDAS\.$/);
+  // A sentence the runtime may emit that is not listed is shown exactly as written; other locales read the runtime's wording.
+  assert.equal(runtimeText("Some sentence nobody has translated.", "es"), "Some sentence nobody has translated.");
+  assert.equal(runtimeText("AXIGNAL's public homepage is observable from the outside", "en"), "AXIGNAL's public homepage is observable from the outside");
+});
+
+test("the chips, the badges and the notice are one thing: they clear only when the finding is marked as seen", () => {
+  const source = fs.readFileSync(path.resolve(process.cwd(), "components/observatory.tsx"), "utf8");
+  // No reading by time on screen: nothing observes the findings to mark them.
+  assert.doesNotMatch(source, /IntersectionObserver/);
+  // The notice counts what is lit, as the chips do, and its button marks exactly the selection it counts.
+  assert.match(source, /\{lit\.size > 0 && <div className="obs-since"/);
+  assert.match(source, /onSeenAll=\{\(\) => updateSeen\(store => markSeen\(store, item\.focusId, shownKeys,/);
+  // Opening a finding is an explicit act on it: it is marked, and the chips follow.
+  assert.match(source, /if \(lit\.has\(insight\.changeKey\)\) window\.setTimeout\(\(\) => updateSeen\(store => markSeen\(store, item\.focusId, \[insight\.changeKey\]/);
 });

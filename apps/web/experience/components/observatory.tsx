@@ -8,9 +8,9 @@
  * own, worded by fixed copy (lib/observatory.ts); nothing here creates or upgrades truth.
  */
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { flushSync } from "react-dom";
+import { createPortal, flushSync } from "react-dom";
 import Link from "next/link";
-import { ArrowLeft, ArrowRight, ChevronDown, ExternalLink, LayoutGrid, LogOut, Menu, MessageCircleQuestion, Plus, RefreshCw, Settings2, X } from "lucide-react";
+import { ArrowLeft, ArrowRight, ChevronDown, CornerRightUp, ExternalLink, LayoutGrid, LogOut, Menu, MessageCircleQuestion, Plus, RefreshCw, Settings2, X } from "lucide-react";
 import { useLocale } from "@/lib/locale";
 import { LocaleToggle, useFocusTrap } from "./ui";
 import { evidenceUrl, monthlyCapacityCents, pendingOutputSchema, subscriberOutputSchema, type FirstObservation, type SubscriberPortfolio } from "@/lib/subscriber-contracts";
@@ -23,9 +23,20 @@ import { causeCopy, dimensionCopy, stateCopy } from "./public-understanding";
 import { SubscriberRepresentation } from "./subscriber-representation";
 import { SubscriberMcpConnections } from "./subscriber-mcp-connections";
 import { RuntimeAxent, useRuntimeAxent } from "./runtime-axent";
+import type { ObservatoryCapabilities } from "@/lib/observatory-source";
+import { channelLabel, FamilyNav, scopeCopy, type FacetScope } from "./family-nav";
+import { countByFacet, facetOfSourceType, facetParams, keysReadOnFirstLook, litByChannel, litOrFirstLook, litByFamily, matchesFacet, parseFacet, type Facet } from "@/lib/observation-families";
 
 type Item = SubscriberPortfolio["organizations"][number];
 export type View = "summary" | "explore" | "evolution" | "evidence";
+/** The page that hosts the Observatory's portfolio navigation, when it owns the sidebar. */
+export type ObservatoryShell = {
+  host: HTMLElement | null;
+  /** False while the shell shows something else: the navigation is then offered, never marked as the current place. */
+  active: boolean;
+  /** Called when the navigation is used, so the shell can bring the reading back. */
+  onNavigate?: () => void;
+};
 export type Screen = "desk" | "organization" | "account" | "add";
 
 export type ObservatoryProps = {
@@ -48,6 +59,29 @@ export type ObservatoryProps = {
   total: number; setTotal: (value: number) => void;
   replacing: string | null; setReplacing: (value: string | null) => void;
   replacementLocator: string; setReplacementLocator: (value: string) => void;
+  /** Account-only capabilities. False in the public demo: same components, synthetic data. */
+  canAct: boolean;
+  /**
+   * Set when the Observatory lives inside a shell that already owns the page's navigation (the Admin's sidebar):
+   * its portfolio navigation is then drawn in the shell's own sidebar instead of a second one beside the reading.
+   */
+  shell?: ObservatoryShell;
+  /** Where to open when there are several organizations: one of them, optionally on a family; otherwise the desk. */
+  landing?: { focusId: string; family?: string };
+  /** Families still unread on a first look. */
+  firstLookUnread?: readonly string[];
+  /** Whether what has been read is kept on this device between visits. */
+  rememberReading?: boolean;
+  /** What the context offers around the reading; the demo declares all of it, an Admin has no account to manage. */
+  capabilities: ObservatoryCapabilities;
+  /** Organizations the context already authorizes, offered while adding one. */
+  suggestions?: readonly string[];
+  /** A statement above the reading, inside the main column (the demo's fictional-data notice). */
+  notice?: React.ReactNode;
+  /** The menu's name for an organization, when the mode names it differently (the demo shows its domain). */
+  menuName?: (item: SubscriberPortfolio["organizations"][number]) => string;
+  /** One reading source for the desk and the organization view: the account's read, or the demo snapshot. */
+  loadReading: (focusId: string, signal: AbortSignal) => Promise<unknown>;
 };
 
 const CLOSED = new Set(["REMOVED", "RESOLVED", "CANCELLED"]);
@@ -79,39 +113,43 @@ function useUrlState() {
       view: (["summary", "explore", "evolution", "evidence"].includes(view ?? "") ? view : "summary") as View,
       screen: (["account", "add"].includes(screen ?? "") ? screen : null) as "account" | "add" | null,
       item: url.searchParams.get("item"),
+      family: url.searchParams.get("family"),
+      channel: url.searchParams.get("channel"),
     };
   };
-  const [state, setState] = useState<{ view: View; screen: "account" | "add" | null; item: string | null }>({ view: "summary", screen: null, item: null });
+  const [state, setState] = useState<{ view: View; screen: "account" | "add" | null; item: string | null; family: string | null; channel: string | null }>({ view: "summary", screen: null, item: null, family: null, channel: null });
   useEffect(() => {
     setState(read());
     const listener = () => setState(read());
     window.addEventListener("popstate", listener);
     return () => window.removeEventListener("popstate", listener);
   }, []);
-  const go = useCallback((next: Partial<{ view: View; screen: "account" | "add" | null; item: string | null; organization: string | null }>, replace = false) => {
+  const go = useCallback((next: Partial<{ view: View; screen: "account" | "add" | null; item: string | null; organization: string | null; family: string | null; channel: string | null }>, replace = false) => {
     const url = new URL(window.location.href);
     const set = (key: string, value: string | null | undefined) => { if (value === undefined) return; if (value === null) url.searchParams.delete(key); else url.searchParams.set(key, value); };
     set("view", next.view === "summary" ? null : next.view);
     set("screen", next.screen);
     set("item", next.item);
     set("organization", next.organization);
+    set("family", next.family);
+    set("channel", next.channel);
     window.history[replace ? "replaceState" : "pushState"](null, "", url);
     setState(read());
   }, []);
   return [state, go] as const;
 }
 
-function useSeen() {
+function useSeen(remember: boolean) {
   const [store, setStore] = useState<SeenStore>({});
-  useEffect(() => { setStore(readSeen(() => window.localStorage)); }, []);
+  useEffect(() => { if (remember) setStore(readSeen(() => window.localStorage)); }, [remember]);
   const update = useCallback((change: (store: SeenStore) => SeenStore) => {
-    setStore(previous => { const next = change(previous); if (next !== previous) writeSeen(() => window.localStorage, next); return next; });
-  }, []);
+    setStore(previous => { const next = change(previous); if (next !== previous && remember) writeSeen(() => window.localStorage, next); return next; });
+  }, [remember]);
   return [store, update] as const;
 }
 
 /** Bounded, cancellable reads for the portfolio desk (three at a time, at most 40). */
-function useDeskReadings(items: Item[], enabled: boolean) {
+function useDeskReadings(items: Item[], enabled: boolean, loadReading: ObservatoryProps["loadReading"]) {
   const [readings, setReadings] = useState<Record<string, Reading | "failed">>({});
   const ids = items.filter(readable).slice(0, 40).map(i => i.focusId).join(",");
   useEffect(() => {
@@ -122,9 +160,7 @@ function useDeskReadings(items: Item[], enabled: boolean) {
       while (queue.length && !controller.signal.aborted) {
         const id = queue.shift()!;
         try {
-          const response = await fetch(`/api/subscriber/organizations/${encodeURIComponent(id)}/output`, { cache: "no-store", signal: controller.signal });
-          if (!response.ok) throw new Error("READ_FAILED");
-          const payload: unknown = await response.json();
+          const payload = await loadReading(id, controller.signal);
           const reading: Reading = (payload as { kind?: unknown })?.kind === "PENDING_ATTENTION"
             ? { projection: null, firstObservation: pendingOutputSchema.parse(payload).firstObservation }
             : (() => { const r = subscriberOutputSchema.parse(payload); return { projection: r.projection, firstObservation: r.firstObservation ?? null }; })();
@@ -134,7 +170,7 @@ function useDeskReadings(items: Item[], enabled: boolean) {
     };
     void Promise.all([worker(), worker(), worker()]);
     return () => controller.abort();
-  }, [enabled, ids]);
+  }, [enabled, ids, loadReading]);
   return readings;
 }
 
@@ -193,6 +229,7 @@ function Lens({ state, lit }: { state: LensState; lit: boolean }) {
 }
 
 function itemStatus(item: Item, t: Translate): string {
+  if (item.reason === "AUTHORIZATION_REVOKED") return t("Autorización revocada", "Authorization revoked");
   if (item.state === "PAUSED") return t("Pausada", "Paused");
   if (item.observation) return observationStateCopy(item.observation.state, t);
   if (item.state === "IDENTITY_PENDING") return item.reason?.startsWith("AMBIGUOUS") ? t("Varias organizaciones coinciden", "Several organizations match") : item.reason?.startsWith("CONFLICT") ? t("Datos en conflicto", "Conflicting details") : t("Identidad por resolver", "Identity unresolved");
@@ -208,7 +245,7 @@ export function Observatory(props: ObservatoryProps) {
   const { t, locale } = useLocale();
   const { access, portfolio, selected } = props;
   const [url, go] = useUrlState();
-  const [seen, updateSeen] = useSeen();
+  const [seen, updateSeen] = useSeen(props.rememberReading !== false);
   const [railOpen, setRailOpen] = useState(false);
   // Lit findings per organization, as the views compute them, so rail, desk and briefing agree.
   const [litCounts, setLitCounts] = useState<Record<string, number>>({});
@@ -217,7 +254,7 @@ export function Observatory(props: ObservatoryProps) {
   const items = useMemo(() => portfolio?.organizations.filter(visible) ?? [], [portfolio]);
   const readableItems = items.filter(readable);
   const screen: Screen = url.screen ?? (selected ? "organization" : readableItems.length || items.length ? "desk" : "add");
-  const deskReadings = useDeskReadings(items, access === "ready" && screen === "desk");
+  const deskReadings = useDeskReadings(items, access === "ready" && screen === "desk", props.loadReading);
   const names = useRef(new Map<string, string>());
   if (props.projection && selected) names.current.set(selected, props.projection.organization.name);
   for (const [id, reading] of Object.entries(deskReadings)) if (reading !== "failed" && reading.projection) names.current.set(id, reading.projection.organization.name);
@@ -230,9 +267,14 @@ export function Observatory(props: ObservatoryProps) {
     if (new URL(window.location.href).searchParams.get("organization")) return;
     autoOpened.current = true;
     if (readableItems.length === 1 && items.length === 1) void props.readOutput(readableItems[0].focusId, false);
+    else if (props.landing && readableItems.some(entry => entry.focusId === props.landing?.focusId)) {
+      void props.readOutput(props.landing.focusId, false);
+      if (props.landing.family) go({ family: props.landing.family, channel: null }, true);
+    }
   }, [access, items.length, props, readableItems, selected, url.screen]);
 
   const openOrganization = (focusId: string, item: string | null = null) => {
+    props.shell?.onNavigate?.();
     setRailOpen(false); setAxentOpen(false);
     transition(() => {
       go({ screen: null, view: "summary", item }, true);
@@ -240,6 +282,7 @@ export function Observatory(props: ObservatoryProps) {
     });
   };
   const openScreen = (next: "desk" | "account" | "add") => {
+    props.shell?.onNavigate?.();
     setRailOpen(false); setAxentOpen(false);
     transition(() => {
       if (next === "desk") { props.clearSelection(); go({ screen: null, item: null, view: "summary", organization: null }); }
@@ -252,18 +295,19 @@ export function Observatory(props: ObservatoryProps) {
   if (access === "failure" || !portfolio) return <ObservatoryFrame><section className="obs-gate" role="alert"><h1>{t("No pudimos leer tu contexto.", "We could not read your context.")}</h1><p>{t("Tu cartera sigue a salvo. Vuelve a comprobarlo en un momento.", "Your portfolio is safe. Check again in a moment.")}</p><button className="obs-button" onClick={props.refresh}><RefreshCw size={16} aria-hidden="true"/>{t("Volver a comprobar", "Check again")}</button></section></ObservatoryFrame>;
 
   const current = items.find(i => i.focusId === selected) ?? null;
-  const rail = <Rail items={items} selected={selected} screen={screen} seen={seen} litCounts={litCounts} nameOf={nameOf} onOrganization={openOrganization} onScreen={openScreen} portfolio={portfolio} busy={props.busy} refresh={props.refresh}/>;
-  return <div className="obs" data-product-surface="living-observatory" aria-busy={props.busy}>
+  const rail = <Rail items={items} selected={props.shell && !props.shell.active ? null : selected} screen={props.shell && !props.shell.active ? null : screen} seen={seen} litCounts={litCounts} nameOf={props.menuName ?? nameOf} onOrganization={openOrganization} onScreen={openScreen} portfolio={portfolio} busy={props.busy} refresh={props.refresh} canAct={props.canAct} account={props.capabilities.account}/>;
+  return <div className={`obs${props.shell ? " obs-shelled" : ""}`} data-product-surface="living-observatory" aria-busy={props.busy}>
     <a className="obs-skip" href="#obs-main">{t("Ir al contenido", "Skip to content")}</a>
-    <div className="obs-rail-desktop">{rail}</div>
-    <MobileBar title={screen === "organization" && current ? nameOf(current) : screen === "desk" ? t("Tu cartera", "Your portfolio") : screen === "account" ? t("Cuenta", "Account") : t("Añadir organización", "Add organization")} onMenu={() => setRailOpen(true)}/>
-    {railOpen && <RailSheet onClose={() => setRailOpen(false)}>{rail}</RailSheet>}
+    {props.shell ? (props.shell.host ? createPortal(<div className="obs obs-in-shell">{rail}</div>, props.shell.host) : null) : <div className="obs-rail-desktop">{rail}</div>}
+    {!props.shell && <MobileBar title={screen === "organization" && current ? nameOf(current) : screen === "desk" ? t("Tu cartera", "Your portfolio") : screen === "account" ? t("Cuenta", "Account") : t("Añadir organización", "Add organization")} onMenu={() => setRailOpen(true)}/>}
+    {!props.shell && railOpen && <RailSheet onClose={() => setRailOpen(false)}>{rail}</RailSheet>}
     <main id="obs-main" className="obs-main" tabIndex={-1}>
+      {props.notice}
       {(props.message || props.paymentUrl) && <div className="obs-toast" role="status" aria-live="polite">{props.message && <p>{props.message}</p>}{props.paymentUrl && <a className="obs-button obs-primary" href={props.paymentUrl}>{t("Continuar al pago", "Continue to payment")}<ArrowRight size={16} aria-hidden="true"/></a>}</div>}
-      {screen === "desk" && <DeskView items={items} readings={deskReadings} seen={seen} nameOf={nameOf} onOpen={openOrganization} onAdd={() => openScreen("add")} reportLit={reportLit}/>}
+      {screen === "desk" && <DeskView firstLookUnread={props.firstLookUnread} items={items} readings={deskReadings} seen={seen} nameOf={nameOf} onOpen={openOrganization} onAdd={() => openScreen("add")} reportLit={reportLit}/>}
       {screen === "add" && <AddView {...props} first={!items.length} onDone={() => openScreen("desk")}/>}
       {screen === "account" && <AccountView {...props}/>}
-      {screen === "organization" && current && <OrganizationView key={current.focusId} item={current} name={nameOf(current)} {...props} view={url.view} itemId={url.item} go={go} seen={seen} updateSeen={updateSeen} axentOpen={axentOpen} setAxentOpen={setAxentOpen} locale={locale} reportLit={reportLit}/>}
+      {screen === "organization" && current && <OrganizationView key={current.focusId} item={current} name={nameOf(current)} {...props} view={url.view} itemId={url.item} family={url.family} channel={url.channel} go={go} seen={seen} updateSeen={updateSeen} axentOpen={axentOpen} setAxentOpen={setAxentOpen} locale={locale} reportLit={reportLit}/>}
     </main>
   </div>;
 }
@@ -274,10 +318,10 @@ function ObservatoryFrame({ children }: { children: React.ReactNode }) {
 
 // ---- rail: where am I, which organization, what changed -----------------------------------
 
-function Rail({ items, selected, screen, seen, litCounts, nameOf, onOrganization, onScreen, portfolio, busy, refresh }: {
-  items: Item[]; selected: string | null; screen: Screen; seen: SeenStore; litCounts: Record<string, number>; nameOf: (item: Item) => string;
+function Rail({ items, selected, screen, seen, litCounts, nameOf, onOrganization, onScreen, portfolio, busy, refresh, canAct, account }: {
+  items: Item[]; selected: string | null; screen: Screen | null; seen: SeenStore; litCounts: Record<string, number>; nameOf: (item: Item) => string;
   onOrganization: (id: string) => void; onScreen: (screen: "desk" | "account" | "add") => void;
-  portfolio: SubscriberPortfolio; busy: boolean; refresh: () => void;
+  portfolio: SubscriberPortfolio; busy: boolean; refresh: () => void; canAct: boolean; account: boolean;
 }) {
   const { t } = useLocale();
   const [filter, setFilter] = useState("");
@@ -309,8 +353,9 @@ function Rail({ items, selected, screen, seen, litCounts, nameOf, onOrganization
       {filter && !shown.length && <li className="obs-org-empty">{t("Ninguna organización coincide.", "No organization matches.")}</li>}
     </ul>
     <div className="obs-rail-foot">
-      <button className="obs-rail-action" aria-current={screen === "add" ? "page" : undefined} onClick={() => onScreen("add")}><Plus size={16} aria-hidden="true"/>{t("Añadir organización", "Add organization")}</button>
-      <button className="obs-rail-action" aria-current={screen === "account" ? "page" : undefined} onClick={() => onScreen("account")}><Settings2 size={16} aria-hidden="true"/>{t("Cuenta y conexiones", "Account and connections")}</button>
+      <button className="obs-rail-action obs-rail-cta" aria-current={screen === "add" ? "page" : undefined} disabled={!canAct} onClick={() => onScreen("add")}><Plus size={16} aria-hidden="true"/>{t("Añadir organización", "Add organization")}</button>
+      {account && <button className="obs-rail-action" aria-current={screen === "account" ? "page" : undefined} disabled={!canAct} onClick={() => onScreen("account")}><Settings2 size={16} aria-hidden="true"/>{t("Cuenta y conexiones", "Account and connections")}</button>}
+      {!canAct && <p className="obs-rail-note">{t("Acciones de cuenta disponibles al crear tu cuenta.", "Account actions are available once you create your account.")}</p>}
       <div className="obs-rail-locale"><LocaleToggle/></div>
     </div>
   </nav>;
@@ -339,15 +384,15 @@ function RailSheet({ children, onClose }: { children: React.ReactNode; onClose: 
 
 // ---- desk: the whole portfolio at a glance ------------------------------------------------
 
-function DeskView({ items, readings, seen, nameOf, onOpen, onAdd, reportLit }: {
-  items: Item[]; readings: Record<string, Reading | "failed">; seen: SeenStore; nameOf: (item: Item) => string;
+function DeskView({ items, readings, seen, nameOf, onOpen, onAdd, reportLit, firstLookUnread }: {
+  firstLookUnread?: readonly string[]; items: Item[]; readings: Record<string, Reading | "failed">; seen: SeenStore; nameOf: (item: Item) => string;
   onOpen: (focusId: string, item?: string | null) => void; onAdd: () => void; reportLit: (focusId: string, count: number) => void;
 }) {
   const { t, locale } = useLocale();
   const rows = items.map(item => {
     const reading = readings[item.focusId];
     const insights = reading && reading !== "failed" ? insightsFor(reading, t, locale) : [];
-    const lit = reading && reading !== "failed" ? litKeys(seen, item.focusId, insights.map(i => i.changeKey)) : new Set<string>();
+    const lit = reading && reading !== "failed" ? litOrFirstLook(seen[item.focusId]?.keys, insights, firstLookUnread) : new Set<string>();
     return { item, reading, insights, lit };
   });
   const attention = rows.filter(r => lensState(r.item) === "low" || r.item.state === "IDENTITY_PENDING" && !r.item.observation || r.reading === "failed");
@@ -434,28 +479,37 @@ function DeskColumn({ title, lane, rows, empty }: { title: string; lane: Lane; e
 // ---- organization ---------------------------------------------------------------------------
 
 type OrgProps = ObservatoryProps & {
-  item: Item; name: string; view: View; itemId: string | null; locale: string;
-  go: (next: Partial<{ view: View; screen: "account" | "add" | null; item: string | null; organization: string | null }>, replace?: boolean) => void;
+  item: Item; name: string; view: View; itemId: string | null; family: string | null; channel: string | null; locale: string;
+  go: (next: Partial<{ view: View; screen: "account" | "add" | null; item: string | null; organization: string | null; family: string | null; channel: string | null }>, replace?: boolean) => void;
   seen: SeenStore; updateSeen: (change: (store: SeenStore) => SeenStore) => void;
   axentOpen: boolean; setAxentOpen: (open: boolean) => void;
   reportLit: (focusId: string, count: number) => void;
 };
 
 function OrganizationView(props: OrgProps) {
-  const { t } = useLocale();
+  const { t, copy } = useLocale();
   const { item, name, view, itemId, go, seen, updateSeen, locale, projection, firstObservation, revision } = props;
   const ready = !props.reading && (projection || firstObservation);
   const reading: Reading = useMemo(() => ({ projection, firstObservation }), [projection, firstObservation]);
   const insights = useMemo(() => ready ? insightsFor(reading, t, locale) : [], [ready, reading, t, locale]);
   const keys = useMemo(() => insights.map(i => i.changeKey), [insights]);
-  const lit = useMemo(() => litKeys(seen, item.focusId, keys), [seen, item.focusId, keys]);
+  const lit = useMemo(() => litOrFirstLook(seen[item.focusId]?.keys, insights, props.firstLookUnread), [seen, item.focusId, insights, props.firstLookUnread]);
+  const facet = useMemo(() => parseFacet(props.family, props.channel), [props.family, props.channel]);
+  const shown = useMemo(() => facet.family ? insights.filter(i => matchesFacet(i, facet)) : insights, [insights, facet]);
+  const shownKeys = useMemo(() => shown.map(i => i.changeKey), [shown]);
+  const litShown = useMemo(() => new Set(shownKeys.filter(k => lit.has(k))), [shownKeys, lit]);
+  const counts = useMemo(() => countByFacet(insights), [insights]);
+  const litFamilies = useMemo(() => litByFamily(insights, lit), [insights, lit]);
+  const litChannels = useMemo(() => litByChannel(insights, lit), [insights, lit]);
+  const scope = useMemo(() => scopeCopy(facet, t, copy), [facet, t, copy]);
+  const selectFacet = (next: Facet) => transition(() => props.go({ ...facetParams(next), item: null }));
   const { reportLit } = props;
   useEffect(() => { if (ready) reportLit(item.focusId, lit.size); }, [ready, item.focusId, lit.size, reportLit]);
   useEffect(() => {
     if (!ready) return;
     const now = new Date().toISOString();
-    updateSeen(store => store[item.focusId] ? touch(store, item.focusId, now) : baseline(store, item.focusId, keys, now));
-  }, [ready, item.focusId, keys, updateSeen]);
+    updateSeen(store => store[item.focusId] ? touch(store, item.focusId, now) : baseline(store, item.focusId, keysReadOnFirstLook(insights, props.firstLookUnread), now));
+  }, [ready, item.focusId, insights, props.firstLookUnread, updateSeen]);
   const open = insights.find(i => i.id === itemId) ?? null;
   const [menu, setMenu] = useState(false);
   const opener = useRef<string | null>(null);
@@ -489,22 +543,22 @@ function OrganizationView(props: OrgProps) {
           </div>
         </div>
         <div className="obs-org-actions">
-          {item.state === "ACTIVE" && <button className="obs-button" disabled={props.busy} onClick={() => void props.command({ action: "reobserve", focusId: item.focusId })}><RefreshCw size={16} aria-hidden="true"/><span className="obs-collapse">{t("Volver a observar", "Observe again")}</span></button>}
-          {!identified && <button className="obs-button" disabled={props.busy} onClick={() => void props.command({ action: "retry_pending", focusId: item.focusId })}><RefreshCw size={16} aria-hidden="true"/><span className="obs-collapse">{t("Volver a comprobar", "Check again")}</span></button>}
-          {projection && revision && <button className={`obs-button obs-axent-button${props.axentOpen && !open ? " obs-active" : ""}`} onClick={() => { transition(() => { go({ item: null }); props.setAxentOpen(true); }); }}><MessageCircleQuestion size={16} aria-hidden="true"/>{t("Preguntar a AXENT", "Ask AXENT")}</button>}
-          <div className="obs-menu">
+          {item.state === "ACTIVE" && <button className="obs-button" disabled={props.busy || !props.canAct} onClick={() => void props.command({ action: "reobserve", focusId: item.focusId })}><RefreshCw size={16} aria-hidden="true"/><span className="obs-collapse">{t("Volver a observar", "Observe again")}</span></button>}
+          {!identified && props.capabilities.recheck && <button className="obs-button" disabled={props.busy || !props.canAct} onClick={() => void props.command({ action: "retry_pending", focusId: item.focusId })}><RefreshCw size={16} aria-hidden="true"/><span className="obs-collapse">{t("Volver a comprobar", "Check again")}</span></button>}
+          {projection && revision && <span className="obs-axent-cta"><button className={`obs-button obs-axent-button${props.axentOpen && !open ? " obs-active" : ""}`} onClick={() => { transition(() => { go({ item: null }); props.setAxentOpen(true); }); }}><MessageCircleQuestion size={16} aria-hidden="true"/>{t("Preguntar a AXENT", "Ask AXENT")}</button><span className="obs-axent-note"><CornerRightUp size="1.15em" aria-hidden="true"/>{t("¿Dudas? Pregúntale a AXENT", "Any doubts? Ask AXENT")}</span></span>}
+          {props.capabilities.manage && <div className="obs-menu">
             <button className="obs-icon" aria-expanded={menu} aria-haspopup="true" aria-label={t("Más acciones", "More actions")} onClick={() => setMenu(!menu)}><ChevronDown size={18} aria-hidden="true"/></button>
             {menu && <ul className="obs-menu-list" onKeyDown={e => { if (e.key === "Escape") setMenu(false); }}>
-              {identified && <li><button disabled={props.busy} onClick={() => { setMenu(false); void props.command({ action: item.state === "PAUSED" ? "resume" : "pause", focusId: item.focusId }); }}>{item.state === "PAUSED" ? t("Reanudar", "Resume") : t("Pausar", "Pause")}</button></li>}
-              {identified && <li><button disabled={props.busy} onClick={() => { setMenu(false); props.setReplacing(item.focusId); props.setReplacementLocator(""); }}>{t("Sustituir organización", "Replace organization")}</button></li>}
-              <li><button disabled={props.busy} onClick={() => { setMenu(false); void props.command({ action: identified ? "remove" : "cancel_pending", focusId: item.focusId }); }}>{t("Retirar de mi cartera", "Remove from my portfolio")}</button></li>
+              {identified && <li><button disabled={props.busy || !props.canAct} onClick={() => { setMenu(false); void props.command({ action: item.state === "PAUSED" ? "resume" : "pause", focusId: item.focusId }); }}>{item.state === "PAUSED" ? t("Reanudar", "Resume") : t("Pausar", "Pause")}</button></li>}
+              {identified && <li><button disabled={props.busy || !props.canAct} onClick={() => { setMenu(false); props.setReplacing(item.focusId); props.setReplacementLocator(""); }}>{t("Sustituir organización", "Replace organization")}</button></li>}
+              <li><button disabled={props.busy || !props.canAct} onClick={() => { setMenu(false); void props.command({ action: identified ? "remove" : "cancel_pending", focusId: item.focusId }); }}>{t("Retirar de mi cartera", "Remove from my portfolio")}</button></li>
             </ul>}
-          </div>
+          </div>}
         </div>
       </header>
       {props.replacing === item.focusId && <form className="obs-inline-form" onSubmit={e => { e.preventDefault(); void props.command({ action: "replace", focusId: item.focusId, locator: props.replacementLocator }); }}>
         <label htmlFor={`replacement-${item.focusId}`}>{t("Nombre o sitio público", "Name or public website")}</label>
-        <input id={`replacement-${item.focusId}`} required maxLength={2048} value={props.replacementLocator} onChange={e => props.setReplacementLocator(e.target.value)} disabled={props.busy}/>
+        <input id={`replacement-${item.focusId}`} required maxLength={2048} value={props.replacementLocator} onChange={e => props.setReplacementLocator(e.target.value)} disabled={props.busy || !props.canAct}/>
         <p>{t("La sustitución conserva el historial privado. La organización actual permanece hasta resolver la nueva identidad.", "Replacement preserves private history. The current organization remains until the new identity is resolved.")}</p>
         <div className="obs-form-actions"><button className="obs-button obs-primary" disabled={props.busy || !props.replacementLocator.trim()}>{t("Sustituir organización", "Replace organization")}</button><button type="button" className="obs-link" onClick={() => props.setReplacing(null)}>{t("Cancelar", "Cancel")}</button></div>
       </form>}
@@ -517,17 +571,18 @@ function OrganizationView(props: OrgProps) {
             if (next) { e.preventDefault(); go({ view: next[0], item: null }); window.requestAnimationFrame(() => document.getElementById(`tab-${next[0]}`)?.focus()); }
           }}>{label}</button>)}
       </div>
+      {ready && !observing && view !== "explore" && <FamilyNav facet={facet} counts={counts} lit={litFamilies} litChannels={litChannels} onSelect={selectFacet}/>}
       <div className="obs-panel" role="tabpanel" id={`panel-${view}`} aria-labelledby={`tab-${view}`}>
         {props.reading && <ReadingSkeleton/>}
         {!props.reading && observing && <ObservingState state={item.observation!.state}/>}
-        {!props.reading && !observing && view === "summary" && <SummaryView reading={reading} name={name} insights={insights} lit={lit} openId={open?.id ?? null} onOpen={openInsight}
-          onSeenAll={() => updateSeen(store => markSeen(store, item.focusId, keys, new Date().toISOString()))} item={item}/>}
+        {!props.reading && !observing && view === "summary" && <SummaryView reading={reading} name={name} insights={shown} lit={litShown} openId={open?.id ?? null} onOpen={openInsight} scope={scope}
+          remembered={props.rememberReading !== false} onSeenAll={() => updateSeen(store => markSeen(store, item.focusId, shownKeys, new Date().toISOString()))} item={item}/>}
         {!props.reading && !observing && view === "explore" && <ExploreView projection={projection} revision={revision} firstObservation={firstObservation} onSummary={() => go({ view: "summary" })}/>}
-        {!props.reading && !observing && view === "evolution" && <EvolutionView reading={reading}/>}
-        {!props.reading && !observing && view === "evidence" && <EvidenceView reading={reading}/>}
+        {!props.reading && !observing && view === "evolution" && <EvolutionView reading={reading} facet={facet} scope={scope}/>}
+        {!props.reading && !observing && view === "evidence" && <EvidenceView reading={reading} facet={facet} scope={scope} insights={shown}/>}
       </div>
     </div>
-    {depthOpen && <DepthPanel insight={open} projection={projection} revision={revision} axentOnly={!open} onClose={closeDepth}
+    {depthOpen && <DepthPanel insight={open} projection={projection} revision={revision} axentOnly={!open} canAct={props.canAct} axent={props.capabilities.axent} onClose={closeDepth}
       onEvidence={() => transition(() => go({ view: "evidence", item: null }))} onExplore={() => transition(() => go({ view: "explore", item: null }))}/>}
   </div>;
 }
@@ -557,8 +612,12 @@ function ObservingState({ state }: { state: string }) {
   </section>;
 }
 
-export function SummaryView({ reading, name, insights, lit, openId, onOpen, onSeenAll, item, exampleLead }: {
+export function SummaryView({ reading, name, insights, lit, remembered = true, openId, onOpen, onSeenAll, item, exampleLead, scope }: {
+  /** Whether what is read is kept on this device: the notice says so only when it is true. */
+  remembered?: boolean;
   reading: Reading; name: string; insights: Insight[]; lit: Set<string>; openId: string | null;
+  /** A selected family or channel: its header and empty state. Absent for the whole reading. */
+  scope?: FacetScope | null;
   onOpen: (insight: Insight) => void; onSeenAll: () => void; item: Pick<Item, "observation">;
   /** Only the explicitly fictional public example supplies a fixture lead. */
   exampleLead?: string;
@@ -569,17 +628,19 @@ export function SummaryView({ reading, name, insights, lit, openId, onOpen, onSe
   const lanes = byLane(insights);
   const low = item.observation && LOW_OBSERVABILITY.has(item.observation.state);
   return <div className="obs-summary">
-    <section className="obs-brief" aria-label={t("En resumen", "In short")}>
-      <p className="obs-brief-lead">{brief.lead}</p>
-      {brief.tally.length > 0 && <ul className="obs-tally">{brief.tally.map(x => <li key={x}>{x}</li>)}</ul>}
+    <section className={`obs-brief${scope ? " obs-brief-scoped" : ""}`} aria-label={scope ? scope.title : t("En resumen", "In short")}>
+      {scope && <h2 className="obs-scope-title">{scope.title}</h2>}
+      <p className="obs-brief-lead">{scope ? scope.intro : brief.lead}</p>
+      {scope ? <ul className="obs-tally"><li>{fill(insights.length === 1 ? t("{n} hallazgo", "{n} finding") : t("{n} hallazgos", "{n} findings"), { n: insights.length })}</li></ul>
+        : brief.tally.length > 0 && <ul className="obs-tally">{brief.tally.map(x => <li key={x}>{x}</li>)}</ul>}
       {low && <p className="obs-brief-note">{observationStateCopy(item.observation!.state, t)}. {t("Lo que no se pudo observar aparece en «Lo que aún no sabemos», con su razón.", "What could not be observed appears under “What we do not know yet”, with its reason.")}</p>}
       {lit.size > 0 && <div className="obs-since" role="status">
         <span className="obs-since-lamp" aria-hidden="true"/>
-        <span>{fill(lit.size === 1 ? t("{n} hallazgo nuevo o cambiado desde tu última visita.", "{n} finding new or changed since your last visit.") : t("{n} hallazgos nuevos o cambiados desde tu última visita.", "{n} findings new or changed since your last visit."), { n: lit.size })} <small>{t("Se recuerda en este dispositivo.", "Remembered on this device.")}</small></span>
+        <span>{fill(lit.size === 1 ? t("{n} hallazgo nuevo o cambiado desde tu última visita.", "{n} finding new or changed since your last visit.") : t("{n} hallazgos nuevos o cambiados desde tu última visita.", "{n} findings new or changed since your last visit."), { n: lit.size })}{remembered && <> <small>{t("Se recuerda en este dispositivo.", "Remembered on this device.")}</small></>}</span>
         <button className="obs-link" onClick={onSeenAll}>{t("Marcar como visto", "Mark as seen")}</button>
       </div>}
     </section>
-    <div className="obs-lanes">
+    {scope && !insights.length ? <section className="obs-empty-state"><h2>{scope.emptyTitle}</h2><p>{scope.emptyBody}</p></section> : <div className="obs-lanes">
       {(["matters", "understood", "unknown"] as Lane[]).map(lane => {
         const copy = laneCopy(lane, t);
         return <section key={lane} className={`obs-lane obs-lane-${lane}`} aria-labelledby={`lane-${lane}`}>
@@ -588,7 +649,7 @@ export function SummaryView({ reading, name, insights, lit, openId, onOpen, onSe
             : <p className="obs-empty">{copy.empty}</p>}
         </section>;
       })}
-    </div>
+    </div>}
   </div>;
 }
 
@@ -635,8 +696,8 @@ export function InsightBody({ insight, onEvidence }: { insight: Insight; onEvide
   </article>;
 }
 
-function DepthPanel({ insight, projection, revision, axentOnly, onClose, onEvidence, onExplore }: {
-  insight: Insight | null; projection: RuntimeProjection | null; revision: string | null; axentOnly: boolean;
+function DepthPanel({ insight, projection, revision, axentOnly, canAct, axent, onClose, onEvidence, onExplore }: {
+  insight: Insight | null; projection: RuntimeProjection | null; revision: string | null; axentOnly: boolean; canAct: boolean; axent: "subscriber" | "admin";
   onClose: () => void; onEvidence: () => void; onExplore: () => void;
 }) {
   const { t, locale } = useLocale();
@@ -656,20 +717,22 @@ function DepthPanel({ insight, projection, revision, axentOnly, onClose, onEvide
       {insight && <span>{laneCopy(insight.lane, t).title}</span>}
     </div>
     {insight && <InsightBody insight={insight} onEvidence={onEvidence}/>}
-    {projection && revision ? <DepthAxent projection={projection} revision={revision} insight={insight} onEvidence={onEvidence} onExplore={onExplore} autoFocus={axentOnly}/>
+    {projection && revision ? <DepthAxent projection={projection} revision={revision} axent={axent} insight={insight} canAct={canAct} onEvidence={onEvidence} onExplore={onExplore} autoFocus={axentOnly}/>
       : <section className="obs-depth-axent obs-quiet"><h3>AXENT</h3><p>{t("AXENT podrá investigar con esta organización cuando su identidad esté verificada por un registro. Esta lectura ya muestra su evidencia.", "AXENT can investigate this organization once its identity is verified by a registry. This reading already shows its evidence.")}</p></section>}
   </aside>;
 }
 
-function DepthAxent({ projection, revision, insight, onEvidence, onExplore, autoFocus }: {
-  projection: RuntimeProjection; revision: string; insight: Insight | null; onEvidence: () => void; onExplore: () => void; autoFocus: boolean;
+function DepthAxent({ projection, revision, axent, insight, canAct, onEvidence, onExplore, autoFocus }: {
+  projection: RuntimeProjection; revision: string; axent: "subscriber" | "admin"; insight: Insight | null; canAct: boolean; onEvidence: () => void; onExplore: () => void; autoFocus: boolean;
 }) {
   const { t } = useLocale();
-  const scope = useMemo(() => ({ revision }), [revision]);
+  // The subscriber's questions are scoped to its reading; an Admin session asks through its own endpoint.
+  const scope = useMemo(() => axent === "subscriber" ? { revision } : undefined, [axent, revision]);
   const conversation = useRuntimeAxent(projection, null, scope);
   const asked = useRef<string | null>(null);
   const question = insight ? fill(t("{finding}: ¿por qué importa y qué sigue abierto?", "{finding}: why does it matter and what remains open?"), { finding: insight.headline }) : null;
   useEffect(() => { asked.current = null; }, [insight?.id]);
+  if (!canAct) return <section className="obs-depth-axent" aria-label="AXENT"><p className="obs-empty">{t("Las preguntas a AXENT se activan con tu cuenta.", "AXENT questions are available with your account.")}</p></section>;
   return <section className="obs-depth-axent" aria-label="AXENT">
     {question && asked.current !== insight?.id && conversation.messages.length === 0 && <button className="obs-button obs-ask" disabled={conversation.busy} onClick={() => { asked.current = insight?.id ?? null; void conversation.ask(question); }}>
       <MessageCircleQuestion size={16} aria-hidden="true"/>{t("Pregunta a AXENT sobre esto", "Ask AXENT about this")}</button>}
@@ -691,35 +754,65 @@ function ExploreView({ projection, revision, firstObservation, onSummary }: { pr
   </section>;
 }
 
-function EvolutionView({ reading }: { reading: Reading }) {
+function EvolutionView({ reading, facet, scope }: { reading: Reading; facet: Facet; scope: FacetScope | null }) {
   const { t, locale } = useLocale();
-  const events: Array<{ at: string; title: string; detail: string; kind: "observation" | "reading" | "change" }> = [];
-  const groups = new Map<string, { at: string; sources: string[]; changed: boolean | null }>();
+  type Event = { at: string; title: string; detail: string; kind: "observation" | "reading" | "change"; facet: Facet };
+  const events: Event[] = [];
+  // Observations are grouped by moment and by the channel their source type belongs to; a change is only stated when the runtime compared them.
+  const groups = new Map<string, { at: string; sources: string[]; changed: boolean | null; facet: Facet }>();
   for (const item of reading.projection?.temporalHistory.items ?? []) {
-    const minute = item.observedAt.slice(0, 16);
-    const group = groups.get(minute) ?? { at: item.observedAt, sources: [], changed: null };
+    const itemFacet = facetOfSourceType(item.sourceType);
+    const key = item.observedAt.slice(0, 16) + "|" + itemFacet.family + "|" + itemFacet.channel;
+    const group = groups.get(key) ?? { at: item.observedAt, sources: [], changed: null, facet: itemFacet };
     group.sources.push(host(item.sourceRef));
     if (item.normalizedStateChanged === true) group.changed = true; else if (item.normalizedStateChanged === false && group.changed === null) group.changed = false;
-    groups.set(minute, group);
+    groups.set(key, group);
   }
-  for (const g of groups.values()) events.push({ at: g.at, kind: "observation", title: t("Observación de sus fuentes", "Observation of its sources"),
+  for (const g of groups.values()) events.push({ at: g.at, kind: "observation", facet: g.facet,
+    title: g.facet.channel === "SEO" ? t("Medición de visibilidad en buscadores", "Search visibility measurement")
+      : g.facet.channel === "GEO" ? t("Medición en respuestas de IA", "AI answer measurement")
+      : t("Observación de sus fuentes", "Observation of its sources"),
     detail: `${[...new Set(g.sources)].join(" · ")} — ${g.changed === true ? t("cambió lo observado", "what was observed changed") : g.changed === false ? t("sin cambios en lo observado", "no change in what was observed") : t("primera observación", "first observation")}` });
   const report = reading.firstObservation?.publicUnderstanding;
   if (report) {
-    for (const old of report.history ?? []) events.push({ at: old.measuredAt, kind: "reading", title: t("Lectura anterior de su oferta pública", "Previous reading of its public offer"), detail: old.status === "MEASURED" ? old.dimensions.map(d => `${dimensionCopy(d.dimension, t)}: ${stateCopy(d.state, t)}`).join(" · ") : causeCopy(old.cause, t) });
-    events.push({ at: report.measuredAt, kind: report.comparison?.changes?.length ? "change" : "reading", title: t("Lectura actual de su oferta pública", "Current reading of its public offer"),
+    const value: Facet = { family: "value", channel: null };
+    for (const old of report.history ?? []) events.push({ at: old.measuredAt, kind: "reading", facet: value, title: t("Lectura anterior de su oferta pública", "Previous reading of its public offer"), detail: old.status === "MEASURED" ? old.dimensions.map(d => `${dimensionCopy(d.dimension, t)}: ${stateCopy(d.state, t)}`).join(" · ") : causeCopy(old.cause, t) });
+    events.push({ at: report.measuredAt, kind: report.comparison?.changes?.length ? "change" : "reading", facet: value, title: t("Lectura actual de su oferta pública", "Current reading of its public offer"),
       detail: report.comparison?.state === "COMPARABLE" ? (report.comparison.changes.length ? fill(t("{n} cambios de interpretación respecto a la lectura anterior; no demuestran por sí solos un resultado comercial.", "{n} interpretation changes since the previous reading; on their own they do not prove a business result."), { n: report.comparison.changes.length }) : t("Sin cambios de interpretación respecto a la lectura anterior.", "No interpretation change since the previous reading.")) : t("Primera lectura comparable.", "First comparable reading.") });
   }
-  events.sort((a, b) => b.at.localeCompare(a.at));
-  if (!events.length) return <section className="obs-empty-state"><h2>{t("La evolución empieza con la segunda observación.", "Evolution starts with the second observation.")}</h2><p>{t("AXIGNAL volverá a observar y te mostrará aquí qué cambió, cuándo y frente a qué.", "AXIGNAL will observe again and show you here what changed, when and against what.")}</p></section>;
-  return <ol className="obs-timeline">{events.map((e, i) => <li key={i} className={`obs-event obs-event-${e.kind}`}>
-    <time dateTime={e.at}>{formatDate(e.at, locale, true)}</time><div><strong>{e.title}</strong><p>{e.detail}</p></div>
+  const visible = events.filter(e => matchesFacet(e.facet, facet));
+  visible.sort((a, b) => b.at.localeCompare(a.at));
+  if (!visible.length) return scope
+    ? <section className="obs-empty-state"><h2>{fill(t("Todavía no hay observaciones de {scope} que comparar", "There are no observations of {scope} to compare yet"), { scope: scope.title })}</h2><p>{t("Un cambio solo se declara cuando hay dos observaciones comparables. Sin ellas no hay cambio que mostrar, ni a favor ni en contra.", "A change is only declared when there are two comparable observations. Without them there is no change to show, for or against.")}</p></section>
+    : <section className="obs-empty-state"><h2>{t("La evolución empieza con la segunda observación.", "Evolution starts with the second observation.")}</h2><p>{t("AXIGNAL volverá a observar y te mostrará aquí qué cambió, cuándo y frente a qué.", "AXIGNAL will observe again and show you here what changed, when and against what.")}</p></section>;
+  return <ol className="obs-timeline">{visible.map((e, i) => <li key={i} className={`obs-event obs-event-${e.kind}`}>
+    <time dateTime={e.at}>{formatDate(e.at, locale, true)}</time><div><strong>{e.title}</strong>{e.facet.channel && !facet.channel && <span className="obs-event-tag">{channelLabel(e.facet.channel, t)}</span>}<p>{e.detail}</p></div>
   </li>)}</ol>;
 }
 
-function EvidenceView({ reading }: { reading: Reading }) {
+function EvidenceView({ reading, facet, scope, insights }: { reading: Reading; facet: Facet; scope: FacetScope | null; insights: Insight[] }) {
   const { t, locale } = useLocale();
   const sources = reading.projection?.cognition?.sources ?? [];
+  if (facet.family) {
+    // A selection shows the evidence behind exactly the findings it contains, and the web measurement where it is the web.
+    const seen = new Set<string>();
+    // Each finding keeps its own evidence row; only a source repeated inside one finding is shown once.
+    const rows = insights.flatMap(insight => insight.sources.map(source => ({ insight, source }))).filter(({ insight, source }) => {
+      const key = [insight.id, source.url, source.label, source.observedAt].join("|");
+      return seen.has(key) ? false : (seen.add(key), true);
+    });
+    const measurement = facet.family === "presence" && (!facet.channel || facet.channel === "WEB") ? reading.projection?.digitalRepresentation : undefined;
+    if (!rows.length && !measurement) return <section className="obs-empty-state"><h2>{scope?.emptyTitle}</h2><p>{scope?.emptyBody}</p></section>;
+    return <div className="obs-evidence">
+      {rows.length > 0 && <section className="obs-sources" aria-labelledby="obs-sources-title"><h2 id="obs-sources-title">{t("Evidencia de esta selección", "Evidence for this selection")}</h2>
+        <ul>{rows.map(({ insight, source }, index) => { const link = source.url ? evidenceUrl(source.url) : null; return <li key={index}>
+          {link ? <a href={link} target="_blank" rel="noopener noreferrer">{source.label}<ExternalLink size={13} aria-hidden="true"/><span className="sr-only">{t("(se abre en otra pestaña)", "(opens in a new tab)")}</span></a> : <span>{source.label}</span>}
+          <span>{source.observedAt ? formatDate(source.observedAt, locale, true) : t("sin fecha", "undated")} · {natureLabel(insight.nature, t)}</span>
+          <span className="obs-evidence-finding">{insight.headline}</span>
+        </li>; })}</ul></section>}
+      {measurement && <SubscriberRepresentation measurement={measurement}/>}
+    </div>;
+  }
   return <div className="obs-evidence">
     {sources.length > 0 && <section className="obs-sources" aria-labelledby="obs-sources-title"><h2 id="obs-sources-title">{t("Fuentes autorizadas de esta lectura", "Authorized sources of this reading")}</h2>
       <ul>{sources.map(s => { const link = evidenceUrl(s.sourceRef); return <li key={s.id}>
@@ -741,8 +834,9 @@ function AddView(props: ObservatoryProps & { first: boolean; onDone: () => void 
     <p className="obs-lede">{t("Escribe su nombre o su web pública. AXIGNAL la observará y te mostrará qué hace, qué importa a su alrededor, cómo se entiende su comunicación y qué no sabe todavía, con las pruebas de cada cosa.", "Type its name or public website. AXIGNAL will observe it and show you what it does, what matters around it, how its communication is understood and what it does not know yet, with the evidence for each.")}</p>
     <form className="obs-add-form" onSubmit={e => { e.preventDefault(); void props.command({ action: "add", locator: props.locator }); }}>
       <label htmlFor="organization-locator">{t("Nombre o sitio público", "Name or public website")}</label>
-      <div className="obs-add-row"><input id="organization-locator" required maxLength={2048} value={props.locator} onChange={e => props.setLocator(e.target.value)} disabled={props.busy} placeholder={t("p. ej. empresa.com o Empresa SL", "e.g. company.com or Company Ltd")} autoComplete="off"/>
+      <div className="obs-add-row"><input id="organization-locator" required maxLength={2048} list={props.suggestions?.length ? "organization-suggestions" : undefined} value={props.locator} onChange={e => props.setLocator(e.target.value)} disabled={props.busy || !props.canAct} placeholder={t("p. ej. empresa.com o Empresa SL", "e.g. company.com or Company Ltd")} autoComplete="off"/>
         <button className="obs-button obs-primary" disabled={props.busy || !props.locator.trim()}><Plus size={16} aria-hidden="true"/>{t("Empezar a observar", "Start observing")}</button></div>
+      {props.suggestions && props.suggestions.length > 0 && <datalist id="organization-suggestions">{props.suggestions.map(name => <option key={name} value={name}/>)}</datalist>}
     </form>
     <ol className="obs-add-steps">
       <li><strong>{t("Identidad", "Identity")}</strong><span>{t("Buscamos su identidad legal en un registro. Un nombre o URL orienta; no establece la verdad.", "We look for its legal identity in a registry. A name or URL guides; it does not establish truth.")}</span></li>
@@ -766,16 +860,16 @@ function AccountView(props: ObservatoryProps) {
         {portfolio.entitlementSource === "DESIGN_PARTNER_PILOT" && <p className="obs-note">{t("Design Partner · 1 organización · 0 € durante el piloto de validación.", "Design Partner · 1 organization · €0 during the validation pilot.")}</p>}
         <form onSubmit={e => { e.preventDefault(); void props.command({ action: portfolio.capacity === null || portfolio.capacity === 0 ? "purchase" : "expand", desiredOrganizationTotal: props.total }); }}>
           <label htmlFor="organization-total">{t("Total de organizaciones", "Total organizations")}</label>
-          <input id="organization-total" type="number" min={portfolio.capacity ? portfolio.capacity + 1 : 1} max={100000} step={1} required value={props.total} onChange={e => props.setTotal(Number(e.target.value))} disabled={props.busy}/>
+          <input id="organization-total" type="number" min={portfolio.capacity ? portfolio.capacity + 1 : 1} max={100000} step={1} required value={props.total} onChange={e => props.setTotal(Number(e.target.value))} disabled={props.busy || !props.canAct}/>
           <p className="obs-price">{Number.isSafeInteger(props.total) && props.total >= 1 && props.total <= 100000 ? new Intl.NumberFormat(locale, { style: "currency", currency: "EUR" }).format(monthlyCapacityCents(props.total) / 100) : "—"}<small>{t("Total mensual sin IVA; el pago confirma los impuestos aplicables.", "Monthly total excluding VAT; checkout confirms applicable taxes.")}</small></p>
           <button className="obs-button" disabled={props.busy || portfolio.canPurchase !== true || !portfolio.contractingEnabled}>{t("Revisar la compra", "Review the purchase")}<ArrowRight size={16} aria-hidden="true"/></button>
         </form>
         {!portfolio.contractingEnabled && <p className="obs-note">{t("La contratación todavía no está activa.", "Contracting is not active yet.")}</p>}
         {portfolio.canPurchase !== true && <p className="obs-quiet">{t("La autoridad de compra no está confirmada para este contexto.", "Purchase authority is not confirmed for this context.")}</p>}
-        <button className="obs-link" disabled={props.busy} onClick={() => void props.command({ action: "refresh_purchase" })}><RefreshCw size={14} aria-hidden="true"/>{t("Comprobar pago y capacidad", "Check payment and capacity")}</button>
+        <button className="obs-link" disabled={props.busy || !props.canAct} onClick={() => void props.command({ action: "refresh_purchase" })}><RefreshCw size={14} aria-hidden="true"/>{t("Comprobar pago y capacidad", "Check payment and capacity")}</button>
       </section>
       <section className="obs-account-card"><SubscriberMcpConnections/></section>
     </div>
-    <button className="obs-button" disabled={props.busy} onClick={props.logout}><LogOut size={16} aria-hidden="true"/>{t("Cerrar sesión", "Sign out")}</button>
+    <button className="obs-button" disabled={props.busy || !props.canAct} onClick={props.logout}><LogOut size={16} aria-hidden="true"/>{t("Cerrar sesión", "Sign out")}</button>
   </section>;
 }

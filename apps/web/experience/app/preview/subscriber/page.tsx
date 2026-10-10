@@ -1,14 +1,19 @@
+import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import "@/components/subscriber-portfolio.css";
 import "@/components/observatory.css";
 import { DemoObservatory } from "@/components/demo-observatory";
 
 export const metadata = {
-  title: "Observatorio · Ejemplo guiado",
+  title: "Vista previa · Panel del suscriptor",
   robots: { index: false, follow: false },
 };
 
-/** The subscriber Observatory in its demonstration context. The page adds nothing of its own. */
+/**
+ * Development preview of the subscriber panel: the account's own Observatory in its demonstration context.
+ * It is not served in production, and no account data is read.
+ */
 export default function Page() {
+  if (process.env.NODE_ENV === "production") notFound();
   return <Suspense><DemoObservatory/></Suspense>;
 }

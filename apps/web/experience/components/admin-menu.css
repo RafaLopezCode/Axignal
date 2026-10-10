@@ -1,0 +1,79 @@
+/*
+ * The Admin menu, one system. The shell's entries and the Observatory's portfolio navigation (drawn inside the
+ * same sidebar) share type, rhythm, radius and states, so the sidebar reads as one menu and not as two stacked.
+ */
+.admin-shell .product-sidebar {
+  --menu-title: #141c3a;
+  --menu-text: #3b4456;
+  --menu-muted: #566173;
+  --menu-line: #e0e5ee;
+  --menu-hover: #eef2fa;
+  --menu-active-bg: #e8eefa;
+  --menu-active: #354f98;
+  --menu-radius: 9px;
+  --menu-gap: 4px;
+  inline-size: 272px;
+  padding: 0 16px;
+}
+.admin-shell .sidebar-brand { padding: 24px 8px 18px; }
+
+/* Who is acting. */
+.admin-shell .admin-plane { display: flex; align-items: center; gap: 10px; padding: 12px; border-radius: var(--menu-radius); background: var(--menu-active-bg); color: var(--menu-active); }
+.admin-shell .admin-plane strong { display: block; font-size: 14px; font-weight: 700; color: var(--menu-text); }
+.admin-shell .admin-plane span { display: block; margin-top: 2px; font-size: 12px; color: var(--menu-muted); }
+
+/* Sections. */
+.admin-shell .product-sidebar nav { display: grid; gap: 20px; padding-block: 18px 12px; }
+.admin-shell .admin-nav-group { display: grid; gap: var(--menu-gap); align-content: start; }
+/* Titles lead the hierarchy: larger, heavier and darker than the functions under them. (typography.css gives both roles to the same system; the menu states its own, with the specificity to hold it.) */
+.admin-shell > .product-sidebar .nav-group-label { padding: 0 12px 8px; font-family: var(--font-ui); font-size: 14px; font-weight: 800; line-height: 1.3; letter-spacing: .06em; text-transform: uppercase; color: var(--menu-title); }
+
+/* Entries: the same height, type and states, wherever they come from. */
+.admin-shell .admin-nav-item { display: flex; align-items: center; justify-content: space-between; gap: 10px; inline-size: 100%; min-block-size: 40px; padding: 8px 12px; border: 0; border-radius: var(--menu-radius); background: transparent; color: var(--menu-text); line-height: 1.3; text-align: start; cursor: pointer; }
+.admin-shell .admin-nav-item > svg { margin: 0; opacity: .45; flex: none; }
+.admin-shell .admin-nav-item:hover { background: var(--menu-hover); color: var(--menu-text); }
+.admin-shell .admin-nav-item.active { background: var(--menu-active-bg); color: var(--menu-active); }
+.admin-shell .admin-nav-item.active > svg { opacity: 1; }
+.admin-shell .admin-nav-item:focus-visible { outline: 2px solid var(--menu-active); outline-offset: 2px; }
+
+/* The Observatory's navigation hangs from Customer Zero, as its children. */
+/* The portfolio is where everything starts: it opens the sidebar, with no tree under a parent entry. */
+.admin-shell .admin-product-navigation { margin: 0; padding: 0; }
+.admin-shell .obs-in-shell { --obs-rail-text: var(--menu-text); --obs-rail-muted: var(--menu-muted); --obs-rail-line: var(--menu-line); --obs-rail-2: var(--menu-hover); margin-block: 4px 8px; }
+.admin-shell .obs-in-shell .obs-rail { gap: var(--menu-gap); }
+.admin-shell .obs-in-shell .obs-scope, .admin-shell .obs-in-shell .obs-rail-action { border-radius: var(--menu-radius); }
+.admin-shell .obs-in-shell .obs-org { border-radius: var(--menu-radius); }
+.admin-shell .obs-in-shell .obs-rail-head { padding: 12px 8px 2px; }
+.admin-shell .obs-in-shell .obs-rail-head h2 { font-family: var(--font-ui); font-size: 14px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: var(--menu-title); }
+/* The functions share one size and weight, whether they come from the shell or from the portfolio. */
+.admin-shell > .product-sidebar .admin-nav-group > .admin-nav-item { font-family: var(--font-ui); font-size: var(--type-control); font-weight: var(--weight-control); }
+.admin-shell .obs-in-shell .obs-scope, .admin-shell .obs-in-shell .obs-org-name, .admin-shell .obs-in-shell .obs-rail-action { font-size: var(--type-control); font-weight: var(--weight-control); }
+.admin-shell > .product-sidebar .admin-nav-group > .admin-nav-item.active, .admin-shell .obs-in-shell .obs-scope[aria-current], .admin-shell .obs-in-shell .obs-org[aria-current] .obs-org-name { font-weight: 700; }
+.admin-shell .obs-in-shell .obs-scope[aria-current], .admin-shell .obs-in-shell .obs-org[aria-current] { background: var(--menu-active-bg); box-shadow: none; color: var(--menu-active); }
+.admin-shell .obs-in-shell .obs-scope:hover, .admin-shell .obs-in-shell .obs-org:hover:not(:disabled) { background: var(--menu-hover); }
+
+/* Footer. */
+.admin-shell .sidebar-bottom { padding-block: 12px 16px; }
+.admin-shell .sidebar-system { font-size: 12px; color: var(--menu-muted); }
+
+/* The domain panels share the reading's gutters. */
+.admin-panel { padding: 28px clamp(20px, 3vw, 44px) 64px; outline: none; }
+.admin-panel-head { margin-block-end: 24px; }
+.admin-panel-head h1 { margin: 0 0 6px; }
+.admin-panel-head p { margin: 0; color: #566173; }
+.admin-notice { max-inline-size: 640px; padding: 20px 24px; border: 1px solid var(--line, #e0e5ee); border-radius: var(--radius, 14px); background: #fff; }
+.admin-notice h2 { margin: 0 0 8px; font-size: 18px; }
+.admin-notice p { margin: 0; line-height: 1.6; color: #3b4456; }
+.admin-notice code { padding: 1px 6px; border-radius: 5px; background: #eef2fa; font-size: 13px; }
+
+/* The drawer on a phone: a real scrim outside it (the old one lived inside a transformed box and covered nothing),
+   a thin scrollbar, and targets a thumb can hit. */
+.admin-shell .product-sidebar { scrollbar-width: thin; scrollbar-color: var(--menu-line) transparent; }
+@media (max-width: 700px) {
+  .admin-scrim { position: fixed; inset: 0; z-index: 29; background: rgba(20, 28, 58, .5); }
+  .admin-shell .product-sidebar { inline-size: min(272px, 86vw); overscroll-behavior: contain; }
+  .admin-shell .product-sidebar.mobile-open::after { display: none; }
+  .admin-shell .product-sidebar .icon-button, .admin-shell .product-sidebar .obs-icon { min-inline-size: 44px; min-block-size: 44px; }
+  .admin-shell .product-topbar .icon-button.mobile-only { min-inline-size: 44px; min-block-size: 44px; }
+}
+@media (min-width: 701px) { .admin-scrim { display: none; } }

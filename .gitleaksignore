@@ -1,0 +1,8 @@
+# Reviewed false positives. Each line is one exact finding (commit:file:rule:line); no rule is disabled.
+#
+# `compatibilityKey` in the synthetic demo snapshot is the SHA-256 content hash of a cognitive reading's
+# compatibility scope (a deterministic identifier carried by the public contract). It is not a credential and
+# unlocks nothing; the generic-api-key rule matches it only because the field name ends in "Key".
+7658981763aa26d60a7763024f767e7bfac7008f:apps/web/experience/lib/demo/synthetic-observatory.json:generic-api-key:566
+7658981763aa26d60a7763024f767e7bfac7008f:apps/web/experience/lib/demo/synthetic-observatory.json:generic-api-key:705
+7658981763aa26d60a7763024f767e7bfac7008f:apps/web/experience/lib/demo/synthetic-observatory.json:generic-api-key:1286

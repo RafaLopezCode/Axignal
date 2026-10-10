@@ -23,6 +23,8 @@ export type RuntimeHost = {
   navigationHost?: HTMLElement | null;
   toolbarHost?: HTMLElement | null;
   onNavigate?: () => void;
+  /** False while the Admin shows another domain; the portfolio navigation then stays offered but unmarked. */
+  active?: boolean;
 };
 export function CustomerZero(props: RuntimeHost) {
   return <RuntimeExperience staff {...props} />;
@@ -33,6 +35,7 @@ export function RuntimeExperience({
   navigationHost,
   toolbarHost,
   onNavigate,
+  active = true,
 }: { staff?: boolean } & RuntimeHost) {
   const { t, locale } = useLocale();
   const [result, setResult] = useState<CustomerZeroState>({ state: "loading" });
@@ -81,10 +84,14 @@ export function RuntimeExperience({
   }
   async function reobserveSelected() {
     try {
-      const before = result.state === "success" ? result.projection : null;
       const response = await fetch("/api/organizations", {cache:"no-store"});
       const inventory = organizationInventorySchema.parse(await response.json());
       if (!response.ok || !inventory.canObserve || !inventory.selectedId) throw new Error("FOCUS_NOT_AVAILABLE");
+      // The shared portfolio may have selected a different organization after the outer Admin
+      // projection was read. Compare with the runtime's *current selection*, never a stale prop.
+      const previous = await fetch("/api/subscriber-context", {cache:"no-store"});
+      const baseline = readCustomerZeroResponse(await previous.json(), previous.status);
+      const before = baseline.state === "success" ? baseline.projection : null;
       const after = await load(true, {action:"reobserve", id:inventory.selectedId});
       if (before && after?.state === "success") {
         const latest = latestObservationStatus(after.projection);
@@ -186,7 +193,7 @@ export function RuntimeExperience({
       )}
       <details className="staff-utility">
       <summary>
-        {t("Cliente cero · Controles internos", "Customer Zero · Staff controls")}
+        {t("Admin · Controles internos", "Admin · Staff controls")}
       </summary>
       <div>
         {!embedded && <Link className="text-link" href="/admin">
@@ -210,14 +217,19 @@ export function RuntimeExperience({
       </details>
     </>
   ) : undefined;
-  if (result.state === "success")
+  // An authorized Admin can still navigate its attention inventory when no focus is selected
+  // or a focus has insufficient evidence. Neither state is an empty Admin portfolio.
+  if (result.state === "success" || result.state === "NO_XEED" || result.state === "INSUFFICIENT_EVIDENCE")
     return (
       <CustomerZeroObservatory
-        key={result.projection.context.id}
-        projection={result.projection}
+        projection={result.state === "success" ? result.projection : null}
         onProjection={projection => {requestRevision.current++; setReobserveFeedback(null); setResult({state:"success",projection});}}
         staffControls={controls}
         embedded={embedded}
+        navigationHost={navigationHost}
+        toolbarHost={toolbarHost}
+        active={active}
+        onNavigate={onNavigate}
       />
     );
   const headings = {
@@ -244,7 +256,7 @@ export function RuntimeExperience({
   return (
     <div className="runtime-entry" data-runtime-state={result.state}>
       {embedded && toolbarHost && createPortal(<>
-        <div className="navigation-controls"><span className="breadcrumb-root">AXIGNAL / Customer Zero</span></div>
+        <div className="navigation-controls"><span className="breadcrumb-root">Admin</span></div>
         <div className="topbar-right"><LocaleToggle /></div>
       </>, toolbarHost)}
       {!embedded && <header className="product-topbar">
@@ -258,7 +270,7 @@ export function RuntimeExperience({
           </Link>
         )}
         <span className="eyebrow">
-          {staff ? "Customer Zero" : t("Panorama", "Panorama")}
+          {staff ? "Admin" : t("Panorama", "Panorama")}
         </span>
         <section
           className={`customer-zero-state state-${result.state}`}
@@ -295,22 +307,9 @@ export function RuntimeExperience({
               </button>
             </form>
           )}
-          {result.state === "NO_XEED" && (
-            <button className="button" onClick={() => load(true)}>
-              {t("Observar AXIGNAL", "Observe AXIGNAL")}
-              <ArrowRight size={16} />
-            </button>
-          )}
-          {["failure", "rejected", "INSUFFICIENT_EVIDENCE"].includes(
-            result.state,
-          ) && (
+          {["failure", "rejected"].includes(result.state) && (
             <button className="button secondary" onClick={() => load()}>
               {t("Volver a leer el estado", "Read state again")}
-            </button>
-          )}
-          {result.state === "INSUFFICIENT_EVIDENCE" && (
-            <button className="text-link" onClick={() => void reobserveSelected()}>
-              {t("Volver a observar la fuente", "Observe the source again")}
             </button>
           )}
         </section>
