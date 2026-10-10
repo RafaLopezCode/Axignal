@@ -16,7 +16,7 @@ import { LocaleToggle, useFocusTrap } from "./ui";
 import { evidenceUrl, monthlyCapacityCents, pendingOutputSchema, subscriberOutputSchema, type FirstObservation, type SubscriberPortfolio } from "@/lib/subscriber-contracts";
 import type { RuntimeProjection } from "@/lib/runtime-projection";
 import { briefing, byLane, currentnessLabel, fill, insightsFor, laneCopy, natureLabel, type Insight, type Lane, type Nature, type Reading, type Translate } from "@/lib/observatory";
-import { baseline, litKeys, markSeen, observedSinceVisit, readSeen, SEEN_DWELL_MS, SEEN_VISIBLE_RATIO, touch, writeSeen, type SeenStore } from "@/lib/observatory-seen";
+import { baseline, litKeys, markSeen, observedSinceVisit, readSeen, touch, writeSeen, type SeenStore } from "@/lib/observatory-seen";
 import { activityLabel, FirstObservationView, observationStateCopy } from "./first-observation";
 import { SubscriberReading } from "./subscriber-reading";
 import { causeCopy, dimensionCopy, stateCopy } from "./public-understanding";
@@ -498,12 +498,6 @@ function OrganizationView(props: OrgProps) {
   const shown = useMemo(() => facet.family ? insights.filter(i => matchesFacet(i, facet)) : insights, [insights, facet]);
   const shownKeys = useMemo(() => shown.map(i => i.changeKey), [shown]);
   const litShown = useMemo(() => new Set(shownKeys.filter(k => lit.has(k))), [shownKeys, lit]);
-  // The notice of the visit says what arrived since the last visit. It is fixed when the reading first appears and stays
-  // until it is dismissed: reading the findings clears the chips and the badges, not the statement of the visit.
-  const arrived = useRef<Set<string> | null>(null);
-  if (ready && arrived.current === null) arrived.current = new Set(lit);
-  const [dismissed, setDismissed] = useState(false);
-  const arrivedShown = dismissed ? 0 : shownKeys.filter(key => arrived.current?.has(key)).length;
   const counts = useMemo(() => countByFacet(insights), [insights]);
   const litFamilies = useMemo(() => litByFamily(insights, lit), [insights, lit]);
   const litChannels = useMemo(() => litByChannel(insights, lit), [insights, lit]);
@@ -516,27 +510,6 @@ function OrganizationView(props: OrgProps) {
     const now = new Date().toISOString();
     updateSeen(store => store[item.focusId] ? touch(store, item.focusId, now) : baseline(store, item.focusId, keysReadOnFirstLook(insights, props.firstLookUnread), now));
   }, [ready, item.focusId, insights, props.firstLookUnread, updateSeen]);
-  // A finding that has been in view, in a visible tab, for a moment has been seen: it stops being lit without a click.
-  useEffect(() => {
-    if (!ready || view !== "summary" || litShown.size === 0 || typeof IntersectionObserver === "undefined") return;
-    const keyOf = new Map(shown.map(insight => [insight.id, insight.changeKey]));
-    const timers = new Map<Element, number>();
-    const observer = new IntersectionObserver(entries => {
-      for (const entry of entries) {
-        const key = keyOf.get((entry.target as HTMLElement).dataset.insight ?? "");
-        if (!key || !litShown.has(key)) continue;
-        const running = timers.get(entry.target);
-        if (entry.isIntersecting && entry.intersectionRatio >= SEEN_VISIBLE_RATIO && document.visibilityState === "visible") {
-          if (running === undefined) timers.set(entry.target, window.setTimeout(() => {
-            timers.delete(entry.target);
-            updateSeen(store => markSeen(store, item.focusId, [key], new Date().toISOString()));
-          }, SEEN_DWELL_MS));
-        } else if (running !== undefined) { window.clearTimeout(running); timers.delete(entry.target); }
-      }
-    }, { threshold: [0, SEEN_VISIBLE_RATIO] });
-    document.querySelectorAll<HTMLElement>("[data-insight]").forEach(card => observer.observe(card));
-    return () => { observer.disconnect(); timers.forEach(id => window.clearTimeout(id)); };
-  }, [ready, view, shown, litShown, item.focusId, updateSeen]);
   const open = insights.find(i => i.id === itemId) ?? null;
   const [menu, setMenu] = useState(false);
   const opener = useRef<string | null>(null);
@@ -603,7 +576,7 @@ function OrganizationView(props: OrgProps) {
         {props.reading && <ReadingSkeleton/>}
         {!props.reading && observing && <ObservingState state={item.observation!.state}/>}
         {!props.reading && !observing && view === "summary" && <SummaryView reading={reading} name={name} insights={shown} lit={litShown} openId={open?.id ?? null} onOpen={openInsight} scope={scope}
-          since={arrivedShown} remembered={props.rememberReading !== false} onSeenAll={() => { setDismissed(true); updateSeen(store => markSeen(store, item.focusId, shownKeys, new Date().toISOString())); }} item={item}/>}
+          remembered={props.rememberReading !== false} onSeenAll={() => updateSeen(store => markSeen(store, item.focusId, shownKeys, new Date().toISOString()))} item={item}/>}
         {!props.reading && !observing && view === "explore" && <ExploreView projection={projection} revision={revision} firstObservation={firstObservation} onSummary={() => go({ view: "summary" })}/>}
         {!props.reading && !observing && view === "evolution" && <EvolutionView reading={reading} facet={facet} scope={scope}/>}
         {!props.reading && !observing && view === "evidence" && <EvidenceView reading={reading} facet={facet} scope={scope} insights={shown}/>}
@@ -639,9 +612,7 @@ function ObservingState({ state }: { state: string }) {
   </section>;
 }
 
-export function SummaryView({ reading, name, insights, lit, since, remembered = true, openId, onOpen, onSeenAll, item, exampleLead, scope }: {
-  /** What arrived since the last visit, when the visit's notice is kept apart from what is still unread. */
-  since?: number;
+export function SummaryView({ reading, name, insights, lit, remembered = true, openId, onOpen, onSeenAll, item, exampleLead, scope }: {
   /** Whether what is read is kept on this device: the notice says so only when it is true. */
   remembered?: boolean;
   reading: Reading; name: string; insights: Insight[]; lit: Set<string>; openId: string | null;
@@ -663,9 +634,9 @@ export function SummaryView({ reading, name, insights, lit, since, remembered = 
       {scope ? <ul className="obs-tally"><li>{fill(insights.length === 1 ? t("{n} hallazgo", "{n} finding") : t("{n} hallazgos", "{n} findings"), { n: insights.length })}</li></ul>
         : brief.tally.length > 0 && <ul className="obs-tally">{brief.tally.map(x => <li key={x}>{x}</li>)}</ul>}
       {low && <p className="obs-brief-note">{observationStateCopy(item.observation!.state, t)}. {t("Lo que no se pudo observar aparece en «Lo que aún no sabemos», con su razón.", "What could not be observed appears under “What we do not know yet”, with its reason.")}</p>}
-      {(since ?? lit.size) > 0 && <div className="obs-since" role="status">
+      {lit.size > 0 && <div className="obs-since" role="status">
         <span className="obs-since-lamp" aria-hidden="true"/>
-        <span>{fill((since ?? lit.size) === 1 ? t("{n} hallazgo nuevo o cambiado desde tu última visita.", "{n} finding new or changed since your last visit.") : t("{n} hallazgos nuevos o cambiados desde tu última visita.", "{n} findings new or changed since your last visit."), { n: since ?? lit.size })}{remembered && <> <small>{t("Se recuerda en este dispositivo.", "Remembered on this device.")}</small></>}</span>
+        <span>{fill(lit.size === 1 ? t("{n} hallazgo nuevo o cambiado desde tu última visita.", "{n} finding new or changed since your last visit.") : t("{n} hallazgos nuevos o cambiados desde tu última visita.", "{n} findings new or changed since your last visit."), { n: lit.size })}{remembered && <> <small>{t("Se recuerda en este dispositivo.", "Remembered on this device.")}</small></>}</span>
         <button className="obs-link" onClick={onSeenAll}>{t("Marcar como visto", "Mark as seen")}</button>
       </div>}
     </section>

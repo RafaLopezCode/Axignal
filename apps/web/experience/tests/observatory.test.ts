@@ -225,25 +225,13 @@ test("the runtime's English sentences are shown in Spanish where the reader read
   assert.equal(runtimeText("AXIGNAL's public homepage is observable from the outside", "en"), "AXIGNAL's public homepage is observable from the outside");
 });
 
-test("a finding that has been in view for a moment is marked seen without a click", () => {
+test("the chips, the badges and the notice are one thing: they clear only when the finding is marked as seen", () => {
   const source = fs.readFileSync(path.resolve(process.cwd(), "components/observatory.tsx"), "utf8");
-  assert.match(source, /new IntersectionObserver\(/);
-  // Only a visible tab counts, and only while enough of the finding is in view for long enough.
-  assert.match(source, /document\.visibilityState === "visible"/);
-  assert.match(source, /entry\.intersectionRatio >= SEEN_VISIBLE_RATIO/);
-  assert.match(source, /SEEN_DWELL_MS\)/);
-  // It marks through the same seen store as opening a finding, and a timer is cancelled when the finding leaves view.
-  assert.match(source, /markSeen\(store, item\.focusId, \[key\]/);
-  assert.match(source, /window\.clearTimeout\(running\)/);
-});
-
-test("the notice of the visit stays until it is dismissed: reading clears the chips and badges, not the statement", () => {
-  const source = fs.readFileSync(path.resolve(process.cwd(), "components/observatory.tsx"), "utf8");
-  // Fixed when the reading first appears, counted over what the selection shows, and cleared only by dismissing it.
-  assert.match(source, /arrived\.current = new Set\(lit\)/);
-  assert.match(source, /const arrivedShown = dismissed \? 0 : shownKeys\.filter\(key => arrived\.current\?\.has\(key\)\)\.length/);
-  assert.match(source, /setDismissed\(true\); updateSeen\(/);
-  assert.match(source, /\(since \?\? lit\.size\) > 0 && <div className="obs-since"/);
-  // Where nothing is kept between visits, the notice does not claim it is.
-  assert.match(source, /\{remembered && <> <small>/);
+  // No reading by time on screen: nothing observes the findings to mark them.
+  assert.doesNotMatch(source, /IntersectionObserver/);
+  // The notice counts what is lit, as the chips do, and its button marks exactly the selection it counts.
+  assert.match(source, /\{lit\.size > 0 && <div className="obs-since"/);
+  assert.match(source, /onSeenAll=\{\(\) => updateSeen\(store => markSeen\(store, item\.focusId, shownKeys,/);
+  // Opening a finding is an explicit act on it: it is marked, and the chips follow.
+  assert.match(source, /if \(lit\.has\(insight\.changeKey\)\) window\.setTimeout\(\(\) => updateSeen\(store => markSeen\(store, item\.focusId, \[insight\.changeKey\]/);
 });
