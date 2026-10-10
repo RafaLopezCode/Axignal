@@ -50,6 +50,8 @@ export type ObservatoryProps = {
   replacementLocator: string; setReplacementLocator: (value: string) => void;
   /** Account-only capabilities. False in the public demo: same components, synthetic data. */
   canAct: boolean;
+  /** The menu's name for an organization, when the mode names it differently (the demo shows its domain). */
+  menuName?: (item: SubscriberPortfolio["organizations"][number]) => string;
   /** One reading source for the desk and the organization view: the account's read, or the demo snapshot. */
   loadReading: (focusId: string, signal: AbortSignal) => Promise<unknown>;
 };
@@ -254,7 +256,7 @@ export function Observatory(props: ObservatoryProps) {
   if (access === "failure" || !portfolio) return <ObservatoryFrame><section className="obs-gate" role="alert"><h1>{t("No pudimos leer tu contexto.", "We could not read your context.")}</h1><p>{t("Tu cartera sigue a salvo. Vuelve a comprobarlo en un momento.", "Your portfolio is safe. Check again in a moment.")}</p><button className="obs-button" onClick={props.refresh}><RefreshCw size={16} aria-hidden="true"/>{t("Volver a comprobar", "Check again")}</button></section></ObservatoryFrame>;
 
   const current = items.find(i => i.focusId === selected) ?? null;
-  const rail = <Rail items={items} selected={selected} screen={screen} seen={seen} litCounts={litCounts} nameOf={nameOf} onOrganization={openOrganization} onScreen={openScreen} portfolio={portfolio} busy={props.busy} refresh={props.refresh} canAct={props.canAct}/>;
+  const rail = <Rail items={items} selected={selected} screen={screen} seen={seen} litCounts={litCounts} nameOf={props.menuName ?? nameOf} onOrganization={openOrganization} onScreen={openScreen} portfolio={portfolio} busy={props.busy} refresh={props.refresh} canAct={props.canAct}/>;
   return <div className="obs" data-product-surface="living-observatory" aria-busy={props.busy}>
     <a className="obs-skip" href="#obs-main">{t("Ir al contenido", "Skip to content")}</a>
     <div className="obs-rail-desktop">{rail}</div>

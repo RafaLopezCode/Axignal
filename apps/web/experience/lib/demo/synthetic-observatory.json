@@ -1,10 +1,19 @@
 {
- "provenance": "SYNTHETIC: fictional organizations on example.* domains (RFC 2606). Produced by the subscriber composition over a controlled test world. No real organization, source or person.",
+ "provenance": "SYNTHETIC: fictional organizations on demo domains and example.* hosts. Produced by the subscriber composition over a controlled test world. No real organization, source or person.",
+ "demoSites": [
+  "seo",
+  "geo",
+  "consultor",
+  "constructor",
+  "marketing",
+  "fabrica",
+  "distribuidor"
+ ],
  "portfolio": [
   {
    "focusId": "focus_ae5bbf52b76149b4af22a67a9fbafeb6",
    "organizationId": "org:id:2685bc852d5ff31e64a4f0ecbb399b66",
-   "label": "Organization",
+   "label": "Demo Seo.com",
    "state": "ACTIVE",
    "observation": {
     "state": "FIRST_PROOF_READY",
@@ -17,7 +26,7 @@
   {
    "focusId": "pending_2ede23d46215446c857f5f2bdccd3c0e",
    "organizationId": null,
-   "label": "https://ejemplo-norte.example.com/",
+   "label": "Demo Geo.com",
    "state": "IDENTITY_PENDING",
    "reason": "IDENTITY_SOURCE_UNAVAILABLE",
    "observation": {
@@ -31,7 +40,7 @@
   {
    "focusId": "pending_115c8d1ab897476dab5eeb7ffcd7f5e5",
    "organizationId": null,
-   "label": "https://ejemplo-idiomas.example.com/",
+   "label": "Demo Consultor.com",
    "state": "IDENTITY_PENDING",
    "reason": "IDENTITY_SOURCE_UNAVAILABLE",
    "observation": {
@@ -45,7 +54,7 @@
   {
    "focusId": "pending_73ba1b9973c04e6c8828f9e7e80a154d",
    "organizationId": null,
-   "label": "https://ejemplo-ledger.example.com/",
+   "label": "Demo Constructor.com",
    "state": "IDENTITY_PENDING",
    "reason": "IDENTITY_SOURCE_UNAVAILABLE",
    "observation": {
@@ -59,7 +68,7 @@
   {
    "focusId": "pending_1a743f603eb84c08a21ddda89f3d741c",
    "organizationId": null,
-   "label": "https://ejemplo-boulangerie.example.com/",
+   "label": "Demo Marketing.com",
    "state": "IDENTITY_PENDING",
    "reason": "IDENTITY_SOURCE_UNAVAILABLE",
    "observation": {
@@ -73,7 +82,7 @@
   {
    "focusId": "pending_8635a3d89af64c7689983612686041d5",
    "organizationId": null,
-   "label": "https://soon.example.com/",
+   "label": "Demo Fabrica.com",
    "state": "IDENTITY_PENDING",
    "reason": "IDENTITY_SOURCE_UNAVAILABLE",
    "observation": {
@@ -87,7 +96,7 @@
   {
    "focusId": "pending_cf98f1069fbb4ea7b3f6248fda4b76f4",
    "organizationId": null,
-   "label": "https://private-robots.example.com/",
+   "label": "Demo Distribuidor.com",
    "state": "IDENTITY_PENDING",
    "reason": "IDENTITY_SOURCE_UNAVAILABLE",
    "observation": {
@@ -108,11 +117,11 @@
     "lifecycleStatus": "LIVE",
     "context": {
      "id": "focus_ae5bbf52b76149b4af22a67a9fbafeb6",
-     "label": "Solar Ejemplo Energía SL"
+     "label": "Demo Seo.com"
     },
     "organization": {
      "id": "org:id:2685bc852d5ff31e64a4f0ecbb399b66",
-     "name": "Solar Ejemplo Energía SL"
+     "name": "Demo Seo.com"
     },
     "nodes": [],
     "temporalHistory": {
@@ -120,7 +129,7 @@
      "items": [
       {
        "observationId": "fo:24cde4e93eaefc28fe5237288a2365d3",
-       "sourceRef": "https://www.solar-ejemplo.example.com/",
+       "sourceRef": "https://www.demo-seo.com/",
        "sourceType": "PUBLIC_WEBSITE",
        "observedAt": "2026-10-09T20:02:56.894179+00:00",
        "currentness": "CURRENT",
@@ -128,7 +137,7 @@
       },
       {
        "observationId": "fo:95e24de6eb7273bf3d61e19c454a1cfa",
-       "sourceRef": "https://www.solar-ejemplo.example.com/services",
+       "sourceRef": "https://www.demo-seo.com/services",
        "sourceType": "PUBLIC_WEBSITE",
        "observedAt": "2026-10-09T20:02:56.894179+00:00",
        "currentness": "CURRENT",
@@ -136,7 +145,7 @@
       },
       {
        "observationId": "fo:47ad8af5f78e8c1fd50bb5077cec7f8c",
-       "sourceRef": "https://www.solar-ejemplo.example.com/",
+       "sourceRef": "https://www.demo-seo.com/",
        "sourceType": "PUBLIC_WEBSITE",
        "observedAt": "2026-10-09T20:02:57.038873+00:00",
        "currentness": "CURRENT",
@@ -144,7 +153,7 @@
       },
       {
        "observationId": "fo:51ce03b9efe4bcf3ca9b8f620808c99e",
-       "sourceRef": "https://www.solar-ejemplo.example.com/services",
+       "sourceRef": "https://www.demo-seo.com/services",
        "sourceType": "PUBLIC_WEBSITE",
        "observedAt": "2026-10-09T20:02:57.038873+00:00",
        "currentness": "CURRENT",
@@ -167,46 +176,46 @@
      "sources": [
       {
        "id": "fo:24cde4e93eaefc28fe5237288a2365d3",
-       "title": "https://www.solar-ejemplo.example.com/",
+       "title": "https://www.demo-seo.com/",
        "observedAt": "2026-10-09T20:02:56.894179+00:00",
        "currentness": "CURRENT",
        "currentnessEvaluatedAt": "2026-10-09T20:02:57.099647+00:00",
        "instrument": "UNKNOWN — acquisition instrument is not recorded in this read contract",
        "limitation": "One authorized source observation; coverage beyond this document remains unknown.",
-       "sourceRef": "https://www.solar-ejemplo.example.com/",
+       "sourceRef": "https://www.demo-seo.com/",
        "provenanceRef": "artifact:8e309d27c17806b3"
       },
       {
        "id": "fo:47ad8af5f78e8c1fd50bb5077cec7f8c",
-       "title": "https://www.solar-ejemplo.example.com/",
+       "title": "https://www.demo-seo.com/",
        "observedAt": "2026-10-09T20:02:57.038873+00:00",
        "currentness": "CURRENT",
        "currentnessEvaluatedAt": "2026-10-09T20:02:57.099647+00:00",
        "instrument": "UNKNOWN — acquisition instrument is not recorded in this read contract",
        "limitation": "One authorized source observation; coverage beyond this document remains unknown.",
-       "sourceRef": "https://www.solar-ejemplo.example.com/",
+       "sourceRef": "https://www.demo-seo.com/",
        "provenanceRef": "artifact:8e309d27c17806b3"
       },
       {
        "id": "fo:51ce03b9efe4bcf3ca9b8f620808c99e",
-       "title": "https://www.solar-ejemplo.example.com/services",
+       "title": "https://www.demo-seo.com/services",
        "observedAt": "2026-10-09T20:02:57.038873+00:00",
        "currentness": "CURRENT",
        "currentnessEvaluatedAt": "2026-10-09T20:02:57.099647+00:00",
        "instrument": "UNKNOWN — acquisition instrument is not recorded in this read contract",
        "limitation": "One authorized source observation; coverage beyond this document remains unknown.",
-       "sourceRef": "https://www.solar-ejemplo.example.com/services",
+       "sourceRef": "https://www.demo-seo.com/services",
        "provenanceRef": "artifact:7d611e93ca58fc87"
       },
       {
        "id": "fo:95e24de6eb7273bf3d61e19c454a1cfa",
-       "title": "https://www.solar-ejemplo.example.com/services",
+       "title": "https://www.demo-seo.com/services",
        "observedAt": "2026-10-09T20:02:56.894179+00:00",
        "currentness": "CURRENT",
        "currentnessEvaluatedAt": "2026-10-09T20:02:57.099647+00:00",
        "instrument": "UNKNOWN — acquisition instrument is not recorded in this read contract",
        "limitation": "One authorized source observation; coverage beyond this document remains unknown.",
-       "sourceRef": "https://www.solar-ejemplo.example.com/services",
+       "sourceRef": "https://www.demo-seo.com/services",
        "provenanceRef": "artifact:8cbf3ccbdb8e7be1"
       },
       {
@@ -231,7 +240,7 @@
       {
        "buyer": "Ayuntamiento Ejemplo",
        "capability": {
-        "excerpt": "Solar Ejemplo | photovoltaic installation",
+        "excerpt": "Demo Seo.com | photovoltaic installation",
         "label": "Solar photovoltaic installation",
         "sourceId": "fo:47ad8af5f78e8c1fd50bb5077cec7f8c"
        },
@@ -327,7 +336,7 @@
        "whyLooked": [
         "«Which open public tenders ask for its observed capabilities?» necesita PUBLIC_PROCUREMENT_OPPORTUNITIES; Tenders Electronic Daily — Search API v3 lo publica para ES y permite buscar por CPV."
        ],
-       "whyPotential": "AXIGNAL observó que la empresa declara «Solar Ejemplo | photovoltaic installation» y este comprador pide 09332000 (Solar photovoltaic installation)."
+       "whyPotential": "AXIGNAL observó que la empresa declara «Demo Seo.com | photovoltaic installation» y este comprador pide 09332000 (Solar photovoltaic installation)."
       }
      ],
      "economicGarden": {
@@ -379,11 +388,11 @@
        "pagesRead": 2
       },
       "epistemicState": "OBSERVED",
-      "excerpt": "Solar Ejemplo | photovoltaic installation",
+      "excerpt": "Demo Seo.com | photovoltaic installation",
       "kind": "PUBLIC_PRESENCE",
       "observedAt": "2026-10-09T20:02:57.038873+00:00",
-      "sourceUrl": "https://www.solar-ejemplo.example.com/",
-      "statement": "Solar Ejemplo | photovoltaic installation"
+      "sourceUrl": "https://www.demo-seo.com/",
+      "statement": "Demo Seo.com | photovoltaic installation"
      },
      {
       "code": "LANGUAGES_PUBLISHED",
@@ -396,7 +405,7 @@
       "excerpt": null,
       "kind": "LANGUAGES",
       "observedAt": "2026-10-09T20:02:57.038873+00:00",
-      "sourceUrl": "https://www.solar-ejemplo.example.com/",
+      "sourceUrl": "https://www.demo-seo.com/",
       "statement": "en"
      },
      {
@@ -408,7 +417,7 @@
       "excerpt": "schema.org address: ES",
       "kind": "DECLARED_LOCATION",
       "observedAt": "2026-10-09T20:02:57.038873+00:00",
-      "sourceUrl": "https://www.solar-ejemplo.example.com/",
+      "sourceUrl": "https://www.demo-seo.com/",
       "statement": "ES"
      },
      {
@@ -425,10 +434,10 @@
        ]
       },
       "epistemicState": "POTENTIAL",
-      "excerpt": "Solar Ejemplo | photovoltaic installation",
+      "excerpt": "Demo Seo.com | photovoltaic installation",
       "kind": "ACTIVITY",
       "observedAt": "2026-10-09T20:02:57.038873+00:00",
-      "sourceUrl": "https://www.solar-ejemplo.example.com/",
+      "sourceUrl": "https://www.demo-seo.com/",
       "statement": "Solar photovoltaic installation"
      },
      {
@@ -457,7 +466,7 @@
       "excerpt": null,
       "kind": "WEB_REPRESENTATION",
       "observedAt": "2026-10-09T20:02:57.038873+00:00",
-      "sourceUrl": "https://www.solar-ejemplo.example.com/",
+      "sourceUrl": "https://www.demo-seo.com/",
       "statement": "Public web representation checks"
      },
      {
@@ -474,7 +483,7 @@
       "excerpt": null,
       "kind": "REPRESENTATION_GAP",
       "observedAt": "2026-10-09T20:02:57.038873+00:00",
-      "sourceUrl": "https://www.solar-ejemplo.example.com/",
+      "sourceUrl": "https://www.demo-seo.com/",
       "statement": "On the pages read, its activity is evidenced in prose but no service or product is declared as structured data."
      },
      {
@@ -531,36 +540,36 @@
        "contentFingerprint": "sha256:8e309d27c17806b3e59f9a4fc69385acb6f330269c535a94a79dada29ef32614",
        "id": "q1",
        "observedAt": "2026-10-09T20:02:57.038873+00:00",
-       "quote": "Solar Ejemplo | photovoltaic installation",
-       "url": "https://www.solar-ejemplo.example.com/"
+       "quote": "Demo Seo.com | photovoltaic installation",
+       "url": "https://www.demo-seo.com/"
       },
       {
        "contentFingerprint": "sha256:8e309d27c17806b3e59f9a4fc69385acb6f330269c535a94a79dada29ef32614",
        "id": "q2",
        "observedAt": "2026-10-09T20:02:57.038873+00:00",
        "quote": "We install photovoltaic panels.",
-       "url": "https://www.solar-ejemplo.example.com/"
+       "url": "https://www.demo-seo.com/"
       },
       {
        "contentFingerprint": "sha256:8e309d27c17806b3e59f9a4fc69385acb6f330269c535a94a79dada29ef32614",
        "id": "q3",
        "observedAt": "2026-10-09T20:02:57.038873+00:00",
        "quote": "Services",
-       "url": "https://www.solar-ejemplo.example.com/"
+       "url": "https://www.demo-seo.com/"
       },
       {
        "contentFingerprint": "sha256:7d611e93ca58fc872816c155d6a76ac16944dcdc79b2e43d57c318912d83803c",
        "id": "q4",
        "observedAt": "2026-10-09T20:02:57.038873+00:00",
        "quote": "We install photovoltaic panels for households.",
-       "url": "https://www.solar-ejemplo.example.com/services"
+       "url": "https://www.demo-seo.com/services"
       },
       {
        "contentFingerprint": "sha256:7d611e93ca58fc872816c155d6a76ac16944dcdc79b2e43d57c318912d83803c",
        "id": "q5",
        "observedAt": "2026-10-09T20:02:57.038873+00:00",
        "quote": "Our systems reduce purchased electricity under suitable site conditions.",
-       "url": "https://www.solar-ejemplo.example.com/services"
+       "url": "https://www.demo-seo.com/services"
       }
      ],
      "compatibilityKey": "77a085b76dabcfcaf5aa77ed6e33f63c5e6699a6816e741ba20a7de86e00c05d",
@@ -573,8 +582,8 @@
       "replicaPolicy": "ONE_EXECUTION_OR_EXACT_JUDGMENT_REUSE",
       "sampleSize": 1,
       "sourceSet": [
-       "https://www.solar-ejemplo.example.com/",
-       "https://www.solar-ejemplo.example.com/services"
+       "https://www.demo-seo.com/",
+       "https://www.demo-seo.com/services"
       ],
       "surface": "OWN_PUBLIC_WEBSITE_API_INTERPRETATION"
      },
@@ -647,22 +656,22 @@
      "sourceObservedAt": "2026-10-09T20:02:57.038873+00:00",
      "sourceRights": [
       {
-       "basisRef": "source-registry:website:solar-ejemplo.example.com@1:c82ae7b330d67a9d587070262ac3b17defa7164d3bf78638abbea11c75cf7892",
+       "basisRef": "source-registry:website:demo-seo.com@1:c82ae7b330d67a9d587070262ac3b17defa7164d3bf78638abbea11c75cf7892",
        "policyVersion": "first-observation-content-rights.v1",
        "providerInput": true,
        "publicOfferInput": true,
        "rawRetentionDays": 90,
        "reusePermitted": true,
-       "url": "https://www.solar-ejemplo.example.com/"
+       "url": "https://www.demo-seo.com/"
       },
       {
-       "basisRef": "source-registry:website:solar-ejemplo.example.com@1:c82ae7b330d67a9d587070262ac3b17defa7164d3bf78638abbea11c75cf7892",
+       "basisRef": "source-registry:website:demo-seo.com@1:c82ae7b330d67a9d587070262ac3b17defa7164d3bf78638abbea11c75cf7892",
        "policyVersion": "first-observation-content-rights.v1",
        "providerInput": true,
        "publicOfferInput": true,
        "rawRetentionDays": 90,
        "reusePermitted": true,
-       "url": "https://www.solar-ejemplo.example.com/services"
+       "url": "https://www.demo-seo.com/services"
       }
      ],
      "stateFingerprint": "a76d47ea8bf8e0b90c1e36ff073d78fe09b6c15744d8bd4a78e164b061b52f88",
@@ -677,29 +686,29 @@
          "contentFingerprint": "sha256:8e309d27c17806b3e59f9a4fc69385acb6f330269c535a94a79dada29ef32614",
          "id": "q1",
          "observedAt": "2026-10-09T20:02:56.894179+00:00",
-         "quote": "Solar Ejemplo | photovoltaic installation",
-         "url": "https://www.solar-ejemplo.example.com/"
+         "quote": "Demo Seo.com | photovoltaic installation",
+         "url": "https://www.demo-seo.com/"
         },
         {
          "contentFingerprint": "sha256:8e309d27c17806b3e59f9a4fc69385acb6f330269c535a94a79dada29ef32614",
          "id": "q2",
          "observedAt": "2026-10-09T20:02:56.894179+00:00",
          "quote": "We install photovoltaic panels.",
-         "url": "https://www.solar-ejemplo.example.com/"
+         "url": "https://www.demo-seo.com/"
         },
         {
          "contentFingerprint": "sha256:8e309d27c17806b3e59f9a4fc69385acb6f330269c535a94a79dada29ef32614",
          "id": "q3",
          "observedAt": "2026-10-09T20:02:56.894179+00:00",
          "quote": "Services",
-         "url": "https://www.solar-ejemplo.example.com/"
+         "url": "https://www.demo-seo.com/"
         },
         {
          "contentFingerprint": "sha256:8cbf3ccbdb8e7be18e0006fc579912ccbcfcab437e3c9c94a835d7e191efdd71",
          "id": "q4",
          "observedAt": "2026-10-09T20:02:56.894179+00:00",
          "quote": "We install photovoltaic panels.",
-         "url": "https://www.solar-ejemplo.example.com/services"
+         "url": "https://www.demo-seo.com/services"
         }
        ],
        "compatibilityKey": "77a085b76dabcfcaf5aa77ed6e33f63c5e6699a6816e741ba20a7de86e00c05d",
@@ -712,8 +721,8 @@
         "replicaPolicy": "ONE_EXECUTION_OR_EXACT_JUDGMENT_REUSE",
         "sampleSize": 1,
         "sourceSet": [
-         "https://www.solar-ejemplo.example.com/",
-         "https://www.solar-ejemplo.example.com/services"
+         "https://www.demo-seo.com/",
+         "https://www.demo-seo.com/services"
         ],
         "surface": "OWN_PUBLIC_WEBSITE_API_INTERPRETATION"
        },
@@ -792,22 +801,22 @@
        "sourceObservedAt": "2026-10-09T20:02:56.894179+00:00",
        "sourceRights": [
         {
-         "basisRef": "source-registry:website:solar-ejemplo.example.com@1:c82ae7b330d67a9d587070262ac3b17defa7164d3bf78638abbea11c75cf7892",
+         "basisRef": "source-registry:website:demo-seo.com@1:c82ae7b330d67a9d587070262ac3b17defa7164d3bf78638abbea11c75cf7892",
          "policyVersion": "first-observation-content-rights.v1",
          "providerInput": true,
          "publicOfferInput": true,
          "rawRetentionDays": 90,
          "reusePermitted": true,
-         "url": "https://www.solar-ejemplo.example.com/"
+         "url": "https://www.demo-seo.com/"
         },
         {
-         "basisRef": "source-registry:website:solar-ejemplo.example.com@1:c82ae7b330d67a9d587070262ac3b17defa7164d3bf78638abbea11c75cf7892",
+         "basisRef": "source-registry:website:demo-seo.com@1:c82ae7b330d67a9d587070262ac3b17defa7164d3bf78638abbea11c75cf7892",
          "policyVersion": "first-observation-content-rights.v1",
          "providerInput": true,
          "publicOfferInput": true,
          "rawRetentionDays": 90,
          "reusePermitted": true,
-         "url": "https://www.solar-ejemplo.example.com/services"
+         "url": "https://www.demo-seo.com/services"
         }
        ],
        "stateFingerprint": "afb412096b77cf5777afab8e0f1a48f2a940eefab0f4e4da4ebfc0f5a2c375a8",
@@ -828,7 +837,7 @@
         "kind": "STATE_CHANGED",
         "beforeQuotations": [
          "Services",
-         "Solar Ejemplo | photovoltaic installation",
+         "Demo Seo.com | photovoltaic installation",
          "We install photovoltaic panels.",
          "We install photovoltaic panels."
         ],
@@ -843,7 +852,7 @@
         "kind": "STATE_CHANGED",
         "beforeQuotations": [
          "Services",
-         "Solar Ejemplo | photovoltaic installation",
+         "Demo Seo.com | photovoltaic installation",
          "We install photovoltaic panels.",
          "We install photovoltaic panels."
         ],
@@ -859,7 +868,7 @@
     "state": "FIRST_PROOF_READY",
     "target": {
      "kind": "FOCUS",
-     "website": "https://www.solar-ejemplo.example.com/",
+     "website": "https://www.demo-seo.com/",
      "name": null,
      "identityLink": "REGISTRY_VERIFIED"
     }
@@ -873,11 +882,11 @@
     "lifecycleStatus": "LIVE",
     "context": {
      "id": "focus_ae5bbf52b76149b4af22a67a9fbafeb6",
-     "label": "Solar Ejemplo Energía SL"
+     "label": "Demo Seo.com"
     },
     "organization": {
      "id": "org:id:2685bc852d5ff31e64a4f0ecbb399b66",
-     "name": "Solar Ejemplo Energía SL"
+     "name": "Demo Seo.com"
     },
     "nodes": [],
     "temporalHistory": {
@@ -885,7 +894,7 @@
      "items": [
       {
        "observationId": "fo:24cde4e93eaefc28fe5237288a2365d3",
-       "sourceRef": "https://www.solar-ejemplo.example.com/",
+       "sourceRef": "https://www.demo-seo.com/",
        "sourceType": "PUBLIC_WEBSITE",
        "observedAt": "2026-10-09T20:02:56.894179+00:00",
        "currentness": "CURRENT",
@@ -893,7 +902,7 @@
       },
       {
        "observationId": "fo:95e24de6eb7273bf3d61e19c454a1cfa",
-       "sourceRef": "https://www.solar-ejemplo.example.com/services",
+       "sourceRef": "https://www.demo-seo.com/services",
        "sourceType": "PUBLIC_WEBSITE",
        "observedAt": "2026-10-09T20:02:56.894179+00:00",
        "currentness": "CURRENT",
@@ -916,24 +925,24 @@
      "sources": [
       {
        "id": "fo:24cde4e93eaefc28fe5237288a2365d3",
-       "title": "https://www.solar-ejemplo.example.com/",
+       "title": "https://www.demo-seo.com/",
        "observedAt": "2026-10-09T20:02:56.894179+00:00",
        "currentness": "CURRENT",
        "currentnessEvaluatedAt": "2026-10-09T20:02:56.999256+00:00",
        "instrument": "UNKNOWN — acquisition instrument is not recorded in this read contract",
        "limitation": "One authorized source observation; coverage beyond this document remains unknown.",
-       "sourceRef": "https://www.solar-ejemplo.example.com/",
+       "sourceRef": "https://www.demo-seo.com/",
        "provenanceRef": "artifact:8e309d27c17806b3"
       },
       {
        "id": "fo:95e24de6eb7273bf3d61e19c454a1cfa",
-       "title": "https://www.solar-ejemplo.example.com/services",
+       "title": "https://www.demo-seo.com/services",
        "observedAt": "2026-10-09T20:02:56.894179+00:00",
        "currentness": "CURRENT",
        "currentnessEvaluatedAt": "2026-10-09T20:02:56.999256+00:00",
        "instrument": "UNKNOWN — acquisition instrument is not recorded in this read contract",
        "limitation": "One authorized source observation; coverage beyond this document remains unknown.",
-       "sourceRef": "https://www.solar-ejemplo.example.com/services",
+       "sourceRef": "https://www.demo-seo.com/services",
        "provenanceRef": "artifact:8cbf3ccbdb8e7be1"
       },
       {
@@ -958,7 +967,7 @@
       {
        "buyer": "Ayuntamiento Ejemplo",
        "capability": {
-        "excerpt": "Solar Ejemplo | photovoltaic installation",
+        "excerpt": "Demo Seo.com | photovoltaic installation",
         "label": "Solar photovoltaic installation",
         "sourceId": "fo:24cde4e93eaefc28fe5237288a2365d3"
        },
@@ -1054,7 +1063,7 @@
        "whyLooked": [
         "«Which open public tenders ask for its observed capabilities?» necesita PUBLIC_PROCUREMENT_OPPORTUNITIES; Tenders Electronic Daily — Search API v3 lo publica para ES y permite buscar por CPV."
        ],
-       "whyPotential": "AXIGNAL observó que la empresa declara «Solar Ejemplo | photovoltaic installation» y este comprador pide 09332000 (Solar photovoltaic installation)."
+       "whyPotential": "AXIGNAL observó que la empresa declara «Demo Seo.com | photovoltaic installation» y este comprador pide 09332000 (Solar photovoltaic installation)."
       }
      ],
      "economicGarden": {
@@ -1106,11 +1115,11 @@
        "pagesRead": 2
       },
       "epistemicState": "OBSERVED",
-      "excerpt": "Solar Ejemplo | photovoltaic installation",
+      "excerpt": "Demo Seo.com | photovoltaic installation",
       "kind": "PUBLIC_PRESENCE",
       "observedAt": "2026-10-09T20:02:56.894179+00:00",
-      "sourceUrl": "https://www.solar-ejemplo.example.com/",
-      "statement": "Solar Ejemplo | photovoltaic installation"
+      "sourceUrl": "https://www.demo-seo.com/",
+      "statement": "Demo Seo.com | photovoltaic installation"
      },
      {
       "code": "LANGUAGES_PUBLISHED",
@@ -1123,7 +1132,7 @@
       "excerpt": null,
       "kind": "LANGUAGES",
       "observedAt": "2026-10-09T20:02:56.894179+00:00",
-      "sourceUrl": "https://www.solar-ejemplo.example.com/",
+      "sourceUrl": "https://www.demo-seo.com/",
       "statement": "en"
      },
      {
@@ -1135,7 +1144,7 @@
       "excerpt": "schema.org address: ES",
       "kind": "DECLARED_LOCATION",
       "observedAt": "2026-10-09T20:02:56.894179+00:00",
-      "sourceUrl": "https://www.solar-ejemplo.example.com/",
+      "sourceUrl": "https://www.demo-seo.com/",
       "statement": "ES"
      },
      {
@@ -1152,10 +1161,10 @@
        ]
       },
       "epistemicState": "POTENTIAL",
-      "excerpt": "Solar Ejemplo | photovoltaic installation",
+      "excerpt": "Demo Seo.com | photovoltaic installation",
       "kind": "ACTIVITY",
       "observedAt": "2026-10-09T20:02:56.894179+00:00",
-      "sourceUrl": "https://www.solar-ejemplo.example.com/",
+      "sourceUrl": "https://www.demo-seo.com/",
       "statement": "Solar photovoltaic installation"
      },
      {
@@ -1184,7 +1193,7 @@
       "excerpt": null,
       "kind": "WEB_REPRESENTATION",
       "observedAt": "2026-10-09T20:02:56.894179+00:00",
-      "sourceUrl": "https://www.solar-ejemplo.example.com/",
+      "sourceUrl": "https://www.demo-seo.com/",
       "statement": "Public web representation checks"
      },
      {
@@ -1201,7 +1210,7 @@
       "excerpt": null,
       "kind": "REPRESENTATION_GAP",
       "observedAt": "2026-10-09T20:02:56.894179+00:00",
-      "sourceUrl": "https://www.solar-ejemplo.example.com/",
+      "sourceUrl": "https://www.demo-seo.com/",
       "statement": "On the pages read, its activity is evidenced in prose but no service or product is declared as structured data."
      },
      {
@@ -1258,29 +1267,29 @@
        "contentFingerprint": "sha256:8e309d27c17806b3e59f9a4fc69385acb6f330269c535a94a79dada29ef32614",
        "id": "q1",
        "observedAt": "2026-10-09T20:02:56.894179+00:00",
-       "quote": "Solar Ejemplo | photovoltaic installation",
-       "url": "https://www.solar-ejemplo.example.com/"
+       "quote": "Demo Seo.com | photovoltaic installation",
+       "url": "https://www.demo-seo.com/"
       },
       {
        "contentFingerprint": "sha256:8e309d27c17806b3e59f9a4fc69385acb6f330269c535a94a79dada29ef32614",
        "id": "q2",
        "observedAt": "2026-10-09T20:02:56.894179+00:00",
        "quote": "We install photovoltaic panels.",
-       "url": "https://www.solar-ejemplo.example.com/"
+       "url": "https://www.demo-seo.com/"
       },
       {
        "contentFingerprint": "sha256:8e309d27c17806b3e59f9a4fc69385acb6f330269c535a94a79dada29ef32614",
        "id": "q3",
        "observedAt": "2026-10-09T20:02:56.894179+00:00",
        "quote": "Services",
-       "url": "https://www.solar-ejemplo.example.com/"
+       "url": "https://www.demo-seo.com/"
       },
       {
        "contentFingerprint": "sha256:8cbf3ccbdb8e7be18e0006fc579912ccbcfcab437e3c9c94a835d7e191efdd71",
        "id": "q4",
        "observedAt": "2026-10-09T20:02:56.894179+00:00",
        "quote": "We install photovoltaic panels.",
-       "url": "https://www.solar-ejemplo.example.com/services"
+       "url": "https://www.demo-seo.com/services"
       }
      ],
      "compatibilityKey": "77a085b76dabcfcaf5aa77ed6e33f63c5e6699a6816e741ba20a7de86e00c05d",
@@ -1293,8 +1302,8 @@
       "replicaPolicy": "ONE_EXECUTION_OR_EXACT_JUDGMENT_REUSE",
       "sampleSize": 1,
       "sourceSet": [
-       "https://www.solar-ejemplo.example.com/",
-       "https://www.solar-ejemplo.example.com/services"
+       "https://www.demo-seo.com/",
+       "https://www.demo-seo.com/services"
       ],
       "surface": "OWN_PUBLIC_WEBSITE_API_INTERPRETATION"
      },
@@ -1373,22 +1382,22 @@
      "sourceObservedAt": "2026-10-09T20:02:56.894179+00:00",
      "sourceRights": [
       {
-       "basisRef": "source-registry:website:solar-ejemplo.example.com@1:c82ae7b330d67a9d587070262ac3b17defa7164d3bf78638abbea11c75cf7892",
+       "basisRef": "source-registry:website:demo-seo.com@1:c82ae7b330d67a9d587070262ac3b17defa7164d3bf78638abbea11c75cf7892",
        "policyVersion": "first-observation-content-rights.v1",
        "providerInput": true,
        "publicOfferInput": true,
        "rawRetentionDays": 90,
        "reusePermitted": true,
-       "url": "https://www.solar-ejemplo.example.com/"
+       "url": "https://www.demo-seo.com/"
       },
       {
-       "basisRef": "source-registry:website:solar-ejemplo.example.com@1:c82ae7b330d67a9d587070262ac3b17defa7164d3bf78638abbea11c75cf7892",
+       "basisRef": "source-registry:website:demo-seo.com@1:c82ae7b330d67a9d587070262ac3b17defa7164d3bf78638abbea11c75cf7892",
        "policyVersion": "first-observation-content-rights.v1",
        "providerInput": true,
        "publicOfferInput": true,
        "rawRetentionDays": 90,
        "reusePermitted": true,
-       "url": "https://www.solar-ejemplo.example.com/services"
+       "url": "https://www.demo-seo.com/services"
       }
      ],
      "stateFingerprint": "afb412096b77cf5777afab8e0f1a48f2a940eefab0f4e4da4ebfc0f5a2c375a8",
@@ -1401,7 +1410,7 @@
     "state": "FIRST_PROOF_READY",
     "target": {
      "kind": "FOCUS",
-     "website": "https://www.solar-ejemplo.example.com/",
+     "website": "https://www.demo-seo.com/",
      "name": null,
      "identityLink": "REGISTRY_VERIFIED"
     }
@@ -1432,8 +1441,8 @@
       "excerpt": "Diseñamos e instalamos sistemas de autoconsumo fotovoltaico para empresas y ayuntamientos.",
       "kind": "PUBLIC_PRESENCE",
       "observedAt": "2026-10-09T20:02:56.279404+00:00",
-      "sourceUrl": "https://ejemplo-norte.example.com/",
-      "statement": "Ejemplo Norte | Instalaciones fotovoltaicas"
+      "sourceUrl": "https://demo-geo.com/",
+      "statement": "Demo Geo.com | Instalaciones fotovoltaicas"
      },
      {
       "code": "LANGUAGES_PUBLISHED",
@@ -1446,7 +1455,7 @@
       "excerpt": null,
       "kind": "LANGUAGES",
       "observedAt": "2026-10-09T20:02:56.279404+00:00",
-      "sourceUrl": "https://ejemplo-norte.example.com/",
+      "sourceUrl": "https://demo-geo.com/",
       "statement": "es"
      },
      {
@@ -1458,7 +1467,7 @@
       "excerpt": "schema.org address: Madrid, ES",
       "kind": "DECLARED_LOCATION",
       "observedAt": "2026-10-09T20:02:56.279404+00:00",
-      "sourceUrl": "https://ejemplo-norte.example.com/",
+      "sourceUrl": "https://demo-geo.com/",
       "statement": "Madrid, ES"
      },
      {
@@ -1470,8 +1479,8 @@
       "excerpt": null,
       "kind": "IDENTITY_HINT",
       "observedAt": "2026-10-09T20:02:56.279404+00:00",
-      "sourceUrl": "https://ejemplo-norte.example.com/",
-      "statement": "Ejemplo Norte SL"
+      "sourceUrl": "https://demo-geo.com/",
+      "statement": "Demo Geo.com SL"
      },
      {
       "code": "solar-pv-installation",
@@ -1487,10 +1496,10 @@
        ]
       },
       "epistemicState": "POTENTIAL",
-      "excerpt": "Ejemplo Norte | Instalaciones fotovoltaicas",
+      "excerpt": "Demo Geo.com | Instalaciones fotovoltaicas",
       "kind": "ACTIVITY",
       "observedAt": "2026-10-09T20:02:56.279404+00:00",
-      "sourceUrl": "https://ejemplo-norte.example.com/",
+      "sourceUrl": "https://demo-geo.com/",
       "statement": "Solar photovoltaic installation"
      },
      {
@@ -1519,7 +1528,7 @@
       "excerpt": null,
       "kind": "WEB_REPRESENTATION",
       "observedAt": "2026-10-09T20:02:56.279404+00:00",
-      "sourceUrl": "https://ejemplo-norte.example.com/",
+      "sourceUrl": "https://demo-geo.com/",
       "statement": "Public web representation checks"
      },
      {
@@ -1536,7 +1545,7 @@
       "excerpt": null,
       "kind": "REPRESENTATION_GAP",
       "observedAt": "2026-10-09T20:02:56.279404+00:00",
-      "sourceUrl": "https://ejemplo-norte.example.com/",
+      "sourceUrl": "https://demo-geo.com/",
       "statement": "On the pages read, its activity is evidenced in prose but no service or product is declared as structured data."
      },
      {
@@ -1600,7 +1609,7 @@
     "state": "FIRST_PROOF_READY",
     "target": {
      "kind": "PENDING",
-     "website": "https://ejemplo-norte.example.com/",
+     "website": "https://demo-geo.com/",
      "name": null,
      "identityLink": "IDENTITY_PENDING"
     }
@@ -1631,8 +1640,8 @@
       "excerpt": "Spanish and French classes for adults and kids.",
       "kind": "PUBLIC_PRESENCE",
       "observedAt": "2026-10-09T20:02:56.279404+00:00",
-      "sourceUrl": "https://ejemplo-idiomas.example.com/",
-      "statement": "Ejemplo Idiomas"
+      "sourceUrl": "https://demo-consultor.com/",
+      "statement": "Demo Consultor.com"
      },
      {
       "code": "LANGUAGES_PUBLISHED",
@@ -1645,7 +1654,7 @@
       "excerpt": null,
       "kind": "LANGUAGES",
       "observedAt": "2026-10-09T20:02:56.279404+00:00",
-      "sourceUrl": "https://ejemplo-idiomas.example.com/",
+      "sourceUrl": "https://demo-consultor.com/",
       "statement": "en"
      },
      {
@@ -1658,7 +1667,7 @@
       "excerpt": "Visit us in Little Rock, Arkansas.",
       "kind": "DECLARED_LOCATION",
       "observedAt": "2026-10-09T20:02:56.279404+00:00",
-      "sourceUrl": "https://ejemplo-idiomas.example.com/",
+      "sourceUrl": "https://demo-consultor.com/",
       "statement": "US/US-AR"
      },
      {
@@ -1674,7 +1683,7 @@
       "excerpt": "Spanish and French classes for adults and kids.",
       "kind": "ACTIVITY",
       "observedAt": "2026-10-09T20:02:56.279404+00:00",
-      "sourceUrl": "https://ejemplo-idiomas.example.com/",
+      "sourceUrl": "https://demo-consultor.com/",
       "statement": "Education"
      },
      {
@@ -1700,7 +1709,7 @@
       "excerpt": null,
       "kind": "WEB_REPRESENTATION",
       "observedAt": "2026-10-09T20:02:56.279404+00:00",
-      "sourceUrl": "https://ejemplo-idiomas.example.com/",
+      "sourceUrl": "https://demo-consultor.com/",
       "statement": "Public web representation checks"
      },
      {
@@ -1717,7 +1726,7 @@
       "excerpt": null,
       "kind": "REPRESENTATION_GAP",
       "observedAt": "2026-10-09T20:02:56.279404+00:00",
-      "sourceUrl": "https://ejemplo-idiomas.example.com/",
+      "sourceUrl": "https://demo-consultor.com/",
       "statement": "On the pages read, its activity is evidenced in prose but no service or product is declared as structured data."
      },
      {
@@ -1755,7 +1764,7 @@
     "state": "FIRST_PROOF_READY",
     "target": {
      "kind": "PENDING",
-     "website": "https://ejemplo-idiomas.example.com/",
+     "website": "https://demo-consultor.com/",
      "name": null,
      "identityLink": "IDENTITY_PENDING"
     }
@@ -1786,8 +1795,8 @@
       "excerpt": "Cloud invoicing and bookkeeping software for small businesses worldwide.",
       "kind": "PUBLIC_PRESENCE",
       "observedAt": "2026-10-09T20:02:56.279404+00:00",
-      "sourceUrl": "https://ejemplo-ledger.example.com/",
-      "statement": "Ejemplo Ledger — invoicing software"
+      "sourceUrl": "https://demo-constructor.com/",
+      "statement": "Demo Constructor.com — invoicing software"
      },
      {
       "code": "LANGUAGES_PUBLISHED",
@@ -1802,7 +1811,7 @@
       "excerpt": null,
       "kind": "LANGUAGES",
       "observedAt": "2026-10-09T20:02:56.279404+00:00",
-      "sourceUrl": "https://ejemplo-ledger.example.com/",
+      "sourceUrl": "https://demo-constructor.com/",
       "statement": "de, en, fr"
      },
      {
@@ -1814,7 +1823,7 @@
       "excerpt": "schema.org address: Dublin, IE",
       "kind": "DECLARED_LOCATION",
       "observedAt": "2026-10-09T20:02:56.279404+00:00",
-      "sourceUrl": "https://ejemplo-ledger.example.com/",
+      "sourceUrl": "https://demo-constructor.com/",
       "statement": "Dublin, IE"
      },
      {
@@ -1831,7 +1840,7 @@
       "excerpt": "schema.org @type: SoftwareApplication, Organization, PostalAddress",
       "kind": "ACTIVITY",
       "observedAt": "2026-10-09T20:02:56.279404+00:00",
-      "sourceUrl": "https://ejemplo-ledger.example.com/",
+      "sourceUrl": "https://demo-constructor.com/",
       "statement": "Information and communication"
      },
      {
@@ -1861,7 +1870,7 @@
       "excerpt": null,
       "kind": "WEB_REPRESENTATION",
       "observedAt": "2026-10-09T20:02:56.279404+00:00",
-      "sourceUrl": "https://ejemplo-ledger.example.com/",
+      "sourceUrl": "https://demo-constructor.com/",
       "statement": "Public web representation checks"
      },
      {
@@ -1909,7 +1918,7 @@
     "state": "FIRST_PROOF_READY",
     "target": {
      "kind": "PENDING",
-     "website": "https://ejemplo-ledger.example.com/",
+     "website": "https://demo-constructor.com/",
      "name": null,
      "identityLink": "IDENTITY_PENDING"
     }
@@ -1937,11 +1946,11 @@
        "pagesRead": 1
       },
       "epistemicState": "OBSERVED",
-      "excerpt": "Ejemplo Boulangerie",
+      "excerpt": "Demo Marketing.com",
       "kind": "PUBLIC_PRESENCE",
       "observedAt": "2026-10-09T20:02:56.279404+00:00",
-      "sourceUrl": "https://ejemplo-boulangerie.example.com/",
-      "statement": "Ejemplo Boulangerie"
+      "sourceUrl": "https://demo-marketing.com/",
+      "statement": "Demo Marketing.com"
      },
      {
       "code": "LANGUAGES_PUBLISHED",
@@ -1954,7 +1963,7 @@
       "excerpt": null,
       "kind": "LANGUAGES",
       "observedAt": "2026-10-09T20:02:56.279404+00:00",
-      "sourceUrl": "https://ejemplo-boulangerie.example.com/",
+      "sourceUrl": "https://demo-marketing.com/",
       "statement": "fr"
      },
      {
@@ -1966,7 +1975,7 @@
       "excerpt": "schema.org address: Lyon, FR",
       "kind": "DECLARED_LOCATION",
       "observedAt": "2026-10-09T20:02:56.279404+00:00",
-      "sourceUrl": "https://ejemplo-boulangerie.example.com/",
+      "sourceUrl": "https://demo-marketing.com/",
       "statement": "Lyon, FR"
      },
      {
@@ -1983,7 +1992,7 @@
       "excerpt": "schema.org @type: Bakery, PostalAddress",
       "kind": "ACTIVITY",
       "observedAt": "2026-10-09T20:02:56.279404+00:00",
-      "sourceUrl": "https://ejemplo-boulangerie.example.com/",
+      "sourceUrl": "https://demo-marketing.com/",
       "statement": "Accommodation and food service activities"
      },
      {
@@ -2012,7 +2021,7 @@
       "excerpt": null,
       "kind": "WEB_REPRESENTATION",
       "observedAt": "2026-10-09T20:02:56.279404+00:00",
-      "sourceUrl": "https://ejemplo-boulangerie.example.com/",
+      "sourceUrl": "https://demo-marketing.com/",
       "statement": "Public web representation checks"
      },
      {
@@ -2029,7 +2038,7 @@
       "excerpt": null,
       "kind": "REPRESENTATION_GAP",
       "observedAt": "2026-10-09T20:02:56.279404+00:00",
-      "sourceUrl": "https://ejemplo-boulangerie.example.com/",
+      "sourceUrl": "https://demo-marketing.com/",
       "statement": "On the pages read, its activity is evidenced in prose but no service or product is declared as structured data."
      },
      {
@@ -2077,7 +2086,7 @@
     "state": "FIRST_PROOF_READY",
     "target": {
      "kind": "PENDING",
-     "website": "https://ejemplo-boulangerie.example.com/",
+     "website": "https://demo-marketing.com/",
      "name": null,
      "identityLink": "IDENTITY_PENDING"
     }
@@ -2099,7 +2108,7 @@
       "excerpt": "Coming soon",
       "kind": "PUBLIC_PRESENCE",
       "observedAt": "2026-10-09T20:02:56.279404+00:00",
-      "sourceUrl": "https://soon.example.com/",
+      "sourceUrl": "https://demo-fabrica.com/",
       "statement": "Coming soon"
      },
      {
@@ -2125,7 +2134,7 @@
       "excerpt": null,
       "kind": "WEB_REPRESENTATION",
       "observedAt": "2026-10-09T20:02:56.279404+00:00",
-      "sourceUrl": "https://soon.example.com/",
+      "sourceUrl": "https://demo-fabrica.com/",
       "statement": "Public web representation checks"
      },
      {
@@ -2155,7 +2164,7 @@
       "excerpt": "Coming soon",
       "kind": "SIGNIFICANT_UNKNOWN",
       "observedAt": "2026-10-09T20:02:56.279404+00:00",
-      "sourceUrl": "https://soon.example.com/",
+      "sourceUrl": "https://demo-fabrica.com/",
       "statement": "The page does not read as an operating organization's website."
      }
     ],
@@ -2167,7 +2176,7 @@
     "state": "NOT_ENOUGH_CAPABILITY_EVIDENCE",
     "target": {
      "kind": "PENDING",
-     "website": "https://soon.example.com/",
+     "website": "https://demo-fabrica.com/",
      "name": null,
      "identityLink": "IDENTITY_PENDING"
     }
@@ -2187,7 +2196,7 @@
       "excerpt": null,
       "kind": "SIGNIFICANT_UNKNOWN",
       "observedAt": "2026-10-09T20:02:59.950495+00:00",
-      "sourceUrl": "https://private-robots.example.com/",
+      "sourceUrl": "https://demo-distribuidor.com/",
       "statement": "The public website could not be observed under its robots rules and our bounded request policy. Nothing is concluded from that."
      },
      {
@@ -2209,7 +2218,7 @@
     "state": "SOURCE_UNAVAILABLE",
     "target": {
      "kind": "PENDING",
-     "website": "https://private-robots.example.com/",
+     "website": "https://demo-distribuidor.com/",
      "name": null,
      "identityLink": "IDENTITY_PENDING"
     }

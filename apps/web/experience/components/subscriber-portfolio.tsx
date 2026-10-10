@@ -22,6 +22,8 @@ const readable = (item: PortfolioItem) => Boolean(item.organizationId || item.ob
 export function SubscriberPortfolioExperience({ source = "live", notice }: { source?: "live" | "synthetic"; notice?: ReactNode } = {}) {
   const { t, locale } = useLocale();
   const live = source === "live";
+  // The demo's snapshot follows the reader's language; the account never re-reads on a language change.
+  const demoLocale = live ? null : locale;
   const [portfolio, setPortfolio] = useState<SubscriberPortfolio | null>(null);
   const [access, setAccess] = useState<"loading" | "required" | "failure" | "ready">("loading");
   const [busy, setBusy] = useState(false);
@@ -50,7 +52,7 @@ export function SubscriberPortfolioExperience({ source = "live", notice }: { sou
   const requests = useRef(new Set<AbortController>());
   useEffect(() => () => { for (const controller of requests.current) controller.abort(); }, []);
   const readPortfolio = useCallback(async () => {
-    if (!live) { setPortfolio(syntheticPortfolio()); setAccess("ready"); return; }
+    if (!live) { setPortfolio(syntheticPortfolio(demoLocale ?? "es")); setAccess("ready"); return; }
     const controller = new AbortController(); requests.current.add(controller);
     const epoch = sessionEpoch.current;
     try {
@@ -63,7 +65,7 @@ export function SubscriberPortfolioExperience({ source = "live", notice }: { sou
       setPortfolio(result); setAccess("ready");
     } catch { if (!controller.signal.aborted && epoch === sessionEpoch.current) setAccess("failure"); }
     finally { requests.current.delete(controller); }
-  }, [live]);
+  }, [live, demoLocale]);
   useEffect(() => { void readPortfolio(); }, [readPortfolio]);
   useEffect(() => {
     // Sign-in started from an assistant connection returns to its consent, unless a pilot invite is pending.
@@ -161,11 +163,11 @@ export function SubscriberPortfolioExperience({ source = "live", notice }: { sou
   }
   /** The same reading in both modes: the account's authorized read, or the demo snapshot. */
   const loadOutput = useCallback(async (focusId: string, signal: AbortSignal): Promise<unknown> => {
-    if (!live) return syntheticOutput(focusId);
+    if (!live) return syntheticOutput(focusId, demoLocale ?? "es");
     const response = await fetch(`/api/subscriber/organizations/${encodeURIComponent(focusId)}/output`, { cache: "no-store", signal });
     if (!response.ok) throw new Error("READ_FAILED");
     return response.json();
-  }, [live]);
+  }, [live, demoLocale]);
   const readOutput = useCallback(async (focusId: string, pushHistory = true) => {
     outputRequest.current?.abort();
     const controller = new AbortController(); outputRequest.current = controller; requests.current.add(controller);
@@ -197,6 +199,8 @@ export function SubscriberPortfolioExperience({ source = "live", notice }: { sou
     window.addEventListener("popstate", navigate);
     return () => window.removeEventListener("popstate", navigate);
   }, [access, portfolio, readOutput, selected]);
+  // A language change in the demo re-reads the open organization in the new locale.
+  useEffect(() => { if (!live && selected) void readOutput(selected, false); }, [demoLocale]);
   useEffect(() => { setTotal(value => Math.max(value, (portfolio?.capacity ?? 0) + 1)); }, [portfolio?.capacity]);
   // Real progress, never fake loading: re-read while a First Observation is still running.
   const running = portfolio?.organizations.filter(item => item.observation && ["QUEUED", "OBSERVING_PUBLIC_PRESENCE"].includes(item.observation.state)).map(item => item.focusId).join(",") ?? "";
@@ -228,7 +232,7 @@ export function SubscriberPortfolioExperience({ source = "live", notice }: { sou
     outputRequest.current?.abort(); ++outputEpoch.current;
     setSelected(null); setProjection(null); setFirstObservation(null); setRevision(null); setReading(false);
   }, []);
-  return <>{notice}<Observatory canAct={live} loadReading={loadOutput} access={access} portfolio={portfolio} busy={busy} message={message} paymentUrl={paymentUrl}
+  return <>{notice}<Observatory canAct={live} loadReading={loadOutput} menuName={live ? undefined : item => "www." + item.label.toLowerCase().replace(" ", "-")} access={access} portfolio={portfolio} busy={busy} message={message} paymentUrl={paymentUrl}
     selected={selected} reading={reading} projection={projection} firstObservation={firstObservation} revision={revision}
     readOutput={readOutput} clearSelection={clearSelection} command={command} refresh={() => void readPortfolio()} logout={() => void logout()}
     locator={locator} setLocator={setLocator} total={total} setTotal={setTotal}
