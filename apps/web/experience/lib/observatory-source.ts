@@ -17,6 +17,8 @@ export type ObservatoryCapabilities = {
   readonly account: boolean;
   /** Pause, replace and remove an organization, and re-check an unresolved identity. */
   readonly manage: boolean;
+  /** Re-check an organization whose identity is still unresolved. */
+  readonly recheck: boolean;
   /** Where AXENT is asked: the subscriber's authorized endpoint, or the Admin session's own. */
   readonly axent: "subscriber" | "admin";
 };
@@ -30,6 +32,8 @@ export type ObservatorySource = {
   readonly capabilities: ObservatoryCapabilities;
   readPortfolio(signal: AbortSignal, locale: Locale): Promise<SubscriberPortfolio | "SESSION_REQUIRED">;
   readOutput(focusId: string, signal: AbortSignal, locale: Locale): Promise<unknown>;
+  /** Organizations the context already authorizes, offered while adding one. */
+  suggestions?(signal: AbortSignal): Promise<readonly string[]>;
   /** An operation on the portfolio. Absent where nothing can be done (the demo). */
   command?(input: Record<string, unknown>, requestRef: string, signal: AbortSignal): Promise<unknown>;
   /** The rail's name for an organization, where it differs from the reading's own name. */
@@ -41,7 +45,7 @@ export const accountSource: ObservatorySource = {
   mode: "account",
   canAct: true,
   localized: false,
-  capabilities: { account: true, manage: true, axent: "subscriber" },
+  capabilities: { account: true, manage: true, recheck: true, axent: "subscriber" },
   async readPortfolio(signal) {
     const response = await fetch("/api/subscriber/portfolio", { cache: "no-store", signal });
     if (response.status === 401) return "SESSION_REQUIRED";

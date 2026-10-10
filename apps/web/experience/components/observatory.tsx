@@ -55,6 +55,8 @@ export type ObservatoryProps = {
   canAct: boolean;
   /** What the context offers around the reading; the demo declares all of it, an Admin has no account to manage. */
   capabilities: ObservatoryCapabilities;
+  /** Organizations the context already authorizes, offered while adding one. */
+  suggestions?: readonly string[];
   /** A statement above the reading, inside the main column (the demo's fictional-data notice). */
   notice?: React.ReactNode;
   /** The menu's name for an organization, when the mode names it differently (the demo shows its domain). */
@@ -208,6 +210,7 @@ function Lens({ state, lit }: { state: LensState; lit: boolean }) {
 }
 
 function itemStatus(item: Item, t: Translate): string {
+  if (item.reason === "AUTHORIZATION_REVOKED") return t("Autorización revocada", "Authorization revoked");
   if (item.state === "PAUSED") return t("Pausada", "Paused");
   if (item.observation) return observationStateCopy(item.observation.state, t);
   if (item.state === "IDENTITY_PENDING") return item.reason?.startsWith("AMBIGUOUS") ? t("Varias organizaciones coinciden", "Several organizations match") : item.reason?.startsWith("CONFLICT") ? t("Datos en conflicto", "Conflicting details") : t("Identidad por resolver", "Identity unresolved");
@@ -515,7 +518,7 @@ function OrganizationView(props: OrgProps) {
         </div>
         <div className="obs-org-actions">
           {item.state === "ACTIVE" && <button className="obs-button" disabled={props.busy || !props.canAct} onClick={() => void props.command({ action: "reobserve", focusId: item.focusId })}><RefreshCw size={16} aria-hidden="true"/><span className="obs-collapse">{t("Volver a observar", "Observe again")}</span></button>}
-          {!identified && props.capabilities.manage && <button className="obs-button" disabled={props.busy || !props.canAct} onClick={() => void props.command({ action: "retry_pending", focusId: item.focusId })}><RefreshCw size={16} aria-hidden="true"/><span className="obs-collapse">{t("Volver a comprobar", "Check again")}</span></button>}
+          {!identified && props.capabilities.recheck && <button className="obs-button" disabled={props.busy || !props.canAct} onClick={() => void props.command({ action: "retry_pending", focusId: item.focusId })}><RefreshCw size={16} aria-hidden="true"/><span className="obs-collapse">{t("Volver a comprobar", "Check again")}</span></button>}
           {projection && revision && <span className="obs-axent-cta"><button className={`obs-button obs-axent-button${props.axentOpen && !open ? " obs-active" : ""}`} onClick={() => { transition(() => { go({ item: null }); props.setAxentOpen(true); }); }}><MessageCircleQuestion size={16} aria-hidden="true"/>{t("Preguntar a AXENT", "Ask AXENT")}</button><span className="obs-axent-note"><CornerRightUp size="1.15em" aria-hidden="true"/>{t("¿Dudas? Pregúntale a AXENT", "Any doubts? Ask AXENT")}</span></span>}
           {props.capabilities.manage && <div className="obs-menu">
             <button className="obs-icon" aria-expanded={menu} aria-haspopup="true" aria-label={t("Más acciones", "More actions")} onClick={() => setMenu(!menu)}><ChevronDown size={18} aria-hidden="true"/></button>
@@ -803,8 +806,9 @@ function AddView(props: ObservatoryProps & { first: boolean; onDone: () => void 
     <p className="obs-lede">{t("Escribe su nombre o su web pública. AXIGNAL la observará y te mostrará qué hace, qué importa a su alrededor, cómo se entiende su comunicación y qué no sabe todavía, con las pruebas de cada cosa.", "Type its name or public website. AXIGNAL will observe it and show you what it does, what matters around it, how its communication is understood and what it does not know yet, with the evidence for each.")}</p>
     <form className="obs-add-form" onSubmit={e => { e.preventDefault(); void props.command({ action: "add", locator: props.locator }); }}>
       <label htmlFor="organization-locator">{t("Nombre o sitio público", "Name or public website")}</label>
-      <div className="obs-add-row"><input id="organization-locator" required maxLength={2048} value={props.locator} onChange={e => props.setLocator(e.target.value)} disabled={props.busy || !props.canAct} placeholder={t("p. ej. empresa.com o Empresa SL", "e.g. company.com or Company Ltd")} autoComplete="off"/>
+      <div className="obs-add-row"><input id="organization-locator" required maxLength={2048} list={props.suggestions?.length ? "organization-suggestions" : undefined} value={props.locator} onChange={e => props.setLocator(e.target.value)} disabled={props.busy || !props.canAct} placeholder={t("p. ej. empresa.com o Empresa SL", "e.g. company.com or Company Ltd")} autoComplete="off"/>
         <button className="obs-button obs-primary" disabled={props.busy || !props.locator.trim()}><Plus size={16} aria-hidden="true"/>{t("Empezar a observar", "Start observing")}</button></div>
+      {props.suggestions && props.suggestions.length > 0 && <datalist id="organization-suggestions">{props.suggestions.map(name => <option key={name} value={name}/>)}</datalist>}
     </form>
     <ol className="obs-add-steps">
       <li><strong>{t("Identidad", "Identity")}</strong><span>{t("Buscamos su identidad legal en un registro. Un nombre o URL orienta; no establece la verdad.", "We look for its legal identity in a registry. A name or URL guides; it does not establish truth.")}</span></li>

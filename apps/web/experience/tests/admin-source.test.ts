@@ -58,29 +58,24 @@ test("the three contexts expose one source contract; only data and capabilities 
   }
   assert.equal(adminSource.mode, "admin");
   assert.equal(adminSource.canAct, true);
-  assert.deepEqual(adminSource.capabilities, { account: false, manage: false, axent: "admin" });
+  assert.deepEqual(adminSource.capabilities, { account: false, manage: false, recheck: true, axent: "admin" });
   assert.equal(accountSource.capabilities.account, true);
   assert.equal(typeof adminSource.command, "function");
   assert.equal(demoSource.command, undefined);
 });
 
 test("an Admin command adds attention or observes again, and refuses anything an account would purchase or manage", async () => {
-  const calls: Array<{ url: string; body: unknown }> = [];
-  const original = globalThis.fetch;
-  globalThis.fetch = (async (url: string, init?: RequestInit) => {
-    calls.push({ url: String(url), body: init?.body ? JSON.parse(String(init.body)) : null });
-    return new Response("{}", { status: 200 });
-  }) as typeof fetch;
-  try {
+  await withService(inventoryRoute, async calls => {
     const signal = new AbortController().signal;
+    const posts = () => calls.filter(call => call.url === "/api/xeeds");
     assert.deepEqual(await adminSource.command!({ action: "add", locator: "empresa.com" }, "r1", signal), { state: "ACCEPTED", observationState: "COMPLETED" });
-    assert.deepEqual(calls[0], { url: "/api/xeeds", body: { action: "add", name: "empresa.com", targetUri: "https://empresa.com/" } });
+    assert.deepEqual(posts()[0], { url: "/api/xeeds", body: { action: "add", name: "empresa.com", targetUri: "https://empresa.com/" } });
     assert.deepEqual(await adminSource.command!({ action: "add", locator: "Empresa SL" }, "r2", signal), { state: "WEBSITE_REQUIRED" });
-    assert.equal(calls.length, 1, "a name without a site never reaches the service");
+    assert.equal(posts().length, 1, "a name without a site never reaches the service");
     await adminSource.command!({ action: "reobserve", focusId: "xeed_1" }, "r3", signal);
-    assert.deepEqual(calls[1], { url: "/api/xeeds", body: { action: "reobserve", id: "xeed_1" } });
+    assert.deepEqual(posts()[1], { url: "/api/xeeds", body: { action: "reobserve", id: "xeed_1" } });
     for (const action of ["purchase", "expand", "pause", "remove", "replace"]) await assert.rejects(adminSource.command!({ action }, "r4", signal), /COMMAND_NOT_AVAILABLE/);
-  } finally { globalThis.fetch = original; }
+  });
 });
 
 test("Customer Zero reads through the one Observatory: no reading interface of its own", () => {
@@ -93,4 +88,66 @@ test("Customer Zero reads through the one Observatory: no reading interface of i
 
 test("inside the Admin shell the rail does not repeat the brand the shell already carries", () => {
   assert.match(read("components/customer-zero-observatory.css"), /\.obs-customer-zero \.obs-rail-brand \{ display: none; \}/);
+});
+
+function withService(routes: (url: string, body: unknown) => Response | undefined, run: (calls: Array<{ url: string; body: unknown }>) => Promise<void>) {
+  const calls: Array<{ url: string; body: unknown }> = [];
+  const original = globalThis.fetch;
+  globalThis.fetch = (async (url: string, init?: RequestInit) => {
+    const body = init?.body ? JSON.parse(String(init.body)) : null;
+    calls.push({ url: String(url), body });
+    return routes(String(url), body) ?? new Response("{}", { status: 200 });
+  }) as typeof fetch;
+  return run(calls).finally(() => { globalThis.fetch = original; });
+}
+const withAvailable = organizationInventorySchema.parse({
+  ...inventory, available: [{ name: "Cooperativa Ribera", targetUri: "https://ribera.example/" }],
+  organizations: [...inventory.organizations, { id: "xeed_3", requestedLabel: "Revocada", name: "Revocada", organizationId: "org_3", targetUri: "https://revocada.example/", state: "AUTHORIZATION_REVOKED", projectionContextId: "ctx_3" }],
+});
+const inventoryRoute = (url: string) => url === "/api/organizations" ? Response.json(withAvailable) : undefined;
+const signal = new AbortController().signal;
+
+test("the authorized organizations are offered while adding, and a chosen name carries the address the service holds", async () => {
+  await withService(inventoryRoute, async calls => {
+    assert.deepEqual(await adminSource.suggestions!(signal), ["Cooperativa Ribera"]);
+    await adminSource.command!({ action: "add", locator: "cooperativa ribera" }, "r", signal);
+    assert.deepEqual(calls.at(-1), { url: "/api/xeeds", body: { action: "add", name: "Cooperativa Ribera", targetUri: "https://ribera.example/" } });
+  });
+});
+
+test("an attention without an organization is asked again with the label and address it already holds", async () => {
+  await withService(inventoryRoute, async calls => {
+    await adminSource.command!({ action: "retry_pending", focusId: "xeed_2" }, "r", signal);
+    assert.deepEqual(calls.at(-1), { url: "/api/xeeds", body: { action: "add", name: "Pendiente", targetUri: "https://pendiente.example/" } });
+    // An identified organization or a revoked authorization is not asked again.
+    for (const focusId of ["xeed_1", "xeed_3", "missing"]) await assert.rejects(adminSource.command!({ action: "retry_pending", focusId }, "r", signal), /COMMAND_NOT_AVAILABLE/);
+  });
+});
+
+test("the service's answers keep their meaning: unresolved identity and insufficient evidence are saved, not concluded", async () => {
+  for (const [status, expected] of [[202, { state: "IDENTITY_PENDING", reason: "UNRESOLVED" }], [422, { state: "ACCEPTED", observationState: "INSUFFICIENT_EVIDENCE" }], [200, { state: "ACCEPTED", observationState: "COMPLETED" }]] as const) {
+    await withService(() => new Response("{}", { status }), async () => {
+      assert.deepEqual(await adminSource.command!({ action: "reobserve", focusId: "xeed_1" }, "r", signal), expected, String(status));
+    });
+  }
+  await withService(() => new Response("{}", { status: 401 }), async () => {
+    assert.equal(await adminSource.command!({ action: "reobserve", focusId: "xeed_1" }, "r", signal), "SESSION_REQUIRED");
+  });
+});
+
+test("a revoked authorization is listed with its reason and is never opened as a reading", () => {
+  const revoked = adminPortfolio(withAvailable).organizations.find(item => item.focusId === "xeed_3")!;
+  assert.equal(revoked.organizationId, null);
+  assert.equal(revoked.reason, "AUTHORIZATION_REVOKED");
+  assert.match(read("components/observatory.tsx"), /item\.reason === "AUTHORIZATION_REVOKED"/);
+});
+
+test("Customer Zero is functional, never synthetic: it reads the service and nothing from the demonstration", () => {
+  for (const file of ["lib/admin-source.ts", "components/customer-zero-observatory.tsx", "components/customer-zero.tsx"]) {
+    const text = read(file);
+    assert.doesNotMatch(text, /lib\/demo|synthetic|demoSource|syntheticPortfolio/i, file);
+  }
+  // The only reads are the Admin session's: the attention inventory and the governed runtime projection.
+  const endpoints = [...read("lib/admin-source.ts").matchAll(/"(\/api\/[a-z-]+)"/g)].map(match => match[1]);
+  assert.deepEqual([...new Set(endpoints)].sort(), ["/api/organizations", "/api/subscriber-context", "/api/xeeds"]);
 });

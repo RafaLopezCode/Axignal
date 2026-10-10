@@ -27,6 +27,7 @@ export function attentionFromLocator(locator: string): { name: string; targetUri
 
 /** The inventory's own states, shown as the portfolio's: an identified organization is readable, the rest is pending. */
 function portfolioState(entry: Entry): SubscriberPortfolio["organizations"][number]["state"] {
+  if (entry.state === "AUTHORIZATION_REVOKED") return "PAUSED";
   return entry.organizationId ? "ACTIVE" : "IDENTITY_PENDING";
 }
 
@@ -41,10 +42,11 @@ export function adminPortfolio(inventory: OrganizationInventory): SubscriberPort
     contractingEnabled: false,
     organizations: inventory.organizations.map(entry => ({
       focusId: entry.id,
-      organizationId: entry.organizationId,
+      // A revoked authorization is never opened as a reading.
+      organizationId: entry.state === "AUTHORIZATION_REVOKED" ? null : entry.organizationId,
       label: entry.name ?? entry.requestedLabel,
       state: portfolioState(entry),
-      reason: entry.organizationId ? null : entry.state,
+      reason: entry.organizationId && entry.state !== "AUTHORIZATION_REVOKED" ? null : entry.state,
     })),
   });
 }
@@ -63,6 +65,23 @@ async function sha256Hex(text: string): Promise<string | undefined> {
   return [...new Uint8Array(digest)].map(byte => byte.toString(16).padStart(2, "0")).join("");
 }
 
+async function inventory(signal: AbortSignal): Promise<OrganizationInventory> {
+  const response = await fetch("/api/organizations", { cache: "no-store", signal });
+  if (!response.ok) throw new Error("READ_FAILED");
+  return organizationInventorySchema.parse(await response.json());
+}
+
+/** What the service answered to an attention command, in the container's own vocabulary. */
+async function outcome(response: Response): Promise<unknown> {
+  if (response.status === 401) return "SESSION_REQUIRED";
+  // Saved, but the identity is still unresolved: no organization and no signal exist yet.
+  if (response.status === 202) return { state: "IDENTITY_PENDING", reason: "UNRESOLVED" };
+  // Saved, but the evidence is not enough for a signal; the previous reading remains.
+  if (response.status === 422) return { state: "ACCEPTED", observationState: "INSUFFICIENT_EVIDENCE" };
+  if (!response.ok) throw new Error("COMMAND_FAILED");
+  return { state: "ACCEPTED", observationState: "COMPLETED" };
+}
+
 async function post(body: Record<string, unknown>, signal: AbortSignal) {
   return fetch("/api/xeeds", { method: "POST", cache: "no-store", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body), signal });
 }
@@ -72,7 +91,10 @@ export const adminSource: ObservatorySource = {
   canAct: true,
   localized: false,
   // The Admin has no account to purchase, sign out of or connect; organizations are managed as attention.
-  capabilities: { account: false, manage: false, axent: "admin" },
+  capabilities: { account: false, manage: false, recheck: true, axent: "admin" },
+  async suggestions(signal) {
+    return (await inventory(signal)).available.map(item => item.name);
+  },
   async readPortfolio(signal) {
     const response = await fetch("/api/organizations", { cache: "no-store", signal });
     if (response.status === 401) return "SESSION_REQUIRED";
@@ -95,18 +117,19 @@ export const adminSource: ObservatorySource = {
   },
   async command(input, _requestRef, signal) {
     if (input.action === "add") {
-      const attention = attentionFromLocator(String(input.locator ?? ""));
+      const locator = String(input.locator ?? "");
+      // An organization the service already authorizes is added by name, with the address it holds for it.
+      const authorized = (await inventory(signal)).available.find(item => item.name.toLocaleLowerCase() === locator.trim().toLocaleLowerCase());
+      const attention = authorized ? { name: authorized.name, targetUri: authorized.targetUri } : attentionFromLocator(locator);
       if (!attention) return { state: "WEBSITE_REQUIRED" };
-      const response = await post({ action: "add", ...attention }, signal);
-      if (response.status === 401) return "SESSION_REQUIRED";
-      if (!response.ok) throw new Error("COMMAND_FAILED");
-      return { state: "ACCEPTED", observationState: "COMPLETED" };
+      return outcome(await post({ action: "add", ...attention }, signal));
     }
-    if (input.action === "reobserve") {
-      const response = await post({ action: "reobserve", id: String(input.focusId ?? "") }, signal);
-      if (response.status === 401) return "SESSION_REQUIRED";
-      if (!response.ok) throw new Error("COMMAND_FAILED");
-      return { state: "ACCEPTED", observationState: "COMPLETED" };
+    if (input.action === "reobserve") return outcome(await post({ action: "reobserve", id: String(input.focusId ?? "") }, signal));
+    if (input.action === "retry_pending") {
+      // An attention without an organization is asked again with the label and address it already holds.
+      const entry = (await inventory(signal)).organizations.find(item => item.id === String(input.focusId ?? ""));
+      if (!entry || entry.projectionContextId || entry.state === "AUTHORIZATION_REVOKED") throw new Error("COMMAND_NOT_AVAILABLE");
+      return outcome(await post({ action: "add", name: entry.requestedLabel, targetUri: entry.targetUri }, signal));
     }
     throw new Error("COMMAND_NOT_AVAILABLE");
   },

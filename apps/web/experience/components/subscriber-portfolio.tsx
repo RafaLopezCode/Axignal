@@ -33,6 +33,7 @@ export function SubscriberPortfolioExperience({ source = accountSource, notice }
   const translate = useRef(t);
   translate.current = t;
   const [locator, setLocator] = useState("");
+  const [suggestions, setSuggestions] = useState<readonly string[]>([]);
   const [total, setTotal] = useState(1);
   const [paymentUrl, setPaymentUrl] = useState<string | null>(null);
   const [projection, setProjection] = useState<RuntimeProjection | null>(null);
@@ -64,6 +65,13 @@ export function SubscriberPortfolioExperience({ source = accountSource, notice }
     finally { requests.current.delete(controller); }
   }, [source, readerLocale]);
   useEffect(() => { void readPortfolio(); }, [readPortfolio]);
+  // Organizations the context already authorizes are offered while adding one; their absence never blocks adding.
+  useEffect(() => {
+    if (!source.suggestions || access !== "ready") return;
+    const controller = new AbortController();
+    source.suggestions(controller.signal).then(names => { if (!controller.signal.aborted) setSuggestions(names); }, () => {});
+    return () => controller.abort();
+  }, [source, access, portfolio]);
   useEffect(() => {
     // Sign-in started from an assistant connection returns to its consent, unless a pilot invite is pending.
     if (!canAct || access !== "ready" || pendingPilotInvite(() => window.sessionStorage)) return;
@@ -224,7 +232,7 @@ export function SubscriberPortfolioExperience({ source = accountSource, notice }
     outputRequest.current?.abort(); ++outputEpoch.current;
     setSelected(null); setProjection(null); setFirstObservation(null); setRevision(null); setReading(false);
   }, []);
-  return <Observatory notice={notice} canAct={canAct} capabilities={source.capabilities} loadReading={loadOutput} menuName={source.menuName} access={access} portfolio={portfolio} busy={busy} message={message} paymentUrl={paymentUrl}
+  return <Observatory notice={notice} canAct={canAct} capabilities={source.capabilities} suggestions={suggestions} loadReading={loadOutput} menuName={source.menuName} access={access} portfolio={portfolio} busy={busy} message={message} paymentUrl={paymentUrl}
     selected={selected} reading={reading} projection={projection} firstObservation={firstObservation} revision={revision}
     readOutput={readOutput} clearSelection={clearSelection} command={command} refresh={() => void readPortfolio()} logout={() => void logout()}
     locator={locator} setLocator={setLocator} total={total} setTotal={setTotal}
