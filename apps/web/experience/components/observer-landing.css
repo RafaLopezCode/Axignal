@@ -1,0 +1,314 @@
+/* Landing-only composition. Canonical copy, product windows and atlas stay intact. */
+.observer-story {
+  --story-width: 1600px;
+  --story-gutter: clamp(24px, 3.5vw, 64px);
+}
+.observer-story .hero, .observer-story .chapter, .observer-story .closing-scene {
+  max-width: var(--story-width);
+  padding-inline: var(--story-gutter);
+  margin-inline: auto;
+}
+.observer-story .funnel-hero {
+  grid-template-columns: minmax(0, .88fr) minmax(0, 1.12fr);
+  gap: clamp(32px, 4vw, 68px);
+  padding-top: 52px;
+  align-items: start;
+}
+.observer-story .hero-copy {
+  padding-top: 16px;
+}
+.observer-story .hero h1 {
+  font-size: clamp(40px, 3.9vw, 66px);
+}
+.observer-story .hero-lead {
+  max-width: 54ch;
+}
+.observer-story .hero-caption {
+  max-width: 58ch;
+}
+.observer-story .observer-hero-stage {
+  min-width: 0;
+  display: grid;
+}
+.observer-story .lx-hero-window {
+  max-inline-size: none;
+}
+.observer-story .landing-guide {
+  width: 230px;
+  max-width: 100%;
+}
+.observer-story .landing-guide > .observer {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.observer-story .observer-hero-guide {
+  width: clamp(180px, 17vw, 270px);
+  justify-self: end;
+  margin-top: 12px;
+  margin-right: 6%;
+}
+.observer-story .chapter {
+  padding-block: 80px;
+}
+.observer-story .chapter-heading {
+  max-width: 920px;
+}
+.observer-story .lx-scrolly {
+  gap: clamp(36px, 5vw, 80px);
+}
+.observer-story .lx-step {
+  opacity: 1;
+  min-block-size: clamp(440px, 56vh, 620px);
+}
+.observer-story .observer-step-guide {
+  width: 220px;
+  margin-top: 20px;
+}
+.observer-story .lx-sticky {
+  top: 100px;
+}
+.observer-story .funnel-axent {
+  display: grid;
+  grid-template-columns: 180px minmax(0, 1fr);
+  gap: 28px;
+  align-items: center;
+  max-width: 1040px;
+  padding: 20px 28px;
+  border: 0;
+  border-radius: 16px;
+}
+.observer-story .funnel-axent .landing-guide {
+  width: 180px;
+}
+.observer-story .funnel-axent p {
+  max-width: 65ch;
+  font-size: 16px;
+}
+.observer-story .funnel-proof {
+  max-width: none;
+  padding-inline: max(var(--story-gutter), calc((100vw - var(--story-width)) / 2 + var(--story-gutter)));
+}
+.observer-story .lx-proof {
+  grid-template-columns: minmax(0, .78fr) minmax(0, 1.22fr);
+  gap: 48px;
+}
+.observer-story .lx-proof-tabs {
+  max-width: 560px;
+}
+.observer-story .observer-proof-guide {
+  width: 230px;
+  margin: 20px auto 0;
+}
+.observer-story .use-panel {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 300px;
+  align-items: center;
+  gap: 40px;
+  padding-right: 0;
+}
+.observer-story .use-panel-content {
+  max-width: 65ch;
+}
+.observer-story .use-panel .use-observer {
+  position: static;
+  display: block;
+  width: 300px;
+  height: auto;
+  margin: 0;
+}
+.observer-story .funnel-trust {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 260px;
+  column-gap: 48px;
+  align-items: center;
+}
+.observer-story .observer-trust-guide {
+  width: 260px;
+}
+.observer-story .trust-commitments, .observer-story .trust-links {
+  grid-column: 1 / -1;
+}
+.observer-story .trust-commitments {
+  margin-top: 36px;
+}
+.observer-story .pricing-perspective > .observer {
+  display: block;
+  width: 300px;
+  height: auto;
+  margin: 24px 0 0;
+}
+.observer-story .closing-scene {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 300px;
+  column-gap: 56px;
+  text-align: left;
+  align-items: center;
+}
+.observer-story .closing-scene > .eyebrow, .observer-story .closing-scene > h2, .observer-story .closing-scene > .hero-actions {
+  grid-column: 1;
+}
+.observer-story .closing-observer {
+  position: static;
+  grid-column: 2;
+  grid-row: 1 / 4;
+  width: 300px;
+  height: auto;
+}
+.observer-story .closing-scene h2 {
+  max-width: 22ch;
+}
+.observer-story .hero-actions {
+  justify-content: flex-start;
+}
+.observer-story .lx-open, .observer-story .lx-time button {
+  min-height: 44px;
+}
+@media (max-width: 1100px) {
+  .observer-story .funnel-hero {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 8px;
+  }
+  .observer-story .hero-copy {
+    padding-bottom: 20px;
+  }
+  .observer-story .hero h1 {
+    max-width: 760px;
+    font-size: clamp(38px, 5.5vw, 60px);
+  }
+  .observer-story .observer-hero-guide {
+    width: 210px;
+  }
+  .observer-story .lx-proof {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 24px;
+  }
+  .observer-story .lx-proof-tabs {
+    max-width: none;
+  }
+  .observer-story .lx-step {
+    min-block-size: auto;
+    padding-bottom: 44px;
+  }
+  .observer-story .observer-step-guide {
+    width: 180px;
+  }
+  .observer-story .use-panel {
+    grid-template-columns: minmax(0, 1fr) 230px;
+    gap: 24px;
+  }
+  .observer-story .use-panel .use-observer {
+    width: 230px;
+  }
+}
+@media (max-width: 700px) {
+  .observer-story {
+    --story-gutter: 20px;
+  }
+  .observer-story .funnel-hero {
+    padding-top: 20px;
+  }
+  .observer-story .hero h1 {
+    font-size: clamp(34px, 9vw, 44px);
+  }
+  .observer-story .chapter {
+    padding-block: 52px;
+  }
+  .observer-story .observer-hero-guide {
+    width: 180px;
+    margin-right: 0;
+  }
+  .observer-story .funnel-axent {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    padding: 20px;
+  }
+  .observer-story .funnel-axent .landing-guide {
+    width: 150px;
+  }
+  .observer-story .observer-proof-guide {
+    width: 180px;
+  }
+  .observer-story .use-panel, .observer-story .funnel-trust, .observer-story .closing-scene {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 20px;
+  }
+  .observer-story .use-panel .use-observer {
+    width: 190px;
+    justify-self: end;
+  }
+  .observer-story .observer-trust-guide {
+    width: 190px;
+    justify-self: end;
+  }
+  .observer-story .pricing-perspective > .observer {
+    width: 190px;
+  }
+  .observer-story .closing-observer {
+    grid-column: 1;
+    grid-row: auto;
+    width: 210px;
+    justify-self: end;
+  }
+  .observer-story .closing-scene {
+    padding-block: 48px;
+  }
+}
+/* Keep the introduction's guide with its invitation, within the first composition. */
+.observer-story .observer-hero-signature {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 220px;
+  align-items: center;
+  gap: 14px;
+  margin-top: 20px;
+}
+.observer-story .observer-hero-signature .hero-caption {
+  margin: 0;
+}
+.observer-story .observer-hero-guide {
+  width: 220px;
+  margin: 0;
+}
+.observer-story .lx-step {
+  display: grid;
+  grid-template-columns: 38px minmax(0, 1fr);
+  column-gap: 18px;
+  align-content: center;
+  padding-inline-start: 0;
+}
+.observer-story .lx-step-mark {
+  position: static;
+  grid-column: 1;
+  grid-row: 1;
+}
+.observer-story .lx-step > h3, .observer-story .lx-step > p, .observer-story .observer-step-guide {
+  grid-column: 2;
+}
+.observer-story .lx-step-window {
+  grid-column: 1 / -1;
+  margin-inline-start: 0;
+}
+@media (max-width: 1100px) {
+  .observer-story .observer-hero-signature {
+    max-width: 700px;
+  }
+  .observer-story .lx-step {
+    padding-left: 0;
+  }
+}
+@media (max-width: 700px) {
+  .observer-story .observer-hero-signature {
+    order: 5;
+    grid-template-columns: minmax(0, 1fr);
+    margin-top: 20px;
+    gap: 6px;
+  }
+  .observer-story .observer-hero-guide {
+    width: 190px;
+    justify-self: end;
+  }
+}
+.observer-story .observer-hero-signature .hero-caption {
+  order: 0;
+}
+

@@ -39,7 +39,7 @@ export function ReferencePricing({
             "An organization is a company AXIGNAL observes for you: yours, a customer or a competitor. Everything that appears around it — changes, opportunities, risks — is included.",
           )}
         </p>
-        <Observer scene="focus" />
+        <Observer scene={focuses > 1 ? "connect" : "focus"} />
       </div>
       <div className="pricing-paper">
         <span className="eyebrow">AXIGNAL</span>

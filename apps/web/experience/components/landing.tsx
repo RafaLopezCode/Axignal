@@ -13,7 +13,9 @@ import { LandingObservatory, type DemoMode } from "./landing-observatory";
 import type { ExampleMoment } from "@/lib/landing-observatory";
 import { PublicHeader } from "./public-shell";
 import { ReferencePricing } from "./landing-extras";
-import { FramedObserver } from "./observer-frame";
+import { FramedObserver, type NarratorScene } from "./observer-frame";
+import { LandingGuide } from "./landing-guide";
+import "./observer-landing.css";
 import { useLocale } from "@/lib/locale";
 import {
   funnelCta,
@@ -270,9 +272,11 @@ export function Landing() {
   ];
   const stepModes: DemoMode[] = ["add", "observing", "briefing"];
   const proofModes: DemoMode[] = ["briefing", "evidence", "unknown", "time"];
+  const stepScenes: NarratorScene[] = ["focus", "memory", "explain"];
+  const proofScenes: NarratorScene[] = ["strategy", "research", "unknown", "time"];
   const selectedAudience = audiences[audience];
   return (
-    <div className="landing funnel-landing">
+    <div className="landing funnel-landing observer-story">
       <PublicHeader landing />
       <main id="main">
         <section className="hero funnel-hero" id="what">
@@ -307,14 +311,19 @@ export function Landing() {
                 {t("Empieza con tu organización", "Start with your organization")}
               </CtaLink>
             </div>
-            <span className="hero-caption">
-              {t(
-                "Para quien dirige o hace crecer una empresa, y para las consultoras y agencias que acompañan a varias. 9,95 € al mes con una organización incluida y 4,95 € por cada organización adicional.",
-                "For people who run or grow a business, and for the consultancies and agencies that support several. €9.95 a month with one organization included, and €4.95 for each additional organization.",
-              )}
-            </span>
+            <div className="observer-hero-signature">
+              <span className="hero-caption">
+                {t(
+                  "Para quien dirige o hace crecer una empresa, y para las consultoras y agencias que acompañan a varias. 9,95 € al mes con una organización incluida y 4,95 € por cada organización adicional.",
+                  "For people who run or grow a business, and for the consultancies and agencies that support several. €9.95 a month with one organization included, and €4.95 for each additional organization.",
+                )}
+              </span>
+              <LandingGuide scene="discover" className="observer-hero-guide" />
+            </div>
           </div>
-          <HeroReading />
+          <div className="observer-hero-stage">
+            <HeroReading />
+          </div>
         </section>
 
         <section className="chapter funnel-how" id="how">
@@ -332,15 +341,17 @@ export function Landing() {
                   <span className="lx-step-mark" aria-hidden="true">{i + 1}</span>
                   <h3>{step.title}</h3>
                   <p>{step.text}</p>
+                  <LandingGuide scene={stepScenes[i]} className="observer-step-guide" />
                   <LandingObservatory mode={stepModes[i]} className="lx-step-window" />
                 </li>
               ))}
             </ol>
-            <div className="lx-sticky" aria-hidden="true">
+            <div className="lx-sticky" aria-hidden="true" inert>
               <LandingObservatory mode={stepModes[activeStep]} />
             </div>
           </div>
           <Reveal className="funnel-axent">
+            <LandingGuide scene="conversation" />
             <p>
               <strong>AXENT</strong>{" "}
               {t(
@@ -398,6 +409,7 @@ export function Landing() {
                   </CtaLink>
                 }
               />
+              <LandingGuide scene={proofScenes[proof]} className="observer-proof-guide" />
             </div>
           </div>
         </section>
@@ -477,6 +489,7 @@ export function Landing() {
               {t("Lo que AXIGNAL no hará.", "What AXIGNAL will not do.")}
             </h2>
           </Reveal>
+          <LandingGuide scene="boundaries" className="observer-trust-guide" />
           <Reveal className="trust-commitments">
             {[
               {
