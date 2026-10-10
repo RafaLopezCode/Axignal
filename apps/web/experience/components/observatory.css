@@ -442,3 +442,27 @@ body:has(.obs-rail-desktop) .privacy-preferences-button { inset-inline-end: auto
 /* The language selector in the rail matches the rail's other controls: same stroke, centred label. */
 .obs-rail-locale .locale-selector { display: flex; align-items: center; justify-content: center; gap: 8px; min-block-size: 42px; border: 1px solid var(--obs-rail-line); border-radius: 12px; padding-inline: 12px; }
 .obs-rail-locale .locale-selector select { text-align: center; text-align-last: center; }
+
+/* Thematic navigation: the ten families and, inside Presence, its channels. Chips wrap on wide screens and scroll sideways on narrow ones. */
+.obs-facets { display: grid; gap: 10px; margin: 16px 0 6px; }
+.obs-facet-nav ul, .obs-channel-nav ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+.obs-facet { display: inline-flex; align-items: center; gap: 8px; min-block-size: 40px; padding: 0 14px; border: 1px solid var(--obs-line); border-radius: 999px; background: var(--obs-card); color: var(--obs-text); font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; white-space: nowrap; transition: background-color .18s var(--obs-ease), border-color .18s var(--obs-ease); }
+.obs-facet:hover { border-color: #b9c8ec; background: var(--obs-blue-soft); }
+.obs-facet[aria-pressed="true"] { background: var(--obs-blue); border-color: var(--obs-blue); color: #fff; }
+.obs-facet-count { display: inline-grid; place-items: center; min-inline-size: 22px; block-size: 22px; padding: 0 6px; border-radius: 999px; background: var(--obs-blue-soft); color: var(--obs-blue); font-size: 12px; font-weight: 700; }
+.obs-facet[aria-pressed="true"] .obs-facet-count { background: rgba(255, 255, 255, .22); color: #fff; }
+.obs-facet-lamp { inline-size: 8px; block-size: 8px; border-radius: 50%; background: var(--obs-brass); }
+.obs-channel-nav { padding-inline-start: 14px; border-inline-start: 3px solid var(--obs-blue-soft); }
+.obs-facet-channel { min-block-size: 36px; font-size: 13px; background: transparent; }
+.obs-facet-channel[aria-pressed="true"] { background: var(--obs-blue); }
+.obs-scope-title { margin: 0 0 6px; font-size: 14px; font-weight: 700; letter-spacing: .02em; color: var(--obs-blue); }
+.obs-event-tag { margin-inline-start: 8px; padding: 2px 8px; border-radius: 999px; background: var(--obs-blue-soft); color: var(--obs-blue); font-size: 12px; font-weight: 700; }
+.obs-evidence-finding { color: var(--obs-muted); font-size: 13px; }
+@media (max-width: 699px) {
+  .obs-facets { margin-inline: -2px; }
+  .obs-facet-nav ul, .obs-channel-nav ul { flex-wrap: nowrap; overflow-x: auto; scroll-snap-type: x proximity; scrollbar-width: none; padding-block: 2px; }
+  .obs-facet-nav ul::-webkit-scrollbar, .obs-channel-nav ul::-webkit-scrollbar { display: none; }
+  .obs-facet { min-block-size: 44px; scroll-snap-align: center; }
+  .obs-channel-nav { padding-inline-start: 10px; }
+}
+@media (prefers-reduced-motion: reduce) { .obs-facet { transition: none; } }

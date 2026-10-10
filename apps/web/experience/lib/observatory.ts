@@ -9,6 +9,8 @@ import { activityLabel, discoveryCopy, placeLabel } from "@/components/first-obs
 import { causeCopy, dimensionCopy, proposalCopy, stateCopy } from "@/components/public-understanding";
 import type { Discovery, FirstObservation, PublicUnderstanding } from "./subscriber-contracts";
 import type { RuntimeProjection } from "./runtime-projection";
+import { facetOfDiscovery, facetOfOpportunity, type Channel } from "./observation-families";
+import type { FamilyId } from "./projection";
 
 export type Translate = (es: string, en: string) => string;
 type Opportunity = NonNullable<RuntimeProjection["cognition"]>["opportunities"][number];
@@ -44,6 +46,9 @@ export type Insight = {
   previous: string | null;
   /** Identity for "lit until seen": changes when what is shown materially changes. */
   changeKey: string;
+  /** Thematic family and Presence channel, placed from typed contract values only; null when the contract cannot place it. */
+  family: FamilyId | null;
+  channel: Channel | null;
 };
 
 function hash(value: string): string {
@@ -162,6 +167,7 @@ function opportunityInsight(o: Opportunity, t: Translate, locale: string): Insig
       state: j.outcome === "NOT_APPLICABLE" ? "NOT_APPLICABLE" as const : j.state === "OBSERVED" ? "OBSERVED" as const : "UNKNOWN" as const })),
     previous: null,
     changeKey: keyOf(o.id, o.title, o.deadline, o.currentness),
+    ...facetOfOpportunity(o),
   };
 }
 
@@ -196,6 +202,7 @@ function discoveryInsight(d: Discovery, index: number, t: Translate, locale: str
     proof, dimensions: [],
     previous: null,
     changeKey: keyOf(`${d.kind}:${d.code}`, d.statement, d.excerpt, d.epistemicState),
+    ...facetOfDiscovery(d),
   };
 }
 
@@ -209,6 +216,7 @@ function understandingInsights(report: PublicUnderstanding, t: Translate): Insig
     proposal: null, sources: [], proof: [], dimensions: [],
     previous: null,
     changeKey: keyOf(`pu:status`, report.status, report.cause),
+    family: "value", channel: null,
   }];
   return report.dimensions.map(d => dimensionInsight(report, d, t));
 }
@@ -245,6 +253,7 @@ function dimensionInsight(report: PublicUnderstanding, d: Dimension, t: Translat
       return stateCopy(change.before, t);
     })(),
     changeKey: keyOf(`pu:${d.dimension}`, d.state, d.cause, quotes.map(q => q.quote).join("|")),
+    family: "value", channel: null,
   };
 }
 

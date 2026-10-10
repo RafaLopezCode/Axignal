@@ -247,6 +247,11 @@ class DiscoveryKind(StrEnum):
     REPRESENTATION_GAP = "REPRESENTATION_GAP"
     IDENTITY_HINT = "IDENTITY_HINT"
     DEMAND = "DEMAND"
+    # Presence channels beside the organization's own web. They mirror the governed source capabilities
+    # PUBLIC_SEARCH_VISIBILITY and GENERATIVE_ANSWER_SURFACES. No producer emits them yet; clients classify
+    # a finding into the SEO or GEO channel by this kind and never by its wording.
+    SEARCH_VISIBILITY = "SEARCH_VISIBILITY"
+    GENERATIVE_VISIBILITY = "GENERATIVE_VISIBILITY"
     SIGNIFICANT_UNKNOWN = "SIGNIFICANT_UNKNOWN"
 
 

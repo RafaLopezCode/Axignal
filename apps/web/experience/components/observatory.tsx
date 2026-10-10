@@ -23,6 +23,8 @@ import { causeCopy, dimensionCopy, stateCopy } from "./public-understanding";
 import { SubscriberRepresentation } from "./subscriber-representation";
 import { SubscriberMcpConnections } from "./subscriber-mcp-connections";
 import { RuntimeAxent, useRuntimeAxent } from "./runtime-axent";
+import { channelLabel, FamilyNav, scopeCopy, type FacetScope } from "./family-nav";
+import { countByFacet, facetOfSourceType, facetParams, litByFamily, matchesFacet, parseFacet, type Facet } from "@/lib/observation-families";
 
 type Item = SubscriberPortfolio["organizations"][number];
 export type View = "summary" | "explore" | "evolution" | "evidence";
@@ -87,22 +89,26 @@ function useUrlState() {
       view: (["summary", "explore", "evolution", "evidence"].includes(view ?? "") ? view : "summary") as View,
       screen: (["account", "add"].includes(screen ?? "") ? screen : null) as "account" | "add" | null,
       item: url.searchParams.get("item"),
+      family: url.searchParams.get("family"),
+      channel: url.searchParams.get("channel"),
     };
   };
-  const [state, setState] = useState<{ view: View; screen: "account" | "add" | null; item: string | null }>({ view: "summary", screen: null, item: null });
+  const [state, setState] = useState<{ view: View; screen: "account" | "add" | null; item: string | null; family: string | null; channel: string | null }>({ view: "summary", screen: null, item: null, family: null, channel: null });
   useEffect(() => {
     setState(read());
     const listener = () => setState(read());
     window.addEventListener("popstate", listener);
     return () => window.removeEventListener("popstate", listener);
   }, []);
-  const go = useCallback((next: Partial<{ view: View; screen: "account" | "add" | null; item: string | null; organization: string | null }>, replace = false) => {
+  const go = useCallback((next: Partial<{ view: View; screen: "account" | "add" | null; item: string | null; organization: string | null; family: string | null; channel: string | null }>, replace = false) => {
     const url = new URL(window.location.href);
     const set = (key: string, value: string | null | undefined) => { if (value === undefined) return; if (value === null) url.searchParams.delete(key); else url.searchParams.set(key, value); };
     set("view", next.view === "summary" ? null : next.view);
     set("screen", next.screen);
     set("item", next.item);
     set("organization", next.organization);
+    set("family", next.family);
+    set("channel", next.channel);
     window.history[replace ? "replaceState" : "pushState"](null, "", url);
     setState(read());
   }, []);
@@ -270,7 +276,7 @@ export function Observatory(props: ObservatoryProps) {
       {screen === "desk" && <DeskView items={items} readings={deskReadings} seen={seen} nameOf={nameOf} onOpen={openOrganization} onAdd={() => openScreen("add")} reportLit={reportLit}/>}
       {screen === "add" && <AddView {...props} first={!items.length} onDone={() => openScreen("desk")}/>}
       {screen === "account" && <AccountView {...props}/>}
-      {screen === "organization" && current && <OrganizationView key={current.focusId} item={current} name={nameOf(current)} {...props} view={url.view} itemId={url.item} go={go} seen={seen} updateSeen={updateSeen} axentOpen={axentOpen} setAxentOpen={setAxentOpen} locale={locale} reportLit={reportLit}/>}
+      {screen === "organization" && current && <OrganizationView key={current.focusId} item={current} name={nameOf(current)} {...props} view={url.view} itemId={url.item} family={url.family} channel={url.channel} go={go} seen={seen} updateSeen={updateSeen} axentOpen={axentOpen} setAxentOpen={setAxentOpen} locale={locale} reportLit={reportLit}/>}
     </main>
   </div>;
 }
@@ -442,21 +448,29 @@ function DeskColumn({ title, lane, rows, empty }: { title: string; lane: Lane; e
 // ---- organization ---------------------------------------------------------------------------
 
 type OrgProps = ObservatoryProps & {
-  item: Item; name: string; view: View; itemId: string | null; locale: string;
-  go: (next: Partial<{ view: View; screen: "account" | "add" | null; item: string | null; organization: string | null }>, replace?: boolean) => void;
+  item: Item; name: string; view: View; itemId: string | null; family: string | null; channel: string | null; locale: string;
+  go: (next: Partial<{ view: View; screen: "account" | "add" | null; item: string | null; organization: string | null; family: string | null; channel: string | null }>, replace?: boolean) => void;
   seen: SeenStore; updateSeen: (change: (store: SeenStore) => SeenStore) => void;
   axentOpen: boolean; setAxentOpen: (open: boolean) => void;
   reportLit: (focusId: string, count: number) => void;
 };
 
 function OrganizationView(props: OrgProps) {
-  const { t } = useLocale();
+  const { t, copy } = useLocale();
   const { item, name, view, itemId, go, seen, updateSeen, locale, projection, firstObservation, revision } = props;
   const ready = !props.reading && (projection || firstObservation);
   const reading: Reading = useMemo(() => ({ projection, firstObservation }), [projection, firstObservation]);
   const insights = useMemo(() => ready ? insightsFor(reading, t, locale) : [], [ready, reading, t, locale]);
   const keys = useMemo(() => insights.map(i => i.changeKey), [insights]);
   const lit = useMemo(() => litKeys(seen, item.focusId, keys), [seen, item.focusId, keys]);
+  const facet = useMemo(() => parseFacet(props.family, props.channel), [props.family, props.channel]);
+  const shown = useMemo(() => facet.family ? insights.filter(i => matchesFacet(i, facet)) : insights, [insights, facet]);
+  const shownKeys = useMemo(() => shown.map(i => i.changeKey), [shown]);
+  const litShown = useMemo(() => new Set(shownKeys.filter(k => lit.has(k))), [shownKeys, lit]);
+  const counts = useMemo(() => countByFacet(insights), [insights]);
+  const litFamilies = useMemo(() => litByFamily(insights, lit), [insights, lit]);
+  const scope = useMemo(() => scopeCopy(facet, t, copy), [facet, t, copy]);
+  const selectFacet = (next: Facet) => transition(() => props.go({ ...facetParams(next), item: null }));
   const { reportLit } = props;
   useEffect(() => { if (ready) reportLit(item.focusId, lit.size); }, [ready, item.focusId, lit.size, reportLit]);
   useEffect(() => {
@@ -525,14 +539,15 @@ function OrganizationView(props: OrgProps) {
             if (next) { e.preventDefault(); go({ view: next[0], item: null }); window.requestAnimationFrame(() => document.getElementById(`tab-${next[0]}`)?.focus()); }
           }}>{label}</button>)}
       </div>
+      {ready && !observing && view !== "explore" && <FamilyNav facet={facet} counts={counts} lit={litFamilies} onSelect={selectFacet}/>}
       <div className="obs-panel" role="tabpanel" id={`panel-${view}`} aria-labelledby={`tab-${view}`}>
         {props.reading && <ReadingSkeleton/>}
         {!props.reading && observing && <ObservingState state={item.observation!.state}/>}
-        {!props.reading && !observing && view === "summary" && <SummaryView reading={reading} name={name} insights={insights} lit={lit} openId={open?.id ?? null} onOpen={openInsight}
-          onSeenAll={() => updateSeen(store => markSeen(store, item.focusId, keys, new Date().toISOString()))} item={item}/>}
+        {!props.reading && !observing && view === "summary" && <SummaryView reading={reading} name={name} insights={shown} lit={litShown} openId={open?.id ?? null} onOpen={openInsight} scope={scope}
+          onSeenAll={() => updateSeen(store => markSeen(store, item.focusId, shownKeys, new Date().toISOString()))} item={item}/>}
         {!props.reading && !observing && view === "explore" && <ExploreView projection={projection} revision={revision} firstObservation={firstObservation} onSummary={() => go({ view: "summary" })}/>}
-        {!props.reading && !observing && view === "evolution" && <EvolutionView reading={reading}/>}
-        {!props.reading && !observing && view === "evidence" && <EvidenceView reading={reading}/>}
+        {!props.reading && !observing && view === "evolution" && <EvolutionView reading={reading} facet={facet} scope={scope}/>}
+        {!props.reading && !observing && view === "evidence" && <EvidenceView reading={reading} facet={facet} scope={scope} insights={shown}/>}
       </div>
     </div>
     {depthOpen && <DepthPanel insight={open} projection={projection} revision={revision} axentOnly={!open} canAct={props.canAct} onClose={closeDepth}
@@ -565,8 +580,10 @@ function ObservingState({ state }: { state: string }) {
   </section>;
 }
 
-export function SummaryView({ reading, name, insights, lit, openId, onOpen, onSeenAll, item, exampleLead }: {
+export function SummaryView({ reading, name, insights, lit, openId, onOpen, onSeenAll, item, exampleLead, scope }: {
   reading: Reading; name: string; insights: Insight[]; lit: Set<string>; openId: string | null;
+  /** A selected family or channel: its header and empty state. Absent for the whole reading. */
+  scope?: FacetScope | null;
   onOpen: (insight: Insight) => void; onSeenAll: () => void; item: Pick<Item, "observation">;
   /** Only the explicitly fictional public example supplies a fixture lead. */
   exampleLead?: string;
@@ -577,9 +594,11 @@ export function SummaryView({ reading, name, insights, lit, openId, onOpen, onSe
   const lanes = byLane(insights);
   const low = item.observation && LOW_OBSERVABILITY.has(item.observation.state);
   return <div className="obs-summary">
-    <section className="obs-brief" aria-label={t("En resumen", "In short")}>
-      <p className="obs-brief-lead">{brief.lead}</p>
-      {brief.tally.length > 0 && <ul className="obs-tally">{brief.tally.map(x => <li key={x}>{x}</li>)}</ul>}
+    <section className={`obs-brief${scope ? " obs-scope" : ""}`} aria-label={scope ? scope.title : t("En resumen", "In short")}>
+      {scope && <h2 className="obs-scope-title">{scope.title}</h2>}
+      <p className="obs-brief-lead">{scope ? scope.intro : brief.lead}</p>
+      {scope ? <ul className="obs-tally"><li>{fill(insights.length === 1 ? t("{n} hallazgo", "{n} finding") : t("{n} hallazgos", "{n} findings"), { n: insights.length })}</li></ul>
+        : brief.tally.length > 0 && <ul className="obs-tally">{brief.tally.map(x => <li key={x}>{x}</li>)}</ul>}
       {low && <p className="obs-brief-note">{observationStateCopy(item.observation!.state, t)}. {t("Lo que no se pudo observar aparece en «Lo que aún no sabemos», con su razón.", "What could not be observed appears under “What we do not know yet”, with its reason.")}</p>}
       {lit.size > 0 && <div className="obs-since" role="status">
         <span className="obs-since-lamp" aria-hidden="true"/>
@@ -587,7 +606,7 @@ export function SummaryView({ reading, name, insights, lit, openId, onOpen, onSe
         <button className="obs-link" onClick={onSeenAll}>{t("Marcar como visto", "Mark as seen")}</button>
       </div>}
     </section>
-    <div className="obs-lanes">
+    {scope && !insights.length ? <section className="obs-empty-state"><h2>{scope.emptyTitle}</h2><p>{scope.emptyBody}</p></section> : <div className="obs-lanes">
       {(["matters", "understood", "unknown"] as Lane[]).map(lane => {
         const copy = laneCopy(lane, t);
         return <section key={lane} className={`obs-lane obs-lane-${lane}`} aria-labelledby={`lane-${lane}`}>
@@ -596,7 +615,7 @@ export function SummaryView({ reading, name, insights, lit, openId, onOpen, onSe
             : <p className="obs-empty">{copy.empty}</p>}
         </section>;
       })}
-    </div>
+    </div>}
   </div>;
 }
 
@@ -700,35 +719,64 @@ function ExploreView({ projection, revision, firstObservation, onSummary }: { pr
   </section>;
 }
 
-function EvolutionView({ reading }: { reading: Reading }) {
+function EvolutionView({ reading, facet, scope }: { reading: Reading; facet: Facet; scope: FacetScope | null }) {
   const { t, locale } = useLocale();
-  const events: Array<{ at: string; title: string; detail: string; kind: "observation" | "reading" | "change" }> = [];
-  const groups = new Map<string, { at: string; sources: string[]; changed: boolean | null }>();
+  type Event = { at: string; title: string; detail: string; kind: "observation" | "reading" | "change"; facet: Facet };
+  const events: Event[] = [];
+  // Observations are grouped by moment and by the channel their source type belongs to; a change is only stated when the runtime compared them.
+  const groups = new Map<string, { at: string; sources: string[]; changed: boolean | null; facet: Facet }>();
   for (const item of reading.projection?.temporalHistory.items ?? []) {
-    const minute = item.observedAt.slice(0, 16);
-    const group = groups.get(minute) ?? { at: item.observedAt, sources: [], changed: null };
+    const itemFacet = facetOfSourceType(item.sourceType);
+    const key = item.observedAt.slice(0, 16) + "|" + itemFacet.family + "|" + itemFacet.channel;
+    const group = groups.get(key) ?? { at: item.observedAt, sources: [], changed: null, facet: itemFacet };
     group.sources.push(host(item.sourceRef));
     if (item.normalizedStateChanged === true) group.changed = true; else if (item.normalizedStateChanged === false && group.changed === null) group.changed = false;
-    groups.set(minute, group);
+    groups.set(key, group);
   }
-  for (const g of groups.values()) events.push({ at: g.at, kind: "observation", title: t("Observación de sus fuentes", "Observation of its sources"),
+  for (const g of groups.values()) events.push({ at: g.at, kind: "observation", facet: g.facet,
+    title: g.facet.channel === "SEO" ? t("Medición de visibilidad en buscadores", "Search visibility measurement")
+      : g.facet.channel === "GEO" ? t("Medición en respuestas de IA", "AI answer measurement")
+      : t("Observación de sus fuentes", "Observation of its sources"),
     detail: `${[...new Set(g.sources)].join(" · ")} — ${g.changed === true ? t("cambió lo observado", "what was observed changed") : g.changed === false ? t("sin cambios en lo observado", "no change in what was observed") : t("primera observación", "first observation")}` });
   const report = reading.firstObservation?.publicUnderstanding;
   if (report) {
-    for (const old of report.history ?? []) events.push({ at: old.measuredAt, kind: "reading", title: t("Lectura anterior de su oferta pública", "Previous reading of its public offer"), detail: old.status === "MEASURED" ? old.dimensions.map(d => `${dimensionCopy(d.dimension, t)}: ${stateCopy(d.state, t)}`).join(" · ") : causeCopy(old.cause, t) });
-    events.push({ at: report.measuredAt, kind: report.comparison?.changes?.length ? "change" : "reading", title: t("Lectura actual de su oferta pública", "Current reading of its public offer"),
+    const value: Facet = { family: "value", channel: null };
+    for (const old of report.history ?? []) events.push({ at: old.measuredAt, kind: "reading", facet: value, title: t("Lectura anterior de su oferta pública", "Previous reading of its public offer"), detail: old.status === "MEASURED" ? old.dimensions.map(d => `${dimensionCopy(d.dimension, t)}: ${stateCopy(d.state, t)}`).join(" · ") : causeCopy(old.cause, t) });
+    events.push({ at: report.measuredAt, kind: report.comparison?.changes?.length ? "change" : "reading", facet: value, title: t("Lectura actual de su oferta pública", "Current reading of its public offer"),
       detail: report.comparison?.state === "COMPARABLE" ? (report.comparison.changes.length ? fill(t("{n} cambios de interpretación respecto a la lectura anterior; no demuestran por sí solos un resultado comercial.", "{n} interpretation changes since the previous reading; on their own they do not prove a business result."), { n: report.comparison.changes.length }) : t("Sin cambios de interpretación respecto a la lectura anterior.", "No interpretation change since the previous reading.")) : t("Primera lectura comparable.", "First comparable reading.") });
   }
-  events.sort((a, b) => b.at.localeCompare(a.at));
-  if (!events.length) return <section className="obs-empty-state"><h2>{t("La evolución empieza con la segunda observación.", "Evolution starts with the second observation.")}</h2><p>{t("AXIGNAL volverá a observar y te mostrará aquí qué cambió, cuándo y frente a qué.", "AXIGNAL will observe again and show you here what changed, when and against what.")}</p></section>;
-  return <ol className="obs-timeline">{events.map((e, i) => <li key={i} className={`obs-event obs-event-${e.kind}`}>
-    <time dateTime={e.at}>{formatDate(e.at, locale, true)}</time><div><strong>{e.title}</strong><p>{e.detail}</p></div>
+  const visible = events.filter(e => matchesFacet(e.facet, facet));
+  visible.sort((a, b) => b.at.localeCompare(a.at));
+  if (!visible.length) return scope
+    ? <section className="obs-empty-state"><h2>{fill(t("Todavía no hay observaciones de {scope} que comparar", "There are no observations of {scope} to compare yet"), { scope: scope.title })}</h2><p>{t("Un cambio solo se declara cuando hay dos observaciones comparables. Sin ellas no hay cambio que mostrar, ni a favor ni en contra.", "A change is only declared when there are two comparable observations. Without them there is no change to show, for or against.")}</p></section>
+    : <section className="obs-empty-state"><h2>{t("La evolución empieza con la segunda observación.", "Evolution starts with the second observation.")}</h2><p>{t("AXIGNAL volverá a observar y te mostrará aquí qué cambió, cuándo y frente a qué.", "AXIGNAL will observe again and show you here what changed, when and against what.")}</p></section>;
+  return <ol className="obs-timeline">{visible.map((e, i) => <li key={i} className={`obs-event obs-event-${e.kind}`}>
+    <time dateTime={e.at}>{formatDate(e.at, locale, true)}</time><div><strong>{e.title}</strong>{e.facet.channel && !facet.channel && <span className="obs-event-tag">{channelLabel(e.facet.channel, t)}</span>}<p>{e.detail}</p></div>
   </li>)}</ol>;
 }
 
-function EvidenceView({ reading }: { reading: Reading }) {
+function EvidenceView({ reading, facet, scope, insights }: { reading: Reading; facet: Facet; scope: FacetScope | null; insights: Insight[] }) {
   const { t, locale } = useLocale();
   const sources = reading.projection?.cognition?.sources ?? [];
+  if (facet.family) {
+    // A selection shows the evidence behind exactly the findings it contains, and the web measurement where it is the web.
+    const seen = new Set<string>();
+    const rows = insights.flatMap(insight => insight.sources.map(source => ({ insight, source }))).filter(({ source }) => {
+      const key = [source.url, source.label, source.observedAt].join("|");
+      return seen.has(key) ? false : (seen.add(key), true);
+    });
+    const measurement = facet.family === "presence" && (!facet.channel || facet.channel === "WEB") ? reading.projection?.digitalRepresentation : undefined;
+    if (!rows.length && !measurement) return <section className="obs-empty-state"><h2>{scope?.emptyTitle}</h2><p>{scope?.emptyBody}</p></section>;
+    return <div className="obs-evidence">
+      {rows.length > 0 && <section className="obs-sources" aria-labelledby="obs-sources-title"><h2 id="obs-sources-title">{t("Evidencia de esta selección", "Evidence for this selection")}</h2>
+        <ul>{rows.map(({ insight, source }, index) => { const link = source.url ? evidenceUrl(source.url) : null; return <li key={index}>
+          {link ? <a href={link} target="_blank" rel="noopener noreferrer">{source.label}<ExternalLink size={13} aria-hidden="true"/><span className="sr-only">{t("(se abre en otra pestaña)", "(opens in a new tab)")}</span></a> : <span>{source.label}</span>}
+          <span>{source.observedAt ? formatDate(source.observedAt, locale, true) : t("sin fecha", "undated")} · {natureLabel(insight.nature, t)}</span>
+          <span className="obs-evidence-finding">{insight.headline}</span>
+        </li>; })}</ul></section>}
+      {measurement && <SubscriberRepresentation measurement={measurement}/>}
+    </div>;
+  }
   return <div className="obs-evidence">
     {sources.length > 0 && <section className="obs-sources" aria-labelledby="obs-sources-title"><h2 id="obs-sources-title">{t("Fuentes autorizadas de esta lectura", "Authorized sources of this reading")}</h2>
       <ul>{sources.map(s => { const link = evidenceUrl(s.sourceRef); return <li key={s.id}>
