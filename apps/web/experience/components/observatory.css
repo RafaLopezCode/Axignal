@@ -493,3 +493,5 @@ body:has(.obs-rail-desktop) .privacy-preferences-button { inset-inline-end: auto
 /* On a narrow screen the actions sit under the title, on the left: the menu opens from its start so it stays on screen. */
 @media (max-width: 599px) { .obs-menu-list { inset-inline-start: 0; inset-inline-end: auto; max-inline-size: calc(100vw - 32px); } }
 .obs-menu-list button:disabled { opacity: 1; color: var(--obs-muted); background: none; cursor: not-allowed; }
+/* The rail's secondary action centres its label like its neighbours. */
+.obs-rail-foot .obs-rail-action:not(.obs-rail-cta) { justify-content: center; }

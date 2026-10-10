@@ -68,3 +68,9 @@ test("the actions menu stays on screen: it opens from its start on narrow screen
 test("disabled menu actions keep their contrast through colour", () => {
   assert.match(observatory, /\.obs-menu-list button:disabled \{ opacity: 1; color: var\(--obs-muted\);/);
 });
+
+test("the rail's controls centre their label alike", () => {
+  assert.match(observatory, /\.obs-rail-cta \{ justify-content: center;/);
+  assert.match(observatory, /\.obs-rail-foot \.obs-rail-action:not\(\.obs-rail-cta\) \{ justify-content: center; \}/);
+  assert.match(observatory, /\.obs-rail-locale \.locale-selector \{[^}]*justify-content: center/);
+});
