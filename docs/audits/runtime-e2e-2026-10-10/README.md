@@ -1,11 +1,13 @@
 # Runtime E2E closure — 2026-10-10
 
-Candidate branch: `codex/runtime-e2e-closure`, independently based on canonical
-`cbd04b75526c6db1d43e88e42fd9871798e70a9e` (merged PR #180). No production write,
-merge, canonical checkout change, Claude worktree inspection, or UI change.
-The earlier owned WIP is preserved as `f6d521a`; this candidate reuses its small
-budget repair on the verified canonical base. Existing specs 063/064/065 govern
-this repair; it adds no feature family, new spec, queue or provider authority.
+The three runtime repairs below are already integrated through PR #181
+(`5d9ad7a`), as verified against canonical `b51a54526da1fc48a6070712df0dd97fde81d6a6`.
+This follow-up PR updates executed evidence and its limits; it does not duplicate
+those repairs or change runtime/UI code. The original pre-integration candidate
+is preserved as `f323496ed5028414604d38d0ee74058d1fc68d63` (base PR #180 / `cbd04b7`).
+No production write, merge, canonical checkout change or Claude worktree inspection.
+Existing specs 063/064/065 govern the integrated repair, with no new feature family,
+provider authority, spec, queue or schema migration.
 
 ## Three demonstrated discontinuities repaired
 
@@ -113,8 +115,10 @@ Graphify is refreshed, without LLM/API cost. No suppressions or CI changes.
 - Final journey with contract snapshots: 1 passed; final MCP/normalized-comparison
   and journey selection: 3 passed.
 - Initial full suite: 2050 passed, 6 skipped, one obsolete temporal expectation
-  failed. Its scenario is strengthened as described above; the final full run
-  result is recorded before handoff.
+  failed. Canonical PR #181 already strengthened normalized temporal comparison.
+  One follow-up run was invalidated by concurrent rebase/child imports; it is
+  not used as a runtime certificate. The final stable canonical run is recorded
+  before handoff.
 - Frontend: 162 tests passed; typecheck passed; i18n inventory 1539, missing 0;
   production build passed. No frontend source changes.
 - Actual frontend schema parse: pending, initial, restarted, changed, final and
@@ -135,7 +139,7 @@ Its JSON keeps fixtures and live facts separate; do not run against production d
 
 IMPLEMENTED: three existing runtime seams repaired. PROBADO: deterministic gates,
 TCP composition, real licensed source acquisition and production read-only checks.
-INTEGRADO: candidate branch only; canonical base contains PR #180, this repair is
-not merged. DESPLEGADO: no. VERIFICADO E2E: complete local chain with synthetic
+INTEGRADO: runtime repairs in canonical main through PR #181; this PR contains
+only updated certification evidence and explanation. DESPLEGADO: no. VERIFICADO E2E: complete local chain with synthetic
 external ports, partial live-source identity/uncertainty chain; no active production
 product or external-model quality certification. Final SHA/CI belong to the PR.
