@@ -436,3 +436,6 @@ body:has(.obs-rail-desktop) .privacy-preferences-button { inset-inline-end: auto
 .obs-rail-cta { justify-content: center; min-block-size: 46px; margin-block-end: 6px; background: var(--obs-blue); color: #fff !important; border-radius: 12px; font-size: 15px; box-shadow: 0 8px 18px rgba(53, 79, 152, .24); }
 .obs-rail-cta:hover:not(:disabled) { background: #2c4485; }
 .obs-rail-cta:disabled { opacity: .72; cursor: not-allowed; box-shadow: none; }
+/* Secondary rail actions carry a stroke, so they read as buttons even when they are waiting for an account. */
+.obs-rail-foot .obs-rail-action:not(.obs-rail-cta) { border: 1px solid var(--obs-rail-line); border-radius: 12px; min-block-size: 42px; padding-inline: 12px; background: transparent; }
+.obs-rail-foot .obs-rail-action:not(.obs-rail-cta):hover:not(:disabled) { background: var(--obs-blue-soft); }
