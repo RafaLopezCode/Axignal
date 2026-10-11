@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { customerCommands, customerAccess, issuedInvite, pilotLink, activationCause, type CustomerAccess } from "../lib/customer-access";
+import { customerCommands, customerAccess, issuedInvite, pilotLink, publicPilotLink, activationCause, type CustomerAccess } from "../lib/customer-access";
 
 test("Admin mutations reject billing, tenant selection, invalid TTL and control characters", () => {
   const valid = { reason: "Private partner", inviteHours: 168, idempotencyKey: "command:1" };
@@ -15,6 +15,15 @@ test("copied invitation is fragment-only, compatible with onboarding; response s
   assert.throws(() => pilotLink("javascript:alert(1)", token));
   assert.throws(() => pilotLink("https://axignal.com", "bad"));
   assert.equal("token_digest" in issuedInvite.parse({ inviteRef: "invite_a", inviteToken: token, expiresAt: "later", capacity: 1, token_digest: "private" }), false);
+});
+
+test("Admin invitation targets public signup, not the private operator tunnel", () => {
+  const token = "a".repeat(43);
+  const link = new URL(publicPilotLink(token));
+  assert.equal(link.origin, "https://axignal.com");
+  assert.equal(link.pathname, "/signup");
+  assert.equal(link.search, "");
+  assert.equal(link.hash, "#pilot=" + token);
 });
 
 const customer: CustomerAccess["customers"][number] = {
