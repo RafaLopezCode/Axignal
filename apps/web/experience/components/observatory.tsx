@@ -27,6 +27,8 @@ import { SubscriberRepresentation } from "./subscriber-representation";
 import { SubscriberMcpConnections } from "./subscriber-mcp-connections";
 import { RuntimeAxent, useRuntimeAxent } from "./runtime-axent";
 import type { ObservatoryCapabilities } from "@/lib/observatory-source";
+import { WAITING_STATES, waitingItems, type ActivationPhase } from "@/lib/activation";
+import { ActivationView } from "./activation";
 import { channelLabel, FamilyNav, scopeCopy, type FacetScope } from "./family-nav";
 import { countByFacet, facetOfSourceType, facetParams, keysReadOnFirstLook, litByChannel, litOrFirstLook, litByFamily, matchesFacet, parseFacet, type Facet } from "@/lib/observation-families";
 
@@ -40,7 +42,7 @@ export type ObservatoryShell = {
   /** Called when the navigation is used, so the shell can bring the reading back. */
   onNavigate?: () => void;
 };
-export type Screen = "desk" | "organization" | "account" | "add";
+export type Screen = "desk" | "organization" | "account" | "add" | "activate";
 
 export type ObservatoryProps = {
   access: "loading" | "required" | "failure" | "ready";
@@ -75,6 +77,12 @@ export type ObservatoryProps = {
   firstLookUnread?: readonly string[];
   /** Whether what has been read is kept on this device between visits. */
   rememberReading?: boolean;
+  /** Activation of a first organization: the phase and the ways in (invitation, payment). Absent where nothing can be activated. */
+  activation?: ActivationPhase;
+  onRedeemInvite?: (token: string) => Promise<boolean>;
+  onCheckout?: (totalOrganizations: number) => void;
+  onConfirmPayment?: () => void;
+  onActivationReset?: () => void;
   /** What the context offers around the reading; the demo declares all of it, an Admin has no account to manage. */
   capabilities: ObservatoryCapabilities;
   /** Organizations the context already authorizes, offered while adding one. */
@@ -114,20 +122,20 @@ function useUrlState() {
     const screen = url.searchParams.get("screen");
     return {
       view: (["summary", "explore", "evolution", "evidence"].includes(view ?? "") ? view : "summary") as View,
-      screen: (["account", "add"].includes(screen ?? "") ? screen : null) as "account" | "add" | null,
+      screen: (["account", "add", "activate"].includes(screen ?? "") ? screen : null) as "account" | "add" | "activate" | null,
       item: url.searchParams.get("item"),
       family: url.searchParams.get("family"),
       channel: url.searchParams.get("channel"),
     };
   };
-  const [state, setState] = useState<{ view: View; screen: "account" | "add" | null; item: string | null; family: string | null; channel: string | null }>({ view: "summary", screen: null, item: null, family: null, channel: null });
+  const [state, setState] = useState<{ view: View; screen: "account" | "add" | "activate" | null; item: string | null; family: string | null; channel: string | null }>({ view: "summary", screen: null, item: null, family: null, channel: null });
   useEffect(() => {
     setState(read());
     const listener = () => setState(read());
     window.addEventListener("popstate", listener);
     return () => window.removeEventListener("popstate", listener);
   }, []);
-  const go = useCallback((next: Partial<{ view: View; screen: "account" | "add" | null; item: string | null; organization: string | null; family: string | null; channel: string | null }>, replace = false) => {
+  const go = useCallback((next: Partial<{ view: View; screen: "account" | "add" | "activate" | null; item: string | null; organization: string | null; family: string | null; channel: string | null }>, replace = false) => {
     const url = new URL(window.location.href);
     const set = (key: string, value: string | null | undefined) => { if (value === undefined) return; if (value === null) url.searchParams.delete(key); else url.searchParams.set(key, value); };
     set("view", next.view === "summary" ? null : next.view);
@@ -237,8 +245,8 @@ function itemStatus(item: Item, t: Translate): string {
   if (item.observation) return observationStateCopy(item.observation.state, t);
   if (item.state === "IDENTITY_PENDING") return item.reason?.startsWith("AMBIGUOUS") ? t("Varias organizaciones coinciden", "Several organizations match") : item.reason?.startsWith("CONFLICT") ? t("Datos en conflicto", "Conflicting details") : t("Identidad por resolver", "Identity unresolved");
   if (item.state === "IDENTITY_REJECTED") return t("Identidad no admitida", "Identity not admitted");
-  if (item.state === "CAPACITY_PENDING" || item.state === "CAPACITY_UNKNOWN") return t("Pendiente de capacidad", "Capacity pending");
-  if (item.state === "PURCHASE_AUTHORITY_REQUIRED") return t("Autoridad de compra pendiente", "Purchase authority pending");
+  // Kept while access is not active: the person reads what happens next, never an internal billing state.
+  if (item.state === "CAPACITY_PENDING" || item.state === "CAPACITY_UNKNOWN" || item.state === "PURCHASE_AUTHORITY_REQUIRED") return t("Esperando activación", "Waiting for activation");
   return t("Observación activa", "Active observation");
 }
 
@@ -257,6 +265,13 @@ export function Observatory(props: ObservatoryProps) {
   const items = useMemo(() => portfolio?.organizations.filter(visible) ?? [], [portfolio]);
   const readableItems = items.filter(readable);
   const screen: Screen = url.screen ?? (selected ? "organization" : readableItems.length || items.length ? "desk" : "add");
+  // An organization kept while access is not active: the activation screen says what is missing and how to go on.
+  const waiting = waitingItems(portfolio);
+  const activationPhase = props.activation ?? "idle";
+  const activating = props.canAct && Boolean(props.onRedeemInvite) && waiting.length > 0
+    && (readableItems.length === 0 || activationPhase !== "idle" || screen === "activate") && screen !== "organization" && screen !== "account";
+  // Before the first reading exists the product is one focused screen: no rail, no menus, one action.
+  const focused = props.canAct && !props.shell && readableItems.length === 0 && (screen === "add" || activating);
   const deskReadings = useDeskReadings(items, access === "ready" && screen === "desk", props.loadReading);
   const names = useRef(new Map<string, string>());
   if (props.projection && selected) names.current.set(selected, props.projection.organization.name);
@@ -288,7 +303,7 @@ export function Observatory(props: ObservatoryProps) {
       void props.readOutput(focusId);
     });
   };
-  const openScreen = (next: "desk" | "account" | "add") => {
+  const openScreen = (next: "desk" | "account" | "add" | "activate") => {
     props.shell?.onNavigate?.();
     setRailOpen(false); setAxentOpen(false);
     transition(() => {
@@ -301,18 +316,39 @@ export function Observatory(props: ObservatoryProps) {
   if (access === "required") return <ObservatoryFrame><section className="obs-gate"><h1>{t("Tu identidad abre el acceso.", "Your identity opens access.")}</h1><p>{t("Accede para leer tu cartera privada y sus evidencias.", "Sign in to read your private portfolio and its evidence.")}</p><Link className="obs-button obs-primary" href="/login">{t("Acceder", "Sign in")}<ArrowRight size={16} aria-hidden="true"/></Link></section></ObservatoryFrame>;
   if (access === "failure" || !portfolio) return <ObservatoryFrame><section className="obs-gate" role="alert"><h1>{t("No pudimos leer tu contexto.", "We could not read your context.")}</h1><p>{t("Tu cartera sigue a salvo. Vuelve a comprobarlo en un momento.", "Your portfolio is safe. Check again in a moment.")}</p><button className="obs-button" onClick={props.refresh}><RefreshCw size={16} aria-hidden="true"/>{t("Volver a comprobar", "Check again")}</button></section></ObservatoryFrame>;
 
+  const toast = (props.message || props.paymentUrl) && <div className="obs-toast" role="status" aria-live="polite">{props.message && <p>{props.message}</p>}{props.paymentUrl && <a className="obs-button obs-primary" href={props.paymentUrl}>{t("Continuar al pago", "Continue to payment")}</a>}</div>;
+  const activationView = activating && <ActivationView portfolio={portfolio} waiting={waiting} phase={activationPhase} busy={props.busy}
+    onRedeemInvite={props.onRedeemInvite!} onCheckout={total => props.onCheckout?.(total)} onConfirmPayment={() => props.onConfirmPayment?.()}
+    onOpenAccount={() => openScreen("account")}
+    onChangeOrganization={() => void (async () => {
+      for (const item of waiting) await props.command({ action: "cancel_pending", focusId: item.focusId });
+      props.onActivationReset?.();
+      if (readableItems.length) openScreen("desk");
+    })()}/>;
+  if (focused) return <div className="obs obs-focused" data-product-surface="living-observatory" aria-busy={props.busy}>
+    <header className="obs-focused-bar">
+      <Link href="/" aria-label={t("AXIGNAL · Inicio", "AXIGNAL · Home")}><img src="/brand/logo-light.svg" alt="AXIGNAL" width={124} height={36}/></Link>
+      <div className="obs-focused-tools"><LocaleToggle/><button className="obs-link" onClick={props.logout} disabled={props.busy}>{t("Salir", "Sign out")}</button></div>
+    </header>
+    <main id="obs-main" className="obs-focused-main" tabIndex={-1}>
+      {toast}
+      {activationView || <AddView {...props} first onDone={() => openScreen("desk")}/>}
+    </main>
+  </div>;
+
   const current = items.find(i => i.focusId === selected) ?? null;
   const rail = <Rail items={items} selected={props.shell && !props.shell.active ? null : selected} screen={props.shell && !props.shell.active ? null : screen} seen={seen} litCounts={litCounts} nameOf={props.menuName ?? nameOf} onOrganization={openOrganization} onScreen={openScreen} portfolio={portfolio} busy={props.busy} refresh={props.refresh} canAct={props.canAct} account={props.capabilities.account}/>;
   return <div className={`obs${props.shell ? " obs-shelled" : ""}`} data-product-surface="living-observatory" aria-busy={props.busy}>
     <a className="obs-skip" href="#obs-main">{t("Ir al contenido", "Skip to content")}</a>
     {props.shell ? (props.shell.host ? createPortal(<div className="obs obs-in-shell">{rail}</div>, props.shell.host) : null) : <div className="obs-rail-desktop">{rail}</div>}
-    {!props.shell && <MobileBar title={screen === "organization" && current ? nameOf(current) : screen === "desk" ? t("Tu cartera", "Your portfolio") : screen === "account" ? t("Cuenta", "Account") : t("Añadir organización", "Add organization")} onMenu={() => setRailOpen(true)}/>}
+    {!props.shell && <MobileBar title={screen === "organization" && current ? nameOf(current) : screen === "desk" ? t("Tu cartera", "Your portfolio") : screen === "account" ? t("Cuenta", "Account") : screen === "activate" ? t("Esperando activación", "Waiting for activation") : t("Añadir organización", "Add organization")} onMenu={() => setRailOpen(true)}/>}
     {!props.shell && railOpen && <RailSheet onClose={() => setRailOpen(false)}>{rail}</RailSheet>}
     <main id="obs-main" className="obs-main" tabIndex={-1}>
       {props.notice}
-      {(props.message || props.paymentUrl) && <div className="obs-toast" role="status" aria-live="polite">{props.message && <p>{props.message}</p>}{props.paymentUrl && <a className="obs-button obs-primary" href={props.paymentUrl}>{t("Continuar al pago", "Continue to payment")}<ArrowRight size={16} aria-hidden="true"/></a>}</div>}
-      {screen === "desk" && <DeskView firstLookUnread={props.firstLookUnread} items={items} readings={deskReadings} seen={seen} nameOf={nameOf} onOpen={openOrganization} onAdd={() => openScreen("add")} reportLit={reportLit}/>}
-      {screen === "add" && <AddView {...props} first={!items.length} onDone={() => openScreen("desk")}/>}
+      {toast}
+      {activationView}
+      {!activationView && screen === "desk" && <DeskView firstLookUnread={props.firstLookUnread} items={items} readings={deskReadings} seen={seen} nameOf={nameOf} onOpen={openOrganization} onAdd={() => openScreen("add")} onActivate={() => openScreen("activate")} reportLit={reportLit}/>}
+      {!activationView && screen === "add" && <AddView {...props} first={!items.length} onDone={() => openScreen("desk")}/>}
       {screen === "account" && <AccountView {...props}/>}
       {screen === "organization" && current && <OrganizationView key={current.focusId} item={current} name={nameOf(current)} {...props} view={url.view} itemId={url.item} family={url.family} channel={url.channel} go={go} seen={seen} updateSeen={updateSeen} axentOpen={axentOpen} setAxentOpen={setAxentOpen} locale={locale} reportLit={reportLit}/>}
     </main>
@@ -327,7 +363,7 @@ function ObservatoryFrame({ children }: { children: React.ReactNode }) {
 
 function Rail({ items, selected, screen, seen, litCounts, nameOf, onOrganization, onScreen, portfolio, busy, refresh, canAct, account }: {
   items: Item[]; selected: string | null; screen: Screen | null; seen: SeenStore; litCounts: Record<string, number>; nameOf: (item: Item) => string;
-  onOrganization: (id: string) => void; onScreen: (screen: "desk" | "account" | "add") => void;
+  onOrganization: (id: string) => void; onScreen: (screen: "desk" | "account" | "add" | "activate") => void;
   portfolio: SubscriberPortfolio; busy: boolean; refresh: () => void; canAct: boolean; account: boolean;
 }) {
   const { t } = useLocale();
@@ -350,7 +386,9 @@ function Rail({ items, selected, screen, seen, litCounts, nameOf, onOrganization
         const fresh = litCounts[item.focusId] ?? 0;
         const state = lensState(item);
         return <li key={item.focusId}>
-          <button className="obs-org" aria-current={selected === item.focusId ? "page" : undefined} disabled={!readable(item)} onClick={() => onOrganization(item.focusId)}>
+          <button className="obs-org" aria-current={selected === item.focusId || (screen === "activate" && WAITING_STATES.has(item.state)) ? "page" : undefined}
+            disabled={!readable(item) && !(canAct && WAITING_STATES.has(item.state))}
+            onClick={() => readable(item) ? onOrganization(item.focusId) : onScreen("activate")}>
             <Lens state={state} lit={lit}/>
             <span className="obs-org-text"><span className="obs-org-name">{nameOf(item)}</span><span className={`obs-org-sub${lit ? " obs-org-sub-lit" : ""}`}>{fresh > 0 ? fill(fresh === 1 ? t("{n} hallazgo nuevo", "{n} new finding") : t("{n} hallazgos nuevos", "{n} new findings"), { n: fresh }) : lit ? t("Nueva observación", "New observation") : itemStatus(item, t)}</span></span>
           </button>
@@ -391,9 +429,9 @@ function RailSheet({ children, onClose }: { children: React.ReactNode; onClose: 
 
 // ---- desk: the whole portfolio at a glance ------------------------------------------------
 
-function DeskView({ items, readings, seen, nameOf, onOpen, onAdd, reportLit, firstLookUnread }: {
+function DeskView({ items, readings, seen, nameOf, onOpen, onAdd, onActivate, reportLit, firstLookUnread }: {
   firstLookUnread?: readonly string[]; items: Item[]; readings: Record<string, Reading | "failed">; seen: SeenStore; nameOf: (item: Item) => string;
-  onOpen: (focusId: string, item?: string | null) => void; onAdd: () => void; reportLit: (focusId: string, count: number) => void;
+  onOpen: (focusId: string, item?: string | null) => void; onAdd: () => void; onActivate: () => void; reportLit: (focusId: string, count: number) => void;
 }) {
   const { t, locale } = useLocale();
   const rows = items.map(item => {
@@ -402,7 +440,7 @@ function DeskView({ items, readings, seen, nameOf, onOpen, onAdd, reportLit, fir
     const lit = reading && reading !== "failed" ? litOrFirstLook(seen[item.focusId]?.keys, insights, firstLookUnread) : new Set<string>();
     return { item, reading, insights, lit };
   });
-  const attention = rows.filter(r => lensState(r.item) === "low" || r.item.state === "IDENTITY_PENDING" && !r.item.observation || r.reading === "failed");
+  const attention = rows.filter(r => lensState(r.item) === "low" || r.item.state === "IDENTITY_PENDING" && !r.item.observation || WAITING_STATES.has(r.item.state) || r.reading === "failed");
   const loaded = rows.filter(r => r.reading && r.reading !== "failed").length;
   const readableCount = items.filter(readable).length;
   const all = rows.flatMap(r => r.insights.map(insight => ({ ...r, insight })));
@@ -427,7 +465,7 @@ function DeskView({ items, readings, seen, nameOf, onOpen, onAdd, reportLit, fir
         rows={clarify.map(r => ({ key: r.insight.id + r.item.focusId, org: nameOf(r.item), insight: r.insight, lit: r.lit.has(r.insight.changeKey), open: () => onOpen(r.item.focusId, r.insight.id) }))}/>
       <section className="obs-desk-col obs-lane-unknown" aria-labelledby="desk-attention">
         <h2 id="desk-attention">{t("Necesitan tu atención", "Need your attention")}</h2>
-        {attention.length ? <ul>{attention.map(r => <li key={r.item.focusId}><button className="obs-desk-row" onClick={() => readable(r.item) ? onOpen(r.item.focusId) : onAdd()}>
+        {attention.length ? <ul>{attention.map(r => <li key={r.item.focusId}><button className="obs-desk-row" onClick={() => readable(r.item) ? onOpen(r.item.focusId) : WAITING_STATES.has(r.item.state) ? onActivate() : onAdd()}>
           <span className="obs-desk-org">{nameOf(r.item)}</span><span className="obs-desk-text">{r.reading === "failed" ? t("La lectura no está disponible ahora.", "The reading is unavailable right now.") : itemStatus(r.item, t)}</span>
         </button></li>)}</ul> : <p className="obs-empty">{t("Todas las organizaciones se pueden observar.", "Every organization can be observed.")}</p>}
       </section>
@@ -487,7 +525,7 @@ function DeskColumn({ title, lane, rows, empty }: { title: string; lane: Lane; e
 
 type OrgProps = ObservatoryProps & {
   item: Item; name: string; view: View; itemId: string | null; family: string | null; channel: string | null; locale: string;
-  go: (next: Partial<{ view: View; screen: "account" | "add" | null; item: string | null; organization: string | null; family: string | null; channel: string | null }>, replace?: boolean) => void;
+  go: (next: Partial<{ view: View; screen: "account" | "add" | "activate" | null; item: string | null; organization: string | null; family: string | null; channel: string | null }>, replace?: boolean) => void;
   seen: SeenStore; updateSeen: (change: (store: SeenStore) => SeenStore) => void;
   axentOpen: boolean; setAxentOpen: (open: boolean) => void;
   reportLit: (focusId: string, count: number) => void;

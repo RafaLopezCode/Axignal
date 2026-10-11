@@ -296,6 +296,7 @@ class SqliteSubscriberPortfolioStore:
         request: AddOrganizationRequest,
         now: datetime,
         reason: str | None = None,
+        status: PendingStatus = PendingStatus.IDENTITY_PENDING,
     ) -> None:
         fingerprint = self._fingerprint(["PENDING", request.locator, request.display_label])
         reason = None if reason is None else reason[:160]
@@ -312,10 +313,16 @@ class SqliteSubscriberPortfolioStore:
             if existing is not None:
                 connection.execute(
                     """UPDATE subscriber_portfolio_pending
-                       SET status = 'IDENTITY_PENDING', identity_reason = ?, updated_at = ?
+                       SET status = ?, identity_reason = ?, updated_at = ?
                        WHERE tenant_id = ? AND idempotency_key = ?
                          AND status NOT IN ('RESOLVED','CANCELLED')""",
-                    (reason, now.isoformat(), context.tenant_id, request.idempotency_key),
+                    (
+                        status.value,
+                        reason,
+                        now.isoformat(),
+                        context.tenant_id,
+                        request.idempotency_key,
+                    ),
                 )
                 return
             connection.execute(
@@ -323,7 +330,7 @@ class SqliteSubscriberPortfolioStore:
                        pending_id, tenant_id, idempotency_key, request_fingerprint,
                        locator, display_label, status, created_at, updated_at,
                        identity_reason
-                   ) VALUES (?, ?, ?, ?, ?, ?, 'IDENTITY_PENDING', ?, ?, ?)""",
+                   ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
                 (
                     f"pending_{uuid.uuid4().hex}",
                     context.tenant_id,
@@ -331,6 +338,7 @@ class SqliteSubscriberPortfolioStore:
                     fingerprint,
                     request.locator,
                     request.display_label,
+                    status.value,
                     now.isoformat(),
                     now.isoformat(),
                     reason,
@@ -344,7 +352,11 @@ class SqliteSubscriberPortfolioStore:
                 fingerprint,
                 None,
                 None,
-                AddStatus.IDENTITY_PENDING.value,
+                (
+                    AddStatus.CAPACITY_UNKNOWN.value
+                    if status is PendingStatus.CAPACITY_UNKNOWN
+                    else AddStatus.IDENTITY_PENDING.value
+                ),
                 now,
             )
 
@@ -669,6 +681,26 @@ class SqliteSubscriberPortfolioStore:
             if row is None:
                 raise RuntimeError("new Focus was not persisted")
             return self._entry(row), True
+
+    def resolve_waiting_for_capacity(
+        self,
+        context: TrustedSubscriberContext,
+        locator: str,
+        focus_id: XeedId,
+        now: datetime,
+    ) -> int:
+        """Resolve this tenant's attention that waited for capacity on the same locator."""
+        with self._connect() as connection:
+            connection.execute("BEGIN IMMEDIATE")
+            self._require_membership(connection, context)
+            cursor = connection.execute(
+                """UPDATE subscriber_portfolio_pending
+                   SET status = 'RESOLVED', resolved_focus_id = ?, updated_at = ?
+                   WHERE tenant_id = ? AND locator = ?
+                     AND status IN ('CAPACITY_UNKNOWN','CAPACITY_PENDING','PURCHASE_AUTHORITY_REQUIRED')""",
+                (focus_id, now.isoformat(), context.tenant_id, locator),
+            )
+            return int(cursor.rowcount)
 
     @staticmethod
     def _complete_pending_add(
