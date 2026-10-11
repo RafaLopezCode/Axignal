@@ -185,6 +185,18 @@ def test_composition_is_off_unless_fully_configured(tmp_path: Path) -> None:
         )
         is None
     )
+    assert isinstance(
+        semantic_screen_from_env(
+            {**enabled, "AXIGNAL_SEMANTIC_RUN_TOKEN_BUDGET": "50000"}, data_dir=tmp_path
+        ),
+        SemanticDemandScreen,
+    )
+    assert (
+        semantic_screen_from_env(
+            {**enabled, "AXIGNAL_SEMANTIC_RUN_TOKEN_BUDGET": "50001"}, data_dir=tmp_path
+        )
+        is None
+    )
     assert (
         semantic_screen_from_env(
             {**enabled, "AXIGNAL_TYPESAFE_API_KEY_FILE": "relative"}, data_dir=tmp_path

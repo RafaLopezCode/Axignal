@@ -26,12 +26,28 @@ from application.admin_billing.subscriber_checkout import (
 from domain.admin_billing.checkout_binding import (
     BindingReason,
     BindingStatus,
+    CurrentSubscriptionItems,
     PurchaseIntent,
 )
 from domain.admin_billing.checkout_binding import (
     BindingStatus as CheckoutBindingStatus,
 )
 from domain.identity import TenantId
+
+
+def _verification_time(snapshot: CurrentSubscriptionItems, *, now: datetime) -> datetime | None:
+    """The moment this provider state was retrieved and verified, or None if not credible.
+
+    A retrieval cannot precede the state it read nor lie in the future; either
+    contradiction leaves the projection without a verification (never CURRENT).
+    """
+    retrieved_at = snapshot.retrieved_at
+    state_at = snapshot.provider_state_at
+    if retrieved_at.tzinfo is None or retrieved_at.utcoffset() is None:
+        return None
+    if state_at is None or retrieved_at < state_at or retrieved_at > now:
+        return None
+    return retrieved_at
 
 
 class ReconciliationDisposition(StrEnum):
@@ -183,6 +199,9 @@ class SubscriberPurchaseReconciler:
                 if payment_state is not PaymentState.VERIFIED
                 else current.invoice_ref or projection.verified_invoice_ref
             ),
+            verified_at=(
+                None if capacity is None else _verification_time(current.snapshot, now=now)
+            ),
         )
         self._store.commit_billing_projection(updated)
         return (
@@ -301,6 +320,7 @@ class SubscriberPurchaseReconciler:
             provider_state_at=current.snapshot.provider_state_at,
             paid_through=current.paid_through,
             verified_invoice_ref=current.invoice_ref,
+            verified_at=_verification_time(current.snapshot, now=now),
         )
         completed = replace(attempt, status=AttemptStatus.COMPLETE)
         self._store.record_reconciled_purchase(completed, projection)
@@ -356,6 +376,7 @@ class SubscriberPurchaseReconciler:
             provider_state_at=validation.provider_state_at,
             paid_through=facts.paid_through,
             verified_invoice_ref=facts.invoice_ref,
+            verified_at=_verification_time(facts.current_snapshot, now=now),
         )
         completed = replace(
             attempt,

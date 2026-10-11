@@ -25,8 +25,8 @@ enrollment="$config_dir/enrollment.json"
 subscriber_config="${AXIGNAL_SUBSCRIBER_CONFIGURATION_FILE:-/etc/axignal/subscriber-runtime.conf}"
 
 [ -r "$attention" ] && [ -r "$enrollment" ] || {
-  echo '{"state":"NOT_CONFIGURED"}'
-  exit 0
+  echo '{"state":"NOT_CONFIGURED"}' >&2
+  exit 2
 }
 [ -d "$data_dir" ] || {
   echo '{"state":"NO_DATA_DIRECTORY"}' >&2
