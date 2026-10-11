@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from collections.abc import Callable
 from dataclasses import replace
 from datetime import datetime
 from enum import StrEnum
@@ -71,6 +72,7 @@ class SubscriberPurchaseReconciler:
         provider: SubscriberBillingProvider,
         catalogue_reader: OfferCatalogueReader,
         environment_ref: str,
+        verification_clock: Callable[[], datetime] | None = None,
     ) -> None:
         if not environment_ref.strip():
             raise ValueError("provider environment is required")
@@ -78,6 +80,16 @@ class SubscriberPurchaseReconciler:
         self._provider = provider
         self._catalogue_reader = catalogue_reader
         self._environment_ref = environment_ref
+        self._verification_clock = verification_clock
+
+    def _verification_now(self, request_started_at: datetime) -> datetime:
+        # In production, the provider retrieves its evidence after the request began.
+        # Compare retrieval with the clock AFTER the provider call, not request entry.
+        return (
+            self._verification_clock()
+            if self._verification_clock is not None
+            else request_started_at
+        )
 
     def reconcile_session(
         self, checkout_session_ref: str, *, now: datetime
@@ -200,7 +212,9 @@ class SubscriberPurchaseReconciler:
                 else current.invoice_ref or projection.verified_invoice_ref
             ),
             verified_at=(
-                None if capacity is None else _verification_time(current.snapshot, now=now)
+                None
+                if capacity is None
+                else _verification_time(current.snapshot, now=self._verification_now(now))
             ),
         )
         self._store.commit_billing_projection(updated)
@@ -320,7 +334,7 @@ class SubscriberPurchaseReconciler:
             provider_state_at=current.snapshot.provider_state_at,
             paid_through=current.paid_through,
             verified_invoice_ref=current.invoice_ref,
-            verified_at=_verification_time(current.snapshot, now=now),
+            verified_at=_verification_time(current.snapshot, now=self._verification_now(now)),
         )
         completed = replace(attempt, status=AttemptStatus.COMPLETE)
         self._store.record_reconciled_purchase(completed, projection)
@@ -376,7 +390,7 @@ class SubscriberPurchaseReconciler:
             provider_state_at=validation.provider_state_at,
             paid_through=facts.paid_through,
             verified_invoice_ref=facts.invoice_ref,
-            verified_at=_verification_time(facts.current_snapshot, now=now),
+            verified_at=_verification_time(facts.current_snapshot, now=self._verification_now(now)),
         )
         completed = replace(
             attempt,

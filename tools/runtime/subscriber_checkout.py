@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from datetime import datetime
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Protocol
 from urllib.parse import urlsplit
@@ -286,13 +286,20 @@ def build_stripe_subscriber_checkout_runtime(
         mutations_enabled=settings.mutations_enabled,
     )
     transport = UrllibStripeTransport(provider_config)
-    provider = StripeSubscriberAdapter(config=provider_config, transport=transport)
+
+    def verification_clock() -> datetime:
+        return datetime.now(UTC)
+
+    provider = StripeSubscriberAdapter(
+        config=provider_config, transport=transport, clock=verification_clock
+    )
     store = SqliteSubscriberBillingStore(settings.database_path)
     reconciler = SubscriberPurchaseReconciler(
         store=store,
         provider=provider,
         catalogue_reader=catalogue_reader,
         environment_ref=settings.environment_ref,
+        verification_clock=verification_clock,
     )
     webhook = StripeWebhookVerifier(
         signing_secret=settings.webhook_signing_secret,
