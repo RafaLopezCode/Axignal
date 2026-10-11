@@ -1,3 +1,4 @@
+import { customerStepUpCookie } from "@/lib/customer-access-server";
 import { cookies } from "next/headers";
 import { customerZeroCookie, sameOrigin } from "@/lib/customer-zero-server";
 import { staffStepUpCookie, validateStaffStepUp } from "@/lib/staff-capacity-server";
@@ -40,6 +41,11 @@ export async function POST(request: Request) {
       secure: request.headers.get("origin")?.startsWith("https:") === true,
       path: "/api/admin/staff-capacity", maxAge: 600,
     });
+    jar.set(customerStepUpCookie, parsed.token, {
+      httpOnly: true, sameSite: "strict",
+      secure: request.headers.get("origin")?.startsWith("https:") === true,
+      path: "/api/admin/customer-access", maxAge: 600,
+    });
     return Response.json({ authorized: true, expiresInSeconds: 600 }, { headers: noStore });
   } catch (error) {
     return reply(error instanceof SyntaxError ? "INVALID_SESSION" : "RUNTIME_UNAVAILABLE",
@@ -51,6 +57,10 @@ export async function DELETE(request: Request) {
   if (!sameOrigin(request)) return reply("ORIGIN_REQUIRED", 403);
   (await cookies()).set(staffStepUpCookie, "", {
     path: "/api/admin/staff-capacity", httpOnly: true, sameSite: "strict",
+    secure: request.headers.get("origin")?.startsWith("https:") === true, maxAge: 0,
+  });
+  (await cookies()).set(customerStepUpCookie, "", {
+    path: "/api/admin/customer-access", httpOnly: true, sameSite: "strict",
     secure: request.headers.get("origin")?.startsWith("https:") === true, maxAge: 0,
   });
   return Response.json({ authorized: false }, { headers: noStore });

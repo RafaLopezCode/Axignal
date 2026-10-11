@@ -340,5 +340,19 @@ class SqliteSubscriberIdentityStore:
             )
         return cursor.rowcount == 1
 
+    def active_customer_contexts(
+        self, *, limit: int = 500
+    ) -> tuple[tuple[PrincipalId, TenantId], ...]:
+        """Bounded membership directory for authorized Staff operational reads."""
+        if not 1 <= limit <= 500:
+            raise ValueError("invalid directory limit")
+        with self._connect() as connection:
+            rows = connection.execute(
+                """SELECT principal_id, tenant_id FROM subscriber_memberships
+                WHERE revoked_at IS NULL ORDER BY tenant_id, principal_id LIMIT ?""",
+                (limit,),
+            ).fetchall()
+        return tuple((PrincipalId(row["principal_id"]), TenantId(row["tenant_id"])) for row in rows)
+
 
 __all__ = ["SqliteSubscriberIdentityStore"]

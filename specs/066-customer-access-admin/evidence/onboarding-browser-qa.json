@@ -1,0 +1,14 @@
+{
+  "mode": "CONTROLLED_PROVIDER_LOCAL_RUNTIME",
+  "google": "intercepted, controlled OIDC exchange",
+  "stripe": "not exercised/no payments",
+  "staffUiIssue": true,
+  "signupFragment": true,
+  "oneUseRedemption": true,
+  "tenantCapacity": 1,
+  "organizationActivation": true,
+  "firstProofReady": true,
+  "observatoryVisible": true,
+  "adminReflectsRedemption": true,
+  "pageErrors": []
+}

@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import re
-from collections.abc import Mapping
+from collections.abc import Callable, Mapping
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from typing import Protocol
@@ -11,6 +11,7 @@ from urllib.parse import unquote, urlsplit
 
 from application.admin_billing.subscriber_checkout import SubscriberCheckoutError
 from application.product_mcp.oauth import OAuthError
+from application.subscriber_access.pilot import PilotAccessService
 from application.subscriber_identity.runtime import (
     AuthIntent,
     OidcProviderId,
@@ -19,6 +20,7 @@ from application.subscriber_identity.runtime import (
 )
 from application.subscriber_portfolio.models import PortfolioError
 from application.xeed_access.reader import XeedReadError
+from domain.admin_access import AdminAuthorizationGrant
 from domain.identity import XeedId
 from tools.runtime.subscriber_checkout import SubscriberBillingWebhook
 from tools.runtime.subscriber_configuration import SubscriberSettings
@@ -131,7 +133,11 @@ class SubscriberHttpFacade:
         mcp: SubscriberMcpConsentPort | None = None,
         mcp_http: object | None = None,
         staff: object | None = None,
+        pilot_admin: PilotAccessService | None = None,
+        customer_read: Callable[[AdminAuthorizationGrant], dict[str, object]] | None = None,
     ) -> None:
+        self.pilot_admin = pilot_admin
+        self.customer_read = customer_read
         self.settings = settings
         self.identity = identity
         self.workflow = workflow

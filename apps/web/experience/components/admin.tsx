@@ -3,8 +3,8 @@ import Link from "next/link";
 import { useState, useRef, useEffect } from "react";
 import { ArrowUpRight, ChevronRight, Eye, LockKeyhole, Menu, X } from "lucide-react";
 import { CustomerZero } from "./customer-zero";
-import { PilotTestAccounts } from "./pilot-test-accounts";
-import { StaffCapacity } from "./staff-capacity";
+import { CustomerAccessPanel } from "./customer-access";
+
 import { adminDomains, connectedDomains } from "@/lib/admin-model";
 import { useLocale } from "@/lib/locale";
 import { Brand, IconButton, LocaleToggle, useFocusTrap } from "./ui";
@@ -162,8 +162,7 @@ export function Admin({ initialDomain = CUSTOMER_ZERO }: { initialDomain?: strin
                 <h1>{copy(domain.name)}</h1>
                 <p>{copy(domain.question)}</p>
               </header>
-              {domain.id === "customers" && <StaffCapacity />}
-              {domain.id === "customers" && <PilotTestAccounts />}
+              {domain.id === "customers" && <CustomerAccessPanel />}
               {!connectedDomains.has(domain.id) && (
                 <section className="admin-notice" aria-labelledby="admin-notice-title">
                   <h2 id="admin-notice-title">{t("Todavía no conectado a esta interfaz", "Not connected to this interface yet")}</h2>

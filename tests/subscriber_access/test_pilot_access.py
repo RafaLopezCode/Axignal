@@ -31,8 +31,9 @@ def test_invite_secret_is_hashed_single_scope_and_replay_safe(tmp_path: Path) ->
     assert redeemed.grant.tenant_id == context.tenant_id
 
     replay = service.redeem(context, invite.invite_token, now=NOW + timedelta(minutes=2))
-    assert replay.accepted is True
-    assert replay.grant == redeemed.grant
+    assert replay.accepted is False
+    assert replay.grant is None
+    assert service.active_grant(context.tenant_id, now=NOW + timedelta(minutes=2)) == redeemed.grant
 
     stolen = service.redeem(_context("two"), invite.invite_token, now=NOW + timedelta(minutes=3))
     assert stolen.accepted is False
