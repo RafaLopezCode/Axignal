@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState, useRef } from "react";
 import { useLocale } from "@/lib/locale";
-import { customerAccess, issuedInvite, pilotLink, activationCause, type CustomerAccess, type CustomerAction } from "@/lib/customer-access";
+import { customerAccess, issuedInvite, publicPilotLink, activationCause, type CustomerAccess, type CustomerAction } from "@/lib/customer-access";
 import { StaffCapacity } from "./staff-capacity";
 import { PilotTestAccounts } from "./pilot-test-accounts";
 
@@ -86,7 +86,7 @@ export function CustomerAccessPanel() {
           if (!commandKey.current) commandKey.current = crypto.randomUUID();
           void run(async () => {
             const invite = issuedInvite.parse(await mutate("issue", { reason: reason.trim(), inviteHours: hours, idempotencyKey: commandKey.current }));
-            setLink(pilotLink(window.location.origin, invite.inviteToken)); commandKey.current = ""; setReason("");
+            setLink(publicPilotLink(invite.inviteToken)); commandKey.current = ""; setReason("");
             await refresh(); linkField.current?.focus();
           });
         }}>

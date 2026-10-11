@@ -44,6 +44,10 @@ export function pilotLink(origin: string, token: string): string {
   url.hash = "pilot=" + token;
   return url.href;
 }
+// Operator-only Admin runs on loopback; invitees must receive a public HTTPS URL.
+export function publicPilotLink(token: string): string {
+  return pilotLink("https://axignal.com", token);
+}
 export function activationCause(c: CustomerAccess["customers"][number]): "PAYMENT" | "ACCESS" | "CAPACITY" | "IDENTITY" | "RUNTIME" | "OBSERVATION" | "READY" {
   if (c.capacityCurrentness !== "CURRENT") return c.billing && c.billing.paymentState !== "VERIFIED" ? "PAYMENT" : "ACCESS";
   if (c.organizations.some(o => ["CAPACITY_UNKNOWN", "CAPACITY_PENDING", "PURCHASE_AUTHORITY_REQUIRED"].includes(o.state))) return "CAPACITY";
