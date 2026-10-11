@@ -125,6 +125,26 @@ def test_unchanged_paid_subscription_is_reverified_at_5_minutes_10_minutes_and_2
     assert added["state"] == "CREATED", added
 
 
+def test_provider_read_after_request_start_is_not_rejected_as_future_evidence(
+    request: pytest.FixtureRequest,
+):
+    paid = _Paid(request.getfixturevalue("paid_journey"))
+    paid.wait(timedelta(minutes=10))
+    original_read = paid.provider.read_current_subscription
+
+    def read_with_network_latency(projection: BillingProjection) -> Any:
+        # The request starts before Stripe responds. Retrieval happens later.
+        paid.clock.advance(seconds=2)
+        return original_read(projection)
+
+    paid.provider.read_current_subscription = read_with_network_latency
+    portfolio = paid.portfolio()
+
+    assert portfolio["capacityCurrentness"] == "CURRENT"
+    assert portfolio["capacity"] == 1
+    assert paid.projection().verified_at == paid.clock.now()
+
+
 def test_refresh_purchase_recovers_a_stale_projection_by_consulting_the_provider(
     request: pytest.FixtureRequest,
 ):

@@ -420,6 +420,7 @@ def paid_journey(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
                 provider=provider,
                 catalogue_reader=catalogue_reader,
                 environment_ref=settings.environment_ref,
+                verification_clock=clock.now,
             )
             retry_worker = SubscriberReconciliationWorker(store=store, reconciler=reconciler)
             return build_subscriber_checkout_runtime(
