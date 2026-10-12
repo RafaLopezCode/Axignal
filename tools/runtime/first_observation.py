@@ -86,6 +86,7 @@ from pipeline.entity_resolution.gleif_group import GleifGroupReader
 from pipeline.first_observation.sqlite_store import SqliteFirstObservationStore
 from pipeline.geo.nominatim import NominatimReverseGeocoder
 from pipeline.observation_memory.sqlite_store import SqliteObservationMemory
+from tools.runtime.field_performance import field_performance_from_env
 from tools.runtime.subscriber_portfolio import SubscriberPortfolioRuntime
 
 ENABLED_KEY = "AXIGNAL_FIRST_OBSERVATION_ENABLED"
@@ -982,6 +983,9 @@ def build_first_observation(
         policy=policy,
         rights=rights_policy,
         geocoder=_geocoder(root, overrides),
+        field_performance=None
+        if overrides.source_ports is not None or overrides.feeds is not None
+        else field_performance_from_env(root),
     )
     try:
         daily_jobs = int(values.get(DAILY_JOBS_KEY, "500"))
