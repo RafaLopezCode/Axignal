@@ -77,6 +77,7 @@ from application.subscriber_portfolio.models import (
 from application.subscriber_projection.subscriber_runtime import SubscriberEconomicRuntime
 from application.world_demand.index import DemandIndexPort, SliceFeedPort, WorldDemandIngestor
 from application.world_demand.live import LiveDemandReader, apply_live_demand
+from application.world_demand.relations import AwardStore, apply_public_awards
 from application.xeed_access.reader import TrustedRequestContext
 from domain.evidence.epistemics import Currentness
 from domain.identity import OrganizationId, PrincipalId, TenantId, XeedId
@@ -349,7 +350,9 @@ class FirstObservationRuntime:
         ingestor: WorldDemandIngestor | None = None,
         purge_canonical_raw: Callable[[datetime], int] | None = None,
         live_demand: LiveDemandReader | None = None,
+        awards: AwardStore | None = None,
     ) -> None:
+        self._awards = awards
         self._purge_canonical_raw = purge_canonical_raw
         self._live_demand = live_demand
         self.ingestor = ingestor
@@ -687,6 +690,10 @@ class FirstObservationRuntime:
                 view, proof, self._live_demand, now=self._clock.now(), directed=directed
             )
             view["demandMarkets"] = {"directed": list(directed)}
+            # Relationships and competition from published public contract awards.
+            view = apply_public_awards(
+                view, proof, self._awards, now=self._clock.now(), countries=lambda: directed
+            )
         if view is not None and proof is not None and proof.get("publicUnderstanding"):
             from application.first_observation.understanding import compare, public_report
 
@@ -891,7 +898,9 @@ def build_first_observation(
             UrllibPlacspTransport,
         )
 
-        feeds[PLACSP_SOURCE_ID] = PlacspFeedAdapter(UrllibPlacspTransport(), clock=clock.now)
+        feeds[PLACSP_SOURCE_ID] = PlacspFeedAdapter(
+            UrllibPlacspTransport(), clock=clock.now, awards_sink=index.upsert_awards
+        )
         ports[PLACSP_SOURCE_ID] = DemandIndexPort(index, None, clock=clock.now)
         index.demand(
             DemandSlice(
@@ -944,6 +953,7 @@ def build_first_observation(
         daily_jobs=max(0, daily_jobs),
         ingestor=ingestor,
         live_demand=LiveDemandReader(index, sources=tuple(ports), clock=clock.now),
+        awards=index,
         purge_canonical_raw=(
             lambda at: observation_memory.purge_first_observation_content(
                 now=at,

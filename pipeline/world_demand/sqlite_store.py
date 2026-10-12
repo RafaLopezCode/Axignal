@@ -10,12 +10,13 @@ import json
 import sqlite3
 from collections.abc import Iterator, Sequence
 from contextlib import contextmanager
-from datetime import datetime
+from datetime import date, datetime
 from pathlib import Path
 from typing import Any
 
 from application.observation_intelligence.contracts import SourceCapability, TaxonomyCode
 from application.observation_intelligence.findings import ProcurementRecord
+from application.world_demand.awards import AwardRecord, normalized_name
 from application.world_demand.index import DemandSlice, SliceState, country_of
 
 
@@ -59,7 +60,109 @@ def _time(value: object) -> datetime | None:
     return None if value is None else datetime.fromisoformat(str(value))
 
 
+def _encode_award(award: AwardRecord) -> str:
+    return json.dumps(
+        {
+            "source_id": award.source_id, "record_id": award.record_id, "lot": award.lot,
+            "title": award.title, "buyer_name": award.buyer_name,
+            "winner_name": award.winner_name, "winner_id": award.winner_id,
+            "amount": award.amount, "currency": award.currency,
+            "awarded_on": None if award.awarded_on is None else award.awarded_on.isoformat(),
+            "offers_received": award.offers_received,
+            "demand_codes": [[c.scheme, c.code] for c in award.demand_codes],
+            "places": [[p.scheme, p.code] for p in award.places],
+            "source_url": award.source_url,
+        },
+        ensure_ascii=False,
+        sort_keys=True,
+    )  # fmt: skip
+
+
+def _decode_award(raw: dict[str, Any]) -> AwardRecord:
+    return AwardRecord(
+        source_id=str(raw["source_id"]), record_id=str(raw["record_id"]), lot=str(raw["lot"]),
+        title=str(raw["title"]), buyer_name=raw["buyer_name"], winner_name=str(raw["winner_name"]),
+        winner_id=raw["winner_id"], amount=raw["amount"], currency=raw["currency"],
+        awarded_on=None if raw["awarded_on"] is None else date.fromisoformat(raw["awarded_on"]),
+        offers_received=raw["offers_received"],
+        demand_codes=tuple(TaxonomyCode(str(s), str(c)) for s, c in raw["demand_codes"]),
+        places=tuple(TaxonomyCode(str(s), str(c)) for s, c in raw["places"]),
+        source_url=str(raw["source_url"]),
+    )  # fmt: skip
+
+
 class SqliteWorldDemandIndex:
+    def upsert_awards(self, awards: Sequence[AwardRecord]) -> int:
+        """Published award results; idempotent (one row per folder, lot and winner)."""
+        rows = [
+            (
+                award.key,
+                award.source_id,
+                award.winner_id,
+                normalized_name(award.winner_name),
+                next((c for p in award.places if (c := country_of(p))), None),
+                None if award.awarded_on is None else award.awarded_on.isoformat(),
+                _encode_award(award),
+            )
+            for award in awards
+        ]
+        if not rows:
+            return 0
+        with self._connect() as db:
+            db.executemany(
+                """INSERT INTO wd_awards
+                (award_key, source_id, winner_id, winner_name_norm, country, awarded_on, payload)
+                VALUES (?,?,?,?,?,?,?) ON CONFLICT(award_key) DO UPDATE SET
+                payload=excluded.payload, awarded_on=excluded.awarded_on""",
+                rows,
+            )
+        return len(rows)
+
+    def awards_won_by(
+        self, *, tax_ids: Sequence[str] = (), names: Sequence[str] = (), limit: int = 500
+    ) -> tuple[AwardRecord, ...]:
+        """Awards whose winner has one of these tax ids, or exactly one of these names."""
+        ids = [t for t in tax_ids if t]
+        norms = [n for n in (normalized_name(x) for x in names) if len(n) >= 4]
+        if not ids and not norms:
+            return ()
+        clauses, params = [], []
+        if ids:
+            clauses.append(f"winner_id IN ({','.join('?' * len(ids))})")
+            params += ids
+        if norms:
+            clauses.append(f"winner_name_norm IN ({','.join('?' * len(norms))})")
+            params += norms
+        with self._connect() as db:
+            rows = db.execute(
+                f"SELECT payload FROM wd_awards WHERE {' OR '.join(clauses)} "
+                "ORDER BY awarded_on DESC LIMIT ?",
+                (*params, limit),
+            ).fetchall()
+        return tuple(_decode_award(json.loads(row["payload"])) for row in rows)
+
+    def awards_in(
+        self, country: str, *, since: date, limit: int = 20000
+    ) -> tuple[AwardRecord, ...]:
+        """Awards in a country since a date, for comparing who wins what (POTENTIAL reading)."""
+        with self._connect() as db:
+            rows = db.execute(
+                "SELECT payload FROM wd_awards WHERE country=? AND awarded_on>=? "
+                "ORDER BY awarded_on DESC LIMIT ?",
+                (country, since.isoformat(), limit),
+            ).fetchall()
+        return tuple(_decode_award(json.loads(row["payload"])) for row in rows)
+
+    def awards_coverage(self, country: str) -> tuple[date | None, int]:
+        """The earliest award date held for a country and how many awards are held."""
+        with self._connect() as db:
+            row = db.execute(
+                "SELECT MIN(awarded_on) AS since, COUNT(*) AS held FROM wd_awards WHERE country=?",
+                (country,),
+            ).fetchone()
+        since = None if row is None or row["since"] is None else date.fromisoformat(row["since"])
+        return since, 0 if row is None else int(row["held"])
+
     def __init__(self, database_path: str | Path) -> None:
         self._path = Path(database_path)
         self._path.parent.mkdir(parents=True, exist_ok=True)
@@ -97,6 +200,18 @@ class SqliteWorldDemandIndex:
                     cursor_page INTEGER NOT NULL DEFAULT 1,
                     traversal_since TEXT
                 );
+                CREATE TABLE IF NOT EXISTS wd_awards (
+                    award_key TEXT PRIMARY KEY,
+                    source_id TEXT NOT NULL,
+                    winner_id TEXT,
+                    winner_name_norm TEXT NOT NULL,
+                    country TEXT,
+                    awarded_on TEXT,
+                    payload TEXT NOT NULL
+                );
+                CREATE INDEX IF NOT EXISTS idx_wd_awards_winner ON wd_awards(winner_id);
+                CREATE INDEX IF NOT EXISTS idx_wd_awards_name ON wd_awards(winner_name_norm);
+                CREATE INDEX IF NOT EXISTS idx_wd_awards_country ON wd_awards(country, awarded_on);
                 """
             )
 

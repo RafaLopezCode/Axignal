@@ -118,6 +118,16 @@ export function activityLabel(code: string, fallback: string, t: Translate): str
 export function discoveryCopy(d: Discovery, t: Translate, locale = "en"): { finding: string; why: string } {
   const title = String(d.detail.title ?? d.statement);
   if (d.kind === "ACTIVITY") return { finding: `${t("Actividad probable", "Likely activity")}: ${activityLabel(d.code, d.statement, t)}`, why: t("Orienta dónde buscar demanda. Es una hipótesis con su cita, no una capacidad verificada.", "It directs where to look for demand. It is a hypothesis with its quote, not a verified capability.") };
+  if (d.kind === "RELATIONSHIP") {
+    const n = Number(d.detail.contracts ?? 0);
+    return { finding: t("Cliente público: {buyer} · {n} contratos ganados", "Public client: {buyer} · {n} contracts won").replace("{buyer}", d.statement).replace("{n}", String(n)),
+      why: d.epistemicState === "OBSERVED"
+        ? t("Adjudicaciones oficiales a su NIF. Es una relación pasada documentada, no una garantía de negocio futuro.", "Official awards to its tax ID. A documented past relationship, not a guarantee of future business.")
+        : t("Adjudicaciones a una empresa con su mismo nombre legal; sin NIF confirmado, la atribución sigue siendo potencial.", "Awards to a company with the same legal name; without a confirmed tax ID, the attribution stays potential.") };
+  }
+  if (d.kind === "COMPETITION") return {
+    finding: t("Competidor posible: {name} · {n} contratos en sus mismos códigos", "Possible competitor: {name} · {n} contracts under the same codes").replace("{name}", d.statement).replace("{n}", String(d.detail.contracts ?? 0)),
+    why: t("Gana contratos públicos con los mismos códigos de actividad. Que compita con ella es una inferencia, no una clasificación de calidad.", "It wins public contracts under the same activity codes. That it competes with this organization is an inference, not a quality ranking.") };
   if (d.kind === "DEMAND") {
     const deadline = typeof d.detail.deadline === "string" ? d.detail.deadline.slice(0, 10) : null;
     const buyer = typeof d.detail.buyer === "string" ? d.detail.buyer : null;
@@ -158,6 +168,7 @@ export function discoveryCopy(d: Discovery, t: Translate, locale = "en"): { find
     case "ACTIVITY_NOT_ESTABLISHED": return { finding: t("Qué ofrece no está establecido todavía.", "What it offers is not established yet."), why: t("No buscamos demanda sobre una suposición.", "We do not search for demand on an assumption.") };
     case "LOCATION_NOT_DECLARED": return { finding: t("No hemos establecido su ubicación ni su ámbito geográfico de servicio.", "Its location and geographic service scope have not been established."), why: t("No elegimos un mercado por defecto.", "We do not pick a default market.") };
     case "DEMAND_NOT_ROUTABLE": case "NO_ROUTABLE_DEMAND_QUESTION": return { finding: t("Ninguna fuente de demanda gobernada aplica todavía a esta actividad y lugar.", "No governed demand source applies yet to this activity and place."), why: t("No es una ausencia de oportunidades.", "It is not an absence of opportunities.") };
+    case "NO_PUBLIC_AWARDS_FOUND": return { finding: t("No hay adjudicaciones públicas a su nombre en el periodo cubierto.", "No public contract awards in its name in the period covered."), why: t("Solo cubre adjudicaciones publicadas desde la fecha indicada; no significa que no tenga contratos.", "It only covers awards published since the stated date; it does not mean it has no contracts.") };
     case "NO_RELEVANT_DEMAND_FOUND": return { finding: t("Las fuentes consultadas no tienen ahora demanda que coincida.", "The sources searched have no matching demand right now."), why: t("Sin resultado no es sin oportunidad; volveremos a observar.", "No result is not no opportunity; we will observe again.") };
     case "NOT_AN_OPERATING_BUSINESS_SITE": return { finding: t("La página no parece la web de una actividad en marcha.", "The page does not read as an operating business website."), why: t("Es un juicio no autoritativo sobre la página, no sobre la organización.", "It is a non-authoritative judgment about the page, not about the organization.") };
     case "NO_PUBLIC_WEBSITE": return { finding: t("No hay una web pública que observar.", "There is no public website to observe."), why: t("Añade su web para empezar la observación.", "Add its website to start observing.") };
@@ -242,6 +253,13 @@ export function basisRows(d: Discovery, t: Translate, locale: string): Array<[st
   if (typeof detail.buyer === "string") rows.push([t("Comprador", "Buyer"), detail.buyer]);
   if (typeof detail.deadline === "string") rows.push([t("Plazo", "Deadline"), detail.deadline]);
   if (detail.checks && typeof detail.checks === "object" && !detail.audit) for (const [key, value] of Object.entries(detail.checks as Record<string, unknown>)) rows.push([checkLabel(key, t), Array.isArray(value) ? value.join(", ") || "—" : value === true ? t("Sí", "Yes") : value === false ? t("No", "No") : String(value ?? "—")]);
+  if (typeof detail.contracts === "number") rows.push([t("Contratos", "Contracts"), String(detail.contracts)]);
+  if (typeof detail.amount === "number" && detail.amount > 0) rows.push([t("Importe adjudicado (sin IVA)", "Awarded amount (excl. VAT)"), `${detail.amount.toLocaleString(locale, { maximumFractionDigits: 0 })} ${typeof detail.currency === "string" ? detail.currency : ""}`]);
+  if (typeof detail.matchedBy === "string") rows.push([t("Atribuida por", "Attributed by"), detail.matchedBy === "TAX_ID" ? t("NIF", "Tax ID") : t("nombre legal", "legal name")]);
+  if (typeof detail.medianOffers === "number") rows.push([t("Ofertas recibidas (mediana)", "Offers received (median)"), String(detail.medianOffers)]);
+  if (Array.isArray(detail.buyers) && detail.buyers.length) rows.push([t("Compradores", "Buyers"), detail.buyers.join(" · ")]);
+  if (Array.isArray(detail.awards)) for (const a of (detail.awards as Array<Record<string, unknown>>).slice(0, 5)) rows.push([t("Adjudicación", "Award"), [a.title, a.buyer, a.awardedOn, typeof a.amount === "number" ? `${a.amount.toLocaleString(locale, { maximumFractionDigits: 0 })} ${a.currency ?? ""}` : null].filter(Boolean).join(" · ")]);
+  if (typeof detail.coverageSince === "string") rows.push([t("Cobertura desde", "Coverage since"), detail.coverageSince]);
   if (Array.isArray(detail.signals)) for (const s of detail.signals as Array<{ kind?: unknown; value?: unknown }>) rows.push([signalLabel(String(s.kind ?? ""), t), String(s.value ?? "")]);
   if (typeof detail.limitation === "string") rows.push([t("Límite", "Limitation"), detail.limitation]);
   if (typeof detail.impact === "string") rows.push([t("Impacto", "Impact"), auditImpact(detail.impact, t)]);

@@ -252,6 +252,9 @@ class DiscoveryKind(StrEnum):
     # a finding into the SEO or GEO channel by this kind and never by its wording.
     SEARCH_VISIBILITY = "SEARCH_VISIBILITY"
     GENERATIVE_VISIBILITY = "GENERATIVE_VISIBILITY"
+    # Read from published public contract awards (relationships family).
+    RELATIONSHIP = "RELATIONSHIP"
+    COMPETITION = "COMPETITION"
     SIGNIFICANT_UNKNOWN = "SIGNIFICANT_UNKNOWN"
 
 
