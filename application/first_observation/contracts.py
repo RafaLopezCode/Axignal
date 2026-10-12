@@ -252,9 +252,13 @@ class DiscoveryKind(StrEnum):
     # a finding into the SEO or GEO channel by this kind and never by its wording.
     SEARCH_VISIBILITY = "SEARCH_VISIBILITY"
     GENERATIVE_VISIBILITY = "GENERATIVE_VISIBILITY"
+    # Headlines publishers syndicate that name the organization (reputation and activity).
+    MENTION = "MENTION"
     # Read from published public contract awards (relationships family).
     RELATIONSHIP = "RELATIONSHIP"
     COMPETITION = "COMPETITION"
+    # Economic magnitudes from a public source, with source, year and attribution.
+    ECONOMIC_FACT = "ECONOMIC_FACT"
     SIGNIFICANT_UNKNOWN = "SIGNIFICANT_UNKNOWN"
 
 

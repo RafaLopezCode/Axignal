@@ -34,12 +34,13 @@ from application.economic_discovery.observation_memory import (
 )
 from application.economic_discovery.observation_reuse import ReusePurpose
 from application.economic_discovery.source_registry import SourceRegistryEntry
+from application.economics import economic_discoveries
 from application.first_observation.contracts import (
     AttentionTarget,
     IdentityLink,
     TargetKind,
 )
-from application.first_observation.geography import EU_MEMBERS
+from application.first_observation.geography import EU_MEMBERS, country_name_en
 from application.first_observation.metrics import runtime_metrics
 from application.first_observation.policy import FirstObservationPolicy
 from application.first_observation.research import ResearchPlan
@@ -57,6 +58,7 @@ from application.first_observation.service import (
 from application.first_observation.shared_findings import SharedFindingsPort
 from application.first_observation.site import PageReading
 from application.first_observation.visibility import first_proof_live_deadline, withdraw_first_proof
+from application.generative_visibility.probe import ProbeSubject, geo_discoveries
 from application.observation_intelligence import (
     OperationalLearning,
     SourceObservationPort,
@@ -66,6 +68,7 @@ from application.observation_intelligence.loop import OpportunityCandidate, run_
 from application.observation_runtime.replay import FindingsLedger
 from application.organization_admission.locator import LocatorError, parse_locator, public_domain
 from application.organization_group import group_discoveries
+from application.press.mentions import press_discoveries
 from application.semantic_layer.cascade import SemanticCascade
 from application.subscriber_identity.runtime import Clock
 from application.subscriber_portfolio.models import (
@@ -82,11 +85,14 @@ from application.world_demand.relations import AwardStore, apply_public_awards
 from application.xeed_access.reader import TrustedRequestContext
 from domain.evidence.epistemics import Currentness
 from domain.identity import OrganizationId, PrincipalId, TenantId, XeedId
+from pipeline.economics.wikidata import WikidataEconomics
 from pipeline.entity_resolution.gleif_group import GleifGroupReader
 from pipeline.first_observation.sqlite_store import SqliteFirstObservationStore
 from pipeline.geo.nominatim import NominatimReverseGeocoder
 from pipeline.observation_memory.sqlite_store import SqliteObservationMemory
+from pipeline.press.sqlite_store import PressIngestor, SqlitePressIndex
 from tools.runtime.field_performance import field_performance_from_env
+from tools.runtime.generative_probe import GenerativeProbeRunner, generative_probe_from_values
 from tools.runtime.subscriber_portfolio import SubscriberPortfolioRuntime
 
 ENABLED_KEY = "AXIGNAL_FIRST_OBSERVATION_ENABLED"
@@ -354,9 +360,15 @@ class FirstObservationRuntime:
         ingestor: WorldDemandIngestor | None = None,
         purge_canonical_raw: Callable[[datetime], int] | None = None,
         live_demand: LiveDemandReader | None = None,
+        press: tuple[PressIngestor, SqlitePressIndex] | None = None,
         awards: AwardStore | None = None,
         groups: GleifGroupReader | None = None,
+        geo: GenerativeProbeRunner | None = None,
+        economics: WikidataEconomics | None = None,
     ) -> None:
+        self._economics = economics
+        self._geo = geo
+        self._press = press
         self._groups = groups
         self._awards = awards
         self._purge_canonical_raw = purge_canonical_raw
@@ -555,6 +567,53 @@ class FirstObservationRuntime:
         with self._lock:
             return len(self.ingestor.run(max_slices=max_slices))
 
+    def measure_geo(self) -> int:
+        """Run queued GEO measurements (a few per tick, under the daily cap)."""
+        return 0 if self._geo is None else self._geo.run()
+
+    def _with_geo(self, view: dict[str, object]) -> dict[str, object]:
+        """Show a stored GEO measurement; queue one when none is fresh (never asks inline)."""
+        if self._geo is None:
+            return view
+        held = view.get("discoveries")
+        discoveries = held if isinstance(held, list) else []
+        activity = next(
+            (d for d in discoveries if isinstance(d, Mapping) and d.get("kind") == "ACTIVITY"), None
+        )
+        target = view.get("target")
+        name = target.get("name") if isinstance(target, Mapping) else None
+        website = target.get("website") if isinstance(target, Mapping) else None
+        scopes = view.get("attentionScopes")
+        country = None
+        if isinstance(scopes, list) and scopes and isinstance(scopes[0], Mapping):
+            parts = str(scopes[0].get("jurisdiction") or "").split("/")
+            country = parts[1] if parts and parts[0] == "EU" and len(parts) > 1 else parts[0]
+        place = country_name_en(country)
+        if not activity or not name or not place:
+            return view
+        subject = ProbeSubject(
+            name=str(name),
+            domain=(urlsplit(str(website)).hostname or "").removeprefix("www.") or None
+            if website
+            else None,
+            activity=str(activity.get("statement") or "").lower(),
+            place=place,
+            language="en",
+        )
+        measurement = self._geo.measurement(subject)
+        self._geo.request(subject)  # no-op while fresh or queued
+        if measurement is None:
+            return view
+        found = geo_discoveries(measurement, observed_at=str(view.get("observedAt") or ""))
+        view["discoveries"] = [*discoveries, *found]
+        return view
+
+    def ingest_press(self) -> int:
+        """Read due publisher feeds into the world press index (off the First Proof path)."""
+        if self._press is None:
+            return 0
+        return self._press[0].run()
+
     def purge(self) -> dict[str, int]:
         """Retention enforcement for First Observation's own stores."""
         now = self._clock.now()
@@ -595,7 +654,15 @@ class FirstObservationRuntime:
             self._wake.wait(timeout=60)
             self._wake.clear()
             # Each stage fails alone: one bad row never stalls the other stages.
-            for stage in (self.enqueue_due, self.drain, self.ingest_demanded, self.purge):
+            stages = (
+                self.enqueue_due,
+                self.drain,
+                self.ingest_demanded,
+                self.ingest_press,
+                self.measure_geo,
+                self.purge,
+            )
+            for stage in stages:
                 try:
                     stage()
                 except Exception:  # the next wake retries; jobs keep leases and attempts
@@ -669,7 +736,7 @@ class FirstObservationRuntime:
         self, view: dict[str, object], organization_id: str | None
     ) -> dict[str, object]:
         """Parents and subsidiaries from GLEIF when the organization has an LEI."""
-        if self._groups is None:
+        if self._groups is None and self._economics is None:
             return view
         verified: tuple[str, ...] = ()
         identifiers_for = getattr(self._websites, "identifiers_for", None)
@@ -685,13 +752,23 @@ class FirstObservationRuntime:
         lei = next(iter(verified), None) or next(iter(declared), None)
         if not lei:
             return view
+        observed_at = str(view.get("observedAt") or "")
+        found: list[dict[str, object]] = []
         try:
-            group = self._groups.group(lei)
+            if self._groups is not None:
+                found += group_discoveries(
+                    self._groups.group(lei), verified=lei in verified, observed_at=observed_at
+                )
         except Exception:  # registry unavailable: the group stays unknown, nothing invented
-            return view
-        found = group_discoveries(
-            group, verified=lei in verified, observed_at=str(view.get("observedAt") or "")
-        )
+            pass
+        try:
+            if self._economics is not None:
+                # Economic magnitudes Wikidata states for the item carrying this LEI.
+                found += economic_discoveries(
+                    self._economics.facts(lei), verified=lei in verified, observed_at=observed_at
+                )
+        except Exception:  # unavailable: the magnitudes stay unknown
+            pass
         if found:
             view["discoveries"] = [*discoveries, *found]
         return view
@@ -727,7 +804,19 @@ class FirstObservationRuntime:
                 view, proof, self._live_demand, now=self._clock.now(), directed=directed
             )
             view["demandMarkets"] = {"directed": list(directed)}
+            if self._press is not None:
+                # Reputation and activity: headlines that name it, from the press index.
+                target = view.get("target")
+                website = target.get("website") if isinstance(target, Mapping) else None
+                host = urlsplit(str(website)).hostname if website else None
+                mentions = press_discoveries(
+                    view, self._press[1], now=self._clock.now(), own_domain=host
+                )
+                if mentions:
+                    held = view.get("discoveries")
+                    view["discoveries"] = [*(held if isinstance(held, list) else []), *mentions]
             view = self._with_group(view, organization_id)
+            view = self._with_geo(view)
             # Relationships and competition from published public contract awards.
             view = apply_public_awards(
                 view, proof, self._awards, now=self._clock.now(), countries=lambda: directed
@@ -859,6 +948,19 @@ def website_rights_entry(
         robots_decision=RobotsDecision.PERMITTED,
         robots_policy_ref="robots.txt evaluated before every First Observation fetch",
     )  # fmt: skip
+
+
+def _press(
+    root: Path, clock: Clock, overrides: FirstObservationOverrides
+) -> tuple[PressIngestor, SqlitePressIndex] | None:
+    """The world press index; off in controlled tests that inject their own sources."""
+    if overrides.source_ports is not None or overrides.feeds is not None:
+        return None
+    from application.press.contracts import FEEDS
+    from pipeline.press.rss import UrllibFeedTransport
+
+    store = SqlitePressIndex(root / "press-index.sqlite3")
+    return PressIngestor(FEEDS, store, UrllibFeedTransport(FEEDS), clock=clock.now), store
 
 
 def _geocoder(root: Path, overrides: FirstObservationOverrides) -> NominatimReverseGeocoder | None:
@@ -1002,9 +1104,16 @@ def build_first_observation(
         daily_jobs=max(0, daily_jobs),
         ingestor=ingestor,
         live_demand=LiveDemandReader(index, sources=tuple(ports), clock=clock.now),
+        press=_press(root, clock, overrides),
         groups=None
         if overrides.source_ports is not None or overrides.feeds is not None
         else GleifGroupReader(root / "gleif-groups.sqlite3"),
+        geo=None
+        if overrides.source_ports is not None or overrides.feeds is not None
+        else generative_probe_from_values(values, root),
+        economics=None
+        if overrides.source_ports is not None or overrides.feeds is not None
+        else WikidataEconomics(root / "wikidata-economics.sqlite3"),
         awards=index,
         purge_canonical_raw=(
             lambda at: observation_memory.purge_first_observation_content(

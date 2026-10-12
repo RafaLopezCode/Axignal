@@ -118,6 +118,13 @@ export function activityLabel(code: string, fallback: string, t: Translate): str
 export function discoveryCopy(d: Discovery, t: Translate, locale = "en"): { finding: string; why: string } {
   const title = String(d.detail.title ?? d.statement);
   if (d.kind === "ACTIVITY") return { finding: `${t("Actividad probable", "Likely activity")}: ${activityLabel(d.code, d.statement, t)}`, why: t("Orienta dónde buscar demanda. Es una hipótesis con su cita, no una capacidad verificada.", "It directs where to look for demand. It is a hypothesis with its quote, not a verified capability.") };
+  if (d.kind === "MENTION") {
+    const outlet = typeof d.detail.outlet === "string" ? d.detail.outlet : "";
+    if (d.code === "PRESS_RELEASE") return { finding: `${t("Nota de prensa distribuida", "Distributed press release")} · ${outlet}: ${d.statement}`, why: t("Una nota que una organización distribuye sobre sí misma: es su voz, no cobertura independiente.", "A release an organization distributes about itself: its own voice, not independent coverage.") };
+    return d.code === "OWN_PUBLICATION"
+      ? { finding: `${t("Publicado por la propia organización", "Published by the organization itself")}: ${d.statement}`, why: t("Es su propia voz, no una mención de terceros.", "It is its own voice, not a third-party mention.") }
+      : { finding: `${t("Mención en prensa", "Press mention")} · ${outlet}: ${d.statement}`, why: t("El titular nombra a la organización. Que trate de ella no está verificado, y mencionar no es recomendar.", "The headline names the organization. That it is about it is not verified, and a mention is not an endorsement.") };
+  }
   if (d.kind === "RELATIONSHIP" && d.code === "GROUP_PARENT") return {
     finding: `${d.detail.role === "ULTIMATE_PARENT" ? t("Matriz última del grupo", "Group's ultimate parent") : t("Matriz directa", "Direct parent")}: ${d.statement}`,
     why: t("Según el registro mundial de entidades (GLEIF). Es estructura societaria registrada, no una opinión.", "According to the global entity registry (GLEIF). It is registered corporate structure, not an opinion.") };
@@ -138,6 +145,18 @@ export function discoveryCopy(d: Discovery, t: Translate, locale = "en"): { find
   if (d.kind === "COMPETITION") return {
     finding: t("Competidor posible: {name} · {n} contratos en sus mismos códigos", "Possible competitor: {name} · {n} contracts under the same codes").replace("{name}", d.statement).replace("{n}", String(d.detail.contracts ?? 0)),
     why: t("Gana contratos públicos con los mismos códigos de actividad. Que compita con ella es una inferencia, no una clasificación de calidad.", "It wins public contracts under the same activity codes. That it competes with this organization is an inference, not a quality ranking.") };
+  if (d.kind === "ECONOMIC_FACT") {
+    const fact = String(d.detail.fact ?? "");
+    const label = fact === "revenue" ? t("Ingresos", "Revenue") : fact === "netProfit" ? t("Beneficio neto", "Net profit")
+      : fact === "employees" ? t("Empleados", "Employees") : fact === "marketCapitalization" ? t("Capitalización bursátil", "Market capitalization")
+      : fact === "inception" ? t("Año de fundación", "Founded") : fact === "stockExchange" ? t("Cotiza en", "Listed on") : t("Sector", "Industry");
+    const value = typeof d.detail.value === "number"
+      ? `${d.detail.value.toLocaleString(locale, { maximumFractionDigits: 0 })}${typeof d.detail.unit === "string" ? " " + d.detail.unit : ""}`
+      : d.statement;
+    const year = typeof d.detail.year === "string" && fact !== "inception" ? ` (${d.detail.year})` : "";
+    return { finding: `${label}: ${value}${year}`,
+      why: t("Según Wikidata, una fuente comunitaria: no es una cuenta oficial y puede estar desactualizada.", "According to Wikidata, a community source: it is not an official account and may be outdated.") };
+  }
   if (d.kind === "DEMAND") {
     const deadline = typeof d.detail.deadline === "string" ? d.detail.deadline.slice(0, 10) : null;
     const buyer = typeof d.detail.buyer === "string" ? d.detail.buyer : null;
@@ -162,6 +181,18 @@ export function discoveryCopy(d: Discovery, t: Translate, locale = "en"): { find
   if (d.kind === "IDENTITY_HINT") return { finding: `${t("Su web declara", "Its website declares")}: ${d.statement}`, why: t("Es una pista de identidad. Solo un registro puede verificarla.", "It is an identity hint. Only a registry can verify it.") };
   if (d.kind === "PUBLIC_PRESENCE") return { finding: `${t("Web pública observada", "Public website observed")}: ${d.statement}`, why: t("Es la fuente de lo que la organización declara sobre sí misma.", "It is the source of what the organization declares about itself.") };
   if (d.kind === "SEARCH_VISIBILITY") return { finding: `${t("Visibilidad en buscadores medida", "Search visibility measured")}: ${d.statement}`, why: t("Es lo observado para una consulta y unas condiciones concretas. No es una posición general ni explica el motivo.", "It is what was observed for a given query and conditions. It is not a general ranking and does not explain why.") };
+  if (d.kind === "GENERATIVE_VISIBILITY" && d.code === "AI_NAMED_FOR_CATEGORY") return {
+    finding: t("Un asistente de IA la nombra al preguntar por su actividad ({n} de las preguntas)", "An AI assistant names it when asked about its activity ({n} of the questions)").replace("{n}", d.statement),
+    why: t("Medido con preguntas fijas, sin búsqueda web. Nombrar no es recomendar; las respuestas varían entre ejecuciones.", "Measured with fixed questions, without web search. Naming is not recommending; answers vary between runs.") };
+  if (d.kind === "GENERATIVE_VISIBILITY" && d.code === "AI_NOT_NAMED_FOR_CATEGORY") return {
+    finding: t("Un asistente de IA no la nombra al preguntar por su actividad", "An AI assistant does not name it when asked about its activity"),
+    why: t("Quien pregunta a un asistente por proveedores de su actividad no la encuentra en esa respuesta. Es una muestra con sus condiciones, no todo lo que sabe el asistente.", "Someone asking an assistant for providers of its activity does not find it in that answer. It is a sample with its conditions, not all the assistant knows.") };
+  if (d.kind === "GENERATIVE_VISIBILITY" && d.code === "AI_KNOWS_BRAND") return {
+    finding: t("Un asistente de IA reconoce la organización por su nombre", "An AI assistant recognizes the organization by name"),
+    why: t("Al preguntarle directamente, afirma tener conocimiento específico de ella. No verifica que lo que diga sea correcto.", "Asked directly, it states specific knowledge of it. This does not verify that what it says is correct.") };
+  if (d.kind === "GENERATIVE_VISIBILITY" && d.code === "AI_DOES_NOT_KNOW_BRAND") return {
+    finding: t("Un asistente de IA no reconoce la organización por su nombre", "An AI assistant does not recognize the organization by name"),
+    why: t("Al preguntarle directamente, no tiene conocimiento específico de ella: su presencia en fuentes públicas citables puede ser escasa.", "Asked directly, it has no specific knowledge of it: its presence in citable public sources may be thin.") };
   if (d.kind === "GENERATIVE_VISIBILITY") return { finding: `${t("Aparición en respuestas de IA medida", "AI answer appearance measured")}: ${d.statement}`, why: t("Mencionar no es citar, y citar no es recomendar. Es una medición con sus condiciones, no una conclusión sobre el negocio.", "A mention is not a citation, and a citation is not an endorsement. It is a measurement with its conditions, not a conclusion about the business.") };
   if (d.kind === "WEB_REPRESENTATION") return { finding: t("Representación web medida", "Web representation measured"), why: t("Comprobaciones de su propia web, con instrumento y condiciones. No es una posición en buscadores.", "Checks of its own website, with instrument and conditions. It is not a search ranking.") };
   if (d.kind === "REPRESENTATION_GAP" && d.code.startsWith("AUDIT:")) {
@@ -184,6 +215,7 @@ export function discoveryCopy(d: Discovery, t: Translate, locale = "en"): { find
     case "ACTIVITY_NOT_ESTABLISHED": return { finding: t("Qué ofrece no está establecido todavía.", "What it offers is not established yet."), why: t("No buscamos demanda sobre una suposición.", "We do not search for demand on an assumption.") };
     case "LOCATION_NOT_DECLARED": return { finding: t("No hemos establecido su ubicación ni su ámbito geográfico de servicio.", "Its location and geographic service scope have not been established."), why: t("No elegimos un mercado por defecto.", "We do not pick a default market.") };
     case "DEMAND_NOT_ROUTABLE": case "NO_ROUTABLE_DEMAND_QUESTION": return { finding: t("Ninguna fuente de demanda gobernada aplica todavía a esta actividad y lugar.", "No governed demand source applies yet to this activity and place."), why: t("No es una ausencia de oportunidades.", "It is not an absence of opportunities.") };
+    case "NO_PRESS_MENTION_FOUND": return { finding: t("Ningún titular de los medios indexados la nombra.", "No headline in the indexed media names it."), why: t("Solo cubre los medios y fechas indicados; no significa que no tenga cobertura en otros.", "It only covers the stated media and dates; it does not mean it has no coverage elsewhere.") };
     case "NO_PUBLIC_AWARDS_FOUND": return { finding: t("No hay adjudicaciones públicas a su nombre en el periodo cubierto.", "No public contract awards in its name in the period covered."), why: t("Solo cubre adjudicaciones publicadas desde la fecha indicada; no significa que no tenga contratos.", "It only covers awards published since the stated date; it does not mean it has no contracts.") };
     case "NO_RELEVANT_DEMAND_FOUND": return { finding: t("Las fuentes consultadas no tienen ahora demanda que coincida.", "The sources searched have no matching demand right now."), why: t("Sin resultado no es sin oportunidad; volveremos a observar.", "No result is not no opportunity; we will observe again.") };
     case "NOT_AN_OPERATING_BUSINESS_SITE": return { finding: t("La página no parece la web de una actividad en marcha.", "The page does not read as an operating business website."), why: t("Es un juicio no autoritativo sobre la página, no sobre la organización.", "It is a non-authoritative judgment about the page, not about the organization.") };
@@ -269,6 +301,14 @@ export function basisRows(d: Discovery, t: Translate, locale: string): Array<[st
   if (typeof detail.buyer === "string") rows.push([t("Comprador", "Buyer"), detail.buyer]);
   if (typeof detail.deadline === "string") rows.push([t("Plazo", "Deadline"), detail.deadline]);
   if (detail.checks && typeof detail.checks === "object" && !detail.audit) for (const [key, value] of Object.entries(detail.checks as Record<string, unknown>)) rows.push([checkLabel(key, t), Array.isArray(value) ? value.join(", ") || "—" : value === true ? t("Sí", "Yes") : value === false ? t("No", "No") : String(value ?? "—")]);
+  if (detail.instrument && typeof detail.instrument === "object" && typeof (detail.instrument as Record<string, unknown>).model === "string") rows.push([t("Asistente medido", "Assistant measured"), String((detail.instrument as Record<string, unknown>).model)]);
+  if (detail.conditions && typeof detail.conditions === "object" && Array.isArray((detail.conditions as Record<string, unknown>).questions)) for (const q of (detail.conditions as { questions: unknown[] }).questions) rows.push([t("Pregunta", "Question"), String(q)]);
+  if (typeof detail.measuredAt === "string") rows.push([t("Medido el", "Measured on"), detail.measuredAt.slice(0, 10)]);
+  if (Array.isArray(detail.competitorsNamed) && detail.competitorsNamed.length) rows.push([t("Otras organizaciones que nombra", "Other organizations it names"), detail.competitorsNamed.join(" · ")]);
+  if (typeof detail.uncertainty === "string") rows.push([t("Incertidumbre", "Uncertainty"), detail.uncertainty]);
+  if (typeof detail.outlet === "string") rows.push([t("Medio", "Outlet"), detail.outlet]);
+  if (typeof detail.publishedAt === "string") rows.push([t("Publicado", "Published"), detail.publishedAt.slice(0, 10)]);
+  if (typeof detail.feeds === "number") rows.push([t("Medios indexados", "Indexed media"), String(detail.feeds)]);
   if (typeof detail.contracts === "number") rows.push([t("Contratos", "Contracts"), String(detail.contracts)]);
   if (typeof detail.amount === "number" && detail.amount > 0) rows.push([t("Importe adjudicado (sin IVA)", "Awarded amount (excl. VAT)"), `${detail.amount.toLocaleString(locale, { maximumFractionDigits: 0 })} ${typeof detail.currency === "string" ? detail.currency : ""}`]);
   if (typeof detail.matchedBy === "string") rows.push([t("Atribuida por", "Attributed by"), detail.matchedBy === "TAX_ID" ? t("NIF", "Tax ID") : t("nombre legal", "legal name")]);
