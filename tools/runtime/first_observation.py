@@ -66,6 +66,7 @@ from application.observation_intelligence.loop import OpportunityCandidate, run_
 from application.observation_runtime.replay import FindingsLedger
 from application.organization_admission.locator import LocatorError, parse_locator, public_domain
 from application.organization_group import group_discoveries
+from application.press.mentions import press_discoveries
 from application.semantic_layer.cascade import SemanticCascade
 from application.subscriber_identity.runtime import Clock
 from application.subscriber_portfolio.models import (
@@ -86,6 +87,7 @@ from pipeline.entity_resolution.gleif_group import GleifGroupReader
 from pipeline.first_observation.sqlite_store import SqliteFirstObservationStore
 from pipeline.geo.nominatim import NominatimReverseGeocoder
 from pipeline.observation_memory.sqlite_store import SqliteObservationMemory
+from pipeline.press.sqlite_store import PressIngestor, SqlitePressIndex
 from tools.runtime.subscriber_portfolio import SubscriberPortfolioRuntime
 
 ENABLED_KEY = "AXIGNAL_FIRST_OBSERVATION_ENABLED"
@@ -353,9 +355,11 @@ class FirstObservationRuntime:
         ingestor: WorldDemandIngestor | None = None,
         purge_canonical_raw: Callable[[datetime], int] | None = None,
         live_demand: LiveDemandReader | None = None,
+        press: tuple[PressIngestor, SqlitePressIndex] | None = None,
         awards: AwardStore | None = None,
         groups: GleifGroupReader | None = None,
     ) -> None:
+        self._press = press
         self._groups = groups
         self._awards = awards
         self._purge_canonical_raw = purge_canonical_raw
@@ -554,6 +558,12 @@ class FirstObservationRuntime:
         with self._lock:
             return len(self.ingestor.run(max_slices=max_slices))
 
+    def ingest_press(self) -> int:
+        """Read due publisher feeds into the world press index (off the First Proof path)."""
+        if self._press is None:
+            return 0
+        return self._press[0].run()
+
     def purge(self) -> dict[str, int]:
         """Retention enforcement for First Observation's own stores."""
         now = self._clock.now()
@@ -594,7 +604,14 @@ class FirstObservationRuntime:
             self._wake.wait(timeout=60)
             self._wake.clear()
             # Each stage fails alone: one bad row never stalls the other stages.
-            for stage in (self.enqueue_due, self.drain, self.ingest_demanded, self.purge):
+            stages = (
+                self.enqueue_due,
+                self.drain,
+                self.ingest_demanded,
+                self.ingest_press,
+                self.purge,
+            )
+            for stage in stages:
                 try:
                     stage()
                 except Exception:  # the next wake retries; jobs keep leases and attempts
@@ -726,6 +743,17 @@ class FirstObservationRuntime:
                 view, proof, self._live_demand, now=self._clock.now(), directed=directed
             )
             view["demandMarkets"] = {"directed": list(directed)}
+            if self._press is not None:
+                # Reputation and activity: headlines that name it, from the press index.
+                target = view.get("target")
+                website = target.get("website") if isinstance(target, Mapping) else None
+                host = urlsplit(str(website)).hostname if website else None
+                mentions = press_discoveries(
+                    view, self._press[1], now=self._clock.now(), own_domain=host
+                )
+                if mentions:
+                    held = view.get("discoveries")
+                    view["discoveries"] = [*(held if isinstance(held, list) else []), *mentions]
             view = self._with_group(view, organization_id)
             # Relationships and competition from published public contract awards.
             view = apply_public_awards(
@@ -858,6 +886,19 @@ def website_rights_entry(
         robots_decision=RobotsDecision.PERMITTED,
         robots_policy_ref="robots.txt evaluated before every First Observation fetch",
     )  # fmt: skip
+
+
+def _press(
+    root: Path, clock: Clock, overrides: FirstObservationOverrides
+) -> tuple[PressIngestor, SqlitePressIndex] | None:
+    """The world press index; off in controlled tests that inject their own sources."""
+    if overrides.source_ports is not None or overrides.feeds is not None:
+        return None
+    from application.press.contracts import FEEDS
+    from pipeline.press.rss import UrllibFeedTransport
+
+    store = SqlitePressIndex(root / "press-index.sqlite3")
+    return PressIngestor(FEEDS, store, UrllibFeedTransport(FEEDS), clock=clock.now), store
 
 
 def _geocoder(root: Path, overrides: FirstObservationOverrides) -> NominatimReverseGeocoder | None:
@@ -998,6 +1039,7 @@ def build_first_observation(
         daily_jobs=max(0, daily_jobs),
         ingestor=ingestor,
         live_demand=LiveDemandReader(index, sources=tuple(ports), clock=clock.now),
+        press=_press(root, clock, overrides),
         groups=None
         if overrides.source_ports is not None or overrides.feeds is not None
         else GleifGroupReader(root / "gleif-groups.sqlite3"),

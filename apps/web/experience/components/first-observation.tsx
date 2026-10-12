@@ -118,6 +118,13 @@ export function activityLabel(code: string, fallback: string, t: Translate): str
 export function discoveryCopy(d: Discovery, t: Translate, locale = "en"): { finding: string; why: string } {
   const title = String(d.detail.title ?? d.statement);
   if (d.kind === "ACTIVITY") return { finding: `${t("Actividad probable", "Likely activity")}: ${activityLabel(d.code, d.statement, t)}`, why: t("Orienta dónde buscar demanda. Es una hipótesis con su cita, no una capacidad verificada.", "It directs where to look for demand. It is a hypothesis with its quote, not a verified capability.") };
+  if (d.kind === "MENTION") {
+    const outlet = typeof d.detail.outlet === "string" ? d.detail.outlet : "";
+    if (d.code === "PRESS_RELEASE") return { finding: `${t("Nota de prensa distribuida", "Distributed press release")} · ${outlet}: ${d.statement}`, why: t("Una nota que una organización distribuye sobre sí misma: es su voz, no cobertura independiente.", "A release an organization distributes about itself: its own voice, not independent coverage.") };
+    return d.code === "OWN_PUBLICATION"
+      ? { finding: `${t("Publicado por la propia organización", "Published by the organization itself")}: ${d.statement}`, why: t("Es su propia voz, no una mención de terceros.", "It is its own voice, not a third-party mention.") }
+      : { finding: `${t("Mención en prensa", "Press mention")} · ${outlet}: ${d.statement}`, why: t("El titular nombra a la organización. Que trate de ella no está verificado, y mencionar no es recomendar.", "The headline names the organization. That it is about it is not verified, and a mention is not an endorsement.") };
+  }
   if (d.kind === "RELATIONSHIP" && d.code === "GROUP_PARENT") return {
     finding: `${d.detail.role === "ULTIMATE_PARENT" ? t("Matriz última del grupo", "Group's ultimate parent") : t("Matriz directa", "Direct parent")}: ${d.statement}`,
     why: t("Según el registro mundial de entidades (GLEIF). Es estructura societaria registrada, no una opinión.", "According to the global entity registry (GLEIF). It is registered corporate structure, not an opinion.") };
@@ -184,6 +191,7 @@ export function discoveryCopy(d: Discovery, t: Translate, locale = "en"): { find
     case "ACTIVITY_NOT_ESTABLISHED": return { finding: t("Qué ofrece no está establecido todavía.", "What it offers is not established yet."), why: t("No buscamos demanda sobre una suposición.", "We do not search for demand on an assumption.") };
     case "LOCATION_NOT_DECLARED": return { finding: t("No hemos establecido su ubicación ni su ámbito geográfico de servicio.", "Its location and geographic service scope have not been established."), why: t("No elegimos un mercado por defecto.", "We do not pick a default market.") };
     case "DEMAND_NOT_ROUTABLE": case "NO_ROUTABLE_DEMAND_QUESTION": return { finding: t("Ninguna fuente de demanda gobernada aplica todavía a esta actividad y lugar.", "No governed demand source applies yet to this activity and place."), why: t("No es una ausencia de oportunidades.", "It is not an absence of opportunities.") };
+    case "NO_PRESS_MENTION_FOUND": return { finding: t("Ningún titular de los medios indexados la nombra.", "No headline in the indexed media names it."), why: t("Solo cubre los medios y fechas indicados; no significa que no tenga cobertura en otros.", "It only covers the stated media and dates; it does not mean it has no coverage elsewhere.") };
     case "NO_PUBLIC_AWARDS_FOUND": return { finding: t("No hay adjudicaciones públicas a su nombre en el periodo cubierto.", "No public contract awards in its name in the period covered."), why: t("Solo cubre adjudicaciones publicadas desde la fecha indicada; no significa que no tenga contratos.", "It only covers awards published since the stated date; it does not mean it has no contracts.") };
     case "NO_RELEVANT_DEMAND_FOUND": return { finding: t("Las fuentes consultadas no tienen ahora demanda que coincida.", "The sources searched have no matching demand right now."), why: t("Sin resultado no es sin oportunidad; volveremos a observar.", "No result is not no opportunity; we will observe again.") };
     case "NOT_AN_OPERATING_BUSINESS_SITE": return { finding: t("La página no parece la web de una actividad en marcha.", "The page does not read as an operating business website."), why: t("Es un juicio no autoritativo sobre la página, no sobre la organización.", "It is a non-authoritative judgment about the page, not about the organization.") };
@@ -269,6 +277,9 @@ export function basisRows(d: Discovery, t: Translate, locale: string): Array<[st
   if (typeof detail.buyer === "string") rows.push([t("Comprador", "Buyer"), detail.buyer]);
   if (typeof detail.deadline === "string") rows.push([t("Plazo", "Deadline"), detail.deadline]);
   if (detail.checks && typeof detail.checks === "object" && !detail.audit) for (const [key, value] of Object.entries(detail.checks as Record<string, unknown>)) rows.push([checkLabel(key, t), Array.isArray(value) ? value.join(", ") || "—" : value === true ? t("Sí", "Yes") : value === false ? t("No", "No") : String(value ?? "—")]);
+  if (typeof detail.outlet === "string") rows.push([t("Medio", "Outlet"), detail.outlet]);
+  if (typeof detail.publishedAt === "string") rows.push([t("Publicado", "Published"), detail.publishedAt.slice(0, 10)]);
+  if (typeof detail.feeds === "number") rows.push([t("Medios indexados", "Indexed media"), String(detail.feeds)]);
   if (typeof detail.contracts === "number") rows.push([t("Contratos", "Contracts"), String(detail.contracts)]);
   if (typeof detail.amount === "number" && detail.amount > 0) rows.push([t("Importe adjudicado (sin IVA)", "Awarded amount (excl. VAT)"), `${detail.amount.toLocaleString(locale, { maximumFractionDigits: 0 })} ${typeof detail.currency === "string" ? detail.currency : ""}`]);
   if (typeof detail.matchedBy === "string") rows.push([t("Atribuida por", "Attributed by"), detail.matchedBy === "TAX_ID" ? t("NIF", "Tax ID") : t("nombre legal", "legal name")]);
