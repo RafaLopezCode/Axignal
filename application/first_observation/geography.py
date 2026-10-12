@@ -95,6 +95,17 @@ def _fold(value: str) -> str:
     return " ".join("".join(c for c in text if not unicodedata.combining(c)).split())
 
 
+def country_name_en(code: str | None) -> str | None:
+    """English name of an ISO country code (or the EU path segment, EL for Greece)."""
+    if not code:
+        return None
+    wanted = "GR" if code.upper() == "EL" else code.upper()
+    for name, value in _COUNTRY_NAMES.items():  # the English name comes first per country
+        if value == wanted:
+            return name.title()
+    return None
+
+
 def country_code(value: str | None) -> str | None:
     """ISO alpha-2 for an exact declared code or listed name; otherwise None (UNKNOWN)."""
     if value is None or not value.strip():

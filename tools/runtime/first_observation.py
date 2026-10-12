@@ -39,7 +39,7 @@ from application.first_observation.contracts import (
     IdentityLink,
     TargetKind,
 )
-from application.first_observation.geography import EU_MEMBERS
+from application.first_observation.geography import EU_MEMBERS, country_name_en
 from application.first_observation.metrics import runtime_metrics
 from application.first_observation.policy import FirstObservationPolicy
 from application.first_observation.research import ResearchPlan
@@ -57,6 +57,7 @@ from application.first_observation.service import (
 from application.first_observation.shared_findings import SharedFindingsPort
 from application.first_observation.site import PageReading
 from application.first_observation.visibility import first_proof_live_deadline, withdraw_first_proof
+from application.generative_visibility.probe import ProbeSubject, geo_discoveries
 from application.observation_intelligence import (
     OperationalLearning,
     SourceObservationPort,
@@ -88,6 +89,7 @@ from pipeline.first_observation.sqlite_store import SqliteFirstObservationStore
 from pipeline.geo.nominatim import NominatimReverseGeocoder
 from pipeline.observation_memory.sqlite_store import SqliteObservationMemory
 from pipeline.press.sqlite_store import PressIngestor, SqlitePressIndex
+from tools.runtime.generative_probe import GenerativeProbeRunner, generative_probe_from_values
 from tools.runtime.subscriber_portfolio import SubscriberPortfolioRuntime
 
 ENABLED_KEY = "AXIGNAL_FIRST_OBSERVATION_ENABLED"
@@ -358,7 +360,9 @@ class FirstObservationRuntime:
         press: tuple[PressIngestor, SqlitePressIndex] | None = None,
         awards: AwardStore | None = None,
         groups: GleifGroupReader | None = None,
+        geo: GenerativeProbeRunner | None = None,
     ) -> None:
+        self._geo = geo
         self._press = press
         self._groups = groups
         self._awards = awards
@@ -558,6 +562,47 @@ class FirstObservationRuntime:
         with self._lock:
             return len(self.ingestor.run(max_slices=max_slices))
 
+    def measure_geo(self) -> int:
+        """Run queued GEO measurements (a few per tick, under the daily cap)."""
+        return 0 if self._geo is None else self._geo.run()
+
+    def _with_geo(self, view: dict[str, object]) -> dict[str, object]:
+        """Show a stored GEO measurement; queue one when none is fresh (never asks inline)."""
+        if self._geo is None:
+            return view
+        held = view.get("discoveries")
+        discoveries = held if isinstance(held, list) else []
+        activity = next(
+            (d for d in discoveries if isinstance(d, Mapping) and d.get("kind") == "ACTIVITY"), None
+        )
+        target = view.get("target")
+        name = target.get("name") if isinstance(target, Mapping) else None
+        website = target.get("website") if isinstance(target, Mapping) else None
+        scopes = view.get("attentionScopes")
+        country = None
+        if isinstance(scopes, list) and scopes and isinstance(scopes[0], Mapping):
+            parts = str(scopes[0].get("jurisdiction") or "").split("/")
+            country = parts[1] if parts and parts[0] == "EU" and len(parts) > 1 else parts[0]
+        place = country_name_en(country)
+        if not activity or not name or not place:
+            return view
+        subject = ProbeSubject(
+            name=str(name),
+            domain=(urlsplit(str(website)).hostname or "").removeprefix("www.") or None
+            if website
+            else None,
+            activity=str(activity.get("statement") or "").lower(),
+            place=place,
+            language="en",
+        )
+        measurement = self._geo.measurement(subject)
+        self._geo.request(subject)  # no-op while fresh or queued
+        if measurement is None:
+            return view
+        found = geo_discoveries(measurement, observed_at=str(view.get("observedAt") or ""))
+        view["discoveries"] = [*discoveries, *found]
+        return view
+
     def ingest_press(self) -> int:
         """Read due publisher feeds into the world press index (off the First Proof path)."""
         if self._press is None:
@@ -609,6 +654,7 @@ class FirstObservationRuntime:
                 self.drain,
                 self.ingest_demanded,
                 self.ingest_press,
+                self.measure_geo,
                 self.purge,
             )
             for stage in stages:
@@ -755,6 +801,7 @@ class FirstObservationRuntime:
                     held = view.get("discoveries")
                     view["discoveries"] = [*(held if isinstance(held, list) else []), *mentions]
             view = self._with_group(view, organization_id)
+            view = self._with_geo(view)
             # Relationships and competition from published public contract awards.
             view = apply_public_awards(
                 view, proof, self._awards, now=self._clock.now(), countries=lambda: directed
@@ -1043,6 +1090,9 @@ def build_first_observation(
         groups=None
         if overrides.source_ports is not None or overrides.feeds is not None
         else GleifGroupReader(root / "gleif-groups.sqlite3"),
+        geo=None
+        if overrides.source_ports is not None or overrides.feeds is not None
+        else generative_probe_from_values(values, root),
         awards=index,
         purge_canonical_raw=(
             lambda at: observation_memory.purge_first_observation_content(

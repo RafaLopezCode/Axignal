@@ -27,6 +27,8 @@ class JobKind(StrEnum):
     GROUNDED_ANSWER = "GROUNDED_ANSWER"
     #: A bounded typed decision escalated from a fast semantic judge (spec 062).
     SEMANTIC_DECISION = "SEMANTIC_DECISION"
+    #: What an assistant answers about an organization's category (GEO measurement).
+    GENERATIVE_PROBE = "GENERATIVE_PROBE"
 
 
 @dataclass(frozen=True)
