@@ -169,6 +169,18 @@ export function discoveryCopy(d: Discovery, t: Translate, locale = "en"): { find
   if (d.kind === "IDENTITY_HINT") return { finding: `${t("Su web declara", "Its website declares")}: ${d.statement}`, why: t("Es una pista de identidad. Solo un registro puede verificarla.", "It is an identity hint. Only a registry can verify it.") };
   if (d.kind === "PUBLIC_PRESENCE") return { finding: `${t("Web pública observada", "Public website observed")}: ${d.statement}`, why: t("Es la fuente de lo que la organización declara sobre sí misma.", "It is the source of what the organization declares about itself.") };
   if (d.kind === "SEARCH_VISIBILITY") return { finding: `${t("Visibilidad en buscadores medida", "Search visibility measured")}: ${d.statement}`, why: t("Es lo observado para una consulta y unas condiciones concretas. No es una posición general ni explica el motivo.", "It is what was observed for a given query and conditions. It is not a general ranking and does not explain why.") };
+  if (d.kind === "GENERATIVE_VISIBILITY" && d.code === "AI_NAMED_FOR_CATEGORY") return {
+    finding: t("Un asistente de IA la nombra al preguntar por su actividad ({n} de las preguntas)", "An AI assistant names it when asked about its activity ({n} of the questions)").replace("{n}", d.statement),
+    why: t("Medido con preguntas fijas, sin búsqueda web. Nombrar no es recomendar; las respuestas varían entre ejecuciones.", "Measured with fixed questions, without web search. Naming is not recommending; answers vary between runs.") };
+  if (d.kind === "GENERATIVE_VISIBILITY" && d.code === "AI_NOT_NAMED_FOR_CATEGORY") return {
+    finding: t("Un asistente de IA no la nombra al preguntar por su actividad", "An AI assistant does not name it when asked about its activity"),
+    why: t("Quien pregunta a un asistente por proveedores de su actividad no la encuentra en esa respuesta. Es una muestra con sus condiciones, no todo lo que sabe el asistente.", "Someone asking an assistant for providers of its activity does not find it in that answer. It is a sample with its conditions, not all the assistant knows.") };
+  if (d.kind === "GENERATIVE_VISIBILITY" && d.code === "AI_KNOWS_BRAND") return {
+    finding: t("Un asistente de IA reconoce la organización por su nombre", "An AI assistant recognizes the organization by name"),
+    why: t("Al preguntarle directamente, afirma tener conocimiento específico de ella. No verifica que lo que diga sea correcto.", "Asked directly, it states specific knowledge of it. This does not verify that what it says is correct.") };
+  if (d.kind === "GENERATIVE_VISIBILITY" && d.code === "AI_DOES_NOT_KNOW_BRAND") return {
+    finding: t("Un asistente de IA no reconoce la organización por su nombre", "An AI assistant does not recognize the organization by name"),
+    why: t("Al preguntarle directamente, no tiene conocimiento específico de ella: su presencia en fuentes públicas citables puede ser escasa.", "Asked directly, it has no specific knowledge of it: its presence in citable public sources may be thin.") };
   if (d.kind === "GENERATIVE_VISIBILITY") return { finding: `${t("Aparición en respuestas de IA medida", "AI answer appearance measured")}: ${d.statement}`, why: t("Mencionar no es citar, y citar no es recomendar. Es una medición con sus condiciones, no una conclusión sobre el negocio.", "A mention is not a citation, and a citation is not an endorsement. It is a measurement with its conditions, not a conclusion about the business.") };
   if (d.kind === "WEB_REPRESENTATION") return { finding: t("Representación web medida", "Web representation measured"), why: t("Comprobaciones de su propia web, con instrumento y condiciones. No es una posición en buscadores.", "Checks of its own website, with instrument and conditions. It is not a search ranking.") };
   if (d.kind === "REPRESENTATION_GAP" && d.code.startsWith("AUDIT:")) {
@@ -277,6 +289,11 @@ export function basisRows(d: Discovery, t: Translate, locale: string): Array<[st
   if (typeof detail.buyer === "string") rows.push([t("Comprador", "Buyer"), detail.buyer]);
   if (typeof detail.deadline === "string") rows.push([t("Plazo", "Deadline"), detail.deadline]);
   if (detail.checks && typeof detail.checks === "object" && !detail.audit) for (const [key, value] of Object.entries(detail.checks as Record<string, unknown>)) rows.push([checkLabel(key, t), Array.isArray(value) ? value.join(", ") || "—" : value === true ? t("Sí", "Yes") : value === false ? t("No", "No") : String(value ?? "—")]);
+  if (detail.instrument && typeof detail.instrument === "object" && typeof (detail.instrument as Record<string, unknown>).model === "string") rows.push([t("Asistente medido", "Assistant measured"), String((detail.instrument as Record<string, unknown>).model)]);
+  if (detail.conditions && typeof detail.conditions === "object" && Array.isArray((detail.conditions as Record<string, unknown>).questions)) for (const q of (detail.conditions as { questions: unknown[] }).questions) rows.push([t("Pregunta", "Question"), String(q)]);
+  if (typeof detail.measuredAt === "string") rows.push([t("Medido el", "Measured on"), detail.measuredAt.slice(0, 10)]);
+  if (Array.isArray(detail.competitorsNamed) && detail.competitorsNamed.length) rows.push([t("Otras organizaciones que nombra", "Other organizations it names"), detail.competitorsNamed.join(" · ")]);
+  if (typeof detail.uncertainty === "string") rows.push([t("Incertidumbre", "Uncertainty"), detail.uncertainty]);
   if (typeof detail.outlet === "string") rows.push([t("Medio", "Outlet"), detail.outlet]);
   if (typeof detail.publishedAt === "string") rows.push([t("Publicado", "Published"), detail.publishedAt.slice(0, 10)]);
   if (typeof detail.feeds === "number") rows.push([t("Medios indexados", "Indexed media"), String(detail.feeds)]);
