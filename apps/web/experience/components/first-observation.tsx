@@ -145,6 +145,18 @@ export function discoveryCopy(d: Discovery, t: Translate, locale = "en"): { find
   if (d.kind === "COMPETITION") return {
     finding: t("Competidor posible: {name} · {n} contratos en sus mismos códigos", "Possible competitor: {name} · {n} contracts under the same codes").replace("{name}", d.statement).replace("{n}", String(d.detail.contracts ?? 0)),
     why: t("Gana contratos públicos con los mismos códigos de actividad. Que compita con ella es una inferencia, no una clasificación de calidad.", "It wins public contracts under the same activity codes. That it competes with this organization is an inference, not a quality ranking.") };
+  if (d.kind === "ECONOMIC_FACT") {
+    const fact = String(d.detail.fact ?? "");
+    const label = fact === "revenue" ? t("Ingresos", "Revenue") : fact === "netProfit" ? t("Beneficio neto", "Net profit")
+      : fact === "employees" ? t("Empleados", "Employees") : fact === "marketCapitalization" ? t("Capitalización bursátil", "Market capitalization")
+      : fact === "inception" ? t("Año de fundación", "Founded") : fact === "stockExchange" ? t("Cotiza en", "Listed on") : t("Sector", "Industry");
+    const value = typeof d.detail.value === "number"
+      ? `${d.detail.value.toLocaleString(locale, { maximumFractionDigits: 0 })}${typeof d.detail.unit === "string" ? " " + d.detail.unit : ""}`
+      : d.statement;
+    const year = typeof d.detail.year === "string" && fact !== "inception" ? ` (${d.detail.year})` : "";
+    return { finding: `${label}: ${value}${year}`,
+      why: t("Según Wikidata, una fuente comunitaria: no es una cuenta oficial y puede estar desactualizada.", "According to Wikidata, a community source: it is not an official account and may be outdated.") };
+  }
   if (d.kind === "DEMAND") {
     const deadline = typeof d.detail.deadline === "string" ? d.detail.deadline.slice(0, 10) : null;
     const buyer = typeof d.detail.buyer === "string" ? d.detail.buyer : null;
