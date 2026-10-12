@@ -82,6 +82,7 @@ from application.xeed_access.reader import TrustedRequestContext
 from domain.evidence.epistemics import Currentness
 from domain.identity import OrganizationId, PrincipalId, TenantId, XeedId
 from pipeline.first_observation.sqlite_store import SqliteFirstObservationStore
+from pipeline.geo.nominatim import NominatimReverseGeocoder
 from pipeline.observation_memory.sqlite_store import SqliteObservationMemory
 from tools.runtime.subscriber_portfolio import SubscriberPortfolioRuntime
 
@@ -823,6 +824,13 @@ def website_rights_entry(
     )  # fmt: skip
 
 
+def _geocoder(root: Path, overrides: FirstObservationOverrides) -> NominatimReverseGeocoder | None:
+    """Places of map points sites publish; off in controlled tests with injected sources."""
+    if overrides.source_ports is not None or overrides.feeds is not None:
+        return None
+    return NominatimReverseGeocoder(root / "geo-reverse.sqlite3")
+
+
 def build_first_observation(
     values: Mapping[str, str],
     root: Path,
@@ -937,6 +945,7 @@ def build_first_observation(
         clock=clock.now,
         policy=policy,
         rights=rights_policy,
+        geocoder=_geocoder(root, overrides),
     )
     try:
         daily_jobs = int(values.get(DAILY_JOBS_KEY, "500"))

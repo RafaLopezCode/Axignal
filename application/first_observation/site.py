@@ -47,6 +47,46 @@ _IDENTIFIER_KEYS = {
 }
 
 
+_MAP_HOST = re.compile(
+    r"(^|\.)(google\.[a-z.]+|maps\.google\.[a-z.]+|openstreetmap\.org|bing\.com)$"
+)
+_COORD_PATTERNS = (
+    re.compile(r"@(-?\d{1,2}\.\d{3,}),(-?\d{1,3}\.\d{3,})"),  # .../@40.41,-3.70,17z
+    re.compile(
+        r"[?&](?:q|ll|query|center|daddr|destination)=(-?\d{1,2}\.\d{3,})(?:,|%2C)\s*(-?\d{1,3}\.\d{3,})"
+    ),
+    re.compile(r"[?&#]mlat=(-?\d{1,2}\.\d{3,})&mlon=(-?\d{1,3}\.\d{3,})"),  # openstreetmap
+)
+_EMBED_LAT = re.compile(r"!3d(-?\d{1,2}\.\d{3,})")  # Google embed: !2d<lng>!3d<lat>
+_EMBED_LNG = re.compile(r"!2d(-?\d{1,3}\.\d{3,})")
+
+
+def map_coordinates(url: str) -> tuple[float, float] | None:
+    """Latitude and longitude carried by a map link or embed the site itself publishes."""
+    try:
+        host = (urlsplit(url).hostname or "").lower()
+    except ValueError:
+        return None
+    if not _MAP_HOST.search(host) or ("google" in host and "map" not in url.lower()):
+        return None
+    found: tuple[str, str] | None = None
+    lat, lng = _EMBED_LAT.search(url), _EMBED_LNG.search(url)
+    if lat and lng:
+        found = (lat.group(1), lng.group(1))
+    else:
+        for pattern in _COORD_PATTERNS:
+            match = pattern.search(url)
+            if match:
+                found = (match.group(1), match.group(2))
+                break
+    if found is None:
+        return None
+    latitude, longitude = float(found[0]), float(found[1])
+    if not (-90 <= latitude <= 90 and -180 <= longitude <= 180) or (latitude, longitude) == (0, 0):
+        return None
+    return round(latitude, 5), round(longitude, 5)
+
+
 def _clean(value: object, limit: int = 300) -> str:
     return _SPACE.sub(" ", str(value)).strip()[:limit]
 
@@ -205,6 +245,7 @@ class _PageParser(HTMLParser):
         self.anchor: tuple[str, list[str]] | None = None
         self.anchors: list[tuple[str, str]] = []
         self.h1: list[str] = []
+        self.coordinates: list[tuple[float, float]] = []
         self.heading_tag: str | None = None
         self.images = 0
         self.images_without_alt = 0
@@ -259,6 +300,11 @@ class _PageParser(HTMLParser):
             self.heading_tag = tag
         if tag == "a" and values.get("href"):
             self.anchor = (values["href"], [])
+        for attribute in ("href", "src", "data-src"):
+            if tag in {"a", "iframe"} and values.get(attribute) and len(self.coordinates) < 10:
+                point = map_coordinates(values[attribute])
+                if point is not None and point not in self.coordinates:
+                    self.coordinates.append(point)
 
     def handle_endtag(self, tag: str) -> None:
         if tag == "script" and self.jsonld_chunks is not None:
@@ -366,11 +412,18 @@ def _jsonld_errors(documents: list[str]) -> int:
 def _jsonld(documents: list[str]) -> dict[str, list[Any]]:
     out: dict[str, list[Any]] = {
         "types": [], "names": [], "legal": [], "ids": [], "addresses": [], "areas": [],
-        "services": [], "same_as": [], "entity_fields": [],
+        "services": [], "same_as": [], "entity_fields": [], "geo": [],
     }  # fmt: skip
     for node in _nodes(documents):
         types = _types(node)
         out["types"].extend(types)
+        if "GeoCoordinates" in types:
+            try:
+                point = (round(float(node["latitude"]), 5), round(float(node["longitude"]), 5))
+            except (KeyError, TypeError, ValueError):
+                point = None
+            if point and -90 <= point[0] <= 90 and -180 <= point[1] <= 180 and point != (0, 0):
+                out["geo"].append(point)
         if set(types) & _ENTITY_TYPES:
             same = node.get("sameAs")
             for link in same if isinstance(same, list) else [same]:
@@ -551,6 +604,9 @@ def read_page(
             "internalLinks": len(links),
             "externalLinks": external,
             "https": urlsplit(url).scheme == "https",
+            # Points the site publishes: its own map links/embeds and schema.org geo.
+            "coordinates": [[lat, lng, "MAP_LINK"] for lat, lng in parser.coordinates]
+            + [[lat, lng, "SCHEMA_GEO"] for lat, lng in _unique(data["geo"], 10)],
         },
     )
 
