@@ -12,10 +12,12 @@ import {
 import { LandingObservatory, type DemoMode } from "./landing-observatory";
 import type { ExampleMoment } from "@/lib/landing-observatory";
 import { PublicShell } from "./public-shell";
+import { LandingFocus } from "./landing-focus";
 import { ReferencePricing } from "./landing-extras";
 import type { NarratorScene } from "./observer-frame";
 import { LandingGuide } from "./landing-guide";
 import "./observer-landing.css";
+import "./landing-craft.css";
 import { useLocale } from "@/lib/locale";
 import {
   funnelCta,
@@ -82,39 +84,17 @@ function CtaLink({
 }
 
 /**
- * The first viewport shows the product working, not a picture of it: the real subscriber
- * interface on the one public example (fictional, and labelled so), annotated by El Observador.
+ * The first viewport focuses the one fictional example on a finding and its evidence.
+ * It is a landing presentation, not a second dataset or a canonical product write.
  */
 function HeroReading() {
   const { t } = useLocale();
-  return <LandingObservatory mode="glance" className="lx-hero-window" footer={
+  return <div className="hero-focus"><LandingFocus />
     <CtaLink href={EXAMPLE_HREF} cta={funnelCta.heroExample} className="lx-open">
       {t("Abrir el ejemplo completo", "Open the full example")}
       <ArrowRight size={16} />
     </CtaLink>
-  }/>;
-}
-
-/** Scroll position chooses the window's state; it never moves the page for the visitor. */
-function useActiveStep() {
-  const [active, setActive] = useState(0);
-  useEffect(() => {
-    let frame = 0;
-    const measure = () => {
-      frame = 0;
-      const middle = window.innerHeight / 2;
-      document.querySelectorAll<HTMLElement>(".lx-step[data-step]").forEach((node) => {
-        const box = node.getBoundingClientRect();
-        if (box.top <= middle && box.bottom > middle) setActive(Number(node.dataset.step));
-      });
-    };
-    const schedule = () => { if (!frame) frame = window.requestAnimationFrame(measure); };
-    measure();
-    window.addEventListener("scroll", schedule, { passive: true });
-    window.addEventListener("resize", schedule);
-    return () => { window.removeEventListener("scroll", schedule); window.removeEventListener("resize", schedule); if (frame) window.cancelAnimationFrame(frame); };
-  }, []);
-  return active;
+  </div>;
 }
 
 function useChapterViews() {
@@ -141,7 +121,7 @@ export function Landing() {
   const { t, locale } = useLocale();
   const [time, setTime] = useState(0);
   const [proof, setProof] = useState(0);
-  const activeStep = useActiveStep();
+  const [activeStep, setActiveStep] = useState(0);
   const [audience, setAudience] = useState(0);
   const [focuses, setFocuses] = useState(1);
   useChapterViews();
@@ -286,7 +266,7 @@ export function Landing() {
   const proofScenes: NarratorScene[] = ["strategy", "research", "unknown", "time"];
   const selectedAudience = audiences[audience];
   return (
-    <PublicShell landing className="landing funnel-landing observer-story">
+    <PublicShell landing className="landing funnel-landing observer-story landing-craft">
         <section className="hero funnel-hero" id="what">
           <div className="hero-copy">
             <span className="eyebrow hero-eyebrow">
@@ -347,15 +327,14 @@ export function Landing() {
               {steps.map((step, i) => (
                 <li className={"lx-step" + (activeStep === i ? " is-active" : "")} key={step.title} data-step={i}>
                   <span className="lx-step-mark" aria-hidden="true">{i + 1}</span>
-                  <h3>{step.title}</h3>
+                  <h3><button type="button" aria-pressed={activeStep === i} aria-controls="how-example" onClick={() => setActiveStep(i)}>{step.title}</button></h3>
                   <p>{step.text}</p>
-                  <LandingGuide scene={stepScenes[i]} className="observer-step-guide" note={stepNotes[i]} />
-                  <LandingObservatory mode={stepModes[i]} className="lx-step-window" />
                 </li>
               ))}
             </ol>
-            <div className="lx-sticky" aria-hidden="true" inert>
-              <LandingObservatory mode={stepModes[activeStep]} />
+            <div className="how-example" id="how-example" role="region" aria-label={steps[activeStep].title}>
+              <LandingObservatory mode={stepModes[activeStep]} compact />
+              <LandingGuide scene={stepScenes[activeStep]} className="observer-step-guide" note={stepNotes[activeStep]} />
             </div>
           </div>
           <Reveal className="funnel-axent">

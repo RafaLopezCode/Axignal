@@ -66,3 +66,9 @@ export function exampleNewSince(asOf: ExampleMoment): Set<string> {
 export function exampleOrganization() {
   return organizations.find(o => o.id === EXAMPLE_ORGANIZATION)!;
 }
+
+/** Selection is presentation only; a missing lane is empty, never a substitute fact. */
+export function selectedExampleInsight(insights: readonly Insight[], lane: Lane, id: string | null): Insight | null {
+  const visible = insights.filter(insight => insight.lane === lane);
+  return visible.find(insight => insight.id === id) ?? visible[0] ?? null;
+}

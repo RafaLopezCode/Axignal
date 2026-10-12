@@ -13,6 +13,7 @@ import { laneCopy, type Insight, type Lane } from "@/lib/observatory";
 import { EXAMPLE_MOMENTS, exampleInsights, exampleNewSince, exampleOrganization, type ExampleMoment } from "@/lib/landing-observatory";
 import { InsightBody, InsightCard } from "./observatory";
 import { SyntheticEvidenceProvider } from "./evidence-link-context";
+import { exampleExcerpt } from "@/lib/landing-focus-copy";
 
 export type DemoMode = "glance" | "add" | "observing" | "briefing" | "evidence" | "unknown" | "time";
 
@@ -47,12 +48,13 @@ function Lanes({ insights, lit, focus, open, onOpen, notes }: {
   </div>;
 }
 
-export function LandingObservatory({ mode, asOf = "2026-10-03", onAsOf, className = "", footer }: {
-  mode: DemoMode; asOf?: ExampleMoment; onAsOf?: (moment: ExampleMoment) => void; className?: string; footer?: React.ReactNode;
+export function LandingObservatory({ mode, asOf = "2026-10-03", onAsOf, className = "", footer, compact = false }: {
+  mode: DemoMode; asOf?: ExampleMoment; onAsOf?: (moment: ExampleMoment) => void; className?: string; footer?: React.ReactNode; compact?: boolean;
 }) {
   const { t, copy, locale } = useLocale();
   const organization = exampleOrganization();
   const insights = useMemo(() => exampleInsights(asOf, copy), [asOf, copy]);
+  const visible = compact ? insights.filter((item, index) => insights.findIndex(candidate => candidate.lane === item.lane) === index) : insights;
   const lit = mode === "time" ? exampleNewSince(asOf) : new Set<string>();
   const [open, setOpen] = useState<string | null>(null);
   const forced = mode === "evidence" ? "renovation" : null;
@@ -92,7 +94,7 @@ export function LandingObservatory({ mode, asOf = "2026-10-03", onAsOf, classNam
           {EXAMPLE_MOMENTS.map(moment => <button key={moment} aria-pressed={asOf === moment} onClick={() => onAsOf?.(moment)}>
             <span className="lx-time-dot" aria-hidden="true"/>{dateLabel(moment, locale)}</button>)}
         </div>}
-        <Lanes insights={insights} lit={lit} focus={mode === "unknown" ? "unknown" : null} open={shown?.id ?? null} onOpen={insight => setOpen(insight.id)} notes={notes}/>
+        <Lanes insights={visible} lit={lit} focus={mode === "unknown" ? "unknown" : null} open={shown?.id ?? null} onOpen={insight => setOpen(insight.id)} notes={notes}/>
         {shown && <div ref={sheet} className={`lx-sheet obs-lane-${shown.lane}`} role="region" aria-label={t("Por qué lo dice AXIGNAL", "Why AXIGNAL says so")}>
           {open && <button className="lx-sheet-close" onClick={() => setOpen(null)} aria-label={t("Cerrar", "Close")}><X size={16} aria-hidden="true"/></button>}
           <SyntheticEvidenceProvider><InsightBody insight={shown}/></SyntheticEvidenceProvider>
@@ -100,6 +102,6 @@ export function LandingObservatory({ mode, asOf = "2026-10-03", onAsOf, classNam
         </div>}
       </>}
     </div>
-    {footer && <figcaption className="lx-footer">{footer}</figcaption>}
+    {(footer || compact) && <figcaption className="lx-footer">{compact && <span>{exampleExcerpt[locale]}</span>}{footer}</figcaption>}
   </figure>;
 }
