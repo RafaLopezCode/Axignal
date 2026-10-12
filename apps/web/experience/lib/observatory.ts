@@ -451,8 +451,11 @@ export function briefing(reading: Reading, name: string, insights: Insight[], t:
   const clarify = insights.filter(i => i.nature === "CLARIFY").length;
   const strength = insights.filter(i => i.nature === "STRENGTH").length;
   const unknown = lanes.unknown.length;
+  const demand = reading.firstObservation?.demand;
   const tally = [
-    potential ? count(potential, t("{n} oportunidad potencial", "{n} potential opportunity"), t("{n} oportunidades potenciales", "{n} potential opportunities")) : null,
+    demand?.live && demand.total ? count(demand.total, t("{n} licitación abierta que encaja", "{n} open tender that fits"), t("{n} licitaciones abiertas que encajan", "{n} open tenders that fit")) : null,
+    demand?.live && demand.new ? count(demand.new, t("{n} nueva esta semana", "{n} new tender this week"), t("{n} nuevas esta semana", "{n} new tenders this week")) : null,
+    potential && !(demand?.live && demand.total) ? count(potential, t("{n} oportunidad potencial", "{n} potential opportunity"), t("{n} oportunidades potenciales", "{n} potential opportunities")) : null,
     strength ? count(strength, t("{n} aspecto que se entiende bien", "{n} aspect understood well"), t("{n} aspectos que se entienden bien", "{n} aspects understood well")) : null,
     clarify ? count(clarify, t("{n} aspecto que conviene aclarar", "{n} aspect worth clarifying"), t("{n} aspectos que conviene aclarar", "{n} aspects worth clarifying")) : null,
     unknown ? count(unknown, t("{n} incógnita abierta", "{n} open unknown"), t("{n} incógnitas abiertas", "{n} open unknowns")) : null,

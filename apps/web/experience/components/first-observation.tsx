@@ -117,7 +117,13 @@ export function activityLabel(code: string, fallback: string, t: Translate): str
 export function discoveryCopy(d: Discovery, t: Translate, locale = "en"): { finding: string; why: string } {
   const title = String(d.detail.title ?? d.statement);
   if (d.kind === "ACTIVITY") return { finding: `${t("Actividad probable", "Likely activity")}: ${activityLabel(d.code, d.statement, t)}`, why: t("Orienta dónde buscar demanda. Es una hipótesis con su cita, no una capacidad verificada.", "It directs where to look for demand. It is a hypothesis with its quote, not a verified capability.") };
-  if (d.kind === "DEMAND") return { finding: `${t("Demanda pública potencial", "Potential public demand")}: ${title}`, why: t("Coincide por clasificación y lugar. No es un cliente, una invitación ni una relación.", "It matches by classification and place. It is not a customer, an invitation or a relationship.") };
+  if (d.kind === "DEMAND") {
+    const deadline = typeof d.detail.deadline === "string" ? d.detail.deadline.slice(0, 10) : null;
+    const buyer = typeof d.detail.buyer === "string" ? d.detail.buyer : null;
+    const facts = [deadline ? t("Plazo {date}", "Deadline {date}").replace("{date}", deadline) : null, buyer].filter(Boolean).join(" · ");
+    return { finding: `${d.detail.isNew === true ? `${t("Nueva", "New")} · ` : ""}${t("Demanda pública potencial", "Potential public demand")}: ${title}`,
+      why: `${facts ? `${facts}. ` : ""}${t("Coincide por clasificación y lugar. No es un cliente, una invitación ni una relación.", "It matches by classification and place. It is not a customer, an invitation or a relationship.")}` };
+  }
   if (d.kind === "DECLARED_LOCATION") return d.code === "LOCATION_STATED_IN_TEXT"
     ? { finding: `${t("Ubicación mencionada en su web", "Location mentioned on its website")}: ${placeLabel(d.statement, locale)}`, why: t("Indica dónde mirar primero. No define dónde opera ni todo su mercado.", "It shows where to look first. It does not define where it operates or its whole market.") }
     : { finding: `${t("Dirección que declara", "Address it declares")}: ${d.statement}`, why: t("Indica dónde mirar primero. No define dónde opera ni todo su mercado.", "It shows where to look first. It does not define where it operates or its whole market.") };

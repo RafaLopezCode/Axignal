@@ -705,6 +705,7 @@ export function SummaryView({ reading, name, insights, lit, remembered = true, o
   const brief = briefing(reading, name, insights, t, locale);
   if (exampleLead) brief.lead = exampleLead;
   const lanes = byLane(insights);
+  const [allShown, setAllShown] = useState(false);
   const low = item.observation && LOW_OBSERVABILITY.has(item.observation.state);
   return <div className="obs-summary">
     <section className={`obs-brief${scope ? " obs-brief-scoped" : ""}`} aria-label={scope ? scope.title : t("En resumen", "In short")}>
@@ -724,13 +725,18 @@ export function SummaryView({ reading, name, insights, lit, remembered = true, o
         const copy = laneCopy(lane, t);
         return <section key={lane} className={`obs-lane obs-lane-${lane}`} aria-labelledby={`lane-${lane}`}>
           <header><h2 id={`lane-${lane}`}>{copy.title}<span className="obs-lane-count">{lanes[lane].length}</span></h2><p>{copy.question}</p></header>
-          {lanes[lane].length ? <ul>{lanes[lane].map((insight, index) => <li key={insight.id} style={{ ["--i" as string]: index }}><InsightCard insight={insight} lit={lit.has(insight.changeKey)} active={openId === insight.id} onOpen={() => onOpen(insight)}/></li>)}</ul>
+          {lanes[lane].length ? <ul>{(lane === "matters" && !allShown ? lanes[lane].slice(0, LANE_PREVIEW) : lanes[lane]).map((insight, index) => <li key={insight.id} style={{ ["--i" as string]: index }}><InsightCard insight={insight} lit={lit.has(insight.changeKey)} active={openId === insight.id} onOpen={() => onOpen(insight)}/></li>)}</ul>
             : <p className="obs-empty">{copy.empty}</p>}
+          {lane === "matters" && lanes[lane].length > LANE_PREVIEW && <button className="obs-link obs-lane-more" aria-expanded={allShown} onClick={() => setAllShown(v => !v)}>
+            {allShown ? t("Mostrar menos", "Show fewer") : fill(t("Ver las {n}", "Show all {n}"), { n: lanes[lane].length })}</button>}
         </section>;
       })}
     </div>}
   </div>;
 }
+
+/** Open tenders can be dozens: the first ones are shown, the rest on request. */
+const LANE_PREVIEW = 12;
 
 export function InsightCard({ insight, lit, active, onOpen }: { insight: Insight; lit: boolean; active: boolean; onOpen: () => void }) {
   const { t, locale } = useLocale();

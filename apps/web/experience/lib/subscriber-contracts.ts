@@ -38,6 +38,16 @@ export const firstObservationSchema = z.object({
   }).optional(),
   observedAt: z.string().max(64).optional(),
   authority: z.literal("OPERATIONAL_NOT_CANONICAL").optional(),
+  // Demand matched again at read time against the current index (open calls only).
+  demand: z.object({
+    live: z.boolean(),
+    asOf: z.string().max(64),
+    ingestedAt: z.string().max(64).optional(),
+    total: z.number().int().min(0),
+    shown: z.number().int().min(0).optional(),
+    new: z.number().int().min(0),
+    sources: z.array(z.string().max(80)).max(20).optional(),
+  }).optional(),
 });
 export type FirstObservation = z.infer<typeof firstObservationSchema>;
 const observationSummarySchema = z.object({
