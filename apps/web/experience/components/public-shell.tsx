@@ -131,15 +131,17 @@ export function PublicShell({
   children,
   className = "",
   localeRoutes,
+  landing = false,
 }: {
   children: React.ReactNode;
   className?: string;
   localeRoutes?: LocaleRoute[];
+  landing?: boolean;
 }) {
   return (
     <div className={"public-page " + className}>
-      <PublicHeader localeRoutes={localeRoutes} />
-      <main id="main" tabIndex={-1}>{children}</main>
+      <PublicHeader landing={landing} localeRoutes={localeRoutes} />
+      <main id="main" className={landing ? "public-main public-main-landing" : "public-main"} tabIndex={-1}>{children}</main>
       <MiniFooter />
     </div>
   );

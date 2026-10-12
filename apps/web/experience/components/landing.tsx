@@ -11,7 +11,7 @@ import {
 } from "lucide-react";
 import { LandingObservatory, type DemoMode } from "./landing-observatory";
 import type { ExampleMoment } from "@/lib/landing-observatory";
-import { PublicHeader } from "./public-shell";
+import { PublicShell } from "./public-shell";
 import { ReferencePricing } from "./landing-extras";
 import type { NarratorScene } from "./observer-frame";
 import { LandingGuide } from "./landing-guide";
@@ -23,7 +23,6 @@ import {
   track,
   type FunnelCta,
 } from "@/lib/funnel-events";
-import { MiniFooter } from "./ui";
 
 /** The one public example. Every "show me" on the site lands here. */
 export const EXAMPLE_HREF = "/demo";
@@ -287,9 +286,7 @@ export function Landing() {
   const proofScenes: NarratorScene[] = ["strategy", "research", "unknown", "time"];
   const selectedAudience = audiences[audience];
   return (
-    <div className="landing funnel-landing observer-story">
-      <PublicHeader landing />
-      <main id="main">
+    <PublicShell landing className="landing funnel-landing observer-story">
         <section className="hero funnel-hero" id="what">
           <div className="hero-copy">
             <span className="eyebrow hero-eyebrow">
@@ -564,9 +561,7 @@ export function Landing() {
           </div>
           <LandingGuide className="closing-observer" scene="journey" note={t("AXIGNAL seguirá mirando.", "AXIGNAL will keep looking.")} />
         </section>
-      </main>
-      <MiniFooter />
-    </div>
+    </PublicShell>
   );
 }
 
