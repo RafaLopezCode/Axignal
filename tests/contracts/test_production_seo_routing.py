@@ -68,3 +68,16 @@ def test_public_edge_answers_unknown_paths_with_404_not_the_legacy_landing() -> 
     page = Path("apps/web/landing/404.html").read_text(encoding="utf-8")
     assert '<meta name="robots" content="noindex, follow">' in page
     assert 'href="/"' in page
+
+
+def test_the_retired_static_landing_is_redirected_not_served() -> None:
+    """The pre-launch landing (old design, outdated legal notice) must not reappear."""
+    from pathlib import Path
+
+    conf = (
+        Path(__file__).resolve().parents[2] / "deploy/production/docker/landing-nginx.conf"
+    ).read_text(encoding="utf-8")
+    assert "location = /index.html { return 301 /; }" in conf
+    assert "location ^~ /legal/ { return 301 /policies; }" in conf
+    assert "location ^~ /legal/privacidad-rgpd { return 301 /policies/privacy; }" in conf
+    assert "storyboard-data\.json|marketing\.js|newsletter\.js)$ { return 404; }" in conf
