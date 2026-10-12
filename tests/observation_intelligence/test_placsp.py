@@ -190,3 +190,29 @@ def test_the_traversal_is_bounded_even_when_the_window_asks_for_more() -> None:
     first, second = adapter.search(query, page=1), adapter.search(query, page=2)
     assert first.has_more is True and second.has_more is False
     assert transport.requests == [A1, A2]
+
+
+class _StoreWithState(_Store):
+    """A slice left mid-traversal at page 25 by a runtime that has since restarted."""
+
+    def state(self, demand_slice: DemandSlice):  # type: ignore[no-untyped-def,override]
+        from application.world_demand.index import SliceState
+
+        return SliceState(
+            demand_slice, NOW, NOW - timedelta(days=60), False, 250, 0, NOW,
+            cursor_page=25, traversal_since=NOW - timedelta(days=30),
+        )  # fmt: skip
+
+
+def test_a_traversal_lost_in_a_restart_starts_again_instead_of_failing_forever() -> None:
+    # Found in production: after a deploy the feed answered PAGE_NOT_REACHABLE at the
+    # resumed page on every round and the slice never completed.
+    transport = Pages({A1: _page([("a1", "PUB", "2026-10-11T10:00:00+02:00")], None)})
+    adapter = PlacspFeedAdapter(transport, clock=lambda: NOW, feeds=(A1,))
+    store = _StoreWithState()
+    ingestor = WorldDemandIngestor(
+        feeds={PLACSP_SOURCE_ID: adapter}, store=store, clock=lambda: NOW
+    )  # type: ignore[dict-item,arg-type]
+    report = ingestor.ingest(DemandSlice(PLACSP_SOURCE_ID, "EU/ES", OPEN))
+    assert report.failure == "PAGE_NOT_REACHABLE" and transport.requests == []
+    assert store.marked["cursor_page"] == 1 and store.marked["traversal_since"] is None
