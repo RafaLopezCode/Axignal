@@ -3,6 +3,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import {
   DEFAULT_LOCALE,
+  isLocale,
   resolveInitialLocale,
   type Locale,
   type Copy,
@@ -23,7 +24,12 @@ const LocaleContext = createContext({
 
 export function LocaleProvider({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const [locale, setLocale] = useState<Locale>(DEFAULT_LOCALE);
+  // A language in the URL (/es, /en/knowledge…) is known before hydration, so the server renders
+  // that page in its own language; saved and browser preferences only refine routes without one.
+  const [locale, setLocale] = useState<Locale>(() => {
+    const routeLocale = pathname?.split("/")[1];
+    return isLocale(routeLocale) ? routeLocale : DEFAULT_LOCALE;
+  });
   const [ready, setReady] = useState(false);
   const [reducedMotion, setReducedMotion] = useState(false);
 

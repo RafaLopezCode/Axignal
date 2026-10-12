@@ -2,10 +2,17 @@ import type { MetadataRoute } from "next";
 import { acquisitionPages, acquisitionHubs, localizedPagePath } from "@/lib/acquisition";
 import { locales } from "@/lib/languages";
 import { absolutePublicUrl, hreflangMap } from "@/lib/acquisition-seo";
+import { homeLanguages } from "@/lib/site-seo";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   // The home page is the front door of the funnel and its only canonical landing URL.
-  const home: MetadataRoute.Sitemap = [{ url: absolutePublicUrl("/") }];
+  // The home page in each language has its own URL; every version declares the others.
+  const languages = homeLanguages();
+  const home: MetadataRoute.Sitemap = [
+    { url: absolutePublicUrl("/"), alternates: { languages } },
+    ...locales.map(({ id }) => ({ url: absolutePublicUrl(`/${id}`), alternates: { languages } })),
+    { url: absolutePublicUrl("/pricing") },
+  ];
   const hubs: MetadataRoute.Sitemap = acquisitionHubs.map((hub) => ({
     url: absolutePublicUrl(hub.path),
     alternates: { languages: hreflangMap(Object.fromEntries(acquisitionHubs.map((item) => [item.locale, item.path]))) },
