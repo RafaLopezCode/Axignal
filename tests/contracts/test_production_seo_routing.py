@@ -94,3 +94,13 @@ def test_the_subscriber_edge_config_carries_the_legacy_redirects() -> None:
     assert "location = /index.html { return 301 /; }" in edge
     assert "location ^~ /legal/aviso-legal { return 301 /policies/legal; }" in edge
     assert "location ~ ^/(es|en|fr|de|it|pt)/$ { return 301 /$1; }" in edge
+
+
+def test_the_edge_redirects_are_relative_not_on_the_internal_port() -> None:
+    """Without absolute_redirect off, nginx emits Location with its internal port 8080."""
+    from pathlib import Path
+
+    edge = (
+        Path(__file__).resolve().parents[2] / "deploy/production/subscriber-edge-nginx.conf"
+    ).read_text(encoding="utf-8")
+    assert "absolute_redirect off;" in edge
