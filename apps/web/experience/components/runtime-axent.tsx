@@ -1,8 +1,9 @@
 "use client";
+import { productGuideCatalog } from "@/lib/axent-product-guide";
 import { useEffect, useRef, useState } from "react";
 import { RotateCcw } from "lucide-react";
 import { safeSourceLink, type RuntimeProjection } from "@/lib/runtime-projection";
-import type { RuntimeAnswer } from "@/lib/runtime-axent";
+import { explainIllustrative, type RuntimeAnswer } from "@/lib/runtime-axent";
 import { useLocale } from "@/lib/locale";
 import { presentRuntimeCode, presentRuntimePassage } from "@/lib/runtime-presentation";
 import { AxentIdentity, IconButton } from "./ui";
@@ -14,6 +15,7 @@ export function useRuntimeAxent(
   projection: RuntimeProjection,
   signalId: string | null,
   subscriber?: { revision: string; cognition?: CognitiveReadingRequest },
+  illustrative = false,
 ) {
   const { t, locale } = useLocale();
   const [draft, setDraft] = useState("");
@@ -39,6 +41,11 @@ export function useRuntimeAxent(
     setError(false);
     setDraft("");
     try {
+      if (illustrative) {
+        const answer = explainIllustrative(projection, question, signalId ?? undefined, locale);
+        setMessages(previous => [...previous, { question, answer }]);
+        return;
+      }
       const response = await fetch(subscriber ? "/api/subscriber/axent" : "/api/axent", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -107,6 +114,7 @@ export function RuntimeAxent({
   onPublicUnderstanding,
   conversation,
   focusLabel,
+  illustrative = false,
 }: {
   projection: RuntimeProjection;
   signalId: string | null;
@@ -115,11 +123,21 @@ export function RuntimeAxent({
   onPublicUnderstanding?: (reportId: string) => void;
   conversation: ReturnType<typeof useRuntimeAxent>;
   focusLabel?: string;
+  illustrative?: boolean;
 }) {
   const { t, locale } = useLocale();
   const { draft, setDraft, busy, error, messages, ask, stop, clear } =
     conversation;
+  const panelRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    // A guide button is replaced by follow-ups. Retain keyboard orientation when that
+    // replacement removes the focused control; typing in the composer keeps its focus.
+    if (messages.at(-1)?.answer.productGuide && document.activeElement === document.body) {
+      panelRef.current?.querySelector<HTMLButtonElement>(".axent-questions button")?.focus({ preventScroll: true });
+    }
+  }, [messages]);
   const questions = [
+    ...productGuideCatalog.locales[locale].questions.slice(0, 2),
     t("Qué sabes", "What do you know"),
     t("Qué cambió", "What changed"),
     t("Por qué importa", "Why it matters"),
@@ -128,7 +146,7 @@ export function RuntimeAxent({
     t("Qué investigarías después", "What would you investigate next"),
   ];
   return (
-    <div className="axent-panel">
+    <div ref={panelRef} className="axent-panel">
       <header className="axent-header">
         <AxentIdentity />
         <IconButton
@@ -143,7 +161,7 @@ export function RuntimeAxent({
       </header>
       <div className="axent-scope">
         <span className="mono">
-          {t("CONTEXTO AUTORIZADO", "AUTHORIZED CONTEXT")}
+          {illustrative ? productGuideCatalog.locales[locale].illustrationLabel : t("CONTEXTO AUTORIZADO", "AUTHORIZED CONTEXT")}
         </span>
         <strong>{projection.organization.name}</strong>
         <small>
@@ -163,7 +181,7 @@ export function RuntimeAxent({
               )}
             </h2>
             <p>
-              {t(
+              {illustrative ? productGuideCatalog.locales[locale].illustrationNotice : t(
                 "Lectura de la evidencia disponible. La investigación nueva requiere herramientas autorizadas.",
                 "Reading available evidence. New research requires authorized tools.",
               )}
@@ -177,6 +195,7 @@ export function RuntimeAxent({
             </div>
             <div className="axent-message">
               <span className="message-author">AXENT</span>
+              {message.answer.productGuide && <small className="axent-example">{message.answer.productGuide.label}</small>}
               <p className="axent-synthesis">{message.answer.summary}</p>
               {message.answer.cognition && <div className="cg-lens">{message.answer.cognition.plan.items.map(item => <CognitiveComponent
                 key={item.component} id={item.component}
@@ -216,6 +235,12 @@ export function RuntimeAxent({
                   ))}
                 </section>
               )}
+              {!!message.answer.grounding && message.answer.action !== "evidence" && message.answer.evidenceBasis.length > 0 && <details className="axent-answer-section">
+                <summary>{t("Ver fundamento y límites", "Inspect basis and limits")}</summary>
+                {message.answer.evidenceBasis.map((value, j) => <p key={j}>{presentRuntimePassage(value, projection, locale)}</p>)}
+                {message.answer.evidenceLimits?.map((value, j) => <p key={`limit-${j}`}>{presentRuntimePassage(value, projection, locale)}</p>)}
+              </details>}
+              {message.answer.action === "evidence" && message.answer.evidenceLimits?.map((value, j) => <p key={`limit-${j}`}>{presentRuntimePassage(value, projection, locale)}</p>)}
               {message.answer.action === "research-unavailable" && (
                 <section className="axent-answer-section proposed-research">
                   <strong>{t("Investigación propuesta", "Proposed research")}</strong>
@@ -256,7 +281,9 @@ export function RuntimeAxent({
                       }
                 }
               >
-                {t("Ver señal y evidencia", "Read signal and evidence")}
+                {message.answer.action === "evidence" && !message.answer.signalIds.length
+                  ? t("Abrir evidencias disponibles", "Open available evidence")
+                  : t("Ver señal y evidencia", "Read signal and evidence")}
               </button>}
             </div>
           </div>
@@ -278,7 +305,7 @@ export function RuntimeAxent({
           </p>
         )}
         <div className="axent-questions">
-          {questions.map((q) => (
+          {(messages.at(-1)?.answer.productGuide?.followUps ?? questions).map((q) => (
             <button key={q} disabled={busy} onClick={() => void ask(q)}>
               {q}
             </button>

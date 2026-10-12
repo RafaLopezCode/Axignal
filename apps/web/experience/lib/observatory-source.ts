@@ -19,8 +19,8 @@ export type ObservatoryCapabilities = {
   readonly manage: boolean;
   /** Re-check an organization whose identity is still unresolved. */
   readonly recheck: boolean;
-  /** Where AXENT is asked: the subscriber's authorized endpoint, or the Admin session's own. */
-  readonly axent: "subscriber" | "admin";
+  /** Authorized subscriber/Admin endpoint, or local explanations of the public fictional snapshot. */
+  readonly axent: "subscriber" | "admin" | "illustrative";
 };
 
 export type ObservatorySource = {

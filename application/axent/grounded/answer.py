@@ -22,7 +22,7 @@ from application.axent.grounded.corpus import EvidenceItem, EvidenceKind
 from application.axent.grounded.intent import QuestionKind, ResolvedQuestion
 from application.observation_runtime.families import ObservationFamily
 
-PROMPT_VERSION = "axent-grounded-2026-10-07.2"
+PROMPT_VERSION = "axent-grounded-2026-10-12.3"
 #: Pack references never reach the person; they stay in the structured citations.
 _REFS_IN_TEXT = re.compile(r"\s*[\(\[]?\bE\d+(?:\s*[,;y&]\s*E\d+)*[\)\]]?")
 
@@ -37,7 +37,8 @@ SYSTEM_PROMPT = (
     "never false or zero. The evidence may be a subset of what is in scope (see shown and "
     "in_scope): never state totals or counts from it. Be brief and plain: no internal "
     "identifiers in claim text. "
-    "Write in the requested language."
+    "Never invent quantities or turn a limitation into a finding. State material scope and "
+    "currentness limits alongside the explanation. Write in the requested language."
 )
 
 ANSWER_SCHEMA: dict[str, object] = {
@@ -118,6 +119,7 @@ class EvidenceRef:
     observed_at: str | None
     source_ref: str | None
     source_label: str | None
+    limits: tuple[str, ...] = ()
 
 
 @dataclass(frozen=True, slots=True)
@@ -211,6 +213,7 @@ def evidence_refs(refs: Mapping[str, EvidenceItem]) -> tuple[EvidenceRef, ...]:
             observed_at=None if item.observed_at is None else item.observed_at.isoformat(),
             source_ref=item.source_ref,
             source_label=item.source_label,
+            limits=item.limits,
         )
         for ref, item in refs.items()
     )
@@ -296,6 +299,14 @@ def verify(
             continue
         backing = [i for i in items if i.kind is not EvidenceKind.GAP]
         clean = " ".join(_REFS_IN_TEXT.sub("", text).split()).replace(" .", ".")
+        # A real reference is necessary, not a proof of natural-language entailment.
+        # Fail closed on quantities absent from the cited evidence (not from other pack items).
+        supported_numbers = {
+            number for item in backing for number in re.findall(r"\d+(?:[.,]\d+)*", item.text)
+        }
+        if not set(re.findall(r"\d+(?:[.,]\d+)*", clean)) <= supported_numbers:
+            dropped += 1
+            continue
         claims.append(
             Claim(
                 text=clean[:400],
