@@ -22,6 +22,38 @@ type Copy = { es: string; en: string };
 const c = (es: string, en: string): Copy => ({ es, en });
 export const policyDocuments = [
   {
+    slug: "legal",
+    title: c("Aviso legal", "Legal notice"),
+    deck: c("Quién presta el servicio AXIGNAL y en qué condiciones se usa este sitio.", "Who provides the AXIGNAL service and on what terms this site is used."),
+    Icon: FileText,
+    sections: [
+      {
+        title: c("Titular del servicio", "Service provider"),
+        text: c("Los datos identificativos del titular figuran al pie de este documento, tal como los publica el propio servicio.", "The provider's identifying details appear at the foot of this document, as published by the service itself."),
+      },
+      {
+        title: c("Objeto", "Purpose"),
+        text: c("axignal.com presenta AXIGNAL, un servicio de observación económica de organizaciones a partir de fuentes públicas, y da acceso a él a las personas suscritas o invitadas al piloto.", "axignal.com presents AXIGNAL, an economic observation service for organizations based on public sources, and gives access to it to subscribers or people invited to the pilot."),
+      },
+      {
+        title: c("Información y límites", "Information and limits"),
+        text: c("Lo que AXIGNAL muestra es observación con sus fuentes, hipótesis marcadas como potenciales e incógnitas declaradas. No es asesoramiento jurídico, financiero ni fiscal, ni garantiza un resultado comercial: una oportunidad potencial no es un cliente.", "What AXIGNAL shows is observation with its sources, hypotheses marked as potential and declared unknowns. It is not legal, financial or tax advice and does not guarantee a commercial result: a potential opportunity is not a customer."),
+      },
+      {
+        title: c("Propiedad intelectual", "Intellectual property"),
+        text: c("La marca, el software, los textos y el diseño de AXIGNAL pertenecen a su titular. Las fuentes públicas conservan sus propias condiciones de reutilización, que AXIGNAL cita en cada dato.", "The AXIGNAL brand, software, texts and design belong to its provider. Public sources keep their own reuse conditions, which AXIGNAL cites with each item."),
+      },
+      {
+        title: c("Uso responsable", "Responsible use"),
+        text: c("No debe usarse el servicio para interferir con su disponibilidad, eludir sus controles, extraer datos de forma masiva ni presentar sus conclusiones como propias.", "The service must not be used to interfere with its availability, bypass its controls, extract data in bulk or present its conclusions as one's own."),
+      },
+      {
+        title: c("Legislación aplicable", "Applicable law"),
+        text: c("Se aplica la legislación española, incluida la Ley 34/2002 de servicios de la sociedad de la información, sin perjuicio de los derechos que la normativa de consumo reconozca a cada persona.", "Spanish law applies, including Law 34/2002 on information society services, without prejudice to the rights consumer law grants each person."),
+      },
+    ],
+  },
+  {
     slug: "privacy",
     title: c("Privacidad", "Privacy"),
     deck: c("Qué datos utiliza AXIGNAL y cómo ejercer tus derechos.", "Which details AXIGNAL uses and how to exercise your rights."),
@@ -29,7 +61,7 @@ export const policyDocuments = [
     sections: [
       {
         title: c("Responsable y alcance", "Controller and scope"),
-        text: c("Responsable: AXIGNAL. País: España. El canal de contacto muestra un correo público sólo cuando el servicio lo publica. No se ha publicado un NIF.", "Controller: AXIGNAL. Country: Spain. The contact channel shows a public email only when the service publishes one. No tax identifier has been published."),
+        text: c("El responsable del tratamiento es el titular del servicio, identificado al pie de este documento y en el aviso legal. País: España.", "The data controller is the service provider, identified at the foot of this document and in the legal notice. Country: Spain."),
       },
       {
         title: c(
@@ -238,7 +270,22 @@ export function Policies() {
     </PublicShell>
   );
 }
-export function PolicyDocument({ slug }: { slug: string }) {
+type Operator = { name: string; kind: string | null; taxId: string; address: string; contact: string; termsVersion: string };
+
+/** The service holder as the server configuration publishes it; nothing is invented. */
+function OperatorIdentity({ operator }: { operator: Operator | null }) {
+  const { t } = useLocale();
+  if (!operator) return <p>{t("Los datos identificativos del titular todavía no están publicados por el servicio.", "The provider's identifying details are not yet published by the service.")}</p>;
+  return <dl className="policy-operator">
+    <div><dt>{t("Titular", "Provider")}</dt><dd>{operator.name}{operator.kind ? ` · ${operator.kind}` : ""}</dd></div>
+    <div><dt>{t("NIF", "Tax ID")}</dt><dd>{operator.taxId}</dd></div>
+    <div><dt>{t("Domicilio", "Address")}</dt><dd>{operator.address}</dd></div>
+    <div><dt>{t("Contacto", "Contact")}</dt><dd><a href={`mailto:${operator.contact}`}>{operator.contact}</a></dd></div>
+    <div><dt>{t("Versión de las condiciones", "Terms version")}</dt><dd>{operator.termsVersion}</dd></div>
+  </dl>;
+}
+
+export function PolicyDocument({ slug, operator = null }: { slug: string; operator?: Operator | null }) {
   const { t, copy } = useLocale();
   const doc = policyDocuments.find((d) => d.slug === slug)!;
   return (
@@ -281,10 +328,8 @@ export function PolicyDocument({ slug }: { slug: string }) {
           ))}
           <aside className="article-basis">
             <Info size={20} />
-            <h3>{t("Responsable y límites", "Controller and limits")}</h3>
-            <p>
-              {t("Responsable: AXIGNAL · España. El correo depende del estado del canal; no se publica un NIF ni se garantiza una resolución legal automática.", "Controller: AXIGNAL · Spain. Email depends on channel status; no tax identifier is published and no automatic legal resolution is guaranteed.")}
-            </p>
+            <h3>{t("Titular y responsable", "Provider and controller")}</h3>
+            <OperatorIdentity operator={operator} />
             <Link href="/contact" className="text-link">
               {t("Consultar el canal", "Check the channel")}
               <ArrowRight size={16} />

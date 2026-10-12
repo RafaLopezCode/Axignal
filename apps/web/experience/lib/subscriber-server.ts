@@ -53,6 +53,22 @@ async function upstream(path: string, token?: string | null, body?: unknown): Pr
     ...(body === undefined ? {} : { body: JSON.stringify(body) }),
   });
 }
+export const legalOperatorSchema = z.object({
+  state: z.literal("PUBLISHED"), name: z.string().min(1).max(200), kind: z.string().max(80).nullable(),
+  taxId: z.string().min(1).max(40), address: z.string().min(1).max(400), contact: z.string().min(3).max(254),
+  termsVersion: z.string().min(1).max(80),
+});
+export type LegalOperator = z.infer<typeof legalOperatorSchema>;
+/** The service holder (LSSI art. 10) as configured on the server; null when not published. */
+export async function legalOperator(): Promise<LegalOperator | null> {
+  if (!process.env.AXIGNAL_RUNTIME_ORIGIN) return null;
+  try {
+    const response = await upstream("/subscriber/legal/operator");
+    if (!response.ok) return null;
+    const parsed = legalOperatorSchema.safeParse(await checkedJson(response));
+    return parsed.success ? parsed.data : null;
+  } catch { return null; }
+}
 const rejected = (code: string, status: number) => Response.json({ state: "rejected", code }, { status, headers });
 export async function subscriberBillingWebhook(request: Request): Promise<Response> {
   try {
