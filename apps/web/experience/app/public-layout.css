@@ -1,0 +1,79 @@
+/* One public frame, owned by PublicShell, including the landing and access.
+   Reading measures inside articles/forms remain local to their content. */
+:root {
+  --public-width: 1600px;
+  --public-gutter: clamp(24px, 3.5vw, 64px);
+  --public-background: #fafbfc;
+}
+
+.public-page {
+  background: var(--public-background);
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+}
+
+.public-page > .public-header,
+.public-page > .public-main,
+.public-page > .mini-footer {
+  width: 100%;
+  max-width: var(--public-width);
+  margin-inline: auto;
+  padding-inline: var(--public-gutter);
+}
+
+.public-page > .public-header {
+  flex-shrink: 0;
+  background: rgb(250 251 252 / 96%);
+}
+
+.public-page > .public-main {
+  flex: 1;
+  margin-block: 0;
+  padding-block: 0 85px;
+}
+
+.public-page > .mini-footer {
+  flex-shrink: 0;
+  margin-block: 0;
+}
+
+/* Chapters own their vertical rhythm and full-width background treatments. */
+.public-page > .public-main-landing {
+  max-width: none;
+  padding: 0;
+}
+
+.public-main-landing > .hero,
+.public-main-landing > .chapter {
+  max-width: var(--public-width);
+  padding-inline: var(--public-gutter);
+}
+
+.public-main-landing > .funnel-proof,
+.public-main-landing > .funnel-time {
+  max-width: none;
+  padding-inline: max(var(--public-gutter), calc((100% - var(--public-width)) / 2 + var(--public-gutter)));
+}
+
+/* Acquisition content already sits inside the global content gutter. */
+.public-page .acquisition-intro,
+.public-page .acquisition-article-intro,
+.public-page .acquisition-hub-content {
+  width: 100%;
+  margin-inline: 0;
+}
+
+@media (max-width: 700px) {
+  :root {
+    --public-gutter: 20px;
+  }
+
+  .public-page > .public-main {
+    padding-bottom: 50px;
+  }
+
+  .public-page > .public-main-landing {
+    padding-bottom: 0;
+  }
+}

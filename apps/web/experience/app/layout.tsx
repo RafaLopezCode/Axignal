@@ -4,6 +4,7 @@ import "./public.css";
 import "./typography.css";
 import "./acquisition.css";
 import "./funnel.css";
+import "./public-layout.css";
 import "../components/cognition/cognition.css";
 import { LocaleProvider } from "@/lib/locale";
 import { PrivacyNotice } from "@/components/privacy-notice";

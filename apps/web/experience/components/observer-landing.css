@@ -1,7 +1,7 @@
 /* Landing-only spatial system; copy, product evidence and atlas remain governed. */
 .observer-story {
-  --story-width: 1600px;
-  --story-gutter: clamp(24px, 3.5vw, 64px);
+  --story-width: var(--public-width);
+  --story-gutter: var(--public-gutter);
   --guide-size: 280px;
   --section-space: clamp(64px, 6vw, 96px);
   --group-space: clamp(32px, 3vw, 48px);
@@ -191,7 +191,7 @@
   .observer-story .observer-pricing-guide { grid-column: 2; grid-row: 1 / 4; margin: 0; }
 }
 @media (max-width: 700px) {
-  .observer-story { --story-gutter: 20px; --guide-size: 180px; --section-space: 52px; --group-space: 32px; }
+  .observer-story { --guide-size: 180px; --section-space: 52px; --group-space: 32px; }
   .observer-story .funnel-hero { padding-top: 20px; }
   .observer-story .hero h1 { font-size: clamp(34px, 9vw, 44px); }
   .observer-story .observer-hero-signature { order: 5; margin-top: 20px; gap: 20px; }
