@@ -34,6 +34,7 @@ from application.economic_discovery.observation_memory import (
 )
 from application.economic_discovery.observation_reuse import ReusePurpose
 from application.economic_discovery.source_registry import SourceRegistryEntry
+from application.economics import economic_discoveries
 from application.first_observation.contracts import (
     AttentionTarget,
     IdentityLink,
@@ -84,6 +85,7 @@ from application.world_demand.relations import AwardStore, apply_public_awards
 from application.xeed_access.reader import TrustedRequestContext
 from domain.evidence.epistemics import Currentness
 from domain.identity import OrganizationId, PrincipalId, TenantId, XeedId
+from pipeline.economics.wikidata import WikidataEconomics
 from pipeline.entity_resolution.gleif_group import GleifGroupReader
 from pipeline.first_observation.sqlite_store import SqliteFirstObservationStore
 from pipeline.geo.nominatim import NominatimReverseGeocoder
@@ -361,7 +363,9 @@ class FirstObservationRuntime:
         awards: AwardStore | None = None,
         groups: GleifGroupReader | None = None,
         geo: GenerativeProbeRunner | None = None,
+        economics: WikidataEconomics | None = None,
     ) -> None:
+        self._economics = economics
         self._geo = geo
         self._press = press
         self._groups = groups
@@ -731,7 +735,7 @@ class FirstObservationRuntime:
         self, view: dict[str, object], organization_id: str | None
     ) -> dict[str, object]:
         """Parents and subsidiaries from GLEIF when the organization has an LEI."""
-        if self._groups is None:
+        if self._groups is None and self._economics is None:
             return view
         verified: tuple[str, ...] = ()
         identifiers_for = getattr(self._websites, "identifiers_for", None)
@@ -747,13 +751,23 @@ class FirstObservationRuntime:
         lei = next(iter(verified), None) or next(iter(declared), None)
         if not lei:
             return view
+        observed_at = str(view.get("observedAt") or "")
+        found: list[dict[str, object]] = []
         try:
-            group = self._groups.group(lei)
+            if self._groups is not None:
+                found += group_discoveries(
+                    self._groups.group(lei), verified=lei in verified, observed_at=observed_at
+                )
         except Exception:  # registry unavailable: the group stays unknown, nothing invented
-            return view
-        found = group_discoveries(
-            group, verified=lei in verified, observed_at=str(view.get("observedAt") or "")
-        )
+            pass
+        try:
+            if self._economics is not None:
+                # Economic magnitudes Wikidata states for the item carrying this LEI.
+                found += economic_discoveries(
+                    self._economics.facts(lei), verified=lei in verified, observed_at=observed_at
+                )
+        except Exception:  # unavailable: the magnitudes stay unknown
+            pass
         if found:
             view["discoveries"] = [*discoveries, *found]
         return view
@@ -1093,6 +1107,9 @@ def build_first_observation(
         geo=None
         if overrides.source_ports is not None or overrides.feeds is not None
         else generative_probe_from_values(values, root),
+        economics=None
+        if overrides.source_ports is not None or overrides.feeds is not None
+        else WikidataEconomics(root / "wikidata-economics.sqlite3"),
         awards=index,
         purge_canonical_raw=(
             lambda at: observation_memory.purge_first_observation_content(
