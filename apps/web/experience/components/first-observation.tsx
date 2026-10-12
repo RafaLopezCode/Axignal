@@ -125,6 +125,9 @@ export function discoveryCopy(d: Discovery, t: Translate, locale = "en"): { find
     return { finding: `${d.detail.isNew === true ? `${t("Nueva", "New")} · ` : ""}${t("Demanda pública potencial", "Potential public demand")}: ${title}`,
       why: `${facts ? `${facts}. ` : ""}${t("Coincide por clasificación y lugar. No es un cliente, una invitación ni una relación.", "It matches by classification and place. It is not a customer, an invitation or a relationship.")}` };
   }
+  if (d.kind === "DECLARED_LOCATION" && d.code === "COUNTRY_FROM_SITE_SIGNALS") return {
+    finding: `${t("País deducido de señales de su web", "Country inferred from its website's signals")}: ${placeLabel(d.statement, locale)}`,
+    why: t("Dos o más señales independientes de su propia web apuntan a este país. Indica dónde empezar a buscar demanda; no define su mercado ni dónde opera.", "Two or more independent signals on its own website point to this country. It shows where to start looking for demand; it does not define its market or where it operates.") };
   if (d.kind === "DECLARED_LOCATION") return d.code === "LOCATION_STATED_IN_TEXT"
     ? { finding: `${t("Ubicación mencionada en su web", "Location mentioned on its website")}: ${placeLabel(d.statement, locale)}`, why: t("Indica dónde mirar primero. No define dónde opera ni todo su mercado.", "It shows where to look first. It does not define where it operates or its whole market.") }
     : { finding: `${t("Dirección que declara", "Address it declares")}: ${d.statement}`, why: t("Indica dónde mirar primero. No define dónde opera ni todo su mercado.", "It shows where to look first. It does not define where it operates or its whole market.") };
@@ -191,6 +194,17 @@ function epistemicCopy(state: Discovery["epistemicState"], t: Translate): string
   return t("Desconocido", "Unknown");
 }
 
+function signalLabel(kind: string, t: Translate): string {
+  switch (kind) {
+    case "DOMAIN": return t("Dominio de país", "Country domain");
+    case "LANGUAGE_REGION": return t("Idioma y región declarados", "Declared language and region");
+    case "PHONE_PREFIX": return t("Prefijo telefónico", "Telephone prefix");
+    case "TAX_IDENTIFIER": return t("Identificador fiscal", "Tax identifier");
+    case "POSTAL_AND_NAME": return t("Código postal y país", "Postal code and country");
+    default: return kind;
+  }
+}
+
 function checkLabel(key: string, t: Translate): string {
   switch (key) {
     case "robotsTxtPublished": return t("robots.txt publicado", "robots.txt published");
@@ -228,6 +242,7 @@ export function basisRows(d: Discovery, t: Translate, locale: string): Array<[st
   if (typeof detail.buyer === "string") rows.push([t("Comprador", "Buyer"), detail.buyer]);
   if (typeof detail.deadline === "string") rows.push([t("Plazo", "Deadline"), detail.deadline]);
   if (detail.checks && typeof detail.checks === "object" && !detail.audit) for (const [key, value] of Object.entries(detail.checks as Record<string, unknown>)) rows.push([checkLabel(key, t), Array.isArray(value) ? value.join(", ") || "—" : value === true ? t("Sí", "Yes") : value === false ? t("No", "No") : String(value ?? "—")]);
+  if (Array.isArray(detail.signals)) for (const s of detail.signals as Array<{ kind?: unknown; value?: unknown }>) rows.push([signalLabel(String(s.kind ?? ""), t), String(s.value ?? "")]);
   if (typeof detail.limitation === "string") rows.push([t("Límite", "Limitation"), detail.limitation]);
   if (typeof detail.impact === "string") rows.push([t("Impacto", "Impact"), auditImpact(detail.impact, t)]);
   if (d.code.startsWith("AUDIT:")) rows.push([t("Qué puedes hacer", "What you can do"), auditCopy(d.code.slice(6), t).action]);

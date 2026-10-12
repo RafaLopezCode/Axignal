@@ -94,7 +94,34 @@ class SqliteFirstObservationStore:
                 );
                 CREATE INDEX IF NOT EXISTS idx_fo_understanding_history_scope
                     ON fo_understanding_history(tenant_id, target_ref, organization_id, observed_at);
+                CREATE TABLE IF NOT EXISTS fo_demand_markets (
+                    tenant_id TEXT NOT NULL,
+                    target_ref TEXT NOT NULL,
+                    markets TEXT NOT NULL,
+                    updated_at TEXT NOT NULL,
+                    PRIMARY KEY (tenant_id, target_ref)
+                );
                 """
+            )
+
+    def demand_markets(self, tenant_id: str, target_ref: str) -> tuple[str, ...]:
+        """Where the subscriber asked to look for demand for this Focus (attention only)."""
+        with self._connect() as db:
+            row = db.execute(
+                "SELECT markets FROM fo_demand_markets WHERE tenant_id=? AND target_ref=?",
+                (tenant_id, target_ref),
+            ).fetchone()
+        return () if row is None else tuple(str(m) for m in json.loads(row["markets"]))
+
+    def set_demand_markets(
+        self, tenant_id: str, target_ref: str, markets: tuple[str, ...], *, now: datetime
+    ) -> None:
+        with self._connect() as db:
+            db.execute(
+                """INSERT INTO fo_demand_markets (tenant_id, target_ref, markets, updated_at)
+                VALUES (?,?,?,?) ON CONFLICT(tenant_id, target_ref) DO UPDATE SET
+                markets=excluded.markets, updated_at=excluded.updated_at""",
+                (tenant_id, target_ref, json.dumps(list(markets)), now.isoformat()),
             )
 
     @contextmanager
