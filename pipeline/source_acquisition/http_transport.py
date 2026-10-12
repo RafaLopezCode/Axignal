@@ -193,5 +193,9 @@ class PinnedHttpTransport:
                 connection.close()
 
         if errors:
-            raise OSError(f"all validated source addresses failed: {type(errors[-1]).__name__}")
+            message = f"all validated source addresses failed: {type(errors[-1]).__name__}"
+            if all(isinstance(error, ssl.SSLCertVerificationError) for error in errors):
+                # Kept distinct: an unverifiable certificate is not an unreachable host.
+                raise ssl.SSLCertVerificationError(message)
+            raise OSError(message)
         raise OSError("source policy returned no connectable address")

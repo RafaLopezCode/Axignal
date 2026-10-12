@@ -176,3 +176,17 @@ def test_placsp_is_adopted_for_spanish_open_tenders_only() -> None:
     assert source.adoption is AdoptionStatus.ADOPTED and not source.adoption_blockers
     assert source.capabilities == frozenset({OPEN})
     assert source.jurisdictions == (SPAIN,)
+
+
+def test_the_traversal_is_bounded_even_when_the_window_asks_for_more() -> None:
+    # Weekday pages hold hours of updates: sixty days would be gigabytes. The feed is read
+    # back to MAX_AGE (30 days) at most, whatever window the index asks for.
+    transport = Pages({
+        A1: _page([("a1", "PUB", "2026-10-11T10:00:00+02:00")], A2),
+        A2: _page([("a2", "PUB", "2026-09-01T10:00:00+02:00")], "https://contrataciondelestado.es/a_3.atom"),
+    })  # fmt: skip
+    adapter = PlacspFeedAdapter(transport, clock=lambda: NOW, feeds=(A1,))
+    query = _query(NOW - timedelta(days=60))
+    first, second = adapter.search(query, page=1), adapter.search(query, page=2)
+    assert first.has_more is True and second.has_more is False
+    assert transport.requests == [A1, A2]

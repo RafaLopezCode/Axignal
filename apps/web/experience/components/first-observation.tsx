@@ -131,7 +131,13 @@ export function discoveryCopy(d: Discovery, t: Translate, locale = "en"): { find
   if (d.kind === "REPRESENTATION_GAP") return d.code === "HOMEPAGE_NOINDEX"
     ? { finding: t("Su página principal pide no aparecer en buscadores.", "Its homepage asks search engines not to index it."), why: t("Los buscadores podrían no representar la web mientras siga así. No mide posiciones.", "Search engines may not represent the site while it stays so. It does not measure rankings.") }
     : { finding: t("En las páginas leídas, su oferta aparece en el texto pero no en datos estructurados.", "On the pages read, its offer appears in the text but not as structured data."), why: t("Las superficies que leen datos estructurados podrían no relacionarla con lo que ofrece. Es una brecha posible, no una causa medida.", "Surfaces that read structured data may not connect it with what it offers. It is a possible gap, not a measured cause.") };
-  if (d.code.startsWith("NO_GOVERNED_DEMAND_SOURCE:")) return { finding: `${t("Aún no hay una fuente de demanda gobernada para", "No governed demand source yet for")} ${placeLabel(String(d.detail.jurisdiction ?? ""), locale)}`, why: t("Falta de fuente no es falta de mercado ni de demanda.", "No source is not no market and not no demand.") };
+  if (d.code.startsWith("NO_GOVERNED_DEMAND_SOURCE:")) {
+    const place = placeLabel(String(d.detail.jurisdiction ?? ""), locale);
+    const asked = Array.isArray(d.detail.questions) ? d.detail.questions.map(q => demandQuestionLabel(String(q), t)).filter((x): x is string => Boolean(x)) : [];
+    return asked.length
+      ? { finding: t("En {place} aún no hay fuente gobernada para: {list}.", "In {place} there is no governed source yet for: {list}.").replace("{place}", place).replace("{list}", asked.join(", ")), why: t("Falta de fuente no es falta de mercado ni de demanda.", "No source is not no market and not no demand.") }
+      : { finding: `${t("Aún no hay una fuente de demanda gobernada para", "No governed demand source yet for")} ${place}`, why: t("Falta de fuente no es falta de mercado ni de demanda.", "No source is not no market and not no demand.") };
+  }
   switch (d.code) {
     case "IDENTITY_NOT_VERIFIED": return { finding: t("Identidad legal todavía no verificada.", "Legal identity not verified yet."), why: t("Lo que ves describe la web pública, no una organización verificada por un registro.", "What you see describes the public website, not an organization verified by a registry.") };
     case "WEBSITE_LINK_NOT_REGISTRY_VERIFIED": return { finding: t("Ningún registro vincula esta web a la organización.", "No registry links this website to the organization."), why: t("La web la indicaste tú; la tratamos como atención, no como hecho.", "You indicated this website; we treat it as attention, not as fact.") };
@@ -145,8 +151,25 @@ export function discoveryCopy(d: Discovery, t: Translate, locale = "en"): { find
     case "ROBOTS_DISALLOWED": return { finding: t("Su robots.txt no permite que la observemos.", "Its robots.txt does not allow us to observe it."), why: t("Lo respetamos y no leemos sus páginas. No concluimos nada de ello.", "We respect it and do not read its pages. We conclude nothing from it.") };
     case "REDIRECTS_TO_ANOTHER_SITE": return { finding: t("Esta web redirige a otro dominio.", "This website redirects to another domain."), why: t("No la seguimos porque podría ser otra organización. Indica el dominio al que lleva para observarla.", "We do not follow it because it could be another organization. Give the domain it leads to in order to observe it.") };
     case "HOMEPAGE_UNAVAILABLE": return { finding: t("Su página principal no respondió a una lectura automática.", "Its homepage did not answer an automated reading."), why: t("Puede limitar los accesos automáticos; no lo eludimos. No concluimos nada de ello.", "It may limit automated access; we do not bypass it. We conclude nothing from it.") };
+    case "TLS_CERTIFICATE_NOT_VERIFIED": return { finding: t("No pudimos verificar el certificado de seguridad de su web.", "We could not verify its website's security certificate."), why: t("Su servidor no presenta una cadena de certificados completa. No desactivamos la verificación; no concluimos nada sobre la organización.", "Its server does not present a complete certificate chain. We do not switch verification off; we conclude nothing about the organization.") };
     case "ROBOTS_UNAVAILABLE": return { finding: t("Su web no respondió a una lectura automática.", "Its website did not answer an automated reading."), why: t("Lo intentamos también con www. Puede ser temporal; no concluimos nada de ello.", "We also tried with www. It may be temporary; we conclude nothing from it.") };
     default: return { finding: t("La web no se pudo observar con sus reglas de acceso.", "The website could not be observed under its access rules."), why: t("Respetamos robots.txt y nuestros límites; no concluimos nada de ello.", "We respect robots.txt and our limits; we conclude nothing from that.") };
+  }
+}
+
+/** The demand question a missing source leaves open, in the reader's words. */
+function demandQuestionLabel(id: string, t: Translate): string | null {
+  switch (id) {
+    case "compatible-public-tenders": return t("licitaciones abiertas", "open tenders");
+    case "revealed-public-demand": return t("adjudicaciones recientes", "recent awards");
+    case "public-investment-pipeline": return t("inversión pública planificada", "planned public investment");
+    case "funding-driven-demand": return t("subvenciones y ayudas", "grants and subsidies");
+    case "projects-needing-capability": return t("permisos y proyectos", "permits and projects");
+    case "private-project-announcements": return t("proyectos privados anunciados", "announced private projects");
+    case "regulation-driven-demand": return t("cambios regulatorios", "regulatory changes");
+    case "buyer-expansion": return t("compradores en expansión", "expanding buyers");
+    case "consumer-representation": return t("presencia ante consumidores", "consumer presence");
+    default: return null;
   }
 }
 

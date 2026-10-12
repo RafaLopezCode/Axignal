@@ -26,7 +26,7 @@ from application.observation_intelligence.contracts import (
     geo,
 )
 
-CATALOG_VERSION = "eoil-catalog-2026-10-12.5"
+CATALOG_VERSION = "eoil-catalog-2026-10-12.6"
 
 #: Path depth that counts as a "region" inside each jurisdiction tree.
 REGIONAL_DEPTH: dict[str, int] = {"EU": 4, "US": 2}
@@ -196,9 +196,13 @@ CAPABILITY_LEXICON: tuple[CapabilityLexiconEntry, ...] = (
     ),
     CapabilityLexiconEntry(
         capability_id="telecommunications", label="Telecommunications and connectivity",
-        terms=("telecomunicaciones", "fibra óptica", "telecommunications", "fibre optic",
-               "fiber optic", "télécommunications", "telekommunikation", "telecomunicazioni",
-               "telecomunicações"),
+        # Service phrases only: the bare sector word is how others list the clients they serve.
+        terms=("operador de telecomunicaciones", "servicios de telecomunicaciones",
+               "instalaciones de telecomunicaciones", "fibra óptica", "telecommunications services",
+               "telecom operator", "fibre optic", "fiber optic", "services de télécommunications",
+               "opérateur télécom", "telekommunikationsdienst", "telekommunikationsanbieter",
+               "servizi di telecomunicazione", "operatore di telecomunicazioni",
+               "serviços de telecomunicações", "operador de telecomunicações"),
         demand_codes=(cpv("64200000"), cpv("32500000"), cpv("45314000"), naics("517111")),
         families=("telecommunications",),
         buyer_jobs=("connectivity and network deployments for public buildings",),
@@ -303,6 +307,8 @@ CAPABILITY_LEXICON: tuple[CapabilityLexiconEntry, ...] = (
     CapabilityLexiconEntry(
         capability_id="cleaning-services", label="Cleaning services",
         terms=("servicios de limpieza", "empresa de limpieza", "limpieza de oficinas",
+               "limpieza de edificios", "limpieza industrial", "limpieza hospitalaria",
+               "apoyo de limpieza",
                "cleaning services", "commercial cleaning", "services de nettoyage",
                "gebäudereinigung", "servizi di pulizia", "serviços de limpeza"),
         demand_codes=(cpv("90910000"), cpv("90911200"), naics("561720")),
@@ -330,6 +336,7 @@ CAPABILITY_LEXICON: tuple[CapabilityLexiconEntry, ...] = (
     CapabilityLexiconEntry(
         capability_id="facility-maintenance", label="Facility management and maintenance",
         terms=("mantenimiento de instalaciones", "facility management", "facility services",
+               "servicios auxiliares",
                "gestión de instalaciones", "maintenance multitechnique", "gebäudemanagement",
                "manutenzione impianti", "manutenção de instalações"),
         demand_codes=(cpv("50700000"), cpv("79993000"), naics("561210")),
@@ -391,7 +398,7 @@ CAPABILITY_LEXICON: tuple[CapabilityLexiconEntry, ...] = (
     CapabilityLexiconEntry(
         capability_id="pharmaceuticals", label="Pharmaceutical products",
         terms=("laboratorio farmacéutico", "medicamentos genéricos", "pharmaceutical company",
-               "pharmaceuticals", "laboratoire pharmaceutique", "pharmaunternehmen",
+               "pharmaceutical products", "laboratoire pharmaceutique", "pharmaunternehmen",
                "azienda farmaceutica", "indústria farmacêutica"),
         demand_codes=(cpv("33600000"), naics("325412")),
         families=("health",),
@@ -777,14 +784,16 @@ SOURCES: tuple[SourceDescriptor, ...] = (
         # conditions (cite the source, do not distort, keep the update date).
         rights=RightsStatus.REUSE_DOCUMENTED,
         reliability=Band.HIGH,
-        precision=Band.MEDIUM,
+        # Official structured CODICE: CPV per tender and lot, like TED.
+        precision=Band.HIGH,
         coverage=Band.HIGH,
         provenance_quality=Band.HIGH,
         structured=True,
         expected_change_interval=timedelta(days=1),
         historical_depth="rolling syndication, about two days per page, newest first",
         cost_per_request_microunits=0,
-        computational_cost=Band.MEDIUM,
+        # Answered from the local index; the feed's weight is paid at ingestion only.
+        computational_cost=Band.LOW,
         expected_latency_ms=3_000,
         failure_modes=(
             "large feed pages (about 14 MB)",
@@ -800,6 +809,9 @@ SOURCES: tuple[SourceDescriptor, ...] = (
         scope_limitations=(
             "Spanish public sector tenders hosted on the platform or aggregated from regional "
             "platforms; minor contracts are excluded. Read for the index, never per request.",
+            "Only open tenders updated within the last 30 days are read (feed size); a tender "
+            "open for longer without any update, such as a dynamic purchasing system, may be "
+            "missing.",
         ),
     ),
     _candidate(

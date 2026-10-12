@@ -17,7 +17,7 @@ import time
 import urllib.request
 import xml.etree.ElementTree as ET
 from collections.abc import Callable, Iterator
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
 from typing import Protocol
 from urllib.parse import urlsplit
 
@@ -39,6 +39,9 @@ FEEDS = (
 )
 HOSTS = frozenset({"contrataciondelsectorpublico.gob.es", "contrataciondelestado.es"})
 MAX_FEED_BYTES = 40_000_000
+#: How far back the feed is read. Weekday pages hold a few hours of updates, so sixty
+#: days would be gigabytes; an open tender almost always had an update within thirty.
+MAX_AGE = timedelta(days=30)
 OPEN = "PUB"
 
 
@@ -191,8 +194,10 @@ class PlacspFeedAdapter:
         *,
         clock: Callable[[], datetime],
         feeds: tuple[str, ...] = FEEDS,
+        max_age: timedelta = MAX_AGE,
     ) -> None:
         self._transport = transport
+        self._max_age = max_age
         self._clock = clock
         self._feeds = feeds
         #: The traversal so far, page by page: (feed index, page URL). Next links are dated
@@ -239,7 +244,12 @@ class PlacspFeedAdapter:
             records, next_url, oldest = parse_feed(body)
         except (ET.ParseError, ValueError):
             return self._failure("FEED_NOT_PARSEABLE", started)
+        # Publication filters records; the traversal stops by update time, bounded by MAX_AGE
+        # (a tender published long ago but updated recently is still kept while open).
         since = query.published_since
+        horizon = self._clock() - self._max_age
+        if since is not None:
+            horizon = max(horizon, since)
         kept = tuple(
             r
             for r in records
@@ -247,8 +257,8 @@ class PlacspFeedAdapter:
             and any(p.within(g) for p in r.places for g in query.geographies)
         )
         # This feed is finished when it has no older page or its page already reaches
-        # back past the window; then the next feed starts, until every feed is read.
-        finished = next_url is None or (since is not None and oldest is not None and oldest < since)
+        # back past the horizon; then the next feed starts, until every feed is read.
+        finished = next_url is None or (oldest is not None and oldest < horizon)
         if not finished and next_url is not None:
             if urlsplit(next_url).hostname not in HOSTS or urlsplit(next_url).scheme != "https":
                 return self._failure("NEXT_LINK_OUTSIDE_PLATFORM", started)

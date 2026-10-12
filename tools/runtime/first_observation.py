@@ -872,7 +872,12 @@ def build_first_observation(
             now=clock.now(),
         )
     ingestor = WorldDemandIngestor(
-        feeds={k: v for k, v in feeds.items() if k in ports}, store=index, clock=clock.now
+        feeds={k: v for k, v in feeds.items() if k in ports},
+        store=index,
+        clock=clock.now,
+        # Ingestion shares the worker with first observations: short rounds keep a new
+        # subscriber's wait bounded while a large backfill (PLACSP) spans many rounds.
+        max_pages=8,
     )
     from application.subscriber_projection.evidence_delivery import ContentAccess
     from tools.runtime.evidence_content import LiveEvidenceContentRights

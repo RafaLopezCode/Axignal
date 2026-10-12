@@ -89,3 +89,25 @@ def test_catalog_entries_are_unique_and_route_only_through_valid_codes() -> None
         for code in entry.demand_codes:
             if code.scheme == "CPV":
                 assert re.fullmatch(r"\d{8}", code.code), (entry.capability_id, code.code)
+
+
+def test_a_list_of_client_sectors_is_not_an_activity() -> None:
+    # Observed on a facility-services group: the sectors it serves, not what it does.
+    sectors = (
+        "Evolucionamos en los servicios globales que prestamos a tu sector de actividad: "
+        "administración pública, industria, banca y seguros, salud, telecomunicaciones, "
+        "transporte."
+    )
+    assert "telecommunications" not in _ids(sectors)
+    assert _ids("Somos un operador de telecomunicaciones con red propia de fibra óptica.") == [
+        "telecommunications"
+    ]
+
+
+def test_a_facility_services_group_is_recognized_by_its_own_sentence() -> None:
+    sentence = (
+        "Servicios para empresas de cualquier sector. Damos apoyo de limpieza, seguridad, "
+        "mantenimiento, servicios auxiliares o recursos humanos."
+    )
+    found = _ids(sentence)
+    assert {"cleaning-services", "facility-maintenance"} <= set(found)
