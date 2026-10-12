@@ -263,6 +263,82 @@ class SqlitePilotAccessStore:
             )
             return self._grant(row)
 
+    def grant_listed_account(
+        self,
+        *,
+        account: str,
+        principal_id: PrincipalId,
+        tenant_id: TenantId,
+        granted_at: datetime,
+        grant_expires_at: datetime,
+    ) -> PilotGrant | None:
+        """One grant for an operator-listed pilot test account; None when one already exists.
+
+        The grant keeps the invite-backed shape: an internal invite is recorded as issued
+        to the listed account and redeemed at once, in the same transaction, and audited.
+        """
+        if granted_at.tzinfo is None or grant_expires_at.tzinfo is None:
+            raise ValueError("pilot grant times must be timezone-aware")
+        if grant_expires_at <= granted_at:
+            raise ValueError("pilot grant expiry must follow grant time")
+        if account not in {"A", "B"}:
+            raise ValueError("listed pilot account must be A or B")
+        with self._connect() as connection:
+            connection.execute("BEGIN IMMEDIATE")
+            existing = connection.execute(
+                """SELECT 1 FROM subscriber_pilot_grants
+                   WHERE principal_id = ? AND tenant_id = ?""",
+                (principal_id, tenant_id),
+            ).fetchone()
+            if existing is not None:
+                return None
+            invite_ref = f"pilot_invite_listed_{uuid.uuid4().hex}"
+            connection.execute(
+                """INSERT INTO subscriber_pilot_invites(invite_ref, token_digest, issued_by, reason,
+                   created_at, expires_at, redeemed_at, redeemed_principal_id, redeemed_tenant_id)
+                   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+                (
+                    invite_ref,
+                    # Never a usable token: a digest of a random value nobody holds.
+                    hashlib.sha256(uuid.uuid4().bytes).hexdigest(),
+                    "admin:pilot-test-accounts",
+                    f"Listed pilot test account {account}",
+                    granted_at.isoformat(),
+                    granted_at.isoformat(),
+                    granted_at.isoformat(),
+                    principal_id,
+                    tenant_id,
+                ),
+            )
+            grant_ref = f"pilot_grant_{uuid.uuid4().hex}"
+            connection.execute(
+                """INSERT INTO subscriber_pilot_grants(grant_ref, invite_ref, principal_id, tenant_id, capacity, granted_at, expires_at)
+                   VALUES (?, ?, ?, ?, 1, ?, ?)""",
+                (
+                    grant_ref,
+                    invite_ref,
+                    principal_id,
+                    tenant_id,
+                    granted_at.isoformat(),
+                    grant_expires_at.isoformat(),
+                ),
+            )
+            row = connection.execute(
+                "SELECT * FROM subscriber_pilot_grants WHERE grant_ref = ?", (grant_ref,)
+            ).fetchone()
+            assert row is not None
+            self._audit(
+                connection,
+                action="GRANTED_LISTED_ACCOUNT",
+                actor="admin:pilot-test-accounts",
+                reference=invite_ref,
+                now=granted_at,
+                reason=f"Verified Google sign-in of listed pilot test account {account}",
+                tenant=str(tenant_id),
+                principal=str(principal_id),
+            )
+            return self._grant(row)
+
     def active_grant(self, tenant_id: TenantId, *, now: datetime) -> PilotGrant | None:
         if now.tzinfo is None:
             raise ValueError("pilot grant read time must be timezone-aware")
@@ -327,6 +403,13 @@ class SqlitePilotAccessStore:
                 ORDER BY sequence DESC LIMIT 100
             """).fetchall()
 
+        # Which listed pilot test account (A or B) each listed grant belongs to.
+        listed = {
+            str(row["invite_ref"]): str(row["reason"]).rsplit(" ", 1)[-1]
+            for row in invites
+            if str(row["invite_ref"]).startswith("pilot_invite_listed_")
+        }
+
         def state(row: sqlite3.Row, redeemed: bool = False) -> str:
             if redeemed and row["redeemed_at"] is not None:
                 return "REDEEMED"
@@ -338,8 +421,24 @@ class SqlitePilotAccessStore:
 
         return {
             "asOf": now.isoformat(),
-            "invites": [{**dict(row), "state": state(row, True), "capacity": 1} for row in invites],
-            "grants": [{**dict(row), "state": state(row)} for row in grants],
+            "invites": [
+                {**dict(row), "state": state(row, True), "capacity": 1}
+                for row in invites
+                if not str(row["invite_ref"]).startswith("pilot_invite_listed_")
+            ],
+            "grants": [
+                {
+                    **dict(row),
+                    "state": state(row),
+                    # Governance: how access was granted (one-use invitation or a listed
+                    # pilot test account signing in with a verified Google address).
+                    "origin": "LISTED_ACCOUNT"
+                    if str(row["invite_ref"]).startswith("pilot_invite_listed_")
+                    else "INVITATION",
+                    "account": listed.get(str(row["invite_ref"])),
+                }
+                for row in grants
+            ],
             "audit": [dict(row) for row in audit],
             "limit": 500,
         }

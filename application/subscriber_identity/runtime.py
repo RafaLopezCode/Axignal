@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import logging
-from collections.abc import Mapping
+from collections.abc import Callable, Mapping
 from dataclasses import dataclass, field
 from datetime import datetime
 from enum import StrEnum
@@ -248,6 +248,7 @@ class SubscriberAuthenticationService:
         *,
         transaction_ttl_seconds: int = 600,
         session_ttl_seconds: int = 60 * 60 * 24,
+        on_verified_email: Callable[[PrincipalId, TenantId, str, datetime], object] | None = None,
     ) -> None:
         if transaction_ttl_seconds <= 0 or session_ttl_seconds <= 0:
             raise ValueError("identity runtime TTLs must be positive")
@@ -260,6 +261,7 @@ class SubscriberAuthenticationService:
         self._clock = clock
         self._transaction_ttl_seconds = transaction_ttl_seconds
         self._session_ttl_seconds = session_ttl_seconds
+        self._on_verified_email = on_verified_email
 
     @staticmethod
     def _digest(value: str) -> str:
@@ -340,6 +342,7 @@ class SubscriberAuthenticationService:
             raise SubscriberIdentityError(IdentityRuntimeFailure.INVALID_TRANSACTION) from None
         if not isinstance(identity, VerifiedExternalIdentity) or identity.issuer != config.issuer:
             raise SubscriberIdentityError(IdentityRuntimeFailure.INVALID_TRANSACTION)
+        verified_email = identity.verified_email
         identity = VerifiedExternalIdentity(
             issuer=identity.issuer,
             subject=identity.subject,
@@ -378,6 +381,16 @@ class SubscriberAuthenticationService:
             raise SubscriberIdentityError(IdentityRuntimeFailure.AUTHENTICATION_REQUIRED)
         if not self._bootstrap.has_membership(subscriber.principal_id, subscriber.tenant_id):
             raise SubscriberIdentityError(IdentityRuntimeFailure.MEMBERSHIP_UNAVAILABLE)
+        if verified_email and self._on_verified_email is not None:
+            try:  # pilot test accounts: a failure here never blocks the sign-in itself
+                self._on_verified_email(
+                    subscriber.principal_id, subscriber.tenant_id, verified_email, now
+                )
+            except Exception:
+                logging.getLogger(__name__).warning(
+                    "verified-email sign-in hook failed",
+                    extra={"event": "subscriber_verified_email_hook_failed"},
+                )
         session_token = secrets.token_urlsafe(48)
         expires_at = now + timedelta(seconds=self._session_ttl_seconds)
         self._sessions.issue(subscriber, self._digest(session_token), now, expires_at)

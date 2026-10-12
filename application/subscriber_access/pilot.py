@@ -80,6 +80,15 @@ class PilotAccessStore(Protocol):
         grant_expires_at: datetime,
     ) -> PilotGrant | None: ...
     def active_grant(self, tenant_id: TenantId, *, now: datetime) -> PilotGrant | None: ...
+    def grant_listed_account(
+        self,
+        *,
+        account: str,
+        principal_id: PrincipalId,
+        tenant_id: TenantId,
+        granted_at: datetime,
+        grant_expires_at: datetime,
+    ) -> PilotGrant | None: ...
     def revoke_grant(self, grant_ref: str, *, revoked_at: datetime) -> bool: ...
     def inventory(self, *, now: datetime) -> dict[str, object]: ...
     def revoke_admin(
@@ -160,6 +169,36 @@ class PilotAccessService:
 
     def active_grant(self, tenant_id: TenantId, *, now: datetime) -> PilotGrant | None:
         return self._store.active_grant(tenant_id, now=now)
+
+    def grant_listed_account(
+        self,
+        *,
+        principal_id: PrincipalId,
+        tenant_id: TenantId,
+        verified_email: str | None,
+        listed: tuple[str, str],
+        now: datetime,
+    ) -> PilotGrant | None:
+        """Pilot access for a Google-verified address the operator listed; no invitation.
+
+        The address is compared at sign-in and never stored. A tenant that already has a
+        grant (active, expired or revoked) is left as it is: listing is not a renewal.
+        """
+        if now.tzinfo is None or now.utcoffset() is None:
+            raise ValueError("pilot grant time must be timezone-aware")
+        if not verified_email:
+            return None
+        address = verified_email.strip().casefold()
+        for label, value in zip(("A", "B"), listed, strict=True):
+            if value and value.strip().casefold() == address:
+                return self._store.grant_listed_account(
+                    account=label,
+                    principal_id=principal_id,
+                    tenant_id=tenant_id,
+                    granted_at=now,
+                    grant_expires_at=now + self._grant_ttl,
+                )
+        return None
 
     @staticmethod
     def _command_text(value: str, *, minimum: int = 8, maximum: int = 500) -> str:

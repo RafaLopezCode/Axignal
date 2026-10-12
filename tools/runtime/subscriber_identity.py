@@ -2,7 +2,8 @@
 
 from __future__ import annotations
 
-from collections.abc import Mapping
+from collections.abc import Callable, Mapping
+from datetime import datetime
 from pathlib import Path
 
 from application.subscriber_identity.runtime import (
@@ -17,6 +18,7 @@ from application.subscriber_identity.runtime import (
     SubscriberAuthenticationService,
     TrustedSubscriberContext,
 )
+from domain.identity import PrincipalId, TenantId
 from pipeline.subscriber_identity.oidc_provider import ConfiguredOidcProvider
 from pipeline.subscriber_identity.sqlite_store import SqliteSubscriberIdentityStore
 
@@ -54,6 +56,8 @@ def build_subscriber_identity_runtime(
     providers: Mapping[OidcProviderId, OidcProviderConfig],
     clock: Clock,
     purchase_scope_provisioner: InitialPurchaseScopeProvisioner,
+    *,
+    on_verified_email: Callable[[PrincipalId, TenantId, str, datetime], object] | None = None,
 ) -> SubscriberIdentityRuntime:
     """Build the durable subscriber authority runtime under AXIGNAL_DATA_DIR."""
 
@@ -68,6 +72,7 @@ def build_subscriber_identity_runtime(
         sessions=store,
         purchase_scope_provisioner=purchase_scope_provisioner,
         clock=clock,
+        on_verified_email=on_verified_email,
     )
     return SubscriberIdentityRuntime(service, store)
 

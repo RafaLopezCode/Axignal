@@ -75,7 +75,7 @@ export function CustomerAccessPanel() {
     {error && <p role="alert">{error}</p>}
     {!data && !error && <p role="status">{t("Cargando…", "Loading…")}</p>}
     {data && <p>{t("Estado consultado", "State checked")} · {when(data.asOf)}</p>}
-    {tab === "operations" && <><StaffCapacity /><PilotTestAccounts /></>}
+    {tab === "operations" && <><StaffCapacity /><PilotTestAccounts grants={data?.pilot?.grants ?? null}/></>}
     {tab === "invites" && <>
       <section className="admin-attention staff-capacity">
         <h2>{t("Crear invitación", "Create invitation")}</h2>
@@ -112,7 +112,7 @@ export function CustomerAccessPanel() {
         {data?.pilot?.grants.length === 0 && <p>{t("No hay concesiones piloto.", "No pilot grants.")}</p>}
         <ul className="customer-access-records">{data?.pilot?.grants.map(g => {
           const c = data.customers.find(c => c.tenantId === g.tenant_id && c.principalId === g.principal_id);
-          return <li key={g.grant_ref}><strong>{g.tenant_id}</strong><span>{state(g.state)} · {g.capacity} · {when(g.granted_at)} → {when(g.expires_at)}</span><code>{g.grant_ref}</code><p>{g.principal_id}</p>
+          return <li key={g.grant_ref}><strong>{g.tenant_id}</strong><span>{g.origin === "LISTED_ACCOUNT" ? t("Cuenta de prueba {account}", "Test account {account}").replace("{account}", g.account ?? "?") : t("Invitación", "Invitation")} · {state(g.state)} · {g.capacity} · {when(g.granted_at)} → {when(g.expires_at)}</span><code>{g.grant_ref}</code><p>{g.principal_id}</p>
             <p>{c ? diagnosis[activationCause(c)] : t("Membresía no disponible", "Membership unavailable")}</p>{c && orgs(c)}
             {g.state === "ACTIVE" && <button className="button secondary" onClick={() => startRevoke(g.grant_ref, "revoke-grant")}>{t("Revocar", "Revoke")}</button>}
           </li>;

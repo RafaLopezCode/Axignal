@@ -18,7 +18,10 @@ const invite = z.object({
 const grant = z.object({
   grant_ref: ref, invite_ref: ref, principal_id: ref, tenant_id: ref, capacity: z.literal(1),
   granted_at: z.string(), expires_at: z.string(), revoked_at: nullable, state: z.enum(["ACTIVE", "REVOKED", "EXPIRED"]),
+  // How access was granted: a one-use invitation or a listed pilot test account (A/B).
+  origin: z.enum(["INVITATION", "LISTED_ACCOUNT"]).default("INVITATION"), account: z.enum(["A", "B"]).nullable().default(null),
 });
+export type PilotGrantRecord = z.infer<typeof grant>;
 const observation = z.object({ state: z.string(), firstProofReady: z.boolean(), headline: nullable, headlineCode: nullable, observedAt: nullable });
 const organization = z.object({ focusId: ref, organizationId: nullable, label: z.string(), state: z.string(), reason: nullable.optional(), observation: observation.optional() });
 const billing = z.object({ subscriptionRef: ref, status: z.string(), paymentState: z.string(), contractedCapacity: z.number().int().nullable(), verifiedAt: nullable, paidThrough: nullable });
