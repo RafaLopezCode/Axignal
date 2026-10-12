@@ -26,6 +26,8 @@ from application.observation_intelligence.strategy import RECENCY_WINDOWS, Obser
 
 INDEX_VERSION = "world-demand-index.v1"
 NOT_INDEXED = "NOT_INDEXED"
+#: A paged feed that cannot reach a resumed page (its traversal state was lost).
+PAGE_NOT_REACHABLE = "PAGE_NOT_REACHABLE"
 
 
 @dataclass(frozen=True, slots=True)
@@ -327,6 +329,12 @@ class WorldDemandIngestor:
             else since
         )
         resume_at = page if failure is not None else page + 1
+        restart = failure == PAGE_NOT_REACHABLE
+        if restart:
+            # The feed cannot reach the page it stopped at (its traversal lived in a
+            # runtime that has since restarted): start the traversal again from page 1.
+            # Records already stored stay; upserts are idempotent.
+            resume_at = 1
         self._store.mark_ingested(
             demand_slice,
             at=now,
@@ -335,7 +343,7 @@ class WorldDemandIngestor:
             requests=pages + (0 if previous is None else previous.requests),
             records=records,
             cursor_page=1 if complete else resume_at,
-            traversal_since=None if complete else since,
+            traversal_since=None if complete or restart else since,
         )
         return IngestionReport(demand_slice.key, pages, records, complete, failure)
 
