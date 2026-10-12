@@ -17,14 +17,19 @@ from datetime import datetime, timedelta
 from typing import Protocol
 from urllib.parse import urlsplit
 
-from application.press.contracts import PressItem
+from application.press.contracts import RELEASE_FEEDS, PressItem
 
 #: Legal forms across the EU countries the press index covers (ES, DE, FR, IT, PT).
 _LEGAL_FORMS = re.compile(
-    r"\b(s\.?\s?a\.?\s?u?|s\.?\s?l\.?\s?u?|s\.?\s?l\.?\s?l|s\.?\s?coop|lda|"
-    r"sociedad (anonima|limitada)( unipersonal)?|ltd|limited|gmbh|ag|kg|se|sas|sarl|srl|spa|"
-    r"s\.?\s?p\.?\s?a|bv|nv|inc)\b\.?"
+    # Longest forms first: "S.A.B. de C.V." must not stop at "S.A.".
+    r"\b(s\.?\s?a\.?\s?b?\.?\s?de\s?c\.?\s?v|s\.?\s?r\.?\s?l|s\.?\s?a\.?\s?s|"
+    r"e\.?\s?i\.?\s?r\.?\s?l|s\.?\s?p\.?\s?a|s\.?\s?a\.?\s?u?|s\.?\s?l\.?\s?u?|s\.?\s?l\.?\s?l|"
+    r"s\.?\s?coop|lda|ltda|sociedad (anonima|limitada)( unipersonal)?|ltd|limited|gmbh|ag|kg|se|"
+    r"sas|sarl|srl|spa|bv|nv|inc|incorporated|corp|corporation|plc|llc|llp|lp|pty|"
+    r"co\.?\s?ltd|pvt|private)\b\.?"
 )
+#: Group words that wrap a name ("Grupo Eulen", "BHP Group", "Inditex Holding").
+_GROUP_WORDS = {"grupo", "group", "groupe", "gruppe", "gruppo", "holding", "holdings", "the"}
 #: A website address typed as a name ("holaluz.com") keeps only its name.
 _DOMAIN_SUFFIX = re.compile(r"\.(com|es|de|fr|it|pt|net|org|eu|global|io|info)\s*$")
 
@@ -57,14 +62,22 @@ def _fold(text: str) -> str:
 def search_terms(names: Sequence[str]) -> list[str]:
     """Distinctive forms of the organization's names (no legal form, folded)."""
     out: list[str] = []
-    for name in names:
+    variants = [
+        part
+        for name in names
+        for part in re.split(r"\s+[-\u2013|]\s+|[()]", name)  # "Petróleo Brasileiro - Petrobras"
+        if part.strip()
+    ]
+    for name in variants:
         norm = normalized_name(name)
         if not norm:
             continue
-        words = norm.split()
-        if len(words) == 1 and len(words[0]) < _MIN_SINGLE_WORD:
-            continue  # too common to attribute alone
-        out.append(norm)
+        bare = " ".join(w for w in norm.split() if w not in _GROUP_WORDS)
+        for candidate in (norm, bare):
+            words = candidate.split()
+            if not words or (len(words) == 1 and len(words[0]) < _MIN_SINGLE_WORD):
+                continue  # too common to attribute alone
+            out.append(candidate)
     return list(dict.fromkeys(out))
 
 
@@ -105,10 +118,15 @@ def press_discoveries(
     for item in sorted(found, key=lambda i: i.published_at, reverse=True)[:MAX_SHOWN]:
         host = (urlsplit(item.url).hostname or "").removeprefix("www.")
         owned = bool(own) and (host == own or host.endswith("." + own))
+        released = item.feed_id in RELEASE_FEEDS  # a release the organization distributes
         out.append(
             {
                 "kind": "MENTION",
-                "code": "OWN_PUBLICATION" if owned else "PRESS_MENTION",
+                "code": "OWN_PUBLICATION"
+                if owned
+                else "PRESS_RELEASE"
+                if released
+                else "PRESS_MENTION",
                 "statement": item.title,
                 "epistemicState": "POTENTIAL",
                 "sourceUrl": item.url,

@@ -36,7 +36,7 @@ class PressItem:
         return self.url
 
 
-#: Publisher feeds verified 2026-10-12/13 (ES, DE, FR, IT, PT) to answer automated reads. Extend by data, not code
+#: Publisher feeds verified 2026-10-12/13 (EU, US, CA, GB, LatAm, AU, IN) to answer automated reads. Extend by data, not code
 #: paths; a feed that later refuses (403/406/WAF) is skipped, never worked around.
 FEEDS: tuple[PressFeed, ...] = (
     PressFeed("europapress-economia", "Europa Press", "https://www.europapress.es/rss/rss.aspx?ch=00136", "EU/ES", "es", ("business",)),
@@ -65,4 +65,27 @@ FEEDS: tuple[PressFeed, ...] = (
     PressFeed("corriere-economia", "Corriere della Sera", "https://xml2.corriereobjects.it/rss/economia.xml", "EU/IT", "it", ("business",)),
     PressFeed("eco-sapo", "ECO", "https://eco.sapo.pt/feed/", "EU/PT", "pt", ("business",)),
     PressFeed("jornaldenegocios", "Jornal de Negócios", "https://www.jornaldenegocios.pt/rss", "EU/PT", "pt", ("business",)),
+    PressFeed("cnbc-business", "CNBC", "https://www.cnbc.com/id/10001147/device/rss/rss.html", "US", "en", ("business",)),
+    PressFeed("marketwatch-top", "MarketWatch", "https://feeds.content.dowjones.io/public/rss/mw_topstories", "US", "en", ("business",)),
+    PressFeed("nyt-business", "The New York Times", "https://rss.nytimes.com/services/xml/rss/nyt/Business.xml", "US", "en", ("business",)),
+    PressFeed("npr-business", "NPR", "https://feeds.npr.org/1006/rss.xml", "US", "en", ("business",)),
+    PressFeed("businesswire", "Business Wire", "https://feed.businesswire.com/rss/home/?rss=G1QFDERJXkJeEFtRWQ==", "US", "en", ("press_release",)),
+    PressFeed("prnewswire", "PR Newswire", "https://www.prnewswire.com/rss/news-releases-list.rss", "US", "en", ("press_release",)),
+    PressFeed("globeandmail-business", "The Globe and Mail", "https://www.theglobeandmail.com/arc/outboundfeeds/rss/category/business/", "CA", "en", ("business",)),
+    PressFeed("financialpost", "Financial Post", "https://financialpost.com/feed", "CA", "en", ("business",)),
+    PressFeed("bbc-business", "BBC", "https://feeds.bbci.co.uk/news/business/rss.xml", "GB", "en", ("business",)),
+    PressFeed("guardian-business", "The Guardian", "https://www.theguardian.com/uk/business/rss", "GB", "en", ("business",)),
+    PressFeed("cityam", "City A.M.", "https://www.cityam.com/feed/", "GB", "en", ("business",)),
+    PressFeed("elfinanciero-mx", "El Financiero", "https://www.elfinanciero.com.mx/arc/outboundfeeds/rss/?outputType=xml", "MX", "es", ("business",)),
+    PressFeed("expansion-mx", "Expansión México", "https://expansion.mx/rss", "MX", "es", ("business",)),
+    PressFeed("infobae-economia", "Infobae", "https://www.infobae.com/arc/outboundfeeds/rss/category/economia/", "AR", "es", ("business",)),
+    PressFeed("portafolio", "Portafolio", "https://www.portafolio.co/rss/economia.xml", "CO", "es", ("business",)),
+    PressFeed("df-chile", "Diario Financiero", "https://www.df.cl/noticias/site/list/port/rss.xml", "CL", "es", ("business",)),
+    PressFeed("valor", "Valor Econômico", "https://pox.globo.com/rss/valor", "BR", "pt", ("business",)),
+    PressFeed("infomoney", "InfoMoney", "https://www.infomoney.com.br/feed/", "BR", "pt", ("business",)),
+    PressFeed("abc-au-business", "ABC News (AU)", "https://www.abc.net.au/news/feed/51892/rss.xml", "AU", "en", ("business",)),
+    PressFeed("economictimes", "The Economic Times", "https://economictimes.indiatimes.com/rssfeedsdefault.cms", "IN", "en", ("business",)),
 )  # fmt: skip
+
+#: Wires that distribute releases organizations write about themselves (their own voice).
+RELEASE_FEEDS = frozenset(f.feed_id for f in FEEDS if "press_release" in f.topics)

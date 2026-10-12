@@ -436,6 +436,8 @@
   "Outlet": ["Medium","Meio","Média","Testata"],
   "Indexed media": ["Indexierte Medien","Meios indexados","Médias indexés","Media indicizzati"],
   "Coverage since": ["Abdeckung seit","Cobertura desde","Couverture depuis","Copertura dal"],
+  "Distributed press release": ["Verbreitete Pressemitteilung","Comunicado de imprensa distribuído","Communiqué de presse diffusé","Comunicato stampa diffuso"],
+  "A release an organization distributes about itself: its own voice, not independent coverage.": ["Eine Mitteilung, die eine Organisation über sich selbst verbreitet: ihre eigene Stimme, keine unabhängige Berichterstattung.","Um comunicado que uma organização distribui sobre si própria: a sua voz, não cobertura independente.","Un communiqué qu'une organisation diffuse sur elle-même : sa propre voix, pas une couverture indépendante.","Un comunicato che un'organizzazione diffonde su se stessa: la sua voce, non una copertura indipendente."],
   "Source excerpt": ["Quellenauszug", "Excerto da fonte", "Extrait de la source", "Estratto della fonte"],
   "What is happening?": ["Was passiert gerade?", "O que está a acontecer?", "Que se passe-t-il ?", "Cosa sta succedendo?"],
   "Open this family": ["Diese Familie öffnen", "Abrir esta família", "Ouvrir cette famille", "Apri questa famiglia"],

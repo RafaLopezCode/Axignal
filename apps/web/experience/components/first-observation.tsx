@@ -120,6 +120,7 @@ export function discoveryCopy(d: Discovery, t: Translate, locale = "en"): { find
   if (d.kind === "ACTIVITY") return { finding: `${t("Actividad probable", "Likely activity")}: ${activityLabel(d.code, d.statement, t)}`, why: t("Orienta dónde buscar demanda. Es una hipótesis con su cita, no una capacidad verificada.", "It directs where to look for demand. It is a hypothesis with its quote, not a verified capability.") };
   if (d.kind === "MENTION") {
     const outlet = typeof d.detail.outlet === "string" ? d.detail.outlet : "";
+    if (d.code === "PRESS_RELEASE") return { finding: `${t("Nota de prensa distribuida", "Distributed press release")} · ${outlet}: ${d.statement}`, why: t("Una nota que una organización distribuye sobre sí misma: es su voz, no cobertura independiente.", "A release an organization distributes about itself: its own voice, not independent coverage.") };
     return d.code === "OWN_PUBLICATION"
       ? { finding: `${t("Publicado por la propia organización", "Published by the organization itself")}: ${d.statement}`, why: t("Es su propia voz, no una mención de terceros.", "It is its own voice, not a third-party mention.") }
       : { finding: `${t("Mención en prensa", "Press mention")} · ${outlet}: ${d.statement}`, why: t("El titular nombra a la organización. Que trate de ella no está verificado, y mencionar no es recomendar.", "The headline names the organization. That it is about it is not verified, and a mention is not an endorsement.") };

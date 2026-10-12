@@ -96,4 +96,34 @@ def test_the_transport_only_reads_registered_https_feeds() -> None:
     for url in ("https://evil.example/rss", FEEDS[0].url.replace("https://", "http://")):
         with pytest.raises(ValueError):
             transport.get(url)
-    assert {f.country for f in FEEDS} >= {"EU/ES", "EU/DE", "EU/FR", "EU/IT", "EU/PT"}
+    assert {f.country for f in FEEDS} >= {
+        "EU/ES", "EU/DE", "EU/FR", "EU/IT", "EU/PT", "US", "CA", "GB", "MX", "BR", "AU", "IN"
+    }  # fmt: skip
+
+
+def test_a_wire_release_is_the_organizations_own_voice(tmp_path: Path) -> None:
+    from application.press.contracts import FEEDS as REGISTERED
+
+    wire = next(f for f in REGISTERED if "press_release" in f.topics)
+    store = SqlitePressIndex(tmp_path / "press.sqlite3")
+    store.upsert(parse_feed(wire, RSS))
+    store.mark_read(wire.feed_id, at=NOW, status="OK", items=1)
+    (release,) = press_discoveries(
+        {"target": {"name": "Prosegur"}, "discoveries": []}, store, now=NOW, own_domain=None
+    )
+    assert release["code"] == "PRESS_RELEASE"
+
+
+def test_names_from_any_country_become_distinctive_search_terms() -> None:
+    cases = {
+        "Nvidia Corporation": ["nvidia"],
+        "Barclays PLC": ["barclays"],
+        "Mercado Libre S.R.L.": ["mercado libre"],
+        "Grupo Bimbo, S.A.B. de C.V.": ["grupo bimbo"],
+        "Leonardo S.p.A.": ["leonardo"],
+        "Tata Motors Limited": ["tata motors"],
+    }
+    for name, expected in cases.items():
+        assert search_terms([name]) == expected, name
+    # An alias after a dash is searched on its own.
+    assert "petrobras" in search_terms(["Petróleo Brasileiro S.A. - Petrobras"])
