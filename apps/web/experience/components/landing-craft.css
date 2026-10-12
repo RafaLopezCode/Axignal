@@ -1,0 +1,70 @@
+/* The existing observer's notebook, with one focus and a shorter reading rhythm. */
+.landing-craft.observer-story { --guide-size: 210px; --section-space: clamp(56px, 5vw, 80px); }
+.landing-craft.observer-story .funnel-hero { grid-template-columns: minmax(0, .94fr) minmax(0, 1.06fr); align-items: center; gap: clamp(32px, 4vw, 64px); padding-top: 44px; padding-bottom: 64px; }
+.landing-craft.observer-story .hero-copy { padding: 0; }
+.landing-craft.observer-story .hero h1 { font-size: clamp(38px, 4.2vw, 66px); line-height: 1.08; max-width: 17ch; text-wrap: balance; }
+.landing-craft.observer-story .hero-lead { font-size: 15px; line-height: 1.75; max-width: 56ch; }
+.landing-craft.observer-story .observer-hero-signature { margin-top: 28px; gap: 20px; align-items: center; }
+.landing-craft.observer-story .observer-hero-guide { flex-basis: 150px; }
+.landing-craft.observer-story .observer-hero-guide .observer-guide-note { font-size: 21px; }
+.landing-craft .hero-focus > .lx-open { padding: 16px 4px 0; font-size: 13px; min-height: 44px; }
+.landing-craft.observer-story .funnel-how { border-top: 1px solid var(--line); }
+.landing-craft.observer-story .lx-scrolly { grid-template-columns: minmax(0, .82fr) minmax(0, 1.18fr); align-items: start; gap: clamp(32px, 4vw, 64px); }
+.landing-craft.observer-story .lx-step { min-block-size: 0; padding: 24px 0; border-bottom: 1px solid var(--line); grid-template-columns: 34px minmax(0, 1fr); column-gap: 16px; }
+.landing-craft.observer-story .lx-step:first-child { padding-top: 0; }
+.landing-craft .lx-step h3 button { border: 0; background: transparent; font: inherit; color: inherit; text-align: left; padding: 4px 0; min-height: 44px; cursor: pointer; text-wrap: balance; }
+.landing-craft .lx-step h3 button[aria-pressed="true"] { color: var(--blue); text-decoration: underline; text-underline-offset: 7px; text-decoration-thickness: 1px; }
+.landing-craft .lx-step h3 button:focus-visible { outline: 3px solid var(--blue); outline-offset: 5px; border-radius: 3px; }
+.landing-craft .lx-step p { font-size: 14px; line-height: 1.7; }
+.landing-craft .how-example { min-width: 0; }
+.landing-craft .how-example > .lx-window { margin: 0; }
+.landing-craft .how-example .lx-screen { min-block-size: 260px; }
+.landing-craft.observer-story .how-example .observer-step-guide { margin: 20px auto 0; width: 180px; }
+.landing-craft.observer-story .funnel-axent { margin-top: 32px; padding: 20px 28px; grid-template-columns: 150px minmax(0, 65ch); }
+.landing-craft .funnel-axent .landing-guide { width: 150px; }
+.landing-craft.observer-story .observer-proof-guide { width: 180px; margin-top: 20px; }
+.landing-craft.observer-story .lx-proof-stage { max-height: none; }
+.landing-craft.observer-story .use-panel { min-height: 0; }
+.landing-craft.observer-story .use-heading, .landing-craft .trust-commitments { margin-top: 28px; }
+.landing-craft .lx-scan-sweep { animation-iteration-count: 1; }
+.landing-craft .lx-typed { animation: none; border-right: 0; }
+.landing-craft .reveal.in-view { animation: none; }
+@media (max-width: 1100px) {
+  .landing-craft.observer-story .funnel-hero { grid-template-columns: 1fr; gap: 32px; }
+  .landing-craft .hero-focus { max-width: 760px; }
+  .landing-craft.observer-story .observer-hero-signature { max-width: 680px; }
+  .landing-craft.observer-story .lx-scrolly { grid-template-columns: 1fr; }
+  .landing-craft .how-example { max-width: 760px; }
+  .landing-craft .lx-steps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
+  .landing-craft.observer-story .lx-step, .landing-craft.observer-story .lx-step:first-child { padding: 0 0 18px; grid-template-columns: 1fr; }
+  .landing-craft.observer-story .lx-step-mark { grid-row: auto; }
+  .landing-craft.observer-story .lx-step > h3, .landing-craft.observer-story .lx-step > p { grid-column: 1; }
+}
+@media (max-width: 700px) {
+  .landing-craft.observer-story { --guide-size: 150px; --section-space: 48px; }
+  .landing-craft.observer-story .funnel-hero { padding-top: 24px; padding-bottom: 40px; gap: 20px; }
+  .landing-craft.observer-story .hero-copy { display: contents; }
+  .landing-craft .hero-copy > h1, .landing-craft .hero-copy > .hero-lead { margin-block: 0; }
+  .landing-craft .hero-eyebrow { order: 1; }
+  .landing-craft .hero h1 { order: 2; }
+  .landing-craft .hero-lead { order: 3; }
+  .landing-craft .hero-copy > .hero-actions { order: 4; }
+  .landing-craft .observer-hero-stage { order: 5; }
+  .landing-craft.observer-story .observer-hero-signature { order: 6; }
+  .landing-craft.observer-story .hero h1 { font-size: clamp(36px, 9vw, 46px); max-width: 18ch; }
+  .landing-craft.observer-story .hero-lead { font-size: 14px; line-height: 1.7; }
+  .landing-craft.observer-story .observer-hero-signature { margin-top: 20px; }
+  .landing-craft.observer-story .observer-hero-guide { flex-basis: 100%; }
+  .landing-craft .lx-steps { grid-template-columns: 1fr; gap: 20px; }
+  .landing-craft.observer-story .lx-step, .landing-craft.observer-story .lx-step:first-child { grid-template-columns: 30px minmax(0, 1fr); gap: 12px; }
+  .landing-craft.observer-story .lx-step-mark { grid-row: 1; }
+  .landing-craft.observer-story .lx-step > h3, .landing-craft.observer-story .lx-step > p { grid-column: 2; }
+  .landing-craft.observer-story .funnel-axent { grid-template-columns: 1fr; padding: 22px; gap: 20px; }
+  .landing-craft .funnel-axent .landing-guide { width: 100%; }
+  .landing-craft.observer-story .how-example .observer-step-guide { width: 100%; }
+  .landing-craft.observer-story .observer-proof-guide { width: 100%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .landing-craft .lx-note, .landing-craft .lx-note-arrow path, .landing-craft .lx-scan-sweep { animation: none; }
+  .landing-craft .lx-note-arrow path { stroke-dashoffset: 0; }
+}

@@ -1,0 +1,65 @@
+/* One authored moment: the visitor brings one finding into focus, then inspects it. */
+.lx-window.focus-notebook {
+  margin: 0;
+  position: relative;
+  background: #fff;
+  color: #141c3a;
+  border: 1px solid #dce2ec;
+  border-radius: 18px;
+  box-shadow: 0 28px 60px -38px rgb(20 28 58 / 30%);
+  overflow: clip;
+  animation: focus-arrive 650ms cubic-bezier(.16, 1, .3, 1);
+}
+.focus-identity { display: flex; gap: 12px; align-items: center; padding: 22px 28px; border-bottom: 1px solid #e0e5ee; }
+.focus-identity strong { font-family: Fraunces, Georgia, serif; font-size: 23px; font-weight: 400; }
+.focus-fiction { margin-left: auto; max-width: 14ch; font-size: 11px; line-height: 1.4; color: #566173; }
+.focus-time { padding: 22px 28px 0; }
+.focus-time > span { display: block; font-size: 12px; color: #566173; margin-bottom: 12px; }
+.focus-moments { display: flex; position: relative; gap: 8px; flex-wrap: wrap; }
+.focus-moments button { flex: 1; min-width: 100px; min-height: 44px; padding: 8px 12px; border: 1px solid #dce2ec; border-radius: 7px; color: #566173; background: #fff; font-size: 12px; transition: background 150ms, color 150ms, border-color 150ms; }
+.focus-moments button[aria-pressed="true"] { color: #fff; background: var(--blue); border-color: var(--blue); }
+.focus-lanes { display: flex; gap: 20px; margin: 18px 28px 0; border-bottom: 1px solid #e0e5ee; }
+.focus-lane { flex: 1; background: transparent; color: #566173; border: 0; border-bottom: 2px solid transparent; padding: 12px 0; min-height: 52px; font-size: 12px; font-weight: 600; text-align: left; line-height: 1.5; }
+.focus-lane[aria-pressed="true"] { color: var(--blue); border-bottom-color: var(--blue); }
+.focus-reading { padding: 30px 28px 22px; }
+.focus-content { animation: focus-change 250ms cubic-bezier(.16, 1, .3, 1); }
+.focus-state { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin-bottom: 20px; font-size: 12px; color: #566173; }
+.focus-state .obs-mark { font-size: 12px; }
+.focus-reading h2 { font-family: Fraunces, Georgia, serif; font-size: clamp(26px, 2.4vw, 35px); font-weight: 400; line-height: 1.18; letter-spacing: -.025em; max-width: 26ch; text-wrap: balance; }
+.focus-meaning { color: #566173; line-height: 1.7; font-size: 15px; margin: 18px 0 24px; max-width: 60ch; }
+.focus-new { background: #fbf0d9; color: #6f4b0c; padding: 4px 8px; border-radius: 4px; font-size: 11px; }
+.focus-evidence { border-top: 1px solid #e0e5ee; }
+.focus-evidence summary { display: flex; justify-content: space-between; gap: 12px; align-items: center; cursor: pointer; min-height: 52px; padding: 12px 0; color: var(--blue); font-size: 13px; font-weight: 650; list-style: none; }
+.focus-evidence summary::-webkit-details-marker { display: none; }
+.focus-evidence summary svg { transition: transform 180ms; flex-shrink: 0; }
+.focus-evidence[open] summary svg { transform: rotate(180deg); }
+.focus-evidence .obs-depth-body { padding: 20px 0 12px; border-top: 1px solid #e0e5ee; }
+.focus-evidence .obs-depth-body h2 { font-size: 24px; }
+.focus-paging { display: flex; gap: 12px; justify-content: flex-end; align-items: center; font-size: 12px; color: #566173; padding-top: 12px; }
+.focus-paging button { display: grid; place-items: center; min-width: 44px; min-height: 44px; background: #f6f7fa; border: 1px solid #e0e5ee; color: var(--blue); border-radius: 7px; }
+.focus-paging button:disabled { opacity: .35; cursor: default; }
+.focus-empty { padding: 24px 0; color: #566173; line-height: 1.7; }
+.focus-invitation { display: flex; align-items: center; gap: 18px; padding: 22px 28px; background: #f1f4fa; border-top: 1px solid #e0e5ee; }
+.focus-invitation .hand-note { font-size: 25px; color: #2747a8; flex: 1; }
+.focus-invitation > span:last-child { font-size: 12px; line-height: 1.6; color: #566173; max-width: 25ch; }
+.focus-notebook button:focus-visible, .focus-notebook summary:focus-visible { outline: 3px solid var(--blue); outline-offset: 4px; }
+.focus-notebook button:not(:disabled):hover { border-color: var(--blue); }
+.focus-notebook ::selection { color: #fff; background: var(--blue); }
+@keyframes focus-arrive { from { clip-path: inset(0 0 8% 0 round 18px); transform: translateY(12px); opacity: .85; } to { clip-path: inset(0 round 18px); transform: none; opacity: 1; } }
+@keyframes focus-change { from { opacity: .65; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+@media (max-width: 700px) {
+  .focus-identity { padding: 18px 20px; gap: 10px; flex-wrap: wrap; }
+  .focus-identity strong { font-size: 21px; }
+  .focus-fiction { font-size: 11px; }
+  .focus-time { padding: 18px 20px 0; }
+  .focus-moments button { min-width: 80px; padding-inline: 8px; }
+  .focus-lanes { margin-inline: 20px; gap: 14px; }
+  .focus-lane { font-size: 11px; }
+  .focus-reading { padding: 24px 20px 18px; }
+  .focus-invitation { padding: 20px; flex-wrap: wrap; }
+  .focus-invitation > span:last-child { max-width: none; flex-basis: 100%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .focus-notebook, .focus-content { animation: none; }
+  .focus-notebook *, .focus-notebook summary svg { transition: none; }
+}
