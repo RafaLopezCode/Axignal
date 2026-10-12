@@ -82,3 +82,15 @@ def test_the_retired_static_landing_is_redirected_not_served() -> None:
     assert "location ^~ /legal/ { return 301 /policies; }" in conf
     assert "location ^~ /legal/privacidad-rgpd { return 301 /policies/privacy; }" in conf
     assert "storyboard-data\.json|marketing\.js|newsletter\.js)$ { return 404; }" in conf
+
+
+def test_the_subscriber_edge_config_carries_the_legacy_redirects() -> None:
+    """The subscriber overlay replaces the landing nginx config in production."""
+    from pathlib import Path
+
+    edge = (
+        Path(__file__).resolve().parents[2] / "deploy/production/subscriber-edge-nginx.conf"
+    ).read_text(encoding="utf-8")
+    assert "location = /index.html { return 301 /; }" in edge
+    assert "location ^~ /legal/aviso-legal { return 301 /policies/legal; }" in edge
+    assert "location ~ ^/(es|en|fr|de|it|pt)/$ { return 301 /$1; }" in edge
