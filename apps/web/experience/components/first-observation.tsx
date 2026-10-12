@@ -145,6 +145,11 @@ export function discoveryCopy(d: Discovery, t: Translate, locale = "en"): { find
   if (d.kind === "COMPETITION") return {
     finding: t("Competidor posible: {name} · {n} contratos en sus mismos códigos", "Possible competitor: {name} · {n} contracts under the same codes").replace("{name}", d.statement).replace("{n}", String(d.detail.contracts ?? 0)),
     why: t("Gana contratos públicos con los mismos códigos de actividad. Que compita con ella es una inferencia, no una clasificación de calidad.", "It wins public contracts under the same activity codes. That it competes with this organization is an inference, not a quality ranking.") };
+  if (d.kind === "CONTEXT_SIGNAL") {
+    const outlet = typeof d.detail.outlet === "string" ? d.detail.outlet : "";
+    return { finding: `${t("En su sector", "In its sector")} · ${outlet}: ${d.statement}`,
+      why: t("Titular reciente sobre su actividad en su país, no sobre la organización. Su relevancia la ha juzgado un asistente: no es un hecho.", "A recent headline about its activity in its country, not about the organization. Its relevance was judged by an assistant: it is not a fact.") };
+  }
   if (d.kind === "DEMAND") {
     const deadline = typeof d.detail.deadline === "string" ? d.detail.deadline.slice(0, 10) : null;
     const buyer = typeof d.detail.buyer === "string" ? d.detail.buyer : null;

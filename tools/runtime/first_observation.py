@@ -23,6 +23,7 @@ from pathlib import Path
 from typing import Any, Protocol
 from urllib.parse import urlsplit
 
+from application.context.sector import context_discoveries
 from application.economic_discovery.brain_contracts import ObservationMode, ObservationRecord
 from application.economic_discovery.observation_memory import (
     GovernedObservation,
@@ -63,6 +64,7 @@ from application.observation_intelligence import (
     SourceObservationPort,
     SourceRegistry,
 )
+from application.observation_intelligence.contracts import TaxonomyCode
 from application.observation_intelligence.loop import OpportunityCandidate, run_observation_loop
 from application.observation_runtime.replay import FindingsLedger
 from application.organization_admission.locator import LocatorError, parse_locator, public_domain
@@ -78,7 +80,12 @@ from application.subscriber_portfolio.models import (
     PortfolioError,
 )
 from application.subscriber_projection.subscriber_runtime import SubscriberEconomicRuntime
-from application.world_demand.index import DemandIndexPort, SliceFeedPort, WorldDemandIngestor
+from application.world_demand.index import (
+    DemandIndexPort,
+    SliceFeedPort,
+    WorldDemandIngestor,
+    country_of,
+)
 from application.world_demand.live import LiveDemandReader, apply_live_demand
 from application.world_demand.relations import AwardStore, apply_public_awards
 from application.xeed_access.reader import TrustedRequestContext
@@ -89,7 +96,13 @@ from pipeline.first_observation.sqlite_store import SqliteFirstObservationStore
 from pipeline.geo.nominatim import NominatimReverseGeocoder
 from pipeline.observation_memory.sqlite_store import SqliteObservationMemory
 from pipeline.press.sqlite_store import PressIngestor, SqlitePressIndex
-from tools.runtime.generative_probe import GenerativeProbeRunner, generative_probe_from_values
+from pipeline.press.sqlite_store import SqlitePressIndex as _PressIndex
+from tools.runtime.generative_probe import (
+    GenerativeProbeRunner,
+    assistant_from_values,
+    generative_probe_from_values,
+)
+from tools.runtime.sector_context import SectorContextRunner
 from tools.runtime.subscriber_portfolio import SubscriberPortfolioRuntime
 
 ENABLED_KEY = "AXIGNAL_FIRST_OBSERVATION_ENABLED"
@@ -361,7 +374,9 @@ class FirstObservationRuntime:
         awards: AwardStore | None = None,
         groups: GleifGroupReader | None = None,
         geo: GenerativeProbeRunner | None = None,
+        sector_context: SectorContextRunner | None = None,
     ) -> None:
+        self._sector_context = sector_context
         self._geo = geo
         self._press = press
         self._groups = groups
@@ -562,6 +577,40 @@ class FirstObservationRuntime:
         with self._lock:
             return len(self.ingestor.run(max_slices=max_slices))
 
+    def judge_sector_context(self) -> int:
+        """Judge queued sector contexts (shared per activity and country per day)."""
+        return 0 if self._sector_context is None else self._sector_context.run()
+
+    def _with_sector_context(self, view: dict[str, object]) -> dict[str, object]:
+        """Recent headlines about its activity in its country; queues a judgment when due."""
+        if self._sector_context is None:
+            return view
+        held = view.get("discoveries")
+        discoveries = held if isinstance(held, list) else []
+        activities = [
+            str(d.get("code"))
+            for d in discoveries
+            if isinstance(d, Mapping) and d.get("kind") == "ACTIVITY" and d.get("code")
+        ][:2]
+        scopes = view.get("attentionScopes")
+        country = None
+        if isinstance(scopes, list) and scopes and isinstance(scopes[0], Mapping):
+            country = country_of(TaxonomyCode("GEO", str(scopes[0].get("jurisdiction") or "")))
+        if not activities or not country:
+            return view
+        found: list[dict[str, object]] = []
+        for capability_id in activities:
+            self._sector_context.request(capability_id, country)
+            result = self._sector_context.latest(capability_id, country)
+            if result is not None:
+                found += context_discoveries(
+                    result, capability_id=capability_id, country=country,
+                    observed_at=str(view.get("observedAt") or ""),
+                )  # fmt: skip
+        if found:
+            view["discoveries"] = [*discoveries, *found]
+        return view
+
     def measure_geo(self) -> int:
         """Run queued GEO measurements (a few per tick, under the daily cap)."""
         return 0 if self._geo is None else self._geo.run()
@@ -655,6 +704,7 @@ class FirstObservationRuntime:
                 self.ingest_demanded,
                 self.ingest_press,
                 self.measure_geo,
+                self.judge_sector_context,
                 self.purge,
             )
             for stage in stages:
@@ -802,6 +852,7 @@ class FirstObservationRuntime:
                     view["discoveries"] = [*(held if isinstance(held, list) else []), *mentions]
             view = self._with_group(view, organization_id)
             view = self._with_geo(view)
+            view = self._with_sector_context(view)
             # Relationships and competition from published public contract awards.
             view = apply_public_awards(
                 view, proof, self._awards, now=self._clock.now(), countries=lambda: directed
@@ -946,6 +997,17 @@ def _press(
 
     store = SqlitePressIndex(root / "press-index.sqlite3")
     return PressIngestor(FEEDS, store, UrllibFeedTransport(FEEDS), clock=clock.now), store
+
+
+def _sector_context(values: Mapping[str, str], root: Path) -> SectorContextRunner | None:
+    """Sector context over the world press index, judged by the governed assistant."""
+    assistant = assistant_from_values(values)
+    if assistant is None:
+        return None
+    complete, model, _rates = assistant
+    return SectorContextRunner(
+        complete, model, _PressIndex(root / "press-index.sqlite3"), root / "sector-context.sqlite3"
+    )
 
 
 def _geocoder(root: Path, overrides: FirstObservationOverrides) -> NominatimReverseGeocoder | None:
@@ -1093,6 +1155,9 @@ def build_first_observation(
         geo=None
         if overrides.source_ports is not None or overrides.feeds is not None
         else generative_probe_from_values(values, root),
+        sector_context=None
+        if overrides.source_ports is not None or overrides.feeds is not None
+        else _sector_context(values, root),
         awards=index,
         purge_canonical_raw=(
             lambda at: observation_memory.purge_first_observation_content(
