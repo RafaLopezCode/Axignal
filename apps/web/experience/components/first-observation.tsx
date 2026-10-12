@@ -125,6 +125,26 @@ export function discoveryCopy(d: Discovery, t: Translate, locale = "en"): { find
       ? { finding: `${t("Publicado por la propia organización", "Published by the organization itself")}: ${d.statement}`, why: t("Es su propia voz, no una mención de terceros.", "It is its own voice, not a third-party mention.") }
       : { finding: `${t("Mención en prensa", "Press mention")} · ${outlet}: ${d.statement}`, why: t("El titular nombra a la organización. Que trate de ella no está verificado, y mencionar no es recomendar.", "The headline names the organization. That it is about it is not verified, and a mention is not an endorsement.") };
   }
+  if (d.kind === "RELATIONSHIP" && d.code === "GROUP_PARENT") return {
+    finding: `${d.detail.role === "ULTIMATE_PARENT" ? t("Matriz última del grupo", "Group's ultimate parent") : t("Matriz directa", "Direct parent")}: ${d.statement}`,
+    why: t("Según el registro mundial de entidades (GLEIF). Es estructura societaria registrada, no una opinión.", "According to the global entity registry (GLEIF). It is registered corporate structure, not an opinion.") };
+  if (d.kind === "RELATIONSHIP" && d.code === "GROUP_SUBSIDIARIES") {
+    const countries = d.detail.countries && typeof d.detail.countries === "object" ? Object.keys(d.detail.countries as Record<string, number>) : [];
+    return { finding: t("{n} filiales registradas en {c} países", "{n} subsidiaries registered in {c} countries").replace("{n}", d.statement).replace("{c}", String(countries.length)),
+      why: d.epistemicState === "OBSERVED"
+        ? t("Del registro mundial de entidades (GLEIF), con su identificador verificado.", "From the global entity registry (GLEIF), with its verified identifier.")
+        : t("Del registro mundial de entidades (GLEIF), a partir del identificador que declara su web; la atribución sigue siendo potencial.", "From the global entity registry (GLEIF), using the identifier its website declares; the attribution stays potential.") };
+  }
+  if (d.kind === "RELATIONSHIP") {
+    const n = Number(d.detail.contracts ?? 0);
+    return { finding: t("Cliente público: {buyer} · {n} contratos ganados", "Public client: {buyer} · {n} contracts won").replace("{buyer}", d.statement).replace("{n}", String(n)),
+      why: d.epistemicState === "OBSERVED"
+        ? t("Adjudicaciones oficiales a su NIF. Es una relación pasada documentada, no una garantía de negocio futuro.", "Official awards to its tax ID. A documented past relationship, not a guarantee of future business.")
+        : t("Adjudicaciones a una empresa con su mismo nombre legal; sin NIF confirmado, la atribución sigue siendo potencial.", "Awards to a company with the same legal name; without a confirmed tax ID, the attribution stays potential.") };
+  }
+  if (d.kind === "COMPETITION") return {
+    finding: t("Competidor posible: {name} · {n} contratos en sus mismos códigos", "Possible competitor: {name} · {n} contracts under the same codes").replace("{name}", d.statement).replace("{n}", String(d.detail.contracts ?? 0)),
+    why: t("Gana contratos públicos con los mismos códigos de actividad. Que compita con ella es una inferencia, no una clasificación de calidad.", "It wins public contracts under the same activity codes. That it competes with this organization is an inference, not a quality ranking.") };
   if (d.kind === "DEMAND") {
     const deadline = typeof d.detail.deadline === "string" ? d.detail.deadline.slice(0, 10) : null;
     const buyer = typeof d.detail.buyer === "string" ? d.detail.buyer : null;
@@ -132,6 +152,12 @@ export function discoveryCopy(d: Discovery, t: Translate, locale = "en"): { find
     return { finding: `${d.detail.isNew === true ? `${t("Nueva", "New")} · ` : ""}${t("Demanda pública potencial", "Potential public demand")}: ${title}`,
       why: `${facts ? `${facts}. ` : ""}${t("Coincide por clasificación y lugar. No es un cliente, una invitación ni una relación.", "It matches by classification and place. It is not a customer, an invitation or a relationship.")}` };
   }
+  if (d.kind === "DECLARED_LOCATION" && d.code === "GROUP_ENTITIES_IN_COUNTRIES") return {
+    finding: `${t("Países con sociedades del grupo", "Countries with group entities")}: ${d.statement.split(", ").map(code => placeLabel(code, locale) || code).join(", ")}`,
+    why: t("Donde el grupo tiene entidades registradas. No es todo su mercado ni dónde vende.", "Where the group has registered entities. It is not its whole market nor where it sells.") };
+  if (d.kind === "DECLARED_LOCATION" && d.code === "PREMISES_PINNED_ON_MAP") return {
+    finding: `${t("Sede que señala en el mapa de su web", "Premises pinned on its website's map")}: ${d.statement}`,
+    why: t("La propia organización publica este punto. Indica dónde está, no todo su mercado ni dónde opera.", "The organization itself publishes this point. It shows where it is, not its whole market or where it operates.") };
   if (d.kind === "DECLARED_LOCATION" && d.code === "COUNTRY_FROM_SITE_SIGNALS") return {
     finding: `${t("País deducido de señales de su web", "Country inferred from its website's signals")}: ${placeLabel(d.statement, locale)}`,
     why: t("Dos o más señales independientes de su propia web apuntan a este país. Indica dónde empezar a buscar demanda; no define su mercado ni dónde opera.", "Two or more independent signals on its own website point to this country. It shows where to start looking for demand; it does not define its market or where it operates.") };
@@ -166,6 +192,7 @@ export function discoveryCopy(d: Discovery, t: Translate, locale = "en"): { find
     case "LOCATION_NOT_DECLARED": return { finding: t("No hemos establecido su ubicación ni su ámbito geográfico de servicio.", "Its location and geographic service scope have not been established."), why: t("No elegimos un mercado por defecto.", "We do not pick a default market.") };
     case "DEMAND_NOT_ROUTABLE": case "NO_ROUTABLE_DEMAND_QUESTION": return { finding: t("Ninguna fuente de demanda gobernada aplica todavía a esta actividad y lugar.", "No governed demand source applies yet to this activity and place."), why: t("No es una ausencia de oportunidades.", "It is not an absence of opportunities.") };
     case "NO_PRESS_MENTION_FOUND": return { finding: t("Ningún titular de los medios indexados la nombra.", "No headline in the indexed media names it."), why: t("Solo cubre los medios y fechas indicados; no significa que no tenga cobertura en otros.", "It only covers the stated media and dates; it does not mean it has no coverage elsewhere.") };
+    case "NO_PUBLIC_AWARDS_FOUND": return { finding: t("No hay adjudicaciones públicas a su nombre en el periodo cubierto.", "No public contract awards in its name in the period covered."), why: t("Solo cubre adjudicaciones publicadas desde la fecha indicada; no significa que no tenga contratos.", "It only covers awards published since the stated date; it does not mean it has no contracts.") };
     case "NO_RELEVANT_DEMAND_FOUND": return { finding: t("Las fuentes consultadas no tienen ahora demanda que coincida.", "The sources searched have no matching demand right now."), why: t("Sin resultado no es sin oportunidad; volveremos a observar.", "No result is not no opportunity; we will observe again.") };
     case "NOT_AN_OPERATING_BUSINESS_SITE": return { finding: t("La página no parece la web de una actividad en marcha.", "The page does not read as an operating business website."), why: t("Es un juicio no autoritativo sobre la página, no sobre la organización.", "It is a non-authoritative judgment about the page, not about the organization.") };
     case "NO_PUBLIC_WEBSITE": return { finding: t("No hay una web pública que observar.", "There is no public website to observe."), why: t("Añade su web para empezar la observación.", "Add its website to start observing.") };
@@ -253,7 +280,17 @@ export function basisRows(d: Discovery, t: Translate, locale: string): Array<[st
   if (typeof detail.outlet === "string") rows.push([t("Medio", "Outlet"), detail.outlet]);
   if (typeof detail.publishedAt === "string") rows.push([t("Publicado", "Published"), detail.publishedAt.slice(0, 10)]);
   if (typeof detail.feeds === "number") rows.push([t("Medios indexados", "Indexed media"), String(detail.feeds)]);
-  if (typeof detail.coverageSince === "string") rows.push([t("Cobertura desde", "Coverage since"), detail.coverageSince.slice(0, 10)]);
+  if (typeof detail.contracts === "number") rows.push([t("Contratos", "Contracts"), String(detail.contracts)]);
+  if (typeof detail.amount === "number" && detail.amount > 0) rows.push([t("Importe adjudicado (sin IVA)", "Awarded amount (excl. VAT)"), `${detail.amount.toLocaleString(locale, { maximumFractionDigits: 0 })} ${typeof detail.currency === "string" ? detail.currency : ""}`]);
+  if (typeof detail.matchedBy === "string") rows.push([t("Atribuida por", "Attributed by"), detail.matchedBy === "TAX_ID" ? t("NIF", "Tax ID") : t("nombre legal", "legal name")]);
+  if (typeof detail.medianOffers === "number") rows.push([t("Ofertas recibidas (mediana)", "Offers received (median)"), String(detail.medianOffers)]);
+  if (Array.isArray(detail.subsidiaries)) for (const s of (detail.subsidiaries as Array<Record<string, unknown>>).slice(0, 12)) rows.push([t("Filial", "Subsidiary"), [s.name, s.city, s.country].filter(Boolean).join(" · ")]);
+  if (typeof detail.lei === "string") rows.push(["LEI", detail.lei]);
+  if (Array.isArray(detail.buyers) && detail.buyers.length) rows.push([t("Compradores", "Buyers"), detail.buyers.join(" · ")]);
+  if (Array.isArray(detail.awards)) for (const a of (detail.awards as Array<Record<string, unknown>>).slice(0, 5)) rows.push([t("Adjudicación", "Award"), [a.title, a.buyer, a.awardedOn, typeof a.amount === "number" ? `${a.amount.toLocaleString(locale, { maximumFractionDigits: 0 })} ${a.currency ?? ""}` : null].filter(Boolean).join(" · ")]);
+  if (typeof detail.coverageSince === "string") rows.push([t("Cobertura desde", "Coverage since"), detail.coverageSince]);
+  if (typeof detail.latitude === "number" && typeof detail.longitude === "number") rows.push([t("Coordenadas", "Coordinates"), `${detail.latitude}, ${detail.longitude}`]);
+  if (typeof detail.attribution === "string") rows.push([t("Lugar según", "Place according to"), detail.attribution]);
   if (Array.isArray(detail.signals)) for (const s of detail.signals as Array<{ kind?: unknown; value?: unknown }>) rows.push([signalLabel(String(s.kind ?? ""), t), String(s.value ?? "")]);
   if (typeof detail.limitation === "string") rows.push([t("Límite", "Limitation"), detail.limitation]);
   if (typeof detail.impact === "string") rows.push([t("Impacto", "Impact"), auditImpact(detail.impact, t)]);

@@ -14,7 +14,7 @@ import time
 from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass, replace
 from datetime import datetime
-from typing import Protocol
+from typing import Any, Protocol
 from urllib.parse import urlsplit
 
 from application.economic_discovery.brain_contracts import ObservationMode, ObservationRecord
@@ -42,7 +42,7 @@ from application.first_observation.contracts import (
     TargetKind,
 )
 from application.first_observation.country_evidence import country_evidence
-from application.first_observation.geography import area_jurisdiction
+from application.first_observation.geography import area_jurisdiction, jurisdiction
 from application.first_observation.policy import FirstObservationPolicy, next_due
 from application.first_observation.representation_audit import (
     AUDIT_VERSION,
@@ -83,6 +83,12 @@ SYSTEM_ONE_EVALUATOR = "typesafe-system-one"
 
 #: The site's TLS certificate could not be verified; verification is never relaxed.
 TLS_NOT_VERIFIED = "TLS_CERTIFICATE_NOT_VERIFIED"
+
+
+class ReverseGeocoder(Protocol):
+    """A point to its country, region and place (replaceable; OSM Nominatim by default)."""
+
+    def place(self, latitude: float, longitude: float) -> Any: ...
 
 
 @dataclass(frozen=True, slots=True)
@@ -185,7 +191,9 @@ class FirstObservationService:
         clock: Callable[[], datetime],
         policy: FirstObservationPolicy | None = None,
         rights: ContentRightsPolicy | None = None,
+        geocoder: ReverseGeocoder | None = None,
     ) -> None:
+        self._geocoder = geocoder
         self._rights: ContentRightsPolicy = rights or NoContentRights()
         self._fetcher = fetcher
         self._sites = sites
@@ -528,7 +536,10 @@ class FirstObservationService:
         roles = _DEFAULT_ROLES | (
             semantic.roles if semantic is not None and semantic.roles else frozenset()
         )
+        mapped = self._mapped_premises(pages, ledger)
         scope_codes: dict[str, TaxonomyCode] = {c.code: c for c in premises}
+        # Premises the site pins on a map it publishes: declared by the organization itself.
+        scope_codes.update({code.code: code for code, _d in mapped if code.code not in scope_codes})
         scope_codes.update({c.code: c for _p, _a, c in areas})
         if semantic is not None and not scope_codes:
             scope_codes.update({place.code: place for place, _u, _l in semantic.located})
@@ -590,6 +601,7 @@ class FirstObservationService:
                     },
                 )
             )
+        discoveries += [discovery for _code, discovery in mapped]
         discoveries += [self._activity(f) for f in findings]
         discoveries += self._web_representation(reading, findings, ledger)
         discoveries += identity
@@ -908,6 +920,51 @@ class FirstObservationService:
                     },
                 )
             )
+        return out
+
+    def _mapped_premises(
+        self, pages: Sequence[PageReading], ledger: RunLedger, *, limit: int = 5
+    ) -> list[tuple[TaxonomyCode, Discovery]]:
+        """Places of the points the site publishes (its map links/embeds, schema.org geo)."""
+        if self._geocoder is None:
+            return []
+        points: dict[tuple[float, float], tuple[str, str]] = {}
+        for page in pages:
+            raw = page.signals.get("coordinates") if page.signals else None
+            for item in raw if isinstance(raw, list) else []:
+                if isinstance(item, list | tuple) and len(item) == 3:
+                    points.setdefault((float(item[0]), float(item[1])), (str(item[2]), page.url))
+        out: list[tuple[TaxonomyCode, Discovery]] = []
+        for (lat, lng), (method, url) in list(points.items())[:limit]:
+            try:
+                place = self._geocoder.place(lat, lng)
+            except Exception:  # a geocoding failure leaves the place unknown, never guessed
+                ledger.decide("FAILED:GEOCODE")
+                continue
+            if place is None or place.country_code is None:
+                continue
+            region = (place.region_code or "").split("-", 1)[-1] or None
+            code = jurisdiction(place.country_code, region)
+            if code is None:
+                continue
+            label = ", ".join(x for x in (place.locality, place.region, place.country_code) if x)
+            ledger.decide(f"LOCATION:MAP_POINT:{place.country_code}")
+            out.append(
+                (
+                    code,
+                    Discovery(
+                        DiscoveryKind.DECLARED_LOCATION, "PREMISES_PINNED_ON_MAP", label, "DECLARED",
+                        url, None, pages[0].observed_at,
+                        {
+                            "method": method, "latitude": lat, "longitude": lng,
+                            "jurisdiction": code.code, "regionCode": place.region_code,
+                            "attribution": place.attribution,
+                            "limitation": "A place the organization pins on its own website; "
+                            "not its whole market or reach.",
+                        },
+                    ),
+                )
+            )  # fmt: skip
         return out
 
     @staticmethod

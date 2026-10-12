@@ -254,6 +254,9 @@ class DiscoveryKind(StrEnum):
     GENERATIVE_VISIBILITY = "GENERATIVE_VISIBILITY"
     # Headlines publishers syndicate that name the organization (reputation and activity).
     MENTION = "MENTION"
+    # Read from published public contract awards (relationships family).
+    RELATIONSHIP = "RELATIONSHIP"
+    COMPETITION = "COMPETITION"
     SIGNIFICANT_UNKNOWN = "SIGNIFICANT_UNKNOWN"
 
 

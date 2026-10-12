@@ -642,7 +642,9 @@ def main(argv: list[str] | None = None) -> None:
         ingested = WorldDemandIngestor(
             feeds={
                 "ted-search-v3": live_ted,
-                PLACSP_SOURCE_ID: PlacspFeedAdapter(UrllibPlacspTransport(), clock=clock.now),
+                PLACSP_SOURCE_ID: PlacspFeedAdapter(
+                    UrllibPlacspTransport(), clock=clock.now, awards_sink=index.upsert_awards
+                ),
             },
             store=index,
             clock=clock.now,

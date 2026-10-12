@@ -16,7 +16,7 @@ from __future__ import annotations
 import time
 import urllib.request
 import xml.etree.ElementTree as ET
-from collections.abc import Callable, Iterator
+from collections.abc import Callable, Iterator, Sequence
 from datetime import UTC, datetime, timedelta
 from typing import Protocol
 from urllib.parse import urlsplit
@@ -29,6 +29,7 @@ from application.observation_intelligence.contracts import (
 )
 from application.observation_intelligence.findings import ProcurementRecord, SourceFindings
 from application.observation_intelligence.strategy import ObservationAction
+from application.world_demand.awards import AwardRecord, normalized_tax_id
 from application.world_demand.index import PAGE_NOT_REACHABLE
 
 PLACSP_SOURCE_ID = "es-placsp"
@@ -44,6 +45,8 @@ MAX_FEED_BYTES = 40_000_000
 #: days would be gigabytes; an open tender almost always had an update within thirty.
 MAX_AGE = timedelta(days=30)
 OPEN = "PUB"
+#: Awarded (ADJ) and resolved (RES) folders carry the published award result.
+AWARDED = frozenset({"ADJ", "RES"})
 
 
 class PlacspTransport(Protocol):
@@ -166,6 +169,73 @@ def parse_entry(entry: ET.Element) -> ProcurementRecord | None:
     )
 
 
+def _number(value: str | None) -> float | None:
+    try:
+        return None if value is None else float(value)
+    except ValueError:
+        return None
+
+
+def parse_awards(entry: ET.Element) -> tuple[AwardRecord, ...]:
+    """The published award results of one CODICE entry (one per lot and winner)."""
+    folder = _child(entry, "ContractFolderStatus")
+    status = _text(_child(folder, "ContractFolderStatusCode"))
+    title = _text(_child(entry, "title"))
+    record_id = _text(_child(entry, "id"))
+    link = _child(entry, "link")
+    url = None if link is None else link.get("href")
+    if status not in AWARDED or not title or not record_id or not url:
+        return ()
+    if urlsplit(url).scheme not in {"https", "http"}:
+        return ()
+    project = _child(folder, "ProcurementProject")
+    codes = {
+        code
+        for classification in _children(project, "RequiredCommodityClassification")
+        if (code := _text(_child(classification, "ItemClassificationCode"))) and code.isdigit()
+    }
+    nuts = _text(_child(project, "RealizedLocation", "CountrySubentityCode"))
+    buyer = _text(_child(folder, "LocatedContractingParty", "Party", "PartyName", "Name"))
+    out: list[AwardRecord] = []
+    for index, result in enumerate(_children(folder, "TenderResult")):
+        winner = _child(result, "WinningParty")
+        name = _text(_child(winner, "PartyName", "Name"))
+        if not name:
+            continue
+        contract = _child(result, "Contract")
+        amount_element = _child(
+            result, "AwardedTenderedProject", "LegalMonetaryTotal", "TaxExclusiveAmount"
+        )
+        issued = _date(_text(_child(contract, "IssueDate"))) or _date(
+            _text(_child(result, "AwardDate"))
+        )
+        offers = _text(_child(result, "ReceivedTenderQuantity"))
+        out.append(
+            AwardRecord(
+                source_id=PLACSP_SOURCE_ID,
+                record_id=record_id,
+                lot=_text(_child(contract, "ID")) or str(index),
+                title=title[:500],
+                buyer_name=buyer,
+                winner_name=name[:300],
+                winner_id=normalized_tax_id(_text(_child(winner, "PartyIdentification", "ID"))),
+                amount=_number(_text(amount_element)),
+                currency=None if amount_element is None else amount_element.get("currencyID"),
+                awarded_on=None if issued is None else issued.date(),
+                offers_received=int(offers) if offers and offers.isdigit() else None,
+                demand_codes=tuple(TaxonomyCode("CPV", c[:8].ljust(8, "0")) for c in sorted(codes)),
+                places=(_place(nuts),),
+                source_url=url,
+            )
+        )
+    return tuple(out)
+
+
+def parse_feed_awards(body: bytes) -> tuple[AwardRecord, ...]:
+    root = ET.fromstring(body)
+    return tuple(a for entry in _children(root, "entry") for a in parse_awards(entry))
+
+
 def parse_feed(body: bytes) -> tuple[tuple[ProcurementRecord, ...], str | None, datetime | None]:
     """Open tenders of one feed page, the next (older) page and the page's oldest update."""
     root = ET.fromstring(body)
@@ -196,7 +266,10 @@ class PlacspFeedAdapter:
         clock: Callable[[], datetime],
         feeds: tuple[str, ...] = FEEDS,
         max_age: timedelta = MAX_AGE,
+        awards_sink: Callable[[Sequence[AwardRecord]], int] | None = None,
     ) -> None:
+        # Award results ride on the same pages: kept as they pass, no extra request.
+        self._awards_sink = awards_sink
         self._transport = transport
         self._max_age = max_age
         self._clock = clock
@@ -243,6 +316,8 @@ class PlacspFeedAdapter:
             return self._failure(f"HTTP_{status}", started)
         try:
             records, next_url, oldest = parse_feed(body)
+            if self._awards_sink is not None:
+                self._awards_sink(parse_feed_awards(body))
         except (ET.ParseError, ValueError):
             return self._failure("FEED_NOT_PARSEABLE", started)
         # Publication filters records; the traversal stops by update time, bounded by MAX_AGE

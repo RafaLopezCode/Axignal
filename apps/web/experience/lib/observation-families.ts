@@ -41,6 +41,8 @@ const BY_KIND: Partial<Record<Discovery["kind"], Facet>> = {
   IDENTITY_HINT: { family: "organization", channel: null },
   DEMAND: { family: "demand", channel: null },
   MENTION: { family: "reputation", channel: null },
+  RELATIONSHIP: { family: "relationships", channel: null },
+  COMPETITION: { family: "relationships", channel: null },
 };
 
 /** A grounded unknown names what is unknown through its code; codes carry an optional ":<jurisdiction>" suffix. */
@@ -52,6 +54,7 @@ const BY_UNKNOWN_CODE: Record<string, Facet> = {
   NO_GOVERNED_DEMAND_SOURCE: { family: "demand", channel: null },
   NO_RELEVANT_DEMAND_FOUND: { family: "demand", channel: null },
   NO_PRESS_MENTION_FOUND: { family: "reputation", channel: null },
+  NO_PUBLIC_AWARDS_FOUND: { family: "relationships", channel: null },
 };
 
 export function facetOfDiscovery(d: Pick<Discovery, "kind" | "code">): Facet {
