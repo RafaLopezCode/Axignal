@@ -29,6 +29,7 @@ from application.observation_intelligence.contracts import (
 )
 from application.observation_intelligence.findings import ProcurementRecord, SourceFindings
 from application.observation_intelligence.strategy import ObservationAction
+from application.world_demand.index import PAGE_NOT_REACHABLE
 
 PLACSP_SOURCE_ID = "es-placsp"
 FEEDS = (
@@ -231,7 +232,7 @@ class PlacspFeedAdapter:
         ):
             return self._findings((), has_more=False, requests=0, started=time.monotonic())
         if page > len(self._chain):
-            return self._failure("PAGE_NOT_REACHABLE", time.monotonic())
+            return self._failure(PAGE_NOT_REACHABLE, time.monotonic())
         feed, url = self._chain[page - 1]
         started = time.monotonic()
         try:
