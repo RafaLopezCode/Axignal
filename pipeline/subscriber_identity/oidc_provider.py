@@ -228,7 +228,13 @@ class ConfiguredOidcProvider:
             and authorized_party != config.client_id
         ):
             raise OidcProtocolError
-        return VerifiedExternalIdentity(config.issuer, subject)
+        email = claims.get("email")
+        verified_email = (
+            email.strip()
+            if claims.get("email_verified") is True and isinstance(email, str) and "@" in email
+            else None
+        )
+        return VerifiedExternalIdentity(config.issuer, subject, verified_email=verified_email)
 
 
 __all__ = ["ConfiguredOidcProvider", "OidcProtocolError"]

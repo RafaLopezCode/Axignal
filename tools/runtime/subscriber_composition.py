@@ -66,7 +66,7 @@ from domain.admin_billing.commercial_prices import (
     EUR_MONTHLY_BASE_MINOR,
 )
 from domain.evidence.epistemics import Currentness
-from domain.identity import OrganizationId, TenantId, XeedId
+from domain.identity import OrganizationId, PrincipalId, TenantId, XeedId
 from pipeline.admin_billing.subscriber_store import SqliteSubscriberBillingStore
 from pipeline.entity_resolution.organization_store import SqliteCanonicalOrganizationStore
 from pipeline.entity_resolution.sqlite_store import SqliteIdentityGovernanceStore
@@ -944,20 +944,41 @@ def build_subscriber_facade(
     root = Path(data_dir).resolve()
     root.mkdir(parents=True, exist_ok=True)
     billing_store = SqliteSubscriberBillingStore(root / "subscriber-billing.sqlite3")
-    identity = build_subscriber_identity_runtime(
-        root,
-        _oidc_provider_configs(settings),
-        effective_clock,
-        billing_store,
-    )
-    purchase_reader = CurrentPurchaseAuthorityReader(identity.store, billing_store)
-    purchase_adapter = _BillingAuthorityAdapter(identity.store, purchase_reader)
-    environment_ref = stripe_settings.environment_ref if stripe_settings is not None else None
     pilot_access = (
         PilotAccessService(SqlitePilotAccessStore(root / "subscriber-pilot.sqlite3"))
         if settings.pilot_enabled
         else None
     )
+
+    def listed_pilot_account(
+        principal: PrincipalId, tenant: TenantId, email: str, now: datetime
+    ) -> object:
+        """A verified sign-in of an operator-listed pilot test account gets pilot access."""
+        if pilot_access is None:
+            return None
+        from pipeline.admin_pilot_accounts import SqlitePilotAccountsStore
+
+        listed = SqlitePilotAccountsStore(root / "admin-pilot-accounts.sqlite3").read()
+        if not listed.authorized_for_test:
+            return None
+        return pilot_access.grant_listed_account(
+            principal_id=principal,
+            tenant_id=tenant,
+            verified_email=email,
+            listed=(listed.a, listed.b),
+            now=now,
+        )
+
+    identity = build_subscriber_identity_runtime(
+        root,
+        _oidc_provider_configs(settings),
+        effective_clock,
+        billing_store,
+        on_verified_email=listed_pilot_account,
+    )
+    purchase_reader = CurrentPurchaseAuthorityReader(identity.store, billing_store)
+    purchase_adapter = _BillingAuthorityAdapter(identity.store, purchase_reader)
+    environment_ref = stripe_settings.environment_ref if stripe_settings is not None else None
     staff_capacity = build_staff_capacity(
         root,
         enabled=settings.staff_capacity_enabled,

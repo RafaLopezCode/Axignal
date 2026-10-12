@@ -88,9 +88,14 @@ def test_solar_installer_in_spain_reaches_routed_public_demand(tmp_path: Path) -
     assert view["attentionScopes"][0]["jurisdiction"] == "EU/ES"
     # Cheapest first: robots + homepage, no extra page (activity and place evidenced),
     # no semantic call (deterministic answer suffices), demand from the routed source.
-    assert world.sites.requests == [SOLAR_ES.rstrip("/") + "/robots.txt", SOLAR_ES]
+    # The representation audit adds one bounded read: /llms.txt (no sitemap declared).
+    assert world.sites.requests == [
+        SOLAR_ES.rstrip("/") + "/robots.txt",
+        SOLAR_ES,
+        SOLAR_ES.rstrip("/") + "/llms.txt",
+    ]
     assert world.judge.calls == []
-    assert _ledger(view, "httpRequests") == 2 and _ledger(view, "lunaCalls") == 0
+    assert _ledger(view, "httpRequests") == 3 and _ledger(view, "lunaCalls") == 0
     assert "SKIPPED:SEMANTIC:DETERMINISTIC_SUFFICIENT" in view["_ledger"]["decisions"]
     assert view["target"] == {
         "kind": "PENDING",
@@ -344,7 +349,7 @@ def test_focus_first_observation_hands_over_to_reobservation_without_an_operator
     assert any(a.source_id == "ted-search-v3" for a in plan.strategy.actions)
 
 
-def test_public_web_representation_is_measured_without_extra_requests(tmp_path: Path) -> None:
+def test_public_web_representation_is_audited_with_its_evidence(tmp_path: Path) -> None:
     world = World()
     facade = build(tmp_path, world)
     solar, _ = _attend(facade, tmp_path, "subject:web-solar", SOLAR_ES)
@@ -354,11 +359,27 @@ def test_public_web_representation_is_measured_without_extra_requests(tmp_path: 
     saas_view = _view(facade, saas, _pending_id(facade, saas))
     (measured,) = discoveries(solar_view, "WEB_REPRESENTATION")
     checks = measured["detail"]["checks"]
-    assert measured["detail"]["instrument"] == "site-reading.v1"
+    assert measured["detail"]["instrument"] == "site-reading.v2"
     assert (checks["organizationDeclared"], checks["offerDeclared"]) == (True, False)
+    audit = measured["detail"]["audit"]
+    assert audit["instrument"] == "representation-audit.v1"
+    assert set(audit["sections"]) == {
+        "SEARCH_FINDABILITY", "AI_ANSWER_READINESS", "SHARING_AND_MOBILE"
+    }  # fmt: skip
+    # Every check says what it saw and where; there is no universal score.
+    assert all({"id", "status", "impact", "value", "evidence"} <= set(c) for c in audit["checks"])
     assert "score" not in str(measured).lower()
-    (gap,) = discoveries(solar_view, "REPRESENTATION_GAP")
-    assert gap["code"] == "OFFER_NOT_MACHINE_READABLE" and gap["epistemicState"] == "POTENTIAL"
-    assert gap["detail"]["notCausal"] is True
-    assert discoveries(saas_view, "REPRESENTATION_GAP") == []  # SoftwareApplication declared
-    assert _ledger(solar_view, "httpRequests") == 2  # robots + homepage, nothing added
+    gaps = discoveries(solar_view, "REPRESENTATION_GAP")
+    assert "OFFER_NOT_MACHINE_READABLE" in {g["code"] for g in gaps}
+    assert all(g["epistemicState"] == "POTENTIAL" and g["detail"]["notCausal"] for g in gaps)
+    audit_gaps = [g for g in gaps if g["code"].startswith("AUDIT:")]
+    attention = {c["id"] for c in audit["checks"] if c["status"] == "ATTENTION"}
+    assert {g["code"].removeprefix("AUDIT:") for g in audit_gaps} == attention - {
+        "NO_NOINDEX_ON_READ_PAGES", "OFFER_DECLARED"
+    }  # fmt: skip
+    # SoftwareApplication declared: no offer gap for the SaaS site.
+    assert "OFFER_NOT_MACHINE_READABLE" not in {
+        g["code"] for g in discoveries(saas_view, "REPRESENTATION_GAP")
+    }
+    # robots + homepage + /llms.txt (no sitemap declared): one bounded audit read.
+    assert _ledger(solar_view, "httpRequests") == 3

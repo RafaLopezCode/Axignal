@@ -2,8 +2,24 @@
 import { useEffect, useState } from "react";
 import { useLocale } from "@/lib/locale";
 import { pilotAccountsSnapshot, type PilotAccountsSnapshot } from "@/lib/pilot-test-accounts";
+import type { PilotGrantRecord } from "@/lib/customer-access";
 
-export function PilotTestAccounts() {
+/** Governance of the two listed test accounts: has each signed in, with what access, until when. */
+function AccountAccess({ account, grants }: { account: "A" | "B"; grants: PilotGrantRecord[] | null }) {
+  const { t, locale } = useLocale();
+  if (grants === null) return null;
+  const grant = grants.find(g => g.origin === "LISTED_ACCOUNT" && g.account === account);
+  const day = (iso: string) => new Date(iso).toLocaleString(locale);
+  return <p className="admin-pilot-access" data-state={grant?.state ?? "NONE"}>
+    {grant
+      ? t("Cuenta {account}: acceso piloto {state} · concedido {granted} · caduca {expires}", "Account {account}: pilot access {state} · granted {granted} · expires {expires}")
+        .replace("{account}", account).replace("{state}", grant.state === "ACTIVE" ? t("activo", "active") : grant.state === "EXPIRED" ? t("caducado", "expired") : t("revocado", "revoked"))
+        .replace("{granted}", day(grant.granted_at)).replace("{expires}", day(grant.expires_at))
+      : t("Cuenta {account}: todavía no ha iniciado sesión con Google.", "Account {account}: has not signed in with Google yet.").replace("{account}", account)}
+  </p>;
+}
+
+export function PilotTestAccounts({ grants = null }: { grants?: PilotGrantRecord[] | null }) {
   const { t } = useLocale();
   const [accounts, setAccounts] = useState({ a: "", b: "" });
   const [saved, setSaved] = useState<PilotAccountsSnapshot | null>(null);
@@ -41,7 +57,7 @@ export function PilotTestAccounts() {
     <section className="admin-attention admin-pilot-accounts" aria-labelledby="pilot-accounts-title">
       <h2 id="pilot-accounts-title">{t("Cuentas para la prueba del piloto", "Pilot test accounts")}</h2>
       <p>{t("AXIGNAL · https://axignal.com/ · 1 organización, sin pagos.", "AXIGNAL · https://axignal.com/ · 1 organization, no payments.")}</p>
-      <p id="pilot-accounts-help">{t("Guarda las dos cuentas Google para autorizar la prueba del piloto. Puedes cambiarlas y guardar de nuevo. El acceso requiere Google verificado y una invitación de un solo uso.", "Save both Google accounts to authorize the pilot test. You can change them and save again. Access requires verified Google sign-in and a single-use invitation.")}</p>
+      <p id="pilot-accounts-help">{t("Guarda las dos cuentas Google de la prueba. Al iniciar sesión con Google, una cuenta guardada con su correo verificado por Google entra con el piloto activo (1 organización, sin pagos, 60 días), sin invitación. Cada acceso queda registrado en Invitaciones y pilotos y se puede revocar.", "Save both Google accounts for the test. When a saved account signs in with Google and Google has verified its address, it gets pilot access (1 organization, no payments, 60 days) without an invitation. Every access is recorded under Invitations and pilots and can be revoked.")}</p>
       <form onSubmit={save} aria-describedby="pilot-accounts-help">
         <div className="admin-table-toolbar">
           {(["a", "b"] as const).map(account => (
@@ -62,6 +78,8 @@ export function PilotTestAccounts() {
           </button>
         </div>
       </form>
+      <AccountAccess account="A" grants={grants}/>
+      <AccountAccess account="B" grants={grants}/>
       <p role="status" aria-live="polite">
         {loading ? t("Cargando cuentas…", "Loading accounts…") : dirty ? t("Cambios sin guardar.", "Unsaved changes.") : saved?.authorizedForTest ? t("Las dos cuentas están guardadas y autorizadas para la prueba.", "Both accounts are saved and authorized for the test.") : t("La prueba espera a que guardes dos cuentas distintas.", "The test awaits two distinct saved accounts.")}
         {saved?.savedAt && <> {t("Último guardado:", "Last saved:")} <time dateTime={saved.savedAt}>{new Date(saved.savedAt).toLocaleString()}</time></>}

@@ -43,6 +43,12 @@ from application.first_observation.contracts import (
 )
 from application.first_observation.geography import area_jurisdiction
 from application.first_observation.policy import FirstObservationPolicy, next_due
+from application.first_observation.representation_audit import (
+    AUDIT_VERSION,
+    SiteExtras,
+    audit_representation,
+    parse_sitemap,
+)
 from application.first_observation.research import ResearchPlan, plan_research
 from application.first_observation.rights import (
     NO_RIGHTS,
@@ -186,6 +192,7 @@ class FirstObservationService:
         self._seeds = seeds
         self._cascade_factory = cascade_factory
         self._clock = clock
+        self._extras_cache: dict[str, tuple[datetime, SiteExtras]] = {}
         self.policy = policy or FirstObservationPolicy()
 
     def content_rights(self, website: str, *, now: datetime) -> ContentRights:
@@ -556,7 +563,7 @@ class FirstObservationService:
         capabilities = to_capabilities(routed, observation_ids, pages)
         discoveries: list[Discovery] = [*self._site_discoveries(reading, semantic)]
         discoveries += [self._activity(f) for f in findings]
-        discoveries += self._web_representation(reading, findings)
+        discoveries += self._web_representation(reading, findings, ledger)
         discoveries += identity
         demand = self._demand(
             target, subject, capabilities, scopes, pages, observation_ids, now, ledger,
@@ -723,9 +730,51 @@ class FirstObservationService:
                 )
         return out
 
-    @staticmethod
+    def _extras(self, reading: SiteReading, ledger: RunLedger) -> SiteExtras:
+        """The first declared sitemap and /llms.txt, within the site request budget."""
+        policy = self.policy
+        robots = reading.robots
+        if robots is None or not reading.pages:
+            return SiteExtras()
+        origin = "{0.scheme}://{0.netloc}".format(urlsplit(reading.pages[0].url))
+        now = self._clock()
+        cached = self._extras_cache.get(origin)
+        if cached is not None and now - cached[0] < policy.robots_reuse_for:
+            ledger.decide("REUSED:AUDIT_EXTRAS")
+            return cached[1]  # public, per origin: paid once, like robots.txt
+        sitemap_url = next(iter(robots.sitemaps()), None)
+        sitemap_urls: int | None = None
+        newest: str | None = None
+        llms: bool | None = None
+        for kind, url in (("sitemap", sitemap_url), ("llms", origin + "/llms.txt")):
+            if url is None or not robots.allows(url):
+                continue
+            if ledger.http_requests + policy.requests_per_fetch > policy.max_site_requests:
+                ledger.decide(f"SKIPPED:AUDIT:{kind.upper()}:BUDGET")
+                continue
+            fetched = self._fetch(url, "site-audit", ledger)
+            if kind == "llms":
+                if fetched.failure is None and fetched.status == 200 and fetched.body:
+                    text = _decode(fetched)
+                    llms = not _is_html(fetched, text) and bool(text.strip())
+                elif fetched.status is not None and 400 <= fetched.status < 500:
+                    llms = False
+                continue
+            if fetched.failure is None and fetched.status == 200 and fetched.body:
+                try:
+                    sitemap_urls, newest = parse_sitemap(fetched.body)
+                except Exception:  # an unreadable sitemap is a finding, never a crash
+                    sitemap_urls = 0
+            elif fetched.status is not None:
+                sitemap_urls = 0
+        extras = SiteExtras(sitemap_url, sitemap_urls, newest, llms)
+        if len(self._extras_cache) >= 2048:
+            self._extras_cache.clear()
+        self._extras_cache[origin] = (now, extras)
+        return extras
+
     def _web_representation(
-        reading: SiteReading, findings: Sequence[ActivityFinding]
+        self, reading: SiteReading, findings: Sequence[ActivityFinding], ledger: RunLedger
     ) -> list[Discovery]:
         """Public web representation as measured by this instrument: checks, not a score.
 
@@ -747,6 +796,9 @@ class FirstObservationService:
         )
         robots = reading.robots
         noindex = "noindex" in (home.meta_robots or "").lower()
+        audit = audit_representation(
+            reading.pages, robots, self._extras(reading, ledger), activity_found=bool(findings)
+        )
         checks: dict[str, object] = {
             "robotsTxtPublished": robots is not None and robots.text is not None,
             "sitemapsDeclared": 0 if robots is None else len(robots.sitemaps()),
@@ -772,6 +824,7 @@ class FirstObservationService:
                     "instrument": READER_VERSION,
                     "conditions": "robots.txt plus pages read by this First Observation",
                     "checks": checks,
+                    "audit": audit.to_wire(),
                     "limitation": "Own website only; not search results, rankings or "
                     "generative answers.",
                 },
@@ -802,6 +855,29 @@ class FirstObservationService:
                     "or product is declared as structured data.",
                     "Search and generative surfaces that rely on structured data may not "
                     "connect this organization to what it offers. Not a measured ranking.",
+                )
+            )
+        covered = {"NO_NOINDEX_ON_READ_PAGES", "OFFER_DECLARED"}  # stated by the gaps above
+        for check in audit.attention():
+            if check.check_id in covered:
+                continue
+            out.append(
+                Discovery(
+                    DiscoveryKind.REPRESENTATION_GAP,
+                    f"AUDIT:{check.check_id}",
+                    check.check_id,
+                    XignalEpistemicState.POTENTIAL.value,
+                    check.evidence,
+                    None,
+                    home.observed_at,
+                    {
+                        "section": check.section.value,
+                        "impact": check.impact.value,
+                        "value": check.value,
+                        "instrument": AUDIT_VERSION,
+                        "basis": ["WEB_REPRESENTATION"],
+                        "notCausal": True,
+                    },
                 )
             )
         return out

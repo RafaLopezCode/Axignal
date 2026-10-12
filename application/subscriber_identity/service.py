@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import StrEnum
 from typing import Protocol
 
@@ -41,6 +41,9 @@ class VerifiedExternalIdentity:
     issuer: str
     subject: str
     client_id: str | None = None
+    #: The provider's email only when the provider itself verified it. Transient: used
+    #: at sign-in (pilot test accounts) and never bound, stored or compared as identity.
+    verified_email: str | None = field(default=None, compare=False, repr=False)
 
     def __post_init__(self) -> None:
         if not isinstance(self.issuer, str) or not self.issuer.strip():

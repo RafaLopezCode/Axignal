@@ -75,6 +75,7 @@ from application.subscriber_portfolio.models import (
 )
 from application.subscriber_projection.subscriber_runtime import SubscriberEconomicRuntime
 from application.world_demand.index import DemandIndexPort, SliceFeedPort, WorldDemandIngestor
+from application.world_demand.live import LiveDemandReader, apply_live_demand
 from application.xeed_access.reader import TrustedRequestContext
 from domain.evidence.epistemics import Currentness
 from domain.identity import OrganizationId, PrincipalId, TenantId, XeedId
@@ -346,8 +347,10 @@ class FirstObservationRuntime:
         tenant_daily_jobs: int = 20,
         ingestor: WorldDemandIngestor | None = None,
         purge_canonical_raw: Callable[[datetime], int] | None = None,
+        live_demand: LiveDemandReader | None = None,
     ) -> None:
         self._purge_canonical_raw = purge_canonical_raw
+        self._live_demand = live_demand
         self.ingestor = ingestor
         self.store = store
         self.service = service
@@ -659,6 +662,9 @@ class FirstObservationRuntime:
                 proof = withdraw_first_proof(proof, at=at)
                 state = "SOURCE_UNAVAILABLE"
         view = public_view(proof, state)
+        if view is not None and proof is not None:
+            # Tenders open and close daily: demand is matched again now, never frozen.
+            view = apply_live_demand(view, proof, self._live_demand, now=self._clock.now())
         if view is not None and proof is not None and proof.get("publicUnderstanding"):
             from application.first_observation.understanding import compare, public_report
 
@@ -915,6 +921,7 @@ def build_first_observation(
         worker=overrides.worker or values.get(WORKER_KEY, "thread").strip() or "thread",
         daily_jobs=max(0, daily_jobs),
         ingestor=ingestor,
+        live_demand=LiveDemandReader(index, sources=tuple(ports), clock=clock.now),
         purge_canonical_raw=(
             lambda at: observation_memory.purge_first_observation_content(
                 now=at,
