@@ -313,7 +313,9 @@ class WorldDemandIngestor:
                 failure = findings.failure
                 break
             records += self._store.upsert(findings.records)
-            if len(findings.records) < self._page_size:
+            if findings.has_more is False or (
+                findings.has_more is None and len(findings.records) < self._page_size
+            ):
                 complete = True
                 break
         # Covered history starts where the oldest finished traversal started.

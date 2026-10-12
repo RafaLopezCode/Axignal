@@ -135,7 +135,9 @@ class SubscriberHttpFacade:
         staff: object | None = None,
         pilot_admin: PilotAccessService | None = None,
         customer_read: Callable[[AdminAuthorizationGrant], dict[str, object]] | None = None,
+        identity_candidates: Callable[[str, str | None], list[dict[str, str | None]]] | None = None,
     ) -> None:
+        self.identity_candidates = identity_candidates
         self.pilot_admin = pilot_admin
         self.customer_read = customer_read
         self.settings = settings
@@ -248,6 +250,25 @@ class SubscriberHttpFacade:
                 return SubscriberHttpResponse(
                     200, self.pilot.redeem(context, _text(body, "inviteToken", 256))
                 )
+            if method == "POST" and path == "/subscriber/identity/candidates":
+                # Registry suggestions for the person to choose from. Nothing is admitted
+                # here: identity comes later from the exact LEI the subscriber picks.
+                body = payload or {}
+                if not set(body) <= {"query", "country"}:
+                    raise SubscriberRequestError("invalid candidate search")
+                query = _text(body, "query", 120)
+                country = body.get("country")
+                if country is not None and (
+                    not isinstance(country, str) or not re.fullmatch(r"[A-Z]{2}", country)
+                ):
+                    raise SubscriberRequestError("invalid country")
+                if self.identity_candidates is None:
+                    return SubscriberHttpResponse(200, {"state": "UNAVAILABLE", "candidates": []})
+                try:
+                    found = self.identity_candidates(query, country)
+                except Exception:  # a registry failure is UNKNOWN, never "no such company"
+                    return SubscriberHttpResponse(200, {"state": "UNAVAILABLE", "candidates": []})
+                return SubscriberHttpResponse(200, {"state": "success", "candidates": found})
             if method == "POST" and path == "/subscriber/auth/logout":
                 if payload != {}:
                     raise SubscriberRequestError("logout body must be empty")
@@ -337,7 +358,10 @@ class SubscriberHttpFacade:
 
 def is_subscriber_path(path: str) -> bool:
     resource = urlsplit(path).path
-    return resource == "/subscriber/portfolio" or resource.startswith(
+    return resource in {
+        "/subscriber/portfolio",
+        "/subscriber/identity/candidates",
+    } or resource.startswith(
         (
             "/subscriber/auth/",
             "/subscriber/organizations/",

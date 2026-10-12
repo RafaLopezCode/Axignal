@@ -575,3 +575,15 @@ body:has(.obs-rail-desktop) .privacy-preferences-button { inset-inline-end: auto
   .obs-activation-invite .obs-add-row { flex-direction: column; align-items: stretch; }
   .obs-activation-way > .obs-button { justify-self: stretch; justify-content: center; }
 }
+
+/* Verify identity: registry candidates the person chooses from. */
+.obs-identity-open { display: inline-flex; align-items: center; gap: 6px; margin-block: 4px 12px; }
+.obs-identity h2 { font-family: Fraunces, Georgia, serif; font-size: 1.05rem; margin: 0; }
+.obs-identity-search { display: grid; gap: 6px; }
+.obs-identity-list { border: 0; padding: 0; margin: 0; display: grid; gap: 6px; }
+.obs-identity-list legend { font-weight: 600; margin-bottom: 4px; }
+.obs-identity-option { display: flex; align-items: flex-start; gap: 10px; padding: 10px 12px; border: 1px solid var(--obs-line); border-radius: var(--obs-r-control); cursor: pointer; background: var(--obs-card); }
+.obs-identity-option:has(input:checked) { border-color: var(--obs-text); }
+.obs-identity-option input { margin-top: 3px; }
+.obs-identity-option span { display: grid; gap: 2px; min-width: 0; }
+.obs-identity-option small { color: var(--obs-muted); overflow-wrap: anywhere; }

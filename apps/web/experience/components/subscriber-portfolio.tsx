@@ -152,7 +152,7 @@ export function SubscriberPortfolioExperience({ source = accountSource, notice, 
       if (waitsForAccess) setActivation(previous => previous === "starting" || previous === "idle" ? "needs_access" : previous);
       setMessage(waitsForAccess || quiet ? "" : input.action === "refresh_purchase" ? result.state === "REFRESHED" ? t("La comprobación ha terminado. La cartera muestra la capacidad verificada.", "The check is complete. The portfolio shows verified capacity.") : t("El pago o la capacidad todavía no se han podido confirmar. No se ha concedido capacidad nueva.", "Payment or capacity could not be confirmed yet. No new capacity has been granted.")
         : link ? t("La compra espera tu confirmación. La capacidad solo cambia tras verificar el pago.", "The purchase awaits your confirmation. Capacity changes only after payment is verified.")
-        : result.observationState === "QUEUED" ? t("Recibido. La primera observación empieza en segundo plano y verás su estado aquí. La identidad legal se verifica aparte.", "Received. The first observation starts in the background and you will see its state here. Legal identity is verified separately.")
+        : result.observationState === "QUEUED" ? t("Recibido. Está en cola para su primera observación y verás su estado aquí. La identidad legal se verifica aparte.", "Received. It is queued for its first observation and you will see its state here. Legal identity is verified separately.")
         : result.observationState === "CAPACITY_REQUIRED" ? t("Tu solicitud está guardada, pero tu capacidad actual ya está en uso. Amplíala para observarla.", "Your request is saved, but your current capacity is already in use. Expand it to observe it.")
         : result.observationState === "NOT_READY" ? t("Tu atención está guardada. La observación necesita un plan autorizado; aún no se ha ejecutado.", "Your attention is saved. Observation requires an authorized plan; it has not run yet.")
         : result.observationState?.startsWith("BLOCKED") ? t("La observación se ha detenido por sus límites de ejecución. No hay una conclusión nueva.", "Observation stopped at its execution limits. There is no new conclusion.")
@@ -259,6 +259,8 @@ export function SubscriberPortfolioExperience({ source = accountSource, notice, 
     const epoch = ++outputEpoch.current, session = sessionEpoch.current;
     if (pushHistory) { const url = new URL(window.location.href); url.searchParams.set("organization", focusId); window.history.pushState(null, "", url); }
     onOutputStart?.(focusId);
+    // A notice belongs to the action that produced it; opening another reading leaves it behind.
+    setMessage("");
     setReading(true); setSelected(focusId); setProjection(null); setFirstObservation(null);
     try {
       const payload = await loadOutput(focusId, controller.signal);
@@ -318,7 +320,7 @@ export function SubscriberPortfolioExperience({ source = accountSource, notice, 
   }
   const clearSelection = useCallback(() => {
     outputRequest.current?.abort(); ++outputEpoch.current;
-    setSelected(null); setProjection(null); setFirstObservation(null); setRevision(null); setReading(false);
+    setSelected(null); setProjection(null); setFirstObservation(null); setRevision(null); setReading(false); setMessage("");
   }, []);
   return <Observatory activation={activation} onRedeemInvite={redeemInvite} onCheckout={startCheckout} onConfirmPayment={() => void confirmPayment()} onActivationReset={() => setActivation("idle")} notice={notice} shell={shell} canAct={canAct} capabilities={source.capabilities} landing={source.landing} firstLookUnread={source.firstLookUnread} rememberReading={source.remembersReading !== false} suggestions={suggestions} loadReading={loadOutput} menuName={source.menuName} access={access} portfolio={portfolio} busy={busy} message={message} paymentUrl={paymentUrl}
     selected={selected} reading={reading} projection={projection} firstObservation={firstObservation} revision={revision}

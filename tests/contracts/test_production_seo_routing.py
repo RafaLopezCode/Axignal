@@ -7,6 +7,15 @@ def test_public_seo_router_exposes_only_expected_public_surface() -> None:
     text = ROUTE.read_text(encoding="utf-8")
     required = (
         "Path(`/sitemap.xml`)",
+        # Home language versions, published prices and the assistant summary (audit 2026-10-12).
+        "Path(`/es`)",
+        "Path(`/en`)",
+        "Path(`/fr`)",
+        "Path(`/de`)",
+        "Path(`/it`)",
+        "Path(`/pt`)",
+        "Path(`/pricing`)",
+        "Path(`/llms.txt`)",
         "Path(`/robots.txt`)",
         "PathPrefix(`/knowledge`)",
         "PathPrefix(`/es/knowledge`)",

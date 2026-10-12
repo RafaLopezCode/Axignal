@@ -215,6 +215,89 @@ function discoveryInsight(d: Discovery, index: number, t: Translate, locale: str
   };
 }
 
+/** The organization's own description of itself, quoted as it publishes it: declared, never verified. */
+function presenceInsight(d: Discovery, t: Translate): Insight[] {
+  const quote = (d.excerpt ?? "").trim();
+  if (d.kind !== "PUBLIC_PRESENCE" || !quote) return [];
+  const why = t("Es lo que la organización dice de sí misma en su web. AXIGNAL no lo ha verificado ni lo convierte en una capacidad.",
+    "It is what the organization says about itself on its website. AXIGNAL has not verified it nor turned it into a capability.");
+  return [{
+    id: `${d.kind}:${d.code}:self`, lane: "understood", nature: "DECLARED",
+    headline: fill(t("Así se presenta: «{quote}»", "How it presents itself: “{quote}”"), { quote: clip(quote, 220) }),
+    why, observedAt: d.observedAt, meaning: [why], reasoning: [],
+    proposal: null,
+    sources: [{ url: d.sourceUrl, label: d.sourceUrl ? hostOf(d.sourceUrl) : t("Su web", "Its website"), observedAt: d.observedAt, quote }],
+    proof: [], dimensions: [], previous: null,
+    changeKey: keyOf(`${d.kind}:${d.code}:self`, quote),
+    ...facetOfDiscovery(d),
+  }];
+}
+
+/**
+ * The measured checks of its own website, one finding each: what is in place, and every check that is not.
+ * Each keeps the instrument, conditions and limitation. A check is not a ranking, a score or a cause.
+ */
+function representationInsights(d: Discovery, offerGapShown: boolean, t: Translate): Insight[] {
+  const checks = d.detail.checks;
+  if (d.kind !== "WEB_REPRESENTATION" || typeof checks !== "object" || checks === null) return [];
+  const c = checks as Record<string, unknown>;
+  const proof: Proof[] = [
+    ...(typeof d.detail.instrument === "string" ? [{ label: t("Instrumento y versión", "Instrument and version"), value: d.detail.instrument }] : []),
+    ...(typeof d.detail.conditions === "string" ? [{ label: t("Condiciones de observación", "Observation conditions"), value: d.detail.conditions }] : []),
+    ...(typeof d.detail.limitation === "string" ? [{ label: t("Límite", "Limitation"), value: d.detail.limitation }] : []),
+  ];
+  const sitemaps = typeof c.sitemapsDeclared === "number" ? c.sitemapsDeclared : 0;
+  const reasoning = [t("Es una comprobación de su propia web, no una posición en buscadores ni la causa de ningún resultado.",
+    "It is a check of its own website, not a search position nor the cause of any result.")];
+  const make = (code: string, nature: Nature, headline: string, why: string, proposal: string | null): Insight => ({
+    id: `${d.kind}:${code}`, lane: "understood", nature, headline, why, observedAt: d.observedAt,
+    meaning: [why], reasoning, proposal,
+    sources: d.sourceUrl ? [{ url: d.sourceUrl, label: hostOf(d.sourceUrl), observedAt: d.observedAt, quote: null }] : [],
+    proof, dimensions: [], previous: null,
+    changeKey: keyOf(`${d.kind}:${code}`, headline),
+    ...facetOfDiscovery(d),
+  });
+  const present = [
+    c.titlePresent === true ? t("título", "title") : null,
+    c.descriptionPresent === true ? t("descripción", "description") : null,
+    c.robotsTxtPublished === true ? "robots.txt" : null,
+    sitemaps > 0 ? fill(sitemaps === 1 ? t("{n} sitemap", "{n} sitemap") : t("{n} sitemaps", "{n} sitemaps"), { n: sitemaps }) : null,
+    typeof c.canonical === "string" && c.canonical ? t("URL canónica", "canonical URL") : null,
+    c.organizationDeclared === true ? t("quién es, en datos estructurados", "who it is, as structured data") : null,
+  ].filter((x): x is string => Boolean(x));
+  const out: Insight[] = [];
+  if (present.length) out.push(make("IN_PLACE", "STRENGTH",
+    fill(t("Lo que su web ya pone a disposición de buscadores y asistentes: {list}.", "What its website already offers search engines and assistants: {list}."), { list: present.join(", ") }),
+    t("Observado en su página principal y robots.txt.", "Observed on its homepage and robots.txt."), null));
+  if (c.titlePresent === false) out.push(make("NO_TITLE", "CLARIFY",
+    t("Su página principal no tiene título.", "Its homepage has no title."),
+    t("Es lo primero que muestran buscadores y asistentes al citarla.", "It is the first thing search engines and assistants show when citing it."),
+    t("Añade un título que diga quién es y qué ofrece. Vuelve a observar después para comprobarlo.", "Add a title that says who it is and what it offers. Observe again afterwards to check.")));
+  if (c.descriptionPresent === false) out.push(make("NO_DESCRIPTION", "CLARIFY",
+    t("Su página principal no tiene meta descripción.", "Its homepage has no meta description."),
+    t("Sin ella, buscadores y asistentes la resumen con texto que no ha elegido.", "Without it, search engines and assistants summarize it with text it did not choose."),
+    t("Escribe una frase que diga qué ofrece y a quién. Vuelve a observar después para comprobarlo.", "Write one sentence that says what it offers and to whom. Observe again afterwards to check.")));
+  if (c.organizationDeclared === false) out.push(make("NO_ORGANIZATION_DATA", "CLARIFY",
+    t("No declara quién es en datos estructurados.", "It does not declare who it is as structured data."),
+    t("Las máquinas que leen schema.org no encuentran su nombre, logotipo ni datos de contacto declarados.", "Machines that read schema.org find no declared name, logo or contact details."),
+    t("Declara la organización con schema.org (Organization). Vuelve a observar después para comprobarlo.", "Declare the organization with schema.org (Organization). Observe again afterwards to check.")));
+  if (c.offerDeclared === false && !offerGapShown) out.push(make("NO_OFFER_DATA", "CLARIFY",
+    t("En las páginas leídas no declara servicios ni productos como datos estructurados.", "On the pages read it declares no services or products as structured data."),
+    t("Las superficies que leen datos estructurados podrían no relacionarla con lo que ofrece.", "Surfaces that read structured data may not connect it with what it offers."),
+    t("Declara su oferta con schema.org (Service o Product). Vuelve a observar después para comprobarlo.", "Declare its offer with schema.org (Service or Product). Observe again afterwards to check.")));
+  if (c.robotsTxtPublished === true && sitemaps === 0) out.push(make("NO_SITEMAP", "CLARIFY",
+    t("Su robots.txt no declara ningún sitemap.", "Its robots.txt declares no sitemap."),
+    t("Un sitemap ayuda a que se descubran todas sus páginas.", "A sitemap helps all its pages get discovered."),
+    t("Declara su sitemap en robots.txt. Vuelve a observar después para comprobarlo.", "Declare its sitemap in robots.txt. Observe again afterwards to check.")));
+  return out;
+}
+
+/** A quote shortened for a sentence; its own closing stop is dropped so the sentence keeps one. */
+function clip(text: string, max: number): string {
+  const bare = text.trim().replace(/[.。]+$/u, "");
+  return bare.length <= max ? bare : `${bare.slice(0, max - 1).trimEnd()}…`;
+}
+
 function understandingInsights(report: PublicUnderstanding, t: Translate): Insight[] {
   if (report.status !== "MEASURED") return [{
     id: `pu:${report.reportId}:status`, lane: "understood", nature: "UNKNOWN",
@@ -323,6 +406,9 @@ export function insightsFor(reading: Reading, t: Translate, locale: string): Ins
     ...opportunities.map(o => opportunityInsight(o, t, locale)),
     ...discoveries.flatMap((d, i) => CONTEXT_ONLY.has(d.kind) || (d.kind === "DEMAND" && titles.has(String(d.detail.title ?? d.statement)))
       ? [] : [discoveryInsight(d, i, t, locale)]),
+    // Context kinds still say what they observed: its own description and the checks of its website.
+    ...discoveries.flatMap(d => presenceInsight(d, t)),
+    ...discoveries.flatMap(d => representationInsights(d, discoveries.some(g => g.code === "OFFER_NOT_MACHINE_READABLE"), t)),
     ...(report ? understandingInsights(report, t) : []),
   ];
   // Within a lane: what to clarify first, then what is understood well, then context.
@@ -351,11 +437,15 @@ function count(n: number, one: string, many: string): string {
 export function briefing(reading: Reading, name: string, insights: Insight[], t: Translate, locale: string): { lead: string; tally: string[] } {
   const activity = reading.firstObservation?.discoveries.find(d => d.kind === "ACTIVITY");
   const place = reading.firstObservation?.discoveries.find(d => d.kind === "DECLARED_LOCATION");
+  const selfDescription = reading.firstObservation?.discoveries.find(d => d.kind === "PUBLIC_PRESENCE" && d.excerpt?.trim())?.excerpt?.trim() ?? null;
   const where = place ? (place.code === "LOCATION_STATED_IN_TEXT" ? placeLabel(place.statement, locale) : placeLabel(place.statement.length <= 6 ? place.statement : "", locale) || place.statement) : null;
   const lead = activity
     ? fill(t("Por lo que publica, {name} probablemente se dedica a {activity}.", "From what it publishes, {name} most likely works in {activity}."),
       { name, activity: `${activityLabel(activity.code, activity.statement, t).toLocaleLowerCase(locale)}${where ? ` (${where})` : ""}` })
-    : fill(t("AXIGNAL todavía no ha establecido a qué se dedica {name}.", "AXIGNAL has not yet established what {name} does."), { name });
+    : selfDescription
+      ? fill(t("{name} se presenta así: «{quote}». AXIGNAL todavía no ha establecido su actividad con evidencia suficiente.", "{name} presents itself as: “{quote}”. AXIGNAL has not yet established its activity with enough evidence."),
+        { name, quote: clip(selfDescription, 180) })
+      : fill(t("AXIGNAL todavía no ha establecido a qué se dedica {name}.", "AXIGNAL has not yet established what {name} does."), { name });
   const lanes = byLane(insights);
   const potential = lanes.matters.filter(i => i.nature === "POTENTIAL").length;
   const clarify = insights.filter(i => i.nature === "CLARIFY").length;

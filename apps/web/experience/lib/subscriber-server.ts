@@ -159,6 +159,30 @@ export async function subscriberAxent(request: Request, contextId: string, body:
   }
 }
 
+/** Registry candidates for "verify identity": suggestions only; nothing is admitted here. */
+export const identityCandidatesSchema = z.object({
+  state: z.enum(["success", "UNAVAILABLE"]),
+  candidates: z.array(z.object({
+    lei: z.string().regex(/^[A-Z0-9]{18}[0-9]{2}$/), legalName: z.string().min(1).max(512),
+    country: z.string().max(8).nullable(), city: z.string().max(200).nullable(),
+  }).strict()).max(20),
+}).strict();
+export async function subscriberIdentityCandidates(request: Request): Promise<Response> {
+  if (!subscriberSameOrigin(request)) return rejected("ORIGIN_REQUIRED", 403);
+  const token = cookie(request, subscriberSessionCookie);
+  if (!token) return rejected("AUTHENTICATION_REQUIRED", 401);
+  try {
+    const input = z.object({ query: z.string().trim().min(2).max(120), country: z.string().regex(/^[A-Z]{2}$/).optional() }).strict().parse(
+      await boundedSubscriberJson(request, 512),
+    );
+    const response = await upstream("/subscriber/identity/candidates", token, input);
+    if (!response.ok) return rejected(response.status === 401 ? "AUTHENTICATION_REQUIRED" : "REGISTRY_UNAVAILABLE", response.status);
+    return Response.json(identityCandidatesSchema.parse(await checkedJson(response)), { headers });
+  } catch {
+    return rejected("REGISTRY_UNAVAILABLE", 503);
+  }
+}
+
 export async function subscriberPilotRedeem(request: Request): Promise<Response> {
   if (!subscriberSameOrigin(request)) return rejected("ORIGIN_REQUIRED", 403);
   const token = cookie(request, subscriberSessionCookie);

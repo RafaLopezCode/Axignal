@@ -215,7 +215,10 @@ def test_unknown_cost_means_zero_child_work(tmp_path: Path):
     w, ledger, _, corpus = setup(tmp_path)
     registry = SourceRegistry(
         tuple(
-            replace(s, cost_per_request_microunits=None) if s.source_id == "ted-search-v3" else s
+            # Every routable demand source has an unknown cost: no child work at all.
+            replace(s, cost_per_request_microunits=None)
+            if s.source_id in {"ted-search-v3", "es-placsp"}
+            else s
             for s in SOURCES
         )
     )

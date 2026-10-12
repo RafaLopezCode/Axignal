@@ -103,17 +103,23 @@ def _schema_line(page: PageReading) -> str | None:
     return next((line for line in page.lines() if line.startswith("schema.org @type:")), None)
 
 
+#: Lexicon hypotheses kept per observation: the ones its pages lead with. A broad
+#: lexicon would otherwise turn every passing mention into a demand search.
+MAX_LEXICON_FINDINGS = 3
+
+
 def deterministic_activity(pages: Sequence[PageReading]) -> tuple[ActivityFinding, ...]:
     """Lexicon matches and schema.org self-declared types. No network, no model."""
 
     findings: dict[str, ActivityFinding] = {}
     for page in pages:
+        lexical = sum(f.method is ActivityMethod.LEXICON for f in findings.values())
         for hypothesis in detect_capabilities(
             text=page.readable(),
             observation_id="page",
             source_ref=page.url,
             observed_at=page.observed_at,
-        ):
+        )[: max(0, MAX_LEXICON_FINDINGS - lexical)]:
             findings.setdefault(
                 hypothesis.capability_id,
                 ActivityFinding(

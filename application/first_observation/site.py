@@ -550,3 +550,27 @@ def rank_information_links(
         if need not in best and url not in best.values():
             best[need] = url
     return tuple((best[need], need) for need in needs if need in best)[:limit]
+
+
+_LANGUAGE_SEGMENT = re.compile(r"^[a-z]{2}(?:[-_][a-z]{2})?$")
+
+
+def language_entry_link(page: PageReading) -> str | None:
+    """The version to read when the homepage is only a language or country selector.
+
+    A splash page (``/es/``, ``/pt/``, ``/us/``…) says nothing of the activity itself; the
+    entry matching the page's declared language (region first) is read instead, else the first.
+    """
+    entries: dict[str, str] = {}
+    for url, _text in page.links:
+        segment = urlsplit(url).path.casefold().strip("/")
+        if _LANGUAGE_SEGMENT.match(segment) and segment not in entries:
+            entries[segment] = url
+    if len(entries) < 3:
+        return None  # a couple of language links is a switcher, not a selector page
+    declared = (page.language or "").casefold().replace("_", "-")
+    preferred = [declared, *reversed(declared.split("-"))] if declared else []
+    for segment in preferred:
+        if segment in entries:
+            return entries[segment]
+    return next(iter(entries.values()))

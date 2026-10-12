@@ -1,0 +1,14 @@
+.pricing { max-width: 880px; margin: 0 auto; padding: clamp(32px, 6vw, 72px) 20px; display: grid; gap: 20px; }
+.pricing h1 { font-family: Fraunces, Georgia, serif; font-size: clamp(2rem, 4.6vw, 3rem); line-height: 1.12; margin: 0; text-wrap: balance; }
+.pricing-lead { font-size: 1.1rem; max-width: 62ch; margin: 0; }
+.pricing-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+.pricing-card { border: 1px solid var(--line); border-radius: var(--radius); padding: 20px 22px; background: var(--paper); }
+.pricing-card h2 { font-size: 1rem; margin: 0 0 8px; }
+.pricing-amount { margin: 0; }
+.pricing-amount strong { font-family: Fraunces, Georgia, serif; font-size: 2.4rem; font-variant-numeric: tabular-nums; }
+.pricing-examples { margin: 0; padding-left: 1.2em; font-variant-numeric: tabular-nums; }
+.pricing-note { color: var(--muted); margin: 0; }
+.pricing-access { border-top: 1px solid var(--line); padding-top: 20px; display: grid; gap: 10px; }
+.pricing-access h2 { font-family: Fraunces, Georgia, serif; font-size: 1.4rem; margin: 0; }
+.pricing-access p { margin: 0; max-width: 62ch; }
+.pricing-actions { display: flex; flex-wrap: wrap; gap: 10px; }

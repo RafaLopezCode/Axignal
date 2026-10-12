@@ -190,6 +190,35 @@ def test_url_the_registry_does_not_attest_is_not_attributed(tmp_path: Path) -> N
     assert _count(tmp_path) == 0
 
 
+def test_a_chosen_lei_with_the_website_the_subscriber_named_admits_identity_only(
+    tmp_path: Path,
+) -> None:
+    # The registry records no website: identity rests on the LEI the subscriber chose;
+    # the website stays the subscriber's direction and is never admitted as official.
+    record = entity(_artifacts(tmp_path), legal_name="Solartec Energía SL", lei_value=SOLAR)
+    outcome = OrganizationAdmissionService(_store(tmp_path), ControlledRegistry([record])).decide(
+        f"solartec.example.com {SOLAR}"
+    )
+    assert outcome.status is AdmissionStatus.ADMITTED_NEW
+    assert _count(tmp_path) == 1
+    assert _count(tmp_path, "canonical_websites") == 0
+
+
+def test_a_registry_that_records_other_websites_contradicts_the_named_one(tmp_path: Path) -> None:
+    record = entity(
+        _artifacts(tmp_path),
+        legal_name="Solartec Energía SL",
+        lei_value=SOLAR,
+        websites=("solartec.example.com",),
+    )
+    outcome = OrganizationAdmissionService(_store(tmp_path), ControlledRegistry([record])).decide(
+        f"other-company.example.com {SOLAR}"
+    )
+    assert outcome.status is AdmissionStatus.IDENTITY_PENDING
+    assert outcome.reason_code == "SOURCE_RECORD_DOES_NOT_ATTEST_LOCATOR"
+    assert _count(tmp_path) == 0
+
+
 def test_a_near_name_match_from_a_search_source_is_never_admitted(tmp_path: Path) -> None:
     record = entity(_artifacts(tmp_path), legal_name="Solartec Energía Holding SL", lei_value=SOLAR)
     outcome = OrganizationAdmissionService(

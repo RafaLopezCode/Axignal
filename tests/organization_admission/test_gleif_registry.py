@@ -216,11 +216,80 @@ def test_reliable_404_only_and_not_cached(tmp_path: Path) -> None:
 def test_unsupported_coverage_and_invalid_input_never_dispatch(tmp_path: Path) -> None:
     transport = Transport()
     provider = source(tmp_path, transport)
-    for locator in ("Acme SL", "https://www.acme.com", "LEI " + LEI + " https://www.acme.com"):
-        assert provider.lookup(parse_locator(locator)).status is RegistryLookupStatus.UNAVAILABLE
+    # GLEIF records no websites: a website alone is UNKNOWN there, never searched.
+    assert provider.lookup(parse_locator("https://www.acme.com")).status is (
+        RegistryLookupStatus.UNAVAILABLE
+    )
     service = OrganizationAdmissionService(index=None, source=provider)
     assert service.decide("LEI 5493001KJTIIGC8Y1R13").status.value == "INVALID_INPUT"
     assert transport.calls == 0
+
+
+RECORD = json.loads(BODY)["data"]
+
+
+def _completion(lei: str, name: str) -> dict[str, object]:
+    return {"attributes": {"value": name}, "relationships": {"lei-records": {"data": {"id": lei}}}}
+
+
+class SearchTransport(Transport):
+    """GLEIF search endpoints over the recorded record; anything else is the exact read."""
+
+    def __init__(self, records: list[dict[str, object]]) -> None:
+        super().__init__()
+        self.records = records
+        self.uris: list[str] = []
+
+    def fetch(
+        self, target: ResolvedTarget, *, timeout_ms: int, max_response_bytes: int
+    ) -> RawHttpResponse:
+        self.uris.append(target.uri)
+        if (
+            "/api/v1/autocompletions" in target.uri
+            or "filter%5Blei%5D" in target.uri
+            or ("filter[lei]" in target.uri)
+        ):
+            self.calls += 1
+            if "autocompletions" in target.uri:
+                data = [_completion(str(r["id"]), "x") for r in self.records]
+            else:
+                data = self.records
+            return RawHttpResponse(
+                200, (("Content-Type", "application/vnd.api+json"),),
+                json.dumps({"data": data}).encode(), "1.1.1.1", None,
+            )  # fmt: skip
+        return super().fetch(target, timeout_ms=timeout_ms, max_response_bytes=max_response_bytes)
+
+
+def test_a_name_is_verified_only_when_it_is_exactly_one_current_legal_name(
+    tmp_path: Path,
+) -> None:
+    transport = SearchTransport([RECORD])
+    provider = source(tmp_path, transport)
+    exact = provider.lookup(parse_locator("Bloomberg Finance L.P."))
+    assert exact.status is RegistryLookupStatus.FOUND and len(exact.records) == 1
+    assert exact.records[0].legal_name.object_or_value == "Bloomberg Finance L.P."
+    # A partial name finds candidates but admits nothing: no fuzzy, no "closest".
+    assert provider.lookup(parse_locator("Bloomberg")).status is RegistryLookupStatus.NOT_FOUND
+    (candidate,) = provider.candidates("Bloomberg")
+    assert (candidate.lei, candidate.legal_name, candidate.country) == (
+        LEI, "Bloomberg Finance L.P.", "US",
+    )  # fmt: skip
+
+
+def test_candidates_are_only_current_lei_holders(tmp_path: Path) -> None:
+    lapsed = json.loads(json.dumps(RECORD))
+    lapsed["id"] = "5493001KJTIIGC8Y1R12".replace("12", "99")
+    lapsed["attributes"]["registration"]["status"] = "LAPSED"
+    provider = source(tmp_path, SearchTransport([lapsed, RECORD]))
+    assert [c.lei for c in provider.candidates("Bloomberg")] == [LEI]
+
+
+def test_an_lei_named_with_a_website_is_read_by_its_lei(tmp_path: Path) -> None:
+    transport = Transport()
+    provider = source(tmp_path, transport)
+    found = provider.lookup(parse_locator("LEI " + LEI + " https://www.acme.com"))
+    assert found.status is RegistryLookupStatus.FOUND and transport.calls == 1
 
 
 def test_cache_is_versioned_current_bounded_and_integrity_checked(tmp_path: Path) -> None:

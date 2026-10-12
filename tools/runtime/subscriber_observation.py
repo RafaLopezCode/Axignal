@@ -34,6 +34,9 @@ from application.observation_intelligence import (
     detect_capabilities,
     geo,
 )
+from application.observation_intelligence.contracts import SourceDescriptor
+from application.observation_intelligence.findings import SourceFindings
+from application.observation_intelligence.strategy import ObservationAction
 from application.subscriber_identity.runtime import Clock, TrustedSubscriberContext
 from application.subscriber_projection.subscriber_runtime import (
     SubscriberEconomicRuntime,
@@ -45,6 +48,27 @@ from pipeline.observation_intelligence import (
     TedSearchAdapter,
     UrllibTedTransport,
 )
+
+#: Sources read only into the world demand index (never per request): PLACSP.
+INDEX_ONLY_SOURCES = frozenset({"es-placsp"})
+
+
+@dataclass(frozen=True, slots=True)
+class _UnindexedPort:
+    """An index-only source where no index is wired: no request, and it says so."""
+
+    source_id: str
+    clock: Clock
+
+    def observe(self, action: ObservationAction, source: SourceDescriptor) -> SourceFindings:
+        return SourceFindings(
+            source_id=self.source_id,
+            retrieved_at=self.clock.now(),
+            requests=0,
+            amount_microunits=0,
+            latency_ms=0,
+            failure="NOT_INDEXED",
+        )
 
 
 class SubscriberObservationPlanConfigurationError(ValueError):
@@ -135,6 +159,9 @@ class ConfiguredSubscriberObservationPlanReader:
     derived_for: Callable[[TrustedSubscriberContext, XeedId], Mapping[str, Any] | None] | None = (
         None
     )
+    #: Index-only sources (PLACSP) answered from the world demand index; without one
+    #: they answer NOT_INDEXED rather than removing every other source from the plan.
+    index_sources: Mapping[str, SourceObservationPort] | None = None
 
     def observation_plan_for(
         self, context: TrustedSubscriberContext, focus_id: XeedId
@@ -242,6 +269,11 @@ class ConfiguredSubscriberObservationPlanReader:
                 UrllibTedTransport(),
                 clock=self.clock.now,
             )
+        for action in strategy.actions:
+            if action.source_id in INDEX_ONLY_SOURCES and action.source_id not in adapters:
+                adapters[action.source_id] = (self.index_sources or {}).get(
+                    action.source_id
+                ) or _UnindexedPort(action.source_id, self.clock)
         if any(action.source_id not in adapters for action in strategy.actions):
             return None
         return SubscriberObservationLoopExecutionPlan(

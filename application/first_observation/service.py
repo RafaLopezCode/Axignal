@@ -54,6 +54,7 @@ from application.first_observation.site import (
     READER_VERSION,
     PageReading,
     RobotsReading,
+    language_entry_link,
     rank_information_links,
     read_page,
 )
@@ -71,6 +72,10 @@ _HTML = re.compile(r"^\s*(<!doctype html|<html|<head|<body|<meta|<title|<!--)", 
 _CHARSET = re.compile(rb"charset=[\"']?([A-Za-z0-9_\-]+)", re.I)
 _DEFAULT_ROLES = frozenset({MarketRole.PUBLIC_BUYERS, MarketRole.PRIVATE_BUSINESSES})
 SYSTEM_ONE_EVALUATOR = "typesafe-system-one"
+
+
+#: The site's TLS certificate could not be verified; verification is never relaxed.
+TLS_NOT_VERIFIED = "TLS_CERTIFICATE_NOT_VERIFIED"
 
 
 @dataclass(frozen=True, slots=True)
@@ -265,10 +270,27 @@ class FirstObservationService:
             ledger.decide("REUSED:ROBOTS")
         else:
             fetched = self._fetch(origin + "/robots.txt", "robots", ledger)
+            host = urlsplit(origin).hostname or ""
+            if fetched.status is None and not host.startswith("www."):
+                # The bare domain did not answer at all (TLS, DNS, timeout): many sites serve
+                # only www. Same DNS domain, same organization; one more bounded request.
+                alternate = f"{urlsplit(origin).scheme}://www.{host}"
+                retried = self._fetch(alternate + "/robots.txt", "robots", ledger)
+                if retried.status is not None:
+                    ledger.decide("RETRIED:WWW_HOST")
+                    origin, fetched = alternate, retried
+                    parts = urlsplit(website if "://" in website else "https://" + website)
+                    website = f"{alternate}{parts.path or '/'}"
             if fetched.failure is None and fetched.status == 200 and fetched.body is not None:
                 robots = RobotsReading(_decode(fetched)[:512_000], fetched.observed_at)
             elif fetched.status is not None and 400 <= fetched.status < 500:
                 robots = RobotsReading(None, fetched.observed_at)  # none published (RFC 9309)
+            elif fetched.failure == "redirect_policy_rejected":
+                # It sends visitors to another domain: possibly another organization, so it is
+                # not followed; the subscriber is told to name that site instead.
+                return self._failed(key, now, None, "REDIRECTS_TO_ANOTHER_SITE", ledger, known)
+            elif fetched.failure == TLS_NOT_VERIFIED:
+                return self._failed(key, now, None, TLS_NOT_VERIFIED, ledger, known)
             else:
                 return self._failed(key, now, None, "ROBOTS_UNAVAILABLE", ledger, known)
         target = website if "://" in website else "https://" + website
@@ -277,11 +299,13 @@ class FirstObservationService:
         # Parsed content has its own governed store; a second retained HTTP body
         # cannot be expired or revoked with that store. Do not persist raw blobs.
         retain = False
-        home = self._page(
-            self._fetch(target, "website", ledger, retain_body=retain), robots, ledger
-        )
+        fetched = self._fetch(target, "website", ledger, retain_body=retain)
+        home = self._page(fetched, robots, ledger)
         if home is None:
-            return self._failed(key, now, robots, "HOMEPAGE_UNAVAILABLE", ledger, known)
+            failure = (
+                TLS_NOT_VERIFIED if fetched.failure == TLS_NOT_VERIFIED else "HOMEPAGE_UNAVAILABLE"
+            )
+            return self._failed(key, now, robots, failure, ledger, known)
         pages = [home]
         streak = 0
         coverage = "BOUNDED_COMPLETE" if policy.public_understanding else "NOT_REQUESTED"
@@ -306,6 +330,18 @@ class FirstObservationService:
             if not needs:
                 ledger.decide("SKIPPED:EXTRA_PAGES:ACTIVITY_AND_LOCATION_EVIDENCED")
             links = rank_information_links(home, needs, limit=policy.max_extra_pages)
+            entry = language_entry_link(home) if needs and not links else None
+            if entry is not None and robots.allows(entry):
+                # A language or country selector: read the matching version as the home.
+                landing = self._page(
+                    self._fetch(entry, "site-page", ledger, retain_body=retain), robots, ledger
+                )
+                if landing is not None:
+                    pages.append(landing)
+                    ledger.decide("FETCHED:LANGUAGE_ENTRY")
+                    links = rank_information_links(
+                        landing, needs, limit=max(policy.max_extra_pages - 1, 0)
+                    )
             if needs and not links:
                 ledger.decide("SKIPPED:EXTRA_PAGES:NO_INFORMATION_LINK")
             if policy.public_understanding and len(
@@ -845,15 +881,21 @@ class FirstObservationService:
             ledger.decide("SKIPPED:DEMAND:NO_ROUTING_CODE")
             return [unknown("DEMAND_NOT_ROUTABLE", "Its activity has no classification a governed demand source uses yet.")]  # fmt: skip
         reasons: dict[str, set[str]] = {}
-        for market, reason in plan.gaps:
-            if reason in {"NO_ADOPTED_SOURCE", "NO_KNOWN_SOURCE"}:
-                reasons.setdefault(market, set()).add(reason)
-        out = [  # one grounded gap per market, whatever the number of questions behind it
+        questions: dict[str, set[str]] = {}
+        for gap in plan.strategy.gaps:
+            if gap.reason in {"NO_ADOPTED_SOURCE", "NO_KNOWN_SOURCE"}:
+                reasons.setdefault(gap.market.code, set()).add(gap.reason)
+                questions.setdefault(gap.market.code, set()).add(gap.question_id)
+        out = [  # one grounded gap per market, naming the questions it leaves open
             unknown(
                 f"NO_GOVERNED_DEMAND_SOURCE:{market}",
-                f"No governed demand source is adopted for {market} yet. That is not an "
-                "absence of demand.",
-                {"jurisdiction": market, "reasons": sorted(found)},
+                f"Some demand questions in {market} have no governed source yet "
+                f"({', '.join(sorted(questions[market]))}). That is not an absence of demand.",
+                {
+                    "jurisdiction": market,
+                    "reasons": sorted(found),
+                    "questions": sorted(questions[market]),
+                },
             )
             for market, found in sorted(reasons.items())
         ]

@@ -215,10 +215,12 @@ def test_tight_budget_spends_on_the_highest_value_questions_first() -> None:
 
     assert result.stop_reason is StopReason.BUDGET_EXHAUSTED
     # Highest value first, and the OBSERVED market before the POTENTIAL one.
-    assert [(s.action.question_id, s.action.market.code) for s in result.steps] == [
+    # PLACSP (adopted for Spain) is answered from the world index and is tried first; it has
+    # no adapter here and spends nothing, so the two requests still go to TED.
+    assert {(s.action.question_id, s.action.market.code) for s in result.steps} == {
         ("compatible-public-tenders", "EU/ES"),
-        ("compatible-public-tenders", "EU/ES"),
-    ]
+    }
+    assert [s.action.source_id for s in result.steps].count("ted-search-v3") == 2
     assert {a.market.code for a in result.unexecuted_actions} == {"EU/ES", "EU/FR"}
 
 
@@ -261,7 +263,7 @@ def test_adoption_gate_and_discovered_sources_never_self_authorize() -> None:
 
     proposed = registry.propose_candidate(
         replace(
-            registry.get("es-placsp"),
+            registry.get("fr-boamp"),
             source_id="us-tx-esbd",
             adoption=AdoptionStatus.ADOPTED,
             adoption_blockers=(),
@@ -270,7 +272,7 @@ def test_adoption_gate_and_discovered_sources_never_self_authorize() -> None:
     assert proposed.adoption is AdoptionStatus.CANDIDATE and not proposed.routable
 
     adopted = registry.adopt(
-        "es-placsp",
+        "fr-boamp",
         replace(
             evidence,
             rights_reference="https://example.test/reuse-terms",

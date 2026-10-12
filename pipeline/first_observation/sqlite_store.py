@@ -168,9 +168,15 @@ class SqliteFirstObservationStore:
         return tuple(str(row["state"]) for row in rows)
 
     def claim(
-        self, *, now: datetime, lease_seconds: int, max_attempts: int
+        self, *, now: datetime, lease_seconds: int, max_attempts: int, offline_only: bool = False
     ) -> ObservationJob | None:
+        """Lease the oldest runnable job; ``offline_only`` restricts it to jobs with no website.
+
+        A job without a website reads nothing from the network: it stops at once as
+        NO_PUBLIC_WEBSITE, so the daily ceiling on public reads must not hold it back.
+        """
         token = secrets.token_hex(16)
+        offline = " AND json_extract(target, '$.website') IS NULL" if offline_only else ""
         at = _iso(now)
         with self._transaction() as db:
             # A worker that died on the last attempt must not leave the job RUNNING forever.
@@ -183,8 +189,9 @@ class SqliteFirstObservationStore:
             row = db.execute(
                 """SELECT * FROM fo_jobs WHERE attempts < ? AND (
                 (state='QUEUED' AND (not_before IS NULL OR not_before <= ?))
-                OR (state='RUNNING' AND lease_expires_at < ?))
-                ORDER BY created_at, job_id LIMIT 1""",
+                OR (state='RUNNING' AND lease_expires_at < ?))"""
+                + offline
+                + " ORDER BY created_at, job_id LIMIT 1",
                 (max_attempts, at, at),
             ).fetchone()
             if row is None:
@@ -214,10 +221,12 @@ class SqliteFirstObservationStore:
         return int(row[0])
 
     def jobs_started_on(self, day: str) -> int:
-        """Jobs claimed on one UTC day (``YYYY-MM-DD``): the daily ceiling."""
+        """Jobs that read a website, claimed on one UTC day (``YYYY-MM-DD``): the daily ceiling."""
         with self._connect() as db:
             row = db.execute(
-                "SELECT COUNT(*) FROM fo_jobs WHERE substr(claimed_at,1,10)=?", (day,)
+                "SELECT COUNT(*) FROM fo_jobs WHERE substr(claimed_at,1,10)=?"
+                " AND json_extract(target, '$.website') IS NOT NULL",
+                (day,),
             ).fetchone()
         return int(row[0])
 

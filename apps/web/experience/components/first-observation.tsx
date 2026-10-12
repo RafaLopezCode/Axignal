@@ -11,10 +11,10 @@ type Translate = (es: string, en: string) => string;
 /** Subscriber-facing state of a First Observation: derived from what actually ran. */
 export function observationStateCopy(state: string, t: Translate): string {
   switch (state) {
-    case "QUEUED": return t("Observación preparada. Empieza en segundo plano; puedes seguir navegando.", "Observation prepared. It starts in the background; you can keep browsing.");
+    case "QUEUED": return t("Observación en cola. Se hace por turnos con un límite diario; puedes seguir navegando.", "Observation queued. It runs in turns within a daily limit; you can keep browsing.");
     case "OBSERVING_PUBLIC_PRESENCE": return t("Observando su presencia pública…", "Observing its public presence…");
     case "FIRST_PROOF_READY": return t("Primera observación lista, con sus evidencias.", "First observation ready, with its evidence.");
-    case "NOT_ENOUGH_CAPABILITY_EVIDENCE": return t("Su web pública todavía no deja claro qué ofrece. No lo suponemos.", "Its public website does not yet make clear what it offers. We do not assume it.");
+    case "NOT_ENOUGH_CAPABILITY_EVIDENCE": return t("AXIGNAL todavía no ha podido clasificar su actividad con evidencia suficiente. No la suponemos.", "AXIGNAL has not yet been able to classify its activity with enough evidence. We do not assume it.");
     case "NO_PUBLIC_WEBSITE": return t("No hay una web pública que observar. Añade su web para empezar.", "There is no public website to observe. Add its website to begin.");
     case "SOURCE_UNAVAILABLE": return t("Su web no se pudo observar con sus reglas de acceso. No concluimos nada de ello.", "Its website could not be observed under its access rules. We conclude nothing from that.");
     case "BUDGET_EXHAUSTED": return t("La observación se detuvo en sus límites. Seguirá en el próximo ciclo.", "Observation stopped at its limits. It will continue in the next cycle.");
@@ -64,6 +64,51 @@ export function activityLabel(code: string, fallback: string, t: Translate): str
     case "industrial-hvac": return t("Climatización industrial", "Industrial HVAC installation and maintenance");
     case "industrial-refrigeration": return t("Refrigeración industrial", "Industrial refrigeration installation and maintenance");
     case "consumer-mobile-app": return t("App móvil para consumidores", "Consumer mobile ordering app");
+    case "legal-services": return t("Servicios jurídicos", "Legal services");
+    case "accounting-tax": return t("Contabilidad, auditoría y asesoría fiscal", "Accounting, audit and tax advisory");
+    case "management-consulting": return t("Consultoría de gestión y negocio", "Management and business consulting");
+    case "market-research": return t("Estudios de mercado e inteligencia económica", "Market research and economic intelligence");
+    case "software-development": return t("Desarrollo de software", "Software development");
+    case "business-software": return t("Software de gestión empresarial", "Business management software");
+    case "it-services": return t("Servicios y soporte informático", "IT services and support");
+    case "cybersecurity": return t("Ciberseguridad", "Cybersecurity");
+    case "telecommunications": return t("Telecomunicaciones y conectividad", "Telecommunications and connectivity");
+    case "engineering-services": return t("Servicios de ingeniería", "Engineering services");
+    case "architecture": return t("Servicios de arquitectura", "Architectural services");
+    case "building-construction": return t("Construcción de edificios y obra civil", "Building and civil construction");
+    case "formwork-scaffolding": return t("Encofrados y andamios", "Formwork and scaffolding");
+    case "ventilation-systems": return t("Sistemas de ventilación", "Ventilation systems");
+    case "automotive-components": return t("Fabricación de componentes de automoción", "Automotive components manufacturing");
+    case "metal-fabrication": return t("Estructuras metálicas y mecanizado", "Metal fabrication and machining");
+    case "food-retail": return t("Distribución alimentaria (supermercados)", "Food retail (supermarkets)");
+    case "food-manufacturing": return t("Fabricación de alimentos y bebidas", "Food and beverage manufacturing");
+    case "catering": return t("Catering y restauración colectiva", "Catering and contract food services");
+    case "hospitality": return t("Alojamiento hotelero", "Hotel accommodation");
+    case "cleaning-services": return t("Servicios de limpieza", "Cleaning services");
+    case "security-guarding": return t("Seguridad privada y vigilancia", "Private security and guarding");
+    case "security-systems": return t("Sistemas de seguridad y videovigilancia", "Security and surveillance systems");
+    case "facility-maintenance": return t("Gestión y mantenimiento de instalaciones", "Facility management and maintenance");
+    case "waste-management": return t("Gestión de residuos y reciclaje", "Waste management and recycling");
+    case "water-treatment": return t("Tratamiento de aguas y depuración", "Water and wastewater treatment");
+    case "freight-logistics": return t("Transporte de mercancías y logística", "Freight transport and logistics");
+    case "courier-parcel": return t("Mensajería y paquetería", "Courier and parcel delivery");
+    case "energy-supply": return t("Suministro de electricidad y gas", "Electricity and gas supply");
+    case "medical-devices": return t("Productos y equipos sanitarios", "Medical devices and equipment");
+    case "pharmaceuticals": return t("Productos farmacéuticos", "Pharmaceutical products");
+    case "healthcare-services": return t("Servicios sanitarios", "Healthcare services");
+    case "training": return t("Formación para empresas", "Training and education for companies");
+    case "marketing-advertising": return t("Marketing y publicidad", "Marketing and advertising");
+    case "web-design": return t("Diseño y desarrollo web", "Web design and development");
+    case "translation": return t("Traducción e interpretación", "Translation and interpreting");
+    case "recruitment-staffing": return t("Selección de personal y trabajo temporal", "Recruitment and staffing");
+    case "insurance": return t("Seguros", "Insurance");
+    case "real-estate": return t("Servicios inmobiliarios", "Real estate services");
+    case "printing": return t("Servicios de impresión", "Printing services");
+    case "events": return t("Organización de eventos", "Event organisation");
+    case "furniture": return t("Fabricación y suministro de mobiliario", "Furniture manufacturing and supply");
+    case "workwear": return t("Ropa laboral y uniformes", "Workwear and uniforms");
+    case "laboratory-testing": return t("Ensayos de laboratorio e inspección", "Laboratory testing and inspection");
+    case "agriculture": return t("Producción agrícola", "Agricultural production");
     default: return fallback;
   }
 }
@@ -86,7 +131,13 @@ export function discoveryCopy(d: Discovery, t: Translate, locale = "en"): { find
   if (d.kind === "REPRESENTATION_GAP") return d.code === "HOMEPAGE_NOINDEX"
     ? { finding: t("Su página principal pide no aparecer en buscadores.", "Its homepage asks search engines not to index it."), why: t("Los buscadores podrían no representar la web mientras siga así. No mide posiciones.", "Search engines may not represent the site while it stays so. It does not measure rankings.") }
     : { finding: t("En las páginas leídas, su oferta aparece en el texto pero no en datos estructurados.", "On the pages read, its offer appears in the text but not as structured data."), why: t("Las superficies que leen datos estructurados podrían no relacionarla con lo que ofrece. Es una brecha posible, no una causa medida.", "Surfaces that read structured data may not connect it with what it offers. It is a possible gap, not a measured cause.") };
-  if (d.code.startsWith("NO_GOVERNED_DEMAND_SOURCE:")) return { finding: `${t("Aún no hay una fuente de demanda gobernada para", "No governed demand source yet for")} ${placeLabel(String(d.detail.jurisdiction ?? ""), locale)}`, why: t("Falta de fuente no es falta de mercado ni de demanda.", "No source is not no market and not no demand.") };
+  if (d.code.startsWith("NO_GOVERNED_DEMAND_SOURCE:")) {
+    const place = placeLabel(String(d.detail.jurisdiction ?? ""), locale);
+    const asked = Array.isArray(d.detail.questions) ? d.detail.questions.map(q => demandQuestionLabel(String(q), t)).filter((x): x is string => Boolean(x)) : [];
+    return asked.length
+      ? { finding: t("En {place} aún no hay fuente gobernada para: {list}.", "In {place} there is no governed source yet for: {list}.").replace("{place}", place).replace("{list}", asked.join(", ")), why: t("Falta de fuente no es falta de mercado ni de demanda.", "No source is not no market and not no demand.") }
+      : { finding: `${t("Aún no hay una fuente de demanda gobernada para", "No governed demand source yet for")} ${place}`, why: t("Falta de fuente no es falta de mercado ni de demanda.", "No source is not no market and not no demand.") };
+  }
   switch (d.code) {
     case "IDENTITY_NOT_VERIFIED": return { finding: t("Identidad legal todavía no verificada.", "Legal identity not verified yet."), why: t("Lo que ves describe la web pública, no una organización verificada por un registro.", "What you see describes the public website, not an organization verified by a registry.") };
     case "WEBSITE_LINK_NOT_REGISTRY_VERIFIED": return { finding: t("Ningún registro vincula esta web a la organización.", "No registry links this website to the organization."), why: t("La web la indicaste tú; la tratamos como atención, no como hecho.", "You indicated this website; we treat it as attention, not as fact.") };
@@ -97,7 +148,28 @@ export function discoveryCopy(d: Discovery, t: Translate, locale = "en"): { find
     case "NOT_AN_OPERATING_BUSINESS_SITE": return { finding: t("La página no parece la web de una actividad en marcha.", "The page does not read as an operating business website."), why: t("Es un juicio no autoritativo sobre la página, no sobre la organización.", "It is a non-authoritative judgment about the page, not about the organization.") };
     case "NO_PUBLIC_WEBSITE": return { finding: t("No hay una web pública que observar.", "There is no public website to observe."), why: t("Añade su web para empezar la observación.", "Add its website to start observing.") };
     case "WEBSITE_OF_ANOTHER_ORGANIZATION": return { finding: t("Un registro asocia esta web a otra organización.", "A registry links this website to another organization."), why: t("No la observamos como si fuera de esta organización.", "We do not observe it as if it belonged to this organization.") };
+    case "ROBOTS_DISALLOWED": return { finding: t("Su robots.txt no permite que la observemos.", "Its robots.txt does not allow us to observe it."), why: t("Lo respetamos y no leemos sus páginas. No concluimos nada de ello.", "We respect it and do not read its pages. We conclude nothing from it.") };
+    case "REDIRECTS_TO_ANOTHER_SITE": return { finding: t("Esta web redirige a otro dominio.", "This website redirects to another domain."), why: t("No la seguimos porque podría ser otra organización. Indica el dominio al que lleva para observarla.", "We do not follow it because it could be another organization. Give the domain it leads to in order to observe it.") };
+    case "HOMEPAGE_UNAVAILABLE": return { finding: t("Su página principal no respondió a una lectura automática.", "Its homepage did not answer an automated reading."), why: t("Puede limitar los accesos automáticos; no lo eludimos. No concluimos nada de ello.", "It may limit automated access; we do not bypass it. We conclude nothing from it.") };
+    case "TLS_CERTIFICATE_NOT_VERIFIED": return { finding: t("No pudimos verificar el certificado de seguridad de su web.", "We could not verify its website's security certificate."), why: t("Su servidor no presenta una cadena de certificados completa. No desactivamos la verificación; no concluimos nada sobre la organización.", "Its server does not present a complete certificate chain. We do not switch verification off; we conclude nothing about the organization.") };
+    case "ROBOTS_UNAVAILABLE": return { finding: t("Su web no respondió a una lectura automática.", "Its website did not answer an automated reading."), why: t("Lo intentamos también con www. Puede ser temporal; no concluimos nada de ello.", "We also tried with www. It may be temporary; we conclude nothing from it.") };
     default: return { finding: t("La web no se pudo observar con sus reglas de acceso.", "The website could not be observed under its access rules."), why: t("Respetamos robots.txt y nuestros límites; no concluimos nada de ello.", "We respect robots.txt and our limits; we conclude nothing from that.") };
+  }
+}
+
+/** The demand question a missing source leaves open, in the reader's words. */
+function demandQuestionLabel(id: string, t: Translate): string | null {
+  switch (id) {
+    case "compatible-public-tenders": return t("licitaciones abiertas", "open tenders");
+    case "revealed-public-demand": return t("adjudicaciones recientes", "recent awards");
+    case "public-investment-pipeline": return t("inversión pública planificada", "planned public investment");
+    case "funding-driven-demand": return t("subvenciones y ayudas", "grants and subsidies");
+    case "projects-needing-capability": return t("permisos y proyectos", "permits and projects");
+    case "private-project-announcements": return t("proyectos privados anunciados", "announced private projects");
+    case "regulation-driven-demand": return t("cambios regulatorios", "regulatory changes");
+    case "buyer-expansion": return t("compradores en expansión", "expanding buyers");
+    case "consumer-representation": return t("presencia ante consumidores", "consumer presence");
+    default: return null;
   }
 }
 

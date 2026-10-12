@@ -7,6 +7,9 @@ http:
       rule: >-
         (Host(`axignal.com`) || Host(`www.axignal.com`)) &&
         (Path(`/`) ||
+         Path(`/es`) || Path(`/en`) || Path(`/fr`) || Path(`/de`) || Path(`/it`) || Path(`/pt`) ||
+         Path(`/pricing`) ||
+         Path(`/llms.txt`) ||
          Path(`/sitemap.xml`) ||
          Path(`/robots.txt`) ||
          PathPrefix(`/knowledge`) ||

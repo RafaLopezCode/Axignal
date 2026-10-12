@@ -9,9 +9,10 @@ content-addressed artifact with its envelope: provenance once, reused many times
 from __future__ import annotations
 
 import hashlib
+import ssl
 from urllib.parse import urlsplit
 
-from application.first_observation.service import FetchedResource
+from application.first_observation.service import TLS_NOT_VERIFIED, FetchedResource
 from application.source_acquisition import (
     DispatchDisposition,
     SourceDispatchPolicy,
@@ -78,6 +79,10 @@ class GovernedSiteFetcher:
         except SourcePolicyRejected as error:
             return _refused(url, f"POLICY_REJECTED:{error}")
         except (OSError, ValueError) as error:
+            if isinstance(error, ssl.SSLCertVerificationError):
+                # The site's certificate chain could not be verified. Verification is never
+                # relaxed: the reading stops, and the reason is said as it is.
+                return _refused(url, TLS_NOT_VERIFIED)
             return _refused(url, f"SENSOR:{type(error).__name__}")
         body = (
             None
@@ -88,6 +93,10 @@ class GovernedSiteFetcher:
             # ADR-0015: raw text retention is not automatic. The envelope (URLs, status,
             # fingerprints) stays as metadata; the body exists only for this run.
             self._artifacts.discard(observed.body_artifact_ref)
+        failure = observed.failure_state
+        if failure == "transport_error:SSLCertVerificationError":
+            # Verification is never relaxed: the reading stops and the reason is said as it is.
+            failure = TLS_NOT_VERIFIED
         return FetchedResource(
             requested_url=url,
             final_url=observed.final_uri,
@@ -98,7 +107,7 @@ class GovernedSiteFetcher:
             content_fingerprint=observed.body_fingerprint,
             artifact_ref=observed.raw_observation_ref,
             requests=len(observed.peer_ips),  # one per request actually sent
-            failure=observed.failure_state,
+            failure=failure,
         )
 
 

@@ -495,10 +495,14 @@ class FirstObservationRuntime:
         """Run one queued job; False when nothing is runnable now."""
         policy = self.service.policy
         now = self._clock.now()
-        if self.store.jobs_started_on(now.date().isoformat()) >= self._daily_jobs:
-            return False
+        # The daily ceiling bounds public reads; a job with no website reads nothing and
+        # must not wait a day (nor take the day's slot) only to report NO_PUBLIC_WEBSITE.
+        reads_left = self.store.jobs_started_on(now.date().isoformat()) < self._daily_jobs
         job = self.store.claim(
-            now=now, lease_seconds=policy.lease_seconds, max_attempts=policy.max_attempts
+            now=now,
+            lease_seconds=policy.lease_seconds,
+            max_attempts=policy.max_attempts,
+            offline_only=not reads_left,
         )
         if job is None:
             return False
@@ -837,7 +841,9 @@ def build_first_observation(
         )
     live_ted = TedSearchAdapter(UrllibTedTransport(), clock=clock.now)
     live = overrides.source_ports or {"ted-search-v3": live_ted}
-    feeds = dict(overrides.feeds) if overrides.feeds is not None else {"ted-search-v3": live_ted}
+    feeds: dict[str, SliceFeedPort] = (
+        dict(overrides.feeds) if overrides.feeds is not None else {"ted-search-v3": live_ted}
+    )
     index = SqliteWorldDemandIndex(root / "world-demand-index.sqlite3")
     # Index first (world slices ingested once), the live adapter only for what no
     # fresh complete slice covers; the uncovered slice is demanded for ingestion.
@@ -845,8 +851,33 @@ def build_first_observation(
         source_id: DemandIndexPort(index, port, clock=clock.now) if source_id in feeds else port
         for source_id, port in live.items()
     }
+    if overrides.source_ports is None and overrides.feeds is None:
+        # Spain's own platform: read only for the index (its pages are large and cannot be
+        # queried by code), so it answers from the index or not at all. Its slice is kept
+        # demanded so it is ready before a subscriber needs it.
+        from application.observation_intelligence.contracts import SourceCapability
+        from application.world_demand.index import DemandSlice
+        from pipeline.observation_intelligence.placsp import (
+            PLACSP_SOURCE_ID,
+            PlacspFeedAdapter,
+            UrllibPlacspTransport,
+        )
+
+        feeds[PLACSP_SOURCE_ID] = PlacspFeedAdapter(UrllibPlacspTransport(), clock=clock.now)
+        ports[PLACSP_SOURCE_ID] = DemandIndexPort(index, None, clock=clock.now)
+        index.demand(
+            DemandSlice(
+                PLACSP_SOURCE_ID, "EU/ES", SourceCapability.PUBLIC_PROCUREMENT_OPPORTUNITIES
+            ),
+            now=clock.now(),
+        )
     ingestor = WorldDemandIngestor(
-        feeds={k: v for k, v in feeds.items() if k in ports}, store=index, clock=clock.now
+        feeds={k: v for k, v in feeds.items() if k in ports},
+        store=index,
+        clock=clock.now,
+        # Ingestion shares the worker with first observations: short rounds keep a new
+        # subscriber's wait bounded while a large backfill (PLACSP) spans many rounds.
+        max_pages=8,
     )
     from application.subscriber_projection.evidence_delivery import ContentAccess
     from tools.runtime.evidence_content import LiveEvidenceContentRights

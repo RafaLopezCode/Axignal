@@ -431,7 +431,15 @@ def _attestation_gap(record: RegistryIdentityRecord, locator: AttentionLocator) 
         not in identifiers
     ):
         return "SOURCE_RECORD_DOES_NOT_ATTEST_LOCATOR"
-    if locator.domain is not None and locator.domain not in websites:
+    # With an attested identifier, a registry that records no website does not contradict
+    # the one the subscriber named: identity rests on the identifier alone and the website
+    # stays subscriber-directed (never admitted as official). A registry that records
+    # other websites does contradict it, and a website alone must be attested.
+    if (
+        locator.domain is not None
+        and locator.domain not in websites
+        and (locator.identifier is None or websites)
+    ):
         return "SOURCE_RECORD_DOES_NOT_ATTEST_LOCATOR"
     if (
         locator.identifier is None

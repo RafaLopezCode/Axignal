@@ -43,9 +43,15 @@ test("all canonical, hreflang and x-default URLs are reciprocal and in the sitem
   const entries = sitemap();
   const byUrl = new Map(entries.map((entry) => [entry.url, entry]));
   assert.equal(byUrl.size, entries.length);
-  // Articles and hubs per locale, plus the home page (spec 060: the funnel's front door).
-  assert.equal(entries.length, (acquisitionPages.length + 1) * locales.length + 1);
-  assert.ok(byUrl.has("https://axignal.com/"));
+  // Articles and hubs per locale, the home page and its language versions, and pricing.
+  assert.equal(entries.length, (acquisitionPages.length + 1) * locales.length + 1 + locales.length + 1);
+  assert.ok(byUrl.has("https://axignal.com/") && byUrl.has("https://axignal.com/pricing"));
+  for (const url of ["https://axignal.com/", ...locales.map(({ id }) => `https://axignal.com/${id}`)]) {
+    const languages = byUrl.get(url)?.alternates?.languages as Record<string, string> | undefined;
+    assert.ok(languages, `${url} declares its language versions`);
+    assert.equal(languages["x-default"], "https://axignal.com/");
+    for (const { id } of locales) assert.equal(languages[id], `https://axignal.com/${id}`);
+  }
   for (const page of acquisitionPages) {
     for (const locale of locales) {
       const content = page.locales[locale.id]!;

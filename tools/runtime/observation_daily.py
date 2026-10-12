@@ -562,6 +562,11 @@ def main(argv: list[str] | None = None) -> None:
         return
     from application.subscriber_identity.runtime import SystemClock
     from pipeline.observation_intelligence import TedSearchAdapter, UrllibTedTransport
+    from pipeline.observation_intelligence.placsp import (
+        PLACSP_SOURCE_ID,
+        PlacspFeedAdapter,
+        UrllibPlacspTransport,
+    )
 
     data = os.getenv("AXIGNAL_DATA_DIR", "").strip()
     attention_file = os.getenv("AXIGNAL_SUBSCRIBER_OBSERVATION_PLAN_FILE", "").strip()
@@ -627,11 +632,20 @@ def main(argv: list[str] | None = None) -> None:
         clock=clock,
         attention_file=Path(attention_file).expanduser().resolve(),
         enrollment=enrollment,
-        source_ports={"ted-search-v3": DemandIndexPort(index, live_ted, clock=clock.now)},
+        source_ports={
+            "ted-search-v3": DemandIndexPort(index, live_ted, clock=clock.now),
+            # Spain's own platform answers only from the index (never per request).
+            PLACSP_SOURCE_ID: DemandIndexPort(index, None, clock=clock.now),
+        },
     )
     if summary["state"] not in {"ERROR", "LEASE_LOST"}:
         ingested = WorldDemandIngestor(
-            feeds={"ted-search-v3": live_ted}, store=index, clock=clock.now
+            feeds={
+                "ted-search-v3": live_ted,
+                PLACSP_SOURCE_ID: PlacspFeedAdapter(UrllibPlacspTransport(), clock=clock.now),
+            },
+            store=index,
+            clock=clock.now,
         ).run()
         summary["worldDemandSlices"] = [
             {"slice": r.slice_key, "pages": r.pages, "complete": r.complete} for r in ingested

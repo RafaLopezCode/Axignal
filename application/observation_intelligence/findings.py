@@ -48,6 +48,9 @@ class SourceFindings:
     records: tuple[ProcurementRecord, ...] = ()
     total_available: int | None = None
     failure: str | None = None
+    #: Whether the source has another page for this query. None: the page size tells
+    #: (a short page is the last); feeds filtered locally say it explicitly.
+    has_more: bool | None = None
 
     def __post_init__(self) -> None:
         if self.requests < 0:
