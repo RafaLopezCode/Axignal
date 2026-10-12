@@ -818,6 +818,20 @@ class _SubscriberUnderstandingReading:
 
 
 class _SubscriberOutputs(SubscriberOutputPort):
+    def set_demand_markets(
+        self, context: TrustedSubscriberContext, focus_id: XeedId, markets: list[str]
+    ) -> dict[str, object]:
+        """The subscriber directs where demand is looked for, on its own Focus only."""
+        observing = self._first_observation
+        if observing is None:
+            raise PortfolioError(PortfolioFailure.FOCUS_NOT_FOUND)
+        if str(focus_id).startswith("pending_"):
+            if str(focus_id) not in {p.pending_id for p in self._portfolio.list_pending(context)}:
+                raise PortfolioError(PortfolioFailure.FOCUS_NOT_FOUND)
+        elif self._portfolio.store.get_authorized(context, focus_id) is None:
+            raise PortfolioError(PortfolioFailure.FOCUS_NOT_FOUND)
+        return observing.set_demand_markets(context, str(focus_id), markets)
+
     def __init__(
         self,
         workflow: _SubscriberWorkflow,

@@ -57,6 +57,9 @@ class Store:
         self.reads += 1
         return self._records
 
+    def demand(self, item: DemandSlice, *, now: datetime) -> None:
+        return None
+
 
 def _reader(store: Store) -> LiveDemandReader:
     return LiveDemandReader(store, sources=("ted-search-v3", "es-placsp"), clock=lambda: NOW)  # type: ignore[arg-type]
@@ -114,10 +117,66 @@ def test_the_view_replaces_frozen_demand_with_the_live_answer() -> None:
 def test_without_a_live_answer_closed_calls_are_still_removed() -> None:
     view = apply_live_demand(_view([ACTIVITY, STORED]), PROOF, None, now=NOW)
     assert [d["kind"] for d in view["discoveries"]] == ["ACTIVITY"]  # type: ignore[union-attr,index]
-    assert view["demand"] == {"live": False, "asOf": NOW.isoformat(), "total": 0, "new": 0}
+    assert view["demand"] == {
+        "live": False, "asOf": NOW.isoformat(), "total": 0, "new": 0, "preparing": False
+    }  # fmt: skip
 
 
 def test_an_observation_that_did_not_look_for_demand_is_left_as_it_is() -> None:
     store = Store([_record("open-new", "09310000", "2026-10-20", 2)])
     view = apply_live_demand(_view([ACTIVITY]), PROOF, _reader(store), now=NOW)
     assert view == {"discoveries": [ACTIVITY]}
+
+
+def test_markets_the_subscriber_chose_direct_where_demand_is_looked_for() -> None:
+    # No place was found by the observation (no demand discoveries), but the subscriber
+    # chose Spain: the live answer is looked for there, and stays POTENTIAL.
+    store = Store([_record("open-new", "09310000", "2026-10-20", 2)])
+    proof = {"capabilities": [ENERGY], "attentionScopes": []}
+    view = apply_live_demand(_view([ACTIVITY]), proof, _reader(store), now=NOW, directed=["EU/ES"])
+    demand = [d for d in view["discoveries"] if d["kind"] == "DEMAND"]  # type: ignore[union-attr,index]
+    assert [d["statement"] for d in demand] == ["Suministro open-new"]
+
+
+class _Unprepared(Store):
+    def __init__(self) -> None:
+        super().__init__([])
+        self.demanded: list[str] = []
+
+    def state(self, item: DemandSlice) -> SliceState | None:
+        return None
+
+    def demand(self, item: DemandSlice, *, now: datetime) -> None:
+        self.demanded.append(item.key)
+
+
+def test_a_chosen_country_not_prepared_yet_is_demanded_and_said_to_be_preparing() -> None:
+    store = _Unprepared()
+    proof = {"capabilities": [ENERGY], "attentionScopes": []}
+    view = apply_live_demand(_view([ACTIVITY]), proof, _reader(store), now=NOW, directed=["EU/PT"])  # type: ignore[arg-type]
+    assert "es-placsp|EU/PT|PUBLIC_PROCUREMENT_OPPORTUNITIES" in store.demanded
+    assert view["demand"]["preparing"] is True  # type: ignore[index]
+
+
+def test_directed_markets_are_bounded_to_five_eu_member_states(tmp_path) -> None:  # type: ignore[no-untyped-def]
+    from types import SimpleNamespace
+
+    import pytest
+
+    from pipeline.first_observation.sqlite_store import SqliteFirstObservationStore
+    from tools.runtime.first_observation import FirstObservationRuntime
+
+    runtime = SimpleNamespace(
+        store=SqliteFirstObservationStore(tmp_path / "fo.sqlite3"),
+        _clock=SimpleNamespace(now=lambda: NOW),
+    )
+    context = SimpleNamespace(tenant_id="tenant-1")
+    result = FirstObservationRuntime.set_demand_markets(
+        runtime, context, "focus-1", ["EU/ES", "EU/PT", "EU/ES"]
+    )  # type: ignore[arg-type]
+    assert result == {"state": "success", "directed": ["EU/ES", "EU/PT"]}
+    assert runtime.store.demand_markets("tenant-1", "focus-1") == ("EU/ES", "EU/PT")
+    assert runtime.store.demand_markets("tenant-2", "focus-1") == ()  # never another tenant's
+    for bad in (["US"], ["EU/XX"], [f"EU/{c}" for c in ("ES", "PT", "FR", "IT", "DE", "AT")]):
+        with pytest.raises(ValueError):
+            FirstObservationRuntime.set_demand_markets(runtime, context, "focus-1", bad)  # type: ignore[arg-type]

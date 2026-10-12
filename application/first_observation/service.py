@@ -41,6 +41,7 @@ from application.first_observation.contracts import (
     SiteReading,
     TargetKind,
 )
+from application.first_observation.country_evidence import country_evidence
 from application.first_observation.geography import area_jurisdiction
 from application.first_observation.policy import FirstObservationPolicy, next_due
 from application.first_observation.representation_audit import (
@@ -531,6 +532,13 @@ class FirstObservationService:
         scope_codes.update({c.code: c for _p, _a, c in areas})
         if semantic is not None and not scope_codes:
             scope_codes.update({place.code: place for place, _u, _l in semantic.located})
+        # Nothing declared: two independent signals the site publishes (domain, language
+        # region, phone prefix, tax identifier, postal code beside the country) start
+        # where to look. POTENTIAL attention with its signals cited, never a market.
+        country = None if scope_codes else country_evidence(pages)
+        if country is not None:
+            scope_codes[country.scope.code] = country.scope
+            ledger.decide(f"LOCATION:COUNTRY_FROM_SITE_SIGNALS:{country.country}")
         scopes = tuple(
             MarketScope(code, roles, XignalEpistemicState.POTENTIAL)
             for code in scope_codes.values()
@@ -562,6 +570,26 @@ class FirstObservationService:
         ]
         capabilities = to_capabilities(routed, observation_ids, pages)
         discoveries: list[Discovery] = [*self._site_discoveries(reading, semantic)]
+        if country is not None:
+            discoveries.append(
+                Discovery(
+                    DiscoveryKind.DECLARED_LOCATION,
+                    "COUNTRY_FROM_SITE_SIGNALS",
+                    country.scope.code,
+                    XignalEpistemicState.POTENTIAL.value,
+                    country.signals[0].page_url,
+                    None,
+                    reading.pages[0].observed_at,
+                    {
+                        "method": "SITE_SIGNALS",
+                        "signals": [
+                            {"kind": sig.kind, "value": sig.value, "page": sig.page_url}
+                            for sig in country.signals
+                        ],
+                        "limitation": "Where to start looking for demand, not its market or reach.",
+                    },
+                )
+            )
         discoveries += [self._activity(f) for f in findings]
         discoveries += self._web_representation(reading, findings, ledger)
         discoveries += identity

@@ -13,6 +13,7 @@ never a customer, a lead or an assessed commercial fit.
 
 from __future__ import annotations
 
+import re
 from collections.abc import Callable, Iterable, Mapping, Sequence
 from dataclasses import dataclass
 from datetime import datetime, timedelta
@@ -38,6 +39,36 @@ class LiveDemand:
     total: int
     new: int
     sources: tuple[str, ...]
+
+
+def _words(title: object) -> str:
+    """A title's own words: TED prefixes 'Country, en dash, Category, en dash' to it."""
+    text = str(title or "").split(" \u2013 ")[-1].casefold()
+    return " ".join(re.findall(r"\w+", text))[:60]
+
+
+def _without_duplicates(candidates: list[dict[str, object]]) -> list[dict[str, object]]:
+    """One call published in several sources is shown once, from its national platform.
+
+    Same buyer, same deadline day and the same opening words: the same call. The national
+    platform's entry is kept (its official link); otherwise the first one seen.
+    """
+    kept: dict[tuple[str, str, str], dict[str, object]] = {}
+    for candidate in candidates:
+        key = (
+            str(candidate.get("buyer") or "").casefold().strip(),
+            str(candidate.get("deadline") or "")[:10],
+            _words(candidate.get("title"))[:40],
+        )
+        if not key[0] or not key[1]:
+            kept[(str(id(candidate)), "", "")] = candidate
+            continue
+        current = kept.get(key)
+        if current is None or (
+            current.get("source") != "es-placsp" and candidate.get("source") == "es-placsp"
+        ):
+            kept[key] = candidate
+    return list(kept.values())
 
 
 def _items(value: object) -> list[object]:
@@ -80,6 +111,9 @@ class LiveDemandReader:
     def _records(self, item: DemandSlice) -> tuple[datetime, tuple[ProcurementRecord, ...]] | None:
         state = self._store.state(item)
         if state is None or not state.complete or state.ingested_at is None:
+            if state is None or state.demanded_at is None:
+                # Not prepared yet: demand it, so the ingestor prepares it for next time.
+                self._store.demand(item, now=self._clock())
             return None
         if self._clock() - state.ingested_at > self._fresh_for:
             return None
@@ -152,7 +186,7 @@ class LiveDemandReader:
         if not answered:
             return None
         ordered = sorted(
-            found.values(),
+            _without_duplicates(list(found.values())),
             key=lambda c: (not c["isNew"], str(c["deadline"]), str(c["title"])),
         )
         return LiveDemand(
@@ -177,6 +211,7 @@ def apply_live_demand(
     reader: LiveDemandReader | None,
     *,
     now: datetime,
+    directed: Sequence[str] = (),
 ) -> dict[str, object]:
     """The subscriber view with demand matched now; stored demand when the index cannot say.
 
@@ -188,6 +223,9 @@ def apply_live_demand(
         d.get("kind") == "DEMAND" or d.get("code") == "NO_RELEVANT_DEMAND_FOUND"
         for d in discoveries
     )
+    # Markets the subscriber chose direct attention too: demand is looked for there even
+    # when the observation found no place of its own (never a fact about the organization).
+    looked = looked or bool(directed)
     if not looked:
         return view
     live = None
@@ -198,14 +236,21 @@ def apply_live_demand(
                 str(s.get("jurisdiction"))
                 for s in _items(proof.get("attentionScopes"))
                 if isinstance(s, Mapping)
-            ],
+            ]
+            + list(directed),
         )
     today = now.date().isoformat()
     if live is None:
         kept = [d for d in discoveries if not (d.get("kind") == "DEMAND" and _expired(d, today))]
         shown = sum(1 for d in kept if d.get("kind") == "DEMAND")
         view["discoveries"] = kept
-        view["demand"] = {"live": False, "asOf": now.isoformat(), "total": shown, "new": 0}
+        view["demand"] = {
+            "live": False,
+            "asOf": now.isoformat(),
+            "total": shown,
+            "new": 0,
+            "preparing": bool(directed) and reader is not None,
+        }
         return view
     others = [
         d

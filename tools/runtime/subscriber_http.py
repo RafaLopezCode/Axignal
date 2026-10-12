@@ -46,6 +46,10 @@ class SubscriberOutputPort(Protocol):
         self, context: TrustedSubscriberContext, focus_id: XeedId, as_of: datetime
     ) -> dict[str, object]: ...
 
+    def set_demand_markets(
+        self, context: TrustedSubscriberContext, focus_id: XeedId, markets: list[str]
+    ) -> dict[str, object]: ...
+
 
 class SubscriberMcpConsentPort(Protocol):
     """Consent and connection management for the Product MCP (ADR-0086)."""
@@ -316,6 +320,28 @@ class SubscriberHttpFacade:
                 return SubscriberHttpResponse(
                     200, self.outputs.output(context, XeedId(focus_id), datetime.now(UTC))
                 )
+            if (
+                method == "POST"
+                and path.startswith("/subscriber/organizations/")
+                and path.endswith("/demand-markets")
+            ):
+                focus_id = unquote(
+                    path.removeprefix("/subscriber/organizations/").removesuffix("/demand-markets")
+                )
+                body = payload or {}
+                markets = body.get("markets")
+                if (
+                    not _REFERENCE.fullmatch(focus_id)
+                    or set(body) != {"markets"}
+                    or not isinstance(markets, list)
+                    or not all(isinstance(m, str) and len(m) <= 8 for m in markets)
+                ):
+                    raise SubscriberRequestError("invalid demand markets")
+                try:
+                    result = self.outputs.set_demand_markets(context, XeedId(focus_id), markets)
+                except ValueError:
+                    raise SubscriberRequestError("invalid demand markets") from None
+                return SubscriberHttpResponse(200, result)
             if (
                 method == "POST"
                 and path.startswith("/subscriber/organizations/")
