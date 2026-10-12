@@ -335,6 +335,15 @@ class SqliteCanonicalOrganizationStore:
             ).fetchone()
         return None if row is None else OrganizationId(str(row[0]))
 
+    def identifiers_for(self, organization_id: OrganizationId, scheme: str) -> tuple[str, ...]:
+        """Verified registry identifiers of one scheme (e.g. LEI) held for an Organization."""
+        with self._connect() as connection:
+            rows = connection.execute(
+                "SELECT value FROM canonical_identifiers WHERE organization_id=? AND scheme=?",
+                (organization_id, scheme),
+            ).fetchall()
+        return tuple(str(row["value"]) for row in rows)
+
     def organization_by_domain(self, domain: str) -> OrganizationId | None:
         with self._connect() as connection:
             row = connection.execute(

@@ -65,6 +65,7 @@ from application.observation_intelligence import (
 from application.observation_intelligence.loop import OpportunityCandidate, run_observation_loop
 from application.observation_runtime.replay import FindingsLedger
 from application.organization_admission.locator import LocatorError, parse_locator, public_domain
+from application.organization_group import group_discoveries
 from application.semantic_layer.cascade import SemanticCascade
 from application.subscriber_identity.runtime import Clock
 from application.subscriber_portfolio.models import (
@@ -81,6 +82,7 @@ from application.world_demand.relations import AwardStore, apply_public_awards
 from application.xeed_access.reader import TrustedRequestContext
 from domain.evidence.epistemics import Currentness
 from domain.identity import OrganizationId, PrincipalId, TenantId, XeedId
+from pipeline.entity_resolution.gleif_group import GleifGroupReader
 from pipeline.first_observation.sqlite_store import SqliteFirstObservationStore
 from pipeline.geo.nominatim import NominatimReverseGeocoder
 from pipeline.observation_memory.sqlite_store import SqliteObservationMemory
@@ -352,7 +354,9 @@ class FirstObservationRuntime:
         purge_canonical_raw: Callable[[datetime], int] | None = None,
         live_demand: LiveDemandReader | None = None,
         awards: AwardStore | None = None,
+        groups: GleifGroupReader | None = None,
     ) -> None:
+        self._groups = groups
         self._awards = awards
         self._purge_canonical_raw = purge_canonical_raw
         self._live_demand = live_demand
@@ -660,6 +664,37 @@ class FirstObservationRuntime:
         )
         return {"state": "success", "directed": list(chosen)}
 
+    def _with_group(
+        self, view: dict[str, object], organization_id: str | None
+    ) -> dict[str, object]:
+        """Parents and subsidiaries from GLEIF when the organization has an LEI."""
+        if self._groups is None:
+            return view
+        verified: tuple[str, ...] = ()
+        identifiers_for = getattr(self._websites, "identifiers_for", None)
+        if organization_id and callable(identifiers_for):
+            verified = tuple(identifiers_for(OrganizationId(organization_id), "LEI"))
+        held = view.get("discoveries")
+        discoveries = held if isinstance(held, list) else []
+        declared = [
+            str(d.get("statement", "")).split(" ", 1)[-1]
+            for d in discoveries
+            if isinstance(d, Mapping) and d.get("code") == "IDENTIFIER_DECLARED:LEI"
+        ]
+        lei = next(iter(verified), None) or next(iter(declared), None)
+        if not lei:
+            return view
+        try:
+            group = self._groups.group(lei)
+        except Exception:  # registry unavailable: the group stays unknown, nothing invented
+            return view
+        found = group_discoveries(
+            group, verified=lei in verified, observed_at=str(view.get("observedAt") or "")
+        )
+        if found:
+            view["discoveries"] = [*discoveries, *found]
+        return view
+
     def view(
         self,
         context: TrustedRequestContext,
@@ -691,6 +726,7 @@ class FirstObservationRuntime:
                 view, proof, self._live_demand, now=self._clock.now(), directed=directed
             )
             view["demandMarkets"] = {"directed": list(directed)}
+            view = self._with_group(view, organization_id)
             # Relationships and competition from published public contract awards.
             view = apply_public_awards(
                 view, proof, self._awards, now=self._clock.now(), countries=lambda: directed
@@ -962,6 +998,9 @@ def build_first_observation(
         daily_jobs=max(0, daily_jobs),
         ingestor=ingestor,
         live_demand=LiveDemandReader(index, sources=tuple(ports), clock=clock.now),
+        groups=None
+        if overrides.source_ports is not None or overrides.feeds is not None
+        else GleifGroupReader(root / "gleif-groups.sqlite3"),
         awards=index,
         purge_canonical_raw=(
             lambda at: observation_memory.purge_first_observation_content(
