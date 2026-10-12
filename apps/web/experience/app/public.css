@@ -716,6 +716,24 @@ html:has(.public-header) {
 .article-basis .text-link {
   font-size: 12px;
 }
+.policy-operator {
+  display: grid;
+  gap: 8px;
+  margin: 17px 0;
+  font-size: 13px;
+}
+.policy-operator div {
+  display: grid;
+  grid-template-columns: minmax(9ch, 14ch) 1fr;
+  gap: 12px;
+}
+.policy-operator dt {
+  color: var(--muted, #5a6375);
+}
+.policy-operator dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
 .related-readings {
   padding-top: 30px;
 }

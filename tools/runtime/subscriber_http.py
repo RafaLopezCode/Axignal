@@ -184,6 +184,24 @@ class SubscriberHttpFacade:
         if method == "POST" and headers.get("Origin") != self.settings.origin:
             return self._denied("ORIGIN_REQUIRED", 403)
         try:
+            if method == "GET" and path == "/subscriber/legal/operator":
+                # The service holder's legally required identity (LSSI art. 10), from
+                # the operator's configuration only: never stored in the repository.
+                values = self.settings.values
+                if not self.settings.legal_ready:
+                    return SubscriberHttpResponse(200, {"state": "NOT_PUBLISHED"})
+                return SubscriberHttpResponse(
+                    200,
+                    {
+                        "state": "PUBLISHED",
+                        "name": values["AXIGNAL_LEGAL_OPERATOR_NAME"].strip(),
+                        "kind": values.get("AXIGNAL_LEGAL_OPERATOR_KIND", "").strip() or None,
+                        "taxId": values["AXIGNAL_LEGAL_TAX_ID"].strip(),
+                        "address": values["AXIGNAL_LEGAL_ADDRESS"].strip(),
+                        "contact": values["AXIGNAL_LEGAL_CONTACT"].strip(),
+                        "termsVersion": values["AXIGNAL_LEGAL_TERMS_VERSION"].strip(),
+                    },
+                )
             if method == "GET" and path == "/subscriber/auth/status":
                 return SubscriberHttpResponse(
                     200,
@@ -361,6 +379,7 @@ def is_subscriber_path(path: str) -> bool:
     return resource in {
         "/subscriber/portfolio",
         "/subscriber/identity/candidates",
+        "/subscriber/legal/operator",
     } or resource.startswith(
         (
             "/subscriber/auth/",
