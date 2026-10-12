@@ -8,6 +8,7 @@ import { useLocale } from "@/lib/locale";
 import { locales, type Locale } from "@/lib/languages";
 import { useRouter } from "next/navigation";
 import { Brand, LocaleToggle, Dialog, MiniFooter } from "./ui";
+import { BackToTop } from "./back-to-top";
 
 type LocaleRoute = { locale: Locale; href: string };
 export function PublicHeader({ landing = false, localeRoutes }: { landing?: boolean; localeRoutes?: LocaleRoute[] }) {
@@ -143,6 +144,7 @@ export function PublicShell({
       <PublicHeader landing={landing} localeRoutes={localeRoutes} />
       <main id="main" className={landing ? "public-main public-main-landing" : "public-main"} tabIndex={-1}>{children}</main>
       <MiniFooter />
+      <BackToTop />
     </div>
   );
 }
