@@ -150,6 +150,18 @@ export function discoveryCopy(d: Discovery, t: Translate, locale = "en"): { find
     return { finding: `${t("En su sector", "In its sector")} · ${outlet}: ${d.statement}`,
       why: t("Titular reciente sobre su actividad en su país, no sobre la organización. Su relevancia la ha juzgado un asistente: no es un hecho.", "A recent headline about its activity in its country, not about the organization. Its relevance was judged by an assistant: it is not a fact.") };
   }
+  if (d.kind === "ECONOMIC_FACT") {
+    const fact = String(d.detail.fact ?? "");
+    const label = fact === "revenue" ? t("Ingresos", "Revenue") : fact === "netProfit" ? t("Beneficio neto", "Net profit")
+      : fact === "employees" ? t("Empleados", "Employees") : fact === "marketCapitalization" ? t("Capitalización bursátil", "Market capitalization")
+      : fact === "inception" ? t("Año de fundación", "Founded") : fact === "stockExchange" ? t("Cotiza en", "Listed on") : t("Sector", "Industry");
+    const value = typeof d.detail.value === "number"
+      ? `${d.detail.value.toLocaleString(locale, { maximumFractionDigits: 0 })}${typeof d.detail.unit === "string" ? " " + d.detail.unit : ""}`
+      : d.statement;
+    const year = typeof d.detail.year === "string" && fact !== "inception" ? ` (${d.detail.year})` : "";
+    return { finding: `${label}: ${value}${year}`,
+      why: t("Según Wikidata, una fuente comunitaria: no es una cuenta oficial y puede estar desactualizada.", "According to Wikidata, a community source: it is not an official account and may be outdated.") };
+  }
   if (d.kind === "DEMAND") {
     const deadline = typeof d.detail.deadline === "string" ? d.detail.deadline.slice(0, 10) : null;
     const buyer = typeof d.detail.buyer === "string" ? d.detail.buyer : null;
