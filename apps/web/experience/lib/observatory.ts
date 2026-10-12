@@ -459,7 +459,7 @@ export function briefing(reading: Reading, name: string, insights: Insight[], t:
   const activity = reading.firstObservation?.discoveries.find(d => d.kind === "ACTIVITY");
   const place = reading.firstObservation?.discoveries.find(d => d.kind === "DECLARED_LOCATION");
   const selfDescription = reading.firstObservation?.discoveries.find(d => d.kind === "PUBLIC_PRESENCE" && d.excerpt?.trim())?.excerpt?.trim() ?? null;
-  const where = place ? (place.code === "LOCATION_STATED_IN_TEXT" ? placeLabel(place.statement, locale) : placeLabel(place.statement.length <= 6 ? place.statement : "", locale) || place.statement) : null;
+  const where = place ? (place.code === "LOCATION_STATED_IN_TEXT" || place.code === "COUNTRY_FROM_SITE_SIGNALS" ? placeLabel(place.statement, locale) : placeLabel(place.statement.length <= 6 ? place.statement : "", locale) || place.statement) : null;
   const lead = activity
     ? fill(t("Por lo que publica, {name} probablemente se dedica a {activity}.", "From what it publishes, {name} most likely works in {activity}."),
       { name, activity: `${activityLabel(activity.code, activity.statement, t).toLocaleLowerCase(locale)}${where ? ` (${where})` : ""}` })

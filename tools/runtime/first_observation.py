@@ -39,6 +39,7 @@ from application.first_observation.contracts import (
     IdentityLink,
     TargetKind,
 )
+from application.first_observation.geography import EU_MEMBERS
 from application.first_observation.metrics import runtime_metrics
 from application.first_observation.policy import FirstObservationPolicy
 from application.first_observation.research import ResearchPlan
@@ -638,6 +639,23 @@ class FirstObservationRuntime:
             "observedAt": None if proof is None else proof.get("observedAt"),
         }
 
+    def set_demand_markets(
+        self, context: TrustedRequestContext, target_ref: str, markets: Sequence[str]
+    ) -> dict[str, object]:
+        """Where the subscriber wants demand looked for (attention only, never truth).
+
+        Bounded to EU member states (where the adopted demand sources publish); five at
+        most. The caller has already authorized the Focus for this tenant.
+        """
+        allowed = {f"EU/{code}" for code in EU_MEMBERS.values()}
+        chosen = tuple(dict.fromkeys(str(m) for m in markets))
+        if len(chosen) > 5 or any(m not in allowed for m in chosen):
+            raise ValueError("demand markets must be up to five EU member states")
+        self.store.set_demand_markets(
+            str(context.tenant_id), target_ref, chosen, now=self._clock.now()
+        )
+        return {"state": "success", "directed": list(chosen)}
+
     def view(
         self,
         context: TrustedRequestContext,
@@ -664,7 +682,11 @@ class FirstObservationRuntime:
         view = public_view(proof, state)
         if view is not None and proof is not None:
             # Tenders open and close daily: demand is matched again now, never frozen.
-            view = apply_live_demand(view, proof, self._live_demand, now=self._clock.now())
+            directed = self.store.demand_markets(tenant, target_ref)
+            view = apply_live_demand(
+                view, proof, self._live_demand, now=self._clock.now(), directed=directed
+            )
+            view["demandMarkets"] = {"directed": list(directed)}
         if view is not None and proof is not None and proof.get("publicUnderstanding"):
             from application.first_observation.understanding import compare, public_report
 

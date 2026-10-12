@@ -38,6 +38,8 @@ export const firstObservationSchema = z.object({
   }).optional(),
   observedAt: z.string().max(64).optional(),
   authority: z.literal("OPERATIONAL_NOT_CANONICAL").optional(),
+  attentionScopes: z.array(z.object({ jurisdiction: z.string().max(64) }).passthrough()).max(50).optional(),
+  demandMarkets: z.object({ directed: z.array(z.string().regex(/^EU\/[A-Z]{2}$/)).max(5) }).optional(),
   // Demand matched again at read time against the current index (open calls only).
   demand: z.object({
     live: z.boolean(),
@@ -47,6 +49,7 @@ export const firstObservationSchema = z.object({
     shown: z.number().int().min(0).optional(),
     new: z.number().int().min(0),
     sources: z.array(z.string().max(80)).max(20).optional(),
+    preparing: z.boolean().optional(),
   }).optional(),
 });
 export type FirstObservation = z.infer<typeof firstObservationSchema>;

@@ -15,6 +15,7 @@ import { useLocale } from "@/lib/locale";
 import { LocaleToggle, useFocusTrap } from "./ui";
 import { formatReferenceMoney } from "@/lib/presentation";
 import { shouldApplyLandingFacet } from "@/lib/observatory-url";
+import { DemandMarkets } from "./demand-markets";
 import { monthlyCapacityCents, pendingOutputSchema, subscriberOutputSchema, type FirstObservation, type SubscriberPortfolio } from "@/lib/subscriber-contracts";
 import type { RuntimeProjection } from "@/lib/runtime-projection";
 import { briefing, byLane, currentnessLabel, fill, insightsFor, laneCopy, natureLabel, type Insight, type Lane, type Nature, type Reading, type Translate } from "@/lib/observatory";
@@ -656,6 +657,7 @@ function OrganizationView(props: OrgProps) {
         {!props.reading && observing && <ObservingState state={item.observation!.state}/>}
         {!props.reading && !observing && view === "summary" && <SummaryView reading={reading} name={name} insights={shown} lit={litShown} openId={open?.id ?? null} onOpen={openInsight} scope={scope}
           remembered={props.rememberReading !== false} onSeenAll={() => updateSeen(store => markSeen(store, item.focusId, shownKeys, new Date().toISOString()))} item={item}/>}
+        {!props.reading && !observing && view === "summary" && firstObservation?.discoveries.some(d => d.kind === "ACTIVITY") && <DemandMarkets focusId={item.focusId} observation={firstObservation} canAct={props.canAct} onSaved={() => void props.readOutput(item.focusId, false)}/>}
         {!props.reading && !observing && view === "explore" && <ExploreView projection={projection} revision={revision} firstObservation={firstObservation} onSummary={() => go({ view: "summary" })}/>}
         {!props.reading && !observing && view === "evolution" && <EvolutionView reading={reading} facet={facet} scope={scope}/>}
         {!props.reading && !observing && view === "evidence" && <EvidenceView reading={reading} facet={facet} scope={scope} insights={shown}/>}

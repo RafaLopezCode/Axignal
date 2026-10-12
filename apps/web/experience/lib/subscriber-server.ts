@@ -199,6 +199,22 @@ export async function subscriberIdentityCandidates(request: Request): Promise<Re
   }
 }
 
+export async function subscriberDemandMarkets(request: Request, focus: string): Promise<Response> {
+  if (!subscriberSameOrigin(request)) return rejected("ORIGIN_REQUIRED", 403);
+  const token = cookie(request, subscriberSessionCookie);
+  if (!token) return rejected("AUTHENTICATION_REQUIRED", 401);
+  if (!/^[A-Za-z0-9:_-]{1,160}$/.test(focus)) return rejected("INVALID_REFERENCE", 400);
+  try {
+    const input = z.object({ markets: z.array(z.string().regex(/^EU\/[A-Z]{2}$/)).max(5) }).strict().parse(await boundedSubscriberJson(request, 512));
+    const response = await upstream(`/subscriber/organizations/${encodeURIComponent(focus)}/demand-markets`, token, input);
+    if (!response.ok) return rejected(response.status === 401 ? "AUTHENTICATION_REQUIRED" : "ACCESS_DENIED", response.status);
+    return Response.json(z.object({ state: z.literal("success"), directed: z.array(z.string()) }).parse(await checkedJson(response)), { headers });
+  } catch (error) {
+    if (error instanceof z.ZodError) return rejected("INVALID_REQUEST_OR_RESPONSE", 400);
+    return rejected("RUNTIME_UNAVAILABLE", 503);
+  }
+}
+
 export async function subscriberPilotRedeem(request: Request): Promise<Response> {
   if (!subscriberSameOrigin(request)) return rejected("ORIGIN_REQUIRED", 403);
   const token = cookie(request, subscriberSessionCookie);
