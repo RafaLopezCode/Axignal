@@ -135,6 +135,9 @@ export function discoveryCopy(d: Discovery, t: Translate, locale = "en"): { find
     return { finding: `${d.detail.isNew === true ? `${t("Nueva", "New")} · ` : ""}${t("Demanda pública potencial", "Potential public demand")}: ${title}`,
       why: `${facts ? `${facts}. ` : ""}${t("Coincide por clasificación y lugar. No es un cliente, una invitación ni una relación.", "It matches by classification and place. It is not a customer, an invitation or a relationship.")}` };
   }
+  if (d.kind === "DECLARED_LOCATION" && d.code === "PREMISES_PINNED_ON_MAP") return {
+    finding: `${t("Sede que señala en el mapa de su web", "Premises pinned on its website's map")}: ${d.statement}`,
+    why: t("La propia organización publica este punto. Indica dónde está, no todo su mercado ni dónde opera.", "The organization itself publishes this point. It shows where it is, not its whole market or where it operates.") };
   if (d.kind === "DECLARED_LOCATION" && d.code === "COUNTRY_FROM_SITE_SIGNALS") return {
     finding: `${t("País deducido de señales de su web", "Country inferred from its website's signals")}: ${placeLabel(d.statement, locale)}`,
     why: t("Dos o más señales independientes de su propia web apuntan a este país. Indica dónde empezar a buscar demanda; no define su mercado ni dónde opera.", "Two or more independent signals on its own website point to this country. It shows where to start looking for demand; it does not define its market or where it operates.") };
@@ -260,6 +263,8 @@ export function basisRows(d: Discovery, t: Translate, locale: string): Array<[st
   if (Array.isArray(detail.buyers) && detail.buyers.length) rows.push([t("Compradores", "Buyers"), detail.buyers.join(" · ")]);
   if (Array.isArray(detail.awards)) for (const a of (detail.awards as Array<Record<string, unknown>>).slice(0, 5)) rows.push([t("Adjudicación", "Award"), [a.title, a.buyer, a.awardedOn, typeof a.amount === "number" ? `${a.amount.toLocaleString(locale, { maximumFractionDigits: 0 })} ${a.currency ?? ""}` : null].filter(Boolean).join(" · ")]);
   if (typeof detail.coverageSince === "string") rows.push([t("Cobertura desde", "Coverage since"), detail.coverageSince]);
+  if (typeof detail.latitude === "number" && typeof detail.longitude === "number") rows.push([t("Coordenadas", "Coordinates"), `${detail.latitude}, ${detail.longitude}`]);
+  if (typeof detail.attribution === "string") rows.push([t("Lugar según", "Place according to"), detail.attribution]);
   if (Array.isArray(detail.signals)) for (const s of detail.signals as Array<{ kind?: unknown; value?: unknown }>) rows.push([signalLabel(String(s.kind ?? ""), t), String(s.value ?? "")]);
   if (typeof detail.limitation === "string") rows.push([t("Límite", "Limitation"), detail.limitation]);
   if (typeof detail.impact === "string") rows.push([t("Impacto", "Impact"), auditImpact(detail.impact, t)]);
