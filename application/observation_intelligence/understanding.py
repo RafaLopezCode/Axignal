@@ -24,6 +24,13 @@ from application.observation_intelligence.contracts import (
 from domain.xignal import XignalEpistemicState
 
 _SENTENCE = re.compile(r"[^.!?\n]+[.!?]?")
+#: Footer and legal-link lines: they name policies and documents, never an offer.
+_POLICY_LINE = re.compile(
+    r"\b(policy|policies|política|políticas|politique|richtlinie|datenschutz|informativa|"
+    r"privacy|privacidad|privacité|cookies?|aviso legal|legal notice|mentions légales|"
+    r"impressum|terms of use|términos|condiciones de uso)\b",
+    re.IGNORECASE,
+)
 
 
 def _sentence_containing(text: str, start: int) -> str:
@@ -41,34 +48,49 @@ def detect_capabilities(
     observed_at: datetime,
     lexicon: tuple[CapabilityLexiconEntry, ...] = CAPABILITY_LEXICON,
 ) -> tuple[CapabilityHypothesis, ...]:
-    """Return one POTENTIAL hypothesis per declared capability, with exact excerpts."""
+    """Return one POTENTIAL hypothesis per declared capability, with exact excerpts.
+
+    Ordered by where the text first says it: what a page leads with (its title and
+    description come first) is listed before what it mentions further down.
+    """
 
     folded = text.casefold()
-    hypotheses: list[CapabilityHypothesis] = []
+    found: list[tuple[int, CapabilityHypothesis]] = []
     for entry in lexicon:
         excerpts: list[str] = []
+        first = len(folded)
         for term in entry.terms:
-            index = folded.find(term.casefold())
-            if index >= 0:
+            needle = term.casefold()
+            index = folded.find(needle)
+            while index >= 0:
                 excerpt = _sentence_containing(text, index)
-                if excerpt and excerpt not in excerpts:
-                    excerpts.append(excerpt)
+                # A line of policies or legal links ("Cybersecurity Policy | Cookies")
+                # names a document, not an offer: look for the next occurrence instead.
+                if excerpt and not _POLICY_LINE.search(excerpt):
+                    first = min(first, index)
+                    if excerpt not in excerpts:
+                        excerpts.append(excerpt)
+                    break
+                index = folded.find(needle, index + len(needle))
         if not excerpts:
             continue
-        hypotheses.append(
-            CapabilityHypothesis(
-                capability_id=entry.capability_id,
-                label=entry.label,
-                state=XignalEpistemicState.POTENTIAL,
-                basis=tuple(
-                    EvidenceRef(observation_id, source_ref, excerpt, observed_at)
-                    for excerpt in excerpts
+        found.append(
+            (
+                first,
+                CapabilityHypothesis(
+                    capability_id=entry.capability_id,
+                    label=entry.label,
+                    state=XignalEpistemicState.POTENTIAL,
+                    basis=tuple(
+                        EvidenceRef(observation_id, source_ref, excerpt, observed_at)
+                        for excerpt in excerpts
+                    ),
+                    demand_codes=entry.demand_codes,
+                    buyer_jobs=entry.buyer_jobs,
                 ),
-                demand_codes=entry.demand_codes,
-                buyer_jobs=entry.buyer_jobs,
             )
         )
-    return tuple(hypotheses)
+    return tuple(hypothesis for _, hypothesis in sorted(found, key=lambda pair: pair[0]))
 
 
 def derive_families(

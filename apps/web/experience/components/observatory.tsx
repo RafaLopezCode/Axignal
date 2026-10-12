@@ -25,6 +25,8 @@ import { useEvidenceLink } from "./evidence-link-context";
 import { causeCopy, dimensionCopy, stateCopy } from "./public-understanding";
 import { SubscriberRepresentation } from "./subscriber-representation";
 import { SubscriberMcpConnections } from "./subscriber-mcp-connections";
+import { IdentityCheck } from "./identity-check";
+import { websiteOf } from "@/lib/identity";
 import { RuntimeAxent, useRuntimeAxent } from "./runtime-axent";
 import type { ObservatoryCapabilities } from "@/lib/observatory-source";
 import { WAITING_STATES, waitingItems, type ActivationPhase } from "@/lib/activation";
@@ -625,6 +627,14 @@ function OrganizationView(props: OrgProps) {
           : t("Sin una web pública no hay nada que observar. Con ella, AXIGNAL empieza la primera observación.", "Without a public website there is nothing to observe. With it, AXIGNAL starts the first observation.")}</p>
         <div className="obs-form-actions"><button className="obs-button obs-primary" disabled={props.busy || !website.trim()}>{t("Observar esta web", "Observe this website")}</button></div>
       </form>}
+      {/* Identity is verified only from the LEI the person points out among the registry's current holders. */}
+      {!identified && !observing && props.capabilities.manage && props.canAct && <IdentityCheck key={`identity-${item.focusId}`} name={name} busy={props.busy}
+        website={websiteOf(item.label, firstObservation?.discoveries.find(d => d.kind === "PUBLIC_PRESENCE")?.sourceUrl)}
+        onChoose={async locator => {
+          await props.command({ action: "cancel_pending", focusId: item.focusId });
+          await props.command({ action: "add", locator });
+          props.clearSelection();
+        }}/>}
       {props.replacing === item.focusId && <form className="obs-inline-form" onSubmit={e => { e.preventDefault(); void props.command({ action: "replace", focusId: item.focusId, locator: props.replacementLocator }); }}>
         <label htmlFor={`replacement-${item.focusId}`}>{t("Nombre o sitio público", "Name or public website")}</label>
         <input id={`replacement-${item.focusId}`} required maxLength={2048} value={props.replacementLocator} onChange={e => props.setReplacementLocator(e.target.value)} disabled={props.busy || !props.canAct}/>

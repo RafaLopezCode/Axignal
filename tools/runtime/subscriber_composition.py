@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from collections.abc import Callable
 from dataclasses import dataclass, replace
 from datetime import datetime, timedelta
 from pathlib import Path
@@ -65,7 +66,7 @@ from domain.admin_billing.commercial_prices import (
     EUR_MONTHLY_BASE_MINOR,
 )
 from domain.evidence.epistemics import Currentness
-from domain.identity import TenantId, XeedId
+from domain.identity import OrganizationId, TenantId, XeedId
 from pipeline.admin_billing.subscriber_store import SqliteSubscriberBillingStore
 from pipeline.entity_resolution.organization_store import SqliteCanonicalOrganizationStore
 from pipeline.entity_resolution.sqlite_store import SqliteIdentityGovernanceStore
@@ -470,7 +471,9 @@ class _SubscriberWorkflow(SubscriberWorkflowPort):
         observation_trigger: _ObservationTrigger,
         catalogue_reader: OfferCatalogueReader | None,
         environment_ref: str,
+        organization_name: Callable[[OrganizationId], str | None] | None = None,
     ) -> None:
+        self._organization_name = organization_name
         self._settings = settings
         self._clock = clock
         self._identity_store = identity_store
@@ -509,6 +512,17 @@ class _SubscriberWorkflow(SubscriberWorkflowPort):
         except Exception:
             return
 
+    def _canonical_name(self, organization_id: OrganizationId) -> str:
+        """The admitted canonical name when the attention carried none (e.g. chosen by LEI)."""
+        if self._organization_name is not None:
+            try:
+                name = self._organization_name(organization_id)
+            except Exception:  # a read failure only loses the label, never the entry
+                name = None
+            if name:
+                return name
+        return "Organization"
+
     def _tax_ready(self) -> bool:
         if self._catalogue_reader is None or not self._checkout_available:
             return False
@@ -543,7 +557,7 @@ class _SubscriberWorkflow(SubscriberWorkflowPort):
             {
                 "focusId": str(entry.focus_id),
                 "organizationId": str(entry.xeed.organization_id),
-                "label": entry.xeed.label or "Organization",
+                "label": entry.xeed.label or self._canonical_name(entry.xeed.organization_id),
                 "state": entry.status.value,
             }
             for entry in entries
@@ -1000,12 +1014,20 @@ def build_subscriber_facade(
     # a configured source, unknown identities stay pending (UNKNOWN), never invented.
     from tools.runtime.organization_registry import build_registry_source
 
-    organization_admission = OrganizationAdmissionService(
-        organizations,
+    registry_source = (
         identity_source
         if identity_source is not None
-        else build_registry_source(settings.values, root),
+        else build_registry_source(settings.values, root)
     )
+    organization_admission = OrganizationAdmissionService(organizations, registry_source)
+    search = getattr(registry_source, "candidates", None)
+
+    def identity_candidates(query: str, country: str | None) -> list[dict[str, str | None]]:
+        # Suggestions only (spec 052 amendment): the subscriber chooses; admission reads
+        # the chosen LEI exactly, as for any typed LEI.
+        assert search is not None
+        return [candidate.to_wire() for candidate in search(query, prefer_country=country)]
+
     observation_trigger = _ObservationTrigger(
         plans=execution_plan_reader,
         observation_plans=observation_plan_reader,
@@ -1085,8 +1107,14 @@ def build_subscriber_facade(
         overrides=first_observation_overrides,
     )
     observation_trigger.first_observation = first_observation
+
+    def canonical_name(organization_id: OrganizationId) -> str | None:
+        organization = organizations.get_organization(organization_id)
+        return None if organization is None else organization.canonical_name
+
     workflow = _SubscriberWorkflow(
         settings=settings,
+        organization_name=canonical_name,
         clock=effective_clock,
         identity_store=identity.store,
         portfolio=portfolio,
@@ -1157,6 +1185,7 @@ def build_subscriber_facade(
     return SubscriberHttpFacade(
         settings=settings,
         identity=identity,
+        identity_candidates=None if search is None else identity_candidates,
         pilot_admin=pilot_access,
         customer_read=customer_read,
         workflow=workflow,
