@@ -495,10 +495,14 @@ class FirstObservationRuntime:
         """Run one queued job; False when nothing is runnable now."""
         policy = self.service.policy
         now = self._clock.now()
-        if self.store.jobs_started_on(now.date().isoformat()) >= self._daily_jobs:
-            return False
+        # The daily ceiling bounds public reads; a job with no website reads nothing and
+        # must not wait a day (nor take the day's slot) only to report NO_PUBLIC_WEBSITE.
+        reads_left = self.store.jobs_started_on(now.date().isoformat()) < self._daily_jobs
         job = self.store.claim(
-            now=now, lease_seconds=policy.lease_seconds, max_attempts=policy.max_attempts
+            now=now,
+            lease_seconds=policy.lease_seconds,
+            max_attempts=policy.max_attempts,
+            offline_only=not reads_left,
         )
         if job is None:
             return False

@@ -41,8 +41,44 @@ test("lanes regroup the runtime's findings without upgrading or downgrading thei
   assert.ok(!insights.some(i => i.nature === "OBSERVED" && i.id.startsWith("opportunity")));
   // UNKNOWN stays UNKNOWN and lives in its own lane, never as a negative finding.
   assert.ok(lanes.unknown.length > 0 && lanes.unknown.every(i => i.nature === "UNKNOWN"));
-  // Context-only discoveries (public presence, web measurement, identity hints) stay in Evidence.
-  assert.ok(!insights.some(i => /^(PUBLIC_PRESENCE|WEB_REPRESENTATION|IDENTITY_HINT):/.test(i.id)));
+  // Context discoveries are never shown raw. What they observed is read with its own nature: the
+  // self-description as DECLARED, each website check as a check carrying its instrument; never an opportunity.
+  assert.ok(!insights.some(i => /^IDENTITY_HINT:/.test(i.id)));
+  assert.ok(!insights.some(i => /^(PUBLIC_PRESENCE|WEB_REPRESENTATION):/.test(i.id) && !/^PUBLIC_PRESENCE:.*:self$|^WEB_REPRESENTATION:(IN_PLACE|NO_[A-Z_]+)$/.test(i.id)));
+  for (const i of insights.filter(i => i.id.startsWith("PUBLIC_PRESENCE:"))) assert.equal(i.nature, "DECLARED");
+  for (const i of insights.filter(i => i.id.startsWith("WEB_REPRESENTATION:"))) {
+    assert.ok(["STRENGTH", "CLARIFY"].includes(i.nature) && i.lane === "understood");
+    assert.ok(i.proof.some(p => p.label === "Instrument and version"));
+  }
+});
+
+test("a website that says what it does is quoted as declared, and its own checks are read one by one", () => {
+  const observedAt = "2026-10-12T07:56:24+00:00";
+  const reading: Reading = { projection: null, firstObservation: {
+    state: "NOT_ENOUGH_CAPABILITY_EVIDENCE", firstProofReady: false, discoveries: [
+      { kind: "PUBLIC_PRESENCE", code: "PUBLIC_WEBSITE_OBSERVED", statement: "Home - ZITRON", epistemicState: "OBSERVED", sourceUrl: "https://zitron.com/",
+        excerpt: "Design, manufacturing and installation of underground ventilation systems for tunnels and mining, since 1963.", observedAt, detail: { pagesRead: 3 } },
+      { kind: "WEB_REPRESENTATION", code: "PUBLIC_WEB_REPRESENTATION_MEASURED", statement: "Public web representation checks", epistemicState: "OBSERVED", sourceUrl: "https://zitron.com/",
+        excerpt: null, observedAt, detail: { instrument: "site-reading.v1", conditions: "robots.txt plus pages read", limitation: "Own website only.",
+          checks: { robotsTxtPublished: true, sitemapsDeclared: 0, canonical: null, homepageNoindex: false, titlePresent: true, descriptionPresent: false, organizationDeclared: false, offerDeclared: false } } },
+      { kind: "SIGNIFICANT_UNKNOWN", code: "ACTIVITY_NOT_ESTABLISHED", statement: "What it offers is not established yet.", epistemicState: "UNKNOWN", sourceUrl: null, excerpt: null, observedAt: null, detail: {} },
+    ] } as Reading["firstObservation"] };
+  const insights = insightsFor(reading, es, "es");
+  const self = insights.find(i => i.id.endsWith(":self"))!;
+  assert.equal(self.nature, "DECLARED");
+  assert.match(self.headline, /^Así se presenta: «Design, manufacturing .* since 1963»$/);
+  const brief = briefing(reading, "zitron.com", insights, es, "es");
+  // Its own words lead, with one closing stop, and the activity is still said to be not established.
+  assert.match(brief.lead, /^zitron\.com se presenta así: «Design.*1963»\. AXIGNAL todavía no ha establecido su actividad/);
+  const ids = insights.filter(i => i.id.startsWith("WEB_REPRESENTATION:")).map(i => i.id).sort();
+  assert.deepEqual(ids, ["WEB_REPRESENTATION:IN_PLACE", "WEB_REPRESENTATION:NO_DESCRIPTION", "WEB_REPRESENTATION:NO_OFFER_DATA",
+    "WEB_REPRESENTATION:NO_ORGANIZATION_DATA", "WEB_REPRESENTATION:NO_SITEMAP"]);
+  // A derived representation gap for the offer is not repeated by the plain check.
+  const withGap: Reading = { projection: null, firstObservation: { ...reading.firstObservation!, discoveries: [...reading.firstObservation!.discoveries,
+    { kind: "REPRESENTATION_GAP", code: "OFFER_NOT_MACHINE_READABLE", statement: "gap", epistemicState: "POTENTIAL", sourceUrl: null, excerpt: null, observedAt, detail: {} }] } };
+  assert.ok(!insightsFor(withGap, es, "es").some(i => i.id === "WEB_REPRESENTATION:NO_OFFER_DATA"));
+  // No score, no ranking claim.
+  assert.ok(!JSON.stringify(insights).match(/\b\d+(\.\d+)?\s*%|score|ranking position/i));
 });
 
 test("opportunity depth shows each relevance dimension with its state and no score", () => {

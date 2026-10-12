@@ -265,10 +265,25 @@ class FirstObservationService:
             ledger.decide("REUSED:ROBOTS")
         else:
             fetched = self._fetch(origin + "/robots.txt", "robots", ledger)
+            host = urlsplit(origin).hostname or ""
+            if fetched.status is None and not host.startswith("www."):
+                # The bare domain did not answer at all (TLS, DNS, timeout): many sites serve
+                # only www. Same DNS domain, same organization; one more bounded request.
+                alternate = f"{urlsplit(origin).scheme}://www.{host}"
+                retried = self._fetch(alternate + "/robots.txt", "robots", ledger)
+                if retried.status is not None:
+                    ledger.decide("RETRIED:WWW_HOST")
+                    origin, fetched = alternate, retried
+                    parts = urlsplit(website if "://" in website else "https://" + website)
+                    website = f"{alternate}{parts.path or '/'}"
             if fetched.failure is None and fetched.status == 200 and fetched.body is not None:
                 robots = RobotsReading(_decode(fetched)[:512_000], fetched.observed_at)
             elif fetched.status is not None and 400 <= fetched.status < 500:
                 robots = RobotsReading(None, fetched.observed_at)  # none published (RFC 9309)
+            elif fetched.failure == "redirect_policy_rejected":
+                # It sends visitors to another domain: possibly another organization, so it is
+                # not followed; the subscriber is told to name that site instead.
+                return self._failed(key, now, None, "REDIRECTS_TO_ANOTHER_SITE", ledger, known)
             else:
                 return self._failed(key, now, None, "ROBOTS_UNAVAILABLE", ledger, known)
         target = website if "://" in website else "https://" + website

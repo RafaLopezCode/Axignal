@@ -11,10 +11,10 @@ type Translate = (es: string, en: string) => string;
 /** Subscriber-facing state of a First Observation: derived from what actually ran. */
 export function observationStateCopy(state: string, t: Translate): string {
   switch (state) {
-    case "QUEUED": return t("Observación preparada. Empieza en segundo plano; puedes seguir navegando.", "Observation prepared. It starts in the background; you can keep browsing.");
+    case "QUEUED": return t("Observación en cola. Se hace por turnos con un límite diario; puedes seguir navegando.", "Observation queued. It runs in turns within a daily limit; you can keep browsing.");
     case "OBSERVING_PUBLIC_PRESENCE": return t("Observando su presencia pública…", "Observing its public presence…");
     case "FIRST_PROOF_READY": return t("Primera observación lista, con sus evidencias.", "First observation ready, with its evidence.");
-    case "NOT_ENOUGH_CAPABILITY_EVIDENCE": return t("Su web pública todavía no deja claro qué ofrece. No lo suponemos.", "Its public website does not yet make clear what it offers. We do not assume it.");
+    case "NOT_ENOUGH_CAPABILITY_EVIDENCE": return t("AXIGNAL todavía no ha podido clasificar su actividad con evidencia suficiente. No la suponemos.", "AXIGNAL has not yet been able to classify its activity with enough evidence. We do not assume it.");
     case "NO_PUBLIC_WEBSITE": return t("No hay una web pública que observar. Añade su web para empezar.", "There is no public website to observe. Add its website to begin.");
     case "SOURCE_UNAVAILABLE": return t("Su web no se pudo observar con sus reglas de acceso. No concluimos nada de ello.", "Its website could not be observed under its access rules. We conclude nothing from that.");
     case "BUDGET_EXHAUSTED": return t("La observación se detuvo en sus límites. Seguirá en el próximo ciclo.", "Observation stopped at its limits. It will continue in the next cycle.");
@@ -97,6 +97,10 @@ export function discoveryCopy(d: Discovery, t: Translate, locale = "en"): { find
     case "NOT_AN_OPERATING_BUSINESS_SITE": return { finding: t("La página no parece la web de una actividad en marcha.", "The page does not read as an operating business website."), why: t("Es un juicio no autoritativo sobre la página, no sobre la organización.", "It is a non-authoritative judgment about the page, not about the organization.") };
     case "NO_PUBLIC_WEBSITE": return { finding: t("No hay una web pública que observar.", "There is no public website to observe."), why: t("Añade su web para empezar la observación.", "Add its website to start observing.") };
     case "WEBSITE_OF_ANOTHER_ORGANIZATION": return { finding: t("Un registro asocia esta web a otra organización.", "A registry links this website to another organization."), why: t("No la observamos como si fuera de esta organización.", "We do not observe it as if it belonged to this organization.") };
+    case "ROBOTS_DISALLOWED": return { finding: t("Su robots.txt no permite que la observemos.", "Its robots.txt does not allow us to observe it."), why: t("Lo respetamos y no leemos sus páginas. No concluimos nada de ello.", "We respect it and do not read its pages. We conclude nothing from it.") };
+    case "REDIRECTS_TO_ANOTHER_SITE": return { finding: t("Esta web redirige a otro dominio.", "This website redirects to another domain."), why: t("No la seguimos porque podría ser otra organización. Indica el dominio al que lleva para observarla.", "We do not follow it because it could be another organization. Give the domain it leads to in order to observe it.") };
+    case "HOMEPAGE_UNAVAILABLE": return { finding: t("Su página principal no respondió a una lectura automática.", "Its homepage did not answer an automated reading."), why: t("Puede limitar los accesos automáticos; no lo eludimos. No concluimos nada de ello.", "It may limit automated access; we do not bypass it. We conclude nothing from it.") };
+    case "ROBOTS_UNAVAILABLE": return { finding: t("Su web no respondió a una lectura automática.", "Its website did not answer an automated reading."), why: t("Lo intentamos también con www. Puede ser temporal; no concluimos nada de ello.", "We also tried with www. It may be temporary; we conclude nothing from it.") };
     default: return { finding: t("La web no se pudo observar con sus reglas de acceso.", "The website could not be observed under its access rules."), why: t("Respetamos robots.txt y nuestros límites; no concluimos nada de ello.", "We respect robots.txt and our limits; we conclude nothing from that.") };
   }
 }

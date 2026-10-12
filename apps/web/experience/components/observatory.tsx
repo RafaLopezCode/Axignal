@@ -283,6 +283,9 @@ export function Observatory(props: ObservatoryProps) {
   useEffect(() => {
     if (access !== "ready" || autoOpened.current || selected || url.screen) return;
     if (new URL(window.location.href).searchParams.get("organization")) return;
+    // Decided once there is something to decide on: an organization activated after the first render (an
+    // invitation redeemed, a payment verified) still lands on its reading.
+    if (!readableItems.length) return;
     autoOpened.current = true;
     if (readableItems.length === 1 && items.length === 1) void props.readOutput(readableItems[0].focusId, false);
     else if (props.landing && readableItems.some(entry => entry.focusId === props.landing?.focusId)) {
@@ -557,6 +560,7 @@ function OrganizationView(props: OrgProps) {
   }, [ready, item.focusId, insights, props.firstLookUnread, updateSeen]);
   const open = insights.find(i => i.id === itemId) ?? null;
   const [menu, setMenu] = useState(false);
+  const [website, setWebsite] = useState("");
   const opener = useRef<string | null>(null);
   const openInsight = (insight: Insight) => {
     opener.current = insight.id;
@@ -601,6 +605,26 @@ function OrganizationView(props: OrgProps) {
           </div>}
         </div>
       </header>
+      {/* No website to observe: give it one here. The kept attention is withdrawn and added again with the
+          website through the same governed commands; capacity and identity are decided by the runtime. */}
+      {!identified && (item.observation?.state === "NO_PUBLIC_WEBSITE" || item.observation?.state === "SOURCE_UNAVAILABLE") && props.capabilities.manage && props.canAct && <form className="obs-inline-form" onSubmit={e => {
+        e.preventDefault();
+        const locator = website.trim();
+        void (async () => {
+          await props.command({ action: "cancel_pending", focusId: item.focusId });
+          await props.command({ action: "add", locator });
+          setWebsite("");
+          props.clearSelection();
+        })();
+      }}>
+        <label htmlFor={`website-${item.focusId}`}>{t("Su web pública", "Its public website")}</label>
+        <input id={`website-${item.focusId}`} required maxLength={2048} inputMode="url" autoComplete="url" spellCheck={false} pattern="\S+\.\S+"
+          placeholder={t("p. ej. empresa.com", "e.g. company.com")} value={website} onChange={e => setWebsite(e.target.value)} disabled={props.busy}/>
+        <p>{item.observation?.state === "SOURCE_UNAVAILABLE"
+          ? t("Si tiene otra web pública, por ejemplo el dominio al que redirige, indícala y AXIGNAL la observará.", "If it has another public website, for example the domain it redirects to, give it and AXIGNAL will observe it.")
+          : t("Sin una web pública no hay nada que observar. Con ella, AXIGNAL empieza la primera observación.", "Without a public website there is nothing to observe. With it, AXIGNAL starts the first observation.")}</p>
+        <div className="obs-form-actions"><button className="obs-button obs-primary" disabled={props.busy || !website.trim()}>{t("Observar esta web", "Observe this website")}</button></div>
+      </form>}
       {props.replacing === item.focusId && <form className="obs-inline-form" onSubmit={e => { e.preventDefault(); void props.command({ action: "replace", focusId: item.focusId, locator: props.replacementLocator }); }}>
         <label htmlFor={`replacement-${item.focusId}`}>{t("Nombre o sitio público", "Name or public website")}</label>
         <input id={`replacement-${item.focusId}`} required maxLength={2048} value={props.replacementLocator} onChange={e => props.setReplacementLocator(e.target.value)} disabled={props.busy || !props.canAct}/>
@@ -644,7 +668,7 @@ function ReadingSkeleton() {
 function ObservingState({ state }: { state: string }) {
   const { t } = useLocale();
   const stages: Array<[string, string, string]> = [
-    ["QUEUED", t("En cola", "Queued"), t("La observación está guardada y empezará en segundo plano.", "The observation is saved and will start in the background.")],
+    ["QUEUED", t("En cola", "Queued"), t("Está guardada. Las primeras observaciones se hacen por turnos, con un límite diario; si hoy ya se ha alcanzado, empieza en el siguiente turno.", "It is saved. First observations run in turns within a daily limit; if today's is reached, it starts in the next turn.")],
     ["OBSERVING_PUBLIC_PRESENCE", t("Observando su presencia pública", "Observing its public presence"), t("Leemos sus páginas públicas respetando robots.txt y nuestros límites.", "We read its public pages within robots.txt and our limits.")],
     ["FIRST_PROOF_READY", t("Primera lectura con evidencias", "First reading with evidence"), t("Aparecerá aquí en cuanto exista, con sus fuentes.", "It will appear here as soon as it exists, with its sources.")],
   ];
@@ -678,7 +702,7 @@ export function SummaryView({ reading, name, insights, lit, remembered = true, o
       <p className="obs-brief-lead">{scope ? scope.intro : brief.lead}</p>
       {scope ? <ul className="obs-tally"><li>{fill(insights.length === 1 ? t("{n} hallazgo", "{n} finding") : t("{n} hallazgos", "{n} findings"), { n: insights.length })}</li></ul>
         : brief.tally.length > 0 && <ul className="obs-tally">{brief.tally.map(x => <li key={x}>{x}</li>)}</ul>}
-      {low && <p className="obs-brief-note">{observationStateCopy(item.observation!.state, t)}. {t("Lo que no se pudo observar aparece en «Lo que aún no sabemos», con su razón.", "What could not be observed appears under “What we do not know yet”, with its reason.")}</p>}
+      {low && <p className="obs-brief-note">{observationStateCopy(item.observation!.state, t)} {t("Lo que no se pudo observar aparece en «Lo que aún no sabemos», con su razón.", "What could not be observed appears under “What we do not know yet”, with its reason.")}</p>}
       {lit.size > 0 && <div className="obs-since" role="status">
         <span className="obs-since-lamp" aria-hidden="true"/>
         <span>{fill(lit.size === 1 ? t("{n} hallazgo nuevo o cambiado desde tu última visita.", "{n} finding new or changed since your last visit.") : t("{n} hallazgos nuevos o cambiados desde tu última visita.", "{n} findings new or changed since your last visit."), { n: lit.size })}{remembered && <> <small>{t("Se recuerda en este dispositivo.", "Remembered on this device.")}</small></>}</span>
