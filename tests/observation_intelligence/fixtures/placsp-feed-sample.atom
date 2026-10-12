@@ -1,0 +1,729 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:cbc="urn:dgpe:names:draft:codice:schema:xsd:CommonBasicComponents-2" xmlns:cac="urn:dgpe:names:draft:codice:schema:xsd:CommonAggregateComponents-2" xmlns:cac-place-ext="urn:dgpe:names:draft:codice-place-ext:schema:xsd:CommonAggregateComponents-2" xmlns:cbc-place-ext="urn:dgpe:names:draft:codice-place-ext:schema:xsd:CommonBasicComponents-2" xmlns:at="http://purl.org/atompub/tombstones/1.0" xmlns:ns7="urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2">
+    <author>
+        <name>Plataforma de Contratación del Sector Público</name>
+        <uri>https://contrataciondelestado.es</uri>
+        <email>contrataciondelestado@minhafp.es</email>
+    </author>
+    <id>https://contrataciondelestado.es/sindicacion/sindicacion_1044/PlataformasAgregadasSinMenores.atom</id>
+    <link href="https://contrataciondelestado.es/sindicacion/sindicacion_1044/PlataformasAgregadasSinMenores.atom" rel="self"/>
+    <link href="https://contrataciondelestado.es/sindicacion/sindicacion_1044/PlataformasAgregadasSinMenores.atom" rel="first"/>
+    <link href="https://contrataciondelestado.es/sindicacion/sindicacion_1044/PlataformasAgregadasSinMenores_20261010_030108.atom" rel="next"/>
+    <title>Licitaciones publicadas en la Plataforma de Contratación del Sector Público: Plataformas Agregadas Sin Menores</title>
+    <updated>2026-10-12T03:00:46.894+02:00</updated>
+    <at:deleted-entry ref="https://contrataciondelestado.es/sindicacion/PlataformasAgregadasSinMenores/7831067" when="2026-10-12T00:00:03.469+02:00">
+        <at:comment type="CERRADA"/>
+    </at:deleted-entry>
+    <at:deleted-entry ref="https://contrataciondelestado.es/sindicacion/PlataformasAgregadasSinMenores/6897099" when="2026-10-12T00:00:02.903+02:00">
+        <at:comment type="CERRADA"/>
+    </at:deleted-entry>
+    <at:deleted-entry ref="https://contrataciondelestado.es/sindicacion/PlataformasAgregadasSinMenores/6439930" when="2026-10-12T00:00:01.448+02:00">
+        <at:comment type="CERRADA"/>
+    </at:deleted-entry>
+    <at:deleted-entry ref="https://contrataciondelestado.es/sindicacion/PlataformasAgregadasSinMenores/8160239" when="2026-10-11T00:00:30.568+02:00">
+        <at:comment type="CERRADA"/>
+    </at:deleted-entry>
+    <at:deleted-entry ref="https://contrataciondelestado.es/sindicacion/PlataformasAgregadasSinMenores/8160236" when="2026-10-11T00:00:30.084+02:00">
+        <at:comment type="CERRADA"/>
+    </at:deleted-entry>
+    <at:deleted-entry ref="https://contrataciondelestado.es/sindicacion/PlataformasAgregadasSinMenores/8343483" when="2026-10-11T00:00:29.611+02:00">
+        <at:comment type="CERRADA"/>
+    </at:deleted-entry>
+    <at:deleted-entry ref="https://contrataciondelestado.es/sindicacion/PlataformasAgregadasSinMenores/8241836" when="2026-10-11T00:00:29.106+02:00">
+        <at:comment type="CERRADA"/>
+    </at:deleted-entry>
+    <at:deleted-entry ref="https://contrataciondelestado.es/sindicacion/PlataformasAgregadasSinMenores/7744311" when="2026-10-11T00:00:28.674+02:00">
+        <at:comment type="CERRADA"/>
+    </at:deleted-entry>
+    <at:deleted-entry ref="https://contrataciondelestado.es/sindicacion/PlataformasAgregadasSinMenores/7815958" when="2026-10-11T00:00:28.289+02:00">
+        <at:comment type="CERRADA"/>
+    </at:deleted-entry>
+    <at:deleted-entry ref="https://contrataciondelestado.es/sindicacion/PlataformasAgregadasSinMenores/7506141" when="2026-10-11T00:00:27.900+02:00">
+        <at:comment type="CERRADA"/>
+    </at:deleted-entry>
+    <at:deleted-entry ref="https://contrataciondelestado.es/sindicacion/PlataformasAgregadasSinMenores/7760208" when="2026-10-11T00:00:27.369+02:00">
+        <at:comment type="CERRADA"/>
+    </at:deleted-entry>
+    <at:deleted-entry ref="https://contrataciondelestado.es/sindicacion/PlataformasAgregadasSinMenores/1974171" when="2026-10-11T00:00:25.778+02:00">
+        <at:comment type="CERRADA"/>
+    </at:deleted-entry>
+    <at:deleted-entry ref="https://contrataciondelestado.es/sindicacion/PlataformasAgregadasSinMenores/7824224" when="2026-10-11T00:00:25.224+02:00">
+        <at:comment type="CERRADA"/>
+    </at:deleted-entry>
+    <at:deleted-entry ref="https://contrataciondelestado.es/sindicacion/PlataformasAgregadasSinMenores/7816069" when="2026-10-11T00:00:24.678+02:00">
+        <at:comment type="CERRADA"/>
+    </at:deleted-entry>
+    <at:deleted-entry ref="https://contrataciondelestado.es/sindicacion/PlataformasAgregadasSinMenores/8396563" when="2026-10-11T00:00:24.200+02:00">
+        <at:comment type="CERRADA"/>
+    </at:deleted-entry>
+    <at:deleted-entry ref="https://contrataciondelestado.es/sindicacion/PlataformasAgregadasSinMenores/7606510" when="2026-10-11T00:00:23.800+02:00">
+        <at:comment type="CERRADA"/>
+    </at:deleted-entry>
+    <at:deleted-entry ref="https://contrataciondelestado.es/sindicacion/PlataformasAgregadasSinMenores/8231600" when="2026-10-11T00:00:23.331+02:00">
+        <at:comment type="CERRADA"/>
+    </at:deleted-entry>
+    <at:deleted-entry ref="https://contrataciondelestado.es/sindicacion/PlataformasAgregadasSinMenores/7972587" when="2026-10-11T00:00:22.811+02:00">
+        <at:comment type="CERRADA"/>
+    </at:deleted-entry>
+    <at:deleted-entry ref="https://contrataciondelestado.es/sindicacion/PlataformasAgregadasSinMenores/8343448" when="2026-10-11T00:00:22.254+02:00">
+        <at:comment type="CERRADA"/>
+    </at:deleted-entry>
+    <at:deleted-entry ref="https://contrataciondelestado.es/sindicacion/PlataformasAgregadasSinMenores/8297217" when="2026-10-11T00:00:21.757+02:00">
+        <at:comment type="CERRADA"/>
+    </at:deleted-entry>
+    <at:deleted-entry ref="https://contrataciondelestado.es/sindicacion/PlataformasAgregadasSinMenores/1983738" when="2026-10-11T00:00:21.137+02:00">
+        <at:comment type="CERRADA"/>
+    </at:deleted-entry>
+    <at:deleted-entry ref="https://contrataciondelestado.es/sindicacion/PlataformasAgregadasSinMenores/2033763" when="2026-10-11T00:00:20.507+02:00">
+        <at:comment type="CERRADA"/>
+    </at:deleted-entry>
+    <at:deleted-entry ref="https://contrataciondelestado.es/sindicacion/PlataformasAgregadasSinMenores/7531176" when="2026-10-11T00:00:19.978+02:00">
+        <at:comment type="CERRADA"/>
+    </at:deleted-entry>
+    <at:deleted-entry ref="https://contrataciondelestado.es/sindicacion/PlataformasAgregadasSinMenores/7808620" when="2026-10-11T00:00:19.422+02:00">
+        <at:comment type="CERRADA"/>
+    </at:deleted-entry>
+    <at:deleted-entry ref="https://contrataciondelestado.es/sindicacion/PlataformasAgregadasSinMenores/8017382" when="2026-10-11T00:00:18.855+02:00">
+        <at:comment type="CERRADA"/>
+    </at:deleted-entry>
+    <at:deleted-entry ref="https://contrataciondelestado.es/sindicacion/PlataformasAgregadasSinMenores/7808618" when="2026-10-11T00:00:18.375+02:00">
+        <at:comment type="CERRADA"/>
+    </at:deleted-entry>
+    <at:deleted-entry ref="https://contrataciondelestado.es/sindicacion/PlataformasAgregadasSinMenores/8144315" when="2026-10-11T00:00:17.331+02:00">
+        <at:comment type="CERRADA"/>
+    </at:deleted-entry>
+    <at:deleted-entry ref="https://contrataciondelestado.es/sindicacion/PlataformasAgregadasSinMenores/8306351" when="2026-10-11T00:00:07.773+02:00">
+        <at:comment type="CERRADA"/>
+    </at:deleted-entry>
+    <at:deleted-entry ref="https://contrataciondelestado.es/sindicacion/PlataformasAgregadasSinMenores/8225158" when="2026-10-11T00:00:07.025+02:00">
+        <at:comment type="CERRADA"/>
+    </at:deleted-entry>
+    <at:deleted-entry ref="https://contrataciondelestado.es/sindicacion/PlataformasAgregadasSinMenores/8444945" when="2026-10-11T00:00:06.474+02:00">
+        <at:comment type="CERRADA"/>
+    </at:deleted-entry>
+    <at:deleted-entry ref="https://contrataciondelestado.es/sindicacion/PlataformasAgregadasSinMenores/7291476" when="2026-10-11T00:00:05.782+02:00">
+        <at:comment type="CERRADA"/>
+    </at:deleted-entry>
+    <at:deleted-entry ref="https://contrataciondelestado.es/sindicacion/PlataformasAgregadasSinMenores/8351155" when="2026-10-11T00:00:05.292+02:00">
+        <at:comment type="CERRADA"/>
+    </at:deleted-entry>
+    <at:deleted-entry ref="https://contrataciondelestado.es/sindicacion/PlataformasAgregadasSinMenores/8396618" when="2026-10-11T00:00:04.537+02:00">
+        <at:comment type="CERRADA"/>
+    </at:deleted-entry>
+    <at:deleted-entry ref="https://contrataciondelestado.es/sindicacion/PlataformasAgregadasSinMenores/7221123" when="2026-10-11T00:00:03.806+02:00">
+        <at:comment type="CERRADA"/>
+    </at:deleted-entry>
+    <at:deleted-entry ref="https://contrataciondelestado.es/sindicacion/PlataformasAgregadasSinMenores/7506089" when="2026-10-11T00:00:03.335+02:00">
+        <at:comment type="CERRADA"/>
+    </at:deleted-entry>
+    <at:deleted-entry ref="https://contrataciondelestado.es/sindicacion/PlataformasAgregadasSinMenores/7744198" when="2026-10-11T00:00:02.423+02:00">
+        <at:comment type="CERRADA"/>
+    </at:deleted-entry>
+    <at:deleted-entry ref="https://contrataciondelestado.es/sindicacion/PlataformasAgregadasSinMenores/7677551" when="2026-10-11T00:00:01.294+02:00">
+        <at:comment type="CERRADA"/>
+    </at:deleted-entry>
+    <at:deleted-entry ref="https://contrataciondelestado.es/sindicacion/PlataformasAgregadasSinMenores/1963380" when="2026-10-10T00:00:02.858+02:00">
+        <at:comment type="CERRADA"/>
+    </at:deleted-entry>
+    <at:deleted-entry ref="https://contrataciondelestado.es/sindicacion/PlataformasAgregadasSinMenores/7911961" when="2026-10-10T00:00:02.158+02:00">
+        <at:comment type="CERRADA"/>
+    </at:deleted-entry>
+    <at:deleted-entry ref="https://contrataciondelestado.es/sindicacion/PlataformasAgregadasSinMenores/2502941" when="2026-10-10T00:00:01.582+02:00">
+        <at:comment type="CERRADA"/>
+    </at:deleted-entry>
+    <entry>
+        <id>https://contrataciondelestado.es/sindicacion/PlataformasAgregadasSinMenores/20400983</id>
+        <link href="https://contractaciopublica.cat/ca/detall-publicacio/eebf8085-3f9f-4e06-a975-bcfca027b7c5/300905984"/>
+        <summary type="text">Id licitación: CS/2000/1100008271/30/PO; Órgano de Contratación: Banc de Sang i Teixits (BST); Importe: 9254561.00 EUR; Estado: EN PLAZO</summary>
+        <title>El objeto del presente contrato es el suministro de los reactivos específicos necesarios para la realización de determinaciones analíticas en los laboratorios del Banco de Sangre y Tejidos (BST), así como la cesión, instalación, puesta en funcionamiento y mantenimiento del equipamiento necesario para su ejecución.</title>
+        <updated>2026-10-11T20:00:04.907+02:00</updated>
+        <cac-place-ext:ContractFolderStatus>
+            <cbc:ContractFolderID>CS/2000/1100008271/30/PO</cbc:ContractFolderID>
+            <cbc-place-ext:ContractFolderStatusCode languageID="es" listURI="https://contrataciondelestado.es/codice/cl/2.04/SyndicationContractFolderStatusCode-2.04.gc">PUB</cbc-place-ext:ContractFolderStatusCode>
+            <cac-place-ext:LocatedContractingParty>
+                <cbc:BuyerProfileURIID>https://contractaciopublica.cat/perfil/BST</cbc:BuyerProfileURIID>
+                <cac:Party>
+                    <cac:PartyIdentification>
+                        <cbc:ID schemeName="ID_OC_PLAT">208009</cbc:ID>
+                    </cac:PartyIdentification>
+                    <cac:PartyName>
+                        <cbc:Name>Banc de Sang i Teixits (BST)</cbc:Name>
+                    </cac:PartyName>
+                    <cac:AgentParty>
+                        <cac:PartyIdentification>
+                            <cbc:ID>62</cbc:ID>
+                        </cac:PartyIdentification>
+                        <cac:PartyName>
+                            <cbc:Name>Generalitat de Catalunya</cbc:Name>
+                        </cac:PartyName>
+                    </cac:AgentParty>
+                </cac:Party>
+                <cac-place-ext:ParentLocatedParty>
+                    <cac:PartyName>
+                        <cbc:Name>Departaments i sector públic de la Generalitat de Catalunya</cbc:Name>
+                    </cac:PartyName>
+                    <cac-place-ext:ParentLocatedParty>
+                        <cac:PartyName>
+                            <cbc:Name>Departament de Salut</cbc:Name>
+                        </cac:PartyName>
+                    </cac-place-ext:ParentLocatedParty>
+                </cac-place-ext:ParentLocatedParty>
+            </cac-place-ext:LocatedContractingParty>
+            <cac:ProcurementProject>
+                <cbc:Name>El objeto del presente contrato es el suministro de los reactivos específicos necesarios para la realización de determinaciones analíticas en los laboratorios del Banco de Sangre y Tejidos (BST), así como la cesión, instalación, puesta en funcionamiento y mantenimiento del equipamiento necesario para su ejecución.</cbc:Name>
+                <cbc:TypeCode listURI="http://contrataciondelestado.es/codice/cl/2.08/ContractCode-2.08.gc">1</cbc:TypeCode>
+                <cbc:MixContractIndicator>false</cbc:MixContractIndicator>
+                <cac:BudgetAmount>
+                    <cbc:EstimatedOverallContractAmount currencyID="EUR">11105473.2</cbc:EstimatedOverallContractAmount>
+                    <cbc:TaxExclusiveAmount currencyID="EUR">9254561</cbc:TaxExclusiveAmount>
+                </cac:BudgetAmount>
+                <cac:RequiredCommodityClassification>
+                    <cbc:ItemClassificationCode listURI="http://contrataciondelestado.es/codice/cl/2.04/CPV2008-2.04.gc">33696500</cbc:ItemClassificationCode>
+                </cac:RequiredCommodityClassification>
+                <cac:RealizedLocation>
+                    <cbc:CountrySubentityCode listURI="http://contrataciondelestado.es/codice/cl/2.08/NUTS-2021.gc">ES511</cbc:CountrySubentityCode>
+                </cac:RealizedLocation>
+                <cac:PlannedPeriod>
+                    <cbc:StartDate>2027-01-01</cbc:StartDate>
+                    <cbc:EndDate>2030-12-31</cbc:EndDate>
+                </cac:PlannedPeriod>
+            </cac:ProcurementProject>
+            <cac:ProcurementProjectLot>
+                <cbc:ID schemeName="ID_LOTE">1</cbc:ID>
+                <cac:ProcurementProject>
+                    <cbc:Name>Reactivos de confirmacion de serología por inmunoblot y cesión del equipamiento asociado</cbc:Name>
+                </cac:ProcurementProject>
+            </cac:ProcurementProjectLot>
+            <cac:ProcurementProjectLot>
+                <cbc:ID schemeName="ID_LOTE">2</cbc:ID>
+                <cac:ProcurementProject>
+                    <cbc:Name>Reactivos de electroforesis capilar de hemoglobinas y proteínas y cesión del equipamiento asociado</cbc:Name>
+                </cac:ProcurementProject>
+            </cac:ProcurementProjectLot>
+            <cac:ProcurementProjectLot>
+                <cbc:ID schemeName="ID_LOTE">3</cbc:ID>
+                <cac:ProcurementProject>
+                    <cbc:Name>Reactivos de inmunohematología y cesión del equipamiento asociado</cbc:Name>
+                </cac:ProcurementProject>
+            </cac:ProcurementProjectLot>
+            <cac:ProcurementProjectLot>
+                <cbc:ID schemeName="ID_LOTE">4</cbc:ID>
+                <cac:ProcurementProject>
+                    <cbc:Name>Reactivos de factores de coagulación y cesión del equipamiento asociado</cbc:Name>
+                </cac:ProcurementProject>
+            </cac:ProcurementProjectLot>
+            <cac:ProcurementProjectLot>
+                <cbc:ID schemeName="ID_LOTE">5</cbc:ID>
+                <cac:ProcurementProject>
+                    <cbc:Name>reactivos por determinaciones inmuno-hematológicas avanzadas y cesión del equipamiento asociado</cbc:Name>
+                </cac:ProcurementProject>
+            </cac:ProcurementProjectLot>
+            <cac:TenderingTerms>
+                <cbc:FundingProgramCode name="No hay financiación con fondos de la UE" listURI="http://contrataciondelestado.es/codice/cl/2.08/FundingProgramCode-2.08.gc">NO-EU</cbc:FundingProgramCode>
+                <cbc:ProcurementNationalLegislationCode listURI="https://contrataciondelestado.es/codice/cl/2.08/ProcurementNationalLegislationCode-2.08.gc">3</cbc:ProcurementNationalLegislationCode>
+            </cac:TenderingTerms>
+            <cac:TenderingProcess>
+                <cbc:ProcedureCode listURI="https://contrataciondelestado.es/codice/cl/2.07/SyndicationTenderingProcessCode-2.07.gc">1</cbc:ProcedureCode>
+                <cbc:UrgencyCode listURI="http://contrataciondelestado.es/codice/cl/1.04/DiligenceTypeCode-1.04.gc">1</cbc:UrgencyCode>
+                <cbc:ContractingSystemCode listURI="http://contrataciondelestado.es/codice/cl/2.08/ContractingSystemTypeCode-2.08.gc">0</cbc:ContractingSystemCode>
+                <cbc:SubmissionMethodCode listURI="http://contrataciondelestado.es/codice/cl/1.04/TenderDeliveryCode-1.04.gc">1</cbc:SubmissionMethodCode>
+                <cbc:OverThresholdIndicator>true</cbc:OverThresholdIndicator>
+                <cac:TenderSubmissionDeadlinePeriod>
+                    <cbc:EndDate>2026-10-20</cbc:EndDate>
+                    <cbc:EndTime>14:00:00</cbc:EndTime>
+                </cac:TenderSubmissionDeadlinePeriod>
+                <cac:AuctionTerms>
+                    <cbc:AuctionConstraintIndicator>false</cbc:AuctionConstraintIndicator>
+                </cac:AuctionTerms>
+            </cac:TenderingProcess>
+            <cac:LegalDocumentReference>
+                <cbc:ID>8271_Plec clàusules administratives.pdf</cbc:ID>
+                <cac:Attachment>
+                    <cac:ExternalReference>
+                        <cbc:URI>https://contractaciopublica.cat/portal-api/descarrega-document/302670136/045CCA07FFDFA1BA42B44A188E438D5F</cbc:URI>
+                    </cac:ExternalReference>
+                </cac:Attachment>
+            </cac:LegalDocumentReference>
+            <cac:TechnicalDocumentReference>
+                <cbc:ID>8271_Plec tècnic Reactius amb equipament.pdf</cbc:ID>
+                <cac:Attachment>
+                    <cac:ExternalReference>
+                        <cbc:URI>https://contractaciopublica.cat/portal-api/descarrega-document/302670137/E96063C10E187BDBB8DC66DA04E02257</cbc:URI>
+                    </cac:ExternalReference>
+                </cac:Attachment>
+            </cac:TechnicalDocumentReference>
+            <cac-place-ext:ValidNoticeInfo>
+                <cbc-place-ext:NoticeTypeCode listURI="http://contrataciondelestado.es/codice/cl/2.11/TenderingNoticeTypeCode-2.11.gc">DOC_CN</cbc-place-ext:NoticeTypeCode>
+                <cac-place-ext:AdditionalPublicationStatus>
+                    <cbc-place-ext:PublicationMediaName>Perfil del contratante</cbc-place-ext:PublicationMediaName>
+                    <cac-place-ext:AdditionalPublicationDocumentReference>
+                        <cbc:IssueDate>2026-09-11</cbc:IssueDate>
+                    </cac-place-ext:AdditionalPublicationDocumentReference>
+                </cac-place-ext:AdditionalPublicationStatus>
+            </cac-place-ext:ValidNoticeInfo>
+        </cac-place-ext:ContractFolderStatus>
+    </entry>
+<entry>
+        <id>https://contrataciondelestado.es/sindicacion/PlataformasAgregadasSinMenores/20678505</id>
+        <link href="https://www.contratacion.euskadi.eus/webkpe00-kpeperfi/es/contenidos/anuncio_contratacion/expgebizkaia3683349/es_doc/index.html"/>
+        <summary type="text">Id licitación: EUS2026_11; Órgano de Contratación: Euskalduna Jauregia - Palacio Euskalduna, S. A.-Director/aGeneralconcurriendo conjuntamente con el/la Presidente/a del Consejo de Administración; Importe: 328795.5EUR; Estado: PUB</summary>
+        <title>Contratación del servicio auxiliar de atención al cliente, supervisión y visitas guiadas para la atención de clientes y eventos enen EUSKALDUNA BILBAO.</title>
+        <updated>2026-10-11T15:11:16.762+02:00</updated>
+        <cac-place-ext:ContractFolderStatus>
+            <cbc:ContractFolderID>EUS2026_11</cbc:ContractFolderID>
+            <cbc-place-ext:ContractFolderStatusCode languageID="es" listURI="https://contrataciondelestado.es/codice/cl/2.04/SyndicationContractFolderStatusCode-2.04.gc">PUB</cbc-place-ext:ContractFolderStatusCode>
+            <cac-place-ext:LocatedContractingParty>
+                <cac:Party>
+                    <cac:PartyIdentification>
+                        <cbc:ID schemeName="ID_OC_PLAT">17858_17859_17861</cbc:ID>
+                    </cac:PartyIdentification>
+                    <cac:PartyName>
+                        <cbc:Name>Euskalduna Jauregia - Palacio Euskalduna, S. A.-Director/aGeneralconcurriendo conjuntamente con el/la Presidente/a del Consejo de Administración</cbc:Name>
+                    </cac:PartyName>
+                    <cac:AgentParty>
+                        <cac:PartyIdentification>
+                            <cbc:ID>63</cbc:ID>
+                        </cac:PartyIdentification>
+                        <cac:PartyName>
+                            <cbc:Name>Gobierno Vasco</cbc:Name>
+                        </cac:PartyName>
+                    </cac:AgentParty>
+                </cac:Party>
+                <cac-place-ext:ParentLocatedParty>
+                    <cac:PartyName>
+                        <cbc:Name>Euskalduna Jauregia - Palacio Euskalduna, S. A.</cbc:Name>
+                    </cac:PartyName>
+                    <cac-place-ext:ParentLocatedParty>
+                        <cac:PartyName>
+                            <cbc:Name>Euskalduna Jauregia - Palacio Euskalduna S. A.</cbc:Name>
+                        </cac:PartyName>
+                    </cac-place-ext:ParentLocatedParty>
+                </cac-place-ext:ParentLocatedParty>
+            </cac-place-ext:LocatedContractingParty>
+            <cac:ProcurementProject>
+                <cbc:Name>Contratación del servicio auxiliar de atención al cliente, supervisión y visitas guiadas para la atención de clientes y eventos enen EUSKALDUNA BILBAO.</cbc:Name>
+                <cbc:TypeCode listURI="http://contrataciondelestado.es/codice/cl/2.08/ContractCode-2.08.gc">2</cbc:TypeCode>
+                <cbc:MixContractIndicator>false</cbc:MixContractIndicator>
+                <cac:BudgetAmount>
+                    <cbc:EstimatedOverallContractAmount currencyID="EUR">657591</cbc:EstimatedOverallContractAmount>
+                    <cbc:TaxExclusiveAmount currencyID="EUR">328795.5</cbc:TaxExclusiveAmount>
+                </cac:BudgetAmount>
+                <cac:RequiredCommodityClassification>
+                    <cbc:ItemClassificationCode listURI="http://contrataciondelestado.es/codice/cl/2.04/CPV2008-2.04.gc">79342320</cbc:ItemClassificationCode>
+                </cac:RequiredCommodityClassification>
+                <cac:RealizedLocation>
+                    <cbc:CountrySubentityCode listURI="http://contrataciondelestado.es/codice/cl/2.08/NUTS-2021.gc">ES213</cbc:CountrySubentityCode>
+                </cac:RealizedLocation>
+                <cac:PlannedPeriod>
+                    <cbc:DurationMeasure unitCode="ANN">3</cbc:DurationMeasure>
+                </cac:PlannedPeriod>
+            </cac:ProcurementProject>
+            <cac:TenderingTerms>
+                <cbc:FundingProgramCode name="No hay financiación con fondos de la UE" listURI="http://contrataciondelestado.es/codice/cl/2.08/FundingProgramCode-2.08.gc">NO-EU</cbc:FundingProgramCode>
+                <cbc:ProcurementNationalLegislationCode listURI="https://contrataciondelestado.es/codice/cl/2.08/ProcurementNationalLegislationCode-2.08.gc">3</cbc:ProcurementNationalLegislationCode>
+            </cac:TenderingTerms>
+            <cac:TenderingProcess>
+                <cbc:ProcedureCode listURI="https://contrataciondelestado.es/codice/cl/2.07/SyndicationTenderingProcessCode-2.07.gc">1</cbc:ProcedureCode>
+                <cbc:UrgencyCode listURI="http://contrataciondelestado.es/codice/cl/1.04/DiligenceTypeCode-1.04.gc">1</cbc:UrgencyCode>
+                <cbc:ContractingSystemCode listURI="http://contrataciondelestado.es/codice/cl/2.08/ContractingSystemTypeCode-2.08.gc">0</cbc:ContractingSystemCode>
+                <cbc:SubmissionMethodCode listURI="http://contrataciondelestado.es/codice/cl/1.04/TenderDeliveryCode-1.04.gc">1</cbc:SubmissionMethodCode>
+                <cbc:OverThresholdIndicator>true</cbc:OverThresholdIndicator>
+                <cac:TenderSubmissionDeadlinePeriod>
+                    <cbc:EndDate>2026-11-10</cbc:EndDate>
+                    <cbc:EndTime>12:00:00</cbc:EndTime>
+                </cac:TenderSubmissionDeadlinePeriod>
+                <cac:AuctionTerms>
+                    <cbc:AuctionConstraintIndicator>false</cbc:AuctionConstraintIndicator>
+                </cac:AuctionTerms>
+            </cac:TenderingProcess>
+            <cac:LegalDocumentReference>
+                <cbc:ID>EUS2026_11 PCA SUPERVISION.pdf</cbc:ID>
+                <cac:Attachment>
+                    <cac:ExternalReference>
+                        <cbc:URI>https://www.contratacion.euskadi.eus/ac70cPublicidadWar/downloadDokusiREST/descargaFicheroPublicadoPorIdFichero?idFichero=13547275&amp;R01HNoPortal=true</cbc:URI>
+                    </cac:ExternalReference>
+                </cac:Attachment>
+            </cac:LegalDocumentReference>
+            <cac:TechnicalDocumentReference>
+                <cbc:ID>EUS2026_11 PPT SUPERVISIÓN.pdf</cbc:ID>
+                <cac:Attachment>
+                    <cac:ExternalReference>
+                        <cbc:URI>https://www.contratacion.euskadi.eus/ac70cPublicidadWar/downloadDokusiREST/descargaFicheroPublicadoPorIdFichero?idFichero=13547277&amp;R01HNoPortal=true</cbc:URI>
+                    </cac:ExternalReference>
+                </cac:Attachment>
+            </cac:TechnicalDocumentReference>
+            <cac-place-ext:ValidNoticeInfo>
+                <cbc-place-ext:NoticeTypeCode listURI="http://contrataciondelestado.es/codice/cl/2.11/TenderingNoticeTypeCode-2.11.gc">DOC_CN</cbc-place-ext:NoticeTypeCode>
+                <cac-place-ext:AdditionalPublicationStatus>
+                    <cbc-place-ext:PublicationMediaName>Perfil del contratante</cbc-place-ext:PublicationMediaName>
+                    <cac-place-ext:AdditionalPublicationDocumentReference>
+                        <cbc:IssueDate>2026-10-11</cbc:IssueDate>
+                    </cac-place-ext:AdditionalPublicationDocumentReference>
+                </cac-place-ext:AdditionalPublicationStatus>
+                <cac-place-ext:AdditionalPublicationStatus>
+                    <cbc-place-ext:PublicationMediaName>DOUE</cbc-place-ext:PublicationMediaName>
+                    <cac-place-ext:AdditionalPublicationRequest>
+                        <cbc:AgencyID>DOUE</cbc:AgencyID>
+                        <cbc-place-ext:SendDate>2026-10-09+02:00</cbc-place-ext:SendDate>
+                        <cbc-place-ext:SendTime>14:10:10</cbc-place-ext:SendTime>
+                    </cac-place-ext:AdditionalPublicationRequest>
+                </cac-place-ext:AdditionalPublicationStatus>
+            </cac-place-ext:ValidNoticeInfo>
+        </cac-place-ext:ContractFolderStatus>
+    </entry>
+<entry>
+        <id>https://contrataciondelestado.es/sindicacion/PlataformasAgregadasSinMenores/20678506</id>
+        <link href="https://www.contratacion.euskadi.eus/webkpe00-kpeperfi/es/contenidos/anuncio_contratacion/expjaso748925/es_doc/index.html"/>
+        <summary type="text">Id licitación: 2026/CO_ASER/0113; Órgano de Contratación: Ayuntamiento de Vitoria-Gasteiz-Junta de Gobierno Local; Importe: 236020EUR; Estado: PUB</summary>
+        <title>Servicio de un tren eléctrico turístico en Vitoria-Gasteiz</title>
+        <updated>2026-10-11T15:11:16.697+02:00</updated>
+        <cac-place-ext:ContractFolderStatus>
+            <cbc:ContractFolderID>2026/CO_ASER/0113</cbc:ContractFolderID>
+            <cbc-place-ext:ContractFolderStatusCode languageID="es" listURI="https://contrataciondelestado.es/codice/cl/2.04/SyndicationContractFolderStatusCode-2.04.gc">PUB</cbc-place-ext:ContractFolderStatusCode>
+            <cac-place-ext:LocatedContractingParty>
+                <cac:Party>
+                    <cac:PartyIdentification>
+                        <cbc:ID schemeName="ID_OC_PLAT">18745_21518_21529</cbc:ID>
+                    </cac:PartyIdentification>
+                    <cac:PartyName>
+                        <cbc:Name>Ayuntamiento de Vitoria-Gasteiz-Junta de Gobierno Local</cbc:Name>
+                    </cac:PartyName>
+                    <cac:AgentParty>
+                        <cac:PartyIdentification>
+                            <cbc:ID>63</cbc:ID>
+                        </cac:PartyIdentification>
+                        <cac:PartyName>
+                            <cbc:Name>Gobierno Vasco</cbc:Name>
+                        </cac:PartyName>
+                    </cac:AgentParty>
+                </cac:Party>
+                <cac-place-ext:ParentLocatedParty>
+                    <cac:PartyName>
+                        <cbc:Name>Ayuntamiento de Vitoria-Gasteiz</cbc:Name>
+                    </cac:PartyName>
+                    <cac-place-ext:ParentLocatedParty>
+                        <cac:PartyName>
+                            <cbc:Name>Ayuntamiento de Vitoria-Gasteiz</cbc:Name>
+                        </cac:PartyName>
+                    </cac-place-ext:ParentLocatedParty>
+                </cac-place-ext:ParentLocatedParty>
+            </cac-place-ext:LocatedContractingParty>
+            <cac:ProcurementProject>
+                <cbc:Name>Servicio de un tren eléctrico turístico en Vitoria-Gasteiz</cbc:Name>
+                <cbc:TypeCode listURI="http://contrataciondelestado.es/codice/cl/2.08/ContractCode-2.08.gc">2</cbc:TypeCode>
+                <cbc:MixContractIndicator>false</cbc:MixContractIndicator>
+                <cac:BudgetAmount>
+                    <cbc:EstimatedOverallContractAmount currencyID="EUR">472040</cbc:EstimatedOverallContractAmount>
+                    <cbc:TaxExclusiveAmount currencyID="EUR">236020</cbc:TaxExclusiveAmount>
+                </cac:BudgetAmount>
+                <cac:RequiredCommodityClassification>
+                    <cbc:ItemClassificationCode listURI="http://contrataciondelestado.es/codice/cl/2.04/CPV2008-2.04.gc">60112000</cbc:ItemClassificationCode>
+                </cac:RequiredCommodityClassification>
+                <cac:RealizedLocation>
+                    <cbc:CountrySubentityCode listURI="http://contrataciondelestado.es/codice/cl/2.08/NUTS-2021.gc">ES211</cbc:CountrySubentityCode>
+                </cac:RealizedLocation>
+                <cac:PlannedPeriod>
+                    <cbc:DurationMeasure unitCode="MON">24</cbc:DurationMeasure>
+                </cac:PlannedPeriod>
+            </cac:ProcurementProject>
+            <cac:TenderingTerms>
+                <cbc:FundingProgramCode name="No hay financiación con fondos de la UE" listURI="http://contrataciondelestado.es/codice/cl/2.08/FundingProgramCode-2.08.gc">NO-EU</cbc:FundingProgramCode>
+                <cbc:ProcurementNationalLegislationCode listURI="https://contrataciondelestado.es/codice/cl/2.08/ProcurementNationalLegislationCode-2.08.gc">3</cbc:ProcurementNationalLegislationCode>
+            </cac:TenderingTerms>
+            <cac:TenderingProcess>
+                <cbc:ProcedureCode listURI="https://contrataciondelestado.es/codice/cl/2.07/SyndicationTenderingProcessCode-2.07.gc">1</cbc:ProcedureCode>
+                <cbc:UrgencyCode listURI="http://contrataciondelestado.es/codice/cl/1.04/DiligenceTypeCode-1.04.gc">1</cbc:UrgencyCode>
+                <cbc:ContractingSystemCode listURI="http://contrataciondelestado.es/codice/cl/2.08/ContractingSystemTypeCode-2.08.gc">0</cbc:ContractingSystemCode>
+                <cbc:SubmissionMethodCode listURI="http://contrataciondelestado.es/codice/cl/1.04/TenderDeliveryCode-1.04.gc">1</cbc:SubmissionMethodCode>
+                <cbc:OverThresholdIndicator>true</cbc:OverThresholdIndicator>
+                <cac:TenderSubmissionDeadlinePeriod>
+                    <cbc:EndDate>2026-11-09</cbc:EndDate>
+                    <cbc:EndTime>14:00:00</cbc:EndTime>
+                </cac:TenderSubmissionDeadlinePeriod>
+                <cac:AuctionTerms>
+                    <cbc:AuctionConstraintIndicator>false</cbc:AuctionConstraintIndicator>
+                </cac:AuctionTerms>
+            </cac:TenderingProcess>
+            <cac:LegalDocumentReference>
+                <cbc:ID>2026_ASER0113_Pliego_Cláusulas_Adm.pdf</cbc:ID>
+                <cac:Attachment>
+                    <cac:ExternalReference>
+                        <cbc:URI>https://www.contratacion.euskadi.eus/ac70cPublicidadWar/downloadDokusiREST/descargaFicheroPublicadoPorIdFichero?idFichero=13547258&amp;R01HNoPortal=true</cbc:URI>
+                    </cac:ExternalReference>
+                </cac:Attachment>
+            </cac:LegalDocumentReference>
+            <cac:TechnicalDocumentReference>
+                <cbc:ID>2026_ASER0113_Pliego_Prescripciones_Técnicas.pdf</cbc:ID>
+                <cac:Attachment>
+                    <cac:ExternalReference>
+                        <cbc:URI>https://www.contratacion.euskadi.eus/ac70cPublicidadWar/downloadDokusiREST/descargaFicheroPublicadoPorIdFichero?idFichero=13547259&amp;R01HNoPortal=true</cbc:URI>
+                    </cac:ExternalReference>
+                </cac:Attachment>
+            </cac:TechnicalDocumentReference>
+            <cac-place-ext:ValidNoticeInfo>
+                <cbc-place-ext:NoticeTypeCode listURI="http://contrataciondelestado.es/codice/cl/2.11/TenderingNoticeTypeCode-2.11.gc">DOC_CN</cbc-place-ext:NoticeTypeCode>
+                <cac-place-ext:AdditionalPublicationStatus>
+                    <cbc-place-ext:PublicationMediaName>Perfil del contratante</cbc-place-ext:PublicationMediaName>
+                    <cac-place-ext:AdditionalPublicationDocumentReference>
+                        <cbc:IssueDate>2026-10-11</cbc:IssueDate>
+                    </cac-place-ext:AdditionalPublicationDocumentReference>
+                </cac-place-ext:AdditionalPublicationStatus>
+                <cac-place-ext:AdditionalPublicationStatus>
+                    <cbc-place-ext:PublicationMediaName>DOUE</cbc-place-ext:PublicationMediaName>
+                    <cac-place-ext:AdditionalPublicationRequest>
+                        <cbc:AgencyID>DOUE</cbc:AgencyID>
+                        <cbc-place-ext:SendDate>2026-10-09+02:00</cbc-place-ext:SendDate>
+                        <cbc-place-ext:SendTime>13:40:07</cbc-place-ext:SendTime>
+                    </cac-place-ext:AdditionalPublicationRequest>
+                </cac-place-ext:AdditionalPublicationStatus>
+            </cac-place-ext:ValidNoticeInfo>
+        </cac-place-ext:ContractFolderStatus>
+    </entry>
+<entry>
+        <id>https://contrataciondelestado.es/sindicacion/PlataformasAgregadasSinMenores/20678509</id>
+        <link href="https://www.contratacion.euskadi.eus/webkpe00-kpeperfi/es/contenidos/anuncio_contratacion/expjaso732031/es_doc/index.html"/>
+        <summary type="text">Id licitación: 2026-032702; Órgano de Contratación: Ayuntamiento de Bilbao-Concejal Delegado de Contratación; Importe: 142229.52EUR; Estado: RES</summary>
+        <title>servicio de mantenimiento preventivo y correctivo de los equipos de respiración autónoma (ERA) adscritos al Servicio de Prevención, Extinción de Incendios y Salvamento</title>
+        <updated>2026-10-11T09:11:17.687+02:00</updated>
+        <cac-place-ext:ContractFolderStatus>
+            <cbc:ContractFolderID>2026-032702</cbc:ContractFolderID>
+            <cbc-place-ext:ContractFolderStatusCode languageID="es" listURI="https://contrataciondelestado.es/codice/cl/2.04/SyndicationContractFolderStatusCode-2.04.gc">RES</cbc-place-ext:ContractFolderStatusCode>
+            <cac-place-ext:LocatedContractingParty>
+                <cac:Party>
+                    <cac:PartyIdentification>
+                        <cbc:ID schemeName="ID_OC_PLAT">24446_25108_25109</cbc:ID>
+                    </cac:PartyIdentification>
+                    <cac:PartyName>
+                        <cbc:Name>Ayuntamiento de Bilbao-Concejal Delegado de Contratación</cbc:Name>
+                    </cac:PartyName>
+                    <cac:AgentParty>
+                        <cac:PartyIdentification>
+                            <cbc:ID>63</cbc:ID>
+                        </cac:PartyIdentification>
+                        <cac:PartyName>
+                            <cbc:Name>Gobierno Vasco</cbc:Name>
+                        </cac:PartyName>
+                    </cac:AgentParty>
+                </cac:Party>
+                <cac-place-ext:ParentLocatedParty>
+                    <cac:PartyName>
+                        <cbc:Name>Ayuntamiento de Bilbao</cbc:Name>
+                    </cac:PartyName>
+                    <cac-place-ext:ParentLocatedParty>
+                        <cac:PartyName>
+                            <cbc:Name>Área de Seguridad Ciudadana</cbc:Name>
+                        </cac:PartyName>
+                    </cac-place-ext:ParentLocatedParty>
+                </cac-place-ext:ParentLocatedParty>
+            </cac-place-ext:LocatedContractingParty>
+            <cac:ProcurementProject>
+                <cbc:Name>servicio de mantenimiento preventivo y correctivo de los equipos de respiración autónoma (ERA) adscritos al Servicio de Prevención, Extinción de Incendios y Salvamento</cbc:Name>
+                <cbc:TypeCode listURI="http://contrataciondelestado.es/codice/cl/2.08/ContractCode-2.08.gc">2</cbc:TypeCode>
+                <cbc:MixContractIndicator>false</cbc:MixContractIndicator>
+                <cac:BudgetAmount>
+                    <cbc:EstimatedOverallContractAmount currencyID="EUR">227567.16</cbc:EstimatedOverallContractAmount>
+                    <cbc:TaxExclusiveAmount currencyID="EUR">142229.52</cbc:TaxExclusiveAmount>
+                </cac:BudgetAmount>
+                <cac:RequiredCommodityClassification>
+                    <cbc:ItemClassificationCode listURI="http://contrataciondelestado.es/codice/cl/2.04/CPV2008-2.04.gc">50800000</cbc:ItemClassificationCode>
+                </cac:RequiredCommodityClassification>
+                <cac:RealizedLocation>
+                    <cbc:CountrySubentityCode listURI="http://contrataciondelestado.es/codice/cl/2.08/NUTS-2021.gc">ES213</cbc:CountrySubentityCode>
+                </cac:RealizedLocation>
+                <cac:PlannedPeriod>
+                    <cbc:DurationMeasure unitCode="MON">36</cbc:DurationMeasure>
+                </cac:PlannedPeriod>
+            </cac:ProcurementProject>
+            <cac:TenderResult>
+                <cbc:ResultCode listURI="http://contrataciondelestado.es/codice/cl/2.09/TenderResultCode-2.09.gc">9</cbc:ResultCode>
+                <cbc:ReceivedTenderQuantity>1</cbc:ReceivedTenderQuantity>
+                <cac:Contract>
+                    <cbc:ID>2026-03270225108_00001</cbc:ID>
+                    <cbc:IssueDate>2026-10-06</cbc:IssueDate>
+                </cac:Contract>
+                <cac:WinningParty>
+                    <cac:PartyIdentification>
+                        <cbc:ID schemeName="NIF">A28063485</cbc:ID>
+                    </cac:PartyIdentification>
+                    <cac:PartyName>
+                        <cbc:Name>DRÄGERHISPANIA, S.A.</cbc:Name>
+                    </cac:PartyName>
+                </cac:WinningParty>
+                <cac:AwardedTenderedProject>
+                    <cac:LegalMonetaryTotal>
+                        <cbc:TaxExclusiveAmount currencyID="EUR">42214.92</cbc:TaxExclusiveAmount>
+                    </cac:LegalMonetaryTotal>
+                </cac:AwardedTenderedProject>
+            </cac:TenderResult>
+            <cac:TenderingTerms>
+                <cbc:FundingProgramCode name="No hay financiación con fondos de la UE" listURI="http://contrataciondelestado.es/codice/cl/2.08/FundingProgramCode-2.08.gc">NO-EU</cbc:FundingProgramCode>
+                <cbc:ProcurementNationalLegislationCode listURI="https://contrataciondelestado.es/codice/cl/2.08/ProcurementNationalLegislationCode-2.08.gc">3</cbc:ProcurementNationalLegislationCode>
+            </cac:TenderingTerms>
+            <cac:TenderingProcess>
+                <cbc:ProcedureCode listURI="https://contrataciondelestado.es/codice/cl/2.07/SyndicationTenderingProcessCode-2.07.gc">3</cbc:ProcedureCode>
+                <cbc:UrgencyCode listURI="http://contrataciondelestado.es/codice/cl/1.04/DiligenceTypeCode-1.04.gc">1</cbc:UrgencyCode>
+                <cbc:ContractingSystemCode listURI="http://contrataciondelestado.es/codice/cl/2.08/ContractingSystemTypeCode-2.08.gc">0</cbc:ContractingSystemCode>
+                <cbc:SubmissionMethodCode listURI="http://contrataciondelestado.es/codice/cl/1.04/TenderDeliveryCode-1.04.gc">1</cbc:SubmissionMethodCode>
+                <cbc:OverThresholdIndicator>true</cbc:OverThresholdIndicator>
+                <cac:TenderSubmissionDeadlinePeriod>
+                    <cbc:EndDate>2026-08-12</cbc:EndDate>
+                    <cbc:EndTime>13:00:00</cbc:EndTime>
+                </cac:TenderSubmissionDeadlinePeriod>
+                <cac:AuctionTerms>
+                    <cbc:AuctionConstraintIndicator>false</cbc:AuctionConstraintIndicator>
+                </cac:AuctionTerms>
+            </cac:TenderingProcess>
+            <cac:LegalDocumentReference>
+                <cbc:ID>Anexos PCAP-AKBA ereduak.zip</cbc:ID>
+                <cac:Attachment>
+                    <cac:ExternalReference>
+                        <cbc:URI>https://www.contratacion.euskadi.eus/ac70cPublicidadWar/downloadDokusiREST/descargaFicheroPublicadoPorIdFichero?idFichero=13547179&amp;R01HNoPortal=true</cbc:URI>
+                    </cac:ExternalReference>
+                </cac:Attachment>
+            </cac:LegalDocumentReference>
+            <cac:TechnicalDocumentReference>
+                <cbc:ID>2026-032702_PPT.pdf</cbc:ID>
+                <cac:Attachment>
+                    <cac:ExternalReference>
+                        <cbc:URI>https://www.contratacion.euskadi.eus/ac70cPublicidadWar/downloadDokusiREST/descargaFicheroPublicadoPorIdFichero?idFichero=13547182&amp;R01HNoPortal=true</cbc:URI>
+                    </cac:ExternalReference>
+                </cac:Attachment>
+            </cac:TechnicalDocumentReference>
+            <cac-place-ext:ValidNoticeInfo>
+                <cbc-place-ext:NoticeTypeCode listURI="http://contrataciondelestado.es/codice/cl/2.11/TenderingNoticeTypeCode-2.11.gc">DOC_FORM</cbc-place-ext:NoticeTypeCode>
+                <cac-place-ext:AdditionalPublicationStatus>
+                    <cbc-place-ext:PublicationMediaName>Perfil del contratante</cbc-place-ext:PublicationMediaName>
+                    <cac-place-ext:AdditionalPublicationDocumentReference>
+                        <cbc:IssueDate>2026-10-11</cbc:IssueDate>
+                    </cac-place-ext:AdditionalPublicationDocumentReference>
+                </cac-place-ext:AdditionalPublicationStatus>
+                <cac-place-ext:AdditionalPublicationStatus>
+                    <cbc-place-ext:PublicationMediaName>DOUE</cbc-place-ext:PublicationMediaName>
+                    <cac-place-ext:AdditionalPublicationRequest>
+                        <cbc:AgencyID>DOUE</cbc:AgencyID>
+                        <cbc-place-ext:SendDate>2026-10-09+02:00</cbc-place-ext:SendDate>
+                        <cbc-place-ext:SendTime>11:40:05</cbc-place-ext:SendTime>
+                    </cac-place-ext:AdditionalPublicationRequest>
+                </cac-place-ext:AdditionalPublicationStatus>
+            </cac-place-ext:ValidNoticeInfo>
+        </cac-place-ext:ContractFolderStatus>
+    </entry>
+<entry>
+        <id>https://contrataciondelestado.es/sindicacion/PlataformasAgregadasSinMenores/20430353</id>
+        <link href="https://www.contratacion.euskadi.eus/webkpe00-kpeperfi/es/contenidos/anuncio_contratacion/expjaso738217/es_doc/index.html"/>
+        <summary type="text">Id licitación: 202501286; Órgano de Contratación: Barakaldo Kirolak-Presidencia; Importe: 91883.28EUR; Estado: EV</summary>
+        <title>Obras de cerramiento perimetral P. Lasesarre</title>
+        <updated>2026-10-11T09:11:17.634+02:00</updated>
+        <cac-place-ext:ContractFolderStatus>
+            <cbc:ContractFolderID>202501286</cbc:ContractFolderID>
+            <cbc-place-ext:ContractFolderStatusCode languageID="es" listURI="https://contrataciondelestado.es/codice/cl/2.04/SyndicationContractFolderStatusCode-2.04.gc">EV</cbc-place-ext:ContractFolderStatusCode>
+            <cac-place-ext:LocatedContractingParty>
+                <cac:Party>
+                    <cac:PartyIdentification>
+                        <cbc:ID schemeName="ID_OC_PLAT">17516_17517_17518</cbc:ID>
+                    </cac:PartyIdentification>
+                    <cac:PartyName>
+                        <cbc:Name>Barakaldo Kirolak-Presidencia</cbc:Name>
+                    </cac:PartyName>
+                    <cac:AgentParty>
+                        <cac:PartyIdentification>
+                            <cbc:ID>63</cbc:ID>
+                        </cac:PartyIdentification>
+                        <cac:PartyName>
+                            <cbc:Name>Gobierno Vasco</cbc:Name>
+                        </cac:PartyName>
+                    </cac:AgentParty>
+                </cac:Party>
+                <cac-place-ext:ParentLocatedParty>
+                    <cac:PartyName>
+                        <cbc:Name>Barakaldo Kirolak</cbc:Name>
+                    </cac:PartyName>
+                    <cac-place-ext:ParentLocatedParty>
+                        <cac:PartyName>
+                            <cbc:Name>Instituto Municipal del Deporte de Barakaldo</cbc:Name>
+                        </cac:PartyName>
+                    </cac-place-ext:ParentLocatedParty>
+                </cac-place-ext:ParentLocatedParty>
+            </cac-place-ext:LocatedContractingParty>
+            <cac:ProcurementProject>
+                <cbc:Name>Obras de cerramiento perimetral P. Lasesarre</cbc:Name>
+                <cbc:TypeCode listURI="http://contrataciondelestado.es/codice/cl/2.08/ContractCode-2.08.gc">3</cbc:TypeCode>
+                <cbc:MixContractIndicator>false</cbc:MixContractIndicator>
+                <cac:BudgetAmount>
+                    <cbc:EstimatedOverallContractAmount currencyID="EUR">91883.28</cbc:EstimatedOverallContractAmount>
+                    <cbc:TaxExclusiveAmount currencyID="EUR">91883.28</cbc:TaxExclusiveAmount>
+                </cac:BudgetAmount>
+                <cac:RequiredCommodityClassification>
+                    <cbc:ItemClassificationCode listURI="http://contrataciondelestado.es/codice/cl/2.04/CPV2008-2.04.gc">45342000</cbc:ItemClassificationCode>
+                </cac:RequiredCommodityClassification>
+                <cac:RealizedLocation>
+                    <cbc:CountrySubentityCode listURI="http://contrataciondelestado.es/codice/cl/2.08/NUTS-2021.gc">ES213</cbc:CountrySubentityCode>
+                </cac:RealizedLocation>
+                <cac:PlannedPeriod>
+                    <cbc:DurationMeasure unitCode="MON">3</cbc:DurationMeasure>
+                </cac:PlannedPeriod>
+            </cac:ProcurementProject>
+            <cac:TenderingTerms>
+                <cbc:FundingProgramCode name="No hay financiación con fondos de la UE" listURI="http://contrataciondelestado.es/codice/cl/2.08/FundingProgramCode-2.08.gc">NO-EU</cbc:FundingProgramCode>
+                <cbc:ProcurementNationalLegislationCode listURI="https://contrataciondelestado.es/codice/cl/2.08/ProcurementNationalLegislationCode-2.08.gc">3</cbc:ProcurementNationalLegislationCode>
+            </cac:TenderingTerms>
+            <cac:TenderingProcess>
+                <cbc:ProcedureCode listURI="https://contrataciondelestado.es/codice/cl/2.07/SyndicationTenderingProcessCode-2.07.gc">9</cbc:ProcedureCode>
+                <cbc:UrgencyCode listURI="http://contrataciondelestado.es/codice/cl/1.04/DiligenceTypeCode-1.04.gc">1</cbc:UrgencyCode>
+                <cbc:ContractingSystemCode listURI="http://contrataciondelestado.es/codice/cl/2.08/ContractingSystemTypeCode-2.08.gc">0</cbc:ContractingSystemCode>
+                <cbc:SubmissionMethodCode listURI="http://contrataciondelestado.es/codice/cl/1.04/TenderDeliveryCode-1.04.gc">1</cbc:SubmissionMethodCode>
+                <cbc:OverThresholdIndicator>false</cbc:OverThresholdIndicator>
+                <cac:TenderSubmissionDeadlinePeriod>
+                    <cbc:EndDate>2026-10-10</cbc:EndDate>
+                    <cbc:EndTime>23:59:00</cbc:EndTime>
+                </cac:TenderSubmissionDeadlinePeriod>
+                <cac:AuctionTerms>
+                    <cbc:AuctionConstraintIndicator>false</cbc:AuctionConstraintIndicator>
+                </cac:AuctionTerms>
+            </cac:TenderingProcess>
+            <cac:LegalDocumentReference>
+                <cbc:ID>Pliego administrativo cerramiento.pdf</cbc:ID>
+                <cac:Attachment>
+                    <cac:ExternalReference>
+                        <cbc:URI>https://www.contratacion.euskadi.eus/ac70cPublicidadWar/downloadDokusiREST/descargaFicheroPublicadoPorIdFichero?idFichero=13547202&amp;R01HNoPortal=true</cbc:URI>
+                    </cac:ExternalReference>
+                </cac:Attachment>
+            </cac:LegalDocumentReference>
+            <cac:TechnicalDocumentReference>
+                <cbc:ID>Proyecto técnico cerramiento.pdf</cbc:ID>
+                <cac:Attachment>
+                    <cac:ExternalReference>
+                        <cbc:URI>https://www.contratacion.euskadi.eus/ac70cPublicidadWar/downloadDokusiREST/descargaFicheroPublicadoPorIdFichero?idFichero=13547203&amp;R01HNoPortal=true</cbc:URI>
+                    </cac:ExternalReference>
+                </cac:Attachment>
+            </cac:TechnicalDocumentReference>
+            <cac-place-ext:ValidNoticeInfo>
+                <cbc-place-ext:NoticeTypeCode listURI="http://contrataciondelestado.es/codice/cl/2.11/TenderingNoticeTypeCode-2.11.gc">DOC_CN</cbc-place-ext:NoticeTypeCode>
+                <cac-place-ext:AdditionalPublicationStatus>
+                    <cbc-place-ext:PublicationMediaName>Perfil del contratante</cbc-place-ext:PublicationMediaName>
+                    <cac-place-ext:AdditionalPublicationDocumentReference>
+                        <cbc:IssueDate>2026-09-15</cbc:IssueDate>
+                    </cac-place-ext:AdditionalPublicationDocumentReference>
+                </cac-place-ext:AdditionalPublicationStatus>
+            </cac-place-ext:ValidNoticeInfo>
+            <cac-place-ext:ValidNoticeInfo>
+                <cbc-place-ext:NoticeTypeCode listURI="http://contrataciondelestado.es/codice/cl/2.11/TenderingNoticeTypeCode-2.11.gc">DOC_CN</cbc-place-ext:NoticeTypeCode>
+                <cac-place-ext:AdditionalPublicationStatus>
+                    <cbc-place-ext:PublicationMediaName>Perfil del contratante</cbc-place-ext:PublicationMediaName>
+                    <cac-place-ext:AdditionalPublicationDocumentReference>
+                        <cbc:IssueDate>2026-09-21</cbc:IssueDate>
+                    </cac-place-ext:AdditionalPublicationDocumentReference>
+                </cac-place-ext:AdditionalPublicationStatus>
+            </cac-place-ext:ValidNoticeInfo>
+            <cac-place-ext:ValidNoticeInfo>
+                <cbc-place-ext:NoticeTypeCode listURI="http://contrataciondelestado.es/codice/cl/2.11/TenderingNoticeTypeCode-2.11.gc">DOC_CN</cbc-place-ext:NoticeTypeCode>
+                <cac-place-ext:AdditionalPublicationStatus>
+                    <cbc-place-ext:PublicationMediaName>Perfil del contratante</cbc-place-ext:PublicationMediaName>
+                    <cac-place-ext:AdditionalPublicationDocumentReference>
+                        <cbc:IssueDate>2026-10-11</cbc:IssueDate>
+                    </cac-place-ext:AdditionalPublicationDocumentReference>
+                </cac-place-ext:AdditionalPublicationStatus>
+            </cac-place-ext:ValidNoticeInfo>
+        </cac-place-ext:ContractFolderStatus>
+    </entry>
+</feed>

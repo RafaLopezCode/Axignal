@@ -1080,6 +1080,8 @@ def build_subscriber_facade(
             "AXIGNAL_SUBSCRIBER_OBSERVATION_PLAN_FILE", ""
         ).strip()
         if configured_plan_path:
+            from application.world_demand.index import DemandIndexPort
+            from pipeline.world_demand.sqlite_store import SqliteWorldDemandIndex
             from tools.runtime.subscriber_observation import (
                 ConfiguredSubscriberObservationPlanReader,
                 load_observation_attention,
@@ -1091,6 +1093,14 @@ def build_subscriber_facade(
                 attention=load_observation_attention(
                     Path(configured_plan_path).expanduser().resolve()
                 ),
+                # PLACSP answers from the world demand index the runtime keeps ingesting.
+                index_sources={
+                    "es-placsp": DemandIndexPort(
+                        SqliteWorldDemandIndex(root / "world-demand-index.sqlite3"),
+                        None,
+                        clock=effective_clock.now,
+                    )
+                },
             )
     observation_trigger.bind(portfolio, economic)
     observation_trigger.bind_observation_plans(resolved_observation_plans)

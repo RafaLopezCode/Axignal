@@ -841,7 +841,9 @@ def build_first_observation(
         )
     live_ted = TedSearchAdapter(UrllibTedTransport(), clock=clock.now)
     live = overrides.source_ports or {"ted-search-v3": live_ted}
-    feeds = dict(overrides.feeds) if overrides.feeds is not None else {"ted-search-v3": live_ted}
+    feeds: dict[str, SliceFeedPort] = (
+        dict(overrides.feeds) if overrides.feeds is not None else {"ted-search-v3": live_ted}
+    )
     index = SqliteWorldDemandIndex(root / "world-demand-index.sqlite3")
     # Index first (world slices ingested once), the live adapter only for what no
     # fresh complete slice covers; the uncovered slice is demanded for ingestion.
@@ -849,6 +851,26 @@ def build_first_observation(
         source_id: DemandIndexPort(index, port, clock=clock.now) if source_id in feeds else port
         for source_id, port in live.items()
     }
+    if overrides.source_ports is None and overrides.feeds is None:
+        # Spain's own platform: read only for the index (its pages are large and cannot be
+        # queried by code), so it answers from the index or not at all. Its slice is kept
+        # demanded so it is ready before a subscriber needs it.
+        from application.observation_intelligence.contracts import SourceCapability
+        from application.world_demand.index import DemandSlice
+        from pipeline.observation_intelligence.placsp import (
+            PLACSP_SOURCE_ID,
+            PlacspFeedAdapter,
+            UrllibPlacspTransport,
+        )
+
+        feeds[PLACSP_SOURCE_ID] = PlacspFeedAdapter(UrllibPlacspTransport(), clock=clock.now)
+        ports[PLACSP_SOURCE_ID] = DemandIndexPort(index, None, clock=clock.now)
+        index.demand(
+            DemandSlice(
+                PLACSP_SOURCE_ID, "EU/ES", SourceCapability.PUBLIC_PROCUREMENT_OPPORTUNITIES
+            ),
+            now=clock.now(),
+        )
     ingestor = WorldDemandIngestor(
         feeds={k: v for k, v in feeds.items() if k in ports}, store=index, clock=clock.now
     )

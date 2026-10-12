@@ -261,7 +261,7 @@ def test_adoption_gate_and_discovered_sources_never_self_authorize() -> None:
 
     proposed = registry.propose_candidate(
         replace(
-            registry.get("es-placsp"),
+            registry.get("fr-boamp"),
             source_id="us-tx-esbd",
             adoption=AdoptionStatus.ADOPTED,
             adoption_blockers=(),
@@ -270,7 +270,7 @@ def test_adoption_gate_and_discovered_sources_never_self_authorize() -> None:
     assert proposed.adoption is AdoptionStatus.CANDIDATE and not proposed.routable
 
     adopted = registry.adopt(
-        "es-placsp",
+        "fr-boamp",
         replace(
             evidence,
             rights_reference="https://example.test/reuse-terms",

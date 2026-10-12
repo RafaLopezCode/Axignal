@@ -758,24 +758,49 @@ SOURCES: tuple[SourceDescriptor, ...] = (
             "below-threshold tenders are outside its scope.",
         ),
     ),
-    _candidate(
+    SourceDescriptor(
         source_id="es-placsp",
-        name="Plataforma de Contratación del Sector Público (open data)",
-        owner="Ministerio de Hacienda, Spain",
-        capabilities=_PROCUREMENT,
+        version="1",
+        name="Plataforma de Contratación del Sector Público — ATOM syndication",
+        owner="Ministerio de Hacienda, Spain (Dirección General del Patrimonio del Estado)",
+        # Open tenders only: an award history would need gigabytes of syndication.
+        capabilities=frozenset({SourceCapability.PUBLIC_PROCUREMENT_OPPORTUNITIES}),
         jurisdictions=(geo("EU/ES"),),
         classification_systems=frozenset({"CPV"}),
         buyer_levels=frozenset(
             {BuyerLevel.NATIONAL_OR_FEDERAL, BuyerLevel.REGIONAL_OR_STATE, BuyerLevel.LOCAL}
         ),
-        record_types=("TO_VERIFY",),
+        record_types=("PUB",),
         access_method=AccessMethod.FEED,
         authentication_required=False,
+        # Ley 37/2007 and RD 1495/2011 art. 8: reuse of State documents under general
+        # conditions (cite the source, do not distort, keep the update date).
+        rights=RightsStatus.REUSE_DOCUMENTED,
+        reliability=Band.HIGH,
+        precision=Band.MEDIUM,
+        coverage=Band.HIGH,
+        provenance_quality=Band.HIGH,
+        structured=True,
         expected_change_interval=timedelta(days=1),
-        reference="https://contrataciondelestado.es (open data section)",
-        blockers=("RIGHTS_TO_VERIFY", "ADAPTER_NOT_BUILT", "COVERAGE_TO_VERIFY"),
-        scope_limitations=("Expected to add below-EU-threshold Spanish tenders; unverified.",),
+        historical_depth="rolling syndication, about two days per page, newest first",
+        cost_per_request_microunits=0,
+        computational_cost=Band.MEDIUM,
+        expected_latency_ms=3_000,
+        failure_modes=(
+            "large feed pages (about 14 MB)",
+            "lot-level classifications only",
+            "regional platforms only through the aggregation feed",
+        ),
         alternatives=("ted-search-v3",),
+        adoption=AdoptionStatus.ADOPTED,
+        reference=(
+            "https://www.hacienda.gob.es/es-ES/GobiernoAbierto/Datos%20Abiertos/Paginas/"
+            "licitaciones_plataforma_contratacion.aspx"
+        ),
+        scope_limitations=(
+            "Spanish public sector tenders hosted on the platform or aggregated from regional "
+            "platforms; minor contracts are excluded. Read for the index, never per request.",
+        ),
     ),
     _candidate(
         source_id="fr-boamp",
