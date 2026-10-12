@@ -12,7 +12,7 @@ import json
 import re
 from collections.abc import Iterator, Mapping
 from contextlib import suppress
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import datetime
 from html import unescape
 from html.parser import HTMLParser
@@ -20,7 +20,7 @@ from typing import Any
 from urllib.parse import urljoin, urlsplit, urlunsplit
 from urllib.robotparser import RobotFileParser
 
-READER_VERSION = "site-reading.v1"
+READER_VERSION = "site-reading.v2"
 USER_AGENT = "AXIGNAL-SourceObserver"
 MAX_TEXT_CHARS = 12_000
 MAX_LINKS = 200
@@ -100,6 +100,9 @@ class PageReading:
     links: tuple[tuple[str, str], ...]
     canonical: str | None = None
     meta_robots: str | None = None
+    #: Page-level representation signals (headings, sharing tags, images, entity links),
+    #: measured by this reader version; empty for pages read by an earlier version.
+    signals: Mapping[str, object] = field(default_factory=dict)
 
     def metadata_only(self) -> PageReading:
         """The page without its content: URL, time and fingerprint (change detection)."""
@@ -152,6 +155,7 @@ class PageReading:
             "links": [list(link) for link in self.links],
             "canonical": self.canonical,
             "metaRobots": self.meta_robots,
+            "signals": dict(self.signals),
         }
 
     @staticmethod
@@ -177,6 +181,7 @@ class PageReading:
             links=tuple((str(u), str(t)) for u, t in raw["links"]),
             canonical=None if raw.get("canonical") is None else str(raw["canonical"]),
             meta_robots=None if raw.get("metaRobots") is None else str(raw["metaRobots"]),
+            signals=dict(raw.get("signals") or {}),
         )
 
 
@@ -199,6 +204,11 @@ class _PageParser(HTMLParser):
         self.jsonld_chunks: list[str] | None = None
         self.anchor: tuple[str, list[str]] | None = None
         self.anchors: list[tuple[str, str]] = []
+        self.h1: list[str] = []
+        self.heading_tag: str | None = None
+        self.images = 0
+        self.images_without_alt = 0
+        self.hreflang: dict[str, str] = {}
 
     def _flush(self) -> None:
         line = _clean("".join(self.current), 1000)
@@ -220,6 +230,14 @@ class _PageParser(HTMLParser):
             and values.get("hreflang")
         ):
             self.alternates.append(values["hreflang"].strip()[:16])
+            if len(self.hreflang) < 64:
+                self.hreflang.setdefault(
+                    values["hreflang"].strip().lower()[:16], values.get("href", "")[:300]
+                )
+        if tag == "img":
+            self.images += 1
+            if not values.get("alt", "").strip() and values.get("role") != "presentation":
+                self.images_without_alt += 1
         if tag == "link" and values.get("rel", "").lower() == "canonical" and values.get("href"):
             self.canonical = self.canonical or values["href"].strip()[:500]
         if tag == "script" and values.get("type", "").lower() == "application/ld+json":
@@ -238,6 +256,7 @@ class _PageParser(HTMLParser):
             self._flush()
         if tag in _HEADINGS:
             self.heading = []
+            self.heading_tag = tag
         if tag == "a" and values.get("href"):
             self.anchor = (values["href"], [])
 
@@ -257,7 +276,10 @@ class _PageParser(HTMLParser):
             text = _clean("".join(self.heading), 200)
             if text and len(self.headings) < _MAX_ITEMS:
                 self.headings.append(text)
+            if self.heading_tag == "h1" and len(self.h1) < 8:
+                self.h1.append(text)
             self.heading = None
+            self.heading_tag = None
         if tag == "a" and self.anchor is not None:
             href, words = self.anchor
             self.anchors.append((href, _clean("".join(words), 120)))
@@ -321,14 +343,42 @@ def _text_value(value: object) -> str | None:
     return None
 
 
+_ENTITY_TYPES = frozenset(
+    {"Organization", "Corporation", "LocalBusiness", "ProfessionalService", "Store",
+     "OnlineBusiness", "NGO", "EducationalOrganization", "GovernmentOrganization"}
+)  # fmt: skip
+_ENTITY_FIELDS = (
+    "name", "url", "logo", "sameAs", "address", "telephone", "email", "contactPoint",
+    "description", "legalName", "vatID", "foundingDate",
+)  # fmt: skip
+
+
+def _jsonld_errors(documents: list[str]) -> int:
+    errors = 0
+    for document in documents:
+        try:
+            json.loads(document)
+        except (json.JSONDecodeError, RecursionError):
+            errors += 1
+    return errors
+
+
 def _jsonld(documents: list[str]) -> dict[str, list[Any]]:
     out: dict[str, list[Any]] = {
         "types": [], "names": [], "legal": [], "ids": [], "addresses": [], "areas": [],
-        "services": [],
+        "services": [], "same_as": [], "entity_fields": [],
     }  # fmt: skip
     for node in _nodes(documents):
         types = _types(node)
         out["types"].extend(types)
+        if set(types) & _ENTITY_TYPES:
+            same = node.get("sameAs")
+            for link in same if isinstance(same, list) else [same]:
+                if isinstance(link, str) and link.startswith(("https://", "http://")):
+                    out["same_as"].append(link.strip()[:300])
+            out["entity_fields"].extend(
+                key for key in _ENTITY_FIELDS if node.get(key) not in (None, "", [], {})
+            )
         lowered = {k.lower(): v for k, v in node.items() if isinstance(k, str)}
         for key, scheme in _IDENTIFIER_KEYS.items():
             if isinstance(lowered.get(key), str) and lowered[key].strip():
@@ -444,11 +494,14 @@ def read_page(
     data = _jsonld(parser.jsonld)
     host = (urlsplit(url).hostname or "").lower()
     links: list[tuple[str, str]] = []
+    external = 0
     for href, text in parser.anchors:
         if href.startswith(("mailto:", "tel:", "javascript:", "#")):
             continue
         absolute = urljoin(url, href)
         parts = urlsplit(absolute)
+        if parts.scheme in ("http", "https") and not same_site(absolute, host):
+            external += 1
         if parts.scheme not in ("http", "https") or not same_site(absolute, host):
             continue
         clean = urlunsplit((parts.scheme, parts.netloc, parts.path or "/", parts.query, ""))
@@ -478,6 +531,27 @@ def read_page(
         links=_unique(links, MAX_LINKS),
         canonical=None if parser.canonical is None else urljoin(url, parser.canonical),
         meta_robots=parser.meta.get("robots"),
+        signals={
+            "h1": parser.h1[:3],
+            "h1Count": len(parser.h1),
+            "viewport": "viewport" in parser.meta,
+            "ogTitle": bool(parser.meta.get("og:title")),
+            "ogDescription": bool(parser.meta.get("og:description")),
+            "ogImage": bool(parser.meta.get("og:image")),
+            "twitterCard": bool(parser.meta.get("twitter:card")),
+            "images": parser.images,
+            "imagesWithoutAlt": parser.images_without_alt,
+            "hreflang": sorted(parser.hreflang)[:32],
+            "xDefault": "x-default" in parser.hreflang,
+            "jsonldDocuments": len(parser.jsonld),
+            "jsonldErrors": _jsonld_errors(parser.jsonld),
+            "sameAs": list(_unique(data["same_as"], 16)),
+            "entityFields": sorted(set(data["entity_fields"])),
+            "words": len(text.split()),
+            "internalLinks": len(links),
+            "externalLinks": external,
+            "https": urlsplit(url).scheme == "https",
+        },
     )
 
 

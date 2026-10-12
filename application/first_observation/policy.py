@@ -33,7 +33,9 @@ class FirstObservationPolicy:
     max_extra_pages: int = 2
     #: Hard ceiling of HTTP requests for the whole site stage (redirects included);
     #: every optional fetch reserves its worst case (1 + max redirects) before running.
-    max_site_requests: int = 16
+    #: 16 for robots, homepage and two extra pages, plus 8 for the representation audit
+    #: (first declared sitemap and /llms.txt).
+    max_site_requests: int = 24
     requests_per_fetch: int = 4
     #: Demand research at first observation: small; T12 continues if it is justified.
     research_budget: ObservationBudget = _RESEARCH_BUDGET

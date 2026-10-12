@@ -5,7 +5,8 @@
  * "Same truth, different density"). It never creates a finding, never raises POTENTIAL
  * to OBSERVED, never reads UNKNOWN as negative and never generates prose.
  */
-import { activityLabel, discoveryCopy, placeLabel } from "@/components/first-observation";
+import { activityLabel, auditRows, discoveryCopy, placeLabel } from "@/components/first-observation";
+import { auditCopy, auditImpact } from "./representation-audit";
 import { causeCopy, dimensionCopy, proposalCopy, stateCopy } from "@/components/public-understanding";
 import type { Discovery, FirstObservation, PublicUnderstanding } from "./subscriber-contracts";
 import type { RuntimeProjection } from "./runtime-projection";
@@ -194,6 +195,8 @@ function discoveryInsight(d: Discovery, index: number, t: Translate, locale: str
   if (detail.comparison === "FIRST_OBSERVATION") proof.push({ label: t("Comparación", "Comparison"), value: t("Primera observación: todavía no hay una anterior con la que compararla.", "First observation: there is no earlier one to compare it with.") });
   if (detail.comparison === "NOT_COMPARABLE") proof.push({ label: t("Comparación", "Comparison"), value: t("Condiciones distintas a las de la observación anterior: no se declara ningún cambio.", "Conditions differ from the earlier observation: no change is declared.") });
   if (typeof detail.limitation === "string") proof.push({ label: t("Límite", "Limitation"), value: String(detail.limitation) });
+  if (typeof detail.impact === "string") proof.push({ label: t("Impacto", "Impact"), value: auditImpact(detail.impact, t) });
+  for (const [label, value] of auditRows(detail.audit, t)) proof.push({ label, value });
   return {
     id: `${d.kind}:${d.code}:${index}`, lane, nature,
     headline: copy.finding, why: copy.why, observedAt: d.observedAt,
@@ -203,7 +206,8 @@ function discoveryInsight(d: Discovery, index: number, t: Translate, locale: str
       : d.kind === "SIGNIFICANT_UNKNOWN"
         ? [t("AXIGNAL lo declara abierto en lugar de suponerlo.", "AXIGNAL declares it open instead of assuming it.")]
         : [],
-    proposal: d.kind === "REPRESENTATION_GAP" && d.code !== "HOMEPAGE_NOINDEX"
+    proposal: d.kind === "REPRESENTATION_GAP" && d.code.startsWith("AUDIT:") ? auditCopy(d.code.slice(6), t).action
+      : d.kind === "REPRESENTATION_GAP" && d.code !== "HOMEPAGE_NOINDEX"
       ? t("Si quieres que las máquinas relacionen tu oferta, decláralo también en datos estructurados (schema.org). Vuelve a observar después para comprobarlo.",
         "If you want machines to connect your offer, also declare it as structured data (schema.org). Observe again afterwards to check.")
       : null,
@@ -247,6 +251,23 @@ function representationInsights(d: Discovery, offerGapShown: boolean, t: Transla
     ...(typeof d.detail.limitation === "string" ? [{ label: t("Límite", "Limitation"), value: d.detail.limitation }] : []),
   ];
   const sitemaps = typeof c.sitemapsDeclared === "number" ? c.sitemapsDeclared : 0;
+  // With the full audit, each item to review is its own gap card; here only what is in place.
+  const audit = d.detail.audit as { checks?: Array<{ id: string; status: string }> } | undefined;
+  if (audit && Array.isArray(audit.checks)) {
+    const passed = audit.checks.filter(x => x.status === "PASS");
+    if (!passed.length) return [];
+    for (const [label, value] of auditRows(d.detail.audit, t)) proof.push({ label, value });
+    return [{
+      id: `${d.kind}:IN_PLACE`, lane: "understood", nature: "STRENGTH",
+      headline: fill(t("{n} de {total} comprobaciones de su web están en orden para buscadores y asistentes.", "{n} of {total} checks of its website are in order for search engines and assistants."), { n: passed.length, total: audit.checks.length }),
+      why: t("Auditoría de su propia web: encontrabilidad, preparación para respuestas de IA y compartir.", "Audit of its own website: findability, AI answer readiness and sharing."),
+      observedAt: d.observedAt, meaning: [], reasoning: [t("Es una comprobación de su propia web, no una posición en buscadores ni la causa de ningún resultado.", "It is a check of its own website, not a search position nor the cause of any result.")], proposal: null,
+      sources: d.sourceUrl ? [{ url: d.sourceUrl, label: hostOf(d.sourceUrl), observedAt: d.observedAt, quote: null }] : [],
+      proof, dimensions: [], previous: null,
+      changeKey: keyOf(`${d.kind}:IN_PLACE`, String(passed.length)),
+      ...facetOfDiscovery(d),
+    }];
+  }
   const reasoning = [t("Es una comprobación de su propia web, no una posición en buscadores ni la causa de ningún resultado.",
     "It is a check of its own website, not a search position nor the cause of any result.")];
   const make = (code: string, nature: Nature, headline: string, why: string, proposal: string | null): Insight => ({

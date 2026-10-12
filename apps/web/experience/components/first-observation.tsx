@@ -5,6 +5,7 @@ import { PublicUnderstandingView } from "./public-understanding";
 import { useLocale } from "@/lib/locale";
 import { useEvidenceLink } from "./evidence-link-context";
 import { type Discovery, type FirstObservation } from "@/lib/subscriber-contracts";
+import { auditCopy, auditImpact, auditSection, auditStatus } from "@/lib/representation-audit";
 
 type Translate = (es: string, en: string) => string;
 
@@ -134,6 +135,10 @@ export function discoveryCopy(d: Discovery, t: Translate, locale = "en"): { find
   if (d.kind === "SEARCH_VISIBILITY") return { finding: `${t("Visibilidad en buscadores medida", "Search visibility measured")}: ${d.statement}`, why: t("Es lo observado para una consulta y unas condiciones concretas. No es una posición general ni explica el motivo.", "It is what was observed for a given query and conditions. It is not a general ranking and does not explain why.") };
   if (d.kind === "GENERATIVE_VISIBILITY") return { finding: `${t("Aparición en respuestas de IA medida", "AI answer appearance measured")}: ${d.statement}`, why: t("Mencionar no es citar, y citar no es recomendar. Es una medición con sus condiciones, no una conclusión sobre el negocio.", "A mention is not a citation, and a citation is not an endorsement. It is a measurement with its conditions, not a conclusion about the business.") };
   if (d.kind === "WEB_REPRESENTATION") return { finding: t("Representación web medida", "Web representation measured"), why: t("Comprobaciones de su propia web, con instrumento y condiciones. No es una posición en buscadores.", "Checks of its own website, with instrument and conditions. It is not a search ranking.") };
+  if (d.kind === "REPRESENTATION_GAP" && d.code.startsWith("AUDIT:")) {
+    const copy = auditCopy(d.code.slice(6), t);
+    return { finding: copy.title, why: copy.why };
+  }
   if (d.kind === "REPRESENTATION_GAP") return d.code === "HOMEPAGE_NOINDEX"
     ? { finding: t("Su página principal pide no aparecer en buscadores.", "Its homepage asks search engines not to index it."), why: t("Los buscadores podrían no representar la web mientras siga así. No mide posiciones.", "Search engines may not represent the site while it stays so. It does not measure rankings.") }
     : { finding: t("En las páginas leídas, su oferta aparece en el texto pero no en datos estructurados.", "On the pages read, its offer appears in the text but not as structured data."), why: t("Las superficies que leen datos estructurados podrían no relacionarla con lo que ofrece. Es una brecha posible, no una causa medida.", "Surfaces that read structured data may not connect it with what it offers. It is a possible gap, not a measured cause.") };
@@ -222,9 +227,29 @@ export function basisRows(d: Discovery, t: Translate, locale: string): Array<[st
   if (typeof detail.source === "string") rows.push([t("Fuente", "Source"), detail.source]);
   if (typeof detail.buyer === "string") rows.push([t("Comprador", "Buyer"), detail.buyer]);
   if (typeof detail.deadline === "string") rows.push([t("Plazo", "Deadline"), detail.deadline]);
-  if (detail.checks && typeof detail.checks === "object") for (const [key, value] of Object.entries(detail.checks as Record<string, unknown>)) rows.push([checkLabel(key, t), Array.isArray(value) ? value.join(", ") || "—" : value === true ? t("Sí", "Yes") : value === false ? t("No", "No") : String(value ?? "—")]);
+  if (detail.checks && typeof detail.checks === "object" && !detail.audit) for (const [key, value] of Object.entries(detail.checks as Record<string, unknown>)) rows.push([checkLabel(key, t), Array.isArray(value) ? value.join(", ") || "—" : value === true ? t("Sí", "Yes") : value === false ? t("No", "No") : String(value ?? "—")]);
   if (typeof detail.limitation === "string") rows.push([t("Límite", "Limitation"), detail.limitation]);
+  if (typeof detail.impact === "string") rows.push([t("Impacto", "Impact"), auditImpact(detail.impact, t)]);
+  if (d.code.startsWith("AUDIT:")) rows.push([t("Qué puedes hacer", "What you can do"), auditCopy(d.code.slice(6), t).action]);
+  for (const [label, value] of auditRows(detail.audit, t)) rows.push([label, value]);
   if (d.observedAt) rows.push([t("Observado el", "Observed on"), d.observedAt.slice(0, 10)]);
+  return rows;
+}
+
+/** The representation audit as rows: per section, its counts, then what to review. */
+export function auditRows(audit: unknown, t: Translate): Array<[string, string]> {
+  if (!audit || typeof audit !== "object") return [];
+  const a = audit as { instrument?: unknown; pagesRead?: unknown; checks?: unknown };
+  const checks = Array.isArray(a.checks) ? a.checks as Array<{ id: string; section: string; status: string; impact: string }> : [];
+  const rows: Array<[string, string]> = [];
+  if (typeof a.instrument === "string") rows.push([t("Auditoría", "Audit"), `${a.instrument} · ${t("páginas leídas", "pages read")}: ${String(a.pagesRead ?? "—")}`]);
+  for (const section of ["SEARCH_FINDABILITY", "AI_ANSWER_READINESS", "SHARING_AND_MOBILE"]) {
+    const inSection = checks.filter(c => c.section === section);
+    if (!inSection.length) continue;
+    const counts = ["PASS", "ATTENTION", "UNKNOWN"].map(s => `${auditStatus(s, t)}: ${inSection.filter(c => c.status === s).length}`).join(" · ");
+    rows.push([auditSection(section, t), counts]);
+    for (const c of inSection.filter(c => c.status === "ATTENTION")) rows.push([`${auditImpact(c.impact, t)}`, auditCopy(c.id, t).title]);
+  }
   return rows;
 }
 
