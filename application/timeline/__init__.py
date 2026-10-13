@@ -145,6 +145,19 @@ def _hiring_channel(ds: list[Discovery], _v: Mapping[str, Any]) -> object:
     return 1 if _of(ds, "OPERATING_SIGNAL") else 0
 
 
+def _wikipedia_views(ds: list[Discovery], _v: Mapping[str, Any]) -> object:
+    for d in _of(ds, "MENTION", "WIKIPEDIA_NOTORIETY"):
+        views = _detail(d).get("views")
+        return int(views) if isinstance(views, int) else None
+    return None
+
+
+def _wikipedia_languages(ds: list[Discovery], _v: Mapping[str, Any]) -> object:
+    for d in _of(ds, "MENTION", "WIKIPEDIA_NOTORIETY"):
+        return sorted(str(x) for x in _detail(d).get("languages") or [])
+    return None
+
+
 def _self_rating(ds: list[Discovery], _v: Mapping[str, Any]) -> object:
     for d in _of(ds, "RATING", "RATING_SELF_PUBLISHED"):
         value = _detail(d).get("value")
@@ -195,6 +208,10 @@ METRICS: tuple[Metric, ...] = (
            1.0, 0.0),
     Metric("reputation.review_profiles", "reputation", 0, "DECLARED",
            _own_site(_set("RATING", "REVIEW_PROFILE_LINKED"))),
+    Metric("reputation.wikipedia_views", "reputation", 0, "OBSERVED", _wikipedia_views,
+           50.0, 0.2),
+    Metric("reputation.wikipedia_languages", "reputation", 0, "OBSERVED",
+           _wikipedia_languages),
     Metric("reputation.self_rating", "reputation", 0, "DECLARED", _own_site(_self_rating),
            0.1, 0.0),
     Metric("organization.identifiers", "organization", 0, "DECLARED",

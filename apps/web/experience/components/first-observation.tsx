@@ -121,6 +121,17 @@ export function discoveryCopy(d: Discovery, t: Translate, locale = "en"): { find
   if (d.kind === "ACTIVITY" && d.code === "REGISTERED_ACTIVITY") return { finding: `${t("Actividad registrada", "Registered activity")}: ${d.statement}`,
     why: t("Según {register}: es la clasificación con la que se registró; puede no reflejar todo lo que ofrece hoy.", "According to {register}: the classification it registered under; it may not reflect everything it offers today.").replace("{register}", String(d.detail.source ?? "")) };
   if (d.kind === "ACTIVITY") return { finding: `${t("Actividad probable", "Likely activity")}: ${activityLabel(d.code, d.statement, t)}`, why: t("Orienta dónde buscar demanda. Es una hipótesis con su cita, no una capacidad verificada.", "It directs where to look for demand. It is a hypothesis with its quote, not a verified capability.") };
+  if (d.kind === "MENTION" && d.code === "WIKIPEDIA_NOTORIETY") {
+    const views = typeof d.detail.views === "number" ? d.detail.views.toLocaleString(locale) : d.statement;
+    const langs = Array.isArray(d.detail.languages) ? d.detail.languages.length : 0;
+    const trend = typeof d.detail.trend === "number" ? d.detail.trend : null;
+    const moved = trend === null ? "" : " " + (trend >= 0
+      ? t("Últimos 3 meses: +{p} % frente a los 3 anteriores.", "Last 3 months: +{p}% against the 3 before.")
+      : t("Últimos 3 meses: {p} % frente a los 3 anteriores.", "Last 3 months: {p}% against the 3 before.")).replace("{p}", String(Math.round(trend * 100)));
+    return { finding: t("Notoriedad pública: {v} visitas a su artículo de Wikipedia en {m} ({n} idiomas)", "Public notoriety: {v} views of its Wikipedia article in {m} ({n} languages)")
+        .replace("{v}", views).replace("{m}", String(d.detail.month ?? "")).replace("{n}", String(langs)),
+      why: t("Mide atención pública real, no opinión. Identificado por su web oficial en Wikidata.", "It measures real public attention, not opinion. Identified through its official website in Wikidata.") + moved };
+  }
   if (d.kind === "MENTION") {
     const outlet = typeof d.detail.outlet === "string" ? d.detail.outlet : "";
     if (d.code === "PRESS_RELEASE") return { finding: `${t("Nota de prensa distribuida", "Distributed press release")} · ${outlet}: ${d.statement}`, why: t("Una nota que una organización distribuye sobre sí misma: es su voz, no cobertura independiente.", "A release an organization distributes about itself: its own voice, not independent coverage.") };
@@ -425,6 +436,8 @@ export function changeLabel(metric: string, t: Translate): string {
     "activity.job_postings": t("Ofertas de empleo publicadas", "Job postings published"),
     "activity.hiring_channel": t("Canal de empleo publicado", "Hiring channel published"),
     "reputation.review_profiles": t("Perfiles de opiniones enlazados", "Linked review profiles"),
+    "reputation.wikipedia_views": t("Visitas a su artículo de Wikipedia (mes)", "Wikipedia article views (month)"),
+    "reputation.wikipedia_languages": t("Idiomas con artículo en Wikipedia", "Languages with a Wikipedia article"),
     "reputation.self_rating": t("Valoración que publica sobre sí misma", "Rating it publishes about itself"),
     "organization.identifiers": t("Identificadores publicados", "Published identifiers"),
     "context.sector_headlines": t("Titulares de su sector", "Sector headlines"),
