@@ -8,7 +8,7 @@
  */
 import { organizationInventorySchema, type OrganizationInventory } from "./organization-attention";
 import { readCustomerZeroResponse } from "./runtime-projection";
-import { portfolioSchema, type SubscriberPortfolio } from "./subscriber-contracts";
+import { firstObservationSchema, portfolioSchema, type SubscriberPortfolio } from "./subscriber-contracts";
 import type { ObservatorySource } from "./observatory-source";
 
 type Entry = OrganizationInventory["organizations"][number];
@@ -79,6 +79,7 @@ async function outcome(response: Response): Promise<unknown> {
   // Saved, but the evidence is not enough for a signal; the previous reading remains.
   if (response.status === 422) return { state: "ACCEPTED", observationState: "INSUFFICIENT_EVIDENCE" };
   if (!response.ok) throw new Error("COMMAND_FAILED");
+  // The reading finished; the ten-family observation runs next to it.
   return { state: "ACCEPTED", observationState: "COMPLETED" };
 }
 
@@ -106,13 +107,18 @@ export const adminSource: ObservatorySource = {
       const selected = await post({ action: "select", id: focusId }, signal);
       if (!selected.ok) throw new Error("READ_FAILED");
       const response = await fetch("/api/subscriber-context", { cache: "no-store", signal });
-      const state = readCustomerZeroResponse(await response.json(), response.status);
+      const body: unknown = await response.json();
+      const state = readCustomerZeroResponse(body, response.status);
+      // The same ten-family First Observation a subscriber reads, when the runtime has it.
+      const raw = body && typeof body === "object" ? (body as Record<string, unknown>).firstObservation : null;
+      const parsed = raw ? firstObservationSchema.safeParse(raw) : null;
+      const firstObservation = parsed?.success ? parsed.data : null;
       if (state.state === "unauthorized") throw new Error("SESSION_REQUIRED");
       if (state.state === "INSUFFICIENT_EVIDENCE") throw new Error("INSUFFICIENT_EVIDENCE");
       if (state.state !== "success") throw new Error("READ_FAILED");
       const projection = state.projection;
       const revision = await sha256Hex([projection.context.id, projection.runtimeCodeSha, JSON.stringify(projection.organization)].join("|"));
-      return { state: "success", projection, ...(revision ? { revision } : {}), firstObservation: null };
+      return { state: "success", projection, ...(revision ? { revision } : {}), firstObservation };
     });
   },
   async command(input, _requestRef, signal) {

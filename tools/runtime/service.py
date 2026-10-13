@@ -143,6 +143,38 @@ from tools.runtime.subscriber_provisioning import (
 )
 
 
+def _admin_reference(target_uri: str) -> str | None:
+    host = (urlsplit(target_uri).hostname or "").lower().removeprefix("www.")
+    return f"admin:{host}" if host else None
+
+
+def _admin_study(runtime: object, name: str, target_uri: str) -> None:
+    """The Admin's organizations get the same First Observation as a subscriber's."""
+    observing = getattr(getattr(runtime, "subscriber", None), "first_observation", None)
+    reference = _admin_reference(target_uri)
+    if observing is None or reference is None:
+        return
+    host = reference.removeprefix("admin:")
+    with contextlib.suppress(Exception):  # the legacy reading still answers; additive
+        observing.study(reference, f"https://{host}/", name or host)
+
+
+def _admin_first_observation(runtime: object, name: str, target_uri: str) -> object:
+    """The ten-family view of an Admin organization; studied once if never read."""
+    observing = getattr(getattr(runtime, "subscriber", None), "first_observation", None)
+    reference = _admin_reference(target_uri)
+    if observing is None or reference is None:
+        return None
+    try:
+        view, _contact = observing.study_result(reference)
+        if view is None:
+            _admin_study(runtime, name, target_uri)
+            view, _contact = observing.study_result(reference)
+        return view
+    except Exception:  # the Admin reading never fails because of this view
+        return None
+
+
 @dataclass(slots=True)
 class AxignalRuntime:
     config: RuntimeConfig
@@ -2375,7 +2407,24 @@ def make_handler(runtime: AxignalRuntime) -> type[BaseHTTPRequestHandler]:
                 if projection is None:
                     self._json({"state": "NO_XEED", "realityLevel": "LIVE_PRODUCTION_FIRST_PROOF"})
                 else:
-                    self._json(projection)
+                    selected = (
+                        runtime.organization_attention.selected(str(reading_grant.principal_id))
+                        if runtime.organization_attention is not None and reading_grant is not None
+                        else None
+                    )
+                    view = (
+                        None
+                        if selected is None
+                        else _admin_first_observation(
+                            runtime,
+                            str(selected.get("name") or selected.get("requestedLabel") or ""),
+                            str(selected.get("targetUri") or ""),
+                        )
+                    )
+                    # Only when the runtime has it: the legacy reading keeps its exact shape.
+                    self._json(
+                        projection if view is None else {**projection, "firstObservation": view}
+                    )
                 return
             if request_path == "/api/organizations":
                 inventory_grant = self._customer_zero_authority()
@@ -3019,6 +3068,25 @@ def make_handler(runtime: AxignalRuntime) -> type[BaseHTTPRequestHandler]:
                             raise ValueError("INTERNAL_ATTENTION_AUTHORITY_REQUIRED")
                         principal = str(command_grant.principal_id)
                         action = payload["action"]
+                        # The ten families: studied first, so they run even if the legacy
+                        # projection below cannot conclude.
+                        if action == "add" and set(payload) == {"action", "name", "targetUri"}:
+                            _admin_study(runtime, payload["name"], payload["targetUri"])
+                        elif action == "reobserve" and set(payload) == {"action", "id"}:
+                            listed = runtime.organization_attention.inventory(
+                                principal, can_observe=True
+                            ).get("organizations")
+                            entry = next(
+                                (o for o in (listed if isinstance(listed, list) else [])
+                                 if isinstance(o, dict) and o.get("id") == payload["id"]),
+                                None,
+                            )  # fmt: skip
+                            if entry is not None:
+                                _admin_study(
+                                    runtime,
+                                    str(entry.get("name") or entry.get("requestedLabel") or ""),
+                                    str(entry.get("targetUri") or ""),
+                                )
                         if action == "add" and set(payload) == {"action", "name", "targetUri"}:
                             projection = runtime.organization_attention.add(
                                 principal, payload["name"], payload["targetUri"]
