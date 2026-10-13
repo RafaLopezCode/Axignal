@@ -117,12 +117,16 @@ class SqlitePressIndex:
     def coverage(self) -> tuple[datetime | None, int, int]:
         """(earliest headline held, headlines held, feeds read successfully)."""
         with self._connect() as db:
+            held = int(db.execute("SELECT COUNT(*) FROM press_items").fetchone()[0])
+            # A few archive items dated years back are not coverage: the index covers from
+            # where its headlines become continuous (2nd percentile of publication dates).
             row = db.execute(
-                "SELECT MIN(published_at) AS since, COUNT(*) AS n FROM press_items"
+                "SELECT published_at FROM press_items ORDER BY published_at LIMIT 1 OFFSET ?",
+                (held // 50,),
             ).fetchone()
             feeds = db.execute("SELECT COUNT(*) FROM press_feeds WHERE status='OK'").fetchone()[0]
-        since = None if row["since"] is None else datetime.fromisoformat(row["since"])
-        return since, int(row["n"]), int(feeds)
+        since = None if row is None else datetime.fromisoformat(row["published_at"])
+        return since, held, int(feeds)
 
 
 class PressIngestor:

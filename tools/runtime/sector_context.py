@@ -19,6 +19,7 @@ from application.context.sector import (
     INSTRUCTION,
     MAX_CANDIDATES,
     SCHEMA,
+    is_headline,
     judgment_prompt,
     mentions_keyword,
     sector_keywords,
@@ -108,7 +109,9 @@ class SectorContextRunner:
             candidates = [
                 item
                 for item in self._press.items_matching(keywords, since=now - WINDOW, limit=400)
-                if item.country == country and mentions_keyword(item.title, keywords)
+                if item.country == country
+                and is_headline(item.title)  # section labels never reach the judgment
+                and mentions_keyword(item.title, keywords)
             ][:MAX_CANDIDATES]
             relevant: list[dict[str, object]] = []
             if candidates:

@@ -361,3 +361,55 @@ def test_operator_rights_revocation_is_live_and_fails_closed(tmp_path: Path) -> 
     assert not policy.rights_for(SOLAR_ES, now=now).reuse_permitted
     file.unlink()
     assert not policy.rights_for(SOLAR_ES, now=now).reuse_permitted
+
+
+def test_routing_vocabulary_is_global_and_still_names_no_one() -> None:
+    from application.first_observation.activity import minimize
+
+    german = minimize("Jung von Matt ist eine Werbeagentur für Marken, Kampagnen und Beratung.")
+    assert {"werbeagentur", "marken", "kampagnen", "beratung"} <= set(german.split())
+    assert "jung" not in german.split() and "matt" not in german.split()
+    norwegian = minimize("Vipps er mobilbetaling for kunder og bedrifter i Norge.")
+    assert {"mobilbetaling", "kunder", "bedrifter"} <= set(norwegian.split())
+    spanish = minimize(
+        "Colegio privado: educación infantil, primaria y bachillerato. Director Juan Pérez."
+    )
+    assert {"colegio", "educación", "infantil", "primaria", "bachillerato"} <= set(spanish.split())
+    assert "juan" not in spanish and "pérez" not in spanish
+
+
+def test_menu_labels_and_client_stories_are_not_the_organizations_offer() -> None:
+    from datetime import UTC, datetime
+
+    from application.observation_intelligence.understanding import detect_capabilities
+
+    text = (
+        "Digital Marketing Agency | SEO, PPC and web design for growing brands.\n"
+        "Industries\nLegal Services\nHealthcare\n"
+        "Medical Equipment Supplier Grows Revenue by 48x\n"
+    )
+    found = {h.capability_id for h in detect_capabilities(
+        text=text, observation_id="p", source_ref="https://a", observed_at=datetime.now(UTC))}  # fmt: skip
+    assert "marketing-advertising" in found
+    assert "legal-services" not in found and "medical-devices" not in found
+    firm = detect_capabilities(text="Somos un despacho de abogados especializado en mercantil.",
+                               observation_id="p", source_ref="https://b",
+                               observed_at=datetime.now(UTC))  # fmt: skip
+    assert [h.capability_id for h in firm] == ["legal-services"]
+
+
+def test_register_activity_answers_value_when_the_website_does_not() -> None:
+    from application.economics import registered_activity
+
+    unknown = {"kind": "SIGNIFICANT_UNKNOWN", "code": "ACTIVITY_NOT_ESTABLISHED"}
+    fact = {"kind": "ECONOMIC_FACT", "code": "REGISTER:ORGNR:activity", "epistemicState": "OBSERVED",
+            "sourceUrl": "https://data.brreg.no/x", "observedAt": "2026-10-13",
+            "detail": {"fact": "activity", "value": "NACE 64.190", "label": "Annen bankvirksomhet",
+                       "source": "Brønnøysundregistrene", "sourceKind": "OFFICIAL_REGISTER"}}  # fmt: skip
+    out = registered_activity([unknown, fact])
+    activity = out[-1]
+    assert activity["code"] == "REGISTERED_ACTIVITY" and activity["epistemicState"] == "OBSERVED"
+    assert activity["statement"] == "Annen bankvirksomhet"
+    assert unknown not in out
+    website = {"kind": "ACTIVITY", "code": "isic-K"}
+    assert registered_activity([website, fact]) == [website, fact]  # the website prevails

@@ -127,3 +127,20 @@ def test_names_from_any_country_become_distinctive_search_terms() -> None:
         assert search_terms([name]) == expected, name
     # An alias after a dash is searched on its own.
     assert "petrobras" in search_terms(["Petróleo Brasileiro S.A. - Petrobras"])
+
+
+def test_coverage_starts_where_headlines_are_continuous_not_at_a_stray_archive_item(
+    tmp_path: Path,
+) -> None:
+    from application.press.contracts import PressItem
+
+    store = SqlitePressIndex(tmp_path / "press.sqlite3")
+    start = datetime(2026, 9, 1, tzinfo=UTC)
+    items = [PressItem("f", "Outlet", f"Headline number {i} today", f"https://x/{i}",
+                       start + timedelta(hours=i), "es", "ES") for i in range(200)]  # fmt: skip
+    items.append(PressItem("f", "Outlet", "An old archive story here", "https://x/old",
+                           datetime(2008, 5, 1, tzinfo=UTC), "es", "ES"))  # fmt: skip
+    store.upsert(items)
+    since, held, _feeds = store.coverage()
+    assert held == 201
+    assert since is not None and since.year == 2026

@@ -63,6 +63,14 @@ def sector_label(capability_id: str) -> str | None:
     return None if entry is None else entry.label
 
 
+#: A section label ("CONSTRUCCIÓN", "Economía") is not a headline.
+MIN_HEADLINE_WORDS = 4
+
+
+def is_headline(title: str) -> bool:
+    return len(title.split()) >= MIN_HEADLINE_WORDS
+
+
 def mentions_keyword(title: str, keywords: Sequence[str]) -> bool:
     folded = _fold(title)
     return any(re.search(rf"\b{re.escape(k)}", folded) for k in keywords)
@@ -77,7 +85,10 @@ def context_discoveries(
     result: Mapping[str, object], *, capability_id: str, country: str, observed_at: str
 ) -> list[dict[str, object]]:
     raw = result.get("relevant")
-    items = [i for i in raw if isinstance(i, Mapping)] if isinstance(raw, list | tuple) else []
+    items = [
+        i for i in (raw if isinstance(raw, list | tuple) else [])
+        if isinstance(i, Mapping) and is_headline(str(i.get("title") or ""))
+    ]  # fmt: skip
     basis = {
         "sector": sector_label(capability_id),
         "country": country,

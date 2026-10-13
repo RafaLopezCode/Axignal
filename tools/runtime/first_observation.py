@@ -39,6 +39,7 @@ from application.economic_discovery.source_registry import SourceRegistryEntry
 from application.economics import (
     economic_discoveries,
     register_discoveries,
+    registered_activity,
     same_organization_name,
 )
 from application.first_observation.contracts import (
@@ -858,6 +859,8 @@ class FirstObservationRuntime:
                 target=self._loop, name="first-observation", daemon=True
             )
             self._thread.start()
+            # Network-bound source ingestion never delays an observation.
+            threading.Thread(target=self._sources_loop, name="source-ingest", daemon=True).start()
             if self.awards_backfill is not None and self._backfill_thread is None:
                 # Heavy, slow and independent: its own thread, never in the observation loop.
                 self._backfill_thread = threading.Thread(
@@ -873,6 +876,16 @@ class FirstObservationRuntime:
                 done = 0
             time.sleep(3600 if done is None else 600)
 
+    def _sources_loop(self) -> None:
+        """Press and official journals on their own clock (each source keeps its cursor)."""
+        while True:
+            for stage in (self.ingest_press, self.ingest_regulation):
+                try:
+                    stage()
+                except Exception:  # a source failing is retried on its own schedule
+                    continue
+            time.sleep(600)
+
     def _loop(self) -> None:
         while True:
             self._wake.wait(timeout=60)
@@ -882,10 +895,8 @@ class FirstObservationRuntime:
                 self.enqueue_due,
                 self.drain,
                 self.ingest_demanded,
-                self.ingest_press,
                 self.measure_geo,
                 self.judge_sector_context,
-                self.ingest_regulation,
                 self.judge_regulation,
                 self.run_marketing_pool,
                 self.purge,
@@ -1124,6 +1135,9 @@ class FirstObservationRuntime:
                     view["discoveries"] = [*(held if isinstance(held, list) else []), *mentions]
             view = self._with_group(view, organization_id)
             view = self._with_registers(view, organization_id)
+            # The register's activity answers the value family when the website does not.
+            held = view.get("discoveries")
+            view["discoveries"] = registered_activity(held if isinstance(held, list) else [])
             view = self._with_geo(view)
             view = self._with_sector_context(view)
             view = self._with_regulation(view)

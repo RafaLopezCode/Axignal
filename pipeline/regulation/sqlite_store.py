@@ -23,6 +23,8 @@ _NOISE = re.compile(
     r"safety zone|security zone|drawbridge|special local regulation"
 )
 EVERY = timedelta(hours=12)
+#: A source that failed is tried again after this, not on every tick.
+RETRY_AFTER = timedelta(hours=1)
 BOE_DAYS_PER_RUN = 7
 
 
@@ -125,6 +127,11 @@ class SqliteRegulationIndex:
         kept = [*national[: max(0, limit - len(eu))], *eu]
         return sorted(kept, key=lambda i: str(i["published"]), reverse=True)[:limit]
 
+    def last_error(self, source: str) -> str | None:
+        with self._connect() as db:
+            row = db.execute("SELECT error FROM reg_cursor WHERE source=?", (source,)).fetchone()
+        return None if row is None else row[0]
+
     def cursor(self, source: str) -> tuple[str | None, datetime | None]:
         with self._connect() as db:
             row = db.execute(
@@ -156,16 +163,25 @@ class RegulationIngestor:
 
     def run(self) -> int:
         added = 0
-        for step in (self._boe, self._federal_register, self._eur_lex, self._uk):
+        for source, step in (
+            ("BOE", self._boe),
+            ("FEDERAL_REGISTER", self._federal_register),
+            ("EUR_LEX", self._eur_lex),
+            ("LEGISLATION_GOV_UK", self._uk),
+        ):
             try:
                 added += step()
-            except Exception:  # one journal failing never stops the others
-                continue
+            except Exception as error:  # one journal failing never stops the others
+                # Recorded with its time: retried after RETRY_AFTER, not on every tick.
+                cursor, _at = self._index.cursor(source)
+                self._index.set_cursor(source, cursor, at=self._clock(),
+                                       error=type(error).__name__)  # fmt: skip
         return added
 
     def _due(self, source: str) -> tuple[str | None, bool]:
         cursor, at = self._index.cursor(source)
-        return cursor, at is None or self._clock() - at >= EVERY
+        wait = RETRY_AFTER if self._index.last_error(source) else EVERY
+        return cursor, at is None or self._clock() - at >= wait
 
     def _boe(self) -> int:
         today = self._clock().date()

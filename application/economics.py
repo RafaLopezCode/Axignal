@@ -183,3 +183,50 @@ def register_discoveries(
             }
         )
     return out
+
+
+def registered_activity(discoveries: list[object]) -> list[object]:
+    """When the website does not establish what it does but the official register does,
+    the register's activity classification answers the value family (with its source).
+
+    It keeps the register fact's state (OBSERVED only when attributed) and replaces the
+    ACTIVITY_NOT_ESTABLISHED unknown; a website reading, when present, always prevails.
+    """
+    held = [d for d in discoveries if isinstance(d, Mapping)]
+    if any(d.get("kind") == "ACTIVITY" for d in held):
+        return discoveries
+    fact = next(
+        (
+            d for d in held
+            if d.get("kind") == "ECONOMIC_FACT"
+            and isinstance(d.get("detail"), Mapping)
+            and d["detail"].get("fact") == "activity"
+            and d["detail"].get("sourceKind") == "OFFICIAL_REGISTER"
+        ),
+        None,
+    )  # fmt: skip
+    if fact is None:
+        return discoveries
+    detail = fact["detail"]
+    activity = {
+        "kind": "ACTIVITY",
+        "code": "REGISTERED_ACTIVITY",
+        "statement": str(detail.get("label") or detail.get("value")),
+        "epistemicState": fact.get("epistemicState"),
+        "sourceUrl": fact.get("sourceUrl"),
+        "excerpt": f"{detail.get('source')}: {detail.get('value')}",
+        "observedAt": fact.get("observedAt"),
+        "detail": {
+            "classification": detail.get("value"),
+            "source": detail.get("source"),
+            "identifier": detail.get("identifier"),
+            "method": "OFFICIAL_REGISTER",
+            "limitation": "The classification the organization registered; it may not "
+            "reflect everything it offers today.",
+        },
+    }
+    kept = [
+        d for d in discoveries
+        if not (isinstance(d, Mapping) and d.get("code") == "ACTIVITY_NOT_ESTABLISHED")
+    ]  # fmt: skip
+    return [*kept, activity]

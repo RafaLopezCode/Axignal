@@ -31,6 +31,20 @@ _POLICY_LINE = re.compile(
     r"impressum|terms of use|términos|condiciones de uso)\b",
     re.IGNORECASE,
 )
+#: A client's success story names what the client does, not what the organization offers.
+_CLIENT_STORY = re.compile(
+    r"\b(grows?|grew|increased?|boosts?|doubled|tripled|case stud\w*|success stor\w*|"
+    r"caso de éxito|casos de éxito|helped|ayudamos a|revenue by|results? for)\b",
+    re.IGNORECASE,
+)
+
+
+def _names_an_offer(excerpt: str, term: str) -> bool:
+    """A bare menu label ("Legal Services" alone, often a list of industries served) or a
+    client story is not the organization's own offer; another occurrence may be."""
+    if _POLICY_LINE.search(excerpt) or _CLIENT_STORY.search(excerpt):
+        return False
+    return len(excerpt.split()) > len(term.split()) + 1
 
 
 def _sentence_containing(text: str, start: int) -> str:
@@ -66,7 +80,7 @@ def detect_capabilities(
                 excerpt = _sentence_containing(text, index)
                 # A line of policies or legal links ("Cybersecurity Policy | Cookies")
                 # names a document, not an offer: look for the next occurrence instead.
-                if excerpt and not _POLICY_LINE.search(excerpt):
+                if excerpt and _names_an_offer(excerpt, term):
                     first = min(first, index)
                     if excerpt not in excerpts:
                         excerpts.append(excerpt)

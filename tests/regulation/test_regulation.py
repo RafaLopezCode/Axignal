@@ -122,3 +122,37 @@ def test_the_judgment_decides_what_is_shown_once_per_activity_country_day(
     assert found[0]["kind"] == "CONTEXT_SIGNAL" and found[0]["code"] == "REGULATION"
     assert found[0]["epistemicState"] == "POTENTIAL"
     assert "Not legal advice" in str(found[0]["detail"]["limitation"])  # type: ignore[index]
+
+
+def test_a_failing_journal_waits_an_hour_instead_of_retrying_every_tick(tmp_path: Path) -> None:
+    from datetime import timedelta
+
+    index = SqliteRegulationIndex(tmp_path / "r.sqlite3")
+    now = [NOW]
+    calls: list[str] = []
+
+    def failing_eu(url: str, accept: str) -> bytes:
+        if "eur-lex" in url or "publications.europa.eu" in url:
+            calls.append(url)
+            raise TimeoutError("down")
+        return _fetch(url, accept)
+
+    ingestor = RegulationIngestor(index, fetch=failing_eu, clock=lambda: now[0])
+    ingestor.run()
+    first = len(calls)
+    assert first and index.last_error("EUR_LEX") == "TimeoutError"
+    now[0] += timedelta(minutes=10)
+    ingestor.run()
+    assert len(calls) == first  # not on the next tick
+    now[0] += timedelta(hours=1)
+    ingestor.run()
+    assert len(calls) > first  # retried after the wait
+
+
+def test_section_labels_are_not_sector_headlines() -> None:
+    from application.context.sector import context_discoveries
+
+    result = {"relevant": [{"title": "CONSTRUCCIÓN", "url": "https://a"},
+                           {"title": "La construcción crece un 4% en octubre", "url": "https://b"}]}  # fmt: skip
+    found = context_discoveries(result, capability_id="x", country="ES", observed_at="2026-10-13")
+    assert [d["statement"] for d in found] == ["La construcción crece un 4% en octubre"]

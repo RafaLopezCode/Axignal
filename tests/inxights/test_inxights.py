@@ -113,3 +113,12 @@ def test_malformed_evidence_silences_only_that_rule() -> None:
     broken = _d("DEMAND", "RECURRING_PUBLIC_BUYER", "X", contractsInArea="many")
     view = apply_inxights(_view(broken, BUYER_A, BUYER_B))
     assert isinstance(view["discoveries"], list)
+
+
+def test_open_demand_counts_the_real_total_not_the_shown_sample() -> None:
+    gap = _d("REPRESENTATION_GAP", "OFFER_NOT_MACHINE_READABLE")
+    view = _view(gap, *[_d("DEMAND", f"TED:{i}", f"Call {i}") for i in range(3)])
+    view["demand"] = {"total": 215}
+    found = next(d for d in apply_inxights(view)["discoveries"] if d["kind"] == "INXIGHT")
+    assert found["statement"].startswith("215 open public call(s)")
+    assert found["detail"]["values"] == {"openCalls": 215, "shown": 3}
