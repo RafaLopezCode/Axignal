@@ -14,6 +14,7 @@ _WORDS = {
     # Information, analysis and intelligence services: without them an analytics,
     # research or intelligence firm reached the judgment almost empty (2026-10-13).
     "information": """
+    próximamente construcción demnächst bientôt prossimamente brevemente binnenkort snart
     intelligence observation observes observing monitoring analysis analytics data
     research evidence insights insight platform subscription reports report
     organizations organisations companies information sources benchmarking

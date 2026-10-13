@@ -383,3 +383,44 @@ def test_public_web_representation_is_audited_with_its_evidence(tmp_path: Path) 
     }
     # robots + homepage + /llms.txt (no sitemap declared): one bounded audit read.
     assert _ledger(solar_view, "httpRequests") == 3
+
+
+def test_a_sparse_real_business_page_is_never_called_not_a_business(
+    tmp_path: Path, monkeypatch: Any
+) -> None:
+    """Jev saying 'not operating' over a near-empty state is withheld (script-built pages)."""
+    from tests.first_observation import harness
+    from tests.semantic_layer.fakes import FakeSystemOne
+
+    sparse = "https://nordlys.example.com/"
+    monkeypatch.setitem(harness.PAGES, sparse,
+                        "<html><head><title>Nordlys</title></head><body><h1>Nordlys</h1></body></html>")  # fmt: skip
+
+    def denies(batch: Any, question: Any) -> tuple[str, float]:
+        return (
+            ("false", 0.9) if question.question_id == "fo_operating_business" else ("UNCLEAR", 0.7)
+        )
+
+    world = World(judge=FakeSystemOne(denies))
+    facade = build(tmp_path, world)
+    token, _ = _attend(facade, tmp_path, "subject:sparse", sparse)
+    runtime(facade).drain()
+    view = _view(facade, token, _pending_id(facade, token))
+    assert world.judge.calls  # the judgment ran
+    assert "NOT_AN_OPERATING_BUSINESS_SITE" not in codes(view)
+    assert "ACTIVITY_NOT_ESTABLISHED" in codes(view)  # unknown, not a false negative
+
+
+def test_business_signals_on_a_site_override_a_not_operating_judgment() -> None:
+    from datetime import UTC, datetime
+
+    from application.first_observation.service import _business_signals
+    from application.first_observation.site import read_page
+
+    def page(body: str) -> Any:
+        return read_page(url="https://acme.example/", html=f"<html><body>{body}</body></html>",
+                         observed_at=datetime.now(UTC), content_fingerprint="f", artifact_ref=None)  # fmt: skip
+
+    assert _business_signals([page('<a href="https://www.linkedin.com/company/acme">LinkedIn</a>')])
+    assert _business_signals([page('<a href="mailto:info@acme.example">Contact</a>')])
+    assert not _business_signals([page("<h1>Coming soon</h1>")])
