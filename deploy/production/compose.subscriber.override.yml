@@ -9,9 +9,12 @@ services:
         AXIGNAL_CODE_SHA: ${AXIGNAL_CODE_SHA:?AXIGNAL_CODE_SHA is required}
     environment:
       AXIGNAL_SUBSCRIBER_CONFIGURATION_FILE: /run/secrets/subscriber_configuration
+      # Real-user Core Web Vitals of observed sites (same governed key as the SEO truth sync).
+      AXIGNAL_CRUX_API_KEY_FILE: /run/secrets/crux_api_key
     secrets:
       - subscriber_configuration
       - google_client_secret
+      - crux_api_key
 
   experience:
     environment:
@@ -30,3 +33,5 @@ secrets:
     file: ${AXIGNAL_SUBSCRIBER_CONFIGURATION_HOST_FILE:-/etc/axignal/subscriber-runtime.conf}
   google_client_secret:
     file: ${AXIGNAL_GOOGLE_CLIENT_SECRET_HOST_FILE:-/etc/axignal/secrets/google_client_secret}
+  crux_api_key:
+    file: ${AXIGNAL_CRUX_API_KEY_HOST_FILE:-/etc/axignal/secrets/crux_api_key}

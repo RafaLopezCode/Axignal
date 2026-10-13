@@ -341,7 +341,7 @@ export function auditRows(audit: unknown, t: Translate): Array<[string, string]>
   const checks = Array.isArray(a.checks) ? a.checks as Array<{ id: string; section: string; status: string; impact: string }> : [];
   const rows: Array<[string, string]> = [];
   if (typeof a.instrument === "string") rows.push([t("Auditoría", "Audit"), `${a.instrument} · ${t("páginas leídas", "pages read")}: ${String(a.pagesRead ?? "—")}`]);
-  for (const section of ["SEARCH_FINDABILITY", "AI_ANSWER_READINESS", "SHARING_AND_MOBILE"]) {
+  for (const section of ["SEARCH_FINDABILITY", "AI_ANSWER_READINESS", "SHARING_AND_MOBILE", "REAL_USER_EXPERIENCE"]) {
     const inSection = checks.filter(c => c.section === section);
     if (!inSection.length) continue;
     const counts = ["PASS", "ATTENTION", "UNKNOWN"].map(s => `${auditStatus(s, t)}: ${inSection.filter(c => c.status === s).length}`).join(" · ");

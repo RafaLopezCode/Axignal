@@ -99,6 +99,7 @@ from pipeline.geo.nominatim import NominatimReverseGeocoder
 from pipeline.observation_memory.sqlite_store import SqliteObservationMemory
 from pipeline.press.sqlite_store import PressIngestor, SqlitePressIndex
 from pipeline.press.sqlite_store import SqlitePressIndex as _PressIndex
+from tools.runtime.field_performance import field_performance_from_env
 from tools.runtime.generative_probe import (
     GenerativeProbeRunner,
     assistant_from_values,
@@ -1146,6 +1147,9 @@ def build_first_observation(
         policy=policy,
         rights=rights_policy,
         geocoder=_geocoder(root, overrides),
+        field_performance=None
+        if overrides.source_ports is not None or overrides.feeds is not None
+        else field_performance_from_env(root),
     )
     try:
         daily_jobs = int(values.get(DAILY_JOBS_KEY, "500"))

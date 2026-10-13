@@ -85,6 +85,12 @@ SYSTEM_ONE_EVALUATOR = "typesafe-system-one"
 TLS_NOT_VERIFIED = "TLS_CERTIFICATE_NOT_VERIFIED"
 
 
+class FieldPerformance(Protocol):
+    """Real-user performance of an origin (CrUX by default); replaceable."""
+
+    def measure(self, origin: str) -> Mapping[str, object]: ...
+
+
 class ReverseGeocoder(Protocol):
     """A point to its country, region and place (replaceable; OSM Nominatim by default)."""
 
@@ -192,8 +198,10 @@ class FirstObservationService:
         policy: FirstObservationPolicy | None = None,
         rights: ContentRightsPolicy | None = None,
         geocoder: ReverseGeocoder | None = None,
+        field_performance: FieldPerformance | None = None,
     ) -> None:
         self._geocoder = geocoder
+        self._field_performance = field_performance
         self._rights: ContentRightsPolicy = rights or NoContentRights()
         self._fetcher = fetcher
         self._sites = sites
@@ -770,6 +778,17 @@ class FirstObservationService:
                 )
         return out
 
+    def _field(self, reading: SiteReading, ledger: RunLedger) -> Mapping[str, object] | None:
+        """Real-user Core Web Vitals of the origin (CrUX); None when it cannot be asked."""
+        if self._field_performance is None or not reading.pages:
+            return None
+        origin = "{0.scheme}://{0.netloc}".format(urlsplit(reading.pages[0].url))
+        try:
+            return self._field_performance.measure(origin)
+        except Exception:  # unavailable: the checks stay UNKNOWN, never a failure
+            ledger.decide("FAILED:FIELD_PERFORMANCE")
+            return None
+
     def _extras(self, reading: SiteReading, ledger: RunLedger) -> SiteExtras:
         """The first declared sitemap and /llms.txt, within the site request budget."""
         policy = self.policy
@@ -837,7 +856,11 @@ class FirstObservationService:
         robots = reading.robots
         noindex = "noindex" in (home.meta_robots or "").lower()
         audit = audit_representation(
-            reading.pages, robots, self._extras(reading, ledger), activity_found=bool(findings)
+            reading.pages,
+            robots,
+            self._extras(reading, ledger),
+            activity_found=bool(findings),
+            field=self._field(reading, ledger),
         )
         checks: dict[str, object] = {
             "robotsTxtPublished": robots is not None and robots.text is not None,

@@ -10,6 +10,7 @@ export function auditSection(id: string, t: Translate): string {
     case "SEARCH_FINDABILITY": return t("Encontrabilidad en buscadores", "Search findability");
     case "AI_ANSWER_READINESS": return t("Preparación para respuestas de IA", "AI answer readiness");
     case "SHARING_AND_MOBILE": return t("Compartir y móvil", "Sharing and mobile");
+    case "REAL_USER_EXPERIENCE": return t("Experiencia real de usuarios", "Real-user experience");
     default: return id;
   }
 }
@@ -133,6 +134,18 @@ export function auditCopy(id: string, t: Translate): AuditCopy {
       title: t("Su oferta no está declarada en datos estructurados", "Its offer is not declared as structured data"),
       why: t("Las superficies que leen datos estructurados podrían no relacionarla con lo que ofrece.", "Surfaces that read structured data may not connect it with what it offers."),
       action: t("Declara sus servicios o productos con schema.org Service o Product.", "Declare its services or products with schema.org Service or Product.") };
+    case "LOADING_SPEED_REAL_USERS": return {
+      title: t("Para sus visitantes reales, el contenido principal tarda en cargar", "For its real visitors, the main content is slow to load"),
+      why: t("Medido con usuarios reales de Chrome en móvil (28 días): el 75 % ve el contenido principal en más de 2,5 s. Afecta a la conversión y al posicionamiento.", "Measured on real Chrome mobile users (28 days): 75% see the main content after more than 2.5 s. It affects conversion and ranking."),
+      action: t("Optimiza imágenes, fuentes y servidor de la página principal; vuelve a medir en 28 días.", "Optimize the main page's images, fonts and server; measure again in 28 days.") };
+    case "RESPONSIVENESS_REAL_USERS": return {
+      title: t("Para sus visitantes reales, la web tarda en responder al tocar", "For its real visitors, the site is slow to respond to taps"),
+      why: t("Medido con usuarios reales (INP, percentil 75) por encima de 200 ms: se percibe lenta al interactuar.", "Measured on real users (INP, 75th percentile) above 200 ms: it feels slow to interact with."),
+      action: t("Reduce el JavaScript que bloquea la interacción, sobre todo en móvil.", "Reduce the JavaScript that blocks interaction, especially on mobile.") };
+    case "VISUAL_STABILITY_REAL_USERS": return {
+      title: t("Para sus visitantes reales, el contenido se desplaza mientras carga", "For its real visitors, content shifts while loading"),
+      why: t("Medido con usuarios reales (CLS, percentil 75) por encima de 0,1: provoca clics erróneos y sensación de descuido.", "Measured on real users (CLS, 75th percentile) above 0.1: it causes mistaken clicks and a careless impression."),
+      action: t("Reserva el espacio de imágenes, anuncios y banners antes de que carguen.", "Reserve space for images, ads and banners before they load.") };
     default: return { title: id, why: "", action: "" };
   }
 }

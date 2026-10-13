@@ -364,7 +364,7 @@ def test_public_web_representation_is_audited_with_its_evidence(tmp_path: Path) 
     audit = measured["detail"]["audit"]
     assert audit["instrument"] == "representation-audit.v1"
     assert set(audit["sections"]) == {
-        "SEARCH_FINDABILITY", "AI_ANSWER_READINESS", "SHARING_AND_MOBILE"
+        "SEARCH_FINDABILITY", "AI_ANSWER_READINESS", "SHARING_AND_MOBILE", "REAL_USER_EXPERIENCE"
     }  # fmt: skip
     # Every check says what it saw and where; there is no universal score.
     assert all({"id", "status", "impact", "value", "evidence"} <= set(c) for c in audit["checks"])

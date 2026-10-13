@@ -11,7 +11,7 @@ attention items are ordered by a fixed impact class, never by a computed number.
 
 from __future__ import annotations
 
-from collections.abc import Sequence
+from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
 from datetime import datetime
 from enum import StrEnum
@@ -34,6 +34,15 @@ class Section(StrEnum):
     SEARCH = "SEARCH_FINDABILITY"
     AI = "AI_ANSWER_READINESS"
     SHARING = "SHARING_AND_MOBILE"
+    EXPERIENCE = "REAL_USER_EXPERIENCE"
+
+
+#: Google's "good" thresholds for Core Web Vitals at the 75th percentile of real users.
+GOOD_P75 = {
+    "largest_contentful_paint": 2500.0,  # ms
+    "interaction_to_next_paint": 200.0,  # ms
+    "cumulative_layout_shift": 0.1,
+}
 
 
 class Status(StrEnum):
@@ -144,6 +153,7 @@ def audit_representation(
     extras: SiteExtras,
     *,
     activity_found: bool,
+    field: Mapping[str, object] | None = None,
 ) -> RepresentationAudit:
     home = pages[0]
     measured = [p for p in pages if p.signals]  # pages read by this reader version
@@ -259,6 +269,23 @@ def audit_representation(
         if images:
             add("IMAGES_DESCRIBED", Section.SHARING, missing_alt <= images // 10, Impact.LOW,
                 {"images": images, "withoutAlt": missing_alt})  # fmt: skip
+    # ---- real-user experience (CrUX field data, 28-day window) --------------------------
+    state = None if field is None else field.get("state")
+    p75 = field.get("p75") if field is not None else None
+    for metric, check_id, impact in (
+        ("largest_contentful_paint", "LOADING_SPEED_REAL_USERS", Impact.HIGH),
+        ("interaction_to_next_paint", "RESPONSIVENESS_REAL_USERS", Impact.MEDIUM),
+        ("cumulative_layout_shift", "VISUAL_STABILITY_REAL_USERS", Impact.MEDIUM),
+    ):
+        value = p75.get(metric) if isinstance(p75, Mapping) else None
+        ok = (
+            None
+            if state != "MEASURED" or not isinstance(value, int | float)
+            else value <= GOOD_P75[metric]
+        )
+        add(check_id, Section.EXPERIENCE, ok, impact,
+            {"p75": value, "goodAtMost": GOOD_P75[metric], "state": state or "NOT_MEASURED",
+             "period": None if field is None else field.get("period")})  # fmt: skip
     return RepresentationAudit(tuple(checks), home.observed_at, len(pages))
 
 

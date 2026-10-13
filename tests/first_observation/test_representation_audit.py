@@ -97,3 +97,43 @@ def test_crawler_access_and_sitemap_parsing() -> None:
     <url><loc>https://a.example/</loc><lastmod>2026-09-01</lastmod></url>
     <url><loc>https://a.example/b</loc><lastmod>2026-10-02</lastmod></url></urlset>"""
     assert parse_sitemap(body) == (2, "2026-10-02")
+
+
+def test_real_user_vitals_pass_fail_or_stay_unknown() -> None:
+    from application.first_observation.representation_audit import Section
+
+    good = {"state": "MEASURED", "p75": {"largest_contentful_paint": 1800.0,
+            "interaction_to_next_paint": 120.0, "cumulative_layout_shift": 0.02}}  # fmt: skip
+    slow = {"state": "MEASURED", "p75": {"largest_contentful_paint": 4200.0,
+            "interaction_to_next_paint": 350.0, "cumulative_layout_shift": 0.3}}  # fmt: skip
+    for field, expected in ((good, Status.PASS), (slow, Status.ATTENTION),
+                            ({"state": "NO_DATA"}, Status.UNKNOWN), (None, Status.UNKNOWN)):  # fmt: skip
+        audit = audit_representation(
+            [_page(GOOD)], None, SiteExtras(), activity_found=True, field=field
+        )
+        experience = [c for c in audit.checks if c.section is Section.EXPERIENCE]
+        assert len(experience) == 3 and {c.status for c in experience} == {expected}
+
+
+def test_crux_answers_are_cached_per_origin_and_no_record_is_no_data(tmp_path) -> None:  # type: ignore[no-untyped-def]
+    from tools.runtime.field_performance import CruxFieldPerformance
+
+    calls: list[str] = []
+
+    def query(origin: str):  # type: ignore[no-untyped-def]
+        calls.append(origin)
+        if "small" in origin:
+            return None
+        return {"metrics": {"largest_contentful_paint": {"percentiles": {"p75": 2100}}},
+                "collectionPeriod": {"firstDate": {"year": 2026, "month": 9, "day": 14},
+                                     "lastDate": {"year": 2026, "month": 10, "day": 11}}}  # fmt: skip
+
+    crux = CruxFieldPerformance(query, tmp_path / "c.sqlite3", clock=lambda: NOW)
+    measured = crux.measure("https://big.example")
+    assert measured["state"] == "MEASURED" and measured["period"] == {
+        "first": "2026-09-14",
+        "last": "2026-10-11",
+    }
+    assert crux.measure("https://small.example")["state"] == "NO_DATA"
+    crux.measure("https://big.example")
+    assert calls == ["https://big.example", "https://small.example"]
