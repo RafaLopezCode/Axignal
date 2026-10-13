@@ -69,14 +69,29 @@ def test_without_rights_the_private_observation_works_and_nothing_is_kept_or_sen
     assert discoveries(_view(facade, second, _pending_id(facade, second)), "ACTIVITY")
 
 
-def test_without_input_rights_no_page_text_reaches_the_semantic_provider(tmp_path: Path) -> None:
+def test_without_input_rights_only_controlled_vocabulary_reaches_the_semantic_provider(
+    tmp_path: Path,
+) -> None:
+    """ADR-0090 §5 as amended: the batch is AXIGNAL's own vocabulary, never page text."""
+    import re as _re
+
+    from application.first_observation.activity import _ROUTING_TERMS
+
     world = World()
     facade = build(tmp_path, world, rights=registered_rights(provider_input=False))
     token, _ = _attend(facade, tmp_path, "subject:no-input", SCHOOL_AR)
     runtime(facade).drain()
     view = _view(facade, token, _pending_id(facade, token))
-    assert world.judge.calls == []
-    assert "SKIPPED:SEMANTIC:PROVIDER_INPUT_RIGHTS_UNKNOWN" in view["_ledger"]["decisions"]
+    assert world.judge.calls, "the activity judgment runs on controlled vocabulary"
+    decisions = view["_ledger"]["decisions"]
+    assert "SEMANTIC_INPUT:CONTROLLED_VOCABULARY:NO_SITE_CONTENT_RIGHTS" in decisions
+    for batch in world.judge.calls:
+        for page in batch.state["pages"]:
+            fields = [page["title"], page["description"], page["text"], *page["headings"],
+                      *page["services"]]  # fmt: skip
+            words = {w for f in fields for w in _re.findall(r"[^\W\d_]+", str(f).casefold())}
+            assert words <= _ROUTING_TERMS, sorted(words - _ROUTING_TERMS)[:5]
+        assert all(str(page["url"]).startswith("[page-") for page in batch.state["pages"])
 
 
 def test_a_registry_verified_website_without_rights_is_never_seeded(tmp_path: Path) -> None:

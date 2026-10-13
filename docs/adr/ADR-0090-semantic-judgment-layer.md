@@ -64,3 +64,17 @@ No additional rights flag exists for Jev: the boundaries are `AXIGNAL_SEMANTIC_L
 - Thresholds are policy, not truth; they must be evaluated on AXIGNAL-owned labels before being trusted.
 - Known Jev 1.13 weaknesses (vendor-published: counting, dates, arithmetic, indirection, large noisy state) stay in Python by construction.
 - TypeSafe adjusts rate limits dynamically; the SDK's bounded backoff applies and failures degrade to UNKNOWN.
+
+## Amendment 2026-10-13: controlled vocabulary needs no per-site content rights
+
+**Decision (CTO, 2026-10-13).** The First Observation activity batch may reach System One for **any public website**, with or without a per-site content-rights entry. The reason is what it carries: `application/first_observation/activity.py::minimize` emits only tokens from AXIGNAL's own fixed economic vocabulary (`_ROUTING_TERMS`: multilingual economic words, place names and taxonomy labels). It never carries page text, quotations, URLs (pages are `[page-N]`), names, e-mails or identifiers. That vocabulary is AXIGNAL's, not the website's content; the "Input" of MCA §5 that needs rights is the site's content, which is never sent here.
+
+**Unchanged:**
+- **Page text and offer excerpts still need rights.** The public-understanding report and any quotation still require `provider_input` **and** `public_offer_input`.
+- Person-free state, budgets, typed questions, non-authoritative output, judgment memory and the layer switch (`AXIGNAL_SEMANTIC_LAYER_ENABLED`) stay as decided above.
+
+**Why now.** In production, every new website lacked a rights entry, so the semantic activity judgment never ran: 0 judgments across the 30-organization golden set. Activity stayed UNKNOWN for sites whose words are not in the lexicon, and with it demand, regulation and sector context.
+
+**Evidence and tests:**
+- The ledger records `SEMANTIC_INPUT:CONTROLLED_VOCABULARY[:NO_SITE_CONTENT_RIGHTS]`.
+- `tests/first_observation/test_rights_and_minimization.py` proves that, without site rights, every word reaching the provider belongs to the controlled vocabulary and pages are anonymous.
