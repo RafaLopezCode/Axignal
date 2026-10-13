@@ -210,7 +210,7 @@ class StripeSubscriberAdapter:
             None,
         )
         if config is None:
-            if configurations.get("has_more") is True:
+            if configurations.get("has_more") is not False:
                 raise StripeSubscriberError("portal configuration pagination incomplete")
             config = self._request(
                 "POST",
@@ -241,10 +241,13 @@ class StripeSubscriberAdapter:
                 raise StripeSubscriberError("portal feature unavailable")
         cancel = features["subscription_cancel"]
         update = features.get("subscription_update")
+        customer_update = features.get("customer_update")
         if (
             cancel.get("mode") != "at_period_end"
             or not isinstance(update, dict)
             or update.get("enabled") is not False
+            or not isinstance(customer_update, dict)
+            or customer_update.get("enabled") is not False
         ):
             raise StripeSubscriberError("portal billing policy mismatch")
         configuration = config.get("id")

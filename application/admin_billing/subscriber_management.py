@@ -96,13 +96,17 @@ class SubscriberBillingManagement:
             or latest.subscription_ref != projection.subscription_ref
         ):
             raise BillingManagementError("BILLING_CHANGED")
-        parsed = urlsplit(url)
+        try:
+            parsed = urlsplit(url)
+            port = parsed.port
+        except ValueError:
+            raise BillingManagementError("BILLING_REDIRECT_REJECTED") from None
         if (
             parsed.scheme != "https"
             or parsed.hostname != "billing.stripe.com"
             or parsed.username
             or parsed.password
-            or parsed.port
+            or port
             or parsed.fragment
             or len(url) > 2048
         ):

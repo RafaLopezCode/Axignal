@@ -73,7 +73,7 @@ def test_tenant_grounded_axent_end_to_end(monkeypatch: pytest.MonkeyPatch, tmp_p
 
     token_a, focus_a = _subscriber(facade, tmp_path, "subject:tenant-a")
     token_b, focus_b = _subscriber(facade, tmp_path, "subject:tenant-b")
-    _append_opportunity_capability_source(tmp_path)
+    _append_opportunity_capability_source(tmp_path, as_of=datetime.now(UTC))
     # Only tenant B reobserves: its opportunities exist only in B's private projection.
     reobserved = facade.handle(
         "POST",

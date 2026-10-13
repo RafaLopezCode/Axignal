@@ -11,3 +11,8 @@ A pilot/unconfigured/unauthorized payer gets a clear state, never fake subscript
 
 ## Acceptance
 Two Principals cannot read/change each other's profile or payer; revoked membership/session and stale versions fail closed; profile survives process restart. No canonical/evidence writes from settings. Portal uses only server mapping, merchant/environment, expected subscription and allowlisted return/redirect. Features verified before session creation. Model/network-independent required tests. Browser desktop/mobile QA. Commit, merge and push authorized by user.
+
+
+## Follow-up clarification
+
+Account settings must remain reachable before the first organization exists, including on mobile. Portal return is an attention to reconcile with the provider, never a payment/cancellation receipt, and selects the account settings view. All subscriber and AXENT messages use six supported languages; inventory must have no missing entries. E2E closure includes actual HTTP session, authorization, Next proxy, persistence, recovery and revocation, with controlled external IO. Never describe controlled tests as live merchant validation or claim blocked native browser steps were exercised.

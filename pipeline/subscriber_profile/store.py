@@ -1,6 +1,8 @@
 """SQLite authority for Principal-owned UI preferences."""
 
 import sqlite3
+from collections.abc import Iterator
+from contextlib import contextmanager
 from pathlib import Path
 
 from application.subscriber_profile.service import Profile, ProfileConflict
@@ -15,10 +17,15 @@ class SqliteProfileStore:
                 "CREATE TABLE IF NOT EXISTS principal_ui_profile (principal TEXT PRIMARY KEY, version INTEGER NOT NULL, locale TEXT, avatar BLOB)"
             )
 
-    def _connect(self) -> sqlite3.Connection:
+    @contextmanager
+    def _connect(self) -> Iterator[sqlite3.Connection]:
         db = sqlite3.connect(self.path, timeout=10)
         db.row_factory = sqlite3.Row
-        return db
+        try:
+            with db:
+                yield db
+        finally:
+            db.close()
 
     @staticmethod
     def _profile(row: sqlite3.Row | None) -> Profile:

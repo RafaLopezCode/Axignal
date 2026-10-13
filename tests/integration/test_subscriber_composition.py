@@ -229,9 +229,9 @@ def _register_canonical_organization(tmp_path: Path) -> None:
     assert store.register(request, EvidenceAdmission.admit_claim(request))
 
 
-def _append_opportunity_capability_source(tmp_path: Path) -> None:
+def _append_opportunity_capability_source(tmp_path: Path, *, as_of: datetime = AS_OF) -> None:
     memory = SqliteObservationMemory(tmp_path / "observation-memory.sqlite3")
-    observed_at = AS_OF - timedelta(hours=1)
+    observed_at = as_of - timedelta(hours=1)
     memory.append(
         GovernedObservation(
             record=ObservationRecord(
@@ -472,7 +472,7 @@ def test_reobserve_executes_authorized_opportunity_plan_and_persists_reading(
     )
     assert added.status == 200
     focus_id = str(added.body["focusId"])
-    _append_opportunity_capability_source(tmp_path)
+    _append_opportunity_capability_source(tmp_path, as_of=datetime.now(UTC))
 
     reobserved = facade.handle(
         "POST",
@@ -767,3 +767,25 @@ def test_principal_profile_requires_session_is_private_and_survives_restart(tmp_
     facade.identity.logout(a)
     assert facade.handle("GET", "/subscriber/profile", headers(a)).status == 401
     assert facade.handle("GET", "/subscriber/profile", headers(b)).status == 200
+
+
+def test_portal_return_opens_account_settings_without_an_organization(tmp_path: Path) -> None:
+    catalogue = ConfiguredOfferCatalogueReader(
+        ApprovedOfferCatalogue(
+            "account-return",
+            "v1",
+            ApprovedRecurringOffer(
+                "base-offer", RecurringTerms("month", 1, "EUR", 995, tax_behavior="exclusive")
+            ),
+            ApprovedRecurringOffer(
+                "additional-offer", RecurringTerms("month", 1, "EUR", 495, tax_behavior="exclusive")
+            ),
+        ),
+        "test",
+    )
+    # Existing subscriber self-service survives disabled new sales and absent tax readiness.
+    facade = _build(tmp_path, checkout_configured=True, offer_catalogue_reader=catalogue)
+    assert facade.management is not None
+    parsed = urlsplit(facade.management.return_url)
+    assert parsed.path == "/account"
+    assert parse_qs(parsed.query) == {"billing": ["return"], "screen": ["account"]}

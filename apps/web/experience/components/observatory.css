@@ -539,9 +539,9 @@ body:has(.obs-rail-desktop) .privacy-preferences-button { inset-inline-end: auto
 
 /* First run: before a first reading exists the product is one focused screen — no rail, no menus, one action. */
 .obs.obs-focused { display: flex; flex-direction: column; min-block-size: 100dvh; background: var(--obs-paper); }
-.obs-focused-bar { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 18px clamp(16px, 4vw, 40px); }
+.obs-focused-bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; padding: 18px clamp(16px, 4vw, 40px); }
 .obs-focused-bar img { block-size: 32px; inline-size: auto; }
-.obs-focused-tools { display: flex; align-items: center; gap: 12px; }
+.obs-focused-tools { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
 .obs-focused-main { flex: 1; padding: clamp(16px, 4vh, 48px) clamp(16px, 4vw, 40px) 64px; outline: none; }
 .obs-focused-main .obs-add { margin-block-start: 0; }
 /* The focused bar holds language and sign-out, so the privacy launcher stays at the bottom edge instead. */

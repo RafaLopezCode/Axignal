@@ -28,7 +28,7 @@ test("profile conflict stays a conflict and portal host is exact",async()=>{
  for(const url of ["https://billing.stripe.com.attacker.test/","https://user:pass@billing.stripe.com/","javascript:alert(1)","https://billing.stripe.com/#secret"])assert.equal(approvedPortalUrl(url),false);
 });
 test("new subscriber controls and dismissal labels are translated in every locale",()=>{
- for(const key of ["Change avatar","Account language","Change payment method","View and download invoices","Cancel renewal","Dismiss notice"])
+ for(const key of ["Change avatar","Account language","Change payment method","View and download invoices","Cancel renewal","Dismiss notice","Account and connections","Inspect basis and limits","Open available evidence","Illustrative explanation of fictional data; without live research. "])
   for(const locale of ["de","pt","fr","it"] as const)assert.notEqual(translate("es",key,locale),key);
 });
 test("temporary operation notices expose a keyboard-accessible dismissal without undoing state",()=>{
