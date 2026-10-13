@@ -17,7 +17,7 @@ import secrets
 import sqlite3
 from collections.abc import Callable, Iterator, Mapping
 from contextlib import contextmanager
-from datetime import UTC, datetime, timedelta
+from datetime import UTC, date, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
@@ -94,6 +94,14 @@ class SqliteFirstObservationStore:
                 );
                 CREATE INDEX IF NOT EXISTS idx_fo_understanding_history_scope
                     ON fo_understanding_history(tenant_id, target_ref, organization_id, observed_at);
+                CREATE TABLE IF NOT EXISTS fo_family_snapshots (
+                    tenant_id TEXT NOT NULL,
+                    target_ref TEXT NOT NULL,
+                    organization_id TEXT,
+                    day TEXT NOT NULL,
+                    metrics TEXT NOT NULL,
+                    PRIMARY KEY (tenant_id, target_ref, day)
+                );
                 CREATE TABLE IF NOT EXISTS fo_demand_markets (
                     tenant_id TEXT NOT NULL,
                     target_ref TEXT NOT NULL,
@@ -123,6 +131,44 @@ class SqliteFirstObservationStore:
                 markets=excluded.markets, updated_at=excluded.updated_at""",
                 (tenant_id, target_ref, json.dumps(list(markets)), now.isoformat()),
             )
+
+    def save_snapshot(
+        self,
+        tenant_id: str,
+        target_ref: str,
+        organization_id: str | None,
+        *,
+        day: str,
+        metrics: Mapping[str, object],
+        keep_days: int = 400,
+    ) -> None:
+        """Today's family metrics for one Focus (one row per day, bounded history)."""
+        oldest = (date.fromisoformat(day) - timedelta(days=keep_days)).isoformat()
+        with self._connect() as db:
+            db.execute(
+                """INSERT INTO fo_family_snapshots
+                (tenant_id, target_ref, organization_id, day, metrics) VALUES (?,?,?,?,?)
+                ON CONFLICT(tenant_id, target_ref, day) DO UPDATE SET
+                organization_id=excluded.organization_id, metrics=excluded.metrics""",
+                (tenant_id, target_ref, organization_id, day,
+                 json.dumps(dict(metrics), ensure_ascii=False, sort_keys=True)),
+            )  # fmt: skip
+            db.execute(
+                "DELETE FROM fo_family_snapshots WHERE tenant_id=? AND target_ref=? AND day<?",
+                (tenant_id, target_ref, oldest),
+            )
+
+    def snapshots(
+        self, tenant_id: str, target_ref: str, organization_id: str | None
+    ) -> list[tuple[str, dict[str, Any]]]:
+        """Daily family metrics of one Focus and Organization, oldest first."""
+        with self._connect() as db:
+            rows = db.execute(
+                """SELECT day, metrics FROM fo_family_snapshots
+                WHERE tenant_id=? AND target_ref=? AND organization_id IS ? ORDER BY day""",
+                (tenant_id, target_ref, organization_id),
+            ).fetchall()
+        return [(str(row["day"]), dict(json.loads(row["metrics"]))) for row in rows]
 
     @contextmanager
     def _connect(self) -> Iterator[sqlite3.Connection]:

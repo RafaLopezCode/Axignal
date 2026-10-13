@@ -92,3 +92,14 @@ test("own-site signals keep their voice: observed technology, declared clients, 
   assert.match(discoveryCopy(discovery("RATING", "RATING_SELF_PUBLISHED", { statement: "4.7/5.0", detail: { count: 212 } }), en).why, /not an independent review/);
   assert.match(discoveryCopy(discovery("CREDENTIAL", "CERTIFICATION_CLAIMED", { statement: "ISO 9001" }), en).why, /register has not been checked/);
 });
+
+test("a change in time names the metric, both readings and its direction, never a cause", () => {
+  const geo = discoveryCopy(discovery("CHANGE", "presence:presence.ai_named_share:EVOLUTION", { detail: { family: "presence",
+    values: { metric: "presence.ai_named_share", before: 0, after: 0.5, beforeDay: "2026-10-01", afterDay: "2026-10-13", direction: "EVOLUTION" } } }), en);
+  assert.match(geo.finding, /AI answers naming it in its category: 0 % . 50 %/);
+  assert.match(geo.why, /improving.*2026-10-01.*not why/);
+  const clients = discoveryCopy(discovery("CHANGE", "relationships:relationships.public_clients:ADDED", { detail: { family: "relationships",
+    values: { metric: "relationships.public_clients", before: ["A"], after: ["A", "B"], added: ["B"], removed: [], direction: "ADDED" } } }), en);
+  assert.match(clients.finding, /Public clients: new: B$/);
+  assert.match(clients.why, /no judgement/);
+});

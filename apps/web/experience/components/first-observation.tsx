@@ -216,6 +216,26 @@ export function discoveryCopy(d: Discovery, t: Translate, locale = "en"): { find
     return { finding: `${label}: ${value}${year}`,
       why: t("Según Wikidata, una fuente comunitaria: no es una cuenta oficial y puede estar desactualizada.", "According to Wikidata, a community source: it is not an official account and may be outdated.") };
   }
+  if (d.kind === "CHANGE") {
+    const v = (d.detail.values && typeof d.detail.values === "object" ? d.detail.values : {}) as Record<string, unknown>;
+    const metric = String(v.metric ?? "");
+    const shown = (x: unknown) => Array.isArray(x) ? (x.length ? x.map(String).join(", ") : t("ninguno", "none"))
+      : metric === "presence.ai_named_share" ? `${Math.round(Number(x ?? 0) * 100)} %`
+      : metric === "presence.ai_knows_brand" ? (Number(x) ? t("sí", "yes") : t("no", "no"))
+      : typeof x === "number" ? x.toLocaleString(locale) : String(x ?? "");
+    const added = Array.isArray(v.added) ? v.added.map(String) : [];
+    const removed = Array.isArray(v.removed) ? v.removed.map(String) : [];
+    const what = added.length || removed.length
+      ? [added.length ? `${t("nuevo", "new")}: ${added.join(", ")}` : "", removed.length ? `${t("ya no", "no longer")}: ${removed.join(", ")}` : ""].filter(Boolean).join(" · ")
+      : `${shown(v.before)} → ${shown(v.after)}`;
+    const direction = String(v.direction ?? "");
+    const since = t("Entre el {a} y el {b}.", "Between {a} and {b}.").replace("{a}", String(v.beforeDay ?? "")).replace("{b}", String(v.afterDay ?? ""));
+    const reading = direction === "EVOLUTION" ? t("Evoluciona a mejor.", "It is improving.")
+      : direction === "REGRESSION" ? t("Retrocede.", "It is regressing.")
+      : t("Un cambio observado, sin juicio de mejor o peor.", "An observed change, with no judgement of better or worse.");
+    return { finding: `${changeLabel(metric, t)}: ${what}`,
+      why: `${reading} ${since} ${t("Compara dos lecturas del mismo instrumento: dice qué cambió, no por qué.", "It compares two readings by the same instrument: it says what changed, not why.")}` };
+  }
   if (d.kind === "INXIGHT") {
     const v = (d.detail.values && typeof d.detail.values === "object" ? d.detail.values : {}) as Record<string, unknown>;
     const list = (x: unknown) => Array.isArray(x) ? x.map(String).join(", ") : String(x ?? "");
@@ -376,6 +396,33 @@ function techCategory(category: string, t: Translate): string {
   return labels[category] ?? category.toLowerCase();
 }
 
+export function changeLabel(metric: string, t: Translate): string {
+  const labels: Record<string, string> = {
+    "presence.ai_named_share": t("Respuestas de IA que la nombran en su categoría", "AI answers naming it in its category"),
+    "presence.ai_knows_brand": t("La IA conoce la marca", "AI knows the brand"),
+    "presence.audit_attention": t("Puntos de su web que piden atención", "Website checks needing attention"),
+    "presence.lcp_ms": t("Carga real de su web (ms)", "Real-user page load (ms)"),
+    "presence.inp_ms": t("Respuesta real de su web (ms)", "Real-user responsiveness (ms)"),
+    "presence.languages": t("Idiomas de su web", "Website languages"),
+    "reputation.press_mentions": t("Titulares que la nombran", "Headlines naming it"),
+    "activity.own_publications": t("Publicaciones propias", "Own publications"),
+    "value.activities": t("Actividades probables", "Likely activities"),
+    "markets.premises": t("Sedes declaradas", "Declared premises"),
+    "markets.group_countries": t("Países de su grupo", "Group countries"),
+    "relationships.public_clients": t("Clientes públicos", "Public clients"),
+    "relationships.partners": t("Socios en contratos públicos", "Public contract partners"),
+    "relationships.competitors": t("Competidores observados", "Observed competitors"),
+    "demand.open_public_calls": t("Licitaciones abiertas que encajan", "Matching open public calls"),
+    "demand.recurrent_buyers": t("Compradores recurrentes de su actividad", "Recurring buyers of its activity"),
+    "economics.revenue": t("Ingresos", "Revenue"),
+    "economics.employees": t("Empleados", "Employees"),
+    "organization.identifiers": t("Identificadores publicados", "Published identifiers"),
+    "context.sector_headlines": t("Titulares de su sector", "Sector headlines"),
+    "context.regulation": t("Normas nuevas sobre su actividad", "New rules about its activity"),
+  };
+  return labels[metric] ?? metric;
+}
+
 function demandQuestionLabel(id: string, t: Translate): string | null {
   switch (id) {
     case "compatible-public-tenders": return t("licitaciones abiertas", "open tenders");
@@ -520,6 +567,7 @@ export function FirstObservationView({ observation }: { observation: FirstObserv
   const findings = ORDER.flatMap(kind => observation.discoveries.filter(d => d.kind === kind));
   const gaps = observation.discoveries.filter(d => d.kind === "REPRESENTATION_GAP");
   const crossings = observation.discoveries.filter(d => d.kind === "INXIGHT");
+  const changes = observation.discoveries.filter(d => d.kind === "CHANGE");
   const unknowns = observation.discoveries.filter(d => d.kind === "SIGNIFICANT_UNKNOWN");
   return <section className="fo-view" aria-labelledby="first-observation-title">
     <span className="eyebrow">{t("Primera observación", "First observation")}</span>
@@ -527,6 +575,7 @@ export function FirstObservationView({ observation }: { observation: FirstObserv
     <p className="fo-authority">{t("Lectura operativa con sus fuentes. No es verdad canónica: lo potencial sigue siendo potencial.", "Operational reading with its sources. It is not canonical truth: what is potential stays potential.")}</p>
     {observation.publicUnderstanding && <PublicUnderstandingView report={observation.publicUnderstanding}/>}
     {crossings.length > 0 && <div className="fo-group fo-crossings"><h4 className="fo-group-title">{t("Lo que revela el cruce", "What crossing the findings reveals")}</h4>{crossings.map((d, i) => <Finding key={`${d.code}-${i}`} d={d}/>)}</div>}
+    {changes.length > 0 && <div className="fo-group fo-changes"><h4 className="fo-group-title">{t("Cómo ha cambiado", "How it has changed")}</h4>{changes.map((d, i) => <Finding key={`${d.code}-${i}`} d={d}/>)}</div>}
     {findings.length > 0 && <div className="fo-group"><h4 className="fo-group-title">{t("Lo que AXIGNAL ha encontrado", "What AXIGNAL found")}</h4>{findings.map((d, i) => <Finding key={`${d.code}-${i}`} d={d}/>)}</div>}
     {gaps.length > 0 && <div className="fo-group"><h4 className="fo-group-title">{t("Brechas posibles", "Possible gaps")}</h4>{gaps.map((d, i) => <Finding key={`${d.code}-${i}`} d={d}/>)}</div>}
     {unknowns.length > 0 && <div className="fo-group"><h4 className="fo-group-title">{t("Lo que todavía no sabemos", "What we do not know yet")}</h4>{unknowns.map((d, i) => <Finding key={`${d.code}-${i}`} d={d}/>)}</div>}
