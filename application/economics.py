@@ -22,7 +22,11 @@ ORDER = (
 
 
 def economic_discoveries(
-    facts: Mapping[str, object], *, verified: bool, observed_at: str
+    facts: Mapping[str, object],
+    *,
+    verified: bool,
+    observed_at: str,
+    attributed_by: str | None = None,
 ) -> list[dict[str, object]]:
     item = facts.get("item")
     values = facts.get("facts")
@@ -51,7 +55,8 @@ def economic_discoveries(
                     "sourceKind": "SECONDARY_COMMUNITY_EDITED",
                     "item": item,
                     "alsoCarryingLei": facts.get("alsoCarryingLei"),
-                    "attributedBy": "VERIFIED_LEI" if verified else "LEI_DECLARED_ON_WEBSITE",
+                    "attributedBy": attributed_by
+                    or ("VERIFIED_LEI" if verified else "LEI_DECLARED_ON_WEBSITE"),
                     "rights": facts.get("rights"),
                     "readAt": facts.get("readAt"),
                     "limitation": "What Wikidata states, with its reference year; not an official "
@@ -183,6 +188,48 @@ def register_discoveries(
             }
         )
     return out
+
+
+def stated_industry(discoveries: list[object]) -> list[object]:
+    """When neither its website nor a register establishes what it does, the industry
+    Wikidata states for the item its official website identifies answers the value family
+    (POTENTIAL: a community source), routed to its ISIC section for regulation and context.
+    """
+    from application.regulation.sectors import section_of_label
+
+    held = [d for d in discoveries if isinstance(d, Mapping)]
+    if any(d.get("kind") == "ACTIVITY" for d in held):
+        return discoveries
+    fact = next(
+        (d for d in held if d.get("code") == "WIKIDATA:industry"
+         and isinstance(d.get("detail"), Mapping)),
+        None,
+    )  # fmt: skip
+    label = str(fact.get("statement") or "") if fact is not None else ""
+    section = section_of_label(label) if label and not label.startswith("Q") else None
+    if fact is None or section is None:
+        return discoveries
+    activity = {
+        "kind": "ACTIVITY",
+        "code": "STATED_INDUSTRY",
+        "statement": label,
+        "epistemicState": "POTENTIAL",
+        "sourceUrl": fact.get("sourceUrl"),
+        "excerpt": f"Wikidata industry: {label}",
+        "observedAt": fact.get("observedAt"),
+        "detail": {
+            "isicSection": section,
+            "source": "Wikidata",
+            "method": "STATED_INDUSTRY",
+            "limitation": "The industry a community source states for it; a direction for "
+            "demand and context, not a verified capability.",
+        },
+    }
+    kept = [
+        d for d in discoveries
+        if not (isinstance(d, Mapping) and d.get("code") == "ACTIVITY_NOT_ESTABLISHED")
+    ]  # fmt: skip
+    return [*kept, activity]
 
 
 def registered_activity(discoveries: list[object]) -> list[object]:
