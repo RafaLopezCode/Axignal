@@ -193,6 +193,52 @@ export function discoveryCopy(d: Discovery, t: Translate, locale = "en"): { find
     return { finding: `${label}: ${value}${year}`,
       why: t("Según Wikidata, una fuente comunitaria: no es una cuenta oficial y puede estar desactualizada.", "According to Wikidata, a community source: it is not an official account and may be outdated.") };
   }
+  if (d.kind === "INXIGHT") {
+    const v = (d.detail.values && typeof d.detail.values === "object" ? d.detail.values : {}) as Record<string, unknown>;
+    const list = (x: unknown) => Array.isArray(x) ? x.map(String).join(", ") : String(x ?? "");
+    const pct = (x: unknown) => String(Math.round(Number(x ?? 0) * 100));
+    const rule = String(d.detail.rule ?? "");
+    const copy: Record<string, [string, string]> = {
+      LOCAL_BUYERS_NEVER_AWARDED: [
+        (v.where === "AREA" ? t("{n} organismos públicos de su zona contratan lo que hace ({c} contratos en el periodo observado) y ninguno le ha adjudicado nada.", "{n} public bodies in its area award what it does ({c} contracts in the period held) and none has awarded it a contract.")
+          : t("{n} organismos públicos de su país contratan lo que hace ({c} contratos en el periodo observado) y ninguno le ha adjudicado nada.", "{n} public bodies in its country award what it does ({c} contracts in the period held) and none has awarded it a contract."))
+          .replace("{n}", String(v.buyers ?? "")).replace("{c}", String(v.contracts ?? "")),
+        t("Demanda recurrente cercana que no está captando.", "Recurring demand close by that it is not capturing.")],
+      COMPETITORS_WIN_WITH_ITS_BUYERS: [
+        (Array.isArray(v.buyers) && v.buyers.length === 1
+          ? t("{competitors} ya ganan contratos con {buyers}, que compra su actividad y no le ha adjudicado nada.", "{competitors} already win contracts with {buyers}, a buyer of its activity that has not awarded it.")
+          : t("{competitors} ya ganan contratos con {buyers}, que compran su actividad y no le han adjudicado nada.", "{competitors} already win contracts with {buyers}: buyers of its activity that have not awarded it."))
+          .replace("{competitors}", list(v.competitors)).replace("{buyers}", list(v.buyers)),
+        t("Donde sus competidores ya trabajan, el comprador ya compra esta actividad: la puerta está abierta y se sabe quién la ocupa.", "Where competitors are established, the buyer already buys this activity: the door is open, and who holds it is known.")],
+      OPEN_DEMAND_OFFER_NOT_DECLARED: [
+        t("{n} licitaciones abiertas encajan con lo que hace, pero su web no declara esa oferta como datos estructurados.", "{n} open public call(s) match what it does, while its website does not declare that offer as structured data.").replace("{n}", String(v.openCalls ?? "")),
+        t("Los compradores y buscadores que se apoyan en datos estructurados pueden no conectarla con una demanda que existe ahora.", "Buyers and search surfaces that rely on structured data may not connect it to demand that exists now.")],
+      AI_NAMES_COMPETITORS_NOT_IT: [
+        t("Al preguntar por su categoría, los asistentes de IA nombran a {competitors} —que ganan contratos en sus códigos— y no a esta organización.", "Asked about its category, AI assistants name {competitors} — companies that win contracts in its codes — and not this organization.").replace("{competitors}", list(v.competitors)),
+        t("Se recomienda a sus competidores donde los compradores preguntan hoy; a ella no.", "Competitors are being recommended where buyers now ask; this organization is not.")],
+      PUBLIC_CONTRACTS_WEIGHT: [
+        Number(v.share ?? 0) >= 1
+          ? t("Los contratos públicos adjudicados en el periodo observado superan su última facturación anual declarada (los contratos suelen durar varios años).", "Public contracts awarded to it in the period held exceed its latest reported annual revenue (contracts often span several years).")
+          : t("Los contratos públicos adjudicados en el periodo observado suman cerca del {p}% de su última facturación anual declarada.", "Public contracts awarded to it in the period held add up to about {p}% of its latest reported annual revenue.").replace("{p}", pct(v.share)),
+        t("Mucho peso de lo público implica exposición a presupuestos y licitaciones. Los contratos pueden durar años: es un orden de magnitud, no una ratio de ventas.", "A high weight of public contracts means exposure to public budgets and tenders. Contract amounts may span several years: an order of magnitude, not a ratio of sales.")],
+      PUBLIC_CLIENT_CONCENTRATION: [
+        t("{client} concentra el {p}% del valor de los contratos públicos que se le han adjudicado en el periodo observado.", "{client} accounts for {p}% of the public contract value awarded to it in the period held.").replace("{client}", String(v.client ?? "")).replace("{p}", pct(v.share)),
+        t("Dependencia de un solo cliente público: una renovación o un cambio de presupuesto ahí pesa mucho.", "Dependence on one public client: a renewal or a budget change there weighs a lot.")],
+      SECTOR_IN_NEWS_NOT_IT: [
+        t("Su sector está en las noticias ({n} titulares recientes en su país) y la prensa indexada no nombra a esta organización.", "Its sector is in the news ({n} recent headlines in its country) and the indexed press does not name this organization.").replace("{n}", String(v.headlines ?? "")),
+        t("Se está hablando de su mercado sin su voz.", "A conversation about its market is happening without its voice.")],
+      GROUP_COUNTRIES_DEMAND_UNWATCHED: [
+        t("Su grupo tiene sociedades registradas en {countries}, donde no se está vigilando su demanda.", "Its group has registered entities in {countries}, where its demand is not being watched.").replace("{countries}", Array.isArray(v.countries) ? v.countries.map(c => placeLabel(String(c), locale) || String(c)).join(", ") : ""),
+        t("Los países donde ya tiene presencia legal son los mercados más baratos de vigilar: dirige allí la demanda para verla.", "Countries where it already has a legal presence are the cheapest markets to watch; direct demand there to see it.")],
+      FOUNDING_YEAR_SOURCES_DISAGREE: [
+        t("El registro oficial la data en {a}; Wikidata, en {b}.", "The official register dates it to {a}; Wikidata to {b}.").replace("{a}", String(v.register ?? "")).replace("{b}", String(v.wikidata ?? "")),
+        t("Suele ser una sociedad predecesora o un nuevo registro: conviene saber qué entidad lleva su historia.", "Often a predecessor company or a re-registration; worth knowing which entity carries its history.")],
+    };
+    const [finding, why] = copy[rule] ?? [d.statement, String(d.detail.why ?? "")];
+    const count = Number(d.detail.evidenceCount ?? 0);
+    const crossed = count === 1 ? t("Se apoya en 1 evidencia; es una inferencia, no un hecho.", "It rests on 1 piece of evidence; an inference, not a fact.") : t("Cruza {n} evidencias; es una inferencia, no un hecho.", "It crosses {n} pieces of evidence; an inference, not a fact.").replace("{n}", String(count));
+    return { finding, why: `${why} ${crossed}` };
+  }
   if (d.code === "VALUE_CHAIN_BUYERS" || d.code === "VALUE_CHAIN_SUPPLIERS") {
     const sectors = Array.isArray(d.detail.sectors) ? d.detail.sectors as { code: string; share: number }[] : [];
     const list = sectors.map(x => `${industryName(x.code, locale)} ${Math.round(x.share * 1000) / 10}%`).join(" · ");
@@ -438,12 +484,14 @@ export function FirstObservationView({ observation }: { observation: FirstObserv
   const { t } = useLocale();
   const findings = ORDER.flatMap(kind => observation.discoveries.filter(d => d.kind === kind));
   const gaps = observation.discoveries.filter(d => d.kind === "REPRESENTATION_GAP");
+  const crossings = observation.discoveries.filter(d => d.kind === "INXIGHT");
   const unknowns = observation.discoveries.filter(d => d.kind === "SIGNIFICANT_UNKNOWN");
   return <section className="fo-view" aria-labelledby="first-observation-title">
     <span className="eyebrow">{t("Primera observación", "First observation")}</span>
     <h3 id="first-observation-title">{observationStateCopy(observation.state, t)}</h3>
     <p className="fo-authority">{t("Lectura operativa con sus fuentes. No es verdad canónica: lo potencial sigue siendo potencial.", "Operational reading with its sources. It is not canonical truth: what is potential stays potential.")}</p>
     {observation.publicUnderstanding && <PublicUnderstandingView report={observation.publicUnderstanding}/>}
+    {crossings.length > 0 && <div className="fo-group fo-crossings"><h4 className="fo-group-title">{t("Lo que revela el cruce", "What crossing the findings reveals")}</h4>{crossings.map((d, i) => <Finding key={`${d.code}-${i}`} d={d}/>)}</div>}
     {findings.length > 0 && <div className="fo-group"><h4 className="fo-group-title">{t("Lo que AXIGNAL ha encontrado", "What AXIGNAL found")}</h4>{findings.map((d, i) => <Finding key={`${d.code}-${i}`} d={d}/>)}</div>}
     {gaps.length > 0 && <div className="fo-group"><h4 className="fo-group-title">{t("Brechas posibles", "Possible gaps")}</h4>{gaps.map((d, i) => <Finding key={`${d.code}-${i}`} d={d}/>)}</div>}
     {unknowns.length > 0 && <div className="fo-group"><h4 className="fo-group-title">{t("Lo que todavía no sabemos", "What we do not know yet")}</h4>{unknowns.map((d, i) => <Finding key={`${d.code}-${i}`} d={d}/>)}</div>}

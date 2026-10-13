@@ -61,6 +61,8 @@ const BY_UNKNOWN_CODE: Record<string, Facet> = {
 
 export function facetOfDiscovery(d: Pick<Discovery, "kind" | "code">): Facet {
   if (d.kind === "SIGNIFICANT_UNKNOWN") return BY_UNKNOWN_CODE[d.code.split(":")[0]] ?? NO_FACET;
+  // A cross-family reading belongs to the family it speaks for ("demand:RULE").
+  if (d.kind === "INXIGHT") return FAMILY_SET.has(d.code.split(":")[0]) ? { family: d.code.split(":")[0] as FamilyId, channel: null } : NO_FACET;
   // Its own channels are its activity; third-party headlines are its reputation.
   if (d.kind === "MENTION" && (d.code === "OWN_PUBLICATION" || d.code === "PRESS_RELEASE")) return { family: "activity", channel: null };
   return BY_KIND[d.kind] ?? NO_FACET;
