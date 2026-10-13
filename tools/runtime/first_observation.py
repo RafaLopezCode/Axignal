@@ -89,6 +89,7 @@ from application.subscriber_portfolio.models import (
 )
 from application.subscriber_projection.subscriber_runtime import SubscriberEconomicRuntime
 from application.timeline import changes as timeline_changes
+from application.timeline import history as timeline_history
 from application.timeline import snapshot as timeline_snapshot
 from application.value_chain import apply_value_chain
 from application.world_demand.index import (
@@ -620,6 +621,24 @@ class FirstObservationRuntime:
 
     def judge_regulation(self) -> int:
         return 0 if self._regulation is None else self._regulation[1].run()
+
+    def history(
+        self,
+        context: TrustedRequestContext,
+        target_ref: str,
+        organization_id: str | None = None,
+        *,
+        family: str | None = None,
+    ) -> dict[str, object] | None:
+        """The recorded evolution of one authorized Focus: series and dated events."""
+        tenant = str(context.tenant_id)
+        proof = self._proof(tenant, target_ref, organization_id)
+        if proof is None:
+            return None
+        organization = proof.get("target", {}).get("organizationId")
+        return timeline_history(
+            self.store.snapshots(tenant, target_ref, organization), family=family
+        )
 
     def _with_timeline(
         self, view: dict[str, Any], tenant: str, target_ref: str, organization_id: str | None

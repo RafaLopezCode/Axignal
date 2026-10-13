@@ -17,7 +17,8 @@ from dataclasses import dataclass
 from datetime import datetime
 from typing import Any, Protocol
 
-from application.product_mcp import views
+from application.first_observation.families import FAMILIES
+from application.product_mcp import panorama, views
 from application.product_mcp.oauth import McpGrant
 from application.xeed_access.reader import TrustedRequestContext
 
@@ -26,9 +27,14 @@ SERVER_VERSION = "1.0.0"
 PROTOCOL_VERSIONS = ("2025-11-25", "2025-06-18", "2025-03-26")
 INSTRUCTIONS = (
     "AXIGNAL is the governed economic memory of the organizations this subscriber observes. "
-    "Start with list_xeeds, then get_xeed_overview; use get_xeed_evidence and get_xeed_timeline "
-    "to trace and date each conclusion. Answer only from these tools for facts about the "
-    "organization; keep OBSERVED, POTENTIAL and UNKNOWN as labelled. This server is read-only."
+    "Start with list_organizations, then get_organization_panorama: everything AXIGNAL "
+    "understands about one organization (ten families with observability and open questions, "
+    "the signals that deserve attention, the record behind it) and how to turn it into a "
+    "value report. Go deeper with get_organization_findings (the evidence of one family) and "
+    "get_organization_history (what appeared, disappeared and moved, and when; pass since= "
+    "to read only what is new). get_xeed_overview, get_xeed_evidence and get_xeed_timeline "
+    "trace the economic reading. Answer only from these tools for facts about the "
+    "organization; keep OBSERVED, DECLARED, POTENTIAL and UNKNOWN as labelled. Read-only."
 )
 
 
@@ -53,6 +59,11 @@ class SubscriberMemoryPort(Protocol):
         self, context: TrustedRequestContext, *, now: datetime
     ) -> tuple[XeedSummary, ...]:
         """Xeeds this tenant may read now; raises McpDenied when no entitlement is current."""
+
+    def history(
+        self, context: TrustedRequestContext, xeed_id: str, *, family: str | None = None
+    ) -> Mapping[str, Any] | None:
+        """The recorded evolution of one authorized organization; None when not observed."""
 
     def reading(
         self, context: TrustedRequestContext, xeed_id: str, *, now: datetime
@@ -135,6 +146,83 @@ TOOLS: tuple[dict[str, object], ...] = (
             "type": "object",
             "properties": _XEED_ARG,
             "required": ["xeed_id"],
+            "additionalProperties": False,
+        },
+        "annotations": _READ_ONLY,
+    },
+)
+_ORGANIZATION_ARG = {
+    "organization_id": {
+        "type": "string",
+        "description": "An organization_id returned by list_organizations.",
+    }
+}
+_FAMILY = {"type": "string", "enum": list(FAMILIES), "description": "One of the ten families."}
+TOOLS = (
+    *TOOLS,
+    {
+        "name": "list_organizations",
+        "title": "Observed organizations",
+        "description": "Organizations this subscriber observes and may read now.",
+        "inputSchema": {"type": "object", "properties": {}, "additionalProperties": False},
+        "annotations": _READ_ONLY,
+    },
+    {
+        "name": "get_organization_panorama",
+        "title": "Everything AXIGNAL understands",
+        "description": (
+            "Start here. For one organization: each of the ten families with its "
+            "observability (strong, partial, limited, unknown, conflicting, stale), what is "
+            "known and the questions still open; the signals that deserve attention "
+            "(crossings between families traced to their findings, changes against an "
+            "earlier reading); the public-understanding report and its comparison; the "
+            "record behind it (sources, instruments, days recorded); and a guide to write "
+            "a value report."
+        ),
+        "inputSchema": {
+            "type": "object",
+            "properties": _ORGANIZATION_ARG,
+            "required": ["organization_id"],
+            "additionalProperties": False,
+        },
+        "annotations": _READ_ONLY,
+    },
+    {
+        "name": "get_organization_findings",
+        "title": "The evidence of one family",
+        "description": (
+            "Every finding of one family: stable id, state, source, observation time, "
+            "instrument, limitation and compact detail. Paged."
+        ),
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                **_ORGANIZATION_ARG,
+                "family": _FAMILY,
+                "cursor": {"type": "string", "description": "next_cursor from a previous page."},
+            },
+            "required": ["organization_id", "family"],
+            "additionalProperties": False,
+        },
+        "annotations": _READ_ONLY,
+    },
+    {
+        "name": "get_organization_history",
+        "title": "What appeared, disappeared and moved",
+        "description": (
+            "The recorded evolution: dated events (which supplier, client, partner, "
+            "certification, buyer, market or rule appeared or disappeared, and when) and "
+            "numeric series per metric, with a per-family summary. Optionally one family; "
+            "since=YYYY-MM-DD returns only what is new after that day (since your last report)."
+        ),
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                **_ORGANIZATION_ARG,
+                "family": _FAMILY,
+                "since": {"type": "string", "description": "YYYY-MM-DD; optional."},
+            },
+            "required": ["organization_id"],
             "additionalProperties": False,
         },
         "annotations": _READ_ONLY,
@@ -264,7 +352,7 @@ class ProductMcpServer:
                 arguments = params.get("arguments") or {}
                 if not isinstance(arguments, dict):
                     return _error(request_id, -32602, "arguments must be an object")
-                raw_xeed = arguments.get("xeed_id")
+                raw_xeed = arguments.get("xeed_id", arguments.get("organization_id"))
                 trace["xeed_id"] = raw_xeed[:160] if isinstance(raw_xeed, str) else None
                 try:
                     data = self._tool(context, target, arguments)
@@ -337,6 +425,16 @@ class ProductMcpServer:
             raise McpDenied("XEED_NOT_AVAILABLE")
         return xeed_id
 
+    def _organization_tool(
+        self,
+        context: TrustedRequestContext,
+        name: str,
+        arguments: Mapping[str, Any],
+        *,
+        now: datetime,
+    ) -> dict[str, object]:
+        return _organization_tool_impl(self, context, name, arguments, now=now)
+
     def _tool(
         self, context: TrustedRequestContext, name: str | None, arguments: Mapping[str, Any]
     ) -> dict[str, object]:
@@ -349,6 +447,16 @@ class ProductMcpServer:
                 ],
                 "how_to_read": views.HOW_TO_READ,
             }
+        if name == "list_organizations":
+            return {
+                "organizations": [
+                    {"organization_id": x.xeed_id, "organization": x.organization}
+                    for x in self._memory.authorized_xeeds(context, now=now)
+                ],
+                "how_to_read": panorama.HOW_TO_READ,
+            }
+        if name in _ORGANIZATION_READS:
+            return self._organization_tool(context, name, arguments, now=now)
         if name not in {"get_xeed_overview", "get_xeed_evidence", "get_xeed_timeline"}:
             raise McpDenied("UNKNOWN_TOOL")
         unexpected = set(arguments) - {"xeed_id", "cursor"}
@@ -366,8 +474,55 @@ class ProductMcpServer:
         return {**page, "next_cursor": None if following is None else _cursor(xeed_id, following)}
 
 
+_ORGANIZATION_READS: dict[str, set[str]] = {
+    "get_organization_panorama": {"organization_id"},
+    "get_organization_findings": {"organization_id", "family", "cursor"},
+    "get_organization_history": {"organization_id", "family", "since"},
+}
+
+
+def _organization_tool_impl(
+    server: ProductMcpServer,
+    context: TrustedRequestContext,
+    name: str,
+    arguments: Mapping[str, Any],
+    *,
+    now: datetime,
+) -> dict[str, object]:
+    if set(arguments) - _ORGANIZATION_READS[name]:
+        raise McpDenied("INVALID_ARGUMENTS")
+    family = arguments.get("family")
+    if (family is not None and family not in FAMILIES) or (
+        name == "get_organization_findings" and family is None
+    ):
+        raise McpDenied("INVALID_ARGUMENTS")
+    organization_id = server._authorized(context, arguments.get("organization_id"))
+    if name == "get_organization_history":
+        try:
+            since = panorama.valid_day(arguments.get("since"))
+        except ValueError as error:
+            raise McpDenied("INVALID_ARGUMENTS") from error
+        recorded = server._memory.history(context, organization_id, family=family)
+        return panorama.history(organization_id, recorded, family=family, since=since)
+    offset = _offset(arguments.get("cursor"), organization_id)
+    wire = server._memory.reading(context, organization_id, now=now)
+    if name == "get_organization_panorama":
+        label = next(
+            (x.organization for x in server._memory.authorized_xeeds(context, now=now)
+             if x.xeed_id == organization_id),
+            None,
+        )  # fmt: skip
+        return panorama.panorama(organization_id, label, wire, now=now)
+    page, following = panorama.findings(organization_id, wire, str(family), offset=offset)
+    return {
+        **page,
+        "next_cursor": None if following is None else _cursor(organization_id, following),
+    }
+
+
 _DENIAL_TEXT = {
-    "XEED_NOT_AVAILABLE": "That Xeed is not available to this subscription. Use list_xeeds.",
+    "XEED_NOT_AVAILABLE": "That organization is not available to this subscription. "
+    "Use list_organizations.",
     "ENTITLEMENT_INACTIVE": "This subscription has no current access (pilot or plan). Nothing can be read.",
     "INVALID_CURSOR": "The cursor is not valid for this Xeed. Start again without a cursor.",
     "INVALID_ARGUMENTS": "Unexpected arguments.",

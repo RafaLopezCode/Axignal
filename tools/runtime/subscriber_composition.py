@@ -1183,7 +1183,12 @@ def build_subscriber_facade(
 
     mcp_store = SqliteProductMcpStore(root / "product-mcp.sqlite3")
     mcp_oauth = OAuthService(mcp_store, resource=settings.origin.rstrip("/") + "/mcp")
-    mcp_memory = SubscriberMemory(portfolio=portfolio, entitlements=entitlements, economic=economic)
+    mcp_memory = SubscriberMemory(
+        portfolio=portfolio,
+        entitlements=entitlements,
+        economic=economic,
+        observing=first_observation,
+    )
     mcp_http = ProductMcpHttp(
         origin=settings.origin,
         oauth=mcp_oauth,

@@ -297,6 +297,11 @@ def test_product_mcp_pilot_and_paid_tenants_isolated_read_only_and_revocable(
         "get_xeed_overview",
         "get_xeed_evidence",
         "get_xeed_timeline",
+        # ADR-0095: the organization panorama, its evidence and its history.
+        "list_organizations",
+        "get_organization_panorama",
+        "get_organization_findings",
+        "get_organization_history",
     }
     assert all(
         t["annotations"]["readOnlyHint"] and not t["annotations"]["destructiveHint"] for t in tools
@@ -310,6 +315,15 @@ def test_product_mcp_pilot_and_paid_tenants_isolated_read_only_and_revocable(
     assert not overview["error"] and overview["opportunities"]
     assert all(o["epistemic"] == "POTENTIAL" and o["evidence"] for o in overview["opportunities"])
     assert "UNKNOWN" in overview["how_to_read"]
+    # The same organization through the public-vocabulary tools (ADR-0095).
+    assert [o["organization_id"] for o in a.call("list_organizations")["organizations"]] == [xeed_a]
+    panorama = a.call("get_organization_panorama", organization_id=xeed_a)
+    assert len(panorama["families"]) == 10 and "report_guide" in panorama
+    assert all(f["observability"] in {"STRONG", "PARTIAL", "LIMITED", "UNKNOWN", "CONFLICTING",
+                                      "STALE"} for f in panorama["families"])  # fmt: skip
+    assert a.call("get_organization_history", organization_id=xeed_a)["state"] in {
+        "NOT_OBSERVED", "NO_HISTORY_YET", "RECORDED"
+    }  # fmt: skip
     evidence = a.call("get_xeed_evidence", xeed_id=xeed_a)
     assert evidence["sources"] and all(
         s["observed_at"] and s["currentness"] for s in evidence["sources"]
@@ -320,6 +334,13 @@ def test_product_mcp_pilot_and_paid_tenants_isolated_read_only_and_revocable(
         for tool in ("get_xeed_overview", "get_xeed_evidence", "get_xeed_timeline"):
             denied = client.call(tool, xeed_id=foreign)
             # Denial carries only a stable code and a message; never the foreign reading.
+            assert denied["error"] == "XEED_NOT_AVAILABLE" and set(denied) == {"error", "message"}
+        for tool, extra in (
+            ("get_organization_panorama", {}),
+            ("get_organization_findings", {"family": "presence"}),
+            ("get_organization_history", {}),
+        ):
+            denied = client.call(tool, organization_id=foreign, **extra)
             assert denied["error"] == "XEED_NOT_AVAILABLE" and set(denied) == {"error", "message"}
         read = json.loads(
             client.rpc("resources/read", {"uri": f"axignal://xeeds/{foreign}/overview"}).body

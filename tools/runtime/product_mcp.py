@@ -64,6 +64,8 @@ class SubscriberMemory(SubscriberMemoryPort):
     portfolio: Any
     entitlements: EntitlementPort
     economic: SubscriberEconomicRuntime
+    #: First Observation runtime: the ten families, crossings and their history.
+    observing: Any = None
     _names: dict[str, str] = field(default_factory=dict)
 
     def authorized_xeeds(
@@ -100,7 +102,30 @@ class SubscriberMemory(SubscriberMemoryPort):
     def reading(
         self, context: TrustedRequestContext, xeed_id: str, *, now: datetime
     ) -> Mapping[str, Any]:
-        return self.economic.read(context, XeedId(xeed_id), now).to_wire()
+        wire = self.economic.read(context, XeedId(xeed_id), now).to_wire()
+        organization = self._organization(context, xeed_id)
+        if organization is not False:
+            # The same view the web product shows this principal for this Focus.
+            wire["firstObservation"] = self.observing.view(context, xeed_id, organization)
+        return wire
+
+    def history(
+        self, context: TrustedRequestContext, xeed_id: str, *, family: str | None = None
+    ) -> Mapping[str, Any] | None:
+        organization = self._organization(context, xeed_id)
+        if organization is False:
+            return None
+        recorded: Mapping[str, Any] | None = self.observing.history(
+            context, xeed_id, organization, family=family
+        )
+        return recorded
+
+    def _organization(self, context: TrustedRequestContext, xeed_id: str) -> str | bool | None:
+        """The Focus organization, re-authorized; False when nothing can be read."""
+        if self.observing is None:
+            return False
+        entry = self.portfolio.store.get_authorized(context, XeedId(xeed_id))
+        return False if entry is None else str(entry.xeed.organization_id)
 
 
 class ProductMcpHttp:
