@@ -1,0 +1,343 @@
+{
+ "version": "excellence-report-v1",
+ "generated_at": "2026-10-13T14:02:28.372610+00:00",
+ "organizations_measured": 10,
+ "families": {
+  "presence": {
+   "coverage_pct": 80.0,
+   "covered": 8,
+   "observability": {
+    "STRONG": 8,
+    "UNKNOWN": 2
+   },
+   "findings": 94,
+   "by_state": {
+    "OBSERVED": 33,
+    "POTENTIAL": 61
+   },
+   "distinct_sources": 18
+  },
+  "reputation": {
+   "coverage_pct": 0.0,
+   "covered": 0,
+   "observability": {
+    "LIMITED": 7,
+    "UNKNOWN": 3
+   },
+   "findings": 0,
+   "by_state": {},
+   "distinct_sources": 0
+  },
+  "value": {
+   "coverage_pct": 50.0,
+   "covered": 5,
+   "observability": {
+    "LIMITED": 3,
+    "PARTIAL": 5,
+    "UNKNOWN": 2
+   },
+   "findings": 8,
+   "by_state": {
+    "POTENTIAL": 8
+   },
+   "distinct_sources": 5
+  },
+  "markets": {
+   "coverage_pct": 50.0,
+   "covered": 5,
+   "observability": {
+    "PARTIAL": 5,
+    "UNKNOWN": 5
+   },
+   "findings": 16,
+   "by_state": {
+    "DECLARED": 15,
+    "POTENTIAL": 1
+   },
+   "distinct_sources": 7
+  },
+  "relationships": {
+   "coverage_pct": 60.0,
+   "covered": 6,
+   "observability": {
+    "PARTIAL": 6,
+    "UNKNOWN": 4
+   },
+   "findings": 6,
+   "by_state": {
+    "POTENTIAL": 6
+   },
+   "distinct_sources": 1
+  },
+  "demand": {
+   "coverage_pct": 60.0,
+   "covered": 6,
+   "observability": {
+    "PARTIAL": 6,
+    "UNKNOWN": 4
+   },
+   "findings": 395,
+   "by_state": {
+    "POTENTIAL": 395
+   },
+   "distinct_sources": 386
+  },
+  "activity": {
+   "coverage_pct": 0.0,
+   "covered": 0,
+   "observability": {
+    "UNKNOWN": 10
+   },
+   "findings": 0,
+   "by_state": {},
+   "distinct_sources": 0
+  },
+  "economics": {
+   "coverage_pct": 10.0,
+   "covered": 1,
+   "observability": {
+    "STRONG": 1,
+    "UNKNOWN": 9
+   },
+   "findings": 7,
+   "by_state": {
+    "OBSERVED": 7
+   },
+   "distinct_sources": 1
+  },
+  "organization": {
+   "coverage_pct": 50.0,
+   "covered": 5,
+   "observability": {
+    "LIMITED": 5,
+    "PARTIAL": 5
+   },
+   "findings": 7,
+   "by_state": {
+    "DECLARED": 7
+   },
+   "distinct_sources": 7
+  },
+  "context": {
+   "coverage_pct": 40.0,
+   "covered": 4,
+   "observability": {
+    "PARTIAL": 4,
+    "UNKNOWN": 6
+   },
+   "findings": 12,
+   "by_state": {
+    "POTENTIAL": 12
+   },
+   "distinct_sources": 12
+  }
+ },
+ "countries": {
+  "DE": {
+   "organizations": 1,
+   "family_coverage_pct": 10.0
+  },
+  "ES": {
+   "organizations": 5,
+   "family_coverage_pct": 56.0
+  },
+  "FR": {
+   "organizations": 1,
+   "family_coverage_pct": 0.0
+  },
+  "GB": {
+   "organizations": 1,
+   "family_coverage_pct": 0.0
+  },
+  "NO": {
+   "organizations": 1,
+   "family_coverage_pct": 50.0
+  },
+  "US": {
+   "organizations": 1,
+   "family_coverage_pct": 60.0
+  }
+ },
+ "organizations": [
+  {
+   "domain": "plexus.es",
+   "country": "ES",
+   "state": "FIRST_PROOF_READY",
+   "families_covered": 7,
+   "observability": {
+    "presence": "STRONG",
+    "reputation": "LIMITED",
+    "value": "PARTIAL",
+    "markets": "PARTIAL",
+    "relationships": "PARTIAL",
+    "demand": "PARTIAL",
+    "activity": "UNKNOWN",
+    "economics": "UNKNOWN",
+    "organization": "PARTIAL",
+    "context": "PARTIAL"
+   }
+  },
+  {
+   "domain": "prosegur.es",
+   "country": "ES",
+   "state": "FIRST_PROOF_READY",
+   "families_covered": 6,
+   "observability": {
+    "presence": "STRONG",
+    "reputation": "LIMITED",
+    "value": "PARTIAL",
+    "markets": "PARTIAL",
+    "relationships": "PARTIAL",
+    "demand": "PARTIAL",
+    "activity": "UNKNOWN",
+    "economics": "UNKNOWN",
+    "organization": "PARTIAL",
+    "context": "UNKNOWN"
+   }
+  },
+  {
+   "domain": "rubau.com",
+   "country": "ES",
+   "state": "FIRST_PROOF_READY",
+   "families_covered": 7,
+   "observability": {
+    "presence": "STRONG",
+    "reputation": "UNKNOWN",
+    "value": "PARTIAL",
+    "markets": "PARTIAL",
+    "relationships": "PARTIAL",
+    "demand": "PARTIAL",
+    "activity": "UNKNOWN",
+    "economics": "UNKNOWN",
+    "organization": "PARTIAL",
+    "context": "PARTIAL"
+   }
+  },
+  {
+   "domain": "humanlevel.com",
+   "country": "ES",
+   "state": "FIRST_PROOF_READY",
+   "families_covered": 7,
+   "observability": {
+    "presence": "STRONG",
+    "reputation": "LIMITED",
+    "value": "PARTIAL",
+    "markets": "PARTIAL",
+    "relationships": "PARTIAL",
+    "demand": "PARTIAL",
+    "activity": "UNKNOWN",
+    "economics": "UNKNOWN",
+    "organization": "PARTIAL",
+    "context": "PARTIAL"
+   }
+  },
+  {
+   "domain": "colegioestudio.com",
+   "country": "ES",
+   "state": "NOT_ENOUGH_CAPABILITY_EVIDENCE",
+   "families_covered": 1,
+   "observability": {
+    "presence": "STRONG",
+    "reputation": "LIMITED",
+    "value": "LIMITED",
+    "markets": "UNKNOWN",
+    "relationships": "UNKNOWN",
+    "demand": "UNKNOWN",
+    "activity": "UNKNOWN",
+    "economics": "UNKNOWN",
+    "organization": "LIMITED",
+    "context": "UNKNOWN"
+   }
+  },
+  {
+   "domain": "alan.com",
+   "country": "FR",
+   "state": "SOURCE_UNAVAILABLE",
+   "families_covered": 0,
+   "observability": {
+    "presence": "UNKNOWN",
+    "reputation": "UNKNOWN",
+    "value": "UNKNOWN",
+    "markets": "UNKNOWN",
+    "relationships": "UNKNOWN",
+    "demand": "UNKNOWN",
+    "activity": "UNKNOWN",
+    "economics": "UNKNOWN",
+    "organization": "LIMITED",
+    "context": "UNKNOWN"
+   }
+  },
+  {
+   "domain": "vipps.no",
+   "country": "NO",
+   "state": "NOT_ENOUGH_CAPABILITY_EVIDENCE",
+   "families_covered": 5,
+   "observability": {
+    "presence": "STRONG",
+    "reputation": "UNKNOWN",
+    "value": "LIMITED",
+    "markets": "UNKNOWN",
+    "relationships": "PARTIAL",
+    "demand": "PARTIAL",
+    "activity": "UNKNOWN",
+    "economics": "STRONG",
+    "organization": "PARTIAL",
+    "context": "UNKNOWN"
+   }
+  },
+  {
+   "domain": "smartsites.com",
+   "country": "US",
+   "state": "FIRST_PROOF_READY",
+   "families_covered": 6,
+   "observability": {
+    "presence": "STRONG",
+    "reputation": "LIMITED",
+    "value": "PARTIAL",
+    "markets": "PARTIAL",
+    "relationships": "PARTIAL",
+    "demand": "PARTIAL",
+    "activity": "UNKNOWN",
+    "economics": "UNKNOWN",
+    "organization": "LIMITED",
+    "context": "PARTIAL"
+   }
+  },
+  {
+   "domain": "jvm.com",
+   "country": "DE",
+   "state": "NOT_ENOUGH_CAPABILITY_EVIDENCE",
+   "families_covered": 1,
+   "observability": {
+    "presence": "STRONG",
+    "reputation": "LIMITED",
+    "value": "LIMITED",
+    "markets": "UNKNOWN",
+    "relationships": "UNKNOWN",
+    "demand": "UNKNOWN",
+    "activity": "UNKNOWN",
+    "economics": "UNKNOWN",
+    "organization": "LIMITED",
+    "context": "UNKNOWN"
+   }
+  },
+  {
+   "domain": "impression.co.uk",
+   "country": "GB",
+   "state": "SOURCE_UNAVAILABLE",
+   "families_covered": 0,
+   "observability": {
+    "presence": "UNKNOWN",
+    "reputation": "LIMITED",
+    "value": "UNKNOWN",
+    "markets": "UNKNOWN",
+    "relationships": "UNKNOWN",
+    "demand": "UNKNOWN",
+    "activity": "UNKNOWN",
+    "economics": "UNKNOWN",
+    "organization": "LIMITED",
+    "context": "UNKNOWN"
+   }
+  }
+ ]
+}

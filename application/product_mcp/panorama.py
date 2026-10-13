@@ -135,7 +135,7 @@ def item(d: Mapping[str, Any], *, full: bool) -> dict[str, object]:
     return out
 
 
-def _observability(
+def observability(
     held: list[Mapping[str, Any]], crossings: list[Mapping[str, Any]], *, now: datetime
 ) -> str:
     known = [d for d in held if d.get("kind") not in {"SIGNIFICANT_UNKNOWN", "CHANGE"}]
@@ -184,7 +184,7 @@ def panorama(
         families.append(
             {
                 "family": name,
-                "observability": _observability(held, mine, now=now),
+                "observability": observability(held, mine, now=now),
                 "findings": len(known),
                 "by_state": states,
                 "known": [item(d, full=False) for d in known[:TOP_KNOWN]],
