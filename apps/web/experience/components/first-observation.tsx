@@ -148,6 +148,16 @@ export function discoveryCopy(d: Discovery, t: Translate, locale = "en"): { find
   if (d.kind === "CREDENTIAL") return {
     finding: `${t("Certificación que declara", "Certification it claims")}: ${d.statement}`,
     why: t("Lo afirma en su web; no se ha comprobado en el registro del emisor.", "Claimed on its website; the issuer's register has not been checked.") };
+  if (d.kind === "OPERATING_SIGNAL" && d.code === "OPEN_POSITIONS") {
+    const fns = d.detail.functions && typeof d.detail.functions === "object" ? Object.entries(d.detail.functions as Record<string, number>).filter(([f]) => f !== "OTHER").slice(0, 4).map(([f, n]) => `${f} (${n})`) : [];
+    const where = d.detail.countries && typeof d.detail.countries === "object" ? Object.keys(d.detail.countries as Record<string, number>).slice(0, 6).map(c => placeLabel(c, locale)) : [];
+    return { finding: t("Contratando: {n} vacantes abiertas", "Hiring: {n} open positions").replace("{n}", d.statement)
+        + (fns.length ? ` · ${fns.join(", ")}` : "") + (where.length ? ` · ${where.join(", ")}` : ""),
+      why: t("Leídas en su portal público de empleo ({v}). Una vacante es intención de contratar, no una contratación; muestra dónde y en qué está creciendo.", "Read from its public job board ({v}). A posting is an intention to hire, not a hire; it shows where and in what it is growing.").replace("{v}", String(d.detail.vendor ?? "")) };
+  }
+  if (d.kind === "DECLARED_LOCATION" && d.code === "HIRING_IN_COUNTRIES") return {
+    finding: `${t("Contrata en", "Hiring in")}: ${Object.keys((d.detail.countries ?? {}) as Record<string, number>).map(c => placeLabel(c, locale)).join(", ")}`,
+    why: t("Países de sus vacantes abiertas: presencia operativa o intención de tenerla allí.", "Countries of its open positions: an operating presence, or an intention to have one there.") };
   if (d.kind === "OPERATING_SIGNAL" && d.code === "JOB_POSTINGS_PUBLISHED") return {
     finding: t("Publica {n} ofertas de empleo", "It publishes {n} job posting(s)").replace("{n}", d.statement) + (Array.isArray(d.detail.titles) && d.detail.titles.length ? `: ${d.detail.titles.slice(0, 3).map(String).join(", ")}` : ""),
     why: t("Contratar es actividad: indica dónde está creciendo. Son ofertas que publica ella misma.", "Hiring is activity: it shows where it is growing. These are postings it publishes itself.") };
@@ -436,6 +446,8 @@ export function changeLabel(metric: string, t: Translate): string {
     "activity.job_postings": t("Ofertas de empleo publicadas", "Job postings published"),
     "activity.hiring_channel": t("Canal de empleo publicado", "Hiring channel published"),
     "reputation.review_profiles": t("Perfiles de opiniones enlazados", "Linked review profiles"),
+    "activity.open_positions": t("Vacantes abiertas", "Open positions"),
+    "markets.hiring_countries": t("Países donde contrata", "Countries it hires in"),
     "reputation.wikipedia_views": t("Visitas a su artículo de Wikipedia (mes)", "Wikipedia article views (month)"),
     "reputation.wikipedia_languages": t("Idiomas con artículo en Wikipedia", "Languages with a Wikipedia article"),
     "reputation.self_rating": t("Valoración que publica sobre sí misma", "Rating it publishes about itself"),

@@ -23,6 +23,7 @@ from collections.abc import Iterable, Mapping, Sequence
 from typing import Any
 from urllib.parse import urlsplit
 
+from application.activity import boards_on
 from application.first_observation.contracts import Discovery, DiscoveryKind
 from application.first_observation.site import PageReading
 
@@ -391,9 +392,9 @@ def hiring(pages: Sequence[PageReading]) -> list[Discovery]:
         for url, text in page.links:
             if careers is None and (_CAREERS.search(text) or _CAREERS.search(urlsplit(url).path)):
                 careers = (url, page)
-    if careers is not None or vendors:
+    if careers is not None or vendors or boards_on(pages):
         careers_url = careers[0] if careers is not None else None
-        page = careers[1] if careers is not None else next(iter(vendors.values()))
+        page = careers[1] if careers is not None else next(iter(vendors.values()), pages[0])
         out.append(
             Discovery(
                 DiscoveryKind.OPERATING_SIGNAL,
@@ -406,6 +407,7 @@ def hiring(pages: Sequence[PageReading]) -> list[Discovery]:
                 {
                     "careersPage": careers_url,
                     "hiringVendors": sorted(vendors),
+                    "jobBoards": [f"{v}:{t}" for v, t in boards_on(pages)],
                     "ownSiteVersion": OWN_SITE_VERSION,
                     "limitation": "A careers channel shows a hiring process exists; open "
                     "positions are not established unless it publishes them.",
