@@ -10,7 +10,7 @@ from __future__ import annotations
 import hashlib
 from collections import Counter
 from dataclasses import dataclass, field
-from datetime import UTC, datetime, timedelta
+from datetime import UTC, datetime, time, timedelta
 from pathlib import Path
 from typing import Any
 
@@ -41,9 +41,16 @@ from domain.xignal import XignalEpistemicState
 from pipeline.observation_intelligence import TedSearchAdapter
 from pipeline.observation_memory.sqlite_store import SqliteObservationMemory
 from pipeline.observation_runtime import SqliteObservationRuntimeStore
-from tests.observation_intelligence.ted_fixture import CORPUS, FixtureTedTransport, _notice
+from tests.observation_intelligence.ted_fixture import (
+    AUTHORED_ON,
+    CORPUS,
+    SHIFT,
+    FixtureTedTransport,
+    _notice,
+)
 
-DAY_1 = datetime(2026, 10, 6, 5, 0, tzinfo=UTC)
+# Day 1 is the day the TED corpus was authored on, moved with it to the run's day.
+DAY_1 = datetime.combine(AUTHORED_ON + SHIFT, time(5, 0), tzinfo=UTC)
 XEED = "xeed:solartec"
 SITE = "https://solartec.example/"
 HOMEPAGE = (

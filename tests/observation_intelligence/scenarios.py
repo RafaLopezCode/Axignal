@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import os
 from datetime import UTC, datetime, timedelta
 
 from application.observation_intelligence import (
@@ -18,7 +19,14 @@ from domain.xignal import XignalEpistemicState
 # Relative to the run, not a calendar day: evidence currentness is judged against the real
 # clock in end-to-end tests, so a fixed day turns this fixture stale a week later.
 # Three hours back, so the scenario (changes up to AS_OF + 2h) is always in the past.
-AS_OF = datetime.now(UTC).replace(minute=0, second=0, microsecond=0) - timedelta(hours=3)
+# A child process inherits its parent's AS_OF through AS_OF_ENV, so both see one world
+# even when they start on either side of a day boundary.
+AS_OF_ENV = "AXIGNAL_TEST_AS_OF"
+AS_OF = (
+    datetime.fromisoformat(os.environ[AS_OF_ENV])
+    if os.environ.get(AS_OF_ENV)
+    else datetime.now(UTC).replace(minute=0, second=0, microsecond=0) - timedelta(hours=3)
+)
 OBSERVED = XignalEpistemicState.OBSERVED
 POTENTIAL = XignalEpistemicState.POTENTIAL
 
