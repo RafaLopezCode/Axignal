@@ -715,3 +715,55 @@ def test_private_pilot_redeem_grants_one_full_xeed_without_billing_and_survives_
     )
     assert stolen.status == 200
     assert stolen.body == {"state": "PILOT_INVITE_INVALID", "accepted": False}
+
+
+def test_principal_profile_requires_session_is_private_and_survives_restart(tmp_path: Path) -> None:
+    facade = _build(tmp_path)
+    a, _ = _signup(facade, "profile-a")
+    b, _ = _signup(facade, "profile-b")
+
+    def headers(token: str) -> dict[str, str]:
+        return {"Origin": "https://axignal.com", "Authorization": f"Bearer {token}"}
+
+    assert facade.handle("GET", "/subscriber/profile", {}).status == 401
+    assert (
+        facade.handle(
+            "POST",
+            "/subscriber/profile",
+            headers(a),
+            {"action": "locale", "locale": "es", "version": 0},
+        ).status
+        == 200
+    )
+    assert facade.handle("GET", "/subscriber/profile", headers(b)).body["locale"] is None
+    assert _build(tmp_path).handle("GET", "/subscriber/profile", headers(a)).body["locale"] == "es"
+    assert (
+        facade.handle(
+            "POST",
+            "/subscriber/profile",
+            headers(a),
+            {"action": "locale", "locale": "de", "version": 0},
+        ).status
+        == 409
+    )
+    assert (
+        facade.handle(
+            "POST",
+            "/subscriber/profile",
+            headers(a),
+            {"action": "locale", "locale": "de", "version": 1, "principalId": "profile-b"},
+        ).status
+        == 400
+    )
+    assert (
+        facade.handle(
+            "POST",
+            "/subscriber/profile",
+            {"Authorization": f"Bearer {a}"},
+            {"action": "locale", "locale": "de", "version": 1},
+        ).status
+        == 403
+    )
+    facade.identity.logout(a)
+    assert facade.handle("GET", "/subscriber/profile", headers(a)).status == 401
+    assert facade.handle("GET", "/subscriber/profile", headers(b)).status == 200

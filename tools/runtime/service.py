@@ -1933,7 +1933,8 @@ def make_handler(runtime: AxignalRuntime) -> type[BaseHTTPRequestHandler]:
                     return
                 try:
                     length = int(self.headers.get("Content-Length", "0"))
-                    if not 0 < length <= 8192:
+                    limit = 196608 if urlsplit(self.path).path == "/subscriber/profile" else 8192
+                    if not 0 < length <= limit:
                         self._json(
                             {"state": "rejected", "code": "BODY_LIMIT"},
                             HTTPStatus.REQUEST_ENTITY_TOO_LARGE,

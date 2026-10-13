@@ -1227,9 +1227,17 @@ def build_subscriber_facade(
             )
         return {"customers": customers, "limit": 500, "asOf": effective_clock.now().isoformat()}
 
+    from application.subscriber_profile.service import SubscriberProfileService
+    from pipeline.subscriber_profile.images import RasterAvatarNormalizer
+    from pipeline.subscriber_profile.store import SqliteProfileStore
+
     return SubscriberHttpFacade(
         settings=settings,
         identity=identity,
+        profile=SubscriberProfileService(
+            SqliteProfileStore(root / "subscriber-profile.sqlite3"), RasterAvatarNormalizer()
+        ),
+        management=None if checkout is None else checkout.management,
         identity_candidates=None if search is None else identity_candidates,
         pilot_admin=pilot_access,
         customer_read=customer_read,

@@ -10,6 +10,10 @@ from typing import Protocol
 from urllib.parse import unquote, urlsplit
 
 from application.admin_billing.subscriber_checkout import SubscriberCheckoutError
+from application.admin_billing.subscriber_management import (
+    BillingManagementError,
+    SubscriberBillingManagement,
+)
 from application.product_mcp.oauth import OAuthError
 from application.subscriber_access.pilot import PilotAccessService
 from application.subscriber_identity.runtime import (
@@ -19,6 +23,7 @@ from application.subscriber_identity.runtime import (
     TrustedSubscriberContext,
 )
 from application.subscriber_portfolio.models import PortfolioError
+from application.subscriber_profile.service import ProfileConflict, SubscriberProfileService
 from application.xeed_access.reader import XeedReadError
 from domain.admin_access import AdminAuthorizationGrant
 from domain.identity import XeedId
@@ -140,9 +145,13 @@ class SubscriberHttpFacade:
         pilot_admin: PilotAccessService | None = None,
         customer_read: Callable[[AdminAuthorizationGrant], dict[str, object]] | None = None,
         identity_candidates: Callable[[str, str | None], list[dict[str, str | None]]] | None = None,
+        profile: SubscriberProfileService | None = None,
+        management: SubscriberBillingManagement | None = None,
         marketing_pool: object | None = None,
     ) -> None:
         self.marketing_pool = marketing_pool
+        self.profile = profile
+        self.management = management
         self.identity_candidates = identity_candidates
         self.pilot_admin = pilot_admin
         self.customer_read = customer_read
@@ -265,6 +274,32 @@ class SubscriberHttpFacade:
             if scheme != "Bearer" or separator != " " or not token or len(token) > 256:
                 return self._denied("AUTHENTICATION_REQUIRED", 401)
             context = self.identity.authenticate(token)
+            if path == "/subscriber/profile":
+                if self.profile is None:
+                    return self._denied("PROFILE_NOT_CONFIGURED", 503)
+                if method == "GET":
+                    return SubscriberHttpResponse(200, self.profile.read(context))
+                if method == "POST":
+                    return SubscriberHttpResponse(200, self.profile.change(context, payload or {}))
+            if path == "/subscriber/billing/management":
+                principal = self.identity.store.get_principal(context.principal_id)
+                if principal is None:
+                    return self._denied("ACCESS_DENIED", 403)
+                if self.management is None:
+                    return (
+                        SubscriberHttpResponse(200, {"state": "NOT_CONFIGURED", "canManage": False})
+                        if method == "GET"
+                        else self._denied("BILLING_NOT_CONFIGURED", 503)
+                    )
+                now = datetime.now(UTC)
+                if method == "GET":
+                    return SubscriberHttpResponse(
+                        200, self.management.status(principal, context.tenant_id, now)
+                    )
+                if method == "POST":
+                    return SubscriberHttpResponse(
+                        200, self.management.open(principal, context.tenant_id, payload or {}, now)
+                    )
             if method == "POST" and path == "/subscriber/pilot/redeem":
                 if not self.settings.pilot_enabled or self.pilot is None:
                     return self._denied("PILOT_NOT_ENABLED", 404)
@@ -398,6 +433,10 @@ class SubscriberHttpFacade:
             )
         except SubscriberCheckoutError as exc:
             return self._denied(exc.failure.value, 409)
+        except ProfileConflict:
+            return self._denied("PROFILE_CHANGED", 409)
+        except BillingManagementError as exc:
+            return self._denied(str(exc), 403 if str(exc) == "BILLING_ACCESS_DENIED" else 503)
         except (SubscriberRequestError, ValueError):
             return self._denied("INVALID_REQUEST", 400)
 
@@ -406,6 +445,8 @@ def is_subscriber_path(path: str) -> bool:
     resource = urlsplit(path).path
     return resource in {
         "/subscriber/portfolio",
+        "/subscriber/profile",
+        "/subscriber/billing/management",
         "/subscriber/identity/candidates",
         "/subscriber/legal/operator",
     } or resource.startswith(
