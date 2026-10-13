@@ -14,7 +14,8 @@ import re
 SIREN = "SIREN"
 COMPANIES_HOUSE = "COMPANIES_HOUSE"
 ORGNR = "ORGNR"
-REGISTER_SCHEMES = frozenset({SIREN, COMPANIES_HOUSE, ORGNR})
+ES_CIF = "ES_CIF"
+REGISTER_SCHEMES = frozenset({SIREN, COMPANIES_HOUSE, ORGNR, ES_CIF})
 
 _FR = re.compile(
     r"\b(?:SIREN|SIRET|R\.?\s?C\.?\s?S\.?(?:\s+[A-Za-zÀ-ÿ'\u2019\-]{2,30}){0,3}(?:\s+[AB])?)"
@@ -33,6 +34,30 @@ _NO = re.compile(
     r"\s*[:.]?\s*(?:NO\s?)?([0-9]{3}[\s]?[0-9]{3}[\s]?[0-9]{3})(?:\s?MVA)?\b",
     re.IGNORECASE,
 )
+
+
+_ES = re.compile(
+    r"\b(?:C\.?\s?I\.?\s?F\.?|N\.?\s?I\.?\s?F\.?)\s*(?:n[\u00ba\u00b0o]\.?|[\u00ba\u00b0])?\s*[:.]?\s*"
+    r"(?:ES[\s-]?)?([ABCDEFGHJNPQRSUVW][\s.-]?[0-9]{2}[\s.]?[0-9]{3}[\s.]?[0-9]{2}[\s.-]?[0-9A-J])\b",
+    re.IGNORECASE,
+)
+
+
+def _cif_ok(cif: str) -> bool:
+    """Spanish company tax identifier (CIF) control character."""
+    digits = cif[1:8]
+    if not digits.isdigit():
+        return False
+    even = sum(int(d) for d in digits[1::2])
+    odd = sum(sum(divmod(int(d) * 2, 10)) for d in digits[0::2])
+    control = (10 - (even + odd) % 10) % 10
+    last = cif[8]
+    letter = "JABCDEFGHI"[control]
+    if cif[0] in "ABEH":
+        return last == str(control)
+    if cif[0] in "KPQS" or cif[0] in "NW":
+        return last == letter
+    return last in {str(control), letter}
 
 
 def _digits(value: str) -> str:
@@ -74,6 +99,10 @@ def registry_identifiers(text: str, *, limit: int = 4) -> list[tuple[str, str]]:
             raw = raw.zfill(8)
         if re.fullmatch(r"(?:[0-9]{8}|(?:SC|NI|OC|SO|NC|FC|SL|LP)[0-9]{6})", raw):
             keep(COMPANIES_HOUSE, raw)
+    for match in _ES.finditer(text):
+        cif = _digits(match.group(1))
+        if len(cif) == 9 and _cif_ok(cif):
+            keep(ES_CIF, cif)
     for match in _NO.finditer(text):
         orgnr = _digits(match.group(1))
         if len(orgnr) == 9 and orgnr[0] in "89" and _orgnr_ok(orgnr):
