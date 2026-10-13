@@ -88,6 +88,8 @@ from application.subscriber_portfolio.models import (
     PortfolioError,
 )
 from application.subscriber_projection.subscriber_runtime import SubscriberEconomicRuntime
+from application.timeline import changes as timeline_changes
+from application.timeline import snapshot as timeline_snapshot
 from application.value_chain import apply_value_chain
 from application.world_demand.index import (
     DemandIndexPort,
@@ -132,6 +134,10 @@ class WebsiteIndex(Protocol):
     def websites_for(self, organization_id: OrganizationId) -> tuple[str, ...]: ...
 
     def organization_by_domain(self, domain: str) -> OrganizationId | None: ...
+
+
+#: A change is read against a reading at least this old (days apart, not hours).
+TIMELINE_MIN_DAYS = 7
 
 
 @dataclass(frozen=True, slots=True)
@@ -615,6 +621,43 @@ class FirstObservationRuntime:
     def judge_regulation(self) -> int:
         return 0 if self._regulation is None else self._regulation[1].run()
 
+    def _with_timeline(
+        self, view: dict[str, Any], tenant: str, target_ref: str, organization_id: str | None
+    ) -> dict[str, Any]:
+        """Records today's family metrics and adds what evolved or regressed since."""
+        now = self._clock.now()
+        today = now.date().isoformat()
+        current = timeline_snapshot(view)
+        self.store.save_snapshot(tenant, target_ref, organization_id, day=today, metrics=current)
+        series = self.store.snapshots(tenant, target_ref, organization_id)
+        cutoff = (now.date() - timedelta(days=TIMELINE_MIN_DAYS)).isoformat()
+        baseline = next((s for s in reversed(series) if s[0] <= cutoff), None)
+        found = (
+            timeline_changes(
+                baseline[1], current, before_day=baseline[0], after_day=today,
+                observed_at=now.isoformat(),
+            )
+            if baseline is not None
+            else []
+        )  # fmt: skip
+        if found:
+            held = view.get("discoveries")
+            view["discoveries"] = [*(held if isinstance(held, list) else []), *found]
+        numeric = {
+            key for _, metrics in series for key, value in metrics.items()
+            if isinstance(value, int | float)
+        }  # fmt: skip
+        view["timeline"] = {
+            "firstDay": series[0][0] if series else today,
+            "days": len(series),
+            "baselineDay": None if baseline is None else baseline[0],
+            "series": {
+                key: [[day, metrics[key]] for day, metrics in series[-90:] if key in metrics]
+                for key in sorted(numeric)
+            },
+        }
+        return view
+
     def _with_regulation(self, view: dict[str, object]) -> dict[str, object]:
         """New official rules about its activity where it is; queues a judgment when due."""
         if self._regulation is None:
@@ -1073,6 +1116,10 @@ class FirstObservationRuntime:
             view = apply_value_chain(view, proof)
             # What crossing the families reveals (derived, recomputed on every read).
             view = apply_inxights(view)
+            # Every family in time: today's reading against one at least a week old.
+            view = self._with_timeline(
+                view, tenant, target_ref, proof.get("target", {}).get("organizationId")
+            )
         if view is not None and proof is not None and proof.get("publicUnderstanding"):
             from application.first_observation.understanding import compare, public_report
 
