@@ -3,7 +3,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 export const localizedKnowledgeLocales = ["es", "en", "fr", "de", "it", "pt"];
-export const expectedHtmlFilesPerLocale = 88;
+export const expectedHtmlFilesPerLocale = 89;
 
 function walkHtml(directory) {
   if (!fs.existsSync(directory)) return [];
