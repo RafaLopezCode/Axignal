@@ -53,6 +53,9 @@ def main() -> int:
     if observing is None:
         _log("first observation is disabled in this runtime")
         return 2
+    # One evaluation tenant studies the whole set: the per-tenant daily cap protects
+    # subscribers, not this isolated copy.
+    observing._tenant_daily_jobs = len(golden) + 10
     refs: dict[str, dict[str, str]] = {}
     for org in golden:
         ref = f"golden:{org['domain']}"
@@ -63,6 +66,13 @@ def main() -> int:
         _log("observed", round(time.time() - started), "s")
     for ref in refs:
         observing.study_result(ref)  # first reads queue GEO, sector context and regulation
+    # Sources the runtime reads on its own thread (inline here): notoriety, job boards.
+    for _ in range(10):
+        if not observing.read_notoriety() + observing.read_job_boards():
+            break
+    for ref in refs:
+        observing.study_result(ref)  # boards are known after the first read of each view
+    observing.read_job_boards()
     for round_ in range(MAX_JUDGMENT_ROUNDS):
         ran = (
             observing.measure_geo()

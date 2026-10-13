@@ -239,9 +239,38 @@ def section_of(classification: str) -> str | None:
     return next((s for low, high, s in _DIVISIONS if low <= division <= high), None)
 
 
+#: Words of an industry label (Wikidata P452, English labels) -> ISIC section.
+_INDUSTRY_WORDS: tuple[tuple[str, str], ...] = (
+    ("software", "J"), ("internet", "J"), ("telecommunication", "J"), ("information technology", "J"),
+    ("media", "J"), ("publishing", "J"), ("video game", "J"), ("insurance", "K"), ("bank", "K"),
+    ("financial", "K"), ("payment", "K"), ("fintech", "K"), ("investment", "K"),
+    ("construction", "F"), ("civil engineering", "F"), ("real estate", "L"), ("retail", "G"),
+    ("wholesale", "G"), ("e-commerce", "G"), ("advertising", "M"), ("marketing", "M"),
+    ("consulting", "M"), ("architecture", "M"), ("legal", "M"), ("accounting", "M"),
+    ("research", "M"), ("engineering", "C"), ("manufactur", "C"), ("machine", "C"),
+    ("automotive", "C"), ("chemical", "C"), ("pharmaceutical", "C"), ("steel", "C"),
+    ("building material", "C"), ("energy", "D"), ("electric", "D"), ("utility", "D"),
+    ("transport", "H"), ("logistic", "H"), ("airline", "H"), ("shipping", "H"),
+    ("hospitality", "I"), ("hotel", "I"), ("restaurant", "I"), ("education", "P"),
+    ("school", "P"), ("health", "Q"), ("hospital", "Q"), ("medical", "Q"),
+    ("security", "N"), ("staffing", "N"), ("cleaning", "N"), ("agricultur", "A"),
+    ("mining", "B"), ("oil and gas", "B"), ("entertainment", "R"), ("sport", "R"),
+)  # fmt: skip
+
+
+def section_of_label(label: str) -> str | None:
+    """The ISIC section an industry label names, by its words; None when it is unclear."""
+    folded = label.casefold()
+    return next((section for word, section in _INDUSTRY_WORDS if word in folded), None)
+
+
 def route_of(discovery: Mapping[str, Any]) -> str | None:
     """The routing code of an ACTIVITY finding: its capability, or ``isic-<section>``."""
     code = str(discovery.get("code") or "")
+    if code == "STATED_INDUSTRY":
+        detail = discovery.get("detail")
+        section = detail.get("isicSection") if isinstance(detail, Mapping) else None
+        return f"isic-{section}" if isinstance(section, str) and section else None
     if code == "REGISTERED_ACTIVITY":
         detail = discovery.get("detail")
         classification = detail.get("classification") if isinstance(detail, Mapping) else None

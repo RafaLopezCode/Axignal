@@ -104,12 +104,15 @@ class WikidataEconomics:
             ).fetchone()
         if row is not None and now - datetime.fromisoformat(row[1]) < self._ttl:
             return dict(json.loads(row[0]))
-        hits = (
-            self._fetch(
-                {"action": "query", "list": "search", "srsearch": f"haswbstatement:P1278={lei}"}
-            ).get("query")
-            or {}
-        ).get("search") or []
+        if lei.startswith("item:"):  # an item already identified (by its official website)
+            hits: list[Any] = [{"title": lei[5:]}]
+        else:
+            hits = (
+                self._fetch(
+                    {"action": "query", "list": "search", "srsearch": f"haswbstatement:P1278={lei}"}
+                ).get("query")
+                or {}
+            ).get("search") or []
         payload: dict[str, object] = {
             "item": None,
             "readAt": now.isoformat(),
@@ -195,6 +198,13 @@ class WikidataEconomics:
                     if isinstance(value, str) and claim.get("rank") != "deprecated":
                         registers.setdefault(scheme, value.strip())
             payload["registers"] = registers
+            # Its LEI, when the item states one: the route to GLEIF's group structure.
+            stated = [
+                (claim.get("mainsnak") or {}).get("datavalue", {}).get("value")
+                for claim in claims.get("P1278") or []
+                if claim.get("rank") != "deprecated"
+            ]
+            payload["lei"] = next((v for v in stated if isinstance(v, str) and v.strip()), None)
             payload.update(
                 {
                     "item": qid,
@@ -208,6 +218,10 @@ class WikidataEconomics:
                 (lei, json.dumps(payload), now.isoformat()),
             )
         return payload
+
+    def facts_for_item(self, qid: str) -> dict[str, object]:
+        """The same reading for an item identified otherwise (its official website)."""
+        return self.facts(f"item:{qid}")
 
     def _labels(self, ids: list[str]) -> dict[str, str]:
         found: dict[str, str] = {}

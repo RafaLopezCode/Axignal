@@ -18,6 +18,7 @@ import json
 import threading
 import time
 from collections.abc import Callable, Mapping, Sequence
+from contextlib import suppress
 from dataclasses import dataclass
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
@@ -42,6 +43,7 @@ from application.economics import (
     register_discoveries,
     registered_activity,
     same_organization_name,
+    stated_industry,
 )
 from application.first_observation.contracts import (
     AttentionTarget,
@@ -1076,6 +1078,12 @@ class FirstObservationRuntime:
             if isinstance(d, Mapping) and d.get("code") == "IDENTIFIER_DECLARED:LEI"
         ]
         lei = next(iter(verified), None) or next(iter(declared_lei), None)
+        if not lei and not routes:
+            item_facts = self._item_facts(view)
+            registers = item_facts.get("registers") if item_facts else None
+            for scheme, value in registers.items() if isinstance(registers, Mapping) else ():
+                if scheme in self._registers.schemes:
+                    routes.append((str(scheme), str(value), "OFFICIAL_WEBSITE_IN_WIKIDATA"))
         if lei and self._economics is not None:
             try:
                 registers = self._economics.facts(lei).get("registers")
@@ -1118,6 +1126,23 @@ class FirstObservationRuntime:
         view["discoveries"] = [*kept, *found]
         return view
 
+    def _item_facts(self, view: Mapping[str, object]) -> dict[str, object] | None:
+        """Wikidata facts of the item its official website identifies, if any."""
+        if self._economics is None or self._notoriety is None:
+            return None
+        target = view.get("target")
+        website = target.get("website") if isinstance(target, Mapping) else None
+        host = urlsplit(str(website)).hostname if website else None
+        reading = self._notoriety.latest(host) if host else None
+        qid = reading.get("item") if isinstance(reading, Mapping) else None
+        if not isinstance(qid, str) or not qid:
+            return None
+        try:
+            facts = self._economics.facts_for_item(qid)
+        except Exception:  # Wikidata unavailable: the magnitudes stay unknown
+            return None
+        return facts if facts.get("item") else None
+
     def _with_group(
         self, view: dict[str, object], organization_id: str | None
     ) -> dict[str, object]:
@@ -1136,10 +1161,30 @@ class FirstObservationRuntime:
             if isinstance(d, Mapping) and d.get("code") == "IDENTIFIER_DECLARED:LEI"
         ]
         lei = next(iter(verified), None) or next(iter(declared), None)
-        if not lei:
-            return view
         observed_at = str(view.get("observedAt") or "")
         found: list[dict[str, object]] = []
+        if not lei:
+            # No LEI on its website: the Wikidata item identified through its official website
+            # (also when the website itself cannot be read) still states its magnitudes and,
+            # often, its LEI.
+            item_facts = self._item_facts(view)
+            if item_facts is None:
+                return view
+            found += economic_discoveries(
+                item_facts, verified=False, observed_at=observed_at,
+                attributed_by="OFFICIAL_WEBSITE_IN_WIKIDATA",
+            )  # fmt: skip
+            lei = str(item_facts.get("lei") or "") or None
+            if not lei or self._groups is None:
+                if found:
+                    view["discoveries"] = [*discoveries, *found]
+                return view
+            with suppress(Exception):  # registry unavailable: the group stays unknown
+                found += group_discoveries(
+                    self._groups.group(lei), verified=False, observed_at=observed_at
+                )
+            view["discoveries"] = [*discoveries, *found]
+            return view
         try:
             if self._groups is not None:
                 found += group_discoveries(
@@ -1207,7 +1252,9 @@ class FirstObservationRuntime:
             view = self._with_registers(view, organization_id)
             # The register's activity answers the value family when the website does not.
             held = view.get("discoveries")
-            view["discoveries"] = registered_activity(held if isinstance(held, list) else [])
+            view["discoveries"] = stated_industry(
+                registered_activity(held if isinstance(held, list) else [])
+            )
             view = self._with_geo(view)
             view = self._with_sector_context(view)
             view = self._with_regulation(view)

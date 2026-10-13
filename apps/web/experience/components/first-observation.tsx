@@ -118,6 +118,8 @@ export function activityLabel(code: string, fallback: string, t: Translate): str
 /** FINDING and WHY IT MATTERS for one discovery. Fixed copy per code: never generated. */
 export function discoveryCopy(d: Discovery, t: Translate, locale = "en"): { finding: string; why: string } {
   const title = String(d.detail.title ?? d.statement);
+  if (d.kind === "ACTIVITY" && d.code === "STATED_INDUSTRY") return { finding: `${t("Sector declarado", "Stated industry")}: ${d.statement}`,
+    why: t("Según Wikidata, para el elemento identificado por su web oficial. Orienta la demanda y el contexto; no es una capacidad verificada.", "According to Wikidata, for the item identified through its official website. It directs demand and context; it is not a verified capability.") };
   if (d.kind === "ACTIVITY" && d.code === "REGISTERED_ACTIVITY") return { finding: `${t("Actividad registrada", "Registered activity")}: ${d.statement}`,
     why: t("Según {register}: es la clasificación con la que se registró; puede no reflejar todo lo que ofrece hoy.", "According to {register}: the classification it registered under; it may not reflect everything it offers today.").replace("{register}", String(d.detail.source ?? "")) };
   if (d.kind === "ACTIVITY") return { finding: `${t("Actividad probable", "Likely activity")}: ${activityLabel(d.code, d.statement, t)}`, why: t("Orienta dónde buscar demanda. Es una hipótesis con su cita, no una capacidad verificada.", "It directs where to look for demand. It is a hypothesis with its quote, not a verified capability.") };
