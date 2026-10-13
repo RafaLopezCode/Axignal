@@ -60,3 +60,25 @@ def normalized_tax_id(value: str | None) -> str | None:
     if cleaned.startswith("ES") and len(cleaned) == 11:
         cleaned = cleaned[2:]
     return cleaned if 8 <= len(cleaned) <= 12 else None
+
+
+_COMPANY_FORMS = re.compile(
+    r"\b(s\.?\s?a\.?\s?u?|s\.?\s?l\.?\s?[lpu]?|s\.?\s?coop|s\.?\s?a\.?\s?l|sociedad|ltd|limited|"
+    r"gmbh|sas|sarl|srl|spa|bv|nv|inc|ute|u\.?t\.?e|asociaci[oó]n|fundaci[oó]n|cooperativa|"
+    r"se|ag|plc|llc|corp|group|grupo)\b\.?",
+    re.IGNORECASE,
+)
+
+
+def is_company(winner_name: str, winner_id: str | None) -> bool:
+    """A legal person, not an individual: a self-employed person's award is never shown.
+
+    Spanish company tax ids start with a letter (CIF); a natural person's NIF is eight
+    digits and a letter, a foreigner's NIE starts with X, Y or Z.
+    """
+    tax = normalized_tax_id(winner_id)
+    if tax is not None and tax[:1].isalpha():
+        return tax[0] not in "XYZKLM"
+    if tax is not None:
+        return False
+    return bool(_COMPANY_FORMS.search(winner_name))

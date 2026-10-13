@@ -6903,6 +6903,25 @@ html[data-motion="reduced"] {
 .pool-findings li { font-size:13px; padding:8px 10px; border-left:3px solid var(--blue); background:#fafbfd; }
 .pool-findings li[data-state="POTENTIAL"] { border-left-style:dashed; border-left-color:#8a7fb0; }
 .pool-findings li span { font-size:11px; text-transform:uppercase; letter-spacing:.08em; color:var(--blue); margin-right:6px; }
+.pool-campaigns { margin:16px 0 20px; display:grid; gap:12px; }
+.pool-mode { font-size:13px; padding:10px 14px; border-radius:10px; background:#fff; border:1px solid var(--line); color:var(--ink); }
+.pool-mode[data-mode="campaign"] { border-color:var(--blue); background:var(--soft-blue); }
+.pool-campaign-list { list-style:none; padding:0; margin:0; display:grid; gap:8px; }
+.pool-campaign-list li { display:grid; grid-template-columns:1fr minmax(120px, 200px); gap:6px 16px; align-items:center; background:#fff; border:1px solid var(--line); border-radius:10px; padding:12px 14px; font-size:13px; }
+.pool-campaign-list li[data-state="ACTIVE"] { box-shadow:inset 3px 0 0 var(--blue); }
+.pool-campaign-list li span { display:block; color:var(--muted); font-size:12px; }
+.pool-bar { display:block; width:100%; height:8px; border-radius:999px; background:var(--soft-blue); overflow:hidden; }
+.pool-bar > span { display:block; height:100%; background:var(--blue); border-radius:999px; }
+.pool-campaigns > .button { justify-self:start; }
+.pool-campaign-numbers { grid-column:1 / -1; }
+.pool-campaign-list .button { justify-self:start; }
+.pool-campaign-form { display:grid; gap:12px; background:#fff; border:1px solid var(--line); border-radius:12px; padding:16px; }
+.pool-campaign-form fieldset { border:0; padding:0; margin:0; display:flex; flex-wrap:wrap; gap:8px 16px; }
+.pool-campaign-form legend { font-size:12px; font-weight:600; margin-bottom:6px; }
+.pool-countries { display:flex; flex-wrap:wrap; gap:6px 14px; }
+.pool-check { display:inline-flex; align-items:center; gap:6px; font-size:13px; }
+.pool-check[data-channel="HOLD"] { color:var(--muted); }
+.pool-origin { margin-bottom:12px; }
 .pool-policy { margin-top:20px; font-size:13px; }
 .pool-policy ul { columns:2; padding-left:18px; }
 @media(max-width:800px) { .pool-grid { grid-template-columns:1fr; } .pool-list { max-height:320px; } .pool-preview { height:640px; } .pool-policy ul { columns:1; } }

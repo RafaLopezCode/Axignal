@@ -23,8 +23,14 @@ from datetime import date, datetime, timedelta
 from typing import Protocol
 
 from application.observation_intelligence.contracts import TaxonomyCode
-from application.world_demand.awards import AwardRecord, normalized_name, normalized_tax_id
+from application.world_demand.awards import (
+    AwardRecord,
+    is_company,
+    normalized_name,
+    normalized_tax_id,
+)
 from application.world_demand.index import code_within
+from application.world_demand.opportunities import contract_partners, recurrent_buyers
 
 #: Competition looks back this far (bounded by what the index actually holds).
 COMPETITION_WINDOW = timedelta(days=365)
@@ -158,16 +164,22 @@ def public_award_discoveries(
             )
         )  # fmt: skip
     codes = _codes(proof)
+    matched: list[AwardRecord] = []
+    window: tuple[AwardRecord, ...] = ()
     if codes:
         window_start = (now - COMPETITION_WINDOW).date()
         rivals: dict[str, list[AwardRecord]] = defaultdict(list)
-        for award in store.awards_in(country, since=window_start):
+        window = store.awards_in(country, since=window_start)
+        for award in window:
             if not any(code_within(c, wanted) for c in award.demand_codes for wanted in codes):
                 continue
+            matched.append(award)
             if (award.winner_id and award.winner_id in own_ids) or normalized_name(
                 award.winner_name
             ) in own_names:
                 continue
+            if not is_company(award.winner_name, award.winner_id):
+                continue  # an individual's award is never shown as competition
             rivals[award.winner_id or normalized_name(award.winner_name)].append(award)
         top = sorted(rivals.values(), key=lambda a: (-len(a), -sum(x.amount or 0 for x in a)))
         for awards in top[:MAX_COMPETITORS]:
@@ -190,6 +202,49 @@ def public_award_discoveries(
                     },
                 )
             )  # fmt: skip
+    if matched:
+        # Who keeps buying what it does, and has not bought from it (POTENTIAL).
+        scopes = [
+            TaxonomyCode("GEO", str(s.get("jurisdiction")))
+            for s in _items(proof.get("attentionScopes"))
+            if isinstance(s, Mapping) and s.get("jurisdiction")
+        ]
+        out += recurrent_buyers(
+            matched, own_buyers=set(by_buyer), scopes=scopes, observed_at=observed_at,
+            coverage=coverage,
+        )  # fmt: skip
+    if window:
+        # Companies active nearby in the sectors its sector buys from and sells to.
+        from application.value_chain import chain_organizations, company_industry
+
+        industry = company_industry(view, [c.code for c in codes])
+        if industry is not None:
+            area = [
+                TaxonomyCode("GEO", str(s.get("jurisdiction")))
+                for s in _items(proof.get("attentionScopes"))
+                if isinstance(s, Mapping) and s.get("jurisdiction")
+            ]
+            out += chain_organizations(
+                list(window), industry[0],
+                in_area=lambda a: not area or any(p.within(z) for p in a.places for z in area),
+                own_ids=own_ids, own_names=own_names, normalize=normalized_name,
+                observed_at=observed_at,
+            )  # fmt: skip
+    lots_of = getattr(store, "awards_of_lots", None)
+    utes_named = getattr(store, "joint_venture_awards", None)
+    if won and callable(lots_of) and callable(utes_named):
+        # Who it has been awarded contracts together with (same lot or joint venture).
+        out += contract_partners(
+            won,
+            lots_of([(a.source_id, a.record_id, a.lot) for a in won[:200]]),
+            utes_named([n for n in names if len(normalized_name(n)) >= 4]),
+            own_ids=own_ids, own_names=own_names, observed_at=observed_at,
+        )  # fmt: skip
+    elif callable(utes_named) and names:
+        out += contract_partners(
+            (), (), utes_named([n for n in names if len(normalized_name(n)) >= 4]),
+            own_ids=own_ids, own_names=own_names, observed_at=observed_at,
+        )  # fmt: skip
     if not won and (tax_ids or names) and held:  # nothing held: nothing to say
         out.append(
             _discovery(

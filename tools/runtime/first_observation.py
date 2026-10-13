@@ -16,6 +16,7 @@ import argparse
 import hashlib
 import json
 import threading
+import time
 from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass
 from datetime import UTC, datetime, timedelta
@@ -23,7 +24,7 @@ from pathlib import Path
 from typing import Any, Protocol
 from urllib.parse import urlsplit
 
-from application.context.sector import context_discoveries
+from application.context.sector import context_discoveries, sector_label
 from application.economic_discovery.brain_contracts import ObservationMode, ObservationRecord
 from application.economic_discovery.observation_memory import (
     GovernedObservation,
@@ -35,7 +36,11 @@ from application.economic_discovery.observation_memory import (
 )
 from application.economic_discovery.observation_reuse import ReusePurpose
 from application.economic_discovery.source_registry import SourceRegistryEntry
-from application.economics import economic_discoveries
+from application.economics import (
+    economic_discoveries,
+    register_discoveries,
+    same_organization_name,
+)
 from application.first_observation.contracts import (
     AttentionTarget,
     IdentityLink,
@@ -71,6 +76,7 @@ from application.observation_runtime.replay import FindingsLedger
 from application.organization_admission.locator import LocatorError, parse_locator, public_domain
 from application.organization_group import group_discoveries
 from application.press.mentions import press_discoveries
+from application.regulation import regulation_discoveries
 from application.semantic_layer.cascade import SemanticCascade
 from application.subscriber_identity.runtime import Clock
 from application.subscriber_portfolio.models import (
@@ -81,6 +87,7 @@ from application.subscriber_portfolio.models import (
     PortfolioError,
 )
 from application.subscriber_projection.subscriber_runtime import SubscriberEconomicRuntime
+from application.value_chain import apply_value_chain
 from application.world_demand.index import (
     DemandIndexPort,
     SliceFeedPort,
@@ -92,6 +99,7 @@ from application.world_demand.relations import AwardStore, apply_public_awards
 from application.xeed_access.reader import TrustedRequestContext
 from domain.evidence.epistemics import Currentness
 from domain.identity import OrganizationId, PrincipalId, TenantId, XeedId
+from pipeline.economics.registries import OfficialRegisters, registers_from_env
 from pipeline.economics.wikidata import WikidataEconomics
 from pipeline.entity_resolution.gleif_group import GleifGroupReader
 from pipeline.first_observation.sqlite_store import SqliteFirstObservationStore
@@ -99,12 +107,14 @@ from pipeline.geo.nominatim import NominatimReverseGeocoder
 from pipeline.observation_memory.sqlite_store import SqliteObservationMemory
 from pipeline.press.sqlite_store import PressIngestor, SqlitePressIndex
 from pipeline.press.sqlite_store import SqlitePressIndex as _PressIndex
+from pipeline.regulation.sqlite_store import RegulationIngestor, SqliteRegulationIndex
 from tools.runtime.field_performance import field_performance_from_env
 from tools.runtime.generative_probe import (
     GenerativeProbeRunner,
     assistant_from_values,
     generative_probe_from_values,
 )
+from tools.runtime.regulation_context import RegulationContextRunner
 from tools.runtime.sector_context import SectorContextRunner
 from tools.runtime.subscriber_portfolio import SubscriberPortfolioRuntime
 
@@ -385,7 +395,11 @@ class FirstObservationRuntime:
         geo: GenerativeProbeRunner | None = None,
         sector_context: SectorContextRunner | None = None,
         economics: WikidataEconomics | None = None,
+        registers: OfficialRegisters | None = None,
+        regulation: tuple[RegulationIngestor, RegulationContextRunner] | None = None,
     ) -> None:
+        self._regulation = regulation
+        self._registers = registers
         self._sector_context = sector_context
         self._economics = economics
         self._geo = geo
@@ -410,6 +424,8 @@ class FirstObservationRuntime:
         self._start_lock = threading.Lock()
         self._tenant_daily_jobs = tenant_daily_jobs
         self.marketing_pool: Any = None
+        self.awards_backfill: Any = None
+        self._backfill_thread: threading.Thread | None = None
 
     # ---- attention (synchronous, cheap) ---------------------------------------------
     def remember_locator(self, locator: str | None) -> None:
@@ -591,6 +607,52 @@ class FirstObservationRuntime:
         with self._lock:
             return len(self.ingestor.run(max_slices=max_slices))
 
+    def ingest_regulation(self) -> int:
+        """Read due official journals into the regulation index (off the First Proof path)."""
+        return 0 if self._regulation is None else self._regulation[0].run()
+
+    def judge_regulation(self) -> int:
+        return 0 if self._regulation is None else self._regulation[1].run()
+
+    def _with_regulation(self, view: dict[str, object]) -> dict[str, object]:
+        """New official rules about its activity where it is; queues a judgment when due."""
+        if self._regulation is None:
+            return view
+        runner = self._regulation[1]
+        held = view.get("discoveries")
+        discoveries = held if isinstance(held, list) else []
+        activities = [
+            str(d.get("code"))
+            for d in discoveries
+            if isinstance(d, Mapping) and d.get("kind") == "ACTIVITY" and d.get("code")
+        ][:2]
+        scopes = view.get("attentionScopes")
+        country = None
+        if isinstance(scopes, list) and scopes and isinstance(scopes[0], Mapping):
+            country = country_of(TaxonomyCode("GEO", str(scopes[0].get("jurisdiction") or "")))
+        if not activities or not country:
+            return view
+        languages = next(
+            (d.get("detail", {}).get("languages") for d in discoveries
+             if isinstance(d, Mapping) and d.get("kind") == "LANGUAGES"),
+            None,
+        )  # fmt: skip
+        language = (
+            str(languages[0])[:2].lower() if isinstance(languages, list) and languages else "en"
+        )
+        found: list[dict[str, object]] = []
+        for capability_id in activities:
+            runner.request(capability_id, country, language)
+            result = runner.latest(capability_id, country)
+            if result is not None:
+                found += regulation_discoveries(
+                    result, capability_id=capability_id, sector=sector_label(capability_id),
+                    country=country, observed_at=str(view.get("observedAt") or ""),
+                )  # fmt: skip
+        if found:
+            view["discoveries"] = [*discoveries, *found]
+        return view
+
     def judge_sector_context(self) -> int:
         """Judge queued sector contexts (shared per activity and country per day)."""
         return 0 if self._sector_context is None else self._sector_context.run()
@@ -733,6 +795,20 @@ class FirstObservationRuntime:
                 target=self._loop, name="first-observation", daemon=True
             )
             self._thread.start()
+            if self.awards_backfill is not None and self._backfill_thread is None:
+                # Heavy, slow and independent: its own thread, never in the observation loop.
+                self._backfill_thread = threading.Thread(
+                    target=self._backfill_loop, name="awards-backfill", daemon=True
+                )
+                self._backfill_thread.start()
+
+    def _backfill_loop(self) -> None:
+        while True:
+            try:
+                done = self.awards_backfill.run_one()
+            except Exception:  # never stops the runtime; the month is retried later
+                done = 0
+            time.sleep(3600 if done is None else 600)
 
     def _loop(self) -> None:
         while True:
@@ -746,6 +822,8 @@ class FirstObservationRuntime:
                 self.ingest_press,
                 self.measure_geo,
                 self.judge_sector_context,
+                self.ingest_regulation,
+                self.judge_regulation,
                 self.run_marketing_pool,
                 self.purge,
             )
@@ -818,6 +896,85 @@ class FirstObservationRuntime:
             str(context.tenant_id), target_ref, chosen, now=self._clock.now()
         )
         return {"state": "success", "directed": list(chosen)}
+
+    def _with_registers(
+        self, view: dict[str, object], organization_id: str | None
+    ) -> dict[str, object]:
+        """Official accounts and size from the business register of the organization's own
+        identifier (its website's, or its LEI's in Wikidata); they supersede Wikidata's."""
+        if self._registers is None:
+            return view
+        held = view.get("discoveries")
+        discoveries = held if isinstance(held, list) else []
+        target = view.get("target")
+        names = [str(target.get("name") or "")] if isinstance(target, Mapping) else []
+        website = target.get("website") if isinstance(target, Mapping) else None
+        host = (urlsplit(str(website)).hostname or "").removeprefix("www.") if website else ""
+        if host.count(".") >= 1:
+            names.append(host.split(".")[-2])  # its own domain name ("vipps" for vipps.no)
+        names += [
+            str(d.get("statement") or "")
+            for d in discoveries
+            if isinstance(d, Mapping) and d.get("code") == "LEGAL_NAME_DECLARED"
+        ]
+        routes: list[tuple[str, str, str]] = []
+        for d in discoveries:
+            code = str(d.get("code") or "") if isinstance(d, Mapping) else ""
+            scheme = code.removeprefix("IDENTIFIER_DECLARED:")
+            if code.startswith("IDENTIFIER_DECLARED:") and scheme in self._registers.schemes:
+                routes.append((scheme, str(d.get("statement", "")).split(" ", 1)[-1],
+                               "REGISTER_ID_ON_WEBSITE"))  # fmt: skip
+        verified: tuple[str, ...] = ()
+        identifiers_for = getattr(self._websites, "identifiers_for", None)
+        if organization_id and callable(identifiers_for):
+            verified = tuple(identifiers_for(OrganizationId(organization_id), "LEI"))
+        declared_lei = [
+            str(d.get("statement", "")).split(" ", 1)[-1]
+            for d in discoveries
+            if isinstance(d, Mapping) and d.get("code") == "IDENTIFIER_DECLARED:LEI"
+        ]
+        lei = next(iter(verified), None) or next(iter(declared_lei), None)
+        if lei and self._economics is not None:
+            try:
+                registers = self._economics.facts(lei).get("registers")
+            except Exception:  # Wikidata unavailable: only the website's identifiers count
+                registers = None
+            for scheme, value in registers.items() if isinstance(registers, Mapping) else ():
+                if scheme in self._registers.schemes:
+                    routes.append((str(scheme), str(value),
+                                   "VERIFIED_LEI" if lei in verified else "LEI_ON_WEBSITE"))  # fmt: skip
+        observed_at = str(view.get("observedAt") or "")
+        found: list[dict[str, object]] = []
+        seen: set[tuple[str, str]] = set()
+        for scheme, value, via in routes:
+            if (scheme, value) in seen or len(seen) >= 3:
+                continue
+            seen.add((scheme, value))
+            try:
+                record = self._registers.record(scheme, value)
+            except Exception:  # register unavailable: the facts stay unknown
+                continue
+            if record is None:
+                continue
+            attributed = via != "LEI_ON_WEBSITE" and same_organization_name(
+                str(record.get("name") or ""), names
+            )
+            found += register_discoveries(record, attributed=attributed, via=via,
+                                          observed_at=observed_at)  # fmt: skip
+        if not found:
+            return view
+        official = {str(d["detail"]["fact"]) for d in found}  # type: ignore[index]
+        kept = [
+            d
+            for d in discoveries
+            if not (
+                isinstance(d, Mapping)
+                and str(d.get("code") or "").startswith("WIKIDATA:")
+                and str((d.get("detail") or {}).get("fact")) in official
+            )
+        ]
+        view["discoveries"] = [*kept, *found]
+        return view
 
     def _with_group(
         self, view: dict[str, object], organization_id: str | None
@@ -903,12 +1060,16 @@ class FirstObservationRuntime:
                     held = view.get("discoveries")
                     view["discoveries"] = [*(held if isinstance(held, list) else []), *mentions]
             view = self._with_group(view, organization_id)
+            view = self._with_registers(view, organization_id)
             view = self._with_geo(view)
             view = self._with_sector_context(view)
+            view = self._with_regulation(view)
             # Relationships and competition from published public contract awards.
             view = apply_public_awards(
                 view, proof, self._awards, now=self._clock.now(), countries=lambda: directed
             )
+            # Where its sector's demand comes from and where its inputs come from.
+            view = apply_value_chain(view, proof)
         if view is not None and proof is not None and proof.get("publicUnderstanding"):
             from application.first_observation.understanding import compare, public_report
 
@@ -1062,6 +1223,20 @@ def _sector_context(values: Mapping[str, str], root: Path) -> SectorContextRunne
     )
 
 
+def _regulation(
+    values: Mapping[str, str], root: Path
+) -> tuple[RegulationIngestor, RegulationContextRunner] | None:
+    """Official journals and their relevance judgment; off without the governed assistant."""
+    assistant = assistant_from_values(values)
+    if assistant is None:
+        return None
+    complete, model, _rates = assistant
+    index = SqliteRegulationIndex(root / "regulation-index.sqlite3")
+    return RegulationIngestor(index), RegulationContextRunner(
+        complete, model, index, root / "regulation-context.sqlite3"
+    )
+
+
 def _geocoder(root: Path, overrides: FirstObservationOverrides) -> NominatimReverseGeocoder | None:
     """Places of map points sites publish; off in controlled tests with injected sources."""
     if overrides.source_ports is not None or overrides.feeds is not None:
@@ -1126,6 +1301,7 @@ def build_first_observation(
         dict(overrides.feeds) if overrides.feeds is not None else {"ted-search-v3": live_ted}
     )
     index = SqliteWorldDemandIndex(root / "world-demand-index.sqlite3")
+    placsp_index: SqliteWorldDemandIndex | None = None
     # Index first (world slices ingested once), the live adapter only for what no
     # fresh complete slice covers; the uncovered slice is demanded for ingestion.
     ports: dict[str, SourceObservationPort] = {
@@ -1147,6 +1323,7 @@ def build_first_observation(
         feeds[PLACSP_SOURCE_ID] = PlacspFeedAdapter(
             UrllibPlacspTransport(), clock=clock.now, awards_sink=index.upsert_awards
         )
+        placsp_index = index
         ports[PLACSP_SOURCE_ID] = DemandIndexPort(index, None, clock=clock.now)
         index.demand(
             DemandSlice(
@@ -1216,6 +1393,12 @@ def build_first_observation(
         economics=None
         if overrides.source_ports is not None or overrides.feeds is not None
         else WikidataEconomics(root / "wikidata-economics.sqlite3"),
+        registers=None
+        if overrides.source_ports is not None or overrides.feeds is not None
+        else registers_from_env(root, values),
+        regulation=None
+        if overrides.source_ports is not None or overrides.feeds is not None
+        else _regulation(values, root),
         awards=index,
         purge_canonical_raw=(
             lambda at: observation_memory.purge_first_observation_content(
@@ -1235,6 +1418,20 @@ def build_first_observation(
         if isinstance(observation_memory, SqliteObservationMemory)
         else None,
     )
+    if placsp_index is not None:
+        try:
+            months = int(values.get("AXIGNAL_AWARDS_BACKFILL_MONTHS", "12"))
+        except ValueError:
+            months = 12
+        if months > 0:
+            from pipeline.observation_intelligence.placsp_archive import PlacspAwardsBackfill
+
+            runtime.awards_backfill = PlacspAwardsBackfill(
+                placsp_index.upsert_awards,
+                root / "world-demand-index.sqlite3",
+                root / "tmp" / "placsp-archives",
+                months=min(months, 36),
+            )
     if overrides.source_ports is None and overrides.feeds is None:
         from tools.runtime.marketing_pool import build_marketing_pool
 
