@@ -47,3 +47,11 @@ test("localized knowledge build helper fails closed on incomplete prerender outp
     fs.rmSync(root, { recursive: true, force: true });
   }
 });
+
+test("the build's expected knowledge count follows the published pages (hub + one per page)", async () => {
+  // @ts-expect-error Build helper is plain ESM and intentionally framework-independent.
+  const { expectedHtmlFilesPerLocale } = await import("../tools/localize-static-html-lang.mjs");
+  const { acquisitionPages } = await import("../lib/acquisition");
+  // Adding a knowledge page must update the build guard; this fails here, not in production.
+  assert.equal(expectedHtmlFilesPerLocale, acquisitionPages.length + 1);
+});
