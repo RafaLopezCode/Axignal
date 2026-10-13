@@ -16,6 +16,7 @@ authority in the repository.
 | Document | Role |
 | --- | --- |
 | [`AXIGNAL_BIDIRECTIONAL_INTELLIGENCE_EXECUTION_GOAL_2026-10-09.md`](AXIGNAL_BIDIRECTIONAL_INTELLIGENCE_EXECUTION_GOAL_2026-10-09.md) | CTO goal: bidirectional economic intelligence, JEV as bounded perception instrument, and evidence-backed constructive criticism. Execution only after spec 063 closure and explicit CTO instruction; never overrides MASTER, Constitution or ADRs. |
+| [`AXIGNAL_GLOBAL_FAMILY_EXCELLENCE_ROADMAP_2026-10-13.md`](AXIGNAL_GLOBAL_FAMILY_EXCELLENCE_ROADMAP_2026-10-13.md) | CTO roadmap: global-first excellence of the ten families, measured by a multi-country golden set and a subscriber-agent evaluation; phases A–E with exit criteria. Never overrides MASTER, Constitution or ADRs. |
 
 ## Rules
 
