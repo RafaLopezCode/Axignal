@@ -1,3 +1,4 @@
+import { firstObservationSchema } from "./subscriber-contracts";
 import { cookies } from "next/headers";
 import { adminOriginAllowed } from "./admin-origin";
 import { attentionCommandSchema, organizationInventorySchema } from "./organization-attention";
@@ -119,8 +120,13 @@ export async function customerZeroProxy(request: Request, write = false) {
       payload,
       response.status,
     );
+    // The ten-family First Observation travels next to the legacy projection, validated.
+    const raw = typeof payload === "object" && payload !== null ? (payload as Record<string, unknown>).firstObservation : undefined;
+    const firstObservation = raw ? firstObservationSchema.safeParse(raw) : null;
     return Response.json(
-      result.state === "success" ? result.projection : result,
+      result.state === "success"
+        ? firstObservation?.success ? { ...result.projection, firstObservation: firstObservation.data } : result.projection
+        : result,
       { status: response.status, headers: noStore },
     );
   } catch {
