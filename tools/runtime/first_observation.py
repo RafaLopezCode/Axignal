@@ -65,6 +65,7 @@ from application.first_observation.shared_findings import SharedFindingsPort
 from application.first_observation.site import PageReading
 from application.first_observation.visibility import first_proof_live_deadline, withdraw_first_proof
 from application.generative_visibility.probe import ProbeSubject, geo_discoveries
+from application.inxights import apply_inxights
 from application.observation_intelligence import (
     OperationalLearning,
     SourceObservationPort,
@@ -1070,6 +1071,8 @@ class FirstObservationRuntime:
             )
             # Where its sector's demand comes from and where its inputs come from.
             view = apply_value_chain(view, proof)
+            # What crossing the families reveals (derived, recomputed on every read).
+            view = apply_inxights(view)
         if view is not None and proof is not None and proof.get("publicUnderstanding"):
             from application.first_observation.understanding import compare, public_report
 
