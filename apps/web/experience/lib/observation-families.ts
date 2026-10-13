@@ -43,6 +43,7 @@ const BY_KIND: Partial<Record<Discovery["kind"], Facet>> = {
   MENTION: { family: "reputation", channel: null },
   RELATIONSHIP: { family: "relationships", channel: null },
   COMPETITION: { family: "relationships", channel: null },
+  CONTEXT_SIGNAL: { family: "context", channel: null },
   ECONOMIC_FACT: { family: "economics", channel: null },
 };
 
