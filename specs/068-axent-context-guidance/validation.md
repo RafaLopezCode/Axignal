@@ -20,3 +20,7 @@ Status: IMPLEMENTED + AUTOMATED_QA_PASS + VISUAL_EVIDENCE_READY; human visual ac
 ## Integrated-tree validation (2026-10-13 Europe/Madrid)
 
 Merged origin/main 3dd3125 without conflict; latest location-evidence/demand attention changes retained. Frozen sync, Ruff format/check (1426 files), mypy (487 source files), Architecture Guard passed. Post-merge targeted AXENT integration, country evidence and world-demand suite: 85 passed in 33.59 s. Full frontend: 279 passed; production build passed. Graphify AST refresh: 20101 nodes, 56172 edges. Browser confirmed product guidance on Demo Energia with the correct current organization and disabled demo account controls. Final governance and clean-tree checks precede main push.
+
+## Concurrent-main reconciliation
+
+A final same-tree pre-push check stopped the first release attempt because origin/main had advanced to 93e28c5 (#192, #217–#220 and their prerequisites). No push was made against that unvalidated tree. The merge candidate 5ddb8ed retains those upstream commits and was revalidated: frozen sync; Ruff format/check (1456 files); mypy (509 source files); Architecture Guard; 118 targeted Python checks covering AXENT and every newly added/changed test module; 279 frontend checks; production build; final Graphify AST refresh (20445 nodes, 57068 edges). Remote main was confirmed at 93e28c5 before the final governed fast-forward push. No force push or production deployment.
