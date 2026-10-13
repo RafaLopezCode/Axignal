@@ -214,6 +214,8 @@ def test_end_to_end_once_per_organization_approved_by_staff(tmp_path: Path) -> N
     message = sender.sent[0]
     assert message.to == "hello@acme.com" and message.html
     assert "Rafael López\nCEO, Axignal.com" in message.body
+    assert message.body.startswith("For the attention of the head of SEO at Acme SEO\n\n")
+    assert "For the attention of the head of SEO at Acme SEO" in message.html
     assert runner.reading(str(runner.store.get("acme.com")["detail"]["token"])) is not None
 
     token = message.unsubscribe_url.rsplit("/", 1)[1]
@@ -277,3 +279,15 @@ def test_a_failed_search_is_retried_the_next_day_not_in_a_month(tmp_path: Path) 
     clock[0] = NOW + timedelta(days=1, minutes=1)
     runner.discover()
     assert Failing.calls == 3
+
+
+def test_the_salutation_names_a_role_never_a_person() -> None:
+    from application.marketing_pool.prospect import salutation
+
+    assert salutation("es", "DIGITAL_MARKETING_AGENCY", "Acme") == (
+        "A la atención del responsable de marketing de Acme"
+    )
+    assert salutation("de", "REPUTATION_PR_AGENCY", "Acme") == (
+        "Zu Händen der Leitung Kommunikation, Acme"
+    )
+    assert salutation("xx", "B2B_CONSULTANCY", "Acme").startswith("For the attention")

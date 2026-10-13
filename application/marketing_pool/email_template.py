@@ -140,6 +140,7 @@ def render_html(
     subject: str,
     body: str,
     findings: Sequence[Mapping[str, object]],
+    greeting: str | None = None,
     reading_url: str,
     unsubscribe_url: str,
     sender_name: str,
@@ -152,7 +153,13 @@ def render_html(
     preheader = escape(_paragraphs(body)[0][:140] if _paragraphs(body) else subject)
     eyebrow = labels["eyebrow"]
     subject_line = domain + (f" · {labels['observed']} {studied_on[:10]}" if studied_on else "")
-    paragraphs = "".join(
+    opening = (
+        f'<p style="margin:0 0 16px 0;font-family:{SANS};font-size:15px;line-height:1.6;'
+        f'color:{MUTED};">{escape(greeting)}</p>'
+        if greeting
+        else ""
+    )
+    paragraphs = opening + "".join(
         f'<p style="margin:0 0 16px 0;font-family:{SANS};font-size:16px;line-height:1.6;'
         f'color:{TEXT};">{escape(p).replace(chr(10), "<br>")}</p>'
         for p in _paragraphs(body)

@@ -150,7 +150,8 @@ INSTRUCTION = (
     "at most 4 findings, the most specific ones, each with a few words of why it matters "
     "to them. Then one sentence on what AXIGNAL could add for them, then invite them to see "
     "the full reading. No greetings with invented names, no signature, no footer, no links: "
-    "those are added separately. Subject under 70 characters, body under 170 words."
+    "those are added separately; start directly with the first sentence, without any "
+    "salutation (one is added). Subject under 70 characters, body under 170 words."
 )
 SCHEMA: dict[str, object] = {
     "type": "object",
@@ -209,6 +210,36 @@ def language_of(declared: str | None, country: str | None) -> str:
                   "BE": "fr", "DE": "de", "AT": "de", "CH": "de", "IT": "it", "PT": "pt",
                   "BR": "pt"}  # fmt: skip
     return by_country.get((country or "").upper(), "en")
+
+
+#: Who the message is for, without naming anyone: the head of the area that would buy.
+_AREA = {
+    "SEO_GEO_AGENCY": {"es": "SEO", "en": "SEO", "fr": "SEO", "de": "SEO", "it": "SEO",
+                       "pt": "SEO"},
+    "DIGITAL_MARKETING_AGENCY": {"es": "marketing", "en": "marketing", "fr": "marketing",
+                                 "de": "Marketing", "it": "marketing", "pt": "marketing"},
+    "REPUTATION_PR_AGENCY": {"es": "comunicación", "en": "communications",
+                             "fr": "communication", "de": "Kommunikation",
+                             "it": "comunicazione", "pt": "comunicação"},
+    "B2B_CONSULTANCY": {"es": "desarrollo de negocio", "en": "business development",
+                        "fr": "développement commercial", "de": "Geschäftsentwicklung",
+                        "it": "sviluppo commerciale", "pt": "desenvolvimento de negócio"},
+}  # fmt: skip
+_ATTENTION = {
+    "es": "A la atención del responsable de {area} de {name}",
+    "en": "For the attention of the head of {area} at {name}",
+    "fr": "À l'attention du responsable {area} de {name}",
+    "de": "Zu Händen der Leitung {area}, {name}",
+    "it": "All'attenzione del responsabile {area} di {name}",
+    "pt": "À atenção do responsável de {area} da {name}",
+}
+
+
+def salutation(language: str, persona_id: str, name: str) -> str:
+    """The opening line: addressed to a role at the organization, never to a person."""
+    areas = _AREA.get(persona_id, _AREA["DIGITAL_MARKETING_AGENCY"])
+    template = _ATTENTION.get(language, _ATTENTION["en"])
+    return template.format(area=areas.get(language, areas["en"]), name=name)
 
 
 def legal_notice(language: str, *, sender: str, address: str, domain: str) -> str:

@@ -37,6 +37,7 @@ from application.marketing_pool.prospect import (
     legal_notice,
     prompt,
     recipient,
+    salutation,
     site_text,
 )
 from cognition.jobs.model import CognitiveJob, JobKind
@@ -267,6 +268,7 @@ class MarketingPoolRunner:
             unsubscribe=f"{origin}/r/{token}/unsubscribe",
             signature=self._signature(language),
         )
+        draft["greeting"] = salutation(language, chosen.id, str(prospect["name"]))
         draft["legal"] = legal_notice(
             language,
             sender=self._operator.sender_name,
@@ -312,7 +314,8 @@ class MarketingPoolRunner:
                     OutgoingMessage(
                         to=address,
                         subject=str(draft["subject"]),
-                        body=f"{draft['body']}\n\n{draft['footer']}",
+                        body=f"{draft.get('greeting', '')}\n\n{draft['body']}\n\n"
+                        f"{draft['footer']}".lstrip(),
                         language=str(detail.get("language") or "en"),
                         unsubscribe_url=f"{origin}/api/marketing/unsubscribe/{token}",  # RFC 8058 POST
                         unsubscribe_mailto=f"mailto:{self._sender.sender_address}"
@@ -349,6 +352,7 @@ class MarketingPoolRunner:
             studied_on=studied if isinstance(studied, str) else None,
             subject=str(draft.get("subject") or ""),
             body=str(draft.get("body") or ""),
+            greeting=str(draft.get("greeting") or "") or None,
             findings=list(draft.get("findingsUsed") or []),
             reading_url=f"{origin}/r/{token}",
             unsubscribe_url=f"{origin}/r/{token}/unsubscribe",
