@@ -136,6 +136,8 @@ class SourceObservation:
     peer_ips: tuple[str, ...]
     failure_state: str | None
     policy_version: str = "1"
+    #: Where a redirect the policy refused pointed (never fetched); lineage only.
+    rejected_redirect: str | None = None
 
     def __post_init__(self) -> None:
         _required(

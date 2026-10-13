@@ -192,3 +192,42 @@ def test_the_fetcher_names_an_unverifiable_certificate() -> None:
     fetcher = GovernedSiteFetcher(sensor=Sensor(), artifacts=None)  # type: ignore[arg-type]
     fetched = fetcher.fetch("https://certs.example/robots.txt", slot="robots")
     assert fetched.failure == TLS_NOT_VERIFIED and fetched.status is None
+
+
+def test_a_redirect_to_the_same_brand_on_another_domain_is_read_once_and_said() -> None:
+    from dataclasses import replace
+
+    moved = replace(
+        _resource("https://impression.co.uk/robots.txt", 301, None, "redirect_policy_rejected"),
+        redirected_to="https://www.impressiondigital.com/robots.txt",
+    )
+    web = Web({
+        "https://impression.co.uk/robots.txt": moved,
+        "https://www.impressiondigital.com/robots.txt": _resource(
+            "https://www.impressiondigital.com/robots.txt", 200, "User-agent: *\nAllow: /\n"),
+        "https://www.impressiondigital.com/": _resource("https://www.impressiondigital.com/", 200, HOME),
+    })  # fmt: skip
+    ledger = RunLedger()
+
+    reading = _service(web).read_site("impression.co.uk", NOW, ledger)
+
+    assert reading.failure is None
+    assert reading.pages[0].url == "https://www.impressiondigital.com/"
+    assert "FOLLOWED:SAME_BRAND_REDIRECT" in ledger.decisions
+
+
+def test_a_redirect_to_another_brand_is_still_never_followed() -> None:
+    from dataclasses import replace
+
+    from application.first_observation.service import same_brand
+
+    moved = replace(
+        _resource("https://acme.example/robots.txt", 301, None, "redirect_policy_rejected"),
+        redirected_to="https://www.bigholding.example/acme",
+    )
+    web = Web({"https://acme.example/robots.txt": moved})
+    reading = _service(web).read_site("acme.example", NOW, RunLedger())
+    assert reading.failure == "REDIRECTS_TO_ANOTHER_SITE"
+    assert web.requests == ["https://acme.example/robots.txt"]
+    assert same_brand("https://alan.com", "https://alan.eu/")
+    assert not same_brand("https://ab.com", "https://abacus.com/")  # too short to tell

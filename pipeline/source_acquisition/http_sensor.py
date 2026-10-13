@@ -6,7 +6,7 @@ import hashlib
 import time
 from collections.abc import Callable
 from datetime import UTC, datetime
-from urllib.parse import urljoin
+from urllib.parse import urljoin, urlsplit
 
 from application.source_acquisition import (
     SourceDispatchPolicy,
@@ -61,6 +61,7 @@ class HttpSourceSensor:
         final_response: RawHttpResponse | None = None
         failure_state: str | None = None
         final_uri = requested_uri
+        rejected_redirect: str | None = None
         deadline_ns = self._monotonic_ns() + policy.timeout_ms * 1_000_000
 
         for hop in range(policy.max_redirects + 1):
@@ -74,6 +75,11 @@ class HttpSourceSensor:
                 if hop == 0:
                     raise
                 failure_state = "redirect_policy_rejected"
+                # Only where it points (scheme and host): a path or query may carry tokens.
+                target = urlsplit(current_uri)
+                rejected_redirect = (
+                    f"{target.scheme}://{target.hostname}/" if target.hostname else None
+                )
                 break
 
             if self._monotonic_ns() >= deadline_ns:
@@ -171,6 +177,8 @@ class HttpSourceSensor:
             "body_artifact_ref": body_ref,
             "failure_state": failure_state,
         }
+        if rejected_redirect is not None:
+            envelope["rejected_redirect"] = rejected_redirect
         envelope_ref = self._artifacts.put_json(envelope)
         observation_fingerprint = f"sha256:{ContentAddressedArtifactStore.digest(envelope_ref)}"
 
@@ -194,4 +202,5 @@ class HttpSourceSensor:
             redirect_chain=tuple(redirect_chain),
             peer_ips=tuple(peer_ips),
             failure_state=failure_state,
+            rejected_redirect=rejected_redirect,
         )

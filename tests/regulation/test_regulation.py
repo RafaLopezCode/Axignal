@@ -156,3 +156,20 @@ def test_section_labels_are_not_sector_headlines() -> None:
                            {"title": "La construcción crece un 4% en octubre", "url": "https://b"}]}  # fmt: skip
     found = context_discoveries(result, capability_id="x", country="ES", observed_at="2026-10-13")
     assert [d["statement"] for d in found] == ["La construcción crece un 4% en octubre"]
+
+
+def test_activities_known_only_by_section_or_register_still_reach_regulation() -> None:
+    from application.context.sector import sector_keywords, sector_label
+    from application.regulation import regulation_phrases
+    from application.regulation.sectors import route_of, section_of
+
+    assert section_of("NACE 64.190") == "K" and section_of("NAF 85.31Z") == "P"
+    assert section_of("SIC 73110") == "M" and section_of("unknown") is None
+    registered = {"kind": "ACTIVITY", "code": "REGISTERED_ACTIVITY",
+                  "detail": {"classification": "NACE 64.190"}}  # fmt: skip
+    assert route_of(registered) == "isic-K"
+    assert route_of({"kind": "ACTIVITY", "code": "isic-P"}) == "isic-P"
+    assert "centros educativos" in regulation_phrases("isic-P")
+    assert "payment services" in regulation_phrases("isic-K")
+    assert "education" in sector_keywords("isic-P") and sector_label("isic-P") == "Education"
+    assert regulation_phrases("isic-Z") == ()

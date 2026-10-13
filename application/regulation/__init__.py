@@ -27,7 +27,9 @@ def regulation_phrases(capability_id: str) -> tuple[str, ...]:
 
     entry = next((e for e in CAPABILITY_LEXICON if e.capability_id == capability_id), None)
     if entry is None:
-        return ()
+        from application.regulation.sectors import section_phrases
+
+        return section_phrases(capability_id)  # known only by its ISIC section
     folded = {
         unicodedata.normalize("NFKD", term).encode("ascii", "ignore").decode().casefold().strip()
         for term in entry.terms

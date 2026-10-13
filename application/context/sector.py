@@ -14,6 +14,7 @@ import unicodedata
 from collections.abc import Mapping, Sequence
 
 from application.observation_intelligence.catalog import CAPABILITY_LEXICON
+from application.regulation.sectors import section_keywords, section_label
 
 MAX_CANDIDATES = 40
 MAX_SHOWN = 8
@@ -48,7 +49,7 @@ def _fold(text: str) -> str:
 def sector_keywords(capability_id: str) -> tuple[str, ...]:
     entry = next((e for e in CAPABILITY_LEXICON if e.capability_id == capability_id), None)
     if entry is None:
-        return ()
+        return section_keywords(capability_id)  # known only by its ISIC section
     words = {
         word
         for term in entry.terms
@@ -60,7 +61,7 @@ def sector_keywords(capability_id: str) -> tuple[str, ...]:
 
 def sector_label(capability_id: str) -> str | None:
     entry = next((e for e in CAPABILITY_LEXICON if e.capability_id == capability_id), None)
-    return None if entry is None else entry.label
+    return section_label(capability_id) if entry is None else entry.label
 
 
 #: A section label ("CONSTRUCCIÓN", "Economía") is not a headline.
