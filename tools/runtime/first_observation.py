@@ -24,7 +24,7 @@ from pathlib import Path
 from typing import Any, Protocol
 from urllib.parse import urlsplit
 
-from application.context.sector import context_discoveries
+from application.context.sector import context_discoveries, sector_label
 from application.economic_discovery.brain_contracts import ObservationMode, ObservationRecord
 from application.economic_discovery.observation_memory import (
     GovernedObservation,
@@ -76,6 +76,7 @@ from application.observation_runtime.replay import FindingsLedger
 from application.organization_admission.locator import LocatorError, parse_locator, public_domain
 from application.organization_group import group_discoveries
 from application.press.mentions import press_discoveries
+from application.regulation import regulation_discoveries
 from application.semantic_layer.cascade import SemanticCascade
 from application.subscriber_identity.runtime import Clock
 from application.subscriber_portfolio.models import (
@@ -106,12 +107,14 @@ from pipeline.geo.nominatim import NominatimReverseGeocoder
 from pipeline.observation_memory.sqlite_store import SqliteObservationMemory
 from pipeline.press.sqlite_store import PressIngestor, SqlitePressIndex
 from pipeline.press.sqlite_store import SqlitePressIndex as _PressIndex
+from pipeline.regulation.sqlite_store import RegulationIngestor, SqliteRegulationIndex
 from tools.runtime.field_performance import field_performance_from_env
 from tools.runtime.generative_probe import (
     GenerativeProbeRunner,
     assistant_from_values,
     generative_probe_from_values,
 )
+from tools.runtime.regulation_context import RegulationContextRunner
 from tools.runtime.sector_context import SectorContextRunner
 from tools.runtime.subscriber_portfolio import SubscriberPortfolioRuntime
 
@@ -393,7 +396,9 @@ class FirstObservationRuntime:
         sector_context: SectorContextRunner | None = None,
         economics: WikidataEconomics | None = None,
         registers: OfficialRegisters | None = None,
+        regulation: tuple[RegulationIngestor, RegulationContextRunner] | None = None,
     ) -> None:
+        self._regulation = regulation
         self._registers = registers
         self._sector_context = sector_context
         self._economics = economics
@@ -602,6 +607,52 @@ class FirstObservationRuntime:
         with self._lock:
             return len(self.ingestor.run(max_slices=max_slices))
 
+    def ingest_regulation(self) -> int:
+        """Read due official journals into the regulation index (off the First Proof path)."""
+        return 0 if self._regulation is None else self._regulation[0].run()
+
+    def judge_regulation(self) -> int:
+        return 0 if self._regulation is None else self._regulation[1].run()
+
+    def _with_regulation(self, view: dict[str, object]) -> dict[str, object]:
+        """New official rules about its activity where it is; queues a judgment when due."""
+        if self._regulation is None:
+            return view
+        runner = self._regulation[1]
+        held = view.get("discoveries")
+        discoveries = held if isinstance(held, list) else []
+        activities = [
+            str(d.get("code"))
+            for d in discoveries
+            if isinstance(d, Mapping) and d.get("kind") == "ACTIVITY" and d.get("code")
+        ][:2]
+        scopes = view.get("attentionScopes")
+        country = None
+        if isinstance(scopes, list) and scopes and isinstance(scopes[0], Mapping):
+            country = country_of(TaxonomyCode("GEO", str(scopes[0].get("jurisdiction") or "")))
+        if not activities or not country:
+            return view
+        languages = next(
+            (d.get("detail", {}).get("languages") for d in discoveries
+             if isinstance(d, Mapping) and d.get("kind") == "LANGUAGES"),
+            None,
+        )  # fmt: skip
+        language = (
+            str(languages[0])[:2].lower() if isinstance(languages, list) and languages else "en"
+        )
+        found: list[dict[str, object]] = []
+        for capability_id in activities:
+            runner.request(capability_id, country, language)
+            result = runner.latest(capability_id, country)
+            if result is not None:
+                found += regulation_discoveries(
+                    result, capability_id=capability_id, sector=sector_label(capability_id),
+                    country=country, observed_at=str(view.get("observedAt") or ""),
+                )  # fmt: skip
+        if found:
+            view["discoveries"] = [*discoveries, *found]
+        return view
+
     def judge_sector_context(self) -> int:
         """Judge queued sector contexts (shared per activity and country per day)."""
         return 0 if self._sector_context is None else self._sector_context.run()
@@ -771,6 +822,8 @@ class FirstObservationRuntime:
                 self.ingest_press,
                 self.measure_geo,
                 self.judge_sector_context,
+                self.ingest_regulation,
+                self.judge_regulation,
                 self.run_marketing_pool,
                 self.purge,
             )
@@ -1010,6 +1063,7 @@ class FirstObservationRuntime:
             view = self._with_registers(view, organization_id)
             view = self._with_geo(view)
             view = self._with_sector_context(view)
+            view = self._with_regulation(view)
             # Relationships and competition from published public contract awards.
             view = apply_public_awards(
                 view, proof, self._awards, now=self._clock.now(), countries=lambda: directed
@@ -1166,6 +1220,20 @@ def _sector_context(values: Mapping[str, str], root: Path) -> SectorContextRunne
     complete, model, _rates = assistant
     return SectorContextRunner(
         complete, model, _PressIndex(root / "press-index.sqlite3"), root / "sector-context.sqlite3"
+    )
+
+
+def _regulation(
+    values: Mapping[str, str], root: Path
+) -> tuple[RegulationIngestor, RegulationContextRunner] | None:
+    """Official journals and their relevance judgment; off without the governed assistant."""
+    assistant = assistant_from_values(values)
+    if assistant is None:
+        return None
+    complete, model, _rates = assistant
+    index = SqliteRegulationIndex(root / "regulation-index.sqlite3")
+    return RegulationIngestor(index), RegulationContextRunner(
+        complete, model, index, root / "regulation-context.sqlite3"
     )
 
 
@@ -1328,6 +1396,9 @@ def build_first_observation(
         registers=None
         if overrides.source_ports is not None or overrides.feeds is not None
         else registers_from_env(root, values),
+        regulation=None
+        if overrides.source_ports is not None or overrides.feeds is not None
+        else _regulation(values, root),
         awards=index,
         purge_canonical_raw=(
             lambda at: observation_memory.purge_first_observation_content(
