@@ -24,6 +24,7 @@ from pathlib import Path
 from typing import Any, Protocol
 from urllib.parse import urlsplit
 
+from application.activity import job_board_discoveries
 from application.context.sector import context_discoveries, sector_label
 from application.economic_discovery.brain_contracts import ObservationMode, ObservationRecord
 from application.economic_discovery.observation_memory import (
@@ -106,6 +107,7 @@ from application.world_demand.relations import AwardStore, apply_public_awards
 from application.xeed_access.reader import TrustedRequestContext
 from domain.evidence.epistemics import Currentness
 from domain.identity import OrganizationId, PrincipalId, TenantId, XeedId
+from pipeline.activity.job_boards import JobBoards
 from pipeline.economics.registries import OfficialRegisters, registers_from_env
 from pipeline.economics.wikidata import WikidataEconomics
 from pipeline.entity_resolution.gleif_group import GleifGroupReader
@@ -410,7 +412,9 @@ class FirstObservationRuntime:
         registers: OfficialRegisters | None = None,
         regulation: tuple[RegulationIngestor, RegulationContextRunner] | None = None,
         notoriety: WikipediaNotoriety | None = None,
+        job_boards: JobBoards | None = None,
     ) -> None:
+        self._job_boards = job_boards
         self._notoriety = notoriety
         self._regulation = regulation
         self._registers = registers
@@ -801,6 +805,35 @@ class FirstObservationRuntime:
         view["discoveries"] = [*discoveries, *found]
         return view
 
+    def read_job_boards(self) -> int:
+        """Public job boards of the organizations being read (source thread)."""
+        return 0 if self._job_boards is None else self._job_boards.run()
+
+    def _with_job_boards(self, view: dict[str, object]) -> dict[str, object]:
+        """Open positions and hiring countries from the job board its website links."""
+        if self._job_boards is None:
+            return view
+        held = view.get("discoveries")
+        discoveries = held if isinstance(held, list) else []
+        channel = next(
+            (d for d in discoveries if isinstance(d, Mapping)
+             and d.get("code") == "HIRING_CHANNEL_PUBLISHED"),
+            None,
+        )  # fmt: skip
+        detail = channel.get("detail") if isinstance(channel, Mapping) else None
+        boards = detail.get("jobBoards") if isinstance(detail, Mapping) else None
+        found: list[dict[str, object]] = []
+        for board in boards if isinstance(boards, list) else []:
+            self._job_boards.request(str(board))
+            result = self._job_boards.latest(str(board))
+            if result is not None:
+                source = channel.get("sourceUrl") if isinstance(channel, Mapping) else None
+                found = job_board_discoveries(result, source_page=str(source or ""))
+                break  # one board is the organization's; a second would double count
+        if found:
+            view["discoveries"] = [*discoveries, *found]
+        return view
+
     def read_notoriety(self) -> int:
         """Weekly Wikipedia attention for the organizations being read (source thread)."""
         return 0 if self._notoriety is None else self._notoriety.run()
@@ -909,7 +942,12 @@ class FirstObservationRuntime:
     def _sources_loop(self) -> None:
         """Press and official journals on their own clock (each source keeps its cursor)."""
         while True:
-            for stage in (self.ingest_press, self.ingest_regulation, self.read_notoriety):
+            for stage in (
+                self.ingest_press,
+                self.ingest_regulation,
+                self.read_notoriety,
+                self.read_job_boards,
+            ):
                 try:
                     stage()
                 except Exception:  # a source failing is retried on its own schedule
@@ -1164,6 +1202,7 @@ class FirstObservationRuntime:
                     held = view.get("discoveries")
                     view["discoveries"] = [*(held if isinstance(held, list) else []), *mentions]
             view = self._with_notoriety(view)
+            view = self._with_job_boards(view)
             view = self._with_group(view, organization_id)
             view = self._with_registers(view, organization_id)
             # The register's activity answers the value family when the website does not.
@@ -1498,6 +1537,9 @@ def build_first_observation(
         notoriety=None
         if overrides.source_ports is not None or overrides.feeds is not None
         else WikipediaNotoriety(root / "wikipedia-notoriety.sqlite3", clock=clock.now),
+        job_boards=None
+        if overrides.source_ports is not None or overrides.feeds is not None
+        else JobBoards(root / "job-boards.sqlite3", clock=clock.now),
         groups=None
         if overrides.source_ports is not None or overrides.feeds is not None
         else GleifGroupReader(root / "gleif-groups.sqlite3"),

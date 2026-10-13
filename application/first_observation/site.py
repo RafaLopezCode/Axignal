@@ -20,6 +20,7 @@ from typing import Any
 from urllib.parse import unquote, urljoin, urlsplit, urlunsplit
 from urllib.robotparser import RobotFileParser
 
+from application.activity import board_of
 from application.first_observation.registry_ids import registry_identifiers
 
 READER_VERSION = "site-reading.v2"
@@ -255,6 +256,8 @@ class _PageParser(HTMLParser):
         self.hreflang: dict[str, str] = {}
         #: Hosts whose code, frames or styles the page loads (its observed technology).
         self.resource_hosts: list[str] = []
+        #: Public job boards it links or embeds ("GREENHOUSE:acme").
+        self.job_boards: list[str] = []
         #: Image alternative texts with the heading they sit under (logo walls).
         self.alts: list[tuple[str, str]] = []
 
@@ -297,6 +300,10 @@ class _PageParser(HTMLParser):
             else values.get("action") if tag == "form"
             else None
         )  # fmt: skip
+        for candidate in (resource, values.get("href") if tag == "a" else None):
+            board = board_of(candidate) if candidate and "://" in candidate else None
+            if board and f"{board[0]}:{board[1]}" not in self.job_boards:
+                self.job_boards.append(f"{board[0]}:{board[1]}")
         if resource and len(self.resource_hosts) < 120:
             host = (urlsplit(resource.strip()).hostname or "").lower()
             if host and host not in self.resource_hosts:
@@ -666,6 +673,7 @@ def read_page(
             "jobPostings": data["jobs"][:50],
             "ratings": data["ratings"][:3],
             "externalLinkHosts": sorted(external_hosts)[:120],
+            "jobBoards": parser.job_boards[:3],
             "entityFields": sorted(set(data["entity_fields"])),
             "words": len(text.split()),
             "internalLinks": len(links),
