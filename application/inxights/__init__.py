@@ -146,11 +146,15 @@ def demand_without_declared_offer(view: Mapping[str, Any]) -> list[dict[str, obj
     gap = _all(view, "REPRESENTATION_GAP", "OFFER_NOT_MACHINE_READABLE")
     if not tenders or not gap:
         return []
+    # The view lists a bounded sample; the demand reading carries the real total.
+    demand = view.get("demand")
+    total = demand.get("total") if isinstance(demand, Mapping) else None
+    calls = total if isinstance(total, int) and total >= len(tenders) else len(tenders)
     return [_inxight(
         "demand", "OPEN_DEMAND_OFFER_NOT_DECLARED",
-        f"{len(tenders)} open public call(s) match what it does, while its website does not "
+        f"{calls} open public call(s) match what it does, while its website does not "
         "declare that offer as structured data.",
-        [*gap, *tenders[:5]], values={"openCalls": len(tenders)},
+        [*gap, *tenders[:5]], values={"openCalls": calls, "shown": len(tenders)},
         why="Buyers and search surfaces that rely on structured data may not connect it to "
         "demand that exists now.",
     )]  # fmt: skip

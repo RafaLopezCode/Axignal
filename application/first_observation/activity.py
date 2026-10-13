@@ -15,6 +15,7 @@ from enum import StrEnum
 
 from application.economic_discovery.brain_contracts import SemanticPrimitive
 from application.first_observation.geography import jurisdiction, mentioned_places, place_words
+from application.first_observation.routing_terms import MULTILINGUAL_ROUTING_TERMS
 from application.first_observation.site import PageReading
 from application.first_observation.vocabularies import (
     CPV_DIVISIONS,
@@ -272,6 +273,7 @@ _ROUTING_TERMS = (
     """.split()  # noqa: SIM905
     )
     | place_words()
+    | MULTILINGUAL_ROUTING_TERMS
     | frozenset(
         token
         for labels in (ISIC_SECTIONS, CPV_DIVISIONS, NAICS_SECTORS)
