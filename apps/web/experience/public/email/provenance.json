@@ -3,10 +3,6 @@
     "source": "observer/observer-laptop.png",
     "transform": "trimmed white margin, resized to 480px wide, 48-colour palette"
   },
-  "isotope-96.png": {
-    "source": "brand/organization-logo-512.png",
-    "transform": "resized to 96px"
-  },
   "use": "HTML email (marketing pool); email clients do not render SVG",
   "logo-440.png": {
     "source": "brand/logo-light.svg",
