@@ -1,3 +1,4 @@
+import { guideTopic, productGuideCatalog } from "@/lib/axent-product-guide";
 import { createUIMessageStream, createUIMessageStreamResponse } from "ai";
 import { z } from "zod";
 import {
@@ -159,6 +160,8 @@ export async function POST(request: Request) {
       .map((v) => v.text)
       .join(" ")
       .slice(0, 1000) ?? "";
+  const guide = guideTopic(prompt);
+  const guideCopy = productGuideCatalog.locales[locale];
   const signal =
     p.signals.find((s) => s.id === context.signalId) ??
     p.signals.find((s) => s.family === context.family);
@@ -178,7 +181,7 @@ export async function POST(request: Request) {
     /context|contexto|cambi|change|señal|signal|explic|explain|panorama|comprend|understand|investig|kontext|erklär|versteh|sinal|spieg|segnal|compreend/i.test(
       prompt,
     );
-  const items: CompositionPlan["items"] = signal
+  const items: CompositionPlan["items"] = signal && !guide
     ? [{ component: "signal", ref: signal.id, priority: "primary" }]
     : [
         {
@@ -188,7 +191,7 @@ export async function POST(request: Request) {
         },
       ];
   // A reason is only readable next to its basis: "why" also composes the evidence.
-  if ((sourceIntent || reasonIntent) && signal?.evidenceIds[0])
+  if (!guide && (sourceIntent || reasonIntent) && signal?.evidenceIds[0])
     items.push({
       component: "evidence",
       ref: signal.evidenceIds[0],
@@ -204,7 +207,7 @@ export async function POST(request: Request) {
       : changeIntent
         ? "change"
         : "overview";
-  if (supported) {
+  if (supported && !guide) {
     const lenses = composeFamily({
       family: context.family,
       intent,
@@ -229,7 +232,7 @@ export async function POST(request: Request) {
     "This is an illustrative explanation, without live research. ",
   );
   const stillUnknown = t("Todavía no sabemos: ", "Still unknown: ");
-  const answer = elsewhere
+  const answer = guide ? guideCopy[guide] : elsewhere
     ? t("Eso está en", "That is in") + " " + copy(elsewhere.name) + " (" + familyTerms(elsewhere.id, locale).join(" · ") + "). " +
       t("Ábrela para ver lo observado y lo que aún no se sabe.", "Open it to see what has been observed and what is still unknown.")
     : !supported
@@ -257,7 +260,7 @@ export async function POST(request: Request) {
       writer.write({
         type: "text-delta",
         id: "explanation",
-        delta: prefix + answer,
+        delta: guide ? guideCopy.label + ": " + answer : prefix + answer,
       });
       writer.write({ type: "text-end", id: "explanation" });
       writer.write({

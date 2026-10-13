@@ -14,6 +14,74 @@ from dataclasses import dataclass, field
 from application.axent.grounded.corpus import AuthorizedCorpus, EvidenceItem, EvidenceKind, terms
 from application.axent.grounded.intent import QuestionKind, ResolvedQuestion
 
+# Question scaffolding is not evidence relevance. Shared across the six UI languages.
+_STOPWORDS = frozenset(
+    [
+        "que",
+        "como",
+        "para",
+        "por",
+        "con",
+        "del",
+        "las",
+        "los",
+        "una",
+        "unos",
+        "esta",
+        "este",
+        "hay",
+        "sabes",
+        "saber",
+        "importa",
+        "axignal",
+        "axent",
+        "what",
+        "how",
+        "why",
+        "the",
+        "and",
+        "for",
+        "does",
+        "with",
+        "from",
+        "know",
+        "matters",
+        "was",
+        "wie",
+        "warum",
+        "der",
+        "die",
+        "das",
+        "und",
+        "mit",
+        "ist",
+        "des",
+        "les",
+        "une",
+        "est",
+        "comment",
+        "pourquoi",
+        "pour",
+        "dans",
+        "cela",
+        "che",
+        "come",
+        "per",
+        "cosa",
+        "della",
+        "dei",
+        "gli",
+        "oque",
+        "voce",
+        "como",
+        "porque",
+        "uma",
+        "com",
+        "dos",
+        "das",
+        "isso",
+    ]
+)
 _CURRENT_RANK = {"CURRENT": 0, "STALE": 1, "HISTORICAL": 2, "UNKNOWN": 3}
 
 
@@ -87,10 +155,10 @@ def _priority(
     change_first = question.kind is QuestionKind.CHANGE and item.kind is EvidenceKind.CHANGE
     return (
         not (direct or change_first),  # 1. directly answering evidence
-        _CURRENT_RANK.get(item.currentness, 3),  # 2. freshest / current
+        -overlap,  # requested content outranks unrelated fresh evidence
+        _CURRENT_RANK.get(item.currentness, 3),  # freshness breaks relevance ties
         item.source_ref is None,  # 3. stronger provenance
         item.kind is not EvidenceKind.CHANGE,  # 4. material change
-        -overlap,  # 5. relevance
         item.observed_at is None,
         -(item.observed_at.timestamp() if item.observed_at else 0.0),
         item.item_id,
@@ -100,7 +168,7 @@ def _priority(
 def retrieve(
     corpus: AuthorizedCorpus, question: ResolvedQuestion, budget: ContextBudget
 ) -> Retrieval:
-    query = terms(question.text)
+    query = terms(question.text) - _STOPWORDS
     excluded: dict[str, int] = {}
     scoped: list[EvidenceItem] = []
     for item in corpus.items:
@@ -116,7 +184,9 @@ def retrieve(
             else {EvidenceKind.SIGNAL, EvidenceKind.OPPORTUNITY}
         )
         preferred = [i for i in scoped if i.kind in wanted]
-        scoped = preferred or scoped
+        # Do not discard an explicitly requested source merely because it is raw evidence.
+        matched = [i for i in scoped if i.kind is not EvidenceKind.GAP and query & i.terms]
+        scoped = list({i.item_id: i for i in [*matched, *preferred]}.values()) or scoped
 
     seen_text: set[tuple[str, str | None]] = set()
     evidence: list[EvidenceItem] = []

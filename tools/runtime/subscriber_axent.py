@@ -17,6 +17,7 @@ from application.axent.grounded import (
 from application.axent.grounded.cost import CostRates
 from application.axent.grounded.model_budget import BudgetedReasoner
 from application.axent.grounded.service import AuthorizedReadingPort
+from application.axent.product_guide import guide_topic, product_guide_wire
 from application.xeed_access.reader import TrustedRequestContext
 from domain.identity import XeedId
 
@@ -38,6 +39,14 @@ class SubscriberAxent:
         if locale not in LOCALES:
             raise ValueError("invalid AXENT locale")
         assert isinstance(locale, str)
+        if guide_topic(question) is not None:
+            reading = self.service.reader.read(context, focus_id, self.service.clock())
+            scope = reading.projection.get("context")
+            if not isinstance(scope, dict) or scope.get("id") != str(focus_id):
+                raise PermissionError("guidance focus changed")
+            guide = product_guide_wire(question, locale, dict(reading.projection))
+            assert guide is not None
+            return guide
         turn = self.service.ask(
             context, focus_id, question, memory=payload.get("memory"), locale=locale
         )

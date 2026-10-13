@@ -130,3 +130,29 @@ test("private report citations get their own destination and cannot open canonic
   assert.equal(stale.status,409);
   assert.equal((await stale.json()).error,"READING_CHANGED");
 });
+
+
+test("product guide reauthorizes the reading but never invokes the model runtime", async () => {
+  process.env.AXIGNAL_RUNTIME_ORIGIN = "http://127.0.0.1:18181";
+  process.env.AXIGNAL_EXPERIENCE_ORIGIN = "https://axignal.com";
+  process.env.AXIGNAL_AXENT_GROUNDED = "true";
+  const calls = runtime(() => { throw new Error("product guidance must not invoke grounded research"); });
+  const response = await subscriberAxent(ask({ prompt: "Qué es AXIGNAL", contextId: "focus:one", revision, locale: "es" }));
+  assert.equal(response.status, 200);
+  const payload = await response.json();
+  assert.equal(payload.productGuide.topic, "overview");
+  assert.deepEqual(payload.known, []);
+  assert.deepEqual(payload.sourceRefs, []);
+  assert.deepEqual(calls, ["GET /subscriber/organizations/focus%3Aone/output"]);
+});
+
+test("product guide cannot bypass changed revision or selected object scope", async () => {
+  process.env.AXIGNAL_RUNTIME_ORIGIN = "http://127.0.0.1:18181";
+  process.env.AXIGNAL_EXPERIENCE_ORIGIN = "https://axignal.com";
+  const calls = runtime(() => { throw new Error("no grounded request expected"); });
+  const stale = await subscriberAxent(ask({ prompt: "Qué es AXIGNAL", contextId: "focus:one", revision: "b".repeat(64), locale: "es" }));
+  assert.equal(stale.status, 409);
+  const foreign = await subscriberAxent(ask({ prompt: "Qué es AXIGNAL", contextId: "focus:one", revision, signalId: "foreign", locale: "es" }));
+  assert.equal(foreign.status, 409);
+  assert.equal(calls.length, 2);
+});

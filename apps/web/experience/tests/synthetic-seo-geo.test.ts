@@ -61,9 +61,9 @@ test("every active demo reading carries a revision, so AXENT's entry exists in t
   const active = Object.values(outputs).filter(output => "projection" in output);
   assert.ok(active.length >= 2);
   for (const output of active) assert.match(String((output as unknown as { revision?: string }).revision), /^[a-f0-9]{64}$/);
-  // The entry exists, but the demo never asks: its panel is the account notice, not a conversation.
+  // Public guidance and local fictional explanations do not enable account operations.
   const observatory = readFileSync(resolve(process.cwd(), "components/observatory.tsx"), "utf8");
-  assert.match(observatory, /if \(!canAct\) return <section className="obs-depth-axent"/);
+  assert.match(observatory, /if \(!canAct && axent !== "illustrative"\) return <section className="obs-depth-axent"/);
 });
 
 test("the demonstration opens on the organization that shows SEO and GEO, so the families are in view at once", async () => {

@@ -785,7 +785,7 @@ export function InsightBody({ insight, onEvidence }: { insight: Insight; onEvide
 }
 
 function DepthPanel({ insight, projection, revision, axentOnly, canAct, axent, onClose, onEvidence, onExplore }: {
-  insight: Insight | null; projection: RuntimeProjection | null; revision: string | null; axentOnly: boolean; canAct: boolean; axent: "subscriber" | "admin";
+  insight: Insight | null; projection: RuntimeProjection | null; revision: string | null; axentOnly: boolean; canAct: boolean; axent: ObservatoryCapabilities["axent"];
   onClose: () => void; onEvidence: () => void; onExplore: () => void;
 }) {
   const { t, locale } = useLocale();
@@ -811,20 +811,20 @@ function DepthPanel({ insight, projection, revision, axentOnly, canAct, axent, o
 }
 
 function DepthAxent({ projection, revision, axent, insight, canAct, onEvidence, onExplore, autoFocus }: {
-  projection: RuntimeProjection; revision: string; axent: "subscriber" | "admin"; insight: Insight | null; canAct: boolean; onEvidence: () => void; onExplore: () => void; autoFocus: boolean;
+  projection: RuntimeProjection; revision: string; axent: ObservatoryCapabilities["axent"]; insight: Insight | null; canAct: boolean; onEvidence: () => void; onExplore: () => void; autoFocus: boolean;
 }) {
   const { t } = useLocale();
   // The subscriber's questions are scoped to its reading; an Admin session asks through its own endpoint.
   const scope = useMemo(() => axent === "subscriber" ? { revision } : undefined, [axent, revision]);
-  const conversation = useRuntimeAxent(projection, null, scope);
+  const conversation = useRuntimeAxent(projection, null, scope, axent === "illustrative");
   const asked = useRef<string | null>(null);
   const question = insight ? fill(t("{finding}: ¿por qué importa y qué sigue abierto?", "{finding}: why does it matter and what remains open?"), { finding: insight.headline }) : null;
   useEffect(() => { asked.current = null; }, [insight?.id]);
-  if (!canAct) return <section className="obs-depth-axent" aria-label="AXENT"><p className="obs-empty">{t("Las preguntas a AXENT se activan con tu cuenta.", "AXENT questions are available with your account.")}</p></section>;
+  if (!canAct && axent !== "illustrative") return <section className="obs-depth-axent" aria-label="AXENT"><p className="obs-empty">{t("Las preguntas a AXENT se activan con tu cuenta.", "AXENT questions are available with your account.")}</p></section>;
   return <section className="obs-depth-axent" aria-label="AXENT">
     {question && asked.current !== insight?.id && conversation.messages.length === 0 && <button className="obs-button obs-ask" disabled={conversation.busy} onClick={() => { asked.current = insight?.id ?? null; void conversation.ask(question); }}>
       <MessageCircleQuestion size={16} aria-hidden="true"/>{t("Pregunta a AXENT sobre esto", "Ask AXENT about this")}</button>}
-    <RuntimeAxent projection={projection} signalId={null} conversation={conversation} onEvidence={onEvidence} onSignal={onExplore} focusLabel={insight ? insight.headline : t("Toda la organización", "The whole organization")}/>
+    <RuntimeAxent illustrative={axent === "illustrative"} projection={projection} signalId={null} conversation={conversation} onEvidence={onEvidence} onSignal={onExplore} focusLabel={insight ? insight.headline : t("Toda la organización", "The whole organization")}/>
     {autoFocus && <span className="sr-only" role="status">{t("AXENT abierto en el contexto de esta organización.", "AXENT opened in this organization's context.")}</span>}
   </section>;
 }
