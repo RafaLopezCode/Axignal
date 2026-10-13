@@ -32,6 +32,8 @@ from application.observation_runtime.budget import reserve
 from application.observation_runtime.ports import AcquisitionPort
 from tests.observation_runtime.harness import ATTENTION, DAY_1, SITE, XEED, World, world
 
+DAY = DAY_1.date().isoformat()
+
 
 def _lead(**overrides: object) -> ResearchLead:
     base = ResearchLead(
@@ -104,7 +106,7 @@ def test_why_spend_here_is_answerable_without_a_model() -> None:
 def test_global_limits_stop_while_scoped_limits_only_skip() -> None:
     budget = DailyObservationBudget(max_http_requests=10, max_runs_per_xeed=1)
     policy = FAMILY_POLICIES[ObservationFamily.DEMAND]
-    usage = BudgetUsage(day="2026-10-06")
+    usage = BudgetUsage(day=DAY)
 
     def ask(requests: int = 1, depth: int = 0):  # type: ignore[no-untyped-def]
         return reserve(
@@ -167,7 +169,7 @@ def test_interrupted_tick_is_fenced_then_resumed_without_repeating_work(tmp_path
     with pytest.raises(_Crash):
         _run(w, acquirers=crashing)
     done_before = {lead.lead_id for lead in w.store().leads() if lead.attempts}
-    usage_before = w.store().budget_usage("2026-10-06")
+    usage_before = w.store().budget_usage(DAY)
     assert len(done_before) >= 2 and usage_before.actions == 3
     # Two settled actions plus the durable reservation for the interrupted third.
     assert len(usage_before.pending_acquisitions) == 1
@@ -187,21 +189,21 @@ def test_interrupted_tick_is_fenced_then_resumed_without_repeating_work(tmp_path
     # the fetch already made instead of repeating it.
     assert w.web.requests[SITE] == 1
     assert resumed.shared_acquisitions >= 2
-    assert w.store().budget_usage("2026-10-06").actions > usage_before.actions
+    assert w.store().budget_usage(DAY).actions > usage_before.actions
     assert _run(w).status is TickStatus.ALREADY_COMPLETED
 
 
 def test_a_worker_that_lost_its_lease_cannot_write(tmp_path: Path) -> None:
     w = world(tmp_path)
     store = w.store()
-    first = store.claim_tick("2026-10-06", now=DAY_1, lease_seconds=60)
-    assert first is not None and store.claim_tick("2026-10-06", now=DAY_1, lease_seconds=60) is None
-    second = store.claim_tick("2026-10-06", now=DAY_1 + timedelta(seconds=61), lease_seconds=60)
+    first = store.claim_tick(DAY, now=DAY_1, lease_seconds=60)
+    assert first is not None and store.claim_tick(DAY, now=DAY_1, lease_seconds=60) is None
+    second = store.claim_tick(DAY, now=DAY_1 + timedelta(seconds=61), lease_seconds=60)
     assert second is not None and second.resumed
     with pytest.raises(LeaseLost):
         store.commit(
             first, now=DAY_1, leads=(), evidence=(), candidates=(),
-            usage=BudgetUsage(day="2026-10-06"), learning=store.learning(), recompute=(),
+            usage=BudgetUsage(day=DAY), learning=store.learning(), recompute=(),
         )  # fmt: skip
 
 

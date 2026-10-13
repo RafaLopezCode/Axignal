@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import os
 import subprocess
 import sys
 from datetime import timedelta
@@ -15,6 +16,7 @@ from application.observation_runtime import (
     run_daily_tick,
 )
 from application.observation_runtime.families import FAMILY_POLICIES
+from tests.observation_intelligence.scenarios import AS_OF, AS_OF_ENV
 from tests.observation_runtime.harness import ATTENTION, DAY_1, world
 
 
@@ -31,6 +33,7 @@ import os, sys
 from pathlib import Path
 from application.observation_runtime import DailyObservationBudget, ObservationFamily, run_daily_tick
 from application.observation_runtime.families import FAMILY_POLICIES
+from tests.observation_intelligence.scenarios import AS_OF, AS_OF_ENV
 from tests.observation_runtime.harness import ATTENTION, DAY_1, world
 w = world(Path(sys.argv[1]))
 inner = w.acquirers()['official-public-website']
@@ -48,6 +51,8 @@ run_daily_tick(store=w.store(), now=DAY_1, attention=ATTENTION,
 """,
             str(tmp_path),
         ],
+        # The child rebuilds the controlled world; it must be the same day as this one.
+        env={**os.environ, AS_OF_ENV: AS_OF.isoformat()},
         capture_output=True,
         text=True,
         timeout=30,
