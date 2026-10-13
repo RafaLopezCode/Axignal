@@ -373,7 +373,7 @@ p.obs-card-before { display: block; margin: 0 0 8px; padding: 8px 12px; font-siz
   .obs-mobilebar-title { flex: 1; font-weight: 700; font-size: 15px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .obs-main { padding: 18px 16px 48px; }
   .obs-org-view.obs-has-depth { grid-template-columns: minmax(0, 1fr); }
-  .obs-depth { position: fixed; inset: 0; z-index: 70; max-block-size: none; border-radius: 0; animation: obs-sheet-up .34s var(--obs-ease) both; }
+  .obs-depth { position: fixed; inset: 0; z-index: 70; block-size: 100dvh; max-block-size: 100dvh; border-radius: 0; animation: obs-sheet-up .34s var(--obs-ease) both; }
   .obs-tabs { top: 56px; margin-inline: -16px; padding-inline: 12px; }
   .obs-org-title h1 { font-size: 27px; }
   .obs-focus-lens { inline-size: 44px; block-size: 44px; }
