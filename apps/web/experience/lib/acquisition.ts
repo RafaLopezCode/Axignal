@@ -22,6 +22,7 @@ import comparisonsSeed from "@/content/acquisition/seed/comparisons.json";
 import comparisonsExpansionSeed from "@/content/acquisition/seed/comparisons-expansion.json";
 import comparisonLocales from "@/content/acquisition/seed/comparison-locales.json";
 import comparisonExpansionLocales from "@/content/acquisition/seed/comparisons-expansion-locales.json";
+import aboutSeed from "@/content/acquisition/seed/about-axignal.json";
 import { isLocale, locales, type Locale } from "./languages";
 
 export type AcquisitionType = "commercial" | "knowledge" | "jtbd" | "comparison";
@@ -48,6 +49,7 @@ export type AcquisitionPage = {
 };
 
 export const acquisitionClusterLabels: Record<string, Record<Locale, string>> = {
+  "about-axignal": { es: "Sobre AXIGNAL", en: "About AXIGNAL", fr: "À propos d’AXIGNAL", de: "Über AXIGNAL", it: "Su AXIGNAL", pt: "Sobre a AXIGNAL" },
   "commercial-use": { es: "Casos de observación económica", en: "Economic observation use cases", fr: "Cas d’usage de l’observation économique", de: "Anwendungsfälle der Wirtschaftsbeobachtung", it: "Casi d’uso dell’osservazione economica", pt: "Casos de observação económica" },
   "commercial-expansion": { es: "Casos avanzados de observación económica", en: "Advanced economic observation use cases", fr: "Cas avancés d’observation économique", de: "Erweiterte Anwendungsfälle der Wirtschaftsbeobachtung", it: "Casi avanzati d’uso dell’osservazione economica", pt: "Casos avançados de observação económica" },
   "evidence-and-trust": { es: "Evidencia y límites de conocimiento", en: "Evidence and knowledge boundaries", fr: "Preuves et limites de la connaissance", de: "Belege und Grenzen des Wissens", it: "Prove e limiti della conoscenza", pt: "Evidência e limites do conhecimento" },
@@ -58,7 +60,7 @@ export const acquisitionClusterLabels: Record<string, Record<Locale, string>> = 
 };
 
 type SupplementalLocales = { id: string } & Partial<Record<Locale, LocalizedAcquisitionPage>>;
-const initialSeeds = [commercialSeed, commercialExpansionSeed, evidenceSeed, knowledgeExpansionAiSeed, knowledgeExpansionAi2Seed, knowledgeExpansionAi3Seed, aiMemorySeed, audienceSeed, jtbdSeed, comparisonsSeed, comparisonsExpansionSeed] as unknown as AcquisitionPage[][];
+const initialSeeds = [aboutSeed, commercialSeed, commercialExpansionSeed, evidenceSeed, knowledgeExpansionAiSeed, knowledgeExpansionAi2Seed, knowledgeExpansionAi3Seed, aiMemorySeed, audienceSeed, jtbdSeed, comparisonsSeed, comparisonsExpansionSeed] as unknown as AcquisitionPage[][];
 const normalizedJtbdLocales = (jtbdLocales as unknown as { id: string; locales: Partial<Record<Locale, LocalizedAcquisitionPage>> }[]).map(({ id, locales: localized }) => ({ id, ...localized }));
 const supplementalLocales = [commercialLocales, commercialExpansionLocalesA, commercialExpansionLocalesB, evidenceLocales, knowledgeExpansionAiLocales, knowledgeExpansionAi2LocalesA, knowledgeExpansionAi2LocalesB, knowledgeExpansionAi3Locales, aiMemoryLocales, audienceLocales, normalizedJtbdLocales, comparisonLocales, comparisonExpansionLocales] as unknown as SupplementalLocales[][];
 const supplementalById = supplementalLocales.flat();

@@ -16,7 +16,7 @@ export const metadata: Metadata = {
     template: "%s · AXIGNAL",
   },
   description:
-    "AXIGNAL continuously observes the organizations you choose in public sources, remembers what it finds, and shows you what changes and why it matters — with source and date.",
+    "Business and economic intelligence from public evidence: AXIGNAL continuously observes the organizations you choose, remembers what it finds, and shows what changes and why it matters, with source and date.",
   icons: { icon: "/brand/favicon.svg", apple: "/brand/apple-touch-icon.png" },
   openGraph: {
     title: "AXIGNAL — What is changing around your company, and why does it matter?",

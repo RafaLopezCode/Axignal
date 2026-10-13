@@ -285,6 +285,7 @@ export function Landing() {
               <em>{t("¿Y por qué importa?", "And why it matters to you.")}</em>
             </h1>
             <p className="hero-lead">
+              <strong>{t("Inteligencia empresarial y económica basada en evidencia pública.", "Business and economic intelligence from public evidence.")}</strong>{" "}
               {t(
                 "AXIGNAL observa de forma continua las organizaciones que eliges —la tuya, tus clientes, tu competencia— en fuentes públicas. Recuerda lo que encuentra, detecta lo que cambia y separa lo que importa a ese negocio del ruido. Siempre con la fuente y la fecha.",
                 "AXIGNAL continuously observes the organizations you choose — yours, your customers, your competitors — in public sources. It remembers what it finds, notices what changes and separates what matters to that business from the noise. Always with the source and the date.",
