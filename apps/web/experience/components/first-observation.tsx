@@ -1,5 +1,6 @@
 "use client";
 
+import { industryName } from "@/lib/industries";
 import { ExternalLink } from "lucide-react";
 import { PublicUnderstandingView } from "./public-understanding";
 import { useLocale } from "@/lib/locale";
@@ -184,6 +185,24 @@ export function discoveryCopy(d: Discovery, t: Translate, locale = "en"): { find
         .replace("{register}", String(d.detail.source ?? "")).replace("{identifier}", String(d.detail.identifier ?? "")) };
     return { finding: `${label}: ${value}${year}`,
       why: t("Según Wikidata, una fuente comunitaria: no es una cuenta oficial y puede estar desactualizada.", "According to Wikidata, a community source: it is not an official account and may be outdated.") };
+  }
+  if (d.code === "VALUE_CHAIN_BUYERS" || d.code === "VALUE_CHAIN_SUPPLIERS") {
+    const sectors = Array.isArray(d.detail.sectors) ? d.detail.sectors as { code: string; share: number }[] : [];
+    const list = sectors.map(x => `${industryName(x.code, locale)} ${Math.round(x.share * 1000) / 10}%`).join(" · ");
+    const own = industryName(String(d.detail.industry ?? ""), locale);
+    const buyers = d.code === "VALUE_CHAIN_BUYERS";
+    return { finding: (buyers ? t("Quién compra a su sector", "Who buys from its sector") : t("A quién compra su sector", "Who its sector buys from")) + `: ${list}`,
+      why: t("Estructura de la economía de la UE-27 para «{sector}» (Eurostat, tabla input-output {year}). Es el sector, no la cartera de clientes o proveedores de esta organización.", "Structure of the EU-27 economy for “{sector}” (Eurostat input-output table {year}). It is the sector, not this organization's own clients or suppliers.")
+        .replace("{sector}", own).replace("{year}", String(d.detail.year ?? "")) };
+  }
+  if (d.code === "POTENTIAL_PRIVATE_CUSTOMER" || d.code === "POTENTIAL_SUPPLIER") {
+    const sector = industryName(String(d.detail.sector ?? ""), locale);
+    const n = String(d.detail.contracts ?? 0);
+    return d.code === "POTENTIAL_PRIVATE_CUSTOMER"
+      ? { finding: t("Posible cliente: {name} · {sector}", "Possible customer: {name} · {sector}").replace("{name}", d.statement).replace("{sector}", sector),
+          why: t("Activa en su zona en un sector que suele comprar al suyo ({n} contratos públicos lo muestran). Es una posibilidad, no una relación.", "Active in its area in a sector that usually buys from its own ({n} public contracts show it). A possibility, not a relationship.").replace("{n}", n) }
+      : { finding: t("Posible proveedor: {name} · {sector}", "Possible supplier: {name} · {sector}").replace("{name}", d.statement).replace("{sector}", sector),
+          why: t("Activa en su zona en un sector al que el suyo suele comprar ({n} contratos públicos lo muestran). Es una posibilidad, no una relación.", "Active in its area in a sector its own usually buys from ({n} public contracts show it). A possibility, not a relationship.").replace("{n}", n) };
   }
   if (d.kind === "DEMAND" && d.code === "RECURRING_PUBLIC_BUYER") {
     const n = Number(d.detail.contracts ?? 0);

@@ -86,6 +86,7 @@ from application.subscriber_portfolio.models import (
     PortfolioError,
 )
 from application.subscriber_projection.subscriber_runtime import SubscriberEconomicRuntime
+from application.value_chain import apply_value_chain
 from application.world_demand.index import (
     DemandIndexPort,
     SliceFeedPort,
@@ -1013,6 +1014,8 @@ class FirstObservationRuntime:
             view = apply_public_awards(
                 view, proof, self._awards, now=self._clock.now(), countries=lambda: directed
             )
+            # Where its sector's demand comes from and where its inputs come from.
+            view = apply_value_chain(view, proof)
         if view is not None and proof is not None and proof.get("publicUnderstanding"):
             from application.first_observation.understanding import compare, public_report
 

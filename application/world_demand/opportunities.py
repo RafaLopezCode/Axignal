@@ -23,7 +23,7 @@ from collections.abc import Iterable, Mapping, Sequence
 from statistics import median
 
 from application.observation_intelligence.contracts import TaxonomyCode
-from application.world_demand.awards import AwardRecord, normalized_name
+from application.world_demand.awards import AwardRecord, is_company, normalized_name
 
 BUYER_POLICY = "recurrent-buyers-v1: in-area first, then contracts, then amount"
 MAX_BUYERS = 8
@@ -75,7 +75,8 @@ def recurrent_buyers(
         offers = [a.offers_received for a in awards if a.offers_received]
         winners: dict[str, int] = defaultdict(int)
         for a in awards:
-            winners[a.winner_name] += 1
+            if is_company(a.winner_name, a.winner_id):
+                winners[a.winner_name] += 1
         dated = sorted((a for a in awards if a.awarded_on), key=lambda a: a.awarded_on or "")
         out.append(
             {
@@ -135,6 +136,8 @@ def contract_partners(
         key = partner_id or normalized_name(name)
         if not key or key in own_ids or normalized_name(name) in own_names:
             return
+        if partner_id is not None and not is_company(name, partner_id):
+            return  # individuals are never listed
         entry = partners.setdefault(
             key,
             {"name": name, "id": partner_id, "state": state, "how": how, "awards": []},

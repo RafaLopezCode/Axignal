@@ -108,6 +108,8 @@ def findings(view: Mapping[str, Any], lead: Sequence[str] = ()) -> list[Finding]
             continue
         if kind == "WEB_REPRESENTATION" or code == "PUBLIC_WEBSITE_OBSERVED":
             continue  # the container of the checks; each gap is its own finding
+        if code.startswith("VALUE_CHAIN_"):
+            continue  # about its sector, not about this organization
         detail = d.get("detail") if isinstance(d.get("detail"), Mapping) else {}
         seen.add((kind, code))
         out.append(
