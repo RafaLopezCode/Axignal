@@ -647,6 +647,7 @@ class FirstObservationService:
             activity_known=bool(findings), scopes=scopes, capabilities=capabilities,
             judged={} if semantic is None else semantic.judged, ready=ready,
             methods={f.activity_id: f for f in findings}, rights=rights,
+            contact=_published_contact(pages),
         )  # fmt: skip
 
     # ---- discoveries --------------------------------------------------------------------
@@ -1141,6 +1142,7 @@ class FirstObservationService:
         ready: bool = False,
         methods: Mapping[str, ActivityFinding] | None = None,
         rights: ContentRights | None = None,
+        contact: Mapping[str, object] | None = None,
     ) -> FirstProof:
         understanding = None
         if self.policy.public_understanding:
@@ -1181,7 +1183,24 @@ class FirstObservationService:
             retain_until=(rights or NO_RIGHTS).private_until(now),
             rights=(rights or NO_RIGHTS).to_wire(),
             understanding=understanding,
+            contact=dict(contact or {}),
         )
+
+
+def _published_contact(pages: Sequence[PageReading]) -> dict[str, object]:
+    """Addresses the site publishes for itself and the language its homepage declares."""
+    emails: list[str] = []
+    for page in pages:
+        held = page.signals.get("emails")
+        for email in held if isinstance(held, list) else []:
+            if isinstance(email, str) and email not in emails:
+                emails.append(email)
+    language = pages[0].language if pages else None
+    return {
+        "emails": emails[:10],
+        "language": None if language is None else language.split("-")[0].lower()[:8],
+        "page": pages[0].url if pages else None,
+    }
 
 
 def _capability_wire(

@@ -3,6 +3,7 @@ import { createHash } from "node:crypto";
 import { authStartSchema, preparedAuthStart, preparedProviders } from "./public-contracts";
 import { approvedPaymentUrl, pendingOutputSchema, pilotRedemptionSchema, portfolioSchema, subscriberCommandSchema, subscriberOutputSchema, subscriberResultSchema } from "./subscriber-contracts";
 import type { RuntimeProjection } from "./runtime-projection";
+import { poolReading, poolToken, type PoolReading } from "./marketing-pool";
 import { approvedMcpRedirect, mcpConnectionsSchema, mcpConsentSchema, mcpDecisionSchema, mcpGrantId, mcpRequestId, mcpRevokeSchema } from "./mcp-connect";
 
 export const subscriberSessionCookie = "__Host-axignal-subscriber";
@@ -68,6 +69,22 @@ export async function legalOperator(): Promise<LegalOperator | null> {
     const parsed = legalOperatorSchema.safeParse(await checkedJson(response));
     return parsed.success ? parsed.data : null;
   } catch { return null; }
+}
+/** A marketing pool recipient's reading (their token is the only authority). */
+export async function poolReadingFor(token: string): Promise<PoolReading | null> {
+  if (!process.env.AXIGNAL_RUNTIME_ORIGIN || !poolToken.test(token)) return null;
+  try {
+    const response = await upstream("/public/marketing-pool/reading/" + token);
+    if (!response.ok) return null;
+    const parsed = poolReading.safeParse(await checkedJson(response));
+    return parsed.success ? parsed.data : null;
+  } catch { return null; }
+}
+/** Opt-out: always answers the same, whether the token is known or not. */
+export async function poolUnsubscribe(token: string): Promise<boolean> {
+  if (!process.env.AXIGNAL_RUNTIME_ORIGIN || !poolToken.test(token)) return false;
+  try { return (await upstream("/public/marketing-pool/unsubscribe/" + token, null, {})).ok; }
+  catch { return false; }
 }
 const rejected = (code: string, status: number) => Response.json({ state: "rejected", code }, { status, headers });
 export async function subscriberBillingWebhook(request: Request): Promise<Response> {

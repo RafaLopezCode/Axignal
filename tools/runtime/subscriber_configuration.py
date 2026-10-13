@@ -47,6 +47,25 @@ _KEYS = frozenset(
         "AXIGNAL_TYPESAFE_API_KEY_FILE",
         "AXIGNAL_SEMANTIC_RUN_TOKEN_BUDGET",
         "AXIGNAL_SEMANTIC_REASONING_CALLS",
+        "AXIGNAL_PUBLIC_ORIGIN",
+        *(
+            f"AXIGNAL_MARKETING_POOL_{suffix}"
+            for suffix in (
+                "ENABLED",
+                "SEND",
+                "STUDIES_PER_DAY",
+                "SENDS_PER_DAY",
+                "SIGNATURE",
+                "SIGNATURE_ROLE",
+                "SENDER_NAME",
+                "REPLY_TO",
+                "SMTP_HOST",
+                "SMTP_PORT",
+                "SMTP_USER",
+                "SMTP_FROM",
+                "SMTP_PASSWORD_FILE",
+            )
+        ),
         *(
             f"AXIGNAL_{provider}_{suffix}"
             for provider in ("GOOGLE", "CHATGPT")

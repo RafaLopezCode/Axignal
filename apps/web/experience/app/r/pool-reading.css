@@ -1,0 +1,25 @@
+/* A recipient's reading: calm, editorial, the Observer beside the evidence. */
+.pool-reading { max-width: 860px; margin: 0 auto; padding: 32px 16px 64px; color: var(--ink); background: var(--paper); }
+.pool-reading-narrow { max-width: 560px; }
+.pool-reading-head { padding-bottom: 20px; border-bottom: 1px solid var(--line); margin-bottom: 28px; }
+.pool-reading-hero { display: grid; grid-template-columns: 1fr 220px; gap: 24px; align-items: end; }
+.pool-reading-eyebrow { font-size: 12px; letter-spacing: .14em; text-transform: uppercase; font-weight: 700; color: #1846d1; }
+.pool-reading-meta { font-size: 13px; color: var(--muted); margin-top: 4px; }
+.pool-reading h1 { font-family: Fraunces, Georgia, serif; font-weight: 400; font-size: clamp(28px, 5vw, 42px); line-height: 1.15; margin: 12px 0 0; }
+.pool-reading-intro { font-size: 16px; line-height: 1.6; color: #2b3140; margin-top: 16px; max-width: 60ch; }
+.pool-reading-observer { width: 100%; height: auto; }
+.pool-reading-findings { list-style: none; padding: 0; margin: 32px 0 0; display: grid; gap: 12px; }
+.pool-reading-findings li { background: #fff; border: 1px solid var(--line); border-left: 3px solid #1846d1; border-radius: 12px; padding: 16px 18px; }
+.pool-reading-findings li[data-state="POTENTIAL"] { border-left-style: dashed; border-left-color: #8a7fb0; }
+.pool-reading-family { font-size: 11px; letter-spacing: .14em; text-transform: uppercase; font-weight: 700; color: #1846d1; }
+.pool-reading-findings li[data-state="POTENTIAL"] .pool-reading-family { color: #8a7fb0; }
+.pool-reading-statement { font-size: 16px; line-height: 1.5; margin-top: 4px; }
+.pool-reading-source { font-size: 13px; color: var(--muted); margin-top: 6px; }
+.pool-reading-source a { color: var(--muted); }
+.pool-reading-actions { display: flex; flex-wrap: wrap; gap: 20px; align-items: center; margin-top: 32px; }
+.pool-reading-done { font-size: 16px; margin-top: 16px; }
+.pool-reading-narrow .button { margin-top: 20px; }
+@media (max-width: 640px) {
+  .pool-reading-hero { grid-template-columns: 1fr; }
+  .pool-reading-observer { width: 160px; }
+}

@@ -128,6 +128,7 @@ from tools.runtime.first_proof import (
     FirstProofService,
     FirstProofStore,
 )
+from tools.runtime.marketing_pool import marketing_pool_request
 from tools.runtime.organization_attention import OrganizationAttention, load_observation_catalog
 from tools.runtime.product_mcp import MAX_BODY as PRODUCT_MCP_MAX_BODY
 from tools.runtime.product_mcp import ProductMcpHttp
@@ -1546,6 +1547,8 @@ def make_handler(runtime: AxignalRuntime) -> type[BaseHTTPRequestHandler]:
                 is_subscriber_path(self.path)
                 or urlsplit(self.path).path == "/internal/webhooks/subscriber-stripe"
                 or urlsplit(self.path).path == "/internal/admin/pilot-test-accounts"
+                or urlsplit(self.path).path.startswith("/internal/admin/marketing-pool")
+                or urlsplit(self.path).path.startswith("/public/marketing-pool/")
                 or urlsplit(self.path).path.startswith("/internal/admin/customer-access")
             ):
                 # The default request line includes query strings; redact callbacks.
@@ -1637,6 +1640,70 @@ def make_handler(runtime: AxignalRuntime) -> type[BaseHTTPRequestHandler]:
                 self._json({"reason": "INVALID_PILOT_ACCOUNTS"}, HTTPStatus.BAD_REQUEST)
             except (OSError, sqlite3.Error):
                 self._json({"reason": "PILOT_ACCOUNTS_UNAVAILABLE"}, HTTPStatus.SERVICE_UNAVAILABLE)
+
+        def _marketing_pool(self, *, write: bool = False) -> None:
+            """Admin: AXIGNAL's own marketing pool (first-party acquisition, Admin §5.7)."""
+            if runtime.admin_access is None:
+                self._json({"reason": "ADMIN_NOT_COMPOSED"}, HTTPStatus.NOT_FOUND)
+                return
+            try:
+                payload = None
+                if write:
+                    if self.headers.get("Content-Type", "").split(";")[0] != "application/json":
+                        self._json({"reason": "JSON_REQUIRED"}, HTTPStatus.UNSUPPORTED_MEDIA_TYPE)
+                        return
+                    length = int(self.headers.get("Content-Length", "0"))
+                    if length < 2 or length > 1024:
+                        self._json({"reason": "BODY_LIMIT"}, HTTPStatus.REQUEST_ENTITY_TOO_LARGE)
+                        return
+                    payload = json.loads(self.rfile.read(length).decode("utf-8"))
+                    if not isinstance(payload, dict):
+                        raise ValueError("invalid marketing pool command")
+                self._json(
+                    marketing_pool_request(
+                        AdminHttpAccessGuard(runtime.admin_access),
+                        getattr(runtime.subscriber, "marketing_pool", None),
+                        authorization=self.headers.get("Authorization"),
+                        now=datetime.now(UTC),
+                        payload=payload,
+                    )
+                )
+            except AdminAuthenticationError:
+                self._json({"reason": "ADMIN_SESSION_REQUIRED"}, HTTPStatus.UNAUTHORIZED)
+            except AdminAuthorizationError:
+                self._json({"reason": "ADMIN_SCOPE_REQUIRED"}, HTTPStatus.FORBIDDEN)
+            except LookupError:
+                self._json({"reason": "STATE_CHANGED"}, HTTPStatus.CONFLICT)
+            except (ValueError, UnicodeError):
+                self._json({"reason": "INVALID_MARKETING_POOL"}, HTTPStatus.BAD_REQUEST)
+            except (OSError, sqlite3.Error):
+                self._json({"reason": "MARKETING_POOL_UNAVAILABLE"}, HTTPStatus.SERVICE_UNAVAILABLE)
+
+        def _marketing_public(self, method: str, request_path: str) -> None:
+            """A recipient's reading link and opt-out: the token is the only authority."""
+            pool = getattr(runtime.subscriber, "marketing_pool", None)
+            parts = request_path.split("/")
+            if pool is None or len(parts) != 5 or not parts[4]:
+                self._json({"reason": "NOT_FOUND"}, HTTPStatus.NOT_FOUND)
+                return
+            action, token = parts[3], parts[4]
+            try:
+                if method == "GET" and action == "reading":
+                    reading = pool.reading(token)
+                    if reading is None:
+                        self._json({"reason": "NOT_FOUND"}, HTTPStatus.NOT_FOUND)
+                    else:
+                        self._json(reading)
+                    return
+                if method == "POST" and action == "unsubscribe":
+                    # Unknown tokens answer the same: the endpoint reveals nothing.
+                    pool.unsubscribe(token)
+                    self._json({"unsubscribed": True})
+                    return
+            except (OSError, sqlite3.Error):
+                self._json({"reason": "UNAVAILABLE"}, HTTPStatus.SERVICE_UNAVAILABLE)
+                return
+            self._json({"reason": "NOT_FOUND"}, HTTPStatus.NOT_FOUND)
 
         def _admin_step_up_verify(self) -> None:
             """Validate a separate elevated bearer against the live PRIMARY Admin identity.
@@ -2223,6 +2290,12 @@ def make_handler(runtime: AxignalRuntime) -> type[BaseHTTPRequestHandler]:
             if request_path == "/internal/admin/pilot-test-accounts":
                 self._pilot_accounts()
                 return
+            if request_path == "/internal/admin/marketing-pool":
+                self._marketing_pool()
+                return
+            if request_path.startswith("/public/marketing-pool/"):
+                self._marketing_public("GET", request_path)
+                return
             if request_path == "/internal/admin/customer-access":
                 self._customer_access(None)
                 return
@@ -2312,6 +2385,12 @@ def make_handler(runtime: AxignalRuntime) -> type[BaseHTTPRequestHandler]:
                 return
             if request_path == "/internal/admin/pilot-test-accounts":
                 self._pilot_accounts(write=True)
+                return
+            if request_path == "/internal/admin/marketing-pool":
+                self._marketing_pool(write=True)
+                return
+            if request_path.startswith("/public/marketing-pool/"):
+                self._marketing_public("POST", request_path)
                 return
             if (
                 request_path.startswith("/internal/admin/customer-access/")

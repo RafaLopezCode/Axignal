@@ -1,0 +1,11 @@
+{
+  "observer-laptop-480.png": {
+    "source": "observer/observer-laptop.png",
+    "transform": "trimmed white margin, resized to 480px wide, 48-colour palette"
+  },
+  "use": "HTML email (marketing pool); email clients do not render SVG",
+  "logo-440.png": {
+    "source": "brand/logo-light.svg",
+    "transform": "rasterized with sharp at 440px wide (email clients do not render SVG)"
+  }
+}

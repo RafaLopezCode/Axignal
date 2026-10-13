@@ -22,6 +22,7 @@ _SCHEMA_NAMES = {
     JobKind.GROUNDED_ANSWER: "axent_grounded_answer",
     JobKind.SEMANTIC_DECISION: "axignal_semantic_decision",
     JobKind.GENERATIVE_PROBE: "axignal_generative_probe",
+    JobKind.OUTREACH_DRAFT: "axignal_outreach_draft",
 }
 
 

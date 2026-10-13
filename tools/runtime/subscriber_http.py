@@ -140,7 +140,9 @@ class SubscriberHttpFacade:
         pilot_admin: PilotAccessService | None = None,
         customer_read: Callable[[AdminAuthorizationGrant], dict[str, object]] | None = None,
         identity_candidates: Callable[[str, str | None], list[dict[str, str | None]]] | None = None,
+        marketing_pool: object | None = None,
     ) -> None:
+        self.marketing_pool = marketing_pool
         self.identity_candidates = identity_candidates
         self.pilot_admin = pilot_admin
         self.customer_read = customer_read
