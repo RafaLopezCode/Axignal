@@ -190,7 +190,7 @@ test("the Admin carries no sample records and no demonstration label", () => {
   assert.doesNotMatch(model, /ilustrativ|illustrative|\bdemo\b|\bexample\b|\bejemplo\b|AdminRecord/i);
 });
 
-test("every Admin function stays in the menu; a domain not yet connected says so and shows nothing", () => {
+test("every Admin function stays in the menu and connects to its authorized owner service", () => {
   const admin = read("components/admin.tsx");
   const model = read("lib/admin-model.ts");
   const ids = [...model.matchAll(/id: "([a-z]+)"/g)].map(match => match[1]);
@@ -198,9 +198,10 @@ test("every Admin function stays in the menu; a domain not yet connected says so
   // The menu is grouped the way the operator works: observe, operate, govern; the attention centre stays one click away.
   assert.match(admin, /GROUPS\.map\(group =>/);
   assert.match(admin, /href="\/admin#command"/);
-  // Only a connected domain draws content; the others state that nothing is connected and render no record.
-  assert.match(model, /connectedDomains: ReadonlySet<string> = new Set\(\["customers"\]\)/);
-  assert.match(admin, /!connectedDomains\.has\(domain\.id\)/);
+  // Each domain owns live reads; a source contract refuses fake records and preserves denied/unknown states.
+  assert.match(model, /new Set\(adminDomains.map/);
+  assert.match(admin, /<AdminOperationalPanel/);
+  assert.doesNotMatch(admin, /Todavía no conectado/);
   assert.doesNotMatch(admin, /adminRecords/);
 });
 

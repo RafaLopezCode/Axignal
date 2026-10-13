@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import threading
 import urllib.error
 import urllib.request
@@ -233,3 +234,79 @@ def test_admin_shell_assets_preserve_visual_and_epistemic_separation() -> None:
     assert "aria-current" in js
     assert "ArrowDown" in js
     assert "ArrowUp" in js
+
+
+@pytest.mark.parametrize(
+    "slug,sections",
+    [
+        ("command-center", ["commandCenter"]),
+        ("xeeds", ["xeedObservatory"]),
+        ("axigland-quality", ["xeedObservatory"]),
+        ("axent-brain", ["brainObservatory"]),
+        ("governance", ["governance"]),
+        ("acquisition", ["acquisition", "gsc"]),
+        ("integrations", ["integrations", "apiOperations"]),
+        (
+            "finance-fiscal",
+            ["financialDocuments", "accountingReconciliation", "fiscalCompliance", "taxOperations"],
+        ),
+        ("frontier-advisor", ["measurementRegistry"]),
+        ("revenue", ["commandCenter"]),
+        ("system", ["commandCenter"]),
+    ],
+)
+def test_operational_json_is_live_authorized_and_secret_free(
+    tmp_path: Path, slug: str, sections: list[str]
+) -> None:
+    runtime, token, support = _admin_runtime(tmp_path)
+    server = ThreadingHTTPServer(("127.0.0.1", 0), make_handler(runtime))
+    thread = threading.Thread(target=server.serve_forever, daemon=True)
+    thread.start()
+    base = f"http://127.0.0.1:{server.server_port}/admin/{slug}"
+
+    def request(credential: str | None):
+        headers = {"Accept": "application/json"}
+        if credential:
+            headers["Authorization"] = "Bearer " + credential
+        return urllib.request.Request(base, headers=headers)
+
+    try:
+        with pytest.raises(urllib.error.HTTPError) as absent:
+            urllib.request.urlopen(request(None), timeout=3)
+        assert absent.value.code == 401
+        assert json.load(absent.value) == {"reason": "ADMIN_SESSION_REQUIRED"}
+        with urllib.request.urlopen(request(token), timeout=3) as response:
+            assert response.headers["Cache-Control"] == "no-store"
+            assert response.headers["Content-Type"].startswith("application/json")
+            raw = response.read().decode()
+            payload = json.loads(raw)
+        assert token not in raw and support not in raw
+        assert payload["mode"] == "ADMIN" and payload["currentSlug"] == slug
+        assert all(isinstance(payload[key], dict) for key in sections)
+        if slug in {"command-center", "revenue", "system"}:
+            metrics = payload["commandCenter"]["metrics"]
+            assert all(item["value"] is None for item in metrics)
+            assert all(item["unknownReason"] == "SOURCE_PROJECTION_UNAVAILABLE" for item in metrics)
+            if slug == "revenue":
+                assert {item["metricId"] for item in metrics} == {"mrr", "arr", "paying_accounts"}
+            if slug == "system":
+                assert {item["metricId"] for item in metrics} == {
+                    "source_health",
+                    "provider_health",
+                    "system_health",
+                }
+        if slug != "xeeds":
+            with pytest.raises(urllib.error.HTTPError) as denied:
+                urllib.request.urlopen(request(support), timeout=3)
+            assert denied.value.code == 403
+            assert json.load(denied.value) == {"reason": "ADMIN_SCOPE_REQUIRED"}
+        runtime.admin_access.revoke_own_session(
+            token, revoked_at=datetime.now(UTC), reason="Read revocation test"
+        )
+        with pytest.raises(urllib.error.HTTPError) as revoked:
+            urllib.request.urlopen(request(token), timeout=3)
+        assert revoked.value.code == 401
+    finally:
+        server.shutdown()
+        server.server_close()
+        thread.join(timeout=3)
