@@ -36,7 +36,12 @@ VIEW = {
     "discoveries": [
         _d("PUBLIC_PRESENCE", "PUBLIC_WEBSITE_OBSERVED", "Acme SEO — search engine agency"),
         _d("ACTIVITY", "seo-services", "SEO and AI search consulting for retailers"),
-        _d("GENERATIVE_VISIBILITY", "AI_NOT_NAMED", "No assistant names it for SEO in Austin"),
+        _d(
+            "GENERATIVE_VISIBILITY",
+            "AI_NOT_NAMED_FOR_CATEGORY",
+            "0/2",
+            competitorsNamed=["Rival SEO"],
+        ),
         _d("REPRESENTATION_GAP", "AUDIT:LLMS_TXT", "LLMS_TXT", "POTENTIAL", value=False),
         _d("MENTION", "PRESS_MENTION", "Quoted in The Daily on a client launch"),
         _d("DEMAND", "TED:123", "Open call for digital marketing services", "POTENTIAL"),

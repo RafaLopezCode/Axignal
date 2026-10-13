@@ -11,7 +11,7 @@ from __future__ import annotations
 import re
 from dataclasses import dataclass
 
-PERSONAS_VERSION = "personas-v2"
+PERSONAS_VERSION = "personas-v3"
 #: A persona needs at least this many distinct offer words on the site itself.
 MIN_OFFER_WORDS = 2
 
@@ -30,6 +30,11 @@ class Persona:
     lead_families: tuple[str, ...]
     #: What AXIGNAL could add for it, said once and without claiming its interest.
     value_angle: str
+    #: Other OpenStreetMap selectors (tags that must all hold), e.g. private schools.
+    osm_selectors: tuple[str, ...] = ()
+
+    def overpass_selectors(self) -> tuple[str, ...]:
+        return (*(f'["office"="{o}"]' for o in self.osm_offices), *self.osm_selectors)
 
 
 PERSONAS: tuple[Persona, ...] = (
@@ -138,6 +143,78 @@ PERSONAS: tuple[Persona, ...] = (
         ("demand", "relationships", "economics"),
         "evidence-backed outside-in intelligence on each client's demand, relationships "
         "and competitors, refreshed over time",
+    ),
+)
+
+
+PERSONAS = (
+    *PERSONAS,
+    Persona(
+        "CONSTRUCTION",
+        "Construction / installation company",
+        ("construction_company",),
+        ("Q811930",),
+        (
+            "constructora",
+            "construcción",
+            "construcciones",
+            "obra civil",
+            "edificación",
+            "rehabilitación",
+            "reformas integrales",
+            "construction company",
+            "general contractor",
+            "building contractor",
+            "civil engineering",
+            "bauunternehmen",
+            "hochbau",
+            "tiefbau",
+            "entreprise de construction",
+            "bâtiment",
+            "travaux publics",
+            "impresa edile",
+            "costruzioni",
+            "construtora",
+            "empreiteiro",
+        ),
+        ("demand", "relationships", "economics"),
+        "who awards its kind of works near it, what is open now and who wins it, refreshed "
+        "every day from official sources",
+    ),
+    Persona(
+        "PRIVATE_SCHOOL",
+        "Private school or academy",
+        (),
+        ("Q423208", "Q572835", "Q897403"),
+        (
+            "colegio privado",
+            "colegio internacional",
+            "escuela infantil",
+            "academia",
+            "bachillerato internacional",
+            "admisiones",
+            "matrícula",
+            "private school",
+            "international school",
+            "admissions",
+            "enrolment",
+            "enrollment",
+            "école privée",
+            "inscriptions",
+            "privatschule",
+            "internationale schule",
+            "scuola privata",
+            "iscrizioni",
+            "escola privada",
+            "matrículas",
+        ),
+        ("presence", "reputation", "context"),
+        "how families find it on search engines and AI assistants, and what is said about "
+        "it, measured independently over time",
+        osm_selectors=(
+            '["amenity"="school"]["operator:type"="private"]',
+            '["amenity"="language_school"]',
+        ),
     ),
 )
 

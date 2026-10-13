@@ -20,6 +20,12 @@ from typing import Any, Protocol
 
 from application.marketing_pool.email_template import LABELS, render_html, signature_role
 from application.marketing_pool.personas import PERSONAS, PERSONAS_VERSION, best_persona, persona
+from application.marketing_pool.playbooks import (
+    PLAYBOOKS_VERSION,
+    hook_brief,
+    hooks,
+    playbook_for,
+)
 from application.marketing_pool.policy import (
     CHANNEL_POLICY_VERSION,
     MARKETS,
@@ -102,6 +108,8 @@ class Limits:
     min_backlog: int = 40
     rediscover_after: timedelta = timedelta(days=30)
     study_timeout: timedelta = timedelta(days=2)
+    #: How long a studied prospect waits for its segment's hook (background measurements).
+    hook_wait: timedelta = timedelta(days=3)
 
 
 class MarketingPoolRunner:
@@ -353,7 +361,19 @@ class MarketingPoolRunner:
         if chosen is None:
             return self.store.move(domain, "NOT_QUALIFIED", now=now, actor="marketing-pool",
                                    reason="NOT_A_TARGET_PERSONA")  # fmt: skip
-        selected = findings(view, chosen.lead_families)
+        playbook = playbook_for(chosen.id)
+        opening = hooks(view, playbook) if playbook is not None else []
+        if playbook is not None and not opening:
+            # Measurements (AI assistants, awards) land in the background: wait a while for
+            # a hook; without one the letter would be generic, and it is not written.
+            started = datetime.fromisoformat(str(prospect["updated_at"]))
+            if now - started <= self.limits.hook_wait:
+                return False
+            return self.store.move(domain, "NOT_QUALIFIED", now=now, actor="marketing-pool",
+                                   reason="NO_SEGMENT_HOOK", persona=chosen.id)  # fmt: skip
+        selected = findings(
+            view, playbook.families if playbook else chosen.lead_families, first=opening[:1]
+        )
         emails = contact.get("emails")
         address = recipient(emails if isinstance(emails, list) else [], domain)
         language = language_of(
@@ -372,6 +392,15 @@ class MarketingPoolRunner:
             "channelBasis": basis,
             "channelPolicy": CHANNEL_POLICY_VERSION,
             "studiedAt": view.get("observedAt"),
+            "segment": None if playbook is None else playbook.segment,
+            "playbooksVersion": PLAYBOOKS_VERSION,
+            "hook": None
+            if not opening
+            else {
+                "kind": opening[0].get("kind"),
+                "code": opening[0].get("code"),
+                "statement": opening[0].get("statement"),
+            },
         }
         reason = gate(selected)
         if reason is not None:
@@ -387,7 +416,15 @@ class MarketingPoolRunner:
                     instruction=INSTRUCTION,
                     context={
                         "schema": SCHEMA,
-                        "user": prompt(str(prospect["name"]), language, chosen, selected),
+                        "user": prompt(
+                            str(prospect["name"]),
+                            language,
+                            chosen,
+                            selected,
+                            segment=None if playbook is None else playbook.segment,
+                            pain=None if playbook is None else playbook.pain,
+                            hook=hook_brief(opening[0]) if opening else None,
+                        ),
                         "max_output_tokens": 900,
                     },
                 )
@@ -396,7 +433,9 @@ class MarketingPoolRunner:
             return False
         payload = result.payload if hasattr(result, "payload") else {}
         answer = payload.get("answer") if isinstance(payload, Mapping) else None
-        draft = accept_draft(answer if isinstance(answer, Mapping) else {}, selected)
+        draft = accept_draft(
+            answer if isinstance(answer, Mapping) else {}, selected, require_first=bool(opening)
+        )
         if draft is None:
             return self.store.move(domain, "NOT_QUALIFIED", now=now, actor="marketing-pool",
                                    reason="DRAFT_NOT_GROUNDED", detail=detail,
@@ -420,6 +459,9 @@ class MarketingPoolRunner:
             domain=domain,
         )
         draft["model"] = self._model
+        if playbook is not None:
+            draft["segment"] = playbook.segment
+            draft["anchor"] = playbook.anchor
         detail.update({"draft": draft, "token": token})
         if self.store.is_suppressed(domain) or (address and self.store.is_suppressed(address)):
             return self.store.move(domain, "SUPPRESSED", now=now, actor="marketing-pool",
@@ -498,8 +540,10 @@ class MarketingPoolRunner:
             body=str(draft.get("body") or ""),
             greeting=str(draft.get("greeting") or "") or None,
             findings=list(draft.get("findingsUsed") or []),
-            reading_url=f"{origin}/r/{token}",
+            reading_url=f"{origin}/r/{token}"
+            + (f"#{draft['anchor']}" if draft.get("anchor") else ""),
             unsubscribe_url=f"{origin}/r/{token}/unsubscribe",
+            segment=str(draft.get("segment") or "") or None,
             sender_name=self._operator.sender_name,
             sender_role=self._operator.sender_role,
             legal_text=str(draft.get("legal") or ""),
@@ -527,7 +571,7 @@ class MarketingPoolRunner:
             "domain": prospect["domain"],
             "language": detail.get("language"),
             "studiedAt": detail.get("studiedAt"),
-            "findings": detail.get("findings") or [],
+            "findings": _reading_findings(detail),
             "authority": "OPERATIONAL_NOT_CANONICAL",
         }
 
@@ -586,6 +630,18 @@ class MarketingPoolRunner:
 
 
 _PREVIEW = {"DRAFTED", "APPROVED", "HELD", "SENT"}
+
+
+def _reading_findings(detail: Mapping[str, Any]) -> list[dict[str, object]]:
+    """What the reading shows: the letter's findings in its language first, then the rest."""
+    draft = detail.get("draft") if isinstance(detail.get("draft"), Mapping) else {}
+    used = [dict(f) for f in (draft or {}).get("findingsUsed") or [] if isinstance(f, Mapping)]
+    shown = {(f.get("kind"), f.get("code")) for f in used}
+    rest = [
+        dict(f) for f in detail.get("findings") or []
+        if isinstance(f, Mapping) and (f.get("kind"), f.get("code")) not in shown
+    ]  # fmt: skip
+    return [{**f, "statement": f.get("text") or f.get("statement")} for f in [*used, *rest]]
 
 
 def _wire(prospect: Mapping[str, Any]) -> dict[str, object]:

@@ -47,8 +47,10 @@ class OverpassDiscovery:
 
     def find(self, persona: Persona, market: Market) -> list[Candidate]:
         selectors = "".join(
-            f'nwr(area.a)["office"="{office}"]["website"];' for office in persona.osm_offices
+            f'nwr(area.a){selector}["website"];' for selector in persona.overpass_selectors()
         )
+        if not selectors:
+            return []
         query = (
             f'[out:json][timeout:120];area["ISO3166-1"="{market.iso}"][admin_level=2]->.a;'
             f"({selectors});out tags {self._limit};"

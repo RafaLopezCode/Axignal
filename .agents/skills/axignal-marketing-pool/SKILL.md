@@ -28,7 +28,7 @@ Turn the user's words into a campaign, then **confirm with the user before runni
 | Field | Values |
 |---|---|
 | name | short, e.g. `SEO Canadá Q4` |
-| personas | `SEO_GEO_AGENCY`, `DIGITAL_MARKETING_AGENCY`, `REPUTATION_PR_AGENCY`, `B2B_CONSULTANCY` |
+| personas | `SEO_GEO_AGENCY`, `DIGITAL_MARKETING_AGENCY`, `REPUTATION_PR_AGENCY`, `CONSTRUCTION`, `PRIVATE_SCHOOL`, `B2B_CONSULTANCY` |
 | countries | ISO codes listed in `application/marketing_pool/policy.py` (`MARKETS`) |
 | target | organizations to **study**, 1–500 (not emails: some will not qualify) |
 | ends-on | optional `YYYY-MM-DD` |
@@ -47,6 +47,15 @@ ssh axignal-production "docker exec axignal-prod-runtime python -m tools.runtime
 
 `--actor` is mandatory and audited: `<agent>:<person who asked>` (`codex:…`, `claude:…`).
 The answer is the campaign id. Cancel with `campaign-cancel <id> --data-dir … --actor …`.
+
+### Segments and playbooks
+
+Each persona belongs to a segment with its own playbook
+(`application/marketing_pool/playbooks.py`): AGENCY (SEO/GEO, digital marketing, PR),
+CONSTRUCTION, PRIVATE_SCHOOL, CONSULTANCY. A playbook fixes the hooks that may open the
+letter (usually an INXIGHT crossing), the order of evidence, the pain and its own call
+to action. A prospect without a hook waits up to 3 days for background measurements and
+is then NOT_QUALIFIED (`NO_SEGMENT_HOOK`): no generic letters.
 
 ## 2. Report progress
 

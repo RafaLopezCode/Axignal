@@ -92,8 +92,13 @@ class Finding:
         }  # fmt: skip
 
 
-def findings(view: Mapping[str, Any], lead: Sequence[str] = ()) -> list[Finding]:
-    """Evidenced findings worth telling it about: sourced, not unknowns, lead families first."""
+def findings(
+    view: Mapping[str, Any],
+    lead: Sequence[str] = (),
+    first: Sequence[Mapping[str, Any]] = (),
+) -> list[Finding]:
+    """Evidenced findings worth telling it about: sourced, not unknowns; the opening hook
+    first (``first``), then lead families."""
     out: list[Finding] = []
     seen: set[tuple[str, str]] = set()
     held = view.get("discoveries")
@@ -102,6 +107,9 @@ def findings(view: Mapping[str, Any], lead: Sequence[str] = ()) -> list[Finding]
             continue
         kind, code = str(d.get("kind") or ""), str(d.get("code") or "")
         family = FAMILY_OF_KIND.get(kind)
+        if kind == "INXIGHT":  # a crossing speaks for its own family
+            raw = d.get("detail")
+            family = (str(raw.get("family") or "") if isinstance(raw, Mapping) else "") or None
         state = str(d.get("epistemicState") or "")
         source = d.get("sourceUrl") or d.get("source")
         if family is None or state == "UNKNOWN" or not source or (kind, code) in seen:
@@ -110,16 +118,25 @@ def findings(view: Mapping[str, Any], lead: Sequence[str] = ()) -> list[Finding]
             continue  # the container of the checks; each gap is its own finding
         if code.startswith("VALUE_CHAIN_"):
             continue  # about its sector, not about this organization
-        detail = d.get("detail") if isinstance(d.get("detail"), Mapping) else {}
+        raw_detail = d.get("detail")
+        detail: Mapping[str, Any] = raw_detail if isinstance(raw_detail, Mapping) else {}
         seen.add((kind, code))
+        value = detail.get("values") if kind == "INXIGHT" else detail.get("value")
         out.append(
             Finding(
                 family, kind, code, str(d.get("statement") or code)[:300], state,
-                str(source), detail.get("value") if isinstance(detail, Mapping) else None,
+                str(source), value,
             )
         )  # fmt: skip
+    opening = [(str(h.get("kind")), str(h.get("code"))) for h in first]
     order = {family: i for i, family in enumerate(lead)}
-    out.sort(key=lambda f: (order.get(f.family, len(order)), f.state != "OBSERVED"))
+    out.sort(
+        key=lambda f: (
+            opening.index((f.kind, f.code)) if (f.kind, f.code) in opening else len(opening),
+            order.get(f.family, len(order)),
+            f.state != "OBSERVED",
+        )
+    )
     return out[:MAX_FINDINGS]
 
 
@@ -148,30 +165,57 @@ INSTRUCTION = (
     "one professional to another. Use ONLY the numbered findings given; never add a fact, "
     "number, ranking, client name or claim that is not in them. Findings marked POTENTIAL "
     "must be phrased as possibilities, never as facts. Do not say their website is bad; "
-    "state what was measured and where. Do not claim they need or want anything. Mention "
-    "at most 4 findings, the most specific ones, each with a few words of why it matters "
-    "to them. Then one sentence on what AXIGNAL could add for them, then invite them to see "
-    "the full reading. No greetings with invented names, no signature, no footer, no links: "
-    "those are added separately; start directly with the first sentence, without any "
-    "salutation (one is added). Subject under 70 characters, body under 170 words."
+    "state what was measured and where. Do not claim they need or want anything. "
+    "Structure: (1) the first paragraph opens with finding [1], the HOOK, in one or two "
+    "concrete sentences using its own values; (2) one sentence on why that matters to this "
+    "kind of organization, from the segment's pain; (3) at most 3 other findings, each with "
+    "a few words of meaning; (4) one sentence on what AXIGNAL could add for them; (5) invite "
+    "them to see the full reading. Separate paragraphs with a blank line. The subject names "
+    "the hook's substance, not AXIGNAL. No greetings with invented names, no signature, no "
+    "footer, no links: those are added separately; start directly with the first sentence, "
+    "without any salutation (one is added). Subject under 70 characters, body under 170 words. "
+    "Also return cards: for each finding you cite, its index and one line (at most 140 "
+    "characters) restating that finding in the requested language, with the same facts and "
+    "numbers and nothing added."
 )
 SCHEMA: dict[str, object] = {
     "type": "object",
     "additionalProperties": False,
-    "required": ["subject", "body", "findings_used"],
+    "required": ["subject", "body", "findings_used", "cards"],
     "properties": {
         "subject": {"type": "string"},
         "body": {"type": "string"},
         "findings_used": {"type": "array", "items": {"type": "integer"}},
+        "cards": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "additionalProperties": False,
+                "required": ["index", "text"],
+                "properties": {"index": {"type": "integer"}, "text": {"type": "string"}},
+            },
+        },
     },
 }
 
 
-def prompt(name: str, language: str, persona_: Persona, selected: Sequence[Finding]) -> str:
+def prompt(
+    name: str,
+    language: str,
+    persona_: Persona,
+    selected: Sequence[Finding],
+    *,
+    segment: str | None = None,
+    pain: str | None = None,
+    hook: str | None = None,
+) -> str:
     lines = [
         f"Organization: {name}",
         f"Language: {language}",
         f"They are: {persona_.label}",
+        *([f"Segment: {segment}"] if segment else []),
+        *([f"The segment's pain: {pain}"] if pain else []),
+        *([f"HOOK (finding [1]) in full: {hook}"] if hook else []),
         f"What AXIGNAL could add for them: {persona_.value_angle}",
         "Findings:",
         *(f.line(i) for i, f in enumerate(selected, 1)),
@@ -223,6 +267,10 @@ _AREA = {
     "REPUTATION_PR_AGENCY": {"es": "comunicación", "en": "communications",
                              "fr": "communication", "de": "Kommunikation",
                              "it": "comunicazione", "pt": "comunicação"},
+    "CONSTRUCTION": {"es": "licitaciones", "en": "tenders", "fr": "appels d'offres",
+                     "de": "Ausschreibungen", "it": "gare", "pt": "concursos"},
+    "PRIVATE_SCHOOL": {"es": "admisiones", "en": "admissions", "fr": "admissions",
+                       "de": "Aufnahme", "it": "ammissioni", "pt": "admissões"},
     "B2B_CONSULTANCY": {"es": "desarrollo de negocio", "en": "business development",
                         "fr": "développement commercial", "de": "Geschäftsentwicklung",
                         "it": "sviluppo commerciale", "pt": "desenvolvimento de negócio"},
@@ -268,7 +316,7 @@ def footer(
 
 
 def accept_draft(
-    answer: Mapping[str, Any], selected: Sequence[Finding]
+    answer: Mapping[str, Any], selected: Sequence[Finding], *, require_first: bool = False
 ) -> dict[str, object] | None:
     """A usable draft: bounded, citing at least two given findings, no links of its own."""
     subject, body = answer.get("subject"), answer.get("body")
@@ -276,6 +324,8 @@ def accept_draft(
     if not isinstance(subject, str) or not isinstance(body, str) or not isinstance(used, list):
         return None
     cited = sorted({i for i in used if isinstance(i, int) and 1 <= i <= len(selected)})
+    if require_first and 1 not in cited:
+        return None  # a playbook letter must open with its hook
     subject, body = subject.strip(), body.strip()
     if (
         len(cited) < 2
@@ -284,8 +334,24 @@ def accept_draft(
         or re.search(r"https?://|www\.", body)
     ):
         return None
+    cards: dict[int, str] = {}
+    for card in answer.get("cards") or []:
+        if not isinstance(card, Mapping):
+            continue
+        index, text = card.get("index"), card.get("text")
+        if (
+            index in cited
+            and isinstance(text, str)
+            and 3 <= len(text.strip()) <= 160
+            and not re.search(r"https?://|www\.", text)
+        ):
+            cards[int(index)] = " ".join(text.split())
     return {
         "subject": subject,
         "body": body,
-        "findingsUsed": [selected[i - 1].to_wire() for i in cited],
+        # The card shows the finding in the letter's language; the original stays for audit.
+        "findingsUsed": [
+            {**selected[i - 1].to_wire(), **({"text": cards[i]} if i in cards else {})}
+            for i in cited
+        ],
     }
