@@ -33,3 +33,5 @@ Native-file handoff: human authorized temporary file-URL access, reported it ena
 
 
 Latest concurrent main (cdf8034, playbooks/cross-INXIGHTS and relative fixture clock) was preserved. Relevant complete integration, observation intelligence, INXIGHTS, marketing pool, subscriber profile and billing suites: 268 passed, 1 existing POSIX skip. Frontend: 284 passed, build passed; final inventory 2306 entries, no missing translations. Ruff format/check, mypy (538 source files), Architecture Guard and governance passed. Native file selection remains explicitly pending manual confirmation; other acceptance paths and code are verified. QA handoff is separate from production deployment, which was not performed.
+
+Avatar picker now exposes only a localized, keyboard-accessible button; the native file input is hidden so browser-owned file-status text cannot remain in a different UI language. Frontend tests, translation inventory and build passed after this final adjustment.

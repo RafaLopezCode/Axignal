@@ -57,8 +57,8 @@ export function SubscriberAccountSettings() {
       <h2 id="profile-title">{t("Tu perfil privado","Your private profile")}</h2>
       <p className="obs-quiet">{t("Tu avatar e idioma se guardan en tu cuenta y no modifican ninguna organización.","Your avatar and language are saved in your account and do not change any organization.")}</p>
       <div className="obs-profile-avatar">{profile?.avatar?<img src={profile.avatar} width={64} height={64} alt={t("Tu avatar","Your avatar")}/>:<UserRound size={32} aria-hidden="true"/>}
-        <div><label className="obs-button" htmlFor="profile-avatar">{t("Cambiar avatar","Change avatar")}</label>
-          <input ref={input} id="profile-avatar" type="file" accept="image/png,image/jpeg,image/webp" disabled={disabled} onChange={event=>void upload(event.target.files?.[0])}/>
+        <div><button type="button" className="obs-button" disabled={disabled} onClick={()=>input.current?.click()}>{t("Cambiar avatar","Change avatar")}</button>
+          <input ref={input} id="profile-avatar" type="file" hidden aria-hidden="true" tabIndex={-1} accept="image/png,image/jpeg,image/webp" disabled={disabled} onChange={event=>void upload(event.target.files?.[0])}/>
           <small>{t("PNG, JPEG o WebP · hasta 5 MB · recorte cuadrado","PNG, JPEG or WebP · up to 5 MB · square crop")}</small></div>
       </div>
       {profile?.avatar&&<button className="obs-link" disabled={disabled} onClick={()=>void remove()}>{t("Eliminar avatar","Remove avatar")}</button>}
