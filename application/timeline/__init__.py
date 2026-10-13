@@ -12,7 +12,7 @@ Global by construction: metrics come from the view, whatever country fed it.
 from __future__ import annotations
 
 import re
-from collections.abc import Callable, Mapping
+from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass
 from typing import Any
 
@@ -290,3 +290,57 @@ def changes(
     order = {"REGRESSION": 0, "EVOLUTION": 1}
     out.sort(key=lambda c: order.get(str(c["detail"]["values"]["direction"]), 2))  # type: ignore[index]
     return out
+
+
+MAX_HISTORY_EVENTS = 300
+MAX_SERIES_POINTS = 120
+
+
+def history(
+    snapshots: Sequence[tuple[str, Mapping[str, object]]], *, family: str | None = None
+) -> dict[str, object]:
+    """The whole recorded history, oldest first: numeric series and dated set events.
+
+    Numbers become series (thinned to at most MAX_SERIES_POINTS, keeping first and last);
+    sets become events: on which day each item appeared or disappeared. A metric absent
+    on a day is unknown that day, never zero or empty, and breaks no comparison.
+    """
+    series: dict[str, list[list[object]]] = {}
+    events: list[dict[str, object]] = []
+    last_set: dict[str, tuple[str, set[str]]] = {}
+    for day, metrics in snapshots:
+        for key, value in metrics.items():
+            metric = BY_KEY.get(key)
+            if metric is None or (family is not None and metric.family != family):
+                continue
+            if isinstance(value, int | float) and not isinstance(value, bool):
+                series.setdefault(key, []).append([day, value])
+            elif isinstance(value, list):
+                current = {str(v) for v in value}
+                if key in last_set:
+                    since, before = last_set[key]
+                    added, removed = sorted(current - before), sorted(before - current)
+                    if added or removed:
+                        events.append({"day": day, "previousDay": since, "metric": key,
+                                       "family": metric.family, "added": added[:20],
+                                       "removed": removed[:20]})  # fmt: skip
+                else:
+                    events.append({"day": day, "metric": key, "family": metric.family,
+                                   "firstSeen": sorted(current)[:20]})  # fmt: skip
+                last_set[key] = (day, current)
+    thinned: dict[str, list[list[object]]] = {}
+    for key, points in series.items():
+        if len(points) > MAX_SERIES_POINTS:
+            step = len(points) / (MAX_SERIES_POINTS - 1)
+            points = [points[int(i * step)] for i in range(MAX_SERIES_POINTS - 1)] + [points[-1]]
+        thinned[key] = points
+    return {
+        "timelineVersion": TIMELINE_VERSION,
+        "firstDay": snapshots[0][0] if snapshots else None,
+        "lastDay": snapshots[-1][0] if snapshots else None,
+        "daysRecorded": len(snapshots),
+        "series": thinned,
+        "events": events[-MAX_HISTORY_EVENTS:],
+        "current": {k: v for k, v in (snapshots[-1][1].items() if snapshots else ())
+                    if family is None or (k in BY_KEY and BY_KEY[k].family == family)},
+    }  # fmt: skip

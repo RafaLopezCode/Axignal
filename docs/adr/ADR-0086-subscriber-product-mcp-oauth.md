@@ -1,6 +1,6 @@
 # ADR-0086: Subscriber Product MCP over OAuth 2.1 (read-only)
 
-- **Status:** Accepted
+- **Status:** Accepted (tool list amended by ADR-0095)
 - **Date:** 2026-10-07
 - **Authority:** MASTER PRODUCT MODEL (§13 replaceable providers, §14 models are not truth, §15.1 CLAIM ≠ WRITE, §15.4 UNKNOWN ≠ FALSE, §20 currentness, §53.3 derived opportunity stays POTENTIAL); Constitution; ADR-0084; ADR-0085; direct human product decision.
 - **Scope:** a public, subscriber-facing Model Context Protocol endpoint that lets a subscriber's own assistant (Claude, ChatGPT or another MCP client) read that subscriber's authorized Xeeds.
