@@ -118,6 +118,11 @@ export function activityLabel(code: string, fallback: string, t: Translate): str
 /** FINDING and WHY IT MATTERS for one discovery. Fixed copy per code: never generated. */
 export function discoveryCopy(d: Discovery, t: Translate, locale = "en"): { finding: string; why: string } {
   const title = String(d.detail.title ?? d.statement);
+  if (d.kind === "IDENTITY_HINT" && d.code === "IDENTITY_CORROBORATED") {
+    const anchors = Array.isArray(d.detail.anchors) ? d.detail.anchors.length : 0;
+    return { finding: t("Identidad corroborada por {n} fuentes independientes: {name}", "Identity corroborated by {n} independent sources: {name}").replace("{n}", String(anchors)).replace("{name}", d.statement),
+      why: t("Wikidata (por su web oficial), el registro oficial y su LEI apuntan a la misma entidad legal. Es una coincidencia de fuentes: un registro aún no ha admitido la identidad.", "Wikidata (through its official website), the official register and its LEI point to the same legal entity. An agreement of sources: a registry has not admitted the identity yet.") };
+  }
   if (d.kind === "ACTIVITY" && d.code === "STATED_INDUSTRY") return { finding: `${t("Sector declarado", "Stated industry")}: ${d.statement}`,
     why: t("Según Wikidata, para el elemento identificado por su web oficial. Orienta la demanda y el contexto; no es una capacidad verificada.", "According to Wikidata, for the item identified through its official website. It directs demand and context; it is not a verified capability.") };
   if (d.kind === "ACTIVITY" && d.code === "REGISTERED_ACTIVITY") return { finding: `${t("Actividad registrada", "Registered activity")}: ${d.statement}`,

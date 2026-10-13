@@ -80,6 +80,7 @@ from application.observation_intelligence.loop import OpportunityCandidate, run_
 from application.observation_runtime.replay import FindingsLedger
 from application.organization_admission.locator import LocatorError, parse_locator, public_domain
 from application.organization_group import group_discoveries
+from application.organization_identity import identity_corroboration
 from application.press.mentions import press_discoveries
 from application.regulation import regulation_discoveries
 from application.regulation.sectors import route_of
@@ -1255,6 +1256,11 @@ class FirstObservationRuntime:
             view["discoveries"] = stated_industry(
                 registered_activity(held if isinstance(held, list) else [])
             )
+            # Independent anchors that agree on the legal entity (never an admission).
+            view["discoveries"] = [
+                *view["discoveries"],  # type: ignore[misc]
+                *identity_corroboration(view["discoveries"]),  # type: ignore[arg-type]
+            ]
             view = self._with_geo(view)
             view = self._with_sector_context(view)
             view = self._with_regulation(view)
