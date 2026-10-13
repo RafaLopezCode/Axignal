@@ -39,6 +39,7 @@ def runtime_answer_wire(turn: AxentTurn, *, locale: str) -> dict[str, object]:
         "known": [labelled(c.text, c.epistemic, c.currentness) for c in answer.claims],
         "openQuestions": list(answer.unknowns),
         "evidenceBasis": [e.label for e in evidence if e.kind != "GAP"],
+        "evidenceLimits": list(dict.fromkeys(limit for e in evidence for limit in e.limits)),
         "researchPlan": [] if research is None else [answer.answer.split(". ")[-1]],
         "passages": [c.text for c in answer.claims],
         "action": "unknown"
@@ -72,6 +73,7 @@ def runtime_answer_wire(turn: AxentTurn, *, locale: str) -> dict[str, object]:
                     "observedAt": e.observed_at,
                     "source": e.source_ref,
                     "sourceLabel": e.source_label,
+                    "limits": list(e.limits),
                 }
                 for e in evidence
             ],

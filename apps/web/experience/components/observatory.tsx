@@ -28,6 +28,8 @@ import { SubscriberRepresentation } from "./subscriber-representation";
 import { SubscriberMcpConnections } from "./subscriber-mcp-connections";
 import { IdentityCheck } from "./identity-check";
 import { websiteOf } from "@/lib/identity";
+import { SubscriberAccountSettings } from "./subscriber-account-settings";
+import { DismissibleNotice } from "./dismissible-notice";
 import { RuntimeAxent, useRuntimeAxent } from "./runtime-axent";
 import type { ObservatoryCapabilities } from "@/lib/observatory-source";
 import { WAITING_STATES, waitingItems, type ActivationPhase } from "@/lib/activation";
@@ -322,7 +324,7 @@ export function Observatory(props: ObservatoryProps) {
   if (access === "required") return <ObservatoryFrame><section className="obs-gate"><h1>{t("Tu identidad abre el acceso.", "Your identity opens access.")}</h1><p>{t("Accede para leer tu cartera privada y sus evidencias.", "Sign in to read your private portfolio and its evidence.")}</p><Link className="obs-button obs-primary" href="/login">{t("Acceder", "Sign in")}<ArrowRight size={16} aria-hidden="true"/></Link></section></ObservatoryFrame>;
   if (access === "failure" || !portfolio) return <ObservatoryFrame><section className="obs-gate" role="alert"><h1>{t("No pudimos leer tu contexto.", "We could not read your context.")}</h1><p>{t("Tu cartera sigue a salvo. Vuelve a comprobarlo en un momento.", "Your portfolio is safe. Check again in a moment.")}</p><button className="obs-button" onClick={props.refresh}><RefreshCw size={16} aria-hidden="true"/>{t("Volver a comprobar", "Check again")}</button></section></ObservatoryFrame>;
 
-  const toast = (props.message || props.paymentUrl) && <div className="obs-toast" role="status" aria-live="polite">{props.message && <p>{props.message}</p>}{props.paymentUrl && <a className="obs-button obs-primary" href={props.paymentUrl}>{t("Continuar al pago", "Continue to payment")}</a>}</div>;
+  const toast = (props.message || props.paymentUrl) && <DismissibleNotice key={props.message + (props.paymentUrl ?? "")} className="obs-toast">{props.message && <p>{props.message}</p>}{props.paymentUrl && <a className="obs-button obs-primary" href={props.paymentUrl}>{t("Continuar al pago", "Continue to payment")}</a>}</DismissibleNotice>;
   const activationView = activating && <ActivationView portfolio={portfolio} waiting={waiting} phase={activationPhase} busy={props.busy}
     onRedeemInvite={props.onRedeemInvite!} onCheckout={total => props.onCheckout?.(total)} onConfirmPayment={() => props.onConfirmPayment?.()}
     onOpenAccount={() => openScreen("account")}
@@ -785,7 +787,7 @@ export function InsightBody({ insight, onEvidence }: { insight: Insight; onEvide
 }
 
 function DepthPanel({ insight, projection, revision, axentOnly, canAct, axent, onClose, onEvidence, onExplore }: {
-  insight: Insight | null; projection: RuntimeProjection | null; revision: string | null; axentOnly: boolean; canAct: boolean; axent: "subscriber" | "admin";
+  insight: Insight | null; projection: RuntimeProjection | null; revision: string | null; axentOnly: boolean; canAct: boolean; axent: ObservatoryCapabilities["axent"];
   onClose: () => void; onEvidence: () => void; onExplore: () => void;
 }) {
   const { t, locale } = useLocale();
@@ -811,20 +813,20 @@ function DepthPanel({ insight, projection, revision, axentOnly, canAct, axent, o
 }
 
 function DepthAxent({ projection, revision, axent, insight, canAct, onEvidence, onExplore, autoFocus }: {
-  projection: RuntimeProjection; revision: string; axent: "subscriber" | "admin"; insight: Insight | null; canAct: boolean; onEvidence: () => void; onExplore: () => void; autoFocus: boolean;
+  projection: RuntimeProjection; revision: string; axent: ObservatoryCapabilities["axent"]; insight: Insight | null; canAct: boolean; onEvidence: () => void; onExplore: () => void; autoFocus: boolean;
 }) {
   const { t } = useLocale();
   // The subscriber's questions are scoped to its reading; an Admin session asks through its own endpoint.
   const scope = useMemo(() => axent === "subscriber" ? { revision } : undefined, [axent, revision]);
-  const conversation = useRuntimeAxent(projection, null, scope);
+  const conversation = useRuntimeAxent(projection, null, scope, axent === "illustrative");
   const asked = useRef<string | null>(null);
   const question = insight ? fill(t("{finding}: ¿por qué importa y qué sigue abierto?", "{finding}: why does it matter and what remains open?"), { finding: insight.headline }) : null;
   useEffect(() => { asked.current = null; }, [insight?.id]);
-  if (!canAct) return <section className="obs-depth-axent" aria-label="AXENT"><p className="obs-empty">{t("Las preguntas a AXENT se activan con tu cuenta.", "AXENT questions are available with your account.")}</p></section>;
+  if (!canAct && axent !== "illustrative") return <section className="obs-depth-axent" aria-label="AXENT"><p className="obs-empty">{t("Las preguntas a AXENT se activan con tu cuenta.", "AXENT questions are available with your account.")}</p></section>;
   return <section className="obs-depth-axent" aria-label="AXENT">
     {question && asked.current !== insight?.id && conversation.messages.length === 0 && <button className="obs-button obs-ask" disabled={conversation.busy} onClick={() => { asked.current = insight?.id ?? null; void conversation.ask(question); }}>
       <MessageCircleQuestion size={16} aria-hidden="true"/>{t("Pregunta a AXENT sobre esto", "Ask AXENT about this")}</button>}
-    <RuntimeAxent projection={projection} signalId={null} conversation={conversation} onEvidence={onEvidence} onSignal={onExplore} focusLabel={insight ? insight.headline : t("Toda la organización", "The whole organization")}/>
+    <RuntimeAxent illustrative={axent === "illustrative"} projection={projection} signalId={null} conversation={conversation} onEvidence={onEvidence} onSignal={onExplore} focusLabel={insight ? insight.headline : t("Toda la organización", "The whole organization")}/>
     {autoFocus && <span className="sr-only" role="status">{t("AXENT abierto en el contexto de esta organización.", "AXENT opened in this organization's context.")}</span>}
   </section>;
 }
@@ -943,6 +945,7 @@ function AccountView(props: ObservatoryProps) {
   return <section className="obs-account" aria-labelledby="account-title">
     <h1 id="account-title">{t("Cuenta y conexiones", "Account and connections")}</h1>
     <div className="obs-account-grid">
+      {props.canAct && props.capabilities.axent === "subscriber" && <SubscriberAccountSettings/>}
       <section className="obs-account-card" aria-labelledby="capacity-title">
         <h2 id="capacity-title">{t("Espacio para observar", "Room to observe")}</h2>
         <p>{portfolio.capacity === null || portfolio.capacityCurrentness !== "CURRENT" ? t("Capacidad sin confirmar", "Unconfirmed capacity") : fill(t("{used} de {total} organizaciones en uso", "{used} of {total} organizations in use"), { used, total: portfolio.capacity })} · {t("Las organizaciones pausadas conservan su espacio.", "Paused organizations retain their space.")}</p>

@@ -48,13 +48,14 @@ export function Brand({
 export function LocaleToggle() {
   const [keyboardFocus, setKeyboardFocus] = useState(false);
   const pointerInteraction = useRef(false);
-  const { locale, setLocale, t } = useLocale();
+  const { locale, setLocale, t, profileSaving, profileLoading } = useLocale();
   return (
     <label className={"locale-selector" + (keyboardFocus ? " keyboard-focus" : "")}>
       <Languages size={16} aria-hidden="true" />
       <span className="sr-only">{t("Idioma", "Language")}</span>
       <select
         value={locale}
+        disabled={profileSaving || profileLoading}
         onPointerDown={() => { pointerInteraction.current = true; setKeyboardFocus(false); }}
         onKeyDown={() => { pointerInteraction.current = false; setKeyboardFocus(true); }}
         onFocus={(e) => setKeyboardFocus(!pointerInteraction.current && e.target.matches(":focus-visible"))}

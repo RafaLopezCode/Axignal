@@ -19,6 +19,7 @@ import {
   type ProjectionContext,
 } from "@/lib/projection";
 import { validatePlan, type CompositionPlan } from "@/lib/governance";
+import { productGuideCatalog } from "@/lib/axent-product-guide";
 import type { AxentMessage } from "@/lib/axent-contract";
 import { Badge, Observer, AxentIdentity } from "./ui";
 import { AxentComposer } from "./axent-composer";
@@ -71,7 +72,7 @@ export function Axent({
     projection.signals.find((s) => s.id === context.signalId) ??
     projection.signals.find((s) => s.family === context.family);
   const family = families.find((f) => f.id === context.family)!;
-  const questions = signal
+  const contextualQuestions = signal
     ? [
         copy(funnelLayers[2].question),
         copy(funnelLayers[3].question),
@@ -85,6 +86,7 @@ export function Axent({
     setInput("");
     await sendMessage({ text: text.trim() });
   }
+  const questions = [...productGuideCatalog.locales[locale].questions.slice(0, 2), ...contextualQuestions];
   return (
     <div className="axent-panel">
       <header className="axent-header">
@@ -218,6 +220,10 @@ export function Axent({
                   </div>
                 ) : null,
               )}
+              {message.role === "assistant" && message.parts.some(part => part.type === "text" && part.text.startsWith(productGuideCatalog.locales[locale].label + ": ")) &&
+                <div className="axent-questions">{productGuideCatalog.locales[locale].followUps.map(question =>
+                  <button key={question} disabled={busy} onClick={() => void ask(question)}>{question}<ArrowRight size={15} /></button>
+                )}</div>}
             </div>
           ))
         )}

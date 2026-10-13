@@ -172,6 +172,108 @@ class StripeSubscriberAdapter:
         self._clock = clock or (lambda: datetime.now(UTC))
         self._account_verified = False
 
+    def portal(
+        self, projection: BillingProjection, *, action: str, locale: str, return_url: str
+    ) -> str:
+        """A temporary provider session, never a payment/cancellation receipt."""
+        if projection.environment_ref != self._config.environment_ref or action not in {
+            "payment_method",
+            "invoices",
+            "cancel",
+        }:
+            raise StripeSubscriberConflict("portal scope mismatch")
+        if not projection.customer_ref.startswith(
+            "cus_"
+        ) or not projection.subscription_ref.startswith("sub_"):
+            raise StripeSubscriberConflict("invalid portal mapping")
+        subscription = self._request("GET", "/v1/subscriptions/" + projection.subscription_ref)
+        if (
+            subscription.get("id") != projection.subscription_ref
+            or subscription.get("customer") != projection.customer_ref
+            or subscription.get("livemode") is not self._config.live_mode
+        ):
+            raise StripeSubscriberConflict("portal subscription mapping mismatch")
+        configurations = self._request("GET", "/v1/billing_portal/configurations", {"limit": "100"})
+        data = configurations.get("data")
+        if not isinstance(data, list):
+            raise StripeSubscriberError("portal configurations unavailable")
+        purpose = "axignal-subscriber-self-service-v1"
+        config: Mapping[str, object] | None = next(
+            (
+                item
+                for item in data
+                if isinstance(item, dict)
+                and isinstance(item.get("metadata"), dict)
+                and item["metadata"].get("purpose") == purpose
+                and item.get("active") is True
+            ),
+            None,
+        )
+        if config is None:
+            if configurations.get("has_more") is True:
+                raise StripeSubscriberError("portal configuration pagination incomplete")
+            config = self._request(
+                "POST",
+                "/v1/billing_portal/configurations",
+                {
+                    "metadata[purpose]": purpose,
+                    "features[payment_method_update][enabled]": "true",
+                    "features[invoice_history][enabled]": "true",
+                    "features[subscription_cancel][enabled]": "true",
+                    "features[subscription_cancel][mode]": "at_period_end",
+                    "features[subscription_update][enabled]": "false",
+                    "features[customer_update][enabled]": "false",
+                    "default_return_url": return_url,
+                },
+                idempotency_key="portal-config-" + self._config.account_ref + "-v1",
+            )
+        assert config is not None
+        features = config.get("features")
+        if (
+            config.get("livemode") is not self._config.live_mode
+            or config.get("active") is not True
+            or not isinstance(features, dict)
+        ):
+            raise StripeSubscriberError("portal configuration mismatch")
+        for name in ("payment_method_update", "invoice_history", "subscription_cancel"):
+            feature = features.get(name)
+            if not isinstance(feature, dict) or feature.get("enabled") is not True:
+                raise StripeSubscriberError("portal feature unavailable")
+        cancel = features["subscription_cancel"]
+        update = features.get("subscription_update")
+        if (
+            cancel.get("mode") != "at_period_end"
+            or not isinstance(update, dict)
+            or update.get("enabled") is not False
+        ):
+            raise StripeSubscriberError("portal billing policy mismatch")
+        configuration = config.get("id")
+        if not isinstance(configuration, str) or not configuration.startswith("bpc_"):
+            raise StripeSubscriberError("invalid portal configuration")
+        parameters = {
+            "customer": projection.customer_ref,
+            "configuration": configuration,
+            "locale": locale,
+            "return_url": return_url,
+        }
+        if action != "invoices":
+            parameters["flow_data[type]"] = (
+                "subscription_cancel" if action == "cancel" else "payment_method_update"
+            )
+            parameters["flow_data[after_completion][type]"] = "redirect"
+            parameters["flow_data[after_completion][redirect][return_url]"] = return_url
+            if action == "cancel":
+                parameters["flow_data[subscription_cancel][subscription]"] = (
+                    projection.subscription_ref
+                )
+        session = self._request("POST", "/v1/billing_portal/sessions", parameters)
+        if session.get("customer") != projection.customer_ref:
+            raise StripeSubscriberConflict("portal session customer mismatch")
+        url = session.get("url")
+        if not isinstance(url, str):
+            raise StripeSubscriberError("portal URL unavailable")
+        return url
+
     def _require_mutations(self) -> None:
         if not self._config.mutations_enabled:
             raise StripeSubscriberError("Stripe subscriber mutations are disabled")

@@ -593,3 +593,20 @@ body:has(.obs-rail-desktop) .privacy-preferences-button { inset-inline-end: auto
 .obs-identity-option input { margin-top: 3px; }
 .obs-identity-option span { display: grid; gap: 2px; min-width: 0; }
 .obs-identity-option small { color: var(--obs-muted); overflow-wrap: anywhere; }
+
+/* Principal-owned preferences inherit the existing account grammar. */
+.obs-profile-avatar { display:flex;align-items:center;gap:16px;margin-block:20px; }
+.obs-profile-avatar > img { border-radius:50%;object-fit:cover;flex-shrink:0; }
+.obs-profile-avatar > div { display:grid;gap:8px;min-width:0;flex:1; }
+.obs-profile-avatar input { width:100%;min-width:0;max-width:100%;font:inherit; }
+.obs-profile-avatar > svg { flex-shrink:0; }
+.obs-profile-avatar .obs-button { white-space:normal; }
+.obs-profile-avatar small { color:var(--obs-muted); }
+.obs-account-card > label { display:block;margin-block:20px 8px; }
+.obs-account-card select { min-height:44px;max-width:100%;width:100%;border:1px solid var(--obs-line);border-radius:var(--obs-r-control);padding:10px;background:var(--obs-card);color:var(--obs-text);font:inherit; }
+.obs-account-actions { display:grid;gap:12px;margin-block:20px;justify-items:start; }
+.obs-dismissible { display:flex;align-items:flex-start;gap:16px; }
+.obs-dismissible > div { flex:1;min-width:0; }
+.obs-dismissible > button { flex-shrink:0;min-width:44px;min-height:44px; }
+.obs-feedback { padding:12px;border:1px solid var(--obs-line);border-radius:var(--obs-r-control);margin-block:12px; }
+.obs-account-actions .obs-button { white-space:normal;text-align:start;min-height:44px; }

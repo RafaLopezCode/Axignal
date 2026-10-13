@@ -1,3 +1,4 @@
+import { productGuideAnswer, productGuideCatalog } from "./axent-product-guide";
 import type { Locale } from "./languages";
 import { translate } from "./copy-catalog";
 import type { RuntimeProjection } from "./runtime-projection";
@@ -16,6 +17,7 @@ export type RuntimeAnswer = {
   known: string[];
   openQuestions: string[];
   evidenceBasis: string[];
+  evidenceLimits?: string[];
   researchPlan: string[];
   passages: string[];
   action: "evidence" | "focus" | "unknown" | "research-unavailable";
@@ -24,6 +26,7 @@ export type RuntimeAnswer = {
   currentness: string[];
   /** Present when tenant-grounded AXENT answered: claims, evidence, research request. */
   grounding?: unknown;
+  productGuide?: { version: string; label: string; topic: string; authority: string[]; followUps: string[] };
   /** Compact memory of this turn, sent back with the next question. */
   memory?: Record<string, unknown>;
 };
@@ -43,11 +46,13 @@ export function explainRuntime(
     : projection.nodes;
   if (selectedId && !selected.length) throw new Error("FOCUS_OUTSIDE_PROJECTION");
 
+  const guide = productGuideAnswer(projection, prompt, locale);
+  if (guide) return guide;
   const t = (es: string, en: string) => translate(es, en, locale);
   const unknownIntent =
-    /unknown|desconoc|abiert|open|unbekannt|inconnu|sconosciut/i.test(prompt);
+    /unknown|desconoc|abiert|open|unbekannt|inconnu|sconosciut|bleibt offen|em aberto|eclaircir|éclaircir|resta aperto/i.test(prompt);
   const evidenceIntent =
-    /evidenc|fuente|source|sabes|sabe|know|quelle|preuve|fonte/i.test(prompt);
+    /evidenc|fuente|source|sabes|sabe|know|quelle|preuve|fonte|weißt|weisst|sais-tu|lo sai|lo sais/i.test(prompt);
   const researchIntent =
     /investig|research|recherch|ricerc|indag|nächst/i.test(prompt);
   const whyIntent = /por qué|why|import|warum|pourquoi|perché|porquê/i.test(prompt);
@@ -101,7 +106,7 @@ export function explainRuntime(
           "The current reading preserves explicit limits: what has not been observed remains open and is not interpreted as false.",
         )
       : evidenceIntent
-        ? t(
+        ? !evidenceBasis.length && !sourceRefs.length ? productGuideCatalog.locales[locale].noEvidence : t(
             "Esta lectura se sostiene únicamente en la evidencia autorizada y trazable que figura a continuación.",
             "This reading is supported only by the authorized, traceable evidence shown below.",
           )
@@ -164,4 +169,12 @@ export function explainRuntime(
     observedAt,
     currentness,
   };
+}
+
+
+/** Read-only demo explanations: no authorization grants, network, model or research. */
+export function explainIllustrative(projection: RuntimeProjection, prompt: string, selectedId: string | undefined, locale: Locale): RuntimeAnswer {
+  const answer = explainRuntime(projection, prompt, selectedId, locale);
+  if (answer.productGuide) return answer;
+  return { ...answer, summary: translate("Explicación ilustrativa de datos ficticios; sin investigación en vivo. ", "Illustrative explanation of fictional data; without live research. ", locale) + answer.summary };
 }

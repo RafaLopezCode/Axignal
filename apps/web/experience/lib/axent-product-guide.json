@@ -1,0 +1,162 @@
+{
+  "version": "axent-product-guide-2026-10-12.1",
+  "authority": [
+    "MASTER §§4.3, 4.3A, 53, 55",
+    "ADR-0017",
+    "ADR-0054"
+  ],
+  "patterns": {
+    "overview": [
+      "(?:que es|que hace|explicame|como funciona) axignal",
+      "(?:what is|what does|explain|how does) axignal(?: do| work)?",
+      "was (?:ist|macht) axignal",
+      "(?:o que e|como funciona) axignal",
+      "(?:qu.est.ce qu.?|comment fonctionne )axignal",
+      "(?:che cos.e|cos.e|come funziona) axignal",
+      "(?:para que sirve|como me ayuda|como empiezo con) axignal",
+      "(?:how can axignal help me|how do i get started with axignal)",
+      "(?:wofur ist axignal|wie hilft mir axignal)",
+      "para que serve axignal",
+      "a quoi sert axignal",
+      "a cosa serve axignal"
+    ],
+    "value": [
+      "como (?:puedo )?(?:encuentro|encontrar|buscar) (?:datos|informacion) (?:de valor|util(?:es)?)",
+      "how (?:do i find|to find) (?:valuable|useful) (?:data|information)",
+      "wie finde ich wertvolle informationen",
+      "como encontro informacoes de valor",
+      "comment trouver des informations utiles",
+      "come trovo informazioni utili"
+    ],
+    "limits": [
+      "que (?:puede hacer|hace) axent",
+      "what can axent do",
+      "was kann axent tun",
+      "o que pode fazer axent",
+      "que peut faire axent",
+      "cosa puo fare axent"
+    ]
+  },
+  "locales": {
+    "es": {
+      "label": "Guía de AXIGNAL",
+      "questions": [
+        "Qué es AXIGNAL",
+        "Cómo encuentro información de valor",
+        "Qué puede hacer AXENT"
+      ],
+      "followUps": [
+        "Por qué importa",
+        "Cómo lo sabes",
+        "Qué cambió",
+        "Qué sigue abierto"
+      ],
+      "overview": "AXIGNAL observa el entorno económico de una organización, conecta evidencias y conserva su evolución para ayudarte a entender qué actividad puede importarte, por qué y qué sigue siendo incierto. AXENT te ayuda a explorar ese conocimiento y sus fuentes.",
+      "value": "Empieza por una organización y una señal disponible en su panorama. Pregunta por qué importa para entender su posible relevancia; abre su evidencia para contrastar fuente, fecha y límites. Compara fechas para explorar cambios y pregunta qué sigue abierto antes de decidir. Una oportunidad potencial no garantiza un cliente, un contrato ni un resultado.",
+      "limits": "AXENT explica la lectura autorizada, sus fuentes, cambios e incertidumbres. Si falta evidencia puede señalar qué investigar; una propuesta no significa que la investigación se haya ejecutado. Tus preguntas orientan la atención, pero no editan la verdad sobre una organización.",
+      "illustrationLabel": "CONTEXTO DEL EJEMPLO",
+      "illustrationNotice": "Datos ficticios. Puedes explorar la guía y esta lectura del ejemplo; no se ejecuta investigación.",
+      "noEvidence": "La lectura seleccionada no contiene pasajes de evidencia para esta pregunta. Puedes abrir las evidencias disponibles y revisar su alcance; lo que falta sigue siendo desconocido."
+    },
+    "en": {
+      "label": "AXIGNAL guide",
+      "questions": [
+        "What is AXIGNAL",
+        "How do I find valuable information",
+        "What can AXENT do"
+      ],
+      "followUps": [
+        "Why it matters",
+        "How do you know",
+        "What changed",
+        "What remains open"
+      ],
+      "overview": "AXIGNAL observes an organization’s economic environment, connects evidence and retains its evolution to help you understand which activity may matter, why, and what remains uncertain. AXENT helps you explore that knowledge and its sources.",
+      "value": "Start with an organization and an available signal in its panorama. Ask why it matters to understand its possible relevance; open its evidence to check the source, date and limits. Compare dates to explore changes and ask what remains open before deciding. A potential opportunity does not guarantee a customer, contract or outcome.",
+      "limits": "AXENT explains the authorized reading, its sources, changes and uncertainties. When evidence is missing it can identify what needs investigation; a proposal does not mean research has run. Your questions direct attention but do not edit the truth about an organization.",
+      "illustrationLabel": "EXAMPLE CONTEXT",
+      "illustrationNotice": "Fictional data. You can explore the guide and this example reading; no research is performed.",
+      "noEvidence": "The selected reading contains no evidence passages for this question. You can open the available evidence and check its scope; what is missing remains unknown."
+    },
+    "de": {
+      "label": "AXIGNAL-Leitfaden",
+      "questions": [
+        "Was ist AXIGNAL",
+        "Wie finde ich wertvolle Informationen",
+        "Was kann AXENT tun"
+      ],
+      "followUps": [
+        "Warum ist das wichtig",
+        "Wie weißt du das",
+        "Was hat sich geändert",
+        "Was bleibt offen"
+      ],
+      "overview": "AXIGNAL beobachtet das wirtschaftliche Umfeld einer Organisation, verbindet Belege und bewahrt ihre Entwicklung. So kannst du verstehen, welche Aktivitäten relevant sein könnten, warum und was ungewiss bleibt. AXENT hilft dir, dieses Wissen und seine Quellen zu erkunden.",
+      "value": "Beginne mit einer Organisation und einem verfügbaren Signal in ihrem Panorama. Frage nach seiner Bedeutung und öffne die Belege, um Quelle, Datum und Grenzen zu prüfen. Vergleiche Zeitpunkte und frage vor einer Entscheidung, was offenbleibt. Eine potenzielle Gelegenheit garantiert weder Kunden noch Verträge oder Ergebnisse.",
+      "limits": "AXENT erklärt die autorisierte Sicht, ihre Quellen, Änderungen und Unsicherheiten. Fehlen Belege, kann es Untersuchungsbedarf benennen; ein Vorschlag bedeutet keine ausgeführte Untersuchung. Deine Fragen lenken Aufmerksamkeit, ändern aber keine Wahrheit über eine Organisation.",
+      "illustrationLabel": "BEISPIELKONTEXT",
+      "illustrationNotice": "Fiktive Daten. Du kannst den Leitfaden und dieses Beispiel erkunden; es wird keine Untersuchung ausgeführt.",
+      "noEvidence": "Die ausgewählte Sicht enthält keine Belegstellen für diese Frage. Du kannst die verfügbaren Belege und ihren Geltungsbereich prüfen; fehlendes Wissen bleibt unbekannt."
+    },
+    "pt": {
+      "label": "Guia do AXIGNAL",
+      "questions": [
+        "O que é AXIGNAL",
+        "Como encontro informações de valor",
+        "O que pode fazer AXENT"
+      ],
+      "followUps": [
+        "Por que importa",
+        "Como sabes",
+        "O que mudou",
+        "O que continua em aberto"
+      ],
+      "overview": "AXIGNAL observa o contexto económico de uma organização, liga evidências e conserva a sua evolução para ajudar a compreender que atividade pode importar, porquê e o que continua incerto. AXENT ajuda a explorar esse conhecimento e as suas fontes.",
+      "value": "Começa por uma organização e um sinal disponível no seu panorama. Pergunta por que importa e abre a evidência para verificar fonte, data e limites. Compara datas para explorar mudanças e pergunta o que continua em aberto antes de decidir. Uma oportunidade potencial não garante um cliente, contrato ou resultado.",
+      "limits": "AXENT explica a leitura autorizada, fontes, mudanças e incertezas. Se faltar evidência pode indicar o que investigar; uma proposta não significa investigação executada. As tuas perguntas orientam a atenção, mas não editam a verdade sobre uma organização.",
+      "illustrationLabel": "CONTEXTO DO EXEMPLO",
+      "illustrationNotice": "Dados fictícios. Podes explorar o guia e esta leitura do exemplo; não é executada investigação.",
+      "noEvidence": "A leitura selecionada não contém passagens de evidência para esta pergunta. Podes abrir a evidência disponível e verificar o seu âmbito; o que falta continua desconhecido."
+    },
+    "fr": {
+      "label": "Guide AXIGNAL",
+      "questions": [
+        "Qu’est-ce qu’AXIGNAL",
+        "Comment trouver des informations utiles",
+        "Que peut faire AXENT"
+      ],
+      "followUps": [
+        "Pourquoi est-ce important",
+        "Comment le sais-tu",
+        "Qu’est-ce qui a changé",
+        "Que reste-t-il à éclaircir"
+      ],
+      "overview": "AXIGNAL observe l’environnement économique d’une organisation, relie les preuves et conserve leur évolution pour comprendre quelles activités peuvent compter, pourquoi et ce qui reste incertain. AXENT aide à explorer ces connaissances et leurs sources.",
+      "value": "Commencez par une organisation et un signal disponible dans son panorama. Demandez pourquoi il compte et ouvrez ses preuves pour vérifier la source, la date et les limites. Comparez les dates et demandez ce qui reste ouvert avant de décider. Une opportunité potentielle ne garantit ni client, ni contrat, ni résultat.",
+      "limits": "AXENT explique la lecture autorisée, ses sources, changements et incertitudes. Si des preuves manquent, il peut indiquer quoi rechercher ; une proposition ne signifie pas une recherche exécutée. Vos questions orientent l’attention sans modifier la vérité sur une organisation.",
+      "illustrationLabel": "CONTEXTE DE L’EXEMPLE",
+      "illustrationNotice": "Données fictives. Vous pouvez explorer le guide et cette lecture d’exemple ; aucune recherche n’est exécutée.",
+      "noEvidence": "La lecture sélectionnée ne contient aucun passage de preuve pour cette question. Vous pouvez ouvrir les preuves disponibles et vérifier leur portée ; ce qui manque reste inconnu."
+    },
+    "it": {
+      "label": "Guida AXIGNAL",
+      "questions": [
+        "Che cos’è AXIGNAL",
+        "Come trovo informazioni utili",
+        "Cosa può fare AXENT"
+      ],
+      "followUps": [
+        "Perché è importante",
+        "Come lo sai",
+        "Cosa è cambiato",
+        "Cosa resta aperto"
+      ],
+      "overview": "AXIGNAL osserva il contesto economico di un’organizzazione, collega le evidenze e ne conserva l’evoluzione per capire quali attività possono contare, perché e cosa resta incerto. AXENT aiuta a esplorare queste conoscenze e le loro fonti.",
+      "value": "Inizia da un’organizzazione e da un segnale disponibile nel suo panorama. Chiedi perché conta e apri le evidenze per verificare fonte, data e limiti. Confronta le date e chiedi cosa resta aperto prima di decidere. Un’opportunità potenziale non garantisce clienti, contratti o risultati.",
+      "limits": "AXENT spiega la lettura autorizzata, le fonti, i cambiamenti e le incertezze. Se mancano evidenze può indicare cosa indagare; una proposta non significa un’indagine eseguita. Le domande orientano l’attenzione senza modificare la verità su un’organizzazione.",
+      "illustrationLabel": "CONTESTO DELL’ESEMPIO",
+      "illustrationNotice": "Dati fittizi. Puoi esplorare la guida e questa lettura d’esempio; non viene eseguita alcuna ricerca.",
+      "noEvidence": "La lettura selezionata non contiene passaggi di evidenza per questa domanda. Puoi aprire le evidenze disponibili e verificarne l’ambito; ciò che manca resta sconosciuto."
+    }
+  }
+}

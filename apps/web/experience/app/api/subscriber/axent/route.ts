@@ -1,3 +1,4 @@
+import { productGuideAnswer } from "@/lib/axent-product-guide";
 import { z } from "zod";
 import { boundedSubscriberJson, subscriberAxent, subscriberProxy, subscriberSameOrigin } from "@/lib/subscriber-server";
 import { subscriberOutputSchema } from "@/lib/subscriber-contracts";
@@ -38,12 +39,14 @@ export async function POST(request: Request) {
     // Grounded AXENT (authorized retrieval, verified claims) when the runtime serves it;
     // otherwise the deterministic explanation of the same authorized reading.
     // Off unless this environment enables it (staged rollout, like the reasoner behind it).
-    const grounded = process.env.AXIGNAL_AXENT_GROUNDED === "true"
+    const guide = productGuideAnswer(projection, input.prompt, input.locale);
+    if (input.signalId && !projection.nodes.some(node => node.id === input.signalId)) throw new Error("FOCUS_OUTSIDE_READING");
+    const grounded = !guide && process.env.AXIGNAL_AXENT_GROUNDED === "true"
       ? await subscriberAxent(request, input.contextId, {
           question: input.prompt, locale: input.locale, ...(input.memory ? { memory: input.memory } : {}),
         })
       : null;
-    const answer = grounded ? (grounded as unknown as ReturnType<typeof explainRuntime>) : explainRuntime(projection, input.prompt, input.signalId, input.locale);
+    const answer = guide ?? (grounded ? (grounded as unknown as ReturnType<typeof explainRuntime>) : explainRuntime(projection, input.prompt, input.signalId, input.locale));
     if (grounded && output.firstObservation?.publicUnderstanding) {
       const report = output.firstObservation.publicUnderstanding;
       const references = answer.signalIds.map(ref => understandingReportReference(ref, report));
@@ -52,8 +55,8 @@ export async function POST(request: Request) {
       answer.signalIds = answer.signalIds.filter((_ref, i) => references[i] === null);
       if (reportId) answer.publicUnderstandingReportId = reportId;
     }
-    const plan = input.cognition ? cognitiveReadingPlan(output.projection, input.cognition) : null;
-    if (input.cognition) {
+    const plan = !guide && input.cognition ? cognitiveReadingPlan(output.projection, input.cognition) : null;
+    if (!guide && input.cognition) {
       const facts = runtimeFactsAt(output.projection, input.cognition.family, input.cognition.asOf);
       const unique = (values: string[]) => [...new Set(values)];
       answer.sourceRefs = unique([...answer.sourceRefs, ...facts.sources.map(source => source.sourceRef)]);

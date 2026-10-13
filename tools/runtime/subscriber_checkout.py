@@ -24,6 +24,7 @@ from application.admin_billing.subscriber_checkout import (
     SubscriberPurchaseStore,
     SubscriberReconciler,
 )
+from application.admin_billing.subscriber_management import SubscriberBillingManagement
 from domain.identity import TenantId
 from domain.tenancy.model import Principal
 
@@ -87,6 +88,7 @@ class SubscriberCheckoutRuntime:
         self._webhook = webhook
         self._config = config
         self._retry_worker = retry_worker
+        self.management: SubscriberBillingManagement | None = None
 
     def start_initial_checkout(
         self,
@@ -310,7 +312,7 @@ def build_stripe_subscriber_checkout_runtime(
         reconciler=reconciler,
     )
     retry_worker = SubscriberReconciliationWorker(store=store, reconciler=reconciler)
-    return build_subscriber_checkout_runtime(
+    runtime = build_subscriber_checkout_runtime(
         config=SubscriberCheckoutRuntimeConfig(
             enabled=settings.enabled,
             environment_ref=settings.environment_ref,
@@ -326,6 +328,16 @@ def build_stripe_subscriber_checkout_runtime(
         reconciler=reconciler,
         retry_worker=retry_worker,
     )
+    origin = urlsplit(settings.success_url)
+    runtime.management = SubscriberBillingManagement(
+        authority_reader,
+        store,
+        provider,
+        settings.environment_ref,
+        f"{origin.scheme}://{origin.netloc}/account?billing=return",
+        settings.enabled,
+    )
+    return runtime
 
 
 def _valid_host(host: str) -> bool:
