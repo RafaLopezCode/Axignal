@@ -9,6 +9,7 @@ organization, so it is never followed and is named for what it is.
 
 from __future__ import annotations
 
+import json
 from datetime import UTC, datetime
 from typing import Any
 
@@ -231,3 +232,73 @@ def test_a_redirect_to_another_brand_is_still_never_followed() -> None:
     assert web.requests == ["https://acme.example/robots.txt"]
     assert same_brand("https://alan.com", "https://alan.eu/")
     assert not same_brand("https://ab.com", "https://abacus.com/")  # too short to tell
+
+
+class ArchiveWeb(Web):
+    """Robots allow, the live homepage refuses us, the Internet Archive holds a capture."""
+
+    def __init__(self, capture: str | None) -> None:
+        super().__init__({})
+        self.capture = capture
+
+    def fetch(self, url: str, *, slot: str, retain_body: bool = False) -> FetchedResource:
+        self.requests.append(url)
+        if url.endswith("/robots.txt"):
+            return _resource(url, 200, "User-agent: *\nAllow: /\n")
+        if url.startswith("https://web.archive.org/cdx/"):
+            rows = [["timestamp", "original"]] + (
+                [[self.capture, "https://walled.example/"]] if self.capture else []
+            )
+            return _resource(url, 200, json.dumps(rows))
+        if url.startswith("https://web.archive.org/web/"):
+            return _resource(url, 200, HOME)
+        return _resource(url, 403, None, "http_403")
+
+
+def test_a_walled_homepage_is_read_from_a_recent_archive_capture_dated_as_such() -> None:
+    web = ArchiveWeb("20261001093000")
+    ledger = RunLedger()
+    reading = _service(web).read_site("walled.example", NOW, ledger)
+    assert reading.failure is None and len(reading.pages) == 1
+    page = reading.pages[0]
+    assert page.url == "https://web.archive.org/web/20261001093000id_/https://walled.example/"
+    assert page.observed_at.isoformat().startswith("2026-10-01T09:30")
+    assert page.signals["archivedFrom"].rstrip("/") == "https://walled.example"
+    assert "READ:ARCHIVED_HOMEPAGE" in ledger.decisions
+    assert "from=20260415" in next(u for u in web.requests if "/cdx/" in u)  # 180 days
+
+
+def test_without_a_recent_capture_the_homepage_stays_unavailable() -> None:
+    reading = _service(ArchiveWeb(None)).read_site("walled.example", NOW, RunLedger())
+    assert reading.failure == "HOMEPAGE_UNAVAILABLE"
+
+
+def test_robots_refusal_is_never_routed_around_through_the_archive() -> None:
+    web = Web({"https://closed.example/robots.txt": _resource(
+        "https://closed.example/robots.txt", 200, "User-agent: *\nDisallow: /\n")})  # fmt: skip
+    reading = _service(web).read_site("closed.example", NOW, RunLedger())
+    assert reading.failure == "ROBOTS_DISALLOWED"
+    assert not any("archive.org" in u for u in web.requests)
+
+
+class FlakyIndexWeb(ArchiveWeb):
+    """The CDX index is temporarily offline; the availability service answers."""
+
+    def fetch(self, url: str, *, slot: str, retain_body: bool = False) -> FetchedResource:
+        if url.startswith("https://web.archive.org/cdx/"):
+            self.requests.append(url)
+            return _resource(url, 503, None, "http_503")
+        if url.startswith("https://archive.org/wayback/available"):
+            self.requests.append(url)
+            body = {"archived_snapshots": {"closest": {
+                "available": True, "status": "200", "timestamp": "20261005120000"}}}  # fmt: skip
+            return _resource(url, 200, json.dumps(body))
+        return super().fetch(url, slot=slot, retain_body=retain_body)
+
+
+def test_an_offline_archive_index_falls_back_to_its_availability_service() -> None:
+    ledger = RunLedger()
+    reading = _service(FlakyIndexWeb("unused")).read_site("walled.example", NOW, ledger)
+    assert reading.failure is None
+    assert reading.pages[0].url.startswith("https://web.archive.org/web/20261005120000id_/")
+    assert {"ARCHIVE:INDEX_UNAVAILABLE", "READ:ARCHIVED_HOMEPAGE"} <= set(ledger.decisions)
