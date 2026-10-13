@@ -144,3 +144,17 @@ def test_coverage_starts_where_headlines_are_continuous_not_at_a_stray_archive_i
     since, held, _feeds = store.coverage()
     assert held == 201
     assert since is not None and since.year == 2026
+
+
+def test_every_golden_set_country_has_its_own_press() -> None:
+    import json
+    from collections import Counter
+
+    golden = json.loads(Path("tools/evaluation/golden_set.json").read_text(encoding="utf-8"))
+    eu = {"ES", "DE", "FR", "IT", "PT", "NL", "IE", "SE", "DK"}
+    feeds = Counter(f.country for f in FEEDS)
+    for org in golden["organizations"]:
+        code = org["country"]
+        key = f"EU/{code}" if code in eu else code
+        assert feeds[key] >= 2, code
+    assert len({f.feed_id for f in FEEDS}) == len(FEEDS)
