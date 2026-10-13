@@ -56,6 +56,8 @@ class Transport:
         self.url = "https://billing.stripe.com/p/session/controlled"
         self.mode = "at_period_end"
         self.subscription_update = False
+        self.customer_update = False
+        self.has_more = False
 
     def request(self, method, path, *, parameters, idempotency_key=None):
         self.calls.append((method, path, dict(parameters), idempotency_key))
@@ -64,7 +66,7 @@ class Transport:
         if path == "/v1/subscriptions/sub_one":
             return {"id": "sub_one", "customer": self.customer, "livemode": False}
         if path == "/v1/billing_portal/configurations" and method == "GET":
-            return {"data": [], "has_more": False}
+            return {"data": [], "has_more": self.has_more}
         if path == "/v1/billing_portal/configurations":
             return {
                 "id": "bpc_one",
@@ -75,7 +77,7 @@ class Transport:
                     "invoice_history": {"enabled": True},
                     "subscription_cancel": {"enabled": True, "mode": self.mode},
                     "subscription_update": {"enabled": self.subscription_update},
-                    "customer_update": {"enabled": False},
+                    "customer_update": {"enabled": self.customer_update},
                 },
             }
         if path == "/v1/billing_portal/sessions":
@@ -166,6 +168,7 @@ def test_owner_revocation_and_provider_mapping_fail_closed():
         "https://billing.stripe.com.attacker.test/path",
         "https://user:pass@billing.stripe.com/path",
         "http://billing.stripe.com/path",
+        "https://billing.stripe.com:invalid/path",
     ],
 )
 def test_portal_redirect_never_leaks_session_to_unapproved_host(url):
@@ -183,3 +186,32 @@ def test_configuration_cannot_cancel_immediately_or_bypass_capacity_policy(mode,
     with pytest.raises(BillingManagementError):
         service.open(OWNER, TENANT, {"action": "cancel", "locale": "es"}, NOW)
     assert not any(call[1] == "/v1/billing_portal/sessions" for call in transport.calls)
+
+
+@pytest.mark.parametrize("has_more", [None, True, "false"])
+def test_unknown_or_incomplete_configuration_page_never_creates_portal(has_more):
+    service, transport, _ = setup()
+    transport.has_more = has_more
+    with pytest.raises(BillingManagementError):
+        service.open(OWNER, TENANT, {"action": "invoices", "locale": "es"}, NOW)
+    assert all(call[0] == "GET" for call in transport.calls)
+
+
+def test_portal_cannot_expand_profile_editing_and_rechecks_owner_after_provider_io():
+    service, transport, authority = setup()
+    transport.customer_update = True
+    with pytest.raises(BillingManagementError):
+        service.open(OWNER, TENANT, {"action": "invoices", "locale": "es"}, NOW)
+    assert not any(call[1] == "/v1/billing_portal/sessions" for call in transport.calls)
+    transport.customer_update = False
+    original = transport.request
+
+    def revoked_during_request(method, path, **kwargs):
+        result = original(method, path, **kwargs)
+        if path == "/v1/billing_portal/sessions":
+            authority.enabled = False
+        return result
+
+    transport.request = revoked_during_request
+    with pytest.raises(BillingManagementError, match="BILLING_ACCESS_DENIED"):
+        service.open(OWNER, TENANT, {"action": "invoices", "locale": "es"}, NOW)

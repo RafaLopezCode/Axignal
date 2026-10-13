@@ -334,7 +334,7 @@ def build_stripe_subscriber_checkout_runtime(
         store,
         provider,
         settings.environment_ref,
-        f"{origin.scheme}://{origin.netloc}/account?billing=return",
+        f"{origin.scheme}://{origin.netloc}/account?billing=return&screen=account",
         settings.enabled,
     )
     return runtime

@@ -223,6 +223,7 @@ export function SubscriberPortfolioExperience({ source = accountSource, notice, 
     url.searchParams.delete("billing"); url.searchParams.delete("purchase");
     window.history.replaceState(null, "", url);
     if (outcome === "cancelled") setActivation("payment_cancelled");
+    else if (outcome === "return") void runRef.current({ action: "refresh_purchase" });
     else void confirmPayment();
   }, [access, canAct, confirmPayment]);
   /**

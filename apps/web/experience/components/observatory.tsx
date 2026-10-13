@@ -336,7 +336,7 @@ export function Observatory(props: ObservatoryProps) {
   if (focused) return <div className="obs obs-focused" data-product-surface="living-observatory" aria-busy={props.busy}>
     <header className="obs-focused-bar">
       <Link href="/" aria-label={t("AXIGNAL · Inicio", "AXIGNAL · Home")}><img src="/brand/logo-light.svg" alt="AXIGNAL" width={124} height={36}/></Link>
-      <div className="obs-focused-tools"><LocaleToggle/><button className="obs-link" onClick={props.logout} disabled={props.busy}>{t("Salir", "Sign out")}</button></div>
+      <div className="obs-focused-tools">{props.capabilities.account&&<button className="obs-link" onClick={()=>openScreen("account")} disabled={props.busy}>{t("Cuenta y conexiones", "Account and connections")}</button>}<LocaleToggle/><button className="obs-link" onClick={props.logout} disabled={props.busy}>{t("Salir", "Sign out")}</button></div>
     </header>
     <main id="obs-main" className="obs-focused-main" tabIndex={-1}>
       {toast}

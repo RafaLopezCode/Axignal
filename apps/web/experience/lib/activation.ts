@@ -42,10 +42,10 @@ export function inviteTokenFrom(input: string): string | null {
   return TOKEN.test(text) ? text : null;
 }
 
-/** The payment provider's return to /account (?billing=complete|cancelled). */
-export function billingReturn(params: URLSearchParams): "complete" | "cancelled" | null {
+/** The payment provider's return to /account (?billing=complete|cancelled|return). */
+export function billingReturn(params: URLSearchParams): "complete" | "cancelled" | "return" | null {
   const value = params.get("billing") ?? params.get("purchase");
-  return value === "complete" || value === "cancelled" ? value : null;
+  return value === "complete" || value === "cancelled" || value === "return" ? value : null;
 }
 
 /** The published monthly offer: the governed EUR reference of the price book (MASTER §27, ADR-0093). */

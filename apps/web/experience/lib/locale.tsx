@@ -49,27 +49,29 @@ export function LocaleProvider({ children }: { children: React.ReactNode }) {
   const epoch = useRef(0);
   const choice = useRef(0);
   const saving = useRef(false);
-  const resetProfile = () => { ++epoch.current; profileRef.current=null; setProfile(null); setProfileError(false); };
+  const profileRead = useRef(0);
+  const resetProfile = () => { ++epoch.current; ++profileRead.current; saving.current=false; profileRef.current=null; setProfile(null); setProfileLoading(false); setProfileSaving(false); setProfileError(false); };
   async function reloadProfile() {
-    const generation=epoch.current, selected=choice.current;
-    setProfileLoading(true);
+    const generation=epoch.current, selected=choice.current, request=++profileRead.current;
+    setProfileLoading(true); setProfileError(false);
     try {
       const response=await fetch("/api/subscriber/profile",{cache:"no-store"});
-      if (response.status === 401) { if(generation===epoch.current) resetProfile(); return; }
+      if (response.status === 401) { if(generation===epoch.current && request===profileRead.current) resetProfile(); return; }
       if (!response.ok) throw new Error("PROFILE_UNAVAILABLE");
       const value=accountProfileSchema.parse(await response.json());
-      if(generation!==epoch.current) return;
+      if(generation!==epoch.current || request!==profileRead.current) return;
       profileRef.current=value; setProfile(value); setProfileError(false);
       if (value.locale && selected===choice.current && !isLocale(pathname.split("/")[1])) setLocalLocale(value.locale);
-    } catch { if(generation===epoch.current) setProfileError(true); }
-    finally { setProfileLoading(false); }
+    } catch { if(generation===epoch.current && request===profileRead.current) setProfileError(true); }
+    finally { if(generation===epoch.current && request===profileRead.current) setProfileLoading(false); }
   }
   async function saveProfile(command:{action:"locale";locale:Locale|null}|{action:"avatar";image:string}|{action:"remove_avatar"}):Promise<boolean> {
     const current=profileRef.current, generation=epoch.current;
     if (!current || saving.current) return false;
-    saving.current=true; setProfileSaving(true); setProfileError(false);
+    ++profileRead.current; setProfileLoading(false); saving.current=true; setProfileSaving(true); setProfileError(false);
     try {
       const response=await fetch("/api/subscriber/profile",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({...command,version:current.version})});
+      if(response.status===401) { if(generation===epoch.current) resetProfile(); return false; }
       if(!response.ok) { if(response.status===409) await reloadProfile(); throw new Error("PROFILE_NOT_SAVED"); }
       const value=accountProfileSchema.parse(await response.json());
       if(generation!==epoch.current) return false;
@@ -77,7 +79,7 @@ export function LocaleProvider({ children }: { children: React.ReactNode }) {
       if(command.action==="locale") setLocalLocale(value.locale ?? resolveInitialLocale({browserLanguages:navigator.languages}));
       return true;
     } catch { if(generation===epoch.current) setProfileError(true); return false; }
-    finally { saving.current=false; setProfileSaving(false); }
+    finally { if(generation===epoch.current) {saving.current=false; setProfileSaving(false);} }
   }
   function changeLocale(value:Locale) {
     if(saving.current) return;

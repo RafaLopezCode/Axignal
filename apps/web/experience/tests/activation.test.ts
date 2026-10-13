@@ -28,9 +28,10 @@ test("an invitation can be pasted as its link or as its token; nothing else is a
   for (const bad of ["", "short", "https://axignal.com/signup", "javascript:alert(1)", `#pilot=${token}<script>`]) assert.equal(inviteTokenFrom(bad), null, bad);
 });
 
-test("the payment provider's return is read, and only its two outcomes", () => {
+test("the payment provider's return is read, without treating a portal return as payment confirmation", () => {
   assert.equal(billingReturn(new URLSearchParams("billing=complete")), "complete");
   assert.equal(billingReturn(new URLSearchParams("billing=cancelled")), "cancelled");
+  assert.equal(billingReturn(new URLSearchParams("billing=return")), "return");
   assert.equal(billingReturn(new URLSearchParams("billing=paid")), null);
   assert.equal(billingReturn(new URLSearchParams("")), null);
 });

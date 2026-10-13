@@ -767,3 +767,25 @@ def test_principal_profile_requires_session_is_private_and_survives_restart(tmp_
     facade.identity.logout(a)
     assert facade.handle("GET", "/subscriber/profile", headers(a)).status == 401
     assert facade.handle("GET", "/subscriber/profile", headers(b)).status == 200
+
+
+def test_portal_return_opens_account_settings_without_an_organization(tmp_path: Path) -> None:
+    catalogue = ConfiguredOfferCatalogueReader(
+        ApprovedOfferCatalogue(
+            "account-return",
+            "v1",
+            ApprovedRecurringOffer(
+                "base-offer", RecurringTerms("month", 1, "EUR", 995, tax_behavior="exclusive")
+            ),
+            ApprovedRecurringOffer(
+                "additional-offer", RecurringTerms("month", 1, "EUR", 495, tax_behavior="exclusive")
+            ),
+        ),
+        "test",
+    )
+    # Existing subscriber self-service survives disabled new sales and absent tax readiness.
+    facade = _build(tmp_path, checkout_configured=True, offer_catalogue_reader=catalogue)
+    assert facade.management is not None
+    parsed = urlsplit(facade.management.return_url)
+    assert parsed.path == "/account"
+    assert parse_qs(parsed.query) == {"billing": ["return"], "screen": ["account"]}
