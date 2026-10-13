@@ -1,0 +1,232 @@
+[
+  {
+    "id": "what-axignal-does",
+    "cluster": "about-axignal",
+    "intent": "Understand what AXIGNAL is and does: evidence-based business and economic intelligence",
+    "type": "knowledge",
+    "locales": {
+      "en": {
+        "slug": "what-axignal-does",
+        "title": "What AXIGNAL does: business intelligence from public evidence",
+        "description": "AXIGNAL is business and economic intelligence built from public evidence: it observes organizations over time and explains what changes, with source and date.",
+        "lead": "AXIGNAL is a business and economic intelligence service. It observes the organizations you choose from the outside, in public sources, and keeps what it finds in time, so you can understand them and see what changes.",
+        "answer": "In short: you add an organization, and AXIGNAL keeps observing it. It reads its own website, official registers, public procurement, press, regulation, job boards and how search and AI assistants represent it. Every finding carries its source, its date and its state: observed, declared by the organization itself, potential or still unknown. The reading is organized in ten families and is kept over time, so changes appear with a date.",
+        "sections": [
+          {
+            "heading": "Ten families, one organization",
+            "body": "AXIGNAL organizes what it observes about an organization into ten families: presence (website, search and AI visibility), reputation (press and public attention), value (what it offers and its credentials), markets (where it operates or hires), relationships (clients, partners, suppliers and competitors shown in public evidence), demand (public calls that match what it does), activity (hiring, publications, changes), economics (official figures when available), organization (identity and group) and context (sector news and regulation). Each family says how much could be observed, from strong to unknown, without turning it into a single score."
+          },
+          {
+            "heading": "Evidence before conclusions",
+            "body": "AXIGNAL separates what it saw from what it infers. A public contract award is observed; a matching public call is a potential opportunity, not a customer; a claim on the organization's own website is declared, not independently confirmed. When something cannot be established, AXIGNAL says it is unknown, and unknown never means false. Crossings between families are explained rules that point back to the findings that support them."
+          },
+          {
+            "heading": "Change over time",
+            "body": "An observation repeated by the same instrument can be compared. AXIGNAL keeps a history per family, so it can tell what appeared, what disappeared and what moved, and when. That memory is what makes evolution or regression visible, and it grows the longer an organization is observed."
+          },
+          {
+            "heading": "For people and for their AI assistants",
+            "body": "You read AXIGNAL in its observatory, and your own AI assistant can read the same organizations through AXIGNAL's read-only MCP connection, limited to your account's data. AXIGNAL does not write anything about the organizations it observes, does not sell positions and is not configured by them."
+          }
+        ],
+        "example": "A consultancy adds a client, two competitors and a supplier. A week later it sees that one competitor opened positions in Germany, that the client's website lost its structured data and that a new regulation touches their sector, each with its source and date.",
+        "limits": "AXIGNAL observes public sources it may read; it does not see the whole Internet, private information or intentions. Low observability does not mean a weak organization, and a potential opportunity is never a guaranteed customer.",
+        "cta": {
+          "label": "Start with your organization",
+          "href": "/signup"
+        },
+        "related": [
+          "commercial_external_observation",
+          "evidence-observed-vs-potential",
+          "commercial_persistent_vs_snapshot",
+          "mcp-and-persistent-context"
+        ]
+      },
+      "es": {
+        "slug": "que-hace-axignal",
+        "title": "Qué hace AXIGNAL: inteligencia empresarial con evidencia",
+        "description": "AXIGNAL es inteligencia empresarial y económica basada en evidencia pública: observa organizaciones en el tiempo y explica qué cambia, con fuente y fecha.",
+        "lead": "AXIGNAL es un servicio de inteligencia empresarial y económica. Observa desde fuera, en fuentes públicas, las organizaciones que eliges y conserva en el tiempo lo que encuentra, para que puedas entenderlas y ver qué cambia.",
+        "answer": "En resumen: añades una organización y AXIGNAL la sigue observando. Lee su propia web, registros oficiales, contratación pública, prensa, regulación, portales de empleo y cómo la representan los buscadores y los asistentes de IA. Cada hallazgo lleva su fuente, su fecha y su estado: observado, declarado por la propia organización, potencial o todavía desconocido. La lectura se ordena en diez familias y se conserva en el tiempo, de modo que los cambios aparecen con fecha.",
+        "sections": [
+          {
+            "heading": "Diez familias, una organización",
+            "body": "AXIGNAL ordena lo que observa de una organización en diez familias: presencia (web, visibilidad en buscadores y en IA), reputación (prensa y atención pública), valor (qué ofrece y sus credenciales), mercados (dónde opera o contrata), relaciones (clientes, socios, proveedores y competidores que muestra la evidencia pública), demanda (licitaciones que encajan con lo que hace), actividad (contratación, publicaciones, cambios), economía (cifras oficiales cuando existen), organización (identidad y grupo) y contexto (noticias del sector y regulación). Cada familia indica cuánto se ha podido observar, de sólido a desconocido, sin convertirlo en una nota única."
+          },
+          {
+            "heading": "Evidencia antes que conclusiones",
+            "body": "AXIGNAL separa lo que vio de lo que infiere. Una adjudicación pública es un hecho observado; una licitación que encaja es una oportunidad potencial, no un cliente; lo que afirma la web de la propia organización es declarado, no confirmado de forma independiente. Cuando algo no se puede establecer, AXIGNAL dice que es desconocido, y desconocido nunca significa falso. Los cruces entre familias son reglas explicadas que remiten a los hallazgos que las sostienen."
+          },
+          {
+            "heading": "El cambio en el tiempo",
+            "body": "Una observación repetida con el mismo instrumento se puede comparar. AXIGNAL guarda un historial por familia, así que puede decir qué apareció, qué desapareció y qué se movió, y cuándo. Esa memoria es la que hace visible la evolución o el retroceso, y crece cuanto más tiempo se observa una organización."
+          },
+          {
+            "heading": "Para personas y para sus asistentes de IA",
+            "body": "Lees AXIGNAL en su observatorio, y tu propio asistente de IA puede leer las mismas organizaciones mediante la conexión MCP de solo lectura de AXIGNAL, limitada a los datos de tu cuenta. AXIGNAL no escribe nada sobre las organizaciones que observa, no vende posiciones y no lo configuran ellas."
+          }
+        ],
+        "example": "Una consultora añade a un cliente, dos competidores y un proveedor. Una semana después ve que un competidor abrió vacantes en Alemania, que la web del cliente perdió sus datos estructurados y que una nueva norma afecta a su sector, cada cosa con su fuente y su fecha.",
+        "limits": "AXIGNAL observa fuentes públicas que puede leer; no ve todo Internet, ni información privada, ni intenciones. Una observabilidad baja no significa una organización débil, y una oportunidad potencial nunca es un cliente garantizado.",
+        "cta": {
+          "label": "Empieza con tu organización",
+          "href": "/signup"
+        },
+        "related": [
+          "commercial_external_observation",
+          "evidence-observed-vs-potential",
+          "commercial_persistent_vs_snapshot",
+          "mcp-and-persistent-context"
+        ]
+      },
+      "fr": {
+        "slug": "ce-que-fait-axignal",
+        "title": "Ce que fait AXIGNAL : intelligence économique fondée sur des preuves",
+        "description": "AXIGNAL, intelligence économique fondée sur des preuves publiques : il observe des organisations dans le temps et explique ce qui change.",
+        "lead": "AXIGNAL est un service d’intelligence économique et d’entreprise. Il observe de l’extérieur, dans des sources publiques, les organisations que vous choisissez et conserve dans le temps ce qu’il trouve, pour que vous puissiez les comprendre et voir ce qui change.",
+        "answer": "En bref : vous ajoutez une organisation et AXIGNAL continue de l’observer. Il lit son propre site, les registres officiels, la commande publique, la presse, la réglementation, les sites d’emploi et la manière dont les moteurs de recherche et les assistants d’IA la représentent. Chaque constat porte sa source, sa date et son statut : observé, déclaré par l’organisation elle-même, potentiel ou encore inconnu. La lecture est organisée en dix familles et conservée dans le temps, de sorte que les changements apparaissent datés.",
+        "sections": [
+          {
+            "heading": "Dix familles, une organisation",
+            "body": "AXIGNAL organise ce qu’il observe d’une organisation en dix familles : présence (site, visibilité dans la recherche et l’IA), réputation (presse et attention publique), valeur (ce qu’elle propose et ses certifications), marchés (où elle opère ou recrute), relations (clients, partenaires, fournisseurs et concurrents visibles dans les preuves publiques), demande (appels d’offres correspondant à son activité), activité (recrutements, publications, changements), économie (chiffres officiels lorsqu’ils existent), organisation (identité et groupe) et contexte (actualité du secteur et réglementation). Chaque famille indique ce qui a pu être observé, de solide à inconnu, sans le réduire à une note unique."
+          },
+          {
+            "heading": "Les preuves avant les conclusions",
+            "body": "AXIGNAL distingue ce qu’il a vu de ce qu’il déduit. Une attribution de marché public est observée ; un appel d’offres correspondant est une opportunité potentielle, pas un client ; ce qu’affirme le site de l’organisation est déclaré, non confirmé de façon indépendante. Quand une chose ne peut pas être établie, AXIGNAL dit qu’elle est inconnue, et inconnu ne veut jamais dire faux. Les croisements entre familles sont des règles expliquées qui renvoient aux constats qui les soutiennent."
+          },
+          {
+            "heading": "Le changement dans le temps",
+            "body": "Une observation répétée avec le même instrument peut être comparée. AXIGNAL conserve un historique par famille : il peut dire ce qui est apparu, ce qui a disparu et ce qui a évolué, et quand. Cette mémoire rend visibles les progrès ou les reculs, et elle s’enrichit à mesure qu’une organisation est observée."
+          },
+          {
+            "heading": "Pour les personnes et pour leurs assistants d’IA",
+            "body": "Vous lisez AXIGNAL dans son observatoire, et votre propre assistant d’IA peut lire les mêmes organisations grâce à la connexion MCP en lecture seule d’AXIGNAL, limitée aux données de votre compte. AXIGNAL n’écrit rien sur les organisations qu’il observe, ne vend pas de positions et n’est pas configuré par elles."
+          }
+        ],
+        "example": "Un cabinet de conseil ajoute un client, deux concurrents et un fournisseur. Une semaine plus tard, il voit qu’un concurrent a ouvert des postes en Allemagne, que le site du client a perdu ses données structurées et qu’une nouvelle réglementation touche leur secteur, chaque point avec sa source et sa date.",
+        "limits": "AXIGNAL observe des sources publiques qu’il peut lire ; il ne voit ni tout Internet, ni les informations privées, ni les intentions. Une faible observabilité ne signifie pas une organisation faible, et une opportunité potentielle n’est jamais un client garanti.",
+        "cta": {
+          "label": "Commencer avec votre organisation",
+          "href": "/signup"
+        },
+        "related": [
+          "commercial_external_observation",
+          "evidence-observed-vs-potential",
+          "commercial_persistent_vs_snapshot",
+          "mcp-and-persistent-context"
+        ]
+      },
+      "de": {
+        "slug": "was-axignal-macht",
+        "title": "Was AXIGNAL macht: Wirtschaftsintelligenz aus öffentlichen Belegen",
+        "description": "AXIGNAL ist Unternehmens- und Wirtschaftsintelligenz aus öffentlichen Belegen: Es beobachtet Organisationen über die Zeit und erklärt Veränderungen mit Quelle und Datum.",
+        "lead": "AXIGNAL ist ein Dienst für Unternehmens- und Wirtschaftsintelligenz. Es beobachtet die Organisationen, die du auswählst, von außen in öffentlichen Quellen und bewahrt das Gefundene über die Zeit, damit du sie verstehst und siehst, was sich ändert.",
+        "answer": "Kurz gesagt: Du fügst eine Organisation hinzu, und AXIGNAL beobachtet sie weiter. Es liest ihre eigene Website, amtliche Register, öffentliche Ausschreibungen, Presse, Regulierung, Stellenportale und wie Suchmaschinen und KI-Assistenten sie darstellen. Jeder Befund trägt Quelle, Datum und Status: beobachtet, von der Organisation selbst angegeben, potenziell oder noch unbekannt. Die Lesung ist in zehn Familien gegliedert und bleibt über die Zeit erhalten, sodass Veränderungen mit Datum erscheinen.",
+        "sections": [
+          {
+            "heading": "Zehn Familien, eine Organisation",
+            "body": "AXIGNAL ordnet, was es über eine Organisation beobachtet, in zehn Familien: Präsenz (Website, Sichtbarkeit in Suche und KI), Reputation (Presse und öffentliche Aufmerksamkeit), Wert (Angebot und Zertifizierungen), Märkte (wo sie tätig ist oder einstellt), Beziehungen (Kunden, Partner, Lieferanten und Wettbewerber in öffentlichen Belegen), Nachfrage (passende öffentliche Ausschreibungen), Aktivität (Einstellungen, Veröffentlichungen, Veränderungen), Wirtschaft (amtliche Zahlen, wenn vorhanden), Organisation (Identität und Gruppe) und Kontext (Branchennachrichten und Regulierung). Jede Familie zeigt, wie viel beobachtet werden konnte, von solide bis unbekannt, ohne es zu einer einzigen Note zu machen."
+          },
+          {
+            "heading": "Belege vor Schlussfolgerungen",
+            "body": "AXIGNAL trennt, was es gesehen hat, von dem, was es ableitet. Ein öffentlicher Zuschlag ist beobachtet; eine passende Ausschreibung ist eine potenzielle Chance, kein Kunde; eine Aussage auf der eigenen Website der Organisation ist angegeben, nicht unabhängig bestätigt. Wenn sich etwas nicht feststellen lässt, sagt AXIGNAL, dass es unbekannt ist, und unbekannt bedeutet nie falsch. Verknüpfungen zwischen Familien sind erklärte Regeln, die auf die stützenden Befunde verweisen."
+          },
+          {
+            "heading": "Veränderung über die Zeit",
+            "body": "Eine mit demselben Instrument wiederholte Beobachtung ist vergleichbar. AXIGNAL führt eine Historie pro Familie und kann sagen, was erschienen ist, was verschwunden ist und was sich bewegt hat, und wann. Dieses Gedächtnis macht Fortschritt oder Rückschritt sichtbar und wächst, je länger eine Organisation beobachtet wird."
+          },
+          {
+            "heading": "Für Menschen und ihre KI-Assistenten",
+            "body": "Du liest AXIGNAL in seinem Observatorium, und dein eigener KI-Assistent kann dieselben Organisationen über die schreibgeschützte MCP-Verbindung von AXIGNAL lesen, beschränkt auf die Daten deines Kontos. AXIGNAL schreibt nichts über die beobachteten Organisationen, verkauft keine Platzierungen und wird nicht von ihnen konfiguriert."
+          }
+        ],
+        "example": "Eine Beratung fügt einen Kunden, zwei Wettbewerber und einen Lieferanten hinzu. Eine Woche später sieht sie, dass ein Wettbewerber Stellen in Deutschland ausgeschrieben hat, dass die Website des Kunden ihre strukturierten Daten verloren hat und dass eine neue Vorschrift ihre Branche betrifft, jeweils mit Quelle und Datum.",
+        "limits": "AXIGNAL beobachtet öffentliche Quellen, die es lesen darf; es sieht weder das ganze Internet noch private Informationen oder Absichten. Geringe Beobachtbarkeit bedeutet keine schwache Organisation, und eine potenzielle Chance ist nie ein garantierter Kunde.",
+        "cta": {
+          "label": "Mit deiner Organisation beginnen",
+          "href": "/signup"
+        },
+        "related": [
+          "commercial_external_observation",
+          "evidence-observed-vs-potential",
+          "commercial_persistent_vs_snapshot",
+          "mcp-and-persistent-context"
+        ]
+      },
+      "it": {
+        "slug": "cosa-fa-axignal",
+        "title": "Cosa fa AXIGNAL: intelligence economica basata su prove",
+        "description": "AXIGNAL è intelligence aziendale ed economica basata su prove pubbliche: osserva le organizzazioni nel tempo e spiega cosa cambia, con fonte e data.",
+        "lead": "AXIGNAL è un servizio di intelligence aziendale ed economica. Osserva dall’esterno, in fonti pubbliche, le organizzazioni che scegli e conserva nel tempo ciò che trova, perché tu possa capirle e vedere cosa cambia.",
+        "answer": "In breve: aggiungi un’organizzazione e AXIGNAL continua a osservarla. Legge il suo sito, i registri ufficiali, gli appalti pubblici, la stampa, la regolamentazione, i portali di lavoro e il modo in cui i motori di ricerca e gli assistenti di IA la rappresentano. Ogni risultato riporta fonte, data e stato: osservato, dichiarato dall’organizzazione stessa, potenziale o ancora sconosciuto. La lettura è organizzata in dieci famiglie e conservata nel tempo, così i cambiamenti appaiono con una data.",
+        "sections": [
+          {
+            "heading": "Dieci famiglie, un’organizzazione",
+            "body": "AXIGNAL organizza ciò che osserva di un’organizzazione in dieci famiglie: presenza (sito, visibilità nella ricerca e nell’IA), reputazione (stampa e attenzione pubblica), valore (cosa offre e le sue certificazioni), mercati (dove opera o assume), relazioni (clienti, partner, fornitori e concorrenti visibili nelle prove pubbliche), domanda (gare pubbliche coerenti con ciò che fa), attività (assunzioni, pubblicazioni, cambiamenti), economia (dati ufficiali quando esistono), organizzazione (identità e gruppo) e contesto (notizie di settore e regolamentazione). Ogni famiglia indica quanto è stato possibile osservare, da solido a sconosciuto, senza ridurlo a un punteggio unico."
+          },
+          {
+            "heading": "Prove prima delle conclusioni",
+            "body": "AXIGNAL separa ciò che ha visto da ciò che deduce. Un’aggiudicazione pubblica è osservata; una gara coerente è un’opportunità potenziale, non un cliente; ciò che afferma il sito dell’organizzazione è dichiarato, non confermato in modo indipendente. Quando qualcosa non può essere stabilito, AXIGNAL dice che è sconosciuto, e sconosciuto non significa mai falso. Gli incroci tra famiglie sono regole spiegate che rimandano ai risultati che le sostengono."
+          },
+          {
+            "heading": "Il cambiamento nel tempo",
+            "body": "Un’osservazione ripetuta con lo stesso strumento si può confrontare. AXIGNAL conserva una cronologia per famiglia e può dire cosa è apparso, cosa è scomparso e cosa si è mosso, e quando. Questa memoria rende visibili progressi e regressioni, e cresce quanto più a lungo un’organizzazione viene osservata."
+          },
+          {
+            "heading": "Per le persone e per i loro assistenti di IA",
+            "body": "Leggi AXIGNAL nel suo osservatorio, e il tuo assistente di IA può leggere le stesse organizzazioni tramite la connessione MCP in sola lettura di AXIGNAL, limitata ai dati del tuo account. AXIGNAL non scrive nulla sulle organizzazioni che osserva, non vende posizioni e non è configurato da loro."
+          }
+        ],
+        "example": "Una società di consulenza aggiunge un cliente, due concorrenti e un fornitore. Una settimana dopo vede che un concorrente ha aperto posizioni in Germania, che il sito del cliente ha perso i dati strutturati e che una nuova norma riguarda il loro settore, ognuno con fonte e data.",
+        "limits": "AXIGNAL osserva fonti pubbliche che può leggere; non vede tutto Internet, né informazioni private, né intenzioni. Una bassa osservabilità non significa un’organizzazione debole, e un’opportunità potenziale non è mai un cliente garantito.",
+        "cta": {
+          "label": "Inizia con la tua organizzazione",
+          "href": "/signup"
+        },
+        "related": [
+          "commercial_external_observation",
+          "evidence-observed-vs-potential",
+          "commercial_persistent_vs_snapshot",
+          "mcp-and-persistent-context"
+        ]
+      },
+      "pt": {
+        "slug": "o-que-faz-a-axignal",
+        "title": "O que faz a AXIGNAL: inteligência empresarial com evidência",
+        "description": "A AXIGNAL é inteligência empresarial e económica baseada em evidência pública: observa organizações ao longo do tempo e explica o que muda, com fonte e data.",
+        "lead": "A AXIGNAL é um serviço de inteligência empresarial e económica. Observa a partir de fora, em fontes públicas, as organizações que escolhe e conserva ao longo do tempo o que encontra, para que as possa compreender e ver o que muda.",
+        "answer": "Em resumo: adiciona uma organização e a AXIGNAL continua a observá-la. Lê o seu próprio site, registos oficiais, contratação pública, imprensa, regulação, portais de emprego e a forma como os motores de pesquisa e os assistentes de IA a representam. Cada descoberta tem a sua fonte, a sua data e o seu estado: observado, declarado pela própria organização, potencial ou ainda desconhecido. A leitura organiza-se em dez famílias e mantém-se no tempo, de modo que as mudanças aparecem com data.",
+        "sections": [
+          {
+            "heading": "Dez famílias, uma organização",
+            "body": "A AXIGNAL organiza o que observa de uma organização em dez famílias: presença (site, visibilidade na pesquisa e na IA), reputação (imprensa e atenção pública), valor (o que oferece e as suas certificações), mercados (onde opera ou contrata), relações (clientes, parceiros, fornecedores e concorrentes visíveis na evidência pública), procura (concursos públicos que correspondem ao que faz), atividade (contratações, publicações, mudanças), economia (números oficiais quando existem), organização (identidade e grupo) e contexto (notícias do setor e regulação). Cada família indica quanto foi possível observar, de sólido a desconhecido, sem o transformar numa nota única."
+          },
+          {
+            "heading": "Evidência antes das conclusões",
+            "body": "A AXIGNAL separa o que viu do que infere. Uma adjudicação pública é observada; um concurso que corresponde é uma oportunidade potencial, não um cliente; o que afirma o site da própria organização é declarado, não confirmado de forma independente. Quando algo não se pode estabelecer, a AXIGNAL diz que é desconhecido, e desconhecido nunca significa falso. Os cruzamentos entre famílias são regras explicadas que remetem para as descobertas que as sustentam."
+          },
+          {
+            "heading": "A mudança ao longo do tempo",
+            "body": "Uma observação repetida com o mesmo instrumento pode ser comparada. A AXIGNAL guarda um histórico por família e consegue dizer o que apareceu, o que desapareceu e o que se moveu, e quando. Essa memória torna visível a evolução ou o retrocesso, e cresce quanto mais tempo uma organização é observada."
+          },
+          {
+            "heading": "Para pessoas e para os seus assistentes de IA",
+            "body": "Lê a AXIGNAL no seu observatório, e o seu próprio assistente de IA pode ler as mesmas organizações através da ligação MCP só de leitura da AXIGNAL, limitada aos dados da sua conta. A AXIGNAL não escreve nada sobre as organizações que observa, não vende posições e não é configurada por elas."
+          }
+        ],
+        "example": "Uma consultora adiciona um cliente, dois concorrentes e um fornecedor. Uma semana depois vê que um concorrente abriu vagas na Alemanha, que o site do cliente perdeu os dados estruturados e que uma nova norma afeta o seu setor, cada coisa com a sua fonte e data.",
+        "limits": "A AXIGNAL observa fontes públicas que pode ler; não vê toda a Internet, nem informação privada, nem intenções. Uma observabilidade baixa não significa uma organização fraca, e uma oportunidade potencial nunca é um cliente garantido.",
+        "cta": {
+          "label": "Começar com a sua organização",
+          "href": "/signup"
+        },
+        "related": [
+          "commercial_external_observation",
+          "evidence-observed-vs-potential",
+          "commercial_persistent_vs_snapshot",
+          "mcp-and-persistent-context"
+        ]
+      }
+    }
+  }
+]
