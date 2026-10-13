@@ -73,7 +73,7 @@ from application.observation_intelligence.contracts import (
     MarketScope,
     TaxonomyCode,
 )
-from application.own_site import own_site_discoveries
+from application.own_site import OWN_SITE_VERSION, own_site_discoveries
 from application.semantic_layer.cascade import SemanticCascade
 from domain.xignal import XignalEpistemicState
 
@@ -713,7 +713,8 @@ class FirstObservationService:
                 home.url,
                 home.description or home.title or None,
                 home.observed_at,
-                {"pagesRead": len(reading.pages)},
+                # Which own-site reader ran: its signals are comparable in time only then.
+                {"pagesRead": len(reading.pages), "ownSiteVersion": OWN_SITE_VERSION},
             )
         ]
         languages = sorted({x for x in (home.language, *home.alternate_languages) if x})
