@@ -154,14 +154,63 @@ class SqliteWorldDemandIndex:
         return tuple(_decode_award(json.loads(row["payload"])) for row in rows)
 
     def awards_coverage(self, country: str) -> tuple[date | None, int]:
-        """The earliest award date held for a country and how many awards are held."""
+        """Since when awards are held for a country, and how many.
+
+        After an archive backfill, coverage starts with the first month read in full (older
+        award dates in it are updates of old tenders, not a complete history).
+        """
         with self._connect() as db:
             row = db.execute(
                 "SELECT MIN(awarded_on) AS since, COUNT(*) AS held FROM wd_awards WHERE country=?",
                 (country,),
             ).fetchone()
+            backfilled = None
+            if db.execute(
+                "SELECT 1 FROM sqlite_master WHERE type='table' AND name='wd_awards_backfill'"
+            ).fetchone():
+                backfilled = db.execute(
+                    "SELECT MIN(month) FROM wd_awards_backfill WHERE state='DONE'"
+                ).fetchone()[0]
         since = None if row is None or row["since"] is None else date.fromisoformat(row["since"])
+        if backfilled:
+            since = date(int(backfilled[:4]), int(backfilled[4:6]), 1)
         return since, 0 if row is None else int(row["held"])
+
+    def awards_of_lots(
+        self, lots: Sequence[tuple[str, str, str]], *, limit: int = 2000
+    ) -> tuple[AwardRecord, ...]:
+        """Every award of these contract lots (all their winners)."""
+        if not lots:
+            return ()
+        out: list[AwardRecord] = []
+        with self._connect() as db:
+            for source, record, lot in list(dict.fromkeys(lots))[:400]:
+                prefix = f"{source}|{record}|{lot}|"
+                rows = db.execute(
+                    "SELECT payload FROM wd_awards WHERE award_key >= ? AND award_key < ?",
+                    (prefix, prefix + "\uffff"),
+                ).fetchall()
+                out += [_decode_award(json.loads(r["payload"])) for r in rows]
+                if len(out) >= limit:
+                    break
+        return tuple(out)
+
+    def joint_venture_awards(
+        self, names: Sequence[str], *, limit: int = 300
+    ) -> tuple[AwardRecord, ...]:
+        """Awards to joint ventures (UTE) whose name contains one of these names."""
+        norms = [n for n in (normalized_name(x) for x in names) if len(n) >= 4]
+        if not norms:
+            return ()
+        clause = " OR ".join("winner_name_norm LIKE ?" for _ in norms)
+        with self._connect() as db:
+            rows = db.execute(
+                f"SELECT payload FROM wd_awards WHERE (winner_name_norm LIKE 'ute %' "
+                f"OR winner_name_norm LIKE '% ute %' OR winner_name_norm LIKE 'union temporal%') "
+                f"AND ({clause}) ORDER BY awarded_on DESC LIMIT ?",
+                (*[f"%{n}%" for n in norms], limit),
+            ).fetchall()
+        return tuple(_decode_award(json.loads(r["payload"])) for r in rows)
 
     def __init__(self, database_path: str | Path) -> None:
         self._path = Path(database_path)

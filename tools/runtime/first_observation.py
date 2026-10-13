@@ -16,6 +16,7 @@ import argparse
 import hashlib
 import json
 import threading
+import time
 from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass
 from datetime import UTC, datetime, timedelta
@@ -417,6 +418,8 @@ class FirstObservationRuntime:
         self._start_lock = threading.Lock()
         self._tenant_daily_jobs = tenant_daily_jobs
         self.marketing_pool: Any = None
+        self.awards_backfill: Any = None
+        self._backfill_thread: threading.Thread | None = None
 
     # ---- attention (synchronous, cheap) ---------------------------------------------
     def remember_locator(self, locator: str | None) -> None:
@@ -740,6 +743,20 @@ class FirstObservationRuntime:
                 target=self._loop, name="first-observation", daemon=True
             )
             self._thread.start()
+            if self.awards_backfill is not None and self._backfill_thread is None:
+                # Heavy, slow and independent: its own thread, never in the observation loop.
+                self._backfill_thread = threading.Thread(
+                    target=self._backfill_loop, name="awards-backfill", daemon=True
+                )
+                self._backfill_thread.start()
+
+    def _backfill_loop(self) -> None:
+        while True:
+            try:
+                done = self.awards_backfill.run_one()
+            except Exception:  # never stops the runtime; the month is retried later
+                done = 0
+            time.sleep(3600 if done is None else 600)
 
     def _loop(self) -> None:
         while True:
@@ -1213,6 +1230,7 @@ def build_first_observation(
         dict(overrides.feeds) if overrides.feeds is not None else {"ted-search-v3": live_ted}
     )
     index = SqliteWorldDemandIndex(root / "world-demand-index.sqlite3")
+    placsp_index: SqliteWorldDemandIndex | None = None
     # Index first (world slices ingested once), the live adapter only for what no
     # fresh complete slice covers; the uncovered slice is demanded for ingestion.
     ports: dict[str, SourceObservationPort] = {
@@ -1234,6 +1252,7 @@ def build_first_observation(
         feeds[PLACSP_SOURCE_ID] = PlacspFeedAdapter(
             UrllibPlacspTransport(), clock=clock.now, awards_sink=index.upsert_awards
         )
+        placsp_index = index
         ports[PLACSP_SOURCE_ID] = DemandIndexPort(index, None, clock=clock.now)
         index.demand(
             DemandSlice(
@@ -1325,6 +1344,20 @@ def build_first_observation(
         if isinstance(observation_memory, SqliteObservationMemory)
         else None,
     )
+    if placsp_index is not None:
+        try:
+            months = int(values.get("AXIGNAL_AWARDS_BACKFILL_MONTHS", "12"))
+        except ValueError:
+            months = 12
+        if months > 0:
+            from pipeline.observation_intelligence.placsp_archive import PlacspAwardsBackfill
+
+            runtime.awards_backfill = PlacspAwardsBackfill(
+                placsp_index.upsert_awards,
+                root / "world-demand-index.sqlite3",
+                root / "tmp" / "placsp-archives",
+                months=min(months, 36),
+            )
     if overrides.source_ports is None and overrides.feeds is None:
         from tools.runtime.marketing_pool import build_marketing_pool
 

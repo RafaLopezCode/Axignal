@@ -135,6 +135,11 @@ export function discoveryCopy(d: Discovery, t: Translate, locale = "en"): { find
         ? t("Del registro mundial de entidades (GLEIF), con su identificador verificado.", "From the global entity registry (GLEIF), with its verified identifier.")
         : t("Del registro mundial de entidades (GLEIF), a partir del identificador que declara su web; la atribución sigue siendo potencial.", "From the global entity registry (GLEIF), using the identifier its website declares; the attribution stays potential.") };
   }
+  if (d.kind === "RELATIONSHIP" && d.code === "PUBLIC_CONTRACT_PARTNER") return {
+    finding: t("Socio en contratos públicos: {name}", "Partner in public contracts: {name}").replace("{name}", d.statement),
+    why: d.detail.how === "SAME_LOT_JOINT_AWARD"
+      ? t("Adjudicatario del mismo lote que esta organización. Es una colaboración pasada documentada, no una alianza actual.", "Awarded the same lot as this organization. A documented past collaboration, not a current alliance.")
+      : t("Aparece con esta organización en el nombre de una unión temporal de empresas (UTE). Leído del nombre: la colaboración sigue siendo potencial.", "Appears with this organization in the name of a joint venture (UTE). Read from the name: the collaboration stays potential.") };
   if (d.kind === "RELATIONSHIP") {
     const n = Number(d.detail.contracts ?? 0);
     return { finding: t("Cliente público: {buyer} · {n} contratos ganados", "Public client: {buyer} · {n} contracts won").replace("{buyer}", d.statement).replace("{n}", String(n)),
@@ -179,6 +184,16 @@ export function discoveryCopy(d: Discovery, t: Translate, locale = "en"): { find
         .replace("{register}", String(d.detail.source ?? "")).replace("{identifier}", String(d.detail.identifier ?? "")) };
     return { finding: `${label}: ${value}${year}`,
       why: t("Según Wikidata, una fuente comunitaria: no es una cuenta oficial y puede estar desactualizada.", "According to Wikidata, a community source: it is not an official account and may be outdated.") };
+  }
+  if (d.kind === "DEMAND" && d.code === "RECURRING_PUBLIC_BUYER") {
+    const n = Number(d.detail.contracts ?? 0);
+    const amount = typeof d.detail.amount === "number" && d.detail.amount > 0
+      ? ` · ${d.detail.amount.toLocaleString(locale, { maximumFractionDigits: 0 })} ${typeof d.detail.currency === "string" ? d.detail.currency : ""}` : "";
+    const offers = typeof d.detail.medianOffers === "number" ? t("suele recibir {n} ofertas", "usually receives {n} offers").replace("{n}", String(d.detail.medianOffers)) : null;
+    const winners = typeof d.detail.distinctWinners === "number" ? t("{n} adjudicatarios distintos", "{n} different winners").replace("{n}", String(d.detail.distinctWinners)) : null;
+    return { finding: t("Comprador público recurrente: {buyer} · {n} contratos en su actividad", "Recurrent public buyer: {buyer} · {n} contracts in its activity").replace("{buyer}", d.statement).replace("{n}", String(n)) + amount,
+      why: [offers, winners].filter(Boolean).join(" · ") + (offers || winners ? ". " : "")
+        + t("Compra lo que esta organización hace y aún no le ha adjudicado nada. Es una oportunidad potencial, no un cliente ni una probabilidad de ganar.", "It buys what this organization does and has not awarded it anything yet. A potential opportunity, not a client nor a probability of winning.") };
   }
   if (d.kind === "DEMAND") {
     const deadline = typeof d.detail.deadline === "string" ? d.detail.deadline.slice(0, 10) : null;
