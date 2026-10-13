@@ -27,7 +27,8 @@ export default async function Page({ params }: { params: Promise<{ token: string
       <img className="pool-reading-observer" src="/email/observer-laptop-480.png" width={240} height={272} alt="" />
     </section>
     <ol className="pool-reading-findings">
-      {reading.findings.map(f => <li key={f.kind + f.code} data-state={f.state}>
+      {reading.findings.map((f, i) => <li key={f.kind + f.code} data-state={f.state}
+        id={reading.findings.findIndex(x => x.family === f.family) === i ? f.family : undefined}>
         <p className="pool-reading-family">{copy.families[f.family as keyof typeof copy.families] ?? f.family}</p>
         <p className="pool-reading-statement">{f.statement}</p>
         <p className="pool-reading-source">{copy.states[f.state] ?? f.state}{f.source && host(f.source) ? <> · {copy.source}: <a href={f.source} rel="noreferrer noopener nofollow" target="_blank">{host(f.source)}</a></> : null}</p>

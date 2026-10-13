@@ -12,6 +12,8 @@ from collections.abc import Mapping, Sequence
 from html import escape
 from urllib.parse import urlsplit
 
+from application.marketing_pool.playbooks import copy
+
 INK = "#141a2b"
 TEXT = "#2b3140"
 MUTED = "#687078"
@@ -126,7 +128,7 @@ def _finding(item: Mapping[str, object], labels: Mapping[str, str]) -> str:
         f'<div style="font-family:{SANS};font-size:11px;letter-spacing:1.4px;'
         f'text-transform:uppercase;color:{accent};font-weight:bold;">{escape(family)}</div>'
         f'<div style="font-family:{SANS};font-size:15px;line-height:1.5;color:{INK};'
-        f'padding-top:4px;">{escape(str(item.get("statement") or ""))}</div>'
+        f'padding-top:4px;">{escape(str(item.get("text") or item.get("statement") or ""))}</div>'
         f'<div style="font-family:{SANS};font-size:12px;color:{MUTED};padding-top:6px;">'
         f"{meta}</div></td></tr></table></td></tr>"
     )
@@ -147,6 +149,7 @@ def render_html(
     legal_text: str,
     sender_role: str | None = None,
     asset_origin: str,
+    segment: str | None = None,
 ) -> str:
     labels = _labels(language)
     origin = asset_origin.rstrip("/")
@@ -159,11 +162,27 @@ def render_html(
         if greeting
         else ""
     )
-    paragraphs = opening + "".join(
-        f'<p style="margin:0 0 16px 0;font-family:{SANS};font-size:16px;line-height:1.6;'
-        f'color:{TEXT};">{escape(p).replace(chr(10), "<br>")}</p>'
-        for p in _paragraphs(body)
+    blocks = _paragraphs(body)
+    # A playbook letter opens with its hook: set apart, like the finding it is.
+    lead = (
+        f'<p style="margin:0 0 18px 0;padding:2px 0 2px 16px;border-left:3px solid {BLUE};'
+        f'font-family:{SERIF};font-size:19px;line-height:1.45;color:{INK};">'
+        f"{escape(blocks[0]).replace(chr(10), '<br>')}</p>"
+        if segment and blocks
+        else ""
     )
+    rest = blocks[1:] if lead else blocks
+    paragraphs = (
+        opening
+        + lead
+        + "".join(
+            f'<p style="margin:0 0 16px 0;font-family:{SANS};font-size:16px;line-height:1.6;'
+            f'color:{TEXT};">{escape(p).replace(chr(10), "<br>")}</p>'
+            for p in rest
+        )
+    )
+    section = (copy(segment, "section", language) if segment else None) or labels["section"]
+    cta = (copy(segment, "cta", language) if segment else None) or labels["cta"]
     cards = "".join(_finding(item, labels) for item in findings[:4])
     role = signature_role(language, sender_role)
     role_html = f'<br><span style="color:{MUTED};">{escape(role)}</span>' if role else ""
@@ -220,7 +239,7 @@ a {{ color:{BLUE}; }}
 <tr><td class="pad" style="padding:18px 36px 4px 36px;">{paragraphs}</td></tr>
 <tr><td class="pad" style="padding:4px 36px 8px 36px;">
   <div style="font-family:{SANS};font-size:11px;letter-spacing:1.6px;text-transform:uppercase;
-   color:{MUTED};padding:0 0 12px 0;">{escape(labels["section"])}</div>
+   color:{MUTED};padding:0 0 12px 0;">{escape(section)}</div>
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0">{cards}</table>
 </td></tr>
 <tr><td class="pad" style="padding:12px 36px 8px 36px;">
@@ -228,7 +247,7 @@ a {{ color:{BLUE}; }}
     <td style="background:{BLUE};border-radius:999px;">
       <a href="{escape(reading_url, quote=True)}" style="display:inline-block;padding:13px 26px;
        font-family:{SANS};font-size:15px;font-weight:bold;color:#ffffff;text-decoration:none;">
-       {escape(labels["cta"])} &rarr;</a>
+       {escape(cta)} &rarr;</a>
     </td>
   </tr></table>
 </td></tr>
