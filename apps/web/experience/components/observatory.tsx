@@ -28,6 +28,8 @@ import { SubscriberRepresentation } from "./subscriber-representation";
 import { SubscriberMcpConnections } from "./subscriber-mcp-connections";
 import { IdentityCheck } from "./identity-check";
 import { websiteOf } from "@/lib/identity";
+import { SubscriberAccountSettings } from "./subscriber-account-settings";
+import { DismissibleNotice } from "./dismissible-notice";
 import { RuntimeAxent, useRuntimeAxent } from "./runtime-axent";
 import type { ObservatoryCapabilities } from "@/lib/observatory-source";
 import { WAITING_STATES, waitingItems, type ActivationPhase } from "@/lib/activation";
@@ -322,7 +324,7 @@ export function Observatory(props: ObservatoryProps) {
   if (access === "required") return <ObservatoryFrame><section className="obs-gate"><h1>{t("Tu identidad abre el acceso.", "Your identity opens access.")}</h1><p>{t("Accede para leer tu cartera privada y sus evidencias.", "Sign in to read your private portfolio and its evidence.")}</p><Link className="obs-button obs-primary" href="/login">{t("Acceder", "Sign in")}<ArrowRight size={16} aria-hidden="true"/></Link></section></ObservatoryFrame>;
   if (access === "failure" || !portfolio) return <ObservatoryFrame><section className="obs-gate" role="alert"><h1>{t("No pudimos leer tu contexto.", "We could not read your context.")}</h1><p>{t("Tu cartera sigue a salvo. Vuelve a comprobarlo en un momento.", "Your portfolio is safe. Check again in a moment.")}</p><button className="obs-button" onClick={props.refresh}><RefreshCw size={16} aria-hidden="true"/>{t("Volver a comprobar", "Check again")}</button></section></ObservatoryFrame>;
 
-  const toast = (props.message || props.paymentUrl) && <div className="obs-toast" role="status" aria-live="polite">{props.message && <p>{props.message}</p>}{props.paymentUrl && <a className="obs-button obs-primary" href={props.paymentUrl}>{t("Continuar al pago", "Continue to payment")}</a>}</div>;
+  const toast = (props.message || props.paymentUrl) && <DismissibleNotice key={props.message + (props.paymentUrl ?? "")} className="obs-toast">{props.message && <p>{props.message}</p>}{props.paymentUrl && <a className="obs-button obs-primary" href={props.paymentUrl}>{t("Continuar al pago", "Continue to payment")}</a>}</DismissibleNotice>;
   const activationView = activating && <ActivationView portfolio={portfolio} waiting={waiting} phase={activationPhase} busy={props.busy}
     onRedeemInvite={props.onRedeemInvite!} onCheckout={total => props.onCheckout?.(total)} onConfirmPayment={() => props.onConfirmPayment?.()}
     onOpenAccount={() => openScreen("account")}
@@ -943,6 +945,7 @@ function AccountView(props: ObservatoryProps) {
   return <section className="obs-account" aria-labelledby="account-title">
     <h1 id="account-title">{t("Cuenta y conexiones", "Account and connections")}</h1>
     <div className="obs-account-grid">
+      {props.canAct && props.capabilities.axent === "subscriber" && <SubscriberAccountSettings/>}
       <section className="obs-account-card" aria-labelledby="capacity-title">
         <h2 id="capacity-title">{t("Espacio para observar", "Room to observe")}</h2>
         <p>{portfolio.capacity === null || portfolio.capacityCurrentness !== "CURRENT" ? t("Capacidad sin confirmar", "Unconfirmed capacity") : fill(t("{used} de {total} organizaciones en uso", "{used} of {total} organizations in use"), { used, total: portfolio.capacity })} · {t("Las organizaciones pausadas conservan su espacio.", "Paused organizations retain their space.")}</p>

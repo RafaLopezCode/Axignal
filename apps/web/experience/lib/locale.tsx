@@ -1,5 +1,6 @@
 "use client";
-import { createContext, useContext, useEffect, useState } from "react";
+import { accountProfileSchema, type AccountProfile } from "./account-contracts";
+import { createContext, useContext, useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import {
   DEFAULT_LOCALE,
@@ -14,6 +15,13 @@ import { HOME_METADATA } from "./public-home-metadata";
 export type { Locale, Copy } from "./languages";
 
 const LocaleContext = createContext({
+  profile: null as AccountProfile | null,
+  profileLoading: false,
+  profileSaving: false,
+  profileError: false,
+  reloadProfile: async () => {},
+  saveProfile: async (_: {action:"locale";locale:Locale|null}|{action:"avatar";image:string}|{action:"remove_avatar"}) => false,
+  resetProfile: () => {},
   reducedMotion: false,
   setReducedMotion: (_: boolean) => {},
   locale: DEFAULT_LOCALE,
@@ -26,12 +34,57 @@ export function LocaleProvider({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   // A language in the URL (/es, /en/knowledge…) is known before hydration, so the server renders
   // that page in its own language; saved and browser preferences only refine routes without one.
-  const [locale, setLocale] = useState<Locale>(() => {
+  const [locale, setLocalLocale] = useState<Locale>(() => {
     const routeLocale = pathname?.split("/")[1];
     return isLocale(routeLocale) ? routeLocale : DEFAULT_LOCALE;
   });
   const [ready, setReady] = useState(false);
   const [reducedMotion, setReducedMotion] = useState(false);
+
+  const [profile, setProfile] = useState<AccountProfile | null>(null);
+  const [profileLoading, setProfileLoading] = useState(false);
+  const [profileSaving, setProfileSaving] = useState(false);
+  const [profileError, setProfileError] = useState(false);
+  const profileRef = useRef<AccountProfile | null>(null);
+  const epoch = useRef(0);
+  const choice = useRef(0);
+  const saving = useRef(false);
+  const resetProfile = () => { ++epoch.current; profileRef.current=null; setProfile(null); setProfileError(false); };
+  async function reloadProfile() {
+    const generation=epoch.current, selected=choice.current;
+    setProfileLoading(true);
+    try {
+      const response=await fetch("/api/subscriber/profile",{cache:"no-store"});
+      if (response.status === 401) { if(generation===epoch.current) resetProfile(); return; }
+      if (!response.ok) throw new Error("PROFILE_UNAVAILABLE");
+      const value=accountProfileSchema.parse(await response.json());
+      if(generation!==epoch.current) return;
+      profileRef.current=value; setProfile(value); setProfileError(false);
+      if (value.locale && selected===choice.current && !isLocale(pathname.split("/")[1])) setLocalLocale(value.locale);
+    } catch { if(generation===epoch.current) setProfileError(true); }
+    finally { setProfileLoading(false); }
+  }
+  async function saveProfile(command:{action:"locale";locale:Locale|null}|{action:"avatar";image:string}|{action:"remove_avatar"}):Promise<boolean> {
+    const current=profileRef.current, generation=epoch.current;
+    if (!current || saving.current) return false;
+    saving.current=true; setProfileSaving(true); setProfileError(false);
+    try {
+      const response=await fetch("/api/subscriber/profile",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({...command,version:current.version})});
+      if(!response.ok) { if(response.status===409) await reloadProfile(); throw new Error("PROFILE_NOT_SAVED"); }
+      const value=accountProfileSchema.parse(await response.json());
+      if(generation!==epoch.current) return false;
+      profileRef.current=value; setProfile(value);
+      if(command.action==="locale") setLocalLocale(value.locale ?? resolveInitialLocale({browserLanguages:navigator.languages}));
+      return true;
+    } catch { if(generation===epoch.current) setProfileError(true); return false; }
+    finally { saving.current=false; setProfileSaving(false); }
+  }
+  function changeLocale(value:Locale) {
+    if(saving.current) return;
+    ++choice.current; setLocalLocale(value);
+    if(profileRef.current) void saveProfile({action:"locale",locale:value});
+  }
+  useEffect(() => { if(pathname.startsWith("/account")) void reloadProfile(); },[pathname]);
 
   useEffect(() => {
     let savedLocale: string | null = null;
@@ -47,7 +100,7 @@ export function LocaleProvider({ children }: { children: React.ReactNode }) {
           ? navigator.languages
           : [navigator.language];
 
-    setLocale(
+    setLocalLocale(
       resolveInitialLocale({
         routeLocale,
         savedLocale,
@@ -99,7 +152,8 @@ export function LocaleProvider({ children }: { children: React.ReactNode }) {
         reducedMotion,
         setReducedMotion,
         locale,
-        setLocale,
+        setLocale: changeLocale,
+        profile, profileLoading, profileSaving, profileError, reloadProfile, saveProfile, resetProfile,
         t: (es, en) => translate(es, en, locale),
         copy: (c) => translate(c.es, c.en, locale),
       }}

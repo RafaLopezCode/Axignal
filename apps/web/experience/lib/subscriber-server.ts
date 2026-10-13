@@ -1,3 +1,4 @@
+import { accountProfileSchema, profileCommandSchema, billingManagementSchema, billingManagementCommandSchema, billingPortalSchema } from "./account-contracts";
 import { z } from "zod";
 import { createHash } from "node:crypto";
 import { authStartSchema, preparedAuthStart, preparedProviders } from "./public-contracts";
@@ -350,4 +351,22 @@ export function subscriberOutputRevision(output: z.infer<typeof subscriberOutput
   const revision = subscriberProjectionRevision(output.projection);
   const report = output.firstObservation?.publicUnderstanding;
   return report ? createHash("sha256").update(JSON.stringify([revision, report.reportId, report.currentness])).digest("hex") : revision;
+}
+
+
+/** Private account commands: browser fields never select Principal/Tenant/Customer. */
+export async function subscriberAccount(request: Request, resource: "profile" | "billing", write = false): Promise<Response> {
+  if (write && !subscriberSameOrigin(request)) return rejected("ORIGIN_REQUIRED",403);
+  const token=cookie(request,subscriberSessionCookie);
+  if (!token) return rejected("AUTHENTICATION_REQUIRED",401);
+  try {
+    const input=write ? (resource === "profile" ? profileCommandSchema : billingManagementCommandSchema).parse(await boundedSubscriberJson(request,resource === "profile" ? 196608 : 512)) : undefined;
+    const response=await upstream(resource === "profile" ? "/subscriber/profile" : "/subscriber/billing/management",token,input);
+    if (!response.ok) return rejected(response.status === 409 ? "PROFILE_CHANGED" : response.status === 401 ? "AUTHENTICATION_REQUIRED" : "ACCOUNT_OPERATION_UNAVAILABLE",response.status);
+    const payload=await checkedJson(response);
+    const schema=resource === "profile" ? accountProfileSchema : write ? billingPortalSchema : billingManagementSchema;
+    return Response.json(schema.parse(payload),{headers});
+  } catch(error) {
+    return rejected(error instanceof z.ZodError ? "INVALID_REQUEST_OR_RESPONSE" : "ACCOUNT_UNAVAILABLE",error instanceof z.ZodError ? 400 : 503);
+  }
 }

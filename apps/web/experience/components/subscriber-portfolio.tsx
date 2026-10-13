@@ -19,7 +19,7 @@ const readable = (item: PortfolioItem) => Boolean(item.organizationId || item.ob
  * Only the source differs (where data comes from and which operations exist); nothing below branches on it.
  */
 export function SubscriberPortfolioExperience({ source = accountSource, notice, shell, onOutputProjection, onOutputStart }: { source?: ObservatorySource; notice?: ReactNode; shell?: ObservatoryShell; onOutputProjection?: (projection: RuntimeProjection) => void; onOutputStart?: (focusId: string) => void } = {}) {
-  const { t, locale } = useLocale();
+  const { t, locale, resetProfile } = useLocale();
   const canAct = source.canAct;
   // A source whose reads follow the reader's language is read again when the language changes.
   const readerLocale = source.localized ? locale : null;
@@ -314,6 +314,7 @@ export function SubscriberPortfolioExperience({ source = accountSource, notice, 
       for (const controller of requests.current) controller.abort();
       clearPilotInvite(() => window.sessionStorage); clearMcpConnect(() => window.sessionStorage); pilotRedeemed.current = false;
       attempts.current.clear(); setSelected(null); setRevision(null); setPaymentUrl(null); setReading(false);
+      resetProfile();
       setPortfolio(null); setProjection(null); setAccess("required");
     } catch { setMessage(t("No se pudo confirmar el cierre de sesión.", "Sign-out could not be confirmed.")); }
     finally { setBusy(false); }
