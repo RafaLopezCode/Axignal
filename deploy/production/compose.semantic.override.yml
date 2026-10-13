@@ -5,10 +5,11 @@
 #
 # Host file: root-owned, mode 0440, group AXIGNAL_TYPESAFE_SECRET_GID, never committed,
 # never in environment variables, health output or image layers.
+#
+# The runtime already belongs to the secret group in compose.yml (group_add 1991); adding
+# it again here makes Compose reject the merged file ("group_add items are equal").
 services:
   runtime:
-    group_add:
-      - "${AXIGNAL_TYPESAFE_SECRET_GID:-1991}"
     secrets:
       - typesafe_api_key
 
