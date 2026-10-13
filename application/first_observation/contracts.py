@@ -257,6 +257,8 @@ class DiscoveryKind(StrEnum):
     # Read from published public contract awards (relationships family).
     RELATIONSHIP = "RELATIONSHIP"
     COMPETITION = "COMPETITION"
+    # Headlines about the organization's sector in its country (context family).
+    CONTEXT_SIGNAL = "CONTEXT_SIGNAL"
     # Economic magnitudes from a public source, with source, year and attribution.
     ECONOMIC_FACT = "ECONOMIC_FACT"
     SIGNIFICANT_UNKNOWN = "SIGNIFICANT_UNKNOWN"

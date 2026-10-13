@@ -167,10 +167,10 @@ def _wire(subject: ProbeSubject) -> dict[str, object]:
     }  # fmt: skip
 
 
-def generative_probe_from_values(
-    values: Mapping[str, str], root: Path
-) -> GenerativeProbeRunner | None:
-    """Configured from the same governed assistant settings as AXENT; off otherwise."""
+def assistant_from_values(
+    values: Mapping[str, str],
+) -> tuple[Callable[[CognitiveJob], Any], str, tuple[Decimal, Decimal] | None] | None:
+    """(routed completion, model, rates) from the governed AXENT settings; None when off."""
     model = values.get("AXIGNAL_AXENT_LUNA_MODEL", "").strip()
     filename = values.get("AXIGNAL_AXENT_API_KEY_FILE", "").strip()
     if values.get("AXIGNAL_AXENT_GROUNDED", "false").lower() != "true" or not model or not filename:
@@ -179,7 +179,7 @@ def generative_probe_from_values(
     if not key_file.is_absolute() or not key_file.is_file() or not os.access(key_file, os.R_OK):
         return None
     try:
-        rates = (
+        rates: tuple[Decimal, Decimal] | None = (
             Decimal(values.get("AXIGNAL_AXENT_INPUT_PER_MILLION", "")),
             Decimal(values.get("AXIGNAL_AXENT_OUTPUT_PER_MILLION", "")),
         )
@@ -189,4 +189,15 @@ def generative_probe_from_values(
     from cognition.router.router import ModelRouter
 
     router = ModelRouter([LunaResponsesProvider(authorized_model=model, key_file=key_file)])
-    return GenerativeProbeRunner(router.route, model, root / "geo-probes.sqlite3", rates=rates)
+    return router.route, model, rates
+
+
+def generative_probe_from_values(
+    values: Mapping[str, str], root: Path
+) -> GenerativeProbeRunner | None:
+    """Configured from the same governed assistant settings as AXENT; off otherwise."""
+    assistant = assistant_from_values(values)
+    if assistant is None:
+        return None
+    complete, model, rates = assistant
+    return GenerativeProbeRunner(complete, model, root / "geo-probes.sqlite3", rates=rates)
