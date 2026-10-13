@@ -29,6 +29,13 @@ PROPERTIES = {
     "P414": "stockExchange",
     "P452": "industry",
 }
+#: Wikidata external identifiers of official business registers.
+REGISTER_IDS = {
+    "P5531": "SEC_CIK",
+    "P1616": "SIREN",
+    "P2622": "COMPANIES_HOUSE",
+    "P2333": "ORGNR",
+}
 
 
 #: Common currencies by Wikidata item (labels are fetched for any other unit).
@@ -179,6 +186,15 @@ class WikidataEconomics:
                 for key in ("value", "unit"):
                     if isinstance(fact.get(key), str) and str(fact[key]) in labels:
                         fact[f"{key}Label"] = labels[str(fact[key])]
+            # Official register identifiers the item carries: a second, LEI-anchored route
+            # to official accounts (SEC EDGAR, INSEE/RNE, Companies House, Brønnøysund).
+            registers: dict[str, str] = {}
+            for prop, scheme in REGISTER_IDS.items():
+                for claim in claims.get(prop) or []:
+                    value = (claim.get("mainsnak") or {}).get("datavalue", {}).get("value")
+                    if isinstance(value, str) and claim.get("rank") != "deprecated":
+                        registers.setdefault(scheme, value.strip())
+            payload["registers"] = registers
             payload.update(
                 {
                     "item": qid,
