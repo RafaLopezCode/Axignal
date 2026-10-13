@@ -81,6 +81,18 @@ test("a provider's confidence is never shown as a percentage or a probability of
   assert.match(text, /Source excerpt/);  // the original source excerpt is distinct from the controlled tokens judged by JEV
 });
 
+test("own-site signals keep their voice: observed technology, declared clients, hiring and ratings", () => {
+  const tech = discoveryCopy(discovery("RELATIONSHIP", "TECHNOLOGY_SUPPLIER_OBSERVED", { statement: "Stripe", detail: { category: "PAYMENTS" } }), en);
+  assert.match(tech.finding, /Technology supplier: Stripe \(payments\)/);
+  assert.match(tech.why, /contract, plan or spend is not established/);
+  const client = discoveryCopy(discovery("RELATIONSHIP", "CLIENT_DECLARED", { statement: "Iberdrola", detail: { heading: "Nuestros clientes" } }), en);
+  assert.match(client.finding, /Client it shows: Iberdrola/);
+  assert.match(client.why, /Nuestros clientes.*not confirmed/);
+  assert.match(discoveryCopy(discovery("OPERATING_SIGNAL", "JOB_POSTINGS_PUBLISHED", { statement: "2", detail: { titles: ["Engineer"] } }), en).finding, /2 job posting\(s\): Engineer/);
+  assert.match(discoveryCopy(discovery("RATING", "RATING_SELF_PUBLISHED", { statement: "4.7/5.0", detail: { count: 212 } }), en).why, /not an independent review/);
+  assert.match(discoveryCopy(discovery("CREDENTIAL", "CERTIFICATION_CLAIMED", { statement: "ISO 9001" }), en).why, /register has not been checked/);
+});
+
 test("a change in time names the metric, both readings and its direction, never a cause", () => {
   const geo = discoveryCopy(discovery("CHANGE", "presence:presence.ai_named_share:EVOLUTION", { detail: { family: "presence",
     values: { metric: "presence.ai_named_share", before: 0, after: 0.5, beforeDay: "2026-10-01", afterDay: "2026-10-13", direction: "EVOLUTION" } } }), en);

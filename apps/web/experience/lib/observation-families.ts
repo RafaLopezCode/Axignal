@@ -45,6 +45,9 @@ const BY_KIND: Partial<Record<Discovery["kind"], Facet>> = {
   COMPETITION: { family: "relationships", channel: null },
   CONTEXT_SIGNAL: { family: "context", channel: null },
   ECONOMIC_FACT: { family: "economics", channel: null },
+  OPERATING_SIGNAL: { family: "activity", channel: null },
+  CREDENTIAL: { family: "value", channel: null },
+  RATING: { family: "reputation", channel: null },
 };
 
 /** A grounded unknown names what is unknown through its code; codes carry an optional ":<jurisdiction>" suffix. */

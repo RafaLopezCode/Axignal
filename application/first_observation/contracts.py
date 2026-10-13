@@ -261,6 +261,12 @@ class DiscoveryKind(StrEnum):
     CONTEXT_SIGNAL = "CONTEXT_SIGNAL"
     # Economic magnitudes from a public source, with source, year and attribution.
     ECONOMIC_FACT = "ECONOMIC_FACT"
+    # From the organization's own website beyond its text (application/own_site): whether
+    # it is hiring (activity family), the certifications it claims (value family) and the
+    # review profiles or rating it publishes (reputation family). All its own voice.
+    OPERATING_SIGNAL = "OPERATING_SIGNAL"
+    CREDENTIAL = "CREDENTIAL"
+    RATING = "RATING"
     SIGNIFICANT_UNKNOWN = "SIGNIFICANT_UNKNOWN"
 
 
