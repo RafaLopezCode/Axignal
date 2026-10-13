@@ -148,7 +148,9 @@ class SubscriberHttpFacade:
         profile: SubscriberProfileService | None = None,
         management: SubscriberBillingManagement | None = None,
         marketing_pool: object | None = None,
+        first_observation: object | None = None,
     ) -> None:
+        self.first_observation = first_observation
         self.marketing_pool = marketing_pool
         self.profile = profile
         self.management = management

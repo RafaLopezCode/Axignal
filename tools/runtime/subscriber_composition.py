@@ -1253,6 +1253,7 @@ def build_subscriber_facade(
         mcp=mcp_consent,
         mcp_http=mcp_http,
         marketing_pool=None if first_observation is None else first_observation.marketing_pool,
+        first_observation=first_observation,
         staff=None
         if staff_capacity is None
         else StaffOperations(
