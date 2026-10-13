@@ -17,7 +17,7 @@ from datetime import datetime
 from html import unescape
 from html.parser import HTMLParser
 from typing import Any
-from urllib.parse import urljoin, urlsplit, urlunsplit
+from urllib.parse import unquote, urljoin, urlsplit, urlunsplit
 from urllib.robotparser import RobotFileParser
 
 READER_VERSION = "site-reading.v2"
@@ -399,6 +399,18 @@ _ENTITY_FIELDS = (
 )  # fmt: skip
 
 
+_EMAIL = re.compile(r"[A-Za-z0-9._%+-]{1,64}@[A-Za-z0-9.-]{1,190}\.[A-Za-z]{2,24}")
+
+
+def _jsonld_emails(documents: list[str]) -> list[str]:
+    """schema.org ``email`` values (also inside contactPoint), as the site declares them."""
+    found: list[str] = []
+    for document in documents:
+        for value in re.findall(r'"email"\s*:\s*"([^"]{3,260})"', document):
+            found += _EMAIL.findall(unquote(value.removeprefix("mailto:")))
+    return found
+
+
 def _jsonld_errors(documents: list[str]) -> int:
     errors = 0
     for document in documents:
@@ -548,7 +560,10 @@ def read_page(
     host = (urlsplit(url).hostname or "").lower()
     links: list[tuple[str, str]] = []
     external = 0
+    emails: list[str] = []
     for href, text in parser.anchors:
+        if href.lower().startswith("mailto:"):
+            emails += _EMAIL.findall(unquote(href[7:].split("?", 1)[0]))
         if href.startswith(("mailto:", "tel:", "javascript:", "#")):
             continue
         absolute = urljoin(url, href)
@@ -607,6 +622,16 @@ def read_page(
             # Points the site publishes: its own map links/embeds and schema.org geo.
             "coordinates": [[lat, lng, "MAP_LINK"] for lat, lng in parser.coordinates]
             + [[lat, lng, "SCHEMA_GEO"] for lat, lng in _unique(data["geo"], 10)],
+            # Addresses the site itself publishes (mailto links, schema.org email).
+            "emails": list(
+                _unique(
+                    [
+                        e.lower()
+                        for e in [*emails, *_jsonld_emails(parser.jsonld), *_EMAIL.findall(text)]
+                    ],
+                    10,
+                )
+            ),
         },
     )
 

@@ -1239,6 +1239,7 @@ def build_subscriber_facade(
         pilot=None if pilot_access is None else _PilotHttpAdapter(pilot_access, effective_clock),
         mcp=mcp_consent,
         mcp_http=mcp_http,
+        marketing_pool=None if first_observation is None else first_observation.marketing_pool,
         staff=None
         if staff_capacity is None
         else StaffOperations(

@@ -307,6 +307,9 @@ class FirstProof:
     retain_until: datetime | None = None
     rights: Mapping[str, object] = field(default_factory=dict)
     understanding: Mapping[str, object] | None = None
+    #: How the site says to reach it (addresses it publishes, its page language):
+    #: operator-only, never part of a subscriber's view.
+    contact: Mapping[str, object] = field(default_factory=dict)
 
     def to_wire(self) -> dict[str, object]:
         return {
@@ -327,6 +330,7 @@ class FirstProof:
             "retainUntil": None if self.retain_until is None else self.retain_until.isoformat(),
             "publicUnderstanding": None if self.understanding is None else dict(self.understanding),
             "rights": dict(self.rights),
+            "publishedContact": dict(self.contact),
             "authority": "OPERATIONAL_NOT_CANONICAL",
         }
 

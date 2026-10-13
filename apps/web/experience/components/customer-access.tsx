@@ -4,6 +4,7 @@ import { useLocale } from "@/lib/locale";
 import { customerAccess, issuedInvite, publicPilotLink, activationCause, type CustomerAccess, type CustomerAction } from "@/lib/customer-access";
 import { StaffCapacity } from "./staff-capacity";
 import { PilotTestAccounts } from "./pilot-test-accounts";
+import { MarketingPool } from "./marketing-pool";
 
 export function CustomerAccessPanel() {
   const { t, locale } = useLocale();
@@ -70,11 +71,13 @@ export function CustomerAccessPanel() {
       <button className="button secondary" aria-pressed={tab === "invites"} onClick={() => { setTab("invites"); setLink(""); }}>{t("Invitaciones y pilotos", "Invitations and pilots")}</button>
       <button className="button secondary" aria-pressed={tab === "accounts"} onClick={() => { setTab("accounts"); setLink(""); }}>{t("Cuentas y suscripciones", "Accounts & subscriptions")}</button>
       <button className="button secondary" aria-pressed={tab === "operations"} onClick={() => { setTab("operations"); setLink(""); }}>{t("Operaciones", "Operations")}</button>
+      <button className="button secondary" aria-pressed={tab === "marketing"} onClick={() => { setTab("marketing"); setLink(""); }}>{t("Pool de marketing", "Marketing pool")}</button>
       <button className="button secondary" disabled={busy} onClick={() => void run(refresh)}>{t("Actualizar", "Refresh")}</button>
     </nav>
     {error && <p role="alert">{error}</p>}
     {!data && !error && <p role="status">{t("Cargando…", "Loading…")}</p>}
     {data && <p>{t("Estado consultado", "State checked")} · {when(data.asOf)}</p>}
+    {tab === "marketing" && <MarketingPool />}
     {tab === "operations" && <><StaffCapacity /><PilotTestAccounts grants={data?.pilot?.grants ?? null}/></>}
     {tab === "invites" && <>
       <section className="admin-attention staff-capacity">

@@ -29,6 +29,8 @@ class JobKind(StrEnum):
     SEMANTIC_DECISION = "SEMANTIC_DECISION"
     #: What an assistant answers about an organization's category (GEO measurement).
     GENERATIVE_PROBE = "GENERATIVE_PROBE"
+    #: A first-party outreach email drafted only from evidenced findings (marketing pool).
+    OUTREACH_DRAFT = "OUTREACH_DRAFT"
 
 
 @dataclass(frozen=True)

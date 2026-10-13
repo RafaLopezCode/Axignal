@@ -323,7 +323,8 @@ def public_view(proof: Mapping[str, Any] | None, state: str | None) -> dict[str,
     view = {
         k: v
         for k, v in proof.items()
-        if k not in {"ledger", "judged", "capabilities", "siteFingerprint", "rights"}
+        if k
+        not in {"ledger", "judged", "capabilities", "siteFingerprint", "rights", "publishedContact"}
     }
     # A provider's confidence stays in the authorized trace (the stored proof): shown to a
     # subscriber it reads as a probability of truth, which it is not (ADR-0047).
@@ -355,6 +356,11 @@ def _headline(proof: Mapping[str, Any] | None) -> tuple[str | None, str | None]:
             if discovery.get("kind") == kind:
                 return str(discovery.get("statement")), str(discovery.get("code"))
     return None, None
+
+
+#: AXIGNAL's own marketing pool studies prospects as staff: no subscriber, no Focus, no
+#: Organization; its proofs are read only by the pool (Admin §5.7).
+MARKETING_TENANT = "staff:marketing-pool"
 
 
 class FirstObservationRuntime:
@@ -403,6 +409,7 @@ class FirstObservationRuntime:
         self._lock = threading.Lock()
         self._start_lock = threading.Lock()
         self._tenant_daily_jobs = tenant_daily_jobs
+        self.marketing_pool: Any = None
 
     # ---- attention (synchronous, cheap) ---------------------------------------------
     def remember_locator(self, locator: str | None) -> None:
@@ -510,6 +517,8 @@ class FirstObservationRuntime:
 
     # ---- work (asynchronous, bounded) -------------------------------------------------
     def _still_authorized(self, target: AttentionTarget) -> bool:
+        if target.tenant_id == MARKETING_TENANT:
+            return True  # staff attention: no subscriber authority to lose
         context = TrustedRequestContext(
             PrincipalId(target.principal_id), TenantId(target.tenant_id)
         )
@@ -682,10 +691,37 @@ class FirstObservationRuntime:
             result["canonicalRaw"] = self._purge_canonical_raw(now)
         return result
 
+    # ---- marketing pool (staff-only studies) ------------------------------------------
+    def study(self, target_ref: str, website: str, name: str) -> str:
+        """Observe a prospect's public presence once, under the pool's staff tenant."""
+        target = AttentionTarget(
+            tenant_id=MARKETING_TENANT,
+            principal_id=MARKETING_TENANT,
+            target_ref=target_ref,
+            kind=TargetKind.PENDING,
+            website=website,
+            name=name,
+            organization_id=None,
+            identity_link=IdentityLink.IDENTITY_PENDING,
+        )
+        return self._enqueue(target, key=f"pool:{target_ref}")
+
+    def study_result(self, target_ref: str) -> tuple[dict[str, object] | None, Mapping[str, Any]]:
+        """The study as a subscriber would read it, plus the contact the site publishes."""
+        context = TrustedRequestContext(PrincipalId(MARKETING_TENANT), TenantId(MARKETING_TENANT))
+        proof = self.store.proof(MARKETING_TENANT, target_ref) or {}
+        contact = proof.get("publishedContact")
+        return self.view(context, target_ref), contact if isinstance(contact, Mapping) else {}
+
+    def run_marketing_pool(self) -> int:
+        return 0 if self.marketing_pool is None else sum(self.marketing_pool.tick().values())
+
     def enqueue_due(self) -> int:
         now = self._clock.now()
         created = 0
         for target in self.store.due(now=now):
+            if target.tenant_id == MARKETING_TENANT:
+                continue  # a prospect is studied once, never kept under observation
             created += self._enqueue(target, key=f"due:{now.date().isoformat()}") == "QUEUED"
         return created
 
@@ -710,6 +746,7 @@ class FirstObservationRuntime:
                 self.ingest_press,
                 self.measure_geo,
                 self.judge_sector_context,
+                self.run_marketing_pool,
                 self.purge,
             )
             for stage in stages:
@@ -1198,6 +1235,18 @@ def build_first_observation(
         if isinstance(observation_memory, SqliteObservationMemory)
         else None,
     )
+    if overrides.source_ports is None and overrides.feeds is None:
+        from tools.runtime.marketing_pool import build_marketing_pool
+
+        assistant = assistant_from_values(values)
+        runtime.marketing_pool = build_marketing_pool(
+            values,
+            root,
+            study=runtime.study,
+            study_result=runtime.study_result,
+            complete=None if assistant is None else assistant[0],
+            model=None if assistant is None else assistant[1],
+        )
     runtime.start()
     return runtime
 

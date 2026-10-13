@@ -6881,6 +6881,32 @@ html[data-motion="reduced"] {
 .customer-access input:not([type="number"]), .customer-access-secret input { width:100%; }
 @media(max-width:600px) { .customer-access .admin-table-toolbar { flex-direction:column; align-items:stretch; } .customer-access-tabs .button { flex:1 1 auto; } }
 
+/* Marketing pool: list of organizations beside the exact email a recipient would get. */
+.admin-attention.pool { display:block; }
+.admin-attention.pool > p { font-size:13px; color:var(--muted); max-width:760px; }
+.pool-status { display:flex; flex-wrap:wrap; gap:8px; }
+.pool-status span { font-size:12px; padding:4px 10px; border-radius:999px; background:#fff; border:1px solid var(--line); color:var(--ink); }
+.pool-status span[data-on="false"] { color:#8a5a00; border-color:#ecd9b0; background:#fff8ea; }
+.pool-grid { display:grid; grid-template-columns:minmax(220px, 300px) 1fr; gap:20px; align-items:start; margin-top:12px; }
+.pool-list { list-style:none; padding:0; margin:0; max-height:760px; overflow:auto; border:1px solid var(--line); border-radius:12px; background:#fff; }
+.pool-list button { display:flex; flex-direction:column; gap:2px; width:100%; text-align:left; padding:12px 14px; border:0; border-bottom:1px solid var(--line); background:none; cursor:pointer; font:inherit; color:var(--ink); }
+.pool-list button span { font-size:12px; color:var(--muted); }
+.pool-list button[aria-current="true"] { background:var(--soft-blue); box-shadow:inset 3px 0 0 var(--blue); }
+.pool-list button:focus-visible { outline:2px solid var(--blue); outline-offset:-2px; }
+.pool-detail { background:#fff; border:1px solid var(--line); border-radius:12px; padding:20px; min-width:0; }
+.pool-detail h3 { font-size:22px; margin:0; }
+.pool-detail header p { font-size:13px; color:var(--muted); margin-top:6px; }
+.pool-detail .pool-reason { color:#8a5a00; }
+.pool-detail h4 { font-size:13px; margin:20px 0 8px; text-transform:uppercase; letter-spacing:.08em; color:var(--muted); }
+.pool-preview { width:100%; height:820px; border:1px solid var(--line); border-radius:10px; background:#f4f5f8; margin-top:16px; }
+.pool-findings { list-style:none; padding:0; margin:0; display:grid; gap:8px; }
+.pool-findings li { font-size:13px; padding:8px 10px; border-left:3px solid var(--blue); background:#fafbfd; }
+.pool-findings li[data-state="POTENTIAL"] { border-left-style:dashed; border-left-color:#8a7fb0; }
+.pool-findings li span { font-size:11px; text-transform:uppercase; letter-spacing:.08em; color:var(--blue); margin-right:6px; }
+.pool-policy { margin-top:20px; font-size:13px; }
+.pool-policy ul { columns:2; padding-left:18px; }
+@media(max-width:800px) { .pool-grid { grid-template-columns:1fr; } .pool-list { max-height:320px; } .pool-preview { height:640px; } .pool-policy ul { columns:1; } }
+
 .customer-access input[type="number"], .customer-access select, .customer-access-secret input, .customer-access [aria-label] > label input {
   min-height:44px; padding:8px 12px; border:1px solid var(--line); border-radius:var(--radius); background:#fff; color:var(--ink); font:inherit;
 }
