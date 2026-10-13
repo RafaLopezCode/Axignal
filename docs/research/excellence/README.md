@@ -26,3 +26,6 @@ dependency: real public sources and the assistant are involved.
 | Date | Set | Report | Notes |
 |---|---|---|---|
 | 2026-10-13 | Production E2E, 10 organizations, 6 countries | `baseline-2026-10-13-prod-10orgs.json` | Before #229–#235. Reputation 0 %, Activity 0 %, Economics 10 %. |
+| 2026-10-13 | Golden set, 30 organizations, 8 countries, `de3b34a` | `golden-2026-10-13-de3b34a.json` | Reputation 80 %, Value 87 %, Economics 77 %, Relationships 80 %, Activity 53 %, Markets 50 %, Demand 57 %, Presence 70 % (5 sites block reading), Organization 43 %, Context 17 %. Countries 42–77 %. Semantic layer off. |
+
+Agent cost comparison: `agent-cost-baseline-2026-10-13.md`.
