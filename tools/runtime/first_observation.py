@@ -80,6 +80,7 @@ from application.organization_group import group_discoveries
 from application.press.mentions import press_discoveries
 from application.regulation import regulation_discoveries
 from application.regulation.sectors import route_of
+from application.reputation import notoriety_discoveries
 from application.semantic_layer.cascade import SemanticCascade
 from application.subscriber_identity.runtime import Clock
 from application.subscriber_portfolio.models import (
@@ -114,6 +115,7 @@ from pipeline.observation_memory.sqlite_store import SqliteObservationMemory
 from pipeline.press.sqlite_store import PressIngestor, SqlitePressIndex
 from pipeline.press.sqlite_store import SqlitePressIndex as _PressIndex
 from pipeline.regulation.sqlite_store import RegulationIngestor, SqliteRegulationIndex
+from pipeline.reputation.notoriety import WikipediaNotoriety
 from tools.runtime.field_performance import field_performance_from_env
 from tools.runtime.generative_probe import (
     GenerativeProbeRunner,
@@ -407,7 +409,9 @@ class FirstObservationRuntime:
         economics: WikidataEconomics | None = None,
         registers: OfficialRegisters | None = None,
         regulation: tuple[RegulationIngestor, RegulationContextRunner] | None = None,
+        notoriety: WikipediaNotoriety | None = None,
     ) -> None:
+        self._notoriety = notoriety
         self._regulation = regulation
         self._registers = registers
         self._sector_context = sector_context
@@ -797,6 +801,27 @@ class FirstObservationRuntime:
         view["discoveries"] = [*discoveries, *found]
         return view
 
+    def read_notoriety(self) -> int:
+        """Weekly Wikipedia attention for the organizations being read (source thread)."""
+        return 0 if self._notoriety is None else self._notoriety.run()
+
+    def _with_notoriety(self, view: dict[str, object]) -> dict[str, object]:
+        """Public attention from Wikipedia, identified through its official website."""
+        if self._notoriety is None:
+            return view
+        target = view.get("target")
+        website = target.get("website") if isinstance(target, Mapping) else None
+        host = urlsplit(str(website)).hostname if website else None
+        if not host:
+            return view
+        name = str(target.get("name") or host) if isinstance(target, Mapping) else host
+        self._notoriety.request(host, name)
+        found = notoriety_discoveries(self._notoriety.latest(host))
+        if found:
+            held = view.get("discoveries")
+            view["discoveries"] = [*(held if isinstance(held, list) else []), *found]
+        return view
+
     def ingest_press(self) -> int:
         """Read due publisher feeds into the world press index (off the First Proof path)."""
         if self._press is None:
@@ -884,7 +909,7 @@ class FirstObservationRuntime:
     def _sources_loop(self) -> None:
         """Press and official journals on their own clock (each source keeps its cursor)."""
         while True:
-            for stage in (self.ingest_press, self.ingest_regulation):
+            for stage in (self.ingest_press, self.ingest_regulation, self.read_notoriety):
                 try:
                     stage()
                 except Exception:  # a source failing is retried on its own schedule
@@ -1138,6 +1163,7 @@ class FirstObservationRuntime:
                 if mentions:
                     held = view.get("discoveries")
                     view["discoveries"] = [*(held if isinstance(held, list) else []), *mentions]
+            view = self._with_notoriety(view)
             view = self._with_group(view, organization_id)
             view = self._with_registers(view, organization_id)
             # The register's activity answers the value family when the website does not.
@@ -1469,6 +1495,9 @@ def build_first_observation(
         ingestor=ingestor,
         live_demand=LiveDemandReader(index, sources=tuple(ports), clock=clock.now),
         press=_press(root, clock, overrides),
+        notoriety=None
+        if overrides.source_ports is not None or overrides.feeds is not None
+        else WikipediaNotoriety(root / "wikipedia-notoriety.sqlite3", clock=clock.now),
         groups=None
         if overrides.source_ports is not None or overrides.feeds is not None
         else GleifGroupReader(root / "gleif-groups.sqlite3"),
