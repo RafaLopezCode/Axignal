@@ -113,6 +113,8 @@ class FetchedResource:
     artifact_ref: str | None
     requests: int
     failure: str | None = None
+    #: Where a refused cross-domain redirect pointed (not fetched).
+    redirected_to: str | None = None
 
 
 class SiteFetchPort(Protocol):
@@ -153,6 +155,28 @@ class FocusSeedPort(Protocol):
         rights: ContentRights,
     ) -> Mapping[str, str]:
         """Append readable pages under the Organization subject; page url → observation id."""
+
+
+_SECOND_LEVEL = frozenset({"co", "com", "org", "net", "ac", "gov", "gob", "edu"})
+
+
+def brand_label(host: str) -> str:
+    """The registrable name of a host: ``impression`` for ``www.impression.co.uk``."""
+    parts = host.lower().removeprefix("www.").split(".")
+    if len(parts) > 2 and parts[-2] in _SECOND_LEVEL:
+        parts = parts[:-1]
+    return parts[-2] if len(parts) >= 2 else parts[0]
+
+
+def same_brand(origin: str, target: str | None) -> bool:
+    """A redirect to the same brand under another domain (``impression.co.uk`` to
+    ``impressiondigital.com``, ``alan.com`` to ``alan.eu``): one name prefixes the other."""
+    if not target:
+        return False
+    a = brand_label(urlsplit(origin).hostname or "")
+    b = brand_label(urlsplit(target).hostname or "")
+    short, long_ = sorted((a, b), key=len)
+    return len(short) >= 4 and long_.startswith(short)
 
 
 def origin_of(website: str) -> str:
@@ -254,6 +278,7 @@ class FirstObservationService:
         rights: ContentRights | None = None,
         *,
         force_refresh: bool = False,
+        redirected: bool = False,
     ) -> SiteReading:
         """The website's pages for this run; what is *kept* depends on governed rights.
 
@@ -312,6 +337,14 @@ class FirstObservationService:
             elif fetched.status is not None and 400 <= fetched.status < 500:
                 robots = RobotsReading(None, fetched.observed_at)  # none published (RFC 9309)
             elif fetched.failure == "redirect_policy_rejected":
+                if not redirected and same_brand(origin, fetched.redirected_to):
+                    # The same brand under another domain: read that site once, and say so.
+                    ledger.decide("FOLLOWED:SAME_BRAND_REDIRECT")
+                    moved = urlsplit(str(fetched.redirected_to))
+                    return self.read_site(
+                        f"{moved.scheme}://{moved.netloc}/", now, ledger, rights,
+                        force_refresh=force_refresh, redirected=True,
+                    )  # fmt: skip
                 # It sends visitors to another domain: possibly another organization, so it is
                 # not followed; the subscriber is told to name that site instead.
                 return self._failed(key, now, None, "REDIRECTS_TO_ANOTHER_SITE", ledger, known)
@@ -327,6 +360,18 @@ class FirstObservationService:
         retain = False
         fetched = self._fetch(target, "website", ledger, retain_body=retain)
         home = self._page(fetched, robots, ledger)
+        if (
+            home is None
+            and fetched.failure == "redirect_policy_rejected"
+            and not redirected
+            and same_brand(origin, fetched.redirected_to)
+        ):
+            ledger.decide("FOLLOWED:SAME_BRAND_REDIRECT")
+            moved = urlsplit(str(fetched.redirected_to))
+            return self.read_site(
+                f"{moved.scheme}://{moved.netloc}/", now, ledger, rights,
+                force_refresh=force_refresh, redirected=True,
+            )  # fmt: skip
         if home is None:
             failure = (
                 TLS_NOT_VERIFIED if fetched.failure == TLS_NOT_VERIFIED else "HOMEPAGE_UNAVAILABLE"

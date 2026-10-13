@@ -108,6 +108,7 @@ class GovernedSiteFetcher:
             artifact_ref=observed.raw_observation_ref,
             requests=len(observed.peer_ips),  # one per request actually sent
             failure=failure,
+            redirected_to=getattr(observed, "rejected_redirect", None),
         )
 
 

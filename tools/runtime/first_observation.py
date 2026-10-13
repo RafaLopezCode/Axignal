@@ -79,6 +79,7 @@ from application.organization_admission.locator import LocatorError, parse_locat
 from application.organization_group import group_discoveries
 from application.press.mentions import press_discoveries
 from application.regulation import regulation_discoveries
+from application.regulation.sectors import route_of
 from application.semantic_layer.cascade import SemanticCascade
 from application.subscriber_identity.runtime import Clock
 from application.subscriber_portfolio.models import (
@@ -686,9 +687,11 @@ class FirstObservationRuntime:
         held = view.get("discoveries")
         discoveries = held if isinstance(held, list) else []
         activities = [
-            str(d.get("code"))
+            route
             for d in discoveries
-            if isinstance(d, Mapping) and d.get("kind") == "ACTIVITY" and d.get("code")
+            if isinstance(d, Mapping)
+            and d.get("kind") == "ACTIVITY"
+            and (route := route_of(d)) is not None
         ][:2]
         scopes = view.get("attentionScopes")
         country = None
@@ -728,9 +731,11 @@ class FirstObservationRuntime:
         held = view.get("discoveries")
         discoveries = held if isinstance(held, list) else []
         activities = [
-            str(d.get("code"))
+            route
             for d in discoveries
-            if isinstance(d, Mapping) and d.get("kind") == "ACTIVITY" and d.get("code")
+            if isinstance(d, Mapping)
+            and d.get("kind") == "ACTIVITY"
+            and (route := route_of(d)) is not None
         ][:2]
         scopes = view.get("attentionScopes")
         country = None
