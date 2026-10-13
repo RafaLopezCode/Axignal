@@ -446,11 +446,13 @@ def _admin_slug(request_path: str) -> str | None:
 
 
 def _command_center_projection(
-    runtime: AxignalRuntime, *, now: datetime
+    runtime: AxignalRuntime, *, now: datetime, metric_ids: frozenset[str] | None = None
 ) -> AdminCommandCenterProjection:
     current: dict[AdminProjectionId, AdminProjectionSnapshot] = {}
     previous: dict[AdminProjectionId, AdminProjectionSnapshot] = {}
     for definition in COMMAND_CENTER_METRICS:
+        if metric_ids is not None and definition.metric_id not in metric_ids:
+            continue
         projection_id = definition.source_projection_id
         snapshots = runtime.admin_observability.recent_snapshots(
             projection_id, "global", limit=2, through=now
@@ -2125,17 +2127,24 @@ def make_handler(runtime: AxignalRuntime) -> type[BaseHTTPRequestHandler]:
                 self._json(payload)
                 return
             admin_slug = _admin_slug(request_path)
+            admin_json = self.headers.get("Accept", "").split(",")[0].strip() == "application/json"
             if admin_slug is not None:
                 if runtime.admin_access is None:
                     self.send_error(HTTPStatus.NOT_FOUND)
                     return
                 authorization = self.headers.get("Authorization")
                 if authorization is None:
-                    self._admin_error(HTTPStatus.UNAUTHORIZED, "Admin authentication required.")
+                    self._json(
+                        {"reason": "ADMIN_SESSION_REQUIRED"}, HTTPStatus.UNAUTHORIZED
+                    ) if admin_json else self._admin_error(
+                        HTTPStatus.UNAUTHORIZED, "Admin authentication required."
+                    )
                     return
                 scheme, separator, token = authorization.partition(" ")
                 if separator != " " or scheme != "Bearer" or not token.strip():
-                    self._admin_error(
+                    self._json(
+                        {"reason": "ADMIN_SESSION_REQUIRED"}, HTTPStatus.UNAUTHORIZED
+                    ) if admin_json else self._admin_error(
                         HTTPStatus.UNAUTHORIZED, "Invalid Admin authorization credential."
                     )
                     return
@@ -2218,6 +2227,64 @@ def make_handler(runtime: AxignalRuntime) -> type[BaseHTTPRequestHandler]:
                         if admin_projection.current_slug == "frontier-advisor"
                         else None
                     )
+                    payload = _admin_projection_payload(
+                        admin_projection,
+                        command_center=command_center,
+                        xeed_observatory=xeed_observatory,
+                        brain_observatory=brain_observatory,
+                        governance=governance,
+                        acquisition=acquisition,
+                        gsc=gsc,
+                        commercial=commercial,
+                        customer_operations=customer_operations,
+                        integrations=integrations,
+                        api_operations=api_operations,
+                        financial_documents=financial_documents,
+                        accounting_reconciliation=accounting_reconciliation,
+                        fiscal_compliance=fiscal_compliance,
+                        tax_operations=tax_operations,
+                        measurement_registry=measurement_registry,
+                    )
+                    if admin_projection.current_slug in {"revenue", "system"}:
+                        metric_ids = (
+                            frozenset({"mrr", "arr", "paying_accounts"})
+                            if admin_projection.current_slug == "revenue"
+                            else frozenset({"source_health", "provider_health", "system_health"})
+                        )
+                        summary = _command_center_payload(
+                            _command_center_projection(runtime, now=now, metric_ids=metric_ids)
+                        )
+                        metrics = summary["metrics"]
+                        assert isinstance(metrics, list)
+                        summary["metrics"] = [
+                            item
+                            for item in metrics
+                            if isinstance(item, dict) and item["metricId"] in metric_ids
+                        ]
+                        payload["commandCenter"] = summary
+                except AdminAuthenticationError:
+                    self._json(
+                        {"reason": "ADMIN_SESSION_REQUIRED"}, HTTPStatus.UNAUTHORIZED
+                    ) if admin_json else self._admin_error(
+                        HTTPStatus.UNAUTHORIZED, "Admin authentication failed."
+                    )
+                    return
+                except (AdminAuthorizationError, AdminShellRouteDenied):
+                    self._json(
+                        {"reason": "ADMIN_SCOPE_REQUIRED"}, HTTPStatus.FORBIDDEN
+                    ) if admin_json else self._admin_error(
+                        HTTPStatus.FORBIDDEN, "Admin scope denied for this domain."
+                    )
+                    return
+                except AdminShellRouteUnknown:
+                    self.send_error(HTTPStatus.NOT_FOUND)
+                    return
+                except (OSError, RuntimeError):
+                    self.send_error(HTTPStatus.SERVICE_UNAVAILABLE)
+                    return
+                if admin_json:
+                    self._json(payload)
+                else:
                     rendered = _render_admin_shell(
                         runtime.config.web_root,
                         admin_projection,
@@ -2237,19 +2304,7 @@ def make_handler(runtime: AxignalRuntime) -> type[BaseHTTPRequestHandler]:
                         tax_operations=tax_operations,
                         measurement_registry=measurement_registry,
                     )
-                except AdminAuthenticationError:
-                    self._admin_error(HTTPStatus.UNAUTHORIZED, "Admin authentication failed.")
-                    return
-                except (AdminAuthorizationError, AdminShellRouteDenied):
-                    self._admin_error(HTTPStatus.FORBIDDEN, "Admin scope denied for this domain.")
-                    return
-                except AdminShellRouteUnknown:
-                    self.send_error(HTTPStatus.NOT_FOUND)
-                    return
-                except (OSError, RuntimeError):
-                    self.send_error(HTTPStatus.SERVICE_UNAVAILABLE)
-                    return
-                self._html(rendered)
+                    self._html(rendered)
                 return
             if request_path in {"/api/contact/status", "/api/gdpr/status"}:
                 self._json(

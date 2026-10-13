@@ -1,0 +1,80 @@
+[
+  {
+    "locale": "en",
+    "text": [
+      "System",
+      "Is the available projection current and reliable?",
+      "Values without available observations remain unknown.",
+      "Refresh",
+      "Service reading · Oct 13, 2026, 12:12 PM",
+      "Operational reading",
+      "Projection time · Oct 13, 2026, 12:12 PM",
+      "Completeness"
+    ]
+  },
+  {
+    "locale": "de",
+    "text": [
+      "System",
+      "Ist die verfügbare Projektion aktuell und verlässlich?",
+      "Werte ohne verfügbare Beobachtungen bleiben unbekannt.",
+      "Aktualisieren",
+      "Dienstabfrage · 13.10.2026, 12:12",
+      "Betriebliche Übersicht",
+      "Projektionszeit · 13.10.2026, 12:12",
+      "Vollständigkeit"
+    ]
+  },
+  {
+    "locale": "pt",
+    "text": [
+      "Sistema",
+      "A projeção disponível é atual e fiável?",
+      "Os valores sem observações disponíveis permanecem desconhecidos.",
+      "Atualizar",
+      "Leitura do serviço · 13 de out. de 2026, 12:12",
+      "Leitura operacional",
+      "Data da projeção · 13 de out. de 2026, 12:12",
+      "Completude"
+    ]
+  },
+  {
+    "locale": "fr",
+    "text": [
+      "Système",
+      "La projection disponible est-elle actuelle et fiable ?",
+      "Les valeurs sans observation disponible restent inconnues.",
+      "Actualiser",
+      "Lecture du service · 13 oct. 2026, 12:12",
+      "Lecture opérationnelle",
+      "Date de la projection · 13 oct. 2026, 12:12",
+      "Complétude"
+    ]
+  },
+  {
+    "locale": "it",
+    "text": [
+      "Sistema",
+      "La proiezione disponibile è aggiornata e affidabile?",
+      "I valori senza osservazioni disponibili restano sconosciuti.",
+      "Aggiorna",
+      "Lettura del servizio · 13 ott 2026, 12:12",
+      "Lettura operativa",
+      "Data della proiezione · 13 ott 2026, 12:12",
+      "Completezza"
+    ]
+  },
+  {
+    "locale": "es",
+    "text": [
+      "Sistema",
+      "¿La proyección disponible es actual y fiable?",
+      "Los datos sin observación disponible se conservan como desconocidos.",
+      "Actualizar",
+      "Lectura del servicio · 13 oct 2026, 12:12",
+      "Lectura operativa",
+      "Fecha de la proyección · 13 oct 2026, 12:12",
+      "Completitud"
+    ]
+  }
+]

@@ -3,9 +3,11 @@ import Link from "next/link";
 import { useState, useRef, useEffect } from "react";
 import { ArrowUpRight, ChevronRight, Eye, LockKeyhole, Menu, X } from "lucide-react";
 import { CustomerZero } from "./customer-zero";
+import { AdminOperationalPanel } from "./admin-operational";
+import { operationalDomains, type OperationalDomain } from "@/lib/admin-projections";
 import { CustomerAccessPanel } from "./customer-access";
 
-import { adminDomains, connectedDomains } from "@/lib/admin-model";
+import { adminDomains } from "@/lib/admin-model";
 import { useLocale } from "@/lib/locale";
 import { Brand, IconButton, LocaleToggle, useFocusTrap } from "./ui";
 
@@ -163,12 +165,7 @@ export function Admin({ initialDomain = CUSTOMER_ZERO }: { initialDomain?: strin
                 <p>{copy(domain.question)}</p>
               </header>
               {domain.id === "customers" && <CustomerAccessPanel />}
-              {!connectedDomains.has(domain.id) && (
-                <section className="admin-notice" aria-labelledby="admin-notice-title">
-                  <h2 id="admin-notice-title">{t("Todavía no conectado a esta interfaz", "Not connected to this interface yet")}</h2>
-                  <p>{t("Esta superficie leerá el servicio", "This surface will read the service")} <code>{domain.service}</code>. {t("Hasta entonces no se muestra ningún registro: un dato de ejemplo no sustituye a una lectura real.", "Until then no record is shown: sample data does not stand in for a real reading.")}</p>
-                </section>
-              )}
+              {Object.hasOwn(operationalDomains, domain.id) && <AdminOperationalPanel key={domain.id} domain={domain.id as OperationalDomain} />}
             </main>
           )}
         </div>

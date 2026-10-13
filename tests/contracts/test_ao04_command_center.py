@@ -153,3 +153,35 @@ def test_command_center_bootstrap_contains_no_credentials_or_canonical_write_sur
     assert "canonical write" in rendered.lower()
     assert "Bearer " not in rendered
     assert "secret" not in rendered.lower()
+
+
+def test_scope_filtered_summary_does_not_read_other_source_projections(
+    tmp_path: Path, monkeypatch
+) -> None:
+    runtime = build_runtime(_config(tmp_path))
+    seen = []
+    original = runtime.admin_observability.recent_snapshots
+
+    def capture(projection_id, scope, **kwargs):
+        seen.append(str(projection_id))
+        return original(projection_id, scope, **kwargs)
+
+    monkeypatch.setattr(runtime.admin_observability, "recent_snapshots", capture)
+    runtime.admin_observability.append_snapshot(
+        _revenue_snapshot("scope-test", as_of=NOW, mrr="100.00", method="ao04-v1")
+    )
+    result = _command_center_projection(
+        runtime, now=NOW, metric_ids=frozenset({"mrr", "arr", "paying_accounts"})
+    )
+    assert set(seen) == {"business-revenue-summary"}
+    assert (
+        next(item for item in result.metrics if item.definition.metric_id == "mrr").value
+        == "100.00"
+    )
+    seen.clear()
+    _command_center_projection(
+        runtime,
+        now=NOW,
+        metric_ids=frozenset({"source_health", "provider_health", "system_health"}),
+    )
+    assert set(seen) == {"provider-system-health"}

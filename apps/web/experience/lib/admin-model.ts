@@ -1,11 +1,7 @@
 import type { Copy } from "./locale";
 const c = (es: string, en: string): Copy => ({ es, en });
 
-/**
- * The Admin's domains. A domain is listed for what the operator does there; whether this interface already
- * reads or writes through its owning service is declared in `connectedDomains`. Where it does not, the panel
- * says so and shows nothing: no sample record stands in for a service that is not connected.
- */
+/** Admin navigation: Customer access owns mutations; all other panels read authorized runtime projections. */
 export const adminDomains = [
   {
     id: "command",
@@ -132,4 +128,4 @@ export const adminDomains = [
 export type AdminDomain = (typeof adminDomains)[number];
 
 /** Domains whose panel is backed by an authorized service in this interface. */
-export const connectedDomains: ReadonlySet<string> = new Set(["customers"]);
+export const connectedDomains: ReadonlySet<string> = new Set(adminDomains.map(domain => domain.id));
