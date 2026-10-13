@@ -151,6 +151,13 @@ export function discoveryCopy(d: Discovery, t: Translate, locale = "en"): { find
   if (d.kind === "COMPETITION") return {
     finding: t("Competidor posible: {name} · {n} contratos en sus mismos códigos", "Possible competitor: {name} · {n} contracts under the same codes").replace("{name}", d.statement).replace("{n}", String(d.detail.contracts ?? 0)),
     why: t("Gana contratos públicos con los mismos códigos de actividad. Que compita con ella es una inferencia, no una clasificación de calidad.", "It wins public contracts under the same activity codes. That it competes with this organization is an inference, not a quality ranking.") };
+  if (d.kind === "CONTEXT_SIGNAL" && d.code === "REGULATION") {
+    const journal = ({ BOE: "BOE", EUR_LEX: "EUR-Lex", FEDERAL_REGISTER: "Federal Register", LEGISLATION_GOV_UK: "legislation.gov.uk" } as Record<string, string>)[String(d.detail.journal ?? "")] ?? String(d.detail.journal ?? "");
+    const published = typeof d.detail.published === "string" ? d.detail.published.slice(0, 10) : "";
+    const issuer = typeof d.detail.issuer === "string" && d.detail.issuer ? ` · ${d.detail.issuer}` : "";
+    return { finding: `${t("Norma nueva", "New rule")} · ${journal} ${published}: ${d.statement}`,
+      why: t("Publicada en el boletín oficial{issuer}. Que concierna a su sector lo ha juzgado un asistente; si le aplica y cómo no está evaluado. No es asesoramiento jurídico.", "Published in the official journal{issuer}. That it concerns its sector was judged by an assistant; whether and how it applies is not assessed. Not legal advice.").replace("{issuer}", issuer) };
+  }
   if (d.kind === "CONTEXT_SIGNAL") {
     const outlet = typeof d.detail.outlet === "string" ? d.detail.outlet : "";
     return { finding: `${t("En su sector", "In its sector")} · ${outlet}: ${d.statement}`,
