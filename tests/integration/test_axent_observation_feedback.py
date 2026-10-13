@@ -53,7 +53,7 @@ def test_two_tenants_real_feedback_and_independent_next_read(
                 TrustedRequestContext(member.principal_id, member.tenant_id),
             )
         )
-    _append_opportunity_capability_source(tmp_path)
+    _append_opportunity_capability_source(tmp_path, as_of=datetime.now(UTC))
     clock = _Clock(datetime.now(UTC))
     facade.axent.service.clock = clock.now
     luna = ScriptedLuna()

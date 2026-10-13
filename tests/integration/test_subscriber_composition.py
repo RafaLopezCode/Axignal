@@ -229,9 +229,9 @@ def _register_canonical_organization(tmp_path: Path) -> None:
     assert store.register(request, EvidenceAdmission.admit_claim(request))
 
 
-def _append_opportunity_capability_source(tmp_path: Path) -> None:
+def _append_opportunity_capability_source(tmp_path: Path, *, as_of: datetime = AS_OF) -> None:
     memory = SqliteObservationMemory(tmp_path / "observation-memory.sqlite3")
-    observed_at = AS_OF - timedelta(hours=1)
+    observed_at = as_of - timedelta(hours=1)
     memory.append(
         GovernedObservation(
             record=ObservationRecord(
@@ -472,7 +472,7 @@ def test_reobserve_executes_authorized_opportunity_plan_and_persists_reading(
     )
     assert added.status == 200
     focus_id = str(added.body["focusId"])
-    _append_opportunity_capability_source(tmp_path)
+    _append_opportunity_capability_source(tmp_path, as_of=datetime.now(UTC))
 
     reobserved = facade.handle(
         "POST",

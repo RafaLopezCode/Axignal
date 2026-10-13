@@ -255,7 +255,7 @@ def test_product_mcp_pilot_and_paid_tenants_isolated_read_only_and_revocable(
     _commit_verified_projection(billing, tenant_b, now=datetime.now(UTC))  # type: ignore[arg-type]
     xeed_b = _add(facade, session_b, "mcp:add:b")
     assert xeed_a != xeed_b
-    _append_opportunity_capability_source(tmp_path)
+    _append_opportunity_capability_source(tmp_path, as_of=datetime.now(UTC))
     reobserved = facade.handle(
         "POST",
         "/subscriber/portfolio",

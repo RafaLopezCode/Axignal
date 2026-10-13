@@ -8,3 +8,8 @@
 
 - [x] Follow-up E2E audit: first-account access, portal reconciliation, connection lifecycle, configuration/redirect boundaries and stale response handling
 - [x] Six-locale inventory, full-stack HTTP verification, browser avatar rendering/removal and session/logout proof
+
+- [x] Preserve concurrent main features/translations and remove duplicate keys
+- [x] Repair clock-sensitive E2E fixtures without changing evidence-currentness policy; verify affected wall-clock and fixed-clock journeys
+
+- [ ] Native browser file-selector proof: both Chrome connections reject file access despite human-reported temporary permission; manual handoff required, no fabricated pass
