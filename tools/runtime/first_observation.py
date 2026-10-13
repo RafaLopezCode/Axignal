@@ -35,7 +35,11 @@ from application.economic_discovery.observation_memory import (
 )
 from application.economic_discovery.observation_reuse import ReusePurpose
 from application.economic_discovery.source_registry import SourceRegistryEntry
-from application.economics import economic_discoveries
+from application.economics import (
+    economic_discoveries,
+    register_discoveries,
+    same_organization_name,
+)
 from application.first_observation.contracts import (
     AttentionTarget,
     IdentityLink,
@@ -92,6 +96,7 @@ from application.world_demand.relations import AwardStore, apply_public_awards
 from application.xeed_access.reader import TrustedRequestContext
 from domain.evidence.epistemics import Currentness
 from domain.identity import OrganizationId, PrincipalId, TenantId, XeedId
+from pipeline.economics.registries import OfficialRegisters, registers_from_env
 from pipeline.economics.wikidata import WikidataEconomics
 from pipeline.entity_resolution.gleif_group import GleifGroupReader
 from pipeline.first_observation.sqlite_store import SqliteFirstObservationStore
@@ -385,7 +390,9 @@ class FirstObservationRuntime:
         geo: GenerativeProbeRunner | None = None,
         sector_context: SectorContextRunner | None = None,
         economics: WikidataEconomics | None = None,
+        registers: OfficialRegisters | None = None,
     ) -> None:
+        self._registers = registers
         self._sector_context = sector_context
         self._economics = economics
         self._geo = geo
@@ -819,6 +826,85 @@ class FirstObservationRuntime:
         )
         return {"state": "success", "directed": list(chosen)}
 
+    def _with_registers(
+        self, view: dict[str, object], organization_id: str | None
+    ) -> dict[str, object]:
+        """Official accounts and size from the business register of the organization's own
+        identifier (its website's, or its LEI's in Wikidata); they supersede Wikidata's."""
+        if self._registers is None:
+            return view
+        held = view.get("discoveries")
+        discoveries = held if isinstance(held, list) else []
+        target = view.get("target")
+        names = [str(target.get("name") or "")] if isinstance(target, Mapping) else []
+        website = target.get("website") if isinstance(target, Mapping) else None
+        host = (urlsplit(str(website)).hostname or "").removeprefix("www.") if website else ""
+        if host.count(".") >= 1:
+            names.append(host.split(".")[-2])  # its own domain name ("vipps" for vipps.no)
+        names += [
+            str(d.get("statement") or "")
+            for d in discoveries
+            if isinstance(d, Mapping) and d.get("code") == "LEGAL_NAME_DECLARED"
+        ]
+        routes: list[tuple[str, str, str]] = []
+        for d in discoveries:
+            code = str(d.get("code") or "") if isinstance(d, Mapping) else ""
+            scheme = code.removeprefix("IDENTIFIER_DECLARED:")
+            if code.startswith("IDENTIFIER_DECLARED:") and scheme in self._registers.schemes:
+                routes.append((scheme, str(d.get("statement", "")).split(" ", 1)[-1],
+                               "REGISTER_ID_ON_WEBSITE"))  # fmt: skip
+        verified: tuple[str, ...] = ()
+        identifiers_for = getattr(self._websites, "identifiers_for", None)
+        if organization_id and callable(identifiers_for):
+            verified = tuple(identifiers_for(OrganizationId(organization_id), "LEI"))
+        declared_lei = [
+            str(d.get("statement", "")).split(" ", 1)[-1]
+            for d in discoveries
+            if isinstance(d, Mapping) and d.get("code") == "IDENTIFIER_DECLARED:LEI"
+        ]
+        lei = next(iter(verified), None) or next(iter(declared_lei), None)
+        if lei and self._economics is not None:
+            try:
+                registers = self._economics.facts(lei).get("registers")
+            except Exception:  # Wikidata unavailable: only the website's identifiers count
+                registers = None
+            for scheme, value in registers.items() if isinstance(registers, Mapping) else ():
+                if scheme in self._registers.schemes:
+                    routes.append((str(scheme), str(value),
+                                   "VERIFIED_LEI" if lei in verified else "LEI_ON_WEBSITE"))  # fmt: skip
+        observed_at = str(view.get("observedAt") or "")
+        found: list[dict[str, object]] = []
+        seen: set[tuple[str, str]] = set()
+        for scheme, value, via in routes:
+            if (scheme, value) in seen or len(seen) >= 3:
+                continue
+            seen.add((scheme, value))
+            try:
+                record = self._registers.record(scheme, value)
+            except Exception:  # register unavailable: the facts stay unknown
+                continue
+            if record is None:
+                continue
+            attributed = via != "LEI_ON_WEBSITE" and same_organization_name(
+                str(record.get("name") or ""), names
+            )
+            found += register_discoveries(record, attributed=attributed, via=via,
+                                          observed_at=observed_at)  # fmt: skip
+        if not found:
+            return view
+        official = {str(d["detail"]["fact"]) for d in found}  # type: ignore[index]
+        kept = [
+            d
+            for d in discoveries
+            if not (
+                isinstance(d, Mapping)
+                and str(d.get("code") or "").startswith("WIKIDATA:")
+                and str((d.get("detail") or {}).get("fact")) in official
+            )
+        ]
+        view["discoveries"] = [*kept, *found]
+        return view
+
     def _with_group(
         self, view: dict[str, object], organization_id: str | None
     ) -> dict[str, object]:
@@ -903,6 +989,7 @@ class FirstObservationRuntime:
                     held = view.get("discoveries")
                     view["discoveries"] = [*(held if isinstance(held, list) else []), *mentions]
             view = self._with_group(view, organization_id)
+            view = self._with_registers(view, organization_id)
             view = self._with_geo(view)
             view = self._with_sector_context(view)
             # Relationships and competition from published public contract awards.
@@ -1216,6 +1303,9 @@ def build_first_observation(
         economics=None
         if overrides.source_ports is not None or overrides.feeds is not None
         else WikidataEconomics(root / "wikidata-economics.sqlite3"),
+        registers=None
+        if overrides.source_ports is not None or overrides.feeds is not None
+        else registers_from_env(root, values),
         awards=index,
         purge_canonical_raw=(
             lambda at: observation_memory.purge_first_observation_content(

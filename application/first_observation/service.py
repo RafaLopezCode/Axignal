@@ -44,6 +44,7 @@ from application.first_observation.contracts import (
 from application.first_observation.country_evidence import country_evidence
 from application.first_observation.geography import area_jurisdiction, jurisdiction
 from application.first_observation.policy import FirstObservationPolicy, next_due
+from application.first_observation.registry_ids import REGISTER_SCHEMES
 from application.first_observation.representation_audit import (
     AUDIT_VERSION,
     SiteExtras,
@@ -391,6 +392,24 @@ class FirstObservationService:
                 else:
                     coverage = "INCOMPLETE"
                     ledger.decide(f"FAILED:ACQUISITION:{need}")
+            # The legal notice is where the law makes a company state its register number
+            # (mentions légales, Impressum, aviso legal): one more page, only when no page
+            # read so far declares one, and only within the site's request budget.
+            if not any(i.scheme in REGISTER_SCHEMES for p in pages for i in p.identifiers):
+                legal = rank_information_links(home, ("LEGAL",), limit=1)
+                read = {p.url for p in pages}
+                for url, _need in legal:
+                    if url in read or not robots.allows(url):
+                        continue
+                    if ledger.http_requests + policy.requests_per_fetch > policy.max_site_requests:
+                        ledger.decide("STOPPED:SITE_REQUEST_BUDGET")
+                        break
+                    page = self._page(
+                        self._fetch(url, "site-page", ledger, retain_body=retain), robots, ledger
+                    )
+                    if page is not None:
+                        pages.append(page)
+                        ledger.decide("FETCHED:LEGAL")
         reading = SiteReading(
             key, now, robots, tuple(pages), None, streak, rights.shared_until(now), coverage
         )
@@ -710,6 +729,7 @@ class FirstObservationService:
                     {"languages": languages},
                 )
             )
+        declared_ids: set[tuple[str, str]] = set()
         for page in reading.pages:
             for address in page.addresses[:5]:
                 out.append(
@@ -738,6 +758,9 @@ class FirstObservationService:
                     )
                 )
             for identifier in page.identifiers[:5]:
+                if (identifier.scheme, identifier.value) in declared_ids:
+                    continue  # the same number in every page's footer is one declaration
+                declared_ids.add((identifier.scheme, identifier.value))
                 out.append(
                     Discovery(
                         DiscoveryKind.IDENTITY_HINT,

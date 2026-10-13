@@ -60,3 +60,126 @@ def economic_discoveries(
             }
         )
     return out
+
+
+#: Legal-form and filler words ignored when comparing a register's name with the site's.
+_FORMS = frozenset(
+    [
+        "sa",
+        "sas",
+        "sasu",
+        "sarl",
+        "eurl",
+        "sca",
+        "snc",
+        "se",
+        "sl",
+        "slu",
+        "ag",
+        "gmbh",
+        "kg",
+        "ug",
+        "ohg",
+        "spa",
+        "srl",
+        "bv",
+        "nv",
+        "ab",
+        "as",
+        "asa",
+        "oy",
+        "oyj",
+        "aps",
+        "ltd",
+        "limited",
+        "plc",
+        "llp",
+        "lp",
+        "llc",
+        "inc",
+        "incorporated",
+        "corp",
+        "corporation",
+        "co",
+        "company",
+        "the",
+        "group",
+        "holding",
+        "holdings",
+    ]
+)
+
+
+def _tokens(name: str) -> list[str]:
+    import re
+    import unicodedata
+
+    folded = unicodedata.normalize("NFKD", name).encode("ascii", "ignore").decode().casefold()
+    return [t for t in re.findall(r"[a-z0-9]+", folded) if t not in _FORMS]
+
+
+def same_organization_name(register_name: str | None, declared: list[str]) -> bool:
+    """The register's name and a name the organization declares are the same name."""
+    theirs = _tokens(register_name or "")
+    if not theirs:
+        return False
+    for name in declared:
+        ours = _tokens(name)
+        if ours and (ours == theirs or (set(ours) <= set(theirs) and ours[0] == theirs[0])
+                     or (set(theirs) <= set(ours) and ours[0] == theirs[0])):  # fmt: skip
+            return True
+    return False
+
+
+REGISTER_ORDER = (
+    "revenue", "netProfit", "assets", "employees", "employeesBand", "sizeCategory",
+    "accountsType", "inception", "establishments", "activity", "status",
+)  # fmt: skip
+
+
+def register_discoveries(
+    record: Mapping[str, object], *, attributed: bool, via: str, observed_at: str
+) -> list[dict[str, object]]:
+    """Facts an official business register holds for the identifier the organization uses.
+
+    OBSERVED when the identifier comes from the organization itself (its website or its
+    verified LEI) and the register's name is the name it declares; otherwise POTENTIAL.
+    """
+    values = record.get("facts")
+    if not isinstance(values, Mapping):
+        return []
+    out: list[dict[str, object]] = []
+    for name in REGISTER_ORDER:
+        fact = values.get(name)
+        if not isinstance(fact, Mapping) or fact.get("value") is None:
+            continue
+        out.append(
+            {
+                "kind": "ECONOMIC_FACT",
+                "code": f"REGISTER:{record.get('scheme')}:{name}",
+                "statement": str(fact.get("label") or fact.get("value")),
+                "epistemicState": "OBSERVED" if attributed else "POTENTIAL",
+                "sourceUrl": record.get("url"),
+                "excerpt": None,
+                "observedAt": observed_at,
+                "detail": {
+                    "fact": name,
+                    "value": fact.get("value"),
+                    "unit": fact.get("unit"),
+                    "year": fact.get("year"),
+                    "period": fact.get("period"),
+                    "filing": fact.get("filing"),
+                    "label": fact.get("label"),
+                    "source": record.get("register"),
+                    "sourceKind": "OFFICIAL_REGISTER",
+                    "registerName": record.get("name"),
+                    "identifier": f"{record.get('scheme')} {record.get('id')}",
+                    "attributedBy": via if attributed else f"{via}_NAME_NOT_CONFIRMED",
+                    "rights": record.get("rights"),
+                    "readAt": record.get("readAt"),
+                    "limitation": "As the official register states it for this identifier, "
+                    "with its reference period; registers lag the present.",
+                },
+            }
+        )
+    return out

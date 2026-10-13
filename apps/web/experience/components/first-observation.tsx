@@ -152,13 +152,31 @@ export function discoveryCopy(d: Discovery, t: Translate, locale = "en"): { find
   }
   if (d.kind === "ECONOMIC_FACT") {
     const fact = String(d.detail.fact ?? "");
-    const label = fact === "revenue" ? t("Ingresos", "Revenue") : fact === "netProfit" ? t("Beneficio neto", "Net profit")
-      : fact === "employees" ? t("Empleados", "Employees") : fact === "marketCapitalization" ? t("Capitalización bursátil", "Market capitalization")
-      : fact === "inception" ? t("Año de fundación", "Founded") : fact === "stockExchange" ? t("Cotiza en", "Listed on") : t("Sector", "Industry");
-    const value = typeof d.detail.value === "number"
-      ? `${d.detail.value.toLocaleString(locale, { maximumFractionDigits: 0 })}${typeof d.detail.unit === "string" ? " " + d.detail.unit : ""}`
-      : d.statement;
-    const year = typeof d.detail.year === "string" && fact !== "inception" ? ` (${d.detail.year})` : "";
+    const labels: Record<string, string> = {
+      revenue: t("Ingresos", "Revenue"), netProfit: t("Beneficio neto", "Net profit"), assets: t("Activos totales", "Total assets"),
+      employees: t("Empleados", "Employees"), employeesBand: t("Empleados (tramo)", "Employees (band)"),
+      sizeCategory: t("Tamaño de empresa", "Company size"), accountsType: t("Tipo de cuentas depositadas", "Type of accounts filed"),
+      marketCapitalization: t("Capitalización bursátil", "Market capitalization"), inception: t("Año de fundación", "Founded"),
+      stockExchange: t("Cotiza en", "Listed on"), establishments: t("Establecimientos abiertos", "Open establishments"),
+      activity: t("Actividad registrada", "Registered activity"), status: t("Estado en el registro", "Register status"),
+    };
+    const label = labels[fact] ?? t("Sector", "Industry");
+    const coded: Record<string, string> = {
+      PME: t("Pyme", "SME"), ETI: t("Empresa mediana (ETI)", "Mid-sized company (ETI)"), GE: t("Gran empresa", "Large company"),
+      ACTIVE: t("Activa", "Active"), CLOSED: t("Cerrada", "Closed"),
+    };
+    const raw = d.detail.value;
+    const value = typeof raw === "number"
+      ? `${raw.toLocaleString(locale, { maximumFractionDigits: 0 })}${typeof d.detail.unit === "string" ? " " + d.detail.unit : ""}`
+      : typeof raw === "string" && coded[raw] ? coded[raw]
+      : typeof d.detail.label === "string" && d.detail.label ? `${d.detail.label} (${String(raw)})` : d.statement;
+    const period = typeof d.detail.period === "string" ? d.detail.period.slice(0, 10) : null;
+    const year = fact === "inception" ? "" : period ? ` (${t("ejercicio cerrado el", "year ended")} ${period})` : typeof d.detail.year === "string" ? ` (${d.detail.year})` : "";
+    if (d.detail.sourceKind === "OFFICIAL_REGISTER") return { finding: `${label}: ${value}${year}`,
+      why: (d.epistemicState === "OBSERVED"
+        ? t("Según {register}, registro oficial, para {identifier}, el identificador que la propia organización publica.", "According to {register}, the official register, for {identifier}, the identifier the organization itself publishes.")
+        : t("Según {register}, registro oficial, para {identifier}. El nombre registrado no confirma todavía que sea esta organización.", "According to {register}, the official register, for {identifier}. The registered name does not yet confirm it is this organization."))
+        .replace("{register}", String(d.detail.source ?? "")).replace("{identifier}", String(d.detail.identifier ?? "")) };
     return { finding: `${label}: ${value}${year}`,
       why: t("Según Wikidata, una fuente comunitaria: no es una cuenta oficial y puede estar desactualizada.", "According to Wikidata, a community source: it is not an official account and may be outdated.") };
   }
