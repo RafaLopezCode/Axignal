@@ -78,7 +78,7 @@ def test_solar_installer_in_spain_reaches_routed_public_demand(tmp_path: Path) -
     assert activity["excerpt"] and activity["sourceUrl"] == SOLAR_ES
     (location,) = discoveries(view, "DECLARED_LOCATION")
     assert location["epistemicState"] == "DECLARED" and "ES" in location["statement"]
-    (demand,) = discoveries(view, "DEMAND")
+    (demand,) = [d for d in discoveries(view, "DEMAND") if d["code"] != "VALUE_CHAIN_BUYERS"]
     assert demand["epistemicState"] == "POTENTIAL"
     assert demand["sourceUrl"].startswith("https://ted.europa.eu/")
     # Identity is never invented: the legal name the site declares is only a hint.

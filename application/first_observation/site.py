@@ -20,6 +20,8 @@ from typing import Any
 from urllib.parse import unquote, urljoin, urlsplit, urlunsplit
 from urllib.robotparser import RobotFileParser
 
+from application.first_observation.registry_ids import registry_identifiers
+
 READER_VERSION = "site-reading.v2"
 USER_AGENT = "AXIGNAL-SourceObserver"
 MAX_TEXT_CHARS = 12_000
@@ -591,7 +593,9 @@ def read_page(
         schema_types=_unique(data["types"], 64),
         names=_unique([*data["names"], *([site_name] if site_name else [])]),
         legal_names=_unique(data["legal"]),
-        identifiers=_unique(data["ids"]),
+        identifiers=_unique(
+            [*data["ids"], *(DeclaredIdentifier(s, v) for s, v in registry_identifiers(text))]
+        ),
         addresses=_unique(data["addresses"]),
         areas_served=_unique(data["areas"]),
         services=_unique(data["services"]),
@@ -680,6 +684,12 @@ INFORMATION_PAGES: dict[str, tuple[str, ...]] = {
     "LOCATION": (
         "contact", "contacto", "contactanos", "kontakt", "contatti", "contato", "locations",
         "ubicaciones", "donde-estamos", "oficinas", "offices", "standorte", "sedi", "agences",
+    ),
+    # Where the law makes a company state its register number.
+    "LEGAL": (
+        "mentions-legales", "mentions", "legales", "aviso-legal", "impressum", "imprint",
+        "legal-notice", "legal", "note-legali", "informacoes-legais", "colofon", "colophon",
+        "company-information", "company-details",
     ),
 }  # fmt: skip
 

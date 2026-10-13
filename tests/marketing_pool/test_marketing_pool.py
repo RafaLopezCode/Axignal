@@ -291,3 +291,53 @@ def test_the_salutation_names_a_role_never_a_person() -> None:
         "Zu Händen der Leitung Kommunikation, Acme"
     )
     assert salutation("xx", "B2B_CONSULTANCY", "Acme").startswith("For the attention")
+
+
+def test_a_campaign_takes_the_budget_then_the_pool_returns_to_automatic(
+    tmp_path: Path,
+) -> None:
+    clock, sender = [NOW], _Sender()
+    runner = _runner(tmp_path, clock, sender)
+    runner.store.add([Candidate("Auto", "https://auto.example", "US", "SEO_GEO_AGENCY",
+                                "FAKE", "osm:node/7")], now=NOW)  # fmt: skip
+    campaign = runner.create_campaign(
+        name="SEO US", personas=["SEO_GEO_AGENCY"], countries=["US"], target=1,
+        ends_on=None, actor="claude:rafael",
+    )  # fmt: skip
+    assert runner.discover() == 1  # the campaign's search, not the automatic rotation
+    assert runner.store.get("acme.com")["campaign_id"] == campaign
+    assert runner.start_studies() == 1  # only the campaign's prospect
+    assert runner.store.get("auto.example")["state"] == "DISCOVERED"
+    runner.collect()
+    view = runner.campaign_view()[0]
+    assert view["state"] == "COMPLETED" and view["progress"]["drafted"] == 1
+    assert runner.start_studies() == 1  # back to automatic mode
+    assert runner.store.get("auto.example")["state"] == "STUDYING"
+
+
+def test_campaigns_are_validated_and_cancelled_by_staff(tmp_path: Path) -> None:
+    import pytest
+
+    runner = _runner(tmp_path, [NOW], _Sender())
+    for bad in (
+        {"personas": ["NOPE"], "countries": ["US"], "target": 5},
+        {"personas": ["SEO_GEO_AGENCY"], "countries": ["ZZ"], "target": 5},
+        {"personas": ["SEO_GEO_AGENCY"], "countries": ["US"], "target": 0},
+    ):
+        with pytest.raises(ValueError):
+            runner.create_campaign(name="x", ends_on=None, actor="a:b", **bad)
+    with pytest.raises(ValueError):
+        runner.create_campaign(name="x", personas=["SEO_GEO_AGENCY"], countries=["US"],
+                               target=5, ends_on="2026-01-01", actor="a:b")  # fmt: skip
+    campaign = runner.create_campaign(name="x", personas=["SEO_GEO_AGENCY"],
+                                      countries=["US"], target=5, ends_on=None,
+                                      actor="a:b")  # fmt: skip
+    assert runner.cancel_campaign(campaign, actor="founder")
+    assert not runner.cancel_campaign(campaign, actor="founder")
+    assert runner.active_campaigns() == []
+
+
+def test_the_automatic_pool_favours_what_has_qualified(tmp_path: Path) -> None:
+    from tools.runtime.marketing_pool import _rate
+
+    assert _rate((10, 8)) > _rate(None) > _rate((10, 0))

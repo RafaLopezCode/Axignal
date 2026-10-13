@@ -1,5 +1,6 @@
 "use client";
 
+import { industryName } from "@/lib/industries";
 import { ExternalLink } from "lucide-react";
 import { PublicUnderstandingView } from "./public-understanding";
 import { useLocale } from "@/lib/locale";
@@ -135,6 +136,11 @@ export function discoveryCopy(d: Discovery, t: Translate, locale = "en"): { find
         ? t("Del registro mundial de entidades (GLEIF), con su identificador verificado.", "From the global entity registry (GLEIF), with its verified identifier.")
         : t("Del registro mundial de entidades (GLEIF), a partir del identificador que declara su web; la atribución sigue siendo potencial.", "From the global entity registry (GLEIF), using the identifier its website declares; the attribution stays potential.") };
   }
+  if (d.kind === "RELATIONSHIP" && d.code === "PUBLIC_CONTRACT_PARTNER") return {
+    finding: t("Socio en contratos públicos: {name}", "Partner in public contracts: {name}").replace("{name}", d.statement),
+    why: d.detail.how === "SAME_LOT_JOINT_AWARD"
+      ? t("Adjudicatario del mismo lote que esta organización. Es una colaboración pasada documentada, no una alianza actual.", "Awarded the same lot as this organization. A documented past collaboration, not a current alliance.")
+      : t("Aparece con esta organización en el nombre de una unión temporal de empresas (UTE). Leído del nombre: la colaboración sigue siendo potencial.", "Appears with this organization in the name of a joint venture (UTE). Read from the name: the collaboration stays potential.") };
   if (d.kind === "RELATIONSHIP") {
     const n = Number(d.detail.contracts ?? 0);
     return { finding: t("Cliente público: {buyer} · {n} contratos ganados", "Public client: {buyer} · {n} contracts won").replace("{buyer}", d.statement).replace("{n}", String(n)),
@@ -145,6 +151,13 @@ export function discoveryCopy(d: Discovery, t: Translate, locale = "en"): { find
   if (d.kind === "COMPETITION") return {
     finding: t("Competidor posible: {name} · {n} contratos en sus mismos códigos", "Possible competitor: {name} · {n} contracts under the same codes").replace("{name}", d.statement).replace("{n}", String(d.detail.contracts ?? 0)),
     why: t("Gana contratos públicos con los mismos códigos de actividad. Que compita con ella es una inferencia, no una clasificación de calidad.", "It wins public contracts under the same activity codes. That it competes with this organization is an inference, not a quality ranking.") };
+  if (d.kind === "CONTEXT_SIGNAL" && d.code === "REGULATION") {
+    const journal = ({ BOE: "BOE", EUR_LEX: "EUR-Lex", FEDERAL_REGISTER: "Federal Register", LEGISLATION_GOV_UK: "legislation.gov.uk" } as Record<string, string>)[String(d.detail.journal ?? "")] ?? String(d.detail.journal ?? "");
+    const published = typeof d.detail.published === "string" ? d.detail.published.slice(0, 10) : "";
+    const issuer = typeof d.detail.issuer === "string" && d.detail.issuer ? ` · ${d.detail.issuer}` : "";
+    return { finding: `${t("Norma nueva", "New rule")} · ${journal} ${published}: ${d.statement}`,
+      why: t("Publicada en el boletín oficial{issuer}. Que concierna a su sector lo ha juzgado un asistente; si le aplica y cómo no está evaluado. No es asesoramiento jurídico.", "Published in the official journal{issuer}. That it concerns its sector was judged by an assistant; whether and how it applies is not assessed. Not legal advice.").replace("{issuer}", issuer) };
+  }
   if (d.kind === "CONTEXT_SIGNAL") {
     const outlet = typeof d.detail.outlet === "string" ? d.detail.outlet : "";
     return { finding: `${t("En su sector", "In its sector")} · ${outlet}: ${d.statement}`,
@@ -152,15 +165,61 @@ export function discoveryCopy(d: Discovery, t: Translate, locale = "en"): { find
   }
   if (d.kind === "ECONOMIC_FACT") {
     const fact = String(d.detail.fact ?? "");
-    const label = fact === "revenue" ? t("Ingresos", "Revenue") : fact === "netProfit" ? t("Beneficio neto", "Net profit")
-      : fact === "employees" ? t("Empleados", "Employees") : fact === "marketCapitalization" ? t("Capitalización bursátil", "Market capitalization")
-      : fact === "inception" ? t("Año de fundación", "Founded") : fact === "stockExchange" ? t("Cotiza en", "Listed on") : t("Sector", "Industry");
-    const value = typeof d.detail.value === "number"
-      ? `${d.detail.value.toLocaleString(locale, { maximumFractionDigits: 0 })}${typeof d.detail.unit === "string" ? " " + d.detail.unit : ""}`
-      : d.statement;
-    const year = typeof d.detail.year === "string" && fact !== "inception" ? ` (${d.detail.year})` : "";
+    const labels: Record<string, string> = {
+      revenue: t("Ingresos", "Revenue"), netProfit: t("Beneficio neto", "Net profit"), assets: t("Activos totales", "Total assets"),
+      employees: t("Empleados", "Employees"), employeesBand: t("Empleados (tramo)", "Employees (band)"),
+      sizeCategory: t("Tamaño de empresa", "Company size"), accountsType: t("Tipo de cuentas depositadas", "Type of accounts filed"),
+      marketCapitalization: t("Capitalización bursátil", "Market capitalization"), inception: t("Año de fundación", "Founded"),
+      stockExchange: t("Cotiza en", "Listed on"), establishments: t("Establecimientos abiertos", "Open establishments"),
+      activity: t("Actividad registrada", "Registered activity"), status: t("Estado en el registro", "Register status"),
+    };
+    const label = labels[fact] ?? t("Sector", "Industry");
+    const coded: Record<string, string> = {
+      PME: t("Pyme", "SME"), ETI: t("Empresa mediana (ETI)", "Mid-sized company (ETI)"), GE: t("Gran empresa", "Large company"),
+      ACTIVE: t("Activa", "Active"), CLOSED: t("Cerrada", "Closed"),
+    };
+    const raw = d.detail.value;
+    const value = typeof raw === "number"
+      ? `${raw.toLocaleString(locale, { maximumFractionDigits: 0 })}${typeof d.detail.unit === "string" ? " " + d.detail.unit : ""}`
+      : typeof raw === "string" && coded[raw] ? coded[raw]
+      : typeof d.detail.label === "string" && d.detail.label ? `${d.detail.label} (${String(raw)})` : d.statement;
+    const period = typeof d.detail.period === "string" ? d.detail.period.slice(0, 10) : null;
+    const year = fact === "inception" ? "" : period ? ` (${t("ejercicio cerrado el", "year ended")} ${period})` : typeof d.detail.year === "string" ? ` (${d.detail.year})` : "";
+    if (d.detail.sourceKind === "OFFICIAL_REGISTER") return { finding: `${label}: ${value}${year}`,
+      why: (d.epistemicState === "OBSERVED"
+        ? t("Según {register}, registro oficial, para {identifier}, el identificador que la propia organización publica.", "According to {register}, the official register, for {identifier}, the identifier the organization itself publishes.")
+        : t("Según {register}, registro oficial, para {identifier}. El nombre registrado no confirma todavía que sea esta organización.", "According to {register}, the official register, for {identifier}. The registered name does not yet confirm it is this organization."))
+        .replace("{register}", String(d.detail.source ?? "")).replace("{identifier}", String(d.detail.identifier ?? "")) };
     return { finding: `${label}: ${value}${year}`,
       why: t("Según Wikidata, una fuente comunitaria: no es una cuenta oficial y puede estar desactualizada.", "According to Wikidata, a community source: it is not an official account and may be outdated.") };
+  }
+  if (d.code === "VALUE_CHAIN_BUYERS" || d.code === "VALUE_CHAIN_SUPPLIERS") {
+    const sectors = Array.isArray(d.detail.sectors) ? d.detail.sectors as { code: string; share: number }[] : [];
+    const list = sectors.map(x => `${industryName(x.code, locale)} ${Math.round(x.share * 1000) / 10}%`).join(" · ");
+    const own = industryName(String(d.detail.industry ?? ""), locale);
+    const buyers = d.code === "VALUE_CHAIN_BUYERS";
+    return { finding: (buyers ? t("Quién compra a su sector", "Who buys from its sector") : t("A quién compra su sector", "Who its sector buys from")) + `: ${list}`,
+      why: t("Estructura de la economía de la UE-27 para «{sector}» (Eurostat, tabla input-output {year}). Es el sector, no la cartera de clientes o proveedores de esta organización.", "Structure of the EU-27 economy for “{sector}” (Eurostat input-output table {year}). It is the sector, not this organization's own clients or suppliers.")
+        .replace("{sector}", own).replace("{year}", String(d.detail.year ?? "")) };
+  }
+  if (d.code === "POTENTIAL_PRIVATE_CUSTOMER" || d.code === "POTENTIAL_SUPPLIER") {
+    const sector = industryName(String(d.detail.sector ?? ""), locale);
+    const n = String(d.detail.contracts ?? 0);
+    return d.code === "POTENTIAL_PRIVATE_CUSTOMER"
+      ? { finding: t("Posible cliente: {name} · {sector}", "Possible customer: {name} · {sector}").replace("{name}", d.statement).replace("{sector}", sector),
+          why: t("Activa en su zona en un sector que suele comprar al suyo ({n} contratos públicos lo muestran). Es una posibilidad, no una relación.", "Active in its area in a sector that usually buys from its own ({n} public contracts show it). A possibility, not a relationship.").replace("{n}", n) }
+      : { finding: t("Posible proveedor: {name} · {sector}", "Possible supplier: {name} · {sector}").replace("{name}", d.statement).replace("{sector}", sector),
+          why: t("Activa en su zona en un sector al que el suyo suele comprar ({n} contratos públicos lo muestran). Es una posibilidad, no una relación.", "Active in its area in a sector its own usually buys from ({n} public contracts show it). A possibility, not a relationship.").replace("{n}", n) };
+  }
+  if (d.kind === "DEMAND" && d.code === "RECURRING_PUBLIC_BUYER") {
+    const n = Number(d.detail.contracts ?? 0);
+    const amount = typeof d.detail.amount === "number" && d.detail.amount > 0
+      ? ` · ${d.detail.amount.toLocaleString(locale, { maximumFractionDigits: 0 })} ${typeof d.detail.currency === "string" ? d.detail.currency : ""}` : "";
+    const offers = typeof d.detail.medianOffers === "number" ? t("suele recibir {n} ofertas", "usually receives {n} offers").replace("{n}", String(d.detail.medianOffers)) : null;
+    const winners = typeof d.detail.distinctWinners === "number" ? t("{n} adjudicatarios distintos", "{n} different winners").replace("{n}", String(d.detail.distinctWinners)) : null;
+    return { finding: t("Comprador público recurrente: {buyer} · {n} contratos en su actividad", "Recurrent public buyer: {buyer} · {n} contracts in its activity").replace("{buyer}", d.statement).replace("{n}", String(n)) + amount,
+      why: [offers, winners].filter(Boolean).join(" · ") + (offers || winners ? ". " : "")
+        + t("Compra lo que esta organización hace y aún no le ha adjudicado nada. Es una oportunidad potencial, no un cliente ni una probabilidad de ganar.", "It buys what this organization does and has not awarded it anything yet. A potential opportunity, not a client nor a probability of winning.") };
   }
   if (d.kind === "DEMAND") {
     const deadline = typeof d.detail.deadline === "string" ? d.detail.deadline.slice(0, 10) : null;

@@ -66,7 +66,7 @@ def test_second_focus_in_the_same_country_is_answered_from_the_world_index(
     view = _view(facade, token, _pending_id(facade, token))
     assert len(world.ted.queries) == live_queries  # no new per-Focus source request
     assert _ledger(view, "sourceRequests") == 0 and _ledger(view, "sourceCacheHits") >= 1
-    (demand,) = discoveries(view, "DEMAND")
+    (demand,) = [d for d in discoveries(view, "DEMAND") if d["code"] != "VALUE_CHAIN_BUYERS"]
     assert demand["detail"]["title"] == TENDERS[0].title
     assert demand["sourceUrl"] == TENDERS[0].source_url  # original evidence, one click away
 
