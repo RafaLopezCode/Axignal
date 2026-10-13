@@ -119,6 +119,39 @@ def _count(kind: str, *codes: str) -> Callable[[list[Discovery], Mapping[str, An
     return lambda ds, _v: len(_of(ds, kind, *codes))
 
 
+def _own_site(
+    extract: Callable[[list[Discovery], Mapping[str, Any]], object],
+) -> Callable[[list[Discovery], Mapping[str, Any]], object]:
+    """Only when the own-site reader read the website: otherwise unknown, never empty."""
+
+    def guarded(ds: list[Discovery], view: Mapping[str, Any]) -> object:
+        read = any(
+            _detail(d).get("ownSiteVersion")
+            for d in _of(ds, "PUBLIC_PRESENCE", "PUBLIC_WEBSITE_OBSERVED")
+        )
+        return extract(ds, view) if read else None
+
+    return guarded
+
+
+def _job_postings(ds: list[Discovery], _v: Mapping[str, Any]) -> object:
+    for d in _of(ds, "OPERATING_SIGNAL", "JOB_POSTINGS_PUBLISHED"):
+        count = _detail(d).get("count")
+        return int(count) if isinstance(count, int) else None
+    return 0
+
+
+def _hiring_channel(ds: list[Discovery], _v: Mapping[str, Any]) -> object:
+    return 1 if _of(ds, "OPERATING_SIGNAL") else 0
+
+
+def _self_rating(ds: list[Discovery], _v: Mapping[str, Any]) -> object:
+    for d in _of(ds, "RATING", "RATING_SELF_PUBLISHED"):
+        value = _detail(d).get("value")
+        return float(value) if isinstance(value, int | float) else None
+    return None
+
+
 METRICS: tuple[Metric, ...] = (
     Metric("presence.ai_named_share", "presence", +1, "OBSERVED", _geo_named, 0.25, 0.0),
     Metric("presence.ai_knows_brand", "presence", +1, "OBSERVED", _brand_known, 1.0, 0.0),
@@ -149,6 +182,21 @@ METRICS: tuple[Metric, ...] = (
            _set("DEMAND", "RECURRING_PUBLIC_BUYER")),
     Metric("economics.revenue", "economics", 0, "OBSERVED", _economic("revenue"), 1.0, 0.05),
     Metric("economics.employees", "economics", 0, "OBSERVED", _economic("employees"), 2.0, 0.05),
+    Metric("relationships.technology", "relationships", 0, "OBSERVED",
+           _own_site(_set("RELATIONSHIP", "TECHNOLOGY_SUPPLIER_OBSERVED"))),
+    Metric("relationships.declared_clients", "relationships", 0, "DECLARED",
+           _own_site(_set("RELATIONSHIP", "CLIENT_DECLARED"))),
+    Metric("relationships.declared_partners", "relationships", 0, "DECLARED",
+           _own_site(_set("RELATIONSHIP", "PARTNER_DECLARED"))),
+    Metric("value.credentials", "value", 0, "DECLARED", _own_site(_set("CREDENTIAL"))),
+    Metric("activity.job_postings", "activity", 0, "DECLARED", _own_site(_job_postings),
+           2.0, 0.25),
+    Metric("activity.hiring_channel", "activity", 0, "DECLARED", _own_site(_hiring_channel),
+           1.0, 0.0),
+    Metric("reputation.review_profiles", "reputation", 0, "DECLARED",
+           _own_site(_set("RATING", "REVIEW_PROFILE_LINKED"))),
+    Metric("reputation.self_rating", "reputation", 0, "DECLARED", _own_site(_self_rating),
+           0.1, 0.0),
     Metric("organization.identifiers", "organization", 0, "DECLARED",
            lambda ds, _v: _names(_of(ds, "IDENTITY_HINT")) if _of(ds, "IDENTITY_HINT") else []),
     Metric("context.sector_headlines", "context", 0, "POTENTIAL",

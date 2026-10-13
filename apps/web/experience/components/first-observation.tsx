@@ -221,7 +221,7 @@ export function discoveryCopy(d: Discovery, t: Translate, locale = "en"): { find
     const metric = String(v.metric ?? "");
     const shown = (x: unknown) => Array.isArray(x) ? (x.length ? x.map(String).join(", ") : t("ninguno", "none"))
       : metric === "presence.ai_named_share" ? `${Math.round(Number(x ?? 0) * 100)} %`
-      : metric === "presence.ai_knows_brand" ? (Number(x) ? t("sí", "yes") : t("no", "no"))
+      : metric === "presence.ai_knows_brand" || metric === "activity.hiring_channel" ? (Number(x) ? t("sí", "yes") : t("no", "no"))
       : typeof x === "number" ? x.toLocaleString(locale) : String(x ?? "");
     const added = Array.isArray(v.added) ? v.added.map(String) : [];
     const removed = Array.isArray(v.removed) ? v.removed.map(String) : [];
@@ -416,6 +416,14 @@ export function changeLabel(metric: string, t: Translate): string {
     "demand.recurrent_buyers": t("Compradores recurrentes de su actividad", "Recurring buyers of its activity"),
     "economics.revenue": t("Ingresos", "Revenue"),
     "economics.employees": t("Empleados", "Employees"),
+    "relationships.technology": t("Proveedores tecnológicos de su web", "Website technology suppliers"),
+    "relationships.declared_clients": t("Clientes que muestra", "Clients it shows"),
+    "relationships.declared_partners": t("Partners que muestra", "Partners it shows"),
+    "value.credentials": t("Certificaciones que declara", "Certifications it claims"),
+    "activity.job_postings": t("Ofertas de empleo publicadas", "Job postings published"),
+    "activity.hiring_channel": t("Canal de empleo publicado", "Hiring channel published"),
+    "reputation.review_profiles": t("Perfiles de opiniones enlazados", "Linked review profiles"),
+    "reputation.self_rating": t("Valoración que publica sobre sí misma", "Rating it publishes about itself"),
     "organization.identifiers": t("Identificadores publicados", "Published identifiers"),
     "context.sector_headlines": t("Titulares de su sector", "Sector headlines"),
     "context.regulation": t("Normas nuevas sobre su actividad", "New rules about its activity"),

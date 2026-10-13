@@ -130,3 +130,24 @@ def test_runtime_compares_today_with_a_reading_at_least_a_week_old(tmp_path: Pat
         ["2026-10-04", 0.75],
         ["2026-10-09", 0.75],
     ]
+
+
+def test_own_site_signals_change_in_time_only_once_the_reader_ran() -> None:
+    def site(*ds: dict[str, Any], read: bool = True) -> dict[str, Any]:
+        detail = {"ownSiteVersion": "own-site-v1"} if read else {}
+        return _view(_d("PUBLIC_PRESENCE", "PUBLIC_WEBSITE_OBSERVED", "Acme", **detail), *ds)
+
+    hubspot = _d("RELATIONSHIP", "TECHNOLOGY_SUPPLIER_OBSERVED", "HubSpot")
+    salesforce = _d("RELATIONSHIP", "TECHNOLOGY_SUPPLIER_OBSERVED", "Salesforce")
+    jobs = _d("OPERATING_SIGNAL", "JOB_POSTINGS_PUBLISHED", "6", count=6)
+    found = _changes(site(hubspot), site(salesforce, jobs))
+    tech = found["relationships.technology"]["detail"]["values"]
+    assert (tech["added"], tech["removed"], tech["direction"]) == (
+        ["Salesforce"],
+        ["HubSpot"],
+        "CHANGED",
+    )
+    assert found["activity.job_postings"]["detail"]["values"]["after"] == 6
+    assert found["activity.hiring_channel"]["code"] == "activity:activity.hiring_channel:UP"
+    # A reading from before the own-site reader is unknown, not "nothing": no false ADDED.
+    assert "relationships.technology" not in _changes(site(read=False), site(salesforce))
