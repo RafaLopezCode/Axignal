@@ -1,0 +1,30 @@
+{
+  "observedAtUTC": "2026-10-10T13:35:11Z",
+  "mode": "READ_ONLY_METADATA_NO_PRODUCTION_MODIFICATION",
+  "containers": [
+    {
+      "name": "axignal-prod-runtime",
+      "revision": "b51a54526da1fc48a6070712df0dd97fde81d6a6",
+      "status": "running"
+    },
+    {
+      "name": "axignal-prod-landing",
+      "revision": "b51a54526da1fc48a6070712df0dd97fde81d6a6",
+      "status": "running"
+    },
+    {
+      "name": "axignal-prod-experience",
+      "revision": "b51a54526da1fc48a6070712df0dd97fde81d6a6",
+      "status": "running"
+    }
+  ],
+  "scheduler": {
+    "state": "NOT_RUN",
+    "lease_status": "NO_TICK"
+  },
+  "limits": [
+    "No current source/customer rows inspected",
+    "No flags, grants or entitlements recertified",
+    "No deployment, activation or service restart performed"
+  ]
+}
