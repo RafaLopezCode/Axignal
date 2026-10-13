@@ -9,13 +9,14 @@ in an attention scope. Luna is never used here. Nothing here writes canonical st
 
 from __future__ import annotations
 
+import json
 import re
 import time
 from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass, replace
-from datetime import datetime
+from datetime import UTC, datetime, timedelta
 from typing import Any, Protocol
-from urllib.parse import urlsplit
+from urllib.parse import urlencode, urlsplit
 
 from application.economic_discovery.brain_contracts import ObservationMode, ObservationRecord
 from application.economic_discovery.observation_memory import GovernedObservation
@@ -157,6 +158,9 @@ class FocusSeedPort(Protocol):
         """Append readable pages under the Organization subject; page url → observation id."""
 
 
+#: How old an archived homepage may be to stand in for an unreadable live one.
+ARCHIVE_MAX_AGE = timedelta(days=180)
+
 _SECOND_LEVEL = frozenset({"co", "com", "org", "net", "ac", "gov", "gob", "edu"})
 
 
@@ -270,6 +274,86 @@ class FirstObservationService:
             artifact_ref=resource.artifact_ref,
         )
 
+    def _archive_capture(
+        self, host: str, since: str, now: datetime, ledger: RunLedger
+    ) -> tuple[str, str] | None:
+        """(timestamp, original URL) of the latest 200 capture: the CDX index first, its
+        availability service when the index is temporarily offline."""
+        index = self._fetch(
+            "https://web.archive.org/cdx/search/cdx?"
+            + urlencode({"url": f"{host}/", "output": "json", "filter": "statuscode:200",
+                         "from": since, "limit": "-1", "fl": "timestamp,original"}),
+            "archive-index", ledger,
+        )  # fmt: skip
+        if index.failure is None and index.status == 200 and index.body:
+            try:
+                rows = json.loads(index.body.decode("utf-8", "replace") or "[]")
+            except ValueError:
+                rows = []
+            if isinstance(rows, list) and len(rows) >= 2 and isinstance(rows[-1], list):
+                return str(rows[-1][0]), str(rows[-1][1])
+            return None
+        ledger.decide("ARCHIVE:INDEX_UNAVAILABLE")
+        available = self._fetch(
+            "https://archive.org/wayback/available?"
+            + urlencode({"url": f"{host}/", "timestamp": now.strftime("%Y%m%d")}),
+            "archive-index", ledger,
+        )  # fmt: skip
+        if available.failure is not None or available.status != 200 or not available.body:
+            return None
+        try:
+            data = json.loads(available.body.decode("utf-8", "replace"))
+        except ValueError:
+            return None
+        closest = ((data or {}).get("archived_snapshots") or {}).get("closest") or {}
+        if not closest.get("available") or str(closest.get("status")) != "200":
+            return None
+        stamp = str(closest.get("timestamp") or "")
+        original = f"https://{host}/"
+        return (stamp, original) if stamp[:8] >= since else None
+
+    def _archived_home(self, target: str, now: datetime, ledger: RunLedger) -> PageReading | None:
+        """The latest Internet Archive capture (HTTP 200) of the homepage, at most
+        ARCHIVE_MAX_AGE old, read as of its capture date; None when there is none."""
+        host = (urlsplit(target).hostname or "").lower()
+        if not host:
+            return None
+        since = (now - ARCHIVE_MAX_AGE).strftime("%Y%m%d")
+        found = self._archive_capture(host, since, now, ledger)
+        if found is None:
+            ledger.decide("ARCHIVE:NO_RECENT_CAPTURE")
+            return None
+        stamp, original = found
+        try:
+            captured = datetime.strptime(stamp[:14], "%Y%m%d%H%M%S").replace(tzinfo=UTC)
+        except ValueError:
+            return None
+        if now - captured > ARCHIVE_MAX_AGE:
+            ledger.decide("ARCHIVE:CAPTURE_TOO_OLD")
+            return None
+        snapshot = f"https://web.archive.org/web/{stamp}id_/{original}"
+        fetched = self._fetch(snapshot, "archive", ledger)
+        if fetched.failure is not None or fetched.status != 200 or fetched.body is None:
+            ledger.decide("ARCHIVE:CAPTURE_UNAVAILABLE")
+            return None
+        text = _decode(fetched)
+        if not _is_html(fetched, text):
+            return None
+        # Read as the organization's own page (its links resolve to its domain), dated by
+        # the capture and cited through the archive.
+        page = read_page(
+            url=target, html=text, observed_at=captured,
+            content_fingerprint=fetched.content_fingerprint or "unknown",
+            artifact_ref=fetched.artifact_ref,
+        )  # fmt: skip
+        ledger.decide("READ:ARCHIVED_HOMEPAGE")
+        return replace(
+            page,
+            url=snapshot,
+            signals={**page.signals, "archivedAt": captured.isoformat(), "archivedFrom": target,
+                     "archiveSource": "Internet Archive (Wayback Machine)"},
+        )  # fmt: skip
+
     def read_site(
         self,
         website: str,
@@ -372,6 +456,20 @@ class FirstObservationService:
                 f"{moved.scheme}://{moved.netloc}/", now, ledger, rights,
                 force_refresh=force_refresh, redirected=True,
             )  # fmt: skip
+        if home is None and fetched.failure != TLS_NOT_VERIFIED:
+            # Its robots.txt allows reading the homepage, but the live page refused us
+            # (anti-bot wall, error, timeout). A recent public archive copy is read instead,
+            # dated by its capture and cited as such (ADR-0098). Never past robots.
+            archived = self._archived_home(target, now, ledger)
+            if archived is not None:
+                reading = SiteReading(
+                    key, now, robots, (archived,), None, 0, rights.shared_until(now),
+                    "NOT_REQUESTED",
+                )  # fmt: skip
+                self._sites.save_site(
+                    reading if reading.content_retained else reading.without_content()
+                )
+                return reading
         if home is None:
             failure = (
                 TLS_NOT_VERIFIED if fetched.failure == TLS_NOT_VERIFIED else "HOMEPAGE_UNAVAILABLE"
@@ -762,7 +860,19 @@ class FirstObservationService:
                 home.description or home.title or None,
                 home.observed_at,
                 # Which own-site reader ran: its signals are comparable in time only then.
-                {"pagesRead": len(reading.pages), "ownSiteVersion": OWN_SITE_VERSION},
+                {
+                    "pagesRead": len(reading.pages),
+                    "ownSiteVersion": OWN_SITE_VERSION,
+                    **(
+                        {
+                            "archivedAt": home.signals["archivedAt"],
+                            "limitation": "The live website refused automated reading; this is "
+                            "a public archive copy dated by its capture.",
+                        }
+                        if home.signals.get("archivedAt")
+                        else {}
+                    ),
+                },
             )
         ]
         languages = sorted({x for x in (home.language, *home.alternate_languages) if x})
