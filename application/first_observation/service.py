@@ -73,6 +73,7 @@ from application.observation_intelligence.contracts import (
     MarketScope,
     TaxonomyCode,
 )
+from application.own_site import own_site_discoveries
 from application.semantic_layer.cascade import SemanticCascade
 from domain.xignal import XignalEpistemicState
 
@@ -730,8 +731,13 @@ class FirstObservationService:
                 )
             )
         declared_ids: set[tuple[str, str]] = set()
+        # The same footer address or legal name on every page is one declaration.
+        declared: set[tuple[str, str]] = set()
         for page in reading.pages:
             for address in page.addresses[:5]:
+                if ("ADDRESS", address.label.casefold()) in declared:
+                    continue
+                declared.add(("ADDRESS", address.label.casefold()))
                 out.append(
                     Discovery(
                         DiscoveryKind.DECLARED_LOCATION,
@@ -774,6 +780,9 @@ class FirstObservationService:
                     )
                 )  # fmt: skip
             for name in page.legal_names[:3]:
+                if ("LEGAL", name.casefold()) in declared:
+                    continue
+                declared.add(("LEGAL", name.casefold()))
                 out.append(
                     Discovery(
                         DiscoveryKind.IDENTITY_HINT,
@@ -786,6 +795,9 @@ class FirstObservationService:
                         {"admitted": False},
                     )
                 )
+        # Technology, clients and partners shown, credentials, hiring and review profiles.
+        own_names = [n for page in reading.pages for n in (*page.names, *page.legal_names)]
+        out += own_site_discoveries(reading.pages, own_names)
         if semantic is not None:
             for place, url, line in semantic.located:
                 out.append(

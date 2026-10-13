@@ -39,6 +39,7 @@ _BLOCK = frozenset(
     }
 )  # fmt: skip
 _HEADINGS = frozenset({"h1", "h2", "h3"})
+_RESOURCE_RELS = frozenset({"stylesheet", "preconnect", "dns-prefetch", "preload", "modulepreload"})
 _SPACE = re.compile(r"\s+")
 _IDENTIFIER_KEYS = {
     "leicode": "LEI",
@@ -252,6 +253,10 @@ class _PageParser(HTMLParser):
         self.images = 0
         self.images_without_alt = 0
         self.hreflang: dict[str, str] = {}
+        #: Hosts whose code, frames or styles the page loads (its observed technology).
+        self.resource_hosts: list[str] = []
+        #: Image alternative texts with the heading they sit under (logo walls).
+        self.alts: list[tuple[str, str]] = []
 
     def _flush(self) -> None:
         line = _clean("".join(self.current), 1000)
@@ -279,10 +284,23 @@ class _PageParser(HTMLParser):
                 )
         if tag == "img":
             self.images += 1
+            alt = _clean(values.get("alt", ""), 120)
+            if alt and len(self.alts) < 160:
+                self.alts.append((self.headings[-1] if self.headings else "", alt))
             if not values.get("alt", "").strip() and values.get("role") != "presentation":
                 self.images_without_alt += 1
         if tag == "link" and values.get("rel", "").lower() == "canonical" and values.get("href"):
             self.canonical = self.canonical or values["href"].strip()[:500]
+        resource = (
+            values.get("src") if tag in {"script", "iframe"}
+            else values.get("href") if tag == "link" and values.get("rel", "").lower() in _RESOURCE_RELS
+            else values.get("action") if tag == "form"
+            else None
+        )  # fmt: skip
+        if resource and len(self.resource_hosts) < 120:
+            host = (urlsplit(resource.strip()).hostname or "").lower()
+            if host and host not in self.resource_hosts:
+                self.resource_hosts.append(host)
         if tag == "script" and values.get("type", "").lower() == "application/ld+json":
             self.jsonld_chunks = []
         if tag == "svg":
@@ -426,7 +444,8 @@ def _jsonld_errors(documents: list[str]) -> int:
 def _jsonld(documents: list[str]) -> dict[str, list[Any]]:
     out: dict[str, list[Any]] = {
         "types": [], "names": [], "legal": [], "ids": [], "addresses": [], "areas": [],
-        "services": [], "same_as": [], "entity_fields": [], "geo": [],
+        "services": [], "same_as": [], "entity_fields": [], "geo": [], "jobs": [],
+        "ratings": [],
     }  # fmt: skip
     for node in _nodes(documents):
         types = _types(node)
@@ -438,6 +457,24 @@ def _jsonld(documents: list[str]) -> dict[str, list[Any]]:
                 point = None
             if point and -90 <= point[0] <= 90 and -180 <= point[1] <= 180 and point != (0, 0):
                 out["geo"].append(point)
+        if "JobPosting" in types and len(out["jobs"]) < 50:
+            title = _text_value(node.get("title")) or _text_value(node.get("name"))
+            if title:
+                posted = node.get("datePosted")
+                out["jobs"].append(
+                    {
+                        "title": title,
+                        "datePosted": _clean(posted, 32) if isinstance(posted, str) else None,
+                    }
+                )
+        rating = node.get("aggregateRating")
+        if set(types) & _ENTITY_TYPES and isinstance(rating, dict):
+            with suppress(TypeError, ValueError):
+                score = float(str(rating.get("ratingValue")).replace(",", "."))
+                count = int(str(rating.get("reviewCount") or rating.get("ratingCount") or 0))
+                best = float(str(rating.get("bestRating") or 5).replace(",", "."))
+                if 0 < score <= best <= 100:
+                    out["ratings"].append({"value": score, "best": best, "count": count})
         if set(types) & _ENTITY_TYPES:
             same = node.get("sameAs")
             for link in same if isinstance(same, list) else [same]:
@@ -562,6 +599,7 @@ def read_page(
     host = (urlsplit(url).hostname or "").lower()
     links: list[tuple[str, str]] = []
     external = 0
+    external_hosts: set[str] = set()
     emails: list[str] = []
     for href, text in parser.anchors:
         if href.lower().startswith("mailto:"):
@@ -572,6 +610,8 @@ def read_page(
         parts = urlsplit(absolute)
         if parts.scheme in ("http", "https") and not same_site(absolute, host):
             external += 1
+            if parts.hostname:
+                external_hosts.add(parts.hostname.lower())
         if parts.scheme not in ("http", "https") or not same_site(absolute, host):
             continue
         clean = urlunsplit((parts.scheme, parts.netloc, parts.path or "/", parts.query, ""))
@@ -618,6 +658,14 @@ def read_page(
             "jsonldDocuments": len(parser.jsonld),
             "jsonldErrors": _jsonld_errors(parser.jsonld),
             "sameAs": list(_unique(data["same_as"], 16)),
+            "resourceHosts": [
+                h for h in parser.resource_hosts if not same_site(f"https://{h}/", host)
+            ],
+            "generator": parser.meta.get("generator"),
+            "imageAlts": [list(pair) for pair in _unique(parser.alts, 160)],
+            "jobPostings": data["jobs"][:50],
+            "ratings": data["ratings"][:3],
+            "externalLinkHosts": sorted(external_hosts)[:120],
             "entityFields": sorted(set(data["entity_fields"])),
             "words": len(text.split()),
             "internalLinks": len(links),

@@ -31,6 +31,9 @@ FAMILY_OF_KIND = {
     "COMPETITION": "relationships",
     "CONTEXT_SIGNAL": "context",
     "ECONOMIC_FACT": "economics",
+    "OPERATING_SIGNAL": "activity",
+    "CREDENTIAL": "value",
+    "RATING": "reputation",
 }
 #: A message goes out only when it could not be sent to another organization unchanged.
 MIN_FINDINGS = 4

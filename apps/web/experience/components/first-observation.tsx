@@ -126,6 +126,29 @@ export function discoveryCopy(d: Discovery, t: Translate, locale = "en"): { find
       ? { finding: `${t("Publicado por la propia organización", "Published by the organization itself")}: ${d.statement}`, why: t("Es su propia voz, no una mención de terceros.", "It is its own voice, not a third-party mention.") }
       : { finding: `${t("Mención en prensa", "Press mention")} · ${outlet}: ${d.statement}`, why: t("El titular nombra a la organización. Que trate de ella no está verificado, y mencionar no es recomendar.", "The headline names the organization. That it is about it is not verified, and a mention is not an endorsement.") };
   }
+  if (d.kind === "RELATIONSHIP" && d.code === "TECHNOLOGY_SUPPLIER_OBSERVED") return {
+    finding: `${t("Proveedor tecnológico", "Technology supplier")}: ${d.statement} (${techCategory(String(d.detail.category ?? ""), t)})`,
+    why: t("Su web carga tecnología de este proveedor: es un proveedor observado. El contrato, el plan o el gasto no están establecidos.", "Its website loads this vendor's technology: an observed supplier. The contract, plan or spend is not established.") };
+  if (d.kind === "RELATIONSHIP" && (d.code === "CLIENT_DECLARED" || d.code === "PARTNER_DECLARED")) return {
+    finding: `${d.code === "CLIENT_DECLARED" ? t("Cliente que muestra", "Client it shows") : t("Partner que muestra", "Partner it shows")}: ${d.statement}`,
+    why: t("Lo muestra su propia web bajo «{heading}». Es su declaración: la otra parte no lo ha confirmado.", "Its own website shows it under “{heading}”. Its own claim: the other party has not confirmed it.").replace("{heading}", String(d.detail.heading ?? "")) };
+  if (d.kind === "CREDENTIAL") return {
+    finding: `${t("Certificación que declara", "Certification it claims")}: ${d.statement}`,
+    why: t("Lo afirma en su web; no se ha comprobado en el registro del emisor.", "Claimed on its website; the issuer's register has not been checked.") };
+  if (d.kind === "OPERATING_SIGNAL" && d.code === "JOB_POSTINGS_PUBLISHED") return {
+    finding: t("Publica {n} ofertas de empleo", "It publishes {n} job posting(s)").replace("{n}", d.statement) + (Array.isArray(d.detail.titles) && d.detail.titles.length ? `: ${d.detail.titles.slice(0, 3).map(String).join(", ")}` : ""),
+    why: t("Contratar es actividad: indica dónde está creciendo. Son ofertas que publica ella misma.", "Hiring is activity: it shows where it is growing. These are postings it publishes itself.") };
+  if (d.kind === "OPERATING_SIGNAL") return {
+    finding: Array.isArray(d.detail.hiringVendors) && d.detail.hiringVendors.length
+      ? `${t("Canal de empleo", "Hiring channel")}: ${d.detail.hiringVendors.map(String).join(", ")}`
+      : t("Publica una página de empleo", "It publishes a careers page"),
+    why: t("Muestra que existe un proceso de selección; no establece vacantes abiertas salvo que las publique.", "It shows a hiring process exists; open positions are not established unless it publishes them.") };
+  if (d.kind === "RATING" && d.code === "RATING_SELF_PUBLISHED") return {
+    finding: `${t("Valoración que publica sobre sí misma", "Rating it publishes about itself")}: ${d.statement}${typeof d.detail.count === "number" && d.detail.count ? ` (${d.detail.count.toLocaleString(locale)} ${t("opiniones", "reviews")})` : ""}`,
+    why: t("Es su propia afirmación en datos estructurados, no una reseña independiente.", "Its own claim in structured data, not an independent review.") };
+  if (d.kind === "RATING") return {
+    finding: `${t("Perfil de opiniones enlazado", "Linked review profile")}: ${d.statement}`,
+    why: t("Remite a sus clientes a esta plataforma para opinar. AXIGNAL no ha leído todavía la valoración allí.", "It sends customers to this platform to review it. AXIGNAL has not read the rating there yet.") };
   if (d.kind === "RELATIONSHIP" && d.code === "GROUP_PARENT") return {
     finding: `${d.detail.role === "ULTIMATE_PARENT" ? t("Matriz última del grupo", "Group's ultimate parent") : t("Matriz directa", "Direct parent")}: ${d.statement}`,
     why: t("Según el registro mundial de entidades (GLEIF). Es estructura societaria registrada, no una opinión.", "According to the global entity registry (GLEIF). It is registered corporate structure, not an opinion.") };
@@ -341,6 +364,18 @@ export function discoveryCopy(d: Discovery, t: Translate, locale = "en"): { find
 }
 
 /** The demand question a missing source leaves open, in the reader's words. */
+function techCategory(category: string, t: Translate): string {
+  const labels: Record<string, string> = {
+    ANALYTICS: t("analítica", "analytics"), ADVERTISING: t("publicidad", "advertising"),
+    CRM_MARKETING: t("CRM y marketing", "CRM and marketing"), EMAIL_MARKETING: t("email marketing", "email marketing"),
+    ECOMMERCE: t("comercio electrónico", "e-commerce"), PAYMENTS: t("pagos", "payments"), CMS: t("gestor de contenidos", "content management"),
+    SUPPORT_CHAT: t("atención al cliente", "customer support"), CONSENT: t("consentimiento de cookies", "cookie consent"),
+    HOSTING_CDN: t("alojamiento y CDN", "hosting and CDN"), SCHEDULING: t("agenda de citas", "scheduling"), FORMS: t("formularios", "forms"),
+    VIDEO: t("vídeo", "video"), MAPS: t("mapas", "maps"), SEARCH: t("búsqueda", "search"), SECURITY: t("seguridad", "security"),
+  };
+  return labels[category] ?? category.toLowerCase();
+}
+
 function demandQuestionLabel(id: string, t: Translate): string | null {
   switch (id) {
     case "compatible-public-tenders": return t("licitaciones abiertas", "open tenders");
