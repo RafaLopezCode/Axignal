@@ -25,6 +25,7 @@ from application.marketing_pool.policy import (
     MARKETS,
     Channel,
     channel_for,
+    market,
 )
 from application.marketing_pool.prospect import (
     INSTRUCTION,
@@ -55,6 +56,16 @@ from tools.runtime.admin_access import AdminHttpAccessGuard
 
 ENABLED_KEY = "AXIGNAL_MARKETING_POOL_ENABLED"
 _RETRY = timedelta(days=1)
+_NOT_STUDIED = {"DISCOVERED", "STUDYING", "OPTED_OUT"}
+_QUALIFIED = ("DRAFTED", "APPROVED", "SENT", "HELD", "SEND_FAILED")
+
+
+def _rate(learned: tuple[int, int] | None) -> float:
+    """Share of studied prospects that qualified, smoothed so the unknown is not zero."""
+    studied, qualified = learned or (0, 0)
+    return (qualified + 1) / (studied + 2)
+
+
 STUDY_PREFIX = "pool:"
 WAITING = {"QUEUED", "OBSERVING_PUBLIC_PRESENCE", None}
 FAILED = {"OBSERVATION_FAILED", "SOURCE_UNAVAILABLE", "NO_PUBLIC_WEBSITE"}
@@ -128,50 +139,119 @@ class MarketingPoolRunner:
             "sent": self.send_approved(),
         }
 
-    def discover(self) -> int:
-        """One persona, country and source per tick, while the backlog is short."""
+    def active_campaigns(self) -> list[dict[str, Any]]:
+        """Active campaigns, oldest first; a campaign done, past its date or out of sources ends."""
         now = self._clock()
-        if len(self.store.in_state("DISCOVERED", limit=self.limits.min_backlog)) >= (
-            self.limits.min_backlog
-        ):
+        active = []
+        for campaign in self.store.campaigns():
+            if campaign["state"] != "ACTIVE":
+                continue
+            counts = self.store.campaign_counts(campaign["id"])
+            studied = sum(n for state, n in counts.items() if state not in _NOT_STUDIED)
+            if studied >= campaign["target"] and not counts.get("STUDYING"):
+                self.store.end_campaign(campaign["id"], "COMPLETED", reason="TARGET_REACHED",
+                                        actor="marketing-pool", now=now)  # fmt: skip
+                continue
+            if campaign["ends_at"] and now >= datetime.fromisoformat(campaign["ends_at"]):
+                self.store.end_campaign(campaign["id"], "ENDED", reason="END_DATE",
+                                        actor="marketing-pool", now=now)  # fmt: skip
+                continue
+            campaign["studied"] = studied
+            campaign["counts"] = counts
+            active.append(campaign)
+        return active
+
+    def discover(self) -> int:
+        """One search per tick: for an active campaign first, else the automatic rotation."""
+        campaigns = self.active_campaigns()
+        for campaign in campaigns:
+            remaining = campaign["target"] - campaign["studied"]
+            backlog = campaign["counts"].get("DISCOVERED", 0)
+            if remaining <= 0 or backlog >= min(self.limits.min_backlog, remaining * 3):
+                continue
+            pairs = [
+                (found, chosen)
+                for iso in campaign["countries"]
+                if (found := market(iso)) is not None
+                for pid in campaign["personas"]
+                if (chosen := persona(pid)) is not None
+            ]
+            outcome = self._search(pairs, prefix=f"c:{campaign['id']}|", campaign=campaign["id"],
+                                   rediscover=False)  # fmt: skip
+            if outcome is None and backlog == 0 and not campaign["counts"].get("STUDYING"):
+                self.store.end_campaign(campaign["id"], "EXHAUSTED", reason="NO_MORE_CANDIDATES",
+                                        actor="marketing-pool", now=self._clock())  # fmt: skip
+            if outcome is not None:
+                return outcome
+        if campaigns:
+            return 0  # a directed campaign holds the budget until it ends
+        if len(self.store.waiting(None, limit=self.limits.min_backlog)) >= self.limits.min_backlog:
             return 0
-        # Markets whose channel is open come first: a held study cannot be sent.
-        markets = sorted(MARKETS, key=lambda m: m.channel is not Channel.EMAIL)
-        for market in markets:
-            for candidate_persona in PERSONAS:
-                for source in self._sources:
-                    key = f"{source.name}|{candidate_persona.id}|{market.iso}"
-                    last = self.store.discovery_done(key)
-                    if last is not None:
-                        # A failed search (rate limit, timeout) is retried the next day.
-                        wait = self.limits.rediscover_after if last[1] is None else _RETRY
-                        if now - datetime.fromisoformat(last[0]) < wait:
-                            continue
-                    try:
-                        found = source.find(candidate_persona, market)
-                    except Exception as error:  # a refusing or slow source is skipped
-                        self.store.record_discovery(
-                            key, now=now, found=0, added=0, error=type(error).__name__
-                        )
-                        return 0
-                    added = self.store.add(found, now=now)
+        learned = self.store.yields()
+        pairs = [(m, p) for m in MARKETS for p in PERSONAS]
+        # Open channel first, then what has qualified best (Laplace-smoothed), then rotation.
+        pairs.sort(key=lambda pair: (pair[0].channel is not Channel.EMAIL,
+                                     -_rate(learned.get((pair[1].id, pair[0].iso)))))  # fmt: skip
+        return self._search(pairs, prefix="", campaign=None, rediscover=True) or 0
+
+    def _search(
+        self,
+        pairs: list[tuple[Any, Any]],
+        *,
+        prefix: str,
+        campaign: str | None,
+        rediscover: bool,
+    ) -> int | None:
+        """Run the first due search; None when every search is done (or waiting to retry)."""
+        now = self._clock()
+        for market_, persona_ in pairs:
+            for source in self._sources:
+                key = f"{prefix}{source.name}|{persona_.id}|{market_.iso}"
+                last = self.store.discovery_done(key)
+                if last is not None:
+                    if last[1] is None and not rediscover:
+                        continue  # a campaign searches each source once
+                    # A failed search (rate limit, timeout) is retried the next day.
+                    wait = self.limits.rediscover_after if last[1] is None else _RETRY
+                    if now - datetime.fromisoformat(last[0]) < wait:
+                        continue
+                try:
+                    found = source.find(persona_, market_)
+                except Exception as error:  # a refusing or slow source is skipped
                     self.store.record_discovery(
-                        key, now=now, found=len(found), added=added, error=None
+                        key, now=now, found=0, added=0, error=type(error).__name__
                     )
-                    return added
-        return 0
+                    return 0
+                added = self.store.add(found, now=now, campaign_id=campaign)
+                self.store.record_discovery(key, now=now, found=len(found), added=added,
+                                            error=None)  # fmt: skip
+                return added
+        return None
 
     def start_studies(self) -> int:
+        """Spend today's study budget: active campaigns first, then the automatic pool."""
         now = self._clock()
         left = self.limits.studies_per_day - self.store.studies_started_today(
             now.date().isoformat()
         )
         if left <= 0:
             return 0
-        waiting = self.store.in_state("DISCOVERED", limit=500)
-        waiting.sort(key=lambda p: channel_for(p["country"])[0] is not Channel.EMAIL)
+        campaigns = self.active_campaigns()
+        queue: list[dict[str, Any]] = []
+        for campaign in campaigns:
+            room = campaign["target"] - campaign["studied"] - campaign["counts"].get("STUDYING", 0)
+            if room > 0:
+                waiting = self.store.waiting(campaign["id"], limit=room)
+                waiting.sort(key=lambda p: channel_for(p["country"])[0] is not Channel.EMAIL)
+                queue += waiting
+        if not campaigns:
+            learned = self.store.yields()
+            waiting = self.store.waiting(None)
+            waiting.sort(key=lambda p: (channel_for(p["country"])[0] is not Channel.EMAIL,
+                                        -_rate(learned.get((str(p["persona"]), p["country"])))))  # fmt: skip
+            queue += waiting
         started = 0
-        for prospect in waiting[:left]:
+        for prospect in queue[:left]:
             outcome = self._study(STUDY_PREFIX + prospect["domain"], prospect["website"],
                                   prospect["name"])  # fmt: skip
             if outcome != "QUEUED":
@@ -182,6 +262,70 @@ class MarketingPoolRunner:
             )  # fmt: skip
             started += 1
         return started
+
+    # ---- campaigns ----------------------------------------------------------------------
+    def create_campaign(
+        self,
+        *,
+        name: str,
+        personas: list[str],
+        countries: list[str],
+        target: int,
+        ends_on: str | None,
+        actor: str,
+    ) -> str:
+        """A directed campaign: these personas in these countries, this many studies."""
+        now = self._clock()
+        clean = name.strip()
+        if not 1 <= len(clean) <= 80:
+            raise ValueError("campaign name must be 1-80 characters")
+        if not personas or any(persona(p) is None for p in personas):
+            raise ValueError("unknown persona")
+        if not countries or any(market(c) is None for c in countries):
+            raise ValueError("unknown or unsupported country")
+        if type(target) is not int or not 1 <= target <= 500:
+            raise ValueError("target must be 1-500 organizations")
+        ends_at = None
+        if ends_on:
+            ends_at = datetime.fromisoformat(ends_on).replace(tzinfo=UTC) + timedelta(days=1)
+            if ends_at <= now:
+                raise ValueError("end date is in the past")
+        campaign_id = "cmp_" + secrets.token_hex(6)
+        self.store.create_campaign(
+            campaign_id=campaign_id, name=clean, personas=sorted(set(personas)),
+            countries=sorted({c.upper() for c in countries}), target=target, ends_at=ends_at,
+            actor=actor, now=now,
+        )  # fmt: skip
+        return campaign_id
+
+    def cancel_campaign(self, campaign_id: str, *, actor: str) -> bool:
+        return self.store.end_campaign(
+            campaign_id, "CANCELLED", reason="STAFF_DECISION", actor=actor, now=self._clock()
+        )
+
+    def campaign_view(self) -> list[dict[str, object]]:
+        self.active_campaigns()  # settle campaigns that are done before showing them
+        out: list[dict[str, object]] = []
+        for campaign in reversed(self.store.campaigns()):
+            counts = self.store.campaign_counts(campaign["id"])
+            out.append({
+                "id": campaign["id"], "name": campaign["name"], "state": campaign["state"],
+                "reason": campaign["reason"], "personas": campaign["personas"],
+                "countries": campaign["countries"], "target": campaign["target"],
+                "endsAt": campaign["ends_at"], "createdBy": campaign["created_by"],
+                "createdAt": campaign["created_at"],
+                "progress": {
+                    "discovered": sum(counts.values()) - counts.get("OPTED_OUT", 0),
+                    "studied": sum(n for st, n in counts.items() if st not in _NOT_STUDIED),
+                    "qualified": sum(counts.get(st, 0) for st in _QUALIFIED),
+                    "drafted": counts.get("DRAFTED", 0),
+                    "approved": counts.get("APPROVED", 0),
+                    "sent": counts.get("SENT", 0),
+                    "held": counts.get("HELD", 0),
+                    "optedOut": counts.get("OPTED_OUT", 0),
+                },
+            })  # fmt: skip
+        return out
 
     def collect(self) -> int:
         """Conclude finished studies: qualify, choose the address and draft the message."""
@@ -417,6 +561,7 @@ class MarketingPoolRunner:
                 {"iso": m.iso, "channel": m.channel.value, "basis": m.basis} for m in MARKETS
             ],
             "counts": self.store.counts(),
+            "campaigns": self.campaign_view(),
             "prospects": [
                 {**_wire(p), "html": self.html(p) if p["state"] in _PREVIEW else None}
                 for p in self.store.recent(shown, limit=150)
@@ -472,6 +617,7 @@ def _wire(prospect: Mapping[str, Any]) -> dict[str, object]:
             "footer": draft.get("footer"),
         },
         "sentAt": detail.get("sentAt"),
+        "campaign": prospect.get("campaign_id"),
     }
 
 
@@ -493,13 +639,40 @@ def marketing_pool_request(
     if runner is None:
         return {"enabled": False}
     if payload is not None:
-        if set(payload) != {"domain", "action"}:
-            raise ValueError("invalid marketing pool fields")
-        domain, action = payload["domain"], payload["action"]
-        if not isinstance(domain, str) or action not in {"APPROVE", "DISCARD", "SUPPRESS"}:
-            raise ValueError("invalid marketing pool values")
-        if not runner.decide(domain.strip().lower(), str(action), actor=str(grant.principal_id)):
-            raise LookupError("prospect not in a state that allows this")
+        actor = str(grant.principal_id)
+        action = payload.get("action")
+        if action == "CREATE_CAMPAIGN":
+            if set(payload) != {"action", "name", "personas", "countries", "target", "endsOn"}:
+                raise ValueError("invalid campaign fields")
+            personas, countries = payload["personas"], payload["countries"]
+            name, target, ends_on = payload["name"], payload["target"], payload["endsOn"]
+            if (
+                not isinstance(name, str)
+                or not isinstance(personas, list)
+                or not isinstance(countries, list)
+                or not all(isinstance(x, str) for x in [*personas, *countries])
+                or type(target) is not int
+                or not (ends_on is None or isinstance(ends_on, str))
+            ):
+                raise ValueError("invalid campaign values")
+            runner.create_campaign(
+                name=name, personas=[str(x) for x in personas],
+                countries=[str(x) for x in countries], target=target, ends_on=ends_on,
+                actor=actor,
+            )  # fmt: skip
+        elif action == "CANCEL_CAMPAIGN":
+            if set(payload) != {"action", "campaign"} or not isinstance(payload["campaign"], str):
+                raise ValueError("invalid campaign fields")
+            if not runner.cancel_campaign(payload["campaign"], actor=actor):
+                raise LookupError("campaign is not active")
+        else:
+            if set(payload) != {"domain", "action"}:
+                raise ValueError("invalid marketing pool fields")
+            domain = payload["domain"]
+            if not isinstance(domain, str) or action not in {"APPROVE", "DISCARD", "SUPPRESS"}:
+                raise ValueError("invalid marketing pool values")
+            if not runner.decide(domain.strip().lower(), str(action), actor=actor):
+                raise LookupError("prospect not in a state that allows this")
     return runner.snapshot()
 
 
@@ -586,16 +759,50 @@ def main(argv: list[str] | None = None) -> None:
     import json
 
     parser = argparse.ArgumentParser(prog="marketing-pool")
-    parser.add_argument("command", choices=("status", "show", "drafts"))
-    parser.add_argument("domain", nargs="?")
+    parser.add_argument(
+        "command", choices=("status", "show", "drafts", "campaign-create", "campaign-cancel")
+    )
+    parser.add_argument("domain", nargs="?", help="domain (show) or campaign id (cancel)")
     parser.add_argument("--data-dir", required=True, type=Path)
+    parser.add_argument("--name")
+    parser.add_argument("--personas", help="comma-separated persona ids")
+    parser.add_argument("--countries", help="comma-separated ISO codes")
+    parser.add_argument("--target", type=int)
+    parser.add_argument("--ends-on", help="YYYY-MM-DD, inclusive")
+    parser.add_argument("--actor", help="who asks, e.g. codex:rafael or claude:rafael")
     args = parser.parse_args(argv)
     path = args.data_dir / "marketing-pool.sqlite3"
     if not path.is_file():
         raise SystemExit("no marketing pool at that data directory")
     store = SqliteMarketingPool(path)
+    if args.command in {"campaign-create", "campaign-cancel"}:
+        if not args.actor or ":" not in args.actor:
+            raise SystemExit("--actor agent:person is required (it is audited)")
+        runner = MarketingPoolRunner(
+            store, (), study=lambda *_: "NOT_READY", study_result=lambda _r: (None, {}),
+            complete=None, model=None, operator=Operator("AXIGNAL", "-", "https://axignal.com"),
+        )  # fmt: skip
+        if args.command == "campaign-cancel":
+            ok = runner.cancel_campaign(str(args.domain or ""), actor=args.actor)
+            print(json.dumps({"cancelled": ok}))
+            return
+        campaign_id = runner.create_campaign(
+            name=args.name or "", personas=(args.personas or "").split(","),
+            countries=(args.countries or "").split(","), target=args.target or 0,
+            ends_on=args.ends_on, actor=args.actor,
+        )  # fmt: skip
+        print(json.dumps({"campaign": campaign_id}))
+        return
     if args.command == "status":
-        out: object = {"counts": store.counts(), "discovery": store.discovery_log(limit=10)}
+        out: object = {
+            "counts": store.counts(),
+            "campaigns": [
+                {k: c[k] for k in ("id", "name", "state", "target", "personas", "countries")}
+                | {"counts": store.campaign_counts(c["id"])}
+                for c in store.campaigns()
+            ],
+            "discovery": store.discovery_log(limit=10),
+        }
     elif args.command == "show":
         found = store.get(str(args.domain or "").lower())
         out = None if found is None else _wire(found)

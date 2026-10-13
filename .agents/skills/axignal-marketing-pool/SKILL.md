@@ -1,65 +1,99 @@
 ---
 name: axignal-marketing-pool
-description: Protocol for Codex or Claude to operate, review and improve AXIGNAL's own marketing pool (autonomous discovery of agencies and consultancies worldwide, one evidence-backed study each, personalized email drafts in the organization's language, sent only after Admin approval). Use when asked to check the pool, review drafts, tune buyer personas, add a country, or diagnose why prospects are held or not qualified.
+description: Launch, follow and cancel AXIGNAL marketing campaigns, and review the marketing pool. Use when the user asks to start a campaign ("lanza una campaña de 50 agencias SEO en Canadá"), to see how the pool or a campaign is going, to review drafts, or to tune buyer personas or countries. The pool runs on its own (automatic mode); a campaign directs it. Agents never approve or send emails.
 ---
 
 # AXIGNAL marketing pool — agent protocol
 
-The pool is a **runtime**, not a script an agent drives. Once enabled it runs on its own in
-the First Observation background loop:
+The pool is a **runtime**. It always runs on its own when enabled:
+
+- **Automatic mode** (no active campaign): it rotates buyer personas and countries,
+  open-channel markets first, and favours the persona × country pairs that have qualified
+  best so far (it learns from its own history).
+- **Campaign mode**: while a campaign is active, it gets the whole daily study budget for
+  its personas and countries, until it reaches its target, its end date, or runs out of
+  candidates. Then the pool returns to automatic mode by itself.
 
 ```
-discover (OpenStreetMap + Wikidata, per persona and country, never the same domain twice)
-  → study (governed First Observation under the staff tenant `staff:marketing-pool`)
-  → qualify (persona evidenced on its own site; ≥4 sourced findings in ≥3 families)
-  → draft (cognition/router, JobKind.OUTREACH_DRAFT, in the site's language, citing findings)
-  → DRAFTED | HELD (country channel policy, or no role address) | NOT_QUALIFIED
-  → a person approves in Admin › Clients and access › Marketing pool
-  → SENT (SMTP, daily cap, List-Unsubscribe one-click) → opt-out = permanent suppression
+discover → study (once per domain, ever) → qualify → draft in its language
+  → DRAFTED | HELD (country channel policy / no role address) | NOT_QUALIFIED
+  → a person approves in Admin › Clients and access › Marketing pool → SENT
 ```
 
-## What an agent may do
+## 1. Launch a campaign from a request
 
-1. **Inspect, read-only.** On a host with the data directory:
-   `python -m tools.runtime.marketing_pool status --data-dir <dir>`
-   `python -m tools.runtime.marketing_pool drafts --data-dir <dir>`
-   `python -m tools.runtime.marketing_pool show <domain> --data-dir <dir>`
-   In production this is read-only SSH inspection only; never edit the SQLite file.
-2. **Review draft quality** and report: does each email cite only its findings, phrase
-   POTENTIAL as possibility, read naturally in its language, avoid claims about the
-   recipient's needs? Report problems with the domain and the sentence.
-3. **Improve the system through a PR**, with tests: buyer personas
-   (`application/marketing_pool/personas.py`, bump `PERSONAS_VERSION`), country rotation
-   and channel policy (`application/marketing_pool/policy.py`, bump
-   `CHANNEL_POLICY_VERSION`), the email template
-   (`application/marketing_pool/email_template.py`), the quality gate and drafting
-   contract (`application/marketing_pool/prospect.py`).
+Turn the user's words into a campaign, then **confirm with the user before running it**
+(it is a production write):
 
-## What an agent must never do
+| Field | Values |
+|---|---|
+| name | short, e.g. `SEO Canadá Q4` |
+| personas | `SEO_GEO_AGENCY`, `DIGITAL_MARKETING_AGENCY`, `REPUTATION_PR_AGENCY`, `B2B_CONSULTANCY` |
+| countries | ISO codes listed in `application/marketing_pool/policy.py` (`MARKETS`) |
+| target | organizations to **study**, 1–500 (not emails: some will not qualify) |
+| ends-on | optional `YYYY-MM-DD` |
 
-- Approve, send, or bypass the approval: `APPROVE` is a human Admin decision.
-- Change a country from HOLD to EMAIL without the operator recording a reviewed legal
-  basis in the policy (`basis` text) — the policy is conservative, not legal advice.
-- Contact a suppressed domain or address, remove a suppression, or re-add a domain.
-- Scrape search engines, maps or social networks, bypass robots.txt or anti-bot, or
-  collect personal addresses: only role addresses the organization publishes on its own
-  domain (`recipient()` enforces it).
-- Write a prospect, lead or study into AXIGLAND, or treat it as an Organization, FAXT or
-  Relationship (Admin §5.7: AXIGNAL CRM LEAD != AXIGLAND ORGANIZATION STATE).
-- Hard-wire a model provider: drafting goes through `cognition/router`.
+Tell the user, before confirming, which chosen countries are **HOLD** in the channel
+policy (e.g. ES, DE, IT): they are studied and drafted but **not emailed**.
 
-## Configuration (runtime settings file, all optional, off by default)
+Run it in production (the runtime container, its data directory):
+
+```bash
+ssh axignal-production "docker exec axignal-prod-runtime python -m tools.runtime.marketing_pool \
+  campaign-create --data-dir /var/lib/axignal/runtime --name 'SEO Canadá Q4' \
+  --personas SEO_GEO_AGENCY --countries CA,US --target 50 --ends-on 2026-11-30 \
+  --actor claude:rafael"
+```
+
+`--actor` is mandatory and audited: `<agent>:<person who asked>` (`codex:…`, `claude:…`).
+The answer is the campaign id. Cancel with `campaign-cancel <id> --data-dir … --actor …`.
+
+## 2. Report progress
+
+```bash
+ssh axignal-production "docker exec axignal-prod-runtime python -m tools.runtime.marketing_pool \
+  status --data-dir /var/lib/axignal/runtime"
+```
+
+Report per campaign: found, studied, qualified, drafts waiting for approval, sent, held,
+opt-outs; and remind the user that drafts wait in Admin for their approval.
+`drafts` lists drafts waiting; `show <domain>` shows one prospect.
+
+## 3. Review drafts (read-only)
+
+Check that each draft cites only its findings, phrases POTENTIAL as possibility, reads
+naturally in its language and claims nothing about the recipient's needs. Report the
+domain and the sentence; never edit the database.
+
+## 4. Improve the system (PR with tests)
+
+Personas `application/marketing_pool/personas.py` (bump `PERSONAS_VERSION`), countries and
+channel policy `application/marketing_pool/policy.py` (bump `CHANNEL_POLICY_VERSION`),
+email `application/marketing_pool/email_template.py`, gate and drafting
+`application/marketing_pool/prospect.py`.
+
+## Never
+
+- Approve, send, or bypass approval; `APPROVE` is a human Admin decision.
+- Change a country from HOLD to EMAIL without a reviewed legal basis recorded by the
+  operator (the policy is conservative, not legal advice).
+- Contact, un-suppress or re-add a suppressed domain or address.
+- Scrape search engines, maps or social networks, bypass robots.txt, or collect personal
+  addresses (only role addresses the organization publishes on its own domain).
+- Write a prospect into AXIGLAND (`AXIGNAL CRM LEAD != AXIGLAND ORGANIZATION STATE`).
+- Hard-wire a model provider (drafting goes through `cognition/router`).
+
+## Configuration (runtime settings file; off by default)
 
 | Key | Meaning |
 |---|---|
-| `AXIGNAL_MARKETING_POOL_ENABLED=true` | discovery, studies and drafts run |
+| `AXIGNAL_MARKETING_POOL_ENABLED=true` | the pool runs (discovery, studies, drafts) |
 | `AXIGNAL_MARKETING_POOL_STUDIES_PER_DAY` | default 12 |
-| `AXIGNAL_MARKETING_POOL_SIGNATURE` / `_SIGNATURE_ROLE` | e.g. `Rafael López` / `CEO` |
-| `AXIGNAL_MARKETING_POOL_SEND=true` | sending allowed (still needs approval) |
+| `AXIGNAL_MARKETING_POOL_SIGNATURE` / `_SIGNATURE_ROLE` | `Rafael López` / `CEO` |
+| `AXIGNAL_MARKETING_POOL_SEND=true` | sending allowed (still only after approval) |
 | `AXIGNAL_MARKETING_POOL_SMTP_FROM` | e.g. `hola@axignal.com` |
 | `AXIGNAL_MARKETING_POOL_SMTP_HOST` / `_PORT` / `_USER` | default `smtp.hostinger.com` / `465` / the from address |
 | `AXIGNAL_MARKETING_POOL_SMTP_PASSWORD_FILE` | absolute path of a root-owned secret file |
 | `AXIGNAL_MARKETING_POOL_SENDS_PER_DAY` | default 20 |
 
-The sender also requires `AXIGNAL_LEGAL_ADDRESS` (identity and postal address in every
-message) and SPF, DKIM and DMARC published for the sending domain.
+Sending also requires `AXIGNAL_LEGAL_ADDRESS` and SPF, DKIM and DMARC on the domain.

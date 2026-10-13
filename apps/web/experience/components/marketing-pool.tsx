@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useMemo, useState } from "react";
 import { useLocale } from "@/lib/locale";
-import { poolSnapshot, type PoolProspect, type PoolSnapshot } from "@/lib/marketing-pool";
+import { poolSnapshot, type PoolCampaign, type PoolProspect, type PoolSnapshot } from "@/lib/marketing-pool";
 
 type View = "review" | "approved" | "sent" | "held" | "studying" | "closed";
 const VIEWS: Record<View, readonly string[]> = {
@@ -15,6 +15,7 @@ export function MarketingPool() {
   const [data, setData] = useState<PoolSnapshot | null>(null);
   const [view, setView] = useState<View>("review");
   const [selected, setSelected] = useState<string | null>(null);
+  const [origin, setOrigin] = useState("ALL");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const failure = (code: unknown) => {
@@ -35,9 +36,10 @@ export function MarketingPool() {
     finally { setBusy(false); }
   }
   useEffect(() => { void run(() => call()); }, []);
-  const decide = (domain: string, action: "APPROVE" | "DISCARD" | "SUPPRESS") =>
-    run(() => call({ method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ domain, action }) }));
-  const prospects = useMemo(() => data && data.enabled ? data.prospects.filter(p => VIEWS[view].includes(p.state)) : [], [data, view]);
+  const post = (body: object) => run(() => call({ method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) }));
+  const decide = (domain: string, action: "APPROVE" | "DISCARD" | "SUPPRESS") => post({ domain, action });
+  const prospects = useMemo(() => data && data.enabled ? data.prospects.filter(p => VIEWS[view].includes(p.state)
+    && (origin === "ALL" || (origin === "AUTO" ? !p.campaign : p.campaign === origin))) : [], [data, view, origin]);
   const current = prospects.find(p => p.domain === selected) ?? prospects[0] ?? null;
   const count = (states: readonly string[]) => data && data.enabled ? states.reduce((n, s) => n + (data.counts[s] ?? 0), 0) : 0;
   const tabs: [View, string][] = [
@@ -68,6 +70,15 @@ export function MarketingPool() {
       <span>{t("{n} estudios/día · {m} envíos/día", "{n} studies/day · {m} sends/day").replace("{n}", String(data.limits.studiesPerDay)).replace("{m}", String(data.limits.sendsPerDay))}</span>
       <span>{t("No volver a contactar", "Do not contact")}: {data.counts.SUPPRESSION_LIST ?? 0}</span>
     </p>}
+    {data && data.enabled && <Campaigns data={data} busy={busy} onPost={post} />}
+    {data && data.enabled && data.campaigns.length > 0 && <label className="search-field pool-origin">
+      <span>{t("Origen", "Origin")}</span>
+      <select value={origin} onChange={e => { setOrigin(e.target.value); setSelected(null); }}>
+        <option value="ALL">{t("Todo el pool", "Whole pool")}</option>
+        <option value="AUTO">{t("Automático", "Automatic")}</option>
+        {data.campaigns.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+      </select>
+    </label>}
     <nav className="customer-access-tabs" aria-label={t("Estados del pool", "Pool states")}>
       {tabs.map(([id, label]) => <button key={id} className="button secondary" aria-pressed={view === id} onClick={() => { setView(id); setSelected(null); }}>{label} · {count(VIEWS[id])}</button>)}
       <button className="button secondary" disabled={busy} onClick={() => void run(() => call())}>{t("Actualizar", "Refresh")}</button>
@@ -126,4 +137,75 @@ function Detail({ prospect, busy, reason, locale, onDecide }: {
       </li>)}</ul>
     </>}
   </article>;
+}
+
+/** Automatic mode, or a directed campaign that takes the daily budget until it ends. */
+function Campaigns({ data, busy, onPost }: {
+  data: Extract<PoolSnapshot, { enabled: true }>; busy: boolean; onPost: (body: object) => void;
+}) {
+  const { t, locale } = useLocale();
+  const [open, setOpen] = useState(false);
+  const [name, setName] = useState("");
+  const [personas, setPersonas] = useState<string[]>([]);
+  const [countries, setCountries] = useState<string[]>([]);
+  const [target, setTarget] = useState(30);
+  const [endsOn, setEndsOn] = useState("");
+  const active = data.campaigns.filter(c => c.state === "ACTIVE");
+  const held = countries.filter(iso => data.markets.find(m => m.iso === iso)?.channel !== "EMAIL");
+  const toggle = (list: string[], value: string) => list.includes(value) ? list.filter(x => x !== value) : [...list, value];
+  const state = (c: PoolCampaign) => ({
+    ACTIVE: t("Activa", "Active"), COMPLETED: t("Completada", "Completed"), ENDED: t("Fecha de fin alcanzada", "End date reached"),
+    EXHAUSTED: t("Sin más candidatas en las fuentes", "No more candidates in the sources"), CANCELLED: t("Cancelada", "Cancelled"),
+  }[c.state]);
+  const valid = name.trim() && personas.length && countries.length && target >= 1 && target <= 500;
+  return <div className="pool-campaigns">
+    <p className="pool-mode" data-mode={active.length ? "campaign" : "auto"}>
+      {active.length
+        ? t("Modo campaña: el presupuesto diario va a {name}. Al terminar, el motor vuelve solo al modo automático.", "Campaign mode: the daily budget goes to {name}. When it ends, the engine returns to automatic mode by itself.").replace("{name}", active[0].name)
+        : t("Modo automático: el motor elige las organizaciones más prometedoras, primero donde se puede enviar y según lo que mejor ha cualificado hasta ahora.", "Automatic mode: the engine picks the most promising organizations, first where sending is allowed and by what has qualified best so far.")}
+    </p>
+    {data.campaigns.length > 0 && <ul className="pool-campaign-list">
+      {data.campaigns.map(c => <li key={c.id} data-state={c.state}>
+        <div>
+          <strong>{c.name}</strong> · {state(c)}
+          <span>{c.countries.join(", ")} · {c.personas.map(id => data.personas.find(p => p.id === id)?.label ?? id).join(", ")}{c.endsAt ? " · " + t("hasta", "until") + " " + new Date(c.endsAt).toLocaleDateString(locale) : ""} · {c.createdBy}</span>
+        </div>
+        <span className="pool-bar" role="progressbar" aria-label={t("Estudiadas", "Studied")} aria-valuemin={0} aria-valuemax={c.target} aria-valuenow={Math.min(c.progress.studied, c.target)}><span style={{ width: `${Math.min(100, Math.round(100 * c.progress.studied / Math.max(1, c.target)))}%` }} /></span>
+        <span className="pool-campaign-numbers">
+          {t("{s} de {n} estudiadas", "{s} of {n} studied").replace("{s}", String(c.progress.studied)).replace("{n}", String(c.target))}
+          {" · "}{c.progress.qualified} {t("cualificadas", "qualified")} · {c.progress.drafted} {t("por revisar", "to review")} · {c.progress.sent} {t("enviadas", "sent")} · {c.progress.held} {t("retenidas", "held")} · {c.progress.optedOut} {t("bajas", "opt-outs")}
+        </span>
+        {c.state === "ACTIVE" && <button className="button secondary" disabled={busy} onClick={() => onPost({ action: "CANCEL_CAMPAIGN", campaign: c.id })}>{t("Cancelar campaña", "Cancel campaign")}</button>}
+      </li>)}
+    </ul>}
+    {!open && <button className="button primary" onClick={() => setOpen(true)}>{t("Nueva campaña", "New campaign")}</button>}
+    {open && <form className="pool-campaign-form" onSubmit={e => {
+      e.preventDefault(); if (!valid || busy) return;
+      onPost({ action: "CREATE_CAMPAIGN", name: name.trim(), personas, countries, target, endsOn: endsOn || null });
+      setOpen(false); setName(""); setPersonas([]); setCountries([]); setEndsOn("");
+    }}>
+      <label className="search-field"><span>{t("Nombre", "Name")}</span>
+        <input value={name} maxLength={80} onChange={e => setName(e.target.value)} placeholder={t("p. ej. Agencias SEO Canadá", "e.g. SEO agencies Canada")} /></label>
+      <fieldset><legend>{t("A quién", "Who")}</legend>
+        {data.personas.map(p => <label key={p.id} className="pool-check"><input type="checkbox" checked={personas.includes(p.id)} onChange={() => setPersonas(toggle(personas, p.id))} />{p.label}</label>)}
+      </fieldset>
+      <fieldset><legend>{t("Dónde", "Where")}</legend>
+        <div className="pool-countries">{data.markets.map(m => <label key={m.iso} className="pool-check" data-channel={m.channel}>
+          <input type="checkbox" checked={countries.includes(m.iso)} onChange={() => setCountries(toggle(countries, m.iso))} />{m.iso}{m.channel !== "EMAIL" ? " · " + t("retener", "hold") : ""}
+        </label>)}</div>
+      </fieldset>
+      {held.length > 0 && <p className="pool-reason">{t("En {list} se estudian y se redactan, pero no se envían por correo: allí exige consentimiento previo o no está revisado.", "In {list} they are studied and drafted but not emailed: prior consent is required there or it is not reviewed.").replace("{list}", held.join(", "))}</p>}
+      <div className="admin-table-toolbar">
+        <label className="search-field"><span>{t("Organizaciones a estudiar", "Organizations to study")}</span>
+          <input type="number" min={1} max={500} value={target} onChange={e => setTarget(Number(e.target.value))} /></label>
+        <label className="search-field"><span>{t("Hasta (opcional)", "Until (optional)")}</span>
+          <input type="date" value={endsOn} onChange={e => setEndsOn(e.target.value)} /></label>
+      </div>
+      <p>{t("Al ritmo de {n} estudios al día. No todas cualificarán, y ningún correo sale sin tu aprobación.", "At {n} studies a day. Not all will qualify, and no email leaves without your approval.").replace("{n}", String(data.limits.studiesPerDay))}</p>
+      <div className="admin-table-toolbar">
+        <button type="submit" className="button primary" disabled={!valid || busy}>{t("Lanzar campaña", "Launch campaign")}</button>
+        <button type="button" className="button secondary" onClick={() => setOpen(false)}>{t("Cancelar", "Cancel")}</button>
+      </div>
+    </form>}
+  </div>;
 }
