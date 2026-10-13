@@ -6649,7 +6649,8 @@ html[data-motion="reduced"] {
   flex: 1;
   min-width: 0;
   min-height: 0;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 .admin-product-host[hidden] { display: none; }
 .admin-product-navigation[hidden] { display: none; }
