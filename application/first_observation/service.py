@@ -686,7 +686,7 @@ class FirstObservationService:
             has_activity=bool(findings), canonical=verified,
         )  # fmt: skip
         discoveries += demand
-        if semantic is not None and semantic.operating is False:
+        if semantic is not None and semantic.operating is False and not _business_signals(pages):
             discoveries.append(
                 Discovery(
                     DiscoveryKind.SIGNIFICANT_UNKNOWN,
@@ -1269,6 +1269,42 @@ class FirstObservationService:
             understanding=understanding,
             contact=dict(contact or {}),
         )
+
+
+_ORGANIZATION_TYPES = frozenset(
+    {"Organization", "Corporation", "LocalBusiness", "ProfessionalService", "Store",
+     "OnlineBusiness", "NGO", "EducationalOrganization"}
+)  # fmt: skip
+
+
+#: Where organizations keep company profiles: linking one is a business signal.
+_COMPANY_PROFILE_HOSTS = ("linkedin.com", "xing.com", "kununu.com", "glassdoor.com",
+                          "glassdoor.es", "crunchbase.com", "trustpilot.com")  # fmt: skip
+
+
+def _business_signals(pages: Sequence[PageReading]) -> bool:
+    """What an operating organization's site shows: an address, a legal name or
+    identifier, a contact address, a schema.org organization, a job board, a company
+    profile it links, or the business tools it runs. With any of them, a judgment
+    that the page is not an operating business is not believed (2026-10-13 golden
+    pass: real companies with sparse homepages were called non-operating)."""
+    for page in pages:
+        if page.addresses or page.legal_names or page.identifiers:
+            return True
+        if set(page.schema_types) & _ORGANIZATION_TYPES:
+            return True
+        signals = page.signals or {}
+        if signals.get("emails") or signals.get("jobBoards"):
+            return True
+        hosts = signals.get("resourceHosts")
+        if isinstance(hosts, list) and len(hosts) >= 3:
+            return True
+        linked = signals.get("externalLinkHosts")
+        if isinstance(linked, list) and any(
+            str(h).endswith(_COMPANY_PROFILE_HOSTS) for h in linked
+        ):
+            return True
+    return False
 
 
 def _published_contact(pages: Sequence[PageReading]) -> dict[str, object]:

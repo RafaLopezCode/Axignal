@@ -394,6 +394,32 @@ def _cite(pages: Sequence[PageReading]) -> tuple[PageReading, str]:
     return page, line
 
 
+#: Distinct controlled words the judgment must have seen before "not an operating
+#: business" is believed (real companies with sparse homepages read 1-9 words).
+MIN_WORDS_TO_DENY = 15
+
+
+#: Words a placeholder page says of itself; with them a short page may be judged one.
+PLACEHOLDER_WORDS = frozenset(
+    ["coming", "soon", "construction", "placeholder", "próximamente", "construcción",
+     "demnächst", "bientôt", "prossimamente", "brevemente", "binnenkort", "snart"]
+)  # fmt: skip
+
+
+def _vocabulary(plan: ActivityBatchPlan, only: frozenset[str] | None = None) -> int:
+    """Distinct controlled words the batch carried (or, with ``only``, those of them)."""
+    pages = plan.batch.state.get("pages") if isinstance(plan.batch.state, dict) else None
+    words: set[str] = set()
+    for page in pages if isinstance(pages, list) else []:
+        if isinstance(page, dict):
+            for key in ("title", "description", "text"):
+                words.update(str(page.get(key) or "").split())
+            for key in ("headings", "services"):
+                for item in page.get(key) or []:
+                    words.update(str(item).split())
+    return len(words if only is None else words & only)
+
+
 def interpret_activity(
     plan: ActivityBatchPlan,
     outcome: CascadeOutcome,
@@ -440,6 +466,16 @@ def interpret_activity(
     }.get(customers[0] if customers else "")
     delivery = _usable(outcome, DELIVERY.question_id)
     operating = _usable(outcome, OPERATING.question_id)
+    if (
+        operating is not None
+        and operating[0] == "false"
+        and _vocabulary(plan) < MIN_WORDS_TO_DENY
+        and not _vocabulary(plan, PLACEHOLDER_WORDS)
+    ):
+        # Too little of the page reached the judgment to say it is not a business: a
+        # script-built or image-only page reads empty. Unknown, never a false negative.
+        operating = None
+        judged["operatingDenialWithheld"] = "THIN_STATE"
     located: list[tuple[TaxonomyCode, str, str]] = []
     location = _usable(outcome, "fo_operating_location")
     if location is not None:
