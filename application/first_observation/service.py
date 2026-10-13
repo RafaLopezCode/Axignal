@@ -496,10 +496,13 @@ class FirstObservationService:
         if plan is None:
             ledger.decide("SKIPPED:SEMANTIC:DETERMINISTIC_SUFFICIENT")
             return None
-        if not provider_input:
-            # ADR-0090 §5: the Customer must hold rights to the Input it sends.
-            ledger.decide("SKIPPED:SEMANTIC:PROVIDER_INPUT_RIGHTS_UNKNOWN")
-            return None
+        # ADR-0090 §5 as amended 2026-10-13: the activity batch carries only AXIGNAL's own
+        # controlled economic vocabulary (``activity.minimize``), never page text, so it
+        # needs no per-site content rights. Page text and offer excerpts still do.
+        ledger.decide(
+            "SEMANTIC_INPUT:CONTROLLED_VOCABULARY"
+            + ("" if provider_input else ":NO_SITE_CONTENT_RIGHTS")
+        )
         try:
             cascade = self._cascade_factory()
             if cascade is None:
