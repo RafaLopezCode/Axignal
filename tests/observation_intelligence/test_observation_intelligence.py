@@ -349,7 +349,7 @@ def test_ted_adapter_speaks_the_real_search_api_contract() -> None:
     query = expert_query(action.query)
     assert "place-of-performance IN (ESP)" in query
     assert "notice-type IN (cn-standard cn-social)" in query
-    assert "deadline-receipt-tender-date-lot>=20261006" in query
+    assert f"deadline-receipt-tender-date-lot>={AS_OF:%Y%m%d}" in query
     assert query.endswith("SORT BY publication-date DESC")
     region = replace(action.query, geographies=(geo("EU/ES/ES5/ES52"),))
     assert "place-of-performance IN (ES52)" in expert_query(region)
