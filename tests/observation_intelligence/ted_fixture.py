@@ -8,7 +8,20 @@ from __future__ import annotations
 
 import re
 from collections.abc import Mapping
+from datetime import date
 from typing import Any
+
+from tests.observation_intelligence.scenarios import AS_OF
+
+#: The corpus is written as seen from this day and moved, as a whole, to the run's day.
+#: The scenarios' AS_OF follows the real clock, so calendar dates would close the open calls
+#: (the first on 2026-10-27) and let the awards age out of the observation windows.
+AUTHORED_ON = date(2026, 10, 6)
+SHIFT = AS_OF.date() - AUTHORED_ON
+
+
+def _day(authored: str) -> str:
+    return (date.fromisoformat(authored) + SHIFT).isoformat()
 
 
 def _notice(
@@ -29,10 +42,10 @@ def _notice(
         "buyer-name": {"spa": [buyer]},
         "classification-cpv": [*cpv, *cpv],
         "place-of-performance": places,
-        "publication-date": f"{published}+02:00",
+        "publication-date": f"{_day(published)}+02:00",
     }
     if deadline:
-        notice["deadline-receipt-tender-date-lot"] = [f"{deadline}+02:00"]
+        notice["deadline-receipt-tender-date-lot"] = [f"{_day(deadline)}+02:00"]
     if winner:
         notice["winner-name"] = {"spa": [winner]}
     return notice

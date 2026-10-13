@@ -421,8 +421,17 @@ def test_production_settings_select_adapter_without_injection(
             },
         )
 
+    # Production wiring reads the real clock, so the recorded nextRenewalDate (2027-01-25)
+    # would turn this LEI lapsed on that day; keep the record renewable relative to the run.
+    payload = json.loads(BODY)
+    payload["data"]["attributes"]["registration"]["nextRenewalDate"] = (
+        datetime.now(UTC) + timedelta(days=365)
+    ).strftime("%Y-%m-%dT%H:%M:%SZ")
+    current = json.dumps(payload).encode()
     monkeypatch.setattr(composition, "_settings", configured)
-    monkeypatch.setattr("tools.runtime.organization_registry.PinnedHttpTransport", Transport)
+    monkeypatch.setattr(
+        "tools.runtime.organization_registry.PinnedHttpTransport", lambda: Transport(current)
+    )
     facade = _build(tmp_path, pilot=True)
     token, _ = _pilot(facade, tmp_path, "gleif:configured")
     assert _add(facade, token, "gleif:configured:add", "LEI " + LEI).body["state"] == "CREATED"
