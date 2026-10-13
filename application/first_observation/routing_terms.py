@@ -11,6 +11,24 @@ identifiers can be expressed with them.
 from __future__ import annotations
 
 _WORDS = {
+    # Information, analysis and intelligence services: without them an analytics,
+    # research or intelligence firm reached the judgment almost empty (2026-10-13).
+    "information": """
+    intelligence observation observes observing monitoring analysis analytics data
+    research evidence insights insight platform subscription reports report
+    organizations organisations companies information sources benchmarking
+    competitive competitors economic economy business market markets trends
+    inteligencia observación observa análisis datos investigación evidencia plataforma
+    suscripción informes organizaciones fuentes competencia mercado mercados tendencias
+    beobachtung analyse daten forschung plattform abonnement berichte organisationen
+    quellen wettbewerb wirtschaft markt märkte
+    observation analyse données recherche plateforme abonnement rapports organisations
+    sources concurrence économie marché marchés tendances
+    osservazione analisi dati ricerca piattaforma abbonamento rapporti organizzazioni
+    fonti concorrenza economia mercato mercati tendenze
+    inteligência observação análise dados pesquisa plataforma assinatura relatórios
+    organizações fontes concorrência economia mercado mercados tendências
+    """,
     "es": """
     escuela escuelas colegio colegios academia academias idiomas idioma clases cursos curso
     educación educativo enseñanza profesores formación alumnos estudiantes niños infantil
