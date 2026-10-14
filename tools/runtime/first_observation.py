@@ -115,7 +115,6 @@ from application.value_chain import (
     apply_value_chain,
     buying_sectors,
     company_industry,
-    industry_of_code,
     label,
     nace_codes,
     wikidata_industry_nace,
@@ -934,7 +933,7 @@ class FirstObservationRuntime:
         signals = view_signals(discoveries)
         # Clients that same-activity organizations in this subscriber's own portfolio show.
         own_codes = [c.code for c in activity_codes(proof)]
-        industry = company_industry(view, own_codes)
+        industry = company_industry(view, own_codes, nace_of=self._industry_nace)
         if industry is not None:
             peers: list[dict[str, object]] = []
             others = sorted(self.store.observed_targets(tenant) - {target_ref})
@@ -985,18 +984,18 @@ class FirstObservationRuntime:
             # Organizations in the sectors that buy from its own, in its countries: needs no
             # visible customer. Its industry: the register's activity, then Wikidata's (P452,
             # curated by its community), then what its website's activity codes suggest.
-            register = company_industry(view, [])
-            own_sector: str | None = register[0] if register is not None else None
+            # One reading of its industry (register, Wikidata, website), as everywhere.
+            own_sector: str | None = industry[0] if industry is not None else None
             stated = facts.get("industry") if isinstance(facts, Mapping) else None
             if own_sector is None and isinstance(stated, Mapping) and stated.get("value"):
-                qid = str(stated["value"])
-                curated = wikidata_industry_nace(qid)
-                codes = [curated] if curated else self._buyers.industry_nace(qid)
-                own_sector = next(
-                    (found for code in codes if (found := industry_of_code(code))), None
-                )
-            if own_sector is None and industry is not None:
-                own_sector = industry[0]
+                # Its Wikidata item, when no finding cites it yet (same exceptions apply).
+                own_sector = (
+                    company_industry(
+                        {"discoveries": [{"kind": "ECONOMIC_FACT", "code": "WIKIDATA:industry",
+                                          "detail": {"value": str(stated["value"])}}]},
+                        [], nace_of=self._industry_nace,
+                    ) or (None, "")
+                )[0]  # fmt: skip
             places: list[str] = list(countries)
             home = facts.get("country") if isinstance(facts, Mapping) else None
             if (
@@ -1325,6 +1324,14 @@ class FirstObservationRuntime:
         view["discoveries"] = [*kept, *found]
         return view
 
+    def _industry_nace(self, qid: str) -> list[str]:
+        """NACE codes of a Wikidata industry: curated for common ones, else Wikidata's own
+        (P4496), from the stored map only."""
+        curated = wikidata_industry_nace(qid)
+        if curated:
+            return [curated]
+        return self._buyers.industry_nace(qid) if self._buyers is not None else []
+
     def _wikidata_facts(
         self, view: Mapping[str, object], discoveries: Sequence[object]
     ) -> Mapping[str, Any] | None:
@@ -1487,7 +1494,7 @@ class FirstObservationRuntime:
                 view, proof, self._awards, now=self._clock.now(), countries=lambda: directed
             )
             # Where its sector's demand comes from and where its inputs come from.
-            view = apply_value_chain(view, proof)
+            view = apply_value_chain(view, proof, nace_of=self._industry_nace)
             # Who could buy what it offers: every public route, each signal kept apart.
             view = self._with_potential_buyers(view, proof, tenant, target_ref)
             # What crossing the families reveals (derived, recomputed on every read).
