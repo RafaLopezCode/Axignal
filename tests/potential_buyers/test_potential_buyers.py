@@ -192,7 +192,9 @@ def test_runtime_derives_buyers_from_portfolio_peers_customers_and_groups(tmp_pa
     )  # fmt: skip
     groups = SimpleNamespace(group=lambda lei: {"children": [{"name": "Iberdrola Clientes SAU",
                                                               "country": "ES", "lei": "L9"}]})  # fmt: skip
-    fake = SimpleNamespace(store=store, _buyers=buyers, _groups=groups, _item_facts=lambda v: None)
+    fake = SimpleNamespace(
+        store=store, _buyers=buyers, _groups=groups, _wikidata_facts=lambda v, d: None
+    )
     view = {"observedAt": "2026-10-14", "target": {"name": "Acme"},
             "discoveries": [_d("RELATIONSHIP", "CLIENT_DECLARED", "Iberdrola", "DECLARED")]}  # fmt: skip
     proof = {"capabilities": capabilities, "attentionScopes": [{"jurisdiction": "EU/ES"}]}
@@ -205,7 +207,7 @@ def test_runtime_derives_buyers_from_portfolio_peers_customers_and_groups(tmp_pa
     ]
     # Nothing to derive from: the unknown says why, and nothing is invented.
     bare = FirstObservationRuntime._with_potential_buyers(
-        SimpleNamespace(store=store, _buyers=None, _groups=None, _item_facts=lambda v: None),
+        SimpleNamespace(store=store, _buyers=None, _groups=None, _wikidata_facts=lambda v, d: None),
         {"observedAt": "t", "discoveries": [_d("PUBLIC_PRESENCE", "PUBLIC_WEBSITE_OBSERVED", "x")]},
         {},
         "t1",
@@ -261,7 +263,9 @@ def test_sector_route_needs_no_customer_and_alternates_sectors(tmp_path: Path) -
     )  # fmt: skip
     store = SimpleNamespace(observed_targets=lambda tenant: frozenset(), proof=lambda t, r: None)
     facts = {"facts": {"industry": {"value": "Q540912"}, "country": {"value": "Q183"}}}
-    fake = SimpleNamespace(store=store, _buyers=buyers, _groups=None, _item_facts=lambda v: facts)
+    fake = SimpleNamespace(
+        store=store, _buyers=buyers, _groups=None, _wikidata_facts=lambda v, d: facts["facts"]
+    )
     view = {"observedAt": "t", "target": {"name": "Ritter"},
             "discoveries": [_d("PUBLIC_PRESENCE", "PUBLIC_WEBSITE_OBSERVED", "ritter")]}  # fmt: skip
     out = FirstObservationRuntime._with_potential_buyers(fake, view, {}, "t1", "self")  # type: ignore[arg-type]
@@ -315,6 +319,29 @@ def test_sector_lookup_maps_nace_to_industries_and_keeps_actionable_organization
     lookups.run()
     assert lookups.industry_nace("Q101") == ["10.1"]
     reading = lookups.sector("C10-12", "DE")
-    assert reading is not None and reading["industries"] == ["Q10", "Q101"]  # exact code first
+    # Curated common industries first (food industry), then exact codes, then subdivisions.
+    assert reading is not None and reading["industries"] == ["Q540912", "Q10", "Q101"]
     assert [o["item"] for o in reading["organizations"]] == ["Q2", "Q1"]  # most documented first
     assert reading["countryLabel"] == "Label Q183"
+
+
+def test_curated_wikidata_industries_and_domain_countries() -> None:
+    from application.value_chain import industry_of_code, wikidata_industry_nace
+    from tools.runtime.first_observation import _countries_of_domain
+
+    assert wikidata_industry_nace("Q880371") == "62"  # software industry carries no P4496
+    assert industry_of_code("62") == "J62_63" and industry_of_code("F") == "F"
+    assert industry_of_code("C") is None  # a whole section the table splits: not one sector
+    assert _countries_of_domain({"target": {"website": "https://www.trumpf.de/"}}) == ["DE"]
+    assert _countries_of_domain({"target": {"website": "https://lendlease.com.au/"}}) == ["AU"]
+    assert _countries_of_domain({"target": {"website": "https://atlassian.com/"}}) == []
+
+
+def test_imputed_rents_are_never_a_buyer_and_text_mentions_are_a_last_resort() -> None:
+    from application.value_chain import buying_sectors
+    from tools.runtime.first_observation import _countries_mentioned, _countries_of
+
+    assert all(code != "L68A" for code, _s in buying_sectors("K65"))
+    assert buying_sectors("L68A") == buying_sectors("L68B")  # real estate: its services
+    mention = [_d("DECLARED_LOCATION", "LOCATION_STATED_IN_TEXT", "EU/FR", "DECLARED")]
+    assert _countries_of(mention, {}) == [] and _countries_mentioned(mention) == ["FR"]

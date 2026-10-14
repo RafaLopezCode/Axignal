@@ -115,9 +115,10 @@ from application.value_chain import (
     apply_value_chain,
     buying_sectors,
     company_industry,
-    industry_of_nace,
+    industry_of_code,
     label,
     nace_codes,
+    wikidata_industry_nace,
 )
 from application.world_demand.index import (
     DemandIndexPort,
@@ -423,14 +424,42 @@ MAX_CUSTOMER_GROUPS = 3
 MAX_SECTOR_COUNTRIES = 2
 
 
+#: Country-code top-level domains, when nothing else states where it is.
+_CC_TLDS = {"es": "ES", "de": "DE", "fr": "FR", "it": "IT", "pt": "PT", "nl": "NL", "be": "BE",
+            "at": "AT", "ch": "CH", "uk": "GB", "ie": "IE", "no": "NO", "se": "SE", "dk": "DK",
+            "fi": "FI", "pl": "PL", "au": "AU", "ca": "CA", "nz": "NZ", "mx": "MX", "br": "BR",
+            "ar": "AR", "cl": "CL", "co": "CO", "jp": "JP", "in": "IN", "sg": "SG"}  # fmt: skip
+
+
+def _countries_of_domain(view: Mapping[str, object]) -> list[str]:
+    """Its country from its website's country-code domain (.de, .co.uk, .com.au)."""
+    target = view.get("target")
+    website = target.get("website") if isinstance(target, Mapping) else None
+    host = (urlsplit(str(website)).hostname or "") if website else ""
+    found = _CC_TLDS.get(host.rsplit(".", 1)[-1]) if "." in host else None
+    return [found] if found else []
+
+
 def _countries_of(discoveries: Sequence[object], proof: Mapping[str, Any]) -> list[str]:
-    """Its countries (ISO alpha-2): where its demand is watched, then what its site states."""
+    """Its countries (ISO alpha-2): where its demand is watched, then the country two or more
+    independent signals of its website point to. A place merely mentioned in its text is
+    weaker (see _countries_mentioned)."""
+    return _iso_codes([
+        *(s.get("jurisdiction") for s in proof.get("attentionScopes") or [] if isinstance(s, Mapping)),
+        *(d.get("statement") for d in discoveries
+          if isinstance(d, Mapping) and d.get("code") == "COUNTRY_FROM_SITE_SIGNALS"),
+    ])  # fmt: skip
+
+
+def _countries_mentioned(discoveries: Sequence[object]) -> list[str]:
+    """Countries its website's text mentions: a last resort, not where it is."""
+    return _iso_codes([d.get("statement") for d in discoveries if isinstance(d, Mapping)
+                       and d.get("code") == "LOCATION_STATED_IN_TEXT"])  # fmt: skip
+
+
+def _iso_codes(values: Sequence[object]) -> list[str]:
     out: list[str] = []
-    scopes = [s.get("jurisdiction") for s in proof.get("attentionScopes") or []
-              if isinstance(s, Mapping)]  # fmt: skip
-    stated = [d.get("statement") for d in discoveries if isinstance(d, Mapping)
-              and d.get("code") in {"COUNTRY_FROM_SITE_SIGNALS", "LOCATION_STATED_IN_TEXT"}]  # fmt: skip
-    for value in (*scopes, *stated):
+    for value in values:
         parts = [p for p in str(value or "").split("/") if p and p != "EU"]
         code = parts[0].upper() if parts else ""
         if len(code) == 2 and code.isalpha() and code not in out:
@@ -951,18 +980,23 @@ class FirstObservationRuntime:
                     readings.append(reading)
             signals += similar_signals(resolved, readings)
         countries = _countries_of(discoveries, proof)
-        item = self._item_facts(view) if self._buyers is not None else None
-        facts = item.get("facts") if isinstance(item, Mapping) else None
+        facts = self._wikidata_facts(view, discoveries) if self._buyers is not None else None
         if self._buyers is not None:
             # Organizations in the sectors that buy from its own, in its countries: needs no
-            # visible customer. Its industry: register or activity, else Wikidata's (P452).
-            own_sector: str | None = industry[0] if industry is not None else None
+            # visible customer. Its industry: the register's activity, then Wikidata's (P452,
+            # curated by its community), then what its website's activity codes suggest.
+            register = company_industry(view, [])
+            own_sector: str | None = register[0] if register is not None else None
             stated = facts.get("industry") if isinstance(facts, Mapping) else None
             if own_sector is None and isinstance(stated, Mapping) and stated.get("value"):
+                qid = str(stated["value"])
+                curated = wikidata_industry_nace(qid)
+                codes = [curated] if curated else self._buyers.industry_nace(qid)
                 own_sector = next(
-                    (found for code in self._buyers.industry_nace(str(stated["value"]))
-                     if (found := industry_of_nace(code))), None,
-                )  # fmt: skip
+                    (found for code in codes if (found := industry_of_code(code))), None
+                )
+            if own_sector is None and industry is not None:
+                own_sector = industry[0]
             places: list[str] = list(countries)
             home = facts.get("country") if isinstance(facts, Mapping) else None
             if (
@@ -971,6 +1005,8 @@ class FirstObservationRuntime:
                 and str(home.get("value", "")).startswith("Q")
             ):
                 places = [str(home["value"])]
+            if not places:
+                places = _countries_of_domain(view) or _countries_mentioned(discoveries)
             if own_sector is not None:
                 buyers_of = buying_sectors(own_sector)
                 readings = []
@@ -1288,6 +1324,26 @@ class FirstObservationRuntime:
         ]
         view["discoveries"] = [*kept, *found]
         return view
+
+    def _wikidata_facts(
+        self, view: Mapping[str, object], discoveries: Sequence[object]
+    ) -> Mapping[str, Any] | None:
+        """Wikidata facts of the organization: the item its findings already cite, else the
+        item its official website identifies."""
+        qid = next(
+            (str(d["detail"]["item"]) for d in discoveries
+             if isinstance(d, Mapping) and str(d.get("code", "")).startswith("WIKIDATA:")
+             and isinstance(d.get("detail"), Mapping) and str(d["detail"].get("item") or "").startswith("Q")),
+            None,
+        )  # fmt: skip
+        reading: Mapping[str, Any] | None = None
+        if qid and self._economics is not None:
+            with suppress(Exception):  # Wikidata unavailable: its country stays unknown
+                reading = self._economics.facts_for_item(qid)
+        if reading is None:
+            reading = self._item_facts(view)
+        facts = reading.get("facts") if isinstance(reading, Mapping) else None
+        return facts if isinstance(facts, Mapping) else None
 
     def _item_facts(self, view: Mapping[str, object]) -> dict[str, object] | None:
         """Wikidata facts of the item its official website identifies, if any."""

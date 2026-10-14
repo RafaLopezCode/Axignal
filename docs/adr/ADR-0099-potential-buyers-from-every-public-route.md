@@ -106,3 +106,14 @@ The v1.1 measurement found that 25 of 30 organizations show no customer, so the 
   - The most documented come first (number of Wikipedia articles). This is an inspectable order, not a judgement of fit.
   - Sectors alternate, up to 8 organizations each.
 - **What it is and is not.** These candidates have the lowest strength and a single signal. They say that a sector buys, not that this organization has a need. They rise in the list only when another route agrees.
+- Adjustments after two validation passes on the golden set:
+  - **Its own sector, in order:** register activity, then Wikidata industry, then website activity codes. Wikidata comes before the website because the website reading misclassified large groups.
+  - **Common Wikidata industries without a NACE code** (software, retail, financial services, construction…) are translated through a curated, inspectable table (`application/value_chain/wikidata_industries.json`). The table is used in both directions: to read the organization's own sector, and to search organizations in its buying sectors.
+  - **Its countries, in order:**
+    1. watched jurisdictions;
+    2. the country that two or more independent signals of its website point to;
+    3. Wikidata P17;
+    4. its country-code domain;
+    5. a place merely mentioned in its text.
+  - **Imputed rents (L68A) are never a buying sector.** They are an accounting entry for households. Real estate is read as its services (L68B).
+  - **Candidates need documentation beyond their own Wikidata item:** a Wikipedia article or an LEI.

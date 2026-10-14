@@ -28,6 +28,7 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
+from application.value_chain import wikidata_industries_for
 from application.world_demand.awards import normalized_name
 
 INSTRUMENT = "wikidata-buyer-lookups-v1"
@@ -307,7 +308,10 @@ class WikidataBuyerLookups:
             for qid, codes in self._nace_map().items()
             if any(c == w or c.startswith(w + ".") for c in codes for w in wanted)
         }  # fmt: skip
-        industries = sorted(depth, key=lambda q: (depth[q], q))[:MAX_SECTOR_INDUSTRIES]
+        # Common industries that carry no NACE code in Wikidata come first (curated).
+        curated = wikidata_industries_for(sorted(wanted))
+        ranked = sorted(depth, key=lambda q: (depth[q], q))
+        industries = list(dict.fromkeys([*curated, *ranked]))[:MAX_SECTOR_INDUSTRIES]
         country_item = country if country.startswith("Q") else self._country(country)
         payload: dict[str, Any] = {**self._base(), "sector": sector, "nace": sorted(wanted),
                                    "country": country, "countryItem": country_item,
@@ -330,9 +334,12 @@ class WikidataBuyerLookups:
             if not isinstance(entity, dict):
                 continue
             org = _organization(qid, entity, ())
-            # A current organization one can act on: its website or its LEI is known.
-            if org["label"] and not org["dissolved"] and (org["website"] or org["lei"]):
-                org["articles"] = len(entity.get("sitelinks") or {})
+            # A current organization one can act on (its website or LEI is known) and that
+            # is documented somewhere beyond its own item (a Wikipedia article or an LEI).
+            articles = len(entity.get("sitelinks") or {})
+            if (org["label"] and not org["dissolved"] and (org["website"] or org["lei"])
+                    and (articles or org["lei"])):  # fmt: skip
+                org["articles"] = articles
                 organizations.append(org)
         # The most documented first: an inspectable order, not a judgement of fit.
         organizations.sort(key=lambda o: -int(o["articles"]))
