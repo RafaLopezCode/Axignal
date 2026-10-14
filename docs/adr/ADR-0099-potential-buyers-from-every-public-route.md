@@ -1,0 +1,78 @@
+# ADR-0099: Potential buyers from every public route, each signal kept apart
+
+**Status:** Proposed. Needs CTO acceptance before integration; the CTO asked for it on 2026-10-14.
+**Date:** 2026-10-14
+**Authority:**
+- MASTER §1 (not a CRM), §11 (knowledge frontier: "potential customer C?"), §53.3 (opportunity is derived, POTENTIAL, never a lead), rules 37, 47 and 48.
+- AGENTS.md: opportunity is POTENTIAL by default; do not special-case TED or a country source; no opaque score.
+- ADR-0012 (Economic Opportunity Intelligence).
+- ADR-0087 (only a registry admits identity).
+- ADR-0095 (MCP: interpret everything).
+- ADR-0097 (job boards).
+
+## Context
+
+Subscribers value most one thing: finding organizations that could buy what they offer. Until now AXIGNAL derived buyers only from public procurement (TED and PLACSP):
+- recurrent public buyers of its codes;
+- competitors' public buyers;
+- companies winning public contracts in sectors that buy from its sector.
+
+That covers the public sector of a few countries. Most of a B2B subscriber's buyers are private organizations that never publish a tender. AXIGNAL already reads other public signals that point to them, but used them only to describe the observed organization:
+- clients shown on websites;
+- corporate groups (GLEIF);
+- industry and country (Wikidata);
+- the subscriber's own portfolio.
+
+## Decision
+
+1. **One derived finding per candidate.** Each candidate gets one `DEMAND / POTENTIAL_BUYER` finding.
+   - The candidate is an organization, never a person.
+   - It carries every signal that points to it, each with its own source, date and route (`via`).
+   - Its epistemic state is always POTENTIAL: not a customer, a lead, a relationship nor a probability.
+2. **Signal types, strongest first.**
+
+   | Signal | Meaning | Source |
+   |---|---|---|
+   | `CUSTOMER_OF_COMPETITOR` | It buys this activity from someone else | A public award to a competitor, or a client shown on the website of a same-activity organization in **the same subscriber's** portfolio |
+   | `PUBLIC_BUYER_OF_CATEGORY` | It keeps awarding contracts under this activity's codes | Public awards |
+   | `GROUP_OF_CUSTOMER` | A parent or subsidiary of an existing customer; the subscriber's countries first | GLEIF Level 2 |
+   | `SIMILAR_TO_CUSTOMERS` | Same industry (P452) and country (P17) as its customers; not dissolved | Wikidata |
+   | `SECTOR_BUYS_FROM_ITS_SECTOR` | Active nearby in a sector that usually buys from its sector | Eurostat input-output, public awards |
+
+   Public procurement is one route among several, not the centre.
+3. **No score.** Candidates are ordered by how many *independent kinds* of signal agree, then by the strongest kind, then by the order each source gave. Nothing is summed into a number.
+4. **Exclusions.** These are never candidates:
+   - the organization itself and its group;
+   - its declared clients and partners;
+   - its public buyers and contract partners.
+5. **A customer's name is not an identity.**
+   - A name from a logo wall or an award is looked up in Wikidata by exact label or alias, ignoring legal form.
+   - It is accepted only when exactly one *organization* item matches (one with an industry or an LEI).
+   - Ambiguous names are recorded and not used.
+   - The match only routes the search for groups and lookalikes. It never admits identity and never creates a relationship.
+6. **Tenant isolation.** Portfolio peers are read only from the same tenant's own observations. World lookups (Wikidata, GLEIF) are cached at world level; they are public CC0 data and carry no tenant information.
+7. **Cost and currentness.**
+   - Wikidata lookups run on the source thread and are refreshed monthly. Reads use only what is stored.
+   - GLEIF groups use the existing weekly cache.
+   - Bounds per read: 50 portfolio peers, 8 customers, 3 customer profiles and 3 customer groups.
+8. **Absence is UNKNOWN.** With no route available, one `NO_BUYER_SIGNALS` unknown explains why. It never says there is no demand.
+9. **Surfaces.**
+   - The Demand family on the web.
+   - `get_potential_buyers` in the subscriber's web MCP: read-only, tenant-scoped, and AXIGNAL's own LLM is never called.
+
+## Consequences
+
+- Buyers become visible for private, B2B and non-EU subscribers. That depends on their customer profile being visible: clients on their website, public awards, or same-activity organizations in their portfolio.
+- A subscriber that adds its competitors to its portfolio gets their declared clients as signals. This is an honest reason to observe more organizations.
+- Name matching is strict. "Naturgy" and "Naturgy Energy Group" stay two candidates rather than risk merging distinct entities.
+
+## Not decided here (later phases)
+
+- **v2:** grants and subsidies, register events (new companies, capital increases), physical establishments (OpenStreetMap).
+- **v3:**
+  - regulatory and press triggers;
+  - technology seen on websites;
+  - hiring by candidates (job boards, ADR-0097);
+  - non-EU procurement (USAspending/SAM, Find a Tender, CanadaBuys, AusTender).
+
+Each new route enters as a new signal type with its own ADR line, licence and limitation.

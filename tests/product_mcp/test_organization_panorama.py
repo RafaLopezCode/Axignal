@@ -151,9 +151,28 @@ def test_public_vocabulary_and_read_only() -> None:
     listed = server.handle({"jsonrpc": "2.0", "id": 1, "method": "tools/list"}, grant=GRANT)
     tools = {t["name"]: t for t in listed["result"]["tools"]}  # type: ignore[index]
     for name in ("list_organizations", "get_organization_panorama",
-                 "get_organization_findings", "get_organization_history"):  # fmt: skip
+                 "get_organization_findings", "get_organization_history",
+                 "get_potential_buyers"):  # fmt: skip
         assert tools[name]["annotations"]["readOnlyHint"] is True
         assert "xeed" not in str(tools[name]).lower()
     assert _call("list_organizations")["organizations"] == [
         {"organization_id": "focus_1", "organization": "Acme"}
     ]
+
+
+def test_potential_buyers_keep_each_signal_and_are_never_a_score(monkeypatch: Any) -> None:
+    buyer = _d("DEMAND", "POTENTIAL_BUYER", "Endesa", "POTENTIAL",
+               signalTypes=["CUSTOMER_OF_COMPETITOR", "SIMILAR_TO_CUSTOMERS"],
+               signals=[{"type": "CUSTOMER_OF_COMPETITOR", "via": "Rival SA",
+                         "sourceUrl": "https://award", "observedAt": "2026-10-01"}],
+               identifiers={"wikidata": "Q8"})  # fmt: skip
+    monkeypatch.setitem(VIEW, "discoveries", [*VIEW["discoveries"], buyer])  # type: ignore[list-item]
+    page = _call("get_potential_buyers", organization_id="focus_1")
+    assert not page["isError"] and "never a customer" in page["how_to_read"]
+    assert page["buyers"] == [{
+        "finding_id": finding_id(buyer), "organization": "Endesa",
+        "signal_types": ["CUSTOMER_OF_COMPETITOR", "SIMILAR_TO_CUSTOMERS"],
+        "signals": buyer["detail"]["signals"], "identifiers": {"wikidata": "Q8"},
+    }]  # fmt: skip
+    assert page["unknown"] is None
+    assert _call("get_potential_buyers", organization_id="other")["error"] == "XEED_NOT_AVAILABLE"

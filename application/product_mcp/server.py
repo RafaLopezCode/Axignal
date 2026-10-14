@@ -32,7 +32,8 @@ INSTRUCTIONS = (
     "the signals that deserve attention, the record behind it) and how to turn it into a "
     "value report. Go deeper with get_organization_findings (the evidence of one family) and "
     "get_organization_history (what appeared, disappeared and moved, and when; pass since= "
-    "to read only what is new). get_xeed_overview, get_xeed_evidence and get_xeed_timeline "
+    "to read only what is new). get_potential_buyers lists organizations that could buy what "
+    "it offers, each with its separate signals. get_xeed_overview, get_xeed_evidence and get_xeed_timeline "
     "trace the economic reading. Answer only from these tools for facts about the "
     "organization; keep OBSERVED, DECLARED, POTENTIAL and UNKNOWN as labelled. Read-only."
 )
@@ -202,6 +203,24 @@ TOOLS = (
                 "cursor": {"type": "string", "description": "next_cursor from a previous page."},
             },
             "required": ["organization_id", "family"],
+            "additionalProperties": False,
+        },
+        "annotations": _READ_ONLY,
+    },
+    {
+        "name": "get_potential_buyers",
+        "title": "Who could buy what it offers",
+        "description": (
+            "Organizations (never people) where independent public signals point to plausible "
+            "demand for this organization's activity: clients of its competitors, public "
+            "buyers of its category, entities in its customers' groups, organizations like "
+            "its customers and sectors that buy from its sector. Each with every signal, "
+            "source and date. POTENTIAL: not customers, leads or probabilities."
+        ),
+        "inputSchema": {
+            "type": "object",
+            "properties": _ORGANIZATION_ARG,
+            "required": ["organization_id"],
             "additionalProperties": False,
         },
         "annotations": _READ_ONLY,
@@ -478,6 +497,7 @@ _ORGANIZATION_READS: dict[str, set[str]] = {
     "get_organization_panorama": {"organization_id"},
     "get_organization_findings": {"organization_id", "family", "cursor"},
     "get_organization_history": {"organization_id", "family", "since"},
+    "get_potential_buyers": {"organization_id"},
 }
 
 
@@ -513,6 +533,8 @@ def _organization_tool_impl(
             None,
         )  # fmt: skip
         return panorama.panorama(organization_id, label, wire, now=now)
+    if name == "get_potential_buyers":
+        return panorama.potential_buyers(organization_id, wire)
     page, following = panorama.findings(organization_id, wire, str(family), offset=offset)
     return {
         **page,

@@ -330,6 +330,14 @@ export function discoveryCopy(d: Discovery, t: Translate, locale = "en"): { find
       : { finding: t("Posible proveedor: {name} · {sector}", "Possible supplier: {name} · {sector}").replace("{name}", d.statement).replace("{sector}", sector),
           why: t("Activa en su zona en un sector al que el suyo suele comprar ({n} contratos públicos lo muestran). Es una posibilidad, no una relación.", "Active in its area in a sector its own usually buys from ({n} public contracts show it). A possibility, not a relationship.").replace("{n}", n) };
   }
+  if (d.kind === "DEMAND" && d.code === "POTENTIAL_BUYER") {
+    const signals = Array.isArray(d.detail.signals) ? d.detail.signals as { type: string; via?: string | null }[] : [];
+    const kinds = Array.isArray(d.detail.signalTypes) ? d.detail.signalTypes.length : 0;
+    const routes = signals.map(s => buyerSignalLabel(s.type, t) + (s.via ? ` (${s.via})` : "")).join(" · ");
+    const count = kinds === 1 ? t("1 tipo de señal", "1 kind of signal") : t("{n} tipos de señal independientes", "{n} independent kinds of signal").replace("{n}", String(kinds));
+    return { finding: t("Posible comprador: {name}", "Possible buyer: {name}").replace("{name}", d.statement) + ` · ${count}`,
+      why: (routes ? `${routes}. ` : "") + t("Cada señal es pública y tiene su fuente y fecha. Es una posibilidad, no un cliente, un lead ni una probabilidad.", "Each signal is public, with its source and date. A possibility, not a customer, a lead nor a probability.") };
+  }
   if (d.kind === "DEMAND" && d.code === "RECURRING_PUBLIC_BUYER") {
     const n = Number(d.detail.contracts ?? 0);
     const amount = typeof d.detail.amount === "number" && d.detail.amount > 0
@@ -399,6 +407,7 @@ export function discoveryCopy(d: Discovery, t: Translate, locale = "en"): { find
     case "LOCATION_NOT_DECLARED": return { finding: t("No hemos establecido su ubicación ni su ámbito geográfico de servicio.", "Its location and geographic service scope have not been established."), why: t("No elegimos un mercado por defecto.", "We do not pick a default market.") };
     case "DEMAND_NOT_ROUTABLE": case "NO_ROUTABLE_DEMAND_QUESTION": return { finding: t("Ninguna fuente de demanda gobernada aplica todavía a esta actividad y lugar.", "No governed demand source applies yet to this activity and place."), why: t("No es una ausencia de oportunidades.", "It is not an absence of opportunities.") };
     case "NO_PRESS_MENTION_FOUND": return { finding: t("Ningún titular de los medios indexados la nombra.", "No headline in the indexed media names it."), why: t("Solo cubre los medios y fechas indicados; no significa que no tenga cobertura en otros.", "It only covers the stated media and dates; it does not mean it has no coverage elsewhere.") };
+    case "NO_BUYER_SIGNALS": return { finding: t("Todavía no se pueden derivar posibles compradores.", "No potential buyer can be derived yet."), why: t("Se derivan de quién ya compra: clientes que muestra su web, adjudicaciones públicas, clientes de competidores y sectores compradores. No es una ausencia de demanda.", "They are derived from who already buys: clients its website shows, public awards, competitors' clients and buying sectors. It is not an absence of demand.") };
     case "NO_PUBLIC_AWARDS_FOUND": return { finding: t("No hay adjudicaciones públicas a su nombre en el periodo cubierto.", "No public contract awards in its name in the period covered."), why: t("Solo cubre adjudicaciones publicadas desde la fecha indicada; no significa que no tenga contratos.", "It only covers awards published since the stated date; it does not mean it has no contracts.") };
     case "NO_RELEVANT_DEMAND_FOUND": return { finding: t("Las fuentes consultadas no tienen ahora demanda que coincida.", "The sources searched have no matching demand right now."), why: t("Sin resultado no es sin oportunidad; volveremos a observar.", "No result is not no opportunity; we will observe again.") };
     case "NOT_AN_OPERATING_BUSINESS_SITE": return { finding: t("La página no parece la web de una actividad en marcha.", "The page does not read as an operating business website."), why: t("Es un juicio no autoritativo sobre la página, no sobre la organización.", "It is a non-authoritative judgment about the page, not about the organization.") };
@@ -414,6 +423,17 @@ export function discoveryCopy(d: Discovery, t: Translate, locale = "en"): { find
 }
 
 /** The demand question a missing source leaves open, in the reader's words. */
+function buyerSignalLabel(type: string, t: Translate): string {
+  switch (type) {
+    case "CUSTOMER_OF_COMPETITOR": return t("Compra a un competidor", "Buys from a competitor");
+    case "PUBLIC_BUYER_OF_CATEGORY": return t("Comprador público de su actividad", "Public buyer of its activity");
+    case "GROUP_OF_CUSTOMER": return t("Del grupo de un cliente", "In a customer's group");
+    case "SIMILAR_TO_CUSTOMERS": return t("Parecida a sus clientes", "Similar to its customers");
+    case "SECTOR_BUYS_FROM_ITS_SECTOR": return t("Su sector compra al suyo", "Its sector buys from its own");
+    default: return type;
+  }
+}
+
 function techCategory(category: string, t: Translate): string {
   const labels: Record<string, string> = {
     ANALYTICS: t("analítica", "analytics"), ADVERTISING: t("publicidad", "advertising"),

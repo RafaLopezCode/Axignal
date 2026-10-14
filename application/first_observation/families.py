@@ -43,6 +43,7 @@ BY_UNKNOWN_CODE: dict[str, str] = {
     "ACTIVITY_NOT_ESTABLISHED": "value",
     "NO_GOVERNED_DEMAND_SOURCE": "demand",
     "NO_RELEVANT_DEMAND_FOUND": "demand",
+    "NO_BUYER_SIGNALS": "demand",
     "NO_PRESS_MENTION_FOUND": "reputation",
     "NO_PUBLIC_AWARDS_FOUND": "relationships",
 }

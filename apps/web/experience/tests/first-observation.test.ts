@@ -15,7 +15,7 @@ function discovery(kind: Discovery["kind"], code: string, extra: Partial<Discove
 }
 
 // Every code the Python First Observation emits (application/first_observation/service.py).
-const BACKEND_UNKNOWN_CODES = ["IDENTITY_NOT_VERIFIED", "WEBSITE_LINK_NOT_REGISTRY_VERIFIED", "ACTIVITY_NOT_ESTABLISHED", "LOCATION_NOT_DECLARED", "DEMAND_NOT_ROUTABLE", "NO_ROUTABLE_DEMAND_QUESTION", "NO_RELEVANT_DEMAND_FOUND", "NOT_AN_OPERATING_BUSINESS_SITE", "NO_PUBLIC_WEBSITE"];
+const BACKEND_UNKNOWN_CODES = ["IDENTITY_NOT_VERIFIED", "WEBSITE_LINK_NOT_REGISTRY_VERIFIED", "ACTIVITY_NOT_ESTABLISHED", "LOCATION_NOT_DECLARED", "DEMAND_NOT_ROUTABLE", "NO_ROUTABLE_DEMAND_QUESTION", "NO_RELEVANT_DEMAND_FOUND", "NO_BUYER_SIGNALS", "NOT_AN_OPERATING_BUSINESS_SITE", "NO_PUBLIC_WEBSITE"];
 
 test("every backend unknown code has its own fixed copy, never a generic or generated one", () => {
   const generic = discoveryCopy(discovery("SIGNIFICANT_UNKNOWN", "ROBOTS_DISALLOWED"), en).finding;

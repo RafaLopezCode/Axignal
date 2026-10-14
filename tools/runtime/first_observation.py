@@ -17,6 +17,7 @@ import hashlib
 import json
 import threading
 import time
+from collections import Counter
 from collections.abc import Callable, Mapping, Sequence
 from contextlib import suppress
 from dataclasses import dataclass
@@ -81,6 +82,16 @@ from application.observation_runtime.replay import FindingsLedger
 from application.organization_admission.locator import LocatorError, parse_locator, public_domain
 from application.organization_group import group_discoveries
 from application.organization_identity import identity_corroboration
+from application.potential_buyers import (
+    customer_names,
+    excluded_names,
+    group_signals,
+    no_buyer_signals,
+    peer_signals,
+    potential_buyers,
+    similar_signals,
+    view_signals,
+)
 from application.press.mentions import press_discoveries
 from application.regulation import regulation_discoveries
 from application.regulation.sectors import route_of
@@ -98,7 +109,7 @@ from application.subscriber_projection.subscriber_runtime import SubscriberEcono
 from application.timeline import changes as timeline_changes
 from application.timeline import history as timeline_history
 from application.timeline import snapshot as timeline_snapshot
-from application.value_chain import apply_value_chain
+from application.value_chain import apply_value_chain, company_industry
 from application.world_demand.index import (
     DemandIndexPort,
     SliceFeedPort,
@@ -106,7 +117,12 @@ from application.world_demand.index import (
     country_of,
 )
 from application.world_demand.live import LiveDemandReader, apply_live_demand
-from application.world_demand.relations import AwardStore, apply_public_awards
+from application.world_demand.relations import (
+    AwardStore,
+    activity_codes,
+    apply_public_awards,
+    identity_keys,
+)
 from application.xeed_access.reader import TrustedRequestContext
 from domain.evidence.epistemics import Currentness
 from domain.identity import OrganizationId, PrincipalId, TenantId, XeedId
@@ -117,6 +133,7 @@ from pipeline.entity_resolution.gleif_group import GleifGroupReader
 from pipeline.first_observation.sqlite_store import SqliteFirstObservationStore
 from pipeline.geo.nominatim import NominatimReverseGeocoder
 from pipeline.observation_memory.sqlite_store import SqliteObservationMemory
+from pipeline.potential_buyers.wikidata import WikidataBuyerLookups
 from pipeline.press.sqlite_store import PressIngestor, SqlitePressIndex
 from pipeline.press.sqlite_store import SqlitePressIndex as _PressIndex
 from pipeline.regulation.sqlite_store import RegulationIngestor, SqliteRegulationIndex
@@ -390,6 +407,12 @@ def _headline(proof: Mapping[str, Any] | None) -> tuple[str | None, str | None]:
 MARKETING_TENANT = "staff:marketing-pool"
 
 
+#: Bounds on what one read looks at: portfolio peers, customer profiles and customer groups.
+MAX_PORTFOLIO_PEERS = 50
+MAX_CUSTOMER_PROFILES = 3
+MAX_CUSTOMER_GROUPS = 3
+
+
 class FirstObservationRuntime:
     def __init__(
         self,
@@ -416,7 +439,9 @@ class FirstObservationRuntime:
         regulation: tuple[RegulationIngestor, RegulationContextRunner] | None = None,
         notoriety: WikipediaNotoriety | None = None,
         job_boards: JobBoards | None = None,
+        buyers: WikidataBuyerLookups | None = None,
     ) -> None:
+        self._buyers = buyers
         self._job_boards = job_boards
         self._notoriety = notoriety
         self._regulation = regulation
@@ -837,6 +862,87 @@ class FirstObservationRuntime:
             view["discoveries"] = [*discoveries, *found]
         return view
 
+    def read_buyer_lookups(self) -> int:
+        """Wikidata lookups of customers and of organizations like them (source thread)."""
+        return 0 if self._buyers is None else self._buyers.run()
+
+    def _with_potential_buyers(
+        self, view: dict[str, object], proof: Mapping[str, Any], tenant: str, target_ref: str
+    ) -> dict[str, object]:
+        """Organizations that could buy what it offers, each with its signals (ADR-0099)."""
+        held = view.get("discoveries")
+        discoveries = list(held) if isinstance(held, list) else []
+        if not any(
+            isinstance(d, Mapping) and d.get("kind") != "SIGNIFICANT_UNKNOWN" for d in discoveries
+        ):
+            return view  # nothing observed (withdrawn, unavailable): nothing to derive from
+        observed_at = str(view.get("observedAt") or "")
+        signals = view_signals(discoveries)
+        # Clients that same-activity organizations in this subscriber's own portfolio show.
+        industry = company_industry(view, [c.code for c in activity_codes(proof)])
+        if industry is not None:
+            peers: list[dict[str, object]] = []
+            others = sorted(self.store.observed_targets(tenant) - {target_ref})
+            for ref in others[:MAX_PORTFOLIO_PEERS]:
+                other = self.store.proof(tenant, ref)
+                if not other:
+                    continue
+                found = other.get("discoveries")
+                other_view = {"discoveries": found if isinstance(found, list) else []}
+                codes = [c.code for c in activity_codes(other)]
+                if company_industry(other_view, codes) != industry:
+                    continue
+                target = other.get("target")
+                name = (
+                    target.get("name") or target.get("website")
+                    if isinstance(target, Mapping)
+                    else None
+                )
+                peers.append({"name": name or ref, "clients": other_view["discoveries"]})
+            signals += peer_signals(peers)
+        # Who its customers are (Wikidata), their groups (GLEIF) and who resembles them.
+        resolved: dict[str, Mapping[str, Any]] = {}
+        if self._buyers is not None:
+            for name in customer_names(discoveries):
+                self._buyers.request_customer(name)
+                reading = self._buyers.customer(name)
+                item = reading.get("item") if isinstance(reading, Mapping) else None
+                if isinstance(item, Mapping):
+                    resolved[name] = item
+            profiles = Counter(
+                (str(i), str(c))
+                for item in resolved.values()
+                for i in list(item.get("industries") or [])[:2]
+                for c in list(item.get("countries") or [])[:1]
+            )
+            readings = []
+            for (sector, country), _n in profiles.most_common(MAX_CUSTOMER_PROFILES):
+                self._buyers.request_peers(sector, country)
+                reading = self._buyers.peers(sector, country)
+                if reading is not None:
+                    readings.append(reading)
+            signals += similar_signals(resolved, readings)
+        if self._groups is not None:
+            countries = [
+                str(s.get("jurisdiction")).rsplit("/", 1)[-1]
+                for s in proof.get("attentionScopes") or []
+                if isinstance(s, Mapping) and s.get("jurisdiction")
+            ]
+            with_lei = [(n, str(i["lei"])) for n, i in resolved.items() if i.get("lei")]
+            for name, lei in with_lei[:MAX_CUSTOMER_GROUPS]:
+                with suppress(Exception):  # registry unavailable: that route stays unknown
+                    signals += group_signals(name, self._groups.group(lei), countries=countries)
+        found_buyers = potential_buyers(
+            signals, exclude=excluded_names(discoveries, identity_keys(view)[1]),
+            observed_at=observed_at,
+        )  # fmt: skip
+        view["discoveries"] = [
+            *discoveries,
+            *(found_buyers or [no_buyer_signals(has_customers=bool(customer_names(discoveries)),
+                                                observed_at=observed_at)]),
+        ]  # fmt: skip
+        return view
+
     def read_notoriety(self) -> int:
         """Weekly Wikipedia attention for the organizations being read (source thread)."""
         return 0 if self._notoriety is None else self._notoriety.run()
@@ -950,6 +1056,7 @@ class FirstObservationRuntime:
                 self.ingest_regulation,
                 self.read_notoriety,
                 self.read_job_boards,
+                self.read_buyer_lookups,
             ):
                 try:
                     stage()
@@ -1270,6 +1377,8 @@ class FirstObservationRuntime:
             )
             # Where its sector's demand comes from and where its inputs come from.
             view = apply_value_chain(view, proof)
+            # Who could buy what it offers: every public route, each signal kept apart.
+            view = self._with_potential_buyers(view, proof, tenant, target_ref)
             # What crossing the families reveals (derived, recomputed on every read).
             view = apply_inxights(view)
             # Every family in time: today's reading against one at least a week old.
@@ -1593,6 +1702,9 @@ def build_first_observation(
         job_boards=None
         if overrides.source_ports is not None or overrides.feeds is not None
         else JobBoards(root / "job-boards.sqlite3", clock=clock.now),
+        buyers=None
+        if overrides.source_ports is not None or overrides.feeds is not None
+        else WikidataBuyerLookups(root / "wikidata-buyers.sqlite3", clock=clock.now),
         groups=None
         if overrides.source_ports is not None or overrides.feeds is not None
         else GleifGroupReader(root / "gleif-groups.sqlite3"),

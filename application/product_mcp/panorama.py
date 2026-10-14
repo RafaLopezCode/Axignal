@@ -272,6 +272,35 @@ def findings(
     )
 
 
+def potential_buyers(organization_id: str, wire: Mapping[str, Any]) -> dict[str, object]:
+    """Organizations that could buy what it offers, each with its separate signals."""
+    held = _discoveries(wire)
+    buyers = [d for d in held if d.get("code") == "POTENTIAL_BUYER"]
+    unknown = next((d for d in held if d.get("code") == "NO_BUYER_SIGNALS"), None)
+    return {
+        "organization_id": organization_id,
+        "how_to_read": HOW_TO_READ
+        + " Potential buyers: organizations only, POTENTIAL, never a customer, lead or "
+        "probability. Ordered by how many independent kinds of signal agree, then by the "
+        "strongest kind (buying from a competitor > public buyer of the category > group of "
+        "a customer > similar to customers > sector that buys from its sector). Each signal "
+        "keeps its own source and date; cite them, do not merge them into a score.",
+        "buyers": [
+            {
+                "finding_id": finding_id(d),
+                "organization": _s(d.get("statement")),
+                "signal_types": _l(_d(d.get("detail")).get("signalTypes")),
+                "signals": _l(_d(d.get("detail")).get("signals")),
+                "identifiers": dict(_d(_d(d.get("detail")).get("identifiers"))),
+            }
+            for d in buyers
+        ],
+        "unknown": None
+        if unknown is None
+        else _s(_d(unknown.get("detail")).get("limitation"), 600),
+    }
+
+
 def valid_day(value: object) -> str | None:
     """A YYYY-MM-DD day, or None when absent; raises ValueError when malformed."""
     if value is None:
