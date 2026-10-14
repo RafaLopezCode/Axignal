@@ -1,0 +1,1133 @@
+{
+ "version": "excellence-report-v1",
+ "generated_at": "2026-10-14T17:07:53.577646+00:00",
+ "organizations_measured": 30,
+ "families": {
+  "presence": {
+   "coverage_pct": 73.3,
+   "covered": 22,
+   "observability": {
+    "STALE": 1,
+    "STRONG": 21,
+    "UNKNOWN": 8
+   },
+   "findings": 252,
+   "by_state": {
+    "OBSERVED": 91,
+    "POTENTIAL": 161
+   },
+   "distinct_sources": 48
+  },
+  "reputation": {
+   "coverage_pct": 80.0,
+   "covered": 24,
+   "observability": {
+    "LIMITED": 5,
+    "PARTIAL": 18,
+    "STRONG": 6,
+    "UNKNOWN": 1
+   },
+   "findings": 47,
+   "by_state": {
+    "DECLARED": 7,
+    "OBSERVED": 22,
+    "POTENTIAL": 18
+   },
+   "distinct_sources": 45
+  },
+  "value": {
+   "coverage_pct": 86.7,
+   "covered": 26,
+   "observability": {
+    "LIMITED": 2,
+    "PARTIAL": 26,
+    "UNKNOWN": 2
+   },
+   "findings": 49,
+   "by_state": {
+    "DECLARED": 18,
+    "OBSERVED": 4,
+    "POTENTIAL": 27
+   },
+   "distinct_sources": 29
+  },
+  "markets": {
+   "coverage_pct": 56.7,
+   "covered": 17,
+   "observability": {
+    "PARTIAL": 17,
+    "UNKNOWN": 13
+   },
+   "findings": 54,
+   "by_state": {
+    "DECLARED": 43,
+    "POTENTIAL": 11
+   },
+   "distinct_sources": 16
+  },
+  "relationships": {
+   "coverage_pct": 83.3,
+   "covered": 25,
+   "observability": {
+    "PARTIAL": 10,
+    "STALE": 1,
+    "STRONG": 14,
+    "UNKNOWN": 5
+   },
+   "findings": 152,
+   "by_state": {
+    "DECLARED": 42,
+    "OBSERVED": 41,
+    "POTENTIAL": 69
+   },
+   "distinct_sources": 78
+  },
+  "demand": {
+   "coverage_pct": 60.0,
+   "covered": 18,
+   "observability": {
+    "LIMITED": 12,
+    "PARTIAL": 18
+   },
+   "findings": 502,
+   "by_state": {
+    "POTENTIAL": 502
+   },
+   "distinct_sources": 382
+  },
+  "activity": {
+   "coverage_pct": 56.7,
+   "covered": 17,
+   "observability": {
+    "PARTIAL": 16,
+    "STALE": 1,
+    "UNKNOWN": 13
+   },
+   "findings": 17,
+   "by_state": {
+    "DECLARED": 17
+   },
+   "distinct_sources": 17
+  },
+  "economics": {
+   "coverage_pct": 76.7,
+   "covered": 23,
+   "observability": {
+    "PARTIAL": 16,
+    "STRONG": 7,
+    "UNKNOWN": 7
+   },
+   "findings": 109,
+   "by_state": {
+    "OBSERVED": 43,
+    "POTENTIAL": 66
+   },
+   "distinct_sources": 31
+  },
+  "organization": {
+   "coverage_pct": 63.3,
+   "covered": 19,
+   "observability": {
+    "LIMITED": 11,
+    "PARTIAL": 19
+   },
+   "findings": 30,
+   "by_state": {
+    "DECLARED": 19,
+    "POTENTIAL": 11
+   },
+   "distinct_sources": 24
+  },
+  "context": {
+   "coverage_pct": 20.0,
+   "covered": 6,
+   "observability": {
+    "PARTIAL": 6,
+    "UNKNOWN": 24
+   },
+   "findings": 22,
+   "by_state": {
+    "POTENTIAL": 22
+   },
+   "distinct_sources": 21
+  }
+ },
+ "countries": {
+  "AU": {
+   "organizations": 3,
+   "family_coverage_pct": 46.7
+  },
+  "CA": {
+   "organizations": 3,
+   "family_coverage_pct": 70.0
+  },
+  "DE": {
+   "organizations": 4,
+   "family_coverage_pct": 55.0
+  },
+  "ES": {
+   "organizations": 5,
+   "family_coverage_pct": 68.0
+  },
+  "FR": {
+   "organizations": 4,
+   "family_coverage_pct": 65.0
+  },
+  "GB": {
+   "organizations": 4,
+   "family_coverage_pct": 75.0
+  },
+  "NO": {
+   "organizations": 3,
+   "family_coverage_pct": 80.0
+  },
+  "US": {
+   "organizations": 4,
+   "family_coverage_pct": 65.0
+  }
+ },
+ "organizations": [
+  {
+   "domain": "plexus.es",
+   "country": "ES",
+   "state": "FIRST_PROOF_READY",
+   "families_covered": 7,
+   "observability": {
+    "presence": "STRONG",
+    "reputation": "LIMITED",
+    "value": "PARTIAL",
+    "markets": "PARTIAL",
+    "relationships": "STRONG",
+    "demand": "PARTIAL",
+    "activity": "PARTIAL",
+    "economics": "UNKNOWN",
+    "organization": "PARTIAL",
+    "context": "UNKNOWN"
+   }
+  },
+  {
+   "domain": "prosegur.es",
+   "country": "ES",
+   "state": "FIRST_PROOF_READY",
+   "families_covered": 9,
+   "observability": {
+    "presence": "STRONG",
+    "reputation": "STRONG",
+    "value": "PARTIAL",
+    "markets": "PARTIAL",
+    "relationships": "STRONG",
+    "demand": "PARTIAL",
+    "activity": "PARTIAL",
+    "economics": "PARTIAL",
+    "organization": "PARTIAL",
+    "context": "UNKNOWN"
+   }
+  },
+  {
+   "domain": "rubau.com",
+   "country": "ES",
+   "state": "FIRST_PROOF_READY",
+   "families_covered": 8,
+   "observability": {
+    "presence": "STRONG",
+    "reputation": "UNKNOWN",
+    "value": "PARTIAL",
+    "markets": "PARTIAL",
+    "relationships": "STRONG",
+    "demand": "PARTIAL",
+    "activity": "PARTIAL",
+    "economics": "UNKNOWN",
+    "organization": "PARTIAL",
+    "context": "PARTIAL"
+   }
+  },
+  {
+   "domain": "humanlevel.com",
+   "country": "ES",
+   "state": "FIRST_PROOF_READY",
+   "families_covered": 8,
+   "observability": {
+    "presence": "STRONG",
+    "reputation": "LIMITED",
+    "value": "PARTIAL",
+    "markets": "PARTIAL",
+    "relationships": "STRONG",
+    "demand": "PARTIAL",
+    "activity": "PARTIAL",
+    "economics": "UNKNOWN",
+    "organization": "PARTIAL",
+    "context": "PARTIAL"
+   }
+  },
+  {
+   "domain": "colegioestudio.com",
+   "country": "ES",
+   "state": "NOT_ENOUGH_CAPABILITY_EVIDENCE",
+   "families_covered": 2,
+   "observability": {
+    "presence": "STRONG",
+    "reputation": "LIMITED",
+    "value": "LIMITED",
+    "markets": "UNKNOWN",
+    "relationships": "PARTIAL",
+    "demand": "LIMITED",
+    "activity": "UNKNOWN",
+    "economics": "UNKNOWN",
+    "organization": "LIMITED",
+    "context": "UNKNOWN"
+   }
+  },
+  {
+   "domain": "jvm.com",
+   "country": "DE",
+   "state": "FIRST_PROOF_READY",
+   "families_covered": 6,
+   "observability": {
+    "presence": "STRONG",
+    "reputation": "STRONG",
+    "value": "LIMITED",
+    "markets": "PARTIAL",
+    "relationships": "PARTIAL",
+    "demand": "LIMITED",
+    "activity": "PARTIAL",
+    "economics": "PARTIAL",
+    "organization": "LIMITED",
+    "context": "UNKNOWN"
+   }
+  },
+  {
+   "domain": "trumpf.com",
+   "country": "DE",
+   "state": "SOURCE_UNAVAILABLE",
+   "families_covered": 3,
+   "observability": {
+    "presence": "UNKNOWN",
+    "reputation": "PARTIAL",
+    "value": "PARTIAL",
+    "markets": "UNKNOWN",
+    "relationships": "UNKNOWN",
+    "demand": "LIMITED",
+    "activity": "UNKNOWN",
+    "economics": "PARTIAL",
+    "organization": "LIMITED",
+    "context": "UNKNOWN"
+   }
+  },
+  {
+   "domain": "personio.de",
+   "country": "DE",
+   "state": "NOT_ENOUGH_CAPABILITY_EVIDENCE",
+   "families_covered": 6,
+   "observability": {
+    "presence": "STALE",
+    "reputation": "PARTIAL",
+    "value": "PARTIAL",
+    "markets": "UNKNOWN",
+    "relationships": "STALE",
+    "demand": "LIMITED",
+    "activity": "STALE",
+    "economics": "PARTIAL",
+    "organization": "LIMITED",
+    "context": "UNKNOWN"
+   }
+  },
+  {
+   "domain": "hornbach.de",
+   "country": "DE",
+   "state": "FIRST_PROOF_READY",
+   "families_covered": 7,
+   "observability": {
+    "presence": "STRONG",
+    "reputation": "PARTIAL",
+    "value": "PARTIAL",
+    "markets": "PARTIAL",
+    "relationships": "STRONG",
+    "demand": "LIMITED",
+    "activity": "UNKNOWN",
+    "economics": "PARTIAL",
+    "organization": "PARTIAL",
+    "context": "UNKNOWN"
+   }
+  },
+  {
+   "domain": "alan.com",
+   "country": "FR",
+   "state": "SOURCE_UNAVAILABLE",
+   "families_covered": 6,
+   "observability": {
+    "presence": "UNKNOWN",
+    "reputation": "PARTIAL",
+    "value": "PARTIAL",
+    "markets": "UNKNOWN",
+    "relationships": "PARTIAL",
+    "demand": "PARTIAL",
+    "activity": "UNKNOWN",
+    "economics": "STRONG",
+    "organization": "PARTIAL",
+    "context": "UNKNOWN"
+   }
+  },
+  {
+   "domain": "doctolib.fr",
+   "country": "FR",
+   "state": "SOURCE_UNAVAILABLE",
+   "families_covered": 6,
+   "observability": {
+    "presence": "UNKNOWN",
+    "reputation": "STRONG",
+    "value": "PARTIAL",
+    "markets": "UNKNOWN",
+    "relationships": "PARTIAL",
+    "demand": "PARTIAL",
+    "activity": "UNKNOWN",
+    "economics": "STRONG",
+    "organization": "PARTIAL",
+    "context": "UNKNOWN"
+   }
+  },
+  {
+   "domain": "saint-gobain.com",
+   "country": "FR",
+   "state": "SOURCE_UNAVAILABLE",
+   "families_covered": 7,
+   "observability": {
+    "presence": "UNKNOWN",
+    "reputation": "PARTIAL",
+    "value": "PARTIAL",
+    "markets": "PARTIAL",
+    "relationships": "PARTIAL",
+    "demand": "PARTIAL",
+    "activity": "UNKNOWN",
+    "economics": "PARTIAL",
+    "organization": "PARTIAL",
+    "context": "UNKNOWN"
+   }
+  },
+  {
+   "domain": "ekimetrics.com",
+   "country": "FR",
+   "state": "FIRST_PROOF_READY",
+   "families_covered": 7,
+   "observability": {
+    "presence": "STRONG",
+    "reputation": "LIMITED",
+    "value": "PARTIAL",
+    "markets": "PARTIAL",
+    "relationships": "STRONG",
+    "demand": "PARTIAL",
+    "activity": "UNKNOWN",
+    "economics": "UNKNOWN",
+    "organization": "PARTIAL",
+    "context": "PARTIAL"
+   }
+  },
+  {
+   "domain": "impression.co.uk",
+   "country": "GB",
+   "state": "FIRST_PROOF_READY",
+   "families_covered": 7,
+   "observability": {
+    "presence": "STRONG",
+    "reputation": "LIMITED",
+    "value": "PARTIAL",
+    "markets": "PARTIAL",
+    "relationships": "PARTIAL",
+    "demand": "PARTIAL",
+    "activity": "PARTIAL",
+    "economics": "UNKNOWN",
+    "organization": "PARTIAL",
+    "context": "UNKNOWN"
+   }
+  },
+  {
+   "domain": "octopus.energy",
+   "country": "GB",
+   "state": "FIRST_PROOF_READY",
+   "families_covered": 7,
+   "observability": {
+    "presence": "STRONG",
+    "reputation": "PARTIAL",
+    "value": "PARTIAL",
+    "markets": "UNKNOWN",
+    "relationships": "PARTIAL",
+    "demand": "PARTIAL",
+    "activity": "PARTIAL",
+    "economics": "UNKNOWN",
+    "organization": "PARTIAL",
+    "context": "UNKNOWN"
+   }
+  },
+  {
+   "domain": "wise.com",
+   "country": "GB",
+   "state": "FIRST_PROOF_READY",
+   "families_covered": 7,
+   "observability": {
+    "presence": "STRONG",
+    "reputation": "PARTIAL",
+    "value": "PARTIAL",
+    "markets": "PARTIAL",
+    "relationships": "PARTIAL",
+    "demand": "LIMITED",
+    "activity": "UNKNOWN",
+    "economics": "PARTIAL",
+    "organization": "PARTIAL",
+    "context": "UNKNOWN"
+   }
+  },
+  {
+   "domain": "balfourbeatty.com",
+   "country": "GB",
+   "state": "FIRST_PROOF_READY",
+   "families_covered": 9,
+   "observability": {
+    "presence": "STRONG",
+    "reputation": "PARTIAL",
+    "value": "PARTIAL",
+    "markets": "PARTIAL",
+    "relationships": "STRONG",
+    "demand": "PARTIAL",
+    "activity": "PARTIAL",
+    "economics": "PARTIAL",
+    "organization": "PARTIAL",
+    "context": "UNKNOWN"
+   }
+  },
+  {
+   "domain": "smartsites.com",
+   "country": "US",
+   "state": "FIRST_PROOF_READY",
+   "families_covered": 9,
+   "observability": {
+    "presence": "STRONG",
+    "reputation": "PARTIAL",
+    "value": "PARTIAL",
+    "markets": "PARTIAL",
+    "relationships": "STRONG",
+    "demand": "PARTIAL",
+    "activity": "PARTIAL",
+    "economics": "PARTIAL",
+    "organization": "LIMITED",
+    "context": "PARTIAL"
+   }
+  },
+  {
+   "domain": "mailchimp.com",
+   "country": "US",
+   "state": "NOT_ENOUGH_CAPABILITY_EVIDENCE",
+   "families_covered": 6,
+   "observability": {
+    "presence": "STRONG",
+    "reputation": "PARTIAL",
+    "value": "PARTIAL",
+    "markets": "UNKNOWN",
+    "relationships": "STRONG",
+    "demand": "LIMITED",
+    "activity": "PARTIAL",
+    "economics": "PARTIAL",
+    "organization": "LIMITED",
+    "context": "UNKNOWN"
+   }
+  },
+  {
+   "domain": "turnerconstruction.com",
+   "country": "US",
+   "state": "FIRST_PROOF_READY",
+   "families_covered": 9,
+   "observability": {
+    "presence": "STRONG",
+    "reputation": "PARTIAL",
+    "value": "PARTIAL",
+    "markets": "PARTIAL",
+    "relationships": "PARTIAL",
+    "demand": "PARTIAL",
+    "activity": "PARTIAL",
+    "economics": "PARTIAL",
+    "organization": "LIMITED",
+    "context": "PARTIAL"
+   }
+  },
+  {
+   "domain": "gusto.com",
+   "country": "US",
+   "state": "SOURCE_UNAVAILABLE",
+   "families_covered": 2,
+   "observability": {
+    "presence": "UNKNOWN",
+    "reputation": "PARTIAL",
+    "value": "UNKNOWN",
+    "markets": "UNKNOWN",
+    "relationships": "UNKNOWN",
+    "demand": "LIMITED",
+    "activity": "UNKNOWN",
+    "economics": "PARTIAL",
+    "organization": "LIMITED",
+    "context": "UNKNOWN"
+   }
+  },
+  {
+   "domain": "vipps.no",
+   "country": "NO",
+   "state": "NOT_ENOUGH_CAPABILITY_EVIDENCE",
+   "families_covered": 7,
+   "observability": {
+    "presence": "STRONG",
+    "reputation": "PARTIAL",
+    "value": "PARTIAL",
+    "markets": "UNKNOWN",
+    "relationships": "STRONG",
+    "demand": "PARTIAL",
+    "activity": "UNKNOWN",
+    "economics": "STRONG",
+    "organization": "PARTIAL",
+    "context": "UNKNOWN"
+   }
+  },
+  {
+   "domain": "kahoot.com",
+   "country": "NO",
+   "state": "FIRST_PROOF_READY",
+   "families_covered": 8,
+   "observability": {
+    "presence": "STRONG",
+    "reputation": "PARTIAL",
+    "value": "PARTIAL",
+    "markets": "UNKNOWN",
+    "relationships": "STRONG",
+    "demand": "PARTIAL",
+    "activity": "PARTIAL",
+    "economics": "STRONG",
+    "organization": "PARTIAL",
+    "context": "UNKNOWN"
+   }
+  },
+  {
+   "domain": "veidekke.no",
+   "country": "NO",
+   "state": "FIRST_PROOF_READY",
+   "families_covered": 9,
+   "observability": {
+    "presence": "STRONG",
+    "reputation": "PARTIAL",
+    "value": "PARTIAL",
+    "markets": "PARTIAL",
+    "relationships": "STRONG",
+    "demand": "PARTIAL",
+    "activity": "PARTIAL",
+    "economics": "STRONG",
+    "organization": "PARTIAL",
+    "context": "UNKNOWN"
+   }
+  },
+  {
+   "domain": "shopify.com",
+   "country": "CA",
+   "state": "FIRST_PROOF_READY",
+   "families_covered": 9,
+   "observability": {
+    "presence": "STRONG",
+    "reputation": "STRONG",
+    "value": "PARTIAL",
+    "markets": "PARTIAL",
+    "relationships": "STRONG",
+    "demand": "PARTIAL",
+    "activity": "PARTIAL",
+    "economics": "STRONG",
+    "organization": "PARTIAL",
+    "context": "UNKNOWN"
+   }
+  },
+  {
+   "domain": "pcl.com",
+   "country": "CA",
+   "state": "SOURCE_UNAVAILABLE",
+   "families_covered": 3,
+   "observability": {
+    "presence": "UNKNOWN",
+    "reputation": "PARTIAL",
+    "value": "PARTIAL",
+    "markets": "UNKNOWN",
+    "relationships": "UNKNOWN",
+    "demand": "LIMITED",
+    "activity": "UNKNOWN",
+    "economics": "PARTIAL",
+    "organization": "LIMITED",
+    "context": "UNKNOWN"
+   }
+  },
+  {
+   "domain": "lightspeedhq.com",
+   "country": "CA",
+   "state": "FIRST_PROOF_READY",
+   "families_covered": 9,
+   "observability": {
+    "presence": "STRONG",
+    "reputation": "STRONG",
+    "value": "PARTIAL",
+    "markets": "PARTIAL",
+    "relationships": "STRONG",
+    "demand": "PARTIAL",
+    "activity": "PARTIAL",
+    "economics": "PARTIAL",
+    "organization": "LIMITED",
+    "context": "PARTIAL"
+   }
+  },
+  {
+   "domain": "canva.com",
+   "country": "AU",
+   "state": "SOURCE_UNAVAILABLE",
+   "families_covered": 2,
+   "observability": {
+    "presence": "UNKNOWN",
+    "reputation": "PARTIAL",
+    "value": "UNKNOWN",
+    "markets": "UNKNOWN",
+    "relationships": "UNKNOWN",
+    "demand": "LIMITED",
+    "activity": "UNKNOWN",
+    "economics": "PARTIAL",
+    "organization": "LIMITED",
+    "context": "UNKNOWN"
+   }
+  },
+  {
+   "domain": "atlassian.com",
+   "country": "AU",
+   "state": "SOURCE_UNAVAILABLE",
+   "families_covered": 4,
+   "observability": {
+    "presence": "UNKNOWN",
+    "reputation": "STRONG",
+    "value": "PARTIAL",
+    "markets": "UNKNOWN",
+    "relationships": "UNKNOWN",
+    "demand": "LIMITED",
+    "activity": "UNKNOWN",
+    "economics": "STRONG",
+    "organization": "PARTIAL",
+    "context": "UNKNOWN"
+   }
+  },
+  {
+   "domain": "lendlease.com",
+   "country": "AU",
+   "state": "FIRST_PROOF_READY",
+   "families_covered": 8,
+   "observability": {
+    "presence": "STRONG",
+    "reputation": "PARTIAL",
+    "value": "PARTIAL",
+    "markets": "PARTIAL",
+    "relationships": "PARTIAL",
+    "demand": "LIMITED",
+    "activity": "PARTIAL",
+    "economics": "PARTIAL",
+    "organization": "PARTIAL",
+    "context": "UNKNOWN"
+   }
+  }
+ ],
+ "buyers": {
+  "organizations_with_buyers": 7,
+  "coverage_pct": 23.3,
+  "median_candidates": 22,
+  "with_multi_signal_candidates": 3,
+  "organizations_by_route": {
+   "CUSTOMER_OF_COMPETITOR:PUBLIC_AWARD": 3,
+   "PUBLIC_BUYER_OF_CATEGORY": 3,
+   "CUSTOMER_OF_COMPETITOR:PORTFOLIO_PEER_WEBSITE": 3,
+   "GROUP_OF_CUSTOMER": 1,
+   "SIMILAR_TO_CUSTOMERS": 1
+  },
+  "unknown_reasons": {
+   "NO_CUSTOMER_PROFILE": 21,
+   "CUSTOMERS_WITHOUT_ROUTE": 2
+  },
+  "countries": {
+   "AU": {
+    "organizations": 3,
+    "with_buyers": 0,
+    "routes": {}
+   },
+   "CA": {
+    "organizations": 3,
+    "with_buyers": 2,
+    "routes": {
+     "SIMILAR_TO_CUSTOMERS": 1,
+     "CUSTOMER_OF_COMPETITOR:PORTFOLIO_PEER_WEBSITE": 1
+    }
+   },
+   "DE": {
+    "organizations": 4,
+    "with_buyers": 0,
+    "routes": {}
+   },
+   "ES": {
+    "organizations": 5,
+    "with_buyers": 3,
+    "routes": {
+     "CUSTOMER_OF_COMPETITOR:PUBLIC_AWARD": 3,
+     "PUBLIC_BUYER_OF_CATEGORY": 3,
+     "CUSTOMER_OF_COMPETITOR:PORTFOLIO_PEER_WEBSITE": 1
+    }
+   },
+   "FR": {
+    "organizations": 4,
+    "with_buyers": 0,
+    "routes": {}
+   },
+   "GB": {
+    "organizations": 4,
+    "with_buyers": 1,
+    "routes": {
+     "CUSTOMER_OF_COMPETITOR:PORTFOLIO_PEER_WEBSITE": 1
+    }
+   },
+   "NO": {
+    "organizations": 3,
+    "with_buyers": 1,
+    "routes": {
+     "GROUP_OF_CUSTOMER": 1
+    }
+   },
+   "US": {
+    "organizations": 4,
+    "with_buyers": 0,
+    "routes": {}
+   }
+  },
+  "organizations": [
+   {
+    "domain": "plexus.es",
+    "country": "ES",
+    "candidates": 0,
+    "multi_signal": 0,
+    "routes": [],
+    "unknown": "NO_CUSTOMER_PROFILE",
+    "top": []
+   },
+   {
+    "domain": "prosegur.es",
+    "country": "ES",
+    "candidates": 25,
+    "multi_signal": 2,
+    "routes": [
+     "CUSTOMER_OF_COMPETITOR:PUBLIC_AWARD",
+     "PUBLIC_BUYER_OF_CATEGORY"
+    ],
+    "unknown": null,
+    "top": [
+     "Junta de Contratación de la Secretaría de Estado de Justicia",
+     "Junta de Contratación del Ministerio de Defensa",
+     "Consejero Delegado de Viviendas del Principado de Asturias S.A.",
+     "Gerencia Territorial de Servicios Sociales de Salamanca",
+     "INSS-Dirección Provincial de Soria"
+    ]
+   },
+   {
+    "domain": "rubau.com",
+    "country": "ES",
+    "candidates": 25,
+    "multi_signal": 2,
+    "routes": [
+     "CUSTOMER_OF_COMPETITOR:PUBLIC_AWARD",
+     "PUBLIC_BUYER_OF_CATEGORY"
+    ],
+    "unknown": null,
+    "top": [
+     "Jefatura de Intendencia de Asuntos Económicos Este",
+     "Jefatura de Intendencia de Asuntos Económicos Oeste",
+     "ALCALDIA AYUNTAMIENTO CÁRCAR",
+     "Aena. Dirección del Aeropuerto de Málaga-Costa del Sol",
+     "Aena. Dirección del Aeropuerto de San Sebastián"
+    ]
+   },
+   {
+    "domain": "humanlevel.com",
+    "country": "ES",
+    "candidates": 25,
+    "multi_signal": 4,
+    "routes": [
+     "CUSTOMER_OF_COMPETITOR:PORTFOLIO_PEER_WEBSITE",
+     "CUSTOMER_OF_COMPETITOR:PUBLIC_AWARD",
+     "PUBLIC_BUYER_OF_CATEGORY"
+    ],
+    "unknown": null,
+    "top": [
+     "Presidencia de la Diputación Provincial de Cáceres",
+     "Área de Gobierno de Vicealcaldía, Portavoz, Seguridad y Emergencias del Ayuntamiento de Madrid",
+     "Presidencia de la Diputación Provincial de Zaragoza",
+     "Presidencia de la Diputación Provincial de Sevilla",
+     "Consejería de Presidencia, Coordinación de la Acción de Gobierno y Cooperación Local"
+    ]
+   },
+   {
+    "domain": "colegioestudio.com",
+    "country": "ES",
+    "candidates": 0,
+    "multi_signal": 0,
+    "routes": [],
+    "unknown": "NO_CUSTOMER_PROFILE",
+    "top": []
+   },
+   {
+    "domain": "jvm.com",
+    "country": "DE",
+    "candidates": 0,
+    "multi_signal": 0,
+    "routes": [],
+    "unknown": "NO_CUSTOMER_PROFILE",
+    "top": []
+   },
+   {
+    "domain": "trumpf.com",
+    "country": "DE",
+    "candidates": 0,
+    "multi_signal": 0,
+    "routes": [],
+    "unknown": "NO_CUSTOMER_PROFILE",
+    "top": []
+   },
+   {
+    "domain": "personio.de",
+    "country": "DE",
+    "candidates": 0,
+    "multi_signal": 0,
+    "routes": [],
+    "unknown": "NO_CUSTOMER_PROFILE",
+    "top": []
+   },
+   {
+    "domain": "hornbach.de",
+    "country": "DE",
+    "candidates": 0,
+    "multi_signal": 0,
+    "routes": [],
+    "unknown": "NO_CUSTOMER_PROFILE",
+    "top": []
+   },
+   {
+    "domain": "alan.com",
+    "country": "FR",
+    "candidates": 0,
+    "multi_signal": 0,
+    "routes": [],
+    "unknown": "NO_CUSTOMER_PROFILE",
+    "top": []
+   },
+   {
+    "domain": "doctolib.fr",
+    "country": "FR",
+    "candidates": 0,
+    "multi_signal": 0,
+    "routes": [],
+    "unknown": "NO_CUSTOMER_PROFILE",
+    "top": []
+   },
+   {
+    "domain": "saint-gobain.com",
+    "country": "FR",
+    "candidates": 0,
+    "multi_signal": 0,
+    "routes": [],
+    "unknown": "NO_CUSTOMER_PROFILE",
+    "top": []
+   },
+   {
+    "domain": "ekimetrics.com",
+    "country": "FR",
+    "candidates": 0,
+    "multi_signal": 0,
+    "routes": [],
+    "unknown": "NO_CUSTOMER_PROFILE",
+    "top": []
+   },
+   {
+    "domain": "impression.co.uk",
+    "country": "GB",
+    "candidates": 19,
+    "multi_signal": 0,
+    "routes": [
+     "CUSTOMER_OF_COMPETITOR:PORTFOLIO_PEER_WEBSITE"
+    ],
+    "unknown": null,
+    "top": [
+     "Raburn Kaufman marketing case study",
+     "Inc. 5000 honoree, 10 years",
+     "Google Partner",
+     "Yelp Advertising Partner",
+     "Meta Business Partner"
+    ]
+   },
+   {
+    "domain": "octopus.energy",
+    "country": "GB",
+    "candidates": 0,
+    "multi_signal": 0,
+    "routes": [],
+    "unknown": "NO_CUSTOMER_PROFILE",
+    "top": []
+   },
+   {
+    "domain": "wise.com",
+    "country": "GB",
+    "candidates": 0,
+    "multi_signal": 0,
+    "routes": [],
+    "unknown": "NO_CUSTOMER_PROFILE",
+    "top": []
+   },
+   {
+    "domain": "balfourbeatty.com",
+    "country": "GB",
+    "candidates": 0,
+    "multi_signal": 0,
+    "routes": [],
+    "unknown": "NO_CUSTOMER_PROFILE",
+    "top": []
+   },
+   {
+    "domain": "smartsites.com",
+    "country": "US",
+    "candidates": 0,
+    "multi_signal": 0,
+    "routes": [],
+    "unknown": "CUSTOMERS_WITHOUT_ROUTE",
+    "top": []
+   },
+   {
+    "domain": "mailchimp.com",
+    "country": "US",
+    "candidates": 0,
+    "multi_signal": 0,
+    "routes": [],
+    "unknown": "CUSTOMERS_WITHOUT_ROUTE",
+    "top": []
+   },
+   {
+    "domain": "turnerconstruction.com",
+    "country": "US",
+    "candidates": 0,
+    "multi_signal": 0,
+    "routes": [],
+    "unknown": "NO_CUSTOMER_PROFILE",
+    "top": []
+   },
+   {
+    "domain": "gusto.com",
+    "country": "US",
+    "candidates": 0,
+    "multi_signal": 0,
+    "routes": [],
+    "unknown": "NO_CUSTOMER_PROFILE",
+    "top": []
+   },
+   {
+    "domain": "vipps.no",
+    "country": "NO",
+    "candidates": 0,
+    "multi_signal": 0,
+    "routes": [],
+    "unknown": "NO_CUSTOMER_PROFILE",
+    "top": []
+   },
+   {
+    "domain": "kahoot.com",
+    "country": "NO",
+    "candidates": 15,
+    "multi_signal": 0,
+    "routes": [
+     "GROUP_OF_CUSTOMER"
+    ],
+    "unknown": null,
+    "top": [
+     "HEWLETT-PACKARD INDIGO LTD.",
+     "HP BILGISAYAR VE BASKI TEKNOLOJILERI LIMITED ŞIRKETI",
+     "HP COMPUTING AND PRINTING SYSTEMS INDIA PRIVATE LIMITED",
+     "HP EUROPE B.V.",
+     "HP INC UK LIMITED"
+    ]
+   },
+   {
+    "domain": "veidekke.no",
+    "country": "NO",
+    "candidates": 0,
+    "multi_signal": 0,
+    "routes": [],
+    "unknown": "NO_CUSTOMER_PROFILE",
+    "top": []
+   },
+   {
+    "domain": "shopify.com",
+    "country": "CA",
+    "candidates": 22,
+    "multi_signal": 0,
+    "routes": [
+     "SIMILAR_TO_CUSTOMERS"
+    ],
+    "unknown": null,
+    "top": [
+     "Williams-Sonoma, Inc.",
+     "At Home",
+     "Hilton Worldwide",
+     "The Leading Hotels of the World",
+     "Best Western"
+    ]
+   },
+   {
+    "domain": "pcl.com",
+    "country": "CA",
+    "candidates": 0,
+    "multi_signal": 0,
+    "routes": [],
+    "unknown": "NO_CUSTOMER_PROFILE",
+    "top": []
+   },
+   {
+    "domain": "lightspeedhq.com",
+    "country": "CA",
+    "candidates": 19,
+    "multi_signal": 0,
+    "routes": [
+     "CUSTOMER_OF_COMPETITOR:PORTFOLIO_PEER_WEBSITE"
+    ],
+    "unknown": null,
+    "top": [
+     "Raburn Kaufman marketing case study",
+     "Inc. 5000 honoree, 10 years",
+     "Google Partner",
+     "Yelp Advertising Partner",
+     "Meta Business Partner"
+    ]
+   },
+   {
+    "domain": "canva.com",
+    "country": "AU",
+    "candidates": 0,
+    "multi_signal": 0,
+    "routes": [],
+    "unknown": "NO_CUSTOMER_PROFILE",
+    "top": []
+   },
+   {
+    "domain": "atlassian.com",
+    "country": "AU",
+    "candidates": 0,
+    "multi_signal": 0,
+    "routes": [],
+    "unknown": "NO_CUSTOMER_PROFILE",
+    "top": []
+   },
+   {
+    "domain": "lendlease.com",
+    "country": "AU",
+    "candidates": 0,
+    "multi_signal": 0,
+    "routes": [],
+    "unknown": "NO_CUSTOMER_PROFILE",
+    "top": []
+   }
+  ]
+ }
+}

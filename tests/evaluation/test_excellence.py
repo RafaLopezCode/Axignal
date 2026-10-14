@@ -55,3 +55,32 @@ def test_sample_is_reproducible_for_human_precision_review() -> None:
     first = sample(ROWS, "presence", 2)
     assert first == sample(ROWS, "presence", 2) and len(first) == 2
     assert all(item["verdict"] is None for item in first)
+
+
+def test_buyers_report_routes_coverage_and_why_none() -> None:
+    def buyer(*signals: tuple[str, str]) -> dict[str, Any]:
+        return {"kind": "DEMAND", "code": "POTENTIAL_BUYER", "statement": "X",
+                "epistemicState": "POTENTIAL", "sourceUrl": None, "observedAt": "t",
+                "detail": {"signalTypes": sorted({t for t, _ in signals}),
+                           "signals": [{"type": t, "basis": b} for t, b in signals]}}  # fmt: skip
+
+    unknown = _d("SIGNIFICANT_UNKNOWN", "NO_BUYER_SIGNALS", "UNKNOWN")
+    unknown["detail"] = {"hasCustomerProfile": False}
+    rows = [
+        {"domain": "a", "country": "ES", "view": {"discoveries": [
+            buyer(("CUSTOMER_OF_COMPETITOR", "Shown as a client on the website of P"),
+                  ("SIMILAR_TO_CUSTOMERS", "Wikidata places it")),
+            buyer(("PUBLIC_BUYER_OF_CATEGORY", "Awarded 4 public contracts")),
+        ]}},
+        {"domain": "b", "country": "US", "view": {"discoveries": [unknown]}},
+    ]  # fmt: skip
+    out = report(rows, now=NOW)["buyers"]
+    assert out["organizations_with_buyers"] == 1 and out["coverage_pct"] == 50.0
+    assert out["organizations_by_route"] == {
+        "CUSTOMER_OF_COMPETITOR:PORTFOLIO_PEER_WEBSITE": 1,
+        "PUBLIC_BUYER_OF_CATEGORY": 1,
+        "SIMILAR_TO_CUSTOMERS": 1,
+    }
+    assert out["with_multi_signal_candidates"] == 1 and out["median_candidates"] == 2
+    assert out["unknown_reasons"] == {"NO_CUSTOMER_PROFILE": 1, "CUSTOMERS_WITHOUT_ROUTE": 0}
+    assert "| US | 0/1 |" in markdown(report(rows, now=NOW))
