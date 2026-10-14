@@ -226,6 +226,42 @@ def similar_signals(
     return out
 
 
+MAX_PER_SECTOR = 8
+
+
+def sector_signals(
+    readings: Sequence[Mapping[str, Any]], labels: Mapping[str, tuple[str, float]]
+) -> list[Signal]:
+    """Organizations of the sectors that buy from its sector, in its countries (Wikidata).
+
+    Needs no visible customer. Sectors come in order of how much they buy; within a sector,
+    the most documented organizations first; sectors alternate, none fills the list."""
+    per_reading: list[list[Signal]] = []
+    for reading in readings:
+        sector = str(reading.get("sector") or "")
+        name, share = labels.get(sector, (sector, 0.0))
+        place = reading.get("countryLabel") or reading.get("country")
+        signals = []
+        for org in _discoveries(_items(reading.get("organizations")))[:MAX_PER_SECTOR]:
+            if not org.get("label"):
+                continue
+            signals.append(Signal(
+                str(org["label"]), "SECTOR_BUYS_FROM_ITS_SECTOR",
+                f"Wikidata places it in {name} in {place}; that sector buys "
+                f"{round(share * 100, 1)}% of its sector's output (Eurostat input-output). "
+                "A sector that buys, not this organization's need.",
+                f"https://www.wikidata.org/wiki/{org.get('item')}",
+                str(reading.get("readAt") or "") or None, via=name,
+                identifiers={k: str(v) for k, v in (("wikidata", org.get("item")),
+                             ("website", org.get("website")), ("lei", org.get("lei"))) if v},
+            ))  # fmt: skip
+        per_reading.append(signals)
+    out: list[Signal] = []
+    for rank in range(MAX_PER_SECTOR):
+        out += [signals[rank] for signals in per_reading if rank < len(signals)]
+    return out
+
+
 def potential_buyers(
     signals: Iterable[Signal], *, exclude: set[str], observed_at: str
 ) -> list[dict[str, object]]:

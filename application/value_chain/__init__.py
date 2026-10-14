@@ -75,6 +75,26 @@ def _by_division() -> dict[int, str]:
     return out
 
 
+def nace_codes(code: str) -> list[str]:
+    """NACE Rev. 2 codes of a table industry as Wikidata writes them: divisions ("10"), and
+    the section letter for a section-level industry ("F", "I")."""
+    divisions = sorted(d for d, c in _by_division().items() if c == code)
+    out = [f"{d:02d}" for d in divisions]
+    return [code, *out] if code.isalpha() else out
+
+
+def buying_sectors(
+    code: str, *, limit: int = 3, min_share: float = 0.02
+) -> list[tuple[str, float]]:
+    """Industries that buy most from this one: neither itself (competitors), final uses, nor
+    public sectors (public buyers are read from awards)."""
+    return [
+        (sector, share)
+        for sector, share in flows(code, "buyers")
+        if sector != code and sector not in FINAL_USES | PUBLIC_SECTORS and share >= min_share
+    ][:limit]
+
+
 def industry_of_nace(code: str | None) -> str | None:
     """The table industry of a NACE/NAF code ("62.02A", "06.100", "80.10Z")."""
     digits = re.findall(r"\d", code or "")

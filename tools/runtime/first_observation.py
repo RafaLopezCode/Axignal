@@ -90,6 +90,7 @@ from application.potential_buyers import (
     peer_signals,
     potential_buyers,
     same_activity,
+    sector_signals,
     similar_signals,
     view_signals,
 )
@@ -110,7 +111,14 @@ from application.subscriber_projection.subscriber_runtime import SubscriberEcono
 from application.timeline import changes as timeline_changes
 from application.timeline import history as timeline_history
 from application.timeline import snapshot as timeline_snapshot
-from application.value_chain import apply_value_chain, company_industry
+from application.value_chain import (
+    apply_value_chain,
+    buying_sectors,
+    company_industry,
+    industry_of_nace,
+    label,
+    nace_codes,
+)
 from application.world_demand.index import (
     DemandIndexPort,
     SliceFeedPort,
@@ -412,6 +420,22 @@ MARKETING_TENANT = "staff:marketing-pool"
 MAX_PORTFOLIO_PEERS = 50
 MAX_CUSTOMER_PROFILES = 3
 MAX_CUSTOMER_GROUPS = 3
+MAX_SECTOR_COUNTRIES = 2
+
+
+def _countries_of(discoveries: Sequence[object], proof: Mapping[str, Any]) -> list[str]:
+    """Its countries (ISO alpha-2): where its demand is watched, then what its site states."""
+    out: list[str] = []
+    scopes = [s.get("jurisdiction") for s in proof.get("attentionScopes") or []
+              if isinstance(s, Mapping)]  # fmt: skip
+    stated = [d.get("statement") for d in discoveries if isinstance(d, Mapping)
+              and d.get("code") in {"COUNTRY_FROM_SITE_SIGNALS", "LOCATION_STATED_IN_TEXT"}]  # fmt: skip
+    for value in (*scopes, *stated):
+        parts = [p for p in str(value or "").split("/") if p and p != "EU"]
+        code = parts[0].upper() if parts else ""
+        if len(code) == 2 and code.isalpha() and code not in out:
+            out.append(code)
+    return out
 
 
 class FirstObservationRuntime:
@@ -926,12 +950,39 @@ class FirstObservationRuntime:
                 if reading is not None:
                     readings.append(reading)
             signals += similar_signals(resolved, readings)
+        countries = _countries_of(discoveries, proof)
+        item = self._item_facts(view) if self._buyers is not None else None
+        facts = item.get("facts") if isinstance(item, Mapping) else None
+        if self._buyers is not None:
+            # Organizations in the sectors that buy from its own, in its countries: needs no
+            # visible customer. Its industry: register or activity, else Wikidata's (P452).
+            own_sector: str | None = industry[0] if industry is not None else None
+            stated = facts.get("industry") if isinstance(facts, Mapping) else None
+            if own_sector is None and isinstance(stated, Mapping) and stated.get("value"):
+                own_sector = next(
+                    (found for code in self._buyers.industry_nace(str(stated["value"]))
+                     if (found := industry_of_nace(code))), None,
+                )  # fmt: skip
+            places: list[str] = list(countries)
+            home = facts.get("country") if isinstance(facts, Mapping) else None
+            if (
+                not places
+                and isinstance(home, Mapping)
+                and str(home.get("value", "")).startswith("Q")
+            ):
+                places = [str(home["value"])]
+            if own_sector is not None:
+                buyers_of = buying_sectors(own_sector)
+                readings = []
+                for code, _share in buyers_of:
+                    for place in places[:MAX_SECTOR_COUNTRIES]:
+                        self._buyers.request_sector(code, nace_codes(code), place)
+                        reading = self._buyers.sector(code, place)
+                        if reading is not None:
+                            readings.append(reading)
+                labels = {code: (label(code), share) for code, share in buyers_of}
+                signals += sector_signals(readings, labels)
         if self._groups is not None:
-            countries = [
-                str(s.get("jurisdiction")).rsplit("/", 1)[-1]
-                for s in proof.get("attentionScopes") or []
-                if isinstance(s, Mapping) and s.get("jurisdiction")
-            ]
             with_lei = [(n, str(i["lei"])) for n, i in resolved.items() if i.get("lei")]
             for name, lei in with_lei[:MAX_CUSTOMER_GROUPS]:
                 with suppress(Exception):  # registry unavailable: that route stays unknown

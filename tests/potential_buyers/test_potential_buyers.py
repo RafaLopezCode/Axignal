@@ -187,10 +187,12 @@ def test_runtime_derives_buyers_from_portfolio_peers_customers_and_groups(tmp_pa
         request_peers=lambda industry, country: None,
         peers=lambda industry, country: {"industry": industry, "country": country,
                                          "organizations": [{"item": "Q8", "label": "Endesa"}]},
+        request_sector=lambda sector, nace, country: None, sector=lambda sector, country: None,
+        industry_nace=lambda qid: [],
     )  # fmt: skip
     groups = SimpleNamespace(group=lambda lei: {"children": [{"name": "Iberdrola Clientes SAU",
                                                               "country": "ES", "lei": "L9"}]})  # fmt: skip
-    fake = SimpleNamespace(store=store, _buyers=buyers, _groups=groups)
+    fake = SimpleNamespace(store=store, _buyers=buyers, _groups=groups, _item_facts=lambda v: None)
     view = {"observedAt": "2026-10-14", "target": {"name": "Acme"},
             "discoveries": [_d("RELATIONSHIP", "CLIENT_DECLARED", "Iberdrola", "DECLARED")]}  # fmt: skip
     proof = {"capabilities": capabilities, "attentionScopes": [{"jurisdiction": "EU/ES"}]}
@@ -203,7 +205,7 @@ def test_runtime_derives_buyers_from_portfolio_peers_customers_and_groups(tmp_pa
     ]
     # Nothing to derive from: the unknown says why, and nothing is invented.
     bare = FirstObservationRuntime._with_potential_buyers(
-        SimpleNamespace(store=store, _buyers=None, _groups=None),
+        SimpleNamespace(store=store, _buyers=None, _groups=None, _item_facts=lambda v: None),
         {"observedAt": "t", "discoveries": [_d("PUBLIC_PRESENCE", "PUBLIC_WEBSITE_OBSERVED", "x")]},
         {},
         "t1",
@@ -227,3 +229,92 @@ def test_peers_share_a_specific_activity_and_badges_are_never_customers() -> Non
               _d("RELATIONSHIP", "CLIENT_DECLARED", "HP", "DECLARED")]  # fmt: skip
     assert customer_names(stored) == ["HP"]  # observations stored before v1.1 too
     assert [s.candidate for s in peer_signals([{"name": "P", "clients": stored}])] == ["HP"]
+
+
+def test_buying_sectors_and_their_nace_codes_come_from_the_input_output_table() -> None:
+    from application.value_chain import buying_sectors, nace_codes
+
+    assert nace_codes("C10-12") == ["10", "11", "12"]
+    assert nace_codes("F") == ["F", "41", "42", "43"]
+    sectors = [code for code, _share in buying_sectors("C10-12")]
+    assert sectors and "C10-12" not in sectors  # never its own sector: those compete
+    assert not {"HOUSEHOLDS", "GOVERNMENT", "O", "P", "Q86"} & set(sectors)
+
+
+def test_sector_route_needs_no_customer_and_alternates_sectors(tmp_path: Path) -> None:
+    from tools.runtime.first_observation import FirstObservationRuntime, _countries_of
+
+    assert _countries_of([], {"attentionScopes": [{"jurisdiction": "US/US-NY"},
+                                                  {"jurisdiction": "EU/ES"}]}) == ["US", "ES"]  # fmt: skip
+    requested: list[tuple[str, tuple[str, ...], str]] = []
+
+    def sector(code: str, country: str) -> dict[str, Any]:
+        return {"sector": code, "country": country, "countryLabel": "Germany", "readAt": "t",
+                "organizations": [{"item": f"Q{code}{i}", "label": f"{code} org {i}",
+                                   "website": f"https://{i}.example"} for i in range(3)]}  # fmt: skip
+
+    buyers = SimpleNamespace(
+        request_customer=lambda name, languages=(): None, customer=lambda name: None,
+        request_peers=lambda i, c: None, peers=lambda i, c: None,
+        request_sector=lambda code, nace, country: requested.append((code, tuple(nace), country)),
+        sector=sector, industry_nace=lambda qid: ["10.1"] if qid == "Q540912" else [],
+    )  # fmt: skip
+    store = SimpleNamespace(observed_targets=lambda tenant: frozenset(), proof=lambda t, r: None)
+    facts = {"facts": {"industry": {"value": "Q540912"}, "country": {"value": "Q183"}}}
+    fake = SimpleNamespace(store=store, _buyers=buyers, _groups=None, _item_facts=lambda v: facts)
+    view = {"observedAt": "t", "target": {"name": "Ritter"},
+            "discoveries": [_d("PUBLIC_PRESENCE", "PUBLIC_WEBSITE_OBSERVED", "ritter")]}  # fmt: skip
+    out = FirstObservationRuntime._with_potential_buyers(fake, view, {}, "t1", "self")  # type: ignore[arg-type]
+    # Industry from Wikidata (food, NACE 10.1) and its home country (Q183) are enough.
+    assert requested and all(country == "Q183" for _c, _n, country in requested)
+    found = [d for d in out["discoveries"] if d["code"] == "POTENTIAL_BUYER"]
+    assert found and all(
+        d["detail"]["signalTypes"] == ["SECTOR_BUYS_FROM_ITS_SECTOR"] for d in found
+    )
+    first_sectors = [d["detail"]["signals"][0]["via"] for d in found[:2]]
+    assert first_sectors[0] != first_sectors[1]  # sectors alternate, none fills the list
+    assert "Eurostat" in found[0]["detail"]["signals"][0]["basis"]
+    assert not [d for d in out["discoveries"] if d["code"] == "NO_BUYER_SIGNALS"]
+
+
+def test_sector_lookup_maps_nace_to_industries_and_keeps_actionable_organizations(
+    tmp_path: Path,
+) -> None:
+    def claim(value: Any) -> list[dict[str, Any]]:
+        data = {"id": value} if str(value).startswith("Q") else value
+        return [{"rank": "normal", "mainsnak": {"datavalue": {"value": data}}}]
+
+    items = {
+        "Q10": {"P4496": "10"}, "Q101": {"P4496": "10.1"}, "Q46": {"P4496": "46"},
+        "Q183": {},
+        "Q1": {"P452": "Q10", "P17": "Q183", "P856": "https://small.example"},
+        "Q2": {"P452": "Q101", "P17": "Q183", "P856": "https://big.example"},
+        "Q3": {"P452": "Q10", "P17": "Q183"},  # no website, no LEI: not actionable
+    }  # fmt: skip
+    links = {"Q1": 2, "Q2": 30}
+
+    def fetch(url: str) -> dict[str, Any]:
+        q = dict(urllib.parse.parse_qsl(urllib.parse.urlsplit(url).query))
+        if q["action"] == "query" and q["srsearch"] == "haswbstatement:P4496":
+            return {"query": {"search": [{"title": t} for t in ("Q10", "Q101", "Q46")]}}
+        if q["action"] == "query" and q["srsearch"].startswith("haswbstatement:P297"):
+            return {"query": {"search": [{"title": "Q183"}]}}
+        if q["action"] == "query":
+            assert "P452=Q10|P452=Q101" in q["srsearch"] and "P17=Q183" in q["srsearch"]
+            return {"query": {"search": [{"title": t} for t in ("Q1", "Q2", "Q3")]}}
+        return {"entities": {
+            qid: {"labels": {"en": {"value": f"Label {qid}"}},
+                  "sitelinks": {f"w{i}": {} for i in range(links.get(qid, 0))},
+                  "claims": {p: claim(v) for p, v in items.get(qid, {}).items()}}
+            for qid in q["ids"].split("|")
+        }}  # fmt: skip
+
+    lookups = WikidataBuyerLookups(tmp_path / "b.sqlite3", fetch=fetch, clock=lambda: NOW)
+    assert lookups.industry_nace("Q101") == []  # no map yet: it is requested, not fetched
+    lookups.request_sector("C10-12", ["10", "11", "12"], "de")
+    lookups.run()
+    assert lookups.industry_nace("Q101") == ["10.1"]
+    reading = lookups.sector("C10-12", "DE")
+    assert reading is not None and reading["industries"] == ["Q10", "Q101"]  # exact code first
+    assert [o["item"] for o in reading["organizations"]] == ["Q2", "Q1"]  # most documented first
+    assert reading["countryLabel"] == "Label Q183"
