@@ -287,7 +287,13 @@ class _PageParser(HTMLParser):
                 )
         if tag == "img":
             self.images += 1
-            alt = _clean(values.get("alt", ""), 120)
+            # A logo's name: its alternative text, else its title or accessible label, else
+            # the logo's own file name ("/logos/hp-logo.svg" -> "Hp").
+            alt = (
+                _clean(values.get("alt", ""), 120)
+                or _clean(values.get("title") or values.get("aria-label") or "", 120)
+                or _logo_file_name(values.get("src") or values.get("data-src") or "")
+            )
             if alt and len(self.alts) < 160:
                 self.alts.append((self.headings[-1] if self.headings else "", alt))
             if not values.get("alt", "").strip() and values.get("role") != "presentation":
@@ -723,6 +729,30 @@ class RobotsReading:
         )
 
 
+#: File-name tokens that describe the image, not the brand it shows.
+_LOGO_FILE_NOISE = frozenset({
+    "logo", "logos", "logotipo", "logotype", "color", "colour", "white", "black", "dark", "light",
+    "grey", "gray", "mono", "monochrome", "rgb", "cmyk", "svg", "png", "webp", "jpg", "jpeg",
+    "small", "large", "big", "icon", "client", "customer", "partner", "img", "image", "min",
+    "full", "horizontal", "vertical", "transparent", "new", "final", "default", "2x", "3x",
+})  # fmt: skip
+
+
+def _logo_file_name(src: str) -> str:
+    """The brand a logo's file name states, only when the file says it is a logo."""
+    path = urlsplit(src).path.casefold() if src and not src.startswith("data:") else ""
+    if "logo" not in path:
+        return ""
+    stem = path.rsplit("/", 1)[-1].rsplit(".", 1)[0]
+    tokens = [
+        t for t in re.split(r"[-_.@\s]+", stem)
+        if t and t not in _LOGO_FILE_NOISE and not re.fullmatch(r"\d+(x\d+)?|v\d+|@?\d+x", t)
+        and not re.fullmatch(r"[0-9a-f]{8,}", t)  # a content hash, not a word
+    ]  # fmt: skip
+    name = " ".join(tokens)
+    return name.title() if 2 <= len(name) <= 40 and len(tokens) <= 4 else ""
+
+
 #: Path/anchor words, by what a page is likely to answer (en, es, fr, de, it, pt).
 #: Governed routing hints for *which page to read next*, never a fact about the site.
 INFORMATION_PAGES: dict[str, tuple[str, ...]] = {
@@ -746,6 +776,13 @@ INFORMATION_PAGES: dict[str, tuple[str, ...]] = {
         "mentions-legales", "mentions", "legales", "aviso-legal", "impressum", "imprint",
         "legal-notice", "legal", "note-legali", "informacoes-legais", "colofon", "colophon",
         "company-information", "company-details",
+    ),
+    # Where an organization shows who buys from it (logo walls, case studies).
+    "CUSTOMERS": (
+        "customers", "clients", "clientes", "nuestros-clientes", "references", "referencias",
+        "referenzen", "kunden", "kundenreferenzen", "case-studies", "casos-de-exito",
+        "success-stories", "clienti", "nos-clients", "nos-references", "temoignages",
+        "customer-stories", "casos", "cases", "referencias-clientes", "clientes-e-casos",
     ),
 }  # fmt: skip
 
