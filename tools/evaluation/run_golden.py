@@ -82,6 +82,14 @@ def main() -> int:
         _log("judgment round", round_, ran)
         if not ran and round_ > 2:
             break
+    # Potential buyers (ADR-0099): reading a view requests its customers' lookups, and a
+    # resolved customer then requests organizations like it: two rounds, read inline here.
+    for _ in range(2):
+        for ref in refs:
+            observing.study_result(ref)
+        for _ in range(30):
+            if not observing.read_buyer_lookups():
+                break
     rows = []
     for ref, org in refs.items():
         view, _contact = observing.study_result(ref)

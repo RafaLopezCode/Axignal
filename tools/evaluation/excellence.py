@@ -107,6 +107,66 @@ def report(rows: Sequence[Mapping[str, Any]], *, now: datetime) -> dict[str, Any
             for c, t in sorted(countries.items())
         },
         "organizations": organizations,
+        "buyers": buyers(rows),
+    }
+
+
+def _route(signal: Mapping[str, Any]) -> str:
+    """The signal type, with the competitor route split by where it was seen."""
+    kind = str(signal.get("type") or "")
+    if kind == "CUSTOMER_OF_COMPETITOR":
+        website = "website" in str(signal.get("basis") or "")
+        return f"{kind}:{'PORTFOLIO_PEER_WEBSITE' if website else 'PUBLIC_AWARD'}"
+    return kind
+
+
+def buyers(rows: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
+    """Potential buyers (ADR-0099): who gets candidates, through which routes, by country."""
+    per_org: list[dict[str, Any]] = []
+    routes: dict[str, int] = {}
+    by_country: dict[str, dict[str, Any]] = {}
+    for row in rows:
+        view = row.get("view") if isinstance(row.get("view"), Mapping) else None
+        found = _discoveries(view)
+        candidates = [d for d in found if d.get("code") == "POTENTIAL_BUYER"]
+        unknown = next((d for d in found if d.get("code") == "NO_BUYER_SIGNALS"), None)
+        seen = sorted({
+            _route(s) for d in candidates
+            for s in (d.get("detail") or {}).get("signals") or [] if isinstance(s, Mapping)
+        })  # fmt: skip
+        for route in seen:
+            routes[route] = routes.get(route, 0) + 1
+        kinds = [len((d.get("detail") or {}).get("signalTypes") or []) for d in candidates]
+        country = str(row.get("country") or "??")
+        tally = by_country.setdefault(country, {"organizations": 0, "with_buyers": 0, "routes": {}})
+        tally["organizations"] += 1
+        tally["with_buyers"] += bool(candidates)
+        for route in seen:
+            tally["routes"][route] = tally["routes"].get(route, 0) + 1
+        reason = None
+        if unknown is not None:
+            profile = (unknown.get("detail") or {}).get("hasCustomerProfile")
+            reason = "CUSTOMERS_WITHOUT_ROUTE" if profile else "NO_CUSTOMER_PROFILE"
+        per_org.append({
+            "domain": row.get("domain"), "country": country, "candidates": len(candidates),
+            "multi_signal": sum(k >= 2 for k in kinds), "routes": seen, "unknown": reason,
+            "top": [d.get("statement") for d in candidates[:5]],
+        })  # fmt: skip
+    total = len(rows) or 1
+    with_buyers = [o for o in per_org if o["candidates"]]
+    counts = sorted(o["candidates"] for o in with_buyers)
+    return {
+        "organizations_with_buyers": len(with_buyers),
+        "coverage_pct": round(100 * len(with_buyers) / total, 1),
+        "median_candidates": counts[len(counts) // 2] if counts else 0,
+        "with_multi_signal_candidates": sum(o["multi_signal"] > 0 for o in per_org),
+        "organizations_by_route": dict(sorted(routes.items(), key=lambda kv: -kv[1])),
+        "unknown_reasons": {
+            r: sum(o["unknown"] == r for o in per_org)
+            for r in ("NO_CUSTOMER_PROFILE", "CUSTOMERS_WITHOUT_ROUTE")
+        },
+        "countries": dict(sorted(by_country.items())),
+        "organizations": per_org,
     }
 
 
@@ -140,6 +200,26 @@ def markdown(current: Mapping[str, Any], baseline: Mapping[str, Any] | None = No
     lines += ["", "| Country | Organizations | Family coverage |", "|---|---|---|"]
     for country, c in current["countries"].items():
         lines.append(f"| {country} | {c['organizations']} | {c['family_coverage_pct']}% |")
+    b = current.get("buyers")
+    if isinstance(b, Mapping):
+        lines += [
+            "",
+            f"Potential buyers: {b['organizations_with_buyers']} organizations "
+            f"({b['coverage_pct']}%), median {b['median_candidates']} candidates, "
+            f"{b['with_multi_signal_candidates']} with a candidate of 2+ kinds of signal. "
+            f"Unknown: {b['unknown_reasons']}",
+            "",
+            "| Route | Organizations |",
+            "|---|---|",
+            *(f"| {r} | {n} |" for r, n in b["organizations_by_route"].items()),
+            "",
+            "| Country | With buyers |",
+            "|---|---|",
+            *(
+                f"| {c} | {t['with_buyers']}/{t['organizations']} |"
+                for c, t in b["countries"].items()
+            ),
+        ]
     return "\n".join(lines)
 
 
