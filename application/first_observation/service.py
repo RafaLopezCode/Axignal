@@ -74,7 +74,7 @@ from application.observation_intelligence.contracts import (
     MarketScope,
     TaxonomyCode,
 )
-from application.own_site import OWN_SITE_VERSION, own_site_discoveries
+from application.own_site import OWN_SITE_VERSION, logo_walls, own_site_discoveries
 from application.semantic_layer.cascade import SemanticCascade
 from domain.xignal import XignalEpistemicState
 
@@ -554,6 +554,23 @@ class FirstObservationService:
                     if page is not None:
                         pages.append(page)
                         ledger.decide("FETCHED:LEGAL")
+        # Who buys from it: its customers or case-studies page, one more page, only when
+        # no page read so far shows a wall of clients (potential buyers, ADR-0099). Also when
+        # its other pages were reused: a page already read is never fetched again.
+        if not any(d.code == "CLIENT_DECLARED" for d in logo_walls(pages)):
+            read = {p.url for p in pages}
+            for url, _need in rank_information_links(home, ("CUSTOMERS",), limit=1):
+                if url in read or not robots.allows(url):
+                    continue
+                if ledger.http_requests + policy.requests_per_fetch > policy.max_site_requests:
+                    ledger.decide("STOPPED:SITE_REQUEST_BUDGET")
+                    break
+                page = self._page(
+                    self._fetch(url, "site-page", ledger, retain_body=retain), robots, ledger
+                )
+                if page is not None:
+                    pages.append(page)
+                    ledger.decide("FETCHED:CUSTOMERS")
         reading = SiteReading(
             key, now, robots, tuple(pages), None, streak, rights.shared_until(now), coverage
         )

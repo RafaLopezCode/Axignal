@@ -270,7 +270,7 @@ def technology(pages: Sequence[PageReading]) -> list[Discovery]:
 
 def is_client_name(name: str) -> bool:
     """False for a badge, award, rating, review site, social link or policy label."""
-    return bool(name.strip()) and not _NOT_A_CLIENT.search(name)
+    return bool(name.strip()) and not _NOT_A_CLIENT.search(name) and not _CREDENTIALS.search(name)
 
 
 def _wall_names(alts: Iterable[str]) -> list[str]:
@@ -306,7 +306,7 @@ def logo_walls(pages: Sequence[PageReading], own_names: Iterable[str] = ()) -> l
             )  # fmt: skip
             names = [n for n in _wall_names(alts) if n.casefold() not in own]
             if role == "CLIENT":
-                badges = [n for n in names if _NOT_A_CLIENT.search(n)]
+                badges = [n for n in names if not is_client_name(n)]
                 if len(badges) * 2 >= len(names):
                     continue  # mostly badges, awards or social links: not a wall of clients
                 names = [n for n in names if n not in badges]

@@ -302,3 +302,51 @@ def test_an_offline_archive_index_falls_back_to_its_availability_service() -> No
     assert reading.failure is None
     assert reading.pages[0].url.startswith("https://web.archive.org/web/20261005120000id_/")
     assert {"ARCHIVE:INDEX_UNAVAILABLE", "READ:ARCHIVED_HOMEPAGE"} <= set(ledger.decisions)
+
+
+def test_its_customers_page_is_read_when_no_page_shows_its_clients() -> None:
+    # Golden set 2026-10-14: 25 of 30 organizations showed no client on the pages read,
+    # while many keep them on a customers or case-studies page, often as unlabeled logos.
+    from application.own_site import own_site_discoveries
+
+    home = HOME.replace("</body>", "<a href='/customers'>Customers</a></body>")
+    customers = (
+        "<html><body><h2>Trusted by our customers</h2>"
+        "<img src='/logos/hp-logo.svg'><img src='/img/logo_coca-cola_white@2x.png'>"
+        "<img title='Deutsche Bahn' src='/x.png'><img aria-label='Repsol' src='/y.svg'>"
+        "<img src='/assets/a1b2c3d4e5f6.svg'></body></html>"
+    )
+    web = Web({
+        "https://apex.example/robots.txt": _resource("https://apex.example/robots.txt", 200, "User-agent: *\nAllow: /\n"),
+        "https://apex.example": _resource("https://apex.example/", 200, home),
+        "https://apex.example/customers": _resource("https://apex.example/customers", 200, customers),
+    })  # fmt: skip
+    ledger = RunLedger()
+    reading = _service(web).read_site("apex.example", NOW, ledger)
+    assert "FETCHED:CUSTOMERS" in ledger.decisions
+    clients = [
+        d.statement for d in own_site_discoveries(reading.pages) if d.code == "CLIENT_DECLARED"
+    ]
+    assert clients == ["Hp", "Coca Cola", "Deutsche Bahn", "Repsol"]  # a hash names nobody
+
+
+def test_no_customers_page_is_read_when_the_pages_read_already_show_clients() -> None:
+    wall = "".join(f"<img alt='{n}'>" for n in ("Iberdrola", "Repsol", "Ferrovial"))
+    home = HOME.replace(
+        "</body>", f"<h2>Our clients</h2>{wall}<a href='/customers'>Customers</a></body>"
+    )
+    web = Web({
+        "https://apex.example/robots.txt": _resource("https://apex.example/robots.txt", 200, "User-agent: *\nAllow: /\n"),
+        "https://apex.example": _resource("https://apex.example/", 200, home),
+    })  # fmt: skip
+    ledger = RunLedger()
+    _service(web).read_site("apex.example", NOW, ledger)
+    assert "https://apex.example/customers" not in web.requests
+
+
+def test_logo_file_names_drop_ids_sizes_and_copies() -> None:
+    from application.first_observation.site import _logo_file_name
+
+    assert _logo_file_name("/up/T43369-Teskeys-Saddle-Shop-logo.png") == "Teskeys Saddle Shop"
+    assert _logo_file_name("/up/logo-chez-420x164px-copy.png") == "Chez"
+    assert _logo_file_name("/banner.jpg") == ""  # not said to be a logo: names nobody

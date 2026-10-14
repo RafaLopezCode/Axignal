@@ -345,3 +345,15 @@ def test_imputed_rents_are_never_a_buyer_and_text_mentions_are_a_last_resort() -
     assert buying_sectors("L68A") == buying_sectors("L68B")  # real estate: its services
     mention = [_d("DECLARED_LOCATION", "LOCATION_STATED_IN_TEXT", "EU/FR", "DECLARED")]
     assert _countries_of(mention, {}) == [] and _countries_mentioned(mention) == ["FR"]
+
+
+def test_one_shared_class_among_several_is_a_neighbour_not_a_competitor() -> None:
+    from application.own_site import is_client_name
+    from application.potential_buyers import same_activity
+
+    # Point-of-sale software vs an SEO agency: one class in common out of three each.
+    assert not same_activity(
+        ["48000000", "72260000", "72210000"], ["72413000", "79341000", "72260000"]
+    )
+    assert same_activity(["72413000", "79341000"], ["79341000", "72413000", "72212000"])
+    assert not is_client_name("EcoVadis") and is_client_name("HP")  # a rating is no client
