@@ -302,6 +302,8 @@ def test_product_mcp_pilot_and_paid_tenants_isolated_read_only_and_revocable(
         "get_organization_panorama",
         "get_organization_findings",
         "get_organization_history",
+        # ADR-0099: who could buy what it offers.
+        "get_potential_buyers",
     }
     assert all(
         t["annotations"]["readOnlyHint"] and not t["annotations"]["destructiveHint"] for t in tools
@@ -339,6 +341,7 @@ def test_product_mcp_pilot_and_paid_tenants_isolated_read_only_and_revocable(
             ("get_organization_panorama", {}),
             ("get_organization_findings", {"family": "presence"}),
             ("get_organization_history", {}),
+            ("get_potential_buyers", {}),
         ):
             denied = client.call(tool, organization_id=foreign, **extra)
             assert denied["error"] == "XEED_NOT_AVAILABLE" and set(denied) == {"error", "message"}

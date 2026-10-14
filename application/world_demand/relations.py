@@ -82,7 +82,8 @@ def identity_keys(view: Mapping[str, object]) -> tuple[list[str], list[str]]:
     return list(dict.fromkeys(tax_ids)), list(dict.fromkeys(names))
 
 
-def _codes(proof: Mapping[str, object]) -> list[TaxonomyCode]:
+def activity_codes(proof: Mapping[str, object]) -> list[TaxonomyCode]:
+    """The CPV codes of the activity the observation established (its capabilities)."""
     out: list[TaxonomyCode] = []
     for capability in _items(proof.get("capabilities")):
         if isinstance(capability, Mapping):
@@ -163,7 +164,7 @@ def public_award_discoveries(
                 },
             )
         )  # fmt: skip
-    codes = _codes(proof)
+    codes = activity_codes(proof)
     matched: list[AwardRecord] = []
     window: tuple[AwardRecord, ...] = ()
     if codes:

@@ -58,6 +58,7 @@ const BY_UNKNOWN_CODE: Record<string, Facet> = {
   ACTIVITY_NOT_ESTABLISHED: { family: "value", channel: null },
   NO_GOVERNED_DEMAND_SOURCE: { family: "demand", channel: null },
   NO_RELEVANT_DEMAND_FOUND: { family: "demand", channel: null },
+  NO_BUYER_SIGNALS: { family: "demand", channel: null },
   NO_PRESS_MENTION_FOUND: { family: "reputation", channel: null },
   NO_PUBLIC_AWARDS_FOUND: { family: "relationships", channel: null },
 };
