@@ -735,6 +735,7 @@ _LOGO_FILE_NOISE = frozenset({
     "grey", "gray", "mono", "monochrome", "rgb", "cmyk", "svg", "png", "webp", "jpg", "jpeg",
     "small", "large", "big", "icon", "client", "customer", "partner", "img", "image", "min",
     "full", "horizontal", "vertical", "transparent", "new", "final", "default", "2x", "3x",
+    "copy", "copia", "px", "web", "retina", "thumb", "thumbnail", "scaled", "cropped",
 })  # fmt: skip
 
 
@@ -748,6 +749,7 @@ def _logo_file_name(src: str) -> str:
         t for t in re.split(r"[-_.@\s]+", stem)
         if t and t not in _LOGO_FILE_NOISE and not re.fullmatch(r"\d+(x\d+)?|v\d+|@?\d+x", t)
         and not re.fullmatch(r"[0-9a-f]{8,}", t)  # a content hash, not a word
+        and not re.fullmatch(r"[a-z]{0,2}\d{3,}|\d+x\d+(px)?|\d+px", t)  # ids and sizes
     ]  # fmt: skip
     name = " ".join(tokens)
     return name.title() if 2 <= len(name) <= 40 and len(tokens) <= 4 else ""

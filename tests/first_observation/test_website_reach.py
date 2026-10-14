@@ -342,3 +342,11 @@ def test_no_customers_page_is_read_when_the_pages_read_already_show_clients() ->
     ledger = RunLedger()
     _service(web).read_site("apex.example", NOW, ledger)
     assert "https://apex.example/customers" not in web.requests
+
+
+def test_logo_file_names_drop_ids_sizes_and_copies() -> None:
+    from application.first_observation.site import _logo_file_name
+
+    assert _logo_file_name("/up/T43369-Teskeys-Saddle-Shop-logo.png") == "Teskeys Saddle Shop"
+    assert _logo_file_name("/up/logo-chez-420x164px-copy.png") == "Chez"
+    assert _logo_file_name("/banner.jpg") == ""  # not said to be a logo: names nobody

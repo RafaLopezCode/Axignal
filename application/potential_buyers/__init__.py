@@ -140,8 +140,11 @@ def specific_classes(cpvs: Iterable[str]) -> set[str]:
 
 
 def same_activity(own: Iterable[str], other: Iterable[str]) -> bool:
-    """Peers share at least one specific CPV class, never only a broad sector."""
-    return bool(specific_classes(own) & specific_classes(other))
+    """Peers share more than half of the smaller set of specific CPV classes: one shared
+    class among several is a neighbour, not a competitor (golden set, 2026-10-14)."""
+    mine, theirs = specific_classes(own), specific_classes(other)
+    shared = mine & theirs
+    return bool(shared) and len(shared) * 2 > min(len(mine), len(theirs))
 
 
 def peer_signals(peers: Sequence[Mapping[str, Any]]) -> list[Signal]:
