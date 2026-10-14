@@ -193,7 +193,11 @@ def test_runtime_derives_buyers_from_portfolio_peers_customers_and_groups(tmp_pa
     groups = SimpleNamespace(group=lambda lei: {"children": [{"name": "Iberdrola Clientes SAU",
                                                               "country": "ES", "lei": "L9"}]})  # fmt: skip
     fake = SimpleNamespace(
-        store=store, _buyers=buyers, _groups=groups, _wikidata_facts=lambda v, d: None
+        store=store,
+        _buyers=buyers,
+        _groups=groups,
+        _industry_nace=lambda q: [],
+        _wikidata_facts=lambda v, d: None,
     )
     view = {"observedAt": "2026-10-14", "target": {"name": "Acme"},
             "discoveries": [_d("RELATIONSHIP", "CLIENT_DECLARED", "Iberdrola", "DECLARED")]}  # fmt: skip
@@ -207,7 +211,13 @@ def test_runtime_derives_buyers_from_portfolio_peers_customers_and_groups(tmp_pa
     ]
     # Nothing to derive from: the unknown says why, and nothing is invented.
     bare = FirstObservationRuntime._with_potential_buyers(
-        SimpleNamespace(store=store, _buyers=None, _groups=None, _wikidata_facts=lambda v, d: None),
+        SimpleNamespace(
+            store=store,
+            _buyers=None,
+            _groups=None,
+            _industry_nace=lambda q: [],
+            _wikidata_facts=lambda v, d: None,
+        ),
         {"observedAt": "t", "discoveries": [_d("PUBLIC_PRESENCE", "PUBLIC_WEBSITE_OBSERVED", "x")]},
         {},
         "t1",
@@ -264,7 +274,11 @@ def test_sector_route_needs_no_customer_and_alternates_sectors(tmp_path: Path) -
     store = SimpleNamespace(observed_targets=lambda tenant: frozenset(), proof=lambda t, r: None)
     facts = {"facts": {"industry": {"value": "Q540912"}, "country": {"value": "Q183"}}}
     fake = SimpleNamespace(
-        store=store, _buyers=buyers, _groups=None, _wikidata_facts=lambda v, d: facts["facts"]
+        store=store,
+        _buyers=buyers,
+        _groups=None,
+        _industry_nace=lambda q: ["10.1"] if q == "Q540912" else [],
+        _wikidata_facts=lambda v, d: facts["facts"],
     )
     view = {"observedAt": "t", "target": {"name": "Ritter"},
             "discoveries": [_d("PUBLIC_PRESENCE", "PUBLIC_WEBSITE_OBSERVED", "ritter")]}  # fmt: skip

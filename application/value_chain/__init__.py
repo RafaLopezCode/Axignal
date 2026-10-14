@@ -11,10 +11,11 @@ from __future__ import annotations
 
 import json
 import re
-from collections.abc import Mapping
+from collections.abc import Callable, Mapping
 from functools import cache
 from pathlib import Path
 from typing import Any
+from urllib.parse import urlsplit
 
 from application.world_demand.awards import is_company
 
@@ -70,6 +71,8 @@ def _by_division() -> dict[int, str]:
                 "T": range(97, 99), "U": range(99, 100), "O": range(84, 85),
                 "D": range(35, 36)}  # fmt: skip
     for code in table()["industries"]:
+        if code == "L68A":
+            continue  # imputed rents of owner-occupiers: households, never an organization's sector
         divisions = _divisions(code) or set(sections.get(code, ()))
         for division in divisions:
             out.setdefault(division, code)
@@ -156,19 +159,70 @@ def flows(code: str, direction: str) -> list[tuple[str, float]]:
     return [(str(k), float(v)) for k, v in entry.get(direction, [])]
 
 
-def company_industry(view: Mapping[str, Any], cpvs: list[str]) -> tuple[str, str] | None:
-    """Its industry and how it was read: the register's activity code first, else what it
-    does (its activity's CPV codes, the most frequent industry)."""
+def non_operating(code: str) -> bool:
+    """A head office (NACE 70.10) or a holding (64.20): the registered entity's legal role,
+    not what the group does. It never decides its industry (golden set, 2026-10-14)."""
+    digits = re.sub(r"\D", "", code)
+    return digits[:3] in {"701", "642"}
+
+
+#: Pages whose text describes contracts and policies, not what the organization does.
+LEGAL_PAGE = re.compile(
+    r"/(legal|terms|privacy|cookies?|aviso-legal|politica|impressum|mentions-legales|agb|"
+    r"datenschutz|conditions|cgv|cgu|disclaimer)(?:[/\-_.]|$)",
+    re.IGNORECASE,
+)
+
+
+def _activity_votes(view: Mapping[str, Any]) -> dict[str, int]:
+    """One vote per activity its website establishes (not per code), never from a legal
+    page; insertion order keeps the strongest method first on a tie."""
+    votes: dict[str, int] = {}
     for d in view.get("discoveries") or []:
-        if (
-            isinstance(d, Mapping)
-            and d.get("kind") == "ECONOMIC_FACT"
-            and str(d.get("code", "")).endswith(":activity")
-        ):
-            value = (d.get("detail") or {}).get("value")
-            found = industry_of_nace(str(value or ""))
+        if not isinstance(d, Mapping) or d.get("kind") != "ACTIVITY":
+            continue
+        if LEGAL_PAGE.search(urlsplit(str(d.get("sourceUrl") or "")).path):
+            continue
+        codes = (d.get("detail") or {}).get("routingCodes") or []
+        found = next(
+            (f for c in codes if str(c).startswith("CPV:") and (f := industry_of_cpv(str(c)[4:]))),
+            None,
+        )
+        if found:
+            votes[found] = votes.get(found, 0) + 1
+    return votes
+
+
+def company_industry(
+    view: Mapping[str, Any],
+    cpvs: list[str],
+    *,
+    nace_of: Callable[[str], list[str]] | None = None,
+) -> tuple[str, str] | None:
+    """Its industry and how it was read, one reading for every consumer:
+
+    1. the register's activity code, unless it only names a head office or holding;
+    2. the industry Wikidata states (community-curated), with the same exception;
+    3. the activities its website establishes (one vote each, legal pages excluded);
+    4. the activity codes of its stored observation, when the view carries none.
+    """
+    discoveries = [d for d in view.get("discoveries") or [] if isinstance(d, Mapping)]
+    for d in discoveries:
+        if d.get("kind") == "ECONOMIC_FACT" and str(d.get("code", "")).endswith(":activity"):
+            value = str((d.get("detail") or {}).get("value") or "")
+            found = None if non_operating(value) else industry_of_nace(value)
             if found:
                 return found, "REGISTER_ACTIVITY_CODE"
+    stated = next((d for d in discoveries if d.get("code") == "WIKIDATA:industry"), None)
+    qid = str((stated.get("detail") or {}).get("value") or "") if stated else ""
+    if nace_of is not None and qid.startswith("Q"):
+        for code in nace_of(qid):
+            found = None if non_operating(code) else industry_of_code(code)
+            if found:
+                return found, "WIKIDATA_INDUSTRY"
+    votes = _activity_votes(view)
+    if votes:
+        return max(votes.items(), key=lambda x: x[1])[0], "WEBSITE_ACTIVITY"
     counts: dict[str, int] = {}
     for cpv in cpvs:
         found = industry_of_cpv(cpv)
@@ -317,7 +371,12 @@ def chain_organizations(
     return out
 
 
-def apply_value_chain(view: dict[str, Any], proof: Mapping[str, Any]) -> dict[str, Any]:
+def apply_value_chain(
+    view: dict[str, Any],
+    proof: Mapping[str, Any],
+    *,
+    nace_of: Callable[[str], list[str]] | None = None,
+) -> dict[str, Any]:
     """Add the sector's buyers and suppliers (EU-27 structure) to an observation view."""
     cpvs = [
         str(pair[1])
@@ -326,7 +385,7 @@ def apply_value_chain(view: dict[str, Any], proof: Mapping[str, Any]) -> dict[st
         for pair in capability.get("demandCodes") or []
         if isinstance(pair, list | tuple) and len(pair) == 2 and pair[0] == "CPV"
     ]
-    found = company_industry(view, cpvs)
+    found = company_industry(view, cpvs, nace_of=nace_of)
     if found is None:
         return view
     held = view.get("discoveries")

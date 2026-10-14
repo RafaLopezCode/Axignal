@@ -117,3 +117,22 @@ The v1.1 measurement found that 25 of 30 organizations show no customer, so the 
     5. a place merely mentioned in its text.
   - **Imputed rents (L68A) are never a buying sector.** They are an accounting entry for households. Real estate is read as its services (L68B).
   - **Candidates need documentation beyond their own Wikidata item:** a Wikipedia article or an LEI.
+
+## Amendment v1.3 (2026-10-14): one reading of the organization's own industry
+
+The golden set showed that the value chain, potential buyers and portfolio peers each read the organization's own industry differently. Some of those readings were wrong:
+- head-office register codes read as consulting (Saint-Gobain, Alan);
+- a legal page's "marketing services terms" read as marketing (Lightspeed);
+- Wikidata's industry ignored by the value chain (11 organizations).
+
+From now on there is a single reading, `company_industry`, shared by all consumers. Its order is:
+1. **The register activity**, unless it only names a head office (70.10) or a holding company (64.20). Those describe the registered entity's legal role, not what the group does.
+2. **Wikidata's industry**, with the same exception.
+3. **The activities established on its website.**
+   - Each activity counts once, however many codes it carries.
+   - Legal, terms and privacy pages never count: future observations do not scan them, and stored readings ignore them.
+4. **The stored activity codes.**
+
+Industry code 68 reads as real-estate services (L68B), never as imputed rents (L68A).
+
+When none of these yields an industry, the industry stays unknown, which is preferable to a wrong one.

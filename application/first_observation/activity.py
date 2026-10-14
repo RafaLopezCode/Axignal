@@ -12,6 +12,7 @@ from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
 from datetime import datetime
 from enum import StrEnum
+from urllib.parse import urlsplit
 
 from application.economic_discovery.brain_contracts import SemanticPrimitive
 from application.first_observation.geography import jurisdiction, mentioned_places, place_words
@@ -35,6 +36,7 @@ from application.observation_intelligence.contracts import (
 from application.observation_intelligence.understanding import detect_capabilities
 from application.semantic_layer.cascade import CascadeOutcome
 from application.semantic_layer.contracts import SemanticBatch, SemanticQuestion
+from application.value_chain import LEGAL_PAGE
 from domain.xignal import XignalEpistemicState
 
 STATE_CHARS_PER_PAGE = 1_800
@@ -115,6 +117,8 @@ def deterministic_activity(pages: Sequence[PageReading]) -> tuple[ActivityFindin
     findings: dict[str, ActivityFinding] = {}
     for page in pages:
         lexical = sum(f.method is ActivityMethod.LEXICON for f in findings.values())
+        if LEGAL_PAGE.search(urlsplit(page.url).path):
+            continue  # contracts and policies name services it uses, not what it does
         for hypothesis in detect_capabilities(
             text=page.readable(),
             observation_id="page",
