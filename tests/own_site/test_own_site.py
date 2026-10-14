@@ -116,3 +116,24 @@ def test_certification_walls_are_credentials_and_customer_experience_is_no_clien
     assert not [d for d in found if d["kind"] == "RELATIONSHIP"]
     claims = [d["statement"] for d in found if d["kind"] == "CREDENTIAL"]
     assert claims == ["ISO 27001", "Aenor Accesibilidad TIC", "SOC2"]  # page order
+
+
+def test_badges_awards_and_social_links_under_a_clients_heading_are_not_clients() -> None:
+    from application.own_site import logo_walls
+
+    # Golden set 2026-10-14: an agency's "trusted by" wall of badges, a footer of social links.
+    badges = _page(
+        "<h2>Trusted by</h2>"
+        '<img alt="Google Partner"><img alt="BBB A+ rating"><img alt="Inc. 5000 honoree, 10 years">'
+        '<img alt="Meta Business Partner"><img alt="DesignRush review"><img alt="Brooklinen">'
+        "<h2>Our customers</h2>"
+        '<img alt="Visit our Facebook page"><img alt="View our Instagram profile">'
+        '<img alt="Visit our LinkedIn page"><img alt="Outils adaptés au RGPD">'
+    )
+    assert not logo_walls([badges])
+    mixed = _page(
+        "<h2>Our customers</h2>"
+        '<img alt="HP"><img alt="Amazon"><img alt="Scotiabank"><img alt="Kempinski">'
+        '<img alt="Best of 2025 award">'
+    )
+    assert [d.statement for d in logo_walls([mixed])] == ["HP", "Amazon", "Scotiabank", "Kempinski"]

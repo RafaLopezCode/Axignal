@@ -180,6 +180,15 @@ _GENERIC_ALT = re.compile(
     re.IGNORECASE,
 )
 MAX_ALT_WORDS = 5
+#: Alt texts that are a badge, award, rating, review site, social link or policy label:
+#: shown under a "clients" heading they are still not a client (golden set, 2026-10-14).
+_NOT_A_CLIENT = re.compile(
+    r"\b(partner|certified|badge|rating|ratings|reviews?|honou?ree|awards?|award-winning|"
+    r"winner|finalist|case stud\w*|visit|view|follow|profile|page|channel|rgpd|gdpr|ccpa|"
+    r"privacy|facebook|instagram|linkedin|youtube|pinterest|twitter|tiktok|clutch|designrush|"
+    r"capterra|trustpilot|bbb|inc\.? ?5000|top \d+|best of)\b|\b(19|20)\d{2}\b",
+    re.IGNORECASE,
+)
 _LOGO_WORDS = re.compile(r"\b(logo(tipo|type)?( de| of| von| di| du)?|icon)\b", re.IGNORECASE)
 _CREDENTIALS = re.compile(
     r"\b(ISO\s?/?\s?(?:IEC\s)?\d{4,5}(?::\d{4})?|SOC\s?2(?:\s?Type\s?I{1,2})?|PCI[\s-]DSS|"
@@ -259,6 +268,11 @@ def technology(pages: Sequence[PageReading]) -> list[Discovery]:
     return out
 
 
+def is_client_name(name: str) -> bool:
+    """False for a badge, award, rating, review site, social link or policy label."""
+    return bool(name.strip()) and not _NOT_A_CLIENT.search(name)
+
+
 def _wall_names(alts: Iterable[str]) -> list[str]:
     names: list[str] = []
     for alt in alts:
@@ -291,6 +305,11 @@ def logo_walls(pages: Sequence[PageReading], own_names: Iterable[str] = ()) -> l
                 else None
             )  # fmt: skip
             names = [n for n in _wall_names(alts) if n.casefold() not in own]
+            if role == "CLIENT":
+                badges = [n for n in names if _NOT_A_CLIENT.search(n)]
+                if len(badges) * 2 >= len(names):
+                    continue  # mostly badges, awards or social links: not a wall of clients
+                names = [n for n in names if n not in badges]
             if role is None or len(names) < 3:  # one image under a heading is not a wall
                 continue
             for name in names[:MAX_NAMES]:
