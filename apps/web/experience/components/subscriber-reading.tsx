@@ -75,7 +75,13 @@ export function SubscriberReading({ projection, revision }: { projection: Runtim
     {chat.error && <p role="alert">{t("La lectura ha cambiado o no está disponible. Actualiza el contexto antes de continuar.", "The reading has changed or is unavailable. Refresh the context before continuing.")}</p>}
     {chat.messages.filter(item => item.role === "assistant").map(item => <div key={item.id}>{item.parts.map((part, index) => part.type === "text" ? <p key={index}>{part.text}</p> : null)}</div>)}
   </div>{readingNodes.map(node => plan?.intent === "evidence" ? <div key={node.id}><RuntimeEvidenceJourney signal={node} organizationName={projection.organization.name}/><button type="button" className="text-link" onClick={() => focusSignal(node.id)}>{t("Enfocar esta señal en AXENT", "Focus this signal in AXENT")}</button></div> : <RuntimeSignalReading key={node.id} signal={node} organizationName={projection.organization.name} onFocusSignal={() => focusSignal(node.id)}/>)}
-  <details className="subscriber-axent" open={axentOpen} onToggle={event => setAxentOpen(event.currentTarget.open)}>
+  <details className="subscriber-axent" open={axentOpen} onToggle={event => {
+    const details = event.currentTarget;
+    setAxentOpen(details.open);
+    if (details.open) window.requestAnimationFrame(() => {
+      if (details.open) details.scrollIntoView({ block: "start", behavior: "instant" });
+    });
+  }}>
     <summary className="text-link">{t("Preguntar a AXENT en este contexto", "Ask AXENT in this context")}</summary>
     <RuntimeAxent projection={projection} signalId={focusedSignalId} onEvidence={focusEvidence} onSignal={focusSignal} onPublicUnderstanding={focusPublicUnderstanding} conversation={axent} focusLabel={t("Lectura de suscripción", "Subscriber reading")}/>
   </details>

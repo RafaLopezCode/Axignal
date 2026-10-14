@@ -430,17 +430,32 @@ body:has(.obs-rail-desktop) .privacy-preferences-button { inset-inline-end: auto
 /* AXENT-only: the panel is a flex column at the available height. Header on top, the
    conversation as the flexible scrolling middle, the composer pinned at the bottom. The canonical
    isotipo + Axent header is the title; close takes the top corner and the header reserves it. */
-.obs-depth-axent-only { display: flex; flex-direction: column; block-size: calc(100dvh - 32px); overflow: hidden; }
+.obs-depth-axent-only { display: flex; flex-direction: column; block-size: calc(100dvh - 160px); overflow: hidden; }
 .obs-depth-axent-only .obs-depth-axent { flex: 1; min-block-size: 0; display: flex; flex-direction: column; padding: 18px 22px 18px; border-top: 0; }
 .obs-depth-axent-only .axent-panel { flex: 1; min-block-size: 0; display: flex; flex-direction: column; block-size: auto; max-block-size: none; }
 .obs-depth-axent-only .axent-messages { flex: 1; min-block-size: 0; overflow-y: auto; scrollbar-width: thin; }
 .obs-depth-axent-only .axent-compose { flex: none; margin-top: auto; }
 .obs-depth-bar-bare { position: absolute; inset-block-start: 39px; inset-inline-end: 14px; z-index: 3; padding: 0; border: 0; background: none; backdrop-filter: none; }
 .obs-depth-axent-only .axent-header { padding-inline-end: 40px; }
+@media (min-width: 881px) and (max-width: 1000px) {
+  .obs-depth-axent-only { block-size: calc(100dvh - 180px); }
+}
 @media (max-width: 880px) {
   .obs-depth-axent-only { block-size: 100dvh; }
   .obs-depth-bar-bare { inset-inline-end: auto; inset-inline-start: 10px; }
   .obs-depth-axent-only .axent-header { padding-inline-end: 0; padding-inline-start: 40px; }
+}
+@media (max-height: 500px) {
+  .obs-depth-axent-only .obs-depth-axent { padding-block: 4px; }
+  :is(.subscriber-axent[open], .obs-depth-axent-only) .axent-header { padding-block: 4px; }
+  :is(.subscriber-axent[open], .obs-depth-axent-only) .axent-scope { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 12px; padding-block: 4px; }
+  :is(.subscriber-axent[open], .obs-depth-axent-only) .axent-scope > .mono { display: none; }
+  :is(.subscriber-axent[open], .obs-depth-axent-only) .axent-scope small { margin-top: 0; }
+  :is(.subscriber-axent[open], .obs-depth-axent-only) .axent-messages { padding-block: 4px; }
+  :is(.subscriber-axent[open], .obs-depth-axent-only) .axent-compose { padding-block: 4px; }
+  :is(.subscriber-axent[open], .obs-depth-axent-only) .axent-compose form { min-block-size: 0; padding-block: 6px; }
+  :is(.subscriber-axent[open], .obs-depth-axent-only) .axent-compose textarea { block-size: 40px; min-block-size: 40px; }
+  :is(.subscriber-axent[open], .obs-depth-axent-only) .axent-compose > p { margin-top: 4px; }
 }
 
 /* The primary action of the rail: adding an organization is what the panel is for. */

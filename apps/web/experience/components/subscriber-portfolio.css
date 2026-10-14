@@ -12,6 +12,14 @@
 .mcp-connections{margin-top:32px;max-width:860px}.mcp-endpoint{display:inline-block;max-width:100%;overflow-wrap:anywhere;padding:8px 12px;border-radius:8px;background:#f0f3f9;border:1px solid #d5deef;font-size:14px;color:#3c3c3c}.mcp-consent h3{font-size:16px;font-weight:500;margin:24px 0 8px}.mcp-consent ul{margin:0 0 16px;padding-left:20px;line-height:1.7;color:#3c3c3c}.mcp-consent .mcp-consent-host{margin-bottom:8px;overflow-wrap:anywhere}.mcp-consent .subscriber-row-actions{margin-top:24px}
 
 .fo-line{color:#354f98!important}
+
+/* The conversation scrolls inside its panel while its composer stays in view. */
+.subscriber-axent[open] .axent-panel { block-size: min(720px, calc(100dvh - 144px)); }
+.subscriber-axent[open] .axent-messages { min-block-size: 0; }
+.subscriber-axent[open] .axent-compose { flex: none; }
+@media (max-width: 700px) {
+  .subscriber-axent[open] .axent-panel { block-size: min(720px, calc(100dvh - 80px)); }
+}
 .fo-view{margin-top:32px;max-width:860px}.fo-view>h3{font-family:var(--font-fraunces),Georgia,serif;font-weight:400;font-size:24px;margin:12px 0}.fo-authority{font-size:14px;color:#616978;line-height:1.7}
 .fo-group{margin-top:32px}.fo-group-title{font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:#616978;margin:0 0 12px}
 .fo-finding{border:1px solid #d5deef;border-radius:14px;background:white;padding:20px 24px;margin:0 0 12px}.fo-finding h4{font-size:17px;font-weight:500;margin:0 0 8px;overflow-wrap:anywhere}.fo-why{font-size:14px;line-height:1.7;color:#3c3c3c;margin:0 0 12px}
