@@ -19,6 +19,7 @@ from typing import Any
 from application.world_demand.awards import is_company
 
 TABLE = Path(__file__).with_name("eu_value_chain.json")
+WIKIDATA_INDUSTRIES = Path(__file__).with_name("wikidata_industries.json")
 
 #: CPV division (or longer prefix) → NACE Rev.2 division. Longest prefix wins. Curated from
 #: the CPV 2008 ↔ CPA 2008 correspondence at division level; versioned with this module.
@@ -73,6 +74,56 @@ def _by_division() -> dict[int, str]:
         for division in divisions:
             out.setdefault(division, code)
     return out
+
+
+@cache
+def _wikidata_industries() -> dict[str, str]:
+    data = json.loads(WIKIDATA_INDUSTRIES.read_text(encoding="utf-8"))["industries"]
+    return {str(qid): str(entry["nace"]) for qid, entry in data.items()}
+
+
+def wikidata_industry_nace(qid: str) -> str | None:
+    """The NACE code curated for a common Wikidata industry that carries none (P4496)."""
+    return _wikidata_industries().get(qid)
+
+
+def wikidata_industries_for(nace: list[str]) -> list[str]:
+    """Curated Wikidata industries whose NACE code is one of these (or below one)."""
+    wanted = {n.upper() for n in nace}
+    return [
+        qid for qid, code in _wikidata_industries().items()
+        if any(code == w or code.startswith(w + ".") for w in wanted)
+    ]  # fmt: skip
+
+
+def industry_of_code(code: str) -> str | None:
+    """The table industry of a NACE division ("62", "10.1") or section letter ("F", "D")."""
+    if code.isalpha():
+        return code if code in table()["industries"] else None
+    return industry_of_nace(code)
+
+
+def nace_codes(code: str) -> list[str]:
+    """NACE Rev. 2 codes of a table industry as Wikidata writes them: divisions ("10"), and
+    the section letter for a section-level industry ("F", "I")."""
+    divisions = sorted(d for d, c in _by_division().items() if c == code)
+    out = [f"{d:02d}" for d in divisions]
+    return [code, *out] if code.isalpha() else out
+
+
+def buying_sectors(
+    code: str, *, limit: int = 3, min_share: float = 0.02
+) -> list[tuple[str, float]]:
+    """Industries that buy most from this one: neither itself (competitors), final uses,
+    public sectors (public buyers are read from awards) nor imputed rents (L68A: an
+    accounting entry for households living in their own homes, not a buyer)."""
+    own = "L68B" if code == "L68A" else code  # real estate is read as its services
+    excluded = FINAL_USES | PUBLIC_SECTORS | {"L68A", own}
+    return [
+        (sector, share)
+        for sector, share in flows(own, "buyers")
+        if sector not in excluded and share >= min_share
+    ][:limit]
 
 
 def industry_of_nace(code: str | None) -> str | None:

@@ -84,3 +84,36 @@ The first measurement found wrong candidates; see `docs/research/excellence/pote
 1. **Badges are not clients.** On client walls, badges, awards, ratings, review sites, social links and policy labels are rejected. A wall that is mostly such items is dropped entirely. The same check applies at read time, so observations stored earlier stop producing such "customers" at once.
 2. **Peers share a specific activity.** Two portfolio organizations are peers only if they share at least one CPV class (four digits, below division level) in addition to the industry. A shared broad sector is not enough.
 3. **A customer's group stays bounded.** Only the ultimate parent and the subsidiaries in the subscriber's own countries are signals. With no countries known, only the ultimate parent is.
+
+## Amendment v1.2 (2026-10-14): a route that needs no visible customer
+
+The v1.1 measurement found that 25 of 30 organizations show no customer, so the customer-based routes cannot fire for them. `SECTOR_BUYS_FROM_ITS_SECTOR` gains a global source.
+
+- **Buying sectors.**
+  - Up to 3 sectors that buy most from the organization's sector, according to the Eurostat input-output table.
+  - Its own sector is excluded (those organizations compete with it).
+  - Final uses and public sectors are excluded; public buyers come from awards.
+  - Each sector buys at least 2% of its output.
+- **Its own sector.** Read from the register activity or CPV activity, or else from its Wikidata industry (P452), translated through NACE.
+- **Its countries.**
+  - The jurisdictions where its demand is watched, and countries stated on its website.
+  - Otherwise, its Wikidata country (P17).
+  - At most 2 countries.
+- **Organizations in those sectors.**
+  - Wikidata industries are matched by their NACE Rev. 2 code (P4496): the exact division first, then its subdivisions. The map is built monthly on the source thread.
+  - Organizations are searched by industry (P452) and country (P17).
+  - Only current organizations with a website or an LEI are kept.
+  - The most documented come first (number of Wikipedia articles). This is an inspectable order, not a judgement of fit.
+  - Sectors alternate, up to 8 organizations each.
+- **What it is and is not.** These candidates have the lowest strength and a single signal. They say that a sector buys, not that this organization has a need. They rise in the list only when another route agrees.
+- Adjustments after two validation passes on the golden set:
+  - **Its own sector, in order:** register activity, then Wikidata industry, then website activity codes. Wikidata comes before the website because the website reading misclassified large groups.
+  - **Common Wikidata industries without a NACE code** (software, retail, financial services, construction…) are translated through a curated, inspectable table (`application/value_chain/wikidata_industries.json`). The table is used in both directions: to read the organization's own sector, and to search organizations in its buying sectors.
+  - **Its countries, in order:**
+    1. watched jurisdictions;
+    2. the country that two or more independent signals of its website point to;
+    3. Wikidata P17;
+    4. its country-code domain;
+    5. a place merely mentioned in its text.
+  - **Imputed rents (L68A) are never a buying sector.** They are an accounting entry for households. Real estate is read as its services (L68B).
+  - **Candidates need documentation beyond their own Wikidata item:** a Wikipedia article or an LEI.

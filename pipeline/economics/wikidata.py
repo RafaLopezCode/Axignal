@@ -28,7 +28,10 @@ PROPERTIES = {
     "P571": "inception",
     "P414": "stockExchange",
     "P452": "industry",
+    "P17": "country",  # read for reasoning (where it operates from), not shown as a figure
 }
+#: Payload schema: a cached reading of an older schema is read again.
+SCHEMA = 2
 #: Wikidata external identifiers of official business registers.
 REGISTER_IDS = {
     "P5531": "SEC_CIK",
@@ -103,7 +106,9 @@ class WikidataEconomics:
                 "SELECT payload, read_at FROM wikidata_economics WHERE lei=?", (lei,)
             ).fetchone()
         if row is not None and now - datetime.fromisoformat(row[1]) < self._ttl:
-            return dict(json.loads(row[0]))
+            cached = dict(json.loads(row[0]))
+            if cached.get("schema") == SCHEMA or cached.get("item") is None:
+                return cached
         if lei.startswith("item:"):  # an item already identified (by its official website)
             hits: list[Any] = [{"title": lei[5:]}]
         else:
@@ -114,6 +119,7 @@ class WikidataEconomics:
                 or {}
             ).get("search") or []
         payload: dict[str, object] = {
+            "schema": SCHEMA,
             "item": None,
             "readAt": now.isoformat(),
             "rights": "Wikidata, CC0 1.0",

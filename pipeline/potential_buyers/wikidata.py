@@ -10,6 +10,10 @@ refreshed monthly on the source thread; subscriber reads only use what is stored
 * Organizations in the same industry (P452) and country (P17) as a customer: the profile
   of who already buys, never a statement that they buy. Dissolved organizations (P576)
   are left out.
+* Organizations in a buying sector and a country: the sector is given as NACE divisions
+  (from Eurostat's input-output table) and matched to Wikidata industries through their
+  NACE code (P4496). It needs no visible customer; the most documented organizations
+  (most Wikipedia articles) come first.
 """
 
 from __future__ import annotations
@@ -24,6 +28,7 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
+from application.value_chain import wikidata_industries_for
 from application.world_demand.awards import normalized_name
 
 INSTRUMENT = "wikidata-buyer-lookups-v1"
@@ -32,6 +37,8 @@ WIKIDATA = "https://www.wikidata.org/w/api.php"
 RIGHTS = "Wikidata, CC0 1.0"
 REFRESH = timedelta(days=30)
 MAX_PEERS = 20
+MAX_SECTOR_INDUSTRIES = 40
+NACE_MAP_PAGES = 5
 #: Languages a name is looked up in, after the organization's own published languages.
 _LANGUAGES = ("en", "es", "de", "fr", "it", "pt")
 
@@ -155,28 +162,70 @@ class WikidataBuyerLookups:
     def peers(self, industry: str, country: str) -> dict[str, Any] | None:
         return self._latest(self._peers_key(industry, country))
 
+    @staticmethod
+    def _sector_key(sector: str, country: str) -> str:
+        return f"sector:{sector}:{country if country.startswith('Q') else country.upper()}"
+
+    def request_nace_map(self) -> None:
+        """Have the NACE map of Wikidata industries built on the source thread."""
+        self._request("nace-request", {"kind": "nace"})
+
+    def industry_nace(self, qid: str) -> list[str]:
+        """NACE codes of a Wikidata industry item, from the stored map only."""
+        with self._connect() as db:
+            row = db.execute("SELECT payload FROM buyer_lookups WHERE key='nace-map'").fetchone()
+        if row is None or not row[0]:
+            self.request_nace_map()
+            return []
+        return [str(c) for c in (json.loads(row[0]).get(qid) or [])]
+
+    def request_sector(self, sector: str, nace: Sequence[str], country: str) -> None:
+        """Organizations of a buying sector (NACE divisions or a section) in a country,
+        the country given as an ISO 3166-1 alpha-2 code or a Wikidata item."""
+        if nace and (len(country) == 2 or country.startswith("Q")):
+            self._request(
+                self._sector_key(sector, country),
+                {
+                    "kind": "sector",
+                    "sector": sector,
+                    "nace": list(nace),
+                    "country": country if country.startswith("Q") else country.upper(),
+                },
+            )
+
+    def sector(self, sector: str, country: str) -> dict[str, Any] | None:
+        return self._latest(self._sector_key(sector, country))
+
     # ---- source thread ----------------------------------------------------------------
     def run(self, *, max_runs: int = 10) -> int:
         now = self._clock()
         with self._connect() as db:
             due = db.execute(
                 """SELECT key, query FROM buyer_lookups
-                WHERE read_at IS NULL OR read_at <= ? ORDER BY read_at IS NOT NULL, read_at
-                LIMIT ?""",
+                WHERE key != 'nace-map' AND (read_at IS NULL OR read_at <= ?)
+                ORDER BY read_at IS NOT NULL, read_at LIMIT ?""",
                 ((now - REFRESH).isoformat(), max_runs),
             ).fetchall()
         done = 0
         for key, raw in due:
             query = json.loads(raw)
             try:
+                kind = query.get("kind")
                 payload, error = (
                     (
                         self._read_customer(str(query["name"]), query.get("languages") or [])
-                        if query.get("kind") == "customer"
+                        if kind == "customer"
+                        else self._read_sector(
+                            str(query["sector"]), list(query.get("nace") or []),
+                            str(query["country"]),
+                        )
+                        if kind == "sector"
+                        else {**self._base(), "industries": len(self._nace_map())}
+                        if kind == "nace"
                         else self._read_peers(str(query["industry"]), str(query["country"]))
                     ),
                     None,
-                )
+                )  # fmt: skip
             except Exception as failure:  # retried next month; the previous reading stays
                 payload, error = None, type(failure).__name__
             with self._connect() as db:
@@ -197,14 +246,105 @@ class WikidataBuyerLookups:
         found = self._fetch(f"{WIKIDATA}?{urllib.parse.urlencode({**params, 'format': 'json'})}")
         return found if isinstance(found, dict) else {}
 
-    def _entities(self, ids: Sequence[str], languages: Sequence[str]) -> dict[str, Any]:
+    def _entities(
+        self, ids: Sequence[str], languages: Sequence[str], *, sitelinks: bool = False
+    ) -> dict[str, Any]:
         if not ids:
             return {}
         langs = "|".join(dict.fromkeys((*languages, *_LANGUAGES)))
+        props = "claims|labels|sitelinks" if sitelinks else "claims|labels"
         return dict(
             self._api({"action": "wbgetentities", "ids": "|".join(ids[:50]),
-                       "props": "claims|labels", "languages": langs}).get("entities") or {}
+                       "props": props, "languages": langs}).get("entities") or {}
         )  # fmt: skip
+
+    def _nace_map(self) -> dict[str, list[str]]:
+        """Wikidata industries by their NACE Rev. 2 code (P4496), refreshed monthly."""
+        now = self._clock()
+        with self._connect() as db:
+            row = db.execute(
+                "SELECT payload, read_at FROM buyer_lookups WHERE key='nace-map'"
+            ).fetchone()
+        if row is not None and row[0] and now - datetime.fromisoformat(row[1]) < REFRESH:
+            return {str(k): [str(c) for c in v] for k, v in json.loads(row[0]).items()}
+        qids: list[str] = []
+        for page in range(NACE_MAP_PAGES):
+            found = self._api({"action": "query", "list": "search", "srlimit": "500",
+                               "sroffset": str(page * 500), "srsearch": "haswbstatement:P4496"})  # fmt: skip
+            hits = [str(h.get("title")) for h in (found.get("query") or {}).get("search") or []]
+            qids += [h for h in hits if h.startswith("Q")]
+            if len(hits) < 500:
+                break
+        codes: dict[str, list[str]] = {}
+        for start in range(0, len(qids), 50):
+            entities = self._entities(qids[start : start + 50], ())
+            for qid, entity in entities.items():
+                if isinstance(entity, dict):
+                    values = _values(entity.get("claims") or {}, "P4496")
+                    codes[qid] = [str(v).strip().upper() for v in values if isinstance(v, str)]
+        with self._connect() as db:
+            db.execute(
+                """INSERT INTO buyer_lookups (key, query, requested_at, read_at, payload)
+                VALUES ('nace-map', '{}', ?, ?, ?) ON CONFLICT(key) DO UPDATE SET
+                read_at=excluded.read_at, payload=excluded.payload""",
+                (now.isoformat(), now.isoformat(), json.dumps(codes)),
+            )
+        return codes
+
+    def _country(self, iso: str) -> str | None:
+        """The Wikidata item of a country by its ISO 3166-1 alpha-2 code (P297)."""
+        found = self._api({"action": "query", "list": "search", "srlimit": "3",
+                           "srsearch": f"haswbstatement:P297={iso.upper()}"})  # fmt: skip
+        hits = [str(h.get("title")) for h in (found.get("query") or {}).get("search") or []]
+        return next((h for h in hits if h.startswith("Q")), None)
+
+    def _read_sector(self, sector: str, nace: Sequence[str], country: str) -> dict[str, Any]:
+        """Organizations Wikidata places in a buying sector and a country (not dissolved)."""
+        wanted = {n.upper() for n in nace}
+        # The sector's own industries first (exact code), then its subdivisions (10.1, 10.11).
+        depth = {
+            qid: min(c.count(".") for c in codes
+                     if any(c == w or c.startswith(w + ".") for w in wanted))
+            for qid, codes in self._nace_map().items()
+            if any(c == w or c.startswith(w + ".") for c in codes for w in wanted)
+        }  # fmt: skip
+        # Common industries that carry no NACE code in Wikidata come first (curated).
+        curated = wikidata_industries_for(sorted(wanted))
+        ranked = sorted(depth, key=lambda q: (depth[q], q))
+        industries = list(dict.fromkeys([*curated, *ranked]))[:MAX_SECTOR_INDUSTRIES]
+        country_item = country if country.startswith("Q") else self._country(country)
+        payload: dict[str, Any] = {**self._base(), "sector": sector, "nace": sorted(wanted),
+                                   "country": country, "countryItem": country_item,
+                                   "industries": industries, "organizations": []}  # fmt: skip
+        if country_item is not None:
+            payload["countryLabel"] = _label(
+                self._entities([country_item], ()).get(country_item) or {}, ()
+            )
+        if not industries or country_item is None:
+            return payload
+        any_industry = "|".join(f"P452={q}" for q in industries)
+        found = self._api({"action": "query", "list": "search", "srlimit": "50",
+                           "srsearch": f"haswbstatement:{any_industry} haswbstatement:P17={country_item}"})  # fmt: skip
+        titles = [str(h.get("title")) for h in (found.get("query") or {}).get("search") or []]
+        hits = [t for t in titles if t.startswith("Q")]
+        entities = self._entities(hits, (), sitelinks=True)
+        organizations = []
+        for qid in hits:
+            entity = entities.get(qid)
+            if not isinstance(entity, dict):
+                continue
+            org = _organization(qid, entity, ())
+            # A current organization one can act on (its website or LEI is known) and that
+            # is documented somewhere beyond its own item (a Wikipedia article or an LEI).
+            articles = len(entity.get("sitelinks") or {})
+            if (org["label"] and not org["dissolved"] and (org["website"] or org["lei"])
+                    and (articles or org["lei"])):  # fmt: skip
+                org["articles"] = articles
+                organizations.append(org)
+        # The most documented first: an inspectable order, not a judgement of fit.
+        organizations.sort(key=lambda o: -int(o["articles"]))
+        payload["organizations"] = organizations[:MAX_PEERS]
+        return payload
 
     def _base(self) -> dict[str, Any]:
         return {"instrument": INSTRUMENT, "readAt": self._clock().isoformat(), "rights": RIGHTS}
