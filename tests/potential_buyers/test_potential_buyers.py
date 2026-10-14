@@ -98,8 +98,8 @@ def test_signals_combine_per_organization_ordered_by_independent_kinds_never_a_s
         "Acme Portugal Lda",
     ):
         assert never not in names
-    # The subscriber's countries come first among a customer's subsidiaries.
-    assert names.index("Iberdrola Clientes SAU") < names.index("Avangrid Inc")
+    # Only subsidiaries in the subscriber's countries: a large group elsewhere is noise.
+    assert "Iberdrola Clientes SAU" in names and "Avangrid Inc" not in names
     assert all(d["epistemicState"] == "POTENTIAL" and family_of(d) == "demand" for d in found)
     assert all("score" not in d["detail"] for d in found)
 
@@ -170,10 +170,10 @@ def test_lookups_accept_one_exact_organization_and_keep_search_order(tmp_path: P
 def test_runtime_derives_buyers_from_portfolio_peers_customers_and_groups(tmp_path: Path) -> None:
     from tools.runtime.first_observation import FirstObservationRuntime
 
-    capabilities = [{"demandCodes": [["CPV", "72000000"]]}]
+    capabilities = [{"demandCodes": [["CPV", "72260000"]]}]
     peer_proof = {"target": {"name": "Peer Consulting"}, "capabilities": capabilities,
                   "discoveries": [_d("RELATIONSHIP", "CLIENT_DECLARED", "Endesa", "DECLARED")]}  # fmt: skip
-    other_proof = {"target": {"name": "Bakery"}, "capabilities": [{"demandCodes": [["CPV", "15000000"]]}],
+    other_proof = {"target": {"name": "Bakery"}, "capabilities": [{"demandCodes": [["CPV", "15810000"]]}],
                    "discoveries": [_d("RELATIONSHIP", "CLIENT_DECLARED", "Hotel Sol", "DECLARED")]}  # fmt: skip
     proofs = {"peer": peer_proof, "bakery": other_proof}
     store = SimpleNamespace(
@@ -214,3 +214,16 @@ def test_runtime_derives_buyers_from_portfolio_peers_customers_and_groups(tmp_pa
         "NO_BUYER_SIGNALS",
     ]
     json.dumps(out)  # the view stays serializable
+
+
+def test_peers_share_a_specific_activity_and_badges_are_never_customers() -> None:
+    from application.potential_buyers import same_activity
+
+    assert same_activity(["72260000", "79341000"], ["72262000"])  # software development
+    assert not same_activity(["72000000"], ["72000000"])  # a broad division is not a peer
+    assert not same_activity(["72413000"], ["72260000"])  # web design vs software
+    stored = [_d("RELATIONSHIP", "CLIENT_DECLARED", "Google Partner", "DECLARED"),
+              _d("RELATIONSHIP", "CLIENT_DECLARED", "Visit our Facebook page", "DECLARED"),
+              _d("RELATIONSHIP", "CLIENT_DECLARED", "HP", "DECLARED")]  # fmt: skip
+    assert customer_names(stored) == ["HP"]  # observations stored before v1.1 too
+    assert [s.candidate for s in peer_signals([{"name": "P", "clients": stored}])] == ["HP"]

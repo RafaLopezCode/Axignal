@@ -23,6 +23,7 @@ from collections.abc import Iterable, Mapping, Sequence
 from dataclasses import dataclass, field
 from typing import Any
 
+from application.own_site import is_client_name
 from application.world_demand.awards import normalized_name
 
 VERSION = "potential-buyers-v1"
@@ -73,7 +74,7 @@ def customer_names(discoveries: Iterable[object]) -> list[str]:
     """Who already buys from it: the clients its own website shows, then its public buyers."""
     found = _discoveries(discoveries)
     declared = [str(d["statement"]) for d in found
-                if d.get("code") == "CLIENT_DECLARED" and d.get("statement")]  # fmt: skip
+                if d.get("code") == "CLIENT_DECLARED" and is_client_name(str(d.get("statement") or ""))]  # fmt: skip
     awarded = [str(d["statement"]) for d in found
                if d.get("code") == "PUBLIC_CONTRACTS_WON" and d.get("statement")]  # fmt: skip
     return list(dict.fromkeys([*declared, *awarded]))[:MAX_CUSTOMERS_LOOKED_UP]
@@ -130,13 +131,28 @@ def view_signals(discoveries: Iterable[object]) -> list[Signal]:
     return out
 
 
+def specific_classes(cpvs: Iterable[str]) -> set[str]:
+    """CPV classes (first four digits) below division level: what an activity actually does.
+
+    A division-only code ("72000000", IT services) says too little: two organizations that
+    share only a division are not peers (golden set, 2026-10-14)."""
+    return {c[:4] for c in cpvs if len(c) >= 4 and c[:4].isdigit() and c[2:4] != "00"}
+
+
+def same_activity(own: Iterable[str], other: Iterable[str]) -> bool:
+    """Peers share at least one specific CPV class, never only a broad sector."""
+    return bool(specific_classes(own) & specific_classes(other))
+
+
 def peer_signals(peers: Sequence[Mapping[str, Any]]) -> list[Signal]:
     """Clients that same-activity organizations in the subscriber's portfolio show."""
     out: list[Signal] = []
     for peer in peers:
         name = str(peer.get("name") or "")
         for d in _discoveries(_items(peer.get("clients"))):
-            if d.get("code") != "CLIENT_DECLARED" or not d.get("statement"):
+            if d.get("code") != "CLIENT_DECLARED" or not is_client_name(
+                str(d.get("statement") or "")
+            ):
                 continue
             out.append(Signal(
                 str(d["statement"]), "CUSTOMER_OF_COMPETITOR",
@@ -151,20 +167,22 @@ def peer_signals(peers: Sequence[Mapping[str, Any]]) -> list[Signal]:
 def group_signals(
     customer: str, group: Mapping[str, Any], *, countries: Sequence[str] = ()
 ) -> list[Signal]:
-    """Entities in a customer's corporate group (GLEIF), the subscriber's countries first."""
+    """Its ultimate parent and its subsidiaries in the subscriber's own countries (GLEIF).
+
+    A large group's subsidiaries elsewhere in the world are noise, not demand (golden set,
+    2026-10-14): without countries to look in, only the ultimate parent is shown."""
     out: list[Signal] = []
     read_at = str(group.get("readAt") or "") or None
     parents = group.get("parents")
     entities: list[tuple[Mapping[str, Any], str]] = []
     if isinstance(parents, Mapping):
-        for level in ("ultimate-parent", "direct-parent"):
-            parent = parents.get(level)
-            if isinstance(parent, Mapping) and parent.get("name"):
-                entities.append((parent, "parent"))
-    children = [c for c in _items(group.get("children")) if isinstance(c, Mapping)]
+        parent = parents.get("ultimate-parent")
+        if isinstance(parent, Mapping) and parent.get("name"):
+            entities.append((parent, "parent"))
     wanted = {c.upper() for c in countries}
-    children.sort(key=lambda c: (str(c.get("country") or "").upper() not in wanted,
-                                 str(c.get("name") or "")))  # fmt: skip
+    children = [c for c in _items(group.get("children"))
+                if isinstance(c, Mapping) and str(c.get("country") or "").upper() in wanted]  # fmt: skip
+    children.sort(key=lambda c: str(c.get("name") or ""))
     entities += [(c, "subsidiary") for c in children[:MAX_GROUP_ENTITIES]]
     for entity, role in entities:
         lei = str(entity.get("lei") or "")

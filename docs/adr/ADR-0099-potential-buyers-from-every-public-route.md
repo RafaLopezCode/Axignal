@@ -35,7 +35,7 @@ That covers the public sector of a few countries. Most of a B2B subscriber's buy
    |---|---|---|
    | `CUSTOMER_OF_COMPETITOR` | It buys this activity from someone else | A public award to a competitor, or a client shown on the website of a same-activity organization in **the same subscriber's** portfolio |
    | `PUBLIC_BUYER_OF_CATEGORY` | It keeps awarding contracts under this activity's codes | Public awards |
-   | `GROUP_OF_CUSTOMER` | A parent or subsidiary of an existing customer; the subscriber's countries first | GLEIF Level 2 |
+   | `GROUP_OF_CUSTOMER` | The ultimate parent of an existing customer, or one of its subsidiaries in the subscriber's countries (amendment v1.1) | GLEIF Level 2 |
    | `SIMILAR_TO_CUSTOMERS` | Same industry (P452) and country (P17) as its customers; not dissolved | Wikidata |
    | `SECTOR_BUYS_FROM_ITS_SECTOR` | Active nearby in a sector that usually buys from its sector | Eurostat input-output, public awards |
 
@@ -76,3 +76,11 @@ That covers the public sector of a few countries. Most of a B2B subscriber's buy
   - non-EU procurement (USAspending/SAM, Find a Tender, CanadaBuys, AusTender).
 
 Each new route enters as a new signal type with its own ADR line, licence and limitation.
+
+## Amendment v1.1 (2026-10-14, after the golden-set measurement)
+
+The first measurement found wrong candidates; see `docs/research/excellence/potential-buyers-golden-2026-10-14.md`. Three changes:
+
+1. **Badges are not clients.** On client walls, badges, awards, ratings, review sites, social links and policy labels are rejected. A wall that is mostly such items is dropped entirely. The same check applies at read time, so observations stored earlier stop producing such "customers" at once.
+2. **Peers share a specific activity.** Two portfolio organizations are peers only if they share at least one CPV class (four digits, below division level) in addition to the industry. A shared broad sector is not enough.
+3. **A customer's group stays bounded.** Only the ultimate parent and the subsidiaries in the subscriber's own countries are signals. With no countries known, only the ultimate parent is.

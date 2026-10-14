@@ -89,6 +89,7 @@ from application.potential_buyers import (
     no_buyer_signals,
     peer_signals,
     potential_buyers,
+    same_activity,
     similar_signals,
     view_signals,
 )
@@ -879,7 +880,8 @@ class FirstObservationRuntime:
         observed_at = str(view.get("observedAt") or "")
         signals = view_signals(discoveries)
         # Clients that same-activity organizations in this subscriber's own portfolio show.
-        industry = company_industry(view, [c.code for c in activity_codes(proof)])
+        own_codes = [c.code for c in activity_codes(proof)]
+        industry = company_industry(view, own_codes)
         if industry is not None:
             peers: list[dict[str, object]] = []
             others = sorted(self.store.observed_targets(tenant) - {target_ref})
@@ -890,8 +892,10 @@ class FirstObservationRuntime:
                 found = other.get("discoveries")
                 other_view = {"discoveries": found if isinstance(found, list) else []}
                 codes = [c.code for c in activity_codes(other)]
-                if company_industry(other_view, codes) != industry:
-                    continue
+                if company_industry(other_view, codes) != industry or not same_activity(
+                    own_codes, codes
+                ):
+                    continue  # a peer shares a specific activity, not only a broad sector
                 target = other.get("target")
                 name = (
                     target.get("name") or target.get("website")
