@@ -255,7 +255,10 @@ test("the runtime's English sentences are shown in Spanish where the reader read
   const { runtimeText } = await import("../lib/runtime-text");
   assert.equal(runtimeText("AXIGNAL's public homepage is observable from the outside", "es"), "La web pública de AXIGNAL es observable desde fuera");
   assert.match(runtimeText("The authorized public homepage was reachable and contained visible text when AXIGNAL observed it.", "es"), /^La web pública autorizada era accesible/);
-  assert.match(runtimeText("This observation covers only the authorized public homepage at this observation time. Search, generative, social, reputation and other public surfaces remain UNKNOWN.", "es"), /DESCONOCIDAS\.$/);
+  assert.match(runtimeText("This observation covers only the authorized public homepage at this observation time. Search, generative, social, reputation and other public surfaces remain UNKNOWN.", "es"), /se miden con sus propios instrumentos, en sus familias\.$/);
+  // The old limit claimed every other surface was unknown; they are measured now, and it says so.
+  assert.match(runtimeText("This signal covers only the authorized public homepage at this observation time. Search, AI assistants, reputation and other surfaces are read by their own instruments, in their families.", "es"), /^Esta señal cubre solo la página pública/);
+  assert.match(runtimeText("The authorized public homepage was reachable and contained deterministic document text when AXIGNAL observed it. Visual visibility remains UNKNOWN when external stylesheet effects are unresolved.", "es"), /^La página pública era accesible y su texto se pudo leer cuando AXIGNAL/);
   // A sentence the runtime may emit that is not listed is shown exactly as written; other locales read the runtime's wording.
   assert.equal(runtimeText("Some sentence nobody has translated.", "es"), "Some sentence nobody has translated.");
   assert.equal(runtimeText("AXIGNAL's public homepage is observable from the outside", "en"), "AXIGNAL's public homepage is observable from the outside");

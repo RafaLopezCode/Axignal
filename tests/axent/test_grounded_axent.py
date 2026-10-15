@@ -334,3 +334,42 @@ def test_question_bounds_are_enforced() -> None:
         service.ask(TENANT_A, FOCUS_A, "x" * 1001)
     with pytest.raises(ValueError):
         service.ask(TENANT_A, XeedId(FOCUS_A), "   ")
+
+
+# AXENT answers from the current reading's findings in every family (not only the economic
+# projection): a free question about presence, buyers or reputation reaches them.
+def test_findings_of_every_family_are_evidence_axent_can_cite() -> None:
+    from application.axent.grounded.corpus import corpus_from_reading
+
+    findings = [
+        {"kind": "REPRESENTATION_GAP", "code": "AUDIT:IMAGES_DESCRIBED", "statement": "IMAGES_DESCRIBED",
+         "epistemicState": "POTENTIAL", "sourceUrl": "https://solartec.example/", "observedAt": NOW.isoformat(),
+         "facts": {"impact": "LOW", "value": {"images": 5, "withoutAlt": 3}, "instrument": "representation-audit.v1"}},
+        {"kind": "DEMAND", "code": "POTENTIAL_BUYER", "statement": "Endesa", "epistemicState": "POTENTIAL",
+         "sourceUrl": "https://award.example/1", "observedAt": NOW.isoformat(), "facts": {"via": ["Rival SA"]}},
+        {"kind": "RELATIONSHIP", "code": "CLIENT_DECLARED", "statement": "Iberdrola", "epistemicState": "DECLARED",
+         "sourceUrl": "https://solartec.example/", "observedAt": NOW.isoformat(),
+         "facts": {"limitation": "Shown by the organization itself as a client."}},
+        {"kind": "SIGNIFICANT_UNKNOWN", "code": "NO_PRESS_MENTION_FOUND", "statement": "No headline names it",
+         "epistemicState": "UNKNOWN", "sourceUrl": None, "observedAt": None, "facts": {}},
+    ]  # fmt: skip
+    projection = {**reading(xeed=FOCUS_A, organization="Solartec Levante"), "findings": findings}
+    corpus = corpus_from_reading(tenant_id="tenant:a", projection=projection, as_of=NOW)
+    by_id = {i.item_id: i for i in corpus.items if i.item_id.startswith("finding:")}
+    assert len(by_id) == 4
+    images = by_id["finding:REPRESENTATION_GAP:AUDIT:IMAGES_DESCRIBED:0"]
+    assert "images described" in images.text and "withoutAlt 3" in images.text
+    assert {f.value for f in images.families} == {"presence"}
+    buyer = by_id["finding:DEMAND:POTENTIAL_BUYER:1"]
+    assert buyer.kind.value == "OPPORTUNITY" and "through: Rival SA" in buyer.text
+    assert by_id["finding:RELATIONSHIP:CLIENT_DECLARED:2"].limits == (
+        "Shown by the organization itself as a client.",
+    )
+    assert by_id["finding:SIGNIFICANT_UNKNOWN:NO_PRESS_MENTION_FOUND:3"].kind.value == "GAP"
+
+    reader = AuthorizingReader()
+    reader.grant(TENANT_A, FOCUS_A, projection)
+    service = AxentService(reader=reader, clock=lambda: NOW)
+    turn = service.ask(TENANT_A, FOCUS_A, "¿Qué compradores potenciales tiene, como Endesa?")
+    # Without a model AXENT returns the most relevant authorized evidence: the buyer finding.
+    assert [e.item_id for e in turn.answer.evidence][:1] == ["finding:DEMAND:POTENTIAL_BUYER:1"]

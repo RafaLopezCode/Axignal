@@ -5,8 +5,12 @@ const PUBLIC_HOMEPAGE_WHY =
   "AXIGNAL retrieved the public homepage through the governed source sensor and can trace this Xignal back to the stored observation.";
 const PUBLIC_HOMEPAGE_INTERPRETATION =
   "The authorized public homepage was reachable and contained visible text when AXIGNAL observed it.";
-const PUBLIC_HOMEPAGE_UNCERTAINTY =
+const PUBLIC_HOMEPAGE_UNCERTAINTY_OLD =
   "This observation covers only the authorized public homepage at this observation time. Search, generative, social, reputation and other public surfaces remain UNKNOWN.";
+const PUBLIC_HOMEPAGE_UNCERTAINTY =
+  "This signal covers only the authorized public homepage at this observation time. Search, AI assistants, reputation and other surfaces are read by their own instruments, in their families.";
+const PUBLIC_HOMEPAGE_INTERPRETATION_DETERMINISTIC =
+  "The authorized public homepage was reachable and contained deterministic document text when AXIGNAL observed it. Visual visibility remains UNKNOWN when external stylesheet effects are unresolved.";
 
 const localized = {
   sourceObserved: {
@@ -34,12 +38,20 @@ const localized = {
     it: "La pagina pubblica autorizzata era raggiungibile e conteneva testo visibile quando AXIGNAL l’ha osservata.",
   },
   uncertainty: {
-    es: "Esta observación cubre únicamente la página pública autorizada en este momento de observación. Búsqueda, presencia generativa, redes sociales, reputación y otras superficies públicas siguen siendo DESCONOCIDAS.",
+    es: "Esta señal cubre solo la página pública en el momento de la observación. La búsqueda, los asistentes de IA, la reputación y otras superficies se miden con sus propios instrumentos, en sus familias.",
     en: PUBLIC_HOMEPAGE_UNCERTAINTY,
-    de: "Diese Beobachtung deckt zu diesem Zeitpunkt nur die autorisierte öffentliche Startseite ab. Suche, generative Präsenz, soziale Netzwerke, Reputation und andere öffentliche Oberflächen bleiben UNBEKANNT.",
-    pt: "Esta observação cobre apenas a página pública autorizada neste momento. Pesquisa, presença generativa, redes sociais, reputação e outras superfícies públicas permanecem DESCONHECIDAS.",
-    fr: "Cette observation ne couvre que la page publique autorisée à cet instant. Recherche, présence générative, réseaux sociaux, réputation et autres surfaces publiques restent INCONNUES.",
-    it: "Questa osservazione copre solo la pagina pubblica autorizzata in questo momento. Ricerca, presenza generativa, social, reputazione e altre superfici pubbliche restano SCONOSCIUTE.",
+    de: "Dieses Signal deckt nur die öffentliche Startseite zum Zeitpunkt der Beobachtung ab. Suche, KI-Assistenten, Reputation und andere Oberflächen werden mit eigenen Instrumenten in ihren Familien gemessen.",
+    pt: "Este sinal cobre apenas a página pública no momento da observação. A pesquisa, os assistentes de IA, a reputação e outras superfícies são medidos com os seus próprios instrumentos, nas suas famílias.",
+    fr: "Ce signal ne couvre que la page publique au moment de l’observation. La recherche, les assistants d’IA, la réputation et les autres surfaces sont mesurés par leurs propres instruments, dans leurs familles.",
+    it: "Questo segnale copre solo la pagina pubblica al momento dell’osservazione. Ricerca, assistenti di IA, reputazione e altre superfici sono misurati con i propri strumenti, nelle loro famiglie.",
+  },
+  interpretationDeterministic: {
+    es: "La página pública era accesible y su texto se pudo leer cuando AXIGNAL la observó. No se ha comprobado cómo cambian su aspecto los estilos externos.",
+    en: PUBLIC_HOMEPAGE_INTERPRETATION_DETERMINISTIC,
+    de: "Die öffentliche Startseite war erreichbar und ihr Text lesbar, als AXIGNAL sie beobachtete. Wie externe Stylesheets ihr Aussehen verändern, wurde nicht geprüft.",
+    pt: "A página pública estava acessível e o seu texto pôde ser lido quando a AXIGNAL a observou. Não se verificou como os estilos externos alteram o seu aspeto.",
+    fr: "La page publique était accessible et son texte lisible lorsque AXIGNAL l’a observée. L’effet des feuilles de style externes sur son apparence n’a pas été vérifié.",
+    it: "La pagina pubblica era raggiungibile e il suo testo leggibile quando AXIGNAL l’ha osservata. Non è stato verificato come gli stili esterni ne modificano l’aspetto.",
   },
 } satisfies Record<string, Record<Locale, string>>;
 
@@ -74,7 +86,8 @@ export function presentRuntimeText(value:string, organizationName:string, locale
   if(value===canonicalTitle) return titleTemplates[locale](organizationName);
   if(value===PUBLIC_HOMEPAGE_WHY) return localized.why[locale];
   if(value===PUBLIC_HOMEPAGE_INTERPRETATION) return localized.interpretation[locale];
-  if(value===PUBLIC_HOMEPAGE_UNCERTAINTY) return localized.uncertainty[locale];
+  if(value===PUBLIC_HOMEPAGE_UNCERTAINTY || value===PUBLIC_HOMEPAGE_UNCERTAINTY_OLD) return localized.uncertainty[locale];
+  if(value===PUBLIC_HOMEPAGE_INTERPRETATION_DETERMINISTIC) return localized.interpretationDeterministic[locale];
   return value;
 }
 

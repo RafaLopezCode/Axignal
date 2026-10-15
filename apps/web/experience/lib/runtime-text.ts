@@ -16,8 +16,12 @@ const TEMPLATES: Template[] = [
     es: m => `La web pública autorizada era accesible y contenía texto visible cuando ${m[1]} la observó.`,
   },
   {
-    pattern: /^This observation covers only the authorized public homepage at this observation time\. Search, generative, social, reputation and other public surfaces remain UNKNOWN\.$/,
-    es: () => "Esta observación cubre solo la web pública autorizada en el momento de la observación. La búsqueda, la generativa, las redes sociales, la reputación y otras superficies públicas siguen siendo DESCONOCIDAS.",
+    pattern: /^The authorized public homepage was reachable and contained deterministic document text when (.+) observed it\. Visual visibility remains UNKNOWN when external stylesheet effects are unresolved\.$/,
+    es: m => `La página pública era accesible y su texto se pudo leer cuando ${m[1]} la observó. No se ha comprobado cómo cambian su aspecto los estilos externos.`,
+  },
+  {
+    pattern: /^This (?:observation|signal) covers only the authorized public homepage at this observation time\. (?:Search, generative, social, reputation and other public surfaces remain UNKNOWN|Search, AI assistants, reputation and other surfaces are read by their own instruments, in their families)\.$/,
+    es: () => "Esta señal cubre solo la página pública en el momento de la observación. La búsqueda, los asistentes de IA, la reputación y otras superficies se miden con sus propios instrumentos, en sus familias.",
   },
 ];
 

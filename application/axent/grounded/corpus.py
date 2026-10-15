@@ -195,6 +195,63 @@ def _item(
     )
 
 
+#: Detail fields a finding may carry into AXENT's evidence (primitives only, never payloads).
+_FINDING_FACTS = ("value", "impact", "count", "instrument", "source", "sample", "previous")
+_FINDING_KIND = {
+    "SIGNIFICANT_UNKNOWN": EvidenceKind.GAP,
+    "CHANGE": EvidenceKind.CHANGE,
+    "DEMAND": EvidenceKind.OPPORTUNITY,
+    "ACTIVITY": EvidenceKind.CAPABILITY,
+    "CREDENTIAL": EvidenceKind.CAPABILITY,
+}
+
+
+def _finding_text(raw: Mapping[str, Any]) -> str:
+    """A finding as one plain line: what it is, its statement and its measured facts."""
+    code = _str(raw.get("code")).split(":", 1)[-1].replace("_", " ").lower()
+    facts = _dict(raw.get("facts"))
+    parts = [f"{code}: {_str(raw.get('statement'))}"]
+    for key in _FINDING_FACTS:
+        value = facts.get(key)
+        if isinstance(value, str | int | float) and _str(value):
+            parts.append(f"{key}: {_str(value)}")
+        elif isinstance(value, Mapping):
+            parts.append(f"{key}: " + ", ".join(f"{k} {v}" for k, v in value.items()
+                                                 if isinstance(v, str | int | float)))  # fmt: skip
+    via = [_str(v) for v in _list(facts.get("via")) if v]
+    if via:
+        parts.append("through: " + ", ".join(via[:3]))
+    return "; ".join(p for p in parts if p)
+
+
+def _finding_items(findings: Iterable[Mapping[str, Any]]) -> list[EvidenceItem]:
+    """The current reading's findings in every family: what AXENT may cite about them."""
+    from application.first_observation.families import family_of
+
+    out: list[EvidenceItem] = []
+    for index, raw in enumerate(findings):
+        family = family_of(raw)
+        if family is None:
+            continue
+        kind = _FINDING_KIND.get(_str(raw.get("kind")), EvidenceKind.OBSERVATION)
+        facts = _dict(raw.get("facts"))
+        out.append(
+            _item(
+                f"finding:{_str(raw.get('kind'))}:{_str(raw.get('code'))}:{index}",
+                kind,
+                (ObservationFamily(family),),
+                _finding_text(raw),
+                epistemic=_str(raw.get("epistemicState")),
+                currentness="UNKNOWN" if kind is EvidenceKind.GAP else "CURRENT",
+                observed_at=_time(raw.get("observedAt")),
+                source_ref=_str(raw.get("sourceUrl")) or None,
+                source_label=_str(facts.get("source")) or None,
+                limits=[_str(facts.get("limitation"))] if facts.get("limitation") else (),
+            )
+        )
+    return out
+
+
 def corpus_from_reading(
     *,
     tenant_id: str,
@@ -495,6 +552,7 @@ def corpus_from_reading(
                 limits=(_str(reason),),
             )
         )
+    items.extend(_finding_items(map(_dict, _list(projection.get("findings")))))
     for family, currentness, reason in coverage:
         items.append(
             _item(

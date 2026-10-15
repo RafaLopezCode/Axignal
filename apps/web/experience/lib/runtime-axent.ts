@@ -31,6 +31,30 @@ export type RuntimeAnswer = {
   memory?: Record<string, unknown>;
 };
 
+/** What a question asks, in any of the six languages (same rules for every AXENT path). */
+export function intentOf(prompt: string): RuntimeAnswer["intent"] {
+  const unknownIntent =
+    /unknown|desconoc|abiert|open|offen|ouvert|unbekannt|inconnu|sconosciut|em aberto|eclaircir|éclaircir|aperto/i.test(prompt);
+  // "How do you know" asks for the basis; "what do you know" asks for the content.
+  const evidenceIntent =
+    /evidenc|fuente|source|c[oó]mo (lo )?sab|how do you know|woher|wei(ß|ss)t du das|comment le sais|come lo sai|quelle|preuve|fonte|fundament|basis/i.test(prompt);
+  const researchIntent =
+    /investig|research|recherch|ricerc|indag|nächst/i.test(prompt);
+  const whyIntent = /por qué|why|import|warum|pourquoi|perché|porquê/i.test(prompt);
+  const changedIntent = /camb|chang|mud|änder/i.test(prompt);
+  return researchIntent
+    ? "research"
+    : unknownIntent
+      ? "unknown"
+      : evidenceIntent
+        ? "evidence"
+        : whyIntent
+          ? "why"
+          : changedIntent
+            ? "changed"
+            : "known";
+}
+
 function unique(values: string[]): string[] {
   return [...new Set(values.filter(Boolean))];
 }
@@ -49,25 +73,9 @@ export function explainRuntime(
   const guide = productGuideAnswer(projection, prompt, locale);
   if (guide) return guide;
   const t = (es: string, en: string) => translate(es, en, locale);
-  const unknownIntent =
-    /unknown|desconoc|abiert|open|unbekannt|inconnu|sconosciut|bleibt offen|em aberto|eclaircir|éclaircir|resta aperto/i.test(prompt);
-  const evidenceIntent =
-    /evidenc|fuente|source|sabes|sabe|know|quelle|preuve|fonte|weißt|weisst|sais-tu|lo sai|lo sais/i.test(prompt);
-  const researchIntent =
-    /investig|research|recherch|ricerc|indag|nächst/i.test(prompt);
-  const whyIntent = /por qué|why|import|warum|pourquoi|perché|porquê/i.test(prompt);
-  const changedIntent = /camb|chang|mud|änder/i.test(prompt);
-  const intent: RuntimeAnswer["intent"] = researchIntent
-    ? "research"
-    : unknownIntent
-      ? "unknown"
-      : evidenceIntent
-        ? "evidence"
-        : whyIntent
-          ? "why"
-          : changedIntent
-            ? "changed"
-            : "known";
+  const intent = intentOf(prompt);
+  const researchIntent = intent === "research", unknownIntent = intent === "unknown",
+    evidenceIntent = intent === "evidence", whyIntent = intent === "why", changedIntent = intent === "changed";
 
   const known = unique(selected.map((signal) => signal.interpretation));
   const openQuestions = unique(
