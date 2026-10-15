@@ -391,7 +391,7 @@ export function discoveryCopy(d: Discovery, t: Translate, locale = "en"): { find
   if (d.kind === "GENERATIVE_VISIBILITY") return { finding: `${t("Aparición en respuestas de IA medida", "AI answer appearance measured")}: ${d.statement}`, why: t("Mencionar no es citar, y citar no es recomendar. Es una medición con sus condiciones, no una conclusión sobre el negocio.", "A mention is not a citation, and a citation is not an endorsement. It is a measurement with its conditions, not a conclusion about the business.") };
   if (d.kind === "WEB_REPRESENTATION") return { finding: t("Representación web medida", "Web representation measured"), why: t("Comprobaciones de su propia web, con instrumento y condiciones. No es una posición en buscadores.", "Checks of its own website, with instrument and conditions. It is not a search ranking.") };
   if (d.kind === "REPRESENTATION_GAP" && d.code.startsWith("AUDIT:")) {
-    const copy = auditCopy(d.code.slice(6), t);
+    const copy = auditCopy(d.code.slice(6), t, d.detail.value);
     return { finding: copy.title, why: copy.why };
   }
   if (d.kind === "REPRESENTATION_GAP") return d.code === "HOMEPAGE_NOINDEX"
@@ -581,7 +581,7 @@ export function basisRows(d: Discovery, t: Translate, locale: string): Array<[st
   if (Array.isArray(detail.signals)) for (const s of detail.signals as Array<{ kind?: unknown; value?: unknown }>) rows.push([signalLabel(String(s.kind ?? ""), t), String(s.value ?? "")]);
   if (typeof detail.limitation === "string") rows.push([t("Límite", "Limitation"), detail.limitation]);
   if (typeof detail.impact === "string") rows.push([t("Impacto", "Impact"), auditImpact(detail.impact, t)]);
-  if (d.code.startsWith("AUDIT:")) rows.push([t("Qué puedes hacer", "What you can do"), auditCopy(d.code.slice(6), t).action]);
+  if (d.code.startsWith("AUDIT:")) rows.push([t("Qué puedes hacer", "What you can do"), auditCopy(d.code.slice(6), t, d.detail.value).action]);
   for (const [label, value] of auditRows(detail.audit, t)) rows.push([label, value]);
   if (d.observedAt) rows.push([t("Observado el", "Observed on"), d.observedAt.slice(0, 10)]);
   return rows;
@@ -591,7 +591,7 @@ export function basisRows(d: Discovery, t: Translate, locale: string): Array<[st
 export function auditRows(audit: unknown, t: Translate): Array<[string, string]> {
   if (!audit || typeof audit !== "object") return [];
   const a = audit as { instrument?: unknown; pagesRead?: unknown; checks?: unknown };
-  const checks = Array.isArray(a.checks) ? a.checks as Array<{ id: string; section: string; status: string; impact: string }> : [];
+  const checks = Array.isArray(a.checks) ? a.checks as Array<{ id: string; section: string; status: string; impact: string; value?: unknown }> : [];
   const rows: Array<[string, string]> = [];
   if (typeof a.instrument === "string") rows.push([t("Auditoría", "Audit"), `${a.instrument} · ${t("páginas leídas", "pages read")}: ${String(a.pagesRead ?? "—")}`]);
   for (const section of ["SEARCH_FINDABILITY", "AI_ANSWER_READINESS", "SHARING_AND_MOBILE", "REAL_USER_EXPERIENCE"]) {
@@ -599,7 +599,7 @@ export function auditRows(audit: unknown, t: Translate): Array<[string, string]>
     if (!inSection.length) continue;
     const counts = ["PASS", "ATTENTION", "UNKNOWN"].map(s => `${auditStatus(s, t)}: ${inSection.filter(c => c.status === s).length}`).join(" · ");
     rows.push([auditSection(section, t), counts]);
-    for (const c of inSection.filter(c => c.status === "ATTENTION")) rows.push([`${auditImpact(c.impact, t)}`, auditCopy(c.id, t).title]);
+    for (const c of inSection.filter(c => c.status === "ATTENTION")) rows.push([`${auditImpact(c.impact, t)}`, auditCopy(c.id, t, c.value).title]);
   }
   return rows;
 }

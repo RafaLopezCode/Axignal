@@ -265,7 +265,7 @@ function discoveryInsight(d: Discovery, index: number, t: Translate, locale: str
       : d.kind === "SIGNIFICANT_UNKNOWN"
         ? [t("AXIGNAL lo declara abierto en lugar de suponerlo.", "AXIGNAL declares it open instead of assuming it.")]
         : [],
-    proposal: d.kind === "REPRESENTATION_GAP" && d.code.startsWith("AUDIT:") ? auditCopy(d.code.slice(6), t).action
+    proposal: d.kind === "REPRESENTATION_GAP" && d.code.startsWith("AUDIT:") ? auditCopy(d.code.slice(6), t, d.detail.value).action
       : d.kind === "REPRESENTATION_GAP" && d.code !== "HOMEPAGE_NOINDEX"
       ? t("Si quieres que las máquinas relacionen tu oferta, decláralo también en datos estructurados (schema.org). Vuelve a observar después para comprobarlo.",
         "If you want machines to connect your offer, also declare it as structured data (schema.org). Observe again afterwards to check.")

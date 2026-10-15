@@ -30,6 +30,8 @@ export function siteStructuredData(locale: Locale | null): Record<string, unknow
         url: absolutePublicUrl("/"),
         logo: absolutePublicUrl("/brand/apple-touch-icon.png"),
         description: HOME_METADATA.en.description,
+        // The official profiles the footer links, declared for machines too.
+        sameAs: ["https://www.linkedin.com/company/axignal/"],
         contactPoint: {
           "@type": "ContactPoint",
           contactType: "customer support",

@@ -28,6 +28,16 @@ AI_CRAWLERS = (
     "GPTBot", "OAI-SearchBot", "ChatGPT-User", "ClaudeBot", "Claude-SearchBot",
     "PerplexityBot", "Google-Extended", "Applebot-Extended", "CCBot",
 )  # fmt: skip
+#: Public profile and reference hosts an organization may link to identify itself.
+PROFILE_HOSTS = (
+    "linkedin.com", "wikipedia.org", "wikidata.org", "crunchbase.com", "x.com", "twitter.com",
+    "facebook.com", "instagram.com", "youtube.com", "github.com", "xing.com", "tiktok.com",
+)  # fmt: skip
+
+
+def _profile_host(host: str) -> str | None:
+    host = host.casefold().removeprefix("www.")
+    return next((p for p in PROFILE_HOSTS if host == p or host.endswith("." + p)), None)
 
 
 class Section(StrEnum):
@@ -239,8 +249,13 @@ def audit_representation(
             {"declared": entity_fields, "missing": missing})  # fmt: skip
     same_as = sorted({link for p in measured for link in _strings(p, "sameAs")})
     if measured:
+        # People may see profile links the site never declares to machines (sameAs): the
+        # check measures the declaration, and says which profiles are already linked.
+        visible = sorted({h for p in measured for raw in _strings(p, "externalLinkHosts")
+                          if (h := _profile_host(raw))})  # fmt: skip
         add("ENTITY_PROFILES_LINKED", Section.AI, len(same_as) >= 2, Impact.MEDIUM,
-            [urlsplit(link).hostname for link in same_as][:8])  # fmt: skip
+            {"declared": [urlsplit(link).hostname for link in same_as][:8],
+             "linkedOnPage": visible[:8]})  # fmt: skip
     offer = bool(types & {"Service", "Product", "Offer", "SoftwareApplication"}) or any(
         p.services for p in pages
     )
