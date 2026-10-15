@@ -1,11 +1,11 @@
 /* The Admin owns its outer shell; reuse the subscriber reading without a second navigation. */
 .obs-customer-zero { display: block; width: 100%; min-width: 0; }
-.obs-customer-zero.obs-embedded { display: block; min-height: 0; background: transparent; }
+.obs-customer-zero.obs-embedded { --obs-host-topbar: 64px; display: block; min-height: 0; background: transparent; }
 .obs-customer-zero .obs-main { min-width: 0; width: 100%; }
 .obs-customer-zero.obs-embedded .obs-main { margin: 0; }
 /* The embedded reading starts below Admin's top bar and its own heading. */
 @media (min-width: 881px) {
-  .obs-customer-zero.obs-embedded .obs-depth { max-block-size: calc(100dvh - 160px); }
+  .obs-customer-zero.obs-embedded .obs-depth:not(.obs-evidence-sheet) { max-block-size: calc(100dvh - 160px); }
 }
 .obs-customer-zero .obs-cz-staff { padding: 0; margin-block-end: 14px; }
 .obs-customer-zero .obs-cz-staff .staff-utility { padding: 10px 0; background: transparent; border-top: 0; border-bottom: 1px solid var(--obs-line, #e0e5ee); max-height: none; }

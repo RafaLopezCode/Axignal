@@ -284,7 +284,8 @@ export function SubscriberPortfolioExperience({ source = accountSource, notice, 
     const navigate = () => {
       const focus = new URL(window.location.href).searchParams.get("organization");
       const entry = portfolio.organizations.find(item => item.focusId === focus && readable(item) && !["REMOVED", "RESOLVED", "CANCELLED"].includes(item.state));
-      if (entry) void readOutput(entry.focusId, false);
+      // Evidence/view history within the same reading must not remount AXENT or discard its draft.
+      if (entry) { if (entry.focusId !== selected) void readOutput(entry.focusId, false); }
       else { outputRequest.current?.abort(); ++outputEpoch.current; setSelected(null); setProjection(null); setFirstObservation(null); setRevision(null); setReading(false); }
     };
     const focus = new URL(window.location.href).searchParams.get("organization");

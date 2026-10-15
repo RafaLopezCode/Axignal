@@ -182,6 +182,17 @@ test("the organization view leads with meaning, lanes, depth tabs and real actio
   assert.doesNotMatch(markup, /\b\d+(\.\d+)?\s*%|probability of truth|confidence/i);
 });
 
+test("AXENT already occupies one independent rail before a finding is opened", () => {
+  const output = subscriberOutputSchema.parse(fixture.outputs[fixture.focus]);
+  const markup = render(props({ selected: fixture.focus, projection: output.projection, firstObservation: output.firstObservation ?? null, revision: "a".repeat(64) }));
+  assert.equal((markup.match(/id="obs-axent-sidebar"/g) ?? []).length, 1);
+  assert.match(markup, /aria-controls="obs-axent-sidebar"/);
+  assert.match(markup, /class="obs-axent-note"[^>]*>Ask Axent/);
+  assert.doesNotMatch(markup, /class="obs-depth obs-evidence-sheet/);
+  assert.match(markup, /<label[^>]*for="[^"]+">Ask about this context<\/label>/);
+  assert.match(markup, /<textarea[^>]*id="[^"]+"/);
+});
+
 test("a pending organization still reads honestly while identity is unresolved", () => {
   const reading = pending(pendingSolar);
   const markup = render(props({ selected: pendingSolar, firstObservation: reading.firstObservation }));
