@@ -162,6 +162,8 @@ from tools.runtime.subscriber_portfolio import SubscriberPortfolioRuntime
 ENABLED_KEY = "AXIGNAL_FIRST_OBSERVATION_ENABLED"
 WORKER_KEY = "AXIGNAL_FIRST_OBSERVATION_WORKER"
 DAILY_JOBS_KEY = "AXIGNAL_FIRST_OBSERVATION_DAILY_JOBS"
+#: Spec 075 US2: verify lexicon activities with Jev. Off until measured (FR-008).
+ACTIVITY_VERIFICATION_KEY = "AXIGNAL_ACTIVITY_VERIFICATION_ENABLED"
 
 
 class EntitlementReader(Protocol):
@@ -188,6 +190,7 @@ class FirstObservationOverrides:
     source_ports: Mapping[str, SourceObservationPort] | None = None
     cascade_factory: Callable[[], SemanticCascade | None] | None = None
     public_understanding: bool | None = None
+    activity_verification: bool | None = None
     feeds: Mapping[str, SliceFeedPort] | None = None
     rights: ContentRightsPolicy | None = None
 
@@ -1724,7 +1727,12 @@ def build_first_observation(
             overrides.public_understanding
             if overrides.public_understanding is not None
             else values.get("AXIGNAL_PUBLIC_UNDERSTANDING_ENABLED", "false").lower() == "true"
-        )
+        ),
+        activity_verification=(
+            overrides.activity_verification
+            if overrides.activity_verification is not None
+            else values.get(ACTIVITY_VERIFICATION_KEY, "false").strip().lower() == "true"
+        ),
     )
     store = SqliteFirstObservationStore(root / "first-observation.sqlite3")
     fetcher = overrides.fetcher

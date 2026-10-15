@@ -25,9 +25,9 @@
   - web copy and contract.
 - [ ] T009 After deploy: the self-check measures the truth set with fit applied (FR-008), and the daily ledger reports spend (SC-005).
 
-## US2: activity verification (next PR)
+## US2: activity verification (this PR)
 
-- [ ] T010 CHOICE question `activity_offered` (OFFERED / MENTIONED / USED_INTERNALLY / UNCLEAR), with state from controlled vocabulary, page kind and anonymous page ids only.
-- [ ] T011 Only OFFERED (or no judgment) establishes a lexicon activity. MENTIONED and USED_INTERNALLY are kept as negative classifications.
-- [ ] T012 The rights test still proves that no site text leaves without rights (ADR-0090 amendment).
-- [ ] T013 Measure on the golden and truth sets before enabling it (FR-008).
+- [x] T010 CHOICE question `activity_offered` (OFFERED / MENTIONED / USED_INTERNALLY / UNCLEAR), with state from controlled vocabulary, page kind and anonymous page ids only.
+- [x] T011 Only OFFERED (or no judgment) establishes a lexicon activity. MENTIONED and USED_INTERNALLY are kept as negative classifications.
+- [x] T012 The rights test still proves that no site text leaves without rights (ADR-0090 amendment).
+- [ ] T013 After deploy: measure on the golden and truth sets with `AXIGNAL_ACTIVITY_VERIFICATION_ENABLED=true` before enabling it by default (FR-008). Off by default until then; off keeps the lexicon result, marked UNVERIFIED.

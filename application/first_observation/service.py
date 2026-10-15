@@ -30,6 +30,12 @@ from application.first_observation.activity import (
     plan_activity_batch,
     to_capabilities,
 )
+from application.first_observation.activity_verification import (
+    ACTIVITY_OFFERED,
+    compose,
+    interpret_verification,
+    plan_verification,
+)
 from application.first_observation.contracts import (
     AttentionTarget,
     CostBasis,
@@ -606,27 +612,82 @@ class FirstObservationService:
         now: datetime,
         ledger: RunLedger,
         provider_input: bool = False,
-    ) -> SemanticReading | None:
+    ) -> tuple[tuple[ActivityFinding, ...], SemanticReading | None]:
+        """Verify lexicon activities, then ask what is still unknown; one cascade, one budget.
+
+        Returns the deterministic findings as composed by Python after verification and
+        the semantic reading (None when no batch was worth asking or none could run).
+        """
+
+        cascade: SemanticCascade | None = None
+        unavailable: str | None = None
+
+        def open_cascade() -> SemanticCascade | None:
+            nonlocal cascade, unavailable
+            if cascade is not None or unavailable is not None:
+                return cascade
+            # ADR-0090 §5 as amended 2026-10-13: every batch here carries only AXIGNAL's
+            # own controlled vocabulary (``activity.minimize``, ``activity_verification
+            # .project``), page kinds and anonymous page ids, never page text, so it needs
+            # no per-site content rights. Page text and offer excerpts still do.
+            ledger.decide(
+                "SEMANTIC_INPUT:CONTROLLED_VOCABULARY"
+                + ("" if provider_input else ":NO_SITE_CONTENT_RIGHTS")
+            )
+            try:
+                cascade = self._cascade_factory()
+            except Exception as error:  # a missing provider never costs the deterministic proof
+                unavailable = f"FAILED:{type(error).__name__}"
+                ledger.decide(f"SKIPPED:SEMANTIC:{unavailable}")
+                return None
+            if cascade is None:
+                unavailable = "LAYER_DISABLED"
+                ledger.decide("SKIPPED:SEMANTIC:LAYER_DISABLED")
+            return cascade
+
+        ran: list[str] = []  # one ledger line per batch run: "RAN:SEMANTIC:<question ids>"
+        lexical = [f for f in deterministic if f.method is ActivityMethod.LEXICON]
+        if lexical and not self.policy.activity_verification:
+            ledger.decide("SKIPPED:ACTIVITY_VERIFICATION:DISABLED")
+        verify = self.policy.activity_verification
+        requests = plan_verification(origin, pages, deterministic) if verify else ()
+        if requests:
+            outcomes = None
+            judge = open_cascade()
+            if judge is not None:
+                try:
+                    outcomes = judge.run([r.batch for r in requests], now=now)
+                    ran.append(ACTIVITY_OFFERED.question_id)
+                except Exception as error:
+                    unavailable = f"FAILED:{type(error).__name__}"
+                    ledger.decide(f"SKIPPED:SEMANTIC:{unavailable}")
+            verifications = interpret_verification(
+                requests, outcomes, unavailable=unavailable or "NO_JUDGMENT"
+            )
+            for verification in verifications:
+                ledger.decide(verification.decision)
+                ledger.activity_verifications.append(verification.to_wire())
+            deterministic = compose(deterministic, verifications)
+        elif lexical:
+            deterministic = compose(deterministic, ())
+        reading = None
         plan = plan_activity_batch(origin, pages, known_scopes=scopes, deterministic=deterministic)
         if plan is None:
             ledger.decide("SKIPPED:SEMANTIC:DETERMINISTIC_SUFFICIENT")
-            return None
-        # ADR-0090 §5 as amended 2026-10-13: the activity batch carries only AXIGNAL's own
-        # controlled economic vocabulary (``activity.minimize``), never page text, so it
-        # needs no per-site content rights. Page text and offer excerpts still do.
-        ledger.decide(
-            "SEMANTIC_INPUT:CONTROLLED_VOCABULARY"
-            + ("" if provider_input else ":NO_SITE_CONTENT_RIGHTS")
-        )
-        try:
-            cascade = self._cascade_factory()
-            if cascade is None:
-                ledger.decide("SKIPPED:SEMANTIC:LAYER_DISABLED")
-                return None
-            outcome = cascade.run([plan.batch], now=now)[plan.batch.batch_id]
-        except Exception as error:  # a missing provider never costs the deterministic proof
-            ledger.decide(f"SKIPPED:SEMANTIC:FAILED:{type(error).__name__}")
-            return None
+        elif (judge := open_cascade()) is not None:
+            try:
+                outcome = judge.run([plan.batch], now=now)[plan.batch.batch_id]
+            except Exception as error:
+                ledger.decide(f"SKIPPED:SEMANTIC:FAILED:{type(error).__name__}")
+            else:
+                ran.append(",".join(q.question_id for q in plan.batch.questions))
+                reading = interpret_activity(plan, outcome, pages, model=judge.judge.model)
+        if cascade is not None and ran:
+            self._account(cascade, ledger, ran)
+        return tuple(deterministic), reading
+
+    @staticmethod
+    def _account(cascade: SemanticCascade, ledger: RunLedger, ran: Sequence[str]) -> None:
         wire = cascade.ledger.to_wire()
         lines = wire["lines"]
         assert isinstance(lines, list)
@@ -644,8 +705,8 @@ class FirstObservationService:
         ledger.jev_tokens_basis = CostBasis.ESTIMATED if unknown_tokens else CostBasis.MEASURED
         ledger.jev_usd = usd
         ledger.jev_usd_basis = CostBasis.VENDOR_PUBLISHED if usd is not None else CostBasis.UNKNOWN
-        ledger.decide("RAN:SEMANTIC:" + ",".join(q.question_id for q in plan.batch.questions))
-        return interpret_activity(plan, outcome, pages, model=cascade.judge.model)
+        for questions in ran:
+            ledger.decide(f"RAN:SEMANTIC:{questions}")
 
     # ---- the whole First Observation ---------------------------------------------------
     def observe(self, target: AttentionTarget, *, force_refresh: bool = False) -> FirstProof:
@@ -713,7 +774,7 @@ class FirstObservationService:
             for area in page.areas_served
             if (code := area_jurisdiction(area.name, area.nuts)) is not None
         ]
-        semantic = self._semantic(
+        deterministic, semantic = self._semantic(
             reading.origin, pages, [*premises, *(c for _p, _a, c in areas)], deterministic,
             now, ledger, rights.provider_input,
         )  # fmt: skip
@@ -1216,6 +1277,7 @@ class FirstObservationService:
                 "method": finding.method.value,
                 "confidence": finding.confidence,
                 "model": finding.model,
+                **({} if finding.verification is None else {"verification": finding.verification}),
                 "routingCodes": [f"{c.scheme}:{c.code}" for c in finding.demand_codes],
             },
         )

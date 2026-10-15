@@ -190,6 +190,10 @@ class RunLedger:
     source_paid_basis: CostBasis = CostBasis.VENDOR_PUBLISHED
     elapsed_ms: int = 0
     decisions: list[str] = field(default_factory=list)
+    #: Typed, non-authoritative activity verifications (spec 075 US2), rejected ones
+    #: included: negative classifications stay inspectable (MASTER §56.13). Never
+    #: training or calibration data for any evaluator (ADR-0090).
+    activity_verifications: list[dict[str, object]] = field(default_factory=list)
 
     def decide(self, reason: str) -> None:
         if len(self.decisions) < 64:
@@ -218,6 +222,7 @@ class RunLedger:
             },
             "elapsedMs": {"value": self.elapsed_ms, "basis": "MEASURED"},
             "decisions": list(self.decisions),
+            "activityVerifications": [dict(v) for v in self.activity_verifications],
             "policyVersion": POLICY_VERSION,
         }
 
