@@ -354,7 +354,9 @@ export function discoveryCopy(d: Discovery, t: Translate, locale = "en"): { find
     const facts = [deadline ? t("Plazo {date}", "Deadline {date}").replace("{date}", deadline) : null, buyer].filter(Boolean).join(" · ");
     // The buyer classified the call mainly as something else: the activity is only one of its additional codes.
     const additional = d.detail.classifiedAs === "ADDITIONAL";
-    return { finding: `${d.detail.isNew === true ? `${t("Nueva", "New")} · ` : ""}${additional ? `${t("Parte secundaria", "Secondary part")} · ` : ""}${t("Demanda pública potencial", "Potential public demand")}: ${title}`,
+    // An evaluator's judgment of how closely the work is the activity's (spec 075); never shown as a fact.
+    const fit = d.detail.fit === "PARTIAL" ? t("Encaje parcial", "Partial fit") : d.detail.fit === "ADJACENT" ? t("Afín, otro trabajo principal", "Adjacent, other main work") : null;
+    return { finding: `${d.detail.isNew === true ? `${t("Nueva", "New")} · ` : ""}${fit ? `${fit} · ` : ""}${additional ? `${t("Parte secundaria", "Secondary part")} · ` : ""}${t("Demanda pública potencial", "Potential public demand")}: ${title}`,
       why: `${facts ? `${facts}. ` : ""}${additional
         ? t("Su actividad figura solo como código adicional: el objeto principal de esta licitación es otro. No es un cliente, una invitación ni una relación.", "Its activity appears only as an additional code: the main object of this call is something else. It is not a customer, an invitation or a relationship.")
         : t("Coincide por clasificación y lugar. No es un cliente, una invitación ni una relación.", "It matches by classification and place. It is not a customer, an invitation or a relationship.")}` };

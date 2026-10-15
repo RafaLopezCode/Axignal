@@ -242,6 +242,11 @@ function discoveryInsight(d: Discovery, index: number, t: Translate, locale: str
     value: detail.classifiedAs === "MAIN"
       ? t("Objeto principal de la licitación", "Main object of the call")
       : t("Código adicional; el objeto principal es otro", "Additional code; the main object is something else") });
+  const fitBy = detail.fitBy && typeof detail.fitBy === "object" ? detail.fitBy as Record<string, unknown> : null;
+  if (fitBy && typeof detail.fit === "string") proof.push({ label: t("Encaje con su actividad", "Fit with its activity"),
+    value: `${detail.fit === "CORE" ? t("Es el trabajo principal de su actividad", "It is its activity's main work")
+      : detail.fit === "PARTIAL" ? t("Parte del trabajo es su actividad", "Part of the work is its activity")
+      : t("Mismo sector, otro trabajo principal", "Same sector, other main work")} · ${fill(t("juicio no autoritativo de {model}", "non-authoritative judgment by {model}"), { model: String(fitBy.model ?? fitBy.evaluator ?? "") })}` });
   if (typeof detail.instrument === "string") proof.push({ label: t("Instrumento y versión", "Instrument and version"), value: String(detail.instrument) });
   if (typeof detail.conditions === "string") proof.push({ label: t("Condiciones de observación", "Observation conditions"), value: String(detail.conditions) });
   if (typeof detail.sample === "string") proof.push({ label: t("Muestra", "Sample"), value: String(detail.sample) });
@@ -539,6 +544,7 @@ export function briefing(reading: Reading, name: string, insights: Insight[], t:
   const demand = reading.firstObservation?.demand;
   const tally = [
     demand?.live && demand.total ? count(demand.total, t("{n} licitación abierta que encaja", "{n} open tender that fits"), t("{n} licitaciones abiertas que encajan", "{n} open tenders that fit")) : null,
+    demand?.live && demand.setAsideByFit ? count(demand.setAsideByFit, t("{n} apartada porque no encaja (juicio de evaluador)", "{n} set aside as unrelated (evaluator judgment)"), t("{n} apartadas porque no encajan (juicio de evaluador)", "{n} set aside as unrelated (evaluator judgment)")) : null,
     demand?.live && demand.new ? count(demand.new, t("{n} nueva esta semana", "{n} new tender this week"), t("{n} nuevas esta semana", "{n} new tenders this week")) : null,
     potential && !(demand?.live && demand.total) ? count(potential, t("{n} oportunidad potencial", "{n} potential opportunity"), t("{n} oportunidades potenciales", "{n} potential opportunities")) : null,
     buyers.length ? count(buyers.length, t("{n} posible comprador", "{n} potential buyer"), t("{n} posibles compradores", "{n} potential buyers"))

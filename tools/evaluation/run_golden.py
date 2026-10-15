@@ -83,6 +83,16 @@ def main() -> int:
         _log("judgment round", round_, ran)
         if not ran and round_ > 2:
             break
+    # Spec 075: judge the fit of the open demand the observed activities match (bounded,
+    # in this isolated copy), so the views below read it as subscribers do.
+    from tools.runtime.demand_fit import run_demand_fit
+
+    activities = sorted({
+        str(d.get("code")) for ref in refs for d in (observing.study_result(ref)[0] or {}).get("discoveries") or []
+        if isinstance(d, dict) and d.get("kind") == "ACTIVITY"
+    })  # fmt: skip
+    if activities:
+        _log("demand fit", run_demand_fit(WORK, capabilities=activities))
     # Potential buyers (ADR-0099): reading a view requests its customers' lookups, and a
     # resolved customer then requests organizations like it: two rounds, read inline here.
     for _ in range(2):

@@ -30,6 +30,9 @@ from application.semantic_layer.ledger import (
 )
 
 MAX_SEMANTIC_RUN_TOKENS = 50_000  # 50k input tokens: $0.0021 at the published JEV-1.13 price.
+#: Off-read-path fit judgments of open demand (spec 075), per daily run: default and hard cap.
+DEFAULT_FIT_RUN_TOKENS = 500_000  # $0.021 at the published JEV-1.13 price
+MAX_FIT_RUN_TOKENS = 2_000_000  # $0.084
 
 
 def _readable(filename: str) -> Path | None:
@@ -173,6 +176,43 @@ def semantic_cascade_factory_from_env(
         return None
     budget = SemanticBudget(
         max_system_one_input_tokens=min(token_budget, composed.tokens), max_reasoning_calls=0
+    )
+
+    def cascade() -> SemanticCascade:
+        return SemanticCascade(
+            judge=composed.judge,
+            ledger=CostLedger(prices=composed.prices),
+            budget=budget,
+            policy=CascadePolicy(),
+            memory=composed.memory,
+            escalation=None,
+        )
+
+    return cascade
+
+
+def fit_cascade_factory_from_env(
+    values: Mapping[str, str] | None = None,
+    *,
+    data_dir: Path | None = None,
+    transport: Any | None = None,
+) -> Callable[[], SemanticCascade] | None:
+    """System One for the daily fit judgments of open demand (spec 075).
+
+    Same judge, judgment memory and prices as every other consumer, with its own budget:
+    ``AXIGNAL_SEMANTIC_FIT_TOKEN_BUDGET`` (default 500k, capped at 2M input tokens per run).
+    A judgment over the same public notice and capability is paid once for every subscriber.
+    """
+    settings = os.environ if values is None else values
+    composed = _compose(settings, data_dir, transport)
+    if composed is None:
+        return None
+    raw = settings.get("AXIGNAL_SEMANTIC_FIT_TOKEN_BUDGET", "").strip()
+    tokens = DEFAULT_FIT_RUN_TOKENS if not raw else _positive_int(raw, 0)
+    if not tokens:
+        return None
+    budget = SemanticBudget(
+        max_system_one_input_tokens=min(tokens, MAX_FIT_RUN_TOKENS), max_reasoning_calls=0
     )
 
     def cascade() -> SemanticCascade:

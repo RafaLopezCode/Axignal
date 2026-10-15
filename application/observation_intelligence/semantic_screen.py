@@ -16,17 +16,29 @@ creates a candidate, widens reach or turns POTENTIAL into anything stronger.
 from __future__ import annotations
 
 from collections.abc import Callable, Mapping, Sequence
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import datetime
 from typing import Protocol
 
 from application.economic_discovery.brain_contracts import SemanticPrimitive
 from application.economic_reach.model import DeliveryMode
 from application.observation_intelligence.catalog import CAPABILITY_LEXICON
+from application.observation_intelligence.findings import ProcurementRecord
 from application.observation_intelligence.loop import OpportunityCandidate
-from application.semantic_layer.cascade import CascadeOutcome, Resolution, ResolvedJudgment
-from application.semantic_layer.contracts import SemanticBatch, SemanticQuestion, fingerprint
+from application.semantic_layer.cascade import (
+    CascadeOutcome,
+    CascadePolicy,
+    Resolution,
+    ResolvedJudgment,
+)
+from application.semantic_layer.contracts import (
+    JudgmentSource,
+    SemanticBatch,
+    SemanticQuestion,
+    fingerprint,
+)
 from application.semantic_layer.ledger import CostLedger
+from application.semantic_layer.memory import JudgmentMemoryPort, memory_key
 
 SCREEN_VERSION = "demand-screen:1"
 
@@ -69,11 +81,17 @@ _FIT_ORDER = {"CORE": 0, "PARTIAL": 1, "ADJACENT": 2}
 
 
 def screen_batch(candidate: OpportunityCandidate, capability_id: str) -> SemanticBatch | None:
-    """World-level state only: the public notice and the capability class, nothing private."""
+    return record_batch(candidate.record, capability_id)
+
+
+def record_batch(record: ProcurementRecord, capability_id: str) -> SemanticBatch | None:
+    """World-level state only: the public notice and the capability class, nothing private.
+
+    The same notice and capability give the same state for every Focus and subscriber, so
+    one judgment serves all of them (judgment memory)."""
     entry = _LEXICON.get(capability_id)
     if entry is None:
         return None
-    record = candidate.record
     state: dict[str, object] = {
         "tender": {
             "title": record.title,
@@ -193,6 +211,46 @@ class SemanticDemandScreen:
         return ScreenRun(screens, cascade.ledger.to_wire())
 
 
+FIT_LABELS = frozenset({*_FIT_ORDER, "UNRELATED"})
+
+
+@dataclass(frozen=True, slots=True)
+class FitRecall:
+    """Remembered fit judgments only, never a provider call (spec 075: the read path).
+
+    Returns the judged fit of a notice for a capability with who judged it, or None when
+    there is no judgment for this exact state, question version and model, or when the
+    judgment is uncertain under the cascade policy: unknown, never UNRELATED."""
+
+    memory: JudgmentMemoryPort
+    #: (evaluator, model) whose judgments are accepted, the System One judge first.
+    evaluators: tuple[tuple[str, str], ...]
+    policy: CascadePolicy = field(default_factory=CascadePolicy)
+
+    def __call__(self, record: ProcurementRecord, capability_id: str) -> dict[str, str] | None:
+        batch = record_batch(record, capability_id)
+        if batch is None:
+            return None
+        question = batch.question(FIT.question_id)
+        for evaluator, model in self.evaluators:
+            answer = self.memory.get(
+                memory_key(batch.state_fingerprint, question, evaluator, model)
+            )
+            if answer is None:
+                continue
+            if answer.source is not JudgmentSource.REASONING and self.policy.uncertain(answer):
+                return None
+            if answer.top not in FIT_LABELS:
+                return None
+            return {
+                "fit": answer.top,
+                "evaluator": answer.evaluator,
+                "model": answer.model,
+                "question": f"{FIT.question_id}:{FIT.version}",
+            }
+        return None
+
+
 def screen_summary(screens: Mapping[str, DemandScreen]) -> dict[str, int]:
     """How many judgments were usable, uncertain or unavailable (for the trace)."""
     summary: dict[str, int] = {}
@@ -206,12 +264,15 @@ def screen_summary(screens: Mapping[str, DemandScreen]) -> dict[str, int]:
 __all__ = [
     "DELIVERY",
     "FIT",
+    "FIT_LABELS",
     "SCREEN_VERSION",
     "DemandScreen",
     "DemandScreenPort",
+    "FitRecall",
     "Resolution",
     "ScreenRun",
     "SemanticDemandScreen",
+    "record_batch",
     "screen_batch",
     "screen_summary",
 ]

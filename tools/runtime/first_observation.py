@@ -79,6 +79,7 @@ from application.observation_intelligence import (
 from application.observation_intelligence.contracts import TaxonomyCode
 from application.observation_intelligence.findings import ADDITIONAL
 from application.observation_intelligence.loop import OpportunityCandidate, run_observation_loop
+from application.observation_intelligence.semantic_screen import FitRecall
 from application.observation_runtime.replay import FindingsLedger
 from application.organization_admission.locator import LocatorError, parse_locator, public_domain
 from application.organization_group import group_discoveries
@@ -1680,6 +1681,14 @@ def _geocoder(root: Path, overrides: FirstObservationOverrides) -> NominatimReve
     return NominatimReverseGeocoder(root / "geo-reverse.sqlite3")
 
 
+def _fit_recall(factory: Callable[[], SemanticCascade | None] | None) -> FitRecall | None:
+    """Remembered fit judgments for live demand (spec 075): the judge's memory, no calls."""
+    cascade = None if factory is None else factory()
+    if cascade is None or cascade.memory is None:
+        return None
+    return FitRecall(memory=cascade.memory, evaluators=((cascade.judge.name, cascade.judge.model),))
+
+
 def build_first_observation(
     values: Mapping[str, str],
     root: Path,
@@ -1815,7 +1824,9 @@ def build_first_observation(
         worker=overrides.worker or values.get(WORKER_KEY, "thread").strip() or "thread",
         daily_jobs=max(0, daily_jobs),
         ingestor=ingestor,
-        live_demand=LiveDemandReader(index, sources=tuple(ports), clock=clock.now),
+        live_demand=LiveDemandReader(
+            index, sources=tuple(ports), clock=clock.now, fit=_fit_recall(factory)
+        ),
         press=_press(root, clock, overrides),
         notoriety=None
         if overrides.source_ports is not None or overrides.feeds is not None

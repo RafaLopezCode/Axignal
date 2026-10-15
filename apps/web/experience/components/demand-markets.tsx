@@ -42,6 +42,16 @@ export function DemandMarkets({ focusId, observation, canAct, onSaved }: {
       {observation.demand?.preparing && <> {t("Preparando las licitaciones de los países elegidos; aparecerán en la próxima lectura.", "Preparing tenders for the chosen countries; they will appear in the next reading.")}</>}
       {" "}<button className="obs-link" disabled={!canAct} aria-expanded={open} onClick={() => { setChosen(directed); setOpen(v => !v); }}>{open ? t("Cerrar", "Close") : t("Elegir países", "Choose countries")}</button>
     </p>
+    {(observation.demand?.setAsideByFit ?? 0) > 0 && <details className="obs-demand-set-aside">
+      <summary>{(observation.demand?.setAsideByFit === 1
+        ? t("{n} licitación apartada: un evaluador juzgó que su trabajo no es el de esta organización", "{n} tender set aside: an evaluator judged its work is not this organization's")
+        : t("{n} licitaciones apartadas: un evaluador juzgó que su trabajo no es el de esta organización", "{n} tenders set aside: an evaluator judged their work is not this organization's")).replace("{n}", String(observation.demand?.setAsideByFit))}</summary>
+      <p>{t("Coincidían por código. Es un juicio de un modelo, no un hecho: revísalas si alguna sí te interesa.", "They matched by code. It is a model's judgment, not a fact: review them if any does interest you.")}</p>
+      <ul>{(observation.demand?.setAside ?? []).map((item, index) => <li key={index}>
+        {item.url ? <a href={item.url} target="_blank" rel="noopener noreferrer">{item.title ?? item.url}</a> : item.title}
+        {item.buyer ? ` · ${item.buyer}` : ""}{item.deadline ? ` · ${t("Plazo {date}", "Deadline {date}").replace("{date}", String(item.deadline).slice(0, 10))}` : ""}
+      </li>)}</ul>
+    </details>}
     {open && <div className="obs-demand-markets-form">
       <p>{t("Hasta {max} países. Solo orienta dónde buscar: no cambia lo que AXIGNAL sabe de la organización.", "Up to {max} countries. It only directs where to look: it does not change what AXIGNAL knows about the organization.").replace("{max}", String(MAX))}</p>
       <fieldset><legend className="sr-only">{t("Países donde buscar licitaciones", "Countries to look for tenders in")}</legend>
