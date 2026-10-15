@@ -1,0 +1,146 @@
+[
+  {
+    "path": "/api/admin/projections/command",
+    "18182": {
+      "status": 401,
+      "reason": "ADMIN_SESSION_REQUIRED"
+    },
+    "3835": {
+      "status": 401,
+      "reason": "ADMIN_SESSION_REQUIRED"
+    },
+    "same": true
+  },
+  {
+    "path": "/api/admin/projections/focus",
+    "18182": {
+      "status": 401,
+      "reason": "ADMIN_SESSION_REQUIRED"
+    },
+    "3835": {
+      "status": 401,
+      "reason": "ADMIN_SESSION_REQUIRED"
+    },
+    "same": true
+  },
+  {
+    "path": "/api/admin/projections/quality",
+    "18182": {
+      "status": 401,
+      "reason": "ADMIN_SESSION_REQUIRED"
+    },
+    "3835": {
+      "status": 401,
+      "reason": "ADMIN_SESSION_REQUIRED"
+    },
+    "same": true
+  },
+  {
+    "path": "/api/admin/projections/brain",
+    "18182": {
+      "status": 401,
+      "reason": "ADMIN_SESSION_REQUIRED"
+    },
+    "3835": {
+      "status": 401,
+      "reason": "ADMIN_SESSION_REQUIRED"
+    },
+    "same": true
+  },
+  {
+    "path": "/api/admin/projections/acquisition",
+    "18182": {
+      "status": 401,
+      "reason": "ADMIN_SESSION_REQUIRED"
+    },
+    "3835": {
+      "status": 401,
+      "reason": "ADMIN_SESSION_REQUIRED"
+    },
+    "same": true
+  },
+  {
+    "path": "/api/admin/projections/revenue",
+    "18182": {
+      "status": 401,
+      "reason": "ADMIN_SESSION_REQUIRED"
+    },
+    "3835": {
+      "status": 401,
+      "reason": "ADMIN_SESSION_REQUIRED"
+    },
+    "same": true
+  },
+  {
+    "path": "/api/admin/projections/finance",
+    "18182": {
+      "status": 401,
+      "reason": "ADMIN_SESSION_REQUIRED"
+    },
+    "3835": {
+      "status": 401,
+      "reason": "ADMIN_SESSION_REQUIRED"
+    },
+    "same": true
+  },
+  {
+    "path": "/api/admin/projections/governance",
+    "18182": {
+      "status": 401,
+      "reason": "ADMIN_SESSION_REQUIRED"
+    },
+    "3835": {
+      "status": 401,
+      "reason": "ADMIN_SESSION_REQUIRED"
+    },
+    "same": true
+  },
+  {
+    "path": "/api/admin/projections/integrations",
+    "18182": {
+      "status": 401,
+      "reason": "ADMIN_SESSION_REQUIRED"
+    },
+    "3835": {
+      "status": 401,
+      "reason": "ADMIN_SESSION_REQUIRED"
+    },
+    "same": true
+  },
+  {
+    "path": "/api/admin/projections/advisor",
+    "18182": {
+      "status": 401,
+      "reason": "ADMIN_SESSION_REQUIRED"
+    },
+    "3835": {
+      "status": 401,
+      "reason": "ADMIN_SESSION_REQUIRED"
+    },
+    "same": true
+  },
+  {
+    "path": "/api/admin/projections/system",
+    "18182": {
+      "status": 401,
+      "reason": "ADMIN_SESSION_REQUIRED"
+    },
+    "3835": {
+      "status": 401,
+      "reason": "ADMIN_SESSION_REQUIRED"
+    },
+    "same": true
+  },
+  {
+    "path": "/api/admin/customer-access",
+    "18182": {
+      "status": 401,
+      "reason": "ADMIN_SESSION_REQUIRED"
+    },
+    "3835": {
+      "status": 401,
+      "reason": "ADMIN_SESSION_REQUIRED"
+    },
+    "same": true
+  }
+]

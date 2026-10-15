@@ -1,0 +1,127 @@
+[
+  {
+    "section": "Centro de atención",
+    "sections": 1,
+    "errors": 0,
+    "layout": {
+      "focus": false,
+      "overflow": false,
+      "scroll": 0,
+      "width": 899
+    }
+  },
+  {
+    "section": "Focos de observación",
+    "sections": 1,
+    "errors": 0,
+    "layout": {
+      "focus": true,
+      "overflow": false,
+      "scroll": 0,
+      "width": 899
+    }
+  },
+  {
+    "section": "Calidad de AXIGLAND",
+    "sections": 1,
+    "errors": 0,
+    "layout": {
+      "focus": true,
+      "overflow": false,
+      "scroll": 0,
+      "width": 899
+    }
+  },
+  {
+    "section": "Axent y Brain",
+    "sections": 1,
+    "errors": 0,
+    "layout": {
+      "focus": true,
+      "overflow": false,
+      "scroll": 0,
+      "width": 899
+    }
+  },
+  {
+    "section": "Adquisición",
+    "sections": 2,
+    "errors": 0,
+    "layout": {
+      "focus": true,
+      "overflow": false,
+      "scroll": 0,
+      "width": 899
+    }
+  },
+  {
+    "section": "Ingresos",
+    "sections": 1,
+    "errors": 0,
+    "layout": {
+      "focus": true,
+      "overflow": false,
+      "scroll": 0,
+      "width": 899
+    }
+  },
+  {
+    "section": "Finanzas y fiscalidad",
+    "sections": 4,
+    "errors": 0,
+    "layout": {
+      "focus": true,
+      "overflow": false,
+      "scroll": 0,
+      "width": 899
+    }
+  },
+  {
+    "section": "Gobernanza",
+    "sections": 1,
+    "errors": 0,
+    "layout": {
+      "focus": true,
+      "overflow": false,
+      "scroll": 0,
+      "width": 899
+    }
+  },
+  {
+    "section": "Integraciones",
+    "sections": 2,
+    "errors": 0,
+    "layout": {
+      "focus": true,
+      "overflow": false,
+      "scroll": 0,
+      "width": 899
+    }
+  },
+  {
+    "section": "Frontier Advisor",
+    "sections": 1,
+    "errors": 0,
+    "layout": {
+      "focus": true,
+      "overflow": false,
+      "scroll": 0,
+      "width": 899
+    }
+  },
+  {
+    "section": "Sistema",
+    "sections": 1,
+    "errors": 0,
+    "layout": {
+      "focus": true,
+      "overflow": false,
+      "scroll": 0,
+      "width": 899
+    }
+  },
+  {
+    "section": "Clientes y accesos",
+    "errors": 0
+  }
+]

@@ -1,0 +1,149 @@
+[
+  {
+    "id": "command",
+    "alerts": [],
+    "metrics": 16,
+    "overflow": false,
+    "records": 0,
+    "sections": [
+      "Lectura operativa"
+    ],
+    "title": "Centro de atención",
+    "unknownMetrics": 16
+  },
+  {
+    "id": "focus",
+    "alerts": [],
+    "metrics": 0,
+    "overflow": false,
+    "records": 8,
+    "sections": [
+      "Observación y memoria"
+    ],
+    "title": "Focos de observación",
+    "unknownMetrics": 0
+  },
+  {
+    "id": "quality",
+    "alerts": [],
+    "metrics": 0,
+    "overflow": false,
+    "records": 0,
+    "sections": [
+      "Observación y memoria"
+    ],
+    "title": "Calidad de AXIGLAND",
+    "unknownMetrics": 0
+  },
+  {
+    "id": "brain",
+    "alerts": [],
+    "metrics": 0,
+    "overflow": false,
+    "records": 0,
+    "sections": [
+      "Investigación y proveedores"
+    ],
+    "title": "Axent y Brain",
+    "unknownMetrics": 0
+  },
+  {
+    "id": "customers",
+    "alerts": [],
+    "metrics": 0,
+    "overflow": false,
+    "records": 0,
+    "sections": [],
+    "title": "Clientes y accesos",
+    "unknownMetrics": 0
+  },
+  {
+    "id": "acquisition",
+    "alerts": [],
+    "metrics": 0,
+    "overflow": false,
+    "records": 0,
+    "sections": [
+      "Solicitudes y atribución",
+      "Analítica privada"
+    ],
+    "title": "Adquisición",
+    "unknownMetrics": 0
+  },
+  {
+    "id": "revenue",
+    "alerts": [],
+    "metrics": 3,
+    "overflow": false,
+    "records": 0,
+    "sections": [
+      "Lectura operativa"
+    ],
+    "title": "Ingresos",
+    "unknownMetrics": 3
+  },
+  {
+    "id": "finance",
+    "alerts": [],
+    "metrics": 0,
+    "overflow": false,
+    "records": 0,
+    "sections": [
+      "Documentos financieros",
+      "Conciliación",
+      "Verificación fiscal",
+      "Obligaciones fiscales"
+    ],
+    "title": "Finanzas y fiscalidad",
+    "unknownMetrics": 0
+  },
+  {
+    "id": "governance",
+    "alerts": [],
+    "metrics": 8,
+    "overflow": false,
+    "records": 15,
+    "sections": [
+      "Políticas y auditoría"
+    ],
+    "title": "Gobernanza",
+    "unknownMetrics": 2
+  },
+  {
+    "id": "integrations",
+    "alerts": [],
+    "metrics": 0,
+    "overflow": false,
+    "records": 6,
+    "sections": [
+      "Conexiones autorizadas",
+      "Servicios y uso"
+    ],
+    "title": "Integraciones",
+    "unknownMetrics": 0
+  },
+  {
+    "id": "advisor",
+    "alerts": [],
+    "metrics": 0,
+    "overflow": false,
+    "records": 12,
+    "sections": [
+      "Definiciones y mediciones"
+    ],
+    "title": "Frontier Advisor",
+    "unknownMetrics": 0
+  },
+  {
+    "id": "system",
+    "alerts": [],
+    "metrics": 3,
+    "overflow": false,
+    "records": 0,
+    "sections": [
+      "Lectura operativa"
+    ],
+    "title": "Sistema",
+    "unknownMetrics": 3
+  }
+]

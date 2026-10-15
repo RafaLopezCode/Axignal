@@ -1,0 +1,39 @@
+[
+  {
+    "alerts": [],
+    "headings": [
+      "Crear invitación",
+      "Invitaciones",
+      "Concesiones piloto"
+    ],
+    "loading": false,
+    "tab": "Invitaciones y pilotos"
+  },
+  {
+    "alerts": [],
+    "headings": [
+      "Cuentas y suscripciones"
+    ],
+    "loading": false,
+    "tab": "Cuentas y suscripciones"
+  },
+  {
+    "tab": "Operaciones",
+    "headings": [
+      "Añadir organizaciones sin checkout",
+      "Cuentas para la prueba del piloto"
+    ],
+    "alerts": [],
+    "loading": false,
+    "persistedConfiguration": true
+  },
+  {
+    "tab": "Pool de marketing",
+    "headings": [
+      "Pool de marketing"
+    ],
+    "alerts": [],
+    "loading": false,
+    "disabled": true
+  }
+]
