@@ -179,6 +179,44 @@ def test_a_records_refresh_rereads_the_window_and_never_touches_the_slice_state(
     assert feed.pages == 2 and not report.complete and store.marked == {}
 
 
+class _SlowDown(_Feed):
+    """Asks to slow down twice at page 2, then answers; records which pages were read."""
+
+    def __init__(self, refusals: int) -> None:
+        super().__init__()
+        self.refusals = refusals
+        self.read: list[int] = []
+
+    def search(self, query: QuerySpec, *, page: int, limit: int | None = None) -> SourceFindings:
+        self.read.append(page)
+        if page == 2 and self.refusals:
+            self.refusals -= 1
+            return SourceFindings(
+                source_id=PLACSP_SOURCE_ID, retrieved_at=NOW, requests=1, amount_microunits=0,
+                latency_ms=0, failure="HTTP_429",
+            )  # fmt: skip
+        return super().search(query, page=page, limit=limit)
+
+
+def test_a_refresh_waits_when_asked_to_slow_down_and_can_resume_where_it_stopped() -> None:
+    waited: list[float] = []
+    feed, slice_ = _SlowDown(refusals=2), DemandSlice(PLACSP_SOURCE_ID, "EU/ES", OPEN)
+    ingestor = WorldDemandIngestor(
+        feeds={PLACSP_SOURCE_ID: feed}, store=_Store(), clock=lambda: NOW
+    )  # type: ignore[arg-type]
+    report = ingestor.refresh_records(slice_, max_pages=5, pause=waited.append, backoff=(1, 2, 3))
+    assert waited == [1, 2] and feed.read == [1, 2, 2, 2, 3] and report.complete
+    # Still refused after every wait: it stops at that page, and a later run starts there.
+    stubborn = _SlowDown(refusals=9)
+    ingestor = WorldDemandIngestor(
+        feeds={PLACSP_SOURCE_ID: stubborn}, store=_Store(), clock=lambda: NOW
+    )  # type: ignore[arg-type]
+    stopped = ingestor.refresh_records(slice_, max_pages=5, pause=waited.append, backoff=(1,))
+    assert stopped.failure == "HTTP_429" and stopped.pages == 2
+    resumed = ingestor.refresh_records(slice_, max_pages=5, start_page=3)
+    assert stubborn.read[-1] == 3 and resumed.complete
+
+
 def test_placsp_is_adopted_for_spanish_open_tenders_only() -> None:
     (source,) = [s for s in SOURCES if s.source_id == PLACSP_SOURCE_ID]
     assert source.adoption is AdoptionStatus.ADOPTED and not source.adoption_blockers
