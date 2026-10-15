@@ -61,6 +61,9 @@ class ActivityFinding:
     demand_codes: tuple[TaxonomyCode, ...]
     confidence: float | None = None
     model: str | None = None
+    #: Lexicon activities only (spec 075 US2): OFFERED when a judgment verified that the
+    #: site offers it, UNVERIFIED when no usable judgment exists; None for other methods.
+    verification: str | None = None
 
     def to_wire(self) -> dict[str, object]:
         return {
@@ -73,6 +76,7 @@ class ActivityFinding:
             "demandCodes": [[c.scheme, c.code] for c in self.demand_codes],
             "confidence": self.confidence,
             "model": self.model,
+            "verification": self.verification,
             "state": XignalEpistemicState.POTENTIAL.value,
         }
 
@@ -91,6 +95,9 @@ class ActivityFinding:
             demand_codes=tuple(TaxonomyCode(str(s), str(c)) for s, c in codes),
             confidence=float(confidence) if isinstance(confidence, int | float) else None,
             model=None if raw.get("model") is None else str(raw.get("model")),
+            verification=(
+                None if raw.get("verification") is None else str(raw.get("verification"))
+            ),
         )
 
 

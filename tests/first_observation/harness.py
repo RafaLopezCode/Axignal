@@ -270,6 +270,7 @@ def build(
     identity_source: Any = None,
     rights: Any = "registered",
     public_understanding: bool = False,
+    activity_verification: bool = False,
 ) -> Any:
     facade = build_subscriber_facade(
         _settings(tmp_path, pilot=True),
@@ -285,6 +286,7 @@ def build(
         first_observation_overrides=FirstObservationOverrides(
             enabled=enabled,
             public_understanding=public_understanding,
+            activity_verification=activity_verification,
             worker="manual",
             fetcher=world.sites,
             source_ports={"ted-search-v3": world.ted},

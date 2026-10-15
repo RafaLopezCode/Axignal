@@ -94,6 +94,51 @@ def test_without_input_rights_only_controlled_vocabulary_reaches_the_semantic_pr
         assert all(str(page["url"]).startswith("[page-") for page in batch.state["pages"])
 
 
+def test_without_input_rights_activity_verification_sends_only_vocabulary_and_page_kinds(
+    tmp_path: Path,
+) -> None:
+    """Spec 075 US2 under ADR-0090 as amended: the activity_offered state is AXIGNAL's
+    controlled vocabulary, the catalog label and terms, page kinds and [page-N] only."""
+    import re as _re
+
+    from application.first_observation.activity_verification import (
+        ACTIVITY_OFFERED,
+        VERIFICATION_TERMS,
+        PageKind,
+    )
+    from application.observation_intelligence.catalog import CAPABILITY_LEXICON
+
+    world = World()
+    facade = build(
+        tmp_path, world, rights=registered_rights(provider_input=False), activity_verification=True
+    )
+    token, _ = _attend(facade, tmp_path, "subject:no-input-verify", SOLAR_ES)
+    runtime(facade).drain()
+    view = _view(facade, token, _pending_id(facade, token))
+    decisions = view["_ledger"]["decisions"]
+    assert "SEMANTIC_INPUT:CONTROLLED_VOCABULARY:NO_SITE_CONTENT_RIGHTS" in decisions
+    batches = [b for b in world.judge.calls if b.questions == (ACTIVITY_OFFERED,)]
+    assert batches, "every lexicon activity is verified"
+    catalog = {(e.label, tuple(e.terms)) for e in CAPABILITY_LEXICON}
+    for batch in batches:
+        state = batch.state
+        assert set(state) == {"representation", "site", "activity", "pagesRead", "mentions"}
+        assert state["site"] == "[site]"
+        activity = state["activity"]
+        assert isinstance(activity, dict)
+        assert (activity["label"], tuple(activity["catalogTerms"])) in catalog  # AXIGNAL's
+        for page in [*state["pagesRead"], *state["mentions"]]:  # type: ignore[misc]
+            assert (
+                _re.fullmatch(r"\[page-\d+\]", page["page"])
+                and page["kind"] in PageKind.__members__
+            )
+        around = " ".join(w for m in state["mentions"] for w in m["around"])  # type: ignore[union-attr]
+        words = set(_re.findall(r"[^\W\d_]+", around.casefold()))
+        assert words and words <= VERIFICATION_TERMS, sorted(words - VERIFICATION_TERMS)[:5]
+        raw = json.dumps(state, ensure_ascii=False).casefold()
+        assert "solaria" not in raw and "example.com" not in raw and "http" not in raw
+
+
 def test_a_registry_verified_website_without_rights_is_never_seeded(tmp_path: Path) -> None:
     artifacts = ContentAddressedArtifactStore(tmp_path / "artifacts")
     registry = ControlledRegistry(

@@ -42,6 +42,10 @@ class FirstObservationPolicy:
     research_stop: StopPolicy = _RESEARCH_STOP
     #: Semantic tokens one First Observation may spend (System One input, estimated).
     public_understanding: bool = False
+    #: Spec 075 US2: verify each lexicon activity (offered, mentioned or used internally).
+    #: Off until measured on the golden and truth sets (FR-008); off keeps today's
+    #: lexicon result, marked UNVERIFIED.
+    activity_verification: bool = False
     semantic_tokens: int = 12_000
     max_attempts: int = 3
     lease_seconds: int = 300
