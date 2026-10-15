@@ -77,6 +77,7 @@ from application.observation_intelligence import (
     SourceRegistry,
 )
 from application.observation_intelligence.contracts import TaxonomyCode
+from application.observation_intelligence.findings import ADDITIONAL
 from application.observation_intelligence.loop import OpportunityCandidate, run_observation_loop
 from application.observation_runtime.replay import FindingsLedger
 from application.organization_admission.locator import LocatorError, parse_locator, public_domain
@@ -274,6 +275,7 @@ def _candidate_wire(candidate: OpportunityCandidate) -> dict[str, object]:
         "source": record.source_id,
         "demandForm": candidate.demand_form,
         "epistemicState": "POTENTIAL",
+        "classifiedAs": candidate.classified_as,
     }
 
 
@@ -329,7 +331,8 @@ class RuntimeDemandResearch:
             )
         # No semantic screen here: it may escalate to Luna and would delete demand the
         # sources returned. Candidates stay POTENTIAL with their routing basis.
-        candidates = list(result.candidates)
+        # Calls mainly about something else (the activity only an additional code) go last.
+        candidates = sorted(result.candidates, key=lambda c: c.classified_as == ADDITIONAL)
         hits = sum(p.hits for p in shared.values() if isinstance(p, SharedFindingsPort))
         hits += sum(p.index_hits for p in indexes) - index_before
         live = sum(p.live_requests for p in shared.values() if isinstance(p, SharedFindingsPort))

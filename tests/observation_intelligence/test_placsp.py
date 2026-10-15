@@ -171,6 +171,14 @@ def test_the_ingestor_follows_an_explicit_has_more_over_the_page_size() -> None:
     assert feed.pages == 3 and report.complete and store.marked["complete"] is True
 
 
+def test_a_records_refresh_rereads_the_window_and_never_touches_the_slice_state() -> None:
+    feed, store = _Feed(), _Store()
+    ingestor = WorldDemandIngestor(feeds={PLACSP_SOURCE_ID: feed}, store=store, clock=lambda: NOW)  # type: ignore[arg-type]
+    report = ingestor.refresh_records(DemandSlice(PLACSP_SOURCE_ID, "EU/ES", OPEN), max_pages=2)
+    # Bounded, and stopping early leaves completeness and freshness exactly as they were.
+    assert feed.pages == 2 and not report.complete and store.marked == {}
+
+
 def test_placsp_is_adopted_for_spanish_open_tenders_only() -> None:
     (source,) = [s for s in SOURCES if s.source_id == PLACSP_SOURCE_ID]
     assert source.adoption is AdoptionStatus.ADOPTED and not source.adoption_blockers

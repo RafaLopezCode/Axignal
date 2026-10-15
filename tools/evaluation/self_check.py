@@ -111,12 +111,17 @@ def evaluate(reading: Mapping[str, Any], truth: Mapping[str, Any]) -> dict[str, 
                 verdict(check, "NOT_MEASURED", None)
                 continue
             off = [{"title": str((d.get("detail") or {}).get("title") or d.get("statement"))[:100],
-                    "codes": (d.get("detail") or {}).get("codes")}
+                    "codes": (d.get("detail") or {}).get("codes"),
+                    "classifiedAs": (d.get("detail") or {}).get("classifiedAs")}
                    for d in items
                    if not any(t in str((d.get("detail") or {}).get("title") or d.get("statement")).casefold()
                               for t in terms)]  # fmt: skip
-            verdict(check, "FAIL" if off else "PASS",
-                    {"opportunities": len(items), "unrelated": off}, "FALSE_POSITIVE")  # fmt: skip
+            # A call said to be mainly about something else (the activity only an additional
+            # code) is presented truthfully; one presented as about the activity is a defect.
+            presented = [o for o in off if o["classifiedAs"] != "ADDITIONAL"]
+            verdict(check, "FAIL" if presented else "PASS",
+                    {"opportunities": len(items), "unrelated": presented,
+                     "labelledAdditional": len(off) - len(presented)}, "FALSE_POSITIVE")  # fmt: skip
     measured = [v for v in verdicts if v["status"] != "NOT_MEASURED"]
     passed = sum(v["status"] == "PASS" for v in measured)
     by_family: dict[str, dict[str, int]] = {}

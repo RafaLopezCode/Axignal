@@ -350,6 +350,38 @@ class WorldDemandIngestor:
     def run(self, *, max_slices: int = 10) -> tuple[IngestionReport, ...]:
         return tuple(self.ingest(s.slice) for s in self.due()[:max_slices])
 
+    def refresh_records(self, demand_slice: DemandSlice, *, max_pages: int) -> IngestionReport:
+        """Read a slice's whole window again and update its stored records, nothing else.
+
+        For facts an adapter learns to read after records were stored (a call's main
+        object): the slice's state, completeness and freshness are never touched, so a
+        refresh that stops early leaves every read exactly as it was.
+        """
+        feed = self._feeds[demand_slice.source_id]
+        window = RECENCY_WINDOWS.get(demand_slice.kind, timedelta(days=60))
+        query = QuerySpec(
+            demand_codes=(),
+            geographies=(TaxonomyCode("GEO", demand_slice.jurisdiction),),
+            capabilities=frozenset({demand_slice.kind}),
+            published_since=self._clock() - window,
+        )
+        pages = records = 0
+        complete = False
+        failure = None
+        for page in range(1, max_pages + 1):
+            findings = feed.search(query, page=page, limit=self._page_size)
+            pages += 1
+            if findings.failure is not None:
+                failure = findings.failure
+                break
+            records += self._store.upsert(findings.records)
+            if findings.has_more is False or (
+                findings.has_more is None and len(findings.records) < self._page_size
+            ):
+                complete = True
+                break
+        return IngestionReport(demand_slice.key, pages, records, complete, failure)
+
 
 def per_focus_requests(
     *, foci: int, capabilities: int, markets: int, questions: int, cadence_days: float

@@ -117,6 +117,11 @@ def _place(nuts: str | None) -> TaxonomyCode:
     return TaxonomyCode("GEO", "EU/ES")
 
 
+#: CODICE ContractCode: 1 supplies, 2 services, 3 works. Concessions, mixed, special and
+#: private contracts say nothing about the nature of the object: unknown.
+_NATURES = {"1": "SUPPLIES", "2": "SERVICES", "3": "WORKS"}
+
+
 def parse_entry(entry: ET.Element) -> ProcurementRecord | None:
     """One open tender from one CODICE entry, or None when it is not open or incomplete."""
     folder = _child(entry, "ContractFolderStatus")
@@ -166,6 +171,7 @@ def parse_entry(entry: ET.Element) -> ProcurementRecord | None:
         published_at=published,
         source_url=url,
         deadline=deadline,
+        contract_nature=_NATURES.get(_text(_child(project, "TypeCode")) or ""),
     )
 
 

@@ -37,6 +37,9 @@ _FIELDS = (
     "notice-type",
     "buyer-name",
     "classification-cpv",
+    "main-classification-proc",
+    "main-classification-lot",
+    "contract-nature",
     "place-of-performance",
     "publication-date",
     "deadline-receipt-tender-date-lot",
@@ -145,6 +148,15 @@ def _codes(value: object) -> tuple[str, ...]:
     return tuple(sorted({item for item in values if isinstance(item, str) and item.strip()}))
 
 
+_NATURES = {"supplies": "SUPPLIES", "services": "SERVICES", "works": "WORKS"}
+
+
+def _nature(value: object) -> str | None:
+    """The declared contract nature; None when absent, unknown or mixed across lots."""
+    natures = {_NATURES.get(n.casefold()) for n in _codes(value)}
+    return natures.pop() if len(natures) == 1 else None
+
+
 def _places(value: object) -> tuple[TaxonomyCode, ...]:
     """TED places (ISO3 countries or NUTS codes) → jurisdiction paths."""
 
@@ -208,6 +220,14 @@ def parse_notices(payload: Mapping[str, Any]) -> tuple[ProcurementRecord, ...]:
                     _all_texts(notice.get("deadline-receipt-tender-date-lot")), default=None
                 ),
                 winners=_all_texts(notice.get("winner-name")),
+                main_codes=tuple(
+                    TaxonomyCode("CPV", c)
+                    for c in sorted(
+                        set(_codes(notice.get("main-classification-proc")))
+                        | set(_codes(notice.get("main-classification-lot")))
+                    )
+                ),
+                contract_nature=_nature(notice.get("contract-nature")),
             )
         )
     return tuple(records)

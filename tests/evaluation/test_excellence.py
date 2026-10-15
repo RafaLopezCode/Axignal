@@ -109,6 +109,13 @@ def test_self_check_flags_false_positives_negatives_and_unrelated_demand() -> No
     assert by_id["value.industry"]["status"] == "NOT_MEASURED"  # nothing to judge it with
     assert report["accuracy"] is not None and 0 < report["accuracy"] < 100
 
+    # Said to be mainly about something else: presented truthfully, not a defect.
+    reading["discoveries"][3]["detail"]["classifiedAs"] = "ADDITIONAL"  # type: ignore[index]
+    demand = {v["id"]: v for v in evaluate(reading, truth)["verdicts"]}[
+        "demand.relevant_to_its_activity"
+    ]
+    assert demand["status"] == "PASS" and demand["detail"]["labelledAdditional"] == 1
+
 
 def test_known_capabilities_read_the_catalogs_current_codes() -> None:
     from application.observation_intelligence.catalog import with_current_codes

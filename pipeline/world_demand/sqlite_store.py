@@ -34,6 +34,8 @@ def _encode(record: ProcurementRecord) -> str:
             "source_url": record.source_url,
             "deadline": record.deadline,
             "winners": list(record.winners),
+            "main_codes": [[c.scheme, c.code] for c in record.main_codes],
+            "contract_nature": record.contract_nature,
         },
         ensure_ascii=False,
         sort_keys=True,
@@ -53,6 +55,9 @@ def _decode(raw: dict[str, Any]) -> ProcurementRecord:
         source_url=str(raw["source_url"]),
         deadline=None if raw["deadline"] is None else str(raw["deadline"]),
         winners=tuple(str(w) for w in raw["winners"]),
+        # Records stored before main codes were read carry none: unknown, not additional.
+        main_codes=tuple(TaxonomyCode(str(s), str(c)) for s, c in raw.get("main_codes") or ()),
+        contract_nature=None if raw.get("contract_nature") is None else str(raw["contract_nature"]),
     )
 
 

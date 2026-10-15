@@ -238,6 +238,10 @@ function discoveryInsight(d: Discovery, index: number, t: Translate, locale: str
   if (typeof detail.source === "string") proof.push({ label: t("Fuente", "Source"), value: String(detail.source) });
   if (typeof detail.buyer === "string") proof.push({ label: t("Comprador", "Buyer"), value: String(detail.buyer) });
   if (typeof detail.deadline === "string") proof.push({ label: t("Plazo", "Deadline"), value: String(detail.deadline) });
+  if (detail.classifiedAs === "MAIN" || detail.classifiedAs === "ADDITIONAL") proof.push({ label: t("Clasificación del comprador", "Buyer's classification"),
+    value: detail.classifiedAs === "MAIN"
+      ? t("Objeto principal de la licitación", "Main object of the call")
+      : t("Código adicional; el objeto principal es otro", "Additional code; the main object is something else") });
   if (typeof detail.instrument === "string") proof.push({ label: t("Instrumento y versión", "Instrument and version"), value: String(detail.instrument) });
   if (typeof detail.conditions === "string") proof.push({ label: t("Condiciones de observación", "Observation conditions"), value: String(detail.conditions) });
   if (typeof detail.sample === "string") proof.push({ label: t("Muestra", "Sample"), value: String(detail.sample) });
