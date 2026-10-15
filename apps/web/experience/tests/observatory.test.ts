@@ -188,6 +188,8 @@ test("AXENT already occupies one independent rail before a finding is opened", (
   assert.equal((markup.match(/id="obs-axent-sidebar"/g) ?? []).length, 1);
   assert.match(markup, /aria-controls="obs-axent-sidebar"/);
   assert.match(markup, /class="obs-axent-note"[^>]*>Ask Axent/);
+  // No action may sit between the handwritten arrow and the independent AXENT rail.
+  assert.ok(markup.indexOf('aria-label="More actions"') < markup.indexOf('class="obs-axent-note"'));
   assert.doesNotMatch(markup, /class="obs-depth obs-evidence-sheet/);
   assert.match(markup, /<label[^>]*for="[^"]+">Ask about this context<\/label>/);
   assert.match(markup, /<textarea[^>]*id="[^"]+"/);

@@ -618,7 +618,6 @@ function OrganizationView(props: OrgProps) {
         <div className="obs-org-actions">
           {item.state === "ACTIVE" && <button className="obs-button" disabled={props.busy || !props.canAct} onClick={() => void props.command({ action: "reobserve", focusId: item.focusId })}><RefreshCw size={16} aria-hidden="true"/><span className="obs-collapse">{t("Volver a observar", "Observe again")}</span></button>}
           {!identified && props.capabilities.recheck && <button className="obs-button" disabled={props.busy || !props.canAct} onClick={() => void props.command({ action: "retry_pending", focusId: item.focusId })}><RefreshCw size={16} aria-hidden="true"/><span className="obs-collapse">{t("Volver a comprobar", "Check again")}</span></button>}
-          {projection && revision && <span className="obs-axent-cta"><button className="obs-axent-note" onClick={focusAxent} aria-label={t("Preguntar a AXENT", "Ask AXENT")} aria-controls="obs-axent-sidebar">{t("Consulta a Axent", "Ask Axent")}<ArrowRight size="1.15em" aria-hidden="true"/></button></span>}
           {props.capabilities.manage && <div className="obs-menu">
             <button className="obs-icon" aria-expanded={menu} aria-haspopup="true" aria-label={t("Más acciones", "More actions")} onClick={() => setMenu(!menu)}><ChevronDown size={18} aria-hidden="true"/></button>
             {menu && <ul className="obs-menu-list" onKeyDown={e => { if (e.key === "Escape") setMenu(false); }}>
@@ -627,6 +626,7 @@ function OrganizationView(props: OrgProps) {
               <li><button disabled={props.busy || !props.canAct} onClick={() => { setMenu(false); void props.command({ action: identified ? "remove" : "cancel_pending", focusId: item.focusId }); }}>{t("Retirar de mi cartera", "Remove from my portfolio")}</button></li>
             </ul>}
           </div>}
+          {projection && revision && <span className="obs-axent-cta"><button className="obs-axent-note" onClick={focusAxent} aria-label={t("Preguntar a AXENT", "Ask AXENT")} aria-controls="obs-axent-sidebar">{t("Consulta a Axent", "Ask Axent")}<ArrowRight size="1.15em" aria-hidden="true"/></button></span>}
         </div>
       </header>
       {/* No website to observe: give it one here. The kept attention is withdrawn and added again with the

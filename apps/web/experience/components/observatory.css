@@ -675,7 +675,10 @@ body:has(.obs-rail-desktop) .privacy-preferences-button { inset-inline-end: auto
 }
 .obs-org-main { position: relative; isolation: isolate; min-inline-size: 0; min-block-size: 0; display: flex; }
 .obs-canvas-reading { flex: 1; min-inline-size: 0; min-block-size: 0; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; scrollbar-gutter: stable; padding: 2px 8px 24px 2px; scroll-padding-block: 16px; }
-.obs-org-head .obs-axent-cta { display: flex; padding: 0; }
+.obs-org-head > .obs-org-actions { position: relative; margin-inline-start: auto; justify-content: flex-end; max-inline-size: 100%; }
+.obs-org-head .obs-menu { position: static; }
+.obs-org-head .obs-axent-cta { display: flex; order: 0; min-inline-size: 0; padding: 0; }
+.obs-org-head .obs-menu-list { inset-inline-start: 0; inset-inline-end: auto; }
 .obs-org-actions:has(.obs-axent-cta) { padding-block-end: 0; }
 .obs-org-head .obs-axent-note { position: static; display: inline-flex; flex-direction: row; align-items: center; gap: 10px; min-block-size: 44px; padding: 4px 8px; border: 0; background: transparent; cursor: pointer; white-space: normal; font-size: 25px; line-height: 1.15; transform: rotate(-3deg); }
 .obs-org-head .obs-axent-note:hover { color: #172f7b; }
