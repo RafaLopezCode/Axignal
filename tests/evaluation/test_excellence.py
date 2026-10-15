@@ -84,3 +84,16 @@ def test_buyers_report_routes_coverage_and_why_none() -> None:
     assert out["with_multi_signal_candidates"] == 1 and out["median_candidates"] == 2
     assert out["unknown_reasons"] == {"NO_CUSTOMER_PROFILE": 1, "CUSTOMERS_WITHOUT_ROUTE": 0}
     assert "| US | 0/1 |" in markdown(report(rows, now=NOW))
+
+
+def test_osm_confirmation_rules_are_fixed_in_advance() -> None:
+    from tools.evaluation.osm_confirm import RULES, eligible, person_like
+
+    assert RULES == ("WEBSITE_REQUIRED", "PERSON_FILTER")
+    assert person_like("Maître Élodie Grisel", "M69_70") and person_like(
+        "Alexandrina FERREIRA", "M69_70"
+    )
+    assert not person_like("Basman and Smith LLP", "M69_70") and not person_like("PwC", "M69_70")
+    assert not person_like("Tischlerei Liebel", "F")  # the filter is for professional names only
+    assert not eligible({"name": "Shop", "sector": "G47", "website": None})
+    assert eligible({"name": "Shop", "sector": "G47", "website": "https://shop.example"})
