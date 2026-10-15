@@ -5,7 +5,7 @@
  * "Same truth, different density"). It never creates a finding, never raises POTENTIAL
  * to OBSERVED, never reads UNKNOWN as negative and never generates prose.
  */
-import { activityLabel, auditRows, discoveryCopy, placeLabel } from "@/components/first-observation";
+import { activityLabel, auditRows, buyerSignalLabel, discoveryCopy, placeLabel } from "@/components/first-observation";
 import { auditCopy, auditImpact } from "./representation-audit";
 import { causeCopy, dimensionCopy, proposalCopy, stateCopy } from "@/components/public-understanding";
 import type { Discovery, FirstObservation, PublicUnderstanding } from "./subscriber-contracts";
@@ -51,7 +51,43 @@ export type Insight = {
   /** Thematic family and Presence channel, placed from typed contract values only; null when the contract cannot place it. */
   family: FamilyId | null;
   channel: Channel | null;
+  /** A potential buyer (ADR-0099): shown in its own block, never mixed with tenders. */
+  group?: "buyers";
+  /** How many independent kinds of signal agree on it (ordering only, never a score). */
+  strength?: number;
 };
+
+type BuyerSignal = { type?: unknown; basis?: unknown; via?: unknown; sourceUrl?: unknown; observedAt?: unknown };
+
+/** Each signal of a potential buyer is one source: its route, through whom, link and date. */
+function buyerSources(d: Discovery, t: Translate): Source[] {
+  const signals = Array.isArray(d.detail.signals) ? d.detail.signals as BuyerSignal[] : [];
+  return signals.map(s => ({
+    url: typeof s.sourceUrl === "string" ? s.sourceUrl : null,
+    label: buyerSignalLabel(String(s.type ?? ""), t) + (typeof s.via === "string" && s.via ? ` · ${s.via}` : ""),
+    observedAt: typeof s.observedAt === "string" ? s.observedAt : null,
+    quote: typeof s.basis === "string" ? s.basis : null,
+  }));
+}
+
+function buyerProof(d: Discovery, t: Translate): Proof[] {
+  const ids = (d.detail.identifiers ?? {}) as Record<string, unknown>;
+  const out: Proof[] = [];
+  if (typeof d.detail.independentSignals === "number") out.push({ label: t("Señales independientes", "Independent signals"), value: String(d.detail.independentSignals) });
+  if (typeof ids.website === "string") out.push({ label: t("Web", "Website"), value: ids.website });
+  if (typeof ids.lei === "string") out.push({ label: "LEI", value: ids.lei });
+  if (typeof ids.wikidata === "string") out.push({ label: "Wikidata", value: ids.wikidata });
+  if (typeof ids.country === "string") out.push({ label: t("País", "Country"), value: ids.country });
+  return out;
+}
+
+/** Potential buyers, most independent signals first (stable within the same strength). */
+export function buyersOf(insights: Insight[]): Insight[] {
+  return insights.filter(i => i.group === "buyers")
+    .map((insight, index) => ({ insight, index }))
+    .sort((a, b) => (b.insight.strength ?? 0) - (a.insight.strength ?? 0) || a.index - b.index)
+    .map(x => x.insight);
+}
 
 function hash(value: string): string {
   let h = 2166136261;
@@ -175,6 +211,7 @@ function opportunityInsight(o: Opportunity, t: Translate, locale: string): Insig
 
 function discoveryInsight(d: Discovery, index: number, t: Translate, locale: string): Insight {
   const copy = discoveryCopy(d, t, locale);
+  const buyer = d.kind === "DEMAND" && d.code === "POTENTIAL_BUYER";
   const lane: Lane = d.kind === "SIGNIFICANT_UNKNOWN" ? "unknown"
     : d.kind === "DEMAND" ? "matters"
     : "understood";
@@ -201,7 +238,10 @@ function discoveryInsight(d: Discovery, index: number, t: Translate, locale: str
     id: `${d.kind}:${d.code}:${index}`, lane, nature,
     headline: copy.finding, why: copy.why, observedAt: d.observedAt,
     meaning: [copy.why],
-    reasoning: d.kind === "REPRESENTATION_GAP"
+    reasoning: buyer
+      ? [t("Cada señal es pública y se muestra con su fuente y fecha. No se suman en una puntuación: el orden solo refleja cuántas señales independientes coinciden.", "Each signal is public and shown with its source and date. They are not added into a score: the order only reflects how many independent signals agree."),
+        t("Es una posibilidad, no un cliente, un lead ni una probabilidad.", "A possibility, not a customer, a lead nor a probability.")]
+      : d.kind === "REPRESENTATION_GAP"
       ? [t("Es una brecha posible en lo que leen las máquinas, no una causa demostrada de ningún resultado.", "It is a possible gap in what machines read, not a demonstrated cause of any result.")]
       : d.kind === "SIGNIFICANT_UNKNOWN"
         ? [t("AXIGNAL lo declara abierto en lugar de suponerlo.", "AXIGNAL declares it open instead of assuming it.")]
@@ -211,11 +251,13 @@ function discoveryInsight(d: Discovery, index: number, t: Translate, locale: str
       ? t("Si quieres que las máquinas relacionen tu oferta, decláralo también en datos estructurados (schema.org). Vuelve a observar después para comprobarlo.",
         "If you want machines to connect your offer, also declare it as structured data (schema.org). Observe again afterwards to check.")
       : null,
-    sources: d.sourceUrl || d.excerpt ? [{ url: d.sourceUrl, label: d.sourceUrl ? hostOf(d.sourceUrl) : t("Fuente", "Source"), observedAt: d.observedAt, quote: d.excerpt }] : [],
-    proof, dimensions: [],
+    sources: buyer ? buyerSources(d, t)
+      : d.sourceUrl || d.excerpt ? [{ url: d.sourceUrl, label: d.sourceUrl ? hostOf(d.sourceUrl) : t("Fuente", "Source"), observedAt: d.observedAt, quote: d.excerpt }] : [],
+    proof: buyer ? [...buyerProof(d, t), ...proof] : proof, dimensions: [],
     previous: comparable ? String(detail.previous) : null,
     changeKey: keyOf(`${d.kind}:${d.code}`, d.statement, d.excerpt, d.epistemicState),
     ...facetOfDiscovery(d),
+    ...(buyer ? { group: "buyers" as const, strength: Number(d.detail.independentSignals ?? 1) } : {}),
   };
 }
 
@@ -439,7 +481,7 @@ export function insightsFor(reading: Reading, t: Translate, locale: string): Ins
 
 export function byLane(insights: Insight[]): Record<Lane, Insight[]> {
   return {
-    matters: insights.filter(i => i.lane === "matters"),
+    matters: insights.filter(i => i.lane === "matters" && i.group !== "buyers"),
     understood: insights.filter(i => i.lane === "understood"),
     unknown: insights.filter(i => i.lane === "unknown"),
   };
@@ -468,6 +510,8 @@ export function briefing(reading: Reading, name: string, insights: Insight[], t:
         { name, quote: clip(selfDescription, 180) })
       : fill(t("AXIGNAL todavía no ha establecido a qué se dedica {name}.", "AXIGNAL has not yet established what {name} does."), { name });
   const lanes = byLane(insights);
+  const buyers = buyersOf(insights);
+  const multi = buyers.filter(b => (b.strength ?? 0) >= 2).length;
   const potential = lanes.matters.filter(i => i.nature === "POTENTIAL").length;
   const clarify = insights.filter(i => i.nature === "CLARIFY").length;
   const strength = insights.filter(i => i.nature === "STRENGTH").length;
@@ -477,6 +521,8 @@ export function briefing(reading: Reading, name: string, insights: Insight[], t:
     demand?.live && demand.total ? count(demand.total, t("{n} licitación abierta que encaja", "{n} open tender that fits"), t("{n} licitaciones abiertas que encajan", "{n} open tenders that fit")) : null,
     demand?.live && demand.new ? count(demand.new, t("{n} nueva esta semana", "{n} new tender this week"), t("{n} nuevas esta semana", "{n} new tenders this week")) : null,
     potential && !(demand?.live && demand.total) ? count(potential, t("{n} oportunidad potencial", "{n} potential opportunity"), t("{n} oportunidades potenciales", "{n} potential opportunities")) : null,
+    buyers.length ? count(buyers.length, t("{n} posible comprador", "{n} potential buyer"), t("{n} posibles compradores", "{n} potential buyers"))
+      + (multi ? ` (${fill(t("{n} con varias señales", "{n} with several signals"), { n: multi })})` : "") : null,
     strength ? count(strength, t("{n} aspecto que se entiende bien", "{n} aspect understood well"), t("{n} aspectos que se entienden bien", "{n} aspects understood well")) : null,
     clarify ? count(clarify, t("{n} aspecto que conviene aclarar", "{n} aspect worth clarifying"), t("{n} aspectos que conviene aclarar", "{n} aspects worth clarifying")) : null,
     unknown ? count(unknown, t("{n} incógnita abierta", "{n} open unknown"), t("{n} incógnitas abiertas", "{n} open unknowns")) : null,

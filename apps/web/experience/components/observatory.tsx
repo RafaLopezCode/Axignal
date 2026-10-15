@@ -18,7 +18,7 @@ import { shouldApplyLandingFacet } from "@/lib/observatory-url";
 import { DemandMarkets } from "./demand-markets";
 import { monthlyCapacityCents, pendingOutputSchema, subscriberOutputSchema, type FirstObservation, type SubscriberPortfolio } from "@/lib/subscriber-contracts";
 import type { RuntimeProjection } from "@/lib/runtime-projection";
-import { briefing, byLane, currentnessLabel, fill, insightsFor, laneCopy, natureLabel, type Insight, type Lane, type Nature, type Reading, type Translate } from "@/lib/observatory";
+import { briefing, buyersOf, byLane, currentnessLabel, fill, insightsFor, laneCopy, natureLabel, type Insight, type Lane, type Nature, type Reading, type Translate } from "@/lib/observatory";
 import { baseline, litKeys, markSeen, observedSinceVisit, readSeen, touch, writeSeen, type SeenStore } from "@/lib/observatory-seen";
 import { activityLabel, FirstObservationView, observationStateCopy } from "./first-observation";
 import { SubscriberReading } from "./subscriber-reading";
@@ -452,7 +452,8 @@ function DeskView({ items, readings, seen, nameOf, onOpen, onAdd, onActivate, re
   const loaded = rows.filter(r => r.reading && r.reading !== "failed").length;
   const readableCount = items.filter(readable).length;
   const all = rows.flatMap(r => r.insights.map(insight => ({ ...r, insight })));
-  const opportunities = all.filter(r => r.insight.lane === "matters" && r.insight.nature === "POTENTIAL");
+  // Potential buyers are counted per organization, not listed here among the tenders.
+  const opportunities = all.filter(r => r.insight.lane === "matters" && r.insight.nature === "POTENTIAL" && r.insight.group !== "buyers");
   const clarify = all.filter(r => r.insight.nature === "CLARIFY");
   const fresh = all.filter(r => r.lit.has(r.insight.changeKey));
   const observing = items.filter(i => lensState(i) === "observing");
@@ -709,7 +710,9 @@ export function SummaryView({ reading, name, insights, lit, remembered = true, o
   const brief = briefing(reading, name, insights, t, locale);
   if (exampleLead) brief.lead = exampleLead;
   const lanes = byLane(insights);
+  const buyers = buyersOf(insights);
   const [allShown, setAllShown] = useState(false);
+  const [allBuyers, setAllBuyers] = useState(false);
   const low = item.observation && LOW_OBSERVABILITY.has(item.observation.state);
   return <div className="obs-summary">
     <section className={`obs-brief${scope ? " obs-brief-scoped" : ""}`} aria-label={scope ? scope.title : t("En resumen", "In short")}>
@@ -733,6 +736,13 @@ export function SummaryView({ reading, name, insights, lit, remembered = true, o
             : <p className="obs-empty">{copy.empty}</p>}
           {lane === "matters" && lanes[lane].length > LANE_PREVIEW && <button className="obs-link obs-lane-more" aria-expanded={allShown} onClick={() => setAllShown(v => !v)}>
             {allShown ? t("Mostrar menos", "Show fewer") : fill(t("Ver las {n}", "Show all {n}"), { n: lanes[lane].length })}</button>}
+          {lane === "matters" && buyers.length > 0 && <section className="obs-buyers" aria-labelledby="buyers-title">
+            <h3 id="buyers-title">{t("Posibles compradores", "Potential buyers")}<span className="obs-lane-count">{buyers.length}</span></h3>
+            <p>{t("Organizaciones donde señales públicas independientes apuntan a una demanda plausible. Primero las que reúnen más señales. Ábrelas para ver cada señal con su fuente y fecha.", "Organizations where independent public signals point to plausible demand. Those with the most signals come first. Open one to see each signal with its source and date.")}</p>
+            <ul>{(allBuyers ? buyers : buyers.slice(0, BUYERS_PREVIEW)).map((insight, index) => <li key={insight.id} style={{ ["--i" as string]: index }}><InsightCard insight={insight} lit={lit.has(insight.changeKey)} active={openId === insight.id} onOpen={() => onOpen(insight)}/></li>)}</ul>
+            {buyers.length > BUYERS_PREVIEW && <button className="obs-link obs-lane-more" aria-expanded={allBuyers} onClick={() => setAllBuyers(v => !v)}>
+              {allBuyers ? t("Mostrar menos", "Show fewer") : fill(t("Ver los {n}", "Show all {n}"), { n: buyers.length })}</button>}
+          </section>}
         </section>;
       })}
     </div>}
@@ -741,6 +751,8 @@ export function SummaryView({ reading, name, insights, lit, remembered = true, o
 
 /** Open tenders can be dozens: the first ones are shown, the rest on request. */
 const LANE_PREVIEW = 12;
+/** Potential buyers: those with the most independent signals first, the rest on request. */
+const BUYERS_PREVIEW = 5;
 
 export function InsightCard({ insight, lit, active, onOpen }: { insight: Insight; lit: boolean; active: boolean; onOpen: () => void }) {
   const { t, locale } = useLocale();
