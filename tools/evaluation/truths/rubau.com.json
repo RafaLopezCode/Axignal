@@ -62,7 +62,14 @@
      "carretera",
      "road",
      "puente",
-     "bridge"
+     "bridge",
+     "aparcadoiro",
+     "aparcamiento",
+     "obras",
+     "pavimenta",
+     "edificio",
+     "rehabilitació",
+     "urbanització"
     ]
    }
   }

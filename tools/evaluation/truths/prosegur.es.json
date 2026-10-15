@@ -57,7 +57,11 @@
      "alarm",
      "cctv",
      "custodia",
-     "cash"
+     "cash",
+     "seguretat",
+     "vigilància",
+     "segurança",
+     "vigilant"
     ]
    }
   }
