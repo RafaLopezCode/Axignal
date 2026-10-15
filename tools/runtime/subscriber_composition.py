@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from collections.abc import Callable
+from collections.abc import Callable, Mapping
 from dataclasses import dataclass, replace
 from datetime import datetime, timedelta
 from pathlib import Path
@@ -771,6 +771,49 @@ class _SubscriberWorkflow(SubscriberWorkflowPort):
         return {"state": "rejected", "code": "NOT_READY"}
 
 
+#: Detail fields kept for AXENT (primitives and small values; never payloads or audits).
+_AXENT_FACTS = (
+    "value",
+    "impact",
+    "count",
+    "instrument",
+    "source",
+    "sample",
+    "previous",
+    "limitation",
+)
+MAX_AXENT_FINDINGS = 300
+
+
+def _axent_findings(view: Mapping[str, object] | None) -> list[dict[str, object]]:
+    """Compact findings of the subscriber's own current reading, for its AXENT turn only."""
+    held = view.get("discoveries") if isinstance(view, Mapping) else None
+    out: list[dict[str, object]] = []
+    for raw in held if isinstance(held, list) else []:
+        if not isinstance(raw, Mapping):
+            continue
+        detail = raw.get("detail") if isinstance(raw.get("detail"), Mapping) else {}
+        assert isinstance(detail, Mapping)
+        facts: dict[str, object] = {
+            k: v for k, v in detail.items()
+            if k in _AXENT_FACTS and (isinstance(v, str | int | float) or (isinstance(v, Mapping) and len(v) <= 8))
+        }  # fmt: skip
+        signals = detail.get("signals")
+        if isinstance(signals, list):
+            facts["via"] = [
+                s.get("via") for s in signals if isinstance(s, Mapping) and s.get("via")
+            ][:3]
+        out.append({
+            "kind": raw.get("kind"), "code": raw.get("code"),
+            "statement": str(raw.get("statement") or "")[:300],
+            "epistemicState": raw.get("epistemicState"), "sourceUrl": raw.get("sourceUrl"),
+            "observedAt": raw.get("observedAt"), "facts": facts,
+        })  # fmt: skip
+        if len(out) >= MAX_AXENT_FINDINGS:
+            break
+    return out
+
+
 class _SubscriberUnderstandingReading:
     """Add tenant-private conditioned basis only after the economic read authorizes."""
 
@@ -794,6 +837,12 @@ class _SubscriberUnderstandingReading:
         if entry is None:
             raise PortfolioError(PortfolioFailure.FOCUS_NOT_FOUND)
         view = self._observing.view(context, str(focus_id), str(entry.xeed.organization_id))
+        # The current reading's findings in every family: what AXENT answers from.
+        findings = _axent_findings(view)
+        if findings:
+            reading = SubscriberRuntimeRead(
+                reading.status, {**reading.projection, "findings": findings}, reading.reason
+            )
         report = None if view is None else view.get("publicUnderstanding")
         if not isinstance(report, dict):
             return reading

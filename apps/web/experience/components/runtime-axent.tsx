@@ -11,11 +11,27 @@ import { AxentComposer } from "./axent-composer";
 import { acceptsReadingPlan, type CognitiveReadingRequest } from "@/lib/subscriber-presentation";
 import { runtimeFactsAt } from "@/lib/cognition/runtime-facts";
 import { CognitiveComponent } from "./cognition/lenses";
+/** One answer as shown: every section in the reader's language, no sentence twice. */
+function presentAnswer(answer: RuntimeAnswer, projection: RuntimeProjection, locale: Parameters<typeof presentRuntimePassage>[2]) {
+  const seen = new Set<string>([answer.summary.trim()]);
+  const section = (values: string[] | undefined) => (values ?? [])
+    .map(value => presentRuntimePassage(value, projection, locale).trim())
+    .filter(value => value && !seen.has(value) && (seen.add(value), true));
+  const passages = section(answer.passages);
+  const known = section(answer.known);
+  const open = section(answer.openQuestions);
+  const basis = section(answer.evidenceBasis);
+  const limits = section(answer.evidenceLimits);
+  return { passages, known, open, basis, limits };
+}
+
 export function useRuntimeAxent(
   projection: RuntimeProjection,
   signalId: string | null,
   subscriber?: { revision: string; cognition?: CognitiveReadingRequest },
   illustrative = false,
+  /** Answers some questions without a round trip (a selected finding); null asks as usual. */
+  local?: (question: string) => RuntimeAnswer | null,
 ) {
   const { t, locale } = useLocale();
   const [draft, setDraft] = useState("");
@@ -41,6 +57,11 @@ export function useRuntimeAxent(
     setError(false);
     setDraft("");
     try {
+      const answered = local?.(question);
+      if (answered) {
+        setMessages(previous => [...previous, { question, answer: answered }]);
+        return;
+      }
       if (illustrative) {
         const answer = explainIllustrative(projection, question, signalId ?? undefined, locale);
         setMessages(previous => [...previous, { question, answer }]);
@@ -188,7 +209,7 @@ export function RuntimeAxent({
             </p>
           </div>
         )}
-        {messages.map((message, i) => (
+        {messages.map((message, i) => { const shown = presentAnswer(message.answer, projection, locale); return (
           <div key={i}>
             <div className="axent-message user">
               <p>{message.question}</p>
@@ -203,44 +224,44 @@ export function RuntimeAxent({
                 asOf={message.answer.cognition!.request.asOf} glance={item.layer === 1}
               />)}</div>}
               {["changed", "why"].includes(message.answer.intent) &&
-                message.answer.passages.length > 0 && (
+                shown.passages.length > 0 && (
                   <section className="axent-answer-section">
                     <strong>{t("Lectura focal", "Focused reading")}</strong>
-                    {message.answer.passages.map((value, j) => (
-                      <p key={j}>{presentRuntimePassage(value, projection, locale)}</p>
+                    {shown.passages.map((value, j) => (
+                      <p key={j}>{value}</p>
                     ))}
                   </section>
                 )}
-              {message.answer.known.length > 0 && (
+              {shown.known.length > 0 && (
                 <section className="axent-answer-section">
                   <strong>{t("Lo que sabemos", "What we know")}</strong>
-                  {message.answer.known.map((value, j) => (
-                    <p key={j}>{presentRuntimePassage(value, projection, locale)}</p>
+                  {shown.known.map((value, j) => (
+                    <p key={j}>{value}</p>
                   ))}
                 </section>
               )}
-              {message.answer.openQuestions.length > 0 && (
+              {shown.open.length > 0 && (
                 <section className="axent-answer-section">
                   <strong>{t("Lo que sigue abierto", "What remains open")}</strong>
-                  {message.answer.openQuestions.map((value, j) => (
-                    <p key={j}>{presentRuntimePassage(value, projection, locale)}</p>
+                  {shown.open.map((value, j) => (
+                    <p key={j}>{value}</p>
                   ))}
                 </section>
               )}
-              {message.answer.action === "evidence" && message.answer.evidenceBasis.length > 0 && (
+              {message.answer.action === "evidence" && shown.basis.length > 0 && (
                 <section className="axent-answer-section">
-                  <strong>{t("Base de evidencia", "Evidence basis")}</strong>
-                  {message.answer.evidenceBasis.map((value, j) => (
-                    <p key={j}>{presentRuntimePassage(value, projection, locale)}</p>
+                  <strong>{t("En qué se basa", "What it rests on")}</strong>
+                  {shown.basis.map((value, j) => (
+                    <p key={j}>{value}</p>
                   ))}
                 </section>
               )}
-              {!!message.answer.grounding && message.answer.action !== "evidence" && message.answer.evidenceBasis.length > 0 && <details className="axent-answer-section">
+              {!!message.answer.grounding && message.answer.action !== "evidence" && shown.basis.length > 0 && <details className="axent-answer-section">
                 <summary>{t("Ver fundamento y límites", "Inspect basis and limits")}</summary>
-                {message.answer.evidenceBasis.map((value, j) => <p key={j}>{presentRuntimePassage(value, projection, locale)}</p>)}
-                {message.answer.evidenceLimits?.map((value, j) => <p key={`limit-${j}`}>{presentRuntimePassage(value, projection, locale)}</p>)}
+                {shown.basis.map((value, j) => <p key={j}>{value}</p>)}
+                {shown.limits.map((value, j) => <p key={`limit-${j}`}>{value}</p>)}
               </details>}
-              {message.answer.action === "evidence" && message.answer.evidenceLimits?.map((value, j) => <p key={`limit-${j}`}>{presentRuntimePassage(value, projection, locale)}</p>)}
+              {message.answer.action === "evidence" && shown.limits.map((value, j) => <p key={`limit-${j}`}>{value}</p>)}
               {message.answer.action === "research-unavailable" && (
                 <section className="axent-answer-section proposed-research">
                   <strong>{t("Investigación propuesta", "Proposed research")}</strong>
@@ -255,7 +276,7 @@ export function RuntimeAxent({
               )}
               {message.answer.sourceRefs.length > 0 && (
                 <section className="axent-answer-section axent-provenance">
-                  <strong>{t("Proveniencia", "Provenance")}</strong>
+                  <strong>{t("Fuentes", "Sources")}</strong>
                   {message.answer.sourceRefs.map((ref) => <p key={ref}>{safeSourceLink(ref)
                     ? <a href={safeSourceLink(ref)!} target="_blank" rel="noopener noreferrer">{ref}</a>
                     : ref}</p>)}
@@ -287,7 +308,7 @@ export function RuntimeAxent({
               </button>}
             </div>
           </div>
-        ))}
+        ); })}
         {busy && (
           <p>
             {t(

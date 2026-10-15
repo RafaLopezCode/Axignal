@@ -819,8 +819,9 @@ class FirstProofService:
             representation.title or representation.description or representation.document_text[:240]
         )
         uncertainty = (
-            "This observation covers only the authorized public homepage at this observation time. "
-            "Search, generative, social, reputation and other public surfaces remain UNKNOWN."
+            "This signal covers only the authorized public homepage at this observation time. "
+            "Search, AI assistants, reputation and other surfaces are read by their own "
+            "instruments, in their families."
         )
         basis = ExplainableBasis(
             basis_id=f"basis:fr30:{sequence}:{_digest(trace.rich_state_fingerprint)[:16]}",

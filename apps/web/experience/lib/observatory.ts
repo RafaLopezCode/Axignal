@@ -51,6 +51,8 @@ export type Insight = {
   /** Thematic family and Presence channel, placed from typed contract values only; null when the contract cannot place it. */
   family: FamilyId | null;
   channel: Channel | null;
+  /** What the finding itself says it does not establish (its source's limitation). */
+  limits?: string[];
   /** A potential buyer (ADR-0099): shown in its own block, never mixed with tenders. */
   group?: "buyers";
   /** How many independent kinds of signal agree on it (ordering only, never a score). */
@@ -209,6 +211,19 @@ function opportunityInsight(o: Opportunity, t: Translate, locale: string): Insig
   };
 }
 
+/** How a finding was read, in plain words (never the internal code). */
+function methodLabel(method: string, t: Translate): string {
+  switch (method) {
+    case "LEXICON": return t("Términos de su propia web", "Terms on its own website");
+    case "SCHEMA_ORG_TYPE": return t("Tipo que declara en sus datos estructurados", "Type it declares in its structured data");
+    case "SEMANTIC_JUDGMENT": return t("Lectura semántica de su web (no autoritativa)", "Semantic reading of its website (non-authoritative)");
+    case "OFFICIAL_REGISTER": return t("Registro oficial", "Official register");
+    case "STATED_INDUSTRY": return t("Sector que indica Wikidata", "Industry stated in Wikidata");
+    case "SITE_SIGNALS": return t("Varias señales de su web", "Several signals on its website");
+    default: return /^[A-Z][A-Z0-9_]+$/.test(method) ? t("Método registrado", "Recorded method") : method;
+  }
+}
+
 function discoveryInsight(d: Discovery, index: number, t: Translate, locale: string): Insight {
   const copy = discoveryCopy(d, t, locale);
   const buyer = d.kind === "DEMAND" && d.code === "POTENTIAL_BUYER";
@@ -218,7 +233,7 @@ function discoveryInsight(d: Discovery, index: number, t: Translate, locale: str
   const nature: Nature = d.kind === "REPRESENTATION_GAP" ? "CLARIFY" : epistemicNature(d.epistemicState);
   const detail = d.detail;
   const proof: Proof[] = [];
-  if (typeof detail.method === "string") proof.push({ label: t("Método", "Method"), value: String(detail.method) });
+  if (typeof detail.method === "string") proof.push({ label: t("Método", "Method"), value: methodLabel(String(detail.method), t) });
   if (typeof detail.model === "string") proof.push({ label: t("Evaluador", "Evaluator"), value: `${detail.model} · ${t("juicio no autoritativo, no es una probabilidad de verdad", "non-authoritative judgment, not a probability of truth")}` });
   if (typeof detail.source === "string") proof.push({ label: t("Fuente", "Source"), value: String(detail.source) });
   if (typeof detail.buyer === "string") proof.push({ label: t("Comprador", "Buyer"), value: String(detail.buyer) });
@@ -257,6 +272,7 @@ function discoveryInsight(d: Discovery, index: number, t: Translate, locale: str
     previous: comparable ? String(detail.previous) : null,
     changeKey: keyOf(`${d.kind}:${d.code}`, d.statement, d.excerpt, d.epistemicState),
     ...facetOfDiscovery(d),
+    limits: typeof detail.limitation === "string" ? [String(detail.limitation)] : [],
     ...(buyer ? { group: "buyers" as const, strength: Number(d.detail.independentSignals ?? 1) } : {}),
   };
 }

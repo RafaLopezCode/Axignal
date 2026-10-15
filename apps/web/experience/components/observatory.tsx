@@ -31,6 +31,8 @@ import { websiteOf } from "@/lib/identity";
 import { SubscriberAccountSettings } from "./subscriber-account-settings";
 import { DismissibleNotice } from "./dismissible-notice";
 import { RuntimeAxent, useRuntimeAxent } from "./runtime-axent";
+import { productGuideAnswer } from "@/lib/axent-product-guide";
+import { explainFinding } from "@/lib/finding-axent";
 import type { ObservatoryCapabilities } from "@/lib/observatory-source";
 import { WAITING_STATES, waitingItems, type ActivationPhase } from "@/lib/activation";
 import { ActivationView } from "./activation";
@@ -666,7 +668,7 @@ function OrganizationView(props: OrgProps) {
         {!props.reading && !observing && view === "evidence" && <EvidenceView reading={reading} facet={facet} scope={scope} insights={shown}/>}
       </div>
     </div>
-    {depthOpen && <DepthPanel insight={open} projection={projection} revision={revision} axentOnly={!open} canAct={props.canAct} axent={props.capabilities.axent} onClose={closeDepth}
+    {depthOpen && <DepthPanel insight={open} related={insights} projection={projection} revision={revision} axentOnly={!open} canAct={props.canAct} axent={props.capabilities.axent} onClose={closeDepth}
       onEvidence={() => transition(() => go({ view: "evidence", item: null }))} onExplore={() => transition(() => go({ view: "explore", item: null }))}/>}
   </div>;
 }
@@ -798,8 +800,8 @@ export function InsightBody({ insight, onEvidence }: { insight: Insight; onEvide
   </article>;
 }
 
-function DepthPanel({ insight, projection, revision, axentOnly, canAct, axent, onClose, onEvidence, onExplore }: {
-  insight: Insight | null; projection: RuntimeProjection | null; revision: string | null; axentOnly: boolean; canAct: boolean; axent: ObservatoryCapabilities["axent"];
+function DepthPanel({ insight, related, projection, revision, axentOnly, canAct, axent, onClose, onEvidence, onExplore }: {
+  insight: Insight | null; related: Insight[]; projection: RuntimeProjection | null; revision: string | null; axentOnly: boolean; canAct: boolean; axent: ObservatoryCapabilities["axent"];
   onClose: () => void; onEvidence: () => void; onExplore: () => void;
 }) {
   const { t, locale } = useLocale();
@@ -819,18 +821,23 @@ function DepthPanel({ insight, projection, revision, axentOnly, canAct, axent, o
       {insight && <span>{laneCopy(insight.lane, t).title}</span>}
     </div>
     {insight && <InsightBody insight={insight} onEvidence={onEvidence}/>}
-    {projection && revision ? <DepthAxent projection={projection} revision={revision} axent={axent} insight={insight} canAct={canAct} onEvidence={onEvidence} onExplore={onExplore} autoFocus={axentOnly}/>
+    {projection && revision ? <DepthAxent key={insight?.id ?? "organization"} projection={projection} revision={revision} axent={axent} insight={insight} related={related} canAct={canAct} onEvidence={onEvidence} onExplore={onExplore} autoFocus={axentOnly}/>
       : <section className="obs-depth-axent obs-quiet"><h3>AXENT</h3><p>{t("AXENT podrá investigar con esta organización cuando su identidad esté verificada por un registro. Esta lectura ya muestra su evidencia.", "AXENT can investigate this organization once its identity is verified by a registry. This reading already shows its evidence.")}</p></section>}
   </aside>;
 }
 
-function DepthAxent({ projection, revision, axent, insight, canAct, onEvidence, onExplore, autoFocus }: {
-  projection: RuntimeProjection; revision: string; axent: ObservatoryCapabilities["axent"]; insight: Insight | null; canAct: boolean; onEvidence: () => void; onExplore: () => void; autoFocus: boolean;
+function DepthAxent({ projection, revision, axent, insight, related, canAct, onEvidence, onExplore, autoFocus }: {
+  projection: RuntimeProjection; revision: string; axent: ObservatoryCapabilities["axent"]; insight: Insight | null; related: Insight[]; canAct: boolean; onEvidence: () => void; onExplore: () => void; autoFocus: boolean;
 }) {
-  const { t } = useLocale();
+  const { t, locale } = useLocale();
   // The subscriber's questions are scoped to its reading; an Admin session asks through its own endpoint.
   const scope = useMemo(() => axent === "subscriber" ? { revision } : undefined, [axent, revision]);
-  const conversation = useRuntimeAxent(projection, null, scope, axent === "illustrative");
+  // About a selected finding, AXENT answers from that finding itself (every family, every
+  // question); the product guide keeps its own answers; the whole organization asks the runtime.
+  const local = useCallback((question: string) => insight && !productGuideAnswer(projection, question, locale)
+    ? explainFinding({ insight, related, prompt: question, organizationId: projection.organization.id, contextId: projection.context.id, t, locale })
+    : null, [insight, related, projection, locale, t]);
+  const conversation = useRuntimeAxent(projection, null, scope, axent === "illustrative", local);
   const asked = useRef<string | null>(null);
   const question = insight ? fill(t("{finding}: ¿por qué importa y qué sigue abierto?", "{finding}: why does it matter and what remains open?"), { finding: insight.headline }) : null;
   useEffect(() => { asked.current = null; }, [insight?.id]);
