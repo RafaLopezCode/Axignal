@@ -15,6 +15,24 @@ uv run architecture-guard --root .
 uv run axignal-governance
 ```
 
+The experience also has deterministic frontend gates. From
+`apps/web/experience`, using the production Docker image's Node 22 major:
+
+```powershell
+npm ci
+npm test
+npm run typecheck
+npm run check:i18n
+npm run build
+npm run test:admin-http
+```
+
+The HTTP regressions start a temporary loopback Next server over the production
+build and an isolated in-memory upstream transport. They use no real credential,
+database, model, provider or production service. The frontend CI job runs all
+of these checks on pull requests and main; a failing frontend check must not be
+treated as covered by the independent Python suite.
+
 `uv run axignal-governance` runs: hygiene, terminology, docs, spec, deps,
 no-generated-data, architecture and graphify. When the repository declares
 Graphify through its tracked configuration, the CLI and generated structural
@@ -46,6 +64,7 @@ reconciled input remains byte-stable unless its pin is reviewed.
 | 14 | Graphify structural checks | `graphify update <root> --no-cluster`, `graphify diagnose multigraph --json`, `graphify hook install && graphify hook status`, `uv run axignal-governance graphify` |
 | 15 | Docs / reference integrity | `uv run axignal-governance docs` |
 | 16 | No generated/raw/private data | `uv run axignal-governance no-generated-data` |
+| 17 | Frontend regression checks | locked `npm ci`, tests, TypeScript, i18n inventory, production build and Admin HTTP transport tests |
 
 ## Graphify: blocking vs non-blocking
 

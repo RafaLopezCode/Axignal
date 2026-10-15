@@ -29,6 +29,8 @@ export function Admin({ initialDomain = CUSTOMER_ZERO }: { initialDomain?: strin
   const [domainId, setDomainId] = useState<string>(known(initialDomain) ? initialDomain : CUSTOMER_ZERO);
   const [mobile, setMobile] = useState(false);
   const sidebarRef = useRef<HTMLElement>(null);
+  const panelRef = useRef<HTMLElement>(null);
+  const focusPanel = useRef(false);
   const [productNavigationHost, setProductNavigationHost] = useState<HTMLDivElement | null>(null);
   const [productToolbarHost, setProductToolbarHost] = useState<HTMLDivElement | null>(null);
   useFocusTrap(mobile, sidebarRef, () => setMobile(false));
@@ -43,11 +45,20 @@ export function Admin({ initialDomain = CUSTOMER_ZERO }: { initialDomain?: strin
   const domain = adminDomains.find(d => d.id === domainId);
 
   useEffect(() => {
+    if (inProduct || !panelRef.current) return;
+    panelRef.current.scrollTop = 0;
+    if (focusPanel.current) panelRef.current.focus({ preventScroll: true });
+    focusPanel.current = false;
+  }, [domainId, inProduct]);
+
+  useEffect(() => {
     const navigate = () => {
       const id = window.location.hash.slice(1);
+      if (id === "main") return;
       // Content anchors (for example the skip link) do not change Admin domains; a retired id opens Customer Zero.
       if (id && !known(id) && id !== "main") return;
       const next = known(id) ? id : CUSTOMER_ZERO;
+      focusPanel.current = true;
       setDomainId(next);
       setMobile(false);
     };
@@ -61,6 +72,7 @@ export function Admin({ initialDomain = CUSTOMER_ZERO }: { initialDomain?: strin
   }, []);
 
   function choose(id: string) {
+    focusPanel.current = true;
     // The home is the address itself, /admin; the other domains hang from it as /admin#domain.
     window.history.pushState(null, "", id === CUSTOMER_ZERO ? "/admin" : "/admin#" + id);
     setDomainId(id);
@@ -159,7 +171,7 @@ export function Admin({ initialDomain = CUSTOMER_ZERO }: { initialDomain?: strin
             </div>
           )}
           {domain && (
-            <main id="main" className="admin-panel" tabIndex={-1}>
+            <main ref={panelRef} id="main" className="admin-panel" tabIndex={-1} aria-label={copy(domain.name)}>
               <header className="admin-panel-head">
                 <h1>{copy(domain.name)}</h1>
                 <p>{copy(domain.question)}</p>

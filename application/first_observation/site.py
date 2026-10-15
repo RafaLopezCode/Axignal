@@ -296,7 +296,10 @@ class _PageParser(HTMLParser):
             )
             if alt and len(self.alts) < 160:
                 self.alts.append((self.headings[-1] if self.headings else "", alt))
-            if not values.get("alt", "").strip() and values.get("role") != "presentation":
+            # Missing only when the attribute is absent: alt="" is how a decorative image is
+            # correctly marked (WCAG H67), as are role="presentation" and aria-hidden="true".
+            decorative = values.get("role") == "presentation" or values.get("aria-hidden") == "true"
+            if "alt" not in values and not decorative:
                 self.images_without_alt += 1
         if tag == "link" and values.get("rel", "").lower() == "canonical" and values.get("href"):
             self.canonical = self.canonical or values["href"].strip()[:500]

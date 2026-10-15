@@ -1,0 +1,48 @@
+{
+  "build": "production-local",
+  "scope": "Admin operational sections only",
+  "data": "controlled fixtures; no production records",
+  "invitation": {
+    "issued": true,
+    "copied": true,
+    "cancelRestoredFocus": "Revocar",
+    "revoked": true,
+    "successRestoredFocus": "Invitaciones"
+  },
+  "sources": {
+    "record": "billing:controlled-ux-072",
+    "periodVisible": true,
+    "methodVisible": true
+  },
+  "pagination": {
+    "records": 19,
+    "pageSize": 8,
+    "secondPage": "9–16",
+    "searchFound": "controlled-18"
+  },
+  "refresh": {
+    "failureClearsPrivateRecords": true,
+    "recovery": true,
+    "restoresButtonFocus": true
+  },
+  "navigation": {
+    "skipRetainsDomain": true,
+    "backForward": true,
+    "mobileDrawer": true
+  },
+  "authority": {
+    "supportDenied": true,
+    "signedOutDenied": true,
+    "privateSectionsWhenDenied": 0
+  },
+  "mobile": {
+    "width": 390,
+    "height": 844,
+    "overflow": false,
+    "evidence": "390px iframe, actual production-local app"
+  },
+  "console": {
+    "errors": 0,
+    "warnings": 0
+  }
+}

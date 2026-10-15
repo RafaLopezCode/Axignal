@@ -1,6 +1,7 @@
 import { cookies } from "next/headers";
 import { customerZeroCookie, resolveRuntimeOrigin, sameOrigin } from "@/lib/customer-zero-server";
 import { staffActions, staffCommands, staffReason, staffResults, staffState, tenantId, type StaffAction } from "@/lib/staff-capacity";
+import { AdminBodyLimitError, readAdminRequestJson, readAdminResponseJson } from "./admin-json";
 
 const noStore = { "Cache-Control": "no-store" };
 export const staffStepUpCookie = "axignal-admin-stepup";
@@ -20,18 +21,7 @@ const reply = (body: unknown, status = 200) => Response.json(body, { status, hea
 async function readJson(request: Request): Promise<unknown | Response> {
   if (request.headers.get("content-type")?.split(";")[0].trim() !== "application/json")
     return reply({ reason: "JSON_REQUIRED" }, 415);
-  const reader = request.body?.getReader();
-  if (!reader) throw new SyntaxError("empty body");
-  const chunks: Uint8Array[] = [];
-  let size = 0;
-  while (true) {
-    const part = await reader.read();
-    if (part.done) break;
-    size += part.value.byteLength;
-    if (size > 4096) { await reader.cancel(); return reply({ reason: "BODY_LIMIT" }, 413); }
-    chunks.push(part.value);
-  }
-  return JSON.parse(Buffer.concat(chunks).toString("utf8"));
+  return readAdminRequestJson(request, 4096);
 }
 
 /** Admin-only proxy: the httpOnly Admin cookie becomes the bearer; nothing is cached or logged. */
@@ -69,13 +59,14 @@ export async function staffCapacityProxy(request: Request, action: StaffAction |
       headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
       ...(body ? { body } : {}),
     });
-    const payload: unknown = await response.json().catch(() => null);
+    const payload: unknown = response.ok ? await readAdminResponseJson(response) : await readAdminResponseJson(response).catch(() => null);
     if (!response.ok) {
       const reason = payload && typeof payload === "object" && "reason" in payload ? payload.reason : null;
       return reply({ reason: staffReason(reason) }, response.status);
     }
     return reply(action === null ? staffState.parse(payload) : staffResults[action].parse(payload));
   } catch (error) {
+    if (error instanceof AdminBodyLimitError) return reply({ reason: "BODY_LIMIT" }, 413);
     return error instanceof SyntaxError
       ? reply({ reason: "INVALID_REQUEST" }, 400)
       : reply({ reason: "RUNTIME_UNAVAILABLE" }, 502);

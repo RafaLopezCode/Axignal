@@ -30,6 +30,12 @@ export function siteStructuredData(locale: Locale | null): Record<string, unknow
         url: absolutePublicUrl("/"),
         logo: absolutePublicUrl("/brand/apple-touch-icon.png"),
         description: HOME_METADATA.en.description,
+        contactPoint: {
+          "@type": "ContactPoint",
+          contactType: "customer support",
+          url: absolutePublicUrl("/contact"),
+          availableLanguage: locales.map(({ id }) => id),
+        },
       },
       {
         "@type": "WebSite",

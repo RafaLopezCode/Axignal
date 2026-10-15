@@ -1,6 +1,7 @@
 import { cookies } from "next/headers";
 import { customerZeroCookie, resolveRuntimeOrigin, sameOrigin } from "@/lib/customer-zero-server";
 import { pilotAccountsCommand, pilotAccountsSnapshot } from "@/lib/pilot-test-accounts";
+import { AdminBodyLimitError, readAdminRequestJson, readAdminResponseJson } from "@/lib/admin-json";
 
 const noStore = { "Cache-Control": "no-store" };
 async function proxy(request: Request, write: boolean) {
@@ -14,21 +15,7 @@ async function proxy(request: Request, write: boolean) {
     if (write) {
       if (request.headers.get("content-type")?.split(";")[0].trim() !== "application/json")
         return Response.json({ reason: "JSON_REQUIRED" }, { status: 415, headers: noStore });
-      const reader = request.body?.getReader();
-      if (!reader) throw new SyntaxError("empty body");
-      const chunks: Uint8Array[] = [];
-      let size = 0;
-      while (true) {
-        const part = await reader.read();
-        if (part.done) break;
-        size += part.value.byteLength;
-        if (size > 2048) {
-          await reader.cancel();
-          return Response.json({ reason: "BODY_LIMIT" }, { status: 413, headers: noStore });
-        }
-        chunks.push(part.value);
-      }
-      const parsed = pilotAccountsCommand.safeParse(JSON.parse(Buffer.concat(chunks).toString("utf8")));
+      const parsed = pilotAccountsCommand.safeParse(await readAdminRequestJson(request, 2048));
       if (!parsed.success)
         return Response.json({ reason: "INVALID_PILOT_ACCOUNTS" }, { status: 400, headers: noStore });
       body = JSON.stringify(parsed.data);
@@ -41,11 +28,15 @@ async function proxy(request: Request, write: boolean) {
       headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
       ...(body ? { body } : {}),
     });
-    if (!response.ok)
+    if (!response.ok) {
+      try { void response.body?.cancel().catch(() => {}); } catch { /* retain the known denial */ }
       return Response.json({ reason: response.status === 409 ? "REVISION_CONFLICT" : "PILOT_ACCOUNTS_REJECTED" }, { status: response.status, headers: noStore });
-    const result = pilotAccountsSnapshot.parse(await response.json());
+    }
+    const result = pilotAccountsSnapshot.parse(await readAdminResponseJson(response));
     return Response.json(result, { headers: noStore });
   } catch (error) {
+    if (error instanceof AdminBodyLimitError)
+      return Response.json({ reason: "BODY_LIMIT" }, { status: 413, headers: noStore });
     return Response.json({ reason: error instanceof SyntaxError ? "INVALID_PILOT_ACCOUNTS" : "RUNTIME_UNAVAILABLE" }, { status: error instanceof SyntaxError ? 400 : 502, headers: noStore });
   }
 }

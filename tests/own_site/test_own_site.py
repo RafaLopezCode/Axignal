@@ -137,3 +137,12 @@ def test_badges_awards_and_social_links_under_a_clients_heading_are_not_clients(
         '<img alt="Best of 2025 award">'
     )
     assert [d.statement for d in logo_walls([mixed])] == ["HP", "Amazon", "Scotiabank", "Kempinski"]
+
+
+def test_decorative_images_marked_with_empty_alt_are_described() -> None:
+    page = _page(
+        '<img src="logo.svg" alt=""><img src="x.png" role="presentation">'
+        '<img src="y.png" aria-hidden="true"><img src="z.png" alt="Team at work"><img src="w.png">'
+    )
+    assert page.signals["images"] == 5
+    assert page.signals["imagesWithoutAlt"] == 1  # only the one with no alt attribute at all

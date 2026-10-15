@@ -5,7 +5,7 @@ import path from "node:path";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 
-import { briefing, byLane, fill, insightsFor, type Reading } from "../lib/observatory";
+import { briefing, buyersOf, byLane, fill, insightsFor, type Reading } from "../lib/observatory";
 import { baseline, litKeys, markSeen, observedSinceVisit, readSeen, touch } from "../lib/observatory-seen";
 import { pendingOutputSchema, portfolioSchema, subscriberOutputSchema } from "../lib/subscriber-contracts";
 import { LocaleProvider } from "../lib/locale";
@@ -304,4 +304,35 @@ test("re-observing the same public homepage is not news: the finding's change ke
   assert.equal(sameSourcesReordered, originalSources, "reordered source links alone are not a change");
   const statusChanged = insightsFor(reading("xignal:hhh", "2026-10-25T00:00:00+00:00", "CURRENT", undefined, ["https://example.test/"], "UNKNOWN"), en, "en")[0].changeKey;
   assert.notEqual(statusChanged, first, "OBSERVED to UNKNOWN is a material epistemic change");
+});
+
+test("potential buyers form their own block: most signals first, each signal with its source and date", () => {
+  const buyer = (name: string, types: string[], signals: Array<{ type: string; via: string; sourceUrl: string; observedAt: string }>) => ({
+    kind: "DEMAND", code: "POTENTIAL_BUYER", statement: name, epistemicState: "POTENTIAL", sourceUrl: signals[0]?.sourceUrl ?? null,
+    excerpt: null, observedAt: "2026-10-15T09:00:00Z",
+    detail: { signalTypes: types, independentSignals: types.length, signals: signals.map(s => ({ ...s, basis: `basis of ${s.type}` })),
+      identifiers: { website: `https://${name.toLowerCase()}.example`, wikidata: "Q1" } },
+  });
+  const reading: Reading = { projection: null, firstObservation: { state: "FIRST_PROOF_READY", firstProofReady: true, discoveries: [
+    buyer("Solo", ["SECTOR_BUYS_FROM_ITS_SECTOR"], [{ type: "SECTOR_BUYS_FROM_ITS_SECTOR", via: "Retail", sourceUrl: "https://www.wikidata.org/wiki/Q9", observedAt: "2026-10-01T00:00:00Z" }]),
+    buyer("Pair", ["CUSTOMER_OF_COMPETITOR", "PUBLIC_BUYER_OF_CATEGORY"], [
+      { type: "CUSTOMER_OF_COMPETITOR", via: "Rival SA", sourceUrl: "https://award.example/1", observedAt: "2026-09-01T00:00:00Z" },
+      { type: "PUBLIC_BUYER_OF_CATEGORY", via: "", sourceUrl: "https://award.example/2", observedAt: "2026-08-01T00:00:00Z" }]),
+    { kind: "DEMAND", code: "TENDER", statement: "Open tender", epistemicState: "POTENTIAL", sourceUrl: "https://ted.example/1", excerpt: null, observedAt: "2026-10-15T00:00:00Z", detail: { title: "Open tender" } },
+  ] } as unknown as Reading["firstObservation"] };
+  const insights = insightsFor(reading, en, "en");
+  const buyers = buyersOf(insights);
+  assert.deepEqual(buyers.map(b => b.headline.split(":")[1]?.split("·")[0]?.trim()), ["Pair", "Solo"]);
+  // Out of the lane's own list, so tenders are never crowded out.
+  assert.ok(!byLane(insights).matters.some(i => i.group === "buyers"));
+  assert.ok(byLane(insights).matters.some(i => i.headline.includes("Open tender")));
+  // Each signal is one source: its route and through whom, its link and its date.
+  const pair = buyers[0];
+  assert.deepEqual(pair.sources.map(s => [s.label, s.url, s.observedAt]), [
+    ["Buys from a competitor · Rival SA", "https://award.example/1", "2026-09-01T00:00:00Z"],
+    ["Public buyer of its activity", "https://award.example/2", "2026-08-01T00:00:00Z"],
+  ]);
+  assert.ok(pair.proof.some(p => p.label === "Independent signals" && p.value === "2"));
+  assert.ok(!JSON.stringify(buyers).match(/score":|\b\d+(\.\d+)?\s*%/i));
+  assert.ok(briefing(reading, "Acme", insights, en, "en").tally.some(x => x.startsWith("2 potential buyers (1 with several signals)")));
 });

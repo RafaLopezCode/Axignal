@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useMemo, useState } from "react";
 import { useLocale } from "@/lib/locale";
+import { text } from "@/lib/admin-presentation";
 import { poolSnapshot, type PoolCampaign, type PoolProspect, type PoolSnapshot } from "@/lib/marketing-pool";
 
 type View = "review" | "approved" | "sent" | "held" | "studying" | "closed";
@@ -59,7 +60,7 @@ export function MarketingPool() {
   } as Record<string, string>)[code ?? ""] ?? code;
   if (data && !data.enabled) return <section className="admin-attention" aria-labelledby="pool-title">
     <h2 id="pool-title">{t("Pool de marketing", "Marketing pool")}</h2>
-    <p>{t("Desactivado en este entorno. Se activa con AXIGNAL_MARKETING_POOL_ENABLED=true en la configuración del runtime.", "Disabled in this environment. Enable it with AXIGNAL_MARKETING_POOL_ENABLED=true in the runtime configuration.")}</p>
+    <p>{text("poolDisabled", locale)}</p>
   </section>;
   return <section className="admin-attention pool" aria-labelledby="pool-title">
     <h2 id="pool-title">{t("Pool de marketing", "Marketing pool")}</h2>

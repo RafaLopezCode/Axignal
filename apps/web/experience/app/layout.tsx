@@ -12,14 +12,14 @@ import { PrivacyNotice } from "@/components/privacy-notice";
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "https://axignal.com"),
   title: {
-    default: "AXIGNAL — What is changing around your company, and why does it matter?",
+    default: "AXIGNAL — What changes around your company, and why it matters",
     template: "%s · AXIGNAL",
   },
   description:
-    "Business and economic intelligence from public evidence: AXIGNAL continuously observes the organizations you choose, remembers what it finds, and shows what changes and why it matters, with source and date.",
+    "Business and economic intelligence from public evidence: AXIGNAL observes the organizations you choose and shows what changes, with source and date.",
   icons: { icon: "/brand/favicon.svg", apple: "/brand/apple-touch-icon.png" },
   openGraph: {
-    title: "AXIGNAL — What is changing around your company, and why does it matter?",
+    title: "AXIGNAL — What changes around your company, and why it matters",
     description: "Continuous economic observation, with memory and evidence.",
     images: ["/brand/og-image-1200x630.png"],
   },

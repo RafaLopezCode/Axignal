@@ -1,8 +1,10 @@
 import { cookies } from "next/headers";
 import { customerZeroCookie, resolveRuntimeOrigin, sameOrigin } from "@/lib/customer-zero-server";
 import { poolCommand, poolSnapshot } from "@/lib/marketing-pool";
+import { AdminBodyLimitError, readAdminRequestJson, readAdminResponseJson } from "@/lib/admin-json";
 
 const noStore = { "Cache-Control": "no-store" };
+const safeReasons = new Set(["ADMIN_SESSION_REQUIRED", "ADMIN_SCOPE_REQUIRED", "ADMIN_NOT_COMPOSED", "STATE_CHANGED", "INVALID_REQUEST", "INVALID_MARKETING_POOL", "JSON_REQUIRED", "BODY_LIMIT", "MARKETING_POOL_UNAVAILABLE", "MARKETING_POOL_REJECTED"]);
 async function proxy(request: Request, write: boolean) {
   if (write && !sameOrigin(request))
     return Response.json({ reason: "ORIGIN_REQUIRED" }, { status: 403, headers: noStore });
@@ -14,10 +16,7 @@ async function proxy(request: Request, write: boolean) {
     if (write) {
       if (request.headers.get("content-type")?.split(";")[0].trim() !== "application/json")
         return Response.json({ reason: "JSON_REQUIRED" }, { status: 415, headers: noStore });
-      const text = await request.text();
-      if (text.length > 1024)
-        return Response.json({ reason: "BODY_LIMIT" }, { status: 413, headers: noStore });
-      const parsed = poolCommand.safeParse(JSON.parse(text));
+      const parsed = poolCommand.safeParse(await readAdminRequestJson(request, 1024));
       if (!parsed.success)
         return Response.json({ reason: "INVALID_MARKETING_POOL" }, { status: 400, headers: noStore });
       body = JSON.stringify(parsed.data);
@@ -31,11 +30,14 @@ async function proxy(request: Request, write: boolean) {
       ...(body ? { body } : {}),
     });
     if (!response.ok) {
-      const raw = await response.json().catch(() => ({}));
-      return Response.json({ reason: typeof raw?.reason === "string" ? raw.reason : "MARKETING_POOL_REJECTED" }, { status: response.status, headers: noStore });
+      const raw: unknown = await readAdminResponseJson(response).catch(() => null);
+      const reason = raw && typeof raw === "object" && "reason" in raw ? raw.reason : null;
+      return Response.json({ reason: typeof reason === "string" && safeReasons.has(reason) ? reason : "MARKETING_POOL_REJECTED" }, { status: response.status, headers: noStore });
     }
-    return Response.json(poolSnapshot.parse(await response.json()), { headers: noStore });
+    return Response.json(poolSnapshot.parse(await readAdminResponseJson(response)), { headers: noStore });
   } catch (error) {
+    if (error instanceof AdminBodyLimitError)
+      return Response.json({ reason: "BODY_LIMIT" }, { status: 413, headers: noStore });
     return Response.json({ reason: error instanceof SyntaxError ? "INVALID_MARKETING_POOL" : "RUNTIME_UNAVAILABLE" }, { status: error instanceof SyntaxError ? 400 : 502, headers: noStore });
   }
 }
