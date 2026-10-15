@@ -50,6 +50,16 @@ export const firstObservationSchema = z.object({
     new: z.number().int().min(0),
     sources: z.array(z.string().max(80)).max(20).optional(),
     preparing: z.boolean().optional(),
+    // The buyer's own classification says the activity is only an additional code (#269).
+    additional: z.number().int().min(0).optional(),
+    // An evaluator judged them unrelated to every matched activity (spec 075): set aside, listed.
+    setAsideByFit: z.number().int().min(0).optional(),
+    setAside: z.array(z.object({
+      title: z.string().max(2000).nullable().optional(),
+      url: z.string().max(2000).nullable().optional(),
+      buyer: z.string().max(500).nullable().optional(),
+      deadline: z.string().max(64).nullable().optional(),
+    }).passthrough()).max(100).optional(),
   }).optional(),
 });
 export type FirstObservation = z.infer<typeof firstObservationSchema>;

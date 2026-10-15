@@ -48,6 +48,32 @@ class LiveDemand:
     sources: tuple[str, ...]
     #: Calls where the activity is only an additional code (main object: something else).
     additional: int = 0
+    #: Calls an evaluator judged UNRELATED to every matched capability (spec 075): set aside,
+    #: never deleted, and listed so they stay inspectable.
+    set_aside: tuple[dict[str, object], ...] = ()
+    set_aside_total: int = 0
+
+
+#: A remembered evaluator judgment of how closely a notice is a capability's work (spec 075):
+#: {"fit", "evaluator", "model", "question"}, or None when there is none to use.
+FitPort = Callable[[ProcurementRecord, str], Mapping[str, str] | None]
+#: Presentation order only: CORE, not judged, PARTIAL, ADJACENT (UNRELATED is set aside).
+_FIT_RANK = {"CORE": 0, "PARTIAL": 2, "ADJACENT": 3}
+_FIT_PREFERENCE = ("CORE", "PARTIAL", "ADJACENT", "UNRELATED")
+
+
+def _call_fit(fits: Sequence[Mapping[str, str] | None]) -> Mapping[str, str] | None:
+    """A call's fit is its best across its capabilities; unknown when any is unknown."""
+    if not fits or any(f is None for f in fits):
+        return None
+    known = [f for f in fits if f is not None]
+    return min(known, key=lambda f: _FIT_PREFERENCE.index(f["fit"]))
+
+
+def _merged_fit(*fits: object) -> object:
+    """Two sources of one call: the more favourable judgment that exists."""
+    known = [f for f in fits if isinstance(f, Mapping) and f.get("fit") in _FIT_PREFERENCE]
+    return min(known, key=lambda f: _FIT_PREFERENCE.index(str(f["fit"]))) if known else None
 
 
 def _words(title: object) -> str:
@@ -92,9 +118,12 @@ def _without_duplicates(candidates: list[dict[str, object]]) -> list[dict[str, o
             kept[key] = candidate
             continue
         known = _best_classification(current.get("classifiedAs"), candidate.get("classifiedAs"))
+        fit = _merged_fit(current.get("fitBy"), candidate.get("fitBy"))
         if current.get("source") != "es-placsp" and candidate.get("source") == "es-placsp":
             current = kept[key] = dict(candidate)
         current["classifiedAs"] = known
+        current["fitBy"] = fit
+        current["fit"] = fit["fit"] if isinstance(fit, Mapping) else None
     return list(kept.values())
 
 
@@ -127,11 +156,14 @@ class LiveDemandReader:
         sources: Sequence[str],
         clock: Callable[[], datetime],
         fresh_for: timedelta = FRESH_FOR,
+        fit: FitPort | None = None,
     ) -> None:
         self._store = store
         self._sources = tuple(sources)
         self._clock = clock
         self._fresh_for = fresh_for
+        # Remembered evaluator judgments only: no provider is ever called on a read.
+        self._fit = fit
         # Decoded slice records, kept until the slice is ingested again.
         self._cache: dict[str, tuple[datetime, tuple[ProcurementRecord, ...]]] = {}
 
@@ -197,6 +229,11 @@ class LiveDemandReader:
                     classification = _best_classification(
                         *(classified_as(record, codes) for cid, codes in wanted if cid in matched)
                     )
+                    fit = (
+                        None
+                        if self._fit is None
+                        else _call_fit([self._fit(record, cid) for cid in sorted(matched)])
+                    )
                     found[key] = {
                         "title": record.title,
                         "buyer": record.buyer_name,
@@ -213,6 +250,8 @@ class LiveDemandReader:
                         "epistemicState": "POTENTIAL",
                         "isNew": now - record.published_at <= NEW_FOR,
                         "classifiedAs": classification,
+                        "fit": None if fit is None else fit["fit"],
+                        "fitBy": None if fit is None else dict(fit),
                         # Read by the duplicate check only, then dropped.
                         "_allCodes": ",".join(sorted({c.code for c in record.demand_codes}))
                         if len(record.demand_codes) >= 3
@@ -220,9 +259,12 @@ class LiveDemandReader:
                     }
         if not answered:
             return None
+        unique = _without_duplicates(list(found.values()))
+        set_aside = [c for c in unique if c.get("fit") == "UNRELATED"]
         ordered = sorted(
-            _without_duplicates(list(found.values())),
+            [c for c in unique if c.get("fit") != "UNRELATED"],
             key=lambda c: (
+                _FIT_RANK.get(str(c.get("fit")), 1),
                 c.get("classifiedAs") == ADDITIONAL,
                 not c["isNew"],
                 str(c["deadline"]),
@@ -237,6 +279,14 @@ class LiveDemandReader:
             new=sum(1 for c in ordered if c["isNew"]),
             sources=tuple(sorted(answered)),
             additional=sum(1 for c in ordered if c.get("classifiedAs") == ADDITIONAL),
+            set_aside=tuple(
+                {
+                    k: c.get(k)
+                    for k in ("title", "url", "buyer", "deadline", "capabilityIds", "fitBy")
+                }
+                for c in set_aside[:MAX_SHOWN]
+            ),
+            set_aside_total=len(set_aside),
         )
 
 
@@ -338,6 +388,8 @@ def apply_live_demand(
         "shown": len(live.candidates),
         "new": live.new,
         "additional": live.additional,
+        "setAsideByFit": live.set_aside_total,
+        "setAside": list(live.set_aside),
         "sources": list(live.sources),
     }
     return view

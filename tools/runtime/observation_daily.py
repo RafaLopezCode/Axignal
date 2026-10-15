@@ -652,6 +652,13 @@ def main(argv: list[str] | None = None) -> None:
         summary["worldDemandSlices"] = [
             {"slice": r.slice_key, "pages": r.pages, "complete": r.complete} for r in ingested
         ]
+        # Spec 075: judge the fit of open demand now, so subscribers' reads only recall it.
+        from tools.runtime.demand_fit import run_demand_fit
+
+        try:
+            summary["demandFit"] = run_demand_fit(root, now=clock.now())
+        except Exception as error:  # a provider problem never fails the daily tick
+            summary["demandFit"] = {"state": "FAILED", "error": type(error).__name__}
     print(json.dumps(summary))
     if summary["state"] in {"ERROR", "LEASE_LOST"}:
         sys.exit(1)

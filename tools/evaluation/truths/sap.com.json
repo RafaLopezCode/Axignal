@@ -11,11 +11,12 @@
  },
  "checks": [
   {
-   "id": "presence.website_read",
+   "id": "presence.robots_respected",
    "family": "presence",
    "require": {
-    "code": "PUBLIC_WEBSITE_OBSERVED"
-   }
+    "code": "ROBOTS_DISALLOWED"
+   },
+   "note": "sap.com's robots.txt disallows every user agent except named search engines: AXIGNAL must respect it and say so (MASTER §54), never read around it."
   },
   {
    "id": "value.activity_established",

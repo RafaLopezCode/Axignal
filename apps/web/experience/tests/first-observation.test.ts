@@ -103,3 +103,17 @@ test("a change in time names the metric, both readings and its direction, never 
   assert.match(clients.finding, /Public clients: new: B$/);
   assert.match(clients.why, /no judgement/);
 });
+
+test("an evaluator's fit judgment labels a tender and a set-aside list survives the contract (spec 075)", () => {
+  const adjacent = discoveryCopy(discovery("DEMAND", "POTENTIAL_DEMAND", { statement: "Obras", detail: { title: "Obras de ventilación", fit: "ADJACENT", fitBy: { model: "jev-1.13.0" } } }), es);
+  assert.match(adjacent.finding, /^Afín, otro trabajo principal · /);
+  const core = discoveryCopy(discovery("DEMAND", "POTENTIAL_DEMAND", { statement: "Estudio", detail: { title: "Estudio", fit: "CORE" } }), es);
+  assert.doesNotMatch(core.finding, /Afín|parcial/);
+  const parsed = firstObservationSchema.parse({
+    state: "FIRST_PROOF_READY", firstProofReady: true, observedAt: "2026-10-15T10:00:00+00:00", discoveries: [],
+    demand: { live: true, asOf: "2026-10-15T10:00:00+00:00", total: 3, new: 0, setAsideByFit: 1,
+      setAside: [{ title: "Captación de familias acogedoras", url: "https://contrataciondelestado.es/x", fitBy: { model: "jev-1.13.0" } }] },
+  });
+  assert.equal(parsed.demand?.setAsideByFit, 1);
+  assert.equal(parsed.demand?.setAside?.[0]?.title, "Captación de familias acogedoras");
+});
