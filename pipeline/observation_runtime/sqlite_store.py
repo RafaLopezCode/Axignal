@@ -219,6 +219,8 @@ def _encode_record(r: ProcurementRecord) -> dict[str, object]:
         "source_url": r.source_url,
         "deadline": r.deadline,
         "winners": list(r.winners),
+        "main_codes": _codes(r.main_codes),
+        "contract_nature": r.contract_nature,
     }
 
 
@@ -235,6 +237,8 @@ def _decode_record(r: dict[str, Any]) -> ProcurementRecord:
         source_url=str(r["source_url"]),
         deadline=r["deadline"],
         winners=tuple(r["winners"]),
+        main_codes=_from_codes(r.get("main_codes") or []),
+        contract_nature=r.get("contract_nature"),
     )
 
 

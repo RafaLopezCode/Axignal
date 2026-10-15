@@ -8,7 +8,8 @@ ones published in the last days marked as new. The index answers only for slices
 complete and fresh; otherwise the caller keeps what the observation stored.
 
 Every match stays POTENTIAL: a capability code inside a published call is a plausible fit,
-never a customer, a lead or an assessed commercial fit.
+never a customer, a lead or an assessed commercial fit. A call whose main object is something
+else, where the activity is only an additional code, is said so and shown after the others.
 """
 
 from __future__ import annotations
@@ -20,7 +21,12 @@ from datetime import datetime, timedelta
 
 from application.observation_intelligence.catalog import with_current_codes
 from application.observation_intelligence.contracts import SourceCapability, TaxonomyCode
-from application.observation_intelligence.findings import ProcurementRecord
+from application.observation_intelligence.findings import (
+    ADDITIONAL,
+    MAIN,
+    ProcurementRecord,
+    classified_as,
+)
 from application.world_demand.index import DemandIndexStore, DemandSlice, code_within, country_of
 
 OPEN = SourceCapability.PUBLIC_PROCUREMENT_OPPORTUNITIES
@@ -40,6 +46,8 @@ class LiveDemand:
     total: int
     new: int
     sources: tuple[str, ...]
+    #: Calls where the activity is only an additional code (main object: something else).
+    additional: int = 0
 
 
 def _words(title: object) -> str:
@@ -48,11 +56,17 @@ def _words(title: object) -> str:
     return " ".join(re.findall(r"\w+", text))[:60]
 
 
+def _best_classification(*known: object) -> str | None:
+    """MAIN when any reading says so, ADDITIONAL when one does, otherwise unknown."""
+    return MAIN if MAIN in known else ADDITIONAL if ADDITIONAL in known else None
+
+
 def _without_duplicates(candidates: list[dict[str, object]]) -> list[dict[str, object]]:
     """One call published in several sources is shown once, from its national platform.
 
     Same buyer, same deadline day and the same opening words: the same call. The national
-    platform's entry is kept (its official link); otherwise the first one seen.
+    platform's entry is kept (its official link); otherwise the first one seen. What one
+    source knows of the call's main object (TED publishes it) is kept on the merged entry.
     """
     kept: dict[tuple[str, str, str], dict[str, object]] = {}
     for candidate in candidates:
@@ -65,10 +79,13 @@ def _without_duplicates(candidates: list[dict[str, object]]) -> list[dict[str, o
             kept[(str(id(candidate)), "", "")] = candidate
             continue
         current = kept.get(key)
-        if current is None or (
-            current.get("source") != "es-placsp" and candidate.get("source") == "es-placsp"
-        ):
+        if current is None:
             kept[key] = candidate
+            continue
+        known = _best_classification(current.get("classifiedAs"), candidate.get("classifiedAs"))
+        if current.get("source") != "es-placsp" and candidate.get("source") == "es-placsp":
+            current = kept[key] = dict(candidate)
+        current["classifiedAs"] = known
     return list(kept.values())
 
 
@@ -168,6 +185,9 @@ class LiveDemandReader:
                     key = (record.source_id, record.record_id)
                     if not matched or key in found:
                         continue
+                    classification = _best_classification(
+                        *(classified_as(record, codes) for cid, codes in wanted if cid in matched)
+                    )
                     found[key] = {
                         "title": record.title,
                         "buyer": record.buyer_name,
@@ -183,12 +203,18 @@ class LiveDemandReader:
                         "demandForm": "OPEN_CALL_FOR_TENDER",
                         "epistemicState": "POTENTIAL",
                         "isNew": now - record.published_at <= NEW_FOR,
+                        "classifiedAs": classification,
                     }
         if not answered:
             return None
         ordered = sorted(
             _without_duplicates(list(found.values())),
-            key=lambda c: (not c["isNew"], str(c["deadline"]), str(c["title"])),
+            key=lambda c: (
+                c.get("classifiedAs") == ADDITIONAL,
+                not c["isNew"],
+                str(c["deadline"]),
+                str(c["title"]),
+            ),
         )
         return LiveDemand(
             as_of=now,
@@ -197,6 +223,7 @@ class LiveDemandReader:
             total=len(ordered),
             new=sum(1 for c in ordered if c["isNew"]),
             sources=tuple(sorted(answered)),
+            additional=sum(1 for c in ordered if c.get("classifiedAs") == ADDITIONAL),
         )
 
 
@@ -297,6 +324,7 @@ def apply_live_demand(
         "total": live.total,
         "shown": len(live.candidates),
         "new": live.new,
+        "additional": live.additional,
         "sources": list(live.sources),
     }
     return view

@@ -29,7 +29,13 @@ from application.observation_intelligence.contracts import (
     geo,
 )
 from application.observation_intelligence.coverage import EvidenceCoverageMap
-from application.observation_intelligence.findings import ProcurementRecord, SourceFindings
+from application.observation_intelligence.findings import (
+    ADDITIONAL,
+    MAIN,
+    ProcurementRecord,
+    SourceFindings,
+    classified_as,
+)
 from application.observation_intelligence.learning import OperationalLearning
 from application.observation_intelligence.registry import SourceRegistry
 from application.observation_intelligence.strategy import (
@@ -119,6 +125,9 @@ class OpportunityCandidate:
     opportunity_family: OpportunityFamily
     demand_form: str
     epistemic_state: XignalEpistemicState = XignalEpistemicState.POTENTIAL
+    #: MAIN when the call is mainly about the activity, ADDITIONAL when the activity is only
+    #: an additional code of a call about something else, None when the source does not say.
+    classified_as: str | None = None
 
     def __post_init__(self) -> None:
         if self.epistemic_state is XignalEpistemicState.OBSERVED:
@@ -205,6 +214,11 @@ def _procurement_candidate(
                 basis.add("ADJACENT_CODE_REVEALED_BY_AWARDS")
     if not matched:
         return None
+    readings = {
+        classified_as(record, capability.demand_codes)
+        for capability in context.capabilities
+        if capability.capability_id in matched
+    }
     digest = hashlib.sha256(f"{context.xeed_id}|{record.source_id}|{record.record_id}".encode())
     return OpportunityCandidate(
         candidate_id="opportunity-candidate:" + digest.hexdigest()[:24],
@@ -219,6 +233,7 @@ def _procurement_candidate(
         match_basis=tuple(sorted(basis)),
         opportunity_family=OpportunityFamily.PUBLIC_PROCUREMENT,
         demand_form="OPEN_CALL_FOR_TENDER",
+        classified_as=MAIN if MAIN in readings else ADDITIONAL if ADDITIONAL in readings else None,
     )
 
 
