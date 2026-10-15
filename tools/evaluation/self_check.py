@@ -11,6 +11,10 @@ Usage: python -m tools.evaluation.self_check reading.json [--out report.json]
 
 After each deploy the reading is compared with the previous report: a check that passed
 and now fails is a regression, named per family (``deploy/production/run-self-check.sh``).
+
+A golden-runner row list is checked organization by organization: AXIGNAL against
+``self_truth.json`` and every other domain with a file in ``truths/`` (organizations whose
+activity is known with certainty), so a fix found on AXIGNAL is measured on many.
 """
 
 from __future__ import annotations
@@ -23,6 +27,43 @@ from pathlib import Path
 from typing import Any
 
 TRUTH = Path(__file__).with_name("self_truth.json")
+TRUTHS = Path(__file__).with_name("truths")
+
+
+def truth_for(domain: str) -> Mapping[str, Any] | None:
+    path = TRUTH if domain == "axignal.com" else TRUTHS / f"{domain}.json"
+    return json.loads(path.read_text(encoding="utf-8")) if path.is_file() else None
+
+
+def evaluate_set(rows: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
+    """Each organization against its own truth; verdict ids are prefixed with its domain."""
+    by_org: dict[str, Any] = {}
+    verdicts: list[dict[str, Any]] = []
+    for row in rows:
+        domain = str(row.get("domain") or "")
+        truth = truth_for(domain)
+        if truth is None or not isinstance(row.get("view"), Mapping):
+            continue
+        report = evaluate(row["view"], truth)
+        by_org[domain] = {k: report[k] for k in ("accuracy", "measured", "passed", "byFamily")}
+        verdicts += [{**v, "id": f"{domain}/{v['id']}"} for v in report["verdicts"]]
+    measured = [v for v in verdicts if v["status"] != "NOT_MEASURED"]
+    passed = sum(v["status"] == "PASS" for v in measured)
+    by_family: dict[str, dict[str, int]] = {}
+    for v in verdicts:
+        tally = by_family.setdefault(v["family"], {"PASS": 0, "FAIL": 0, "NOT_MEASURED": 0})
+        tally[v["status"]] += 1
+    return {
+        "truth": "truth-set",
+        "accuracy": None if not measured else round(100 * passed / len(measured), 1),
+        "checks": len(verdicts),
+        "measured": len(measured),
+        "passed": passed,
+        "byFamily": by_family,
+        "byOrganization": by_org,
+        "defects": [v for v in verdicts if v["status"] == "FAIL"],
+        "verdicts": verdicts,
+    }
 
 
 def _discoveries(reading: Mapping[str, Any]) -> list[Mapping[str, Any]]:
@@ -164,9 +205,12 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser.add_argument("--fail-on-regression", action="store_true")
     args = parser.parse_args(argv)
     raw = json.loads(args.reading.read_text(encoding="utf-8"))
-    # Accepts a reading, or a golden-runner row list ([{"view": ...}]).
-    reading = raw[0]["view"] if isinstance(raw, list) else raw
-    report = evaluate(reading, json.loads(TRUTH.read_text(encoding="utf-8")))
+    # Accepts a reading (AXIGNAL's), or a golden-runner row list ([{"domain", "view"}]).
+    if isinstance(raw, list) and len(raw) > 1:
+        report = evaluate_set(raw)
+    else:
+        reading = raw[0]["view"] if isinstance(raw, list) else raw
+        report = evaluate(reading, json.loads(TRUTH.read_text(encoding="utf-8")))
     previous = (
         json.loads(args.previous.read_text(encoding="utf-8"))
         if args.previous is not None and args.previous.is_file()
@@ -182,6 +226,8 @@ def main(argv: Sequence[str] | None = None) -> int:
     lines = [
         f"self-accuracy {report['accuracy']}% ({report['passed']}/{report['measured']} measured checks)"
     ]
+    for domain, org in (report.get("byOrganization") or {}).items():
+        lines.append(f"  {domain}: {org['accuracy']}% ({org['passed']}/{org['measured']})")
     lines += [f"FAIL {d['id']} [{d['defect']}]: {json.dumps(d['detail'], ensure_ascii=False)[:300]}"
               for d in report["defects"]]  # fmt: skip
     lines += [f"REGRESSION {r['family']}: {r['id']} [{r['defect']}]" for r in report["regressions"]]

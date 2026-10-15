@@ -1,0 +1,72 @@
+{
+ "version": "truth-set-v1",
+ "purpose": "Organizations whose activity is known with certainty: AXIGNAL itself plus ten others (well known and niche), checked after each deploy.",
+ "organizations": [
+  {
+   "domain": "axignal.com",
+   "name": "AXIGNAL",
+   "country": "ES",
+   "segment": "Economic intelligence"
+  },
+  {
+   "domain": "inditex.com",
+   "name": "Inditex",
+   "country": "ES",
+   "segment": "Fashion design, sourcing and retail (Zara, Massimo Dutti, Be"
+  },
+  {
+   "domain": "iberdrola.com",
+   "name": "Iberdrola",
+   "country": "ES",
+   "segment": "Electric utility"
+  },
+  {
+   "domain": "ferrovial.com",
+   "name": "Ferrovial",
+   "country": "ES",
+   "segment": "Infrastructure developer and operator"
+  },
+  {
+   "domain": "zitron.com",
+   "name": "Zitron",
+   "country": "ES",
+   "segment": "Micro-niche"
+  },
+  {
+   "domain": "sap.com",
+   "name": "SAP",
+   "country": "DE",
+   "segment": "Enterprise application software (ERP, cloud), with consultin"
+  },
+  {
+   "domain": "novonordisk.com",
+   "name": "Novo Nordisk",
+   "country": "DK",
+   "segment": "Pharmaceuticals for diabetes, obesity and rare diseases (ins"
+  },
+  {
+   "domain": "dsv.com",
+   "name": "DSV",
+   "country": "DK",
+   "segment": "Freight forwarding and contract logistics"
+  },
+  {
+   "domain": "securitas.com",
+   "name": "Securitas",
+   "country": "SE",
+   "segment": "Security services"
+  },
+  {
+   "domain": "ipsos.com",
+   "name": "Ipsos",
+   "country": "FR",
+   "segment": "Market research and public opinion polling, with related ana"
+  },
+  {
+   "domain": "hamilton-medical.com",
+   "name": "Hamilton Medical",
+   "country": "CH",
+   "segment": "Niche"
+  }
+ ]
+}

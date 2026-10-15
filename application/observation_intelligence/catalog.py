@@ -27,7 +27,7 @@ from application.observation_intelligence.contracts import (
     geo,
 )
 
-CATALOG_VERSION = "eoil-catalog-2026-10-12.6"
+CATALOG_VERSION = "eoil-catalog-2026-10-15.7"
 
 #: Path depth that counts as a "region" inside each jurisdiction tree.
 REGIONAL_DEPTH: dict[str, int] = {"EU": 4, "US": 2}
@@ -324,8 +324,8 @@ CAPABILITY_LEXICON: tuple[CapabilityLexiconEntry, ...] = (
     CapabilityLexiconEntry(
         capability_id="security-guarding", label="Private security and guarding",
         terms=("seguridad privada", "vigilantes de seguridad", "security guard services",
-               "manned guarding", "gardiennage", "sicherheitsdienst", "vigilanza privata",
-               "segurança privada"),
+               "manned guarding", "on-site guarding", "guarding services", "mobile security services",
+               "gardiennage", "sicherheitsdienst", "vigilanza privata", "segurança privada"),
         demand_codes=(cpv("79710000"), cpv("79713000"), naics("561612")),
         families=("facility-services",),
         buyer_jobs=("guarding of public buildings and events",),
@@ -333,7 +333,8 @@ CAPABILITY_LEXICON: tuple[CapabilityLexiconEntry, ...] = (
     CapabilityLexiconEntry(
         capability_id="security-systems", label="Security and surveillance systems",
         terms=("videovigilancia", "sistemas de alarma", "sistemas de seguridad electrónica",
-               "cctv", "alarm systems", "vidéosurveillance", "videoüberwachung",
+               "cctv", "alarm systems", "electronic security", "remote video", "alarm monitoring",
+               "vidéosurveillance", "videoüberwachung",
                "videosorveglianza", "videovigilância"),
         demand_codes=(cpv("35120000"), cpv("45312000"), naics("561621")),
         families=("facility-services", "construction"),

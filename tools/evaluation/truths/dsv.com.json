@@ -1,0 +1,73 @@
+{
+ "version": "truth-v1",
+ "purpose": "What is publicly and well known about this organization; AXIGNAL's reading must agree (flywheel, CTO 2026-10-15).",
+ "subject": {
+  "name": "DSV",
+  "website": "https://dsv.com/",
+  "home": "DK"
+ },
+ "facts": {
+  "value": "Freight forwarding and contract logistics: road, air and sea transport, warehousing."
+ },
+ "checks": [
+  {
+   "id": "presence.website_read",
+   "family": "presence",
+   "require": {
+    "code": "PUBLIC_WEBSITE_OBSERVED"
+   }
+  },
+  {
+   "id": "value.activity_established",
+   "family": "value",
+   "forbid": {
+    "code": "ACTIVITY_NOT_ESTABLISHED"
+   }
+  },
+  {
+   "id": "value.activities_allowed",
+   "family": "value",
+   "activities": [
+    "freight-logistics",
+    "courier-parcel"
+   ]
+  },
+  {
+   "id": "value.industry",
+   "family": "value",
+   "industry": {
+    "allowed": [
+     "H52",
+     "H49",
+     "H50",
+     "H51",
+     "H53"
+    ],
+    "preferred": "H52"
+   }
+  },
+  {
+   "id": "demand.relevant_to_its_activity",
+   "family": "demand",
+   "demand": {
+    "titleTerms": [
+     "transporte",
+     "transport",
+     "logístic",
+     "logistic",
+     "almacén",
+     "warehous",
+     "flete",
+     "freight",
+     "carga",
+     "cargo",
+     "envío",
+     "shipping",
+     "mudanza",
+     "distribución",
+     "distribution"
+    ]
+   }
+  }
+ ]
+}

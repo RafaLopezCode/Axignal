@@ -270,8 +270,8 @@ Operational invariants:
 ## Self-check after each deploy
 
 `run-self-check.sh` runs after a release is recorded:
-1. AXIGNAL observes `axignal.com` with the deployed image, in a throwaway container. Runtime data is mounted read-only and copied (`tools/evaluation/run_golden.py` with `self_golden_set.json`).
-2. The reading is checked against `tools/evaluation/self_truth.json`.
+1. AXIGNAL observes `axignal.com` and ten organizations it knows with certainty (`truth_set.json`) with the deployed image, in a throwaway container. Runtime data is mounted read-only and copied (`tools/evaluation/run_golden.py`).
+2. Each reading is checked against its truth: `tools/evaluation/self_truth.json` for AXIGNAL, `tools/evaluation/truths/<domain>.json` for the others.
 3. Reports are kept in `/var/lib/axignal/self-check/<sha>/`, and `latest.json` is the baseline for the next deploy.
 
 The script prints the self-accuracy, every defect, and every check that passed after the previous deploy and fails now (`REGRESSION <family>: <check>`). It reports only: it never blocks or reverts a deploy. Each regression is an engine defect to fix for every organization (the flywheel).

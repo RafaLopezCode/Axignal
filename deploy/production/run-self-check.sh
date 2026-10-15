@@ -1,6 +1,7 @@
 #!/bin/sh
-# AXIGNAL observes axignal.com with the release just deployed and checks the reading against
-# what we know to be true (tools/evaluation/self_truth.json). Every disagreement is an engine
+# AXIGNAL observes axignal.com and ten organizations it knows with certainty (truth_set.json)
+# with the release just deployed and checks each reading against
+# what we know to be true (tools/evaluation/self_truth.json, truths/). Every disagreement is an engine
 # defect; a check that passed after the previous deploy and fails now is a regression.
 #
 # Isolated and read-only for production: a throwaway container from the deployed image,
@@ -29,7 +30,7 @@ trap 'rm -f "$work/env"' EXIT
 set -- /usr/bin/docker run --rm --name axignal-self-check --group-add 1991 --memory 1500m --cpus 1 \
   --entrypoint /app/.venv/bin/python --env-file "$work/env" \
   -e AXIGNAL_ADMIN_ACCESS_ENABLED=false \
-  -e AXIGNAL_GOLDEN_SET=/app/tools/evaluation/self_golden_set.json \
+  -e AXIGNAL_GOLDEN_SET=/app/tools/evaluation/truth_set.json \
   -v /var/lib/axignal/runtime:/src:ro \
   -v /etc/axignal/subscriber-runtime.conf:/run/secrets/subscriber_configuration:ro
 for secret in openai_api_key crux_api_key google_client_secret typesafe_api_key; do

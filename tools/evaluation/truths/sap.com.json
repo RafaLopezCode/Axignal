@@ -1,0 +1,72 @@
+{
+ "version": "truth-v1",
+ "purpose": "What is publicly and well known about this organization; AXIGNAL's reading must agree (flywheel, CTO 2026-10-15).",
+ "subject": {
+  "name": "SAP",
+  "website": "https://sap.com/",
+  "home": "DE"
+ },
+ "facts": {
+  "value": "Enterprise application software (ERP, cloud), with consulting, support and training around it."
+ },
+ "checks": [
+  {
+   "id": "presence.website_read",
+   "family": "presence",
+   "require": {
+    "code": "PUBLIC_WEBSITE_OBSERVED"
+   }
+  },
+  {
+   "id": "value.activity_established",
+   "family": "value",
+   "forbid": {
+    "code": "ACTIVITY_NOT_ESTABLISHED"
+   }
+  },
+  {
+   "id": "value.activities_allowed",
+   "family": "value",
+   "activities": [
+    "business-software",
+    "software-development",
+    "it-services",
+    "training",
+    "management-consulting"
+   ]
+  },
+  {
+   "id": "value.industry",
+   "family": "value",
+   "industry": {
+    "allowed": [
+     "J58",
+     "J62_63"
+    ],
+    "preferred": "J58"
+   }
+  },
+  {
+   "id": "demand.relevant_to_its_activity",
+   "family": "demand",
+   "demand": {
+    "titleTerms": [
+     "software",
+     "sap",
+     "erp",
+     "licencia",
+     "licence",
+     "license",
+     "cloud",
+     "nube",
+     "sistema",
+     "system",
+     "aplicación",
+     "application",
+     "informátic",
+     "digital"
+    ]
+   }
+  }
+ ]
+}

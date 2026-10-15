@@ -125,3 +125,47 @@ def test_known_capabilities_read_the_catalogs_current_codes() -> None:
     assert "79300000" not in codes and "79310000" in codes  # advertising (7934) no longer matches
     unknown = {"capabilityId": "something-else", "demandCodes": [["CPV", "1"]]}
     assert with_current_codes(unknown) is unknown
+
+
+def test_every_truth_speaks_the_engines_vocabulary() -> None:
+    # A truth naming a capability or industry the engine cannot produce would fail forever.
+    from application.observation_intelligence.catalog import CAPABILITY_LEXICON
+    from tools.evaluation.self_check import TRUTHS, truth_for
+
+    capabilities = {e.capability_id for e in CAPABILITY_LEXICON}
+    chain = Path("application/value_chain/eu_value_chain.json")
+    industries = set(json.loads(chain.read_text(encoding="utf-8"))["industries"])
+    truth_set = json.loads(TRUTHS.with_name("truth_set.json").read_text(encoding="utf-8"))
+    domains = [o["domain"] for o in truth_set["organizations"]]
+    assert len(domains) == 11 and "axignal.com" in domains
+    for domain in domains:
+        truth = truth_for(domain)
+        assert truth is not None, domain
+        for check in truth["checks"]:
+            assert set(check.get("activities", ())) <= capabilities, (domain, check["id"])
+            if "industry" in check:
+                allowed = set(check["industry"]["allowed"])
+                assert allowed <= industries and check["industry"]["preferred"] in allowed, domain
+
+
+def test_a_truth_set_is_checked_organization_by_organization() -> None:
+    from tools.evaluation.self_check import evaluate_set, regressions
+
+    rows = [
+        {"domain": "zitron.com", "view": {"discoveries": [
+            _d("PUBLIC_PRESENCE", "PUBLIC_WEBSITE_OBSERVED"),
+            {"kind": "ACTIVITY", "code": "ventilation-systems", "statement": "x", "detail": {}}]}},
+        {"domain": "hamilton-medical.com", "view": {"discoveries": [
+            _d("PUBLIC_PRESENCE", "PUBLIC_WEBSITE_OBSERVED"),
+            # Mechanical ventilators read as building ventilation: a wrong classification.
+            {"kind": "ACTIVITY", "code": "ventilation-systems", "statement": "x", "detail": {}}]}},
+        {"domain": "unknown.example", "view": {"discoveries": []}},
+    ]  # fmt: skip
+    report = evaluate_set(rows)
+    assert set(report["byOrganization"]) == {"zitron.com", "hamilton-medical.com"}
+    by_id = {v["id"]: v for v in report["verdicts"]}
+    assert by_id["zitron.com/value.activities_allowed"]["status"] == "PASS"
+    wrong = by_id["hamilton-medical.com/value.activities_allowed"]
+    assert wrong["status"] == "FAIL" and wrong["defect"] == "WRONG_CLASSIFICATION"
+    before = {"verdicts": [{**wrong, "status": "PASS"}]}
+    assert [r["id"] for r in regressions(report, before)] == [wrong["id"]]

@@ -27,7 +27,7 @@ WIKIDATA_INDUSTRIES = Path(__file__).with_name("wikidata_industries.json")
 CPV_TO_NACE: dict[str, str] = {
     "03": "01", "031": "01", "032": "01", "034": "02", "035": "03", "09": "19", "091": "19",
     "093": "35", "094": "35", "14": "08", "15": "10", "159": "11", "16": "28", "18": "14",
-    "184": "15", "19": "13", "22": "18", "24": "20", "246": "20", "33": "21", "336": "21",
+    "184": "15", "19": "13", "22": "18", "24": "20", "246": "20", "33": "32", "331": "32", "336": "21", "337": "20",
     "30": "26", "301": "28", "31": "27", "32": "26", "34": "29", "345": "30", "347": "30",
     "35": "25", "37": "32", "38": "26", "39": "31", "395": "13", "398": "20", "41": "36",
     "42": "28", "43": "28", "44": "23", "441": "23", "442": "25", "443": "25", "445": "25",
@@ -83,6 +83,13 @@ def _by_division() -> dict[int, str]:
 def _wikidata_industries() -> dict[str, str]:
     data = json.loads(WIKIDATA_INDUSTRIES.read_text(encoding="utf-8"))["industries"]
     return {str(qid): str(entry["nace"]) for qid, entry in data.items()}
+
+
+def wikidata_industry_classifies(qid: str) -> bool:
+    """False for a curated industry too broad to name one organization's ("transport": land,
+    air or sea?); it still routes the sector search of potential buyers."""
+    entry = json.loads(WIKIDATA_INDUSTRIES.read_text(encoding="utf-8"))["industries"].get(qid)
+    return not (isinstance(entry, Mapping) and entry.get("classifies") is False)
 
 
 def wikidata_industry_nace(qid: str) -> str | None:
@@ -167,8 +174,10 @@ def non_operating(code: str) -> bool:
 
 
 #: Pages whose text describes contracts and policies, not what the organization does.
+#: A legal or policy page, also when the word ends a longer segment ("/digital-services--
+#: legal-documents/", found on securitas.com, truth set 2026-10-15).
 LEGAL_PAGE = re.compile(
-    r"/(legal|terms|privacy|cookies?|aviso-legal|politica|impressum|mentions-legales|agb|"
+    r"(?:/|[\-_.])(legal|terms|privacy|cookies?|aviso-legal|politica|impressum|mentions-legales|agb|"
     r"datenschutz|conditions|cgv|cgu|disclaimer)(?:[/\-_.]|$)",
     re.IGNORECASE,
 )
@@ -215,7 +224,7 @@ def company_industry(
                 return found, "REGISTER_ACTIVITY_CODE"
     stated = next((d for d in discoveries if d.get("code") == "WIKIDATA:industry"), None)
     qid = str((stated.get("detail") or {}).get("value") or "") if stated else ""
-    if nace_of is not None and qid.startswith("Q"):
+    if nace_of is not None and qid.startswith("Q") and wikidata_industry_classifies(qid):
         for code in nace_of(qid):
             found = None if non_operating(code) else industry_of_code(code)
             if found:

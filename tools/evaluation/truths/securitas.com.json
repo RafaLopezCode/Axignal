@@ -1,0 +1,69 @@
+{
+ "version": "truth-v1",
+ "purpose": "What is publicly and well known about this organization; AXIGNAL's reading must agree (flywheel, CTO 2026-10-15).",
+ "subject": {
+  "name": "Securitas",
+  "website": "https://securitas.com/",
+  "home": "SE"
+ },
+ "facts": {
+  "value": "Security services: guarding, mobile and remote monitoring, electronic security and fire safety."
+ },
+ "checks": [
+  {
+   "id": "presence.website_read",
+   "family": "presence",
+   "require": {
+    "code": "PUBLIC_WEBSITE_OBSERVED"
+   }
+  },
+  {
+   "id": "value.activity_established",
+   "family": "value",
+   "forbid": {
+    "code": "ACTIVITY_NOT_ESTABLISHED"
+   }
+  },
+  {
+   "id": "value.activities_allowed",
+   "family": "value",
+   "activities": [
+    "security-guarding",
+    "security-systems",
+    "cybersecurity",
+    "facility-maintenance"
+   ]
+  },
+  {
+   "id": "value.industry",
+   "family": "value",
+   "industry": {
+    "allowed": [
+     "N80-82"
+    ],
+    "preferred": "N80-82"
+   }
+  },
+  {
+   "id": "demand.relevant_to_its_activity",
+   "family": "demand",
+   "demand": {
+    "titleTerms": [
+     "seguridad",
+     "security",
+     "vigilancia",
+     "guard",
+     "alarma",
+     "alarm",
+     "cctv",
+     "videovigilancia",
+     "surveillance",
+     "control de accesos",
+     "access control",
+     "protección",
+     "protection"
+    ]
+   }
+  }
+ ]
+}
