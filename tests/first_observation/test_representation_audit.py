@@ -83,6 +83,21 @@ def test_a_poorly_declared_site_gets_ordered_attention_items() -> None:
     assert impacts == sorted(impacts, key=["HIGH", "MEDIUM", "LOW"].index)
 
 
+def test_profiles_linked_for_people_but_not_declared_are_named() -> None:
+    # Found on AXIGNAL itself: the footer linked LinkedIn, yet the reading said
+    # "it does not link its official profiles". The declaration is what is measured;
+    # the profiles already linked are stated, not ignored.
+    html = BAD.replace(
+        "</body>",
+        '<footer><a href="https://www.linkedin.com/company/apex/">LinkedIn</a></footer></body>',
+    )
+    check = _by_id(audit_representation([_page(html)], None, SiteExtras(), activity_found=True))[
+        "ENTITY_PROFILES_LINKED"
+    ]
+    assert check.status is Status.ATTENTION
+    assert check.value == {"declared": [], "linkedOnPage": ["linkedin.com"]}
+
+
 def test_what_was_not_read_is_unknown_never_a_failure() -> None:
     audit = audit_representation([_page(GOOD)], None, SiteExtras(), activity_found=False)
     checks = _by_id(audit)
