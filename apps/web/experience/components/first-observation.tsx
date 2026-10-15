@@ -423,7 +423,7 @@ export function discoveryCopy(d: Discovery, t: Translate, locale = "en"): { find
 }
 
 /** The demand question a missing source leaves open, in the reader's words. */
-function buyerSignalLabel(type: string, t: Translate): string {
+export function buyerSignalLabel(type: string, t: Translate): string {
   switch (type) {
     case "CUSTOMER_OF_COMPETITOR": return t("Compra a un competidor", "Buys from a competitor");
     case "PUBLIC_BUYER_OF_CATEGORY": return t("Comprador público de su actividad", "Public buyer of its activity");
