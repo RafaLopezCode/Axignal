@@ -8,6 +8,7 @@
     "start": "next start --hostname 127.0.0.1 --port 3810",
     "typecheck": "tsc --noEmit",
     "test": "tsx --test tests/*.test.ts",
+    "test:admin-http": "node --test tools/check-admin-transport.mjs",
     "check:seo": "tsx --test tests/acquisition.test.ts",
     "check:i18n": "node tools/locale-inventory.mjs --check"
   },

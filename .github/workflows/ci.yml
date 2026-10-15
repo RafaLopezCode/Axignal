@@ -16,6 +16,43 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  frontend:
+    name: Frontend regression checks
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/web/experience
+    env:
+      NEXT_TELEMETRY_DISABLED: "1"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up production Node major
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: apps/web/experience/package-lock.json
+
+      - name: Install locked frontend dependencies
+        run: npm ci
+
+      - name: Frontend regression tests
+        run: npm test
+
+      - name: Frontend strict typecheck
+        run: npm run typecheck
+
+      - name: Six-language inventory
+        run: npm run check:i18n
+
+      - name: Frontend production build
+        run: npm run build
+
+      - name: Admin transport HTTP regressions
+        run: npm run test:admin-http
+
   validate:
     name: Deterministic validation
     runs-on: ubuntu-latest
