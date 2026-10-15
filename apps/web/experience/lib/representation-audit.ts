@@ -28,7 +28,33 @@ export function auditImpact(id: string, t: Translate): string {
   return id === "HIGH" ? t("Impacto alto", "High impact") : id === "MEDIUM" ? t("Impacto medio", "Medium impact") : t("Impacto bajo", "Low impact");
 }
 
-export function auditCopy(id: string, t: Translate): AuditCopy {
+const PROFILE_NAMES: Record<string, string> = {
+  "linkedin.com": "LinkedIn", "wikipedia.org": "Wikipedia", "wikidata.org": "Wikidata", "crunchbase.com": "Crunchbase",
+  "x.com": "X", "twitter.com": "X", "facebook.com": "Facebook", "instagram.com": "Instagram", "youtube.com": "YouTube",
+  "github.com": "GitHub", "xing.com": "XING", "tiktok.com": "TikTok",
+};
+
+/** Profiles declared in sameAs, and those the site links for people but does not declare. */
+function profiles(value: unknown): { declared: string[]; undeclared: string[] } {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return { declared: [], undeclared: [] };
+  const v = value as { declared?: unknown; linkedOnPage?: unknown };
+  const hosts = new Set(Array.isArray(v.declared) ? v.declared.map(h => String(h).replace(/^www\./, "")) : []);
+  const linked = Array.isArray(v.linkedOnPage) ? v.linkedOnPage.map(String) : [];
+  const name = (h: string) => PROFILE_NAMES[h] ?? Object.entries(PROFILE_NAMES).find(([k]) => h.endsWith(`.${k}`))?.[1] ?? h;
+  return { declared: [...new Set([...hosts].map(name))], undeclared: [...new Set(linked.filter(h => !hosts.has(h)).map(name))] };
+}
+
+export function auditCopy(id: string, t: Translate, value?: unknown): AuditCopy {
+  const known = id === "ENTITY_PROFILES_LINKED" ? profiles(value) : { declared: [], undeclared: [] };
+  const visible = known.undeclared;
+  if (!visible.length && known.declared.length === 1) return {
+    title: t("Declara un solo perfil oficial en sus datos estructurados (sameAs)", "It declares only one official profile in its structured data (sameAs)"),
+    why: t("Declara {profiles}; un segundo perfil oficial ayuda a que buscadores y asistentes de IA reconozcan la entidad sin ambigüedad.", "It declares {profiles}; a second official profile helps search engines and AI assistants recognize the entity unambiguously.").replace("{profiles}", known.declared.join(", ")),
+    action: t("Añade en sameAs al menos otro perfil oficial, como Wikidata o Crunchbase.", "Add at least one more official profile to sameAs, such as Wikidata or Crunchbase.") };
+  if (visible.length) return {
+    title: t("Enlaza sus perfiles en la web, pero no los declara en sus datos estructurados (sameAs)", "It links its profiles on its website but does not declare them in its structured data (sameAs)"),
+    why: t("Las personas ven el enlace a {profiles}; buscadores y asistentes de IA necesitan sameAs para saber que ese perfil es la misma entidad.", "People see the link to {profiles}; search engines and AI assistants need sameAs to know that profile is the same entity.").replace("{profiles}", visible.join(", ")),
+    action: t("Declara en sameAs los perfiles que ya enlaza ({profiles}) y al menos otro perfil oficial más.", "Declare in sameAs the profiles it already links ({profiles}) and at least one more official profile.").replace("{profiles}", visible.join(", ")) };
   switch (id) {
     case "ROBOTS_TXT_PUBLISHED": return {
       title: t("No publica robots.txt", "It publishes no robots.txt"),

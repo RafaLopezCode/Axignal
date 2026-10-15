@@ -88,7 +88,9 @@ def classified_as(record: ProcurementRecord, codes: tuple[TaxonomyCode, ...]) ->
                     if len(_cpv_significant(main)) >= 3:
                         return MAIN
                     broad = True
-        return None if broad else ADDITIONAL
+        # A whole division says nothing, unless a specific main object names something else.
+        specific = any(len(_cpv_significant(m)) >= 3 for m in mains)
+        return ADDITIONAL if specific or not broad else None
     if record.contract_nature is not None and all(
         _cpv_nature(code) != record.contract_nature for code in cpv
     ):
