@@ -1,0 +1,32 @@
+[
+  {
+    "locale": "en",
+    "heading": "System",
+    "unknown": "Unknown"
+  },
+  {
+    "locale": "de",
+    "heading": "System",
+    "unknown": "Unbekannt"
+  },
+  {
+    "locale": "pt",
+    "heading": "Sistema",
+    "unknown": "Desconhecido"
+  },
+  {
+    "locale": "fr",
+    "heading": "Système",
+    "unknown": "Inconnu"
+  },
+  {
+    "locale": "it",
+    "heading": "Sistema",
+    "unknown": "Sconosciuto"
+  },
+  {
+    "locale": "es",
+    "heading": "Sistema",
+    "unknown": "Desconocido"
+  }
+]

@@ -1,0 +1,98 @@
+[
+  {
+    "id": "command",
+    "drawerOpen": false,
+    "errors": 0,
+    "height": 844,
+    "overflow": false,
+    "width": 390
+  },
+  {
+    "id": "focus",
+    "drawerOpen": false,
+    "errors": 0,
+    "height": 844,
+    "overflow": false,
+    "width": 390
+  },
+  {
+    "id": "quality",
+    "drawerOpen": false,
+    "errors": 0,
+    "height": 844,
+    "overflow": false,
+    "width": 390
+  },
+  {
+    "id": "brain",
+    "drawerOpen": false,
+    "errors": 0,
+    "height": 844,
+    "overflow": false,
+    "width": 390
+  },
+  {
+    "id": "customers",
+    "drawerOpen": false,
+    "errors": 0,
+    "height": 844,
+    "overflow": false,
+    "width": 390
+  },
+  {
+    "id": "acquisition",
+    "drawerOpen": false,
+    "errors": 0,
+    "height": 844,
+    "overflow": false,
+    "width": 390
+  },
+  {
+    "id": "revenue",
+    "drawerOpen": false,
+    "errors": 0,
+    "height": 844,
+    "overflow": false,
+    "width": 390
+  },
+  {
+    "id": "finance",
+    "drawerOpen": false,
+    "errors": 0,
+    "height": 844,
+    "overflow": false,
+    "width": 390
+  },
+  {
+    "id": "governance",
+    "drawerOpen": false,
+    "errors": 0,
+    "height": 844,
+    "overflow": false,
+    "width": 390
+  },
+  {
+    "id": "integrations",
+    "drawerOpen": false,
+    "errors": 0,
+    "height": 844,
+    "overflow": false,
+    "width": 390
+  },
+  {
+    "id": "advisor",
+    "drawerOpen": false,
+    "errors": 0,
+    "height": 844,
+    "overflow": false,
+    "width": 390
+  },
+  {
+    "id": "system",
+    "drawerOpen": false,
+    "errors": 0,
+    "height": 844,
+    "overflow": false,
+    "width": 390
+  }
+]
