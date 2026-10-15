@@ -350,12 +350,22 @@ class WorldDemandIngestor:
     def run(self, *, max_slices: int = 10) -> tuple[IngestionReport, ...]:
         return tuple(self.ingest(s.slice) for s in self.due()[:max_slices])
 
-    def refresh_records(self, demand_slice: DemandSlice, *, max_pages: int) -> IngestionReport:
+    def refresh_records(
+        self,
+        demand_slice: DemandSlice,
+        *,
+        max_pages: int,
+        start_page: int = 1,
+        pause: Callable[[float], None] | None = None,
+        backoff: Sequence[float] = (30.0, 60.0, 120.0, 240.0),
+    ) -> IngestionReport:
         """Read a slice's whole window again and update its stored records, nothing else.
 
         For facts an adapter learns to read after records were stored (a call's main
         object): the slice's state, completeness and freshness are never touched, so a
-        refresh that stops early leaves every read exactly as it was.
+        refresh that stops early leaves every read exactly as it was. A source asking to
+        slow down (HTTP 429) is waited for, with ``pause``, before the same page is read
+        again; a refresh that still stops can resume at the page it stopped at.
         """
         feed = self._feeds[demand_slice.source_id]
         window = RECENCY_WINDOWS.get(demand_slice.kind, timedelta(days=60))
@@ -368,8 +378,13 @@ class WorldDemandIngestor:
         pages = records = 0
         complete = False
         failure = None
-        for page in range(1, max_pages + 1):
+        for page in range(start_page, start_page + max_pages):
             findings = feed.search(query, page=page, limit=self._page_size)
+            waits = iter(backoff if pause is not None else ())
+            while findings.failure == "HTTP_429" and (wait := next(waits, None)) is not None:
+                assert pause is not None
+                pause(wait)
+                findings = feed.search(query, page=page, limit=self._page_size)
             pages += 1
             if findings.failure is not None:
                 failure = findings.failure
