@@ -1,0 +1,61 @@
+{
+ "version": "truth-v1",
+ "purpose": "What is publicly and well known about this organization; AXIGNAL's reading must agree (flywheel, CTO 2026-10-15).",
+ "subject": {
+  "name": "Wise",
+  "website": "https://wise.com/",
+  "home": "GB"
+ },
+ "facts": {
+  "value": "International money transfers and multi-currency accounts (financial services)."
+ },
+ "checks": [
+  {
+   "id": "presence.website_read",
+   "family": "presence",
+   "require": {
+    "code": "PUBLIC_WEBSITE_OBSERVED"
+   }
+  },
+  {
+   "id": "value.activity_established",
+   "family": "value",
+   "forbid": {
+    "code": "ACTIVITY_NOT_ESTABLISHED"
+   }
+  },
+  {
+   "id": "value.activities_allowed",
+   "family": "value",
+   "activities": []
+  },
+  {
+   "id": "value.industry",
+   "family": "value",
+   "industry": {
+    "allowed": [
+     "K64",
+     "K66"
+    ],
+    "preferred": "K66"
+   }
+  },
+  {
+   "id": "demand.relevant_to_its_activity",
+   "family": "demand",
+   "demand": {
+    "titleTerms": [
+     "pago",
+     "payment",
+     "transferencia",
+     "transfer",
+     "divisa",
+     "currency",
+     "banc",
+     "bank",
+     "financ"
+    ]
+   }
+  }
+ ]
+}

@@ -1,0 +1,76 @@
+{
+ "version": "truth-v1",
+ "purpose": "What is publicly and well known about this organization; AXIGNAL's reading must agree (flywheel, CTO 2026-10-15).",
+ "subject": {
+  "name": "Atlassian",
+  "website": "https://atlassian.com/",
+  "home": "AU"
+ },
+ "facts": {
+  "value": "Collaboration and software-development tools (Jira, Confluence)."
+ },
+ "checks": [
+  {
+   "id": "presence.website_read",
+   "family": "presence",
+   "require": {
+    "code": "PUBLIC_WEBSITE_OBSERVED"
+   }
+  },
+  {
+   "id": "value.activity_established",
+   "family": "value",
+   "forbid": {
+    "code": "ACTIVITY_NOT_ESTABLISHED"
+   }
+  },
+  {
+   "id": "value.activities_allowed",
+   "family": "value",
+   "activities": [
+    "business-software",
+    "software-development",
+    "it-services"
+   ]
+  },
+  {
+   "id": "value.industry",
+   "family": "value",
+   "industry": {
+    "allowed": [
+     "J58",
+     "J62_63"
+    ],
+    "preferred": "J58"
+   }
+  },
+  {
+   "id": "demand.relevant_to_its_activity",
+   "family": "demand",
+   "demand": {
+    "titleTerms": [
+     "software",
+     "platform",
+     "plataforma",
+     "licencia",
+     "licence",
+     "license",
+     "cloud",
+     "nube",
+     "aplicación",
+     "application",
+     "sistema",
+     "system",
+     "digital",
+     "saas",
+     "colaboración",
+     "collaboration",
+     "proyecto",
+     "project",
+     "gestión",
+     "management"
+    ]
+   }
+  }
+ ]
+}

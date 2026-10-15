@@ -1,0 +1,70 @@
+{
+ "version": "truth-v1",
+ "purpose": "What is publicly and well known about this organization; AXIGNAL's reading must agree (flywheel, CTO 2026-10-15).",
+ "subject": {
+  "name": "Rubau",
+  "website": "https://rubau.com/",
+  "home": "ES"
+ },
+ "facts": {
+  "value": "Construction company: building, civil works and infrastructure."
+ },
+ "checks": [
+  {
+   "id": "presence.website_read",
+   "family": "presence",
+   "require": {
+    "code": "PUBLIC_WEBSITE_OBSERVED"
+   }
+  },
+  {
+   "id": "value.activity_established",
+   "family": "value",
+   "forbid": {
+    "code": "ACTIVITY_NOT_ESTABLISHED"
+   }
+  },
+  {
+   "id": "value.activities_allowed",
+   "family": "value",
+   "activities": [
+    "building-construction",
+    "engineering-services",
+    "facility-maintenance",
+    "architecture"
+   ]
+  },
+  {
+   "id": "value.industry",
+   "family": "value",
+   "industry": {
+    "allowed": [
+     "F"
+    ],
+    "preferred": "F"
+   }
+  },
+  {
+   "id": "demand.relevant_to_its_activity",
+   "family": "demand",
+   "demand": {
+    "titleTerms": [
+     "obra",
+     "works",
+     "construc",
+     "edific",
+     "building",
+     "rehabilit",
+     "reforma",
+     "urbaniz",
+     "infraestructura",
+     "infrastructure",
+     "carretera",
+     "road",
+     "puente",
+     "bridge"
+    ]
+   }
+  }
+ ]
+}

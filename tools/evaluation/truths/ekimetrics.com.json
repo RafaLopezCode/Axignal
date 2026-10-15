@@ -1,0 +1,70 @@
+{
+ "version": "truth-v1",
+ "purpose": "What is publicly and well known about this organization; AXIGNAL's reading must agree (flywheel, CTO 2026-10-15).",
+ "subject": {
+  "name": "Ekimetrics",
+  "website": "https://ekimetrics.com/",
+  "home": "FR"
+ },
+ "facts": {
+  "value": "Data science and marketing-analytics consulting."
+ },
+ "checks": [
+  {
+   "id": "presence.website_read",
+   "family": "presence",
+   "require": {
+    "code": "PUBLIC_WEBSITE_OBSERVED"
+   }
+  },
+  {
+   "id": "value.activity_established",
+   "family": "value",
+   "forbid": {
+    "code": "ACTIVITY_NOT_ESTABLISHED"
+   }
+  },
+  {
+   "id": "value.activities_allowed",
+   "family": "value",
+   "activities": [
+    "management-consulting",
+    "market-research",
+    "marketing-advertising",
+    "software-development",
+    "it-services"
+   ]
+  },
+  {
+   "id": "value.industry",
+   "family": "value",
+   "industry": {
+    "allowed": [
+     "M69_70",
+     "M73",
+     "J62_63"
+    ],
+    "preferred": "M69_70"
+   }
+  },
+  {
+   "id": "demand.relevant_to_its_activity",
+   "family": "demand",
+   "demand": {
+    "titleTerms": [
+     "datos",
+     "data",
+     "análisis",
+     "analytics",
+     "analysis",
+     "consultor",
+     "consulting",
+     "marketing",
+     "inteligencia artificial",
+     "modelo",
+     "model"
+    ]
+   }
+  }
+ ]
+}
