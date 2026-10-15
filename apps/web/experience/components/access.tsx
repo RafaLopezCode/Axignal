@@ -20,7 +20,10 @@ import { Observer } from "./ui";
 import { funnelCta, track } from "@/lib/funnel-events";
 import { PublicShell } from "./public-shell";
 
-export function Access({ intent }: { intent: AuthStartRequest["intent"] }) {
+export function Access({ intent, callbackFailed = false }: {
+  intent: AuthStartRequest["intent"];
+  callbackFailed?: boolean;
+}) {
   const { t } = useLocale();
   const controller = useRef<AbortController | null>(null);
   const [busy, setBusy] = useState<string | null>(null);
@@ -196,6 +199,19 @@ export function Access({ intent }: { intent: AuthStartRequest["intent"] }) {
                   "Choose how you would like to enter AXIGNAL.",
                 )}
           </p>
+          {callbackFailed && (
+            <div className="auth-outcome auth-error" role="alert">
+              <strong>{t("No se ha completado el acceso.", "Sign-in did not complete.")}</strong>
+              <p>{t(
+                "Vuelve a intentarlo con la misma cuenta de Google. Si es tu primera visita, elige Crear cuenta para darte de alta antes de acceder.",
+                "Try again with the same Google account. If this is your first visit, choose Create account to register before signing in.",
+              )}</p>
+              <Link className="text-link" href="/signup">
+                {t("Crear cuenta con Google", "Create account with Google")}
+                <ArrowRight size={16} aria-hidden="true" />
+              </Link>
+            </div>
+          )}
           <div className="access-availability">
             <Info size={17} />
             <p>
