@@ -10,7 +10,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { createPortal, flushSync } from "react-dom";
 import Link from "next/link";
-import { ArrowLeft, ArrowRight, ChevronDown, CornerRightUp, ExternalLink, LayoutGrid, LogOut, Menu, MessageCircleQuestion, Plus, RefreshCw, Settings2, X } from "lucide-react";
+import { ArrowLeft, ArrowRight, ChevronDown, ExternalLink, LayoutGrid, LogOut, Menu, MessageCircleQuestion, Plus, RefreshCw, Settings2, X } from "lucide-react";
 import { useLocale } from "@/lib/locale";
 import { LocaleToggle, useFocusTrap } from "./ui";
 import { formatReferenceMoney } from "@/lib/presentation";
@@ -31,6 +31,7 @@ import { websiteOf } from "@/lib/identity";
 import { SubscriberAccountSettings } from "./subscriber-account-settings";
 import { DismissibleNotice } from "./dismissible-notice";
 import { RuntimeAxent, useRuntimeAxent } from "./runtime-axent";
+import { CanvasEvidenceSheet } from "./canvas-evidence-sheet";
 import { productGuideAnswer } from "@/lib/axent-product-guide";
 import { explainFinding } from "@/lib/finding-axent";
 import type { ObservatoryCapabilities } from "@/lib/observatory-source";
@@ -294,14 +295,16 @@ export function Observatory(props: ObservatoryProps) {
     // invitation redeemed, a payment verified) still lands on its reading.
     if (!readableItems.length) return;
     autoOpened.current = true;
-    if (readableItems.length === 1 && items.length === 1) void props.readOutput(readableItems[0].focusId, false);
+    if (readableItems.length === 1 && items.length === 1) {
+      go({ organization: readableItems[0].focusId }, true);
+      void props.readOutput(readableItems[0].focusId, false);
+    }
     else if (props.landing && readableItems.some(entry => entry.focusId === props.landing?.focusId)) {
-      void props.readOutput(props.landing.focusId, false);
       // The demo's initial narrative is a default, never an override of a shared/deep link.
       // The URL is user attention authority: preserve explicit family/channel across reloads.
       const query = new URL(window.location.href).searchParams;
-      if (props.landing.family && shouldApplyLandingFacet(query))
-        go({ family: props.landing.family, channel: null }, true);
+      go({ organization: props.landing.focusId, ...(props.landing.family && shouldApplyLandingFacet(query) ? { family: props.landing.family, channel: null } : {}) }, true);
+      void props.readOutput(props.landing.focusId, false);
     }
   }, [access, items.length, props, readableItems, selected, url.screen]);
 
@@ -353,7 +356,7 @@ export function Observatory(props: ObservatoryProps) {
     {props.shell ? (props.shell.host ? createPortal(<div className="obs obs-in-shell">{rail}</div>, props.shell.host) : null) : <div className="obs-rail-desktop">{rail}</div>}
     {!props.shell && <MobileBar title={screen === "organization" && current ? nameOf(current) : screen === "desk" ? t("Tu cartera", "Your portfolio") : screen === "account" ? t("Cuenta", "Account") : screen === "activate" ? t("Esperando activación", "Waiting for activation") : t("Añadir organización", "Add organization")} onMenu={() => setRailOpen(true)}/>}
     {!props.shell && railOpen && <RailSheet onClose={() => setRailOpen(false)}>{rail}</RailSheet>}
-    <main id="obs-main" className="obs-main" tabIndex={-1}>
+    <main id="obs-main" className={`obs-main${screen === "organization" ? " obs-workspace-main" : ""}`} tabIndex={-1}>
       {props.notice}
       {toast}
       {activationView}
@@ -570,23 +573,35 @@ function OrganizationView(props: OrgProps) {
   const [menu, setMenu] = useState(false);
   const [website, setWebsite] = useState("");
   const opener = useRef<string | null>(null);
+  const axentSidebar = useRef<HTMLElement>(null);
+  const previousView = useRef<View>("summary");
+  useEffect(() => { if (view !== "evidence") previousView.current = view; }, [view]);
   const openInsight = (insight: Insight) => {
     opener.current = insight.id;
     props.setAxentOpen(false);
-    transition(() => go({ item: insight.id }));
+    go({ item: insight.id });
     if (lit.has(insight.changeKey)) window.setTimeout(() => updateSeen(store => markSeen(store, item.focusId, [insight.changeKey], new Date().toISOString())), 700);
   };
   const closeDepth = () => {
-    transition(() => { go({ item: null }); props.setAxentOpen(false); });
-    window.requestAnimationFrame(() => { if (opener.current) document.querySelector<HTMLElement>(`[data-insight="${CSS.escape(opener.current)}"]`)?.focus(); });
+    go({ item: null, ...(view === "evidence" ? { view: previousView.current } : {}) });
+    window.requestAnimationFrame(() => {
+      const card = opener.current ? document.querySelector<HTMLElement>(`[data-insight="${CSS.escape(opener.current)}"]`) : null;
+      (card ?? document.getElementById(`tab-${view === "evidence" ? previousView.current : view}`))?.focus({ preventScroll: true });
+    });
   };
   const observing = item.observation && OBSERVING.has(item.observation.state);
   const identified = Boolean(item.organizationId);
   const observedAt = projection?.cognition?.asOf ?? firstObservation?.observedAt ?? item.observation?.observedAt ?? null;
   const tabs: Array<[View, string]> = [["summary", t("Resumen", "Summary")], ["explore", t("Explorar", "Explore")], ["evolution", t("Evolución", "Evolution")], ["evidence", t("Evidencias", "Evidence")]];
-  const depthOpen = Boolean(open) || props.axentOpen;
-  return <div className={`obs-org-view${depthOpen ? " obs-has-depth" : ""}`}>
+  const evidenceOpen = Boolean(open) || view === "evidence";
+  const readingView = view === "evidence" ? previousView.current : view;
+  const focusAxent = () => {
+    props.setAxentOpen(true);
+    window.requestAnimationFrame(() => axentSidebar.current?.querySelector<HTMLTextAreaElement>("textarea")?.focus());
+  };
+  return <div className="obs-org-view obs-has-axent">
     <div className="obs-org-main">
+      <div className="obs-canvas-reading" inert={evidenceOpen}>
       <header className="obs-org-head">
         <div className="obs-org-title">
           <span className="obs-focus-lens" aria-hidden="true"><img src="/brand/isotope.svg" alt="" width={34} height={34}/></span>
@@ -602,7 +617,7 @@ function OrganizationView(props: OrgProps) {
         <div className="obs-org-actions">
           {item.state === "ACTIVE" && <button className="obs-button" disabled={props.busy || !props.canAct} onClick={() => void props.command({ action: "reobserve", focusId: item.focusId })}><RefreshCw size={16} aria-hidden="true"/><span className="obs-collapse">{t("Volver a observar", "Observe again")}</span></button>}
           {!identified && props.capabilities.recheck && <button className="obs-button" disabled={props.busy || !props.canAct} onClick={() => void props.command({ action: "retry_pending", focusId: item.focusId })}><RefreshCw size={16} aria-hidden="true"/><span className="obs-collapse">{t("Volver a comprobar", "Check again")}</span></button>}
-          {projection && revision && <span className="obs-axent-cta"><button className={`obs-button obs-axent-button${props.axentOpen && !open ? " obs-active" : ""}`} onClick={() => { transition(() => { go({ item: null }); props.setAxentOpen(true); }); }}><MessageCircleQuestion size={16} aria-hidden="true"/>{t("Preguntar a AXENT", "Ask AXENT")}</button><span className="obs-axent-note"><CornerRightUp size="1.15em" aria-hidden="true"/>{t("¿Dudas? Pregúntale a AXENT", "Any doubts? Ask AXENT")}</span></span>}
+          {projection && revision && <span className="obs-axent-cta"><button className="obs-axent-note" onClick={focusAxent} aria-label={t("Preguntar a AXENT", "Ask AXENT")} aria-controls="obs-axent-sidebar">{t("Consulta a Axent", "Ask Axent")}<ArrowRight size="1.15em" aria-hidden="true"/></button></span>}
           {props.capabilities.manage && <div className="obs-menu">
             <button className="obs-icon" aria-expanded={menu} aria-haspopup="true" aria-label={t("Más acciones", "More actions")} onClick={() => setMenu(!menu)}><ChevronDown size={18} aria-hidden="true"/></button>
             {menu && <ul className="obs-menu-list" onKeyDown={e => { if (e.key === "Escape") setMenu(false); }}>
@@ -648,8 +663,8 @@ function OrganizationView(props: OrgProps) {
         <div className="obs-form-actions"><button className="obs-button obs-primary" disabled={props.busy || !props.replacementLocator.trim()}>{t("Sustituir organización", "Replace organization")}</button><button type="button" className="obs-link" onClick={() => props.setReplacing(null)}>{t("Cancelar", "Cancel")}</button></div>
       </form>}
       <div className="obs-tabs" role="tablist" aria-label={t("Profundidad", "Depth")}>
-        {tabs.map(([id, label]) => <button key={id} role="tab" id={`tab-${id}`} aria-selected={view === id} aria-controls={`panel-${id}`} tabIndex={view === id ? 0 : -1}
-          onClick={() => transition(() => go({ view: id, item: null }))}
+        {tabs.map(([id, label]) => <button key={id} role="tab" id={`tab-${id}`} aria-selected={view === id} aria-controls={id === "evidence" ? "obs-depth" : `panel-${id}`} tabIndex={view === id ? 0 : -1}
+          onClick={() => { if (id === "evidence" || view === "evidence") go({ view: id, item: null }); else transition(() => go({ view: id, item: null })); }}
           onKeyDown={e => {
             const index = tabs.findIndex(([v]) => v === id);
             const next = e.key === "ArrowRight" ? tabs[(index + 1) % tabs.length] : e.key === "ArrowLeft" ? tabs[(index + tabs.length - 1) % tabs.length] : null;
@@ -657,19 +672,22 @@ function OrganizationView(props: OrgProps) {
           }}>{label}</button>)}
       </div>
       {ready && !observing && view !== "explore" && <FamilyNav facet={facet} counts={counts} lit={litFamilies} litChannels={litChannels} onSelect={selectFacet}/>}
-      <div className="obs-panel" role="tabpanel" id={`panel-${view}`} aria-labelledby={`tab-${view}`}>
+      <div className="obs-panel" role="tabpanel" id={`panel-${readingView}`} aria-labelledby={`tab-${readingView}`}>
         {props.reading && <ReadingSkeleton/>}
         {!props.reading && observing && <ObservingState state={item.observation!.state}/>}
-        {!props.reading && !observing && view === "summary" && <SummaryView reading={reading} name={name} insights={shown} lit={litShown} openId={open?.id ?? null} onOpen={openInsight} scope={scope}
+        {!props.reading && !observing && readingView === "summary" && <SummaryView reading={reading} name={name} insights={shown} lit={litShown} openId={open?.id ?? null} onOpen={openInsight} scope={scope}
           remembered={props.rememberReading !== false} onSeenAll={() => updateSeen(store => markSeen(store, item.focusId, shownKeys, new Date().toISOString()))} item={item}/>}
-        {!props.reading && !observing && view === "summary" && firstObservation?.discoveries.some(d => d.kind === "ACTIVITY") && <DemandMarkets focusId={item.focusId} observation={firstObservation} canAct={props.canAct} onSaved={() => void props.readOutput(item.focusId, false)}/>}
-        {!props.reading && !observing && view === "explore" && <ExploreView projection={projection} revision={revision} firstObservation={firstObservation} onSummary={() => go({ view: "summary" })}/>}
-        {!props.reading && !observing && view === "evolution" && <EvolutionView reading={reading} facet={facet} scope={scope}/>}
-        {!props.reading && !observing && view === "evidence" && <EvidenceView reading={reading} facet={facet} scope={scope} insights={shown}/>}
+        {!props.reading && !observing && readingView === "summary" && firstObservation?.discoveries.some(d => d.kind === "ACTIVITY") && <DemandMarkets focusId={item.focusId} observation={firstObservation} canAct={props.canAct} onSaved={() => void props.readOutput(item.focusId, false)}/>}
+        {!props.reading && !observing && readingView === "explore" && <ExploreView projection={projection} revision={revision} firstObservation={firstObservation} onSummary={() => go({ view: "summary" })}/>}
+        {!props.reading && !observing && readingView === "evolution" && <EvolutionView reading={reading} facet={facet} scope={scope}/>}
       </div>
+      </div>
+      {evidenceOpen && <CanvasEvidenceSheet focusKey={open?.id ?? "evidence"} lane={open?.lane} title={open ? laneCopy(open.lane, t).title : t("Evidencias", "Evidence")} onClose={closeDepth}>
+        {open ? <InsightBody insight={open} onEvidence={() => go({ view: "evidence", item: null })}/> : <EvidenceView reading={reading} facet={facet} scope={scope} insights={shown}/>}
+      </CanvasEvidenceSheet>}
     </div>
-    {depthOpen && <DepthPanel insight={open} related={insights} projection={projection} revision={revision} axentOnly={!open} canAct={props.canAct} axent={props.capabilities.axent} onClose={closeDepth}
-      onEvidence={() => transition(() => go({ view: "evidence", item: null }))} onExplore={() => transition(() => go({ view: "explore", item: null }))}/>}
+    <AxentSidebar panelRef={axentSidebar} open={props.axentOpen} insight={open} related={insights} projection={projection} revision={revision} canAct={props.canAct} axent={props.capabilities.axent} onClose={() => props.setAxentOpen(false)}
+      onEvidence={() => { props.setAxentOpen(false); go({ view: "evidence", item: null }); }} onExplore={() => { props.setAxentOpen(false); transition(() => go({ view: "explore", item: null })); }}/>
   </div>;
 }
 
@@ -800,28 +818,20 @@ export function InsightBody({ insight, onEvidence }: { insight: Insight; onEvide
   </article>;
 }
 
-function DepthPanel({ insight, related, projection, revision, axentOnly, canAct, axent, onClose, onEvidence, onExplore }: {
-  insight: Insight | null; related: Insight[]; projection: RuntimeProjection | null; revision: string | null; axentOnly: boolean; canAct: boolean; axent: ObservatoryCapabilities["axent"];
+function AxentSidebar({ panelRef, open, insight, related, projection, revision, canAct, axent, onClose, onEvidence, onExplore }: {
+  panelRef: React.RefObject<HTMLElement | null>; open: boolean;
+  insight: Insight | null; related: Insight[]; projection: RuntimeProjection | null; revision: string | null; canAct: boolean; axent: ObservatoryCapabilities["axent"];
   onClose: () => void; onEvidence: () => void; onExplore: () => void;
 }) {
-  const { t, locale } = useLocale();
-  const ref = useRef<HTMLElement>(null);
+  const { t } = useLocale();
   const [mobile, setMobile] = useState(false);
   useEffect(() => { const m = window.matchMedia("(max-width: 880px)"); const set = () => setMobile(m.matches); set(); m.addEventListener("change", set); return () => m.removeEventListener("change", set); }, []);
-  useFocusTrap(mobile, ref, onClose);
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
-    window.addEventListener("keydown", onKey);
-    if (!mobile) ref.current?.querySelector<HTMLElement>("h2")?.focus();
-    return () => window.removeEventListener("keydown", onKey);
-  }, [insight?.id, mobile, onClose]);
-  return <aside ref={ref} id="obs-depth" className={`obs-depth${insight ? ` obs-lane-${insight.lane}` : " obs-depth-axent-only"}`} aria-label={insight ? t("Profundizar", "Go deeper") : t("Preguntar a AXENT", "Ask AXENT")} {...(mobile ? { role: "dialog", "aria-modal": true } : {})}>
-    <div className={`obs-depth-bar${insight ? "" : " obs-depth-bar-bare"}`}>
-      <button className="obs-icon" onClick={onClose} aria-label={t("Volver", "Back")}>{mobile ? <ArrowLeft size={18} aria-hidden="true"/> : <X size={18} aria-hidden="true"/>}</button>
-      {insight && <span>{laneCopy(insight.lane, t).title}</span>}
+  useFocusTrap(mobile && open, panelRef, onClose);
+  return <aside ref={panelRef} id="obs-axent-sidebar" className="obs-axent-sidebar obs-depth-axent-only" data-open={open} aria-label="AXENT" {...(mobile && open ? { role: "dialog", "aria-modal": true } : {})}>
+    <div className="obs-depth-bar obs-depth-bar-bare obs-axent-close">
+      <button className="obs-icon" onClick={onClose} aria-label={t("Volver", "Back")}><ArrowLeft size={18} aria-hidden="true"/></button>
     </div>
-    {insight && <InsightBody insight={insight} onEvidence={onEvidence}/>}
-    {projection && revision ? <DepthAxent key={insight?.id ?? "organization"} projection={projection} revision={revision} axent={axent} insight={insight} related={related} canAct={canAct} onEvidence={onEvidence} onExplore={onExplore} autoFocus={axentOnly}/>
+    {projection && revision ? <DepthAxent key={insight?.id ?? "organization"} projection={projection} revision={revision} axent={axent} insight={insight} related={related} canAct={canAct} onEvidence={onEvidence} onExplore={onExplore} autoFocus={open}/>
       : <section className="obs-depth-axent obs-quiet"><h3>AXENT</h3><p>{t("AXENT podrá investigar con esta organización cuando su identidad esté verificada por un registro. Esta lectura ya muestra su evidencia.", "AXENT can investigate this organization once its identity is verified by a registry. This reading already shows its evidence.")}</p></section>}
   </aside>;
 }
