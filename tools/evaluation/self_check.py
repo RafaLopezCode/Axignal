@@ -7,12 +7,17 @@ proof: anything with "discoveries"). Output: one verdict per check, PASS, FAIL o
 NOT_MEASURED (the reading carries nothing to judge it with), with the evidence.
 
 Usage: python -m tools.evaluation.self_check reading.json [--out report.json]
+       [--previous last-report.json] [--fail-on-regression]
+
+After each deploy the reading is compared with the previous report: a check that passed
+and now fails is a regression, named per family (``deploy/production/run-self-check.sh``).
 """
 
 from __future__ import annotations
 
 import argparse
 import json
+import sys
 from collections.abc import Mapping, Sequence
 from pathlib import Path
 from typing import Any
@@ -140,25 +145,52 @@ def evaluate(reading: Mapping[str, Any], truth: Mapping[str, Any]) -> dict[str, 
     }
 
 
+def regressions(report: Mapping[str, Any], previous: Mapping[str, Any]) -> list[dict[str, str]]:
+    """Checks that passed in the previous report and fail now (a check newly unmeasured is
+    not a regression: it says the reading lacked the evidence, not that it is wrong)."""
+    before = {v["id"]: v["status"] for v in previous.get("verdicts") or ()}
+    return [
+        {"id": v["id"], "family": v["family"], "defect": v["defect"]}
+        for v in report["verdicts"]
+        if v["status"] == "FAIL" and before.get(v["id"]) == "PASS"
+    ]
+
+
 def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("reading", type=Path)
     parser.add_argument("--out", type=Path)
+    parser.add_argument("--previous", type=Path, help="The last report, to name regressions")
+    parser.add_argument("--fail-on-regression", action="store_true")
     args = parser.parse_args(argv)
     raw = json.loads(args.reading.read_text(encoding="utf-8"))
     # Accepts a reading, or a golden-runner row list ([{"view": ...}]).
     reading = raw[0]["view"] if isinstance(raw, list) else raw
     report = evaluate(reading, json.loads(TRUTH.read_text(encoding="utf-8")))
-    if args.out:
-        args.out.write_text(json.dumps(report, ensure_ascii=False, indent=1), encoding="utf-8")
-    print(
-        f"self-accuracy {report['accuracy']}% ({report['passed']}/{report['measured']} measured checks)"
+    previous = (
+        json.loads(args.previous.read_text(encoding="utf-8"))
+        if args.previous is not None and args.previous.is_file()
+        else None
     )
-    for defect in report["defects"]:
-        print(
-            f"FAIL {defect['id']} [{defect['defect']}]: {json.dumps(defect['detail'], ensure_ascii=False)[:300]}"
-        )
-    return 0
+    report["previousAccuracy"] = None if previous is None else previous.get("accuracy")
+    report["regressions"] = [] if previous is None else regressions(report, previous)
+    # "--out -": the report on stdout and the summary on stderr (a container with no
+    # writable mount hands both to the host).
+    to_stdout = args.out is not None and str(args.out) == "-"
+    if args.out is not None and not to_stdout:
+        args.out.write_text(json.dumps(report, ensure_ascii=False, indent=1), encoding="utf-8")
+    lines = [
+        f"self-accuracy {report['accuracy']}% ({report['passed']}/{report['measured']} measured checks)"
+    ]
+    lines += [f"FAIL {d['id']} [{d['defect']}]: {json.dumps(d['detail'], ensure_ascii=False)[:300]}"
+              for d in report["defects"]]  # fmt: skip
+    lines += [f"REGRESSION {r['family']}: {r['id']} [{r['defect']}]" for r in report["regressions"]]
+    if report["previousAccuracy"] is not None:
+        lines.append(f"previous self-accuracy {report['previousAccuracy']}%")
+    print("\n".join(lines), file=sys.stderr if to_stdout else sys.stdout)
+    if to_stdout:
+        print(json.dumps(report, ensure_ascii=False))
+    return 3 if args.fail_on_regression and report["regressions"] else 0
 
 
 if __name__ == "__main__":

@@ -1,0 +1,1 @@
+{"version": "self-read", "purpose": "AXIGNAL observing its own website after each deploy (self_check, self_truth.json)", "organizations": [{"domain": "axignal.com", "name": "AXIGNAL", "country": "ES", "segment": "Economic intelligence"}]}

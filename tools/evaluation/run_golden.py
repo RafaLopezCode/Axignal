@@ -23,7 +23,8 @@ from typing import Any
 
 SOURCE = Path(os.environ.get("AXIGNAL_GOLDEN_SOURCE", "/src"))
 WORK = Path(os.environ.get("AXIGNAL_GOLDEN_WORK", "/tmp/axignal-golden"))
-GOLDEN = Path(__file__).with_name("golden_set.json")
+#: The set to observe: the golden set, or another (the self set, after each deploy).
+GOLDEN = Path(os.environ.get("AXIGNAL_GOLDEN_SET") or Path(__file__).with_name("golden_set.json"))
 MAX_JUDGMENT_ROUNDS = 12
 
 
