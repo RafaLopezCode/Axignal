@@ -40,6 +40,18 @@ export const firstObservationSchema = z.object({
   authority: z.literal("OPERATIONAL_NOT_CANONICAL").optional(),
   attentionScopes: z.array(z.object({ jurisdiction: z.string().max(64) }).passthrough()).max(50).optional(),
   demandMarkets: z.object({ directed: z.array(z.string().regex(/^EU\/[A-Z]{2}$/)).max(5) }).optional(),
+  // Spec 076: every recorded day, so any day X can be compared with any day Y (instruments kept).
+  timeline: z.object({
+    firstDay: z.string().max(16).optional(),
+    days: z.number().int().min(0).optional(),
+    baselineDay: z.string().max(16).nullable().optional(),
+    evolution: z.object({
+      timelineVersion: z.string().max(40).optional(),
+      days: z.array(z.string().max(16)).max(200),
+      versions: z.array(z.object({ from: z.string().max(16), to: z.string().max(16), metrics: z.record(z.string(), z.unknown()) })).max(200),
+      catalog: z.record(z.string(), z.object({ family: z.string().max(40), polarity: z.number(), state: z.string().max(40).optional(), minAbs: z.number(), minRel: z.number() })),
+    }).optional(),
+  }).passthrough().optional(),
   // Demand matched again at read time against the current index (open calls only).
   demand: z.object({
     live: z.boolean(),

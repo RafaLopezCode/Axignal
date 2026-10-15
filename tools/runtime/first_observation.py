@@ -111,6 +111,7 @@ from application.subscriber_portfolio.models import (
 )
 from application.subscriber_projection.subscriber_runtime import SubscriberEconomicRuntime
 from application.timeline import changes as timeline_changes
+from application.timeline import evolution as timeline_evolution
 from application.timeline import history as timeline_history
 from application.timeline import snapshot as timeline_snapshot
 from application.value_chain import (
@@ -772,6 +773,8 @@ class FirstObservationRuntime:
                 key: [[day, metrics[key]] for day, metrics in series[-90:] if key in metrics]
                 for key in sorted(numeric)
             },
+            # Spec 076: any recorded day X against any day Y, with instruments and thresholds.
+            "evolution": timeline_evolution(series),
         }
         return view
 

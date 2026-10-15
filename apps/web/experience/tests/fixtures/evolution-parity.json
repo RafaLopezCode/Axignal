@@ -1,0 +1,472 @@
+{
+ "timelineVersion": "timeline-v1",
+ "catalog": {
+  "presence.ai_named_share": {
+   "family": "presence",
+   "polarity": 1,
+   "state": "OBSERVED",
+   "minAbs": 0.25,
+   "minRel": 0.0
+  },
+  "presence.ai_knows_brand": {
+   "family": "presence",
+   "polarity": 1,
+   "state": "OBSERVED",
+   "minAbs": 1.0,
+   "minRel": 0.0
+  },
+  "presence.audit_attention": {
+   "family": "presence",
+   "polarity": -1,
+   "state": "OBSERVED",
+   "minAbs": 1.0,
+   "minRel": 0.2
+  },
+  "presence.audit_passed": {
+   "family": "presence",
+   "polarity": 1,
+   "state": "OBSERVED",
+   "minAbs": 1.0,
+   "minRel": 0.0
+  },
+  "presence.lcp_ms": {
+   "family": "presence",
+   "polarity": -1,
+   "state": "OBSERVED",
+   "minAbs": 200.0,
+   "minRel": 0.1
+  },
+  "presence.inp_ms": {
+   "family": "presence",
+   "polarity": -1,
+   "state": "OBSERVED",
+   "minAbs": 40.0,
+   "minRel": 0.15
+  },
+  "presence.languages": {
+   "family": "presence",
+   "polarity": 0,
+   "state": "OBSERVED",
+   "minAbs": 1.0,
+   "minRel": 0.2
+  },
+  "reputation.press_mentions": {
+   "family": "reputation",
+   "polarity": 0,
+   "state": "POTENTIAL",
+   "minAbs": 1.0,
+   "minRel": 0.2
+  },
+  "activity.own_publications": {
+   "family": "activity",
+   "polarity": 0,
+   "state": "OBSERVED",
+   "minAbs": 1.0,
+   "minRel": 0.2
+  },
+  "value.activities": {
+   "family": "value",
+   "polarity": 0,
+   "state": "POTENTIAL",
+   "minAbs": 1.0,
+   "minRel": 0.2
+  },
+  "markets.premises": {
+   "family": "markets",
+   "polarity": 0,
+   "state": "DECLARED",
+   "minAbs": 1.0,
+   "minRel": 0.2
+  },
+  "markets.group_countries": {
+   "family": "markets",
+   "polarity": 0,
+   "state": "OBSERVED",
+   "minAbs": 1.0,
+   "minRel": 0.2
+  },
+  "relationships.public_clients": {
+   "family": "relationships",
+   "polarity": 0,
+   "state": "OBSERVED",
+   "minAbs": 1.0,
+   "minRel": 0.2
+  },
+  "relationships.partners": {
+   "family": "relationships",
+   "polarity": 0,
+   "state": "POTENTIAL",
+   "minAbs": 1.0,
+   "minRel": 0.2
+  },
+  "relationships.competitors": {
+   "family": "relationships",
+   "polarity": 0,
+   "state": "POTENTIAL",
+   "minAbs": 1.0,
+   "minRel": 0.2
+  },
+  "demand.open_public_calls": {
+   "family": "demand",
+   "polarity": 0,
+   "state": "POTENTIAL",
+   "minAbs": 3.0,
+   "minRel": 0.25
+  },
+  "demand.recurrent_buyers": {
+   "family": "demand",
+   "polarity": 0,
+   "state": "POTENTIAL",
+   "minAbs": 1.0,
+   "minRel": 0.2
+  },
+  "economics.revenue": {
+   "family": "economics",
+   "polarity": 0,
+   "state": "OBSERVED",
+   "minAbs": 1.0,
+   "minRel": 0.05
+  },
+  "economics.employees": {
+   "family": "economics",
+   "polarity": 0,
+   "state": "OBSERVED",
+   "minAbs": 2.0,
+   "minRel": 0.05
+  },
+  "relationships.technology": {
+   "family": "relationships",
+   "polarity": 0,
+   "state": "OBSERVED",
+   "minAbs": 1.0,
+   "minRel": 0.2
+  },
+  "relationships.declared_clients": {
+   "family": "relationships",
+   "polarity": 0,
+   "state": "DECLARED",
+   "minAbs": 1.0,
+   "minRel": 0.2
+  },
+  "relationships.declared_partners": {
+   "family": "relationships",
+   "polarity": 0,
+   "state": "DECLARED",
+   "minAbs": 1.0,
+   "minRel": 0.2
+  },
+  "value.credentials": {
+   "family": "value",
+   "polarity": 0,
+   "state": "DECLARED",
+   "minAbs": 1.0,
+   "minRel": 0.2
+  },
+  "activity.job_postings": {
+   "family": "activity",
+   "polarity": 0,
+   "state": "DECLARED",
+   "minAbs": 2.0,
+   "minRel": 0.25
+  },
+  "activity.hiring_channel": {
+   "family": "activity",
+   "polarity": 0,
+   "state": "DECLARED",
+   "minAbs": 1.0,
+   "minRel": 0.0
+  },
+  "reputation.review_profiles": {
+   "family": "reputation",
+   "polarity": 0,
+   "state": "DECLARED",
+   "minAbs": 1.0,
+   "minRel": 0.2
+  },
+  "activity.open_positions": {
+   "family": "activity",
+   "polarity": 0,
+   "state": "DECLARED",
+   "minAbs": 3.0,
+   "minRel": 0.2
+  },
+  "markets.hiring_countries": {
+   "family": "markets",
+   "polarity": 0,
+   "state": "DECLARED",
+   "minAbs": 1.0,
+   "minRel": 0.2
+  },
+  "reputation.wikipedia_views": {
+   "family": "reputation",
+   "polarity": 0,
+   "state": "OBSERVED",
+   "minAbs": 50.0,
+   "minRel": 0.2
+  },
+  "reputation.wikipedia_languages": {
+   "family": "reputation",
+   "polarity": 0,
+   "state": "OBSERVED",
+   "minAbs": 1.0,
+   "minRel": 0.2
+  },
+  "reputation.self_rating": {
+   "family": "reputation",
+   "polarity": 0,
+   "state": "DECLARED",
+   "minAbs": 0.1,
+   "minRel": 0.0
+  },
+  "organization.identifiers": {
+   "family": "organization",
+   "polarity": 0,
+   "state": "DECLARED",
+   "minAbs": 1.0,
+   "minRel": 0.2
+  },
+  "context.sector_headlines": {
+   "family": "context",
+   "polarity": 0,
+   "state": "POTENTIAL",
+   "minAbs": 3.0,
+   "minRel": 0.5
+  },
+  "context.regulation": {
+   "family": "context",
+   "polarity": 0,
+   "state": "POTENTIAL",
+   "minAbs": 1.0,
+   "minRel": 0.2
+  }
+ },
+ "cases": [
+  {
+   "metric": "demand.open_public_calls",
+   "before": {
+    "demand.open_public_calls": 10
+   },
+   "after": {
+    "demand.open_public_calls": 14
+   },
+   "direction": "UP"
+  },
+  {
+   "metric": "demand.open_public_calls",
+   "before": {
+    "demand.open_public_calls": 10
+   },
+   "after": {
+    "demand.open_public_calls": 12
+   },
+   "direction": "SAME"
+  },
+  {
+   "metric": "demand.open_public_calls",
+   "before": {
+    "demand.open_public_calls": 10
+   },
+   "after": {
+    "demand.open_public_calls": 6
+   },
+   "direction": "DOWN"
+  },
+  {
+   "metric": "presence.ai_named_share",
+   "before": {
+    "presence.ai_named_share": 0.25,
+    "_instruments": {
+     "presence.ai_named_share": "P:m1"
+    }
+   },
+   "after": {
+    "presence.ai_named_share": 0.75,
+    "_instruments": {
+     "presence.ai_named_share": "P:m1"
+    }
+   },
+   "direction": "EVOLUTION"
+  },
+  {
+   "metric": "presence.ai_named_share",
+   "before": {
+    "presence.ai_named_share": 0.25,
+    "_instruments": {
+     "presence.ai_named_share": "P:m1"
+    }
+   },
+   "after": {
+    "presence.ai_named_share": 0.75,
+    "_instruments": {
+     "presence.ai_named_share": "P:m2"
+    }
+   },
+   "direction": "NOT_COMPARABLE"
+  },
+  {
+   "metric": "presence.ai_named_share",
+   "before": {
+    "presence.ai_named_share": 0.25
+   },
+   "after": {
+    "presence.ai_named_share": 0.75,
+    "_instruments": {
+     "presence.ai_named_share": "P:m1"
+    }
+   },
+   "direction": "NOT_COMPARABLE"
+  },
+  {
+   "metric": "presence.lcp_ms",
+   "before": {
+    "presence.lcp_ms": 2400.0,
+    "_instruments": {
+     "presence.lcp_ms": "a1"
+    }
+   },
+   "after": {
+    "presence.lcp_ms": 1900.0,
+    "_instruments": {
+     "presence.lcp_ms": "a1"
+    }
+   },
+   "direction": "EVOLUTION"
+  },
+  {
+   "metric": "presence.lcp_ms",
+   "before": {
+    "presence.lcp_ms": 2400.0,
+    "_instruments": {
+     "presence.lcp_ms": "a1"
+    }
+   },
+   "after": {
+    "presence.lcp_ms": 2300.0,
+    "_instruments": {
+     "presence.lcp_ms": "a1"
+    }
+   },
+   "direction": "SAME"
+  },
+  {
+   "metric": "presence.audit_attention",
+   "before": {
+    "presence.audit_attention": [
+     "A",
+     "B"
+    ],
+    "_instruments": {
+     "presence.audit_attention": "a1"
+    }
+   },
+   "after": {
+    "presence.audit_attention": [
+     "A"
+    ],
+    "_instruments": {
+     "presence.audit_attention": "a1"
+    }
+   },
+   "direction": "EVOLUTION"
+  },
+  {
+   "metric": "presence.audit_attention",
+   "before": {
+    "presence.audit_attention": [
+     "A"
+    ],
+    "_instruments": {
+     "presence.audit_attention": "a1"
+    }
+   },
+   "after": {
+    "presence.audit_attention": [
+     "A",
+     "C"
+    ],
+    "_instruments": {
+     "presence.audit_attention": "a1"
+    }
+   },
+   "direction": "REGRESSION"
+  },
+  {
+   "metric": "relationships.competitors",
+   "before": {
+    "relationships.competitors": [
+     "X"
+    ]
+   },
+   "after": {
+    "relationships.competitors": [
+     "X",
+     "Y"
+    ]
+   },
+   "direction": "ADDED"
+  },
+  {
+   "metric": "relationships.competitors",
+   "before": {
+    "relationships.competitors": [
+     "X",
+     "Y"
+    ]
+   },
+   "after": {
+    "relationships.competitors": [
+     "Y"
+    ]
+   },
+   "direction": "REMOVED"
+  },
+  {
+   "metric": "relationships.competitors",
+   "before": {
+    "relationships.competitors": [
+     "X"
+    ]
+   },
+   "after": {
+    "relationships.competitors": [
+     "Z"
+    ]
+   },
+   "direction": "CHANGED"
+  },
+  {
+   "metric": "relationships.competitors",
+   "before": {
+    "relationships.competitors": [
+     "X"
+    ]
+   },
+   "after": {
+    "relationships.competitors": [
+     "X"
+    ]
+   },
+   "direction": "SAME"
+  },
+  {
+   "metric": "economics.employees",
+   "before": {
+    "economics.employees": 100.0
+   },
+   "after": {
+    "economics.employees": 103.0
+   },
+   "direction": "SAME"
+  },
+  {
+   "metric": "economics.employees",
+   "before": {
+    "economics.employees": 100.0
+   },
+   "after": {
+    "economics.employees": 120.0
+   },
+   "direction": "UP"
+  }
+ ]
+}
