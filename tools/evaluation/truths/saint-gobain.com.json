@@ -1,0 +1,68 @@
+{
+ "version": "truth-v1",
+ "purpose": "What is publicly and well known about this organization; AXIGNAL's reading must agree (flywheel, CTO 2026-10-15).",
+ "subject": {
+  "name": "Saint-Gobain",
+  "website": "https://saint-gobain.com/",
+  "home": "FR"
+ },
+ "facts": {
+  "value": "Building materials manufacturing (glass, insulation, plaster, mortars) and distribution."
+ },
+ "checks": [
+  {
+   "id": "presence.website_read",
+   "family": "presence",
+   "require": {
+    "code": "PUBLIC_WEBSITE_OBSERVED"
+   }
+  },
+  {
+   "id": "value.activity_established",
+   "family": "value",
+   "forbid": {
+    "code": "ACTIVITY_NOT_ESTABLISHED"
+   }
+  },
+  {
+   "id": "value.activities_allowed",
+   "family": "value",
+   "activities": [
+    "building-construction",
+    "industrial-hvac",
+    "metal-fabrication"
+   ]
+  },
+  {
+   "id": "value.industry",
+   "family": "value",
+   "industry": {
+    "allowed": [
+     "C23",
+     "G46",
+     "F"
+    ],
+    "preferred": "C23"
+   }
+  },
+  {
+   "id": "demand.relevant_to_its_activity",
+   "family": "demand",
+   "demand": {
+    "titleTerms": [
+     "vidrio",
+     "glass",
+     "verre",
+     "aislamiento",
+     "insulation",
+     "isolation",
+     "yeso",
+     "plaster",
+     "material",
+     "construc",
+     "mortero"
+    ]
+   }
+  }
+ ]
+}

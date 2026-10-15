@@ -1,0 +1,70 @@
+{
+ "version": "truth-v1",
+ "purpose": "What is publicly and well known about this organization; AXIGNAL's reading must agree (flywheel, CTO 2026-10-15).",
+ "subject": {
+  "name": "TRUMPF",
+  "website": "https://trumpf.com/",
+  "home": "DE"
+ },
+ "facts": {
+  "value": "Machine tools and industrial lasers for sheet-metal processing; related software and services."
+ },
+ "checks": [
+  {
+   "id": "presence.website_read",
+   "family": "presence",
+   "require": {
+    "code": "PUBLIC_WEBSITE_OBSERVED"
+   }
+  },
+  {
+   "id": "value.activity_established",
+   "family": "value",
+   "forbid": {
+    "code": "ACTIVITY_NOT_ESTABLISHED"
+   }
+  },
+  {
+   "id": "value.activities_allowed",
+   "family": "value",
+   "activities": [
+    "metal-fabrication",
+    "engineering-services",
+    "software-development"
+   ]
+  },
+  {
+   "id": "value.industry",
+   "family": "value",
+   "industry": {
+    "allowed": [
+     "C28",
+     "C26",
+     "C27"
+    ],
+    "preferred": "C28"
+   }
+  },
+  {
+   "id": "demand.relevant_to_its_activity",
+   "family": "demand",
+   "demand": {
+    "titleTerms": [
+     "láser",
+     "laser",
+     "máquina",
+     "machine",
+     "maschine",
+     "corte",
+     "cutting",
+     "chapa",
+     "sheet metal",
+     "plegado",
+     "bending",
+     "herramienta",
+     "tool"
+    ]
+   }
+  }
+ ]
+}

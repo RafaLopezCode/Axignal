@@ -138,7 +138,11 @@ def test_every_truth_speaks_the_engines_vocabulary() -> None:
     truth_set = json.loads(TRUTHS.with_name("truth_set.json").read_text(encoding="utf-8"))
     domains = [o["domain"] for o in truth_set["organizations"]]
     assert len(domains) == 11 and "axignal.com" in domains
-    for domain in domains:
+    # The golden set (30 organizations, 8 countries) has a truth for every organization too.
+    golden = json.loads(TRUTHS.with_name("golden_set.json").read_text(encoding="utf-8"))
+    golden_domains = [o["domain"] for o in golden["organizations"]]
+    assert len(golden_domains) == 30
+    for domain in [*domains, *golden_domains]:
         truth = truth_for(domain)
         assert truth is not None, domain
         for check in truth["checks"]:

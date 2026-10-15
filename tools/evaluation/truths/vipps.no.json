@@ -1,0 +1,63 @@
+{
+ "version": "truth-v1",
+ "purpose": "What is publicly and well known about this organization; AXIGNAL's reading must agree (flywheel, CTO 2026-10-15).",
+ "subject": {
+  "name": "Vipps",
+  "website": "https://vipps.no/",
+  "home": "NO"
+ },
+ "facts": {
+  "value": "Mobile payment app and payment solutions."
+ },
+ "checks": [
+  {
+   "id": "presence.website_read",
+   "family": "presence",
+   "require": {
+    "code": "PUBLIC_WEBSITE_OBSERVED"
+   }
+  },
+  {
+   "id": "value.activity_established",
+   "family": "value",
+   "forbid": {
+    "code": "ACTIVITY_NOT_ESTABLISHED"
+   }
+  },
+  {
+   "id": "value.activities_allowed",
+   "family": "value",
+   "activities": [
+    "consumer-mobile-app",
+    "business-software"
+   ]
+  },
+  {
+   "id": "value.industry",
+   "family": "value",
+   "industry": {
+    "allowed": [
+     "K66",
+     "K64",
+     "J62_63"
+    ],
+    "preferred": "K66"
+   }
+  },
+  {
+   "id": "demand.relevant_to_its_activity",
+   "family": "demand",
+   "demand": {
+    "titleTerms": [
+     "pago",
+     "payment",
+     "betaling",
+     "app",
+     "móvil",
+     "mobile",
+     "financ"
+    ]
+   }
+  }
+ ]
+}
