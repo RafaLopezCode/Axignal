@@ -22,6 +22,7 @@ from collections.abc import Callable, Iterable, Mapping, Sequence
 from datetime import date, datetime, timedelta
 from typing import Protocol
 
+from application.observation_intelligence.catalog import with_current_codes
 from application.observation_intelligence.contracts import TaxonomyCode
 from application.world_demand.awards import (
     AwardRecord,
@@ -87,7 +88,7 @@ def activity_codes(proof: Mapping[str, object]) -> list[TaxonomyCode]:
     out: list[TaxonomyCode] = []
     for capability in _items(proof.get("capabilities")):
         if isinstance(capability, Mapping):
-            for pair in _items(capability.get("demandCodes")):
+            for pair in _items(with_current_codes(capability).get("demandCodes")):
                 if isinstance(pair, list | tuple) and len(pair) == 2 and pair[0] == "CPV":
                     out.append(TaxonomyCode("CPV", str(pair[1])))
     return out

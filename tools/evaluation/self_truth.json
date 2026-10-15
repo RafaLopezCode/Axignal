@@ -1,0 +1,40 @@
+{
+  "version": "self-truth-v1",
+  "purpose": "What we know to be true about AXIGNAL, family by family. AXIGNAL observing axignal.com must agree; every disagreement is an engine defect, not uncertainty (CTO, 2026-10-15).",
+  "subject": {"name": "AXIGNAL", "website": "https://axignal.com/", "home": "ES", "markets": "GLOBAL"},
+  "facts": {
+    "value": "Subscription platform of business and economic intelligence from public evidence; also market research and advisory reports.",
+    "industry": "Software and information services (preferred); market research and management consulting are also its activities.",
+    "profiles": "LinkedIn company page (URL to confirm; not yet declared in sameAs).",
+    "notPublishedYet": ["legal address (legal operator)", "LEI", "customer logos or case studies", "job postings", "financial figures", "FAQ section"]
+  },
+  "checks": [
+    {"id": "presence.website_read", "family": "presence", "require": {"code": "PUBLIC_WEBSITE_OBSERVED"}},
+    {"id": "presence.languages", "family": "presence", "languages": ["de", "en", "es", "fr", "it", "pt"]},
+    {"id": "presence.audit.pass", "family": "presence", "audit": {"status": "PASS", "checks": [
+      "ROBOTS_TXT_PUBLISHED", "SEARCH_CRAWLERS_ALLOWED", "NO_NOINDEX_ON_READ_PAGES", "SITEMAP_DECLARED",
+      "SITEMAP_READABLE", "HOMEPAGE_CANONICAL_SAME_SITE", "TITLES_PRESENT_AND_SIZED",
+      "DESCRIPTIONS_PRESENT_AND_SIZED", "ONE_H1_PER_PAGE", "HTTPS", "LANGUAGE_DECLARED",
+      "HREFLANG_X_DEFAULT", "AI_CRAWLERS_ALLOWED", "ORGANIZATION_DECLARED", "OFFER_DECLARED",
+      "STRUCTURED_DATA_PARSES", "LLMS_TXT_PUBLISHED", "HOMEPAGE_TEXT_DEPTH", "ACTIVITY_STATED_IN_TEXT",
+      "MOBILE_VIEWPORT", "SOCIAL_PREVIEW_TAGS", "IMAGES_DESCRIBED"]}},
+    {"id": "presence.audit.true_gaps", "family": "presence", "audit": {"status": "ATTENTION", "checks": [
+      "FAQ_OR_QA_DECLARED", "ORGANIZATION_COMPLETE", "ENTITY_PROFILES_LINKED"]},
+      "note": "Real gaps today: no FAQ, no published address, LinkedIn not yet in sameAs."},
+    {"id": "value.activity_established", "family": "value", "forbid": {"code": "ACTIVITY_NOT_ESTABLISHED"}},
+    {"id": "value.activities_allowed", "family": "value", "activities": [
+      "market-research", "business-software", "software-development", "it-services", "management-consulting"]},
+    {"id": "value.industry", "family": "value", "industry": {"allowed": ["J62_63", "J58", "M73", "M69_70"], "preferred": "J62_63"}},
+    {"id": "markets.worldwide", "family": "markets", "require": {"code": "SERVICE_AREA_DECLARED", "statement": "Worldwide"}},
+    {"id": "markets.home_spain", "family": "markets", "require": {"code": "LOCATION_STATED_IN_TEXT", "statement": "EU/ES"}},
+    {"id": "relationships.no_declared_clients", "family": "relationships", "forbid": {"code": "CLIENT_DECLARED"}},
+    {"id": "activity.no_job_postings", "family": "activity", "forbid": {"code": "JOB_POSTINGS_PUBLISHED"}},
+    {"id": "economics.no_figures", "family": "economics", "forbid": {"kind": "ECONOMIC_FACT"}},
+    {"id": "organization.identity_unverified", "family": "organization", "require": {"code": "IDENTITY_NOT_VERIFIED"}},
+    {"id": "demand.relevant_to_its_activity", "family": "demand", "demand": {"titleTerms": [
+      "mercado", "market", "estudio", "study", "análisis", "analysis", "encuesta", "survey", "sondeo",
+      "estadístic", "statistic", "inteligencia", "intelligence", "observatorio", "observatory", "datos",
+      "data", "investigación", "research", "consultoría", "consulting", "asesoramiento", "software",
+      "plataforma", "platform", "información", "information", "prospectiva", "benchmark", "vigilancia"]}}
+  ]
+}

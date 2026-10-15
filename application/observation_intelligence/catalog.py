@@ -8,6 +8,7 @@ anything unverified keeps the source CANDIDATE with explicit adoption blockers.
 
 from __future__ import annotations
 
+from collections.abc import Mapping
 from dataclasses import dataclass
 from datetime import timedelta
 
@@ -156,7 +157,9 @@ CAPABILITY_LEXICON: tuple[CapabilityLexiconEntry, ...] = (
                "economic intelligence", "competitive intelligence", "inteligencia empresarial",
                "inteligencia competitiva", "intelligence économique", "wirtschaftsintelligenz",
                "intelligence economica", "inteligência económica", "inteligência empresarial"),
-        demand_codes=(cpv("79300000"), cpv("79310000"), naics("541910")),
+        # Not the 79300000 parent: in CPV it also holds advertising, marketing, events and
+        # auctions (7934xxxx), which made 70 of 100 matches unrelated (self-check, 2026-10-15).
+        demand_codes=(cpv("79310000"), cpv("79320000"), cpv("79330000"), naics("541910")),
         families=("professional-services",),
         buyer_jobs=("sector studies and economic observatories for public bodies",),
     ),
@@ -926,3 +929,18 @@ SOURCES: tuple[SourceDescriptor, ...] = (
         blockers=("RIGHTS_TO_VERIFY", "ACCESS_METHOD_TO_VERIFY", "ADAPTER_NOT_BUILT"),
     ),
 )
+
+
+_BY_ID = {entry.capability_id: entry for entry in CAPABILITY_LEXICON}
+
+
+def with_current_codes(capability: Mapping[str, object]) -> Mapping[str, object]:
+    """A stored capability with the catalog's current demand codes, when the catalog knows it.
+
+    Observations copy the codes they were read with; a correction to the catalog (a code
+    that matched unrelated demand) must reach every reading at once, not only new ones.
+    """
+    entry = _BY_ID.get(str(capability.get("capabilityId") or ""))
+    if entry is None:
+        return capability
+    return {**capability, "demandCodes": [[c.scheme, c.code] for c in entry.demand_codes]}

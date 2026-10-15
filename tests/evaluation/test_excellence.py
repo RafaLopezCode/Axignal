@@ -84,3 +84,37 @@ def test_buyers_report_routes_coverage_and_why_none() -> None:
     assert out["with_multi_signal_candidates"] == 1 and out["median_candidates"] == 2
     assert out["unknown_reasons"] == {"NO_CUSTOMER_PROFILE": 1, "CUSTOMERS_WITHOUT_ROUTE": 0}
     assert "| US | 0/1 |" in markdown(report(rows, now=NOW))
+
+
+def test_self_check_flags_false_positives_negatives_and_unrelated_demand() -> None:
+    from tools.evaluation.self_check import TRUTH, evaluate
+
+    truth = json.loads(TRUTH.read_text(encoding="utf-8"))
+    reading = {"discoveries": [
+        _d("PUBLIC_PRESENCE", "PUBLIC_WEBSITE_OBSERVED"),
+        {"kind": "LANGUAGES", "code": "LANGUAGES_PUBLISHED", "statement": "de, en, es, fr, it, pt, x-default", "detail": {}},
+        {"kind": "RELATIONSHIP", "code": "CLIENT_DECLARED", "statement": "Google Partner", "detail": {}},
+        {"kind": "DEMAND", "code": "POTENTIAL_DEMAND", "statement": "x",
+         "detail": {"title": "Servicio de campañas de publicidad", "codes": ["CPV:79341400"]}},
+        {"kind": "DEMAND", "code": "POTENTIAL_DEMAND", "statement": "y",
+         "detail": {"title": "Servicios de análisis de mercado", "codes": ["CPV:79310000"]}},
+    ]}  # fmt: skip
+    report = evaluate(reading, truth)
+    by_id = {v["id"]: v for v in report["verdicts"]}
+    assert by_id["presence.languages"]["status"] == "PASS"
+    assert by_id["relationships.no_declared_clients"]["defect"] == "FALSE_POSITIVE"
+    assert by_id["organization.identity_unverified"]["defect"] == "FALSE_NEGATIVE"
+    demand = by_id["demand.relevant_to_its_activity"]
+    assert demand["status"] == "FAIL" and len(demand["detail"]["unrelated"]) == 1
+    assert by_id["value.industry"]["status"] == "NOT_MEASURED"  # nothing to judge it with
+    assert report["accuracy"] is not None and 0 < report["accuracy"] < 100
+
+
+def test_known_capabilities_read_the_catalogs_current_codes() -> None:
+    from application.observation_intelligence.catalog import with_current_codes
+
+    stored = {"capabilityId": "market-research", "demandCodes": [["CPV", "79300000"]]}
+    codes = [c for _s, c in with_current_codes(stored)["demandCodes"]]  # type: ignore[union-attr]
+    assert "79300000" not in codes and "79310000" in codes  # advertising (7934) no longer matches
+    unknown = {"capabilityId": "something-else", "demandCodes": [["CPV", "1"]]}
+    assert with_current_codes(unknown) is unknown

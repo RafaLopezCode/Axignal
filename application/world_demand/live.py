@@ -18,6 +18,7 @@ from collections.abc import Callable, Iterable, Mapping, Sequence
 from dataclasses import dataclass
 from datetime import datetime, timedelta
 
+from application.observation_intelligence.catalog import with_current_codes
 from application.observation_intelligence.contracts import SourceCapability, TaxonomyCode
 from application.observation_intelligence.findings import ProcurementRecord
 from application.world_demand.index import DemandIndexStore, DemandSlice, code_within, country_of
@@ -231,7 +232,11 @@ def apply_live_demand(
     live = None
     if reader is not None:
         live = reader.read(
-            [c for c in _items(proof.get("capabilities")) if isinstance(c, Mapping)],
+            [
+                with_current_codes(c)
+                for c in _items(proof.get("capabilities"))
+                if isinstance(c, Mapping)
+            ],
             [
                 str(s.get("jurisdiction"))
                 for s in _items(proof.get("attentionScopes"))
