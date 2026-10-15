@@ -317,6 +317,35 @@ p.obs-card-before { display: block; margin: 0 0 8px; padding: 8px 12px; font-siz
 
 /* ---- evolution, evidence, explore ------------------------------------------------------------ */
 .obs-section-lede { color: var(--obs-muted); margin: 0 0 16px; max-inline-size: 70ch; }
+/* Spec 076: day X against day Y, per family. */
+.obs-evo { box-sizing: border-box; inline-size: 100%; padding: 24px; border-radius: var(--obs-r-card); background: var(--obs-card); border: 1px solid var(--obs-line); margin-block-end: 28px; max-inline-size: 980px; }
+.obs-evo h2 { margin: 0 0 12px; font-size: 1.1rem; color: var(--obs-ink); }
+.obs-evo-pick { display: flex; flex-wrap: wrap; gap: 12px 20px; align-items: center; color: var(--obs-muted); }
+.obs-evo-pick select { margin-inline-start: 6px; padding: 6px 10px; border-radius: var(--obs-r-field); border: 1px solid var(--obs-line); background: var(--obs-paper); color: var(--obs-ink); font: inherit; }
+.obs-evo-summary { margin: 14px 0 6px; color: var(--obs-text); font-weight: 600; }
+.obs-evo-family { margin-block-start: 18px; }
+.obs-evo-family h3 { margin: 0 0 8px; font-size: .95rem; color: var(--obs-ink); }
+.obs-evo-table { inline-size: 100%; border-collapse: collapse; font-size: .9rem; table-layout: fixed; }
+.obs-evo-table thead th:first-child, .obs-evo-table tbody th { inline-size: 38%; }
+.obs-evo-table thead th:last-child { inline-size: 34%; }
+.obs-evo-table th, .obs-evo-table td { text-align: start; padding: 8px 10px; border-block-end: 1px solid var(--obs-line); vertical-align: top; }
+.obs-evo-table thead th { color: var(--obs-muted); font-weight: 600; font-size: .8rem; }
+.obs-evo-table tbody th { font-weight: 500; color: var(--obs-ink); }
+.obs-evo-trend { margin-inline-start: 8px; vertical-align: middle; color: var(--obs-blue); }
+.obs-evo-change { display: block; color: var(--obs-muted); }
+.obs-evo-evolution .obs-evo-change { color: var(--obs-sage); font-weight: 600; }
+.obs-evo-regression .obs-evo-change { color: var(--obs-brass-ink); font-weight: 600; }
+.obs-evo-up .obs-evo-change, .obs-evo-down .obs-evo-change, .obs-evo-added .obs-evo-change, .obs-evo-removed .obs-evo-change, .obs-evo-changed .obs-evo-change { color: var(--obs-text); font-weight: 600; }
+.obs-evo-items { display: block; color: var(--obs-muted); font-size: .82rem; margin-block-start: 2px; overflow-wrap: anywhere; }
+.obs-evo-note { margin: 16px 0 0; color: var(--obs-muted); font-size: .82rem; }
+@media (max-width: 640px) {
+  .obs-evo { padding: 16px; }
+  .obs-evo-table thead { display: none; }
+  .obs-evo-table tr { display: grid; grid-template-columns: 1fr 1fr; gap: 2px 12px; padding: 8px 0; border-block-end: 1px solid var(--obs-line); }
+  .obs-evo-table th, .obs-evo-table td { border: 0; padding: 2px 0; }
+  .obs-evo-table tbody th, .obs-evo-table td:last-child { grid-column: 1 / -1; inline-size: auto; }
+  .obs-evo-table { table-layout: auto; }
+}
 .obs-timeline { list-style: none; margin: 0; padding: 0 0 0 4px; display: grid; gap: 0; max-inline-size: 820px; }
 .obs-event { position: relative; display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: 18px; padding: 0 0 22px 22px; }
 .obs-event::before { content: ""; position: absolute; inset-inline-start: 4px; inset-block: 8px -2px; inline-size: 2px; background: var(--obs-line); }

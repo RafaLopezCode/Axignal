@@ -151,3 +151,61 @@ def test_own_site_signals_change_in_time_only_once_the_reader_ran() -> None:
     assert found["activity.hiring_channel"]["code"] == "activity:activity.hiring_channel:UP"
     # A reading from before the own-site reader is unknown, not "nothing": no false ADDED.
     assert "relationships.technology" not in _changes(site(read=False), site(salesforce))
+
+
+def _probe(statement: str, model: str) -> dict[str, Any]:
+    return _d("GENERATIVE_VISIBILITY", "AI_NAMED_FOR_CATEGORY", statement,
+              instrument={"kind": "GENERATIVE_PROBE", "model": model},
+              conditions={"questions": ["Who leads market research in Spain?"], "language": "en"})  # fmt: skip
+
+
+def test_every_value_carries_its_instrument_and_a_new_one_is_a_discontinuity() -> None:
+    # Spec 076 / MASTER §22: a before/after is comparable only under the same instrument.
+    before, after = _view(_probe("1/4 answers", "luna-1")), _view(_probe("3/4 answers", "luna-1"))
+    held = snapshot(after)
+    assert held["_instruments"]["presence.ai_named_share"].startswith("GENERATIVE_PROBE:luna-1:")  # type: ignore[index]
+    assert "presence.ai_named_share" in _changes(before, after)
+    other_model = _view(_probe("3/4 answers", "luna-2"))
+    assert "presence.ai_named_share" not in _changes(before, other_model)
+
+
+def test_snapshots_from_before_instruments_still_compare_definition_metrics() -> None:
+    from application.timeline import comparable
+
+    old = {"demand.open_public_calls": 3, "presence.ai_named_share": 0.25}
+    new = snapshot(_view(_probe("3/4 answers", "luna-1"), total=9))
+    assert comparable(old, new, "demand.open_public_calls")  # the timeline's own definition
+    assert not comparable(old, new, "presence.ai_named_share")  # unknown probe vs a known one
+
+
+def test_audit_checks_passed_is_a_comparable_presence_metric() -> None:
+    audit = {"instrument": "representation-audit.v1",
+             "checks": [{"id": "HTTPS", "status": "PASS"}, {"id": "SITEMAP_DECLARED", "status": "PASS"},
+                        {"id": "FAQ_OR_QA_DECLARED", "status": "ATTENTION"}]}  # fmt: skip
+    held = snapshot(
+        _view(_d("WEB_REPRESENTATION", "PUBLIC_WEB_REPRESENTATION_MEASURED", audit=audit))
+    )
+    assert held["presence.audit_passed"] == 2
+    assert held["_instruments"]["presence.audit_passed"] == "representation-audit.v1"  # type: ignore[index]
+
+
+def test_evolution_collapses_identical_days_and_carries_the_catalog() -> None:
+    from application.timeline import evolution
+
+    a, b = {"demand.open_public_calls": 3}, {"demand.open_public_calls": 9}
+    found = evolution([("2026-10-13", a), ("2026-10-14", a), ("2026-10-15", b)])
+    assert found["days"] == ["2026-10-13", "2026-10-14", "2026-10-15"]
+    assert [(v["from"], v["to"]) for v in found["versions"]] == [  # type: ignore[index, union-attr]
+        ("2026-10-13", "2026-10-14"), ("2026-10-15", "2026-10-15")]  # fmt: skip
+    assert found["catalog"]["presence.audit_attention"]["polarity"] == -1  # type: ignore[index]
+
+
+def test_the_webs_comparison_fixture_states_what_the_engine_states() -> None:
+    # Spec 076: the web compares day X with day Y with these exact rules; regenerate the
+    # fixture (python -m tools.evaluation.evolution_parity) whenever the engine's rules change.
+    import json
+
+    from tools.evaluation.evolution_parity import FIXTURE, cases
+
+    committed = json.loads(FIXTURE.read_text(encoding="utf-8"))
+    assert committed["cases"] == json.loads(json.dumps(cases()))

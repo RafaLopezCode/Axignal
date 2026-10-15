@@ -38,6 +38,7 @@ import type { ObservatoryCapabilities } from "@/lib/observatory-source";
 import { WAITING_STATES, waitingItems, type ActivationPhase } from "@/lib/activation";
 import { ActivationView } from "./activation";
 import { channelLabel, FamilyNav, scopeCopy, type FacetScope } from "./family-nav";
+import { EvolutionCompare } from "./evolution-compare";
 import { countByFacet, facetOfSourceType, facetParams, keysReadOnFirstLook, litByChannel, litOrFirstLook, litByFamily, matchesFacet, parseFacet, type Facet } from "@/lib/observation-families";
 
 type Item = SubscriberPortfolio["organizations"][number];
@@ -901,6 +902,12 @@ function EvolutionView({ reading, facet, scope }: { reading: Reading; facet: Fac
   }
   const visible = events.filter(e => matchesFacet(e.facet, facet));
   visible.sort((a, b) => b.at.localeCompare(a.at));
+  // Spec 076: any recorded day against any other, with values; the event list stays below it.
+  const evolution = reading.firstObservation?.timeline?.evolution;
+  const compare = evolution && evolution.days.length >= 2 ? <EvolutionCompare evolution={evolution} facet={facet}/> : null;
+  if (compare) return <>{compare}{visible.length > 0 && <ol className="obs-timeline">{visible.map((e, i) => <li key={i} className={`obs-event obs-event-${e.kind}`}>
+    <time dateTime={e.at}>{formatDate(e.at, locale, true)}</time><div><strong>{e.title}</strong>{e.facet.channel && !facet.channel && <span className="obs-event-tag">{channelLabel(e.facet.channel, t)}</span>}<p>{e.detail}</p></div>
+  </li>)}</ol>}</>;
   if (!visible.length) return scope
     ? <section className="obs-empty-state"><h2>{fill(t("Todavía no hay observaciones de {scope} que comparar", "There are no observations of {scope} to compare yet"), { scope: scope.title })}</h2><p>{t("Un cambio solo se declara cuando hay dos observaciones comparables. Sin ellas no hay cambio que mostrar, ni a favor ni en contra.", "A change is only declared when there are two comparable observations. Without them there is no change to show, for or against.")}</p></section>
     : <section className="obs-empty-state"><h2>{t("La evolución empieza con la segunda observación.", "Evolution starts with the second observation.")}</h2><p>{t("AXIGNAL volverá a observar y te mostrará aquí qué cambió, cuándo y frente a qué.", "AXIGNAL will observe again and show you here what changed, when and against what.")}</p></section>;

@@ -17,6 +17,9 @@ from dataclasses import dataclass
 from typing import Any
 
 TIMELINE_VERSION = "timeline-v1"
+#: Instruments of each snapshot, stored next to the metrics (MASTER §22: a before/after is
+#: comparable only under the same instrument and version).
+INSTRUMENTS = "_instruments"
 Discovery = Mapping[str, Any]
 
 
@@ -32,6 +35,9 @@ class Metric:
     #: Minimum change that counts (numbers): absolute and relative.
     min_abs: float = 1.0
     min_rel: float = 0.2
+    #: The instrument and version that produced the value; None: the metric definition
+    #: itself (TIMELINE_VERSION) is the instrument.
+    instrument: Callable[[list[Discovery]], str | None] | None = None
 
 
 def _of(ds: list[Discovery], kind: str, *codes: str) -> list[Discovery]:
@@ -83,6 +89,39 @@ def _field_ms(check: str) -> Callable[[list[Discovery], Mapping[str, Any]], obje
         return None
 
     return extract
+
+
+def _audit_instrument(ds: list[Discovery]) -> str | None:
+    for d in _of(ds, "WEB_REPRESENTATION"):
+        audit = _detail(d).get("audit")
+        if isinstance(audit, Mapping) and audit.get("instrument"):
+            return str(audit["instrument"])
+    return None
+
+
+def _probe_instrument(ds: list[Discovery]) -> str | None:
+    """The generative probe: kind, model and its frozen conditions (questions, language,
+    live search). Another model or other questions is another instrument."""
+    import hashlib
+    import json
+
+    for d in _of(ds, "GENERATIVE_VISIBILITY"):
+        detail = _detail(d)
+        instrument = detail.get("instrument")
+        if isinstance(instrument, Mapping):
+            conditions = json.dumps(detail.get("conditions"), sort_keys=True, default=str)
+            digest = hashlib.sha256(conditions.encode("utf-8")).hexdigest()[:12]
+            return f"{instrument.get('kind')}:{instrument.get('model')}:{digest}"
+    return None
+
+
+def _audit_passed(ds: list[Discovery], _v: Mapping[str, Any]) -> object:
+    for d in _of(ds, "WEB_REPRESENTATION"):
+        audit = _detail(d).get("audit")
+        checks = audit.get("checks") if isinstance(audit, Mapping) else None
+        if isinstance(checks, list):
+            return sum(1 for c in checks if isinstance(c, Mapping) and c.get("status") == "PASS")
+    return None
 
 
 def _languages(ds: list[Discovery], _v: Mapping[str, Any]) -> object:
@@ -179,13 +218,18 @@ def _self_rating(ds: list[Discovery], _v: Mapping[str, Any]) -> object:
 
 
 METRICS: tuple[Metric, ...] = (
-    Metric("presence.ai_named_share", "presence", +1, "OBSERVED", _geo_named, 0.25, 0.0),
-    Metric("presence.ai_knows_brand", "presence", +1, "OBSERVED", _brand_known, 1.0, 0.0),
-    Metric("presence.audit_attention", "presence", -1, "OBSERVED", _audit_attention),
+    Metric("presence.ai_named_share", "presence", +1, "OBSERVED", _geo_named, 0.25, 0.0,
+           _probe_instrument),
+    Metric("presence.ai_knows_brand", "presence", +1, "OBSERVED", _brand_known, 1.0, 0.0,
+           _probe_instrument),
+    Metric("presence.audit_attention", "presence", -1, "OBSERVED", _audit_attention,
+           instrument=_audit_instrument),
+    Metric("presence.audit_passed", "presence", +1, "OBSERVED", _audit_passed, 1.0, 0.0,
+           _audit_instrument),
     Metric("presence.lcp_ms", "presence", -1, "OBSERVED",
-           _field_ms("LOADING_SPEED_REAL_USERS"), 200.0, 0.1),
+           _field_ms("LOADING_SPEED_REAL_USERS"), 200.0, 0.1, _audit_instrument),
     Metric("presence.inp_ms", "presence", -1, "OBSERVED",
-           _field_ms("RESPONSIVENESS_REAL_USERS"), 40.0, 0.15),
+           _field_ms("RESPONSIVENESS_REAL_USERS"), 40.0, 0.15, _audit_instrument),
     Metric("presence.languages", "presence", 0, "OBSERVED", _languages),
     Metric("reputation.press_mentions", "reputation", 0, "POTENTIAL",
            _count("MENTION", "PRESS_MENTION")),
@@ -244,6 +288,7 @@ def snapshot(view: Mapping[str, Any]) -> dict[str, object]:
     held = view.get("discoveries")
     ds = [d for d in (held if isinstance(held, list) else []) if isinstance(d, Mapping)]
     out: dict[str, object] = {}
+    instruments: dict[str, str] = {}
     for metric in METRICS:
         try:
             value = metric.extract(ds, view)
@@ -251,7 +296,27 @@ def snapshot(view: Mapping[str, Any]) -> dict[str, object]:
             value = None
         if value is not None:
             out[metric.key] = value
+            used = metric.instrument(ds) if metric.instrument is not None else None
+            instruments[metric.key] = used or TIMELINE_VERSION
+    if instruments:
+        out[INSTRUMENTS] = instruments
     return out
+
+
+def instrument_of(snapshot_metrics: Mapping[str, object], key: str) -> str | None:
+    """The instrument a stored value came from. Snapshots stored before instruments were kept
+    carry none: a metric defined by the timeline itself is still that definition; a measured
+    one (audit, generative probe) is unknown, comparable only with another unknown."""
+    held = snapshot_metrics.get(INSTRUMENTS)
+    if isinstance(held, Mapping) and key in held:
+        return str(held[key])
+    metric = BY_KEY.get(key)
+    return TIMELINE_VERSION if metric is not None and metric.instrument is None else None
+
+
+def comparable(before: Mapping[str, object], after: Mapping[str, object], key: str) -> bool:
+    """Same instrument and version (an unknown instrument compares only with another unknown)."""
+    return instrument_of(before, key) == instrument_of(after, key)
 
 
 def _change(
@@ -297,6 +362,8 @@ def changes(
     for key, metric in BY_KEY.items():
         if key not in before or key not in after:
             continue
+        if not comparable(before, after, key):
+            continue  # another instrument or version: a discontinuity, never a change
         values = _change(metric, before[key], after[key], before_day=before_day,
                          after_day=after_day)  # fmt: skip
         if values is None:
@@ -322,6 +389,41 @@ def changes(
     order = {"REGRESSION": 0, "EVOLUTION": 1}
     out.sort(key=lambda c: order.get(str(c["detail"]["values"]["direction"]), 2))  # type: ignore[index]
     return out
+
+
+MAX_EVOLUTION_DAYS = 180
+#: Items kept per set metric in the evolution sent to a view (lists of names stay small).
+MAX_EVOLUTION_ITEMS = 30
+
+
+def catalog() -> dict[str, dict[str, object]]:
+    """What a client needs to compare two days exactly as ``changes`` does (spec 076)."""
+    return {
+        m.key: {"family": m.family, "polarity": m.polarity, "state": m.state,
+                "minAbs": m.min_abs, "minRel": m.min_rel}
+        for m in METRICS
+    }  # fmt: skip
+
+
+def evolution(snapshots: Sequence[tuple[str, Mapping[str, object]]]) -> dict[str, object]:
+    """Every recorded day (up to 180) as versions: consecutive identical days collapse into
+    one (from, to) range, so any day X can be compared with any day Y at little cost."""
+    recent = list(snapshots)[-MAX_EVOLUTION_DAYS:]
+    versions: list[dict[str, object]] = []
+    for day, metrics in recent:
+        compact = {
+            k: v[:MAX_EVOLUTION_ITEMS] if isinstance(v, list) else v for k, v in metrics.items()
+        }
+        if versions and versions[-1]["metrics"] == compact:
+            versions[-1]["to"] = day
+        else:
+            versions.append({"from": day, "to": day, "metrics": compact})
+    return {
+        "timelineVersion": TIMELINE_VERSION,
+        "days": [day for day, _ in recent],
+        "versions": versions,
+        "catalog": catalog(),
+    }
 
 
 MAX_HISTORY_EVENTS = 300
