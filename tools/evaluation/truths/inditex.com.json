@@ -1,0 +1,61 @@
+{
+ "version": "truth-v1",
+ "purpose": "What is publicly and well known about this organization; AXIGNAL's reading must agree (flywheel, CTO 2026-10-15).",
+ "subject": {
+  "name": "Inditex",
+  "website": "https://inditex.com/",
+  "home": "ES"
+ },
+ "facts": {
+  "value": "Fashion design, sourcing and retail (Zara, Massimo Dutti, Bershka...): retail trade, not apparel for work."
+ },
+ "checks": [
+  {
+   "id": "presence.website_read",
+   "family": "presence",
+   "require": {
+    "code": "PUBLIC_WEBSITE_OBSERVED"
+   }
+  },
+  {
+   "id": "value.activity_established",
+   "family": "value",
+   "forbid": {
+    "code": "ACTIVITY_NOT_ESTABLISHED"
+   }
+  },
+  {
+   "id": "value.activities_allowed",
+   "family": "value",
+   "activities": []
+  },
+  {
+   "id": "value.industry",
+   "family": "value",
+   "industry": {
+    "allowed": [
+     "G47",
+     "C13-15"
+    ],
+    "preferred": "G47"
+   }
+  },
+  {
+   "id": "demand.relevant_to_its_activity",
+   "family": "demand",
+   "demand": {
+    "titleTerms": [
+     "moda",
+     "fashion",
+     "ropa",
+     "clothing",
+     "textil",
+     "textile",
+     "tienda",
+     "store",
+     "retail"
+    ]
+   }
+  }
+ ]
+}

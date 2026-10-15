@@ -195,6 +195,16 @@ def test_the_fetcher_names_an_unverifiable_certificate() -> None:
     assert fetched.failure == TLS_NOT_VERIFIED and fetched.status is None
 
 
+def test_the_fetcher_follows_the_five_redirects_robots_txt_allows() -> None:
+    # Found on inditex.com (truth set, 2026-10-15): bare domain -> www -> home -> language
+    # home is four hops; three cut the read and the whole site was declared unreadable.
+    # RFC 9309 §2.3.1.2: crawlers SHOULD follow at least five consecutive redirects.
+    from pipeline.first_observation.http_fetcher import GovernedSiteFetcher
+
+    policy = GovernedSiteFetcher(sensor=None, artifacts=None).policy_for("inditex.com")  # type: ignore[arg-type]
+    assert policy.max_redirects == 5
+
+
 def test_a_redirect_to_the_same_brand_on_another_domain_is_read_once_and_said() -> None:
     from dataclasses import replace
 

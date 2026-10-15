@@ -1,0 +1,74 @@
+{
+ "version": "truth-v1",
+ "purpose": "What is publicly and well known about this organization; AXIGNAL's reading must agree (flywheel, CTO 2026-10-15).",
+ "subject": {
+  "name": "Ipsos",
+  "website": "https://ipsos.com/",
+  "home": "FR"
+ },
+ "facts": {
+  "value": "Market research and public opinion polling, with related analytics and advisory."
+ },
+ "checks": [
+  {
+   "id": "presence.website_read",
+   "family": "presence",
+   "require": {
+    "code": "PUBLIC_WEBSITE_OBSERVED"
+   }
+  },
+  {
+   "id": "value.activity_established",
+   "family": "value",
+   "forbid": {
+    "code": "ACTIVITY_NOT_ESTABLISHED"
+   }
+  },
+  {
+   "id": "value.activities_allowed",
+   "family": "value",
+   "activities": [
+    "market-research",
+    "management-consulting",
+    "marketing-advertising"
+   ]
+  },
+  {
+   "id": "value.industry",
+   "family": "value",
+   "industry": {
+    "allowed": [
+     "M73",
+     "M69_70"
+    ],
+    "preferred": "M73"
+   }
+  },
+  {
+   "id": "demand.relevant_to_its_activity",
+   "family": "demand",
+   "demand": {
+    "titleTerms": [
+     "mercado",
+     "market",
+     "estudio",
+     "study",
+     "encuesta",
+     "survey",
+     "sondeo",
+     "poll",
+     "opinión",
+     "opinion",
+     "investigación",
+     "research",
+     "evaluación",
+     "evaluation",
+     "análisis",
+     "analysis",
+     "estadíst",
+     "statistic"
+    ]
+   }
+  }
+ ]
+}

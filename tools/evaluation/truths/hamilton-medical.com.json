@@ -1,0 +1,67 @@
+{
+ "version": "truth-v1",
+ "purpose": "What is publicly and well known about this organization; AXIGNAL's reading must agree (flywheel, CTO 2026-10-15).",
+ "subject": {
+  "name": "Hamilton Medical",
+  "website": "https://hamilton-medical.com/",
+  "home": "CH"
+ },
+ "facts": {
+  "value": "Niche: intelligent mechanical ventilators for intensive care and transport (medical devices). Building ventilation (HVAC) would be a wrong classification."
+ },
+ "checks": [
+  {
+   "id": "presence.website_read",
+   "family": "presence",
+   "require": {
+    "code": "PUBLIC_WEBSITE_OBSERVED"
+   }
+  },
+  {
+   "id": "value.activity_established",
+   "family": "value",
+   "forbid": {
+    "code": "ACTIVITY_NOT_ESTABLISHED"
+   }
+  },
+  {
+   "id": "value.activities_allowed",
+   "family": "value",
+   "activities": [
+    "medical-devices"
+   ]
+  },
+  {
+   "id": "value.industry",
+   "family": "value",
+   "industry": {
+    "allowed": [
+     "C26",
+     "C31_32"
+    ],
+    "preferred": "C31_32"
+   }
+  },
+  {
+   "id": "demand.relevant_to_its_activity",
+   "family": "demand",
+   "demand": {
+    "titleTerms": [
+     "ventilador",
+     "ventilator",
+     "respirador",
+     "respirat",
+     "ventilación mecánica",
+     "mechanical ventilation",
+     "uci",
+     "icu",
+     "intensiv",
+     "médic",
+     "medical",
+     "sanitari",
+     "hospital"
+    ]
+   }
+  }
+ ]
+}

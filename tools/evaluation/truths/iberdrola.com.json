@@ -1,0 +1,70 @@
+{
+ "version": "truth-v1",
+ "purpose": "What is publicly and well known about this organization; AXIGNAL's reading must agree (flywheel, CTO 2026-10-15).",
+ "subject": {
+  "name": "Iberdrola",
+  "website": "https://iberdrola.com/",
+  "home": "ES"
+ },
+ "facts": {
+  "value": "Electric utility: renewable and conventional generation, electricity networks, energy supply and smart solutions (solar, charging)."
+ },
+ "checks": [
+  {
+   "id": "presence.website_read",
+   "family": "presence",
+   "require": {
+    "code": "PUBLIC_WEBSITE_OBSERVED"
+   }
+  },
+  {
+   "id": "value.activity_established",
+   "family": "value",
+   "forbid": {
+    "code": "ACTIVITY_NOT_ESTABLISHED"
+   }
+  },
+  {
+   "id": "value.activities_allowed",
+   "family": "value",
+   "activities": [
+    "energy-supply",
+    "solar-pv-installation",
+    "electrical-installation",
+    "engineering-services"
+   ]
+  },
+  {
+   "id": "value.industry",
+   "family": "value",
+   "industry": {
+    "allowed": [
+     "D"
+    ],
+    "preferred": "D"
+   }
+  },
+  {
+   "id": "demand.relevant_to_its_activity",
+   "family": "demand",
+   "demand": {
+    "titleTerms": [
+     "energía",
+     "energy",
+     "eléctric",
+     "electric",
+     "electricidad",
+     "electricity",
+     "solar",
+     "eólic",
+     "wind",
+     "renovable",
+     "renewable",
+     "red",
+     "grid",
+     "fotovolt"
+    ]
+   }
+  }
+ ]
+}

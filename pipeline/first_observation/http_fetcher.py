@@ -38,7 +38,7 @@ class GovernedSiteFetcher:
         artifacts: ContentAddressedArtifactStore,
         max_response_bytes: int = 1_500_000,
         timeout_ms: int = 8_000,
-        max_redirects: int = 3,
+        max_redirects: int = 5,  # RFC 9309 §2.3.1.2: follow at least five for robots.txt
     ) -> None:
         self._sensor = sensor
         self._artifacts = artifacts

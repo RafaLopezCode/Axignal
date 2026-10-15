@@ -32,6 +32,8 @@ def test_codes_resolve_to_industries() -> None:
     assert industry_of_cpv("79710000") == "N80-82"
     assert industry_of_cpv("72000000") == "J62_63"
     assert industry_of_cpv("45000000") == "F"
+    # Found on hamilton-medical.com (truth set): medical equipment is not pharmacy.
+    assert industry_of_cpv("33100000") == "C31_32" and industry_of_cpv("33600000") == "C21"
     assert industry_of_cpv("") is None
 
 
@@ -98,3 +100,21 @@ def test_individuals_are_told_apart_from_companies() -> None:
     assert not is_company("John Smith", "X1234567L")
     assert is_company("Talleres Zitrón, S.A.", None)
     assert not is_company("María López", None)
+
+
+def test_truth_set_findings_on_industries_and_legal_pages() -> None:
+    # Found on securitas.com and ferrovial.com (truth set, 2026-10-15).
+    from application.value_chain import (
+        LEGAL_PAGE,
+        wikidata_industry_classifies,
+        wikidata_industry_nace,
+    )
+
+    assert LEGAL_PAGE.search("/en/about-us/securitas-digital-services--legal-documents/")
+    assert LEGAL_PAGE.search("/privacy/") and not LEGAL_PAGE.search("/en/services/guarding/")
+    # "Transport" (land, air or sea?) never names one organization's industry...
+    assert not wikidata_industry_classifies("Q7590") and wikidata_industry_nace("Q7590") == "49"
+    assert wikidata_industry_classifies("Q1116826") and wikidata_industry_nace("Q1116826") == "80"
+    view = {"discoveries": [{"code": "WIKIDATA:industry", "detail": {"value": "Q7590"}}]}
+    # ... so it falls through to what the website or its codes establish (here: nothing).
+    assert company_industry(view, [], nace_of=lambda q: [wikidata_industry_nace(q) or ""]) is None

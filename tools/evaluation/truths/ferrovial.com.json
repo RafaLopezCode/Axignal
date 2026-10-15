@@ -1,0 +1,76 @@
+{
+ "version": "truth-v1",
+ "purpose": "What is publicly and well known about this organization; AXIGNAL's reading must agree (flywheel, CTO 2026-10-15).",
+ "subject": {
+  "name": "Ferrovial",
+  "website": "https://ferrovial.com/",
+  "home": "ES"
+ },
+ "facts": {
+  "value": "Infrastructure developer and operator: construction, toll roads, airports, energy infrastructure."
+ },
+ "checks": [
+  {
+   "id": "presence.website_read",
+   "family": "presence",
+   "require": {
+    "code": "PUBLIC_WEBSITE_OBSERVED"
+   }
+  },
+  {
+   "id": "value.activity_established",
+   "family": "value",
+   "forbid": {
+    "code": "ACTIVITY_NOT_ESTABLISHED"
+   }
+  },
+  {
+   "id": "value.activities_allowed",
+   "family": "value",
+   "activities": [
+    "building-construction",
+    "engineering-services",
+    "architecture",
+    "facility-maintenance",
+    "energy-supply"
+   ]
+  },
+  {
+   "id": "value.industry",
+   "family": "value",
+   "industry": {
+    "allowed": [
+     "F",
+     "H52",
+     "M71"
+    ],
+    "preferred": "F"
+   }
+  },
+  {
+   "id": "demand.relevant_to_its_activity",
+   "family": "demand",
+   "demand": {
+    "titleTerms": [
+     "obra",
+     "works",
+     "construc",
+     "infraestructura",
+     "infrastructure",
+     "autopista",
+     "motorway",
+     "carretera",
+     "road",
+     "aeropuerto",
+     "airport",
+     "puente",
+     "bridge",
+     "túnel",
+     "tunnel",
+     "ferrocarril",
+     "rail"
+    ]
+   }
+  }
+ ]
+}
