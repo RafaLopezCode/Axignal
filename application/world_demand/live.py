@@ -64,20 +64,29 @@ def _best_classification(*known: object) -> str | None:
 def _without_duplicates(candidates: list[dict[str, object]]) -> list[dict[str, object]]:
     """One call published in several sources is shown once, from its national platform.
 
-    Same buyer, same deadline day and the same opening words: the same call. The national
+    Same buyer, same deadline day and the same opening words: the same call. So is one with
+    the same deadline day and the same full list of three or more codes: sources title and
+    name buyers differently, a detailed classification is the call's own. The national
     platform's entry is kept (its official link); otherwise the first one seen. What one
     source knows of the call's main object (TED publishes it) is kept on the merged entry.
     """
     kept: dict[tuple[str, str, str], dict[str, object]] = {}
+    by_codes: dict[tuple[str, str], tuple[str, str, str]] = {}
     for candidate in candidates:
         key = (
             str(candidate.get("buyer") or "").casefold().strip(),
             str(candidate.get("deadline") or "")[:10],
             _words(candidate.get("title"))[:40],
         )
+        signature = str(candidate.pop("_allCodes", "") or "")
+        twin = by_codes.get((key[1], signature)) if signature and key[1] else None
+        if twin is not None and key not in kept:
+            key = twin
         if not key[0] or not key[1]:
             kept[(str(id(candidate)), "", "")] = candidate
             continue
+        if signature:
+            by_codes.setdefault((key[1], signature), key)
         current = kept.get(key)
         if current is None:
             kept[key] = candidate
@@ -204,6 +213,10 @@ class LiveDemandReader:
                         "epistemicState": "POTENTIAL",
                         "isNew": now - record.published_at <= NEW_FOR,
                         "classifiedAs": classification,
+                        # Read by the duplicate check only, then dropped.
+                        "_allCodes": ",".join(sorted({c.code for c in record.demand_codes}))
+                        if len(record.demand_codes) >= 3
+                        else "",
                     }
         if not answered:
             return None

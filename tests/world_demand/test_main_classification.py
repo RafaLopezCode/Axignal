@@ -58,6 +58,9 @@ def test_the_main_object_decides_main_or_additional_and_unknown_stays_unknown() 
     assert classified_as(_call("g", ("79311000",), main=("79300000",)), SURVEYS) == MAIN
     # ... a whole division ("business services") is too broad to say either way.
     assert classified_as(_call("d", ("79311000",), main=("79000000",)), SURVEYS) is None
+    # ... unless a specific main object names something else (foster-family services).
+    social = _call("f", ("79311000", "85312000"), main=("79000000", "85312000"))
+    assert classified_as(social, SURVEYS) == ADDITIONAL
     # Without a main code, a declared nature the activity cannot have says it too.
     assert classified_as(_call("n", ("79311000",), nature="SUPPLIES"), SURVEYS) == ADDITIONAL
     assert classified_as(_call("v", ("79311000",), nature="SERVICES"), SURVEYS) is None
@@ -140,3 +143,24 @@ def test_the_contract_nature_is_validated() -> None:
     except ValueError:
         return
     raise AssertionError("an unknown contract nature must be rejected")
+
+
+def test_one_call_titled_differently_by_each_source_is_shown_once() -> None:
+    # Found on AXIGNAL: TED and the national platform titled the same call differently
+    # ("Compra Pública de Tecnología Innovadora..." vs "gestión inteligente de las
+    # emergencias"); its eleven codes and deadline are the same.
+    codes = ("72000000", "72224000", "79311000", "79411000")
+    store = Store([
+        _call("ted:2", codes, main=("72224000",), source="ted-search-v3",
+              title=f"España{DASH}Consultoría{DASH}Compra Pública de Tecnología Innovadora"),
+        _call("placsp:2", codes, title="gestión inteligente de las emergencias"),
+        _call("placsp:3", (*codes[:2], "79311000"), title="otra licitación con otros códigos"),
+    ])  # fmt: skip
+    live = _reader(store).read([RESEARCH], SCOPES)
+    assert live is not None
+    titles = {c["title"]: c["classifiedAs"] for c in live.candidates}
+    assert titles == {
+        "gestión inteligente de las emergencias": ADDITIONAL,
+        "otra licitación con otros códigos": None,
+    }
+    assert all("_allCodes" not in c for c in live.candidates)
