@@ -28,6 +28,7 @@ from application.first_observation.activity import (
     deterministic_activity,
     interpret_activity,
     plan_activity_batch,
+    prefer_specific_routing,
     to_capabilities,
 )
 from application.first_observation.activity_verification import (
@@ -787,7 +788,9 @@ class FirstObservationService:
                 f if f.demand_codes else replace(f, demand_codes=semantic.codes)
                 for f in deterministic
             )
-        findings = (*deterministic, *(() if semantic is None else semantic.findings))
+        findings = prefer_specific_routing(
+            (*deterministic, *(() if semantic is None else semantic.findings))
+        )
         # Attention widens, never narrows on a judgment: a false rejection loses demand.
         roles = _DEFAULT_ROLES | (
             semantic.roles if semantic is not None and semantic.roles else frozenset()
