@@ -626,13 +626,11 @@ class FirstObservationService:
             nonlocal cascade, unavailable
             if cascade is not None or unavailable is not None:
                 return cascade
-            # ADR-0090 §5 as amended 2026-10-13: every batch here carries only AXIGNAL's
-            # own controlled vocabulary (``activity.minimize``, ``activity_verification
-            # .project``), page kinds and anonymous page ids, never page text, so it needs
-            # no per-site content rights. Page text and offer excerpts still do.
+            # ADR-0090 as amended 2026-10-16 (CTO: public data): the activity batches carry
+            # public website text (``public_text``: contact data and sentences about people
+            # removed, legal pages not sent), page kinds and anonymous page ids.
             ledger.decide(
-                "SEMANTIC_INPUT:CONTROLLED_VOCABULARY"
-                + ("" if provider_input else ":NO_SITE_CONTENT_RIGHTS")
+                "SEMANTIC_INPUT:PUBLIC_TEXT" + ("" if provider_input else ":NO_SITE_CONTENT_RIGHTS")
             )
             try:
                 cascade = self._cascade_factory()

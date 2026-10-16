@@ -22,7 +22,6 @@ import pytest
 from application.first_observation.activity import ActivityMethod, deterministic_activity
 from application.first_observation.activity_verification import (
     ACTIVITY_OFFERED,
-    VERIFICATION_TERMS,
     PageKind,
     Verdict,
     compose,
@@ -164,16 +163,15 @@ def test_without_a_usable_judgment_the_lexicon_result_stands_unverified(tmp_path
     assert "ACTIVITY_UNVERIFIED:software-development:TIMEOUT" in failed["_ledger"]["decisions"]
 
 
-def test_without_rights_only_controlled_vocabulary_and_page_kinds_leave(tmp_path: Path) -> None:
+def test_without_rights_the_public_sentence_and_page_kinds_leave_never_people(
+    tmp_path: Path,
+) -> None:
     world = World(judge=FakeSystemOne(offered_rule))
     view = _observe(
         tmp_path, world, activity_verification=True,
         rights=registered_rights(provider_input=False),
     )  # fmt: skip
-    assert (
-        "SEMANTIC_INPUT:CONTROLLED_VOCABULARY:NO_SITE_CONTENT_RIGHTS"
-        in view["_ledger"]["decisions"]
-    )
+    assert "SEMANTIC_INPUT:PUBLIC_TEXT:NO_SITE_CONTENT_RIGHTS" in view["_ledger"]["decisions"]
     batches = _verification_batches(world)
     assert batches
     for batch in batches:
@@ -183,12 +181,9 @@ def test_without_rights_only_controlled_vocabulary_and_page_kinds_leave(tmp_path
         for page in [*state["pagesRead"], *state["mentions"]]:  # type: ignore[misc]
             assert re.fullmatch(r"\[page-\d+\]", page["page"])
             assert page["kind"] in PageKind.__members__
-        assert _words(batch) <= VERIFICATION_TERMS, sorted(_words(batch) - VERIFICATION_TERMS)
         raw = json.dumps(state, ensure_ascii=False).casefold()
-        for private in ("guardia", "marta", "ibáñez", "@", "example.com", "http"):
+        for private in ("marta", "ibáñez", "@", "example.com", "http"):
             assert private not in raw, private
-    # The vocabulary is AXIGNAL's: fixed at import, never extended by a site.
-    assert "guardia" not in VERIFICATION_TERMS and "marta" not in VERIFICATION_TERMS
 
 
 def test_identical_states_are_not_asked_twice(tmp_path: Path) -> None:

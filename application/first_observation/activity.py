@@ -16,6 +16,7 @@ from urllib.parse import urlsplit
 
 from application.economic_discovery.brain_contracts import SemanticPrimitive
 from application.first_observation.geography import jurisdiction, mentioned_places, place_words
+from application.first_observation.public_text import public_text
 from application.first_observation.routing_terms import MULTILINGUAL_ROUTING_TERMS
 from application.first_observation.site import PageReading
 from application.first_observation.vocabularies import (
@@ -225,6 +226,24 @@ DELIVERY = SemanticQuestion(
         ("UNCLEAR", "The reading does not say."),
     ),
 )  # fmt: skip
+#: AXIGNAL's own activity catalog, asked over the public text when the lexicon finds nothing
+#: (found on biocultor.com: "Comprar té de humus y servicios para jardines" read as nothing).
+CATALOG_ACTIVITY = SemanticQuestion(
+    question_id="fo_catalog_activity",
+    version="1",
+    primitive=SemanticPrimitive.CHOICE,
+    instructions=(
+        "Using only this public website reading, which of these activities is the main thing "
+        "the organization offers to its customers? Something it only mentions, uses itself, "
+        "buys or sells through is not what it offers. Choose NONE when it offers something "
+        "else, and UNCLEAR when the reading does not say what it offers."
+    ),
+    criteria=(
+        *((e.capability_id, e.label) for e in CAPABILITY_LEXICON),
+        ("NONE", "It offers something else, not in this list."),
+        ("UNCLEAR", "The reading does not establish what it offers."),
+    ),
+)
 OPERATING = SemanticQuestion(
     question_id="fo_operating_business",
     version="1",
@@ -259,10 +278,9 @@ class ActivityBatchPlan:
     place_candidates: tuple[tuple[TaxonomyCode, str, str, str], ...]  # place, name, url, line
 
 
-# Evaluator input is a bounded **routing signal projection**, not an excerpt.
-# A free-text regex cannot guarantee that single-token or lowercase personal names
-# are absent. Every emitted term comes from this developer-controlled vocabulary.
-# The actual source text remains only in the tenant's governed observation context.
+# AXIGNAL's routing vocabulary. Since the ADR-0090 amendment of 2026-10-16 the evaluator
+# receives public text (``public_text``) rather than this projection; ``minimize`` remains
+# for routing heuristics and for any consumer that must stay vocabulary-only.
 _ROUTING_TERMS = (
     frozenset(
         """
@@ -315,21 +333,31 @@ def person_free(text: str) -> str:
 
 
 def _state(origin: str, pages: Sequence[PageReading]) -> dict[str, object]:
+    """Typed public text per page (ADR-0090 amendment 2026-10-16): what the site says, with
+    contact data and sentences about people removed. Legal pages are not sent; an about page
+    contributes its title, description and headings, not its body (often about people)."""
+    from application.first_observation.activity_verification import PageKind, page_kind
+
     del origin
+    out: list[dict[str, object]] = []
+    for index, page in enumerate(pages, 1):
+        kind = page_kind(page)
+        if kind is PageKind.LEGAL:
+            continue
+        body = "" if kind in {PageKind.ABOUT, PageKind.CAREERS} else page.text
+        out.append({
+            "url": f"[page-{index}]",
+            "kind": kind.value,
+            "title": public_text(page.title, 300),
+            "description": public_text(page.description, 600),
+            "headings": [public_text(h, 200) for h in page.headings[:8]],
+            "services": [public_text(x, 200) for x in page.services[:12]],
+            "text": public_text(body[: STATE_CHARS_PER_PAGE * 2], STATE_CHARS_PER_PAGE),
+        })  # fmt: skip
     return {
-        "representation": "controlled economic terms, not complete page text",
+        "representation": "public website text; contact data and sentences about people removed",
         "site": "[site]",
-        "pages": [
-            {
-                "url": f"[page-{index}]",
-                "title": minimize(page.title),
-                "description": minimize(page.description),
-                "headings": [minimize(h) for h in page.headings[:8]],
-                "services": [minimize(x) for x in page.services[:12]],
-                "text": minimize(page.text[:STATE_CHARS_PER_PAGE]),
-            }
-            for index, page in enumerate(pages, 1)
-        ],
+        "pages": out,
     }
 
 
@@ -368,7 +396,7 @@ def plan_activity_batch(
     questions: list[SemanticQuestion] = []
     routed = any(f.demand_codes for f in deterministic)
     if not deterministic:
-        questions += [OPERATING, SECTOR]
+        questions += [OPERATING, SECTOR, CATALOG_ACTIVITY]
     if eu and not routed:
         questions.append(CPV_DIVISION)
     if us and not routed:
@@ -423,11 +451,10 @@ def _vocabulary(plan: ActivityBatchPlan, only: frozenset[str] | None = None) -> 
     words: set[str] = set()
     for page in pages if isinstance(pages, list) else []:
         if isinstance(page, dict):
-            for key in ("title", "description", "text"):
-                words.update(str(page.get(key) or "").split())
-            for key in ("headings", "services"):
-                for item in page.get(key) or []:
-                    words.update(str(item).split())
+            fields = [str(page.get(k) or "") for k in ("title", "description", "text")]
+            fields += [str(i) for k in ("headings", "services") for i in page.get(k) or []]
+            for field in fields:
+                words.update(_SAFE_WORD.findall(field.casefold()))
     return len(words if only is None else words & only)
 
 
@@ -467,6 +494,24 @@ def interpret_activity(
                 confidence=sector[1],
                 model=model,
             )
+        )
+    catalog = _usable(outcome, CATALOG_ACTIVITY.question_id)
+    entry = next((e for e in CAPABILITY_LEXICON if catalog and e.capability_id == catalog[0]), None)
+    if entry is not None and catalog is not None and line:
+        judged["catalogActivity"] = entry.capability_id
+        findings.insert(
+            0,
+            ActivityFinding(
+                activity_id=entry.capability_id,
+                label=entry.label,
+                method=ActivityMethod.SEMANTIC_JUDGMENT,
+                page_url=page.url,
+                excerpt=line,
+                observed_at=page.observed_at,
+                demand_codes=entry.demand_codes,
+                confidence=catalog[1],
+                model=model,
+            ),
         )
     customers = _usable(outcome, CUSTOMERS.question_id)
     roles = {

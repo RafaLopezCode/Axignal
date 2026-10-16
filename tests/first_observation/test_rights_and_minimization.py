@@ -69,43 +69,35 @@ def test_without_rights_the_private_observation_works_and_nothing_is_kept_or_sen
     assert discoveries(_view(facade, second, _pending_id(facade, second)), "ACTIVITY")
 
 
-def test_without_input_rights_only_controlled_vocabulary_reaches_the_semantic_provider(
+def test_without_input_rights_public_text_reaches_the_provider_without_contact_or_people(
     tmp_path: Path,
 ) -> None:
-    """ADR-0090 §5 as amended: the batch is AXIGNAL's own vocabulary, never page text."""
+    """ADR-0090 as amended 2026-10-16 (CTO: public data): public website text reaches the
+    provider; contact data, URLs, sentences about people and legal pages never do."""
     import re as _re
-
-    from application.first_observation.activity import _ROUTING_TERMS
 
     world = World()
     facade = build(tmp_path, world, rights=registered_rights(provider_input=False))
     token, _ = _attend(facade, tmp_path, "subject:no-input", SCHOOL_AR)
     runtime(facade).drain()
     view = _view(facade, token, _pending_id(facade, token))
-    assert world.judge.calls, "the activity judgment runs on controlled vocabulary"
-    decisions = view["_ledger"]["decisions"]
-    assert "SEMANTIC_INPUT:CONTROLLED_VOCABULARY:NO_SITE_CONTENT_RIGHTS" in decisions
+    assert world.judge.calls, "the activity judgment runs on public text"
+    assert "SEMANTIC_INPUT:PUBLIC_TEXT:NO_SITE_CONTENT_RIGHTS" in view["_ledger"]["decisions"]
     for batch in world.judge.calls:
-        for page in batch.state["pages"]:
-            fields = [page["title"], page["description"], page["text"], *page["headings"],
-                      *page["services"]]  # fmt: skip
-            words = {w for f in fields for w in _re.findall(r"[^\W\d_]+", str(f).casefold())}
-            assert words <= _ROUTING_TERMS, sorted(words - _ROUTING_TERMS)[:5]
+        raw = json.dumps(batch.state, ensure_ascii=False)
+        assert not _re.search(r"[\w.+-]+@[\w-]+\.", raw) and "http" not in raw.casefold()
         assert all(str(page["url"]).startswith("[page-") for page in batch.state["pages"])
+        assert all(page["kind"] != "LEGAL" for page in batch.state["pages"])
 
 
-def test_without_input_rights_activity_verification_sends_only_vocabulary_and_page_kinds(
+def test_without_input_rights_activity_verification_sends_public_sentences_and_page_kinds(
     tmp_path: Path,
 ) -> None:
-    """Spec 075 US2 under ADR-0090 as amended: the activity_offered state is AXIGNAL's
-    controlled vocabulary, the catalog label and terms, page kinds and [page-N] only."""
+    """Spec 079 / ADR-0090 as amended 2026-10-16: the activity_offered state is the public
+    sentence naming the activity, the catalog label and terms, page kinds and [page-N]."""
     import re as _re
 
-    from application.first_observation.activity_verification import (
-        ACTIVITY_OFFERED,
-        VERIFICATION_TERMS,
-        PageKind,
-    )
+    from application.first_observation.activity_verification import ACTIVITY_OFFERED, PageKind
     from application.observation_intelligence.catalog import CAPABILITY_LEXICON
 
     world = World()
@@ -115,28 +107,22 @@ def test_without_input_rights_activity_verification_sends_only_vocabulary_and_pa
     token, _ = _attend(facade, tmp_path, "subject:no-input-verify", SOLAR_ES)
     runtime(facade).drain()
     view = _view(facade, token, _pending_id(facade, token))
-    decisions = view["_ledger"]["decisions"]
-    assert "SEMANTIC_INPUT:CONTROLLED_VOCABULARY:NO_SITE_CONTENT_RIGHTS" in decisions
+    assert "SEMANTIC_INPUT:PUBLIC_TEXT:NO_SITE_CONTENT_RIGHTS" in view["_ledger"]["decisions"]
     batches = [b for b in world.judge.calls if b.questions == (ACTIVITY_OFFERED,)]
     assert batches, "every lexicon activity is verified"
     catalog = {(e.label, tuple(e.terms)) for e in CAPABILITY_LEXICON}
     for batch in batches:
         state = batch.state
         assert set(state) == {"representation", "site", "activity", "pagesRead", "mentions"}
-        assert state["site"] == "[site]"
         activity = state["activity"]
         assert isinstance(activity, dict)
         assert (activity["label"], tuple(activity["catalogTerms"])) in catalog  # AXIGNAL's
         for page in [*state["pagesRead"], *state["mentions"]]:  # type: ignore[misc]
-            assert (
-                _re.fullmatch(r"\[page-\d+\]", page["page"])
-                and page["kind"] in PageKind.__members__
-            )
-        around = " ".join(w for m in state["mentions"] for w in m["around"])  # type: ignore[union-attr]
-        words = set(_re.findall(r"[^\W\d_]+", around.casefold()))
-        assert words and words <= VERIFICATION_TERMS, sorted(words - VERIFICATION_TERMS)[:5]
+            assert _re.fullmatch(r"\[page-\d+\]", page["page"])
+            assert page["kind"] in PageKind.__members__
+        assert any(m["around"] for m in state["mentions"])  # type: ignore[union-attr]
         raw = json.dumps(state, ensure_ascii=False).casefold()
-        assert "solaria" not in raw and "example.com" not in raw and "http" not in raw
+        assert "@" not in raw and "example.com" not in raw and "http" not in raw
 
 
 def test_a_registry_verified_website_without_rights_is_never_seeded(tmp_path: Path) -> None:
@@ -262,20 +248,23 @@ def test_provider_confidence_never_reaches_the_subscriber(tmp_path: Path) -> Non
     assert traced["detail"]["confidence"] > 0.6
 
 
-def test_single_word_names_and_url_usernames_are_never_sent_to_evaluator(
-    tmp_path: Path, monkeypatch
-) -> None:
-    from application.first_observation.activity import _state, minimize
+def test_contact_data_people_and_urls_are_never_sent_to_evaluator() -> None:
+    from application.first_observation.activity import _state
+    from application.first_observation.public_text import public_text
     from application.first_observation.site import read_page
 
-    assert "Alicia" not in minimize("Nuestro equipo incluye a Alicia para asistencia.")
-    assert "Beatriz" not in minimize("Our consultant Beatriz handles support.")
-    assert "alice" not in minimize("Please write to alice@example.com")
+    text = public_text(
+        "Clases de idiomas para empresas. Founded by Beatriz Ruiz and Dr. Ana García. "
+        "Write to alice@example.com or call +1 501 555 0100."
+    )
+    assert text.startswith("Clases de idiomas para empresas.")
+    for forbidden in ("Beatriz", "García", "alice@", "555 0100"):
+        assert forbidden not in text, forbidden
     page = read_page(
         url="https://personal.example.com/users/alicia?email=alice@example.com",
         html=(
-            "<html><head><title>Beatriz Ruiz's classes</title></head>"
-            "<body><p>Classes offered by Alicia. "
+            "<html><head><title>Language classes</title></head>"
+            "<body><p>Classes for companies. Our team: Beatriz Ruiz. "
             "Call 555 0100, write to alice@example.com.</p></body></html>"
         ),
         observed_at=datetime.now(UTC),
@@ -283,9 +272,9 @@ def test_single_word_names_and_url_usernames_are_never_sent_to_evaluator(
         artifact_ref=None,
     )
     raw = json.dumps(_state(page.url, [page]), ensure_ascii=False).casefold()
-    for forbidden in ("alicia", "beatriz", "ruiz", "personal.example", "alice@", "555 0100"):
+    for forbidden in ("beatriz", "ruiz", "personal.example", "alice@", "555 0100"):
         assert forbidden not in raw, forbidden
-    assert "classes" in raw
+    assert "classes for companies" in raw
 
 
 def test_registry_rights_respect_path_and_currentness() -> None:
