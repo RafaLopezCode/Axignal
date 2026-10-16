@@ -308,6 +308,23 @@ def _location_question(candidates: Sequence[tuple[TaxonomyCode, str]]) -> Semant
 class ActivityBatchPlan:
     batch: SemanticBatch
     place_candidates: tuple[tuple[TaxonomyCode, str, str, str], ...]  # place, name, url, line
+    #: The lexicon's own readings, kept so the offer's nature can arbitrate between them.
+    deterministic: tuple[ActivityFinding, ...] = ()
+
+
+_ENTRIES = {e.capability_id: e for e in CAPABILITY_LEXICON}
+
+
+def _natures(finding: ActivityFinding) -> frozenset[str]:
+    entry = _ENTRIES.get(finding.activity_id)
+    return frozenset() if entry is None else offer_natures(entry)
+
+
+def natures_disagree(findings: Sequence[ActivityFinding]) -> bool:
+    """The site's own readings name offers of natures no single answer reconciles (spec 080):
+    a fertiliser shop that also reads as landscaping from an article headline."""
+    natured = [n for n in map(_natures, findings) if n]
+    return len(natured) > 1 and not frozenset.intersection(*natured)
 
 
 # AXIGNAL's routing vocabulary. Since the ADR-0090 amendment of 2026-10-16 the evaluator
@@ -429,6 +446,8 @@ def plan_activity_batch(
     routed = any(f.demand_codes for f in deterministic)
     if not deterministic:
         questions += [OPERATING, SECTOR, CATALOG_ACTIVITY, OFFER_NATURE]
+    elif natures_disagree(deterministic):
+        questions.append(OFFER_NATURE)
     if eu and not routed:
         questions.append(CPV_DIVISION)
     if us and not routed:
@@ -438,7 +457,7 @@ def plan_activity_batch(
     if not questions:
         return None
     batch = SemanticBatch(f"first-observation:{origin}", _state(origin, pages), tuple(questions))
-    return ActivityBatchPlan(batch, tuple(candidates))
+    return ActivityBatchPlan(batch, tuple(candidates), tuple(deterministic))
 
 
 @dataclass(frozen=True, slots=True)
@@ -450,6 +469,8 @@ class SemanticReading:
     operating: bool | None
     located: tuple[tuple[TaxonomyCode, str, str], ...]  # place, url, cited line
     judged: dict[str, str]
+    #: Lexicon activities whose nature contradicts what the organization sells (spec 080).
+    withheld: tuple[str, ...] = ()
 
 
 def _usable(outcome: CascadeOutcome, question_id: str) -> tuple[str, float | None] | None:
@@ -598,7 +619,16 @@ def interpret_activity(
     ):
         if value is not None:
             judged[key] = value[0]
+    withheld: tuple[str, ...] = ()
+    agreeing = [f for f in plan.deterministic if nature in _natures(f)]
+    if nature is not None and agreeing:
+        # The evaluator only arbitrates between the site's own readings: it withholds those
+        # of another nature when one of the nature it sells remains, never all of them.
+        withheld = tuple(
+            f.activity_id for f in plan.deterministic if _natures(f) and nature not in _natures(f)
+        )
     return SemanticReading(
+        withheld=withheld,
         findings=tuple(findings),
         codes=tuple(codes),
         roles=roles,

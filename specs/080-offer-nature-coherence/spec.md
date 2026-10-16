@@ -35,3 +35,8 @@ biocultor.com sells a fertiliser, but it was read as **landscaping**, one of the
 ## Success criteria
 - **SC-001:** on the next self-check, biocultor.com reads as fertilisers and gets no landscaping-services tenders. The other truth-set organizations lose no accuracy.
 - **SC-002:** across the golden set, no SUPPLIES organization keeps a SERVICES-only catalog activity.
+
+## Follow-up (2026-10-17, measured after #290)
+biocultor.com still read as landscaping, this time from an article headline on its home page: "Mantenimiento de jardines con bajo residuo visible: por qué importa en zonas premium". Adding a rule per phrase would chase cases one by one. Instead, the nature gate now also covers the lexicon's own readings:
+- When the deterministic readings name offers whose natures no single answer reconciles (`natures_disagree`), `fo_offer_nature` is asked.
+- `interpret_activity` withholds the readings of another nature (`WITHHELD:NATURE_CONFLICT:<id>` in the ledger), but only when at least one reading of the judged nature remains. The evaluator arbitrates between the site's own readings and never erases them all. MIXED and UNCLEAR withhold nothing.

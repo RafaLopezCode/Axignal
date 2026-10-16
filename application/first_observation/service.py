@@ -776,6 +776,12 @@ class FirstObservationService:
             reading.origin, pages, [*premises, *(c for _p, _a, c in areas)], deterministic,
             now, ledger, rights.provider_input,
         )  # fmt: skip
+        if semantic is not None and semantic.withheld:
+            for withheld in semantic.withheld:
+                ledger.decide(f"WITHHELD:NATURE_CONFLICT:{withheld}")
+            deterministic = tuple(
+                f for f in deterministic if f.activity_id not in semantic.withheld
+            )
         if semantic is not None and semantic.codes and not semantic.findings:
             deterministic = tuple(
                 f if f.demand_codes else replace(f, demand_codes=semantic.codes)
