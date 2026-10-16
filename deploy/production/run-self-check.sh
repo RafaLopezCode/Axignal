@@ -8,6 +8,13 @@
 # runtime data mounted read-only and copied inside it (tools/evaluation/run_golden.py).
 # Reports stay on the host in /var/lib/axignal/self-check/<sha>/; latest.json is the
 # baseline for the next deploy. Never blocks or reverts a deploy: it reports.
+#
+# External effects, bounded (audit 2026-10-15): it reads public websites and sources as a
+# first observation does, and calls the providers the runtime is configured with, each
+# within its configured budgets: the generative probe (OpenAI key), CrUX field data and
+# Jev (TypeSafe key; demand-fit capped here at 200k input tokens, about $0.01). Only those
+# three keys are mounted, read-only; the whole run is killed after SELF_CHECK_TIMEOUT
+# seconds (default 1800). Nothing is written to production data.
 set -eu
 
 release="$(readlink -f /srv/axignal/docker/current)"
@@ -33,12 +40,18 @@ set -- /usr/bin/docker run --rm --name axignal-self-check --group-add 1991 --mem
   -e AXIGNAL_GOLDEN_SET=/app/tools/evaluation/truth_set.json \
   -v /var/lib/axignal/runtime:/src:ro \
   -v /etc/axignal/subscriber-runtime.conf:/run/secrets/subscriber_configuration:ro
-for secret in openai_api_key crux_api_key google_client_secret typesafe_api_key; do
+set -- "$@" -e AXIGNAL_SEMANTIC_FIT_TOKEN_BUDGET=200000
+# Least privilege: only the providers a reading uses (no sign-in or other secrets).
+for secret in openai_api_key crux_api_key typesafe_api_key; do
   if [ -r "/etc/axignal/secrets/$secret" ]; then
     set -- "$@" -v "/etc/axignal/secrets/$secret:/run/secrets/$secret:ro"
   fi
 done
-"$@" "$image" -m tools.evaluation.run_golden > "$work/views.json" 2> "$work/observe.log"
+if ! timeout "${SELF_CHECK_TIMEOUT:-1800}" "$@" "$image" -m tools.evaluation.run_golden   > "$work/views.json" 2> "$work/observe.log"; then
+  /usr/bin/docker rm -f axignal-self-check >/dev/null 2>&1 || true
+  echo "{\"state\":\"OBSERVATION_FAILED_OR_TIMED_OUT\",\"sha\":\"$sha\"}"
+  exit 0
+fi
 
 if [ -f "$root/latest.json" ]; then cp "$root/latest.json" "$work/previous.json"; else echo '{}' > "$work/previous.json"; fi
 chmod 644 "$work/views.json" "$work/previous.json"
@@ -50,4 +63,4 @@ status=0
   > "$work/report.json" 2> "$work/summary.txt" || status=$?
 cat "$work/summary.txt"
 [ "$status" -eq 0 ] && [ -s "$work/report.json" ] && cp "$work/report.json" "$root/latest.json"
-echo "{\"state\":\"DONE\",\"sha\":\"$sha\",\"report\":\"$work/report.json\",\"regressions\":$(grep -c '^REGRESSION' "$work/summary.txt" || true)}"
+echo "{\"state\":\"DONE\",\"sha\":\"$sha\",\"report\":\"$work/report.json\",\"regressions\":$(grep -c '^REGRESSION' "$work/summary.txt" || true),\"lostMeasurements\":$(grep -c '^LOST_MEASUREMENT' "$work/summary.txt" || true)}"

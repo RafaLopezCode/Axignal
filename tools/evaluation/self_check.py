@@ -56,6 +56,8 @@ def evaluate_set(rows: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
     return {
         "truth": "truth-set",
         "accuracy": None if not measured else round(100 * passed / len(measured), 1),
+        # Accuracy excludes what was not measured; coverage says how much was measured.
+        "coverage": None if not verdicts else round(100 * len(measured) / len(verdicts), 1),
         "checks": len(verdicts),
         "measured": len(measured),
         "passed": passed,
@@ -177,6 +179,8 @@ def evaluate(reading: Mapping[str, Any], truth: Mapping[str, Any]) -> dict[str, 
     return {
         "truth": truth["version"],
         "accuracy": None if not measured else round(100 * passed / len(measured), 1),
+        # Accuracy excludes what was not measured; coverage says how much was measured.
+        "coverage": None if not verdicts else round(100 * len(measured) / len(verdicts), 1),
         "checks": len(verdicts),
         "measured": len(measured),
         "passed": passed,
@@ -184,6 +188,20 @@ def evaluate(reading: Mapping[str, Any], truth: Mapping[str, Any]) -> dict[str, 
         "defects": [v for v in verdicts if v["status"] == "FAIL"],
         "verdicts": verdicts,
     }
+
+
+def lost_measurements(
+    report: Mapping[str, Any], previous: Mapping[str, Any]
+) -> list[dict[str, str]]:
+    """Checks measured in the previous report (PASS or FAIL) and unmeasured now: not a wrong
+    reading, but a lost capability to read (a source blocked, an instrument gone). Reported
+    apart from regressions so accuracy is never inflated by measuring less (audit 2026-10-15)."""
+    before = {v["id"]: v["status"] for v in previous.get("verdicts") or ()}
+    return [
+        {"id": v["id"], "family": v["family"], "was": before[v["id"]]}
+        for v in report["verdicts"]
+        if v["status"] == "NOT_MEASURED" and before.get(v["id"]) in {"PASS", "FAIL"}
+    ]
 
 
 def regressions(report: Mapping[str, Any], previous: Mapping[str, Any]) -> list[dict[str, str]]:
@@ -218,6 +236,8 @@ def main(argv: Sequence[str] | None = None) -> int:
     )
     report["previousAccuracy"] = None if previous is None else previous.get("accuracy")
     report["regressions"] = [] if previous is None else regressions(report, previous)
+    report["previousCoverage"] = None if previous is None else previous.get("coverage")
+    report["lostMeasurements"] = [] if previous is None else lost_measurements(report, previous)
     # "--out -": the report on stdout and the summary on stderr (a container with no
     # writable mount hands both to the host).
     to_stdout = args.out is not None and str(args.out) == "-"
@@ -230,13 +250,24 @@ def main(argv: Sequence[str] | None = None) -> int:
         lines.append(f"  {domain}: {org['accuracy']}% ({org['passed']}/{org['measured']})")
     lines += [f"FAIL {d['id']} [{d['defect']}]: {json.dumps(d['detail'], ensure_ascii=False)[:300]}"
               for d in report["defects"]]  # fmt: skip
+    lines.append(
+        f"coverage {report['coverage']}% ({report['measured']}/{report['checks']} checks measured)"
+    )
     lines += [f"REGRESSION {r['family']}: {r['id']} [{r['defect']}]" for r in report["regressions"]]
+    lines += [
+        f"LOST_MEASUREMENT {r['family']}: {r['id']} (was {r['was']})"
+        for r in report["lostMeasurements"]
+    ]
     if report["previousAccuracy"] is not None:
         lines.append(f"previous self-accuracy {report['previousAccuracy']}%")
     print("\n".join(lines), file=sys.stderr if to_stdout else sys.stdout)
     if to_stdout:
         print(json.dumps(report, ensure_ascii=False))
-    return 3 if args.fail_on_regression and report["regressions"] else 0
+    return (
+        3
+        if args.fail_on_regression and (report["regressions"] or report["lostMeasurements"])
+        else 0
+    )
 
 
 if __name__ == "__main__":
