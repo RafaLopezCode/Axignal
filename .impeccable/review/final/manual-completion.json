@@ -1,0 +1,113 @@
+{
+  "kind": "Human-authorized direct application review, not a CLI gate receipt",
+  "date": "2026-10-16",
+  "authority": {
+    "questionId": "call_4c83c7865e1c4446aae38f3e435d855a",
+    "answer": "Continúa con la aplicación real",
+    "meaning": "Replace incompatible HTML-only intermediate checkpoint with direct review of the actual Next.js application; retain code gates and pending final human visual acceptance."
+  },
+  "cliState": {
+    "file": ".impeccable/build/state.json",
+    "hero": "OPEN; historical failures preserved",
+    "sectionsMotionResponsive": "CLI pending; no claim of automated phase closure"
+  },
+  "manualReview": {
+    "sections": {
+      "status": "completed",
+      "evidence": [
+        "home-full-desktop.png",
+        "home-full-mobile.png",
+        "data-full-desktop.png",
+        "industry-full-desktop.png",
+        "pricing-desktop.png"
+      ],
+      "scope": "All home sections, ten families, six typed sector routes, equal audiences and governed prices."
+    },
+    "motion": {
+      "status": "completed",
+      "evidence": [
+        "apps/web/experience/components/marketing.css",
+        "desktop.png",
+        "mobile.png"
+      ],
+      "scope": "650ms already-visible hero entrance, settled capture; native disclosures; reduced-motion media fallback inspected in source. OS preference toggle not tested."
+    },
+    "responsive": {
+      "status": "completed",
+      "evidence": [
+        "desktop.png",
+        "mobile.png",
+        "user-1280.png",
+        "mobile-320.png",
+        "data-mobile.png",
+        "industries-mobile.png",
+        "industry-mobile.png",
+        "pricing-mobile.png",
+        "menu-mobile.png"
+      ],
+      "scope": "Actual production app at 320,390,1280,1440,1520; public controls, native keyboard disclosure, family fragment and calculated prices checked."
+    }
+  },
+  "independentReview": {
+    "firstDisposition": "fix",
+    "fixes": [
+      "Restore three geometric annotation connectors.",
+      "Persist manual section/motion/responsive completion separately from open CLI hero gate."
+    ],
+    "verdict": "SHIP at the scope of the two scored fixes, both resolved; not whole-surface or human visual approval.",
+    "record": ".impeccable/review/final/finish-verdict.md"
+  },
+  "finalHumanVisualAcceptance": "PENDING",
+  "mergeOrDeploy": "Explicitly authorized by human2026-10-16 after load optimization and checks; not yet performed.",
+  "cliFinishAttempt": {
+    "dispositionRequested": "ship, matching reviewer verdict",
+    "result": "Refused: hero, sections, motion, responsive not closed",
+    "record": ".impeccable/review/final/cli-finish.log",
+    "treatment": "Historical automatic state retained; manual alternative authorized by the human is recorded separately. No automatic pass claimed."
+  },
+  "followup": {
+    "date": "2026-10-16",
+    "authority": "User browser comment requesting more prominence for human advisory, plus continuation of documented responsive repairs",
+    "record": ".impeccable/review/final/followup/packet.md",
+    "measurements": {
+      "desktopTabletSamples": 54,
+      "mobilePricingSamples": 12,
+      "failures": 0
+    },
+    "humanVisualAcceptance": "PENDING",
+    "independentReview": "SHIP for prominence, preserved service semantics and responsive fit; .impeccable/review/final/followup/finish-verdict.md. Human acceptance pending; CLI history unchanged."
+  },
+  "browserComments": {
+    "date": "2026-10-16",
+    "record": ".impeccable/review/final/browser-comments/packet.md",
+    "scope": "Seven public browser annotations, governed newsletter invitation and inline canonical SVG logos",
+    "measurements": {
+      "home": 48,
+      "knowledge": 12,
+      "vector": 4,
+      "failures": 0
+    },
+    "newsletter": "Real local runtime enabled:false; no successful subscription claim",
+    "testimonials": "Pending real authorized statements; synthetic social proof excluded by public contract§13",
+    "independentReview": "SHIP at this bounded visual/requested wiring scope; browser-comments/finish-verdict.md. Newsletter successful subscription not claimed; testimonials pending; human acceptance pending.",
+    "humanVisualAcceptance": "PENDING",
+    "graphify": "AST-only update completed:22480nodes/66454edges"
+  },
+  "heroTypography": {
+    "date": "2026-10-16",
+    "record": ".impeccable/review/final/hero-localization/packet.md",
+    "scope": "Six-language newspaper titles centered on master paper bands, outlined login, equal canonical SVG header/footer, complete native locale names",
+    "responsiveChecks": 24,
+    "failures": 0,
+    "independentReview": "SHIP for scoped fixes; hero-localization/finish-verdict.md",
+    "humanVisualAcceptance": "PENDING",
+    "graphify": "AST22490nodes/66462edges"
+  },
+  "release": {
+    "authority": "Human: Cuando termines, Commit, deploy y Push despues de optimizar la carga de la pagina para el posicionamiento de GSC.",
+    "record": ".impeccable/review/final/release/packet.md",
+    "stripe": "295EUR/month verified live; separate advisory; self-service unchanged",
+    "fieldPerformance": "No invented CWV/GSC ranking results; resource byte measurements only",
+    "status": "Validated; final bounded review and green canonical main CI pending"
+  }
+}

@@ -2,25 +2,29 @@
 version: 1
 slug: "apps-web-experience-app-page-tsx"
 primary_target: "apps/web/experience/app/page.tsx"
-related_targets: ["apps/web/experience/components/landing.tsx","apps/web/experience/components/landing-observatory.tsx"]
+related_targets: ["apps/web/experience/components/landing.tsx"]
 ---
 
-# Public landing — /
+# Public ecosystem — home, data and industries
 
-Mode: Persuade. Seed: 5606ed5e (surface). Dealt: Observer's notebook (lead), time-travel hero, living-product scrollytelling. Locked fusion (builder, under the user's delegation): an annotated notebook around the living product.
+Mode: Persuade. Established AXIGNAL identity; replacement public composition only. Seed `f19d3616`, reroll 1; user selected `understanding` through decision answer `23303bea`. The user changed this run to comp first. Approved comp: `.impeccable/mocks/decision/round-2/understanding.png`. The three decision comps discharge the three-option round; do not generate another approval round.
 
-Audience: owners and growth people, plus consultancies and agencies. Job: understand what AXIGNAL is in 5 seconds, how it works in 30 seconds and why it is trustworthy in 2 minutes, then start with one organization. Must stay untouched: spec 060 frozen 5-second copy, CTA names and AO-12 funnel events, the one public example (/panorama), pricing, no prototype copy, no scroll-jacking.
+Audience: company leaders, agencies and consultancies, equally legitimate. Job: understand economic observation, explore ten data families and sector questions, inspect the canonical example and choose actual access. Public-only write boundary; no private dashboard, AXENT, backend, auth or telemetry authority changes. Preserve governed pricing and actual invitation-based access. No invented customers, observations, integration coverage or results.
 
 ## Direction contract
 
-THESIS: The landing shows the real subscriber interface working on the one public example, annotated by El Observador. It refuses the generic SaaS hero with a feature grid, and it refuses screenshots presented as proof.
+THESIS: An annotated public document makes the difference between a business and how it is understood tangible, then opens the full economic context. This replaces the old fictional-dashboard hero.
 
-OWN-WORLD: The incumbent AXIGNAL editorial paper with Fraunces headlines and Manrope. The observatory's lanes and marks inside a soft "window". Bic-blue handwritten notes (Bic Notes) with hand-drawn arrows. A brass lamp for change.
+OWN-WORLD: AXIGNAL blue #354F98, cool paper white, dark ink; Fraunces display, Manrope body, blue Bic annotations and the approved white Observador with his monocle. One commissioned folio illustration carries the hero; public controls remain precise and calm.
 
-STORY: In 5 seconds the promise sits beside the working window. In 30 seconds the window follows the three steps (add, observing, briefing). In 2 minutes four proofs drive the window (reach, evidence, unknown, time). Then audience, trust, pricing and start.
+STORY: Understand the offering, see how public observation explains it, discover nine further connected dimensions, enter by industry or role, inspect memory/evidence, then see honest access and pricing.
 
-FIRST VIEWPORT: The spec 060 headline and CTAs on the left. On the right, the fictional Norte Renovable window, with one potential, two observed and one unknown finding, each explained by a handwritten note.
+FIRST VIEWPORT: Compact canonical header; large left-aligned three-line headline “Lo que haces. Lo que el mundo entiende.”, supporting sentence and example/how actions. At right and below, Observador reads a large open folio, with three semantic annotations. The lower edge opens the ten-family section “Mucho más que presencia digital”. Match the approved geometry and artwork scale; generated small text and family explanations are replaced by canonical human copy in code.
 
-SIGNATURE: Notes draw themselves onto the product. Time travel from July to October lights what is new.
+FORM: Public-understanding folio, grounded candidate 3 of the fresh list, seed f19d3616, reroll 1. Earlier presented economic reading, cabinet/atlas and evidence-chain candidates were eliminated. The approved three-line headline and existing brand fonts override generic external line-count/font preferences.
 
-RISK: Notes must never overclaim, and must wrap without overlap in all six locales. The example stays fictional and labelled.
+SIGNATURE: The folio's three annotations connect to the family explorer; choosing a family reveals its real explanatory question, evidence types and limits. Sector links provide concrete entry points; content and navigation have semantic, keyboard and no-script fallbacks. The artwork is explanatory, never evidence or real company data.
+
+FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance
+
+Acceptance: composition approved; implementation and human visual acceptance of the running website pending. Keep direction metadata development-only.

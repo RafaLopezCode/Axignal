@@ -1,3 +1,4 @@
+import { marketingPaths } from "../lib/marketing-seo";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
@@ -43,8 +44,8 @@ test("all canonical, hreflang and x-default URLs are reciprocal and in the sitem
   const entries = sitemap();
   const byUrl = new Map(entries.map((entry) => [entry.url, entry]));
   assert.equal(byUrl.size, entries.length);
-  // Articles and hubs per locale, the home page and its language versions, and pricing.
-  assert.equal(entries.length, (acquisitionPages.length + 1) * locales.length + 1 + locales.length + 1);
+  // Articles, hubs and the explicit public catalog per locale, home versions and legacy pricing.
+  assert.equal(entries.length, (acquisitionPages.length + 1 + marketingPaths.length) * locales.length + 1 + locales.length + 1);
   assert.ok(byUrl.has("https://axignal.com/") && byUrl.has("https://axignal.com/pricing"));
   for (const url of ["https://axignal.com/", ...locales.map(({ id }) => `https://axignal.com/${id}`)]) {
     const languages = byUrl.get(url)?.alternates?.languages as Record<string, string> | undefined;

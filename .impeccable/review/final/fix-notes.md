@@ -1,0 +1,6 @@
+# Verdict pass — first material fix batch
+
+1. Three decorative authored SVG Bézier paths and arrowheads restore the comp’s blue annotation device. Geometry is hidden from accessibility, ignores pointer events and is removed at the existing mobile breakpoint. Semantic annotation links and approved artwork remain unchanged. Recaptured: desktop.png, user-1280.png, mobile.png, mobile-320.png and both full home documents. Full captures start at scrollY=0 with every image loaded. Final diff was refreshed at D:/AXIGNAL/_tmp/landing-ecosystem-evidence/final/diff/.
+2. manual-completion.json records evidence-backed direct application review of sections, motion and responsive behavior under the human’s exact override, distinguishing this from the retained OPEN CLI hero and historical pending automatic stages. Verification.md/quickstart.md explain the same limits. Final human acceptance is PENDING.
+
+Production rebuild and 344 frontend tests pass after this batch; the HTTP contract passes on the corrected production server for all 60 localized journeys, aliases, unsupported paths and real images. No second detector was run. No source outside the two requested UI files and completion/docs records was changed by this fix batch.

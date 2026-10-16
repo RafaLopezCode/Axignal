@@ -442,9 +442,9 @@ No production path may claim tax or VeriFactu/SIF compliance from implementation
 
 Admin may contain a staff-only Frontier Advisor workbench and associated delivery/commercial operations. Advisory drafts, human edits, reports and client-specific interpretations are private artifacts. They do not write AXIGLAND or gain canonical authority by being paid deliverables.
 
-The authorized launch offer is **AXIGNAL con asesoría humana — €995/month + applicable VAT**, scoped initially to one customer organization/Xeed, four weekly evidence-backed updates and one monthly strategic review. The price is commercially authorized for launch but remains unvalidated until real paid evidence exists.
+The authorized launch offer is **AXIGNAL con asesoría humana — €295/month + applicable VAT**, scoped initially to one customer organization/Xeed, four weekly evidence-backed updates and one monthly strategic review. The price is commercially authorized for launch but remains unvalidated until real paid evidence exists.
 
-The €995 service includes one Xeed within the human-advisory scope. Additional self-service Xeeds continue under the normal +€4.95/month product pricing, but an additional Xeed requiring human advisory work needs separately governed scope/pricing and is not silently included by the self-service add-on.
+The €295 service includes one Xeed within the human-advisory scope. Additional self-service Xeeds continue under the normal +€4.95/month product pricing, but an additional Xeed requiring human advisory work needs separately governed scope/pricing and is not silently included by the self-service add-on.
 
 The Workbench MUST resolve account → tenant → authorized Xeed → observed organization server-side before generation. Generation produces a reviewable draft from a versioned evidence snapshot; human approval and delivery are separate actions. Advisor text is stored separately from primary evidence and must preserve authorship, version and delivery lineage.
 

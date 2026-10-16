@@ -1,0 +1,351 @@
+import type { FamilyId } from "./projection";
+import { words, type LocalizedText } from "./marketing-content";
+
+export interface PublicIndustry {
+  slug: string;
+  title: LocalizedText;
+  intro: LocalizedText;
+  questions: readonly LocalizedText[];
+  families: readonly FamilyId[];
+  limit: LocalizedText;
+  position: string;
+}
+
+/** Editorial use cases. These are questions to investigate, never observed customer results. */
+export const industries = [
+  {
+    slug: "industry",
+    position: "8% center",
+    title: words(
+      "Industria y fabricación",
+      "Industry & manufacturing",
+      "Industrie et fabrication",
+      "Industrie & Fertigung",
+      "Industria e produzione",
+      "Indústria e produção",
+    ),
+    intro: words(
+      "Conecta lo que una empresa sabe hacer con la actividad y la demanda que merece investigar.",
+      "Connect what a company can do with activity and demand worth investigating.",
+      "Reliez les capacités d’une entreprise à l’activité et à la demande à étudier.",
+      "Verbinden Sie die Fähigkeiten eines Unternehmens mit relevanten Aktivitäten und Nachfrage.",
+      "Collega le capacità di un’azienda alle attività e alla domanda da approfondire.",
+      "Ligue as capacidades de uma empresa à atividade e à procura que vale a pena investigar.",
+    ),
+    questions: [
+      words(
+        "¿Qué capacidades declara y qué evidencia las respalda?",
+        "Which capabilities does it declare, and what supports them?",
+        "Quelles capacités déclare-t-elle et sur quelles preuves ?",
+        "Welche Fähigkeiten nennt sie und welche Belege gibt es?",
+        "Quali capacità dichiara e quali prove le sostengono?",
+        "Que capacidades declara e que evidência as sustenta?",
+      ),
+      words(
+        "¿Qué proyectos o compras públicas podrían requerirlas?",
+        "Which projects or public purchases could require them?",
+        "Quels projets ou achats publics pourraient les nécessiter ?",
+        "Welche Projekte oder öffentlichen Beschaffungen könnten sie benötigen?",
+        "Quali progetti o acquisti pubblici potrebbero richiederle?",
+        "Que projetos ou compras públicas poderão exigi-las?",
+      ),
+      words(
+        "¿Puede prestar ese servicio en el lugar y las condiciones requeridas?",
+        "Can it deliver in the required location and conditions?",
+        "Peut-elle intervenir au lieu et dans les conditions requis ?",
+        "Kann sie am erforderlichen Ort unter den nötigen Bedingungen liefern?",
+        "Può operare nel luogo e alle condizioni richieste?",
+        "Pode prestar o serviço no local e nas condições exigidas?",
+      ),
+    ],
+    families: ["value", "activity", "demand", "markets", "relationships"],
+    limit: words(
+      "Una capacidad publicada no demuestra capacidad disponible ni encaje comercial. Una coincidencia abre una investigación; no establece una venta.",
+      "A published capability proves neither available capacity nor commercial fit. A match opens an investigation; it does not establish a sale.",
+      "Une capacité publiée ne prouve ni disponibilité ni adéquation commerciale. Une correspondance ouvre une recherche, pas une vente.",
+      "Eine veröffentlichte Fähigkeit belegt weder Verfügbarkeit noch kommerzielle Eignung. Eine Übereinstimmung eröffnet eine Prüfung, keinen Verkauf.",
+      "Una capacità pubblicata non prova disponibilità o idoneità commerciale. Una corrispondenza avvia un’indagine, non una vendita.",
+      "Uma capacidade publicada não prova disponibilidade nem adequação comercial. Uma correspondência abre uma investigação, não uma venda.",
+    ),
+  },
+  {
+    slug: "construction",
+    position: "33% center",
+    title: words(
+      "Construcción e ingeniería",
+      "Construction & engineering",
+      "Construction et ingénierie",
+      "Bau & Ingenieurwesen",
+      "Edilizia e ingegneria",
+      "Construção e engenharia",
+    ),
+    intro: words(
+      "Lee proyectos, requisitos y capacidades en su contexto antes de decidir dónde profundizar.",
+      "Read projects, requirements and capabilities in context before deciding where to investigate.",
+      "Lisez projets, exigences et capacités dans leur contexte avant d’approfondir.",
+      "Lesen Sie Projekte, Anforderungen und Fähigkeiten im Kontext, bevor Sie gezielt nachforschen.",
+      "Leggi progetti, requisiti e capacità nel loro contesto prima di approfondire.",
+      "Leia projetos, requisitos e capacidades no seu contexto antes de aprofundar.",
+    ),
+    questions: [
+      words(
+        "¿Qué actividad nueva se ha publicado y cuándo?",
+        "What new activity was published, and when?",
+        "Quelle nouvelle activité a été publiée, et quand ?",
+        "Welche neue Aktivität wurde wann veröffentlicht?",
+        "Quale nuova attività è stata pubblicata e quando?",
+        "Que atividade nova foi publicada e quando?",
+      ),
+      words(
+        "¿Qué requisitos están documentados y cuáles faltan?",
+        "Which requirements are documented, and which are missing?",
+        "Quelles exigences sont documentées et lesquelles manquent ?",
+        "Welche Anforderungen sind belegt und welche fehlen?",
+        "Quali requisiti sono documentati e quali mancano?",
+        "Que requisitos estão documentados e quais faltam?",
+      ),
+      words(
+        "¿Qué alcance geográfico tiene cada capacidad?",
+        "What geographic reach does each capability have?",
+        "Quelle est la portée géographique de chaque capacité ?",
+        "Welche geografische Reichweite hat jede Fähigkeit?",
+        "Qual è la portata geografica di ogni capacità?",
+        "Qual é o alcance geográfico de cada capacidade?",
+      ),
+    ],
+    families: ["activity", "demand", "value", "markets", "context"],
+    limit: words(
+      "Una adjudicación no demuestra una subcontratación. Una obra anunciada no demuestra ejecución. La demanda en otra región no implica expansión.",
+      "An award does not establish a subcontract. An announced project does not prove execution. Demand in another region does not imply expansion.",
+      "Une attribution ne démontre pas une sous-traitance. Un projet annoncé ne prouve pas sa réalisation. Une demande ailleurs n’implique pas une expansion.",
+      "Ein Zuschlag belegt keinen Unterauftrag. Eine Ankündigung belegt keine Ausführung. Nachfrage andernorts bedeutet keine Expansion.",
+      "Un’aggiudicazione non prova un subappalto. Un progetto annunciato non prova l’esecuzione. La domanda altrove non implica espansione.",
+      "Uma adjudicação não prova uma subcontratação. Um projeto anunciado não prova execução. Procura noutra região não implica expansão.",
+    ),
+  },
+  {
+    slug: "energy",
+    position: "60% center",
+    title: words(
+      "Energía y transición",
+      "Energy & transition",
+      "Énergie et transition",
+      "Energie & Transformation",
+      "Energia e transizione",
+      "Energia e transição",
+    ),
+    intro: words(
+      "Pon en relación anuncios de proyectos, capacidades y contexto territorial con sus fuentes a la vista.",
+      "Connect project announcements, capabilities and territorial context with sources in view.",
+      "Reliez annonces de projets, capacités et contexte territorial avec leurs sources.",
+      "Verbinden Sie Projektankündigungen, Fähigkeiten und regionalen Kontext mit sichtbaren Quellen.",
+      "Collega annunci di progetti, capacità e contesto territoriale con le fonti in vista.",
+      "Relacione anúncios de projetos, capacidades e contexto territorial com as fontes à vista.",
+    ),
+    questions: [
+      words(
+        "¿Qué se ha anunciado y cuál es su estado documentado?",
+        "What was announced, and what is its documented status?",
+        "Qu’a-t-on annoncé et quel est l’état documenté ?",
+        "Was wurde angekündigt und welcher Stand ist belegt?",
+        "Cosa è stato annunciato e qual è lo stato documentato?",
+        "O que foi anunciado e qual é o estado documentado?",
+      ),
+      words(
+        "¿Qué servicios podrían ser relevantes para ese proyecto?",
+        "Which services could be relevant to that project?",
+        "Quels services pourraient être pertinents pour ce projet ?",
+        "Welche Leistungen könnten für das Projekt relevant sein?",
+        "Quali servizi potrebbero essere rilevanti per il progetto?",
+        "Que serviços poderão ser relevantes para esse projeto?",
+      ),
+      words(
+        "¿Qué restricciones del entorno necesitan verificación?",
+        "Which contextual constraints need verification?",
+        "Quelles contraintes du contexte faut-il vérifier ?",
+        "Welche Rahmenbedingungen müssen überprüft werden?",
+        "Quali vincoli del contesto vanno verificati?",
+        "Que restrições do contexto precisam de verificação?",
+      ),
+    ],
+    families: ["activity", "value", "demand", "markets", "context"],
+    limit: words(
+      "El anuncio de un proyecto no acredita financiación, permisos, ejecución ni elegibilidad como proveedor. Cada condición necesita evidencia propia.",
+      "A project announcement establishes neither funding, permits, execution nor supplier eligibility. Each condition needs its own evidence.",
+      "Une annonce ne prouve ni financement, ni permis, ni exécution, ni éligibilité fournisseur. Chaque condition exige ses preuves.",
+      "Eine Ankündigung belegt weder Finanzierung, Genehmigungen, Umsetzung noch Lieferanteneignung. Jede Bedingung braucht eigene Belege.",
+      "Un annuncio non prova finanziamento, permessi, esecuzione o idoneità del fornitore. Ogni condizione richiede prove proprie.",
+      "Um anúncio não comprova financiamento, licenças, execução ou elegibilidade como fornecedor. Cada condição exige evidência própria.",
+    ),
+  },
+  {
+    slug: "logistics",
+    position: "76% center",
+    title: words(
+      "Logística y distribución",
+      "Logistics & distribution",
+      "Logistique et distribution",
+      "Logistik & Distribution",
+      "Logistica e distribuzione",
+      "Logística e distribuição",
+    ),
+    intro: words(
+      "Distingue la sede de una empresa de los lugares y condiciones en los que puede prestar cada servicio.",
+      "Distinguish a company’s headquarters from where and under which conditions it can deliver each service.",
+      "Distinguez le siège des lieux et conditions de prestation de chaque service.",
+      "Unterscheiden Sie den Firmensitz von den Orten und Bedingungen der Leistungserbringung.",
+      "Distingui la sede dai luoghi e dalle condizioni in cui può offrire ogni servizio.",
+      "Distinga a sede dos locais e condições em que pode prestar cada serviço.",
+    ),
+    questions: [
+      words(
+        "¿Qué modalidades y zonas de servicio están publicadas?",
+        "Which service modes and areas are published?",
+        "Quels modes et zones de service sont publiés ?",
+        "Welche Leistungsarten und Gebiete sind veröffentlicht?",
+        "Quali modalità e aree di servizio sono pubblicate?",
+        "Que modalidades e áreas de serviço estão publicadas?",
+      ),
+      words(
+        "¿Qué requisitos de entrega tiene la demanda encontrada?",
+        "What delivery requirements does the demand specify?",
+        "Quelles exigences de livraison la demande précise-t-elle ?",
+        "Welche Lieferanforderungen nennt die Nachfrage?",
+        "Quali requisiti di consegna specifica la domanda?",
+        "Que requisitos de entrega especifica a procura?",
+      ),
+      words(
+        "¿Qué relaciones comerciales están realmente documentadas?",
+        "Which commercial relationships are actually documented?",
+        "Quelles relations commerciales sont réellement documentées ?",
+        "Welche Geschäftsbeziehungen sind tatsächlich belegt?",
+        "Quali relazioni commerciali sono realmente documentate?",
+        "Que relações comerciais estão realmente documentadas?",
+      ),
+    ],
+    families: ["markets", "value", "relationships", "demand", "context"],
+    limit: words(
+      "AXIGNAL no es seguimiento de flotas. No deduce rutas activas, disponibilidad ni clientes de la proximidad geográfica o de una coincidencia de actividad.",
+      "AXIGNAL is not fleet tracking. It does not infer active routes, availability or customers from geographic proximity or matching activity.",
+      "AXIGNAL n’est pas un suivi de flotte. La proximité ou une activité similaire ne permettent pas de déduire routes, disponibilité ou clients.",
+      "AXIGNAL ist keine Flottenverfolgung. Nähe oder ähnliche Aktivitäten belegen keine aktiven Routen, Verfügbarkeit oder Kunden.",
+      "AXIGNAL non traccia flotte. Non deduce rotte attive, disponibilità o clienti dalla vicinanza o da attività simili.",
+      "AXIGNAL não rastreia frotas. Não deduz rotas ativas, disponibilidade ou clientes da proximidade ou de atividades semelhantes.",
+    ),
+  },
+  {
+    slug: "professional-services",
+    position: "100% center",
+    title: words(
+      "Consultoría y servicios",
+      "Consulting & services",
+      "Conseil et services",
+      "Beratung & Dienstleistungen",
+      "Consulenza e servizi",
+      "Consultoria e serviços",
+    ),
+    intro: words(
+      "Prepara conversaciones y análisis con una lectura que conserva la evidencia y distingue los cambios de los vacíos.",
+      "Prepare conversations and analysis with a reading that retains evidence and separates changes from gaps.",
+      "Préparez échanges et analyses avec une lecture qui conserve les preuves et distingue changements et lacunes.",
+      "Bereiten Sie Gespräche und Analysen mit einer Lesart vor, die Belege bewahrt und Änderungen von Lücken trennt.",
+      "Prepara conversazioni e analisi con una lettura che conserva le prove e distingue cambiamenti e lacune.",
+      "Prepare conversas e análises com uma leitura que conserva a evidência e distingue mudanças de lacunas.",
+    ),
+    questions: [
+      words(
+        "¿Qué identidad y propuesta están documentadas?",
+        "Which identity and offering are documented?",
+        "Quelle identité et quelle offre sont documentées ?",
+        "Welche Identität und welches Angebot sind belegt?",
+        "Quali identità e proposta sono documentate?",
+        "Que identidade e proposta estão documentadas?",
+      ),
+      words(
+        "¿Qué ha cambiado desde la lectura anterior?",
+        "What changed since the previous reading?",
+        "Qu’est-ce qui a changé depuis la lecture précédente ?",
+        "Was hat sich seit der letzten Lesart geändert?",
+        "Cosa è cambiato dall’ultima lettura?",
+        "O que mudou desde a leitura anterior?",
+      ),
+      words(
+        "¿Qué cifras públicas tienen periodo y fuente verificables?",
+        "Which public figures have a verifiable period and source?",
+        "Quels chiffres publics ont une période et une source vérifiables ?",
+        "Welche öffentlichen Zahlen haben überprüfbare Zeiträume und Quellen?",
+        "Quali dati pubblici hanno periodo e fonte verificabili?",
+        "Que números públicos têm período e fonte verificáveis?",
+      ),
+    ],
+    families: ["organization", "value", "activity", "economics", "context"],
+    limit: words(
+      "La ausencia de cuentas públicas no equivale a una mala situación económica. La interpretación exige contexto y no sustituye el criterio profesional.",
+      "Missing public accounts do not imply poor financial health. Interpretation requires context and does not replace professional judgment.",
+      "L’absence de comptes publics n’implique pas une mauvaise santé financière. L’interprétation exige du contexte et un jugement professionnel.",
+      "Fehlende öffentliche Abschlüsse bedeuten keine schlechte Finanzlage. Interpretation erfordert Kontext und ersetzt kein fachliches Urteil.",
+      "L’assenza di bilanci pubblici non implica difficoltà economiche. L’interpretazione richiede contesto e giudizio professionale.",
+      "A ausência de contas públicas não implica má saúde financeira. A interpretação exige contexto e não substitui o critério profissional.",
+    ),
+  },
+  {
+    slug: "agencies",
+    position: "96% center",
+    title: words(
+      "Agencias y comunicación",
+      "Agencies & communication",
+      "Agences et communication",
+      "Agenturen & Kommunikation",
+      "Agenzie e comunicazione",
+      "Agências e comunicação",
+    ),
+    intro: words(
+      "Contrasta lo que una organización ofrece con cómo se presenta y cómo aparece en las superficies públicas medidas.",
+      "Compare what an organization offers with how it presents itself and appears on measured public surfaces.",
+      "Comparez l’offre d’une organisation à sa présentation et à son apparition sur les surfaces publiques mesurées.",
+      "Vergleichen Sie das Angebot mit der Selbstdarstellung und dem Auftreten auf gemessenen öffentlichen Oberflächen.",
+      "Confronta l’offerta con la presentazione e la presenza sulle superfici pubbliche misurate.",
+      "Compare a oferta com a apresentação e a presença nas superfícies públicas medidas.",
+    ),
+    questions: [
+      words(
+        "¿La web explica la oferta y a quién se dirige?",
+        "Does the website explain the offer and its intended audience?",
+        "Le site explique-t-il l’offre et son public ?",
+        "Erklärt die Website das Angebot und seine Zielgruppe?",
+        "Il sito spiega l’offerta e a chi si rivolge?",
+        "O site explica a oferta e a quem se dirige?",
+      ),
+      words(
+        "¿Qué se observó en buscadores o asistentes, bajo qué condiciones?",
+        "What was observed in search or assistants, under which conditions?",
+        "Qu’a-t-on observé dans les moteurs ou assistants, et sous quelles conditions ?",
+        "Was wurde unter welchen Bedingungen in Suchmaschinen oder Assistenten beobachtet?",
+        "Cosa è stato osservato nei motori o assistenti, e a quali condizioni?",
+        "O que foi observado em motores ou assistentes, e em que condições?",
+      ),
+      words(
+        "¿Hay una diferencia sustentada que merezca una revisión?",
+        "Is there a supported discrepancy worth reviewing?",
+        "Existe-t-il un écart étayé qui mérite une révision ?",
+        "Gibt es eine belegte Abweichung, die geprüft werden sollte?",
+        "Esiste una discrepanza fondata da esaminare?",
+        "Existe uma diferença fundamentada que mereça revisão?",
+      ),
+    ],
+    families: ["presence", "reputation", "value", "markets", "activity"],
+    limit: words(
+      "Una mención no es una cita ni un respaldo. Las mediciones tienen muestra, fecha y condiciones. AXIGNAL observa; no ejecuta SEO ni promete posicionamiento.",
+      "A mention is neither a citation nor an endorsement. Measurements have samples, dates and conditions. AXIGNAL observes; it does not execute SEO or promise rankings.",
+      "Une mention n’est ni citation ni approbation. Les mesures ont échantillon, date et conditions. AXIGNAL observe, sans exécuter le SEO ni promettre un classement.",
+      "Eine Erwähnung ist weder Zitat noch Empfehlung. Messungen haben Stichproben, Datum und Bedingungen. AXIGNAL beobachtet, betreibt kein SEO und verspricht keine Rankings.",
+      "Una menzione non è una citazione o approvazione. Le misure hanno campione, data e condizioni. AXIGNAL osserva, non esegue SEO né promette posizionamenti.",
+      "Uma menção não é citação nem endosso. As medições têm amostra, data e condições. AXIGNAL observa, não executa SEO nem promete posições.",
+    ),
+  },
+] as const satisfies readonly PublicIndustry[];
+
+export type IndustrySlug = (typeof industries)[number]["slug"];
+export function industryBySlug(slug: string): PublicIndustry | undefined {
+  return industries.find((industry) => industry.slug === slug);
+}

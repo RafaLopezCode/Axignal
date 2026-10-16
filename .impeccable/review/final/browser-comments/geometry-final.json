@@ -1,0 +1,1058 @@
+[
+  {
+    "actionRight": 289,
+    "actions": [
+      {
+        "display": "none",
+        "width": 0
+      },
+      {
+        "display": "flex",
+        "width": 95.890625
+      }
+    ],
+    "client": 305,
+    "lang": "es",
+    "logoHeight": 35.265625,
+    "logoWidth": 121.65625,
+    "newsletterScroll": 305,
+    "newsletterWidth": 305,
+    "page": "home",
+    "scroll": 305,
+    "width": 320
+  },
+  {
+    "actionRight": 355,
+    "actions": [
+      {
+        "display": "none",
+        "width": 0
+      },
+      {
+        "display": "flex",
+        "width": 99.890625
+      }
+    ],
+    "client": 375,
+    "lang": "es",
+    "logoHeight": 41.15625,
+    "logoWidth": 142,
+    "newsletterScroll": 375,
+    "newsletterWidth": 375,
+    "page": "home",
+    "scroll": 375,
+    "width": 390
+  },
+  {
+    "actionRight": 722.890625,
+    "actions": [
+      {
+        "display": "flex",
+        "width": 148
+      },
+      {
+        "display": "flex",
+        "width": 148
+      }
+    ],
+    "client": 753,
+    "lang": "es",
+    "logoHeight": 43,
+    "logoWidth": 147,
+    "newsletterScroll": 753,
+    "newsletterWidth": 753,
+    "page": "home",
+    "scroll": 753,
+    "width": 768
+  },
+  {
+    "actionRight": 772.8125,
+    "actions": [
+      {
+        "display": "flex",
+        "width": 148
+      },
+      {
+        "display": "flex",
+        "width": 148
+      }
+    ],
+    "client": 805,
+    "lang": "es",
+    "logoHeight": 43,
+    "logoWidth": 147,
+    "newsletterScroll": 805,
+    "newsletterWidth": 805,
+    "page": "home",
+    "scroll": 805,
+    "width": 820
+  },
+  {
+    "actionRight": 1213.453125,
+    "actions": [
+      {
+        "display": "flex",
+        "width": 148
+      },
+      {
+        "display": "flex",
+        "width": 148
+      }
+    ],
+    "client": 1264,
+    "lang": "es",
+    "logoHeight": 43,
+    "logoWidth": 147,
+    "newsletterScroll": 1264,
+    "newsletterWidth": 1264,
+    "page": "home",
+    "scroll": 1264,
+    "width": 1279
+  },
+  {
+    "actionRight": 1214.40625,
+    "actions": [
+      {
+        "display": "flex",
+        "width": 148
+      },
+      {
+        "display": "flex",
+        "width": 148
+      }
+    ],
+    "client": 1265,
+    "lang": "es",
+    "logoHeight": 43,
+    "logoWidth": 147,
+    "newsletterScroll": 1265,
+    "newsletterWidth": 1265,
+    "page": "home",
+    "scroll": 1265,
+    "width": 1280
+  },
+  {
+    "actionRight": 1368,
+    "actions": [
+      {
+        "display": "flex",
+        "width": 148
+      },
+      {
+        "display": "flex",
+        "width": 148
+      }
+    ],
+    "client": 1425,
+    "lang": "es",
+    "logoHeight": 43,
+    "logoWidth": 147,
+    "newsletterScroll": 1425,
+    "newsletterWidth": 1425,
+    "page": "home",
+    "scroll": 1425,
+    "width": 1440
+  },
+  {
+    "actionRight": 1569.609375,
+    "actions": [
+      {
+        "display": "flex",
+        "width": 148
+      },
+      {
+        "display": "flex",
+        "width": 148
+      }
+    ],
+    "client": 1635,
+    "lang": "es",
+    "logoHeight": 43,
+    "logoWidth": 147,
+    "newsletterScroll": 1635,
+    "newsletterWidth": 1635,
+    "page": "home",
+    "scroll": 1635,
+    "width": 1650
+  },
+  {
+    "actionRight": 289,
+    "actions": [
+      {
+        "display": "none",
+        "width": 0
+      },
+      {
+        "display": "flex",
+        "width": 112.875
+      }
+    ],
+    "client": 305,
+    "lang": "en",
+    "logoHeight": 30.34375,
+    "logoWidth": 104.671875,
+    "newsletterScroll": 305,
+    "newsletterWidth": 305,
+    "page": "home",
+    "scroll": 305,
+    "width": 320
+  },
+  {
+    "actionRight": 355,
+    "actions": [
+      {
+        "display": "none",
+        "width": 0
+      },
+      {
+        "display": "flex",
+        "width": 116.875
+      }
+    ],
+    "client": 375,
+    "lang": "en",
+    "logoHeight": 41.15625,
+    "logoWidth": 142,
+    "newsletterScroll": 375,
+    "newsletterWidth": 375,
+    "page": "home",
+    "scroll": 375,
+    "width": 390
+  },
+  {
+    "actionRight": 722.890625,
+    "actions": [
+      {
+        "display": "flex",
+        "width": 148
+      },
+      {
+        "display": "flex",
+        "width": 148
+      }
+    ],
+    "client": 753,
+    "lang": "en",
+    "logoHeight": 43,
+    "logoWidth": 147,
+    "newsletterScroll": 753,
+    "newsletterWidth": 753,
+    "page": "home",
+    "scroll": 753,
+    "width": 768
+  },
+  {
+    "actionRight": 772.8125,
+    "actions": [
+      {
+        "display": "flex",
+        "width": 148
+      },
+      {
+        "display": "flex",
+        "width": 148
+      }
+    ],
+    "client": 805,
+    "lang": "en",
+    "logoHeight": 43,
+    "logoWidth": 147,
+    "newsletterScroll": 805,
+    "newsletterWidth": 805,
+    "page": "home",
+    "scroll": 805,
+    "width": 820
+  },
+  {
+    "actionRight": 1213.453125,
+    "actions": [
+      {
+        "display": "flex",
+        "width": 148
+      },
+      {
+        "display": "flex",
+        "width": 148
+      }
+    ],
+    "client": 1264,
+    "lang": "en",
+    "logoHeight": 43,
+    "logoWidth": 147,
+    "newsletterScroll": 1264,
+    "newsletterWidth": 1264,
+    "page": "home",
+    "scroll": 1264,
+    "width": 1279
+  },
+  {
+    "actionRight": 1214.40625,
+    "actions": [
+      {
+        "display": "flex",
+        "width": 148
+      },
+      {
+        "display": "flex",
+        "width": 148
+      }
+    ],
+    "client": 1265,
+    "lang": "en",
+    "logoHeight": 43,
+    "logoWidth": 147,
+    "newsletterScroll": 1265,
+    "newsletterWidth": 1265,
+    "page": "home",
+    "scroll": 1265,
+    "width": 1280
+  },
+  {
+    "actionRight": 1368,
+    "actions": [
+      {
+        "display": "flex",
+        "width": 148
+      },
+      {
+        "display": "flex",
+        "width": 148
+      }
+    ],
+    "client": 1425,
+    "lang": "en",
+    "logoHeight": 43,
+    "logoWidth": 147,
+    "newsletterScroll": 1425,
+    "newsletterWidth": 1425,
+    "page": "home",
+    "scroll": 1425,
+    "width": 1440
+  },
+  {
+    "actionRight": 1569.609375,
+    "actions": [
+      {
+        "display": "flex",
+        "width": 148
+      },
+      {
+        "display": "flex",
+        "width": 148
+      }
+    ],
+    "client": 1635,
+    "lang": "en",
+    "logoHeight": 43,
+    "logoWidth": 147,
+    "newsletterScroll": 1635,
+    "newsletterWidth": 1635,
+    "page": "home",
+    "scroll": 1635,
+    "width": 1650
+  },
+  {
+    "actionRight": 289,
+    "actions": [
+      {
+        "display": "none",
+        "width": 0
+      },
+      {
+        "display": "flex",
+        "width": 117.546875
+      }
+    ],
+    "client": 305,
+    "lang": "fr",
+    "logoHeight": 28.984375,
+    "logoWidth": 100,
+    "newsletterScroll": 305,
+    "newsletterWidth": 305,
+    "page": "home",
+    "scroll": 305,
+    "width": 320
+  },
+  {
+    "actionRight": 355,
+    "actions": [
+      {
+        "display": "none",
+        "width": 0
+      },
+      {
+        "display": "flex",
+        "width": 121.546875
+      }
+    ],
+    "client": 375,
+    "lang": "fr",
+    "logoHeight": 41.15625,
+    "logoWidth": 142,
+    "newsletterScroll": 375,
+    "newsletterWidth": 375,
+    "page": "home",
+    "scroll": 375,
+    "width": 390
+  },
+  {
+    "actionRight": 722.890625,
+    "actions": [
+      {
+        "display": "flex",
+        "width": 148
+      },
+      {
+        "display": "flex",
+        "width": 148
+      }
+    ],
+    "client": 753,
+    "lang": "fr",
+    "logoHeight": 43,
+    "logoWidth": 147,
+    "newsletterScroll": 753,
+    "newsletterWidth": 753,
+    "page": "home",
+    "scroll": 753,
+    "width": 768
+  },
+  {
+    "actionRight": 772.8125,
+    "actions": [
+      {
+        "display": "flex",
+        "width": 148
+      },
+      {
+        "display": "flex",
+        "width": 148
+      }
+    ],
+    "client": 805,
+    "lang": "fr",
+    "logoHeight": 43,
+    "logoWidth": 147,
+    "newsletterScroll": 805,
+    "newsletterWidth": 805,
+    "page": "home",
+    "scroll": 805,
+    "width": 820
+  },
+  {
+    "actionRight": 1213.453125,
+    "actions": [
+      {
+        "display": "flex",
+        "width": 148
+      },
+      {
+        "display": "flex",
+        "width": 148
+      }
+    ],
+    "client": 1264,
+    "lang": "fr",
+    "logoHeight": 43,
+    "logoWidth": 147,
+    "newsletterScroll": 1264,
+    "newsletterWidth": 1264,
+    "page": "home",
+    "scroll": 1264,
+    "width": 1279
+  },
+  {
+    "actionRight": 1214.40625,
+    "actions": [
+      {
+        "display": "flex",
+        "width": 148
+      },
+      {
+        "display": "flex",
+        "width": 148
+      }
+    ],
+    "client": 1265,
+    "lang": "fr",
+    "logoHeight": 43,
+    "logoWidth": 147,
+    "newsletterScroll": 1265,
+    "newsletterWidth": 1265,
+    "page": "home",
+    "scroll": 1265,
+    "width": 1280
+  },
+  {
+    "actionRight": 1368,
+    "actions": [
+      {
+        "display": "flex",
+        "width": 148
+      },
+      {
+        "display": "flex",
+        "width": 148
+      }
+    ],
+    "client": 1425,
+    "lang": "fr",
+    "logoHeight": 43,
+    "logoWidth": 147,
+    "newsletterScroll": 1425,
+    "newsletterWidth": 1425,
+    "page": "home",
+    "scroll": 1425,
+    "width": 1440
+  },
+  {
+    "actionRight": 1569.609375,
+    "actions": [
+      {
+        "display": "flex",
+        "width": 148
+      },
+      {
+        "display": "flex",
+        "width": 148
+      }
+    ],
+    "client": 1635,
+    "lang": "fr",
+    "logoHeight": 43,
+    "logoWidth": 147,
+    "newsletterScroll": 1635,
+    "newsletterWidth": 1635,
+    "page": "home",
+    "scroll": 1635,
+    "width": 1650
+  },
+  {
+    "actionRight": 289,
+    "actions": [
+      {
+        "display": "none",
+        "width": 0
+      },
+      {
+        "display": "flex",
+        "width": 98.40625
+      }
+    ],
+    "client": 305,
+    "lang": "de",
+    "logoHeight": 34.53125,
+    "logoWidth": 119.140625,
+    "newsletterScroll": 305,
+    "newsletterWidth": 305,
+    "page": "home",
+    "scroll": 305,
+    "width": 320
+  },
+  {
+    "actionRight": 355,
+    "actions": [
+      {
+        "display": "none",
+        "width": 0
+      },
+      {
+        "display": "flex",
+        "width": 102.40625
+      }
+    ],
+    "client": 375,
+    "lang": "de",
+    "logoHeight": 41.15625,
+    "logoWidth": 142,
+    "newsletterScroll": 375,
+    "newsletterWidth": 375,
+    "page": "home",
+    "scroll": 375,
+    "width": 390
+  },
+  {
+    "actionRight": 722.890625,
+    "actions": [
+      {
+        "display": "flex",
+        "width": 148
+      },
+      {
+        "display": "flex",
+        "width": 148
+      }
+    ],
+    "client": 753,
+    "lang": "de",
+    "logoHeight": 43,
+    "logoWidth": 147,
+    "newsletterScroll": 753,
+    "newsletterWidth": 753,
+    "page": "home",
+    "scroll": 753,
+    "width": 768
+  },
+  {
+    "actionRight": 772.8125,
+    "actions": [
+      {
+        "display": "flex",
+        "width": 148
+      },
+      {
+        "display": "flex",
+        "width": 148
+      }
+    ],
+    "client": 805,
+    "lang": "de",
+    "logoHeight": 43,
+    "logoWidth": 147,
+    "newsletterScroll": 805,
+    "newsletterWidth": 805,
+    "page": "home",
+    "scroll": 805,
+    "width": 820
+  },
+  {
+    "actionRight": 1213.453125,
+    "actions": [
+      {
+        "display": "flex",
+        "width": 148
+      },
+      {
+        "display": "flex",
+        "width": 148
+      }
+    ],
+    "client": 1264,
+    "lang": "de",
+    "logoHeight": 43,
+    "logoWidth": 147,
+    "newsletterScroll": 1264,
+    "newsletterWidth": 1264,
+    "page": "home",
+    "scroll": 1264,
+    "width": 1279
+  },
+  {
+    "actionRight": 1214.40625,
+    "actions": [
+      {
+        "display": "flex",
+        "width": 148
+      },
+      {
+        "display": "flex",
+        "width": 148
+      }
+    ],
+    "client": 1265,
+    "lang": "de",
+    "logoHeight": 43,
+    "logoWidth": 147,
+    "newsletterScroll": 1265,
+    "newsletterWidth": 1265,
+    "page": "home",
+    "scroll": 1265,
+    "width": 1280
+  },
+  {
+    "actionRight": 1368,
+    "actions": [
+      {
+        "display": "flex",
+        "width": 148
+      },
+      {
+        "display": "flex",
+        "width": 148
+      }
+    ],
+    "client": 1425,
+    "lang": "de",
+    "logoHeight": 43,
+    "logoWidth": 147,
+    "newsletterScroll": 1425,
+    "newsletterWidth": 1425,
+    "page": "home",
+    "scroll": 1425,
+    "width": 1440
+  },
+  {
+    "actionRight": 1569.609375,
+    "actions": [
+      {
+        "display": "flex",
+        "width": 148
+      },
+      {
+        "display": "flex",
+        "width": 148
+      }
+    ],
+    "client": 1635,
+    "lang": "de",
+    "logoHeight": 43,
+    "logoWidth": 147,
+    "newsletterScroll": 1635,
+    "newsletterWidth": 1635,
+    "page": "home",
+    "scroll": 1635,
+    "width": 1650
+  },
+  {
+    "actionRight": 289,
+    "actions": [
+      {
+        "display": "none",
+        "width": 0
+      },
+      {
+        "display": "flex",
+        "width": 74.796875
+      }
+    ],
+    "client": 305,
+    "lang": "it",
+    "logoHeight": 35.9375,
+    "logoWidth": 124,
+    "newsletterScroll": 305,
+    "newsletterWidth": 305,
+    "page": "home",
+    "scroll": 305,
+    "width": 320
+  },
+  {
+    "actionRight": 355,
+    "actions": [
+      {
+        "display": "none",
+        "width": 0
+      },
+      {
+        "display": "flex",
+        "width": 78.796875
+      }
+    ],
+    "client": 375,
+    "lang": "it",
+    "logoHeight": 41.15625,
+    "logoWidth": 142,
+    "newsletterScroll": 375,
+    "newsletterWidth": 375,
+    "page": "home",
+    "scroll": 375,
+    "width": 390
+  },
+  {
+    "actionRight": 722.890625,
+    "actions": [
+      {
+        "display": "flex",
+        "width": 148
+      },
+      {
+        "display": "flex",
+        "width": 148
+      }
+    ],
+    "client": 753,
+    "lang": "it",
+    "logoHeight": 43,
+    "logoWidth": 147,
+    "newsletterScroll": 753,
+    "newsletterWidth": 753,
+    "page": "home",
+    "scroll": 753,
+    "width": 768
+  },
+  {
+    "actionRight": 772.8125,
+    "actions": [
+      {
+        "display": "flex",
+        "width": 148
+      },
+      {
+        "display": "flex",
+        "width": 148
+      }
+    ],
+    "client": 805,
+    "lang": "it",
+    "logoHeight": 43,
+    "logoWidth": 147,
+    "newsletterScroll": 805,
+    "newsletterWidth": 805,
+    "page": "home",
+    "scroll": 805,
+    "width": 820
+  },
+  {
+    "actionRight": 1213.453125,
+    "actions": [
+      {
+        "display": "flex",
+        "width": 148
+      },
+      {
+        "display": "flex",
+        "width": 148
+      }
+    ],
+    "client": 1264,
+    "lang": "it",
+    "logoHeight": 43,
+    "logoWidth": 147,
+    "newsletterScroll": 1264,
+    "newsletterWidth": 1264,
+    "page": "home",
+    "scroll": 1264,
+    "width": 1279
+  },
+  {
+    "actionRight": 1214.40625,
+    "actions": [
+      {
+        "display": "flex",
+        "width": 148
+      },
+      {
+        "display": "flex",
+        "width": 148
+      }
+    ],
+    "client": 1265,
+    "lang": "it",
+    "logoHeight": 43,
+    "logoWidth": 147,
+    "newsletterScroll": 1265,
+    "newsletterWidth": 1265,
+    "page": "home",
+    "scroll": 1265,
+    "width": 1280
+  },
+  {
+    "actionRight": 1368,
+    "actions": [
+      {
+        "display": "flex",
+        "width": 148
+      },
+      {
+        "display": "flex",
+        "width": 148
+      }
+    ],
+    "client": 1425,
+    "lang": "it",
+    "logoHeight": 43,
+    "logoWidth": 147,
+    "newsletterScroll": 1425,
+    "newsletterWidth": 1425,
+    "page": "home",
+    "scroll": 1425,
+    "width": 1440
+  },
+  {
+    "actionRight": 1569.609375,
+    "actions": [
+      {
+        "display": "flex",
+        "width": 148
+      },
+      {
+        "display": "flex",
+        "width": 148
+      }
+    ],
+    "client": 1635,
+    "lang": "it",
+    "logoHeight": 43,
+    "logoWidth": 147,
+    "newsletterScroll": 1635,
+    "newsletterWidth": 1635,
+    "page": "home",
+    "scroll": 1635,
+    "width": 1650
+  },
+  {
+    "actionRight": 289,
+    "actions": [
+      {
+        "display": "none",
+        "width": 0
+      },
+      {
+        "display": "flex",
+        "width": 98.46875
+      }
+    ],
+    "client": 305,
+    "lang": "pt",
+    "logoHeight": 34.515625,
+    "logoWidth": 119.078125,
+    "newsletterScroll": 305,
+    "newsletterWidth": 305,
+    "page": "home",
+    "scroll": 305,
+    "width": 320
+  },
+  {
+    "actionRight": 355,
+    "actions": [
+      {
+        "display": "none",
+        "width": 0
+      },
+      {
+        "display": "flex",
+        "width": 102.46875
+      }
+    ],
+    "client": 375,
+    "lang": "pt",
+    "logoHeight": 41.15625,
+    "logoWidth": 142,
+    "newsletterScroll": 375,
+    "newsletterWidth": 375,
+    "page": "home",
+    "scroll": 375,
+    "width": 390
+  },
+  {
+    "actionRight": 722.890625,
+    "actions": [
+      {
+        "display": "flex",
+        "width": 148
+      },
+      {
+        "display": "flex",
+        "width": 148
+      }
+    ],
+    "client": 753,
+    "lang": "pt",
+    "logoHeight": 43,
+    "logoWidth": 147,
+    "newsletterScroll": 753,
+    "newsletterWidth": 753,
+    "page": "home",
+    "scroll": 753,
+    "width": 768
+  },
+  {
+    "actionRight": 772.8125,
+    "actions": [
+      {
+        "display": "flex",
+        "width": 148
+      },
+      {
+        "display": "flex",
+        "width": 148
+      }
+    ],
+    "client": 805,
+    "lang": "pt",
+    "logoHeight": 43,
+    "logoWidth": 147,
+    "newsletterScroll": 805,
+    "newsletterWidth": 805,
+    "page": "home",
+    "scroll": 805,
+    "width": 820
+  },
+  {
+    "actionRight": 1213.453125,
+    "actions": [
+      {
+        "display": "flex",
+        "width": 148
+      },
+      {
+        "display": "flex",
+        "width": 148
+      }
+    ],
+    "client": 1264,
+    "lang": "pt",
+    "logoHeight": 43,
+    "logoWidth": 147,
+    "newsletterScroll": 1264,
+    "newsletterWidth": 1264,
+    "page": "home",
+    "scroll": 1264,
+    "width": 1279
+  },
+  {
+    "actionRight": 1214.40625,
+    "actions": [
+      {
+        "display": "flex",
+        "width": 148
+      },
+      {
+        "display": "flex",
+        "width": 148
+      }
+    ],
+    "client": 1265,
+    "lang": "pt",
+    "logoHeight": 43,
+    "logoWidth": 147,
+    "newsletterScroll": 1265,
+    "newsletterWidth": 1265,
+    "page": "home",
+    "scroll": 1265,
+    "width": 1280
+  },
+  {
+    "actionRight": 1368,
+    "actions": [
+      {
+        "display": "flex",
+        "width": 148
+      },
+      {
+        "display": "flex",
+        "width": 148
+      }
+    ],
+    "client": 1425,
+    "lang": "pt",
+    "logoHeight": 43,
+    "logoWidth": 147,
+    "newsletterScroll": 1425,
+    "newsletterWidth": 1425,
+    "page": "home",
+    "scroll": 1425,
+    "width": 1440
+  },
+  {
+    "actionRight": 1569.609375,
+    "actions": [
+      {
+        "display": "flex",
+        "width": 148
+      },
+      {
+        "display": "flex",
+        "width": 148
+      }
+    ],
+    "client": 1635,
+    "lang": "pt",
+    "logoHeight": 43,
+    "logoWidth": 147,
+    "newsletterScroll": 1635,
+    "newsletterWidth": 1635,
+    "page": "home",
+    "scroll": 1635,
+    "width": 1650
+  }
+]

@@ -1,0 +1,70 @@
+{
+  "title": "Tres formas de descubrir AXIGNAL",
+  "question": "Elige la composición para desarrollar la web. Las tres incluyen empresas, agencias y consultoras, las diez familias y casos de uso por industria.",
+  "options": [
+    {
+      "id": "evidence",
+      "label": "Del dato a la decisión",
+      "kicker": "THE ROLL",
+      "thesis": "La evidencia se convierte en contexto delante de ti.",
+      "viewport": "Titular a la izquierda; una gran lectura de fuentes, familias y preguntas ocupa el centro y la derecha.",
+      "risk": "Exige una demostración muy legible para que el método no eclipse el beneficio.",
+      "palette": [
+        "#354F98",
+        "#F7F8FC",
+        "#17243F",
+        "#FFFFFF"
+      ],
+      "materials": [
+        "Fraunces y Manrope",
+        "ilustración propia y notas Bic"
+      ],
+      "html": "C:\\Users\\usuario\\.codex-clean\\worktrees\\admin-governance-ux\\Axignal\\.impeccable\\mocks\\decision\\evidence.html",
+      "comp": "C:\\Users\\usuario\\.codex-clean\\worktrees\\admin-governance-ux\\Axignal\\.impeccable\\mocks\\decision\\evidence.png"
+    },
+    {
+      "id": "atlas",
+      "label": "El mundo de tu empresa",
+      "thesis": "Un atlas de capacidades conecta las familias de datos con cada industria.",
+      "viewport": "Una gran composición azul reúne la organización, sus preguntas y diez familias; los sectores abren el recorrido.",
+      "risk": "La cartografía necesita etiquetas claras para no parecer un grafo técnico.",
+      "palette": [
+        "#354F98",
+        "#F7F8FC",
+        "#17243F",
+        "#FFFFFF"
+      ],
+      "materials": [
+        "Fraunces y Manrope",
+        "ilustración propia y notas Bic"
+      ],
+      "html": "C:\\Users\\usuario\\.codex-clean\\worktrees\\admin-governance-ux\\Axignal\\.impeccable\\mocks\\decision\\atlas.html",
+      "comp": "C:\\Users\\usuario\\.codex-clean\\worktrees\\admin-governance-ux\\Axignal\\.impeccable\\mocks\\decision\\atlas.png"
+    },
+    {
+      "id": "reading",
+      "label": "Lo que merece tu atención",
+      "thesis": "Una lectura editorial permite explorar qué cambia, por qué importa y dónde comprobarlo.",
+      "viewport": "Un titular amplio precede una lectura económica abierta; las familias y los sectores funcionan como índice.",
+      "risk": "La explicación debe mantener el ritmo y evitar una página excesivamente larga.",
+      "palette": [
+        "#354F98",
+        "#F7F8FC",
+        "#17243F",
+        "#FFFFFF"
+      ],
+      "materials": [
+        "Fraunces y Manrope",
+        "ilustración propia y notas Bic"
+      ],
+      "html": "C:\\Users\\usuario\\.codex-clean\\worktrees\\admin-governance-ux\\Axignal\\.impeccable\\mocks\\decision\\reading.html",
+      "comp": "C:\\Users\\usuario\\.codex-clean\\worktrees\\admin-governance-ux\\Axignal\\.impeccable\\mocks\\decision\\reading.png"
+    }
+  ],
+  "reroll": true,
+  "steer": true,
+  "buildPath": {
+    "value": "code",
+    "toggle": true
+  }
+}

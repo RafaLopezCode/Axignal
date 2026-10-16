@@ -1,0 +1,717 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-16T12:50:02.2625669Z",
+  "title": "Design System: AXIGNAL public landing ecosystem",
+  "extensions": {
+    "scope": {
+      "authority": "MASTER > Constitution > accepted ADRs/contracts > feature/design authority > this scoped implementation record",
+      "excluded": [
+        "Private subscriber app",
+        "Admin",
+        "AXENT"
+      ],
+      "appliesTo": "PUBLIC LANDING ECOSYSTEM ONLY, including public Knowledge readings and newsletter channel",
+      "sources": [
+        "apps/web/experience/components/marketing.css",
+        "apps/web/experience/components/landing.tsx",
+        "apps/web/experience/components/marketing-shared.tsx",
+        "apps/web/experience/app/globals.css",
+        "apps/web/experience/app/typography.css",
+        "apps/web/experience/app/public.css",
+        "apps/web/experience/app/funnel.css",
+        "apps/web/experience/app/public-layout.css",
+        "apps/web/experience/components/acquisition.tsx",
+        "apps/web/experience/components/weekly-brief-channel.tsx",
+        "apps/web/experience/lib/marketing-newsletter.ts",
+        "apps/web/experience/public/marketing/industries.webp.json",
+        "apps/web/experience/components/public-brand-vector.tsx",
+        "apps/web/experience/public/brand/logo-light.svg"
+      ],
+      "review": "CLI hero/history OPEN; automatic phases unclosed; manual real-app review authorized; final human visual acceptance PENDING."
+    },
+    "colorMeta": {
+      "marketing-blue": {
+        "role": "primary",
+        "tonalRamp": [
+          "oklch(15% 0.1232 266.68)",
+          "oklch(26.43% 0.1232 266.68)",
+          "oklch(37.86% 0.1232 266.68)",
+          "oklch(49.29% 0.1232 266.68)",
+          "oklch(60.71% 0.1232 266.68)",
+          "oklch(72.14% 0.1232 266.68)",
+          "oklch(83.57% 0.1232 266.68)",
+          "oklch(95% 0.1232 266.68)"
+        ],
+        "displayName": "marketing blue"
+      },
+      "marketing-action": {
+        "role": "primary",
+        "tonalRamp": [
+          "oklch(15% 0.1498 263.64)",
+          "oklch(26.43% 0.1498 263.64)",
+          "oklch(37.86% 0.1498 263.64)",
+          "oklch(49.29% 0.1498 263.64)",
+          "oklch(60.71% 0.1498 263.64)",
+          "oklch(72.14% 0.1498 263.64)",
+          "oklch(83.57% 0.1498 263.64)",
+          "oklch(95% 0.1498 263.64)"
+        ],
+        "displayName": "marketing action"
+      },
+      "marketing-ink": {
+        "role": "neutral",
+        "tonalRamp": [
+          "oklch(15% 0.0338 265.53)",
+          "oklch(26.43% 0.0338 265.53)",
+          "oklch(37.86% 0.0338 265.53)",
+          "oklch(49.29% 0.0338 265.53)",
+          "oklch(60.71% 0.0338 265.53)",
+          "oklch(72.14% 0.0338 265.53)",
+          "oklch(83.57% 0.0338 265.53)",
+          "oklch(95% 0.0338 265.53)"
+        ],
+        "displayName": "marketing ink"
+      },
+      "marketing-muted": {
+        "role": "neutral",
+        "tonalRamp": [
+          "oklch(15% 0.0458 261.32)",
+          "oklch(26.43% 0.0458 261.32)",
+          "oklch(37.86% 0.0458 261.32)",
+          "oklch(49.29% 0.0458 261.32)",
+          "oklch(60.71% 0.0458 261.32)",
+          "oklch(72.14% 0.0458 261.32)",
+          "oklch(83.57% 0.0458 261.32)",
+          "oklch(95% 0.0458 261.32)"
+        ],
+        "displayName": "marketing muted"
+      },
+      "marketing-paper": {
+        "role": "neutral",
+        "tonalRamp": [
+          "oklch(15% 0.0034 247.86)",
+          "oklch(26.43% 0.0034 247.86)",
+          "oklch(37.86% 0.0034 247.86)",
+          "oklch(49.29% 0.0034 247.86)",
+          "oklch(60.71% 0.0034 247.86)",
+          "oklch(72.14% 0.0034 247.86)",
+          "oklch(83.57% 0.0034 247.86)",
+          "oklch(95% 0.0034 247.86)"
+        ],
+        "displayName": "marketing paper"
+      },
+      "marketing-line": {
+        "role": "neutral",
+        "tonalRamp": [
+          "oklch(15% 0.0209 261.77)",
+          "oklch(26.43% 0.0209 261.77)",
+          "oklch(37.86% 0.0209 261.77)",
+          "oklch(49.29% 0.0209 261.77)",
+          "oklch(60.71% 0.0209 261.77)",
+          "oklch(72.14% 0.0209 261.77)",
+          "oklch(83.57% 0.0209 261.77)",
+          "oklch(95% 0.0209 261.77)"
+        ],
+        "displayName": "marketing line"
+      },
+      "marketing-tint": {
+        "role": "neutral",
+        "tonalRamp": [
+          "oklch(15% 0.0166 259.42)",
+          "oklch(26.43% 0.0166 259.42)",
+          "oklch(37.86% 0.0166 259.42)",
+          "oklch(49.29% 0.0166 259.42)",
+          "oklch(60.71% 0.0166 259.42)",
+          "oklch(72.14% 0.0166 259.42)",
+          "oklch(83.57% 0.0166 259.42)",
+          "oklch(95% 0.0166 259.42)"
+        ],
+        "displayName": "marketing tint"
+      },
+      "action-hover": {
+        "role": "primary",
+        "tonalRamp": [
+          "oklch(15% 0.1115 266.87)",
+          "oklch(26.43% 0.1115 266.87)",
+          "oklch(37.86% 0.1115 266.87)",
+          "oklch(49.29% 0.1115 266.87)",
+          "oklch(60.71% 0.1115 266.87)",
+          "oklch(72.14% 0.1115 266.87)",
+          "oklch(83.57% 0.1115 266.87)",
+          "oklch(95% 0.1115 266.87)"
+        ],
+        "displayName": "action hover"
+      },
+      "button-secondary": {
+        "role": "neutral",
+        "tonalRamp": [
+          "oklch(15% 0.0029 264.54)",
+          "oklch(26.43% 0.0029 264.54)",
+          "oklch(37.86% 0.0029 264.54)",
+          "oklch(49.29% 0.0029 264.54)",
+          "oklch(60.71% 0.0029 264.54)",
+          "oklch(72.14% 0.0029 264.54)",
+          "oklch(83.57% 0.0029 264.54)",
+          "oklch(95% 0.0029 264.54)"
+        ],
+        "displayName": "button secondary"
+      },
+      "button-secondary-line": {
+        "role": "neutral",
+        "tonalRamp": [
+          "oklch(15% 0.0408 263.63)",
+          "oklch(26.43% 0.0408 263.63)",
+          "oklch(37.86% 0.0408 263.63)",
+          "oklch(49.29% 0.0408 263.63)",
+          "oklch(60.71% 0.0408 263.63)",
+          "oklch(72.14% 0.0408 263.63)",
+          "oklch(83.57% 0.0408 263.63)",
+          "oklch(95% 0.0408 263.63)"
+        ],
+        "displayName": "button secondary line"
+      },
+      "annotation-ink": {
+        "role": "primary",
+        "tonalRamp": [
+          "oklch(15% 0.1225 261.59)",
+          "oklch(26.43% 0.1225 261.59)",
+          "oklch(37.86% 0.1225 261.59)",
+          "oklch(49.29% 0.1225 261.59)",
+          "oklch(60.71% 0.1225 261.59)",
+          "oklch(72.14% 0.1225 261.59)",
+          "oklch(83.57% 0.1225 261.59)",
+          "oklch(95% 0.1225 261.59)"
+        ],
+        "displayName": "annotation ink"
+      },
+      "surface-white": {
+        "role": "neutral",
+        "tonalRamp": [
+          "oklch(15% 0.0000 89.88)",
+          "oklch(26.43% 0.0000 89.88)",
+          "oklch(37.86% 0.0000 89.88)",
+          "oklch(49.29% 0.0000 89.88)",
+          "oklch(60.71% 0.0000 89.88)",
+          "oklch(72.14% 0.0000 89.88)",
+          "oklch(83.57% 0.0000 89.88)",
+          "oklch(95% 0.0000 89.88)"
+        ],
+        "displayName": "surface white"
+      },
+      "pricing-paper": {
+        "role": "neutral",
+        "tonalRamp": [
+          "oklch(15% 0.0132 262.38)",
+          "oklch(26.43% 0.0132 262.38)",
+          "oklch(37.86% 0.0132 262.38)",
+          "oklch(49.29% 0.0132 262.38)",
+          "oklch(60.71% 0.0132 262.38)",
+          "oklch(72.14% 0.0132 262.38)",
+          "oklch(83.57% 0.0132 262.38)",
+          "oklch(95% 0.0132 262.38)"
+        ],
+        "displayName": "pricing paper"
+      },
+      "evidence-paper": {
+        "role": "neutral",
+        "tonalRamp": [
+          "oklch(15% 0.0120 259.82)",
+          "oklch(26.43% 0.0120 259.82)",
+          "oklch(37.86% 0.0120 259.82)",
+          "oklch(49.29% 0.0120 259.82)",
+          "oklch(60.71% 0.0120 259.82)",
+          "oklch(72.14% 0.0120 259.82)",
+          "oklch(83.57% 0.0120 259.82)",
+          "oklch(95% 0.0120 259.82)"
+        ],
+        "displayName": "evidence paper"
+      },
+      "pricing-rule": {
+        "role": "neutral",
+        "tonalRamp": [
+          "oklch(15% 0.0324 260.03)",
+          "oklch(26.43% 0.0324 260.03)",
+          "oklch(37.86% 0.0324 260.03)",
+          "oklch(49.29% 0.0324 260.03)",
+          "oklch(60.71% 0.0324 260.03)",
+          "oklch(72.14% 0.0324 260.03)",
+          "oklch(83.57% 0.0324 260.03)",
+          "oklch(95% 0.0324 260.03)"
+        ],
+        "displayName": "pricing rule"
+      }
+    },
+    "tonalRampPolicy": "Display-only synthesized OKLCH ramps: source hue/chroma, eight lightness steps from 15% to 95%; not implemented CSS tokens or approved expanded palette. Frontmatter remains normative.",
+    "typographyMeta": {
+      "headline": {
+        "displayName": "Reading headline",
+        "purpose": "Recurring public section headings."
+      },
+      "display": {
+        "displayName": "Public hero",
+        "purpose": "Selected home hero; mobile and localized overrides stay in source."
+      },
+      "annotation": {
+        "displayName": "Bic observation note",
+        "purpose": "Semantic handwritten folio annotations only."
+      },
+      "advisory-title": {
+        "purpose": "Separate service emphasis: white Fraunces on canonical blue.",
+        "displayName": "Human advisory title"
+      },
+      "advisory-price": {
+        "purpose": "Prominent existing service amount, retaining governing commercial content.",
+        "displayName": "Human advisory price"
+      },
+      "folio-label": {
+        "displayName": "Folio column headline",
+        "purpose": "Centered HTML headline within each newspaper paper plane, scoped to the hero."
+      },
+      "folio-right-localized": {
+        "displayName": "Localized right folio headline",
+        "purpose": "Existing EN/DE/FR/IT copy fitted in the right newspaper column without semantic changes."
+      }
+    },
+    "shadows": [
+      {
+        "purpose": "Inherited fixed public back-to-top utility only; not a reading-card shadow.",
+        "value": "0 8px 22px -12px rgb(20 28 58 / 40%)",
+        "name": "public-back-top"
+      }
+    ],
+    "motion": [
+      {
+        "name": "public-action-color",
+        "value": "background-color 0.18s ease, color 0.18s ease",
+        "purpose": "Marketing action hover."
+      },
+      {
+        "name": "disclosure-plus",
+        "value": "transform 180ms ease-out",
+        "purpose": "45deg open-state rotation."
+      },
+      {
+        "name": "reduced-motion",
+        "value": "transition: none; animation: none; scroll-behavior: auto",
+        "purpose": "Scoped fallback; OS preference toggle not tested."
+      }
+    ],
+    "breakpoints": [
+      {
+        "value": "380px",
+        "name": "compact-header"
+      },
+      {
+        "value": "760px",
+        "name": "mobile"
+      },
+      {
+        "value": "761px",
+        "name": "medium-hero-start"
+      },
+      {
+        "value": "800px",
+        "name": "shared-header-actions"
+      },
+      {
+        "value": "1279px",
+        "name": "reading-flow-and-navigation"
+      },
+      {
+        "value": "1280px",
+        "name": "desktop-composition"
+      },
+      {
+        "value": "1439px",
+        "name": "spanish-compact-desktop-end"
+      },
+      {
+        "value": "1700px",
+        "name": "wide-hero"
+      },
+      {
+        "value": "480px",
+        "name": "narrow-annotations"
+      },
+      {
+        "value": "1519px",
+        "name": "compact-desktop-header-end"
+      }
+    ],
+    "focus": {
+      "input": "outline: 3px solid var(--marketing-blue); outline-offset: 4px",
+      "note": "Observed marketing rules; existing selector specificity/cascade remains authoritative.",
+      "interactive": "outline: 3px solid var(--marketing-blue); outline-offset: 5px",
+      "advisoryAction": "outline-color: #fff; inherits 3px outline and 5px offset"
+    },
+    "snippetPolicy": "Appearance excerpts use ds- class scoping and local token fallbacks because marketing variables are scoped to .marketing-site, not :root. Existing globally served font faces are inherited; no font/network dependency is added. No framework behavior, real pricing logic or data is fabricated.",
+    "responsiveOverrides": [
+      {
+        "value": "normal-flow copy and art; annotations below; no folio labels/connectors",
+        "condition": "max-width: 1279px",
+        "target": "hero reading flow and collapsed public navigation"
+      },
+      {
+        "value": "height: clamp(330px, 43vw, 480px)",
+        "condition": "min-width: 761px and max-width: 1279px",
+        "target": "medium hero art"
+      },
+      {
+        "value": "font-size: clamp(39px, 4vw, 76px)",
+        "condition": "min-width: 1280px",
+        "target": "French/Italian desktop hero"
+      },
+      {
+        "value": "font-size: 4.9vw",
+        "condition": "min-width: 1280px and max-width: 1439px",
+        "target": "Spanish compact desktop hero"
+      },
+      {
+        "value": "one column; padding: 30px 24px; price: clamp(38px, 10vw, 52px); CTA width: 100%",
+        "condition": "max-width: 760px",
+        "target": "human advisory"
+      },
+      {
+        "condition": "max-width: 480px",
+        "value": "three stacked rows; each row columns minmax(0, 1fr) minmax(0, 1.5fr); gap: 18px; column-gap: 16px",
+        "target": "narrow annotations"
+      },
+      {
+        "condition": "min-width: 1280px and max-width: 1519px",
+        "value": "grid-template-columns: 20% minmax(0, 1fr) auto; column-gap: 1.5%; nav gap: 24px; action gap: 14px",
+        "target": "compact desktop header"
+      },
+      {
+        "condition": "min-width: 761px",
+        "value": "header and footer inline canonical SVG default: 147px by 43px, shared variables; login/signup width and min-width: 148px; inline padding: 18px; login transparent with 1px solid #354f98 border",
+        "target": "desktop/tablet logo and auth actions"
+      },
+      {
+        "condition": "base CSS; mobile margin reset at max-width: 760px",
+        "value": "margin-top: 36px",
+        "target": "family strip"
+      },
+      {
+        "condition": "max-width: 760px",
+        "value": "one-column section; gap: 32px; white panel/form padding: 26px 22px",
+        "target": "newsletter channel"
+      }
+    ],
+    "newsletterState": {
+      "retry": "Rechecks availability, never registers a request by itself",
+      "consent": "Existing separately optional revocable newsletter consent; request is not guaranteed delivery",
+      "source": "Existing WeeklyBriefChannel AO-15/AO-16; variant marketing",
+      "states": [
+        "checking",
+        "paused when enabled === false",
+        "unavailable when null after checking",
+        "form only when enabled === true"
+      ],
+      "runtimeEvidence": "Parent reports runtime 18182 enabled:false. This documenter inspected source only and does not independently claim a runtime check."
+    },
+    "publicArtwork": {
+      "material": "Ivory paper, blue-gray engraving/ink wash; approved hero and previous scene references",
+      "display": "Full scene, width:100%, height:auto; contain where specified",
+      "meaning": "Conceptual illustration, never observed facilities/customer evidence",
+      "provenance": "apps/web/experience/public/marketing/industries.webp.json",
+      "path": "/marketing/industries.webp"
+    },
+    "publicReadingShell": {
+      "class": "marketing-reading",
+      "boundary": "Public CSS only; root layout unchanged",
+      "component": "MarketingShell",
+      "routes": "Existing localeRoutes supplied by public acquisition hub/articles",
+      "localizedCards": "min-width: 0; overflow-wrap: anywhere; hyphens: auto",
+      "verification": "Primary reports repaired German card overflow at 320px and final geometry 12/12 without failures; documenter inspected source only."
+    },
+    "publicBrand": {
+      "source": "D:/AXIGNAL/LOGOS/Logo_Claro.svg",
+      "sizes": {
+        "footer": "147px × 43px default; shared --marketing-brand-width/--marketing-brand-height; 142px/auto at max-width760px; 124px/auto at max-width380px",
+        "header": "147px × 43px default; shared --marketing-brand-width/--marketing-brand-height; 142px/auto at max-width760px; 124px/auto at max-width380px"
+      },
+      "accessibility": "SVG aria-hidden and nonfocusable inside named brand link",
+      "rendering": "Inline original SVG: two paths, original groups/transforms/fills, viewBox 0 0 3011 873. No PNG/JPG or raster tracing.",
+      "boundary": "Private ui.tsx/Brand and source SVG unchanged",
+      "distributedSource": "apps/web/experience/public/brand/logo-light.svg",
+      "validation": "Documenter independently verified canonical/distributed source hash and source use in preceding pass; current refresh inspected shared dimensions and default component use. Primary reports passing canonical-parity/no-raster tests; no test rerun by documenter.",
+      "component": "PublicBrandVector",
+      "consumers": [
+        "PublicHeader catalog branch",
+        "MarketingFooter"
+      ],
+      "sha256": "3df29aa09f405b6a5de898841c90c7775909dfbdf344e17a5b6dc73a39c4e8b4"
+    },
+    "publicHeaderLogin": {
+      "border": "1px solid var(--marketing-blue)",
+      "meaning": "Existing sign-in action; geometry matches signup footprint, copy/destination unchanged",
+      "width": "148px",
+      "background": "transparent"
+    },
+    "folioHeadlines": {
+      "typographyRef": "folio-label",
+      "review": "Confirmed capture and geometry evidence is available in .impeccable/review/final/hero-localization; documenter verified records and capture hashes. Final human visual acceptance PENDING; historical CLI OPEN.",
+      "scope": "Surface-specific decorative newspaper headline placement, not global layout",
+      "alignment": "text-align:center; transform-origin:center; translate(-50%, -50%) before rotation",
+      "columns": [
+        {
+          "name": "offer",
+          "left": "46.5%",
+          "width": "13.8%",
+          "rotation": "10deg",
+          "top": "51.6%"
+        },
+        {
+          "name": "audience",
+          "left": "63.65%",
+          "width": "15.6%",
+          "rotation": "4.5deg",
+          "top": "56.9%"
+        },
+        {
+          "name": "understood",
+          "left": "83.9%",
+          "width": "18%",
+          "rotation": "-8.5deg",
+          "top": "54.5%"
+        }
+      ],
+      "rightLocales": [
+        "en",
+        "de",
+        "fr",
+        "it"
+      ],
+      "rightLocalizedTypographyRef": "folio-right-localized",
+      "measuredMaster": {
+        "height": 814,
+        "width": 1931,
+        "centers": [
+          [
+            898,
+            420
+          ],
+          [
+            1229,
+            463
+          ],
+          [
+            1620,
+            444
+          ]
+        ],
+        "purpose": "Real newspaper paper-band centers; CSS percentages are rounded source values."
+      }
+    },
+    "publicLocaleSelect": {
+      "boundary": "Public marketing only; private components unchanged",
+      "paddingInline": "8px",
+      "purpose": "Full native locale names and arrow, including Português",
+      "minWidth": "112px",
+      "width": "112px",
+      "label": "flex-shrink: 0",
+      "selector": ".marketing-site .locale-route-selector select"
+    },
+    "finalLocalizationEvidence": {
+      "directory": ".impeccable/review/final/hero-localization",
+      "documenterVerification": "Persisted rows parsed; 24 rows/six locales/four widths, no overflow/header overlap, equal two-path/no-image logo geometry; all 11 capture file hashes matched. No browser run or new application gate.",
+      "packetValidation": "Packet reports 349 frontend tests, production build, TypeScript, six HTTP contracts, Architecture Guard and eight Governance categories passing; no rerun by documenter.",
+      "records": [
+        "packet.md",
+        "captures.json",
+        "geometry.json"
+      ],
+      "widths": [
+        320,
+        390,
+        1280,
+        1650
+      ],
+      "locales": [
+        "es",
+        "en",
+        "fr",
+        "de",
+        "it",
+        "pt"
+      ],
+      "geometryRows": 24,
+      "hashedCaptures": 11,
+      "acceptance": "Final human visual acceptance PENDING; historical CLI OPEN; independent final reviewer verdict belongs to finish-verdict.md."
+    },
+    "publicDelivery": {
+      "fonts": [
+        {
+          "bytes": 53800,
+          "family": "Manrope",
+          "format": "WOFF2",
+          "coverage": "Full original cmap/metrics/variable axes; original TTF/license retained"
+        },
+        {
+          "bytes": 173748,
+          "family": "Bic Notes",
+          "format": "WOFF2",
+          "coverage": "Full original cmap/metrics/variable axes; original TTF/license retained"
+        }
+      ],
+      "preloads": [
+        "Fraunces",
+        "Manrope"
+      ],
+      "cache": "One year immutable only for ten explicitly allowlisted hashed image/font URLs; no authenticated page cache change",
+      "fontManifest": "specs/077-public-landing-ecosystem/performance/font-delivery.json",
+      "art": "Six small hashed WebP variants (640/960/1440 for each of two approved scenes), two byte-identical hashed full plates; same frames/artwork",
+      "links": "Public Link prefetch:false; same routes on demand",
+      "measurementLimit": "Resource delivery and contextual localhost inventory only; no field LCP/INP/CLS, user-performance or ranking claim",
+      "heroText": "No arrival animation, blur or vertical translation; crisp first paint",
+      "assetManifest": "specs/077-public-landing-ecosystem/performance/asset-delivery.json"
+    },
+    "advisoryCommercialContext": {
+      "boundary": "Commercial context for sample accuracy, never a visual token or new payment action by documenter",
+      "stripeEvidence": "specs/077-public-landing-ecosystem/stripe-advisory-verification.json; primary verified live recurring EUR monthly exclusive-tax catalogue",
+      "tax": "Applicable VAT additional; existing launch/scope conditions",
+      "monthlyMinorEUR": 29500,
+      "stripeProduct": "prod_VS4WfT6KAF46Gz",
+      "stripePrice": "price_1URANP8feyjV8PemhSZWfxQW",
+      "authority": "Explicit human amendment to MASTER §27.4/27.5",
+      "selfService": "995/495 minor EUR unchanged"
+    },
+    "releaseEvidence": {
+      "releaseAuthority": "Human explicitly authorized commit/push/deploy after optimization; earlier no-release notes are historical. Execution not inferred from authorization.",
+      "hashedCaptures": 7,
+      "geometryRows": 12,
+      "acceptance": "Final aesthetic acceptance PENDING; historical Impeccable CLI OPEN; no automatic checkpoint pass inferred",
+      "validation": "Packet reports 352 frontend, 2461 Python passed/7 skipped and deterministic gates passed; no rerun by documenter.",
+      "locales": 6,
+      "records": [
+        "packet.md",
+        "captures.json",
+        "geometry.json"
+      ],
+      "widths": [
+        390,
+        1280
+      ],
+      "directory": ".impeccable/review/final/release"
+    }
+  },
+  "components": [
+    {
+      "css": ".ds-button{display:inline-flex;align-items:center;justify-content:center;gap:20px;min-height:58px;padding:15px 24px;background:var(--marketing-action,#21479f);color:#fff;border:1px solid var(--marketing-action,#21479f);border-radius:12px;font:600 15px/1.5 Manrope,sans-serif;text-decoration:none;transition:background-color .18s ease,color .18s ease}.ds-button:hover{background:#293f7f;color:#fff}.ds-button:focus-visible{outline:3px solid var(--marketing-blue,#354f98);outline-offset:5px}@media(prefers-reduced-motion:reduce){.ds-button{transition:none}}",
+      "name": "Primary public action",
+      "description": "Public CTA appearance; real routing belongs to the application.",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "html": "<a class=\"ds-button\" href=\"#example\">Ver ejemplo</a>"
+    },
+    {
+      "css": ".ds-button{display:inline-flex;align-items:center;justify-content:center;gap:20px;min-height:58px;padding:15px 24px;background:var(--marketing-action,#21479f);color:#fff;border:1px solid var(--marketing-action,#21479f);border-radius:12px;font:600 15px/1.5 Manrope,sans-serif;text-decoration:none;transition:background-color .18s ease,color .18s ease}.ds-button:hover{background:#293f7f;color:#fff}.ds-button:focus-visible{outline:3px solid var(--marketing-blue,#354f98);outline-offset:5px}@media(prefers-reduced-motion:reduce){.ds-button{transition:none}}.ds-secondary{background:#fbfcfe;border-color:#bdcbe6;color:var(--marketing-blue,#354f98)}.ds-secondary:hover{background:var(--marketing-tint,#eaf1fc);color:var(--marketing-blue,#354f98)}",
+      "name": "Secondary public action",
+      "description": "Quiet alternate action.",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "html": "<a class=\"ds-button ds-secondary\" href=\"#how\">Cómo funciona</a>"
+    },
+    {
+      "name": "Public text navigation",
+      "css": ".ds-nav{display:flex;flex-direction:column;align-items:start;gap:10px;font-family:Manrope,Arial,sans-serif}.ds-nav a{display:inline-flex;align-items:center;min-height:34px;color:var(--marketing-blue,#354f98);font-size:14px;text-decoration:none}.ds-nav a:hover{text-decoration:underline;text-underline-offset:4px}.ds-nav a:focus-visible{outline:3px solid var(--marketing-blue,#354f98);outline-offset:5px}",
+      "html": "<nav class=\"ds-nav\" aria-label=\"Explorar\"><a href=\"#data\">Qué observamos</a><a href=\"#industries\">Sectores</a></nav>",
+      "description": "Text link treatment from the public footer; route labels remain semantic.",
+      "kind": "nav"
+    },
+    {
+      "name": "Pricing range",
+      "css": ".ds-range{display:block;color:var(--marketing-ink,#101727);font:600 15px/1.65 Manrope,Arial,sans-serif}.ds-range input{display:block;width:100%;height:36px;margin:20px 0 12px;accent-color:var(--marketing-blue,#354f98);cursor:pointer}.ds-range input:focus-visible{outline:3px solid var(--marketing-blue,#354f98);outline-offset:4px}",
+      "html": "<label class=\"ds-range\">Organizaciones observadas<input type=\"range\" min=\"1\" max=\"100\" value=\"5\" aria-label=\"Organizaciones observadas\"></label>",
+      "description": "Native labeled range; this preview does not run the governed pricing calculator.",
+      "kind": "input"
+    },
+    {
+      "css": ".ds-evidence{background:#edf2fa;padding:26px 30px;border-radius:12px;color:var(--marketing-ink,#101727);font-family:Manrope,Arial,sans-serif}.ds-evidence h3{font-size:15px;font-weight:600;line-height:1.65;margin:0 0 8px}.ds-evidence p{font-size:15px;line-height:1.8;color:var(--marketing-muted,#52617b);margin:0}",
+      "name": "Evidence explanation",
+      "description": "Quiet evidence/limits container from the family catalog; preview text is a label only.",
+      "kind": "card",
+      "refersTo": "evidence-panel",
+      "html": "<section class=\"ds-evidence\"><h3>Evidencia y límites</h3><p>Tipos de evidencia y límites de la lectura.</p></section>"
+    },
+    {
+      "name": "Industry disclosure",
+      "css": ".ds-industry{border-block:1px solid var(--marketing-line,#dce4f2);color:var(--marketing-ink,#101727)}.ds-industry summary{list-style:none;display:flex;align-items:center;justify-content:space-between;gap:25px;cursor:pointer;padding:26px 0;font:400 clamp(25px,2.8vw,39px)/1.25 Fraunces,Georgia,serif}.ds-industry summary::-webkit-details-marker{display:none}.ds-industry svg{color:var(--marketing-blue,#354f98);flex-shrink:0;transition:transform 180ms ease-out}.ds-industry[open] svg{transform:rotate(45deg)}.ds-industry p{padding:0 0 32px;margin:0;color:var(--marketing-muted,#52617b);font:400 18px/1.75 Manrope,Arial,sans-serif}.ds-industry summary:focus-visible{outline:3px solid var(--marketing-blue,#354f98);outline-offset:5px}@media(prefers-reduced-motion:reduce){.ds-industry svg{transition:none}}",
+      "html": "<details class=\"ds-industry\"><summary><span>Agencias</span><svg width=\"23\" height=\"23\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M12 5v14M5 12h14\"/></svg></summary><p>Preguntas del sector, evidencia y límites.</p></details>",
+      "description": "Native disclosure and Lucide plus; semantic keyboard behavior works without framework runtime.",
+      "kind": "custom"
+    },
+    {
+      "name": "Folio annotation link",
+      "css": ".ds-annotation{display:block;max-width:18ch;color:var(--marketing-muted,#52617b);text-decoration:none;font:400 clamp(12px,.99vw,16px)/1.45 Manrope,Arial,sans-serif}.ds-annotation strong{display:block;font:500 clamp(22px,1.8vw,29px)/1.1 \"Bic Notes\",cursive;color:#183c80;margin-bottom:6px}.ds-annotation:hover strong{text-decoration:underline;text-underline-offset:4px}.ds-annotation:focus-visible{outline:3px solid var(--marketing-blue,#354f98);outline-offset:5px}",
+      "html": "<a class=\"ds-annotation\" href=\"#value\"><strong>Qué ofreces</strong><span>La propuesta que se puede entender.</span></a>",
+      "description": "Handwritten label with supporting explanation; position and connectors belong to the hero.",
+      "kind": "custom"
+    },
+    {
+      "refersTo": "button-advisory",
+      "css": ".ds-advisory-action-surface{padding:24px;background:var(--marketing-blue,#354f98)}.ds-advisory-action{display:inline-flex;align-items:center;justify-content:center;gap:20px;min-height:58px;padding:15px 24px;background:#fff;color:var(--marketing-blue,#354f98);border:1px solid #fff;border-radius:12px;font:600 15px/1.5 Manrope,sans-serif;text-decoration:none;transition:background-color .18s ease,color .18s ease}.ds-advisory-action:hover{background:var(--marketing-tint,#eaf1fc);color:var(--marketing-blue,#354f98)}.ds-advisory-action:focus-visible{outline:3px solid #fff;outline-offset:5px}@media(max-width:1279px){.ds-advisory-action{min-height:48px;padding:12px 15px;font-size:13px;gap:12px}}@media(max-width:760px){.ds-advisory-action{box-sizing:border-box;width:100%;padding:13px 16px}}@media(prefers-reduced-motion:reduce){.ds-advisory-action{transition:none}}",
+      "html": "<div class=\"ds-advisory-action-surface\"><a class=\"ds-advisory-action\" href=\"/contact\">Hablar del alcance<svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M7 7h10v10M7 17 17 7\"/></svg></a></div>",
+      "name": "Human advisory action",
+      "description": "White action on the canonical-blue separate-service panel, with unchanged contact destination.",
+      "kind": "button"
+    },
+    {
+      "refersTo": "advisory-panel",
+      "css": ".ds-advisory{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);align-items:center;gap:36px 8%;padding:clamp(30px,3.3vw,48px);background:var(--marketing-blue,#354f98);color:#fff;border-radius:16px;font-family:Manrope,Arial,sans-serif}.ds-advisory h3{font:400 clamp(32px,3vw,46px)/1.1 Fraunces,Georgia,serif;letter-spacing:-.025em;color:#fff;margin:0;max-width:17ch;text-wrap:balance}.ds-advisory p{font-size:16px;line-height:1.7;color:#eaf1fc;margin:22px 0 0;max-width:53ch}.ds-advisory-price{display:flex;align-items:baseline;flex-wrap:wrap;gap:8px 12px}.ds-advisory-price strong{font:400 clamp(48px,4.2vw,68px)/1.05 Fraunces,Georgia,serif;letter-spacing:-.025em;white-space:nowrap}.ds-advisory-price span{font-size:15px;color:#eaf1fc}.ds-advisory small{display:block;font-size:12px;line-height:1.6;color:#eaf1fc;margin:14px 0 26px}@media(max-width:760px){.ds-advisory{grid-template-columns:minmax(0,1fr);padding:30px 24px;margin-top:35px}.ds-advisory-price strong{font-size:clamp(38px,10vw,52px)}}",
+      "html": "<aside class=\"ds-advisory\"><div><h3>AXIGNAL con asesoría humana</h3><p>Un servicio humano, aparte: una organización dentro del alcance acordado, cuatro actualizaciones semanales y una revisión estratégica al mes.</p></div><div><div class=\"ds-advisory-price\"><strong>295,00 €</strong><span>mes</span></div><small>Más impuestos aplicables · precio de lanzamiento</small></div></aside>",
+      "name": "Human advisory panel",
+      "description": "Separate service emphasis; current MASTER §27.4 amount plus unchanged launch-price/tax conditions.",
+      "kind": "card"
+    },
+    {
+      "kind": "custom",
+      "name": "Newsletter paused channel",
+      "description": "Appearance excerpt of the actual paused state; retry behavior remains in the real application.",
+      "refersTo": "newsletter-channel",
+      "css": ".ds-newsletter{padding:32px;background:#fff;border-radius:16px;min-width:0;color:var(--marketing-ink,#101727);font-family:Manrope,Arial,sans-serif}.ds-newsletter h3{font:400 28px/1.2 Fraunces,Georgia,serif;margin:0}.ds-newsletter p{font-size:15px;line-height:1.75;color:var(--marketing-muted,#52617b)}.ds-newsletter button{font:inherit;cursor:pointer;border:0;padding:10px 0;background:transparent;color:var(--marketing-blue,#354f98);text-decoration:underline;text-underline-offset:4px}.ds-newsletter button:focus-visible{outline:3px solid var(--marketing-blue,#354f98);outline-offset:5px}@media(max-width:760px){.ds-newsletter{padding:26px 22px}}",
+      "html": "<section class=\"ds-newsletter\"><div role=\"status\" aria-live=\"polite\"><h3>Las solicitudes están pausadas.</h3><p>Puedes volver a comprobarlo o consultar con nosotros. No se ha registrado ninguna solicitud.</p></div><button type=\"button\">Volver a comprobar</button></section>"
+    }
+  ],
+  "narrative": {
+    "donts": [
+      "Don't apply these public composition tokens to the private app, Admin or AXENT.",
+      "Don't turn artwork, surface output or a capability match into observed business truth.",
+      "Don't infer pricing, access, customer results or source coverage from a design example.",
+      "Don't fabricate testimonials, customer counts or outcomes; Landing Contract §13 requires real evidence.",
+      "Don't turn a local layout, decorative annotation or existing kicker into a universal product rule."
+    ],
+    "rules": [
+      {
+        "name": "Public Scope",
+        "section": "colors",
+        "body": "Apply this record only inside the public landing ecosystem. MASTER, Constitution, accepted ADRs and canonical brand/design authorities win on conflict."
+      },
+      {
+        "name": "Annotation Meaning",
+        "section": "typography",
+        "body": "Use Bic handwriting for explanatory observation annotations; retain semantic text links and keep decorative connectors outside the accessibility tree."
+      },
+      {
+        "name": "Flat Reading",
+        "section": "elevation",
+        "body": "Use paper tones, whitespace and rules for public reading sections; the marketing stylesheet adds no card shadows."
+      }
+    ],
+    "keyCharacteristics": [
+      "Canonical AXIGNAL identity and calm blue controls.",
+      "Fraunces reading hierarchy with Manrope controls and Bic annotations.",
+      "Tonal paper sections and fine rules rather than elevated cards.",
+      "Responsive public navigation and explicit evidence/limit explanations."
+    ],
+    "dos": [
+      "Do preserve the canonical monocle logo, AXIGNAL blue and approved Observador artwork; public logos use the original inline SVG vectors without raster intermediates.",
+      "Do pair Fraunces headings with Manrope reading and controls.",
+      "Do preserve semantic links, native disclosures, visible keyboard focus and textual state cues.",
+      "Do keep evidence types and limits visible in the family catalog.",
+      "Do reflow annotations and reading columns for narrow screens and respect reduced motion."
+    ],
+    "overview": "An annotated public document pairs AXIGNAL editorial type with cool paper, dark ink and blue observation marks. The approved white Observador and his monocle explain the offering; the illustration remains explanatory artwork, never evidence or a real customer observation.\n\nPrecise public controls sit alongside spacious reading sections, native disclosures and rule-separated catalogs. This records the implemented public landing ecosystem only: home, data catalog, industry hub and cases, pricing, public Knowledge hub/articles, newsletter channel, and their scoped public shell. It establishes no visual authority for the private app, Admin or AXENT.",
+    "northStar": "Public-understanding folio"
+  }
+}

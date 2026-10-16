@@ -1,0 +1,1418 @@
+[
+  {
+    "headerOverlap": false,
+    "labels": [
+      {
+        "boxWidth": 227.7105712890625,
+        "centerX": 0.46499426605504585,
+        "centerY": 0.5159909399773499,
+        "content": 226,
+        "inkWidth": 161.8004150390625,
+        "text": "Qué ofreces",
+        "width": 226
+      },
+      {
+        "boxWidth": 256.751708984375,
+        "centerX": 0.6364965596330275,
+        "centerY": 0.5689920724801812,
+        "content": 255,
+        "inkWidth": 145.7880859375,
+        "text": "Para quién",
+        "width": 255
+      },
+      {
+        "boxWidth": 295.75732421875,
+        "centerX": 0.8389908256880734,
+        "centerY": 0.5449830124575311,
+        "content": 294,
+        "inkWidth": 213.7938232421875,
+        "text": "Qué se entiende",
+        "width": 294
+      }
+    ],
+    "labelsHidden": false,
+    "lang": "es",
+    "login": {
+      "background": "rgba(0, 0, 0, 0)",
+      "border": "1px solid rgb(53, 79, 152)",
+      "width": 148
+    },
+    "logos": [
+      {
+        "height": 43,
+        "images": 0,
+        "paths": 2,
+        "width": 147
+      },
+      {
+        "height": 43,
+        "images": 0,
+        "paths": 2,
+        "width": 147
+      }
+    ],
+    "overflow": false,
+    "selector": {
+      "label": "Español",
+      "width": 112
+    },
+    "viewport": 1650
+  },
+  {
+    "headerOverlap": false,
+    "labels": [
+      {
+        "boxWidth": 227.7105712890625,
+        "centerX": 0.46499426605504585,
+        "centerY": 0.5159909399773499,
+        "content": 226,
+        "inkWidth": 202.3775634765625,
+        "text": "What you offer",
+        "width": 226
+      },
+      {
+        "boxWidth": 256.751708984375,
+        "centerX": 0.6364965596330275,
+        "centerY": 0.5689920724801812,
+        "content": 255,
+        "inkWidth": 165.10345458984375,
+        "text": "Who it is for",
+        "width": 255
+      },
+      {
+        "boxWidth": 294.817138671875,
+        "centerX": 0.8389908256880734,
+        "centerY": 0.5449830124575311,
+        "content": 294,
+        "inkWidth": 211.7479248046875,
+        "text": "What is understood",
+        "width": 294
+      }
+    ],
+    "labelsHidden": false,
+    "lang": "en",
+    "login": {
+      "background": "rgba(0, 0, 0, 0)",
+      "border": "1px solid rgb(53, 79, 152)",
+      "width": 148
+    },
+    "logos": [
+      {
+        "height": 43,
+        "images": 0,
+        "paths": 2,
+        "width": 147
+      },
+      {
+        "height": 43,
+        "images": 0,
+        "paths": 2,
+        "width": 147
+      }
+    ],
+    "overflow": false,
+    "selector": {
+      "label": "English",
+      "width": 112
+    },
+    "viewport": 1650
+  },
+  {
+    "headerOverlap": false,
+    "labels": [
+      {
+        "boxWidth": 227.7105712890625,
+        "centerX": 0.46499426605504585,
+        "centerY": 0.5159909399773499,
+        "content": 226,
+        "inkWidth": 147.9515380859375,
+        "text": "Votre offre",
+        "width": 226
+      },
+      {
+        "boxWidth": 256.751708984375,
+        "centerX": 0.6364965596330275,
+        "centerY": 0.5689920724801812,
+        "content": 255,
+        "inkWidth": 116.3946533203125,
+        "text": "Pour qui",
+        "width": 255
+      },
+      {
+        "boxWidth": 294.817138671875,
+        "centerX": 0.8389908256880734,
+        "centerY": 0.5449830124575311,
+        "content": 294,
+        "inkWidth": 198.59716796875,
+        "text": "Ce qui est compris",
+        "width": 294
+      }
+    ],
+    "labelsHidden": false,
+    "lang": "fr",
+    "login": {
+      "background": "rgba(0, 0, 0, 0)",
+      "border": "1px solid rgb(53, 79, 152)",
+      "width": 148
+    },
+    "logos": [
+      {
+        "height": 43,
+        "images": 0,
+        "paths": 2,
+        "width": 147
+      },
+      {
+        "height": 43,
+        "images": 0,
+        "paths": 2,
+        "width": 147
+      }
+    ],
+    "overflow": false,
+    "selector": {
+      "label": "Français",
+      "width": 112
+    },
+    "viewport": 1650
+  },
+  {
+    "headerOverlap": false,
+    "labels": [
+      {
+        "boxWidth": 227.7105712890625,
+        "centerX": 0.46499426605504585,
+        "centerY": 0.5159909399773499,
+        "content": 226,
+        "inkWidth": 163.4161376953125,
+        "text": "Ihr Angebot",
+        "width": 226
+      },
+      {
+        "boxWidth": 256.751708984375,
+        "centerX": 0.6364965596330275,
+        "centerY": 0.5689920724801812,
+        "content": 255,
+        "inkWidth": 110.366455078125,
+        "text": "Für wen",
+        "width": 255
+      },
+      {
+        "boxWidth": 294.817138671875,
+        "centerX": 0.8389908256880734,
+        "centerY": 0.5449830124575311,
+        "content": 294,
+        "inkWidth": 226.8150634765625,
+        "text": "Was verstanden wird",
+        "width": 294
+      }
+    ],
+    "labelsHidden": false,
+    "lang": "de",
+    "login": {
+      "background": "rgba(0, 0, 0, 0)",
+      "border": "1px solid rgb(53, 79, 152)",
+      "width": 148
+    },
+    "logos": [
+      {
+        "height": 43,
+        "images": 0,
+        "paths": 2,
+        "width": 147
+      },
+      {
+        "height": 43,
+        "images": 0,
+        "paths": 2,
+        "width": 147
+      }
+    ],
+    "overflow": false,
+    "selector": {
+      "label": "Deutsch",
+      "width": 112
+    },
+    "viewport": 1650
+  },
+  {
+    "headerOverlap": false,
+    "labels": [
+      {
+        "boxWidth": 227.7105712890625,
+        "centerX": 0.46499426605504585,
+        "centerY": 0.5159909399773499,
+        "content": 226,
+        "inkWidth": 134.16424560546875,
+        "text": "Cosa offri",
+        "width": 226
+      },
+      {
+        "boxWidth": 256.751708984375,
+        "centerX": 0.6364965596330275,
+        "centerY": 0.5689920724801812,
+        "content": 255,
+        "inkWidth": 95.21014404296876,
+        "text": "Per chi",
+        "width": 255
+      },
+      {
+        "boxWidth": 294.817138671875,
+        "centerX": 0.8389908256880734,
+        "centerY": 0.5449830124575311,
+        "content": 294,
+        "inkWidth": 204.5003662109375,
+        "text": "Cosa si comprende",
+        "width": 294
+      }
+    ],
+    "labelsHidden": false,
+    "lang": "it",
+    "login": {
+      "background": "rgba(0, 0, 0, 0)",
+      "border": "1px solid rgb(53, 79, 152)",
+      "width": 148
+    },
+    "logos": [
+      {
+        "height": 43,
+        "images": 0,
+        "paths": 2,
+        "width": 147
+      },
+      {
+        "height": 43,
+        "images": 0,
+        "paths": 2,
+        "width": 147
+      }
+    ],
+    "overflow": false,
+    "selector": {
+      "label": "Italiano",
+      "width": 112
+    },
+    "viewport": 1650
+  },
+  {
+    "headerOverlap": false,
+    "labels": [
+      {
+        "boxWidth": 227.7105712890625,
+        "centerX": 0.46499426605504585,
+        "centerY": 0.5159909399773499,
+        "content": 226,
+        "inkWidth": 186.09747314453125,
+        "text": "O que oferece",
+        "width": 226
+      },
+      {
+        "boxWidth": 256.751708984375,
+        "centerX": 0.6364965596330275,
+        "centerY": 0.5689920724801812,
+        "content": 255,
+        "inkWidth": 146.27099609375,
+        "text": "Para quem",
+        "width": 255
+      },
+      {
+        "boxWidth": 295.75732421875,
+        "centerX": 0.8389908256880734,
+        "centerY": 0.5449830124575311,
+        "content": 294,
+        "inkWidth": 228.24267578125,
+        "text": "O que se entende",
+        "width": 294
+      }
+    ],
+    "labelsHidden": false,
+    "lang": "pt",
+    "login": {
+      "background": "rgba(0, 0, 0, 0)",
+      "border": "1px solid rgb(53, 79, 152)",
+      "width": 148
+    },
+    "logos": [
+      {
+        "height": 43,
+        "images": 0,
+        "paths": 2,
+        "width": 147
+      },
+      {
+        "height": 43,
+        "images": 0,
+        "paths": 2,
+        "width": 147
+      }
+    ],
+    "overflow": false,
+    "selector": {
+      "label": "Português",
+      "width": 112
+    },
+    "viewport": 1650
+  },
+  {
+    "headerOverlap": false,
+    "labels": [
+      {
+        "boxWidth": 176.1893310546875,
+        "centerX": 0.4649950592885376,
+        "centerY": 0.5159987119060863,
+        "content": 175,
+        "inkWidth": 126.51666259765624,
+        "text": "Qué ofreces",
+        "width": 175
+      },
+      {
+        "boxWidth": 198.653076171875,
+        "centerX": 0.6364995059288537,
+        "centerY": 0.5689862115401505,
+        "content": 197,
+        "inkWidth": 113.88275146484376,
+        "text": "Para quién",
+        "width": 197
+      },
+      {
+        "boxWidth": 228.82861328125,
+        "centerX": 0.8389945652173914,
+        "centerY": 0.5449808249656021,
+        "content": 228,
+        "inkWidth": 167.10986328125,
+        "text": "Qué se entiende",
+        "width": 228
+      }
+    ],
+    "labelsHidden": false,
+    "lang": "es",
+    "login": {
+      "background": "rgba(0, 0, 0, 0)",
+      "border": "1px solid rgb(53, 79, 152)",
+      "width": 148
+    },
+    "logos": [
+      {
+        "height": 43,
+        "images": 0,
+        "paths": 2,
+        "width": 147
+      },
+      {
+        "height": 43,
+        "images": 0,
+        "paths": 2,
+        "width": 147
+      }
+    ],
+    "overflow": false,
+    "selector": {
+      "label": "Español",
+      "width": 112
+    },
+    "viewport": 1280
+  },
+  {
+    "headerOverlap": false,
+    "labels": [
+      {
+        "boxWidth": 176.1893310546875,
+        "centerX": 0.4649950592885376,
+        "centerY": 0.5159987119060863,
+        "content": 175,
+        "inkWidth": 158.23056030273438,
+        "text": "What you offer",
+        "width": 175
+      },
+      {
+        "boxWidth": 198.653076171875,
+        "centerX": 0.6364995059288537,
+        "centerY": 0.5689862115401505,
+        "content": 197,
+        "inkWidth": 129.0701904296875,
+        "text": "Who it is for",
+        "width": 197
+      },
+      {
+        "boxWidth": 228.098876953125,
+        "centerX": 0.8389945652173914,
+        "centerY": 0.5449808249656021,
+        "content": 228,
+        "inkWidth": 165.4437255859375,
+        "text": "What is understood",
+        "width": 228
+      }
+    ],
+    "labelsHidden": false,
+    "lang": "en",
+    "login": {
+      "background": "rgba(0, 0, 0, 0)",
+      "border": "1px solid rgb(53, 79, 152)",
+      "width": 148
+    },
+    "logos": [
+      {
+        "height": 43,
+        "images": 0,
+        "paths": 2,
+        "width": 147
+      },
+      {
+        "height": 43,
+        "images": 0,
+        "paths": 2,
+        "width": 147
+      }
+    ],
+    "overflow": false,
+    "selector": {
+      "label": "English",
+      "width": 112
+    },
+    "viewport": 1280
+  },
+  {
+    "headerOverlap": false,
+    "labels": [
+      {
+        "boxWidth": 176.1893310546875,
+        "centerX": 0.4649950592885376,
+        "centerY": 0.5159987119060863,
+        "content": 175,
+        "inkWidth": 115.776123046875,
+        "text": "Votre offre",
+        "width": 175
+      },
+      {
+        "boxWidth": 198.653076171875,
+        "centerX": 0.6364995059288537,
+        "centerY": 0.5689862115401505,
+        "content": 197,
+        "inkWidth": 90.891357421875,
+        "text": "Pour qui",
+        "width": 197
+      },
+      {
+        "boxWidth": 228.098876953125,
+        "centerX": 0.8389945652173914,
+        "centerY": 0.5449808249656021,
+        "content": 228,
+        "inkWidth": 155.074462890625,
+        "text": "Ce qui est compris",
+        "width": 228
+      }
+    ],
+    "labelsHidden": false,
+    "lang": "fr",
+    "login": {
+      "background": "rgba(0, 0, 0, 0)",
+      "border": "1px solid rgb(53, 79, 152)",
+      "width": 148
+    },
+    "logos": [
+      {
+        "height": 43,
+        "images": 0,
+        "paths": 2,
+        "width": 147
+      },
+      {
+        "height": 43,
+        "images": 0,
+        "paths": 2,
+        "width": 147
+      }
+    ],
+    "overflow": false,
+    "selector": {
+      "label": "Français",
+      "width": 112
+    },
+    "viewport": 1280
+  },
+  {
+    "headerOverlap": false,
+    "labels": [
+      {
+        "boxWidth": 176.1893310546875,
+        "centerX": 0.4649950592885376,
+        "centerY": 0.5159987119060863,
+        "content": 175,
+        "inkWidth": 127.7476806640625,
+        "text": "Ihr Angebot",
+        "width": 175
+      },
+      {
+        "boxWidth": 198.653076171875,
+        "centerX": 0.6364995059288537,
+        "centerY": 0.5689862115401505,
+        "content": 197,
+        "inkWidth": 86.2650146484375,
+        "text": "Für wen",
+        "width": 197
+      },
+      {
+        "boxWidth": 228.098876953125,
+        "centerX": 0.8389945652173914,
+        "centerY": 0.5449808249656021,
+        "content": 228,
+        "inkWidth": 177.188232421875,
+        "text": "Was verstanden wird",
+        "width": 228
+      }
+    ],
+    "labelsHidden": false,
+    "lang": "de",
+    "login": {
+      "background": "rgba(0, 0, 0, 0)",
+      "border": "1px solid rgb(53, 79, 152)",
+      "width": 148
+    },
+    "logos": [
+      {
+        "height": 43,
+        "images": 0,
+        "paths": 2,
+        "width": 147
+      },
+      {
+        "height": 43,
+        "images": 0,
+        "paths": 2,
+        "width": 147
+      }
+    ],
+    "overflow": false,
+    "selector": {
+      "label": "Deutsch",
+      "width": 112
+    },
+    "viewport": 1280
+  },
+  {
+    "headerOverlap": false,
+    "labels": [
+      {
+        "boxWidth": 176.1893310546875,
+        "centerX": 0.4649950592885376,
+        "centerY": 0.5159987119060863,
+        "content": 175,
+        "inkWidth": 104.9278564453125,
+        "text": "Cosa offri",
+        "width": 175
+      },
+      {
+        "boxWidth": 198.653076171875,
+        "centerX": 0.6364995059288537,
+        "centerY": 0.5689862115401505,
+        "content": 197,
+        "inkWidth": 74.41107177734375,
+        "text": "Per chi",
+        "width": 197
+      },
+      {
+        "boxWidth": 228.098876953125,
+        "centerX": 0.8389945652173914,
+        "centerY": 0.5449808249656021,
+        "content": 228,
+        "inkWidth": 159.74139404296875,
+        "text": "Cosa si comprende",
+        "width": 228
+      }
+    ],
+    "labelsHidden": false,
+    "lang": "it",
+    "login": {
+      "background": "rgba(0, 0, 0, 0)",
+      "border": "1px solid rgb(53, 79, 152)",
+      "width": 148
+    },
+    "logos": [
+      {
+        "height": 43,
+        "images": 0,
+        "paths": 2,
+        "width": 147
+      },
+      {
+        "height": 43,
+        "images": 0,
+        "paths": 2,
+        "width": 147
+      }
+    ],
+    "overflow": false,
+    "selector": {
+      "label": "Italiano",
+      "width": 112
+    },
+    "viewport": 1280
+  },
+  {
+    "headerOverlap": false,
+    "labels": [
+      {
+        "boxWidth": 176.1893310546875,
+        "centerX": 0.4649950592885376,
+        "centerY": 0.5159987119060863,
+        "content": 175,
+        "inkWidth": 145.5203857421875,
+        "text": "O que oferece",
+        "width": 175
+      },
+      {
+        "boxWidth": 198.653076171875,
+        "centerX": 0.6364995059288537,
+        "centerY": 0.5689862115401505,
+        "content": 197,
+        "inkWidth": 114.24102783203124,
+        "text": "Para quem",
+        "width": 197
+      },
+      {
+        "boxWidth": 228.82861328125,
+        "centerX": 0.8389945652173914,
+        "centerY": 0.5449808249656021,
+        "content": 228,
+        "inkWidth": 178.40631103515625,
+        "text": "O que se entende",
+        "width": 228
+      }
+    ],
+    "labelsHidden": false,
+    "lang": "pt",
+    "login": {
+      "background": "rgba(0, 0, 0, 0)",
+      "border": "1px solid rgb(53, 79, 152)",
+      "width": 148
+    },
+    "logos": [
+      {
+        "height": 43,
+        "images": 0,
+        "paths": 2,
+        "width": 147
+      },
+      {
+        "height": 43,
+        "images": 0,
+        "paths": 2,
+        "width": 147
+      }
+    ],
+    "overflow": false,
+    "selector": {
+      "label": "Português",
+      "width": 112
+    },
+    "viewport": 1280
+  },
+  {
+    "headerOverlap": false,
+    "labels": [
+      {
+        "boxWidth": 0,
+        "centerX": 0,
+        "centerY": -0.08876560332871013,
+        "content": 0,
+        "inkWidth": 0,
+        "text": "Qué ofreces",
+        "width": 0
+      },
+      {
+        "boxWidth": 0,
+        "centerX": 0,
+        "centerY": -0.08876560332871013,
+        "content": 0,
+        "inkWidth": 0,
+        "text": "Para quién",
+        "width": 0
+      },
+      {
+        "boxWidth": 0,
+        "centerX": 0,
+        "centerY": -0.08876560332871013,
+        "content": 0,
+        "inkWidth": 0,
+        "text": "Qué se entiende",
+        "width": 0
+      }
+    ],
+    "labelsHidden": true,
+    "lang": "es",
+    "login": {
+      "background": "rgba(0, 0, 0, 0)",
+      "border": "0px none rgb(78, 88, 102)",
+      "width": 0
+    },
+    "logos": [
+      {
+        "height": 41.53125,
+        "images": 0,
+        "paths": 2,
+        "width": 142
+      },
+      {
+        "height": 41.53125,
+        "images": 0,
+        "paths": 2,
+        "width": 142
+      }
+    ],
+    "overflow": false,
+    "selector": {
+      "label": "Español",
+      "width": 0
+    },
+    "viewport": 390
+  },
+  {
+    "headerOverlap": false,
+    "labels": [
+      {
+        "boxWidth": 0,
+        "centerX": 0,
+        "centerY": -0.0919019007671088,
+        "content": 0,
+        "inkWidth": 0,
+        "text": "What you offer",
+        "width": 0
+      },
+      {
+        "boxWidth": 0,
+        "centerX": 0,
+        "centerY": -0.0919019007671088,
+        "content": 0,
+        "inkWidth": 0,
+        "text": "Who it is for",
+        "width": 0
+      },
+      {
+        "boxWidth": 0,
+        "centerX": 0,
+        "centerY": -0.0919019007671088,
+        "content": 0,
+        "inkWidth": 0,
+        "text": "What is understood",
+        "width": 0
+      }
+    ],
+    "labelsHidden": true,
+    "lang": "en",
+    "login": {
+      "background": "rgba(0, 0, 0, 0)",
+      "border": "0px none rgb(78, 88, 102)",
+      "width": 0
+    },
+    "logos": [
+      {
+        "height": 41.53125,
+        "images": 0,
+        "paths": 2,
+        "width": 142
+      },
+      {
+        "height": 41.53125,
+        "images": 0,
+        "paths": 2,
+        "width": 142
+      }
+    ],
+    "overflow": false,
+    "selector": {
+      "label": "English",
+      "width": 0
+    },
+    "viewport": 390
+  },
+  {
+    "headerOverlap": false,
+    "labels": [
+      {
+        "boxWidth": 0,
+        "centerX": 0,
+        "centerY": -0.08656036446469248,
+        "content": 0,
+        "inkWidth": 0,
+        "text": "Votre offre",
+        "width": 0
+      },
+      {
+        "boxWidth": 0,
+        "centerX": 0,
+        "centerY": -0.08656036446469248,
+        "content": 0,
+        "inkWidth": 0,
+        "text": "Pour qui",
+        "width": 0
+      },
+      {
+        "boxWidth": 0,
+        "centerX": 0,
+        "centerY": -0.08656036446469248,
+        "content": 0,
+        "inkWidth": 0,
+        "text": "Ce qui est compris",
+        "width": 0
+      }
+    ],
+    "labelsHidden": true,
+    "lang": "fr",
+    "login": {
+      "background": "rgba(0, 0, 0, 0)",
+      "border": "0px none rgb(78, 88, 102)",
+      "width": 0
+    },
+    "logos": [
+      {
+        "height": 41.53125,
+        "images": 0,
+        "paths": 2,
+        "width": 142
+      },
+      {
+        "height": 41.53125,
+        "images": 0,
+        "paths": 2,
+        "width": 142
+      }
+    ],
+    "overflow": false,
+    "selector": {
+      "label": "Français",
+      "width": 0
+    },
+    "viewport": 390
+  },
+  {
+    "headerOverlap": false,
+    "labels": [
+      {
+        "boxWidth": 0,
+        "centerX": 0,
+        "centerY": -0.0919019007671088,
+        "content": 0,
+        "inkWidth": 0,
+        "text": "Ihr Angebot",
+        "width": 0
+      },
+      {
+        "boxWidth": 0,
+        "centerX": 0,
+        "centerY": -0.0919019007671088,
+        "content": 0,
+        "inkWidth": 0,
+        "text": "Für wen",
+        "width": 0
+      },
+      {
+        "boxWidth": 0,
+        "centerX": 0,
+        "centerY": -0.0919019007671088,
+        "content": 0,
+        "inkWidth": 0,
+        "text": "Was verstanden wird",
+        "width": 0
+      }
+    ],
+    "labelsHidden": true,
+    "lang": "de",
+    "login": {
+      "background": "rgba(0, 0, 0, 0)",
+      "border": "0px none rgb(78, 88, 102)",
+      "width": 0
+    },
+    "logos": [
+      {
+        "height": 41.53125,
+        "images": 0,
+        "paths": 2,
+        "width": 142
+      },
+      {
+        "height": 41.53125,
+        "images": 0,
+        "paths": 2,
+        "width": 142
+      }
+    ],
+    "overflow": false,
+    "selector": {
+      "label": "Deutsch",
+      "width": 0
+    },
+    "viewport": 390
+  },
+  {
+    "headerOverlap": false,
+    "labels": [
+      {
+        "boxWidth": 0,
+        "centerX": 0,
+        "centerY": -0.08621820437826819,
+        "content": 0,
+        "inkWidth": 0,
+        "text": "Cosa offri",
+        "width": 0
+      },
+      {
+        "boxWidth": 0,
+        "centerX": 0,
+        "centerY": -0.08621820437826819,
+        "content": 0,
+        "inkWidth": 0,
+        "text": "Per chi",
+        "width": 0
+      },
+      {
+        "boxWidth": 0,
+        "centerX": 0,
+        "centerY": -0.08621820437826819,
+        "content": 0,
+        "inkWidth": 0,
+        "text": "Cosa si comprende",
+        "width": 0
+      }
+    ],
+    "labelsHidden": true,
+    "lang": "it",
+    "login": {
+      "background": "rgba(0, 0, 0, 0)",
+      "border": "0px none rgb(78, 88, 102)",
+      "width": 0
+    },
+    "logos": [
+      {
+        "height": 41.53125,
+        "images": 0,
+        "paths": 2,
+        "width": 142
+      },
+      {
+        "height": 41.53125,
+        "images": 0,
+        "paths": 2,
+        "width": 142
+      }
+    ],
+    "overflow": false,
+    "selector": {
+      "label": "Italiano",
+      "width": 0
+    },
+    "viewport": 390
+  },
+  {
+    "headerOverlap": false,
+    "labels": [
+      {
+        "boxWidth": 0,
+        "centerX": 0,
+        "centerY": -0.08621820437826819,
+        "content": 0,
+        "inkWidth": 0,
+        "text": "O que oferece",
+        "width": 0
+      },
+      {
+        "boxWidth": 0,
+        "centerX": 0,
+        "centerY": -0.08621820437826819,
+        "content": 0,
+        "inkWidth": 0,
+        "text": "Para quem",
+        "width": 0
+      },
+      {
+        "boxWidth": 0,
+        "centerX": 0,
+        "centerY": -0.08621820437826819,
+        "content": 0,
+        "inkWidth": 0,
+        "text": "O que se entende",
+        "width": 0
+      }
+    ],
+    "labelsHidden": true,
+    "lang": "pt",
+    "login": {
+      "background": "rgba(0, 0, 0, 0)",
+      "border": "0px none rgb(78, 88, 102)",
+      "width": 0
+    },
+    "logos": [
+      {
+        "height": 41.53125,
+        "images": 0,
+        "paths": 2,
+        "width": 142
+      },
+      {
+        "height": 41.53125,
+        "images": 0,
+        "paths": 2,
+        "width": 142
+      }
+    ],
+    "overflow": false,
+    "selector": {
+      "label": "Português",
+      "width": 0
+    },
+    "viewport": 390
+  },
+  {
+    "headerOverlap": false,
+    "labels": [
+      {
+        "boxWidth": 0,
+        "centerX": 0,
+        "centerY": -0.085878738656026,
+        "content": 0,
+        "inkWidth": 0,
+        "text": "Qué ofreces",
+        "width": 0
+      },
+      {
+        "boxWidth": 0,
+        "centerX": 0,
+        "centerY": -0.085878738656026,
+        "content": 0,
+        "inkWidth": 0,
+        "text": "Para quién",
+        "width": 0
+      },
+      {
+        "boxWidth": 0,
+        "centerX": 0,
+        "centerY": -0.085878738656026,
+        "content": 0,
+        "inkWidth": 0,
+        "text": "Qué se entiende",
+        "width": 0
+      }
+    ],
+    "labelsHidden": true,
+    "lang": "es",
+    "login": {
+      "background": "rgba(0, 0, 0, 0)",
+      "border": "0px none rgb(78, 88, 102)",
+      "width": 0
+    },
+    "logos": [
+      {
+        "height": 36.265625,
+        "images": 0,
+        "paths": 2,
+        "width": 124
+      },
+      {
+        "height": 36.265625,
+        "images": 0,
+        "paths": 2,
+        "width": 124
+      }
+    ],
+    "overflow": false,
+    "selector": {
+      "label": "Español",
+      "width": 0
+    },
+    "viewport": 320
+  },
+  {
+    "headerOverlap": false,
+    "labels": [
+      {
+        "boxWidth": 0,
+        "centerX": 0,
+        "centerY": -0.08184418643782601,
+        "content": 0,
+        "inkWidth": 0,
+        "text": "What you offer",
+        "width": 0
+      },
+      {
+        "boxWidth": 0,
+        "centerX": 0,
+        "centerY": -0.08184418643782601,
+        "content": 0,
+        "inkWidth": 0,
+        "text": "Who it is for",
+        "width": 0
+      },
+      {
+        "boxWidth": 0,
+        "centerX": 0,
+        "centerY": -0.08184418643782601,
+        "content": 0,
+        "inkWidth": 0,
+        "text": "What is understood",
+        "width": 0
+      }
+    ],
+    "labelsHidden": true,
+    "lang": "en",
+    "login": {
+      "background": "rgba(0, 0, 0, 0)",
+      "border": "0px none rgb(78, 88, 102)",
+      "width": 0
+    },
+    "logos": [
+      {
+        "height": 36.265625,
+        "images": 0,
+        "paths": 2,
+        "width": 124
+      },
+      {
+        "height": 36.265625,
+        "images": 0,
+        "paths": 2,
+        "width": 124
+      }
+    ],
+    "overflow": false,
+    "selector": {
+      "label": "English",
+      "width": 0
+    },
+    "viewport": 320
+  },
+  {
+    "headerOverlap": false,
+    "labels": [
+      {
+        "boxWidth": 0,
+        "centerX": 0,
+        "centerY": -0.0804738426921677,
+        "content": 0,
+        "inkWidth": 0,
+        "text": "Votre offre",
+        "width": 0
+      },
+      {
+        "boxWidth": 0,
+        "centerX": 0,
+        "centerY": -0.0804738426921677,
+        "content": 0,
+        "inkWidth": 0,
+        "text": "Pour qui",
+        "width": 0
+      },
+      {
+        "boxWidth": 0,
+        "centerX": 0,
+        "centerY": -0.0804738426921677,
+        "content": 0,
+        "inkWidth": 0,
+        "text": "Ce qui est compris",
+        "width": 0
+      }
+    ],
+    "labelsHidden": true,
+    "lang": "fr",
+    "login": {
+      "background": "rgba(0, 0, 0, 0)",
+      "border": "0px none rgb(78, 88, 102)",
+      "width": 0
+    },
+    "logos": [
+      {
+        "height": 36.265625,
+        "images": 0,
+        "paths": 2,
+        "width": 124
+      },
+      {
+        "height": 36.265625,
+        "images": 0,
+        "paths": 2,
+        "width": 124
+      }
+    ],
+    "overflow": false,
+    "selector": {
+      "label": "Français",
+      "width": 0
+    },
+    "viewport": 320
+  },
+  {
+    "headerOverlap": false,
+    "labels": [
+      {
+        "boxWidth": 0,
+        "centerX": 0,
+        "centerY": -0.07683315957413199,
+        "content": 0,
+        "inkWidth": 0,
+        "text": "Ihr Angebot",
+        "width": 0
+      },
+      {
+        "boxWidth": 0,
+        "centerX": 0,
+        "centerY": -0.07683315957413199,
+        "content": 0,
+        "inkWidth": 0,
+        "text": "Für wen",
+        "width": 0
+      },
+      {
+        "boxWidth": 0,
+        "centerX": 0,
+        "centerY": -0.07683315957413199,
+        "content": 0,
+        "inkWidth": 0,
+        "text": "Was verstanden wird",
+        "width": 0
+      }
+    ],
+    "labelsHidden": true,
+    "lang": "de",
+    "login": {
+      "background": "rgba(0, 0, 0, 0)",
+      "border": "0px none rgb(78, 88, 102)",
+      "width": 0
+    },
+    "logos": [
+      {
+        "height": 36.265625,
+        "images": 0,
+        "paths": 2,
+        "width": 124
+      },
+      {
+        "height": 36.265625,
+        "images": 0,
+        "paths": 2,
+        "width": 124
+      }
+    ],
+    "overflow": false,
+    "selector": {
+      "label": "Deutsch",
+      "width": 0
+    },
+    "viewport": 320
+  },
+  {
+    "headerOverlap": false,
+    "labels": [
+      {
+        "boxWidth": 0,
+        "centerX": 0,
+        "centerY": -0.0804738426921677,
+        "content": 0,
+        "inkWidth": 0,
+        "text": "Cosa offri",
+        "width": 0
+      },
+      {
+        "boxWidth": 0,
+        "centerX": 0,
+        "centerY": -0.0804738426921677,
+        "content": 0,
+        "inkWidth": 0,
+        "text": "Per chi",
+        "width": 0
+      },
+      {
+        "boxWidth": 0,
+        "centerX": 0,
+        "centerY": -0.0804738426921677,
+        "content": 0,
+        "inkWidth": 0,
+        "text": "Cosa si comprende",
+        "width": 0
+      }
+    ],
+    "labelsHidden": true,
+    "lang": "it",
+    "login": {
+      "background": "rgba(0, 0, 0, 0)",
+      "border": "0px none rgb(78, 88, 102)",
+      "width": 0
+    },
+    "logos": [
+      {
+        "height": 36.265625,
+        "images": 0,
+        "paths": 2,
+        "width": 124
+      },
+      {
+        "height": 36.265625,
+        "images": 0,
+        "paths": 2,
+        "width": 124
+      }
+    ],
+    "overflow": false,
+    "selector": {
+      "label": "Italiano",
+      "width": 0
+    },
+    "viewport": 320
+  },
+  {
+    "headerOverlap": false,
+    "labels": [
+      {
+        "boxWidth": 0,
+        "centerX": 0,
+        "centerY": -0.08172317618199536,
+        "content": 0,
+        "inkWidth": 0,
+        "text": "O que oferece",
+        "width": 0
+      },
+      {
+        "boxWidth": 0,
+        "centerX": 0,
+        "centerY": -0.08172317618199536,
+        "content": 0,
+        "inkWidth": 0,
+        "text": "Para quem",
+        "width": 0
+      },
+      {
+        "boxWidth": 0,
+        "centerX": 0,
+        "centerY": -0.08172317618199536,
+        "content": 0,
+        "inkWidth": 0,
+        "text": "O que se entende",
+        "width": 0
+      }
+    ],
+    "labelsHidden": true,
+    "lang": "pt",
+    "login": {
+      "background": "rgba(0, 0, 0, 0)",
+      "border": "0px none rgb(78, 88, 102)",
+      "width": 0
+    },
+    "logos": [
+      {
+        "height": 36.265625,
+        "images": 0,
+        "paths": 2,
+        "width": 124
+      },
+      {
+        "height": 36.265625,
+        "images": 0,
+        "paths": 2,
+        "width": 124
+      }
+    ],
+    "overflow": false,
+    "selector": {
+      "label": "Português",
+      "width": 0
+    },
+    "viewport": 320
+  }
+]

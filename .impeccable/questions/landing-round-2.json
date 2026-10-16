@@ -1,0 +1,67 @@
+{
+  "title": "AXIGNAL: nuevas direcciones visuales",
+  "question": "Tres alternativas nuevas, con composiciones visuales completas. Las tres servirán a empresas, agencias y consultoras e incluirán las diez familias y seis industrias.",
+  "options": [
+    {
+      "id": "families",
+      "label": "Diez formas de entender una empresa",
+      "kicker": "THE ROLL",
+      "thesis": "Las diez familias abren ventanas concretas al contexto de una organización.",
+      "viewport": "Un gran gabinete de observación convierte cada familia en una pregunta; El Observador acompaña la exploración.",
+      "risk": "La riqueza visual debe conservar una lectura sencilla y cómoda en móvil.",
+      "palette": [
+        "#354F98",
+        "#F7F8FC",
+        "#17243F",
+        "#FFFFFF"
+      ],
+      "materials": [
+        "Fraunces y Manrope",
+        "El Observador · ilustración a medida"
+      ],
+      "comp": "C:\\Users\\usuario\\.codex-clean\\worktrees\\admin-governance-ux\\Axignal\\.impeccable\\mocks\\decision\\round-2\\families.png"
+    },
+    {
+      "id": "understanding",
+      "label": "Lo que haces y lo que se entiende",
+      "thesis": "La observación de la web pública introduce la diferencia entre una empresa y cómo se representa.",
+      "viewport": "Una página pública anotada domina la escena; la lectura continúa hacia mercados, demanda y el resto de familias.",
+      "risk": "La presencia digital es una puerta de entrada: debe quedar claro que AXIGNAL observa más dimensiones.",
+      "palette": [
+        "#354F98",
+        "#F7F8FC",
+        "#17243F",
+        "#FFFFFF"
+      ],
+      "materials": [
+        "Fraunces y Manrope",
+        "El Observador · ilustración a medida"
+      ],
+      "comp": "C:\\Users\\usuario\\.codex-clean\\worktrees\\admin-governance-ux\\Axignal\\.impeccable\\mocks\\decision\\round-2\\understanding.png"
+    },
+    {
+      "id": "industries",
+      "label": "El contexto de cada industria",
+      "thesis": "Las decisiones de cada sector guían la entrada a AXIGNAL.",
+      "viewport": "Un paisaje industrial ilustrado y un selector de industrias llevan a preguntas específicas y a sus familias de datos.",
+      "risk": "Los casos de uso se deben leer como preguntas posibles, sin confundirlos con resultados de clientes.",
+      "palette": [
+        "#354F98",
+        "#F7F8FC",
+        "#17243F",
+        "#FFFFFF"
+      ],
+      "materials": [
+        "Fraunces y Manrope",
+        "El Observador · ilustración a medida"
+      ],
+      "comp": "C:\\Users\\usuario\\.codex-clean\\worktrees\\admin-governance-ux\\Axignal\\.impeccable\\mocks\\decision\\round-2\\industries.png"
+    }
+  ],
+  "reroll": true,
+  "steer": true,
+  "buildPath": {
+    "value": "comp",
+    "toggle": true
+  }
+}

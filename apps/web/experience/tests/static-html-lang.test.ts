@@ -3,7 +3,6 @@ import assert from "node:assert/strict";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-// @ts-expect-error Build helper is plain ESM and intentionally framework-independent.
 import { localizeStaticKnowledgeHtml } from "../tools/localize-static-html-lang.mjs";
 
 test("localized knowledge build helper rewrites only prerendered knowledge html lang", () => {
@@ -49,7 +48,6 @@ test("localized knowledge build helper fails closed on incomplete prerender outp
 });
 
 test("the build's expected knowledge count follows the published pages (hub + one per page)", async () => {
-  // @ts-expect-error Build helper is plain ESM and intentionally framework-independent.
   const { expectedHtmlFilesPerLocale } = await import("../tools/localize-static-html-lang.mjs");
   const { acquisitionPages } = await import("../lib/acquisition");
   // Adding a knowledge page must update the build guard; this fails here, not in production.

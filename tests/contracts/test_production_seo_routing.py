@@ -104,3 +104,30 @@ def test_the_edge_redirects_are_relative_not_on_the_internal_port() -> None:
         Path(__file__).resolve().parents[2] / "deploy/production/subscriber-edge-nginx.conf"
     ).read_text(encoding="utf-8")
     assert "absolute_redirect off;" in edge
+
+
+def test_marketing_catalog_uses_exact_public_routes_and_never_a_locale_catchall() -> None:
+    text = ROUTE.read_text(encoding="utf-8")
+    sectors = (
+        "industry",
+        "construction",
+        "energy",
+        "logistics",
+        "professional-services",
+        "agencies",
+    )
+    for locale in ("es", "en", "fr", "de", "it", "pt"):
+        for page in ("data", "industries", "pricing"):
+            assert f"Path(`/{locale}/{page}`)" in text
+        for sector in sectors:
+            assert f"Path(`/{locale}/industries/{sector}`)" in text
+        assert f"PathPrefix(`/{locale}`)" not in text
+        assert f"PathPrefix(`/{locale}/`)" not in text
+    for page in ("data", "industries"):
+        assert f"Path(`/{page}`)" in text
+    for sector in sectors:
+        assert f"Path(`/industries/{sector}`)" in text
+    for asset in ("hero-art", "industries", "focus", "memory", "explain"):
+        assert f"Path(`/marketing/{asset}.webp`)" in text
+    for prefix in ("marketing", "assets", "industries", "data"):
+        assert f"PathPrefix(`/{prefix}`)" not in text

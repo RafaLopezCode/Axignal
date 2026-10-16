@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
 import { ArrowRight, ArrowUpRight, Check } from "lucide-react";
+import { HUMAN_ADVISORY_EUR_MONTHLY_MINOR } from "@/lib/commercial-prices";
 import { useLocale } from "@/lib/locale";
 import { formatReferenceMoney, monthlyReferenceCents } from "@/lib/presentation";
 import { funnelCta, track } from "@/lib/funnel-events";
@@ -139,7 +140,7 @@ export function ReferencePricing({
         </div>
         <div>
           <strong>
-            {money(99500)} <span>/{t("mes", "month")}</span>
+            {money(HUMAN_ADVISORY_EUR_MONTHLY_MINOR)} <span>/{t("mes", "month")}</span>
           </strong>
           <small>
             {t(

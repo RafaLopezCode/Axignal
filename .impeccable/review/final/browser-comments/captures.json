@@ -1,0 +1,64 @@
+[
+  {
+    "file": "home-svg-final.png",
+    "sha256": "af0751497d480683546fda22242ac01ffa3f42231bd44b678364fcd1ccbad44b",
+    "origin": "Actual Next.js production preview via CUA screenshot/read-only DOM"
+  },
+  {
+    "file": "header-svg-final.png",
+    "sha256": "c2359dee1b6d9c6b9c2f9044823514ba4f46ad516ca9204ab88861267a852765",
+    "origin": "Actual Next.js production preview via CUA screenshot/read-only DOM"
+  },
+  {
+    "file": "agencies-desktop-final.png",
+    "sha256": "35cea5c565a9fb4c03827be60208d372a5d088c8518a5ee3112e79eccacd72da",
+    "origin": "Actual Next.js production preview via CUA screenshot/read-only DOM"
+  },
+  {
+    "file": "agencies-mobile-final.png",
+    "sha256": "92c5782c542f56460de04ab5019e7dd2a43df84f04b9421db9a52bf62781171a",
+    "origin": "Actual Next.js production preview via CUA screenshot/read-only DOM"
+  },
+  {
+    "file": "knowledge-desktop-final.png",
+    "sha256": "0aae333e50a85f23ce9c4b083346ba0892da1f9778ad42a5ef0af731a4d301d0",
+    "origin": "Actual Next.js production preview via CUA screenshot/read-only DOM"
+  },
+  {
+    "file": "knowledge-mobile-final.png",
+    "sha256": "f01c737e768f4db30834f4a29f744b0d64a51be6033edc30fd474400d1c045d3",
+    "origin": "Actual Next.js production preview via CUA screenshot/read-only DOM",
+    "note": "Frame capture before the narrow German word-containment rule; final twelve-sample reading geometry confirms that repair."
+  },
+  {
+    "file": "knowledge-footer-desktop-final.png",
+    "sha256": "905471b9706ecd2e913031c533ef35d706b6013a2185f6a78b1d208774730b6d",
+    "origin": "Actual Next.js production preview via CUA screenshot/read-only DOM",
+    "note": "Browser review selection overlay is visible over the footer brand; it is not application UI."
+  },
+  {
+    "file": "newsletter-desktop.png",
+    "sha256": "577dab320428eaa9b7a5752282277af8fc983680131321adc1ae00bf4d11c7d1",
+    "origin": "Actual Next.js production preview via CUA screenshot/read-only DOM"
+  },
+  {
+    "file": "newsletter-mobile-final.png",
+    "sha256": "cb25f60ff56566a9853702d8285a947027edb237dae603508993a1d6c381ca6b",
+    "origin": "Actual Next.js production preview via CUA screenshot/read-only DOM"
+  },
+  {
+    "file": "geometry-final.json",
+    "sha256": "8863b5fa5c8b6b86bdce89592be1ebfac982fde29e7c09eddafe89f0f358cafa",
+    "origin": "Actual Next.js production preview via CUA screenshot/read-only DOM"
+  },
+  {
+    "file": "knowledge-geometry-confirmed.json",
+    "sha256": "e501132a11b22631356a02481db6aaabe371b2f1a258c82135029b40b880ceca",
+    "origin": "Actual Next.js production preview via CUA screenshot/read-only DOM"
+  },
+  {
+    "file": "vector-geometry-final.json",
+    "sha256": "96fce83baf73ca97bef175f1d86db5af3b870d51707523a36f2bfeea45d60658",
+    "origin": "Actual Next.js production preview via CUA screenshot/read-only DOM"
+  }
+]

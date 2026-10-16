@@ -5,8 +5,6 @@ import { absolutePublicUrl } from "@/lib/acquisition-seo";
 import { isLocale, locales, type Locale } from "@/lib/languages";
 import { HOME_METADATA } from "@/lib/public-home-metadata";
 import { homeLanguages, jsonLd, siteStructuredData } from "@/lib/site-seo";
-import "@/components/observatory.css";
-import "@/components/landing-observatory.css";
 
 /** The home page in one language: its own URL, so each language version can be found and declared. */
 export const dynamicParams = false;

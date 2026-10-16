@@ -1,0 +1,128 @@
+[
+  {
+    "file": "data-desktop.png",
+    "sha256": "ff0656d9c3624b78e33710301ea3f478ca9a87eb45f9a88fce01a294e66a35bd",
+    "origin": "CUA screenshot of actual local Next.js production build",
+    "source": "D:\\AXIGNAL\\_tmp\\landing-ecosystem-evidence\\final\\data-desktop.png"
+  },
+  {
+    "file": "data-evidence-mobile.png",
+    "sha256": "ae3f3d18e36cc1b5805a37984fda3e557032b17078b618e8171d7cd901a79c31",
+    "origin": "CUA screenshot of actual local Next.js production build",
+    "source": "D:\\AXIGNAL\\_tmp\\landing-ecosystem-evidence\\final\\data-evidence-mobile.png"
+  },
+  {
+    "file": "data-full-desktop.png",
+    "sha256": "a28e955f8147b780670c97f8409a4e9c4f2ac3d7bc67bd35fdaeb6c4d0eb88cd",
+    "origin": "CUA screenshot of actual local Next.js production build",
+    "source": "D:\\AXIGNAL\\_tmp\\landing-ecosystem-evidence\\final\\data-full-desktop.png"
+  },
+  {
+    "file": "data-mobile.png",
+    "sha256": "be1ab6d94baf28a3d4ba6b32cc9194713b4878688173fed16effc1cf27b9e26a",
+    "origin": "CUA screenshot of actual local Next.js production build",
+    "source": "D:\\AXIGNAL\\_tmp\\landing-ecosystem-evidence\\final\\data-mobile.png"
+  },
+  {
+    "file": "desktop.png",
+    "sha256": "c7af2dbc80c367f210430f6bb185b87cc570ef152e91239684adce2b36c080b5",
+    "origin": "CUA screenshot of actual local Next.js production build",
+    "source": "D:\\AXIGNAL\\_tmp\\landing-ecosystem-evidence\\final\\desktop.png",
+    "round": "Independent-review fix confirmation, three curves restored; otherwise same composition."
+  },
+  {
+    "file": "home-full-desktop.png",
+    "sha256": "af9a0c502fdd855aca644ec05715ca22cbbf8bae150389565277524adcfdd551",
+    "origin": "CUA screenshot of actual local Next.js production build",
+    "source": "D:\\AXIGNAL\\_tmp\\landing-ecosystem-evidence\\final\\home-full-desktop.png",
+    "round": "Independent-review fix confirmation, three curves restored; otherwise same composition."
+  },
+  {
+    "file": "home-full-mobile.png",
+    "sha256": "a74a75466d775f255b77861837f74abfb3a7915b462caaf258e3e0628c41b18e",
+    "origin": "CUA screenshot of actual local Next.js production build",
+    "source": "D:\\AXIGNAL\\_tmp\\landing-ecosystem-evidence\\final\\home-full-mobile.png",
+    "round": "Independent-review fix confirmation, three curves restored; otherwise same composition."
+  },
+  {
+    "file": "industries-desktop.png",
+    "sha256": "586145a8b4ba19a70602b98954f8fd8dcb796d5ee934e64b231838e9d9bd760e",
+    "origin": "CUA screenshot of actual local Next.js production build",
+    "source": "D:\\AXIGNAL\\_tmp\\landing-ecosystem-evidence\\final\\industries-desktop.png"
+  },
+  {
+    "file": "industries-mobile.png",
+    "sha256": "a4ee46a4d0e98e579d704a48b724ba20eff8c37d0ade7716f0d865827f073e42",
+    "origin": "CUA screenshot of actual local Next.js production build",
+    "source": "D:\\AXIGNAL\\_tmp\\landing-ecosystem-evidence\\final\\industries-mobile.png"
+  },
+  {
+    "file": "industry-desktop.png",
+    "sha256": "e0da72a396bd288a5ad538404ff0d8633fe635f27748fb05a8c50a5451fcd382",
+    "origin": "CUA screenshot of actual local Next.js production build",
+    "source": "D:\\AXIGNAL\\_tmp\\landing-ecosystem-evidence\\final\\industry-desktop.png"
+  },
+  {
+    "file": "industry-full-desktop.png",
+    "sha256": "daaafb1557de5e2d95405df45c5ca7397125040e05cf1497cfe0b0e5161fc55e",
+    "origin": "CUA screenshot of actual local Next.js production build",
+    "source": "D:\\AXIGNAL\\_tmp\\landing-ecosystem-evidence\\final\\industry-full-desktop.png"
+  },
+  {
+    "file": "industry-mobile.png",
+    "sha256": "b44c966dfe763da6007e1541e1f741358517b90cf53fa90edb0bc05925b898c9",
+    "origin": "CUA screenshot of actual local Next.js production build",
+    "source": "D:\\AXIGNAL\\_tmp\\landing-ecosystem-evidence\\final\\industry-mobile.png"
+  },
+  {
+    "file": "menu-mobile.png",
+    "sha256": "b5436838a70e87dbc087da618f39eca591ae7e1f66db1c02db05211113d03a32",
+    "origin": "CUA screenshot of actual local Next.js production build",
+    "source": "D:\\AXIGNAL\\_tmp\\landing-ecosystem-evidence\\final\\menu-mobile.png"
+  },
+  {
+    "file": "method-desktop.png",
+    "sha256": "f5887adeb785823ffe074466002e789c6c022d33e4069b84a9eb64ae258f7e58",
+    "origin": "CUA screenshot of actual local Next.js production build",
+    "source": "D:\\AXIGNAL\\_tmp\\landing-ecosystem-evidence\\final\\method-desktop.png"
+  },
+  {
+    "file": "mobile-320.png",
+    "sha256": "26cd5612b5fd56475891d770ee2cb2b840ed12b272dcd6be1dd886b10a9df8e2",
+    "origin": "CUA screenshot of actual local Next.js production build",
+    "source": "D:\\AXIGNAL\\_tmp\\landing-ecosystem-evidence\\final\\mobile-320.png",
+    "round": "Independent-review fix confirmation, three curves restored; otherwise same composition."
+  },
+  {
+    "file": "mobile.png",
+    "sha256": "697ec39941f772c618b38c4b167079cff4e2b53ee125985d4e61ee99180300a3",
+    "origin": "CUA screenshot of actual local Next.js production build",
+    "source": "D:\\AXIGNAL\\_tmp\\landing-ecosystem-evidence\\final\\mobile.png",
+    "round": "Independent-review fix confirmation, three curves restored; otherwise same composition."
+  },
+  {
+    "file": "pricing-desktop.png",
+    "sha256": "e476bf00b79f24ac9e308c0e225df38054799cd219ebff4b6f7d36ddc1e3069d",
+    "origin": "CUA screenshot of actual local Next.js production build",
+    "source": "D:\\AXIGNAL\\_tmp\\landing-ecosystem-evidence\\final\\pricing-desktop.png"
+  },
+  {
+    "file": "pricing-mobile.png",
+    "sha256": "6be00ac6ceaa9d114f5ea2dfc808c2591d6e55048fe90cdfe8e66114de7ddcf6",
+    "origin": "CUA screenshot of actual local Next.js production build",
+    "source": "D:\\AXIGNAL\\_tmp\\landing-ecosystem-evidence\\final\\pricing-mobile.png"
+  },
+  {
+    "file": "sectors-desktop.png",
+    "sha256": "923645bd018d7888da0a016d5427aeebfa356a19f03fe63cd402c8d17406ce02",
+    "origin": "CUA screenshot of actual local Next.js production build",
+    "source": "D:\\AXIGNAL\\_tmp\\landing-ecosystem-evidence\\final\\sectors-desktop.png"
+  },
+  {
+    "file": "user-1280.png",
+    "sha256": "adf4a3132e80432e7de6d1cf1e2d001570b6219d0f6e5e5af5cd901cfb81a592",
+    "origin": "CUA screenshot of actual local Next.js production build",
+    "source": "D:\\AXIGNAL\\_tmp\\landing-ecosystem-evidence\\final\\user-1280.png",
+    "round": "Independent-review fix confirmation, three curves restored; otherwise same composition."
+  }
+]

@@ -1,0 +1,19 @@
+{
+  "kind": "Conceptual editorial illustration; not observed facilities or customer evidence",
+  "createdAt": "2026-10-16T05:43:30.621Z",
+  "generator": "Built-in image_gen",
+  "sourceFile": "C:/Users/usuario/.codex-clean/generated_images/01a13cf4-e369-7bb2-a10d-61937c0fac16/exec-7009722e-fd64-4275-ad58-0581b8f964a4.png",
+  "master": "D:/AXIGNAL/_tmp/landing-ecosystem-evidence/masters/industries-hero-style.png",
+  "prompt": "Use case: style-transfer. Redesign the first input image, the AXIGNAL cross-industry panorama, to belong precisely to the restrained premium visual world of the SECOND reference (the approved website hero). Output one very wide landscape editorial illustration, approximate aspect ratio 2.56:1, no lettering or UI. Keep the panorama's meaning: manufacturing at left (assembly and machinery), construction (building and crane), renewable energy (wind turbines), logistics (warehouse, trucks and a port), consulting and communications (a small group of professionals reviewing evidence) at right. This is a conceptual cross-industry scene, never real client facilities. Reinterpret rather than apply a colored filter: make the whole industrial world a fine engraved/ink-wash illustration printed across an open cream-paper folio resting on the same softly lit pale desktop as the approved hero. Fewer, clearer masses, generous quiet sky/paper, subtle blue-gray linework and pale washes like the little architecture pictures in the second reference; natural paper edges and elegant dimensionality. Integrate the same canonical white Observer character with bold near-black contours, white explorer hat and vivid blue monocle as the second reference, quietly inspecting the folio, recognizable but subordinate to the industry scene. Preserve its identity, no extra mascot variants. Palette must be nearly monochrome navy, AXIGNAL blue #354f98, powder blue, ivory and soft gray; no bright yellow cranes, red containers, saturated green landscape, cyan sky or colorful comic/anime rendering. Match the second reference's diffuse daylight from upper left, soft realistic paper shadows, quiet cream/white desk, crisp refined illustration, visual breathing room. No headings, labels, words, fake logos, metrics, testimonials or text. All six sectors should be legible in the same continuous panorama. No border, no webpage mockup. Produce a final production artwork, not a mood board.",
+  "references": [
+    "/marketing/industries.webp (previous asset, composition/sector meaning)",
+    "/marketing/hero-art.webp (approved hero palette, paper, daylight and Observer identity)"
+  ],
+  "delivery": {
+    "width": 2007,
+    "height": 784,
+    "format": "webp",
+    "quality": 88
+  },
+  "authority": "User browser comments2and3: restyle industry illustration to match hero; shared asset replaces it across home, hub and sector pages"
+}

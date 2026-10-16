@@ -9,6 +9,68 @@ http:
         (Path(`/`) ||
          Path(`/es`) || Path(`/en`) || Path(`/fr`) || Path(`/de`) || Path(`/it`) || Path(`/pt`) ||
          Path(`/pricing`) ||
+         Path(`/data`) ||
+         Path(`/industries`) ||
+         Path(`/industries/industry`) ||
+         Path(`/industries/construction`) ||
+         Path(`/industries/energy`) ||
+         Path(`/industries/logistics`) ||
+         Path(`/industries/professional-services`) ||
+         Path(`/industries/agencies`) ||
+         Path(`/es/data`) ||
+         Path(`/es/industries`) ||
+         Path(`/es/pricing`) ||
+         Path(`/es/industries/industry`) ||
+         Path(`/es/industries/construction`) ||
+         Path(`/es/industries/energy`) ||
+         Path(`/es/industries/logistics`) ||
+         Path(`/es/industries/professional-services`) ||
+         Path(`/es/industries/agencies`) ||
+         Path(`/en/data`) ||
+         Path(`/en/industries`) ||
+         Path(`/en/pricing`) ||
+         Path(`/en/industries/industry`) ||
+         Path(`/en/industries/construction`) ||
+         Path(`/en/industries/energy`) ||
+         Path(`/en/industries/logistics`) ||
+         Path(`/en/industries/professional-services`) ||
+         Path(`/en/industries/agencies`) ||
+         Path(`/fr/data`) ||
+         Path(`/fr/industries`) ||
+         Path(`/fr/pricing`) ||
+         Path(`/fr/industries/industry`) ||
+         Path(`/fr/industries/construction`) ||
+         Path(`/fr/industries/energy`) ||
+         Path(`/fr/industries/logistics`) ||
+         Path(`/fr/industries/professional-services`) ||
+         Path(`/fr/industries/agencies`) ||
+         Path(`/de/data`) ||
+         Path(`/de/industries`) ||
+         Path(`/de/pricing`) ||
+         Path(`/de/industries/industry`) ||
+         Path(`/de/industries/construction`) ||
+         Path(`/de/industries/energy`) ||
+         Path(`/de/industries/logistics`) ||
+         Path(`/de/industries/professional-services`) ||
+         Path(`/de/industries/agencies`) ||
+         Path(`/it/data`) ||
+         Path(`/it/industries`) ||
+         Path(`/it/pricing`) ||
+         Path(`/it/industries/industry`) ||
+         Path(`/it/industries/construction`) ||
+         Path(`/it/industries/energy`) ||
+         Path(`/it/industries/logistics`) ||
+         Path(`/it/industries/professional-services`) ||
+         Path(`/it/industries/agencies`) ||
+         Path(`/pt/data`) ||
+         Path(`/pt/industries`) ||
+         Path(`/pt/pricing`) ||
+         Path(`/pt/industries/industry`) ||
+         Path(`/pt/industries/construction`) ||
+         Path(`/pt/industries/energy`) ||
+         Path(`/pt/industries/logistics`) ||
+         Path(`/pt/industries/professional-services`) ||
+         Path(`/pt/industries/agencies`) ||
          Path(`/llms.txt`) ||
          Path(`/sitemap.xml`) ||
          Path(`/robots.txt`) ||
@@ -24,6 +86,19 @@ http:
          Path(`/policies`) ||
          PathPrefix(`/policies/`) ||
          PathPrefix(`/_next/`) ||
+         Path(`/marketing/hero-art.webp`) ||
+         Path(`/marketing/hero-art-640.54a4dab4.webp`) ||
+         Path(`/marketing/hero-art-960.19bdf5ad.webp`) ||
+         Path(`/marketing/hero-art-1440.2dea815a.webp`) ||
+         Path(`/marketing/hero-art-1931.ac8ba5f0.webp`) ||
+         Path(`/marketing/industries-640.d72f4b1f.webp`) ||
+         Path(`/marketing/industries-960.aacd5920.webp`) ||
+         Path(`/marketing/industries-1440.44adf72f.webp`) ||
+         Path(`/marketing/industries-2007.c184a810.webp`) ||
+         Path(`/marketing/industries.webp`) ||
+         Path(`/marketing/focus.webp`) ||
+         Path(`/marketing/memory.webp`) ||
+         Path(`/marketing/explain.webp`) ||
          PathPrefix(`/brand/`) ||
          PathPrefix(`/fonts/`) ||
          PathPrefix(`/observer/`) ||
