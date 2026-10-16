@@ -854,6 +854,7 @@
   "{n} worsened": ["{n} verschlechtert", "{n} pioram", "{n} se dégradent", "{n} peggiorano"],
   "Metric": ["Kennzahl", "Métrica", "Indicateur", "Metrica"],
   "A change is what differs between two readings by the same instrument, not its cause. Improved or worsened is said only where more is clearly better or worse.": ["Eine Änderung ist, was sich zwischen zwei Messungen mit demselben Instrument unterscheidet, nicht ihre Ursache. Besser oder schlechter wird nur gesagt, wo mehr eindeutig besser oder schlechter ist.", "Uma mudança é o que difere entre duas leituras do mesmo instrumento, não a sua causa. Melhora ou piora só se diz onde mais é claramente melhor ou pior.", "Un changement est ce qui diffère entre deux lectures du même instrument, pas sa cause. Amélioration ou dégradation n'est indiqué que là où plus est clairement mieux ou pire.", "Un cambiamento è ciò che differisce tra due letture dello stesso strumento, non la sua causa. Migliora o peggiora si dice solo dove di più è chiaramente meglio o peggio."],
+  "Made in Spain · Global service": ["Entwickelt in Spanien · Weltweiter Service", "Feito em Espanha · Serviço global", "Conçu en Espagne · Service mondial", "Fatto in Spagna · Servizio globale"],
   "Source excerpt": ["Quellenauszug", "Excerto da fonte", "Extrait de la source", "Estratto della fonte"],
   "What is happening?": ["Was passiert gerade?", "O que está a acontecer?", "Que se passe-t-il ?", "Cosa sta succedendo?"],
   "Open this family": ["Diese Familie öffnen", "Abrir esta família", "Ouvrir cette famille", "Apri questa famiglia"],

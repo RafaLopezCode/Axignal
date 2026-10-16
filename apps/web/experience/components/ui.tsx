@@ -305,6 +305,9 @@ export function MiniFooter() {
           "Economic observation with memory and evidence.",
         )}
       </span>
+      {/* Where AXIGNAL is, stated in text on every public page: people and machines (the
+          self-check's markets.home_spain) read it; the service area stays worldwide. */}
+      <span>{t("Hecho en España · Servicio global", "Made in Spain · Global service")}</span>
       <nav aria-label={t("Más sobre AXIGNAL", "More about AXIGNAL")}>
         <Link href="/demo">{t("Ejemplo", "Example")}</Link>
         <Link href="/#pricing">{t("Precio", "Pricing")}</Link>
