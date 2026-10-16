@@ -26,10 +26,17 @@ WORK = Path(os.environ.get("AXIGNAL_GOLDEN_WORK", "/tmp/axignal-golden"))
 #: The set to observe: the golden set, or another (the self set, after each deploy).
 GOLDEN = Path(os.environ.get("AXIGNAL_GOLDEN_SET") or Path(__file__).with_name("golden_set.json"))
 MAX_JUDGMENT_ROUNDS = 12
+#: A website that did not load is studied once more after this pause: big sites shed load
+#: intermittently, and one failed fetch is not the engine's error (self-check 2026-10-17).
+RETRY_PAUSE_SECONDS = float(os.environ.get("AXIGNAL_GOLDEN_RETRY_PAUSE", "30"))
 
 
 def _log(*parts: object) -> None:
     print(*parts, file=sys.stderr, flush=True)
+
+
+def _unreachable(view: Any) -> bool:
+    return isinstance(view, dict) and view.get("state") == "SOURCE_UNAVAILABLE"
 
 
 def main() -> int:
@@ -65,6 +72,20 @@ def main() -> int:
     started = time.time()
     while observing.run_next():
         _log("observed", round(time.time() - started), "s")
+    unreachable = [ref for ref in refs if _unreachable(observing.study_result(ref)[0])]
+    if unreachable:
+        time.sleep(RETRY_PAUSE_SECONDS)
+        for ref in unreachable:
+            org = refs.pop(ref)
+            retry = f"{ref}:retry"
+            refs[retry] = org
+            _log(
+                "retry",
+                org["domain"],
+                observing.study(retry, f"https://{org['domain']}/", org["name"]),
+            )
+        while observing.run_next():
+            _log("observed", round(time.time() - started), "s")
     for ref in refs:
         observing.study_result(ref)  # first reads queue GEO, sector context and regulation
     # Sources the runtime reads on its own thread (inline here): notoriety, job boards.

@@ -68,7 +68,12 @@
      "túnel",
      "tunnel",
      "ferrocarril",
-     "rail"
+     "rail",
+     "paviment",
+     "asfalt",
+     "urbaniza",
+     "vial",
+     "firme"
     ]
    }
   }
