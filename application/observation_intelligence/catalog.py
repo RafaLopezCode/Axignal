@@ -27,7 +27,7 @@ from application.observation_intelligence.contracts import (
     geo,
 )
 
-CATALOG_VERSION = "eoil-catalog-2026-10-16.8"
+CATALOG_VERSION = "eoil-catalog-2026-10-16.9"
 
 #: Path depth that counts as a "region" inside each jurisdiction tree.
 REGIONAL_DEPTH: dict[str, int] = {"EU": 4, "US": 2}
@@ -314,6 +314,19 @@ CAPABILITY_LEXICON: tuple[CapabilityLexiconEntry, ...] = (
         demand_codes=(cpv("55100000"), naics("721110")),
         families=("hospitality",),
         buyer_jobs=("accommodation for official delegations and events",),
+    ),
+    CapabilityLexiconEntry(
+        # Found on the canary (biocultor.com, 2026-10-16): Jev read CPV division 77 at 0.91
+        # but the catalog had no gardening activity to name.
+        capability_id="landscaping-gardening", label="Landscaping and green-area maintenance",
+        terms=("mantenimiento de zonas verdes", "mantenimiento de jardines",
+               "servicios de jardinería", "jardinería profesional", "paisajismo",
+               "landscaping", "gardening services", "grounds maintenance",
+               "entretien des espaces verts", "garten- und landschaftsbau",
+               "manutenzione del verde", "manutenção de jardins"),
+        demand_codes=(cpv("77310000"), cpv("77314000"), naics("561730")),
+        families=("facility-services",),
+        buyer_jobs=("maintenance of parks, gardens and public green areas",),
     ),
     CapabilityLexiconEntry(
         capability_id="cleaning-services", label="Cleaning services",

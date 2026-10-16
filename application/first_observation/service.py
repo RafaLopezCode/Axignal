@@ -1517,6 +1517,9 @@ def _capability_wire(
     return {
         "method": None if finding is None else finding.method.value,
         "model": None if finding is None else finding.model,
+        # Operator trace (never the subscriber's view): decides whether a judged activity
+        # may seed where the autonomous loop looks (spec 079, CTO 2026-10-16).
+        "confidence": None if finding is None else finding.confidence,
         "capabilityId": capability.capability_id,
         "label": capability.label,
         "state": capability.state.value,
