@@ -612,6 +612,7 @@ class FirstObservationService:
         now: datetime,
         ledger: RunLedger,
         provider_input: bool = False,
+        premises_known: bool | None = None,
     ) -> tuple[tuple[ActivityFinding, ...], SemanticReading | None]:
         """Verify lexicon activities, then ask what is still unknown; one cascade, one budget.
 
@@ -669,7 +670,8 @@ class FirstObservationService:
         elif lexical:
             deterministic = compose(deterministic, ())
         reading = None
-        plan = plan_activity_batch(origin, pages, known_scopes=scopes, deterministic=deterministic)
+        plan = plan_activity_batch(origin, pages, known_scopes=scopes, deterministic=deterministic,
+                                   premises_known=premises_known)  # fmt: skip
         if plan is None:
             ledger.decide("SKIPPED:SEMANTIC:DETERMINISTIC_SUFFICIENT")
         elif (judge := open_cascade()) is not None:
@@ -774,7 +776,7 @@ class FirstObservationService:
         ]
         deterministic, semantic = self._semantic(
             reading.origin, pages, [*premises, *(c for _p, _a, c in areas)], deterministic,
-            now, ledger, rights.provider_input,
+            now, ledger, rights.provider_input, premises_known=bool(premises),
         )  # fmt: skip
         if semantic is not None and semantic.withheld:
             for withheld in semantic.withheld:

@@ -170,3 +170,23 @@ def test_readings_of_one_nature_never_ask() -> None:
     assert one and not natures_disagree(one)
     plan = plan_activity_batch("https://x.example.com/", [page], known_scopes=(), deterministic=one)
     assert plan is None or OFFER_NATURE not in plan.batch.questions
+
+
+def test_a_declared_service_area_still_asks_where_the_organization_is() -> None:
+    # Found on axignal.com (2026-10-17): "Worldwide" is where it sells, not where it is.
+    html = ("<html><body><h1>Observatorio económico</h1><p>Empresa española con sede en Madrid, "
+            "España, que observa organizaciones de todo el mundo.</p></body></html>")  # fmt: skip
+    page = read_page(url="https://a.example.com/", html=html, observed_at=NOW,
+                     content_fingerprint="t", artifact_ref=None)  # fmt: skip
+    from application.observation_intelligence.contracts import TaxonomyCode
+
+    worldwide = (TaxonomyCode("GEO", "WORLD"),)
+    asked = plan_activity_batch("https://a.example.com/", [page], known_scopes=worldwide,
+                                deterministic=(), premises_known=False)  # fmt: skip
+    assert asked is not None
+    assert any(q.question_id == "fo_operating_location" for q in asked.batch.questions)
+    known = plan_activity_batch("https://a.example.com/", [page], known_scopes=worldwide,
+                                deterministic=(), premises_known=True)  # fmt: skip
+    assert known is None or all(
+        q.question_id != "fo_operating_location" for q in known.batch.questions
+    )
