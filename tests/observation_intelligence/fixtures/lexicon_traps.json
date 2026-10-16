@@ -13,7 +13,16 @@
   ["trap corpus", "Nuestra sede tiene paneles solares en la cubierta."],
   ["trap corpus", "Somos clientes de una empresa de limpieza profesional."],
   ["trap corpus", "Utilizamos software a medida desarrollado por un partner."],
-  ["securitas.com 2026-10-15", "Cybersecurity Policy | Cookies | Privacy"]
+  ["securitas.com 2026-10-15", "Cybersecurity Policy | Cookies | Privacy"],
+  ["spec 080 use-of-product", "Fertilizante para jardinería profesional y paisajismo."],
+  ["spec 080 use-of-product", "Uniformes para servicios de limpieza y catering."],
+  ["spec 080 use-of-product", "Software for commercial cleaning companies."],
+  ["spec 080 use-of-product", "Maquinaria para mantenimiento de zonas verdes."],
+  ["spec 080 use-of-product", "Inversores y baterías para instalaciones fotovoltaicas."],
+  ["spec 080 use-of-product", "Produits d'entretien pour services de nettoyage."],
+  ["spec 080 use-of-product", "Arbeitskleidung für Gebäudereinigung."],
+  ["spec 080 use-of-product", "Attrezzature per manutenzione del verde."],
+  ["spec 080 use-of-product", "Equipamentos para serviços de limpeza."]
  ],
  "offers": [
   ["solar-pv-installation", "Instalamos placas solares para hogares y empresas en toda Andalucía."],
@@ -25,6 +34,8 @@
   ["software-development", "Desarrollo de software a medida para empresas industriales."],
   ["cleaning-services", "Empresa de limpieza profesional para oficinas y comunidades."],
   ["food-retail", "Supermercado online con entrega a domicilio en Madrid."],
-  ["legal-services", "Despacho de abogados especializado en derecho mercantil y laboral."]
+  ["legal-services", "Despacho de abogados especializado en derecho mercantil y laboral."],
+  ["fertilisers-soil-amendments", "Tienda especializada en té de humus de lombriz para huerto y jardín."],
+  ["fertilisers-soil-amendments", "Abono ecológico para mantenimiento de jardines y zonas verdes."]
  ]
 }

@@ -56,7 +56,7 @@ def _cpv_significant(code: str) -> str:
     return code[: max(2, len(code.rstrip("0")))]
 
 
-def _cpv_nature(code: str) -> str:
+def cpv_nature(code: str) -> str:
     """CPV divisions 03-44 and 48 are supplies, 45 is works, the rest are services."""
     division = int(code[:2]) if code[:2].isdigit() else 99
     if division == 45:
@@ -92,7 +92,7 @@ def classified_as(record: ProcurementRecord, codes: tuple[TaxonomyCode, ...]) ->
         specific = any(len(_cpv_significant(m)) >= 3 for m in mains)
         return ADDITIONAL if specific or not broad else None
     if record.contract_nature is not None and all(
-        _cpv_nature(code) != record.contract_nature for code in cpv
+        cpv_nature(code) != record.contract_nature for code in cpv
     ):
         return ADDITIONAL
     return None
