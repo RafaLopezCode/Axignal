@@ -50,4 +50,12 @@ T022 includes the subsequent human corrections: untruncated112pxnative locale se
 
 - [x] T023 Apply the explicit295EUR/month advisory commercial amendment; synchronize the verified Stripe catalogue when Products Write is granted.
 - [x] T024 Optimize public first-load assets and speculative navigation, preserve SSR/hreflang/canonicals and verify image/font delivery without invented CWV claims.
-- [ ] T025 Run required deterministic gates, commit and push the isolated branch, integrate the reviewed green canonical main and deploy its exact SHA with rollback and subscriber overlays preserved. User expressly requested commit, deploy and push after load optimization on2026-10-16.
+- [x] T025 Run required deterministic gates, commit and push the isolated branch, integrate the reviewed green canonical main and deploy its exact SHA with rollback and subscriber overlays preserved. User expressly requested commit, deploy and push after load optimization on2026-10-16.
+
+## Header and mobile refinement requested after publication
+
+- [x] T026 Center public navigation against the complete header and center the Start label/arrow; add the canonical Lucide LinkedIn brand icon; introduce a mobile-only folio illustration with six-language HTML headings and preserve desktop art. Verify narrow/intermediate/wide layouts, focus/menu, asset delivery and private boundaries. Human visual acceptance of this refinement remains pending.
+
+T025 completed in prior release04ad93c through PR281 with exact-main CI and production verification. T026 is implemented and locally verified in codex/landing-header-mobile-polish; evidence `.impeccable/review/final/header-mobile/packet.md`, new visual acceptance pending, no new deployment.
+
+- [ ] T027 Execute the explicitly requested commit, merge and deployment of the scoped header/mobile refinement after green branch/main CI, preserving overlays, private boundaries, runtime configuration and rollback; record actual production evidence against the immutable main SHA.

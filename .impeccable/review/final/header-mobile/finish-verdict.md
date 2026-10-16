@@ -1,0 +1,12 @@
+## verdict
+
+1. Navegación global — resolved. La captura de escritorio conserva la identidad y centra el grupo sobre el ancho total; CSS usa laterales simétricos y gutters iguales. Las muestras finales con nav visible sitúan su centro a menos de 0.008px del centro del header. El colapso bajo 1440px evita forzar textos de seis idiomas entre el logo y las acciones. Las muestras ocultas no se usan para evaluar centrado de nav.
+2. Empezar — resolved. Texto y flecha aparecen centrados conjuntamente dentro del botón; justify-content:center, gap explícito y SVG sin encogimiento corrigen la causa estructural. Las once geometrías finales registran ctaJustify:center sin overflow.
+3. Hero móvil — resolved. La nueva placa 4:3 llena el área ilustrada y recupera los tres titulares localizados sobre sus bandas. El wrapper local contiene imagen y títulos; tablet comparte la misma altura del visual y la imagen, sin invadir las anotaciones. Las capturas 405/320 alemán muestran títulos contenidos; las doce combinaciones finales únicas de seis idiomas a 320/405 no exceden la altura de banda ni producen overflow. Los 10px a 320 son únicamente duplicados decorativos aria-hidden; las anotaciones enlazadas legibles permanecen debajo. Se conserva el fallback de tablet y el master de escritorio.
+4. LinkedIn — resolved. La captura del footer muestra icono, texto, flecha externa y foco visible. El SVG vendorizado registra origen Lucide 0.468.0, licencia y hash; mantiene su geometría y usa azul AXIGNAL. El enlace conserva nombre accesible, URL y comportamiento externo, con objetivo de 44px. No se incorpora una segunda biblioteca ni un glifo improvisado.
+
+## remaining
+
+Clear exclusivamente para los cuatro comentarios del lote. Abiertos todos los cinco PNG finales y cotejados todos los hashes del manifiesto. Recalculados los predicados de las once geometrías de estructura y doce combinaciones móviles: cero fallos del alcance comprobado. La superposición numérica de anotaciones de escritorio corresponde al overlay intencional; no se confunde con una colisión en el flujo tablet/móvil. Los checks HTTP/cache de 14 activos y gates del paquete son resultados aportados, no repetidos por este revisor. No se ejecutaron navegador, detector, build ni auditoría global. Este lote sigue SOLO LOCAL con HUMAN_VISUAL_ACCEPTANCE_PENDING; no se declara publicado, ni se cierra el checkpoint CLI histórico OPEN. Ship cubre únicamente las correcciones revisadas.
+
+disposition: ship

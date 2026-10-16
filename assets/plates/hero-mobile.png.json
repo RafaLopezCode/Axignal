@@ -1,0 +1,11 @@
+{
+  "tool": "built-in image_gen",
+  "createdAt": "2026-10-16",
+  "prompt": "Create a separate MOBILE hero illustration for AXIGNAL, adapted from the provided desktop hero reference. Preserve exactly the recognisable friendly white Observador mascot, thick elegant dark ink outlines, small detective cap, bright royal blue monocle, high-end editorial photoreal paper and soft daylight style. Use a tightly composed 4:3 landscape canvas, no empty copy area and no desktop desk objects. The mascot occupies the upper center 40 percent, the foreground is a large open THREE-PANEL newspaper held by the mascot, almost front-facing with only subtle perspective. Each equal-width newspaper panel shows a rich but restrained monochrome slate-blue editorial picture: first a company building/offer, middle a small diverse professional audience, third a wider city/public world. Put these pictures lower on their panels; reserve a clean ivory heading band above each picture with no printed text. The three heading band centers should align horizontally at about 52 percent image height, at x17 percent,50 percent,83 percent. Leave generous room in these bands for live translated HTML labels, two short lines each. Fill the lower newspaper with fine editorial rules, tiny schematic maps and columns, matching the reference's palette, without readable words. Composition must feel substantial and useful at a phone width of390px. Crop the paper naturally at the bottom and sides; keep mascot cap and monocle fully visible. Background pale cool ivory #f8fafc, paper cream-white, ink near #101727 and accents #354f98, soft grey-blue illustrations. No colourful backgrounds, no extra characters beyond the newspaper illustration, no letters, no text, no logo, no UI, no arrows. Deliver one polished mobile-specific image. Do not change or regenerate the desktop asset.",
+  "reference": "apps/web/experience/public/marketing/hero-art.webp",
+  "source": "assets/plates/hero-mobile.png",
+  "sourceSha256": "e274b2c118edda40adb7b664f3edca98eb4306b719113b535a3ac277d2b1718a",
+  "purpose": "Conceptual mobile-only editorial illustration; never economic evidence",
+  "derivatives": "Sharp, WebP quality86 effort6; manifest records hashes and widths",
+  "humanVisualAcceptance": "PENDING"
+}

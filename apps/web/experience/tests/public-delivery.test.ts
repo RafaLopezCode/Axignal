@@ -47,7 +47,7 @@ test("WOFF2 delivery preserves the original font assets with a smaller immutable
 test("year-long cache is limited to content-hashed public assets", async () => {
   const headers=await config.headers!();
   const cached=headers.filter(rule=>rule.headers.some(h=>h.key==="Cache-Control"));
-  assert.equal(cached.length,10);
+  assert.equal(cached.length,14);
   for(const rule of cached) {
     assert.match(rule.source,/^\/(?:marketing|fonts)\/[a-z0-9-]+\.[a-f0-9]{8}\.(?:webp|woff2)$/);
     assert.ok(rule.headers.some(h=>h.key==="Cache-Control"&&h.value==="public, max-age=31536000, immutable"));

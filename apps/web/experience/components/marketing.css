@@ -37,14 +37,14 @@
 }
 .marketing-site > .public-header {
   height: clamp(76px, 5.45vw, 88px);
-  padding-inline: 3% 4%;
+  padding-inline: 3%;
   padding-block: 0;
   align-items: center;
   max-width: none;
   position: relative;
   background: #fafcfd;
   display: grid;
-  grid-template-columns: 26% 1fr auto;
+  grid-template-columns: minmax(0, 1fr) max-content minmax(0, 1fr);
   gap: 2%;
   backdrop-filter: none;
 }
@@ -53,15 +53,18 @@
   height: auto;
 }
 .marketing-site .public-header nav {
-  gap: clamp(30px, 3.9vw, 59px);
-  font-size: 15px;
-  justify-self: start;
+  gap: clamp(18px, 1.5vw, 28px);
+  font-size: 14px;
+  justify-self: center;
   white-space: nowrap;
 }
 .marketing-site .public-header .header-actions {
+  justify-self: end;
   gap: 20px;
 }
 .marketing-site .public-header .public-access-link {
+  justify-content: center;
+  gap: 8px;
   min-height: 49px;
   min-width: 135px;
   padding-inline: 22px;
@@ -72,6 +75,22 @@
   width: 100%;
   aspect-ratio: 1505/635;
   isolation: isolate;
+}
+.marketing-site .public-header .public-access-link svg {
+  flex-shrink: 0;
+}
+.marketing-site .marketing-hero-visual {
+  position: absolute;
+  inset: 0;
+}
+.marketing-site .marketing-hero-visual picture {
+  display: block;
+  height: 100%;
+}
+.marketing-site .marketing-folio-labels {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
 }
 .marketing-site .marketing-hero-art {
   display: block;
@@ -362,8 +381,14 @@
     margin-block: 24px;
     gap: 10px;
   }
-  .marketing-site .marketing-hero-art {
+  .marketing-site .marketing-hero-visual {
+    position: relative;
+    inset: auto;
     order: 1;
+    height: 260px;
+    width: 100%;
+  }
+  .marketing-site .marketing-hero-art {
     height: 260px;
     object-fit: cover;
     object-position: 75% center;
@@ -1372,8 +1397,11 @@
 }
 /* The folio enters reading flow with the collapsed header; medium widths must not overlap the next section. */
 @media (min-width: 761px) and (max-width: 1279px) {
-  .marketing-site .marketing-hero-art {
+  .marketing-site .marketing-hero-visual {
     height: clamp(330px, 43vw, 480px);
+  }
+  .marketing-site .marketing-hero-art {
+    height: 100%;
   }
   .marketing-site .marketing-families-opening {
     grid-template-columns: 45% 1fr;
@@ -1589,11 +1617,11 @@
 
 @media (min-width: 1280px) and (max-width: 1519px) {
   .marketing-site > .public-header {
-    grid-template-columns: 20% minmax(0, 1fr) auto;
+    grid-template-columns: minmax(0, 1fr) max-content minmax(0, 1fr);
     column-gap: 1.5%;
   }
   .marketing-site .public-header nav {
-    gap: 24px;
+    gap: 18px;
     font-size: 14px;
   }
   .marketing-site .public-header .header-actions {
@@ -1655,4 +1683,63 @@
   width: 112px;
   min-width: 112px;
   padding-inline: 8px;
+}
+/* Equal side tracks center navigation on the header, independent of action width.
+   Collapse before localized navigation can collide with the fixed action group. */
+@media (min-width: 1280px) and (max-width: 1439px) {
+  .marketing-site > .public-header {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+  .marketing-site .public-header > nav {
+    display: none;
+  }
+  .marketing-site .public-menu-button {
+    display: inline-flex;
+  }
+}
+/* A separate, fully composed plate fills phones; labels remain localized HTML.
+   Heading centers measured on the1448x1086mobile master. */
+@media (max-width: 760px) {
+  .marketing-site .marketing-hero-visual {
+    height: auto;
+    aspect-ratio: 4 / 3;
+  }
+  .marketing-site .marketing-hero-art {
+    height: 100%;
+    object-fit: contain;
+    object-position: center;
+  }
+  .marketing-site .marketing-folio-labels {
+    display: block;
+  }
+  .marketing-site .marketing-hero-visual .marketing-folio-labels span {
+    width: 26.5%;
+    font-size: clamp(10px, 3vw, 20px);
+    line-height: 1.1;
+    white-space: normal;
+    text-wrap: balance;
+  }
+  .marketing-site .marketing-folio-offer {
+    left: 17.3%;
+    top: 46.9%;
+    transform: translate(-50%, -50%) rotate(9.5deg);
+  }
+  .marketing-site .marketing-folio-audience {
+    left: 49.8%;
+    top: 50.3%;
+    transform: translate(-50%, -50%);
+  }
+  .marketing-site .marketing-folio-understood {
+    left: 82.7%;
+    top: 46.9%;
+    transform: translate(-50%, -50%) rotate(-9.5deg);
+  }
+}
+.marketing-site .marketing-footer .marketing-linkedin-logo {
+  display: block;
+  flex-shrink: 0;
+}
+
+.marketing-site .marketing-footer .marketing-social-link {
+  min-height: 44px;
 }

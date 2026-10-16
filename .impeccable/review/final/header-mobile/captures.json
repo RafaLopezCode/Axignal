@@ -1,0 +1,38 @@
+[
+  {
+    "file": "desktop-final.png",
+    "sha256": "5698491f0cd4e5f1f82ec31dffc5c0154ccf95b2bdd2606e56d93ab4728baad9"
+  },
+  {
+    "file": "mobile-final.png",
+    "sha256": "3e045691e513d8bcdbc07b25aac9bc311b7d66fbebada04fb4f1471b07a78977"
+  },
+  {
+    "file": "mobile-de-320.png",
+    "sha256": "8f93b7ef91507fa7dbb01d524e0beb1b47aa555ad362bf5888498ac44f99df1e"
+  },
+  {
+    "file": "tablet-final.png",
+    "sha256": "7361ac243e4dd01ba5ce1744c7c428a2ccb972535ffeff8140553c9bfdbb076f"
+  },
+  {
+    "file": "footer-final.png",
+    "sha256": "798e4a797c4222160e5995e13b981a83a9a02e03ff97b2e2ad51234e83685b7f"
+  },
+  {
+    "file": "first-geometry.json",
+    "sha256": "9ffca83bf546405c5596d07a27bfee363ee96bd9001ab7d3868915c57ff0f8be"
+  },
+  {
+    "file": "final-geometry.json",
+    "sha256": "0d89792bb7485a2a0ac0ded3936798905c6fb789f299b061ead5212faa1bc586"
+  },
+  {
+    "file": "mobile-locales-final.json",
+    "sha256": "4edca29080a6b2d2fc00a237645e3453e95a8c6c2eb6693221208f80fbd5f2c7"
+  },
+  {
+    "file": "asset-verification.json",
+    "sha256": "2d27afc55bca271a04cd19a57c114d615a4673cd73a30f7c13517a9f6e469e4b"
+  }
+]

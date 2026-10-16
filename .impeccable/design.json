@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-16T12:50:02.2625669Z",
+  "generatedAt": "2026-10-16T14:13:49.8988084Z",
   "title": "Design System: AXIGNAL public landing ecosystem",
   "extensions": {
     "scope": {
@@ -25,7 +25,10 @@
         "apps/web/experience/lib/marketing-newsletter.ts",
         "apps/web/experience/public/marketing/industries.webp.json",
         "apps/web/experience/components/public-brand-vector.tsx",
-        "apps/web/experience/public/brand/logo-light.svg"
+        "apps/web/experience/public/brand/logo-light.svg",
+        "apps/web/experience/lib/marketing-delivery.json",
+        "assets/plates/hero-mobile.png.json",
+        "apps/web/experience/public/brand/linkedin-lucide.svg.json"
       ],
       "review": "CLI hero/history OPEN; automatic phases unclosed; manual real-app review authorized; final human visual acceptance PENDING."
     },
@@ -270,6 +273,10 @@
       "folio-right-localized": {
         "displayName": "Localized right folio headline",
         "purpose": "Existing EN/DE/FR/IT copy fitted in the right newspaper column without semantic changes."
+      },
+      "folio-mobile-label": {
+        "displayName": "Mobile paper label",
+        "purpose": "Localized HTML within the new local 4:3 mobile plate; same Fraunces identity."
       }
     },
     "shadows": [
@@ -336,6 +343,10 @@
       {
         "value": "1519px",
         "name": "compact-desktop-header-end"
+      },
+      {
+        "name": "desktop-navigation-collapse",
+        "value": "1439px"
       }
     ],
     "focus": {
@@ -347,12 +358,12 @@
     "snippetPolicy": "Appearance excerpts use ds- class scoping and local token fallbacks because marketing variables are scoped to .marketing-site, not :root. Existing globally served font faces are inherited; no font/network dependency is added. No framework behavior, real pricing logic or data is fabricated.",
     "responsiveOverrides": [
       {
-        "value": "normal-flow copy and art; annotations below; no folio labels/connectors",
+        "value": "max 1279px: normal-flow copy and visual wrapper; linked annotations below; desktop folio labels hidden on tablet; mobile plate restores labels at max 760px",
         "condition": "max-width: 1279px",
-        "target": "hero reading flow and collapsed public navigation"
+        "target": "hero reading flow"
       },
       {
-        "value": "height: clamp(330px, 43vw, 480px)",
+        "value": "wrapper height: clamp(330px, 43vw, 480px); image height: 100%",
         "condition": "min-width: 761px and max-width: 1279px",
         "target": "medium hero art"
       },
@@ -378,7 +389,7 @@
       },
       {
         "condition": "min-width: 1280px and max-width: 1519px",
-        "value": "grid-template-columns: 20% minmax(0, 1fr) auto; column-gap: 1.5%; nav gap: 24px; action gap: 14px",
+        "value": "visible desktop 1440–1519px: equal flexible side tracks around max-content navigation, 1.5% column-gap, nav gap 18px, action gap 14px; menu at 1439px and below",
         "target": "compact desktop header"
       },
       {
@@ -558,13 +569,13 @@
         "Fraunces",
         "Manrope"
       ],
-      "cache": "One year immutable only for ten explicitly allowlisted hashed image/font URLs; no authenticated page cache change",
+      "cache": "Fourteen explicitly allowlisted hashed image/font URLs, year-long immutable; five exact new mobile-image routes added to the AXIGNAL edge allowlist. No broad asset/private cache policy.",
       "fontManifest": "specs/077-public-landing-ecosystem/performance/font-delivery.json",
-      "art": "Six small hashed WebP variants (640/960/1440 for each of two approved scenes), two byte-identical hashed full plates; same frames/artwork",
+      "art": "Existing approved desktop/industry plates preserved; new local mobile-only 4:3 plate has 360/640/960/1448 WebP srcset at max 760px.",
       "links": "Public Link prefetch:false; same routes on demand",
       "measurementLimit": "Resource delivery and contextual localhost inventory only; no field LCP/INP/CLS, user-performance or ranking claim",
       "heroText": "No arrival animation, blur or vertical translation; crisp first paint",
-      "assetManifest": "specs/077-public-landing-ecosystem/performance/asset-delivery.json"
+      "assetManifest": "apps/web/experience/lib/marketing-delivery.json"
     },
     "advisoryCommercialContext": {
       "boundary": "Commercial context for sample accuracy, never a visual token or new payment action by documenter",
@@ -593,6 +604,67 @@
         1280
       ],
       "directory": ".impeccable/review/final/release"
+    },
+    "localHeaderMobileRefinement": {
+      "status": "LOCAL ONLY, unintegrated and unpublished",
+      "linkedin": {
+        "geometry": "Untouched; stroke currentColor resolved to #354f98",
+        "provenance": "apps/web/experience/public/brand/linkedin-lucide.svg.json",
+        "targetMinHeight": "44px",
+        "source": "official Lucide 0.468.0 SVG",
+        "license": "apps/web/experience/public/brand/linkedin-lucide.LICENSE.txt",
+        "size": "18px"
+      },
+      "production": "Primary reports previous main 04ad93c remains deployed",
+      "mobileHero": {
+        "media": "max-width: 760px",
+        "labels": "Existing six-language HTML, hidden from accessibility as decorative duplicates; mobile scoped specificity",
+        "master": "1448×1086, 4:3",
+        "centers": [
+          {
+            "left": "17.3%",
+            "rotation": "9.5deg",
+            "top": "46.9%"
+          },
+          {
+            "left": "49.8%",
+            "rotation": "0deg",
+            "top": "50.3%"
+          },
+          {
+            "left": "82.7%",
+            "rotation": "-9.5deg",
+            "top": "46.9%"
+          }
+        ],
+        "width": "26.5%",
+        "widths": [
+          360,
+          640,
+          960,
+          1448
+        ],
+        "provenance": "assets/plates/hero-mobile.png.json",
+        "source": "assets/plates/hero-mobile.png",
+        "generator": "built-in image_gen, prior desktop hero reference, full prompt recorded",
+        "typographyRef": "folio-mobile-label"
+      },
+      "acceptance": "Human visual acceptance PENDING; historical CLI OPEN; prior production release remains separate",
+      "branch": "codex/landing-header-mobile-polish",
+      "header": "Equal side tracks center visible navigation independently of action width; menu <=1439px; signup text/arrow centered with 8px gap",
+      "validation": "Final header-mobile/packet.md reports 352 frontend, final production build/types/i18n, 8 public HTTP, 28 Admin HTTP, 7 routing contracts, architecture and 8 governance checks passed; 12 unique mobile locale/width combinations fit without overflow, 11 structural boundaries, five final captures. No QA rerun by documenter.",
+      "evidence": {
+        "documenter": "Read final packet; no browser, QA, detector or gate rerun.",
+        "geometry": "final-geometry.json",
+        "captures": "captures.json",
+        "packet": "packet.md",
+        "independentReview": "Final bounded reviewer working; no verdict inferred",
+        "taskHistory": "T025 is previous deployed04ad93c; T026 is current implemented/local batch with human acceptance pending",
+        "directory": ".impeccable/review/final/header-mobile",
+        "finalMobile": "mobile-locales-final.json",
+        "status": "IMPLEMENTED + AUTOMATED_QA_PASS + VISUAL_EVIDENCE_READY + HUMAN_VISUAL_ACCEPTANCE_PENDING",
+        "typographyBoundary": "Mobile specificity fix affects decorative duplicate headlines only, not accessible annotations/body"
+      }
     }
   },
   "components": [
