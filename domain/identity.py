@@ -9,6 +9,17 @@ from enum import StrEnum
 from typing import NewType
 
 OrganizationId = NewType("OrganizationId", str)
+
+#: A web-anchored subject (ADR-0087 amendment 2026-10-16): an organization observed through its
+#: public website whose legal identity is not verified. It directs observation only and can
+#: never be the subject of canonical state.
+WEB_SUBJECT_PREFIX = "org:web:"
+
+
+def is_web_subject(organization_id: str) -> bool:
+    return organization_id.startswith(WEB_SUBJECT_PREFIX)
+
+
 FaxtId = NewType("FaxtId", str)
 PrincipalId = NewType("PrincipalId", str)
 TenantId = NewType("TenantId", str)

@@ -29,3 +29,44 @@ The subscriber portfolio already resolved locators through `SqliteCanonicalOrgan
 - Two Tenants observing one company share one canonical Organization and keep separate private Foci; removing a Focus never deletes the Organization.
 - The Customer Zero operator catalog keeps its legacy `org:axignal` binding (`legacy-fr30`), which has no registry evidence; it is not bridged into the subscriber store.
 - Admission is global: an entitled Tenant at capacity may cause a registry-attested identity to be admitted, but receives no Focus.
+
+## Amendment 2026-10-16: identity verification is an optional upgrade, not a gate to observe
+
+- **Status:** Proposed (CTO decision requested in review).
+- **Authority:**
+  - MASTER §22 (line 1377): an agency may create 100 Foci over clients, competitors or targets without proving it represents any of them, because a Focus **writes nothing about them**; it only directs persistent observation.
+  - MASTER §15.3: the official website is the source for declared products and capabilities; registry and authority are the source for legal identity.
+  - MASTER §15.4: UNKNOWN ≠ FALSE.
+
+**Measured problem.** The first real pilot (a Spanish shop, 2026-10-16) stayed `IDENTITY_PENDING / IDENTITY_SOURCE_UNAVAILABLE`. The only configured registry is GLEIF, which covers LEI holders. Its consequences:
+- No Focus is created, and the autonomous loop has nothing to observe.
+- Every small business without an LEI, and every competitor (whose identity a subscriber can never verify), is blocked.
+
+The gate is stricter than the MASTER requires.
+
+**Decision (proposed).**
+
+1. **Web-anchored subject.** When admission ends `IDENTITY_PENDING` for a locator with a public website, the portfolio may create the Focus on a **web-anchored subject**:
+   - its id is `org:web:<sha256(registrable domain)>`;
+   - it is stored in its own operational store (`web-subjects.sqlite3`), **never in the canonical Organization store or AXIGLAND**;
+   - it carries only the registrable domain, the locator and the creation time.
+2. **What it may observe.** Everything public whose source is the website or public surfaces about it: presence (SEO, GEO, web), reputation, value (declared offer), markets, relationships, demand, activity, context and evolution in time.
+   - Legal-identity predicates stay **UNKNOWN** with `IDENTITY_NOT_VERIFIED`, as the first observation already shows: legal name, registrations, register filings, accounts, awards bound to a legal entity, and group structure.
+   - Nothing about a web-anchored subject is a canonical write or a FAXT.
+3. **A website still never admits identity.** Item 4 of this ADR is unchanged. The subject is attention plus observation, never a legal identity. Display uses the domain, not an invented legal name.
+4. **Verification is an optional upgrade.** The subscriber (or AXIGNAL, when a registry source later resolves the same locator) may verify the identity:
+   - registry admission creates or finds the canonical Organization;
+   - the Focus is re-pointed with the existing `replace` flow;
+   - the web-anchored observation history stays attached to the Focus, so continuity is not lost;
+   - the newly reachable legal predicates are then observed.
+5. **Unchanged:**
+   - INVALID_INPUT, CONFLICT and AMBIGUOUS keep their current outcomes;
+   - private hosts and IPs are still rejected;
+   - capacity and entitlement rules are unchanged;
+   - one Tenant's Focus never writes anything about the organization.
+
+**Consequences.**
+- Small businesses and competitors can be observed continuously from day one.
+- Verified identity becomes a value-adding upgrade: it unlocks registry, financial and award facts.
+- Two Tenants observing the same domain share one web-anchored subject, as with canonical Organizations.
+- Merging a later verified identity is explicit and auditable.

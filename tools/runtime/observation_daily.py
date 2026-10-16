@@ -70,6 +70,7 @@ from application.xeed_access.organization_reader import OrganizationReadError
 from application.xeed_access.reader import TrustedRequestContext, XeedReadError
 from domain.identity import PrincipalId, TenantId, XeedId
 from domain.xignal import XignalEpistemicState
+from pipeline.entity_resolution.web_subjects import CanonicalOrWebSubjects, SqliteWebSubjectStore
 from pipeline.world_demand.sqlite_store import SqliteWorldDemandIndex
 from tools.runtime.first_observation import DerivedReader, first_observation_reader
 from tools.runtime.subscriber_observation import (
@@ -431,10 +432,14 @@ def build_economic_runtime(root: Path, *, code_sha: str) -> SubscriberEconomicRu
         database_path=root / "subscriber-economic-output.sqlite3",
         identity_store=SqliteSubscriberIdentityStore(root / "subscriber-runtime.sqlite3"),
         portfolio_store=SqliteSubscriberPortfolioStore(root / "subscriber-runtime.sqlite3"),
-        organizations=SqliteCanonicalOrganizationStore(
-            root / "canonical-organizations.sqlite3",
-            integrity=ContentAddressedArtifactIntegrityAdapter(artifacts),
-            governance=SqliteIdentityGovernanceStore(root / "identity-governance.sqlite3"),
+        # ADR-0087 amendment: a Focus may be on a web-anchored subject (never canonical).
+        organizations=CanonicalOrWebSubjects(
+            SqliteCanonicalOrganizationStore(
+                root / "canonical-organizations.sqlite3",
+                integrity=ContentAddressedArtifactIntegrityAdapter(artifacts),
+                governance=SqliteIdentityGovernanceStore(root / "identity-governance.sqlite3"),
+            ),
+            SqliteWebSubjectStore(root / "web-subjects.sqlite3"),
         ),
         observation_memory=SqliteObservationMemory(root / "observation-memory.sqlite3"),
         reuse_policy=SUBSCRIBER_REUSE_POLICY,

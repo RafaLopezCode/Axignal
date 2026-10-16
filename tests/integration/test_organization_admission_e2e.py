@@ -51,8 +51,10 @@ def _registry(tmp_path: Path) -> ControlledRegistry:
     )
 
 
-def _facade(tmp_path: Path, registry: ControlledRegistry) -> Any:
-    return _build(tmp_path, pilot=True, identity_source=registry)
+def _facade(tmp_path: Path, registry: ControlledRegistry, *, web_anchored: bool = False) -> Any:
+    # Spec 052 as written: registry-only Foci. The ADR-0087 amendment (web-anchored Foci when
+    # no registry answers) is on by default and tested below with web_anchored=True.
+    return _build(tmp_path, pilot=True, identity_source=registry, web_anchored=web_anchored)
 
 
 def _headers(token: str | None = None) -> dict[str, str]:
@@ -279,3 +281,49 @@ def test_unauthorized_and_forged_requests_fail_before_any_identity_work(tmp_path
     signed_out = facade.handle("POST", "/subscriber/auth/logout", _headers(token), {})
     assert signed_out.status == 200
     assert _add(facade, token, "add:after-logout").status == 401
+
+
+def test_a_website_no_registry_attests_is_observed_as_a_web_anchored_subject(
+    tmp_path: Path,
+) -> None:
+    # ADR-0087 amendment 2026-10-16, found on the first real pilot (a shop without an LEI):
+    # verifying identity is an optional upgrade, not a gate to observe.
+    registry = _registry(tmp_path)
+    facade = _facade(tmp_path, registry, web_anchored=True)
+    token, _ = _pilot(facade, tmp_path, "subject:pilot-web")
+    added = _add(facade, token, "add:shop", "https://www.tienda-ejemplo.example.com/")
+    assert added.body["state"] == "CREATED", added.body
+    assert str(added.body["organizationId"]).startswith("org:web:")
+    # A Focus exists; nothing was admitted to the canonical Organization store.
+    assert (_organizations(tmp_path), _focuses(tmp_path)) == (0, 1)
+    (entry,) = _portfolio(facade, token)
+    assert entry["state"] == "ACTIVE"
+    output = facade.handle(
+        "GET", f"/subscriber/organizations/{entry['focusId']}/output", _headers(token)
+    )
+    assert output.status == 200, output.body
+
+    # The same website for a second Tenant shares the subject (as a canonical Organization).
+    other, _ = _pilot(facade, tmp_path, "subject:pilot-web-2")
+    again = _add(facade, other, "add:shop:2", "https://tienda-ejemplo.example.com")
+    assert again.body["organizationId"] == added.body["organizationId"]
+
+    # Ambiguity and bare names stay pending: only a missing registry answer is anchored.
+    ambiguous = _add(facade, other, "add:acme", "Acme SL")
+    assert ambiguous.body["state"] == "IDENTITY_PENDING"
+
+
+def test_a_pending_website_becomes_a_focus_on_retry_once_web_anchoring_is_on(
+    tmp_path: Path,
+) -> None:
+    registry = _registry(tmp_path)
+    token, _ = _pilot(_facade(tmp_path, registry), tmp_path, "subject:pilot-retry")
+    pending = _add(_facade(tmp_path, registry), token, "add:shop", "https://shop.example.com/")
+    assert pending.body["state"] == "IDENTITY_PENDING"
+    (item,) = _portfolio(_facade(tmp_path, registry), token)
+    retried = _facade(tmp_path, registry, web_anchored=True).handle(
+        "POST", "/subscriber/portfolio", _headers(token),
+        {"action": "retry_pending", "requestRef": "retry:shop", "focusId": item["focusId"]},
+    )  # fmt: skip
+    assert retried.body["state"] == "CREATED", retried.body
+    assert str(retried.body["organizationId"]).startswith("org:web:")

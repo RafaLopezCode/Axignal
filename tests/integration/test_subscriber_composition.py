@@ -141,6 +141,7 @@ def _build(
     observation_plan_path: Path | None = None,
     clock: Clock | None = None,
     identity_source=None,
+    web_anchored: bool | None = None,
 ) -> SubscriberHttpFacade:
     settings = _settings(
         tmp_path,
@@ -148,6 +149,11 @@ def _build(
         pilot=pilot,
         observation_plan_path=observation_plan_path,
     )
+    if web_anchored is not None:
+        from dataclasses import replace as _replace
+
+        flag = {"AXIGNAL_WEB_ANCHORED_FOCUS_ENABLED": "true" if web_anchored else "false"}
+        settings = _replace(settings, values={**settings.values, **flag})
     facade = build_subscriber_facade(
         settings,
         tmp_path,

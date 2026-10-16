@@ -1104,6 +1104,23 @@ def build_subscriber_facade(
         else build_registry_source(settings.values, root)
     )
     organization_admission = OrganizationAdmissionService(organizations, registry_source)
+    # ADR-0087 amendment (2026-10-16): verifying identity is an optional upgrade, not a gate.
+    # A website no registry can attest is observed as a web-anchored subject (never canonical).
+    from application.organization_admission.web_anchored import WebAnchoredResolution
+    from pipeline.entity_resolution.web_subjects import (
+        CanonicalOrWebSubjects,
+        SqliteWebSubjectStore,
+    )
+
+    web_subjects = SqliteWebSubjectStore(root / "web-subjects.sqlite3")
+    canonical_organizations = organizations
+    organizations = CanonicalOrWebSubjects(canonical_organizations, web_subjects)  # type: ignore[assignment]
+    organization_resolution = (
+        WebAnchoredResolution(organization_admission, web_subjects, effective_clock.now)
+        if settings.values.get("AXIGNAL_WEB_ANCHORED_FOCUS_ENABLED", "true").strip().lower()
+        == "true"
+        else organization_admission
+    )
     search = getattr(registry_source, "candidates", None)
 
     def identity_candidates(query: str, country: str | None) -> list[dict[str, str | None]]:
@@ -1132,7 +1149,7 @@ def build_subscriber_facade(
             if checkout is not None
             else _UnavailableCheckout()
         ),
-        organization_admission,
+        organization_resolution,
         observation_trigger,
         effective_clock,
     )
