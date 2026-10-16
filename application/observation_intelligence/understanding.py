@@ -38,11 +38,28 @@ _CLIENT_STORY = re.compile(
     re.IGNORECASE,
 )
 
+#: What the organization uses, has, buys or sells through, not what it offers (found on
+#: biocultor.com, 2026-10-16: "huerto urbano, autoconsumo" read as solar installation; a trap
+#: corpus showed the same for "our offices have CCTV", "we work with a local printer"...).
+_OWN_USE = re.compile(
+    r"\b(nuestr[ao]s? (sede|sedes|oficinas?|nave|naves|f[aá]brica|almac[eé]n|instalaciones|"
+    r"tienda f[ií]sica|cubierta|edificio)|our (offices?|headquarters|warehouse|factory|"
+    r"facilities|building|premises|roof)|nos (bureaux|locaux|entrep[oô]ts?)|unser(e|em)? "
+    r"(b[uü]ro|lager|geb[aä]ude|halle)|i nostri uffici|os nossos escrit[oó]rios|"
+    r"utilizamos|usamos|we use|nous utilisons|wir nutzen|utilizziamo|"
+    r"somos clientes|we are (a )?customers?|trabajamos con (un|una)|colaboramos con (un|una)|"
+    r"we work with an? |protected by|protegid[ao]s? (por|con)|runs on|powered by|"
+    r"funciona con|disponibles? en (supermercados|supermarkets|tiendas|grandes superficies)|"
+    r"available (in|at) (supermarkets|stores|retailers)|encuentra nuestros productos|"
+    r"find our products|para reducir nuestr[ao]|to reduce our)\b",
+    re.IGNORECASE,
+)
+
 
 def _names_an_offer(excerpt: str, term: str) -> bool:
-    """A bare menu label ("Legal Services" alone, often a list of industries served) or a
-    client story is not the organization's own offer; another occurrence may be."""
-    if _POLICY_LINE.search(excerpt) or _CLIENT_STORY.search(excerpt):
+    """A bare menu label ("Legal Services" alone, often a list of industries served), a client
+    story or what the organization itself uses is not its own offer; another occurrence may be."""
+    if _POLICY_LINE.search(excerpt) or _CLIENT_STORY.search(excerpt) or _OWN_USE.search(excerpt):
         return False
     return len(excerpt.split()) > len(term.split()) + 1
 

@@ -1,6 +1,6 @@
 {
  "version": "truth-set-v1",
- "purpose": "Organizations whose activity is known with certainty: AXIGNAL itself plus ten others (well known and niche), checked after each deploy.",
+ "purpose": "Organizations whose activity is known with certainty: AXIGNAL itself plus eleven others (well known and niche), checked after each deploy.",
  "organizations": [
   {
    "domain": "axignal.com",
@@ -67,6 +67,12 @@
    "name": "Hamilton Medical",
    "country": "CH",
    "segment": "Niche"
+  },
+  {
+   "domain": "biocultor.com",
+   "name": "Biocultor",
+   "country": "ES",
+   "segment": "Online shop, organic fertiliser (SME without LEI)"
   }
  ]
 }
