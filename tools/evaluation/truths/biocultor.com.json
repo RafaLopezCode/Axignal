@@ -28,7 +28,8 @@
    "id": "value.activities_allowed",
    "family": "value",
    "activities": [
-    "agriculture"
+    "agriculture",
+    "landscaping-gardening"
    ],
    "note": "Never solar installation, security systems or any activity it only mentions (lexicon trap corpus)."
   },
@@ -40,7 +41,8 @@
      "G47",
      "C20",
      "A01",
-     "G46"
+     "G46",
+     "N80-82"
     ],
     "preferred": "G47"
    }

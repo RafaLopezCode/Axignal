@@ -20,22 +20,33 @@ from application.observation_intelligence.contracts import (
     TaxonomyCode,
     geo,
 )
+from domain.identity import is_web_subject
 from domain.xignal import XignalEpistemicState
 
 
 def _focus_proof(
     proof: Mapping[str, Any] | None, organization_id: str | None
 ) -> Mapping[str, Any] | None:
-    """Only a registry-verified Focus proof of *this* Organization hands over (ADR-0091 §3)."""
+    """Only a Focus proof of *this* Organization hands over (ADR-0091 §3): registry verified,
+    or a web-anchored subject read through its own website (ADR-0087 amendment 2026-10-16),
+    where the organization is that website by definition."""
     target = {} if proof is None else proof.get("target", {})
+    link = target.get("identityLink")
+    web_anchored = link == "SUBSCRIBER_DIRECTED" and is_web_subject(
+        str(target.get("organizationId"))
+    )
     if (
         proof is None
         or target.get("kind") != "FOCUS"
-        or target.get("identityLink") != "REGISTRY_VERIFIED"
+        or not (link == "REGISTRY_VERIFIED" or web_anchored)
         or (organization_id is not None and target.get("organizationId") != organization_id)
     ):
         return None
     return proof
+
+
+#: Minimum evaluator confidence for a judged activity to seed attention (spec 079).
+JUDGED_SEED_MIN_CONFIDENCE = 0.7
 
 
 def derived_scopes(
@@ -65,8 +76,17 @@ def derived_capabilities(
         return ()
     out: list[CapabilityHypothesis] = []
     for item in focus.get("capabilities", ()):
-        if item.get("method") not in {"LEXICON", "SCHEMA_ORG_TYPE"}:
-            continue  # a judgment chooses where to look, it never founds a capability
+        method = item.get("method")
+        if method == "SEMANTIC_JUDGMENT":
+            # CTO, 2026-10-16: a judged activity may choose where to look when the evaluator
+            # is confident and it routes demand. It stays POTENTIAL attention, never a fact.
+            confidence = item.get("confidence")
+            if not isinstance(confidence, int | float) or confidence < JUDGED_SEED_MIN_CONFIDENCE:
+                continue
+            if not item.get("demandCodes"):
+                continue
+        elif method not in {"LEXICON", "SCHEMA_ORG_TYPE"}:
+            continue
         try:
             basis = item["basis"]
             out.append(

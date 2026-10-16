@@ -137,7 +137,7 @@ from application.world_demand.relations import (
 )
 from application.xeed_access.reader import TrustedRequestContext
 from domain.evidence.epistemics import Currentness
-from domain.identity import OrganizationId, PrincipalId, TenantId, XeedId
+from domain.identity import OrganizationId, PrincipalId, TenantId, XeedId, is_web_subject
 from pipeline.activity.job_boards import JobBoards
 from pipeline.economics.registries import OfficialRegisters, registers_from_env
 from pipeline.economics.wikidata import WikidataEconomics
@@ -556,8 +556,12 @@ class FirstObservationRuntime:
             None if website is None else (urlsplit(website).hostname or "").removeprefix("www.")
         )
         owner = None if domain is None else self._websites.organization_by_domain(domain)
-        verified = owner is not None and str(owner) == organization
-        if owner is not None and not verified:
+        # A web-anchored subject (ADR-0087 amendment) is its own website: the subscriber
+        # directed it, no registry verified it. Never REGISTRY_VERIFIED.
+        verified = (
+            owner is not None and str(owner) == organization and not is_web_subject(organization)
+        )
+        if owner is not None and str(owner) != organization:
             link = IdentityLink.WEBSITE_OF_ANOTHER_ORGANIZATION
         else:
             link = IdentityLink.REGISTRY_VERIFIED if verified else IdentityLink.SUBSCRIBER_DIRECTED
