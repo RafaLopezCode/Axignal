@@ -173,3 +173,18 @@ def test_a_truth_set_is_checked_organization_by_organization() -> None:
     assert wrong["status"] == "FAIL" and wrong["defect"] == "WRONG_CLASSIFICATION"
     before = {"verdicts": [{**wrong, "status": "PASS"}]}
     assert [r["id"] for r in regressions(report, before)] == [wrong["id"]]
+
+
+def test_a_lost_measurement_is_reported_and_coverage_is_shown() -> None:
+    # Audit 2026-10-15: PASS -> NOT_MEASURED was invisible, and accuracy excludes the unmeasured.
+    from tools.evaluation.self_check import TRUTH, evaluate, lost_measurements
+
+    truth = json.loads(TRUTH.read_text(encoding="utf-8"))
+    read = {"discoveries": [
+        _d("PUBLIC_PRESENCE", "PUBLIC_WEBSITE_OBSERVED"),
+        {"kind": "LANGUAGES", "code": "LANGUAGES_PUBLISHED", "statement": "de, en, es, fr, it, pt", "detail": {}},
+    ]}  # fmt: skip
+    before = evaluate(read, truth)
+    after = evaluate({"discoveries": [_d("PUBLIC_PRESENCE", "PUBLIC_WEBSITE_OBSERVED")]}, truth)
+    assert after["coverage"] < before["coverage"]
+    assert [x["id"] for x in lost_measurements(after, before)] == ["presence.languages"]
