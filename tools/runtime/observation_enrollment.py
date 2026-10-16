@@ -125,6 +125,15 @@ class SubscriberObservationAuthority:
             ),
             read_only=True,
         )
+        # ADR-0087 amendment: a Focus may be on a web-anchored subject (never canonical).
+        from pipeline.entity_resolution.web_subjects import (
+            CanonicalOrWebSubjects,
+            SqliteWebSubjectStore,
+        )
+
+        self.organizations = CanonicalOrWebSubjects(  # type: ignore[assignment]
+            self.organizations, SqliteWebSubjectStore(root / "web-subjects.sqlite3", read_only=True)
+        )
         self.authorized = AuthorizedXeedReader(self.identity, self.identity, self.portfolio)
         self.organization_reader = AuthorizedXeedOrganizationReader(self.organizations)
         self.memory = SqliteObservationMemory(root / "observation-memory.sqlite3", read_only=True)

@@ -271,9 +271,17 @@ def build(
     rights: Any = "registered",
     public_understanding: bool = False,
     activity_verification: bool = False,
+    web_anchored: bool = False,
 ) -> Any:
+    settings = _settings(tmp_path, pilot=True)
+    # These scenarios exercise attention while identity is pending (spec 063); the ADR-0087
+    # amendment's web-anchored Foci are tested in tests/integration and organization_admission.
+    from dataclasses import replace as _replace
+
+    settings = _replace(settings, values={**settings.values,
+                        "AXIGNAL_WEB_ANCHORED_FOCUS_ENABLED": "true" if web_anchored else "false"})  # fmt: skip
     facade = build_subscriber_facade(
-        _settings(tmp_path, pilot=True),
+        settings,
         tmp_path,
         observation_memory=SqliteObservationMemory(tmp_path / "observation-memory.sqlite3"),
         reuse_policy=ObservationReusePolicy("subscriber-read", "051-v1"),

@@ -17,7 +17,7 @@ from domain.evidence.admission import (
     EvidenceAdmissionError,
 )
 from domain.evidence.epistemics import Currentness, EpistemicState
-from domain.identity import FaxtId
+from domain.identity import WEB_SUBJECT_PREFIX, FaxtId
 
 
 class FAXTCreationError(EvidenceAdmissionError):
@@ -88,6 +88,9 @@ class FAXT:
             raise FAXTCreationError("a canonical FAXT requires an id")
         if not subject_id.strip():
             raise FAXTCreationError("a FAXT requires a subject id")
+        if subject_id.startswith(WEB_SUBJECT_PREFIX):
+            # ADR-0087 amendment: a web-anchored subject is attention, never a legal identity.
+            raise FAXTCreationError("a web-anchored subject cannot hold canonical state")
         if not object_or_value.strip():
             raise FAXTCreationError("a FAXT requires an object or value")
         if epistemic_state is EpistemicState.UNKNOWN:
