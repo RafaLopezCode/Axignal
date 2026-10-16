@@ -87,6 +87,11 @@ http:
          PathPrefix(`/policies/`) ||
          PathPrefix(`/_next/`) ||
          Path(`/marketing/hero-art.webp`) ||
+         Path(`/marketing/hero-mobile.webp`) ||
+         Path(`/marketing/hero-mobile-360.ae896a09.webp`) ||
+         Path(`/marketing/hero-mobile-640.f0cf27d5.webp`) ||
+         Path(`/marketing/hero-mobile-960.86695226.webp`) ||
+         Path(`/marketing/hero-mobile-1448.f7162478.webp`) ||
          Path(`/marketing/hero-art-640.54a4dab4.webp`) ||
          Path(`/marketing/hero-art-960.19bdf5ad.webp`) ||
          Path(`/marketing/hero-art-1440.2dea815a.webp`) ||

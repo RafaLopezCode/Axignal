@@ -13,7 +13,7 @@ import {
 import { funnelCta, landingChapters, track } from "@/lib/funnel-events";
 import { MarketingShell, FamilyIcon } from "./marketing-shared";
 import { MarketingHomeBody } from "./marketing-home-body";
-import { HERO_SRC_SET, HERO_SIZES } from "@/lib/marketing-media";
+import { HERO_SRC_SET, HERO_SIZES, MOBILE_HERO_SRC_SET } from "@/lib/marketing-media";
 import "./marketing.css";
 
 export const EXAMPLE_HREF = "/demo";
@@ -60,18 +60,36 @@ export function Landing() {
   return (
     <MarketingShell landing>
       <section className="marketing-hero" aria-labelledby="marketing-heading">
-        <img
-          className="marketing-hero-art"
-          src="/marketing/hero-art.webp"
-          srcSet={HERO_SRC_SET}
-          sizes={HERO_SIZES}
-          loading="eager"
-          decoding="async"
-          width={1931}
-          height={814}
-          alt=""
-          fetchPriority="high"
-        />
+        <div className="marketing-hero-visual">
+          <picture>
+            <source
+              media="(max-width: 760px)"
+              srcSet={MOBILE_HERO_SRC_SET}
+              sizes="100vw"
+              width={1448}
+              height={1086}
+            />
+            <img
+              className="marketing-hero-art"
+              src="/marketing/hero-art.webp"
+              srcSet={HERO_SRC_SET}
+              sizes={HERO_SIZES}
+              loading="eager"
+              decoding="async"
+              width={1931}
+              height={814}
+              alt=""
+              fetchPriority="high"
+            />
+          </picture>
+          <div className="marketing-folio-labels" aria-hidden="true">
+            {annotations.map(({ key, title }) => (
+              <span key={key} className={`marketing-folio-${key}`}>
+                {title[locale]}
+              </span>
+            ))}
+          </div>
+        </div>
         <div className="marketing-hero-copy">
           <p className="marketing-kicker">{m.observation[locale]}</p>
           <h1 id="marketing-heading">
@@ -126,13 +144,6 @@ export function Landing() {
           <path d="M742 205 C720 233 719 263 734 295 M726 289 L734 295 L735 285" />
           <path d="M1267 153 C1238 179 1248 211 1269 248 C1280 271 1286 288 1283 302 M1277 294 L1283 302 L1289 293" />
         </svg>
-        <div className="marketing-folio-labels" aria-hidden="true">
-          {annotations.map(({ key, title }) => (
-            <span key={key} className={`marketing-folio-${key}`}>
-              {title[locale]}
-            </span>
-          ))}
-        </div>
         <a
           className="marketing-continue"
           href="#families"

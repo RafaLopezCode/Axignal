@@ -1,0 +1,8 @@
+{
+  "source": "https://raw.githubusercontent.com/lucide-icons/lucide/0.468.0/icons/linkedin.svg",
+  "reason": "Current lucide-react1.51.0 omits brand icons; preserve the official Lucide brand geometry without adding a second icon package or inventing a mark.",
+  "modification": "stroke currentColor resolved to existing AXIGNAL blue354f98 for external SVG delivery; geometry untouched.",
+  "license": "linkedin-lucide.LICENSE.txt",
+  "sha256": "5e45d04ced91ecd3d066a32d873e3ac8f0d412fa7c7c41474e107cc4b8bbc330",
+  "library": "Lucide"
+}

@@ -130,10 +130,12 @@ export function MarketingFooter() {
           <Link prefetch={false} href="/policies">{p.trust[locale]}</Link>
           <Link prefetch={false} href="/gdpr">{p.rights[locale]}</Link>
           <a
+            className="marketing-social-link"
             href="https://www.linkedin.com/company/axignal/"
             rel="noopener noreferrer"
             target="_blank"
           >
+            <img className="marketing-linkedin-logo" src="/brand/linkedin-lucide.svg" width={18} height={18} alt="" loading="lazy" decoding="async" />
             LinkedIn
             <ArrowUpRight size={14} aria-hidden="true" />
           </a>

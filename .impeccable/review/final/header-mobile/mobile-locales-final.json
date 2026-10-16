@@ -1,0 +1,326 @@
+[
+  {
+    "bandHeight": 27.45,
+    "hero": "http://127.0.0.1:3847/marketing/hero-mobile-360.ae896a09.webp",
+    "labels": [
+      {
+        "font": "10px",
+        "h": 11,
+        "text": "Qué ofreces",
+        "w": 81
+      },
+      {
+        "font": "10px",
+        "h": 11,
+        "text": "Para quién",
+        "w": 81
+      },
+      {
+        "font": "10px",
+        "h": 11,
+        "text": "Qué se entiende",
+        "w": 81
+      }
+    ],
+    "locale": "es",
+    "overflow": false,
+    "width": 320
+  },
+  {
+    "bandHeight": 27.45,
+    "hero": "http://127.0.0.1:3847/marketing/hero-mobile-360.ae896a09.webp",
+    "labels": [
+      {
+        "font": "10px",
+        "h": 11,
+        "text": "What you offer",
+        "w": 81
+      },
+      {
+        "font": "10px",
+        "h": 11,
+        "text": "Who it is for",
+        "w": 81
+      },
+      {
+        "font": "10px",
+        "h": 22,
+        "text": "What is understood",
+        "w": 81
+      }
+    ],
+    "locale": "en",
+    "overflow": false,
+    "width": 320
+  },
+  {
+    "bandHeight": 27.45,
+    "hero": "http://127.0.0.1:3847/marketing/hero-mobile-360.ae896a09.webp",
+    "labels": [
+      {
+        "font": "10px",
+        "h": 11,
+        "text": "Votre offre",
+        "w": 81
+      },
+      {
+        "font": "10px",
+        "h": 11,
+        "text": "Pour qui",
+        "w": 81
+      },
+      {
+        "font": "10px",
+        "h": 22,
+        "text": "Ce qui est compris",
+        "w": 81
+      }
+    ],
+    "locale": "fr",
+    "overflow": false,
+    "width": 320
+  },
+  {
+    "bandHeight": 27.45,
+    "hero": "http://127.0.0.1:3847/marketing/hero-mobile-640.f0cf27d5.webp",
+    "labels": [
+      {
+        "font": "10px",
+        "h": 11,
+        "text": "Ihr Angebot",
+        "w": 81
+      },
+      {
+        "font": "10px",
+        "h": 11,
+        "text": "Für wen",
+        "w": 81
+      },
+      {
+        "font": "10px",
+        "h": 22,
+        "text": "Was verstanden wird",
+        "w": 81
+      }
+    ],
+    "locale": "de",
+    "overflow": false,
+    "width": 320
+  },
+  {
+    "bandHeight": 27.45,
+    "hero": "http://127.0.0.1:3847/marketing/hero-mobile-360.ae896a09.webp",
+    "labels": [
+      {
+        "font": "10px",
+        "h": 11,
+        "text": "Cosa offri",
+        "w": 81
+      },
+      {
+        "font": "10px",
+        "h": 11,
+        "text": "Per chi",
+        "w": 81
+      },
+      {
+        "font": "10px",
+        "h": 22,
+        "text": "Cosa si comprende",
+        "w": 81
+      }
+    ],
+    "locale": "it",
+    "overflow": false,
+    "width": 320
+  },
+  {
+    "bandHeight": 27.45,
+    "hero": "http://127.0.0.1:3847/marketing/hero-mobile-360.ae896a09.webp",
+    "labels": [
+      {
+        "font": "10px",
+        "h": 11,
+        "text": "O que oferece",
+        "w": 81
+      },
+      {
+        "font": "10px",
+        "h": 11,
+        "text": "Para quem",
+        "w": 81
+      },
+      {
+        "font": "10px",
+        "h": 11,
+        "text": "O que se entende",
+        "w": 81
+      }
+    ],
+    "locale": "pt",
+    "overflow": false,
+    "width": 320
+  },
+  {
+    "bandHeight": 35.1,
+    "hero": "http://127.0.0.1:3847/marketing/hero-mobile-640.f0cf27d5.webp",
+    "labels": [
+      {
+        "font": "12.15px",
+        "h": 13,
+        "text": "Qué ofreces",
+        "w": 103
+      },
+      {
+        "font": "12.15px",
+        "h": 13,
+        "text": "Para quién",
+        "w": 103
+      },
+      {
+        "font": "12.15px",
+        "h": 13,
+        "text": "Qué se entiende",
+        "w": 103
+      }
+    ],
+    "locale": "es",
+    "overflow": false,
+    "width": 405
+  },
+  {
+    "bandHeight": 35.1,
+    "hero": "http://127.0.0.1:3847/marketing/hero-mobile-640.f0cf27d5.webp",
+    "labels": [
+      {
+        "font": "12.15px",
+        "h": 13,
+        "text": "What you offer",
+        "w": 103
+      },
+      {
+        "font": "12.15px",
+        "h": 13,
+        "text": "Who it is for",
+        "w": 103
+      },
+      {
+        "font": "12.15px",
+        "h": 27,
+        "text": "What is understood",
+        "w": 103
+      }
+    ],
+    "locale": "en",
+    "overflow": false,
+    "width": 405
+  },
+  {
+    "bandHeight": 35.1,
+    "hero": "http://127.0.0.1:3847/marketing/hero-mobile-640.f0cf27d5.webp",
+    "labels": [
+      {
+        "font": "12.15px",
+        "h": 13,
+        "text": "Votre offre",
+        "w": 103
+      },
+      {
+        "font": "12.15px",
+        "h": 13,
+        "text": "Pour qui",
+        "w": 103
+      },
+      {
+        "font": "12.15px",
+        "h": 27,
+        "text": "Ce qui est compris",
+        "w": 103
+      }
+    ],
+    "locale": "fr",
+    "overflow": false,
+    "width": 405
+  },
+  {
+    "bandHeight": 35.1,
+    "hero": "http://127.0.0.1:3847/marketing/hero-mobile-640.f0cf27d5.webp",
+    "labels": [
+      {
+        "font": "12.15px",
+        "h": 13,
+        "text": "Ihr Angebot",
+        "w": 103
+      },
+      {
+        "font": "12.15px",
+        "h": 13,
+        "text": "Für wen",
+        "w": 103
+      },
+      {
+        "font": "12.15px",
+        "h": 27,
+        "text": "Was verstanden wird",
+        "w": 103
+      }
+    ],
+    "locale": "de",
+    "overflow": false,
+    "width": 405
+  },
+  {
+    "bandHeight": 35.1,
+    "hero": "http://127.0.0.1:3847/marketing/hero-mobile-640.f0cf27d5.webp",
+    "labels": [
+      {
+        "font": "12.15px",
+        "h": 13,
+        "text": "Cosa offri",
+        "w": 103
+      },
+      {
+        "font": "12.15px",
+        "h": 13,
+        "text": "Per chi",
+        "w": 103
+      },
+      {
+        "font": "12.15px",
+        "h": 27,
+        "text": "Cosa si comprende",
+        "w": 103
+      }
+    ],
+    "locale": "it",
+    "overflow": false,
+    "width": 405
+  },
+  {
+    "bandHeight": 35.1,
+    "hero": "http://127.0.0.1:3847/marketing/hero-mobile-640.f0cf27d5.webp",
+    "labels": [
+      {
+        "font": "12.15px",
+        "h": 13,
+        "text": "O que oferece",
+        "w": 103
+      },
+      {
+        "font": "12.15px",
+        "h": 13,
+        "text": "Para quem",
+        "w": 103
+      },
+      {
+        "font": "12.15px",
+        "h": 13,
+        "text": "O que se entende",
+        "w": 103
+      }
+    ],
+    "locale": "pt",
+    "overflow": false,
+    "width": 405
+  }
+]

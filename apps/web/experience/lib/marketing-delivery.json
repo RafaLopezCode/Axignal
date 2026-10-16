@@ -77,6 +77,38 @@
           "sha256": "c184a81070ac5d27291fe3a07335f190ea56ff7d7101e3f4c52dc1be33b7d2ad"
         }
       ]
+    },
+    "hero-mobile": {
+      "src": "/marketing/hero-mobile.webp",
+      "width": 1448,
+      "height": 1086,
+      "bytes": 139890,
+      "variants": [
+        {
+          "url": "/marketing/hero-mobile-360.ae896a09.webp",
+          "width": 360,
+          "bytes": 18812,
+          "sha256": "ae896a092fa51eeb190716d0cc9ca096992ae77b7d933265f0bb3d9beb634209"
+        },
+        {
+          "url": "/marketing/hero-mobile-640.f0cf27d5.webp",
+          "width": 640,
+          "bytes": 44756,
+          "sha256": "f0cf27d5bc90793076ee50337517090d96fad0a80cff96ef8b01690e9663e709"
+        },
+        {
+          "url": "/marketing/hero-mobile-960.86695226.webp",
+          "width": 960,
+          "bytes": 79664,
+          "sha256": "86695226fc71ff4706b9e541215020232324c1eabbb58a9b687abd8f6175d075"
+        },
+        {
+          "url": "/marketing/hero-mobile-1448.f7162478.webp",
+          "width": 1448,
+          "bytes": 139890,
+          "sha256": "f716247897058d564af1e46c402e85f69fadfd3419cb8fc909836325af853ee0"
+        }
+      ]
     }
   }
 }

@@ -1,0 +1,362 @@
+[
+  {
+    "art": "http://127.0.0.1:3847/marketing/hero-art-1931.ac8ba5f0.webp",
+    "labels": [
+      {
+        "h": 61.44390869140625,
+        "text": "Qué ofreces",
+        "top": 279.5124206542969,
+        "w": 198.466552734375
+      },
+      {
+        "h": 45.07452392578125,
+        "text": "Para quién",
+        "top": 319.5564880371094,
+        "w": 223.786376953125
+      },
+      {
+        "h": 65.327392578125,
+        "text": "Qué se entiende",
+        "top": 295.0081787109375,
+        "w": 257.779541015625
+      }
+    ],
+    "linkedin": false,
+    "locale": "es",
+    "navActionsGap": 65.015625,
+    "navCenter": -0.0078125,
+    "navVisible": true,
+    "overflow": false,
+    "width": 1440
+  },
+  {
+    "art": "http://127.0.0.1:3847/marketing/hero-art-1931.ac8ba5f0.webp",
+    "labels": [
+      {
+        "h": 61.44390869140625,
+        "text": "What you offer",
+        "top": 279.5124206542969,
+        "w": 198.466552734375
+      },
+      {
+        "h": 45.07452392578125,
+        "text": "Who it is for",
+        "top": 319.5564880371094,
+        "w": 223.786376953125
+      },
+      {
+        "h": 59.8414306640625,
+        "text": "What is understood",
+        "top": 297.75115966796875,
+        "w": 256.959716796875
+      }
+    ],
+    "linkedin": false,
+    "locale": "en",
+    "navActionsGap": 41.4375,
+    "navCenter": -0.0078125,
+    "navVisible": true,
+    "overflow": false,
+    "width": 1440
+  },
+  {
+    "art": "http://127.0.0.1:3847/marketing/hero-art-1931.ac8ba5f0.webp",
+    "labels": [
+      {
+        "h": 61.44390869140625,
+        "text": "Votre offre",
+        "top": 279.5124206542969,
+        "w": 198.466552734375
+      },
+      {
+        "h": 45.07452392578125,
+        "text": "Pour qui",
+        "top": 319.5564880371094,
+        "w": 223.786376953125
+      },
+      {
+        "h": 59.8414306640625,
+        "text": "Ce qui est compris",
+        "top": 297.75115966796875,
+        "w": 256.959716796875
+      }
+    ],
+    "linkedin": false,
+    "locale": "fr",
+    "navActionsGap": 42.890625,
+    "navCenter": -0.0078125,
+    "navVisible": true,
+    "overflow": false,
+    "width": 1440
+  },
+  {
+    "art": "http://127.0.0.1:3847/marketing/hero-art-1931.ac8ba5f0.webp",
+    "labels": [
+      {
+        "h": 61.44390869140625,
+        "text": "Ihr Angebot",
+        "top": 279.5124206542969,
+        "w": 198.466552734375
+      },
+      {
+        "h": 45.07452392578125,
+        "text": "Für wen",
+        "top": 319.5564880371094,
+        "w": 223.786376953125
+      },
+      {
+        "h": 59.8414306640625,
+        "text": "Was verstanden wird",
+        "top": 297.75115966796875,
+        "w": 256.959716796875
+      }
+    ],
+    "linkedin": false,
+    "locale": "de",
+    "navActionsGap": 37.8125,
+    "navCenter": 0,
+    "navVisible": true,
+    "overflow": false,
+    "width": 1440
+  },
+  {
+    "art": "http://127.0.0.1:3847/marketing/hero-art-1931.ac8ba5f0.webp",
+    "labels": [
+      {
+        "h": 61.44390869140625,
+        "text": "Cosa offri",
+        "top": 279.5124206542969,
+        "w": 198.466552734375
+      },
+      {
+        "h": 45.07452392578125,
+        "text": "Per chi",
+        "top": 319.5564880371094,
+        "w": 223.786376953125
+      },
+      {
+        "h": 59.8414306640625,
+        "text": "Cosa si comprende",
+        "top": 297.75115966796875,
+        "w": 256.959716796875
+      }
+    ],
+    "linkedin": false,
+    "locale": "it",
+    "navActionsGap": 55.140625,
+    "navCenter": -0.0078125,
+    "navVisible": true,
+    "overflow": false,
+    "width": 1440
+  },
+  {
+    "art": "http://127.0.0.1:3847/marketing/hero-art-1931.ac8ba5f0.webp",
+    "labels": [
+      {
+        "h": 61.44390869140625,
+        "text": "O que oferece",
+        "top": 279.5124206542969,
+        "w": 198.466552734375
+      },
+      {
+        "h": 45.07452392578125,
+        "text": "Para quem",
+        "top": 319.5564880371094,
+        "w": 223.786376953125
+      },
+      {
+        "h": 65.327392578125,
+        "text": "O que se entende",
+        "top": 295.0081787109375,
+        "w": 257.779541015625
+      }
+    ],
+    "linkedin": false,
+    "locale": "pt",
+    "navActionsGap": 51.859375,
+    "navCenter": 0,
+    "navVisible": true,
+    "overflow": false,
+    "width": 1440
+  },
+  {
+    "art": "http://127.0.0.1:3847/marketing/hero-mobile-360.ae896a09.webp",
+    "labels": [
+      {
+        "h": 25.265869140625,
+        "text": "Qué ofreces",
+        "top": 94.6483154296875,
+        "w": 81.70025634765625
+      },
+      {
+        "h": 12.09375,
+        "text": "Para quién",
+        "top": 109,
+        "w": 80.8125
+      },
+      {
+        "h": 37.1937255859375,
+        "text": "Qué se entiende",
+        "top": 88.68438720703125,
+        "w": 83.6962890625
+      }
+    ],
+    "linkedin": false,
+    "locale": "es",
+    "navActionsGap": 145.453125,
+    "navCenter": -152.5,
+    "navVisible": false,
+    "overflow": false,
+    "width": 320
+  },
+  {
+    "art": "http://127.0.0.1:3847/marketing/hero-mobile-360.ae896a09.webp",
+    "labels": [
+      {
+        "h": 25.265869140625,
+        "text": "What you offer",
+        "top": 94.6483154296875,
+        "w": 81.70025634765625
+      },
+      {
+        "h": 12.09375,
+        "text": "Who it is for",
+        "top": 109,
+        "w": 80.8125
+      },
+      {
+        "h": 50.2003173828125,
+        "text": "What is understood",
+        "top": 82.18109130859375,
+        "w": 85.87286376953125
+      }
+    ],
+    "linkedin": false,
+    "locale": "en",
+    "navActionsGap": 145.453125,
+    "navCenter": -152.5,
+    "navVisible": false,
+    "overflow": false,
+    "width": 320
+  },
+  {
+    "art": "http://127.0.0.1:3847/marketing/hero-mobile-360.ae896a09.webp",
+    "labels": [
+      {
+        "h": 25.265869140625,
+        "text": "Votre offre",
+        "top": 94.6483154296875,
+        "w": 81.70025634765625
+      },
+      {
+        "h": 12.09375,
+        "text": "Pour qui",
+        "top": 109,
+        "w": 80.8125
+      },
+      {
+        "h": 50.2003173828125,
+        "text": "Ce qui est compris",
+        "top": 82.18109130859375,
+        "w": 85.87286376953125
+      }
+    ],
+    "linkedin": false,
+    "locale": "fr",
+    "navActionsGap": 145.453125,
+    "navCenter": -152.5,
+    "navVisible": false,
+    "overflow": false,
+    "width": 320
+  },
+  {
+    "art": "http://127.0.0.1:3847/marketing/hero-mobile-360.ae896a09.webp",
+    "labels": [
+      {
+        "h": 25.265869140625,
+        "text": "Ihr Angebot",
+        "top": 94.6483154296875,
+        "w": 81.70025634765625
+      },
+      {
+        "h": 12.09375,
+        "text": "Für wen",
+        "top": 109,
+        "w": 80.8125
+      },
+      {
+        "h": 68.631591796875,
+        "text": "Was verstanden wird",
+        "top": 72.9654541015625,
+        "w": 88.95719909667969
+      }
+    ],
+    "linkedin": false,
+    "locale": "de",
+    "navActionsGap": 145.453125,
+    "navCenter": -152.5,
+    "navVisible": false,
+    "overflow": false,
+    "width": 320
+  },
+  {
+    "art": "http://127.0.0.1:3847/marketing/hero-mobile-360.ae896a09.webp",
+    "labels": [
+      {
+        "h": 25.265869140625,
+        "text": "Cosa offri",
+        "top": 94.6483154296875,
+        "w": 81.70025634765625
+      },
+      {
+        "h": 12.09375,
+        "text": "Per chi",
+        "top": 109,
+        "w": 80.8125
+      },
+      {
+        "h": 50.2003173828125,
+        "text": "Cosa si comprende",
+        "top": 82.18109130859375,
+        "w": 85.87286376953125
+      }
+    ],
+    "linkedin": false,
+    "locale": "it",
+    "navActionsGap": 162.203125,
+    "navCenter": -152.5,
+    "navVisible": false,
+    "overflow": false,
+    "width": 320
+  },
+  {
+    "art": "http://127.0.0.1:3847/marketing/hero-mobile-360.ae896a09.webp",
+    "labels": [
+      {
+        "h": 25.265869140625,
+        "text": "O que oferece",
+        "top": 94.6483154296875,
+        "w": 81.70025634765625
+      },
+      {
+        "h": 12.09375,
+        "text": "Para quem",
+        "top": 109,
+        "w": 80.8125
+      },
+      {
+        "h": 37.1937255859375,
+        "text": "O que se entende",
+        "top": 88.68438720703125,
+        "w": 83.6962890625
+      }
+    ],
+    "linkedin": false,
+    "locale": "pt",
+    "navActionsGap": 145.453125,
+    "navCenter": -152.5,
+    "navVisible": false,
+    "overflow": false,
+    "width": 320
+  }
+]

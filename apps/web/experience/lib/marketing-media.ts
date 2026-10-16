@@ -3,6 +3,7 @@ import delivery from "./marketing-delivery.json";
 const sourceSet = (name: keyof typeof delivery.images) =>
   delivery.images[name].variants.map(({url, width}) => `${url} ${width}w`).join(", ");
 
+export const MOBILE_HERO_SRC_SET = sourceSet("hero-mobile");
 export const HERO_SRC_SET = sourceSet("hero-art");
 // Below1280px the existing full plate is cropped by height; account for its full rendered width.
 export const HERO_SIZES = "(max-width: 760px) 620px, (max-width: 1116px) 102vw, (max-width: 1279px) 1140px, 100vw";

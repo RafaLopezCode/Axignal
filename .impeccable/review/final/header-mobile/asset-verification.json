@@ -1,0 +1,89 @@
+{
+  "hashedAssets": [
+    {
+      "url": "/fonts/manrope-full.15e95cd6.woff2",
+      "bytes": 53800,
+      "hash": "passed",
+      "immutable": true
+    },
+    {
+      "url": "/fonts/caveat-full.ab1a1d69.woff2",
+      "bytes": 173748,
+      "hash": "passed",
+      "immutable": true
+    },
+    {
+      "url": "/marketing/hero-art-640.54a4dab4.webp",
+      "bytes": 20822,
+      "hash": "passed",
+      "immutable": true
+    },
+    {
+      "url": "/marketing/hero-art-960.19bdf5ad.webp",
+      "bytes": 37292,
+      "hash": "passed",
+      "immutable": true
+    },
+    {
+      "url": "/marketing/hero-art-1440.2dea815a.webp",
+      "bytes": 62438,
+      "hash": "passed",
+      "immutable": true
+    },
+    {
+      "url": "/marketing/hero-art-1931.ac8ba5f0.webp",
+      "bytes": 142694,
+      "hash": "passed",
+      "immutable": true
+    },
+    {
+      "url": "/marketing/industries-640.d72f4b1f.webp",
+      "bytes": 42776,
+      "hash": "passed",
+      "immutable": true
+    },
+    {
+      "url": "/marketing/industries-960.aacd5920.webp",
+      "bytes": 83044,
+      "hash": "passed",
+      "immutable": true
+    },
+    {
+      "url": "/marketing/industries-1440.44adf72f.webp",
+      "bytes": 151348,
+      "hash": "passed",
+      "immutable": true
+    },
+    {
+      "url": "/marketing/industries-2007.c184a810.webp",
+      "bytes": 301870,
+      "hash": "passed",
+      "immutable": true
+    },
+    {
+      "url": "/marketing/hero-mobile-360.ae896a09.webp",
+      "bytes": 18812,
+      "hash": "passed",
+      "immutable": true
+    },
+    {
+      "url": "/marketing/hero-mobile-640.f0cf27d5.webp",
+      "bytes": 44756,
+      "hash": "passed",
+      "immutable": true
+    },
+    {
+      "url": "/marketing/hero-mobile-960.86695226.webp",
+      "bytes": 79664,
+      "hash": "passed",
+      "immutable": true
+    },
+    {
+      "url": "/marketing/hero-mobile-1448.f7162478.webp",
+      "bytes": 139890,
+      "hash": "passed",
+      "immutable": true
+    }
+  ],
+  "linkedinSvg": "200 image/svg+xml"
+}
