@@ -136,8 +136,8 @@ def test_language_school_in_arkansas_is_understood_and_gets_a_grounded_source_ga
     assert any(d.startswith("FETCHED:ACTIVITY") for d in view["_ledger"]["decisions"])
     # One Jev batch, many questions; never Luna.
     assert (
-        len(world.judge.calls) == 1 and len(world.judge.calls[0].questions) == 4
-    )  # sector, NAICS, operating, location
+        len(world.judge.calls) == 1 and len(world.judge.calls[0].questions) == 5
+    )  # sector, catalog activity, NAICS, operating, location
     assert _ledger(view, "jevCalls") == 1 and _ledger(view, "lunaCalls") == 0
     assert view["_ledger"]["jevUsd"]["basis"] == "VENDOR_PUBLISHED"
 
@@ -253,7 +253,7 @@ def test_semantic_judgments_are_reused_across_tenants(tmp_path: Path) -> None:
     runtime(facade).drain()
     view = _view(facade, token, _pending_id(facade, token))
     assert len(world.judge.calls) == 1  # the second tenant paid no provider call
-    assert _ledger(view, "jevCalls") == 0 and _ledger(view, "jevMemoryHits") == 4
+    assert _ledger(view, "jevCalls") == 0 and _ledger(view, "jevMemoryHits") == 5
     assert discoveries(view, "ACTIVITY")[0]["code"] == "isic-P"
 
 

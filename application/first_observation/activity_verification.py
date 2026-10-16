@@ -35,6 +35,7 @@ from application.first_observation.activity import (
     ActivityFinding,
     ActivityMethod,
 )
+from application.first_observation.public_text import public_text
 from application.first_observation.site import PageReading
 from application.observation_intelligence.catalog import CAPABILITY_LEXICON
 from application.observation_intelligence.understanding import detect_capabilities
@@ -209,11 +210,17 @@ def verification_state(
             {
                 "page": f"[page-{index}]",
                 "kind": kind.value,
-                "around": [project(e.excerpt) for e in found[0].basis[:MAX_MENTIONS_PER_PAGE]],
+                # The sentence itself (ADR-0090 amendment 2026-10-16), contact data and
+                # sentences about people removed: what the site says around the activity.
+                "around": [
+                    text
+                    for e in found[0].basis[:MAX_MENTIONS_PER_PAGE]
+                    if (text := public_text(e.excerpt, 400))
+                ],
             }
         )
     return {
-        "representation": "controlled economic terms and page kinds, not page text",
+        "representation": "public sentences where the activity is named, and page kinds",
         "site": "[site]",
         "activity": {"label": entry.label, "catalogTerms": list(entry.terms)},
         "pagesRead": read,

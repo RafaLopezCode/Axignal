@@ -78,3 +78,28 @@ No additional rights flag exists for Jev: the boundaries are `AXIGNAL_SEMANTIC_L
 **Evidence and tests:**
 - The ledger records `SEMANTIC_INPUT:CONTROLLED_VOCABULARY[:NO_SITE_CONTENT_RIGHTS]`.
 - `tests/first_observation/test_rights_and_minimization.py` proves that, without site rights, every word reaching the provider belongs to the controlled vocabulary and pages are anonymous.
+
+## Amendment 2026-10-16: public website text as typed state
+
+**Decision (CTO, 2026-10-16: "Estamos utilizando datos públicos, no veo el problema").** The First Observation activity batches may send **public website text** to System One, for any public website, without a per-site content-rights entry:
+- page title, description, headings and services;
+- the page body, bounded per field;
+- the sentence where a lexicon activity is named, for `activity_offered`.
+
+**Why.** TypeSafe's own guidance is to give each question the source text it needs. With controlled vocabulary only, measured on 2026-10-16:
+- activity verification rejected **0** known false positives;
+- a shop whose title says "Comprar té de humus y servicios para jardines" had **no activity** at all.
+
+**Minimization (GDPR), enforced in `application/first_observation/public_text.py` and tested:**
+- e-mail addresses, URLs and phone numbers are removed before anything else;
+- sentences about people are dropped (founders, executives, honorifics, "our team"), in six languages;
+- legal pages are never sent; about and careers pages send their title, description and headings, never their body;
+- page URLs stay anonymous (`[page-N]`) and the site host is not sent.
+
+**Unchanged:**
+- output is non-authoritative and never a FAXT;
+- the judgment memory and budgets are unchanged;
+- no Jev output trains or calibrates another evaluator;
+- the public-understanding report keeps its own `provider_input` / `public_offer_input` rights.
+
+The ledger records `SEMANTIC_INPUT:PUBLIC_TEXT[:NO_SITE_CONTENT_RIGHTS]`.
