@@ -26,8 +26,9 @@ from application.observation_intelligence.contracts import (
     TaxonomyCode,
     geo,
 )
+from application.observation_intelligence.findings import cpv_nature
 
-CATALOG_VERSION = "eoil-catalog-2026-10-16.9"
+CATALOG_VERSION = "eoil-catalog-2026-10-16.10"
 
 #: Path depth that counts as a "region" inside each jurisdiction tree.
 REGIONAL_DEPTH: dict[str, int] = {"EU": 4, "US": 2}
@@ -39,6 +40,15 @@ def cpv(code: str) -> TaxonomyCode:
 
 def naics(code: str) -> TaxonomyCode:
     return TaxonomyCode("NAICS", code)
+
+
+def offer_natures(entry: CapabilityLexiconEntry) -> frozenset[str]:
+    """SUPPLIES, SERVICES and/or WORKS, read from the entry's own CPV codes (spec 080).
+
+    Selling goods is not performing the services its buyers perform with them: a fertiliser
+    shop is not a landscaper. Empty when the entry carries no CPV code: unknown, never a guess.
+    """
+    return frozenset(cpv_nature(c.code) for c in entry.demand_codes if c.scheme == "CPV")
 
 
 def psc(code: str) -> TaxonomyCode:
@@ -316,8 +326,24 @@ CAPABILITY_LEXICON: tuple[CapabilityLexiconEntry, ...] = (
         buyer_jobs=("accommodation for official delegations and events",),
     ),
     CapabilityLexiconEntry(
-        # Found on the canary (biocultor.com, 2026-10-16): Jev read CPV division 77 at 0.91
-        # but the catalog had no gardening activity to name.
+        # Found on the canary (biocultor.com, 2026-10-16), CTO: "es una tienda de venta de Té
+        # de Humus de Lombriz; landscaping es uno de los muchos casos de uso". A product's
+        # use (and its buyers) is not the seller's activity: the seller supplies fertilisers.
+        capability_id="fertilisers-soil-amendments",
+        label="Fertilisers and organic soil amendments",
+        terms=("humus de lombriz", "té de humus", "vermicompost", "lombricompost",
+               "abono orgánico", "abonos orgánicos", "abono ecológico", "abonos ecológicos", "fertilizante orgánico",
+               "fertilizante ecológico", "fertilizantes ecológicos", "enmienda orgánica",
+               "bioestimulante", "worm castings", "worm humus", "compost tea",
+               "organic fertiliser", "organic fertilizer", "soil amendment", "biostimulant",
+               "engrais organique", "wurmhumus", "organischer dünger",
+               "concime organico", "humus di lombrico", "húmus de minhoca", "adubo orgânico"),
+        demand_codes=(cpv("24440000"), naics("325314"), naics("424910")),
+        families=("industrial", "food"),
+        buyer_jobs=("fertilisers and soil improvers for municipal parks, gardens and green areas",
+                    "organic inputs for public agricultural and forestry estates"),
+    ),
+    CapabilityLexiconEntry(
         capability_id="landscaping-gardening", label="Landscaping and green-area maintenance",
         terms=("mantenimiento de zonas verdes", "mantenimiento de jardines",
                "servicios de jardinería", "jardinería profesional", "paisajismo",

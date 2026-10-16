@@ -56,10 +56,34 @@ _OWN_USE = re.compile(
 )
 
 
+#: "abono para mantenimiento de jardines", "software for restaurants": what follows a purpose
+#: preposition is what the buyer does with the offer, never the seller's activity (spec 080).
+
+
+#: "for our team" is the organization's own, not a buyer's purpose.
+_PURPOSE_WORD = re.compile(
+    r"\b(?:para|for|pour|f[uü]r|per|zum|zur)\b(?!\s+(?:our|nuestr|notre|nos\b|unser|nostr|noss))",
+    re.IGNORECASE,
+)
+
+
+def _only_as_purpose(excerpt: str, term: str) -> bool:
+    """Every occurrence follows a purpose preposition within its clause ("para X y Y")."""
+    occurrences = list(re.finditer(re.escape(term), excerpt, re.IGNORECASE))
+    for match in occurrences:
+        clause = re.split(r"[.;:,!?|]", excerpt[: match.start()])[-1]
+        if not _PURPOSE_WORD.search(clause):
+            return False
+    return bool(occurrences)
+
+
 def _names_an_offer(excerpt: str, term: str) -> bool:
     """A bare menu label ("Legal Services" alone, often a list of industries served), a client
-    story or what the organization itself uses is not its own offer; another occurrence may be."""
+    story, what the organization itself uses or what its buyers do with the offer is not its
+    own offer; another occurrence may be."""
     if _POLICY_LINE.search(excerpt) or _CLIENT_STORY.search(excerpt) or _OWN_USE.search(excerpt):
+        return False
+    if _only_as_purpose(excerpt, term):
         return False
     return len(excerpt.split()) > len(term.split()) + 1
 

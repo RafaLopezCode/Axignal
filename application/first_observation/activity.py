@@ -27,13 +27,14 @@ from application.first_observation.vocabularies import (
     SECTION_ROUTING,
     naics_prefixes,
 )
-from application.observation_intelligence.catalog import CAPABILITY_LEXICON
+from application.observation_intelligence.catalog import CAPABILITY_LEXICON, offer_natures
 from application.observation_intelligence.contracts import (
     CapabilityHypothesis,
     EvidenceRef,
     MarketRole,
     TaxonomyCode,
 )
+from application.observation_intelligence.findings import cpv_nature
 from application.observation_intelligence.understanding import detect_capabilities
 from application.semantic_layer.cascade import CascadeOutcome
 from application.semantic_layer.contracts import SemanticBatch, SemanticQuestion
@@ -177,12 +178,13 @@ SECTOR = SemanticQuestion(
 )
 CPV_DIVISION = SemanticQuestion(
     question_id="fo_cpv_division",
-    version="1",
+    version="2",
     primitive=SemanticPrimitive.CHOICE,
     instructions=(
-        "If a public buyer procured what this organization offers, which CPV division "
-        "would classify it? Choose NONE when public buyers would not procure it and "
-        "UNCLEAR when the reading does not say what it offers."
+        "If a public buyer procured what this organization itself supplies or performs, "
+        "which CPV division would classify it? For goods, the division of the goods, never "
+        "of the services or works its customers perform with them. Choose NONE when public "
+        "buyers would not procure it and UNCLEAR when the reading does not say what it offers."
     ),
     criteria=(
         *CPV_DIVISIONS.items(),
@@ -226,22 +228,52 @@ DELIVERY = SemanticQuestion(
         ("UNCLEAR", "The reading does not say."),
     ),
 )  # fmt: skip
+_NATURE_WORDS = {"SUPPLIES": "supplies goods", "SERVICES": "performs services",
+                  "WORKS": "carries out construction works"}  # fmt: skip
+
+
+def _with_nature(entry_label: str, natures: frozenset[str]) -> str:
+    said = " or ".join(_NATURE_WORDS[n] for n in sorted(natures))
+    return f"{entry_label} (the organization {said})" if said else entry_label
+
+
 #: AXIGNAL's own activity catalog, asked over the public text when the lexicon finds nothing
-#: (found on biocultor.com: "Comprar té de humus y servicios para jardines" read as nothing).
+#: (found on biocultor.com: "Comprar té de humus y servicios para jardines" read as nothing;
+#: then read as landscaping, the use of what it sells, because no entry fitted: spec 080).
 CATALOG_ACTIVITY = SemanticQuestion(
     question_id="fo_catalog_activity",
-    version="1",
+    version="2",
     primitive=SemanticPrimitive.CHOICE,
     instructions=(
         "Using only this public website reading, which of these activities is the main thing "
-        "the organization offers to its customers? Something it only mentions, uses itself, "
-        "buys or sells through is not what it offers. Choose NONE when it offers something "
-        "else, and UNCLEAR when the reading does not say what it offers."
+        "the organization itself sells or performs for its customers? What its customers do "
+        "with its products, who buys them, and what it only mentions, uses itself or sells "
+        "through are not its activity: a shop selling fertiliser for gardens supplies "
+        "fertiliser, it does not maintain gardens. Choose NONE when no activity in the list is "
+        "what it sells or performs (never the closest one), and UNCLEAR when the reading does "
+        "not say."
     ),
     criteria=(
-        *((e.capability_id, e.label) for e in CAPABILITY_LEXICON),
-        ("NONE", "It offers something else, not in this list."),
+        *((e.capability_id, _with_nature(e.label, offer_natures(e))) for e in CAPABILITY_LEXICON),
+        ("NONE", "What it sells or performs is not in this list."),
         ("UNCLEAR", "The reading does not establish what it offers."),
+    ),
+)
+#: What kind of offer it is: the structural check every judged activity must agree with.
+OFFER_NATURE = SemanticQuestion(
+    question_id="fo_offer_nature",
+    version="1",
+    primitive=SemanticPrimitive.CHOICE,
+    instructions=(
+        "Using only this public website reading, what does the organization mainly sell to "
+        "its customers? What customers then do with it is not what it sells."
+    ),
+    criteria=(
+        ("SUPPLIES", "Goods or products it makes, distributes or sells."),
+        ("SERVICES", "Services it performs for its customers."),
+        ("WORKS", "Construction works it carries out."),
+        ("MIXED", "More than one of the above, explicitly and substantially."),
+        ("UNCLEAR", "The reading does not establish it."),
     ),
 )
 OPERATING = SemanticQuestion(
@@ -396,7 +428,7 @@ def plan_activity_batch(
     questions: list[SemanticQuestion] = []
     routed = any(f.demand_codes for f in deterministic)
     if not deterministic:
-        questions += [OPERATING, SECTOR, CATALOG_ACTIVITY]
+        questions += [OPERATING, SECTOR, CATALOG_ACTIVITY, OFFER_NATURE]
     if eu and not routed:
         questions.append(CPV_DIVISION)
     if us and not routed:
@@ -474,6 +506,14 @@ def interpret_activity(
     sector = _usable(outcome, SECTOR.question_id)
     cpv = _usable(outcome, CPV_DIVISION.question_id)
     naics = _usable(outcome, NAICS_SECTOR.question_id)
+    answered_nature = _usable(outcome, OFFER_NATURE.question_id)
+    nature = answered_nature[0] if answered_nature and answered_nature[0] in _NATURE_WORDS else None
+    if nature is not None:
+        judged["offerNature"] = nature
+    if cpv and cpv[0] in CPV_DIVISIONS and nature not in (None, cpv_nature(cpv[0])):
+        # Spec 080: a goods seller's division is never that of what its buyers do with them.
+        judged["cpvDivisionWithheld"] = "NATURE_CONFLICT"
+        cpv = None
     if cpv and cpv[0] in CPV_DIVISIONS:
         codes.append(TaxonomyCode("CPV", f"{cpv[0]}000000"))
         judged["cpvDivision"] = cpv[0]
@@ -497,6 +537,18 @@ def interpret_activity(
         )
     catalog = _usable(outcome, CATALOG_ACTIVITY.question_id)
     entry = next((e for e in CAPABILITY_LEXICON if catalog and e.capability_id == catalog[0]), None)
+    if (
+        entry is not None
+        and nature is not None
+        and offer_natures(entry)
+        and (nature not in offer_natures(entry))
+    ):
+        # Spec 080: the judged activity disagrees with what the organization sells (a shop
+        # read as the service its buyers perform). Unknown, never the nearest activity.
+        judged["catalogActivityWithheld"] = "NATURE_CONFLICT"
+        entry = None
+    elif catalog is not None and catalog[0] == "NONE":
+        judged["catalogGap"] = "NONE"  # operator trace: the catalog may lack this activity
     if entry is not None and catalog is not None and line:
         judged["catalogActivity"] = entry.capability_id
         findings.insert(
