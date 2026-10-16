@@ -5,6 +5,7 @@
  * "Same truth, different density"). It never creates a finding, never raises POTENTIAL
  * to OBSERVED, never reads UNKNOWN as negative and never generates prose.
  */
+import { contractScaleRows } from "./contract-scale";
 import { activityLabel, auditRows, buyerSignalLabel, discoveryCopy, placeLabel } from "@/components/first-observation";
 import { auditCopy, auditImpact } from "./representation-audit";
 import { causeCopy, dimensionCopy, proposalCopy, stateCopy } from "@/components/public-understanding";
@@ -238,6 +239,7 @@ function discoveryInsight(d: Discovery, index: number, t: Translate, locale: str
   if (typeof detail.source === "string") proof.push({ label: t("Fuente", "Source"), value: String(detail.source) });
   if (typeof detail.buyer === "string") proof.push({ label: t("Comprador", "Buyer"), value: String(detail.buyer) });
   if (typeof detail.deadline === "string") proof.push({ label: t("Plazo", "Deadline"), value: String(detail.deadline) });
+  for (const [label, value] of contractScaleRows(detail.scale, t, locale)) proof.push({ label, value });
   if (detail.classifiedAs === "MAIN" || detail.classifiedAs === "ADDITIONAL") proof.push({ label: t("Clasificación del comprador", "Buyer's classification"),
     value: detail.classifiedAs === "MAIN"
       ? t("Objeto principal de la licitación", "Main object of the call")

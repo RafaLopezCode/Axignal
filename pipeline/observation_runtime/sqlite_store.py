@@ -24,7 +24,11 @@ from application.observation_intelligence.contracts import (
     SourceCapability,
     TaxonomyCode,
 )
-from application.observation_intelligence.findings import ProcurementRecord, SourceFindings
+from application.observation_intelligence.findings import (
+    ContractScale,
+    ProcurementRecord,
+    SourceFindings,
+)
 from application.observation_intelligence.learning import (
     OperationalLearning,
     SourceOperationalStats,
@@ -221,6 +225,7 @@ def _encode_record(r: ProcurementRecord) -> dict[str, object]:
         "winners": list(r.winners),
         "main_codes": _codes(r.main_codes),
         "contract_nature": r.contract_nature,
+        "scale": None if r.scale is None else r.scale.to_wire(),
     }
 
 
@@ -239,6 +244,7 @@ def _decode_record(r: dict[str, Any]) -> ProcurementRecord:
         winners=tuple(r["winners"]),
         main_codes=_from_codes(r.get("main_codes") or []),
         contract_nature=r.get("contract_nature"),
+        scale=ContractScale.from_wire(r.get("scale")),
     )
 
 
