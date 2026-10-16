@@ -188,3 +188,28 @@ def test_a_lost_measurement_is_reported_and_coverage_is_shown() -> None:
     after = evaluate({"discoveries": [_d("PUBLIC_PRESENCE", "PUBLIC_WEBSITE_OBSERVED")]}, truth)
     assert after["coverage"] < before["coverage"]
     assert [x["id"] for x in lost_measurements(after, before)] == ["presence.languages"]
+
+
+def test_a_site_that_did_not_load_is_unmeasured_never_a_regression(tmp_path: Path) -> None:
+    # Self-check 2026-10-17: Iberdrola and Securitas shed load intermittently, and each
+    # failed fetch was reported as an engine regression.
+    from tools.evaluation.self_check import UNREACHABLE, evaluate_set, lost_measurements
+    from tools.evaluation.self_check import main as check_main
+    from tools.evaluation.self_check import regressions as check_regressions
+
+    seen = {"discoveries": [_d("PUBLIC_PRESENCE", "PUBLIC_WEBSITE_OBSERVED")]}
+    down = {"state": "SOURCE_UNAVAILABLE", "discoveries": [
+        {"kind": "ACTIVITY", "code": "STATED_INDUSTRY", "statement": "x", "detail": {}}]}  # fmt: skip
+    before = evaluate_set([{"domain": "zitron.com", "view": seen}])
+    after = evaluate_set([{"domain": "zitron.com", "view": down}])
+    assert after["defects"] == [] and after["byOrganization"]["zitron.com"]["unreachable"]
+    assert check_regressions(after, before) == []
+    lost = lost_measurements(after, before)
+    assert lost and all(x["reason"] == UNREACHABLE for x in lost)
+    views, previous = tmp_path / "v.json", tmp_path / "p.json"
+    views.write_text(json.dumps([{"domain": "zitron.com", "view": down},
+                                 {"domain": "sap.com", "view": seen}]), encoding="utf-8")  # fmt: skip
+    previous.write_text(json.dumps(before), encoding="utf-8")
+    check_main([str(views), "--out", str(tmp_path / "r.json"), "--previous", str(previous)])
+    summary = json.loads((tmp_path / "r.json").read_text(encoding="utf-8"))
+    assert summary["regressions"] == []

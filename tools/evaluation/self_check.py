@@ -46,6 +46,8 @@ def evaluate_set(rows: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
             continue
         report = evaluate(row["view"], truth)
         by_org[domain] = {k: report[k] for k in ("accuracy", "measured", "passed", "byFamily")}
+        if report.get("unreachable"):
+            by_org[domain]["unreachable"] = True
         verdicts += [{**v, "id": f"{domain}/{v['id']}"} for v in report["verdicts"]]
     measured = [v for v in verdicts if v["status"] != "NOT_MEASURED"]
     passed = sum(v["status"] == "PASS" for v in measured)
@@ -87,10 +89,20 @@ def _audit(found: list[Mapping[str, Any]]) -> dict[str, str]:
     return {}
 
 
+#: The website did not load: nothing about the engine can be judged from this reading.
+UNREACHABLE = "SITE_UNREACHABLE"
+
+
 def evaluate(reading: Mapping[str, Any], truth: Mapping[str, Any]) -> dict[str, Any]:
     found = _discoveries(reading)
     audit = _audit(found)
     verdicts: list[dict[str, Any]] = []
+    if reading.get("state") == "SOURCE_UNAVAILABLE":
+        # An external failure (the site shed load, refused or timed out), not a wrong
+        # reading: every check is unmeasured and named as such, never a FAIL or a PASS.
+        verdicts = [{"id": c["id"], "family": c["family"], "status": "NOT_MEASURED",
+                     "defect": None, "detail": UNREACHABLE} for c in truth["checks"]]  # fmt: skip
+        return _report(truth["version"], verdicts) | {"unreachable": True}
 
     def verdict(
         check: Mapping[str, Any], status: str, detail: object, kind: str | None = None
@@ -170,6 +182,10 @@ def evaluate(reading: Mapping[str, Any], truth: Mapping[str, Any]) -> dict[str, 
             verdict(check, "FAIL" if presented else "PASS",
                     {"opportunities": len(items), "unrelated": presented,
                      "labelledAdditional": len(off) - len(presented)}, "FALSE_POSITIVE")  # fmt: skip
+    return _report(truth["version"], verdicts)
+
+
+def _report(version: str, verdicts: list[dict[str, Any]]) -> dict[str, Any]:
     measured = [v for v in verdicts if v["status"] != "NOT_MEASURED"]
     passed = sum(v["status"] == "PASS" for v in measured)
     by_family: dict[str, dict[str, int]] = {}
@@ -177,7 +193,7 @@ def evaluate(reading: Mapping[str, Any], truth: Mapping[str, Any]) -> dict[str, 
         tally = by_family.setdefault(v["family"], {"PASS": 0, "FAIL": 0, "NOT_MEASURED": 0})
         tally[v["status"]] += 1
     return {
-        "truth": truth["version"],
+        "truth": version,
         "accuracy": None if not measured else round(100 * passed / len(measured), 1),
         # Accuracy excludes what was not measured; coverage says how much was measured.
         "coverage": None if not verdicts else round(100 * len(measured) / len(verdicts), 1),
@@ -199,6 +215,7 @@ def lost_measurements(
     before = {v["id"]: v["status"] for v in previous.get("verdicts") or ()}
     return [
         {"id": v["id"], "family": v["family"], "was": before[v["id"]]}
+        | ({"reason": UNREACHABLE} if v.get("detail") == UNREACHABLE else {})
         for v in report["verdicts"]
         if v["status"] == "NOT_MEASURED" and before.get(v["id"]) in {"PASS", "FAIL"}
     ]
@@ -247,6 +264,9 @@ def main(argv: Sequence[str] | None = None) -> int:
         f"self-accuracy {report['accuracy']}% ({report['passed']}/{report['measured']} measured checks)"
     ]
     for domain, org in (report.get("byOrganization") or {}).items():
+        if org.get("unreachable"):
+            lines.append(f"  {domain}: UNREACHABLE (website did not load twice; not measured)")
+            continue
         lines.append(f"  {domain}: {org['accuracy']}% ({org['passed']}/{org['measured']})")
     lines += [f"FAIL {d['id']} [{d['defect']}]: {json.dumps(d['detail'], ensure_ascii=False)[:300]}"
               for d in report["defects"]]  # fmt: skip
@@ -257,6 +277,13 @@ def main(argv: Sequence[str] | None = None) -> int:
     lines += [
         f"LOST_MEASUREMENT {r['family']}: {r['id']} (was {r['was']})"
         for r in report["lostMeasurements"]
+        if r.get("reason") != UNREACHABLE
+    ]
+    unreachable = sorted({r["id"].split("/")[0] for r in report["lostMeasurements"]
+                          if r.get("reason") == UNREACHABLE})  # fmt: skip
+    lines += [
+        f"UNREACHABLE {domain}: website did not load; its checks are unmeasured"
+        for domain in unreachable
     ]
     if report["previousAccuracy"] is not None:
         lines.append(f"previous self-accuracy {report['previousAccuracy']}%")

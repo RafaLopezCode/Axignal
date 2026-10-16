@@ -7,7 +7,7 @@
   "home": "ES"
  },
  "facts": {
-  "value": "Online shop selling worm-humus tea (an organic fertiliser). Landscaping and green-area maintenance are uses of the product and kinds of buyers, not its activity (CTO, 2026-10-16). Identity not registry-verified (no LEI): a web-anchored subject."
+  "value": "Online shop selling worm-humus tea (an organic fertiliser): its main activity. Its site also offers professional application for lawns, gardens and green areas, a real secondary service (CTO, 2026-10-17: \"está en la web y Jev está haciendo bien su trabajo\"). Identity not registry-verified (no LEI): a web-anchored subject."
  },
  "checks": [
   {
@@ -29,9 +29,10 @@
    "family": "value",
    "activities": [
     "fertilisers-soil-amendments",
+    "landscaping-gardening",
     "agriculture"
    ],
-   "note": "Never landscaping (its buyers' activity), solar installation or anything it only mentions."
+   "note": "Fertilisers first; landscaping is a secondary service its site offers. Never solar installation or anything it only mentions."
   },
   {
    "id": "value.industry",
@@ -62,10 +63,23 @@
      "fertilitz",
      "suministro de abono",
      "productos fitosanitarios",
-     "tierra vegetal"
+     "tierra vegetal",
+     "jardin",
+     "jardín",
+     "zonas verdes",
+     "espais verds",
+     "espacios verdes",
+     "césped",
+     "cesped",
+     "desbroce",
+     "desbrossament",
+     "poda",
+     "arbolado",
+     "paisaj",
+     "verde"
     ]
    },
-   "note": "Supply of fertilisers and soil amendments; landscaping works are its buyers' demand, not its own."
+   "note": "Fertiliser supply first; green-area maintenance is a secondary service it offers. Whether a contract is within its reach is a separate question (scale)."
   }
  ]
 }
