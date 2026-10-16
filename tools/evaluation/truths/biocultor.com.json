@@ -1,0 +1,75 @@
+{
+ "version": "truth-v1",
+ "purpose": "What is publicly and well known about this organization; AXIGNAL's reading must agree (flywheel, CTO 2026-10-15). The CTO's own shop: the first real pilot and canary.",
+ "subject": {
+  "name": "Biocultor",
+  "website": "https://biocultor.com/",
+  "home": "ES"
+ },
+ "facts": {
+  "value": "Online shop selling worm-humus tea (organic fertiliser) for gardens and urban vegetable plots. Identity not registry-verified (no LEI): observed as a web-anchored subject (ADR-0087 amendment)."
+ },
+ "checks": [
+  {
+   "id": "presence.website_read",
+   "family": "presence",
+   "require": {
+    "code": "PUBLIC_WEBSITE_OBSERVED"
+   }
+  },
+  {
+   "id": "markets.home_spain",
+   "family": "markets",
+   "require": {
+    "code": "ADDRESS_DECLARED"
+   }
+  },
+  {
+   "id": "value.activities_allowed",
+   "family": "value",
+   "activities": [
+    "agriculture"
+   ],
+   "note": "Never solar installation, security systems or any activity it only mentions (lexicon trap corpus)."
+  },
+  {
+   "id": "value.industry",
+   "family": "value",
+   "industry": {
+    "allowed": [
+     "G47",
+     "C20",
+     "A01",
+     "G46"
+    ],
+    "preferred": "G47"
+   }
+  },
+  {
+   "id": "demand.relevant_to_its_activity",
+   "family": "demand",
+   "demand": {
+    "titleTerms": [
+     "humus",
+     "abono",
+     "fertiliz",
+     "compost",
+     "lombri",
+     "jardin",
+     "jardín",
+     "huerto",
+     "agrícol",
+     "agricol",
+     "agricultur",
+     "vivero",
+     "sustrato",
+     "ecológic",
+     "riego",
+     "semilla",
+     "zonas verdes",
+     "parques"
+    ]
+   }
+  }
+ ]
+}

@@ -27,7 +27,7 @@ from application.observation_intelligence.contracts import (
     geo,
 )
 
-CATALOG_VERSION = "eoil-catalog-2026-10-15.7"
+CATALOG_VERSION = "eoil-catalog-2026-10-16.8"
 
 #: Path depth that counts as a "region" inside each jurisdiction tree.
 REGIONAL_DEPTH: dict[str, int] = {"EU": 4, "US": 2}
@@ -67,7 +67,12 @@ CAPABILITY_LEXICON: tuple[CapabilityLexiconEntry, ...] = (
     CapabilityLexiconEntry(
         capability_id="solar-pv-installation",
         label="Solar photovoltaic installation",
-        terms=("fotovoltaic", "photovoltaï", "photovoltaic", "paneles solares", "placas solares", "autoconsumo"),
+        # "autoconsumo" alone also means growing one's own food or saving water (found on
+        # biocultor.com, an organic-fertiliser shop: "huerto urbano, autoconsumo y jardinería"):
+        # only its solar forms name this activity.
+        terms=("fotovoltaic", "photovoltaï", "photovoltaic", "paneles solares", "placas solares",
+               "autoconsumo solar", "autoconsumo fotovoltaico", "autoconsumo eléctrico",
+               "autoconsumo energético", "instalaciones de autoconsumo"),
         demand_codes=(
             cpv("09331200"), cpv("09332000"), cpv("45261215"), naics("221114"), naics("238210"),
         ),

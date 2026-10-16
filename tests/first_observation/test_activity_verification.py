@@ -51,8 +51,10 @@ GUARDS_HOME = (
     "<meta name='description' content='Manned guarding and alarm monitoring for companies "
     "and public buildings in Spain.'></head><body><h1>Security guard services</h1>"
     "<p>Our guarding services protect offices, warehouses and events across Spain.</p>"
-    "<p>Our teams follow a secure software development lifecycle for the internal tools "
-    "we use. Contact Marta Ibáñez at marta@guardia-norte.example.com.</p></body></html>"
+    # securitas.com's own wording (no "we use" cue, which the lexicon now drops by itself):
+    "<p>Guardia Norte protects digital assets by adopting a secure software development "
+    "lifecycle and security controls. Contact Marta Ibáñez at marta@guardia-norte.example.com."
+    "</p></body></html>"
 )
 
 

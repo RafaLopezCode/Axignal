@@ -1,0 +1,30 @@
+{
+ "purpose": "Sentences that mention a capability's words without offering it (must establish nothing) and sentences that offer it (must still be read). Grow it with every false activity found by the flywheel; never delete a case.",
+ "traps": [
+  ["biocultor.com 2026-10-16", "Usuarios de huerto urbano, autoconsumo y jardinería doméstica."],
+  ["trap corpus", "Encuentra nuestros productos en supermercados y tiendas de toda España."],
+  ["trap corpus", "Disponible en supermarkets across the UK."],
+  ["trap corpus", "Nuestras oficinas cuentan con videovigilancia y control de accesos."],
+  ["trap corpus", "Our offices are protected by CCTV."],
+  ["trap corpus", "Trabajamos con una imprenta local para nuestros catálogos."],
+  ["trap corpus", "Instalamos placas solares en nuestra nave para reducir nuestra huella de carbono."],
+  ["trap corpus", "Our warehouse runs on photovoltaic panels."],
+  ["trap corpus", "Colaboramos con un despacho de abogados para la protección de datos."],
+  ["trap corpus", "Nuestra sede tiene paneles solares en la cubierta."],
+  ["trap corpus", "Somos clientes de una empresa de limpieza profesional."],
+  ["trap corpus", "Utilizamos software a medida desarrollado por un partner."],
+  ["securitas.com 2026-10-15", "Cybersecurity Policy | Cookies | Privacy"]
+ ],
+ "offers": [
+  ["solar-pv-installation", "Instalamos placas solares para hogares y empresas en toda Andalucía."],
+  ["solar-pv-installation", "We design and install photovoltaic systems for farms and factories."],
+  ["solar-pv-installation", "Instalaciones de autoconsumo fotovoltaico llave en mano."],
+  ["security-systems", "Somos una empresa de videovigilancia y sistemas de alarma para comercios."],
+  ["security-systems", "Our security company provides CCTV installation and monitoring."],
+  ["printing", "Imprenta online: impresión de catálogos, flyers y tarjetas."],
+  ["software-development", "Desarrollo de software a medida para empresas industriales."],
+  ["cleaning-services", "Empresa de limpieza profesional para oficinas y comunidades."],
+  ["food-retail", "Supermercado online con entrega a domicilio en Madrid."],
+  ["legal-services", "Despacho de abogados especializado en derecho mercantil y laboral."]
+ ]
+}

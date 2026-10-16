@@ -137,7 +137,7 @@ def test_every_truth_speaks_the_engines_vocabulary() -> None:
     industries = set(json.loads(chain.read_text(encoding="utf-8"))["industries"])
     truth_set = json.loads(TRUTHS.with_name("truth_set.json").read_text(encoding="utf-8"))
     domains = [o["domain"] for o in truth_set["organizations"]]
-    assert len(domains) == 11 and "axignal.com" in domains
+    assert len(domains) == 12 and "axignal.com" in domains and "biocultor.com" in domains
     # The golden set (30 organizations, 8 countries) has a truth for every organization too.
     golden = json.loads(TRUTHS.with_name("golden_set.json").read_text(encoding="utf-8"))
     golden_domains = [o["domain"] for o in golden["organizations"]]
