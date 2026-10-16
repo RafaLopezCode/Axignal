@@ -19,7 +19,9 @@ from application.first_observation.activity import (
     CATALOG_ACTIVITY,
     CPV_DIVISION,
     OFFER_NATURE,
+    deterministic_activity,
     interpret_activity,
+    natures_disagree,
     plan_activity_batch,
 )
 from application.first_observation.site import read_page
@@ -110,3 +112,61 @@ def test_the_question_tells_the_evaluator_what_each_activity_is_and_never_the_cl
     assert "never the closest" in CATALOG_ACTIVITY.instructions
     reading = _read({OFFER_NATURE.question_id: "SUPPLIES", CATALOG_ACTIVITY.question_id: "NONE"})
     assert reading.judged["catalogGap"] == "NONE"
+
+
+#: Measured after #290: the shop also read as landscaping from an article headline on its home.
+SHOP_WITH_ARTICLE = (
+    "<html lang='es'><head><title>Té de humus de lombriz | Ejemplo</title></head><body>"
+    "<h1>Tienda especializada en té de humus de lombriz para huerto y jardín.</h1>"
+    "<h2>Mantenimiento de jardines con bajo residuo visible: por qué importa en zonas premium</h2>"
+    "</body></html>"
+)
+
+
+def _arbitrate(nature: str):  # type: ignore[no-untyped-def]
+    page = read_page(url="https://shop.example.com/", html=SHOP_WITH_ARTICLE, observed_at=NOW,
+                     content_fingerprint="t", artifact_ref=None)  # fmt: skip
+    found = deterministic_activity([page])
+    assert {f.activity_id for f in found} >= {
+        "fertilisers-soil-amendments",
+        "landscaping-gardening",
+    }
+    plan = plan_activity_batch("https://shop.example.com/", [page], known_scopes=(),
+                               deterministic=found)  # fmt: skip
+    assert plan is not None and OFFER_NATURE in plan.batch.questions
+
+    def rule(batch, question):  # type: ignore[no-untyped-def]
+        if question.question_id == OFFER_NATURE.question_id:
+            return (nature, 0.95)
+        return ("UNCLEAR", 0.9) if "UNCLEAR" in question.labels else (question.labels[-1], 0.9)
+
+    price = PricePolicy("t.v1", "typesafe-system-one", "jev-1.13.0", Decimal("0.042"),
+                        Decimal("0"), "test", "2026-10-17")  # fmt: skip
+    cascade = SemanticCascade(
+        judge=FakeSystemOne(rule), ledger=CostLedger(prices=(price,)),
+        memory=InMemoryJudgmentMemory(),
+        budget=SemanticBudget(max_system_one_input_tokens=200_000, max_reasoning_calls=0),
+    )  # fmt: skip
+    outcome = cascade.run([plan.batch], now=NOW)[plan.batch.batch_id]
+    return interpret_activity(plan, outcome, [page], model="jev-1.13.0")
+
+
+def test_the_offer_nature_arbitrates_between_the_lexicons_own_readings() -> None:
+    assert _arbitrate("SUPPLIES").withheld == ("landscaping-gardening",)
+    assert _arbitrate("SERVICES").withheld == ("fertilisers-soil-amendments",)
+    for unknown in ("MIXED", "UNCLEAR"):
+        assert _arbitrate(unknown).withheld == ()
+    # A nature none of its readings has never erases them all: unknown, not empty.
+    assert _arbitrate("WORKS").withheld == ()
+
+
+def test_readings_of_one_nature_never_ask() -> None:
+    page = read_page(url="https://x.example.com/", html=SHOP, observed_at=NOW,
+                     content_fingerprint="t", artifact_ref=None)  # fmt: skip
+    one = deterministic_activity([read_page(
+        url="https://x.example.com/", observed_at=NOW, content_fingerprint="t", artifact_ref=None,
+        html="<html><body><h1>Tienda de té de humus de lombriz y abono ecológico.</h1></body></html>",
+    )])  # fmt: skip
+    assert one and not natures_disagree(one)
+    plan = plan_activity_batch("https://x.example.com/", [page], known_scopes=(), deterministic=one)
+    assert plan is None or OFFER_NATURE not in plan.batch.questions
