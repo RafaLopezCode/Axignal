@@ -37,5 +37,10 @@
   ["legal-services", "Despacho de abogados especializado en derecho mercantil y laboral."],
   ["fertilisers-soil-amendments", "Tienda especializada en té de humus de lombriz para huerto y jardín."],
   ["fertilisers-soil-amendments", "Abono ecológico para mantenimiento de jardines y zonas verdes."]
+ ],
+ "offer_and_its_uses": [
+  ["fertilisers-soil-amendments", "landscaping-gardening", "Tienda especializada en té de humus de lombriz y servicios profesionales para césped, jardines, paisajistas y mantenimiento de zonas verdes."],
+  ["workwear", "cleaning-services", "Fabricamos ropa laboral para hostelería, sanidad, servicios de limpieza y seguridad privada."],
+  ["business-software", "catering", "Software de gestión para hoteles, restaurantes, colegios y restauración colectiva."]
  ]
 }

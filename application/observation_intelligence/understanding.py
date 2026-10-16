@@ -71,7 +71,9 @@ def _only_as_purpose(excerpt: str, term: str) -> bool:
     """Every occurrence follows a purpose preposition within its clause ("para X y Y")."""
     occurrences = list(re.finditer(re.escape(term), excerpt, re.IGNORECASE))
     for match in occurrences:
-        clause = re.split(r"[.;:,!?|]", excerpt[: match.start()])[-1]
+        # Commas enumerate what the purpose covers ("para césped, jardines y zonas verdes",
+        # found on biocultor.com 2026-10-17): only a sentence-level stop ends it.
+        clause = re.split(r"[.;:!?|]", excerpt[: match.start()])[-1]
         if not _PURPOSE_WORD.search(clause):
             return False
     return bool(occurrences)

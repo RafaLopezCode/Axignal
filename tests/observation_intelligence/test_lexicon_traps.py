@@ -34,3 +34,13 @@ def test_a_mention_establishes_no_activity(origin: str, sentence: str) -> None:
 @pytest.mark.parametrize(("capability", "sentence"), CORPUS["offers"])
 def test_a_real_offer_is_still_read(capability: str, sentence: str) -> None:
     assert capability in _read(sentence)
+
+
+@pytest.mark.parametrize(("offered", "use", "sentence"), CORPUS["offer_and_its_uses"])
+def test_an_offer_is_read_without_the_uses_it_enumerates(
+    offered: str, use: str, sentence: str
+) -> None:
+    read = _read(sentence)
+    assert offered in read and use not in read, (
+        read
+    )  # spec 080: its buyers' activity is not its own
