@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import publicDelivery from "./lib/marketing-delivery.json";
 // Baseline CSP in report-only mode: collect browser compatibility evidence before
 // enforcing a policy on OAuth, payment or the Next.js hydration runtime.
 const cspReportOnly = [
@@ -15,7 +16,13 @@ const cspReportOnly = [
 ].join("; ");
 const config: NextConfig = {
   async headers() {
-    return [{ source: "/:path*", headers: [{ key: "Content-Security-Policy-Report-Only", value: cspReportOnly }] }];
+    return [
+      { source: "/:path*", headers: [{ key: "Content-Security-Policy-Report-Only", value: cspReportOnly }] },
+      ...[
+        ...publicDelivery.fonts.map(({url}) => url),
+        ...Object.values(publicDelivery.images).flatMap(({variants}) => variants.map(({url}) => url)),
+      ].map(source => ({source, headers: [{key: "Cache-Control", value: "public, max-age=31536000, immutable"}]})),
+    ];
   },
   poweredByHeader: false,
   devIndicators: false,

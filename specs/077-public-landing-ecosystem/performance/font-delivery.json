@@ -1,0 +1,22 @@
+[
+  {
+    "family": "Manrope",
+    "src": "/fonts/manrope.ttf",
+    "url": "/fonts/manrope-full.15e95cd6.woff2",
+    "sourceBytes": 164700,
+    "bytes": 53800,
+    "sha256": "15e95cd63aa1d00c420ed9f2e9368a159d5fc55463506e5942a190389ccb5769",
+    "glyphs": 742,
+    "coverage": "full original cmap, metrics and variation axes preserved"
+  },
+  {
+    "family": "Bic Notes",
+    "src": "/fonts/caveat.ttf",
+    "url": "/fonts/caveat-full.ab1a1d69.woff2",
+    "sourceBytes": 403648,
+    "bytes": 173748,
+    "sha256": "ab1a1d6903284cb3d4a7514b8a8f90666c797332f8144c294adb9548369657d6",
+    "glyphs": 1034,
+    "coverage": "full original cmap, metrics and variation axes preserved"
+  }
+]

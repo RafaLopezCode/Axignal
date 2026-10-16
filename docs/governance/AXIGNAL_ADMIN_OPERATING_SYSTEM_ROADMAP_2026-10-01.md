@@ -51,7 +51,7 @@ Current commercial hypotheses remain hypotheses until empirical evidence closes 
 - Additional Xeed: `€4.95/month` each.
 - Xignals are not billable units.
 - Free weekly brief/newsletter: acquisition hypothesis, not a free Xeed entitlement.
-- Premium human External Intelligence / Frontier Advisor service: separate high-touch offer, currently discussed around `€995/month`, still requiring willingness-to-pay and bundle validation.
+- Premium human External Intelligence / Frontier Advisor service: separate high-touch offer, revised by explicit commercial instruction on2026-10-16 to `€295/month` (previous discussion: `€995/month`), still requiring willingness-to-pay and bundle validation.
 - FR-27 remains READY, not DONE, until real buyer/job/WTP evidence exists.
 
 Admin must measure these hypotheses without silently converting them into validated economics.
@@ -1237,13 +1237,13 @@ Premium advisory reuses AXIGNAL's governed substrate instead of creating a secon
 **Depends on:** AO-08, AO-10, AO-11, AO-25
 **Priority:** P1 Advisory
 ### Work
-- Implement the authorized launch package: €995/month + applicable VAT, one advisory-scoped Xeed, four weekly evidence-backed updates and one monthly strategic review; define response boundaries and human-hour cap from measured delivery.
+- Implement the authorized launch package: €295/month + applicable VAT, one advisory-scoped Xeed, four weekly evidence-backed updates and one monthly strategic review; define response boundaries and human-hour cap from measured delivery.
 - Quote/contract/subscription linkage through CRM/billing; update Stripe catalog, customer account projection, public pricing and a dedicated advisory landing from the same package contract.
 - Measure advisor time, variable cost, corrections, renewals and WTP.
 - Separate advisory utility from epistemic correctness.
 
 ### Acceptance
-- €995 or any launch price remains marked hypothesis until real paid evidence exists.
+- €295 or any launch price remains marked hypothesis until real paid evidence exists.
 - Service cannot promise improved AXIGNAL measurement for paying.
 - Advisor capacity/gross contribution visible.
 

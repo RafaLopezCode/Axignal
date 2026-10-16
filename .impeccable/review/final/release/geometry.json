@@ -1,0 +1,242 @@
+[
+  {
+    "advisory": "295,00 €",
+    "heroLoaded": true,
+    "heroSrc": "http://127.0.0.1:3847/marketing/hero-art-1440.2dea815a.webp",
+    "lang": "es",
+    "logos": [
+      {
+        "height": 43,
+        "images": 0,
+        "width": 147
+      },
+      {
+        "height": 43,
+        "images": 0,
+        "width": 147
+      }
+    ],
+    "overflow": false,
+    "width": 1280
+  },
+  {
+    "advisory": "€295.00",
+    "heroLoaded": true,
+    "heroSrc": "http://127.0.0.1:3847/marketing/hero-art-1440.2dea815a.webp",
+    "lang": "en",
+    "logos": [
+      {
+        "height": 43,
+        "images": 0,
+        "width": 147
+      },
+      {
+        "height": 43,
+        "images": 0,
+        "width": 147
+      }
+    ],
+    "overflow": false,
+    "width": 1280
+  },
+  {
+    "advisory": "295,00 €",
+    "heroLoaded": true,
+    "heroSrc": "http://127.0.0.1:3847/marketing/hero-art-1440.2dea815a.webp",
+    "lang": "fr",
+    "logos": [
+      {
+        "height": 43,
+        "images": 0,
+        "width": 147
+      },
+      {
+        "height": 43,
+        "images": 0,
+        "width": 147
+      }
+    ],
+    "overflow": false,
+    "width": 1280
+  },
+  {
+    "advisory": "295,00 €",
+    "heroLoaded": true,
+    "heroSrc": "http://127.0.0.1:3847/marketing/hero-art-1440.2dea815a.webp",
+    "lang": "de",
+    "logos": [
+      {
+        "height": 43,
+        "images": 0,
+        "width": 147
+      },
+      {
+        "height": 43,
+        "images": 0,
+        "width": 147
+      }
+    ],
+    "overflow": false,
+    "width": 1280
+  },
+  {
+    "advisory": "295,00 €",
+    "heroLoaded": true,
+    "heroSrc": "http://127.0.0.1:3847/marketing/hero-art-1440.2dea815a.webp",
+    "lang": "it",
+    "logos": [
+      {
+        "height": 43,
+        "images": 0,
+        "width": 147
+      },
+      {
+        "height": 43,
+        "images": 0,
+        "width": 147
+      }
+    ],
+    "overflow": false,
+    "width": 1280
+  },
+  {
+    "advisory": "€ 295,00",
+    "heroLoaded": true,
+    "heroSrc": "http://127.0.0.1:3847/marketing/hero-art-1440.2dea815a.webp",
+    "lang": "pt",
+    "logos": [
+      {
+        "height": 43,
+        "images": 0,
+        "width": 147
+      },
+      {
+        "height": 43,
+        "images": 0,
+        "width": 147
+      }
+    ],
+    "overflow": false,
+    "width": 1280
+  },
+  {
+    "advisory": "295,00 €",
+    "heroLoaded": true,
+    "heroSrc": "http://127.0.0.1:3847/marketing/hero-art-1931.ac8ba5f0.webp",
+    "lang": "es",
+    "logos": [
+      {
+        "height": 41.53125,
+        "images": 0,
+        "width": 142
+      },
+      {
+        "height": 41.53125,
+        "images": 0,
+        "width": 142
+      }
+    ],
+    "overflow": false,
+    "width": 390
+  },
+  {
+    "advisory": "€295.00",
+    "heroLoaded": true,
+    "heroSrc": "http://127.0.0.1:3847/marketing/hero-art-1931.ac8ba5f0.webp",
+    "lang": "en",
+    "logos": [
+      {
+        "height": 41.53125,
+        "images": 0,
+        "width": 142
+      },
+      {
+        "height": 41.53125,
+        "images": 0,
+        "width": 142
+      }
+    ],
+    "overflow": false,
+    "width": 390
+  },
+  {
+    "advisory": "295,00 €",
+    "heroLoaded": true,
+    "heroSrc": "http://127.0.0.1:3847/marketing/hero-art-1931.ac8ba5f0.webp",
+    "lang": "fr",
+    "logos": [
+      {
+        "height": 41.53125,
+        "images": 0,
+        "width": 142
+      },
+      {
+        "height": 41.53125,
+        "images": 0,
+        "width": 142
+      }
+    ],
+    "overflow": false,
+    "width": 390
+  },
+  {
+    "advisory": "295,00 €",
+    "heroLoaded": true,
+    "heroSrc": "http://127.0.0.1:3847/marketing/hero-art-1931.ac8ba5f0.webp",
+    "lang": "de",
+    "logos": [
+      {
+        "height": 41.53125,
+        "images": 0,
+        "width": 142
+      },
+      {
+        "height": 41.53125,
+        "images": 0,
+        "width": 142
+      }
+    ],
+    "overflow": false,
+    "width": 390
+  },
+  {
+    "advisory": "295,00 €",
+    "heroLoaded": true,
+    "heroSrc": "http://127.0.0.1:3847/marketing/hero-art-1931.ac8ba5f0.webp",
+    "lang": "it",
+    "logos": [
+      {
+        "height": 41.53125,
+        "images": 0,
+        "width": 142
+      },
+      {
+        "height": 41.53125,
+        "images": 0,
+        "width": 142
+      }
+    ],
+    "overflow": false,
+    "width": 390
+  },
+  {
+    "advisory": "€ 295,00",
+    "heroLoaded": true,
+    "heroSrc": "http://127.0.0.1:3847/marketing/hero-art-1931.ac8ba5f0.webp",
+    "lang": "pt",
+    "logos": [
+      {
+        "height": 41.53125,
+        "images": 0,
+        "width": 142
+      },
+      {
+        "height": 41.53125,
+        "images": 0,
+        "width": 142
+      }
+    ],
+    "overflow": false,
+    "width": 390
+  }
+]

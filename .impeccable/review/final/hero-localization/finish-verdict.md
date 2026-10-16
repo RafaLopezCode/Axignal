@@ -1,0 +1,12 @@
+## verdict
+
+1. Evidencia — resolved. es-confirmed.png sustituido: ahora muestra el hero español y su header, con los tres titulares del folio visibles. Todos los hashes del manifiesto coinciden con los archivos actuales. Revisadas las seis capturas de idioma, escritorio compacto, móvil, menú y página con footer, más el master hero-art.webp.
+2. Titulares del periódico — resolved. El resultado visual centra los tres textos en las bandas del master de 1931×814. CSS usa los centros (898,420), (1229,463), (1620,444) expresados como 46.5%/51.6%, 63.65%/56.9% y 83.9%/54.5%, translate(-50%,-50%) y giros de 10°, 4.5° y -8.5°. Las doce muestras de escritorio reproducen esos centros con el redondeo esperado. Las seis traducciones permanecen completas; los títulos derechos largos conservan su banda con una escala menor. El fallback móvil de enlaces permanece separado de la ilustración.
+3. Login y selector — resolved. Las capturas de escritorio muestran login transparente con contorno azul y el mismo ancho de 148px que la acción principal. La geometría registra border 1px solid rgb(53,79,152), fondo transparente y selector de 112px en las doce muestras de escritorio. El menú móvil portugués muestra «Português» completo y flecha nativa. Los selectores/login ocultos del header móvil tienen ancho medido cero por su estado oculto; no se interpretan como un fallo ni como mediciones del menú abierto.
+4. Marca y fit — resolved. Header y footer usan PublicBrandVector con dimensiones compartidas: 147×43 en escritorio, 142px a 390 y 124px a 320, con idéntica altura automática por pareja. Las 24 muestras aportadas registran dos paths/cero imágenes por logo y ninguna superposición del header ni overflow de página; los doce juegos de titulares visibles no exceden sus cajas medidas. La captura de página completa acredita el footer real.
+
+## remaining
+
+Clear exclusivamente para centrado/localización de los titulares, login, tamaños compartidos del SVG y selector de idioma de este lote. No se observa una regresión material atribuible al cambio en la evidencia entregada. Se conserva el historial de la recaptura inicial y de los dictámenes anteriores. Aceptación visual humana PENDING; checkpoint CLI histórico OPEN. No se ejecutaron navegador, detector, build ni auditoría global en esta revisión; los gates del paquete son resultados reportados por el agente principal. Ship cubre únicamente este alcance revisado.
+
+disposition: ship

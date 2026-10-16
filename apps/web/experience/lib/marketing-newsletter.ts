@@ -1,0 +1,77 @@
+import { words } from "./marketing-content";
+
+/** Public invitation to the existing AO-15/AO-16 channel; never an entitlement. */
+export const newsletterCopy = {
+  title: words(
+    "La semana, con perspectiva.",
+    "A weekly perspective.",
+    "La semaine, en perspective.",
+    "Die Woche mit Perspektive.",
+    "La settimana, in prospettiva.",
+    "A semana, com perspetiva.",
+  ),
+  lead: words(
+    "Una newsletter gratuita para seguir una organización a través de sus señales públicas. Hasta tres por semana cuando existan novedades materiales, con sus fuentes, fechas y límites.",
+    "A free newsletter to follow an organization through its public signals. Up to three a week when there are material developments, with sources, dates and limits.",
+    "Une newsletter gratuite pour suivre une organisation à travers ses signaux publics. Jusqu’à trois par semaine en cas d’évolution significative, avec sources, dates et limites.",
+    "Ein kostenloser Newsletter über öffentliche Signale einer Organisation. Bis zu drei pro Woche bei wesentlichen Entwicklungen, mit Quellen, Datum und Grenzen.",
+    "Una newsletter gratuita per seguire un’organizzazione attraverso i suoi segnali pubblici. Fino a tre a settimana in presenza di novità rilevanti, con fonti, date e limiti.",
+    "Uma newsletter gratuita para acompanhar uma organização através dos seus sinais públicos. Até três por semana quando existirem novidades materiais, com fontes, datas e limites.",
+  ),
+  boundary: words(
+    "Bajo solicitud y aceptación según cobertura. Es una muestra editorial: no incluye acceso a AXENT ni al contexto privado de AXIGNAL. El consentimiento para recibirla es independiente y revocable.",
+    "By request and acceptance based on coverage. An editorial sample: it does not include AXENT or private AXIGNAL context. Email consent is separate and can be withdrawn.",
+    "Sur demande et acceptation selon la couverture. Un aperçu éditorial, sans accès à AXENT ni au contexte privé d’AXIGNAL. Le consentement aux envois est distinct et révocable.",
+    "Auf Anfrage und nach Annahme je nach Abdeckung. Eine redaktionelle Auswahl ohne Zugang zu AXENT oder privatem AXIGNAL-Kontext. Die E-Mail-Einwilligung ist separat und widerrufbar.",
+    "Su richiesta e accettazione in base alla copertura. Un estratto editoriale, senza accesso ad AXENT o al contesto privato di AXIGNAL. Il consenso alle email è separato e revocabile.",
+    "Mediante pedido e aceitação conforme a cobertura. Uma amostra editorial, sem acesso ao AXENT nem ao contexto privado da AXIGNAL. O consentimento para emails é separado e revogável.",
+  ),
+  checking: words(
+    "Comprobando disponibilidad…",
+    "Checking availability…",
+    "Vérification de la disponibilité…",
+    "Verfügbarkeit wird geprüft…",
+    "Verifica della disponibilità…",
+    "A verificar a disponibilidade…",
+  ),
+  paused: words(
+    "Las solicitudes están pausadas.",
+    "Requests are paused.",
+    "Les demandes sont suspendues.",
+    "Anfragen sind pausiert.",
+    "Le richieste sono in pausa.",
+    "Os pedidos estão em pausa.",
+  ),
+  unavailable: words(
+    "No podemos comprobar la disponibilidad.",
+    "We cannot check availability.",
+    "Nous ne pouvons pas vérifier la disponibilité.",
+    "Die Verfügbarkeit kann nicht geprüft werden.",
+    "Non possiamo verificare la disponibilità.",
+    "Não conseguimos verificar a disponibilidade.",
+  ),
+  recovery: words(
+    "Puedes volver a comprobarlo o consultar con nosotros. No se ha registrado ninguna solicitud.",
+    "Check again or contact us. No request has been registered.",
+    "Réessayez ou contactez-nous. Aucune demande n’a été enregistrée.",
+    "Erneut prüfen oder Kontakt aufnehmen. Es wurde keine Anfrage erfasst.",
+    "Riprova o contattaci. Nessuna richiesta è stata registrata.",
+    "Tenta novamente ou contacta-nos. Não foi registado nenhum pedido.",
+  ),
+  retry: words(
+    "Volver a comprobar",
+    "Check again",
+    "Vérifier à nouveau",
+    "Erneut prüfen",
+    "Verifica di nuovo",
+    "Verificar novamente",
+  ),
+  contact: words(
+    "Consultar disponibilidad",
+    "Ask about availability",
+    "Se renseigner sur la disponibilité",
+    "Verfügbarkeit erfragen",
+    "Chiedi la disponibilità",
+    "Consultar disponibilidade",
+  ),
+};

@@ -1,0 +1,30 @@
+[
+  {
+    "path": "home-optimized.png",
+    "sha256": "a04e6e7c05e9257b6bf51ebff47539d0749dc3bc7092d99b67776f9bff6f432b"
+  },
+  {
+    "path": "mobile-optimized.png",
+    "sha256": "e848872ef64c3560d7a871ff8830202683537d713cc5be7243eccc210372d66c"
+  },
+  {
+    "path": "advisory-295.png",
+    "sha256": "2251b87840cf91acd9c6e786f965a7ec8eb92d6d349b0726422e6efd2aac87ee"
+  },
+  {
+    "path": "stripe-295.png",
+    "sha256": "309a38cd449358caa1d7aec1555d720ce79f5724ddeeb8e9b551e3333452477a"
+  },
+  {
+    "path": "geometry.json",
+    "sha256": "e18dba2993fd93f2033fecbfb47747b1b4dda0fe91ce56b3da7c66922c8be33b"
+  },
+  {
+    "path": "before-assets.json",
+    "sha256": "24054176cbf377200fcbd758cd5a48eaad67ce61b3dcb3fe9c230ee214b61ebe"
+  },
+  {
+    "path": "after-assets.json",
+    "sha256": "08f72716ed4612d7da111333778a07d711ead30df9472cfc28e46470e306467c"
+  }
+]

@@ -1,0 +1,35 @@
+{
+  "date": "2026-10-16",
+  "merchant": "acct_1TybkH8feyjV8Pem",
+  "method": "Authorized AXIGNAL Dashboard UI; independent CLI read verification",
+  "product": "prod_VS4WfT6KAF46Gz",
+  "name": "AXIGNAL con asesoría humana",
+  "active": true,
+  "livemode": true,
+  "price": {
+    "id": "price_1URANP8feyjV8PemhSZWfxQW",
+    "unit_amount": 29500,
+    "currency": "eur",
+    "tax_behavior": "exclusive",
+    "active": true,
+    "recurring": {
+      "interval": "month",
+      "interval_count": 1,
+      "meter": null,
+      "trial_period_days": null,
+      "usage_type": "licensed"
+    }
+  },
+  "unchanged_self_service": [
+    {
+      "product": "axignal_additional_organization_v1",
+      "price": "price_1UNYY88feyjV8PemyuI3unra",
+      "minor": 495
+    },
+    {
+      "product": "axignal_base_subscription_v1",
+      "price": "price_1UNYXv8feyjV8PemcFisvBJ2",
+      "minor": 995
+    }
+  ]
+}

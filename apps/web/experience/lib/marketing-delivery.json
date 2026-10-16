@@ -1,0 +1,82 @@
+{
+  "fonts": [
+    {
+      "family": "Manrope",
+      "url": "/fonts/manrope-full.15e95cd6.woff2",
+      "bytes": 53800,
+      "sha256": "15e95cd63aa1d00c420ed9f2e9368a159d5fc55463506e5942a190389ccb5769"
+    },
+    {
+      "family": "Bic Notes",
+      "url": "/fonts/caveat-full.ab1a1d69.woff2",
+      "bytes": 173748,
+      "sha256": "ab1a1d6903284cb3d4a7514b8a8f90666c797332f8144c294adb9548369657d6"
+    }
+  ],
+  "images": {
+    "hero-art": {
+      "src": "/marketing/hero-art.webp",
+      "width": 1931,
+      "height": 814,
+      "bytes": 142694,
+      "variants": [
+        {
+          "url": "/marketing/hero-art-640.54a4dab4.webp",
+          "width": 640,
+          "bytes": 20822,
+          "sha256": "54a4dab4f4b84919ca0d7f25fb2abe64f6d6a4c2ac6d14851fda957cfa92793b"
+        },
+        {
+          "url": "/marketing/hero-art-960.19bdf5ad.webp",
+          "width": 960,
+          "bytes": 37292,
+          "sha256": "19bdf5adbf2e925342c6ed8523d4518846012288ff3087aa4f3eac16a4b4390c"
+        },
+        {
+          "url": "/marketing/hero-art-1440.2dea815a.webp",
+          "width": 1440,
+          "bytes": 62438,
+          "sha256": "2dea815a55103bf1db7bf3eb3d76056bf90a95c1fa0adc28af36e242a221f12a"
+        },
+        {
+          "url": "/marketing/hero-art-1931.ac8ba5f0.webp",
+          "width": 1931,
+          "bytes": 142694,
+          "sha256": "ac8ba5f0639c433b8df1c571b15e35714a7d5388f2f3691154bf4f26d5e222e4"
+        }
+      ]
+    },
+    "industries": {
+      "src": "/marketing/industries.webp",
+      "width": 2007,
+      "height": 784,
+      "bytes": 301870,
+      "variants": [
+        {
+          "url": "/marketing/industries-640.d72f4b1f.webp",
+          "width": 640,
+          "bytes": 42776,
+          "sha256": "d72f4b1fa57ed8b3216fdedfafb1ece9e67cb8d6fb0555c919858612af5045e7"
+        },
+        {
+          "url": "/marketing/industries-960.aacd5920.webp",
+          "width": 960,
+          "bytes": 83044,
+          "sha256": "aacd5920bf5ee6bf477acbebd509e56b62853e0176ac273f05eb483bb71a7d7c"
+        },
+        {
+          "url": "/marketing/industries-1440.44adf72f.webp",
+          "width": 1440,
+          "bytes": 151348,
+          "sha256": "44adf72f2523c67b9209e6cfe8c8f5e4f12464f46e6825dea01588febc1debfe"
+        },
+        {
+          "url": "/marketing/industries-2007.c184a810.webp",
+          "width": 2007,
+          "bytes": 301870,
+          "sha256": "c184a81070ac5d27291fe3a07335f190ea56ff7d7101e3f4c52dc1be33b7d2ad"
+        }
+      ]
+    }
+  }
+}

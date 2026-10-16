@@ -48,6 +48,9 @@ export function approvedPriceBook(offers: readonly ApprovedFixedOffer[]): Readon
 
 export const PUBLISHED_PRICES = approvedPriceBook([EUR_REFERENCE]);
 
+/** Separate human service: explicit commercial amendment, MASTER §27.4, 2026-10-16. */
+export const HUMAN_ADVISORY_EUR_MONTHLY_MINOR = 29500;
+
 export function monthlyFixedPriceMinor(offer: ApprovedFixedOffer, organizations: number): number {
   if (!Number.isSafeInteger(organizations) || organizations < 1 || organizations > 100)
     throw new RangeError("Organizations must be an integer from 1 to 100");

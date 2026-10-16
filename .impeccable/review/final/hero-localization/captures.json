@@ -1,0 +1,46 @@
+[
+  {
+    "path": "compact-desktop-confirmed.png",
+    "sha256": "f0bce71ad080dbb1e58a3da843c683ba6f9f7d37a3da77a1c08d8ee354fc2b2c"
+  },
+  {
+    "path": "de-confirmed.png",
+    "sha256": "43f6d1e28b3d8800d5596e0b999651e4ec4aad29615585a8414e39fa2159af5c"
+  },
+  {
+    "path": "en-confirmed.png",
+    "sha256": "70f4ae4e943dae8578f1bb90fc93f5135dec5225cfa07231578160e185578d66"
+  },
+  {
+    "path": "es-confirmed.png",
+    "sha256": "1d2eee40ba9241ca4160599a397dbfb12371f7c0550baed8aec8b6980d2cee7d"
+  },
+  {
+    "path": "fr-confirmed.png",
+    "sha256": "03da65cfba1bb86981913856ca9d11909795cee15638103f8f72dc5cd8b195f6"
+  },
+  {
+    "path": "geometry.json",
+    "sha256": "a03c16d89d287a366b8afb5368dda3574f3aa73b78295706991efa3261b80267"
+  },
+  {
+    "path": "it-confirmed.png",
+    "sha256": "2bbdb21026df0259e1037074c1b9383c3cbe4c3fddfceda6790fea46c4d5a3b4"
+  },
+  {
+    "path": "mobile-confirmed.png",
+    "sha256": "ad58d1a3199a6f2135cfde77c32b76238a1d5a44288e0a7b4f9039e0c7c18cfe"
+  },
+  {
+    "path": "mobile-menu-confirmed.png",
+    "sha256": "d18c07eec8f0b52dec4db7245051be8a81cae5344ae26e8d0c50024883698278"
+  },
+  {
+    "path": "page-with-footer-confirmed.png",
+    "sha256": "46a9e28f620415c22c1c93e045ae0aff888719090d060cc6f41ff380d0ed314a"
+  },
+  {
+    "path": "pt-confirmed.png",
+    "sha256": "8e70d8c97e25961b8731b68cd588ee4042aaf2ca370e197a0ea81abc08fd797d"
+  }
+]

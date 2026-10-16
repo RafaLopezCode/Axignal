@@ -17,6 +17,9 @@ const PUBLIC_SURFACES = [
   "components/landing-extras.tsx",
   "components/landing-observatory.tsx",
   "components/public-shell.tsx",
+  "components/marketing-shared.tsx",
+  "components/marketing-pages.tsx",
+  "components/marketing-home-body.tsx",
   "components/ui.tsx",
   "components/access.tsx",
   "components/panorama.tsx",
@@ -26,6 +29,7 @@ const PUBLIC_SURFACES = [
 ];
 const PUBLIC_ROUTES = new Set([
   "/", "/demo", "/signup", "/login", "/knowledge", "/contact", "/policies", "/gdpr",
+  "/pricing",
   "/policies/terms", "/policies/privacy", "/policies/cookies", "/knowledge/basis/product-model",
 ]);
 const literalHrefs = (source: string) =>

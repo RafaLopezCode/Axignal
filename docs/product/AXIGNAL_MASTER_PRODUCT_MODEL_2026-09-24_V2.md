@@ -1635,8 +1635,12 @@ Contrato de producto:
 
 Oferta premium separada del autoservicio:
 
+Actualización comercial expresa de la persona responsable del producto,
+2026-10-16: precio de lanzamiento revisado de €995 a €295/mes. El alcance,
+los impuestos y las fronteras de autoridad del servicio no cambian.
+
     AXIGNAL con asesoría humana
-    €995 / month + applicable VAT
+    €295 / month + applicable VAT
     includes 1 Foco de observación in the human-advisory scope
     4 weekly evidence-backed updates
     1 monthly strategic review
@@ -1653,7 +1657,7 @@ Un Foco de observación adicional de autoservicio sigue costando €4.95/mes. Un
 que requiera trabajo humano de advisory **no queda incluida automáticamente por
 ese add-on** y necesita alcance/precio humano específico.
 
-La cifra €995/mes es el precio de lanzamiento autorizado para el servicio humano
+La cifra €295/mes es el precio de lanzamiento autorizado para el servicio humano
 y sigue sujeta a validación de willingness-to-pay, capacidad, horas humanas,
 coste variable, renovación y margen. No debe presentarse como evidencia de que
 el mercado ya ha validado el precio.
@@ -1665,7 +1669,7 @@ Las superficies públicas y privadas deben mantener cuatro conceptos distintos:
 1. autoservicio AXIGNAL: €9.95/mes con 1 Foco de observación;
 2. Foco de observación adicional de autoservicio: +€4.95/mes;
 3. newsletter gratuita solicitada: adquisición, sin entitlement de Foco de observación;
-4. asesoría humana AXIGNAL: €995/mes + IVA aplicable, un Foco de observación dentro del alcance
+4. asesoría humana AXIGNAL: €295/mes + IVA aplicable, un Foco de observación dentro del alcance
    humano y entrega recurrente gobernada.
 
 No presentar estas cuatro opciones como tiers equivalentes de software. La

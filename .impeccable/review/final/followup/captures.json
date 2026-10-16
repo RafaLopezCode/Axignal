@@ -1,0 +1,42 @@
+[
+  {
+    "file": "advisory-desktop-1650.png",
+    "sha256": "00d7a709941eb5f19c887e29bc9dbead8bf1f04179466a94166bf1e1caa1fc8d",
+    "origin": "Actual local Next.js production application; CUA browser capture or read-only DOM measurements"
+  },
+  {
+    "file": "advisory-mobile-390.png",
+    "sha256": "64694590b1a2acfdda34a6bc8fba7ef06675140b2fa9f54fb80ec83cd9487684",
+    "origin": "Actual local Next.js production application; CUA browser capture or read-only DOM measurements"
+  },
+  {
+    "file": "tablet-before.png",
+    "sha256": "d64f6a9b3c2ea0921726b402d4ca75d66d18ca4251c32c6bbaef1f228074d075",
+    "origin": "Actual local Next.js production application; CUA browser capture or read-only DOM measurements"
+  },
+  {
+    "file": "tablet-820-it-final.png",
+    "sha256": "d61b47049881ac2e2c0d53fca3e6ccab968d32319130007cbda9adab51404744",
+    "origin": "Actual local Next.js production application; CUA browser capture or read-only DOM measurements"
+  },
+  {
+    "file": "desktop-1280-es-final.png",
+    "sha256": "b29482d6c7b4a68c08c7e97a014dccf2d599363c37e55413038999283821611d",
+    "origin": "Actual local Next.js production application; CUA browser capture or read-only DOM measurements"
+  },
+  {
+    "file": "desktop-1440-it-final.png",
+    "sha256": "eecdb6b63d5e610e1dac75e3e9855c2d36ce681740561a39d4d3f0ff611f063e",
+    "origin": "Actual local Next.js production application; CUA browser capture or read-only DOM measurements"
+  },
+  {
+    "file": "geometry-final.json",
+    "sha256": "9b744e331d8c1a497e997de977f1c865972fb1e4e24f797877ad048cb612ea96",
+    "origin": "Actual local Next.js production application; CUA browser capture or read-only DOM measurements"
+  },
+  {
+    "file": "pricing-mobile-geometry.json",
+    "sha256": "c5e4929ee27544c48470f567f4876a123ba252b0c9d698dc85d4f8ae0cfd3c2d",
+    "origin": "Actual local Next.js production application; CUA browser capture or read-only DOM measurements"
+  }
+]

@@ -2,6 +2,8 @@ import type { MetadataRoute } from "next";
 import { acquisitionPages, acquisitionHubs, localizedPagePath } from "@/lib/acquisition";
 import { locales } from "@/lib/languages";
 import { absolutePublicUrl, hreflangMap } from "@/lib/acquisition-seo";
+import { marketingLanguages, marketingPaths } from "@/lib/marketing-seo";
+import { marketingPath } from "@/lib/marketing-content";
 import { homeLanguages } from "@/lib/site-seo";
 
 export default function sitemap(): MetadataRoute.Sitemap {
@@ -25,5 +27,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       alternates: { languages: hreflangMap(paths) },
     }];
   }));
-  return [...home, ...hubs, ...articles];
+  const catalog=marketingPaths.flatMap(path=>locales.map(({id})=>({url:absolutePublicUrl(marketingPath(path,id)),alternates:{languages:marketingLanguages(path)}})));
+  return [...home, ...catalog, ...hubs, ...articles];
 }
