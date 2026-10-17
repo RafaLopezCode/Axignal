@@ -66,6 +66,7 @@ export const firstObservationSchema = z.object({
     additional: z.number().int().min(0).optional(),
     // An evaluator judged them unrelated to every matched activity (spec 075): set aside, listed.
     setAsideByFit: z.number().int().min(0).optional(),
+    best: z.number().int().min(0).optional(),
     setAside: z.array(z.object({
       title: z.string().max(2000).nullable().optional(),
       url: z.string().max(2000).nullable().optional(),

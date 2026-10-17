@@ -97,3 +97,33 @@ def test_placsp_reads_the_estimated_value_and_planned_duration() -> None:
     scales = {r.title[:30]: r.scale for e in entries if (r := parse_entry(e)) is not None}
     assert ContractScale(657591.0, "EUR", None, None, 36) in scales.values()
     assert all(s is None or s.estimated_value for s in scales.values())
+
+
+def test_what_fits_best_comes_first_and_the_rest_says_why_spec_087() -> None:
+    # CTO, 2026-10-17: "Mejor 5 oportunidades buenas que 95 mezcladas", never hidden.
+    calls = [_call("parques", "77310000", days_ago=1), _call("abono", "24440000", days_ago=9)]
+    live = LiveDemandReader(Store(calls), sources=("es-placsp",),
+                            clock=lambda: NOW).read([FERTILISER, GARDENS], SCOPES)  # type: ignore[arg-type]  # fmt: skip
+    assert live is not None and live.best == 1 and live.total == 2
+    best, other = live.candidates
+    assert (best["title"], best["focus"], best["otherReasons"]) == ("Contrato abono", "BEST", [])
+    assert other["focus"] == "OTHER" and other["otherReasons"] == ["SECONDARY_ACTIVITY"]
+    alone = LiveDemandReader(Store(calls[:1]), sources=("es-placsp",),
+                             clock=lambda: NOW).read([GARDENS], SCOPES)  # type: ignore[arg-type]  # fmt: skip
+    assert (
+        alone is not None and alone.candidates[0]["focus"] == "BEST"
+    )  # one activity: none is secondary
+
+
+def test_focus_reasons_are_inspectable_one_by_one() -> None:
+    from application.world_demand.live import focus_reasons
+
+    assert (
+        focus_reasons({"_lead": 0, "classifiedAs": "MAIN", "fit": "CORE"}, several_activities=True)
+        == []
+    )
+    assert focus_reasons({"_lead": 0, "classifiedAs": "ADDITIONAL", "fit": "ADJACENT"},
+                         several_activities=False) == ["ADDITIONAL_CODE", "ADJACENT_FIT"]  # fmt: skip
+    assert focus_reasons({"_lead": 0, "fit": "PARTIAL"}, several_activities=False) == [
+        "PARTIAL_FIT"
+    ]

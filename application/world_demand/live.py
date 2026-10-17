@@ -52,6 +52,8 @@ class LiveDemand:
     #: never deleted, and listed so they stay inspectable.
     set_aside: tuple[dict[str, object], ...] = ()
     set_aside_total: int = 0
+    #: Calls that fit best (spec 087): lead activity, main object, fit not partial/adjacent.
+    best: int = 0
 
 
 #: A remembered evaluator judgment of how closely a notice is a capability's work (spec 075):
@@ -277,6 +279,11 @@ class LiveDemandReader:
                 str(c["title"]),
             ),
         )
+        several = len(wanted) > 1
+        for candidate in ordered:
+            reasons = focus_reasons(candidate, several_activities=several)
+            candidate["focus"] = "BEST" if not reasons else "OTHER"
+            candidate["otherReasons"] = reasons
         for candidate in unique:
             candidate.pop("_lead", None)
         return LiveDemand(
@@ -287,6 +294,7 @@ class LiveDemandReader:
             new=sum(1 for c in ordered if c["isNew"]),
             sources=tuple(sorted(answered)),
             additional=sum(1 for c in ordered if c.get("classifiedAs") == ADDITIONAL),
+            best=sum(1 for c in ordered if c.get("focus") == "BEST"),
             set_aside=tuple(
                 {
                     k: c.get(k)
@@ -296,6 +304,32 @@ class LiveDemandReader:
             ),
             set_aside_total=len(set_aside),
         )
+
+
+#: Why a call is not among those that fit best (spec 087). Each reason is inspectable on
+#: its own: the call stays listed, never hidden, never scored.
+SECONDARY_ACTIVITY = "SECONDARY_ACTIVITY"
+ADDITIONAL_CODE = "ADDITIONAL_CODE"
+PARTIAL_FIT = "PARTIAL_FIT"
+ADJACENT_FIT = "ADJACENT_FIT"
+
+
+def focus_reasons(candidate: Mapping[str, object], *, several_activities: bool) -> list[str]:
+    """Why a call is not among those that fit best; empty when it is.
+
+    "Better five good ones than ninety-five mixed" (CTO, 2026-10-17): the organization's lead
+    activity, the call's own main object and a fit that is not partial or merely adjacent.
+    """
+    reasons = []
+    if several_activities and int(str(candidate.get("_lead", 0))) > 0:
+        reasons.append(SECONDARY_ACTIVITY)
+    if candidate.get("classifiedAs") == ADDITIONAL:
+        reasons.append(ADDITIONAL_CODE)
+    if candidate.get("fit") == "PARTIAL":
+        reasons.append(PARTIAL_FIT)
+    if candidate.get("fit") == "ADJACENT":
+        reasons.append(ADJACENT_FIT)
+    return reasons
 
 
 def _expired(discovery: Mapping[str, object], today: str) -> bool:
@@ -396,6 +430,7 @@ def apply_live_demand(
         "shown": len(live.candidates),
         "new": live.new,
         "additional": live.additional,
+        "best": live.best,
         "setAsideByFit": live.set_aside_total,
         "setAside": list(live.set_aside),
         "sources": list(live.sources),

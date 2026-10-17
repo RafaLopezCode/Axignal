@@ -19,7 +19,7 @@ import { shouldApplyLandingFacet } from "@/lib/observatory-url";
 import { DemandMarkets } from "./demand-markets";
 import { monthlyCapacityCents, pendingOutputSchema, subscriberOutputSchema, type FirstObservation, type SubscriberPortfolio } from "@/lib/subscriber-contracts";
 import type { RuntimeProjection } from "@/lib/runtime-projection";
-import { briefing, buyersOf, byLane, currentnessLabel, fill, insightsFor, laneCopy, natureLabel, type Insight, type Lane, type Nature, type Reading, type Translate } from "@/lib/observatory";
+import { briefing, buyersOf, byLane, currentnessLabel, fill, insightsFor, laneCopy, natureLabel, otherDemandOf, type Insight, type Lane, type Nature, type Reading, type Translate } from "@/lib/observatory";
 import { baseline, litKeys, markSeen, observedSinceVisit, readSeen, touch, writeSeen, type SeenStore } from "@/lib/observatory-seen";
 import { activityLabel, FirstObservationView, observationStateCopy } from "./first-observation";
 import { SubscriberReading } from "./subscriber-reading";
@@ -736,6 +736,8 @@ export function SummaryView({ reading, name, insights, lit, remembered = true, o
   if (exampleLead) brief.lead = exampleLead;
   const lanes = byLane(insights);
   const buyers = buyersOf(insights);
+  const otherDemand = otherDemandOf(insights);
+  const [othersShown, setOthersShown] = useState(false);
   const [allShown, setAllShown] = useState(false);
   const [allBuyers, setAllBuyers] = useState(false);
   const low = item.observation && LOW_OBSERVABILITY.has(item.observation.state);
@@ -761,6 +763,13 @@ export function SummaryView({ reading, name, insights, lit, remembered = true, o
             : <p className="obs-empty">{copy.empty}</p>}
           {lane === "matters" && lanes[lane].length > LANE_PREVIEW && <button className="obs-link obs-lane-more" aria-expanded={allShown} onClick={() => setAllShown(v => !v)}>
             {allShown ? t("Mostrar menos", "Show fewer") : fill(t("Ver las {n}", "Show all {n}"), { n: lanes[lane].length })}</button>}
+          {lane === "matters" && otherDemand.length > 0 && <section className="obs-buyers obs-other-demand" aria-labelledby="other-demand-title">
+            <h3 id="other-demand-title">{t("Otras posibles", "Other possible ones")}<span className="obs-lane-count">{otherDemand.length}</span></h3>
+            <p>{t("Licitaciones que coinciden con lo que hace, pero encajan menos: cada una dice por qué no está arriba. No se ocultan ni se puntúan.", "Calls that match what it does but fit less well: each says why it is not above. They are neither hidden nor scored.")}</p>
+            <button className="obs-link obs-lane-more" aria-expanded={othersShown} onClick={() => setOthersShown(v => !v)}>
+              {othersShown ? t("Ocultar", "Hide") : fill(t("Ver las {n}", "Show all {n}"), { n: otherDemand.length })}</button>
+            {othersShown && <ul>{otherDemand.map((insight, index) => <li key={insight.id} style={{ ["--i" as string]: index }}><InsightCard insight={insight} lit={lit.has(insight.changeKey)} active={openId === insight.id} onOpen={() => onOpen(insight)}/></li>)}</ul>}
+          </section>}
           {lane === "matters" && buyers.length > 0 && <section className="obs-buyers" aria-labelledby="buyers-title">
             <h3 id="buyers-title">{t("Posibles compradores", "Potential buyers")}<span className="obs-lane-count">{buyers.length}</span></h3>
             <p>{t("Organizaciones donde señales públicas independientes apuntan a una demanda plausible. Primero las que reúnen más señales. Ábrelas para ver cada señal con su fuente y fecha.", "Organizations where independent public signals point to plausible demand. Those with the most signals come first. Open one to see each signal with its source and date.")}</p>
