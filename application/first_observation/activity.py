@@ -416,18 +416,21 @@ def plan_activity_batch(
     *,
     known_scopes: Sequence[TaxonomyCode],
     deterministic: Sequence[ActivityFinding],
+    premises_known: bool | None = None,
 ) -> ActivityBatchPlan | None:
     """The questions worth asking, or None when the deterministic answer suffices.
 
     Sector is asked when no deterministic activity exists; CPV / NAICS only when an EU /
-    US scope (declared or mentioned) could route them; location only when none is
-    declared and the text mentions listed places.
+    US scope (declared or mentioned) could route them; location only when no premises are
+    declared and the text mentions listed places. A declared service area ("Worldwide")
+    says where it sells, not where it is (found on axignal.com, 2026-10-17), so it does
+    not stop the question; ``premises_known`` defaults to "any scope known".
     """
 
     if not pages:
         return None
     candidates: list[tuple[TaxonomyCode, str, str, str]] = []
-    if not known_scopes:
+    if not (bool(known_scopes) if premises_known is None else premises_known):
         for page in pages:
             english = (page.language or "").lower().startswith("en")
             for line in page.lines():
