@@ -51,6 +51,7 @@ from application.first_observation.contracts import (
 )
 from application.first_observation.country_evidence import country_evidence
 from application.first_observation.geography import area_jurisdiction, jurisdiction
+from application.first_observation.legal_notice import legal_names_in_text
 from application.first_observation.policy import FirstObservationPolicy, next_due
 from application.first_observation.registry_ids import REGISTER_SCHEMES
 from application.first_observation.representation_audit import (
@@ -84,6 +85,7 @@ from application.observation_intelligence.contracts import (
 from application.own_site import OWN_SITE_VERSION, logo_walls, own_site_discoveries
 from application.own_site.wall_roles import interpret_walls, wall_batch, walls
 from application.semantic_layer.cascade import SemanticCascade
+from application.value_chain import LEGAL_PAGE
 from domain.identity import is_web_subject
 from domain.xignal import XignalEpistemicState
 
@@ -1060,7 +1062,18 @@ class FirstObservationService:
                         {"admitted": False, "reason": "A website declaring itself never admits identity."},
                     )
                 )  # fmt: skip
-            for name in page.legal_names[:3]:
+            # Structured data first, then what a legal notice states in its text (spec 089).
+            from_text = (
+                legal_names_in_text(
+                    page.readable(),
+                    brand=brand_label(urlsplit(page.url).hostname or ""),
+                    identifiers=[i.value for i in page.identifiers],
+                )
+                if LEGAL_PAGE.search(urlsplit(page.url).path)
+                else []
+            )
+            for name, method in [*((n, "STRUCTURED_DATA") for n in page.legal_names[:3]),
+                                 *((n, "LEGAL_NOTICE_TEXT") for n in from_text)]:  # fmt: skip
                 if ("LEGAL", name.casefold()) in declared:
                     continue
                 declared.add(("LEGAL", name.casefold()))
@@ -1073,7 +1086,7 @@ class FirstObservationService:
                         page.url,
                         None,
                         page.observed_at,
-                        {"admitted": False},
+                        {"admitted": False, "method": method},
                     )
                 )
         # Technology, clients and partners shown, credentials, hiring and review profiles.

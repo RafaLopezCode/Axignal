@@ -487,6 +487,10 @@ def _iso_codes(values: Sequence[object]) -> list[str]:
     return out
 
 
+#: How often press and official journals are ingested; lookups may run sooner on demand.
+SOURCE_INGEST_SECONDS = 600
+
+
 class FirstObservationRuntime:
     def __init__(
         self,
@@ -546,6 +550,8 @@ class FirstObservationRuntime:
         self._daily_jobs = daily_jobs
         self._hint = threading.local()
         self._wake = threading.Event()
+        # Wakes the source thread's per-organization lookups for a fresh observation.
+        self._sources_wake = threading.Event()
         self._thread: threading.Thread | None = None
         self._lock = threading.Lock()
         self._start_lock = threading.Lock()
@@ -738,6 +744,7 @@ class FirstObservationRuntime:
         except Exception:
             return
         self._wake.set()
+        self._sources_wake.set()
 
     def drain(self, limit: int = 100) -> int:
         done = 0
@@ -1229,20 +1236,27 @@ class FirstObservationRuntime:
             time.sleep(3600 if done is None else 600)
 
     def _sources_loop(self) -> None:
-        """Press and official journals on their own clock (each source keeps its cursor)."""
+        """Press and official journals on their own clock (each source keeps its cursor);
+        per-organization lookups (Wikidata and Wikipedia, job boards, buyers) as soon as a
+        fresh observation asks for them (minute 0, CTO 2026-10-17: economics and organization
+        were 0/14 in the first minute because these lookups waited up to ten minutes)."""
+        last_ingest: float | None = None
         while True:
-            for stage in (
-                self.ingest_press,
-                self.ingest_regulation,
+            due = last_ingest is None or time.monotonic() - last_ingest >= SOURCE_INGEST_SECONDS
+            stages = ((self.ingest_press, self.ingest_regulation) if due else ()) + (
                 self.read_notoriety,
                 self.read_job_boards,
                 self.read_buyer_lookups,
-            ):
+            )
+            if due:
+                last_ingest = time.monotonic()
+            for stage in stages:
                 try:
                     stage()
                 except Exception:  # a source failing is retried on its own schedule
                     continue
-            time.sleep(600)
+            self._sources_wake.wait(timeout=SOURCE_INGEST_SECONDS)
+            self._sources_wake.clear()
 
     def _loop(self) -> None:
         while True:
