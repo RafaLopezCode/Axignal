@@ -36,6 +36,7 @@ from application.observation_runtime.families import (
     ObservationFamily,
 )
 from application.observation_runtime.frontier import (
+    CONTEXT_BLOCKS,
     LeadOutcome,
     LeadStatus,
     LeadTier,
@@ -65,6 +66,12 @@ TICK_POLICY_VERSION = "aor-tick-2026-10-07.1"
 _ANYWHERE = TaxonomyCode("GLOBAL", "ANY")
 #: Backoff doubles at most this many times before the family ceiling applies.
 _MAX_DOUBLINGS = 16
+
+
+#: A block on AXIGNAL's own context (frontier.CONTEXT_BLOCKS) is rescheduled for the next
+#: daily tick (biocultor.com canary, 2026-10-17: a missing capability context parked demand
+#: for 30 days, like a source that does not exist).
+CONTEXT_RECHECK = timedelta(days=1)
 
 
 class TickStatus(StrEnum):
@@ -609,13 +616,16 @@ def run_daily_tick(
                 stats.failures += 1
 
         if acquisition.blocked is not None:
+            # A block on AXIGNAL's own context (no capability yet, authority rechecked) can
+            # clear by the next tick; only a missing source waits the family's recheck.
+            own_context = acquisition.blocked in CONTEXT_BLOCKS
             parked = replace(
                 lead,
                 status=LeadStatus.BLOCKED,
                 blocked_reason=acquisition.blocked,
                 last_outcome=LeadOutcome.BLOCKED,
-                next_due_at=now + policy.blocked_recheck,
-                scheduling_reason="BLOCKED_RECHECK",
+                next_due_at=now + (CONTEXT_RECHECK if own_context else policy.blocked_recheck),
+                scheduling_reason="CONTEXT_RECHECK" if own_context else "BLOCKED_RECHECK",
             )
             state.leads[lead.lead_id] = changed_leads[lead.lead_id] = parked
             executed.append(

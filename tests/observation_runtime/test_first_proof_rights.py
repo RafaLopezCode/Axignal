@@ -36,3 +36,22 @@ def test_first_proof_passes_the_authoritys_website_rights(
     authority = SimpleNamespace(root=tmp_path, clock=None, allows=None, website_rights=rights)
     observation_enrollment.first_proof(authority, tmp_path, code_sha="x", source_ports={})  # type: ignore[arg-type]
     assert seen["website_rights"] is rights
+
+
+def test_first_proof_reads_the_same_demand_sources_as_the_daily_runner(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    # biocultor.com canary, 2026-10-17: the manual tick searched TED only, never PLACSP.
+    from application.subscriber_identity.runtime import SystemClock
+
+    seen: dict[str, Any] = {}
+    monkeypatch.setattr(observation_enrollment, "check",
+                        lambda a, c: {"state": Readiness.READY_FOR_MANUAL_TICK.value})  # fmt: skip
+    monkeypatch.setattr(observation_enrollment, "run_scheduled_tick",
+                        lambda **kw: seen.update(kw) or {"state": "COMPLETED"})  # fmt: skip
+    monkeypatch.setattr(observation_enrollment, "load_enrollment", lambda path: ())
+    authority = SimpleNamespace(
+        root=tmp_path, clock=SystemClock(), allows=None, website_rights=None
+    )
+    observation_enrollment.first_proof(authority, tmp_path, code_sha="x")  # type: ignore[arg-type]
+    assert set(seen["source_ports"]) == {"ted-search-v3", "es-placsp"}

@@ -452,6 +452,22 @@ def build_economic_runtime(root: Path, *, code_sha: str) -> SubscriberEconomicRu
     )
 
 
+def daily_source_ports(
+    index: SqliteWorldDemandIndex, live_ted: SourceObservationPort | None, clock: Clock
+) -> dict[str, SourceObservationPort]:
+    """The demand sources a tick reads, the same for the daily runner and the manual First
+    Proof (biocultor.com canary, 2026-10-17: the manual tick read TED only, never Spain's
+    PLACSP). Spec 063: the world demand index answers covered queries without a request; an
+    uncovered slice is demanded and ingested once after the daily tick for every Focus."""
+    from pipeline.observation_intelligence.placsp import PLACSP_SOURCE_ID
+
+    return {
+        "ted-search-v3": DemandIndexPort(index, live_ted, clock=clock.now),
+        # Spain's own platform answers only from the index (never per request).
+        PLACSP_SOURCE_ID: DemandIndexPort(index, None, clock=clock.now),
+    }
+
+
 def run_scheduled_tick(
     *,
     root: Path,
@@ -636,8 +652,6 @@ def main(argv: list[str] | None = None) -> None:
             print(json.dumps({"state": "STALE_MATERIALIZATION", "requests": 0}))
             return
     live_ted = TedSearchAdapter(UrllibTedTransport(), clock=lambda: datetime.now(UTC))
-    # Spec 063: the world demand index answers covered queries without a request; an
-    # uncovered slice is demanded and ingested once after the tick for every Focus.
     index = SqliteWorldDemandIndex(root / "world-demand-index.sqlite3")
     summary = run_scheduled_tick(
         root=root,
@@ -645,11 +659,7 @@ def main(argv: list[str] | None = None) -> None:
         clock=clock,
         attention_file=Path(attention_file).expanduser().resolve(),
         enrollment=enrollment,
-        source_ports={
-            "ted-search-v3": DemandIndexPort(index, live_ted, clock=clock.now),
-            # Spain's own platform answers only from the index (never per request).
-            PLACSP_SOURCE_ID: DemandIndexPort(index, None, clock=clock.now),
-        },
+        source_ports=daily_source_ports(index, live_ted, clock),
     )
     if summary["state"] not in {"ERROR", "LEASE_LOST"}:
         ingested = WorldDemandIngestor(
