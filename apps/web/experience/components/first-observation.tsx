@@ -385,6 +385,9 @@ export function discoveryCopy(d: Discovery, t: Translate, locale = "en"): { find
   if (d.kind === "GENERATIVE_VISIBILITY" && d.code === "AI_NOT_NAMED_FOR_CATEGORY") return {
     finding: t("Un asistente de IA no la nombra al preguntar por su actividad", "An AI assistant does not name it when asked about its activity"),
     why: t("Quien pregunta a un asistente por proveedores de su actividad no la encuentra en esa respuesta. Es una muestra con sus condiciones, no todo lo que sabe el asistente.", "Someone asking an assistant for providers of its activity does not find it in that answer. It is a sample with its conditions, not all the assistant knows.") };
+  if (d.kind === "GENERATIVE_VISIBILITY" && d.code === "AI_CITED_SOURCES") return {
+    finding: t("Webs que cita un asistente de IA al preguntar por su actividad: {sites}", "Websites an AI assistant cites when asked about its activity: {sites}").replace("{sites}", d.statement),
+    why: t("Son las fuentes de las que bebe la respuesta: donde conviene estar presente para que la IA la encuentre. Citar no es recomendar.", "They are the sources the answer draws on: where it pays to be present for the AI to find it. Citing is not endorsing.") };
   if (d.kind === "GENERATIVE_VISIBILITY" && d.code === "AI_KNOWS_BRAND") return {
     finding: t("Un asistente de IA reconoce la organización por su nombre", "An AI assistant recognizes the organization by name"),
     why: t("Al preguntarle directamente, afirma tener conocimiento específico de ella. No verifica que lo que diga sea correcto.", "Asked directly, it states specific knowledge of it. This does not verify that what it says is correct.") };
@@ -570,7 +573,12 @@ export function basisRows(d: Discovery, t: Translate, locale: string): Array<[st
   if (detail.instrument && typeof detail.instrument === "object" && typeof (detail.instrument as Record<string, unknown>).model === "string") rows.push([t("Asistente medido", "Assistant measured"), String((detail.instrument as Record<string, unknown>).model)]);
   if (detail.conditions && typeof detail.conditions === "object" && Array.isArray((detail.conditions as Record<string, unknown>).questions)) for (const q of (detail.conditions as { questions: unknown[] }).questions) rows.push([t("Pregunta", "Question"), String(q)]);
   if (typeof detail.measuredAt === "string") rows.push([t("Medido el", "Measured on"), detail.measuredAt.slice(0, 10)]);
-  if (Array.isArray(detail.competitorsNamed) && detail.competitorsNamed.length) rows.push([t("Otras organizaciones que nombra", "Other organizations it names"), detail.competitorsNamed.join(" · ")]);
+  // Spec 090: share of voice, position, who it names instead and which sites it cites.
+  if (typeof detail.shareOfVoice === "number") rows.push([t("Cuota de voz en las respuestas", "Share of voice in the answers"), `${Math.round(detail.shareOfVoice * 100)} % ${t("de las organizaciones nombradas", "of the organizations named")}`]);
+  if (typeof detail.averagePosition === "number") rows.push([t("Posición media cuando la nombra", "Average position when named"), String(detail.averagePosition)]);
+  if (Array.isArray(detail.competitorFrequency) && detail.competitorFrequency.length) rows.push([t("A quién nombra en su lugar", "Who it names instead"), (detail.competitorFrequency as unknown[][]).map(r => `${String(r[0])} (${String(r[1])})`).join(" · ")]);
+  else if (Array.isArray(detail.competitorsNamed) && detail.competitorsNamed.length) rows.push([t("Otras organizaciones que nombra", "Other organizations it names"), detail.competitorsNamed.join(" · ")]);
+  if (Array.isArray(detail.sitesCited) && detail.sitesCited.length) rows.push([t("Webs que cita", "Websites it cites"), (detail.sitesCited as unknown[][]).map(r => `${String(r[0])} (${String(r[1])})`).join(" · ")]);
   if (typeof detail.uncertainty === "string") rows.push([t("Incertidumbre", "Uncertainty"), detail.uncertainty]);
   if (typeof detail.outlet === "string") rows.push([t("Medio", "Outlet"), detail.outlet]);
   if (typeof detail.publishedAt === "string") rows.push([t("Publicado", "Published"), detail.publishedAt.slice(0, 10)]);

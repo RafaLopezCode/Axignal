@@ -134,3 +134,13 @@ test("an unclear offer is a representation gap in the reader's language (spec 08
   assert.match(copy.finding, /does not make clear whether it sells products, performs services or carries out works/);
   assert.match(copy.why, /a reading of its own text, not a fact/);
 });
+
+test("AI visibility shows share of voice, position, who it names instead and cited sites (spec 090)", () => {
+  const named = discovery("GENERATIVE_VISIBILITY", "AI_NAMED_FOR_CATEGORY", { statement: "2/6", detail: { shareOfVoice: 0.2, averagePosition: 2, competitorFrequency: [["Systemair", 5], ["Soler & Palau", 4]] } });
+  const text = basisRows(named, en, "en").map(([label, value]) => `${label} ${value}`).join(" | ");
+  assert.match(text, /Share of voice in the answers 20 % of the organizations named/);
+  assert.match(text, /Average position when named 2/);
+  assert.match(text, /Who it names instead Systemair \(5\) · Soler & Palau \(4\)/);
+  const cited = discoveryCopy(discovery("GENERATIVE_VISIBILITY", "AI_CITED_SOURCES", { statement: "clima.example, ranking.example" }), en);
+  assert.match(cited.finding, /Websites an AI assistant cites when asked about its activity: clima\.example/);
+});

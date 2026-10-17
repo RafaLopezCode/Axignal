@@ -20,9 +20,14 @@ ZITRON = ProbeSubject("Talleres Zitrón", "zitron.com", "ventilation systems", "
 
 
 def test_questions_are_fixed_and_localized() -> None:
+    # Six category intents (spec 090), then the brand question, always last.
     assert questions(ZITRON) == (
         "Which companies do you recommend for ventilation systems in Spain?",
         "Who are the main providers of ventilation systems in Spain?",
+        "What are the best ventilation systems companies in Spain for a small business?",
+        "Which ventilation systems companies in Spain have the best reputation?",
+        "I need to hire ventilation systems in Spain: who should I ask for a quote?",
+        "What are the alternatives to the big ventilation systems companies in Spain?",
         "What do you know about the company Talleres Zitrón?",
     )
     spanish = ProbeSubject("Holaluz", None, "energía", "España", "es")
@@ -81,9 +86,9 @@ def test_the_runner_measures_once_per_period_off_the_read_path(tmp_path: Path) -
     runner.request(ZITRON)
     runner.request(ZITRON)  # already queued
     assert calls == []  # requesting never asks the model
-    assert runner.run() == 1 and len(calls) == 3
+    assert runner.run() == 1 and len(calls) == 7
     measurement = runner.measurement(ZITRON)
-    assert measurement is not None and measurement["cost"]["usd"] == 0.000338  # type: ignore[index]
+    assert measurement is not None and measurement["cost"]["usd"] == 0.000788  # type: ignore[index]
     runner.request(ZITRON)
     assert runner.run() == 0  # fresh for 30 days
     clock[0] = NOW + timedelta(days=31)
@@ -98,3 +103,26 @@ def test_a_daily_cap_and_provider_failures_never_invent_a_result(tmp_path: Path)
     )
     runner.request(ZITRON)
     assert runner.run() == 0 and runner.measurement(ZITRON) is None  # stays queued
+
+
+def test_share_of_voice_position_competitors_and_cited_sources_spec_090() -> None:
+    # Two category answers (the measure works with any count); the brand question is last.
+    answers = [
+        {"answer": "Systemair, Talleres Zitrón and Soler & Palau.",
+         "organizations_named": ["Systemair", "Talleres Zitrón", "Soler & Palau"],
+         "websites_cited": ["https://www.systemair.com/es", "clima.example/ranking"]},
+        {"answer": "Soler & Palau and Systemair.", "organizations_named": ["Soler & Palau", "Systemair"],
+         "websites_cited": ["https://clima.example/ranking"]},
+        {"answer": "A Spanish maker of tunnel fans.", "organizations_named": [], "recognizes_subject": True},
+    ]  # fmt: skip
+    result = evaluate(ZITRON, answers)
+    assert result["shareOfVoice"] == round(1 / 5, 3)  # its 1 mention among 5
+    assert result["averagePosition"] == 2.0
+    assert result["competitorFrequency"][0][1] == 2  # type: ignore[index]
+    assert result["sitesCited"][0] == ["clima.example", 2]  # type: ignore[index]
+    found = geo_discoveries({"result": result, "instrument": {"model": "m"}, "measuredAt": NOW.isoformat(),
+                             "language": "en"}, observed_at="x")  # fmt: skip
+    codes = [d["code"] for d in found]
+    assert codes == ["AI_NAMED_FOR_CATEGORY", "AI_KNOWS_BRAND", "AI_CITED_SOURCES"]
+    assert found[0]["detail"]["shareOfVoice"] == 0.2  # type: ignore[index]
+    assert found[2]["statement"].startswith("clima.example")  # type: ignore[union-attr]
