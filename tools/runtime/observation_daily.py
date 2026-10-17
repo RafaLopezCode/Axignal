@@ -37,6 +37,7 @@ from application.axent.research import ResearchConsumer, ResearchLedger
 from application.economic_discovery.continuous_observation import SharedObservationWorkMemory
 from application.economic_discovery.observation_reuse import ObservationReusePolicy
 from application.economic_discovery.temporal_currentness import TemporalCurrentnessPolicy
+from application.first_observation.rights import ContentRightsPolicy
 from application.observation_intelligence import (
     MarketScope,
     StopPolicy,
@@ -461,8 +462,14 @@ def run_scheduled_tick(
     source_ports: Mapping[str, SourceObservationPort],
     economic: SubscriberEconomicRuntime | None = None,
     research_access: Callable[[TrustedRequestContext, XeedId, datetime], bool] | None = None,
+    website_rights: ContentRightsPolicy | None = None,
 ) -> dict[str, object]:
-    """One existing runtime entry with durable, redacted operator evidence. No retries."""
+    """One existing runtime entry with durable, redacted operator evidence. No retries.
+
+    ``website_rights``: the caller's governed content rights. The manual First Proof passes
+    its configuration by flag, not by environment, and without them every stored First
+    Proof read as withdrawn, so no capability reached the tick (biocultor.com canary,
+    2026-10-17: 9 leads blocked, NO_OBSERVED_CAPABILITY_CONTEXT)."""
 
     from pipeline.axent import SqliteResearchRequestLedger
     from pipeline.continuous_observation import SqliteSharedObservationWorkMemory
@@ -484,7 +491,8 @@ def run_scheduled_tick(
             source_ports=source_ports,
             derived_for=first_observation_reader(
                 root,
-                rights=SubscriberObservationAuthority(
+                rights=website_rights
+                or SubscriberObservationAuthority(
                     root,
                     clock,
                     Path(os.environ["AXIGNAL_SUBSCRIBER_CONFIGURATION_FILE"])
