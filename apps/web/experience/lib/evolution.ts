@@ -22,7 +22,7 @@ export type Row = {
 
 const INSTRUMENTS = "_instruments";
 /** Metrics measured by an instrument of their own (audit, generative probe); the rest are the timeline's definition. */
-const MEASURED = new Set(["presence.ai_named_share", "presence.ai_knows_brand", "presence.audit_attention", "presence.audit_passed", "presence.lcp_ms", "presence.inp_ms"]);
+const MEASURED = new Set(["presence.ai_named_share", "presence.ai_knows_brand", "presence.search_ranked_share", "presence.audit_attention", "presence.audit_passed", "presence.lcp_ms", "presence.inp_ms"]);
 
 export function channelOf(key: string): Channel | null {
   if (key.startsWith("presence.ai_")) return "GEO";

@@ -1,0 +1,17 @@
+# Optional spec 091 composition: mounts the Brave Search API key for the runtime only.
+# It does not by itself measure anything: the runtime reads AXIGNAL_BRAVE_SEARCH_KEY_FILE
+# from the subscriber configuration and stays off while that file is missing or unreadable.
+# Apply together with compose.subscriber.override.yml, and only when the host file exists
+# (Compose refuses a secret whose file is missing).
+#
+# Host file: root-owned, mode 0440, group AXIGNAL_TYPESAFE_SECRET_GID (the runtime's secret
+# group), never committed, never in environment variables, health output or image layers.
+# The API plan must allow storing results (the measurement keeps positions and hosts).
+services:
+  runtime:
+    secrets:
+      - brave_search_api_key
+
+secrets:
+  brave_search_api_key:
+    file: ${AXIGNAL_BRAVE_SEARCH_API_KEY_HOST_FILE:-/etc/axignal/secrets/brave_search_api_key}

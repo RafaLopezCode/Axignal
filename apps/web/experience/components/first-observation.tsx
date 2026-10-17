@@ -251,7 +251,7 @@ export function discoveryCopy(d: Discovery, t: Translate, locale = "en"): { find
     const v = (d.detail.values && typeof d.detail.values === "object" ? d.detail.values : {}) as Record<string, unknown>;
     const metric = String(v.metric ?? "");
     const shown = (x: unknown) => Array.isArray(x) ? (x.length ? x.map(String).join(", ") : t("ninguno", "none"))
-      : metric === "presence.ai_named_share" ? `${Math.round(Number(x ?? 0) * 100)} %`
+      : metric === "presence.ai_named_share" || metric === "presence.search_ranked_share" ? `${Math.round(Number(x ?? 0) * 100)} %`
       : metric === "presence.ai_knows_brand" || metric === "activity.hiring_channel" ? (Number(x) ? t("sí", "yes") : t("no", "no"))
       : typeof x === "number" ? x.toLocaleString(locale) : String(x ?? "");
     const added = Array.isArray(v.added) ? v.added.map(String) : [];
@@ -378,6 +378,15 @@ export function discoveryCopy(d: Discovery, t: Translate, locale = "en"): { find
   if (d.kind === "LANGUAGES") return { finding: `${t("Idiomas publicados", "Published languages")}: ${d.statement}`, why: t("Muestra en qué idiomas se presenta; no prueba en qué mercados vende.", "It shows the languages it presents itself in; it does not prove where it sells.") };
   if (d.kind === "IDENTITY_HINT") return { finding: `${t("Su web declara", "Its website declares")}: ${d.statement}`, why: t("Es una pista de identidad. Solo un registro puede verificarla.", "It is an identity hint. Only a registry can verify it.") };
   if (d.kind === "PUBLIC_PRESENCE") return { finding: `${t("Web pública observada", "Public website observed")}: ${d.statement}`, why: t("Es la fuente de lo que la organización declara sobre sí misma.", "It is the source of what the organization declares about itself.") };
+  // Spec 091: the searches of its activity, in its own words, read through a permitted API.
+  if (d.kind === "SEARCH_VISIBILITY" && (d.code === "SEARCH_RANKS_MEASURED" || d.code === "SEARCH_NOT_RANKED")) {
+    const [ranked, measured] = d.statement.split("/");
+    return d.code === "SEARCH_RANKS_MEASURED" ? {
+      finding: t("Aparece en {ranked} de {measured} búsquedas de su actividad", "It appears in {ranked} of {measured} searches for its activity").replace("{ranked}", ranked ?? "").replace("{measured}", measured ?? ""),
+      why: t("Búsquedas formadas con las palabras de su propia web y su país, leídas en un buscador independiente. Puedes comprobar cada una en Google: allí los resultados cambian según la persona y el lugar.", "Searches built from its own website's words and its country, read on an independent search engine. You can check each one on Google, where results change by person and place.") } : {
+      finding: t("No aparece entre los primeros resultados de {measured} búsquedas de su actividad", "It does not appear among the top results of {measured} searches for its activity").replace("{measured}", measured ?? ""),
+      why: t("Quien busca lo que hace encuentra antes a otros. Es una medición con fecha y condiciones, no un juicio sobre el negocio.", "Whoever searches for what it does finds others first. It is a dated measurement with its conditions, not a judgment of the business.") };
+  }
   if (d.kind === "SEARCH_VISIBILITY") return { finding: `${t("Visibilidad en buscadores medida", "Search visibility measured")}: ${d.statement}`, why: t("Es lo observado para una consulta y unas condiciones concretas. No es una posición general ni explica el motivo.", "It is what was observed for a given query and conditions. It is not a general ranking and does not explain why.") };
   if (d.kind === "GENERATIVE_VISIBILITY" && d.code === "AI_NAMED_FOR_CATEGORY") return {
     finding: t("Un asistente de IA la nombra al preguntar por su actividad ({n} de las preguntas)", "An AI assistant names it when asked about its activity ({n} of the questions)").replace("{n}", d.statement),
@@ -463,6 +472,7 @@ function techCategory(category: string, t: Translate): string {
 export function changeLabel(metric: string, t: Translate): string {
   const labels: Record<string, string> = {
     "presence.ai_named_share": t("Respuestas de IA que la nombran en su categoría", "AI answers naming it in its category"),
+    "presence.search_ranked_share": t("Búsquedas de su actividad en las que aparece", "Searches for its activity where it appears"),
     "presence.ai_knows_brand": t("La IA conoce la marca", "AI knows the brand"),
     "presence.audit_attention": t("Puntos de su web que piden atención", "Website checks needing attention"),
     "presence.lcp_ms": t("Carga real de su web (ms)", "Real-user page load (ms)"),
@@ -575,7 +585,9 @@ export function basisRows(d: Discovery, t: Translate, locale: string): Array<[st
   if (typeof detail.measuredAt === "string") rows.push([t("Medido el", "Measured on"), detail.measuredAt.slice(0, 10)]);
   // Spec 090: share of voice, position, who it names instead and which sites it cites.
   if (typeof detail.shareOfVoice === "number") rows.push([t("Cuota de voz en las respuestas", "Share of voice in the answers"), `${Math.round(detail.shareOfVoice * 100)} % ${t("de las organizaciones nombradas", "of the organizations named")}`]);
-  if (typeof detail.averagePosition === "number") rows.push([t("Posición media cuando la nombra", "Average position when named"), String(detail.averagePosition)]);
+  if (typeof detail.averagePosition === "number" && d.kind === "SEARCH_VISIBILITY") rows.push([t("Posición media donde aparece", "Average position where it appears"), String(detail.averagePosition)]);
+  else if (typeof detail.averagePosition === "number") rows.push([t("Posición media cuando la nombra", "Average position when named"), String(detail.averagePosition)]);
+  if (Array.isArray(detail.rankingInstead) && detail.rankingInstead.length) rows.push([t("Webs que aparecen en su lugar", "Websites that appear instead"), (detail.rankingInstead as unknown[][]).slice(0, 8).map(r => `${String(r[0])} (${String(r[1])})`).join(" · ")]);
   if (Array.isArray(detail.competitorFrequency) && detail.competitorFrequency.length) rows.push([t("A quién nombra en su lugar", "Who it names instead"), (detail.competitorFrequency as unknown[][]).map(r => `${String(r[0])} (${String(r[1])})`).join(" · ")]);
   else if (Array.isArray(detail.competitorsNamed) && detail.competitorsNamed.length) rows.push([t("Otras organizaciones que nombra", "Other organizations it names"), detail.competitorsNamed.join(" · ")]);
   if (Array.isArray(detail.sitesCited) && detail.sitesCited.length) rows.push([t("Webs que cita", "Websites it cites"), (detail.sitesCited as unknown[][]).map(r => `${String(r[0])} (${String(r[1])})`).join(" · ")]);
@@ -638,8 +650,34 @@ function Finding({ d }: { d: Discovery }) {
     <p className="fo-meta"><span className="fo-state">{epistemicCopy(d.epistemicState, t)}</span>
       {link && <a href={link} target="_blank" rel="noopener noreferrer">{sourceName(link)}<ExternalLink size={14} aria-hidden="true"/><span className="sr-only">{t("(se abre en otra pestaña)", "(opens in a new tab)")}</span></a>}
       {d.observedAt && <span>{t("observado", "observed")} {d.observedAt.slice(0, 10)}</span>}</p>
+    {d.kind === "SEARCH_VISIBILITY" && <SearchRows d={d}/>}
     <Basis d={d}/>
   </article>;
+}
+
+type SearchRow = { keyword?: unknown; position?: unknown; ranksInstead?: unknown; googleUrl?: unknown };
+
+/** Spec 091: each search with its position and a link to see the same search on Google. */
+export function searchRows(d: Discovery): Array<{ keyword: string; position: number | null; instead: string[]; googleUrl: string | null }> {
+  const rows = Array.isArray(d.detail.rows) ? d.detail.rows as SearchRow[] : [];
+  return rows.filter(r => typeof r.keyword === "string").map(r => ({
+    keyword: String(r.keyword),
+    position: typeof r.position === "number" ? r.position : null,
+    instead: Array.isArray(r.ranksInstead) ? (r.ranksInstead as unknown[]).slice(0, 3).map(String) : [],
+    googleUrl: typeof r.googleUrl === "string" && r.googleUrl.startsWith("https://www.google.com/search?") ? r.googleUrl : null,
+  }));
+}
+
+function SearchRows({ d }: { d: Discovery }) {
+  const { t } = useLocale();
+  const rows = searchRows(d);
+  if (!rows.length) return null;
+  return <ul className="fo-search-rows">{rows.map(r => <li key={r.keyword}>
+    <strong>«{r.keyword}»</strong>{" "}
+    <span>{r.position === null ? t("no aparece en los 20 primeros", "not in the top 20") : t("posición {n}", "position {n}").replace("{n}", String(r.position))}</span>
+    {r.instead.length > 0 && <span className="fo-search-instead"> · {t("antes aparecen", "ahead of it")}: {r.instead.join(", ")}</span>}
+    {r.googleUrl && <> · <a href={r.googleUrl} target="_blank" rel="noopener noreferrer">{t("Ver esta búsqueda en Google", "See this search on Google")}<ExternalLink size={14} aria-hidden="true"/><span className="sr-only">{t("(se abre en otra pestaña)", "(opens in a new tab)")}</span></a></>}
+  </li>)}</ul>;
 }
 
 const ORDER: Discovery["kind"][] = ["ACTIVITY", "DEMAND", "DECLARED_LOCATION", "DECLARED_SERVICE_AREA", "LANGUAGES", "IDENTITY_HINT", "PUBLIC_PRESENCE", "WEB_REPRESENTATION"];

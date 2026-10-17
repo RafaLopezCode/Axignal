@@ -979,6 +979,11 @@ SOURCES: tuple[SourceDescriptor, ...] = (
 _BY_ID = {entry.capability_id: entry for entry in CAPABILITY_LEXICON}
 
 
+def lexicon_entry(capability_id: str) -> CapabilityLexiconEntry | None:
+    """The lexicon entry of a capability id, when the catalog knows it."""
+    return _BY_ID.get(capability_id)
+
+
 def with_current_codes(capability: Mapping[str, object]) -> Mapping[str, object]:
     """A stored capability with the catalog's current demand codes, when the catalog knows it.
 

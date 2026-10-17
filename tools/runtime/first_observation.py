@@ -78,6 +78,7 @@ from application.observation_intelligence import (
     SourceObservationPort,
     SourceRegistry,
 )
+from application.observation_intelligence.catalog import lexicon_entry
 from application.observation_intelligence.contracts import TaxonomyCode
 from application.observation_intelligence.findings import ADDITIONAL
 from application.observation_intelligence.loop import OpportunityCandidate, run_observation_loop
@@ -103,6 +104,13 @@ from application.press.mentions import press_discoveries
 from application.regulation import regulation_discoveries
 from application.regulation.sectors import route_of
 from application.reputation import notoriety_discoveries
+from application.search_visibility import (
+    SearchSubject,
+    clean_terms,
+    language_for,
+    search_discoveries,
+    terms_from_activity,
+)
 from application.semantic_layer.cascade import SemanticCascade
 from application.subscriber_identity.runtime import Clock
 from application.subscriber_portfolio.models import (
@@ -160,6 +168,7 @@ from tools.runtime.generative_probe import (
     generative_probe_from_values,
 )
 from tools.runtime.regulation_context import RegulationContextRunner
+from tools.runtime.search_rank import SearchRankRunner, search_rank_from_values
 from tools.runtime.sector_context import SectorContextRunner
 from tools.runtime.subscriber_portfolio import SubscriberPortfolioRuntime
 
@@ -520,7 +529,9 @@ class FirstObservationRuntime:
         notoriety: WikipediaNotoriety | None = None,
         job_boards: JobBoards | None = None,
         buyers: WikidataBuyerLookups | None = None,
+        search_rank: SearchRankRunner | None = None,
     ) -> None:
+        self._search_rank = search_rank
         self._buyers = buyers
         self._job_boards = job_boards
         self._notoriety = notoriety
@@ -983,6 +994,58 @@ class FirstObservationRuntime:
         view["discoveries"] = [*discoveries, *found]
         return view
 
+    def measure_search_rank(self) -> int:
+        """Run queued search ranking measurements (a few per tick, under the daily cap)."""
+        return 0 if self._search_rank is None else self._search_rank.run()
+
+    def _with_search_rank(self, view: dict[str, object]) -> dict[str, object]:
+        """Show a stored search ranking; queue one when none is fresh (never searches inline).
+
+        The searches are the activity in the website's own words (the lexicon terms its text
+        uses, in its language) plus its country: nothing is asked of anyone (spec 091).
+        """
+        if self._search_rank is None:
+            return view
+        held = view.get("discoveries")
+        discoveries = held if isinstance(held, list) else []
+        target = view.get("target")
+        website = target.get("website") if isinstance(target, Mapping) else None
+        host = (urlsplit(str(website)).hostname or "").removeprefix("www.") if website else ""
+        scopes = view.get("attentionScopes")
+        country = None
+        if isinstance(scopes, list) and scopes and isinstance(scopes[0], Mapping):
+            parts = str(scopes[0].get("jurisdiction") or "").split("/")
+            country = parts[1] if parts and parts[0] == "EU" and len(parts) > 1 else parts[0]
+        contact = view.get("publishedContact")
+        declared = contact.get("language") if isinstance(contact, Mapping) else None
+        if not host or not country or len(country) != 2:
+            return view
+        language = language_for(country, str(declared) if declared else None)
+        terms: list[str] = []
+        held_capabilities = view.get("capabilities")
+        for capability in held_capabilities if isinstance(held_capabilities, list) else []:
+            if not isinstance(capability, Mapping):
+                continue
+            entry = lexicon_entry(str(capability.get("capabilityId") or ""))
+            basis = capability.get("basis")
+            excerpt = str(basis.get("excerpt") or "") if isinstance(basis, Mapping) else ""
+            if entry is not None:
+                found = terms_from_activity(excerpt, entry.terms)
+                terms.extend(found[:1] or ((entry.label.lower(),) if language == "en" else ()))
+        cleaned = clean_terms(terms)
+        if not cleaned:
+            return view
+        subject = SearchSubject(
+            name=host, domain=host, terms=cleaned[:2], country=country.upper(), language=language
+        )
+        measurement = self._search_rank.measurement(subject)
+        self._search_rank.request(subject)  # no-op while fresh or queued
+        if measurement is None:
+            return view
+        found_rank = search_discoveries(measurement, observed_at=str(view.get("observedAt") or ""))
+        view["discoveries"] = [*discoveries, *found_rank]
+        return view
+
     def read_job_boards(self) -> int:
         """Public job boards of the organizations being read (source thread)."""
         return 0 if self._job_boards is None else self._job_boards.run()
@@ -1268,6 +1331,7 @@ class FirstObservationRuntime:
                 self.drain,
                 self.ingest_demanded,
                 self.measure_geo,
+                self.measure_search_rank,
                 self.judge_sector_context,
                 self.judge_regulation,
                 self.judge_press_attribution,
@@ -1594,6 +1658,7 @@ class FirstObservationRuntime:
                 *identity_corroboration(view["discoveries"]),  # type: ignore[arg-type]
             ]
             view = self._with_geo(view)
+            view = self._with_search_rank(view)
             view = self._with_sector_context(view)
             view = self._with_regulation(view)
             # Relationships and competition from published public contract awards.
@@ -1987,6 +2052,9 @@ def build_first_observation(
         geo=None
         if overrides.source_ports is not None or overrides.feeds is not None
         else generative_probe_from_values(values, root),
+        search_rank=None
+        if overrides.source_ports is not None or overrides.feeds is not None
+        else search_rank_from_values(values, root),
         sector_context=None
         if overrides.source_ports is not None or overrides.feeds is not None
         else _sector_context(values, root),

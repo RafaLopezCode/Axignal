@@ -253,7 +253,7 @@ class DiscoveryKind(StrEnum):
     IDENTITY_HINT = "IDENTITY_HINT"
     DEMAND = "DEMAND"
     # Presence channels beside the organization's own web. They mirror the governed source capabilities
-    # PUBLIC_SEARCH_VISIBILITY and GENERATIVE_ANSWER_SURFACES. No producer emits them yet; clients classify
+    # PUBLIC_SEARCH_VISIBILITY and GENERATIVE_ANSWER_SURFACES (search ranking: spec 091; GEO: spec 090). Clients classify
     # a finding into the SEO or GEO channel by this kind and never by its wording.
     SEARCH_VISIBILITY = "SEARCH_VISIBILITY"
     GENERATIVE_VISIBILITY = "GENERATIVE_VISIBILITY"
