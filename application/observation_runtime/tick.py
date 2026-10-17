@@ -36,6 +36,7 @@ from application.observation_runtime.families import (
     ObservationFamily,
 )
 from application.observation_runtime.frontier import (
+    CONTEXT_BLOCKS,
     LeadOutcome,
     LeadStatus,
     LeadTier,
@@ -67,9 +68,9 @@ _ANYWHERE = TaxonomyCode("GLOBAL", "ANY")
 _MAX_DOUBLINGS = 16
 
 
-#: Blocks caused by AXIGNAL's own context, not by the world: retried on the next daily tick
-#: (biocultor.com canary, 2026-10-17: a missing capability context parked demand for 30 days).
-CONTEXT_BLOCKS = frozenset({"NO_OBSERVED_CAPABILITY_CONTEXT", "AUTHORIZATION_REVOKED"})
+#: A block on AXIGNAL's own context (frontier.CONTEXT_BLOCKS) is rescheduled for the next
+#: daily tick (biocultor.com canary, 2026-10-17: a missing capability context parked demand
+#: for 30 days, like a source that does not exist).
 CONTEXT_RECHECK = timedelta(days=1)
 
 

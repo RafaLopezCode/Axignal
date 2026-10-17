@@ -50,3 +50,32 @@ def test_own_context_blocks_recheck_tomorrow_and_world_blocks_wait(
     parked = [lead for lead in w.store().leads() if lead.blocked_reason == blocked]
     assert parked and all(lead.next_due_at == DAY_1 + recheck for lead in parked)
     assert FAMILY_POLICIES[ObservationFamily.VALUE].blocked_recheck > CONTEXT_RECHECK
+
+
+def test_a_context_block_parked_for_a_month_by_older_code_is_due_now(tmp_path: Path) -> None:
+    from application.observation_runtime.frontier import LeadStatus
+
+    w = world(tmp_path)
+    source = replace(SourceRegistry().get("official-public-website"), cost_per_request_microunits=0)
+
+    class Blocked:
+        def acquisition_key(self, request):  # type: ignore[no-untyped-def]
+            return "synthetic:blocked"
+
+        def worst_case_requests(self, request):  # type: ignore[no-untyped-def]
+            return 1
+
+        def acquire(self, request):  # type: ignore[no-untyped-def]
+            return Acquisition(0, 0, 1, blocked="RIGHTS_REVOKED")
+
+    run_daily_tick(
+        store=w.store(), now=DAY_1, attention=ATTENTION,
+        acquirers={source.source_id: Blocked()}, recompute=w.downstream,
+        policies={ObservationFamily.VALUE: FAMILY_POLICIES[ObservationFamily.VALUE]},
+        registry=SourceRegistry((source,)),
+    )  # fmt: skip
+    (lead,) = [x for x in w.store().leads() if x.status is LeadStatus.BLOCKED][:1]
+    tomorrow = DAY_1 + timedelta(days=1)
+    assert not lead.due(tomorrow)  # a refused source waits its recheck
+    old = replace(lead, blocked_reason="NO_OBSERVED_CAPABILITY_CONTEXT")  # parked a month
+    assert old.due(tomorrow)
