@@ -428,11 +428,17 @@ def first_proof(
     if readiness["state"] != Readiness.READY_FOR_MANUAL_TICK.value:
         return dict(readiness, manual_tick_status="NOT_EXECUTED")
     if source_ports is None:
+        # The same sources the daily runner reads (TED and Spain's PLACSP, through the world
+        # demand index), so the manual proof measures what the daily loop will do.
         from pipeline.observation_intelligence import TedSearchAdapter, UrllibTedTransport
+        from pipeline.world_demand.sqlite_store import SqliteWorldDemandIndex
+        from tools.runtime.observation_daily import daily_source_ports
 
-        source_ports = {
-            "ted-search-v3": TedSearchAdapter(UrllibTedTransport(), clock=authority.clock.now)
-        }
+        source_ports = daily_source_ports(
+            SqliteWorldDemandIndex(authority.root / "world-demand-index.sqlite3"),
+            TedSearchAdapter(UrllibTedTransport(), clock=authority.clock.now),
+            authority.clock,
+        )
     summary = run_scheduled_tick(
         root=authority.root,
         clock=authority.clock,
