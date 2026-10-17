@@ -92,7 +92,9 @@ def test_findings_are_sourced_lead_families_first_and_gated() -> None:
 def test_a_draft_must_cite_findings_and_carry_no_links_of_its_own() -> None:
     selected = findings(VIEW, ("presence",))
     body = "We observed your agency from the outside. " * 8
-    good = {"subject": "What AXIGNAL observes", "body": body, "findings_used": [1, 2]}
+    good = {"subject": "What AXIGNAL observes", "body": body, "findings_used": [1, 2],
+            "cards": [{"index": 1, "text": "AI assistants did not name it"},
+                      {"index": 2, "text": "An open call matches its services"}]}  # fmt: skip
     assert accept_draft(good, selected) is not None
     assert accept_draft({**good, "findings_used": [1]}, selected) is None
     assert accept_draft({**good, "body": body + " see https://x.com"}, selected) is None
@@ -166,7 +168,9 @@ def _runner(tmp_path: Path, clock: list[datetime], sender: _Sender) -> Marketing
         body = "We observed your agency from the outside, as an auditor would. " * 4
         return SimpleNamespace(payload={"answer": {
             "subject": "What AXIGNAL observes about you", "body": body,
-            "findings_used": [1, 3]}})  # fmt: skip
+            "findings_used": [1, 3],
+            "cards": [{"index": 1, "text": "AI assistants did not name it in 2 answers"},
+                      {"index": 3, "text": "Its site states its services in prose only"}]}})  # fmt: skip
 
     return MarketingPoolRunner(
         store,

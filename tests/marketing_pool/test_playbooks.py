@@ -73,7 +73,10 @@ def test_the_hook_comes_first_and_must_be_cited() -> None:
     assert accept_draft({"subject": "Tres organismos cerca", "body": body,
                          "findings_used": [2, 3]}, selected, require_first=True) is None  # fmt: skip
     assert accept_draft({"subject": "Tres organismos cerca", "body": body,
-                         "findings_used": [1, 2]}, selected, require_first=True)  # fmt: skip
+                         "findings_used": [1, 2],
+                         "cards": [{"index": 1, "text": "3 organismos de su zona contratan su obra"},
+                                   {"index": 2, "text": "Ninguno le ha adjudicado nada aún"}]},
+                        selected, require_first=True)  # fmt: skip
 
 
 class _Sender:
@@ -92,7 +95,9 @@ def _runner(
                 "adjudicado nada.\n\nPara una constructora, ser conocida por quien adjudica "
                 "cerca es la mitad del trabajo.\n\nAXIGNAL lo vigila cada día.")  # fmt: skip
         return SimpleNamespace(payload={"answer": {"subject": "Tres organismos de su zona",
-                                                   "body": body, "findings_used": [1, 2]}})  # fmt: skip
+                                                   "body": body, "findings_used": [1, 2],
+                                                   "cards": [{"index": 1, "text": "3 organismos de su zona contratan su obra"},
+                                                             {"index": 2, "text": "Ninguno le ha adjudicado nada aún"}]}})  # fmt: skip
 
     return MarketingPoolRunner(
         SqliteMarketingPool(tmp_path / "pool.sqlite3"), (),
@@ -119,7 +124,7 @@ def test_a_construction_letter_opens_with_its_hook_and_its_own_cta(tmp_path: Pat
     assert "Segment: CONSTRUCTION" in brief and "HOOK (finding [1])" in brief
     html = runner.html(prospect) or ""
     assert "Ver compradores y licitaciones abiertas" in html
-    assert "Quién compra tu obra cerca de ti" in html
+    assert "Quién compra obras como las suyas cerca" in html
     assert "#demand" in html and "border-left:3px solid" in html
     assert "A la atención del responsable de licitaciones de Obras Norte" in html
 
@@ -149,9 +154,10 @@ def test_cards_speak_the_letters_language_and_never_carry_links() -> None:
                         first=hooks(CONSTRUCTION_VIEW, playbook)[:1])  # fmt: skip
     body = "Tres organismos de su zona contratan obra como la suya. " * 6
     draft = accept_draft({
-        "subject": "Tres organismos cerca", "body": body, "findings_used": [1, 2],
+        "subject": "Tres organismos cerca", "body": body, "findings_used": [1, 2, 3],
         "cards": [{"index": 1, "text": "3 organismos de su zona contratan su obra"},
-                  {"index": 2, "text": "Vea https://x.com"}, {"index": 9, "text": "invented"}],
+                  {"index": 2, "text": "Vea https://x.com"}, {"index": 9, "text": "invented"},
+                  {"index": 3, "text": "Su web declara obra civil y edificación"}],
     }, selected, require_first=True)  # fmt: skip
     assert draft is not None
     used = draft["findingsUsed"]

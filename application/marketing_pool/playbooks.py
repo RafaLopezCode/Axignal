@@ -134,30 +134,40 @@ def hook_brief(hook: Mapping[str, Any]) -> str:
     return " | ".join(parts)
 
 
-#: Call to action and section title per segment, in [es, en, fr, de, it, pt].
+#: Call to action and section title per segment, in [es, en, fr, de, it, pt]. One formal,
+#: region-neutral register per language (CTO, 2026-10-17: "plantillas perfectas"): Spanish
+#: without tú/vosotros (the pool writes to Spain and Latin America alike), Portuguese without
+#: tu/vós/você (Portugal and Brazil), German Sie, French vous, Italian without mixing tu/voi.
+#: Buttons say what opens, never "click here".
 COPY: dict[str, dict[str, Sequence[str]]] = {
     "AGENCY": {
-        "cta": ("Ver cómo os ven buscadores e IA", "See how search and AI see you",
-                "Voir comment la recherche et l'IA vous voient", "So sehen Suche und KI Sie",
-                "Vedi come vi vedono ricerca e IA", "Ver como a pesquisa e a IA vos veem"),
-        "section": ("Lo que podríais medir para cada cliente", "What you could measure for each client",
+        "cta": ("Ver su visibilidad en buscadores e IA", "See your visibility in search and AI",
+                "Voir votre visibilité dans la recherche et l'IA",
+                "Ihre Sichtbarkeit in Suche und KI ansehen",
+                "La vostra visibilità in ricerca e IA", "Ver a visibilidade em pesquisa e IA"),
+        "section": ("Lo que podría medir para cada cliente", "What you could measure for each client",
                     "Ce que vous pourriez mesurer pour chaque client",
                     "Was Sie für jeden Kunden messen könnten",
                     "Cosa potreste misurare per ogni cliente",
-                    "O que poderiam medir para cada cliente"),
+                    "O que poderia medir para cada cliente"),
     },
     "CONSTRUCTION": {
         "cta": ("Ver compradores y licitaciones abiertas", "See buyers and open tenders",
-                "Voir les acheteurs et les appels d'offres", "Auftraggeber und Ausschreibungen ansehen",
-                "Vedi acquirenti e gare aperte", "Ver compradores e concursos abertos"),
-        "section": ("Quién compra tu obra cerca de ti", "Who buys your work near you",
-                    "Qui achète vos travaux près de chez vous", "Wer Ihre Leistungen in Ihrer Nähe kauft",
-                    "Chi compra i vostri lavori vicino a voi", "Quem compra a sua obra perto de si"),
+                "Voir les acheteurs et les appels d'offres ouverts",
+                "Auftraggeber und offene Ausschreibungen ansehen",
+                "Acquirenti e gare aperte", "Ver compradores e concursos abertos"),
+        "section": ("Quién compra obras como las suyas cerca", "Who buys work like yours nearby",
+                    "Qui achète des travaux comme les vôtres près de chez vous",
+                    "Wer Leistungen wie Ihre in Ihrer Nähe einkauft",
+                    "Chi compra lavori come i vostri nella vostra zona",
+                    "Quem compra obras como as suas na sua zona"),
     },
     "PRIVATE_SCHOOL": {
-        "cta": ("Ver cómo te encuentran las familias", "See how families find you",
-                "Voir comment les familles vous trouvent", "So finden Familien Sie",
-                "Vedi come vi trovano le famiglie", "Ver como as famílias vos encontram"),
+        "cta": ("Ver cómo encuentran las familias su centro", "See how families find your school",
+                "Voir comment les familles trouvent votre école",
+                "Ansehen, wie Familien Ihre Schule finden",
+                "Come le famiglie trovano la vostra scuola",
+                "Ver como as famílias encontram a escola"),
         "section": ("Lo que ven las familias cuando buscan colegio", "What families see when they look for a school",
                     "Ce que voient les familles qui cherchent une école",
                     "Was Familien bei der Schulsuche sehen",
@@ -167,10 +177,10 @@ COPY: dict[str, dict[str, Sequence[str]]] = {
     "CONSULTANCY": {
         "cta": ("Ver el mapa de oportunidades", "See the opportunity map",
                 "Voir la carte des opportunités", "Die Chancenkarte ansehen",
-                "Vedi la mappa delle opportunità", "Ver o mapa de oportunidades"),
-        "section": ("El mercado que rodea a tus clientes", "The market around your clients",
+                "La mappa delle opportunità", "Ver o mapa de oportunidades"),
+        "section": ("El mercado que rodea a sus clientes", "The market around your clients",
                     "Le marché qui entoure vos clients", "Der Markt rund um Ihre Kunden",
-                    "Il mercato intorno ai vostri clienti", "O mercado à volta dos seus clientes"),
+                    "Il mercato intorno ai vostri clienti", "O mercado em torno dos seus clientes"),
     },
 }  # fmt: skip
 _LANGS = ("es", "en", "fr", "de", "it", "pt")

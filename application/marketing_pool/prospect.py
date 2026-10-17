@@ -179,7 +179,17 @@ INSTRUCTION = (
     "without any salutation (one is added). Subject under 70 characters, body under 170 words. "
     "Also return cards: for each finding you cite, its index and one line (at most 140 "
     "characters) restating that finding in the requested language, with the same facts and "
-    "numbers and nothing added."
+    "numbers and nothing added; never an internal code or identifier (such as "
+    "ORGANIZATION_DECLARED). Register: Spanish formal and region-neutral (usted, never tú or "
+    "vosotros: it is read in Spain and Latin America); Portuguese formal and region-neutral "
+    "(no tu, vós or você: it is read in Portugal and Brazil); German Sie; French vous; Italian "
+    "formal without mixing tu and voi; English plain and courteous. Portuguese vocabulary "
+    "understood in both Portugal and Brazil (motores de busca, not mecanismos de busca). "
+    "Subject: no exclamation marks, no capitals for emphasis, no emoji, no words like free, "
+    "offer, guarantee or urgent. Write for a business reader: never list technical "
+    "identifiers (schema.org types, tag names, codes); say in plain words what they mean. "
+    "State a measured value (a count, a tag present or absent, a number of open calls) as "
+    "measured, and hedge only what it may imply, never the measurement itself."
 )
 SCHEMA: dict[str, object] = {
     "type": "object",
@@ -231,7 +241,7 @@ _READ = {
     "en": "See the full reading: {link}",
     "fr": "Voir la lecture complète : {link}",
     "de": "Die vollständige Auswertung: {link}",
-    "it": "Vedi la lettura completa: {link}",
+    "it": "La lettura completa: {link}",
     "pt": "Ver a leitura completa: {link}",
 }
 _NOTICE = {
@@ -242,7 +252,7 @@ _NOTICE = {
     "fr": "Nous vous écrivons car cette adresse est publiée comme contact sur {domain}. "
     "Pour ne plus recevoir de courriels :",
     "de": "Wir schreiben Ihnen, weil diese Adresse auf {domain} als Kontakt veröffentlicht "
-    "ist. Keine weiteren E-Mails:",
+    "ist. Wenn Sie keine weiteren E-Mails erhalten möchten:",
     "it": "Le scriviamo perché questo indirizzo è pubblicato come contatto su {domain}. "
     "Per non ricevere altre email:",
     "pt": "Escrevemos porque este endereço está publicado como contacto em {domain}. "
@@ -284,7 +294,7 @@ _ATTENTION = {
     "fr": "À l'attention du responsable {area} de {name}",
     "de": "Zu Händen der Leitung {area}, {name}",
     "it": "All'attenzione del responsabile {area} di {name}",
-    "pt": "À atenção do responsável de {area} da {name}",
+    "pt": "À atenção do responsável de {area} de {name}",
 }
 
 
@@ -349,6 +359,10 @@ def accept_draft(
             and not re.search(r"https?://|www\.", text)
         ):
             cards[int(index)] = " ".join(text.split())
+    if len(cards) < 2:
+        return None  # a letter shows what it cites, readably: never a raw finding code
+    if re.search(r"!|[\U0001F300-\U0001FAFF]", subject):
+        return None  # deliverability: no exclamation marks or emoji in the subject
     return {
         "subject": subject,
         "body": body,
