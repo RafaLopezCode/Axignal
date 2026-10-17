@@ -27,6 +27,7 @@ from typing import Any, Protocol
 from urllib.parse import urlsplit
 
 from application.activity import job_board_discoveries
+from application.context.headline_judgment import HeadlineJudge, jev_headline_judge
 from application.context.sector import context_discoveries, sector_label
 from application.economic_discovery.brain_contracts import ObservationMode, ObservationRecord
 from application.economic_discovery.observation_memory import (
@@ -1659,28 +1660,45 @@ def _press(
     return PressIngestor(FEEDS, store, UrllibFeedTransport(FEEDS), clock=clock.now), store
 
 
-def _sector_context(values: Mapping[str, str], root: Path) -> SectorContextRunner | None:
-    """Sector context over the world press index, judged by the governed assistant."""
-    assistant = assistant_from_values(values)
-    if assistant is None:
-        return None
-    complete, model, _rates = assistant
-    return SectorContextRunner(
-        complete, model, _PressIndex(root / "press-index.sqlite3"), root / "sector-context.sqlite3"
+#: Jev input tokens one sector-context or regulation run may spend (40 headlines, typed).
+HEADLINE_JUDGMENT_TOKENS = 60_000
+
+
+def _headline_judge(values: Mapping[str, str], root: Path) -> HeadlineJudge | None:
+    """Spec 082: Jev judges headlines one by one when configured (memory shared)."""
+    from tools.runtime.semantic_layer import semantic_cascade_factory_from_env
+
+    factory = semantic_cascade_factory_from_env(
+        values, data_dir=root, token_budget=HEADLINE_JUDGMENT_TOKENS
     )
+    return None if factory is None else jev_headline_judge(factory)
+
+
+def _sector_context(values: Mapping[str, str], root: Path) -> SectorContextRunner | None:
+    """Sector context over the world press index, judged by Jev, else the governed assistant."""
+    assistant = assistant_from_values(values)
+    judge = _headline_judge(values, root)
+    if assistant is None and judge is None:
+        return None
+    complete, model = (None, None) if assistant is None else assistant[:2]
+    return SectorContextRunner(
+        complete, model, _PressIndex(root / "press-index.sqlite3"), root / "sector-context.sqlite3",
+        judge=judge,
+    )  # fmt: skip
 
 
 def _regulation(
     values: Mapping[str, str], root: Path
 ) -> tuple[RegulationIngestor, RegulationContextRunner] | None:
-    """Official journals and their relevance judgment; off without the governed assistant."""
+    """Official journals and their relevance judgment (Jev, else the governed assistant)."""
     assistant = assistant_from_values(values)
-    if assistant is None:
+    judge = _headline_judge(values, root)
+    if assistant is None and judge is None:
         return None
-    complete, model, _rates = assistant
+    complete, model = (None, None) if assistant is None else assistant[:2]
     index = SqliteRegulationIndex(root / "regulation-index.sqlite3")
     return RegulationIngestor(index), RegulationContextRunner(
-        complete, model, index, root / "regulation-context.sqlite3"
+        complete, model, index, root / "regulation-context.sqlite3", judge=judge
     )
 
 

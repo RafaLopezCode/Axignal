@@ -15,6 +15,7 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
+from application.context.headline_judgment import SECTOR_NEWS, HeadlineJudge
 from application.context.sector import (
     INSTRUCTION,
     MAX_CANDIDATES,
@@ -35,14 +36,17 @@ MAX_PER_DAY = 60
 class SectorContextRunner:
     def __init__(
         self,
-        complete: Callable[[CognitiveJob], Any],
-        model: str,
+        complete: Callable[[CognitiveJob], Any] | None,
+        model: str | None,
         press: SqlitePressIndex,
         database_path: str | Path,
         *,
         clock: Callable[[], datetime] = lambda: datetime.now(UTC),
         max_per_day: int = MAX_PER_DAY,
+        judge: HeadlineJudge | None = None,
     ) -> None:
+        # Spec 082: Jev judges each headline when configured; the assistant is the fallback.
+        self._judge = judge
         self._complete = complete
         self._model = model
         self._press = press
@@ -114,7 +118,23 @@ class SectorContextRunner:
                 and mentions_keyword(item.title, keywords)
             ][:MAX_CANDIDATES]
             relevant: list[dict[str, object]] = []
-            if candidates:
+            instrument: dict[str, object] = {"model": self._model, "router": "cognition/router"}
+            verdict = None
+            if candidates and self._judge is not None:
+                try:
+                    verdict = self._judge(str(sector_label(capability_id)),
+                                          [c.title for c in candidates], SECTOR_NEWS, now)  # fmt: skip
+                except Exception:
+                    verdict = None  # unavailable: the assistant may still answer
+            if verdict is not None:
+                instrument = dict(verdict.instrument)
+                for index in verdict.kept:
+                    item = candidates[index]
+                    relevant.append({"title": item.title, "url": item.url, "outlet": item.outlet,
+                                     "publishedAt": item.published_at.isoformat()})  # fmt: skip
+            elif candidates:
+                if self._complete is None:
+                    continue  # nothing can judge now: stays queued for a later tick
                 try:
                     result = self._complete(
                         CognitiveJob(
@@ -144,7 +164,7 @@ class SectorContextRunner:
                 "relevant": sorted(relevant, key=lambda r: str(r["publishedAt"]), reverse=True),
                 "candidates": len(candidates),
                 "judgedAt": now.isoformat(),
-                "instrument": {"model": self._model, "router": "cognition/router"},
+                "instrument": instrument,
             }
             with self._connect() as db:
                 db.execute(
