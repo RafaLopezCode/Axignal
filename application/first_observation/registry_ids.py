@@ -15,12 +15,27 @@ SIREN = "SIREN"
 COMPANIES_HOUSE = "COMPANIES_HOUSE"
 ORGNR = "ORGNR"
 ES_CIF = "ES_CIF"
-REGISTER_SCHEMES = frozenset({SIREN, COMPANIES_HOUSE, ORGNR, ES_CIF})
+DE_HR = "DE_HR"
+REGISTER_SCHEMES = frozenset({SIREN, COMPANIES_HOUSE, ORGNR, ES_CIF, DE_HR})
 
+#: The label, then a short run of words before the number: "RCS Paris B", "RCS de Paris sous
+#: le numéro", "immatriculée au registre du commerce et des sociétés de Lyon sous le n°"
+#: (eskimoz.fr, 2026-10-18: "RCS de Paris sous le numéro 528 338 494" was not read). The
+#: SIREN check digit (Luhn) still rejects any other number.
 _FR = re.compile(
-    r"\b(?:SIREN|SIRET|R\.?\s?C\.?\s?S\.?(?:\s+[A-Za-zÀ-ÿ'\u2019\-]{2,30}){0,3}(?:\s+[AB])?)"
-    r"\s*(?:n[°ºo]\.?\s*)?[:\s]\s*([0-9]{3}[\s.]?[0-9]{3}[\s.]?[0-9]{3})",
+    r"\b(?:SIREN|SIRET|R\.?\s?C\.?\s?S\.?|registre\s+du\s+commerce\s+et\s+des\s+soci[ée]t[ée]s)"
+    r"(?:[\s,]+(?:n[°ºo]\.?|[A-Za-zÀ-ÿ'\u2019\-]{1,30})){0,7}?"
+    r"\s*[:\s]\s*([0-9]{3}[\s.]?[0-9]{3}[\s.]?[0-9]{3})(?![0-9])",
     re.IGNORECASE,
+)
+#: A German commercial-register entry with its register court ("HRB 3771, AG Bonn",
+#: "Amtsgericht München, HRB 123456"). Without the court the number is not unique: not read.
+_DE_COURT = (
+    r"(?:Amtsgericht|AG|Registergericht)[:\s]+([A-ZÄÖÜ][a-zäöüß]+(?:[\s-][A-ZÄÖÜ][a-zäöüß]+)?)"
+)
+_DE = re.compile(
+    rf"\b(HR[AB])\s*(?:Nr\.?\s*)?[:.]?\s*([0-9]{{1,6}})(?:\s?[A-Z]{{1,2}}\b)?[\s,;()]*{_DE_COURT}"
+    rf"|{_DE_COURT}[\s,;:()-]*(?:Handelsregister[\s,:-]*)?(HR[AB])\s*(?:Nr\.?\s*)?[:.]?\s*([0-9]{{1,6}})\b"
 )
 _GB = re.compile(
     r"\b(?:company|registration|registered|reg\.?)\s+(?:registration\s+|company\s+)?"
@@ -103,6 +118,14 @@ def registry_identifiers(text: str, *, limit: int = 4) -> list[tuple[str, str]]:
         cif = _digits(match.group(1))
         if len(cif) == 9 and _cif_ok(cif):
             keep(ES_CIF, cif)
+    for match in _DE.finditer(text):
+        section, number, court = (
+            (match.group(1), match.group(2), match.group(3))
+            if match.group(1)
+            else (match.group(5), match.group(6), match.group(4))
+        )
+        court = re.sub(r"^(?:Amtsgericht|AG)\s+", "", court)
+        keep(DE_HR, f"{section} {int(number)} {court}")
     for match in _NO.finditer(text):
         orgnr = _digits(match.group(1))
         if len(orgnr) == 9 and orgnr[0] in "89" and _orgnr_ok(orgnr):
