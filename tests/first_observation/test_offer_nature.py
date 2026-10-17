@@ -190,3 +190,34 @@ def test_a_declared_service_area_still_asks_where_the_organization_is() -> None:
     assert known is None or all(
         q.question_id != "fo_operating_location" for q in known.batch.questions
     )
+
+
+def test_an_unclear_offer_nature_is_named_for_presence_and_mixed_is_not() -> None:
+    # Spec 084, found on biocultor.com: MIXED 0.59 vs SUPPLIES 0.41, too uncertain to use.
+    page = read_page(url="https://shop.example.com/", html=SHOP_WITH_ARTICLE, observed_at=NOW,
+                     content_fingerprint="t", artifact_ref=None)  # fmt: skip
+    found = deterministic_activity([page])
+    plan = plan_activity_batch("https://shop.example.com/", [page], known_scopes=(),
+                               deterministic=found)  # fmt: skip
+    assert plan is not None
+
+    def read(answer: tuple[str, float]):  # type: ignore[no-untyped-def]
+        def rule(batch, question):  # type: ignore[no-untyped-def]
+            if question.question_id == OFFER_NATURE.question_id:
+                return answer
+            return ("UNCLEAR", 0.9) if "UNCLEAR" in question.labels else (question.labels[-1], 0.9)
+
+        price = PricePolicy("t.v1", "typesafe-system-one", "jev-1.13.0", Decimal("0.042"),
+                            Decimal("0"), "test", "2026-10-17")  # fmt: skip
+        cascade = SemanticCascade(
+            judge=FakeSystemOne(rule), ledger=CostLedger(prices=(price,)),
+            memory=InMemoryJudgmentMemory(),
+            budget=SemanticBudget(max_system_one_input_tokens=200_000, max_reasoning_calls=0),
+        )  # fmt: skip
+        outcome = cascade.run([plan.batch], now=NOW)[plan.batch.batch_id]
+        return interpret_activity(plan, outcome, [page], model="jev-1.13.0")
+
+    assert read(("MIXED", 0.59)).judged["offerNatureUnclear"] == "UNCERTAIN"
+    assert read(("UNCLEAR", 0.9)).judged["offerNatureUnclear"] == "UNCLEAR"
+    assert "offerNatureUnclear" not in read(("MIXED", 0.9)).judged  # it does both, clearly
+    assert "offerNatureUnclear" not in read(("SUPPLIES", 0.9)).judged

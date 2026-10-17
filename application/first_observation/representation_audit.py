@@ -11,6 +11,7 @@ attention items are ordered by a fixed impact class, never by a computed number.
 
 from __future__ import annotations
 
+import re
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
 from datetime import datetime
@@ -18,7 +19,8 @@ from enum import StrEnum
 from urllib.parse import urlsplit
 from urllib.robotparser import RobotFileParser
 
-from application.first_observation.site import PageReading, RobotsReading
+from application.first_observation.site import INFORMATION_PAGES, PageReading, RobotsReading
+from application.value_chain import LEGAL_PAGE
 
 AUDIT_VERSION = "representation-audit.v1"
 
@@ -38,6 +40,15 @@ PROFILE_HOSTS = (
 def _profile_host(host: str) -> str | None:
     host = host.casefold().removeprefix("www.")
     return next((p for p in PROFILE_HOSTS if host == p or host.endswith("." + p)), None)
+
+
+def deliberately_unindexed(url: str) -> bool:
+    """Legal and contact pages are often kept out of search on purpose: their noindex says
+    nothing about how the offer is found (axignal.com self-check, 2026-10-17). Only pages
+    that carry the offer (home, services, about, clients...) are judged."""
+    path = urlsplit(url).path.casefold()
+    words = set(re.split(r"[/_\-.]+", path.strip("/")))
+    return bool(LEGAL_PAGE.search(path)) or bool(words & set(INFORMATION_PAGES["LOCATION"]))
 
 
 class Section(StrEnum):
@@ -188,7 +199,11 @@ def audit_representation(
         robots is not None and robots.text is not None)  # fmt: skip
     add("SEARCH_CRAWLERS_ALLOWED", Section.SEARCH,
         None if not access else not blocked_search, Impact.HIGH, blocked_search or "ALL")  # fmt: skip
-    noindex_pages = [p.url for p in pages if "noindex" in (p.meta_robots or "").lower()]
+    noindex_pages = [
+        p.url
+        for p in pages
+        if "noindex" in (p.meta_robots or "").lower() and not deliberately_unindexed(p.url)
+    ]
     add("NO_NOINDEX_ON_READ_PAGES", Section.SEARCH, not noindex_pages, Impact.HIGH,
         noindex_pages or "NONE", noindex_pages[0] if noindex_pages else home.url)  # fmt: skip
     sitemaps = () if robots is None else robots.sitemaps()
