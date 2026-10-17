@@ -162,6 +162,9 @@ def evaluate(reading: Mapping[str, Any], truth: Mapping[str, Any]) -> dict[str, 
                         "WRONG_CLASSIFICATION")  # fmt: skip
         elif "demand" in check:
             terms = [t.casefold() for t in check["demand"]["titleTerms"]]
+            # Calls the CTO judged relevant one by one, each with who, when and why: a title
+            # that names no activity word is not by itself unrelated (spec 092).
+            terms += [str(a["title"]).casefold() for a in check["demand"].get("accepted", [])]
             items = [
                 d
                 for d in found

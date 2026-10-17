@@ -128,6 +128,18 @@ def test_self_check_flags_false_positives_negatives_and_unrelated_demand() -> No
         ]
         assert demand["status"] == status, reasons
 
+    # A call the CTO accepted one by one (its title, with who and when) is not unrelated.
+    detail["otherReasons"] = []
+    title = str(detail.get("title") or reading["discoveries"][3].get("statement"))  # type: ignore[index]
+    check = next(c for c in truth["checks"] if c["id"] == "demand.relevant_to_its_activity")  # type: ignore[index]
+    check["demand"]["accepted"] = [
+        {"title": title, "acceptedBy": "CTO", "acceptedOn": "2026-10-17"}
+    ]
+    demand = {v["id"]: v for v in evaluate(reading, truth)["verdicts"]}[
+        "demand.relevant_to_its_activity"
+    ]
+    assert demand["status"] == "PASS"
+
 
 def test_known_capabilities_read_the_catalogs_current_codes() -> None:
     from application.observation_intelligence.catalog import with_current_codes
