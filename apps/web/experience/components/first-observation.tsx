@@ -376,7 +376,7 @@ export function discoveryCopy(d: Discovery, t: Translate, locale = "en"): { find
     : { finding: `${t("Dirección que declara", "Address it declares")}: ${d.statement}`, why: t("Indica dónde mirar primero. No define dónde opera ni todo su mercado.", "It shows where to look first. It does not define where it operates or its whole market.") };
   if (d.kind === "DECLARED_SERVICE_AREA") return { finding: `${t("Zona de servicio que declara", "Service area it declares")}: ${d.statement}`, why: t("Es lo que la organización dice de sí misma; no se ha verificado.", "It is what the organization says about itself; it has not been verified.") };
   if (d.kind === "LANGUAGES") return { finding: `${t("Idiomas publicados", "Published languages")}: ${d.statement}`, why: t("Muestra en qué idiomas se presenta; no prueba en qué mercados vende.", "It shows the languages it presents itself in; it does not prove where it sells.") };
-  if (d.kind === "IDENTITY_HINT") return { finding: `${t("Su web declara", "Its website declares")}: ${d.statement}`, why: t("Es una pista de identidad. Solo un registro puede verificarla.", "It is an identity hint. Only a registry can verify it.") };
+  if (d.kind === "IDENTITY_HINT") return { finding: `${t("Su web declara", "Its website declares")}: ${identifierLabel(d.code, d.statement, t)}`, why: t("Es una pista de identidad. Solo un registro puede verificarla.", "It is an identity hint. Only a registry can verify it.") };
   if (d.kind === "PUBLIC_PRESENCE") return { finding: `${t("Web pública observada", "Public website observed")}: ${d.statement}`, why: t("Es la fuente de lo que la organización declara sobre sí misma.", "It is the source of what the organization declares about itself.") };
   // Spec 091: the searches of its activity, in its own words, read through a permitted API.
   if (d.kind === "SEARCH_VISIBILITY" && (d.code === "SEARCH_RANKS_MEASURED" || d.code === "SEARCH_NOT_RANKED")) {
@@ -560,6 +560,23 @@ function checkLabel(key: string, t: Translate): string {
 
 function sourceName(url: string): string {
   try { return new URL(url).hostname.replace(/^www\./, ""); } catch { return url; }
+}
+
+/** A declared register identifier in the reader's words: "CIF B54941729", not the scheme code
+ * "ES_CIF B54941729" (spec 094). Other identity hints keep their statement. */
+export function identifierLabel(code: string, statement: string, t: Translate): string {
+  if (!code.startsWith("IDENTIFIER_DECLARED:")) return statement;
+  const scheme = code.slice("IDENTIFIER_DECLARED:".length);
+  const value = statement.startsWith(`${scheme} `) ? statement.slice(scheme.length + 1) : statement;
+  const label: Record<string, string> = {
+    ES_CIF: t("CIF", "Spanish tax ID (CIF)"),
+    SIREN: "SIREN",
+    COMPANIES_HOUSE: t("número de Companies House", "Companies House number"),
+    ORGNR: t("número de organización (Noruega)", "Norwegian organisation number"),
+    DE_HR: t("inscripción en el Registro Mercantil alemán", "German commercial register entry"),
+    LEI: "LEI",
+  };
+  return label[scheme] ? `${label[scheme]} ${value}` : statement;
 }
 
 /** The persisted basis of one discovery, as rows. Never a regenerated narrative. A

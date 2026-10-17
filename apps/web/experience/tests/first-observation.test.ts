@@ -162,3 +162,12 @@ test("search ranking shows each search, its position, who ranks instead and a Go
   const none = discovery("SEARCH_VISIBILITY", "SEARCH_NOT_RANKED", { statement: "0/3" });
   assert.match(discoveryCopy(none, en).finding, /does not appear among the top results of 3 searches/);
 });
+
+test("a declared register identifier reads as people say it, not as a scheme code (spec 094)", () => {
+  const cif = discovery("IDENTITY_HINT", "IDENTIFIER_DECLARED:ES_CIF", { statement: "ES_CIF B54941729" });
+  assert.match(discoveryCopy(cif, en).finding, /Its website declares: Spanish tax ID \(CIF\) B54941729/);
+  const hr = discovery("IDENTITY_HINT", "IDENTIFIER_DECLARED:DE_HR", { statement: "DE_HR HRB 3771 Bonn" });
+  assert.match(discoveryCopy(hr, en).finding, /German commercial register entry HRB 3771 Bonn/);
+  const other = discovery("IDENTITY_HINT", "LEGAL_NAME_DECLARED", { statement: "Webpositer S.L." });
+  assert.match(discoveryCopy(other, en).finding, /Its website declares: Webpositer S\.L\./);
+});
