@@ -233,18 +233,50 @@ def persona_fit(text: str, candidate: Persona) -> tuple[str, ...]:
     )
 
 
-def best_persona(text: str, hint: str | None) -> tuple[Persona | None, tuple[str, ...]]:
+#: What the study already read as its activity (lexicon or Jev over its public text) is
+#: evidence of the persona on its own (first pool dry run, 2026-10-17: 9 of 20 prospects
+#: were discarded as "not a target" because only the title and description were searched
+#: for offer words, while the engine had read "marketing-advertising" on their site).
+ACTIVITY_PERSONAS: dict[str, str] = {
+    "marketing-advertising": "DIGITAL_MARKETING_AGENCY",
+    "web-design": "DIGITAL_MARKETING_AGENCY",
+    "management-consulting": "B2B_CONSULTANCY",
+    "market-research": "B2B_CONSULTANCY",
+    "building-construction": "CONSTRUCTION",
+    "formwork-scaffolding": "CONSTRUCTION",
+}
+
+
+def best_persona(
+    text: str, hint: str | None, activities: tuple[str, ...] = ()
+) -> tuple[Persona | None, tuple[str, ...]]:
     """The persona its own site supports best.
 
     The hint is the persona of the open registry class it was found under (a declared
     organization type): with it, one offer word on its own site suffices; otherwise two.
+    An activity the study read on its site (``activities``) is sufficient evidence alone.
     """
+    read = {ACTIVITY_PERSONAS[a] for a in activities if a in ACTIVITY_PERSONAS}
+    # The registry class it was found under (OpenStreetMap office, Wikidata class) speaks for
+    # every persona listed under that class, not only the one searched (dry run 2026-10-17:
+    # "Top Digital Marketing Agency", found as an SEO agency's advertising_agency office).
+    found_as = persona(hint) if hint else None
+    classes = set() if found_as is None else {*found_as.osm_offices, *found_as.wikidata_classes}
+
+    def is_hinted(p: Persona) -> bool:
+        return p.id == hint or bool(classes & {*p.osm_offices, *p.wikidata_classes})
+
+    def evidence(p: Persona) -> tuple[str, ...]:
+        words = persona_fit(text, p)
+        return (*words, *(f"activity:{a}" for a in activities if ACTIVITY_PERSONAS.get(a) == p.id))
+
     ranked = sorted(
-        ((len(persona_fit(text, p)), p.id == hint, p) for p in PERSONAS),
+        ((len(persona_fit(text, p)) + (MIN_OFFER_WORDS if p.id in read else 0), is_hinted(p), p)
+         for p in PERSONAS),
         key=lambda row: (row[0], row[1]),
         reverse=True,
-    )
+    )  # fmt: skip
     for hits, hinted, chosen in ranked:
         if hits >= MIN_OFFER_WORDS or (hinted and hits >= 1):
-            return chosen, persona_fit(text, chosen)
+            return chosen, evidence(chosen)
     return None, ()

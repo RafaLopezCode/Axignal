@@ -55,7 +55,7 @@ LABELS: dict[str, dict[str, str]] = {
     },
     "de": {
         "eyebrow": "Unabhängige Auswertung", "section": "Was wir beobachtet haben",
-        "cta": "Vollständige Auswertung ansehen", "source": "Quelle", "observed": "beobachtet",
+        "cta": "Die vollständige Auswertung ansehen", "source": "Quelle", "observed": "beobachtet",
         "OBSERVED": "Beobachtet", "DECLARED": "Von der Website erklärt",
         "POTENTIAL": "Potenziell · zu bestätigen", "signoff": "Mit freundlichen Grüßen",
         "presence": "Präsenz", "reputation": "Reputation", "value": "Wert",
@@ -64,7 +64,7 @@ LABELS: dict[str, dict[str, str]] = {
     },
     "it": {
         "eyebrow": "Lettura indipendente", "section": "Cosa abbiamo osservato",
-        "cta": "Vedi la lettura completa", "source": "Fonte", "observed": "osservato",
+        "cta": "La lettura completa", "source": "Fonte", "observed": "osservato",
         "OBSERVED": "Osservato", "DECLARED": "Dichiarato dal suo sito",
         "POTENTIAL": "Potenziale · da confermare", "signoff": "Cordiali saluti,",
         "presence": "Presenza", "reputation": "Reputazione", "value": "Valore",
@@ -75,7 +75,7 @@ LABELS: dict[str, dict[str, str]] = {
         "eyebrow": "Leitura independente", "section": "O que observámos",
         "cta": "Ver a leitura completa", "source": "Fonte", "observed": "observado",
         "OBSERVED": "Observado", "DECLARED": "Declarado pelo seu site",
-        "POTENTIAL": "Potencial · a confirmar", "signoff": "Com os melhores cumprimentos,",
+        "POTENTIAL": "Potencial · a confirmar", "signoff": "Cordialmente,",
         "presence": "Presença", "reputation": "Reputação", "value": "Valor",
         "markets": "Mercados", "relationships": "Relações", "demand": "Procura",
         "economics": "Economia", "organization": "Organização", "context": "Contexto",
@@ -101,6 +101,14 @@ def _labels(language: str) -> dict[str, str]:
 def _paragraphs(body: str) -> list[str]:
     blocks = [b.strip() for b in body.replace("\r\n", "\n").split("\n\n")]
     return [b for b in blocks if b]
+
+
+def readable(findings: Sequence[Mapping[str, object]]) -> list[Mapping[str, object]]:
+    """Cards a recipient can read: the finding restated in the letter's language (``text``).
+
+    Found on the first pool dry run (2026-10-17): without it the card showed the finding's
+    raw statement, an internal code such as ORGANIZATION_DECLARED, to the recipient."""
+    return [f for f in findings if isinstance(f.get("text"), str) and str(f["text"]).strip()]
 
 
 def _finding(item: Mapping[str, object], labels: Mapping[str, str]) -> str:
@@ -183,7 +191,7 @@ def render_html(
     )
     section = (copy(segment, "section", language) if segment else None) or labels["section"]
     cta = (copy(segment, "cta", language) if segment else None) or labels["cta"]
-    cards = "".join(_finding(item, labels) for item in findings[:4])
+    cards = "".join(_finding(item, labels) for item in readable(findings)[:4])
     role = signature_role(language, sender_role)
     role_html = f'<br><span style="color:{MUTED};">{escape(role)}</span>' if role else ""
     legal = escape(legal_text).replace("\n", "<br>")
