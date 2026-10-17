@@ -25,6 +25,8 @@ export type Lane = "matters" | "understood" | "unknown";
 export type Nature = "OBSERVED" | "DECLARED" | "POTENTIAL" | "UNKNOWN" | "STRENGTH" | "CLARIFY" | "UNRESOLVED";
 
 export type Proof = { label: string; value: string };
+/** Kinds of weekly news, most consequential first (spec 088). */
+export type WeekNews = "NEW_DEMAND" | "REGRESSION" | "PRESS" | "REGULATION" | "EVOLUTION";
 export type Source = { url: string | null; label: string; observedAt: string | null; quote: string | null };
 
 export type Insight = {
@@ -58,6 +60,8 @@ export type Insight = {
   group?: "buyers" | "otherDemand";
   /** How many independent kinds of signal agree on it (ordering only, never a score). */
   strength?: number;
+  /** What kind of weekly news it is, when it is news at all (spec 088). */
+  news?: WeekNews;
 };
 
 type BuyerSignal = { type?: unknown; basis?: unknown; via?: unknown; sourceUrl?: unknown; observedAt?: unknown };
@@ -288,10 +292,47 @@ function discoveryInsight(d: Discovery, index: number, t: Translate, locale: str
     ...facetOfDiscovery(d),
     limits: typeof detail.limitation === "string" ? [String(detail.limitation)] : [],
     ...(buyer ? { group: "buyers" as const, strength: Number(d.detail.independentSignals ?? 1) } : {}),
+    ...weekNewsOf(d),
     // Spec 087: a call that does not fit best is listed apart, with why, never hidden.
     ...(d.kind === "DEMAND" && d.code === "POTENTIAL_DEMAND" && detail.focus === "OTHER"
       ? { group: "otherDemand" as const, why: otherDemandWhy(detail.otherReasons, t) } : {}),
   };
+}
+
+function weekNewsOf(d: Discovery): { news?: WeekNews } {
+  if (d.kind === "DEMAND" && d.code === "POTENTIAL_DEMAND" && d.detail.isNew === true && d.detail.focus !== "OTHER") return { news: "NEW_DEMAND" };
+  if (d.kind === "CHANGE" && d.code.endsWith(":REGRESSION")) return { news: "REGRESSION" };
+  if (d.kind === "CHANGE" && d.code.endsWith(":EVOLUTION")) return { news: "EVOLUTION" };
+  if (d.kind === "MENTION" && d.code === "PRESS_MENTION") return { news: "PRESS" };
+  if (d.kind === "CONTEXT_SIGNAL" && d.code === "REGULATION") return { news: "REGULATION" };
+  return {};
+}
+
+const NEWS_ORDER: Record<WeekNews, number> = { NEW_DEMAND: 0, REGRESSION: 1, PRESS: 2, REGULATION: 3, EVOLUTION: 4 };
+const WEEK_MS = 7 * 24 * 3600 * 1000;
+
+/**
+ * "This week: what matters" (spec 088): up to three findings of the last seven days, chosen
+ * by a fixed, visible order (new calls that fit best, setbacks, press, regulation, progress)
+ * and never generated. A kind appears once before any repeats, so three different things
+ * are said when they exist; nothing is invented when there is nothing new.
+ */
+export function weekHighlights(insights: Insight[], now: Date, limit = 3): Insight[] {
+  const recent = insights
+    .filter(i => i.news && i.observedAt && now.getTime() - new Date(i.observedAt).getTime() <= WEEK_MS)
+    .sort((a, b) => NEWS_ORDER[a.news!] - NEWS_ORDER[b.news!]
+      || new Date(b.observedAt!).getTime() - new Date(a.observedAt!).getTime());
+  const firsts = recent.filter((item, index) => recent.findIndex(x => x.news === item.news) === index);
+  return [...firsts, ...recent.filter(item => !firsts.includes(item))].slice(0, limit);
+}
+
+/** What each kind of weekly news is, in the reader's words. */
+export function weekNewsLabel(news: WeekNews, t: Translate): string {
+  return news === "NEW_DEMAND" ? t("Nueva licitación que encaja", "New call that fits")
+    : news === "REGRESSION" ? t("Retroceso medido", "Measured setback")
+    : news === "PRESS" ? t("En prensa", "In the press")
+    : news === "REGULATION" ? t("Regulación nueva", "New regulation")
+    : t("Avance medido", "Measured progress");
 }
 
 /** Why a call is not among those that fit best, in the reader's words (spec 087). */

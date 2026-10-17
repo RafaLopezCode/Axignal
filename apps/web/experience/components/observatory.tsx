@@ -19,7 +19,7 @@ import { shouldApplyLandingFacet } from "@/lib/observatory-url";
 import { DemandMarkets } from "./demand-markets";
 import { monthlyCapacityCents, pendingOutputSchema, subscriberOutputSchema, type FirstObservation, type SubscriberPortfolio } from "@/lib/subscriber-contracts";
 import type { RuntimeProjection } from "@/lib/runtime-projection";
-import { briefing, buyersOf, byLane, currentnessLabel, fill, insightsFor, laneCopy, natureLabel, otherDemandOf, type Insight, type Lane, type Nature, type Reading, type Translate } from "@/lib/observatory";
+import { briefing, buyersOf, byLane, currentnessLabel, fill, insightsFor, laneCopy, natureLabel, otherDemandOf, weekHighlights, weekNewsLabel, type Insight, type Lane, type Nature, type Reading, type Translate } from "@/lib/observatory";
 import { baseline, litKeys, markSeen, observedSinceVisit, readSeen, touch, writeSeen, type SeenStore } from "@/lib/observatory-seen";
 import { activityLabel, FirstObservationView, observationStateCopy } from "./first-observation";
 import { SubscriberReading } from "./subscriber-reading";
@@ -737,6 +737,7 @@ export function SummaryView({ reading, name, insights, lit, remembered = true, o
   const lanes = byLane(insights);
   const buyers = buyersOf(insights);
   const otherDemand = otherDemandOf(insights);
+  const week = scope ? [] : weekHighlights(insights, new Date());
   const [othersShown, setOthersShown] = useState(false);
   const [allShown, setAllShown] = useState(false);
   const [allBuyers, setAllBuyers] = useState(false);
@@ -754,6 +755,13 @@ export function SummaryView({ reading, name, insights, lit, remembered = true, o
         <button className="obs-link" onClick={onSeenAll}>{t("Marcar como visto", "Mark as seen")}</button>
       </div>}
     </section>
+    {!scope && <section className="obs-week" aria-labelledby="week-title">
+      <h2 id="week-title">{t("Esta semana, lo que importa", "This week, what matters")}</h2>
+      {week.length ? <ol>{week.map(insight => <li key={insight.id}>
+        <button className="obs-link" onClick={() => onOpen(insight)}><strong>{weekNewsLabel(insight.news!, t)}</strong> · {insight.headline}</button>
+      </li>)}</ol>
+        : <p>{t("Nada nuevo que importe en los últimos 7 días. AXIGNAL sigue observando; no se rellena con lo de siempre.", "Nothing new that matters in the last 7 days. AXIGNAL keeps observing; it does not fill the space with the usual.")}</p>}
+    </section>}
     {scope && !insights.length ? <section className="obs-empty-state"><h2>{scope.emptyTitle}</h2><p>{scope.emptyBody}</p></section> : <div className="obs-lanes">
       {(["matters", "understood", "unknown"] as Lane[]).map(lane => {
         const copy = laneCopy(lane, t);
