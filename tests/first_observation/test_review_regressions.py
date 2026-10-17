@@ -190,3 +190,29 @@ def test_parser_and_place_edge_cases() -> None:
     )  # fmt: skip
     assert "Body text" in unclosed.text
     assert (country_code("UK"), country_code("EL")) == ("GB", "GR")
+
+
+def test_a_web_anchored_subject_seeds_its_own_website_with_rights_only(tmp_path: Path) -> None:
+    # The biocultor.com canary (2026-10-17): a web-anchored subject is its website
+    # (ADR-0087 amendment), yet its pages were never seeded, so the daily loop had no
+    # current public seed. A subscriber-directed site for a canonical Organization still
+    # never is (test above), and without rights nothing is seeded.
+    from dataclasses import replace
+
+    from application.first_observation.rights import NoContentRights
+    from pipeline.entity_resolution.web_subjects import web_subject_id
+
+    world = World()
+    facade = build(tmp_path, world)
+    service = runtime(facade).service
+    spy = _SeedSpy()
+    service._seeds = spy
+    anchored = replace(
+        _focus_target(SOLAR_ES, IdentityLink.SUBSCRIBER_DIRECTED),
+        organization_id=str(web_subject_id("solaria-norte.example.com")),
+    )
+    proof = service.observe(anchored)
+    assert spy.calls == 1 and proof.ready
+    service._rights = NoContentRights()
+    service.observe(replace(anchored, target_ref="focus_y"))
+    assert spy.calls == 1  # no governed rights: never seeded

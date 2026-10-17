@@ -84,6 +84,7 @@ from application.observation_intelligence.contracts import (
 from application.own_site import OWN_SITE_VERSION, logo_walls, own_site_discoveries
 from application.own_site.wall_roles import interpret_walls, wall_batch, walls
 from application.semantic_layer.cascade import SemanticCascade
+from domain.identity import is_web_subject
 from domain.xignal import XignalEpistemicState
 
 _HTML = re.compile(r"^\s*(<!doctype html|<html|<head|<body|<meta|<title|<!--)", re.I)
@@ -839,18 +840,20 @@ class FirstObservationService:
             for code in scope_codes.values()
         )
         subject = target.organization_id or f"attention:{target.target_ref}"
-        # Canonical path: the registry says it is the official website AND a governed rights
-        # decision permits reusing and retaining its content (ADR-0015, ADR-0091 §3).
-        verified = (
-            target.kind is TargetKind.FOCUS
-            and target.identity_link is IdentityLink.REGISTRY_VERIFIED
-            and rights.raw_retention_days > 0
+        # Canonical path: the website speaks for the Organization AND a governed rights
+        # decision permits reusing and retaining its content (ADR-0015, ADR-0091 §3). It
+        # speaks for it when the registry records it, or when the subject is web-anchored:
+        # that Organization is its website by definition (ADR-0087 amendment 2026-10-16;
+        # found on the biocultor.com canary: no seed, so the daily loop could never start).
+        speaks_for_it = target.kind is TargetKind.FOCUS and (
+            target.identity_link is IdentityLink.REGISTRY_VERIFIED
+            or (
+                target.identity_link is IdentityLink.SUBSCRIBER_DIRECTED
+                and is_web_subject(str(target.organization_id))
+            )
         )
-        if (
-            target.kind is TargetKind.FOCUS
-            and target.identity_link is IdentityLink.REGISTRY_VERIFIED
-            and not verified
-        ):
+        verified = speaks_for_it and rights.raw_retention_days > 0
+        if speaks_for_it and not verified:
             ledger.decide("PRIVATE_PATH:CONTENT_RIGHTS_UNKNOWN")
         if verified:
             observation_ids = dict(self._seeds.seed(target, pages, now=now, rights=rights))
