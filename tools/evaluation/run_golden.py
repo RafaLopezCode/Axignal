@@ -100,6 +100,7 @@ def main() -> int:
             observing.measure_geo()
             + observing.judge_sector_context()
             + observing.judge_regulation()
+            + observing.judge_press_attribution()
         )
         _log("judgment round", round_, ran)
         if not ran and round_ > 2:

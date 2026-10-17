@@ -12,7 +12,7 @@ from __future__ import annotations
 
 import re
 import unicodedata
-from collections.abc import Mapping, Sequence
+from collections.abc import Callable, Mapping, Sequence
 from datetime import datetime, timedelta
 from typing import Protocol
 from urllib.parse import urlsplit
@@ -87,8 +87,16 @@ def mentions(title: str, term: str) -> bool:
 
 
 def press_discoveries(
-    view: Mapping[str, object], store: PressStore, *, now: datetime, own_domain: str | None
+    view: Mapping[str, object],
+    store: PressStore,
+    *,
+    now: datetime,
+    own_domain: str | None,
+    attribution: Callable[[str], tuple[str, str] | None] | None = None,
 ) -> list[dict[str, object]]:
+    """Headlines that name it. ``attribution`` (spec 085) recalls whether each headline is
+    about this organization: another entity is withheld, about it names who judged it,
+    unknown stays exactly as before."""
     names: list[str] = []
     target = view.get("target")
     if isinstance(target, Mapping) and isinstance(target.get("name"), str):
@@ -114,8 +122,18 @@ def press_discoveries(
     ]
     own = (own_domain or "").removeprefix("www.")
     observed_at = str(view.get("observedAt") or now.isoformat())
+    judged: dict[str, tuple[str, str]] = {}
+    if attribution is not None:
+        for item in found:
+            if (verdict := attribution(item.title)) is not None:
+                judged[item.url] = verdict
+    withheld = sum(1 for label, _model in judged.values() if label == "ANOTHER_ENTITY")
+    if withheld:
+        coverage = {**coverage, "withheldAsAnotherEntity": withheld}
+    found = [i for i in found if judged.get(i.url, ("", ""))[0] != "ANOTHER_ENTITY"]
     out: list[dict[str, object]] = []
     for item in sorted(found, key=lambda i: i.published_at, reverse=True)[:MAX_SHOWN]:
+        about = judged.get(item.url)
         host = (urlsplit(item.url).hostname or "").removeprefix("www.")
         owned = bool(own) and (host == own or host.endswith("." + own))
         released = item.feed_id in RELEASE_FEEDS  # a release the organization distributes
@@ -137,7 +155,11 @@ def press_discoveries(
                     "publishedAt": item.published_at.isoformat(),
                     "language": item.language,
                     "attribution": "Headline names the organization; that it is about this "
-                    "organization is not verified.",
+                    "organization is not verified."
+                    if about is None
+                    else "Headline names the organization and was judged to be about it "
+                    "(non-authoritative judgment).",
+                    **({"attributionBy": about[1]} if about is not None else {}),
                     "notEndorsement": True,
                     **coverage,
                 },
