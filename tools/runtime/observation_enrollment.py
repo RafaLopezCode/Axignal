@@ -441,6 +441,7 @@ def first_proof(
         enrollment=load_enrollment(config_dir / ENROLLMENT),
         source_ports=source_ports,
         research_access=authority.allows,
+        website_rights=authority.website_rights,
     )
     return dict(
         readiness,
