@@ -27,7 +27,12 @@ from application.observation_intelligence.contracts import (
     SourceDescriptor,
     TaxonomyCode,
 )
-from application.observation_intelligence.findings import ProcurementRecord, SourceFindings
+from application.observation_intelligence.findings import (
+    ContractScale,
+    ProcurementRecord,
+    SourceFindings,
+    duration_months,
+)
 from application.observation_intelligence.strategy import ObservationAction
 from application.world_demand.awards import AwardRecord, normalized_tax_id
 from application.world_demand.index import PAGE_NOT_REACHABLE
@@ -122,6 +127,37 @@ def _place(nuts: str | None) -> TaxonomyCode:
 _NATURES = {"1": "SUPPLIES", "2": "SERVICES", "3": "WORKS"}
 
 
+def _amount(budget: ET.Element | None) -> tuple[float | None, str | None]:
+    """The estimated value (valor estimado) or, without it, the budget before tax."""
+    for name in ("EstimatedOverallContractAmount", "TaxExclusiveAmount"):
+        element = _child(budget, name)
+        value = _number(_text(element))
+        if value is not None and value > 0 and element is not None:
+            return value, element.get("currencyID")
+    return None, None
+
+
+def _scale(folder: ET.Element | None, project: ET.Element | None) -> ContractScale | None:
+    total, currency = _amount(_child(project, "BudgetAmount"))
+    lots = []
+    for lot in _children(folder, "ProcurementProjectLot"):
+        value, lot_currency = _amount(_child(lot, "ProcurementProject", "BudgetAmount"))
+        if value is not None:
+            lots.append(value)
+            currency = currency or lot_currency
+    duration = _child(project, "PlannedPeriod", "DurationMeasure")
+    scale = ContractScale(
+        estimated_value=total if total is not None else (sum(lots) if lots else None),
+        currency=currency,
+        lots=len(lots) if len(lots) > 1 else None,
+        smallest_lot_value=min(lots) if len(lots) > 1 else None,
+        duration_months=duration_months(
+            _text(duration), None if duration is None else duration.get("unitCode")
+        ),
+    )
+    return scale if scale.known() else None
+
+
 def parse_entry(entry: ET.Element) -> ProcurementRecord | None:
     """One open tender from one CODICE entry, or None when it is not open or incomplete."""
     folder = _child(entry, "ContractFolderStatus")
@@ -172,6 +208,7 @@ def parse_entry(entry: ET.Element) -> ProcurementRecord | None:
         source_url=url,
         deadline=deadline,
         contract_nature=_NATURES.get(_text(_child(project, "TypeCode")) or ""),
+        scale=_scale(folder, project),
     )
 
 

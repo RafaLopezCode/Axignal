@@ -117,3 +117,13 @@ test("an evaluator's fit judgment labels a tender and a set-aside list survives 
   assert.equal(parsed.demand?.setAsideByFit, 1);
   assert.equal(parsed.demand?.setAside?.[0]?.title, "Captación de familias acogedoras");
 });
+
+test("a call's published size is shown as facts, and nothing published shows nothing (spec 081)", () => {
+  const call = discovery("DEMAND", "POTENTIAL_DEMAND", { detail: { deadline: "2026-11-01", scale: { estimatedValue: 564231.36, currency: "EUR", lots: 3, smallestLotValue: 34982.34, durationMonths: 12 } } });
+  const text = basisRows(call, en, "en").map(([label, value]) => `${label} ${value}`).join(" | ");
+  assert.match(text, /Published estimated value €564,231/);
+  assert.match(text, /3 lots; the smallest, €34,982/);
+  assert.match(text, /Published duration 1 year/);
+  const unknown = basisRows(discovery("DEMAND", "POTENTIAL_DEMAND", { detail: { scale: { estimatedValue: null, lots: null, durationMonths: null } } }), en, "en");
+  assert.ok(!unknown.some(([label]) => /value|Lots|duration/.test(label)));
+});

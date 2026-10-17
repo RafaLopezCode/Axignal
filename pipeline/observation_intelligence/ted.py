@@ -27,6 +27,7 @@ from application.observation_intelligence import (
 )
 from application.observation_intelligence.catalog import eu_nuts
 from application.observation_intelligence.contracts import geo
+from application.observation_intelligence.findings import ContractScale, duration_months
 
 TED_SOURCE_ID = "ted-search-v3"
 TED_SEARCH_URL = "https://api.ted.europa.eu/v3/notices/search"
@@ -44,6 +45,12 @@ _FIELDS = (
     "publication-date",
     "deadline-receipt-tender-date-lot",
     "winner-name",
+    "estimated-value-proc",
+    "estimated-value-cur-proc",
+    "estimated-value-lot",
+    "estimated-value-cur-lot",
+    "duration-period-value-lot",
+    "duration-period-unit-lot",
 )
 _NOTICE_TYPES = {
     SourceCapability.PUBLIC_PROCUREMENT_OPPORTUNITIES: ("cn-standard", "cn-social"),
@@ -157,6 +164,43 @@ def _nature(value: object) -> str | None:
     return natures.pop() if len(natures) == 1 else None
 
 
+def _amounts(value: object) -> list[float]:
+    out = []
+    for item in _all_texts(value):
+        try:
+            amount = float(item)
+        except ValueError:
+            continue
+        if amount > 0:
+            out.append(amount)
+    return out
+
+
+def _scale(notice: Mapping[str, Any]) -> ContractScale | None:
+    """The published size of the contract; lots are summed only when no total is given."""
+    lots = _amounts(notice.get("estimated-value-lot"))
+    total = next(iter(_amounts(notice.get("estimated-value-proc"))), None)
+    currencies = {*_all_texts(notice.get("estimated-value-cur-proc")),
+                  *_all_texts(notice.get("estimated-value-cur-lot"))}  # fmt: skip
+    months = [
+        m
+        for value, unit in zip(
+            _all_texts(notice.get("duration-period-value-lot")),
+            _all_texts(notice.get("duration-period-unit-lot")),
+            strict=False,
+        )
+        if (m := duration_months(value, unit)) is not None
+    ]
+    scale = ContractScale(
+        estimated_value=total if total is not None else (sum(lots) if lots else None),
+        currency=currencies.pop() if len(currencies) == 1 else None,
+        lots=len(lots) if len(lots) > 1 else None,
+        smallest_lot_value=min(lots) if len(lots) > 1 else None,
+        duration_months=max(months) if months else None,
+    )
+    return scale if scale.known() else None
+
+
 def _places(value: object) -> tuple[TaxonomyCode, ...]:
     """TED places (ISO3 countries or NUTS codes) → jurisdiction paths."""
 
@@ -228,6 +272,7 @@ def parse_notices(payload: Mapping[str, Any]) -> tuple[ProcurementRecord, ...]:
                     )
                 ),
                 contract_nature=_nature(notice.get("contract-nature")),
+                scale=_scale(notice),
             )
         )
     return tuple(records)

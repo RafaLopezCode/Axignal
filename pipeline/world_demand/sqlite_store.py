@@ -15,7 +15,7 @@ from pathlib import Path
 from typing import Any
 
 from application.observation_intelligence.contracts import SourceCapability, TaxonomyCode
-from application.observation_intelligence.findings import ProcurementRecord
+from application.observation_intelligence.findings import ContractScale, ProcurementRecord
 from application.world_demand.awards import AwardRecord, normalized_name
 from application.world_demand.index import DemandSlice, SliceState, country_of
 
@@ -36,6 +36,7 @@ def _encode(record: ProcurementRecord) -> str:
             "winners": list(record.winners),
             "main_codes": [[c.scheme, c.code] for c in record.main_codes],
             "contract_nature": record.contract_nature,
+            "scale": None if record.scale is None else record.scale.to_wire(),
         },
         ensure_ascii=False,
         sort_keys=True,
@@ -58,6 +59,8 @@ def _decode(raw: dict[str, Any]) -> ProcurementRecord:
         # Records stored before main codes were read carry none: unknown, not additional.
         main_codes=tuple(TaxonomyCode(str(s), str(c)) for s, c in raw.get("main_codes") or ()),
         contract_nature=None if raw.get("contract_nature") is None else str(raw["contract_nature"]),
+        # Records stored before the scale was read carry none: unknown, never zero.
+        scale=ContractScale.from_wire(raw.get("scale")),
     )
 
 

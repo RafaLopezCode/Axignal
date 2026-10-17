@@ -194,6 +194,7 @@ class LiveDemandReader:
             return None
         now = self._clock()
         today = now.date().isoformat()
+        order = {cid: i for i, (cid, _codes) in reversed(list(enumerate(wanted)))}
         found: dict[tuple[str, str], dict[str, object]] = {}
         ingested: list[datetime] = []
         answered: set[str] = set()
@@ -250,6 +251,10 @@ class LiveDemandReader:
                         "epistemicState": "POTENTIAL",
                         "isNew": now - record.published_at <= NEW_FOR,
                         "classifiedAs": classification,
+                        "scale": None if record.scale is None else record.scale.to_wire(),
+                        # Read by the ordering only, then dropped: the site's lead activity
+                        # (the order its reading names them) comes first (spec 081).
+                        "_lead": min(order[cid] for cid in matched),
                         "fit": None if fit is None else fit["fit"],
                         "fitBy": None if fit is None else dict(fit),
                         # Read by the duplicate check only, then dropped.
@@ -264,6 +269,7 @@ class LiveDemandReader:
         ordered = sorted(
             [c for c in unique if c.get("fit") != "UNRELATED"],
             key=lambda c: (
+                int(str(c.get("_lead", 0))),
                 _FIT_RANK.get(str(c.get("fit")), 1),
                 c.get("classifiedAs") == ADDITIONAL,
                 not c["isNew"],
@@ -271,6 +277,8 @@ class LiveDemandReader:
                 str(c["title"]),
             ),
         )
+        for candidate in unique:
+            candidate.pop("_lead", None)
         return LiveDemand(
             as_of=now,
             ingested_at=min(ingested),

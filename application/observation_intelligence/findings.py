@@ -11,6 +11,73 @@ from datetime import datetime
 
 from application.observation_intelligence.contracts import SourceCapability, TaxonomyCode
 
+_MONTHS_PER_UNIT = {"MONTH": 1, "MON": 1, "YEAR": 12, "ANN": 12}
+_DAYS_PER_UNIT = {"DAY": 1, "DAYS": 1, "WEEK": 7, "WEE": 7}
+
+
+def duration_months(value: str | float | None, unit: str | None) -> int | None:
+    """A published contract duration in whole months (rounded up); None when unsaid."""
+    try:
+        amount = None if value is None else float(value)
+    except ValueError:
+        return None
+    unit = (unit or "").upper()
+    if amount is None or amount <= 0:
+        return None
+    if unit in _MONTHS_PER_UNIT:
+        return max(1, round(amount * _MONTHS_PER_UNIT[unit]))
+    if unit in _DAYS_PER_UNIT:
+        return max(1, -(-int(amount * _DAYS_PER_UNIT[unit]) // 30))
+    return None
+
+
+@dataclass(frozen=True, slots=True)
+class ContractScale:
+    """How big a contract is, as its source publishes it (spec 081): observed facts that
+    let a person judge whether it is within reach, never a filter or a score. Every field
+    is None when the source does not say it."""
+
+    estimated_value: float | None = None
+    currency: str | None = None
+    #: Lots let smaller suppliers bid for part of a contract: how many, and the smallest.
+    lots: int | None = None
+    smallest_lot_value: float | None = None
+    duration_months: int | None = None
+
+    def known(self) -> bool:
+        return any(v is not None for v in (self.estimated_value, self.lots, self.duration_months))
+
+    def to_wire(self) -> dict[str, object]:
+        return {
+            "estimatedValue": self.estimated_value,
+            "currency": self.currency,
+            "lots": self.lots,
+            "smallestLotValue": self.smallest_lot_value,
+            "durationMonths": self.duration_months,
+        }
+
+    @classmethod
+    def from_wire(cls, raw: object) -> ContractScale | None:
+        if not isinstance(raw, dict):
+            return None
+
+        def number(key: str) -> float | None:
+            value = raw.get(key)
+            return float(value) if isinstance(value, int | float) else None
+
+        def whole(key: str) -> int | None:
+            value = raw.get(key)
+            return int(value) if isinstance(value, int) else None
+
+        currency = raw.get("currency")
+        return cls(
+            estimated_value=number("estimatedValue"),
+            currency=currency if isinstance(currency, str) else None,
+            lots=whole("lots"),
+            smallest_lot_value=number("smallestLotValue"),
+            duration_months=whole("durationMonths"),
+        )
+
 
 @dataclass(frozen=True, slots=True)
 class ProcurementRecord:
@@ -30,6 +97,8 @@ class ProcurementRecord:
     main_codes: tuple[TaxonomyCode, ...] = ()
     #: SUPPLIES, SERVICES or WORKS as the source declares it; None when not declared or mixed.
     contract_nature: str | None = None
+    #: Value, lots and duration as published (spec 081); None when the source says nothing.
+    scale: ContractScale | None = None
 
     def __post_init__(self) -> None:
         if not self.record_id.strip() or not self.source_id.strip() or not self.title.strip():

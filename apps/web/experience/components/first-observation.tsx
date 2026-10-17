@@ -1,6 +1,7 @@
 "use client";
 
 import { industryName } from "@/lib/industries";
+import { contractScaleRows } from "@/lib/contract-scale";
 import { ExternalLink } from "lucide-react";
 import { PublicUnderstandingView } from "./public-understanding";
 import { useLocale } from "@/lib/locale";
@@ -560,6 +561,7 @@ export function basisRows(d: Discovery, t: Translate, locale: string): Array<[st
   if (typeof detail.source === "string") rows.push([t("Fuente", "Source"), detail.source]);
   if (typeof detail.buyer === "string") rows.push([t("Comprador", "Buyer"), detail.buyer]);
   if (typeof detail.deadline === "string") rows.push([t("Plazo", "Deadline"), detail.deadline]);
+  rows.push(...contractScaleRows(detail.scale, t, locale));
   if (detail.checks && typeof detail.checks === "object" && !detail.audit) for (const [key, value] of Object.entries(detail.checks as Record<string, unknown>)) rows.push([checkLabel(key, t), Array.isArray(value) ? value.join(", ") || "—" : value === true ? t("Sí", "Yes") : value === false ? t("No", "No") : String(value ?? "—")]);
   if (detail.instrument && typeof detail.instrument === "object" && typeof (detail.instrument as Record<string, unknown>).model === "string") rows.push([t("Asistente medido", "Assistant measured"), String((detail.instrument as Record<string, unknown>).model)]);
   if (detail.conditions && typeof detail.conditions === "object" && Array.isArray((detail.conditions as Record<string, unknown>).questions)) for (const q of (detail.conditions as { questions: unknown[] }).questions) rows.push([t("Pregunta", "Question"), String(q)]);
