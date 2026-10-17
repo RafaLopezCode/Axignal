@@ -19,7 +19,7 @@ import { shouldApplyLandingFacet } from "@/lib/observatory-url";
 import { DemandMarkets } from "./demand-markets";
 import { monthlyCapacityCents, pendingOutputSchema, subscriberOutputSchema, type FirstObservation, type SubscriberPortfolio } from "@/lib/subscriber-contracts";
 import type { RuntimeProjection } from "@/lib/runtime-projection";
-import { briefing, buyersOf, byLane, currentnessLabel, fill, insightsFor, laneCopy, natureLabel, otherDemandOf, weekHighlights, weekNewsLabel, type Insight, type Lane, type Nature, type Reading, type Translate } from "@/lib/observatory";
+import { briefing, buyersOf, byLane, currentnessLabel, familyValue, fill, insightsFor, laneCopy, natureLabel, otherDemandOf, weekHighlights, weekNewsLabel, type Insight, type Lane, type Nature, type Reading, type Translate } from "@/lib/observatory";
 import { baseline, litKeys, markSeen, observedSinceVisit, readSeen, touch, writeSeen, type SeenStore } from "@/lib/observatory-seen";
 import { activityLabel, FirstObservationView, observationStateCopy } from "./first-observation";
 import { SubscriberReading } from "./subscriber-reading";
@@ -41,6 +41,7 @@ import { ActivationView } from "./activation";
 import { channelLabel, FamilyNav, scopeCopy, type FacetScope } from "./family-nav";
 import { EvolutionCompare } from "./evolution-compare";
 import { countByFacet, facetOfSourceType, facetParams, keysReadOnFirstLook, litByChannel, litOrFirstLook, litByFamily, matchesFacet, parseFacet, type Facet } from "@/lib/observation-families";
+import { families, type FamilyId } from "@/lib/projection";
 
 type Item = SubscriberPortfolio["organizations"][number];
 export type View = "summary" | "explore" | "evolution" | "evidence";
@@ -680,7 +681,7 @@ function OrganizationView(props: OrgProps) {
       <div className="obs-panel" role="tabpanel" id={`panel-${readingView}`} aria-labelledby={`tab-${readingView}`}>
         {props.reading && <ReadingSkeleton/>}
         {!props.reading && observing && <ObservingState state={item.observation!.state}/>}
-        {!props.reading && !observing && readingView === "summary" && <SummaryView reading={reading} name={name} insights={shown} lit={litShown} openId={open?.id ?? null} onOpen={openInsight} scope={scope}
+        {!props.reading && !observing && readingView === "summary" && <SummaryView reading={reading} name={name} insights={shown} lit={litShown} openId={open?.id ?? null} onOpen={openInsight} scope={scope} onFamily={family => selectFacet({ family, channel: null })}
           remembered={props.rememberReading !== false} onSeenAll={() => updateSeen(store => markSeen(store, item.focusId, shownKeys, new Date().toISOString()))} item={item}/>}
         {!props.reading && !observing && readingView === "summary" && firstObservation?.discoveries.some(d => d.kind === "ACTIVITY") && <DemandMarkets focusId={item.focusId} observation={firstObservation} canAct={props.canAct} onSaved={() => void props.readOutput(item.focusId, false)}/>}
         {!props.reading && !observing && readingView === "explore" && <ExploreView projection={projection} revision={revision} firstObservation={firstObservation} onSummary={() => go({ view: "summary" })}/>}
@@ -721,7 +722,9 @@ function ObservingState({ state }: { state: string }) {
   </section>;
 }
 
-export function SummaryView({ reading, name, insights, lit, remembered = true, openId, onOpen, onSeenAll, item, exampleLead, scope }: {
+export function SummaryView({ reading, name, insights, lit, remembered = true, openId, onOpen, onSeenAll, item, exampleLead, scope, onFamily }: {
+  /** Opens a family's own view (spec 093); absent where the reading has no family navigation. */
+  onFamily?: (family: FamilyId) => void;
   /** Whether what is read is kept on this device: the notice says so only when it is true. */
   remembered?: boolean;
   reading: Reading; name: string; insights: Insight[]; lit: Set<string>; openId: string | null;
@@ -738,6 +741,7 @@ export function SummaryView({ reading, name, insights, lit, remembered = true, o
   const buyers = buyersOf(insights);
   const otherDemand = otherDemandOf(insights);
   const week = scope ? [] : weekHighlights(insights, new Date());
+  const values = scope ? [] : familyValue(insights);
   const [othersShown, setOthersShown] = useState(false);
   const [allShown, setAllShown] = useState(false);
   const [allBuyers, setAllBuyers] = useState(false);
@@ -762,6 +766,7 @@ export function SummaryView({ reading, name, insights, lit, remembered = true, o
       </li>)}</ol>
         : <p>{t("Nada nuevo que importe en los últimos 7 días. AXIGNAL sigue observando; no se rellena con lo de siempre.", "Nothing new that matters in the last 7 days. AXIGNAL keeps observing; it does not fill the space with the usual.")}</p>}
     </section>}
+    {!scope && <FamilyValues values={values} onOpen={onOpen} onFamily={onFamily}/>}
     {scope && !insights.length ? <section className="obs-empty-state"><h2>{scope.emptyTitle}</h2><p>{scope.emptyBody}</p></section> : <div className="obs-lanes">
       {(["matters", "understood", "unknown"] as Lane[]).map(lane => {
         const copy = laneCopy(lane, t);
@@ -789,6 +794,42 @@ export function SummaryView({ reading, name, insights, lit, remembered = true, o
       })}
     </div>}
   </div>;
+}
+
+/**
+ * The value of each family at a glance (spec 093): one row per family with the finding to
+ * read first, its epistemic state as text and shape, and how many findings the family holds.
+ * A family with nothing observed says so, or names what is not known yet; nothing is scored.
+ */
+export function FamilyValues({ values, onOpen, onFamily }: {
+  values: ReturnType<typeof familyValue>; onOpen: (insight: Insight) => void; onFamily?: (family: FamilyId) => void;
+}) {
+  const { t, copy } = useLocale();
+  const nameOf = (id: FamilyId) => copy(families.find(f => f.id === id)!.name);
+  // Families with nothing observed are named together once: a list of empty rows says less.
+  const said = values.filter(v => v.pick || v.unknown);
+  const silent = values.filter(v => !v.pick && !v.unknown);
+  return <section className="obs-family-values" aria-labelledby="family-values-title">
+    <h2 id="family-values-title">{t("Lo que vale de cada familia", "What each family is worth")}</h2>
+    <p>{t("Lo primero que conviene leer en cada familia, con su estado. No es una puntuación: abre cada uno para ver su prueba.", "The first thing worth reading in each family, with its state. It is not a score: open each one to see its proof.")}</p>
+    <ol>{said.map(({ family, pick, unknown, findings }, index) => <li key={family} className={pick ? "" : "obs-family-value-empty"} style={{ ["--i" as string]: index }}>
+      <span className="obs-family-value-name">
+        {onFamily ? <button className="obs-link" onClick={() => onFamily(family)}>{nameOf(family)}</button> : nameOf(family)}
+        {findings > 0 && <small>{fill(findings === 1 ? t("{n} hallazgo", "{n} finding") : t("{n} hallazgos", "{n} findings"), { n: findings })}</small>}
+      </span>
+      {pick ? <button className="obs-family-value-pick" onClick={() => onOpen(pick)}>
+        <NatureMark nature={pick.nature} label={natureLabel(pick.nature, t)}/>
+        <span>{pick.headline}</span>
+      </button>
+        : unknown ? <button className="obs-family-value-pick" onClick={() => onOpen(unknown)}>
+          <NatureMark nature="UNKNOWN" label={natureLabel("UNKNOWN", t)}/>
+          <span>{unknown.headline}</span>
+        </button>
+        : null}
+    </li>)}</ol>
+    {silent.length > 0 && <p className="obs-family-value-none">{t("Aún sin nada observado:", "Nothing observed yet:")}{" "}
+      {silent.map(({ family }, index) => <span key={family}>{index > 0 && ", "}{onFamily ? <button className="obs-link" onClick={() => onFamily(family)}>{nameOf(family)}</button> : nameOf(family)}</span>)}.</p>}
+  </section>;
 }
 
 /** Open tenders can be dozens: the first ones are shown, the rest on request. */

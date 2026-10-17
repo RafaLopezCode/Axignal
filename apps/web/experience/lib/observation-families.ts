@@ -61,6 +61,9 @@ const BY_UNKNOWN_CODE: Record<string, Facet> = {
   NO_BUYER_SIGNALS: { family: "demand", channel: null },
   NO_PRESS_MENTION_FOUND: { family: "reputation", channel: null },
   NO_PUBLIC_AWARDS_FOUND: { family: "relationships", channel: null },
+  LOCATION_NOT_DECLARED: { family: "markets", channel: null },
+  DEMAND_NOT_ROUTABLE: { family: "demand", channel: null },
+  NO_ROUTABLE_DEMAND_QUESTION: { family: "demand", channel: null },
 };
 
 export function facetOfDiscovery(d: Pick<Discovery, "kind" | "code">): Facet {
