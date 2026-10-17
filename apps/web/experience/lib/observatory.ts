@@ -342,6 +342,7 @@ export function otherDemandWhy(reasons: unknown, t: Translate): string {
     ADDITIONAL_CODE: t("su actividad es solo un código adicional del contrato", "its activity is only an additional code of the call"),
     PARTIAL_FIT: t("solo parte del trabajo es su actividad", "only part of the work is its activity"),
     ADJACENT_FIT: t("mismo sector, pero el trabajo principal es otro", "same sector, but the main work is something else"),
+    UNCERTAIN_FIT: t("no está claro que el trabajo principal sea su actividad", "it is unclear that the main work is its activity"),
   };
   const said = (Array.isArray(reasons) ? reasons : []).map(r => labels[String(r)]).filter(Boolean);
   return said.length

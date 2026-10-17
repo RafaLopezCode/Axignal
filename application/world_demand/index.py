@@ -20,7 +20,11 @@ from application.observation_intelligence.contracts import (
     SourceDescriptor,
     TaxonomyCode,
 )
-from application.observation_intelligence.findings import ProcurementRecord, SourceFindings
+from application.observation_intelligence.findings import (
+    ProcurementRecord,
+    SourceFindings,
+    cpv_other_activity,
+)
 from application.observation_intelligence.loop import SourceObservationPort
 from application.observation_intelligence.strategy import RECENCY_WINDOWS, ObservationAction
 
@@ -113,7 +117,9 @@ def code_within(record: TaxonomyCode, asked: TaxonomyCode) -> bool:
     if record.scheme != asked.scheme:
         return False
     if asked.scheme == "CPV":
-        return record.code.startswith(_cpv_prefix(asked.code))
+        return record.code.startswith(_cpv_prefix(asked.code)) and not cpv_other_activity(
+            record.code, asked.code
+        )
     return record.code.startswith(asked.code)
 
 

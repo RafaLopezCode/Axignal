@@ -116,6 +116,18 @@ def test_self_check_flags_false_positives_negatives_and_unrelated_demand() -> No
     ]
     assert demand["status"] == "PASS" and demand["detail"]["labelledAdditional"] == 1
 
+    # Spec 092: set apart as possibly other work (its fit in doubt): labelled, not a defect;
+    # a partial fit still claims part of the work, so it still counts.
+    detail = reading["discoveries"][3]["detail"]  # type: ignore[index]
+    detail["classifiedAs"] = None
+    for reasons, status in ((["UNCERTAIN_FIT"], "PASS"), (["ADJACENT_FIT"], "PASS"),
+                            (["PARTIAL_FIT"], "FAIL"), (["SECONDARY_ACTIVITY"], "FAIL")):  # fmt: skip
+        detail["otherReasons"] = reasons
+        demand = {v["id"]: v for v in evaluate(reading, truth)["verdicts"]}[
+            "demand.relevant_to_its_activity"
+        ]
+        assert demand["status"] == status, reasons
+
 
 def test_known_capabilities_read_the_catalogs_current_codes() -> None:
     from application.observation_intelligence.catalog import with_current_codes
