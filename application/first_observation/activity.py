@@ -9,7 +9,7 @@ from __future__ import annotations
 
 import re
 from collections.abc import Mapping, Sequence
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from datetime import datetime
 from enum import StrEnum
 from urllib.parse import urlsplit
@@ -108,6 +108,20 @@ def _section_codes(section: str) -> tuple[TaxonomyCode, ...]:
     return (
         *(TaxonomyCode("CPV", f"{division}000000") for division in cpv),
         *(TaxonomyCode("NAICS", p) for sector in naics for p in naics_prefixes(sector)),
+    )
+
+
+def prefer_specific_routing(findings: Sequence[ActivityFinding]) -> tuple[ActivityFinding, ...]:
+    """A section reading (``isic-*``) routes demand only while no specific activity does.
+
+    A section routes whole CPV divisions: "Manufacturing" read on novonordisk.com routed all
+    of CPV 33, and a pharmaceutical maker was offered cardiac-ablation devices (self-check,
+    2026-10-17). The section stays as a reading; only its broad routing yields.
+    """
+    if not any(f.demand_codes and not f.activity_id.startswith("isic-") for f in findings):
+        return tuple(findings)
+    return tuple(
+        replace(f, demand_codes=()) if f.activity_id.startswith("isic-") else f for f in findings
     )
 
 
