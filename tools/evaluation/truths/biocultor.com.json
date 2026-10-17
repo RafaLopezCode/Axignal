@@ -83,6 +83,14 @@
      "palmer",
      "plantaci",
      "riego"
+    ],
+    "accepted": [
+     {
+      "title": "Servicio de mantenimiento y conservación del canal de Castilla",
+      "acceptedBy": "CTO",
+      "acceptedOn": "2026-10-17",
+      "why": "Its own main CPV is planting and maintenance of green areas (77310000) and the fit judgment read it CORE; its national title names no activity word."
+     }
     ]
    },
    "note": "Fertiliser supply first; green-area maintenance is a secondary service it offers. Whether a contract is within its reach is a separate question (scale)."
