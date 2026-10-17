@@ -66,6 +66,7 @@ from application.first_observation.service import (
     DemandOutcome,
     FirstObservationService,
     SiteFetchPort,
+    brand_label,
 )
 from application.first_observation.shared_findings import SharedFindingsPort
 from application.first_observation.site import PageReading
@@ -721,7 +722,22 @@ class FirstObservationRuntime:
             )
             return True
         self.store.complete(job, proof, now=self._clock.now())
+        self._prime(job.target)
         return True
+
+    def _prime(self, target: AttentionTarget) -> None:
+        """Minute 0 (CTO, 2026-10-17): queue every background reading of a fresh observation
+        now (AI visibility, press, job boards, sector context, regulation, registers) and wake
+        the background loop, instead of waiting for the subscriber's first read and the loop's
+        next turn. Best effort: the first read queues the same work anyway."""
+        try:
+            context = TrustedRequestContext(
+                PrincipalId(target.principal_id), TenantId(target.tenant_id)
+            )
+            self.view(context, target.target_ref, target.organization_id)
+        except Exception:
+            return
+        self._wake.set()
 
     def drain(self, limit: int = 100) -> int:
         done = 0
@@ -924,8 +940,17 @@ class FirstObservationRuntime:
             (d for d in discoveries if isinstance(d, Mapping) and d.get("kind") == "ACTIVITY"), None
         )
         target = view.get("target")
-        name = target.get("name") if isinstance(target, Mapping) else None
         website = target.get("website") if isinstance(target, Mapping) else None
+        # A Focus added by its website alone has no name: the legal name its site declares,
+        # else its brand, so AI visibility is measured from minute 0 for every SME too.
+        legal = next((d.get("statement") for d in discoveries if isinstance(d, Mapping)
+                      and d.get("code") == "LEGAL_NAME_DECLARED" and d.get("statement")), None)  # fmt: skip
+        host = (urlsplit(str(website)).hostname or "") if website else ""
+        name = (
+            (target.get("name") if isinstance(target, Mapping) else None)
+            or legal
+            or (brand_label(host).capitalize() if host else None)
+        )
         scopes = view.get("attentionScopes")
         country = None
         if isinstance(scopes, list) and scopes and isinstance(scopes[0], Mapping):
