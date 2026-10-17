@@ -44,3 +44,6 @@ def test_a_fresh_observation_queues_ai_visibility_without_waiting_for_a_read(
     subject = spy.requested[0]
     assert subject.name  # a Focus added by its website alone still has a name to ask about
     assert rt._wake.is_set()
+    # Wikidata/Wikipedia (economics, organization), job boards and buyers run on the source
+    # thread: it is woken too, instead of waiting up to ten minutes.
+    assert rt._sources_wake.is_set()
