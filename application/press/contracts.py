@@ -93,6 +93,18 @@ FEEDS: tuple[PressFeed, ...] = (
     PressFeed("itnews-au", "iTnews", "https://www.itnews.com.au/RSS/rss.ashx", "AU", "en", ("technology",)),
     PressFeed("betakit", "BetaKit", "https://betakit.com/feed/", "CA", "en", ("technology",)),
     PressFeed("construction-enquirer", "The Construction Enquirer", "https://www.constructionenquirer.com/feed/", "GB", "en", ("construction",)),
+    # Trade press of agencies and consultancies (CTO, 2026-10-17: SEO/GEO agencies and
+    # consultancies as clients; Reputation had 1/14 at minute 0). Public RSS, each checked live.
+    PressFeed("searchenginejournal", "Search Engine Journal", "https://www.searchenginejournal.com/feed/", "US", "en", ("marketing", "search")),
+    PressFeed("seroundtable", "Search Engine Roundtable", "https://www.seroundtable.com/index.xml", "US", "en", ("marketing", "search")),
+    PressFeed("adweek", "Adweek", "https://www.adweek.com/feed/", "US", "en", ("marketing",)),
+    PressFeed("marketingweek", "Marketing Week", "https://www.marketingweek.com/feed/", "GB", "en", ("marketing",)),
+    PressFeed("prnoticias", "PR Noticias", "https://prnoticias.com/feed/", "EU/ES", "es", ("marketing", "communications")),
+    PressFeed("dircomfidencial", "Dircomfidencial", "https://dircomfidencial.com/feed/", "EU/ES", "es", ("marketing", "communications")),
+    PressFeed("elpublicista", "El Publicista", "https://www.elpublicista.es/rss/", "EU/ES", "es", ("marketing",)),
+    PressFeed("abondance", "Abondance", "https://www.abondance.com/feed", "EU/FR", "fr", ("marketing", "search")),
+    PressFeed("primaonline", "Prima Comunicazione", "https://www.primaonline.it/feed/", "EU/IT", "it", ("marketing", "communications")),
+    PressFeed("briefing-pt", "Briefing", "https://www.briefing.pt/feed/", "EU/PT", "pt", ("marketing",)),
     PressFeed("thisismoney", "This is Money", "https://www.thisismoney.co.uk/money/index.rss", "GB", "en", ("business",)),
     PressFeed("computerweekly", "Computer Weekly", "https://www.computerweekly.com/rss/All-Computer-Weekly-content.xml", "GB", "en", ("technology",)),
     PressFeed("bfm-economie", "BFM", "https://www.bfmtv.com/rss/economie/", "EU/FR", "fr", ("business",)),
