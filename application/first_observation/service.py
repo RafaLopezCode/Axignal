@@ -82,6 +82,7 @@ from application.observation_intelligence.contracts import (
     TaxonomyCode,
 )
 from application.own_site import OWN_SITE_VERSION, logo_walls, own_site_discoveries
+from application.own_site.wall_roles import interpret_walls, wall_batch, walls
 from application.semantic_layer.cascade import SemanticCascade
 from domain.xignal import XignalEpistemicState
 
@@ -93,6 +94,10 @@ SYSTEM_ONE_EVALUATOR = "typesafe-system-one"
 
 #: The site's TLS certificate could not be verified; verification is never relaxed.
 TLS_NOT_VERIFIED = "TLS_CERTIFICATE_NOT_VERIFIED"
+
+
+#: Logo-wall roles judged by the evaluator (spec 083) and the model that judged them.
+JudgedWalls = tuple[dict[tuple[str, str], str | None], str | None]
 
 
 class FieldPerformance(Protocol):
@@ -614,7 +619,7 @@ class FirstObservationService:
         ledger: RunLedger,
         provider_input: bool = False,
         premises_known: bool | None = None,
-    ) -> tuple[tuple[ActivityFinding, ...], SemanticReading | None]:
+    ) -> tuple[tuple[ActivityFinding, ...], SemanticReading | None, JudgedWalls]:
         """Verify lexicon activities, then ask what is still unknown; one cascade, one budget.
 
         Returns the deterministic findings as composed by Python after verification and
@@ -683,9 +688,25 @@ class FirstObservationService:
             else:
                 ran.append(",".join(q.question_id for q in plan.batch.questions))
                 reading = interpret_activity(plan, outcome, pages, model=judge.judge.model)
+        # Spec 083: what the organizations on each logo wall are to it (clients, partners,
+        # or neither), judged from the heading and the names; the vocabulary otherwise.
+        judged_walls: dict[tuple[str, str], str | None] = {}
+        wall_model: str | None = None
+        own_names = [n for page in pages for n in (*page.names, *page.legal_names)]
+        candidates = walls(pages, own_names)
+        batch = wall_batch(candidates)
+        if batch is not None and (judge := open_cascade()) is not None:
+            try:
+                walled = judge.run([batch], now=now)[batch.batch_id]
+            except Exception as error:
+                ledger.decide(f"SKIPPED:SEMANTIC:WALLS:FAILED:{type(error).__name__}")
+            else:
+                ran.append("wall_role")
+                judged_walls = interpret_walls(candidates, walled)
+                wall_model = judge.judge.model
         if cascade is not None and ran:
             self._account(cascade, ledger, ran)
-        return tuple(deterministic), reading
+        return tuple(deterministic), reading, (judged_walls, wall_model)
 
     @staticmethod
     def _account(cascade: SemanticCascade, ledger: RunLedger, ran: Sequence[str]) -> None:
@@ -775,7 +796,7 @@ class FirstObservationService:
             for area in page.areas_served
             if (code := area_jurisdiction(area.name, area.nuts)) is not None
         ]
-        deterministic, semantic = self._semantic(
+        deterministic, semantic, judged_walls = self._semantic(
             reading.origin, pages, [*premises, *(c for _p, _a, c in areas)], deterministic,
             now, ledger, rights.provider_input, premises_known=bool(premises),
         )  # fmt: skip
@@ -841,7 +862,7 @@ class FirstObservationService:
             f for f in findings if not verified or f.method is not ActivityMethod.SEMANTIC_JUDGMENT
         ]
         capabilities = to_capabilities(routed, observation_ids, pages)
-        discoveries: list[Discovery] = [*self._site_discoveries(reading, semantic)]
+        discoveries: list[Discovery] = [*self._site_discoveries(reading, semantic, judged_walls)]
         if country is not None:
             discoveries.append(
                 Discovery(
@@ -934,7 +955,10 @@ class FirstObservationService:
         return ()
 
     def _site_discoveries(
-        self, reading: SiteReading, semantic: SemanticReading | None
+        self,
+        reading: SiteReading,
+        semantic: SemanticReading | None,
+        judged_walls: JudgedWalls = ({}, None),
     ) -> list[Discovery]:
         home = reading.pages[0]
         out = [
@@ -1043,7 +1067,7 @@ class FirstObservationService:
                 )
         # Technology, clients and partners shown, credentials, hiring and review profiles.
         own_names = [n for page in reading.pages for n in (*page.names, *page.legal_names)]
-        out += own_site_discoveries(reading.pages, own_names)
+        out += own_site_discoveries(reading.pages, own_names, *judged_walls)
         if semantic is not None:
             for place, url, line in semantic.located:
                 out.append(
