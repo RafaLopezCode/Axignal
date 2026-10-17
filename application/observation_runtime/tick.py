@@ -67,6 +67,12 @@ _ANYWHERE = TaxonomyCode("GLOBAL", "ANY")
 _MAX_DOUBLINGS = 16
 
 
+#: Blocks caused by AXIGNAL's own context, not by the world: retried on the next daily tick
+#: (biocultor.com canary, 2026-10-17: a missing capability context parked demand for 30 days).
+CONTEXT_BLOCKS = frozenset({"NO_OBSERVED_CAPABILITY_CONTEXT", "AUTHORIZATION_REVOKED"})
+CONTEXT_RECHECK = timedelta(days=1)
+
+
 class TickStatus(StrEnum):
     COMPLETED = "COMPLETED"
     ALREADY_COMPLETED = "ALREADY_COMPLETED"
@@ -609,13 +615,16 @@ def run_daily_tick(
                 stats.failures += 1
 
         if acquisition.blocked is not None:
+            # A block on AXIGNAL's own context (no capability yet, authority rechecked) can
+            # clear by the next tick; only a missing source waits the family's recheck.
+            own_context = acquisition.blocked in CONTEXT_BLOCKS
             parked = replace(
                 lead,
                 status=LeadStatus.BLOCKED,
                 blocked_reason=acquisition.blocked,
                 last_outcome=LeadOutcome.BLOCKED,
-                next_due_at=now + policy.blocked_recheck,
-                scheduling_reason="BLOCKED_RECHECK",
+                next_due_at=now + (CONTEXT_RECHECK if own_context else policy.blocked_recheck),
+                scheduling_reason="CONTEXT_RECHECK" if own_context else "BLOCKED_RECHECK",
             )
             state.leads[lead.lead_id] = changed_leads[lead.lead_id] = parked
             executed.append(
