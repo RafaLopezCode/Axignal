@@ -217,9 +217,17 @@ class FocusSeed:
         if entry is None or rights.raw_retention_days <= 0 or not rights.reuse_permitted:
             raise ValueError("seeding requires a governed rights decision with retention")
         organization = target.organization_id
-        if organization is None or target.identity_link is not IdentityLink.REGISTRY_VERIFIED:
-            # ADR-0091 §3: only a registry-recorded website speaks for the Organization.
-            raise ValueError("only a registry-verified Focus website is seeded")
+        anchored = (
+            organization is not None
+            and target.identity_link is IdentityLink.SUBSCRIBER_DIRECTED
+            and is_web_subject(str(organization))
+        )
+        if organization is None or not (
+            target.identity_link is IdentityLink.REGISTRY_VERIFIED or anchored
+        ):
+            # ADR-0091 §3: only a registry-recorded website speaks for the Organization, or
+            # the website a web-anchored subject is (ADR-0087 amendment 2026-10-16).
+            raise ValueError("only a registry-verified or web-anchored Focus website is seeded")
         ids: dict[str, str] = {}
         for page in pages:
             content = page.readable()
@@ -255,9 +263,11 @@ class FocusSeed:
                         authority_id="first-observation-public-website",
                         authority_version="1",
                         reuse_reason=(
-                            "Registry-recorded official website page, observed after "
-                            "robots.txt under a bounded GET policy."
-                        ),
+                            "Web-anchored subject's own website page"
+                            if anchored
+                            else "Registry-recorded official website page"
+                        )
+                        + ", observed after robots.txt under a bounded GET policy.",
                         retention_policy_ref=entry.retention_policy.ref,
                         content_retention_days=entry.retention_policy.raw_retention_days,
                         robots_policy_ref=entry.robots_policy_ref,
