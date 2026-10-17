@@ -55,7 +55,7 @@ export type Insight = {
   /** What the finding itself says it does not establish (its source's limitation). */
   limits?: string[];
   /** A potential buyer (ADR-0099): shown in its own block, never mixed with tenders. */
-  group?: "buyers";
+  group?: "buyers" | "otherDemand";
   /** How many independent kinds of signal agree on it (ordering only, never a score). */
   strength?: number;
 };
@@ -288,7 +288,29 @@ function discoveryInsight(d: Discovery, index: number, t: Translate, locale: str
     ...facetOfDiscovery(d),
     limits: typeof detail.limitation === "string" ? [String(detail.limitation)] : [],
     ...(buyer ? { group: "buyers" as const, strength: Number(d.detail.independentSignals ?? 1) } : {}),
+    // Spec 087: a call that does not fit best is listed apart, with why, never hidden.
+    ...(d.kind === "DEMAND" && d.code === "POTENTIAL_DEMAND" && detail.focus === "OTHER"
+      ? { group: "otherDemand" as const, why: otherDemandWhy(detail.otherReasons, t) } : {}),
   };
+}
+
+/** Why a call is not among those that fit best, in the reader's words (spec 087). */
+export function otherDemandWhy(reasons: unknown, t: Translate): string {
+  const labels: Record<string, string> = {
+    SECONDARY_ACTIVITY: t("es de su actividad secundaria", "it belongs to its secondary activity"),
+    ADDITIONAL_CODE: t("su actividad es solo un código adicional del contrato", "its activity is only an additional code of the call"),
+    PARTIAL_FIT: t("solo parte del trabajo es su actividad", "only part of the work is its activity"),
+    ADJACENT_FIT: t("mismo sector, pero el trabajo principal es otro", "same sector, but the main work is something else"),
+  };
+  const said = (Array.isArray(reasons) ? reasons : []).map(r => labels[String(r)]).filter(Boolean);
+  return said.length
+    ? fill(t("No está entre las que más encajan: {reasons}.", "Not among those that fit best: {reasons}."), { reasons: said.join("; ") })
+    : t("No está entre las que más encajan.", "Not among those that fit best.");
+}
+
+/** Calls that do not fit best (spec 087): shown apart, on request, each with its reason. */
+export function otherDemandOf(insights: Insight[]): Insight[] {
+  return insights.filter(i => i.group === "otherDemand");
 }
 
 /** The organization's own description of itself, quoted as it publishes it: declared, never verified. */
@@ -511,7 +533,7 @@ export function insightsFor(reading: Reading, t: Translate, locale: string): Ins
 
 export function byLane(insights: Insight[]): Record<Lane, Insight[]> {
   return {
-    matters: insights.filter(i => i.lane === "matters" && i.group !== "buyers"),
+    matters: insights.filter(i => i.lane === "matters" && i.group !== "buyers" && i.group !== "otherDemand"),
     understood: insights.filter(i => i.lane === "understood"),
     unknown: insights.filter(i => i.lane === "unknown"),
   };
@@ -548,7 +570,11 @@ export function briefing(reading: Reading, name: string, insights: Insight[], t:
   const unknown = lanes.unknown.length;
   const demand = reading.firstObservation?.demand;
   const tally = [
-    demand?.live && demand.total ? count(demand.total, t("{n} licitación abierta que encaja", "{n} open tender that fits"), t("{n} licitaciones abiertas que encajan", "{n} open tenders that fit")) : null,
+    demand?.live && typeof demand.best === "number"
+      ? count(demand.best, t("{n} licitación abierta que encaja mejor", "{n} open tender that fits best"), t("{n} licitaciones abiertas que encajan mejor", "{n} open tenders that fit best"))
+      : demand?.live && demand.total ? count(demand.total, t("{n} licitación abierta que encaja", "{n} open tender that fits"), t("{n} licitaciones abiertas que encajan", "{n} open tenders that fit")) : null,
+    demand?.live && typeof demand.best === "number" && demand.total > demand.best
+      ? count(demand.total - demand.best, t("{n} otra posible, con su motivo", "{n} other possible one, with its reason"), t("{n} otras posibles, con su motivo", "{n} other possible ones, with their reason")) : null,
     demand?.live && demand.setAsideByFit ? count(demand.setAsideByFit, t("{n} apartada porque no encaja (juicio de evaluador)", "{n} set aside as unrelated (evaluator judgment)"), t("{n} apartadas porque no encajan (juicio de evaluador)", "{n} set aside as unrelated (evaluator judgment)")) : null,
     demand?.live && demand.new ? count(demand.new, t("{n} nueva esta semana", "{n} new tender this week"), t("{n} nuevas esta semana", "{n} new tenders this week")) : null,
     potential && !(demand?.live && demand.total) ? count(potential, t("{n} oportunidad potencial", "{n} potential opportunity"), t("{n} oportunidades potenciales", "{n} potential opportunities")) : null,

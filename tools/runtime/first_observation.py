@@ -511,6 +511,7 @@ class FirstObservationRuntime:
         registers: OfficialRegisters | None = None,
         regulation: tuple[RegulationIngestor, RegulationContextRunner] | None = None,
         press_attribution: PressAttribution | None = None,
+        demand_fit: Callable[[datetime], Mapping[str, object]] | None = None,
         notoriety: WikipediaNotoriety | None = None,
         job_boards: JobBoards | None = None,
         buyers: WikidataBuyerLookups | None = None,
@@ -522,6 +523,10 @@ class FirstObservationRuntime:
         self._registers = registers
         self._sector_context = sector_context
         self._press_attribution = press_attribution
+        # Spec 087: the fit of open demand is judged once per UTC day in the background, so
+        # subscribers' reads can put what fits best first even while the daily loop is off.
+        self._demand_fit = demand_fit
+        self._demand_fit_day: str | None = None
         self._economics = economics
         self._geo = geo
         self._press = press
@@ -836,6 +841,17 @@ class FirstObservationRuntime:
         if found:
             view["discoveries"] = [*discoveries, *found]
         return view
+
+    def judge_demand_fit(self) -> int:
+        """Judge the fit of open demand once per UTC day (bounded, memory-shared, spec 087)."""
+        if self._demand_fit is None:
+            return 0
+        now = self._clock.now()
+        if self._demand_fit_day == now.date().isoformat():
+            return 0
+        self._demand_fit_day = now.date().isoformat()
+        result = self._demand_fit(now)
+        return int(str(result.get("pairs") or 0)) if result.get("state") == "DONE" else 0
 
     def judge_press_attribution(self) -> int:
         """Judge queued headline attributions (spec 085); the read path only recalls them."""
@@ -1216,6 +1232,7 @@ class FirstObservationRuntime:
                 self.judge_sector_context,
                 self.judge_regulation,
                 self.judge_press_attribution,
+                self.judge_demand_fit,
                 self.run_marketing_pool,
                 self.purge,
             )
@@ -1710,6 +1727,15 @@ def _headline_judge(values: Mapping[str, str], root: Path) -> HeadlineJudge | No
     return None if factory is None else jev_headline_judge(factory)
 
 
+def _demand_fit(
+    values: Mapping[str, str], root: Path
+) -> Callable[[datetime], Mapping[str, object]] | None:
+    """Spec 087: the daily fit judgment, bounded by AXIGNAL_SEMANTIC_FIT_TOKEN_BUDGET."""
+    from tools.runtime.demand_fit import run_demand_fit
+
+    return lambda now: run_demand_fit(root, values=values, now=now)
+
+
 def _press_attribution(values: Mapping[str, str], root: Path) -> PressAttribution | None:
     """Spec 085: Jev judges whether headlines are about the organization (memory shared)."""
     from tools.runtime.semantic_layer import semantic_cascade_factory_from_env
@@ -1937,6 +1963,9 @@ def build_first_observation(
         press_attribution=None
         if overrides.source_ports is not None or overrides.feeds is not None
         else _press_attribution(values, root),
+        demand_fit=None
+        if overrides.source_ports is not None or overrides.feeds is not None
+        else _demand_fit(values, root),
         awards=index,
         purge_canonical_raw=(
             lambda at: observation_memory.purge_first_observation_content(
