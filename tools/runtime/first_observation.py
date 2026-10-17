@@ -97,6 +97,7 @@ from application.potential_buyers import (
     similar_signals,
     view_signals,
 )
+from application.press.attribution import PressAttribution
 from application.press.mentions import press_discoveries
 from application.regulation import regulation_discoveries
 from application.regulation.sectors import route_of
@@ -499,6 +500,7 @@ class FirstObservationRuntime:
         economics: WikidataEconomics | None = None,
         registers: OfficialRegisters | None = None,
         regulation: tuple[RegulationIngestor, RegulationContextRunner] | None = None,
+        press_attribution: PressAttribution | None = None,
         notoriety: WikipediaNotoriety | None = None,
         job_boards: JobBoards | None = None,
         buyers: WikidataBuyerLookups | None = None,
@@ -509,6 +511,7 @@ class FirstObservationRuntime:
         self._regulation = regulation
         self._registers = registers
         self._sector_context = sector_context
+        self._press_attribution = press_attribution
         self._economics = economics
         self._geo = geo
         self._press = press
@@ -823,6 +826,27 @@ class FirstObservationRuntime:
         if found:
             view["discoveries"] = [*discoveries, *found]
         return view
+
+    def judge_press_attribution(self) -> int:
+        """Judge queued headline attributions (spec 085); the read path only recalls them."""
+        return (
+            0 if self._press_attribution is None else self._press_attribution.run(self._clock.now())
+        )
+
+    def _attribution_for(
+        self, view: Mapping[str, object], host: str | None
+    ) -> Callable[[str], tuple[str, str] | None] | None:
+        if self._press_attribution is None:
+            return None
+        target = view.get("target")
+        name = target.get("name") if isinstance(target, Mapping) else None
+        held = view.get("discoveries")
+        legal = next((str(d.get("statement")) for d in (held if isinstance(held, list) else [])
+                      if isinstance(d, Mapping) and d.get("code") == "LEGAL_NAME_DECLARED"), None)  # fmt: skip
+        activity = next((str(d.get("statement")) for d in (held if isinstance(held, list) else [])
+                         if isinstance(d, Mapping) and d.get("kind") == "ACTIVITY"), None)  # fmt: skip
+        label = str(name or legal or host or "")
+        return None if not label else self._press_attribution.recall(label, host, activity)
 
     def judge_sector_context(self) -> int:
         """Judge queued sector contexts (shared per activity and country per day)."""
@@ -1181,6 +1205,7 @@ class FirstObservationRuntime:
                 self.measure_geo,
                 self.judge_sector_context,
                 self.judge_regulation,
+                self.judge_press_attribution,
                 self.run_marketing_pool,
                 self.purge,
             )
@@ -1482,8 +1507,9 @@ class FirstObservationRuntime:
                 website = target.get("website") if isinstance(target, Mapping) else None
                 host = urlsplit(str(website)).hostname if website else None
                 mentions = press_discoveries(
-                    view, self._press[1], now=self._clock.now(), own_domain=host
-                )
+                    view, self._press[1], now=self._clock.now(), own_domain=host,
+                    attribution=self._attribution_for(view, host),
+                )  # fmt: skip
                 if mentions:
                     held = view.get("discoveries")
                     view["discoveries"] = [*(held if isinstance(held, list) else []), *mentions]
@@ -1672,6 +1698,16 @@ def _headline_judge(values: Mapping[str, str], root: Path) -> HeadlineJudge | No
         values, data_dir=root, token_budget=HEADLINE_JUDGMENT_TOKENS
     )
     return None if factory is None else jev_headline_judge(factory)
+
+
+def _press_attribution(values: Mapping[str, str], root: Path) -> PressAttribution | None:
+    """Spec 085: Jev judges whether headlines are about the organization (memory shared)."""
+    from tools.runtime.semantic_layer import semantic_cascade_factory_from_env
+
+    factory = semantic_cascade_factory_from_env(
+        values, data_dir=root, token_budget=HEADLINE_JUDGMENT_TOKENS
+    )
+    return None if factory is None else PressAttribution(factory)
 
 
 def _sector_context(values: Mapping[str, str], root: Path) -> SectorContextRunner | None:
@@ -1888,6 +1924,9 @@ def build_first_observation(
         regulation=None
         if overrides.source_ports is not None or overrides.feeds is not None
         else _regulation(values, root),
+        press_attribution=None
+        if overrides.source_ports is not None or overrides.feeds is not None
+        else _press_attribution(values, root),
         awards=index,
         purge_canonical_raw=(
             lambda at: observation_memory.purge_first_observation_content(
