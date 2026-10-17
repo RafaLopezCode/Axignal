@@ -1,6 +1,6 @@
 import test, { afterEach } from "node:test";
 import assert from "node:assert/strict";
-import { basisRows, discoveryCopy, observationStateCopy } from "../components/first-observation";
+import { basisRows, discoveryCopy, observationStateCopy, searchRows } from "../components/first-observation";
 import { evidenceUrl, firstObservationSchema, observationStates, pendingOutputSchema, portfolioSchema, subscriberResultSchema, type Discovery } from "../lib/subscriber-contracts";
 import { subscriberProxy } from "../lib/subscriber-server";
 
@@ -143,4 +143,22 @@ test("AI visibility shows share of voice, position, who it names instead and cit
   assert.match(text, /Who it names instead Systemair \(5\) · Soler & Palau \(4\)/);
   const cited = discoveryCopy(discovery("GENERATIVE_VISIBILITY", "AI_CITED_SOURCES", { statement: "clima.example, ranking.example" }), en);
   assert.match(cited.finding, /Websites an AI assistant cites when asked about its activity: clima\.example/);
+});
+
+test("search ranking shows each search, its position, who ranks instead and a Google link (spec 091)", () => {
+  const rows = [
+    { keyword: "humus de lombriz", position: 2, ranksInstead: ["amazon.es", "leroymerlin.es"], googleUrl: "https://www.google.com/search?q=humus+de+lombriz&hl=es&gl=es" },
+    { keyword: "abono orgánico", position: null, ranksInstead: ["amazon.es"], googleUrl: "javascript:alert(1)" },
+  ];
+  const ranked = discovery("SEARCH_VISIBILITY", "SEARCH_RANKS_MEASURED", { statement: "1/2", detail: { averagePosition: 2, rankingInstead: [["amazon.es", 2]], rows } });
+  assert.match(discoveryCopy(ranked, en).finding, /It appears in 1 of 2 searches for its activity/);
+  const text = basisRows(ranked, en, "en").map(([label, value]) => `${label} ${value}`).join(" | ");
+  assert.match(text, /Average position where it appears 2/);
+  assert.match(text, /Websites that appear instead amazon\.es \(2\)/);
+  const shown = searchRows(ranked);
+  assert.equal(shown[0]?.googleUrl, rows[0]?.googleUrl);
+  assert.equal(shown[1]?.position, null);
+  assert.equal(shown[1]?.googleUrl, null);
+  const none = discovery("SEARCH_VISIBILITY", "SEARCH_NOT_RANKED", { statement: "0/3" });
+  assert.match(discoveryCopy(none, en).finding, /does not appear among the top results of 3 searches/);
 });

@@ -37,6 +37,7 @@ PLAYBOOKS: tuple[Playbook, ...] = (
         (
             ("INXIGHT", "presence:AI_NAMES_COMPETITORS_NOT_IT"),
             ("GENERATIVE_VISIBILITY", "AI_NOT_NAMED_FOR_CATEGORY"),
+            ("SEARCH_VISIBILITY", "SEARCH_NOT_RANKED"),
             ("GENERATIVE_VISIBILITY", "AI_DOES_NOT_KNOW_BRAND"),
             ("INXIGHT", "demand:OPEN_DEMAND_OFFER_NOT_DECLARED"),
             ("REPRESENTATION_GAP", "AUDIT:*"),
@@ -69,6 +70,7 @@ PLAYBOOKS: tuple[Playbook, ...] = (
         (
             ("INXIGHT", "presence:AI_NAMES_COMPETITORS_NOT_IT"),
             ("GENERATIVE_VISIBILITY", "AI_NOT_NAMED_FOR_CATEGORY"),
+            ("SEARCH_VISIBILITY", "SEARCH_NOT_RANKED"),
             ("GENERATIVE_VISIBILITY", "AI_DOES_NOT_KNOW_BRAND"),
             ("INXIGHT", "reputation:SECTOR_IN_NEWS_NOT_IT"),
             ("REPRESENTATION_GAP", "AUDIT:*"),

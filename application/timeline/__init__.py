@@ -61,6 +61,31 @@ def _geo_named(ds: list[Discovery], _v: Mapping[str, Any]) -> object:
     return None
 
 
+def _search_ranked_share(ds: list[Discovery], _v: Mapping[str, Any]) -> object:
+    """Share of its activity's searches where it appears in the results read (spec 091)."""
+    for d in _of(ds, "SEARCH_VISIBILITY", "SEARCH_RANKS_MEASURED", "SEARCH_NOT_RANKED"):
+        found = re.match(r"(\d+)/(\d+)", str(d.get("statement") or ""))
+        if found and int(found.group(2)):
+            return round(int(found.group(1)) / int(found.group(2)), 2)
+    return None
+
+
+def _search_instrument(ds: list[Discovery]) -> str | None:
+    """The search instrument and its frozen conditions: other keywords or another engine,
+    country or language is another instrument."""
+    import hashlib
+    import json
+
+    for d in _of(ds, "SEARCH_VISIBILITY", "SEARCH_RANKS_MEASURED", "SEARCH_NOT_RANKED"):
+        detail = _detail(d)
+        instrument = detail.get("instrument")
+        if isinstance(instrument, Mapping):
+            conditions = json.dumps(detail.get("conditions"), sort_keys=True, default=str)
+            digest = hashlib.sha256(conditions.encode("utf-8")).hexdigest()[:12]
+            return f"{instrument.get('name')}:{digest}"
+    return None
+
+
 def _brand_known(ds: list[Discovery], _v: Mapping[str, Any]) -> object:
     if _of(ds, "GENERATIVE_VISIBILITY", "AI_KNOWS_BRAND"):
         return 1
@@ -222,6 +247,8 @@ METRICS: tuple[Metric, ...] = (
            _probe_instrument),
     Metric("presence.ai_knows_brand", "presence", +1, "OBSERVED", _brand_known, 1.0, 0.0,
            _probe_instrument),
+    Metric("presence.search_ranked_share", "presence", +1, "OBSERVED", _search_ranked_share,
+           0.25, 0.0, _search_instrument),
     Metric("presence.audit_attention", "presence", -1, "OBSERVED", _audit_attention,
            instrument=_audit_instrument),
     Metric("presence.audit_passed", "presence", +1, "OBSERVED", _audit_passed, 1.0, 0.0,

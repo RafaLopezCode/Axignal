@@ -12,6 +12,7 @@ type Translate = (es: string, en: string) => string;
 export function metricLabel(key: string, t: Translate): string {
   switch (key) {
     case "presence.ai_named_share": return t("Respuestas de IA que la nombran", "AI answers that name it");
+    case "presence.search_ranked_share": return t("Búsquedas de su actividad en las que aparece", "Searches for its activity where it appears");
     case "presence.ai_knows_brand": return t("La IA conoce la marca", "AI knows the brand");
     case "presence.audit_attention": return t("Comprobaciones de su web por revisar", "Website checks to review");
     case "presence.audit_passed": return t("Comprobaciones de su web superadas", "Website checks passed");
@@ -68,7 +69,7 @@ function formatValue(key: string, value: unknown, locale: string, t: Translate):
   if (value === undefined || value === null) return t("No medido", "Not measured");
   if (Array.isArray(value)) return value.length === 1 ? t("1 elemento", "1 item") : t("{n} elementos", "{n} items").replace("{n}", String(value.length));
   if (typeof value === "number") {
-    if (key === "presence.ai_named_share") return `${Math.round(value * 100)} %`;
+    if (key === "presence.ai_named_share" || key === "presence.search_ranked_share") return `${Math.round(value * 100)} %`;
     if (key === "presence.ai_knows_brand" || key === "activity.hiring_channel") return value ? t("Sí", "Yes") : t("No", "No");
     if (key.endsWith("_ms")) return `${Math.round(value).toLocaleString(locale)} ms`;
     return value.toLocaleString(locale, { maximumFractionDigits: 2 });
@@ -141,7 +142,7 @@ export function EvolutionCompare({ evolution, facet }: { evolution: Evolution; f
             <th scope="row">{metricLabel(row.key, t)} <Trend points={seriesOf(evolution, row.key)}/></th>
             <td>{formatValue(row.key, row.before, locale, t)}</td>
             <td>{formatValue(row.key, row.after, locale, t)}</td>
-            <td><span className="obs-evo-change">{changeLabel(row, t)}{typeof row.delta === "number" && row.delta !== 0 && !["SAME"].includes(row.direction) ? ` (${row.delta > 0 ? "+" : ""}${row.key === "presence.ai_named_share" ? `${Math.round(row.delta * 100)} pp` : row.delta.toLocaleString(locale)})` : ""}</span>
+            <td><span className="obs-evo-change">{changeLabel(row, t)}{typeof row.delta === "number" && row.delta !== 0 && !["SAME"].includes(row.direction) ? ` (${row.delta > 0 ? "+" : ""}${row.key === "presence.ai_named_share" || row.key === "presence.search_ranked_share" ? `${Math.round(row.delta * 100)} pp` : row.delta.toLocaleString(locale)})` : ""}</span>
               {row.added?.length ? <span className="obs-evo-items">+ {row.added.slice(0, 5).map(i => itemLabel(row.key, i, t)).join(" · ")}{row.added.length > 5 ? "…" : ""}</span> : null}
               {row.removed?.length ? <span className="obs-evo-items">− {row.removed.slice(0, 5).map(i => itemLabel(row.key, i, t)).join(" · ")}{row.removed.length > 5 ? "…" : ""}</span> : null}</td>
           </tr>)}</tbody>
