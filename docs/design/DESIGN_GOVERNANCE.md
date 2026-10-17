@@ -48,6 +48,11 @@ The target is: **distinctive, legible, semantic, exploratory, precise,
 memorable, fast, accessible.** The interface should communicate "I am looking
 into a living economic world" without sacrificing usability.
 
+The subscriber workspace (left menu with organization selector and families,
+full-canvas family pages, collapsible AXENT panel, governed motion) follows the
+CTO-accepted [family workspace design base](FAMILY_WORKSPACE_DESIGN_BASE.md),
+including the adaptations it lists before anything ships.
+
 ## shadcn/ui boundary
 
 shadcn/ui may be used as **infrastructure** for commodity interactions. It must
