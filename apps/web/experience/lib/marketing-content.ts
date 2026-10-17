@@ -179,12 +179,12 @@ export const marketingCopy = {
 
 export const familyNames: Readonly<Record<FamilyId, LocalizedText>> = {
   presence: words(
-    "Presencia",
-    "Presence",
-    "Présence",
-    "Präsenz",
-    "Presenza",
-    "Presença",
+    "Visibilidad",
+    "Visibility",
+    "Visibilité",
+    "Sichtbarkeit",
+    "Visibilità",
+    "Visibilidade",
   ),
   reputation: words(
     "Reputación",

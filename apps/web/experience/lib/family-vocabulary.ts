@@ -15,7 +15,7 @@ const c = (es: string, en: string): Copy => ({ es, en });
  */
 export const familyVocabulary: Record<FamilyId, { terms: readonly Copy[]; aliases: readonly string[] }> = {
   presence: {
-    terms: [c("SEO", "SEO"), c("GEO", "GEO"), c("Visibilidad digital", "Online visibility")],
+    terms: [c("SEO", "SEO"), c("GEO", "GEO"), c("Web", "Website")],
     aliases: ["seo", "geo", "posicionamiento", "buscador", "google", "chatgpt", "ia generativa", "generative", "web", "sitio", "website", "visibil", "sichtbar", "referencement", "indexa"],
   },
   reputation: {

@@ -58,7 +58,7 @@ function TrendChart({ facts, glance }: Props) {
         `: ${first.value}% → ${last.value}% (${delta >= 0 ? "+" : ""}${delta} ${t("puntos", "points")})`
       : t("Todavía no hay dos mediciones comparables.", "There are not yet two comparable measurements.");
   return (
-    <Frame id="trend-chart" title={t("Presencia en búsqueda", "Search presence")}>
+    <Frame id="trend-chart" title={t("Visibilidad en buscadores", "Search visibility")}>
       <Headline>{summary}</Headline>
       <svg viewBox="0 0 320 110" className="cg-trend" role="img" aria-label={summary}>
         <defs>
@@ -153,7 +153,7 @@ function AnswerSpaceMatrix({ facts, glance }: Props) {
     NOT_OBSERVED: t("No observado", "Not observed"),
   };
   return (
-    <Frame id="answer-space-matrix" title={t("Presencia en respuestas generativas", "Presence in generative answers")}>
+    <Frame id="answer-space-matrix" title={t("Visibilidad en respuestas generativas", "Visibility in generative answers")}>
       <Headline>
         {t("Aparece en", "Appears in")} {present}/{space.questions.length}{" "}
         {t("preguntas observadas", "observed questions")}
