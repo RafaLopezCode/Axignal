@@ -172,16 +172,23 @@ def evaluate(reading: Mapping[str, Any], truth: Mapping[str, Any]) -> dict[str, 
                 continue
             off = [{"title": str((d.get("detail") or {}).get("title") or d.get("statement"))[:100],
                     "codes": (d.get("detail") or {}).get("codes"),
-                    "classifiedAs": (d.get("detail") or {}).get("classifiedAs")}
+                    "classifiedAs": (d.get("detail") or {}).get("classifiedAs"),
+                    "otherReasons": list((d.get("detail") or {}).get("otherReasons") or [])}
                    for d in items
                    if not any(t in str((d.get("detail") or {}).get("title") or d.get("statement")).casefold()
                               for t in terms)]  # fmt: skip
             # A call said to be mainly about something else (the activity only an additional
             # code) is presented truthfully; one presented as about the activity is a defect.
-            presented = [o for o in off if o["classifiedAs"] != "ADDITIONAL"]
+            # So is one set apart as possibly other work (spec 092): adjacent, or its fit in
+            # doubt. A partial fit still says part of the work is its own: it still counts.
+            labelled = [o for o in off if o["classifiedAs"] == "ADDITIONAL"
+                        or {"ADDITIONAL_CODE", "ADJACENT_FIT", "UNCERTAIN_FIT"} & set(map(str, o["otherReasons"] or []))]  # fmt: skip
+            presented = [o for o in off if o not in labelled]
             verdict(check, "FAIL" if presented else "PASS",
                     {"opportunities": len(items), "unrelated": presented,
-                     "labelledAdditional": len(off) - len(presented)}, "FALSE_POSITIVE")  # fmt: skip
+                     "labelledAdditional": sum(o["classifiedAs"] == "ADDITIONAL" for o in labelled),
+                     "labelledDoubtful": len(labelled) - sum(o["classifiedAs"] == "ADDITIONAL" for o in labelled)},
+                    "FALSE_POSITIVE")  # fmt: skip
     return _report(truth["version"], verdicts)
 
 

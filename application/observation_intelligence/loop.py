@@ -35,6 +35,7 @@ from application.observation_intelligence.findings import (
     ProcurementRecord,
     SourceFindings,
     classified_as,
+    cpv_other_activity,
 )
 from application.observation_intelligence.learning import OperationalLearning
 from application.observation_intelligence.registry import SourceRegistry
@@ -81,7 +82,9 @@ def code_within(narrow: TaxonomyCode, broad: TaxonomyCode) -> bool:
     if narrow.scheme != broad.scheme:
         return False
     if broad.scheme == "CPV":
-        return narrow.code.startswith(broad.code.rstrip("0") or broad.code)
+        return narrow.code.startswith(
+            broad.code.rstrip("0") or broad.code
+        ) and not cpv_other_activity(narrow.code, broad.code)
     return narrow.within(broad)
 
 

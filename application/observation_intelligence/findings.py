@@ -125,6 +125,21 @@ def _cpv_significant(code: str) -> str:
     return code[: max(2, len(code.rstrip("0")))]
 
 
+#: CPV descendants that are another activity than the group they sit in. Asking for the
+#: group never matches them; asking for the code itself still does. Governed data, found by
+#: the self-check: "social research services" (79315000) sits under "market research"
+#: (79310000), and a social-programme notice reached an economic intelligence firm
+#: (axignal.com, 2026-10-17).
+CPV_OTHER_ACTIVITY: dict[str, frozenset[str]] = {
+    "79310000": frozenset({"79315000"}),
+}
+
+
+def cpv_other_activity(narrow: str, broad: str) -> bool:
+    """``narrow`` lies under a descendant of ``broad`` that is another activity."""
+    return any(narrow.startswith(e.rstrip("0")) for e in CPV_OTHER_ACTIVITY.get(broad, ()))
+
+
 def cpv_nature(code: str) -> str:
     """CPV divisions 03-44 and 48 are supplies, 45 is works, the rest are services."""
     division = int(code[:2]) if code[:2].isdigit() else 99
@@ -149,7 +164,7 @@ def classified_as(record: ProcurementRecord, codes: tuple[TaxonomyCode, ...]) ->
         broad = False
         for main in mains:
             for code in cpv:
-                if main.startswith(_cpv_significant(code)):
+                if main.startswith(_cpv_significant(code)) and not cpv_other_activity(main, code):
                     return MAIN
                 if code.startswith(_cpv_significant(main)):
                     # A parent group ("market and economic research") is about the activity;

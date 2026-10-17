@@ -23,7 +23,7 @@ from tests.world_demand.test_live_demand import NOW, OPEN, SCOPES, Store
 
 RESEARCH = {"capabilityId": "market-research", "demandCodes": [["CPV", "79310000"]]}
 FITS = {"survey": ("CORE", 0.9), "foster": ("UNRELATED", 0.9), "stats": ("ADJACENT", 0.8),
-        "doubt": ("UNRELATED", 0.4)}  # fmt: skip
+        "doubt": ("UNRELATED", 0.4), "maybe": ("CORE", 0.4)}  # fmt: skip
 
 
 def _call(rid: str, days_ago: int = 3, cpv: str = "79311000") -> ProcurementRecord:
@@ -85,9 +85,13 @@ def test_unrelated_calls_are_set_aside_listed_and_the_rest_ordered_by_fit() -> N
     ).read([RESEARCH], SCOPES)
     assert live is not None
     shown = [(c["title"], c["fit"]) for c in live.candidates]
-    # CORE first, then not judged (an uncertain judgment is not judged), then ADJACENT.
-    assert shown[0] == ("Servicio survey", "CORE") and shown[-1] == ("Servicio stats", "ADJACENT")
-    assert {t for t, f in shown if f is None} == {"Servicio doubt", "Servicio unjudged"}
+    # CORE first, then not judged, then in doubt (spec 092: an uncertain judgment is neither
+    # its label nor set aside), then ADJACENT.
+    assert shown == [("Servicio survey", "CORE"), ("Servicio unjudged", None),
+                     ("Servicio doubt", "UNCERTAIN"), ("Servicio stats", "ADJACENT")]  # fmt: skip
+    doubt = next(c for c in live.candidates if c["fit"] == "UNCERTAIN")
+    assert doubt["focus"] == "OTHER" and "UNCERTAIN_FIT" in doubt["otherReasons"]  # type: ignore[operator]
+    assert doubt["fitBy"]["leaning"] == "UNRELATED"  # type: ignore[index]
     assert [s["title"] for s in live.set_aside] == ["Servicio foster"] and live.set_aside_total == 1
     assert live.total == 4  # set aside, never counted as an opportunity nor deleted
     view = apply_live_demand(
@@ -158,3 +162,9 @@ def test_the_fit_budget_is_bounded_and_off_without_the_layer(tmp_path) -> None: 
         is None
     )
     assert run_demand_fit(tmp_path, values={}) == {"state": "LAYER_DISABLED"}
+
+
+def test_a_doubtful_judgment_leaning_core_stays_unjudged() -> None:
+    calls = [_call("maybe", 1)]
+    recall = _judged(calls)
+    assert recall(calls[0], "market-research") is None  # never promoted, never demoted

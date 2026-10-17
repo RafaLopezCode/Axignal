@@ -59,9 +59,10 @@ class LiveDemand:
 #: A remembered evaluator judgment of how closely a notice is a capability's work (spec 075):
 #: {"fit", "evaluator", "model", "question"}, or None when there is none to use.
 FitPort = Callable[[ProcurementRecord, str], Mapping[str, str] | None]
-#: Presentation order only: CORE, not judged, PARTIAL, ADJACENT (UNRELATED is set aside).
-_FIT_RANK = {"CORE": 0, "PARTIAL": 2, "ADJACENT": 3}
-_FIT_PREFERENCE = ("CORE", "PARTIAL", "ADJACENT", "UNRELATED")
+#: Presentation order only: CORE, not judged, in doubt or PARTIAL, ADJACENT (UNRELATED is
+#: set aside). A doubtful judgment (spec 092) is unknown, not a label: never set aside.
+_FIT_RANK = {"CORE": 0, "UNCERTAIN": 2, "PARTIAL": 2, "ADJACENT": 3}
+_FIT_PREFERENCE = ("CORE", "UNCERTAIN", "PARTIAL", "ADJACENT", "UNRELATED")
 
 
 def _call_fit(fits: Sequence[Mapping[str, str] | None]) -> Mapping[str, str] | None:
@@ -312,6 +313,8 @@ SECONDARY_ACTIVITY = "SECONDARY_ACTIVITY"
 ADDITIONAL_CODE = "ADDITIONAL_CODE"
 PARTIAL_FIT = "PARTIAL_FIT"
 ADJACENT_FIT = "ADJACENT_FIT"
+#: Judged, but under the confidence threshold and not as its core work (spec 092).
+UNCERTAIN_FIT = "UNCERTAIN_FIT"
 
 
 def focus_reasons(candidate: Mapping[str, object], *, several_activities: bool) -> list[str]:
@@ -329,6 +332,8 @@ def focus_reasons(candidate: Mapping[str, object], *, several_activities: bool) 
         reasons.append(PARTIAL_FIT)
     if candidate.get("fit") == "ADJACENT":
         reasons.append(ADJACENT_FIT)
+    if candidate.get("fit") == "UNCERTAIN":
+        reasons.append(UNCERTAIN_FIT)
     return reasons
 
 

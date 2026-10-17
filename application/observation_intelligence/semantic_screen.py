@@ -214,13 +214,20 @@ class SemanticDemandScreen:
 FIT_LABELS = frozenset({*_FIT_ORDER, "UNRELATED"})
 
 
+#: A fit judged under the confidence threshold and not leaning to CORE: in doubt, never a label.
+UNCERTAIN_FIT = "UNCERTAIN"
+
+
 @dataclass(frozen=True, slots=True)
 class FitRecall:
     """Remembered fit judgments only, never a provider call (spec 075: the read path).
 
     Returns the judged fit of a notice for a capability with who judged it, or None when
-    there is no judgment for this exact state, question version and model, or when the
-    judgment is uncertain under the cascade policy: unknown, never UNRELATED."""
+    there is no judgment for this exact state, question version and model: unknown, never
+    UNRELATED. An uncertain judgment never becomes its label: one leaning to CORE stays
+    unknown; one leaning elsewhere is UNCERTAIN, the call's fit in doubt (spec 092: building
+    maintenance and works calls with a green-area code read PARTIAL or ADJACENT under the
+    confidence threshold, and were shown among the calls that fit best)."""
 
     memory: JudgmentMemoryPort
     #: (evaluator, model) whose judgments are accepted, the System One judge first.
@@ -238,12 +245,16 @@ class FitRecall:
             )
             if answer is None:
                 continue
-            if answer.source is not JudgmentSource.REASONING and self.policy.uncertain(answer):
-                return None
             if answer.top not in FIT_LABELS:
                 return None
+            doubtful = answer.source is not JudgmentSource.REASONING and self.policy.uncertain(
+                answer
+            )
+            if doubtful and answer.top == "CORE":
+                return None
             return {
-                "fit": answer.top,
+                "fit": UNCERTAIN_FIT if doubtful else answer.top,
+                "leaning": answer.top,
                 "evaluator": answer.evaluator,
                 "model": answer.model,
                 "question": f"{FIT.question_id}:{FIT.version}",

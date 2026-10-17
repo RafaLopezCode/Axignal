@@ -4,8 +4,9 @@ Codes say a call may concern a capability; an evaluator's narrow judgment (spec 
 ``tender_capability_fit``: CORE, PARTIAL, ADJACENT, UNRELATED) says how closely its work is
 that capability's. Judgments are world-level (the public notice and the catalog
 capability, nothing about any organization), stored in judgment memory and read by live
-demand without any provider call. Newest calls first, within the run's budget; what is
-not judged today stays unknown and is shown as before.
+demand without any provider call. Within the run's budget, the calls whose codes cannot
+say first (spec 092), newest first; what is not judged today stays unknown and is shown as
+before.
 """
 
 from __future__ import annotations
@@ -17,7 +18,11 @@ from datetime import datetime
 
 from application.observation_intelligence.catalog import CAPABILITY_LEXICON
 from application.observation_intelligence.contracts import TaxonomyCode
-from application.observation_intelligence.findings import ProcurementRecord
+from application.observation_intelligence.findings import (
+    ADDITIONAL,
+    ProcurementRecord,
+    classified_as,
+)
 from application.observation_intelligence.semantic_screen import (
     FIT,
     CascadeRunner,
@@ -43,15 +48,41 @@ def open_pairs(
     *,
     today: str,
 ) -> list[tuple[ProcurementRecord, str]]:
-    """(Open call, capability) pairs the code match produces, newest calls first."""
-    pairs: list[tuple[ProcurementRecord, str]] = []
+    """(Open call, capability) pairs the code match produces, most doubtful first.
+
+    The budget goes where codes cannot decide (spec 092, self-check 2026-10-17: 2,307 of
+    3,271 pairs went unjudged, newest first, while building-maintenance and works calls
+    with a green-area code reached a landscaper unjudged). Then newest first.
+    """
+    pairs: list[tuple[int, ProcurementRecord, str]] = []
     for record in sorted(records, key=lambda r: r.published_at, reverse=True):
         if record.deadline is None or record.deadline[:10] < today:
             continue
         for capability_id, codes in capabilities:
             if any(code_within(c, w) for c in record.demand_codes for w in codes):
-                pairs.append((record, capability_id))
-    return pairs
+                pairs.append((doubt(record, codes), record, capability_id))
+    pairs.sort(key=lambda p: p[0])  # stable: newest first within each level
+    return [(record, capability_id) for _doubt, record, capability_id in pairs]
+
+
+def doubt(record: ProcurementRecord, codes: tuple[TaxonomyCode, ...]) -> int:
+    """How little the codes say about a call being this capability's work (0: least).
+
+    0: no main code says what it is mainly about, or a main code is other work, and it
+       also lists other work: a mixed object (building maintenance with gardens, works
+       with planting);
+    1: no main code, but every code it lists is the capability's;
+    2: its main code is the capability's alone;
+    3: the capability is only an additional code: already presented as such.
+    """
+    classification = classified_as(record, codes)
+    if classification == ADDITIONAL:
+        return 3
+    mixed = any(not any(code_within(c, w) for w in codes) for c in record.demand_codes)
+    other_main = any(not any(code_within(m, w) for w in codes) for m in record.main_codes)
+    if mixed and (classification is None or other_main):
+        return 0
+    return 1 if classification is None else 2
 
 
 @dataclass(frozen=True, slots=True)
