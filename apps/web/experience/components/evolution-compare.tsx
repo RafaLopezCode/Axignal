@@ -51,7 +51,7 @@ export function metricLabel(key: string, t: Translate): string {
 
 function familyLabel(family: FamilyId, t: Translate): string {
   switch (family) {
-    case "presence": return t("Presencia (SEO, GEO y web)", "Presence (SEO, GEO and web)");
+    case "presence": return t("Visibilidad (SEO, GEO y web)", "Visibility (SEO, GEO and web)");
     case "reputation": return t("Reputación", "Reputation");
     case "value": return t("Valor", "Value");
     case "markets": return t("Mercados", "Markets");
