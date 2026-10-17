@@ -11,7 +11,7 @@ import { auditCopy, auditImpact } from "./representation-audit";
 import { causeCopy, dimensionCopy, proposalCopy, stateCopy } from "@/components/public-understanding";
 import type { Discovery, FirstObservation, PublicUnderstanding } from "./subscriber-contracts";
 import type { RuntimeProjection } from "./runtime-projection";
-import { facetOfDiscovery, facetOfOpportunity, type Channel } from "./observation-families";
+import { FAMILY_ORDER, facetOfDiscovery, facetOfOpportunity, type Channel } from "./observation-families";
 import { runtimeText } from "./runtime-text";
 import type { FamilyId } from "./projection";
 
@@ -324,6 +324,58 @@ export function weekHighlights(insights: Insight[], now: Date, limit = 3): Insig
       || new Date(b.observedAt!).getTime() - new Date(a.observedAt!).getTime());
   const firsts = recent.filter((item, index) => recent.findIndex(x => x.news === item.news) === index);
   return [...firsts, ...recent.filter(item => !firsts.includes(item))].slice(0, limit);
+}
+
+/**
+ * The value of each family at a glance (spec 093): for every family, the one finding worth
+ * reading first, chosen by a fixed, visible order (crossings, then the family's most telling
+ * measurements and facts) and never generated nor scored. A family with nothing observed says
+ * what is not known yet, or that nothing has been observed; it never borrows another's value.
+ */
+const FAMILY_VALUE_ORDER: Record<FamilyId, string[]> = {
+  presence: ["INXIGHT", "CHANGE", "GENERATIVE_VISIBILITY:AI_NOT_NAMED_FOR_CATEGORY", "GENERATIVE_VISIBILITY:AI_NAMED_FOR_CATEGORY",
+    "SEARCH_VISIBILITY:SEARCH_NOT_RANKED", "SEARCH_VISIBILITY:SEARCH_RANKS_MEASURED", "GENERATIVE_VISIBILITY:AI_DOES_NOT_KNOW_BRAND",
+    "GENERATIVE_VISIBILITY:AI_KNOWS_BRAND", "REPRESENTATION_GAP:OFFER_NOT_MACHINE_READABLE", "REPRESENTATION_GAP", "WEB_REPRESENTATION",
+    "GENERATIVE_VISIBILITY", "LANGUAGES", "PUBLIC_PRESENCE"],
+  reputation: ["INXIGHT", "CHANGE", "MENTION:PRESS_MENTION", "RATING", "MENTION:WIKIPEDIA_NOTORIETY", "MENTION"],
+  value: ["INXIGHT", "CHANGE", "ACTIVITY", "CREDENTIAL"],
+  markets: ["INXIGHT", "CHANGE", "DECLARED_LOCATION:GROUP_ENTITIES_IN_COUNTRIES", "DECLARED_SERVICE_AREA", "DECLARED_LOCATION"],
+  relationships: ["INXIGHT", "CHANGE", "RELATIONSHIP:CLIENT_DECLARED", "COMPETITION", "RELATIONSHIP:GROUP_SUBSIDIARIES",
+    "RELATIONSHIP:GROUP_PARENT", "RELATIONSHIP:PARTNER_DECLARED", "RELATIONSHIP:TECHNOLOGY_SUPPLIER_OBSERVED", "RELATIONSHIP"],
+  demand: ["INXIGHT", "CHANGE", "DEMAND:POTENTIAL_DEMAND", "DEMAND:RECURRING_PUBLIC_BUYER", "DEMAND:POTENTIAL_BUYER", "DEMAND"],
+  activity: ["INXIGHT", "CHANGE", "OPERATING_SIGNAL:JOB_POSTINGS_PUBLISHED", "MENTION:OWN_PUBLICATION", "MENTION:PRESS_RELEASE", "OPERATING_SIGNAL"],
+  economics: ["INXIGHT", "CHANGE", "ECONOMIC_FACT:REGISTER", "ECONOMIC_FACT"],
+  organization: ["INXIGHT", "CHANGE", "IDENTITY_HINT:IDENTITY_CORROBORATED", "IDENTITY_HINT:LEGAL_NAME_DECLARED", "IDENTITY_HINT"],
+  context: ["INXIGHT", "CHANGE", "CONTEXT_SIGNAL:REGULATION", "CONTEXT_SIGNAL"],
+};
+
+export type FamilyValue = {
+  family: FamilyId;
+  /** The finding to read first; null when the family has nothing observed yet. */
+  pick: Insight | null;
+  /** What is not known yet in the family, when nothing better is observed. */
+  unknown: Insight | null;
+  /** Findings of the family (a real count, never a score). */
+  findings: number;
+};
+
+function rankIn(order: string[], id: string): number {
+  const [kind, ...rest] = id.split(":");
+  const code = rest.slice(0, -1).join(":");
+  const at = order.findIndex(p => p === kind || p === `${kind}:${code}` || (p.includes(":") && `${kind}:${code}`.startsWith(`${p}:`)));
+  return at < 0 ? order.length : at;
+}
+
+export function familyValue(insights: Insight[]): FamilyValue[] {
+  return FAMILY_ORDER.map(family => {
+    const own = insights.filter(i => i.family === family && i.group !== "otherDemand");
+    const known = own.filter(i => i.nature !== "UNKNOWN" && i.nature !== "UNRESOLVED");
+    const order = FAMILY_VALUE_ORDER[family];
+    const pick = [...known].sort((a, b) => rankIn(order, a.id) - rankIn(order, b.id)
+      || Number(b.lane === "matters") - Number(a.lane === "matters")
+      || new Date(b.observedAt ?? 0).getTime() - new Date(a.observedAt ?? 0).getTime())[0] ?? null;
+    return { family, pick, unknown: pick ? null : own.find(i => i.nature === "UNKNOWN" || i.nature === "UNRESOLVED") ?? null, findings: known.length };
+  });
 }
 
 /** What each kind of weekly news is, in the reader's words. */
