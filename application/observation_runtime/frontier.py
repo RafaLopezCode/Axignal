@@ -44,6 +44,10 @@ class LeadStatus(StrEnum):
     BLOCKED = "BLOCKED"
 
 
+#: Blocks caused by AXIGNAL's own context, not by the world: retried on the next daily tick.
+CONTEXT_BLOCKS = frozenset({"NO_OBSERVED_CAPABILITY_CONTEXT", "AUTHORIZATION_REVOKED"})
+
+
 class LeadOutcome(StrEnum):
     MATERIAL_CHANGE = "MATERIAL_CHANGE"
     UNCHANGED = "UNCHANGED"
@@ -116,6 +120,10 @@ class ResearchLead:
         return LEAD_CAPABILITY[self.kind]
 
     def due(self, now: datetime) -> bool:
+        # A block on AXIGNAL's own context is due on every tick, including leads parked for
+        # a month before this rule existed (biocultor.com canary, 2026-10-17).
+        if self.status is LeadStatus.BLOCKED and self.blocked_reason in CONTEXT_BLOCKS:
+            return True
         return self.next_due_at <= now
 
     def merged_with(self, other: ResearchLead) -> ResearchLead:
