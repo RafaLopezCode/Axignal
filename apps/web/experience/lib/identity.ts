@@ -15,3 +15,12 @@ export function websiteOf(label: string, sourceUrl: string | null | undefined): 
   const text = label.trim().toLowerCase();
   return /^(https?:\/\/)?[\w-]+(\.[\w-]+)+\/?$/.test(text) ? text.replace(/^https?:\/\//, "").replace(/\/$/, "").replace(/^www\./, "") : null;
 }
+
+
+/** Prefix of a web-anchored subject's id (domain.identity.WEB_SUBJECT_PREFIX, ADR-0087 amendment). */
+export const WEB_SUBJECT_PREFIX = "org:web:";
+
+/** A subject identified by its own website, not verified by any registry. */
+export function isWebSubject(organizationId: string | null | undefined): boolean {
+  return typeof organizationId === "string" && organizationId.startsWith(WEB_SUBJECT_PREFIX);
+}

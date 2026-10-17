@@ -7,6 +7,7 @@
  * beside the finding it explains, never on another page. Every statement is the runtime's
  * own, worded by fixed copy (lib/observatory.ts); nothing here creates or upgrades truth.
  */
+import { isWebSubject } from "@/lib/identity";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { createPortal, flushSync } from "react-dom";
 import Link from "next/link";
@@ -592,6 +593,9 @@ function OrganizationView(props: OrgProps) {
   };
   const observing = item.observation && OBSERVING.has(item.observation.state);
   const identified = Boolean(item.organizationId);
+  // A web-anchored subject (org:web:…, ADR-0087 amendment) is its website: identified for
+  // observation, never "verified by registry" (found on the biocultor.com canary, 2026-10-17).
+  const anchored = isWebSubject(item.organizationId);
   const observedAt = projection?.cognition?.asOf ?? firstObservation?.observedAt ?? item.observation?.observedAt ?? null;
   const tabs: Array<[View, string]> = [["summary", t("Resumen", "Summary")], ["explore", t("Explorar", "Explore")], ["evolution", t("Evolución", "Evolution")], ["evidence", t("Evidencias", "Evidence")]];
   const evidenceOpen = Boolean(open) || view === "evidence";
@@ -609,7 +613,7 @@ function OrganizationView(props: OrgProps) {
           <div>
             <h1>{name}</h1>
             <p className="obs-org-meta">
-              <span className={`obs-chip${identified ? " obs-chip-ok" : ""}`}>{identified ? t("Identidad verificada por registro", "Identity verified by registry") : t("Identidad por resolver", "Identity unresolved")}</span>
+              <span className={`obs-chip${identified && !anchored ? " obs-chip-ok" : ""}`} title={anchored ? t("Ningún registro (como GLEIF) la verifica aún; la observamos a través de su propia web.", "No registry (such as GLEIF) verifies it yet; we observe it through its own website.") : undefined}>{anchored ? t("Identidad anclada a su web", "Identity anchored to its website") : identified ? t("Identidad verificada por registro", "Identity verified by registry") : t("Identidad por resolver", "Identity unresolved")}</span>
               {observedAt && <span>{t("Observada", "Observed")} <time dateTime={observedAt}>{formatDate(observedAt, locale, true)}</time></span>}
               {props.projection?.cognition && <span>{props.projection.cognition.sources.length} {t("fuentes", "sources")}</span>}
             </p>
