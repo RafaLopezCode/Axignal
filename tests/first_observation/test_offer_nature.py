@@ -217,7 +217,10 @@ def test_an_unclear_offer_nature_is_named_for_presence_and_mixed_is_not() -> Non
         outcome = cascade.run([plan.batch], now=NOW)[plan.batch.batch_id]
         return interpret_activity(plan, outcome, [page], model="jev-1.13.0")
 
-    assert read(("MIXED", 0.59)).judged["offerNatureUnclear"] == "UNCERTAIN"
+    # A split answer reads a diversified organization, not an unclear website (self-check
+    # 2026-10-17: Ferrovial and Iberdrola were wrongly told their website was unclear).
+    assert "offerNatureUnclear" not in read(("MIXED", 0.59)).judged
+    assert "offerNatureUnclear" not in read(("UNCLEAR", 0.5)).judged
     assert read(("UNCLEAR", 0.9)).judged["offerNatureUnclear"] == "UNCLEAR"
     assert "offerNatureUnclear" not in read(("MIXED", 0.9)).judged  # it does both, clearly
     assert "offerNatureUnclear" not in read(("SUPPLIES", 0.9)).judged

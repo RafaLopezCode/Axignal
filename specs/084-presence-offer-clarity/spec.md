@@ -31,3 +31,6 @@ MASTER §54: Digital Representation Intelligence is observation, not SEO executi
   - an unclear site gets the gap, a parked one does not;
   - a noindex contact page leaves the check at PASS, and that test fails on main.
 - **Web:** the copy is shown in the reader's language.
+
+## Amendment (2026-10-17, measured after deploy)
+The first deploy told Ferrovial and Iberdrola that their websites were unclear, because the evaluator split between MIXED and one nature. A split answer reads a diversified organization; it does not show an unclear website. The gap now fires only on a confident UNCLEAR. Biocultor, which does both and says so (CTO), no longer receives it either.

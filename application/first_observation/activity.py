@@ -545,11 +545,12 @@ def interpret_activity(
     cpv = _usable(outcome, CPV_DIVISION.question_id)
     naics = _usable(outcome, NAICS_SECTOR.question_id)
     answered_nature = _usable(outcome, OFFER_NATURE.question_id)
-    asked_nature = outcome.judgments.get(OFFER_NATURE.question_id)
-    if asked_nature is not None and (answered_nature is None or answered_nature[0] == "UNCLEAR"):
-        # Spec 084: asked, and its pages did not make it clear whether it mainly sells
-        # goods, performs services or carries out works (found on biocultor.com).
-        judged["offerNatureUnclear"] = "UNCLEAR" if answered_nature else "UNCERTAIN"
+    if answered_nature is not None and answered_nature[0] == "UNCLEAR":
+        # Spec 084: the evaluator is confident its pages do not say whether it mainly sells
+        # goods, performs services or carries out works. A split answer is not that: it
+        # reads a diversified organization (Ferrovial, Iberdrola and Biocultor were split
+        # between MIXED and one nature on 2026-10-17), never an unclear website.
+        judged["offerNatureUnclear"] = "UNCLEAR"
     nature = answered_nature[0] if answered_nature and answered_nature[0] in _NATURE_WORDS else None
     if nature is not None:
         judged["offerNature"] = nature

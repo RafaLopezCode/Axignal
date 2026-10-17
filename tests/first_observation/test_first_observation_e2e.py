@@ -20,6 +20,7 @@ from tests.first_observation.harness import (
     SAAS_IE,
     SCHOOL_AR,
     SOLAR_ES,
+    VAGUE,
     WORLDWIDE_ES,
     World,
     build,
@@ -457,7 +458,7 @@ def test_a_site_whose_offer_is_unclear_gets_a_presence_gap_and_a_parked_one_does
     # Spec 084: the controlled evaluator cannot tell what kind of offer these sites make.
     world = World()
     facade = build(tmp_path, world)
-    school, _ = _attend(facade, tmp_path, "subject:unclear", SCHOOL_AR)
+    school, _ = _attend(facade, tmp_path, "subject:unclear", VAGUE)
     parked, _ = _attend(facade, tmp_path, "subject:parked", PLACEHOLDER)
     runtime(facade).drain()
     gaps = {g["code"]: g for g in discoveries(_view(facade, school, _pending_id(facade, school)),

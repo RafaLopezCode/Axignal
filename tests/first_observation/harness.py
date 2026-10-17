@@ -62,6 +62,8 @@ KNOWN = "https://www.solartec.example.com/"
 FORBIDDEN = "https://private-robots.example.com/"
 # G. Serves "Worldwide"; only its contact page states where it is (axignal.com, 2026-10-17).
 WORLDWIDE_ES = "https://worldwide-dev.example.com/"
+# H. An operating site that never says what it sells or does (spec 084).
+VAGUE = "https://vague.example.com/"
 
 PAGES: dict[str, str] = {
     SOLAR_ES: (
@@ -131,6 +133,11 @@ PAGES: dict[str, str] = {
                "areaServed": "Worldwide"})
         + "</head><body><h1>We build custom software development projects for companies."
         "</h1><a href='/contact'>Contact</a></body></html>"
+    ),
+    VAGUE: (
+        "<html lang='en'><head><title>Welcome | Vague</title></head><body><h1>We are a "
+        "passionate team.</h1><p>Excellence, passion and commitment since 2010.</p>"
+        "</body></html>"
     ),
     WORLDWIDE_ES + "contact": (
         "<html><head><title>Contact</title><meta name='robots' content='noindex, follow'></head>"
@@ -258,6 +265,8 @@ def jev_rule(batch: SemanticBatch, question: SemanticQuestion) -> tuple[str, flo
             if place in question.labels:
                 return (place, 0.9)
         return ("NONE_STATED", 0.7)
+    if qid == "fo_offer_nature":
+        return ("SERVICES", 0.9) if teaching else ("UNCLEAR", 0.9)
     return (question.labels[-1], 0.5)
 
 
