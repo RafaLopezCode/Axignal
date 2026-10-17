@@ -168,13 +168,18 @@ steps. Use the deployed SHA image; never move `current` with these commands.
    docker run --rm --network none --user 0:33 --read-only --tmpfs /tmp:mode=1777 \
      --cap-drop ALL --cap-add CHOWN --security-opt no-new-privileges:true \
      -e AXIGNAL_ENV=production \
-     --mount "type=bind,src=$data,dst=/data,readonly" \
+     --mount "type=bind,src=$data,dst=/var/lib/axignal/runtime,readonly" \
      --mount "type=bind,src=$config,dst=/config" \
      --mount "type=bind,src=$settings,dst=/run/subscriber.conf,readonly" \
      --entrypoint python "$image" -m tools.runtime.observation_enrollment reconcile \
-     --data-dir /data --config-dir /config --configuration-file /run/subscriber.conf
+     --data-dir /var/lib/axignal/runtime --config-dir /config --configuration-file /run/subscriber.conf
    ```
 
+   The data directory is mounted at the same path the runtime uses
+   (`/var/lib/axignal/runtime`): files the subscriber configuration names inside it, such
+   as the website content-rights file (`AXIGNAL_FIRST_OBSERVATION_CONTENT_RIGHTS_FILE`),
+   must resolve here exactly as in the runtime, or every seed reads as having no rights
+   (found on the biocultor.com canary, 2026-10-17).
    The existing config parent must already exist for Docker's bind mount. Do not
    create enrollment/attention by hand. `materialization.json` only verifies the
    disposable snapshot; it grants no authority.
@@ -183,11 +188,11 @@ steps. Use the deployed SHA image; never move `current` with these commands.
    ```sh
    docker run --rm --network none --user 33:33 --read-only --tmpfs /tmp:mode=1777 \
      --cap-drop ALL --security-opt no-new-privileges:true -e AXIGNAL_ENV=production \
-     --mount "type=bind,src=$data,dst=/data,readonly" \
+     --mount "type=bind,src=$data,dst=/var/lib/axignal/runtime,readonly" \
      --mount "type=bind,src=$config,dst=/config,readonly" \
      --mount "type=bind,src=$settings,dst=/run/subscriber.conf,readonly" \
      --entrypoint python "$image" -m tools.runtime.observation_enrollment check \
-     --data-dir /data --config-dir /config --configuration-file /run/subscriber.conf
+     --data-dir /var/lib/axignal/runtime --config-dir /config --configuration-file /run/subscriber.conf
    ```
 
    `NO_ELIGIBLE_FOCUS` is the correct no-work result. `ATTENTION_NOT_READY` requires
@@ -202,11 +207,11 @@ steps. Use the deployed SHA image; never move `current` with these commands.
    docker run --rm --network axignal_prod_internal --user 33:33 --read-only \
      --tmpfs /tmp:mode=1777 --cap-drop ALL --security-opt no-new-privileges:true \
      --memory 512m --cpus 1 -e AXIGNAL_ENV=production -e "AXIGNAL_CODE_SHA=${image#axignal-runtime:}" \
-     --mount "type=bind,src=$data,dst=/data" \
+     --mount "type=bind,src=$data,dst=/var/lib/axignal/runtime" \
      --mount "type=bind,src=$config,dst=/config,readonly" \
      --mount "type=bind,src=$settings,dst=/run/subscriber.conf,readonly" \
      --entrypoint python "$image" -m tools.runtime.observation_enrollment first-proof \
-     --data-dir /data --config-dir /config --configuration-file /run/subscriber.conf
+     --data-dir /var/lib/axignal/runtime --config-dir /config --configuration-file /run/subscriber.conf
    ```
 
    No model/payment/OIDC secret is mounted. Inspect the redacted tick summary,
