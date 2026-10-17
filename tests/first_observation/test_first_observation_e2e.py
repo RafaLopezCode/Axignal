@@ -20,6 +20,7 @@ from tests.first_observation.harness import (
     SAAS_IE,
     SCHOOL_AR,
     SOLAR_ES,
+    WORLDWIDE_ES,
     World,
     build,
     codes,
@@ -424,3 +425,20 @@ def test_business_signals_on_a_site_override_a_not_operating_judgment() -> None:
     assert _business_signals([page('<a href="https://www.linkedin.com/company/acme">LinkedIn</a>')])
     assert _business_signals([page('<a href="mailto:info@acme.example">Contact</a>')])
     assert not _business_signals([page("<h1>Coming soon</h1>")])
+
+
+def test_a_served_area_still_reads_the_page_that_says_where_it_is(tmp_path: Path) -> None:
+    # Self-check 2026-10-17: axignal.com declares "Worldwide" and states Spain only on its
+    # contact page, which was never read because a served area counted as a known location.
+    world = World()
+    facade = build(tmp_path, world)
+    token, _ = _attend(facade, tmp_path, "subject:worldwide", WORLDWIDE_ES)
+    runtime(facade).drain()
+    view = _view(facade, token, _pending_id(facade, token))
+    assert WORLDWIDE_ES + "contact" in world.sites.requests
+    stated = [
+        d for d in discoveries(view, "DECLARED_LOCATION") if d["code"] == "LOCATION_STATED_IN_TEXT"
+    ]
+    assert [d["statement"] for d in stated] == ["EU/ES"] and stated[0][
+        "epistemicState"
+    ] == "POTENTIAL"

@@ -499,7 +499,9 @@ class FirstObservationService:
         else:
             needs = policy.needs(
                 activity_known=bool(deterministic_activity([home])),
-                location_known=bool(declared_scopes([home]) or home.areas_served),
+                # A served area ("Worldwide") is where it sells, not where it is: the
+                # contact page that states where it is is still read (axignal.com, 2026-10-17).
+                location_known=bool(declared_scopes([home])),
             )
             if policy.public_understanding:
                 needs = tuple(dict.fromkeys(("ACTIVITY", "ABOUT", *needs)))
