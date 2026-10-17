@@ -121,3 +121,17 @@ unresolved identity.
   CLAIM ≠ WRITE and ADR-0087 §4); running First Observation inside the HTTP request
   (latency, retries, abuse); waiting for the daily tick (a day of silence for a new
   subscriber); a hand-maintained attention JSON (operator knowledge in the product path).
+
+## Amendment (Proposed, 2026-10-17): verified first-party consent (spec 086)
+
+- **Status:** Proposed. It takes effect only when the CTO accepts it.
+- **Change to §11:** "registered by the operator; none exists by default" becomes "registered by the operator, **or by the website's controller through verified first-party consent (spec 086)**; none exists by default".
+- **Conditions:**
+  - The controller must prove control of the host (a DNS TXT record, a homepage meta tag or a `.well-known` file, each with a single-use tenant-bound token).
+  - The controller accepts a versioned consent with evaluator input as a separate choice.
+  - The proof is re-verified every 90 days, and revocation is immediate.
+  - An operator `PROHIBITED` or `INACCESSIBLE` decision always overrides a consent.
+- **Unchanged:**
+  - Every other guarantee of §11: the decision is re-taken at every use, lost rights purge before any reuse, and seeds carry rights and retention references.
+  - Identity: consent never verifies identity and never mutates canonical truth.
+  - Third-party websites.
