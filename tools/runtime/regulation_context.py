@@ -15,6 +15,7 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
+from application.context.headline_judgment import REGULATION, HeadlineJudge
 from application.context.sector import sector_keywords, sector_label
 from application.regulation import (
     INSTRUCTION,
@@ -33,14 +34,17 @@ MAX_PER_DAY = 60
 class RegulationContextRunner:
     def __init__(
         self,
-        complete: Callable[[CognitiveJob], Any],
-        model: str,
+        complete: Callable[[CognitiveJob], Any] | None,
+        model: str | None,
         index: SqliteRegulationIndex,
         database_path: str | Path,
         *,
         clock: Callable[[], datetime] = lambda: datetime.now(UTC),
         max_per_day: int = MAX_PER_DAY,
+        judge: HeadlineJudge | None = None,
     ) -> None:
+        # Spec 082: Jev judges each entry when configured; the assistant is the fallback.
+        self._judge = judge
         self._complete = complete
         self._model = model
         self.index = index
@@ -106,7 +110,20 @@ class RegulationContextRunner:
                 language=str(row["language"] or "en"), limit=MAX_CANDIDATES,
             )  # fmt: skip
             relevant: list[Mapping[str, object]] = []
-            if candidates:
+            instrument: dict[str, object] = {"model": self._model, "router": "cognition/router"}
+            verdict = None
+            if candidates and self._judge is not None:
+                try:
+                    verdict = self._judge(str(sector_label(capability_id)),
+                                          [str(c["title"]) for c in candidates], REGULATION, now)  # fmt: skip
+                except Exception:
+                    verdict = None  # unavailable: the assistant may still answer
+            if verdict is not None:
+                instrument = dict(verdict.instrument)
+                relevant += [candidates[index] for index in verdict.kept]
+            elif candidates:
+                if self._complete is None:
+                    continue  # nothing can judge now: stays queued for a later tick
                 try:
                     result = self._complete(
                         CognitiveJob(
@@ -135,7 +152,7 @@ class RegulationContextRunner:
                 "relevant": relevant,
                 "candidates": len(candidates),
                 "judgedAt": now.isoformat(),
-                "instrument": {"model": self._model, "router": "cognition/router"},
+                "instrument": instrument,
             }
             with self._connect() as db:
                 db.execute(
