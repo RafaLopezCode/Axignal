@@ -103,7 +103,10 @@ class Operator:
 
 @dataclass(frozen=True, slots=True)
 class Limits:
-    studies_per_day: int = 12
+    #: Studies cost cents (Jev, GEO probe) and 40% of registry domains no longer load
+    #: (pool dry run, 2026-10-17): a larger daily budget keeps drafts flowing; sends stay
+    #: capped and approval-gated.
+    studies_per_day: int = 40
     sends_per_day: int = 20
     min_backlog: int = 40
     rediscover_after: timedelta = timedelta(days=30)
@@ -357,7 +360,13 @@ class MarketingPoolRunner:
         if state in FAILED:
             return self.store.move(domain, "STUDY_FAILED", now=now, actor="marketing-pool",
                                    reason=str(state))  # fmt: skip
-        chosen, words = best_persona(site_text(view), prospect.get("persona"))
+        held = view.get("discoveries")
+        activities = tuple(
+            str(d.get("code"))
+            for d in (held if isinstance(held, list) else [])
+            if isinstance(d, Mapping) and d.get("kind") == "ACTIVITY"
+        )
+        chosen, words = best_persona(site_text(view), prospect.get("persona"), activities)
         if chosen is None:
             return self.store.move(domain, "NOT_QUALIFIED", now=now, actor="marketing-pool",
                                    reason="NOT_A_TARGET_PERSONA")  # fmt: skip
@@ -786,7 +795,7 @@ def build_marketing_pool(
         return None  # a commercial message must identify its sender and postal address
     try:
         limits = Limits(
-            studies_per_day=int(values.get("AXIGNAL_MARKETING_POOL_STUDIES_PER_DAY", "12")),
+            studies_per_day=int(values.get("AXIGNAL_MARKETING_POOL_STUDIES_PER_DAY", "40")),
             sends_per_day=int(values.get("AXIGNAL_MARKETING_POOL_SENDS_PER_DAY", "20")),
         )
     except ValueError:
