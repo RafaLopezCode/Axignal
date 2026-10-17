@@ -397,6 +397,10 @@ export function discoveryCopy(d: Discovery, t: Translate, locale = "en"): { find
     const copy = auditCopy(d.code.slice(6), t, d.detail.value);
     return { finding: copy.title, why: copy.why };
   }
+  if (d.kind === "REPRESENTATION_GAP" && d.code === "OFFER_NATURE_UNCLEAR") return {
+    finding: t("Su web no deja claro si vende productos, presta servicios o hace obras.", "Its website does not make clear whether it sells products, performs services or carries out works."),
+    why: t("Visitantes, buscadores y asistentes de IA podrían leerla como otro tipo de negocio y relacionarla con demanda que no es suya. Es una lectura de su propio texto, no un hecho.", "Visitors, search engines and AI assistants may read it as another kind of business and connect it with demand that is not its own. It is a reading of its own text, not a fact."),
+  };
   if (d.kind === "REPRESENTATION_GAP") return d.code === "HOMEPAGE_NOINDEX"
     ? { finding: t("Su página principal pide no aparecer en buscadores.", "Its homepage asks search engines not to index it."), why: t("Los buscadores podrían no representar la web mientras siga así. No mide posiciones.", "Search engines may not represent the site while it stays so. It does not measure rankings.") }
     : { finding: t("En las páginas leídas, su oferta aparece en el texto pero no en datos estructurados.", "On the pages read, its offer appears in the text but not as structured data."), why: t("Las superficies que leen datos estructurados podrían no relacionarla con lo que ofrece. Es una brecha posible, no una causa medida.", "Surfaces that read structured data may not connect it with what it offers. It is a possible gap, not a measured cause.") };

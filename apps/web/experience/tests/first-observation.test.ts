@@ -127,3 +127,10 @@ test("a call's published size is shown as facts, and nothing published shows not
   const unknown = basisRows(discovery("DEMAND", "POTENTIAL_DEMAND", { detail: { scale: { estimatedValue: null, lots: null, durationMonths: null } } }), en, "en");
   assert.ok(!unknown.some(([label]) => /value|Lots|duration/.test(label)));
 });
+
+test("an unclear offer is a representation gap in the reader's language (spec 084)", () => {
+  const gap = discovery("REPRESENTATION_GAP", "OFFER_NATURE_UNCLEAR", { detail: { judgment: "UNCERTAIN" } });
+  const copy = discoveryCopy(gap, en);
+  assert.match(copy.finding, /does not make clear whether it sells products, performs services or carries out works/);
+  assert.match(copy.why, /a reading of its own text, not a fact/);
+});

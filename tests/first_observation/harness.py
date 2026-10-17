@@ -133,7 +133,8 @@ PAGES: dict[str, str] = {
         "</h1><a href='/contact'>Contact</a></body></html>"
     ),
     WORLDWIDE_ES + "contact": (
-        "<html><head><title>Contact</title></head><body><p>Controller: Worldwide Dev · Spain."
+        "<html><head><title>Contact</title><meta name='robots' content='noindex, follow'></head>"
+        "<body><p>Controller: Worldwide Dev · Spain."
         "</p></body></html>"
     ),
 }  # fmt: skip

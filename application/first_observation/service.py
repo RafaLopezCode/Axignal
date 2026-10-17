@@ -887,7 +887,13 @@ class FirstObservationService:
             )
         discoveries += [discovery for _code, discovery in mapped]
         discoveries += [self._activity(f) for f in findings]
-        discoveries += self._web_representation(reading, findings, ledger)
+        discoveries += self._web_representation(
+            reading, findings, ledger,
+            # A parked or placeholder site has no offer to be unclear about.
+            unclear_offer=None
+            if semantic is None or semantic.operating is False
+            else semantic.judged.get("offerNatureUnclear"),
+        )  # fmt: skip
         discoveries += identity
         demand = self._demand(
             target, subject, capabilities, scopes, pages, observation_ids, now, ledger,
@@ -1141,7 +1147,11 @@ class FirstObservationService:
         return extras
 
     def _web_representation(
-        self, reading: SiteReading, findings: Sequence[ActivityFinding], ledger: RunLedger
+        self,
+        reading: SiteReading,
+        findings: Sequence[ActivityFinding],
+        ledger: RunLedger,
+        unclear_offer: str | None = None,
     ) -> list[Discovery]:
         """Public web representation as measured by this instrument: checks, not a score.
 
@@ -1228,6 +1238,22 @@ class FirstObservationService:
                     "connect this organization to what it offers. Not a measured ranking.",
                 )
             )
+        if unclear_offer is not None:
+            # Spec 084 (Presence): what the site communicates vs what it is. Judged from its
+            # own public text; POTENTIAL and derived, never a fact about the organization.
+            out.append(
+                Discovery(
+                    DiscoveryKind.REPRESENTATION_GAP, "OFFER_NATURE_UNCLEAR",
+                    "Its website does not make clear whether it mainly sells products, "
+                    "performs services or carries out works.",
+                    XignalEpistemicState.POTENTIAL.value, home.url,
+                    home.description or home.title or None, home.observed_at,
+                    {"whyItMatters": "Visitors, search engines and AI assistants may read it as "
+                     "another kind of business and connect it with demand that is not its own.",
+                     "basis": ["ACTIVITY", "WEB_REPRESENTATION"], "notCausal": True,
+                     "method": "SEMANTIC_JUDGMENT", "judgment": unclear_offer},
+                )
+            )  # fmt: skip
         covered = {"NO_NOINDEX_ON_READ_PAGES", "OFFER_DECLARED"}  # stated by the gaps above
         for check in audit.attention():
             if check.check_id in covered:

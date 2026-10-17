@@ -273,6 +273,9 @@ function discoveryInsight(d: Discovery, index: number, t: Translate, locale: str
         ? [t("AXIGNAL lo declara abierto en lugar de suponerlo.", "AXIGNAL declares it open instead of assuming it.")]
         : [],
     proposal: d.kind === "REPRESENTATION_GAP" && d.code.startsWith("AUDIT:") ? auditCopy(d.code.slice(6), t, d.detail.value).action
+      : d.kind === "REPRESENTATION_GAP" && d.code === "OFFER_NATURE_UNCLEAR"
+      ? t("Di en el título y la primera frase qué vendes o qué haces, y presenta aparte cualquier servicio secundario. Vuelve a observar después para comprobarlo.",
+        "Say in the title and first sentence what you sell or do, and present any secondary service separately. Observe again afterwards to check.")
       : d.kind === "REPRESENTATION_GAP" && d.code !== "HOMEPAGE_NOINDEX"
       ? t("Si quieres que las máquinas relacionen tu oferta, decláralo también en datos estructurados (schema.org). Vuelve a observar después para comprobarlo.",
         "If you want machines to connect your offer, also declare it as structured data (schema.org). Observe again afterwards to check.")

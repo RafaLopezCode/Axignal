@@ -442,3 +442,29 @@ def test_a_served_area_still_reads_the_page_that_says_where_it_is(tmp_path: Path
     assert [d["statement"] for d in stated] == ["EU/ES"] and stated[0][
         "epistemicState"
     ] == "POTENTIAL"
+    # Its contact page is kept out of search on purpose: not a findability problem
+    # (axignal.com self-check, 2026-10-17); only pages that carry the offer are judged.
+    (measured,) = discoveries(view, "WEB_REPRESENTATION")
+    noindex = [
+        c for c in measured["detail"]["audit"]["checks"] if c["id"] == "NO_NOINDEX_ON_READ_PAGES"
+    ]
+    assert noindex and noindex[0]["status"] == "PASS"
+
+
+def test_a_site_whose_offer_is_unclear_gets_a_presence_gap_and_a_parked_one_does_not(
+    tmp_path: Path,
+) -> None:
+    # Spec 084: the controlled evaluator cannot tell what kind of offer these sites make.
+    world = World()
+    facade = build(tmp_path, world)
+    school, _ = _attend(facade, tmp_path, "subject:unclear", SCHOOL_AR)
+    parked, _ = _attend(facade, tmp_path, "subject:parked", PLACEHOLDER)
+    runtime(facade).drain()
+    gaps = {g["code"]: g for g in discoveries(_view(facade, school, _pending_id(facade, school)),
+                                              "REPRESENTATION_GAP")}  # fmt: skip
+    gap = gaps["OFFER_NATURE_UNCLEAR"]
+    assert gap["epistemicState"] == "POTENTIAL" and gap["detail"]["notCausal"] is True
+    parked_gaps = discoveries(
+        _view(facade, parked, _pending_id(facade, parked)), "REPRESENTATION_GAP"
+    )
+    assert "OFFER_NATURE_UNCLEAR" not in {g["code"] for g in parked_gaps}
