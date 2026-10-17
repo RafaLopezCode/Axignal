@@ -19,8 +19,10 @@ from __future__ import annotations
 
 import hashlib
 import json
+from collections.abc import Sequence
 from dataclasses import dataclass
 from enum import StrEnum
+from typing import Any
 
 from application.observation_intelligence.contracts import EvidenceRef, TaxonomyCode
 from domain.evidence.epistemics import Currentness
@@ -66,6 +68,13 @@ class Polarity(StrEnum):
     INCLUDED = "INCLUDED"
     #: Explicitly excluded by the Organization ("no enviamos a Canarias").
     EXCLUDED = "EXCLUDED"
+
+
+def _total_order(values: Sequence[object]) -> Any:
+    """Sort key for identity rows that may hold None (a claim without a mode): the same order
+    as the rows themselves when none is None, so stored fingerprints stay valid, and None
+    first otherwise instead of a TypeError (found on the biocultor.com canary, 2026-10-17)."""
+    return [(value is not None, "" if value is None else value) for value in values]
 
 
 @dataclass(frozen=True, slots=True)
@@ -192,11 +201,19 @@ class EconomicOperatingModel:
                 {
                     "id": c.capability_id,
                     "modes": sorted(
-                        [m.mode.value, m.binding.value, m.evidence.observation_id] for m in c.modes
+                        (
+                            [m.mode.value, m.binding.value, m.evidence.observation_id]
+                            for m in c.modes
+                        ),
+                        key=_total_order,
                     ),
-                    "claims": sorted(claim.identity() for claim in c.claims),
+                    "claims": sorted((claim.identity() for claim in c.claims), key=_total_order),
                     "constraints": sorted(
-                        [k.kind.value, k.value, k.binding.value, k.withdrawn] for k in c.constraints
+                        (
+                            [k.kind.value, k.value, k.binding.value, k.withdrawn]
+                            for k in c.constraints
+                        ),
+                        key=_total_order,
                     ),
                 }
                 for c in sorted(self.capabilities, key=lambda item: item.capability_id)
