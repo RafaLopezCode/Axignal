@@ -6,7 +6,7 @@ export type Epistemic = "OBSERVED" | "POTENTIAL" | "UNKNOWN";
 export const families = [
   {
     id: "presence",
-    name: c("Presencia", "Presence"),
+    name: c("Visibilidad", "Visibility"),
     color: "blue",
     intro: c(
       "Cómo aparece la organización y si se la encuentra: buscadores, respuestas de IA y su web.",

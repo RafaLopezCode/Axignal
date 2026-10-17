@@ -7,12 +7,12 @@ type Copy = {
   unsubscribed: string; unsubscribeFailed: string; unsubscribeLink: string; missing: string;
 };
 const families = {
-  es: { presence: "Presencia", reputation: "Reputación", value: "Valor", markets: "Mercados", relationships: "Relaciones", demand: "Demanda", economics: "Economía", organization: "Organización", context: "Contexto" },
-  en: { presence: "Presence", reputation: "Reputation", value: "Value", markets: "Markets", relationships: "Relationships", demand: "Demand", economics: "Economics", organization: "Organization", context: "Context" },
-  fr: { presence: "Présence", reputation: "Réputation", value: "Valeur", markets: "Marchés", relationships: "Relations", demand: "Demande", economics: "Économie", organization: "Organisation", context: "Contexte" },
-  de: { presence: "Präsenz", reputation: "Reputation", value: "Wert", markets: "Märkte", relationships: "Beziehungen", demand: "Nachfrage", economics: "Wirtschaft", organization: "Organisation", context: "Kontext" },
-  it: { presence: "Presenza", reputation: "Reputazione", value: "Valore", markets: "Mercati", relationships: "Relazioni", demand: "Domanda", economics: "Economia", organization: "Organizzazione", context: "Contesto" },
-  pt: { presence: "Presença", reputation: "Reputação", value: "Valor", markets: "Mercados", relationships: "Relações", demand: "Procura", economics: "Economia", organization: "Organização", context: "Contexto" },
+  es: { presence: "Visibilidad", reputation: "Reputación", value: "Valor", markets: "Mercados", relationships: "Relaciones", demand: "Demanda", economics: "Economía", organization: "Organización", context: "Contexto" },
+  en: { presence: "Visibility", reputation: "Reputation", value: "Value", markets: "Markets", relationships: "Relationships", demand: "Demand", economics: "Economics", organization: "Organization", context: "Context" },
+  fr: { presence: "Visibilité", reputation: "Réputation", value: "Valeur", markets: "Marchés", relationships: "Relations", demand: "Demande", economics: "Économie", organization: "Organisation", context: "Contexte" },
+  de: { presence: "Sichtbarkeit", reputation: "Reputation", value: "Wert", markets: "Märkte", relationships: "Beziehungen", demand: "Nachfrage", economics: "Wirtschaft", organization: "Organisation", context: "Kontext" },
+  it: { presence: "Visibilità", reputation: "Reputazione", value: "Valore", markets: "Mercati", relationships: "Relazioni", demand: "Domanda", economics: "Economia", organization: "Organizzazione", context: "Contesto" },
+  pt: { presence: "Visibilidade", reputation: "Reputação", value: "Valor", markets: "Mercados", relationships: "Relações", demand: "Procura", economics: "Economia", organization: "Organização", context: "Contexto" },
 };
 export const POOL_COPY: Record<PoolLanguage, Copy> = {
   es: { eyebrow: "Lectura independiente", title: "Lo que AXIGNAL observa de {name}", intro: "AXIGNAL observa organizaciones desde fuera, como un auditor independiente: solo lo que fuentes públicas muestran, cada hallazgo con su fuente y su estado. Lo potencial está por confirmar.", observed: "Observado el", source: "Fuente", states: { OBSERVED: "Observado", DECLARED: "Declarado por su web", POTENTIAL: "Potencial · a confirmar" }, families: families.es, cta: "Conocer AXIGNAL", more: "Ver cómo trabaja AXIGNAL", unsubscribeTitle: "No recibir más correos", unsubscribeBody: "Confirme y no volveremos a escribir a esta dirección ni a su organización.", unsubscribeButton: "Confirmar baja", unsubscribed: "Hecho. No volveremos a escribirle.", unsubscribeFailed: "No se pudo completar ahora. Responda al correo con la palabra «baja» y lo haremos a mano.", unsubscribeLink: "No recibir más correos", missing: "Esta lectura ya no está disponible." },

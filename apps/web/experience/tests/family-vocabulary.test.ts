@@ -83,10 +83,10 @@ async function ask(text: string, locale = "es") {
 }
 
 test("Axent answers an everyday question by pointing at the family where it lives", async () => {
-  // The illustrative context is Markets; SEO lives in Presence.
+  // The illustrative context is Markets; SEO lives in Visibility (the presence family).
   const seo = await ask("¿Cómo está mi SEO?");
   assert.ok(seo.includes('"component":"family","ref":"presence"'));
-  assert.ok(seo.includes("Presencia (SEO · GEO · Visibilidad digital)"));
+  assert.ok(seo.includes("Visibilidad (SEO · GEO · Web)"));
   const reviews = await ask("What do people say about us?", "en");
   assert.ok(reviews.includes('"ref":"reputation"'));
   // A question about change stays with the family in view.
