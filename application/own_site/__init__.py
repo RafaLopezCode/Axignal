@@ -287,24 +287,44 @@ def _wall_names(alts: Iterable[str]) -> list[str]:
     return names
 
 
-def logo_walls(pages: Sequence[PageReading], own_names: Iterable[str] = ()) -> list[Discovery]:
-    """Clients and partners the site shows as logos under a clients/partners heading."""
+def wall_groups(page: PageReading, own_names: Iterable[str] = ()) -> list[tuple[str, list[str]]]:
+    """Logo names grouped by the heading they appear under (the organization's own excluded)."""
     own = {n.casefold() for n in own_names if n}
+    by_heading: dict[str, list[str]] = {}
+    for pair in _items(page.signals.get("imageAlts")):
+        if isinstance(pair, list | tuple) and len(pair) == 2:
+            by_heading.setdefault(str(pair[0]), []).append(str(pair[1]))
+    return [
+        (heading, [n for n in _wall_names(alts) if n.casefold() not in own])
+        for heading, alts in by_heading.items()
+    ]
+
+
+def logo_walls(
+    pages: Sequence[PageReading],
+    own_names: Iterable[str] = (),
+    judged: Mapping[tuple[str, str], str | None] | None = None,
+    model: str | None = None,
+) -> list[Discovery]:
+    """Clients and partners the site shows as logos under a clients/partners heading.
+
+    ``judged`` (spec 083): a usable evaluator answer per wall (page url, heading) decides its
+    role, or that it is neither; walls it did not judge keep the vocabulary's reading.
+    """
     out: list[Discovery] = []
     seen: set[tuple[str, str]] = set()
     for page in pages:
-        by_heading: dict[str, list[str]] = {}
-        for pair in _items(page.signals.get("imageAlts")):
-            if isinstance(pair, list | tuple) and len(pair) == 2:
-                by_heading.setdefault(str(pair[0]), []).append(str(pair[1]))
-        for heading, alts in by_heading.items():
-            role = (
+        for heading, names in wall_groups(page, own_names):
+            lexical = (
                 None if _CERTIFICATIONS.search(heading)
                 else "PARTNER" if _PARTNERS.search(heading)
                 else "CLIENT" if _CLIENTS.search(heading)
                 else None
             )  # fmt: skip
-            names = [n for n in _wall_names(alts) if n.casefold() not in own]
+            by_judgment = judged is not None and (page.url, heading) in judged
+            role = (judged or {}).get((page.url, heading)) if by_judgment else lexical
+            if _CERTIFICATIONS.search(heading):
+                role = None  # claimed credentials are never counterparties
             if role == "CLIENT":
                 badges = [n for n in names if not is_client_name(n)]
                 if len(badges) * 2 >= len(names):
@@ -321,12 +341,16 @@ def logo_walls(pages: Sequence[PageReading], own_names: Iterable[str] = ()) -> l
                         DiscoveryKind.RELATIONSHIP,
                         f"{role}_DECLARED",
                         name,
-                        "DECLARED",
+                        # The names are shown by the site; a role only the evaluator read
+                        # is an inference, never promoted to a declaration.
+                        "DECLARED" if role == lexical else "POTENTIAL",
                         page.url,
                         f"{heading}: {name}"[:200],
                         page.observed_at,
                         {
                             "role": role,
+                            "roleBy": "SEMANTIC_JUDGMENT" if by_judgment else "VOCABULARY",
+                            **({"model": model} if by_judgment and model else {}),
                             "heading": heading[:120],
                             "ownSiteVersion": OWN_SITE_VERSION,
                             "limitation": "Shown by the organization itself as a "
@@ -487,14 +511,17 @@ def reputation(pages: Sequence[PageReading]) -> list[Discovery]:
 
 
 def own_site_discoveries(
-    pages: Sequence[PageReading], own_names: Iterable[str] = ()
+    pages: Sequence[PageReading],
+    own_names: Iterable[str] = (),
+    judged_walls: Mapping[tuple[str, str], str | None] | None = None,
+    model: str | None = None,
 ) -> list[Discovery]:
     """Every own-site signal, in family order: relationships, value, activity, reputation."""
     if not pages:
         return []
     return [
         *technology(pages),
-        *logo_walls(pages, own_names),
+        *logo_walls(pages, own_names, judged_walls, model),
         *credentials(pages),
         *hiring(pages),
         *reputation(pages),
