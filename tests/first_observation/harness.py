@@ -60,6 +60,8 @@ PLACEHOLDER = "https://soon.example.com/"
 KNOWN = "https://www.solartec.example.com/"
 # Robots forbid everything.
 FORBIDDEN = "https://private-robots.example.com/"
+# G. Serves "Worldwide"; only its contact page states where it is (axignal.com, 2026-10-17).
+WORLDWIDE_ES = "https://worldwide-dev.example.com/"
 
 PAGES: dict[str, str] = {
     SOLAR_ES: (
@@ -123,6 +125,17 @@ PAGES: dict[str, str] = {
         "industria y administraciones públicas.</p></body></html>"
     ),
     FORBIDDEN: "<html><body><p>Instalaciones fotovoltaicas.</p></body></html>",
+    WORLDWIDE_ES: (
+        '<html lang="en"><head><title>Worldwide Dev | Custom software development</title>'
+        + _ld({"@context": "https://schema.org", "@type": "Organization", "name": "Worldwide Dev",
+               "areaServed": "Worldwide"})
+        + "</head><body><h1>We build custom software development projects for companies."
+        "</h1><a href='/contact'>Contact</a></body></html>"
+    ),
+    WORLDWIDE_ES + "contact": (
+        "<html><head><title>Contact</title></head><body><p>Controller: Worldwide Dev · Spain."
+        "</p></body></html>"
+    ),
 }  # fmt: skip
 ROBOTS: dict[str, str] = {
     "https://private-robots.example.com": "User-agent: *\nDisallow: /\n",
@@ -240,7 +253,10 @@ def jev_rule(batch: SemanticBatch, question: SemanticQuestion) -> tuple[str, flo
     if qid == "fo_delivery_mode":
         return ("PREMISES", 0.82)
     if qid == "fo_operating_location":
-        return ("US/US-AR", 0.9) if "US/US-AR" in question.labels else ("NONE_STATED", 0.7)
+        for place in ("US/US-AR", "EU/ES"):
+            if place in question.labels:
+                return (place, 0.9)
+        return ("NONE_STATED", 0.7)
     return (question.labels[-1], 0.5)
 
 
