@@ -183,6 +183,14 @@ def _count(kind: str, *codes: str) -> Callable[[list[Discovery], Mapping[str, An
     return lambda ds, _v: len(_of(ds, kind, *codes))
 
 
+def _publications_90d(ds: list[Discovery], _v: Mapping[str, Any]) -> object:
+    """Spec 096: what it published on its own channel in the last 90 days; unknown without one."""
+    for d in _of(ds, "OPERATING_SIGNAL", "PUBLISHING_CADENCE"):
+        value = _detail(d).get("last90Days")
+        return int(value) if isinstance(value, int) else None
+    return None
+
+
 def _own_site(
     extract: Callable[[list[Discovery], Mapping[str, Any]], object],
 ) -> Callable[[list[Discovery], Mapping[str, Any]], object]:
@@ -262,6 +270,7 @@ METRICS: tuple[Metric, ...] = (
            _count("MENTION", "PRESS_MENTION")),
     Metric("activity.own_publications", "activity", 0, "OBSERVED",
            _count("MENTION", "OWN_PUBLICATION", "PRESS_RELEASE")),
+    Metric("activity.publications_90d", "activity", 0, "OBSERVED", _publications_90d, 2.0, 0.25),
     Metric("value.activities", "value", 0, "POTENTIAL", _set("ACTIVITY")),
     Metric("markets.premises", "markets", 0, "DECLARED",
            _set("DECLARED_LOCATION", "PREMISES_PINNED_ON_MAP", "ADDRESS_DECLARED")),

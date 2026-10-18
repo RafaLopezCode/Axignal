@@ -25,6 +25,7 @@ export function metricLabel(key: string, t: Translate): string {
     case "reputation.wikipedia_languages": return t("Idiomas de su artículo de Wikipedia", "Languages of its Wikipedia article");
     case "reputation.self_rating": return t("Valoración que publica", "Rating it publishes");
     case "activity.own_publications": return t("Publicaciones propias", "Own publications");
+    case "activity.publications_90d": return t("Publicaciones en 90 días (canal propio)", "Posts in 90 days (own channel)");
     case "activity.job_postings": return t("Ofertas de empleo en su web", "Job postings on its website");
     case "activity.hiring_channel": return t("Canal de empleo", "Hiring channel");
     case "activity.open_positions": return t("Puestos abiertos", "Open positions");

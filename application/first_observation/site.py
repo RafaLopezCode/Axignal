@@ -254,6 +254,10 @@ class _PageParser(HTMLParser):
         self.images = 0
         self.images_without_alt = 0
         self.hreflang: dict[str, str] = {}
+        #: News feeds it declares (RSS/Atom alternates): its own publishing channel.
+        self.feeds: list[str] = []
+        #: Its site platform when its own markup shows it (feed conventions differ).
+        self.platform: str | None = None
         #: Hosts whose code, frames or styles the page loads (its observed technology).
         self.resource_hosts: list[str] = []
         #: Public job boards it links or embeds ("GREENHOUSE:acme").
@@ -275,6 +279,14 @@ class _PageParser(HTMLParser):
             key = (values.get("name") or values.get("property") or "").lower()
             if key and "content" in values:
                 self.meta.setdefault(key, _clean(values["content"], 500))
+        if (
+            tag == "link"
+            and values.get("rel", "").lower() == "alternate"
+            and values.get("type", "").lower() in ("application/rss+xml", "application/atom+xml")
+            and values.get("href")
+            and len(self.feeds) < 5
+        ):
+            self.feeds.append(values["href"].strip()[:300])
         if (
             tag == "link"
             and values.get("rel", "").lower() == "alternate"
@@ -313,6 +325,11 @@ class _PageParser(HTMLParser):
             board = board_of(candidate) if candidate and "://" in candidate else None
             if board and f"{board[0]}:{board[1]}" not in self.job_boards:
                 self.job_boards.append(f"{board[0]}:{board[1]}")
+        src = (resource or values.get("href") or "").lower() if tag in {"script", "link"} else ""
+        if self.platform is None and ("/wp-content/" in src or "/wp-includes/" in src):
+            self.platform = "WORDPRESS"
+        elif self.platform is None and ("cdn.shopify.com" in src or "/cdn/shop/" in src):
+            self.platform = "SHOPIFY"
         if resource and len(self.resource_hosts) < 120:
             host = (urlsplit(resource.strip()).hostname or "").lower()
             if host and host not in self.resource_hosts:
@@ -670,6 +687,11 @@ def read_page(
             "images": parser.images,
             "imagesWithoutAlt": parser.images_without_alt,
             "hreflang": sorted(parser.hreflang)[:32],
+            "hreflangHosts": sorted(
+                {h for v in parser.hreflang.values() if (h := urlsplit(urljoin(url, v)).hostname)}
+            )[:32],
+            "feeds": parser.feeds,
+            "platform": parser.platform,
             "xDefault": "x-default" in parser.hreflang,
             "jsonldDocuments": len(parser.jsonld),
             "jsonldErrors": _jsonld_errors(parser.jsonld),
