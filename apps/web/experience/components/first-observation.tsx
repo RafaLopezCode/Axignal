@@ -142,6 +142,12 @@ export function discoveryCopy(d: Discovery, t: Translate, locale = "en"): { find
   }
   if (d.kind === "MENTION") {
     const outlet = typeof d.detail.outlet === "string" ? d.detail.outlet : "";
+    const linked = d.detail.linksToItsWebsite === true
+      ? " " + t("La página enlaza a su web.", "The page links to its website.") : "";
+    if (d.code === "REVIEW_PAGE") return { finding: `${t("Página de opiniones", "Reviews page")} · ${outlet}: ${d.statement}`,
+      why: t("AXIGNAL ha leído la página y nombra a la organización. Que trate de ella no está verificado del todo; las opiniones son de terceros y no se puntúan.", "AXIGNAL read the page and it names the organization. That it is about it is not fully verified; the reviews are third-party and are not scored.") + linked };
+    if (d.code === "WEB_MENTION") return { finding: `${t("La nombran en la web", "Named on the web")} · ${outlet}: ${d.statement}`,
+      why: t("Un buscador propuso la página y AXIGNAL la ha leído: su texto nombra a la organización. Mencionar no es recomendar.", "A search index proposed the page and AXIGNAL read it: its text names the organization. A mention is not an endorsement.") + linked };
     if (d.code === "PRESS_RELEASE") return { finding: `${t("Nota de prensa distribuida", "Distributed press release")} · ${outlet}: ${d.statement}`, why: t("Una nota que una organización distribuye sobre sí misma: es su voz, no cobertura independiente.", "A release an organization distributes about itself: its own voice, not independent coverage.") };
     return d.code === "OWN_PUBLICATION"
       ? { finding: `${t("Publicado por la propia organización", "Published by the organization itself")}: ${d.statement}`, why: t("Es su propia voz, no una mención de terceros.", "It is its own voice, not a third-party mention.") }
@@ -226,6 +232,11 @@ export function discoveryCopy(d: Discovery, t: Translate, locale = "en"): { find
     const issuer = typeof d.detail.issuer === "string" && d.detail.issuer ? ` · ${d.detail.issuer}` : "";
     return { finding: `${t("Norma nueva", "New rule")} · ${journal} ${published}: ${d.statement}`,
       why: t("Publicada en el boletín oficial{issuer}. Que concierna a su sector lo ha juzgado un asistente; si le aplica y cómo no está evaluado. No es asesoramiento jurídico.", "Published in the official journal{issuer}. That it concerns its sector was judged by an assistant; whether and how it applies is not assessed. Not legal advice.").replace("{issuer}", issuer) };
+  }
+  if (d.kind === "CONTEXT_SIGNAL" && d.code === "WEB_SECTOR_SOURCE") {
+    const outlet = typeof d.detail.outlet === "string" ? d.detail.outlet : "";
+    return { finding: `${t("Marco de su actividad", "Framework of its activity")} · ${outlet}: ${d.statement}`,
+      why: t("Página sobre su actividad y las normas que la enmarcan, leída por AXIGNAL. Trata del sector, no de la organización; si le aplica y cómo no está evaluado. No es asesoramiento jurídico.", "A page about its activity and the rules that frame it, read by AXIGNAL. It is about the sector, not the organization; whether and how it applies is not assessed. Not legal advice.") };
   }
   if (d.kind === "CONTEXT_SIGNAL") {
     const outlet = typeof d.detail.outlet === "string" ? d.detail.outlet : "";

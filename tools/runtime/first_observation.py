@@ -134,6 +134,7 @@ from application.value_chain import (
     nace_codes,
     wikidata_industry_nace,
 )
+from application.web_research import ResearchSubject, research_discoveries
 from application.world_demand.index import (
     DemandIndexPort,
     SliceFeedPort,
@@ -172,6 +173,7 @@ from tools.runtime.regulation_context import RegulationContextRunner
 from tools.runtime.search_rank import SearchRankRunner, search_rank_from_values
 from tools.runtime.sector_context import SectorContextRunner
 from tools.runtime.subscriber_portfolio import SubscriberPortfolioRuntime
+from tools.runtime.web_research import WebResearchRunner, web_research_from_values
 
 ENABLED_KEY = "AXIGNAL_FIRST_OBSERVATION_ENABLED"
 WORKER_KEY = "AXIGNAL_FIRST_OBSERVATION_WORKER"
@@ -531,8 +533,10 @@ class FirstObservationRuntime:
         job_boards: JobBoards | None = None,
         buyers: WikidataBuyerLookups | None = None,
         search_rank: SearchRankRunner | None = None,
+        web_research: WebResearchRunner | None = None,
     ) -> None:
         self._search_rank = search_rank
+        self._web_research = web_research
         self._buyers = buyers
         self._job_boards = job_boards
         self._notoriety = notoriety
@@ -1009,31 +1013,10 @@ class FirstObservationRuntime:
             return view
         held = view.get("discoveries")
         discoveries = held if isinstance(held, list) else []
-        target = view.get("target")
-        website = target.get("website") if isinstance(target, Mapping) else None
-        host = (urlsplit(str(website)).hostname or "").removeprefix("www.") if website else ""
-        scopes = view.get("attentionScopes")
-        country = None
-        if isinstance(scopes, list) and scopes and isinstance(scopes[0], Mapping):
-            parts = str(scopes[0].get("jurisdiction") or "").split("/")
-            country = parts[1] if parts and parts[0] == "EU" and len(parts) > 1 else parts[0]
-        contact = view.get("publishedContact")
-        declared = contact.get("language") if isinstance(contact, Mapping) else None
-        if not host or not country or len(country) != 2:
+        activity = _activity_words(view)
+        if activity is None:
             return view
-        language = language_for(country, str(declared) if declared else None)
-        terms: list[str] = []
-        held_capabilities = view.get("capabilities")
-        for capability in held_capabilities if isinstance(held_capabilities, list) else []:
-            if not isinstance(capability, Mapping):
-                continue
-            entry = lexicon_entry(str(capability.get("capabilityId") or ""))
-            basis = capability.get("basis")
-            excerpt = str(basis.get("excerpt") or "") if isinstance(basis, Mapping) else ""
-            if entry is not None:
-                found = terms_from_activity(excerpt, entry.terms)
-                terms.extend(found[:1] or ((entry.label.lower(),) if language == "en" else ()))
-        cleaned = clean_terms(terms)
+        host, country, language, cleaned = activity
         if not cleaned:
             return view
         subject = SearchSubject(
@@ -1045,6 +1028,40 @@ class FirstObservationRuntime:
             return view
         found_rank = search_discoveries(measurement, observed_at=str(view.get("observedAt") or ""))
         view["discoveries"] = [*discoveries, *found_rank]
+        return view
+
+    def run_web_research(self) -> int:
+        """Run queued web research (a few per tick, under the daily search cap, spec 098)."""
+        return 0 if self._web_research is None else self._web_research.run()
+
+    def _with_web_research(self, view: dict[str, object]) -> dict[str, object]:
+        """Pages that name it or frame its activity, each read and verified by AXIGNAL itself;
+        queues research when none is fresh (never searches on the read path)."""
+        if self._web_research is None:
+            return view
+        held = view.get("discoveries")
+        discoveries = held if isinstance(held, list) else []
+        activity = _activity_words(view)
+        if activity is None:
+            return view
+        host, _country, language, cleaned = activity
+        target = view.get("target")
+        names = [str(target["name"])] if isinstance(target, Mapping) and target.get("name") else []
+        names += [str(d["statement"]) for d in discoveries if isinstance(d, Mapping)
+                  and d.get("code") == "LEGAL_NAME_DECLARED" and d.get("statement")]  # fmt: skip
+        subject = ResearchSubject(
+            names=tuple(dict.fromkeys(names or [host])), domain=host, language=language,
+            activity_terms=tuple(cleaned[:1]),
+        )  # fmt: skip
+        result = self._web_research.result(subject)
+        self._web_research.request(subject)  # no-op while fresh or queued
+        if result is None:
+            return view
+        found = research_discoveries(
+            result, own_domain=host, attribution=self._attribution_for(view, host)
+        )
+        if found:
+            view["discoveries"] = [*discoveries, *found]
         return view
 
     def read_job_boards(self) -> int:
@@ -1333,6 +1350,7 @@ class FirstObservationRuntime:
                 self.ingest_demanded,
                 self.measure_geo,
                 self.measure_search_rank,
+                self.run_web_research,
                 self.judge_sector_context,
                 self.judge_regulation,
                 self.judge_press_attribution,
@@ -1660,6 +1678,7 @@ class FirstObservationRuntime:
             ]
             view = self._with_geo(view)
             view = self._with_search_rank(view)
+            view = self._with_web_research(view)
             view = self._with_sector_context(view)
             view = self._with_regulation(view)
             # Relationships and competition from published public contract awards.
@@ -2058,6 +2077,9 @@ def build_first_observation(
         search_rank=None
         if overrides.source_ports is not None or overrides.feeds is not None
         else search_rank_from_values(values, root),
+        web_research=None
+        if overrides.source_ports is not None or overrides.feeds is not None
+        else web_research_from_values(values, root, fetcher),
         sector_context=None
         if overrides.source_ports is not None or overrides.feeds is not None
         else _sector_context(values, root),
@@ -2180,3 +2202,33 @@ def first_observation_reader(
         return proof
 
     return read
+
+
+def _activity_words(view: Mapping[str, object]) -> tuple[str, str, str, tuple[str, ...]] | None:
+    """(host, country, language, activity terms in the website's own words); None without
+    a website and a country. The terms may be empty."""
+    target = view.get("target")
+    website = target.get("website") if isinstance(target, Mapping) else None
+    host = (urlsplit(str(website)).hostname or "").removeprefix("www.") if website else ""
+    scopes = view.get("attentionScopes")
+    country = None
+    if isinstance(scopes, list) and scopes and isinstance(scopes[0], Mapping):
+        parts = str(scopes[0].get("jurisdiction") or "").split("/")
+        country = parts[1] if parts and parts[0] == "EU" and len(parts) > 1 else parts[0]
+    contact = view.get("publishedContact")
+    declared = contact.get("language") if isinstance(contact, Mapping) else None
+    if not host or not country or len(country) != 2:
+        return None
+    language = language_for(country, str(declared) if declared else None)
+    terms: list[str] = []
+    held_capabilities = view.get("capabilities")
+    for capability in held_capabilities if isinstance(held_capabilities, list) else []:
+        if not isinstance(capability, Mapping):
+            continue
+        entry = lexicon_entry(str(capability.get("capabilityId") or ""))
+        basis = capability.get("basis")
+        excerpt = str(basis.get("excerpt") or "") if isinstance(basis, Mapping) else ""
+        if entry is not None:
+            found = terms_from_activity(excerpt, entry.terms)
+            terms.extend(found[:1] or ((entry.label.lower(),) if language == "en" else ()))
+    return host, country, language, clean_terms(terms)

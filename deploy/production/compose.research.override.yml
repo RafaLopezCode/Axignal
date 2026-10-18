@@ -1,0 +1,17 @@
+# Optional spec 098 composition: mounts the DeepSeek Search API key for the runtime only.
+# It does not by itself research anything: the runtime also needs
+# AXIGNAL_WEB_RESEARCH_ENABLED=true and AXIGNAL_DEEPSEEK_API_KEY_FILE in the subscriber
+# configuration, and stays off while either is missing or the file is unreadable.
+# Apply together with compose.subscriber.override.yml, and only when the host file exists
+# (Compose refuses a secret whose file is missing).
+#
+# Host file: root-owned, mode 0440, group AXIGNAL_TYPESAFE_SECRET_GID (the runtime's secret
+# group), never committed, never in environment variables, health output or image layers.
+services:
+  runtime:
+    secrets:
+      - deepseek_api_key
+
+secrets:
+  deepseek_api_key:
+    file: ${AXIGNAL_DEEPSEEK_API_KEY_HOST_FILE:-/etc/axignal/secrets/deepseek_api_key}
