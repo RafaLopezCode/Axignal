@@ -59,6 +59,8 @@ class GovernedSiteFetcher:
             max_response_bytes=self._max_bytes,
             timeout_ms=self._timeout_ms,
             max_redirects=self._max_redirects,
+            # A page larger than the budget is read from its start, not lost whole.
+            oversize="TRUNCATE",
         )
 
     def fetch(self, url: str, *, slot: str, retain_body: bool = False) -> FetchedResource:

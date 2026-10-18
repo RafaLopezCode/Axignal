@@ -23,6 +23,8 @@ class RawHttpResponse:
     body: bytes
     peer_ip: str
     failure_state: str | None = None
+    #: Only the first bytes were kept (the policy opted in to truncation).
+    truncated: bool = False
 
     def header(self, name: str) -> str | None:
         wanted = name.lower()
@@ -113,6 +115,7 @@ class PinnedHttpTransport:
         *,
         timeout_ms: int,
         max_response_bytes: int,
+        truncate: bool = False,
     ) -> RawHttpResponse:
         deadline_ns = self._monotonic_ns() + timeout_ms * 1_000_000
         errors: list[OSError] = []
@@ -157,7 +160,7 @@ class PinnedHttpTransport:
                         announced = int(content_length)
                     except ValueError:
                         announced = None
-                    if announced is not None and announced > max_response_bytes:
+                    if announced is not None and announced > max_response_bytes and not truncate:
                         return RawHttpResponse(
                             status=response.status,
                             headers=headers,
@@ -169,6 +172,7 @@ class PinnedHttpTransport:
                 parts: list[bytes] = []
                 total = 0
                 failure: str | None = None
+                truncated = False
                 while True:
                     self._apply_remaining_timeout(connection, deadline_ns)
                     remaining_bytes = max_response_bytes + 1 - total
@@ -180,7 +184,12 @@ class PinnedHttpTransport:
                         break
                     total += len(chunk)
                     if total > max_response_bytes:
-                        failure = "response_too_large"
+                        if truncate:
+                            # Keep exactly the budget: the page's first bytes, said as such.
+                            parts.append(chunk[: len(chunk) - (total - max_response_bytes)])
+                            truncated = True
+                        else:
+                            failure = "response_too_large"
                         break
                     parts.append(chunk)
 
@@ -191,6 +200,7 @@ class PinnedHttpTransport:
                     body=body,
                     peer_ip=address,
                     failure_state=failure,
+                    truncated=truncated,
                 )
             except SourceDeadlineExceeded:
                 raise

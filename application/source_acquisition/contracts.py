@@ -52,6 +52,11 @@ class SourceDispatchPolicy:
     timeout_ms: int = 5_000
     max_redirects: int = 3
     policy_version: str = "1"
+    #: A response larger than the budget: REFUSE it whole (the default) or keep its first
+    #: ``max_response_bytes``, marked as truncated. Only HTML pages, whose head, navigation
+    #: and first content come first, may opt in (storefront homepages above 1.5 MB were
+    #: read only through archives: brooklinen.com, 2026-10-18).
+    oversize: str = "REFUSE"
 
     def __post_init__(self) -> None:
         _required(self.policy_id, self.policy_version, self.decision_basis)
@@ -63,6 +68,8 @@ class SourceDispatchPolicy:
             raise ValueError("source timeout must be between 100 ms and 30 s")
         if self.max_redirects < 0 or self.max_redirects > 10:
             raise ValueError("source redirect budget must be between 0 and 10")
+        if self.oversize not in {"REFUSE", "TRUNCATE"}:
+            raise ValueError("oversize is REFUSE or TRUNCATE")
 
     @property
     def fingerprint(self) -> str:
@@ -83,6 +90,8 @@ class SourceDispatchPolicy:
             "timeout_ms": self.timeout_ms,
             "max_redirects": self.max_redirects,
         }
+        if self.oversize != "REFUSE":  # existing policies keep their fingerprints
+            payload["oversize"] = self.oversize
         encoded = json.dumps(payload, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
         return hashlib.sha256(encoded.encode("utf-8")).hexdigest()
 

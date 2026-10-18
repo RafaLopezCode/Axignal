@@ -101,6 +101,8 @@ class HttpSourceSensor:
                     resolved,
                     timeout_ms=remaining_ms,
                     max_response_bytes=policy.max_response_bytes,
+                    # Only a policy that opted in asks for it, so other transports are unchanged.
+                    **({"truncate": True} if policy.oversize == "TRUNCATE" else {}),
                 )
             except SourceDeadlineExceeded:
                 failure_state = "deadline_exceeded"
@@ -177,6 +179,8 @@ class HttpSourceSensor:
             "body_artifact_ref": body_ref,
             "failure_state": failure_state,
         }
+        if final_response is not None and getattr(final_response, "truncated", False):
+            envelope["truncated_at_bytes"] = policy.max_response_bytes
         if rejected_redirect is not None:
             envelope["rejected_redirect"] = rejected_redirect
         envelope_ref = self._artifacts.put_json(envelope)
