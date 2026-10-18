@@ -153,6 +153,12 @@ export function discoveryCopy(d: Discovery, t: Translate, locale = "en"): { find
   if (d.kind === "RELATIONSHIP" && (d.code === "CLIENT_DECLARED" || d.code === "PARTNER_DECLARED")) return {
     finding: `${d.code === "CLIENT_DECLARED" ? t("Cliente que muestra", "Client it shows") : t("Partner que muestra", "Partner it shows")}: ${d.statement}`,
     why: t("Lo muestra su propia web bajo «{heading}». Es su declaración: la otra parte no lo ha confirmado.", "Its own website shows it under “{heading}”. Its own claim: the other party has not confirmed it.").replace("{heading}", String(d.detail.heading ?? "")) };
+  // Spec 097: what it sells, in its own catalog's words.
+  if (d.kind === "OFFER") return {
+    finding: `${t("Lo que vende, según su catálogo", "What it sells, according to its catalog")}: ${Array.isArray(d.detail.categories) ? d.detail.categories.slice(0, 8).map(String).join(", ") : d.statement}`,
+    why: d.detail.basis === "PRODUCT_TYPES"
+      ? t("Son los tipos de producto de su catálogo público, ordenados por número de productos. Lo declara su tienda: es lo que ofrece, no lo que más vende.", "These are the product types in its public catalog, ordered by number of products. Its shop declares them: what it offers, not what it sells most.")
+      : t("Son las categorías que enlaza su propia web en su catálogo. Lo declara ella: es lo que ofrece, no lo que más vende.", "These are the categories its own website links in its catalog. It declares them: what it offers, not what it sells most.") };
   if (d.kind === "CREDENTIAL") return {
     finding: `${t("Certificación que declara", "Certification it claims")}: ${d.statement}`,
     why: t("Lo afirma en su web; no se ha comprobado en el registro del emisor.", "Claimed on its website; the issuer's register has not been checked.") };

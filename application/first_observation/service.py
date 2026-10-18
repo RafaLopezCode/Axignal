@@ -53,6 +53,12 @@ from application.first_observation.contracts import (
 from application.first_observation.country_evidence import country_evidence
 from application.first_observation.geography import area_jurisdiction, jurisdiction
 from application.first_observation.legal_notice import legal_names_in_text
+from application.first_observation.offer_catalog import (
+    catalog_categories,
+    offer_categories,
+    product_types,
+    shopify_catalog_url,
+)
 from application.first_observation.policy import FirstObservationPolicy, next_due
 from application.first_observation.publications import SHOWN as SHOWN_PUBLICATIONS
 from application.first_observation.publications import (
@@ -634,6 +640,30 @@ class FirstObservationService:
                         },
                     )
                     ledger.decide("FETCHED:OWN_FEED")
+        # What it sells (spec 097): a Shopify storefront's public catalog, one request
+        # within the site budget, robots respected; only product types are kept.
+        first = pages[0] if pages else None
+        if (
+            first is not None
+            and first.signals.get("platform") == "SHOPIFY"
+            and "productTypes" not in first.signals
+        ):
+            catalog = shopify_catalog_url(first.url)
+            if not robots.allows(catalog):
+                ledger.decide("SKIPPED:ROBOTS:CATALOG")
+            elif ledger.http_requests + policy.requests_per_fetch > policy.max_site_requests:
+                ledger.decide("STOPPED:SITE_REQUEST_BUDGET")
+            else:
+                resource = self._fetch(catalog, "site-page", ledger)
+                if resource.failure is None and resource.status == 200 and resource.body:
+                    pages[0] = dataclass_replace(
+                        first,
+                        signals={
+                            **first.signals,
+                            "productTypes": [list(t) for t in product_types(resource.body)],
+                        },
+                    )
+                    ledger.decide("FETCHED:CATALOG")
         reading = SiteReading(
             key, now, robots, tuple(pages), None, streak, rights.shared_until(now), coverage
         )
@@ -1649,6 +1679,24 @@ def _activity_and_markets(home: PageReading, now: datetime) -> list[Discovery]:
                      "channel": "OWN_FEED"},
                 )
             )  # fmt: skip
+    held_types = home.signals.get("productTypes")
+    types = [
+        (str(t[0]), int(t[1]))
+        for t in (held_types if isinstance(held_types, list) else [])
+        if isinstance(t, list | tuple) and len(t) == 2
+    ]
+    offer = offer_categories(catalog_categories(list(home.links), home.url), types)
+    if offer is not None:
+        categories, basis = offer
+        out.append(
+            Discovery(
+                DiscoveryKind.OFFER, "CATALOG_CATEGORIES", ", ".join(categories), "DECLARED",
+                home.url, None, home.observed_at,
+                {"categories": categories, "basis": basis,
+                 "counts": {name: n for name, n in types} if basis == "PRODUCT_TYPES" else {},
+                 "meaning": "What it offers, in its own catalog's words: not what it sells most."},
+            )
+        )  # fmt: skip
     countries = versions_for_countries(
         home.url,
         _strings(home.signals.get("hreflang")),

@@ -33,6 +33,7 @@ FAMILY_OF_KIND = {
     "ECONOMIC_FACT": "economics",
     "OPERATING_SIGNAL": "activity",
     "CREDENTIAL": "value",
+    "OFFER": "value",
     "RATING": "reputation",
 }
 #: A message goes out only when it could not be sent to another organization unchanged.

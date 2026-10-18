@@ -47,6 +47,7 @@ const BY_KIND: Partial<Record<Discovery["kind"], Facet>> = {
   ECONOMIC_FACT: { family: "economics", channel: null },
   OPERATING_SIGNAL: { family: "activity", channel: null },
   CREDENTIAL: { family: "value", channel: null },
+  OFFER: { family: "value", channel: null },
   RATING: { family: "reputation", channel: null },
 };
 

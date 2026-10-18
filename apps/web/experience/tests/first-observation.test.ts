@@ -195,3 +195,10 @@ test("its own channel's pace and its country versions read in people's words (sp
   const versions = discovery("DECLARED_SERVICE_AREA", "SITE_VERSIONS_FOR_COUNTRIES", { statement: "DE, FR", detail: { countries: { DE: ["HREFLANG"], FR: ["COUNTRY_DOMAIN"] } } });
   assert.match(discoveryCopy(versions, en).finding, /Its website has versions for: Germany, France/);
 });
+
+test("what it sells reads in its own catalog's words (spec 097)", () => {
+  const offer = discovery("OFFER", "CATALOG_CATEGORIES", { statement: "Soaps, Candles", epistemicState: "DECLARED", detail: { categories: ["Soaps", "Candles"], basis: "PRODUCT_TYPES" } });
+  const copy = discoveryCopy(offer, en);
+  assert.match(copy.finding, /What it sells, according to its catalog: Soaps, Candles/);
+  assert.match(copy.why, /not what it sells most/);
+});
