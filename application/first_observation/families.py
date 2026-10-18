@@ -23,6 +23,7 @@ BY_KIND: dict[str, str] = {
     "GENERATIVE_VISIBILITY": "presence",
     "ACTIVITY": "value",
     "CREDENTIAL": "value",
+    "OFFER": "value",
     "DECLARED_LOCATION": "markets",
     "DECLARED_SERVICE_AREA": "markets",
     "IDENTITY_HINT": "organization",

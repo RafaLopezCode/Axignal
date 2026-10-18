@@ -271,6 +271,8 @@ class DiscoveryKind(StrEnum):
     # review profiles or rating it publishes (reputation family). All its own voice.
     OPERATING_SIGNAL = "OPERATING_SIGNAL"
     CREDENTIAL = "CREDENTIAL"
+    #: What it sells in its own catalog's words (spec 097): DECLARED by its site.
+    OFFER = "OFFER"
     RATING = "RATING"
     SIGNIFICANT_UNKNOWN = "SIGNIFICANT_UNKNOWN"
 

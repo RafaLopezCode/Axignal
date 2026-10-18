@@ -203,6 +203,7 @@ _FINDING_KIND = {
     "DEMAND": EvidenceKind.OPPORTUNITY,
     "ACTIVITY": EvidenceKind.CAPABILITY,
     "CREDENTIAL": EvidenceKind.CAPABILITY,
+    "OFFER": EvidenceKind.CAPABILITY,
 }
 
 
