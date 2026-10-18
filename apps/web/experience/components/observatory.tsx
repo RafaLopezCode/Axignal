@@ -112,18 +112,20 @@ const LOW_OBSERVABILITY = new Set(["SOURCE_UNAVAILABLE", "NO_PUBLIC_WEBSITE", "O
 export const readable = (item: Item) => Boolean(item.organizationId || item.observation);
 const visible = (item: Item) => !CLOSED.has(item.state);
 
-/** Continuity across organizations and views, with a native fallback when unsupported. */
+/** Keep navigation motion consistent when a new selection supersedes an active transition. */
 type ViewTransitionLike = { ready: Promise<void>; finished: Promise<void>; updateCallbackDone: Promise<void> };
-let running: ViewTransitionLike | null = null;
+let transitionSequence = 0;
 function transition(update: () => void) {
+  const sequence = ++transitionSequence;
   const doc = document as Document & { startViewTransition?: (cb: () => void) => ViewTransitionLike };
-  // Instant update when unsupported, reduced, or while a transition is still running.
-  if (!doc.startViewTransition || running || window.matchMedia("(prefers-reduced-motion: reduce)").matches) { update(); return; }
-  const current = doc.startViewTransition(() => flushSync(update));
-  running = current;
-  // A skipped or interrupted transition is expected on fast clicks; the DOM update still happens.
+  if (!doc.startViewTransition || window.matchMedia("(prefers-reduced-motion: reduce)").matches) { update(); return; }
+  // Starting a new transition skips the previous animation; stale callbacks must not restore an older route.
+  const current = doc.startViewTransition(() => {
+    if (sequence !== transitionSequence) return;
+    flushSync(update);
+  });
   for (const promise of [current.ready, current.updateCallbackDone]) promise.catch(() => {});
-  current.finished.catch(() => {}).finally(() => { if (running === current) running = null; });
+  current.finished.catch(() => {});
 }
 
 function useUrlState() {
