@@ -237,3 +237,17 @@ def test_a_site_that_did_not_load_is_unmeasured_never_a_regression(tmp_path: Pat
     check_main([str(views), "--out", str(tmp_path / "r.json"), "--previous", str(previous)])
     summary = json.loads((tmp_path / "r.json").read_text(encoding="utf-8"))
     assert summary["regressions"] == []
+
+
+def test_a_finding_about_its_sector_never_breaks_a_forbid_about_the_organization() -> None:
+    from tools.evaluation.self_check import evaluate
+
+    truth = {"version": "t", "checks": [{"id": "economics.no_figures", "family": "economics",
+                                         "forbid": {"kind": "ECONOMIC_FACT"}}]}  # fmt: skip
+    sector = {"kind": "ECONOMIC_FACT", "code": "SECTOR_MARKET:ES", "statement": "ES M73 2024",
+              "detail": {"fact": "sectorMarket", "notAboutThisOrganization": True}}  # fmt: skip
+    own = {"kind": "ECONOMIC_FACT", "code": "WIKIDATA:revenue", "statement": "revenue 1",
+           "detail": {"fact": "revenue"}}  # fmt: skip
+    status = lambda ds: evaluate({"discoveries": ds}, truth)["verdicts"][0]["status"]  # noqa: E731
+    assert status([sector]) == "PASS"
+    assert status([sector, own]) == "FAIL"
