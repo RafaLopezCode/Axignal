@@ -115,7 +115,10 @@ def evaluate(reading: Mapping[str, Any], truth: Mapping[str, Any]) -> dict[str, 
             hits = [d for d in found if _matches(d, check["require"])]
             verdict(check, "PASS" if hits else "FAIL", check["require"], "FALSE_NEGATIVE")
         elif "forbid" in check:
-            said = [str(d.get("statement"))[:80] for d in found if _matches(d, check["forbid"])]
+            # A truth forbids what is said about the organization; a finding that states it
+            # is about its sector, not about it (spec 095), cannot say it.
+            said = [str(d.get("statement"))[:80] for d in found if _matches(d, check["forbid"])
+                    and not (d.get("detail") or {}).get("notAboutThisOrganization")]  # fmt: skip
             verdict(check, "FAIL" if said else "PASS", said, "FALSE_POSITIVE")
         elif "languages" in check:
             stated = next((d for d in found if d.get("code") == "LANGUAGES_PUBLISHED"), None)
