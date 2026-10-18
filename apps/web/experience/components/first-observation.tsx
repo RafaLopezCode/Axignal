@@ -447,6 +447,22 @@ export function discoveryCopy(d: Discovery, t: Translate, locale = "en"): { find
     finding: t("Un asistente de IA no reconoce la organización por su nombre", "An AI assistant does not recognize the organization by name"),
     why: t("Al preguntarle directamente, no tiene conocimiento específico de ella: su presencia en fuentes públicas citables puede ser escasa.", "Asked directly, it has no specific knowledge of it: its presence in citable public sources may be thin.") };
   if (d.kind === "GENERATIVE_VISIBILITY") return { finding: `${t("Aparición en respuestas de IA medida", "AI answer appearance measured")}: ${d.statement}`, why: t("Mencionar no es citar, y citar no es recomendar. Es una medición con sus condiciones, no una conclusión sobre el negocio.", "A mention is not a citation, and a citation is not an endorsement. It is a measurement with its conditions, not a conclusion about the business.") };
+  if (d.kind === "WEB_REPRESENTATION" && d.code === "LIGHTHOUSE_AUDIT") {
+    const scores = (d.detail.scores ?? {}) as Record<string, number | null>;
+    const names: Record<string, string> = { SEO: "SEO", PERFORMANCE: t("Rendimiento", "Performance"),
+      ACCESSIBILITY: t("Accesibilidad", "Accessibility"), BEST_PRACTICES: t("Buenas prácticas", "Best practices") };
+    const conditions = (d.detail.conditions ?? {}) as Record<string, unknown>;
+    const device = conditions.strategy === "DESKTOP" ? t("escritorio", "desktop") : t("móvil", "mobile");
+    const parts = Object.entries(scores).filter(([, v]) => typeof v === "number").map(([k, v]) => `${names[k] ?? k} ${v}`);
+    const failing = ((d.detail.failing ?? {}) as Record<string, { title?: string }[]>).SEO ?? [];
+    const instrument = (d.detail.instrument ?? {}) as Record<string, unknown>;
+    const seo = failing.length
+      ? t("{n} comprobaciones de SEO no pasan: {list}. ", "{n} SEO checks do not pass: {list}. ").replace("{n}", String(failing.length))
+          .replace("{list}", failing.slice(0, 4).map(f => f.title ?? "").filter(Boolean).join("; "))
+      : t("Pasa todas las comprobaciones de SEO de Lighthouse. ", "It passes every Lighthouse SEO check. ");
+    return { finding: `${t("Lighthouse de su web", "Lighthouse of its website")} (${device}): ${parts.join(" · ")}`,
+      why: seo + t("Medido por Google PageSpeed Insights en laboratorio (Lighthouse {v}): varía unos puntos entre mediciones, no es la experiencia de sus visitantes ni su posición en buscadores.", "Measured by Google PageSpeed Insights in a lab (Lighthouse {v}): it varies a few points between runs, and it is neither its visitors' experience nor its search position.").replace("{v}", String(instrument.lighthouseVersion ?? "")) };
+  }
   if (d.kind === "WEB_REPRESENTATION") return { finding: t("Representación web medida", "Web representation measured"), why: t("Comprobaciones de su propia web, con instrumento y condiciones. No es una posición en buscadores.", "Checks of its own website, with instrument and conditions. It is not a search ranking.") };
   if (d.kind === "REPRESENTATION_GAP" && d.code.startsWith("AUDIT:")) {
     const copy = auditCopy(d.code.slice(6), t, d.detail.value);
