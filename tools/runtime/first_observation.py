@@ -135,6 +135,7 @@ from application.value_chain import (
     nace_codes,
     wikidata_industry_nace,
 )
+from application.web_history import history_discoveries
 from application.web_quality import lighthouse_discoveries
 from application.web_research import ResearchSubject, research_discoveries
 from application.world_demand.index import (
@@ -177,6 +178,7 @@ from tools.runtime.regulation_context import RegulationContextRunner
 from tools.runtime.search_rank import SearchRankRunner, search_rank_from_values
 from tools.runtime.sector_context import SectorContextRunner
 from tools.runtime.subscriber_portfolio import SubscriberPortfolioRuntime
+from tools.runtime.wayback import WaybackRunner, wayback_from_values
 from tools.runtime.web_research import WebResearchRunner, web_research_from_values
 
 ENABLED_KEY = "AXIGNAL_FIRST_OBSERVATION_ENABLED"
@@ -535,6 +537,7 @@ class FirstObservationRuntime:
         demand_fit: Callable[[datetime], Mapping[str, object]] | None = None,
         notoriety: WikipediaNotoriety | None = None,
         job_boards: JobBoards | None = None,
+        wayback: WaybackRunner | None = None,
         buyers: WikidataBuyerLookups | None = None,
         common_crawl: CommonCrawlRunner | None = None,
         search_rank: SearchRankRunner | None = None,
@@ -547,6 +550,7 @@ class FirstObservationRuntime:
         self._buyers = buyers
         self._common_crawl = common_crawl
         self._job_boards = job_boards
+        self._wayback = wayback
         self._notoriety = notoriety
         self._regulation = regulation
         self._registers = registers
@@ -920,6 +924,30 @@ class FirstObservationRuntime:
                          if isinstance(d, Mapping) and d.get("kind") == "ACTIVITY"), None)  # fmt: skip
         label = str(name or legal or host or "")
         return None if not label else self._press_attribution.recall(label, host, activity)
+
+    def read_wayback(self) -> int:
+        """Ask the web archive about queued home pages (two per tick, spec 102)."""
+        return 0 if self._wayback is None else self._wayback.run()
+
+    def _with_wayback(self, view: dict[str, object]) -> dict[str, object]:
+        """Since when its website is archived and how often its home page changed."""
+        if self._wayback is None:
+            return view
+        target = view.get("target")
+        website = target.get("website") if isinstance(target, Mapping) else None
+        host = (
+            (urlsplit(str(website)).hostname or "").lower().removeprefix("www.") if website else ""
+        )
+        if not host:
+            return view
+        measurement = self._wayback.measurement(host)
+        self._wayback.request(host)  # no-op while fresh or queued
+        if measurement is None:
+            return view
+        held = view.get("discoveries")
+        found = history_discoveries(measurement, observed_at=str(view.get("observedAt") or ""))
+        view["discoveries"] = [*(held if isinstance(held, list) else []), *found]
+        return view
 
     def judge_sector_context(self) -> int:
         """Judge queued sector contexts (shared per activity and country per day)."""
@@ -1416,6 +1444,7 @@ class FirstObservationRuntime:
                 self.judge_regulation,
                 self.read_common_crawl,
                 self.judge_press_attribution,
+                self.read_wayback,
                 self.judge_demand_fit,
                 self.run_marketing_pool,
                 self.purge,
@@ -1726,6 +1755,7 @@ class FirstObservationRuntime:
                     view["discoveries"] = [*(held if isinstance(held, list) else []), *mentions]
             view = self._with_notoriety(view)
             view = self._with_job_boards(view)
+            view = self._with_wayback(view)
             view = self._with_group(view, organization_id)
             view = self._with_registers(view, organization_id)
             # The register's activity answers the value family when the website does not.
@@ -2129,6 +2159,9 @@ def build_first_observation(
         job_boards=None
         if overrides.source_ports is not None or overrides.feeds is not None
         else JobBoards(root / "job-boards.sqlite3", clock=clock.now),
+        wayback=None
+        if overrides.source_ports is not None or overrides.feeds is not None
+        else wayback_from_values(values, root),
         buyers=None
         if overrides.source_ports is not None or overrides.feeds is not None
         else WikidataBuyerLookups(root / "wikidata-buyers.sqlite3", clock=clock.now),

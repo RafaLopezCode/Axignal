@@ -170,6 +170,20 @@ export function discoveryCopy(d: Discovery, t: Translate, locale = "en"): { find
     finding: `${t("Certificación que declara", "Certification it claims")}: ${d.statement}`,
     why: t("Lo afirma en su web; no se ha comprobado en el registro del emisor.", "Claimed on its website; the issuer's register has not been checked.") };
   // Spec 096: what it publishes on its own channel, and how often.
+  if (d.kind === "OPERATING_SIGNAL" && d.code === "WEBSITE_HISTORY") {
+    const first = String(d.detail.firstCapture ?? "").slice(0, 4);
+    const recent = typeof d.detail.homeVersionsLast12Months === "number" ? d.detail.homeVersionsLast12Months : null;
+    const total = Number(d.detail.homeVersions ?? 0);
+    const changes = recent === null
+      ? t("sin capturas válidas recientes de su inicio (puede redirigir), sus cambios del último año no se conocen", "with no recent valid captures of its home page (it may redirect), its changes over the last year are unknown")
+      : t("su página de inicio cambió {n} veces en los últimos 12 meses", "its home page changed {n} times in the last 12 months").replace("{n}", String(recent));
+    return { finding: t("Su dominio tiene capturas en el Internet Archive desde {y}: {changes} ({t} versiones en total)", "Its domain has Internet Archive captures since {y}: {changes} ({t} versions in all)")
+        .replace("{y}", first).replace("{changes}", changes).replace("{t}", String(total)),
+      why: t("Según las capturas mensuales del Internet Archive. La primera captura fecha el dominio, que pudo tener otro dueño antes; no es la fecha de fundación. Un cambio puede ser una edición pequeña.", "From the Internet Archive's monthly captures. The first capture dates the domain, which may have had an earlier owner; it is not the founding date. A change may be a small edit.") };
+  }
+  if (d.kind === "OPERATING_SIGNAL" && d.code === "WEBSITE_NOT_ARCHIVED") return {
+    finding: t("El Internet Archive no tiene capturas de su web", "The Internet Archive holds no captures of its website"),
+    why: t("Suele indicar una web reciente o poco enlazada. No significa que no exista: el archivo muestrea la web.", "It usually means a recent or little-linked website. It does not mean it does not exist: the archive samples the web.") };
   if (d.kind === "OPERATING_SIGNAL" && d.code === "PUBLISHING_CADENCE") {
     const n90 = Number(d.detail.last90Days ?? 0), n365 = Number(d.detail.last365Days ?? 0);
     const last = typeof d.detail.lastPublishedAt === "string" ? d.detail.lastPublishedAt.slice(0, 10) : null;
