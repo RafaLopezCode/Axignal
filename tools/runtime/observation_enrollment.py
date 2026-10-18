@@ -75,6 +75,10 @@ class SubscriberObservationAuthority:
 
     def __init__(self, root: Path, clock: Clock, configuration_file: Path | None = None):
         self.root, self.clock = root, clock
+        #: The configuration this authority was given, passed on to everything the tick
+        #: builds (biocultor.com canary, 2026-10-18: the economic runtime read it only from
+        #: the environment, so the manual proof ran without website rights).
+        self.configuration_file = configuration_file
         self.identity = SqliteSubscriberIdentityStore(
             root / "subscriber-runtime.sqlite3", read_only=True
         )
@@ -448,6 +452,7 @@ def first_proof(
         source_ports=source_ports,
         research_access=authority.allows,
         website_rights=authority.website_rights,
+        configuration_file=getattr(authority, "configuration_file", None),
     )
     return dict(
         readiness,
