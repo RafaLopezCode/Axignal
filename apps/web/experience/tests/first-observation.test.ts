@@ -186,3 +186,12 @@ test("its sector's market reads as the sector's, and its size as an order of mag
   assert.match(said, /Its revenue, €16\.4M \(2023\), is 0\.7 times the average of enterprises of its size \(50–249 people\) in its sector in France, and 21\.9 times/);
   assert.match(said, /Only 0\.7% of enterprises in its sector in France are its size \(50–249 people\) or larger/);
 });
+
+test("its own channel's pace and its country versions read in people's words (spec 096)", () => {
+  const pace = discovery("OPERATING_SIGNAL", "PUBLISHING_CADENCE", { statement: "12 in 90 days", detail: { last90Days: 12, last365Days: 30, lastPublishedAt: "2026-10-06T10:00:00+00:00" } });
+  assert.match(discoveryCopy(pace, en).finding, /It publishes on its own channel: 12 posts in 90 days \(latest 2026-10-06\)/);
+  const quiet = discovery("OPERATING_SIGNAL", "PUBLISHING_CADENCE", { statement: "0 in 90 days", detail: { last90Days: 0, last365Days: 0, lastPublishedAt: "2025-12-23T10:00:00+00:00" } });
+  assert.match(discoveryCopy(quiet, en).finding, /Its news channel is quiet: last post 2025-12-23/);
+  const versions = discovery("DECLARED_SERVICE_AREA", "SITE_VERSIONS_FOR_COUNTRIES", { statement: "DE, FR", detail: { countries: { DE: ["HREFLANG"], FR: ["COUNTRY_DOMAIN"] } } });
+  assert.match(discoveryCopy(versions, en).finding, /Its website has versions for: Germany, France/);
+});

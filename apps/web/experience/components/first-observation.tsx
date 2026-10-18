@@ -156,6 +156,15 @@ export function discoveryCopy(d: Discovery, t: Translate, locale = "en"): { find
   if (d.kind === "CREDENTIAL") return {
     finding: `${t("Certificación que declara", "Certification it claims")}: ${d.statement}`,
     why: t("Lo afirma en su web; no se ha comprobado en el registro del emisor.", "Claimed on its website; the issuer's register has not been checked.") };
+  // Spec 096: what it publishes on its own channel, and how often.
+  if (d.kind === "OPERATING_SIGNAL" && d.code === "PUBLISHING_CADENCE") {
+    const n90 = Number(d.detail.last90Days ?? 0), n365 = Number(d.detail.last365Days ?? 0);
+    const last = typeof d.detail.lastPublishedAt === "string" ? d.detail.lastPublishedAt.slice(0, 10) : null;
+    return { finding: n365 === 0
+        ? t("Su canal de noticias está parado: última publicación {date}", "Its news channel is quiet: last post {date}").replace("{date}", last ?? "—")
+        : t("Publica en su propio canal: {n} publicaciones en 90 días (la última, {date})", "It publishes on its own channel: {n} posts in 90 days (latest {date})").replace("{n}", String(n90)).replace("{date}", last ?? "—"),
+      why: t("Leído del canal de noticias que declara su web: qué cuenta y con qué ritmo. Un canal parado no significa que la organización esté parada.", "Read from the news feed its website declares: what it says and at what pace. A quiet channel does not mean the organization is idle.") };
+  }
   if (d.kind === "OPERATING_SIGNAL" && d.code === "OPEN_POSITIONS") {
     const fns = d.detail.functions && typeof d.detail.functions === "object" ? Object.entries(d.detail.functions as Record<string, number>).filter(([f]) => f !== "OTHER").slice(0, 4).map(([f, n]) => `${f} (${n})`) : [];
     const where = d.detail.countries && typeof d.detail.countries === "object" ? Object.keys(d.detail.countries as Record<string, number>).slice(0, 6).map(c => placeLabel(c, locale)) : [];
@@ -388,6 +397,9 @@ export function discoveryCopy(d: Discovery, t: Translate, locale = "en"): { find
   if (d.kind === "DECLARED_LOCATION") return d.code === "LOCATION_STATED_IN_TEXT"
     ? { finding: `${t("Ubicación mencionada en su web", "Location mentioned on its website")}: ${placeLabel(d.statement, locale)}`, why: t("Indica dónde mirar primero. No define dónde opera ni todo su mercado.", "It shows where to look first. It does not define where it operates or its whole market.") }
     : { finding: `${t("Dirección que declara", "Address it declares")}: ${d.statement}`, why: t("Indica dónde mirar primero. No define dónde opera ni todo su mercado.", "It shows where to look first. It does not define where it operates or its whole market.") };
+  if (d.kind === "DECLARED_SERVICE_AREA" && d.code === "SITE_VERSIONS_FOR_COUNTRIES") return {
+    finding: `${t("Su web tiene versiones para", "Its website has versions for")}: ${Object.keys((d.detail.countries ?? {}) as Record<string, unknown>).map(c => placeLabel(c, locale)).join(", ")}`,
+    why: t("Es lo que declara su propia web con sus versiones por país: dónde dice vender o atender, no una prueba de ventas allí.", "Its own website declares it through its country versions: where it says it sells or serves, not proof of sales there.") };
   if (d.kind === "DECLARED_SERVICE_AREA") return { finding: `${t("Zona de servicio que declara", "Service area it declares")}: ${d.statement}`, why: t("Es lo que la organización dice de sí misma; no se ha verificado.", "It is what the organization says about itself; it has not been verified.") };
   if (d.kind === "LANGUAGES") return { finding: `${t("Idiomas publicados", "Published languages")}: ${d.statement}`, why: t("Muestra en qué idiomas se presenta; no prueba en qué mercados vende.", "It shows the languages it presents itself in; it does not prove where it sells.") };
   if (d.kind === "IDENTITY_HINT") return { finding: `${t("Su web declara", "Its website declares")}: ${identifierLabel(d.code, d.statement, t)}`, why: t("Es una pista de identidad. Solo un registro puede verificarla.", "It is an identity hint. Only a registry can verify it.") };
@@ -494,6 +506,7 @@ export function changeLabel(metric: string, t: Translate): string {
     "presence.languages": t("Idiomas de su web", "Website languages"),
     "reputation.press_mentions": t("Titulares que la nombran", "Headlines naming it"),
     "activity.own_publications": t("Publicaciones propias", "Own publications"),
+    "activity.publications_90d": t("Publicaciones en 90 días (canal propio)", "Posts in 90 days (own channel)"),
     "value.activities": t("Actividades probables", "Likely activities"),
     "markets.premises": t("Sedes declaradas", "Declared premises"),
     "markets.group_countries": t("Países de su grupo", "Group countries"),

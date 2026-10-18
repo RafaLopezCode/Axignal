@@ -14,6 +14,7 @@ import re
 import time
 from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass, replace
+from dataclasses import replace as dataclass_replace
 from datetime import UTC, datetime, timedelta
 from typing import Any, Protocol
 from urllib.parse import urlencode, urlsplit
@@ -53,6 +54,13 @@ from application.first_observation.country_evidence import country_evidence
 from application.first_observation.geography import area_jurisdiction, jurisdiction
 from application.first_observation.legal_notice import legal_names_in_text
 from application.first_observation.policy import FirstObservationPolicy, next_due
+from application.first_observation.publications import SHOWN as SHOWN_PUBLICATIONS
+from application.first_observation.publications import (
+    cadence,
+    conventional_feed,
+    own_feed,
+    parse_feed,
+)
 from application.first_observation.registry_ids import REGISTER_SCHEMES
 from application.first_observation.representation_audit import (
     AUDIT_VERSION,
@@ -75,6 +83,7 @@ from application.first_observation.site import (
     rank_information_links,
     read_page,
 )
+from application.first_observation.site_markets import versions_for_countries
 from application.first_observation.vocabularies import SCHEMA_TYPE_SECTIONS
 from application.observation_intelligence.contracts import (
     CapabilityHypothesis,
@@ -588,6 +597,43 @@ class FirstObservationService:
                 if page is not None:
                     pages.append(page)
                     ledger.decide("FETCHED:CUSTOMERS")
+        # What it publishes on its own channel (spec 096): the news feed its homepage
+        # declares, one more request within the site budget, robots respected. Only titles,
+        # links and dates are kept, on the homepage reading.
+        first = pages[0] if pages else None
+        declared = first.signals.get("feeds") if first is not None else None
+        feed = (
+            own_feed([str(f) for f in declared], first.url)
+            if first is not None and isinstance(declared, list)
+            else None
+        )
+        if first is not None and feed is None:
+            # None declared: the one its platform publishes by convention (one guess).
+            feed = conventional_feed(
+                first.signals.get("platform"), first.url, [url for url, _t in first.links]
+            )
+        if first is not None and feed and "publications" not in first.signals:
+            if not robots.allows(feed):
+                ledger.decide("SKIPPED:ROBOTS:OWN_FEED")
+            elif ledger.http_requests + policy.requests_per_fetch > policy.max_site_requests:
+                ledger.decide("STOPPED:SITE_REQUEST_BUDGET")
+            else:
+                resource = self._fetch(feed, "site-page", ledger)
+                if (
+                    resource.failure is None
+                    and resource.status == 200
+                    and resource.body
+                    and robots.allows(resource.final_url)
+                ):
+                    pages[0] = dataclass_replace(
+                        first,
+                        signals={
+                            **first.signals,
+                            "publications": parse_feed(resource.body, resource.final_url),
+                            "feedUrl": resource.final_url,
+                        },
+                    )
+                    ledger.decide("FETCHED:OWN_FEED")
         reading = SiteReading(
             key, now, robots, tuple(pages), None, streak, rights.shared_until(now), coverage
         )
@@ -999,6 +1045,7 @@ class FirstObservationService:
                 },
             )
         ]
+        out += _activity_and_markets(home, reading.observed_at)
         languages = sorted({x for x in (home.language, *home.alternate_languages) if x})
         if languages:
             out.append(
@@ -1571,6 +1618,66 @@ def _business_signals(pages: Sequence[PageReading]) -> bool:
         ):
             return True
     return False
+
+
+def _activity_and_markets(home: PageReading, now: datetime) -> list[Discovery]:
+    """Its own publications and publishing pace, and the countries its site versions
+    address (spec 096), read from its homepage and the feed it declares."""
+    out: list[Discovery] = []
+    held = home.signals.get("publications")
+    feed = home.signals.get("feedUrl")
+    if isinstance(held, list) and isinstance(feed, str):
+        items = [i for i in held if isinstance(i, Mapping)]
+        pace = cadence(items, now)
+        out.append(
+            Discovery(
+                DiscoveryKind.OPERATING_SIGNAL, "PUBLISHING_CADENCE",
+                f"{pace['last90Days']} in 90 days", XignalEpistemicState.OBSERVED.value,
+                feed, None, home.observed_at,
+                {**pace, "feed": feed, "basis": "OWN_FEED",
+                 "meaning": "What it publishes on its own channel and how often; a quiet "
+                 "channel is not an absence of activity."},
+            )
+        )  # fmt: skip
+        for item in items[:SHOWN_PUBLICATIONS]:
+            out.append(
+                Discovery(
+                    DiscoveryKind.MENTION, "OWN_PUBLICATION", str(item.get("title") or ""),
+                    XignalEpistemicState.OBSERVED.value, str(item.get("url") or feed), None,
+                    _parsed(str(item.get("publishedAt") or "")) or home.observed_at,
+                    {"outlet": urlsplit(feed).hostname, "publishedAt": item.get("publishedAt"),
+                     "channel": "OWN_FEED"},
+                )
+            )  # fmt: skip
+    countries = versions_for_countries(
+        home.url,
+        _strings(home.signals.get("hreflang")),
+        _strings(home.signals.get("hreflangHosts")),
+        [url for url, _text in home.links],
+    )
+    if countries:
+        out.append(
+            Discovery(
+                DiscoveryKind.DECLARED_SERVICE_AREA, "SITE_VERSIONS_FOR_COUNTRIES",
+                ", ".join(countries), "DECLARED", home.url, None,
+                home.observed_at,
+                {"countries": countries, "basis": "STATED_SERVICE_AREA",
+                 "meaning": "Its website publishes versions addressed to these countries: where "
+                 "it says it sells or serves, not proof of sales there."},
+            )
+        )  # fmt: skip
+    return out
+
+
+def _strings(value: object) -> list[str]:
+    return [str(x) for x in value] if isinstance(value, list | tuple) else []
+
+
+def _parsed(value: str) -> datetime | None:
+    try:
+        return datetime.fromisoformat(value)
+    except ValueError:
+        return None
 
 
 def _published_contact(pages: Sequence[PageReading]) -> dict[str, object]:
