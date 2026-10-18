@@ -341,7 +341,7 @@ Cada paso se mide sobre el panel de 20 clientes típicos de agencia antes de su 
 | 1 | Spec 099: texto principal y fecha (trafilatura + htmldate) | Menciones solo si están en el título o el texto principal; fecha de publicación | Reputación, Contexto |
 | 2 | PageSpeed Insights API | Lighthouse: SEO, rendimiento, accesibilidad y buenas prácticas, móvil y escritorio, con su versión de instrumento | Presencia (SEO) |
 | 3 | Índice de Common Crawl | Si su web está en el corpus que leen los modelos de IA, y con cuántas páginas | Presencia (GEO) |
-| 4 | GDELT DOC 2.0 | Segunda fuente gratuita de noticias del motor de investigación (65 idiomas) | Reputación, Actividad |
+| 4 | ~~GDELT DOC 2.0~~ **aparcado** (2026-10-19) | Respondió 429 incluso con 40 s entre consultas, desde dos IP, y sin artículos para Holded ni Vitaldent en 3-6 meses; DeepSeek ya cubre esas noticias | Reputación, Actividad |
 | 5 | Wayback CDX | Historia de la web: antigüedad, versiones, rediseños | Actividad, Presencia |
 
 Después: Mozilla Observatory y SSL Labs (confianza técnica); OpenAlex, PatentsView y SEC EDGAR
