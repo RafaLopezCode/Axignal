@@ -102,21 +102,33 @@ export function explainFinding({ insight, related, prompt, organizationId, conte
       basis = sources;
       open = limits;
       break;
+    case "act":
+      summary = t("A partir de lo que midió este hallazgo, en orden:", "From what this finding measured, in order:");
+      known = insight.actions?.length ? insight.actions : [step];
+      open = limits;
+      break;
     case "research":
-      summary = t("Lo siguiente que conviene hacer:", "What to do next:");
-      known = [step];
+      summary = t("Para entender mejor este hallazgo antes de actuar:", "To understand this finding better before acting:");
+      known = insight.research?.length
+        ? insight.research
+        : unique([...familyUnknowns.map(i => i.headline), t("Si cambia en la próxima observación y frente a qué.", "Whether it changes at the next observation, and against what.")]);
       open = limits;
       break;
     default:
-      summary = insight.headline;
-      known = unique([insight.why, ...insight.meaning, ...proof], new Set([summary]));
+      // "What do you know" asks for the finding itself; any other question this finding cannot
+      // answer is said to be so, instead of answering it with the finding's headline.
+      summary = /qu[eé] sabe|what do you know|was wei(ß|ss)t|que sais|cosa sai|o que sabe/i.test(prompt)
+        ? insight.headline
+        : fill(t("Este hallazgo no tiene un dato que responda exactamente a eso. Lo que sí establece: {finding}", "This finding holds no data that answers exactly that. What it does establish: {finding}"), { finding: insight.headline });
+      known = unique([insight.why, ...insight.meaning, ...proof], new Set([summary, insight.headline]));
       open = limits;
   }
   // No sentence appears twice in one answer.
   const shown = new Set([summary]);
   known = unique(known, shown); known.forEach(v => shown.add(v));
   basis = unique(basis, shown); basis.forEach(v => shown.add(v));
-  open = unique(open, shown);
+  // A limit already said inside another line (a proof row quoting it) is not repeated.
+  open = unique(open, shown).filter(v => ![...shown].some(s => s !== v && s.includes(v)));
   return {
     organizationId, contextId, signalIds: [], intent, summary,
     known, openQuestions: open, evidenceBasis: basis, evidenceLimits: [],

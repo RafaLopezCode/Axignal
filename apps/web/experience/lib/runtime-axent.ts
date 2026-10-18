@@ -12,7 +12,7 @@ export type RuntimeAnswer = {
   contextId: string;
   signalIds: string[];
   publicUnderstandingReportId?: string;
-  intent: "known" | "changed" | "why" | "unknown" | "evidence" | "research";
+  intent: "known" | "changed" | "why" | "unknown" | "evidence" | "research" | "act";
   summary: string;
   known: string[];
   openQuestions: string[];
@@ -40,9 +40,14 @@ export function intentOf(prompt: string): RuntimeAnswer["intent"] {
     /evidenc|fuente|source|c[oó]mo (lo )?sab|how do you know|woher|wei(ß|ss)t du das|comment le sais|come lo sai|quelle|preuve|fonte|fundament|basis/i.test(prompt);
   const researchIntent =
     /investig|research|recherch|ricerc|indag|nächst/i.test(prompt);
+  // "How do I fix it", "what can I do", "how do I improve": the reader wants to act.
+  const actIntent =
+    /corrij|corregi|arregl|mejor(o|ar)|soluc|qu[eé] (puedo|debo) hacer|qu[eé] hago|c[oó]mo (lo )?(hago|consigo|aparezco)|fix|improve|solve|what (can|should) i do|how (do|can) i|beheb|verbesser|was kann ich|corrig|amélior|que faire|correg|miglior|cosa posso|corrijo|melhor|o que fa[cç]o|posso fazer|puis-je faire/i.test(prompt);
   const whyIntent = /por qué|why|import|warum|pourquoi|perché|porquê/i.test(prompt);
   const changedIntent = /camb|chang|mud|änder/i.test(prompt);
-  return researchIntent
+  return actIntent
+    ? "act"
+    : researchIntent
     ? "research"
     : unknownIntent
       ? "unknown"

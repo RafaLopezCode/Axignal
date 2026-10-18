@@ -14,6 +14,7 @@ const d = (kind: string, code: string, statement: string, state: string, detail:
 const reading: Reading = { projection: null, firstObservation: { state: "FIRST_PROOF_READY", firstProofReady: true, discoveries: [
   d("REPRESENTATION_GAP", "AUDIT:IMAGES_DESCRIBED", "IMAGES_DESCRIBED", "POTENTIAL", { impact: "LOW", instrument: "representation-audit.v1", value: { images: 5, withoutAlt: 3 } }),
   d("GENERATIVE_VISIBILITY", "AI_NOT_NAMED_FOR_CATEGORY", "0/2", "OBSERVED", { sample: "3 questions, 1 answer each", conditions: "Fixed questions, no web search" }),
+  d("GENERATIVE_VISIBILITY", "AI_CITED_SOURCES", "compo-expert.com, yara.es", "OBSERVED", { sample: "7 questions, 1 answer each", sitesCited: [["compo-expert.com", 3], ["yara.es", 2]] }),
   d("MENTION", "PRESS_MENTION", "Acme opens a plant", "OBSERVED", { source: "El Diario" }, "https://news.example/acme"),
   d("ACTIVITY", "web-design", "Web design and development", "POTENTIAL", { method: "LEXICON", routingCodes: ["CPV:72413000"] }),
   d("DECLARED_LOCATION", "LOCATION_STATED_IN_TEXT", "EU/ES", "DECLARED"),
@@ -36,6 +37,8 @@ const QUESTIONS: Array<[string, string, ReturnType<typeof intentOf>]> = [
   ["Qué sigue abierto", "What remains open", "unknown"],
   ["Cómo lo sabes", "How do you know", "evidence"],
   ["Qué investigarías después", "What would you investigate next", "research"],
+  ["Qué puedo hacer", "What can I do", "act"],
+  ["Cómo lo corrijo", "How do I fix it", "act"],
 ];
 const LOCALES: Locale[] = ["es", "en", "de", "pt", "fr", "it"];
 const RAW = /\b(UNKNOWN|OBSERVED|POTENTIAL|DECLARED|DESCONOCIDAS)\b|governed source sensor|Xignal|[A-Z][A-Z0-9]*_[A-Z0-9_]+/;
@@ -60,7 +63,7 @@ test("AXENT answers every question about every finding of every family from that
           assert.equal(answer.evidenceBasis.length, insight.sources.length, `${where}: every source shown`);
           for (const url of insight.sources.map(s => s.url).filter(Boolean)) assert.ok(answer.sourceRefs.includes(url!), `${where}: link kept`);
         }
-        if (expected === "research") assert.ok(answer.known.length === 1, `${where}: one concrete next step`);
+        if (expected === "research" || expected === "act") assert.ok(answer.known.length >= 1, `${where}: at least one concrete item`);
       }
     }
   }
@@ -86,4 +89,20 @@ test("a change is said against the earlier reading; without one, no change is de
   const buyer = insights.find(i => i.id.startsWith("DEMAND:POTENTIAL_BUYER"))!;
   const answer = explainFinding({ insight: buyer, related: insights, prompt: "What changed", organizationId: "org", contextId: "ctx", t, locale: "en" });
   assert.match(answer.summary, /no comparable earlier reading/);
+});
+
+test("asked how to fix a finding, AXENT gives that finding's own steps, not its headline again", () => {
+  const t = (es: string, en: string) => translate(es, en, "es");
+  const insights = insightsFor(reading, t, "es");
+  const cited = insights.find(i => i.id.startsWith("GENERATIVE_VISIBILITY:AI_CITED_SOURCES"))!;
+  const fix = explainFinding({ insight: cited, related: insights, prompt: "¿Cómo lo corrijo?", organizationId: "org", contextId: "ctx", t, locale: "es" });
+  assert.equal(fix.intent, "act");
+  assert.notEqual(fix.summary, cited.headline);
+  assert.ok(fix.known.some(k => k.includes("compo-expert.com") && k.includes("yara.es")), "names the sites the assistant cites");
+  const next = explainFinding({ insight: cited, related: insights, prompt: "Qué investigarías después", organizationId: "org", contextId: "ctx", t, locale: "es" });
+  assert.equal(next.intent, "research");
+  assert.ok(next.known.every(k => !fix.known.includes(k)), "research is not the action list again");
+  const notNamed = insights.find(i => i.id.startsWith("GENERATIVE_VISIBILITY:AI_NOT_NAMED_FOR_CATEGORY"))!;
+  const sample = notNamed.proof.find(p => p.label === "Muestra");
+  assert.equal(sample?.value, "3 preguntas, una respuesta cada una", "the instrument's sample in the reader's language");
 });
