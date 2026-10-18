@@ -46,11 +46,19 @@ REGULATION_WORDS = {
     "it": "normativa", "pt": "regulamentação", "nl": "regelgeving",
 }  # fmt: skip
 
-#: Hosts whose pages are a platform's own profiles, never a third-party mention.
+#: Hosts whose pages are a platform's own profiles or app store listings, never a third-party
+#: mention (play.google.com listed Holded's own app, 2026-10-18).
 SOCIAL_LABELS = frozenset({
     "facebook", "instagram", "twitter", "x", "linkedin", "youtube", "tiktok", "pinterest",
-    "threads", "wikipedia", "wikidata",
+    "threads", "wikipedia", "wikidata", "google", "apple",
 })  # fmt: skip
+#: Legal boilerplate names every brand it lists (a privacy policy named Vitaldent, 2026-10-18):
+#: it says nothing about the organization.
+_BOILERPLATE_PATH = re.compile(
+    r"privacy|privacidad|privacite|privacidade|datenschutz|cookie|aviso-legal|legal-notice|"
+    r"mentions-legales|impressum|terms|condiciones|conditions|/legal",
+    re.IGNORECASE,
+)
 #: Public review platforms (registrable label): their pages are reviews, told apart.
 REVIEW_LABELS = frozenset({
     "trustpilot", "tripadvisor", "glassdoor", "indeed", "kununu", "ocu", "yelp", "sluurpy",
@@ -148,6 +156,12 @@ def registrable_label(host: str) -> str:
     return labels[-2] if len(labels) >= 2 else labels[0]
 
 
+def page_key(url: str) -> str:
+    """One page across its language subdomains (gl.example.com and example.com, same path)."""
+    parts = urlsplit(url)
+    return registrable_label(parts.hostname or "") + parts.path.rstrip("/").lower()
+
+
 def _brand_tokens(names: Sequence[str], domain: str) -> set[str]:
     tokens = {registrable_label(domain)} if domain else set()
     for name in names:
@@ -169,7 +183,7 @@ def candidates(hits: Sequence[WebHit], subject: ResearchSubject, *, purpose: str
         if hit.rerank is not None and hit.rerank < MIN_RERANK:
             continue
         label = registrable_label(host)
-        if label in SOCIAL_LABELS:
+        if label in SOCIAL_LABELS or _BOILERPLATE_PATH.search(urlsplit(hit.url).path):
             continue
         if purpose == "REPUTATION":
             if host == own or host.endswith("." + own):
@@ -178,7 +192,7 @@ def candidates(hits: Sequence[WebHit], subject: ResearchSubject, *, purpose: str
                 continue  # a same-brand domain (velascawomen.com) is its own channel
         out.append(hit)
     out.sort(key=lambda h: -(h.rerank or 0.0))
-    return list({h.url: h for h in out}.values())[:MAX_PAGES_PER_QUERY]
+    return list({page_key(h.url): h for h in reversed(out)}.values())[::-1][:MAX_PAGES_PER_QUERY]
 
 
 def _fold(text: str) -> str:
@@ -218,11 +232,13 @@ class PageCheck:
     excerpt: str | None = None
     links_to_website: bool = False
     read_at: str | None = None
+    #: Why a page was not read (HTTP status or the reader's refusal), said as it is.
+    reason: str | None = None
 
     def to_wire(self) -> dict[str, object]:
         return {
             "url": self.url, "state": self.state, "title": self.title, "excerpt": self.excerpt,
-            "linksToWebsite": self.links_to_website, "readAt": self.read_at,
+            "linksToWebsite": self.links_to_website, "readAt": self.read_at, "reason": self.reason,
         }  # fmt: skip
 
     @staticmethod
@@ -233,6 +249,7 @@ class PageCheck:
             excerpt=str(raw["excerpt"]) if raw.get("excerpt") else None,
             links_to_website=bool(raw.get("linksToWebsite")),
             read_at=str(raw["readAt"]) if raw.get("readAt") else None,
+            reason=str(raw["reason"]) if raw.get("reason") else None,
         )  # fmt: skip
 
 

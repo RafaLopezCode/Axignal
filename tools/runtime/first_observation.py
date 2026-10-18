@@ -1003,7 +1003,9 @@ class FirstObservationRuntime:
         """Run queued search ranking measurements (a few per tick, under the daily cap)."""
         return 0 if self._search_rank is None else self._search_rank.run()
 
-    def _with_search_rank(self, view: dict[str, object]) -> dict[str, object]:
+    def _with_search_rank(
+        self, view: dict[str, object], proof: Mapping[str, object] | None = None
+    ) -> dict[str, object]:
         """Show a stored search ranking; queue one when none is fresh (never searches inline).
 
         The searches are the activity in the website's own words (the lexicon terms its text
@@ -1013,11 +1015,11 @@ class FirstObservationRuntime:
             return view
         held = view.get("discoveries")
         discoveries = held if isinstance(held, list) else []
-        activity = _activity_words(view)
+        activity = _activity_words(view, proof)
         if activity is None:
             return view
         host, country, language, cleaned = activity
-        if not cleaned:
+        if not cleaned or country is None:
             return view
         subject = SearchSubject(
             name=host, domain=host, terms=cleaned[:2], country=country.upper(), language=language
@@ -1034,14 +1036,16 @@ class FirstObservationRuntime:
         """Run queued web research (a few per tick, under the daily search cap, spec 098)."""
         return 0 if self._web_research is None else self._web_research.run()
 
-    def _with_web_research(self, view: dict[str, object]) -> dict[str, object]:
+    def _with_web_research(
+        self, view: dict[str, object], proof: Mapping[str, object] | None = None
+    ) -> dict[str, object]:
         """Pages that name it or frame its activity, each read and verified by AXIGNAL itself;
         queues research when none is fresh (never searches on the read path)."""
         if self._web_research is None:
             return view
         held = view.get("discoveries")
         discoveries = held if isinstance(held, list) else []
-        activity = _activity_words(view)
+        activity = _activity_words(view, proof)
         if activity is None:
             return view
         host, _country, language, cleaned = activity
@@ -1677,8 +1681,8 @@ class FirstObservationRuntime:
                 *identity_corroboration(view["discoveries"]),  # type: ignore[arg-type]
             ]
             view = self._with_geo(view)
-            view = self._with_search_rank(view)
-            view = self._with_web_research(view)
+            view = self._with_search_rank(view, proof)
+            view = self._with_web_research(view, proof)
             view = self._with_sector_context(view)
             view = self._with_regulation(view)
             # Relationships and competition from published public contract awards.
@@ -2204,24 +2208,38 @@ def first_observation_reader(
     return read
 
 
-def _activity_words(view: Mapping[str, object]) -> tuple[str, str, str, tuple[str, ...]] | None:
-    """(host, country, language, activity terms in the website's own words); None without
-    a website and a country. The terms may be empty."""
+def _activity_words(
+    view: Mapping[str, object], proof: Mapping[str, object] | None = None
+) -> tuple[str, str | None, str, tuple[str, ...]] | None:
+    """(host, country, language, activity terms in the website's own words); None without a
+    website. The country may be unknown and the terms empty. The capabilities and published
+    contact are read from the proof: the public view does not carry them (2026-10-18: every
+    search and research subject had no activity words)."""
+    source = proof if isinstance(proof, Mapping) else view
     target = view.get("target")
     website = target.get("website") if isinstance(target, Mapping) else None
     host = (urlsplit(str(website)).hostname or "").removeprefix("www.") if website else ""
+    if not host:
+        return None
     scopes = view.get("attentionScopes")
-    country = None
+    country: str | None = None
     if isinstance(scopes, list) and scopes and isinstance(scopes[0], Mapping):
         parts = str(scopes[0].get("jurisdiction") or "").split("/")
         country = parts[1] if parts and parts[0] == "EU" and len(parts) > 1 else parts[0]
-    contact = view.get("publishedContact")
+    if country is not None and len(country) != 2:
+        country = None
+    contact = source.get("publishedContact") or view.get("publishedContact")
     declared = contact.get("language") if isinstance(contact, Mapping) else None
-    if not host or not country or len(country) != 2:
-        return None
-    language = language_for(country, str(declared) if declared else None)
+    if country is not None:
+        language = language_for(country, str(declared) if declared else None)
+    else:
+        held = view.get("discoveries")
+        spoken = next((d.get("detail", {}).get("languages") for d in (held if isinstance(held, list) else [])
+                       if isinstance(d, Mapping) and d.get("kind") == "LANGUAGES"), None)  # fmt: skip
+        first = str(declared or (spoken[0] if isinstance(spoken, list) and spoken else "en"))
+        language = first[:2].lower()
     terms: list[str] = []
-    held_capabilities = view.get("capabilities")
+    held_capabilities = source.get("capabilities") or view.get("capabilities")
     for capability in held_capabilities if isinstance(held_capabilities, list) else []:
         if not isinstance(capability, Mapping):
             continue

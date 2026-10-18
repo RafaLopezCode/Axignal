@@ -14,6 +14,7 @@ import json
 import urllib.request
 from collections.abc import Callable, Mapping
 from pathlib import Path
+from urllib.parse import urldefrag
 
 from application.web_research import WebHit
 
@@ -65,7 +66,8 @@ class DeepSeekSearch:
             score = item.get("rerank_score")
             out.append(
                 WebHit(
-                    url=str(item["url"]),
+                    # The index appends fragments ("#1"); a page is read without them.
+                    url=urldefrag(str(item["url"])).url,
                     title=str(item.get("title") or ""),
                     site_name=str(item["site_name"]) if item.get("site_name") else None,
                     rerank=float(score) if isinstance(score, int | float) else None,

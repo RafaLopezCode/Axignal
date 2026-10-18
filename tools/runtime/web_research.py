@@ -31,6 +31,7 @@ from application.web_research import (
     WebSearch,
     candidates,
     check_page,
+    page_key,
     plan,
 )
 
@@ -176,7 +177,8 @@ class WebResearchRunner:
         elif robots.status in {404, 410}:
             reading = RobotsReading(None, robots.observed_at)  # none published (RFC 9309)
         else:
-            return PageCheck(url, "UNREADABLE")  # robots unknown: not read
+            # robots.txt unknown: not read
+            return PageCheck(url, "UNREADABLE", reason=f"ROBOTS:{robots.failure or robots.status}")
         if not reading.allows(url):
             return PageCheck(url, "ROBOTS_DISALLOWED")
         fetched = self._fetcher.fetch(url, slot="web-research")
@@ -185,7 +187,8 @@ class WebResearchRunner:
             or fetched.body is None
             or "html" not in (fetched.content_type or "html").lower()
         ):
-            return PageCheck(url, "UNREADABLE")
+            reason = fetched.failure or f"HTTP_{fetched.status}"
+            return PageCheck(url, "UNREADABLE", reason=reason)
         page = read_page(
             url=fetched.final_url, html=_text(fetched), observed_at=fetched.observed_at,
             content_fingerprint=fetched.content_fingerprint or "", artifact_ref=None,
@@ -237,9 +240,9 @@ class WebResearchRunner:
             searched += int(paid)
             needles = names if query.purpose == "REPUTATION" else list(subject.activity_terms)
             for hit in candidates(hits, subject, purpose=query.purpose):
-                if hit.url in seen:
+                if page_key(hit.url) in seen:
                     continue
-                seen.add(hit.url)
+                seen.add(page_key(hit.url))
                 check = self._check(hit, needles, subject.domain)
                 pages.append({
                     **check.to_wire(), "purpose": query.purpose,
