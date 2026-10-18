@@ -91,6 +91,32 @@
 .obs-org-empty { padding: 10px; font-size: 13px; color: var(--obs-rail-muted); }
 .obs-rail-note { font-size: 12px; line-height: 1.4; color: var(--obs-muted); margin: 6px 0 0; }
 .obs-rail-foot { display: grid; gap: 2px; border-top: 1px solid var(--obs-rail-line); padding-top: 10px; }
+/* Family workspace (design base): one organization at a time, its families as the menu. */
+.obs { --ax-family-presence: oklch(0.58 0.13 265); --ax-family-reputation: oklch(0.58 0.13 301); --ax-family-value: oklch(0.58 0.13 337); --ax-family-markets: oklch(0.58 0.13 13); --ax-family-relationships: oklch(0.58 0.13 49); --ax-family-demand: oklch(0.58 0.13 85); --ax-family-activity: oklch(0.58 0.13 121); --ax-family-economics: oklch(0.58 0.13 157); --ax-family-organization: oklch(0.58 0.13 193); --ax-family-context: oklch(0.58 0.13 229); }
+.obs-org-select { position: relative; display: block; margin: 4px 0 2px; }
+.obs-org-select select { appearance: none; inline-size: 100%; min-block-size: 44px; padding: 0 36px 0 12px; border: 1px solid var(--obs-rail-line); border-radius: var(--obs-r-control); background: var(--obs-card); color: var(--obs-ink); font: inherit; font-size: 14.5px; font-weight: 700; cursor: pointer; text-overflow: ellipsis; box-shadow: 0 6px 16px -14px rgba(20, 28, 58, .5); transition: border-color .15s var(--obs-ease); }
+.obs-org-select select:hover:not(:disabled) { border-color: #b9c8ec; }
+.obs-org-select svg { position: absolute; inset-inline-end: 12px; inset-block-start: 50%; translate: 0 -50%; pointer-events: none; color: var(--obs-rail-muted); }
+.obs-rail-add { margin-block-end: 6px; }
+.obs-rail-families { flex: 1; min-block-size: 0; overflow-y: auto; scrollbar-width: thin; scrollbar-color: var(--obs-rail-line) transparent; border-top: 1px solid var(--obs-rail-line); padding-top: 8px; }
+.obs-rail-families:empty { border-top: 0; padding: 0; }
+.obs-rail-label { margin: 2px 10px 6px; font-size: 12px; font-weight: 700; letter-spacing: .02em; color: var(--obs-rail-muted); }
+.obs-family-rail ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 1px; }
+.obs-family-link { display: flex; align-items: center; gap: 10px; inline-size: 100%; min-block-size: 40px; padding: 0 10px; border: 0; border-radius: var(--obs-r-control); background: transparent; color: var(--obs-rail-text); font: inherit; font-size: 14px; font-weight: 600; text-align: start; cursor: pointer; transition: background-color .15s var(--obs-ease); }
+.obs-family-link:hover { background: var(--obs-rail-2); }
+.obs-family-link[aria-current] { background: var(--obs-card); color: var(--obs-ink); box-shadow: 0 0 0 1px var(--obs-rail-line), 0 6px 16px -12px rgba(20, 28, 58, .45); }
+.obs-family-name { flex: 1; min-inline-size: 0; overflow-wrap: anywhere; }
+.obs-family-empty { color: var(--obs-rail-muted); font-weight: 500; }
+.obs-family-dot { flex: none; inline-size: 9px; block-size: 9px; border-radius: 50%; background: var(--dot, var(--obs-rail-muted)); transition: transform .2s var(--obs-ease); }
+.obs-family-link[aria-current] .obs-family-dot { transform: scale(1.25); }
+.obs-family-dot-all { background: transparent; box-shadow: inset 0 0 0 2px var(--obs-rail-muted); }
+.obs-family-dot-presence { --dot: var(--ax-family-presence); } .obs-family-dot-reputation { --dot: var(--ax-family-reputation); } .obs-family-dot-value { --dot: var(--ax-family-value); } .obs-family-dot-markets { --dot: var(--ax-family-markets); } .obs-family-dot-relationships { --dot: var(--ax-family-relationships); } .obs-family-dot-demand { --dot: var(--ax-family-demand); } .obs-family-dot-activity { --dot: var(--ax-family-activity); } .obs-family-dot-economics { --dot: var(--ax-family-economics); } .obs-family-dot-organization { --dot: var(--ax-family-organization); } .obs-family-dot-context { --dot: var(--ax-family-context); }
+.obs-family-unread { display: inline-grid; place-items: center; min-inline-size: 20px; block-size: 20px; padding: 0 6px; border-radius: var(--obs-r-badge); background: var(--obs-brass-soft); color: var(--obs-brass-ink); box-shadow: inset 0 0 0 1px rgba(196, 138, 34, .45); font-size: 12px; font-weight: 800; font-variant-numeric: tabular-nums; }
+.obs-family-channels { margin: 1px 0 4px; padding-inline-start: 19px !important; }
+.obs-family-channel { min-block-size: 36px; font-size: 13px; font-weight: 600; }
+/* The menu carries the families on wide screens; narrow screens keep the chips in the page. */
+@media (min-width: 881px) { .obs:has(.obs-rail-desktop .obs-family-rail) .obs-workspace-main .obs-facets { display: none; } }
+@media (prefers-reduced-motion: reduce) { .obs-family-link, .obs-family-dot, .obs-org-select select { transition: none; } }
 .obs-rail-action { display: flex; align-items: center; gap: 10px; min-height: 42px; padding: 0 10px; border: 0; border-radius: var(--obs-r-control); background: transparent; cursor: pointer; font-size: 14px; font-weight: 600; text-align: start; }
 .obs-rail-locale { padding: 4px 10px; }
 .obs-rail-locale .locale-selector { color: var(--obs-rail-muted); }

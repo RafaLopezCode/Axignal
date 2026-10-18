@@ -38,7 +38,7 @@ import { explainFinding } from "@/lib/finding-axent";
 import type { ObservatoryCapabilities } from "@/lib/observatory-source";
 import { WAITING_STATES, waitingItems, type ActivationPhase } from "@/lib/activation";
 import { ActivationView } from "./activation";
-import { channelLabel, FamilyNav, scopeCopy, type FacetScope } from "./family-nav";
+import { channelLabel, FamilyNav, FamilyRail, scopeCopy, type FacetScope } from "./family-nav";
 import { EvolutionCompare } from "./evolution-compare";
 import { countByFacet, facetOfSourceType, facetParams, keysReadOnFirstLook, litByChannel, litOrFirstLook, litByFamily, matchesFacet, parseFacet, type Facet } from "@/lib/observation-families";
 import { families, type FamilyId } from "@/lib/projection";
@@ -273,6 +273,8 @@ export function Observatory(props: ObservatoryProps) {
   const [litCounts, setLitCounts] = useState<Record<string, number>>({});
   const reportLit = useCallback((focusId: string, count: number) => setLitCounts(previous => previous[focusId] === count ? previous : { ...previous, [focusId]: count }), []);
   const [axentOpen, setAxentOpen] = useState(false);
+  // Where the open organization places its families in the menu (family workspace design base).
+  const [familySlot, setFamilySlot] = useState<HTMLElement | null>(null);
   const items = useMemo(() => portfolio?.organizations.filter(visible) ?? [], [portfolio]);
   const readableItems = items.filter(readable);
   const screen: Screen = url.screen ?? (selected ? "organization" : readableItems.length || items.length ? "desk" : "add");
@@ -353,12 +355,13 @@ export function Observatory(props: ObservatoryProps) {
   </div>;
 
   const current = items.find(i => i.focusId === selected) ?? null;
-  const rail = <Rail items={items} selected={props.shell && !props.shell.active ? null : selected} screen={props.shell && !props.shell.active ? null : screen} seen={seen} litCounts={litCounts} nameOf={props.menuName ?? nameOf} onOrganization={openOrganization} onScreen={openScreen} portfolio={portfolio} busy={props.busy} refresh={props.refresh} canAct={props.canAct} account={props.capabilities.account}/>;
+  const railWith = (slot?: (element: HTMLElement | null) => void) => <Rail items={items} selected={props.shell && !props.shell.active ? null : selected} screen={props.shell && !props.shell.active ? null : screen} seen={seen} litCounts={litCounts} nameOf={props.menuName ?? nameOf} onOrganization={openOrganization} onScreen={openScreen} portfolio={portfolio} busy={props.busy} refresh={props.refresh} canAct={props.canAct} account={props.capabilities.account} familySlot={slot}/>;
+  const rail = railWith(setFamilySlot);
   return <div className={`obs${props.shell ? " obs-shelled" : ""}`} data-product-surface="living-observatory" aria-busy={props.busy}>
     <a className="obs-skip" href="#obs-main">{t("Ir al contenido", "Skip to content")}</a>
     {props.shell ? (props.shell.host ? createPortal(<div className="obs obs-in-shell">{rail}</div>, props.shell.host) : null) : <div className="obs-rail-desktop">{rail}</div>}
     {!props.shell && <MobileBar title={screen === "organization" && current ? nameOf(current) : screen === "desk" ? t("Tu cartera", "Your portfolio") : screen === "account" ? t("Cuenta", "Account") : screen === "activate" ? t("Esperando activación", "Waiting for activation") : t("Añadir organización", "Add organization")} onMenu={() => setRailOpen(true)}/>}
-    {!props.shell && railOpen && <RailSheet onClose={() => setRailOpen(false)}>{rail}</RailSheet>}
+    {!props.shell && railOpen && <RailSheet onClose={() => setRailOpen(false)}>{railWith()}</RailSheet>}
     <main id="obs-main" className={`obs-main${screen === "organization" ? " obs-workspace-main" : ""}`} tabIndex={-1}>
       {props.notice}
       {toast}
@@ -366,7 +369,7 @@ export function Observatory(props: ObservatoryProps) {
       {!activationView && screen === "desk" && <DeskView firstLookUnread={props.firstLookUnread} items={items} readings={deskReadings} seen={seen} nameOf={nameOf} onOpen={openOrganization} onAdd={() => openScreen("add")} onActivate={() => openScreen("activate")} reportLit={reportLit}/>}
       {!activationView && screen === "add" && <AddView {...props} first={!items.length} onDone={() => openScreen("desk")}/>}
       {screen === "account" && <AccountView {...props}/>}
-      {screen === "organization" && current && <OrganizationView key={current.focusId} item={current} name={nameOf(current)} {...props} view={url.view} itemId={url.item} family={url.family} channel={url.channel} go={go} seen={seen} updateSeen={updateSeen} axentOpen={axentOpen} setAxentOpen={setAxentOpen} locale={locale} reportLit={reportLit}/>}
+      {screen === "organization" && current && <OrganizationView key={current.focusId} item={current} name={nameOf(current)} {...props} view={url.view} itemId={url.item} family={url.family} channel={url.channel} go={go} seen={seen} updateSeen={updateSeen} axentOpen={axentOpen} setAxentOpen={setAxentOpen} locale={locale} reportLit={reportLit} familySlot={screen === "organization" ? familySlot : null}/>}
     </main>
   </div>;
 }
@@ -377,14 +380,14 @@ function ObservatoryFrame({ children }: { children: React.ReactNode }) {
 
 // ---- rail: where am I, which organization, what changed -----------------------------------
 
-function Rail({ items, selected, screen, seen, litCounts, nameOf, onOrganization, onScreen, portfolio, busy, refresh, canAct, account }: {
+function Rail({ items, selected, screen, seen, litCounts, nameOf, onOrganization, onScreen, portfolio, busy, refresh, canAct, account, familySlot }: {
   items: Item[]; selected: string | null; screen: Screen | null; seen: SeenStore; litCounts: Record<string, number>; nameOf: (item: Item) => string;
   onOrganization: (id: string) => void; onScreen: (screen: "desk" | "account" | "add" | "activate") => void;
   portfolio: SubscriberPortfolio; busy: boolean; refresh: () => void; canAct: boolean; account: boolean;
+  /** The desktop menu's place for the open organization's families. */
+  familySlot?: (element: HTMLElement | null) => void;
 }) {
   const { t } = useLocale();
-  const [filter, setFilter] = useState("");
-  const shown = filter.trim() ? items.filter(i => nameOf(i).toLocaleLowerCase().includes(filter.trim().toLocaleLowerCase())) : items;
   const isLit = (i: Item) => observedSinceVisit(seen, i.focusId, i.observation?.observedAt) || (litCounts[i.focusId] ?? 0) > 0;
   const lamps = items.filter(isLit).length;
   return <nav className="obs-rail" aria-label={t("Cartera", "Portfolio")}>
@@ -395,26 +398,29 @@ function Rail({ items, selected, screen, seen, litCounts, nameOf, onOrganization
     </button>
     <div className="obs-rail-head"><h2>{t("Organizaciones", "Organizations")}</h2><span className="obs-rail-count">{portfolio.capacity === null || portfolio.capacityCurrentness !== "CURRENT" ? items.length : `${items.filter(i => i.state === "ACTIVE" || i.state === "PAUSED").length}/${portfolio.capacity}`}</span>
       <button className="obs-icon" onClick={refresh} disabled={busy} aria-label={t("Actualizar la cartera", "Refresh the portfolio")}><RefreshCw size={15} aria-hidden="true"/></button></div>
-    {items.length > 6 && <label className="obs-filter"><span className="sr-only">{t("Buscar en tu cartera", "Search your portfolio")}</span><input value={filter} onChange={e => setFilter(e.target.value)} placeholder={t("Buscar organización…", "Find an organization…")}/></label>}
-    <ul className="obs-orgs">
-      {shown.map(item => {
-        const lit = isLit(item);
-        const fresh = litCounts[item.focusId] ?? 0;
-        const state = lensState(item);
-        return <li key={item.focusId}>
-          <button className="obs-org" aria-current={selected === item.focusId || (screen === "activate" && WAITING_STATES.has(item.state)) ? "page" : undefined}
-            disabled={!readable(item) && !(canAct && WAITING_STATES.has(item.state))}
-            onClick={() => readable(item) ? onOrganization(item.focusId) : onScreen("activate")}>
-            <Lens state={state} lit={lit}/>
-            <span className="obs-org-text"><span className="obs-org-name">{nameOf(item)}</span><span className={`obs-org-sub${lit ? " obs-org-sub-lit" : ""}`}>{fresh > 0 ? fill(fresh === 1 ? t("{n} hallazgo nuevo", "{n} new finding") : t("{n} hallazgos nuevos", "{n} new findings"), { n: fresh }) : lit ? t("Nueva observación", "New observation") : itemStatus(item, t)}</span></span>
-          </button>
-        </li>;
-      })}
-      {!items.length && <li className="obs-org-empty">{t("Todavía no observas ninguna organización.", "You are not observing any organization yet.")}</li>}
-      {filter && !shown.length && <li className="obs-org-empty">{t("Ninguna organización coincide.", "No organization matches.")}</li>}
-    </ul>
+    {/* One organization at a time (family workspace design base): a native, labelled selector; what is new
+        in each is said in its option and the whole portfolio stays one click away. */}
+    {items.length > 0 ? <label className="obs-org-select">
+      <span className="sr-only">{t("Organización", "Organization")}</span>
+      {/* Options carry their position, never the internal identifier. */}
+      <select value={selected && screen === "organization" ? String(items.findIndex(i => i.focusId === selected)) : ""} disabled={busy}
+        onChange={e => {
+          const item = items[Number(e.target.value)];
+          if (!item) return;
+          if (readable(item)) onOrganization(item.focusId); else onScreen("activate");
+        }}>
+        {!(selected && screen === "organization") && <option value="" disabled>{t("Elige una organización", "Choose an organization")}</option>}
+        {items.map((item, index) => {
+          const fresh = litCounts[item.focusId] ?? 0;
+          const note = fresh > 0 ? fill(fresh === 1 ? t("{n} nuevo", "{n} new") : t("{n} nuevos", "{n} new"), { n: fresh }) : isLit(item) ? t("nueva observación", "new observation") : null;
+          return <option key={item.focusId} value={String(index)} disabled={!readable(item) && !(canAct && WAITING_STATES.has(item.state))}>{nameOf(item)}{note ? ` · ${note}` : ""}</option>;
+        })}
+      </select>
+      <ChevronDown size={16} aria-hidden="true"/>
+    </label> : <p className="obs-org-empty">{t("Todavía no observas ninguna organización.", "You are not observing any organization yet.")}</p>}
+    <button className="obs-rail-action obs-rail-cta obs-rail-add" aria-current={screen === "add" ? "page" : undefined} disabled={!canAct} onClick={() => onScreen("add")}><Plus size={16} aria-hidden="true"/>{t("Añadir organización", "Add organization")}</button>
+    <div className="obs-rail-families" ref={familySlot}/>
     <div className="obs-rail-foot">
-      <button className="obs-rail-action obs-rail-cta" aria-current={screen === "add" ? "page" : undefined} disabled={!canAct} onClick={() => onScreen("add")}><Plus size={16} aria-hidden="true"/>{t("Añadir organización", "Add organization")}</button>
       {account && <button className="obs-rail-action" aria-current={screen === "account" ? "page" : undefined} disabled={!canAct} onClick={() => onScreen("account")}><Settings2 size={16} aria-hidden="true"/>{t("Cuenta y conexiones", "Account and connections")}</button>}
       {!canAct && <p className="obs-rail-note">{t("Acciones de cuenta disponibles al crear tu cuenta.", "Account actions are available once you create your account.")}</p>}
       <div className="obs-rail-locale"><LocaleToggle/></div>
@@ -546,6 +552,8 @@ type OrgProps = ObservatoryProps & {
   seen: SeenStore; updateSeen: (change: (store: SeenStore) => SeenStore) => void;
   axentOpen: boolean; setAxentOpen: (open: boolean) => void;
   reportLit: (focusId: string, count: number) => void;
+  /** The desktop menu's place for this organization's families; null where there is none. */
+  familySlot?: HTMLElement | null;
 };
 
 function OrganizationView(props: OrgProps) {
@@ -678,6 +686,7 @@ function OrganizationView(props: OrgProps) {
           }}>{label}</button>)}
       </div>
       {ready && !observing && view !== "explore" && <FamilyNav facet={facet} counts={counts} lit={litFamilies} litChannels={litChannels} onSelect={selectFacet}/>}
+      {props.familySlot && ready && !observing && createPortal(<FamilyRail facet={facet} counts={counts} lit={litFamilies} litChannels={litChannels} onSelect={selectFacet}/>, props.familySlot)}
       <div className="obs-panel" role="tabpanel" id={`panel-${readingView}`} aria-labelledby={`tab-${readingView}`}>
         {props.reading && <ReadingSkeleton/>}
         {!props.reading && observing && <ObservingState state={item.observation!.state}/>}
