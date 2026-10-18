@@ -405,8 +405,19 @@ def run_once(
     return report, brain
 
 
-def build_economic_runtime(root: Path, *, code_sha: str) -> SubscriberEconomicRuntime:
-    """The same membership-checked subscriber runtime the HTTP service composes."""
+def _configuration_from_environment() -> Path | None:
+    configuration = os.getenv("AXIGNAL_SUBSCRIBER_CONFIGURATION_FILE")
+    return Path(configuration) if configuration else None
+
+
+def build_economic_runtime(
+    root: Path, *, code_sha: str, configuration_file: Path | None = None
+) -> SubscriberEconomicRuntime:
+    """The same membership-checked subscriber runtime the HTTP service composes.
+
+    ``configuration_file``: the caller's subscriber configuration; else the environment's.
+    Its content rights decide whether stored website text is reusable at all, so a caller
+    that passes its configuration by flag must pass it here too."""
 
     from application.subscriber_identity.runtime import SystemClock
     from pipeline.entity_resolution.organization_store import SqliteCanonicalOrganizationStore
@@ -423,11 +434,8 @@ def build_economic_runtime(root: Path, *, code_sha: str) -> SubscriberEconomicRu
     from tools.runtime.subscriber_configuration import load_subscriber_settings
     from tools.runtime.subscriber_economic import build_subscriber_economic_runtime
 
-    configuration = os.getenv("AXIGNAL_SUBSCRIBER_CONFIGURATION_FILE")
-    settings = load_subscriber_settings(
-        os.environ,
-        configuration_file=Path(configuration) if configuration else None,
-    )
+    configuration = configuration_file or _configuration_from_environment()
+    settings = load_subscriber_settings(os.environ, configuration_file=configuration)
     artifacts = ContentAddressedArtifactStore(root / "artifacts")
     return build_subscriber_economic_runtime(
         database_path=root / "subscriber-economic-output.sqlite3",
@@ -479,6 +487,7 @@ def run_scheduled_tick(
     economic: SubscriberEconomicRuntime | None = None,
     research_access: Callable[[TrustedRequestContext, XeedId, datetime], bool] | None = None,
     website_rights: ContentRightsPolicy | None = None,
+    configuration_file: Path | None = None,
 ) -> dict[str, object]:
     """One existing runtime entry with durable, redacted operator evidence. No retries.
 
@@ -499,7 +508,10 @@ def run_scheduled_tick(
     summary: dict[str, object]
     try:
         report, brain = run_once(
-            economic=economic or build_economic_runtime(root, code_sha=code_sha),
+            economic=economic
+            or build_economic_runtime(
+                root, code_sha=code_sha, configuration_file=configuration_file
+            ),
             store=store,
             clock=clock,
             attention_file=attention_file,
@@ -524,9 +536,7 @@ def run_scheduled_tick(
             or SubscriberObservationAuthority(
                 root,
                 clock,
-                Path(os.environ["AXIGNAL_SUBSCRIBER_CONFIGURATION_FILE"])
-                if os.getenv("AXIGNAL_SUBSCRIBER_CONFIGURATION_FILE")
-                else None,
+                configuration_file or _configuration_from_environment(),
             ).allows,
             research_shared=SqliteSharedObservationWorkMemory(root / "research-work.sqlite3"),
         )
@@ -626,11 +636,7 @@ def main(argv: list[str] | None = None) -> None:
 
         try:
             authority = SubscriberObservationAuthority(
-                root,
-                clock,
-                Path(os.environ["AXIGNAL_SUBSCRIBER_CONFIGURATION_FILE"])
-                if os.getenv("AXIGNAL_SUBSCRIBER_CONFIGURATION_FILE")
-                else None,
+                root, clock, _configuration_from_environment()
             )
             desired = snapshot_bytes(derive_observation(authority, now=clock.now()))
             stale = (
