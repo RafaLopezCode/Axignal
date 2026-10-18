@@ -53,6 +53,9 @@ _KEYS = frozenset(
         "AXIGNAL_PUBLIC_ORIGIN",
         "AXIGNAL_AWARDS_BACKFILL_MONTHS",
         "AXIGNAL_COMPANIES_HOUSE_API_KEY_FILE",
+        "AXIGNAL_BRAVE_SEARCH_KEY_FILE",
+        "AXIGNAL_WEB_RESEARCH_ENABLED",
+        "AXIGNAL_DEEPSEEK_API_KEY_FILE",
         *(
             f"AXIGNAL_MARKETING_POOL_{suffix}"
             for suffix in (
