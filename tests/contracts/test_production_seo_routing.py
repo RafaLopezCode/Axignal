@@ -81,7 +81,7 @@ def test_the_retired_static_landing_is_redirected_not_served() -> None:
     assert "location ~ ^/(es|en|fr|de|it|pt)/$ { return 301 /$1; }" in conf
     assert "location ^~ /legal/ { return 301 /policies; }" in conf
     assert "location ^~ /legal/privacidad-rgpd { return 301 /policies/privacy; }" in conf
-    assert "storyboard-data\.json|marketing\.js|newsletter\.js)$ { return 404; }" in conf
+    assert r"storyboard-data\.json|marketing\.js|newsletter\.js)$ { return 404; }" in conf
 
 
 def test_the_subscriber_edge_config_carries_the_legacy_redirects() -> None:

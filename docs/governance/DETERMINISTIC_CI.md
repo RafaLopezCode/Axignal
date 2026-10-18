@@ -15,6 +15,8 @@ uv run architecture-guard --root .
 uv run axignal-governance
 ```
 
+Pytest selects a dedicated directory under the operating system temp root, unique to each checkout. Fixtures stay outside the repository, and the test run does not enumerate stale user-specific pytest temp trees.
+
 The experience also has deterministic frontend gates. From
 `apps/web/experience`, using the production Docker image's Node 22 major:
 
@@ -43,6 +45,10 @@ CI Graphify job installs the official `graphifyy` package before generating
 the structural graph and then runs the same governance gate. The docs check
 also verifies the pinned SHA-256 of the logical architecture Atlas so the
 reconciled input remains byte-stable unless its pin is reviewed.
+
+Local runtime defaults live in .python-version and
+apps/web/experience/.nvmrc. CI reads those same files, keeping the Python
+and Node validation toolchains aligned with developer setup.
 
 ## Required gates
 

@@ -24,6 +24,14 @@ it is not the final product.
 - Local development path: `D:\AXIGNAL\Axignal`
 - Default branch: `main`
 
+## Local toolchains
+
+Use the checked-in runtime defaults to keep local development aligned with CI:
+Python 3.12 is in .python-version; Node 22 is in
+apps/web/experience/.nvmrc. The project package metadata continues to support
+Python 3.11 and newer; 3.12 is the reproducible development baseline. Run
+nvm use from the frontend directory before npm ci.
+
 ## Governance stack
 
 | Concern | Where |
