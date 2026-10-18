@@ -53,6 +53,8 @@ def test_own_same_brand_and_social_pages_are_never_reputation() -> None:
         hit("https://blog.velasca.com/post"),
         hit("https://velascawomen.com/"),  # a same-brand domain is its own channel
         hit("https://www.instagram.com/velasca/"),
+        hit("https://play.google.com/store/apps/details?id=com.velasca"),
+        hit("https://www.smysecret.com/politica-de-privacidad"),
         hit("https://it.trustpilot.com/review/velasca.com"),
         hit("https://www.corriere.it/economia/velasca", rerank=1.6),
         hit("https://example.org/low", rerank=0.3),  # below the index's relevance floor
@@ -148,7 +150,7 @@ def test_deepseek_adapter_keeps_no_summary_or_content_and_hides_the_key(tmp_path
     def transport(url: str, headers: Mapping[str, str], body: bytes) -> bytes:
         sent.append((url, headers, body))
         return json.dumps({"results": [
-            {"url": "https://a.es/x", "title": "T", "site_name": "A", "rerank_score": 1.7,
+            {"url": "https://a.es/x#1", "title": "T", "site_name": "A", "rerank_score": 1.7,
              "date": "2026-05-01T10:00:00", "summary": "model text", "content": "page"},
             {"title": "no url"},
         ]}).encode()  # fmt: skip
@@ -249,3 +251,34 @@ def test_off_unless_enabled_and_key_mounted(tmp_path: Path) -> None:
     assert web_research_from_values(enabled, tmp_path, fetcher) is not None
     missing = {**enabled, "AXIGNAL_DEEPSEEK_API_KEY_FILE": str(tmp_path / "none")}
     assert web_research_from_values(missing, tmp_path, fetcher) is None
+
+
+def test_activity_words_come_from_the_proof_and_need_no_country() -> None:
+    from tools.runtime.first_observation import _activity_words
+
+    view: dict[str, object] = {
+        "target": {"website": "https://www.biocultor.com/"},
+        "attentionScopes": [{"jurisdiction": "EU/ES"}],
+        "discoveries": [],
+    }  # the public view carries no capabilities nor published contact
+    proof = {
+        "publishedContact": {"language": "es"},
+        "capabilities": [{"capabilityId": "fertilisers-soil-amendments",
+                          "basis": {"excerpt": "Fabricamos humus de lombriz."}}],
+    }  # fmt: skip
+    assert _activity_words(view) == ("biocultor.com", "ES", "es", ())
+    assert _activity_words(view, proof) == ("biocultor.com", "ES", "es", ("humus de lombriz",))
+    no_country = {**view, "attentionScopes": [],
+                  "discoveries": [{"kind": "LANGUAGES", "detail": {"languages": ["it-IT"]}}]}  # fmt: skip
+    assert _activity_words(no_country) == ("biocultor.com", None, "it", ())
+    assert _activity_words({"target": {}}) is None
+
+
+def test_one_page_in_two_language_subdomains_is_read_once() -> None:
+    hits = [
+        hit("https://empresaexterior.com/i/velasca/"),
+        hit("https://gl.empresaexterior.com/i/velasca", rerank=1.5),
+    ]
+    assert [h.url for h in candidates(hits, VELASCA, purpose="REPUTATION")] == [
+        "https://empresaexterior.com/i/velasca/"
+    ]
