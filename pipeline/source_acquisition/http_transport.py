@@ -65,6 +65,18 @@ class _PinnedHTTPSConnection(http.client.HTTPSConnection):
         self.sock = self._ssl_context.wrap_socket(raw, server_hostname=self.host)
 
 
+def _default_context() -> ssl.SSLContext:
+    """Verified TLS that declares the protocol this transport speaks (ALPN ``http/1.1``),
+    as the standard library does for the connections it creates itself. Without it,
+    storefront platforms answered every request with 429 (Shopify: ecoalf.com,
+    tonyschocolonely.com, einhorn.my, mymuesli.com, 2026-10-18) and their sites were read
+    only through archived copies. Declaring the protocol is not evasion: the User-Agent
+    still names AXIGNAL and robots.txt still decides what is read."""
+    context = ssl.create_default_context()
+    context.set_alpn_protocols(["http/1.1"])
+    return context
+
+
 class PinnedHttpTransport:
     """Direct GET transport. DNS decisions are supplied by the policy gate."""
 
@@ -76,7 +88,7 @@ class PinnedHttpTransport:
         ssl_context: ssl.SSLContext | None = None,
         monotonic_ns: Callable[[], int] | None = None,
     ) -> None:
-        self._ssl_context = ssl_context or ssl.create_default_context()
+        self._ssl_context = ssl_context or _default_context()
         self._monotonic_ns = monotonic_ns or time.monotonic_ns
 
     def _remaining_seconds(self, deadline_ns: int) -> float:
