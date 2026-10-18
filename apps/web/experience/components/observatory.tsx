@@ -219,20 +219,9 @@ function host(url: string): string { try { return new URL(url).hostname.replace(
 
 // ---- marks: shape + text, never colour alone -------------------------------------------
 
-export function NatureMark({ nature, label }: { nature: Nature; label: string }) {
-  const shape = (() => {
-    switch (nature) {
-      case "OBSERVED": return <circle cx="6" cy="6" r="4" fill="currentColor"/>;
-      case "DECLARED": return <><circle cx="6" cy="6" r="4" fill="none" stroke="currentColor" strokeWidth="1.5"/><path d="M6 2a4 4 0 0 1 0 8z" fill="currentColor"/></>;
-      case "POTENTIAL": return <circle cx="6" cy="6" r="4" fill="none" stroke="currentColor" strokeWidth="1.5" strokeDasharray="2 1.6"/>;
-      case "UNKNOWN": return <><circle cx="6" cy="6" r="4" fill="none" stroke="currentColor" strokeWidth="1.5"/><circle cx="6" cy="6" r="1" fill="currentColor"/></>;
-      case "STRENGTH": return <><circle cx="6" cy="6" r="5" fill="currentColor"/><path d="M3.6 6.2 5.3 7.8 8.5 4.4" fill="none" stroke="var(--obs-paper)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></>;
-      case "CLARIFY": return <><circle cx="6" cy="6" r="4.5" fill="none" stroke="currentColor" strokeWidth="1.5"/><path d="M6 3.8v4.4M3.8 6h4.4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/></>;
-      case "UNRESOLVED": return <><circle cx="6" cy="6" r="4.5" fill="none" stroke="currentColor" strokeWidth="1.5" strokeDasharray="1.4 1.6"/></>;
-    }
-  })();
-  return <span className={`obs-mark obs-mark-${nature.toLowerCase()}`}><svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true">{shape}</svg>{label}</span>;
-}
+import { VisibilityCanvas } from "./family-canvas";
+import { NatureMark } from "./nature-mark";
+export { NatureMark };
 
 type LensState = "observing" | "ready" | "paused" | "low" | "pending";
 function lensState(item: Item): LensState {
@@ -691,6 +680,7 @@ function OrganizationView(props: OrgProps) {
         {props.reading && <ReadingSkeleton/>}
         {!props.reading && observing && <ObservingState state={item.observation!.state}/>}
         {!props.reading && !observing && readingView === "summary" && <SummaryView reading={reading} name={name} insights={shown} lit={litShown} openId={open?.id ?? null} onOpen={openInsight} scope={scope} onFamily={family => selectFacet({ family, channel: null })}
+          canvas={facet.family === "presence" && !facet.channel ? <VisibilityCanvas reading={reading} insights={insights} onOpen={openInsight}/> : undefined}
           remembered={props.rememberReading !== false} onSeenAll={() => updateSeen(store => markSeen(store, item.focusId, shownKeys, new Date().toISOString()))} item={item}/>}
         {!props.reading && !observing && readingView === "summary" && firstObservation?.discoveries.some(d => d.kind === "ACTIVITY") && <DemandMarkets focusId={item.focusId} observation={firstObservation} canAct={props.canAct} onSaved={() => void props.readOutput(item.focusId, false)}/>}
         {!props.reading && !observing && readingView === "explore" && <ExploreView projection={projection} revision={revision} firstObservation={firstObservation} onSummary={() => go({ view: "summary" })}/>}
@@ -731,7 +721,9 @@ function ObservingState({ state }: { state: string }) {
   </section>;
 }
 
-export function SummaryView({ reading, name, insights, lit, remembered = true, openId, onOpen, onSeenAll, item, exampleLead, scope, onFamily }: {
+export function SummaryView({ reading, name, insights, lit, remembered = true, openId, onOpen, onSeenAll, item, exampleLead, scope, onFamily, canvas }: {
+  /** A family's full canvas (design base phase 2), shown above its findings. */
+  canvas?: React.ReactNode;
   /** Opens a family's own view (spec 093); absent where the reading has no family navigation. */
   onFamily?: (family: FamilyId) => void;
   /** Whether what is read is kept on this device: the notice says so only when it is true. */
@@ -776,6 +768,7 @@ export function SummaryView({ reading, name, insights, lit, remembered = true, o
         : <p>{t("Nada nuevo que importe en los últimos 7 días. AXIGNAL sigue observando; no se rellena con lo de siempre.", "Nothing new that matters in the last 7 days. AXIGNAL keeps observing; it does not fill the space with the usual.")}</p>}
     </section>}
     {!scope && <FamilyValues values={values} onOpen={onOpen} onFamily={onFamily}/>}
+    {canvas}
     {scope && !insights.length ? <section className="obs-empty-state"><h2>{scope.emptyTitle}</h2><p>{scope.emptyBody}</p></section> : <div className="obs-lanes">
       {(["matters", "understood", "unknown"] as Lane[]).map(lane => {
         const copy = laneCopy(lane, t);
