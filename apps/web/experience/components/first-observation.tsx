@@ -142,11 +142,12 @@ export function discoveryCopy(d: Discovery, t: Translate, locale = "en"): { find
   }
   if (d.kind === "MENTION") {
     const outlet = typeof d.detail.outlet === "string" ? d.detail.outlet : "";
+    const dated = typeof d.detail.publishedAt === "string" ? ` (${d.detail.publishedAt.slice(0, 10)})` : "";
     const linked = d.detail.linksToItsWebsite === true
       ? " " + t("La página enlaza a su web.", "The page links to its website.") : "";
-    if (d.code === "REVIEW_PAGE") return { finding: `${t("Página de opiniones", "Reviews page")} · ${outlet}: ${d.statement}`,
+    if (d.code === "REVIEW_PAGE") return { finding: `${t("Página de opiniones", "Reviews page")} · ${outlet}: ${d.statement}${dated}`,
       why: t("AXIGNAL ha leído la página y nombra a la organización. Que trate de ella no está verificado del todo; las opiniones son de terceros y no se puntúan.", "AXIGNAL read the page and it names the organization. That it is about it is not fully verified; the reviews are third-party and are not scored.") + linked };
-    if (d.code === "WEB_MENTION") return { finding: `${t("La nombran en la web", "Named on the web")} · ${outlet}: ${d.statement}`,
+    if (d.code === "WEB_MENTION") return { finding: `${t("La nombran en la web", "Named on the web")} · ${outlet}: ${d.statement}${dated}`,
       why: t("Un buscador propuso la página y AXIGNAL la ha leído: su texto nombra a la organización. Mencionar no es recomendar.", "A search index proposed the page and AXIGNAL read it: its text names the organization. A mention is not an endorsement.") + linked };
     if (d.code === "PRESS_RELEASE") return { finding: `${t("Nota de prensa distribuida", "Distributed press release")} · ${outlet}: ${d.statement}`, why: t("Una nota que una organización distribuye sobre sí misma: es su voz, no cobertura independiente.", "A release an organization distributes about itself: its own voice, not independent coverage.") };
     return d.code === "OWN_PUBLICATION"
@@ -235,7 +236,8 @@ export function discoveryCopy(d: Discovery, t: Translate, locale = "en"): { find
   }
   if (d.kind === "CONTEXT_SIGNAL" && d.code === "WEB_SECTOR_SOURCE") {
     const outlet = typeof d.detail.outlet === "string" ? d.detail.outlet : "";
-    return { finding: `${t("Marco de su actividad", "Framework of its activity")} · ${outlet}: ${d.statement}`,
+    const dated = typeof d.detail.publishedAt === "string" ? ` (${d.detail.publishedAt.slice(0, 10)})` : "";
+    return { finding: `${t("Marco de su actividad", "Framework of its activity")} · ${outlet}: ${d.statement}${dated}`,
       why: t("Página sobre su actividad y las normas que la enmarcan, leída por AXIGNAL. Trata del sector, no de la organización; si le aplica y cómo no está evaluado. No es asesoramiento jurídico.", "A page about its activity and the rules that frame it, read by AXIGNAL. It is about the sector, not the organization; whether and how it applies is not assessed. Not legal advice.") };
   }
   if (d.kind === "CONTEXT_SIGNAL") {
@@ -460,6 +462,22 @@ export function discoveryCopy(d: Discovery, t: Translate, locale = "en"): { find
           why: history + " " + t("Puede deberse al muestreo del rastreo, a una regla de robots.txt para CCBot o al tamaño del sitio. Es una señal GEO que se puede revisar.", "It may be the crawl's sampling, a robots.txt rule for CCBot or the site's size. It is a GEO signal worth reviewing.") };
   }
   if (d.kind === "GENERATIVE_VISIBILITY") return { finding: `${t("Aparición en respuestas de IA medida", "AI answer appearance measured")}: ${d.statement}`, why: t("Mencionar no es citar, y citar no es recomendar. Es una medición con sus condiciones, no una conclusión sobre el negocio.", "A mention is not a citation, and a citation is not an endorsement. It is a measurement with its conditions, not a conclusion about the business.") };
+  if (d.kind === "WEB_REPRESENTATION" && d.code === "LIGHTHOUSE_AUDIT") {
+    const scores = (d.detail.scores ?? {}) as Record<string, number | null>;
+    const names: Record<string, string> = { SEO: "SEO", PERFORMANCE: t("Rendimiento", "Performance"),
+      ACCESSIBILITY: t("Accesibilidad", "Accessibility"), BEST_PRACTICES: t("Buenas prácticas", "Best practices") };
+    const conditions = (d.detail.conditions ?? {}) as Record<string, unknown>;
+    const device = conditions.strategy === "DESKTOP" ? t("escritorio", "desktop") : t("móvil", "mobile");
+    const parts = Object.entries(scores).filter(([, v]) => typeof v === "number").map(([k, v]) => `${names[k] ?? k} ${v}`);
+    const failing = ((d.detail.failing ?? {}) as Record<string, { title?: string }[]>).SEO ?? [];
+    const instrument = (d.detail.instrument ?? {}) as Record<string, unknown>;
+    const seo = failing.length
+      ? t("{n} comprobaciones de SEO no pasan: {list}. ", "{n} SEO checks do not pass: {list}. ").replace("{n}", String(failing.length))
+          .replace("{list}", failing.slice(0, 4).map(f => f.title ?? "").filter(Boolean).join("; "))
+      : t("Pasa todas las comprobaciones de SEO de Lighthouse. ", "It passes every Lighthouse SEO check. ");
+    return { finding: `${t("Lighthouse de su web", "Lighthouse of its website")} (${device}): ${parts.join(" · ")}`,
+      why: seo + t("Medido por Google PageSpeed Insights en laboratorio (Lighthouse {v}): varía unos puntos entre mediciones, no es la experiencia de sus visitantes ni su posición en buscadores.", "Measured by Google PageSpeed Insights in a lab (Lighthouse {v}): it varies a few points between runs, and it is neither its visitors' experience nor its search position.").replace("{v}", String(instrument.lighthouseVersion ?? "")) };
+  }
   if (d.kind === "WEB_REPRESENTATION") return { finding: t("Representación web medida", "Web representation measured"), why: t("Comprobaciones de su propia web, con instrumento y condiciones. No es una posición en buscadores.", "Checks of its own website, with instrument and conditions. It is not a search ranking.") };
   if (d.kind === "REPRESENTATION_GAP" && d.code.startsWith("AUDIT:")) {
     const copy = auditCopy(d.code.slice(6), t, d.detail.value);

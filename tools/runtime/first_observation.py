@@ -135,6 +135,7 @@ from application.value_chain import (
     nace_codes,
     wikidata_industry_nace,
 )
+from application.web_quality import lighthouse_discoveries
 from application.web_research import ResearchSubject, research_discoveries
 from application.world_demand.index import (
     DemandIndexPort,
@@ -171,6 +172,7 @@ from tools.runtime.generative_probe import (
     assistant_from_values,
     generative_probe_from_values,
 )
+from tools.runtime.pagespeed import PageSpeedRunner, pagespeed_from_values
 from tools.runtime.regulation_context import RegulationContextRunner
 from tools.runtime.search_rank import SearchRankRunner, search_rank_from_values
 from tools.runtime.sector_context import SectorContextRunner
@@ -537,7 +539,9 @@ class FirstObservationRuntime:
         common_crawl: CommonCrawlRunner | None = None,
         search_rank: SearchRankRunner | None = None,
         web_research: WebResearchRunner | None = None,
+        pagespeed: PageSpeedRunner | None = None,
     ) -> None:
+        self._pagespeed = pagespeed
         self._search_rank = search_rank
         self._web_research = web_research
         self._buyers = buyers
@@ -1036,6 +1040,30 @@ class FirstObservationRuntime:
         view["discoveries"] = [*discoveries, *found_rank]
         return view
 
+    def measure_pagespeed(self) -> int:
+        """Run queued Lighthouse lab runs of home pages (a few per tick, spec 100)."""
+        return 0 if self._pagespeed is None else self._pagespeed.run()
+
+    def _with_pagespeed(self, view: dict[str, object]) -> dict[str, object]:
+        """Show a stored Lighthouse measurement of its home page; queue one when none is
+        fresh (never measured on the read path)."""
+        if self._pagespeed is None:
+            return view
+        target = view.get("target")
+        website = target.get("website") if isinstance(target, Mapping) else None
+        parts = urlsplit(str(website)) if website else None
+        if parts is None or parts.scheme not in {"http", "https"} or not parts.hostname:
+            return view
+        origin = f"{parts.scheme}://{parts.hostname}/"
+        measurement = self._pagespeed.measurement(origin)
+        self._pagespeed.request(origin)  # no-op while fresh or queued
+        if measurement is None:
+            return view
+        held = view.get("discoveries")
+        found = lighthouse_discoveries(measurement, observed_at=str(view.get("observedAt") or ""))
+        view["discoveries"] = [*(held if isinstance(held, list) else []), *found]
+        return view
+
     def run_web_research(self) -> int:
         """Run queued web research (a few per tick, under the daily search cap, spec 098)."""
         return 0 if self._web_research is None else self._web_research.run()
@@ -1383,6 +1411,7 @@ class FirstObservationRuntime:
                 self.measure_geo,
                 self.measure_search_rank,
                 self.run_web_research,
+                self.measure_pagespeed,
                 self.judge_sector_context,
                 self.judge_regulation,
                 self.read_common_crawl,
@@ -1712,6 +1741,7 @@ class FirstObservationRuntime:
             view = self._with_geo(view)
             view = self._with_search_rank(view, proof)
             view = self._with_web_research(view, proof)
+            view = self._with_pagespeed(view)
             view = self._with_sector_context(view)
             view = self._with_regulation(view)
             view = self._with_common_crawl(view)
@@ -2114,6 +2144,9 @@ def build_first_observation(
         web_research=None
         if overrides.source_ports is not None or overrides.feeds is not None
         else web_research_from_values(values, root, fetcher),
+        pagespeed=None
+        if overrides.source_ports is not None or overrides.feeds is not None
+        else pagespeed_from_values(values, root),
         sector_context=None
         if overrides.source_ports is not None or overrides.feeds is not None
         else _sector_context(values, root),

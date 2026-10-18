@@ -234,11 +234,14 @@ class PageCheck:
     read_at: str | None = None
     #: Why a page was not read (HTTP status or the reader's refusal), said as it is.
     reason: str | None = None
+    #: The publication date the page declares (ISO), when it declares one.
+    published: str | None = None
 
     def to_wire(self) -> dict[str, object]:
         return {
             "url": self.url, "state": self.state, "title": self.title, "excerpt": self.excerpt,
             "linksToWebsite": self.links_to_website, "readAt": self.read_at, "reason": self.reason,
+            "published": self.published,
         }  # fmt: skip
 
     @staticmethod
@@ -250,6 +253,7 @@ class PageCheck:
             links_to_website=bool(raw.get("linksToWebsite")),
             read_at=str(raw["readAt"]) if raw.get("readAt") else None,
             reason=str(raw["reason"]) if raw.get("reason") else None,
+            published=str(raw["published"]) if raw.get("published") else None,
         )  # fmt: skip
 
 
@@ -262,13 +266,20 @@ def check_page(
     needles: Sequence[str],
     own_domain: str | None,
     read_at: str,
+    published: str | None = None,
 ) -> PageCheck:
     """SUPPORTED only when the page's own title or text names a needle."""
+    if published is not None and published >= read_at[:10]:
+        # A date on or after the day the page was read is the time it was served (review
+        # platforms stamp every page with today), not when it was published: unknown.
+        published = None
     named = any(mentions(title, n) for n in needles) or any(
         mentions(text[:200_000], n) for n in needles
     )
     if not named:
-        return PageCheck(url, "NOT_SUPPORTED", title=title[:300], read_at=read_at)
+        return PageCheck(
+            url, "NOT_SUPPORTED", title=title[:300], read_at=read_at, published=published
+        )
     own = (own_domain or "").lower().removeprefix("www.")
     linked = bool(own) and any(
         (h := (urlsplit(link).hostname or "").lower().removeprefix("www.")) == own
@@ -278,7 +289,7 @@ def check_page(
     excerpt = excerpt_around(text, needles) or excerpt_around(title, needles)
     return PageCheck(
         url, "SUPPORTED", title=title[:300], excerpt=excerpt, links_to_website=linked,
-        read_at=read_at,
+        read_at=read_at, published=published,
     )  # fmt: skip
 
 
@@ -334,6 +345,7 @@ def research_discoveries(
                     else "The page names the organization and was judged to be about it "
                     "(non-authoritative judgment).",
                     **({"attributionBy": about[1]} if about is not None else {}),
+                    "publishedAt": check.published,
                     "indexedDate": page.get("indexedDate"),
                     **basis,
                 },
@@ -348,6 +360,7 @@ def research_discoveries(
                     "outlet": outlet,
                     "aboutSector": True,
                     "notAboutThisOrganization": True,
+                    "publishedAt": check.published,
                     "indexedDate": page.get("indexedDate"),
                     **basis,
                     "limitation": "A page about its activity and the rules that frame it; "

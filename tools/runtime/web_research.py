@@ -34,6 +34,7 @@ from application.web_research import (
     page_key,
     plan,
 )
+from pipeline.web_search.article import read_article
 
 TTL = timedelta(days=30)
 MAX_SEARCHES_PER_DAY = 120  # paid requests per UTC day, all tenants together (≈ $0.09)
@@ -189,14 +190,20 @@ class WebResearchRunner:
         ):
             reason = fetched.failure or f"HTTP_{fetched.status}"
             return PageCheck(url, "UNREADABLE", reason=reason)
+        html = _text(fetched)
         page = read_page(
-            url=fetched.final_url, html=_text(fetched), observed_at=fetched.observed_at,
+            url=fetched.final_url, html=html, observed_at=fetched.observed_at,
             content_fingerprint=fetched.content_fingerprint or "", artifact_ref=None,
         )  # fmt: skip
+        # The mention must be in the title or the main text: navigation, footers and brand
+        # lists say nothing about the organization (spec 099). Whole page when unavailable.
+        article = read_article(html, fetched.final_url)
         return check_page(
-            fetched.final_url, title=page.title, text=page.text,
+            fetched.final_url, title=page.title or (article.title if article else ""),
+            text=article.text if article else page.text,
             links=[href for href, _ in page.links], needles=needles, own_domain=own_domain,
             read_at=fetched.observed_at.isoformat(),
+            published=article.published if article else None,
         )  # fmt: skip
 
     def run(self, *, max_runs: int = 2) -> int:
