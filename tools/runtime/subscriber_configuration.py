@@ -58,6 +58,7 @@ _KEYS = frozenset(
         "AXIGNAL_DEEPSEEK_API_KEY_FILE",
         "AXIGNAL_PAGESPEED_ENABLED",
         "AXIGNAL_PAGESPEED_API_KEY_FILE",
+        "AXIGNAL_COMMON_CRAWL_ENABLED",
         *(
             f"AXIGNAL_MARKETING_POOL_{suffix}"
             for suffix in (

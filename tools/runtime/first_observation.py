@@ -84,6 +84,7 @@ from application.observation_intelligence.findings import ADDITIONAL
 from application.observation_intelligence.loop import OpportunityCandidate, run_observation_loop
 from application.observation_intelligence.semantic_screen import FitRecall
 from application.observation_runtime.replay import FindingsLedger
+from application.open_corpus import corpus_discoveries
 from application.organization_admission.locator import LocatorError, parse_locator, public_domain
 from application.organization_group import group_discoveries
 from application.organization_identity import identity_corroboration
@@ -164,6 +165,7 @@ from pipeline.press.sqlite_store import PressIngestor, SqlitePressIndex
 from pipeline.press.sqlite_store import SqlitePressIndex as _PressIndex
 from pipeline.regulation.sqlite_store import RegulationIngestor, SqliteRegulationIndex
 from pipeline.reputation.notoriety import WikipediaNotoriety
+from tools.runtime.common_crawl import CommonCrawlRunner, common_crawl_from_values
 from tools.runtime.field_performance import field_performance_from_env
 from tools.runtime.generative_probe import (
     GenerativeProbeRunner,
@@ -534,6 +536,7 @@ class FirstObservationRuntime:
         notoriety: WikipediaNotoriety | None = None,
         job_boards: JobBoards | None = None,
         buyers: WikidataBuyerLookups | None = None,
+        common_crawl: CommonCrawlRunner | None = None,
         search_rank: SearchRankRunner | None = None,
         web_research: WebResearchRunner | None = None,
         pagespeed: PageSpeedRunner | None = None,
@@ -542,6 +545,7 @@ class FirstObservationRuntime:
         self._search_rank = search_rank
         self._web_research = web_research
         self._buyers = buyers
+        self._common_crawl = common_crawl
         self._job_boards = job_boards
         self._notoriety = notoriety
         self._regulation = regulation
@@ -1096,6 +1100,30 @@ class FirstObservationRuntime:
             view["discoveries"] = [*discoveries, *found]
         return view
 
+    def read_common_crawl(self) -> int:
+        """Ask the open-corpus index about one queued domain per tick (spec 101)."""
+        return 0 if self._common_crawl is None else self._common_crawl.run()
+
+    def _with_common_crawl(self, view: dict[str, object]) -> dict[str, object]:
+        """Whether the latest open web crawl captured its site; queued when not fresh."""
+        if self._common_crawl is None:
+            return view
+        target = view.get("target")
+        website = target.get("website") if isinstance(target, Mapping) else None
+        domain = (
+            (urlsplit(str(website)).hostname or "").lower().removeprefix("www.") if website else ""
+        )
+        if not domain:
+            return view
+        measurement = self._common_crawl.measurement(domain)
+        self._common_crawl.request(domain)  # no-op while fresh or queued
+        if measurement is None:
+            return view
+        held = view.get("discoveries")
+        found = corpus_discoveries(measurement, observed_at=str(view.get("observedAt") or ""))
+        view["discoveries"] = [*(held if isinstance(held, list) else []), *found]
+        return view
+
     def read_job_boards(self) -> int:
         """Public job boards of the organizations being read (source thread)."""
         return 0 if self._job_boards is None else self._job_boards.run()
@@ -1386,6 +1414,7 @@ class FirstObservationRuntime:
                 self.measure_pagespeed,
                 self.judge_sector_context,
                 self.judge_regulation,
+                self.read_common_crawl,
                 self.judge_press_attribution,
                 self.judge_demand_fit,
                 self.run_marketing_pool,
@@ -1715,6 +1744,7 @@ class FirstObservationRuntime:
             view = self._with_pagespeed(view)
             view = self._with_sector_context(view)
             view = self._with_regulation(view)
+            view = self._with_common_crawl(view)
             # Relationships and competition from published public contract awards.
             view = apply_public_awards(
                 view, proof, self._awards, now=self._clock.now(), countries=lambda: directed
@@ -2129,6 +2159,9 @@ def build_first_observation(
         regulation=None
         if overrides.source_ports is not None or overrides.feeds is not None
         else _regulation(values, root),
+        common_crawl=None
+        if overrides.source_ports is not None or overrides.feeds is not None
+        else common_crawl_from_values(values, root),
         press_attribution=None
         if overrides.source_ports is not None or overrides.feeds is not None
         else _press_attribution(values, root),

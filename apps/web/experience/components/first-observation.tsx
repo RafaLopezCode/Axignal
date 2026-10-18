@@ -448,6 +448,19 @@ export function discoveryCopy(d: Discovery, t: Translate, locale = "en"): { find
   if (d.kind === "GENERATIVE_VISIBILITY" && d.code === "AI_DOES_NOT_KNOW_BRAND") return {
     finding: t("Un asistente de IA no reconoce la organización por su nombre", "An AI assistant does not recognize the organization by name"),
     why: t("Al preguntarle directamente, no tiene conocimiento específico de ella: su presencia en fuentes públicas citables puede ser escasa.", "Asked directly, it has no specific knowledge of it: its presence in citable public sources may be thin.") };
+  if (d.kind === "GENERATIVE_VISIBILITY" && (d.code === "OPEN_CORPUS_CAPTURED" || d.code === "OPEN_CORPUS_NOT_CAPTURED")) {
+    const conditions = (d.detail.conditions ?? {}) as Record<string, unknown>;
+    const crawl = String(conditions.crawl ?? "");
+    const pages = Number(d.detail.okCaptures ?? 0).toLocaleString(locale) + (d.detail.capped === true ? "+" : "");
+    const before = Number(d.detail.capturedInPrevious ?? 0);
+    const history = t("En los {m} rastreos anteriores aparece en {n}.", "It appears in {n} of the {m} previous crawls.")
+      .replace("{n}", String(before)).replace("{m}", String(Array.isArray(d.detail.previousCrawls) ? d.detail.previousCrawls.length : 0));
+    return d.code === "OPEN_CORPUS_CAPTURED"
+      ? { finding: t("Su web está en el corpus abierto con el que se entrenan modelos de IA: {n} páginas en {crawl}", "Its website is in the open corpus AI models are trained on: {n} pages in {crawl}").replace("{n}", pages).replace("{crawl}", crawl),
+          why: history + " " + t("Common Crawl es un rastreo abierto de la web que usan muchos modelos de lenguaje. Estar no garantiza que un modelo concreto la conozca o la cite.", "Common Crawl is an open crawl of the web that many language models use. Being in it does not guarantee that a given model knows or cites it.") }
+      : { finding: t("Su web no aparece en el último rastreo abierto con el que se entrenan modelos de IA ({crawl})", "Its website does not appear in the latest open crawl AI models are trained on ({crawl})").replace("{crawl}", crawl),
+          why: history + " " + t("Puede deberse al muestreo del rastreo, a una regla de robots.txt para CCBot o al tamaño del sitio. Es una señal GEO que se puede revisar.", "It may be the crawl's sampling, a robots.txt rule for CCBot or the site's size. It is a GEO signal worth reviewing.") };
+  }
   if (d.kind === "GENERATIVE_VISIBILITY") return { finding: `${t("Aparición en respuestas de IA medida", "AI answer appearance measured")}: ${d.statement}`, why: t("Mencionar no es citar, y citar no es recomendar. Es una medición con sus condiciones, no una conclusión sobre el negocio.", "A mention is not a citation, and a citation is not an endorsement. It is a measurement with its conditions, not a conclusion about the business.") };
   if (d.kind === "WEB_REPRESENTATION" && d.code === "LIGHTHOUSE_AUDIT") {
     const scores = (d.detail.scores ?? {}) as Record<string, number | null>;
