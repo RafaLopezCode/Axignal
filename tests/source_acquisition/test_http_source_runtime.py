@@ -666,3 +666,52 @@ def test_sensitive_redirect_fails_closed_without_persisting_secret(
     assert observation.final_uri == "https://example.test/docs/company"
     assert "AUDIT_SYNTHETIC_TOKEN" not in envelope
     assert "access_token" not in envelope
+
+
+def test_a_policy_that_opts_in_keeps_the_first_bytes_of_an_oversized_page() -> None:
+    """brooklinen.com (2026-10-18): a 1.8 MB homepage was lost whole above the 1.5 MB budget.
+    A website policy keeps exactly its first bytes, marked as truncated; others still refuse."""
+    server = http.server.ThreadingHTTPServer(("127.0.0.1", 0), _FixtureHandler)
+    thread = threading.Thread(target=server.serve_forever, daemon=True)
+    thread.start()
+    try:
+        target = ResolvedTarget(
+            uri="http://fixture.test/",
+            scheme="http",
+            host="fixture.test",
+            port=server.server_port,
+            path_and_query="/",
+            addresses=("127.0.0.1",),
+        )
+        kept = PinnedHttpTransport().fetch(
+            target, timeout_ms=1_500, max_response_bytes=8, truncate=True
+        )
+        assert kept.failure_state is None and kept.truncated
+        assert kept.body == _FixtureHandler.body[:8]
+        whole = PinnedHttpTransport().fetch(
+            target, timeout_ms=1_500, max_response_bytes=4_096, truncate=True
+        )
+        assert whole.body == _FixtureHandler.body and not whole.truncated
+    finally:
+        server.shutdown()
+        server.server_close()
+        thread.join(timeout=2)
+
+
+def test_oversize_is_part_of_a_policy_only_when_it_opts_in() -> None:
+    import pytest
+
+    from application.source_acquisition.contracts import (
+        DispatchDisposition,
+        SourceDispatchPolicy,
+        SourceTargetRule,
+    )
+
+    rule = (SourceTargetRule("example.com", "/", ("https",)),)
+    refuse = SourceDispatchPolicy("p", DispatchDisposition.ALLOW, "basis", rule)
+    truncate = SourceDispatchPolicy(
+        "p", DispatchDisposition.ALLOW, "basis", rule, oversize="TRUNCATE"
+    )
+    assert refuse.oversize == "REFUSE" and refuse.fingerprint != truncate.fingerprint
+    with pytest.raises(ValueError):
+        SourceDispatchPolicy("p", DispatchDisposition.ALLOW, "basis", rule, oversize="KEEP")
