@@ -142,11 +142,12 @@ export function discoveryCopy(d: Discovery, t: Translate, locale = "en"): { find
   }
   if (d.kind === "MENTION") {
     const outlet = typeof d.detail.outlet === "string" ? d.detail.outlet : "";
+    const dated = typeof d.detail.publishedAt === "string" ? ` (${d.detail.publishedAt.slice(0, 10)})` : "";
     const linked = d.detail.linksToItsWebsite === true
       ? " " + t("La página enlaza a su web.", "The page links to its website.") : "";
-    if (d.code === "REVIEW_PAGE") return { finding: `${t("Página de opiniones", "Reviews page")} · ${outlet}: ${d.statement}`,
+    if (d.code === "REVIEW_PAGE") return { finding: `${t("Página de opiniones", "Reviews page")} · ${outlet}: ${d.statement}${dated}`,
       why: t("AXIGNAL ha leído la página y nombra a la organización. Que trate de ella no está verificado del todo; las opiniones son de terceros y no se puntúan.", "AXIGNAL read the page and it names the organization. That it is about it is not fully verified; the reviews are third-party and are not scored.") + linked };
-    if (d.code === "WEB_MENTION") return { finding: `${t("La nombran en la web", "Named on the web")} · ${outlet}: ${d.statement}`,
+    if (d.code === "WEB_MENTION") return { finding: `${t("La nombran en la web", "Named on the web")} · ${outlet}: ${d.statement}${dated}`,
       why: t("Un buscador propuso la página y AXIGNAL la ha leído: su texto nombra a la organización. Mencionar no es recomendar.", "A search index proposed the page and AXIGNAL read it: its text names the organization. A mention is not an endorsement.") + linked };
     if (d.code === "PRESS_RELEASE") return { finding: `${t("Nota de prensa distribuida", "Distributed press release")} · ${outlet}: ${d.statement}`, why: t("Una nota que una organización distribuye sobre sí misma: es su voz, no cobertura independiente.", "A release an organization distributes about itself: its own voice, not independent coverage.") };
     return d.code === "OWN_PUBLICATION"
@@ -235,7 +236,8 @@ export function discoveryCopy(d: Discovery, t: Translate, locale = "en"): { find
   }
   if (d.kind === "CONTEXT_SIGNAL" && d.code === "WEB_SECTOR_SOURCE") {
     const outlet = typeof d.detail.outlet === "string" ? d.detail.outlet : "";
-    return { finding: `${t("Marco de su actividad", "Framework of its activity")} · ${outlet}: ${d.statement}`,
+    const dated = typeof d.detail.publishedAt === "string" ? ` (${d.detail.publishedAt.slice(0, 10)})` : "";
+    return { finding: `${t("Marco de su actividad", "Framework of its activity")} · ${outlet}: ${d.statement}${dated}`,
       why: t("Página sobre su actividad y las normas que la enmarcan, leída por AXIGNAL. Trata del sector, no de la organización; si le aplica y cómo no está evaluado. No es asesoramiento jurídico.", "A page about its activity and the rules that frame it, read by AXIGNAL. It is about the sector, not the organization; whether and how it applies is not assessed. Not legal advice.") };
   }
   if (d.kind === "CONTEXT_SIGNAL") {

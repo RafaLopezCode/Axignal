@@ -23,7 +23,7 @@ WORKDIR /app
 COPY --from=uv /uv /uvx /bin/
 COPY pyproject.toml uv.lock README.md ./
 
-RUN uv sync --frozen --no-install-project --no-default-groups --group subscriber-auth --group research-canary-live --group semantic-layer-live
+RUN uv sync --frozen --no-install-project --no-default-groups --group subscriber-auth --group research-canary-live --group semantic-layer-live --group web-reading
 
 COPY application /app/application
 COPY domain /app/domain
