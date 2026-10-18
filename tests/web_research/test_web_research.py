@@ -282,3 +282,56 @@ def test_one_page_in_two_language_subdomains_is_read_once() -> None:
     assert [h.url for h in candidates(hits, VELASCA, purpose="REPUTATION")] == [
         "https://empresaexterior.com/i/velasca/"
     ]
+
+
+ARTICLE = """<html><head><title>{title}</title>
+<meta property="article:published_time" content="2026-04-07T08:00:00+02:00"></head>
+<body><nav><a href="/">Inicio</a> <a href="/marcas">Marcas</a></nav>
+<article><h1>{title}</h1>
+<p>{body} El sector dental vive un año de cambios y las cadenas revisan sus planes de
+expansión en toda España, con nuevas aperturas previstas para el próximo ejercicio.</p>
+<p>Los analistas consultados creen que la consolidación continuará durante los próximos
+trimestres, mientras los fondos buscan nuevas oportunidades en el mercado sanitario.</p>
+</article>
+<footer>Nuestros socios: Vitaldent, Sanitas, Adeslas, DKV y otras marcas.</footer>
+</body></html>"""
+
+
+def test_main_text_and_date_decide_a_mention() -> None:
+    from pipeline.web_search.article import read_article
+
+    about = ARTICLE.format(
+        title="OTPP nombra presidente", body="Vitaldent nombra nuevo presidente."
+    )
+    reading = read_article(about, "https://www.expansion.com/a")
+    assert reading is not None and reading.published == "2026-04-07"
+    assert "Vitaldent nombra" in reading.text and "Nuestros socios" not in reading.text
+    footer_only = ARTICLE.format(title="Planes del sector", body="Las cadenas preparan su año.")
+    other = read_article(footer_only, "https://example.es/b")
+    assert other is not None
+    check = check_page(
+        "https://example.es/b", title="Planes del sector", text=other.text, links=[],
+        needles=["vitaldent"], own_domain="vitaldent.com", read_at=NOW.isoformat(),
+        published=other.published,
+    )  # fmt: skip
+    assert check.state == "NOT_SUPPORTED"  # named only in the footer's brand list
+
+
+def test_findings_carry_the_publication_date() -> None:
+    found = research_discoveries(
+        result_with(
+            [{**page("https://www.corriere.it/a", "REPUTATION"), "published": "2026-04-07"}]
+        ),
+        own_domain="velasca.com",
+    )
+    detail = found[0]["detail"]
+    assert isinstance(detail, dict) and detail["publishedAt"] == "2026-04-07"
+
+
+def test_a_date_stamped_when_served_is_not_a_publication_date() -> None:
+    check = check_page(
+        "https://www.reviews.io/r/1", title="Review on Velasca - March 2026", text="Velasca shoes.",
+        links=[], needles=["velasca"], own_domain="velasca.com", read_at=NOW.isoformat(),
+        published=NOW.date().isoformat(),
+    )  # fmt: skip
+    assert check.state == "SUPPORTED" and check.published is None

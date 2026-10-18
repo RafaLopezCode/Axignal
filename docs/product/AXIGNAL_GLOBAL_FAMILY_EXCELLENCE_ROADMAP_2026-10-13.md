@@ -329,6 +329,28 @@ Cada fase termina con una PR desde `main` y gates verdes, el despliegue autoriza
 
 ---
 
+## 5bis. Refuerzo de SEO y GEO con fuentes gratuitas (aprobado por el CTO, 2026-10-18)
+
+SEO y GEO son pilares que hay que reforzar mucho. Todo a coste cero, sin raspar buscadores y
+con la misma ingeniería: la fuente propone o mide, AXIGNAL lee y verifica, Python decide.
+Cada paso se mide sobre el panel de 20 clientes típicos de agencia antes de su PR.
+
+| Orden | Entrega | Qué aporta | Familia |
+|---|---|---|---|
+| 0 | Spec 098: investigación web gobernada (DeepSeek Search) | Reseñas, reclamaciones, prensa y normativa verificadas (reputación 4/20 a 15/20) | Reputación, Contexto |
+| 1 | Spec 099: texto principal y fecha (trafilatura + htmldate) | Menciones solo si están en el título o el texto principal; fecha de publicación | Reputación, Contexto |
+| 2 | PageSpeed Insights API | Lighthouse: SEO, rendimiento, accesibilidad y buenas prácticas, móvil y escritorio, con su versión de instrumento | Presencia (SEO) |
+| 3 | Índice de Common Crawl | Si su web está en el corpus que leen los modelos de IA, y con cuántas páginas | Presencia (GEO) |
+| 4 | GDELT DOC 2.0 | Segunda fuente gratuita de noticias del motor de investigación (65 idiomas) | Reputación, Actividad |
+| 5 | Wayback CDX | Historia de la web: antigüedad, versiones, rediseños | Actividad, Presencia |
+
+Después: Mozilla Observatory y SSL Labs (confianza técnica); OpenAlex, PatentsView y SEC EDGAR
+para los clientes en los que apliquen.
+
+Descartado: Brave (de pago con tarjeta, y su índice no es Google); las API de resultados que
+raspan Google; Search Console de los clientes por ahora, porque exige un flujo de alta
+fricción (#308).
+
 ## 6. Dependencias de dirección (CTO/CEO)
 
 - Desplegar 52fb35d+ y aceptar ADR-0095 (#232 ya mergeado).
