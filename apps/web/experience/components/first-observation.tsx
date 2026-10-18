@@ -217,6 +217,18 @@ export function discoveryCopy(d: Discovery, t: Translate, locale = "en"): { find
     return { finding: `${t("En su sector", "In its sector")} · ${outlet}: ${d.statement}`,
       why: t("Titular reciente sobre su actividad en su país, no sobre la organización. Su relevancia la ha juzgado un asistente: no es un hecho.", "A recent headline about its activity in its country, not about the organization. Its relevance was judged by an assistant: it is not a fact.") };
   }
+  if (d.kind === "ECONOMIC_FACT" && d.detail.fact === "sectorMarket") {
+    const country = placeLabel(String(d.detail.country ?? ""), locale);
+    const money = (meur: unknown) => typeof meur === "number" ? (meur * 1_000_000).toLocaleString(locale, { notation: "compact", style: "currency", currency: "EUR", maximumFractionDigits: 1 }) : "—";
+    const count = (n: unknown) => typeof n === "number" ? n.toLocaleString(locale, { maximumFractionDigits: 0 }) : "—";
+    const growth = typeof d.detail.employmentGrowthPc === "number" ? d.detail.employmentGrowthPc : null;
+    return {
+      finding: t("Su sector en {country}: {n} empresas facturan {turnover} y emplean a {persons} personas ({year})", "Its sector in {country}: {n} enterprises turn over {turnover} and employ {persons} people ({year})")
+        .replace("{country}", country).replace("{n}", count(d.detail.enterprises)).replace("{turnover}", money(d.detail.turnoverMeur))
+        .replace("{persons}", count(d.detail.personsEmployed)).replace("{year}", String(d.detail.year ?? "")),
+      why: (growth === null ? "" : t("El empleo del sector varió un {g} % en el último año. ", "Employment in the sector changed by {g}% over the last year. ").replace("{g}", `${growth > 0 ? "+" : ""}${growth.toLocaleString(locale)}`))
+        + t("Son datos oficiales del sector, no de la organización: dan escala a sus cifras, o a su ausencia.", "These are official figures for the sector, not for the organization: they give its own figures, or their absence, a scale.") };
+  }
   if (d.kind === "ECONOMIC_FACT") {
     const fact = String(d.detail.fact ?? "");
     const labels: Record<string, string> = {
@@ -304,6 +316,8 @@ export function discoveryCopy(d: Discovery, t: Translate, locale = "en"): { find
       GROUP_COUNTRIES_DEMAND_UNWATCHED: [
         t("Su grupo tiene sociedades registradas en {countries}, donde no se está vigilando su demanda.", "Its group has registered entities in {countries}, where its demand is not being watched.").replace("{countries}", Array.isArray(v.countries) ? v.countries.map(c => placeLabel(String(c), locale) || String(c)).join(", ") : ""),
         t("Los países donde ya tiene presencia legal son los mercados más baratos de vigilar: dirige allí la demanda para verla.", "Countries where it already has a legal presence are the cheapest markets to watch; direct demand there to see it.")],
+      SIZE_IN_SECTOR: [sizeInSectorCopy(v, t, locale),
+        t("Da escala a sus cifras: la misma facturación es grande en un sector y pequeña en otro. La media la elevan unas pocas grandes; su tramo de tamaño es la comparación más justa.", "It gives its figures a scale: the same revenue is large in one sector and small in another. A few large firms pull the average up; its size class is the fairer comparison.")],
       FOUNDING_YEAR_SOURCES_DISAGREE: [
         t("El registro oficial la data en {a}; Wikidata, en {b}.", "The official register dates it to {a}; Wikidata to {b}.").replace("{a}", String(v.register ?? "")).replace("{b}", String(v.wikidata ?? "")),
         t("Suele ser una sociedad predecesora o un nuevo registro: conviene saber qué entidad lleva su historia.", "Often a predecessor company or a re-registration; worth knowing which entity carries its history.")],
@@ -562,6 +576,33 @@ function sourceName(url: string): string {
   try { return new URL(url).hostname.replace(/^www\./, ""); } catch { return url; }
 }
 
+const SIZE_CLASS_LABEL: Record<string, [string, string]> = {
+  "0-9": ["0–9", "0–9"], "10-19": ["10–19", "10–19"], "20-49": ["20–49", "20–49"],
+  "50-249": ["50–249", "50–249"], GE250: ["250 o más", "250 or more"],
+};
+
+/** Its size against its sector (spec 095), from the crossing's values only. */
+export function sizeInSectorCopy(v: Record<string, unknown>, t: Translate, locale: string): string {
+  const country = placeLabel(String(v.country ?? ""), locale);
+  const size = typeof v.sizeClass === "string" && SIZE_CLASS_LABEL[v.sizeClass] ? t(...SIZE_CLASS_LABEL[v.sizeClass]) : null;
+  const times = (x: unknown) => typeof x === "number" ? x.toLocaleString(locale, { maximumFractionDigits: 1 }) : "";
+  const parts: string[] = [];
+  if (typeof v.revenue === "number") {
+    const revenue = `${v.revenue.toLocaleString(locale, { notation: "compact", style: "currency", currency: "EUR", maximumFractionDigits: 1 })}${v.revenueYear ? ` (${String(v.revenueYear)})` : ""}`;
+    parts.push(typeof v.timesSizeClassAverage === "number" && size
+      ? t("Su facturación, {revenue}, es {x} veces la media de las empresas de su tamaño ({size} personas) en su sector en {country}, y {y} veces la de la empresa media del sector.", "Its revenue, {revenue}, is {x} times the average of enterprises of its size ({size} people) in its sector in {country}, and {y} times the sector's average enterprise.")
+        .replace("{revenue}", revenue).replace("{x}", times(v.timesSizeClassAverage)).replace("{size}", size).replace("{country}", country).replace("{y}", times(v.timesSectorAverage))
+      : t("Su facturación, {revenue}, es {y} veces la de la empresa media de su sector en {country}.", "Its revenue, {revenue}, is {y} times the sector's average enterprise in {country}.")
+        .replace("{revenue}", revenue).replace("{y}", times(v.timesSectorAverage)).replace("{country}", country));
+  }
+  if (typeof v.shareAtLeastItsSize === "number" && size) {
+    const share = (v.shareAtLeastItsSize * 100).toLocaleString(locale, { maximumFractionDigits: v.shareAtLeastItsSize < 0.1 ? 1 : 0 });
+    parts.push(t("Solo el {p} % de las empresas de su sector en {country} tienen su tamaño ({size} personas) o más.", "Only {p}% of enterprises in its sector in {country} are its size ({size} people) or larger.")
+      .replace("{p}", share).replace("{country}", country).replace("{size}", size));
+  }
+  return parts.join(" ");
+}
+
 /** A declared register identifier in the reader's words: "CIF B54941729", not the scheme code
  * "ES_CIF B54941729" (spec 094). Other identity hints keep their statement. */
 export function identifierLabel(code: string, statement: string, t: Translate): string {
@@ -608,6 +649,11 @@ export function basisRows(d: Discovery, t: Translate, locale: string): Array<[st
   if (Array.isArray(detail.competitorFrequency) && detail.competitorFrequency.length) rows.push([t("A quién nombra en su lugar", "Who it names instead"), (detail.competitorFrequency as unknown[][]).map(r => `${String(r[0])} (${String(r[1])})`).join(" · ")]);
   else if (Array.isArray(detail.competitorsNamed) && detail.competitorsNamed.length) rows.push([t("Otras organizaciones que nombra", "Other organizations it names"), detail.competitorsNamed.join(" · ")]);
   if (Array.isArray(detail.sitesCited) && detail.sitesCited.length) rows.push([t("Webs que cita", "Websites it cites"), (detail.sitesCited as unknown[][]).map(r => `${String(r[0])} (${String(r[1])})`).join(" · ")]);
+  if (detail.fact === "sectorMarket") {
+    if (Array.isArray(detail.divisions)) rows.push([t("Actividades (NACE Rev.2)", "Activities (NACE Rev.2)"), detail.divisions.join(", ")]);
+    if (typeof detail.turnoverPerPersonTeur === "number") rows.push([t("Facturación por persona ocupada", "Turnover per person employed"), `${(detail.turnoverPerPersonTeur * 1000).toLocaleString(locale, { style: "currency", currency: "EUR", maximumFractionDigits: 0 })}`]);
+    if (typeof detail.industryReadFrom === "string") rows.push([t("Sector leído de", "Sector read from"), detail.industryReadFrom === "REGISTER_ACTIVITY_CODE" ? t("su código de actividad en el registro", "its register activity code") : t("su actividad observada (lectura potencial)", "its observed activity (a potential reading)")]);
+  }
   if (typeof detail.uncertainty === "string") rows.push([t("Incertidumbre", "Uncertainty"), detail.uncertainty]);
   if (typeof detail.outlet === "string") rows.push([t("Medio", "Outlet"), detail.outlet]);
   if (typeof detail.publishedAt === "string") rows.push([t("Publicado", "Published"), detail.publishedAt.slice(0, 10)]);

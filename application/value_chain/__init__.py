@@ -64,6 +64,22 @@ def _divisions(code: str) -> set[int]:
     return set(numbers)
 
 
+#: NACE section letter → its divisions, for industry codes that name a whole section ("B").
+_SECTION_DIVISIONS = {
+    "A": range(1, 4), "B": range(5, 10), "D": range(35, 36), "E": range(36, 40),
+    "F": range(41, 44), "I": range(55, 57), "L": range(68, 69), "O": range(84, 85),
+    "P": range(85, 86), "S": range(94, 97),
+}  # fmt: skip
+
+
+def industry_divisions(code: str) -> set[int]:
+    """NACE divisions an industry code covers, for every consumer (sector economy, peers)."""
+    found = _divisions(code)
+    if found:
+        return found
+    return set(_SECTION_DIVISIONS.get(code[:1].upper(), ()))
+
+
 @cache
 def _by_division() -> dict[int, str]:
     out: dict[int, str] = {}

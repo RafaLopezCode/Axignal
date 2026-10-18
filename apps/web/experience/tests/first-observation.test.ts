@@ -171,3 +171,18 @@ test("a declared register identifier reads as people say it, not as a scheme cod
   const other = discovery("IDENTITY_HINT", "LEGAL_NAME_DECLARED", { statement: "Webpositer S.L." });
   assert.match(discoveryCopy(other, en).finding, /Its website declares: Webpositer S\.L\./);
 });
+
+test("its sector's market reads as the sector's, and its size as an order of magnitude (spec 095)", () => {
+  const market = discovery("ECONOMIC_FACT", "SECTOR_MARKET:FR", { statement: "FR J62 2024", epistemicState: "DECLARED",
+    detail: { fact: "sectorMarket", country: "FR", year: "2024", enterprises: 139348, personsEmployed: 560858, turnoverMeur: 104075, employmentGrowthPc: 0.58, divisions: ["J62"], industryReadFrom: "REGISTER_ACTIVITY_CODE" } });
+  const copy = discoveryCopy(market, en);
+  assert.match(copy.finding, /Its sector in France: 139,348 enterprises turn over €104(\.1)?B and employ 560,858 people \(2024\)/);
+  assert.match(copy.why, /\+0\.58% over the last year/);
+  assert.match(copy.why, /not for the organization/);
+  const rows = basisRows(market, en, "en").map(([l, v]) => `${l} ${v}`).join(" | ");
+  assert.match(rows, /Sector read from its register activity code/);
+  const size = discovery("INXIGHT", "economics:SIZE_IN_SECTOR", { detail: { rule: "SIZE_IN_SECTOR", values: { country: "FR", sizeClass: "50-249", revenue: 16353415, revenueYear: "2023", timesSizeClassAverage: 0.7, timesSectorAverage: 21.9, shareAtLeastItsSize: 0.007 } } });
+  const said = discoveryCopy(size, en).finding;
+  assert.match(said, /Its revenue, €16\.4M \(2023\), is 0\.7 times the average of enterprises of its size \(50–249 people\) in its sector in France, and 21\.9 times/);
+  assert.match(said, /Only 0\.7% of enterprises in its sector in France are its size \(50–249 people\) or larger/);
+});

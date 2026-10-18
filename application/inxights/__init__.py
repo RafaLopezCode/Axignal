@@ -290,6 +290,76 @@ def inception_disagreement(view: Mapping[str, Any]) -> list[dict[str, object]]:
     )]  # fmt: skip
 
 
+def size_in_sector(view: Mapping[str, Any]) -> list[dict[str, object]]:
+    """Its own size against its sector in its home country (spec 095): its reported revenue
+    against the average enterprise of its size class and of the whole sector, and the share
+    of the sector's enterprises that are at least its size. Only with its own figures."""
+    sector = next((d for d in _all(view, "ECONOMIC_FACT")
+                   if str(d.get("code", "")).startswith("SECTOR_MARKET:")), None)  # fmt: skip
+    if sector is None:
+        return []
+    from application.sector_economy import SIZE_BOUNDS, size_class_of
+
+    facts = {str(_detail(d).get("fact")): d for d in _all(view, "ECONOMIC_FACT")
+             if not str(d.get("code", "")).startswith("SECTOR_MARKET:")}  # fmt: skip
+    revenue = facts.get("revenue")
+    revenue_eur = (
+        float(_detail(revenue).get("value") or 0)
+        if revenue is not None and _detail(revenue).get("unit") == "EUR"
+        else 0.0
+    )
+    employees = facts.get("employees")
+    band = facts.get("employeesBand")
+    count = _detail(employees).get("value") if employees is not None else None
+    size = size_class_of(
+        float(count) if isinstance(count, int | float) else None,
+        str(_detail(band).get("value") or "") if band is not None else None,
+    )
+    figures = _detail(sector)
+    enterprises = float(figures.get("enterprises") or 0)
+    turnover = float(figures.get("turnoverMeur") or 0) * 1_000_000
+    held_sizes = figures.get("bySize")
+    by_size: Mapping[str, Any] = held_sizes if isinstance(held_sizes, Mapping) else {}
+    values: dict[str, object] = {
+        "country": figures.get("country"), "sectorYear": figures.get("year"),
+        "divisions": figures.get("divisions"), "sizeClass": size,
+    }  # fmt: skip
+    evidence: list[Discovery] = [sector]
+    if revenue is not None and revenue_eur > 0 and enterprises > 0 and turnover > 0:
+        values["revenue"] = revenue_eur
+        values["revenueYear"] = _detail(revenue).get("year")
+        values["timesSectorAverage"] = round(revenue_eur / (turnover / enterprises), 1)
+        evidence.append(revenue)
+        own = by_size.get(size) if size else None
+        if isinstance(own, Mapping) and own.get("enterprises") and own.get("turnoverMeur"):
+            average = float(own["turnoverMeur"]) * 1_000_000 / float(own["enterprises"])
+            values["timesSizeClassAverage"] = round(revenue_eur / average, 1)
+            values["sizeClassEnterprises"] = own["enterprises"]
+    if size and enterprises > 0:
+        classes = [s for s, _lo, _hi in SIZE_BOUNDS]
+        counts: list[float] = []
+        for name in classes[classes.index(size) :]:
+            cell = by_size.get(name)
+            number = cell.get("enterprises") if isinstance(cell, Mapping) else None
+            if isinstance(number, int | float):
+                counts.append(float(number))
+        if len(counts) == len(classes) - classes.index(size):
+            values["shareAtLeastItsSize"] = round(sum(counts) / enterprises, 4)
+        sized = employees if employees is not None else band
+        if sized is not None:
+            evidence.append(sized)
+    if "timesSectorAverage" not in values and "shareAtLeastItsSize" not in values:
+        return []
+    return [_inxight(
+        "economics", "SIZE_IN_SECTOR",
+        f"Its size against its sector in {figures.get('country')} ({figures.get('year')}).",
+        evidence, values=values,
+        why="Gives its own figures a scale: the same revenue is large in one sector and small "
+        "in another. An average is pulled up by a few large firms; its size class is the fairer "
+        "comparison. Figures of different years are compared as an order of magnitude.",
+    )]  # fmt: skip
+
+
 RULES: tuple[Callable[[Mapping[str, Any]], list[dict[str, object]]], ...] = (
     local_buyers_never_awarded,
     competitors_win_with_its_buyers,
@@ -300,6 +370,7 @@ RULES: tuple[Callable[[Mapping[str, Any]], list[dict[str, object]]], ...] = (
     sector_in_news_not_it,
     group_countries_unwatched,
     inception_disagreement,
+    size_in_sector,
 )
 
 
