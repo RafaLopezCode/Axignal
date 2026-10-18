@@ -95,3 +95,39 @@ export function FamilyNav({ facet, counts, lit, litChannels, onSelect }: {
     </nav>}
   </div>;
 }
+
+/**
+ * The families as the workspace menu (family workspace design base): one entry per family, its
+ * own hue as a dot at equal perceived lightness (never the only cue: the name is always beside
+ * it), unread findings as a count, and Visibilidad's channels nested when it is open. It only
+ * selects what is shown; the selection travels in the URL like the chips it replaces.
+ */
+export function FamilyRail({ facet, counts, lit, litChannels, onSelect }: {
+  facet: Facet; counts: Counts; lit: Record<FamilyId, number>; litChannels: Record<Channel, number>; onSelect: (facet: Facet) => void;
+}) {
+  const { t, copy } = useLocale();
+  const unread = (n: number) => n > 0 && <span className="obs-family-unread" role="img" aria-label={n === 1 ? t("1 sin leer", "1 unread") : fill(t("{n} sin leer", "{n} unread"), { n })}>{n}</span>;
+  return <nav className="obs-family-rail" aria-label={t("Familias de observación", "Observation families")}>
+    <h2 className="obs-rail-label">{t("Familias", "Families")}</h2>
+    <ul>
+      <li><button className="obs-family-link" aria-current={!facet.family ? "page" : undefined} onClick={() => onSelect(NO_FACET)}>
+        <span className="obs-family-dot obs-family-dot-all" aria-hidden="true"/><span className="obs-family-name">{t("Resumen", "Overview")}</span>
+      </button></li>
+      {FAMILY_ORDER.map(id => <li key={id}>
+        <button className={`obs-family-link${counts.families[id] === 0 ? " obs-family-empty" : ""}`} aria-current={facet.family === id ? "page" : undefined} onClick={() => onSelect({ family: id, channel: null })}>
+          <span className={`obs-family-dot obs-family-dot-${id}`} aria-hidden="true"/>
+          <span className="obs-family-name">{copy(familyOf(id).name)}</span>
+          {unread(lit[id])}
+        </button>
+        {id === "presence" && facet.family === "presence" && <ul className="obs-family-channels">
+          {CHANNEL_ORDER.map(channel => <li key={channel}>
+            <button className={`obs-family-link obs-family-channel${counts.channels[channel] === 0 ? " obs-family-empty" : ""}`} aria-current={facet.channel === channel ? "page" : undefined} onClick={() => onSelect({ family: "presence", channel: facet.channel === channel ? null : channel })}>
+              <span className="obs-family-name">{channelLabel(channel, t)}</span>
+              {unread(litChannels[channel])}
+            </button>
+          </li>)}
+        </ul>}
+      </li>)}
+    </ul>
+  </nav>;
+}
