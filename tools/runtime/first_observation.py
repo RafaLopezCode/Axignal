@@ -111,6 +111,7 @@ from application.search_visibility import (
     search_discoveries,
     terms_from_activity,
 )
+from application.sector_economy import apply_sector_economy
 from application.semantic_layer.cascade import SemanticCascade
 from application.subscriber_identity.runtime import Clock
 from application.subscriber_portfolio.models import (
@@ -1667,6 +1668,8 @@ class FirstObservationRuntime:
             )
             # Where its sector's demand comes from and where its inputs come from.
             view = apply_value_chain(view, proof, nace_of=self._industry_nace)
+            # Its sector's economy in its own country and the markets it looks at (spec 095).
+            view = apply_sector_economy(view, proof, directed=directed, nace_of=self._industry_nace)
             # Who could buy what it offers: every public route, each signal kept apart.
             view = self._with_potential_buyers(view, proof, tenant, target_ref)
             # What crossing the families reveals (derived, recomputed on every read).
