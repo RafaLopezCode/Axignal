@@ -2,6 +2,9 @@
   "name": "axignal-experience",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": ">=22 <23"
+  },
   "scripts": {
     "dev": "next dev --hostname 127.0.0.1 --port 3810",
     "build": "npm run check:seo && next build && node tools/localize-static-html-lang.mjs",

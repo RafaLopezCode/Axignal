@@ -31,7 +31,7 @@ jobs:
       - name: Set up production Node major
         uses: actions/setup-node@v4
         with:
-          node-version: "22"
+          node-version-file: apps/web/experience/.nvmrc
           cache: npm
           cache-dependency-path: apps/web/experience/package-lock.json
 
@@ -66,7 +66,7 @@ jobs:
           enable-cache: true
 
       - name: Set up Python
-        run: uv python install 3.12
+        run: uv python install "$(cat .python-version)"
 
       - name: Sync (locked)
         run: uv sync --frozen
