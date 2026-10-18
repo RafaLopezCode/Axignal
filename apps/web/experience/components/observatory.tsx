@@ -831,8 +831,10 @@ export function FamilyValues({ values, onOpen, onFamily }: {
         </button>
         : null}
     </li>)}</ol>
-    {silent.length > 0 && <p className="obs-family-value-none">{t("Aún sin nada observado:", "Nothing observed yet:")}{" "}
-      {silent.map(({ family }, index) => <span key={family}>{index > 0 && ", "}{onFamily ? <button className="obs-link" onClick={() => onFamily(family)}>{nameOf(family)}</button> : nameOf(family)}</span>)}.</p>}
+    {silent.length > 0 && <p className="obs-family-value-none">
+      <span className="obs-family-value-none-label">{t("Aún sin nada observado:", "Nothing observed yet:")}</span>
+      <span className="obs-family-value-none-families">{silent.map(({ family }, index) => <span key={family}>{index > 0 && ", "}{onFamily ? <button className="obs-link" onClick={() => onFamily(family)}>{nameOf(family)}</button> : nameOf(family)}</span>)}.</span>
+    </p>}
   </section>;
 }
 
