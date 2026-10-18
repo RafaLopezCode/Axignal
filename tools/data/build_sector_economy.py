@@ -21,10 +21,39 @@ from typing import Any
 
 API = "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/"
 OUT = Path(__file__).parents[2] / "application" / "sector_economy" / "eu_sbs.json"
-COUNTRIES = (
-    "AT BE BG CY CZ DE DK EE EL ES FI FR HR HU IE IT LT LU LV MT NL PL PT RO SE SI SK "
-    "NO IS LI CH"
-).split()
+COUNTRIES = [
+    "AT",
+    "BE",
+    "BG",
+    "CY",
+    "CZ",
+    "DE",
+    "DK",
+    "EE",
+    "EL",
+    "ES",
+    "FI",
+    "FR",
+    "HR",
+    "HU",
+    "IE",
+    "IT",
+    "LT",
+    "LU",
+    "LV",
+    "MT",
+    "NL",
+    "PL",
+    "PT",
+    "RO",
+    "SE",
+    "SI",
+    "SK",
+    "NO",
+    "IS",
+    "LI",
+    "CH",
+]
 #: indicator → key in the table
 SECTOR = {
     "ENT_NR": "enterprises",
@@ -42,7 +71,7 @@ DIVISION = re.compile(r"^[A-S][0-9]{2}$")
 def _get(dataset: str, params: list[tuple[str, str]]) -> dict[str, Any]:
     query = urllib.parse.urlencode([*params, ("format", "JSON"), ("lang", "EN")])
     request = urllib.request.Request(f"{API}{dataset}?{query}", headers={"User-Agent": "AXIGNAL"})
-    with urllib.request.urlopen(request, timeout=180) as response:  # noqa: S310 (fixed host)
+    with urllib.request.urlopen(request, timeout=180) as response:
         return dict(json.load(response))
 
 
@@ -118,6 +147,5 @@ def build() -> dict[str, object]:
 if __name__ == "__main__":
     OUT.parent.mkdir(parents=True, exist_ok=True)
     OUT.write_text(json.dumps(build(), ensure_ascii=False, separators=(",", ":")) + "\n",
-                   encoding="utf-8", newline="
-")  # fmt: skip
+                   encoding="utf-8", newline="\n")  # fmt: skip
     print("wrote", OUT, OUT.stat().st_size, "bytes")
