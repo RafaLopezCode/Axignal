@@ -123,6 +123,13 @@ export function findingActions(d: Discovery, t: Translate): FindingActions | nul
     act: [t("Muestra la certificación «{what}» con su número y su organismo, enlazando al registro que la acredita.", "Show the “{what}” credential with its number and issuer, linking to the register that proves it.").replace("{what}", what)],
     research: [t("Si la certificación sigue vigente en el registro oficial del organismo emisor.", "Whether the credential is still valid in the issuer's official register.")],
   };
+  if (d.kind === "DECLARED_SERVICE_AREA" && d.code === "ENTRY_REPORTED") return {
+    act: [
+      t("Lee la noticia en su fuente y confirma que la entrada sigue activa: tiendas, distribuidor o venta online en ese país.", "Read the news at its source and confirm the entry is still active: stores, distributor or online sales in that country."),
+      t("Si vende allí, que su web tenga versión para ese país (idioma, moneda, contacto) y lo declare en hreflang.", "If it sells there, give its website a version for that country (language, currency, contact) declared in hreflang."),
+    ],
+    research: [t("Si hay demanda pública y competidores observados en esos países.", "Whether there is public demand and observed competitors in those countries.")],
+  };
   // Markets: where it acts.
   if (d.kind === "DECLARED_LOCATION" || d.kind === "DECLARED_SERVICE_AREA") return {
     act: [

@@ -433,6 +433,9 @@ export function discoveryCopy(d: Discovery, t: Translate, locale = "en"): { find
   if (d.kind === "DECLARED_LOCATION") return d.code === "LOCATION_STATED_IN_TEXT"
     ? { finding: `${t("Ubicación mencionada en su web", "Location mentioned on its website")}: ${placeLabel(d.statement, locale)}`, why: t("Indica dónde mirar primero. No define dónde opera ni todo su mercado.", "It shows where to look first. It does not define where it operates or its whole market.") }
     : { finding: `${t("Dirección que declara", "Address it declares")}: ${d.statement}`, why: t("Indica dónde mirar primero. No define dónde opera ni todo su mercado.", "It shows where to look first. It does not define where it operates or its whole market.") };
+  if (d.kind === "DECLARED_SERVICE_AREA" && d.code === "ENTRY_REPORTED") return {
+    finding: `${t("La prensa informa de su entrada en", "The press reports its entry into")}: ${Object.keys((d.detail.countries ?? {}) as Record<string, unknown>).map(c => placeLabel(c, locale)).join(", ")}`,
+    why: t("Una página de terceros lo cuenta en la misma frase que la nombra; los planes y previsiones no cuentan. Es un mercado que comprobar, no ventas confirmadas.", "A third-party page says so in the same sentence that names it; plans and forecasts do not count. A market to check, not confirmed sales.") };
   if (d.kind === "DECLARED_SERVICE_AREA" && d.code === "SITE_VERSIONS_FOR_COUNTRIES") return {
     finding: `${t("Su web tiene versiones para", "Its website has versions for")}: ${Object.keys((d.detail.countries ?? {}) as Record<string, unknown>).map(c => placeLabel(c, locale)).join(", ")}`,
     why: t("Es lo que declara su propia web con sus versiones por país: dónde dice vender o atender, no una prueba de ventas allí.", "Its own website declares it through its country versions: where it says it sells or serves, not proof of sales there.") };
