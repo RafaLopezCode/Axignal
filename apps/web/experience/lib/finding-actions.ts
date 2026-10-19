@@ -87,6 +87,14 @@ export function findingActions(d: Discovery, t: Translate): FindingActions | nul
       research: [t("Su posición en otras búsquedas de su actividad y en otros países donde opera.", "Its position in other searches for its activity and in other countries where it operates.")],
     };
   }
+  if (d.kind === "WEB_REPRESENTATION" && d.code === "SECURITY_HEADERS_GRADE") return {
+    act: [
+      t("Abre el informe de Mozilla Observatory (su fuente) para ver qué comprobaciones fallan.", "Open the Mozilla Observatory report (its source) to see which checks fail."),
+      t("Lo habitual: forzar HTTPS con HSTS, añadir una política de seguridad de contenidos (CSP) y las cabeceras X-Content-Type-Options y Referrer-Policy en el servidor.", "The usual: enforce HTTPS with HSTS, add a content security policy (CSP) and the X-Content-Type-Options and Referrer-Policy headers on the server."),
+      t("Vuelve a medir después: la nota cambia en cuanto el servidor envía las cabeceras.", "Measure again afterwards: the grade changes as soon as the server sends the headers."),
+    ],
+    research: [t("Qué nota tienen las webs de sus competidores con la misma medición.", "What grade its competitors' websites get with the same measurement.")],
+  };
   if (d.kind === "WEB_REPRESENTATION" && d.code === "LIGHTHOUSE_AUDIT") {
     const seo = failingTitles(detail, "SEO");
     const performance = failingTitles(detail, "PERFORMANCE");
