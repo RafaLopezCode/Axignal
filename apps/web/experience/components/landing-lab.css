@@ -2679,3 +2679,20 @@ html[data-motion="reduced"] .landing-lab * {
 .lab-footer {
   padding-bottom: 92px;
 }
+
+.lab-hero {
+  row-gap: 24px;
+}
+.lab-world-controls {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: flex-end;
+}
+.lab-world-controls .lab-replay {
+  position: static;
+}
+@media (max-width: 700px) {
+  .lab-world-controls {
+    justify-content: flex-start;
+  }
+}
