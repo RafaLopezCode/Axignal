@@ -157,6 +157,10 @@ export function findingActions(d: Discovery, t: Translate): FindingActions | nul
     research: [t("Su evolución en años anteriores y cómo se compara con su sector en su país.", "Its trend over previous years and how it compares with its sector in its country.")],
   };
   // Organization: who it is.
+  if (d.kind === "IDENTITY_HINT" && d.code === "IDENTIFIER_IN_DIRECTORY") return {
+    act: [t("Comprueba en el registro oficial que el identificador {id} corresponde a la organización y, si es así, publícalo en su web.", "Check in the official register that identifier {id} belongs to the organization and, if so, publish it on its website.").replace("{id}", what)],
+    research: [t("Si el registro oficial confirma ese identificador, su nombre legal y su domicilio.", "Whether the official register confirms that identifier, its legal name and address.")],
+  };
   if (d.kind === "IDENTITY_HINT") return {
     act: [t("Que su web muestre su nombre legal y su número de registro o NIF, y que coincidan con el registro oficial.", "Make its website show its legal name and registration or tax number, matching the official register.")],
     research: [t("Si el registro oficial confirma ese nombre, su domicilio y su actividad.", "Whether the official register confirms that name, its address and its activity.")],

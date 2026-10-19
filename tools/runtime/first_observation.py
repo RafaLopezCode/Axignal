@@ -1108,14 +1108,24 @@ class FirstObservationRuntime:
         activity = _activity_words(view, proof)
         if activity is None:
             return view
-        host, _country, language, cleaned = activity
+        host, country, language, cleaned = activity
         target = view.get("target")
         names = [str(target["name"])] if isinstance(target, Mapping) and target.get("name") else []
         names += [str(d["statement"]) for d in discoveries if isinstance(d, Mapping)
                   and d.get("code") == "LEGAL_NAME_DECLARED" and d.get("statement")]  # fmt: skip
+        # Without the activity in the website's own words, AXIGNAL's classified activity
+        # (its English label) frames the sector research (spec 103).
+        # A whole ISIC section ("isic-G": trade and repair of vehicles) is too broad: its words
+        # pulled agricultural-vehicle rules into fashion brands (2026-10-19); only a specific
+        # activity frames the research.
+        label = next((str(d["statement"]) for d in discoveries if isinstance(d, Mapping)
+                      and d.get("kind") == "ACTIVITY" and d.get("statement")
+                      and not str(d.get("code") or "").startswith("isic-")), None)  # fmt: skip
         subject = ResearchSubject(
             names=tuple(dict.fromkeys(names or [host])), domain=host, language=language,
-            activity_terms=tuple(cleaned[:1]),
+            activity_terms=tuple(cleaned[:1]) or ((label,) if label else ()),
+            country=country.upper() if country else None,
+            activity_from_label=not cleaned and bool(label),
         )  # fmt: skip
         result = self._web_research.result(subject)
         self._web_research.request(subject)  # no-op while fresh or queued

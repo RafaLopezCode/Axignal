@@ -28,6 +28,7 @@ from datetime import date
 from typing import Protocol
 from urllib.parse import urlsplit
 
+from application.first_observation.registry_ids import registry_identifiers
 from application.press.mentions import mentions, normalized_name, search_terms
 
 #: The provider's own relevance score (0-3); below it a candidate is not read at all.
@@ -44,6 +45,13 @@ REVIEW_WORDS = {
 REGULATION_WORDS = {
     "es": "normativa", "en": "regulation", "de": "Verordnung", "fr": "réglementation",
     "it": "normativa", "pt": "regulamentação", "nl": "regelgeving",
+}  # fmt: skip
+
+#: How a country's company directories name the identifier AXIGNAL can verify (check digits):
+#: a page that names the organization and shows one such identifier is a potential identity.
+IDENTITY_WORDS = {
+    "ES": "CIF", "FR": "SIREN", "DE": "Handelsregister", "GB": '"company number"',
+    "NO": "organisasjonsnummer",
 }  # fmt: skip
 
 #: Hosts whose pages are a platform's own profiles or app store listings, never a third-party
@@ -66,6 +74,10 @@ REVIEW_LABELS = frozenset({
     "provenexpert", "thefork", "eltenedor", "productreview", "reclameaqui", "reviews",
     "ekomi", "judge", "verified-reviews", "comparably",
 })  # fmt: skip
+#: Patent databases: an invention is not its sector's context (patsnap pages reached the
+#: ventilation and solar clients' context, 2026-10-19).
+PATENT_LABELS = frozenset({"patsnap", "freepatentsonline", "patentimages", "espacenet", "lens"})
+_PATENT_HOSTS = frozenset({"patents.google.com", "worldwide.espacenet.com", "patentscope.wipo.int"})
 _SECOND_LEVEL = frozenset({"co", "com", "org", "net", "gov", "gob", "ac", "edu"})
 
 
@@ -111,10 +123,17 @@ class ResearchSubject:
     domain: str
     language: str
     activity_terms: tuple[str, ...] = ()
+    #: Where it is registered (ISO alpha-2), for its legal identity; None when unknown.
+    country: str | None = None
+    #: The activity terms are AXIGNAL's English label, not the website's own words.
+    activity_from_label: bool = False
 
     @property
     def key(self) -> str:
-        return f"{self.domain}|{self.language}|{','.join(self.activity_terms)}"
+        return (
+            f"{self.domain}|{self.language}|{','.join(self.activity_terms)}|{self.country or ''}"
+            f"|{int(self.activity_from_label)}"
+        )
 
 
 @dataclass(frozen=True, slots=True)
@@ -123,9 +142,17 @@ class PlannedQuery:
     query: str
 
 
+def research_names(names: Sequence[str]) -> list[str]:
+    """What a page must say to name the organization. Short single-word names (Goiko, Huel),
+    too common for a press headline, are kept here: the query quotes the name and excludes
+    its own website, and Jev judges the page title for another entity (spec 103)."""
+    terms = search_terms(names)
+    return terms or list(dict.fromkeys(n for n in map(normalized_name, names) if len(n) >= 3))
+
+
 def plan(subject: ResearchSubject, *, today: date) -> tuple[PlannedQuery, ...]:
     """At most three queries: reviews, recent pages that name it, and its sector's rules."""
-    terms = search_terms(subject.names)
+    terms = research_names(subject.names)
     if not terms or not subject.domain:
         return ()
     name = max(subject.names, key=len) if len(terms) > 1 else subject.names[0]
@@ -139,8 +166,16 @@ def plan(subject: ResearchSubject, *, today: date) -> tuple[PlannedQuery, ...]:
     if subject.activity_terms:
         term = subject.activity_terms[0]
         out.append(
-            PlannedQuery("CONTEXT", f'"{term}" {REGULATION_WORDS[lang]} lang:{lang} after:{since}')
+            # A label in English is searched as such, in any language (spec 103).
+            PlannedQuery("CONTEXT", f'"{term}" regulation after:{since}')
+            if subject.activity_from_label
+            else PlannedQuery(
+                "CONTEXT", f'"{term}" {REGULATION_WORDS[lang]} lang:{lang} after:{since}'
+            )
         )
+    if subject.country in IDENTITY_WORDS:
+        word = IDENTITY_WORDS[str(subject.country)]
+        out.append(PlannedQuery("IDENTITY", f'"{name}" {word} -site:{subject.domain}'))
     return tuple(PlannedQuery(q.purpose, q.query[:128]) for q in out)
 
 
@@ -185,7 +220,9 @@ def candidates(hits: Sequence[WebHit], subject: ResearchSubject, *, purpose: str
         label = registrable_label(host)
         if label in SOCIAL_LABELS or _BOILERPLATE_PATH.search(urlsplit(hit.url).path):
             continue
-        if purpose == "REPUTATION":
+        if purpose == "CONTEXT" and (label in PATENT_LABELS or host in _PATENT_HOSTS):
+            continue
+        if purpose in {"REPUTATION", "IDENTITY"}:
             if host == own or host.endswith("." + own):
                 continue  # its own voice
             if any(b in label for b in brands) and label not in REVIEW_LABELS:
@@ -232,6 +269,8 @@ class PageCheck:
     excerpt: str | None = None
     links_to_website: bool = False
     read_at: str | None = None
+    #: Company identifiers the page shows, check digits verified (identity research only).
+    identifiers: tuple[tuple[str, str], ...] = ()
     #: Why a page was not read (HTTP status or the reader's refusal), said as it is.
     reason: str | None = None
     #: The publication date the page declares (ISO), when it declares one.
@@ -242,6 +281,7 @@ class PageCheck:
             "url": self.url, "state": self.state, "title": self.title, "excerpt": self.excerpt,
             "linksToWebsite": self.links_to_website, "readAt": self.read_at, "reason": self.reason,
             "published": self.published,
+            "identifiers": [list(i) for i in self.identifiers],
         }  # fmt: skip
 
     @staticmethod
@@ -254,6 +294,10 @@ class PageCheck:
             read_at=str(raw["readAt"]) if raw.get("readAt") else None,
             reason=str(raw["reason"]) if raw.get("reason") else None,
             published=str(raw["published"]) if raw.get("published") else None,
+            identifiers=tuple(
+                (str(i[0]), str(i[1])) for i in raw.get("identifiers") or []  # type: ignore[attr-defined]
+                if isinstance(i, list | tuple) and len(i) == 2
+            ),
         )  # fmt: skip
 
 
@@ -267,6 +311,7 @@ def check_page(
     own_domain: str | None,
     read_at: str,
     published: str | None = None,
+    require_identifier: bool = False,
 ) -> PageCheck:
     """SUPPORTED only when the page's own title or text names a needle."""
     if published is not None and published >= read_at[:10]:
@@ -287,9 +332,23 @@ def check_page(
         for link in links
     )
     excerpt = excerpt_around(text, needles) or excerpt_around(title, needles)
+    identifiers: tuple[tuple[str, str], ...] = ()
+    if require_identifier:
+        # One company's page: exactly one or two verified identifiers (a list of companies,
+        # with many, says nothing about which one is this organization).
+        found = registry_identifiers(f"{title}\n{text[:200_000]}", limit=4)
+        if not 1 <= len(found) <= 2:
+            return PageCheck(
+                url, "NOT_SUPPORTED", title=title[:300], read_at=read_at, published=published
+            )
+        identifiers = tuple(found)
+        value = (
+            found[0][1].split(" ")[-1].lower() if found[0][0] == "DE_HR" else found[0][1].lower()
+        )
+        excerpt = excerpt_around(text, [value]) or excerpt
     return PageCheck(
         url, "SUPPORTED", title=title[:300], excerpt=excerpt, links_to_website=linked,
-        read_at=read_at, published=published,
+        read_at=read_at, published=published, identifiers=identifiers,
     )  # fmt: skip
 
 
@@ -348,6 +407,28 @@ def research_discoveries(
                     "publishedAt": check.published,
                     "indexedDate": page.get("indexedDate"),
                     **basis,
+                },
+            })  # fmt: skip
+        elif purpose == "IDENTITY" and check.identifiers:
+            about = attribution(check.title) if attribution is not None and check.title else None
+            if about is not None and about[0] == "ANOTHER_ENTITY":
+                continue
+            if any(d["code"] == "IDENTIFIER_IN_DIRECTORY" for d in out):
+                continue  # one directory identity is enough to show
+            scheme, value = check.identifiers[0]
+            out.append({
+                "kind": "IDENTITY_HINT",
+                "code": "IDENTIFIER_IN_DIRECTORY",
+                "statement": value,
+                **common,
+                "detail": {
+                    "scheme": scheme,
+                    "value": value,
+                    "outlet": outlet,
+                    "attributionBy": about[1] if about is not None else None,
+                    **basis,
+                    "limitation": "A third-party directory shows this identifier on a page that "
+                    "names the organization; only an official register admits an identity.",
                 },
             })  # fmt: skip
         elif purpose == "CONTEXT":
