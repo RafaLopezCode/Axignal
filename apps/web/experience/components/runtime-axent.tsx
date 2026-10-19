@@ -141,6 +141,7 @@ export function RuntimeAxent({
   onWiden,
   widenLabel,
   suggestions,
+  onConnectAgent,
 }: {
   projection: RuntimeProjection;
   signalId: string | null;
@@ -154,6 +155,8 @@ export function RuntimeAxent({
   widenLabel?: string;
   /** Questions that fit the current context; the general ones otherwise. */
   suggestions?: string[];
+  /** Opens the screen that connects the reader's own agent (MCP). */
+  onConnectAgent?: () => void;
   illustrative?: boolean;
 }) {
   const { t, locale } = useLocale();
@@ -347,6 +350,8 @@ export function RuntimeAxent({
           ))}
         </div>
       </div>
+      {onConnectAgent && <p className="axent-own-agent">{t("¿Prefieres tu propio agente?", "Prefer your own agent?")}{" "}
+        <button type="button" className="obs-link" onClick={onConnectAgent}>{t("Conecta AXIGNAL a Claude o ChatGPT", "Connect AXIGNAL to Claude or ChatGPT")}</button></p>}
       <AxentComposer
         value={draft}
         onChange={setDraft}

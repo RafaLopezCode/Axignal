@@ -11,7 +11,7 @@ import { isWebSubject } from "@/lib/identity";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { createPortal, flushSync } from "react-dom";
 import Link from "next/link";
-import { ArrowLeft, ArrowRight, ChevronDown, ExternalLink, LayoutGrid, LogOut, Menu, MessageCircleQuestion, Plus, RefreshCw, Settings2, X } from "lucide-react";
+import { ArrowLeft, ArrowRight, Bot, ChevronDown, ExternalLink, LayoutGrid, LogOut, Menu, MessageCircleQuestion, Plus, RefreshCw, Settings2, X } from "lucide-react";
 import { useLocale } from "@/lib/locale";
 import { LocaleToggle, useFocusTrap } from "./ui";
 import { formatReferenceMoney } from "@/lib/presentation";
@@ -27,6 +27,7 @@ import { useEvidenceLink } from "./evidence-link-context";
 import { causeCopy, dimensionCopy, stateCopy } from "./public-understanding";
 import { SubscriberRepresentation } from "./subscriber-representation";
 import { SubscriberMcpConnections } from "./subscriber-mcp-connections";
+import { AgentConnectView, CopyButton } from "./agent-connect";
 import { IdentityCheck } from "./identity-check";
 import { websiteOf } from "@/lib/identity";
 import { SubscriberAccountSettings } from "./subscriber-account-settings";
@@ -54,7 +55,7 @@ export type ObservatoryShell = {
   /** Called when the navigation is used, so the shell can bring the reading back. */
   onNavigate?: () => void;
 };
-export type Screen = "desk" | "organization" | "account" | "add" | "activate";
+export type Screen = "desk" | "organization" | "account" | "agent" | "add" | "activate";
 
 export type ObservatoryProps = {
   access: "loading" | "required" | "failure" | "ready";
@@ -136,20 +137,20 @@ function useUrlState() {
     const screen = url.searchParams.get("screen");
     return {
       view: (["summary", "explore", "evolution", "evidence"].includes(view ?? "") ? view : "summary") as View,
-      screen: (["account", "add", "activate"].includes(screen ?? "") ? screen : null) as "account" | "add" | "activate" | null,
+      screen: (["account", "agent", "add", "activate"].includes(screen ?? "") ? screen : null) as "account" | "agent" | "add" | "activate" | null,
       item: url.searchParams.get("item"),
       family: url.searchParams.get("family"),
       channel: url.searchParams.get("channel"),
     };
   };
-  const [state, setState] = useState<{ view: View; screen: "account" | "add" | "activate" | null; item: string | null; family: string | null; channel: string | null }>({ view: "summary", screen: null, item: null, family: null, channel: null });
+  const [state, setState] = useState<{ view: View; screen: "account" | "agent" | "add" | "activate" | null; item: string | null; family: string | null; channel: string | null }>({ view: "summary", screen: null, item: null, family: null, channel: null });
   useEffect(() => {
     setState(read());
     const listener = () => setState(read());
     window.addEventListener("popstate", listener);
     return () => window.removeEventListener("popstate", listener);
   }, []);
-  const go = useCallback((next: Partial<{ view: View; screen: "account" | "add" | "activate" | null; item: string | null; organization: string | null; family: string | null; channel: string | null }>, replace = false) => {
+  const go = useCallback((next: Partial<{ view: View; screen: "account" | "agent" | "add" | "activate" | null; item: string | null; organization: string | null; family: string | null; channel: string | null }>, replace = false) => {
     const url = new URL(window.location.href);
     const set = (key: string, value: string | null | undefined) => { if (value === undefined) return; if (value === null) url.searchParams.delete(key); else url.searchParams.set(key, value); };
     set("view", next.view === "summary" ? null : next.view);
@@ -313,7 +314,7 @@ export function Observatory(props: ObservatoryProps) {
       void props.readOutput(focusId);
     });
   };
-  const openScreen = (next: "desk" | "account" | "add" | "activate") => {
+  const openScreen = (next: "desk" | "account" | "agent" | "add" | "activate") => {
     props.shell?.onNavigate?.();
     setRailOpen(false); setAxentOpen(false);
     transition(() => {
@@ -347,20 +348,24 @@ export function Observatory(props: ObservatoryProps) {
   </div>;
 
   const current = items.find(i => i.focusId === selected) ?? null;
-  const railWith = (slot?: (element: HTMLElement | null) => void) => <Rail items={items} selected={props.shell && !props.shell.active ? null : selected} screen={props.shell && !props.shell.active ? null : screen} seen={seen} litCounts={litCounts} nameOf={props.menuName ?? nameOf} onOrganization={openOrganization} onScreen={openScreen} portfolio={portfolio} busy={props.busy} refresh={props.refresh} canAct={props.canAct} account={props.capabilities.account} familySlot={slot}/>;
+  // Your agent (MCP): connectable with an account; shown as a guide in the illustrative demo.
+  const agentAvailable = props.capabilities.account || props.capabilities.axent === "illustrative";
+  const railWith = (slot?: (element: HTMLElement | null) => void) => <Rail items={items} selected={props.shell && !props.shell.active ? null : selected} screen={props.shell && !props.shell.active ? null : screen} seen={seen} litCounts={litCounts} nameOf={props.menuName ?? nameOf} onOrganization={openOrganization} onScreen={openScreen} portfolio={portfolio} busy={props.busy} refresh={props.refresh} canAct={props.canAct} account={props.capabilities.account} agent={agentAvailable} familySlot={slot}/>;
   const rail = railWith(setFamilySlot);
   return <div className={`obs${props.shell ? " obs-shelled" : ""}`} data-product-surface="living-observatory" aria-busy={props.busy}>
     <a className="obs-skip" href="#obs-main">{t("Ir al contenido", "Skip to content")}</a>
     {props.shell ? (props.shell.host ? createPortal(<div className="obs obs-in-shell">{rail}</div>, props.shell.host) : null) : <div className="obs-rail-desktop">{rail}</div>}
-    {!props.shell && <MobileBar title={screen === "organization" && current ? nameOf(current) : screen === "desk" ? t("Tu cartera", "Your portfolio") : screen === "account" ? t("Cuenta", "Account") : screen === "activate" ? t("Esperando activación", "Waiting for activation") : t("Añadir organización", "Add organization")} onMenu={() => setRailOpen(true)}/>}
+    {!props.shell && <MobileBar title={screen === "organization" && current ? nameOf(current) : screen === "desk" ? t("Tu cartera", "Your portfolio") : screen === "account" ? t("Cuenta", "Account") : screen === "agent" ? t("Tu agente", "Your agent") : screen === "activate" ? t("Esperando activación", "Waiting for activation") : t("Añadir organización", "Add organization")} onMenu={() => setRailOpen(true)}/>}
     {!props.shell && railOpen && <RailSheet onClose={() => setRailOpen(false)}>{railWith()}</RailSheet>}
     <main id="obs-main" className={`obs-main${screen === "organization" ? " obs-workspace-main" : ""}`} tabIndex={-1}>
       {props.notice}
       {toast}
       {activationView}
-      {!activationView && screen === "desk" && <DeskView firstLookUnread={props.firstLookUnread} items={items} readings={deskReadings} seen={seen} nameOf={nameOf} onOpen={openOrganization} onAdd={() => openScreen("add")} onActivate={() => openScreen("activate")} reportLit={reportLit}/>}
+      {!activationView && screen === "desk" && <DeskView firstLookUnread={props.firstLookUnread} items={items} readings={deskReadings} seen={seen} nameOf={nameOf} onOpen={openOrganization} onAdd={() => openScreen("add")} onActivate={() => openScreen("activate")} reportLit={reportLit}
+        onAgent={agentAvailable ? () => openScreen("agent") : undefined}/>}
       {!activationView && screen === "add" && <AddView {...props} first={!items.length} onDone={() => openScreen("desk")}/>}
-      {screen === "account" && <AccountView {...props}/>}
+      {screen === "account" && <AccountView {...props} onAgent={() => openScreen("agent")}/>}
+      {screen === "agent" && agentAvailable && <AgentConnectView portfolioSize={items.length} illustrative={props.capabilities.axent === "illustrative"}/>}
       {screen === "organization" && current && <OrganizationView key={current.focusId} item={current} name={nameOf(current)} {...props} view={url.view} itemId={url.item} family={url.family} channel={url.channel} go={go} seen={seen} updateSeen={updateSeen} axentOpen={axentOpen} setAxentOpen={setAxentOpen} locale={locale} reportLit={reportLit} familySlot={screen === "organization" ? familySlot : null}/>}
     </main>
   </div>;
@@ -372,9 +377,10 @@ function ObservatoryFrame({ children }: { children: React.ReactNode }) {
 
 // ---- rail: where am I, which organization, what changed -----------------------------------
 
-function Rail({ items, selected, screen, seen, litCounts, nameOf, onOrganization, onScreen, portfolio, busy, refresh, canAct, account, familySlot }: {
+function Rail({ items, selected, screen, seen, litCounts, nameOf, onOrganization, onScreen, portfolio, busy, refresh, canAct, account, agent, familySlot }: {
+  agent: boolean;
   items: Item[]; selected: string | null; screen: Screen | null; seen: SeenStore; litCounts: Record<string, number>; nameOf: (item: Item) => string;
-  onOrganization: (id: string) => void; onScreen: (screen: "desk" | "account" | "add" | "activate") => void;
+  onOrganization: (id: string) => void; onScreen: (screen: "desk" | "account" | "agent" | "add" | "activate") => void;
   portfolio: SubscriberPortfolio; busy: boolean; refresh: () => void; canAct: boolean; account: boolean;
   /** The desktop menu's place for the open organization's families. */
   familySlot?: (element: HTMLElement | null) => void;
@@ -413,6 +419,7 @@ function Rail({ items, selected, screen, seen, litCounts, nameOf, onOrganization
     <button className="obs-rail-action obs-rail-cta obs-rail-add" aria-current={screen === "add" ? "page" : undefined} disabled={!canAct} onClick={() => onScreen("add")}><Plus size={16} aria-hidden="true"/>{t("Añadir organización", "Add organization")}</button>
     <div className="obs-rail-families" ref={familySlot}/>
     <div className="obs-rail-foot">
+      {agent && <button className="obs-rail-action" aria-current={screen === "agent" ? "page" : undefined} onClick={() => onScreen("agent")}><Bot size={16} aria-hidden="true"/>{t("Tu agente (MCP)", "Your agent (MCP)")}</button>}
       {account && <button className="obs-rail-action" aria-current={screen === "account" ? "page" : undefined} disabled={!canAct} onClick={() => onScreen("account")}><Settings2 size={16} aria-hidden="true"/>{t("Cuenta y conexiones", "Account and connections")}</button>}
       {!canAct && <p className="obs-rail-note">{t("Acciones de cuenta disponibles al crear tu cuenta.", "Account actions are available once you create your account.")}</p>}
       <div className="obs-rail-locale"><LocaleToggle/></div>
@@ -443,7 +450,8 @@ function RailSheet({ children, onClose }: { children: React.ReactNode; onClose: 
 
 // ---- desk: the whole portfolio at a glance ------------------------------------------------
 
-function DeskView({ items, readings, seen, nameOf, onOpen, onAdd, onActivate, reportLit, firstLookUnread }: {
+function DeskView({ items, readings, seen, nameOf, onOpen, onAdd, onActivate, reportLit, firstLookUnread, onAgent }: {
+  onAgent?: () => void;
   firstLookUnread?: readonly string[]; items: Item[]; readings: Record<string, Reading | "failed">; seen: SeenStore; nameOf: (item: Item) => string;
   onOpen: (focusId: string, item?: string | null) => void; onAdd: () => void; onActivate: () => void; reportLit: (focusId: string, count: number) => void;
 }) {
@@ -468,6 +476,10 @@ function DeskView({ items, readings, seen, nameOf, onOpen, onAdd, onActivate, re
   return <section className="obs-desk" aria-labelledby="desk-title">
     <header className="obs-desk-head">
       <h1 id="desk-title">{t("Tu cartera", "Your portfolio")}</h1>
+      {onAgent && <p className="obs-agent-hint"><Bot size={15} aria-hidden="true"/>{items.length > 1
+        ? t("Pregunta a tu agente (Claude, ChatGPT…) por todos tus clientes a la vez.", "Ask your agent (Claude, ChatGPT…) about all your clients at once.")
+        : t("Interpreta esta lectura con tu propio agente (Claude, ChatGPT…).", "Interpret this reading with your own agent (Claude, ChatGPT…).")}
+        <button className="obs-link" onClick={onAgent}>{t("Conectar tu agente", "Connect your agent")}<ArrowRight size={14} aria-hidden="true"/></button></p>}
       <p className="obs-lede">{fill(items.length === 1 ? t("{n} organización observada.", "{n} organization observed.") : t("{n} organizaciones observadas.", "{n} organizations observed."), { n: items.length })}{" "}
         {fresh.length ? fill(fresh.length === 1 ? t("{n} hallazgo nuevo desde tu última visita.", "{n} new finding since your last visit.") : t("{n} hallazgos nuevos desde tu última visita.", "{n} new findings since your last visit."), { n: fresh.length }) : ""}{" "}
         {observing.length ? fill(t("{n} en observación ahora.", "{n} being observed now."), { n: observing.length }) : ""}</p>
@@ -540,7 +552,7 @@ function DeskColumn({ title, lane, rows, empty }: { title: string; lane: Lane; e
 
 type OrgProps = ObservatoryProps & {
   item: Item; name: string; view: View; itemId: string | null; family: string | null; channel: string | null; locale: string;
-  go: (next: Partial<{ view: View; screen: "account" | "add" | "activate" | null; item: string | null; organization: string | null; family: string | null; channel: string | null }>, replace?: boolean) => void;
+  go: (next: Partial<{ view: View; screen: "account" | "agent" | "add" | "activate" | null; item: string | null; organization: string | null; family: string | null; channel: string | null }>, replace?: boolean) => void;
   seen: SeenStore; updateSeen: (change: (store: SeenStore) => SeenStore) => void;
   axentOpen: boolean; setAxentOpen: (open: boolean) => void;
   reportLit: (focusId: string, count: number) => void;
@@ -691,12 +703,13 @@ function OrganizationView(props: OrgProps) {
       </div>
       </div>
       {evidenceOpen && <CanvasEvidenceSheet focusKey={open?.id ?? "evidence"} lane={open?.lane} title={open ? laneCopy(open.lane, t).title : t("Evidencias", "Evidence")} onClose={closeDepth}>
-        {open ? <InsightBody insight={open} onEvidence={() => go({ view: "evidence", item: null })} onAsk={focusAxent}/> : <EvidenceView reading={reading} facet={facet} scope={scope} insights={shown}/>}
+        {open ? <InsightBody insight={open} onEvidence={() => go({ view: "evidence", item: null })} onAsk={focusAxent} organization={props.capabilities.account || props.capabilities.axent === "illustrative" ? name : undefined}/> : <EvidenceView reading={reading} facet={facet} scope={scope} insights={shown}/>}
       </CanvasEvidenceSheet>}
     </div>
     <AxentSidebar panelRef={axentSidebar} open={props.axentOpen} insight={open} related={insights} projection={projection} revision={revision} canAct={props.canAct} axent={props.capabilities.axent} onClose={() => props.setAxentOpen(false)}
       family={facet.family && scope ? { title: scope.title, insights: shown } : null}
       onWidenFinding={() => go({ item: null })} onWidenFamily={() => selectFacet({ family: null, channel: null })}
+      onConnectAgent={props.capabilities.account || props.capabilities.axent === "illustrative" ? () => { props.setAxentOpen(false); go({ screen: "agent", item: null }); } : undefined}
       onEvidence={() => { props.setAxentOpen(false); go({ view: "evidence", item: null }); }} onExplore={() => { props.setAxentOpen(false); transition(() => go({ view: "explore", item: null })); }}/>
   </div>;
 }
@@ -865,14 +878,17 @@ export function InsightCard({ insight, lit, active, onOpen }: { insight: Insight
 // ---- depth: meaning → reasoning → proof → AXENT, beside the finding ----------------------------
 
 /** GLANCE → UNDERSTAND → REASON → PROVE for one finding; the same body wherever it is shown. */
-export function InsightBody({ insight, onEvidence, onAsk }: { insight: Insight; onEvidence?: () => void; onAsk?: () => void }) {
+export function InsightBody({ insight, onEvidence, onAsk, organization }: { insight: Insight; onEvidence?: () => void; onAsk?: () => void; organization?: string }) {
   const { t, locale } = useLocale();
   const evidenceLink = useEvidenceLink();
   return <article className="obs-depth-body">
       <NatureMark nature={insight.nature} label={natureLabel(insight.nature, t)}/>
       <h2 tabIndex={-1}>{insight.headline}</h2>
       {insight.why && <p className="obs-depth-why">{insight.why}</p>}
-      {onAsk && <button type="button" className="obs-button obs-ask-finding" onClick={onAsk}><MessageCircleQuestion size={16} aria-hidden="true"/>{t("Preguntar a Axent sobre este hallazgo", "Ask Axent about this finding")}</button>}
+      {(onAsk || organization) && <div className="obs-ask-row">
+        {onAsk && <button type="button" className="obs-button obs-ask-finding" onClick={onAsk}><MessageCircleQuestion size={16} aria-hidden="true"/>{t("Preguntar a Axent sobre este hallazgo", "Ask Axent about this finding")}</button>}
+        {organization && <CopyButton text={fill(t("Con AXIGNAL, sobre {organization} y su hallazgo «{finding}»: ¿por qué importa, qué puedo hacer y qué sigue abierto? Cita las fuentes.", "Using AXIGNAL, about {organization} and its finding “{finding}”: why does it matter, what can I do and what remains open? Cite the sources."), { organization, finding: insight.headline })} label={t("Copiar pregunta para tu agente", "Copy question for your agent")}/>}
+      </div>}
       {insight.previous && <p className="obs-card-before">{t("En la lectura anterior comparable", "In the previous comparable reading")}: {insight.previous}. {t("Un cambio de interpretación no demuestra por sí solo una mejora comercial.", "An interpretation change alone does not prove a business improvement.")}</p>}
       <section><h3>{t("Qué significa", "What it means")}</h3>{insight.meaning.map(x => <p key={x}>{x}</p>)}</section>
       {insight.dimensions.length > 0 && <section><h3>{t("Lo que se ha comprobado", "What has been checked")}</h3>
@@ -891,7 +907,8 @@ export function InsightBody({ insight, onEvidence, onAsk }: { insight: Insight; 
   </article>;
 }
 
-function AxentSidebar({ panelRef, open, insight, related, projection, revision, canAct, axent, onClose, onEvidence, onExplore, family, onWidenFinding, onWidenFamily }: {
+function AxentSidebar({ panelRef, open, insight, related, projection, revision, canAct, axent, onClose, onEvidence, onExplore, family, onWidenFinding, onWidenFamily, onConnectAgent }: {
+  onConnectAgent?: () => void;
   panelRef: React.RefObject<HTMLElement | null>; open: boolean;
   /** The family the reader is looking at: AXENT's context when no finding is selected. */
   family: { title: string; insights: Insight[] } | null; onWidenFinding: () => void; onWidenFamily: () => void;
@@ -907,12 +924,13 @@ function AxentSidebar({ panelRef, open, insight, related, projection, revision, 
       <button className="obs-icon" onClick={onClose} aria-label={t("Volver", "Back")}><ArrowLeft size={18} aria-hidden="true"/></button>
     </div>
     {projection && revision ? <DepthAxent key={insight?.id ?? family?.title ?? "organization"} projection={projection} revision={revision} axent={axent} insight={insight} related={related} canAct={canAct} onEvidence={onEvidence} onExplore={onExplore} autoFocus={open}
-      family={family} onWidenFinding={onWidenFinding} onWidenFamily={onWidenFamily}/>
+      family={family} onWidenFinding={onWidenFinding} onWidenFamily={onWidenFamily} onConnectAgent={onConnectAgent}/>
       : <section className="obs-depth-axent obs-quiet"><h3>AXENT</h3><p>{t("AXENT podrá investigar con esta organización cuando su identidad esté verificada por un registro. Esta lectura ya muestra su evidencia.", "AXENT can investigate this organization once its identity is verified by a registry. This reading already shows its evidence.")}</p></section>}
   </aside>;
 }
 
-function DepthAxent({ projection, revision, axent, insight, related, canAct, onEvidence, onExplore, autoFocus, family, onWidenFinding, onWidenFamily }: {
+function DepthAxent({ projection, revision, axent, insight, related, canAct, onEvidence, onExplore, autoFocus, family, onWidenFinding, onWidenFamily, onConnectAgent }: {
+  onConnectAgent?: () => void;
   projection: RuntimeProjection; revision: string; axent: ObservatoryCapabilities["axent"]; insight: Insight | null; related: Insight[]; canAct: boolean; onEvidence: () => void; onExplore: () => void; autoFocus: boolean;
   family: { title: string; insights: Insight[] } | null; onWidenFinding: () => void; onWidenFamily: () => void;
 }) {
@@ -955,7 +973,8 @@ function DepthAxent({ projection, revision, axent, insight, related, canAct, onE
   return <section className="obs-depth-axent" aria-label="AXENT">
     {question && asked.current !== insight?.id && conversation.messages.length === 0 && <button className="obs-button obs-ask" disabled={conversation.busy} onClick={() => { asked.current = insight?.id ?? null; void conversation.ask(question); }}>
       <MessageCircleQuestion size={16} aria-hidden="true"/>{t("Pregunta a AXENT sobre esto", "Ask AXENT about this")}</button>}
-    <RuntimeAxent illustrative={illustrative} projection={projection} signalId={null} conversation={conversation} onEvidence={onEvidence} onSignal={onExplore} focusLabel={focusLabel} suggestions={suggestions} {...widen}/>
+    <RuntimeAxent illustrative={illustrative} projection={projection} signalId={null} conversation={conversation} onEvidence={onEvidence} onSignal={onExplore} focusLabel={focusLabel} suggestions={suggestions} {...widen}
+      onConnectAgent={onConnectAgent}/>
     {autoFocus && <span className="sr-only" role="status">{t("AXENT abierto en el contexto de esta organización.", "AXENT opened in this organization's context.")}</span>}
   </section>;
 }
@@ -1073,7 +1092,7 @@ function AddView(props: ObservatoryProps & { first: boolean; onDone: () => void 
   </section>;
 }
 
-function AccountView(props: ObservatoryProps) {
+function AccountView(props: ObservatoryProps & { onAgent: () => void }) {
   const { t, locale } = useLocale();
   const portfolio = props.portfolio!;
   const used = portfolio.organizations.filter(item => item.state === "ACTIVE" || item.state === "PAUSED").length;
@@ -1095,7 +1114,7 @@ function AccountView(props: ObservatoryProps) {
         {portfolio.canPurchase !== true && <p className="obs-quiet">{t("La autoridad de compra no está confirmada para este contexto.", "Purchase authority is not confirmed for this context.")}</p>}
         <button className="obs-link" disabled={props.busy || !props.canAct} onClick={() => void props.command({ action: "refresh_purchase" })}><RefreshCw size={14} aria-hidden="true"/>{t("Comprobar pago y capacidad", "Check payment and capacity")}</button>
       </section>
-      <section className="obs-account-card"><SubscriberMcpConnections/></section>
+      <section className="obs-account-card"><SubscriberMcpConnections/><button className="obs-link" onClick={props.onAgent}>{t("Cómo conectar tu agente y qué preguntarle", "How to connect your agent and what to ask it")}<ArrowRight size={14} aria-hidden="true"/></button></section>
     </div>
     <button className="obs-button" disabled={props.busy || !props.canAct} onClick={props.logout}><LogOut size={16} aria-hidden="true"/>{t("Cerrar sesión", "Sign out")}</button>
   </section>;
