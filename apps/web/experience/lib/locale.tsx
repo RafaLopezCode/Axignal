@@ -1,6 +1,6 @@
 "use client";
 import { accountProfileSchema, type AccountProfile } from "./account-contracts";
-import { createContext, useContext, useEffect, useRef, useState } from "react";
+import { createContext, useContext, useEffect, useRef, useState, startTransition } from "react";
 import { usePathname } from "next/navigation";
 import {
   DEFAULT_LOCALE,
@@ -9,7 +9,7 @@ import {
   type Locale,
   type Copy,
 } from "./languages";
-import { translate } from "./copy-catalog";
+import { useTranslator } from "./client-copy-catalog";
 import { HOME_METADATA } from "./public-home-metadata";
 
 export type { Locale, Copy } from "./languages";
@@ -34,10 +34,12 @@ export function LocaleProvider({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   // A language in the URL (/es, /en/knowledge…) is known before hydration, so the server renders
   // that page in its own language; saved and browser preferences only refine routes without one.
-  const [locale, setLocalLocale] = useState<Locale>(() => {
+  const [locale, commitLocale] = useState<Locale>(() => {
     const routeLocale = pathname?.split("/")[1];
     return isLocale(routeLocale) ? routeLocale : DEFAULT_LOCALE;
   });
+  const translate = useTranslator(locale);
+  const setLocalLocale = (value: Locale) => startTransition(() => commitLocale(value));
   const [ready, setReady] = useState(false);
   const [reducedMotion, setReducedMotion] = useState(false);
 
@@ -156,8 +158,8 @@ export function LocaleProvider({ children }: { children: React.ReactNode }) {
         locale,
         setLocale: changeLocale,
         profile, profileLoading, profileSaving, profileError, reloadProfile, saveProfile, resetProfile,
-        t: (es, en) => translate(es, en, locale),
-        copy: (c) => translate(c.es, c.en, locale),
+        t: (es, en) => translate(es, en),
+        copy: (c) => translate(c.es, c.en),
       }}
     >
       {children}

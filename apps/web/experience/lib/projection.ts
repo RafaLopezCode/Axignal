@@ -1,4 +1,3 @@
-import { translate } from "./copy-catalog";
 import type { Locale } from "./languages";
 import type { Copy } from "./locale";
 const c = (es: string, en: string): Copy => ({ es, en });
@@ -857,6 +856,7 @@ export function project(context: ProjectionContext) {
     families,
   };
 }
+const unsupportedDate: Record<Locale, string> = {"es": "Sin fecha acreditada", "en": "No supported date", "de": "Kein belegtes Datum", "pt": "Sem data comprovada", "fr": "Aucune date étayée", "it": "Nessuna data supportata"};
 export function dateLabel(date: string | null, locale: Locale) {
   const instant = date ? new Date(/^\d{4}-\d{2}-\d{2}$/.test(date) ? date + "T12:00:00Z" : date) : null;
   return instant && Number.isFinite(instant.getTime())
@@ -866,5 +866,5 @@ export function dateLabel(date: string | null, locale: Locale) {
         year: "numeric",
         timeZone: "UTC",
       }).format(instant)
-    : translate("Sin fecha acreditada", "No supported date", locale);
+    : unsupportedDate[locale];
 }

@@ -1,0 +1,49 @@
+{
+  "note": "Official fonts: glyph coverage and layout features retained. Manrope keeps variable weights; Fraunces and notes use the exact 400 weight shown by this surface, retaining optical axes. Original font licenses remain in public/fonts. Non-Latin characters use the original face outside unicode-range.",
+  "fonts": [
+    {
+      "family": "Manrope",
+      "url": "/fonts/lab-manrope.4060b77fb8d8.woff2",
+      "source": "/fonts/manrope-full.15e95cd6.woff2",
+      "bytes": 31688,
+      "sourceBytes": 53800,
+      "sha256": "4060b77fb8d88c0e06284ad0558118d4843e8afbab5431a42d9d7932396bf2f4",
+      "weight": "200 800",
+      "unicodeRange": "U+0-24F,U+300-36F,U+2000-206F,U+20A0-20CF,U+2190-21FF,U+2212,U+221E",
+      "glyphCoverage": 354
+    },
+    {
+      "family": "Fraunces",
+      "url": "/fonts/lab-fraunces.1a2133d7f543.woff2",
+      "source": "/fonts/font-01.woff2",
+      "bytes": 33452,
+      "sourceBytes": 67304,
+      "sha256": "1a2133d7f5439fa23358d835e0128b14c81739dc235f291b0fd04679e8761b59",
+      "weight": "400",
+      "unicodeRange": "U+0-24F,U+300-36F,U+2000-206F,U+20A0-20CF,U+2190-21FF,U+2212,U+221E",
+      "glyphCoverage": 216
+    },
+    {
+      "family": "Bic Notes Lab",
+      "url": "/fonts/lab-bic-notes-lab.681b0e8e631d.woff2",
+      "source": "/fonts/caveat-latin.15bf208d.woff2",
+      "bytes": 54512,
+      "sourceBytes": 85384,
+      "sha256": "681b0e8e631d976a5e027dab38b7ba78c69c4a68d7c8f18050ffccbc5d8e5d6d",
+      "weight": "400",
+      "unicodeRange": "U+0-24F,U+300-36F,U+2000-206F,U+20A0-20CF,U+2190-21FF,U+2212,U+221E",
+      "glyphCoverage": 411
+    },
+    {
+      "family": "IBM Plex Mono",
+      "url": "/fonts/lab-ibm-plex-mono.de47d1f03114.woff2",
+      "source": "/fonts/font-04.woff2",
+      "bytes": 13756,
+      "sourceBytes": 14708,
+      "sha256": "de47d1f03114dace63f2354ced9b880caf309273d12a4f8e5e9898c4793315f7",
+      "weight": "400",
+      "unicodeRange": "U+0-24F,U+300-36F,U+2000-206F,U+20A0-20CF,U+2190-21FF,U+2212,U+221E",
+      "glyphCoverage": 222
+    }
+  ]
+}

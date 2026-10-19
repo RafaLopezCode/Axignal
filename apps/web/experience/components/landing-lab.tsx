@@ -62,7 +62,7 @@ import { NatureMark } from "./nature-mark";
 import { InsightSources } from "./insight-sources";
 import { SyntheticEvidenceProvider } from "./evidence-link-context";
 import { Dialog } from "./ui";
-import { PUBLIC_BODY_FONT, PUBLIC_DISPLAY_FONT } from "@/lib/marketing-media";
+import labFonts from "@/lib/landing-lab-fonts.json";
 import "./landing-lab.css";
 
 // Separate async chunk: essential presentation and controls do not import GSAP.
@@ -285,14 +285,14 @@ export function LandingLab() {
       <link
         rel="preload"
         as="font"
-        href={PUBLIC_DISPLAY_FONT}
+        href={labFonts.fonts[1].url}
         type="font/woff2"
         crossOrigin="anonymous"
       />
       <link
         rel="preload"
         as="font"
-        href={PUBLIC_BODY_FONT}
+        href={labFonts.fonts[0].url}
         type="font/woff2"
         crossOrigin="anonymous"
       />
