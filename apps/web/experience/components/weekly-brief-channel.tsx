@@ -12,10 +12,11 @@ import "./public-request-channel.css";
 export function WeeklyBriefChannel({
   variant = "default",
 }: {
-  variant?: "default" | "marketing";
+  variant?: "default" | "marketing" | "footer";
 }) {
   const { t, locale } = useLocale();
-  const marketing = variant === "marketing";
+  const marketing = variant !== "default";
+  const footer = variant === "footer";
   const id = useId();
   const sending = useRef(false);
   const [enabled, setEnabled] = useState<boolean | null>(null);
@@ -89,11 +90,15 @@ export function WeeklyBriefChannel({
     <section
       id="weekly-brief"
       className={
-        marketing ? "marketing-newsletter marketing-section" : "rights-request"
+        footer
+          ? "lab-newsletter-channel"
+          : marketing
+            ? "marketing-newsletter marketing-section"
+            : "rights-request"
       }
-      aria-labelledby={marketing ? id + "-title" : undefined}
+      aria-labelledby={marketing && !footer ? id + "-title" : undefined}
     >
-      {marketing ? (
+      {footer ? null : marketing ? (
         <div className="marketing-newsletter-copy">
           <h2 id={id + "-title"}>{n.title[locale]}</h2>
           <p>{n.lead[locale]}</p>

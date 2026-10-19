@@ -12,6 +12,8 @@ import {
 } from "react";
 import {
   ArrowRight,
+  ArrowUp,
+  RotateCcw,
   ArrowUpRight,
   BookOpen,
   Check,
@@ -23,6 +25,8 @@ import {
 } from "lucide-react";
 import { useLocale } from "@/lib/locale";
 import { locales, isLocale } from "@/lib/languages";
+import { newsletterCopy } from "@/lib/marketing-newsletter";
+import { labExperienceCopy as x } from "@/lib/landing-lab-experience-copy";
 import { words, marketingPath } from "@/lib/marketing-content";
 import {
   publicCopy as p,
@@ -63,6 +67,11 @@ import "./landing-lab.css";
 
 // Separate async chunk: essential presentation and controls do not import GSAP.
 const NarrativeMotion = lazy(() => import("./landing-lab-motion"));
+const FooterBrief = lazy(() =>
+  import("./weekly-brief-channel").then((module) => ({
+    default: module.WeeklyBriefChannel,
+  })),
+);
 class MotionBoundary extends Component<
   { children: ReactNode },
   { failed: boolean }
@@ -93,6 +102,11 @@ export function LandingLab() {
   const [proofOpen, setProofOpen] = useState(false);
   const [reasonOpen, setReasonOpen] = useState(false);
   const [motion, setMotion] = useState(false);
+  const [systemReduced, setSystemReduced] = useState(false);
+  const [narrativeRun, setNarrativeRun] = useState(0);
+  const [newsletterOpen, setNewsletterOpen] = useState(false);
+  const [activeChapter, setActiveChapter] = useState("");
+  const [showBackTop, setShowBackTop] = useState(false);
   const selected = labInsight(moment, scenario, copy);
   const heroFinding = exampleInsights("2026-10-03", copy).find(
     (item) => item.id === "renovation",
@@ -131,6 +145,28 @@ export function LandingLab() {
     return () => observer.disconnect();
   }, []);
   useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries)
+          if (entry.isIntersecting) setActiveChapter("#" + entry.target.id);
+      },
+      { rootMargin: "-15% 0px -55% 0px", threshold: 0 },
+    );
+    root.current
+      ?.querySelectorAll("#discover, #audience, #how, #pricing")
+      .forEach((node) => observer.observe(node));
+    const hero = root.current?.querySelector(".lab-hero-copy");
+    const topObserver = new IntersectionObserver((entries) => {
+      setShowBackTop(!entries[0].isIntersecting);
+      if (entries[0].isIntersecting) setActiveChapter("");
+    });
+    if (hero) topObserver.observe(hero);
+    return () => {
+      observer.disconnect();
+      topObserver.disconnect();
+    };
+  }, []);
+  useEffect(() => {
     const media = window.matchMedia("(prefers-reduced-motion: reduce)");
     let idle: number | undefined;
     let timer: ReturnType<typeof setTimeout> | undefined;
@@ -144,6 +180,7 @@ export function LandingLab() {
     };
     const update = () => {
       cancel();
+      setSystemReduced(media.matches);
       if (media.matches || reducedMotion) {
         setMotion(false);
         return;
@@ -173,8 +210,20 @@ export function LandingLab() {
       window.removeEventListener("pointerdown", explore);
       window.removeEventListener("keydown", explore);
     };
+    const sceneObserver = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((entry) => entry.isIntersecting)) {
+          motionRequested.current = true;
+          update();
+          sceneObserver.disconnect();
+        }
+      },
+      { threshold: 0.12 },
+    );
+    const scene = root.current?.querySelector(".lab-world");
+    if (scene) sceneObserver.observe(scene);
     update();
-    // Load motion when the visitor begins exploring; direct reading stays light.
+    // Prepare after first paint while the actual scene is still visible.
     window.addEventListener("scroll", explore, { passive: true });
     window.addEventListener("pointerdown", explore, { once: true });
     window.addEventListener("keydown", explore, { once: true });
@@ -182,13 +231,14 @@ export function LandingLab() {
     media.addEventListener("change", update);
     return () => {
       cancel();
+      sceneObserver.disconnect();
       window.removeEventListener("scroll", explore);
       window.removeEventListener("pointerdown", explore);
       window.removeEventListener("keydown", explore);
       window.removeEventListener("load", update);
       media.removeEventListener("change", update);
     };
-  }, [reducedMotion]);
+  }, [reducedMotion, narrativeRun]);
   const depth = (chapter: number) =>
     track({ kind: "CHAPTER_VIEWED", surface: "example", chapter });
   const choose = (value: Scenario) => {
@@ -223,7 +273,7 @@ export function LandingLab() {
   );
   const stepImages = ["focus", "explain", "memory"];
   return (
-    <div className="landing-lab" ref={root}>
+    <div className="landing-lab" ref={root} id="lab-top">
       <link
         rel="preload"
         as="font"
@@ -248,8 +298,16 @@ export function LandingLab() {
           <PublicBrandVector />
         </Link>
         <nav aria-label={label("menu")}>
-          {nav.map(([href, name]) => (
-            <a key={href} href={href}>
+          {nav.map(([href, name], index) => (
+            <a
+              key={href}
+              href={href}
+              aria-current={activeChapter === href ? "location" : undefined}
+              onClick={() => setActiveChapter(href)}
+            >
+              <span className="lab-nav-number" aria-hidden="true">
+                0{index + 1}
+              </span>
               {name}
             </a>
           ))}
@@ -292,7 +350,7 @@ export function LandingLab() {
               <span className="lab-dot" aria-hidden="true" />
               {label("kicker")}
             </p>
-            <h1 id="lab-heading">
+            <h1 id="lab-heading" tabIndex={-1}>
               {label("heroFirst")} <span>{label("heroSecond")}</span>
             </h1>
             <p className="lab-lead">{label("heroLead")}</p>
@@ -431,6 +489,18 @@ export function LandingLab() {
               />
               <span className="lab-hand">{label("heroNote")}</span>
             </div>
+            <button
+              type="button"
+              className="lab-replay"
+              disabled={reducedMotion || systemReduced}
+              onClick={() => {
+                motionRequested.current = true;
+                setNarrativeRun((value) => value + 1);
+              }}
+            >
+              <RotateCcw size={15} aria-hidden="true" />
+              {x.replay[locale]}
+            </button>
           </div>
         </section>
         <nav className="lab-benefits" aria-label={label("discover")}>
@@ -748,10 +818,18 @@ export function LandingLab() {
           aria-labelledby="lab-trust-title"
           data-chapter="5"
         >
-          <div className="lab-trust-note">
-            <ShieldCheck size={32} strokeWidth={1.5} aria-hidden="true" />
-            <span className="lab-hand">{label("heroNote")}</span>
-          </div>
+          <figure className="lab-trust-note">
+            <img
+              data-trust-observer
+              src="/marketing/explain.webp"
+              width={640}
+              height={640}
+              loading="lazy"
+              decoding="async"
+              alt=""
+            />
+            <figcaption className="lab-hand">{x.trustNote[locale]}</figcaption>
+          </figure>
           <div>
             <h2 id="lab-trust-title">{label("trustTitle")}</h2>
             <p>{label("trustLead")}</p>
@@ -786,115 +864,125 @@ export function LandingLab() {
             <h2 id="lab-price-title">{label("priceTitle")}</h2>
             <p>{label("included")}</p>
           </div>
-          <div className="lab-price-desk">
-            <div className="lab-price-base">
-              <span>{p.first[locale]}</span>
-              <p>
-                <strong>{money(locale, EUR_REFERENCE.baseMinor)}</strong>
-                <span>/ {p.month[locale]}</span>
-              </p>
-              <div className="lab-price-add">
-                {p.extra[locale]}
-                <b>
-                  +{money(locale, EUR_REFERENCE.additionalMinor)} /{" "}
-                  {p.month[locale]}
-                </b>
+          <div className="lab-price-options">
+            <div className="lab-price-desk">
+              <div className="lab-price-base">
+                <span>{p.first[locale]}</span>
+                <p>
+                  <strong>{money(locale, EUR_REFERENCE.baseMinor)}</strong>
+                  <span>/ {p.month[locale]}</span>
+                </p>
+                <div className="lab-price-add">
+                  <span>{p.extra[locale]}</span>
+                  <p>
+                    <b>+{money(locale, EUR_REFERENCE.additionalMinor)}</b>
+                    <span>/ {p.month[locale]}</span>
+                  </p>
+                </div>
+                <p className="lab-micro">{p.taxes[locale]}</p>
               </div>
-              <p className="lab-micro">{p.taxes[locale]}</p>
+              <div className="lab-price-portfolio">
+                <label htmlFor="lab-count">
+                  {label("countLabel")}
+                  <output htmlFor="lab-count">{count}</output>
+                </label>
+                <input
+                  id="lab-count"
+                  type="range"
+                  min="1"
+                  max="100"
+                  step="1"
+                  value={count}
+                  onChange={(event) => setCount(Number(event.target.value))}
+                />
+                <div
+                  className="lab-presets"
+                  role="group"
+                  aria-label={label("countLabel")}
+                >
+                  {[1, 5, 25, 100].map((value) => (
+                    <button
+                      type="button"
+                      key={value}
+                      aria-pressed={value === count}
+                      onClick={() => setCount(value)}
+                    >
+                      {value}
+                    </button>
+                  ))}
+                </div>
+                <p
+                  className="lab-price-total"
+                  aria-live="polite"
+                  aria-atomic="true"
+                >
+                  <strong>
+                    {money(
+                      locale,
+                      monthlyFixedPriceMinor(EUR_REFERENCE, count),
+                    )}
+                  </strong>
+                  <span>/ {p.month[locale]}</span>
+                </p>
+                <p>{p.access[locale]}</p>
+                <Link
+                  prefetch={false}
+                  className="lab-button"
+                  href="/contact"
+                  onClick={() =>
+                    track({
+                      kind: "CTA_ACTIVATED",
+                      surface: "landing",
+                      cta: funnelCta.pricingStart,
+                    })
+                  }
+                >
+                  {p.request[locale]}
+                  <ArrowUpRight size={17} aria-hidden="true" />
+                </Link>
+              </div>
             </div>
-            <div className="lab-price-portfolio">
-              <label htmlFor="lab-count">
-                {label("countLabel")}
-                <output htmlFor="lab-count">{count}</output>
-              </label>
-              <input
-                id="lab-count"
-                type="range"
-                min="1"
-                max="100"
-                step="1"
-                value={count}
-                onChange={(event) => setCount(Number(event.target.value))}
-              />
-              <div
-                className="lab-presets"
-                role="group"
-                aria-label={label("countLabel")}
-              >
-                {[1, 5, 25, 100].map((value) => (
-                  <button
-                    type="button"
-                    key={value}
-                    aria-pressed={value === count}
-                    onClick={() => setCount(value)}
-                  >
-                    {value}
-                  </button>
-                ))}
-              </div>
-              <p
-                className="lab-price-total"
-                aria-live="polite"
-                aria-atomic="true"
-              >
+            <article
+              className="lab-advisory"
+              aria-labelledby="lab-advisory-title"
+            >
+              <p className="lab-eyebrow">{x.advisoryKicker[locale]}</p>
+              <h3 id="lab-advisory-title">
+                {
+                  words(
+                    "¿Buscas asesoría humana?",
+                    "Looking for human advisory?",
+                    "Vous cherchez un conseil humain ?",
+                    "Suchen Sie persönliche Beratung?",
+                    "Cerchi consulenza umana?",
+                    "Procura aconselhamento humano?",
+                  )[locale]
+                }
+              </h3>
+              <div className="lab-advisory-price">
                 <strong>
-                  {money(locale, monthlyFixedPriceMinor(EUR_REFERENCE, count))}
+                  {money(locale, HUMAN_ADVISORY_EUR_MONTHLY_MINOR)}
                 </strong>
                 <span>/ {p.month[locale]}</span>
-              </p>
-              <p>{p.access[locale]}</p>
-              <Link
-                prefetch={false}
-                className="lab-button"
-                href="/contact"
-                onClick={() =>
-                  track({
-                    kind: "CTA_ACTIVATED",
-                    surface: "landing",
-                    cta: funnelCta.pricingStart,
-                  })
+              </div>
+              <p>
+                {
+                  words(
+                    "Servicio separado: una organización en el alcance acordado, cuatro actualizaciones semanales y una revisión estratégica al mes. Precio de lanzamiento, más impuestos aplicables. El pago no influye en las conclusiones.",
+                    "Separate service: one organization in the agreed scope, four weekly updates and one strategic review a month. Launch price, plus applicable tax. Payment does not influence conclusions.",
+                    "Service distinct : une organisation dans le périmètre convenu, quatre mises à jour hebdomadaires et une revue stratégique par mois. Prix de lancement, taxes en sus. Le paiement n’influence pas les conclusions.",
+                    "Separater Service: eine Organisation im vereinbarten Umfang, vier wöchentliche Updates und eine strategische Prüfung im Monat. Einführungspreis zuzüglich Steuern. Zahlung beeinflusst keine Schlussfolgerungen.",
+                    "Servizio separato: un’organizzazione nell’ambito concordato, quattro aggiornamenti settimanali e una revisione strategica al mese. Prezzo di lancio, imposte escluse. Il pagamento non influenza le conclusioni.",
+                    "Serviço separado: uma organização no âmbito acordado, quatro atualizações semanais e uma revisão estratégica mensal. Preço de lançamento, mais impostos. O pagamento não influencia conclusões.",
+                  )[locale]
                 }
-              >
-                {p.request[locale]}
+              </p>
+              <Link prefetch={false} className="lab-text-link" href="/contact">
+                {p.contact[locale]}
                 <ArrowUpRight size={17} aria-hidden="true" />
               </Link>
-            </div>
+            </article>
           </div>
-          <details className="lab-advisory">
-            <summary>
-              {
-                words(
-                  "¿Buscas asesoría humana?",
-                  "Looking for human advisory?",
-                  "Vous cherchez un conseil humain ?",
-                  "Suchen Sie persönliche Beratung?",
-                  "Cerchi consulenza umana?",
-                  "Procura aconselhamento humano?",
-                )[locale]
-              }
-              <span>
-                {money(locale, HUMAN_ADVISORY_EUR_MONTHLY_MINOR)} /{" "}
-                {p.month[locale]}
-              </span>
-              <ChevronDown size={18} aria-hidden="true" />
-            </summary>
-            <p>
-              {
-                words(
-                  "Servicio separado: una organización en el alcance acordado, cuatro actualizaciones semanales y una revisión estratégica al mes. Precio de lanzamiento, más impuestos aplicables. El pago no influye en las conclusiones.",
-                  "Separate service: one organization in the agreed scope, four weekly updates and one strategic review a month. Launch price, plus applicable tax. Payment does not influence conclusions.",
-                  "Service distinct : une organisation dans le périmètre convenu, quatre mises à jour hebdomadaires et une revue stratégique par mois. Prix de lancement, taxes en sus. Le paiement n’influence pas les conclusions.",
-                  "Separater Service: eine Organisation im vereinbarten Umfang, vier wöchentliche Updates und eine strategische Prüfung im Monat. Einführungspreis zuzüglich Steuern. Zahlung beeinflusst keine Schlussfolgerungen.",
-                  "Servizio separato: un’organizzazione nell’ambito concordato, quattro aggiornamenti settimanali e una revisione strategica al mese. Prezzo di lancio, imposte escluse. Il pagamento non influenza le conclusioni.",
-                  "Serviço separado: uma organização no âmbito acordado, quatro atualizações semanais e uma revisão estratégica mensal. Preço de lançamento, mais impostos. O pagamento não influencia conclusões.",
-                )[locale]
-              }
-            </p>
-            <Link prefetch={false} className="lab-text-link" href="/contact">
-              {p.contact[locale]}
-              <ArrowUpRight size={17} aria-hidden="true" />
-            </Link>
-          </details>
         </section>
         <section
           className="lab-faq lab-section"
@@ -959,18 +1047,54 @@ export function LandingLab() {
       </main>
       <footer className="lab-footer">
         <div className="lab-footer-intro">
-          <Link
-            prefetch={false}
-            className="lab-brand"
-            href={marketingPath("/", locale)}
-            aria-label="AXIGNAL"
+          <div className="lab-footer-brand-story">
+            <Link
+              prefetch={false}
+              className="lab-brand"
+              href={marketingPath("/", locale)}
+              aria-label="AXIGNAL"
+            >
+              <PublicBrandVector width={195} height={57} />
+            </Link>
+            <p>{label("heroLead")}</p>
+            <span className="lab-hand">{label("methodTitle")}</span>
+          </div>
+          <section
+            className="lab-footer-newsletter"
+            aria-labelledby="lab-newsletter-title"
           >
-            <PublicBrandVector width={195} height={57} />
-          </Link>
-          <p>{label("heroLead")}</p>
+            <p className="lab-eyebrow">Newsletter · AXIGNAL</p>
+            <h2 id="lab-newsletter-title">{newsletterCopy.title[locale]}</h2>
+            <p>{newsletterCopy.lead[locale]}</p>
+            <details
+              className="lab-newsletter-request"
+              onToggle={(event) => setNewsletterOpen(event.currentTarget.open)}
+            >
+              <summary>
+                {x.newsletterAction[locale]}
+                <ArrowRight size={18} aria-hidden="true" />
+              </summary>
+              <p className="lab-newsletter-boundary">
+                {newsletterCopy.boundary[locale]}
+              </p>
+              {newsletterOpen && (
+                <Suspense fallback={<p>{newsletterCopy.checking[locale]}</p>}>
+                  <FooterBrief variant="footer" />
+                </Suspense>
+              )}
+              <Link
+                prefetch={false}
+                href={marketingPath("/", locale) + "#weekly-brief"}
+              >
+                {x.openChannel[locale]}
+                <ArrowUpRight size={15} aria-hidden="true" />
+              </Link>
+            </details>
+          </section>
         </div>
         <div className="lab-footer-grid">
           <nav aria-label={label("discover")}>
+            <h3>{x.footerProduct[locale]}</h3>
             <a href="#discover">{label("discover")}</a>
             <Link prefetch={false} href={EXAMPLE_HREF}>
               {label("example")}
@@ -995,6 +1119,7 @@ export function LandingLab() {
             </Link>
           </nav>
           <nav aria-label={label("audience")}>
+            <h3>{label("audience")}</h3>
             {industries.map((item) => (
               <Link
                 prefetch={false}
@@ -1006,6 +1131,7 @@ export function LandingLab() {
             ))}
           </nav>
           <nav aria-label={p.trust[locale]}>
+            <h3>{x.footerTrust[locale]}</h3>
             <Link prefetch={false} href="/contact">
               {p.contact[locale]}
             </Link>
@@ -1042,7 +1168,10 @@ export function LandingLab() {
         </div>
         <div className="lab-footer-bottom">
           <span>© {new Date().getFullYear()} AXIGNAL</span>
-          <span>{label("methodTitle")}</span>
+          <a className="lab-backtop-footer" href="#lab-heading">
+            {x.backTop[locale]}
+            <ArrowUp size={16} aria-hidden="true" />
+          </a>
           <button
             type="button"
             className="lab-motion-control"
@@ -1070,8 +1199,11 @@ export function LandingLab() {
           className="lab-menu"
         >
           <nav>
-            {nav.map(([href, name]) => (
+            {nav.map(([href, name], index) => (
               <a key={href} href={href} onClick={() => setMenu(false)}>
+                <span className="lab-menu-index" aria-hidden="true">
+                  0{index + 1}
+                </span>
                 {name}
                 <ArrowRight size={18} aria-hidden="true" />
               </a>
@@ -1079,11 +1211,24 @@ export function LandingLab() {
             <Link prefetch={false} href={EXAMPLE_HREF}>
               {label("example")}
             </Link>
+            <Link prefetch={false} href="/login" className="lab-signin">
+              {label("signIn")}
+            </Link>
             <Link prefetch={false} href="/signup">
               {label("start")}
             </Link>
           </nav>
         </Dialog>
+      )}
+      {showBackTop && (
+        <a
+          className="lab-backtop"
+          href="#lab-heading"
+          aria-label={x.backTop[locale]}
+        >
+          <ArrowUp size={19} aria-hidden="true" />
+          <span>{x.backTop[locale]}</span>
+        </a>
       )}
       {motion && (
         <MotionBoundary>
@@ -1092,6 +1237,7 @@ export function LandingLab() {
               root={root}
               revision={scenario + moment}
               proofOpen={proofOpen}
+              replay={narrativeRun}
             />
           </Suspense>
         </MotionBoundary>
