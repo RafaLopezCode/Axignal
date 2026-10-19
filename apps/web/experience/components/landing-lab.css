@@ -2696,3 +2696,8 @@ html[data-motion="reduced"] .landing-lab * {
     justify-content: flex-start;
   }
 }
+@media (max-width: 700px) {
+  .lab-world-controls {
+    padding-top: 32px;
+  }
+}
