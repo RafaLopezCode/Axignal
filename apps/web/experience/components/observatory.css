@@ -894,3 +894,23 @@ body:has(.obs-rail-desktop) .privacy-preferences-button { inset-inline-end: auto
 .obs-figures th, .obs-figures td { text-align: start; padding: 6px 8px 6px 0; border-block-end: 1px solid var(--obs-line); vertical-align: top; }
 .obs-figures th { font-weight: 400; }
 @media (prefers-reduced-motion: reduce) { .obs-deadlines li { animation: none; } }
+
+/* Relationships graph: ties around the organization, by kind and epistemic state. */
+.obs-canvas-wide { grid-column: 1 / -1; }
+.obs-ties { display: grid; grid-template-columns: minmax(220px, 320px) minmax(0, 1fr); gap: 18px; align-items: start; }
+@media (max-width: 760px) { .obs-ties { grid-template-columns: 1fr; } }
+.obs-ties-graph { inline-size: 100%; block-size: auto; overflow: visible; }
+.obs-tie { stroke: #b4bdd3; stroke-width: 1.5; }
+.obs-tie-centre { fill: #354f98; }
+.obs-tie-centre-text { fill: #fff; font-size: 10px; font-weight: 700; }
+.obs-tie-node { stroke-width: 2; fill: #fff; }
+.obs-tie-text { font-size: 9.5px; fill: var(--obs-text); }
+.obs-tie-clients { stroke: var(--ax-family-relationships, #3d6fb4); }
+.obs-tie-partners { stroke: var(--ax-family-markets, #7a5fb0); }
+.obs-tie-suppliers { stroke: var(--ax-family-value, #4f8a6b); }
+.obs-tie-group { stroke: var(--ax-family-organization, #8a7a3d); }
+.obs-tie-competitors { stroke: var(--ax-family-demand, #b05f5f); }
+.obs-ties-list h4 { margin: 0 0 4px; font-size: 13px; }
+.obs-ties-list section + section { margin-block-start: 10px; }
+.obs-ties-list ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
+.obs-ties-list li { display: flex; justify-content: space-between; gap: 8px; align-items: baseline; }

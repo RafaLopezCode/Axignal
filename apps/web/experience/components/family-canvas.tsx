@@ -189,10 +189,12 @@ const MONTHS = 12;
  * opens its proof; counts are real counts of stored findings, never a score; a panel with
  * nothing says so. Family-specific panels can replace these one by one.
  */
-export function FamilyCanvas({ family, title, insights, onOpen, reading }: {
+export function FamilyCanvas({ family, title, insights, onOpen, reading, organization }: {
   family: FamilyId; title: string; insights: Insight[]; onOpen: (insight: Insight) => void;
   /** The stored discoveries behind the insights, for the family-specific panels. */
   reading?: Reading;
+  /** The organization's name, at the centre of the relationships graph. */
+  organization?: string;
 }) {
   const { t, locale } = useLocale();
   const ds = reading?.firstObservation?.discoveries ?? [];
@@ -240,6 +242,7 @@ export function FamilyCanvas({ family, title, insights, onOpen, reading }: {
     </Panel>
     {family === "demand" && <DemandPanels insights={insights.filter(i => i.family === "demand")} discoveryOf={discoveryOf} onOpen={onOpen}/>}
     {family === "economics" && <EconomicsPanel insights={own} discoveryOf={discoveryOf} onOpen={onOpen}/>}
+    {family === "relationships" && <RelationshipsPanel organization={organization ?? title} insights={own} discoveryOf={discoveryOf} onOpen={onOpen}/>}
     {family !== "demand" && <Panel index={2} title={t("En el tiempo", "Over time")} state={strongest(dated)?.nature ?? "UNKNOWN"} proof={strongest(dated)} onOpen={onOpen}
       conditions={fill(t("Hallazgos con fecha por mes, últimos 12 meses{older}. Cuenta lo observado, no la actividad real.", "Dated findings per month, last 12 months{older}. It counts what was observed, not the actual activity."),
         { older: olderThanWindow ? fill(t(" ({n} anteriores)", " ({n} earlier)"), { n: olderThanWindow }) : "" })}>
@@ -315,4 +318,74 @@ function EconomicsPanel({ insights, discoveryOf, onOpen }: {
         <td>{year}</td><td>{kind}</td><td><NatureMark nature={i.nature} label={natureLabel(i.nature, t)}/></td></tr>;
     })}</tbody></table> : <p className="obs-canvas-empty">{t("Todavía no hay cifras económicas con fuente.", "There are no sourced economic figures yet.")}</p>}
   </Panel>;
+}
+
+type Tie = { group: "clients" | "partners" | "suppliers" | "group" | "competitors"; name: string; insight: Insight };
+const TIE_GROUPS: Tie["group"][] = ["clients", "partners", "suppliers", "group", "competitors"];
+
+function tieGroup(d: Discovery): Tie["group"] | null {
+  if (d.kind === "COMPETITION") return "competitors";
+  if (d.kind !== "RELATIONSHIP") return null;
+  if (d.code === "VALUE_CHAIN_SUPPLIERS") return null;  // sectors, not organizations
+  if (d.code.startsWith("GROUP_")) return "group";
+  if (d.code === "PARTNER_DECLARED" || d.code === "JOINT_VENTURE_NAME" || d.code === "SAME_LOT_JOINT_AWARD") return "partners";
+  if (d.code === "TECHNOLOGY_SUPPLIER_OBSERVED" || d.code === "POTENTIAL_SUPPLIER") return "suppliers";
+  return "clients";
+}
+
+/**
+ * Relationships (design base): the organization at the centre and its ties around it, grouped
+ * by kind; each tie keeps its own epistemic state (solid observed, dashed declared, dotted
+ * potential) in the drawing and in words in the list beside it. A drawing, not a network
+ * score: what is not observed is not drawn.
+ */
+export function RelationshipsPanel({ organization, insights, discoveryOf, onOpen }: {
+  organization: string; insights: Insight[]; discoveryOf: (i: Insight) => Discovery | null; onOpen: (insight: Insight) => void;
+}) {
+  const { t } = useLocale();
+  const label: Record<Tie["group"], string> = {
+    clients: t("Clientes", "Clients"), partners: t("Socios", "Partners"), suppliers: t("Proveedores", "Suppliers"),
+    group: t("Su grupo", "Its group"), competitors: t("Competidores", "Competitors"),
+  };
+  const ties: Tie[] = [];
+  for (const insight of insights) {
+    const d = discoveryOf(insight);
+    const group = d ? tieGroup(d) : null;
+    if (d && group && ties.length < 16) ties.push({ group, name: d.statement.slice(0, 40), insight });
+  }
+  if (!ties.length) return null;
+  const present = TIE_GROUPS.filter(g => ties.some(tie => tie.group === g));
+  const size = 300, c = size / 2, r = 112;
+  const placed = present.flatMap((g, gi) => {
+    const own = ties.filter(tie => tie.group === g);
+    const span = (2 * Math.PI) / present.length;
+    return own.map((tie, k) => {
+      const angle = -Math.PI / 2 + gi * span + (span * (k + 1)) / (own.length + 1);
+      return { ...tie, x: c + r * Math.cos(angle), y: c + r * Math.sin(angle) };
+    });
+  });
+  const dash = (n: Nature) => n === "OBSERVED" ? undefined : n === "DECLARED" ? "6 4" : "2 4";
+  return <section className="obs-canvas-panel obs-canvas-wide" style={{ ["--i" as string]: 2 }} aria-label={t("Con quién se relaciona", "Who it is tied to")}>
+    <header><h3>{t("Con quién se relaciona", "Who it is tied to")}</h3></header>
+    <div className="obs-ties">
+      <svg viewBox={`0 0 ${size} ${size}`} className="obs-ties-graph" role="img"
+        aria-label={fill(t("{org} y {n} relaciones: {groups}", "{org} and {n} ties: {groups}"), { org: organization, n: ties.length, groups: present.map(g => label[g]).join(", ") })}>
+        {placed.map((p, k) => <line key={`l${k}`} x1={c} y1={c} x2={p.x} y2={p.y} className={`obs-tie obs-tie-${p.group}`} strokeDasharray={dash(p.insight.nature)}/>)}
+        <circle cx={c} cy={c} r={30} className="obs-tie-centre"/>
+        <text x={c} y={c + 4} textAnchor="middle" className="obs-tie-centre-text">{organization.slice(0, 14)}</text>
+        {placed.map((p, k) => <g key={`n${k}`}>
+          <circle cx={p.x} cy={p.y} r={7} className={`obs-tie-node obs-tie-${p.group}`} strokeDasharray={dash(p.insight.nature)}/>
+          <text x={p.x} y={p.y + (p.y < c ? -12 : 20)} textAnchor="middle" className="obs-tie-text">{p.name.slice(0, 18)}</text>
+        </g>)}
+      </svg>
+      <div className="obs-ties-list">{present.map(g => <section key={g}>
+        <h4>{label[g]}</h4>
+        <ul>{ties.filter(tie => tie.group === g).map(tie => <li key={tie.insight.id}>
+          <button className="obs-link obs-canvas-finding" onClick={() => onOpen(tie.insight)}>{tie.name}</button>
+          <NatureMark nature={tie.insight.nature} label={natureLabel(tie.insight.nature, t)}/>
+        </li>)}</ul>
+      </section>)}</div>
+    </div>
+    <footer><p className="obs-canvas-conditions">{t("Línea continua: observada; discontinua: declarada por la organización; punteada: potencial. Una relación declarada o potencial no es una relación confirmada.", "Solid line: observed; dashed: declared by the organization; dotted: potential. A declared or potential tie is not a confirmed one.")}</p></footer>
+  </section>;
 }

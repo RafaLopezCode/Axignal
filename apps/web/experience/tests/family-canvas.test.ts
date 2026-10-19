@@ -119,3 +119,21 @@ test("Economics' canvas tells each figure's source kind and year apart", () => {
   assert.match(html, /Third-party report/);
   assert.match(html, /2025/);
 });
+
+test("Relationships' canvas draws ties around the organization and keeps their epistemic state", () => {
+  const tie = (kind: string, code: string, statement: string, state: string) => ({ kind, code, statement, epistemicState: state,
+    sourceUrl: "https://example.org/r", excerpt: null, observedAt: month(0), detail: {} });
+  const r = reading([
+    tie("RELATIONSHIP", "PUBLIC_CONTRACT_AWARDED", "Ayuntamiento de Bilbao", "OBSERVED"),
+    tie("RELATIONSHIP", "PARTNER_DECLARED", "Siemens", "DECLARED"),
+    tie("RELATIONSHIP", "VALUE_CHAIN_SUPPLIERS", "Sector metal", "POTENTIAL"),
+    tie("COMPETITION", "SAME_MARKET_COMPETITOR", "Acciona", "POTENTIAL"),
+  ]);
+  const html = renderToStaticMarkup(createElement(FamilyCanvas, { family: "relationships", title: "Relaciones", insights: insightsFor(r, t, "es"), onOpen() {}, reading: r, organization: "Ingeteam" }));
+  assert.match(html, /Who it is tied to/);
+  assert.match(html, /Ingeteam and 3 ties/);
+  assert.match(html, /stroke-dasharray="6 4"/);  // declared
+  assert.match(html, /stroke-dasharray="2 4"/);  // potential
+  assert.doesNotMatch(html, /Sector metal<\/button>/);  // sectors are not organizations
+  assert.match(html, /is not a confirmed one/);
+});
