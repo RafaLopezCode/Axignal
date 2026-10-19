@@ -1301,7 +1301,7 @@ body { font-family: var(--font-ui); font-size: var(--type-body); font-weight: va
   display: inline-flex;
   flex-shrink: 0;
 }
-.lab-brand svg {
+.lab-brand .public-brand-vector {
   display: block;
   max-width: 100%;
   height: auto;
@@ -2576,7 +2576,7 @@ body { font-family: var(--font-ui); font-size: var(--type-body); font-weight: va
     padding: 12px 6%;
     gap: 12px;
   }
-  .lab-header .lab-brand svg {
+  .lab-header .lab-brand .public-brand-vector {
     width: 128px;
   }
   .lab-header-actions .lab-small,
@@ -2990,7 +2990,7 @@ body { font-family: var(--font-ui); font-size: var(--type-body); font-weight: va
     gap: 25px;
     margin-bottom: 30px;
   }
-  .lab-footer-intro .lab-brand svg {
+  .lab-footer-intro .lab-brand .public-brand-vector {
     width: 160px;
   }
   .lab-footer-intro p {
@@ -3023,7 +3023,7 @@ body { font-family: var(--font-ui); font-size: var(--type-body); font-weight: va
   .lab-header {
     padding-inline: 5%;
   }
-  .lab-header .lab-brand svg {
+  .lab-header .lab-brand .public-brand-vector {
     width: 112px;
   }
   .lab-header-actions {
@@ -3537,7 +3537,7 @@ html[data-motion="reduced"] .landing-lab * {
 .lab-footer-brand-story {
   padding-top: 15px;
 }
-.lab-footer-brand-story .lab-brand svg {
+.lab-footer-brand-story .lab-brand .public-brand-vector {
   width: 230px;
 }
 .lab-footer-brand-story > p {
@@ -3826,7 +3826,7 @@ html[data-motion="reduced"] .landing-lab * {
     gap: 35px;
     padding-bottom: 38px;
   }
-  .lab-footer-brand-story .lab-brand svg {
+  .lab-footer-brand-story .lab-brand .public-brand-vector {
     width: 190px;
   }
   .lab-footer-newsletter {

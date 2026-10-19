@@ -42,7 +42,6 @@ import {
   monthlyFixedPriceMinor,
 } from "@/lib/commercial-prices";
 import { exampleDepth, funnelCta, track } from "@/lib/funnel-events";
-import { PublicBrandVector } from "./public-brand-vector";
 import { NatureMark } from "./nature-mark";
 import { InsightSources } from "./insight-sources";
 import { SyntheticEvidenceProvider } from "./evidence-link-context";
@@ -325,7 +324,15 @@ export function LandingLab({ content }: { content: LandingLabContent }) {
           className="lab-brand"
           aria-label="AXIGNAL"
         >
-          <PublicBrandVector />
+          <img
+            className="public-brand-vector"
+            src="/brand/logo-light.svg"
+            width={147}
+            height={43}
+            alt=""
+            fetchPriority="low"
+            decoding="async"
+          />
         </a>
         <nav aria-label={label("menu")}>
           {nav.map(([href, name], index) => (
@@ -1077,7 +1084,15 @@ export function LandingLab({ content }: { content: LandingLabContent }) {
               href={marketingPath("/", locale)}
               aria-label="AXIGNAL"
             >
-              <PublicBrandVector width={195} height={57} />
+              <img
+                className="public-brand-vector"
+                src="/brand/logo-light.svg"
+                width={195}
+                height={57}
+                alt=""
+                loading="lazy"
+                decoding="async"
+              />
             </a>
             <p>{label("heroLead")}</p>
             <span className="lab-hand">{label("methodTitle")}</span>
