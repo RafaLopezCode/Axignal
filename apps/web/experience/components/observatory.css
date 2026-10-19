@@ -849,3 +849,25 @@ body:has(.obs-rail-desktop) .privacy-preferences-button { inset-inline-end: auto
 .axent-widen { flex: none; border: 0; background: transparent; color: var(--ax-muted, currentColor); font-size: 15px; line-height: 1; padding: 0 4px; border-radius: var(--obs-r-control); cursor: pointer; }
 .axent-widen:hover, .axent-widen:focus-visible { background: var(--obs-hover, rgba(0, 0, 0, .06)); color: inherit; }
 .obs-ask-finding { align-self: flex-start; margin: 4px 0 12px; }
+
+/* Your agent (MCP): why, how to connect each assistant, what to ask, who is connected. */
+.obs-agent { display: grid; gap: 16px; max-inline-size: 880px; }
+.obs-agent-head h1 { margin: 4px 0 8px; }
+.obs-agent-value { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+.obs-agent-value li { display: grid; gap: 4px; padding: 12px 14px; border: 1px solid var(--obs-line, #e3e6ee); border-radius: var(--obs-r-card); background: var(--obs-surface, #fff); }
+.obs-agent-card { padding: 16px 18px; border: 1px solid var(--obs-line, #e3e6ee); border-radius: var(--obs-r-card); background: var(--obs-surface, #fff); }
+.obs-agent-card h2 { font-size: 1rem; margin: 14px 0 8px; }
+.obs-agent-card h2:first-child { margin-top: 0; }
+.obs-agent-endpoint { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+.obs-agent-tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-block-end: 8px; }
+.obs-agent-tab { border: 1px solid var(--obs-line, #d9dde7); background: var(--obs-surface, #fff); color: inherit; padding: 6px 12px; border-radius: var(--obs-r-control); font: inherit; font-weight: 600; cursor: pointer; }
+.obs-agent-tab:hover, .obs-agent-tab:focus-visible { border-color: currentColor; }
+.obs-agent-tab[aria-selected="true"] { background: #1d2433; border-color: #1d2433; color: #fff; }
+.obs-agent-steps { margin: 0; padding-inline-start: 20px; display: grid; gap: 6px; }
+.obs-agent-prompts { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.obs-agent-prompts li { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px; padding: 10px 12px; border-radius: var(--obs-r-field); background: var(--obs-soft, #f4f6fa); }
+.obs-agent-prompts li p { margin: 0; flex: 1 1 320px; }
+.obs-agent-hint { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 6px 0 0; }
+.obs-ask-row { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin: 4px 0 12px; }
+.obs-ask-row .obs-ask-finding { margin: 0; }
+.axent-own-agent { margin: 0 0 6px; font-size: .82rem; }
