@@ -32,6 +32,8 @@ export function useRuntimeAxent(
   illustrative = false,
   /** Answers some questions without a round trip (a selected finding); null asks as usual. */
   local?: (question: string) => RuntimeAnswer | null,
+  /** What the reader is looking at, named in the question the runtime receives. */
+  frame?: (question: string) => string,
 ) {
   const { t, locale } = useLocale();
   const [draft, setDraft] = useState("");
@@ -78,7 +80,7 @@ export function useRuntimeAxent(
                 ...(messages.at(-1)?.answer.memory ? { memory: messages.at(-1)?.answer.memory } : {}),
               }
             : { mode: "runtime" }),
-          prompt: question,
+          prompt: frame ? frame(question) : question,
           contextId: projection.context.id,
           locale,
           ...(signalId ? { signalId } : {}),
@@ -136,6 +138,9 @@ export function RuntimeAxent({
   conversation,
   focusLabel,
   illustrative = false,
+  onWiden,
+  widenLabel,
+  suggestions,
 }: {
   projection: RuntimeProjection;
   signalId: string | null;
@@ -144,6 +149,11 @@ export function RuntimeAxent({
   onPublicUnderstanding?: (reportId: string) => void;
   conversation: ReturnType<typeof useRuntimeAxent>;
   focusLabel?: string;
+  /** Widens the context one level (finding → family → organization). */
+  onWiden?: () => void;
+  widenLabel?: string;
+  /** Questions that fit the current context; the general ones otherwise. */
+  suggestions?: string[];
   illustrative?: boolean;
 }) {
   const { t, locale } = useLocale();
@@ -157,7 +167,7 @@ export function RuntimeAxent({
       panelRef.current?.querySelector<HTMLButtonElement>(".axent-questions button")?.focus({ preventScroll: true });
     }
   }, [messages]);
-  const questions = [
+  const questions = suggestions ?? [
     ...productGuideCatalog.locales[locale].questions.slice(0, 2),
     t("Qué sabes", "What do you know"),
     t("Qué cambió", "What changed"),
@@ -186,11 +196,12 @@ export function RuntimeAxent({
           {illustrative ? productGuideCatalog.locales[locale].illustrationLabel : t("CONTEXTO AUTORIZADO", "AUTHORIZED CONTEXT")}
         </span>
         <strong>{projection.organization.name}</strong>
-        <small>
+        <small className="axent-focus">
           {focusLabel ??
             (signalId
               ? t("Señal seleccionada", "Selected signal")
               : t("Panorama", "Panorama"))}
+          {onWiden && widenLabel && <button type="button" className="axent-widen" onClick={onWiden} aria-label={widenLabel} title={widenLabel}>×</button>}
         </small>
       </div>
       <div className="axent-messages" aria-live="polite" aria-busy={busy}>

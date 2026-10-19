@@ -843,3 +843,9 @@ body:has(.obs-rail-desktop) .privacy-preferences-button { inset-inline-end: auto
 .obs-audit-counts { font-size: 12.5px; color: var(--obs-muted); font-variant-numeric: tabular-nums; }
 .obs-canvas-reach p { margin: 0 0 6px; font-size: 14px; line-height: 1.55; }
 .obs-canvas-reach strong { color: var(--obs-ink); margin-inline-end: 6px; }
+
+/* AXENT's context: what it will answer about, with a control to widen it one level. */
+.axent-focus { display: flex; align-items: flex-start; gap: 6px; }
+.axent-widen { flex: none; border: 0; background: transparent; color: var(--ax-muted, currentColor); font-size: 15px; line-height: 1; padding: 0 4px; border-radius: var(--obs-r-control); cursor: pointer; }
+.axent-widen:hover, .axent-widen:focus-visible { background: var(--obs-hover, rgba(0, 0, 0, .06)); color: inherit; }
+.obs-ask-finding { align-self: flex-start; margin: 4px 0 12px; }

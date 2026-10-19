@@ -1,6 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { explainFinding } from "../lib/finding-axent";
+import { explainFamily, framed, isFreeQuestion } from "../lib/family-axent";
 import { insightsFor, type Reading } from "../lib/observatory";
 import { intentOf } from "../lib/runtime-axent";
 import { translate } from "../lib/copy-catalog";
@@ -105,4 +106,39 @@ test("asked how to fix a finding, AXENT gives that finding's own steps, not its 
   const notNamed = insights.find(i => i.id.startsWith("GENERATIVE_VISIBILITY:AI_NOT_NAMED_FOR_CATEGORY"))!;
   const sample = notNamed.proof.find(p => p.label === "Muestra");
   assert.equal(sample?.value, "3 preguntas, una respuesta cada una", "the instrument's sample in the reader's language");
+});
+
+test("every family's findings carry their own steps and research, not a generic sentence", () => {
+  const t = (es: string, en: string) => translate(es, en, "es");
+  const insights = insightsFor(reading, t, "es").filter(i => i.lane !== "unknown" && !i.id.startsWith("CHANGE:"));
+  const families = new Set<string>();
+  for (const insight of insights) {
+    if (insight.id.startsWith("REPRESENTATION_GAP")) continue;  // its own audit proposal
+    assert.ok(insight.actions?.length, `${insight.id}: steps of its own`);
+    assert.ok(insight.research?.length, `${insight.id}: research of its own`);
+    if (insight.family) families.add(insight.family);
+  }
+  // Organization's identity hints are shown as context (Evidence), so its only lane findings
+  // here are unknowns: every family with a known finding has steps of its own.
+  assert.equal(families.size, 9, `every family with known findings has steps (${[...families].join(",")})`);
+});
+
+test("with no finding selected, AXENT answers about the family on screen, not the whole organization", () => {
+  const t = (es: string, en: string) => translate(es, en, "es");
+  const all = insightsFor(reading, t, "es");
+  const presence = all.filter(i => i.family === "presence");
+  const ask = (prompt: string, illustrative = false) => explainFamily({ family: "Visibilidad", insights: presence, prompt,
+    organizationId: "org", contextId: "ctx", t, illustrative });
+  const top = ask("Qué es lo más importante")!;
+  assert.match(top.summary, /Visibilidad/);
+  assert.ok(top.known.length >= 1 && top.known.every(k => presence.some(i => i.headline === k)), "only this family's findings");
+  const act = ask("Qué puedo hacer")!;
+  assert.equal(act.intent, "act");
+  assert.ok(act.known.length >= 1, "steps from the family's findings");
+  assert.equal(ask("¿Quién aparece en lugar de esta empresa?"), null, "a free question goes to the grounded runtime");
+  assert.match(ask("¿Quién aparece en lugar de esta empresa?", true)!.summary, /no tienen un dato/, "the demo says so instead");
+  assert.ok(isFreeQuestion("¿Quién aparece en lugar de esta empresa?") && !isFreeQuestion("Qué sabes"));
+  const empty = explainFamily({ family: "Contexto", insights: [], prompt: "Qué sabes", organizationId: "org", contextId: "ctx", t, illustrative: false })!;
+  assert.match(empty.summary, /todavía no hay hallazgos/);
+  assert.ok(framed("x".repeat(2000), "Sobre la familia Valor").length <= 1000, "the framed question fits the endpoint");
 });
