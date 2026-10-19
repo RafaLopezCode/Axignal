@@ -5,6 +5,7 @@
  * "Same truth, different density"). It never creates a finding, never raises POTENTIAL
  * to OBSERVED, never reads UNKNOWN as negative and never generates prose.
  */
+import { findingActions } from "./finding-actions";
 import { contractScaleRows } from "./contract-scale";
 import { activityLabel, auditRows, buyerSignalLabel, discoveryCopy, placeLabel } from "@/components/first-observation";
 import { auditCopy, auditImpact } from "./representation-audit";
@@ -42,6 +43,9 @@ export type Insight = {
   reasoning: string[];
   /** Conditional next step, only when the runtime supplied one. */
   proposal: string | null;
+  /** What the reader can do about it, and what AXENT would look into next (its own data). */
+  actions?: string[];
+  research?: string[];
   /** PROVE: exact sources and recorded basis. */
   sources: Source[];
   proof: Proof[];
@@ -229,6 +233,31 @@ function methodLabel(method: string, t: Translate): string {
   }
 }
 
+/** The sample of a measurement, written in English by its instrument, in the reader's language. */
+export function sampleCopy(sample: string, t: Translate): string {
+  let m = /^(\d+) category questions and (\d+) brand question, 1 answer each$/.exec(sample);
+  if (m) return t("{c} preguntas sobre su actividad y {b} sobre la marca, una respuesta cada una", "{c} category questions and {b} brand question, 1 answer each").replace("{c}", m[1]).replace("{b}", m[2]);
+  m = /^(\d+) questions, 1 answer each$/.exec(sample);
+  if (m) return t("{n} preguntas, una respuesta cada una", "{n} questions, 1 answer each").replace("{n}", m[1]);
+  m = /^(\d+) searches, top (\d+) results each$/.exec(sample);
+  if (m) return t("{n} búsquedas, los {k} primeros resultados de cada una", "{n} searches, top {k} results each").replace("{n}", m[1]).replace("{k}", m[2]);
+  const fixed: Record<string, [string, string]> = {
+    "One lab run of the home page": ["Una medición de laboratorio de la página de inicio", "One lab run of the home page"],
+    "The archive's monthly captures of the home page": ["Las capturas mensuales del archivo de su página de inicio", "The archive's monthly captures of the home page"],
+    "The domain's captures in the latest crawl, and whether each of the previous crawls captured it": ["Las capturas del dominio en el último rastreo, y si los anteriores lo capturaron", "The domain's captures in the latest crawl, and whether each of the previous crawls captured it"],
+  };
+  return fixed[sample] ? t(...fixed[sample]) : sample;
+}
+
+/** An instrument's uncertainty, in the reader's language when it is a known one. */
+export function uncertaintyCopy(text: string, t: Translate): string {
+  if (/^A lab run with a simulated device and network/.test(text)) return t("Medición de laboratorio con un dispositivo y una red simulados: varía unos puntos entre ejecuciones y no es la experiencia de sus visitantes.", "A lab run with a simulated device and network: it varies a few points between runs and it is not its visitors' experience.");
+  if (/^Common Crawl samples the web/.test(text)) return t("Common Crawl muestrea la web: estar no significa que un modelo la conozca o la cite, y no estar puede deberse al muestreo, a robots.txt o al tamaño del sitio.", "Common Crawl samples the web: being in it does not mean a model knows or cites it, and not being in it may be sampling, robots.txt or size.");
+  if (/^The Internet Archive samples the web/.test(text)) return t("El Internet Archive muestrea la web: la primera captura fecha el dominio, que pudo tener otro dueño; un mes sin capturas no es un mes sin web.", "The Internet Archive samples the web: the first capture dates the domain, which may have had an earlier owner; a month without captures is not a month without a website.");
+  if (/^That engine's ranking on that date and place/.test(text)) return t("La clasificación de ese buscador en esa fecha y lugar; varía según buscador, persona, lugar y día. No es lo que todo el mundo ve en Google.", "That engine's ranking on that date and place; it varies by engine, person, place and day. Not what everyone sees on Google.");
+  return text;
+}
+
 function discoveryInsight(d: Discovery, index: number, t: Translate, locale: string): Insight {
   const copy = discoveryCopy(d, t, locale);
   const buyer = d.kind === "DEMAND" && d.code === "POTENTIAL_BUYER";
@@ -255,7 +284,8 @@ function discoveryInsight(d: Discovery, index: number, t: Translate, locale: str
       : t("Mismo sector, otro trabajo principal", "Same sector, other main work")} · ${fill(t("juicio no autoritativo de {model}", "non-authoritative judgment by {model}"), { model: String(fitBy.model ?? fitBy.evaluator ?? "") })}` });
   if (typeof detail.instrument === "string") proof.push({ label: t("Instrumento y versión", "Instrument and version"), value: String(detail.instrument) });
   if (typeof detail.conditions === "string") proof.push({ label: t("Condiciones de observación", "Observation conditions"), value: String(detail.conditions) });
-  if (typeof detail.sample === "string") proof.push({ label: t("Muestra", "Sample"), value: String(detail.sample) });
+  if (typeof detail.sample === "string") proof.push({ label: t("Muestra", "Sample"), value: sampleCopy(String(detail.sample), t) });
+  if (typeof detail.uncertainty === "string") proof.push({ label: t("Incertidumbre", "Uncertainty"), value: uncertaintyCopy(String(detail.uncertainty), t) });
   if (typeof detail.coverage === "string") proof.push({ label: t("Cobertura", "Coverage"), value: String(detail.coverage) });
   // A change is only stated against a comparable earlier observation; otherwise the proof says why not.
   const comparable = detail.comparison === "COMPARABLE" && typeof detail.previous === "string";
@@ -264,6 +294,7 @@ function discoveryInsight(d: Discovery, index: number, t: Translate, locale: str
   if (typeof detail.limitation === "string") proof.push({ label: t("Límite", "Limitation"), value: String(detail.limitation) });
   if (typeof detail.impact === "string") proof.push({ label: t("Impacto", "Impact"), value: auditImpact(detail.impact, t) });
   for (const [label, value] of auditRows(detail.audit, t)) proof.push({ label, value });
+  const actions = findingActions(d, t);
   return {
     id: `${d.kind}:${d.code}:${index}`, lane, nature,
     headline: copy.finding, why: copy.why, observedAt: d.observedAt,
@@ -288,6 +319,7 @@ function discoveryInsight(d: Discovery, index: number, t: Translate, locale: str
       : d.sourceUrl || d.excerpt ? [{ url: d.sourceUrl, label: d.sourceUrl ? hostOf(d.sourceUrl) : t("Fuente", "Source"), observedAt: d.observedAt, quote: d.excerpt }] : [],
     proof: buyer ? [...buyerProof(d, t), ...proof] : proof, dimensions: [],
     previous: comparable ? String(detail.previous) : null,
+    ...(actions ? { actions: actions.act, research: actions.research } : {}),
     changeKey: keyOf(`${d.kind}:${d.code}`, d.statement, d.excerpt, d.epistemicState),
     ...facetOfDiscovery(d),
     limits: typeof detail.limitation === "string" ? [String(detail.limitation)] : [],

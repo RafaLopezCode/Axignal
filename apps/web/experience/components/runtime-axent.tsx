@@ -165,6 +165,7 @@ export function RuntimeAxent({
     t("Qué sigue abierto", "What remains open"),
     t("Cómo lo sabes", "How do you know"),
     t("Qué investigarías después", "What would you investigate next"),
+    t("Qué puedo hacer", "What can I do"),
   ];
   return (
     <div ref={panelRef} className="axent-panel">
@@ -234,7 +235,9 @@ export function RuntimeAxent({
                 )}
               {shown.known.length > 0 && (
                 <section className="axent-answer-section">
-                  <strong>{t("Lo que sabemos", "What we know")}</strong>
+                  <strong>{message.answer.intent === "act" ? t("Qué puedes hacer", "What you can do")
+                    : message.answer.intent === "research" ? t("Qué investigaría", "What I would look into")
+                    : t("Lo que sabemos", "What we know")}</strong>
                   {shown.known.map((value, j) => (
                     <p key={j}>{value}</p>
                   ))}
