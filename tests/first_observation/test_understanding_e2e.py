@@ -219,3 +219,24 @@ def test_opt_in_configuration_survives_allowlist() -> None:
 
     settings = load_subscriber_settings({"AXIGNAL_PUBLIC_UNDERSTANDING_ENABLED": "true"})
     assert settings.values["AXIGNAL_PUBLIC_UNDERSTANDING_ENABLED"] == "true"
+
+
+def test_question_research_is_scoped_to_the_subscribers_own_organization(
+    tmp_path: Path, monkeypatch: Any
+) -> None:
+    """Spec 105: the route exists behind the same authorization; off when research is off."""
+    facade, _world = controlled_facade(tmp_path, monkeypatch)
+    token, added = _attend(facade, tmp_path, "synthetic:agency-a", KNOWN)
+    focus = str(added["focusId"])
+    assert runtime(facade).drain() == 1
+    path = f"/subscriber/organizations/{focus}/research"
+    reply = facade.handle("POST", path, _headers(token), {"question": "¿Qué opinan sus clientes?"})
+    assert reply.status == 200 and reply.body == {"state": "NOT_CONFIGURED"}
+    assert facade.handle("POST", path, _headers(token), {"question": "x", "url": "y"}).status == 400
+    other = facade.handle(
+        "POST",
+        "/subscriber/organizations/focus_unknown/research",
+        _headers(token),
+        {"question": "x"},
+    )
+    assert other.status in {403, 404}

@@ -55,6 +55,10 @@ class SubscriberOutputPort(Protocol):
         self, context: TrustedSubscriberContext, focus_id: XeedId, markets: list[str]
     ) -> dict[str, object]: ...
 
+    def research(
+        self, context: TrustedSubscriberContext, focus_id: XeedId, question: str
+    ) -> dict[str, object]: ...
+
 
 class SubscriberMcpConsentPort(Protocol):
     """Consent and connection management for the Product MCP (ADR-0086)."""
@@ -397,6 +401,25 @@ class SubscriberHttpFacade:
                 return SubscriberHttpResponse(
                     200, self.axent.ask(context, XeedId(focus_id), payload or {})
                 )
+            if (
+                method == "POST"
+                and path.startswith("/subscriber/organizations/")
+                and path.endswith("/research")
+            ):
+                focus_id = unquote(
+                    path.removeprefix("/subscriber/organizations/").removesuffix("/research")
+                )
+                if not _REFERENCE.fullmatch(focus_id):
+                    raise SubscriberRequestError("invalid focus reference")
+                body = payload or {}
+                if set(body) != {"question"}:
+                    raise SubscriberRequestError("invalid research question")
+                question = _text(body, "question", 300)
+                try:
+                    result = self.outputs.research(context, XeedId(focus_id), question)
+                except PortfolioError:
+                    return self._denied("FOCUS_NOT_FOUND", 404)
+                return SubscriberHttpResponse(200, result)
             if path.startswith("/subscriber/mcp/"):
                 if self.mcp is None:
                     return self._denied("MCP_NOT_CONFIGURED", 503)

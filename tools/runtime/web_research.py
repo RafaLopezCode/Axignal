@@ -12,7 +12,9 @@ from __future__ import annotations
 
 import json
 import os
+import re
 import sqlite3
+import time
 from collections.abc import Callable, Iterator, Mapping, Sequence
 from contextlib import contextmanager
 from datetime import UTC, datetime, timedelta
@@ -37,6 +39,9 @@ from application.web_research import (
 from pipeline.web_search.article import read_article
 
 TTL = timedelta(days=30)
+ASKS_PER_DAY = 10  # questions researched per requester and UTC day
+ASK_PAGES = 3
+ASK_SECONDS = 15.0  # within the web proxy's 30-second wait
 MAX_SEARCHES_PER_DAY = 120  # paid requests per UTC day, all tenants together (≈ $0.09)
 COUNT = 10
 
@@ -74,6 +79,9 @@ class WebResearchRunner:
                     billed INTEGER NOT NULL, usd REAL NOT NULL);
                 CREATE TABLE IF NOT EXISTS pages (
                     check_key TEXT PRIMARY KEY, page TEXT NOT NULL, checked_at TEXT NOT NULL);
+                CREATE TABLE IF NOT EXISTS asks (
+                    requester TEXT NOT NULL, day TEXT NOT NULL, count INTEGER NOT NULL,
+                    PRIMARY KEY (requester, day));
                 """
             )
 
@@ -224,6 +232,57 @@ class WebResearchRunner:
             require_identifier=identity,
             extract_revenue=economics,
         )  # fmt: skip
+
+    def ask(self, subject: ResearchSubject, question: str, *, requester: str) -> dict[str, object]:
+        """Research one subscriber question now (spec 105): one search for the organization's
+        name and the question, at most three pages read by AXIGNAL, kept only when they name
+        the organization. What the subscriber asks directs attention; nothing it returns
+        becomes a finding. Bounded per requester and day, and by the global search cap."""
+        now = self._clock()
+        day = now.date().isoformat()
+        with self._connect() as db:
+            row = db.execute(
+                "SELECT count FROM asks WHERE requester=? AND day=?", (requester, day)
+            ).fetchone()
+        if row is not None and int(row["count"]) >= ASKS_PER_DAY:
+            return {"state": "DAILY_LIMIT", "limit": ASKS_PER_DAY}
+        names = research_names(subject.names)
+        if not names or not subject.domain:
+            return {"state": "NOT_RESEARCHABLE"}
+        # The brand as the press writes it ("Huel"), not its legal form ("Huel Limited").
+        name = subject.names[0]
+        words = " ".join(re.findall(r"[\w'-]+", question.replace(chr(0x2019), "'")))[:80]
+        query = f'"{name}" {words} -site:{subject.domain}'[:128]
+        found = self._hits(query)
+        if found is None:
+            return {"state": "DAILY_LIMIT", "limit": self._max_per_day}
+        hits, paid = found
+        with self._connect() as db:
+            db.execute(
+                """INSERT INTO asks (requester, day, count) VALUES (?,?,1)
+                ON CONFLICT(requester, day) DO UPDATE SET count = count + 1""",
+                (requester, day),
+            )
+        pages: list[dict[str, object]] = []
+        started = time.monotonic()
+        for hit in candidates(hits, subject, purpose="REPUTATION")[:ASK_PAGES]:
+            if time.monotonic() - started > ASK_SECONDS:
+                break  # an answer within seconds: what is not read now is not shown
+            check = self._check(hit, names, subject.domain)
+            if check.state == "SUPPORTED":
+                pages.append({**check.to_wire(), "siteName": hit.site_name})
+        return {
+            "state": "DONE",
+            "question": question,
+            "query": query,
+            "pages": pages,
+            "researchedAt": self._clock().isoformat(),
+            "instrument": {"search": self._search.instrument, "reader": "governed-site-reader"},
+            "cost": {"paidSearches": int(paid), "usd": round(int(paid) * self._usd, 6)},
+            "limitation": "Pages a search index proposed and AXIGNAL read: each names the "
+            "organization in its own text. They answer the question only as far as they say; "
+            "nothing here is admitted as a finding.",
+        }
 
     def run(self, *, max_runs: int = 2) -> int:
         with self._connect() as db:
