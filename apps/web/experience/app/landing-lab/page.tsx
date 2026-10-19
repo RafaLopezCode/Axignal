@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { LandingLab } from "@/components/landing-lab";
+import { LandingLabCriticalType } from "@/components/landing-lab-critical-type";
 import { jsonLd, siteStructuredData } from "@/lib/site-seo";
 import { HOME_METADATA } from "@/lib/public-home-metadata";
 export const metadata: Metadata = {
@@ -37,6 +38,7 @@ export default function Page() {
           __html: jsonLd(siteStructuredData(null, "/landing-lab")),
         }}
       />
+      <LandingLabCriticalType />
       <LandingLab />
     </>
   );

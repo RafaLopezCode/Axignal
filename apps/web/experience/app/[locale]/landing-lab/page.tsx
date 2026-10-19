@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { LandingLab } from "@/components/landing-lab";
+import { LandingLabCriticalType } from "@/components/landing-lab-critical-type";
 import { locales, isLocale } from "@/lib/languages";
 import { jsonLd, siteStructuredData } from "@/lib/site-seo";
 import { HOME_METADATA } from "@/lib/public-home-metadata";
@@ -68,6 +69,7 @@ export default async function Page({
           __html: jsonLd(siteStructuredData(locale, `/${locale}/landing-lab`)),
         }}
       />
+      <LandingLabCriticalType />
       <LandingLab />
     </>
   );

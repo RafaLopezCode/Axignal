@@ -8,7 +8,7 @@
     "app/public-layout.css",
     "components/cognition/cognition.css"
   ],
-  "fontManifestSha256": "71f6879ca001bccc3bcc8cd23cdcb2a2581c1e89f32297c249e7af7362ddc8e4",
+  "fontManifestSha256": "ece9382fda5be8ff86646088f2fe1a7e75115913ce67904375f9bd09e06d5ac1",
   "base": {
     "url": "/styles/base.7fe0e0bcff92.css",
     "bytes": 23739,

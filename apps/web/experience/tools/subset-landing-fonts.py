@@ -45,9 +45,6 @@ for family, name, weight in [
 ]:
     original = root / "public/fonts" / name
     font = TTFont(original, recalcTimestamp=False)
-    if family == "Fraunces" and "fvar" in font:
-        # Keep its native 900 default while removing weights below the declared 300.
-        font = instantiateVariableFont(font, {"wght": (300, 900, 900)}, inplace=True)
     if family == "Bic Notes Lab" and "fvar" in font:
         font = instantiateVariableFont(font, {"wght": 400}, inplace=True)
         weight = "400"
@@ -55,8 +52,8 @@ for family, name, weight in [
     opts = subset.Options()
     opts.flavor = "woff2"
     opts.recalc_timestamp = False
-    # Preserve the normal browser features; unused stylistic sets are not shipped.
-    opts.layout_features = ["ccmp", "locl", "mark", "mkmk", "rlig", "liga", "clig", "calt", "kern"]
+    # Preserve every OpenType feature, including required variation substitutions.
+    opts.layout_features = ["*"]
     if family in ("Fraunces", "Bic Notes Lab"):
         opts.hinting = False
     sub = subset.Subsetter(options=opts)
@@ -66,6 +63,19 @@ for family, name, weight in [
     font.flavor = "woff2"
     font.save(temporary)
     check = TTFont(temporary)
+    if "GSUB" in TTFont(original):
+        original_features = {
+            entry.FeatureTag for entry in TTFont(original)["GSUB"].table.FeatureList.FeatureRecord
+        }
+        delivered_features = (
+            {entry.FeatureTag for entry in check["GSUB"].table.FeatureList.FeatureRecord}
+            if "GSUB" in check
+            else set()
+        )
+        assert "rvrn" not in original_features or "rvrn" in delivered_features, (
+            "Required variation feature must survive"
+        )
+
     assert expected <= set(check.getBestCmap()), (family, expected - set(check.getBestCmap()))
     data = temporary.read_bytes()
     digest = hashlib.sha256(data).hexdigest()

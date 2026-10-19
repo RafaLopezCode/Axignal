@@ -78,7 +78,7 @@ export function PrivacyNotice() {
               {t("Solo lo necesario", "Necessary only")}
             </button>
           </div>
-          <Link href="/gdpr">
+          <Link prefetch={false} href="/gdpr">
             {t("Tus datos y derechos", "Your data and rights")}
           </Link>
         </aside>
@@ -91,10 +91,7 @@ export function PrivacyNotice() {
         >
           <span className="publication-note">
             <Info size={14} />
-            {t(
-              "Información del servicio",
-              "Service information",
-            )}
+            {t("Información del servicio", "Service information")}
           </span>
           <h3>
             {t("Preferencias en tu navegador", "Preferences in your browser")}
@@ -124,13 +121,13 @@ export function PrivacyNotice() {
             )}
           </p>
           <div className="privacy-document-links">
-            <Link href="/policies/cookies">
+            <Link prefetch={false} href="/policies/cookies">
               {t("Cookies y almacenamiento", "Cookies and storage")}
             </Link>
-            <Link href="/policies/privacy">
+            <Link prefetch={false} href="/policies/privacy">
               {t("Política de privacidad", "Privacy policy")}
             </Link>
-            <Link href="/gdpr">
+            <Link prefetch={false} href="/gdpr">
               {t("Tus datos y derechos", "Your data and rights")}
             </Link>
           </div>

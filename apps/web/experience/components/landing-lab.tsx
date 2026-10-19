@@ -289,13 +289,6 @@ export function LandingLab() {
         type="font/woff2"
         crossOrigin="anonymous"
       />
-      <link
-        rel="preload"
-        as="font"
-        href={labFonts.fonts[0].url}
-        type="font/woff2"
-        crossOrigin="anonymous"
-      />
       <header className="lab-header">
         <Link
           prefetch={false}
