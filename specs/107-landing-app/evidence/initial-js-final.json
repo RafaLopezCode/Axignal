@@ -1,0 +1,19 @@
+{
+  "source": "059e03d2c11cd4b6cfe044f9054f51e750eedcd9",
+  "rows": [
+    {
+      "path": "/es",
+      "files": 12,
+      "raw": 2142668,
+      "gzip": 683417,
+      "gsapInInitialScripts": false
+    },
+    {
+      "path": "/es/landing-lab",
+      "files": 13,
+      "raw": 2181897,
+      "gzip": 696420,
+      "gsapInInitialScripts": false
+    }
+  ]
+}

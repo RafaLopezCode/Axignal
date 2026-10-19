@@ -1,0 +1,18 @@
+{
+  "source": "public/fonts/caveat-full.ab1a1d69.woff2",
+  "sourceSha256": "ab1a1d6903284cb3d4a7514b8a8f90666c797332f8144c294adb9548369657d6",
+  "derivative": "public/fonts/caveat-latin.15bf208d.woff2",
+  "sha256": "15bf208d5b2f9afb33421813862d50c0391a6ed06ca69b769a0ea053c441f501",
+  "bytesBefore": 173748,
+  "bytesAfter": 85384,
+  "fontToolsVersion": "4.67.0",
+  "unicodeRanges": "U+0000-024F,U+2000-206F,U+20A0-20CF,U+2190-21FF",
+  "layoutFeatures": "*",
+  "license": "public/fonts/OFL-Caveat.txt",
+  "scope": "Bic Notes Lab alias, landing-lab.css only; same outlines and metrics; no runtime dependency",
+  "verification": {
+    "codepoints": 411,
+    "horizontalMetricsIdentical": true,
+    "defaultDecomposedOutlinesIdentical": true
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "checkedAt": "2026-10-19T08:54:27.267Z",
+  "base": "http://127.0.0.1:3822",
+  "locales": [
+    {
+      "route": "/es/landing-lab",
+      "status": 200,
+      "bytes": 92145,
+      "h1": "Tu mercado cambia. Que no se te escape lo importante."
+    },
+    {
+      "route": "/en/landing-lab",
+      "status": 200,
+      "bytes": 91547,
+      "h1": "Your market moves. Keep sight of what matters."
+    },
+    {
+      "route": "/de/landing-lab",
+      "status": 200,
+      "bytes": 91974,
+      "h1": "Ihr Markt verändert sich. Behalten Sie das Wesentliche im Blick."
+    },
+    {
+      "route": "/fr/landing-lab",
+      "status": 200,
+      "bytes": 92306,
+      "h1": "Votre marché évolue. Gardez l’essentiel en vue."
+    },
+    {
+      "route": "/it/landing-lab",
+      "status": 200,
+      "bytes": 91072,
+      "h1": "Il tuo mercato cambia. Non perdere ciò che conta."
+    },
+    {
+      "route": "/pt/landing-lab",
+      "status": 200,
+      "bytes": 91140,
+      "h1": "O seu mercado muda. Não perca o que importa."
+    }
+  ],
+  "publicDestinations": 22,
+  "ssr": true,
+  "noindex": true,
+  "sitemapExcluded": true
+}

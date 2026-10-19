@@ -1,0 +1,141 @@
+▲ Next.js 16.3.8 (Turbopack)
+✓ Running next.config.ts took 46ms
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 1905ms
+  Running TypeScript ...
+  Finished TypeScript in 3.0s ...
+  Collecting page data using 11 workers ...
+  Generating static pages using 11 workers (0/663) ...
+  Generating static pages using 11 workers (165/663)
+  Generating static pages using 11 workers (331/663)
+  Generating static pages using 11 workers (497/663)
+✓ Generating static pages using 11 workers (663/663) in 13.8s
+  Finalizing page optimization ...
+
+Route (app)
+┌ ○ /
+├ ○ /_not-found
+├   /[locale]
+│ ├ ● /es
+│ ├ ● /en
+│ ├ ● /de
+│ └ ● [+3 more paths]
+├   /[locale]/data
+│ ├ ● /es/data
+│ ├ ● /en/data
+│ ├ ● /de/data
+│ └ ● [+3 more paths]
+├   /[locale]/industries
+│ ├ ● /es/industries
+│ ├ ● /en/industries
+│ ├ ● /de/industries
+│ └ ● [+3 more paths]
+├   /[locale]/industries/[industry]
+│ ├ ● /es/industries/industry
+│ ├ ● /es/industries/construction
+│ ├ ● /es/industries/energy
+│ └ ● [+33 more paths]
+├   /[locale]/knowledge
+│ ├ ● /es/knowledge
+│ ├ ● /en/knowledge
+│ ├ ● /de/knowledge
+│ └ ● [+3 more paths]
+├   /[locale]/knowledge/[slug]
+│ ├ ● /es/knowledge/que-hace-axignal
+│ ├ ● /es/knowledge/observar-una-organizacion-desde-fuera
+│ ├ ● /es/knowledge/observacion-persistente-o-busqueda-puntual
+│ └ ● [+525 more paths]
+├   /[locale]/landing-lab
+│ ├ ● /es/landing-lab
+│ ├ ● /en/landing-lab
+│ ├ ● /de/landing-lab
+│ └ ● [+3 more paths]
+├   /[locale]/pricing
+│ ├ ● /es/pricing
+│ ├ ● /en/pricing
+│ ├ ● /de/pricing
+│ └ ● [+3 more paths]
+├ ○ /account
+├ ○ /account/connect
+├ ○ /admin
+├ ƒ /api/admin/action
+├ ƒ /api/admin/customer-access
+├ ƒ /api/admin/customer-access/[action]
+├ ƒ /api/admin/marketing-pool
+├ ƒ /api/admin/pilot-test-accounts
+├ ƒ /api/admin/projections/[domain]
+├ ƒ /api/admin/session
+├ ƒ /api/admin/staff-capacity
+├ ƒ /api/admin/staff-capacity/[action]
+├ ƒ /api/admin/step-up
+├ ƒ /api/auth/callback/[provider]
+├ ƒ /api/auth/logout
+├ ƒ /api/auth/start
+├ ƒ /api/auth/status
+├ ƒ /api/axent
+├ ƒ /api/contact
+├ ƒ /api/contact/status
+├ ƒ /api/gdpr/status
+├ ƒ /api/marketing/unsubscribe/[token]
+├ ƒ /api/organizations
+├ ƒ /api/privacy/request
+├ ƒ /api/projection
+├ ƒ /api/subscriber-context
+├ ƒ /api/subscriber/axent
+├ ƒ /api/subscriber/billing/management
+├ ƒ /api/subscriber/billing/webhook
+├ ƒ /api/subscriber/identity/candidates
+├ ƒ /api/subscriber/mcp/connections
+├ ƒ /api/subscriber/mcp/requests/[id]
+├ ƒ /api/subscriber/organizations/[focus]/demand-markets
+├ ƒ /api/subscriber/organizations/[focus]/output
+├ ƒ /api/subscriber/organizations/[focus]/research
+├ ƒ /api/subscriber/pilot/redeem
+├ ƒ /api/subscriber/portfolio
+├ ƒ /api/subscriber/profile
+├ ƒ /api/subscriber/reading
+├ ƒ /api/weekly-brief/requests
+├ ƒ /api/weekly-brief/status
+├ ƒ /api/xeeds
+├ ○ /contact
+├ ○ /data
+├ ○ /demo
+├ ○ /design
+├ ○ /design/panorama
+├ ○ /design/recovery
+├ ○ /gdpr
+├ ○ /industries
+├   /industries/[industry]
+│ ├ ● /industries/industry
+│ ├ ● /industries/construction
+│ ├ ● /industries/energy
+│ └ ● [+3 more paths]
+├ ○ /knowledge
+├   /knowledge/[slug]
+│ ├ ● /knowledge/una-senal-no-es-una-certeza
+│ ├ ● /knowledge/una-organizacion-una-mirada-un-mundo
+│ ├ ● /knowledge/el-contexto-tambien-tiene-fecha
+│ └ ● [+3 more paths]
+├   /knowledge/basis/[source]
+│ ├ ● /knowledge/basis/product-model
+│ └ ● /knowledge/basis/human-first
+├ ○ /landing-lab
+├ ○ /llms.txt
+├ ƒ /login
+├ ○ /panorama/live
+├ ○ /policies
+├ ƒ /policies/[slug]
+├ ○ /preview/subscriber
+├ ○ /pricing
+├ ƒ /r/[token]
+├ ƒ /r/[token]/unsubscribe
+├ ○ /robots.txt
+├ ○ /signup
+├ ○ /sitemap.xml
+└ ƒ /sources/[id]
+
+
+○  (Static)   prerendered as static content
+●  (SSG)      prerendered as static HTML (uses generateStaticParams)
+ƒ  (Dynamic)  server-rendered on demand
