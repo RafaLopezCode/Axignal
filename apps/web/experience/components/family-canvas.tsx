@@ -10,7 +10,8 @@
 import type { ReactNode } from "react";
 import { ExternalLink } from "lucide-react";
 import { useLocale } from "@/lib/locale";
-import { fill, natureLabel, type Insight, type Nature, type Reading, type Translate } from "@/lib/observatory";
+import { familyRank, fill, natureLabel, type Insight, type Nature, type Reading, type Translate } from "@/lib/observatory";
+import type { FamilyId } from "@/lib/projection";
 import { auditSection, auditStatus } from "@/lib/representation-audit";
 import type { Discovery } from "@/lib/subscriber-contracts";
 import { placeLabel } from "./first-observation";
@@ -175,6 +176,69 @@ export function VisibilityCanvas({ reading, insights, onOpen }: {
         {langs.length > 0 && <p><strong>{t("Idiomas", "Languages")}</strong> {langs.join(", ")}</p>}
         {countries.length > 0 && <p><strong>{t("Versiones para", "Versions for")}</strong> {countries.map(c => placeLabel(c, locale)).join(", ")}</p>}
       </div> : <p className="obs-canvas-empty">{t("Su web no declara idiomas ni versiones por país.", "Its website declares no languages or country versions.")}</p>}
+    </Panel>
+  </div>;
+}
+
+const NATURES: Nature[] = ["OBSERVED", "DECLARED", "POTENTIAL", "UNKNOWN"];
+const MONTHS = 12;
+
+/**
+ * Any other family as a full canvas (design base, phase 3): what has been observed by state,
+ * the most telling findings, when they were observed and where they come from. Each panel
+ * opens its proof; counts are real counts of stored findings, never a score; a panel with
+ * nothing says so. Family-specific panels can replace these one by one.
+ */
+export function FamilyCanvas({ family, title, insights, onOpen }: {
+  family: FamilyId; title: string; insights: Insight[]; onOpen: (insight: Insight) => void;
+}) {
+  const { t, locale } = useLocale();
+  const own = insights.filter(i => i.family === family && i.group !== "otherDemand");
+  if (!own.length) return null;
+  const known = own.filter(i => i.nature !== "UNKNOWN" && i.nature !== "UNRESOLVED");
+  // Fewer than two known findings: the lanes already say what is (not) known; a canvas of
+  // near-empty panels would only add noise.
+  if (known.length < 2) return null;
+  const top = [...known].sort((a, b) => familyRank(family, a.id) - familyRank(family, b.id)
+    || Number(b.lane === "matters") - Number(a.lane === "matters")
+    || Date.parse(b.observedAt ?? "") - Date.parse(a.observedAt ?? "") || 0).slice(0, 3);
+  const byNature = NATURES.map(n => [n, own.filter(i => (i.nature === "UNRESOLVED" ? "UNKNOWN" : i.nature) === n).length] as const).filter(([, c]) => c > 0);
+  // When: the month of each dated finding, over the last twelve months.
+  const now = new Date();
+  const months = Array.from({ length: MONTHS }, (_, k) => new Date(now.getFullYear(), now.getMonth() - (MONTHS - 1 - k), 1));
+  const dated = own.filter(i => i.observedAt && !Number.isNaN(Date.parse(i.observedAt)));
+  const perMonth = months.map(m => dated.filter(i => { const d = new Date(i.observedAt!); return d.getFullYear() === m.getFullYear() && d.getMonth() === m.getMonth(); }).length);
+  const olderThanWindow = dated.filter(i => new Date(i.observedAt!) < months[0]).length;
+  // Where from: the sources behind its findings.
+  const hosts = new Map<string, number>();
+  for (const i of own) for (const s of i.sources) if (s.label) hosts.set(s.label, (hosts.get(s.label) ?? 0) + 1);
+  const sources = [...hosts.entries()].sort((a, b) => b[1] - a[1]).slice(0, 6) as Row[];
+  const monthLabel = (m: Date) => m.toLocaleDateString(locale, { month: "short" });
+  const strongest = (items: Insight[]) => items.find(i => i.nature === "OBSERVED") ?? items[0] ?? null;
+  return <div className="obs-canvas obs-family-canvas" aria-label={fill(t("{family} en detalle", "{family} in depth"), { family: title })}>
+    <Panel index={0} title={t("Lo que se ha observado", "What has been observed")} state={strongest(own)?.nature ?? "UNKNOWN"} proof={strongest(own)} onOpen={onOpen}
+      conditions={t("Recuento de hallazgos guardados por su estado epistémico; no es una puntuación.", "Count of stored findings by epistemic state; it is not a score.")}>
+      <ul className="obs-canvas-states">{byNature.map(([n, c]) => <li key={n}><NatureMark nature={n} label={natureLabel(n, t)}/><strong>{c.toLocaleString(locale)}</strong></li>)}</ul>
+    </Panel>
+    <Panel index={1} title={t("Lo más importante", "The most important")} state={top[0]?.nature ?? "UNKNOWN"} proof={top[0] ?? null} onOpen={onOpen}>
+      {top.length ? <ul className="obs-canvas-list obs-canvas-top">{top.map(i => <li key={i.id}>
+        <button className="obs-link obs-canvas-finding" onClick={() => onOpen(i)}>{i.headline}</button>
+        <NatureMark nature={i.nature} label={natureLabel(i.nature, t)}/>
+      </li>)}</ul> : <p className="obs-canvas-empty">{t("Solo hay incógnitas declaradas en esta familia; ver «Lo que aún no sabemos».", "There are only declared unknowns in this family; see “What we do not know yet”.")}</p>}
+    </Panel>
+    <Panel index={2} title={t("En el tiempo", "Over time")} state={strongest(dated)?.nature ?? "UNKNOWN"} proof={strongest(dated)} onOpen={onOpen}
+      conditions={fill(t("Hallazgos con fecha por mes, últimos 12 meses{older}. Cuenta lo observado, no la actividad real.", "Dated findings per month, last 12 months{older}. It counts what was observed, not the actual activity."),
+        { older: olderThanWindow ? fill(t(" ({n} anteriores)", " ({n} earlier)"), { n: olderThanWindow }) : "" })}>
+      {dated.length ? <ol className="obs-months" aria-label={t("Hallazgos por mes", "Findings per month")}>{months.map((m, k) => <li key={k} style={{ ["--i" as string]: k }}>
+        <span className="obs-month-bar" style={{ blockSize: `${perMonth[k] ? Math.max(8, (perMonth[k] / Math.max(...perMonth)) * 100) : 0}%` }} aria-hidden="true"/>
+        <span className="obs-month-value">{perMonth[k] || ""}</span>
+        <span className="obs-month-name">{monthLabel(m)}</span>
+        <span className="sr-only">{fill(t("{month}: {n}", "{month}: {n}"), { month: monthLabel(m), n: perMonth[k] })}</span>
+      </li>)}</ol> : <p className="obs-canvas-empty">{t("Ningún hallazgo de esta familia tiene fecha todavía.", "No finding in this family has a date yet.")}</p>}
+    </Panel>
+    <Panel index={3} title={t("De dónde viene", "Where it comes from")} state={strongest(own.filter(i => i.sources.length))?.nature ?? "UNKNOWN"} proof={strongest(own.filter(i => i.sources.length))} onOpen={onOpen}
+      conditions={t("Fuentes de los hallazgos de esta familia, por número de hallazgos.", "Sources of this family's findings, by number of findings.")}>
+      {sources.length ? <Bars items={sources}/> : <p className="obs-canvas-empty">{t("Sus hallazgos no tienen todavía una fuente pública enlazable.", "Its findings have no linkable public source yet.")}</p>}
     </Panel>
   </div>;
 }

@@ -391,6 +391,11 @@ export type FamilyValue = {
   findings: number;
 };
 
+/** Where a finding stands in its family's fixed value order (lower first). */
+export function familyRank(family: FamilyId, id: string): number {
+  return rankIn(FAMILY_VALUE_ORDER[family], id);
+}
+
 function rankIn(order: string[], id: string): number {
   const [kind, ...rest] = id.split(":");
   const code = rest.slice(0, -1).join(":");
