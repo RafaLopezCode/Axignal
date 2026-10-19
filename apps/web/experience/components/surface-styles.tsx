@@ -13,6 +13,12 @@ export function SurfaceStyles() {
         precedence="axignal-base"
         data-axignal-style="base"
       />
+      {/* Reserve the legacy group before page CSS even when entering via the lab.
+          Otherwise its first client navigation would append the global skin after
+          route overrides, making appearance depend on navigation history. */}
+      <style href="axignal-legacy-order" precedence="axignal-legacy">
+        {":root{}"}
+      </style>
       {!lab && (
         <link
           rel="stylesheet"
