@@ -485,6 +485,12 @@ export function discoveryCopy(d: Discovery, t: Translate, locale = "en"): { find
           why: history + " " + t("Puede deberse al muestreo del rastreo, a una regla de robots.txt para CCBot o al tamaño del sitio. Es una señal GEO que se puede revisar.", "It may be the crawl's sampling, a robots.txt rule for CCBot or the site's size. It is a GEO signal worth reviewing.") };
   }
   if (d.kind === "GENERATIVE_VISIBILITY") return { finding: `${t("Aparición en respuestas de IA medida", "AI answer appearance measured")}: ${d.statement}`, why: t("Mencionar no es citar, y citar no es recomendar. Es una medición con sus condiciones, no una conclusión sobre el negocio.", "A mention is not a citation, and a citation is not an endorsement. It is a measurement with its conditions, not a conclusion about the business.") };
+  if (d.kind === "WEB_REPRESENTATION" && d.code === "SECURITY_HEADERS_GRADE") {
+    const passed = Number(d.detail.testsPassed ?? 0), total = Number(d.detail.testsQuantity ?? 0);
+    return { finding: t("Seguridad de su web (Mozilla Observatory): nota {grade}, {score}/100 · {passed} de {total} comprobaciones superadas", "Its website's security (Mozilla Observatory): grade {grade}, {score}/100 · {passed} of {total} checks passed")
+        .replace("{grade}", d.statement).replace("{score}", String(d.detail.score ?? "—")).replace("{passed}", String(passed)).replace("{total}", String(total)),
+      why: t("Mide la redirección a HTTPS, HSTS, la política de seguridad de contenidos y otras cabeceras que protegen a sus visitantes; es una señal de confianza técnica, no una prueba de intrusión ni una posición en buscadores.", "It measures HTTPS redirection, HSTS, content security policy and other headers that protect its visitors; a technical trust signal, not a penetration test nor a search position.") };
+  }
   if (d.kind === "WEB_REPRESENTATION" && d.code === "LIGHTHOUSE_AUDIT") {
     const scores = (d.detail.scores ?? {}) as Record<string, number | null>;
     const names: Record<string, string> = { SEO: "SEO", PERFORMANCE: t("Rendimiento", "Performance"),

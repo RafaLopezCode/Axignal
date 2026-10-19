@@ -63,3 +63,43 @@ def lighthouse_discoveries(
             }
         )
     return out
+
+
+def security_discoveries(
+    measurement: Mapping[str, object], *, observed_at: str
+) -> list[dict[str, object]]:
+    """Mozilla's HTTP Observatory grade of its website (spec 106): one OBSERVED finding."""
+    scan = measurement.get("scan")
+    if not isinstance(scan, Mapping) or not scan.get("grade"):
+        return []
+    return [
+        {
+            "kind": "WEB_REPRESENTATION",
+            "code": "SECURITY_HEADERS_GRADE",
+            "statement": str(scan.get("grade")),
+            "epistemicState": "OBSERVED",
+            "sourceUrl": scan.get("detailsUrl"),
+            "excerpt": None,
+            "observedAt": str(
+                scan.get("scannedAt") or measurement.get("measuredAt") or observed_at
+            ),
+            "detail": {
+                "instrument": {"name": measurement.get("instrument")},
+                "conditions": {
+                    "host": measurement.get("host"),
+                    "checks": scan.get("testsQuantity"),
+                },
+                "measuredAt": scan.get("scannedAt"),
+                "sample": "One scan of the site's HTTPS and security headers",
+                "uncertainty": "Grades HTTPS redirection, HSTS, content security policy and other "
+                "headers as Mozilla's Observatory weighs them; not a penetration test nor a "
+                "search position.",
+                "grade": scan.get("grade"),
+                "score": scan.get("score"),
+                "testsPassed": scan.get("testsPassed"),
+                "testsFailed": scan.get("testsFailed"),
+                "testsQuantity": scan.get("testsQuantity"),
+                "notSearchPosition": True,
+            },
+        }
+    ]
