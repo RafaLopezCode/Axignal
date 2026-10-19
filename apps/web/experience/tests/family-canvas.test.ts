@@ -5,7 +5,8 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { LocaleProvider } from "../lib/locale";
 import { insightsFor, type Reading } from "../lib/observatory";
 import type { Discovery, FirstObservation } from "../lib/subscriber-contracts";
-import { VisibilityCanvas } from "../components/family-canvas";
+import { FamilyCanvas, VisibilityCanvas } from "../components/family-canvas";
+import { translate } from "../lib/copy-catalog";
 
 const when = "2026-10-17T10:00:00+00:00";
 const d = (kind: Discovery["kind"], code: string, statement: string, detail: Record<string, unknown>, epistemicState: Discovery["epistemicState"] = "OBSERVED"): Discovery =>
@@ -53,4 +54,41 @@ test("a panel with nothing measured says so and is unknown, never zero", () => {
   assert.match(markup, /Its website declares no languages or country versions/);
   assert.equal((markup.match(/>Unknown</g) ?? []).length, 4);
   assert.doesNotMatch(markup, />0%</);
+});
+
+// Phase 3: any other family as a canvas.
+const t = (es: string, en: string) => translate(es, en, "es");
+const month = (k: number) => new Date(new Date().getFullYear(), new Date().getMonth() - k, 10).toISOString();
+const mention = (code: string, url: string, k: number) => ({ kind: "MENTION", code, statement: `Acme ${code} ${k}`, epistemicState: "POTENTIAL",
+  sourceUrl: url, excerpt: "… Acme …", observedAt: month(k), detail: { outlet: new URL(url).hostname, notEndorsement: true } });
+const reading = (discoveries: unknown[]): Reading => ({ projection: null,
+  firstObservation: { state: "FIRST_PROOF_READY", firstProofReady: true, discoveries } } as unknown as Reading);
+
+test("a family canvas shows states, the most telling findings, months and sources, each with its proof", () => {
+  const insights = insightsFor(reading([
+    mention("WEB_MENTION", "https://www.expansion.com/a", 0),
+    mention("WEB_MENTION", "https://www.expansion.com/b", 2),
+    mention("REVIEW_PAGE", "https://www.ocu.org/r", 1),
+    mention("REVIEW_PAGE", "https://www.ocu.org/s", 14),  // older than the window
+  ]), t, "es");
+  const html = renderToStaticMarkup(createElement(FamilyCanvas, { family: "reputation", title: "Reputación", insights, onOpen() {} }));
+  // Rendered without a locale provider: the English copy.
+  for (const title of ["What has been observed", "The most important", "Over time", "Where it comes from"]) assert.match(html, new RegExp(title));
+  assert.match(html, /Potential/);  // the state in words, never color alone
+  assert.equal((html.match(/class="obs-months"/g) ?? []).length, 1);
+  assert.equal((html.match(/<li style="--i:\d+">/g) ?? []).length >= 12, true);
+  assert.match(html, /\(1 earlier\)/);  // the finding older than twelve months is said, not hidden
+  assert.match(html, /expansion\.com/);
+  assert.match(html, /Show me how AXIGNAL knows/);
+  // The most important: same rank, the most recent first (the 14-month-old review last).
+  assert.ok(html.indexOf("REVIEW_PAGE 1<") < html.indexOf("REVIEW_PAGE 14<"));
+  assert.doesNotMatch(html, /\/100|universal/i);  // counts, never a score
+});
+
+test("a family with fewer than two known findings gets no canvas: the lanes already say it", () => {
+  const insights = insightsFor(reading([
+    mention("WEB_MENTION", "https://www.expansion.com/a", 0),
+    { kind: "SIGNIFICANT_UNKNOWN", code: "NO_PRESS_MENTION_FOUND", statement: "x", epistemicState: "UNKNOWN", sourceUrl: null, excerpt: null, observedAt: month(0), detail: {} },
+  ]), t, "es");
+  assert.equal(renderToStaticMarkup(createElement(FamilyCanvas, { family: "reputation", title: "Reputación", insights, onOpen() {} })), "");
 });
