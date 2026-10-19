@@ -37,6 +37,7 @@ unicode_range = ",".join(
 )
 
 items = []
+glyph_maps = []
 for family, name, weight in [
     ("Manrope", "manrope-full.15e95cd6.woff2", "200 800"),
     ("Fraunces", "font-01.woff2", "300 600"),
@@ -51,6 +52,7 @@ for family, name, weight in [
     expected = set(font.getBestCmap()) & points
     opts = subset.Options()
     opts.flavor = "woff2"
+    opts.notdef_outline = True
     opts.recalc_timestamp = False
     # Preserve every OpenType feature, including required variation substitutions.
     opts.layout_features = ["*"]
@@ -61,8 +63,12 @@ for family, name, weight in [
     sub.subset(font)
     temporary = root / "public/fonts" / ("lab-" + name)
     font.flavor = "woff2"
+    original_names = list(font.getGlyphOrder())
     font.save(temporary)
     check = TTFont(temporary)
+    glyph_maps.append(
+        dict(family=family, pairs=list(zip(original_names, check.getGlyphOrder(), strict=True)))
+    )
     if "GSUB" in TTFont(original):
         original_features = {
             entry.FeatureTag for entry in TTFont(original)["GSUB"].table.FeatureList.FeatureRecord

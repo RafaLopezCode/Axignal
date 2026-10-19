@@ -3,22 +3,22 @@
   "fonts": [
     {
       "family": "Manrope",
-      "url": "/fonts/lab-manrope.4799ee271618.woff2",
+      "url": "/fonts/lab-manrope.76d1ca24ef0d.woff2",
       "source": "/fonts/manrope-full.15e95cd6.woff2",
-      "bytes": 20260,
+      "bytes": 20408,
       "sourceBytes": 53800,
-      "sha256": "4799ee271618fdcb549a3d4b6cdd8f1604fe7e98324ee654a2279f7f6980c1d9",
+      "sha256": "76d1ca24ef0dd23ff4b29480858eceda0169aef71052756c9b4ba33f7b897e58",
       "weight": "200 800",
       "unicodeRange": "U+0-7F,U+A0-A1,U+A7,U+A9,U+AB,U+B0,U+B7,U+BB,U+BF-C4,U+C7-CA,U+CD,U+D1-D3,U+D5-D7,U+D9-DA,U+DC,U+DF-E4,U+E7-EA,U+EC-EF,U+F1-F6,U+F9-FC,U+153,U+2013-2014,U+2019,U+201C-201E,U+2026,U+203A,U+20AC,U+2192,U+21C4,U+2212",
       "glyphCoverage": 160
     },
     {
       "family": "Fraunces",
-      "url": "/fonts/lab-fraunces.08bfcd31035d.woff2",
+      "url": "/fonts/lab-fraunces.7b6f14901b6f.woff2",
       "source": "/fonts/font-01.woff2",
-      "bytes": 52500,
+      "bytes": 52588,
       "sourceBytes": 67304,
-      "sha256": "08bfcd31035d298f0173d60e3d51b228288f2b19821dd57cc1710c149b9d6ace",
+      "sha256": "7b6f14901b6fdb90e5fec1a5b77225201a766ff010a0238faa096f56ef5071c0",
       "weight": "300 600",
       "unicodeRange": "U+0-7F,U+A0-A1,U+A7,U+A9,U+AB,U+B0,U+B7,U+BB,U+BF-C4,U+C7-CA,U+CD,U+D1-D3,U+D5-D7,U+D9-DA,U+DC,U+DF-E4,U+E7-EA,U+EC-EF,U+F1-F6,U+F9-FC,U+153,U+2013-2014,U+2019,U+201C-201E,U+2026,U+203A,U+20AC,U+2192,U+21C4,U+2212",
       "glyphCoverage": 158
@@ -36,11 +36,11 @@
     },
     {
       "family": "IBM Plex Mono",
-      "url": "/fonts/lab-ibm-plex-mono.dd1b6b54eb0b.woff2",
+      "url": "/fonts/lab-ibm-plex-mono.75215d728296.woff2",
       "source": "/fonts/font-04.woff2",
-      "bytes": 10448,
+      "bytes": 10480,
       "sourceBytes": 14708,
-      "sha256": "dd1b6b54eb0b12a83e425c29206f89d6dc66a2fdfed5a0882a43f45dd8f1c589",
+      "sha256": "75215d7282966e964bb0c98e60b4426f67c288f6482f40daa41e685bd0411a35",
       "weight": "400",
       "unicodeRange": "U+0-7F,U+A0-A1,U+A7,U+A9,U+AB,U+B0,U+B7,U+BB,U+BF-C4,U+C7-CA,U+CD,U+D1-D3,U+D5-D7,U+D9-DA,U+DC,U+DF-E4,U+E7-EA,U+EC-EF,U+F1-F6,U+F9-FC,U+153,U+2013-2014,U+2019,U+201C-201E,U+2026,U+203A,U+20AC,U+2192,U+21C4,U+2212",
       "glyphCoverage": 160
