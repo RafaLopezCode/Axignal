@@ -435,6 +435,12 @@ export function discoveryCopy(d: Discovery, t: Translate, locale = "en"): { find
     why: t("Es lo que declara su propia web con sus versiones por país: dónde dice vender o atender, no una prueba de ventas allí.", "Its own website declares it through its country versions: where it says it sells or serves, not proof of sales there.") };
   if (d.kind === "DECLARED_SERVICE_AREA") return { finding: `${t("Zona de servicio que declara", "Service area it declares")}: ${d.statement}`, why: t("Es lo que la organización dice de sí misma; no se ha verificado.", "It is what the organization says about itself; it has not been verified.") };
   if (d.kind === "LANGUAGES") return { finding: `${t("Idiomas publicados", "Published languages")}: ${d.statement}`, why: t("Muestra en qué idiomas se presenta; no prueba en qué mercados vende.", "It shows the languages it presents itself in; it does not prove where it sells.") };
+  if (d.kind === "IDENTITY_HINT" && d.code === "IDENTIFIER_IN_DIRECTORY") {
+    const scheme = String(d.detail.scheme ?? "");
+    const outlet = typeof d.detail.outlet === "string" ? d.detail.outlet : "";
+    return { finding: `${t("Identificador en un directorio público", "Identifier in a public directory")} · ${outlet}: ${identifierLabel(`IDENTIFIER_DECLARED:${scheme}`, d.statement, t)}`,
+      why: t("Una web de terceros muestra este identificador en una página que nombra a la organización; su dígito de control es válido. Solo un registro oficial admite una identidad.", "A third-party website shows this identifier on a page that names the organization; its check digit is valid. Only an official register admits an identity.") };
+  }
   if (d.kind === "IDENTITY_HINT") return { finding: `${t("Su web declara", "Its website declares")}: ${identifierLabel(d.code, d.statement, t)}`, why: t("Es una pista de identidad. Solo un registro puede verificarla.", "It is an identity hint. Only a registry can verify it.") };
   if (d.kind === "PUBLIC_PRESENCE") return { finding: `${t("Web pública observada", "Public website observed")}: ${d.statement}`, why: t("Es la fuente de lo que la organización declara sobre sí misma.", "It is the source of what the organization declares about itself.") };
   // Spec 091: the searches of its activity, in its own words, read through a permitted API.

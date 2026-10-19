@@ -22,7 +22,6 @@ from urllib.parse import urlsplit
 
 from application.first_observation.service import FetchedResource
 from application.first_observation.site import RobotsReading, read_page
-from application.press.mentions import search_terms
 from application.web_research import (
     PageCheck,
     PlannedQuery,
@@ -33,6 +32,7 @@ from application.web_research import (
     check_page,
     page_key,
     plan,
+    research_names,
 )
 from pipeline.web_search.article import read_article
 
@@ -150,8 +150,10 @@ class WebResearchRunner:
             )  # fmt: skip
         return hits, bool(billed)
 
-    def _check(self, hit: WebHit, needles: Sequence[str], own_domain: str) -> PageCheck:
-        key = f"{hit.url}|{'/'.join(needles)}|{own_domain}"
+    def _check(
+        self, hit: WebHit, needles: Sequence[str], own_domain: str, *, identity: bool = False
+    ) -> PageCheck:
+        key = f"{hit.url}|{'/'.join(needles)}|{own_domain}|{int(identity)}"
         now = self._clock()
         with self._connect() as db:
             row = db.execute(
@@ -159,7 +161,7 @@ class WebResearchRunner:
             ).fetchone()
         if row is not None and now - datetime.fromisoformat(row["checked_at"]) < TTL:
             return PageCheck.from_wire(json.loads(row["page"]))
-        check = self._read(hit.url, needles, own_domain)
+        check = self._read(hit.url, needles, own_domain, identity=identity)
         with self._connect() as db:
             db.execute(
                 """INSERT INTO pages (check_key, page, checked_at) VALUES (?,?,?)
@@ -169,7 +171,9 @@ class WebResearchRunner:
             )
         return check
 
-    def _read(self, url: str, needles: Sequence[str], own_domain: str) -> PageCheck:
+    def _read(
+        self, url: str, needles: Sequence[str], own_domain: str, *, identity: bool = False
+    ) -> PageCheck:
         parts = urlsplit(url)
         robots_url = f"{parts.scheme}://{parts.netloc}/robots.txt"
         robots = self._fetcher.fetch(robots_url, slot="web-research")
@@ -204,6 +208,8 @@ class WebResearchRunner:
             links=[href for href, _ in page.links], needles=needles, own_domain=own_domain,
             read_at=fetched.observed_at.isoformat(),
             published=article.published if article else None,
+            # A directory's identifier sits in its data blocks, not its article text.
+            require_identifier=identity,
         )  # fmt: skip
 
     def run(self, *, max_runs: int = 2) -> int:
@@ -218,6 +224,7 @@ class WebResearchRunner:
             subject = ResearchSubject(
                 names=tuple(wire["names"]), domain=str(wire["domain"]),
                 language=str(wire["language"]), activity_terms=tuple(wire["activityTerms"]),
+                country=wire.get("country"), activity_from_label=bool(wire.get("activityFromLabel")),
             )  # fmt: skip
             try:
                 result = self._research(subject)
@@ -235,7 +242,7 @@ class WebResearchRunner:
 
     def _research(self, subject: ResearchSubject) -> dict[str, object] | None:
         planned: Sequence[PlannedQuery] = plan(subject, today=self._clock().date())
-        names = search_terms(subject.names)
+        names = research_names(subject.names)
         pages: list[dict[str, object]] = []
         searched = 0
         seen: set[str] = set()
@@ -245,12 +252,16 @@ class WebResearchRunner:
                 return None
             hits, paid = found
             searched += int(paid)
-            needles = names if query.purpose == "REPUTATION" else list(subject.activity_terms)
+            needles = (
+                names if query.purpose in {"REPUTATION", "IDENTITY"} else _context_needles(subject)
+            )
             for hit in candidates(hits, subject, purpose=query.purpose):
                 if page_key(hit.url) in seen:
                     continue
                 seen.add(page_key(hit.url))
-                check = self._check(hit, needles, subject.domain)
+                check = self._check(
+                    hit, needles, subject.domain, identity=query.purpose == "IDENTITY"
+                )
                 pages.append({
                     **check.to_wire(), "purpose": query.purpose,
                     "siteName": hit.site_name, "indexedDate": hit.indexed_date,
@@ -263,6 +274,14 @@ class WebResearchRunner:
             "researchedAt": self._clock().isoformat(),
             "cost": {"paidSearches": searched, "usd": round(searched * self._usd, 6)},
         }
+
+
+def _context_needles(subject: ResearchSubject) -> list[str]:
+    """The activity in the page's text; a label also by its long words (spec 103)."""
+    needles = list(subject.activity_terms)
+    if subject.activity_from_label:
+        needles += [w for t in subject.activity_terms for w in t.lower().split() if len(w) >= 6]
+    return list(dict.fromkeys(needles))
 
 
 def _text(fetched: FetchedResource) -> str:
@@ -280,7 +299,8 @@ def _text(fetched: FetchedResource) -> str:
 def _wire(subject: ResearchSubject) -> dict[str, object]:
     return {
         "names": list(subject.names), "domain": subject.domain, "language": subject.language,
-        "activityTerms": list(subject.activity_terms),
+        "activityTerms": list(subject.activity_terms), "country": subject.country,
+        "activityFromLabel": subject.activity_from_label,
     }  # fmt: skip
 
 

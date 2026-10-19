@@ -335,3 +335,60 @@ def test_a_date_stamped_when_served_is_not_a_publication_date() -> None:
         published=NOW.date().isoformat(),
     )  # fmt: skip
     assert check.state == "SUPPORTED" and check.published is None
+
+
+def test_identity_research_asks_the_country_word_and_needs_one_verified_identifier() -> None:
+    subject = ResearchSubject(names=("Goiko",), domain="goiko.com", language="es", country="ES")
+    queries = plan(subject, today=NOW.date())
+    assert queries[-1].purpose == "IDENTITY" and queries[-1].query == '"Goiko" CIF -site:goiko.com'
+    assert not [
+        q
+        for q in plan(
+            ResearchSubject(names=("Velasca",), domain="velasca.com", language="it", country="IT"),
+            today=NOW.date(),
+        )
+        if q.purpose == "IDENTITY"
+    ]  # no verifiable identifier for Italy yet
+    one = check_page(
+        "https://www.einforma.com/goiko", title="Goiko Grill SL", text="Goiko Grill SL. CIF: B82846825. Madrid.",
+        links=[], needles=["goiko"], own_domain="goiko.com", read_at=NOW.isoformat(), require_identifier=True,
+    )  # fmt: skip
+    assert one.state == "SUPPORTED" and one.identifiers == (("ES_CIF", "B82846825"),)
+    assert one.excerpt is not None and "B82846825" in one.excerpt
+    listing = check_page(
+        "https://dir.example/es", title="Empresas Goiko", needles=["goiko"], own_domain="goiko.com",
+        text="Goiko. CIF B82846825. Otra SA CIF A28015865. Tercera SL CIF B-82846825. Cuarta SIREN 552 100 554",
+        links=[], read_at=NOW.isoformat(), require_identifier=True,
+    )  # fmt: skip
+    assert listing.state == "NOT_SUPPORTED"  # a list of companies says nothing about which
+    none = check_page(
+        "https://x.es/a", title="Goiko", text="Goiko abre en Valencia.", links=[], needles=["goiko"],
+        own_domain="goiko.com", read_at=NOW.isoformat(), require_identifier=True,
+    )  # fmt: skip
+    assert none.state == "NOT_SUPPORTED"
+    found = research_discoveries(
+        result_with([{**page("https://www.einforma.com/goiko", "IDENTITY", title="Goiko Grill SL"),
+                      "identifiers": [["ES_CIF", "B82846825"]]}]),
+        own_domain="goiko.com",
+    )  # fmt: skip
+    assert [(d["kind"], d["code"], d["statement"], d["epistemicState"]) for d in found] == [
+        ("IDENTITY_HINT", "IDENTIFIER_IN_DIRECTORY", "B82846825", "POTENTIAL")
+    ]
+
+
+def test_without_its_own_words_the_classified_activity_frames_the_sector_research() -> None:
+    subject = ResearchSubject(names=("Bombas",), domain="bombas.com", language="en",
+                              activity_terms=("Retail trade",), activity_from_label=True)  # fmt: skip
+    context = [q for q in plan(subject, today=NOW.date()) if q.purpose == "CONTEXT"]
+    assert (
+        context[0].query.startswith('"Retail trade" regulation') and "lang:" not in context[0].query
+    )
+
+
+def test_patent_databases_are_not_sector_context() -> None:
+    hits = [hit("https://eureka.patsnap.com/patent/CN224316339U", title="Air damper"),
+            hit("https://patents.google.com/patent/X", title="Damper"),
+            hit("https://www.boe.es/norma", title="Norma")]  # fmt: skip
+    assert [h.url for h in candidates(hits, VELASCA, purpose="CONTEXT")] == [
+        "https://www.boe.es/norma"
+    ]
