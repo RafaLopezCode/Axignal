@@ -4,6 +4,8 @@ import { useEffect, useRef, useState } from "react";
 import { RotateCcw } from "lucide-react";
 import { safeSourceLink, type RuntimeProjection } from "@/lib/runtime-projection";
 import { explainIllustrative, type RuntimeAnswer } from "@/lib/runtime-axent";
+import { fill } from "@/lib/observatory";
+import { isFreeQuestion } from "@/lib/family-axent";
 import { useLocale } from "@/lib/locale";
 import { presentRuntimeCode, presentRuntimePassage } from "@/lib/runtime-presentation";
 import { AxentIdentity, IconButton } from "./ui";
@@ -115,6 +117,24 @@ export function useRuntimeAxent(
     controller.current?.abort();
     setBusy(false);
   };
+  /** Spec 105: the subscriber asks AXIGNAL to look on the web now; one search, pages it reads. */
+  async function research(question: string) {
+    if (busy || !subscriber || illustrative) return;
+    setBusy(true);
+    setError(false);
+    try {
+      const response = await fetch(`/api/subscriber/organizations/${encodeURIComponent(projection.context.id)}/research`, {
+        method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ question }),
+      });
+      if (!response.ok) throw new Error("UNAVAILABLE");
+      const found = (await response.json()) as WebResearchReply;
+      setMessages(previous => [...previous, { question: fill(t("Investigar en la web: {q}", "Research on the web: {q}"), { q: question }), answer: researchAnswer(found, projection, t, locale) }]);
+    } catch {
+      setError(true);
+    } finally {
+      setBusy(false);
+    }
+  }
   return {
     draft,
     setDraft,
@@ -122,6 +142,8 @@ export function useRuntimeAxent(
     error,
     messages,
     ask,
+    research,
+    canResearch: Boolean(subscriber) && !illustrative,
     stop,
     clear: () => {
       stop();
@@ -129,6 +151,32 @@ export function useRuntimeAxent(
     },
   };
 }
+type WebResearchReply = {
+  state: "DONE" | "DAILY_LIMIT" | "NOT_RESEARCHABLE" | "NOT_CONFIGURED";
+  limit?: number;
+  pages?: Array<{ url: string; title: string; excerpt?: string | null; published?: string | null; siteName?: string | null }>;
+};
+
+/** The web research reply as an AXENT answer: what was read, with its page and words. */
+function researchAnswer(found: WebResearchReply, projection: RuntimeProjection, t: (es: string, en: string) => string, locale: string): RuntimeAnswer {
+  const pages = found.pages ?? [];
+  const host = (url: string) => { try { return new URL(url).hostname.replace(/^www\./, ""); } catch { return url; } };
+  const summary = found.state === "DAILY_LIMIT"
+    ? t("Has alcanzado el límite de investigaciones de hoy. Vuelve a intentarlo mañana.", "You have reached today's research limit. Try again tomorrow.")
+    : found.state !== "DONE"
+      ? t("La investigación web no está disponible para esta organización ahora.", "Web research is not available for this organization right now.")
+      : pages.length
+        ? fill(pages.length === 1 ? t("He leído 1 página que nombra a {org}:", "I read 1 page that names {org}:") : t("He leído {n} páginas que nombran a {org}:", "I read {n} pages that name {org}:"), { n: pages.length, org: projection.organization.name })
+        : fill(t("No he encontrado páginas que nombren a {org} y respondan a eso. No encontrarlas no demuestra que no existan.", "I found no pages that name {org} and answer that. Not finding them does not prove they do not exist."), { org: projection.organization.name });
+  return {
+    organizationId: projection.organization.id, contextId: projection.context.id, signalIds: [], intent: "research", summary,
+    known: pages.map(p => `${p.title || host(p.url)} · ${p.siteName || host(p.url)}${p.published ? ` (${new Date(p.published).toLocaleDateString(locale)})` : ""}${p.excerpt ? ` — «${p.excerpt}»` : ""}`),
+    openQuestions: pages.length ? [t("Lo que dicen estas páginas es potencial: no se ha convertido en un hallazgo de AXIGNAL.", "What these pages say is potential: it has not become an AXIGNAL finding.")] : [],
+    evidenceBasis: [], evidenceLimits: [], researchPlan: [], passages: [], action: "focus",
+    sourceRefs: pages.map(p => p.url), observedAt: [], currentness: [],
+  };
+}
+
 export function RuntimeAxent({
   projection,
   signalId,
@@ -291,6 +339,12 @@ export function RuntimeAxent({
                   </small>
                 </section>
               )}
+              {conversation.canResearch && !message.question.startsWith(t("Investigar en la web: {q}", "Research on the web: {q}").split("{q}")[0])
+                && (message.answer.action === "unknown" || isFreeQuestion(message.question)) && <p className="axent-research-offer">
+                <button type="button" className="obs-link" disabled={busy} onClick={() => void conversation.research(message.question)}>
+                  {t("Investigar en la web", "Research on the web")}</button>{" "}
+                <small>{t("Una búsqueda; AXIGNAL lee las páginas y solo muestra las que nombran a la organización.", "One search; AXIGNAL reads the pages and only shows those that name the organization.")}</small>
+              </p>}
               {message.answer.sourceRefs.length > 0 && (
                 <section className="axent-answer-section axent-provenance">
                   <strong>{t("Fuentes", "Sources")}</strong>

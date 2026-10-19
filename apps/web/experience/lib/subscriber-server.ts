@@ -46,10 +46,10 @@ export async function boundedSubscriberJson(request: Request, limit = 4096): Pro
   }
   return JSON.parse(Buffer.concat(chunks).toString("utf8"));
 }
-async function upstream(path: string, token?: string | null, body?: unknown): Promise<Response> {
+async function upstream(path: string, token?: string | null, body?: unknown, timeoutMs = 20000): Promise<Response> {
   return fetch(new URL(path, runtimeOrigin()), {
     method: body === undefined ? "GET" : "POST", cache: "no-store", redirect: "error",
-    signal: AbortSignal.timeout(20000),
+    signal: AbortSignal.timeout(timeoutMs),
     headers: { ...(token ? { Authorization: `Bearer ${token}` } : {}),
       "Content-Type": "application/json", Origin: process.env.AXIGNAL_EXPERIENCE_ORIGIN ?? "http://127.0.0.1:3810" },
     ...(body === undefined ? {} : { body: JSON.stringify(body) }),
@@ -227,6 +227,34 @@ export async function subscriberDemandMarkets(request: Request, focus: string): 
     const response = await upstream(`/subscriber/organizations/${encodeURIComponent(focus)}/demand-markets`, token, input);
     if (!response.ok) return rejected(response.status === 401 ? "AUTHENTICATION_REQUIRED" : "ACCESS_DENIED", response.status);
     return Response.json(z.object({ state: z.literal("success"), directed: z.array(z.string()) }).parse(await checkedJson(response)), { headers });
+  } catch (error) {
+    if (error instanceof z.ZodError) return rejected("INVALID_REQUEST_OR_RESPONSE", 400);
+    return rejected("RUNTIME_UNAVAILABLE", 503);
+  }
+}
+
+/** A question about its own organization researched on the web now (spec 105). */
+export const webResearchAnswerSchema = z.object({
+  state: z.enum(["DONE", "DAILY_LIMIT", "NOT_RESEARCHABLE", "NOT_CONFIGURED"]),
+  limit: z.number().int().optional(),
+  pages: z.array(z.object({
+    url: z.string().url().max(2048), title: z.string().max(400), excerpt: z.string().max(1200).nullable().optional(),
+    published: z.string().max(40).nullable().optional(), siteName: z.string().max(200).nullable().optional(),
+  }).passthrough()).max(5).optional(),
+  limitation: z.string().max(600).optional(),
+}).passthrough();
+export type WebResearchAnswer = z.infer<typeof webResearchAnswerSchema>;
+
+export async function subscriberResearch(request: Request, focus: string): Promise<Response> {
+  if (!subscriberSameOrigin(request)) return rejected("ORIGIN_REQUIRED", 403);
+  const token = cookie(request, subscriberSessionCookie);
+  if (!token) return rejected("AUTHENTICATION_REQUIRED", 401);
+  if (!/^[A-Za-z0-9:_-]{1,160}$/.test(focus)) return rejected("INVALID_REFERENCE", 400);
+  try {
+    const input = z.object({ question: z.string().trim().min(2).max(300) }).strict().parse(await boundedSubscriberJson(request, 2048));
+    const response = await upstream(`/subscriber/organizations/${encodeURIComponent(focus)}/research`, token, input, 30000);
+    if (!response.ok) return rejected(response.status === 401 ? "AUTHENTICATION_REQUIRED" : "ACCESS_DENIED", response.status);
+    return Response.json(webResearchAnswerSchema.parse(await checkedJson(response)), { headers });
   } catch (error) {
     if (error instanceof z.ZodError) return rejected("INVALID_REQUEST_OR_RESPONSE", 400);
     return rejected("RUNTIME_UNAVAILABLE", 503);

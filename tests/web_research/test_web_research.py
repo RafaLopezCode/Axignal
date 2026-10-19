@@ -419,3 +419,25 @@ def test_reported_revenue_is_one_potential_figure_from_the_most_recent_report() 
         "THIRD_PARTY_REPORT",
     )
     assert detail["reportsConsidered"] == 2
+
+
+def test_a_subscriber_question_is_researched_now_bounded_and_about_it_only(tmp_path: Path) -> None:
+    question = "¿Qué opinan sus clientes?"
+    query = '"Velasca" Qué opinan sus clientes -site:velasca.com'
+    search = FakeSearch({query: [hit("https://www.corriere.it/a"), hit("https://altro.it/b")]})
+    fetcher = FakeFetcher({
+        "https://www.corriere.it/a": (200, "<title>Velasca, i clienti</title><p>I clienti di Velasca apprezzano.</p>"),
+        "https://altro.it/b": (200, "<title>Scarpe</title><p>Nessun nome.</p>"),
+    })  # fmt: skip
+    runner = WebResearchRunner(
+        search, fetcher, tmp_path / "r.sqlite3", usd_per_request=0.00075, clock=lambda: NOW
+    )
+    answer = runner.ask(VELASCA, question, requester="tenant-a")
+    assert answer["state"] == "DONE" and answer["query"] == query
+    assert [p["url"] for p in answer["pages"]] == ["https://www.corriere.it/a"]  # names it
+    assert answer["cost"] == {"paidSearches": 1, "usd": 0.00075}
+    for _ in range(9):
+        runner.ask(VELASCA, question, requester="tenant-a")
+    assert runner.ask(VELASCA, question, requester="tenant-a")["state"] == "DAILY_LIMIT"
+    assert runner.ask(VELASCA, question, requester="tenant-b")["state"] == "DONE"
+    assert search.calls.count(query) == 1  # the same question is not paid twice

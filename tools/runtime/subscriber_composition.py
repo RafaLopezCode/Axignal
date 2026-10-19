@@ -867,6 +867,21 @@ class _SubscriberUnderstandingReading:
 
 
 class _SubscriberOutputs(SubscriberOutputPort):
+    def research(
+        self, context: TrustedSubscriberContext, focus_id: XeedId, question: str
+    ) -> dict[str, object]:
+        """A question about its own organization researched on the web now (spec 105)."""
+        observing = self._first_observation
+        if observing is None or str(focus_id).startswith("pending_"):
+            raise PortfolioError(PortfolioFailure.FOCUS_NOT_FOUND)
+        entry = self._portfolio.store.get_authorized(context, focus_id)
+        if entry is None:
+            raise PortfolioError(PortfolioFailure.FOCUS_NOT_FOUND)
+        view = observing.view(context, str(focus_id), str(entry.xeed.organization_id))
+        if not isinstance(view, dict):
+            return {"state": "NOT_RESEARCHABLE"}
+        return observing.research_question(view, question, requester=str(context.tenant_id))
+
     def set_demand_markets(
         self, context: TrustedSubscriberContext, focus_id: XeedId, markets: list[str]
     ) -> dict[str, object]:
