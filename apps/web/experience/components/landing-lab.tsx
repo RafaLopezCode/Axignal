@@ -145,33 +145,63 @@ export function LandingLab() {
     return () => observer.disconnect();
   }, []);
   useEffect(() => {
-    const visibleChapters = new Map<string, number>();
-    const observer = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting)
-            visibleChapters.set(entry.target.id, entry.intersectionRatio);
-          else visibleChapters.delete(entry.target.id);
-        }
-        const current = [...visibleChapters.entries()].sort(
-          (a, b) => b[1] - a[1],
-        )[0];
-        setActiveChapter(current ? "#" + current[0] : "");
-      },
-      { rootMargin: "-15% 0px -55% 0px", threshold: 0 },
-    );
-    root.current
-      ?.querySelectorAll("#discover, #audience, #how, #pricing")
-      .forEach((node) => observer.observe(node));
-    const hero = root.current?.querySelector(".lab-hero-copy");
+    const surface = root.current;
+    if (!surface) return;
+    const visibleChapters = new Set<string>();
+    let sectionObserver: IntersectionObserver | undefined;
+    const watchChapters = () => {
+      sectionObserver?.disconnect();
+      visibleChapters.clear();
+      const first = surface.querySelector("#discover");
+      const padding =
+        parseFloat(
+          getComputedStyle(document.documentElement).scrollPaddingTop,
+        ) || 0;
+      const margin = first
+        ? parseFloat(getComputedStyle(first).scrollMarginTop) || 0
+        : 0;
+      // A pixel band follows the native anchor position. Percentage root margins
+      // depend on root width and can collapse on wide, short viewports.
+      const line = Math.min(
+        window.innerHeight - 2,
+        Math.round(padding + margin + 2),
+      );
+      sectionObserver = new IntersectionObserver(
+        (entries) => {
+          for (const entry of entries) {
+            if (entry.isIntersecting) visibleChapters.add(entry.target.id);
+            else visibleChapters.delete(entry.target.id);
+          }
+          const current = [...visibleChapters]
+            .map((id) => surface.querySelector<HTMLElement>("#" + id))
+            .filter((node): node is HTMLElement => node !== null)
+            .sort(
+              (a, b) =>
+                b.getBoundingClientRect().top - a.getBoundingClientRect().top,
+            )[0];
+          setActiveChapter(current ? "#" + current.id : "");
+        },
+        {
+          rootMargin: `-${line}px 0px -${Math.max(0, window.innerHeight - line - 2)}px 0px`,
+          threshold: 0,
+        },
+      );
+      surface
+        .querySelectorAll("#discover, #audience, #how, #pricing")
+        .forEach((node) => sectionObserver?.observe(node));
+    };
+    watchChapters();
+    window.addEventListener("resize", watchChapters, { passive: true });
+    const hero = surface.querySelector(".lab-hero-copy");
     const topObserver = new IntersectionObserver((entries) => {
       setShowBackTop(!entries[0].isIntersecting);
       if (entries[0].isIntersecting) setActiveChapter("");
     });
     if (hero) topObserver.observe(hero);
     return () => {
-      observer.disconnect();
+      sectionObserver?.disconnect();
       topObserver.disconnect();
+      window.removeEventListener("resize", watchChapters);
     };
   }, []);
   useEffect(() => {

@@ -55,7 +55,7 @@
   --obs-violet: #61547d;
   background: var(--lab-paper);
   color: var(--lab-ink);
-  font-family: Manrope, Arial, sans-serif;
+  font-family: "AXIGNAL Reading", Manrope, Arial, sans-serif;
   font-size: 16px;
   line-height: 1.65;
   isolation: isolate;
@@ -2732,4 +2732,9 @@ html[data-motion="reduced"] .landing-lab * {
   .lab-world-controls {
     padding-top: 32px;
   }
+}
+
+/* The alias keeps the in-HTML Manrope face independent of later route CSS. */
+:root:has(.landing-lab) {
+  --font-ui: "AXIGNAL Reading", Manrope, Arial, sans-serif;
 }
