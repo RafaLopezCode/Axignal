@@ -155,3 +155,22 @@ test("Activity's canvas shows its pace as counted facts and what happened, newes
   assert.match(html, /not an absence of activity/);
   assert.doesNotMatch(html, /\/100|score of/i);
 });
+
+test("Organization's canvas shows each identity anchor with its state, and that only a registry admits", () => {
+  const hint = (kind: string, code: string, statement: string, state: string, detail: Record<string, unknown> = {}) => ({ kind, code, statement, epistemicState: state,
+    sourceUrl: "https://example.org/legal", excerpt: null, observedAt: month(0), detail });
+  const r = reading([
+    hint("IDENTITY_HINT", "LEGAL_NAME_DECLARED", "Ecoalf Recycled Fabrics S.L.", "DECLARED"),
+    hint("IDENTITY_HINT", "IDENTIFIER_DECLARED:ES_NIF", "ES_NIF B86040357", "DECLARED"),
+    hint("IDENTITY_HINT", "IDENTITY_CORROBORATED", "Ecoalf Recycled Fabrics S.L.", "POTENTIAL",
+      { anchors: [{ anchor: "WIKIDATA_OFFICIAL_WEBSITE", value: "Q123" }, { anchor: "OFFICIAL_REGISTER", value: "B86040357" }] }),
+    hint("SIGNIFICANT_UNKNOWN", "IDENTITY_NOT_VERIFIED", "x", "UNKNOWN"),
+  ]);
+  const html = renderToStaticMarkup(createElement(FamilyCanvas, { family: "organization", title: "Organización", insights: insightsFor(r, t, "es"), onOpen() {}, reading: r }));
+  assert.match(html, /Who it is, anchor by anchor/);
+  assert.match(html, /Ecoalf Recycled Fabrics S\.L\./);
+  assert.match(html, /Q123/);
+  assert.match(html, /Not found yet/);  // no LEI: not found yet, never false
+  assert.match(html, /Admitted by a registry/);
+  assert.match(html, /corroboration, not an admission/);
+});
