@@ -32,7 +32,8 @@ def hit(url: str, rerank: float | None = 2.0, title: str = "Velasca recensioni")
 
 def test_plan_asks_reviews_recent_pages_and_sector_rules_in_its_language() -> None:
     queries = plan(VELASCA, today=date(2026, 10, 18))
-    assert [q.purpose for q in queries] == ["REPUTATION", "REPUTATION", "CONTEXT"]
+    assert [q.purpose for q in queries] == ["REPUTATION", "REPUTATION", "CONTEXT", "ECONOMICS"]
+    assert queries[3].query.startswith('"Velasca" fatturato -site:velasca.com after:2024-10-18')
     assert queries[0].query == '"Velasca" recensioni -site:velasca.com'
     assert "after:2025-10-18" in queries[1].query
     assert queries[2].query.startswith('"scarpe" normativa lang:it')
@@ -44,6 +45,7 @@ def test_no_activity_words_means_no_context_query() -> None:
     assert [q.purpose for q in plan(subject, today=date(2026, 10, 18))] == [
         "REPUTATION",
         "REPUTATION",
+        "ECONOMICS",
     ]
 
 
@@ -392,3 +394,28 @@ def test_patent_databases_are_not_sector_context() -> None:
     assert [h.url for h in candidates(hits, VELASCA, purpose="CONTEXT")] == [
         "https://www.boe.es/norma"
     ]
+
+
+def test_reported_revenue_is_one_potential_figure_from_the_most_recent_report() -> None:
+    def report(url: str, value: float, year: int) -> dict[str, object]:
+        return {
+            **page(url, "ECONOMICS", title="Goiko"),
+            "revenue": {"value": value, "currency": "EUR", "year": year},
+        }
+
+    found = research_discoveries(
+        result_with([report("https://a.es/1", 100e6, 2023), report("https://b.es/2", 120.5e6, 2025)]),
+        own_domain="goiko.com",
+    )  # fmt: skip
+    assert [(d["code"], d["epistemicState"], d["sourceUrl"]) for d in found] == [
+        ("REPORTED:revenue", "POTENTIAL", "https://b.es/2")
+    ]
+    detail = found[0]["detail"]
+    assert isinstance(detail, dict)
+    assert (detail["value"], detail["unit"], detail["year"], detail["sourceKind"]) == (
+        120.5e6,
+        "EUR",
+        "2025",
+        "THIRD_PARTY_REPORT",
+    )
+    assert detail["reportsConsidered"] == 2

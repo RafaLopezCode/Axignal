@@ -293,6 +293,9 @@ export function discoveryCopy(d: Discovery, t: Translate, locale = "en"): { find
       : typeof d.detail.label === "string" && d.detail.label ? `${d.detail.label} (${String(raw)})` : d.statement;
     const period = typeof d.detail.period === "string" ? d.detail.period.slice(0, 10) : null;
     const year = fact === "inception" ? "" : period ? ` (${t("ejercicio cerrado el", "year ended")} ${period})` : typeof d.detail.year === "string" ? ` (${d.detail.year})` : "";
+    if (d.detail.sourceKind === "THIRD_PARTY_REPORT") return {
+      finding: `${t("Ingresos reportados", "Reported revenue")}: ${value}${year} · ${String(d.detail.source ?? "")}`,
+      why: t("Lo publica una página de terceros en la misma frase que nombra a la organización. No es una cuenta oficial: puede estar redondeado o desactualizado.", "A third-party page publishes it in the same sentence that names the organization. It is not an official account: it may be rounded or outdated.") };
     if (d.detail.sourceKind === "OFFICIAL_REGISTER") return { finding: `${label}: ${value}${year}`,
       why: (d.epistemicState === "OBSERVED"
         ? t("Según {register}, registro oficial, para {identifier}, el identificador que la propia organización publica.", "According to {register}, the official register, for {identifier}, the identifier the organization itself publishes.")
