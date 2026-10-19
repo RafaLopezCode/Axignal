@@ -151,9 +151,15 @@ class WebResearchRunner:
         return hits, bool(billed)
 
     def _check(
-        self, hit: WebHit, needles: Sequence[str], own_domain: str, *, identity: bool = False
+        self,
+        hit: WebHit,
+        needles: Sequence[str],
+        own_domain: str,
+        *,
+        identity: bool = False,
+        economics: bool = False,
     ) -> PageCheck:
-        key = f"{hit.url}|{'/'.join(needles)}|{own_domain}|{int(identity)}"
+        key = f"{hit.url}|{'/'.join(needles)}|{own_domain}|{int(identity)}|{int(economics)}"
         now = self._clock()
         with self._connect() as db:
             row = db.execute(
@@ -161,7 +167,7 @@ class WebResearchRunner:
             ).fetchone()
         if row is not None and now - datetime.fromisoformat(row["checked_at"]) < TTL:
             return PageCheck.from_wire(json.loads(row["page"]))
-        check = self._read(hit.url, needles, own_domain, identity=identity)
+        check = self._read(hit.url, needles, own_domain, identity=identity, economics=economics)
         with self._connect() as db:
             db.execute(
                 """INSERT INTO pages (check_key, page, checked_at) VALUES (?,?,?)
@@ -172,7 +178,13 @@ class WebResearchRunner:
         return check
 
     def _read(
-        self, url: str, needles: Sequence[str], own_domain: str, *, identity: bool = False
+        self,
+        url: str,
+        needles: Sequence[str],
+        own_domain: str,
+        *,
+        identity: bool = False,
+        economics: bool = False,
     ) -> PageCheck:
         parts = urlsplit(url)
         robots_url = f"{parts.scheme}://{parts.netloc}/robots.txt"
@@ -210,6 +222,7 @@ class WebResearchRunner:
             published=article.published if article else None,
             # A directory's identifier sits in its data blocks, not its article text.
             require_identifier=identity,
+            extract_revenue=economics,
         )  # fmt: skip
 
     def run(self, *, max_runs: int = 2) -> int:
@@ -253,14 +266,20 @@ class WebResearchRunner:
             hits, paid = found
             searched += int(paid)
             needles = (
-                names if query.purpose in {"REPUTATION", "IDENTITY"} else _context_needles(subject)
+                names
+                if query.purpose in {"REPUTATION", "IDENTITY", "ECONOMICS"}
+                else _context_needles(subject)
             )
             for hit in candidates(hits, subject, purpose=query.purpose):
                 if page_key(hit.url) in seen:
                     continue
                 seen.add(page_key(hit.url))
                 check = self._check(
-                    hit, needles, subject.domain, identity=query.purpose == "IDENTITY"
+                    hit,
+                    needles,
+                    subject.domain,
+                    identity=query.purpose == "IDENTITY",
+                    economics=query.purpose == "ECONOMICS",
                 )
                 pages.append({
                     **check.to_wire(), "purpose": query.purpose,
