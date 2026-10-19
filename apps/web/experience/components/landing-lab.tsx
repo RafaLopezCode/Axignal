@@ -118,7 +118,7 @@ export function LandingLab() {
     ["#how", label("how")],
     [
       "#pricing",
-      words("Precios", "Pricing", "Tarifs", "Preise", "Prezzi", "PreÃ§os")[
+      words("Precios", "Pricing", "Tarifs", "Preise", "Prezzi", "PreÃƒÂ§os")[
         locale
       ],
     ],
@@ -145,10 +145,18 @@ export function LandingLab() {
     return () => observer.disconnect();
   }, []);
   useEffect(() => {
+    const visibleChapters = new Map<string, number>();
     const observer = new IntersectionObserver(
       (entries) => {
-        for (const entry of entries)
-          if (entry.isIntersecting) setActiveChapter("#" + entry.target.id);
+        for (const entry of entries) {
+          if (entry.isIntersecting)
+            visibleChapters.set(entry.target.id, entry.intersectionRatio);
+          else visibleChapters.delete(entry.target.id);
+        }
+        const current = [...visibleChapters.entries()].sort(
+          (a, b) => b[1] - a[1],
+        )[0];
+        setActiveChapter(current ? "#" + current[0] : "");
       },
       { rootMargin: "-15% 0px -55% 0px", threshold: 0 },
     );
@@ -952,10 +960,10 @@ export function LandingLab() {
               <h3 id="lab-advisory-title">
                 {
                   words(
-                    "Â¿Buscas asesorÃ­a humana?",
+                    "Ã‚Â¿Buscas asesorÃƒÂ­a humana?",
                     "Looking for human advisory?",
                     "Vous cherchez un conseil humain ?",
-                    "Suchen Sie persÃ¶nliche Beratung?",
+                    "Suchen Sie persÃƒÂ¶nliche Beratung?",
                     "Cerchi consulenza umana?",
                     "Procura aconselhamento humano?",
                   )[locale]
@@ -970,12 +978,12 @@ export function LandingLab() {
               <p>
                 {
                   words(
-                    "Servicio separado: una organizaciÃ³n en el alcance acordado, cuatro actualizaciones semanales y una revisiÃ³n estratÃ©gica al mes. Precio de lanzamiento, mÃ¡s impuestos aplicables. El pago no influye en las conclusiones.",
+                    "Servicio separado: una organizaciÃƒÂ³n en el alcance acordado, cuatro actualizaciones semanales y una revisiÃƒÂ³n estratÃƒÂ©gica al mes. Precio de lanzamiento, mÃƒÂ¡s impuestos aplicables. El pago no influye en las conclusiones.",
                     "Separate service: one organization in the agreed scope, four weekly updates and one strategic review a month. Launch price, plus applicable tax. Payment does not influence conclusions.",
-                    "Service distinct : une organisation dans le pÃ©rimÃ¨tre convenu, quatre mises Ã  jour hebdomadaires et une revue stratÃ©gique par mois. Prix de lancement, taxes en sus. Le paiement nâ€™influence pas les conclusions.",
-                    "Separater Service: eine Organisation im vereinbarten Umfang, vier wÃ¶chentliche Updates und eine strategische PrÃ¼fung im Monat. EinfÃ¼hrungspreis zuzÃ¼glich Steuern. Zahlung beeinflusst keine Schlussfolgerungen.",
-                    "Servizio separato: unâ€™organizzazione nellâ€™ambito concordato, quattro aggiornamenti settimanali e una revisione strategica al mese. Prezzo di lancio, imposte escluse. Il pagamento non influenza le conclusioni.",
-                    "ServiÃ§o separado: uma organizaÃ§Ã£o no Ã¢mbito acordado, quatro atualizaÃ§Ãµes semanais e uma revisÃ£o estratÃ©gica mensal. PreÃ§o de lanÃ§amento, mais impostos. O pagamento nÃ£o influencia conclusÃµes.",
+                    "Service distinct : une organisation dans le pÃƒÂ©rimÃƒÂ¨tre convenu, quatre mises ÃƒÂ  jour hebdomadaires et une revue stratÃƒÂ©gique par mois. Prix de lancement, taxes en sus. Le paiement nÃ¢â‚¬â„¢influence pas les conclusions.",
+                    "Separater Service: eine Organisation im vereinbarten Umfang, vier wÃƒÂ¶chentliche Updates und eine strategische PrÃƒÂ¼fung im Monat. EinfÃƒÂ¼hrungspreis zuzÃƒÂ¼glich Steuern. Zahlung beeinflusst keine Schlussfolgerungen.",
+                    "Servizio separato: unÃ¢â‚¬â„¢organizzazione nellÃ¢â‚¬â„¢ambito concordato, quattro aggiornamenti settimanali e una revisione strategica al mese. Prezzo di lancio, imposte escluse. Il pagamento non influenza le conclusioni.",
+                    "ServiÃƒÂ§o separado: uma organizaÃƒÂ§ÃƒÂ£o no ÃƒÂ¢mbito acordado, quatro atualizaÃƒÂ§ÃƒÂµes semanais e uma revisÃƒÂ£o estratÃƒÂ©gica mensal. PreÃƒÂ§o de lanÃƒÂ§amento, mais impostos. O pagamento nÃƒÂ£o influencia conclusÃƒÂµes.",
                   )[locale]
                 }
               </p>
@@ -1065,7 +1073,7 @@ export function LandingLab() {
             className="lab-footer-newsletter"
             aria-labelledby="lab-newsletter-title"
           >
-            <p className="lab-eyebrow">Newsletter Â· AXIGNAL</p>
+            <p className="lab-eyebrow">Newsletter Ã‚Â· AXIGNAL</p>
             <h2 id="lab-newsletter-title">{newsletterCopy.title[locale]}</h2>
             <p>{newsletterCopy.lead[locale]}</p>
             <details
@@ -1107,9 +1115,9 @@ export function LandingLab() {
             <Link prefetch={false} href={marketingPath("/data", locale)}>
               {
                 words(
-                  "QuÃ© observa",
+                  "QuÃƒÂ© observa",
                   "What it observes",
-                  "Ce quâ€™il observe",
+                  "Ce quÃ¢â‚¬â„¢il observe",
                   "Was es beobachtet",
                   "Cosa osserva",
                   "O que observa",
@@ -1146,7 +1154,7 @@ export function LandingLab() {
             <Link prefetch={false} href="/policies/terms">
               {
                 words(
-                  "TÃ©rminos",
+                  "TÃƒÂ©rminos",
                   "Terms",
                   "Conditions",
                   "Bedingungen",
@@ -1169,7 +1177,7 @@ export function LandingLab() {
           </nav>
         </div>
         <div className="lab-footer-bottom">
-          <span>Â© {new Date().getFullYear()} AXIGNAL</span>
+          <span>Ã‚Â© {new Date().getFullYear()} AXIGNAL</span>
           <a className="lab-backtop-footer" href="#lab-heading">
             {x.backTop[locale]}
             <ArrowUp size={16} aria-hidden="true" />
@@ -1184,7 +1192,7 @@ export function LandingLab() {
               words(
                 "Reducir movimiento",
                 "Reduce motion",
-                "RÃ©duire le mouvement",
+                "RÃƒÂ©duire le mouvement",
                 "Bewegung reduzieren",
                 "Riduci movimento",
                 "Reduzir movimento",
