@@ -2556,6 +2556,8 @@ html[data-motion="reduced"] .landing-lab * {
     font-size: 18px;
   }
   .lab-replay {
+    left: 0;
+    right: auto;
     font-size: 10px;
     max-width: 140px;
     padding: 8px;
