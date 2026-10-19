@@ -23,6 +23,6 @@ Economics had data for 14/20 agency clients, mostly Wikidata and sector figures.
   never a sum or an average. Not an official account.
 
 ## Measured (isolated copy, real key, 75 searches, $0.06)
-Revenue for 5/20, each checked against its sentence: Hawkers €36m (2023, accounts filed in the
+Revenue for 4/20, each checked against its sentence: Hawkers €36m (2023, accounts filed in the
 Registro Mercantil, via Modaes), Holaluz €158.9m (2025), Ingeteam €914.3m (2024, Expansión),
 mymuesli $31m (2024, CB Insights estimate), plus correct rejections listed above.
