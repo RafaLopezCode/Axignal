@@ -205,11 +205,16 @@ export function FamilyCanvas({ family, title, insights, onOpen, reading, organiz
     return d && i.id.startsWith(`${d.kind}:${d.code}:`) ? d : null;
   };
   const own = insights.filter(i => i.family === family && i.group !== "otherDemand");
-  if (!own.length) return null;
+  // Organization: its identity anchors, read from the discoveries (they get no lane of their own).
+  const anchors = family === "organization" ? identityAnchors(ds, t) : [];
+  const notAdmitted = own.find(i => discoveryOf(i)?.code === "IDENTITY_NOT_VERIFIED") ?? null;
+  const organizationPanel = anchors.length ? <OrganizationPanel anchors={anchors} notAdmitted={notAdmitted} onOpen={onOpen}/> : null;
+  const label = fill(t("{family} en detalle", "{family} in depth"), { family: title });
+  if (!own.length && !organizationPanel) return null;
   const known = own.filter(i => i.nature !== "UNKNOWN" && i.nature !== "UNRESOLVED");
   // Fewer than two known findings: the lanes already say what is (not) known; a canvas of
   // near-empty panels would only add noise.
-  if (known.length < 2) return null;
+  if (known.length < 2) return organizationPanel ? <div className="obs-canvas obs-family-canvas" aria-label={label}>{organizationPanel}</div> : null;
   // A call whose deadline has passed is no longer among the most important.
   const today = new Date(new Date().toDateString()).getTime();
   const closed = (i: Insight) => { const at = Date.parse(String(discoveryOf(i)?.detail.deadline ?? "")); return Number.isFinite(at) && at < today; };
@@ -229,7 +234,7 @@ export function FamilyCanvas({ family, title, insights, onOpen, reading, organiz
   const sources = [...hosts.entries()].sort((a, b) => b[1] - a[1]).slice(0, 6) as Row[];
   const monthLabel = (m: Date) => m.toLocaleDateString(locale, { month: "short" });
   const strongest = (items: Insight[]) => items.find(i => i.nature === "OBSERVED") ?? items[0] ?? null;
-  return <div className="obs-canvas obs-family-canvas" aria-label={fill(t("{family} en detalle", "{family} in depth"), { family: title })}>
+  return <div className="obs-canvas obs-family-canvas" aria-label={label}>
     <Panel index={0} title={t("Lo que se ha observado", "What has been observed")} state={strongest(own)?.nature ?? "UNKNOWN"} proof={strongest(own)} onOpen={onOpen}
       conditions={t("Recuento de hallazgos guardados por su estado epistémico; no es una puntuación.", "Count of stored findings by epistemic state; it is not a score.")}>
       <ul className="obs-canvas-states">{byNature.map(([n, c]) => <li key={n}><NatureMark nature={n} label={natureLabel(n, t)}/><strong>{c.toLocaleString(locale)}</strong></li>)}</ul>
@@ -243,6 +248,7 @@ export function FamilyCanvas({ family, title, insights, onOpen, reading, organiz
     {family === "demand" && <DemandPanels insights={insights.filter(i => i.family === "demand")} discoveryOf={discoveryOf} onOpen={onOpen}/>}
     {family === "economics" && <EconomicsPanel insights={own} discoveryOf={discoveryOf} onOpen={onOpen}/>}
     {family === "activity" && <ActivityPanels insights={own} discoveryOf={discoveryOf} onOpen={onOpen}/>}
+    {organizationPanel}
     {family === "relationships" && <RelationshipsPanel organization={organization ?? title} insights={own} discoveryOf={discoveryOf} onOpen={onOpen}/>}
     {family !== "demand" && <Panel index={2} title={t("En el tiempo", "Over time")} state={strongest(dated)?.nature ?? "UNKNOWN"} proof={strongest(dated)} onOpen={onOpen}
       conditions={fill(t("Hallazgos con fecha por mes, últimos 12 meses{older}. Cuenta lo observado, no la actividad real.", "Dated findings per month, last 12 months{older}. It counts what was observed, not the actual activity."),
@@ -371,6 +377,68 @@ function ActivityPanels({ insights, discoveryOf, onOpen }: {
       </li>)}</ol> : <p className="obs-canvas-empty">{t("Ningún hecho de su actividad tiene fecha todavía.", "No fact of its activity has a date yet.")}</p>}
     </Panel>
   </>;
+}
+
+type Anchor = { label: string; value: string | null; nature: Nature; source: string | null };
+
+/**
+ * Identity anchors read from the stored discoveries: identity hints orient (they never get a
+ * lane of their own), so the organization's canvas reads them directly, each with its source.
+ */
+function identityAnchors(ds: Discovery[], t: Translate): Anchor[] {
+  const first = (match: (d: Discovery) => boolean) => ds.find(match) ?? null;
+  const legal = first(d => d.kind === "IDENTITY_HINT" && d.code === "LEGAL_NAME_DECLARED");
+  const declared = first(d => d.kind === "IDENTITY_HINT" && d.code.startsWith("IDENTIFIER_DECLARED:"));
+  const directory = first(d => d.kind === "IDENTITY_HINT" && d.code === "IDENTIFIER_IN_DIRECTORY");
+  const corroborated = first(d => d.kind === "IDENTITY_HINT" && d.code === "IDENTITY_CORROBORATED");
+  const held = corroborated?.detail.anchors;
+  const anchors = Array.isArray(held) ? held as Record<string, unknown>[] : [];
+  const shown = (value: unknown) => typeof value === "string" || typeof value === "number" ? String(value) : null;
+  const of = (name: string): Anchor => {
+    const a = anchors.find(x => x.anchor === name);
+    return { label: "", value: shown(a?.value), nature: a ? "POTENTIAL" : "UNKNOWN", source: shown(a?.source) ?? corroborated?.sourceUrl ?? null };
+  };
+  const hint = (d: Discovery | null, value: string | null): Anchor => ({ label: "", value, nature: d ? nature(d) : "UNKNOWN", source: d?.sourceUrl ?? null });
+  const dir = (directory?.detail ?? {}) as Record<string, unknown>;
+  const rows: Anchor[] = [
+    { ...hint(legal, legal?.statement ?? null), label: t("Nombre legal que declara", "Legal name it declares") },
+    { ...hint(declared, declared?.statement ?? null), label: t("Identificador en su web", "Identifier on its website") },
+    { ...hint(directory, directory ? [shown(dir.scheme), shown(dir.value), shown(dir.outlet) && `(${shown(dir.outlet)})`].filter(Boolean).join(" ") : null),
+      label: t("Identificador en un directorio", "Identifier in a directory") },
+    { ...of("WIKIDATA_OFFICIAL_WEBSITE"), label: "Wikidata" },
+    { ...of("OFFICIAL_REGISTER"), label: t("Registro oficial", "Official register") },
+    { ...of("LEI"), label: "LEI" },
+  ];
+  return rows.some(r => r.value) ? rows : [];
+}
+
+/**
+ * Organization (design base): who it is, anchor by anchor — what its website declares, what
+ * third parties and open registers say, and whether a registry has admitted the identity. Each
+ * anchor keeps its own state; an anchor not found is "not found yet", never "false". Only a
+ * registry admits an identity: agreeing sources are a corroboration, not an admission.
+ */
+function OrganizationPanel({ anchors, notAdmitted, onOpen }: {
+  anchors: Anchor[]; notAdmitted: Insight | null; onOpen: (insight: Insight) => void;
+}) {
+  const { t } = useLocale();
+  const state: Nature = anchors.some(a => a.value && a.nature === "POTENTIAL") ? "POTENTIAL" : anchors.some(a => a.value && a.nature === "DECLARED") ? "DECLARED" : "UNKNOWN";
+  return <Panel index={2} title={t("Quién es, ancla por ancla", "Who it is, anchor by anchor")} state={state} proof={notAdmitted} onOpen={onOpen}
+    conditions={t("Cada ancla con su estado; «no encontrado todavía» no significa que no exista. Solo un registro admite una identidad: que las fuentes coincidan es una corroboración, no una admisión.", "Each anchor with its state; “not found yet” does not mean it does not exist. Only a registry admits an identity: sources agreeing is a corroboration, not an admission.")}>
+    <table className="obs-anchors"><tbody>
+      {anchors.map(a => <tr key={a.label}>
+        <th scope="row">{a.label}</th>
+        <td>{a.value ? a.source ? <a className="obs-link" href={a.source} target="_blank" rel="noopener noreferrer">{a.value}</a> : a.value
+          : <span className="obs-canvas-empty">{t("No encontrado todavía", "Not found yet")}</span>}</td>
+        <td><NatureMark nature={a.value ? a.nature : "UNKNOWN"} label={natureLabel(a.value ? a.nature : "UNKNOWN", t)}/></td>
+      </tr>)}
+      {notAdmitted && <tr>
+        <th scope="row">{t("Admitida por un registro", "Admitted by a registry")}</th>
+        <td><button className="obs-link obs-canvas-finding" onClick={() => onOpen(notAdmitted)}>{t("Todavía no", "Not yet")}</button></td>
+        <td><NatureMark nature="UNKNOWN" label={natureLabel("UNKNOWN", t)}/></td>
+      </tr>}
+    </tbody></table>
+  </Panel>;
 }
 
 type Tie = { group: "clients" | "partners" | "suppliers" | "group" | "competitors"; name: string; insight: Insight };

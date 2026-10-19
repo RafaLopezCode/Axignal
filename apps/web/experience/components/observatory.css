@@ -923,3 +923,9 @@ body:has(.obs-rail-desktop) .privacy-preferences-button { inset-inline-end: auto
 .obs-events li { display: grid; grid-template-columns: auto auto minmax(0, 1fr); gap: 8px; align-items: baseline; }
 .obs-events time { font-variant-numeric: tabular-nums; color: var(--obs-muted, #5b6478); font-size: 12px; }
 .obs-event-kind { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; color: var(--ax-family-activity, #354f98); }
+
+/* Organization: identity anchors, each with its own state. */
+.obs-anchors { inline-size: 100%; border-collapse: collapse; }
+.obs-anchors th, .obs-anchors td { padding: 6px 4px; text-align: start; vertical-align: baseline; border-block-end: 1px solid var(--obs-line, #e3e7ef); }
+.obs-anchors th { font-weight: 600; font-size: 13px; }
+.obs-anchors td:last-child { text-align: end; }
