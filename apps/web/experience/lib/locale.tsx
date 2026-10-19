@@ -1,5 +1,5 @@
 "use client";
-import { accountProfileSchema, type AccountProfile } from "./account-contracts";
+import type { AccountProfile } from "./account-contracts";
 import { createContext, useContext, useEffect, useRef, useState, startTransition } from "react";
 import { usePathname } from "next/navigation";
 import {
@@ -60,6 +60,7 @@ export function LocaleProvider({ children }: { children: React.ReactNode }) {
       const response=await fetch("/api/subscriber/profile",{cache:"no-store"});
       if (response.status === 401) { if(generation===epoch.current && request===profileRead.current) resetProfile(); return; }
       if (!response.ok) throw new Error("PROFILE_UNAVAILABLE");
+      const { accountProfileSchema } = await import("./account-contracts");
       const value=accountProfileSchema.parse(await response.json());
       if(generation!==epoch.current || request!==profileRead.current) return;
       profileRef.current=value; setProfile(value); setProfileError(false);
@@ -75,6 +76,7 @@ export function LocaleProvider({ children }: { children: React.ReactNode }) {
       const response=await fetch("/api/subscriber/profile",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({...command,version:current.version})});
       if(response.status===401) { if(generation===epoch.current) resetProfile(); return false; }
       if(!response.ok) { if(response.status===409) await reloadProfile(); throw new Error("PROFILE_NOT_SAVED"); }
+      const { accountProfileSchema } = await import("./account-contracts");
       const value=accountProfileSchema.parse(await response.json());
       if(generation!==epoch.current) return false;
       profileRef.current=value; setProfile(value);
