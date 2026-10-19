@@ -22,8 +22,20 @@ export type FunnelCta = (typeof funnelCta)[keyof typeof funnelCta];
 
 // CHAPTER_VIEWED carries a bounded 1-15 index. Landing chapters and example depth
 // share the same event kind but never the same surface.
-export const landingChapters = { how: 2, proof: 3, audience: 4, trust: 5, pricing: 6 } as const;
-export const exampleDepth = { opened: 1, family: 2, signal: 3, evidence: 4, history: 5 } as const;
+export const landingChapters = {
+  how: 2,
+  proof: 3,
+  audience: 4,
+  trust: 5,
+  pricing: 6,
+} as const;
+export const exampleDepth = {
+  opened: 1,
+  family: 2,
+  signal: 3,
+  evidence: 4,
+  history: 5,
+} as const;
 
 type Surface = "landing" | "example" | "access";
 type Event =
@@ -34,13 +46,16 @@ type Event =
 const STATUS_URL = "/api/acquisition/status";
 const EVENT_URL = "/api/acquisition/events";
 const SESSION_KEY = "axignal.acquisition.session.v1";
-let enabled: Promise<boolean> | null = null;
+type MeasurementAuthority = "ENABLED" | "DISABLED" | "UNAVAILABLE";
+let enabled: Promise<MeasurementAuthority> | null = null;
 const sent = new Set<string>();
 
 function token(bytes: number): string {
   const data = new Uint8Array(bytes);
   crypto.getRandomValues(data);
-  return Array.from(data, (value) => value.toString(16).padStart(2, "0")).join("");
+  return Array.from(data, (value) => value.toString(16).padStart(2, "0")).join(
+    "",
+  );
 }
 
 function sessionRef(): string | null {
@@ -56,22 +71,64 @@ function sessionRef(): string | null {
   }
 }
 
-function measurementEnabled(): Promise<boolean> {
-  enabled ??= fetch(STATUS_URL, { headers: { Accept: "application/json" } })
-    .then(async (response) => {
-      if (!response.ok) return false;
-      const data: unknown = await response.json();
-      return (
-        typeof data === "object" && data !== null &&
-        "enabled" in data && data.enabled === true &&
-        "model" in data && data.model === "OBSERVED_TOUCH_V1"
-      );
-    })
-    .catch(() => false);
+/** Bound headers AND body consumption; always release an unread error stream.
+ * An unavailable authority never authorizes an event. This does not infer a
+ * disabled operator setting from a missing or timed-out response.
+ */
+export async function fetchMeasurementAuthority(
+  request: typeof fetch = fetch,
+  budgetMs = 2500,
+): Promise<MeasurementAuthority> {
+  const controller = new AbortController();
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  const unavailable: MeasurementAuthority = "UNAVAILABLE";
+  const operation = (async (): Promise<MeasurementAuthority> => {
+    const response = await request(STATUS_URL, {
+      headers: { Accept: "application/json" },
+      signal: controller.signal,
+    });
+    if (!response.ok) return unavailable;
+    const data: unknown = await response.json();
+    if (
+      typeof data !== "object" ||
+      data === null ||
+      !("enabled" in data) ||
+      !("model" in data) ||
+      data.model !== "OBSERVED_TOUCH_V1"
+    )
+      return unavailable;
+    if (data.enabled === true) return "ENABLED";
+    return data.enabled === false ? "DISABLED" : unavailable;
+  })().catch(() => unavailable);
+  const deadline = new Promise<MeasurementAuthority>((resolve) => {
+    timer = setTimeout(() => {
+      controller.abort();
+      resolve(unavailable);
+    }, budgetMs);
+  });
+  try {
+    return await Promise.race([operation, deadline]);
+  } finally {
+    clearTimeout(timer);
+    controller.abort();
+  }
+}
+function measurementEnabled(): Promise<MeasurementAuthority> {
+  enabled ??= fetchMeasurementAuthority();
   return enabled;
 }
 
-export function funnelPayload(event: Event, context: { session: string; locale: string; path: string; referrer: string | null; now: Date; id: string }) {
+export function funnelPayload(
+  event: Event,
+  context: {
+    session: string;
+    locale: string;
+    path: string;
+    referrer: string | null;
+    now: Date;
+    id: string;
+  },
+) {
   return {
     eventId: "mkt:" + context.id,
     sessionRef: context.session,
@@ -89,13 +146,16 @@ export function funnelPayload(event: Event, context: { session: string; locale: 
 /** Fire-and-forget. Telemetry can never block or degrade the public journey. */
 export function track(event: Event): void {
   if (typeof window === "undefined") return;
-  const once = event.kind === "CTA_ACTIVATED" ? null : JSON.stringify(event) + location.pathname;
+  const once =
+    event.kind === "CTA_ACTIVATED"
+      ? null
+      : JSON.stringify(event) + location.pathname;
   if (once) {
     if (sent.has(once)) return;
     sent.add(once);
   }
   void measurementEnabled().then((on) => {
-    const session = on ? sessionRef() : null;
+    const session = on === "ENABLED" ? sessionRef() : null;
     if (!session) return;
     const body = funnelPayload(event, {
       session,
@@ -107,7 +167,10 @@ export function track(event: Event): void {
     });
     void fetch(EVENT_URL, {
       method: "POST",
-      headers: { "Content-Type": "application/json", Accept: "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
       body: JSON.stringify(body),
       keepalive: true,
     }).catch(() => undefined);

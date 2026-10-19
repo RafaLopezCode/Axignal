@@ -1,0 +1,14 @@
+.lab-newsletter-channel .brief-consent {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  min-height: 44px;
+  cursor: pointer;
+}
+.lab-newsletter-channel .brief-consent input[type="checkbox"] {
+  flex: 0 0 16px;
+  width: 16px;
+  height: 16px;
+  margin-top: 4px;
+  accent-color: var(--blue);
+}

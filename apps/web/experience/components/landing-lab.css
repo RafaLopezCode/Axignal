@@ -1,34 +1,46 @@
 @font-face {
   font-family: "Manrope";
-  src: url("/fonts/lab-manrope.4060b77fb8d8.woff2") format("woff2");
+  src: url("/fonts/lab-manrope.67a72b469a72.woff2") format("woff2");
   font-weight: 200 800;
   font-display: swap;
   unicode-range:
-    U+0-24F, U+300-36F, U+2000-206F, U+20A0-20CF, U+2190-21FF, U+2212, U+221E;
+    U+0-7F, U+A0-A1, U+A7, U+A9, U+AB, U+B0, U+B7, U+BB, U+BF-C4, U+C7-CA, U+CD,
+    U+D1-D3, U+D5-D7, U+D9-DA, U+DC, U+DF-E4, U+E7-EA, U+EC-EF, U+F1-F6,
+    U+F9-FC, U+153, U+2013-2014, U+2019, U+201C-201E, U+2026, U+203A, U+20AC,
+    U+2192, U+21C4, U+2212;
 }
 @font-face {
   font-family: "Fraunces";
-  src: url("/fonts/lab-fraunces.1a2133d7f543.woff2") format("woff2");
-  font-weight: 400;
+  src: url("/fonts/lab-fraunces.86ea69685e1a.woff2") format("woff2");
+  font-weight: 300 600;
   font-display: swap;
   unicode-range:
-    U+0-24F, U+300-36F, U+2000-206F, U+20A0-20CF, U+2190-21FF, U+2212, U+221E;
+    U+0-7F, U+A0-A1, U+A7, U+A9, U+AB, U+B0, U+B7, U+BB, U+BF-C4, U+C7-CA, U+CD,
+    U+D1-D3, U+D5-D7, U+D9-DA, U+DC, U+DF-E4, U+E7-EA, U+EC-EF, U+F1-F6,
+    U+F9-FC, U+153, U+2013-2014, U+2019, U+201C-201E, U+2026, U+203A, U+20AC,
+    U+2192, U+21C4, U+2212;
 }
 @font-face {
   font-family: "Bic Notes Lab";
-  src: url("/fonts/lab-bic-notes-lab.681b0e8e631d.woff2") format("woff2");
+  src: url("/fonts/lab-bic-notes-lab.49acff7e85ab.woff2") format("woff2");
   font-weight: 400;
   font-display: swap;
   unicode-range:
-    U+0-24F, U+300-36F, U+2000-206F, U+20A0-20CF, U+2190-21FF, U+2212, U+221E;
+    U+0-7F, U+A0-A1, U+A7, U+A9, U+AB, U+B0, U+B7, U+BB, U+BF-C4, U+C7-CA, U+CD,
+    U+D1-D3, U+D5-D7, U+D9-DA, U+DC, U+DF-E4, U+E7-EA, U+EC-EF, U+F1-F6,
+    U+F9-FC, U+153, U+2013-2014, U+2019, U+201C-201E, U+2026, U+203A, U+20AC,
+    U+2192, U+21C4, U+2212;
 }
 @font-face {
   font-family: "IBM Plex Mono";
-  src: url("/fonts/lab-ibm-plex-mono.de47d1f03114.woff2") format("woff2");
+  src: url("/fonts/lab-ibm-plex-mono.9b0acbd5d50a.woff2") format("woff2");
   font-weight: 400;
   font-display: swap;
   unicode-range:
-    U+0-24F, U+300-36F, U+2000-206F, U+20A0-20CF, U+2190-21FF, U+2212, U+221E;
+    U+0-7F, U+A0-A1, U+A7, U+A9, U+AB, U+B0, U+B7, U+BB, U+BF-C4, U+C7-CA, U+CD,
+    U+D1-D3, U+D5-D7, U+D9-DA, U+DC, U+DF-E4, U+E7-EA, U+EC-EF, U+F1-F6,
+    U+F9-FC, U+153, U+2013-2014, U+2019, U+201C-201E, U+2026, U+203A, U+20AC,
+    U+2192, U+21C4, U+2212;
 }
 .landing-lab {
   --lab-blue: #354f98;

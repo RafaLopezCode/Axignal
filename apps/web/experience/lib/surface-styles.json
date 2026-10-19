@@ -1,0 +1,22 @@
+{
+  "sources": [
+    "app/globals.css",
+    "app/public.css",
+    "app/typography.css",
+    "app/acquisition.css",
+    "app/funnel.css",
+    "app/public-layout.css",
+    "components/cognition/cognition.css"
+  ],
+  "fontManifestSha256": "71f6879ca001bccc3bcc8cd23cdcb2a2581c1e89f32297c249e7af7362ddc8e4",
+  "base": {
+    "url": "/styles/base.7fe0e0bcff92.css",
+    "bytes": 23739,
+    "sha256": "7fe0e0bcff92abb9e0430906f0aac6126685a3a7ec3721b0133cc37b26e5ac2f"
+  },
+  "legacy": {
+    "url": "/styles/legacy.6cd6be449f6b.css",
+    "bytes": 243199,
+    "sha256": "6cd6be449f6bb7e7434755cafacd411796dfa5ac463c074b764b2f7ccc5b2e61"
+  }
+}

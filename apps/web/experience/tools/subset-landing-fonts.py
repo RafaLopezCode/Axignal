@@ -7,15 +7,35 @@ from fontTools.ttLib import TTFont
 from fontTools.varLib.instancer import instantiateVariableFont
 
 root = Path(__file__).resolve().parents[1]
-unicode_range = "U+0-24F,U+300-36F,U+2000-206F,U+20A0-20CF,U+2190-21FF,U+2212,U+221E"
-points = (
-    set(range(0x250))
-    | set(range(0x300, 0x370))
-    | set(range(0x2000, 0x2070))
-    | set(range(0x20A0, 0x20D0))
-    | set(range(0x2190, 0x2200))
-    | {0x2212, 0x221E}
+# The canonical catalog and authored UI define the public six-language repertoire.
+# Keep ASCII, all their Latin characters, punctuation and combining marks. Other
+# scripts remain eligible for the original full face outside this unicode-range.
+copy = json.dumps(
+    json.loads((root / "lib/translations.json").read_text(encoding="utf-8")), ensure_ascii=False
 )
+for folder in (root / "lib", root / "components", root / "app"):
+    for source in folder.rglob("*.ts*"):
+        copy += source.read_text(encoding="utf-8")
+points = set(range(0x80)) | {
+    ord(char)
+    for char in copy
+    if ord(char) <= 0x24F
+    or 0x300 <= ord(char) <= 0x36F
+    or 0x2000 <= ord(char) <= 0x206F
+    or 0x20A0 <= ord(char) <= 0x20CF
+    or 0x2190 <= ord(char) <= 0x21FF
+    or ord(char) in (0x2212, 0x221E)
+}
+groups = []
+for point in sorted(points):
+    if groups and point == groups[-1][-1] + 1:
+        groups[-1].append(point)
+    else:
+        groups.append([point])
+unicode_range = ",".join(
+    f"U+{group[0]:X}-{group[-1]:X}" if len(group) > 1 else f"U+{group[0]:X}" for group in groups
+)
+
 items = []
 for family, name, weight in [
     ("Manrope", "manrope-full.15e95cd6.woff2", "200 800"),
@@ -25,14 +45,20 @@ for family, name, weight in [
 ]:
     original = root / "public/fonts" / name
     font = TTFont(original, recalcTimestamp=False)
-    if family in ("Fraunces", "Bic Notes Lab") and "fvar" in font:
+    if family == "Fraunces" and "fvar" in font:
+        # Keep its native 900 default while removing weights below the declared 300.
+        font = instantiateVariableFont(font, {"wght": (300, 900, 900)}, inplace=True)
+    if family == "Bic Notes Lab" and "fvar" in font:
         font = instantiateVariableFont(font, {"wght": 400}, inplace=True)
         weight = "400"
     expected = set(font.getBestCmap()) & points
     opts = subset.Options()
     opts.flavor = "woff2"
     opts.recalc_timestamp = False
-    opts.layout_features = ["*"]
+    # Preserve the normal browser features; unused stylistic sets are not shipped.
+    opts.layout_features = ["ccmp", "locl", "mark", "mkmk", "rlig", "liga", "clig", "calt", "kern"]
+    if family in ("Fraunces", "Bic Notes Lab"):
+        opts.hinting = False
     sub = subset.Subsetter(options=opts)
     sub.populate(unicodes=points)
     sub.subset(font)
@@ -64,7 +90,7 @@ manifest = root / "lib/landing-lab-fonts.json"
 manifest.write_text(
     json.dumps(
         dict(
-            note="Official fonts: glyph coverage and layout features retained. Manrope keeps variable weights; Fraunces and notes use the exact 400 weight shown by this surface, retaining optical axes. Original font licenses remain in public/fonts. Non-Latin characters use the original face outside unicode-range.",
+            note="Official fonts: glyph coverage and layout features retained. Manrope keeps variable weights; Fraunces retains its original 300-600 range and optical axes; notes use their exact 400 weight. Original font licenses remain in public/fonts. Non-Latin characters use the original face outside unicode-range.",
             fonts=items,
         ),
         ensure_ascii=False,

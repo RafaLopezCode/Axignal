@@ -104,6 +104,8 @@ http:
          Path(`/marketing/focus.webp`) ||
          Path(`/marketing/memory.webp`) ||
          Path(`/marketing/explain.webp`) ||
+         Path(`/styles/base.7fe0e0bcff92.css`) ||
+         Path(`/styles/legacy.6cd6be449f6b.css`) ||
          PathPrefix(`/brand/`) ||
          PathPrefix(`/fonts/`) ||
          PathPrefix(`/observer/`) ||
