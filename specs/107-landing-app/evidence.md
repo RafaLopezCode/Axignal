@@ -13,7 +13,7 @@
 
 ![Nueva landing-app, primera impresión](evidence/new-desktop-hero.jpg)
 
-Las imágenes completas conservan toda la página y se pueden abrir a tamaño original. Son capturas reales del navegador, no composiciones ni referencias del briefing. El manifiesto registra dimensiones efectivas, hashes y fechas. La referencia visual 197f9ee y el código final sólo difieren en metadatos sociales y su verificación HTTP; el código pintado y sus fixtures son idénticos.
+Las imágenes completas conservan toda la página y se pueden abrir a tamaño original. Son capturas reales del navegador, no composiciones ni referencias del briefing. El manifiesto registra dimensiones efectivas, hashes y fechas. Las capturas proceden de un build local identificado en el manifiesto. La presentación y los assets se mantienen; las 90 lecturas tienen salida idéntica tras integrar #348/#349. El canvas de Visibilidad permanece y los demás casos ilustrativos no reúnen el mínimo de hallazgos para los nuevos canvas.
 
 ## Estados y recorrido
 

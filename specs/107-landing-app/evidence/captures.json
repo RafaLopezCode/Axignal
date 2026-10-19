@@ -1,12 +1,6 @@
 {
   "browser": "ChatGPT in-app Chromium browser",
-  "visualCodeReference": "197f9eecb8817145e1bdeee1380060f6d6df059e",
-  "finalCodeRevision": "059e03d2c11cd4b6cfe044f9054f51e750eedcd9",
-  "nonvisualOnlyChangesSinceVisualReference": [
-    "apps/web/experience/app/[locale]/landing-lab/page.tsx",
-    "apps/web/experience/app/landing-lab/page.tsx",
-    "apps/web/experience/tools/check-landing-lab.mjs"
-  ],
+  "finalCodeRevision": "77f8f04e9f8f7d0cf3db3cfb659012c9d288a65f",
   "inspection": "Real browser screenshots, unedited. Four long comparisons include hero, original poses, all commercial sections and footer. Responsive images in the old desktop capture completed after its pre-capture DOM check and are visibly present in the saved image.",
   "sourceHashes": {
     "apps/web/experience/components/landing-lab.tsx": "bec28ad5744263ffe483df1bc8c2b74990ea3e91a921bbd19fed90a90442000f",
@@ -388,5 +382,8 @@
       "sha256": "db14a98332d2ebbb4a314b155a77a2878d75ce015ef594081641cd12946d0140",
       "capturedAt": "2026-10-19T08:47:47.578625+00:00"
     }
-  ]
+  ],
+  "localBuildReferenceAtCapture": "197f9eecb8817145e1bdeee1380060f6d6df059e",
+  "reviewedBase": "637ba6542debf1b6ba610b4d85bb35410bed98ab",
+  "compatibility": "Captured presentation files, assets and all 90 read-only fixture outputs are unchanged. Subsequent #348/#349 source additions do not appear in these illustrative cases; Presence keeps its existing canvas and other demo families have insufficient known findings for the new canvas. The recorded capture build was local, not a published commit."
 }

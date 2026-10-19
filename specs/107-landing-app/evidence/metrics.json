@@ -1,32 +1,32 @@
 {
-  "finalCodeRevision": "059e03d2c11cd4b6cfe044f9054f51e750eedcd9",
-  "baselineCodeReference": "2638e63048c95c7f4271a06b7722a0afd62d3be8",
-  "baselineNote": "The existing homepage and its presentation files did not change between the baseline audit and final code.",
+  "finalCodeRevision": "77f8f04e9f8f7d0cf3db3cfb659012c9d288a65f",
+  "reviewedBase": "637ba6542debf1b6ba610b4d85bb35410bed98ab",
+  "baselineNote": "Both surfaces measured on the same final production build, serially, after CPU validation suites finished. Mobile rows selected by median LCP of three runs; all six raw JSONs retained. Desktop one run each.",
   "INP": "No field data collected for this local isolated route. TBT is not INP.",
   "runs": [
     {
       "surface": "Anterior",
       "device": "mobile",
       "url": "http://127.0.0.1:3822/es",
-      "fetchTime": "2026-10-19T08:38:52.666Z",
+      "fetchTime": "2026-10-19T09:37:39.524Z",
       "lighthouseVersion": "13.5.0",
       "environment": {
         "networkUserAgent": "Mozilla/5.0 (Linux; Android 11; moto g power (2022)) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Mobile Safari/537.36",
         "hostUserAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36",
-        "benchmarkIndex": 2293.5,
+        "benchmarkIndex": 2512.5,
         "credits": {
           "axe-core": "4.14.0"
         }
       },
       "scores": {
-        "performance": 60,
+        "performance": 77,
         "accessibility": 100,
         "best-practices": 92,
         "seo": 92
       },
-      "LCP_ms": 8504.117999999999,
-      "CLS": 0,
-      "TBT_ms": 379.4264999999996,
+      "LCP_ms": 4892.29365,
+      "CLS": 0.0001903787216053256,
+      "TBT_ms": 177,
       "INP": null,
       "warnings": [
         "The page loaded too slowly to finish within the time limit. Results may be incomplete."
@@ -89,19 +89,18 @@
           "seo"
         ],
         "skipAudits": null
-      },
-      "report": "lighthouse-mobile-old"
+      }
     },
     {
       "surface": "Nueva",
       "device": "mobile",
       "url": "http://127.0.0.1:3822/es/landing-lab",
-      "fetchTime": "2026-10-19T08:54:38.470Z",
+      "fetchTime": "2026-10-19T09:36:32.358Z",
       "lighthouseVersion": "13.5.0",
       "environment": {
         "networkUserAgent": "Mozilla/5.0 (Linux; Android 11; moto g power (2022)) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Mobile Safari/537.36",
         "hostUserAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36",
-        "benchmarkIndex": 2484.5,
+        "benchmarkIndex": 2460.5,
         "credits": {
           "axe-core": "4.14.0"
         }
@@ -112,9 +111,9 @@
         "best-practices": 92,
         "seo": 69
       },
-      "LCP_ms": 4553.166149999999,
+      "LCP_ms": 4551.3313,
       "CLS": 5.676207860839794e-05,
-      "TBT_ms": 149.5,
+      "TBT_ms": 149,
       "INP": null,
       "warnings": [
         "The page loaded too slowly to finish within the time limit. Results may be incomplete."
@@ -177,32 +176,31 @@
           "seo"
         ],
         "skipAudits": null
-      },
-      "report": "lighthouse-mobile-new"
+      }
     },
     {
       "surface": "Anterior",
       "device": "desktop",
       "url": "http://127.0.0.1:3822/es",
-      "fetchTime": "2026-10-19T08:39:54.633Z",
+      "fetchTime": "2026-10-19T09:35:04.124Z",
       "lighthouseVersion": "13.5.0",
       "environment": {
         "networkUserAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
         "hostUserAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36",
-        "benchmarkIndex": 1906.5,
+        "benchmarkIndex": 2517.5,
         "credits": {
           "axe-core": "4.14.0"
         }
       },
       "scores": {
-        "performance": 98,
+        "performance": 99,
         "accessibility": 100,
         "best-practices": 92,
         "seo": 92
       },
-      "LCP_ms": 1018.67515,
-      "CLS": 0,
-      "TBT_ms": 8.5,
+      "LCP_ms": 1016.6931999999999,
+      "CLS": 0.00013831382105741,
+      "TBT_ms": 2.5,
       "INP": null,
       "warnings": [
         "The page loaded too slowly to finish within the time limit. Results may be incomplete."
@@ -265,19 +263,18 @@
           "seo"
         ],
         "skipAudits": null
-      },
-      "report": "lighthouse-desktop-old"
+      }
     },
     {
       "surface": "Nueva",
       "device": "desktop",
       "url": "http://127.0.0.1:3822/es/landing-lab",
-      "fetchTime": "2026-10-19T08:55:37.305Z",
+      "fetchTime": "2026-10-19T09:32:23.731Z",
       "lighthouseVersion": "13.5.0",
       "environment": {
         "networkUserAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
         "hostUserAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36",
-        "benchmarkIndex": 2496.5,
+        "benchmarkIndex": 2488,
         "credits": {
           "axe-core": "4.14.0"
         }
@@ -288,9 +285,9 @@
         "best-practices": 92,
         "seo": 69
       },
-      "LCP_ms": 885.0346499999999,
+      "LCP_ms": 935.4159,
       "CLS": 0,
-      "TBT_ms": 4.5,
+      "TBT_ms": 3,
       "INP": null,
       "warnings": [
         "The page loaded too slowly to finish within the time limit. Results may be incomplete."
@@ -353,8 +350,99 @@
           "seo"
         ],
         "skipAudits": null
-      },
-      "report": "lighthouse-desktop-new"
+      }
+    }
+  ],
+  "mobileRepetitions": [
+    {
+      "surface": "Anterior",
+      "selection": "Median LCP of three runs; other table metrics belong to that same run, not independent medians.",
+      "selectedFile": "lighthouse-mobile-old-run2.json",
+      "medianLCP_ms": 4892.29365,
+      "medianTBT_ms": 145,
+      "samples": [
+        {
+          "prefix": "frozen-mobile-old",
+          "file": "lighthouse-mobile-old-run1.json",
+          "fetchTime": "2026-10-19T09:33:39.816Z",
+          "performance": 78,
+          "LCP_ms": 4892.5893,
+          "CLS": 0,
+          "TBT_ms": 145,
+          "warnings": [
+            "The page loaded too slowly to finish within the time limit. Results may be incomplete."
+          ]
+        },
+        {
+          "prefix": "frozen-mobile-old-2",
+          "file": "lighthouse-mobile-old-run2.json",
+          "fetchTime": "2026-10-19T09:37:39.524Z",
+          "performance": 77,
+          "LCP_ms": 4892.29365,
+          "CLS": 0.0001903787216053256,
+          "TBT_ms": 177,
+          "warnings": [
+            "The page loaded too slowly to finish within the time limit. Results may be incomplete."
+          ]
+        },
+        {
+          "prefix": "frozen-mobile-old-3",
+          "file": "lighthouse-mobile-old-run3.json",
+          "fetchTime": "2026-10-19T09:40:07.024Z",
+          "performance": 78,
+          "LCP_ms": 4891.505550000001,
+          "CLS": 0.0001903787216053256,
+          "TBT_ms": 145,
+          "warnings": [
+            "The page loaded too slowly to finish within the time limit. Results may be incomplete."
+          ]
+        }
+      ]
+    },
+    {
+      "surface": "Nueva",
+      "selection": "Median LCP of three runs; other table metrics belong to that same run, not independent medians.",
+      "selectedFile": "lighthouse-mobile-new-run2.json",
+      "medianLCP_ms": 4551.3313,
+      "medianTBT_ms": 149,
+      "samples": [
+        {
+          "prefix": "frozen-mobile-new",
+          "file": "lighthouse-mobile-new-run1.json",
+          "fetchTime": "2026-10-19T09:30:44.079Z",
+          "performance": 72,
+          "LCP_ms": 6961.334299999999,
+          "CLS": 0,
+          "TBT_ms": 158.5,
+          "warnings": [
+            "The page loaded too slowly to finish within the time limit. Results may be incomplete."
+          ]
+        },
+        {
+          "prefix": "frozen-mobile-new-2",
+          "file": "lighthouse-mobile-new-run2.json",
+          "fetchTime": "2026-10-19T09:36:32.358Z",
+          "performance": 80,
+          "LCP_ms": 4551.3313,
+          "CLS": 5.676207860839794e-05,
+          "TBT_ms": 149,
+          "warnings": [
+            "The page loaded too slowly to finish within the time limit. Results may be incomplete."
+          ]
+        },
+        {
+          "prefix": "frozen-mobile-new-3",
+          "file": "lighthouse-mobile-new-run3.json",
+          "fetchTime": "2026-10-19T09:38:58.526Z",
+          "performance": 81,
+          "LCP_ms": 4475.342049999999,
+          "CLS": 5.676207860839794e-05,
+          "TBT_ms": 149,
+          "warnings": [
+            "The page loaded too slowly to finish within the time limit. Results may be incomplete."
+          ]
+        }
+      ]
     }
   ]
 }

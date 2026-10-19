@@ -12,7 +12,6 @@ Alcance: código, especificaciones y compatibilidad con la landing. Esta revisi�
 | [345](https://github.com/RafaLopezCode/Axignal/pull/345) | Identidad en directorios, contexto y nombres cortos. | Los indicios siguen siendo potenciales; un directorio no se presenta como identidad admitida. |
 | [346](https://github.com/RafaLopezCode/Axignal/pull/346) | Ingresos reportados por terceros, con exclusiones conservadoras. | No se convierten en cuentas oficiales ni se inventan ejemplos económicos nuevos. |
 | [347](https://github.com/RafaLopezCode/Axignal/pull/347) | Investigación web de preguntas, autorizada por organización. | Se mantiene excluida de la demo ilustrativa; las páginas no se convierten en hallazgos. |
-
 | [348](https://github.com/RafaLopezCode/Axignal/pull/348) | Grado HTTP de Mozilla Observatory, condicionado al instrumento y sin grado ante fallos. | Se conserva como observación de representación, sin convertirlo en nota universal ni prueba de penetración. |
 | [349](https://github.com/RafaLopezCode/Axignal/pull/349) | Canvas de familias con al menos dos hallazgos conocidos y trazabilidad. | La demo mantiene Visibilidad y omite canvas vacíos; no se añaden datos ficticios para rellenarlos. |
 

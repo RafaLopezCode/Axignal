@@ -1,60 +1,60 @@
 {
-  "source": "059e03d2c11cd4b6cfe044f9054f51e750eedcd9",
-  "checkedAt": "2026-10-19T09:00:03.068Z",
+  "source": "77f8f04e9f8f7d0cf3db3cfb659012c9d288a65f",
+  "checkedAt": "2026-10-19T09:41:41.932Z",
   "cases": [
     {
       "locale": "es",
       "width": 320,
       "broken": [],
-      "contentWidth": 305,
+      "contentWidth": 1425,
       "h1": 1,
       "lang": "es",
-      "scrollWidth": 305
+      "scrollWidth": 1425
     },
     {
       "locale": "en",
       "width": 320,
       "broken": [],
-      "contentWidth": 305,
+      "contentWidth": 1425,
       "h1": 1,
       "lang": "en",
-      "scrollWidth": 305
+      "scrollWidth": 1425
     },
     {
       "locale": "de",
       "width": 320,
       "broken": [],
-      "contentWidth": 305,
+      "contentWidth": 1425,
       "h1": 1,
       "lang": "de",
-      "scrollWidth": 305
+      "scrollWidth": 1425
     },
     {
       "locale": "fr",
       "width": 320,
       "broken": [],
-      "contentWidth": 305,
+      "contentWidth": 1425,
       "h1": 1,
       "lang": "fr",
-      "scrollWidth": 305
+      "scrollWidth": 1425
     },
     {
       "locale": "it",
       "width": 320,
       "broken": [],
-      "contentWidth": 305,
+      "contentWidth": 1425,
       "h1": 1,
       "lang": "it",
-      "scrollWidth": 305
+      "scrollWidth": 1425
     },
     {
       "locale": "pt",
       "width": 320,
       "broken": [],
-      "contentWidth": 305,
+      "contentWidth": 1425,
       "h1": 1,
       "lang": "pt",
-      "scrollWidth": 305
+      "scrollWidth": 1425
     },
     {
       "locale": "es",
@@ -114,55 +114,62 @@
       "locale": "es",
       "width": 375,
       "broken": [],
-      "contentWidth": 360,
+      "contentWidth": 1425,
       "h1": 1,
       "lang": "es",
-      "scrollWidth": 360
+      "scrollWidth": 1425
     },
     {
       "locale": "es",
       "width": 390,
       "broken": [],
-      "contentWidth": 375,
+      "contentWidth": 1425,
       "h1": 1,
       "lang": "es",
-      "scrollWidth": 375
+      "scrollWidth": 1425
     },
     {
       "locale": "es",
       "width": 768,
       "broken": [],
-      "contentWidth": 753,
+      "contentWidth": 1425,
       "h1": 1,
       "lang": "es",
-      "scrollWidth": 753
+      "scrollWidth": 1425
     },
     {
       "locale": "es",
       "width": 1024,
       "broken": [],
-      "contentWidth": 1009,
+      "contentWidth": 1425,
       "h1": 1,
       "lang": "es",
-      "scrollWidth": 1009
+      "scrollWidth": 1425
     },
     {
       "locale": "es",
       "width": 1920,
       "broken": [],
-      "contentWidth": 1905,
+      "contentWidth": 1425,
       "h1": 1,
       "lang": "es",
-      "scrollWidth": 1905
+      "scrollWidth": 1425
     },
     {
       "locale": "de",
       "width": 1024,
       "broken": [],
-      "contentWidth": 1009,
+      "contentWidth": 1425,
       "h1": 1,
       "lang": "de",
-      "scrollWidth": 1009
+      "scrollWidth": 1425
     }
-  ]
+  ],
+  "motionCheck": {
+    "initialGSAPScript": false,
+    "afterExploreIntentGSAPScript": true,
+    "engineChunk": "1mu1cbtn7x1n0.js",
+    "browser": "ChatGPT in-app Chromium browser",
+    "method": "DOM script inventory before and after the actual hero link click; essential content visible at both stages."
+  }
 }

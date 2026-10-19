@@ -1,21 +1,21 @@
 # Verificación técnica y límites de la entrega
 
-Modo **EXPLORE**. La nueva composición vive en `/landing-lab` y `/{locale}/landing-lab`. La homepage aceptada sigue siendo la comparación y no se sustituye. Autoridad: MASTER, Constitución, ADRs y contratos indicados en la especificación, identidad oficial y Design System. La revisión visual humana sigue pendiente.
+Modo **EXPLORE**. La nueva composición vive en `/landing-lab` y `/{locale}/landing-lab`. La homepage aceptada sigue siendo la comparación y no se sustituye. Autoridad: MASTER, Constitución, ADRs y contratos indicados en la especificación, identidad oficial y Design System. La revisión visual humana sigue pendiente. Base final fijada: `637ba6542debf1b6ba610b4d85bb35410bed98ab`; los PR posteriores quedan fuera de esta ejecución.
 
 ## Comprobaciones ejecutadas
 
 | Comprobación | Resultado |
 | --- | --- |
 | `uv sync --frozen` | PASS |
-| Ruff format / lint | PASS; 1.709 archivos en format |
-| mypy | PASS; 599 archivos |
-| pytest | 2.708 PASS, 7 SKIPPED; 405,26 s |
+| Ruff format / lint | PASS; 1.718 archivos en format |
+| mypy | PASS; 601 archivos |
+| pytest | 2.711 PASS, 7 SKIPPED; 331,84 s |
 | Architecture Guard | PASS; sin supresiones |
 | AXIGNAL governance | Los ocho checks PASS; comprobados tras adjuntar la evidencia |
 | Graphify | Actualización AST, sin API ni extracción semántica de pago |
-| Frontend | 378 PASS, 0 omitidas |
+| Frontend | 380 PASS, 0 omitidas |
 | Transporte HTTP admin | 28 PASS |
-| TypeScript e i18n | PASS; 2.721 entradas, ninguna ausente |
+| TypeScript e i18n | PASS; 2.741 entradas, ninguna ausente |
 | Next build y localización estática | PASS; 663 páginas generadas, incluidas las rutas aisladas |
 | HTML servido | Seis idiomas, H1 único, fuentes y FAQ en HTML inicial, JSON-LD canónico, OG/Twitter, noindex y exclusión del sitemap; 22 destinos públicos responden 200 |
 
@@ -38,6 +38,8 @@ Son omisiones explícitas del entorno Windows o de una dependencia opcional; no 
 Estas siete omisiones no dejan sin comprobar un comportamiento añadido por esta PR: es presentación pública de solo lectura con fixtures existentes. No equivalen a una certificación de producción en Linux o del SDK opcional; esos contratos conservan sus requisitos para una promoción posterior.
 
 ## Fidelidad al producto y al precio
+
+Las 90 combinaciones de pregunta, fecha e idioma conservan una salida idéntica tras integrar #348/#349 ([comprobación](evidence/lab-contract-compatibility.json)).
 
 La demostración usa `projection.ts`, `landing-observatory.ts` y `exampleInsights`, con un adaptador que conserva los extractos completos, fechas e instrumento. No añade señales, relaciones, proveedores ni admisiones. La fuente ilustrativa permanece sin enlace externo y se identifica como ficticia. Una oportunidad sigue siendo POTENTIAL; una declaración observada de cliente no verifica un contrato; UNKNOWN no se convierte en negativo. Una fecha anterior nunca toma prestado el hallazgo futuro.
 
