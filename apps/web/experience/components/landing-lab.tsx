@@ -24,7 +24,7 @@ import {
 } from "lucide-react";
 import { useLocale } from "@/lib/locale";
 import { locales, isLocale } from "@/lib/languages";
-import { words, marketingPath } from "@/lib/marketing-content";
+import { words, marketingPath } from "@/lib/marketing-locale";
 import type { LandingLabContent } from "@/lib/landing-lab-content";
 import {
   exampleInsights,
@@ -88,6 +88,10 @@ export function LandingLab({ content }: { content: LandingLabContent }) {
   } = content;
   const { locale, t, copy, reducedMotion, setReducedMotion } = useLocale();
   const router = useRouter();
+  const focusHero = () =>
+    requestAnimationFrame(() => {
+      document.getElementById("lab-heading")?.focus({ preventScroll: true });
+    });
   const root = useRef<HTMLDivElement>(null);
   const motionRequested = useRef(false);
   const [menu, setMenu] = useState(false);
@@ -1190,7 +1194,7 @@ export function LandingLab({ content }: { content: LandingLabContent }) {
         </div>
         <div className="lab-footer-bottom">
           <span>© {new Date().getFullYear()} AXIGNAL</span>
-          <a className="lab-backtop-footer" href="#lab-heading">
+          <a className="lab-backtop-footer" href="#lab-top" onClick={focusHero}>
             {x.backTop[locale]}
             <ArrowUp size={16} aria-hidden="true" />
           </a>
@@ -1241,7 +1245,8 @@ export function LandingLab({ content }: { content: LandingLabContent }) {
       {showBackTop && (
         <a
           className="lab-backtop"
-          href="#lab-heading"
+          href="#lab-top"
+          onClick={focusHero}
           aria-label={x.backTop[locale]}
         >
           <ArrowUp size={19} aria-hidden="true" />
