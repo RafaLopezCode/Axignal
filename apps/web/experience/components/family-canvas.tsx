@@ -242,6 +242,7 @@ export function FamilyCanvas({ family, title, insights, onOpen, reading, organiz
     </Panel>
     {family === "demand" && <DemandPanels insights={insights.filter(i => i.family === "demand")} discoveryOf={discoveryOf} onOpen={onOpen}/>}
     {family === "economics" && <EconomicsPanel insights={own} discoveryOf={discoveryOf} onOpen={onOpen}/>}
+    {family === "activity" && <ActivityPanels insights={own} discoveryOf={discoveryOf} onOpen={onOpen}/>}
     {family === "relationships" && <RelationshipsPanel organization={organization ?? title} insights={own} discoveryOf={discoveryOf} onOpen={onOpen}/>}
     {family !== "demand" && <Panel index={2} title={t("En el tiempo", "Over time")} state={strongest(dated)?.nature ?? "UNKNOWN"} proof={strongest(dated)} onOpen={onOpen}
       conditions={fill(t("Hallazgos con fecha por mes, últimos 12 meses{older}. Cuenta lo observado, no la actividad real.", "Dated findings per month, last 12 months{older}. It counts what was observed, not the actual activity."),
@@ -318,6 +319,58 @@ function EconomicsPanel({ insights, discoveryOf, onOpen }: {
         <td>{year}</td><td>{kind}</td><td><NatureMark nature={i.nature} label={natureLabel(i.nature, t)}/></td></tr>;
     })}</tbody></table> : <p className="obs-canvas-empty">{t("Todavía no hay cifras económicas con fuente.", "There are no sourced economic figures yet.")}</p>}
   </Panel>;
+}
+
+/**
+ * Activity (design base): its pace as counted facts (what it publishes, the jobs it posts,
+ * since when its website is archived) and what happened, newest first, each with its kind.
+ * Counts of what was observed, never a score of how active it is: a quiet channel is not an
+ * absence of activity.
+ */
+function ActivityPanels({ insights, discoveryOf, onOpen }: {
+  insights: Insight[]; discoveryOf: (i: Insight) => Discovery | null; onOpen: (insight: Insight) => void;
+}) {
+  const { t, locale } = useLocale();
+  const pairs = insights.map(i => ({ i, d: discoveryOf(i) }));
+  const find = (code: string) => pairs.find(({ d }) => d?.kind === "OPERATING_SIGNAL" && d.code === code);
+  const pace: { label: string; value: string; i: Insight }[] = [];
+  const cadence = find("PUBLISHING_CADENCE");
+  const last90 = cadence?.d?.detail.last90Days;
+  if (cadence && typeof last90 === "number") pace.push({ i: cadence.i, label: t("Publicaciones propias en 90 días", "Own publications in 90 days"), value: last90.toLocaleString(locale) });
+  const jobs = find("JOB_POSTINGS_PUBLISHED");
+  const count = jobs?.d?.detail.count;
+  if (jobs && typeof count === "number") pace.push({ i: jobs.i, label: t("Ofertas de empleo publicadas", "Job postings published"), value: count.toLocaleString(locale) });
+  const history = find("WEBSITE_HISTORY");
+  const since = history?.d?.statement.slice(0, 4);
+  if (history && since && /^\d{4}$/.test(since)) pace.push({ i: history.i, label: t("Su web está archivada desde", "Its website is archived since"), value: since });
+  const kindOf = (d: Discovery): string | null => {
+    if (d.kind === "MENTION" && d.code === "OWN_PUBLICATION") return t("Publicó", "Published");
+    if (d.kind === "MENTION" && d.code === "PRESS_RELEASE") return t("Nota de prensa", "Press release");
+    if (d.kind === "CHANGE") return d.code.endsWith(":REGRESSION") ? t("Empeoró", "Regressed") : d.code.endsWith(":EVOLUTION") ? t("Mejoró", "Improved") : t("Cambió", "Changed");
+    if (d.kind === "INXIGHT") return "INXIGHT";
+    return null;
+  };
+  const events = pairs
+    .map(({ i, d }) => ({ i, kind: d ? kindOf(d) : null, at: Date.parse(i.observedAt ?? "") }))
+    .filter((e): e is { i: Insight; kind: string; at: number } => e.kind !== null && Number.isFinite(e.at))
+    .sort((a, b) => b.at - a.at).slice(0, 8);
+  return <>
+    <Panel index={2} title={t("Su ritmo", "Its pace")} state={pace.length ? "OBSERVED" : "UNKNOWN"} proof={pace[0]?.i ?? null} onOpen={onOpen}
+      conditions={t("Recuentos de lo observado en sus canales públicos; un canal tranquilo no es ausencia de actividad.", "Counts of what was observed on its public channels; a quiet channel is not an absence of activity.")}>
+      {pace.length ? <dl className="obs-pace">{pace.map(p => <div key={p.i.id}>
+        <dt><button className="obs-link obs-canvas-finding" onClick={() => onOpen(p.i)}>{p.label}</button></dt>
+        <dd>{p.value}</dd>
+      </div>)}</dl> : <p className="obs-canvas-empty">{t("Todavía no se ha medido su ritmo en canales públicos.", "Its pace on public channels has not been measured yet.")}</p>}
+    </Panel>
+    <Panel index={2.5} title={t("Lo que ha pasado", "What happened")} state={events[0]?.i.nature ?? "UNKNOWN"} proof={events[0]?.i ?? null} onOpen={onOpen}
+      conditions={t("Lo observado con fecha, de lo más reciente a lo más antiguo; un cambio compara dos lecturas, no explica por qué.", "What was observed with a date, newest first; a change compares two readings, it does not explain why.")}>
+      {events.length ? <ol className="obs-events">{events.map(({ i, kind, at }, k) => <li key={i.id} style={{ ["--i" as string]: k }}>
+        <time dateTime={new Date(at).toISOString()}>{new Date(at).toLocaleDateString(locale, { day: "numeric", month: "short", year: "numeric" })}</time>
+        <span className="obs-event-kind">{kind}</span>
+        <button className="obs-link obs-canvas-finding" onClick={() => onOpen(i)}>{i.headline}</button>
+      </li>)}</ol> : <p className="obs-canvas-empty">{t("Ningún hecho de su actividad tiene fecha todavía.", "No fact of its activity has a date yet.")}</p>}
+    </Panel>
+  </>;
 }
 
 type Tie = { group: "clients" | "partners" | "suppliers" | "group" | "competitors"; name: string; insight: Insight };

@@ -914,3 +914,12 @@ body:has(.obs-rail-desktop) .privacy-preferences-button { inset-inline-end: auto
 .obs-ties-list section + section { margin-block-start: 10px; }
 .obs-ties-list ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
 .obs-ties-list li { display: flex; justify-content: space-between; gap: 8px; align-items: baseline; }
+
+/* Activity: its pace as counted facts, and what happened, newest first. */
+.obs-pace { display: grid; gap: 8px; margin: 0; }
+.obs-pace div { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; }
+.obs-pace dd { margin: 0; font-size: 20px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.obs-events { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.obs-events li { display: grid; grid-template-columns: auto auto minmax(0, 1fr); gap: 8px; align-items: baseline; }
+.obs-events time { font-variant-numeric: tabular-nums; color: var(--obs-muted, #5b6478); font-size: 12px; }
+.obs-event-kind { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; color: var(--ax-family-activity, #354f98); }
