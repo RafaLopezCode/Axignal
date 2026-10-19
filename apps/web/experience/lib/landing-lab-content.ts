@@ -10,7 +10,18 @@ import {
 } from "./marketing-ui";
 import { newsletterCopy } from "./marketing-newsletter";
 import { industries } from "./marketing-industries";
+import { labInsight } from "./landing-lab-model";
+import {
+  exampleInsights,
+  EXAMPLE_MOMENTS,
+  type ExampleMoment,
+} from "./landing-observatory";
+import { evidence, demoOrganizationName } from "./projection";
+import { translate } from "./copy-catalog";
+
 const content = {
+  heroEvidence: evidence.filter((item) => item.id === "capabilities"),
+  demoOrganizationName,
   c: labCopy,
   x: labExperienceCopy,
   p: {
@@ -39,29 +50,66 @@ const content = {
   methodSteps,
   industries: industries.map(({ slug, title }) => ({ slug, title })),
 };
-export type LandingLabContent = typeof content;
-/** Called by server pages. Localized routes deliver only their chosen wording,
- * retaining the localized-record interface used by presentation. Repeated aliases
- * compress locally; source catalogs never enter client JS. The unprefixed route
- * retains all locales for saved/browser preference resolution.
+
+type Scenario = (typeof labQuestions)[number]["id"];
+type Views = Record<
+  ExampleMoment,
+  Record<Scenario, ReturnType<typeof labInsight>>
+>;
+function readingFor(locale: Locale) {
+  const copy = (value: { es: string; en: string }) =>
+    translate(value.es, value.en, locale);
+  const hero = exampleInsights("2026-10-03", copy).find(
+    (item) => item.id === "renovation",
+  );
+  if (!hero) throw new Error("Missing canonical landing fixture");
+  const views = Object.fromEntries(
+    EXAMPLE_MOMENTS.map((moment) => [
+      moment,
+      Object.fromEntries(
+        labQuestions.map((question) => [
+          question.id,
+          labInsight(moment, question.id, copy),
+        ]),
+      ),
+    ]),
+  ) as Views;
+  return { hero, views };
+}
+export type LandingLabContent = typeof content & {
+  runtime: {
+    moments: typeof EXAMPLE_MOMENTS;
+    byLocale: Record<Locale, ReturnType<typeof readingFor>>;
+  };
+};
+
+/** Server pages select wording and compute the same existing synthetic projections.
+ * Localized routes share one selected-language reading by reference; the unprefixed
+ * route retains every locale for saved/browser preferences. No evidence is changed.
  */
 export function getLandingLabContent(locale: Locale | null): LandingLabContent {
-  if (locale === null) return content;
-  const chosen = locale;
-  function select(value: unknown): unknown {
-    if (Array.isArray(value)) return value.map(select);
-    if (value && typeof value === "object") {
-      const record = value as Record<string, unknown>;
-      if (locales.every(({ id }) => typeof record[id] === "string")) {
+  let presentation = content;
+  if (locale !== null) {
+    const chosen = locale;
+    function select(value: unknown): unknown {
+      if (Array.isArray(value)) return value.map(select);
+      if (value && typeof value === "object") {
+        const record = value as Record<string, unknown>;
+        if (locales.every(({ id }) => typeof record[id] === "string"))
+          return Object.fromEntries(
+            Object.keys(record).map((id) => [id, record[chosen]]),
+          );
         return Object.fromEntries(
-          Object.keys(record).map((id) => [id, record[chosen]]),
+          Object.entries(record).map(([key, item]) => [key, select(item)]),
         );
       }
-      return Object.fromEntries(
-        Object.entries(record).map(([key, item]) => [key, select(item)]),
-      );
+      return value;
     }
-    return value;
+    presentation = select(content) as typeof content;
   }
-  return select(content) as LandingLabContent;
+  const selected = locale === null ? null : readingFor(locale);
+  const byLocale = Object.fromEntries(
+    locales.map(({ id }) => [id, selected ?? readingFor(id)]),
+  ) as LandingLabContent["runtime"]["byLocale"];
+  return { ...presentation, runtime: { moments: EXAMPLE_MOMENTS, byLocale } };
 }

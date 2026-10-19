@@ -26,14 +26,8 @@ import { useLocale } from "@/lib/locale";
 import { locales, isLocale } from "@/lib/languages";
 import { words, marketingPath } from "@/lib/marketing-locale";
 import type { LandingLabContent } from "@/lib/landing-lab-content";
-import {
-  exampleInsights,
-  EXAMPLE_MOMENTS,
-  type ExampleMoment,
-} from "@/lib/landing-observatory";
-import { labInsight } from "@/lib/landing-lab-model";
-import { evidence } from "@/lib/projection";
-import { dateLabel, demoOrganizationName } from "@/lib/projection";
+import type { ExampleMoment } from "@/lib/landing-observatory";
+import { dateLabel } from "@/lib/date-label";
 import { natureLabel } from "@/lib/nature-label";
 import {
   EUR_REFERENCE,
@@ -85,7 +79,10 @@ export function LandingLab({ content }: { content: LandingLabContent }) {
     trustItems,
     methodSteps,
     industries,
+    heroEvidence: evidence,
+    demoOrganizationName,
   } = content;
+  const EXAMPLE_MOMENTS = content.runtime.moments;
   const { locale, t, copy, reducedMotion, setReducedMotion } = useLocale();
   const router = useRouter();
   const focusHero = () =>
@@ -107,10 +104,9 @@ export function LandingLab({ content }: { content: LandingLabContent }) {
   const [newsletterOpen, setNewsletterOpen] = useState(false);
   const [activeChapter, setActiveChapter] = useState("");
   const [showBackTop, setShowBackTop] = useState(false);
-  const selected = labInsight(moment, scenario, copy);
-  const heroFinding = exampleInsights("2026-10-03", copy).find(
-    (item) => item.id === "renovation",
-  )!;
+  const reading = content.runtime.byLocale[locale];
+  const selected = reading.views[moment][scenario];
+  const heroFinding = reading.hero;
   const label = (key: keyof Omit<typeof c, "benefits">) => c[key][locale];
   const nav = [
     ["#discover", label("discover")],

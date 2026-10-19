@@ -6,8 +6,10 @@ import { locales } from "../lib/languages";
 
 for (const { id: locale } of locales) {
   test(`server-delivered landing wording preserves every ${locale} text and non-text value`, () => {
-    const canonical = getLandingLabContent(null);
-    const delivered = getLandingLabContent(locale);
+    const { runtime: _canonicalRuntime, ...canonical } =
+      getLandingLabContent(null);
+    const { runtime: _deliveredRuntime, ...delivered } =
+      getLandingLabContent(locale);
     function compare(source: unknown, result: unknown): void {
       if (Array.isArray(source)) {
         assert.ok(Array.isArray(result));
@@ -37,3 +39,39 @@ test("landing delivery does not mutate canonical wording or transfer industry ar
   for (const item of getLandingLabContent(null).industries)
     assert.deepEqual(Object.keys(item).sort(), ["slug", "title"]);
 });
+
+import { labInsight } from "../lib/landing-lab-model";
+import { exampleInsights, EXAMPLE_MOMENTS } from "../lib/landing-observatory";
+import { translate } from "../lib/copy-catalog";
+for (const { id: locale } of locales) {
+  test(`all 15 server-delivered ${locale} states and the hero exactly match the existing models`, () => {
+    const data = getLandingLabContent(locale);
+    const unprefixed = getLandingLabContent(null);
+    const copy = (value: { es: string; en: string }) =>
+      translate(value.es, value.en, locale);
+    for (const moment of EXAMPLE_MOMENTS)
+      for (const question of data.labQuestions) {
+        const expected = labInsight(moment, question.id, copy);
+        assert.deepEqual(
+          data.runtime.byLocale[locale].views[moment][question.id],
+          expected,
+        );
+        assert.deepEqual(
+          unprefixed.runtime.byLocale[locale].views[moment][question.id],
+          expected,
+        );
+      }
+    assert.deepEqual(
+      data.runtime.byLocale[locale].hero,
+      exampleInsights("2026-10-03", copy).find(
+        (item) => item.id === "renovation",
+      ),
+    );
+    for (const { id } of locales)
+      assert.equal(
+        data.runtime.byLocale[id],
+        data.runtime.byLocale[locale],
+        "Localized routes serialize one reading, with reference aliases",
+      );
+  });
+}
