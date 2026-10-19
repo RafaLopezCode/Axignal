@@ -92,3 +92,85 @@ test("a family with fewer than two known findings gets no canvas: the lanes alre
   ]), t, "es");
   assert.equal(renderToStaticMarkup(createElement(FamilyCanvas, { family: "reputation", title: "Reputación", insights, onOpen() {} })), "");
 });
+
+const inDays = (n: number) => new Date(Date.now() + n * 86_400_000).toISOString().slice(0, 10);
+const call = (title: string, days: number, fit: string) => ({ kind: "DEMAND", code: "POTENTIAL_DEMAND", statement: title, epistemicState: "POTENTIAL",
+  sourceUrl: "https://ted.europa.eu/x", excerpt: null, observedAt: month(0), detail: { deadline: inDays(days), fit, buyer: "Ayuntamiento" } });
+
+test("Demand's canvas shows open calls by deadline and their fit, never past deadlines", () => {
+  const r = reading([call("Paneles solares escuela", 20, "CORE"), call("Alumbrado público", 5, "PARTIAL"), call("Obra cerrada", -3, "CORE")]);
+  const insights = insightsFor(r, t, "es");
+  const html = renderToStaticMarkup(createElement(FamilyCanvas, { family: "demand", title: "Demanda", insights, onOpen() {}, reading: r }));
+  assert.match(html, /Upcoming deadlines/);
+  assert.ok(html.indexOf("in 5 days") >= 0 && html.indexOf("in 5 days") < html.indexOf("in 20 days"), "soonest first");
+  assert.doesNotMatch(html, /Obra cerrada<\/button>/);  // a past deadline is not upcoming
+  assert.match(html, /Fit with its activity/);
+  assert.match(html, /Its main work/);
+  assert.doesNotMatch(html, /Over time/);  // deadlines replace the generic months
+});
+
+test("Economics' canvas tells each figure's source kind and year apart", () => {
+  const fact = (code: string, kind: string, year: string) => ({ kind: "ECONOMIC_FACT", code, statement: "120000000", epistemicState: "POTENTIAL",
+    sourceUrl: "https://example.org/f", excerpt: null, observedAt: month(0), detail: { fact: "revenue", value: 120000000, unit: "EUR", year, sourceKind: kind, source: "x" } });
+  const r = reading([fact("WIKIDATA:revenue", "SECONDARY_COMMUNITY_EDITED", "2023"), fact("REPORTED:revenue", "THIRD_PARTY_REPORT", "2025")]);
+  const html = renderToStaticMarkup(createElement(FamilyCanvas, { family: "economics", title: "Economía", insights: insightsFor(r, t, "es"), onOpen() {}, reading: r }));
+  assert.match(html, /Figures, their source and year/);
+  assert.match(html, /Wikidata/);
+  assert.match(html, /Third-party report/);
+  assert.match(html, /2025/);
+});
+
+test("Relationships' canvas draws ties around the organization and keeps their epistemic state", () => {
+  const tie = (kind: string, code: string, statement: string, state: string) => ({ kind, code, statement, epistemicState: state,
+    sourceUrl: "https://example.org/r", excerpt: null, observedAt: month(0), detail: {} });
+  const r = reading([
+    tie("RELATIONSHIP", "PUBLIC_CONTRACT_AWARDED", "Ayuntamiento de Bilbao", "OBSERVED"),
+    tie("RELATIONSHIP", "PARTNER_DECLARED", "Siemens", "DECLARED"),
+    tie("RELATIONSHIP", "VALUE_CHAIN_SUPPLIERS", "Sector metal", "POTENTIAL"),
+    tie("COMPETITION", "SAME_MARKET_COMPETITOR", "Acciona", "POTENTIAL"),
+  ]);
+  const html = renderToStaticMarkup(createElement(FamilyCanvas, { family: "relationships", title: "Relaciones", insights: insightsFor(r, t, "es"), onOpen() {}, reading: r, organization: "Ingeteam" }));
+  assert.match(html, /Who it is tied to/);
+  assert.match(html, /Ingeteam and 3 ties/);
+  assert.match(html, /stroke-dasharray="6 4"/);  // declared
+  assert.match(html, /stroke-dasharray="2 4"/);  // potential
+  assert.doesNotMatch(html, /Sector metal<\/button>/);  // sectors are not organizations
+  assert.match(html, /is not a confirmed one/);
+});
+
+test("Activity's canvas shows its pace as counted facts and what happened, newest first", () => {
+  const ev = (kind: string, code: string, statement: string, at: string, detail: Record<string, unknown> = {}) => ({ kind, code, statement, epistemicState: "OBSERVED",
+    sourceUrl: "https://example.org/a", excerpt: null, observedAt: at, detail });
+  const r = reading([
+    ev("OPERATING_SIGNAL", "PUBLISHING_CADENCE", "4 in 90 days", month(0), { last90Days: 4 }),
+    ev("OPERATING_SIGNAL", "WEBSITE_HISTORY", "2009-03-01", month(0)),
+    ev("MENTION", "OWN_PUBLICATION", "Nueva planta en Valencia", month(2)),
+    ev("MENTION", "OWN_PUBLICATION", "Informe anual", month(1)),
+  ]);
+  const html = renderToStaticMarkup(createElement(FamilyCanvas, { family: "activity", title: "Actividad", insights: insightsFor(r, t, "es"), onOpen() {}, reading: r }));
+  assert.match(html, /Its pace/);
+  assert.match(html, /Own publications in 90 days/);
+  assert.match(html, /2009/);
+  assert.match(html, /What happened/);
+  assert.match(html, /not an absence of activity/);
+  assert.doesNotMatch(html, /\/100|score of/i);
+});
+
+test("Organization's canvas shows each identity anchor with its state, and that only a registry admits", () => {
+  const hint = (kind: string, code: string, statement: string, state: string, detail: Record<string, unknown> = {}) => ({ kind, code, statement, epistemicState: state,
+    sourceUrl: "https://example.org/legal", excerpt: null, observedAt: month(0), detail });
+  const r = reading([
+    hint("IDENTITY_HINT", "LEGAL_NAME_DECLARED", "Ecoalf Recycled Fabrics S.L.", "DECLARED"),
+    hint("IDENTITY_HINT", "IDENTIFIER_DECLARED:ES_NIF", "ES_NIF B86040357", "DECLARED"),
+    hint("IDENTITY_HINT", "IDENTITY_CORROBORATED", "Ecoalf Recycled Fabrics S.L.", "POTENTIAL",
+      { anchors: [{ anchor: "WIKIDATA_OFFICIAL_WEBSITE", value: "Q123" }, { anchor: "OFFICIAL_REGISTER", value: "B86040357" }] }),
+    hint("SIGNIFICANT_UNKNOWN", "IDENTITY_NOT_VERIFIED", "x", "UNKNOWN"),
+  ]);
+  const html = renderToStaticMarkup(createElement(FamilyCanvas, { family: "organization", title: "Organización", insights: insightsFor(r, t, "es"), onOpen() {}, reading: r }));
+  assert.match(html, /Who it is, anchor by anchor/);
+  assert.match(html, /Ecoalf Recycled Fabrics S\.L\./);
+  assert.match(html, /Q123/);
+  assert.match(html, /Not found yet/);  // no LEI: not found yet, never false
+  assert.match(html, /Admitted by a registry/);
+  assert.match(html, /corroboration, not an admission/);
+});

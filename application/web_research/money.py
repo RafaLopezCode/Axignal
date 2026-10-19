@@ -13,6 +13,8 @@ import unicodedata
 from collections.abc import Sequence
 from dataclasses import dataclass
 
+from application.web_research.expansion import names_in
+
 #: Revenue in the languages the observatory reads (folded, no accents).
 _REVENUE = re.compile(
     r"factur\w*|ventas|ingresos|cifra de negocio\w*|revenues?|sales|turnover|umsatz\w*|"
@@ -110,9 +112,8 @@ def reported_revenue(
     folded = _ABBREVIATIONS.sub(lambda m: m.group(1), _fold(text[:200_000]))
     sentences = [s.strip() for s in _SENTENCE.split(folded) if s.strip()]
     for needle in needles:
-        pattern = re.compile(r"(?<![a-z0-9])" + re.escape(needle) + r"(?![a-z0-9])")
         for window in sentences:
-            if len(window) > 2 * WINDOW or not pattern.search(window.lower()):
+            if len(window) > 2 * WINDOW or not names_in(window, [needle]):
                 continue
             if not _REVENUE.search(window) or _NOT_REPORTED.search(window):
                 continue  # a target, a forecast or a cumulative figure is not reported revenue

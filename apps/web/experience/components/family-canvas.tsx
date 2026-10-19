@@ -189,17 +189,36 @@ const MONTHS = 12;
  * opens its proof; counts are real counts of stored findings, never a score; a panel with
  * nothing says so. Family-specific panels can replace these one by one.
  */
-export function FamilyCanvas({ family, title, insights, onOpen }: {
+export function FamilyCanvas({ family, title, insights, onOpen, reading, organization }: {
   family: FamilyId; title: string; insights: Insight[]; onOpen: (insight: Insight) => void;
+  /** The stored discoveries behind the insights, for the family-specific panels. */
+  reading?: Reading;
+  /** The organization's name, at the centre of the relationships graph. */
+  organization?: string;
 }) {
   const { t, locale } = useLocale();
+  const ds = reading?.firstObservation?.discoveries ?? [];
+  // An insight's own discovery: its id is `${kind}:${code}:${index}` (or names no index).
+  const discoveryOf = (i: Insight): Discovery | null => {
+    const index = Number(i.id.split(":").at(-1));
+    const d = Number.isInteger(index) ? ds[index] : undefined;
+    return d && i.id.startsWith(`${d.kind}:${d.code}:`) ? d : null;
+  };
   const own = insights.filter(i => i.family === family && i.group !== "otherDemand");
-  if (!own.length) return null;
+  // Organization: its identity anchors, read from the discoveries (they get no lane of their own).
+  const anchors = family === "organization" ? identityAnchors(ds, t) : [];
+  const notAdmitted = own.find(i => discoveryOf(i)?.code === "IDENTITY_NOT_VERIFIED") ?? null;
+  const organizationPanel = anchors.length ? <OrganizationPanel anchors={anchors} notAdmitted={notAdmitted} onOpen={onOpen}/> : null;
+  const label = fill(t("{family} en detalle", "{family} in depth"), { family: title });
+  if (!own.length && !organizationPanel) return null;
   const known = own.filter(i => i.nature !== "UNKNOWN" && i.nature !== "UNRESOLVED");
   // Fewer than two known findings: the lanes already say what is (not) known; a canvas of
   // near-empty panels would only add noise.
-  if (known.length < 2) return null;
-  const top = [...known].sort((a, b) => familyRank(family, a.id) - familyRank(family, b.id)
+  if (known.length < 2) return organizationPanel ? <div className="obs-canvas obs-family-canvas" aria-label={label}>{organizationPanel}</div> : null;
+  // A call whose deadline has passed is no longer among the most important.
+  const today = new Date(new Date().toDateString()).getTime();
+  const closed = (i: Insight) => { const at = Date.parse(String(discoveryOf(i)?.detail.deadline ?? "")); return Number.isFinite(at) && at < today; };
+  const top = [...known].filter(i => !closed(i)).sort((a, b) => familyRank(family, a.id) - familyRank(family, b.id)
     || Number(b.lane === "matters") - Number(a.lane === "matters")
     || Date.parse(b.observedAt ?? "") - Date.parse(a.observedAt ?? "") || 0).slice(0, 3);
   const byNature = NATURES.map(n => [n, own.filter(i => (i.nature === "UNRESOLVED" ? "UNKNOWN" : i.nature) === n).length] as const).filter(([, c]) => c > 0);
@@ -215,7 +234,7 @@ export function FamilyCanvas({ family, title, insights, onOpen }: {
   const sources = [...hosts.entries()].sort((a, b) => b[1] - a[1]).slice(0, 6) as Row[];
   const monthLabel = (m: Date) => m.toLocaleDateString(locale, { month: "short" });
   const strongest = (items: Insight[]) => items.find(i => i.nature === "OBSERVED") ?? items[0] ?? null;
-  return <div className="obs-canvas obs-family-canvas" aria-label={fill(t("{family} en detalle", "{family} in depth"), { family: title })}>
+  return <div className="obs-canvas obs-family-canvas" aria-label={label}>
     <Panel index={0} title={t("Lo que se ha observado", "What has been observed")} state={strongest(own)?.nature ?? "UNKNOWN"} proof={strongest(own)} onOpen={onOpen}
       conditions={t("Recuento de hallazgos guardados por su estado epistémico; no es una puntuación.", "Count of stored findings by epistemic state; it is not a score.")}>
       <ul className="obs-canvas-states">{byNature.map(([n, c]) => <li key={n}><NatureMark nature={n} label={natureLabel(n, t)}/><strong>{c.toLocaleString(locale)}</strong></li>)}</ul>
@@ -226,7 +245,12 @@ export function FamilyCanvas({ family, title, insights, onOpen }: {
         <NatureMark nature={i.nature} label={natureLabel(i.nature, t)}/>
       </li>)}</ul> : <p className="obs-canvas-empty">{t("Solo hay incógnitas declaradas en esta familia; ver «Lo que aún no sabemos».", "There are only declared unknowns in this family; see “What we do not know yet”.")}</p>}
     </Panel>
-    <Panel index={2} title={t("En el tiempo", "Over time")} state={strongest(dated)?.nature ?? "UNKNOWN"} proof={strongest(dated)} onOpen={onOpen}
+    {family === "demand" && <DemandPanels insights={insights.filter(i => i.family === "demand")} discoveryOf={discoveryOf} onOpen={onOpen}/>}
+    {family === "economics" && <EconomicsPanel insights={own} discoveryOf={discoveryOf} onOpen={onOpen}/>}
+    {family === "activity" && <ActivityPanels insights={own} discoveryOf={discoveryOf} onOpen={onOpen}/>}
+    {organizationPanel}
+    {family === "relationships" && <RelationshipsPanel organization={organization ?? title} insights={own} discoveryOf={discoveryOf} onOpen={onOpen}/>}
+    {family !== "demand" && <Panel index={2} title={t("En el tiempo", "Over time")} state={strongest(dated)?.nature ?? "UNKNOWN"} proof={strongest(dated)} onOpen={onOpen}
       conditions={fill(t("Hallazgos con fecha por mes, últimos 12 meses{older}. Cuenta lo observado, no la actividad real.", "Dated findings per month, last 12 months{older}. It counts what was observed, not the actual activity."),
         { older: olderThanWindow ? fill(t(" ({n} anteriores)", " ({n} earlier)"), { n: olderThanWindow }) : "" })}>
       {dated.length ? <ol className="obs-months" aria-label={t("Hallazgos por mes", "Findings per month")}>{months.map((m, k) => <li key={k} style={{ ["--i" as string]: k }}>
@@ -235,10 +259,254 @@ export function FamilyCanvas({ family, title, insights, onOpen }: {
         <span className="obs-month-name">{monthLabel(m)}</span>
         <span className="sr-only">{fill(t("{month}: {n}", "{month}: {n}"), { month: monthLabel(m), n: perMonth[k] })}</span>
       </li>)}</ol> : <p className="obs-canvas-empty">{t("Ningún hallazgo de esta familia tiene fecha todavía.", "No finding in this family has a date yet.")}</p>}
-    </Panel>
+    </Panel>}
     <Panel index={3} title={t("De dónde viene", "Where it comes from")} state={strongest(own.filter(i => i.sources.length))?.nature ?? "UNKNOWN"} proof={strongest(own.filter(i => i.sources.length))} onOpen={onOpen}
       conditions={t("Fuentes de los hallazgos de esta familia, por número de hallazgos.", "Sources of this family's findings, by number of findings.")}>
       {sources.length ? <Bars items={sources}/> : <p className="obs-canvas-empty">{t("Sus hallazgos no tienen todavía una fuente pública enlazable.", "Its findings have no linkable public source yet.")}</p>}
     </Panel>
   </div>;
+}
+
+const FIT_ORDER = ["CORE", "PARTIAL", "ADJACENT", "UNCERTAIN"] as const;
+
+/** Demand (design base): open calls by deadline, and how each fits its activity. */
+function DemandPanels({ insights, discoveryOf, onOpen }: {
+  insights: Insight[]; discoveryOf: (i: Insight) => Discovery | null; onOpen: (insight: Insight) => void;
+}) {
+  const { t, locale } = useLocale();
+  const today = new Date(new Date().toDateString()).getTime();
+  const calls = insights.map(i => ({ i, d: discoveryOf(i) }))
+    .filter(({ d }) => d?.kind === "DEMAND" && d.code === "POTENTIAL_DEMAND");
+  const upcoming = calls
+    .map(({ i, d }) => ({ i, d, at: Date.parse(String(d?.detail.deadline ?? "")) }))
+    .filter(c => Number.isFinite(c.at) && c.at >= today)
+    .sort((a, b) => a.at - b.at).slice(0, 8);
+  const fitLabel: Record<string, string> = {
+    CORE: t("Es su trabajo principal", "Its main work"), PARTIAL: t("Parte del trabajo es suya", "Part of the work is its"),
+    ADJACENT: t("Mismo sector, otro trabajo", "Same sector, other work"), UNCERTAIN: t("Encaje dudoso", "Uncertain fit"),
+  };
+  const fits = FIT_ORDER.map(f => [fitLabel[f], calls.filter(c => c.d?.detail.fit === f).length] as Row).filter(([, n]) => n > 0);
+  const unjudged = calls.filter(c => !FIT_ORDER.includes(String(c.d?.detail.fit) as typeof FIT_ORDER[number])).length;
+  const days = (at: number) => Math.round((at - today) / 86_400_000);
+  return <>
+    <Panel index={2} title={t("Plazos que vienen", "Upcoming deadlines")} state={upcoming.length ? "POTENTIAL" : "UNKNOWN"} proof={upcoming[0]?.i ?? null} onOpen={onOpen}
+      conditions={t("Convocatorias públicas abiertas, por fecha límite. Son oportunidades potenciales, no clientes.", "Open public calls, by deadline. They are potential opportunities, not customers.")}>
+      {upcoming.length ? <ol className="obs-deadlines">{upcoming.map(({ i, at }, k) => <li key={i.id} style={{ ["--i" as string]: k }}>
+        <time dateTime={new Date(at).toISOString()}>{new Date(at).toLocaleDateString(locale, { day: "numeric", month: "short" })}</time>
+        <span className="obs-deadline-in">{days(at) === 0 ? t("hoy", "today") : fill(t("en {n} días", "in {n} days"), { n: days(at) })}</span>
+        <button className="obs-link obs-canvas-finding" onClick={() => onOpen(i)}>{i.headline}</button>
+      </li>)}</ol> : <p className="obs-canvas-empty">{t("No hay convocatorias abiertas con plazo próximo en esta lectura.", "There are no open calls with an upcoming deadline in this reading.")}</p>}
+    </Panel>
+    <Panel index={2.5} title={t("Encaje con su actividad", "Fit with its activity")} state={fits.length ? "POTENTIAL" : "UNKNOWN"} proof={calls[0]?.i ?? null} onOpen={onOpen}
+      conditions={fill(t("Juicio no autoritativo de cada convocatoria frente a su actividad{unjudged}; no es una probabilidad de ganarla.", "Non-authoritative judgment of each call against its activity{unjudged}; not a probability of winning it."),
+        { unjudged: unjudged ? fill(t(" ({n} sin juzgar todavía)", " ({n} not judged yet)"), { n: unjudged }) : "" })}>
+      {fits.length ? <Bars items={fits}/> : <p className="obs-canvas-empty">{t("Ninguna convocatoria tiene todavía un juicio de encaje.", "No call has a fit judgment yet.")}</p>}
+    </Panel>
+  </>;
+}
+
+/** Economics (design base): each figure with its source kind and year; unknowns explicit. */
+function EconomicsPanel({ insights, discoveryOf, onOpen }: {
+  insights: Insight[]; discoveryOf: (i: Insight) => Discovery | null; onOpen: (insight: Insight) => void;
+}) {
+  const { t } = useLocale();
+  const kindLabel: Record<string, string> = {
+    OFFICIAL_REGISTER: t("Registro oficial", "Official register"), THIRD_PARTY_REPORT: t("Publicado por terceros", "Third-party report"),
+    SECONDARY_COMMUNITY_EDITED: "Wikidata",
+  };
+  const rows = insights.map(i => ({ i, d: discoveryOf(i) })).filter(({ d }) => d?.kind === "ECONOMIC_FACT");
+  return <Panel index={2} title={t("Cifras, su fuente y su año", "Figures, their source and year")} state={rows.some(r => r.i.nature === "OBSERVED") ? "OBSERVED" : rows.length ? "POTENTIAL" : "UNKNOWN"} proof={rows[0]?.i ?? null} onOpen={onOpen}
+    conditions={t("Cada cifra con el tipo de fuente y su año; las de su sector describen el sector, no a la organización.", "Each figure with its kind of source and year; sector figures describe the sector, not the organization.")}>
+    {rows.length ? <table className="obs-figures"><tbody>{rows.slice(0, 8).map(({ i, d }) => {
+      const detail = (d?.detail ?? {}) as Record<string, unknown>;
+      const kind = detail.fact === "sectorMarket" ? t("Estadística del sector", "Sector statistics") : kindLabel[String(detail.sourceKind)] ?? t("Otra fuente", "Other source");
+      const year = typeof detail.year === "string" || typeof detail.year === "number" ? String(detail.year) : typeof detail.period === "string" ? detail.period.slice(0, 4) : "—";
+      return <tr key={i.id}><th scope="row"><button className="obs-link obs-canvas-finding" onClick={() => onOpen(i)}>{i.headline}</button></th>
+        <td>{year}</td><td>{kind}</td><td><NatureMark nature={i.nature} label={natureLabel(i.nature, t)}/></td></tr>;
+    })}</tbody></table> : <p className="obs-canvas-empty">{t("Todavía no hay cifras económicas con fuente.", "There are no sourced economic figures yet.")}</p>}
+  </Panel>;
+}
+
+/**
+ * Activity (design base): its pace as counted facts (what it publishes, the jobs it posts,
+ * since when its website is archived) and what happened, newest first, each with its kind.
+ * Counts of what was observed, never a score of how active it is: a quiet channel is not an
+ * absence of activity.
+ */
+function ActivityPanels({ insights, discoveryOf, onOpen }: {
+  insights: Insight[]; discoveryOf: (i: Insight) => Discovery | null; onOpen: (insight: Insight) => void;
+}) {
+  const { t, locale } = useLocale();
+  const pairs = insights.map(i => ({ i, d: discoveryOf(i) }));
+  const find = (code: string) => pairs.find(({ d }) => d?.kind === "OPERATING_SIGNAL" && d.code === code);
+  const pace: { label: string; value: string; i: Insight }[] = [];
+  const cadence = find("PUBLISHING_CADENCE");
+  const last90 = cadence?.d?.detail.last90Days;
+  if (cadence && typeof last90 === "number") pace.push({ i: cadence.i, label: t("Publicaciones propias en 90 días", "Own publications in 90 days"), value: last90.toLocaleString(locale) });
+  const jobs = find("JOB_POSTINGS_PUBLISHED");
+  const count = jobs?.d?.detail.count;
+  if (jobs && typeof count === "number") pace.push({ i: jobs.i, label: t("Ofertas de empleo publicadas", "Job postings published"), value: count.toLocaleString(locale) });
+  const history = find("WEBSITE_HISTORY");
+  const since = history?.d?.statement.slice(0, 4);
+  if (history && since && /^\d{4}$/.test(since)) pace.push({ i: history.i, label: t("Su web está archivada desde", "Its website is archived since"), value: since });
+  const kindOf = (d: Discovery): string | null => {
+    if (d.kind === "MENTION" && d.code === "OWN_PUBLICATION") return t("Publicó", "Published");
+    if (d.kind === "MENTION" && d.code === "PRESS_RELEASE") return t("Nota de prensa", "Press release");
+    if (d.kind === "CHANGE") return d.code.endsWith(":REGRESSION") ? t("Empeoró", "Regressed") : d.code.endsWith(":EVOLUTION") ? t("Mejoró", "Improved") : t("Cambió", "Changed");
+    if (d.kind === "INXIGHT") return "INXIGHT";
+    return null;
+  };
+  const events = pairs
+    .map(({ i, d }) => ({ i, kind: d ? kindOf(d) : null, at: Date.parse(i.observedAt ?? "") }))
+    .filter((e): e is { i: Insight; kind: string; at: number } => e.kind !== null && Number.isFinite(e.at))
+    .sort((a, b) => b.at - a.at).slice(0, 8);
+  return <>
+    <Panel index={2} title={t("Su ritmo", "Its pace")} state={pace.length ? "OBSERVED" : "UNKNOWN"} proof={pace[0]?.i ?? null} onOpen={onOpen}
+      conditions={t("Recuentos de lo observado en sus canales públicos; un canal tranquilo no es ausencia de actividad.", "Counts of what was observed on its public channels; a quiet channel is not an absence of activity.")}>
+      {pace.length ? <dl className="obs-pace">{pace.map(p => <div key={p.i.id}>
+        <dt><button className="obs-link obs-canvas-finding" onClick={() => onOpen(p.i)}>{p.label}</button></dt>
+        <dd>{p.value}</dd>
+      </div>)}</dl> : <p className="obs-canvas-empty">{t("Todavía no se ha medido su ritmo en canales públicos.", "Its pace on public channels has not been measured yet.")}</p>}
+    </Panel>
+    <Panel index={2.5} title={t("Lo que ha pasado", "What happened")} state={events[0]?.i.nature ?? "UNKNOWN"} proof={events[0]?.i ?? null} onOpen={onOpen}
+      conditions={t("Lo observado con fecha, de lo más reciente a lo más antiguo; un cambio compara dos lecturas, no explica por qué.", "What was observed with a date, newest first; a change compares two readings, it does not explain why.")}>
+      {events.length ? <ol className="obs-events">{events.map(({ i, kind, at }, k) => <li key={i.id} style={{ ["--i" as string]: k }}>
+        <time dateTime={new Date(at).toISOString()}>{new Date(at).toLocaleDateString(locale, { day: "numeric", month: "short", year: "numeric" })}</time>
+        <span className="obs-event-kind">{kind}</span>
+        <button className="obs-link obs-canvas-finding" onClick={() => onOpen(i)}>{i.headline}</button>
+      </li>)}</ol> : <p className="obs-canvas-empty">{t("Ningún hecho de su actividad tiene fecha todavía.", "No fact of its activity has a date yet.")}</p>}
+    </Panel>
+  </>;
+}
+
+type Anchor = { label: string; value: string | null; nature: Nature; source: string | null };
+
+/**
+ * Identity anchors read from the stored discoveries: identity hints orient (they never get a
+ * lane of their own), so the organization's canvas reads them directly, each with its source.
+ */
+function identityAnchors(ds: Discovery[], t: Translate): Anchor[] {
+  const first = (match: (d: Discovery) => boolean) => ds.find(match) ?? null;
+  const legal = first(d => d.kind === "IDENTITY_HINT" && d.code === "LEGAL_NAME_DECLARED");
+  const declared = first(d => d.kind === "IDENTITY_HINT" && d.code.startsWith("IDENTIFIER_DECLARED:"));
+  const directory = first(d => d.kind === "IDENTITY_HINT" && d.code === "IDENTIFIER_IN_DIRECTORY");
+  const corroborated = first(d => d.kind === "IDENTITY_HINT" && d.code === "IDENTITY_CORROBORATED");
+  const held = corroborated?.detail.anchors;
+  const anchors = Array.isArray(held) ? held as Record<string, unknown>[] : [];
+  const shown = (value: unknown) => typeof value === "string" || typeof value === "number" ? String(value) : null;
+  const of = (name: string): Anchor => {
+    const a = anchors.find(x => x.anchor === name);
+    return { label: "", value: shown(a?.value), nature: a ? "POTENTIAL" : "UNKNOWN", source: shown(a?.source) ?? corroborated?.sourceUrl ?? null };
+  };
+  const hint = (d: Discovery | null, value: string | null): Anchor => ({ label: "", value, nature: d ? nature(d) : "UNKNOWN", source: d?.sourceUrl ?? null });
+  const dir = (directory?.detail ?? {}) as Record<string, unknown>;
+  const rows: Anchor[] = [
+    { ...hint(legal, legal?.statement ?? null), label: t("Nombre legal que declara", "Legal name it declares") },
+    { ...hint(declared, declared?.statement ?? null), label: t("Identificador en su web", "Identifier on its website") },
+    { ...hint(directory, directory ? [shown(dir.scheme), shown(dir.value), shown(dir.outlet) && `(${shown(dir.outlet)})`].filter(Boolean).join(" ") : null),
+      label: t("Identificador en un directorio", "Identifier in a directory") },
+    { ...of("WIKIDATA_OFFICIAL_WEBSITE"), label: "Wikidata" },
+    { ...of("OFFICIAL_REGISTER"), label: t("Registro oficial", "Official register") },
+    { ...of("LEI"), label: "LEI" },
+  ];
+  return rows.some(r => r.value) ? rows : [];
+}
+
+/**
+ * Organization (design base): who it is, anchor by anchor — what its website declares, what
+ * third parties and open registers say, and whether a registry has admitted the identity. Each
+ * anchor keeps its own state; an anchor not found is "not found yet", never "false". Only a
+ * registry admits an identity: agreeing sources are a corroboration, not an admission.
+ */
+function OrganizationPanel({ anchors, notAdmitted, onOpen }: {
+  anchors: Anchor[]; notAdmitted: Insight | null; onOpen: (insight: Insight) => void;
+}) {
+  const { t } = useLocale();
+  const state: Nature = anchors.some(a => a.value && a.nature === "POTENTIAL") ? "POTENTIAL" : anchors.some(a => a.value && a.nature === "DECLARED") ? "DECLARED" : "UNKNOWN";
+  return <Panel index={2} title={t("Quién es, ancla por ancla", "Who it is, anchor by anchor")} state={state} proof={notAdmitted} onOpen={onOpen}
+    conditions={t("Cada ancla con su estado; «no encontrado todavía» no significa que no exista. Solo un registro admite una identidad: que las fuentes coincidan es una corroboración, no una admisión.", "Each anchor with its state; “not found yet” does not mean it does not exist. Only a registry admits an identity: sources agreeing is a corroboration, not an admission.")}>
+    <table className="obs-anchors"><tbody>
+      {anchors.map(a => <tr key={a.label}>
+        <th scope="row">{a.label}</th>
+        <td>{a.value ? a.source ? <a className="obs-link" href={a.source} target="_blank" rel="noopener noreferrer">{a.value}</a> : a.value
+          : <span className="obs-canvas-empty">{t("No encontrado todavía", "Not found yet")}</span>}</td>
+        <td><NatureMark nature={a.value ? a.nature : "UNKNOWN"} label={natureLabel(a.value ? a.nature : "UNKNOWN", t)}/></td>
+      </tr>)}
+      {notAdmitted && <tr>
+        <th scope="row">{t("Admitida por un registro", "Admitted by a registry")}</th>
+        <td><button className="obs-link obs-canvas-finding" onClick={() => onOpen(notAdmitted)}>{t("Todavía no", "Not yet")}</button></td>
+        <td><NatureMark nature="UNKNOWN" label={natureLabel("UNKNOWN", t)}/></td>
+      </tr>}
+    </tbody></table>
+  </Panel>;
+}
+
+type Tie = { group: "clients" | "partners" | "suppliers" | "group" | "competitors"; name: string; insight: Insight };
+const TIE_GROUPS: Tie["group"][] = ["clients", "partners", "suppliers", "group", "competitors"];
+
+function tieGroup(d: Discovery): Tie["group"] | null {
+  if (d.kind === "COMPETITION") return "competitors";
+  if (d.kind !== "RELATIONSHIP") return null;
+  if (d.code === "VALUE_CHAIN_SUPPLIERS") return null;  // sectors, not organizations
+  if (d.code.startsWith("GROUP_")) return "group";
+  if (d.code === "PARTNER_DECLARED" || d.code === "JOINT_VENTURE_NAME" || d.code === "SAME_LOT_JOINT_AWARD") return "partners";
+  if (d.code === "TECHNOLOGY_SUPPLIER_OBSERVED" || d.code === "POTENTIAL_SUPPLIER") return "suppliers";
+  return "clients";
+}
+
+/**
+ * Relationships (design base): the organization at the centre and its ties around it, grouped
+ * by kind; each tie keeps its own epistemic state (solid observed, dashed declared, dotted
+ * potential) in the drawing and in words in the list beside it. A drawing, not a network
+ * score: what is not observed is not drawn.
+ */
+export function RelationshipsPanel({ organization, insights, discoveryOf, onOpen }: {
+  organization: string; insights: Insight[]; discoveryOf: (i: Insight) => Discovery | null; onOpen: (insight: Insight) => void;
+}) {
+  const { t } = useLocale();
+  const label: Record<Tie["group"], string> = {
+    clients: t("Clientes", "Clients"), partners: t("Socios", "Partners"), suppliers: t("Proveedores", "Suppliers"),
+    group: t("Su grupo", "Its group"), competitors: t("Competidores", "Competitors"),
+  };
+  const ties: Tie[] = [];
+  for (const insight of insights) {
+    const d = discoveryOf(insight);
+    const group = d ? tieGroup(d) : null;
+    if (d && group && ties.length < 16) ties.push({ group, name: d.statement.slice(0, 40), insight });
+  }
+  if (!ties.length) return null;
+  const present = TIE_GROUPS.filter(g => ties.some(tie => tie.group === g));
+  const size = 300, c = size / 2, r = 112;
+  const placed = present.flatMap((g, gi) => {
+    const own = ties.filter(tie => tie.group === g);
+    const span = (2 * Math.PI) / present.length;
+    return own.map((tie, k) => {
+      const angle = -Math.PI / 2 + gi * span + (span * (k + 1)) / (own.length + 1);
+      return { ...tie, x: c + r * Math.cos(angle), y: c + r * Math.sin(angle) };
+    });
+  });
+  const dash = (n: Nature) => n === "OBSERVED" ? undefined : n === "DECLARED" ? "6 4" : "2 4";
+  return <section className="obs-canvas-panel obs-canvas-wide" style={{ ["--i" as string]: 2 }} aria-label={t("Con quién se relaciona", "Who it is tied to")}>
+    <header><h3>{t("Con quién se relaciona", "Who it is tied to")}</h3></header>
+    <div className="obs-ties">
+      <svg viewBox={`0 0 ${size} ${size}`} className="obs-ties-graph" role="img"
+        aria-label={fill(t("{org} y {n} relaciones: {groups}", "{org} and {n} ties: {groups}"), { org: organization, n: ties.length, groups: present.map(g => label[g]).join(", ") })}>
+        {placed.map((p, k) => <line key={`l${k}`} x1={c} y1={c} x2={p.x} y2={p.y} className={`obs-tie obs-tie-${p.group}`} strokeDasharray={dash(p.insight.nature)}/>)}
+        <circle cx={c} cy={c} r={30} className="obs-tie-centre"/>
+        <text x={c} y={c + 4} textAnchor="middle" className="obs-tie-centre-text">{organization.slice(0, 14)}</text>
+        {placed.map((p, k) => <g key={`n${k}`}>
+          <circle cx={p.x} cy={p.y} r={7} className={`obs-tie-node obs-tie-${p.group}`} strokeDasharray={dash(p.insight.nature)}/>
+          <text x={p.x} y={p.y + (p.y < c ? -12 : 20)} textAnchor="middle" className="obs-tie-text">{p.name.slice(0, 18)}</text>
+        </g>)}
+      </svg>
+      <div className="obs-ties-list">{present.map(g => <section key={g}>
+        <h4>{label[g]}</h4>
+        <ul>{ties.filter(tie => tie.group === g).map(tie => <li key={tie.insight.id}>
+          <button className="obs-link obs-canvas-finding" onClick={() => onOpen(tie.insight)}>{tie.name}</button>
+          <NatureMark nature={tie.insight.nature} label={natureLabel(tie.insight.nature, t)}/>
+        </li>)}</ul>
+      </section>)}</div>
+    </div>
+    <footer><p className="obs-canvas-conditions">{t("Línea continua: observada; discontinua: declarada por la organización; punteada: potencial. Una relación declarada o potencial no es una relación confirmada.", "Solid line: observed; dashed: declared by the organization; dotted: potential. A declared or potential tie is not a confirmed one.")}</p></footer>
+  </section>;
 }

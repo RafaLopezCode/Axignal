@@ -30,6 +30,7 @@ from urllib.parse import urlsplit
 
 from application.first_observation.registry_ids import registry_identifiers
 from application.press.mentions import mentions, normalized_name, search_terms
+from application.web_research.expansion import reported_entries
 from application.web_research.money import reported_revenue
 
 #: The provider's own relevance score (0-3); below it a candidate is not read at all.
@@ -52,6 +53,13 @@ REGULATION_WORDS = {
 REVENUE_WORDS = {
     "es": "facturación", "en": "revenue", "de": "Umsatz", "fr": "chiffre d'affaires",
     "it": "fatturato", "pt": "faturação", "nl": "omzet",
+}  # fmt: skip
+
+#: "International expansion" in the languages the observatory reads (spec 107).
+EXPANSION_WORDS = {
+    "es": "expansión internacional", "en": "international expansion", "de": "Expansion Ausland",
+    "fr": "s'implante", "it": "espansione internazionale", "pt": "expansão internacional",
+    "nl": "internationale expansie",
 }  # fmt: skip
 
 #: How a country's company directories name the identifier AXIGNAL can verify (check digits):
@@ -183,6 +191,12 @@ def plan(subject: ResearchSubject, *, today: date) -> tuple[PlannedQuery, ...]:
     two_years = date(today.year - 2, today.month, min(today.day, 28)).isoformat()
     out.append(
         PlannedQuery(
+            "MARKETS",
+            f'"{name}" {EXPANSION_WORDS.get(lang, "international expansion")} -site:{subject.domain} after:{two_years}',
+        )
+    )
+    out.append(
+        PlannedQuery(
             "ECONOMICS",
             f'"{name}" {REVENUE_WORDS.get(lang, "revenue")} -site:{subject.domain} after:{two_years}',
         )
@@ -236,7 +250,7 @@ def candidates(hits: Sequence[WebHit], subject: ResearchSubject, *, purpose: str
             continue
         if purpose == "CONTEXT" and (label in PATENT_LABELS or host in _PATENT_HOSTS):
             continue
-        if purpose in {"REPUTATION", "IDENTITY", "ECONOMICS"}:
+        if purpose in {"REPUTATION", "IDENTITY", "ECONOMICS", "MARKETS"}:
             if host == own or host.endswith("." + own):
                 continue  # its own voice
             if any(b in label for b in brands) and label not in REVIEW_LABELS:
@@ -287,6 +301,8 @@ class PageCheck:
     identifiers: tuple[tuple[str, str], ...] = ()
     #: Revenue the page reports for the organization (economics research only).
     revenue: Mapping[str, object] | None = None
+    #: Countries the page reports it has entered (markets research only).
+    entries: tuple[str, ...] = ()
     #: Why a page was not read (HTTP status or the reader's refusal), said as it is.
     reason: str | None = None
     #: The publication date the page declares (ISO), when it declares one.
@@ -299,6 +315,7 @@ class PageCheck:
             "published": self.published,
             "identifiers": [list(i) for i in self.identifiers],
             "revenue": dict(self.revenue) if self.revenue else None,
+            "entries": list(self.entries),
         }  # fmt: skip
 
     @staticmethod
@@ -312,6 +329,7 @@ class PageCheck:
             reason=str(raw["reason"]) if raw.get("reason") else None,
             published=str(raw["published"]) if raw.get("published") else None,
             revenue=_mapping(raw.get("revenue")),
+            entries=tuple(str(c) for c in raw.get("entries") or [] if isinstance(c, str)),  # type: ignore[attr-defined]
             identifiers=tuple(
                 (str(i[0]), str(i[1])) for i in raw.get("identifiers") or []  # type: ignore[attr-defined]
                 if isinstance(i, list | tuple) and len(i) == 2
@@ -331,6 +349,8 @@ def check_page(
     published: str | None = None,
     require_identifier: bool = False,
     extract_revenue: bool = False,
+    home_country: str | None = None,
+    extract_entries: bool = False,
 ) -> PageCheck:
     """SUPPORTED only when the page's own title or text names a needle."""
     if published is not None and published >= read_at[:10]:
@@ -365,6 +385,16 @@ def check_page(
             found[0][1].split(" ")[-1].lower() if found[0][0] == "DE_HR" else found[0][1].lower()
         )
         excerpt = excerpt_around(text, [value]) or excerpt
+    entries: tuple[str, ...] = ()
+    if extract_entries:
+        # Same sentence: the organization, an expansion verb and a country, not a plan (spec 107).
+        found_entries = reported_entries(f"{title}. {text}", needles, home=home_country)
+        if found_entries is None:
+            return PageCheck(
+                url, "NOT_SUPPORTED", title=title[:300], read_at=read_at, published=published
+            )
+        entries = found_entries.countries
+        excerpt = found_entries.excerpt
     revenue: dict[str, object] | None = None
     if extract_revenue:
         # The figure must be reported in the same sentence that names it (spec 104).
@@ -381,6 +411,7 @@ def check_page(
     return PageCheck(
         url, "SUPPORTED", title=title[:300], excerpt=excerpt, links_to_website=linked,
         read_at=read_at, published=published, identifiers=identifiers, revenue=revenue,
+        entries=entries,
     )  # fmt: skip
 
 
@@ -404,6 +435,7 @@ def research_discoveries(
     out: list[dict[str, object]] = []
     withheld = 0
     reported: list[tuple[PageCheck, str, tuple[str, str] | None, Mapping[str, object]]] = []
+    entered: dict[str, list[dict[str, object]]] = {}
     for page in pages:
         check = PageCheck.from_wire(page)
         if check.state != "SUPPORTED":
@@ -464,6 +496,13 @@ def research_discoveries(
                     "names the organization; only an official register admits an identity.",
                 },
             })  # fmt: skip
+        elif purpose == "MARKETS" and check.entries:
+            about = attribution(check.title) if attribution is not None and check.title else None
+            if about is None or about[0] != "ANOTHER_ENTITY":
+                for country in check.entries:
+                    entered.setdefault(country, []).append(
+                        {"url": check.url, "excerpt": check.excerpt, "published": check.published}
+                    )
         elif purpose == "ECONOMICS" and check.revenue:
             about = attribution(check.title) if attribution is not None and check.title else None
             if about is not None and about[0] == "ANOTHER_ENTITY":
@@ -487,6 +526,24 @@ def research_discoveries(
                     "Not legal advice.",
                 },
             })  # fmt: skip
+    if entered:
+        first = next(iter(entered.values()))[0]
+        out.append({
+            "kind": "DECLARED_SERVICE_AREA",
+            "code": "ENTRY_REPORTED",
+            "statement": ", ".join(sorted(entered)),
+            "sourceUrl": first["url"],
+            "excerpt": first["excerpt"],
+            "observedAt": result.get("researchedAt"),
+            "epistemicState": "POTENTIAL",
+            "detail": {
+                "countries": {c: pages[:3] for c, pages in sorted(entered.items())},
+                **basis,
+                "limitation": "Countries a third-party page reports it has entered, in the same "
+                "sentence that names it; plans and forecasts left out. A market to check, not "
+                "sales confirmed.",
+            },
+        })  # fmt: skip
     if reported:
         # The most recent year reported; one figure, never a sum or an average of pages.
         check, outlet, about, page = max(

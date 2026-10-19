@@ -884,3 +884,48 @@ body:has(.obs-rail-desktop) .privacy-preferences-button { inset-inline-end: auto
 .obs-month-value { font-size: 11px; font-variant-numeric: tabular-nums; color: var(--obs-text); min-block-size: 14px; }
 .obs-month-name { font-size: 10.5px; color: var(--obs-muted, #6b7280); overflow: hidden; white-space: nowrap; max-inline-size: 100%; }
 @media (prefers-reduced-motion: reduce) { .obs-month-bar { animation: none; } }
+
+/* Family-specific panels: demand deadlines and economic figures. */
+.obs-deadlines { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.obs-deadlines li { display: grid; grid-template-columns: 64px 72px minmax(0, 1fr); align-items: baseline; gap: 10px; animation: obs-rise .44s calc(var(--i, 0) * 50ms) var(--obs-ease) both; }
+.obs-deadlines time { font-weight: 700; font-variant-numeric: tabular-nums; }
+.obs-deadline-in { font-size: 12.5px; color: var(--obs-muted, #6b7280); }
+.obs-figures { inline-size: 100%; border-collapse: collapse; font-size: 13.5px; }
+.obs-figures th, .obs-figures td { text-align: start; padding: 6px 8px 6px 0; border-block-end: 1px solid var(--obs-line); vertical-align: top; }
+.obs-figures th { font-weight: 400; }
+@media (prefers-reduced-motion: reduce) { .obs-deadlines li { animation: none; } }
+
+/* Relationships graph: ties around the organization, by kind and epistemic state. */
+.obs-canvas-wide { grid-column: 1 / -1; }
+.obs-ties { display: grid; grid-template-columns: minmax(220px, 320px) minmax(0, 1fr); gap: 18px; align-items: start; }
+@media (max-width: 760px) { .obs-ties { grid-template-columns: 1fr; } }
+.obs-ties-graph { inline-size: 100%; block-size: auto; overflow: visible; }
+.obs-tie { stroke: #b4bdd3; stroke-width: 1.5; }
+.obs-tie-centre { fill: #354f98; }
+.obs-tie-centre-text { fill: #fff; font-size: 10px; font-weight: 700; }
+.obs-tie-node { stroke-width: 2; fill: #fff; }
+.obs-tie-text { font-size: 9.5px; fill: var(--obs-text); }
+.obs-tie-clients { stroke: var(--ax-family-relationships, #3d6fb4); }
+.obs-tie-partners { stroke: var(--ax-family-markets, #7a5fb0); }
+.obs-tie-suppliers { stroke: var(--ax-family-value, #4f8a6b); }
+.obs-tie-group { stroke: var(--ax-family-organization, #8a7a3d); }
+.obs-tie-competitors { stroke: var(--ax-family-demand, #b05f5f); }
+.obs-ties-list h4 { margin: 0 0 4px; font-size: 13px; }
+.obs-ties-list section + section { margin-block-start: 10px; }
+.obs-ties-list ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
+.obs-ties-list li { display: flex; justify-content: space-between; gap: 8px; align-items: baseline; }
+
+/* Activity: its pace as counted facts, and what happened, newest first. */
+.obs-pace { display: grid; gap: 8px; margin: 0; }
+.obs-pace div { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; }
+.obs-pace dd { margin: 0; font-size: 20px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.obs-events { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.obs-events li { display: grid; grid-template-columns: auto auto minmax(0, 1fr); gap: 8px; align-items: baseline; }
+.obs-events time { font-variant-numeric: tabular-nums; color: var(--obs-muted, #5b6478); font-size: 12px; }
+.obs-event-kind { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; color: var(--ax-family-activity, #354f98); }
+
+/* Organization: identity anchors, each with its own state. */
+.obs-anchors { inline-size: 100%; border-collapse: collapse; }
+.obs-anchors th, .obs-anchors td { padding: 6px 4px; text-align: start; vertical-align: baseline; border-block-end: 1px solid var(--obs-line, #e3e7ef); }
+.obs-anchors th { font-weight: 600; font-size: 13px; }
+.obs-anchors td:last-child { text-align: end; }
