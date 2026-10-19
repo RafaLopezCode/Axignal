@@ -52,10 +52,10 @@ export function localizeStaticKnowledgeHtml({
 export const localizedPublicPagePaths = ["", "data", "industries", "pricing", "industries/industry", "industries/construction", "industries/energy", "industries/logistics", "industries/professional-services", "industries/agencies"];
 
 /** Patch the known public catalog only; missing output or language attributes fail closed. */
-export function localizeStaticPublicHtml({appDir, locales=localizedKnowledgeLocales}) {
+export function localizeStaticPublicHtml({appDir, locales=localizedKnowledgeLocales, pages=localizedPublicPagePaths}) {
   const updated=[];
   for(const locale of locales) {
-    for(const page of localizedPublicPagePaths) {
+    for(const page of pages) {
       const file=path.join(appDir, page ? `${locale}/${page}.html` : `${locale}.html`);
       if(!fs.existsSync(file)) throw new Error(`Missing prerendered public page: ${file}`);
       const original=fs.readFileSync(file,"utf8");
@@ -80,6 +80,6 @@ if (invokedDirectly) {
     : path.resolve("node_modules/.cache/axignal-next");
   const appDir = path.join(distDir, "server", "app");
   const updated = localizeStaticKnowledgeHtml({ appDir });
-  const publicPages=localizeStaticPublicHtml({appDir});
+  const publicPages=localizeStaticPublicHtml({appDir, pages:[...localizedPublicPagePaths,"landing-lab"]});
   console.log(`Localized html lang for ${updated.length} knowledge and ${publicPages.length} public catalog pages.`);
 }

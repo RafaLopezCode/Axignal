@@ -1,3 +1,4 @@
+import { natureLabel } from "./nature-label";
 /**
  * Observatory model: deterministic presentation of an authorized subscriber output.
  *
@@ -116,17 +117,7 @@ function epistemicNature(state: Discovery["epistemicState"]): Nature {
   return state;
 }
 
-export function natureLabel(nature: Nature, t: Translate): string {
-  switch (nature) {
-    case "OBSERVED": return t("Observado", "Observed");
-    case "DECLARED": return t("Declarado", "Declared");
-    case "POTENTIAL": return t("Potencial", "Potential");
-    case "UNKNOWN": return t("Desconocido", "Unknown");
-    case "STRENGTH": return t("Se entiende bien", "Understood well");
-    case "CLARIFY": return t("Conviene aclarar", "Worth clarifying");
-    case "UNRESOLVED": return t("Sin conclusión", "No conclusion");
-  }
-}
+export { natureLabel } from "./nature-label";
 
 export function laneCopy(lane: Lane, t: Translate): { title: string; question: string; empty: string } {
   if (lane === "matters") return {

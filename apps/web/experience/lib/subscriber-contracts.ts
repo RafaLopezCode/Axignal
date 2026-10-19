@@ -89,13 +89,8 @@ export const pendingOutputSchema = z.object({
   firstObservation: firstObservationSchema.nullable(),
 });
 /** Only public http(s) evidence links are rendered; anything else stays text. */
-export function evidenceUrl(value: string | null | undefined): string | null {
-  if (!value) return null;
-  try {
-    const url = new URL(value);
-    return (url.protocol === "https:" || url.protocol === "http:") && !url.username && !url.password ? url.toString() : null;
-  } catch { return null; }
-}
+export { evidenceUrl } from "./evidence-url";
+
 export const portfolioSchema = z.object({
   state: z.literal("success"),
   capacity: z.number().int().nonnegative().nullable(),

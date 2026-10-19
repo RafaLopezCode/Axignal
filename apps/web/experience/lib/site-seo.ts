@@ -16,8 +16,8 @@ export function homeLanguages(): Record<string, string> {
   };
 }
 
-export function siteStructuredData(locale: Locale | null): Record<string, unknown> {
-  const url = absolutePublicUrl(locale ? `/${locale}` : "/");
+export function siteStructuredData(locale: Locale | null, pagePath?: string): Record<string, unknown> {
+  const url = absolutePublicUrl(pagePath ?? (locale ? `/${locale}` : "/"));
   const meta = HOME_METADATA[locale ?? "en"];
   const euros = (minor: number) => (minor / 100).toFixed(2);
   return {
