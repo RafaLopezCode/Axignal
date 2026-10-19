@@ -166,8 +166,13 @@ class WebResearchRunner:
         *,
         identity: bool = False,
         economics: bool = False,
+        markets: bool = False,
+        home: str | None = None,
     ) -> PageCheck:
-        key = f"{hit.url}|{'/'.join(needles)}|{own_domain}|{int(identity)}|{int(economics)}"
+        key = (
+            f"{hit.url}|{'/'.join(needles)}|{own_domain}|{int(identity)}|{int(economics)}"
+            f"|{int(markets)}|{home or ''}"
+        )
         now = self._clock()
         with self._connect() as db:
             row = db.execute(
@@ -175,7 +180,15 @@ class WebResearchRunner:
             ).fetchone()
         if row is not None and now - datetime.fromisoformat(row["checked_at"]) < TTL:
             return PageCheck.from_wire(json.loads(row["page"]))
-        check = self._read(hit.url, needles, own_domain, identity=identity, economics=economics)
+        check = self._read(
+            hit.url,
+            needles,
+            own_domain,
+            identity=identity,
+            economics=economics,
+            markets=markets,
+            home=home,
+        )
         with self._connect() as db:
             db.execute(
                 """INSERT INTO pages (check_key, page, checked_at) VALUES (?,?,?)
@@ -193,6 +206,8 @@ class WebResearchRunner:
         *,
         identity: bool = False,
         economics: bool = False,
+        markets: bool = False,
+        home: str | None = None,
     ) -> PageCheck:
         parts = urlsplit(url)
         robots_url = f"{parts.scheme}://{parts.netloc}/robots.txt"
@@ -231,6 +246,8 @@ class WebResearchRunner:
             # A directory's identifier sits in its data blocks, not its article text.
             require_identifier=identity,
             extract_revenue=economics,
+            home_country=home,
+            extract_entries=markets,
         )  # fmt: skip
 
     def ask(self, subject: ResearchSubject, question: str, *, requester: str) -> dict[str, object]:
@@ -326,7 +343,7 @@ class WebResearchRunner:
             searched += int(paid)
             needles = (
                 names
-                if query.purpose in {"REPUTATION", "IDENTITY", "ECONOMICS"}
+                if query.purpose in {"REPUTATION", "IDENTITY", "ECONOMICS", "MARKETS"}
                 else _context_needles(subject)
             )
             for hit in candidates(hits, subject, purpose=query.purpose):
@@ -339,6 +356,8 @@ class WebResearchRunner:
                     subject.domain,
                     identity=query.purpose == "IDENTITY",
                     economics=query.purpose == "ECONOMICS",
+                    markets=query.purpose == "MARKETS",
+                    home=subject.country,
                 )
                 pages.append({
                     **check.to_wire(), "purpose": query.purpose,

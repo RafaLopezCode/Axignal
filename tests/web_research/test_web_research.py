@@ -32,8 +32,17 @@ def hit(url: str, rerank: float | None = 2.0, title: str = "Velasca recensioni")
 
 def test_plan_asks_reviews_recent_pages_and_sector_rules_in_its_language() -> None:
     queries = plan(VELASCA, today=date(2026, 10, 18))
-    assert [q.purpose for q in queries] == ["REPUTATION", "REPUTATION", "CONTEXT", "ECONOMICS"]
-    assert queries[3].query.startswith('"Velasca" fatturato -site:velasca.com after:2024-10-18')
+    assert [q.purpose for q in queries] == [
+        "REPUTATION",
+        "REPUTATION",
+        "CONTEXT",
+        "MARKETS",
+        "ECONOMICS",
+    ]
+    assert queries[3].query.startswith(
+        '"Velasca" espansione internazionale -site:velasca.com after:'
+    )
+    assert queries[4].query.startswith('"Velasca" fatturato -site:velasca.com after:2024-10-18')
     assert queries[0].query == '"Velasca" recensioni -site:velasca.com'
     assert "after:2025-10-18" in queries[1].query
     assert queries[2].query.startswith('"scarpe" normativa lang:it')
@@ -45,6 +54,7 @@ def test_no_activity_words_means_no_context_query() -> None:
     assert [q.purpose for q in plan(subject, today=date(2026, 10, 18))] == [
         "REPUTATION",
         "REPUTATION",
+        "MARKETS",
         "ECONOMICS",
     ]
 
@@ -441,3 +451,16 @@ def test_a_subscriber_question_is_researched_now_bounded_and_about_it_only(tmp_p
     assert runner.ask(VELASCA, question, requester="tenant-a")["state"] == "DAILY_LIMIT"
     assert runner.ask(VELASCA, question, requester="tenant-b")["state"] == "DONE"
     assert search.calls.count(query) == 1  # the same question is not paid twice
+
+
+def test_entries_reported_by_pages_become_one_potential_markets_finding() -> None:
+    found = research_discoveries(
+        result_with([{**page("https://www.modaes.com/a", "MARKETS"), "entries": ["FR", "IT"]},
+                     {**page("https://www.expansion.com/b", "MARKETS"), "entries": ["FR"]}]),
+        own_domain="velasca.com",
+    )  # fmt: skip
+    assert [(d["kind"], d["code"], d["statement"], d["epistemicState"]) for d in found] == [
+        ("DECLARED_SERVICE_AREA", "ENTRY_REPORTED", "FR, IT", "POTENTIAL")
+    ]
+    detail = found[0]["detail"]
+    assert isinstance(detail, dict) and len(detail["countries"]["FR"]) == 2

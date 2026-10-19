@@ -61,3 +61,10 @@ def test_a_reported_figure_is_read_with_its_scale_currency_and_year(
 ])  # fmt: skip
 def test_figures_that_are_not_its_revenue_are_left_out(text: str) -> None:
     assert reported_revenue(text, ["ecoalf"], current_year=2026) is None
+
+
+def test_a_name_with_symbols_is_matched_word_for_word() -> None:
+    found = reported_revenue(
+        "Bloom & Wild's revenue reached £120m in 2025.", ["bloom wild"], current_year=2026
+    )
+    assert found is not None and found.value == 120_000_000.0
