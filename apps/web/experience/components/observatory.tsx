@@ -696,7 +696,7 @@ function OrganizationView(props: OrgProps) {
         {!props.reading && observing && <ObservingState state={item.observation!.state}/>}
         {!props.reading && !observing && readingView === "summary" && <SummaryView reading={reading} name={name} insights={shown} lit={litShown} openId={open?.id ?? null} onOpen={openInsight} scope={scope} onFamily={family => selectFacet({ family, channel: null })}
           canvas={facet.family === "presence" && !facet.channel ? <VisibilityCanvas reading={reading} insights={insights} onOpen={openInsight}/>
-            : facet.family && facet.family !== "presence" && scope ? <FamilyCanvas family={facet.family} title={scope.title} insights={insights} onOpen={openInsight}/> : undefined}
+            : facet.family && facet.family !== "presence" && scope ? <FamilyCanvas family={facet.family} title={scope.title} insights={insights} onOpen={openInsight} reading={reading}/> : undefined}
           remembered={props.rememberReading !== false} onSeenAll={() => updateSeen(store => markSeen(store, item.focusId, shownKeys, new Date().toISOString()))} item={item}/>}
         {!props.reading && !observing && readingView === "summary" && firstObservation?.discoveries.some(d => d.kind === "ACTIVITY") && <DemandMarkets focusId={item.focusId} observation={firstObservation} canAct={props.canAct} onSaved={() => void props.readOutput(item.focusId, false)}/>}
         {!props.reading && !observing && readingView === "explore" && <ExploreView projection={projection} revision={revision} firstObservation={firstObservation} onSummary={() => go({ view: "summary" })}/>}
