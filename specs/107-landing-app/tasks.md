@@ -6,5 +6,5 @@
 - [x] Verify SSR, browser, keyboard, responsive sizes, demo and access navigation, pricing, motion and console.
 - [x] Run deterministic gates and update the AST graph.
 - [x] Capture old/new full desktop/mobile comparisons and interactive states, preserving measurement warnings.
-- [ ] Create and attach draft PR for CTO review.
+- [x] Create and attach draft PR for CTO review: https://github.com/RafaLopezCode/Axignal/pull/350.
 - [ ] Human visual, narrative and interactive acceptance. No automatic promotion.
