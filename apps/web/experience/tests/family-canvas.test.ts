@@ -92,3 +92,30 @@ test("a family with fewer than two known findings gets no canvas: the lanes alre
   ]), t, "es");
   assert.equal(renderToStaticMarkup(createElement(FamilyCanvas, { family: "reputation", title: "Reputación", insights, onOpen() {} })), "");
 });
+
+const inDays = (n: number) => new Date(Date.now() + n * 86_400_000).toISOString().slice(0, 10);
+const call = (title: string, days: number, fit: string) => ({ kind: "DEMAND", code: "POTENTIAL_DEMAND", statement: title, epistemicState: "POTENTIAL",
+  sourceUrl: "https://ted.europa.eu/x", excerpt: null, observedAt: month(0), detail: { deadline: inDays(days), fit, buyer: "Ayuntamiento" } });
+
+test("Demand's canvas shows open calls by deadline and their fit, never past deadlines", () => {
+  const r = reading([call("Paneles solares escuela", 20, "CORE"), call("Alumbrado público", 5, "PARTIAL"), call("Obra cerrada", -3, "CORE")]);
+  const insights = insightsFor(r, t, "es");
+  const html = renderToStaticMarkup(createElement(FamilyCanvas, { family: "demand", title: "Demanda", insights, onOpen() {}, reading: r }));
+  assert.match(html, /Upcoming deadlines/);
+  assert.ok(html.indexOf("in 5 days") >= 0 && html.indexOf("in 5 days") < html.indexOf("in 20 days"), "soonest first");
+  assert.doesNotMatch(html, /Obra cerrada<\/button>/);  // a past deadline is not upcoming
+  assert.match(html, /Fit with its activity/);
+  assert.match(html, /Its main work/);
+  assert.doesNotMatch(html, /Over time/);  // deadlines replace the generic months
+});
+
+test("Economics' canvas tells each figure's source kind and year apart", () => {
+  const fact = (code: string, kind: string, year: string) => ({ kind: "ECONOMIC_FACT", code, statement: "120000000", epistemicState: "POTENTIAL",
+    sourceUrl: "https://example.org/f", excerpt: null, observedAt: month(0), detail: { fact: "revenue", value: 120000000, unit: "EUR", year, sourceKind: kind, source: "x" } });
+  const r = reading([fact("WIKIDATA:revenue", "SECONDARY_COMMUNITY_EDITED", "2023"), fact("REPORTED:revenue", "THIRD_PARTY_REPORT", "2025")]);
+  const html = renderToStaticMarkup(createElement(FamilyCanvas, { family: "economics", title: "Economía", insights: insightsFor(r, t, "es"), onOpen() {}, reading: r }));
+  assert.match(html, /Figures, their source and year/);
+  assert.match(html, /Wikidata/);
+  assert.match(html, /Third-party report/);
+  assert.match(html, /2025/);
+});
