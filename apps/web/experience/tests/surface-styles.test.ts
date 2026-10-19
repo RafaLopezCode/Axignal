@@ -52,7 +52,7 @@ test("shared foundation retains accessibility, dialog, privacy and real request 
     base.length < 40000,
     "The lab must not receive a workspace-sized foundation",
   );
-  for (const asset of [styles.base, styles.legacy]) {
+  for (const asset of [styles.base, styles.legacy, styles.lab]) {
     const data = fs.readFileSync(
       new URL("../public" + asset.url, import.meta.url),
     );
@@ -84,8 +84,25 @@ test("only exact immutable style assets enter the public router; the lab remains
     ),
     "utf8",
   );
-  for (const asset of [styles.base, styles.legacy])
+  for (const asset of [styles.base, styles.legacy, styles.lab])
     assert.ok(edge.includes(`Path(\`${asset.url}\`)`));
   assert.ok(!edge.includes("PathPrefix(`/styles"));
   assert.ok(!edge.includes("landing-lab"));
+});
+
+test("the isolated lab gets one exact combined stylesheet, with its own skin after the foundation", () => {
+  const read = (path: string) =>
+    fs
+      .readFileSync(new URL("../" + path, import.meta.url), "utf8")
+      .replace(/\r\n/g, "\n");
+  assert.equal(
+    read("public" + styles.lab.url),
+    read("public" + styles.base.url) +
+      "\n/* components/landing-lab.css */\n" +
+      read("components/landing-lab.css"),
+  );
+  assert.ok(
+    styles.lab.bytes < 120000,
+    "The complete landing skin must remain far below the legacy skin",
+  );
 });

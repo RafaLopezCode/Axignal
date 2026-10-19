@@ -1,5 +1,6 @@
 import hashlib
 import json
+import re
 from pathlib import Path
 
 from fontTools import subset
@@ -26,15 +27,42 @@ points = set(range(0x80)) | {
     or 0x2190 <= ord(char) <= 0x21FF
     or ord(char) in (0x2212, 0x221E)
 }
-groups = []
-for point in sorted(points):
-    if groups and point == groups[-1][-1] + 1:
-        groups[-1].append(point)
-    else:
-        groups.append([point])
-unicode_range = ",".join(
-    f"U+{group[0]:X}-{group[-1]:X}" if len(group) > 1 else f"U+{group[0]:X}" for group in groups
-)
+
+
+def unicode_ranges(values):
+    groups = []
+    for point in sorted(values):
+        if groups and point == groups[-1][-1] + 1:
+            groups[-1].append(point)
+        else:
+            groups.append([point])
+    return ",".join(
+        f"U+{group[0]:X}-{group[-1]:X}" if len(group) > 1 else f"U+{group[0]:X}" for group in groups
+    )
+
+
+# Handwriting is used only for these four authored annotations. Keep every
+# character in all six canonical versions, with all OpenType alternate glyphs.
+notes = ""
+for source, keys in [
+    ("lib/landing-lab-copy.ts", ("heroNote", "closingNote", "methodTitle")),
+    ("lib/landing-lab-experience-copy.ts", ("trustNote",)),
+]:
+    text = (root / source).read_text(encoding="utf-8")
+    for key in keys:
+        call = re.search(r"\b" + key + r":\s*(?:w|words)\(([\s\S]*?)\n\s*\),", text)
+        assert call, (source, key)
+        literals = re.findall(r'"(?:[^"\\]|\\.)*"', call.group(1))
+        assert len(literals) == 6, (source, key, len(literals))
+        notes += "".join(json.loads(value) for value in literals)
+# The zero glyph supplies ch-based annotation widths, even without a visible digit.
+note_points = {ord(char) for char in notes} | {0x20, 0x30, 0xA0}
+editorial_points = {
+    ord(char)
+    for char in json.loads((root / "lib/landing-lab-repertoire.json").read_text(encoding="utf-8"))[
+        "characters"
+    ]
+} | {0x20, 0x30, 0xA0}
 
 items = []
 glyph_maps = []
@@ -49,7 +77,9 @@ for family, name, weight in [
     if family == "Bic Notes Lab" and "fvar" in font:
         font = instantiateVariableFont(font, {"wght": 400}, inplace=True)
         weight = "400"
-    expected = set(font.getBestCmap()) & points
+    face_points = {"Bic Notes Lab": note_points, "Fraunces": editorial_points}.get(family, points)
+    face_range = unicode_ranges(face_points)
+    expected = set(font.getBestCmap()) & face_points
     opts = subset.Options()
     opts.flavor = "woff2"
     opts.notdef_outline = True
@@ -59,7 +89,7 @@ for family, name, weight in [
     if family in ("Fraunces", "Bic Notes Lab"):
         opts.hinting = False
     sub = subset.Subsetter(options=opts)
-    sub.populate(unicodes=points)
+    sub.populate(unicodes=face_points)
     sub.subset(font)
     temporary = root / "public/fonts" / ("lab-" + name)
     font.flavor = "woff2"
@@ -97,7 +127,7 @@ for family, name, weight in [
             sourceBytes=original.stat().st_size,
             sha256=digest,
             weight=weight,
-            unicodeRange=unicode_range,
+            unicodeRange=face_range,
             glyphCoverage=len(expected),
         )
     )
@@ -106,7 +136,7 @@ manifest = root / "lib/landing-lab-fonts.json"
 manifest.write_text(
     json.dumps(
         dict(
-            note="Official fonts: glyph coverage and layout features retained. Manrope keeps variable weights; Fraunces retains its original 300-600 range and optical axes; notes use their exact 400 weight. Original font licenses remain in public/fonts. Non-Latin characters use the original face outside unicode-range.",
+            note="Official fonts: glyph coverage and layout features retained. Manrope keeps variable weights; Fraunces retains its original 300-600 range and optical axes; notes use their exact 400 weight and the complete six-language annotation repertoire. Original font licenses remain in public/fonts. Non-Latin characters use the original face outside unicode-range.",
             fonts=items,
         ),
         ensure_ascii=False,
@@ -128,7 +158,7 @@ faces = (
         + '") format("woff2");\n  font-weight: '
         + i["weight"]
         + ";\n  font-display: swap;\n  unicode-range: "
-        + unicode_range
+        + i["unicodeRange"]
         + ";\n}"
         for i in items
     )

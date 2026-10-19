@@ -7,15 +7,19 @@ export function SurfaceStyles() {
   const lab = isLandingLabPath(usePathname());
   return (
     <>
-      <link
-        rel="stylesheet"
-        href={styles.base.url}
-        precedence="axignal-base"
-        data-axignal-style="base"
-      />
-      {/* Reserve the legacy group before page CSS even when entering via the lab.
-          Otherwise its first client navigation would append the global skin after
-          route overrides, making appearance depend on navigation history. */}
+      {/* Reserve every group in a stable order on both initial and client navigation.
+          React retains precedence resources; arrival order must not change the skin. */}
+      <style href="axignal-base-order" precedence="axignal-base">
+        {":root{}"}
+      </style>
+      {!lab && (
+        <link
+          rel="stylesheet"
+          href={styles.base.url}
+          precedence="axignal-base"
+          data-axignal-style="base"
+        />
+      )}
       <style href="axignal-legacy-order" precedence="axignal-legacy">
         {":root{}"}
       </style>
@@ -25,6 +29,17 @@ export function SurfaceStyles() {
           href={styles.legacy.url}
           precedence="axignal-legacy"
           data-axignal-style="legacy"
+        />
+      )}
+      <style href="axignal-lab-order" precedence="axignal-lab">
+        {":root{}"}
+      </style>
+      {lab && (
+        <link
+          rel="stylesheet"
+          href={styles.lab.url}
+          precedence="axignal-lab"
+          data-axignal-style="lab"
         />
       )}
     </>

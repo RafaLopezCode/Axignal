@@ -76,6 +76,7 @@ test("year-long cache is limited to content-hashed public assets", async () => {
     ...labFonts.fonts.map((asset) => asset.url),
     surfaceStyles.base.url,
     surfaceStyles.legacy.url,
+    surfaceStyles.lab.url,
   ];
   assert.deepEqual(cached.map((rule) => rule.source).sort(), expected.sort());
   for (const rule of cached) {

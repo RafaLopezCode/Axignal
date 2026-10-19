@@ -1,5 +1,5 @@
 {
-  "note": "Official fonts: glyph coverage and layout features retained. Manrope keeps variable weights; Fraunces retains its original 300-600 range and optical axes; notes use their exact 400 weight. Original font licenses remain in public/fonts. Non-Latin characters use the original face outside unicode-range.",
+  "note": "Official fonts: glyph coverage and layout features retained. Manrope keeps variable weights; Fraunces retains its original 300-600 range and optical axes; notes use their exact 400 weight and the complete six-language annotation repertoire. Original font licenses remain in public/fonts. Non-Latin characters use the original face outside unicode-range.",
   "fonts": [
     {
       "family": "Manrope",
@@ -14,25 +14,25 @@
     },
     {
       "family": "Fraunces",
-      "url": "/fonts/lab-fraunces.7b6f14901b6f.woff2",
+      "url": "/fonts/lab-fraunces.3bbb3a5b8520.woff2",
       "source": "/fonts/font-01.woff2",
-      "bytes": 52588,
+      "bytes": 44724,
       "sourceBytes": 67304,
-      "sha256": "7b6f14901b6fdb90e5fec1a5b77225201a766ff010a0238faa096f56ef5071c0",
+      "sha256": "3bbb3a5b852090f458b055cad529dd1cfcdaccf64124655c4b88a6558617321e",
       "weight": "300 600",
-      "unicodeRange": "U+0-7F,U+A0-A1,U+A7,U+A9,U+AB,U+B0,U+B7,U+BB,U+BF-C4,U+C7-CA,U+CD,U+D1-D3,U+D5-D7,U+D9-DA,U+DC,U+DF-E4,U+E7-EA,U+EC-EF,U+F1-F6,U+F9-FC,U+153,U+2013-2014,U+2019,U+201C-201E,U+2026,U+203A,U+20AC,U+2192,U+21C4,U+2212",
-      "glyphCoverage": 158
+      "unicodeRange": "U+20,U+22-23,U+26-29,U+2B-3B,U+3F-5B,U+5D,U+5F,U+61-7B,U+7D,U+A0,U+A9,U+B7,U+BF-C0,U+C2,U+C4,U+C8-C9,U+D6,U+DA,U+DF-E4,U+E7-EA,U+ED-EE,U+F1-F3,U+F5-F6,U+F9-FA,U+FC,U+2019,U+2026,U+20AC,U+2192,U+2212",
+      "glyphCoverage": 118
     },
     {
       "family": "Bic Notes Lab",
-      "url": "/fonts/lab-bic-notes-lab.2947bc9ac698.woff2",
+      "url": "/fonts/lab-bic-notes-lab.3137d8930670.woff2",
       "source": "/fonts/caveat-latin.15bf208d.woff2",
-      "bytes": 45496,
+      "bytes": 25500,
       "sourceBytes": 85384,
-      "sha256": "2947bc9ac698569c5120434543db8bf8ba6a3ae9b8b6913e2a206a2701ff8fd9",
+      "sha256": "3137d89306705de5314ba9e5d1d413d376a0b871e9d6e4f079327f2da71d792b",
       "weight": "400",
-      "unicodeRange": "U+0-7F,U+A0-A1,U+A7,U+A9,U+AB,U+B0,U+B7,U+BB,U+BF-C4,U+C7-CA,U+CD,U+D1-D3,U+D5-D7,U+D9-DA,U+DC,U+DF-E4,U+E7-EA,U+EC-EF,U+F1-F6,U+F9-FC,U+153,U+2013-2014,U+2019,U+201C-201E,U+2026,U+203A,U+20AC,U+2192,U+21C4,U+2212",
-      "glyphCoverage": 159
+      "unicodeRange": "U+20,U+2E,U+30,U+41-43,U+45-46,U+48,U+4C-4D,U+4F,U+51-53,U+55-56,U+61-7A,U+A0,U+E3-E4,U+E7-E9,U+ED,U+F3,U+2019",
+      "glyphCoverage": 52
     },
     {
       "family": "IBM Plex Mono",

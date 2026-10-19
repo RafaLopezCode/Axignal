@@ -7,14 +7,15 @@
   },
   "scripts": {
     "dev": "next dev --hostname 127.0.0.1 --port 3810",
-    "build": "npm run check:styles && npm run check:seo && next build && node tools/localize-static-html-lang.mjs",
+    "build": "npm run check:repertoire && npm run check:styles && npm run check:seo && next build && node tools/localize-static-html-lang.mjs",
     "start": "next start --hostname 127.0.0.1 --port 3810",
     "typecheck": "tsc --noEmit",
     "test": "tsx --test tests/*.test.ts",
     "test:admin-http": "node --test tools/check-admin-transport.mjs",
     "check:seo": "tsx --test tests/acquisition.test.ts",
     "check:i18n": "node tools/locale-inventory.mjs --check",
-    "check:styles": "node tools/surface-styles.mjs --check"
+    "check:styles": "node tools/surface-styles.mjs --check",
+    "check:repertoire": "tsx tools/landing-lab-repertoire.ts --check"
   },
   "dependencies": {
     "@ai-sdk/react": "4.0.130",

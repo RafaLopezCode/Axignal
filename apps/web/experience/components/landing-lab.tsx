@@ -25,22 +25,8 @@ import {
 } from "lucide-react";
 import { useLocale } from "@/lib/locale";
 import { locales, isLocale } from "@/lib/languages";
-import { newsletterCopy } from "@/lib/marketing-newsletter";
-import { labExperienceCopy as x } from "@/lib/landing-lab-experience-copy";
 import { words, marketingPath } from "@/lib/marketing-content";
-import {
-  publicCopy as p,
-  marketingFaq,
-  trustItems,
-  methodSteps,
-} from "@/lib/marketing-ui";
-import { industries } from "@/lib/marketing-industries";
-import {
-  labCopy as c,
-  labQuestions,
-  labPersonas,
-  labFaq,
-} from "@/lib/landing-lab-copy";
+import type { LandingLabContent } from "@/lib/landing-lab-content";
 import {
   exampleInsights,
   EXAMPLE_MOMENTS,
@@ -63,7 +49,6 @@ import { InsightSources } from "./insight-sources";
 import { SyntheticEvidenceProvider } from "./evidence-link-context";
 import { Dialog } from "./ui";
 import labFonts from "@/lib/landing-lab-fonts.json";
-import "./landing-lab.css";
 
 // Separate async chunk: essential presentation and controls do not import GSAP.
 const NarrativeMotion = lazy(() => import("./landing-lab-motion"));
@@ -85,11 +70,24 @@ class MotionBoundary extends Component<
   }
 }
 const EXAMPLE_HREF = "/demo";
-type Scenario = (typeof labQuestions)[number]["id"];
+type Scenario = LandingLabContent["labQuestions"][number]["id"];
 const money = (locale: string, amount: number) =>
   formatFixedMoney(locale, EUR_REFERENCE, amount);
 
-export function LandingLab() {
+export function LandingLab({ content }: { content: LandingLabContent }) {
+  const {
+    c,
+    x,
+    p,
+    newsletterCopy,
+    labQuestions,
+    labPersonas,
+    labFaq,
+    marketingFaq,
+    trustItems,
+    methodSteps,
+    industries,
+  } = content;
   const { locale, t, copy, reducedMotion, setReducedMotion } = useLocale();
   const router = useRouter();
   const root = useRef<HTMLDivElement>(null);
@@ -312,13 +310,16 @@ export function LandingLab() {
   const stepImages = ["focus", "explain", "memory"];
   return (
     <div className="landing-lab" ref={root} id="lab-top">
-      <link
-        rel="preload"
-        as="font"
-        href={labFonts.fonts[1].url}
-        type="font/woff2"
-        crossOrigin="anonymous"
-      />
+      {labFonts.fonts.slice(0, 2).map((font) => (
+        <link
+          key={font.url}
+          rel="preload"
+          as="font"
+          href={font.url}
+          type="font/woff2"
+          crossOrigin="anonymous"
+        />
+      ))}
       <header className="lab-header">
         <Link
           prefetch={false}
@@ -515,7 +516,8 @@ export function LandingLab() {
                 width={640}
                 height={413}
                 alt=""
-                fetchPriority="high"
+                loading="lazy"
+                fetchPriority="low"
                 decoding="async"
               />
               <span className="lab-hand">{label("heroNote")}</span>

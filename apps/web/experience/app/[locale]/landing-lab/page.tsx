@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { LandingLab } from "@/components/landing-lab";
+import { getLandingLabContent } from "@/lib/landing-lab-content";
 import { LandingLabCriticalType } from "@/components/landing-lab-critical-type";
 import { locales, isLocale } from "@/lib/languages";
 import { jsonLd, siteStructuredData } from "@/lib/site-seo";
@@ -70,7 +71,7 @@ export default async function Page({
         }}
       />
       <LandingLabCriticalType />
-      <LandingLab />
+      <LandingLab content={getLandingLabContent(locale)} />
     </>
   );
 }

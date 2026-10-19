@@ -23,7 +23,7 @@ const config: NextConfig = {
       ...[
         ...publicDelivery.fonts.map(({url}) => url),
         ...labFonts.fonts.map(({url}) => url),
-        surfaceStyles.base.url, surfaceStyles.legacy.url,
+        surfaceStyles.base.url, surfaceStyles.legacy.url, surfaceStyles.lab.url,
         ...Object.values(publicDelivery.images).flatMap(({variants}) => variants.map(({url}) => url)),
       ].map(source => ({source, headers: [{key: "Cache-Control", value: "public, max-age=31536000, immutable"}]})),
     ];

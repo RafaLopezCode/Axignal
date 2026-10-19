@@ -57,29 +57,31 @@ for (const { path, text } of sheets.filter(
 const fonts = JSON.parse(
   fs.readFileSync(new URL("lib/landing-lab-fonts.json", root), "utf8"),
 ).fonts;
-const ranges = fonts[0].unicodeRange
-  .split(",")
-  .map((value) =>
-    value
-      .slice(2)
-      .split("-")
-      .map((value) => parseInt(value, 16)),
-  )
-  .map(([a, b]) => [a, b ?? a]);
-let cursor = 0;
-const complement = [];
-for (const [start, end] of ranges) {
-  if (cursor < start) complement.push([cursor, start - 1]);
-  cursor = end + 1;
+function outsideRange(unicodeRange) {
+  const ranges = unicodeRange
+    .split(",")
+    .map((value) =>
+      value
+        .slice(2)
+        .split("-")
+        .map((value) => parseInt(value, 16)),
+    )
+    .map(([a, b]) => [a, b ?? a]);
+  let cursor = 0;
+  const complement = [];
+  for (const [start, end] of ranges) {
+    if (cursor < start) complement.push([cursor, start - 1]);
+    cursor = end + 1;
+  }
+  if (cursor <= 0x10ffff) complement.push([cursor, 0x10ffff]);
+  return complement
+    .map(([a, b]) => `U+${a.toString(16)}-${b.toString(16)}`)
+    .join(",");
 }
-if (cursor <= 0x10ffff) complement.push([cursor, 0x10ffff]);
-const outside = complement
-  .map(([a, b]) => `U+${a.toString(16)}-${b.toString(16)}`)
-  .join(",");
 const fallback = fonts
   .map(
     (font) =>
-      `@font-face{font-family:${JSON.stringify(font.family)};src:url("${font.source}") format("woff2");font-weight:${font.weight};font-display:swap;unicode-range:${outside}}`,
+      `@font-face{font-family:${JSON.stringify(font.family)};src:url("${font.source}") format("woff2");font-weight:${font.weight};font-display:swap;unicode-range:${outsideRange(font.unicodeRange)}}`,
   )
   .join("\n");
 const controls = fs.readFileSync(
@@ -87,6 +89,12 @@ const controls = fs.readFileSync(
   "utf8",
 );
 const base = fallback + "\n" + foundation.toString() + "\n" + controls;
+const lab =
+  base +
+  "\n/* components/landing-lab.css */\n" +
+  fs
+    .readFileSync(new URL("components/landing-lab.css", root), "utf8")
+    .replace(/\r\n/g, "\n");
 const folder = new URL("public/styles/", root);
 fs.mkdirSync(folder, { recursive: true });
 const manifest = {
@@ -98,6 +106,7 @@ const manifest = {
 for (const [name, text] of [
   ["base", base],
   ["legacy", legacy],
+  ["lab", lab],
 ]) {
   const sha256 = createHash("sha256").update(text).digest("hex");
   const filename = `${name}.${sha256.slice(0, 12)}.css`;
@@ -127,11 +136,11 @@ const edgePath = new URL(
 );
 let edge = fs.readFileSync(edgePath, "utf8").replace(/\r\n/g, "\n");
 const assetLines =
-  [manifest.base.url, manifest.legacy.url]
+  [manifest.base.url, manifest.legacy.url, manifest.lab.url]
     .map((url) => `         Path(\`${url}\`) ||`)
     .join("\n") + "\n";
 if (check) {
-  for (const asset of [manifest.base, manifest.legacy]) {
+  for (const asset of [manifest.base, manifest.legacy, manifest.lab]) {
     if (!edge.includes(`Path(\`${asset.url}\`)`))
       throw new Error("Exact style asset ingress is stale");
   }
@@ -139,7 +148,7 @@ if (check) {
     throw new Error("Style ingress must be exact");
 } else {
   edge = edge.replace(
-    /^\s*Path\(`\/styles\/(?:base|legacy)\.[a-f0-9]{12}\.css`\) \|\|\n/gm,
+    /^\s*Path\(`\/styles\/(?:base|legacy|lab)\.[a-f0-9]{12}\.css`\) \|\|\n/gm,
     "",
   );
   edge = edge.replace(
