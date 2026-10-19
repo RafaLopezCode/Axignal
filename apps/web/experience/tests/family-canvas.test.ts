@@ -137,3 +137,21 @@ test("Relationships' canvas draws ties around the organization and keeps their e
   assert.doesNotMatch(html, /Sector metal<\/button>/);  // sectors are not organizations
   assert.match(html, /is not a confirmed one/);
 });
+
+test("Activity's canvas shows its pace as counted facts and what happened, newest first", () => {
+  const ev = (kind: string, code: string, statement: string, at: string, detail: Record<string, unknown> = {}) => ({ kind, code, statement, epistemicState: "OBSERVED",
+    sourceUrl: "https://example.org/a", excerpt: null, observedAt: at, detail });
+  const r = reading([
+    ev("OPERATING_SIGNAL", "PUBLISHING_CADENCE", "4 in 90 days", month(0), { last90Days: 4 }),
+    ev("OPERATING_SIGNAL", "WEBSITE_HISTORY", "2009-03-01", month(0)),
+    ev("MENTION", "OWN_PUBLICATION", "Nueva planta en Valencia", month(2)),
+    ev("MENTION", "OWN_PUBLICATION", "Informe anual", month(1)),
+  ]);
+  const html = renderToStaticMarkup(createElement(FamilyCanvas, { family: "activity", title: "Actividad", insights: insightsFor(r, t, "es"), onOpen() {}, reading: r }));
+  assert.match(html, /Its pace/);
+  assert.match(html, /Own publications in 90 days/);
+  assert.match(html, /2009/);
+  assert.match(html, /What happened/);
+  assert.match(html, /not an absence of activity/);
+  assert.doesNotMatch(html, /\/100|score of/i);
+});
