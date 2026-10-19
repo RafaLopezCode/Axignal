@@ -118,7 +118,7 @@ export function LandingLab() {
     ["#how", label("how")],
     [
       "#pricing",
-      words("Precios", "Pricing", "Tarifs", "Preise", "Prezzi", "PreÃƒÂ§os")[
+      words("Precios", "Pricing", "Tarifs", "Preise", "Prezzi", "Preços")[
         locale
       ],
     ],
@@ -960,10 +960,10 @@ export function LandingLab() {
               <h3 id="lab-advisory-title">
                 {
                   words(
-                    "Ã‚Â¿Buscas asesorÃƒÂ­a humana?",
+                    "¿Buscas asesoría humana?",
                     "Looking for human advisory?",
                     "Vous cherchez un conseil humain ?",
-                    "Suchen Sie persÃƒÂ¶nliche Beratung?",
+                    "Suchen Sie persönliche Beratung?",
                     "Cerchi consulenza umana?",
                     "Procura aconselhamento humano?",
                   )[locale]
@@ -978,12 +978,12 @@ export function LandingLab() {
               <p>
                 {
                   words(
-                    "Servicio separado: una organizaciÃƒÂ³n en el alcance acordado, cuatro actualizaciones semanales y una revisiÃƒÂ³n estratÃƒÂ©gica al mes. Precio de lanzamiento, mÃƒÂ¡s impuestos aplicables. El pago no influye en las conclusiones.",
+                    "Servicio separado: una organización en el alcance acordado, cuatro actualizaciones semanales y una revisión estratégica al mes. Precio de lanzamiento, más impuestos aplicables. El pago no influye en las conclusiones.",
                     "Separate service: one organization in the agreed scope, four weekly updates and one strategic review a month. Launch price, plus applicable tax. Payment does not influence conclusions.",
-                    "Service distinct : une organisation dans le pÃƒÂ©rimÃƒÂ¨tre convenu, quatre mises ÃƒÂ  jour hebdomadaires et une revue stratÃƒÂ©gique par mois. Prix de lancement, taxes en sus. Le paiement nÃ¢â‚¬â„¢influence pas les conclusions.",
-                    "Separater Service: eine Organisation im vereinbarten Umfang, vier wÃƒÂ¶chentliche Updates und eine strategische PrÃƒÂ¼fung im Monat. EinfÃƒÂ¼hrungspreis zuzÃƒÂ¼glich Steuern. Zahlung beeinflusst keine Schlussfolgerungen.",
-                    "Servizio separato: unÃ¢â‚¬â„¢organizzazione nellÃ¢â‚¬â„¢ambito concordato, quattro aggiornamenti settimanali e una revisione strategica al mese. Prezzo di lancio, imposte escluse. Il pagamento non influenza le conclusioni.",
-                    "ServiÃƒÂ§o separado: uma organizaÃƒÂ§ÃƒÂ£o no ÃƒÂ¢mbito acordado, quatro atualizaÃƒÂ§ÃƒÂµes semanais e uma revisÃƒÂ£o estratÃƒÂ©gica mensal. PreÃƒÂ§o de lanÃƒÂ§amento, mais impostos. O pagamento nÃƒÂ£o influencia conclusÃƒÂµes.",
+                    "Service distinct : une organisation dans le périmètre convenu, quatre mises à jour hebdomadaires et une revue stratégique par mois. Prix de lancement, taxes en sus. Le paiement n’influence pas les conclusions.",
+                    "Separater Service: eine Organisation im vereinbarten Umfang, vier wöchentliche Updates und eine strategische Prüfung im Monat. Einführungspreis zuzüglich Steuern. Zahlung beeinflusst keine Schlussfolgerungen.",
+                    "Servizio separato: un’organizzazione nell’ambito concordato, quattro aggiornamenti settimanali e una revisione strategica al mese. Prezzo di lancio, imposte escluse. Il pagamento non influenza le conclusioni.",
+                    "Serviço separado: uma organização no âmbito acordado, quatro atualizações semanais e uma revisão estratégica mensal. Preço de lançamento, mais impostos. O pagamento não influencia conclusões.",
                   )[locale]
                 }
               </p>
@@ -1073,7 +1073,7 @@ export function LandingLab() {
             className="lab-footer-newsletter"
             aria-labelledby="lab-newsletter-title"
           >
-            <p className="lab-eyebrow">Newsletter Ã‚Â· AXIGNAL</p>
+            <p className="lab-eyebrow">Newsletter · AXIGNAL</p>
             <h2 id="lab-newsletter-title">{newsletterCopy.title[locale]}</h2>
             <p>{newsletterCopy.lead[locale]}</p>
             <details
@@ -1115,9 +1115,9 @@ export function LandingLab() {
             <Link prefetch={false} href={marketingPath("/data", locale)}>
               {
                 words(
-                  "QuÃƒÂ© observa",
+                  "Qué observa",
                   "What it observes",
-                  "Ce quÃ¢â‚¬â„¢il observe",
+                  "Ce qu’il observe",
                   "Was es beobachtet",
                   "Cosa osserva",
                   "O que observa",
@@ -1154,7 +1154,7 @@ export function LandingLab() {
             <Link prefetch={false} href="/policies/terms">
               {
                 words(
-                  "TÃƒÂ©rminos",
+                  "Términos",
                   "Terms",
                   "Conditions",
                   "Bedingungen",
@@ -1177,7 +1177,7 @@ export function LandingLab() {
           </nav>
         </div>
         <div className="lab-footer-bottom">
-          <span>Ã‚Â© {new Date().getFullYear()} AXIGNAL</span>
+          <span>© {new Date().getFullYear()} AXIGNAL</span>
           <a className="lab-backtop-footer" href="#lab-heading">
             {x.backTop[locale]}
             <ArrowUp size={16} aria-hidden="true" />
@@ -1192,7 +1192,7 @@ export function LandingLab() {
               words(
                 "Reducir movimiento",
                 "Reduce motion",
-                "RÃƒÂ©duire le mouvement",
+                "Réduire le mouvement",
                 "Bewegung reduzieren",
                 "Riduci movimento",
                 "Reduzir movimento",
