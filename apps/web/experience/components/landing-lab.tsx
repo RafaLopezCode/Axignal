@@ -1,5 +1,4 @@
 "use client";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
   Component,
@@ -47,7 +46,7 @@ import { PublicBrandVector } from "./public-brand-vector";
 import { NatureMark } from "./nature-mark";
 import { InsightSources } from "./insight-sources";
 import { SyntheticEvidenceProvider } from "./evidence-link-context";
-import { Dialog } from "./ui";
+import { Dialog } from "./dialog";
 import labFonts from "@/lib/landing-lab-fonts.json";
 
 // Separate async chunk: essential presentation and controls do not import GSAP.
@@ -321,14 +320,13 @@ export function LandingLab({ content }: { content: LandingLabContent }) {
         />
       ))}
       <header className="lab-header">
-        <Link
-          prefetch={false}
+        <a
           href={marketingPath("/", locale)}
           className="lab-brand"
           aria-label="AXIGNAL"
         >
           <PublicBrandVector />
-        </Link>
+        </a>
         <nav aria-label={label("menu")}>
           {nav.map(([href, name], index) => (
             <a
@@ -346,11 +344,10 @@ export function LandingLab({ content }: { content: LandingLabContent }) {
         </nav>
         <div className="lab-header-actions">
           {localeSelector}
-          <Link prefetch={false} className="lab-signin" href="/login">
+          <a className="lab-signin" href="/login">
             {label("signIn")}
-          </Link>
-          <Link
-            prefetch={false}
+          </a>
+          <a
             className="lab-button lab-small"
             href="/signup"
             onClick={() =>
@@ -363,7 +360,7 @@ export function LandingLab({ content }: { content: LandingLabContent }) {
           >
             {label("start")}
             <ArrowUpRight size={16} aria-hidden="true" />
-          </Link>
+          </a>
           <button
             type="button"
             className="lab-menu-button"
@@ -402,8 +399,7 @@ export function LandingLab({ content }: { content: LandingLabContent }) {
                 {label("example")}
                 <ArrowRight size={18} aria-hidden="true" />
               </a>
-              <Link
-                prefetch={false}
+              <a
                 className="lab-text-link"
                 href="/signup"
                 onClick={() =>
@@ -416,7 +412,7 @@ export function LandingLab({ content }: { content: LandingLabContent }) {
               >
                 {label("start")}
                 <ArrowUpRight size={16} aria-hidden="true" />
-              </Link>
+              </a>
             </div>
             <p className="lab-micro">
               <Check size={14} aria-hidden="true" />
@@ -707,8 +703,7 @@ export function LandingLab({ content }: { content: LandingLabContent }) {
           </div>
           <div className="lab-demo-bridge">
             <p>{label("demoBridge")}</p>
-            <Link
-              prefetch={false}
+            <a
               href={EXAMPLE_HREF}
               className="lab-text-link"
               onClick={() =>
@@ -721,7 +716,7 @@ export function LandingLab({ content }: { content: LandingLabContent }) {
             >
               {label("fullExample")}
               <ArrowUpRight size={18} aria-hidden="true" />
-            </Link>
+            </a>
           </div>
         </section>
         <section
@@ -881,10 +876,10 @@ export function LandingLab({ content }: { content: LandingLabContent }) {
                 {label("sources")}
                 <ArrowRight size={17} aria-hidden="true" />
               </a>
-              <Link prefetch={false} className="lab-text-link" href="/policies">
+              <a className="lab-text-link" href="/policies">
                 {p.trust[locale]}
                 <ArrowUpRight size={17} aria-hidden="true" />
-              </Link>
+              </a>
             </div>
           </div>
         </section>
@@ -960,8 +955,7 @@ export function LandingLab({ content }: { content: LandingLabContent }) {
                   <span>/ {p.month[locale]}</span>
                 </p>
                 <p>{p.access[locale]}</p>
-                <Link
-                  prefetch={false}
+                <a
                   className="lab-button"
                   href="/contact"
                   onClick={() =>
@@ -974,7 +968,7 @@ export function LandingLab({ content }: { content: LandingLabContent }) {
                 >
                   {p.request[locale]}
                   <ArrowUpRight size={17} aria-hidden="true" />
-                </Link>
+                </a>
               </div>
             </div>
             <article
@@ -1012,10 +1006,10 @@ export function LandingLab({ content }: { content: LandingLabContent }) {
                   )[locale]
                 }
               </p>
-              <Link prefetch={false} className="lab-text-link" href="/contact">
+              <a className="lab-text-link" href="/contact">
                 {p.contact[locale]}
                 <ArrowUpRight size={17} aria-hidden="true" />
-              </Link>
+              </a>
             </article>
           </div>
         </section>
@@ -1041,8 +1035,7 @@ export function LandingLab({ content }: { content: LandingLabContent }) {
             <p className="lab-eyebrow">{label("kicker")}</p>
             <h2>{label("closing")}</h2>
             <div className="lab-actions">
-              <Link
-                prefetch={false}
+              <a
                 href="/contact"
                 className="lab-button"
                 onClick={() =>
@@ -1055,15 +1048,11 @@ export function LandingLab({ content }: { content: LandingLabContent }) {
               >
                 {p.request[locale]}
                 <ArrowUpRight size={18} aria-hidden="true" />
-              </Link>
-              <Link
-                prefetch={false}
-                href={EXAMPLE_HREF}
-                className="lab-text-link"
-              >
+              </a>
+              <a href={EXAMPLE_HREF} className="lab-text-link">
                 {label("example")}
                 <ArrowRight size={17} aria-hidden="true" />
-              </Link>
+              </a>
             </div>
             <p className="lab-micro">{label("invitation")}</p>
           </div>
@@ -1083,14 +1072,13 @@ export function LandingLab({ content }: { content: LandingLabContent }) {
       <footer className="lab-footer">
         <div className="lab-footer-intro">
           <div className="lab-footer-brand-story">
-            <Link
-              prefetch={false}
+            <a
               className="lab-brand"
               href={marketingPath("/", locale)}
               aria-label="AXIGNAL"
             >
               <PublicBrandVector width={195} height={57} />
-            </Link>
+            </a>
             <p>{label("heroLead")}</p>
             <span className="lab-hand">{label("methodTitle")}</span>
           </div>
@@ -1117,13 +1105,10 @@ export function LandingLab({ content }: { content: LandingLabContent }) {
                   <FooterBrief variant="footer" />
                 </Suspense>
               )}
-              <Link
-                prefetch={false}
-                href={marketingPath("/", locale) + "#weekly-brief"}
-              >
+              <a href={marketingPath("/", locale) + "#weekly-brief"}>
                 {x.openChannel[locale]}
                 <ArrowUpRight size={15} aria-hidden="true" />
-              </Link>
+              </a>
             </details>
           </section>
         </div>
@@ -1131,13 +1116,11 @@ export function LandingLab({ content }: { content: LandingLabContent }) {
           <nav aria-label={label("discover")}>
             <h3>{x.footerProduct[locale]}</h3>
             <a href="#discover">{label("discover")}</a>
-            <Link prefetch={false} href={EXAMPLE_HREF}>
-              {label("example")}
-            </Link>
-            <Link prefetch={false} href={marketingPath("/pricing", locale)}>
+            <a href={EXAMPLE_HREF}>{label("example")}</a>
+            <a href={marketingPath("/pricing", locale)}>
               {t("Precio", "Pricing")}
-            </Link>
-            <Link prefetch={false} href={marketingPath("/data", locale)}>
+            </a>
+            <a href={marketingPath("/data", locale)}>
               {
                 words(
                   "Qué observa",
@@ -1148,35 +1131,26 @@ export function LandingLab({ content }: { content: LandingLabContent }) {
                   "O que observa",
                 )[locale]
               }
-            </Link>
-            <Link prefetch={false} href={"/" + locale + "/knowledge"}>
-              Knowledge
-            </Link>
+            </a>
+            <a href={"/" + locale + "/knowledge"}>Knowledge</a>
           </nav>
           <nav aria-label={label("audience")}>
             <h3>{label("audience")}</h3>
             {industries.map((item) => (
-              <Link
-                prefetch={false}
+              <a
                 href={marketingPath("/industries/" + item.slug, locale)}
                 key={item.slug}
               >
                 {item.title[locale]}
-              </Link>
+              </a>
             ))}
           </nav>
           <nav aria-label={p.trust[locale]}>
             <h3>{x.footerTrust[locale]}</h3>
-            <Link prefetch={false} href="/contact">
-              {p.contact[locale]}
-            </Link>
-            <Link prefetch={false} href="/policies">
-              {p.trust[locale]}
-            </Link>
-            <Link prefetch={false} href="/policies/privacy">
-              {t("Privacidad", "Privacy")}
-            </Link>
-            <Link prefetch={false} href="/policies/terms">
+            <a href="/contact">{p.contact[locale]}</a>
+            <a href="/policies">{p.trust[locale]}</a>
+            <a href="/policies/privacy">{t("Privacidad", "Privacy")}</a>
+            <a href="/policies/terms">
               {
                 words(
                   "Términos",
@@ -1187,10 +1161,8 @@ export function LandingLab({ content }: { content: LandingLabContent }) {
                   "Termos",
                 )[locale]
               }
-            </Link>
-            <Link prefetch={false} href="/gdpr">
-              {p.rights[locale]}
-            </Link>
+            </a>
+            <a href="/gdpr">{p.rights[locale]}</a>
             <a
               href="https://www.linkedin.com/company/axignal/"
               target="_blank"
@@ -1243,15 +1215,11 @@ export function LandingLab({ content }: { content: LandingLabContent }) {
                 <ArrowRight size={18} aria-hidden="true" />
               </a>
             ))}
-            <Link prefetch={false} href={EXAMPLE_HREF}>
-              {label("example")}
-            </Link>
-            <Link prefetch={false} href="/login" className="lab-signin">
+            <a href={EXAMPLE_HREF}>{label("example")}</a>
+            <a href="/login" className="lab-signin">
               {label("signIn")}
-            </Link>
-            <Link prefetch={false} href="/signup">
-              {label("start")}
-            </Link>
+            </a>
+            <a href="/signup">{label("start")}</a>
           </nav>
         </Dialog>
       )}

@@ -1,10 +1,9 @@
 "use client";
-import Link from "next/link";
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { ShieldCheck, Info } from "lucide-react";
 import { useLocale } from "@/lib/locale";
-import { Dialog } from "./ui";
+import { Dialog } from "./dialog";
 const key = "axignal.privacy-notice.v1";
 const maximumAge = 180 * 24 * 60 * 60 * 1000;
 export function PrivacyNotice() {
@@ -78,9 +77,9 @@ export function PrivacyNotice() {
               {t("Solo lo necesario", "Necessary only")}
             </button>
           </div>
-          <Link prefetch={false} href="/gdpr">
+          <a href="/gdpr">
             {t("Tus datos y derechos", "Your data and rights")}
-          </Link>
+          </a>
         </aside>
       )}
       {details && (
@@ -121,15 +120,15 @@ export function PrivacyNotice() {
             )}
           </p>
           <div className="privacy-document-links">
-            <Link prefetch={false} href="/policies/cookies">
+            <a href="/policies/cookies">
               {t("Cookies y almacenamiento", "Cookies and storage")}
-            </Link>
-            <Link prefetch={false} href="/policies/privacy">
+            </a>
+            <a href="/policies/privacy">
               {t("Política de privacidad", "Privacy policy")}
-            </Link>
-            <Link prefetch={false} href="/gdpr">
+            </a>
+            <a href="/gdpr">
               {t("Tus datos y derechos", "Your data and rights")}
-            </Link>
+            </a>
           </div>
           <button className="button primary" onClick={dismiss}>
             {t("Mantener solo lo necesario", "Keep necessary only")}
