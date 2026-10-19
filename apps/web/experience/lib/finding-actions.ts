@@ -102,7 +102,75 @@ export function findingActions(d: Discovery, t: Translate): FindingActions | nul
       research: [t("Si sus visitantes reales viven lo mismo (datos de campo de Chrome, CrUX) y cómo están sus páginas de servicio, no solo la de inicio.", "Whether its real visitors experience the same (Chrome field data, CrUX) and how its service pages do, not just the home page.")],
     };
   }
-  if (d.kind === "MENTION" && (d.code === "REVIEW_PAGE" || d.code === "WEB_MENTION")) return {
+  const what = d.statement;
+  // Value: what it offers and can prove.
+  if (d.kind === "ACTIVITY" || d.kind === "OFFER") return {
+    act: [
+      t("Comprueba que su web presenta «{what}» con una página propia: qué es, para quién y con qué resultados.", "Check that its website presents “{what}” on its own page: what it is, for whom and with what results.").replace("{what}", what),
+      t("Si es una actividad principal, nómbrala igual en el título, el texto y los datos estructurados para que buscadores e IA la entiendan.", "If it is a main activity, name it the same way in the title, text and structured data so search engines and AI understand it."),
+    ],
+    research: [t("Qué demanda pública y qué competidores hay para «{what}» en sus mercados.", "What public demand and which competitors exist for “{what}” in its markets.").replace("{what}", what)],
+  };
+  if (d.kind === "CREDENTIAL") return {
+    act: [t("Muestra la certificación «{what}» con su número y su organismo, enlazando al registro que la acredita.", "Show the “{what}” credential with its number and issuer, linking to the register that proves it.").replace("{what}", what)],
+    research: [t("Si la certificación sigue vigente en el registro oficial del organismo emisor.", "Whether the credential is still valid in the issuer's official register.")],
+  };
+  // Markets: where it acts.
+  if (d.kind === "DECLARED_LOCATION" || d.kind === "DECLARED_SERVICE_AREA") return {
+    act: [
+      t("Si atiende esos mercados, que cada uno tenga su versión de la web (idioma, país, contacto local) y lo declare en hreflang.", "If it serves those markets, give each its own version of the website (language, country, local contact) declared in hreflang."),
+      t("Indica en «Dónde buscar demanda» los mercados que te interesan para observarlos de forma directa.", "Set the markets you care about under “Where to look for demand” so they are observed directly."),
+    ],
+    research: [t("Si hay demanda pública y competidores observados en esos mercados.", "Whether there is public demand and observed competitors in those markets.")],
+  };
+  // Relationships: who it works with or competes against.
+  if (d.kind === "RELATIONSHIP") return {
+    act: [
+      t("Abre la fuente y comprueba si la relación con {who} sigue vigente: una relación declarada no es una confirmada.", "Open the source and check whether the relationship with {who} still holds: a declared relationship is not a confirmed one.").replace("{who}", what),
+      t("Si es un cliente o socio relevante, un caso publicado con su permiso la hace verificable para terceros.", "If it is a relevant client or partner, a case study published with its permission makes it verifiable by others."),
+    ],
+    research: [t("Si {who} aparece en otras fuentes (adjudicaciones, prensa, su propia web) junto a esta organización.", "Whether {who} appears in other sources (awards, press, its own website) together with this organization.").replace("{who}", what)],
+  };
+  if (d.kind === "COMPETITION") return {
+    act: [t("Revisa qué contratos gana {who} con los mismos códigos y a qué compradores: indica dónde compite y con qué precio.", "Review which contracts {who} wins under the same codes and from which buyers: it shows where it competes and at what price.").replace("{who}", what)],
+    research: [t("Si {who} compite en los mismos mercados y si gana más de lo que pierde frente a ella.", "Whether {who} competes in the same markets and whether it wins more than it loses against it.").replace("{who}", what)],
+  };
+  // Demand: potential, never a customer.
+  if (d.kind === "DEMAND") {
+    const deadline = typeof detail.deadline === "string" ? detail.deadline.slice(0, 10) : null;
+    return {
+      act: [
+        t("Abre la fuente y valora si encaja con lo que hace: es una oportunidad potencial, no un cliente.", "Open the source and judge whether it fits what it does: it is a potential opportunity, not a customer."),
+        ...(deadline ? [t("Si encaja, el plazo es el {date}: revisa antes los requisitos (solvencia, certificaciones, lotes).", "If it fits, the deadline is {date}: check the requirements (solvency, credentials, lots) first.").replace("{date}", deadline)] : []),
+      ],
+      research: [t("Quién ganó antes contratos parecidos de ese comprador y por qué importe.", "Who won similar contracts from that buyer before, and for what amount.")],
+    };
+  }
+  // Activity: what it does and how often.
+  if (d.kind === "OPERATING_SIGNAL") return {
+    act: [t("Sigue esta señal en «Evolución»: una sola lectura no muestra una tendencia.", "Follow this signal in “Evolution”: a single reading does not show a trend.")],
+    research: [t("Si la señal se mantiene, crece o cae en las próximas observaciones.", "Whether the signal holds, grows or falls over the next observations.")],
+  };
+  // Economics: figures with source and date.
+  if (d.kind === "ECONOMIC_FACT") return {
+    act: [t("Contrasta la cifra con su fuente y su fecha; si es antigua, búscala en el registro oficial más reciente.", "Check the figure against its source and date; if it is old, look for it in the latest official register.")],
+    research: [t("Su evolución en años anteriores y cómo se compara con su sector en su país.", "Its trend over previous years and how it compares with its sector in its country.")],
+  };
+  // Organization: who it is.
+  if (d.kind === "IDENTITY_HINT") return {
+    act: [t("Que su web muestre su nombre legal y su número de registro o NIF, y que coincidan con el registro oficial.", "Make its website show its legal name and registration or tax number, matching the official register.")],
+    research: [t("Si el registro oficial confirma ese nombre, su domicilio y su actividad.", "Whether the official register confirms that name, its address and its activity.")],
+  };
+  // Context: the frame it operates in.
+  if (d.kind === "CONTEXT_SIGNAL") return {
+    act: [t("Lee la norma o la noticia en su fuente y valora si afecta a esta organización y desde cuándo. No es asesoramiento jurídico.", "Read the rule or news at its source and judge whether it affects this organization and from when. Not legal advice.")],
+    research: [t("Qué otras organizaciones de su sector se ven afectadas y cómo han reaccionado.", "Which other organizations in its sector are affected and how they have reacted.")],
+  };
+  if (d.kind === "MENTION" && (d.code === "OWN_PUBLICATION" || d.code === "PRESS_RELEASE")) return {
+    act: [t("Es su propia voz: comprueba que lo que publica llega a medios y webs de terceros, que es lo que leen buscadores e IA.", "It is its own voice: check that what it publishes reaches third-party media and sites, which is what search engines and AI read.")],
+    research: [t("Si algún medio o web de terceros recogió esa publicación.", "Whether any third-party media or site picked up that publication.")],
+  };
+  if (d.kind === "MENTION" || d.kind === "RATING") return {
     act: [
       t("Lee la página en su fuente: si es una reseña o una reclamación, valora responder allí mismo; si contiene un dato erróneo, pide que se corrija.", "Read the page at its source: if it is a review or a complaint, consider answering there; if it contains a wrong fact, ask for a correction."),
       t("Una mención no es una recomendación: cuenta qué se dice y dónde, no solo cuántas veces.", "A mention is not an endorsement: weigh what is said and where, not just how often."),

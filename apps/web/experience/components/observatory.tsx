@@ -35,6 +35,7 @@ import { RuntimeAxent, useRuntimeAxent } from "./runtime-axent";
 import { CanvasEvidenceSheet } from "./canvas-evidence-sheet";
 import { productGuideAnswer } from "@/lib/axent-product-guide";
 import { explainFinding } from "@/lib/finding-axent";
+import { explainFamily, framed, isFreeQuestion } from "@/lib/family-axent";
 import type { ObservatoryCapabilities } from "@/lib/observatory-source";
 import { WAITING_STATES, waitingItems, type ActivationPhase } from "@/lib/activation";
 import { ActivationView } from "./activation";
@@ -690,10 +691,12 @@ function OrganizationView(props: OrgProps) {
       </div>
       </div>
       {evidenceOpen && <CanvasEvidenceSheet focusKey={open?.id ?? "evidence"} lane={open?.lane} title={open ? laneCopy(open.lane, t).title : t("Evidencias", "Evidence")} onClose={closeDepth}>
-        {open ? <InsightBody insight={open} onEvidence={() => go({ view: "evidence", item: null })}/> : <EvidenceView reading={reading} facet={facet} scope={scope} insights={shown}/>}
+        {open ? <InsightBody insight={open} onEvidence={() => go({ view: "evidence", item: null })} onAsk={focusAxent}/> : <EvidenceView reading={reading} facet={facet} scope={scope} insights={shown}/>}
       </CanvasEvidenceSheet>}
     </div>
     <AxentSidebar panelRef={axentSidebar} open={props.axentOpen} insight={open} related={insights} projection={projection} revision={revision} canAct={props.canAct} axent={props.capabilities.axent} onClose={() => props.setAxentOpen(false)}
+      family={facet.family && scope ? { title: scope.title, insights: shown } : null}
+      onWidenFinding={() => go({ item: null })} onWidenFamily={() => selectFacet({ family: null, channel: null })}
       onEvidence={() => { props.setAxentOpen(false); go({ view: "evidence", item: null }); }} onExplore={() => { props.setAxentOpen(false); transition(() => go({ view: "explore", item: null })); }}/>
   </div>;
 }
@@ -862,13 +865,14 @@ export function InsightCard({ insight, lit, active, onOpen }: { insight: Insight
 // ---- depth: meaning → reasoning → proof → AXENT, beside the finding ----------------------------
 
 /** GLANCE → UNDERSTAND → REASON → PROVE for one finding; the same body wherever it is shown. */
-export function InsightBody({ insight, onEvidence }: { insight: Insight; onEvidence?: () => void }) {
+export function InsightBody({ insight, onEvidence, onAsk }: { insight: Insight; onEvidence?: () => void; onAsk?: () => void }) {
   const { t, locale } = useLocale();
   const evidenceLink = useEvidenceLink();
   return <article className="obs-depth-body">
       <NatureMark nature={insight.nature} label={natureLabel(insight.nature, t)}/>
       <h2 tabIndex={-1}>{insight.headline}</h2>
       {insight.why && <p className="obs-depth-why">{insight.why}</p>}
+      {onAsk && <button type="button" className="obs-button obs-ask-finding" onClick={onAsk}><MessageCircleQuestion size={16} aria-hidden="true"/>{t("Preguntar a Axent sobre este hallazgo", "Ask Axent about this finding")}</button>}
       {insight.previous && <p className="obs-card-before">{t("En la lectura anterior comparable", "In the previous comparable reading")}: {insight.previous}. {t("Un cambio de interpretación no demuestra por sí solo una mejora comercial.", "An interpretation change alone does not prove a business improvement.")}</p>}
       <section><h3>{t("Qué significa", "What it means")}</h3>{insight.meaning.map(x => <p key={x}>{x}</p>)}</section>
       {insight.dimensions.length > 0 && <section><h3>{t("Lo que se ha comprobado", "What has been checked")}</h3>
@@ -887,8 +891,10 @@ export function InsightBody({ insight, onEvidence }: { insight: Insight; onEvide
   </article>;
 }
 
-function AxentSidebar({ panelRef, open, insight, related, projection, revision, canAct, axent, onClose, onEvidence, onExplore }: {
+function AxentSidebar({ panelRef, open, insight, related, projection, revision, canAct, axent, onClose, onEvidence, onExplore, family, onWidenFinding, onWidenFamily }: {
   panelRef: React.RefObject<HTMLElement | null>; open: boolean;
+  /** The family the reader is looking at: AXENT's context when no finding is selected. */
+  family: { title: string; insights: Insight[] } | null; onWidenFinding: () => void; onWidenFamily: () => void;
   insight: Insight | null; related: Insight[]; projection: RuntimeProjection | null; revision: string | null; canAct: boolean; axent: ObservatoryCapabilities["axent"];
   onClose: () => void; onEvidence: () => void; onExplore: () => void;
 }) {
@@ -900,23 +906,48 @@ function AxentSidebar({ panelRef, open, insight, related, projection, revision, 
     <div className="obs-depth-bar obs-depth-bar-bare obs-axent-close">
       <button className="obs-icon" onClick={onClose} aria-label={t("Volver", "Back")}><ArrowLeft size={18} aria-hidden="true"/></button>
     </div>
-    {projection && revision ? <DepthAxent key={insight?.id ?? "organization"} projection={projection} revision={revision} axent={axent} insight={insight} related={related} canAct={canAct} onEvidence={onEvidence} onExplore={onExplore} autoFocus={open}/>
+    {projection && revision ? <DepthAxent key={insight?.id ?? family?.title ?? "organization"} projection={projection} revision={revision} axent={axent} insight={insight} related={related} canAct={canAct} onEvidence={onEvidence} onExplore={onExplore} autoFocus={open}
+      family={family} onWidenFinding={onWidenFinding} onWidenFamily={onWidenFamily}/>
       : <section className="obs-depth-axent obs-quiet"><h3>AXENT</h3><p>{t("AXENT podrá investigar con esta organización cuando su identidad esté verificada por un registro. Esta lectura ya muestra su evidencia.", "AXENT can investigate this organization once its identity is verified by a registry. This reading already shows its evidence.")}</p></section>}
   </aside>;
 }
 
-function DepthAxent({ projection, revision, axent, insight, related, canAct, onEvidence, onExplore, autoFocus }: {
+function DepthAxent({ projection, revision, axent, insight, related, canAct, onEvidence, onExplore, autoFocus, family, onWidenFinding, onWidenFamily }: {
   projection: RuntimeProjection; revision: string; axent: ObservatoryCapabilities["axent"]; insight: Insight | null; related: Insight[]; canAct: boolean; onEvidence: () => void; onExplore: () => void; autoFocus: boolean;
+  family: { title: string; insights: Insight[] } | null; onWidenFinding: () => void; onWidenFamily: () => void;
 }) {
   const { t, locale } = useLocale();
   // The subscriber's questions are scoped to its reading; an Admin session asks through its own endpoint.
   const scope = useMemo(() => axent === "subscriber" ? { revision } : undefined, [axent, revision]);
-  // About a selected finding, AXENT answers from that finding itself (every family, every
-  // question); the product guide keeps its own answers; the whole organization asks the runtime.
-  const local = useCallback((question: string) => insight && !productGuideAnswer(projection, question, locale)
-    ? explainFinding({ insight, related, prompt: question, organizationId: projection.organization.id, contextId: projection.context.id, t, locale })
-    : null, [insight, related, projection, locale, t]);
-  const conversation = useRuntimeAxent(projection, null, scope, axent === "illustrative", local);
+  // The context is what the reader is looking at: the selected finding, else the family on
+  // screen, else the whole organization. Fixed questions are answered from that context's own
+  // findings; a free question goes to the grounded runtime with the context named in it (the
+  // illustrative demo answers it locally). The product guide keeps its own answers.
+  const illustrative = axent === "illustrative";
+  const local = useCallback((question: string) => {
+    if (productGuideAnswer(projection, question, locale)) return null;
+    const ids = { organizationId: projection.organization.id, contextId: projection.context.id };
+    if (insight) return !illustrative && isFreeQuestion(question) ? null
+      : explainFinding({ insight, related, prompt: question, ...ids, t, locale });
+    if (family) return explainFamily({ family: family.title, insights: family.insights, prompt: question, ...ids, t, illustrative });
+    return null;
+  }, [insight, related, family, projection, locale, t, illustrative]);
+  const frame = useMemo(() => insight
+    ? (q: string) => framed(q, fill(t("Sobre el hallazgo «{finding}»", "About the finding “{finding}”"), { finding: insight.headline }))
+    : family ? (q: string) => framed(q, fill(t("Sobre la familia {family} de esta organización", "About this organization's {family} family"), { family: family.title }))
+    : undefined, [insight, family, t]);
+  const conversation = useRuntimeAxent(projection, null, scope, illustrative, local, frame);
+  const suggestions = insight
+    ? [t("Por qué importa", "Why it matters"), t("Qué puedo hacer", "What can I do"), t("Qué sigue abierto", "What remains open"), t("Cómo lo sabes", "How do you know"), t("Qué cambió", "What changed"), t("Qué investigarías después", "What would you investigate next")]
+    : family
+      ? [t("Qué es lo más importante", "What is most important"), t("Qué puedo hacer", "What can I do"), t("Qué sigue abierto", "What remains open"), t("Qué cambió", "What changed"), t("Qué investigarías después", "What would you investigate next"), t("Cómo lo sabes", "How do you know")]
+      : undefined;
+  const focusLabel = insight ? `${t("Hallazgo", "Finding")}: ${insight.headline}`
+    : family ? `${t("Familia", "Family")}: ${family.title}`
+    : t("Toda la organización", "The whole organization");
+  const widen = insight
+    ? { onWiden: onWidenFinding, widenLabel: family ? fill(t("Preguntar sobre toda la familia {family}", "Ask about the whole {family} family"), { family: family.title }) : t("Preguntar sobre toda la organización", "Ask about the whole organization") }
+    : family ? { onWiden: onWidenFamily, widenLabel: t("Preguntar sobre toda la organización", "Ask about the whole organization") } : {};
   const asked = useRef<string | null>(null);
   const question = insight ? fill(t("{finding}: ¿por qué importa y qué sigue abierto?", "{finding}: why does it matter and what remains open?"), { finding: insight.headline }) : null;
   useEffect(() => { asked.current = null; }, [insight?.id]);
@@ -924,7 +955,7 @@ function DepthAxent({ projection, revision, axent, insight, related, canAct, onE
   return <section className="obs-depth-axent" aria-label="AXENT">
     {question && asked.current !== insight?.id && conversation.messages.length === 0 && <button className="obs-button obs-ask" disabled={conversation.busy} onClick={() => { asked.current = insight?.id ?? null; void conversation.ask(question); }}>
       <MessageCircleQuestion size={16} aria-hidden="true"/>{t("Pregunta a AXENT sobre esto", "Ask AXENT about this")}</button>}
-    <RuntimeAxent illustrative={axent === "illustrative"} projection={projection} signalId={null} conversation={conversation} onEvidence={onEvidence} onSignal={onExplore} focusLabel={insight ? insight.headline : t("Toda la organización", "The whole organization")}/>
+    <RuntimeAxent illustrative={illustrative} projection={projection} signalId={null} conversation={conversation} onEvidence={onEvidence} onSignal={onExplore} focusLabel={focusLabel} suggestions={suggestions} {...widen}/>
     {autoFocus && <span className="sr-only" role="status">{t("AXENT abierto en el contexto de esta organización.", "AXENT opened in this organization's context.")}</span>}
   </section>;
 }
