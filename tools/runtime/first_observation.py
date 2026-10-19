@@ -136,7 +136,7 @@ from application.value_chain import (
     wikidata_industry_nace,
 )
 from application.web_history import history_discoveries
-from application.web_quality import lighthouse_discoveries
+from application.web_quality import lighthouse_discoveries, security_discoveries
 from application.web_research import ResearchSubject, research_discoveries
 from application.world_demand.index import (
     DemandIndexPort,
@@ -177,6 +177,7 @@ from tools.runtime.pagespeed import PageSpeedRunner, pagespeed_from_values
 from tools.runtime.regulation_context import RegulationContextRunner
 from tools.runtime.search_rank import SearchRankRunner, search_rank_from_values
 from tools.runtime.sector_context import SectorContextRunner
+from tools.runtime.security_grade import SecurityGradeRunner, security_grade_from_values
 from tools.runtime.subscriber_portfolio import SubscriberPortfolioRuntime
 from tools.runtime.wayback import WaybackRunner, wayback_from_values
 from tools.runtime.web_research import WebResearchRunner, web_research_from_values
@@ -543,7 +544,9 @@ class FirstObservationRuntime:
         search_rank: SearchRankRunner | None = None,
         web_research: WebResearchRunner | None = None,
         pagespeed: PageSpeedRunner | None = None,
+        security_grade: SecurityGradeRunner | None = None,
     ) -> None:
+        self._security_grade = security_grade
         self._pagespeed = pagespeed
         self._search_rank = search_rank
         self._web_research = web_research
@@ -1068,6 +1071,28 @@ class FirstObservationRuntime:
         view["discoveries"] = [*discoveries, *found_rank]
         return view
 
+    def scan_security(self) -> int:
+        """Scan queued sites with Mozilla's HTTP Observatory (two per tick, spec 106)."""
+        return 0 if self._security_grade is None else self._security_grade.run()
+
+    def _with_security_grade(self, view: dict[str, object]) -> dict[str, object]:
+        """Its website's HTTP security grade; queued when none is fresh."""
+        if self._security_grade is None:
+            return view
+        target = view.get("target")
+        website = target.get("website") if isinstance(target, Mapping) else None
+        host = (urlsplit(str(website)).hostname or "").lower() if website else ""
+        if not host:
+            return view
+        measurement = self._security_grade.measurement(host)
+        self._security_grade.request(host)  # no-op while fresh or queued
+        if measurement is None:
+            return view
+        held = view.get("discoveries")
+        found = security_discoveries(measurement, observed_at=str(view.get("observedAt") or ""))
+        view["discoveries"] = [*(held if isinstance(held, list) else []), *found]
+        return view
+
     def measure_pagespeed(self) -> int:
         """Run queued Lighthouse lab runs of home pages (a few per tick, spec 100)."""
         return 0 if self._pagespeed is None else self._pagespeed.run()
@@ -1470,6 +1495,7 @@ class FirstObservationRuntime:
                 self.measure_search_rank,
                 self.run_web_research,
                 self.measure_pagespeed,
+                self.scan_security,
                 self.judge_sector_context,
                 self.judge_regulation,
                 self.read_common_crawl,
@@ -1802,6 +1828,7 @@ class FirstObservationRuntime:
             view = self._with_search_rank(view, proof)
             view = self._with_web_research(view, proof)
             view = self._with_pagespeed(view)
+            view = self._with_security_grade(view)
             view = self._with_sector_context(view)
             view = self._with_regulation(view)
             view = self._with_common_crawl(view)
@@ -2210,6 +2237,9 @@ def build_first_observation(
         pagespeed=None
         if overrides.source_ports is not None or overrides.feeds is not None
         else pagespeed_from_values(values, root),
+        security_grade=None
+        if overrides.source_ports is not None or overrides.feeds is not None
+        else security_grade_from_values(values, root),
         sector_context=None
         if overrides.source_ports is not None or overrides.feeds is not None
         else _sector_context(values, root),
