@@ -1,0 +1,137 @@
+[
+  {
+    "url": "https://axignal.com/brand/favicon-96x96.png",
+    "status": 200,
+    "final": "https://axignal.com/brand/favicon-96x96.png",
+    "type": "image/png",
+    "robots": null,
+    "dimensions": [
+      96,
+      96
+    ]
+  },
+  {
+    "url": "https://axignal.com/brand/favicon.ico",
+    "status": 200,
+    "final": "https://axignal.com/brand/favicon.ico",
+    "type": "image/x-icon",
+    "robots": null
+  },
+  {
+    "url": "https://axignal.com/brand/icon-192.png",
+    "status": 200,
+    "final": "https://axignal.com/brand/icon-192.png",
+    "type": "image/png",
+    "robots": null,
+    "dimensions": [
+      192,
+      192
+    ]
+  },
+  {
+    "url": "https://axignal.com/brand/icon-512.png",
+    "status": 200,
+    "final": "https://axignal.com/brand/icon-512.png",
+    "type": "image/png",
+    "robots": null,
+    "dimensions": [
+      512,
+      512
+    ]
+  },
+  {
+    "url": "https://axignal.com/brand/apple-touch-icon.png",
+    "status": 200,
+    "final": "https://axignal.com/brand/apple-touch-icon.png",
+    "type": "image/png",
+    "robots": null,
+    "dimensions": [
+      180,
+      180
+    ]
+  },
+  {
+    "url": "https://axignal.com/brand/organization-logo-512.png",
+    "status": 200,
+    "final": "https://axignal.com/brand/organization-logo-512.png",
+    "type": "image/png",
+    "robots": null,
+    "dimensions": [
+      512,
+      512
+    ]
+  },
+  {
+    "url": "https://axignal.com/guides/analyse-tender-documents",
+    "status": 404
+  },
+  {
+    "url": "https://axignal.com/de/guides/analyse-tender-documents",
+    "status": 404
+  },
+  {
+    "url": "https://axignal.com/solutions/tender-document-analysis",
+    "status": 404
+  },
+  {
+    "url": "https://axignal.com/es/public-procurement/portugal",
+    "status": 404
+  },
+  {
+    "url": "https://axignal.com/de/for/tender-managers",
+    "status": 404
+  },
+  {
+    "url": "https://axignal.com/de/for/bid-managers",
+    "status": 404
+  },
+  {
+    "url": "https://axignal.com/knowledge/basis/product-model",
+    "status": 200,
+    "final": "https://axignal.com/knowledge/basis/product-model",
+    "type": "text/html; charset=utf-8",
+    "robots": null
+  },
+  {
+    "url": "https://axignal.com/contact",
+    "status": 200,
+    "final": "https://axignal.com/contact",
+    "type": "text/html; charset=utf-8",
+    "robots": null
+  },
+  {
+    "url": "https://axignal.com/policies",
+    "status": 200,
+    "final": "https://axignal.com/policies",
+    "type": "text/html; charset=utf-8",
+    "robots": null
+  },
+  {
+    "url": "https://axignal.com/gdpr",
+    "status": 200,
+    "final": "https://axignal.com/gdpr",
+    "type": "text/html; charset=utf-8",
+    "robots": null
+  },
+  {
+    "url": "https://axignal.com/demo",
+    "status": 200,
+    "final": "https://axignal.com/demo",
+    "type": "text/html; charset=utf-8",
+    "robots": null
+  },
+  {
+    "url": "https://axignal.com/login",
+    "status": 200,
+    "final": "https://axignal.com/login",
+    "type": "text/html; charset=utf-8",
+    "robots": null
+  },
+  {
+    "url": "https://axignal.com/signup",
+    "status": 200,
+    "final": "https://axignal.com/signup",
+    "type": "text/html; charset=utf-8",
+    "robots": null
+  }
+]

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { LocaleProvider } from "@/lib/locale";
 import { SurfaceStyles } from "@/components/surface-styles";
 import { PrivacyNotice } from "@/components/privacy-notice";
+import { siteIcons } from "@/lib/site-icons";
 
 export const metadata: Metadata = {
   metadataBase: new URL(
@@ -13,7 +14,7 @@ export const metadata: Metadata = {
   },
   description:
     "Business and economic intelligence from public evidence: AXIGNAL observes the organizations you choose and shows what changes, with source and date.",
-  icons: { icon: "/brand/favicon.svg", apple: "/brand/apple-touch-icon.png" },
+  icons: siteIcons,
   openGraph: {
     title: "AXIGNAL — What changes around your company, and why it matters",
     description: "Continuous economic observation, with memory and evidence.",
