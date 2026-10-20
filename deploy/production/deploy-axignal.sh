@@ -1,6 +1,6 @@
 #!/bin/sh
 # The sole supported production Compose entrypoint. Prevents silently dropping
-# the optional subscriber overlay (the 2026-10-10 root cause).
+# the subscriber profile or production capability overlays.
 set -eu
 
 usage() {
@@ -33,20 +33,32 @@ case ${AXIGNAL_DEPLOY_PROFILE:-subscriber} in
  subscriber) : ;;
  *) echo 'Refusing to deploy without subscriber overlay. Use documented rollback for base.' >&2; exit 2 ;;
 esac
+
+# Keep the full production composition consistent across check/build/up.
+# Optional overlays mount governed credentials but do not activate capabilities.
 export AXIGNAL_CODE_SHA
 docker compose --env-file "$runtime_env" -p axignal-prod \
   -f deploy/production/compose.yml \
-  -f deploy/production/compose.subscriber.override.yml config --quiet
+  -f deploy/production/compose.subscriber.override.yml \
+  -f deploy/production/compose.axent.override.yml \
+  -f deploy/production/compose.semantic.override.yml \
+  -f deploy/production/compose.research.override.yml config --quiet
 case "$operation" in
  check) echo 'AXIGNAL_RELEASE_PROFILE=subscriber; validation=passed' ;;
  build)
   docker compose --env-file "$runtime_env" -p axignal-prod \
     -f deploy/production/compose.yml \
-    -f deploy/production/compose.subscriber.override.yml build runtime experience landing ;;
+    -f deploy/production/compose.subscriber.override.yml \
+    -f deploy/production/compose.axent.override.yml \
+    -f deploy/production/compose.semantic.override.yml \
+    -f deploy/production/compose.research.override.yml build runtime experience landing ;;
  up)
   docker compose --env-file "$runtime_env" -p axignal-prod \
     -f deploy/production/compose.yml \
-    -f deploy/production/compose.subscriber.override.yml up -d --no-build runtime experience landing
+    -f deploy/production/compose.subscriber.override.yml \
+    -f deploy/production/compose.axent.override.yml \
+    -f deploy/production/compose.semantic.override.yml \
+    -f deploy/production/compose.research.override.yml up -d --no-build runtime experience landing
   # A Docker "healthy" state is not product acceptance. Fail the release if
   # its public login/demo/customer boundary disagrees with the artifact.
   attempt=0
