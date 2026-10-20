@@ -50,6 +50,10 @@ jobs:
       - name: Frontend production build
         run: npm run build
 
+      - name: Production Experience container build
+        working-directory: ${{ github.workspace }}
+        run: docker build --build-arg AXIGNAL_CODE_SHA="${GITHUB_SHA}" --tag axignal-experience:ci --file deploy/production/docker/experience.Dockerfile .
+
       - name: Admin transport HTTP regressions
         run: npm run test:admin-http
 
