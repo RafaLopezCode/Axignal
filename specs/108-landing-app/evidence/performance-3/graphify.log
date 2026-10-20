@@ -1,0 +1,10 @@
+Re-extracting code files in . (no LLM needed)...
+[graphify watch] 422 file(s) not classified (no supported extension or shebang), skipped: .dockerignore, .git, .gitattributes, .gitignore, .gitleaksignore, .graphify_version (+416 more)
+  AST extraction: 100/681 uncached files (14%) [12 workers]
+  AST extraction: 200/681 uncached files (29%) [12 workers]
+  AST extraction: 300/681 uncached files (44%) [12 workers]
+  AST extraction: 400/681 uncached files (58%) [12 workers]
+  AST extraction: 500/681 uncached files (73%) [12 workers]
+  AST extraction: 600/681 uncached files (88%) [12 workers]
+  AST extraction: 681/681 uncached files (100%) [12 workers]
+[graphify watch] community set changed since labeling (1078 saved labels, 1061 communities now; renamed 238 community(ies) by their hub). Run `graphify label` to refresh names with the LLM.

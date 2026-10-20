@@ -1,0 +1,162 @@
+{
+  "source": "4b2a7fbc7937d01f81efa8820315b6755ab9f8dc",
+  "checkedAt": "2026-10-20T07:07:48.150095+00:00",
+  "note": "HTTP inspection of initial HTML without executing JavaScript; all requests local and read-only.",
+  "pages": [
+    {
+      "locale": "es",
+      "status": 200,
+      "lang": "es",
+      "h1": 1,
+      "nativeDisclosures": 11,
+      "essentialTextCharacters": 9209,
+      "htmlSha256": "0e8ca1d08d39379b05d6df08a9ee2fbcd0da805d3eff5d6e02df6e9875884f43",
+      "stylesheets": [
+        "/styles/lab.e550ae4b77c0.css"
+      ],
+      "noindex": true
+    },
+    {
+      "locale": "en",
+      "status": 200,
+      "lang": "en",
+      "h1": 1,
+      "nativeDisclosures": 11,
+      "essentialTextCharacters": 8732,
+      "htmlSha256": "b281389b3a25e0b803d92d5a15a454354955fe8754aaf06566834f3335a2dacf",
+      "stylesheets": [
+        "/styles/lab.e550ae4b77c0.css"
+      ],
+      "noindex": true
+    },
+    {
+      "locale": "de",
+      "status": 200,
+      "lang": "de",
+      "h1": 1,
+      "nativeDisclosures": 11,
+      "essentialTextCharacters": 9172,
+      "htmlSha256": "5f2b7be4897b040c82fac4f2e6c996c8125e067946c57c6d4a6ddfb990b160c4",
+      "stylesheets": [
+        "/styles/lab.e550ae4b77c0.css"
+      ],
+      "noindex": true
+    },
+    {
+      "locale": "pt",
+      "status": 200,
+      "lang": "pt",
+      "h1": 1,
+      "nativeDisclosures": 11,
+      "essentialTextCharacters": 8587,
+      "htmlSha256": "cc45c4a7ccef5b6e08354a5bd6933934e785f634092a8d93a3a4f63e118c2d87",
+      "stylesheets": [
+        "/styles/lab.e550ae4b77c0.css"
+      ],
+      "noindex": true
+    },
+    {
+      "locale": "fr",
+      "status": 200,
+      "lang": "fr",
+      "h1": 1,
+      "nativeDisclosures": 11,
+      "essentialTextCharacters": 9287,
+      "htmlSha256": "e7c66f71bccfa725120b49e891bd93d984a488f1f79c743e04ea8509d60e5913",
+      "stylesheets": [
+        "/styles/lab.e550ae4b77c0.css"
+      ],
+      "noindex": true
+    },
+    {
+      "locale": "it",
+      "status": 200,
+      "lang": "it",
+      "h1": 1,
+      "nativeDisclosures": 11,
+      "essentialTextCharacters": 8651,
+      "htmlSha256": "9bf73f903dc864eac5c7c976f2aa572f9058d8e7c8815e193a42bd76b5a66934",
+      "stylesheets": [
+        "/styles/lab.e550ae4b77c0.css"
+      ],
+      "noindex": true
+    }
+  ],
+  "destinations": [
+    {
+      "path": "/contact",
+      "status": 200
+    },
+    {
+      "path": "/demo",
+      "status": 200
+    },
+    {
+      "path": "/es",
+      "status": 200
+    },
+    {
+      "path": "/es/data",
+      "status": 200
+    },
+    {
+      "path": "/es/industries/agencies",
+      "status": 200
+    },
+    {
+      "path": "/es/industries/construction",
+      "status": 200
+    },
+    {
+      "path": "/es/industries/energy",
+      "status": 200
+    },
+    {
+      "path": "/es/industries/industry",
+      "status": 200
+    },
+    {
+      "path": "/es/industries/logistics",
+      "status": 200
+    },
+    {
+      "path": "/es/industries/professional-services",
+      "status": 200
+    },
+    {
+      "path": "/es/knowledge",
+      "status": 200
+    },
+    {
+      "path": "/es/pricing",
+      "status": 200
+    },
+    {
+      "path": "/gdpr",
+      "status": 200
+    },
+    {
+      "path": "/login",
+      "status": 200
+    },
+    {
+      "path": "/policies",
+      "status": 200
+    },
+    {
+      "path": "/policies/privacy",
+      "status": 200
+    },
+    {
+      "path": "/policies/terms",
+      "status": 200
+    },
+    {
+      "path": "/signup",
+      "status": 200
+    }
+  ],
+  "stylesheetIntegrity": true,
+  "canonicalLogoUnchanged": true,
+  "sitemapExclusion": true
+}

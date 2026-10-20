@@ -1,0 +1,10 @@
+{
+  "reason": "First mobile audit overlapped the end of Graphify; retained separately, excluded from final serial runs.",
+  "fetchTime": "2026-10-19T16:12:37.098Z",
+  "performance": 72,
+  "LCP_ms": 6374.988600000001,
+  "TBT_ms": 222.5000000000009,
+  "warnings": [
+    "The page loaded too slowly to finish within the time limit. Results may be incomplete."
+  ]
+}

@@ -1,0 +1,546 @@
+[
+  {
+    "file": "hero-desktop.jpg",
+    "source": "6d6c34ebe693d7747cb1f93e0c6f54c0b06e5ea0",
+    "url": "http://127.0.0.1:3822/es/landing-lab",
+    "at": "2026-10-19T22:16:52.412Z",
+    "fullPage": false,
+    "client": {
+      "height": 1000,
+      "width": 1425
+    },
+    "locale": "es",
+    "scrollY": 0,
+    "viewport": {
+      "height": 1000,
+      "width": 1440
+    }
+  },
+  {
+    "file": "motion-start.jpg",
+    "source": "6d6c34ebe693d7747cb1f93e0c6f54c0b06e5ea0",
+    "url": "http://127.0.0.1:3822/es/landing-lab",
+    "at": "2026-10-19T22:17:05.688Z",
+    "fullPage": false,
+    "client": {
+      "height": 1000,
+      "width": 1425
+    },
+    "locale": "es",
+    "scrollY": 304,
+    "viewport": {
+      "height": 1000,
+      "width": 1440
+    }
+  },
+  {
+    "file": "motion-complete.jpg",
+    "source": "6d6c34ebe693d7747cb1f93e0c6f54c0b06e5ea0",
+    "url": "http://127.0.0.1:3822/es/landing-lab",
+    "at": "2026-10-19T22:17:08.313Z",
+    "fullPage": false,
+    "client": {
+      "height": 1000,
+      "width": 1425
+    },
+    "locale": "es",
+    "scrollY": 304,
+    "viewport": {
+      "height": 1000,
+      "width": 1440
+    }
+  },
+  {
+    "file": "qa-de-320.jpg",
+    "source": "6d6c34ebe693d7747cb1f93e0c6f54c0b06e5ea0",
+    "url": "http://127.0.0.1:3822/de/landing-lab",
+    "at": "2026-10-19T22:18:02.438Z",
+    "fullPage": false,
+    "client": {
+      "height": 844,
+      "width": 305
+    },
+    "locale": "de",
+    "scrollY": 0,
+    "viewport": {
+      "height": 844,
+      "width": 320
+    }
+  },
+  {
+    "file": "qa-it-320.jpg",
+    "source": "6d6c34ebe693d7747cb1f93e0c6f54c0b06e5ea0",
+    "url": "http://127.0.0.1:3822/it/landing-lab",
+    "at": "2026-10-19T22:18:02.918Z",
+    "fullPage": false,
+    "client": {
+      "height": 844,
+      "width": 305
+    },
+    "locale": "it",
+    "scrollY": 0,
+    "viewport": {
+      "height": 844,
+      "width": 320
+    }
+  },
+  {
+    "file": "qa-es-320.jpg",
+    "source": "6d6c34ebe693d7747cb1f93e0c6f54c0b06e5ea0",
+    "url": "http://127.0.0.1:3822/es/landing-lab",
+    "at": "2026-10-19T22:18:03.086Z",
+    "fullPage": false,
+    "client": {
+      "height": 844,
+      "width": 305
+    },
+    "locale": "es",
+    "scrollY": 0,
+    "viewport": {
+      "height": 844,
+      "width": 320
+    }
+  },
+  {
+    "file": "hero-mobile.jpg",
+    "source": "6d6c34ebe693d7747cb1f93e0c6f54c0b06e5ea0",
+    "url": "http://127.0.0.1:3822/es/landing-lab",
+    "at": "2026-10-19T22:19:19.524Z",
+    "fullPage": false,
+    "client": {
+      "height": 844,
+      "width": 375
+    },
+    "locale": "es",
+    "scrollY": 0,
+    "viewport": {
+      "height": 844,
+      "width": 390
+    }
+  },
+  {
+    "file": "menu-mobile.jpg",
+    "source": "6d6c34ebe693d7747cb1f93e0c6f54c0b06e5ea0",
+    "url": "http://127.0.0.1:3822/es/landing-lab",
+    "at": "2026-10-19T22:19:19.891Z",
+    "fullPage": false,
+    "client": {
+      "height": 844,
+      "width": 375
+    },
+    "locale": "es",
+    "scrollY": 0,
+    "viewport": {
+      "height": 844,
+      "width": 390
+    }
+  },
+  {
+    "file": "new-mobile-full.jpg",
+    "source": "6d6c34ebe693d7747cb1f93e0c6f54c0b06e5ea0",
+    "url": "http://127.0.0.1:3822/es/landing-lab#lab-heading",
+    "at": "2026-10-19T22:20:38.830Z",
+    "fullPage": true,
+    "client": {
+      "height": 844,
+      "width": 375
+    },
+    "locale": "es",
+    "scrollY": 119,
+    "viewport": {
+      "height": 844,
+      "width": 390
+    }
+  },
+  {
+    "file": "hero-desktop.jpg",
+    "source": "6d6c34ebe693d7747cb1f93e0c6f54c0b06e5ea0",
+    "url": "http://127.0.0.1:3822/es/landing-lab",
+    "at": "2026-10-20T06:56:14.663Z",
+    "fullPage": false,
+    "client": {
+      "height": 1000,
+      "width": 1425
+    },
+    "locale": "es",
+    "scrollY": 0,
+    "viewport": {
+      "height": 1000,
+      "width": 1440
+    }
+  },
+  {
+    "file": "motion-start.jpg",
+    "source": "6d6c34ebe693d7747cb1f93e0c6f54c0b06e5ea0",
+    "url": "http://127.0.0.1:3822/es/landing-lab",
+    "at": "2026-10-20T06:56:15.166Z",
+    "fullPage": false,
+    "client": {
+      "height": 1000,
+      "width": 1425
+    },
+    "locale": "es",
+    "scrollY": 304,
+    "viewport": {
+      "height": 1000,
+      "width": 1440
+    }
+  },
+  {
+    "file": "motion-complete.jpg",
+    "source": "6d6c34ebe693d7747cb1f93e0c6f54c0b06e5ea0",
+    "url": "http://127.0.0.1:3822/es/landing-lab",
+    "at": "2026-10-20T06:56:19.991Z",
+    "fullPage": false,
+    "client": {
+      "height": 1000,
+      "width": 1425
+    },
+    "locale": "es",
+    "scrollY": 304,
+    "viewport": {
+      "height": 1000,
+      "width": 1440
+    }
+  },
+  {
+    "file": "discovery-desktop.jpg",
+    "source": "6d6c34ebe693d7747cb1f93e0c6f54c0b06e5ea0",
+    "url": "http://127.0.0.1:3822/es/landing-lab#discover",
+    "at": "2026-10-20T06:56:26.573Z",
+    "fullPage": false,
+    "client": {
+      "height": 1000,
+      "width": 1425
+    },
+    "locale": "es",
+    "scrollY": 813,
+    "viewport": {
+      "height": 1000,
+      "width": 1440
+    }
+  },
+  {
+    "file": "connections-desktop.jpg",
+    "source": "6d6c34ebe693d7747cb1f93e0c6f54c0b06e5ea0",
+    "url": "http://127.0.0.1:3822/es/landing-lab#discover",
+    "at": "2026-10-20T06:56:27.327Z",
+    "fullPage": false,
+    "client": {
+      "height": 1000,
+      "width": 1425
+    },
+    "locale": "es",
+    "scrollY": 1476,
+    "viewport": {
+      "height": 1000,
+      "width": 1440
+    }
+  },
+  {
+    "file": "finding-reason-desktop.jpg",
+    "source": "6d6c34ebe693d7747cb1f93e0c6f54c0b06e5ea0",
+    "url": "http://127.0.0.1:3822/es/landing-lab#discover",
+    "at": "2026-10-20T06:56:31.690Z",
+    "fullPage": false,
+    "client": {
+      "height": 1000,
+      "width": 1425
+    },
+    "locale": "es",
+    "scrollY": 1318,
+    "viewport": {
+      "height": 1000,
+      "width": 1440
+    }
+  },
+  {
+    "file": "evidence-desktop.jpg",
+    "source": "6d6c34ebe693d7747cb1f93e0c6f54c0b06e5ea0",
+    "url": "http://127.0.0.1:3822/es/landing-lab#discover",
+    "at": "2026-10-20T06:56:32.501Z",
+    "fullPage": false,
+    "client": {
+      "height": 1000,
+      "width": 1425
+    },
+    "locale": "es",
+    "scrollY": 1718,
+    "viewport": {
+      "height": 1000,
+      "width": 1440
+    }
+  },
+  {
+    "file": "temporal-july-desktop.jpg",
+    "source": "6d6c34ebe693d7747cb1f93e0c6f54c0b06e5ea0",
+    "url": "http://127.0.0.1:3822/es/landing-lab#discover",
+    "at": "2026-10-20T06:56:43.424Z",
+    "fullPage": false,
+    "client": {
+      "height": 1000,
+      "width": 1425
+    },
+    "locale": "es",
+    "scrollY": 1464,
+    "viewport": {
+      "height": 1000,
+      "width": 1440
+    }
+  },
+  {
+    "file": "temporal-september-desktop.jpg",
+    "source": "6d6c34ebe693d7747cb1f93e0c6f54c0b06e5ea0",
+    "url": "http://127.0.0.1:3822/es/landing-lab#discover",
+    "at": "2026-10-20T06:56:44.078Z",
+    "fullPage": false,
+    "client": {
+      "height": 1000,
+      "width": 1425
+    },
+    "locale": "es",
+    "scrollY": 1360,
+    "viewport": {
+      "height": 1000,
+      "width": 1440
+    }
+  },
+  {
+    "file": "temporal-october-desktop.jpg",
+    "source": "6d6c34ebe693d7747cb1f93e0c6f54c0b06e5ea0",
+    "url": "http://127.0.0.1:3822/es/landing-lab#discover",
+    "at": "2026-10-20T06:56:44.910Z",
+    "fullPage": false,
+    "client": {
+      "height": 1000,
+      "width": 1425
+    },
+    "locale": "es",
+    "scrollY": 1360,
+    "viewport": {
+      "height": 1000,
+      "width": 1440
+    }
+  },
+  {
+    "file": "unknown-desktop.jpg",
+    "source": "6d6c34ebe693d7747cb1f93e0c6f54c0b06e5ea0",
+    "url": "http://127.0.0.1:3822/es/landing-lab#discover",
+    "at": "2026-10-20T06:56:45.396Z",
+    "fullPage": false,
+    "client": {
+      "height": 1000,
+      "width": 1425
+    },
+    "locale": "es",
+    "scrollY": 926,
+    "viewport": {
+      "height": 1000,
+      "width": 1440
+    }
+  },
+  {
+    "file": "pricing-desktop.jpg",
+    "source": "6d6c34ebe693d7747cb1f93e0c6f54c0b06e5ea0",
+    "url": "http://127.0.0.1:3822/es/landing-lab#pricing",
+    "at": "2026-10-20T06:56:51.500Z",
+    "fullPage": false,
+    "client": {
+      "height": 1000,
+      "width": 1425
+    },
+    "locale": "es",
+    "scrollY": 5184,
+    "viewport": {
+      "height": 1000,
+      "width": 1440
+    }
+  },
+  {
+    "file": "footer-newsletter-desktop.jpg",
+    "source": "6d6c34ebe693d7747cb1f93e0c6f54c0b06e5ea0",
+    "url": "http://127.0.0.1:3822/es/landing-lab#pricing",
+    "at": "2026-10-20T06:57:05.943Z",
+    "fullPage": false,
+    "client": {
+      "height": 1000,
+      "width": 1425
+    },
+    "locale": "es",
+    "scrollY": 7167,
+    "viewport": {
+      "height": 1000,
+      "width": 1440
+    }
+  },
+  {
+    "file": "reduced-motion-desktop.jpg",
+    "source": "6d6c34ebe693d7747cb1f93e0c6f54c0b06e5ea0",
+    "url": "http://127.0.0.1:3822/es/landing-lab#pricing",
+    "at": "2026-10-20T06:57:06.423Z",
+    "fullPage": false,
+    "client": {
+      "height": 1000,
+      "width": 1425
+    },
+    "locale": "es",
+    "scrollY": 7805,
+    "viewport": {
+      "height": 1000,
+      "width": 1440
+    }
+  },
+  {
+    "file": "new-desktop-full.jpg",
+    "source": "6d6c34ebe693d7747cb1f93e0c6f54c0b06e5ea0",
+    "url": "http://127.0.0.1:3822/es/landing-lab#lab-top",
+    "at": "2026-10-20T06:57:23.909Z",
+    "fullPage": true,
+    "client": {
+      "height": 1000,
+      "width": 1425
+    },
+    "locale": "es",
+    "scrollY": 0,
+    "viewport": {
+      "height": 1000,
+      "width": 1440
+    }
+  },
+  {
+    "file": "hero-mobile.jpg",
+    "source": "6d6c34ebe693d7747cb1f93e0c6f54c0b06e5ea0",
+    "url": "http://127.0.0.1:3822/es/landing-lab#lab-top",
+    "at": "2026-10-20T06:57:24.150Z",
+    "fullPage": false,
+    "client": {
+      "height": 844,
+      "width": 375
+    },
+    "locale": "es",
+    "scrollY": 0,
+    "viewport": {
+      "height": 844,
+      "width": 390
+    }
+  },
+  {
+    "file": "menu-mobile.jpg",
+    "source": "6d6c34ebe693d7747cb1f93e0c6f54c0b06e5ea0",
+    "url": "http://127.0.0.1:3822/es/landing-lab#lab-top",
+    "at": "2026-10-20T06:57:24.533Z",
+    "fullPage": false,
+    "client": {
+      "height": 844,
+      "width": 375
+    },
+    "locale": "es",
+    "scrollY": 0,
+    "viewport": {
+      "height": 844,
+      "width": 390
+    }
+  },
+  {
+    "file": "new-mobile-full.jpg",
+    "source": "6d6c34ebe693d7747cb1f93e0c6f54c0b06e5ea0",
+    "url": "http://127.0.0.1:3822/es/landing-lab#lab-top",
+    "at": "2026-10-20T06:57:41.368Z",
+    "fullPage": true,
+    "client": {
+      "height": 844,
+      "width": 375
+    },
+    "locale": "es",
+    "scrollY": 0,
+    "viewport": {
+      "height": 844,
+      "width": 390
+    }
+  },
+  {
+    "file": "old-desktop-full.jpg",
+    "source": "6d6c34ebe693d7747cb1f93e0c6f54c0b06e5ea0",
+    "url": "http://127.0.0.1:3822/es",
+    "at": "2026-10-20T06:57:54.476Z",
+    "fullPage": true,
+    "client": {
+      "height": 1000,
+      "width": 1425
+    },
+    "locale": "es",
+    "scrollY": 0,
+    "viewport": {
+      "height": 1000,
+      "width": 1440
+    }
+  },
+  {
+    "file": "old-mobile-full.jpg",
+    "source": "6d6c34ebe693d7747cb1f93e0c6f54c0b06e5ea0",
+    "url": "http://127.0.0.1:3822/es",
+    "at": "2026-10-20T06:58:01.796Z",
+    "fullPage": true,
+    "client": {
+      "height": 844,
+      "width": 375
+    },
+    "locale": "es",
+    "scrollY": 0,
+    "viewport": {
+      "height": 844,
+      "width": 390
+    }
+  },
+  {
+    "file": "qa-es-320.jpg",
+    "source": "6d6c34ebe693d7747cb1f93e0c6f54c0b06e5ea0",
+    "url": "http://127.0.0.1:3822/es/landing-lab",
+    "at": "2026-10-20T06:58:09.565Z",
+    "fullPage": false,
+    "client": {
+      "height": 844,
+      "width": 305
+    },
+    "locale": "es",
+    "scrollY": 0,
+    "viewport": {
+      "height": 844,
+      "width": 320
+    }
+  },
+  {
+    "file": "qa-de-320.jpg",
+    "source": "6d6c34ebe693d7747cb1f93e0c6f54c0b06e5ea0",
+    "url": "http://127.0.0.1:3822/de/landing-lab",
+    "at": "2026-10-20T06:58:10.632Z",
+    "fullPage": false,
+    "client": {
+      "height": 844,
+      "width": 305
+    },
+    "locale": "de",
+    "scrollY": 0,
+    "viewport": {
+      "height": 844,
+      "width": 320
+    }
+  },
+  {
+    "file": "qa-it-320.jpg",
+    "source": "6d6c34ebe693d7747cb1f93e0c6f54c0b06e5ea0",
+    "url": "http://127.0.0.1:3822/it/landing-lab",
+    "at": "2026-10-20T06:58:12.036Z",
+    "fullPage": false,
+    "client": {
+      "height": 844,
+      "width": 305
+    },
+    "locale": "it",
+    "scrollY": 0,
+    "viewport": {
+      "height": 844,
+      "width": 320
+    }
+  }
+]

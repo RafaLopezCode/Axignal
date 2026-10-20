@@ -1,0 +1,36 @@
+{
+  "source": "d236a3e3b0b7411c95dba1fe243b77e8c214cf87",
+  "checkedAt": "2026-10-19T16:38:27.252Z",
+  "cases": [
+    {
+      "gap": 45.609375,
+      "locale": "es",
+      "overlap": false
+    },
+    {
+      "gap": 56,
+      "locale": "en",
+      "overlap": false
+    },
+    {
+      "gap": 45.609375,
+      "locale": "de",
+      "overlap": false
+    },
+    {
+      "gap": 45.609375,
+      "locale": "fr",
+      "overlap": false
+    },
+    {
+      "gap": 21.609375,
+      "locale": "it",
+      "overlap": false
+    },
+    {
+      "gap": 45.609375,
+      "locale": "pt",
+      "overlap": false
+    }
+  ]
+}

@@ -1,0 +1,99 @@
+{
+  "source": "4b2a7fbc7937d01f81efa8820315b6755ab9f8dc",
+  "motionPlaying": "playing",
+  "motionComplete": "complete",
+  "temporal": "Observado\n3 oct 2026\nHa publicado tres obras recientes en su web.\n\nSon anuncios propios con fecha. Muestran actividad visible, no volumen de negocio.",
+  "price25": "128,75 €\n/ al mes",
+  "price100": "500,00 €\n/ al mes",
+  "newsletter": "Newsletter · AXIGNAL\n\nLa semana, con perspectiva.\n\nUna newsletter gratuita para seguir una organización a través de sus señales públicas. Hasta tres por semana cuando existan novedades materiales, con sus fuentes, fechas y límites.\n\nQuiero recibir el boletín\n\nBajo solicitud y aceptación según cobertura. Es una muestra editorial: no incluye acceso a AXENT ni al contexto privado de AXIGNAL. El consentimiento para recibirla es independiente y revocable.\n\nNo podemos comprobar la disponibilidad.\n\nPuedes volver a comprobarlo o consultar con nosotros. No se ha registrado ninguna solicitud.\n\nVolver a comprobar\nConsultar disponibilidad\nAbrir el canal de solicitudes",
+  "reduced": {
+    "animated": 0,
+    "modes": [
+      "reduced"
+    ],
+    "pressed": "true",
+    "replayDisabled": true
+  },
+  "backTop": {
+    "focus": "lab-heading",
+    "hash": "#lab-top",
+    "y": 0
+  },
+  "menuEscape": {
+    "focus": "Navegación",
+    "open": false
+  },
+  "mobileImages": [
+    {
+      "complete": true,
+      "src": "/brand/logo-light.svg"
+    },
+    {
+      "complete": true,
+      "src": "/brand/isotope.svg"
+    },
+    {
+      "complete": true,
+      "src": "/marketing/focus.webp"
+    },
+    {
+      "complete": true,
+      "src": "/marketing/focus.webp"
+    },
+    {
+      "complete": true,
+      "src": "/marketing/explain.webp"
+    },
+    {
+      "complete": true,
+      "src": "/marketing/memory.webp"
+    },
+    {
+      "complete": true,
+      "src": "/marketing/explain.webp"
+    },
+    {
+      "complete": true,
+      "src": "/marketing/memory.webp"
+    },
+    {
+      "complete": true,
+      "src": "/brand/logo-light.svg"
+    }
+  ],
+  "mobileBackTop": {
+    "focus": "lab-heading",
+    "hash": "#lab-top",
+    "y": 0
+  },
+  "confirmation": "Final source changes only expanded newsletter consent selector specificity; other recorded interactions executed on 92f, the direct parent.",
+  "newsletterContrast": {
+    "background": "rgb(53, 79, 152)",
+    "color": "rgb(241, 244, 255)"
+  },
+  "console": [],
+  "chapters": [
+    {
+      "current": "#discover",
+      "hash": "#discover",
+      "top": 1010.75
+    },
+    {
+      "current": "#audience",
+      "hash": "#audience",
+      "top": 2217.921875
+    },
+    {
+      "current": "#how",
+      "hash": "#how",
+      "top": 3080.859375
+    },
+    {
+      "current": "#pricing",
+      "hash": "#pricing",
+      "top": 5132.359375
+    }
+  ],
+  "finalMotionStart": "playing",
+  "finalMotionComplete": "complete"
+}
