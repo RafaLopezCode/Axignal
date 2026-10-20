@@ -106,7 +106,7 @@ http:
          Path(`/marketing/explain.webp`) ||
          Path(`/styles/base.6a1b27358c35.css`) ||
          Path(`/styles/legacy.6cd6be449f6b.css`) ||
-         Path(`/styles/lab.d8cd614ef219.css`) ||
+         Path(`/styles/lab.e550ae4b77c0.css`) ||
          PathPrefix(`/brand/`) ||
          PathPrefix(`/fonts/`) ||
          PathPrefix(`/observer/`) ||

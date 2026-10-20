@@ -2425,7 +2425,7 @@ html[data-motion="reduced"] .landing-lab * {
   text-underline-offset: 4px;
   margin-top: 12px;
 }
-.lab-newsletter-boundary {
+.lab-footer-newsletter .lab-newsletter-boundary {
   font-size: 12px !important;
   color: #f1f4ff;
   line-height: 1.8;
