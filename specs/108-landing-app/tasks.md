@@ -19,4 +19,4 @@
 - [x] Preserve the complete CSS cascade with ordered semantic equality; retain exact legacy styles.
 - [x] Match Observer image reservations to their actual files and add a deterministic regression check.
 - [x] Confirm the final source build in five consecutive mobile runs below 2.5 s, with desktop and browser regression evidence.
-- [ ] Publish the current source/evidence to the existing draft PR with required checks passing.
+- [x] Prepare the current source/evidence for the existing draft PR; preserve local gate results and expose CI status on the PR. No automatic promotion.

@@ -1,0 +1,41 @@
+{
+  "note": "Each per-run originals.zip contains untouched Lighthouse HTML and JSON. Browsable HTML only has trailing line whitespace removed for repository checks. Standalone JSON copies are untouched.",
+  "reports": [
+    {
+      "name": "ready-mobile-1",
+      "originalJsonSha256": "277c69ae38375e4e5bdf3a3c203a5457998a615f93ab357b11b09c478a48b3d4",
+      "originalHtmlSha256": "bbb702e45f9a51c2de9a9298128452157ef26c20dbdd02fb734f4451e4b04c2b",
+      "browsableHtmlSha256": "4574881d8a373e14c98ab1ca42151de659f214cdc30c62c1fd7b0d0d23c03afc"
+    },
+    {
+      "name": "ready-mobile-2",
+      "originalJsonSha256": "c217f9a8f31af48eb8735e01a2451512925c46f705352cc2d912a4c9ad7cedc0",
+      "originalHtmlSha256": "db6ba21572cfc31446ca1192a5d31a9ebbdcb3693cc5a9733d2018da1158a9f3",
+      "browsableHtmlSha256": "cf24f9845027b97ecb1416fcf7b4a9ea16f788074ed933acef482bde29fab195"
+    },
+    {
+      "name": "ready-mobile-3",
+      "originalJsonSha256": "f17af083c4496f6c9ac29ab6a49931994ad8f5ec887594faa24171a71e610160",
+      "originalHtmlSha256": "fe9d6660c86dd1374efa3105d522e26a5900d66b35b3e89943fa19682c271c85",
+      "browsableHtmlSha256": "ef5d943779c721c449897ae99b0c523d30d828a9ca26c88148b0c2170aa63856"
+    },
+    {
+      "name": "ready-mobile-4",
+      "originalJsonSha256": "4da06309deff4cb7d7002a57d18472965f9932988f736a5feb6fe17421546e4e",
+      "originalHtmlSha256": "19d818c0cd26412766e870a51a94410573b6a90d8b40cc9c026e03d5d2f358d5",
+      "browsableHtmlSha256": "e9d1b6c4a6bf4b8144029f58c87697f1085e92209551bb2bc201dee435a59291"
+    },
+    {
+      "name": "ready-mobile-5",
+      "originalJsonSha256": "9a6c05c4193abfcfecbf123e2696d43e06806d6ea9fe68b2fe3f137752e494b6",
+      "originalHtmlSha256": "84b81864dcbbdc697937b71d88a2eec423f7df85683a538681a8f25b4fe16cd8",
+      "browsableHtmlSha256": "59450bacde50e16591a159d63b6fe6e05884f0b1f116401687d18ed034dd0ec0"
+    },
+    {
+      "name": "ready-desktop-1",
+      "originalJsonSha256": "f527e0ec1187208c00b78402f342f993018ba7b03f680c8fb128a753f89cbe83",
+      "originalHtmlSha256": "71c5d533dcbaea9a58a408aacfae6dd7e3ae3e183f462cfd12bacbc95ac744d2",
+      "browsableHtmlSha256": "c58281b7785451b8cc6b03802a8ad3e9c20d2b664c0de95acf3b2ed88353dd4a"
+    }
+  ]
+}

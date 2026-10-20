@@ -1,0 +1,7 @@
+{
+  "desktopGeometryIdentical": true,
+  "mobileLoadedGeometryIdentical": true,
+  "typeAndColorsIdentical": true,
+  "checkedRegions": 20,
+  "note": "Before/after measurements use equal effective client widths, before full-page exports suppress scrollbars. Mobile loaded-image reference is unchanged. The previous cold trust placeholder was 36.53125px taller; corrected width/height now reserve the real canvas. These are presentation measurements, not field Web Vitals."
+}

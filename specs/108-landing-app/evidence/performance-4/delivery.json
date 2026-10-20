@@ -1,0 +1,166 @@
+{
+  "note": "Read-only HTTP inspection without executing JavaScript. Normal source-built Next/Turbopack delivery; no experimental route-manifest rewrite.",
+  "pages": [
+    {
+      "locale": "es",
+      "url": "http://127.0.0.1:3822/es/landing-lab",
+      "status": 200,
+      "lang": "es",
+      "h1": 1,
+      "styles": [
+        "/styles/lab.d2094b618da9.css"
+      ],
+      "link": "</fonts/lab-manrope.76d1ca24ef0d.woff2>; rel=preload; as=font; type=\"font/woff2\"; crossorigin=anonymous; fetchpriority=high, </fonts/lab-fraunces.3bbb3a5b8520.woff2>; rel=preload; as=font; type=\"font/woff2\"; crossorigin=anonymous; fetchpriority=high",
+      "nativeDisclosures": 11,
+      "jsonLd": 1,
+      "noindex": true,
+      "noJsRootHasNoDeferredLayout": true
+    },
+    {
+      "locale": "en",
+      "url": "http://127.0.0.1:3822/en/landing-lab",
+      "status": 200,
+      "lang": "en",
+      "h1": 1,
+      "styles": [
+        "/styles/lab.d2094b618da9.css"
+      ],
+      "link": "</fonts/lab-manrope.76d1ca24ef0d.woff2>; rel=preload; as=font; type=\"font/woff2\"; crossorigin=anonymous; fetchpriority=high, </fonts/lab-fraunces.3bbb3a5b8520.woff2>; rel=preload; as=font; type=\"font/woff2\"; crossorigin=anonymous; fetchpriority=high",
+      "nativeDisclosures": 11,
+      "jsonLd": 1,
+      "noindex": true,
+      "noJsRootHasNoDeferredLayout": true
+    },
+    {
+      "locale": "de",
+      "url": "http://127.0.0.1:3822/de/landing-lab",
+      "status": 200,
+      "lang": "de",
+      "h1": 1,
+      "styles": [
+        "/styles/lab.d2094b618da9.css"
+      ],
+      "link": "</fonts/lab-manrope.76d1ca24ef0d.woff2>; rel=preload; as=font; type=\"font/woff2\"; crossorigin=anonymous; fetchpriority=high, </fonts/lab-fraunces.3bbb3a5b8520.woff2>; rel=preload; as=font; type=\"font/woff2\"; crossorigin=anonymous; fetchpriority=high",
+      "nativeDisclosures": 11,
+      "jsonLd": 1,
+      "noindex": true,
+      "noJsRootHasNoDeferredLayout": true
+    },
+    {
+      "locale": "pt",
+      "url": "http://127.0.0.1:3822/pt/landing-lab",
+      "status": 200,
+      "lang": "pt",
+      "h1": 1,
+      "styles": [
+        "/styles/lab.d2094b618da9.css"
+      ],
+      "link": "</fonts/lab-manrope.76d1ca24ef0d.woff2>; rel=preload; as=font; type=\"font/woff2\"; crossorigin=anonymous; fetchpriority=high, </fonts/lab-fraunces.3bbb3a5b8520.woff2>; rel=preload; as=font; type=\"font/woff2\"; crossorigin=anonymous; fetchpriority=high",
+      "nativeDisclosures": 11,
+      "jsonLd": 1,
+      "noindex": true,
+      "noJsRootHasNoDeferredLayout": true
+    },
+    {
+      "locale": "fr",
+      "url": "http://127.0.0.1:3822/fr/landing-lab",
+      "status": 200,
+      "lang": "fr",
+      "h1": 1,
+      "styles": [
+        "/styles/lab.d2094b618da9.css"
+      ],
+      "link": "</fonts/lab-manrope.76d1ca24ef0d.woff2>; rel=preload; as=font; type=\"font/woff2\"; crossorigin=anonymous; fetchpriority=high, </fonts/lab-fraunces.3bbb3a5b8520.woff2>; rel=preload; as=font; type=\"font/woff2\"; crossorigin=anonymous; fetchpriority=high",
+      "nativeDisclosures": 11,
+      "jsonLd": 1,
+      "noindex": true,
+      "noJsRootHasNoDeferredLayout": true
+    },
+    {
+      "locale": "it",
+      "url": "http://127.0.0.1:3822/it/landing-lab",
+      "status": 200,
+      "lang": "it",
+      "h1": 1,
+      "styles": [
+        "/styles/lab.d2094b618da9.css"
+      ],
+      "link": "</fonts/lab-manrope.76d1ca24ef0d.woff2>; rel=preload; as=font; type=\"font/woff2\"; crossorigin=anonymous; fetchpriority=high, </fonts/lab-fraunces.3bbb3a5b8520.woff2>; rel=preload; as=font; type=\"font/woff2\"; crossorigin=anonymous; fetchpriority=high",
+      "nativeDisclosures": 11,
+      "jsonLd": 1,
+      "noindex": true,
+      "noJsRootHasNoDeferredLayout": true
+    },
+    {
+      "locale": null,
+      "url": "http://127.0.0.1:3822/landing-lab",
+      "status": 200,
+      "lang": "en",
+      "h1": 1,
+      "styles": [
+        "/styles/lab.d2094b618da9.css"
+      ],
+      "link": "</fonts/lab-manrope.76d1ca24ef0d.woff2>; rel=preload; as=font; type=\"font/woff2\"; crossorigin=anonymous; fetchpriority=high, </fonts/lab-fraunces.3bbb3a5b8520.woff2>; rel=preload; as=font; type=\"font/woff2\"; crossorigin=anonymous; fetchpriority=high",
+      "nativeDisclosures": 11,
+      "jsonLd": 1,
+      "noindex": true,
+      "noJsRootHasNoDeferredLayout": true
+    }
+  ],
+  "controls": [
+    {
+      "path": "/es",
+      "status": 200,
+      "noLabFontHint": true
+    },
+    {
+      "path": "/es/pricing",
+      "status": 200,
+      "noLabFontHint": true
+    },
+    {
+      "path": "/demo",
+      "status": 200,
+      "noLabFontHint": true
+    },
+    {
+      "path": "/login",
+      "status": 200,
+      "noLabFontHint": true
+    }
+  ],
+  "assets": [
+    {
+      "url": "/fonts/lab-manrope.76d1ca24ef0d.woff2",
+      "bytes": 20408,
+      "sha256": "76d1ca24ef0dd23ff4b29480858eceda0169aef71052756c9b4ba33f7b897e58",
+      "cache": "public, max-age=31536000, immutable"
+    },
+    {
+      "url": "/fonts/lab-fraunces.3bbb3a5b8520.woff2",
+      "bytes": 44724,
+      "sha256": "3bbb3a5b852090f458b055cad529dd1cfcdaccf64124655c4b88a6558617321e",
+      "cache": "public, max-age=31536000, immutable"
+    },
+    {
+      "url": "/fonts/lab-bic-notes-lab.3137d8930670.woff2",
+      "bytes": 25500,
+      "sha256": "3137d89306705de5314ba9e5d1d413d376a0b871e9d6e4f079327f2da71d792b",
+      "cache": "public, max-age=31536000, immutable"
+    },
+    {
+      "url": "/fonts/lab-ibm-plex-mono.75215d728296.woff2",
+      "bytes": 10480,
+      "sha256": "75215d7282966e964bb0c98e60b4426f67c288f6482f40daa41e685bd0411a35",
+      "cache": "public, max-age=31536000, immutable"
+    },
+    {
+      "url": "/styles/lab.d2094b618da9.css",
+      "bytes": 60825,
+      "sha256": "d2094b618da912652603fb5776f13c12d6b3e13ce922d7f6a637ea960bada5d3",
+      "cache": "public, max-age=31536000, immutable"
+    }
+  ],
+  "sitemapExcludesLab": true,
+  "noCompressionPrototype": true
+}

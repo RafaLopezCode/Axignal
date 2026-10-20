@@ -1,6 +1,37 @@
 # Lighthouse: resultados reales de laboratorio
 
-## Entrega optimizada · 20 de octubre de 2026
+## Cierre vigente del presupuesto LCP · 20 de octubre de 2026
+
+Código `a31e80c37a510db8c3e9d1e40e85646ae29ff1e8`, misma base integrada hasta #355. Cinco navegaciones móviles frías consecutivas y una de escritorio, ejecutadas en serie después del build de producción. Node 22.23.3, Lighthouse 13.5.0 y Chrome 155. La comparación confirma configuración, perfil y versión iguales a la referencia: no se modifica throttling, no se bloquean solicitudes y no se usa una muestra aislada rápida.
+
+| Ejecución | Rendimiento | Accesibilidad | LCP | CLS | TBT | Informe |
+| --- | ---: | ---: | ---: | ---: | ---: | --- |
+| ready-mobile-1 | 97 | 100 | 2.487 s | 0.00000 | 46.0 ms | [HTML](evidence/performance-4/ready-mobile-1.html) · [JSON](evidence/performance-4/ready-mobile-1.json) · [Originales](evidence/performance-4/ready-mobile-1.originals.zip) |
+| ready-mobile-2 | 98 | 100 | 2.485 s | 0.00000 | 44.0 ms | [HTML](evidence/performance-4/ready-mobile-2.html) · [JSON](evidence/performance-4/ready-mobile-2.json) · [Originales](evidence/performance-4/ready-mobile-2.originals.zip) |
+| ready-mobile-3 | 98 | 100 | 2.484 s | 0.00000 | 36.5 ms | [HTML](evidence/performance-4/ready-mobile-3.html) · [JSON](evidence/performance-4/ready-mobile-3.json) · [Originales](evidence/performance-4/ready-mobile-3.originals.zip) |
+| ready-mobile-4 | 98 | 100 | 2.485 s | 0.00000 | 37.0 ms | [HTML](evidence/performance-4/ready-mobile-4.html) · [JSON](evidence/performance-4/ready-mobile-4.json) · [Originales](evidence/performance-4/ready-mobile-4.originals.zip) |
+| ready-mobile-5 | 98 | 100 | 2.484 s | 0.00000 | 36.5 ms | [HTML](evidence/performance-4/ready-mobile-5.html) · [JSON](evidence/performance-4/ready-mobile-5.json) · [Originales](evidence/performance-4/ready-mobile-5.originals.zip) |
+| ready-desktop-1 | 100 | 100 | 0.727 s | 0.00000 | 0.0 ms | [HTML](evidence/performance-4/ready-desktop-1.html) · [JSON](evidence/performance-4/ready-desktop-1.json) · [Originales](evidence/performance-4/ready-desktop-1.originals.zip) |
+
+**Las cinco muestras móviles están por debajo de 2,5 s.** Mediana: **2.484626 s**, muestra `ready-mobile-2`; rango: **2.484033–2.487104 s**. Se conservan todas las métricas de esa misma muestra. CLS cero y accesibilidad 100 en las seis ejecuciones; ninguna advertencia. El margen al umbral es estrecho: estos resultados no garantizan cada dispositivo, red o visita futura, ni certifican Core Web Vitals de campo. INP real: no disponible.
+
+[Condiciones, hashes y resultados completos](evidence/performance-4/metrics.json) · [Integridad de originales](evidence/performance-4/integrity.json) · [Todas las series diagnósticas](evidence/performance-4/diagnostics.json). Los ZIP por ejecución preservan HTML y JSON originales sin alterar; las copias HTML navegables sólo eliminan espacios de final de línea para cumplir los controles del repositorio. La serie anterior al ajuste de dimensiones pasó cinco muestras; una serie posterior falló y se conserva en el registro. Se corrigió la preparación redundante de fuentes antes de aceptar esta serie final completa.
+
+Se priorizan las fuentes esenciales mediante HTTP y HTML; la anotación manuscrita fuera de pantalla espera a una pintura real y a las fuentes que usa CSS. El código de GSAP continúa diferido y sus CTAs siguen disponibles. La prioridad temporal de layout se retira al terminar esa fase o inmediatamente ante interacción, y se omite en enlaces directos y sin JavaScript. Las ilustraciones reservan su proporción real de 640 × 427. No se altera ningún archivo de imagen o fuente, el precio ni las capacidades del ejemplo.
+
+El CSS combinado pasa de 75.011 a 60.825 bytes mediante formato; se comprueba la igualdad del árbol completo de reglas y declaraciones. Los siete estilos heredados permanecen byte por byte iguales. [Comprobación de conservación](evidence/performance-4/preservation.json) · [HTML y entrega HTTP](evidence/performance-4/delivery.json). Best Practices y SEO conservan sus límites previos; el laboratorio sigue con noindex.
+
+### Reproducción
+
+Con el servidor de producción local preparado, ejecutar cinco veces en serie, sin builds o tests simultáneos:
+
+```powershell
+npx --yes lighthouse@13.5.0 http://127.0.0.1:3822/es/landing-lab --chrome-flags="--headless=new --disable-gpu" --only-categories=performance,accessibility,best-practices,seo --output=json --output=html --output-path=mobile-1
+```
+
+Cambiar el nombre de salida en cada ejecución. Para escritorio, añadir `--preset=desktop`. Las versiones y condiciones reales se guardan en cada informe; el comando es una herramienta de revisión opcional, no un gate CI dependiente de la red.
+
+## Referencia anterior · código 4b2a7fbc
 
 Código `4b2a7fbc7937d01f81efa8820315b6755ab9f8dc`, integrado con main hasta #355 (`c2bda9644c50b1f0b2e00b96d30cf6f30a5494f2`). Tres ejecuciones móviles consecutivas y una de escritorio, seriales, navegador frío, build de producción Node 22.23.3, Lighthouse 13.5.0. Misma configuración predeterminada de Lighthouse, sin bloquear solicitudes ni cambiar throttling. [Configuración completa y selección](evidence/performance-3/metrics.json).
 
