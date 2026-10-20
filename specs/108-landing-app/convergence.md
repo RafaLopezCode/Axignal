@@ -4,7 +4,7 @@ Mode EXPLORE. Independent commercial presentation in the isolated lab; existing 
 
 Visual evidence: complete current old/new desktop/mobile comparison; discovery, relationships, reasoning, sources, temporal change, UNKNOWN, Observer, GSAP replay/reduced motion, pricing, newsletter and mobile menu. Eighteen responsive cases in six languages. Native anchor back-to-top reaches zero and restores H1 focus. Expanded newsletter consent contrast corrected after screenshot inspection. No Golden Master overwritten or declared accepted.
 
-Validation: frontend 412 PASS, zero skipped; Python 2723 PASS and seven explicit Windows/optional-SDK skips (see verification.md); Ruff, mypy, architecture, i18n, production build and initial HTML verified. All eight governance checks PASS after evidence staging (architecture, deps, docs, graphify, hygiene, no-generated-data, spec, terminology). AST graph updated without API costs. No gate, CSP or epistemic invariant weakened.
+Validation: frontend 413 PASS, zero skipped; Python 2723 PASS and seven explicit Windows/optional-SDK skips (see verification.md); Ruff, mypy, architecture, i18n, production build and initial HTML verified. All eight governance checks PASS after evidence staging (architecture, deps, docs, graphify, hygiene, no-generated-data, spec, terminology). AST graph updated without API costs. No gate, CSP or epistemic invariant weakened.
 
 Lighthouse: three serial cold mobile samples and one desktop. All raw samples retained; mobile selected by median LCP. No field INP or field CWV assertion. Mobile LCP retains margin against 2.5 seconds; this is explicitly reported, not called perfect.
 

@@ -1,0 +1,5 @@
+
+> axignal-experience@0.1.0 check:styles
+> node tools/surface-styles.mjs --check
+
+{"sources":["app/globals.css","app/public.css","app/typography.css","app/acquisition.css","app/funnel.css","app/public-layout.css","components/cognition/cognition.css"],"fontManifestSha256":"ee068481c0ad543988532942f06dd3c22937ce1662d6582120f4171701814122","base":{"url":"/styles/base.6a1b27358c35.css","bytes":23597,"sha256":"6a1b27358c35577f0b4d6245d6102436d588241a65d152e31abd5dc60cf89b29"},"legacy":{"url":"/styles/legacy.6cd6be449f6b.css","bytes":243199,"sha256":"6cd6be449f6bb7e7434755cafacd411796dfa5ac463c074b764b2f7ccc5b2e61"},"lab":{"url":"/styles/lab.e550ae4b77c0.css","bytes":75011,"sha256":"e550ae4b77c0b46f44e8433ba104af22a5df836637f2ae23d24b7c029a24e340"}}

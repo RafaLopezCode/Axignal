@@ -13,7 +13,7 @@ Modo **EXPLORE**. La nueva composición vive en `/landing-lab` y `/{locale}/land
 | Architecture Guard | PASS; sin supresiones |
 | AXIGNAL governance | Los ocho checks PASS; comprobados tras adjuntar la evidencia |
 | Graphify | Actualización AST, sin API ni extracción semántica de pago |
-| Frontend | 412 PASS, 0 omitidas |
+| Frontend | 413 PASS, 0 omitidas |
 | Transporte HTTP admin | 28 PASS |
 | TypeScript e i18n | PASS; 2.786 entradas, ninguna ausente |
 | Next build y localización estática | PASS; 663 páginas generadas, incluidas las rutas aisladas |
@@ -73,3 +73,7 @@ Se comprobaron «Volver arriba» con scroll cero y foco al H1, menú móvil y Es
 - Las imágenes son evidencia de revisión, no Golden Masters aceptados ni material del briefing incorporado al producto. No se ha hecho merge a main ni despliegue.
 
 Estado: **IMPLEMENTADO + PROBADO + VISUAL_EVIDENCE_READY + HUMAN_VISUAL_ACCEPTANCE_PENDING**.
+
+## Corrección de portabilidad del generador
+
+Después de las capturas y mediciones del código `4b2a7fbc`, CI detectó que el hash de procedencia del manifiesto de fuentes usaba CRLF en Windows y LF en Linux. La generación ahora normaliza ese texto a LF, igual que Git. Se añade un contrato de portabilidad: frontend final 413 PASS, cero omisiones; TypeScript y check:styles pasan. Los tres archivos CSS, sus hashes y sus URLs permanecen byte por byte iguales; no hay cambio visual ni nueva medición atribuida a ese ajuste. Se conservan ambos manifiestos de procedencia y el log de 412 pruebas del build capturado, además del log final de 413 pruebas.

@@ -100,7 +100,12 @@ fs.mkdirSync(folder, { recursive: true });
 const manifest = {
   sources,
   fontManifestSha256: createHash("sha256")
-    .update(fs.readFileSync(new URL("lib/landing-lab-fonts.json", root)))
+    // Git text files use LF. Hash the same source on Windows and Linux.
+    .update(
+      fs
+        .readFileSync(new URL("lib/landing-lab-fonts.json", root), "utf8")
+        .replace(/\r\n/g, "\n"),
+    )
     .digest("hex"),
 };
 for (const [name, text] of [

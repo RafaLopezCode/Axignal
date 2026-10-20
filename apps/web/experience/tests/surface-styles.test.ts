@@ -106,3 +106,16 @@ test("the isolated lab gets one exact combined stylesheet, with its own skin aft
     "The complete landing skin must remain far below the legacy skin",
   );
 });
+
+test("font provenance uses Git LF text, independent of Windows working-copy newlines", () => {
+  const source = fs.readFileSync(
+    new URL("../lib/landing-lab-fonts.json", import.meta.url),
+    "utf8",
+  );
+  const lf = source.replace(/\r\n/g, "\n");
+  assert.equal(
+    styles.fontManifestSha256,
+    createHash("sha256").update(lf).digest("hex"),
+    "The committed source and local generator must agree across operating systems",
+  );
+});

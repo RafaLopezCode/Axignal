@@ -42,6 +42,6 @@ Reviewed the changes and governing specification for the five later merges, then
 | #354 | Activity family panels | Current product panels retained. Temporal landing views still use existing synthetic projections. |
 | #355 | Identity anchor refinements | Current identity presentation retained. Translation catalogs regenerated with all 46 new translations. |
 
-MASTER, Constitution, ADRs, commercial prices and the landing projection fixture did not change across these merges. Full backend suite after integration: 2723 PASS / 7 explicit skips; final frontend: 412 PASS / zero skips.
+MASTER, Constitution, ADRs, commercial prices and the landing projection fixture did not change across these merges. Full backend suite after integration: 2723 PASS / 7 explicit skips; final frontend: 413 PASS / zero skips.
 
 **Inherited P2 in #351:** `Hawkers abrirá en México.` produces country `MX` although specification 107 excludes future announcements. The entry pattern accepts `abrira` without the future exclusion. [UTF-8 deterministic reproduction](evidence/performance-3/merged-pr-351-future.json). No network, provider or production mutation was used. This is not introduced by the landing and its demo does not invoke this extractor; the defect is reported rather than silently declared fixed.

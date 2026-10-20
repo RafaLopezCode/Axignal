@@ -80,3 +80,7 @@ SEO: 69 en el laboratorio aislado y 92 en la homepage anterior. La diferencia co
 - La variante latina de Bic Notes pasa de 173.748 a 85.384 bytes. Se comprobaron métricas y contornos descompuestos idénticos para 411 caracteres retenidos; mantiene las ligaduras y la licencia original. [Proveniencia](evidence/font-optimization.json).
 
 No se ha añadido un presupuesto universal ni se han relajado gates. Se mantiene separada la medición de laboratorio de cualquier medición real posterior a la aprobación.
+
+## Corrección de portabilidad del generador
+
+Después de las capturas y mediciones del código `4b2a7fbc`, CI detectó que el hash de procedencia del manifiesto de fuentes usaba CRLF en Windows y LF en Linux. La generación ahora normaliza ese texto a LF, igual que Git. Se añade un contrato de portabilidad: frontend final 413 PASS, cero omisiones; TypeScript y check:styles pasan. Los tres archivos CSS, sus hashes y sus URLs permanecen byte por byte iguales; no hay cambio visual ni nueva medición atribuida a ese ajuste. Se conservan ambos manifiestos de procedencia y el log de 412 pruebas del build capturado, además del log final de 413 pruebas.
