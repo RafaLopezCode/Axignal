@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { Landing } from "@/components/landing";
+import { LandingLab } from "@/components/landing-lab";
+import { getLandingLabContent } from "@/lib/landing-lab-content";
+import { LandingLabCriticalType } from "@/components/landing-lab-critical-type";
 import { absolutePublicUrl } from "@/lib/acquisition-seo";
 import { isLocale, locales, type Locale } from "@/lib/languages";
 import { HOME_METADATA } from "@/lib/public-home-metadata";
@@ -27,6 +29,7 @@ export default async function Page({ params }: { params: Promise<{ locale: strin
   if (!isLocale(locale)) notFound();
   return <>
     <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(siteStructuredData(locale)) }}/>
-    <Landing />
+    <LandingLabCriticalType />
+    <LandingLab content={getLandingLabContent(locale)} />
   </>;
 }

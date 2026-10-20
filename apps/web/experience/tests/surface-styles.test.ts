@@ -6,7 +6,7 @@ import { gzipSync } from "node:zlib";
 import { minifyLabStyles } from "../tools/minify-lab-styles.mjs";
 import { createHash } from "node:crypto";
 import styles from "../lib/surface-styles.json";
-import { isLandingLabPath } from "../lib/surface-style-path";
+import { isLandingSurfacePath } from "../lib/surface-style-path";
 
 test("the legacy stylesheet preserves every original rule in original import order", () => {
   const original = [
@@ -63,20 +63,20 @@ test("shared foundation retains accessibility, dialog, privacy and real request 
     assert.equal(createHash("sha256").update(data).digest("hex"), asset.sha256);
   }
 });
-test("only the isolated lab omits the legacy skin", () => {
+test("the public home and isolated landing preview use the focused landing skin", () => {
   for (const locale of ["", "es/", "en/", "de/", "pt/", "fr/", "it/"])
-    assert.equal(isLandingLabPath("/" + locale + "landing-lab"), true);
+    assert.equal(isLandingSurfacePath("/" + locale + "landing-lab"), true);
   for (const path of [
     null,
-    "/",
-    "/es",
     "/demo",
     "/account",
     "/login",
     "/es/pricing",
     "/es/landing-lab-other",
   ])
-    assert.equal(isLandingLabPath(path), false);
+    assert.equal(isLandingSurfacePath(path), false);
+  for (const path of ["/", "/es", "/en", "/fr/", "/de", "/it", "/pt"])
+    assert.equal(isLandingSurfacePath(path), true);
 });
 
 test("only exact immutable style assets enter the public router; the lab remains isolated", () => {
