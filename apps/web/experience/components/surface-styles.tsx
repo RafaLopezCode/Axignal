@@ -1,10 +1,10 @@
 "use client";
 import { usePathname } from "next/navigation";
 import styles from "@/lib/surface-styles.json";
-import { isLandingLabPath } from "@/lib/surface-style-path";
+import { isLandingSurfacePath } from "@/lib/surface-style-path";
 
 export function SurfaceStyles() {
-  const lab = isLandingLabPath(usePathname());
+  const landing = isLandingSurfacePath(usePathname());
   return (
     <>
       {/* Reserve every group in a stable order on both initial and client navigation.
@@ -12,7 +12,7 @@ export function SurfaceStyles() {
       <style href="axignal-base-order" precedence="axignal-base">
         {":root{}"}
       </style>
-      {!lab && (
+      {!landing && (
         <link
           rel="stylesheet"
           href={styles.base.url}
@@ -23,7 +23,7 @@ export function SurfaceStyles() {
       <style href="axignal-legacy-order" precedence="axignal-legacy">
         {":root{}"}
       </style>
-      {!lab && (
+      {!landing && (
         <link
           rel="stylesheet"
           href={styles.legacy.url}
@@ -34,7 +34,7 @@ export function SurfaceStyles() {
       <style href="axignal-lab-order" precedence="axignal-lab">
         {":root{}"}
       </style>
-      {lab && (
+      {landing && (
         <link
           rel="stylesheet"
           href={styles.lab.url}
