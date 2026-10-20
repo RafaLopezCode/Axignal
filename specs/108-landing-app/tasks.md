@@ -11,3 +11,12 @@
 - [x] Optimize delivery, preserve complete 90-state equality, repeat real Lighthouse and document the remaining mobile LCP margin.
 - [x] Address outlined sign-in, visible advisory/additional pricing, Observer in trust, newsletter/footer, motion replay, chapter navigation and native back-to-top; correct expanded-consent contrast from browser evidence.
 - [ ] Human visual, narrative and interactive acceptance. No automatic promotion.
+
+## LCP closure
+
+- [x] Preserve official font glyphs and the complete semantic HTML; prioritize the essential faces.
+- [x] Bound the first-reading phase by real paint/readiness or immediate human intent, including cleanup.
+- [x] Preserve the complete CSS cascade with ordered semantic equality; retain exact legacy styles.
+- [x] Match Observer image reservations to their actual files and add a deterministic regression check.
+- [x] Confirm the final source build in five consecutive mobile runs below 2.5 s, with desktop and browser regression evidence.
+- [ ] Publish the current source/evidence to the existing draft PR with required checks passing.

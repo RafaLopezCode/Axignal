@@ -219,7 +219,11 @@ export function LandingLab({ content }: { content: LandingLabContent }) {
         setMotion(false);
         return;
       }
-      if (!motionRequested.current || document.readyState !== "complete")
+      if (
+        !motionRequested.current ||
+        document.readyState !== "complete" ||
+        document.documentElement.hasAttribute("data-lab-first-reading")
+      )
         return;
       const current = generation;
       // Let essential fonts paint before even downloading the optional engine.
@@ -262,6 +266,7 @@ export function LandingLab({ content }: { content: LandingLabContent }) {
     window.addEventListener("pointerdown", explore, { once: true });
     window.addEventListener("keydown", explore, { once: true });
     window.addEventListener("load", update, { once: true });
+    window.addEventListener("axignal:secondary-type-settled", update);
     media.addEventListener("change", update);
     return () => {
       cancel();
@@ -270,6 +275,7 @@ export function LandingLab({ content }: { content: LandingLabContent }) {
       window.removeEventListener("pointerdown", explore);
       window.removeEventListener("keydown", explore);
       window.removeEventListener("load", update);
+      window.removeEventListener("axignal:secondary-type-settled", update);
       media.removeEventListener("change", update);
     };
   }, [reducedMotion, narrativeRun]);
@@ -517,7 +523,7 @@ export function LandingLab({ content }: { content: LandingLabContent }) {
                 data-observer
                 src="/marketing/focus.webp"
                 width={640}
-                height={413}
+                height={427}
                 alt=""
                 loading="lazy"
                 fetchPriority="low"
@@ -805,7 +811,7 @@ export function LandingLab({ content }: { content: LandingLabContent }) {
                     data-observer
                     src={"/marketing/" + stepImages[index] + ".webp"}
                     width={640}
-                    height={640}
+                    height={427}
                     alt=""
                     loading="lazy"
                     decoding="async"
@@ -860,7 +866,7 @@ export function LandingLab({ content }: { content: LandingLabContent }) {
               data-trust-observer
               src="/marketing/explain.webp"
               width={640}
-              height={640}
+              height={427}
               loading="lazy"
               decoding="async"
               alt=""
@@ -1067,7 +1073,7 @@ export function LandingLab({ content }: { content: LandingLabContent }) {
             <img
               src="/marketing/memory.webp"
               width={640}
-              height={640}
+              height={427}
               alt=""
               loading="lazy"
               decoding="async"

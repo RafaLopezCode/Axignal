@@ -33,3 +33,13 @@ Chapter location uses a two-pixel observer band at the real native anchor line, 
 ## Final delivery amendment · 2026-10-20
 
 Integrate main through #355 in the isolated branch and renumber this specification 108; preserve upstream reported-market-entries 107. No MASTER, ADR or commercial contract change. Deliver localized public content and all existing synthetic views from the server, with complete 90-view equality checks. Keep shared pure formatters and dialog compatible through reexports. Retain cacheable outline-identical font subsets, a single hashed lab stylesheet, exact prepared asset routes and deferred motion. No production configuration is applied. Screenshot QA corrected the expanded newsletter consent contrast. Final evidence records all lab runs, native captures, test logs and human acceptance pending.
+
+## First-reading priority and LCP budget · 2026-10-20
+
+This is a presentation-delivery refinement of the isolated lab. No product model, fixture, commercial offer, dependency, accepted homepage or production route is changed. The original licensed font files and glyphs remain unchanged.
+
+Announce the two essential fonts in the lab's HTTP response while retaining native HTML preloads. On small initial entries only, defer the handwritten face outside the first viewport until actual contentful paint, readiness of the CSS-selected fonts and two frames. Pointer, keyboard, scroll, resize or pagehide releases the phase immediately. Deep links and no-JavaScript retain eager type and full layout. During this short phase, use native content-visibility:auto for later sections; remove the condition before motion measures the page. GSAP waits for the secondary face to settle and removes its event listener on cleanup. No fixed loading delay, hidden CTA or scroll interception is introduced.
+
+Minify only lab CSS formatting with PostCSS. Compare the full ordered tree of selectors, at-rules, declaration values and importance against the authored source, including custom-property whitespace. Preserve the legacy stylesheet byte-for-byte. Correct Observer image reservations to their real 640 × 427 canvas; keep raster bytes, CSS sizing and the final loaded composition intact.
+
+Architecture review: existing Next presentation and font/static-asset boundaries are retained; no runtime provider, canonical write, new API or new production exposure. Validate five consecutive cold mobile Lighthouse runs under 2.5 s using the unchanged default profile, desktop metrics, all raw results, initial semantic HTML, six languages, native navigation/focus, font/layout restoration, actual motion and reduced-motion cleanup. Record any failed series rather than selecting isolated fast samples. Human visual acceptance remains pending.

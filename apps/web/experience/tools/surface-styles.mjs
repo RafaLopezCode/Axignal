@@ -2,6 +2,7 @@
 import fs from "node:fs";
 import { createHash } from "node:crypto";
 import postcss from "postcss";
+import { minifyLabStyles } from "./minify-lab-styles.mjs";
 const root = new URL("../", import.meta.url);
 const check = process.argv.includes("--check");
 const sources = [
@@ -89,12 +90,13 @@ const controls = fs.readFileSync(
   "utf8",
 );
 const base = fallback + "\n" + foundation.toString() + "\n" + controls;
-const lab =
+const labSource =
   base +
   "\n/* components/landing-lab.css */\n" +
   fs
     .readFileSync(new URL("components/landing-lab.css", root), "utf8")
     .replace(/\r\n/g, "\n");
+const lab = minifyLabStyles(labSource);
 const folder = new URL("public/styles/", root);
 fs.mkdirSync(folder, { recursive: true });
 const manifest = {

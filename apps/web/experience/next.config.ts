@@ -20,6 +20,14 @@ const config: NextConfig = {
   async headers() {
     return [
       { source: "/:path*", headers: [{ key: "Content-Security-Policy-Report-Only", value: cspReportOnly }] },
+      // Announce only the two essential faces before parsing the lab document.
+      // HTML preloads remain for native/client navigation and are coalesced by URL.
+      ...["/landing-lab", "/:locale(es|en|de|pt|fr|it)/landing-lab"].map(source => ({
+        source,
+        headers: [{ key: "Link", value: labFonts.fonts.slice(0, 2).map(font =>
+          `<${font.url}>; rel=preload; as=font; type="font/woff2"; crossorigin=anonymous; fetchpriority=high`
+        ).join(", ") }],
+      })),
       ...[
         ...publicDelivery.fonts.map(({url}) => url),
         ...labFonts.fonts.map(({url}) => url),

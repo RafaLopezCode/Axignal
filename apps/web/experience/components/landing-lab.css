@@ -2736,3 +2736,14 @@ html[data-motion="reduced"] .landing-lab * {
 :root:has(.landing-lab) {
   --font-ui: "AXIGNAL Reading", Manrope, Arial, sans-serif;
 }
+/* Only while the first small-screen reading is being painted. Pointer, keyboard
+   or scroll intent restores full layout immediately; deep links and no-JS keep
+   the original layout. Motion measures sections after this phase has ended. */
+@supports (content-visibility: auto) {
+  :root[data-lab-first-reading] .landing-lab .lab-section,
+  :root[data-lab-first-reading] .landing-lab .lab-closing,
+  :root[data-lab-first-reading] .landing-lab .lab-footer {
+    content-visibility: auto;
+    contain-intrinsic-block-size: auto 900px;
+  }
+}
